@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Terraria.ModLoader;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
+using Macrocosm.Items.Currency;
+using Macrocosm.Items.Materials;
 
 namespace Macrocosm.NPCs.Unfriendly.Enemies
 {
@@ -81,16 +83,16 @@ namespace Macrocosm.NPCs.Unfriendly.Enemies
         }
         public override void NPCLoot()
         {
-            Item.NewItem(npc.getRect(), mod.ItemType("CosmicDust"));
+            Item.NewItem(npc.getRect(), ModContent.ItemType<CosmicDust>());
             if (Main.rand.NextFloat() < .0625)
-                Item.NewItem(npc.getRect(), mod.ItemType("ArtemiteOre"), 1 + Main.rand.Next(5));
+                Item.NewItem(npc.getRect(), ModContent.ItemType<ArtemiteOre>(), 1 + Main.rand.Next(5));
             if (Main.rand.NextFloat() < .0625)
-                Item.NewItem(npc.getRect(), mod.ItemType("ChandriumOre"), 1 + Main.rand.Next(5));
+                Item.NewItem(npc.getRect(), ModContent.ItemType<ChandriumOre>(), 1 + Main.rand.Next(5));
             if (Main.rand.NextFloat() < .0625)
-                Item.NewItem(npc.getRect(), mod.ItemType("SeleniumOre"), 1 + Main.rand.Next(5));
+                Item.NewItem(npc.getRect(), ModContent.ItemType<SeleniumOre>(), 1 + Main.rand.Next(5));
             if (Main.rand.NextFloat() < .0625)
-                Item.NewItem(npc.getRect(), mod.ItemType("DianiteOre"), 1 + Main.rand.Next(5));
-            Item.NewItem(npc.getRect(), mod.ItemType("UnuCredit"), 1);
+                Item.NewItem(npc.getRect(), ModContent.ItemType<DianiteOre>(), 1 + Main.rand.Next(5));
+            Item.NewItem(npc.getRect(), ModContent.ItemType<UnuCredit>(), 1);
         }
 
         public override void HitEffect(int hitDirection, double damage)
