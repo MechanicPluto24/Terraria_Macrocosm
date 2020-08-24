@@ -6,10 +6,11 @@ using Macrocosm;
 using Terraria.GameContent.UI;
 using Macrocosm.Backgrounds;
 using Terraria.Graphics.Effects;
+using Macrocosm.Items.Currency;
 
 namespace Macrocosm
 {
-    class Macrocosm : Mod
+    public class Macrocosm : Mod
     {
         public static Macrocosm instance => ModContent.GetInstance<Macrocosm>();
         public Macrocosm()
@@ -28,7 +29,7 @@ namespace Macrocosm
             {
                 LoadClient();
             }
-            FaceCustomCurrencyId = CustomCurrencyManager.RegisterCurrency(new Items.Currency.UnuCreditData(ModContent.ItemType<Items.Currency.UnuCredit>(), 999999L));
+            CurrencyManager.LoadCurrencies();
         }
         public void LoadClient()
         {
@@ -56,6 +57,5 @@ namespace Macrocosm
                 }
             }
         }
-        public static int FaceCustomCurrencyId;
     }
 }
