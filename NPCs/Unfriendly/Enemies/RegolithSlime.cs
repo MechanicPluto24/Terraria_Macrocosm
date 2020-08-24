@@ -1,3 +1,4 @@
+using Macrocosm.Items.Currency;
 using System.ComponentModel;
 using System.Media;
 using Terraria;
@@ -54,7 +55,7 @@ namespace Macrocosm.NPCs.Unfriendly.Enemies
 				Item.NewItem(npc.getRect(), mod.ItemType("SeleniumOre"), 1 + Main.rand.Next(5));
 			if (Main.rand.NextFloat() < .0625)
 				Item.NewItem(npc.getRect(), mod.ItemType("DianiteOre"), 1 + Main.rand.Next(5));
-			Item.NewItem(npc.getRect(), mod.ItemType("UnuCredit"), 1);
+			Item.NewItem(npc.getRect(), ModContent.ItemType<UnuCredit>(), 1);
 		}
 
 		public override void HitEffect(int hitDirection, double damage)
