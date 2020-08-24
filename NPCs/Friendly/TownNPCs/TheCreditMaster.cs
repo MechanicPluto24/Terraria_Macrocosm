@@ -129,11 +129,11 @@ namespace Macrocosm.NPCs.Friendly.TownNPCs
         {
             shop.item[nextSlot].SetDefaults(mod.ItemType("ReaperEX"));
             shop.item[nextSlot].shopCustomPrice = new int?(20);
-            shop.item[nextSlot].shopSpecialCurrency = mod.ItemType("UnuCredit");
+            shop.item[nextSlot].shopSpecialCurrency = Macrocosm.FaceCustomCurrencyId;
             nextSlot++;
             shop.item[nextSlot].SetDefaults(mod.ItemType("BanHammer"));
             shop.item[nextSlot].shopCustomPrice = new int?(20);
-            shop.item[nextSlot].shopSpecialCurrency = mod.ItemType("UnuCredit");
+            shop.item[nextSlot].shopSpecialCurrency = Macrocosm.FaceCustomCurrencyId;
             nextSlot++;
         }
 
