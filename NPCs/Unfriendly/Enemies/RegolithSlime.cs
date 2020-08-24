@@ -1,4 +1,5 @@
 using Macrocosm.Items.Currency;
+using Macrocosm.Items.Materials;
 using System.ComponentModel;
 using System.Media;
 using Terraria;
@@ -46,15 +47,15 @@ namespace Macrocosm.NPCs.Unfriendly.Enemies
 
 		public override void NPCLoot()
         {
-			Item.NewItem(npc.getRect(), mod.ItemType("CosmicDust"));
+			Item.NewItem(npc.getRect(), ModContent.ItemType<CosmicDust>());
 			if (Main.rand.NextFloat() < .0625)
-				Item.NewItem(npc.getRect(), mod.ItemType("ArtemiteOre"), 1 + Main.rand.Next(5));
+				Item.NewItem(npc.getRect(), ModContent.ItemType<ArtemiteOre>(), 1 + Main.rand.Next(5));
 			if (Main.rand.NextFloat() < .0625)
-				Item.NewItem(npc.getRect(), mod.ItemType("ChandriumOre"), 1 + Main.rand.Next(5));
+				Item.NewItem(npc.getRect(), ModContent.ItemType<ChandriumOre>(), 1 + Main.rand.Next(5));
 			if (Main.rand.NextFloat() < .0625)
-				Item.NewItem(npc.getRect(), mod.ItemType("SeleniumOre"), 1 + Main.rand.Next(5));
+				Item.NewItem(npc.getRect(), ModContent.ItemType<SeleniumOre>(), 1 + Main.rand.Next(5));
 			if (Main.rand.NextFloat() < .0625)
-				Item.NewItem(npc.getRect(), mod.ItemType("DianiteOre"), 1 + Main.rand.Next(5));
+				Item.NewItem(npc.getRect(), ModContent.ItemType<DianiteOre>(), 1 + Main.rand.Next(5));
 			Item.NewItem(npc.getRect(), ModContent.ItemType<UnuCredit>(), 1);
 		}
 

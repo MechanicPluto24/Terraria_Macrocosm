@@ -8,6 +8,8 @@ using Terraria.UI;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Macrocosm.Items.Currency;
+using Macrocosm.Items.Weapons;
+using Macrocosm.Items.Materials;
 
 namespace Macrocosm.NPCs.Friendly.TownNPCs
 {
@@ -128,11 +130,11 @@ namespace Macrocosm.NPCs.Friendly.TownNPCs
 
         public override void SetupShop(Chest shop, ref int nextSlot)
         {
-            shop.item[nextSlot].SetDefaults(mod.ItemType("ReaperEX"));
+            shop.item[nextSlot].SetDefaults(ModContent.ItemType<ReaperEX>());
             shop.item[nextSlot].shopCustomPrice = new int?(20);
             shop.item[nextSlot].shopSpecialCurrency = CurrencyManager.UnuCredit;
             nextSlot++;
-            shop.item[nextSlot].SetDefaults(mod.ItemType("BanHammer"));
+            shop.item[nextSlot].SetDefaults(ModContent.ItemType<BanHammer>());
             shop.item[nextSlot].shopCustomPrice = new int?(20);
             shop.item[nextSlot].shopSpecialCurrency = CurrencyManager.UnuCredit;
             nextSlot++;
@@ -140,7 +142,7 @@ namespace Macrocosm.NPCs.Friendly.TownNPCs
 
         public override void NPCLoot()
         {
-            Item.NewItem(npc.getRect(), mod.ItemType("CosmicDust"));
+            Item.NewItem(npc.getRect(), ModContent.ItemType<CosmicDust>());
         }
 
         public override void TownNPCAttackStrength(ref int damage, ref float knockback)
