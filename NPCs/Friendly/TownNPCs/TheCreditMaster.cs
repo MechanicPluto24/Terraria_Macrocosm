@@ -109,7 +109,7 @@ namespace Macrocosm.NPCs.Friendly.TownNPCs
         
         public override void SetChatButtons(ref string button, ref string button2)
         {
-            button = "Please don't press this, it crashes instantly";
+            button = "Shop";
             button2 = "Advice";
         }
 
