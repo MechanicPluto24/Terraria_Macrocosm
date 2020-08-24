@@ -5,6 +5,8 @@ Dig, build, explore, and fight your way across the solar system, where each worl
 
 This mod contains:
 
+Venus - A sulfuric nightmare shrouded in toxic clouds, and burning in temperatures hot enough to melt lead.
+
 The Moon - Earth's sole natural satellite, an irradiated rock with a sinister bloody hell at its core.
 
 Mars - A rusting fossil overrun by sandstorms, plagued by an alien nanovirus, and scarred by war.
