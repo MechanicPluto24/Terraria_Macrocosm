@@ -1,5 +1,5 @@
 displayName = Macrocosm
-author = MechanicPluto24
+author = MechanicPluto24 and the Dev team
 version = 0.0.0.1
 modReferences = SubworldLibrary
 hideCode = false
