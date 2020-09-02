@@ -4,7 +4,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Items.Weapons
 {
-	public class SeleniumBow : ModItem
+	public class SeleniteBow : ModItem
 	{
 		public override void SetStaticDefaults() {
 			

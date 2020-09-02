@@ -53,7 +53,7 @@ namespace Macrocosm.NPCs.Unfriendly.Enemies
 			if (Main.rand.NextFloat() < .0625)
 				Item.NewItem(npc.getRect(), ModContent.ItemType<ChandriumOre>(), 1 + Main.rand.Next(5));
 			if (Main.rand.NextFloat() < .0625)
-				Item.NewItem(npc.getRect(), ModContent.ItemType<SeleniumOre>(), 1 + Main.rand.Next(5));
+				Item.NewItem(npc.getRect(), ModContent.ItemType<SeleniteOre>(), 1 + Main.rand.Next(5));
 			if (Main.rand.NextFloat() < .0625)
 				Item.NewItem(npc.getRect(), ModContent.ItemType<DianiteOre>(), 1 + Main.rand.Next(5));
 			Item.NewItem(npc.getRect(), ModContent.ItemType<UnuCredit>(), 1);

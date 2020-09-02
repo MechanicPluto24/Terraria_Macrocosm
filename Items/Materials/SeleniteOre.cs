@@ -5,7 +5,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Items.Materials
 {
-    public class SeleniumBar : ModItem
+    public class SeleniteOre : ModItem
     {
         public override void SetStaticDefaults()
         {
@@ -24,18 +24,14 @@ namespace Macrocosm.Items.Materials
             item.useTime = 10;
             item.autoReuse = true;
             item.consumable = true;
-            item.createTile = TileType<Tiles.SeleniumBar>();
+            item.createTile = TileType<Tiles.SeleniteOre>();
             item.placeStyle = 0;
             // Set other item.X values here
         }
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(mod, "SeleniumOre", 6);
-            recipe.AddTile(TileID.WorkBenches);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+
         }
     }
 }

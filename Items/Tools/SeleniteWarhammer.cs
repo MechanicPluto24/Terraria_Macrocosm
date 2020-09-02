@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Items.Tools
 {
-	public class SeleniumWaraxe : ModItem
+	public class SeleniteWarhammer : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
@@ -19,7 +19,7 @@ namespace Macrocosm.Items.Tools
 			item.height = 40;
 			item.useTime = 5;
 			item.useAnimation = 12;
-			item.axe = 35;
+			item.hammer = 125;
 			item.useStyle = ItemUseStyleID.SwingThrow;
 			item.knockBack = 6;
 			item.value = 10000;
