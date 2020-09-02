@@ -33,7 +33,7 @@ namespace Macrocosm.Items.Weapons
 		{
 			ModRecipe recipe = new ModRecipe(mod);
 			recipe.AddIngredient(mod, "LuminiteCrystal", 1);
-			recipe.AddIngredient(mod, "SeleniumBar", 12);
+			recipe.AddIngredient(mod, "SeleniteBar", 12);
 			recipe.AddTile(TileID.WorkBenches);
 			recipe.SetResult(this);
 			recipe.AddRecipe();
