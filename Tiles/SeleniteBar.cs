@@ -7,7 +7,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Tiles
 {
-	public class SeleniumBar : ModTile
+	public class SeleniteBar : ModTile
 	{
 		public override void SetDefaults()
 		{
@@ -30,7 +30,7 @@ namespace Macrocosm.Tiles
 			int style = t.frameX / 18;
 			if (style == 0) // It can be useful to share a single tile with multiple styles. This code will let you drop the appropriate bar if you had multiple.
 			{
-				Item.NewItem(i * 16, j * 16, 16, 16, ItemType<Items.Materials.SeleniumBar>());
+				Item.NewItem(i * 16, j * 16, 16, 16, ItemType<Items.Materials.SeleniteBar>());
 			}
 			return base.Drop(i, j);
 		}

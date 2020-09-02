@@ -6,7 +6,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Tiles
 {
-	public class SeleniumOre : ModTile
+	public class SeleniteOre : ModTile
 	{
 		public override void SetDefaults()
 		{
@@ -27,7 +27,7 @@ namespace Macrocosm.Tiles
 			AddMapEntry(new Color(182, 208, 255), name);
 
 			dustType = 84;
-			drop = ItemType<Items.Materials.SeleniumOre>();
+			drop = ItemType<Items.Materials.SeleniteOre>();
 			soundType = SoundID.Tink;
 			soundStyle = 1;
 			//mineResist = 4f;
