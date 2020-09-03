@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 
 namespace Macrocosm
 {
@@ -36,6 +37,14 @@ namespace Macrocosm
             }
             else
                 Main.time += 1f;
+        }
+        public override TagCompound Save()
+        {
+            if (Main.gameMenu)
+            {
+                Main.sunTexture = ModContent.GetTexture("Terraria/Sun");
+            }
+            return null;
         }
     }
 }

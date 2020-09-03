@@ -47,10 +47,14 @@ namespace Macrocosm
         }
         public override void PostUpdate()
         {
-            if (Subworld.IsActive<Moon>())
+            /* if (Main.player[Main.myPlayer].GetModPlayer<MacrocosmPlayer>().ZoneMoon)
             {
-                
+                Main.sunTexture = ModContent.GetTexture("Macrocosm/Assets/Earth.png");
             }
+            else
+            {
+                Main.sunTexture = ModContent.GetTexture("Terraria/Sun");
+            } */
         }
         public override void PostUpdateMiscEffects()
         {
