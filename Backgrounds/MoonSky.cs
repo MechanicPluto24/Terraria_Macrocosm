@@ -41,7 +41,6 @@ namespace Macrocosm.Backgrounds
         public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth)
         {
             Texture2D SunTexture = mod.GetTexture("Backgrounds/Sun_0");
-            // Texture2D MoonTexture = mod.GetTexture("Backgrounds/Sun_0");
             Texture2D SkyTex = mod.GetTexture("Backgrounds/MoonSky");
 
             if (maxDepth >= 3.40282347E+38f && minDepth < 3.40282347E+38f)
@@ -78,7 +77,6 @@ namespace Macrocosm.Backgrounds
                     }
                     Color color6 = new Color((byte)(255f * num64), (byte)(Color.White.G * num64), (byte)(Color.White.B * num64), (byte)(255f * num64));
                     Main.spriteBatch.Draw(SunTexture, new Vector2(num20, num21 + Main.sunModY), new Microsoft.Xna.Framework.Rectangle?(new Rectangle(0, 0, SunTexture.Width, SunTexture.Height)), color6, rotation, new Vector2(SunTexture.Width / 2, SunTexture.Height / 2), num22, SpriteEffects.None, 0f);
-                    // Main.spriteBatch.Draw(MoonTexture, new Vector2(num20, num21 + Main.moonModY), new Microsoft.Xna.Framework.Rectangle?(new Rectangle(0, 0, MoonTexture.Width, MoonTexture.Height)), color6, rotation, new Vector2(MoonTexture.Width / 2, MoonTexture.Height / 2), num22, SpriteEffects.None, 0f);
                 }
             }
         }

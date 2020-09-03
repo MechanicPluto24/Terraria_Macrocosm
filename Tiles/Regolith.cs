@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 
@@ -18,5 +19,10 @@ namespace Macrocosm.Tiles
 			drop = ItemType<Items.Placeables.BlocksAndWalls.Regolith>();
 			AddMapEntry(new Color(65, 65, 65));
 		}
-	}
+        public override bool CreateDust(int i, int j, ref int type)
+        {
+			Dust.NewDust(new Vector2(i, j).ToWorldCoordinates(), 16, 16, DustID.Smoke);
+			return false;
+        }
+    }
 }
