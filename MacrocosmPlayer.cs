@@ -10,6 +10,7 @@ using Macrocosm;
 using Macrocosm.Subworlds;
 using SubworldLibrary;
 using Terraria.ID;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Macrocosm
 {
@@ -19,7 +20,7 @@ namespace Macrocosm
         public bool ZoneBasalt = false;
         public override void UpdateBiomes()
         {
-            ZoneMoon = MacrocosmWorld.moonBiome > 20;
+            ZoneMoon = MacrocosmWorld.moonBiome > 20 || Subworld.IsActive<Moon>();
             ZoneBasalt = MacrocosmWorld.moonBiome > 20;
         }
         public override bool CustomBiomesMatch(Player other)
@@ -58,9 +59,8 @@ namespace Macrocosm
         }
         public override void PostUpdateMiscEffects()
         {
-            if (Subworld.IsActive<Moon>())
+            if (ZoneMoon)
             {
-                ZoneMoon = true;
                 player.gravity = 0.068f;
             }
         }
@@ -68,5 +68,13 @@ namespace Macrocosm
         {
             player.ManageSpecialBiomeVisuals("Macrocosm:MoonSky", ZoneMoon, player.Center);
         }
-    }
+		public override Texture2D GetMapBackgroundImage()
+		{
+            if (ZoneMoon)
+			{
+                return ModContent.GetTexture($"{typeof(Macrocosm).Name}/Map/Moon");
+			}
+			return null;
+		}
+	}
 }
