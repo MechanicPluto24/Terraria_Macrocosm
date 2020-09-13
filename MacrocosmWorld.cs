@@ -36,7 +36,9 @@ namespace Macrocosm
                 // Main.time += 0.5f; // Double the duration of a normal day/night
             }
             else
+            {
                 Main.time += 1f;
+            }
         }
         public override TagCompound Save()
         {
