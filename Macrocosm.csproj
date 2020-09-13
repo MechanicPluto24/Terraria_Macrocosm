@@ -15,7 +15,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Sounds\Music\" />
-    <Folder Include="Tiles\" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="SubworldLibrary">
