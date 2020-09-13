@@ -45,39 +45,36 @@ namespace Macrocosm.Backgrounds
 
             if (maxDepth >= 3.40282347E+38f && minDepth < 3.40282347E+38f)
             {
-                if (Subworld.IsActive<Moon>())
+                spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.Black * Intensity);
+                spriteBatch.Draw(SkyTex, new Rectangle(0, Math.Max(0, (int)((Main.worldSurface * 16.0 - Main.screenPosition.Y - 2400.0) * 0.10000000149011612)), Main.screenWidth, Main.screenHeight), Color.OrangeRed * Math.Min(1f, (Main.screenPosition.Y - 800f) / 1000f * Intensity));
+                float num64 = 1f;
+                num64 -= Main.cloudAlpha * 1.5f;
+                if (num64 < 0f)
                 {
-                    spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.Black * Intensity);
-                    spriteBatch.Draw(SkyTex, new Rectangle(0, Math.Max(0, (int)((Main.worldSurface * 16.0 - Main.screenPosition.Y - 2400.0) * 0.10000000149011612)), Main.screenWidth, Main.screenHeight), Color.OrangeRed * Math.Min(1f, (Main.screenPosition.Y - 800f) / 1000f * Intensity));
-                    float num64 = 1f;
-                    num64 -= Main.cloudAlpha * 1.5f;
-                    if (num64 < 0f)
-                    {
-                        num64 = 0f;
-                    }
-                    int num20 = (int)(Main.time / 54000.0 * (Main.screenWidth + Main.sunTexture.Width * 2)) - Main.sunTexture.Width;
-                    int num21 = 0;
-                    float num22 = 1f;
-                    float rotation = (float)(Main.time / 54000.0) * 2f - 7.3f;
-                    double bgTop = (-Main.screenPosition.Y) / (Main.worldSurface * 16.0 - 600.0) * 200.0;
-                    if (Main.dayTime)
-                    {
-                        double num26;
-                        if (Main.time < 27000.0)
-                        {
-                            num26 = Math.Pow(1.0 - Main.time / 54000.0 * 2.0, 2.0);
-                            num21 = (int)(bgTop + num26 * 250.0 + 180.0);
-                        }
-                        else
-                        {
-                            num26 = Math.Pow((Main.time / 54000.0 - 0.5) * 2.0, 2.0);
-                            num21 = (int)(bgTop + num26 * 250.0 + 180.0);
-                        }
-                        num22 = (float)(1.2 - num26 * 0.4);
-                    }
-                    Color color6 = new Color((byte)(255f * num64), (byte)(Color.White.G * num64), (byte)(Color.White.B * num64), (byte)(255f * num64));
-                    Main.spriteBatch.Draw(SunTexture, new Vector2(num20, num21 + Main.sunModY), new Microsoft.Xna.Framework.Rectangle?(new Rectangle(0, 0, SunTexture.Width, SunTexture.Height)), color6, rotation, new Vector2(SunTexture.Width / 2, SunTexture.Height / 2), num22, SpriteEffects.None, 0f);
+                    num64 = 0f;
                 }
+                int num20 = (int)(Main.time / 54000.0 * (Main.screenWidth + Main.sunTexture.Width * 2)) - Main.sunTexture.Width;
+                int num21 = 0;
+                float num22 = 1f;
+                float rotation = (float)(Main.time / 54000.0) * 2f - 7.3f;
+                double bgTop = (-Main.screenPosition.Y) / (Main.worldSurface * 16.0 - 600.0) * 200.0;
+                if (Main.dayTime)
+                {
+                    double num26;
+                    if (Main.time < 27000.0)
+                    {
+                        num26 = Math.Pow(1.0 - Main.time / 54000.0 * 2.0, 2.0);
+                        num21 = (int)(bgTop + num26 * 250.0 + 180.0);
+                    }
+                    else
+                    {
+                        num26 = Math.Pow((Main.time / 54000.0 - 0.5) * 2.0, 2.0);
+                        num21 = (int)(bgTop + num26 * 250.0 + 180.0);
+                    }
+                    num22 = (float)(1.2 - num26 * 0.4);
+                }
+                Color color6 = new Color((byte)(255f * num64), (byte)(Color.White.G * num64), (byte)(Color.White.B * num64), (byte)(255f * num64));
+                Main.spriteBatch.Draw(SunTexture, new Vector2(num20, num21 + Main.sunModY), new Microsoft.Xna.Framework.Rectangle?(new Rectangle(0, 0, SunTexture.Width, SunTexture.Height)), color6, rotation, new Vector2(SunTexture.Width / 2, SunTexture.Height / 2), num22, SpriteEffects.None, 0f);
             }
         }
 
