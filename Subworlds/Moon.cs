@@ -10,6 +10,10 @@ using Terraria.World.Generation;
 using Terraria.ModLoader;
 using Terraria.ID;
 using Macrocosm.Tiles;
+using Terraria.UI;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace Macrocosm.Subworlds
 {
@@ -22,11 +26,14 @@ namespace Macrocosm.Subworlds
 		public override int width => 2000;
 		public override int height => 1000;
 
-        public override ModWorld modWorld => null;
+		public override ModWorld modWorld => null;
 
-        public override bool saveSubworld => true;
-        public override bool disablePlayerSaving => false;
+		public override bool saveSubworld => true;
+		public override bool disablePlayerSaving => false;
 		public override bool saveModData => true;
+		public static double rockLayerHigh = 0.0;
+		public static double rockLayerLow = 0.0;
+		public static double surfaceLayer = 500;
 		public override List<GenPass> tasks => new List<GenPass>()
 		{
 			new SubworldGenPass(progress =>
@@ -35,7 +42,9 @@ namespace Macrocosm.Subworlds
 				Main.worldSurface = Main.maxTilesY - 42; // Hides the underground layer just out of bounds
 				Main.rockLayer = Main.maxTilesY; // Hides the cavern layer way out of bounds
 
-				int surfaceHeight = 500; // If the moon's world size is variable, this probably should depend on that
+				int surfaceHeight = (int)surfaceLayer; // If the moon's world size is variable, this probably should depend on that
+				rockLayerLow = surfaceHeight;
+				rockLayerHigh = surfaceHeight;
 				#region Base ground
 				// Generate base ground
 				for (int i = 0; i < Main.maxTilesX; i++)
@@ -49,13 +58,20 @@ namespace Macrocosm.Subworlds
 					}
 
 					if (WorldGen.genRand.Next(0, 10) == 0) // Not much deviation here
-                    {
+					{
 						surfaceHeight += WorldGen.genRand.Next(-1, 2);
 						if (WorldGen.genRand.Next(0, 10) == 0)
 						{
 							surfaceHeight += WorldGen.genRand.Next(-2, 3);
 						}
 					}
+
+					if (surfaceHeight < rockLayerLow)
+						rockLayerLow = surfaceHeight;
+
+					if (surfaceHeight > rockLayerHigh)
+						rockLayerHigh = surfaceHeight;
+
 				}
 				#endregion
 			}),
@@ -177,56 +193,201 @@ namespace Macrocosm.Subworlds
 			}),
 			new SubworldGenPass(progress =>
 			{
-				progress.Message = "Smoothening the Moon...";
-				#region Smooth the moon
-				// Time to smoothen up the surface
-				// We're going to scan through the moon and find the top most surface tiles
-				for (int i = 0; i < Main.maxTilesX; i++)
-                {
-					progress.Set((i / (float)Main.maxTilesX - 1));
-					int j = -1;
-					for (int lookupJ = 0; lookupJ < Main.maxTilesY; lookupJ++)
-					{
-						// Framing.GetTileSafety() only checks if the tile is null and not when it's out of bounds... Let's use it anyway
-                        if (Framing.GetTileSafely(i, lookupJ).active())
+				// This generates before lunar caves so that there are overhangsd
+				progress.Message = "Backgrounding the Moon...";
+				#region Generate regolith walls
+				for (int tileX = 1; tileX < Main.maxTilesX - 1; tileX++) {
+					int wall = 2;
+					float progressPercent = tileX / Main.maxTilesX;
+					progress.Set(progressPercent);
+					bool surroundedTile = false;
+					for (int tileY = 2; tileY < Main.maxTilesY - 1; tileY++) {
+						if (Main.tile[tileX, tileY].active())
+							wall = ModContent.WallType<Walls.RegolithWall>();
+
+						if (surroundedTile)
+							Main.tile[tileX, tileY].wall = (ushort)wall;
+
+						if
+						(
+							Main.tile[tileX, tileY].active() // Current tile is active
+							&& Main.tile[tileX - 1, tileY].active() // Left tile is active
+							&& Main.tile[tileX + 1, tileY].active() // Right tile is active
+							&& Main.tile[tileX, tileY + 1].active() // Bottom tile is active
+							&& Main.tile[tileX - 1, tileY + 1].active() // Bottom-left tile is active
+							&& Main.tile[tileX + 1, tileY + 1].active() // Bottom-right tile is active
+							// The following will help to make the walls slightly lower than the terrain
+							&& Main.tile[tileX, tileY - 2].active() // Top tile is active
+						)
 						{
-							j = lookupJ;
-							break;
+							surroundedTile = true; // Set the rest of the walls down the column
 						}
 					}
-					if (j >= 0 && i < Main.maxTilesX - 1 && i > 0) // Prevent edge out-of-bounds
-                    {
-						// If the tile to the left doesn't exist, slope to the left
-						bool left = !Framing.GetTileSafely(i - 1, j).active();
-						// If the tile to the right doesn't exist, slope to the right
-						bool right = !Framing.GetTileSafely(i + 1, j).active();
-
-						// If both doesn't exist, flatten the tile
-						if (left && right)
-                        {
-							Main.tile[i, j].halfBrick(true);
-                        }
-						else if (left)
-						{
-							Main.tile[i, j].slope(2);
-						}
-						else if (right)
-						{
-							Main.tile[i, j].slope(1);
-						}
-                    }
 				}
 				#endregion
-			})
-		};
+			}),
+			new SubworldGenPass(progress =>
+			{
+				progress.Message = "Carving the Moon...";
+				for (int currentCaveSpot = 0; currentCaveSpot < (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.00013); currentCaveSpot++) {
+					float percentDone = (float)((double)currentCaveSpot / ((double)(Main.maxTilesX * Main.maxTilesY) * 0.00013));
+					progress.Set(percentDone);
+					if (rockLayerHigh <= (double)Main.maxTilesY) {
+						int airType = -1;
+						WorldGen.TileRunner(WorldGen.genRand.Next(0, Main.maxTilesX), WorldGen.genRand.Next((int)rockLayerLow, Main.maxTilesY), WorldGen.genRand.Next(6, 20), WorldGen.genRand.Next(50, 300), airType);
+					}
+				}
+				//float iterations = Main.maxTilesX / 4200;
+				//for (int iterationIndex = 0; (float)iterationIndex < 5f * iterations; iterationIndex++) {
+				//	try
+				//	{
+				//		// Randomly carve interconnected tunnels
+				//		WorldGen.Caverer(WorldGen.genRand.Next(100, Main.maxTilesX - 100), WorldGen.genRand.Next((int)surfaceLayer, Main.maxTilesY - 50));
+				//	}
+				//	catch {}
+				//}
+			}),
+			new SubworldGenPass(progress =>
+			{
+				progress.Message = "Smoothening the Moon...";
+				// Adopted from "Smooth World" gen pass
+				for (int tileX = 20; tileX < Main.maxTilesX - 20; tileX++) {
+					float percentAcrossWorld = (float)tileX / (float)Main.maxTilesX;
+					progress.Set(percentAcrossWorld);
+					for (int tileY = 20; tileY < Main.maxTilesY - 20; tileY++) {
+						if (Main.tile[tileX, tileY].type != 48 && Main.tile[tileX, tileY].type != 137 && Main.tile[tileX, tileY].type != 232 && Main.tile[tileX, tileY].type != 191 && Main.tile[tileX, tileY].type != 151 && Main.tile[tileX, tileY].type != 274) {
+							if (!Main.tile[tileX, tileY - 1].active()) {
+								if (WorldGen.SolidTile(tileX, tileY) && TileID.Sets.CanBeClearedDuringGeneration[Main.tile[tileX, tileY].type]) {
+									if (!Main.tile[tileX - 1, tileY].halfBrick() && !Main.tile[tileX + 1, tileY].halfBrick() && Main.tile[tileX - 1, tileY].slope() == 0 && Main.tile[tileX + 1, tileY].slope() == 0) {
+										if (WorldGen.SolidTile(tileX, tileY + 1)) {
+											if (!WorldGen.SolidTile(tileX - 1, tileY) && !Main.tile[tileX - 1, tileY + 1].halfBrick() && WorldGen.SolidTile(tileX - 1, tileY + 1) && WorldGen.SolidTile(tileX + 1, tileY) && !Main.tile[tileX + 1, tileY - 1].active()) {
+												if (WorldGen.genRand.Next(2) == 0)
+													WorldGen.SlopeTile(tileX, tileY, 2);
+												else
+													WorldGen.PoundTile(tileX, tileY);
+											}
+											else if (!WorldGen.SolidTile(tileX + 1, tileY) && !Main.tile[tileX + 1, tileY + 1].halfBrick() && WorldGen.SolidTile(tileX + 1, tileY + 1) && WorldGen.SolidTile(tileX - 1, tileY) && !Main.tile[tileX - 1, tileY - 1].active()) {
+												if (WorldGen.genRand.Next(2) == 0)
+													WorldGen.SlopeTile(tileX, tileY, 1);
+												else
+													WorldGen.PoundTile(tileX, tileY);
+											}
+											else if (WorldGen.SolidTile(tileX + 1, tileY + 1) && WorldGen.SolidTile(tileX - 1, tileY + 1) && !Main.tile[tileX + 1, tileY].active() && !Main.tile[tileX - 1, tileY].active()) {
+												WorldGen.PoundTile(tileX, tileY);
+											}
 
-        public override void Load()
+											if (WorldGen.SolidTile(tileX, tileY)) {
+												if (WorldGen.SolidTile(tileX - 1, tileY) && WorldGen.SolidTile(tileX + 1, tileY + 2) && !Main.tile[tileX + 1, tileY].active() && !Main.tile[tileX + 1, tileY + 1].active() && !Main.tile[tileX - 1, tileY - 1].active()) {
+													WorldGen.KillTile(tileX, tileY);
+												}
+												else if (WorldGen.SolidTile(tileX + 1, tileY) && WorldGen.SolidTile(tileX - 1, tileY + 2) && !Main.tile[tileX - 1, tileY].active() && !Main.tile[tileX - 1, tileY + 1].active() && !Main.tile[tileX + 1, tileY - 1].active()) {
+													WorldGen.KillTile(tileX, tileY);
+												}
+												else if (!Main.tile[tileX - 1, tileY + 1].active() && !Main.tile[tileX - 1, tileY].active() && WorldGen.SolidTile(tileX + 1, tileY) && WorldGen.SolidTile(tileX, tileY + 2)) {
+													if (WorldGen.genRand.Next(5) == 0)
+														WorldGen.KillTile(tileX, tileY);
+													else if (WorldGen.genRand.Next(5) == 0)
+														WorldGen.PoundTile(tileX, tileY);
+													else
+														WorldGen.SlopeTile(tileX, tileY, 2);
+												}
+												else if (!Main.tile[tileX + 1, tileY + 1].active() && !Main.tile[tileX + 1, tileY].active() && WorldGen.SolidTile(tileX - 1, tileY) && WorldGen.SolidTile(tileX, tileY + 2)) {
+													if (WorldGen.genRand.Next(5) == 0)
+														WorldGen.KillTile(tileX, tileY);
+													else if (WorldGen.genRand.Next(5) == 0)
+														WorldGen.PoundTile(tileX, tileY);
+													else
+														WorldGen.SlopeTile(tileX, tileY, 1);
+												}
+											}
+										}
+
+										if (WorldGen.SolidTile(tileX, tileY) && !Main.tile[tileX - 1, tileY].active() && !Main.tile[tileX + 1, tileY].active())
+											WorldGen.KillTile(tileX, tileY);
+									}
+								}
+								else if (!Main.tile[tileX, tileY].active() && Main.tile[tileX, tileY + 1].type != 151 && Main.tile[tileX, tileY + 1].type != 274) {
+									if (Main.tile[tileX + 1, tileY].type != 190 && Main.tile[tileX + 1, tileY].type != 48 && Main.tile[tileX + 1, tileY].type != 232 && WorldGen.SolidTile(tileX - 1, tileY + 1) && WorldGen.SolidTile(tileX + 1, tileY) && !Main.tile[tileX - 1, tileY].active() && !Main.tile[tileX + 1, tileY - 1].active()) {
+										WorldGen.PlaceTile(tileX, tileY, Main.tile[tileX, tileY + 1].type);
+										if (WorldGen.genRand.Next(2) == 0)
+											WorldGen.SlopeTile(tileX, tileY, 2);
+										else
+											WorldGen.PoundTile(tileX, tileY);
+									}
+
+									if (Main.tile[tileX - 1, tileY].type != 190 && Main.tile[tileX - 1, tileY].type != 48 && Main.tile[tileX - 1, tileY].type != 232 && WorldGen.SolidTile(tileX + 1, tileY + 1) && WorldGen.SolidTile(tileX - 1, tileY) && !Main.tile[tileX + 1, tileY].active() && !Main.tile[tileX - 1, tileY - 1].active()) {
+										WorldGen.PlaceTile(tileX, tileY, Main.tile[tileX, tileY + 1].type);
+										if (WorldGen.genRand.Next(2) == 0)
+											WorldGen.SlopeTile(tileX, tileY, 1);
+										else
+											WorldGen.PoundTile(tileX, tileY);
+									}
+								}
+							}
+							else if (!Main.tile[tileX, tileY + 1].active() && WorldGen.genRand.Next(2) == 0 && WorldGen.SolidTile(tileX, tileY) && !Main.tile[tileX - 1, tileY].halfBrick() && !Main.tile[tileX + 1, tileY].halfBrick() && Main.tile[tileX - 1, tileY].slope() == 0 && Main.tile[tileX + 1, tileY].slope() == 0 && WorldGen.SolidTile(tileX, tileY - 1)) {
+								if (WorldGen.SolidTile(tileX - 1, tileY) && !WorldGen.SolidTile(tileX + 1, tileY) && WorldGen.SolidTile(tileX - 1, tileY - 1))
+									WorldGen.SlopeTile(tileX, tileY, 3);
+								else if (WorldGen.SolidTile(tileX + 1, tileY) && !WorldGen.SolidTile(tileX - 1, tileY) && WorldGen.SolidTile(tileX + 1, tileY - 1))
+									WorldGen.SlopeTile(tileX, tileY, 4);
+							}
+
+							if (TileID.Sets.Conversion.Sand[Main.tile[tileX, tileY].type])
+								Tile.SmoothSlope(tileX, tileY, applyToNeighbors: false);
+						}
+					}
+				}
+
+				for (int tileX = 20; tileX < Main.maxTilesX - 20; tileX++) {
+					for (int tileY = 20; tileY < Main.maxTilesY - 20; tileY++) {
+						if (WorldGen.genRand.Next(2) == 0 && !Main.tile[tileX, tileY - 1].active() && Main.tile[tileX, tileY].type != 137 && Main.tile[tileX, tileY].type != 48 && Main.tile[tileX, tileY].type != 232 && Main.tile[tileX, tileY].type != 191 && Main.tile[tileX, tileY].type != 151 && Main.tile[tileX, tileY].type != 274 && Main.tile[tileX, tileY].type != 75 && Main.tile[tileX, tileY].type != 76 && WorldGen.SolidTile(tileX, tileY) && Main.tile[tileX - 1, tileY].type != 137 && Main.tile[tileX + 1, tileY].type != 137) {
+							if (WorldGen.SolidTile(tileX, tileY + 1) && WorldGen.SolidTile(tileX + 1, tileY) && !Main.tile[tileX - 1, tileY].active())
+								WorldGen.SlopeTile(tileX, tileY, 2);
+
+							if (WorldGen.SolidTile(tileX, tileY + 1) && WorldGen.SolidTile(tileX - 1, tileY) && !Main.tile[tileX + 1, tileY].active())
+								WorldGen.SlopeTile(tileX, tileY, 1);
+						}
+
+						if (Main.tile[tileX, tileY].slope() == 1 && !WorldGen.SolidTile(tileX - 1, tileY)) {
+							WorldGen.SlopeTile(tileX, tileY);
+							WorldGen.PoundTile(tileX, tileY);
+						}
+
+						if (Main.tile[tileX, tileY].slope() == 2 && !WorldGen.SolidTile(tileX + 1, tileY)) {
+							WorldGen.SlopeTile(tileX, tileY);
+							WorldGen.PoundTile(tileX, tileY);
+						}
+					}
+				}
+			}),
+		};
+		public override UIState loadingUIState => new MoonSubworldLoadUI();
+
+		public class MoonSubworldLoadUI : UIDefaultSubworldLoad
+		{
+			protected override void DrawSelf(SpriteBatch spriteBatch)
+			{
+				string message = "Did y'all know you can change this loading UI? - 4mbr0s3 2";
+				Vector2 messageSize = Main.fontDeathText.MeasureString(message) * 0.7f;
+				spriteBatch.DrawString(Main.fontDeathText, message, new Vector2(Main.screenWidth / 2f - messageSize.X / 2f, Main.screenHeight - messageSize.Y - 20), Color.White * 0.2f, 0, Vector2.Zero, 0.7f, SpriteEffects.None, 0);
+				base.DrawSelf(spriteBatch);
+			}
+		}
+
+		public override void Load()
 		{
 			// One Terraria day = 86400
+			SLWorld.drawUnderworldBackground = false;
 			SLWorld.noReturn = true;
 			Main.dayTime = true;
 			Main.spawnTileX = 1000;
-			Main.spawnTileY = 500;
+			for (int tileY = 0; tileY < Main.maxTilesY; tileY++)
+			{
+				if (Main.tile[1000, tileY].active())
+				{
+					Main.spawnTileY = tileY;
+					break;
+				}
+			}
 			Main.numClouds = 0;
 		}
 	}
