@@ -2,7 +2,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Items.Miscellanious
+namespace Macrocosm.Items.Miscellaneous
 {
     public class StarshipKey : ModItem
     {
