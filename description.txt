@@ -13,7 +13,7 @@ Mars - A rusting fossil overrun by sandstorms, plagued by an alien nanovirus, an
 
 Developers and Dedications:
 
-Pluto (MPXIV) - Creator, Peer Reviewer
+Pluto (MP-XXIV) - Creator, Peer Reviewer
 Ryan (RighteousRyan) - Programmer, Peer Reviewer
 Universe - Composer
 absoluteAquarian - Programmer
