@@ -16,10 +16,7 @@ namespace Macrocosm.NPCs.Friendly.TownNPCs
     [AutoloadHead]
     public class TheCreditMaster : ModNPC
     {
-        public override string Texture
-        {
-            get { return "Macrocosm/NPCs/Friendly/TownNPCs/TheCreditMaster"; }
-        }
+        public override string Texture => "Macrocosm/NPCs/Friendly/TownNPCs/TheCreditMaster";
 
         public override bool Autoload(ref string name)
         {
@@ -36,7 +33,7 @@ namespace Macrocosm.NPCs.Friendly.TownNPCs
             NPCID.Sets.AttackType[npc.type] = 0;
             NPCID.Sets.AttackTime[npc.type] = 60;
             NPCID.Sets.AttackAverageChance[npc.type] = 30;
-            NPCID.Sets.HatOffsetY[npc.type] = 4;
+            NPCID.Sets.HatOffsetY[npc.type] = 0;
         }
         public override void SetDefaults()
         {
@@ -56,21 +53,9 @@ namespace Macrocosm.NPCs.Friendly.TownNPCs
 
         public override bool CanTownNPCSpawn(int numTownNPCs, int money)
         {
-            for (int k = 0; k < 255; k++)
+            if (player.HasItem(ModContent.ItemType<UnuCredit>()))
             {
-                Player player = Main.player[k];
-                if (!player.active)
-                {
-                    continue;
-                }
-
-                foreach (Item item in player.inventory)
-                {
-                    if (item.type == ModContent.ItemType<UnuCredit>())
-                    {
-                        return true;
-                    }
-                }
+                return true;
             }
             return false;
         }
@@ -80,33 +65,36 @@ namespace Macrocosm.NPCs.Friendly.TownNPCs
             switch(WorldGen.genRand.Next(4))
             {
                 case 0:
-                    return "Baron";
+                    return "Mona";
                 case 1:
-                    return "Lord";
+                    return "Rich Uncle Pennybags";
                 case 2:
-                    return "Old Guy";
+                    return "Decert";
                 default:
-                    return "Mr Money";
+                    return "Mister Money";
             }
         }
 
         public override string GetChat()
         {
-            int otherNPC = NPC.FindFirstNPC(NPCID.Merchant);
+            int merchant = NPC.FindFirstNPC(NPCID.Merchant);
             if(otherNPC >= 0 && Main.rand.NextBool())
             {
-                return "Did you know that " + Main.npc[otherNPC].GivenName + " is the merchant?";
+                return $"Did you know that {Main.npc[merchant].GivenName}'s prices are really bad?";
             }
             switch(Main.rand.Next(4))
             {
                 case 0:
-                    return "dialogue 1";
+                    if (player.HasItem(ModContent.ItemType<UnuCredit>())
+                    {
+                        return "I see you have Unu-Credits, why don't you try spending them here?";
+                    }
                 case 1:
-                    return "dialogue 2";
+                    return "Why do you deny the fact that I am the coolest man alive?";
                 case 2:
-                    return "dialogue 3";
+                    return "Nice hair, dude. Really liking it.";
                 default:
-                    return "dialogue 4";
+                    return "Credits are the source of all life.";
             }
         }
         
@@ -124,10 +112,9 @@ namespace Macrocosm.NPCs.Friendly.TownNPCs
             }
             else
             {
-                Main.npcChatText = "Enemies on planets drop credits. You must have a lot, so give them to me for some nice  items.";
+                Main.npcChatText = "Enemies on extra-terrestrial planets drop a currency known as Unu-Credits. You can get them by just... Well... Killing enemies!";
             }
         }
-
         public override void SetupShop(Chest shop, ref int nextSlot)
         {
             shop.item[nextSlot].SetDefaults(ModContent.ItemType<ReaperEX>());
