@@ -21,7 +21,7 @@ namespace Macrocosm.Tiles
 			TileObjectData.newTile.LavaDeath = false;
 			TileObjectData.addTile(Type);
 
-			AddMapEntry(new Color(176, 150, 211), Language.GetText("MapObject.MetalBar")); // localized text for "Metal Bar"
+			AddMapEntry(new Color(176, 150, 211), Language.GetText("Chandrium Bar")); // localized text for "Metal Bar"
 		}
 
 		public override bool Drop(int i, int j)

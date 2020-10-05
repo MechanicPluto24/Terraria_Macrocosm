@@ -23,7 +23,7 @@ namespace Macrocosm.Tiles
 			mineResist = 5f;
 
 			ModTranslation name = CreateMapEntryName();
-			name.SetDefault("ArtemiteOre");
+			name.SetDefault("Artemite Ore");
 			AddMapEntry(new Color(255, 255, 255), name);
 
 			dustType = 84;

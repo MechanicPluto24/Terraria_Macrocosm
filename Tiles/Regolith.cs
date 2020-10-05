@@ -18,7 +18,7 @@ namespace Macrocosm.Tiles
 			mineResist = 3f;
 			drop = ItemType<Items.Placeables.BlocksAndWalls.Regolith>();
 			AddMapEntry(new Color(65, 65, 65));
-			soundType = SoundID.Tink;
+			soundType = SoundID.Dig;
 		}
         public override bool CreateDust(int i, int j, ref int type)
         {

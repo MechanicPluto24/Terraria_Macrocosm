@@ -2,11 +2,11 @@ using Terraria.ModLoader;
 using Macrocosm.Items;
 using SubworldLibrary;
 using Terraria;
-using Macrocosm;
 using Terraria.GameContent.UI;
 using Macrocosm.Backgrounds;
 using Terraria.Graphics.Effects;
 using Macrocosm.Items.Currency;
+using Microsoft.Xna.Framework;
 
 namespace Macrocosm
 {
@@ -32,7 +32,15 @@ namespace Macrocosm
             }
             CurrencyManager.LoadCurrencies();
         }
-
+        public override void ModifyLightingBrightness(ref float scale)
+        {
+            // Someone get me the subworld lib code pls thank - Ryan
+        }
+        public override void ModifySunLightColor(ref Color tileColor, ref Color backgroundColor)
+        {
+            // Someone get me the subworld lib code pls thank - Ryan
+            //tileColor = Color.Black;
+        }
         private int ItemSlot_PickItemMovementAction(On.Terraria.UI.ItemSlot.orig_PickItemMovementAction orig, Item[] inv, int context, int slot, Item checkItem)
         {
             if (context == 1 && checkItem.type == ModContent.ItemType<UnuCredit>())
@@ -44,7 +52,6 @@ namespace Macrocosm
                 return orig(inv, context, slot, checkItem);
             }
         }
-
         public void LoadClient()
         {
             MoonSky moonSky = new MoonSky();
