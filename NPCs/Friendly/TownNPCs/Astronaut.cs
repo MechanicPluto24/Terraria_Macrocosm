@@ -25,7 +25,7 @@ namespace Macrocosm.NPCs.Friendly.TownNPCs
             Main.npcFrameCount[npc.type] = 26;
             NPCID.Sets.ExtraFramesCount[npc.type] = 9;
             NPCID.Sets.AttackFrameCount[npc.type] = 5;
-            NPCID.Sets.DangerDetectRange[npc.type] = 700;
+            NPCID.Sets.DangerDetectRange[npc.type] = 50;
             NPCID.Sets.AttackType[npc.type] = 0;
             NPCID.Sets.AttackTime[npc.type] = 60;
             NPCID.Sets.AttackAverageChance[npc.type] = 30;
@@ -75,6 +75,37 @@ namespace Macrocosm.NPCs.Friendly.TownNPCs
         public override string GetChat()
         {
             Player player = Main.player[Main.myPlayer];
+            /* 
+            if (eventual_rescue_condition)
+            {
+                return "Woah... Thank you, human! You have saved me from that scary Moon monster! Perhaps you are also a champion of the Moon?";
+            }
+            */
+            if (Main.dayTime && Main.rand.NextFloat() < 0.25f)
+            {
+                return "The Moon is not so bad once you get used to it! I personally find it quite beautiful! Just stay indoors during the night, I shall defend you from those evil Moon monsters!";
+            }
+            if (Main.dayTime && Main.rand.NextFloat() < 0.25f)
+            {
+                return "I found an old space lander once! It looked abandoned, and there was this weird pole with cloth attached to it. Do you know anything about this?";
+            }
+            if (Main.dayTime && Main.rand.NextFloat() < 0.25f)
+            {
+                return "Earth looks very pretty! I want to visit it someday, but I do not know how to leave the Moon...";
+            }
+            if (!Main.dayTime && Main.rand.NextFloat() < 0.25f)
+            {
+                return "Human, I am curious, is the Earth made of cheese?";
+            }
+            if (!Main.dayTime && Main.rand.NextFloat() < 0.25f)
+            {
+                return "Stand alert, human! Night-time lasts far longer than it does on Earth, and lots of scary monsters emerge from the craters and shadows looking for food!";
+            }
+            if (!Main.dayTime && Main.rand.NextFloat() < 0.25f)
+            {
+                return "You look troubled, are you afraid of those Moon monsters? Do not be, for I will defend you! Those Moon monsters will never defeat me!";
+            }
+
             switch (Main.rand.Next(4))
             {
                 case 0:
@@ -150,7 +181,6 @@ namespace Macrocosm.NPCs.Friendly.TownNPCs
         public override void DrawTownAttackSwing(ref Texture2D item, ref int itemSize, ref float scale, ref Vector2 offset)
         {
             item = ModContent.GetTexture("Terraria/Item_" + ItemID.None);
-            itemSize = 20;
             scale = 1f;
 
         }
