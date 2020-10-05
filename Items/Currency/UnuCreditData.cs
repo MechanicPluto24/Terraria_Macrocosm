@@ -23,7 +23,7 @@ namespace Macrocosm.Items.Currency
                     color.B,
                     Lang.tip[50],
                     price,
-                    "Moon Money" //this is the Currency name when shown in the shop
+                    "Moon Coin" //this is the Currency name when shown in the shop
                 });
         }
     }

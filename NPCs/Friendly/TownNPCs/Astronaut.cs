@@ -43,10 +43,9 @@ namespace Macrocosm.NPCs.Friendly.TownNPCs
             npc.lifeMax = 5000;
             npc.HitSound = SoundID.NPCHit4;
             npc.DeathSound = SoundID.NPCDeath3;
-            npc.knockBackResist = 1f;
+            npc.knockBackResist = 0.2f;
             animationType = NPCID.Guide;
         }
-
         public override bool CanTownNPCSpawn(int numTownNPCs, int money)
         {
             Player player = Main.player[Main.myPlayer];
@@ -71,7 +70,7 @@ namespace Macrocosm.NPCs.Friendly.TownNPCs
                     return "Cooper";
             }
         }
-
+        // NOTE: I cannot guarentee that all of this code is in tip-top shape, so if there is anything off, just let ryan know :poggers:
         public override string GetChat()
         {
             Player player = Main.player[Main.myPlayer];
@@ -81,27 +80,27 @@ namespace Macrocosm.NPCs.Friendly.TownNPCs
                 return "Woah... Thank you, human! You have saved me from that scary Moon monster! Perhaps you are also a champion of the Moon?";
             }
             */
-            if (Main.dayTime && Main.rand.NextFloat() < 0.25f)
+            if (Main.dayTime && Main.rand.NextFloat() < 0.2f)
             {
                 return "The Moon is not so bad once you get used to it! I personally find it quite beautiful! Just stay indoors during the night, I shall defend you from those evil Moon monsters!";
             }
-            if (Main.dayTime && Main.rand.NextFloat() < 0.25f)
+            if (Main.dayTime && Main.rand.NextFloat() < 0.2f)
             {
                 return "I found an old space lander once! It looked abandoned, and there was this weird pole with cloth attached to it. Do you know anything about this?";
             }
-            if (Main.dayTime && Main.rand.NextFloat() < 0.25f)
+            if (Main.dayTime && Main.rand.NextFloat() < 0.2f)
             {
                 return "Earth looks very pretty! I want to visit it someday, but I do not know how to leave the Moon...";
             }
-            if (!Main.dayTime && Main.rand.NextFloat() < 0.25f)
+            if (!Main.dayTime && Main.rand.NextFloat() < 0.2f)
             {
                 return "Human, I am curious, is the Earth made of cheese?";
             }
-            if (!Main.dayTime && Main.rand.NextFloat() < 0.25f)
+            if (!Main.dayTime && Main.rand.NextFloat() < 0.2f)
             {
                 return "Stand alert, human! Night-time lasts far longer than it does on Earth, and lots of scary monsters emerge from the craters and shadows looking for food!";
             }
-            if (!Main.dayTime && Main.rand.NextFloat() < 0.25f)
+            if (!Main.dayTime && Main.rand.NextFloat() < 0.2f)
             {
                 return "You look troubled, are you afraid of those Moon monsters? Do not be, for I will defend you! Those Moon monsters will never defeat me!";
             }
@@ -111,11 +110,11 @@ namespace Macrocosm.NPCs.Friendly.TownNPCs
                 case 0:
                     if (player.CountItem(ModContent.ItemType<UnuCredit>()) > 1)
                     {
-                        return $"I see you have {player.CountItem(ModContent.ItemType<UnuCredit>())} Moon Monies. why don't you try spending them here?";
+                        return $"I see you have {player.CountItem(ModContent.ItemType<UnuCredit>())} Moon Coins. why don't you try spending them here?";
                     }
                     else if (player.CountItem(ModContent.ItemType<UnuCredit>()) == 1)
                     {
-                        return $"I see you have {player.CountItem(ModContent.ItemType<UnuCredit>())} Moon Money. why don't you try spending them here?";
+                        return $"I see you have {player.CountItem(ModContent.ItemType<UnuCredit>())} Moon Coins. why don't you try spending them here?";
                     }
                     else
                     {
@@ -138,7 +137,7 @@ namespace Macrocosm.NPCs.Friendly.TownNPCs
 
         public override void OnChatButtonClicked(bool firstButton, ref bool shop)
         {
-            if(firstButton)
+            if (firstButton)
             {
                 shop = true;
             }
@@ -159,20 +158,15 @@ namespace Macrocosm.NPCs.Friendly.TownNPCs
                 }
             }
         }
+        // TODO: Bad shop, sprite fast, die hard
         public override void SetupShop(Chest shop, ref int nextSlot)
         {
             shop.item[nextSlot].SetDefaults(ModContent.ItemType<ChandriumBar>());
-            shop.item[nextSlot].SetNameOverride("Sorry dude this is just placeholder");
+            shop.item[nextSlot].SetNameOverride("Sorry dude this is just placeholder\nApparently newlines work\nChange the shop soon pls kthanks\n");
             shop.item[nextSlot].shopCustomPrice = new int?(20);
             shop.item[nextSlot].shopSpecialCurrency = CurrencyManager.UnuCredit;
             nextSlot++;
         }
-
-        public override void NPCLoot()
-        {
-            Item.NewItem(npc.getRect(), ModContent.ItemType<CosmicDust>());
-        }
-
         public override void TownNPCAttackStrength(ref int damage, ref float knockback)
         {
             damage = 125;

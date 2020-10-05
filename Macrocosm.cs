@@ -25,12 +25,26 @@ namespace Macrocosm
         }
         public override void Load()
         {
+            On.Terraria.UI.ItemSlot.PickItemMovementAction += ItemSlot_PickItemMovementAction;
             if (!Main.dedServ)
             {
                 LoadClient();
             }
             CurrencyManager.LoadCurrencies();
         }
+
+        private int ItemSlot_PickItemMovementAction(On.Terraria.UI.ItemSlot.orig_PickItemMovementAction orig, Item[] inv, int context, int slot, Item checkItem)
+        {
+            if (context == 1 && checkItem.type == ModContent.ItemType<UnuCredit>())
+            {
+                return 0;
+            }
+            else
+            {
+                return orig(inv, context, slot, checkItem);
+            }
+        }
+
         public void LoadClient()
         {
             MoonSky moonSky = new MoonSky();
