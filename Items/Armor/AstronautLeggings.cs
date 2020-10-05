@@ -17,7 +17,7 @@ namespace Macrocosm.Items.Armor
 			item.height = 18;
 			item.value = 10000;
 			item.rare = ItemRarityID.Green;
-			item.defense = 10;
+			item.defense = = 22;
 		}
 
 		public override void UpdateEquip(Player player) {
