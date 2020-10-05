@@ -5,6 +5,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 using Microsoft.Xna.Framework;
+using Terraria.DataStructures;
 
 namespace Macrocosm.Items.Currency
 {
@@ -12,13 +13,14 @@ namespace Macrocosm.Items.Currency
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Moon Money");
+            DisplayName.SetDefault("Moon Coin");
+            Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(4, 8));
         }
         public override void SetDefaults()
         {
             item.width = 20;
             item.height = 20;
-            item.maxStack = 999999;
+            item.maxStack = 999;
             item.value = 750;
         }
         public override void ModifyTooltips(List<TooltipLine> tooltips)
@@ -32,7 +34,7 @@ namespace Macrocosm.Items.Currency
                     tooltips.Add(new TooltipLine(mod, "Name", "For the champ")
                     {
                         overrideColor = Color.DarkGray,
-                        text = $"These are a currency for the Space Champion, but unfortunately he is not with you"
+                        text = $"These are a currency for the Moon Champion, but unfortunately he is not with you"
                     });
                     return;
                 }
@@ -41,7 +43,7 @@ namespace Macrocosm.Items.Currency
                     tooltips.Add(new TooltipLine(mod, "Name", "For the champ")
                     {
                         overrideColor = Color.DarkGray,
-                        text = $"These are a currency for {Main.npc[champ].GivenName}, the Space Champion"
+                        text = $"These are a currency for {Main.npc[champ].GivenName}, the Moon Champion"
                     });
                 }
             }

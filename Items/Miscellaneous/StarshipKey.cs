@@ -8,7 +8,7 @@ namespace Macrocosm.Items.Miscellaneous
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("This could take you to a spaceship subworld, if we knew how to make subworlds.");
+            Tooltip.SetDefault("This could take you to a spaceship subworld, if we knew how to make subworlds."); // FIXME: Please, dude (kirito) please this is cancer
         }
 
         public override void SetDefaults()
@@ -17,7 +17,7 @@ namespace Macrocosm.Items.Miscellaneous
             item.height = 20;
             item.maxStack = 1;
             item.value = 100;
-            item.rare = 1;
+            item.rare = ItemRarityID.Blue;
         }
 
         public override void AddRecipes()
