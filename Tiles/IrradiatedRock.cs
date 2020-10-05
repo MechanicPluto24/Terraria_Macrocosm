@@ -1,3 +1,4 @@
+using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
@@ -16,7 +17,8 @@ namespace Macrocosm.Tiles
 			minPick = 275;
 			mineResist = 3f;
 			drop = ItemType<Items.Placeables.BlocksAndWalls.IrradiatedRock>();
-			AddMapEntry(new Color(129, 117, 0));
+            AddMapEntry(new Color(129, 117, 0));
+			soundType = SoundID.Tink;
 		}
 	}
 }

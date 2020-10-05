@@ -23,7 +23,7 @@ namespace Macrocosm.Tiles
 			mineResist = 5f;
 
 			ModTranslation name = CreateMapEntryName();
-			name.SetDefault("ChandriumOre");
+			name.SetDefault("Chandrium Ore");
 			AddMapEntry(new Color(207, 182, 255), name);
 
 			dustType = 84;

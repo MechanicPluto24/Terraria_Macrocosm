@@ -158,7 +158,7 @@ namespace Macrocosm.NPCs.Friendly.TownNPCs
                 }
             }
         }
-        // TODO: Bad shop, sprite fast, die hard
+        // TODO: Bad shop, sprite fast, die hard (ambrose plesea ima die)
         public override void SetupShop(Chest shop, ref int nextSlot)
         {
             shop.item[nextSlot].SetDefaults(ModContent.ItemType<ChandriumBar>());
