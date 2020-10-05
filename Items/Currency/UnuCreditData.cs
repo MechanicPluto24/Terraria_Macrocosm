@@ -6,7 +6,7 @@ namespace Macrocosm.Items.Currency
 {
     public class UnuCreditData : CustomCurrencySingleCoin
     {
-        public Color UnuCredittextcolor = Color.ForestGreen; //this defines the Custom Currency Buy Price color when shown in the shoop
+        public Color UnuCredittextcolor = Color.DarkGray; //this defines the Custom Currency Buy Price color when shown in the shoop
 
         public UnuCreditData(int coinItemID, long currencyCap) : base(coinItemID, currencyCap)
         {
@@ -23,7 +23,7 @@ namespace Macrocosm.Items.Currency
                     color.B,
                     Lang.tip[50],
                     price,
-                    "Unu Credit" //this is the Currency name when shown in the shop
+                    "Moon Money" //this is the Currency name when shown in the shop
                 });
         }
     }
