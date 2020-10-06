@@ -58,7 +58,7 @@ namespace Macrocosm.NPCs.Friendly.TownNPCs
 
         public override string TownNPCName()
         {
-            switch(WorldGen.genRand.Next(4))
+            switch(WorldGen.genRand.Next(8))
             {
                 case 0:
                     return "Mann";
@@ -66,6 +66,14 @@ namespace Macrocosm.NPCs.Friendly.TownNPCs
                     return "Doyle";
                 case 2:
                     return "Romilly";
+                case 3:
+                    return "Miller";
+                case 4:
+                    return "Edmunds";
+                case 5:
+                    return "Neil";
+                case 6:
+                    return "Buzz";
                 default:
                     return "Cooper";
             }
@@ -110,22 +118,22 @@ namespace Macrocosm.NPCs.Friendly.TownNPCs
                 case 0:
                     if (player.CountItem(ModContent.ItemType<UnuCredit>()) > 1)
                     {
-                        return $"I see you have {player.CountItem(ModContent.ItemType<UnuCredit>())} Moon Coins. why don't you try spending them here?";
+                        return $"I see you have {player.CountItem(ModContent.ItemType<UnuCredit>())} Moon coins! Why don't you try spending them here?";
                     }
                     else if (player.CountItem(ModContent.ItemType<UnuCredit>()) == 1)
                     {
-                        return $"I see you have {player.CountItem(ModContent.ItemType<UnuCredit>())} Moon Coins. why don't you try spending them here?";
+                        return $"I see you have {player.CountItem(ModContent.ItemType<UnuCredit>())} Moon coins! Why don't you try spending them here?";
                     }
                     else
                     {
-                        return "I see you lack Moon Money, try killing lunar enemies.";
+                        return "Hmm, you appear to have no Moon coins, try killing some Moon monsters to get some!";
                     }
                 case 1:
-                    return "Why do you deny the fact that I am the coolest man alive?";
+                    return "What was I doing on the Moon before I got eaten? I was fighting Moon monsters, of course!";
                 case 2:
-                    return "When humans first went to Mars, I thought \"Dang, Im never gunna do this!\" Yeah, unfortunately, I didn't. I went to Ganymede, baby!";
+                    return "A while back I discovered I could tune in on human conversations if they were happening close enough to the Moon! I kept " + "hearing the word 'Houston' come up in their conversations. I would like to meet this Houston some day!";
                 default:
-                    return "I say space is cool, but at that price, it is also scary.";
+                    return "Space is so cool! There are billions and billions of stars and galaxies! There is nothing I like more than space!";
             }
         }
         
@@ -146,14 +154,13 @@ namespace Macrocosm.NPCs.Friendly.TownNPCs
                 switch (Main.rand.Next(3))
                 {
                     case 1:
-                        Main.npcChatText = "Enemies on the moon planets drop a currency known as Moon Money. You can get them by just... Well... Killing enemies!";
+                        Main.npcChatText = "Monsters on the Moon drop these strange coins! If you can find enough of them, I'll trade them for some supplies!";
                         break;
                     case 2:
-                        Main.npcChatText = "The moon is littered with deadly enemies that can easily overwhelm you if you are not careful. I'd recommend you get prepared"
-                            + " as much as possible before taking anything on it.";
+                        Main.npcChatText = "Be prepared for anything, and stay alert! The Moon is a very dangerous place crawling with all kinds of monsters, " + "always be ready for anything!";
                         break;
                     default:
-                        Main.npcChatText = "It is crucial to use an astronaut suit on the moon, otherwise you would run out of breath and die faster than you could imagine.";
+                        Main.npcChatText = "If you wish to explore the Moon, do not forget your spacesuit!";
                         break;
                 }
             }
