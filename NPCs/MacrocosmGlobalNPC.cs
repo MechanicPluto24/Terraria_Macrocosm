@@ -10,7 +10,7 @@ namespace Macrocosm.NPCs
     {
         public override void NPCLoot(NPC npc)
         {
-            if (Main.rand.Next(10) == 0)
+            if (Main.rand.NextFloat() <= 0.10f)
             {
                 if (npc.type == NPCID.MoonLordCore)
                 {
