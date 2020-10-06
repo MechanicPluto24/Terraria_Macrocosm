@@ -122,7 +122,7 @@ namespace Macrocosm.NPCs.Friendly.TownNPCs
                     }
                     else if (player.CountItem(ModContent.ItemType<UnuCredit>()) == 1)
                     {
-                        return $"I see you have {player.CountItem(ModContent.ItemType<UnuCredit>())} Moon coins! Why don't you try spending them here?";
+                        return $"I see you have {player.CountItem(ModContent.ItemType<UnuCredit>())} Moon coin! Why don't you try spending them here?";
                     }
                     else
                     {
