@@ -131,7 +131,7 @@ namespace Macrocosm.NPCs.Friendly.TownNPCs
                 case 1:
                     return "What was I doing on the Moon before I got eaten? I was fighting Moon monsters, of course!";
                 case 2:
-                    return "A while back I discovered I could tune in on human conversations if they were happening close enough to the Moon! I kept " + "hearing the word 'Houston' come up in their conversations. I would like to meet this Houston some day!";
+                    return "A while back I discovered I could tune in on human conversations if they were happening close enough to the Moon! I kept hearing the word 'Houston' come up in their conversations. I would like to meet this Houston some day!";
                 default:
                     return "Space is so cool! There are billions and billions of stars and galaxies! There is nothing I like more than space!";
             }
@@ -157,7 +157,7 @@ namespace Macrocosm.NPCs.Friendly.TownNPCs
                         Main.npcChatText = "Monsters on the Moon drop these strange coins! If you can find enough of them, I'll trade them for some supplies!";
                         break;
                     case 2:
-                        Main.npcChatText = "Be prepared for anything, and stay alert! The Moon is a very dangerous place crawling with all kinds of monsters, " + "always be ready for anything!";
+                        Main.npcChatText = "Be prepared for anything, and stay alert! The Moon is a very dangerous place crawling with all kinds of monsters, always be ready for anything!";
                         break;
                     default:
                         Main.npcChatText = "If you wish to explore the Moon, do not forget your spacesuit!";
