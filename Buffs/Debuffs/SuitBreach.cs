@@ -16,8 +16,12 @@ namespace Macrocosm.Buffs.Debuffs
         {
             DisplayName.SetDefault("Suit Breach");
             Description.SetDefault("There is a hole in your spacesuit!");
+            Main.debuff[Type] = true;
+            Main.buffNoSave[Type] = true;
+            Main.buffNoTimeDisplay[Type] = false;
+            canBeCleared = false;
+            Main.pvpBuff[Type] = true;
         }
-
         public override void Update(Player player, ref int buffIndex)
         {
             player.lifeRegen -= 20;

@@ -183,11 +183,11 @@ namespace Macrocosm.NPCs.Friendly.TownNPCs
         {
             item = ModContent.GetTexture("Terraria/Item_" + ItemID.None);
             scale = 1f;
-
         }
         public override void TownNPCAttackSwing(ref int itemWidth, ref int itemHeight)
         {
-            // Idk i dont really have the time rn to implement this, might do it later
+            itemWidth = 20;
+            itemHeight = 5;
         }
         public override void TownNPCAttackCooldown(ref int cooldown, ref int randExtraCooldown)
         {

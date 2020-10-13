@@ -1,14 +1,11 @@
 ﻿using System;
 using Terraria;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria.ModLoader;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Macrocosm.Items.Currency;
 using Macrocosm.Items.Materials;
+using Macrocosm.Buffs.Debuffs;
 
 namespace Macrocosm.NPCs.Unfriendly.Enemies
 {
@@ -74,15 +71,18 @@ namespace Macrocosm.NPCs.Unfriendly.Enemies
         }
         public override void OnHitPlayer(Player player, int damage, bool crit)
         {
-            player.AddBuff(mod.BuffType("SuitBreach"), 600, true);
+            if (player.GetModPlayer<MacrocosmPlayer>().accMoonArmor) // Now only suit breaches players with said suit
+            {
+                player.AddBuff(ModContent.BuffType<SuitBreach>(), 600, true);
+            }
         }
-
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
             return spawnInfo.spawnTileType == ModContent.TileType<Tiles.Regolith>() ? .1f : 0f;
         }
         public override void NPCLoot()
         {
+            Item.NewItem(npc.getRect(), ModContent.ItemType<UnuCredit>());
             Item.NewItem(npc.getRect(), ModContent.ItemType<CosmicDust>());
             if (Main.rand.NextFloat() < .0625)
                 Item.NewItem(npc.getRect(), ModContent.ItemType<ArtemiteOre>(), 1 + Main.rand.Next(5));
@@ -92,7 +92,7 @@ namespace Macrocosm.NPCs.Unfriendly.Enemies
                 Item.NewItem(npc.getRect(), ModContent.ItemType<SeleniteOre>(), 1 + Main.rand.Next(5));
             if (Main.rand.NextFloat() < .0625)
                 Item.NewItem(npc.getRect(), ModContent.ItemType<DianiteOre>(), 1 + Main.rand.Next(5));
-            Item.NewItem(npc.getRect(), ModContent.ItemType<UnuCredit>(), 1);
+            // Very sloppy but it will do
         }
 
         public override void HitEffect(int hitDirection, double damage)
@@ -102,8 +102,8 @@ namespace Macrocosm.NPCs.Unfriendly.Enemies
                 int dustType = 1;
                 int dustIndex = Dust.NewDust(npc.position, npc.width, npc.height, dustType);
                 Dust dust = Main.dust[dustIndex];
-                dust.velocity.X = dust.velocity.X + Main.rand.Next(-50, 51) * 0.01f;
-                dust.velocity.Y = dust.velocity.Y + Main.rand.Next(-50, 51) * 0.01f;
+                dust.velocity.X *= Main.rand.Next(-50, 51) * 0.01f;
+                dust.velocity.Y *= Main.rand.Next(-50, 51) * 0.01f;
                 dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
             }
         }

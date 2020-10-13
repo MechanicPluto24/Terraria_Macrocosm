@@ -1,3 +1,4 @@
+using Macrocosm.Items.Weapons;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
@@ -16,7 +17,7 @@ namespace Macrocosm.Tiles
 			minPick = 300;
 			mineResist = 3f;
 			drop = ItemType<Items.Placeables.BlocksAndWalls.Tendril>();
-			AddMapEntry(new Color(188, 0, 0));
+            AddMapEntry(new Color(188, 0, 0));
 		}
 	}
 }
