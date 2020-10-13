@@ -16,6 +16,12 @@ namespace Macrocosm
         {
         };
         /// <summary>
+        /// Enemies of the dwarf planet Eris, see list to view said NPCs
+        /// </summary>
+        public static List<int> ErisEnemies = new List<int>
+        {
+        };
+        /// <summary>
         /// Enemies of our very own satellite, The Moon. See list to view said NPCs
         /// </summary>
         public static List<int> MoonEnemies = new List<int>
