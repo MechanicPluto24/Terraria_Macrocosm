@@ -366,9 +366,9 @@ namespace Macrocosm.Subworlds
 		{
 			protected override void DrawSelf(SpriteBatch spriteBatch)
 			{
-				string message = "Did y'all know you can change this loading UI? - 4mbr0s3 2";
-				Vector2 messageSize = Main.fontDeathText.MeasureString(message) * 0.7f;
-				spriteBatch.DrawString(Main.fontDeathText, message, new Vector2(Main.screenWidth / 2f - messageSize.X / 2f, Main.screenHeight - messageSize.Y - 20), Color.White * 0.2f, 0, Vector2.Zero, 0.7f, SpriteEffects.None, 0);
+                string msgToPlayer = "You are amidst a travel! Please wait.";
+				Vector2 messageSize1 = Main.fontDeathText.MeasureString(msgToPlayer) * 0.7f;
+                spriteBatch.DrawString(Main.fontDeathText, msgToPlayer, new Vector2(Main.screenWidth / 2f - messageSize1.X / 2f, Main.screenHeight - messageSize1.Y - 20), Color.White * 0.2f, 0, Vector2.Zero, 0.7f, SpriteEffects.None, 0);
 				base.DrawSelf(spriteBatch);
 			}
 		}

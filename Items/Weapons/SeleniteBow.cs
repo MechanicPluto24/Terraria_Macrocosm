@@ -17,7 +17,8 @@ namespace Macrocosm.Items.Weapons
         {
             // Kinda mentally bored rn so note
             // TODO: Rework this failiure of a bow - Ryan
-            item.damage = 200;
+            // Its october and im still bored - Ryan
+            item.damage = 320;
             item.ranged = true;
             item.width = 40;
             item.height = 20;
@@ -28,7 +29,7 @@ namespace Macrocosm.Items.Weapons
             item.knockBack = 4;
             item.value = 10000;
             item.rare = ItemRarityID.Green;
-            item.UseSound = SoundID.Item11;
+            item.UseSound = SoundID.Item2;
             item.autoReuse = true;
             item.shoot = ProjectileID.PurificationPowder;
             item.shootSpeed = 20f;

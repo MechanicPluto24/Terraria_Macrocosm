@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 using Terraria;
 using Terraria.ModLoader;
 using Macrocosm;
@@ -11,16 +6,36 @@ using Macrocosm.Subworlds;
 using SubworldLibrary;
 using Terraria.ID;
 using Microsoft.Xna.Framework.Graphics;
+using Macrocosm.Buffs.Debuffs;
 
 namespace Macrocosm
 {
     class MacrocosmPlayer : ModPlayer
     {
+        public bool accMoonArmor = false;
         public bool ZoneMoon = false;
         public bool ZoneBasalt = false;
+        public override void ResetEffects()
+        {
+            accMoonArmor = false;
+        }
+        public override void PostUpdateBuffs()
+        {
+            if (player.GetModPlayer<MacrocosmPlayer>().accMoonArmor)
+            {
+                player.buffImmune[ModContent.BuffType<SpaceSuffocation>()] = true;
+            }
+            if (Subworld.IsActive<Moon>())
+            {
+                if (!player.GetModPlayer<MacrocosmPlayer>().accMoonArmor) // Now die if you dont have moon armor, scum
+                {
+                    player.AddBuff(ModContent.BuffType<SpaceSuffocation>(), 2);
+                }
+            }    
+        }
         public override void UpdateBiomes()
         {
-            ZoneMoon = MacrocosmWorld.moonBiome > 20 || Subworld.IsActive<Moon>();
+            ZoneMoon = Subworld.IsActive<Moon>();
             ZoneBasalt = MacrocosmWorld.moonBiome > 20;
         }
         public override bool CustomBiomesMatch(Player other)

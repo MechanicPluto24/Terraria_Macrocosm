@@ -70,9 +70,15 @@ namespace Macrocosm
 
             if (Main.myPlayer != -1 && !Main.gameMenu)
             {
-                if (Main.player[Main.myPlayer].GetModPlayer<MacrocosmPlayer>().ZoneMoon)
+                if (!Main.dayTime && Main.player[Main.myPlayer].GetModPlayer<MacrocosmPlayer>().ZoneMoon)
                 {
-                    music = GetSoundSlot(SoundType.Music, "Sounds/Music/Moon");
+                    music = GetSoundSlot(SoundType.Music, "Sounds/Music/MoonNight");
+
+                    priority = MusicPriority.Environment;
+                }
+                if (Main.player[Main.myPlayer].GetModPlayer<MacrocosmPlayer>().ZoneMoon && Main.dayTime)
+                {
+                    music = GetSoundSlot(SoundType.Music, "Sounds/Music/MoonDay");
 
                     priority = MusicPriority.Environment;
                 }

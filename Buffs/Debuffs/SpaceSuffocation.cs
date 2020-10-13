@@ -1,12 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 using Terraria.ModLoader;
-using Terraria.ID;
-using System.ComponentModel;
 
 namespace Macrocosm.Buffs.Debuffs
 {
@@ -16,11 +9,14 @@ namespace Macrocosm.Buffs.Debuffs
         {
             DisplayName.SetDefault("Osphyxiation");
             Description.SetDefault("You are suffocating");
+            Main.debuff[Type] = true;
+            Main.buffNoSave[Type] = true;
+            Main.buffNoTimeDisplay[Type] = false;
+            canBeCleared = false;
         }
-
         public override void Update(Player player, ref int buffIndex)
         {
-            player.lifeRegen -= 60;
+            player.lifeRegen -= 120; // Oh no, double trouble
         }
     }
 }
