@@ -92,7 +92,7 @@ namespace Macrocosm.NPCs.Friendly.TownNPCs
             {
                 return "The Moon is not so bad once you get used to it! I personally find it quite beautiful! Just stay indoors during the night, I shall defend you from those evil Moon monsters!";
             }
-            if (Main.rand.NextFloat() < 0.05f)
+            if (Main.rand.NextFloat() < 0.01f) // Note to all: Yes, this is a TF2 reference.
             {
                 return "Am I a good Moon Champion? If I wasn't a good Moon Champion, I wouldn't be sitting here discussing it with you now would I?";
             }
