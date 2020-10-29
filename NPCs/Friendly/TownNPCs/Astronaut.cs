@@ -165,6 +165,14 @@ namespace Macrocosm.NPCs.Friendly.TownNPCs
                 }
             }
         }
+		public override void PostAI()
+		{
+			base.PostAI();
+			if (!Subworld.IsActive<Moon>())
+			{
+				npc.active = false;
+			}
+		}
         // TODO: Bad shop, sprite fast, die hard (ambrose plesea ima die)
         public override void SetupShop(Chest shop, ref int nextSlot)
         {
