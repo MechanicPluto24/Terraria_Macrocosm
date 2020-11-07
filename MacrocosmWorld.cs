@@ -30,14 +30,10 @@ namespace Macrocosm
         {
             if (Subworld.IsActive<Moon>())
             {
-                Main.time += 0.125f; // 
-                // Main.time += 10f; // One tenth the duration of a normal day/night
-                // Main.time += 5f; // Half the duration of a normal day/night
-                // Main.time += 0.5f; // Double the duration of a normal day/night
-            }
-            else
-            {
-                Main.time += 1f;
+                Main.time += 0.125; // 
+                // Main.time += 10; // One tenth the duration of a normal day/night
+                // Main.time += 5; // Half the duration of a normal day/night
+                // Main.time += 0.5; // Double the duration of a normal day/night
             }
         }
         public override TagCompound Save()
