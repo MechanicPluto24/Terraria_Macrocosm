@@ -92,6 +92,10 @@ namespace Macrocosm.NPCs.Friendly.TownNPCs
             {
                 return "The Moon is not so bad once you get used to it! I personally find it quite beautiful! Just stay indoors during the night, I shall defend you from those evil Moon monsters!";
             }
+            if (Main.rand.NextFloat() < 0.01f) // Note to all: Yes, this is a TF2 reference.
+            {
+                return "Am I a good Moon Champion? If I wasn't a good Moon Champion, I wouldn't be sitting here discussing it with you now would I?";
+            }
             if (Main.dayTime && Main.rand.NextFloat() < 0.2f)
             {
                 return "I found an old space lander once! It looked abandoned, and there was this weird pole with cloth attached to it. Do you know anything about this?";
@@ -165,6 +169,14 @@ namespace Macrocosm.NPCs.Friendly.TownNPCs
                 }
             }
         }
+		public override void PostAI()
+		{
+			base.PostAI();
+			if (!Subworld.IsActive<Moon>())
+			{
+				npc.active = false;
+			}
+		}
         // TODO: Bad shop, sprite fast, die hard (ambrose plesea ima die)
         public override void SetupShop(Chest shop, ref int nextSlot)
         {
