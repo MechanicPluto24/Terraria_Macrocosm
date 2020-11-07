@@ -5,11 +5,53 @@ Dig, build, explore, and fight your way across the solar system, where each worl
 
 This mod contains:
 
+The Sun - A golden incandescent star, and the center of the solar system.
+
+Vulcan - An infernal hellhole covered in volcanoes, and scorched by the Sun's relentless radiation.
+
+Mercury - A small, dense ball of rock and iron, and the remains of a gas giant vaporized by the Sun.
+
 Venus - A sulfuric nightmare shrouded in toxic clouds, and burning in temperatures hot enough to melt lead.
 
 The Moon - Earth's sole natural satellite, an irradiated rock with a sinister bloody hell at its core.
 
 Mars - A rusting fossil overrun by sandstorms, plagued by an alien nanovirus, and scarred by war.
+
+Phobos - Mars's largest moon, a small asteroid swarmed by demons and other hellspawn.
+
+Deimos - Mars's smallest moon, a tiny asteroid rotting and decaying from the inside out.
+
+Asteroid Belt - A field of rocks and metals, the largest being Ceres, a massive planetoid.
+
+Jupiter - The behemoth of the solar system, a colossal ball of hydrogen and helium gas.
+
+Io - Jupiter's innermost moon, a world covered in sulfur and volcanoes, and bathed in radiation.
+
+Europa - Another Jovian moon, blanketed in a thick layer of ice covering a deep global ocean.
+
+Saturn - An enormous yet lightweight gas giant, known for its vast and breathtaking ring system.
+
+Titan - Saturn's largest moon, wrapped in thick clouds and covered in grimy tar and methane.
+
+Ouranos - A large ice giant rich in methane, knocked on its side by an ancient cosmic collision.
+
+Miranda - A tiny frozen moon broken apart and reassembled many times, appearing grotesque and amalgamated.
+
+Neptune - Another large methane-rich ice giant, known for its extreme wind speeds and furious storms.
+
+Triton - Neptune's largest moon, covered in frozen methane and fields of geysers and cryovolcanoes.
+
+Pluto - A dreary, dark dwarf planet far from the Sun, infested with arachnids and bugs of all sizes.
+
+Charon - Pluto's largest moon, a tiny sphere of ice harboring spirits of the dead.
+
+Eris - A ghostly white dwarf planet, scarred and distorted by beings of violence and destruction.
+
+Yano-Moore - A dark, mysterious comet located at the very edge of the solar system.
+
+The Warp - A dimension of raw chaos and discord, and home to ancient Lovecraftian nightmares and horrors.
+
+
 
 Developers and Dedications:
 
@@ -30,3 +72,5 @@ VentralRaptor24 - Messenger
 Brayden - Lore-ist
 dontkickmychick - Lore-ist
 Almarduk - Lore-ist
+
+Kiraa - Ex-Spriter responsible for War Machine and Moon Beast sprites
