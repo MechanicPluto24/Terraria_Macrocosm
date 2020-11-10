@@ -10,7 +10,7 @@ using Macrocosm.Buffs.Debuffs;
 
 namespace Macrocosm
 {
-    class MacrocosmPlayer : ModPlayer
+    public class MacrocosmPlayer : ModPlayer
     {
         public bool accMoonArmor = false;
         public bool ZoneMoon = false;
@@ -21,15 +21,11 @@ namespace Macrocosm
         }
         public override void PostUpdateBuffs()
         {
-            if (player.GetModPlayer<MacrocosmPlayer>().accMoonArmor)
-            {
-                player.buffImmune[ModContent.BuffType<SpaceSuffocation>()] = true;
-            }
             if (Subworld.IsActive<Moon>())
             {
-                if (!player.GetModPlayer<MacrocosmPlayer>().accMoonArmor) // Now die if you dont have moon armor, scum
+                if (!player.GetModPlayer<MacrocosmPlayer>().accMoonArmor) // Now die if you dont have moon armor
                 {
-                    player.AddBuff(ModContent.BuffType<SpaceSuffocation>(), 2);
+                    player.AddBuff(ModContent.BuffType<SuitBreach>(), 2);
                 }
             }    
         }
@@ -60,6 +56,7 @@ namespace Macrocosm
         {
             BitsByte flags = reader.ReadByte();
             ZoneMoon = flags[0];
+            ZoneBasalt = flags[1];
         }
         public override void PostUpdate()
         {

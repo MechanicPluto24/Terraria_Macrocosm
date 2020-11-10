@@ -14,13 +14,18 @@ namespace Macrocosm.Tiles
 			Main.tileBlockLight[Type] = true;
 			Main.tileLighted[Type] = true;
 			Main.tileMergeDirt[Type] = true;
+			Main.tileMerge[Type][TileType<Protolith>()] = true;
 			minPick = 225;
 			mineResist = 3f;
 			drop = ItemType<Items.Placeables.BlocksAndWalls.Regolith>();
-			AddMapEntry(new Color(65, 65, 65));
+			AddMapEntry(new Color(90, 90, 90));
 			soundType = SoundID.Dig;
 		}
-        public override bool CreateDust(int i, int j, ref int type)
+		public override bool HasWalkDust()
+		{
+			return true;
+		}
+		public override bool CreateDust(int i, int j, ref int type)
         {
 			Dust.NewDust(new Vector2(i, j).ToWorldCoordinates(), 16, 16, DustID.Smoke);
 			return false;
