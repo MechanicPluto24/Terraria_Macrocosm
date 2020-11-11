@@ -34,7 +34,7 @@ namespace Macrocosm.Subworlds
 		public override bool saveModData => true;
 		public static double rockLayerHigh = 0.0;
 		public static double rockLayerLow = 0.0;
-		public static double surfaceLayer = 500;
+		public static double surfaceLayer = 200;
 		public override List<GenPass> tasks => new List<GenPass>()
 		{
 			new SubworldGenPass(progress =>
@@ -233,17 +233,39 @@ namespace Macrocosm.Subworlds
 				#region Generate regolith
 				for (int tileX = 1; tileX < Main.maxTilesX - 1; tileX++) {
 					float progressPercent = tileX / Main.maxTilesX;
-					progress.Set(progressPercent);
-					float regolithChance = 3;
+					progress.Set(progressPercent / 2f);
+					float regolithChance = 6;
+					bool generatedVeinForThisColumn = false;
 					for (int tileY = 1; tileY < Main.maxTilesY; tileY++)
 					{
 						if (Main.tile[tileX, tileY].active())
 						{
-							if (WorldGen.genRand.NextFloat() < regolithChance)
+							if (regolithChance > 0.1)
 							{
 								Main.tile[tileX, tileY].type = (ushort)ModContent.TileType<Tiles.Regolith>();
 							}
-							regolithChance -= 0.05f;
+							regolithChance -= 0.02f;
+							if (regolithChance <= 0) break;
+						}
+					}
+				}
+				// Generate protolith veins
+				for (int tileX = 1; tileX < Main.maxTilesX - 1; tileX++) {
+					float progressPercent = tileX / Main.maxTilesX;
+					progress.Set(0.5f + progressPercent / 2f);
+					float regolithChance = 6;
+					for (int tileY = 1; tileY < Main.maxTilesY; tileY++)
+					{
+						if (Main.tile[tileX, tileY].active())
+						{
+							double veinChance = (6 - regolithChance) / 6f * 0.006;
+							if (WorldGen.genRand.NextFloat() < veinChance || veinChance == 0)
+							{
+								//WorldGen.TileRunner(tileX, tileY, WorldGen.genRand.Next((int)(6 * veinChance / 0.005), (int)(20 * veinChance / 0.005)), WorldGen.genRand.Next(50, 300), ModContent.TileType<Tiles.Protolith>());
+								WorldGen.TileRunner(tileX, tileY, WorldGen.genRand.Next((int)(6 * veinChance / 0.003), (int)(20 * veinChance / 0.003)), WorldGen.genRand.Next(5, 19), ModContent.TileType<Tiles.Protolith>());
+							}
+							regolithChance -= 0.02f;
+							if (regolithChance < 0) break;
 						}
 					}
 				}
@@ -432,7 +454,7 @@ namespace Macrocosm.Subworlds
 						null,
 						Color.White * (float)(animationTimer / 5) * 0.8f
 					);
-					string msgToPlayer = "You're going to Cairo, Egypt bye bye";
+					string msgToPlayer = "*loading a pistol and getting back on the rocket-ship* moon's haunted";
 					Vector2 messageSize1 = Main.fontDeathText.MeasureString(msgToPlayer) * 0.7f;
 					spriteBatch.DrawString(Main.fontDeathText, msgToPlayer, new Vector2(Main.screenWidth / 2f - messageSize1.X / 2f, Main.screenHeight - messageSize1.Y - 20), Color.White * 1f, 0, Vector2.Zero, 0.7f, SpriteEffects.None, 0);
 				}
@@ -445,12 +467,12 @@ namespace Macrocosm.Subworlds
 						null,
 						Color.White * (float)(animationTimer / 5) * 0.8f
 					);
-					string msgToPlayer = "Also help me convince Ryan to play Wynncraft Minecraft MMORPG server w/ us pls";
+					string msgToPlayer = "Moon's haunted";
 					Vector2 messageSize1 = Main.fontDeathText.MeasureString(msgToPlayer) * 0.7f;
 					spriteBatch.DrawString(Main.fontDeathText, msgToPlayer, new Vector2(Main.screenWidth / 2f - messageSize1.X / 2f, Main.screenHeight - messageSize1.Y - 20), Color.White * 1f, 0, Vector2.Zero, 0.7f, SpriteEffects.None, 0);
-					string msgToPlayer2 = "Bruh where the other coders at";
-					Vector2 messageSize2 = Main.fontDeathText.MeasureString(msgToPlayer2) * 0.7f;
-					spriteBatch.DrawString(Main.fontDeathText, msgToPlayer2, new Vector2(Main.screenWidth / 2f - messageSize2.X / 2f, messageSize2.Y), Color.White * 1f, 0, Vector2.Zero, 0.7f, SpriteEffects.None, 0);
+					string msgToPlayer2 = "Moon's haunted";
+					Vector2 messageSize2 = Main.fontDeathText.MeasureString(msgToPlayer2) * 1f;
+					spriteBatch.DrawString(Main.fontDeathText, msgToPlayer2, new Vector2(Main.screenWidth / 2f - messageSize2.X / 2f, messageSize2.Y), Color.White * 1f, 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
 				}
 				spriteBatch.End();
 				Main.spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, Main.UIScaleMatrix);
