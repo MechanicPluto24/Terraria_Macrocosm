@@ -23,7 +23,7 @@ namespace Macrocosm.Tiles
 			mineResist = 5f;
 
 			ModTranslation name = CreateMapEntryName();
-			name.SetDefault("Lithium");
+			name.SetDefault("Lithium Ore");
 			AddMapEntry(new Color(108, 101, 112), name);
 
 			dustType = 84;
