@@ -70,7 +70,7 @@ namespace Macrocosm.NPCs.Friendly.TownNPCs
                 case 2:
                     return "Romilly"; // (Interstellar)
                 case 3:
-                    return "Miller"; // Dr. Miller (Interstellar)?
+                    return "Miller"; // Dr. Miller (Interstellar)
                 case 4:
                     return "Edmunds"; // Wolf Edmunds (Interstellar)
                 case 5:
@@ -122,9 +122,9 @@ namespace Macrocosm.NPCs.Friendly.TownNPCs
                 chatBag.Add("Hmm, you appear to have no Moon coins, try killing some Moon monsters to get some!");
             }
             chatBag.Add("What was I doing on the Moon before I got eaten? I was fighting Moon monsters, of course!");
-            // Reference to Apollo 13
+            // Reference to Houston Space Center, Texas
             chatBag.Add("A while back I discovered I could tune in on human conversations if they were happening close enough to the Moon! I kept hearing the word 'Houston' come up in their conversations. I would like to meet this Houston some day!");
-            // There are 10^3 x 10^9 x 10^9 = 10^21, or a sextillion, stars, according to my Google search
+            // Reference to "SPACE IS COOL" Songify Remix by SCHMOYOHO
             chatBag.Add("Space is so cool! There are thousands of billions of billions of stars and galaxies! There is nothing I like more than space!");
             // Reference to "Space Oddity" by David Bowie
             chatBag.Add("Planet Earth is blue, and there's nothing I can do...");
