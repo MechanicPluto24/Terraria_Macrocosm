@@ -24,7 +24,7 @@ namespace Macrocosm.Tiles
 
 			ModTranslation name = CreateMapEntryName();
 			name.SetDefault("SeleniumOre");
-			AddMapEntry(new Color(182, 208, 255), name);
+			AddMapEntry(new Color(108, 117, 220), name);
 
 			dustType = 84;
 			drop = ItemType<Items.Materials.SeleniteOre>();
