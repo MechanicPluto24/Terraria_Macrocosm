@@ -24,7 +24,7 @@ namespace Macrocosm.Tiles
 
 			ModTranslation name = CreateMapEntryName();
 			name.SetDefault("DianiteOre");
-			AddMapEntry(new Color(255, 216, 182), name);
+			AddMapEntry(new Color(210, 116, 75), name);
 
 			dustType = 84;
 			drop = ItemType<Items.Materials.DianiteOre>();
