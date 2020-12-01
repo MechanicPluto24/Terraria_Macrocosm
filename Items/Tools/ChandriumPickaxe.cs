@@ -15,8 +15,8 @@ namespace Macrocosm.Items.Tools
 		{
 			item.damage = 90;
 			item.melee = true;
-			item.width = 40;
-			item.height = 40;
+			item.width = 44;
+			item.height = 44;
 			item.useTime = 5;
 			item.useAnimation = 12;
 			item.pick = 250;
