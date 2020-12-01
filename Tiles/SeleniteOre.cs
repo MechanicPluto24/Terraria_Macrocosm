@@ -23,7 +23,7 @@ namespace Macrocosm.Tiles
 			mineResist = 5f;
 
 			ModTranslation name = CreateMapEntryName();
-			name.SetDefault("SeleniumOre");
+			name.SetDefault("Selenium Ore");
 			AddMapEntry(new Color(108, 117, 220), name);
 
 			dustType = 84;
