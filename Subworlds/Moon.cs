@@ -14,12 +14,13 @@ using Terraria.UI;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
 using Microsoft.Xna.Framework;
+using Macrocosm.Items.Placeables.BlocksAndWalls;
 
 namespace Macrocosm.Subworlds
 {
 	/// <summary>
-	/// Moon terrain and crater generation by 4mbr0s3 2.
-	/// I'll probably tweak it later when I have time...
+	/// Moon terrain and crater generation by 4mbr0s3 2
+	/// Why isn't anyone else working on this
 	/// </summary>
 	public class Moon : Subworld
 	{
@@ -33,7 +34,7 @@ namespace Macrocosm.Subworlds
 		public override bool saveModData => true;
 		public static double rockLayerHigh = 0.0;
 		public static double rockLayerLow = 0.0;
-		public static double surfaceLayer = 500;
+		public static double surfaceLayer = 200;
 		public override List<GenPass> tasks => new List<GenPass>()
 		{
 			new SubworldGenPass(progress =>
@@ -51,10 +52,10 @@ namespace Macrocosm.Subworlds
 				{
 					// Here, we just focus on the progress along the x-axis
 					progress.Set((i / (float)Main.maxTilesX - 1)); // Controls the progress bar, should only be set between 0f and 1f
-					for (int j = surfaceHeight; j < Main.maxTilesY; j++)
+					for (int j = surfaceHeight; j < height; j++)
 					{
 						Main.tile[i, j].active(true);
-						Main.tile[i, j].type = (ushort)ModContent.TileType<Regolith>();
+						Main.tile[i, j].type = (ushort)ModContent.TileType<Tiles.Protolith>();
 					}
 
 					if (WorldGen.genRand.Next(0, 10) == 0) // Not much deviation here
@@ -193,7 +194,7 @@ namespace Macrocosm.Subworlds
 			}),
 			new SubworldGenPass(progress =>
 			{
-				// This generates before lunar caves so that there are overhangsd
+				// This generates before lunar caves so that there are overhangs
 				progress.Message = "Backgrounding the Moon...";
 				#region Generate regolith walls
 				for (int tileX = 1; tileX < Main.maxTilesX - 1; tileX++) {
@@ -228,6 +229,72 @@ namespace Macrocosm.Subworlds
 			}),
 			new SubworldGenPass(progress =>
 			{
+				progress.Message = "Sending meteors to the Moon...";
+				#region Generate regolith
+				for (int tileX = 1; tileX < Main.maxTilesX - 1; tileX++) {
+					float progressPercent = tileX / Main.maxTilesX;
+					progress.Set(progressPercent / 2f);
+					float regolithChance = 6;
+					bool generatedVeinForThisColumn = false;
+					for (int tileY = 1; tileY < Main.maxTilesY; tileY++)
+					{
+						if (Main.tile[tileX, tileY].active())
+						{
+							if (regolithChance > 0.1)
+							{
+								Main.tile[tileX, tileY].type = (ushort)ModContent.TileType<Tiles.Regolith>();
+							}
+							regolithChance -= 0.02f;
+							if (regolithChance <= 0) break;
+						}
+					}
+				}
+				// Generate protolith veins
+				for (int tileX = 1; tileX < Main.maxTilesX - 1; tileX++) {
+					float progressPercent = tileX / Main.maxTilesX;
+					progress.Set(0.5f + progressPercent / 2f);
+					float regolithChance = 6;
+					for (int tileY = 1; tileY < Main.maxTilesY; tileY++)
+					{
+						if (Main.tile[tileX, tileY].active())
+						{
+							double veinChance = (6 - regolithChance) / 6f * 0.006;
+							if (WorldGen.genRand.NextFloat() < veinChance || veinChance == 0)
+							{
+								//WorldGen.TileRunner(tileX, tileY, WorldGen.genRand.Next((int)(6 * veinChance / 0.005), (int)(20 * veinChance / 0.005)), WorldGen.genRand.Next(50, 300), ModContent.TileType<Tiles.Protolith>());
+								WorldGen.TileRunner(tileX, tileY, WorldGen.genRand.Next((int)(6 * veinChance / 0.003), (int)(20 * veinChance / 0.003)), WorldGen.genRand.Next(5, 19), ModContent.TileType<Tiles.Protolith>());
+							}
+							regolithChance -= 0.02f;
+							if (regolithChance < 0) break;
+						}
+					}
+				}
+				#endregion
+			}),
+			new SubworldGenPass(progress =>
+			{
+				void GenerateOre(int type, double percent, int strength, int steps)
+				{
+					for (int k = 0; k < (int)((Main.maxTilesX * Main.maxTilesY) * percent); k++)
+					{
+						int x = WorldGen.genRand.Next(0, Main.maxTilesX);
+						int y = WorldGen.genRand.Next(0, Main.maxTilesY);
+						if (Main.tile[x, y].active() && Main.tile[x, y].type == ModContent.TileType<Tiles.Protolith>())
+						{
+							WorldGen.TileRunner(x, y, strength, steps, type);
+						}
+					}
+				}
+				progress.Message = "Mineralizing the Moon...";
+				#region Generate ore veins
+				GenerateOre(ModContent.TileType<ArtemiteOre>(), 0.0001, WorldGen.genRand.Next(5, 9), WorldGen.genRand.Next(5, 9));
+				GenerateOre(ModContent.TileType<ChandriumOre>(), 0.0001, WorldGen.genRand.Next(5, 9), WorldGen.genRand.Next(5, 9));
+				GenerateOre(ModContent.TileType<DianiteOre>(), 0.0001, WorldGen.genRand.Next(5, 9), WorldGen.genRand.Next(5, 9));
+				GenerateOre(ModContent.TileType<SeleniteOre>(), 0.0001, WorldGen.genRand.Next(5, 9), WorldGen.genRand.Next(5, 9));
+				#endregion
+			}),
+			new SubworldGenPass(progress =>
+			{
 				progress.Message = "Carving the Moon...";
 				for (int currentCaveSpot = 0; currentCaveSpot < (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.00013); currentCaveSpot++) {
 					float percentDone = (float)((double)currentCaveSpot / ((double)(Main.maxTilesX * Main.maxTilesY) * 0.00013));
@@ -250,7 +317,7 @@ namespace Macrocosm.Subworlds
 			new SubworldGenPass(progress =>
 			{
 				progress.Message = "Smoothening the Moon...";
-				// Adopted from "Smooth World" gen pass
+				// Adopted (copy-pasted) from "Smooth World" gen pass
 				for (int tileX = 20; tileX < Main.maxTilesX - 20; tileX++) {
 					float percentAcrossWorld = (float)tileX / (float)Main.maxTilesX;
 					progress.Set(percentAcrossWorld);
@@ -364,12 +431,58 @@ namespace Macrocosm.Subworlds
 
 		public class MoonSubworldLoadUI : UIDefaultSubworldLoad
 		{
+			bool toEarth;
+			double animationTimer = 0;
+			Texture2D lunaBackground;
+			Texture2D earthBackground;
+			public override void OnInitialize()
+			{
+				toEarth = Subworld.IsActive<Moon>();
+				lunaBackground = ModContent.GetTexture($"{typeof(Macrocosm).Name}/Subworlds/LoadingBackgrounds/Luna");
+				earthBackground = ModContent.GetTexture($"{typeof(Macrocosm).Name}/Subworlds/LoadingBackgrounds/Earth");
+			}
 			protected override void DrawSelf(SpriteBatch spriteBatch)
 			{
-                string msgToPlayer = "You are amidst a travel! Please wait.";
-				Vector2 messageSize1 = Main.fontDeathText.MeasureString(msgToPlayer) * 0.7f;
-                spriteBatch.DrawString(Main.fontDeathText, msgToPlayer, new Vector2(Main.screenWidth / 2f - messageSize1.X / 2f, Main.screenHeight - messageSize1.Y - 20), Color.White * 0.2f, 0, Vector2.Zero, 0.7f, SpriteEffects.None, 0);
+				spriteBatch.End();
+				Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, null, null, null, null, Main.UIScaleMatrix);
+				if (toEarth)
+				{
+					spriteBatch.Draw
+					(
+						earthBackground,
+						new Rectangle(Main.screenWidth - earthBackground.Width, Main.screenHeight - earthBackground.Height + 50 - (int)(animationTimer * 10), earthBackground.Width, earthBackground.Height),
+						null,
+						Color.White * (float)(animationTimer / 5) * 0.8f
+					);
+					string msgToPlayer = "*loading a pistol and getting back on the rocket-ship* moon's haunted";
+					Vector2 messageSize1 = Main.fontDeathText.MeasureString(msgToPlayer) * 0.7f;
+					spriteBatch.DrawString(Main.fontDeathText, msgToPlayer, new Vector2(Main.screenWidth / 2f - messageSize1.X / 2f, Main.screenHeight - messageSize1.Y - 20), Color.White * 1f, 0, Vector2.Zero, 0.7f, SpriteEffects.None, 0);
+				}
+				else
+				{
+					spriteBatch.Draw
+					(
+						lunaBackground,
+						new Rectangle(Main.screenWidth - lunaBackground.Width, Main.screenHeight - lunaBackground.Height + 50 - (int)(animationTimer * 10), lunaBackground.Width, lunaBackground.Height),
+						null,
+						Color.White * (float)(animationTimer / 5) * 0.8f
+					);
+					string msgToPlayer = "Moon's haunted";
+					Vector2 messageSize1 = Main.fontDeathText.MeasureString(msgToPlayer) * 0.7f;
+					spriteBatch.DrawString(Main.fontDeathText, msgToPlayer, new Vector2(Main.screenWidth / 2f - messageSize1.X / 2f, Main.screenHeight - messageSize1.Y - 20), Color.White * 1f, 0, Vector2.Zero, 0.7f, SpriteEffects.None, 0);
+					string msgToPlayer2 = "Moon's haunted";
+					Vector2 messageSize2 = Main.fontDeathText.MeasureString(msgToPlayer2) * 1f;
+					spriteBatch.DrawString(Main.fontDeathText, msgToPlayer2, new Vector2(Main.screenWidth / 2f - messageSize2.X / 2f, messageSize2.Y), Color.White * 1f, 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
+				}
+				spriteBatch.End();
+				Main.spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, Main.UIScaleMatrix);
+				
 				base.DrawSelf(spriteBatch);
+			}
+			public override void Update(GameTime gameTime)
+			{
+				animationTimer += gameTime.ElapsedGameTime.TotalSeconds;
+				if (animationTimer > 5) animationTimer = 5;
 			}
 		}
 

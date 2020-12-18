@@ -24,7 +24,7 @@ namespace Macrocosm.Tiles
 
 			ModTranslation name = CreateMapEntryName();
 			name.SetDefault("Artemite Ore");
-			AddMapEntry(new Color(255, 255, 255), name);
+			AddMapEntry(new Color(139, 146, 161), name);
 
 			dustType = 84;
 			drop = ItemType<Items.Materials.ArtemiteOre>();
@@ -35,9 +35,9 @@ namespace Macrocosm.Tiles
 		}
 		public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
-			r = 0.5f;
-			g = 0.75f;
-			b = 1f;
-        }
+			r = 0.55f;
+			g = 0.55f;
+			b = 0.65f;
+		}
 	}
 }

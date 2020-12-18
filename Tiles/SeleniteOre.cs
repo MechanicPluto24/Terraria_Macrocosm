@@ -23,8 +23,8 @@ namespace Macrocosm.Tiles
 			mineResist = 5f;
 
 			ModTranslation name = CreateMapEntryName();
-			name.SetDefault("SeleniumOre");
-			AddMapEntry(new Color(182, 208, 255), name);
+			name.SetDefault("Selenium Ore");
+			AddMapEntry(new Color(108, 117, 220), name);
 
 			dustType = 84;
 			drop = ItemType<Items.Materials.SeleniteOre>();
@@ -35,9 +35,9 @@ namespace Macrocosm.Tiles
 		}
 		public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
 		{
-			r = 0.5f;
-			g = 0.75f;
-			b = 1f;
+			r = 0.4f;
+			g = 0.45f;
+			b = 0.85f;
 		}
 	}
 }

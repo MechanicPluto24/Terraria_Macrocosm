@@ -6,6 +6,9 @@ using Macrocosm.Items.Weapons;
 using Macrocosm.Items.Materials;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
+using SubworldLibrary;
+using Macrocosm.Subworlds;
 
 namespace Macrocosm.NPCs.Friendly.TownNPCs
 {
@@ -58,27 +61,30 @@ namespace Macrocosm.NPCs.Friendly.TownNPCs
 
         public override string TownNPCName()
         {
-            switch(WorldGen.genRand.Next(8))
+            switch(WorldGen.genRand.Next(9))
             {
                 case 0:
-                    return "Mann";
+                    return "Mann"; // Hugh Mann (Interstellar)
                 case 1:
-                    return "Doyle";
+                    return "Doyle"; // (Interstellar)
                 case 2:
-                    return "Romilly";
+                    return "Romilly"; // (Interstellar)
                 case 3:
-                    return "Miller";
+                    return "Miller"; // Dr. Miller (Interstellar)
                 case 4:
-                    return "Edmunds";
+                    return "Edmunds"; // Wolf Edmunds (Interstellar)
                 case 5:
-                    return "Neil";
+                    return "Neil"; // Neil Armstrong
                 case 6:
-                    return "Buzz";
+                    return "Buzz"; // Buzz Aldrin
+                case 7:
+                    return "Chris"; // Chris Hadfield
                 default:
-                    return "Cooper";
+                    return "Cooper"; // Joseph Cooper (Interstellar)
             }
         }
         // NOTE: I cannot guarentee that all of this code is in tip-top shape, so if there is anything off, just let ryan know :poggers:
+        // "Ok I think I made it in tip-top shape now probably" - 4mbr0s3 2
         public override string GetChat()
         {
             Player player = Main.player[Main.myPlayer];
@@ -88,57 +94,41 @@ namespace Macrocosm.NPCs.Friendly.TownNPCs
                 return "Woah... Thank you, human! You have saved me from that scary Moon monster! Perhaps you are also a champion of the Moon?";
             }
             */
-            if (Main.dayTime && Main.rand.NextFloat() < 0.2f)
+            List<string> chatBag = new List<string>();
+            if (Main.dayTime)
+			{
+                chatBag.Add("The Moon is not so bad once you get used to it! I personally find it quite beautiful! Just stay indoors during the night, I shall defend you from those evil Moon monsters!");
+                if (Main.rand.NextFloat() < 0.2f)
+				{
+                    // Note to all: Yes, this is a TF2 reference.
+                    chatBag.Add("Am I a good Moon Champion? If I wasn't a good Moon Champion, I wouldn't be sitting here discussing it with you now would I?");
+				}
+                chatBag.Add("I found an old space lander once! It looked abandoned, and there was this weird pole with cloth attached to it. Do you know anything about this?");
+                chatBag.Add("Earth looks very pretty! I want to visit it someday, but I do not know how to leave the Moon...");
+			}
+            else
+			{
+                chatBag.Add("Human, I am curious, is the Earth made of cheese?");
+                chatBag.Add("Stand alert, human! Night-time lasts far longer than it does on Earth, and lots of scary monsters emerge from the craters and shadows looking for food!");
+                chatBag.Add("You look troubled, are you afraid of those Moon monsters? Do not be, for I will defend you! Those Moon monsters will never defeat me!");
+			}
+            int unuCount = player.CountItem(ModContent.ItemType<UnuCredit>());
+            if (unuCount > 0)
             {
-                return "The Moon is not so bad once you get used to it! I personally find it quite beautiful! Just stay indoors during the night, I shall defend you from those evil Moon monsters!";
+                chatBag.Add($"I see you have {player.CountItem(ModContent.ItemType<UnuCredit>())} Moon coin{(unuCount == 1 ? "" : "s")}! Why don't you try spending them here?");
             }
-            if (Main.rand.NextFloat() < 0.01f) // Note to all: Yes, this is a TF2 reference.
+            else
             {
-                return "Am I a good Moon Champion? If I wasn't a good Moon Champion, I wouldn't be sitting here discussing it with you now would I?";
+                chatBag.Add("Hmm, you appear to have no Moon coins, try killing some Moon monsters to get some!");
             }
-            if (Main.dayTime && Main.rand.NextFloat() < 0.2f)
-            {
-                return "I found an old space lander once! It looked abandoned, and there was this weird pole with cloth attached to it. Do you know anything about this?";
-            }
-            if (Main.dayTime && Main.rand.NextFloat() < 0.2f)
-            {
-                return "Earth looks very pretty! I want to visit it someday, but I do not know how to leave the Moon...";
-            }
-            if (!Main.dayTime && Main.rand.NextFloat() < 0.2f)
-            {
-                return "Human, I am curious, is the Earth made of cheese?";
-            }
-            if (!Main.dayTime && Main.rand.NextFloat() < 0.2f)
-            {
-                return "Stand alert, human! Night-time lasts far longer than it does on Earth, and lots of scary monsters emerge from the craters and shadows looking for food!";
-            }
-            if (!Main.dayTime && Main.rand.NextFloat() < 0.2f)
-            {
-                return "You look troubled, are you afraid of those Moon monsters? Do not be, for I will defend you! Those Moon monsters will never defeat me!";
-            }
-
-            switch (Main.rand.Next(4))
-            {
-                case 0:
-                    if (player.CountItem(ModContent.ItemType<UnuCredit>()) > 1)
-                    {
-                        return $"I see you have {player.CountItem(ModContent.ItemType<UnuCredit>())} Moon coins! Why don't you try spending them here?";
-                    }
-                    else if (player.CountItem(ModContent.ItemType<UnuCredit>()) == 1)
-                    {
-                        return $"I see you have {player.CountItem(ModContent.ItemType<UnuCredit>())} Moon coin! Why don't you try spending them here?";
-                    }
-                    else
-                    {
-                        return "Hmm, you appear to have no Moon coins, try killing some Moon monsters to get some!";
-                    }
-                case 1:
-                    return "What was I doing on the Moon before I got eaten? I was fighting Moon monsters, of course!";
-                case 2:
-                    return "A while back I discovered I could tune in on human conversations if they were happening close enough to the Moon! I kept hearing the word 'Houston' come up in their conversations. I would like to meet this Houston some day!";
-                default:
-                    return "Space is so cool! There are billions and billions of stars and galaxies! There is nothing I like more than space!";
-            }
+            chatBag.Add("What was I doing on the Moon before I got eaten? I was fighting Moon monsters, of course!");
+            // Reference to Houston Space Center, Texas
+            chatBag.Add("A while back I discovered I could tune in on human conversations if they were happening close enough to the Moon! I kept hearing the word 'Houston' come up in their conversations. I would like to meet this Houston some day!");
+            // Reference to "SPACE IS COOL" Songify Remix by SCHMOYOHO
+            chatBag.Add("Space is so cool! There are thousands of billions of billions of stars and galaxies! There is nothing I like more than space!");
+            // Reference to "Space Oddity" by David Bowie
+            chatBag.Add("Planet Earth is blue, and there's nothing I can do...");
+            return chatBag[Main.rand.Next(chatBag.Count)];
         }
         
         public override void SetChatButtons(ref string button, ref string button2)
@@ -178,13 +168,17 @@ namespace Macrocosm.NPCs.Friendly.TownNPCs
 			}
 		}
         // TODO: Bad shop, sprite fast, die hard (ambrose plesea ima die)
+        // No - 4mbr0s3 2
         public override void SetupShop(Chest shop, ref int nextSlot)
         {
-            shop.item[nextSlot].SetDefaults(ModContent.ItemType<ChandriumBar>());
-            shop.item[nextSlot].SetNameOverride("Sorry dude this is just placeholder\nApparently newlines work\nChange the shop soon pls kthanks\n");
-            shop.item[nextSlot].shopCustomPrice = new int?(20);
-            shop.item[nextSlot].shopSpecialCurrency = CurrencyManager.UnuCredit;
-            nextSlot++;
+            Item AddNewSlot(ref int nextSlotRef, int type, int price)
+			{
+                shop.item[nextSlotRef].SetDefaults(type);
+                shop.item[nextSlotRef].shopCustomPrice = price;
+                shop.item[nextSlotRef].shopSpecialCurrency = CurrencyManager.UnuCredit;
+                return shop.item[nextSlotRef];
+            }
+            AddNewSlot(ref nextSlot, ModContent.ItemType<ChandriumBar>(), 20);
         }
         public override void TownNPCAttackStrength(ref int damage, ref float knockback)
         {

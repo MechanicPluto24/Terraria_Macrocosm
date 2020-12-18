@@ -10,7 +10,7 @@ namespace Macrocosm.Items.Armor
 	{
 		public override void SetStaticDefaults() 
 		{
-            DisplayName.SetDefault("Astronaut Visor");
+            DisplayName.SetDefault("Astronaut Helmet");
 			Tooltip.SetDefault("'Now they can't poke your eyes out!'");
 		}
 		public override void SetDefaults() 
@@ -30,9 +30,9 @@ namespace Macrocosm.Items.Armor
 		public override void UpdateArmorSet(Player player) 
 		{
 			player.GetModPlayer<MacrocosmPlayer>().accMoonArmor = true;
-			player.setBonus = "Pressurized spacesuit allows for exploration of other celestial bodies"
+			player.setBonus = "Pressurized spacesuit allows for safe exploration of other celestial bodies"
 							+ "\nVastly extends underwater breathing time";
-			player.buffImmune[ModContent.BuffType<SpaceSuffocation>()] = true;
+			player.buffImmune[ModContent.BuffType<SuitBreach>()] = true;
 		}
 
 		public override void AddRecipes() 
