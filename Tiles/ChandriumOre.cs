@@ -24,7 +24,7 @@ namespace Macrocosm.Tiles
 
 			ModTranslation name = CreateMapEntryName();
 			name.SetDefault("Chandrium Ore");
-			AddMapEntry(new Color(207, 182, 255), name);
+			AddMapEntry(new Color(178, 108, 220), name);
 
 			dustType = 84;
 			drop = ItemType<Items.Materials.ChandriumOre>();
@@ -35,9 +35,9 @@ namespace Macrocosm.Tiles
 		}
 		public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
 		{
-			r = 0.5f;
-			g = 0.75f;
-			b = 1f;
+			r = 0.7f;
+			g = 0.4f;
+			b = 0.85f;
 		}
 	}
 }

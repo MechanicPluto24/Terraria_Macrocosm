@@ -7,7 +7,7 @@ namespace Macrocosm.Backgrounds
 	{
 		public override bool ChooseBgStyle()
 		{
-			return !Main.gameMenu && (Main.LocalPlayer.GetModPlayer<MacrocosmPlayer>().ZoneMoon || Main.LocalPlayer.GetModPlayer<MacrocosmPlayer>().ZoneMoon || Main.LocalPlayer.GetModPlayer<MacrocosmPlayer>().ZoneMoon);
+			return !Main.gameMenu && Main.LocalPlayer.GetModPlayer<MacrocosmPlayer>().ZoneMoon;
 		}
         // Use this to keep far Backgrounds like the mountains.
         public override void ModifyFarFades(float[] fades, float transitionSpeed)

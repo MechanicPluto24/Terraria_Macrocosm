@@ -9,7 +9,6 @@ namespace Macrocosm.Items.Placeables.BlocksAndWalls
     {
         public override void SetStaticDefaults()
         {
-            
         }
 
         public override void SetDefaults()
