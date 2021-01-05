@@ -454,7 +454,7 @@ namespace Macrocosm.Subworlds
 						null,
 						Color.White * (float)(animationTimer / 5) * 0.8f
 					);
-					string msgToPlayer = "*loading a pistol and getting back on the rocket-ship* moon's haunted";
+					string msgToPlayer = "You are never safe.";
 					Vector2 messageSize1 = Main.fontDeathText.MeasureString(msgToPlayer) * 0.7f;
 					spriteBatch.DrawString(Main.fontDeathText, msgToPlayer, new Vector2(Main.screenWidth / 2f - messageSize1.X / 2f, Main.screenHeight - messageSize1.Y - 20), Color.White * 1f, 0, Vector2.Zero, 0.7f, SpriteEffects.None, 0);
 				}
@@ -467,10 +467,10 @@ namespace Macrocosm.Subworlds
 						null,
 						Color.White * (float)(animationTimer / 5) * 0.8f
 					);
-					string msgToPlayer = "Moon's haunted";
+					string msgToPlayer = "When the Sun sets, the hunt begins.";
 					Vector2 messageSize1 = Main.fontDeathText.MeasureString(msgToPlayer) * 0.7f;
 					spriteBatch.DrawString(Main.fontDeathText, msgToPlayer, new Vector2(Main.screenWidth / 2f - messageSize1.X / 2f, Main.screenHeight - messageSize1.Y - 20), Color.White * 1f, 0, Vector2.Zero, 0.7f, SpriteEffects.None, 0);
-					string msgToPlayer2 = "Moon's haunted";
+					string msgToPlayer2 = "When the Red Moon rises, the slaughter begins.";
 					Vector2 messageSize2 = Main.fontDeathText.MeasureString(msgToPlayer2) * 1f;
 					spriteBatch.DrawString(Main.fontDeathText, msgToPlayer2, new Vector2(Main.screenWidth / 2f - messageSize2.X / 2f, messageSize2.Y), Color.White * 1f, 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
 				}
