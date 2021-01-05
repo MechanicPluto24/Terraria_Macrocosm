@@ -458,7 +458,7 @@ namespace Macrocosm.Subworlds
 					Vector2 messageSize = Main.fontDeathText.MeasureString(msgToPlayer) * 1f;
 					spriteBatch.DrawString(Main.fontDeathText, msgToPlayer, new Vector2(Main.screenWidth / 2f - messageSize.X / 2f, messageSize.Y), Color.White * 1f, 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
 					string msgToPlayer2 = "You are never safe."; // Subtitle
-					Vector2 messageSize2 = Main.fontDeathText.MeasureString(msgToPlayer) * 0.7f;
+					Vector2 messageSize2 = Main.fontDeathText.MeasureString(msgToPlayer2) * 0.7f;
 					spriteBatch.DrawString(Main.fontDeathText, msgToPlayer2, new Vector2(Main.screenWidth / 2f - messageSize2.X / 2f, Main.screenHeight - messageSize2.Y - 20), Color.White * 1f, 0, Vector2.Zero, 0.7f, SpriteEffects.None, 0);
 				}
 				else
@@ -474,7 +474,7 @@ namespace Macrocosm.Subworlds
 					Vector2 messageSize = Main.fontDeathText.MeasureString(msgToPlayer) * 1f;
 					spriteBatch.DrawString(Main.fontDeathText, msgToPlayer, new Vector2(Main.screenWidth / 2f - messageSize.X / 2f, messageSize.Y), Color.White * 1f, 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
 					string msgToPlayer2 = "When the Red Moon rises, the slaughter begins."; // Subtitle
-					Vector2 messageSize2 = Main.fontDeathText.MeasureString(msgToPlayer) * 0.7f;
+					Vector2 messageSize2 = Main.fontDeathText.MeasureString(msgToPlayer2) * 0.7f;
 					spriteBatch.DrawString(Main.fontDeathText, msgToPlayer2, new Vector2(Main.screenWidth / 2f - messageSize2.X / 2f, Main.screenHeight - messageSize2.Y - 20), Color.White * 1f, 0, Vector2.Zero, 0.7f, SpriteEffects.None, 0);
 				}
 				spriteBatch.End();
