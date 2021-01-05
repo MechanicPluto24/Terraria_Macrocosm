@@ -428,7 +428,6 @@ namespace Macrocosm.Subworlds
 			}),
 		};
 		public override UIState loadingUIState => new MoonSubworldLoadUI();
-
 		public class MoonSubworldLoadUI : UIDefaultSubworldLoad
 		{
 			bool toEarth;
@@ -473,7 +472,7 @@ namespace Macrocosm.Subworlds
 					string msgToPlayer = "The Moon"; // Title
 					Vector2 messageSize = Main.fontDeathText.MeasureString(msgToPlayer) * 1f;
 					spriteBatch.DrawString(Main.fontDeathText, msgToPlayer, new Vector2(Main.screenWidth / 2f - messageSize.X / 2f, messageSize.Y), Color.White * 1f, 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
-					string msgToPlayer2 = "When the Red Moon rises, the slaughter begins."; // Subtitle
+					string msgToPlayer2 = MessageHelpers.ChooseMessage(Main.rand.Next(0,4)); // Subtitle
 					Vector2 messageSize2 = Main.fontDeathText.MeasureString(msgToPlayer2) * 0.7f;
 					spriteBatch.DrawString(Main.fontDeathText, msgToPlayer2, new Vector2(Main.screenWidth / 2f - messageSize2.X / 2f, Main.screenHeight - messageSize2.Y - 20), Color.White * 1f, 0, Vector2.Zero, 0.7f, SpriteEffects.None, 0);
 				}
