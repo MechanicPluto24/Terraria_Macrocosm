@@ -132,4 +132,21 @@ namespace Macrocosm
         {
         };
     }
+    public class MessageHelpers
+    {
+        public static string ChooseMessage(int typeMoon)
+        {
+            switch (typeMoon)
+            {
+                default:
+                    return "No atmosphere does not mean no life. Always remain on guard.";
+                case 1:
+                    return "The Moon takes much longer to rotate than the Earth. Make sure you have enough supplies to last through the night.";
+                case 2:
+                    return "Take advantage of the Moon's low gravity, but remember that your enemies will do the same.";
+                case 3:
+                    return "When the Red Moon rises, the slaughter begins.";
+            }
+        }
+    }
 }
