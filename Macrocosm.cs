@@ -32,6 +32,14 @@ namespace Macrocosm
             }
             CurrencyManager.LoadCurrencies();
         }
+        /*public override void PostSetupContent()
+        {
+            var ta = ModLoader.GetMod("TerrariaAmbience");
+            if (ta != null)
+            {
+                ta.Call("AddTilesToList", this, "Stone", new string[] { }, null);
+            }
+        }*/
         public override void ModifyLightingBrightness(ref float scale)
         {
             // Someone get me the subworld lib code pls thank - Ryan
