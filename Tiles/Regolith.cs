@@ -2,7 +2,6 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using static Terraria.ModLoader.ModContent;
 using Macrocosm.Dusts;
 
 namespace Macrocosm.Tiles
@@ -15,10 +14,10 @@ namespace Macrocosm.Tiles
 			Main.tileBlockLight[Type] = true;
 			Main.tileLighted[Type] = true;
 			Main.tileMergeDirt[Type] = true;
-			Main.tileMerge[Type][TileType<Protolith>()] = true;
+			Main.tileMerge[Type][ModContent.TileType<Protolith>()] = true;
 			minPick = 225;
 			mineResist = 3f;
-			drop = ItemType<Items.Placeables.BlocksAndWalls.Regolith>();
+			drop = ModContent.ItemType<Items.Placeables.BlocksAndWalls.Regolith>();
 			AddMapEntry(new Color(90, 90, 90));
 			soundType = SoundID.Dig;
 		}
@@ -28,7 +27,7 @@ namespace Macrocosm.Tiles
 		}
 		public override bool CreateDust(int i, int j, ref int type)
         {
-			Dust.NewDust(new Vector2(i, j).ToWorldCoordinates(), 16, 16, ModContent.DustType<RegolithDust>());
+			type = Dust.NewDust(new Vector2(i, j).ToWorldCoordinates(), 16, 16, ModContent.DustType<RegolithDust>());
 			return false;
         }
     }
