@@ -3,6 +3,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
+using Macrocosm.Dusts;
 
 namespace Macrocosm.Tiles
 {
@@ -27,7 +28,7 @@ namespace Macrocosm.Tiles
 		}
 		public override bool CreateDust(int i, int j, ref int type)
         {
-			Dust.NewDust(new Vector2(i, j).ToWorldCoordinates(), 16, 16, DustID.Smoke);
+			Dust.NewDust(new Vector2(i, j).ToWorldCoordinates(), 16, 16, ModContent.DustType<RegolithDust>());
 			return false;
         }
     }
