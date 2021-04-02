@@ -4,12 +4,11 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Dusts
 {
-    public class RegolithDust : ModDust
+    public class ProtolithDust : ModDust
 	{
         public override void OnSpawn(Dust dust)
         {
             dust.noLight = true;
-            // dust.velocity.Y = -1.5f;
             dust.scale = Main.rand.NextFloat(1, 1.35f);
         }
 
