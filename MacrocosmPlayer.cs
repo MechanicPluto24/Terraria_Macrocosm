@@ -21,6 +21,7 @@ namespace Macrocosm
         }
         public override void PostUpdateBuffs()
         {
+            // Dust.NewDust(player.Center, 1, 1, ModContent.DustType<Dusts.RegolithDust>());
             if (Subworld.IsActive<Moon>())
             {
                 if (!player.GetModPlayer<MacrocosmPlayer>().accMoonArmor) // Now die if you dont have moon armor
