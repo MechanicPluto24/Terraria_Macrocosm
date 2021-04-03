@@ -3,7 +3,7 @@ using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
-using static Terraria.ModLoader.ModContent;
+using Macrocosm.Dusts;
 
 namespace Macrocosm.Tiles
 {
@@ -30,9 +30,14 @@ namespace Macrocosm.Tiles
 			int style = t.frameX / 18;
 			if (style == 0) // It can be useful to share a single tile with multiple styles. This code will let you drop the appropriate bar if you had multiple.
 			{
-				Item.NewItem(i * 16, j * 16, 16, 16, ItemType<Items.Materials.DianiteBar>());
+				Item.NewItem(i * 16, j * 16, 16, 16, ModContent.ItemType<Items.Materials.DianiteBar>());
 			}
 			return base.Drop(i, j);
+		}
+		public override bool CreateDust(int i, int j, ref int type)
+		{
+			type = Dust.NewDust(new Vector2(i, j).ToWorldCoordinates(), 16, 16, ModContent.DustType<DianiteDust>());
+			return false;
 		}
 	}
 }

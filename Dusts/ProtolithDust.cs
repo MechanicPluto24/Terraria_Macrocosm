@@ -16,7 +16,7 @@ namespace Macrocosm.Dusts
         {
             dust.velocity.Y += 0.025f;
             dust.position += dust.velocity;
-            dust.scale -= 0.01f;
+            dust.scale -= 0.02f;
             dust.rotation += (dust.velocity.Y - dust.velocity.X) / 5;
 
 
@@ -35,7 +35,8 @@ namespace Macrocosm.Dusts
 
         public override Color? GetAlpha(Dust dust, Color lightColor)
         {
-            return new Color(lightColor.R, lightColor.G, lightColor.B, 25);
+            return new Color(lightColor.R, lightColor.G, lightColor.B, 255);
+            return lightColor;
         }
     }
 }
