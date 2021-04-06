@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using static Terraria.ModLoader.ModContent;
+using Macrocosm.Dusts;
 
 namespace Macrocosm.Tiles
 {
@@ -27,7 +27,7 @@ namespace Macrocosm.Tiles
 			AddMapEntry(new Color(210, 116, 75), name);
 
 			dustType = 84;
-			drop = ItemType<Items.Materials.DianiteOre>();
+			drop = ModContent.ItemType<Items.Materials.DianiteOre>();
 			soundType = SoundID.Tink;
 			soundStyle = 1;
 			//mineResist = 4f;
@@ -38,6 +38,11 @@ namespace Macrocosm.Tiles
 			r = 0.8f;
 			g = 0.25f;
 			b = 0.2f;
+		}
+		public override bool CreateDust(int i, int j, ref int type)
+		{
+			type = Dust.NewDust(new Vector2(i, j).ToWorldCoordinates(), 16, 16, ModContent.DustType<DianiteDust>());
+			return false;
 		}
 	}
 }
