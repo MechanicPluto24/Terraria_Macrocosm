@@ -7,7 +7,8 @@ using Terraria.Graphics.Effects;
 using Terraria.Graphics.Shaders;
 using Terraria.Utilities;
 using SubworldLibrary;
-using Macrocosm.Subworlds;
+using Macrocosm.Content.Subworlds;
+using Macrocosm.Content;
 
 namespace Macrocosm.Backgrounds
 {
@@ -114,7 +115,7 @@ namespace Macrocosm.Backgrounds
 
         private void UpdateMoonSky()
         {
-            MacrocosmPlayer modPlayer = Main.LocalPlayer.GetModPlayer<MacrocosmPlayer>();
+            var modPlayer = Main.LocalPlayer.GetModPlayer<MacrocosmPlayer>();
             if (MacrocosmWorld.moonBiome < 100)
             {
                 return;
