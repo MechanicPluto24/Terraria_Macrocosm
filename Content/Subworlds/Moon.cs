@@ -17,6 +17,7 @@ using Microsoft.Xna.Framework;
 using Macrocosm.Content.Items.Placeables.BlocksAndWalls;
 using Macrocosm.Common;
 using Macrocosm.Content.Tiles;
+using Terraria.UI.Chat;
 
 namespace Macrocosm.Content.Subworlds
 {
@@ -481,9 +482,9 @@ namespace Macrocosm.Content.Subworlds
 					);
 					string msgToPlayer = "Earth"; // Title
 					Vector2 messageSize = Main.fontDeathText.MeasureString(msgToPlayer) * 1f;
-					spriteBatch.DrawString(Main.fontDeathText, msgToPlayer, new Vector2(Main.screenWidth / 2f - messageSize.X / 2f, messageSize.Y), Color.White * 1f, 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
+					ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontDeathText, msgToPlayer, new Vector2(Main.screenWidth / 2f - messageSize.X / 2f, messageSize.Y), Color.White, 0f, Vector2.Zero, Vector2.One);
 					Vector2 messageSize2 = Main.fontDeathText.MeasureString(_chosenMessage) * 0.7f;
-					spriteBatch.DrawString(Main.fontDeathText, _chosenMessage, new Vector2(Main.screenWidth / 2f - messageSize2.X / 2f, Main.screenHeight - messageSize2.Y - 20), Color.White * 1f, 0, Vector2.Zero, 0.7f, SpriteEffects.None, 0);
+					ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontDeathText, _chosenMessage, new Vector2(Main.screenWidth / 2f - messageSize2.X / 2f, Main.screenHeight - messageSize2.Y - 20), Color.White, 0f, Vector2.Zero, new Vector2(0.7f));
 				}
 				else
 				{
@@ -496,9 +497,9 @@ namespace Macrocosm.Content.Subworlds
 					);
 					string msgToPlayer = "Earth's Moon"; // Title
 					Vector2 messageSize = Main.fontDeathText.MeasureString(msgToPlayer) * 1f;
-					spriteBatch.DrawString(Main.fontDeathText, msgToPlayer, new Vector2(Main.screenWidth / 2f - messageSize.X / 2f, messageSize.Y), Color.White * 1f, 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
+					ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontDeathText, msgToPlayer, new Vector2(Main.screenWidth / 2f - messageSize.X / 2f, messageSize.Y), Color.White, 0f, Vector2.Zero, Vector2.One);
 					Vector2 messageSize2 = Main.fontDeathText.MeasureString(_chosenMessage) * 0.7f;
-					spriteBatch.DrawString(Main.fontDeathText, _chosenMessage, new Vector2(Main.screenWidth / 2f - messageSize2.X / 2f, Main.screenHeight - messageSize2.Y - 20), Color.White * 1f, 0, Vector2.Zero, 0.7f, SpriteEffects.None, 0);
+					ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontDeathText, _chosenMessage, new Vector2(Main.screenWidth / 2f - messageSize2.X / 2f, Main.screenHeight - messageSize2.Y - 20), Color.White, 0f, Vector2.Zero, new Vector2(0.7f));
 				}
 				spriteBatch.End();
 				Main.spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, Main.UIScaleMatrix);
