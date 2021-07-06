@@ -445,17 +445,16 @@ namespace Macrocosm.Content.Subworlds
 				"No atmosphere does not mean no life. Always remain on guard.",
 				"The Moon takes much longer to rotate than the Earth. Make sure you have enough supplies to last through the night.",
 				"Take advantage of the Moon's low gravity, but remember that your enemies will do the same.",
-				"When the thing you stand on turns red, you know things are going to get bad.",
-				"Solar eclipses make the moon very dark!",
+				"We feared the Blood Moon then, we fear it now. Heed its crimson glare.",
 				"The monsters that gather on our own satellite intrigue many."
 			};
 			string[] earthMessages =
 			{
 				"Returning for a beer?",
 				"Did you know that there are more than 1 quadrillion ants roaming our Earth?",
-				"Normal gravity is quite punishing.",
-				"Fear the solar eclipse!",
-				"If you are returning to Earth, you have very little to fear here."
+				"Normal gravity can be quite punishing after a long trek in zero-g. You'll get used to it.",
+				"Nearly seven billion deaths within the first 24 hours.",
+				"You are never truly safe."
 			};
 			public override void OnInitialize()
 			{
