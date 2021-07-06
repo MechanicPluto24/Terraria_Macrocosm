@@ -1,12 +1,14 @@
 using Terraria.ModLoader;
-using Macrocosm.Items;
+using Macrocosm.Content.Items;
 using SubworldLibrary;
 using Terraria;
 using Terraria.GameContent.UI;
 using Macrocosm.Backgrounds;
 using Terraria.Graphics.Effects;
-using Macrocosm.Items.Currency;
+using Macrocosm.Content.Items.Currency;
 using Microsoft.Xna.Framework;
+using Macrocosm.Content;
+using Macrocosm.Backgrounds;
 
 namespace Macrocosm
 {
