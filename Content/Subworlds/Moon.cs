@@ -444,7 +444,7 @@ namespace Macrocosm.Content.Subworlds
 			string[] moonMessages =
 			{
 				"No atmosphere does not mean no life. Always remain on guard.",
-				"The Moon takes much longer to rotate than the Earth. Make sure you have enough supplies to\nlast through the night.",
+				"The Moon takes much longer to rotate than the Earth. Make sure you have enough supplies to last\nthrough the night.",
 				"Take advantage of the Moon's low gravity, but remember that your enemies will do the same.",
 				"We feared the Blood Moon then, we fear it now. Heed its crimson glare.",
 				"The monsters that gather on our own satellite intrigue many."
@@ -482,7 +482,7 @@ namespace Macrocosm.Content.Subworlds
 					);
 					string msgToPlayer = "Earth"; // Title
 					Vector2 messageSize = Main.fontDeathText.MeasureString(msgToPlayer) * 1f;
-					ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontDeathText, msgToPlayer, new Vector2(Main.screenWidth / 2f - messageSize.X / 2f, messageSize.Y), Color.White, 0f, Vector2.Zero, Vector2.One);
+					ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontDeathText, msgToPlayer, new Vector2(Main.screenWidth / 2f - messageSize.X / 2f, messageSize.Y), new Color(94,150,255), 0f, Vector2.Zero, Vector2.One);
 					Vector2 messageSize2 = Main.fontDeathText.MeasureString(_chosenMessage) * 0.7f;
 					ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontDeathText, _chosenMessage, new Vector2(Main.screenWidth / 2f - messageSize2.X / 2f, Main.screenHeight - messageSize2.Y - 20), Color.White, 0f, Vector2.Zero, new Vector2(0.7f));
 				}
