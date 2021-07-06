@@ -1,6 +1,8 @@
 using Terraria.ModLoader;
 using System.Collections.Generic;
 using Macrocosm.NPCs.Unfriendly.Enemies;
+using Terraria;
+using System;
 
 namespace Macrocosm
 {
@@ -132,21 +134,34 @@ namespace Macrocosm
         {
         };
     }
-    public class MessageHelpers
+    public class RandomHelper
     {
-        public static string ChooseMessage(int typeMoon)
+        // Oh yeah >:)
+        public static T PickRandom<T>(T[] input)
         {
-            switch (typeMoon)
+            int rand = new Random().Next(0, input.Length);
+
+            return input[rand];
+        }
+        private static List<int> chosenTs = new List<int>();
+        public static List<T> PickRandom<T>(T[] input, int amount)
+        {
+            List<T> values = new List<T>();
+            for (int i = 0; i < amount; i++)
             {
-                default:
-                    return "No atmosphere does not mean no life. Always remain on guard.";
-                case 1:
-                    return "The Moon takes much longer to rotate than the Earth. Make sure you have enough supplies to last through the night.";
-                case 2:
-                    return "Take advantage of the Moon's low gravity, but remember that your enemies will do the same.";
-                case 3:
-                    return "When the Red Moon rises, the slaughter begins.";
+            ReRoll:
+                int rand = new Random().Next(0, input.Length);
+
+                if (!chosenTs.Contains(rand))
+                {
+                    chosenTs.Add(rand);
+                    values.Add(input[rand]);
+                }
+                else
+                    goto ReRoll;
             }
+            chosenTs.Clear();
+            return values;
         }
     }
 }

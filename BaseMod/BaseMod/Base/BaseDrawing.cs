@@ -1891,7 +1891,6 @@ namespace Macrocosm
 			ChatManager.DrawColorCodedStringWithShadow(sb, Main.fontItemStack, s, pos + new Vector2(10f * sc, 32f * sc), color, 0f, default(Vector2), new Vector2(sc *= 0.8f), -1f, 0.8f);			
         }
     }
-
 	public class BaseArmorData : ArmorShaderData
 	{
 		public static Entity lastShaderDrawObject = null;		

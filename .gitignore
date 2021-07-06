@@ -1,5 +1,5 @@
-/bin
-/.vs
-/obj
-obj/Debug/net45/Macrocosm.pdb
-obj/Debug/net45/Macrocosm.pdb
+bin/
+obj/
+Properties/
+.vs/
+.idea/
