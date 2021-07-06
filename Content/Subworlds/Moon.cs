@@ -443,7 +443,7 @@ namespace Macrocosm.Content.Subworlds
 			string[] moonMessages =
 			{
 				"No atmosphere does not mean no life. Always remain on guard.",
-				"The Moon takes much longer to rotate than the Earth. Make sure you have enough supplies to last through the night.",
+				"The Moon takes much longer to rotate than the Earth. Make sure you have enough supplies to\nlast through the night.",
 				"Take advantage of the Moon's low gravity, but remember that your enemies will do the same.",
 				"We feared the Blood Moon then, we fear it now. Heed its crimson glare.",
 				"The monsters that gather on our own satellite intrigue many."
