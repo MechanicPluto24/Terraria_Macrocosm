@@ -21,6 +21,7 @@ namespace Macrocosm.Subworlds
 	/// <summary>
 	/// Moon terrain and crater generation by 4mbr0s3 2
 	/// Why isn't anyone else working on this
+	/// I have saved the day - Ryan
 	/// </summary>
 	public class Moon : Subworld
 	{
@@ -434,11 +435,35 @@ namespace Macrocosm.Subworlds
 			double animationTimer = 0;
 			Texture2D lunaBackground;
 			Texture2D earthBackground;
+
+			private string _chosenMessage;
+
+			string[] moonMessages =
+			{
+				"No atmosphere does not mean no life. Always remain on guard.",
+				"The Moon takes much longer to rotate than the Earth. Make sure you have enough supplies to last through the night.",
+				"Take advantage of the Moon's low gravity, but remember that your enemies will do the same.",
+				"When the thing you stand on turns red, you know things are going to get bad.",
+				"Solar eclipses make the moon very dark!",
+				"The monsters that gather on our own satellite intrigue many."
+			};
+			string[] earthMessages =
+			{
+				"Returning for a beer?",
+				"Did you know that there are more than 1 quadrillion ants roaming our Earth?",
+				"Normal gravity is quite punishing.",
+				"Fear the solar eclipse!",
+				"If you are returning to Earth, you have very little to fear here."
+			};
 			public override void OnInitialize()
 			{
-				toEarth = Subworld.IsActive<Moon>();
-				lunaBackground = ModContent.GetTexture($"{typeof(Macrocosm).Name}/Subworlds/LoadingBackgrounds/Luna");
-				earthBackground = ModContent.GetTexture($"{typeof(Macrocosm).Name}/Subworlds/LoadingBackgrounds/Earth");
+				toEarth = IsActive<Moon>();
+				lunaBackground = ModContent.GetTexture($"{nameof(Macrocosm)}/Subworlds/LoadingBackgrounds/Luna");
+				earthBackground = ModContent.GetTexture($"{nameof(Macrocosm)}/Subworlds/LoadingBackgrounds/Earth");
+				if (toEarth)
+					_chosenMessage = RandomHelper.PickRandom(earthMessages);
+				else
+					_chosenMessage = RandomHelper.PickRandom(moonMessages);
 			}
 			protected override void DrawSelf(SpriteBatch spriteBatch)
 			{
@@ -456,9 +481,8 @@ namespace Macrocosm.Subworlds
 					string msgToPlayer = "Earth"; // Title
 					Vector2 messageSize = Main.fontDeathText.MeasureString(msgToPlayer) * 1f;
 					spriteBatch.DrawString(Main.fontDeathText, msgToPlayer, new Vector2(Main.screenWidth / 2f - messageSize.X / 2f, messageSize.Y), Color.White * 1f, 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
-					string msgToPlayer2 = "You are never safe."; // Subtitle
-					Vector2 messageSize2 = Main.fontDeathText.MeasureString(msgToPlayer2) * 0.7f;
-					spriteBatch.DrawString(Main.fontDeathText, msgToPlayer2, new Vector2(Main.screenWidth / 2f - messageSize2.X / 2f, Main.screenHeight - messageSize2.Y - 20), Color.White * 1f, 0, Vector2.Zero, 0.7f, SpriteEffects.None, 0);
+					Vector2 messageSize2 = Main.fontDeathText.MeasureString(_chosenMessage) * 0.7f;
+					spriteBatch.DrawString(Main.fontDeathText, _chosenMessage, new Vector2(Main.screenWidth / 2f - messageSize2.X / 2f, Main.screenHeight - messageSize2.Y - 20), Color.White * 1f, 0, Vector2.Zero, 0.7f, SpriteEffects.None, 0);
 				}
 				else
 				{
@@ -469,12 +493,11 @@ namespace Macrocosm.Subworlds
 						null,
 						Color.White * (float)(animationTimer / 5) * 0.8f
 					);
-					string msgToPlayer = "The Moon"; // Title
+					string msgToPlayer = "Earth's Moon"; // Title
 					Vector2 messageSize = Main.fontDeathText.MeasureString(msgToPlayer) * 1f;
 					spriteBatch.DrawString(Main.fontDeathText, msgToPlayer, new Vector2(Main.screenWidth / 2f - messageSize.X / 2f, messageSize.Y), Color.White * 1f, 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
-					string msgToPlayer2 = MessageHelpers.ChooseMessage(Main.rand.Next(0,4)); // Subtitle
-					Vector2 messageSize2 = Main.fontDeathText.MeasureString(msgToPlayer2) * 0.7f;
-					spriteBatch.DrawString(Main.fontDeathText, msgToPlayer2, new Vector2(Main.screenWidth / 2f - messageSize2.X / 2f, Main.screenHeight - messageSize2.Y - 20), Color.White * 1f, 0, Vector2.Zero, 0.7f, SpriteEffects.None, 0);
+					Vector2 messageSize2 = Main.fontDeathText.MeasureString(_chosenMessage) * 0.7f;
+					spriteBatch.DrawString(Main.fontDeathText, _chosenMessage, new Vector2(Main.screenWidth / 2f - messageSize2.X / 2f, Main.screenHeight - messageSize2.Y - 20), Color.White * 1f, 0, Vector2.Zero, 0.7f, SpriteEffects.None, 0);
 				}
 				spriteBatch.End();
 				Main.spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, Main.UIScaleMatrix);
@@ -484,7 +507,8 @@ namespace Macrocosm.Subworlds
 			public override void Update(GameTime gameTime)
 			{
 				animationTimer += gameTime.ElapsedGameTime.TotalSeconds;
-				if (animationTimer > 5) animationTimer = 5;
+				if (animationTimer > 5) 
+					animationTimer = 5;
 			}
 		}
 
