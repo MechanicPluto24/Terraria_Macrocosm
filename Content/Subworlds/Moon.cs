@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
-using Macrocosm;
 using SubworldLibrary;
 using Terraria.World.Generation;
 using Terraria.ModLoader;
@@ -12,11 +8,8 @@ using Terraria.ID;
 using Macrocosm.Content.Tiles;
 using Terraria.UI;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Graphics;
 using Microsoft.Xna.Framework;
-using Macrocosm.Content.Items.Placeables.BlocksAndWalls;
 using Macrocosm.Common;
-using Macrocosm.Content.Tiles;
 using Terraria.UI.Chat;
 
 namespace Macrocosm.Content.Subworlds
@@ -239,7 +232,6 @@ namespace Macrocosm.Content.Subworlds
 					float progressPercent = tileX / Main.maxTilesX;
 					progress.Set(progressPercent / 2f);
 					float regolithChance = 6;
-					bool generatedVeinForThisColumn = false;
 					for (int tileY = 1; tileY < Main.maxTilesY; tileY++)
 					{
 						if (Main.tile[tileX, tileY].active())
