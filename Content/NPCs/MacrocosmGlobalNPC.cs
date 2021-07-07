@@ -1,13 +1,11 @@
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Subworlds;
-using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using SubworldLibrary;
 using Macrocosm.Common;
-using Macrocosm.Content.Subworlds;
 
 namespace Macrocosm.NPCs
 {

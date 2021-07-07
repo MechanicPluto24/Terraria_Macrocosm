@@ -53,24 +53,24 @@ The Warp - A dimension of raw chaos and discord, and home to ancient Lovecraftia
 
 
 
-Developers and Dedications:
+Developers:
 
 Pluto (MP-XXIV) - Mod Creator, Peer Reviewer
 Ryan (RighteousRyan) - Programmer, Peer Reviewer
 Universe - Composer
 absoluteAquarian - Programmer
 4mbr0s3 2 - Programmer
-Mello - Programmer
-William - Spriter/Artist
-Kirito - Spriter/ Conceptionist
-Dovahkick - Spriter/ Concepionist
+William - Spriter / Artist
+Kirito - Spriter
+Dovahkick - Spriter
 Delly - Spriter
-Crowlarghost - Spriter
 Azazzel - Artist
 Zetry - Sound Artist
 VentralRaptor24 - Messenger
 Brayden - Lore-ist
 dontkickmychick - Lore-ist
 Almarduk - Lore-ist
+
+Honorable Mentions / Dedications:
 
 Kiraa - Ex-Spriter responsible for War Machine and Moon Beast sprites

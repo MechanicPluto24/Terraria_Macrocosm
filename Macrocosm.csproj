@@ -17,5 +17,8 @@
     <Reference Include="SubworldLibrary">
       <HintPath>..\..\references\mods\SubworldLibrary.dll</HintPath>
     </Reference>
+    <Reference Include="TerrariaAmbienceAPI">
+      <HintPath>lib\TerrariaAmbienceAPI.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>
