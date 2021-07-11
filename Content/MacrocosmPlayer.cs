@@ -85,7 +85,7 @@ namespace Macrocosm.Content
 		{
             if (ZoneMoon)
 			{
-                return ModContent.GetTexture($"{typeof(Macrocosm).Name}Assets/Map/Moon");
+                //return ModContent.GetTexture($"{typeof(Macrocosm).Name}Assets/Map/Moon");
 			}
 			return null;
 		}
