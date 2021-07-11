@@ -83,9 +83,9 @@ namespace Macrocosm.Content
         }
 		public override Texture2D GetMapBackgroundImage()
 		{
-            if (ZoneMoon)
+      if (ZoneMoon)
 			{
-                //return ModContent.GetTexture($"{typeof(Macrocosm).Name}Assets/Map/Moon");
+                return ModContent.GetTexture($"{typeof(Macrocosm).Name}/Assets/Map/Moon");
 			}
 			return null;
 		}
