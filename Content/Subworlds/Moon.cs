@@ -37,8 +37,8 @@ namespace Macrocosm.Content.Subworlds
 			new SubworldGenPass(progress =>
 			{
 				progress.Message = "Landing on the Moon...";
-				Main.worldSurface = Main.maxTilesY - 42; // Hides the underground layer just out of bounds
-				Main.rockLayer = Main.maxTilesY; // Hides the cavern layer way out of bounds
+				Main.worldSurface = surfaceLayer + 20; // Hides the underground layer just out of bounds
+				Main.rockLayer = surfaceLayer + 60; // Hides the cavern layer way out of bounds
 
 				int surfaceHeight = (int)surfaceLayer; // If the moon's world size is variable, this probably should depend on that
 				rockLayerLow = surfaceHeight;
