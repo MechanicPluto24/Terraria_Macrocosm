@@ -37,7 +37,7 @@ namespace Macrocosm.Backgrounds
             return new Color(Vector4.Lerp(value, Vector4.One, Intensity * 0.5f));
         }
 
-        readonly Macrocosm mod = Macrocosm.instance;
+        readonly Macrocosm mod = Macrocosm.Instance;
 
         public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth)
         {
@@ -47,7 +47,7 @@ namespace Macrocosm.Backgrounds
             if (maxDepth >= 3.40282347E+38f && minDepth < 3.40282347E+38f)
             {
                 spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.Black * Intensity);
-                spriteBatch.Draw(SkyTex, new Rectangle(0, Math.Max(0, (int)((Main.worldSurface * 16.0 - Main.screenPosition.Y - 2400.0) * 0.10000000149011612)), Main.screenWidth, Main.screenHeight), Color.OrangeRed * Math.Min(1f, (Main.screenPosition.Y - 800f) / 1000f * Intensity));
+                spriteBatch.Draw(SkyTex, new Rectangle(0, Math.Max(0, (int)((Main.worldSurface * 16.0 - Main.screenPosition.Y - 2400.0) * 0.10000000149011612)), Main.screenWidth, Main.screenHeight), Color.White * Math.Min(1f, (Main.screenPosition.Y - 800f) / 1000f * Intensity));
                 float num64 = 1f;
                 num64 -= Main.cloudAlpha * 1.5f;
                 if (num64 < 0f)
