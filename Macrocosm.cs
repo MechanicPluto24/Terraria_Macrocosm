@@ -10,7 +10,7 @@ namespace Macrocosm
 {
     public class Macrocosm : Mod
     {
-        public static Macrocosm Instance => ModContent.GetInstance<Macrocosm>();
+        public static Mod Instance => ModContent.GetInstance<Macrocosm>();
         public Macrocosm()
         {
             Properties = new ModProperties()

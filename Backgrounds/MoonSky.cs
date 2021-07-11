@@ -37,8 +37,7 @@ namespace Macrocosm.Backgrounds
             return new Color(Vector4.Lerp(value, Vector4.One, Intensity * 0.5f));
         }
 
-        readonly Macrocosm mod = Macrocosm.Instance;
-
+        private readonly Mod mod = ModContent.GetInstance<Macrocosm>();
         public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth)
         {
             Texture2D SunTexture = mod.GetTexture("Backgrounds/Sun_0");
