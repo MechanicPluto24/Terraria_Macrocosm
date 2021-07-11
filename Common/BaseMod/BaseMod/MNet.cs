@@ -15,7 +15,7 @@ namespace Macrocosm
 		public static void SendBaseNetMessage(int msg, params object[] param)
 		{
 			if (Main.netMode == 0) { return; } //nothing to sync in SP
-            BaseNet.WriteToPacket(Macrocosm.instance.GetPacket(), (byte)msg, param).Send();
+            BaseNet.WriteToPacket(Macrocosm.Instance.GetPacket(), (byte)msg, param).Send();
 		}
 
 		//OLD (moved to Macrocosm)

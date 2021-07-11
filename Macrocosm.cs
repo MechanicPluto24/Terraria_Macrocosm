@@ -1,20 +1,16 @@
 using Terraria.ModLoader;
-using Macrocosm.Content.Items;
-using SubworldLibrary;
 using Terraria;
-using Terraria.GameContent.UI;
 using Macrocosm.Backgrounds;
 using Terraria.Graphics.Effects;
 using Macrocosm.Content.Items.Currency;
 using Microsoft.Xna.Framework;
 using Macrocosm.Content;
-using Macrocosm.Backgrounds;
 
 namespace Macrocosm
 {
     public class Macrocosm : Mod
     {
-        public static Macrocosm instance => ModContent.GetInstance<Macrocosm>();
+        public static Mod Instance => ModContent.GetInstance<Macrocosm>();
         public Macrocosm()
         {
             Properties = new ModProperties()
