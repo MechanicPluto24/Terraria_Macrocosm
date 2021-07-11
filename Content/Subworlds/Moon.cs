@@ -433,7 +433,7 @@ namespace Macrocosm.Content.Subworlds
 
 			private string _chosenMessage;
 
-			string[] moonMessages =
+			internal readonly string[] moonMessages =
 			{
 				"No atmosphere does not mean no life. Always remain on guard.",
 				"The Moon takes much longer to rotate than the Earth. Make sure you have enough supplies to last\nthrough the night.",
@@ -441,7 +441,7 @@ namespace Macrocosm.Content.Subworlds
 				"We feared the Blood Moon then, we fear it now. Heed its crimson glare.",
 				"The monsters that gather on our own satellite intrigue many."
 			};
-			string[] earthMessages =
+			internal readonly string[] earthMessages =
 			{
 				"Returning for a beer?",
 				"Did you know that there are more than 1 quadrillion ants roaming our Earth?",
