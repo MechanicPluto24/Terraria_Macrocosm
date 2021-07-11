@@ -18,8 +18,14 @@ namespace Macrocosm.Content.AmbienceTracks
             Sound = mod.GetSound("Sounds/Ambient/Moon");
             SoundInstance = Sound.CreateInstance();
         }
-        public override void SaveAndQuit()
+        public override void UpdateActive()
         {
+            int worldBottom = Main.maxTilesY;
+            var player = Main.LocalPlayer;
+            var distance_worldBottom_playerCenter = worldBottom - (int)player.Center.Y;
+
+            // volume = distance_worldBottom_playerCenter / worldBottom;
+            Main.NewText(distance_worldBottom_playerCenter / worldBottom);
         }
     }
 }
