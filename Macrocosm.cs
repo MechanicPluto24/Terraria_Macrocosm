@@ -38,7 +38,7 @@ namespace Macrocosm
             var taAPI = ModLoader.GetMod("TerrariaAmbienceAPI");
             ta?.Call("AddTilesToList", this, "Stone", new string[] { }, null);
             // mod, path, name, maxVol, volStep, playWhen, actionInit, actionUpdate, SNQAction
-            taAPI?.Call(this, "Sounds/Ambient/Moon", "MoonAmbience", 1f, 0.0075f, new Func<bool>(Subworld.IsActive<Moon>), null, null, null);
+            taAPI?.Call(this, "Sounds/Ambient/Moon", "MoonAmbience", 1f, 0.0075f, new Func<bool>(Subworld.IsActive<Moon>));
         }
         private int ItemSlot_PickItemMovementAction(On.Terraria.UI.ItemSlot.orig_PickItemMovementAction orig, Item[] inv, int context, int slot, Item checkItem)
         {
