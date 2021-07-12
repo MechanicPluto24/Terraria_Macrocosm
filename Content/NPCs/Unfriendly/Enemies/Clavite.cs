@@ -82,7 +82,6 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies
         }
         public override void NPCLoot()
         {
-            Item.NewItem(npc.getRect(), ModContent.ItemType<UnuCredit>());
             Item.NewItem(npc.getRect(), ModContent.ItemType<CosmicDust>());
             if (Main.rand.NextFloat() < .0625)
                 Item.NewItem(npc.getRect(), ModContent.ItemType<ArtemiteOre>(), 1 + Main.rand.Next(5));

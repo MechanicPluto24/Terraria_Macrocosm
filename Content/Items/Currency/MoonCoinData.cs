@@ -1,17 +1,15 @@
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.GameContent.UI;
+using Terraria.Localization;
 
 namespace Macrocosm.Content.Items.Currency
 {
-    public class UnuCreditData : CustomCurrencySingleCoin
+    public class MoonCoinData : CustomCurrencySingleCoin
     {
         public Color UnuCredittextcolor = Color.DarkGray; //this defines the Custom Currency Buy Price color when shown in the shoop
 
-        public UnuCreditData(int coinItemID, long currencyCap) : base(coinItemID, currencyCap)
-        {
-
-        }
+        public MoonCoinData(int coinItemID, long currencyCap) : base(coinItemID, currencyCap) { }
 
         public override void GetPriceText(string[] lines, ref int currentLine, int price)
         {

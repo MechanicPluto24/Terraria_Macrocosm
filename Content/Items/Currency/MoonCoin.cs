@@ -9,7 +9,7 @@ using Terraria.DataStructures;
 
 namespace Macrocosm.Content.Items.Currency
 {
-    public class UnuCredit : ModItem
+    public class MoonCoin : ModItem
     {
         public override void SetStaticDefaults()
         {
