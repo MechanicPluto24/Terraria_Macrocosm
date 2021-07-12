@@ -52,7 +52,7 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
         public override bool CanTownNPCSpawn(int numTownNPCs, int money)
         {
             Player player = Main.player[Main.myPlayer];
-            if (player.HasItem(ModContent.ItemType<UnuCredit>()))
+            if (player.HasItem(ModContent.ItemType<MoonCoin>()))
             {
                 return true;
             }
@@ -112,10 +112,10 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
                 chatBag.Add("Stand alert, human! Night-time lasts far longer than it does on Earth, and lots of scary monsters emerge from the craters and shadows looking for food!");
                 chatBag.Add("You look troubled, are you afraid of those Moon monsters? Do not be, for I will defend you! Those Moon monsters will never defeat me!");
 			}
-            int unuCount = player.CountItem(ModContent.ItemType<UnuCredit>());
+            int unuCount = player.CountItem(ModContent.ItemType<MoonCoin>());
             if (unuCount > 0)
             {
-                chatBag.Add($"I see you have {player.CountItem(ModContent.ItemType<UnuCredit>())} Moon coin{(unuCount == 1 ? "" : "s")}! Why don't you try spending them here?");
+                chatBag.Add($"I see you have {player.CountItem(ModContent.ItemType<MoonCoin>())} Moon coin{(unuCount == 1 ? "" : "s")}! Why don't you try spending them here?");
             }
             else
             {

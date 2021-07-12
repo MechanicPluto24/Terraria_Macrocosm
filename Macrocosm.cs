@@ -14,7 +14,6 @@ namespace Macrocosm
 {
     public class Macrocosm : Mod
     {
-        public static Mod Instance => ModContent.GetInstance<Macrocosm>();
         public Macrocosm()
         {
             Properties = new ModProperties()
@@ -25,9 +24,23 @@ namespace Macrocosm
                 AutoloadBackgrounds = true
             };
         }
+        internal static void INTERNAL_SubworldTileFraming()
+        {
+            for (int i = 0; i < Main.maxTilesX; i++)
+            {
+                for (int j = Main.maxTilesY - 180; j < Main.maxTilesY; j++)
+                {
+                    if (Framing.GetTileSafely(i, j).active())
+                        WorldGen.SquareTileFrame(i, j);
+                    if (Main.tile[i, j] != null)
+                        WorldGen.SquareWallFrame(i, j);
+                }
+            }
+        }
+        public static Mod Instance => ModContent.GetInstance<Macrocosm>();
         public override void Load()
         {
-            On.Terraria.UI.ItemSlot.PickItemMovementAction += ItemSlot_PickItemMovementAction;
+            On.Terraria.UI.ItemSlot.PickItemMovementAction += MoonCoin_AllowCoinSlotPlacement;
             if (!Main.dedServ)
             {
                 LoadClient();
@@ -40,9 +53,20 @@ namespace Macrocosm
             // mod, path, name, maxVol, volStep, playWhen, actionInit, actionUpdate, SNQAction
             taAPI?.Call(this, "Sounds/Ambient/Moon", "MoonAmbience", 1f, 0.0075f, new Func<bool>(Subworld.IsActive<Moon>));
         }
-        private int ItemSlot_PickItemMovementAction(On.Terraria.UI.ItemSlot.orig_PickItemMovementAction orig, Item[] inv, int context, int slot, Item checkItem)
+
+        private bool _anySubworldActive;
+        private bool _anySubworldActiveLastTick;
+        public override void PostUpdateEverything()
         {
-            if (context == 1 && checkItem.type == ModContent.ItemType<UnuCredit>())
+            _anySubworldActive = Subworld.AnyActive(this);
+            if (_anySubworldActive && !_anySubworldActiveLastTick)
+                INTERNAL_SubworldTileFraming();
+
+            _anySubworldActiveLastTick = _anySubworldActive;
+        }
+        private int MoonCoin_AllowCoinSlotPlacement(On.Terraria.UI.ItemSlot.orig_PickItemMovementAction orig, Item[] inv, int context, int slot, Item checkItem)
+        {
+            if (context == 1 && checkItem.type == ModContent.ItemType<MoonCoin>())
             {
                 return 0;
             }

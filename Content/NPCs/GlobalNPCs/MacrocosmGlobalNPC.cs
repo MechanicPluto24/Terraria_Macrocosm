@@ -6,8 +6,9 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using SubworldLibrary;
 using Macrocosm.Common;
+using Macrocosm.Content.Items.Currency;
 
-namespace Macrocosm.NPCs
+namespace Macrocosm.NPCs.GlobalNPCs
 {
     public class MacrocosmGlobalNPC : GlobalNPC
     {
@@ -19,6 +20,10 @@ namespace Macrocosm.NPCs
                 {
                     Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType<ActivationCore>());
                 }
+            }
+            if (EnemyCategorization.MoonEnemies.Contains(npc.type))
+            {
+                Item.NewItem(npc.getRect(), ModContent.ItemType<MoonCoin>());
             }
         }
         public override void EditSpawnPool(IDictionary<int, float> pool, NPCSpawnInfo spawnInfo)

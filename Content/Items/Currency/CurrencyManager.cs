@@ -13,7 +13,7 @@ namespace Macrocosm.Content.Items.Currency
 		public static int UnuCredit;
 		public static void LoadCurrencies()
 		{
-			UnuCredit = CustomCurrencyManager.RegisterCurrency(new UnuCreditData(ModContent.ItemType<UnuCredit>(), 999999L));
+			UnuCredit = CustomCurrencyManager.RegisterCurrency(new MoonCoinData(ModContent.ItemType<MoonCoin>(), 999999L));
 		}
 	}
 }

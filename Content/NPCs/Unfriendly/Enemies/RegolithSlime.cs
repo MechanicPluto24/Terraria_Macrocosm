@@ -56,7 +56,6 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies
 				Item.NewItem(npc.getRect(), ModContent.ItemType<SeleniteOre>(), 1 + Main.rand.Next(5));
 			if (Main.rand.NextFloat() < .0625)
 				Item.NewItem(npc.getRect(), ModContent.ItemType<DianiteOre>(), 1 + Main.rand.Next(5));
-			Item.NewItem(npc.getRect(), ModContent.ItemType<UnuCredit>(), 1);
 		}
 
 		public override void HitEffect(int hitDirection, double damage)
