@@ -13,7 +13,6 @@ namespace Macrocosm.Content.NPCs.GlobalNPCs
         public override bool CloneNewInstances => true;
         public override void PostAI(NPC npc)
         {
-            // wtf
             gravity = 1f;
             if (!npc.noGravity)
             {

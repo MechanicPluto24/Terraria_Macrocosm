@@ -5,6 +5,10 @@ using Terraria.Graphics.Effects;
 using Macrocosm.Content.Items.Currency;
 using Microsoft.Xna.Framework;
 using Macrocosm.Content;
+using SubworldLibrary;
+using Macrocosm.Common;
+using Macrocosm.Content.Subworlds;
+using System;
 
 namespace Macrocosm
 {
@@ -29,23 +33,11 @@ namespace Macrocosm
                 LoadClient();
             }
             CurrencyManager.LoadCurrencies();
-        }
-        /*public override void PostSetupContent()
-        {
-            var ta = ModLoader.GetMod("TerrariaAmbience");
-            if (ta != null)
-            {
-                ta.Call("AddTilesToList", this, "Stone", new string[] { }, null);
-            }
-        }*/
-        public override void ModifyLightingBrightness(ref float scale)
-        {
-            // Someone get me the subworld lib code pls thank - Ryan
-        }
-        public override void ModifySunLightColor(ref Color tileColor, ref Color backgroundColor)
-        {
-            // Someone get me the subworld lib code pls thank - Ryan
-            //tileColor = Color.Black;
+			
+			var ta = ModLoader.GetMod("TerrariaAmbience");
+            var taAPI = ModLoader.GetMod("TerrariaAmbienceAPI");
+            ta?.Call("AddTilesToList", this, "Stone", new string[] { }, null);
+            taAPI?.Call(this, "Sounds/Ambient/Moon", "MoonAmbience", 1f, 0.075f, Subworld.IsActive<Moon>(), true, null, null, null);
         }
         private int ItemSlot_PickItemMovementAction(On.Terraria.UI.ItemSlot.orig_PickItemMovementAction orig, Item[] inv, int context, int slot, Item checkItem)
         {
