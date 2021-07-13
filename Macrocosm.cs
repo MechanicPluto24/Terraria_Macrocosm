@@ -40,17 +40,16 @@ namespace Macrocosm
         public static Mod Instance => ModContent.GetInstance<Macrocosm>();
         public override void Load()
         {
+            Content.NPCs.GlobalNPCs.LowGravityNPC.DetourNPCGravity();
+            Common.Drawing.EarthDrawing.InitializeDetour();
             On.Terraria.UI.ItemSlot.PickItemMovementAction += MoonCoin_AllowCoinSlotPlacement;
-            if (!Main.dedServ)
-            {
-                LoadClient();
-            }
             CurrencyManager.LoadCurrencies();
-			
-			var ta = ModLoader.GetMod("TerrariaAmbience");
+            if (!Main.dedServ)
+                LoadMoonSky();
+
+            var ta = ModLoader.GetMod("TerrariaAmbience");
             var taAPI = ModLoader.GetMod("TerrariaAmbienceAPI");
-            ta?.Call("AddTilesToList", this, "Stone", new string[] { }, null);
-            // mod, path, name, maxVol, volStep, playWhen, actionInit, actionUpdate, SNQAction
+            ta?.Call("AddTilesToList", this, "Stone", new string[] { "Regolith", "RegolithBrick", "Hemostone" }, null); // ech
             taAPI?.Call(this, "Sounds/Ambient/Moon", "MoonAmbience", 1f, 0.0075f, new Func<bool>(Subworld.IsActive<Moon>));
         }
 
@@ -75,7 +74,7 @@ namespace Macrocosm
                 return orig(inv, context, slot, checkItem);
             }
         }
-        public void LoadClient()
+        private void LoadMoonSky()
         {
             MoonSky moonSky = new MoonSky();
             Filters.Scene["Macrocosm:MoonSky"] = new Filter(new MoonSkyData("FilterMiniTower").UseColor(0f, 0f, 0f).UseOpacity(0f), EffectPriority.High);

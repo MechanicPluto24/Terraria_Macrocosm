@@ -37,18 +37,18 @@ namespace Macrocosm.Content
         }
         public override bool CustomBiomesMatch(Player other)
         {
-            MacrocosmPlayer modOther = other.GetModPlayer<MacrocosmPlayer>();
+            var modOther = other.GetModPlayer<MacrocosmPlayer>();
             return ZoneMoon == modOther.ZoneMoon && ZoneBasalt == modOther.ZoneBasalt;
         }
         public override void CopyCustomBiomesTo(Player other)
         {
-            MacrocosmPlayer modOther = other.GetModPlayer<MacrocosmPlayer>();
+            var modOther = other.GetModPlayer<MacrocosmPlayer>();
             modOther.ZoneMoon = ZoneMoon;
             modOther.ZoneBasalt = ZoneBasalt;
         }
         public override void SendCustomBiomes(BinaryWriter writer)
         {
-            BitsByte flags = new BitsByte();
+            var flags = new BitsByte();
             flags[0] = ZoneMoon;
             flags[1] = ZoneBasalt;
             writer.Write(flags);
@@ -58,17 +58,6 @@ namespace Macrocosm.Content
             BitsByte flags = reader.ReadByte();
             ZoneMoon = flags[0];
             ZoneBasalt = flags[1];
-        }
-        public override void PostUpdate()
-        {
-            /* if (Main.player[Main.myPlayer].GetModPlayer<MacrocosmPlayer>().ZoneMoon)
-            {
-                Main.sunTexture = ModContent.GetTexture("Macrocosm/Assets/Earth.png");
-            }
-            else
-            {
-                Main.sunTexture = ModContent.GetTexture("Terraria/Sun");
-            } */
         }
         public override void PostUpdateMiscEffects()
         {
@@ -83,11 +72,24 @@ namespace Macrocosm.Content
         }
 		public override Texture2D GetMapBackgroundImage()
 		{
-      if (ZoneMoon)
+            if (ZoneMoon)
 			{
                 return ModContent.GetTexture($"{typeof(Macrocosm).Name}/Assets/Map/Moon");
 			}
 			return null;
 		}
-	}
+
+        public override void ModifyScreenPosition()
+        {
+            // Main.NewText($"P: {player.Center.Y} | S: {Main.screenPosition.Y}");
+
+            if (Subworld.AnyActive(mod))
+            {
+                if (Main.screenPosition.Y >= 11864f)
+                {
+                    Main.screenPosition = new Microsoft.Xna.Framework.Vector2(Main.screenPosition.X, 11864f);
+                }
+            }
+        }
+    }
 }

@@ -22,7 +22,7 @@ namespace Macrocosm.Content.Subworlds
 	public class Moon : Subworld
 	{
 		public override int width => 2000;
-		public override int height => 1000;
+		public override int height => 1200; // 200 tile padding for the hell-layer.
 
 		public override ModWorld modWorld => null;
 
