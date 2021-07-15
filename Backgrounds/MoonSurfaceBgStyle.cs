@@ -60,7 +60,7 @@ namespace Macrocosm.Backgrounds
             int[] textureSlots = new int[] {
                 mod.GetBackgroundSlot("Backgrounds/MoonSurfaceFar"),
                 mod.GetBackgroundSlot("Backgrounds/MoonSurfaceMid"),
-                mod.GetBackgroundSlot("Backgrounds/MoonSurfaceMid"),
+                mod.GetBackgroundSlot("Backgrounds/MoonSurfaceNear"),
             };
             int length = textureSlots.Length;
             for (int i = 0; i < textureSlots.Length; i++)
