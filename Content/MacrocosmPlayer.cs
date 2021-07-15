@@ -7,6 +7,7 @@ using SubworldLibrary;
 using Terraria.ID;
 using Microsoft.Xna.Framework.Graphics;
 using Macrocosm.Content.Buffs.Debuffs;
+using Microsoft.Xna.Framework;
 
 namespace Macrocosm.Content
 {
@@ -81,13 +82,11 @@ namespace Macrocosm.Content
 
         public override void ModifyScreenPosition()
         {
-            // Main.NewText($"P: {player.Center.Y} | S: {Main.screenPosition.Y}");
-
             if (Subworld.AnyActive(mod))
             {
-                if (Main.screenPosition.Y >= 11864f)
+                if (Main.screenPosition.Y >= 11864f) // Ignore the magic numbers :peepohappy:
                 {
-                    Main.screenPosition = new Microsoft.Xna.Framework.Vector2(Main.screenPosition.X, 11864f);
+                    Main.screenPosition = new Vector2(Main.screenPosition.X, 11864f);
                 }
             }
         }
