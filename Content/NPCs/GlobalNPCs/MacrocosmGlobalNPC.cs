@@ -1,12 +1,12 @@
 using Macrocosm.Content.Items.Materials;
-using Macrocosm.Content.Subworlds;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using SubworldLibrary;
-using Macrocosm.Common;
 using Macrocosm.Content.Items.Currency;
+using Macrocosm.Content.Systems;
+using Macrocosm.Content.Subworlds.Moon;
 
 namespace Macrocosm.NPCs.GlobalNPCs
 {

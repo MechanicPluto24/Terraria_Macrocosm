@@ -2,13 +2,12 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Macrocosm.Content.Items.Currency;
-using Macrocosm.Content.Items.Weapons;
 using Macrocosm.Content.Items.Materials;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using SubworldLibrary;
-using Macrocosm.Content.Subworlds;
+using Macrocosm.Content.Subworlds.Moon;
 
 namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
 {
@@ -128,6 +127,16 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
             chatBag.Add("Space is so cool! There are thousands of billions of billions of stars and galaxies! There is nothing I like more than space!");
             // Reference to "Space Oddity" by David Bowie
             chatBag.Add("Planet Earth is blue, and there's nothing I can do...");
+            
+            // References to Touhou lore ;)
+            chatBag.Add("So, what made you join the Lunar War? What do you mean you don't know any war? ");
+            chatBag.Add("If you humans keep trying to establish bases here, you'll soon meet the wrath of the Lunarians.");
+            chatBag.Add("How does it feel to be free from the confinements of Earth? You're lucky to have made it here. I know a fugitive princess who met an opposite fate.");
+            chatBag.Add("There are many here who fled to Earth when war was declared with the Invasion of 1969. I stayed to watch the fireworks.");
+            chatBag.Add("Are you looking for the Lunar Civilization? A barrier hides its existence, and, because you are human, I'm afraid you can't even come close. Well, there was an exception. One mysterious... shrine maiden.");
+            // LoLK reference
+            chatBag.Add("A few years ago, there was chaos in these lunar outskirts. You should've seen it yourself.");
+
             return chatBag[Main.rand.Next(chatBag.Count)];
         }
         

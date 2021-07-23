@@ -3,12 +3,12 @@ using Terraria;
 using Macrocosm.Backgrounds;
 using Terraria.Graphics.Effects;
 using Macrocosm.Content.Items.Currency;
-using Microsoft.Xna.Framework;
 using Macrocosm.Content;
 using SubworldLibrary;
-using Macrocosm.Common;
-using Macrocosm.Content.Subworlds;
 using System;
+using Macrocosm.Content.Subworlds.Moon;
+using Terraria.Graphics.Shaders;
+using Macrocosm.Content.Systems.Music;
 
 namespace Macrocosm
 {
@@ -77,33 +77,17 @@ namespace Macrocosm
         private void LoadMoonSky()
         {
             MoonSky moonSky = new MoonSky();
-            Filters.Scene["Macrocosm:MoonSky"] = new Filter(new MoonSkyData("FilterMiniTower").UseColor(0f, 0f, 0f).UseOpacity(0f), EffectPriority.High);
+            Filters.Scene["Macrocosm:MoonSky"] = new Filter(new ScreenShaderData("FilterMiniTower").UseColor(0f, 0f, 0f).UseOpacity(0f), EffectPriority.High);
             SkyManager.Instance["Macrocosm:MoonSky"] = moonSky;
         }
         public override void UpdateMusic(ref int music, ref MusicPriority priority)
         {
-            if (Main.gameMenu)
+            var player = Main.LocalPlayer.GetModPlayer<MacrocosmPlayer>();
+            if (Main.gameMenu || priority > MusicPriority.Environment || !player.player.active)
                 return;
-            if (priority > MusicPriority.Environment)
-                return;
-            Player player = Main.LocalPlayer;
-            if (!player.active)
-                return;
-
             if (Main.myPlayer != -1 && !Main.gameMenu)
             {
-                if (!Main.dayTime && Main.player[Main.myPlayer].GetModPlayer<MacrocosmPlayer>().ZoneMoon)
-                {
-                    music = GetSoundSlot(SoundType.Music, "Sounds/Music/MoonNight");
-
-                    priority = MusicPriority.Environment;
-                }
-                if (Main.player[Main.myPlayer].GetModPlayer<MacrocosmPlayer>().ZoneMoon && Main.dayTime)
-                {
-                    music = GetSoundSlot(SoundType.Music, "Sounds/Music/MoonDay");
-
-                    priority = MusicPriority.Environment;
-                }
+                new ZoneMusicSystem().UpdateMusic(player, ref music, ref priority);
             }
         }
     }
