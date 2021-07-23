@@ -1,10 +1,8 @@
 using Terraria;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria.ID;
 using SubworldLibrary;
-using Macrocosm.Content.Subworlds;
 using Terraria.ModLoader;
+using Macrocosm.Content.Subworlds.Moon;
 
 namespace Macrocosm.Common.Drawing
 {

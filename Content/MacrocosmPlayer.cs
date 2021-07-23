@@ -1,13 +1,11 @@
 ﻿using System.IO;
 using Terraria;
 using Terraria.ModLoader;
-using Macrocosm;
-using Macrocosm.Content.Subworlds;
 using SubworldLibrary;
-using Terraria.ID;
 using Microsoft.Xna.Framework.Graphics;
 using Macrocosm.Content.Buffs.Debuffs;
 using Microsoft.Xna.Framework;
+using Macrocosm.Content.Subworlds.Moon;
 
 namespace Macrocosm.Content
 {
@@ -22,14 +20,13 @@ namespace Macrocosm.Content
         }
         public override void PostUpdateBuffs()
         {
-            // Dust.NewDust(player.Center, 1, 1, ModContent.DustType<Dusts.RegolithDust>());
             if (Subworld.IsActive<Moon>())
             {
-                if (!player.GetModPlayer<MacrocosmPlayer>().accMoonArmor) // Now die if you dont have moon armor
+                if (!player.GetModPlayer<MacrocosmPlayer>().accMoonArmor)
                 {
                     player.AddBuff(ModContent.BuffType<SuitBreach>(), 2);
                 }
-            }    
+            }
         }
         public override void UpdateBiomes()
         {
@@ -71,14 +68,14 @@ namespace Macrocosm.Content
         {
             player.ManageSpecialBiomeVisuals("Macrocosm:MoonSky", ZoneMoon, player.Center);
         }
-		public override Texture2D GetMapBackgroundImage()
-		{
+        public override Texture2D GetMapBackgroundImage()
+        {
             if (ZoneMoon)
-			{
+            {
                 return ModContent.GetTexture($"{typeof(Macrocosm).Name}/Assets/Map/Moon");
-			}
-			return null;
-		}
+            }
+            return null;
+        }
 
         public override void ModifyScreenPosition()
         {

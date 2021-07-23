@@ -1,7 +1,6 @@
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.GameContent.UI;
-using Terraria.Localization;
 
 namespace Macrocosm.Content.Items.Currency
 {
