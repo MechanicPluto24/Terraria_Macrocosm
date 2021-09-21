@@ -6,8 +6,6 @@ using Terraria.ModLoader;
 using Terraria.Graphics.Effects;
 using Terraria.Graphics.Shaders;
 using Terraria.Utilities;
-using SubworldLibrary;
-using Macrocosm.Content.Subworlds;
 using Macrocosm.Content;
 
 namespace Macrocosm.Backgrounds
@@ -102,29 +100,6 @@ namespace Macrocosm.Backgrounds
         public override bool IsActive()
         {
             return Active || Intensity > 0.001f;
-        }
-    }
-
-    public class MoonSkyData : ScreenShaderData
-    {
-        public MoonSkyData(string passName) : base(passName)
-        {
-
-        }
-
-        private void UpdateMoonSky()
-        {
-            var modPlayer = Main.LocalPlayer.GetModPlayer<MacrocosmPlayer>();
-            if (MacrocosmWorld.moonBiome < 100)
-            {
-                return;
-            }
-        }
-
-        public override void Apply()
-        {
-            UpdateMoonSky();
-            base.Apply();
         }
     }
 }

@@ -1,4 +1,4 @@
-using Macrocosm.Common;
+using Macrocosm.Common.Utility;
 using Macrocosm.Content;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Backgrounds
 {
-	public class MoonSurfaceBgStyle : ModSurfaceBgStyle
+    public class MoonSurfaceBgStyle : ModSurfaceBgStyle
 	{
 		public override bool ChooseBgStyle()
 		{

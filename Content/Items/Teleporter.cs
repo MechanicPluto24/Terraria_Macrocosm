@@ -1,10 +1,8 @@
-﻿using Microsoft.Xna.Framework;
-using Terraria;
+﻿using Terraria;
 using Terraria.ModLoader;
 using SubworldLibrary;
-using Macrocosm.Content.Subworlds;
-using Macrocosm;
 using Terraria.ID;
+using Macrocosm.Content.Subworlds.Moon;
 
 namespace Macrocosm.Content.Items
 {

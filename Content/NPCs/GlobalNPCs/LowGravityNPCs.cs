@@ -1,9 +1,8 @@
 using Terraria.ModLoader;
 using Terraria;
-using Terraria.ID;
-using Macrocosm.Content.Subworlds;
 using SubworldLibrary;
 using System.Reflection;
+using Macrocosm.Content.Subworlds.Moon;
 
 namespace Macrocosm.Content.NPCs.GlobalNPCs
 {
