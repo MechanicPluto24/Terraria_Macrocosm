@@ -1,16 +1,16 @@
 using Terraria.ModLoader;
 using System.Collections.Generic;
 using Macrocosm.Content.NPCs.Unfriendly.Enemies;
-using Terraria;
 using System;
-using System.Reflection;
-using Microsoft.Xna.Framework;
 
-namespace Macrocosm.Common
+namespace Macrocosm.Content.Systems
 {
     /// <summary>
     /// Contains lists of enemies for each planet, some are uncomplete and some (for now) are completely un-filled
     /// </summary>
+    // This doesn't seem like a very flexible way to categorize. Just make superclasses instead.
+    // You can check for categories with an is statement (npc.modNPC is MoonEnemy) - 4mbr0s3 2
+    [Obsolete]
     public sealed class EnemyCategorization
     {
         /// <summary>
@@ -97,106 +97,5 @@ namespace Macrocosm.Common
         /// Enemies of the (nearly a planet) dwarf planet Pluto, see list to view said NPCs
         /// </summary>
         public static List<int> PlutoEnemies = new List<int>();
-    }
-    public static class RandomHelper
-    {
-        // Oh yeah >:)
-        public static T PickRandom<T>(T[] input)
-        {
-            int rand = new Random().Next(0, input.Length);
-
-            return input[rand];
-        }
-        private static List<int> chosenTs = new List<int>();
-        public static List<T> PickRandom<T>(T[] input, int amount)
-        {
-            List<T> values = new List<T>();
-            for (int i = 0; i < amount; i++)
-            {
-            ReRoll:
-                int rand = new Random().Next(0, input.Length);
-
-                if (!chosenTs.Contains(rand))
-                {
-                    chosenTs.Add(rand);
-                    values.Add(input[rand]);
-                }
-                else
-                    goto ReRoll;
-            }
-            chosenTs.Clear();
-            return values;
-        }
-    }
-    public static class ReflectionHelper
-    {
-        public static object GetFieldValue(this Type type, string fieldName, object obj = null, BindingFlags? flags = null)
-        {
-            if (flags == null)
-            {
-                flags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public;
-            }
-            FieldInfo field = type.GetField(fieldName, flags.Value);
-            return field.GetValue(obj);
-        }
-
-        public static T GetFieldValue<T>(this Type type, string fieldName, object obj = null, BindingFlags? flags = null)
-        {
-            if (flags == null)
-            {
-                flags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public;
-            }
-            FieldInfo field = type.GetField(fieldName, flags.Value);
-            return (T)field.GetValue(obj);
-        }
-    }
-	public static class ColorManipulator 
-	{
-		public static void ManipulateColor(ref Color color, byte amount)
-		{
-			color.R += amount;
-			color.G += amount;
-			color.B += amount;
-		}
-		public static void ManipulateColor(ref Color color, float amount)
-		{
-			color.R *= (byte)Math.Round(color.R * amount);
-			color.G += (byte)Math.Round(color.G * amount);
-			color.B += (byte)Math.Round(color.B * amount);
-		}
-	}
-    public static class MathFHelper
-    {
-        // Thank you code from TerrariaAmbience
-        public static double CreateGradientValue(double value, double min, double max)
-        {
-            double mid = (max + min) / 2;
-            double returnValue;
-
-            if (value > mid)
-            {
-                var thing = 1f - (value - min) / (max - min) * 2;
-                returnValue = 1f + thing;
-                return returnValue;
-            }
-            returnValue = (value - min) / (max - min) * 2;
-            returnValue = Utils.Clamp(returnValue, 0, 1);
-            return returnValue;
-        }
-        public static float CreateGradientValue(float value, float min, float max)
-        {
-            float mid = (max + min) / 2;
-            float returnValue;
-
-            if (value > mid)
-            {
-                var thing = 1f - (value - min) / (max - min) * 2;
-                returnValue = 1f + thing;
-                return returnValue;
-            }
-            returnValue = (value - min) / (max - min) * 2;
-            returnValue = Utils.Clamp(returnValue, 0, 1);
-            return returnValue;
-        }
     }
 }
