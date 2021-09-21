@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Content.Subworlds;
 using Macrocosm.Content.Tiles;
+using Microsoft.Xna.Framework.Graphics;
 using SubworldLibrary;
 using Terraria;
 using Terraria.ModLoader;
@@ -33,10 +34,11 @@ namespace Macrocosm.Content
         }
         public override TagCompound Save()
         {
-            if (Main.gameMenu)
+            /*if (Main.gameMenu && !Main.world)
             {
-                Main.sunTexture = ModContent.GetTexture("Terraria/Sun");
-            }
+                Main.sunTexture = Main.instance.OurLoad<Texture2D>("Terraria/Sun");
+            }*/
+            // FIXME: like now
             return null;
         }
     }

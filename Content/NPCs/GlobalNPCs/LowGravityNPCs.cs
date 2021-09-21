@@ -16,15 +16,15 @@ namespace Macrocosm.Content.NPCs.GlobalNPCs
 
         public static void DetourNPCGravity()
         {
-            NPCGravity = typeof(NPC).Assembly.GetType("Terraria.NPC").GetField("gravity", BindingFlags.NonPublic | BindingFlags.Static);
+            NPCGravity = typeof(NPC).GetField("gravity", BindingFlags.NonPublic | BindingFlags.Static);
             On.Terraria.NPC.UpdateNPC_UpdateGravity += NPC_UpdateNPC_UpdateGravity;
         }
 
         private static void NPC_UpdateNPC_UpdateGravity(On.Terraria.NPC.orig_UpdateNPC_UpdateGravity orig, NPC self, out float maxFallSpeed)
         {
+            orig(self, out maxFallSpeed);
             if (Subworld.IsActive<Moon>())
                 NPCGravity.SetValue(null, 0.05f);
-            orig(self, out maxFallSpeed);
         }
     }
 }
