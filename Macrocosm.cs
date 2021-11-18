@@ -82,12 +82,18 @@ namespace Macrocosm
         }
         public override void UpdateMusic(ref int music, ref MusicPriority priority)
         {
-            var player = Main.LocalPlayer.GetModPlayer<MacrocosmPlayer>();
-            if (Main.gameMenu || priority > MusicPriority.Environment || !player.player.active)
-                return;
-            if (Main.myPlayer != -1 && !Main.gameMenu)
-            {
-                new ZoneMusicSystem().UpdateMusic(player, ref music, ref priority);
+            if (Main.myPlayer != -1 && !Main.gameMenu && Main.LocalPlayer.active) {
+                MacrocosmPlayer modPlayer = Main.LocalPlayer.GetModPlayer<MacrocosmPlayer>();
+
+                if (modPlayer.ZoneMoon && Main.dayTime) {
+                    music = GetSoundSlot(SoundType.Music, "Sounds/Music/MoonDay");
+                    priority = MusicPriority.Environment;
+                }
+
+                if (modPlayer.ZoneMoon && !Main.dayTime) {
+                    music = GetSoundSlot(SoundType.Music, "Sounds/Music/MoonDay");
+                    priority = MusicPriority.Environment;
+                }
             }
         }
     }
