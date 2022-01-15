@@ -12,6 +12,7 @@ namespace Macrocosm.Content
     public class MacrocosmPlayer : ModPlayer
     {
         public bool accMoonArmor = false;
+        public int accMoonArmorDebuff = 0;
         public bool ZoneMoon = false;
         public bool ZoneBasalt = false;
         public override void ResetEffects()
@@ -63,8 +64,16 @@ namespace Macrocosm.Content
             {
                 player.gravity = 0.068f;
             }
+
+            if (accMoonArmorDebuff > 0)
+                player.buffImmune[ModContent.BuffType<SuitBreach>()] = false;
         }
-        public override void UpdateBiomeVisuals()
+		public override void PostUpdate()
+        {
+			if(accMoonArmorDebuff > 0)
+                accMoonArmorDebuff--;
+		}
+		public override void UpdateBiomeVisuals()
         {
             player.ManageSpecialBiomeVisuals("Macrocosm:MoonSky", ZoneMoon, player.Center);
         }
