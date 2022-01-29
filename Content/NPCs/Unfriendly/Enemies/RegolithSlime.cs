@@ -42,7 +42,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies
 
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
 		{
-			return spawnInfo.spawnTileType == ModContent.TileType<Tiles.Regolith>() ? .1f : 0f;
+			return spawnInfo.spawnTileType == ModContent.TileType<Tiles.Regolith>() && Main.dayTime ? 0.1f : 0f;
 		}
 
 		public override void NPCLoot()
