@@ -18,7 +18,7 @@ namespace Macrocosm.Content.Tiles
 			minPick = 225;
 			mineResist = 3f;
 			drop = ModContent.ItemType<Items.Placeables.BlocksAndWalls.Regolith>();
-			AddMapEntry(new Color(90, 90, 90));
+			AddMapEntry(new Color(220, 220, 220));
 			soundType = SoundID.Dig;
 		}
 		public override bool HasWalkDust()
