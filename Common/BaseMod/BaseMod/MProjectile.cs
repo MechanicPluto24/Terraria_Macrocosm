@@ -12,10 +12,10 @@ namespace Macrocosm
 {
 	public class MProjectile : GlobalProjectile
 	{
-		public override bool PreDrawExtras(Projectile projectile, SpriteBatch spriteBatch)
+		public override bool PreDrawExtras(Projectile projectile)
 		{
 			BaseArmorData.lastShaderDrawObject = projectile;
-			return base.PreDrawExtras(projectile, spriteBatch);
+			return base.PreDrawExtras(projectile);
 		}		
 	}
 }
