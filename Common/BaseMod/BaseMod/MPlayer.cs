@@ -1,12 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 using Terraria;
-using Terraria.DataStructures;
-using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm;
 
 namespace Macrocosm
 {
@@ -19,8 +12,8 @@ namespace Macrocosm
 			if(useItem)
 			{
 				useItem = false;
-				player.delayUseItem = false;
-				player.controlUseItem = true;
+				Player.delayUseItem = false;
+				Player.controlUseItem = true;
 			}
 		}
     }

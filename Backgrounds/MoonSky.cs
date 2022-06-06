@@ -7,6 +7,7 @@ using Terraria.Graphics.Effects;
 using Terraria.Graphics.Shaders;
 using Terraria.Utilities;
 using Macrocosm.Content;
+using Terraria.GameContent;
 
 namespace Macrocosm.Backgrounds
 {
@@ -38,12 +39,12 @@ namespace Macrocosm.Backgrounds
         private readonly Mod mod = ModContent.GetInstance<Macrocosm>();
         public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth)
         {
-            Texture2D SunTexture = mod.GetTexture("Backgrounds/Sun_0");
-            Texture2D SkyTex = mod.GetTexture("Backgrounds/MoonSky");
+            Texture2D SunTexture = ModContent.Request<Texture2D>("Backgrounds/Sun_0").Value;
+            Texture2D SkyTex = ModContent.Request<Texture2D>("Backgrounds/MoonSky").Value;
 
             if (maxDepth >= 3.40282347E+38f && minDepth < 3.40282347E+38f)
             {
-                spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.Black * Intensity);
+                spriteBatch.Draw((Texture2D)TextureAssets.BlackTile, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.Black * Intensity);
                 spriteBatch.Draw(SkyTex, new Rectangle(0, Math.Max(0, (int)((Main.worldSurface * 16.0 - Main.screenPosition.Y - 2400.0) * 0.10000000149011612)), Main.screenWidth, Main.screenHeight), Color.White * Math.Min(1f, (Main.screenPosition.Y - 800f) / 1000f * Intensity));
                 float num64 = 1f;
                 num64 -= Main.cloudAlpha * 1.5f;
@@ -51,7 +52,7 @@ namespace Macrocosm.Backgrounds
                 {
                     num64 = 0f;
                 }
-                int num20 = (int)(Main.time / 54000.0 * (Main.screenWidth + Main.sunTexture.Width * 2)) - Main.sunTexture.Width;
+                int num20 = (int)(Main.time / 54000.0 * (Main.screenWidth + TextureAssets.Sun.Width() * 2)) - TextureAssets.Sun.Width();
                 int num21 = 0;
                 float num22 = 1f;
                 float rotation = (float)(Main.time / 54000.0) * 2f - 7.3f;
