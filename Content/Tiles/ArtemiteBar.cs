@@ -5,12 +5,9 @@ using Terraria.ModLoader;
 using Terraria.ObjectData;
 using static Terraria.ModLoader.ModContent;
 
-namespace Macrocosm.Content.Tiles
-{
-    public class ArtemiteBar : ModTile
-    {
-        public override void SetDefaults()
-        {
+namespace Macrocosm.Content.Tiles {
+    public class ArtemiteBar : ModTile {
+        public override void SetStaticDefaults() {
             Main.tileShine[Type] = 1100;
             Main.tileSolid[Type] = true;
             Main.tileSolidTop[Type] = true;
@@ -24,8 +21,7 @@ namespace Macrocosm.Content.Tiles
             AddMapEntry(new Color(96, 98, 109), Language.GetText("Artemite Bar"));
         }
 
-        public override bool Drop(int i, int j)
-        {
+        public override bool Drop(int i, int j) {
             Tile t = Main.tile[i, j];
             int style = t.frameX / 18;
             if (style == 0)

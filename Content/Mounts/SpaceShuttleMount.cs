@@ -3,12 +3,9 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Mounts
-{
-    public class SpaceShuttle : ModMountData
-    {
-        public override void SetDefaults()
-        {
+namespace Terraria_Macrocosm.Content.Mounts {
+    public class SpaceShuttleMount : ModMount {
+        public override void SetDefaults() {
             mountData.buff = mod.BuffType("SpaceShuttle");
             mountData.heightBoost = 20;          //how high is the mount from the ground
             mountData.fallDamage = 0f;
@@ -23,8 +20,7 @@ namespace Macrocosm.Content.Mounts
             mountData.totalFrames = 4;            //mount frame/animation
             mountData.constantJump = true;
             int[] offset = new int[mountData.totalFrames];
-            for (int l = 0; l < offset.Length; l++)
-            {
+            for (int l = 0; l < offset.Length; l++) {
                 offset[l] = 20;
             }
             mountData.playerYOffsets = offset;
@@ -51,8 +47,7 @@ namespace Macrocosm.Content.Mounts
             mountData.swimFrameCount = mountData.inAirFrameCount;
             mountData.swimFrameDelay = mountData.inAirFrameDelay;
             mountData.swimFrameStart = mountData.inAirFrameStart;
-            if (Main.netMode != 2)
-            {
+            if (Main.netMode != 2) {
                 mountData.textureWidth = mountData.frontTexture.Width;
                 mountData.textureHeight = mountData.frontTexture.Height;
             }

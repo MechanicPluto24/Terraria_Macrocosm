@@ -2,6 +2,7 @@
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ID;
+using Terraria.GameContent;
 
 namespace Macrocosm.Common.Utility{
 	public static class PlayerUtils{
@@ -12,7 +13,7 @@ namespace Macrocosm.Common.Utility{
 
 			Rectangle hitbox = new Rectangle((int)player.itemLocation.X, (int)player.itemLocation.Y, 32, 32);
 			if(!Main.dedServ)
-				hitbox = new Rectangle((int)player.itemLocation.X, (int)player.itemLocation.Y, Main.itemTexture[item.type].Width, Main.itemTexture[item.type].Height);
+				hitbox = new Rectangle((int)player.itemLocation.X, (int)player.itemLocation.Y, TextureAssets.Item[item.type].Width, TextureAssets.Item[item.type].Height);
 
 			hitbox.Width = (int)(hitbox.Width * item.scale);
 			hitbox.Height = (int)(hitbox.Height * item.scale);
@@ -22,7 +23,7 @@ namespace Macrocosm.Common.Utility{
 			if(player.gravDir == 1f)
 				hitbox.Y -= hitbox.Height;
 
-			if(item.useStyle == ItemUseStyleID.SwingThrow){
+			if(item.useStyle == ItemUseStyleID.Swing){
 				if(player.itemAnimation < player.itemAnimationMax * 0.333){
 					if(player.direction == -1)
 						hitbox.X -= (int)(hitbox.Width * 1.4 - hitbox.Width);
@@ -38,7 +39,7 @@ namespace Macrocosm.Common.Utility{
 					hitbox.Y -= (int)((hitbox.Height * 1.4 - hitbox.Height) * player.gravDir);
 					hitbox.Height = (int)(hitbox.Height * 1.4);
 				}
-			}else if(item.useStyle == ItemUseStyleID.Stabbing){
+			}else if(item.useStyle == ItemUseStyleID.Thrust){
 				if(player.itemAnimation > player.itemAnimationMax * 0.666)
 					flag21 = true;
 				else{
