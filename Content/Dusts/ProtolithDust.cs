@@ -2,18 +2,14 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Dusts
-{
-    public class ProtolithDust : ModDust
-	{
-        public override void OnSpawn(Dust dust)
-        {
+namespace Macrocosm.Content.Dusts {
+    public class ProtolithDust : ModDust {
+        public override void OnSpawn(Dust dust) {
             dust.noLight = true;
             dust.scale = Main.rand.NextFloat(1, 1.35f);
         }
 
-        public override bool Update(Dust dust)
-        {
+        public override bool Update(Dust dust) {
             dust.velocity.Y += 0.025f;
             dust.position += dust.velocity;
             dust.scale -= 0.02f;
@@ -27,16 +23,13 @@ namespace Macrocosm.Content.Dusts
             return false;
         }
 
-        public override bool MidUpdate(Dust dust)
-        {
+        public override bool MidUpdate(Dust dust) {
             return true;
         }
 
 
-        public override Color? GetAlpha(Dust dust, Color lightColor)
-        {
+        public override Color? GetAlpha(Dust dust, Color lightColor) {
             return new Color(lightColor.R, lightColor.G, lightColor.B, 255);
-            return lightColor;
         }
     }
 }
