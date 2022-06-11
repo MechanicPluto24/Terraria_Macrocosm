@@ -7,12 +7,9 @@ using Terraria.ModLoader;
 using Terraria.ObjectData;
 using static Terraria.ModLoader.ModContent;
 
-namespace Macrocosm.Content.Tiles.Paintings
-{
-    public class BloodSunRising : ModTile
-    {
-        public override void SetDefaults()
-        {
+namespace Macrocosm.Content.Tiles.Paintings {
+    public class BloodSunRising : ModTile {
+        public override void SetStaticDefaults() {
             Main.tileSolid[Type] = false;
             Main.tileSolidTop[Type] = false;
             Main.tileFrameImportant[Type] = true;
@@ -27,12 +24,11 @@ namespace Macrocosm.Content.Tiles.Paintings
             TileObjectData.newTile.CoordinateHeights = new int[] { 16, 16, 16, 16 };
             TileObjectData.addTile(Type);
 
-            disableSmartCursor = true;
+            TileID.Sets.DisableSmartCursor[Type] = true;
             AddMapEntry(new Color(99, 50, 30), Language.GetText("Painting"));
         }
-        public override void KillMultiTile(int i, int j, int frameX, int frameY)
-        {
-            Item.NewItem(i * 16, j * 16, 32, 22, mod.ItemType("BloodSunRising"));
+        public override void KillMultiTile(int i, int j, int frameX, int frameY) {
+            Item.NewItem(new EntitySource_TileBreak(i, j), i * 16, j * 16, 16, 32, ItemType<Items.Placeables.Paintings.BloodSunRising>());
         }
     }
 }

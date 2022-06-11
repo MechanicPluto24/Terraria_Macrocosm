@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
@@ -21,14 +22,13 @@ namespace Macrocosm.Content.Tiles {
             AddMapEntry(new Color(96, 98, 109), Language.GetText("Artemite Bar"));
         }
 
-        public override bool Drop(int i, int j) {
-            Tile t = Main.tile[i, j];
-            int style = t.frameX / 18;
-            if (style == 0)
-            {
-                Item.NewItem(i * 16, j * 16, 16, 16, ItemType<Items.Materials.ArtemiteBar>());
+        public override bool Drop(int x, int y) {
+            Tile t = Main.tile[x, y];
+            int style = t.TileFrameX / 18;
+            if (style == 0) {
+                Item.NewItem(new EntitySource_TileBreak(x, y), x * 16, y * 16, 16, 16, ItemType<Items.Materials.ArtemiteBar>());
             }
-            return base.Drop(i, j);
+            return base.Drop(x, y);
         }
     }
 }
