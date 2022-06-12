@@ -7,90 +7,77 @@ using Macrocosm.Content.Items.Currency;
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Buffs.Debuffs;
 
-namespace Macrocosm.Content.NPCs.Unfriendly.Enemies
-{
-    public class Clavite : ModNPC
-    {
-        public override void SetStaticDefaults()
-        {
+namespace Macrocosm.Content.NPCs.Unfriendly.Enemies {
+    public class Clavite : ModNPC {
+        public override void SetStaticDefaults() {
             DisplayName.SetDefault("Clavite");
-            Main.npcFrameCount[npc.type] = Main.npcFrameCount[NPCID.MeteorHead];
+            Main.npcFrameCount[NPC.type] = Main.npcFrameCount[NPCID.MeteorHead];
         }
-        public override void SetDefaults()
-        {
-            npc.width = 60;
-            npc.height = 60;
-            npc.lifeMax = 2500;
-            npc.damage = 60;
-            npc.defense = 60;
-            npc.HitSound = SoundID.NPCHit2;
-            npc.DeathSound = SoundID.NPCDeath2;
-            npc.value = 60f;
-            npc.knockBackResist = 0f;
-            npc.noGravity = true;
-            npc.noTileCollide = true;
-            animationType = NPCID.MeteorHead;
-            banner = Item.NPCtoBanner(NPCID.MeteorHead);
-            bannerItem = Item.BannerToItem(banner);
+        public override void SetDefaults() {
+            NPC.width = 60;
+            NPC.height = 60;
+            NPC.lifeMax = 2500;
+            NPC.damage = 60;
+            NPC.defense = 60;
+            NPC.HitSound = SoundID.NPCHit2;
+            NPC.DeathSound = SoundID.NPCDeath2;
+            NPC.value = 60f;
+            NPC.knockBackResist = 0f;
+            NPC.noGravity = true;
+            NPC.noTileCollide = true;
+            AnimationType = NPCID.MeteorHead;
+            Banner = Item.NPCtoBanner(NPCID.MeteorHead);
+            BannerItem = Item.BannerToItem(Banner);
         }
 
-        public override void AI()
-        {
-            Player player = Main.player[npc.target];
-            if (npc.target < 0 || npc.target == 255 || Main.player[npc.target].dead || !Main.player[npc.target].active)
-            {
-                npc.TargetClosest(true);
+        public override void AI() {
+            Player player = Main.player[NPC.target];
+            if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active) {
+                NPC.TargetClosest(true);
             }
 
             Move(Vector2.Zero);
             bool playerActive = player != null && player.active && !player.dead;
-            BaseAI.LookAt(playerActive ? player.Center : (npc.Center + npc.velocity), npc, 0);
+            BaseAI.LookAt(playerActive ? player.Center : (NPC.Center + NPC.velocity), NPC, 0);
         }
-        public void Move(Vector2 offset, float speed = 3f, float turnResistance = 0.5f)
-        {
-            Player player = Main.player[npc.target];
-            Vector2 moveTo = player.Center + offset; // Gets the point that the npc will be moving to.
-            Vector2 move = moveTo - npc.Center;
+        public void Move(Vector2 offset, float speed = 3f, float turnResistance = 0.5f) {
+            Player player = Main.player[NPC.target];
+            Vector2 moveTo = player.Center + offset; // Gets the point that the NPC will be moving to.
+            Vector2 move = moveTo - NPC.Center;
             float magnitude = Magnitude(move);
-            if (magnitude > speed)
-            {
+            if (magnitude > speed) {
                 move *= speed / magnitude;
             }
-            move = (npc.velocity * turnResistance + move) / (turnResistance + 1f);
+            move = (NPC.velocity * turnResistance + move) / (turnResistance + 1f);
             magnitude = Magnitude(move);
-            if (magnitude > speed)
-            {
+            if (magnitude > speed) {
                 move *= speed / magnitude;
             }
-            npc.velocity = move;
+            NPC.velocity = move;
         }
 
-        private float Magnitude(Vector2 mag)
-        {
+        private float Magnitude(Vector2 mag) {
             return (float)Math.Sqrt(mag.X * mag.X + mag.Y * mag.Y);
         }
-        public override void OnHitPlayer(Player player, int damage, bool crit)
-        {
-            if (player.GetModPlayer<MacrocosmPlayer>().accMoonArmor) // Now only suit breaches players with said suit
-            {
+        public override void OnHitPlayer(Player player, int damage, bool crit) {
+            if (player.GetModPlayer<MacrocosmPlayer>().accMoonArmor) { // Now only suit breaches players with said suit 
                 player.AddBuff(ModContent.BuffType<SuitBreach>(), 600, true);
             }
         }
-        public override float SpawnChance(NPCSpawnInfo spawnInfo)
-        {
-            return spawnInfo.spawnTileType == ModContent.TileType<Tiles.Regolith>() ? .1f : 0f;
+        public override float SpawnChance(NPCSpawnInfo spawnInfo) {
+            return spawnInfo.SpawnTileType == ModContent.TileType<Tiles.Regolith>() ? .1f : 0f;
         }
         public override void NPCLoot()
         {
-            Item.NewItem(npc.getRect(), ModContent.ItemType<CosmicDust>());
+            Item.NewItem(NPC.getRect(), ModContent.ItemType<CosmicDust>());
             if (Main.rand.NextFloat() < .0625)
-                Item.NewItem(npc.getRect(), ModContent.ItemType<ArtemiteOre>(), 1 + Main.rand.Next(5));
+                Item.NewItem(NPC.getRect(), ModContent.ItemType<ArtemiteOre>(), 1 + Main.rand.Next(5));
             if (Main.rand.NextFloat() < .0625)
-                Item.NewItem(npc.getRect(), ModContent.ItemType<ChandriumOre>(), 1 + Main.rand.Next(5));
+                Item.NewItem(NPC.getRect(), ModContent.ItemType<ChandriumOre>(), 1 + Main.rand.Next(5));
             if (Main.rand.NextFloat() < .0625)
-                Item.NewItem(npc.getRect(), ModContent.ItemType<SeleniteOre>(), 1 + Main.rand.Next(5));
+                Item.NewItem(NPC.getRect(), ModContent.ItemType<SeleniteOre>(), 1 + Main.rand.Next(5));
             if (Main.rand.NextFloat() < .0625)
-                Item.NewItem(npc.getRect(), ModContent.ItemType<DianiteOre>(), 1 + Main.rand.Next(5));
+                Item.NewItem(NPC.getRect(), ModContent.ItemType<DianiteOre>(), 1 + Main.rand.Next(5));
             // Very sloppy but it will do
         }
 
@@ -99,7 +86,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies
             for (int i = 0; i < 10; i++)
             {
                 int dustType = 1;
-                int dustIndex = Dust.NewDust(npc.position, npc.width, npc.height, dustType);
+                int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, dustType);
                 Dust dust = Main.dust[dustIndex];
                 dust.velocity.X *= Main.rand.Next(-50, 51) * 0.01f;
                 dust.velocity.Y *= Main.rand.Next(-50, 51) * 0.01f;

@@ -3,53 +3,53 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Terraria_Macrocosm.Content.Mounts {
+namespace Macrocosm.Content.Mounts {
     public class SpaceShuttleMount : ModMount {
-        public override void SetDefaults() {
-            mountData.buff = mod.BuffType("SpaceShuttle");
-            mountData.heightBoost = 20;          //how high is the mount from the ground
-            mountData.fallDamage = 0f;
-            mountData.runSpeed = 10f;
-            mountData.dashSpeed = 8f;
-            mountData.flightTimeMax = 1000000;
-            mountData.fatigueMax = 0;
-            mountData.jumpHeight = 5;
-            mountData.acceleration = 1f;
-            mountData.jumpSpeed = 5f;
-            mountData.blockExtraJumps = false;
-            mountData.totalFrames = 4;            //mount frame/animation
-            mountData.constantJump = true;
-            int[] offset = new int[mountData.totalFrames];
+        public override void SetStaticDefaults() {
+            MountData.buff = ModContent.BuffType<Buffs.GoodBuffs.MountBuffs.SpaceShuttle>();
+            MountData.heightBoost = 20;          //how high is the mount from the ground
+            MountData.fallDamage = 0f;
+            MountData.runSpeed = 10f;
+            MountData.dashSpeed = 8f;
+            MountData.flightTimeMax = 1000000;
+            MountData.fatigueMax = 0;
+            MountData.jumpHeight = 5;
+            MountData.acceleration = 1f;
+            MountData.jumpSpeed = 5f;
+            MountData.blockExtraJumps = false;
+            MountData.totalFrames = 4;            //mount frame/animation
+            MountData.constantJump = true;
+            int[] offset = new int[MountData.totalFrames];
             for (int l = 0; l < offset.Length; l++) {
                 offset[l] = 20;
             }
-            mountData.playerYOffsets = offset;
-            mountData.xOffset = 13;
-            mountData.yOffset = -3;          //how high is the mount from the player
-            mountData.bodyFrame = 3;          //player frame when it's on the mount
-            mountData.playerHeadOffset = 22;
-            mountData.standingFrameCount = 4;
-            mountData.standingFrameDelay = 12;
-            mountData.standingFrameStart = 0;
-            mountData.runningFrameCount = 4;
-            mountData.runningFrameDelay = 12;
-            mountData.runningFrameStart = 0;
-            mountData.flyingFrameCount = 4;
-            mountData.flyingFrameDelay = 12;
-            mountData.flyingFrameStart = 0;
-            mountData.inAirFrameCount = 4;
-            mountData.inAirFrameDelay = 12;
-            mountData.inAirFrameStart = 0;
-            mountData.idleFrameCount = 4;
-            mountData.idleFrameDelay = 12;
-            mountData.idleFrameStart = 0;
-            mountData.idleFrameLoop = true;
-            mountData.swimFrameCount = mountData.inAirFrameCount;
-            mountData.swimFrameDelay = mountData.inAirFrameDelay;
-            mountData.swimFrameStart = mountData.inAirFrameStart;
+            MountData.playerYOffsets = offset;
+            MountData.xOffset = 13;
+            MountData.yOffset = -3;          //how high is the mount from the player
+            MountData.bodyFrame = 3;          //player frame when it's on the mount
+            MountData.playerHeadOffset = 22;
+            MountData.standingFrameCount = 4;
+            MountData.standingFrameDelay = 12;
+            MountData.standingFrameStart = 0;
+            MountData.runningFrameCount = 4;
+            MountData.runningFrameDelay = 12;
+            MountData.runningFrameStart = 0;
+            MountData.flyingFrameCount = 4;
+            MountData.flyingFrameDelay = 12;
+            MountData.flyingFrameStart = 0;
+            MountData.inAirFrameCount = 4;
+            MountData.inAirFrameDelay = 12;
+            MountData.inAirFrameStart = 0;
+            MountData.idleFrameCount = 4;
+            MountData.idleFrameDelay = 12;
+            MountData.idleFrameStart = 0;
+            MountData.idleFrameLoop = true;
+            MountData.swimFrameCount = MountData.inAirFrameCount;
+            MountData.swimFrameDelay = MountData.inAirFrameDelay;
+            MountData.swimFrameStart = MountData.inAirFrameStart;
             if (Main.netMode != 2) {
-                mountData.textureWidth = mountData.frontTexture.Width;
-                mountData.textureHeight = mountData.frontTexture.Height;
+                MountData.textureWidth = MountData.frontTexture.Width();
+                MountData.textureHeight = MountData.frontTexture.Height();
             }
         }
     }

@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.Graphics.Effects;
 using Terraria.ModLoader;
 
@@ -65,7 +66,7 @@ namespace Macrocosm.Backgrounds {
                 int bgLoops = Main.screenWidth / bgW + 2;
                 if (Main.screenPosition.Y < Main.worldSurface * 16.0 + 16.0) {
                     for (int k = 0; k < bgLoops; k++) {
-                        Main.spriteBatch.Draw(Main.backgroundTexture[textureSlot],
+                        Main.spriteBatch.Draw(TextureAssets.Background[textureSlot].Value,
                             new Vector2(bgStart + bgW * k, bgTop),
                             new Rectangle(0, 0, Main.backgroundWidth[textureSlot], Main.backgroundHeight[textureSlot]),
                             backColor, 0f, default, bgScale, SpriteEffects.None, 0f);
