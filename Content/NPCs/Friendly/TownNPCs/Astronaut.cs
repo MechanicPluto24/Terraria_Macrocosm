@@ -178,6 +178,7 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
 		}
         // TODO: Bad shop, sprite fast, die hard (ambrose plesea ima die)
         // No - 4mbr0s3 2
+        // Æ: Sigma
         public override void SetupShop(Chest shop, ref int nextSlot)
         {
             Item AddNewSlot(ref int nextSlotRef, int type, int price)

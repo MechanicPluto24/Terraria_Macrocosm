@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -10,10 +9,8 @@ using Terraria.Utilities;
 using Terraria.ModLoader;
 using Macrocosm;
 
-namespace Macrocosm
-{
-    public class BaseAI
-    {
+namespace Macrocosm {
+    public class BaseAI {
         //------------------------------------------------------//
         //-------------------BASE AI CLASS----------------------//
         //------------------------------------------------------//
@@ -26,11 +23,9 @@ namespace Macrocosm
    
         #region Custom AI Methods
 
-		public static void AIDive(Projectile projectile, ref int chargeTime, int chargeTimeMax, Vector2 targetCenter)
-		{
+		public static void AIDive(Projectile projectile, ref int chargeTime, int chargeTimeMax, Vector2 targetCenter) {
 			chargeTime = (int)Math.Max(0, chargeTime - 1);
-			if (chargeTime > 0)
-			{
+			if (chargeTime > 0) {
 				//while this is running, the velocity of the proj should not be touched, as doing so will break this AI.
 				//this AI also ignores tile collision, just a quick concept
 				Vector2 positionOld = projectile.position - projectile.velocity;
@@ -43,26 +38,22 @@ namespace Macrocosm
 			}
 		}
 
-		public static void AIMinionPlant(Projectile projectile, ref float[] ai, Entity owner, Vector2 endPoint, bool setTime = true, float vineLength = 150f, float vineLengthLong = 200f, int vineTimeExtend = 300, int vineTimeMax = 450, float moveInterval = 0.035f, float speedMax = 2f, Vector2 targetOffset = default(Vector2), Func<Entity, Entity, Entity> GetTarget = null, Func<Entity, Entity, Entity, bool> ShootTarget = null)
-		{
+		public static void AIMinionPlant(Projectile projectile, ref float[] ai, Entity owner, Vector2 endPoint, bool setTime = true, float vineLength = 150f, float vineLengthLong = 200f, int vineTimeExtend = 300, int vineTimeMax = 450, float moveInterval = 0.035f, float speedMax = 2f, Vector2 targetOffset = default(Vector2), Func<Entity, Entity, Entity> GetTarget = null, Func<Entity, Entity, Entity, bool> ShootTarget = null) {
 			if (setTime){ projectile.timeLeft = 10; }
 			Entity target = (GetTarget == null ? null : GetTarget(projectile, owner));
 			if (target == null) { target = owner; }
 			bool targetOwner = target == owner;
 			ai[0] += 1f;
-			if (ai[0] > vineTimeExtend)
-			{
+			if (ai[0] > vineTimeExtend) {
 				vineLength = vineLengthLong;
 				if (ai[0] > vineTimeMax) { ai[0] = 0f; }
 			}
 			Vector2 targetCenter = target.Center + targetOffset + (target == owner ? new Vector2(0f, (owner is Player ? ((Player)owner).gfxOffY : owner is NPC ? ((NPC)owner).gfxOffY : ((Projectile)owner).gfxOffY)) : default(Vector2));
-			if (!targetOwner)
-			{
+			if (!targetOwner) {
 				float distTargetX = targetCenter.X - endPoint.X;
 				float distTargetY = targetCenter.Y - endPoint.Y;
 				float distTarget = (float)Math.Sqrt((double)(distTargetX * distTargetX + distTargetY * distTargetY));
-				if (distTarget > vineLength)
-				{
+				if (distTarget > vineLength) {
 					projectile.velocity *= 0.85f;
 					projectile.velocity += owner.velocity;
 					distTarget = vineLength / distTarget;
@@ -70,30 +61,22 @@ namespace Macrocosm
 					distTargetY *= distTarget;
 				}
 				bool dontMove = (ShootTarget != null && ShootTarget(projectile, owner, target));
-				if (!dontMove)
-				{
-					if (projectile.position.X < endPoint.X + distTargetX)
-					{
+				if (!dontMove) {
+					if (projectile.position.X < endPoint.X + distTargetX) {
 						projectile.velocity.X = projectile.velocity.X + moveInterval;
 						if (projectile.velocity.X < 0f && distTargetX > 0f) { projectile.velocity.X = projectile.velocity.X + moveInterval * 1.5f; }
-					}else
-					if (projectile.position.X > endPoint.X + distTargetX)
-					{
+					} else if (projectile.position.X > endPoint.X + distTargetX) {
 						projectile.velocity.X = projectile.velocity.X - moveInterval;
 						if (projectile.velocity.X > 0f && distTargetX < 0f) { projectile.velocity.X = projectile.velocity.X - moveInterval * 1.5f; }
 					}
-					if (projectile.position.Y < endPoint.Y + distTargetY)
-					{
+					if (projectile.position.Y < endPoint.Y + distTargetY) {
 						projectile.velocity.Y = projectile.velocity.Y + moveInterval;
 						if (projectile.velocity.Y < 0f && distTargetY > 0f) { projectile.velocity.Y = projectile.velocity.Y + moveInterval * 1.5f; }
-					}else
-					if (projectile.position.Y > endPoint.Y + distTargetY)
-					{
+					} else if (projectile.position.Y > endPoint.Y + distTargetY)  {
 						projectile.velocity.Y = projectile.velocity.Y - moveInterval;
 						if (projectile.velocity.Y > 0f && distTargetY < 0f) { projectile.velocity.Y = projectile.velocity.Y - moveInterval * 1.5f; }
 					}
-				}else
-				{
+				} else {
 					projectile.velocity *= 0.85f;
 					if (Math.Abs(projectile.velocity.X) < moveInterval + 0.01f) { projectile.velocity.X = 0f; }
 					if (Math.Abs(projectile.velocity.Y) < moveInterval + 0.01f) { projectile.velocity.Y = 0f; }
@@ -102,39 +85,32 @@ namespace Macrocosm
 				projectile.velocity.Y = MathHelper.Clamp(projectile.velocity.Y, -speedMax, speedMax);
 				if (distTargetX > 0f) { projectile.spriteDirection = 1; projectile.rotation = (float)Math.Atan2((double)distTargetY, (double)distTargetX); }else
 				if (distTargetX < 0f) { projectile.spriteDirection = -1; projectile.rotation = (float)Math.Atan2((double)distTargetY, (double)distTargetX) + 3.14f; }
-				if (projectile.tileCollide)
-				{
+				if (projectile.tileCollide) {
 					Vector4 slopeVec = Collision.SlopeCollision(projectile.position, projectile.velocity, projectile.width, projectile.height);
 					projectile.position = new Vector2(slopeVec.X, slopeVec.Y);
 					projectile.velocity = new Vector2(slopeVec.Z, slopeVec.W);
 				}
 				projectile.position += (owner.position - owner.oldPosition);
-			}else
-			{
+			} else {
 				projectile.position += (owner.position - owner.oldPosition);
 				projectile.spriteDirection = (owner.Center.X > projectile.Center.X ? -1 : 1);
 				projectile.velocity = AIVelocityLinear(projectile, targetCenter, moveInterval, speedMax, true);
-				if (Vector2.Distance(projectile.Center, targetCenter) < speedMax * 1.1f) 
-				{
+				if (Vector2.Distance(projectile.Center, targetCenter) < speedMax * 1.1f) {
 					projectile.rotation = 0f;
 					projectile.velocity *= 0f; projectile.Center = targetCenter; 
-				}else
-				{
+				} else {
 					projectile.rotation = BaseUtility.RotationTo(targetCenter, projectile.Center) + (projectile.spriteDirection == -1 ? 3.14f : 0f);
 				}
 			}
 		}
 
-		public static void TileCollidePlant(Projectile projectile, ref Vector2 velocity, float speedMax)
-		{
-			if (projectile.velocity.X != velocity.X)
-			{
+		public static void TileCollidePlant(Projectile projectile, ref Vector2 velocity, float speedMax) {
+			if (projectile.velocity.X != velocity.X) {
 				projectile.netUpdate = true;
 				projectile.velocity.X = projectile.velocity.X * -0.7f;
 				projectile.velocity.X = MathHelper.Clamp(projectile.velocity.X, -speedMax, speedMax);
 			}
-			if (projectile.velocity.Y != velocity.Y)
-			{
+			if (projectile.velocity.Y != velocity.Y) {
 				projectile.netUpdate = true;
 				projectile.velocity.Y = projectile.velocity.Y * -0.7f;
 				projectile.velocity.Y = MathHelper.Clamp(projectile.velocity.Y, -speedMax, speedMax);
@@ -142,8 +118,7 @@ namespace Macrocosm
 		}
 
 
-		public static void AIMinionFlier(Projectile projectile, ref float[] ai, Entity owner, bool pet = false, bool movementFixed = false, bool hover = false, int hoverHeight = 40, int lineDist = 40, int returnDist = 400, int teleportDist = 800, float moveInterval = -1f, float maxSpeed = -1f, float maxSpeedFlying = -1f, bool autoSpriteDir = true, bool dummyTileCollide = false, Func<Entity, Entity, Entity> GetTarget = null, Func<Entity, Entity, Entity, bool> ShootTarget = null)
-		{
+		public static void AIMinionFlier(Projectile projectile, ref float[] ai, Entity owner, bool pet = false, bool movementFixed = false, bool hover = false, int hoverHeight = 40, int lineDist = 40, int returnDist = 400, int teleportDist = 800, float moveInterval = -1f, float maxSpeed = -1f, float maxSpeedFlying = -1f, bool autoSpriteDir = true, bool dummyTileCollide = false, Func<Entity, Entity, Entity> GetTarget = null, Func<Entity, Entity, Entity, bool> ShootTarget = null) {
 			if (moveInterval == -1f) { moveInterval = (0.08f * Main.player[projectile.owner].moveSpeed); }
 			if (maxSpeed == -1f) { maxSpeed = Math.Max(Main.player[projectile.owner].maxRunSpeed, Main.player[projectile.owner].accRunSpeed); }
 			if (maxSpeedFlying == -1f) { maxSpeedFlying = Math.Max(maxSpeed, Math.Max(Main.player[projectile.owner].maxRunSpeed, Main.player[projectile.owner].accRunSpeed)); }
@@ -174,18 +149,16 @@ namespace Macrocosm
 		 * maxSpeedFlying : The maximum speed whist 'flying' back to the player.
 		 * GetTarget : a Func(Entity codable, Entity owner), returns a Vector2 of the a target's position. If GetTarget is null or it returns default(Vector2) the target is assumed to be the owner.
 		 */
-		public static void AIMinionFlier(Entity codable, ref float[] ai, Entity owner, ref bool tileCollide, ref bool netUpdate, int minionPos, bool movementFixed, bool hover = false, int hoverHeight = 40, int lineDist = 40, int returnDist = 400, int teleportDist = 800, float moveInterval = 0.2f, float maxSpeed = 4.5f, float maxSpeedFlying = 4.5f, Func<Entity, Entity, Entity> GetTarget = null, Func<Entity, Entity, Entity, bool> ShootTarget = null)
-		{
+		public static void AIMinionFlier(Entity codable, ref float[] ai, Entity owner, ref bool tileCollide, ref bool netUpdate, int minionPos, bool movementFixed, bool hover = false, int hoverHeight = 40, int lineDist = 40, int returnDist = 400, int teleportDist = 800, float moveInterval = 0.2f, float maxSpeed = 4.5f, float maxSpeedFlying = 4.5f, Func<Entity, Entity, Entity> GetTarget = null, Func<Entity, Entity, Entity, bool> ShootTarget = null) {
 			float dist = Vector2.Distance(codable.Center, owner.Center);
 			if (dist > teleportDist) { codable.Center = owner.Center; }
 			int tileX = (int)(codable.Center.X / 16f), tileY = (int)(codable.Center.Y / 16f);
 			Tile tile = Main.tile[tileX, tileY];
-			bool inTile = (tile != null && tile.nactive() && Main.tileSolid[tile.type]);
+			bool inTile = (tile != null && tile.HasUnactuatedTile && Main.tileSolid[tile.TileType]);
 			float prevAI = ai[0];
 			ai[0] = (((ai[0] == 1 && (dist > (float)Math.Max(lineDist, (float)returnDist / 2f) || !BaseUtility.CanHit(codable.Hitbox, owner.Hitbox))) || dist > returnDist || inTile) ? 1 : 0);
 			if (ai[0] != prevAI) { netUpdate = true; }
-			if (ai[0] == 0 || ai[0] == 1)
-			{
+			if (ai[0] == 0 || ai[0] == 1) {
 				if (ai[0] == 1) { moveInterval *= 1.5f; maxSpeedFlying *= 1.5f; }
 				tileCollide = (ai[0] == 0);
 				Entity target = (GetTarget == null ? owner : GetTarget(codable, owner));
@@ -193,13 +166,11 @@ namespace Macrocosm
 				Vector2 targetCenter = target.Center;
 				bool isOwner = target == owner;
 				bool dontMove = (ai[0] == 0 && ShootTarget != null && ShootTarget(codable, owner, target));
-				if (isOwner)
-				{
+				if (isOwner) {
 					targetCenter.Y -= hoverHeight;
 					if (hover){ targetCenter.X += (lineDist + (lineDist * minionPos)) * -target.direction; }
 				}
-				if (!hover || !isOwner)
-				{
+				if (!hover || !isOwner)  {
 					float dirDist = (hover ? 1.2f : 1.8f);
 					float dir = (dist < ((lineDist * minionPos) + lineDist * dirDist) ? (codable.velocity.X > 0 ? 1f : -1f) : (target.Center.X > codable.Center.X ? 1f : -1f));
 					//Semierratic movement so it looks more like a swarm and less like synchronized swimmers.
@@ -225,8 +196,7 @@ namespace Macrocosm
 
 
 
-		public static void AIMinionFighter(Projectile projectile, ref float[] ai, Entity owner, bool pet = false, int jumpDistX = 4, int jumpDistY = 5, int lineDist = 40, int returnDist = 400, int teleportDist = 800, float moveInterval = -1f, float maxSpeed = -1f, float maxSpeedFlying = -1f, Func<Entity, Entity, Entity> GetTarget = null)
-		{
+		public static void AIMinionFighter(Projectile projectile, ref float[] ai, Entity owner, bool pet = false, int jumpDistX = 4, int jumpDistY = 5, int lineDist = 40, int returnDist = 400, int teleportDist = 800, float moveInterval = -1f, float maxSpeed = -1f, float maxSpeedFlying = -1f, Func<Entity, Entity, Entity> GetTarget = null) {
 			if (moveInterval == -1f) { moveInterval = (0.08f * Main.player[projectile.owner].moveSpeed); }
 			if (maxSpeed == -1f){ maxSpeed = Math.Max(Main.player[projectile.owner].maxRunSpeed, Main.player[projectile.owner].accRunSpeed); }
 			if (maxSpeedFlying == -1f) { maxSpeedFlying = Math.Max(maxSpeed, Math.Max(Main.player[projectile.owner].maxRunSpeed, Main.player[projectile.owner].accRunSpeed)); }
@@ -258,24 +228,21 @@ namespace Macrocosm
 		 * maxSpeedFlying : The maximum speed whist 'flying' back to the player.
 		 * GetTarget : a Func(Entity codable, Entity owner), returns a Vector2 of the a target's position. If GetTarget is null or it returns default(Vector2) the target is assumed to be the owner.
 		 */
-		public static void AIMinionFighter(Entity codable, ref float[] ai, Entity owner, ref bool tileCollide, ref bool netUpdate, ref float gfxOffY, ref float stepSpeed, int minionPos, int jumpDistX = 4, int jumpDistY = 5, int lineDist = 40, int returnDist = 400, int teleportDist = 800, float moveInterval = 0.2f, float maxSpeed = 4.5f, float maxSpeedFlying = 4.5f, Func<Entity, Entity, Entity> GetTarget = null)
-		{
+		public static void AIMinionFighter(Entity codable, ref float[] ai, Entity owner, ref bool tileCollide, ref bool netUpdate, ref float gfxOffY, ref float stepSpeed, int minionPos, int jumpDistX = 4, int jumpDistY = 5, int lineDist = 40, int returnDist = 400, int teleportDist = 800, float moveInterval = 0.2f, float maxSpeed = 4.5f, float maxSpeedFlying = 4.5f, Func<Entity, Entity, Entity> GetTarget = null) {
 			float dist = Vector2.Distance(codable.Center, owner.Center);
 			if (dist > teleportDist) { codable.Center = owner.Center; }
 			int tileX = (int)(codable.Center.X / 16f), tileY = (int)(codable.Center.Y / 16f);
 			Tile tile = Main.tile[tileX, tileY];
-			bool inTile = (tile != null && tile.nactive() && Main.tileSolid[tile.type]);
+			bool inTile = (tile != null && tile.HasUnactuatedTile && Main.tileSolid[tile.TileType]);
 			float prevAI = ai[0];
 			ai[0] = (((ai[0] == 1 && (owner.velocity.Y != 0 || dist > (float)Math.Max(lineDist, (float)returnDist / 10f))) || dist > returnDist || inTile) ? 1 : 0);
 			if (ai[0] != prevAI) { netUpdate = true; }
-			if (ai[0] == 0) //walking
-			{
+			if (ai[0] == 0) { //walking 
 				tileCollide = true;
 				Entity target = (GetTarget == null ? null : GetTarget(codable, owner));
 				Vector2 targetCenter = (target == null ? default(Vector2) : target.Center);
 				bool isOwner = (target == null || targetCenter == owner.Center);
-				if (targetCenter == default(Vector2))
-				{
+				if (targetCenter == default(Vector2)) {
 					targetCenter = owner.Center;
 					targetCenter.X += (owner.width + 10 + (lineDist * minionPos)) * -owner.direction;
 				}
@@ -283,31 +250,22 @@ namespace Macrocosm
 				float targetDistY = Math.Abs(codable.Center.Y - targetCenter.Y);
 				int moveDirection = (targetCenter.X > codable.Center.X ? 1 : -1);
 				int moveDirectionY = (targetCenter.Y > codable.Center.Y ? 1 : -1);
-				if (isOwner && owner.velocity.X < 0.025f && codable.velocity.Y == 0f && targetDistX < 8f)
-				{
+				if (isOwner && owner.velocity.X < 0.025f && codable.velocity.Y == 0f && targetDistX < 8f) {
 					codable.velocity.X *= (Math.Abs(codable.velocity.X) > 0.01f ? 0.8f : 0f);
-				}else
-				if (codable.velocity.X < -maxSpeed || codable.velocity.X > maxSpeed)
-				{
+				} else if (codable.velocity.X < -maxSpeed || codable.velocity.X > maxSpeed) {
 					if (codable.velocity.Y == 0f){ codable.velocity *= 0.85f; }
-				}else
-				if (codable.velocity.X < maxSpeed && moveDirection == 1)
-				{
+				} else if (codable.velocity.X < maxSpeed && moveDirection == 1) {
 					if(codable.velocity.X < 0){ codable.velocity.X *= 0.85f; }
 					codable.velocity.X += moveInterval * (codable.velocity.X < 0 ? 2f : 1f);
 					if (codable.velocity.X > maxSpeed){ codable.velocity.X = maxSpeed; }
-				}else
-				if (codable.velocity.X > -maxSpeed && moveDirection == -1)
-				{
+				} else if (codable.velocity.X > -maxSpeed && moveDirection == -1) {
 					if(codable.velocity.X > 0) { codable.velocity.X *= 0.8f; }
 					codable.velocity.X -= moveInterval * (codable.velocity.X > 0 ? 2f : 1f);
 					if(codable.velocity.X < -maxSpeed){ codable.velocity.X = -maxSpeed; }
 				}
 				WalkupHalfBricks(codable, ref gfxOffY, ref stepSpeed);
-				if (HitTileOnSide(codable, 3))
-				{
-					if ((codable.velocity.X < 0f && moveDirection == -1) || (codable.velocity.X > 0f && moveDirection == 1))
-					{
+				if (HitTileOnSide(codable, 3)) {
+					if ((codable.velocity.X < 0f && moveDirection == -1) || (codable.velocity.X > 0f && moveDirection == 1)) {
 						bool test = (target != null && !isOwner && targetDistX < 50f && targetDistY > codable.height + (codable.height / 2) && targetDistY < (16f * (jumpDistY + 1)) && BaseUtility.CanHit(codable.Hitbox, target.Hitbox));
 						Vector2 newVec = AttemptJump(codable.position, codable.velocity, codable.width, codable.height, moveDirection, moveDirectionY, jumpDistX, jumpDistY, maxSpeed, true, target, test);
 						if (tileCollide)
@@ -319,26 +277,22 @@ namespace Macrocosm
 						}
 						if (codable.velocity != newVec) { codable.velocity = newVec; netUpdate = true; }
 					}
-				}else{ codable.velocity.Y += 0.35f; } //gravity
-			}else //flying
-			{
+				} else { codable.velocity.Y += 0.35f; } //gravity
+			} else { //flying
 				tileCollide = false;
 				Vector2 targetCenter = owner.Center;
-				if (owner.velocity.Y != 0f && dist < 80)
-				{
+				if (owner.velocity.Y != 0f && dist < 80) {
 					targetCenter = owner.Center + BaseUtility.RotateVector(default(Vector2), new Vector2(10, 0f), BaseUtility.RotationTo(codable.Center, owner.Center));
 				}
 				Vector2 newVel = BaseUtility.RotateVector(default(Vector2), new Vector2(maxSpeedFlying, 0f), BaseUtility.RotationTo(codable.Center, targetCenter));
-				if (owner.velocity.Y != 0f && ((newVel.X > 0 && codable.velocity.X < 0) || (newVel.X < 0 && codable.velocity.X > 0)))
-				{
+				if (owner.velocity.Y != 0f && ((newVel.X > 0 && codable.velocity.X < 0) || (newVel.X < 0 && codable.velocity.X > 0))) {
 					codable.velocity *= 0.98f; newVel *= 0.02f; codable.velocity += newVel;
-				}else{ codable.velocity = newVel; }
+				} else{ codable.velocity = newVel; }
 				codable.position += owner.velocity;	
 			}
 		}
 
-		public static void AIMinionSlime(Projectile projectile, ref float[] ai, Entity owner, bool pet = false, int lineDist = 40, int returnDist = 400, int teleportDist = 800, float jumpVelX = -1f, float jumpVelY = 20f, float maxSpeedFlying = -1f, Func<Entity, Entity, Entity> GetTarget = null)
-		{
+		public static void AIMinionSlime(Projectile projectile, ref float[] ai, Entity owner, bool pet = false, int lineDist = 40, int returnDist = 400, int teleportDist = 800, float jumpVelX = -1f, float jumpVelY = 20f, float maxSpeedFlying = -1f, Func<Entity, Entity, Entity> GetTarget = null) {
 			if (jumpVelX == -1f) { jumpVelX = (2f + Main.player[projectile.owner].velocity.X); }
 			if (maxSpeedFlying == -1f) { maxSpeedFlying = Math.Max(jumpVelX, jumpVelY); }
 			projectile.timeLeft = 10;
@@ -366,24 +320,21 @@ namespace Macrocosm
 		 * maxSpeedFlying : The maximum speed whist 'flying' back to the player.
 		 * GetTarget : a Func(Entity codable, Entity owner), returns a Vector2 of the a target's position. If GetTarget is null or it returns default(Vector2) the target is assumed to be the owner.
 		 */
-		public static void AIMinionSlime(Entity codable, ref float[] ai, Entity owner, ref bool tileCollide, ref bool netUpdate, int minionPos, int lineDist = 40, int returnDist = 400, int teleportDist = 800, float jumpVelX = 2f, float jumpVelY = 20f, float maxSpeedFlying = 4.5f, Func<Entity, Entity, Entity> GetTarget = null)
-		{
+		public static void AIMinionSlime(Entity codable, ref float[] ai, Entity owner, ref bool tileCollide, ref bool netUpdate, int minionPos, int lineDist = 40, int returnDist = 400, int teleportDist = 800, float jumpVelX = 2f, float jumpVelY = 20f, float maxSpeedFlying = 4.5f, Func<Entity, Entity, Entity> GetTarget = null) {
 			float dist = Vector2.Distance(codable.Center, owner.Center);
 			if (dist > teleportDist) { codable.Center = owner.Center; }
 			int tileX = (int)(codable.Center.X / 16f), tileY = (int)(codable.Center.Y / 16f);
 			Tile tile = Main.tile[tileX, tileY];
-			bool inTile = (tile != null && tile.nactive() && Main.tileSolid[tile.type]);
+			bool inTile = (tile != null && tile.HasUnactuatedTile && Main.tileSolid[tile.TileType]);
 			float prevAI = ai[0];
 			ai[0] = (((ai[0] == 1 && (owner.velocity.Y != 0 || dist > (float)Math.Max(lineDist, (float)returnDist / 10f))) || dist > returnDist || inTile) ? 1 : 0);
 			if (ai[0] != prevAI) { netUpdate = true; }
-			if (ai[0] == 0) //walking
-			{
+			if (ai[0] == 0) { //walking
 				tileCollide = true;
 				Entity target = (GetTarget == null ? null : GetTarget(codable, owner));
 				Vector2 targetCenter = (target == null ? default(Vector2) : target.Center);
 				bool isOwner = (target == null || targetCenter == owner.Center);
-				if (targetCenter == default(Vector2))
-				{
+				if (targetCenter == default(Vector2)) {
 					targetCenter = owner.Center;
 					targetCenter.X += (lineDist + (lineDist * minionPos)) * -owner.direction;
 				}
@@ -391,25 +342,19 @@ namespace Macrocosm
 				float targetDistY = Math.Abs(codable.Center.Y - targetCenter.Y);
 				int moveDirection = (targetCenter.X > codable.Center.X ? 1 : -1);
 				int moveDirectionY = (targetCenter.Y > codable.Center.Y ? 1 : -1);					
-				if (isOwner && owner.velocity.X < 0.025f && codable.velocity.Y == 0f && targetDistX < 8f)
-				{
+				if (isOwner && owner.velocity.X < 0.025f && codable.velocity.Y == 0f && targetDistX < 8f) {
 					codable.velocity.X *= (Math.Abs(codable.velocity.X) > 0.01f ? 0.8f : 0f);
-				}else
-				if (codable.velocity.Y == 0f)
-				{
+				} else if (codable.velocity.Y == 0f) {
 					codable.velocity.X = codable.velocity.X * 0.8f;
 					if (codable.velocity.X > -0.1f && codable.velocity.X < 0.1f){ codable.velocity.X = 0f; }
 					codable.velocity.Y = -jumpVelY;
 					codable.velocity.X += jumpVelX * moveDirection;
 					codable.position += codable.velocity;
 				}
-				if (HitTileOnSide(codable, 3))
-				{
-					if ((codable.velocity.X < 0f && moveDirection == -1) || (codable.velocity.X > 0f && moveDirection == 1))
-					{
+				if (HitTileOnSide(codable, 3)) {
+					if ((codable.velocity.X < 0f && moveDirection == -1) || (codable.velocity.X > 0f && moveDirection == 1)) {
 						Vector2 newVec = codable.velocity;
-						if (tileCollide)
-						{
+						if (tileCollide) {
 							newVec = Collision.TileCollision(codable.position, newVec, codable.width, codable.height);
 							Vector4 slopeVec = Collision.SlopeCollision(codable.position, newVec, codable.width, codable.height);
 							codable.position = new Vector2(slopeVec.X, slopeVec.Y);
@@ -417,7 +362,7 @@ namespace Macrocosm
 						}
 						if (codable.velocity != newVec) { codable.velocity = newVec; netUpdate = true; }
 					}
-				}else{ codable.velocity.Y += 0.35f; } //gravity*/			
+				} else { codable.velocity.Y += 0.35f; } //gravity*/			
 				/*if (isOwner && owner.velocity.X < 0.025f && codable.velocity.Y == 0f && targetDistX < 8f)
 				{
 					codable.velocity.X *= (Math.Abs(codable.velocity.X) > 0.01f ? 0.8f : 0f);
@@ -454,19 +399,16 @@ namespace Macrocosm
 						if (codable.velocity != newVec) { codable.velocity = newVec; netUpdate = true; }
 					}
 				}else{ codable.velocity.Y += 0.35f; } //gravity*/
-			}else //flying
-			{
+			} else { //flying
 				tileCollide = false;
 				Vector2 targetCenter = owner.Center;
-				if (owner.velocity.Y != 0f && dist < 80)
-				{
+				if (owner.velocity.Y != 0f && dist < 80) {
 					targetCenter = owner.Center + BaseUtility.RotateVector(default(Vector2), new Vector2(10, 0f), BaseUtility.RotationTo(codable.Center, owner.Center));
 				}
 				Vector2 newVel = BaseUtility.RotateVector(default(Vector2), new Vector2(maxSpeedFlying, 0f), BaseUtility.RotationTo(codable.Center, targetCenter));
-				if (owner.velocity.Y != 0f && ((newVel.X > 0 && codable.velocity.X < 0) || (newVel.X < 0 && codable.velocity.X > 0)))
-				{
+				if (owner.velocity.Y != 0f && ((newVel.X > 0 && codable.velocity.X < 0) || (newVel.X < 0 && codable.velocity.X > 0))) {
 					codable.velocity *= 0.98f; newVel *= 0.02f; codable.velocity += newVel;
-				}else{ codable.velocity = newVel; }
+				} else { codable.velocity = newVel; }
 				codable.position += owner.velocity;	
 			}
 		}
@@ -484,48 +426,39 @@ namespace Macrocosm
 		 * rotAmount : How much to rotate each tick.
 		 * moveTowards : Only used if absolute is false, if outside the rotation, move towards it.
 		 */
-		public static void AIRotate(Entity codable, ref float rotation, ref float moveRot, Vector2 rotateCenter, bool absolute = false, float rotDistance = 50f, float rotThreshold = 20f, float rotAmount = 0.024f, bool moveTowards = true)
-		{
-			if (absolute)
-			{
+		public static void AIRotate(Entity codable, ref float rotation, ref float moveRot, Vector2 rotateCenter, bool absolute = false, float rotDistance = 50f, float rotThreshold = 20f, float rotAmount = 0.024f, bool moveTowards = true) {
+			if (absolute) {
 				moveRot += rotAmount;
 				Vector2 rotVec = BaseUtility.RotateVector(default(Vector2), new Vector2(rotDistance, 0f), moveRot) + rotateCenter;
 				codable.Center = rotVec;
 				rotVec.Normalize();
 				rotation = BaseUtility.RotationTo(codable.Center, rotateCenter) - 1.57f;
 				codable.velocity *= 0f;
-			}else
-			{
+			} else {
 				float dist = Vector2.Distance(codable.Center, rotateCenter);
-				if (dist < rotDistance)//close enough to rotate
-				{
-					if (rotDistance - dist > rotThreshold) //too close, get back into position
-					{
+				if (dist < rotDistance) { //close enough to rotate 
+					if (rotDistance - dist > rotThreshold) { //too close, get back into position
 						moveRot += rotAmount;
 						Vector2 rotVec = BaseUtility.RotateVector(default(Vector2), new Vector2(rotDistance, 0f), moveRot) + rotateCenter;
 						float rot2 = BaseUtility.RotationTo(codable.Center, rotVec);
 						codable.velocity = BaseUtility.RotateVector(default(Vector2), new Vector2(5f, 0f), rot2);
 						rotation = BaseUtility.RotationTo(codable.Center, codable.Center + codable.velocity);
-					}else
-					{
+					} else {
 						moveRot += rotAmount;
 						Vector2 rotVec = BaseUtility.RotateVector(default(Vector2), new Vector2(rotDistance, 0f), moveRot) + rotateCenter;
 						float rot2 = BaseUtility.RotationTo(codable.Center, rotVec);
 						codable.velocity = BaseUtility.RotateVector(default(Vector2), new Vector2(5f, 0f), rot2);
 						rotation = BaseUtility.RotationTo(codable.Center, codable.Center + codable.velocity);
 					}
-				}else
-				if (moveTowards)
-				{
+				} else if (moveTowards) {
 					codable.velocity = AIVelocityLinear(codable, rotateCenter, rotAmount, rotAmount, true);
 					rotation = BaseUtility.RotationTo(codable.Center, rotateCenter) - 1.57f;
-				}else { codable.velocity *= 0.95f; }
+				} else { codable.velocity *= 0.95f; }
 			}
 		}
 
 
-        public static void AIPounce(Entity codable, Player player, float pounceScalar = 3f, float maxSpeed = 5f, float yBoost = -5.2f, float minDistance = 50, float maxDistance = 60)
-        {
+        public static void AIPounce(Entity codable, Player player, float pounceScalar = 3f, float maxSpeed = 5f, float yBoost = -5.2f, float minDistance = 50, float maxDistance = 60) {
             if (player == null || !player.active || player.dead) { return; }
             AIPounce(codable, player.Center, pounceScalar, maxSpeed, yBoost, minDistance, maxDistance);
         }
@@ -539,15 +472,12 @@ namespace Macrocosm
          * yBoost : the amount to jump by on the y-axis.
          * minDistance/maxDistance : the minimum and maximum distance from the pounce center that the codable is allowed to pounce, respectively.
          */
-        public static void AIPounce(Entity codable, Vector2 pounceCenter, float pounceScalar = 3.5f, float maxSpeed = 5f, float yBoost = -5.2f, float minDistance = 50, float maxDistance = 60)
-        {
+        public static void AIPounce(Entity codable, Vector2 pounceCenter, float pounceScalar = 3.5f, float maxSpeed = 5f, float yBoost = -5.2f, float minDistance = 50, float maxDistance = 60) {
             int direction = (codable is NPC ? ((NPC)codable).direction : codable is Projectile ? ((Projectile)codable).direction : 0);
             float dist = Vector2.Distance(codable.Center, pounceCenter);
-            if (pounceCenter.Y <= codable.Center.Y && dist > minDistance && dist < maxDistance)
-            {
+            if (pounceCenter.Y <= codable.Center.Y && dist > minDistance && dist < maxDistance) {
                 bool onLeft = pounceCenter.X < codable.Center.X;
-                if (codable.velocity.Y == 0 && ((onLeft && direction == -1) || (!onLeft && direction == 1)))
-                {
+                if (codable.velocity.Y == 0 && ((onLeft && direction == -1) || (!onLeft && direction == 1))) {
                     codable.velocity.X *= pounceScalar;
                     if (codable.velocity.X > maxSpeed) { codable.velocity.X = maxSpeed; } if (codable.velocity.X < -maxSpeed) { codable.velocity.X = -maxSpeed; }
                     codable.velocity.Y = yBoost;
@@ -565,29 +495,23 @@ namespace Macrocosm
          * maxSpeed : the maximum speed of the npc.
          * direct : If true npc's velocity is set so it moves in a straight line. If false, moves similarly to Flier AI.
          */
-        public static void AIPath(NPC npc, ref float[] ai, Vector2[] points, float moveInterval = 0.11f, float maxSpeed = 3f, bool direct = false)
-        {
+        public static void AIPath(NPC npc, ref float[] ai, Vector2[] points, float moveInterval = 0.11f, float maxSpeed = 3f, bool direct = false) {
             Vector2 destVec = new Vector2(ai[0], ai[1]);
-            if (Main.netMode != 1 && destVec != default(Vector2) && Vector2.Distance(npc.Center, destVec) <= Math.Max(5f, ((npc.width + npc.height) / 2f) * 0.45f))
-            {
+            if (Main.netMode != 1 && destVec != default(Vector2) && Vector2.Distance(npc.Center, destVec) <= Math.Max(5f, ((npc.width + npc.height) / 2f) * 0.45f)) {
                 ai[0] = 0f; ai[1] = 0f; destVec = default(Vector2);
             }
-            if (npc.ai[2] < points.Length)
-            {
+            if (npc.ai[2] < points.Length) {
                 //if the destination vec is default (0, 0), get the current point.
-                if (destVec == default(Vector2))
-                {
+                if (destVec == default(Vector2)) {
                     npc.velocity *= 0.95f;
-                    if(Main.netMode != 1)
-                    {
+                    if (Main.netMode != 1) {
                         destVec = points[(int)npc.ai[2]];
                         ai[0] = destVec.X; ai[1] = destVec.Y;
                         ai[2]++;
                         npc.netUpdate = true;
                     }
-                }else //otherwise move to the point.
-                {
-                    npc.velocity = AIVelocityLinear(npc, destVec, moveInterval, maxSpeed, direct);
+                } else { //otherwise move to the point.
+					npc.velocity = AIVelocityLinear(npc, destVec, moveInterval, maxSpeed, direct);
                 }
             }
         }
@@ -602,33 +526,27 @@ namespace Macrocosm
          * direct : If true npc's velocity is set so it moves in a straight line. If false, moves similarly to Flier AI.
          * tackleDelay : the amount of time between tackles in ticks.
          */
-        public static void AITackle(NPC npc, ref float[] ai, Vector2 point, float moveInterval = 0.11f, float maxSpeed = 3f, bool direct = false, int tackleDelay = 50, float drift = 0.95f)
-        {
+        public static void AITackle(NPC npc, ref float[] ai, Vector2 point, float moveInterval = 0.11f, float maxSpeed = 3f, bool direct = false, int tackleDelay = 50, float drift = 0.95f) {
             Vector2 destVec = new Vector2(ai[0], ai[1]);
-            if (destVec != default(Vector2) && Vector2.Distance(npc.Center, destVec) <= Math.Max(5f, ((npc.width + npc.height) / 2f) * 0.45f))
-            {
+            if (destVec != default(Vector2) && Vector2.Distance(npc.Center, destVec) <= Math.Max(5f, ((npc.width + npc.height) / 2f) * 0.45f)) {
                 ai[0] = 0f; ai[1] = 0f; destVec = default(Vector2);
             }
             //if the destination vec is default (0, 0), get the current point.
-            if (destVec == default(Vector2))
-            {
+            if (destVec == default(Vector2)) {
                 npc.velocity *= drift;
                 ai[2]--;
-                if (ai[2] <= 0)
-                {
+                if (ai[2] <= 0) {
                     ai[2] = tackleDelay;
                     destVec = point;
                     ai[0] = destVec.X; ai[1] = destVec.Y;
                 }
                 if(Main.netMode == 2){ npc.netUpdate = true; }
-            }else //otherwise move to the point.
-            {
-                npc.velocity = AIVelocityLinear(npc, destVec, moveInterval, maxSpeed, direct);
+            } else { //otherwise move to the point.
+				npc.velocity = AIVelocityLinear(npc, destVec, moveInterval, maxSpeed, direct);
             }
         }
 
-        public static Random GetSyncedRand(NPC npc)
-        {
+        public static Random GetSyncedRand(NPC npc) {
             return new Random(npc.whoAmI);
         }
 
@@ -644,33 +562,26 @@ namespace Macrocosm
          * direct : If true npc's velocity is set so it moves in a straight line. If false, moves similarly to Flier AI.
          * minDistance/maxDistance : the minimum and maximum distance the calculated points have to be from the central point, respectively.
          */
-        public static void AIGravitate(NPC npc, ref float[] ai, UnifiedRandom rand, Vector2 point, float moveInterval = 0.06f, float maxSpeed = 2f, bool canCrossCenter = true, bool direct = false, int minDistance = 50, int maxDistance = 200)
-        {
+        public static void AIGravitate(NPC npc, ref float[] ai, UnifiedRandom rand, Vector2 point, float moveInterval = 0.06f, float maxSpeed = 2f, bool canCrossCenter = true, bool direct = false, int minDistance = 50, int maxDistance = 200) {
             Vector2 destVec = new Vector2(ai[0], ai[1]);
             bool idleTooLong = false;
-            if (Main.netMode != 1)
-            {
+            if (Main.netMode != 1) {
                 //used to prevent the npc from getting 'stuck' trying to reach a point
-                if (!idleTooLong && destVec != default(Vector2) && Vector2.Distance(npc.Center, destVec) <= Math.Max(12f, ((npc.width + npc.height) / 2f) * 3f * (moveInterval / 0.06f)))
-                {
+                if (!idleTooLong && destVec != default(Vector2) && Vector2.Distance(npc.Center, destVec) <= Math.Max(12f, ((npc.width + npc.height) / 2f) * 3f * (moveInterval / 0.06f))) {
                     ai[2]++;
                     if (ai[2] > 100) { ai[2] = 0; idleTooLong = true; }
                 }
                 //if the destination vec is not null and the npc is close to the point (or has been idle too long), set it to default.
-                if (idleTooLong || (destVec != default(Vector2) && Vector2.Distance(npc.Center, destVec) <= Math.Max(5f, ((npc.width + npc.height) / 2f) * 0.75f)))
-                {
+                if (idleTooLong || (destVec != default(Vector2) && Vector2.Distance(npc.Center, destVec) <= Math.Max(5f, ((npc.width + npc.height) / 2f) * 0.75f))) {
                     ai[0] = 0f; ai[1] = 0f; destVec = default(Vector2);
                 }
             }
             //if the destination vec is default (0, 0)...
-            if (destVec == default(Vector2))
-            {
+            if (destVec == default(Vector2)) {
                 if (npc.velocity.X > 0.3f || npc.velocity.Y > 0.3f) { npc.velocity.X *= 0.95f; }
-                if (canCrossCenter)
-                {
+                if (canCrossCenter) {
                     destVec = BaseUtility.GetRandomPosNear(point, rand, minDistance, maxDistance);
-                }else
-                {
+                } else {
                     int distance = maxDistance - minDistance;
                     Vector2 topLeft = new Vector2(point.X - (minDistance + rand.Next(distance)), point.Y - (minDistance + rand.Next(distance)));
                     Vector2 topRight = new Vector2(point.X + (minDistance + rand.Next(distance)), topLeft.Y);
@@ -678,11 +589,9 @@ namespace Macrocosm
                     Vector2 bottomRight = new Vector2(topRight.X, bottomLeft.Y);
                     float tempDist = 9999999f;
                     Vector2 closestPoint = default(Vector2);
-                    for (int m = 0; m < 4; m++)
-                    {
+                    for (int m = 0; m < 4; m++) {
                         Vector2 corner = (m == 0 ? topLeft : m == 1 ? topRight : m == 2 ? bottomLeft : bottomRight);
-                        if (Vector2.Distance(npc.Center, corner) < tempDist)
-                        {
+                        if (Vector2.Distance(npc.Center, corner) < tempDist) {
                             tempDist = Vector2.Distance(npc.Center, corner);
                             closestPoint = corner;
                         }
@@ -692,34 +601,27 @@ namespace Macrocosm
                 }
                 ai[0] = destVec.X; ai[1] = destVec.Y;
                 if(Main.netMode == 2){ npc.netUpdate = true; }
-            }else
-            if (destVec != default(Vector2)) //otherwise move towards the point.
-            {
-                npc.velocity = AIVelocityLinear(npc, destVec, moveInterval, maxSpeed, direct);
+            } else if (destVec != default(Vector2)) { //otherwise move towards the point.
+				npc.velocity = AIVelocityLinear(npc, destVec, moveInterval, maxSpeed, direct);
             }
         }
 
 
-        public static Vector2 AIVelocityLinear(Entity codable, Vector2 destVec, float moveInterval, float maxSpeed, bool direct = false)
-        {
+        public static Vector2 AIVelocityLinear(Entity codable, Vector2 destVec, float moveInterval, float maxSpeed, bool direct = false) {
             Vector2 returnVelocity = codable.velocity;
             bool tileCollide = (codable is NPC ? !(((NPC)codable).noTileCollide) : codable is Projectile ? ((Projectile)codable).tileCollide : false);
-            if (direct)
-            {
+            if (direct) {
                 Vector2 rotVec = BaseUtility.RotateVector(codable.Center, codable.Center + new Vector2(maxSpeed, 0f), BaseUtility.RotationTo(codable.Center, destVec));
                 returnVelocity = rotVec - codable.Center;
-            }else
-            {
+            } else {
                 if (codable.Center.X > destVec.X) { returnVelocity.X = Math.Max(-maxSpeed, returnVelocity.X - moveInterval); } else if (codable.Center.X < destVec.X) { returnVelocity.X = Math.Min(maxSpeed, returnVelocity.X + moveInterval); }
                 if (codable.Center.Y > destVec.Y) { returnVelocity.Y = Math.Max(-maxSpeed, returnVelocity.Y - moveInterval); } else if (codable.Center.Y < destVec.Y) { returnVelocity.Y = Math.Min(maxSpeed, returnVelocity.Y + moveInterval); }
             }
-            if (tileCollide)
-            {
+            if (tileCollide) {
                 returnVelocity = Collision.TileCollision(codable.position, returnVelocity, codable.width, codable.height);
             }
             return returnVelocity;
         }
-
         #endregion
 
         #region Vanilla Projectile AI Copy Methods

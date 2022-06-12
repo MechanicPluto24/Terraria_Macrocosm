@@ -14,8 +14,7 @@ using Macrocosm;
 
 namespace Macrocosm
 {
-    public interface GoreInfo
-    {
+    public interface GoreInfo {
         //------------------------------------------------------//
         //-----------------GORE INFO CLASS----------------------//
         //------------------------------------------------------//
@@ -28,8 +27,7 @@ namespace Macrocosm
     }
 	
 	
-    public interface ZoneInfo
-    {
+    public interface ZoneInfo {
         //------------------------------------------------------//
         //-----------------ZONE INFO CLASS----------------------//
         //------------------------------------------------------//
@@ -41,8 +39,7 @@ namespace Macrocosm
         bool InZone(Player p, string zoneName);
     }
 
-    public static class BaseExtensions
-    {
+    public static class BaseExtensions {
         //------------------------------------------------------//
         //--------------BASE EXTENSIONS CLASS-------------------//
         //------------------------------------------------------//
@@ -55,15 +52,12 @@ namespace Macrocosm
         //  Author(s): Grox the Great                           //
         //------------------------------------------------------//
 
-        public static bool InZone(this Player p, string zoneName, ZoneInfo info = null)
-        {
-            if (info != null)
-			{
+        public static bool InZone(this Player p, string zoneName, ZoneInfo info = null) {
+            if (info != null) {
 				bool inZ = info.InZone(p, zoneName);
 				if(inZ) return true;
 			}
-            switch (zoneName)
-            {
+            switch (zoneName) {
                 //TODO: ADD IN BIOMES
                 case "Space": return p.position.Y / 16 < Main.worldSurface * 0.1f;
                 case "Sky": return p.position.Y / 16 > Main.worldSurface * 0.1f && p.position.Y / 16 < Main.worldSurface * 0.4f;
@@ -140,13 +134,12 @@ namespace Macrocosm
             return false;
         }
 
-        public static void AddRecipeGroup(this ModRecipe recipe, Mod mod, string groupName, int count) 
-        {
-            Mod m = (mod == null ? recipe.mod : mod);
+        public static void AddRecipeGroup(this Recipe recipe, Mod mod, string groupName, int count)  {
+            Mod m = (mod == null ? recipe.Mod : mod);
             recipe.AddRecipeGroup(m.Name + ":" + groupName, count);
         }
-        public static void AddItem(this ModRecipe recipe, int itemID, int count) { recipe.AddIngredient(itemID, count); }
-        public static void AddItem(this ModRecipe recipe, Mod mod, string itemName, int count) { recipe.AddIngredient((mod == null ? recipe.mod : mod), itemName, count); }
+        public static void AddItem(this Recipe recipe, int itemID, int count) { recipe.AddIngredient(itemID, count); }
+        public static void AddItem(this Recipe recipe, Mod mod, string itemName, int count) { recipe.AddIngredient((mod == null ? recipe.Mod : mod), itemName, count); }
 
         public static void ClearBuff(this Player player, Mod mod, string name) { player.ClearBuff(mod.BuffType(name)); }
         public static void AddBuff(this Player player, Mod mod, string name, int time, bool sync = true) { player.AddBuff(mod.BuffType(name), time, sync); }
