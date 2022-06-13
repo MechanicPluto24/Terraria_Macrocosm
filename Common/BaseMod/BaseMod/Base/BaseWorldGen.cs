@@ -11,13 +11,11 @@ using Terraria.Localization;
 using Terraria.Utilities;
 using Terraria.Map;
 using Terraria.ModLoader;
-using Terraria.World.Generation;
+using Terraria.WorldBuilding;
 using Macrocosm;
 
-namespace Macrocosm
-{
-    public class BaseWorldGen
-    {
+namespace Macrocosm {
+    public class BaseWorldGen {
         //------------------------------------------------------//
         //---------------BASE WORLDGEN CLASS--------------------//
         //------------------------------------------------------//
@@ -27,31 +25,26 @@ namespace Macrocosm
         //  Author(s): Grox the Great                           //
         //------------------------------------------------------//
 		
-		public static Tile GetTileSafely(Vector2 position)
-		{
+		public static Tile GetTileSafely(Vector2 position) {
 			return GetTileSafely((int)(position.X / 16f), (int)(position.Y / 16f));
 		}
 		
-		public static Tile GetTileSafely(int x, int y)
-		{
+		public static Tile GetTileSafely(int x, int y) {
 			if(x < 0 || x > Main.maxTilesX || y < 0 || y > Main.maxTilesY)
 				return new Tile();
 			return Framing.GetTileSafely(x, y);
 		}
 
-		public static void GenOre(int tileType, int amountInWorld = -1, float oreStrength = 5, int oreSteps = 5, int heightLimit = -1, bool mapDebug = false)
-		{
+		public static void GenOre(int tileType, int amountInWorld = -1, float oreStrength = 5, int oreSteps = 5, int heightLimit = -1, bool mapDebug = false) {
 			if (WorldGen.noTileActions) return;
 			if (heightLimit == -1) heightLimit = (int)Main.worldSurface;
-			if(amountInWorld == -1)
-			{
+			if(amountInWorld == -1) {
 				float oreCount = (float)(Main.maxTilesX / 4200);
 				oreCount *= 50f;
 				amountInWorld = (int)oreCount;
 			}
 			int count = 0;
-			while (count < amountInWorld)
-			{
+			while (count < amountInWorld) {
 				int i2 = WorldGen.genRand.Next(100, Main.maxTilesX - 100);
 				int j2 = WorldGen.genRand.Next(heightLimit, Main.maxTilesY - 150);
 				WorldGen.OreRunner(i2, j2, oreStrength, oreSteps, (ushort)tileType);
@@ -85,13 +78,11 @@ namespace Macrocosm
          * startY : The y to begin iteration at.
          * solid : True if the tile must be solid.
          */
-        public static int GetFirstTileFloor(int x, int startY, bool solid = true)
-        {
+        public static int GetFirstTileFloor(int x, int startY, bool solid = true) {
 			if(!WorldGen.InWorld(x, startY)) return startY;			
-            for(int y = startY; y < Main.maxTilesY - 10; y++)
-            {
+            for(int y = startY; y < Main.maxTilesY - 10; y++) {
                 Tile tile = Framing.GetTileSafely(x, y);
-                if(tile != null && tile.nactive() && (!solid || Main.tileSolid[(int)tile.type])){ return y; }
+                if(tile != null && tile.HasUnactuatedTile && (!solid || Main.tileSolid[(int)tile.TileType])){ return y; }
             }
             return Main.maxTilesY - 10;
         }
@@ -101,35 +92,30 @@ namespace Macrocosm
          * startY : The y to begin iteration at.
          * solid : True if the tile must be solid.
          */
-        public static int GetFirstTileCeiling(int x, int startY, bool solid = true)
-        {
-			if(!WorldGen.InWorld(x, startY)) return startY;
-            for (int y = startY; y > 10; y--)
-            {
+        public static int GetFirstTileCeiling(int x, int startY, bool solid = true) {
+			if (!WorldGen.InWorld(x, startY)) return startY;
+            for (int y = startY; y > 10; y--) {
                 Tile tile = Framing.GetTileSafely(x, y);
-                if (tile != null && tile.nactive() && (!solid || Main.tileSolid[(int)tile.type])) { return y; }
-            }
+				if (tile != null && tile.HasUnactuatedTile && (!solid || Main.tileSolid[(int)tile.TileType])) { return y; }
+			}
             return 10;
         }
 		
 		
-        public static int GetFirstTileSide(int startX, int y, bool left, bool solid = true)
-        {
-			if(!WorldGen.InWorld(startX, y)) return startX;			
-			if(left)
-			{
-				for(int x = startX; x > 10; x--)
-				{
+        public static int GetFirstTileSide(int startX, int y, bool left, bool solid = true) {
+			if (!WorldGen.InWorld(startX, y)) return startX;			
+			if (left) {
+				for (int x = startX; x > 10; x--) {
 					Tile tile = Framing.GetTileSafely(x, y);
-					if(tile != null && tile.nactive() && (!solid || Main.tileSolid[(int)tile.type])){ return x; }
-				}			
+					if (tile != null && tile.HasUnactuatedTile && (!solid || Main.tileSolid[(int)tile.TileType])) { return x; }
+				}	
 				return 10;
 			}else
 			{
 				for(int x = startX; x < Main.maxTilesX - 10; x++)
 				{
 					Tile tile = Framing.GetTileSafely(x, y);
-					if(tile != null && tile.nactive() && (!solid || Main.tileSolid[(int)tile.type])){ return x; }
+					if (tile != null && tile.HasUnactuatedTile && (!solid || Main.tileSolid[(int)tile.TileType])) { return x; }
 				}
 				return Main.maxTilesX - 10;				
 			}
@@ -138,8 +124,7 @@ namespace Macrocosm
         /*
          * returns the first Y position below the possible spawning height of floating islands.
          */
-        public static int GetBelowFloatingIslandY() 
-        {
+        public static int GetBelowFloatingIslandY()  {
             int size = GetWorldSize();
             return (size == 1 ? 1200 : size == 2 ? 1600 : size == 3 ? 2000 : 1200) + 1;
         }
@@ -148,8 +133,7 @@ namespace Macrocosm
          * Returns the current world size.
          * 1 == small, 2 == medium, 3 == large.
          */
-        public static int GetWorldSize()
-        {
+        public static int GetWorldSize() {
             if (Main.maxTilesX == 4200) { return 1; }
             else if (Main.maxTilesX == 6400) { return 2; }
             else if (Main.maxTilesX == 8400) { return 3; }
@@ -166,35 +150,29 @@ namespace Macrocosm
          *  sync : the conditional over which of wether to sync or not.
 		 *  silent : If true, prevents sounds and dusts.
          */
-        public static void ReplaceTiles(Vector2 position, int radius, int[] tiles, int[] replacements, bool silent = false, bool sync = true)
-        {
+        public static void ReplaceTiles(Vector2 position, int radius, int[] tiles, int[] replacements, bool silent = false, bool sync = true) {
             int radiusLeft = (int)(position.X / 16f - (float)radius);
             int radiusRight = (int)(position.X / 16f + (float)radius);
             int radiusUp = (int)(position.Y / 16f - (float)radius);
             int radiusDown = (int)(position.Y / 16f + (float)radius);
-            if(radiusLeft < 0){ radiusLeft = 0; } if(radiusRight > Main.maxTilesX) { radiusRight = Main.maxTilesX; }
-            if(radiusUp < 0){ radiusUp = 0; } if(radiusDown > Main.maxTilesY) { radiusDown = Main.maxTilesY; }
+            if (radiusLeft < 0){ radiusLeft = 0; } if(radiusRight > Main.maxTilesX) { radiusRight = Main.maxTilesX; }
+            if (radiusUp < 0){ radiusUp = 0; } if(radiusDown > Main.maxTilesY) { radiusDown = Main.maxTilesY; }
 
 			float distRad = radius * 16f;
-            for(int x1 = radiusLeft; x1 <= radiusRight; x1++)
-            {
-                for(int y1 = radiusUp; y1 <= radiusDown; y1++)
-                {
+            for (int x1 = radiusLeft; x1 <= radiusRight; x1++) {
+                for (int y1 = radiusUp; y1 <= radiusDown; y1++) {
                     double dist = Vector2.Distance(new Vector2(x1 * 16f + 8f, y1 * 16f + 8f), position);	
-					if(!WorldGen.InWorld(x1, y1, 0)) continue;					
-                    if(dist < distRad && Main.tile[x1, y1] != null && Main.tile[x1, y1].active())
-                    {
+					if (!WorldGen.InWorld(x1, y1, 0)) continue;					
+                    if (dist < distRad && Main.tile[x1, y1] != null && Main.tile[x1, y1].active()) {
                         int currentType = Main.tile[x1, y1].type;
                         int index = 0;					
-                        if(BaseUtility.InArray(tiles, currentType, ref index))
-                        {					
+                        if (BaseUtility.InArray(tiles, currentType, ref index)) {
                             GenerateTile(x1, y1, replacements[index], -1, 0, true, false, -2, silent, false);
                         }
                     }
                 }
             }
-            if (sync && Main.netMode != 0)
-            {
+            if (sync && Main.netMode != 0) {
                 NetMessage.SendTileSquare(-1, (int)(position.X / 16f), (int)(position.Y / 16f), (radius * 2) + 2);
             }
         }
@@ -203,12 +181,9 @@ namespace Macrocosm
          *  Completely kills a chest at X, Y and removes all items within it.
          *  (note this does not remove the tile itself)
          */
-        public static bool KillChestAndItems(int X, int Y)
-        {
-            for(int i = 0; i < 1000; i++)
-            {
-                if(Main.chest[i] != null && Main.chest[i].x == X && Main.chest[i].y == Y)
-                {
+        public static bool KillChestAndItems(int X, int Y) {
+            for (int i = 0; i < 1000; i++) {
+                if (Main.chest[i] != null && Main.chest[i].x == X && Main.chest[i].y == Y) {
                     Main.chest[i] = null;
                     return true;
                 }
