@@ -23,7 +23,7 @@ namespace Macrocosm {
             var ta = ModLoader.GetMod("TerrariaAmbience");
             var taAPI = ModLoader.GetMod("TerrariaAmbienceAPI");
             ta?.Call("AddTilesToList", this, "Stone", new string[] { "Regolith", "RegolithBrick", "Hemostone" }, null); // ech
-            taAPI?.Call(this, "Sounds/Ambient/Moon", "MoonAmbience", 1f, 0.0075f, new Func<bool>(Subworld.IsActive<Moon>()));
+            taAPI?.Call(this, "Sounds/Ambient/Moon", "MoonAmbience", 1f, 0.0075f, new Func<bool>(SubworldSystem.IsActive<Moon>));
         }
 
         private int MoonCoin_AllowCoinSlotPlacement(On.Terraria.UI.ItemSlot.orig_PickItemMovementAction orig, Item[] inv, int context, int slot, Item checkItem) {

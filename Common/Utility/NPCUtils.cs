@@ -14,7 +14,7 @@ namespace Macrocosm.Common.Utility {
 		public static void ScaleHealthBy(this NPC npc, float factor) {
 			float bossScale = CalculateBossHealthScale(out _);
 
-			npc.lifeMax = (int)Math.Ceiling(npc.lifeMax * Main.);
+			npc.lifeMax = (int)Math.Ceiling(npc.lifeMax * Main.GameModeInfo.EnemyMaxLifeMultiplier);
 			npc.lifeMax = (int)Math.Ceiling(npc.lifeMax * factor * bossScale);
 		}
 
@@ -48,7 +48,7 @@ namespace Macrocosm.Common.Utility {
 
 		public static bool SummonBossDirectlyWithMessage(Vector2 targetPosition, int type){
 			//Try to spawn the new NPC.  If that failed, then "npc" will be 200
-			int npc = NPC.NewNPC((int)targetPosition.X, (int)targetPosition.Y, type);
+			int npc = NPC.NewNPC(Entity.GetSource_NaturalSpawn(), (int)targetPosition.X, (int)targetPosition.Y, type);
 
 			//Only display the text if we could spawn the NPC
 			if (npc < Main.npc.Length) {

@@ -4,7 +4,6 @@ using System.Reflection;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -12,8 +11,7 @@ using Terraria.Audio;
 using Terraria.ModLoader;
 using Macrocosm;
 
-namespace Macrocosm
-{
+namespace Macrocosm {
     public interface GoreInfo {
         //------------------------------------------------------//
         //-----------------GORE INFO CLASS----------------------//
@@ -25,7 +23,6 @@ namespace Macrocosm
 
         IDictionary<string, int> GetGoreArray();
     }
-	
 	
     public interface ZoneInfo {
         //------------------------------------------------------//
@@ -81,7 +78,7 @@ namespace Macrocosm
                 case "Jungle": return p.ZoneJungle;
                 case "Snow": return p.ZoneSnow;
 
-				case "Purity": return !p.ZoneTowerSolar && !p.ZoneTowerVortex && !p.ZoneTowerNebula && !p.ZoneTowerStardust && !p.ZoneBeach && !p.ZoneDesert && !p.ZoneUndergroundDesert && !p.ZoneSnow && !p.ZoneDungeon && !p.ZoneJungle && !p.ZoneCorrupt && !p.ZoneCrimson && !p.ZoneHoly && !p.ZoneMeteor && !p.ZoneGlowshroom;
+				case "Purity": return !p.ZoneTowerSolar && !p.ZoneTowerVortex && !p.ZoneTowerNebula && !p.ZoneTowerStardust && !p.ZoneBeach && !p.ZoneDesert && !p.ZoneUndergroundDesert && !p.ZoneSnow && !p.ZoneDungeon && !p.ZoneJungle && !p.ZoneCorrupt && !p.ZoneCrimson && !p.ZoneHallow && !p.ZoneMeteor && !p.ZoneGlowshroom;
 
 				case "Meteor":
                 case "Meteorite": return p.ZoneMeteor;
@@ -94,7 +91,7 @@ namespace Macrocosm
                 case "Corruption": return p.ZoneCorrupt;
 				case "Crim":
                 case "Crimson": return p.ZoneCrimson;
-                case "Hallow": return p.ZoneHoly;
+                case "Hallow": return p.ZoneHallow;
                 case "Dungeon": return p.ZoneDungeon;
 				
 				case "TowerAny": return (p.ZoneTowerSolar || p.ZoneTowerVortex || p.ZoneTowerNebula || p.ZoneTowerStardust);
@@ -161,19 +158,17 @@ namespace Macrocosm
 	    public static ushort ReadUShort(this BinaryReader w) { return w.ReadUInt16(); }	
         public static float ReadFloat(this BinaryReader w) { return w.ReadSingle(); }
 
-        public static bool IsBlank(this Item item)
-        {
+        public static bool IsBlank(this Item item) {
             if (item.type <= 0 || item.stack <= 0) return true;
             return string.IsNullOrEmpty(item.Name);
         }
 
-        public static bool water(this Tile tile) { return tile.liquidType() == Tile.Liquid_Water; }
-        public static bool lava(this Tile tile) { return tile.liquidType() == Tile.Liquid_Lava; }
-        public static bool honey(this Tile tile) { return tile.liquidType() == Tile.Liquid_Honey; }
+        public static bool water(this Tile tile) { return tile.LiquidType == LiquidID.Water; }
+        public static bool lava(this Tile tile) { return tile.LiquidType == LiquidID.Lava; }
+        public static bool honey(this Tile tile) { return tile.LiquidType == LiquidID.Honey; }
     }
 
-    public class BaseConstants
-    {
+    public class BaseConstants {
         //------------------------------------------------------//
         //---------------BASE CONSTANTS CLASS-------------------//
         //------------------------------------------------------//
@@ -183,9 +178,7 @@ namespace Macrocosm
         //  Author(s): Grox the Great                           //
         //------------------------------------------------------//
 
-
         //---Alternating Variables---//
-
 
         //returns the name of the client's player. If the player is null or it's called on the server, it returns null.
 		public static string NAME_MAINPLAYER { get { return Main.netMode == 2 || Main.player[Main.myPlayer] == null ? null : Main.player[Main.myPlayer].name; } }
@@ -194,26 +187,26 @@ namespace Macrocosm
         public static Player MAINPLAYER { get { return Main.netMode == 2 ? null : Main.player[Main.myPlayer]; } }
 
         //returns the name of the given npc. If the npc isn't in the world, it returns null.
-        public static string NAME_GUIDE { get { return NPC.AnyNPCs(22) ? NPC.firstNPCName(22) : null; } }
-        public static string NAME_MERCHANT{ get{ return NPC.AnyNPCs(17) ? NPC.firstNPCName(17) : null; } }
-        public static string NAME_NURSE { get { return NPC.AnyNPCs(18) ? NPC.firstNPCName(18) : null; } }
-        public static string NAME_ARMSDEALER { get { return NPC.AnyNPCs(19) ? NPC.firstNPCName(19) : null; } }
-        public static string NAME_DRYAD { get { return NPC.AnyNPCs(20) ? NPC.firstNPCName(20) : null; } }
-        public static string NAME_DEMOLITIONIST { get { return NPC.AnyNPCs(38) ? NPC.firstNPCName(38) : null; } }
-        public static string NAME_CLOTHIER { get { return NPC.AnyNPCs(54) ? NPC.firstNPCName(54) : null; } }
-        public static string NAME_TINKERER { get { return NPC.AnyNPCs(107) ? NPC.firstNPCName(107) : null; } }
-        public static string NAME_WIZARD { get { return NPC.AnyNPCs(108) ? NPC.firstNPCName(108) : null; } }
-        public static string NAME_MECHANIC { get { return NPC.AnyNPCs(124) ? NPC.firstNPCName(124) : null; } }
-        public static string NAME_TRUFFLE { get { return NPC.AnyNPCs(160) ? NPC.firstNPCName(160) : null; } }
-        public static string NAME_STEAMPUNKER { get { return NPC.AnyNPCs(178) ? NPC.firstNPCName(178) : null; } }
-        public static string NAME_DYETRADER { get { return NPC.AnyNPCs(207) ? NPC.firstNPCName(207) : null; } }
-        public static string NAME_PARTYGIRL { get { return NPC.AnyNPCs(208) ? NPC.firstNPCName(208) : null; } }
-        public static string NAME_CYBORG { get { return NPC.AnyNPCs(209) ? NPC.firstNPCName(209) : null; } }
-        public static string NAME_PAINTER { get { return NPC.AnyNPCs(227) ? NPC.firstNPCName(227) : null; } }
-        public static string NAME_WITCHDOCTOR { get { return NPC.AnyNPCs(228) ? NPC.firstNPCName(228) : null; } }
-        public static string NAME_PIRATE { get { return NPC.AnyNPCs(229) ? NPC.firstNPCName(229) : null; } }
-		public static string NAME_STYLIST { get { return NPC.AnyNPCs(353) ? NPC.firstNPCName(353) : null; } }
-		public static string NAME_ANGLER { get { return NPC.AnyNPCs(369) ? NPC.firstNPCName(369) : null; } }
+        public static string NAME_GUIDE { get { return NPC.AnyNPCs(22) ? NPC.GetFirstNPCNameOrNull(22) : null; } }
+        public static string NAME_MERCHANT{ get{ return NPC.AnyNPCs(17) ? NPC.GetFirstNPCNameOrNull(17) : null; } }
+        public static string NAME_NURSE { get { return NPC.AnyNPCs(18) ? NPC.GetFirstNPCNameOrNull(18) : null; } }
+        public static string NAME_ARMSDEALER { get { return NPC.AnyNPCs(19) ? NPC.GetFirstNPCNameOrNull(19) : null; } }
+        public static string NAME_DRYAD { get { return NPC.AnyNPCs(20) ? NPC.GetFirstNPCNameOrNull(20) : null; } }
+        public static string NAME_DEMOLITIONIST { get { return NPC.AnyNPCs(38) ? NPC.GetFirstNPCNameOrNull(38) : null; } }
+        public static string NAME_CLOTHIER { get { return NPC.AnyNPCs(54) ? NPC.GetFirstNPCNameOrNull(54) : null; } }
+        public static string NAME_TINKERER { get { return NPC.AnyNPCs(107) ? NPC.GetFirstNPCNameOrNull(107) : null; } }
+        public static string NAME_WIZARD { get { return NPC.AnyNPCs(108) ? NPC.GetFirstNPCNameOrNull(108) : null; } }
+        public static string NAME_MECHANIC { get { return NPC.AnyNPCs(124) ? NPC.GetFirstNPCNameOrNull(124) : null; } }
+        public static string NAME_TRUFFLE { get { return NPC.AnyNPCs(160) ? NPC.GetFirstNPCNameOrNull(160) : null; } }
+        public static string NAME_STEAMPUNKER { get { return NPC.AnyNPCs(178) ? NPC.GetFirstNPCNameOrNull(178) : null; } }
+        public static string NAME_DYETRADER { get { return NPC.AnyNPCs(207) ? NPC.GetFirstNPCNameOrNull(207) : null; } }
+        public static string NAME_PARTYGIRL { get { return NPC.AnyNPCs(208) ? NPC.GetFirstNPCNameOrNull(208) : null; } }
+        public static string NAME_CYBORG { get { return NPC.AnyNPCs(209) ? NPC.GetFirstNPCNameOrNull(209) : null; } }
+        public static string NAME_PAINTER { get { return NPC.AnyNPCs(227) ? NPC.GetFirstNPCNameOrNull(227) : null; } }
+        public static string NAME_WITCHDOCTOR { get { return NPC.AnyNPCs(228) ? NPC.GetFirstNPCNameOrNull(228) : null; } }
+        public static string NAME_PIRATE { get { return NPC.AnyNPCs(229) ? NPC.GetFirstNPCNameOrNull(229) : null; } }
+		public static string NAME_STYLIST { get { return NPC.AnyNPCs(353) ? NPC.GetFirstNPCNameOrNull(353) : null; } }
+		public static string NAME_ANGLER { get { return NPC.AnyNPCs(369) ? NPC.GetFirstNPCNameOrNull(369) : null; } }
 
         //----Drawing Constants----//
 
@@ -361,12 +354,10 @@ namespace Macrocosm
         //----------------------//
     }
 
-    public class DuoObj
-    {
+    public class DuoObj {
         public object obj1, obj2;
 
-        public DuoObj(object o1, object o2) 
-        { 
+        public DuoObj(object o1, object o2)  { 
             obj1 = o1; obj2 = o2; 
         }
     }
