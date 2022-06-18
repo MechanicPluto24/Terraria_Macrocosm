@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Macrocosm.Content.Items.Currency;
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Buffs.Debuffs;
+using Terraria.GameContent.ItemDropRules;
 
 namespace Macrocosm.Content.NPCs.Unfriendly.Enemies {
     public class Clavite : ModNPC {
@@ -56,37 +57,32 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies {
             NPC.velocity = move;
         }
 
-        private float Magnitude(Vector2 mag) {
-            return (float)Math.Sqrt(mag.X * mag.X + mag.Y * mag.Y);
-        }
+        private float Magnitude(Vector2 mag) => (float)Math.Sqrt(mag.X * mag.X + mag.Y * mag.Y);
+
         public override void OnHitPlayer(Player player, int damage, bool crit) {
             if (player.GetModPlayer<MacrocosmPlayer>().accMoonArmor) { // Now only suit breaches players with said suit 
                 player.AddBuff(ModContent.BuffType<SuitBreach>(), 600, true);
             }
         }
-        public override float SpawnChance(NPCSpawnInfo spawnInfo) {
+        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        {
             return spawnInfo.SpawnTileType == ModContent.TileType<Tiles.Regolith>() ? .1f : 0f;
         }
-        public override void NPCLoot()
+        
+        public override void ModifyNPCLoot(NPCLoot loot)
         {
-            Item.NewItem(NPC.getRect(), ModContent.ItemType<CosmicDust>());
-            if (Main.rand.NextFloat() < .0625)
-                Item.NewItem(NPC.getRect(), ModContent.ItemType<ArtemiteOre>(), 1 + Main.rand.Next(5));
-            if (Main.rand.NextFloat() < .0625)
-                Item.NewItem(NPC.getRect(), ModContent.ItemType<ChandriumOre>(), 1 + Main.rand.Next(5));
-            if (Main.rand.NextFloat() < .0625)
-                Item.NewItem(NPC.getRect(), ModContent.ItemType<SeleniteOre>(), 1 + Main.rand.Next(5));
-            if (Main.rand.NextFloat() < .0625)
-                Item.NewItem(NPC.getRect(), ModContent.ItemType<DianiteOre>(), 1 + Main.rand.Next(5));
-            // Very sloppy but it will do
+            loot.Add(ItemDropRule.Common(ModContent.ItemType<CosmicDust>()));             // Always drop 1 cosmic dust
+            loot.Add(ItemDropRule.Common(ModContent.ItemType<ArtemiteOre>(), 16, 1, 6));  // 16% chance to drop 1-6 Artemite Ore
+            loot.Add(ItemDropRule.Common(ModContent.ItemType<ChandriumOre>(), 16, 1, 6)); // 16% chance to drop 1-6 Chandrium Ore
+            loot.Add(ItemDropRule.Common(ModContent.ItemType<SeleniteOre>(), 16, 1, 6));  // 16% chance to drop 1-6 Selenite Ore
+            loot.Add(ItemDropRule.Common(ModContent.ItemType<DianiteOre>(), 16, 1, 6));   // 16% chance to drop 1-6 DianiteOre Ore
         }
 
         public override void HitEffect(int hitDirection, double damage)
         {
             for (int i = 0; i < 10; i++)
             {
-                int dustType = 1;
-                int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, dustType);
+                int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.Stone);
                 Dust dust = Main.dust[dustIndex];
                 dust.velocity.X *= Main.rand.Next(-50, 51) * 0.01f;
                 dust.velocity.Y *= Main.rand.Next(-50, 51) * 0.01f;
