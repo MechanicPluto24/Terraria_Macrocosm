@@ -1667,7 +1667,7 @@ namespace Macrocosm {
         public static void AISpear(Projectile p, ref float[] ai, float initialSpeed = 3f, float moveOutward = 1.4f, float moveInward = 1.6f, bool overrideKill = false) {
             Player plr = Main.player[p.owner];
             Item item = plr.inventory[plr.selectedItem];
-            if (Main.myPlayer == p.owner && item != null && item.autoReuse && plr.itemAnimation == 1) { p.Kill(); return; } //prevents a bug with autoReuse and spears
+            if (Main.myPlayer == p.owner && item != null && Item.autoReuse && plr.itemAnimation == 1) { p.Kill(); return; } //prevents a bug with autoReuse and spears
             Main.player[p.owner].heldProj = p.whoAmI;
             Main.player[p.owner].itemTime = Main.player[p.owner].itemAnimation;
 			Vector2 gfxOffset = new Vector2(0, plr.gfxOffY);
@@ -4832,7 +4832,7 @@ namespace Macrocosm {
          * If it drops more then one item it will return the last item dropped's whoAmI.
          * 
          * amt : the amount of the item to drop.
-         * maxStack : The max stack count per item. (only applies if clusterItem == true)
+         * maxStack : The max stack count per Item. (only applies if clusterItem == true)
          * chance : 0-1. The percent chance of the item drop. If projectile is not 100 and the item does not drop, projectile method returns -1.
          * clusterItem : If true, it will stick the drops into stacks that fit to the item's maxStack value. If false it drops them as individual items.
          */
@@ -4929,7 +4929,7 @@ namespace Macrocosm {
 
 				//player.ItemDamagePVP(subPlayer, hitDirection, ref dmgAmt, ref crit, ref mult);
 				//BuffDef.RunBuffMethod(player, (modbuff) => { modbuff.DamagePVP(player, subPlayer, hitDirection, ref dmgAmt, ref crit, ref mult); });
-				//ItemDef.RunEquipMethod(player, (item) => { item.DamagePVP(player, subPlayer, hitDirection, ref dmgAmt, ref crit, ref mult); }, true, true, false, true);
+				//ItemDef.RunEquipMethod(player, (item) => { Item.DamagePVP(player, subPlayer, hitDirection, ref dmgAmt, ref crit, ref mult); }, true, true, false, true);
 
                 int parsedDamage = dmgAmt; if (dmgVariation){ parsedDamage = Main.DamageVar((float)dmgAmt); }
 
@@ -4938,7 +4938,7 @@ namespace Macrocosm {
 				//crit = false;
 				//player.ItemDealtPVP(subPlayer, hitDirection, dmgAmt, crit);
 				//BuffDef.RunBuffMethod(player, (modbuff) => { modbuff.DealtPVP(player, subPlayer, hitDirection, dmgAmt, crit); });
-				//ItemDef.RunEquipMethod(player, (item) => { item.DealtPVP(player, subPlayer, hitDirection, dmgAmt, crit); }, true, true, false, true);
+				//ItemDef.RunEquipMethod(player, (item) => { Item.DealtPVP(player, subPlayer, hitDirection, dmgAmt, crit); }, true, true, false, true);
 
                 if (Main.netMode != 0)
                 {
@@ -4994,7 +4994,7 @@ namespace Macrocosm {
 				//BuffDef.RunBuffMethod(npc, (modbuff) => { modbuff.DamagePlayer(npc, player, hitDirection, ref dmgAmt, ref crit, ref mult); });
 				//player.NPCDamagePlayer(npc, hitDirection, ref dmgAmt, ref crit, ref mult);
 				//BuffDef.RunBuffMethod(player, (modbuff) => { modbuff.DamagePlayer(player, npc, hitDirection, ref dmgAmt, ref crit, ref mult); });
-				//ItemDef.RunEquipMethod(player, (item) => { item.DamagePlayer(npc, player, hitDirection, ref dmgAmt, ref crit, ref mult); }, true, true, false, true);
+				//ItemDef.RunEquipMethod(player, (item) => { Item.DamagePlayer(npc, player, hitDirection, ref dmgAmt, ref crit, ref mult); }, true, true, false, true);
 
                 int parsedDamage = dmgAmt; if (dmgVariation){ parsedDamage = Main.DamageVar((float)dmgAmt); }
                 int dmgDealt = (int)player.Hurt(PlayerDeathReason.ByNPC(npc.whoAmI), parsedDamage, hitDirection, false, false, false, 0);
@@ -5003,7 +5003,7 @@ namespace Macrocosm {
 				//BuffDef.RunBuffMethod(npc, (modbuff) => { modbuff.DealtPlayer(npc, player, hitDirection, dmgAmt, crit); });
 				//player.NPCDealtPlayer(npc, hitDirection, dmgDealt, crit);
 				//BuffDef.RunBuffMethod(player, (modbuff) => { modbuff.DealtPlayer(player, npc, hitDirection, dmgAmt, crit); });
-				//ItemDef.RunEquipMethod(player, (item) => { item.DealtPlayer(npc, player, hitDirection, dmgAmt, crit); }, true, true, false, true);
+				//ItemDef.RunEquipMethod(player, (item) => { Item.DealtPlayer(npc, player, hitDirection, dmgAmt, crit); }, true, true, false, true);
 
                 if (Main.netMode != 0)
                 {
@@ -5075,7 +5075,7 @@ namespace Macrocosm {
 					//BuffDef.RunBuffMethod(npc, (modbuff) => { modbuff.DamageNPC(npc, player, hitDirection, ref dmgAmt, ref knockback, ref crit, ref mult); });
 					//player.ItemDamageNPC(npc, hitDirection, ref dmgAmt, ref knockback, ref crit, ref mult);
 					//BuffDef.RunBuffMethod(player, (modbuff) => { modbuff.DamageNPC(player, npc, hitDirection, ref dmgAmt, ref knockback, ref crit, ref mult); });
-					//ItemDef.RunEquipMethod(player, (item) => { item.DamageNPC(player, npc, hitDirection, ref dmgAmt, ref knockback, ref crit, ref mult); }, true, true, false, true);
+					//ItemDef.RunEquipMethod(player, (item) => { Item.DamageNPC(player, npc, hitDirection, ref dmgAmt, ref knockback, ref crit, ref mult); }, true, true, false, true);
                     
 					int parsedDamage = dmgAmt; if (dmgVariation){ parsedDamage = Main.DamageVar((float)dmgAmt); }
                     int dmgDealt = (int)npc.StrikeNPC(parsedDamage, knockback, hitDirection, false, false, false);
@@ -5085,7 +5085,7 @@ namespace Macrocosm {
 					//BuffDef.RunBuffMethod(npc, (modbuff) => { modbuff.DealtNPC(npc, player, hitDirection, dmgAmt, knockback, crit); });
 					//player.ItemDealtNPC(npc, hitDirection, dmgDealt, knockback, crit);
 					//BuffDef.RunBuffMethod(player, (modbuff) => { modbuff.DealtNPC(player, npc, hitDirection, dmgAmt, knockback, crit); });
-					//ItemDef.RunEquipMethod(player, (item) => { item.DealtNPC(player, npc, hitDirection, dmgAmt, knockback, crit); }, true, true, false, true);
+					//ItemDef.RunEquipMethod(player, (item) => { Item.DealtNPC(player, npc, hitDirection, dmgAmt, knockback, crit); }, true, true, false, true);
 
                     if (Main.netMode != 0)
                     {

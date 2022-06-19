@@ -10,15 +10,15 @@ namespace Macrocosm.Content.Items.Armor
 	{
 		public override void SetStaticDefaults() 
 		{
-            DisplayName.SetDefault("Astronaut Helmet");
+            DisplayName.SetDefault("MoonChampion Helmet");
 		}
 		public override void SetDefaults() 
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = 10000;
-			item.rare = ItemRarityID.Green;
-			item.defense = 26;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = 10000;
+			Item.rare = ItemRarityID.Green;
+			Item.defense = 26;
 		}
 
 		public override bool IsArmorSet(Item head, Item body, Item legs)
@@ -37,11 +37,10 @@ namespace Macrocosm.Content.Items.Armor
 
 		public override void AddRecipes() 
 		{
-			ModRecipe recipe = new ModRecipe(mod);
+			Recipe recipe = Mod.CreateRecipe(Type);
 			recipe.AddIngredient(ItemID.DirtBlock, 10);
 			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			recipe.Register();
 		}
 	}
 }

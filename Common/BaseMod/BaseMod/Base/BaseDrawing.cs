@@ -383,7 +383,7 @@ namespace Macrocosm
         }
 
         /*
-         * Convenience method for getting lighting color using an npc or projectile position.
+         * Convenience method for getting lighting color using an npc or Projectile position.
          */
         public static Color GetLightColor(Vector2 position)
         {
@@ -391,14 +391,14 @@ namespace Macrocosm
         }
 
         /*
-         * Convenience method for adding lighting using an npc or projectile position, using a Color instance for color.
+         * Convenience method for adding lighting using an npc or Projectile position, using a Color instance for color.
          */
         public static void AddLight(Vector2 position, Color color, float brightnessDivider = 1F)
         {
             AddLight(position, color.R / 255F, color.G / 255F, color.B / 255F, brightnessDivider);
         }
         /*
-         * Convenience method for adding lighting using an npc or projectile position with 0F - 1F color values.
+         * Convenience method for adding lighting using an npc or Projectile position with 0F - 1F color values.
          */
         public static void AddLight(Vector2 position, float colorR, float colorG, float colorB, float brightnessDivider = 1F)
         {
@@ -709,7 +709,7 @@ namespace Macrocosm
          */
         public static bool ShouldDrawHeldItem(Item item, int itemAnimation, bool isWet, bool isDead = false)
         {
-            return ((itemAnimation > 0 || item.holdStyle > 0) && item.type > 0 && !isDead && !item.noUseGraphic && (!isWet || !item.noWet));
+            return ((itemAnimation > 0 || Item.holdStyle > 0) && Item.type > 0 && !isDead && !Item.noUseGraphic && (!isWet || !Item.noWet));
         }
 
         /*
@@ -724,7 +724,7 @@ namespace Macrocosm
             if(ShouldDrawHeldItem(drawPlayer))
             {
                 Item item = drawPlayer.inventory[drawPlayer.selectedItem];
-                DrawHeldSword(sb, (overrideTex != null ? overrideTex : Main.itemTexture[item.type]), shader, drawPlayer.itemLocation, item, drawPlayer.direction, drawPlayer.itemRotation, scale <= 0f ? item.scale : scale, lightColor, item.color, xOffset, yOffset, drawPlayer.gravDir, drawPlayer, frame, frameCount);
+                DrawHeldSword(sb, (overrideTex != null ? overrideTex : Main.itemTexture[Item.type]), shader, drawPlayer.itemLocation, item, drawPlayer.direction, drawPlayer.itemRotation, scale <= 0f ? Item.scale : scale, lightColor, Item.color, xOffset, yOffset, drawPlayer.gravDir, drawPlayer, frame, frameCount);
                 return false;
             }
             return true;
@@ -751,7 +751,7 @@ namespace Macrocosm
 			{
 				NPC drawNPC = (NPC)entity; yOffset -= drawNPC.gfxOffY;
 			}
-            int drawType = item.type;
+            int drawType = Item.type;
 
             Vector2 drawPos = position - Main.screenPosition;
             Vector2 texOrigin = new Vector2(tex.Width * 0.5f, tex.Height * 0.5f / frameCount);
@@ -761,21 +761,21 @@ namespace Macrocosm
             {
 				if (sb is List<DrawData>)
 				{
-					DrawData dd = new DrawData(tex, drawPos, frame, item.GetAlpha(lightColor), itemRotation, rotOrigin, itemScale, spriteEffect, 0);
+					DrawData dd = new DrawData(tex, drawPos, frame, Item.GetAlpha(lightColor), itemRotation, rotOrigin, itemScale, spriteEffect, 0);
 					dd.shader = shader;
 					((List<DrawData>)sb).Add(dd);
 				}else
-				if (sb is SpriteBatch) ((SpriteBatch)sb).Draw(tex, drawPos, frame, item.GetAlpha(lightColor), itemRotation, rotOrigin, itemScale, spriteEffect, 0);
+				if (sb is SpriteBatch) ((SpriteBatch)sb).Draw(tex, drawPos, frame, Item.GetAlpha(lightColor), itemRotation, rotOrigin, itemScale, spriteEffect, 0);
 				
 				if (wepColor != default(Color))
 				{
 					if (sb is List<DrawData>)
 					{
-						DrawData dd = new DrawData(tex, drawPos, frame, item.GetColor(wepColor), itemRotation, rotOrigin, itemScale, spriteEffect, 0);
+						DrawData dd = new DrawData(tex, drawPos, frame, Item.GetColor(wepColor), itemRotation, rotOrigin, itemScale, spriteEffect, 0);
 						dd.shader = shader;
 						((List<DrawData>)sb).Add(dd);
 					}else
-					if (sb is SpriteBatch) ((SpriteBatch)sb).Draw(tex, drawPos, frame, item.GetColor(wepColor), itemRotation, rotOrigin, itemScale, spriteEffect, 0);
+					if (sb is SpriteBatch) ((SpriteBatch)sb).Draw(tex, drawPos, frame, Item.GetColor(wepColor), itemRotation, rotOrigin, itemScale, spriteEffect, 0);
 				}
             }else //normal gravity
             {
@@ -785,21 +785,21 @@ namespace Macrocosm
                 }
 				if (sb is List<DrawData>)
 				{
-					DrawData dd = new DrawData(tex, drawPos, frame, item.GetAlpha(lightColor), itemRotation, rotOrigin, itemScale, spriteEffect, 0);
+					DrawData dd = new DrawData(tex, drawPos, frame, Item.GetAlpha(lightColor), itemRotation, rotOrigin, itemScale, spriteEffect, 0);
 					dd.shader = shader;
 					((List<DrawData>)sb).Add(dd);
 				}else
-				if (sb is SpriteBatch) ((SpriteBatch)sb).Draw(tex, drawPos, frame, item.GetAlpha(lightColor), itemRotation, rotOrigin, itemScale, spriteEffect, 0);
+				if (sb is SpriteBatch) ((SpriteBatch)sb).Draw(tex, drawPos, frame, Item.GetAlpha(lightColor), itemRotation, rotOrigin, itemScale, spriteEffect, 0);
                 
 				if (wepColor != default(Color))
                 {
 					if (sb is List<DrawData>)
 					{
-						DrawData dd = new DrawData(tex, drawPos, frame, item.GetColor(wepColor), itemRotation, rotOrigin, itemScale, spriteEffect, 0);
+						DrawData dd = new DrawData(tex, drawPos, frame, Item.GetColor(wepColor), itemRotation, rotOrigin, itemScale, spriteEffect, 0);
 						dd.shader = shader;
 						((List<DrawData>)sb).Add(dd);
 					}else
-					if (sb is SpriteBatch) ((SpriteBatch)sb).Draw(tex, drawPos, frame, item.GetColor(wepColor), itemRotation, rotOrigin, itemScale, spriteEffect, 0);
+					if (sb is SpriteBatch) ((SpriteBatch)sb).Draw(tex, drawPos, frame, Item.GetColor(wepColor), itemRotation, rotOrigin, itemScale, spriteEffect, 0);
                 }
             }
         }
@@ -810,7 +810,7 @@ namespace Macrocosm
             if(ShouldDrawHeldItem(drawPlayer))
             {
                 Item item = drawPlayer.inventory[drawPlayer.selectedItem];
-                DrawHeldGun(sb, (overrideTex != null ? overrideTex : Main.itemTexture[item.type]), shader, drawPlayer.itemLocation, item, drawPlayer.direction, drawPlayer.itemRotation, scale <= 0f ? item.scale : scale, lightColor, item.color, xOffset, yOffset, shakeX, shakeY, shakeScalarX, shakeScalarY, drawPlayer.gravDir, drawPlayer, frame, frameCount);
+                DrawHeldGun(sb, (overrideTex != null ? overrideTex : Main.itemTexture[Item.type]), shader, drawPlayer.itemLocation, item, drawPlayer.direction, drawPlayer.itemRotation, scale <= 0f ? Item.scale : scale, lightColor, Item.color, xOffset, yOffset, shakeX, shakeY, shakeScalarX, shakeScalarY, drawPlayer.gravDir, drawPlayer, frame, frameCount);
                 return false;
             }
             return true;
@@ -820,8 +820,8 @@ namespace Macrocosm
          * Draws a texture in a gun-like fashion. (ie only when used and in the direction of the cursor)
          * 
          * direction : the direction the sprite should point. (-1 for left, 1 for right)
-         * itemRotation : Rotation of the item.
-         * itemScale : Scale of the item.
+         * itemRotation : Rotation of the Item.
+         * itemScale : Scale of the Item.
          * lightColor : color of the light the weapon is at.
          * wepColor : weapon's tint.
          * XOffset / YOffset : Offsets the gun's position on the X/Y axis.
@@ -836,7 +836,7 @@ namespace Macrocosm
             if(lightColor == default(Color)){ lightColor = GetLightColor(position); }
             SpriteEffects spriteEffect = direction == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
             if(gravDir == -1f){ yOffset *= -1; spriteEffect = spriteEffect | SpriteEffects.FlipVertically; }
-            int type = item.type;
+            int type = Item.type;
             int fakeType = type;
             Vector2 texOrigin = new Vector2((float)(tex.Width / 2), (float)(tex.Height / 2) / frameCount);
 			if(entity is Player)
@@ -859,28 +859,28 @@ namespace Macrocosm
 
 			if (sb is List<DrawData>)
 			{
-				DrawData dd = new DrawData(tex, pos, frame, item.GetAlpha(lightColor), itemRotation, rotOrigin, itemScale, spriteEffect, 0);
+				DrawData dd = new DrawData(tex, pos, frame, Item.GetAlpha(lightColor), itemRotation, rotOrigin, itemScale, spriteEffect, 0);
 				dd.shader = shader;
 				((List<DrawData>)sb).Add(dd);
 			}else
-			if (sb is SpriteBatch) ((SpriteBatch)sb).Draw(tex, pos, frame, item.GetAlpha(lightColor), itemRotation, rotOrigin, itemScale, spriteEffect, 0);
+			if (sb is SpriteBatch) ((SpriteBatch)sb).Draw(tex, pos, frame, Item.GetAlpha(lightColor), itemRotation, rotOrigin, itemScale, spriteEffect, 0);
             
 			if (wepColor != default(Color))
             {
 				if (sb is List<DrawData>)
 				{
-					DrawData dd = new DrawData(tex, pos, frame, item.GetColor(wepColor), itemRotation, rotOrigin, itemScale, spriteEffect, 0);
+					DrawData dd = new DrawData(tex, pos, frame, Item.GetColor(wepColor), itemRotation, rotOrigin, itemScale, spriteEffect, 0);
 					dd.shader = shader;
 					((List<DrawData>)sb).Add(dd);
 				}else
-				if (sb is SpriteBatch) ((SpriteBatch)sb).Draw(tex, pos, frame, item.GetColor(wepColor), itemRotation, rotOrigin, itemScale, spriteEffect, 0);
+				if (sb is SpriteBatch) ((SpriteBatch)sb).Draw(tex, pos, frame, Item.GetColor(wepColor), itemRotation, rotOrigin, itemScale, spriteEffect, 0);
             }
-            try { if (type != fakeType) { item.type = type; } }
+            try { if (type != fakeType) { Item.type = type; } }
             catch { }
         }
 
         /*
-         * Draws the given texture in a spear-like fashion (texture is oriented at the upper-right corner) using the projectile provided.
+         * Draws the given texture in a spear-like fashion (texture is oriented at the upper-right corner) using the Projectile provided.
          */
         public static void DrawProjectileSpear(object sb, Texture2D texture, int shader, Projectile p, Color? overrideColor = null, float offsetX = 0f, float offsetY = 0f)
         {
@@ -935,23 +935,23 @@ namespace Macrocosm
 			}
 		}
 
-		public static void DrawYoyoLine(SpriteBatch sb, Projectile projectile, Texture2D overrideTex = null, Color? overrideColor = null)
+		public static void DrawYoyoLine(SpriteBatch sb, Projectile Projectile, Texture2D overrideTex = null, Color? overrideColor = null)
 		{
-			DrawYoyoLine(sb, projectile, Main.player[projectile.owner], projectile.Center, Main.player[projectile.owner].MountedCenter, overrideTex, overrideColor);
+			DrawYoyoLine(sb, Projectile, Main.player[Projectile.owner], Projectile.Center, Main.player[Projectile.owner].MountedCenter, overrideTex, overrideColor);
 		}
 
-		public static void DrawYoyoLine(SpriteBatch sb, Projectile projectile, Entity owner,  Vector2 yoyoLoc, Vector2 connectionLoc, Texture2D overrideTex = null, Color? overrideColor = null)
+		public static void DrawYoyoLine(SpriteBatch sb, Projectile Projectile, Entity owner,  Vector2 yoyoLoc, Vector2 connectionLoc, Texture2D overrideTex = null, Color? overrideColor = null)
 		{
 			Vector2 mountedCenter = connectionLoc;
-			if(owner is Player) mountedCenter.Y += Main.player[projectile.owner].gfxOffY;
+			if(owner is Player) mountedCenter.Y += Main.player[Projectile.owner].gfxOffY;
 			float centerDistX = yoyoLoc.X - mountedCenter.X;
 			float centerDistY = yoyoLoc.Y - mountedCenter.Y;
 			Math.Sqrt((double)(centerDistX * centerDistX + centerDistY * centerDistY));
 			float rotation = (float)Math.Atan2((double)centerDistY, (double)centerDistX) - 1.57f;
-			if (owner is Player && !projectile.counterweight)
+			if (owner is Player && !Projectile.counterweight)
 			{
 				int projDir = -1;
-				if (projectile.position.X + (float)(projectile.width / 2) < Main.player[projectile.owner].position.X + (float)(Main.player[projectile.owner].width / 2)) projDir = 1;
+				if (Projectile.position.X + (float)(Projectile.width / 2) < Main.player[Projectile.owner].position.X + (float)(Main.player[Projectile.owner].width / 2)) projDir = 1;
 				projDir *= -1;
 				((Player)owner).itemRotation = (float)Math.Atan2((double)(centerDistY * (float)projDir), (double)(centerDistX * (float)projDir));
 			}
@@ -986,7 +986,7 @@ namespace Macrocosm
 					if (sqrtCenter2 > 12f)
 					{
 						float scalar = 0.3f;
-						float velocityAverage = Math.Abs(projectile.velocity.X) + Math.Abs(projectile.velocity.Y);
+						float velocityAverage = Math.Abs(Projectile.velocity.X) + Math.Abs(Projectile.velocity.Y);
 						if (velocityAverage > 16f) velocityAverage = 16f;
 						velocityAverage = 1f - velocityAverage / 16f;
 						scalar *= velocityAverage;
@@ -1002,7 +1002,7 @@ namespace Macrocosm
 							centerDistX *= 1f - scalar;
 						}else
 						{
-							velocityAverage = Math.Abs(projectile.velocity.X) / 3f;
+							velocityAverage = Math.Abs(Projectile.velocity.X) / 3f;
 							if (velocityAverage > 1f) velocityAverage = 1f;
 							velocityAverage -= 0.5f;
 							scalar *= velocityAverage;
@@ -1012,7 +1012,7 @@ namespace Macrocosm
 						}
 					}
 					rotation = (float)Math.Atan2((double)centerDistY, (double)centerDistX) - 1.57f;
-					int stringColor = Main.player[projectile.owner].stringColor;
+					int stringColor = Main.player[Projectile.owner].stringColor;
 					Color color = (overrideColor != null && stringColor <= 0 ? (Color)overrideColor : WorldGen.paintColor(stringColor));
 					if (color.R < 75) color.R = 75; if (color.G < 75) color.G = 75; if (color.B < 75) color.B = 75;
 					if (stringColor == 13){ color = new Color(20, 20, 20); }
@@ -1034,28 +1034,28 @@ namespace Macrocosm
 		}
 		
         /*
-          * Draws a fishing line from the given projectile bobber to the player owning it.
+          * Draws a fishing line from the given Projectile bobber to the player owning it.
           */
-		public static void DrawFishingLine(SpriteBatch sb, Projectile projectile, Vector2 rodLoc, Vector2 bobberLoc, Texture2D overrideTex = null, Color? overrideColor = null)
+		public static void DrawFishingLine(SpriteBatch sb, Projectile Projectile, Vector2 rodLoc, Vector2 bobberLoc, Texture2D overrideTex = null, Color? overrideColor = null)
 		{
-			Player player = Main.player[projectile.owner];
-			if (projectile.bobber && Main.player[projectile.owner].inventory[Main.player[projectile.owner].selectedItem].holdStyle > 0)
+			Player player = Main.player[Projectile.owner];
+			if (Projectile.bobber && Main.player[Projectile.owner].inventory[Main.player[Projectile.owner].selectedItem].holdStyle > 0)
 			{
 				float mountedCenterX = player.MountedCenter.X;
 				float mountedCenterY = player.MountedCenter.Y;
-				mountedCenterY += Main.player[projectile.owner].gfxOffY;
-				int type = Main.player[projectile.owner].inventory[Main.player[projectile.owner].selectedItem].type;
-				float gravDir = Main.player[projectile.owner].gravDir;
+				mountedCenterY += Main.player[Projectile.owner].gfxOffY;
+				int type = Main.player[Projectile.owner].inventory[Main.player[Projectile.owner].selectedItem].type;
+				float gravDir = Main.player[Projectile.owner].gravDir;
 
-				mountedCenterX += (float)(rodLoc.X * Main.player[projectile.owner].direction);
-				if (Main.player[projectile.owner].direction < 0) mountedCenterX -= 13f;
+				mountedCenterX += (float)(rodLoc.X * Main.player[Projectile.owner].direction);
+				if (Main.player[Projectile.owner].direction < 0) mountedCenterX -= 13f;
 				mountedCenterY -= rodLoc.Y * gravDir;
 				
 				if (gravDir == -1f) mountedCenterY -= 12f;
 				Vector2 mountedCenter = new Vector2(mountedCenterX, mountedCenterY);
-				mountedCenter = Main.player[projectile.owner].RotatedRelativePoint(mountedCenter + new Vector2(8f), true) - new Vector2(8f);
-				float projLineCenterX = projectile.position.X + (float)projectile.width * 0.5f - mountedCenter.X;
-				float projLineCenterY = projectile.position.Y + (float)projectile.height * 0.5f - mountedCenter.Y;
+				mountedCenter = Main.player[Projectile.owner].RotatedRelativePoint(mountedCenter + new Vector2(8f), true) - new Vector2(8f);
+				float projLineCenterX = Projectile.position.X + (float)Projectile.width * 0.5f - mountedCenter.X;
+				float projLineCenterY = Projectile.position.Y + (float)Projectile.height * 0.5f - mountedCenter.Y;
                 projLineCenterX += bobberLoc.X; projLineCenterY += bobberLoc.Y;
 				Math.Sqrt((double)(projLineCenterX * projLineCenterX + projLineCenterY * projLineCenterY));
 				float rotation2 = (float)Math.Atan2((double)projLineCenterY, (double)projLineCenterX) - 1.57f;
@@ -1068,8 +1068,8 @@ namespace Macrocosm
 					projLineCenterY *= num15;
 					mountedCenter.X -= projLineCenterX;
 					mountedCenter.Y -= projLineCenterY;
-					projLineCenterX = projectile.position.X + (float)projectile.width * 0.5f - mountedCenter.X;
-					projLineCenterY = projectile.position.Y + (float)projectile.height * 0.5f - mountedCenter.Y;
+					projLineCenterX = Projectile.position.X + (float)Projectile.width * 0.5f - mountedCenter.X;
+					projLineCenterY = Projectile.position.Y + (float)Projectile.height * 0.5f - mountedCenter.Y;
 				}
 				while (flag2)
 				{
@@ -1088,12 +1088,12 @@ namespace Macrocosm
 						projLineCenterY *= num17;
 						mountedCenter.X += projLineCenterX;
 						mountedCenter.Y += projLineCenterY;
-						projLineCenterX = projectile.position.X + (float)projectile.width * 0.5f - mountedCenter.X;
-						projLineCenterY = projectile.position.Y + (float)projectile.height * 0.1f - mountedCenter.Y;
+						projLineCenterX = Projectile.position.X + (float)Projectile.width * 0.5f - mountedCenter.X;
+						projLineCenterY = Projectile.position.Y + (float)Projectile.height * 0.1f - mountedCenter.Y;
 						if (num18 > 12f)
 						{
 							float num19 = 0.3f;
-							float num20 = Math.Abs(projectile.velocity.X) + Math.Abs(projectile.velocity.Y);
+							float num20 = Math.Abs(Projectile.velocity.X) + Math.Abs(Projectile.velocity.Y);
 							if (num20 > 16f) num20 = 16f;
 							num20 = 1f - num20 / 16f;
 							num19 *= num20;
@@ -1101,7 +1101,7 @@ namespace Macrocosm
 							if (num20 > 1f) num20 = 1f;
 							num19 *= num20;
 							if (num19 < 0f) num19 = 0f;
-							num20 = 1f - projectile.localAI[0] / 100f;
+							num20 = 1f - Projectile.localAI[0] / 100f;
 							num19 *= num20;
 							if (projLineCenterY > 0f)
 							{
@@ -1109,7 +1109,7 @@ namespace Macrocosm
 								projLineCenterX *= 1f - num19;
 							}else
 							{
-								num20 = Math.Abs(projectile.velocity.X) / 3f;
+								num20 = Math.Abs(Projectile.velocity.X) / 3f;
 								if (num20 > 1f) num20 = 1f;
 								num20 -= 0.5f;
 								num19 *= num20;
@@ -1881,7 +1881,7 @@ namespace Macrocosm
 
 		public virtual void Draw(SpriteBatch sb, Color color, Item item, Vector2 pos, float sc) 
         {
-            if(Main.playerInventory || item.type <= 0 || item.stack <= 0 || item.type != itemType) return;
+            if(Main.playerInventory || Item.type <= 0 || Item.stack <= 0 || Item.type != itemType) return;
             int totalItemCount = 0;
             if(ammoItemTypes != default(int[])){ totalItemCount += BasePlayer.GetItemstackSum(Main.player[Main.myPlayer], ammoItemTypes, false, true, true); }
             if(ammoTypes != default(int[])){ totalItemCount += BasePlayer.GetItemstackSum(Main.player[Main.myPlayer], ammoTypes, true, true, true); }

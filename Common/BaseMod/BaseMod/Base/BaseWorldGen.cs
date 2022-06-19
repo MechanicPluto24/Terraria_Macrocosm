@@ -143,7 +143,7 @@ namespace Macrocosm {
         /**
          *  Replaces tiles within a certain radius with the replacements. (Circular)
 		 *
-         *  position : the position of the center. (NOTE THIS IS NPC/PROJECTILE COORDS NOT TILE)
+         *  position : the position of the center. (NOTE THIS IS NPC/Projectile COORDS NOT TILE)
          *  radius : The radius from the position you want to replace to.
          *  tiles : the array of tiles you want to replace.
          *  replacements : the array of replacement tiles. (it goes by using the same index as tiles. Ie, tiles[0] will be replaced with replacements[0].)
@@ -606,7 +606,7 @@ namespace Macrocosm {
             int num2 = WorldGen.PlaceChest(x - 1, y, (ushort)type, false, chestStyle);
             if (num2 >= 0)
             {
-                for (int m = 0; m < Main.chest[num2].item.Length; m++)
+                for (int m = 0; m < Main.chest[num2].Item.Length; m++)
                 {
 					if(stackIDs == null || stackIDs.Length <= m) break;
                     Main.chest[num2].item[m].SetDefaults(stackIDs[m], false);
