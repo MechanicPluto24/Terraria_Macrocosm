@@ -1,3 +1,4 @@
+using Macrocosm.Content.Items.Materials;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -14,7 +15,7 @@ namespace Macrocosm.Content.Items.Tools
 		public override void SetDefaults()
 		{
 			Item.damage = 90;
-			Item.melee = true;
+			Item.DamageType = DamageClass.Melee;
 			Item.width = 44;
 			Item.height = 44;
 			Item.useTime = 5;
@@ -32,10 +33,9 @@ namespace Macrocosm.Content.Items.Tools
 		public override void AddRecipes()
 		{
 			Recipe recipe = Mod.CreateRecipe(Type);
-			recipe.AddIngredient(mod, "LuminiteCrystal", 1);
-			recipe.AddIngredient(mod, "DianiteBar", 12);
+			recipe.AddIngredient<LuminiteCrystal>();
+			recipe.AddIngredient<DianiteBar>(12);
 			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
 			recipe.Register();
 		}
 	}

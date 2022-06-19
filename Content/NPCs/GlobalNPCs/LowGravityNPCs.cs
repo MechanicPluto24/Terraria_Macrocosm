@@ -18,7 +18,7 @@ namespace Macrocosm.Content.NPCs.GlobalNPCs {
 
         private static void NPC_UpdateNPC_UpdateGravity(On.Terraria.NPC.orig_UpdateNPC_UpdateGravity orig, NPC self, out float maxFallSpeed) {
             orig(self, out maxFallSpeed);
-            if (Subworld.IsActive<Moon>())
+            if (SubworldSystem.IsActive<Moon>())
                 NPCGravity.SetValue(null, 0.05f);
         }
     }

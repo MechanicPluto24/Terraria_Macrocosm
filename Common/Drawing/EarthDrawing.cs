@@ -14,7 +14,7 @@ namespace Macrocosm.Common.Drawing {
 
         private static void Main_DrawBG(On.Terraria.Main.orig_DrawBG orig, Main self) {
             orig(self);
-            if (Subworld.IsActive<Moon>()) {
+            if (SubworldSystem.IsActive<Moon>()) {
                 var earthTexture = ModContent.Request<Texture2D>("Terraria_Macrocosm/Assets/Earth").Value;
                 var sb = Main.spriteBatch;
                 sb.Draw(earthTexture, new Vector2(Main.screenWidth / 2, 200), null, Color.White, 0.4101524f, earthTexture.Size() / 2, 1f, default, 0f); // 0.4101524 is earth's axial tilt to radians
