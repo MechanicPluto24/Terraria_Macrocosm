@@ -27,6 +27,7 @@ namespace Macrocosm.Content.Systems
         public static List<int> MoonEnemies = new List<int>
         {
             ModContent.NPCType<Clavite>(),
+            ModContent.NPCType<MoonZombie>(),
             ModContent.NPCType<RegolithSlime>()
         };
         /// <summary>

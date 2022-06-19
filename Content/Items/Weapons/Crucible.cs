@@ -29,7 +29,7 @@ namespace Macrocosm.Content.Items.Weapons
 			}
 			Item.glowMask = customGlowMask;
 		}
-
+        
 		public override void SetDefaults() 
 		{
 			Item.damage = 666;

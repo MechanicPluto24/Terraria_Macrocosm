@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Items.Tools
 		public override void SetDefaults()
 		{
 			Item.damage = 10000;
-			Item.melee = true;
+			Item.DamageType = DamageClass.Melee;
 			Item.width = 40;
 			Item.height = 40;
 			Item.useTime = 1;

@@ -18,7 +18,7 @@ namespace Macrocosm {
         private bool _anySubworldActive;
         private bool _anySubworldActiveLastTick;
         public override void PostUpdateEverything() {
-            _anySubworldActive = Subworld.AnyActive(this);
+            _anySubworldActive = SubworldSystem.AnyActive(Macrocosm.Instance);
             if (_anySubworldActive && !_anySubworldActiveLastTick)
                 INTERNAL_SubworldTileFraming();
 

@@ -17,7 +17,7 @@ namespace Macrocosm.Content {
             moonBiome = 0;
         }
         public override void PreUpdateEntities() {
-            if (Subworld.IsActive<Moon>()) {
+            if (SubworldSystem.IsActive<Moon>()) {
                 Main.time += 0.125;
             }
         }
