@@ -20,8 +20,8 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies
 
 		public override void SetDefaults()
 		{
-			NPC.width = 18;
-			NPC.height = 40;
+			NPC.width = 36;  
+			NPC.height = 22;
 			NPC.damage = 50;
 			NPC.defense = 60;
 			NPC.lifeMax = 2000;
@@ -61,8 +61,8 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies
 			{
 				int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.TintableDust);
 				Dust dust = Main.dust[dustIndex];
-				dust.velocity.X = dust.velocity.X + Main.rand.Next(-50, 51) * 0.01f;
-				dust.velocity.Y = dust.velocity.Y + Main.rand.Next(-50, 51) * 0.01f;
+				dust.velocity.X *= dust.velocity.X * 1.25f * hitDirection + Main.rand.Next(0, 100) * 0.015f;
+				dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;
 				dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
 			}
 		}
