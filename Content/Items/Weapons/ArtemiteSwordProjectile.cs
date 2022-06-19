@@ -13,14 +13,14 @@ namespace Macrocosm.Content.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			projectile.width = 10;
-			projectile.height = 10;
-			projectile.aiStyle = 56;
-			projectile.friendly = true;
-			projectile.melee = true;
-			projectile.tileCollide = false;
-			projectile.ignoreWater = true;
-			projectile.light = 1f;
+			Projectile.width = 10;
+			Projectile.height = 10;
+			Projectile.aiStyle = 56;
+			Projectile.friendly = true;
+			Projectile.DamageType = DamageClass.Melee;
+			Projectile.tileCollide = false;
+			Projectile.ignoreWater = true;
+			Projectile.light = 1f;
 		}
 
 		// Additional hooks/methods here.

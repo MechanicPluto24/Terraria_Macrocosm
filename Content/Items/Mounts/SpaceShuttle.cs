@@ -1,4 +1,6 @@
 using Terraria.ModLoader;
+using Macrocosm.Content.Mounts;
+using Terraria.ID;
 
 namespace Macrocosm.Content.Items.Mounts
 {
@@ -11,15 +13,15 @@ namespace Macrocosm.Content.Items.Mounts
 
         public override void SetDefaults()
         {
-            item.width = 20;
-            item.height = 30;
-            item.useTime = 20;
-            item.useAnimation = 20;
-            item.useStyle = 1;
-            item.value = 300;
-            item.rare = 5;
-            item.noMelee = true;
-            item.mountType = mod.MountType("SpaceShuttle");
+            Item.width = 20;
+            Item.height = 30;
+            Item.useTime = 20;
+            Item.useAnimation = 20;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.value = 300;
+            Item.rare = ItemRarityID.Pink;
+            Item.noMelee = true;
+            Item.mountType = ModContent.MountType<SpaceShuttleMount>();
         }
 
 

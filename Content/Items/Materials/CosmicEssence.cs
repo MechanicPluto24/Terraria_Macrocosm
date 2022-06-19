@@ -13,25 +13,24 @@ namespace Macrocosm.Content.Items.Materials
 
         public override void SetDefaults()
         {
-            item.width = 20;
-            item.height = 20;
-            item.maxStack = 999;
-            item.value = 100;
-            item.rare = 1;
-            // Set other item.X values here
+            Item.width = 20;
+            Item.height = 20;
+            Item.maxStack = 999;
+            Item.value = 100;
+            Item.rare = 1;
+            // Set other Item.X values here
         }
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
+            Recipe recipe = Mod.CreateRecipe(Type);
             recipe.AddIngredient(ItemID.FragmentSolar, 5);
             recipe.AddIngredient(ItemID.FragmentVortex, 5);
             recipe.AddIngredient(ItemID.FragmentNebula, 5);
             recipe.AddIngredient(ItemID.FragmentStardust, 5);
-            recipe.AddIngredient(mod, "CosmicDust", 25);
+            recipe.AddIngredient<CosmicDust>(25);
             recipe.AddTile(TileID.WorkBenches);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

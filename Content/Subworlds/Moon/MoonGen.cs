@@ -1,20 +1,23 @@
 ﻿using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
-using Terraria.World.Generation;
 using Macrocosm.Content.Tiles;
 using SubworldLibrary;
 using System;
 using Terraria.ID;
+using Terraria.WorldBuilding;
+using Terraria.IO;
 
 namespace Macrocosm.Content.Subworlds.Moon
 {
-    public class MoonGen : List<GenPass>
+    public class MoonGen : GenPass
     {
         private Subworld subworld;
         private double surfaceLayer = 200.0;
         private double rockLayerLow = 0.0;
         private double rockLayerHigh = 0.0;
+
+
         private void CraterPass(GenerationProgress progress)
         {
             progress.Message = "Sculpting the Moon...";
@@ -47,7 +50,7 @@ namespace Macrocosm.Content.Subworlds.Moon
                         // Look for a Y position to put the crater
                         for (int lookupY = 0; lookupY < Main.maxTilesY; lookupY++)
                         {
-                            if (Framing.GetTileSafely(i, lookupY).active())
+                            if (Framing.GetTileSafely(i, lookupY).HasTile)
                             {
                                 craterJPosition = lookupY;
                                 break;
@@ -103,7 +106,7 @@ namespace Macrocosm.Content.Subworlds.Moon
                                 {
                                     if (craterTileX < Main.maxTilesX && craterTileY < Main.maxTilesY && craterTileX >= 0 && craterTileY >= 0)
                                     {
-                                        Main.tile[craterTileX, craterTileY].active(false);
+                                        Main.tile[craterTileX, craterTileY].ClearTile();
                                     }
                                 }
                             }
@@ -116,7 +119,7 @@ namespace Macrocosm.Content.Subworlds.Moon
                             {
                                 if (craterTileX < Main.maxTilesX && craterTileY < Main.maxTilesY && craterTileX >= 0 && craterTileY >= 0)
                                 {
-                                    Main.tile[craterTileX, craterTileY].active(false);
+                                    Main.tile[craterTileX, craterTileY].ClearTile();
                                 }
                             }
                         }
@@ -128,15 +131,15 @@ namespace Macrocosm.Content.Subworlds.Moon
         }
         private void OrePass(GenerationProgress progress)
         {
-            void GenerateOre(int type, double percent, int strength, int steps)
+            void GenerateOre(int TileType, double percent, int strength, int steps)
             {
                 for (int k = 0; k < (int)((Main.maxTilesX * Main.maxTilesY) * percent); k++)
                 {
                     int x = WorldGen.genRand.Next(0, Main.maxTilesX);
                     int y = WorldGen.genRand.Next(0, Main.maxTilesY);
-                    if (Main.tile[x, y].active() && Main.tile[x, y].type == ModContent.TileType<Tiles.Protolith>())
+                    if (Main.tile[x, y].HasTile && Main.tile[x, y].TileType == ModContent.TileType<Tiles.Protolith>())
                     {
-                        WorldGen.TileRunner(x, y, strength, steps, type);
+                        WorldGen.TileRunner(x, y, strength, steps, TileType);
                     }
                 }
             }
@@ -160,22 +163,22 @@ namespace Macrocosm.Content.Subworlds.Moon
                 bool surroundedTile = false;
                 for (int tileY = 2; tileY < Main.maxTilesY - 1; tileY++)
                 {
-                    if (Main.tile[tileX, tileY].active())
+                    if (Main.tile[tileX, tileY].HasTile)
                         wall = ModContent.WallType<Walls.RegolithWall>();
 
                     if (surroundedTile)
-                        Main.tile[tileX, tileY].wall = (ushort)wall;
+                        Main.tile[tileX, tileY].WallType = (ushort)wall;
 
                     if
                     (
-                        Main.tile[tileX, tileY].active() // Current tile is active
-                        && Main.tile[tileX - 1, tileY].active() // Left tile is active
-                        && Main.tile[tileX + 1, tileY].active() // Right tile is active
-                        && Main.tile[tileX, tileY + 1].active() // Bottom tile is active
-                        && Main.tile[tileX - 1, tileY + 1].active() // Bottom-left tile is active
-                        && Main.tile[tileX + 1, tileY + 1].active() // Bottom-right tile is active
+                        Main.tile[tileX, tileY].HasTile // Current tile is active
+                        && Main.tile[tileX - 1, tileY].HasTile // Left tile is active
+                        && Main.tile[tileX + 1, tileY].HasTile // Right tile is active
+                        && Main.tile[tileX, tileY + 1].HasTile // Bottom tile is active
+                        && Main.tile[tileX - 1, tileY + 1].HasTile // Bottom-left tile is active
+                        && Main.tile[tileX + 1, tileY + 1].HasTile // Bottom-right tile is active
                                                                     // The following will help to make the walls slightly lower than the terrain
-                        && Main.tile[tileX, tileY - 2].active() // Top tile is active
+                        && Main.tile[tileX, tileY - 2].HasTile // Top tile is active
                     )
                     {
                         surroundedTile = true; // Set the rest of the walls down the column
@@ -194,46 +197,46 @@ namespace Macrocosm.Content.Subworlds.Moon
                 progress.Set(percentAcrossWorld);
                 for (int tileY = 20; tileY < Main.maxTilesY - 20; tileY++)
                 {
-                    if (Main.tile[tileX, tileY].type != 48 && Main.tile[tileX, tileY].type != 137 && Main.tile[tileX, tileY].type != 232 && Main.tile[tileX, tileY].type != 191 && Main.tile[tileX, tileY].type != 151 && Main.tile[tileX, tileY].type != 274)
+                    if (Main.tile[tileX, tileY].TileType != 48 && Main.tile[tileX, tileY].TileType != 137 && Main.tile[tileX, tileY].TileType != 232 && Main.tile[tileX, tileY].TileType != 191 && Main.tile[tileX, tileY].TileType != 151 && Main.tile[tileX, tileY].TileType != 274)
                     {
-                        if (!Main.tile[tileX, tileY - 1].active())
+                        if (!Main.tile[tileX, tileY - 1].HasTile)
                         {
-                            if (WorldGen.SolidTile(tileX, tileY) && TileID.Sets.CanBeClearedDuringGeneration[Main.tile[tileX, tileY].type])
+                            if (WorldGen.SolidTile(tileX, tileY) && TileID.Sets.CanBeClearedDuringGeneration[Main.tile[tileX, tileY].TileType])
                             {
-                                if (!Main.tile[tileX - 1, tileY].halfBrick() && !Main.tile[tileX + 1, tileY].halfBrick() && Main.tile[tileX - 1, tileY].slope() == 0 && Main.tile[tileX + 1, tileY].slope() == 0)
+                                if (!Main.tile[tileX - 1, tileY].IsHalfBlock && !Main.tile[tileX + 1, tileY].IsHalfBlock && Main.tile[tileX - 1, tileY].Slope == SlopeType.Solid && Main.tile[tileX + 1, tileY].Slope == SlopeType.Solid)
                                 {
                                     if (WorldGen.SolidTile(tileX, tileY + 1))
                                     {
-                                        if (!WorldGen.SolidTile(tileX - 1, tileY) && !Main.tile[tileX - 1, tileY + 1].halfBrick() && WorldGen.SolidTile(tileX - 1, tileY + 1) && WorldGen.SolidTile(tileX + 1, tileY) && !Main.tile[tileX + 1, tileY - 1].active())
+                                        if (!WorldGen.SolidTile(tileX - 1, tileY) && !Main.tile[tileX - 1, tileY + 1].IsHalfBlock && WorldGen.SolidTile(tileX - 1, tileY + 1) && WorldGen.SolidTile(tileX + 1, tileY) && !Main.tile[tileX + 1, tileY - 1].HasTile)
                                         {
                                             if (WorldGen.genRand.Next(2) == 0)
                                                 WorldGen.SlopeTile(tileX, tileY, 2);
                                             else
                                                 WorldGen.PoundTile(tileX, tileY);
                                         }
-                                        else if (!WorldGen.SolidTile(tileX + 1, tileY) && !Main.tile[tileX + 1, tileY + 1].halfBrick() && WorldGen.SolidTile(tileX + 1, tileY + 1) && WorldGen.SolidTile(tileX - 1, tileY) && !Main.tile[tileX - 1, tileY - 1].active())
+                                        else if (!WorldGen.SolidTile(tileX + 1, tileY) && !Main.tile[tileX + 1, tileY + 1].IsHalfBlock && WorldGen.SolidTile(tileX + 1, tileY + 1) && WorldGen.SolidTile(tileX - 1, tileY) && !Main.tile[tileX - 1, tileY - 1].HasTile)
                                         {
                                             if (WorldGen.genRand.Next(2) == 0)
                                                 WorldGen.SlopeTile(tileX, tileY, 1);
                                             else
                                                 WorldGen.PoundTile(tileX, tileY);
                                         }
-                                        else if (WorldGen.SolidTile(tileX + 1, tileY + 1) && WorldGen.SolidTile(tileX - 1, tileY + 1) && !Main.tile[tileX + 1, tileY].active() && !Main.tile[tileX - 1, tileY].active())
+                                        else if (WorldGen.SolidTile(tileX + 1, tileY + 1) && WorldGen.SolidTile(tileX - 1, tileY + 1) && !Main.tile[tileX + 1, tileY].HasTile && !Main.tile[tileX - 1, tileY].HasTile)
                                         {
                                             WorldGen.PoundTile(tileX, tileY);
                                         }
 
                                         if (WorldGen.SolidTile(tileX, tileY))
                                         {
-                                            if (WorldGen.SolidTile(tileX - 1, tileY) && WorldGen.SolidTile(tileX + 1, tileY + 2) && !Main.tile[tileX + 1, tileY].active() && !Main.tile[tileX + 1, tileY + 1].active() && !Main.tile[tileX - 1, tileY - 1].active())
+                                            if (WorldGen.SolidTile(tileX - 1, tileY) && WorldGen.SolidTile(tileX + 1, tileY + 2) && !Main.tile[tileX + 1, tileY].HasTile && !Main.tile[tileX + 1, tileY + 1].HasTile && !Main.tile[tileX - 1, tileY - 1].HasTile)
                                             {
                                                 WorldGen.KillTile(tileX, tileY);
                                             }
-                                            else if (WorldGen.SolidTile(tileX + 1, tileY) && WorldGen.SolidTile(tileX - 1, tileY + 2) && !Main.tile[tileX - 1, tileY].active() && !Main.tile[tileX - 1, tileY + 1].active() && !Main.tile[tileX + 1, tileY - 1].active())
+                                            else if (WorldGen.SolidTile(tileX + 1, tileY) && WorldGen.SolidTile(tileX - 1, tileY + 2) && !Main.tile[tileX - 1, tileY].HasTile && !Main.tile[tileX - 1, tileY + 1].HasTile && !Main.tile[tileX + 1, tileY - 1].HasTile)
                                             {
                                                 WorldGen.KillTile(tileX, tileY);
                                             }
-                                            else if (!Main.tile[tileX - 1, tileY + 1].active() && !Main.tile[tileX - 1, tileY].active() && WorldGen.SolidTile(tileX + 1, tileY) && WorldGen.SolidTile(tileX, tileY + 2))
+                                            else if (!Main.tile[tileX - 1, tileY + 1].HasTile && !Main.tile[tileX - 1, tileY].HasTile && WorldGen.SolidTile(tileX + 1, tileY) && WorldGen.SolidTile(tileX, tileY + 2))
                                             {
                                                 if (WorldGen.genRand.Next(5) == 0)
                                                     WorldGen.KillTile(tileX, tileY);
@@ -242,7 +245,7 @@ namespace Macrocosm.Content.Subworlds.Moon
                                                 else
                                                     WorldGen.SlopeTile(tileX, tileY, 2);
                                             }
-                                            else if (!Main.tile[tileX + 1, tileY + 1].active() && !Main.tile[tileX + 1, tileY].active() && WorldGen.SolidTile(tileX - 1, tileY) && WorldGen.SolidTile(tileX, tileY + 2))
+                                            else if (!Main.tile[tileX + 1, tileY + 1].HasTile && !Main.tile[tileX + 1, tileY].HasTile && WorldGen.SolidTile(tileX - 1, tileY) && WorldGen.SolidTile(tileX, tileY + 2))
                                             {
                                                 if (WorldGen.genRand.Next(5) == 0)
                                                     WorldGen.KillTile(tileX, tileY);
@@ -254,32 +257,32 @@ namespace Macrocosm.Content.Subworlds.Moon
                                         }
                                     }
 
-                                    if (WorldGen.SolidTile(tileX, tileY) && !Main.tile[tileX - 1, tileY].active() && !Main.tile[tileX + 1, tileY].active())
+                                    if (WorldGen.SolidTile(tileX, tileY) && !Main.tile[tileX - 1, tileY].HasTile && !Main.tile[tileX + 1, tileY].HasTile)
                                         WorldGen.KillTile(tileX, tileY);
                                 }
                             }
-                            else if (!Main.tile[tileX, tileY].active() && Main.tile[tileX, tileY + 1].type != 151 && Main.tile[tileX, tileY + 1].type != 274)
+                            else if (!Main.tile[tileX, tileY].HasTile && Main.tile[tileX, tileY + 1].TileType != 151 && Main.tile[tileX, tileY + 1].TileType != 274)
                             {
-                                if (Main.tile[tileX + 1, tileY].type != 190 && Main.tile[tileX + 1, tileY].type != 48 && Main.tile[tileX + 1, tileY].type != 232 && WorldGen.SolidTile(tileX - 1, tileY + 1) && WorldGen.SolidTile(tileX + 1, tileY) && !Main.tile[tileX - 1, tileY].active() && !Main.tile[tileX + 1, tileY - 1].active())
+                                if (Main.tile[tileX + 1, tileY].TileType != 190 && Main.tile[tileX + 1, tileY].TileType != 48 && Main.tile[tileX + 1, tileY].TileType != 232 && WorldGen.SolidTile(tileX - 1, tileY + 1) && WorldGen.SolidTile(tileX + 1, tileY) && !Main.tile[tileX - 1, tileY].HasTile && !Main.tile[tileX + 1, tileY - 1].HasTile)
                                 {
-                                    WorldGen.PlaceTile(tileX, tileY, Main.tile[tileX, tileY + 1].type);
+                                    WorldGen.PlaceTile(tileX, tileY, Main.tile[tileX, tileY + 1].TileType);
                                     if (WorldGen.genRand.Next(2) == 0)
                                         WorldGen.SlopeTile(tileX, tileY, 2);
                                     else
                                         WorldGen.PoundTile(tileX, tileY);
                                 }
 
-                                if (Main.tile[tileX - 1, tileY].type != 190 && Main.tile[tileX - 1, tileY].type != 48 && Main.tile[tileX - 1, tileY].type != 232 && WorldGen.SolidTile(tileX + 1, tileY + 1) && WorldGen.SolidTile(tileX - 1, tileY) && !Main.tile[tileX + 1, tileY].active() && !Main.tile[tileX - 1, tileY - 1].active())
+                                if (Main.tile[tileX - 1, tileY].TileType != 190 && Main.tile[tileX - 1, tileY].TileType != 48 && Main.tile[tileX - 1, tileY].TileType != 232 && WorldGen.SolidTile(tileX + 1, tileY + 1) && WorldGen.SolidTile(tileX - 1, tileY) && !Main.tile[tileX + 1, tileY].HasTile && !Main.tile[tileX - 1, tileY - 1].HasTile)
                                 {
-                                    WorldGen.PlaceTile(tileX, tileY, Main.tile[tileX, tileY + 1].type);
-                                    if (WorldGen.genRand.Next(2) == 0)
+                                    WorldGen.PlaceTile(tileX, tileY, Main.tile[tileX, tileY + 1].TileType);
+                                    if (WorldGen.genRand.NextBool(2))
                                         WorldGen.SlopeTile(tileX, tileY, 1);
                                     else
                                         WorldGen.PoundTile(tileX, tileY);
                                 }
                             }
                         }
-                        else if (!Main.tile[tileX, tileY + 1].active() && WorldGen.genRand.Next(2) == 0 && WorldGen.SolidTile(tileX, tileY) && !Main.tile[tileX - 1, tileY].halfBrick() && !Main.tile[tileX + 1, tileY].halfBrick() && Main.tile[tileX - 1, tileY].slope() == 0 && Main.tile[tileX + 1, tileY].slope() == 0 && WorldGen.SolidTile(tileX, tileY - 1))
+                        else if (!Main.tile[tileX, tileY + 1].HasTile && WorldGen.genRand.NextBool(2)&& WorldGen.SolidTile(tileX, tileY) && !Main.tile[tileX - 1, tileY].IsHalfBlock && !Main.tile[tileX + 1, tileY].IsHalfBlock && Main.tile[tileX - 1, tileY].Slope == SlopeType.Solid && Main.tile[tileX + 1, tileY].Slope == SlopeType.Solid && WorldGen.SolidTile(tileX, tileY - 1))
                         {
                             if (WorldGen.SolidTile(tileX - 1, tileY) && !WorldGen.SolidTile(tileX + 1, tileY) && WorldGen.SolidTile(tileX - 1, tileY - 1))
                                 WorldGen.SlopeTile(tileX, tileY, 3);
@@ -287,7 +290,7 @@ namespace Macrocosm.Content.Subworlds.Moon
                                 WorldGen.SlopeTile(tileX, tileY, 4);
                         }
 
-                        if (TileID.Sets.Conversion.Sand[Main.tile[tileX, tileY].type])
+                        if (TileID.Sets.Conversion.Sand[Main.tile[tileX, tileY].TileType])
                             Tile.SmoothSlope(tileX, tileY, applyToNeighbors: false);
                     }
                 }
@@ -297,22 +300,22 @@ namespace Macrocosm.Content.Subworlds.Moon
             {
                 for (int tileY = 20; tileY < Main.maxTilesY - 20; tileY++)
                 {
-                    if (WorldGen.genRand.Next(2) == 0 && !Main.tile[tileX, tileY - 1].active() && Main.tile[tileX, tileY].type != 137 && Main.tile[tileX, tileY].type != 48 && Main.tile[tileX, tileY].type != 232 && Main.tile[tileX, tileY].type != 191 && Main.tile[tileX, tileY].type != 151 && Main.tile[tileX, tileY].type != 274 && Main.tile[tileX, tileY].type != 75 && Main.tile[tileX, tileY].type != 76 && WorldGen.SolidTile(tileX, tileY) && Main.tile[tileX - 1, tileY].type != 137 && Main.tile[tileX + 1, tileY].type != 137)
+                    if (WorldGen.genRand.NextBool(2) && !Main.tile[tileX, tileY - 1].HasTile && Main.tile[tileX, tileY].TileType != 137 && Main.tile[tileX, tileY].TileType != 48 && Main.tile[tileX, tileY].TileType != 232 && Main.tile[tileX, tileY].TileType != 191 && Main.tile[tileX, tileY].TileType != 151 && Main.tile[tileX, tileY].TileType != 274 && Main.tile[tileX, tileY].TileType != 75 && Main.tile[tileX, tileY].TileType != 76 && WorldGen.SolidTile(tileX, tileY) && Main.tile[tileX - 1, tileY].TileType != 137 && Main.tile[tileX + 1, tileY].TileType != 137)
                     {
-                        if (WorldGen.SolidTile(tileX, tileY + 1) && WorldGen.SolidTile(tileX + 1, tileY) && !Main.tile[tileX - 1, tileY].active())
+                        if (WorldGen.SolidTile(tileX, tileY + 1) && WorldGen.SolidTile(tileX + 1, tileY) && !Main.tile[tileX - 1, tileY].HasTile)
                             WorldGen.SlopeTile(tileX, tileY, 2);
 
-                        if (WorldGen.SolidTile(tileX, tileY + 1) && WorldGen.SolidTile(tileX - 1, tileY) && !Main.tile[tileX + 1, tileY].active())
+                        if (WorldGen.SolidTile(tileX, tileY + 1) && WorldGen.SolidTile(tileX - 1, tileY) && !Main.tile[tileX + 1, tileY].HasTile)
                             WorldGen.SlopeTile(tileX, tileY, 1);
                     }
 
-                    if (Main.tile[tileX, tileY].slope() == 1 && !WorldGen.SolidTile(tileX - 1, tileY))
+                    if (Main.tile[tileX, tileY].Slope == SlopeType.SlopeDownLeft && !WorldGen.SolidTile(tileX - 1, tileY))
                     {
                         WorldGen.SlopeTile(tileX, tileY);
                         WorldGen.PoundTile(tileX, tileY);
                     }
 
-                    if (Main.tile[tileX, tileY].slope() == 2 && !WorldGen.SolidTile(tileX + 1, tileY))
+                    if (Main.tile[tileX, tileY].Slope == SlopeType.SlopeDownRight && !WorldGen.SolidTile(tileX + 1, tileY))
                     {
                         WorldGen.SlopeTile(tileX, tileY);
                         WorldGen.PoundTile(tileX, tileY);
@@ -329,8 +332,8 @@ namespace Macrocosm.Content.Subworlds.Moon
                 progress.Set(percentDone);
                 if (rockLayerHigh <= (double)Main.maxTilesY)
                 {
-                    int airType = -1;
-                    WorldGen.TileRunner(WorldGen.genRand.Next(0, Main.maxTilesX), WorldGen.genRand.Next((int)rockLayerLow, Main.maxTilesY), WorldGen.genRand.Next(6, 20), WorldGen.genRand.Next(50, 300), airType);
+                    int airTileType = -1;
+                    WorldGen.TileRunner(WorldGen.genRand.Next(0, Main.maxTilesX), WorldGen.genRand.Next((int)rockLayerLow, Main.maxTilesY), WorldGen.genRand.Next(6, 20), WorldGen.genRand.Next(50, 300), airTileType);
                 }
             }
         }
@@ -344,11 +347,11 @@ namespace Macrocosm.Content.Subworlds.Moon
                 float regolithChance = 6;
                 for (int tileY = 1; tileY < Main.maxTilesY; tileY++)
                 {
-                    if (Main.tile[tileX, tileY].active())
+                    if (Main.tile[tileX, tileY].HasTile)
                     {
                         if (regolithChance > 0.1)
                         {
-                            Main.tile[tileX, tileY].type = (ushort)ModContent.TileType<Tiles.Regolith>();
+                            Main.tile[tileX, tileY].TileType = (ushort)ModContent.TileType<Tiles.Regolith>();
                         }
                         regolithChance -= 0.02f;
                         if (regolithChance <= 0) break;
@@ -363,7 +366,7 @@ namespace Macrocosm.Content.Subworlds.Moon
                 float regolithChance = 6;
                 for (int tileY = 1; tileY < Main.maxTilesY; tileY++)
                 {
-                    if (Main.tile[tileX, tileY].active())
+                    if (Main.tile[tileX, tileY].HasTile)
                     {
                         double veinChance = (6 - regolithChance) / 6f * 0.006;
                         if (WorldGen.genRand.NextFloat() < veinChance || veinChance == 0)
@@ -392,10 +395,10 @@ namespace Macrocosm.Content.Subworlds.Moon
             {
                 // Here, we just focus on the progress along the x-axis
                 progress.Set((i / (float)Main.maxTilesX - 1)); // Controls the progress bar, should only be set between 0f and 1f
-                for (int j = surfaceHeight; j < subworld.height; j++)
+                for (int j = surfaceHeight; j < subworld.Height; j++)
                 {
-                    Main.tile[i, j].active(true);
-                    Main.tile[i, j].type = (ushort)ModContent.TileType<Tiles.Protolith>();
+                    // Main.tile[i, j].active(true);  - probably no longer needed 
+                    Main.tile[i, j].TileType = (ushort)ModContent.TileType<Tiles.Protolith>();
                 }
 
                 if (WorldGen.genRand.Next(0, 10) == 0) // Not much deviation here
@@ -416,16 +419,27 @@ namespace Macrocosm.Content.Subworlds.Moon
             }
             #endregion
         }
-        public MoonGen(Subworld sw)
+        public MoonGen(string name, float loadWeight, Subworld sw) : base(name, loadWeight)
         {
             subworld = sw;
-            Add(new SubworldGenPass(GroundPass));
-            Add(new SubworldGenPass(CraterPass));
-            Add(new SubworldGenPass(BackgroundPass));
-            Add(new SubworldGenPass(RegolithPass));
-            Add(new SubworldGenPass(OrePass));
-            Add(new SubworldGenPass(CavePass));
-            Add(new SubworldGenPass(ScuffedSmoothPass));
+            //Add(new SubworldGenPass(GroundPass));
+            //Add(new SubworldGenPass(CraterPass));
+            //Add(new SubworldGenPass(BackgroundPass));
+            //Add(new SubworldGenPass(RegolithPass));
+            //Add(new SubworldGenPass(OrePass));
+            //Add(new SubworldGenPass(CavePass));
+            //Add(new SubworldGenPass(ScuffedSmoothPass));
+        }
+
+        protected override void ApplyPass(GenerationProgress progress, GameConfiguration configuration)
+        {
+            GroundPass(progress);
+            CraterPass(progress);
+            BackgroundPass(progress);
+            RegolithPass(progress);
+            OrePass(progress);
+            CavePass(progress);
+            ScuffedSmoothPass(progress);
         }
     }
 }

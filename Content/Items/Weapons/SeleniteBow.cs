@@ -1,8 +1,8 @@
 using Macrocosm.Content.Items.Materials;
 using Microsoft.Xna.Framework;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Weapons
 {
@@ -18,22 +18,22 @@ namespace Macrocosm.Content.Items.Weapons
             // Kinda mentally bored rn so note
             // TODO: Rework this failiure of a bow - Ryan
             // Its october and im still bored - Ryan
-            item.damage = 320;
-            item.ranged = true;
-            item.width = 40;
-            item.height = 20;
-            item.useTime = 18;
-            item.useAnimation = 18;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.knockBack = 4;
-            item.value = 10000;
-            item.rare = ItemRarityID.Green;
-            item.UseSound = SoundID.Item2;
-            item.autoReuse = true;
-            item.shoot = ProjectileID.PurificationPowder;
-            item.shootSpeed = 20f;
-            item.useAmmo = AmmoID.Arrow;
+            Item.damage = 320;
+            Item.DamageType = DamageClass.Ranged;
+            Item.width = 40;
+            Item.height = 20;
+            Item.useTime = 18;
+            Item.useAnimation = 18;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 4;
+            Item.value = 10000;
+            Item.rare = ItemRarityID.Green;
+            Item.UseSound = SoundID.Item2;
+            Item.autoReuse = true;
+            Item.shoot = ProjectileID.PurificationPowder;
+            Item.shootSpeed = 20f;
+            Item.useAmmo = AmmoID.Arrow;
         }
         public override Vector2? HoldoutOffset()
         {
@@ -41,12 +41,11 @@ namespace Macrocosm.Content.Items.Weapons
         }
         public override void AddRecipes() 
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemType<LuminiteCrystal>(), 1);
-			recipe.AddIngredient(ItemType<SeleniteBar>(), 12);
+            Recipe recipe = Mod.CreateRecipe(Type);
+			recipe.AddIngredient(ModContent.ItemType<LuminiteCrystal>(), 1);
+			recipe.AddIngredient(ModContent.ItemType<SeleniteBar>(), 12);
 			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
             // FIXME: Definitely not finalized, someone check with this and see if the values are appropriate
 		}
 	}

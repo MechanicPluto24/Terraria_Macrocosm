@@ -9,6 +9,7 @@ using Macrocosm.Common.Utility.IO;
 
 namespace Macrocosm.Content.Subworlds.Moon
 {
+    /*
     public class MoonSubworldLoadUI : UIDefaultSubworldLoad
     {
         bool toEarth;
@@ -18,7 +19,7 @@ namespace Macrocosm.Content.Subworlds.Moon
         private string _chosenMessage;
         public override void OnInitialize()
         {
-            toEarth = Subworld.IsActive<Moon>();
+            toEarth = SubworldSystem.IsActive<Moon>();
             lunaBackground = ModContent.GetTexture($"{nameof(Macrocosm)}/Content/Subworlds/LoadingBackgrounds/Luna");
             earthBackground = ModContent.GetTexture($"{nameof(Macrocosm)}/Content/Subworlds/LoadingBackgrounds/Earth");
             var textFileLoader = new TextFileLoader();
@@ -73,5 +74,7 @@ namespace Macrocosm.Content.Subworlds.Moon
             if (animationTimer > 5)
                 animationTimer = 5;
         }
+        
     }
+    */
 }

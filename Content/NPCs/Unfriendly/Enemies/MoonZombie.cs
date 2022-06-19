@@ -1,10 +1,9 @@
-using Macrocosm.Content.Items.Currency;
-using Macrocosm.Content.Items.Materials;
-using System.ComponentModel;
-using System.Media;
 using Terraria;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.Items.Currency;
 
 namespace Macrocosm.Content.NPCs.Unfriendly.Enemies
 {
@@ -12,94 +11,98 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Moon Zombie");
-			Main.npcFrameCount[npc.type] = 9;
+			DisplayName.SetDefault("Moon Zombie");	
+			Main.npcFrameCount[Type] = 9;
 		}
 
 		public override void SetDefaults()
 		{
-			npc.width = 18;
-			npc.height = 44;
-			npc.damage = 60;
-			npc.defense = 60;
-			npc.lifeMax = 2200;
-			npc.HitSound = SoundID.NPCHit1;
-			npc.DeathSound = SoundID.NPCDeath2;
-			npc.knockBackResist = 0.5f;
-			npc.aiStyle = 3;
-			aiType = NPCID.ZombieMushroom;
-			banner = Item.NPCtoBanner(NPCID.Zombie);
-			bannerItem = Item.BannerToItem(banner);
+			NPC.width = 18;
+			NPC.height = 44;
+			NPC.damage = 60;
+			NPC.defense = 60;
+			NPC.lifeMax = 2200;
+			NPC.HitSound = SoundID.NPCHit1;
+			NPC.DeathSound = SoundID.NPCDeath2;
+			NPC.knockBackResist = 0.5f;
+			NPC.aiStyle = 3;
+			AIType = NPCID.ZombieMushroom;
+			Banner = Item.NPCtoBanner(NPCID.Zombie);
+			BannerItem = Item.BannerToItem(Banner);
 		}
 
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
 		{
-			return spawnInfo.spawnTileType == ModContent.TileType<Tiles.Regolith>() && !Main.dayTime ? 0.1f : 0f;
+			return spawnInfo.SpawnTileType == ModContent.TileType<Tiles.Regolith>() && !Main.dayTime ? 0.1f : 0f;
 		}
 
 		public override void AI()
 		{
-			if (npc.velocity.Y < 0f)
-				npc.velocity.Y += 0.1f;
+			if (NPC.velocity.Y < 0f)
+				NPC.velocity.Y += 0.1f;
 			base.AI();
 		}
 
 		public override void FindFrame(int frameHeight)
 		{
-			npc.spriteDirection = npc.direction;
-			if (npc.velocity.Y == 0)
+			NPC.spriteDirection = NPC.direction;
+			if (NPC.velocity.Y == 0)
 			{
-				npc.frameCounter += 10;
-				if (npc.frameCounter >= 48)
+				NPC.frameCounter += 10;
+				if (NPC.frameCounter >= 48)
 				{
-					npc.frameCounter -= 48;
-					npc.frame.Y += 44;
-					if (npc.frame.Y > 304)
+					NPC.frameCounter -= 48;
+					NPC.frame.Y += frameHeight;
+					if (NPC.frame.Y > 304)
 					{
-						npc.frame.Y = 0;
+						NPC.frame.Y = 0;
 					}
 				}
 			}
 			else
 			{
-				npc.frame.Y = 352;
+				NPC.frame.Y = 8 * frameHeight;
 			}
 		}
 
-		public override void NPCLoot()
+		public override void ModifyNPCLoot(NPCLoot loot)
         {
-			Item.NewItem(npc.getRect(), ModContent.ItemType<CosmicDust>());
-			if (Main.rand.NextFloat() < .0625)
-				Item.NewItem(npc.getRect(), ModContent.ItemType<ArtemiteOre>(), 1 + Main.rand.Next(5));
-			if (Main.rand.NextFloat() < .0625)
-				Item.NewItem(npc.getRect(), ModContent.ItemType<ChandriumOre>(), 1 + Main.rand.Next(5));
-			if (Main.rand.NextFloat() < .0625)
-				Item.NewItem(npc.getRect(), ModContent.ItemType<SeleniteOre>(), 1 + Main.rand.Next(5));
-			if (Main.rand.NextFloat() < .0625)
-				Item.NewItem(npc.getRect(), ModContent.ItemType<DianiteOre>(), 1 + Main.rand.Next(5));
+			loot.Add(ItemDropRule.Common(ModContent.ItemType<CosmicDust>()));             // Always drop 1 cosmic dust
+			loot.Add(ItemDropRule.Common(ModContent.ItemType<ArtemiteOre>(), 16, 1, 6));  // 16% chance to drop 1-6 Artemite Ore
+			loot.Add(ItemDropRule.Common(ModContent.ItemType<ChandriumOre>(), 16, 1, 6)); // 16% chance to drop 1-6 Chandrium Ore
+			loot.Add(ItemDropRule.Common(ModContent.ItemType<SeleniteOre>(), 16, 1, 6));  // 16% chance to drop 1-6 Selenite Ore
+			loot.Add(ItemDropRule.Common(ModContent.ItemType<DianiteOre>(), 16, 1, 6));   // 16% chance to drop 1-6 DianiteOre Ore
 		}
 
 		public override void HitEffect(int hitDirection, double damage)
 		{
-			if (npc.life <= 0)
-			{
-				Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Content/Gores/MoonZombieHead"), 1f);
-				Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Content/Gores/MoonZombieArm"), 1f);
-				Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Content/Gores/MoonZombieArm"), 1f);
-				Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Content/Gores/MoonZombieLeg"), 1f);
-				Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Content/Gores/MoonZombieLeg"), 1f);
-			}
-			else
-			{
+            
+            if(NPC.life > 0)
+            {
 				for (int i = 0; i < 10; i++)
 				{
-					int dustType = 4;
-					int dustIndex = Dust.NewDust(npc.position, npc.width, npc.height, dustType);
+					int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.TintableDust);
 					Dust dust = Main.dust[dustIndex];
-					dust.velocity.X = dust.velocity.X + Main.rand.Next(-50, 51) * 0.01f;
-					dust.velocity.Y = dust.velocity.Y + Main.rand.Next(-50, 51) * 0.01f;
+					dust.velocity.X *= dust.velocity.X * 1.25f * hitDirection + Main.rand.Next(0, 100) * 0.015f;
+					dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;
 					dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
 				}
+			}
+
+			if (Main.netMode == NetmodeID.Server)
+			{
+                return; // don't run on the server
+            }
+
+			if (NPC.life <= 0)
+			{
+				var entitySource = NPC.GetSource_Death();
+
+				Gore.NewGore(entitySource, NPC.position, NPC.velocity, Mod.Find<ModGore>("MoonZombieHead").Type);
+				Gore.NewGore(entitySource, NPC.position, NPC.velocity, Mod.Find<ModGore>("MoonZombieArm").Type);
+				Gore.NewGore(entitySource, NPC.position, NPC.velocity, Mod.Find<ModGore>("MoonZombieArm").Type);
+				Gore.NewGore(entitySource, NPC.position, NPC.velocity, Mod.Find<ModGore>("MoonZombieLeg").Type);
+				Gore.NewGore(entitySource, NPC.position, NPC.velocity, Mod.Find<ModGore>("MoonZombieLeg").Type);
 			}
 		}
 	}

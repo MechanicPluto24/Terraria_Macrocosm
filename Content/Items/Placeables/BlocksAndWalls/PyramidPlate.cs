@@ -14,18 +14,18 @@ namespace Macrocosm.Content.Items.Placeables.BlocksAndWalls
 
         public override void SetDefaults()
         {
-            item.width = 20;
-            item.height = 20;
-            item.maxStack = 999;
-            item.value = 750;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.useTurn = true;
-            item.useAnimation = 15;
-            item.useTime = 10;
-            item.autoReuse = true;
-            item.consumable = true;
-            item.createTile = TileType<Tiles.PyramidPlate>();
-            item.placeStyle = 0;
+            Item.width = 20;
+            Item.height = 20;
+            Item.maxStack = 999;
+            Item.value = 750;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.useTurn = true;
+            Item.useAnimation = 15;
+            Item.useTime = 10;
+            Item.autoReuse = true;
+            Item.consumable = true;
+            Item.createTile = TileType<Tiles.PyramidPlate>();
+            Item.placeStyle = 0;
         }
 
         public override void AddRecipes()
