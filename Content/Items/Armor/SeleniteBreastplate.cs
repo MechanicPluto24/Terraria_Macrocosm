@@ -2,7 +2,6 @@
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using static Terraria.ModLoader.ModContent;
 using Macrocosm.Content.Items.Materials;
 
 namespace Macrocosm.Content.Items.Armor

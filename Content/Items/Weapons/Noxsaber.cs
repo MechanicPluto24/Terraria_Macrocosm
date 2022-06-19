@@ -16,7 +16,7 @@ namespace Macrocosm.Content.Items.Weapons
 			DisplayName.SetDefault("The Noxsaber"); // By default, capitalization in classnames will add spaces to the display name. You can customize the display name here by uncommenting this line.
 			Tooltip.SetDefault("An ancient black energy saber, stolen from the temple of a long dead cult");
 		}
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)
         {
 			if (Main.netMode != NetmodeID.Server)
 			{
@@ -35,7 +35,7 @@ namespace Macrocosm.Content.Items.Weapons
         public override void SetDefaults() 
 		{
 			Item.damage = 777;
-			Item.melee = true;
+			Item.DamageType = DamageClass.Melee;
 			Item.width = 100;
 			Item.height = 100;
 			Item.useTime = 15;
