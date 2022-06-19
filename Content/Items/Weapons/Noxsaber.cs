@@ -16,7 +16,7 @@ namespace Macrocosm.Content.Items.Weapons
 			DisplayName.SetDefault("The Noxsaber"); // By default, capitalization in classnames will add spaces to the display name. You can customize the display name here by uncommenting this line.
 			Tooltip.SetDefault("An ancient black energy saber, stolen from the temple of a long dead cult");
 		}
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)
         {
 			if (Main.netMode != NetmodeID.Server)
 			{
@@ -29,24 +29,24 @@ namespace Macrocosm.Content.Items.Weapons
 				customGlowMask = (short)(glowMasks.Length - 1);
 				Main.glowMaskTexture = glowMasks;
 			}
-			item.glowMask = customGlowMask;
+			Item.glowMask = customGlowMask;
 			return base.UseItem(player);
         }
         public override void SetDefaults() 
 		{
-			item.damage = 777;
-			item.melee = true;
-			item.width = 100;
-			item.height = 100;
-			item.useTime = 15;
-			item.useAnimation = 15;
-			item.useStyle = ItemUseStyleID.SwingThrow; // 1 = sword
-			item.knockBack = 6f;
-			item.value = 10000;
-			item.rare = ItemRarityID.Red;
-			item.UseSound = SoundID.Item15;
-			item.autoReuse = true; // Lets you use the item without clicking the mouse repeatedly (i.e. swinging swords)
-			item.glowMask = customGlowMask;
+			Item.damage = 777;
+			Item.DamageType = DamageClass.Melee;
+			Item.width = 100;
+			Item.height = 100;
+			Item.useTime = 15;
+			Item.useAnimation = 15;
+			Item.useStyle = ItemUseStyleID.Swing; // 1 = sword
+			Item.knockBack = 6f;
+			Item.value = 10000;
+			Item.rare = ItemRarityID.Red;
+			Item.UseSound = SoundID.Item15;
+			Item.autoReuse = true; // Lets you use the item without clicking the mouse repeatedly (i.e. swinging swords)
+			Item.glowMask = customGlowMask;
 		}
 		public override void MeleeEffects(Player player, Rectangle hitbox)
 		{
@@ -57,17 +57,17 @@ namespace Macrocosm.Content.Items.Weapons
 		}
 		public override void PostUpdate()
 		{
-			Lighting.AddLight(item.Center, Color.White.ToVector3() * 0.85f * Main.essScale);
+			Lighting.AddLight(Item.Center, Color.White.ToVector3() * 0.85f * Main.essScale);
 		}
 
 		public override void AddRecipes() 
 		{
-			//ModRecipe recipe = new ModRecipe(mod);
+			//Recipe recipe = Mod.CreateRecipe(Type);
 			//recipe.AddIngredient(ItemID.HellstoneBar, 20);
 			//recipe.AddIngredient(ItemID.SoulofFright, 10);
 			//recipe.AddTile(TileID.WorkBenches);
 			//recipe.SetResult(this);
-			//recipe.AddRecipe();
+			//recipe.Register();
 		}
 	}
 }

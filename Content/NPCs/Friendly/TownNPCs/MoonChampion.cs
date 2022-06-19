@@ -8,45 +8,49 @@ using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using SubworldLibrary;
 using Macrocosm.Content.Subworlds.Moon;
+using Terraria.GameContent;
 
 namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
 {
     [AutoloadHead]
-    public class Astronaut : ModNPC
+    public class MoonChampion : ModNPC
     {
-        public override string Texture => "Macrocosm/Content/NPCs/Friendly/TownNPCs/Astronaut";
 
-        public override bool Autoload(ref string name)
-        {
-            name = "MoonChampion";
-            return mod.Properties.Autoload;
-        }
+        // These are done automatically now - Feldy
+
+            //public override string Texture => "Macrocosm/Content/NPCs/Friendly/TownNPCs/MoonChampion";
+
+            // public override bool Autoload(ref string name)
+            // {
+            //     name = "MoonChampion";
+            //     return mod.Properties.Autoload;
+            // }
 
         public override void SetStaticDefaults()
         {
-            Main.npcFrameCount[npc.type] = 26;
-            NPCID.Sets.ExtraFramesCount[npc.type] = 9;
-            NPCID.Sets.AttackFrameCount[npc.type] = 5;
-            NPCID.Sets.DangerDetectRange[npc.type] = 50;
-            NPCID.Sets.AttackType[npc.type] = 0;
-            NPCID.Sets.AttackTime[npc.type] = 60;
-            NPCID.Sets.AttackAverageChance[npc.type] = 30;
-            NPCID.Sets.HatOffsetY[npc.type] = 0;
+            Main.npcFrameCount[NPC.type] = 26;
+            NPCID.Sets.ExtraFramesCount[NPC.type] = 9;
+            NPCID.Sets.AttackFrameCount[NPC.type] = 5;
+            NPCID.Sets.DangerDetectRange[NPC.type] = 50;
+            NPCID.Sets.AttackType[NPC.type] = 0;
+            NPCID.Sets.AttackTime[NPC.type] = 60;
+            NPCID.Sets.AttackAverageChance[NPC.type] = 30;
+            NPCID.Sets.HatOffsetY[NPC.type] = 0;
         }
         public override void SetDefaults()
         {
-            npc.townNPC = true;
-            npc.friendly = true;
-            npc.width = 18;
-            npc.height = 40;
-            npc.aiStyle = 7;
-            npc.damage = 1000;
-            npc.defense = 100;
-            npc.lifeMax = 5000;
-            npc.HitSound = SoundID.NPCHit4;
-            npc.DeathSound = SoundID.NPCDeath3;
-            npc.knockBackResist = 0.2f;
-            animationType = NPCID.Guide;
+            NPC.townNPC = true;
+            NPC.friendly = true;
+            NPC.width = 18;
+            NPC.height = 40;
+            NPC.aiStyle = 7;
+            NPC.damage = 1000;
+            NPC.defense = 100;
+            NPC.lifeMax = 5000;
+            NPC.HitSound = SoundID.NPCHit4;
+            NPC.DeathSound = SoundID.NPCDeath3;
+            NPC.knockBackResist = 0.2f;
+            AnimationType = NPCID.Guide;
         }
         public override bool CanTownNPCSpawn(int numTownNPCs, int money)
         {
@@ -58,30 +62,22 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
             return false;
         }
 
-        public override string TownNPCName()
+        public override List<string> SetNPCNameList()
         {
-            switch(WorldGen.genRand.Next(9))
-            {
-                case 0:
-                    return "Mann"; // Hugh Mann (Interstellar)
-                case 1:
-                    return "Doyle"; // (Interstellar)
-                case 2:
-                    return "Romilly"; // (Interstellar)
-                case 3:
-                    return "Miller"; // Dr. Miller (Interstellar)
-                case 4:
-                    return "Edmunds"; // Wolf Edmunds (Interstellar)
-                case 5:
-                    return "Neil"; // Neil Armstrong
-                case 6:
-                    return "Buzz"; // Buzz Aldrin
-                case 7:
-                    return "Chris"; // Chris Hadfield
-                default:
-                    return "Cooper"; // Joseph Cooper (Interstellar)
-            }
+            return new List<string>() {
+                "Mann"   , // Hugh Mann (Interstellar)
+                "Doyle"  , // (Interstellar)
+                "Romilly", // (Interstellar)
+                "Miller" , // Dr. Miller (Interstellar)
+                "Edmunds", // Wolf Edmunds (Interstellar)
+                "Neil"   , // Neil Armstrong
+                "Buzz"   , // Buzz Aldrin
+                "Chris"  , // Chris Hadfield
+                "Cooper"   // Joseph Cooper (Interstellar)
+            };
         }
+
+
         // NOTE: I cannot guarentee that all of this code is in tip-top shape, so if there is anything off, just let ryan know :poggers:
         // "Ok I think I made it in tip-top shape now probably" - 4mbr0s3 2
         public override string GetChat()
@@ -171,9 +167,12 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
 		public override void PostAI()
 		{
 			base.PostAI();
-			if (!Subworld.IsActive<Moon>())
-			{
-				npc.active = false;
+            if (!SubworldSystem.IsActive<Moon>())
+            {
+                return;
+            }
+            {
+				NPC.active = false;
 			}
 		}
         // TODO: Bad shop, sprite fast, die hard (ambrose plesea ima die)
@@ -197,7 +196,8 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
         }
         public override void DrawTownAttackSwing(ref Texture2D item, ref int itemSize, ref float scale, ref Vector2 offset)
         {
-            item = ModContent.GetTexture("Terraria/Item_" + ItemID.None);
+            Main.instance.LoadItem(ItemID.None);
+            item = TextureAssets.Item[ItemID.None].Value;
             scale = 1f;
         }
         public override void TownNPCAttackSwing(ref int itemWidth, ref int itemHeight)

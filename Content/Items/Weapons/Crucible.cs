@@ -27,45 +27,44 @@ namespace Macrocosm.Content.Items.Weapons
 				customGlowMask = (short)(glowMasks.Length - 1);
 				Main.glowMaskTexture = glowMasks;
 			}
-			item.glowMask = customGlowMask;
+			Item.glowMask = customGlowMask;
 		}
-
+        
 		public override void SetDefaults() 
 		{
-			item.damage = 666;
-			item.melee = true;
-			item.width = 76;
-			item.height = 76;
-			item.useTime = 20;
-			item.useAnimation = 20;
-			item.useStyle = ItemUseStyleID.SwingThrow; // 1 = sword
-			item.knockBack = 6f;
-			item.value = 10000;
-			item.rare = ItemRarityID.Red;
-			item.UseSound = SoundID.Item20;
-			item.autoReuse = true; // Lets you use the item without clicking the mouse repeatedly (i.e. swinging swords)
-			item.glowMask = customGlowMask;
+			Item.damage = 666;
+			Item.DamageType = DamageClass.Melee;
+			Item.width = 76;
+			Item.height = 76;
+			Item.useTime = 20;
+			Item.useAnimation = 20;
+			Item.useStyle = ItemUseStyleID.Swing; // 1 = sword
+			Item.knockBack = 6f;
+			Item.value = 10000;
+			Item.rare = ItemRarityID.Red;
+			Item.UseSound = SoundID.Item20;
+			Item.autoReuse = true; // Lets you use the item without clicking the mouse repeatedly (i.e. swinging swords)
+			Item.glowMask = customGlowMask;
 		}
 		public override void MeleeEffects(Player player, Rectangle hitbox)
 		{
-			if (Main.rand.Next(2) == 0)
+			if (Main.rand.NextBool(2))
 			{
 				int dust = Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, mod.DustType("CrucibleDust"));
 			}
 		}
 		public override void PostUpdate()
 		{
-			Lighting.AddLight(item.Center, Color.Red.ToVector3() * 0.85f * Main.essScale);
+			Lighting.AddLight(Item.Center, Color.Red.ToVector3() * 0.85f * Main.essScale);
 		}
 
 		public override void AddRecipes() 
 		{
-			ModRecipe recipe = new ModRecipe(mod);
+			Recipe recipe = Mod.CreateRecipe(Type);
 			recipe.AddIngredient(ItemID.HellstoneBar, 20);
 			recipe.AddIngredient(ItemID.SoulofFright, 10);
 			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			recipe.Register();
 		}
 	}
 }

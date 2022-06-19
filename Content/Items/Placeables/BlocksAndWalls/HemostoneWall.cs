@@ -1,6 +1,7 @@
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 using Terraria.ID;
+using Terraria;
 
 namespace Macrocosm.Content.Items.Placeables.BlocksAndWalls
 {
@@ -13,26 +14,25 @@ namespace Macrocosm.Content.Items.Placeables.BlocksAndWalls
 
 		public override void SetDefaults()
 		{
-			item.width = 12;
-			item.height = 12;
-			item.maxStack = 999;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 7;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.consumable = true;
-			item.createWall = WallType<Walls.HemostoneWall>();
+			Item.width = 12;
+			Item.height = 12;
+			Item.maxStack = 999;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 7;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.consumable = true;
+			Item.createWall = WallType<Walls.HemostoneWall>();
 		}
 
 		public override void AddRecipes()
 		{
-
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod, "Hemostone", 1);
+            
+			Recipe recipe = Mod.CreateRecipe(Type, 4);
+			recipe.AddIngredient<Hemostone>();
 			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this, 4);
-			recipe.AddRecipe();
+			recipe.Register();
 		}
 	}
 }

@@ -8,6 +8,11 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Common\BaseMod\**" />
+    <EmbeddedResource Remove="Common\BaseMod\**" />
+    <None Remove="Common\BaseMod\**" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="tModLoader.CodeAssist" Version="0.1.*" />
   </ItemGroup>
   <ItemGroup>
