@@ -13,11 +13,11 @@ namespace Macrocosm.Content.Items.Armor
 		}
 
 		public override void SetDefaults() {
-			item.width = 18;
-			item.height = 18;
-			item.value = 10000;
-			item.rare = ItemRarityID.Green;
-			item.defense = 22;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = 10000;
+			Item.rare = ItemRarityID.Green;
+			Item.defense = 22;
 		}
 
 		public override void UpdateEquip(Player player) {
@@ -25,11 +25,10 @@ namespace Macrocosm.Content.Items.Armor
 		}
 
 		public override void AddRecipes() {
-			ModRecipe recipe = new ModRecipe(mod);
+			Recipe recipe = Mod.CreateRecipe(Type);
 			recipe.AddIngredient(ItemID.DirtBlock, 10);
 			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			recipe.Register();
 		}
 	}
 }

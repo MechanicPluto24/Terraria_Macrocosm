@@ -13,12 +13,12 @@ namespace Macrocosm.Content.Items.Materials
 
         public override void SetDefaults()
         {
-            item.width = 20;
-            item.height = 20;
-            item.maxStack = 999;
-            item.value = 100;
-            item.rare = 1;
-            // Set other item.X values here
+            Item.width = 20;
+            Item.height = 20;
+            Item.maxStack = 999;
+            Item.value = 100;
+            Item.rare = 1;
+            // Set other Item.X values here
         }
 
         public override void AddRecipes()

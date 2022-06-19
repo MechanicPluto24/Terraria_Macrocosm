@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
@@ -17,22 +18,22 @@ namespace Macrocosm.Content.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			item.damage = 80;
-			item.ranged = true;
-			item.width = 52;
-			item.height = 16;
-			item.useTime = 34;
-			item.useAnimation = 34;
-			item.useStyle = ItemUseStyleID.HoldingOut;
-			item.noMelee = true;
-			item.knockBack = 8f;
-			item.value = 10000;
-			item.rare = ItemRarityID.Purple;
-			item.UseSound = SoundID.Item38;
-			item.autoReuse = true;
-			item.shoot = ProjectileID.PurificationPowder;
-			item.shootSpeed = 20f;
-			item.useAmmo = AmmoID.Bullet;
+			Item.damage = 80;
+			Item.DamageType = DamageClass.Ranged;
+			Item.width = 52;
+			Item.height = 16;
+			Item.useTime = 34;
+			Item.useAnimation = 34;
+			Item.useStyle = ItemUseStyleID.Shoot; // was HoldingOut
+			Item.noMelee = true;
+			Item.knockBack = 8f;
+			Item.value = 10000;
+			Item.rare = ItemRarityID.Purple;
+			Item.UseSound = SoundID.Item38;
+			Item.autoReuse = true;
+			Item.shoot = ProjectileID.PurificationPowder;
+			Item.shootSpeed = 20f;
+			Item.useAmmo = AmmoID.Bullet;
 		}
 
 		public override bool AltFunctionUse(Player player)
@@ -44,30 +45,30 @@ namespace Macrocosm.Content.Items.Weapons
 		{
 			if (player.altFunctionUse == 2)
 			{
-				item.useTime = 68;
-				item.useAnimation = 68;
-				item.shoot =  ProjectileType<Content.Projectiles.Friendly.Weapons.CruithneBlackSlug>();
+				Item.useTime = 68;
+				Item.useAnimation = 68;
+				Item.shoot =  ProjectileType<Content.Projectiles.Friendly.Weapons.CruithneBlackSlug>();
 			}
 			else
 			{
-				item.useTime = 34;
-				item.useAnimation = 34;
-				item.shoot =  ProjectileType<Content.Projectiles.Friendly.Weapons.CruithneGreenSlug>();
+				Item.useTime = 34;
+				Item.useAnimation = 34;
+				Item.shoot =  ProjectileType<Content.Projectiles.Friendly.Weapons.CruithneGreenSlug>();
 			}
 			return base.CanUseItem(player);
 		}
 
-		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockBack)
 		{
 			int numberProjectiles = player.altFunctionUse == 2 ? 12 : 6;
 			int degree = player.altFunctionUse == 2 ? 20 : 10;
 			for (int i = 0; i < numberProjectiles; i++)
 			{
-				Vector2 muzzleOffset = Vector2.Normalize(new Vector2(speedX, speedY)) * 12f;
+				Vector2 muzzleOffset = Vector2.Normalize(velocity) * 12f;
 				if (Collision.CanHit(position, 0, 0, position + muzzleOffset, 0, 0))
 					position += muzzleOffset;
-				Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(degree));
-				Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, item.shoot, damage, knockBack, player.whoAmI);
+				Vector2 perturbedSpeed = velocity.RotatedByRandom(MathHelper.ToRadians(degree));
+				Projectile.NewProjectile(source, position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, Item.shoot, damage, knockBack, player.whoAmI);
 			}
 			return false;
 		}

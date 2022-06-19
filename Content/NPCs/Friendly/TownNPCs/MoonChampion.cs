@@ -18,7 +18,7 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
 
         // These are done automatically now - Feldy
 
-            //public override string Texture => "Macrocosm/Content/NPCs/Friendly/TownNPCs/Astronaut";
+            //public override string Texture => "Macrocosm/Content/NPCs/Friendly/TownNPCs/MoonChampion";
 
             // public override bool Autoload(ref string name)
             // {

@@ -13,18 +13,18 @@ namespace Macrocosm.Content.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			item.damage = 100000000;
-			item.melee = true;
-			item.width = 40;
-			item.height = 40;
-			item.useTime = 60;
-			item.useAnimation = 60;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.knockBack = 1000;
-			item.value = 10000;
-			item.rare = ItemRarityID.Green;
-			item.UseSound = SoundID.Item1;
-			item.autoReuse = false;
+			Item.damage = 100000000;
+			Item.DamageType = DamageClass.Melee;
+			Item.width = 40;
+			Item.height = 40;
+			Item.useTime = 60;
+			Item.useAnimation = 60;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.knockBack = 1000;
+			Item.value = 10000;
+			Item.rare = ItemRarityID.Green;
+			Item.UseSound = SoundID.Item1;
+			Item.autoReuse = false;
 		}
 
 		public override void AddRecipes()

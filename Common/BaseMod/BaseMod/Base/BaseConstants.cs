@@ -159,8 +159,8 @@ namespace Macrocosm {
         public static float ReadFloat(this BinaryReader w) { return w.ReadSingle(); }
 
         public static bool IsBlank(this Item item) {
-            if (item.type <= 0 || item.stack <= 0) return true;
-            return string.IsNullOrEmpty(item.Name);
+            if (Item.type <= 0 || Item.stack <= 0) return true;
+            return string.IsNullOrEmpty(Item.Name);
         }
 
         public static bool water(this Tile tile) { return tile.LiquidType == LiquidID.Water; }

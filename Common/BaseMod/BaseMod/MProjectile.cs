@@ -9,9 +9,9 @@ using Terraria.ModLoader;
 
 namespace Macrocosm {
 	public class MProjectile : GlobalProjectile {
-		public override bool PreDrawExtras(Projectile projectile) {
-			BaseArmorData.lastShaderDrawObject = projectile;
-			return base.PreDrawExtras(projectile);
+		public override bool PreDrawExtras(Projectile Projectile) {
+			BaseArmorData.lastShaderDrawObject = Projectile;
+			return base.PreDrawExtras(Projectile);
 		}		
 	}
 }

@@ -891,8 +891,8 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon{
 		public override bool? CanBeHitByItem(Player player, Item item)
 			=> CanBeHitByThing(player.GetSwungItemHitbox());
 
-		public override bool? CanBeHitByProjectile(Projectile projectile)
-			=> CanBeHitByThing(projectile.Hitbox);
+		public override bool? CanBeHitByProjectile(Projectile Projectile)
+			=> CanBeHitByThing(Projectile.Hitbox);
 
 		private bool? CanBeHitByThing(Rectangle hitbox){
 			//Make the hit detection dynamic be based on the sprite for extra coolness points
