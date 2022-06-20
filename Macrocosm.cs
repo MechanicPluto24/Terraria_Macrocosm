@@ -19,6 +19,7 @@ namespace Macrocosm {
             CurrencyManager.LoadCurrencies();
             if (!Main.dedServ)
                 LoadMoonSky();
+            
             try
             {
                 var ta = ModLoader.GetMod("TerrariaAmbience");
@@ -28,7 +29,7 @@ namespace Macrocosm {
             }
             catch (Exception e)
             {
-                Main.NewText(e.Message);
+                Logger.Warn(e.Message + " Failed to load TerrariaAmbience. ");
             }
 
         }
@@ -40,6 +41,7 @@ namespace Macrocosm {
                 return orig(inv, context, slot, checkItem);
             }
         }
+
         private void LoadMoonSky() {
             MoonSky moonSky = new MoonSky();
             Filters.Scene["Macrocosm:MoonSky"] = new Filter(new ScreenShaderData("FilterMiniTower").UseColor(0f, 0f, 0f).UseOpacity(0f), EffectPriority.High);

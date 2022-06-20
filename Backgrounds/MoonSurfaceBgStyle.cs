@@ -62,7 +62,8 @@ namespace Macrocosm.Backgrounds {
                 if (Main.gameMenu) {
                     bgTop = 320;
                 }
-                Color backColor = typeof(Main).GetFieldValue<Color>("backColor", Main.instance);
+                //Color backColor = typeof(Main).GetFieldValue<Color>("backColor", Main.instance);
+                Color backColor = typeof(Main).GetFieldValue<Color>("ColorOfSurfaceBackgroundsBase", Main.instance);
                 int bgLoops = Main.screenWidth / bgW + 2;
                 if (Main.screenPosition.Y < Main.worldSurface * 16.0 + 16.0) {
                     for (int k = 0; k < bgLoops; k++) {
@@ -72,6 +73,7 @@ namespace Macrocosm.Backgrounds {
                             backColor, 0f, default, bgScale, SpriteEffects.None, 0f);
                     }
                 }
+            
             }
             return false;
         }
