@@ -4,6 +4,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Macrocosm.Content.Dusts;
+using Macrocosm.Common.Utility;
 
 namespace Macrocosm.Content.Items.Weapons
 {
@@ -15,19 +16,6 @@ namespace Macrocosm.Content.Items.Weapons
 		{
 			// DisplayName.SetDefault("BasicSword"); // By default, capitalization in classnames will add spaces to the display name. You can customize the display name here by uncommenting this line.
 			Tooltip.SetDefault("A sword forged from the fires of Hell itself" + "\n'The only thing they fear is you.'");
-
-			if (Main.netMode != NetmodeID.Server)
-			{
-				Texture2D[] glowMasks = new Texture2D[Main.glowMaskTexture.Length + 1];
-				for (int i = 0; i < Main.glowMaskTexture.Length; i++)
-				{
-					glowMasks[i] = Main.glowMaskTexture[i];
-				}
-				glowMasks[glowMasks.Length - 1] = mod.GetTexture("Content/Items/Weapons/" + GetType().Name + "_Glow");
-				customGlowMask = (short)(glowMasks.Length - 1);
-				Main.glowMaskTexture = glowMasks;
-			}
-			Item.glowMask = customGlowMask;
 		}
         
 		public override void SetDefaults() 
@@ -44,13 +32,13 @@ namespace Macrocosm.Content.Items.Weapons
 			Item.rare = ItemRarityID.Red;
 			Item.UseSound = SoundID.Item20;
 			Item.autoReuse = true; // Lets you use the item without clicking the mouse repeatedly (i.e. swinging swords)
-			Item.glowMask = customGlowMask;
+			Item.GetGlobalItem<GlowmaskGlobalItem>().glowTexture = ModContent.Request<Texture2D>("Macrocosm/Content/Items/Weapons/Crucible_Glow").Value;
 		}
 		public override void MeleeEffects(Player player, Rectangle hitbox)
 		{
 			if (Main.rand.NextBool(2))
 			{
-				int dust = Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, mod.DustType("CrucibleDust"));
+				int dust = Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, ModContent.DustType<CrucibleDust>());
 			}
 		}
 		public override void PostUpdate()

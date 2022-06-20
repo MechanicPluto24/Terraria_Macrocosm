@@ -17,7 +17,11 @@ namespace Macrocosm.Common.Drawing {
             if (SubworldSystem.IsActive<Moon>()) {
                 var earthTexture = ModContent.Request<Texture2D>("Macrocosm/Assets/Earth").Value;
                 var sb = Main.spriteBatch;
-                sb.Draw(earthTexture, new Vector2(Main.screenWidth / 2, 200), null, Color.White, 0.4101524f, earthTexture.Size() / 2, 1f, default, 0f); // 0.4101524 is earth's axial tilt to radians
+                Main.spriteBatch.End();
+                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+                sb.Draw(earthTexture, new Vector2(Main.screenWidth / 2, 200), null, Color.White, 0f, earthTexture.Size() / 2, 1f, default, 0f);
+                Main.spriteBatch.End();
+                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
             }
         }
     }

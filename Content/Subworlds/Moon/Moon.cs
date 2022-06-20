@@ -4,6 +4,7 @@ using SubworldLibrary;
 using Terraria.WorldBuilding;
 using Terraria.ModLoader;
 using Terraria.UI;
+using Terraria.Graphics.Effects;
 
 namespace Macrocosm.Content.Subworlds.Moon
 {
@@ -22,10 +23,22 @@ namespace Macrocosm.Content.Subworlds.Moon
         {
             new MoonGen("LoadingMoon", 1f, this)
         };
-        
+
         //public override UIState loadingUIState => new MoonSubworldLoadUI();
         //public override ModWorld modWorld => null;
         //public override bool saveModData => true;
+
+
+        public override void OnEnter()
+        {
+            SkyManager.Instance.Activate("Macrocosm:MoonSky");
+        }
+
+        public override void OnExit()
+        {
+            SkyManager.Instance.Deactivate("Macrocosm:MoonSky");
+        }
+
 
         public override void Load()
         {
