@@ -2,15 +2,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\tModLoader.targets" />
   <PropertyGroup>
-    <AssemblyName>Terraria_Macrocosm</AssemblyName>
+    <AssemblyName>Macrocosm</AssemblyName>
     <TargetFramework>net6.0</TargetFramework>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="Common\BaseMod\**" />
-    <EmbeddedResource Remove="Common\BaseMod\**" />
-    <None Remove="Common\BaseMod\**" />
+    <Compile Remove="Common\BaseMod\BaseMod\**" />
+    <EmbeddedResource Remove="Common\BaseMod\BaseMod\**" />
+    <None Remove="Common\BaseMod\BaseMod\**" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="tModLoader.CodeAssist" Version="0.1.*" />

@@ -239,7 +239,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon{
 		public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor){
 			//Draw portals
 			//Texture2D portal = mod.GetTexture("Content/NPCs/Unfriendly/Bosses/Moon/BigPortal");
-			Texture2D portal = ModContent.Request<Texture2D>("Content/NPCs/Unfriendly/Bosses/Moon/BigPortal").Value;
+			Texture2D portal = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Unfriendly/Bosses/Moon/BigPortal").Value;
 
 			DrawBigPortal(spriteBatch, portal, bigPortal);
 			DrawBigPortal(spriteBatch, portal, bigPortal2);
