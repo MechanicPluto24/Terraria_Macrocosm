@@ -26,8 +26,8 @@ namespace Macrocosm.Backgrounds {
         }
 
         public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth) {
-            Texture2D SunTexture = ModContent.Request<Texture2D>("Terraria_Macrocosm/Backgrounds/Sun_0").Value;
-            Texture2D SkyTex = ModContent.Request<Texture2D>("Terraria_Macrocosm/Backgrounds/MoonSky").Value;
+            Texture2D SunTexture = ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Sun_0").Value;
+            Texture2D SkyTex = ModContent.Request<Texture2D>("Macrocosm/Backgrounds/MoonSky").Value;
 
             if (maxDepth >= 3.40282347E+38f && minDepth < 3.40282347E+38f) {
                 spriteBatch.Draw((Texture2D)TextureAssets.BlackTile, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.Black * Intensity);

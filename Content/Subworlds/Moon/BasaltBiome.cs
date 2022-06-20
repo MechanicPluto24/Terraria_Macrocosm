@@ -5,6 +5,7 @@ using Terraria.WorldBuilding;
 using Terraria.ModLoader;
 using Terraria.UI;
 using Microsoft.Xna.Framework;
+using Macrocosm.Backgrounds;
 
 namespace Macrocosm.Content.Subworlds.Moon
 {
@@ -13,17 +14,22 @@ namespace Macrocosm.Content.Subworlds.Moon
     
     public class BasaltBiome : ModBiome
     {
-
+        public override SceneEffectPriority Priority => SceneEffectPriority.BiomeHigh;
         public override string BestiaryIcon => base.BestiaryIcon;
         public override string BackgroundPath => base.BackgroundPath;
         public override Color? BackgroundColor => base.BackgroundColor;
-        public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.Find<ModSurfaceBackgroundStyle>("ExampleMod/ExampleSurfaceBackgroundStyle");
+        public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => new MoonSurfaceBgStyle();
 
         //public override int Music => base.Music;
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("The Moon");
+            DisplayName.SetDefault("Basalt");
+        }
+
+        public override void OnInBiome(Player player)
+        {
+            player.GetModPlayer<MacrocosmPlayer>().ZoneBasalt = true;
         }
 
         public override bool IsBiomeActive(Player player)

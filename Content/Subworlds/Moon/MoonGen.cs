@@ -351,7 +351,9 @@ namespace Macrocosm.Content.Subworlds.Moon
                     {
                         if (regolithChance > 0.1)
                         {
-                            Main.tile[tileX, tileY].TileType = (ushort)ModContent.TileType<Tiles.Regolith>();
+                            //Main.tile[tileX, tileY].TileType = (ushort)ModContent.TileType<Tiles.Regolith>();
+                           Main.tile[tileX, tileY].ClearTile();
+                           WorldGen.PlaceTile(tileX, tileY, (ushort)ModContent.TileType<Tiles.Regolith>());
                         }
                         regolithChance -= 0.02f;
                         if (regolithChance <= 0) break;
@@ -380,6 +382,7 @@ namespace Macrocosm.Content.Subworlds.Moon
                 }
             }
         }
+        
         private void GroundPass(GenerationProgress progress)
         {
             progress.Message = "Landing on the Moon...";
@@ -397,8 +400,10 @@ namespace Macrocosm.Content.Subworlds.Moon
                 progress.Set((i / (float)Main.maxTilesX - 1)); // Controls the progress bar, should only be set between 0f and 1f
                 for (int j = surfaceHeight; j < subworld.Height; j++)
                 {
-                    // Main.tile[i, j].active(true);  - probably no longer needed 
-                    Main.tile[i, j].TileType = (ushort)ModContent.TileType<Tiles.Protolith>();
+                    //Main.tile[i, j].active(true);
+                    //Main.tile[i, j].TileType = (ushort)ModContent.TileType<Tiles.Protolith>();
+
+                    WorldGen.PlaceTile(i, j, (ushort)ModContent.TileType<Tiles.Protolith>());
                 }
 
                 if (WorldGen.genRand.Next(0, 10) == 0) // Not much deviation here

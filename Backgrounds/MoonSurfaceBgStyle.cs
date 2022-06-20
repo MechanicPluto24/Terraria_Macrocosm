@@ -36,15 +36,15 @@ namespace Macrocosm.Backgrounds {
         }
 
         public override int ChooseCloseTexture(ref float scale, ref double parallax, ref float a, ref float b) {
-            return BackgroundTextureLoader.GetBackgroundSlot("Terraria_Macrocosm/Backgrounds/MoonSurfaceMid");
+            return BackgroundTextureLoader.GetBackgroundSlot("Macrocosm/Backgrounds/MoonSurfaceMid");
         }
         public override bool PreDrawCloseBackground(SpriteBatch spriteBatch) {
             float a = 1300f;
             float b = 1750f;
             int[] textureSlots = new int[] {
-                BackgroundTextureLoader.GetBackgroundSlot("Terraria_Macrocosm/Backgrounds/MoonSurfaceFar"),
-                BackgroundTextureLoader.GetBackgroundSlot("Terraria_Macrocosm/Backgrounds/MoonSurfaceMid"),
-                BackgroundTextureLoader.GetBackgroundSlot("Terraria_Macrocosm/Backgrounds/MoonSurfaceNear"),
+                BackgroundTextureLoader.GetBackgroundSlot("Macrocosm/Backgrounds/MoonSurfaceFar"),
+                BackgroundTextureLoader.GetBackgroundSlot("Macrocosm/Backgrounds/MoonSurfaceMid"),
+                BackgroundTextureLoader.GetBackgroundSlot("Macrocosm/Backgrounds/MoonSurfaceNear"),
             };
             int length = textureSlots.Length;
             for (int i = 0; i < textureSlots.Length; i++) {
