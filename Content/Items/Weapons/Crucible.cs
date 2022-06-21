@@ -10,8 +10,6 @@ namespace Macrocosm.Content.Items.Weapons
 {
 	public class Crucible : ModItem
 	{
-		public static short customGlowMask = 0;
-
 		public override void SetStaticDefaults() 
 		{
 			// DisplayName.SetDefault("BasicSword"); // By default, capitalization in classnames will add spaces to the display name. You can customize the display name here by uncommenting this line.
