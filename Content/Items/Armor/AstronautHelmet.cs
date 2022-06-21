@@ -10,7 +10,7 @@ namespace Macrocosm.Content.Items.Armor
 	{
 		public override void SetStaticDefaults() 
 		{
-            DisplayName.SetDefault("MoonChampion Helmet");
+            DisplayName.SetDefault("Astronaut Helmet");
 		}
 		public override void SetDefaults() 
 		{

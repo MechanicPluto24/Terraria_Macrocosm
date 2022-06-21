@@ -17,11 +17,10 @@ namespace Macrocosm.Content.Biomes
     public class MoonBiome : ModBiome
     {
         public override SceneEffectPriority Priority => SceneEffectPriority.BiomeHigh;
-        public override string BestiaryIcon => base.BestiaryIcon;
-        public override string BackgroundPath => base.BackgroundPath;
+        public override string BestiaryIcon => "Assets/FilterIcons/Moon";
+        public override string BackgroundPath => "Assets/Map/Moon";
         public override Color? BackgroundColor => base.BackgroundColor;
         public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.GetInstance<MoonSurfaceBgStyle>();
-
         public override ModUndergroundBackgroundStyle UndergroundBackgroundStyle => ModContent.GetInstance<MoonUgBgStyle>();
 
         public override int Music => Main.dayTime ? MusicLoader.GetMusicSlot(Mod, "Sounds/Music/MoonDay") : MusicLoader.GetMusicSlot(Mod, "Sounds/Music/MoonNight");
