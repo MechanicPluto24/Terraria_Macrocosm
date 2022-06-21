@@ -11,9 +11,6 @@ using Macrocosm.Content.Subworlds.Moon;
 
 namespace Macrocosm.Content.Biomes
 {
-
-    //TODO: add music, sky, whatever left 
-
     public class MoonBiome : ModBiome
     {
         public override SceneEffectPriority Priority => SceneEffectPriority.BiomeHigh;
@@ -32,6 +29,7 @@ namespace Macrocosm.Content.Biomes
  
         public override void OnInBiome(Player player)
         {
+            Main.windSpeedCurrent = 0;
             player.GetModPlayer<MacrocosmPlayer>().ZoneMoon = true;
         }
 
@@ -46,38 +44,3 @@ namespace Macrocosm.Content.Biomes
         }
     }
 }
-
-// The old code in MacrocosmPlayer
-
-/*
-   public override void UpdateBiomes() {
-        ZoneMoon = Subworld.IsActive<Moon>();
-        ZoneBasalt = MacrocosmWorld.moonBiome > 20;
-    }
-    public override bool CustomBiomesMatch(Player other) {
-        var modOther = other.GetModPlayer<MacrocosmPlayer>();
-        return ZoneMoon == modOther.ZoneMoon && ZoneBasalt == modOther.ZoneBasalt;
-    }
-    public override void CopyCustomBiomesTo(Player other) {
-        var modOther = other.GetModPlayer<MacrocosmPlayer>();
-        modOther.ZoneMoon = ZoneMoon;
-        modOther.ZoneBasalt = ZoneBasalt;
-    }
-    public override void SendCustomBiomes(BinaryWriter writer) {
-        var flags = new BitsByte();
-        flags[0] = ZoneMoon;
-        flags[1] = ZoneBasalt;
-        writer.Write(flags);
-    }
-    public override void ReceiveCustomBiomes(BinaryReader reader) {
-        BitsByte flags = reader.ReadByte();
-        ZoneMoon = flags[0];
-        ZoneBasalt = flags[1];
-    }
-
-    public override void UpdateBiomeVisuals() {
-
-    }
-
- */
-
