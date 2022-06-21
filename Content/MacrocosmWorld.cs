@@ -16,7 +16,8 @@ namespace Macrocosm.Content {
         public override void ResetNearbyTileEffects() {
             moonBiome = 0;
         }
-        public override void PreUpdateEntities() {
+        public override void PreUpdateEntities() 
+        {
             if (SubworldSystem.IsActive<Moon>()) {
                 Main.time += 0.125;
             }

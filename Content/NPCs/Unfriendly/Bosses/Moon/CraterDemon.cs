@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Utility;
+using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Projectiles.Unfriendly;
 using Microsoft.Xna.Framework;
@@ -8,6 +9,7 @@ using System.IO;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
+using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -170,9 +172,20 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon{
 			Music = MusicID.Boss1;
 
 			NPC.HitSound = SoundID.NPCHit2;
+
+			SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBiome>().Type }; // Associates this NPC with the Moon Biome in Bestiary
 		}
 
-		public override void ScaleExpertStats(int numPlayers, float bossLifeScale){
+        public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
+        {
+			bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[]
+			{
+				new FlavorTextBestiaryInfoElement(
+					"This massive meteorite demon is a member of a race that invaded the Moon long ago, and bears the scars of an ancient war.")
+			});
+		}
+
+        public override void ScaleExpertStats(int numPlayers, float bossLifeScale){
 			NPC.ScaleHealthBy(0.35f);  //For comparison, Moon Lord's scale factor is 0.7f
 
 			NPC.damage = 180;

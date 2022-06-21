@@ -1,0 +1,6 @@
+﻿- localization support
+- fix bestiary biome name display
+- find a way to sync bestiary data across subworlds ??????
+- add ambient rocks 
+- fix sun position during midnight
+- fix spawn on moon 

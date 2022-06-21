@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using SubworldLibrary;
 using Macrocosm.Content.Subworlds.Moon;
 using Terraria.GameContent;
+using Terraria.GameContent.Bestiary;
+using Macrocosm.Content.Biomes;
 
 namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
 {
@@ -51,7 +53,18 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
             NPC.DeathSound = SoundID.NPCDeath3;
             NPC.knockBackResist = 0.2f;
             AnimationType = NPCID.Guide;
+            SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBiome>().Type }; // Associates this NPC with the Moon Biome in Bestiary
         }
+
+        public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
+        {
+            bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[]
+            {
+                new FlavorTextBestiaryInfoElement(
+                    "A mysterious, superhuman lunatic who has dedicated his life to protecting the Moon, and challenging all who threaten it.")
+            });
+        }
+        
         public override bool CanTownNPCSpawn(int numTownNPCs, int money)
         {
             Player player = Main.player[Main.myPlayer];

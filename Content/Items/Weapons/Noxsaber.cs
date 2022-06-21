@@ -39,7 +39,7 @@ namespace Macrocosm.Content.Items.Weapons
 		{
 			//if (Main.rand.NextBool(2))
 			//{
-			//	int dust = Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, ModContent.DustType<DianiteDust>());
+			//	int dust = Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, ModContent.DustType<CrucibleDust>());
 			//}
 		}
 		public override void PostUpdate()

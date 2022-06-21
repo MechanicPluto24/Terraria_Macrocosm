@@ -20,4 +20,7 @@
       <HintPath>lib\SubworldLibrary.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Localization\" />
+  </ItemGroup>
 </Project>
