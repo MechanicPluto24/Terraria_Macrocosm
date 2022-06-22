@@ -11,16 +11,16 @@ namespace Macrocosm.Content.Items.Materials.Chunks
 		{
 			DisplayName.SetDefault("Turben Chunk");
 			Tooltip.SetDefault("'Emitting enough light to blind'");
-			ItemID.Sets.ItemNoGravity[item.type] = true;
-			Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(5, 11)); // NOTE: TicksPerFrame, Frames
+			ItemID.Sets.ItemNoGravity[Item.type] = true;
+			Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(5, 11)); // NOTE: TicksPerFrame, Frames
 		}
 
 		public override void SetDefaults()
 		{
-			item.width = 30;
-			item.height = 30;
-			item.rare = ItemRarityID.Blue;
-			item.maxStack = 999;
+			Item.width = 30;
+			Item.height = 30;
+			Item.rare = ItemRarityID.Blue;
+			Item.maxStack = 999;
 		}
 	}
 }

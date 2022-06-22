@@ -179,7 +179,7 @@ namespace Macrocosm
 
         public static void AddTooltips(Item item, string[] tooltips)
         {
-			AddTooltips(item.modItem, tooltips);
+			AddTooltips(Item.modItem, tooltips);
         }	
 		
         public static void AddTooltips(ModItem item, string[] tooltips)
@@ -189,7 +189,7 @@ namespace Macrocosm
 			{
 				supertip += (tooltips[m] + (m == tooltips.Length - 1 ? "" : "\n"));
 			}	
-			item.Tooltip.SetDefault(supertip);
+			Item.Tooltip.SetDefault(supertip);
         }			
 
         #region ByName calls
@@ -239,7 +239,7 @@ namespace Macrocosm
             {
                 string mName = n.Split(':')[0];
                 string n2 = n.Split(':')[1];
-                return ModLoader.GetMod(mName).GetProjectile(n2).projectile;
+                return ModLoader.GetMod(mName).GetProjectile(n2).Projectile;
             }
             else
             {
@@ -248,7 +248,7 @@ namespace Macrocosm
                 {
                     Mod mod = ModLoader.GetMod(name);
                     ModProjectile m = mod.GetProjectile(n);
-                    if (m != null) return m.projectile;
+                    if (m != null) return m.Projectile;
                 }
             }
             return null;

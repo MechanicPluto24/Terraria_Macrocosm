@@ -56,7 +56,7 @@ namespace Macrocosm
         }
 
         /*
-         * Used to sync custom ai float arrays. (the npc or projectile requires a method called 'public void SetAI(float[] ai, int type)' that sets the ai for this to work)
+         * Used to sync custom ai float arrays. (the npc or Projectile requires a method called 'public void SetAI(float[] ai, int type)' that sets the ai for this to work)
          */
         public static void SyncAI(int entType, int id, float[] ai, int aitype)
         {

@@ -1,0 +1,7 @@
+﻿- add ambient rocks 
+- fix sun position during moon night
+- localization support
+- disable torches on the moon 
+- edit info display for moon phase and weather (also time?) 
+- fix accelerated time passing not working (sleeping, journey slider)
+- find a way to sync bestiary data across subworlds ??????

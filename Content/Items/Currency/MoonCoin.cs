@@ -13,36 +13,36 @@ namespace Macrocosm.Content.Items.Currency
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Moon Coin");
-            Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(4, 8));
+            Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(4, 8));
         }
         public override void SetDefaults()
         {
-            item.width = 20;
-            item.height = 20;
-            item.maxStack = 999;
-            item.value = 750;
+            Item.width = 20;
+            Item.height = 20;
+            Item.maxStack = 999;
+            Item.value = 750;
         }
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            int champ = NPC.FindFirstNPC(NPCType<Astronaut>());
+            int champ = NPC.FindFirstNPC(NPCType<MoonChampion>());
             for (int iterate = 0; iterate < Main.maxNPCs; iterate++)
             {
                 NPC npc = Main.npc[iterate];
-                if (npc.type == NPCType<Astronaut>() && !npc.active)
+                if (npc.type == NPCType<MoonChampion>() && !npc.active)
                 {
-                    tooltips.Add(new TooltipLine(mod, "Name", "For the champ")
+                    tooltips.Add(new TooltipLine(Mod, "Name", "For the champ")
                     {
-                        overrideColor = Color.DarkGray,
-                        text = $"These are a currency for the Moon Champion, but unfortunately he is not with you"
+                        OverrideColor = Color.DarkGray,
+                        Text = $"These are a currency for the Moon Champion, but unfortunately he is not with you"
                     });
                     return;
                 }
-                else if (npc.type == NPCType<Astronaut>() && npc.active)
+                else if (npc.type == NPCType<MoonChampion>() && npc.active)
                 {
-                    tooltips.Add(new TooltipLine(mod, "Name", "For the champ")
+                    tooltips.Add(new TooltipLine(Mod, "Name", "For the champ")
                     {
-                        overrideColor = Color.DarkGray,
-                        text = $"These are a currency for {Main.npc[champ].GivenName}, the Moon Champion"
+                        OverrideColor = Color.DarkGray,
+                        Text = $"These are a currency for {Main.npc[champ].GivenName}, the Moon Champion"
                     });
                 }
             }

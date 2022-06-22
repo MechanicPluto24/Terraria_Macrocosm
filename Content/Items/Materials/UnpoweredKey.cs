@@ -13,11 +13,11 @@ namespace Macrocosm.Content.Items.Materials
 
         public override void SetDefaults()
         {
-            item.width = 20;
-            item.height = 20;
-            item.maxStack = 1;
-            item.value = 100;
-            item.rare = 1;
+            Item.width = 20;
+            Item.height = 20;
+            Item.maxStack = 1;
+            Item.value = 100;
+            Item.rare = ItemRarityID.Blue;
 
         }
     }

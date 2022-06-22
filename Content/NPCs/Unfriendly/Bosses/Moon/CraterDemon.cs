@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Utility;
+using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Projectiles.Unfriendly;
 using Microsoft.Xna.Framework;
@@ -6,6 +7,9 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.IO;
 using Terraria;
+using Terraria.Audio;
+using Terraria.GameContent;
+using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -55,10 +59,10 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon{
 			}
 		}
 
-		public ref float AI_Attack => ref npc.ai[0];
-		public ref float AI_Timer => ref npc.ai[1];
-		public ref float AI_AttackProgress => ref npc.ai[2];
-		public ref float AI_AnimationCounter => ref npc.ai[3];
+		public ref float AI_Attack => ref NPC.ai[0];
+		public ref float AI_Timer => ref NPC.ai[1];
+		public ref float AI_AttackProgress => ref NPC.ai[2];
+		public ref float AI_AnimationCounter => ref NPC.ai[3];
 
 		public const int FadeIn                    = -2;
 		public const int FadeAway                  = -1;
@@ -83,7 +87,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon{
 				resetAnimationCounter = true
 			},
 			new AttackInfo(){
-				initialProgress = npc => npc.CountAliveLesserDemons(),
+				initialProgress = NPC => NPC.CountAliveLesserDemons(),
 				initialTimer = 8 * 60
 			},
 			new AttackInfo(){
@@ -139,42 +143,53 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon{
 
 		public override void SetStaticDefaults(){
 			DisplayName.SetDefault("Crater Demon");
-			Main.npcFrameCount[npc.type] = 6;
-			NPCID.Sets.TrailCacheLength[npc.type] = 5;
-			NPCID.Sets.TrailingMode[npc.type] = 0;
+			Main.npcFrameCount[NPC.type] = 6;
+			NPCID.Sets.TrailCacheLength[NPC.type] = 5;
+			NPCID.Sets.TrailingMode[NPC.type] = 0;
 		}
 
 		private int baseWidth, baseHeight;
 
 		public override void SetDefaults(){
-			baseWidth = npc.width = 178;
-			baseHeight = npc.height = 196;
-			npc.knockBackResist = 0f;
+			baseWidth = NPC.width = 178;
+			baseHeight = NPC.height = 196;
+			NPC.knockBackResist = 0f;
 
-			npc.defense = 100;
-			npc.damage = 120;
-			npc.lifeMax = 110000;  //For comparison, Moon Lord has 145,000 total HP in Normal Mode
+			NPC.defense = 100;
+			NPC.damage = 120;
+			NPC.lifeMax = 110000;  //For comparison, Moon Lord has 145,000 total HP in Normal Mode
 
-			npc.boss = true;
-			npc.noGravity = true;
-			npc.noTileCollide = true;
+			NPC.boss = true;
+			NPC.noGravity = true;
+			NPC.noTileCollide = true;
 
-			targetAlpha = npc.alpha = 255;
-			npc.dontTakeDamage = true;
-			npc.aiStyle = -1;
+			targetAlpha = NPC.alpha = 255;
+			NPC.dontTakeDamage = true;
+			NPC.aiStyle = -1;
 
-			npc.npcSlots = 40f;
+			NPC.npcSlots = 40f;
 
-			music = MusicID.Boss1;
+			Music = MusicID.Boss1;
 
-			npc.HitSound = SoundID.NPCHit2;
+			NPC.HitSound = SoundID.NPCHit2;
+
+			SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBiome>().Type }; // Associates this NPC with the Moon Biome in Bestiary
 		}
 
-		public override void ScaleExpertStats(int numPlayers, float bossLifeScale){
-			npc.ScaleHealthBy(0.35f);  //For comparison, Moon Lord's scale factor is 0.7f
+        public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
+        {
+			bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[]
+			{
+				new FlavorTextBestiaryInfoElement(
+					"This massive meteorite demon is a member of a race that invaded the Moon long ago, and bears the scars of an ancient war.")
+			});
+		}
 
-			npc.damage = 180;
-			npc.defense = 150;
+        public override void ScaleExpertStats(int numPlayers, float bossLifeScale){
+			NPC.ScaleHealthBy(0.35f);  //For comparison, Moon Lord's scale factor is 0.7f
+
+			NPC.damage = 180;
+			NPC.defense = 150;
 		}
 
 		public override void BossLoot(ref string name, ref int potionType){
@@ -186,10 +201,10 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon{
 		}
 
 		private void UpdateScale(float newScale){
-			if(npc.scale == newScale)
+			if(NPC.scale == newScale)
 				return;
 
-			npc.UpdateScaleAndHitbox(baseWidth, baseHeight, newScale);
+			NPC.UpdateScaleAndHitbox(baseWidth, baseHeight, newScale);
 		}
 
 		const float ZAxisRotationThreshold = 25f;
@@ -234,25 +249,26 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon{
 				index = -1;
 		}
 
-		public override bool PreDraw(SpriteBatch spriteBatch, Color drawColor){
+		public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor){
 			//Draw portals
-			Texture2D portal = mod.GetTexture("Content/NPCs/Unfriendly/Bosses/Moon/BigPortal");
+			//Texture2D portal = mod.GetTexture("Content/NPCs/Unfriendly/Bosses/Moon/BigPortal");
+			Texture2D portal = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Unfriendly/Bosses/Moon/BigPortal").Value;
 
 			DrawBigPortal(spriteBatch, portal, bigPortal);
 			DrawBigPortal(spriteBatch, portal, bigPortal2);
 
-			if(AI_Attack == Attack_SummonMeteors && Math.Abs(npc.velocity.X) < 0.1f && Math.Abs(npc.velocity.Y) < 0.1f)
+			if(AI_Attack == Attack_SummonMeteors && Math.Abs(NPC.velocity.X) < 0.1f && Math.Abs(NPC.velocity.Y) < 0.1f)
 				return true;
 
-			if(AI_Attack == Attack_ChargeAtPlayer && AI_AttackProgress > 2 && npc.alpha >= 160)
+			if(AI_Attack == Attack_ChargeAtPlayer && AI_AttackProgress > 2 && NPC.alpha >= 160)
 				return true;
 			
-			for(int i = 0; i < npc.oldPos.Length; i++){
-				Vector2 drawPos = npc.oldPos[i] - Main.screenPosition + new Vector2(0, 4);
+			for(int i = 0; i < NPC.oldPos.Length; i++){
+				Vector2 drawPos = NPC.oldPos[i] - Main.screenPosition + new Vector2(0, 4);
 
-				Color color = npc.GetAlpha(drawColor) * (((float)npc.oldPos.Length - i) / npc.oldPos.Length);
+				Color color = NPC.GetAlpha(drawColor) * (((float)NPC.oldPos.Length - i) / NPC.oldPos.Length);
 
-				spriteBatch.Draw(Main.npcTexture[npc.type], drawPos, npc.frame, color * 0.6f, npc.rotation, Vector2.Zero, npc.scale, SpriteEffects.None, 0f);
+				spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, drawPos, NPC.frame, color * 0.6f, NPC.rotation, Vector2.Zero, NPC.scale, SpriteEffects.None, 0f);
 			}
 
 			return true;
@@ -300,13 +316,13 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon{
 						if(repeatCount == 0 && repeatRelative == 0){
 							if(AI_AnimationCounter % 26 < 13)
 								set++;
-						}else if(repeatRelative == 4 && npc.DistanceSQ(bigPortal2.center) >= portalTargetDist * portalTargetDist)
+						}else if(repeatRelative == 4 && NPC.DistanceSQ(bigPortal2.center) >= portalTargetDist * portalTargetDist)
 							set++;
 					}else if(AI_AnimationCounter % 26 < 13)
 						set++;
 					break;
 				case Attack_PostCharge:
-					if(npc.velocity != Vector2.Zero)
+					if(NPC.velocity != Vector2.Zero)
 						set++;
 					break;
 			}
@@ -324,7 +340,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon{
 		public override void FindFrame(int frameHeight){
 			int set = GetAnimationSetFrame();
 
-			npc.frame.Y = frameHeight * set;
+			NPC.frame.Y = frameHeight * set;
 		}
 
 		public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position){
@@ -334,7 +350,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon{
 		}
 
 		public override void AI(){
-			npc.defense = npc.defDefense;
+			NPC.defense = NPC.defDefense;
 
 			if(!spawned){
 				//Laugh after a second
@@ -347,30 +363,30 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon{
 
 					AI_Timer = 60 + 100;
 					AI_Attack = FadeIn;
-					npc.TargetClosest();
+					NPC.TargetClosest();
 
-					npc.netUpdate = true;
+					NPC.netUpdate = true;
 				}else if(AI_Timer <= 100){
 					spawned = true;
 					targetAlpha = 0f;
 
-					Main.PlaySound(SoundID.Zombie, npc.Center, 105);  //Cultist laugh sound
+					SoundEngine.PlaySound(SoundID.Zombie105, NPC.Center);  //Cultist laugh sound
 
-					npc.netUpdate = true;
+					NPC.netUpdate = true;
 				}else
 					targetAlpha -= 255f / 60f;
 			}
 
 			//Player is dead/not connected?  Target a new one
 			//That player is also dead/not connected?  Begin the "fade away" animation and despawn
-			Player player = npc.target >= 0 && npc.target < Main.maxPlayers ? Main.player[npc.target] : null;
+			Player player = NPC.target >= 0 && NPC.target < Main.maxPlayers ? Main.player[NPC.target] : null;
 
-			if(!ignoreRetargetPlayer && (npc.target < 0 || npc.target >= Main.maxPlayers || player.dead || !player.active)){
-				npc.TargetClosest();
+			if(!ignoreRetargetPlayer && (NPC.target < 0 || NPC.target >= Main.maxPlayers || player.dead || !player.active)){
+				NPC.TargetClosest();
 
-				player = npc.target >= 0 && npc.target < Main.maxPlayers ? Main.player[npc.target] : null;
+				player = NPC.target >= 0 && NPC.target < Main.maxPlayers ? Main.player[NPC.target] : null;
 
-				if(npc.target < 0 || npc.target >= Main.maxPlayers || player.dead || !player.active){
+				if(NPC.target < 0 || NPC.target >= Main.maxPlayers || player.dead || !player.active){
 					//Go away
 					AI_Attack = FadeAway;
 					AI_Timer = -1;
@@ -378,39 +394,39 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon{
 
 					hadNoPlayerTargetForLongEnough = true;
 
-					npc.netUpdate = true;
+					NPC.netUpdate = true;
 				}else if(hadNoPlayerTargetForLongEnough){
 					hadNoPlayerTargetForLongEnough = false;
 
 					//Start back in the idle phase
 					SetAttack(Attack_DoNothing);
 
-					npc.netUpdate = true;
+					NPC.netUpdate = true;
 				}
 			}
 
-			npc.defense = npc.defDefense;
+			NPC.defense = NPC.defDefense;
 
 			switch((int)AI_Attack){
 				case FadeIn:
 					//Do the laughing animation
 					if(AI_Timer > 0 && AI_Timer <= 100){
-						npc.velocity *= 1f - 3f / 60f;
+						NPC.velocity *= 1f - 3f / 60f;
 					}else if(AI_Timer <= 0){
 						//Transition to the next subphase
 						SetAttack(Attack_DoNothing);
 
-						npc.dontTakeDamage = false;
+						NPC.dontTakeDamage = false;
 						ignoreRetargetPlayer = false;
 					}else{
-						npc.velocity = new Vector2(0, 1.5f);
+						NPC.velocity = new Vector2(0, 1.5f);
 
 						SpawnDusts();
 					}
 
 					break;
 				case FadeAway:
-					npc.velocity *= 1f - 3f / 60f;
+					NPC.velocity *= 1f - 3f / 60f;
 
 					//Spawn dusts as the boss fades away, then despawn it once fully invisible
 					SpawnDusts();
@@ -418,7 +434,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon{
 					targetAlpha += 255f / 180f;
 
 					if(targetAlpha >= 255){
-						npc.active = false;
+						NPC.active = false;
 						return;
 					}
 					break;
@@ -436,35 +452,38 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon{
 						}while(attack == oldAttack);
 
 						SetAttack(attack);
-						npc.netUpdate = true;
+						NPC.netUpdate = true;
 
 						oldAttack = (int)AI_Attack;
 					}
 
 					break;
 				case Attack_SummonMeteors:
-					npc.defense = npc.defDefense + 40;
+					NPC.defense = NPC.defDefense + 40;
 
 					//Face forwards
 					targetZAxisRotation = 0f;
 
-					npc.velocity *= 1f - 4.67f / 60f;
+					NPC.velocity *= 1f - 4.67f / 60f;
 
-					if(Math.Abs(npc.velocity.X) < 0.02f)
-						npc.velocity.X = 0f;
-					if(Math.Abs(npc.velocity.Y) < 0.02f)
-						npc.velocity.Y = 0f;
+					if(Math.Abs(NPC.velocity.X) < 0.02f)
+						NPC.velocity.X = 0f;
+					if(Math.Abs(NPC.velocity.Y) < 0.02f)
+						NPC.velocity.Y = 0f;
 
 					int max = Main.expertMode ? PortalTimerMax : (int)(PortalTimerMax * 1.5f);
 
-					if((int)AI_Timer == max - 1)
-						Main.PlaySound(SoundID.Zombie, npc.Center, 99);
-					else if((int)AI_Timer == max - 24){
+					if ((int)AI_Timer == max - 1)
+						SoundEngine.PlaySound(SoundID.Zombie99, NPC.Center);
+					else if ((int)AI_Timer == max - 24)
+					{
 						//Wait until the animation frame changes to the one facing forwards
-						if(GetAnimationSetFrame() == Animation_LookFront_JawOpen){
-							Main.PlaySound(SoundID.Zombie, npc.Center, 93);
+						if (GetAnimationSetFrame() == Animation_LookFront_JawOpen)
+						{
+							SoundEngine.PlaySound(SoundID.Zombie93, NPC.Center);
 							AI_AttackProgress++;
-						}else
+						}
+						else
 							AI_Timer++;
 					}
 
@@ -477,8 +496,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon{
 						for(int i = 0; i < count; i++){
 							Vector2 spawn = orig + new Vector2(Main.rand.NextFloat(-1, 1) * 40 * 16, Main.rand.NextFloat(-1, 1) * 6 * 16);
 
-							Projectile.NewProjectile(spawn, Vector2.Zero, ModContent.ProjectileType<Portal>(), MiscUtils.TrueDamage(Main.expertMode ? 140 : 90), 0f, Main.myPlayer);
-
+							Projectile.NewProjectile(NPC.GetSource_FromAI(), spawn, Vector2.Zero, ModContent.ProjectileType<Portal>(), MiscUtils.TrueDamage(Main.expertMode ? 140 : 90), 0f, Main.myPlayer);
 							// TODO: netcode
 						}
 
@@ -492,12 +510,12 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon{
 
 					if(AI_AttackProgress < 3){
 						if(AI_Timer % 75 == 0){
-							Vector2 spawn = npc.Center + new Vector2(Main.rand.NextFloat(-1, 1) * 22 * 16, Main.rand.NextFloat(-1, 1) * 10 * 16);
+							Vector2 spawn = NPC.Center + new Vector2(Main.rand.NextFloat(-1, 1) * 22 * 16, Main.rand.NextFloat(-1, 1) * 10 * 16);
 
-							NPC.NewNPC((int)spawn.X, (int)spawn.Y, ModContent.NPCType<MiniCraterDemon>(), ai3: npc.whoAmI);
+							NPC.NewNPC(NPC.GetSource_FromAI(), (int)spawn.X, (int)spawn.Y, ModContent.NPCType<MiniCraterDemon>(), ai3: NPC.whoAmI);
 
 							//Exhale sound
-							Main.PlaySound(SoundID.Zombie, npc.Center, 93);
+							SoundEngine.PlaySound(SoundID.Zombie93, NPC.Center);
 
 							// TODO: netcode
 
@@ -539,7 +557,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon{
 							int tries = 0;
 							bool success = false;
 							do{
-								spawn = npc.Center + Main.rand.NextVector2Unit() * 40 * 16;
+								spawn = NPC.Center + Main.rand.NextVector2Unit() * 40 * 16;
 								tries++;
 							}while(tries < 1000 && (success = player.DistanceSQ(spawn) >= playerDistMax * playerDistMax));
 
@@ -551,7 +569,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon{
 							SpawnBigPortal(spawn, ref bigPortal);
 						}
 					}else if(AI_AttackProgress == 1){
-						float dist = npc.DistanceSQ(bigPortal.center);
+						float dist = NPC.DistanceSQ(bigPortal.center);
 						const float portalDist = 5;
 						bool tooFar = dist > portalDist * portalDist;
 
@@ -570,8 +588,8 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon{
 
 							FloatTowardsTarget(player, minimumDistanceThreshold: 0);
 						}else{
-							npc.Center = bigPortal.center;
-							npc.velocity = Vector2.Zero;
+							NPC.Center = bigPortal.center;
+							NPC.velocity = Vector2.Zero;
 							movementTarget = null;
 
 							//If the portal hasn't gotten to the full size yet, wait for it to do so
@@ -586,10 +604,10 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon{
 					}else if(repeatRelative == 0){
 						//Shrink (factor of 4.3851 makes it reach 0.01 in around 60 ticks, 12.2753 ~= 20 ticks)
 						const float epsilon = 0.01f;
-						if(npc.scale > epsilon)
-							UpdateScale(MiscUtils.ScaleLogarithmic(npc.scale, 0f, repeatCount == 0 ? 4.3851f : 12.2753f, 1f / 60f));
+						if(NPC.scale > epsilon)
+							UpdateScale(MiscUtils.ScaleLogarithmic(NPC.scale, 0f, repeatCount == 0 ? 4.3851f : 12.2753f, 1f / 60f));
 						
-						targetAlpha = 255f * (1f - npc.scale);
+						targetAlpha = 255f * (1f - NPC.scale);
 
 						if(AI_Timer <= 0){
 							//Shrink the portal, but a bit slower
@@ -597,12 +615,12 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon{
 							bigPortal.alpha = bigPortal.scale;
 						}
 
-						if(npc.scale < 0.4f){
+						if(NPC.scale < 0.4f){
 							hideMapIcon = true;
-							npc.dontTakeDamage = true;
+							NPC.dontTakeDamage = true;
 						}
 
-						if(npc.scale < epsilon){
+						if(NPC.scale < epsilon){
 							UpdateScale(epsilon);
 							
 							targetAlpha = 255f;
@@ -618,12 +636,12 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon{
 
 							AI_AttackProgress++;
 
-							if(repeatCount == 0)
-								Main.PlaySound(SoundID.Zombie, npc.Center, 105);  //Cultist laugh sound
+							if (repeatCount == 0)
+								SoundEngine.PlaySound(SoundID.Zombie105, NPC.Center); //Cultist laugh sound
 
 							//Wait for a random amount of time
 							AI_Timer = Main.expertMode ? Main.rand.Next(40, 90 + 1) : Main.rand.Next(100, 220 + 1);
-							npc.netUpdate = true;
+							NPC.netUpdate = true;
 
 							movementTarget = null;
 						}
@@ -637,8 +655,8 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon{
 							SpawnBigPortal(player.Center - offset, ref bigPortal2, fast: true);
 							bigPortal2.visible = false;
 
-							npc.Center = bigPortal.center;
-							npc.velocity = Vector2.Zero;
+							NPC.Center = bigPortal.center;
+							NPC.velocity = Vector2.Zero;
 
 							AI_AttackProgress++;
 						}
@@ -660,27 +678,28 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon{
 						zAxisLerpStrength = DefaultZAxisLerpStrength * 2.7f;
 
 						//15.7025 ~= 16 ticks to go from 0.01 to 1
-						if(npc.scale < 0.99f)
-							UpdateScale(MiscUtils.ScaleLogarithmic(npc.scale, 1, 15.7025f, 1f / 60f));
+						if(NPC.scale < 0.99f)
+							UpdateScale(MiscUtils.ScaleLogarithmic(NPC.scale, 1, 15.7025f, 1f / 60f));
 						else
 							UpdateScale(1f);
 
-						if(npc.scale > 0.4f){
-							npc.dontTakeDamage = false;
+						if(NPC.scale > 0.4f){
+							NPC.dontTakeDamage = false;
 							hideMapIcon = false;
 						}
 
-						targetAlpha = 255f * (1f - npc.scale);
+						targetAlpha = 255f * (1f - NPC.scale);
 
 						SetTargetZAxisRotation(player, out _);
 
-						if(AI_Timer <= 0 && npc.scale == 1f){
+						if(AI_Timer <= 0 && NPC.scale == 1f){
 							AI_AttackProgress++;
 							AI_Timer = Main.expertMode ? 30 : 60;
 
-							npc.Center = bigPortal.center;
-							npc.velocity = npc.DirectionTo(player.Center) * chargeVelocity;
-							Main.PlaySound(SoundID.ForceRoar, (int)npc.Center.X, (int)npc.Center.Y, -1);
+							NPC.Center = bigPortal.center;
+							NPC.velocity = NPC.DirectionTo(player.Center) * chargeVelocity;
+
+							SoundEngine.PlaySound(SoundID.ForceRoar, NPC.position); // there was a -1 here but the style is correct 
 
 							if(repeatCount >= (Main.expertMode ? Main.rand.Next(5, 8) : Main.rand.Next(2, 5))){
 								//Stop the repetition
@@ -693,11 +712,11 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon{
 					}else if(repeatRelative == 4){
 						//Second portal appears once the boss is within 22 update ticks of its center
 						float activeDist = chargeVelocity * 22;
-						if(AI_Timer < 0 && npc.DistanceSQ(bigPortal2.center) <= activeDist * activeDist)
+						if(AI_Timer < 0 && NPC.DistanceSQ(bigPortal2.center) <= activeDist * activeDist)
 							bigPortal2.visible = true;
 
 						//First portal disappears once the boss leaves within 22 update ticks of its center
-						if(npc.DistanceSQ(bigPortal.center) > activeDist * activeDist){
+						if(NPC.DistanceSQ(bigPortal.center) > activeDist * activeDist){
 							bigPortal.scale = MiscUtils.ScaleLogarithmic(bigPortal.scale, 0f, 15.2753f, 1f / 60f);
 							bigPortal.alpha = bigPortal.scale;
 
@@ -722,15 +741,15 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon{
 
 						if(AI_Timer >= 0){
 							if(AI_Timer == 0)
-								bigPortal2.center = npc.Center + Vector2.Normalize(npc.velocity) * (activeDist + 3 * 16);
+								bigPortal2.center = NPC.Center + Vector2.Normalize(NPC.velocity) * (activeDist + 3 * 16);
 						}else{
 							//Make sure the boss snaps to the center of the portal before repeating the logic
-							float dist = npc.DistanceSQ(bigPortal2.center);
+							float dist = NPC.DistanceSQ(bigPortal2.center);
 							if(dist < portalEnterDist * portalEnterDist){
 								UpdateScale(1f);
 
-								npc.Center = bigPortal2.center;
-								npc.velocity = Vector2.Zero;
+								NPC.Center = bigPortal2.center;
+								NPC.velocity = Vector2.Zero;
 
 								targetAlpha = 0;
 
@@ -754,17 +773,17 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon{
 					}
 					break;
 				case Attack_PostCharge:
-					if(npc.velocity == Vector2.Zero && !bigPortal.visible)
+					if(NPC.velocity == Vector2.Zero && !bigPortal.visible)
 						SetAttack(Attack_DoNothing);
 					else if(AI_Timer <= 0){
 						//Charge has ended.  Make the portal fade away and slow the boss down
-						npc.velocity *= 1f - 8.5f / 60f;
+						NPC.velocity *= 1f - 8.5f / 60f;
 
 						//5.9192 ~= 45 ticks to reach 0.01 scale
 						bigPortal.scale = MiscUtils.ScaleLogarithmic(bigPortal.scale, 0f, 5.9192f, 1f / 60f);
 
-						if(Math.Abs(npc.velocity.X) < 0.05f && Math.Abs(npc.velocity.Y) <= 0.05f)
-							npc.velocity = Vector2.Zero;
+						if(Math.Abs(NPC.velocity.X) < 0.05f && Math.Abs(NPC.velocity.Y) <= 0.05f)
+							NPC.velocity = Vector2.Zero;
 
 						if(bigPortal.scale <= 0.01f)
 							bigPortal = new BigPortalInfo();
@@ -782,7 +801,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon{
 					targetAlpha = 0;
 			}
 
-			npc.alpha = (int)targetAlpha;
+			NPC.alpha = (int)targetAlpha;
 
 			if(Math.Abs(zAxisRotation - targetZAxisRotation) < 0.02f)
 				zAxisRotation = targetZAxisRotation;
@@ -790,7 +809,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon{
 				zAxisRotation = MathHelper.Lerp(zAxisRotation, targetZAxisRotation, zAxisLerpStrength / 60f);
 
 			//We don't want sprite flipping
-			npc.spriteDirection = -1;
+			NPC.spriteDirection = -1;
 
 			bigPortal.Update();
 			bigPortal2.Update();
@@ -800,9 +819,9 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon{
 			float rad = MathHelper.ToRadians(ZAxisRotationThreshold * 2);
 			targetCenter = movementTarget ?? player.Center;
 
-			targetZAxisRotation = targetCenter.X < npc.Left.X
+			targetZAxisRotation = targetCenter.X < NPC.Left.X
 				? -rad
-				: (targetCenter.X > npc.Right.X
+				: (targetCenter.X > NPC.Right.X
 					? rad
 					: 0f);
 		}
@@ -814,27 +833,27 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon{
 			const float speedX = 8f;
 			const float speedY = speedX * 0.4f;
 
-			if(npc.DistanceSQ(targetCenter) >= minimumDistanceThreshold * minimumDistanceThreshold){
-				Vector2 direction = npc.DirectionTo(targetCenter) * speedX;
+			if(NPC.DistanceSQ(targetCenter) >= minimumDistanceThreshold * minimumDistanceThreshold){
+				Vector2 direction = NPC.DirectionTo(targetCenter) * speedX;
 
-				npc.velocity = (npc.velocity * (inertia - 1) + direction) / inertia;
+				NPC.velocity = (NPC.velocity * (inertia - 1) + direction) / inertia;
 
-				if(npc.velocity.X < -speedX)
-					npc.velocity.X = -speedX;
-				else if(npc.velocity.X > speedX)
-					npc.velocity.X = speedX;
+				if(NPC.velocity.X < -speedX)
+					NPC.velocity.X = -speedX;
+				else if(NPC.velocity.X > speedX)
+					NPC.velocity.X = speedX;
 
-				if(npc.velocity.Y < -speedY)
-					npc.velocity.Y = -speedY;
-				else if(npc.velocity.Y > speedY)
-					npc.velocity.Y = speedY;
+				if(NPC.velocity.Y < -speedY)
+					NPC.velocity.Y = -speedY;
+				else if(NPC.velocity.Y > speedY)
+					NPC.velocity.Y = speedY;
 			}
 
 			//Play one of two sounds randomly
-			if(Main.rand.NextFloat() < 0.02f / 60f)
-				Main.PlaySound(SoundID.Zombie, npc.Center, Style: 96);
-			else if(Main.rand.NextFloat() < 0.02f / 60f)
-				Main.PlaySound(SoundID.Zombie, npc.Center, Style: 5);
+			if (Main.rand.NextFloat() < 0.02f / 60f)
+				SoundEngine.PlaySound(SoundID.Zombie96, NPC.Center);
+			else if (Main.rand.NextFloat() < 0.02f / 60f)
+				SoundEngine.PlaySound(SoundID.Zombie5, NPC.Center);
 		}
 
 		private int CountAliveLesserDemons(){
@@ -842,7 +861,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon{
 			
 			for(int i = 0; i < Main.maxNPCs; i++){
 				NPC other = Main.npc[i];
-				if(other.active && other.modNPC is MiniCraterDemon mini && mini.ParentBoss == npc.whoAmI)
+				if(other.active && other.ModNPC is MiniCraterDemon mini && mini.ParentBoss == NPC.whoAmI)
 					count++;
 			}
 
@@ -875,7 +894,8 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon{
 			info.rotation = 0f;
 			info.fast = fast;
 
-			Main.PlaySound(SoundID.Item84.WithVolume(0.9f), info.center);
+			SoundStyle sound = SoundID.Item84 with { Volume = 0.9f };
+			SoundEngine.PlaySound(sound, info.center);
 		}
 
 		public override Color? GetAlpha(Color drawColor)
@@ -884,8 +904,8 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon{
 		public override bool? CanBeHitByItem(Player player, Item item)
 			=> CanBeHitByThing(player.GetSwungItemHitbox());
 
-		public override bool? CanBeHitByProjectile(Projectile projectile)
-			=> CanBeHitByThing(projectile.Hitbox);
+		public override bool? CanBeHitByProjectile(Projectile Projectile)
+			=> CanBeHitByThing(Projectile.Hitbox);
 
 		private bool? CanBeHitByThing(Rectangle hitbox){
 			//Make the hit detection dynamic be based on the sprite for extra coolness points
@@ -939,13 +959,13 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon{
 					break;
 			}
 
-			head.Location = (head.Location.ToVector2() + npc.position).ToPoint();
-			jaw.Location = (jaw.Location.ToVector2() + npc.position).ToPoint();
+			head.Location = (head.Location.ToVector2() + NPC.position).ToPoint();
+			jaw.Location = (jaw.Location.ToVector2() + NPC.position).ToPoint();
 
-			head.Width = (int)(head.Width * npc.scale);
-			head.Height = (int)(head.Height * npc.scale);
-			jaw.Width = (int)(jaw.Width * npc.scale);
-			jaw.Height = (int)(jaw.Height * npc.scale);
+			head.Width = (int)(head.Width * NPC.scale);
+			head.Height = (int)(head.Height * NPC.scale);
+			jaw.Width = (int)(jaw.Width * NPC.scale);
+			jaw.Height = (int)(jaw.Height * NPC.scale);
 		}
 	}
 }

@@ -11,16 +11,16 @@ namespace Macrocosm.Content.Items.Materials.Chunks
 		{
 			DisplayName.SetDefault("Sidus Chunk");
 			Tooltip.SetDefault("'The fire burns like a star'");
-			ItemID.Sets.ItemNoGravity[item.type] = true;
-			Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(4, 4)); // NOTE: TicksPerFrame, Frames
+			ItemID.Sets.ItemNoGravity[Item.type] = true;
+			Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(4, 4)); // NOTE: TicksPerFrame, Frames
 		}
 
 		public override void SetDefaults()
 		{
-			item.width = 30;
-			item.height = 30;
-			item.rare = ItemRarityID.Red;
-			item.maxStack = 999;
+			Item.width = 30;
+			Item.height = 30;
+			Item.rare = ItemRarityID.Red;
+			Item.maxStack = 999;
 		}
 	}
 }
