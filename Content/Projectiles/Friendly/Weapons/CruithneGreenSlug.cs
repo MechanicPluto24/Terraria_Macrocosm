@@ -5,18 +5,15 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Projectiles.Friendly.Weapons
-{
-	public class CruithneGreenSlug : ModProjectile
-	{
-		public override void SetDefaults()
-		{
-			projectile.CloneDefaults(14);
-			aiType = ProjectileID.Bullet;
-			projectile.width = 4;
-			projectile.height = 4;
-			projectile.extraUpdates = 3;
-			projectile.timeLeft = 180;
+namespace Macrocosm.Content.Projectiles.Friendly.Weapons {
+	public class CruithneGreenSlug : ModProjectile {
+		public override void SetDefaults() {
+			Projectile.CloneDefaults(14);
+			AIType = ProjectileID.Bullet;
+			Projectile.width = 4;
+			Projectile.height = 4;
+			Projectile.extraUpdates = 3;
+			Projectile.timeLeft = 180;
 		}
 	}
 }

@@ -14,25 +14,25 @@ namespace Macrocosm.Content.Items
         }
         public override void SetDefaults()
         {
-            item.width = 36;
-            item.height = 36;
-            item.rare = ItemRarityID.Purple;
-            item.value = 100000;
-            item.maxStack = 1;
-            item.useTime = 40;
-            item.useAnimation = 40;
-            item.useStyle = ItemUseStyleID.HoldingUp;
-            item.UseSound = SoundID.Item6;
+            Item.width = 36;
+            Item.height = 36;
+            Item.rare = ItemRarityID.Purple;
+            Item.value = 100000;
+            Item.maxStack = 1;
+            Item.useTime = 40;
+            Item.useAnimation = 40;
+            Item.useStyle = ItemUseStyleID.HoldUp;
+            Item.UseSound = SoundID.Item6;
         }
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)
         {
-            if (!Subworld.AnyActive<Macrocosm>())
+            if (!SubworldSystem.AnyActive<Macrocosm>())
             {
-                Subworld.Enter<Moon>();
+                SubworldSystem.Enter<Moon>();
             }
             else
             {
-                Subworld.Exit();
+                SubworldSystem.Exit();
             }
             return true;
         }

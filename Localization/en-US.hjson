@@ -1,0 +1,8 @@
+﻿Mods: {
+    Macrocosm: {    
+        BiomeName: {
+            MoonBiome: The Moon
+            BasaltBiome: Basalt
+        }
+    }
+}

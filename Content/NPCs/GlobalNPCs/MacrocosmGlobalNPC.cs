@@ -7,37 +7,32 @@ using SubworldLibrary;
 using Macrocosm.Content.Items.Currency;
 using Macrocosm.Content.Systems;
 using Macrocosm.Content.Subworlds.Moon;
+using Terraria.GameContent.ItemDropRules;
+using Terraria.GameContent.Bestiary;
 
-namespace Macrocosm.NPCs.GlobalNPCs
-{
-    public class MacrocosmGlobalNPC : GlobalNPC
-    {
-        public override void NPCLoot(NPC npc)
+namespace Macrocosm.NPCs.GlobalNPCs {
+    public class MacrocosmGlobalNPC : GlobalNPC { 
+
+        public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
         {
-            if (Main.rand.NextFloat() <= 0.10f) // NOTE: What is this Activation Core even used for?
-            {
-                if (npc.type == NPCID.MoonLordCore)
-                {
-                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType<ActivationCore>());
-                }
-            }
             if (EnemyCategorization.MoonEnemies.Contains(npc.type))
             {
-                Item.NewItem(npc.getRect(), ModContent.ItemType<MoonCoin>());
+                npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<MoonCoin>(), 10));
             }
         }
+
+
         public override void EditSpawnPool(IDictionary<int, float> pool, NPCSpawnInfo spawnInfo)
         {
-            foreach (var id in EnemyCategorization.MoonEnemies)
+
+            if (SubworldSystem.IsActive<Moon>())
             {
-                if (!Subworld.IsActive<Moon>())
+                for (int id = 0; id < NPCLoader.NPCCount; id++)
                 {
-                    return;
-                }
-                if (Subworld.IsActive<Moon>())
-                {
-                    pool.Clear();
-                    pool.Add(id, 1f);
+                    if (!EnemyCategorization.MoonEnemies.Contains(id))
+                    {
+                        pool.Remove(id);
+                    }
                 }
             }
         }

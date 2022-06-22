@@ -3,3 +3,4 @@ author = MechanicPluto24 and the Dev team
 version = 0.0.0.1
 modReferences = SubworldLibrary
 hideCode = false
+buildIgnore = Common/BaseMod/*

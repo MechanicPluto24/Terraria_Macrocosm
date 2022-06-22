@@ -384,7 +384,7 @@ namespace Macrocosm
             {
                 if (item == null || item.IsBlank()) return false; //items in the list cannot be null!
 				if(!item.Name.StartsWith(setName)) return false;	
-				if(mod != null && item.modItem != null && !(item.modItem.mod.Name.ToLower().Equals(mod.Name.ToLower()))) return false;
+				if(mod != null && item.ModItem != null && !(item.ModItem.Mod.Name.ToLower().Equals(mod.Name.ToLower()))) return false;
 			}
             return true;
         }

@@ -8,16 +8,16 @@ namespace Macrocosm.Content.Items.Materials
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("There are large amounts of energy emnating from within the core, maybe you could ");
+            Tooltip.SetDefault("There are large amounts of energy emanating from within the core, maybe you could ");
         }
 
         public override void SetDefaults()
         {
-            item.width = 20;
-            item.height = 20;
-            item.maxStack = 1;
-            item.value = 100;
-            item.rare = 1;
+            Item.width = 20;
+            Item.height = 20;
+            Item.maxStack = 1;
+            Item.value = 100;
+            Item.rare = ItemRarityID.Blue;
 
         }
     }
