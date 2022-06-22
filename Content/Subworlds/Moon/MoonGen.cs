@@ -451,7 +451,7 @@ namespace Macrocosm.Content.Subworlds.Moon
             {
                 if (Main.tile[1000, tileY].HasTile)
                 {
-                    Main.spawnTileY = tileY + 4;
+                    Main.spawnTileY = tileY;
                     break;
                 }
             }
