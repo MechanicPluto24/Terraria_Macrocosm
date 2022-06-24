@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using SubworldLibrary;
 using System;
 using Terraria;
+using Terraria.GameContent.Creative;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
@@ -11,11 +12,6 @@ namespace Macrocosm.Content {
     class MacrocosmWorld : ModSystem {
 
         public static int moonBiome = 0;
-
-        public static bool IsDusk => lastDayTime && !Main.dayTime;
-        public static bool IsDawn => !lastDayTime && Main.dayTime;
-
-        private static bool lastDayTime = false;
 
         public override void TileCountsAvailable(ReadOnlySpan<int> tileCounts) {
             moonBiome = tileCounts[ModContent.TileType<Regolith>()];
@@ -26,17 +22,15 @@ namespace Macrocosm.Content {
 
         public override void PreUpdateEntities() 
         {
-            lastDayTime = Main.dayTime;
-            if (SubworldSystem.IsActive<Moon>()) {
-                Main.time += 0.125; // TODO: maybe replace this with the ModifyTimeRate Hook?
+            int timeRateModifier = CreativePowerManager.Instance.GetPower<CreativePowers.ModifyTimeRate>().TargetTimeRate;
+
+            if (SubworldSystem.IsActive<Moon>()) 
+            {
+                Main.time += 0.125 * (Main.fastForwardTime ? 60 : timeRateModifier); // TODO: maybe replace this with the ModifyTimeRate Hook?
             }
         }
-        
-        public override void SaveWorldData(TagCompound downed) {
-            /*if (Main.gameMenu && !Main.world) {
-                Main.sunTexture = Main.instance.OurLoad<Texture2D>("Terraria/Sun");
-            }*/
-            // FIXME: like now
-        }
+
+        //public override void ModifyTimeRate(ref double timeRate, ref double tileUpdateRate, ref double eventUpdateRate)
+       
     }
 }
