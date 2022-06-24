@@ -4,4 +4,5 @@
 - disable torches on the moon 
 - edit info display for moon phase and weather (also time?) 
 - fix accelerated time passing not working (sleeping, journey slider)
+- bestiary portraits for CD and minions
 - find a way to sync bestiary data across subworlds ??????
