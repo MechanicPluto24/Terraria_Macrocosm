@@ -14,11 +14,15 @@ namespace Macrocosm
     public class Macrocosm : Mod {
         public static Mod Instance => ModContent.GetInstance<Macrocosm>();
         public override void Load() {
+
+            // TODO: Unload these 
             Content.NPCs.GlobalNPCs.LowGravityNPC.DetourNPCGravity();
             Common.Drawing.EarthDrawing.InitializeDetour();
             Common.Drawing.RemoveBackgroundAmbient.InitializeDetour();
             On.Terraria.UI.ItemSlot.PickItemMovementAction += MoonCoin_AllowCoinSlotPlacement;
+
             CurrencyManager.LoadCurrencies();
+
             if (!Main.dedServ)
                 LoadMoonSky();
             
@@ -49,21 +53,5 @@ namespace Macrocosm
             Filters.Scene["Macrocosm:MoonSky"] = new Filter(new ScreenShaderData("FilterMiniTower").UseColor(0f, 0f, 0f).UseOpacity(0f), EffectPriority.High);
             SkyManager.Instance["Macrocosm:MoonSky"] = moonSky;
         }
-
-        /*public override void UpdateMusic(ref int music, ref MusicPriority priority) {
-            if (Main.myPlayer != -1 && !Main.gameMenu && Main.LocalPlayer.active) {
-                MacrocosmPlayer modPlayer = Main.LocalPlayer.GetModPlayer<MacrocosmPlayer>();
-
-                if (modPlayer.ZoneMoon && Main.dayTime) {
-                    music = GetSoundSlot(SoundType.Music, "Sounds/Music/MoonDay");
-                    priority = MusicPriority.Environment;
-                }
-
-                if (modPlayer.ZoneMoon && !Main.dayTime) {
-                    music = GetSoundSlot(SoundType.Music, "Sounds/Music/MoonDay");
-                    priority = MusicPriority.Environment;
-                }
-            }
-        }*/
     }
 }
