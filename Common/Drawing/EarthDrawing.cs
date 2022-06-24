@@ -24,7 +24,7 @@ namespace Macrocosm.Common.Drawing {
                 // also feels kinda laggy at low X speeds 
 
                 // surface layer dimensions in pixels 
-                float moonWidth = Main.maxTilesX * 16; 
+                float moonWidth = Main.maxTilesX * 16f; 
                 float moonSurfaceLayerHeight = (float)Main.worldSurface * 16f;
 
                 // positions relative to the center origin of the surface layer 

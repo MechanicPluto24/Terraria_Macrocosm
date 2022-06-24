@@ -1,6 +1,5 @@
 using Terraria.ModLoader;
 using Terraria;
-using Macrocosm.Backgrounds;
 using Terraria.Graphics.Effects;
 using Macrocosm.Content.Items.Currency;
 using System;
@@ -8,8 +7,10 @@ using SubworldLibrary;
 using Macrocosm.Content.Subworlds.Moon;
 using Terraria.Graphics.Shaders;
 using Macrocosm.Content.Systems.Music;
+using Macrocosm.Backgrounds.Moon;
 
-namespace Macrocosm {
+namespace Macrocosm
+{
     public class Macrocosm : Mod {
         public static Mod Instance => ModContent.GetInstance<Macrocosm>();
         public override void Load() {
