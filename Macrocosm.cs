@@ -8,6 +8,7 @@ using Macrocosm.Content.Subworlds.Moon;
 using Terraria.Graphics.Shaders;
 using Macrocosm.Content.Systems.Music;
 using Macrocosm.Backgrounds.Moon;
+using Macrocosm.Content.Tiles;
 
 namespace Macrocosm
 {
@@ -30,12 +31,12 @@ namespace Macrocosm
             {
                 var ta = ModLoader.GetMod("TerrariaAmbience");
                 var taAPI = ModLoader.GetMod("TerrariaAmbienceAPI");
-                ta?.Call("AddTilesToList", this, "Stone", new string[] { "Regolith", "RegolithBrick", "Hemostone" }, null); // ech
-                taAPI?.Call(this, "Sounds/Ambient/Moon", "MoonAmbience", 1f, 0.0075f, new Func<bool>(SubworldSystem.IsActive<Moon>));
+                ta?.Call("AddTilesToList", null, "Stone", Array.Empty<string>(), new int[] { ModContent.TileType<Regolith>()}); 
+                taAPI?.Call("Ambience", this, "MoonAmbience", "Sounds/Ambient/Moon", 1f, 0.0075f, new Func<bool>(SubworldSystem.IsActive<Moon>));
             }
             catch (Exception e)
             {
-                Logger.Warn(e.Message + " Failed to load TerrariaAmbience. ");
+                Logger.Warn(e.Message + " failed to load TerrariaAmbience. ");
             }
 
         }
