@@ -6,8 +6,8 @@ using Terraria.ModLoader;
 using Terraria.Graphics.Effects;
 using Terraria.UI;
 using Microsoft.Xna.Framework;
-using Macrocosm.Backgrounds;
 using Macrocosm.Content.Subworlds.Moon;
+using Macrocosm.Backgrounds.Moon;
 
 namespace Macrocosm.Content.Biomes
 {

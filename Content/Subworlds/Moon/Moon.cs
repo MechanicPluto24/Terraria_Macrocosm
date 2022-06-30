@@ -15,7 +15,9 @@ namespace Macrocosm.Content.Subworlds.Moon
     /// </summary>
     public class Moon : Subworld
     {
-        
+
+        public static float timeRate = 0.125f;
+
         public override int Width => 2000;
         public override int Height => 1200; // 200 tile padding for the hell-layer.
         public override bool ShouldSave => true;
