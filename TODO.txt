@@ -1,7 +1,11 @@
 ﻿- add ambient rocks 
-- fix sun position during moon night
-- localization support
+- fix the fucking sun position during fucking moon fucking night fuck TM 
 - disable torches on the moon 
 - edit info display for moon phase and weather (also time?) 
-- fix accelerated time passing not working (sleeping, journey slider)
+- fix accelerated time passing not working (sleeping)
+- bestiary portraits for CD and minions
+- lower gore gravity on moon 
+- add hooks on dusk and dawn for sky update 
+
 - find a way to sync bestiary data across subworlds ??????
+- disable graveyards on the moon??
