@@ -9,7 +9,7 @@ using Terraria.Utilities;
 using Macrocosm.Content;
 using Terraria.GameContent;
 using System.Collections.Generic;
-using Macrocosm.Common.Drawing;
+using Macrocosm.Common.Drawing.Stars;
 
 namespace Macrocosm.Backgrounds.Moon
 {
@@ -18,28 +18,21 @@ namespace Macrocosm.Backgrounds.Moon
         public bool Active;
         public float Intensity;
 
-        private readonly UnifiedRandom _random = new UnifiedRandom();
+        private static StarsDrawing moonStarsDay = new();
+        private static StarsDrawing moonStarsNight = new();
 
-        StarsDrawing moonStarsDay = new();
-        StarsDrawing moonStarsNight = new();
-
-        public void DrawStarsOnMoon(SpriteBatch spriteBatch)
+        public static void SpawnStarsOnMoon(bool day)
         {
-            if (moonStarsDay.None)
+            if (day)
             {
-                moonStarsDay.SpawnStars(20, 40, 2f);
+                moonStarsDay.Clear();
+                moonStarsNight.Clear();
+                moonStarsDay.SpawnStars(40, 65, 1.2f, 0.2f);
             }
-
-            if (moonStarsNight.None && !Main.dayTime)
+            else
             {
-                moonStarsNight.SpawnStars(100, 200, 1f);
+                moonStarsNight.SpawnStars(200, 300, 0.8f, 0.2f);
             }
-
-            if (Main.dayTime)
-                moonStarsNight.Clear(); // this needs some fade out 
-
-            moonStarsDay.Draw(spriteBatch);
-            moonStarsNight.Draw(spriteBatch); 
         }
 
         public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth)
@@ -53,7 +46,8 @@ namespace Macrocosm.Backgrounds.Moon
                 spriteBatch.Draw(SkyTex, new Rectangle(0, Math.Max(0, (int)((Main.worldSurface * 16.0 - Main.screenPosition.Y - 2400.0) * 0.10000000149011612)),
                     Main.screenWidth, Main.screenHeight), Color.White * Math.Min(1f, (Main.screenPosition.Y - 800f) / 1000f * Intensity));
 
-                DrawStarsOnMoon(spriteBatch);
+                moonStarsDay.Draw(spriteBatch);
+                moonStarsNight.Draw(spriteBatch);
 
                 //PLEASE DON'T NAME YOUR VARS LIKE "NUM474" EVER AGAIN OR I WILL FCKING RIP YOUR GUTS OUT AND EAT NACHOS FROM YOUR RIBCAGE lol
                 float clouldAlphaMult = 1f - Main.cloudAlpha * 1.5f;
@@ -74,10 +68,12 @@ namespace Macrocosm.Backgrounds.Moon
                     sunAngle = (int)(bgTop + sunTimeY * 250.0 + 180.0);
 
                     sunScale = (float)(1.2 - sunTimeY * 0.4);
+
+                    Color color6 = new Color((byte)(255f * clouldAlphaMult), (byte)(Color.White.G * clouldAlphaMult), (byte)(Color.White.B * clouldAlphaMult), (byte)(255f * clouldAlphaMult));
+               
+                    Main.spriteBatch.Draw(SunTexture, new Vector2(sunTimeX, sunAngle + Main.sunModY), new Microsoft.Xna.Framework.Rectangle?(new Rectangle(0, 0, SunTexture.Width, SunTexture.Height)),
+                        color6, sunRotation, new Vector2(SunTexture.Width / 2, SunTexture.Height / 2), sunScale, SpriteEffects.None, 0f);
                 }
-                Color color6 = new Color((byte)(255f * clouldAlphaMult), (byte)(Color.White.G * clouldAlphaMult), (byte)(Color.White.B * clouldAlphaMult), (byte)(255f * clouldAlphaMult));
-                Main.spriteBatch.Draw(SunTexture, new Vector2(sunTimeX, sunAngle + Main.sunModY), new Microsoft.Xna.Framework.Rectangle?(new Rectangle(0, 0, SunTexture.Width, SunTexture.Height)),
-                    color6, sunRotation, new Vector2(SunTexture.Width / 2, SunTexture.Height / 2), sunScale, SpriteEffects.None, 0f);
             }
         }
 

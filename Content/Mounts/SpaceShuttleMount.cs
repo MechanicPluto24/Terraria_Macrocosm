@@ -2,6 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.ID;
 
 namespace Macrocosm.Content.Mounts {
     public class SpaceShuttleMount : ModMount {
@@ -47,7 +48,7 @@ namespace Macrocosm.Content.Mounts {
             MountData.swimFrameCount = MountData.inAirFrameCount;
             MountData.swimFrameDelay = MountData.inAirFrameDelay;
             MountData.swimFrameStart = MountData.inAirFrameStart;
-            if (Main.netMode != 2) {
+            if (Main.netMode != NetmodeID.Server) {
                 MountData.textureWidth = MountData.frontTexture.Width();
                 MountData.textureHeight = MountData.frontTexture.Height();
             }

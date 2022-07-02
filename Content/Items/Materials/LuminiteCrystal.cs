@@ -25,7 +25,7 @@ namespace Macrocosm.Content.Items.Materials
 
         public override void AddRecipes()
         {
-            Recipe recipe = Mod.CreateRecipe(Type);
+            Recipe recipe = Recipe.Create(Type);
             recipe.AddIngredient(ItemID.LunarBar, 5);
             recipe.AddIngredient<SidusChunk>(10);
             recipe.AddIngredient<NubisChunk>(10);

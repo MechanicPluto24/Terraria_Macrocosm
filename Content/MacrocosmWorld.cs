@@ -20,17 +20,28 @@ namespace Macrocosm.Content {
             moonBiome = 0;
         }
 
-        public override void PreUpdateEntities() 
+        public override void PreUpdateEntities()
         {
             int timeRateModifier = CreativePowerManager.Instance.GetPower<CreativePowers.ModifyTimeRate>().TargetTimeRate;
 
             if (SubworldSystem.IsActive<Moon>()) 
             {
-                Main.time += 0.125 * (Main.fastForwardTime ? 60 : timeRateModifier); // TODO: maybe replace this with the ModifyTimeRate Hook?
-            }
-        }
+                Main.time += Moon.timeRate * (Main.fastForwardTime ? 60 : timeRateModifier); 
 
-        //public override void ModifyTimeRate(ref double timeRate, ref double tileUpdateRate, ref double eventUpdateRate)
-       
+                if(Main.dayTime && Main.time >= Main.dayLength)
+                {
+                    Main.dayTime = false;
+                    Main.time = 0;
+                }
+
+                if (!Main.dayTime && Main.time >= Main.nightLength)
+                {
+                    Main.dayTime = true;
+                    Main.bloodMoon = false; // we can actually control how long a blood moon will be 
+                    Main.time = 0;
+                }
+
+            }
+        }  
     }
 }

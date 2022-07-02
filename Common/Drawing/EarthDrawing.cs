@@ -7,11 +7,13 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 
 namespace Macrocosm.Common.Drawing {
-    public sealed class EarthDrawing {
-        private static Mod MacrocosmMod => ModContent.GetInstance<Macrocosm>();
-        public static void InitializeDetour() {
+    public sealed class EarthDrawing : ILoadable
+    {
+        public void Load(Mod mod) {
             On.Terraria.Main.DrawSurfaceBG_BackMountainsStep1 += Main_DrawBG;
         }
+
+        public void Unload() { }
         
         private static void Main_DrawBG(On.Terraria.Main.orig_DrawSurfaceBG_BackMountainsStep1 orig, Main self, double backgroundTopMagicNumber, float bgGlobalScaleMultiplier, int pushBGTopHack) {
             orig(self, backgroundTopMagicNumber, bgGlobalScaleMultiplier, pushBGTopHack);

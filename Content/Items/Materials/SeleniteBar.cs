@@ -31,7 +31,7 @@ namespace Macrocosm.Content.Items.Materials
         
         public override void AddRecipes()
         {
-            Recipe recipe = Mod.CreateRecipe(Type);
+            Recipe recipe = Recipe.Create(Type);
             recipe.AddIngredient<SeleniteOre>(6);
             recipe.AddTile(TileID.WorkBenches);
             recipe.Register();

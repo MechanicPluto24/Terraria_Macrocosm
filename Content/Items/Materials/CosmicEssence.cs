@@ -17,13 +17,12 @@ namespace Macrocosm.Content.Items.Materials
             Item.height = 20;
             Item.maxStack = 999;
             Item.value = 100;
-            Item.rare = 1;
-            // Set other Item.X values here
+            Item.rare = ItemRarityID.Blue;
         }
 
         public override void AddRecipes()
         {
-            Recipe recipe = Mod.CreateRecipe(Type);
+            Recipe recipe = Recipe.Create(Type);
             recipe.AddIngredient(ItemID.FragmentSolar, 5);
             recipe.AddIngredient(ItemID.FragmentVortex, 5);
             recipe.AddIngredient(ItemID.FragmentNebula, 5);

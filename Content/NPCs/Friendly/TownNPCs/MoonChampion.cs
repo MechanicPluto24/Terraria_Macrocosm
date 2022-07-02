@@ -17,17 +17,6 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
     [AutoloadHead]
     public class MoonChampion : ModNPC
     {
-
-        // These are done automatically now - Feldy
-
-            //public override string Texture => "Macrocosm/Content/NPCs/Friendly/TownNPCs/MoonChampion";
-
-            // public override bool Autoload(ref string name)
-            // {
-            //     name = "MoonChampion";
-            //     return mod.Properties.Autoload;
-            // }
-
         public override void SetStaticDefaults()
         {
             Main.npcFrameCount[NPC.type] = 26;
@@ -179,14 +168,8 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
         }
 		public override void PostAI()
 		{
-			base.PostAI();
             if (!SubworldSystem.IsActive<Moon>())
-            {
-                return;
-            }
-            {
-				NPC.active = false;
-			}
+                NPC.active = false;
 		}
         // TODO: Bad shop, sprite fast, die hard (ambrose plesea ima die)
         // No - 4mbr0s3 2

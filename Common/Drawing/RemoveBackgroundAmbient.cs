@@ -7,10 +7,13 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria.GameContent.Ambience;
 
 namespace Macrocosm.Common.Drawing {
-    public sealed class RemoveBackgroundAmbient {
-        public static void InitializeDetour() {
+    public class RemoveBackgroundAmbient : ILoadable
+    {
+        public void Load(Mod mod) {
             On.Terraria.GameContent.Ambience.AmbienceServer.Update += DisableAmbienceOnMoon;
         }
+
+        public void Unload() { }
 
         private static void DisableAmbienceOnMoon(On.Terraria.GameContent.Ambience.AmbienceServer.orig_Update orig, AmbienceServer self)
         {

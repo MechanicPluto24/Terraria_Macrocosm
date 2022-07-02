@@ -20,7 +20,7 @@ namespace Macrocosm.Content.Items.Weapons
 			Item.height = 40;
 			Item.useTime = 10;
 			Item.useAnimation = 10;
-			Item.useStyle = 1;
+			Item.useStyle = ItemUseStyleID.Swing;
 			Item.knockBack = 5;
 			Item.value = 10000;
 			Item.rare = ItemRarityID.Green;
@@ -32,7 +32,7 @@ namespace Macrocosm.Content.Items.Weapons
 
 		public override void AddRecipes()
 		{
-			Recipe recipe = Mod.CreateRecipe(Type);
+			Recipe recipe = Recipe.Create(Type);
 			recipe.AddIngredient<LuminiteCrystal>();
 			recipe.AddIngredient<ArtemiteBar>(12);
 			recipe.AddTile(TileID.WorkBenches);

@@ -22,7 +22,7 @@ namespace Macrocosm.Content.Items.Armor
 		}
 
 		public override void AddRecipes() {
-			Recipe recipe = Mod.CreateRecipe(Type);
+			Recipe recipe = Recipe.Create(Type);
 			recipe.AddIngredient(ModContent.ItemType<SeleniteBar>(), 16);
 			recipe.AddTile(TileID.WorkBenches);
 			recipe.Register();

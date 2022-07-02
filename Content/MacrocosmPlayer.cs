@@ -36,12 +36,12 @@ namespace Macrocosm.Content {
                 accMoonArmorDebuff--;
 		}
 
-        public override Texture2D GetMapBackgroundImage() {
-            if (ZoneMoon) {
-                return ModContent.Request<Texture2D>($"{typeof(Macrocosm).Name}/Assets/Map/Moon").Value;
-            }
-            return null;
-        }
+        //public override Texture2D GetMapBackgroundImage() {
+        //    if (ZoneMoon) {
+        //        return ModContent.Request<Texture2D>($"{typeof(Macrocosm).Name}/Assets/Map/Moon").Value;
+        //    }
+        //    return null;
+        //}
 
         public override void ModifyScreenPosition() {
             if (SubworldSystem.AnyActive(Mod)) {

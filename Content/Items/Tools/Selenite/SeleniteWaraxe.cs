@@ -32,7 +32,7 @@ namespace Macrocosm.Content.Items.Tools.Selenite
 
         public override void AddRecipes()
         {
-            Recipe recipe = Mod.CreateRecipe(Type);
+            Recipe recipe = Recipe.Create(Type);
             recipe.AddIngredient<LuminiteCrystal>();
             recipe.AddIngredient<SeleniteBar>(12);
             recipe.AddTile(TileID.WorkBenches);

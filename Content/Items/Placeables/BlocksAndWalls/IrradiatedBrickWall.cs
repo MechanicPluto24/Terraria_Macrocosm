@@ -29,7 +29,7 @@ namespace Macrocosm.Content.Items.Placeables.BlocksAndWalls
 		public override void AddRecipes()
 		{
 
-			Recipe recipe = Mod.CreateRecipe(Type, 4);
+			Recipe recipe = Recipe.Create(Type, 4);
 			recipe.AddIngredient<IrradiatedBrick>(1);
 			recipe.AddTile(TileID.WorkBenches);
 			recipe.Register();

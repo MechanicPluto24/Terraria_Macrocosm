@@ -46,7 +46,7 @@ namespace Macrocosm.Content.Items.Weapons
 
 		public override void AddRecipes() 
 		{
-			Recipe recipe = Mod.CreateRecipe(Type);
+			Recipe recipe = Recipe.Create(Type);
 			recipe.AddIngredient(ItemID.HellstoneBar, 20);
 			recipe.AddIngredient(ItemID.SoulofFright, 10);
 			recipe.AddTile(TileID.WorkBenches);

@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Items.Miscellaneous
         public override void AddRecipes()
         {
 
-            Recipe recipe = Mod.CreateRecipe(Type);
+            Recipe recipe = Recipe.Create(Type);
             recipe.AddIngredient<ActivationCore>();
             recipe.AddIngredient<UnpoweredKey>();
             recipe.AddTile(TileID.WorkBenches);
