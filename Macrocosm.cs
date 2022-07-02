@@ -16,10 +16,7 @@ namespace Macrocosm
         public static Mod Instance => ModContent.GetInstance<Macrocosm>();
         public override void Load() {
 
-            // TODO: Unload these 
             Content.NPCs.GlobalNPCs.LowGravityNPC.DetourNPCGravity();
-            Common.Drawing.EarthDrawing.InitializeDetour();
-            Common.Drawing.RemoveBackgroundAmbient.InitializeDetour();
             On.Terraria.UI.ItemSlot.PickItemMovementAction += MoonCoin_AllowCoinSlotPlacement;
 
             CurrencyManager.LoadCurrencies();

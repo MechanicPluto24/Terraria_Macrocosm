@@ -1,5 +1,5 @@
 ﻿- add ambient rocks 
-- fix the fucking sun position during fucking moon fucking night fuck TM 
+- fix the sun position during moon night 
 - disable torches on the moon 
 - edit info display for moon phase and weather (also time?) 
 - fix accelerated time passing not working (sleeping)

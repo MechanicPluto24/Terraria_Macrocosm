@@ -30,7 +30,7 @@ namespace Macrocosm.Content.Items.Placeables.BlocksAndWalls
 
         public override void AddRecipes()
         {
-            Recipe recipe = Mod.CreateRecipe(Type);
+            Recipe recipe = Recipe.Create(Type);
             recipe.AddIngredient<IrradiatedRock>(2);
             recipe.AddTile(TileID.WorkBenches);
             recipe.Register();

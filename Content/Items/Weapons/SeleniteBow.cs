@@ -41,7 +41,7 @@ namespace Macrocosm.Content.Items.Weapons
         }
         public override void AddRecipes() 
 		{
-            Recipe recipe = Mod.CreateRecipe(Type);
+            Recipe recipe = Recipe.Create(Type);
 			recipe.AddIngredient(ModContent.ItemType<LuminiteCrystal>(), 1);
 			recipe.AddIngredient(ModContent.ItemType<SeleniteBar>(), 12);
 			recipe.AddTile(TileID.WorkBenches);

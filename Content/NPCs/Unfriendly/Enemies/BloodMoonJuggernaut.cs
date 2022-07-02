@@ -22,9 +22,10 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies
 			Kick
         };
 
+		// ai[0] and ai[3] are used by fighter ai
+		public ref float AI_Timer => ref NPC.ai[1];
+		public ref float AI_Direction => ref NPC.ai[2];
 		public ref float AI_State => ref NPC.localAI[0];
-		public ref float AI_Timer => ref NPC.localAI[1];
-		public ref float AI_Direction => ref NPC.localAI[2];
 
 		public override void SetStaticDefaults()
 		{
@@ -41,8 +42,8 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies
 			NPC.HitSound = SoundID.NPCHit1;
 			NPC.DeathSound = SoundID.NPCDeath2;
 			NPC.knockBackResist = 0.0f;
-			NPC.aiStyle = NPCID.Zombie;
-			AIType = NPCID.Skeleton;
+			NPC.aiStyle = NPCAIStyleID.Fighter;
+			AIType = NPCID.Krampus;
 
 			SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBiome>().Type }; // Associates this NPC with the Moon Biome in Bestiary
 		}
@@ -58,29 +59,31 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies
 
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
 		{
-			return (spawnInfo.Player.GetModPlayer<MacrocosmPlayer>().ZoneMoon && !Main.dayTime) ? .1f : 0f;
+			return (spawnInfo.Player.GetModPlayer<MacrocosmPlayer>().ZoneMoon && Main.bloodMoon) ? .1f : 0f;
 		}
 
 		public override void AI()
 		{
-			base.AI();
+			base.AI(); // base fighter AI 
 		}
 
         public override void PostAI()
         {
-			Player targetPlayer = Main.player[NPC.target];
 
-			const float punchCooldown = 180f;
+			const float punchCooldown = 180f; // min ticks between attacks 
 			const float dashSpeed = 12f; // initial dash speed and cap 
 			const float dashDeceleration = 2f; // deceleration factor of the dash
-
 
 			if (AI_Timer <= 0)
             {
 				AI_Timer = 0;
             }
+			
+			// actively targets closest player
+			// TODO: check behaviour in MP 
+			NPC.TargetClosest(); 
+			Player targetPlayer = Main.player[NPC.target];
 
-			NPC.TargetClosest();
 
 			switch (AI_State)
 			{
@@ -89,37 +92,39 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies
 					NPC.damage = 150;
 
 					if (NPC.velocity.Y < 0f)
-						NPC.velocity.Y += 0.1f;
+						NPC.velocity.Y += 0.1f;	// fall down faster 
 
-					if (NPC.life <= NPC.lifeMax / 2)
+
+					if (NPC.life <= NPC.lifeMax / 2 && Main.netMode != NetmodeID.MultiplayerClient)
 					{
 						AI_State = (float)ActionState.Sprint;
+						NPC.netUpdate = true;
 					}
 
-					if(Math.Abs(NPC.velocity.Y) == 0 && 
+					// when not jumping, target is close enough but not too close,
+					// on the same horizontal line, no blocks between target and him
+					// and there's no active cooldown
+					if(NPC.HasValidTarget &&
+					   Main.netMode != NetmodeID.MultiplayerClient &&
+					   AI_Timer == 0 &&
+					   Math.Abs(NPC.velocity.Y) == 0 &&
 					   Vector2.Distance(NPC.Center, targetPlayer.Center) <= 16 * 16f && 
 					   Vector2.Distance(NPC.Center, targetPlayer.Center) >= 3 * 16f && 
-					   Math.Abs(NPC.Center.Y - Main.player[NPC.target].Center.Y) < 2f * 16f && 
-					   !targetPlayer.dead &&
-					   AI_Timer == 0)
+					   Math.Abs(NPC.Center.Y - Main.player[NPC.target].Center.Y) < 2f * 16f &&
+					   Collision.CanHitLine(NPC.position, NPC.width, NPC.height, targetPlayer.position, targetPlayer.width, targetPlayer.height))
 					{
 						NPC.frameCounter = 0;
 						AI_State = (float)ActionState.Punch;
 						AI_Timer = punchCooldown;
+						NPC.netUpdate = true;
 					}
 
-					if (NPC.HasValidTarget && NPC.collideX)
-					{
-						if (NPC.collideY)
-						{
-							NPC.velocity.Y += 1f;   // fall if it gets stuck (still happens)
-						}
-						else
-						{
-							NPC.velocity.Y += -0.5f;
-							Collision.StepUp(ref NPC.position, ref NPC.velocity, NPC.width, NPC.height, ref NPC.stepSpeed, ref NPC.gfxOffY);
-						}
-					}
+					// this is done to avoid base fighter AI boredom mechanic 
+                    if (NPC.ai[3] > 0)
+                    {
+						NPC.velocity.Y -= 0.5f;
+						NPC.ai[3] = float.MaxValue;
+                    }
 
 					AI_Timer--;
 
@@ -130,11 +135,10 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies
 
 					NPC.damage = 350;
 
-					Main.NewText(NPC.velocity.X);
-
-					if (NPC.life <= NPC.lifeMax / 2)
+					if (NPC.life <= NPC.lifeMax / 2 && Main.netMode != NetmodeID.MultiplayerClient)
 					{
 						AI_State = (float)ActionState.Sprint;
+						NPC.netUpdate = true;
 					}
 
 					if (AI_Timer == punchCooldown - 1f)
@@ -165,8 +169,11 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies
 							if(Math.Sign(NPC.velocity.X) != AI_Direction)
                             {
 								NPC.velocity.X = 0;
-								if(AI_Timer <= 0)
+								if(AI_Timer <= 0 && Main.netMode != NetmodeID.MultiplayerClient)
+                                {
 									AI_State = (float)ActionState.Walk;
+									NPC.netUpdate = true;
+								}
 							}
 						}
                         else
@@ -177,6 +184,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies
 						if (AI_Timer < punchCooldown - 100f)
 						{
 							AI_State = (float)ActionState.Walk;
+							NPC.netUpdate = true;
 						}		
 					}
 
@@ -185,9 +193,10 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies
 						NPC.velocity.X = dashSpeed * AI_Direction;
 					}
 
-					if(Vector2.Distance(NPC.Center, targetPlayer.Center) > 22 * 16f)
+					if(Vector2.Distance(NPC.Center, targetPlayer.Center) > 22 * 16f && Main.netMode != NetmodeID.MultiplayerClient)
                     {
 						AI_State = (float)ActionState.Walk;
+						NPC.netUpdate = true;
 					}
 
 					break;
@@ -196,8 +205,6 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies
 
 					NPC.defense = 120;
 					NPC.damage = 300;
-
-					AIType = NPCID.LihzahrdCrawler;
 
 					if (Math.Abs(NPC.velocity.Y) > 0.5f) // if falling 
                     {
@@ -212,21 +219,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies
 							NPC.velocity.X = NPC.direction * 8f; // up to 8f
 						}
 					}
-					
-					// on block collision 
-					if (NPC.HasValidTarget && NPC.collideX && Math.Abs(NPC.velocity.Y) < 1f)
-					{
-                        if (NPC.collideX && NPC.collideY)
-                        {
-							NPC.velocity.Y += 1f;	// fall if it gets stuck (still happens)
-						}
-                        else 
-                        {
-							//NPC.velocity.Y += -3f;
-							Collision.StepUp(ref NPC.position, ref NPC.velocity, NPC.width, NPC.height, ref NPC.stepSpeed, ref NPC.gfxOffY);
-                        }
-					}
-
+ 
 					break;
 			}
 		}
@@ -234,7 +227,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies
         // Frame 0		  : idle
         // Frames 1 - 8   : walking   
         // Frame 9		  : jump w/ arms
-        // Frames 10 - 12 : punch start
+        // Frames 10 - 12 : punch chargeup
         // Frames 13 - 17 : punch dash
         // Frames 18 - 20 : roar
         // Frames 21 - 28 : sprint 
@@ -284,23 +277,23 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies
 
 						if (NPC.direction != AI_Direction)
 						{
-							NPC.frame.Y = 16 * frameHeight;
+							NPC.frame.Y = 16 * frameHeight; // after passing through target, static punch frame 
 						}
 						else if (Math.Abs(NPC.velocity.X) < 1f)
                         {
 							if(AI_Timer >= 180f - 15f)
                             {
-								NPC.frame.Y = 10 * frameHeight;
+								NPC.frame.Y = 10 * frameHeight;	// initially static charge frame 
 							}
 							else if(AI_Timer <= 180f - 45f)
                             {
-								NPC.frame.Y = 12 * frameHeight;
-                            }
+								NPC.frame.Y = 12 * frameHeight; // another static charge frame after loop  
+							}
                             else
                             {
 								NPC.frameCounter++;
 
-								NPC.frame.Y = (int)(NPC.frameCounter / 5 + 10) * frameHeight; // 3 punch start frames @ 5 ticks per frame 
+								NPC.frame.Y = (int)(NPC.frameCounter / 5 + 10) * frameHeight; // 2 punch chargeup loop frames @ 5 ticks per frame 
 								if (NPC.frameCounter >= 9)
 								{
 									NPC.frameCounter = 0;
@@ -311,7 +304,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies
                         {
 							if(Math.Abs(NPC.velocity.X) > 4f)
                             {
-								NPC.frame.Y = 13 * frameHeight;
+								NPC.frame.Y = 13 * frameHeight; // while dashing use the fist motion blur effect frame 
 							}
                             else
                             {
@@ -381,7 +374,6 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies
 
 			if (NPC.life <= NPC.lifeMax / 2 && AI_State != (float)ActionState.Sprint)
             {
-				// TODO: Replace with it's own gore 
 				Gore.NewGore(entitySource, NPC.position, NPC.velocity, Mod.Find<ModGore>("JuggernautGoreArm1").Type); 
 				Gore.NewGore(entitySource, NPC.position, NPC.velocity, Mod.Find<ModGore>("JuggernautGoreArm2").Type);
 

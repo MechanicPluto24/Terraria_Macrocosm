@@ -5,6 +5,7 @@ using Terraria.WorldBuilding;
 using Terraria.ModLoader;
 using Terraria.UI;
 using Terraria.Graphics.Effects;
+using Macrocosm.Backgrounds.Moon;
 
 namespace Macrocosm.Content.Subworlds.Moon
 {
@@ -35,6 +36,7 @@ namespace Macrocosm.Content.Subworlds.Moon
         public override void OnEnter()
         {
             SkyManager.Instance.Activate("Macrocosm:MoonSky");
+            MoonSky.SpawnStarsOnMoon(true);
         }
 
         public override void OnExit()
@@ -50,6 +52,7 @@ namespace Macrocosm.Content.Subworlds.Moon
             SubworldSystem.noReturn = true;
             Main.dayTime = true;
             Main.numClouds = 0;
+          
         }
     }
 }

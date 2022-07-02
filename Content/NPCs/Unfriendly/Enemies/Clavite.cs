@@ -79,7 +79,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies
         }
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return (spawnInfo.Player.GetModPlayer<MacrocosmPlayer>().ZoneMoon && Main.dayTime) ? .1f : 0f;
+            return (spawnInfo.Player.GetModPlayer<MacrocosmPlayer>().ZoneMoon && Main.dayTime && spawnInfo.SpawnTileY <= Main.worldSurface + 100) ? .1f : 0f;
         }
         
         public override void ModifyNPCLoot(NPCLoot loot)
