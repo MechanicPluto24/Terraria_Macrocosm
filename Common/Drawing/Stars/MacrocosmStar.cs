@@ -19,8 +19,8 @@ namespace Macrocosm.Common.Drawing.Stars
         /// <summary>
         /// Adapted from Star.SpawnStars
         /// </summary>
-        /// <param name="baseScale"> The average scaling of the stars </param>
-        /// <param name="twinkleFactor"> How much a star will twinkle, keep betweem (0f, 1f) </param>
+        /// <param name="baseScale"> The average scaling of the stars relative to vanilla </param>
+        /// <param name="twinkleFactor"> How much a star will twinkle, keep between (0f, 1f); 0.4f for vanilla effect</param>
         public MacrocosmStar(float baseScale = 1f, float twinkleFactor = 0.4f)
         {
             FastRandom fastRandom = FastRandom.CreateWithRandomSeed();
@@ -31,7 +31,7 @@ namespace Macrocosm.Common.Drawing.Stars
             rotation = fastRandom.Next(628) * 0.01f;
             scale = fastRandom.Next(70, 130) * 0.006f * baseScale;
             twinkle = Math.Clamp(fastRandom.Next(1, 101) * 0.01f, 1f - twinkleFactor, 1f);
-            twinkleSpeed = fastRandom.Next(30, 110) * 0.0001f;
+            twinkleSpeed = fastRandom.Next(30, 110) * 0.0001f; // TODO: add constructor argument for this
 
             if (fastRandom.Next(2) == 0)
                 twinkleSpeed *= -1f;
