@@ -26,14 +26,14 @@ namespace Macrocosm.Content {
 
             if (SubworldSystem.IsActive<Moon>()) 
             {
-                Main.time += Moon.timeRate * (Main.fastForwardTime ? 60 : timeRateModifier); 
+                Main.time += Moon.TimeRate * (Main.fastForwardTime ? 60 : timeRateModifier); 
 
+                // time update logic (behaves weird otherwise)
                 if(Main.dayTime && Main.time >= Main.dayLength)
                 {
                     Main.dayTime = false;
                     Main.time = 0;
                 }
-
                 if (!Main.dayTime && Main.time >= Main.nightLength)
                 {
                     Main.dayTime = true;

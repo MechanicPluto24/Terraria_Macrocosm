@@ -201,7 +201,7 @@ namespace Macrocosm.Common.Utility{
     }
 
     /// <summary>
-    /// Adds a glowmask field to items.
+    /// Adds a glowmask field to GlobalItems.
     /// Code by Hallam
     /// </summary>
     public class GlowmaskGlobalItem : GlobalItem

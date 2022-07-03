@@ -455,6 +455,8 @@ namespace Macrocosm.Content.Subworlds.Moon
                     break;
                 }
             }
+
+            Main.dayTime = true;
         }
     }
 }

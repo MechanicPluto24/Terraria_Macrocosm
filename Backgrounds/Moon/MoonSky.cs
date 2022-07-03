@@ -27,11 +27,11 @@ namespace Macrocosm.Backgrounds.Moon
             {
                 moonStarsDay.Clear();
                 moonStarsNight.Clear();
-                moonStarsDay.SpawnStars(40, 65, 1.2f, 0.2f);
+                moonStarsDay.SpawnStars(40, 65, 1.2f, 0.05f);
             }
             else
             {
-                moonStarsNight.SpawnStars(200, 300, 0.8f, 0.2f);
+                moonStarsNight.SpawnStars(300, 400, 0.8f, 0.05f);
             }
         }
 
