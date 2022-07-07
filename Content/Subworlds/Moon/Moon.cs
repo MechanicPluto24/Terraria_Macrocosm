@@ -50,9 +50,10 @@ namespace Macrocosm.Content.Subworlds.Moon
 
         public override void OnEnter()
         {
-            animationTimer = 0;
             lunaBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Subworlds/LoadingBackgrounds/Luna").Value;
             lunaAtmoBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Subworlds/LoadingBackgrounds/LunaAtmo").Value;
+
+            animationTimer = 0;
             toEarth = false;
             chosenMessage = ListRandom.Pick(textFileLoader.Parse("Content/Subworlds/Moon/MoonMessages"));
 
@@ -65,9 +66,10 @@ namespace Macrocosm.Content.Subworlds.Moon
 
         public override void OnExit()
         {
-            animationTimer = 0;
             earthBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Subworlds/LoadingBackgrounds/Earth").Value;
             earthAtmoBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Subworlds/LoadingBackgrounds/EarthAtmo").Value;
+
+            animationTimer = 0;
             toEarth = true;
             chosenMessage = ListRandom.Pick(textFileLoader.Parse("Content/Subworlds/Earth/EarthMessages"));
 
@@ -80,6 +82,9 @@ namespace Macrocosm.Content.Subworlds.Moon
 
         public override void Load()
         {
+
+
+
             // One Terraria day = 86400
             SubworldSystem.hideUnderworld = true;
             SubworldSystem.noReturn = true;

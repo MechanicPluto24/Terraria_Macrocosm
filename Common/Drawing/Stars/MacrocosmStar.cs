@@ -31,7 +31,7 @@ namespace Macrocosm.Common.Drawing.Stars
             rotation = fastRandom.Next(628) * 0.01f;
             scale = fastRandom.Next(70, 130) * 0.006f * baseScale;
             twinkle = Math.Clamp(fastRandom.Next(1, 101) * 0.01f, 1f - twinkleFactor, 1f);
-            twinkleSpeed = fastRandom.Next(30, 110) * 0.0001f; // TODO: add constructor argument for this
+            twinkleSpeed = (fastRandom.Next(30, 110) * 0.0001f); // TODO: add constructor argument for this
 
             if (fastRandom.Next(2) == 0)
                 twinkleSpeed *= -1f;
@@ -42,7 +42,7 @@ namespace Macrocosm.Common.Drawing.Stars
 
             if (fastRandom.Next(40) == 0)
             {
-                scale *= 2f;
+                scale *= 2f * (0.6f + twinkleFactor);
                 twinkleSpeed /= 2f;
                 rotationSpeed /= 2f;
             }
