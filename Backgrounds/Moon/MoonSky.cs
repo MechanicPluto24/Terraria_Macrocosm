@@ -10,6 +10,7 @@ using Macrocosm.Content;
 using Terraria.GameContent;
 using System.Collections.Generic;
 using Macrocosm.Common.Drawing.Stars;
+using Macrocosm.Common.Drawing;
 
 namespace Macrocosm.Backgrounds.Moon
 {
@@ -25,8 +26,10 @@ namespace Macrocosm.Backgrounds.Moon
         {
             if (day)
             {
-                moonStarsDay.Clear();
+                // should add some fade-out for these 
+                moonStarsDay.Clear(); 
                 moonStarsNight.Clear();
+
                 moonStarsDay.SpawnStars(40, 65, 1.2f, 0.05f);
             }
             else
@@ -39,6 +42,8 @@ namespace Macrocosm.Backgrounds.Moon
         {
             Texture2D SunTexture = ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/Sun_0").Value;
             Texture2D SkyTex = ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/MoonSky").Value;
+            Texture2D earthBody = ModContent.Request<Texture2D>("Macrocosm/Assets/EarthTransparent").Value;
+            Texture2D earthAtmo = ModContent.Request<Texture2D>("Macrocosm/Assets/EarthAtmo").Value;
 
             if (maxDepth >= 3.40282347E+38f && minDepth < 3.40282347E+38f)
             {
@@ -49,12 +54,15 @@ namespace Macrocosm.Backgrounds.Moon
                 moonStarsDay.Draw(spriteBatch);
                 moonStarsNight.Draw(spriteBatch);
 
+                BackgroundCelestialBody.Draw(spriteBatch, earthBody, earthAtmo, 0.9f, 0f, -250f, 0.01f, 0.03f);
+
                 //PLEASE DON'T NAME YOUR VARS LIKE "NUM474" EVER AGAIN OR I WILL FCKING RIP YOUR GUTS OUT AND EAT NACHOS FROM YOUR RIBCAGE lol
                 float clouldAlphaMult = 1f - Main.cloudAlpha * 1.5f;
                 if (clouldAlphaMult < 0f)
                 {
                     clouldAlphaMult = 0f;
                 }
+
                 int sunAngle = 0;
                 int sunTimeX = (int)(Main.time / 54000.0 * (Main.screenWidth + TextureAssets.Sun.Width() * 2)) - TextureAssets.Sun.Width();
                 double sunTimeY = Main.time < 27000.0 ? //Gets the Y axis for the angle depending on the time
@@ -63,6 +71,7 @@ namespace Macrocosm.Backgrounds.Moon
                 float sunScale = 1f;
                 float sunRotation = (float)(Main.time / 54000.0) * 2f - 7.3f;
                 double bgTop = -Main.screenPosition.Y / (Main.worldSurface * 16.0 - 600.0) * 200.0;
+
                 if (Main.dayTime)
                 {
                     sunAngle = (int)(bgTop + sunTimeY * 250.0 + 180.0);
