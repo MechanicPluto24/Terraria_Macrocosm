@@ -2,13 +2,14 @@ using Terraria;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
 using Terraria.ModLoader;
-using Macrocosm.Content.Subworlds.Moon;
 using Macrocosm.Common.Utility;
 
-namespace Macrocosm.Common.Drawing {
+namespace Macrocosm.Content.Subworlds
+{
     public class ChangeTileSkyColor : ILoadable
     {
-        public void Load(Mod mod) {
+        public void Load(Mod mod)
+        {
             On.Terraria.Main.ApplyColorOfTheSkiesToTiles += GrayscaleTileColor;
         }
 
@@ -16,7 +17,7 @@ namespace Macrocosm.Common.Drawing {
 
         private static void GrayscaleTileColor(On.Terraria.Main.orig_ApplyColorOfTheSkiesToTiles orig)
         {
-            if (SubworldSystem.IsActive<Moon>())
+            if (SubworldSystem.IsActive<Moon.Moon>())
             {
                 Color colorOfTheSkies = ColorManipulator.ToGrayscale(Main.ColorOfTheSkies);
 
@@ -26,7 +27,7 @@ namespace Macrocosm.Common.Drawing {
             }
             else
             {
-                orig();       
+                orig();
             }
 
         }

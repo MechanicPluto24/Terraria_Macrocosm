@@ -21,10 +21,10 @@ namespace Macrocosm.NPCs.GlobalNPCs {
             }
         }
 
-
         public override void EditSpawnPool(IDictionary<int, float> pool, NPCSpawnInfo spawnInfo)
         {
 
+            // TODO: replace the code below with specific moon enemy spawn conditions, then delete SpawnCondition override for each ModNPC - Feldy 
             if (SubworldSystem.IsActive<Moon>())
             {
                 for (int id = 0; id < NPCLoader.NPCCount; id++)
@@ -34,6 +34,7 @@ namespace Macrocosm.NPCs.GlobalNPCs {
                         pool.Remove(id);
                     }
                 }
+
             }
         }
     }

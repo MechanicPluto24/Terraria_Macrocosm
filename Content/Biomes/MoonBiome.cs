@@ -14,8 +14,8 @@ namespace Macrocosm.Content.Biomes
     public class MoonBiome : ModBiome
     {
         public override SceneEffectPriority Priority => SceneEffectPriority.BiomeHigh;
-        public override string BestiaryIcon => "Assets/FilterIcons/Moon";
-        public override string BackgroundPath => "Assets/Map/Moon";
+        public override string BestiaryIcon => "Macrocosm/Assets/FilterIcons/Moon";
+        public override string BackgroundPath => "Macrocosm/Assets/Map/Moon";
         public override Color? BackgroundColor => base.BackgroundColor;
         public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.GetInstance<MoonSurfaceBgStyle>();
         public override ModUndergroundBackgroundStyle UndergroundBackgroundStyle => ModContent.GetInstance<MoonUgBgStyle>();

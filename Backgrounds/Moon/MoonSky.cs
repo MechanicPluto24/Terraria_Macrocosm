@@ -4,13 +4,11 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.Graphics.Effects;
-using Terraria.Graphics.Shaders;
-using Terraria.Utilities;
-using Macrocosm.Content;
 using Terraria.GameContent;
-using System.Collections.Generic;
 using Macrocosm.Common.Drawing.Stars;
 using Macrocosm.Common.Drawing;
+using SubworldLibrary;
+using Subworlds = Macrocosm.Content.Subworlds.Moon; // ambiguity with this namespace!
 
 namespace Macrocosm.Backgrounds.Moon
 {
@@ -24,6 +22,9 @@ namespace Macrocosm.Backgrounds.Moon
 
         public static void SpawnStarsOnMoon(bool day)
         {
+            if (!SubworldSystem.IsActive<Subworlds.Moon>())
+                return;
+
             if (day)
             {
                 // should add some fade-out for these 
@@ -42,8 +43,8 @@ namespace Macrocosm.Backgrounds.Moon
         {
             Texture2D SunTexture = ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/Sun_0").Value;
             Texture2D SkyTex = ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/MoonSky").Value;
-            Texture2D earthBody = ModContent.Request<Texture2D>("Macrocosm/Assets/EarthTransparent").Value;
-            Texture2D earthAtmo = ModContent.Request<Texture2D>("Macrocosm/Assets/EarthAtmo").Value;
+            Texture2D earthBody = ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/EarthTransparent").Value;
+            Texture2D earthAtmo = ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/EarthAtmo").Value;
 
             if (maxDepth >= 3.40282347E+38f && minDepth < 3.40282347E+38f)
             {
@@ -51,10 +52,13 @@ namespace Macrocosm.Backgrounds.Moon
                 spriteBatch.Draw(SkyTex, new Rectangle(0, Math.Max(0, (int)((Main.worldSurface * 16.0 - Main.screenPosition.Y - 2400.0) * 0.10000000149011612)),
                     Main.screenWidth, Main.screenHeight), Color.White * Math.Min(1f, (Main.screenPosition.Y - 800f) / 1000f * Intensity));
 
-                moonStarsDay.Draw(spriteBatch);
-                moonStarsNight.Draw(spriteBatch);
+                if (moonStarsNight.None && !Main.dayTime) // bugfix bcs we can't check for moon time on subworld OnEnter 
+                    SpawnStarsOnMoon(false);
 
-                BackgroundCelestialBody.Draw(spriteBatch, earthBody, earthAtmo, 0.9f, 0f, -250f, 0.01f, 0.03f);
+                moonStarsDay.Draw();
+                moonStarsNight.Draw();
+
+                BgCelestialBody.Draw(earthBody, earthAtmo, 0.9f, 0f, -250f, 0.01f, 0.03f);
 
                 //PLEASE DON'T NAME YOUR VARS LIKE "NUM474" EVER AGAIN OR I WILL FCKING RIP YOUR GUTS OUT AND EAT NACHOS FROM YOUR RIBCAGE lol
                 float clouldAlphaMult = 1f - Main.cloudAlpha * 1.5f;

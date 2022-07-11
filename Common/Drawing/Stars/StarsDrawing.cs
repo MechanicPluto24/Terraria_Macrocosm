@@ -18,14 +18,14 @@ namespace Macrocosm.Common.Drawing.Stars
         public bool None => stars.Count == 0;
         public void Clear() => stars.Clear();
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw()
         {
             if (None)
                 return;
 
             foreach (MacrocosmStar star in stars)
             {
-                star.Draw(spriteBatch);
+                star.Draw();
                 star.Update();
             }
         }

@@ -24,8 +24,8 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies
 
 		// ai[0] and ai[3] are used by fighter ai
 		public ref float AI_Timer => ref NPC.ai[1];
-		public ref float AI_Direction => ref NPC.ai[2];
-		public ref float AI_State => ref NPC.localAI[0];
+		public ref float AI_State => ref NPC.ai[2];
+		public ref float AI_Direction => ref NPC.localAI[0];
 
 		public override void SetStaticDefaults()
 		{
@@ -45,13 +45,15 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies
 			NPC.aiStyle = NPCAIStyleID.Fighter;
 			AIType = NPCID.Krampus;
 
-			SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBiome>().Type }; // Associates this NPC with the Moon Biome in Bestiary
+			SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBiome>().Type}; // Associates this NPC with the Moon Biome in Bestiary
 		}
 
 		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
 		{
 			bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[]
 			{
+				BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Events.BloodMoon,
+
 				new FlavorTextBestiaryInfoElement(
 					"Big mofo")
 			});

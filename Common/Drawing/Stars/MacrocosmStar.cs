@@ -15,7 +15,6 @@ namespace Macrocosm.Common.Drawing.Stars
 
         public float twinkleFactor;
 
-
         /// <summary>
         /// Adapted from Star.SpawnStars
         /// </summary>
@@ -60,9 +59,9 @@ namespace Macrocosm.Common.Drawing.Stars
             texture = tex;
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw()
         {
-            spriteBatch.Draw(texture, position, null, color, rotation, texture.Size() / 2, scale * twinkle, default, 0f);
+            Main.spriteBatch.Draw(texture, position, null, color, rotation, texture.Size() / 2, scale * twinkle, default, 0f);
         }
 
         public new void Update()
