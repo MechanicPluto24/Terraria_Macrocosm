@@ -1,11 +1,10 @@
 ﻿- add ambient rocks 
-- fix the sun position during moon night 
-- disable torches on the moon 
+- finish juggernaut 
+- add some daytime fade for nebulas 
 - edit info display for moon phase and weather (also time?) 
 - fix accelerated time passing not working (sleeping)
 - bestiary portraits for CD and minions
 - lower gore gravity on moon 
 - add hooks on dusk and dawn for sky update 
-
 - find a way to sync bestiary data across subworlds ??????
 - disable graveyards on the moon??

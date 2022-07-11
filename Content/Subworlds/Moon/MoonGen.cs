@@ -427,13 +427,6 @@ namespace Macrocosm.Content.Subworlds.Moon
         public MoonGen(string name, float loadWeight, Subworld sw) : base(name, loadWeight)
         {
             subworld = sw;
-            //Add(new SubworldGenPass(GroundPass));
-            //Add(new SubworldGenPass(CraterPass));
-            //Add(new SubworldGenPass(BackgroundPass));
-            //Add(new SubworldGenPass(RegolithPass));
-            //Add(new SubworldGenPass(OrePass));
-            //Add(new SubworldGenPass(CavePass));
-            //Add(new SubworldGenPass(ScuffedSmoothPass));
         }
 
         protected override void ApplyPass(GenerationProgress progress, GameConfiguration configuration)

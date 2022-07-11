@@ -22,42 +22,45 @@ namespace Macrocosm.Content {
             moonBiome = 0;
         }
 
-        public override void PreUpdateEntities()
+        public override void PreUpdateWorld()
         {
-            int timeRateModifier = CreativePowerManager.Instance.GetPower<CreativePowers.ModifyTimeRate>().TargetTimeRate;
-
             if (SubworldSystem.AnyActive<Macrocosm>())
             {
                 // time update logic (behaves weird otherwise)
-                if (Main.dayTime && Main.time >= Main.dayLength)
-                {
-                    Main.dayTime = false;
-                    Main.time = 0;
-                    OnDusk();
-                }
-                if (!Main.dayTime && Main.time >= Main.nightLength)
-                {
-                    Main.dayTime = true;
-                    Main.bloodMoon = false; // we can actually control how long a blood moon will be 
-                    Main.time = 0;
-                    OnDawn();
-                }
+                //if (Main.dayTime && Main.time >= Main.dayLength)
+                //{
+                //    Main.dayTime = false;
+                //    Main.time = 0;
+                //    OnDusk();
+                //}
+                //if (!Main.dayTime && Main.time >= Main.nightLength)
+                //{
+                //    Main.dayTime = true;
+                //    Main.bloodMoon = false; // we can actually control how long a blood moon will be 
+                //    Main.time = 0;
+                //    OnDawn();
+                //}
+
+                Main.numClouds = 0;
+                Main.windSpeedCurrent = 0;
+                Main.weatherCounter = 0;
+
+                Main.StopRain(); // Rain, rain, go away, come again another day
+                Main.StopSlimeRain();
+
             }
 
-            if (SubworldSystem.IsActive<Moon>()) 
+        }
+
+        public override void ModifyTimeRate(ref double timeRate, ref double tileUpdateRate, ref double eventUpdateRate)
+        {
+            int timeRateModifier = CreativePowerManager.Instance.GetPower<CreativePowers.ModifyTimeRate>().TargetTimeRate;
+            bool freezeTime = CreativePowerManager.Instance.GetPower<CreativePowers.FreezeTime>().Enabled;
+
+            if (SubworldSystem.IsActive<Moon>())
             {
-                Main.time += Moon.TimeRate * (Main.fastForwardTime ? 60 : timeRateModifier); 
+                timeRate = freezeTime ? 0f : Moon.TimeRate * (Main.fastForwardTime ? 60 : timeRateModifier); 
             }
-
-        }
-        public static void OnDusk()
-        {
-            MoonSky.SpawnStarsOnMoon(false);
-        }
-
-        public static void OnDawn()
-        {
-            MoonSky.SpawnStarsOnMoon(true);
         }
 
     }
