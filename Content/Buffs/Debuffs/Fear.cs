@@ -13,7 +13,7 @@ namespace Macrocosm.Content.Buffs.Debuffs {
         }
         public override void Update(Player player, ref int buffIndex) {
             player.cursed = true;
-            player.moveSpeed -= 20;
+            player.moveSpeed /= 4;
         }
     }
 }

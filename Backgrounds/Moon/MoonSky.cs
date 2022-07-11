@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Graphics.Effects;
 using Terraria.GameContent;
@@ -31,12 +32,58 @@ namespace Macrocosm.Backgrounds.Moon
                 moonStarsDay.Clear(); 
                 moonStarsNight.Clear();
 
-                moonStarsDay.SpawnStars(40, 65, 1.2f, 0.05f);
+                moonStarsDay.SpawnStars(70, 100, 1.6f, 0.05f);
             }
             else
             {
-                moonStarsNight.SpawnStars(300, 400, 0.8f, 0.05f);
+                moonStarsNight.SpawnStars(500, 700, 0.8f, 0.05f);
             }
+        }
+
+        public static void DrawMoonNebula(SpriteBatch spriteBatch)
+        {
+
+            Texture2D nebula = Main.moonType switch
+            {
+                1 => ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/NebulaYellow").Value,
+                2 => ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/NebulaRinged").Value,
+                3 => ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/NebulaMythril").Value,
+                4 => ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/NebulaBlue").Value,
+                5 => ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/NebulaGreen").Value,
+                6 => ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/NebulaPink").Value,
+                7 => ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/NebulaOrange").Value,
+                8 => ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/NebulaPurple").Value,
+                _ => ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/NebulaNormal").Value,
+            };
+
+            Color nebulaColor;
+            float nebulaBrightnessDay = 0.17f;
+            float nebulaBrightnessNight = 0.45f;
+            float nebulaFade = nebulaBrightnessNight - nebulaBrightnessDay;
+
+            if (Main.dayTime)
+            {
+                if(Main.time <= 10000)
+                {
+                    nebulaColor = Color.White * (float)(nebulaBrightnessDay + (Main.time / 10000 * nebulaFade));
+                }
+                else if(Main.time >= 44000)
+                {
+                    nebulaColor = Color.White * (float)(nebulaBrightnessDay + (Main.time - 44000) / 10000 * nebulaFade);
+                }
+                else
+                {
+                    nebulaColor = Color.White * nebulaBrightnessDay;
+                }
+            }
+            else
+            {
+                nebulaColor = Color.White * nebulaBrightnessNight;
+            }
+
+            nebulaColor.A = 0;
+
+            spriteBatch.Draw(nebula, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), nebulaColor);
         }
 
         public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth)
@@ -46,19 +93,20 @@ namespace Macrocosm.Backgrounds.Moon
             Texture2D earthBody = ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/EarthTransparent").Value;
             Texture2D earthAtmo = ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/EarthAtmo").Value;
 
-            if (maxDepth >= 3.40282347E+38f && minDepth < 3.40282347E+38f)
+            if (maxDepth >= float.MaxValue && minDepth < float.MaxValue)
             {
                 spriteBatch.Draw(TextureAssets.BlackTile.Value, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.Black * Intensity);
+
                 spriteBatch.Draw(SkyTex, new Rectangle(0, Math.Max(0, (int)((Main.worldSurface * 16.0 - Main.screenPosition.Y - 2400.0) * 0.10000000149011612)),
                     Main.screenWidth, Main.screenHeight), Color.White * Math.Min(1f, (Main.screenPosition.Y - 800f) / 1000f * Intensity));
+
+                DrawMoonNebula(spriteBatch);
 
                 if (moonStarsNight.None && !Main.dayTime) // bugfix bcs we can't check for moon time on subworld OnEnter 
                     SpawnStarsOnMoon(false);
 
                 moonStarsDay.Draw();
                 moonStarsNight.Draw();
-
-                BgCelestialBody.Draw(earthBody, earthAtmo, 0.9f, 0f, -250f, 0.01f, 0.03f);
 
                 //PLEASE DON'T NAME YOUR VARS LIKE "NUM474" EVER AGAIN OR I WILL FCKING RIP YOUR GUTS OUT AND EAT NACHOS FROM YOUR RIBCAGE lol
                 float clouldAlphaMult = 1f - Main.cloudAlpha * 1.5f;
@@ -87,6 +135,8 @@ namespace Macrocosm.Backgrounds.Moon
                     Main.spriteBatch.Draw(SunTexture, new Vector2(sunTimeX, sunAngle + Main.sunModY), new Microsoft.Xna.Framework.Rectangle?(new Rectangle(0, 0, SunTexture.Width, SunTexture.Height)),
                         color6, sunRotation, new Vector2(SunTexture.Width / 2, SunTexture.Height / 2), sunScale, SpriteEffects.None, 0f);
                 }
+
+                BgCelestialBody.Draw(earthBody, earthAtmo, 0.9f, 0f, -250f, 0.01f, 0.12f);
             }
         }
 

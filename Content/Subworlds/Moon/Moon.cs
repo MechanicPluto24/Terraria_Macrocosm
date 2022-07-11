@@ -26,9 +26,7 @@ namespace Macrocosm.Content.Subworlds.Moon
     public class Moon : Subworld
     {
         public const float TimeRate = 0.125f;
-
-        public override bool NormalUpdates => base.NormalUpdates;
-
+        public override bool NormalUpdates => true;
         public override int Width => 2000;
         public override int Height => 1200; // 200 tile padding for the hell-layer.
         public override bool ShouldSave => true;
@@ -40,10 +38,10 @@ namespace Macrocosm.Content.Subworlds.Moon
 
         private bool toEarth;
         private double animationTimer;
-        private Texture2D lunaBackground ;
-        private Texture2D lunaAtmoBackground ;
-        private Texture2D earthBackground ;
-        private Texture2D earthAtmoBackground ;
+        private Texture2D lunaBackground;
+        private Texture2D lunaAtmoBackground;
+        private Texture2D earthBackground;
+        private Texture2D earthAtmoBackground;
         private string chosenMessage;
         private StarsDrawing starsDrawing = new();
         private TextFileLoader textFileLoader = new();
@@ -85,6 +83,7 @@ namespace Macrocosm.Content.Subworlds.Moon
             SubworldSystem.hideUnderworld = true;
             SubworldSystem.noReturn = true;
             Main.numClouds = 0;
+            Main.raining = false;
         }
 
         public override void DrawSetup(GameTime gameTime)
@@ -161,7 +160,7 @@ namespace Macrocosm.Content.Subworlds.Moon
 
             }
 
-            ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, FontAssets.DeathText.Value, Main.AutogenProgress.Message + Main.statusText, new Vector2((float)Main.screenWidth, (float)Main.screenHeight) / 2f - FontAssets.DeathText.Value.MeasureString(Main.statusText) / 2f, Color.White, 0f, Vector2.Zero, Vector2.One);
+            ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, FontAssets.DeathText.Value, Main.statusText, new Vector2((float)Main.screenWidth, (float)Main.screenHeight) / 2f - FontAssets.DeathText.Value.MeasureString(Main.statusText) / 2f, Color.White, 0f, Vector2.Zero, Vector2.One);
 
             Main.DrawCursor(Main.DrawThickCursor(false), false);
 

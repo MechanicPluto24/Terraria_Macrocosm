@@ -8,6 +8,7 @@ using Macrocosm.Content.Items.Currency;
 using Macrocosm.Content.Biomes;
 using Microsoft.Xna.Framework;
 using System;
+using Macrocosm.Content.Buffs.Debuffs;
 
 namespace Macrocosm.Content.NPCs.Unfriendly.Enemies
 {
@@ -71,7 +72,6 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies
 
         public override void PostAI()
         {
-
 			const float punchCooldown = 180f; // min ticks between attacks 
 			const float dashSpeed = 12f; // initial dash speed and cap 
 			const float dashDeceleration = 2f; // deceleration factor of the dash
@@ -136,6 +136,10 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies
 				case (float)ActionState.Punch:
 
 					NPC.damage = 350;
+
+					targetPlayer.noKnockback = false;
+
+					targetPlayer.AddBuff(ModContent.BuffType<Fear>(), 120, false);
 
 					if (NPC.life <= NPC.lifeMax / 2 && Main.netMode != NetmodeID.MultiplayerClient)
 					{
