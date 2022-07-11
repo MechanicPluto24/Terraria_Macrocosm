@@ -28,7 +28,8 @@ namespace Macrocosm.Content.Systems
         {
             ModContent.NPCType<Clavite>(),
             ModContent.NPCType<MoonZombie>(),
-            ModContent.NPCType<RegolithSlime>()
+            ModContent.NPCType<RegolithSlime>(),
+            ModContent.NPCType<BloodMoonJuggernaut>()
         };
         /// <summary>
         /// Enemies of the potential future red home-planet Mars, see list to view said NPCs

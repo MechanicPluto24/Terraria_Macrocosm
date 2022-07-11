@@ -6,10 +6,12 @@ using Macrocosm.Content.Subworlds.Moon;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.GameContent.Ambience;
 
-namespace Macrocosm.Common.Drawing {
+namespace Macrocosm.Content.Subworlds
+{
     public class RemoveBackgroundAmbient : ILoadable
     {
-        public void Load(Mod mod) {
+        public void Load(Mod mod)
+        {
             On.Terraria.GameContent.Ambience.AmbienceServer.Update += DisableAmbienceOnMoon;
         }
 
@@ -17,10 +19,10 @@ namespace Macrocosm.Common.Drawing {
 
         private static void DisableAmbienceOnMoon(On.Terraria.GameContent.Ambience.AmbienceServer.orig_Update orig, AmbienceServer self)
         {
-            if (SubworldSystem.AnyActive<Macrocosm>()) 
+            if (SubworldSystem.AnyActive<Macrocosm>())
                 return;
 
-            orig(self);        
+            orig(self);
         }
     }
 }

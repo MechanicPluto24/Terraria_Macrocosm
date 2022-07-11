@@ -58,7 +58,7 @@ namespace Macrocosm.Content.Subworlds.Moon
             chosenMessage = ListRandom.Pick(textFileLoader.Parse("Content/Subworlds/Moon/MoonMessages"));
 
             starsDrawing.Clear();
-            starsDrawing.SpawnStars(50, 150);
+            starsDrawing.SpawnStars(100, 175);
 
             SkyManager.Instance.Activate("Macrocosm:MoonSky");
             MoonSky.SpawnStarsOnMoon(Main.dayTime);
@@ -74,17 +74,13 @@ namespace Macrocosm.Content.Subworlds.Moon
             chosenMessage = ListRandom.Pick(textFileLoader.Parse("Content/Subworlds/Earth/EarthMessages"));
 
             starsDrawing.Clear();
-            starsDrawing.SpawnStars(50, 150);
-            
+            starsDrawing.SpawnStars(100, 175);
 
             SkyManager.Instance.Deactivate("Macrocosm:MoonSky");
         }
 
         public override void Load()
         {
-
-
-
             // One Terraria day = 86400
             SubworldSystem.hideUnderworld = true;
             SubworldSystem.noReturn = true;
@@ -100,6 +96,9 @@ namespace Macrocosm.Content.Subworlds.Moon
 
         public override void DrawMenu(GameTime gameTime)
         {
+            Color bodyColor = Color.White * (float)(animationTimer / 5) * 0.8f;  // color of the celestial body
+            bodyColor.A = byte.MaxValue;                                         // keep it opaque
+
             if (toEarth)
             {
                 Main.spriteBatch.Begin(0, BlendState.Additive, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.UIScaleMatrix);
@@ -108,20 +107,21 @@ namespace Macrocosm.Content.Subworlds.Moon
                     earthAtmoBackground,
                     new Rectangle(Main.screenWidth - earthAtmoBackground.Width, Main.screenHeight - earthAtmoBackground.Height + 50 - (int)(animationTimer * 10), earthAtmoBackground.Width, earthAtmoBackground.Height),
                     null,
-                    Color.White * (float)(animationTimer / 5) * 0.8f
+                    bodyColor
+                    
                 );
                 Main.spriteBatch.End();
 
                 Main.spriteBatch.Begin(0, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.UIScaleMatrix);
 
-                starsDrawing.Draw(Main.spriteBatch);
+                starsDrawing.Draw();
 
                 Main.spriteBatch.Draw
                 (
                     earthBackground,
                     new Rectangle(Main.screenWidth - earthBackground.Width, Main.screenHeight - earthBackground.Height + 50 - (int)(animationTimer * 10), earthBackground.Width, earthBackground.Height),
                     null,
-                    Color.White * (float)(animationTimer / 5) * 0.8f
+                    bodyColor
                 );
                 string msgToPlayer = "Earth"; // Title
                 Vector2 messageSize = FontAssets.DeathText.Value.MeasureString(msgToPlayer) * 1.2f;
@@ -137,20 +137,20 @@ namespace Macrocosm.Content.Subworlds.Moon
                     lunaAtmoBackground,
                     new Rectangle(Main.screenWidth - lunaAtmoBackground.Width, Main.screenHeight - lunaAtmoBackground.Height + 50 - (int)(animationTimer * 10), lunaAtmoBackground.Width, lunaAtmoBackground.Height),
                     null,
-                    Color.White * (float)(animationTimer / 5) * 0.8f
+                    bodyColor
                 );
                 Main.spriteBatch.End();
 
                 Main.spriteBatch.Begin(0, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.UIScaleMatrix);
 
-                starsDrawing.Draw(Main.spriteBatch);
+                starsDrawing.Draw();
 
                 Main.spriteBatch.Draw
                 (
                     lunaBackground,
                     new Rectangle(Main.screenWidth - lunaBackground.Width, Main.screenHeight - lunaBackground.Height + 50 - (int)(animationTimer * 10), lunaBackground.Width, lunaBackground.Height),
                     null,
-                    Color.White * (float)(animationTimer / 5) * 0.8f
+                    bodyColor
                 );
 
                 string msgToPlayer = "Earth's Moon"; // Title
@@ -160,7 +160,8 @@ namespace Macrocosm.Content.Subworlds.Moon
                 ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, FontAssets.DeathText.Value, chosenMessage, new Vector2(Main.screenWidth / 2f - messageSize2.X / 2f, Main.screenHeight - messageSize2.Y - 20), Color.White, 0f, Vector2.Zero, new Vector2(0.7f));
 
             }
-            ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, FontAssets.DeathText.Value, Main.statusText, new Vector2((float)Main.screenWidth, (float)Main.screenHeight) / 2f - FontAssets.DeathText.Value.MeasureString(Main.statusText) / 2f, Color.White, 0f, Vector2.Zero, Vector2.One);
+
+            ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, FontAssets.DeathText.Value, Main.AutogenProgress.Message + Main.statusText, new Vector2((float)Main.screenWidth, (float)Main.screenHeight) / 2f - FontAssets.DeathText.Value.MeasureString(Main.statusText) / 2f, Color.White, 0f, Vector2.Zero, Vector2.One);
 
             Main.DrawCursor(Main.DrawThickCursor(false), false);
 
