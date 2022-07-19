@@ -13,7 +13,7 @@ namespace Macrocosm.Common.Drawing.Stars
 
         public Color color;
 
-        public float twinkleFactor;
+        public float brightness;
 
         /// <summary>
         /// Adapted from Star.SpawnStars
@@ -23,7 +23,10 @@ namespace Macrocosm.Common.Drawing.Stars
         public MacrocosmStar(float baseScale = 1f, float twinkleFactor = 0.4f)
         {
             FastRandom fastRandom = FastRandom.CreateWithRandomSeed();
+
             texture = TextureAssets.Star[fastRandom.Next(0, 4)].Value;
+            brightness = 1f;
+            color = Color.White;
 
             position.X = fastRandom.Next(1921);
             position.Y = fastRandom.Next(1201);
@@ -45,8 +48,6 @@ namespace Macrocosm.Common.Drawing.Stars
                 twinkleSpeed /= 2f;
                 rotationSpeed /= 2f;
             }
-
-            color = Color.White;
         }
 
         public MacrocosmStar(Vector2 position, float baseScale = 1f, float twinkleFactor = 0.4f) : this(baseScale, twinkleFactor)
@@ -96,6 +97,8 @@ namespace Macrocosm.Common.Drawing.Stars
             color.R = (byte)red;
             color.G = (byte)green;
             color.B = (byte)blue;
+
+            color *= brightness;
         }
     }
 }

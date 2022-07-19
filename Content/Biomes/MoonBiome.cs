@@ -19,7 +19,6 @@ namespace Macrocosm.Content.Biomes
         public override Color? BackgroundColor => base.BackgroundColor;
         public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.GetInstance<MoonSurfaceBgStyle>();
         public override ModUndergroundBackgroundStyle UndergroundBackgroundStyle => ModContent.GetInstance<MoonUgBgStyle>();
-
         public override int Music => Main.dayTime ? MusicLoader.GetMusicSlot(Mod, "Sounds/Music/MoonDay") : MusicLoader.GetMusicSlot(Mod, "Sounds/Music/MoonNight");
 
         public override void SetStaticDefaults()
@@ -29,7 +28,6 @@ namespace Macrocosm.Content.Biomes
  
         public override void OnInBiome(Player player)
         {
-            Main.windSpeedCurrent = 0;
             player.GetModPlayer<MacrocosmPlayer>().ZoneMoon = true;
         }
 
