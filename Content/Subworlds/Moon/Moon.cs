@@ -59,7 +59,7 @@ namespace Macrocosm.Content.Subworlds.Moon
             starsDrawing.SpawnStars(100, 175);
 
             SkyManager.Instance.Activate("Macrocosm:MoonSky");
-            MoonSky.SpawnStarsOnMoon(Main.dayTime);
+            MoonSky.SpawnStarsOnMoon();
         }
 
         public override void OnExit()

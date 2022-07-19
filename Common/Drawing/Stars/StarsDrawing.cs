@@ -1,34 +1,16 @@
 using Terraria;
-using Microsoft.Xna.Framework;
-using SubworldLibrary;
-using Terraria.ModLoader;
-using Macrocosm.Content.Subworlds.Moon;
-using Microsoft.Xna.Framework.Graphics;
-using Macrocosm.Content;
 using System.Collections.Generic;
-using Terraria.GameContent;
+using Microsoft.Xna.Framework;
 
 namespace Macrocosm.Common.Drawing.Stars
 {
     public class StarsDrawing
     {
 
-        private List<MacrocosmStar> stars = new();
+        private readonly List<MacrocosmStar> stars = new();
 
         public bool None => stars.Count == 0;
         public void Clear() => stars.Clear();
-
-        public void Draw()
-        {
-            if (None)
-                return;
-
-            foreach (MacrocosmStar star in stars)
-            {
-                star.Draw();
-                star.Update();
-            }
-        }
 
         public void SpawnStars(int minStars, int maxStars, float baseScale = 1f, float twinkleFactor = 0.4f)
         {
@@ -39,5 +21,20 @@ namespace Macrocosm.Common.Drawing.Stars
                 stars.Add(new MacrocosmStar(baseScale, twinkleFactor));
             }
         }
+
+        public void Draw(float brightness = 1f)
+        {
+            if (None)
+                return;
+
+            foreach (MacrocosmStar star in stars)
+            {
+                star.brightness = brightness;
+                star.Update();
+                star.Draw();
+            }
+        }
+
+   
     }
 }

@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 
 namespace Macrocosm.Common.Drawing {
-    public static class BgCelestialBody 
+    public static class ParallaxingCelestialBody 
     {
         /// <summary>
         /// Draw a parallaxing celestial body with an atmosphere in the background of a world's surface

@@ -47,7 +47,6 @@ namespace Macrocosm.Content {
 
                 Main.StopRain(); // Rain, rain, go away, come again another day
                 Main.StopSlimeRain();
-
             }
 
         }

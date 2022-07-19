@@ -11,6 +11,7 @@ namespace Macrocosm.Content.Buffs.Debuffs {
             Main.buffNoTimeDisplay[Type] = false;
             Main.pvpBuff[Type] = true;
         }
+
         public override void Update(Player player, ref int buffIndex) {
             player.cursed = true;
             player.moveSpeed /= 4;
