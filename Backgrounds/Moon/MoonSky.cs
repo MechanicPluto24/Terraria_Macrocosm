@@ -7,10 +7,11 @@ using Terraria.Graphics.Effects;
 using Terraria.GameContent;
 using Macrocosm.Common.Drawing.Stars;
 using Macrocosm.Common.Drawing;
+using Terraria.Graphics.Shaders;
 
 namespace Macrocosm.Backgrounds.Moon
 {
-    public class MoonSky : CustomSky
+    public class MoonSky : CustomSky, ILoadable
     {
         public bool Active;
         public float Intensity;
@@ -18,41 +19,20 @@ namespace Macrocosm.Backgrounds.Moon
         private static readonly StarsDrawing moonStarsDay = new();
         private static readonly StarsDrawing moonStarsNight = new();
 
-        const float fadeOutTimeDawn = 7200f; // 4:30-6:30: nebula and night stars dim
+        const float fadeOutTimeDawn = 7200f; //  4:30 -  6:30: nebula and night stars dim
         const float fadeInTimeDusk = 46800f; // 17:30 - 19:30: nebula and night stars brighten
 
-        public static void SpawnStarsOnMoon()
+        public void Load(Mod mod)
         {
-            moonStarsDay.SpawnStars(100, 130, 1.4f, 0.05f);
-            moonStarsNight.SpawnStars(700, 900, 0.8f, 0.05f);
+            if (Main.dedServ)
+                return;
+
+            MoonSky moonSky = new MoonSky();
+            Filters.Scene["Macrocosm:MoonSky"] = new Filter(new ScreenShaderData("FilterMiniTower").UseColor(0f, 0f, 0f).UseOpacity(0f), EffectPriority.High);
+            SkyManager.Instance["Macrocosm:MoonSky"] = moonSky;
         }
 
-        public static void ClearStarsOnMoon()
-        {
-            moonStarsDay.Clear();
-            moonStarsNight.Clear();
-        }
-
-        public static void DrawMoonNebula(float brightness)
-        {
-            Texture2D nebula = Main.moonType switch
-            {
-                1 => ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/NebulaYellow").Value,
-                2 => ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/NebulaRinged").Value,
-                3 => ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/NebulaMythril").Value,
-                4 => ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/NebulaBlue").Value,
-                5 => ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/NebulaGreen").Value,
-                6 => ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/NebulaPink").Value,
-                7 => ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/NebulaOrange").Value,
-                8 => ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/NebulaPurple").Value,
-                _ => ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/NebulaNormal").Value,
-            };
-
-            Color nebulaColor = Color.White * brightness;
-            nebulaColor.A = 0;
-
-            Main.spriteBatch.Draw(nebula, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), nebulaColor);
-        }
+        public void Unload() { }
 
         public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth)
         {
@@ -77,8 +57,41 @@ namespace Macrocosm.Backgrounds.Moon
                 moonStarsNight.Draw(nightStarBrightness);
 
                 RotatingCelestialBody.Draw(sunTexture, dayTime: true);
-                ParallaxingCelestialBody.Draw(earthBody, earthAtmo, 0.9f, 0f, -250f, 0.01f, 0.12f);
+                ParallaxingCelestialBody.Draw(earthBody, earthAtmo, 0.9f, 0f, -200f, 0.01f, 0.12f);
             }
+        }
+
+        public static void SpawnStarsOnMoon()
+        {
+            moonStarsDay.SpawnStars(100, 130, 1.4f, 0.05f);
+            moonStarsNight.SpawnStars(600, 700, 0.8f, 0.05f);
+        }
+
+        public static void ClearStarsOnMoon()
+        {
+            moonStarsDay.Clear();
+            moonStarsNight.Clear();
+        }
+
+        private static void DrawMoonNebula(float brightness)
+        {
+            Texture2D nebula = Main.moonType switch
+            {
+                1 => ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/NebulaYellow").Value,
+                2 => ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/NebulaRinged").Value,
+                3 => ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/NebulaMythril").Value,
+                4 => ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/NebulaBlue").Value,
+                5 => ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/NebulaGreen").Value,
+                6 => ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/NebulaPink").Value,
+                7 => ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/NebulaOrange").Value,
+                8 => ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/NebulaPurple").Value,
+                _ => ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/NebulaNormal").Value,
+            };
+
+            Color nebulaColor = Color.White * brightness;
+            nebulaColor.A = 0;
+
+            Main.spriteBatch.Draw(nebula, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), nebulaColor);
         }
 
         private static float ComputeBrightness(double fadeOutTimeDawn, double fadeInTimeDusk, float maxBrightnessDay, float maxBrightnessNigt)
@@ -109,7 +122,6 @@ namespace Macrocosm.Backgrounds.Moon
 
             return brightness;
         }
-
 
         public override void Update(GameTime gameTime)
         {

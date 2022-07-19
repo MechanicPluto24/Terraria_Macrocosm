@@ -43,8 +43,8 @@ namespace Macrocosm.Content.Subworlds.Moon
         private Texture2D earthBackground;
         private Texture2D earthAtmoBackground;
         private string chosenMessage;
-        private StarsDrawing starsDrawing = new();
-        private TextFileLoader textFileLoader = new();
+        private readonly StarsDrawing starsDrawing = new();
+        private readonly TextFileLoader textFileLoader = new();
 
         public override void OnEnter()
         {
@@ -75,6 +75,7 @@ namespace Macrocosm.Content.Subworlds.Moon
             starsDrawing.SpawnStars(100, 175);
 
             SkyManager.Instance.Deactivate("Macrocosm:MoonSky");
+            MoonSky.ClearStarsOnMoon();
         }
 
         public override void Load()

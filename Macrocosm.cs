@@ -9,47 +9,45 @@ using Terraria.Graphics.Shaders;
 using Macrocosm.Content.Systems.Music;
 using Macrocosm.Backgrounds.Moon;
 using Macrocosm.Content.Tiles;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 
 namespace Macrocosm
 {
     public class Macrocosm : Mod {
         public static Mod Instance => ModContent.GetInstance<Macrocosm>();
+
+        public const string emptyTexPath = "Macrocosm/Assets/Empty";
+        public static Asset<Texture2D> EmptyTexAsset { get; set; }
+        public static Texture2D EmptyTex => EmptyTexAsset.Value;
+
         public override void Load() {
 
-            Content.NPCs.GlobalNPCs.LowGravityNPC.DetourNPCGravity();
-            On.Terraria.UI.ItemSlot.PickItemMovementAction += MoonCoin_AllowCoinSlotPlacement;
+            EmptyTexAsset = ModContent.Request<Texture2D>(emptyTexPath);
+            RyanModCalls();
+        }
 
-            CurrencyManager.LoadCurrencies();
-
-            if (!Main.dedServ)
-                LoadMoonSky();
-            
+        private void RyanModCalls()
+        {
             try
             {
                 var ta = ModLoader.GetMod("TerrariaAmbience");
-                var taAPI = ModLoader.GetMod("TerrariaAmbienceAPI");
-                ta?.Call("AddTilesToList", null, "Stone", Array.Empty<string>(), new int[] { ModContent.TileType<Regolith>()}); 
-                taAPI?.Call("Ambience", this, "MoonAmbience", "Sounds/Ambient/Moon", 1f, 0.0075f, new Func<bool>(SubworldSystem.IsActive<Moon>));
+                ta?.Call("AddTilesToList", null, "Stone", Array.Empty<string>(), new int[] { ModContent.TileType<Regolith>() });
             }
             catch (Exception e)
             {
                 Logger.Warn(e.Message + " failed to load TerrariaAmbience. ");
             }
 
-        }
-
-        private int MoonCoin_AllowCoinSlotPlacement(On.Terraria.UI.ItemSlot.orig_PickItemMovementAction orig, Item[] inv, int context, int slot, Item checkItem) {
-            if (context == 1 && checkItem.type == ModContent.ItemType<MoonCoin>()) {
-                return 0;
-            } else {
-                return orig(inv, context, slot, checkItem);
+            try
+            {
+                var taAPI = ModLoader.GetMod("TerrariaAmbienceAPI");
+                taAPI?.Call("Ambience", this, "MoonAmbience", "Sounds/Ambient/Moon", 1f, 0.0075f, new Func<bool>(SubworldSystem.IsActive<Moon>));
             }
-        }
-
-        private void LoadMoonSky() {
-            MoonSky moonSky = new MoonSky();
-            Filters.Scene["Macrocosm:MoonSky"] = new Filter(new ScreenShaderData("FilterMiniTower").UseColor(0f, 0f, 0f).UseOpacity(0f), EffectPriority.High);
-            SkyManager.Instance["Macrocosm:MoonSky"] = moonSky;
+            catch (Exception e)
+            {
+                Logger.Warn(e.Message + " failed to load TerrariaAmbienceAPI. ");
+            }
         }
     }
 }
