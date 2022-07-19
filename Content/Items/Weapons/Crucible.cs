@@ -4,11 +4,11 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Common.Utility;
+using Macrocosm.Content.Items.GlobalItems;
 
 namespace Macrocosm.Content.Items.Weapons
 {
-	public class Crucible : ModItem
+    public class Crucible : ModItem
 	{
 		public override void SetStaticDefaults() 
 		{

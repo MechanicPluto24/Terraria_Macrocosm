@@ -5,11 +5,10 @@ using Terraria.ID;
 using Terraria.ObjectData;
 using System.Collections.Generic;
 
-namespace Macrocosm.Content.Subworlds
+namespace Macrocosm.Content.Tiles.GlobalTiles
 {
     public class LightSourceGlobalTile : GlobalTile
     {
-
         /// <summary>
         /// Turns off placed torches, campfires and other blocks with fire when placed on our subworlds 
         /// </summary>
@@ -17,7 +16,7 @@ namespace Macrocosm.Content.Subworlds
         {
             if (SubworldSystem.AnyActive<Macrocosm>())
             {
-                if (IsTileWithFire(i, j, type)) // TODO: make a list of tiles and tileframes(?) that appear to use fire 
+                if (IsTileWithFire(i, j, type)) 
                 {
                     WorldGen.TryToggleLight(i, j, false, skipWires: false);
                 }
@@ -45,7 +44,7 @@ namespace Macrocosm.Content.Subworlds
             }
         }
 
-        private bool IsTileWithFire(int i, int j, int type)
+        public static bool IsTileWithFire(int i, int j, int type)
         {
             Tile tile = Main.tile[i, j];
             int style = TileObjectData.GetTileStyle(tile);
@@ -61,7 +60,7 @@ namespace Macrocosm.Content.Subworlds
         }
 
 
-        private readonly List<int> enabledCandleStyles = new()
+        private static readonly List<int> enabledCandleStyles = new()
         {
              7,  // Glass
              12, // Skyware
@@ -76,7 +75,7 @@ namespace Macrocosm.Content.Subworlds
              36  // Stardust
         };
 
-        private readonly List<int> enabledChandelierStyles = new()
+        private static readonly List<int> enabledChandelierStyles = new()
         {
              15, // Skyware
              17, // Glass
@@ -89,7 +88,7 @@ namespace Macrocosm.Content.Subworlds
              43  // Stardust
         };
 
-        private readonly List<int> disabledLanternStyles = new()
+        private static readonly List<int> disabledLanternStyles = new()
         {
              8,  // Hanging Jack O' Lantern 
              10, // Cactus
@@ -109,7 +108,7 @@ namespace Macrocosm.Content.Subworlds
         };
 
 
-        private readonly List<int> disabledLampStyles = new() 
+        private static readonly List<int> disabledLampStyles = new()
         {
             0  ,  // Tiki torch 
             1  ,  // Cactus 
@@ -129,7 +128,7 @@ namespace Macrocosm.Content.Subworlds
             39    // Bamboo
         };
 
-        private readonly List<int> enabledCandelabras = new()
+        private static readonly List<int> enabledCandelabras = new()
         {
             6, // Glass
             11, // Skyware

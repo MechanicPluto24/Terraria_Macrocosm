@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using Macrocosm.Backgrounds.Moon;
 
-namespace Macrocosm.Common.Drawing.Stars
+namespace Macrocosm.Common.Hooks
 {
     public class DuskDawnHook : ILoadable
     {

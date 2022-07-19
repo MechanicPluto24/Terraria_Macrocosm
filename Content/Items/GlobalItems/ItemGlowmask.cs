@@ -8,13 +8,14 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace Macrocosm.Common.Utility{
+namespace Macrocosm.Content.Items.GlobalItems
+{
 
     /// <summary>
-    /// Adds glowmask on item use to items that have it 
+    /// Adds glowmask on item use to GlobalItems that have it 
     /// Code by qwerty3.14, Hallam
     /// </summary>
-    class ItemGlowLayer : PlayerDrawLayer 
+    class ItemGlowLayer : PlayerDrawLayer
     {
         public override void SetStaticDefaults()
         {
@@ -83,7 +84,7 @@ namespace Macrocosm.Common.Utility{
                     {
                         flag2 = false;
                     }
-                    if (drawInfo.shadow != 0f || drawInfo.drawPlayer.frozen || !(flag || flag2) || itemID <= 0 || drawInfo.drawPlayer.dead || heldItem.noUseGraphic || (drawInfo.drawPlayer.wet && heldItem.noWet) || (drawInfo.drawPlayer.happyFunTorchTime && drawInfo.drawPlayer.inventory[drawInfo.drawPlayer.selectedItem].createTile == TileID.Torches && drawInfo.drawPlayer.itemAnimation == 0))
+                    if (drawInfo.shadow != 0f || drawInfo.drawPlayer.frozen || !(flag || flag2) || itemID <= 0 || drawInfo.drawPlayer.dead || heldItem.noUseGraphic || drawInfo.drawPlayer.wet && heldItem.noWet || drawInfo.drawPlayer.happyFunTorchTime && drawInfo.drawPlayer.inventory[drawInfo.drawPlayer.selectedItem].createTile == TileID.Torches && drawInfo.drawPlayer.itemAnimation == 0)
                     {
                         return;
                     }

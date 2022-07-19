@@ -5,13 +5,14 @@ using System.Reflection;
 using Macrocosm.Content.Subworlds.Moon;
 
 namespace Macrocosm.Content.NPCs.GlobalNPCs {
-    public class LowGravityNPC : GlobalNPC {
+    public class LowGravityNPC : GlobalNPC 
+    {
         public override bool InstancePerEntity => true;
         protected override bool CloneNewInstances => true;
 
         public static FieldInfo NPCGravity { get; private set; }
 
-        public static void DetourNPCGravity() {
+        public override void Load() {
             NPCGravity = typeof(NPC).GetField("gravity", BindingFlags.NonPublic | BindingFlags.Static);
             On.Terraria.NPC.UpdateNPC_UpdateGravity += NPC_UpdateNPC_UpdateGravity;
         }

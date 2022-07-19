@@ -6,9 +6,9 @@ using Macrocosm.Content.Subworlds.Moon;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.GameContent.Ambience;
 
-namespace Macrocosm.Content.Subworlds
+namespace Macrocosm.Common.Hooks
 {
-    public class RemoveBackgroundAmbient : ILoadable
+    public class RemoveBgAmbientHook : ILoadable
     {
         public void Load(Mod mod)
         {
