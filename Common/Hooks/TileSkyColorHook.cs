@@ -11,12 +11,12 @@ namespace Macrocosm.Common.Hooks
     {
         public void Load(Mod mod)
         {
-            On.Terraria.Main.ApplyColorOfTheSkiesToTiles += GrayscaleTileColor;
+            On.Terraria.Main.ApplyColorOfTheSkiesToTiles += ModifyTileColor;
         }
 
         public void Unload() { }
 
-        private static void GrayscaleTileColor(On.Terraria.Main.orig_ApplyColorOfTheSkiesToTiles orig)
+        private static void ModifyTileColor(On.Terraria.Main.orig_ApplyColorOfTheSkiesToTiles orig)
         {
             if (SubworldSystem.IsActive<Moon>())
             {

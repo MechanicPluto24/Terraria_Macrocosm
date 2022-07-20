@@ -38,7 +38,7 @@ namespace Macrocosm.Backgrounds.Moon
         {
             Texture2D skyTexture = ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/MoonSky").Value;
             Texture2D sunTexture = ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/Sun_0").Value;
-            Texture2D earthBody = ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/EarthTransparent").Value;
+            Texture2D earthBody = ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/EarthAtmoless2").Value;
             Texture2D earthAtmo = ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/EarthAtmo").Value;
 
             if (maxDepth >= float.MaxValue && minDepth < float.MaxValue)

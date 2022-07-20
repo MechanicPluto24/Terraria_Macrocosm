@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Items.Weapons
 			Item.height = 16;
 			Item.useTime = 34;
 			Item.useAnimation = 34;
-			Item.useStyle = ItemUseStyleID.Shoot; // was HoldingOut
+			Item.useStyle = ItemUseStyleID.Shoot; 
 			Item.noMelee = true;
 			Item.knockBack = 8f;
 			Item.value = 10000;
@@ -47,13 +47,13 @@ namespace Macrocosm.Content.Items.Weapons
 			{
 				Item.useTime = 68;
 				Item.useAnimation = 68;
-				Item.shoot =  ProjectileType<Content.Projectiles.Friendly.Weapons.CruithneBlackSlug>();
+				Item.shoot =  ProjectileType<Projectiles.Friendly.Weapons.CruithneBlackSlug>();
 			}
 			else
 			{
 				Item.useTime = 34;
 				Item.useAnimation = 34;
-				Item.shoot =  ProjectileType<Content.Projectiles.Friendly.Weapons.CruithneGreenSlug>();
+				Item.shoot =  ProjectileType<Projectiles.Friendly.Weapons.CruithneGreenSlug>();
 			}
 			return base.CanUseItem(player);
 		}
