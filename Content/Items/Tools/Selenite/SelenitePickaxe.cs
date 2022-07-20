@@ -1,5 +1,6 @@
 using Macrocosm.Content.Items.Materials;
 using Terraria;
+using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -9,9 +10,8 @@ namespace Macrocosm.Content.Items.Tools.Selenite
     {
         public override void SetStaticDefaults()
         {
-
+            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
-
         public override void SetDefaults()
         {
             Item.damage = 90;

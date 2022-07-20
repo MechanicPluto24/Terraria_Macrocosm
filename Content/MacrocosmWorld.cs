@@ -15,6 +15,8 @@ namespace Macrocosm.Content {
 
         public static int moonBiome = 0;
 
+        public static int moonType = 0;
+
         public override void TileCountsAvailable(ReadOnlySpan<int> tileCounts) {
             moonBiome = tileCounts[ModContent.TileType<Regolith>()];
         }
@@ -24,23 +26,10 @@ namespace Macrocosm.Content {
 
         public override void PreUpdateWorld()
         {
+            Main.moonType = moonType;
+
             if (SubworldSystem.AnyActive<Macrocosm>())
             {
-                // time update logic (behaves weird otherwise)
-                //if (Main.dayTime && Main.time >= Main.dayLength)
-                //{
-                //    Main.dayTime = false;
-                //    Main.time = 0;
-                //    OnDusk();
-                //}
-                //if (!Main.dayTime && Main.time >= Main.nightLength)
-                //{
-                //    Main.dayTime = true;
-                //    Main.bloodMoon = false; // we can actually control how long a blood moon will be 
-                //    Main.time = 0;
-                //    OnDawn();
-                //}
-
                 Main.numClouds = 0;
                 Main.windSpeedCurrent = 0;
                 Main.weatherCounter = 0;
@@ -48,7 +37,6 @@ namespace Macrocosm.Content {
                 Main.StopRain(); // Rain, rain, go away, come again another day
                 Main.StopSlimeRain();
             }
-
         }
 
         public override void ModifyTimeRate(ref double timeRate, ref double tileUpdateRate, ref double eventUpdateRate)
@@ -60,6 +48,11 @@ namespace Macrocosm.Content {
             {
                 timeRate = freezeTime ? 0f : Moon.TimeRate * (Main.fastForwardTime ? 60 : timeRateModifier); 
             }
+        }
+
+        public override void PostWorldGen()
+        {
+            moonType = Main.moonType;
         }
 
     }

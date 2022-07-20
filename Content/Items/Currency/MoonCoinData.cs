@@ -6,7 +6,7 @@ namespace Macrocosm.Content.Items.Currency
 {
     public class MoonCoinData : CustomCurrencySingleCoin
     {
-        public Color UnuCredittextcolor = Color.DarkGray; //this defines the Custom Currency Buy Price color when shown in the shoop
+        public Color UnuCredittextcolor = Color.DarkGray; //this defines the Custom Currency Buy Price color when shown in the shop
 
         public MoonCoinData(int coinItemID, long currencyCap) : base(coinItemID, currencyCap) { }
 

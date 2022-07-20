@@ -1,17 +1,13 @@
 using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.Projectiles.Friendly.Weapons;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons
 {
-	public class ArtemiteSword : ModItem
+    public class ArtemiteGreatsword : ModItem
 	{
-		public override void SetStaticDefaults()
-		{
-			
-		}
-
 		public override void SetDefaults()
 		{
 			Item.damage = 225;
@@ -26,7 +22,7 @@ namespace Macrocosm.Content.Items.Weapons
 			Item.rare = ItemRarityID.Green;
 			Item.UseSound = SoundID.Item1;
 			Item.autoReuse = true;
-			Item.shoot = ModContent.ProjectileType<ArtemiteSwordProjectile>();
+			Item.shoot = ModContent.ProjectileType<ArtemiteGreatswordProjectile>();
 			Item.shootSpeed = 10f;
 		}
 

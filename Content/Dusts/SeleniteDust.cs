@@ -4,12 +4,11 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Dusts 
 {
-    public class RegolithDust : ModDust 
+    public class SeleniteDust : ModDust
     {
-        public override void OnSpawn(Dust dust) 
+        public override void OnSpawn(Dust dust)
         {
             dust.noLight = true;
-            // dust.velocity.Y = -1.5f;
             dust.scale = Main.rand.NextFloat(1, 1.35f);
         }
 
@@ -20,21 +19,20 @@ namespace Macrocosm.Content.Dusts
             dust.scale -= 0.02f;
             dust.rotation += (dust.velocity.Y - dust.velocity.X) / 5;
 
-
-            if (dust.scale < 0f) 
+            if (dust.scale < 0f)
             {
                 dust.active = false;
             }
             return false;
         }
 
-        public override bool MidUpdate(Dust dust) 
+        public override bool MidUpdate(Dust dust)
         {
             return true;
         }
 
 
-        public override Color? GetAlpha(Dust dust, Color lightColor) 
+        public override Color? GetAlpha(Dust dust, Color lightColor)
         {
             return new Color(lightColor.R, lightColor.G, lightColor.B, 255);
         }
