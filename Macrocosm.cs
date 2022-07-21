@@ -17,37 +17,27 @@ namespace Macrocosm
     public class Macrocosm : Mod {
         public static Mod Instance => ModContent.GetInstance<Macrocosm>();
 
-        public const string emptyTexPath = "Macrocosm/Assets/Empty";
-        public static Asset<Texture2D> EmptyTexAsset { get; set; }
-        public static Texture2D EmptyTex => EmptyTexAsset.Value;
+        public const string EmptyTexPath = "Macrocosm/Assets/Empty";
+        public static Texture2D EmptyTex { get; set; }
+        public static Mod GetModOrNull(string name) => ModLoader.TryGetMod(name, out Mod result) ? result : null;
 
         public override void Load() {
 
-            EmptyTexAsset = ModContent.Request<Texture2D>(emptyTexPath);
-            RyanModCalls();
-        }
+            EmptyTex = ModContent.Request<Texture2D>(EmptyTexPath).Value;
 
-        private void RyanModCalls()
-        {
-            try
-            {
-                var ta = ModLoader.GetMod("TerrariaAmbience");
+            #region Ryan's mods calls
+
+            Mod ta = GetModOrNull("TerrariaAmbience");
+            if (ta == null)
                 ta?.Call("AddTilesToList", null, "Stone", Array.Empty<string>(), new int[] { ModContent.TileType<Regolith>() });
-            }
-            catch (Exception e)
-            {
-                Logger.Warn(e.Message + " failed to load TerrariaAmbience. ");
-            }
 
-            try
-            {
-                var taAPI = ModLoader.GetMod("TerrariaAmbienceAPI");
+
+            Mod taAPI = GetModOrNull("TerrariaAmbienceAPI");
+            if (taAPI != null)
                 taAPI?.Call("Ambience", this, "MoonAmbience", "Sounds/Ambient/Moon", 1f, 0.0075f, new Func<bool>(SubworldSystem.IsActive<Moon>));
-            }
-            catch (Exception e)
-            {
-                Logger.Warn(e.Message + " failed to load TerrariaAmbienceAPI. ");
-            }
+
+            #endregion
         }
+
     }
 }

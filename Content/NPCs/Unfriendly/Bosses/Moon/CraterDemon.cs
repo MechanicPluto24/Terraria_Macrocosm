@@ -13,9 +13,11 @@ using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon{
+namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon
+{
 	[AutoloadBossHead]
-	public class CraterDemon : ModNPC{
+	public class CraterDemon : ModNPC
+	{
 		private struct AttackInfo{
 			public Func<CraterDemon, int> initialProgress;
 			public int initialTimer;
@@ -141,16 +143,20 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon{
 
 		public const int PortalTimerMax = (int)(4f * 60 + 1.5f * 60 + 24);  //Portal spawning leadup + time portals are active before they shrink
 
-		public override void SetStaticDefaults(){
+		public override void SetStaticDefaults()
+		{
 			DisplayName.SetDefault("Crater Demon");
 			Main.npcFrameCount[NPC.type] = 6;
 			NPCID.Sets.TrailCacheLength[NPC.type] = 5;
 			NPCID.Sets.TrailingMode[NPC.type] = 0;
+
+			NPCID.Sets.BossBestiaryPriority.Add(Type);
 		}
 
 		private int baseWidth, baseHeight;
 
-		public override void SetDefaults(){
+		public override void SetDefaults()
+		{
 			baseWidth = NPC.width = 178;
 			baseHeight = NPC.height = 196;
 			NPC.knockBackResist = 0f;
@@ -172,8 +178,6 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon{
 			Music = MusicID.Boss1;
 
 			NPC.HitSound = SoundID.NPCHit2;
-
-			SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBiome>().Type }; // Associates this NPC with the Moon Biome in Bestiary
 		}
 
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)

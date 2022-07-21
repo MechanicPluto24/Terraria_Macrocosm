@@ -4,9 +4,12 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Macrocosm.Content.Dusts;
 
-namespace Macrocosm.Content.Tiles {
-	public class Protolith : ModTile {
-		public override void SetStaticDefaults() {
+namespace Macrocosm.Content.Tiles 
+{
+	public class Protolith : ModTile 
+	{
+		public override void SetStaticDefaults() 
+		{
 			Main.tileSolid[Type] = true;
 			Main.tileBlockLight[Type] = true;
 			Main.tileLighted[Type] = true;
@@ -18,9 +21,11 @@ namespace Macrocosm.Content.Tiles {
 			AddMapEntry(new Color(65, 65, 65));
 			HitSound = SoundID.Tink;
 		}
-		public override bool CreateDust(int i, int j, ref int type) {
+
+		public override bool CreateDust(int i, int j, ref int type) 
+		{
 			type = Dust.NewDust(new Vector2(i, j).ToWorldCoordinates(), 16, 16, ModContent.DustType<ProtolithDust>());
 			return false;
 		}
-	}
+    }
 }
