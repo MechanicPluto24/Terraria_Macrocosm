@@ -38,7 +38,7 @@ namespace Macrocosm.Content.Projectiles.Tools
             #region Dust
             if (Main.rand.NextBool(4))
             {
-                int swingDust = Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, ModContent.DustType<ChandriumDust>(), -35 * player.direction, default, default, default, Main.rand.NextFloat(1.25f, 1.35f));
+                int swingDust = Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, ModContent.DustType<DianiteDust>(), -35 * player.direction, default, default, default, Main.rand.NextFloat(1.25f, 1.35f));
                 Main.dust[swingDust].velocity *= 0.05f;
             }
             #endregion

@@ -17,7 +17,6 @@ namespace Macrocosm.Content.Subworlds.Moon
         private double rockLayerLow = 0.0;
         private double rockLayerHigh = 0.0;
 
-
         private void CraterPass(GenerationProgress progress)
         {
             progress.Message = "Sculpting the Moon...";
@@ -177,7 +176,7 @@ namespace Macrocosm.Content.Subworlds.Moon
                         && Main.tile[tileX, tileY + 1].HasTile // Bottom tile is active
                         && Main.tile[tileX - 1, tileY + 1].HasTile // Bottom-left tile is active
                         && Main.tile[tileX + 1, tileY + 1].HasTile // Bottom-right tile is active
-                                                                    // The following will help to make the walls slightly lower than the terrain
+                                                                   // The following will help to make the walls slightly lower than the terrain
                         && Main.tile[tileX, tileY - 2].HasTile // Top tile is active
                     )
                     {
@@ -266,7 +265,7 @@ namespace Macrocosm.Content.Subworlds.Moon
                                 if (Main.tile[tileX + 1, tileY].TileType != 190 && Main.tile[tileX + 1, tileY].TileType != 48 && Main.tile[tileX + 1, tileY].TileType != 232 && WorldGen.SolidTile(tileX - 1, tileY + 1) && WorldGen.SolidTile(tileX + 1, tileY) && !Main.tile[tileX - 1, tileY].HasTile && !Main.tile[tileX + 1, tileY - 1].HasTile)
                                 {
                                     WorldGen.PlaceTile(tileX, tileY, Main.tile[tileX, tileY + 1].TileType);
-                                    if (WorldGen.genRand.Next(2) == 0)
+                                    if (WorldGen.genRand.NextBool(2))
                                         WorldGen.SlopeTile(tileX, tileY, 2);
                                     else
                                         WorldGen.PoundTile(tileX, tileY);
@@ -282,7 +281,7 @@ namespace Macrocosm.Content.Subworlds.Moon
                                 }
                             }
                         }
-                        else if (!Main.tile[tileX, tileY + 1].HasTile && WorldGen.genRand.NextBool(2)&& WorldGen.SolidTile(tileX, tileY) && !Main.tile[tileX - 1, tileY].IsHalfBlock && !Main.tile[tileX + 1, tileY].IsHalfBlock && Main.tile[tileX - 1, tileY].Slope == SlopeType.Solid && Main.tile[tileX + 1, tileY].Slope == SlopeType.Solid && WorldGen.SolidTile(tileX, tileY - 1))
+                        else if (!Main.tile[tileX, tileY + 1].HasTile && WorldGen.genRand.NextBool(2) && WorldGen.SolidTile(tileX, tileY) && !Main.tile[tileX - 1, tileY].IsHalfBlock && !Main.tile[tileX + 1, tileY].IsHalfBlock && Main.tile[tileX - 1, tileY].Slope == SlopeType.Solid && Main.tile[tileX + 1, tileY].Slope == SlopeType.Solid && WorldGen.SolidTile(tileX, tileY - 1))
                         {
                             if (WorldGen.SolidTile(tileX - 1, tileY) && !WorldGen.SolidTile(tileX + 1, tileY) && WorldGen.SolidTile(tileX - 1, tileY - 1))
                                 WorldGen.SlopeTile(tileX, tileY, 3);
@@ -352,8 +351,8 @@ namespace Macrocosm.Content.Subworlds.Moon
                         if (regolithChance > 0.1)
                         {
                             //Main.tile[tileX, tileY].TileType = (ushort)ModContent.TileType<Tiles.Regolith>();
-                           Main.tile[tileX, tileY].ClearTile();
-                           WorldGen.PlaceTile(tileX, tileY, (ushort)ModContent.TileType<Tiles.Regolith>());
+                            Main.tile[tileX, tileY].ClearTile();
+                            WorldGen.PlaceTile(tileX, tileY, (ushort)ModContent.TileType<Tiles.Regolith>());
                         }
                         regolithChance -= 0.02f;
                         if (regolithChance <= 0) break;
@@ -382,7 +381,7 @@ namespace Macrocosm.Content.Subworlds.Moon
                 }
             }
         }
-        
+
         private void GroundPass(GenerationProgress progress)
         {
             progress.Message = "Landing on the Moon...";
@@ -392,18 +391,19 @@ namespace Macrocosm.Content.Subworlds.Moon
             int surfaceHeight = (int)surfaceLayer; // If the moon's world size is variable, this probably should depend on that
             rockLayerLow = surfaceHeight;
             rockLayerHigh = surfaceHeight;
+
+            ushort protolithType = (ushort)ModContent.TileType<Tiles.Protolith>();
+
             #region Base ground
             // Generate base ground
             for (int i = 0; i < Main.maxTilesX; i++)
             {
                 // Here, we just focus on the progress along the x-axis
-                progress.Set((i / (float)Main.maxTilesX - 1)); // Controls the progress bar, should only be set between 0f and 1f
+                progress.Set(i / (float)(Main.maxTilesX - 1)); // Controls the progress bar, should only be set between 0f and 1f
                 for (int j = surfaceHeight; j < subworld.Height; j++)
                 {
-                    //Main.tile[i, j].active(true);
-                    //Main.tile[i, j].TileType = (ushort)ModContent.TileType<Tiles.Protolith>();
-
-                    WorldGen.PlaceTile(i, j, (ushort)ModContent.TileType<Tiles.Protolith>());
+                    WorldGen.PlaceTile(i, j, protolithType);
+                    //progress.Message = "Landing on the Moon... (" + i.ToString() + ", " + j.ToString() + ") " + progress.Value + " ";
                 }
 
                 if (WorldGen.genRand.Next(0, 10) == 0) // Not much deviation here
@@ -420,10 +420,23 @@ namespace Macrocosm.Content.Subworlds.Moon
 
                 if (surfaceHeight > rockLayerHigh)
                     rockLayerHigh = surfaceHeight;
-
             }
             #endregion
         }
+
+        public void SetSpawnPoint()
+        {
+            Main.spawnTileX = Main.maxTilesX / 2;
+            for (int tileY = 0; tileY < Main.maxTilesY; tileY++)
+            {
+                if (Main.tile[1000, tileY].HasTile)
+                {
+                    Main.spawnTileY = tileY;
+                    break;
+                }
+            }
+        }
+
         public MoonGen(string name, float loadWeight, Subworld sw) : base(name, loadWeight)
         {
             subworld = sw;
@@ -439,15 +452,7 @@ namespace Macrocosm.Content.Subworlds.Moon
             CavePass(progress);
             ScuffedSmoothPass(progress);
 
-            Main.spawnTileX = 1000;
-            for (int tileY = 0; tileY < Main.maxTilesY; tileY++)
-            {
-                if (Main.tile[1000, tileY].HasTile)
-                {
-                    Main.spawnTileY = tileY;
-                    break;
-                }
-            }
+            SetSpawnPoint();
 
             Main.dayTime = true;
         }

@@ -4,13 +4,15 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon {
-	public class MiniCraterDemon : ModNPC {
+	public class MiniCraterDemon : ModNPC
+	{
 		public ref float AI_Timer => ref NPC.ai[0];
 		public ref float AI_Attack => ref NPC.ai[1];
 		public ref float AI_AttackProgress => ref NPC.ai[2];
@@ -30,16 +32,26 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon {
 
 		public const int WaitTime = 4 * 60;
 
-		public override void SetStaticDefaults() {
+		public override void SetStaticDefaults() 
+		{
 			DisplayName.SetDefault("Crater Demonite");
 			Main.npcFrameCount[NPC.type] = 4;
 			NPCID.Sets.TrailCacheLength[NPC.type] = 5;
 			NPCID.Sets.TrailingMode[NPC.type] = 0;
+
+			NPCID.Sets.NPCBestiaryDrawModifiers bestiaryData = new(0) 
+			{
+				Frame = 2,
+				Position = new Vector2(-2f, 0f),
+				Velocity = 1f
+			};
+
+			NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, bestiaryData);
 		}
 
-		public override void SetDefaults() {
+		public override void SetDefaults()
+		{
 			NPC.width = NPC.height = 56;
-
 			NPC.lifeMax = 6000;
 			NPC.defense = 60;
 			NPC.damage = 80;
@@ -51,12 +63,13 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon {
 
 			NPC.HitSound = SoundID.NPCHit2;
 			NPC.DeathSound = SoundID.NPCDeath2;
-
-			SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBiome>().Type }; // Associates this NPC with the Moon Biome in Bestiary
 		}
 
 		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
 		{
+			int associatedNPCType = ModContent.NPCType<CraterDemon>();
+			bestiaryEntry.UIInfoProvider = new CommonEnemyUICollectionInfoProvider(ContentSamples.NpcBestiaryCreditIdsByNpcNetIds[associatedNPCType], quickUnlock: true);
+
 			bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[]
 			{
 				new FlavorTextBestiaryInfoElement(

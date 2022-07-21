@@ -4,7 +4,7 @@ using Terraria.GameContent.Creative;
 using Terraria.ModLoader;
 using Macrocosm.Content.Projectiles.Tools;
 
-namespace Macrocosm.Content.Items.Tools.Dianite
+namespace Macrocosm.Content.Items.Tools.Selenite
 {
     public class SeleniteDrill : ModItem
 	{

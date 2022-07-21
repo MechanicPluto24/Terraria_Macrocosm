@@ -50,7 +50,7 @@ namespace Macrocosm.Common.Hooks
 
         private static int RemoveTorchDust(On.Terraria.WorldGen.orig_KillTile_MakeTileDust orig, int i, int j, Tile tileCache)
         {
-            if(SubworldSystem.AnyActive<Macrocosm>() && LightSourceGlobalTile.IsTileWithFire(i, j, tileCache.TileType))
+            if(SubworldSystem.AnyActive<Macrocosm>() && LightSourceGlobalTile.IsTileWithFlame(i, j, tileCache.TileType))
             {
                 return -1;
             }

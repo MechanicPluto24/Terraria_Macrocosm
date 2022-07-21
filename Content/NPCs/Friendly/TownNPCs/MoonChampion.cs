@@ -27,6 +27,13 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
             NPCID.Sets.AttackTime[NPC.type] = 60;
             NPCID.Sets.AttackAverageChance[NPC.type] = 30;
             NPCID.Sets.HatOffsetY[NPC.type] = 0;
+
+            NPCID.Sets.NPCBestiaryDrawModifiers drawModifiers = new(0)
+            {
+                Velocity = 1f // Draws the NPC in the bestiary as if its walking +1 tiles in the x direction
+            };
+
+            NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, drawModifiers);
         }
         public override void SetDefaults()
         {

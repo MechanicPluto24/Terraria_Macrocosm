@@ -16,7 +16,7 @@ namespace Macrocosm.Content.Tiles.GlobalTiles
         {
             if (SubworldSystem.AnyActive<Macrocosm>())
             {
-                if (IsTileWithFire(i, j, type)) 
+                if (IsTileWithFlame(i, j, type)) 
                 {
                     WorldGen.TryToggleLight(i, j, false, skipWires: false);
                 }
@@ -27,7 +27,7 @@ namespace Macrocosm.Content.Tiles.GlobalTiles
         /// <summary>
         /// Disables wiring on our subworlds for chosen light sources 
         /// </summary>
-        public override bool PreHitWire(int i, int j, int type) => !(SubworldSystem.AnyActive<Macrocosm>() && IsTileWithFire(i, j, type));
+        public override bool PreHitWire(int i, int j, int type) => !(SubworldSystem.AnyActive<Macrocosm>() && IsTileWithFlame(i, j, type));
 
 
         /// <summary>
@@ -44,7 +44,10 @@ namespace Macrocosm.Content.Tiles.GlobalTiles
             }
         }
 
-        public static bool IsTileWithFire(int i, int j, int type)
+        /// <summary>
+        /// Returns true if tile[i,j] is a block with flames 
+        /// </summary>
+        public static bool IsTileWithFlame(int i, int j, int type)
         {
             Tile tile = Main.tile[i, j];
             int style = TileObjectData.GetTileStyle(tile);
@@ -60,6 +63,7 @@ namespace Macrocosm.Content.Tiles.GlobalTiles
         }
 
 
+        // No style IDs unfotunately
         private static readonly List<int> enabledCandleStyles = new()
         {
              7,  // Glass

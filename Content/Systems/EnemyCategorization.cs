@@ -1,7 +1,7 @@
 using Terraria.ModLoader;
 using System.Collections.Generic;
-using Macrocosm.Content.NPCs.Unfriendly.Enemies;
 using System;
+using Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon;
 
 namespace Macrocosm.Content.Systems
 {
@@ -10,6 +10,7 @@ namespace Macrocosm.Content.Systems
     /// </summary>
     // This doesn't seem like a very flexible way to categorize. Just make superclasses instead.
     // You can check for categories with an is statement (npc.modNPC is MoonEnemy) - 4mbr0s3 2
+    // ^ Did that, bye bye EnemyCategorization - Feldy
     [Obsolete]
     public sealed class EnemyCategorization
     {
