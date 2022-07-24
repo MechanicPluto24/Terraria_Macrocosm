@@ -7,6 +7,7 @@ using Terraria.DataStructures;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.UI;
 
 namespace Macrocosm.Content.Items.Weapons
 {
@@ -26,82 +27,71 @@ namespace Macrocosm.Content.Items.Weapons
 			Item.height = 26;
 			Item.useTime = 8;
 			Item.useAnimation = 8;
-			Item.useStyle = ItemUseStyleID.Shoot; 
+			Item.useStyle = ItemUseStyleID.Shoot;
 			Item.noMelee = true;
+			Item.channel = true;
 			Item.knockBack = 8f;
 			Item.value = 10000;
-			Item.channel = true;
 			Item.rare = ItemRarityID.Purple;
-			Item.UseSound = SoundID.Item41;
+			Item.UseSound = SoundID.Item41; // do it in UseItem?
 			Item.shoot = ProjectileID.PurificationPowder; // For some reason, all the guns in the vanilla source have this.
 			Item.autoReuse = true;
 			Item.shootSpeed = 20f;
 			Item.useAmmo = AmmoID.Bullet;
-		}
+        }
+
+		private const int altUseCooldown = 30;
+		private int altUseCounter = altUseCooldown;
 
         public override Vector2? HoldoutOffset() => new Vector2(-10, 0);
 
-		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
+		public override bool AltFunctionUse(Player player) => altUseCounter == altUseCooldown;
+
+        public override bool CanUseItem(Player player) => true;
+
+		public override bool? UseItem(Player player)
 		{
-			position = (Vector2)(player.Center + HoldoutOffset() + new Vector2(0,-2));
-			type = ProjectileID.Bullet;
+			//if (player.altFunctionUse == 2)
+			//{
+			//	Item.useAmmo = AmmoID.Rocket;
+			//}
+            //else
+            //{
+			//	Item.useAmmo = AmmoID.Bullet;
+            //}
+
+			return true;
 		}
-	}
 
-	public class HoldOut : PlayerDrawLayer
-	{
-		public override Position GetDefaultPosition() => new BeforeParent(PlayerDrawLayers.HeldItem);
-
-        public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
+        public override void UpdateInventory(Player player)
         {
-			return drawInfo.drawPlayer.HeldItem?.type == ModContent.ItemType<AssaultRifle>();
+			if (player.altFunctionUse == 2 || altUseCounter < altUseCooldown)
+				altUseCounter--;
+
+			if (altUseCounter == 0)
+				altUseCounter = altUseCooldown;
 		}
 
-		private Asset<Texture2D> weaponTex;
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+        {
+			return true;
+		}
 
-		protected override void Draw(ref PlayerDrawSet drawInfo)
+        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
 		{
-			if (weaponTex == null)
+			int defaulType = type;
+
+			if (player.altFunctionUse == 2)
 			{
-				weaponTex = ModContent.Request<Texture2D>("Macrocosm/Content/Items/Weapons/AssaultRifle");
+				type = ProjectileID.RocketI;
+				velocity /= 3f;
+			}
+            else
+            {
+				type = defaulType;
 			}
 
-			Texture2D itemTexture = weaponTex.Value;
-
-			ModItem weapon = drawInfo.heldItem.ModItem;
-
-			Rectangle? sourceRect = new Rectangle(0, 0, itemTexture.Width, itemTexture.Height);
-			Vector2 vector3 = new(itemTexture.Width / 2, itemTexture.Height / 2);
-			Vector2 vector4 = Main.DrawPlayerItemPos(drawInfo.drawPlayer.gravDir, weapon.Type);
-			int num12 = (int)vector4.X;
-			vector3.Y = vector4.Y;
-			Vector2 origin6 = new(-num12, itemTexture.Height / 2);
-			if (drawInfo.drawPlayer.direction == -1)
-				origin6 = new Vector2(itemTexture.Width + num12, itemTexture.Height / 2);
-
-			Vector2 offset = (Vector2)weapon.HoldoutOffset() - new Vector2(0,0);
-
-			Vector2 position = new Vector2((int)(drawInfo.drawPlayer.position.X - Main.screenPosition.X + vector3.X + offset.X),
-										   (int)(drawInfo.drawPlayer.position.Y - Main.screenPosition.Y + vector3.Y + offset.Y));
-
-
-			float rotation = (Main.MouseWorld - drawInfo.drawPlayer.MountedCenter).ToRotation();
-
-
-			DrawData drawData = new DrawData(
-				itemTexture, 
-				position,
-				sourceRect, 
-				new Color(250, 250, 250, 255),
-				rotation,
-				origin6, 
-				1f,
-				drawInfo.itemEffect, 
-				0);
-
-			drawInfo.DrawDataCache.Add(drawData);
+			position.Y -= 2;
 		}
 	}
-
-
 }
