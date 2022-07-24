@@ -9,8 +9,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Weapons
 {
 	public class ArtemiteSpearProjectile : ModProjectile
 	{
-		protected virtual float HoldoutRangeMin => 145f;
-		protected virtual float HoldoutRangeMax => 190f;
+		protected virtual float HoldoutRangeMin => 50f;
+		protected virtual float HoldoutRangeMax => 200f;
 
 		public override void SetStaticDefaults() {
 			DisplayName.SetDefault("Artemite Spear");
@@ -18,8 +18,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Weapons
 
 		public override void SetDefaults() {
 			Projectile.CloneDefaults(ProjectileID.Spear); // Clone the default values for a vanilla spear. Spear specific values set for width, height, aiStyle, friendly, penetrate, tileCollide, scale, hide, ownerHitCheck, and melee.
-			Projectile.width = 116;
-			Projectile.height = 116; // uhhh???
+			Projectile.width = 36;
+			Projectile.height = 36; 
 		}
 
 		public override bool PreAI() {
@@ -28,53 +28,41 @@ namespace Macrocosm.Content.Projectiles.Friendly.Weapons
 
 			player.heldProj = Projectile.whoAmI; // Update the player's held projectile id
 
-			// Reset projectile time left if necessary
 			if (Projectile.timeLeft > duration)
-			{
 				Projectile.timeLeft = duration;
-			}
 
 			Projectile.velocity = Vector2.Normalize(Projectile.velocity); // Velocity isn't used in this spear implementation, but we use the field to store the spear's attack direction.
 
 			float halfDuration = duration * 0.5f;
 			float progress;
 
+			float holdoutOffset = 0f; 
+
 			// Here 'progress' is set to a value that goes from 0.0 to 1.0 and back during the item use animation.
 			if (Projectile.timeLeft < halfDuration)
 			{
 				progress = Projectile.timeLeft / halfDuration;
+				holdoutOffset = 45f; // Some offset so the handle doesn't return all the way back to the player
 			}
 			else 
 			{
 				progress = (duration - Projectile.timeLeft) / halfDuration;
 			}
 
-
 			// Move the projectile from the HoldoutRangeMin to the HoldoutRangeMax and back, using SmoothStep for easing the movement
-			Projectile.Center = player.MountedCenter + Vector2.SmoothStep(Projectile.velocity * HoldoutRangeMin, Projectile.velocity * HoldoutRangeMax, progress);
+			Projectile.Center = player.MountedCenter + Vector2.SmoothStep(Projectile.velocity * (HoldoutRangeMin + holdoutOffset), Projectile.velocity * HoldoutRangeMax, progress);
 
 			// Apply proper rotation to the sprite.
-			if (Projectile.spriteDirection == -1) {
-				// If sprite is facing left, rotate 45 degrees
-				Projectile.rotation += MathHelper.ToRadians(45f);
-			}
-			else {
-				// If sprite is facing right, rotate 135 degrees
-				Projectile.rotation += MathHelper.ToRadians(135f);
-			}
-
-
-			Vector2 shootPosition = Projectile.Center;
-			//shootPosition.X -= 9;
-
-			Vector2 shootVelocity = Projectile.velocity * 15f;
+			Projectile.rotation += MathHelper.ToRadians(Projectile.spriteDirection == -1 ? 45f : 135f);
 
 			if (Projectile.timeLeft == halfDuration)
 			{
+				Vector2 shootPosition = Projectile.Center;
+				Vector2 shootVelocity = Projectile.velocity * 15f;
 				Projectile.NewProjectile(Projectile.GetSource_FromThis(), shootPosition, shootVelocity, ModContent.ProjectileType<ArtemiteSpearProjectileShoot>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
 			}
 
-			// Avoid spawning dusts on dedicated servers
+			// Spawn dust on use
 			if (!Main.dedServ) {
 				if (Main.rand.NextBool(3)) {
 					Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<ArtemiteDust>(), Projectile.velocity.X * 2f, Projectile.velocity.Y * 2f, Scale: 1.2f);
