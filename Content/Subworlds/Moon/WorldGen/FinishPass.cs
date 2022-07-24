@@ -1,8 +1,6 @@
 ﻿using Terraria;
 using Terraria.IO;
 using Terraria.WorldBuilding;
-using Terraria.ModLoader;
-using Macrocosm.Content.Tiles;
 
 namespace Macrocosm.Content.Subworlds.Moon.Generation
 {
@@ -27,7 +25,7 @@ namespace Macrocosm.Content.Subworlds.Moon.Generation
             {
                 if (Main.tile[1000, tileY].HasTile)
                 {
-                    Main.spawnTileY = tileY;
+                    Main.spawnTileY = tileY - 1;
                     break;
                 }
             }

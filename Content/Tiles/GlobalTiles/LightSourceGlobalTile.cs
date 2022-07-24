@@ -14,12 +14,9 @@ namespace Macrocosm.Content.Tiles.GlobalTiles
         /// </summary>
         public override bool TileFrame(int i, int j, int type, ref bool resetFrame, ref bool noBreak)
         {
-            if (SubworldSystem.AnyActive<Macrocosm>())
+            if (SubworldSystem.AnyActive<Macrocosm>() && IsTileWithFlame(i, j, type))
             {
-                if (IsTileWithFlame(i, j, type)) 
-                {
-                    WorldGen.TryToggleLight(i, j, false, skipWires: false);
-                }
+                WorldGen.TryToggleLight(i, j, false, skipWires: false);
             }
             return true;
         }
@@ -35,12 +32,9 @@ namespace Macrocosm.Content.Tiles.GlobalTiles
         /// </summary>
         public override void RightClick(int i, int j, int type)
         {
-            if (SubworldSystem.AnyActive<Macrocosm>())
+            if (SubworldSystem.AnyActive<Macrocosm>() && type == TileID.Campfire)
             {
-                if (type == TileID.Campfire)
-                {
-                    WorldGen.TryToggleLight(i, j, false, skipWires: false);
-                }
+                WorldGen.TryToggleLight(i, j, false, skipWires: false);
             }
         }
 

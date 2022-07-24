@@ -76,15 +76,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Weapons
 
 			for (int i = 0; i < list.Count - 1; i++) {
 
+				bool tip = (i == list.Count - 2);
+
 				Rectangle frame = new(0, 0, frameWidth, frameHeight);
 				Vector2 origin = new(frameWidth/2, frameHeight/2);
 				float scale = 1;
 
-				bool tip = (i == list.Count - 2);
-
 				if (tip) {
 					frame.Y = 4 * frameHeight;
-					//frame.Height = 18;
 
 					// For a more impactful look, this scales the tip of the whip up when fully extended, and down when curled up.
 					Projectile.GetWhipSettings(Projectile, out float timeToFlyOut, out int _, out float _);
@@ -98,10 +97,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Weapons
 					if (dustChance > 0.2f && Main.rand.NextFloat() < dustChance * 0.5f)
 					{
 						Vector2 outwardsVector = list[^2].DirectionTo(list[^1]).SafeNormalize(Vector2.Zero);
-						int dustIdx = Dust.NewDust(list[^1] - texture.Size()/2, texture.Width, texture.Height, ModContent.DustType<ChandriumDust>(), 0f, 0f, 100, default, Main.rand.NextFloat(1f, 1.5f));
-						Main.dust[dustIdx].noGravity = true;
-						Main.dust[dustIdx].velocity *= Main.rand.NextFloat() * 0.8f;
-						Main.dust[dustIdx].velocity += outwardsVector * 0.8f;
+						Dust dust = Dust.NewDustDirect(list[^1] - texture.Size()/2, texture.Width, texture.Height, ModContent.DustType<ChandriumDust>(), 0f, 0f, 100, default, Main.rand.NextFloat(1f, 1.5f));
+						dust.noGravity = true;
+						dust.velocity *= Main.rand.NextFloat() * 0.8f;
+						dust.velocity += outwardsVector * 0.8f;
 					}
 				}
 				else if (i >= 19) {

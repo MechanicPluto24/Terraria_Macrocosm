@@ -31,7 +31,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Weapons
 			Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
 			Projectile.velocity.Y += 0.03f;
 
-			// Avoid spawning dusts on dedicated servers
 			if (!Main.dedServ)
 			{
 				if (Main.rand.NextBool(2))
@@ -45,17 +44,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Weapons
         {
             if (!Main.dedServ)
             {
-				for (int i = 0; i < Main.rand.Next(10, 20); i++)
+				for (int i = 0; i < Main.rand.Next(30, 40); i++)
 				{
-					int dustIdx = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<ArtemiteDust>(), 0f, .1f, Scale: 1f);
-					Main.dust[dustIdx].velocity.Y *= 0.2f;
+					Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<ArtemiteDust>(), 0f, .1f, Scale: 1f);
+					dust.velocity.Y *= 0.02f;
 				}
 			}
-		}
-
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit) {
-			// 3a: target.immune[Projectile.owner] = 20;
-			// 3b: target.immune[Projectile.owner] = 5;
 		}
 	}
 }

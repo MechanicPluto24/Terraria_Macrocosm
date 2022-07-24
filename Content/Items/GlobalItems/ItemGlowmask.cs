@@ -104,7 +104,7 @@ namespace Macrocosm.Content.Items.GlobalItems
                     }
                     //origin += vector;
                     float itemRotation = drawInfo.drawPlayer.itemRotation;
-                    if (heldItem.useStyle == 8)
+                    if (heldItem.useStyle == ItemUseStyleID.GolfPlay)
                     {
                         ref float x = ref position.X;
                         float num6 = x;
