@@ -1,6 +1,6 @@
-using Terraria.ModLoader;
-using Terraria;
 using SubworldLibrary;
+using Terraria;
+using Terraria.ModLoader;
 
 namespace Macrocosm {
     public class MacrocosmSystem : ModSystem {

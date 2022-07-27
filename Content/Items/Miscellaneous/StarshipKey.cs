@@ -3,17 +3,13 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Miscellaneous
-{
-    public class StarshipKey : ModItem
-    {
-        public override void SetStaticDefaults()
-        {
+namespace Macrocosm.Content.Items.Miscellaneous {
+    public class StarshipKey : ModItem {
+        public override void SetStaticDefaults() {
             Tooltip.SetDefault("This could take you to a spaceship subworld, if we knew how to make subworlds."); // FIXME: Please, dude (kirito) please this is cancer
         }
 
-        public override void SetDefaults()
-        {
+        public override void SetDefaults() {
             Item.width = 20;
             Item.height = 20;
             Item.maxStack = 1;
@@ -21,8 +17,7 @@ namespace Macrocosm.Content.Items.Miscellaneous
             Item.rare = ItemRarityID.Blue;
         }
 
-        public override void AddRecipes()
-        {
+        public override void AddRecipes() {
 
             Recipe recipe = Recipe.Create(Type);
             recipe.AddIngredient<ActivationCore>();

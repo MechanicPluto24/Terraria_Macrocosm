@@ -1,21 +1,17 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Content.Dusts;
+using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.ID;
 using Terraria.GameContent.Creative;
+using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Content.Dusts;
 
-namespace Macrocosm.Content.Items.Tools.Artemite
-{
-    public class ArtemiteAxe : ModItem
-    {
-        public override void SetStaticDefaults()
-        {
+namespace Macrocosm.Content.Items.Tools.Artemite {
+    public class ArtemiteAxe : ModItem {
+        public override void SetStaticDefaults() {
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
 
-        public override void SetDefaults()
-        {
+        public override void SetDefaults() {
             Item.damage = 65;
             Item.DamageType = DamageClass.Melee;
             Item.width = 50;
@@ -33,15 +29,13 @@ namespace Macrocosm.Content.Items.Tools.Artemite
             Item.tileBoost = 5;
         }
 
-        public override void MeleeEffects(Player player, Rectangle hitbox)
-        {
+        public override void MeleeEffects(Player player, Rectangle hitbox) {
             #region Variables
             float lightMultiplier = 0.25f;
             #endregion
 
             #region Dust
-            if (Main.rand.NextBool(4))
-            {
+            if (Main.rand.NextBool(4)) {
                 int swingDust = Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, ModContent.DustType<ArtemiteDust>(), -35 * player.direction, default, default, default, Main.rand.NextFloat(1.25f, 1.35f));
                 Main.dust[swingDust].velocity *= 0.05f;
             }

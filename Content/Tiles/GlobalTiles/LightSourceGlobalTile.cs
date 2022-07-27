@@ -1,21 +1,17 @@
-using Terraria;
 using SubworldLibrary;
-using Terraria.ModLoader;
-using Terraria.ID;
-using Terraria.ObjectData;
 using System.Collections.Generic;
+using Terraria;
+using Terraria.ID;
+using Terraria.ModLoader;
+using Terraria.ObjectData;
 
-namespace Macrocosm.Content.Tiles.GlobalTiles
-{
-    public class LightSourceGlobalTile : GlobalTile
-    {
+namespace Macrocosm.Content.Tiles.GlobalTiles {
+    public class LightSourceGlobalTile : GlobalTile {
         /// <summary>
         /// Turns off placed torches, campfires and other blocks with fire when placed on our subworlds 
         /// </summary>
-        public override bool TileFrame(int i, int j, int type, ref bool resetFrame, ref bool noBreak)
-        {
-            if (SubworldSystem.AnyActive<Macrocosm>() && IsTileWithFlame(i, j, type))
-            {
+        public override bool TileFrame(int i, int j, int type, ref bool resetFrame, ref bool noBreak) {
+            if (SubworldSystem.AnyActive<Macrocosm>() && IsTileWithFlame(i, j, type)) {
                 WorldGen.TryToggleLight(i, j, false, skipWires: false);
             }
             return true;
@@ -30,10 +26,8 @@ namespace Macrocosm.Content.Tiles.GlobalTiles
         /// <summary>
         /// Disables right clicking on campfires on our subworlds 
         /// </summary>
-        public override void RightClick(int i, int j, int type)
-        {
-            if (SubworldSystem.AnyActive<Macrocosm>() && type == TileID.Campfire)
-            {
+        public override void RightClick(int i, int j, int type) {
+            if (SubworldSystem.AnyActive<Macrocosm>() && type == TileID.Campfire) {
                 WorldGen.TryToggleLight(i, j, false, skipWires: false);
             }
         }
@@ -41,8 +35,7 @@ namespace Macrocosm.Content.Tiles.GlobalTiles
         /// <summary>
         /// Returns true if tile[i,j] is a block with flames 
         /// </summary>
-        public static bool IsTileWithFlame(int i, int j, int type)
-        {
+        public static bool IsTileWithFlame(int i, int j, int type) {
             Tile tile = Main.tile[i, j];
             int style = TileObjectData.GetTileStyle(tile);
 

@@ -1,21 +1,15 @@
-﻿using Terraria.ModLoader;
-using Terraria.ID;
-using Macrocosm.Content.Biomes;
+﻿using Macrocosm.Content.Biomes;
 using Terraria.DataStructures;
-using Terraria.GameContent.ItemDropRules;
-using Macrocosm.Content.Items.Currency;
+using Terraria.ID;
+using Terraria.ModLoader;
 
-namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon
-{
+namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon {
     /// <summary>
     /// Abstract class for every moon enemy 
     /// </summary>
-    public abstract class MoonEnemy : ModNPC
-    {
-        public override void SetStaticDefaults()
-        {
-            NPCDebuffImmunityData debuffData = new()
-            {
+    public abstract class MoonEnemy : ModNPC {
+        public override void SetStaticDefaults() {
+            NPCDebuffImmunityData debuffData = new() {
                 SpecificallyImmuneTo = new int[] {
                     BuffID.OnFire,
                     BuffID.OnFire3,
@@ -29,8 +23,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon
             NPCID.Sets.DebuffImmunitySets.Add(Type, debuffData);
         }
 
-        public override void SetDefaults()
-        {
+        public override void SetDefaults() {
 
             SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBiome>().Type }; // Associates this NPC with the Moon Biome in Bestiary
 

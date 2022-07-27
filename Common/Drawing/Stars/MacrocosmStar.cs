@@ -5,10 +5,8 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.Utilities;
 
-namespace Macrocosm.Common.Drawing.Stars
-{
-    public class MacrocosmStar : Star
-    {
+namespace Macrocosm.Common.Drawing.Stars {
+    public class MacrocosmStar : Star {
         public Texture2D texture;
 
         public Color color;
@@ -20,8 +18,7 @@ namespace Macrocosm.Common.Drawing.Stars
         /// </summary>
         /// <param name="baseScale"> The average scaling of the stars relative to vanilla </param>
         /// <param name="twinkleFactor"> How much a star will twinkle, keep between (0f, 1f); 0.4f for vanilla effect</param>
-        public MacrocosmStar(float baseScale = 1f, float twinkleFactor = 0.4f)
-        {
+        public MacrocosmStar(float baseScale = 1f, float twinkleFactor = 0.4f) {
             FastRandom fastRandom = FastRandom.CreateWithRandomSeed();
 
             texture = TextureAssets.Star[fastRandom.Next(0, 4)].Value;
@@ -42,31 +39,26 @@ namespace Macrocosm.Common.Drawing.Stars
             if (fastRandom.Next(2) == 0)
                 rotationSpeed *= -1f;
 
-            if (fastRandom.Next(40) == 0)
-            {
+            if (fastRandom.Next(40) == 0) {
                 scale *= 2f * (0.6f + twinkleFactor);
                 twinkleSpeed /= 2f;
                 rotationSpeed /= 2f;
             }
         }
 
-        public MacrocosmStar(Vector2 position, float baseScale = 1f, float twinkleFactor = 0.4f) : this(baseScale, twinkleFactor)
-        {
+        public MacrocosmStar(Vector2 position, float baseScale = 1f, float twinkleFactor = 0.4f) : this(baseScale, twinkleFactor) {
             this.position = position;
         }
 
-        public MacrocosmStar(Vector2 position, Texture2D tex, float baseScale = 1f, float twinkleFactor = 0.4f) : this(position, twinkleFactor, baseScale)
-        {
+        public MacrocosmStar(Vector2 position, Texture2D tex, float baseScale = 1f, float twinkleFactor = 0.4f) : this(position, twinkleFactor, baseScale) {
             texture = tex;
         }
 
-        public void Draw()
-        {
+        public void Draw() {
             Main.spriteBatch.Draw(texture, position, null, color, rotation, texture.Size() / 2, scale * twinkle, default, 0f);
         }
 
-        public new void Update()
-        {
+        public new void Update() {
             base.Update();
             TwinkleColor();
         }
@@ -74,8 +66,7 @@ namespace Macrocosm.Common.Drawing.Stars
         /// <summary>
         /// Adapted from Main.DrawStarsInBackround
         /// </summary>
-        private void TwinkleColor()
-        {
+        private void TwinkleColor() {
             float fade = 1f - fadeIn;
             int red = (int)((float)(155) * twinkle * fade);
             int green = (int)((float)(155) * twinkle * fade);
@@ -83,12 +74,12 @@ namespace Macrocosm.Common.Drawing.Stars
 
             red = (red + green + blue) / 3;
 
-            if (red <= 0) 
+            if (red <= 0)
                 return;
 
             red = (int)((double)red * 1.4);
 
-            if(red > 255) 
+            if (red > 255)
                 red = 255;
 
             green = red;

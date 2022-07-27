@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 
 namespace Macrocosm.Common.Utility {
     [Obsolete("PickRandom() can potentially get stuck. Also... Why is there a static field...")]
@@ -14,7 +14,7 @@ namespace Macrocosm.Common.Utility {
         public static List<T> PickRandom<T>(this T[] input, int amount) {
             List<T> values = new List<T>();
             for (int i = 0; i < amount; i++) {
-                ReRoll:
+            ReRoll:
                 int rand = new Random().Next(0, input.Length);
 
                 if (!chosenTs.Contains(rand)) {

@@ -1,19 +1,14 @@
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Projectiles.Friendly.Weapons
-{
-    public class ArtemiteGreatswordProjectile : ModProjectile
-    {
-        public override void SetStaticDefaults()
-        {
+namespace Macrocosm.Content.Projectiles.Friendly.Weapons {
+    public class ArtemiteGreatswordProjectile : ModProjectile {
+        public override void SetStaticDefaults() {
             //DisplayName.SetDefault("Crescent Moon");
             DisplayName.SetDefault("Artemite Greatsword");
         }
 
-        public override void SetDefaults()
-        {
+        public override void SetDefaults() {
             Projectile.width = 10;
             Projectile.height = 10;
             Projectile.aiStyle = 56;

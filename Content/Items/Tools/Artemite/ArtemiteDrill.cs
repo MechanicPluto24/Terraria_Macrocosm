@@ -1,40 +1,36 @@
-﻿using Terraria;
-using Terraria.ID;
+﻿using Macrocosm.Content.Projectiles.Friendly.Tools;
+using Terraria;
 using Terraria.GameContent.Creative;
+using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Content.Projectiles.Tools;
 
-namespace Macrocosm.Content.Items.Tools.Artemite
-{
-	public class ArtemiteDrill : ModItem
-	{
-		public override void SetStaticDefaults()
-		{
-			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
-		}
+namespace Macrocosm.Content.Items.Tools.Artemite {
+    public class ArtemiteDrill : ModItem {
+        public override void SetStaticDefaults() {
+            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
+        }
 
-		public override void SetDefaults()
-		{
-			Item.damage = 55;
-			Item.DamageType = DamageClass.Melee;
-			Item.width = 44;
-			Item.height = 22;
-			Item.useTime = 2;
-			Item.useAnimation = 15;
-			Item.useStyle = ItemUseStyleID.Shoot;
-			Item.channel = true;
-			Item.knockBack = 0;
-			Item.value = Item.sellPrice(gold: 8);
-			Item.rare = ItemRarityID.Purple;
-			Item.UseSound = SoundID.Item23;
-			Item.autoReuse = true;
-			Item.useTurn = true;
-			Item.pick = 235;
-			Item.tileBoost = 3;
-			Item.noUseGraphic = true;
-			Item.noMelee = true;
-			Item.shoot = ModContent.ProjectileType<ArtemiteDrillProjectile>();
-			Item.shootSpeed = 32;
-		}
-	}
+        public override void SetDefaults() {
+            Item.damage = 55;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 44;
+            Item.height = 22;
+            Item.useTime = 2;
+            Item.useAnimation = 15;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.channel = true;
+            Item.knockBack = 0;
+            Item.value = Item.sellPrice(gold: 8);
+            Item.rare = ItemRarityID.Purple;
+            Item.UseSound = SoundID.Item23;
+            Item.autoReuse = true;
+            Item.useTurn = true;
+            Item.pick = 235;
+            Item.tileBoost = 3;
+            Item.noUseGraphic = true;
+            Item.noMelee = true;
+            Item.shoot = ModContent.ProjectileType<ArtemiteDrillProjectile>();
+            Item.shootSpeed = 32;
+        }
+    }
 }

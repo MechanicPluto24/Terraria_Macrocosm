@@ -1,6 +1,6 @@
+using Macrocosm.Content.Mounts;
 using Terraria;
 using Terraria.ModLoader;
-using Macrocosm.Content.Mounts;
 
 namespace Macrocosm.Content.Buffs.GoodBuffs.MountBuffs {
     public class SpaceShuttle : ModBuff {

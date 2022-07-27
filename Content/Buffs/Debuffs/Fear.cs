@@ -2,7 +2,7 @@ using Terraria;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Buffs.Debuffs {
-	public class Fear : ModBuff {
+    public class Fear : ModBuff {
         public override void SetStaticDefaults() {
             DisplayName.SetDefault("Fear");
             Description.SetDefault("OH GOD WHAT IS THAT!?");

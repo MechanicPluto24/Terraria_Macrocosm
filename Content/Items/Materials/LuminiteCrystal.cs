@@ -1,20 +1,15 @@
 using Macrocosm.Content.Items.Materials.Chunks;
-using System.Reflection;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Materials
-{
-    public class LuminiteCrystal : ModItem
-    {
-        public override void SetStaticDefaults()
-        {
-            
+namespace Macrocosm.Content.Items.Materials {
+    public class LuminiteCrystal : ModItem {
+        public override void SetStaticDefaults() {
+
         }
 
-        public override void SetDefaults()
-        {
+        public override void SetDefaults() {
             Item.width = 20;
             Item.height = 20;
             Item.maxStack = 999;
@@ -23,8 +18,7 @@ namespace Macrocosm.Content.Items.Materials
             // Set other Item.X values here
         }
 
-        public override void AddRecipes()
-        {
+        public override void AddRecipes() {
             Recipe recipe = Recipe.Create(Type);
             recipe.AddIngredient(ItemID.LunarBar, 5);
             recipe.AddIngredient<SidusChunk>(10);

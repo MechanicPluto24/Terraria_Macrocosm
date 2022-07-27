@@ -1,97 +1,85 @@
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
-using System;
 using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.UI;
+using Macrocosm.Sounds;
+using Macrocosm.Common.Utility;
 
-namespace Macrocosm.Content.Items.Weapons
-{
-	public class AssaultRifle : ModItem
-	{
-		public override void SetStaticDefaults() 
-		{
+namespace Macrocosm.Content.Items.Weapons {
+    public class AssaultRifle : ModItem {
+        public override void SetStaticDefaults() {
             DisplayName.SetDefault("Dovah's Assault Rifle");
-			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
-		}
-
-		public override void SetDefaults()
-		{
-			Item.damage = 150;
-			Item.DamageType = DamageClass.Ranged;
-			Item.width = 70;
-			Item.height = 26;
-			Item.useTime = 8;
-			Item.useAnimation = 8;
-			Item.useStyle = ItemUseStyleID.Shoot;
-			Item.noMelee = true;
-			Item.channel = true;
-			Item.knockBack = 8f;
-			Item.value = 10000;
-			Item.rare = ItemRarityID.Purple;
-			Item.UseSound = SoundID.Item41; // do it in UseItem?
-			Item.shoot = ProjectileID.PurificationPowder; // For some reason, all the guns in the vanilla source have this.
-			Item.autoReuse = true;
-			Item.shootSpeed = 20f;
-			Item.useAmmo = AmmoID.Bullet;
+            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
 
-		private const int altUseCooldown = 30;
-		private int altUseCounter = altUseCooldown;
+        public override void SetDefaults() {
+            Item.damage = 150;
+            Item.DamageType = DamageClass.Ranged;
+            Item.width = 70;
+            Item.height = 26;
+            Item.useTime = 8;
+            Item.useAnimation = 8;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.channel = true;
+            Item.knockBack = 8f;
+            Item.value = 10000;
+            Item.rare = ItemRarityID.Purple;
+            Item.shoot = ProjectileID.PurificationPowder; // For some reason, all the guns in the vanilla source have this.
+            Item.autoReuse = true;
+            Item.shootSpeed = 20f;
+            Item.useAmmo = AmmoID.Bullet;
+        }
+
+        private const int altUseCooldown = 30;
+        private int altUseCounter = altUseCooldown;
 
         public override Vector2? HoldoutOffset() => new Vector2(-10, 0);
 
-		public override bool AltFunctionUse(Player player) => altUseCounter == altUseCooldown;
+        public override bool AltFunctionUse(Player player) => altUseCounter == altUseCooldown;
 
         public override bool CanUseItem(Player player) => true;
 
-		public override bool? UseItem(Player player)
-		{
-			//if (player.altFunctionUse == 2)
-			//{
-			//	Item.useAmmo = AmmoID.Rocket;
-			//}
-            //else
-            //{
-			//	Item.useAmmo = AmmoID.Bullet;
-            //}
+        public override bool? UseItem(Player player) {
+            if (player.altFunctionUse == 2) {
+                SoundEngine.PlaySound(CustomSounds.GrenadeLauncherThunk);
+            }
+            else {
+                SoundEngine.PlaySound(CustomSounds.AssaultRifle);
+            }
 
-			return true;
-		}
+            return true;
+        }
 
-        public override void UpdateInventory(Player player)
-        {
-			if (player.altFunctionUse == 2 || altUseCounter < altUseCooldown)
-				altUseCounter--;
+        public override void UpdateInventory(Player player) {
+            if (player.altFunctionUse == 2 || altUseCounter < altUseCooldown)
+                altUseCounter--;
 
-			if (altUseCounter == 0)
-				altUseCounter = altUseCooldown;
-		}
+            if (altUseCounter == 0)
+                altUseCounter = altUseCooldown;
+        }
 
-        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
-        {
-			return true;
-		}
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback) {
+            return true;
+        }
 
-        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
-		{
-			int defaulType = type;
+        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback) {
 
-			if (player.altFunctionUse == 2)
-			{
-				type = ProjectileID.RocketI;
-				velocity /= 3f;
-			}
-            else
-            {
-				type = defaulType;
-			}
+            int defaulType = type;
 
-			position.Y -= 2;
-		}
-	}
+            if (player.altFunctionUse == 2) {
+
+                type = ItemUtils.ToRocketProjectile(player, ItemID.GrenadeLauncher);
+                position.Y += 2;
+                velocity /= 3f;
+            }
+            else {
+                type = defaulType;
+                position -= new Vector2(2 * player.direction, 2); // so bullets line up with the muzzle
+            }
+        }
+    }
 }

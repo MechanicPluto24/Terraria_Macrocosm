@@ -1,19 +1,15 @@
-﻿using Terraria;
-using Terraria.ModLoader;
+﻿using Macrocosm.Content.Subworlds.Moon;
 using SubworldLibrary;
+using Terraria;
 using Terraria.ID;
-using Macrocosm.Content.Subworlds.Moon;
+using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items
-{
-    class Teleporter : ModItem
-    {
-        public override void SetStaticDefaults()
-        {
+namespace Macrocosm.Content.Items {
+    class Teleporter : ModItem {
+        public override void SetStaticDefaults() {
             Tooltip.SetDefault("Teleports the user to and from the Moon");
         }
-        public override void SetDefaults()
-        {
+        public override void SetDefaults() {
             Item.width = 36;
             Item.height = 36;
             Item.rare = ItemRarityID.Purple;
@@ -24,14 +20,11 @@ namespace Macrocosm.Content.Items
             Item.useStyle = ItemUseStyleID.HoldUp;
             Item.UseSound = SoundID.Item6;
         }
-        public override bool? UseItem(Player player)
-        {
-            if (!SubworldSystem.AnyActive<Macrocosm>())
-            {
+        public override bool? UseItem(Player player) {
+            if (!SubworldSystem.AnyActive<Macrocosm>()) {
                 SubworldSystem.Enter<Moon>();
             }
-            else
-            {
+            else {
                 SubworldSystem.Exit();
             }
             return true;

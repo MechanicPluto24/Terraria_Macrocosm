@@ -1,8 +1,11 @@
 ﻿- add ambient rocks 
 - finish juggernaut 
-- edit info display for moon phase and weather (also time?) 
+- finish current weapons 
+- disable underworld and space music, (PR into SubLib???)
+- meteor size variation, gores, effects
+- edit info display for moon phase and weather 
 - fix accelerated time passing not working (sleeping)
 - bestiary portraits for CD and minions
-- lower gore gravity on moon 
-- find a way to sync bestiary data across subworlds ??????
+- lower projectile, gore gravity on moon 
 - disable graveyards on the moon??
+- find a way to sync bestiary data across subworlds ??????

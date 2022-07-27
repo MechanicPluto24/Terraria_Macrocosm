@@ -1,10 +1,9 @@
-using Terraria.ModLoader;
-using System.Collections.Generic;
-using System;
 using Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon;
+using System;
+using System.Collections.Generic;
+using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Systems
-{
+namespace Macrocosm.Content.Systems {
     /// <summary>
     /// Contains lists of enemies for each planet, some are uncomplete and some (for now) are completely un-filled
     /// </summary>
@@ -12,8 +11,7 @@ namespace Macrocosm.Content.Systems
     // You can check for categories with an is statement (npc.modNPC is MoonEnemy) - 4mbr0s3 2
     // ^ Did that, bye bye EnemyCategorization - Feldy
     [Obsolete]
-    public sealed class EnemyCategorization
-    {
+    public sealed class EnemyCategorization {
         /// <summary>
         /// Enemies of our bastion of life, The Sun. See list to view said NPCs
         /// </summary>
