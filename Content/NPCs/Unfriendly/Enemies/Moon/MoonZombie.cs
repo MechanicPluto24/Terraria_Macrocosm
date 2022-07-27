@@ -1,25 +1,20 @@
+using Macrocosm.Content.Biomes;
+using Macrocosm.Content.Items.Materials;
 using Terraria;
-using Terraria.GameContent.ItemDropRules;
 using Terraria.GameContent.Bestiary;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Content.Items.Materials;
-using Macrocosm.Content.Items.Currency;
-using Macrocosm.Content.Biomes;
 
-namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon
-{
-    public class MoonZombie : MoonEnemy
-    {
-        public override void SetStaticDefaults()
-        {
+namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon {
+    public class MoonZombie : MoonEnemy {
+        public override void SetStaticDefaults() {
             base.SetStaticDefaults();
 
             Main.npcFrameCount[Type] = 9;
         }
 
-        public override void SetDefaults()
-        {
+        public override void SetDefaults() {
             base.SetDefaults();
 
             NPC.width = 18;
@@ -37,8 +32,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon
             SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBiome>().Type }; // Associates this NPC with the Moon Biome in Bestiary
         }
 
-        public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
-        {
+        public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry) {
             bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[]
             {
                 new FlavorTextBestiaryInfoElement(
@@ -46,42 +40,34 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon
             });
         }
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo)
-        {
+        public override float SpawnChance(NPCSpawnInfo spawnInfo) {
             return spawnInfo.Player.GetModPlayer<MacrocosmPlayer>().ZoneMoon && !Main.dayTime ? .1f : 0f;
         }
 
-        public override void AI()
-        {
+        public override void AI() {
             if (NPC.velocity.Y < 0f)
                 NPC.velocity.Y += 0.1f;
             base.AI();
         }
 
-        public override void FindFrame(int frameHeight)
-        {
+        public override void FindFrame(int frameHeight) {
             NPC.spriteDirection = NPC.direction;
-            if (NPC.velocity.Y == 0)
-            {
+            if (NPC.velocity.Y == 0) {
                 NPC.frameCounter += 10;
-                if (NPC.frameCounter >= 48)
-                {
+                if (NPC.frameCounter >= 48) {
                     NPC.frameCounter -= 48;
                     NPC.frame.Y += frameHeight;
-                    if (NPC.frame.Y > 304)
-                    {
+                    if (NPC.frame.Y > 304) {
                         NPC.frame.Y = 0;
                     }
                 }
             }
-            else
-            {
+            else {
                 NPC.frame.Y = 8 * frameHeight;
             }
         }
 
-        public override void ModifyNPCLoot(NPCLoot loot)
-        {
+        public override void ModifyNPCLoot(NPCLoot loot) {
             loot.Add(ItemDropRule.Common(ModContent.ItemType<CosmicDust>()));             // Always drop 1 cosmic dust
             loot.Add(ItemDropRule.Common(ModContent.ItemType<ArtemiteOre>(), 16, 1, 6));  // 1/16 chance to drop 1-6 Artemite Ore
             loot.Add(ItemDropRule.Common(ModContent.ItemType<ChandriumOre>(), 16, 1, 6)); // 1/16 chance to drop 1-6 Chandrium Ore
@@ -89,13 +75,10 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon
             loot.Add(ItemDropRule.Common(ModContent.ItemType<DianiteOre>(), 16, 1, 6));   // 1/16 chance to drop 1-6 DianiteOre Ore
         }
 
-        public override void HitEffect(int hitDirection, double damage)
-        {
+        public override void HitEffect(int hitDirection, double damage) {
 
-            if (NPC.life > 0)
-            {
-                for (int i = 0; i < 10; i++)
-                {
+            if (NPC.life > 0) {
+                for (int i = 0; i < 10; i++) {
                     int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.TintableDust);
                     Dust dust = Main.dust[dustIndex];
                     dust.velocity.X *= dust.velocity.X * 1.25f * hitDirection + Main.rand.Next(0, 100) * 0.015f;
@@ -104,13 +87,11 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon
                 }
             }
 
-            if (Main.netMode == NetmodeID.Server)
-            {
+            if (Main.netMode == NetmodeID.Server) {
                 return; // don't run on the server
             }
 
-            if (NPC.life <= 0)
-            {
+            if (NPC.life <= 0) {
                 var entitySource = NPC.GetSource_Death();
 
                 Gore.NewGore(entitySource, NPC.position, NPC.velocity, Mod.Find<ModGore>("MoonZombieHead").Type);

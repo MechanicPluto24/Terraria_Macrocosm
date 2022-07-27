@@ -1,27 +1,22 @@
-using Macrocosm.Content.Items.Currency;
-using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Buffs.Debuffs;
+using Macrocosm.Content.Items.Materials;
 using Terraria;
-using Terraria.GameContent.ItemDropRules;
 using Terraria.GameContent.Bestiary;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Content.Biomes;
 
-namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon
-{
-    public class RegolithSlime : MoonEnemy
-    {
-        public override void SetStaticDefaults()
-        {
+namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon {
+    public class RegolithSlime : MoonEnemy {
+        public override void SetStaticDefaults() {
             base.SetStaticDefaults();
 
             DisplayName.SetDefault("Regolith Slime");
             Main.npcFrameCount[NPC.type] = Main.npcFrameCount[NPCID.BlueSlime];
         }
 
-        public override void SetDefaults()
-        {
+        public override void SetDefaults() {
             base.SetDefaults();
 
             NPC.width = 36;
@@ -40,8 +35,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon
             BannerItem = Item.BannerToItem(Banner);
             SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBiome>().Type }; // Associates this NPC with the Moon Biome in Bestiary
         }
-        public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
-        {
+        public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry) {
             bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[]
             {
                 new FlavorTextBestiaryInfoElement(
@@ -49,18 +43,15 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon
             });
         }
 
-        public override void OnHitPlayer(Player player, int damage, bool crit)
-        {
+        public override void OnHitPlayer(Player player, int damage, bool crit) {
             player.AddBuff(ModContent.BuffType<SuitBreach>(), 600, true);
         }
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo)
-        {
+        public override float SpawnChance(NPCSpawnInfo spawnInfo) {
             return spawnInfo.SpawnTileType == ModContent.TileType<Tiles.Regolith>() && Main.dayTime ? 0.1f : 0f;
         }
 
-        public override void ModifyNPCLoot(NPCLoot loot)
-        {
+        public override void ModifyNPCLoot(NPCLoot loot) {
             loot.Add(ItemDropRule.Common(ModContent.ItemType<CosmicDust>()));             // Always drop 1 cosmic dust
             loot.Add(ItemDropRule.Common(ModContent.ItemType<ArtemiteOre>(), 16, 1, 6));  // 1/16 chance to drop 1-6 Artemite Ore
             loot.Add(ItemDropRule.Common(ModContent.ItemType<ChandriumOre>(), 16, 1, 6)); // 1/16 chance to drop 1-6 Chandrium Ore
@@ -68,10 +59,8 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon
             loot.Add(ItemDropRule.Common(ModContent.ItemType<DianiteOre>(), 16, 1, 6));   // 1/16 chance to drop 1-6 DianiteOre Ore
         }
 
-        public override void HitEffect(int hitDirection, double damage)
-        {
-            for (int i = 0; i < 10; i++)
-            {
+        public override void HitEffect(int hitDirection, double damage) {
+            for (int i = 0; i < 10; i++) {
                 int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.TintableDust);
                 Dust dust = Main.dust[dustIndex];
                 dust.velocity.X *= dust.velocity.X * 1.25f * hitDirection + Main.rand.Next(0, 100) * 0.015f;

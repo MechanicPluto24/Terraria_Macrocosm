@@ -1,8 +1,6 @@
-using System;
-using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.ModLoader;
 using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Mounts {
     public class SpaceShuttleMount : ModMount {

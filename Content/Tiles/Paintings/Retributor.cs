@@ -27,7 +27,7 @@ namespace Macrocosm.Content.Tiles.Paintings {
             TileID.Sets.DisableSmartCursor[Type] = true;
             AddMapEntry(new Color(99, 50, 30), Language.GetText("Picture"));
         }
-        public override void KillMultiTile(int i, int j, int frameX, int frameY){
+        public override void KillMultiTile(int i, int j, int frameX, int frameY) {
             Item.NewItem(new EntitySource_TileBreak(i, j), i * 16, j * 16, 16, 32, ItemType<Items.Placeables.Paintings.Retributor>());
         }
     }

@@ -1,22 +1,19 @@
+using Macrocosm.Common.Drawing.Stars;
+using Macrocosm.Common.UI;
+using Macrocosm.Common.Utility;
+using Macrocosm.Common.Utility.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
-using Terraria.ModLoader;
-using Terraria.UI.Chat;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.States;
+using Terraria.ModLoader;
+using Terraria.UI.Chat;
 using Terraria.WorldBuilding;
-using SubworldLibrary;
-using Macrocosm.Common.UI;
-using Macrocosm.Common.Utility;
-using Macrocosm.Common.Utility.IO;
-using Macrocosm.Common.Drawing.Stars;
 
-namespace Macrocosm.Content.Subworlds.Moon
-{
-    public class MoonSubworldLoadUI : UIWorldLoad
-    {
+namespace Macrocosm.Content.Subworlds.Moon {
+    public class MoonSubworldLoadUI : UIWorldLoad {
         private Texture2D lunaBackground;
         private Texture2D lunaAtmoBackground;
         private Texture2D earthBackground;
@@ -35,8 +32,7 @@ namespace Macrocosm.Content.Subworlds.Moon
         public void ResetAnimation() => animationTimer = 0;
         public void NewStatusMessage() => chosenMessage = toEarth ? ListRandom.Pick(textFileLoader.Parse("Content/Subworlds/Earth/EarthMessages")) : ListRandom.Pick(textFileLoader.Parse("Content/Subworlds/Moon/MoonMessages"));
 
-        public void Setup(bool toEarth)
-        {
+        public void Setup(bool toEarth) {
             LoadTextures();
 
             this.toEarth = toEarth;
@@ -45,20 +41,16 @@ namespace Macrocosm.Content.Subworlds.Moon
             NewStatusMessage();
             starsDrawing.Clear();
 
-            if (toEarth)
-            {
+            if (toEarth) {
                 starsDrawing.SpawnStars(150, 200);
             }
-            else
-            {
+            else {
                 starsDrawing.SpawnStars(200, 250, twinkleFactor: 0.1f);
             }
         }
 
-        private void LoadTextures()
-        {
-            if (lunaBackground == null || lunaAtmoBackground == null || earthBackground == null || earthAtmoBackground == null || progressBar == null)
-            {
+        private void LoadTextures() {
+            if (lunaBackground == null || lunaAtmoBackground == null || earthBackground == null || earthAtmoBackground == null || progressBar == null) {
                 lunaBackground = ModContent.Request<Texture2D>("Macrocosm/Assets/LoadingBackgrounds/Luna", AssetRequestMode.ImmediateLoad).Value;
                 lunaAtmoBackground = ModContent.Request<Texture2D>("Macrocosm/Assets/LoadingBackgrounds/LunaAtmo", AssetRequestMode.ImmediateLoad).Value;
 
@@ -73,15 +65,13 @@ namespace Macrocosm.Content.Subworlds.Moon
             }
         }
 
-        public new void DrawSelf(SpriteBatch spriteBatch)
-        {
-            string loadText; 
+        public new void DrawSelf(SpriteBatch spriteBatch) {
+            string loadText;
 
             Color bodyColor = Color.White * (float)(animationTimer / 5) * 0.8f;  // color of the celestial body
             bodyColor.A = byte.MaxValue;                                         // keep it opaque
 
-            if (toEarth)
-            {
+            if (toEarth) {
                 spriteBatch.Begin(0, BlendState.Additive, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.UIScaleMatrix);
                 spriteBatch.Draw
                 (
@@ -110,8 +100,7 @@ namespace Macrocosm.Content.Subworlds.Moon
                 Vector2 messageSize2 = FontAssets.DeathText.Value.MeasureString(chosenMessage) * 0.7f;
                 ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, chosenMessage, new Vector2(Main.screenWidth / 2f - messageSize2.X / 2f, Main.screenHeight - messageSize2.Y - 20), Color.White, 0f, Vector2.Zero, new Vector2(0.7f));
             }
-            else
-            {
+            else {
                 spriteBatch.Begin(0, BlendState.Additive, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.UIScaleMatrix);
                 spriteBatch.Draw
                 (
@@ -142,19 +131,17 @@ namespace Macrocosm.Content.Subworlds.Moon
 
             }
 
-            if (WorldGenerator.CurrentGenerationProgress != null)
-            {
+            if (WorldGenerator.CurrentGenerationProgress != null) {
                 loadText = WorldGenerator.CurrentGenerationProgress.Message;
                 progressBar.SetProgress(WorldGenerator.CurrentGenerationProgress.TotalProgress, WorldGenerator.CurrentGenerationProgress.Value);
                 progressBar.DrawSelf(spriteBatch);
                 progressBar.SetPosition((Main.screenWidth - progressBar.Width.Pixels) / 2, (Main.screenHeight - progressBar.Height.Pixels) / 2);
             }
-            else
-            {
+            else {
                 loadText = Main.statusText;
             }
-            
-            ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, loadText, new Vector2((float)Main.screenWidth, (float)Main.screenHeight - 100f) / 2f - FontAssets.DeathText.Value.MeasureString(loadText)  / 2f , Color.White, 0f, Vector2.Zero, Vector2.One);
+
+            ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, loadText, new Vector2((float)Main.screenWidth, (float)Main.screenHeight - 100f) / 2f - FontAssets.DeathText.Value.MeasureString(loadText) / 2f, Color.White, 0f, Vector2.Zero, Vector2.One);
 
             Main.DrawCursor(Main.DrawThickCursor(false), false);
 
@@ -168,5 +155,5 @@ namespace Macrocosm.Content.Subworlds.Moon
 
 
 
-    } 
+    }
 }

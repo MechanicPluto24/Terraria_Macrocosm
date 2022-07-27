@@ -1,42 +1,32 @@
-﻿using System.Collections.Generic;
-using Terraria;
-using SubworldLibrary;
-using Terraria.WorldBuilding;
-using Terraria.ModLoader;
-using Terraria.Graphics.Effects;
-using Terraria.UI;
-using Microsoft.Xna.Framework;
+﻿using Macrocosm.Backgrounds.Moon;
 using Macrocosm.Content.Subworlds.Moon;
-using Macrocosm.Backgrounds.Moon;
+using Microsoft.Xna.Framework;
+using SubworldLibrary;
+using Terraria;
+using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Biomes
-{
-    public class MoonBiome : ModBiome
-    {
-        public override SceneEffectPriority Priority => SceneEffectPriority.BiomeHigh;
+namespace Macrocosm.Content.Biomes {
+    public class MoonBiome : ModBiome {
+        public override SceneEffectPriority Priority => SceneEffectPriority.Environment;
         public override string BestiaryIcon => "Macrocosm/Assets/FilterIcons/MoonAdjusted";
         public override string BackgroundPath => "Macrocosm/Assets/Map/Moon";
         public override Color? BackgroundColor => base.BackgroundColor;
         public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.GetInstance<MoonSurfaceBgStyle>();
         public override ModUndergroundBackgroundStyle UndergroundBackgroundStyle => ModContent.GetInstance<MoonUgBgStyle>();
-        public override int Music => Main.dayTime ? MusicLoader.GetMusicSlot(Mod, "Sounds/Music/MoonDay") : MusicLoader.GetMusicSlot(Mod, "Sounds/Music/MoonNight");
-        public override void SetStaticDefaults()
-        {
+        public override int Music => Main.dayTime ? MusicLoader.GetMusicSlot(Mod, "Sounds/Music/Deadworld") : MusicLoader.GetMusicSlot(Mod, "Sounds/Music/Requiem");
+        public override void SetStaticDefaults() {
             DisplayName.SetDefault("The Moon");
         }
- 
-        public override void OnInBiome(Player player)
-        {
+
+        public override void OnInBiome(Player player) {
             player.GetModPlayer<MacrocosmPlayer>().ZoneMoon = true;
         }
 
-        public override void OnLeave(Player player)
-        {
+        public override void OnLeave(Player player) {
             player.GetModPlayer<MacrocosmPlayer>().ZoneMoon = false;
         }
-        
-        public override bool IsBiomeActive(Player player)
-        {
+
+        public override bool IsBiomeActive(Player player) {
             return SubworldSystem.IsActive<Moon>();
         }
     }

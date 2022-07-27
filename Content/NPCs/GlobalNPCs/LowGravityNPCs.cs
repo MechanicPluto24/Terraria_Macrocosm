@@ -1,12 +1,11 @@
-using Terraria.ModLoader;
-using Terraria;
+using Macrocosm.Content.Subworlds.Moon;
 using SubworldLibrary;
 using System.Reflection;
-using Macrocosm.Content.Subworlds.Moon;
+using Terraria;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.GlobalNPCs {
-    public class LowGravityNPC : GlobalNPC 
-    {
+    public class LowGravityNPC : GlobalNPC {
         public override bool InstancePerEntity => true;
         protected override bool CloneNewInstances => true;
 

@@ -2,7 +2,7 @@ using Terraria;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Buffs.Debuffs {
-	public class SuitBreach : ModBuff {
+    public class SuitBreach : ModBuff {
         public override void SetStaticDefaults() {
             DisplayName.SetDefault("Suit Breach");
             Description.SetDefault("Your blood is boiling from the lack of atmospheric pressure!");

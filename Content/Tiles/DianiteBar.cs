@@ -1,10 +1,10 @@
+using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
-using Macrocosm.Content.Dusts;
-using Terraria.DataStructures;
 using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Tiles {

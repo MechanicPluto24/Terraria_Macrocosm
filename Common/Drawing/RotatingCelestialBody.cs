@@ -1,14 +1,12 @@
-using Terraria;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using Terraria;
 using Terraria.GameContent;
 
 namespace Macrocosm.Common.Drawing {
-    public static class RotatingCelestialBody
-    { 
-        public static void Draw(Texture2D texture, bool dayTime) 
-        {
+    public static class RotatingCelestialBody {
+        public static void Draw(Texture2D texture, bool dayTime) {
             int vanillaSkyObjectWidth = dayTime ? TextureAssets.Sun.Width() : TextureAssets.Moon[0].Width();
             double duration = dayTime ? Main.dayLength : Main.nightLength;
             short modY = dayTime ? Main.sunModY : Main.moonModY;
@@ -16,7 +14,7 @@ namespace Macrocosm.Common.Drawing {
             int angle;
             float scale;
             int timeX = (int)(Main.time / duration * (Main.screenWidth + vanillaSkyObjectWidth * 2)) - vanillaSkyObjectWidth;
-            double timeY = Main.time < duration/2 ? //Gets the Y axis for the angle depending on the time
+            double timeY = Main.time < duration / 2 ? //Gets the Y axis for the angle depending on the time
                     Math.Pow((Main.time / duration - 0.5) * 2.0, 2.0) : //AM
                     Math.Pow(1.0 - Main.time / duration * 2.0, 2.0); //PM
             float rotation = (float)(Main.time / duration) * 2f - 7.3f;
@@ -24,13 +22,11 @@ namespace Macrocosm.Common.Drawing {
 
             //PLEASE DON'T NAME YOUR VARS LIKE "NUM474" EVER AGAIN OR I WILL FCKING RIP YOUR GUTS OUT AND EAT NACHOS FROM YOUR RIBCAGE lol
             float clouldAlphaMult = 1f - Main.cloudAlpha * 1.5f;
-            if(clouldAlphaMult < 0f)
-            {
+            if (clouldAlphaMult < 0f) {
                 clouldAlphaMult = 0f;
             }
 
-            if(dayTime == Main.dayTime)
-            {
+            if (dayTime == Main.dayTime) {
                 angle = (int)(bgTop + timeY * 250.0 + 180.0);
 
                 scale = (float)(1.2 - timeY * 0.4);

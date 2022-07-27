@@ -1,8 +1,8 @@
+using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Content.Dusts;
 
 namespace Macrocosm.Content.Tiles {
     public class DianiteOre : ModTile {

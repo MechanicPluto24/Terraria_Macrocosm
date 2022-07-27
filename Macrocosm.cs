@@ -1,19 +1,11 @@
-using Terraria.ModLoader;
-using Terraria;
-using Terraria.Graphics.Effects;
-using Macrocosm.Content.Items.Currency;
-using System;
-using SubworldLibrary;
 using Macrocosm.Content.Subworlds.Moon;
-using Terraria.Graphics.Shaders;
-using Macrocosm.Content.Systems.Music;
-using Macrocosm.Backgrounds.Moon;
 using Macrocosm.Content.Tiles;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
+using SubworldLibrary;
+using System;
+using Terraria.ModLoader;
 
-namespace Macrocosm
-{
+namespace Macrocosm {
     public class Macrocosm : Mod {
         public static Mod Instance => ModContent.GetInstance<Macrocosm>();
 
