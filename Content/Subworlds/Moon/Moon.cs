@@ -17,7 +17,8 @@ namespace Macrocosm.Content.Subworlds.Moon {
     /// </summary>
     public class Moon : Subworld {
         public override bool NormalUpdates => true;
-        public override int Width => 2000;
+        //public override int Width => 2000;
+        public override int Width => 2200;
         public override int Height => 1200; 
         public override bool ShouldSave => true;
         public override bool NoPlayerSaving => false;
@@ -26,23 +27,21 @@ namespace Macrocosm.Content.Subworlds.Moon {
             genGroundPass,
             new CraterPass("CraterPass", 1f),
             new BackgroundPass("BackgroundPass", 1f),
-            new RegolithPass("RegolithPass", 1.5f),
+            new RegolithPass("RegolithPass", 5f),
             new OrePass("OrePass", 0.75f),
             new CavePass("CavePass", 1f, genGroundPass.RockLayerHigh, genGroundPass.RockLayerHigh),
             new ScuffedSmoothPass("ScuffedSmoothPass", 1f),
             new FinishPass("FinishPass", 0.1f)
         };
 
-
         public const float TimeRate = 0.125f;
-
 
         private MoonSubworldLoadUI moonLoadUI;
         private GroundPass genGroundPass;
 
         public Moon() {
             this.moonLoadUI = new();
-            this.genGroundPass = new GroundPass("GroundPass", 2f, Width, Height);
+            this.genGroundPass = new GroundPass("GroundPass", 8f, Width, Height);
         }
 
         public override void OnEnter() {

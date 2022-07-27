@@ -35,7 +35,7 @@ namespace Macrocosm.Content.Subworlds.Moon.Generation {
                 // Here, we just focus on the progress along the x-axis
                 progress.Set(i / (float)(Main.maxTilesX - 1)); // Controls the progress bar, should only be set between 0f and 1f
                 for (int j = surfaceHeight; j < subworldHeight; j++) {
-                    WorldGen.PlaceTile(i, j, protolithType);
+                    WorldGen.PlaceTile(i, j, protolithType, true, true);
                 }
 
                 if (WorldGen.genRand.Next(0, 10) == 0) // Not much deviation here

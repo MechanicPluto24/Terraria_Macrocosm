@@ -13,7 +13,7 @@ namespace Macrocosm.Common.Utility {
         /// <param name="player"> The player using the picked rocket ammo </param>
         /// <param name="copyWeaponType"> The launcher type to copy </param>
         /// <returns> The projectile ID, defaults to Rocket I </returns>
-        public static int ToRocketProjectile(Player player, int copyWeaponType) {
+        public static int ToRocketProjectileID(Player player, int copyWeaponType) {
 
             if (copyWeaponType != ItemID.GrenadeLauncher && copyWeaponType != ItemID.RocketLauncher && copyWeaponType != ItemID.ProximityMineLauncher)
                 return ProjectileID.RocketI;
@@ -28,7 +28,7 @@ namespace Macrocosm.Common.Utility {
                 type = pickedProjectileId;
             }
             // for rockets I to IV
-            else if (AmmoID.Sets.IsRocket[ammo.ammo]) {
+            else if (ammo.ammo == AmmoID.Rocket) {
                 type = launcher.shoot + ammo.shoot;
             }
             else {

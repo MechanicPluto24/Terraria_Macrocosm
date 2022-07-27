@@ -24,9 +24,11 @@ namespace Macrocosm.Content.Projectiles {
 
         public override void Kill(int timeLeft) {
 
-            #region Spawn Items
-
+            // handled by server 
             if(Main.netMode != NetmodeID.MultiplayerClient) {
+
+                #region Spawn Items
+
                 if (Main.rand.NextBool(3)) {
                     //int type = Utils.SelectRandom<int>(Main.rand, SomeGeode, SomeOtherGeode); -- maybe WeigthedRandom?
                     int type = ModContent.ItemType<MoonGeode>();
@@ -34,14 +36,32 @@ namespace Macrocosm.Content.Projectiles {
                     int itemIdx = Item.NewItem(Projectile.GetSource_FromThis(), position, new Vector2(Projectile.width, Projectile.height), type);
                     NetMessage.SendData(MessageID.SyncItem, -1, -1, null, itemIdx, 1f);
                 }
+
+                #endregion
+
+                #region Screenshake effect
+
+                // let the server do it for every player
+
+                float maxDist = 110f * 16f; // 110 tiles max distance (least screenshake) 
+                float maxScreenshake = 40f; // max screenshake (up to 100) for distance = 0
+
+                for (int i = 0; i < 255; i++) {
+
+                    Player player = Main.player[i];
+
+                    if (player.active) {
+                        float distance = Vector2.Distance(player.Center, Projectile.Center);
+
+                        if (distance < maxDist)
+                            player.GetModPlayer<MacrocosmPlayer>().ScreenShakeIntensity = maxScreenshake - distance / maxDist * maxScreenshake;
+                    }
+                }
+  
+                #endregion
             }
-                      
-            #endregion
 
-            #region Gores
-
-            #endregion
-
+            // handled by clients 
             if (Main.netMode != NetmodeID.Server) {
 
                 #region Dusts
@@ -58,8 +78,11 @@ namespace Macrocosm.Content.Projectiles {
                     );
 
                     dust.noGravity = false;
-
                 }
+
+                #endregion
+
+                #region Gores
 
                 #endregion
 
@@ -67,45 +90,11 @@ namespace Macrocosm.Content.Projectiles {
 
                 #endregion
             }
-
-            #region Screenshake effect
-
-            // let the server do it for every player
-            if (Main.netMode == NetmodeID.MultiplayerClient)
-                return;
-
-            float maxDist = 110f * 16f; // 110 tiles max distance (least screenshake) 
-            float maxScreenshake = 40f; // max screenshake (up to 100) for distance = 0
-
-            for(int i = 0; i < 255; i++) {
-
-                Player player = Main.player[i];
-
-                if (player.active) {
-                    float distance = Vector2.Distance(player.Center, Projectile.Center);
-
-                    if(distance < maxDist)
-                        player.GetModPlayer<MacrocosmPlayer>().ScreenShakeIntensity = maxScreenshake - distance/maxDist * maxScreenshake;
-                }
-            }
-
-            #endregion
         }
 
         override public void AI() {
 
-            if (Projectile.ai[1] == 0f && !Collision.SolidCollision(Projectile.position, Projectile.width, Projectile.height)) {
-                Projectile.ai[1] = 1f;
-                Projectile.netUpdate = true;
-            }
-            
-            if (Projectile.ai[1] != 0f)
-                Projectile.tileCollide = true;
-
             Projectile.rotation += (Math.Abs(Projectile.velocity.X) + Math.Abs(Projectile.velocity.Y)) * 0.01f * (float)Projectile.direction;
         }
-
-
-
     }
 }

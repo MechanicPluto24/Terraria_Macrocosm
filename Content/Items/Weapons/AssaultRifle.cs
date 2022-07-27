@@ -72,7 +72,7 @@ namespace Macrocosm.Content.Items.Weapons {
 
             if (player.altFunctionUse == 2) {
 
-                type = ItemUtils.ToRocketProjectile(player, ItemID.GrenadeLauncher);
+                type = ItemUtils.ToRocketProjectileID(player, ItemID.GrenadeLauncher);
                 position.Y += 2;
                 velocity /= 3f;
             }
