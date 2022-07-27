@@ -83,7 +83,8 @@ namespace Macrocosm.Content.Subworlds.Moon.Generation {
                                     ) <= 1
                                 ) {
                                     if (craterTileX < Main.maxTilesX && craterTileY < Main.maxTilesY && craterTileX >= 0 && craterTileY >= 0) {
-                                        Main.tile[craterTileX, craterTileY].ClearTile();
+                                        //Main.tile[craterTileX, craterTileY].ClearTile();
+                                        Main.tile[craterTileX, craterTileY].ClearEverything();
                                     }
                                 }
                             }

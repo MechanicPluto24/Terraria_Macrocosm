@@ -278,15 +278,16 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon {
                         break;
 
                     case (float)ActionState.Sprint:
-                        if (NPC.velocity.Y < 1f) {
-                            NPC.frameCounter++;
-                        }
 
                         if (threeTilesAboveGround || NPC.velocity.Y > 1.5f) {
                             NPC.frame.Y = 28 * frameHeight; // frame while above ground  (armless)
                         }
                         else {
+
                             NPC.frame.Y = (int)(NPC.frameCounter / 5 + 21) * frameHeight; // 8 sprint frames @ 5 ticks per frame 
+
+                            NPC.frameCounter++;
+
                             if (NPC.frameCounter >= 39) {
                                 NPC.frameCounter = 0;
                             }

@@ -17,7 +17,7 @@ namespace Macrocosm.Content.Subworlds.Moon.Generation {
                     if (Main.tile[tileX, tileY].HasTile) {
                         if (regolithChance > 0.1) {
                             Main.tile[tileX, tileY].ClearTile();
-                            WorldGen.PlaceTile(tileX, tileY, (ushort)ModContent.TileType<Tiles.Regolith>());
+                            WorldGen.PlaceTile(tileX, tileY, (ushort)ModContent.TileType<Tiles.Regolith>(), true, true);
                         }
                         regolithChance -= 0.02f;
                         if (regolithChance <= 0) break;
