@@ -30,12 +30,18 @@ namespace Macrocosm.Common.Drawing {
 
             Main.spriteBatch.End();
 
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+            // draw atmosphere in BlendState.Additive (for proper transparency) and in the EffectMatrix (no scaling with screen size) 
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.EffectMatrix);
             Main.spriteBatch.Draw(atmoTexture, position, null, Color.White, 0f, atmoTexture.Size() / 2, scale, default, 0f);
             Main.spriteBatch.End();
 
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+            // draw body in the EffectMatrix 
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.EffectMatrix);
             Main.spriteBatch.Draw(bodyTexture, position, null, Color.White, 0f, bodyTexture.Size() / 2, scale, default, 0f);
+            Main.spriteBatch.End();
+
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+
         }
 
         /// <summary>
@@ -60,8 +66,13 @@ namespace Macrocosm.Common.Drawing {
                                             (Main.screenHeight / 2) - playerPositionToSurfaceCenterY * parallax_Y + averageOffsetY);
 
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+
+            // draw body in the EffectMatrix 
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.EffectMatrix);
             Main.spriteBatch.Draw(bodyTexture, position, null, Color.White, 0f, bodyTexture.Size() / 2, scale, default, 0f);
+            Main.spriteBatch.End();
+
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
         }
     }
 }
