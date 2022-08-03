@@ -10,12 +10,6 @@ using Terraria.ModLoader;
 namespace Macrocosm.Content.Projectiles.Friendly.Weapons {
     public class ChandriumWhipProjectile : ModProjectile {
 
-        public const int frameWidth = 14;
-        public const int frameHeight = 26;
-
-        public const int numSegments = 30;
-        public const float range = 30;
-
         public override void SetStaticDefaults() {
             ProjectileID.Sets.IsAWhip[Type] = true;
         }
@@ -37,6 +31,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Weapons {
             //target.AddBuff(ModContent.BuffType<SomeDebuff>(), 240);
             Main.player[Projectile.owner].MinionAttackTargetNPC = target.whoAmI;
         }
+
+        private int frameWidth = 14;
+        private int frameHeight = 26;
 
         // This method draws a line between all points of the whip, in case there's empty space between the sprites.
         private void DrawLine(List<Vector2> list) {

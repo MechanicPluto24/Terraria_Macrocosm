@@ -1,3 +1,4 @@
+using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Stars;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.Utility;
@@ -14,8 +15,12 @@ using Terraria.WorldBuilding;
 
 namespace Macrocosm.Content.Subworlds.Moon {
     public class MoonSubworldLoadUI : UIWorldLoad {
+
         private Texture2D lunaBackground;
         private Texture2D lunaAtmoBackground;
+        private Texture2D earthSmallBackground;
+        private Texture2D earthSmallAtmoBackground;
+
         private Texture2D earthBackground;
         private Texture2D earthAtmoBackground;
 
@@ -50,9 +55,13 @@ namespace Macrocosm.Content.Subworlds.Moon {
         }
 
         private void LoadTextures() {
-            if (lunaBackground == null || lunaAtmoBackground == null || earthBackground == null || earthAtmoBackground == null || progressBar == null) {
+            if ((lunaBackground ?? lunaAtmoBackground ?? earthSmallBackground ?? earthSmallAtmoBackground ?? earthBackground ?? earthAtmoBackground) == null || progressBar == null) {
+
                 lunaBackground = ModContent.Request<Texture2D>("Macrocosm/Assets/LoadingBackgrounds/Luna", AssetRequestMode.ImmediateLoad).Value;
                 lunaAtmoBackground = ModContent.Request<Texture2D>("Macrocosm/Assets/LoadingBackgrounds/LunaAtmo", AssetRequestMode.ImmediateLoad).Value;
+
+                earthSmallBackground = ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/EarthAtmoless2", AssetRequestMode.ImmediateLoad).Value;
+                earthSmallAtmoBackground = ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/EarthAtmo", AssetRequestMode.ImmediateLoad).Value;
 
                 earthBackground = ModContent.Request<Texture2D>("Macrocosm/Assets/LoadingBackgrounds/Earth", AssetRequestMode.ImmediateLoad).Value;
                 earthAtmoBackground = ModContent.Request<Texture2D>("Macrocosm/Assets/LoadingBackgrounds/EarthAtmo", AssetRequestMode.ImmediateLoad).Value;
@@ -115,6 +124,8 @@ namespace Macrocosm.Content.Subworlds.Moon {
 
                 starsDrawing.Draw();
 
+                CelestialBody.Draw(earthSmallBackground, earthSmallAtmoBackground, 0.7f, -450f, -200f);
+
                 spriteBatch.Draw
                 (
                     lunaBackground,
@@ -134,8 +145,8 @@ namespace Macrocosm.Content.Subworlds.Moon {
             if (WorldGenerator.CurrentGenerationProgress != null) {
                 loadText = WorldGenerator.CurrentGenerationProgress.Message;
                 progressBar.SetProgress(WorldGenerator.CurrentGenerationProgress.TotalProgress, WorldGenerator.CurrentGenerationProgress.Value);
-                progressBar.DrawSelf(spriteBatch);
                 progressBar.SetPosition((Main.screenWidth - progressBar.Width.Pixels) / 2, (Main.screenHeight - progressBar.Height.Pixels) / 2);
+                progressBar.DrawSelf(spriteBatch);
             }
             else {
                 loadText = Main.statusText;
@@ -150,10 +161,6 @@ namespace Macrocosm.Content.Subworlds.Moon {
             animationTimer += 0.125;
             if (animationTimer > 5)
                 animationTimer = 5;
-
         }
-
-
-
     }
 }

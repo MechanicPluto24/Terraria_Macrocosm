@@ -3,9 +3,11 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 
 namespace Macrocosm.Common.Drawing {
-    public static class ParallaxingCelestialBody {
+
+    // We could make it non-static if, for some reason, we actually need instances - Feldy 
+    public static class CelestialBody {
         /// <summary>
-        /// Draw a parallaxing celestial body with an atmosphere in the background of a world's surface
+        /// Draws a celestial body with an atmosphere at the screen center, with possible offsets and parallax speeds
         /// </summary>
         /// <param name="bodyTexture"> The celestial body to draw </param>
         /// <param name="atmoTexture"> The celestial body's atmosphere </param>
@@ -14,7 +16,7 @@ namespace Macrocosm.Common.Drawing {
         /// <param name="averageOffsetY"> The offset from screen center when the player is midway between world's surface and upper bounds </param>
         /// <param name="parallax_X"> The horizontal parallax speed relative to the player </param>
         /// <param name="parallax_Y"> The vertical parallax speed relative to the player </param>
-        public static void Draw(Texture2D bodyTexture, Texture2D atmoTexture, float scale, float averageOffsetX, float averageOffsetY, float parallax_X, float parallax_Y) {
+        public static void Draw(Texture2D bodyTexture, Texture2D atmoTexture, float scale, float averageOffsetX = 0f, float averageOffsetY = 0f, float parallax_X = 0f, float parallax_Y = 0f) {
             // surface layer dimensions in pixels 
             float worldWidth = Main.maxTilesX * 16f;
             float surfaceLayerHeight = (float)Main.worldSurface * 16f;
@@ -37,7 +39,7 @@ namespace Macrocosm.Common.Drawing {
         }
 
         /// <summary>
-        /// Draw a parallaxing celestial body in the background of a world's surface
+        /// Draws a celestial body at the screen center, with possible offsets and parallax speeds
         /// </summary>
         /// <param name="bodyTexture"> The celestial body to draw </param>
         /// <param name="scale"> The scale of the texture </param>
@@ -45,7 +47,7 @@ namespace Macrocosm.Common.Drawing {
         /// <param name="averageOffsetY"> The offset from screen center when the player is midway between world's surface and upper bounds </param>
         /// <param name="parallax_X"> The horizontal parallax speed relative to the player </param>
         /// <param name="parallax_Y"> The vertical parallax speed relative to the player </param>
-        public static void Draw(Texture2D bodyTexture, float scale, float averageOffsetX, float averageOffsetY, float parallax_X, float parallax_Y) {
+        public static void Draw(Texture2D bodyTexture, float scale, float averageOffsetX = 0f, float averageOffsetY = 0f, float parallax_X = 0f, float parallax_Y = 0f) {
             // surface layer dimensions in pixels 
             float worldWidth = Main.maxTilesX * 16f;
             float surfaceLayerHeight = (float)Main.worldSurface * 16f;

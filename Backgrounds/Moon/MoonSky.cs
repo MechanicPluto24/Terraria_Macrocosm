@@ -52,7 +52,7 @@ namespace Macrocosm.Backgrounds.Moon {
                 moonStarsNight.Draw(nightStarBrightness);
 
                 RotatingCelestialBody.Draw(sunTexture, dayTime: true);
-                ParallaxingCelestialBody.Draw(earthBody, earthAtmo, 0.9f, 0f, -200f, 0.01f, 0.12f);
+                CelestialBody.Draw(earthBody, earthAtmo, 0.9f, 0f, -200f, 0.01f, 0.12f);
             }
         }
 

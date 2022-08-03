@@ -34,8 +34,8 @@ namespace Macrocosm.Content.Items.Weapons {
             Item.useAmmo = AmmoID.Bullet;
         }
 
-        private const int altUseCooldown = 30;
-        private int altUseCounter = altUseCooldown;
+        private int altUseCooldown = 30;
+        private int altUseCounter = 30;
 
         public override Vector2? HoldoutOffset() => new Vector2(-10, 0);
 

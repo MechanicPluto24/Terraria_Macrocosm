@@ -31,6 +31,7 @@ namespace Macrocosm.Content.Subworlds.Moon {
             new OrePass("OrePass", 0.75f),
             new CavePass("CavePass", 1f, genGroundPass.RockLayerHigh, genGroundPass.RockLayerHigh),
             new ScuffedSmoothPass("ScuffedSmoothPass", 1f),
+            new AmbientPass("AmbientPass", 0.2f),
             new FinishPass("FinishPass", 0.1f)
         };
 
