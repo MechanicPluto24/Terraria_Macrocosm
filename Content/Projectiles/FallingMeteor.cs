@@ -66,7 +66,7 @@ namespace Macrocosm.Content.Projectiles {
 
                 #region Dusts
 
-                for(int i = 0; i < Main.rand.Next(30,80); i++) {
+                for(int i = 0; i < Main.rand.Next(60,80); i++) {
                     Dust dust = Dust.NewDustDirect(
                         new Vector2(Projectile.position.X, Projectile.position.Y + 1.5f * Projectile.height), 
                         Projectile.width, 

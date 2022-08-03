@@ -21,11 +21,12 @@ namespace Macrocosm.Content.Subworlds.Moon.Generation {
                     continue;
                 }
 
-                if (Main.rand.NextBool(10)) {
+                if (WorldGen.genRand.NextBool(20)) {
                     for (int tileY = 1; tileY < Main.maxTilesY; tileY++) {
                         if (Main.tile[tileX, tileY].HasTile && Main.tile[tileX, tileY].BlockType == Terraria.ID.BlockType.Solid) {
-                            WorldGen.PlaceTile(tileX, tileY - 1, (ushort)ModContent.TileType<RegolithRockSmall>(), true, true, style: Main.rand.Next(10));
-                            skipX = Main.rand.Next(10, 50);
+                            //WorldGen.PlaceTile(tileX, tileY - 1, (ushort)ModContent.TileType<RegolithRockSmall>(), true, true, style: WorldGen.genRand.Next(10));
+                            WorldGen.PlaceSmallPile(tileX, tileY - 1, WorldGen.genRand.Next(10), 0, (ushort)ModContent.TileType<RegolithRockSmall>());
+                            skipX = WorldGen.genRand.Next(5, 50);
                             break;
                         }
                     }
