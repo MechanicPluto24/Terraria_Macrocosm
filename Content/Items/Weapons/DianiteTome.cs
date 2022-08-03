@@ -43,7 +43,7 @@ namespace Macrocosm.Content.Items.Weapons {
         }
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockBack) {
-            int numberProjectiles = 6 + Main.rand.Next(2);  //This defines how many projectiles to shoot
+            int numberProjectiles = 4 + Main.rand.Next(2);  //This defines how many projectiles to shoot
             for (int index = 0; index < numberProjectiles; ++index) {
 
                 bool bigProjectile = Main.rand.NextBool(4);

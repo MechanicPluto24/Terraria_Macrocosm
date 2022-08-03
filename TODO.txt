@@ -1,8 +1,8 @@
-﻿- add ambient rocks 
-- finish juggernaut 
+﻿- finish juggernaut 
 - finish current weapons 
-- disable underworld and space music, (PR into SubLib???)
 - meteor size variation, gores, effects
+- add ambient rocks to moon generation
+- improve CD fight
 - edit info display for moon phase and weather 
 - fix accelerated time passing not working (sleeping)
 - bestiary portraits for CD and minions

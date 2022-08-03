@@ -57,9 +57,9 @@ namespace Macrocosm.Common.UI {
                 Color color = default;
 
                 color.PackedValue = 4286836223u;
-                DrawFilling(spriteBatch, position + value + new Vector2(22f, 40f), longBarHeight, completedWidth, longBarWidth, color, Color.Lerp(color, Color.Black, 0.5f), new Color(48, 48, 48));
+                DrawFilling(spriteBatch, position + value + new Vector2(20f, 40f), longBarHeight, completedWidth, longBarWidth, color, Color.Lerp(color, Color.Black, 0.5f), new Color(48, 48, 48));
                 color.PackedValue = 4290947159u;
-                DrawFilling(spriteBatch, position + value + new Vector2(50f, 60f), shortBarHeight, completedWidth2, shortBarWidth, color, Color.Lerp(color, Color.Black, 0.5f), new Color(33, 33, 33));
+                DrawFilling(spriteBatch, position + value + new Vector2(48f, 60f), shortBarHeight, completedWidth2, shortBarWidth, color, Color.Lerp(color, Color.Black, 0.5f), new Color(33, 33, 33));
 
                 Rectangle r = GetDimensions().ToRectangle();
                 r.X -= 8;

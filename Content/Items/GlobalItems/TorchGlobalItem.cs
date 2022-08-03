@@ -12,9 +12,9 @@ namespace Macrocosm.Content.Items.GlobalItems {
         public static bool HasFlame(Item item) => flameItems.Contains(item.type);
 
         public override void Load() {
-            for (int type = 0; type < ItemID.Count; type++) {
-                Item item = new();
-                item.CloneDefaults(type);
+            for (int type = 0; type < ItemID.Count; type++) { // vanilla only 
+
+                Item item = new(type);
 
                 if (item.flame) {
                     flameItems.Add(type);
@@ -28,6 +28,5 @@ namespace Macrocosm.Content.Items.GlobalItems {
                 item.flame = !SubworldSystem.AnyActive<Macrocosm>();
             }
         }
-
     }
 }

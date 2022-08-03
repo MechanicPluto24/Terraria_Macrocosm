@@ -23,6 +23,10 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon {
         public ref float AI_State => ref NPC.ai[2];
         public ref float AI_Direction => ref NPC.localAI[0];
 
+        private float punchCooldown = 180f; // min ticks between attacks 
+        private float dashSpeed = 12f; // initial dash speed and cap 
+        private float dashDeceleration = 2f; // deceleration factor of the dash
+
         public override void SetStaticDefaults() {
             base.SetStaticDefaults();
 
@@ -63,9 +67,6 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon {
         }
 
         public override void PostAI() {
-            const float punchCooldown = 180f; // min ticks between attacks 
-            const float dashSpeed = 12f; // initial dash speed and cap 
-            const float dashDeceleration = 2f; // deceleration factor of the dash
 
             if (AI_Timer <= 0) {
                 AI_Timer = 0;
@@ -74,130 +75,134 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon {
             // actively targets closest player
             // TODO: check behaviour in MP 
             NPC.TargetClosest();
-            Player targetPlayer = Main.player[NPC.target];
 
             // when not jumping, target is close enough but not too close, on the same horizontal line, no blocks between target and him, and there's no active cooldown
             bool canPunch = NPC.HasValidTarget &&
                        Main.netMode != NetmodeID.MultiplayerClient &&
                        AI_Timer == 0 &&
                        Math.Abs(NPC.velocity.Y) == 0 &&
-                       Vector2.Distance(NPC.Center, targetPlayer.Center) <= 16 * 16f &&
-                       Vector2.Distance(NPC.Center, targetPlayer.Center) >= 3 * 16f &&
+                       Vector2.Distance(NPC.Center, Main.player[NPC.target].Center) <= 16 * 16f &&
+                       Vector2.Distance(NPC.Center, Main.player[NPC.target].Center) >= 3 * 16f &&
                        Math.Abs(NPC.Center.Y - Main.player[NPC.target].Center.Y) < 2f * 16f &&
-                       Collision.CanHitLine(NPC.position, NPC.width, NPC.height, targetPlayer.position, targetPlayer.width, targetPlayer.height);
+                       Collision.CanHitLine(NPC.position, NPC.width, NPC.height, Main.player[NPC.target].position, Main.player[NPC.target].width, Main.player[NPC.target].height);
 
             switch (AI_State) {
                 case (float)ActionState.Walk:
-
-                    NPC.damage = 150;
-
-                    if (NPC.velocity.Y < 0f)
-                        NPC.velocity.Y += 0.1f; // fall down faster 
-
-
-                    if (NPC.life <= NPC.lifeMax / 2 && Main.netMode != NetmodeID.MultiplayerClient) {
-                        AI_State = (float)ActionState.Sprint;
-                        NPC.netUpdate = true;
-                    }
-
-                    if (canPunch) {
-                        NPC.frameCounter = 0;
-                        AI_State = (float)ActionState.Punch;
-                        AI_Timer = punchCooldown;
-                        NPC.netUpdate = true;
-                    }
-
-                    // this is done to avoid base fighter AI boredom mechanic 
-                    if (NPC.ai[3] > 0) {
-                        NPC.velocity.Y -= 0.5f;
-                        NPC.ai[3] = float.MaxValue;
-                    }
-
-                    AI_Timer--;
+                    AI_Walk(canPunch);
                     break;
 
-
                 case (float)ActionState.Punch:
+                    AI_Punch();
+                    break;
 
-                    NPC.damage = 350;
+                case (float)ActionState.Sprint:
+                    AI_Sprint();
+                    break;
+            }
+        }
 
-                    targetPlayer.noKnockback = false;
 
-                    targetPlayer.AddBuff(ModContent.BuffType<Fear>(), 120, false);
+        private void AI_Walk(bool canPunch) {
+            NPC.damage = 150;
 
-                    if (NPC.life <= NPC.lifeMax / 2 && Main.netMode != NetmodeID.MultiplayerClient) {
-                        AI_State = (float)ActionState.Sprint;
-                        NPC.netUpdate = true;
-                    }
+            if (NPC.velocity.Y < 0f)
+                NPC.velocity.Y += 0.1f; // fall down faster 
 
-                    if (AI_Timer == punchCooldown - 1f) {
-                        AI_Direction = NPC.direction;
-                    }
 
-                    AI_Timer--;
+            if (NPC.life <= NPC.lifeMax / 2 && Main.netMode != NetmodeID.MultiplayerClient) {
+                AI_State = (float)ActionState.Sprint;
+                NPC.netUpdate = true;
+            }
 
-                    NPC.velocity.Y = 2f;
+            if (canPunch) {
+                NPC.frameCounter = 0;
+                AI_State = (float)ActionState.Punch;
+                AI_Timer = punchCooldown;
+                NPC.netUpdate = true;
+            }
 
-                    if (AI_Timer >= punchCooldown - 60f) // 1 second charge 
-                    {
+            // this is done to avoid base fighter AI boredom mechanic 
+            if (NPC.ai[3] > 0) {
+                NPC.velocity.Y -= 0.5f;
+                NPC.ai[3] = float.MaxValue;
+            }
+
+            AI_Timer--;
+        }
+
+        private void AI_Punch() {
+            NPC.damage = 350;
+
+            //Main.player[NPC.target].AddBuff(ModContent.BuffType<Fear>(), 120, false);
+
+            if (NPC.life <= NPC.lifeMax / 2 && Main.netMode != NetmodeID.MultiplayerClient) {
+                AI_State = (float)ActionState.Sprint;
+                NPC.netUpdate = true;
+            }
+
+            if (AI_Timer == punchCooldown - 1f) {
+                AI_Direction = NPC.direction;
+            }
+
+            AI_Timer--;
+
+            NPC.velocity.Y = 2f;
+
+            if (AI_Timer >= punchCooldown - 60f) // 1 second charge 
+            {
+                NPC.velocity.X = 0;
+            }
+            else {
+                if (AI_Timer == 119) {
+                    NPC.velocity.X = dashSpeed * AI_Direction;
+                }
+
+                if (NPC.direction != AI_Direction && Vector2.Distance(NPC.Center, Main.player[NPC.target].Center) > 2 * 16f) {
+                    AI_Timer -= 0.5f;
+
+                    NPC.velocity.X -= 0.05f * AI_Direction;
+                    if (Math.Sign(NPC.velocity.X) != AI_Direction) {
                         NPC.velocity.X = 0;
-                    }
-                    else {
-                        if (AI_Timer == 119) {
-                            NPC.velocity.X = dashSpeed * AI_Direction;
-                        }
-
-                        if (NPC.direction != AI_Direction && Vector2.Distance(NPC.Center, targetPlayer.Center) > 2 * 16f) {
-                            AI_Timer -= 0.5f;
-
-                            NPC.velocity.X -= 0.05f * AI_Direction;
-                            if (Math.Sign(NPC.velocity.X) != AI_Direction) {
-                                NPC.velocity.X = 0;
-                                if (AI_Timer <= 0 && Main.netMode != NetmodeID.MultiplayerClient) {
-                                    AI_State = (float)ActionState.Walk;
-                                    NPC.netUpdate = true;
-                                }
-                            }
-                        }
-                        else {
-                            NPC.velocity.X -= AI_Timer * dashDeceleration * -AI_Direction;
-                        }
-
-                        if (AI_Timer < punchCooldown - 100f) {
+                        if (AI_Timer <= 0 && Main.netMode != NetmodeID.MultiplayerClient) {
                             AI_State = (float)ActionState.Walk;
                             NPC.netUpdate = true;
                         }
                     }
+                }
+                else {
+                    NPC.velocity.X -= AI_Timer * dashDeceleration * -AI_Direction;
+                }
 
-                    if (Math.Abs(NPC.velocity.X) > dashSpeed) {
-                        NPC.velocity.X = dashSpeed * AI_Direction;
-                    }
+                if (AI_Timer < punchCooldown - 100f) {
+                    AI_State = (float)ActionState.Walk;
+                    NPC.netUpdate = true;
+                }
+            }
 
-                    if (Vector2.Distance(NPC.Center, targetPlayer.Center) > 22 * 16f && Main.netMode != NetmodeID.MultiplayerClient) {
-                        AI_State = (float)ActionState.Walk;
-                        NPC.netUpdate = true;
-                    }
+            if (Math.Abs(NPC.velocity.X) > dashSpeed) {
+                NPC.velocity.X = dashSpeed * AI_Direction;
+            }
 
-                    break;
+            if (Vector2.Distance(NPC.Center, Main.player[NPC.target].Center) > 22 * 16f && Main.netMode != NetmodeID.MultiplayerClient) {
+                AI_State = (float)ActionState.Walk;
+                NPC.netUpdate = true;
+            }
+        }
 
-                case (float)ActionState.Sprint:
+        private void AI_Sprint() {
+            NPC.defense = 120;
+            NPC.damage = 300;
 
-                    NPC.defense = 120;
-                    NPC.damage = 300;
-
-                    if (Math.Abs(NPC.velocity.Y) > 0.5f) // if falling 
-                    {
-                        NPC.velocity.Y += 0.1f;              // accelerate 	
-                        NPC.velocity.X = NPC.direction * 6f; // cap horiz velocity?? 
-                    }
-                    else {
-                        NPC.velocity.X += NPC.direction * 0.4f; // accelerate
-                        if (Math.Abs(NPC.velocity.X) >= 8f) {
-                            NPC.velocity.X = NPC.direction * 8f; // up to 8f
-                        }
-                    }
-
-                    break;
+            if (Math.Abs(NPC.velocity.Y) > 0.5f) // if falling 
+            {
+                NPC.velocity.Y += 0.1f;              // accelerate 	
+                NPC.velocity.X = NPC.direction * 6f; // cap horiz velocity?? 
+            }
+            else {
+                NPC.velocity.X += NPC.direction * 0.4f; // accelerate
+                if (Math.Abs(NPC.velocity.X) >= 8f) {
+                    NPC.velocity.X = NPC.direction * 8f; // up to 8f
+                }
             }
         }
 
@@ -284,7 +289,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon {
                         }
                         else {
 
-                            NPC.frame.Y = (int)(NPC.frameCounter / 5 + 21) * frameHeight; // 8 sprint frames @ 5 ticks per frame 
+                            NPC.frame.Y = (int)(NPC.frameCounter / 5 + 20) * frameHeight; // 8 sprint frames @ 5 ticks per frame 
 
                             NPC.frameCounter++;
 
