@@ -80,7 +80,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon {
         }
 
         public override Color? GetAlpha(Color drawColor)
-            => Color.White * (1f - targetAlpha / 255f);
+            => drawColor * (1f - targetAlpha / 255f);
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 vector, Color drawColor) {
             Texture2D texture = (Texture2D)TextureAssets.Npc[NPC.type];

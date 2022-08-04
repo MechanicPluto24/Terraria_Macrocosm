@@ -6,7 +6,7 @@ using Macrocosm.Content.Projectiles.Friendly.Thrown;
 namespace Macrocosm.Content.Items.Consumables.Throwable {
     public class MoonGlobe : ModItem {
         public override void SetStaticDefaults() {
-            DisplayName.SetDefault("MoonGlobe");
+            DisplayName.SetDefault("Moon Globe");
             Tooltip.SetDefault("Toss it to change how the Moon looks!");
         }
 
@@ -16,6 +16,7 @@ namespace Macrocosm.Content.Items.Consumables.Throwable {
             Item.width = 18;
             Item.height = 18;
             Item.value = Item.sellPrice(gold: 15);
+            Item.rare = ItemRarityID.Green;
         }
     }
 }

@@ -95,7 +95,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Weapons {
                         dust.noGravity = true;
                         dust.velocity *= Main.rand.NextFloat() * 0.8f;
                         dust.velocity += outwardsVector * 0.8f;
-                    }
+                    }   
                 }
                 else if (i >= 19) {
                     frame.Y = 3 * frameHeight; ;
