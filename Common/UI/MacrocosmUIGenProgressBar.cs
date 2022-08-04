@@ -4,62 +4,45 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
+using Terraria.ModLoader;
 using Terraria.UI;
 
 namespace Macrocosm.Common.UI {
     public class MacrocosmUIGenProgressBar : UIGenProgressBar {
+
         private readonly Texture2D texUpper;
         private readonly Texture2D texLower;
+        private readonly Texture2D fillLarge;
+        private readonly Texture2D fillSmall;
 
-        private float visualOverallProgress;
-        private float targetOverallProgress;
-        private float visualCurrentProgress;
-        private float targetCurrentProgress;
-
-        const int longBarWidth = 562;
-        const int longBarHeight = 18;
-        const int shortBarWidth = 508;
-        const int shortBarHeight = 10;
+        private float overallProgress;
+        private float currentProgress;
 
         private Vector2 position;
 
         public void SetPosition(float x, float y) => position = new Vector2(x, y);
 
-        public MacrocosmUIGenProgressBar(Texture2D texUpper, Texture2D texLower) {
+        public MacrocosmUIGenProgressBar(Texture2D texUpper, Texture2D texLower, Texture2D fillLarge, Texture2D fillSmall) {
             if (Main.netMode != NetmodeID.Server) {
                 this.texUpper = texUpper;
                 this.texLower = texLower;
+                this.fillLarge = fillLarge;
+                this.fillSmall = fillSmall;
             }
             base.Recalculate();
         }
 
-        public MacrocosmUIGenProgressBar(Texture2D texUpper, Texture2D texLower, float totalWidth, float totalHeight) : this(texUpper, texLower) {
-            Width.Pixels = totalWidth;
-            Height.Pixels = totalHeight;
-            base.Recalculate();
-        }
-
         public new void SetProgress(float overallProgress, float currentProgress) {
-            targetCurrentProgress = currentProgress;
-            targetOverallProgress = overallProgress;
+            this.overallProgress = overallProgress;
+            this.currentProgress = currentProgress;
         }
 
         public new void DrawSelf(SpriteBatch spriteBatch) {
-            if (texUpper != null && texLower != null) {
-                visualOverallProgress = targetOverallProgress;
-                visualCurrentProgress = targetCurrentProgress;
+            if ((texUpper ?? texLower ?? fillLarge ?? fillSmall) != null) {
 
-                CalculatedStyle dimensions = GetDimensions();
-                int completedWidth = (int)(visualOverallProgress * (float)longBarWidth);
-                int completedWidth2 = (int)(visualCurrentProgress * (float)shortBarWidth);
+                DrawFilling(spriteBatch, new Rectangle((int)position.X + 20, (int)position.Y + 38, 568, 22), overallProgress, fillLarge, new Color(48, 48, 48));
 
-                Vector2 value = new(dimensions.X, dimensions.Y);
-                Color color = default;
-
-                color.PackedValue = 4286836223u;
-                DrawFilling(spriteBatch, position + value + new Vector2(20f, 40f), longBarHeight, completedWidth, longBarWidth, color, Color.Lerp(color, Color.Black, 0.5f), new Color(48, 48, 48));
-                color.PackedValue = 4290947159u;
-                DrawFilling(spriteBatch, position + value + new Vector2(48f, 60f), shortBarHeight, completedWidth2, shortBarWidth, color, Color.Lerp(color, Color.Black, 0.5f), new Color(33, 33, 33));
+                DrawFilling(spriteBatch, new Rectangle((int)position.X + 48, (int)position.Y + 60, 506, 12), currentProgress, fillSmall, new Color(48, 48, 48));
 
                 Rectangle r = GetDimensions().ToRectangle();
                 r.X -= 8;
@@ -68,13 +51,15 @@ namespace Macrocosm.Common.UI {
             }
         }
 
-        private static void DrawFilling(SpriteBatch spritebatch, Vector2 position, int height, int completedWidth, int totalWidth, Color filled, Color separator, Color empty) {
-            if (completedWidth % 2 != 0)
-                completedWidth--;
+        private static void DrawFilling(SpriteBatch spriteBatch, Rectangle rect, float progress, Texture2D texture, Color empty) {
 
-            spritebatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle((int)position.X, (int)position.Y, completedWidth, height), new Rectangle(0, 0, 1, 1), filled);
-            spritebatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle((int)position.X + completedWidth, (int)position.Y, totalWidth - completedWidth, height), new Rectangle(0, 0, 1, 1), empty);
-            spritebatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle((int)position.X + completedWidth - 2, (int)position.Y, 2, height), new Rectangle(0, 0, 1, 1), separator);
+            spriteBatch.Draw(TextureAssets.MagicPixel.Value, rect, empty);
+
+            int steps = (int)((rect.Right - rect.Left) * progress);
+            for (int i = 0; i < steps; i++) {
+                spriteBatch.Draw(texture, new Rectangle(rect.Left + i, rect.Y, 1, rect.Height), Color.White);
+            }
+            spriteBatch.Draw(texture, new Rectangle(rect.X + (int)(progress * rect.Width), rect.Y, 2, rect.Height), null, Color.White * 0.5f);
         }
     }
 }

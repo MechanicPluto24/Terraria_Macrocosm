@@ -1,4 +1,5 @@
-﻿using Terraria;
+﻿using Microsoft.Xna.Framework;
+using Terraria;
 
 namespace Macrocosm.Common.Utility {
     public static class MiscUtils {
@@ -8,6 +9,12 @@ namespace Macrocosm.Common.Utility {
         /// </summary>
         public static int TrueDamage(int damage)
             => damage / (Main.expertMode ? 4 : 2);
+
+        public static Rectangle VanillaDustFrame(int dustId) {
+            int frameX = dustId * 10 % 1000;
+            int frameY = dustId * 10 / 1000 * 30 + Main.rand.Next(3) * 10;
+            return new Rectangle(frameX, frameY, 8, 8);
+        }
 
         /// <summary>
         /// Applies a logarithmic derivative to <paramref name="value"/>

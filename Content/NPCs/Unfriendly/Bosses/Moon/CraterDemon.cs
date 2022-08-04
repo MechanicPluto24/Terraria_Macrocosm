@@ -3,6 +3,7 @@ using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Projectiles.Unfriendly;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using System;
 using System.IO;
 using Terraria;
@@ -272,6 +273,15 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon {
             return true;
         }
 
+        public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor) {
+
+            Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Unfriendly/Bosses/Moon/CraterDemonGlow").Value;
+            int frameHeight = (glowmask.Height / Main.npcFrameCount[Type]);
+            int frameY = NPC.frame.Y / frameHeight;
+
+            spriteBatch.Draw(glowmask, NPC.position - screenPos, glowmask.Frame(1, Main.npcFrameCount[Type], frameY: frameY), Color.White, NPC.rotation, Vector2.Zero, NPC.scale, SpriteEffects.None, 0f);
+        }
+
         private void DrawBigPortal(SpriteBatch spriteBatch, Texture2D texture, BigPortalInfo info) {
             if (!info.visible)
                 return;
@@ -499,7 +509,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon {
                         for (int i = 0; i < count; i++) {
                             Vector2 spawn = orig + new Vector2(Main.rand.NextFloat(-1, 1) * 40 * 16, Main.rand.NextFloat(-1, 1) * 6 * 16);
 
-                            Projectile.NewProjectile(NPC.GetSource_FromAI(), spawn, Vector2.Zero, ModContent.ProjectileType<Portal>(), MiscUtils.TrueDamage(Main.expertMode ? 140 : 90), 0f, Main.myPlayer);
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), spawn, Vector2.Zero, ModContent.ProjectileType<CDMeteorPortal>(), MiscUtils.TrueDamage(Main.expertMode ? 140 : 90), 0f, Main.myPlayer);
                             // TODO: netcode
                         }
 
@@ -915,7 +925,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon {
         }
 
         public override Color? GetAlpha(Color drawColor)
-            => Color.White * (1f - targetAlpha / 255f);
+            => drawColor * (1f - targetAlpha / 255f);
 
         public override bool? CanBeHitByItem(Player player, Item item)
             => CanBeHitByThing(player.GetSwungItemHitbox());
