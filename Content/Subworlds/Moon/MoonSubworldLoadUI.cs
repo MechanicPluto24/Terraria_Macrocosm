@@ -13,160 +13,172 @@ using Terraria.ModLoader;
 using Terraria.UI.Chat;
 using Terraria.WorldBuilding;
 
-namespace Macrocosm.Content.Subworlds.Moon {
-    public class MoonSubworldLoadUI : UIWorldLoad {
+namespace Macrocosm.Content.Subworlds.Moon
+{
+	public class MoonSubworldLoadUI : UIWorldLoad
+	{
 
-        private Texture2D lunaBackground;
-        private Texture2D lunaAtmoBackground;
-        private Texture2D earthSmallBackground;
-        private Texture2D earthSmallAtmoBackground;
+		private Texture2D lunaBackground;
+		private Texture2D lunaAtmoBackground;
+		private Texture2D earthSmallBackground;
+		private Texture2D earthSmallAtmoBackground;
 
-        private Texture2D earthBackground;
-        private Texture2D earthAtmoBackground;
+		private Texture2D earthBackground;
+		private Texture2D earthAtmoBackground;
 
-        private bool texLoaded = false;
+		private bool texLoaded = false;
 
-        private bool toEarth;
+		private bool toEarth;
 
-        private double animationTimer;
-        private string chosenMessage;
+		private double animationTimer;
+		private string chosenMessage;
 
-        private MacrocosmUIGenProgressBar progressBar;
+		private MacrocosmUIGenProgressBar progressBar;
 
-        private StarsDrawing starsDrawing = new();
-        private readonly TextFileLoader textFileLoader = new();
+		private StarsDrawing starsDrawing = new();
+		private readonly TextFileLoader textFileLoader = new();
 
-        public void ResetAnimation() => animationTimer = 0;
-        public void NewStatusMessage() => chosenMessage = toEarth ? ListRandom.Pick(textFileLoader.Parse("Content/Subworlds/Earth/EarthMessages")) : ListRandom.Pick(textFileLoader.Parse("Content/Subworlds/Moon/MoonMessages"));
+		public void ResetAnimation() => animationTimer = 0;
+		public void NewStatusMessage() => chosenMessage = toEarth ? ListRandom.Pick(textFileLoader.Parse("Content/Subworlds/Earth/EarthMessages")) : ListRandom.Pick(textFileLoader.Parse("Content/Subworlds/Moon/MoonMessages"));
 
-        public void Setup(bool toEarth) {
-            LoadTextures();
+		public void Setup(bool toEarth)
+		{
+			LoadTextures();
 
-            this.toEarth = toEarth;
+			this.toEarth = toEarth;
 
-            ResetAnimation();
-            NewStatusMessage();
-            starsDrawing.Clear();
+			ResetAnimation();
+			NewStatusMessage();
+			starsDrawing.Clear();
 
-            if (toEarth) {
-                starsDrawing.SpawnStars(150, 200);
-            }
-            else {
-                starsDrawing.SpawnStars(200, 250, twinkleFactor: 0.1f);
-            }
-        }
+			if (toEarth)
+			{
+				starsDrawing.SpawnStars(150, 200);
+			}
+			else
+			{
+				starsDrawing.SpawnStars(200, 250, twinkleFactor: 0.1f);
+			}
+		}
 
-        private void LoadTextures() {
-            if (!texLoaded) {
+		private void LoadTextures()
+		{
+			if (!texLoaded)
+			{
 
-                lunaBackground = ModContent.Request<Texture2D>("Macrocosm/Assets/LoadingBackgrounds/Luna", AssetRequestMode.ImmediateLoad).Value;
-                lunaAtmoBackground = ModContent.Request<Texture2D>("Macrocosm/Assets/LoadingBackgrounds/LunaAtmo", AssetRequestMode.ImmediateLoad).Value;
+				lunaBackground = ModContent.Request<Texture2D>("Macrocosm/Assets/LoadingBackgrounds/Luna", AssetRequestMode.ImmediateLoad).Value;
+				lunaAtmoBackground = ModContent.Request<Texture2D>("Macrocosm/Assets/LoadingBackgrounds/LunaAtmo", AssetRequestMode.ImmediateLoad).Value;
 
-                earthSmallBackground = ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/EarthAtmoless2", AssetRequestMode.ImmediateLoad).Value;
-                earthSmallAtmoBackground = ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/EarthAtmo", AssetRequestMode.ImmediateLoad).Value;
+				earthSmallBackground = ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/EarthAtmoless2", AssetRequestMode.ImmediateLoad).Value;
+				earthSmallAtmoBackground = ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/EarthAtmo", AssetRequestMode.ImmediateLoad).Value;
 
-                earthBackground = ModContent.Request<Texture2D>("Macrocosm/Assets/LoadingBackgrounds/Earth", AssetRequestMode.ImmediateLoad).Value;
-                earthAtmoBackground = ModContent.Request<Texture2D>("Macrocosm/Assets/LoadingBackgrounds/EarthAtmo", AssetRequestMode.ImmediateLoad).Value;
+				earthBackground = ModContent.Request<Texture2D>("Macrocosm/Assets/LoadingBackgrounds/Earth", AssetRequestMode.ImmediateLoad).Value;
+				earthAtmoBackground = ModContent.Request<Texture2D>("Macrocosm/Assets/LoadingBackgrounds/EarthAtmo", AssetRequestMode.ImmediateLoad).Value;
 
-                Texture2D moonProgressBarTexUpper = ModContent.Request<Texture2D>("Macrocosm/Assets/UI/WorldGen/ProgressBarMoon", AssetRequestMode.ImmediateLoad).Value;
-                Texture2D moonProgressBarTexLower = ModContent.Request<Texture2D>("Macrocosm/Assets/UI/WorldGen/ProgressBarMoon_Lower", AssetRequestMode.ImmediateLoad).Value;
-                Texture2D moonProgressBarLargeFill = ModContent.Request<Texture2D>("Macrocosm/Assets/UI/WorldGen/MoonLargeFill", AssetRequestMode.ImmediateLoad).Value;
-                Texture2D moonProgressBarSmallFill = ModContent.Request<Texture2D>("Macrocosm/Assets/UI/WorldGen/MoonSmallFill", AssetRequestMode.ImmediateLoad).Value;
+				Texture2D moonProgressBarTexUpper = ModContent.Request<Texture2D>("Macrocosm/Assets/UI/WorldGen/ProgressBarMoon", AssetRequestMode.ImmediateLoad).Value;
+				Texture2D moonProgressBarTexLower = ModContent.Request<Texture2D>("Macrocosm/Assets/UI/WorldGen/ProgressBarMoon_Lower", AssetRequestMode.ImmediateLoad).Value;
+				Texture2D moonProgressBarLargeFill = ModContent.Request<Texture2D>("Macrocosm/Assets/UI/WorldGen/MoonLargeFill", AssetRequestMode.ImmediateLoad).Value;
+				Texture2D moonProgressBarSmallFill = ModContent.Request<Texture2D>("Macrocosm/Assets/UI/WorldGen/MoonSmallFill", AssetRequestMode.ImmediateLoad).Value;
 
-                progressBar = new(moonProgressBarTexUpper, moonProgressBarTexLower, moonProgressBarLargeFill, moonProgressBarSmallFill);
-                progressBar.SetPosition(200f, 200f);
+				progressBar = new(moonProgressBarTexUpper, moonProgressBarTexLower, moonProgressBarLargeFill, moonProgressBarSmallFill);
+				progressBar.SetPosition(200f, 200f);
 
-                texLoaded = true;
-            }
-        }
+				texLoaded = true;
+			}
+		}
 
-        public new void DrawSelf(SpriteBatch spriteBatch) {
-            string loadText;
+		public new void DrawSelf(SpriteBatch spriteBatch)
+		{
+			string loadText;
 
-            Color bodyColor = Color.White * (float)(animationTimer / 5) * 0.8f;  // color of the celestial body
-            bodyColor.A = byte.MaxValue;                                         // keep it opaque
+			Color bodyColor = Color.White * (float)(animationTimer / 5) * 0.8f;  // color of the celestial body
+			bodyColor.A = byte.MaxValue;                                         // keep it opaque
 
-            if (toEarth) {
-                spriteBatch.Begin(0, BlendState.Additive, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.UIScaleMatrix);
-                spriteBatch.Draw
-                (
-                    earthAtmoBackground,
-                    new Rectangle(Main.screenWidth - earthAtmoBackground.Width, Main.screenHeight - earthAtmoBackground.Height + 50 - (int)(animationTimer * 10), earthAtmoBackground.Width, earthAtmoBackground.Height),
-                    null,
-                    bodyColor
+			if (toEarth)
+			{
+				spriteBatch.Begin(0, BlendState.Additive, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.UIScaleMatrix);
+				spriteBatch.Draw
+				(
+					earthAtmoBackground,
+					new Rectangle(Main.screenWidth - earthAtmoBackground.Width, Main.screenHeight - earthAtmoBackground.Height + 50 - (int)(animationTimer * 10), earthAtmoBackground.Width, earthAtmoBackground.Height),
+					null,
+					bodyColor
 
-                );
-                spriteBatch.End();
+				);
+				spriteBatch.End();
 
-                spriteBatch.Begin(0, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.UIScaleMatrix);
+				spriteBatch.Begin(0, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.UIScaleMatrix);
 
-                starsDrawing.Draw();
+				starsDrawing.Draw();
 
-                spriteBatch.Draw
-                (
-                    earthBackground,
-                    new Rectangle(Main.screenWidth - earthBackground.Width, Main.screenHeight - earthBackground.Height + 50 - (int)(animationTimer * 10), earthBackground.Width, earthBackground.Height),
-                    null,
-                    bodyColor
-                );
-                string msgToPlayer = "Earth"; // Title
-                Vector2 messageSize = FontAssets.DeathText.Value.MeasureString(msgToPlayer) * 1.2f;
-                ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, msgToPlayer, new Vector2(Main.screenWidth / 2f - messageSize.X / 2f, messageSize.Y), new Color(94, 150, 255), 0f, Vector2.Zero, new Vector2(1.2f));
-                Vector2 messageSize2 = FontAssets.DeathText.Value.MeasureString(chosenMessage) * 0.7f;
-                ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, chosenMessage, new Vector2(Main.screenWidth / 2f - messageSize2.X / 2f, Main.screenHeight - messageSize2.Y - 20), Color.White, 0f, Vector2.Zero, new Vector2(0.7f));
-            }
-            else {
-                spriteBatch.Begin(0, BlendState.Additive, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.UIScaleMatrix);
-                spriteBatch.Draw
-                (
-                    lunaAtmoBackground,
-                    new Rectangle(Main.screenWidth - lunaAtmoBackground.Width, Main.screenHeight - lunaAtmoBackground.Height + 50 - (int)(animationTimer * 10), lunaAtmoBackground.Width, lunaAtmoBackground.Height),
-                    null,
-                    bodyColor
-                );
-                spriteBatch.End();
+				spriteBatch.Draw
+				(
+					earthBackground,
+					new Rectangle(Main.screenWidth - earthBackground.Width, Main.screenHeight - earthBackground.Height + 50 - (int)(animationTimer * 10), earthBackground.Width, earthBackground.Height),
+					null,
+					bodyColor
+				);
+				string msgToPlayer = "Earth"; // Title
+				Vector2 messageSize = FontAssets.DeathText.Value.MeasureString(msgToPlayer) * 1.2f;
+				ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, msgToPlayer, new Vector2(Main.screenWidth / 2f - messageSize.X / 2f, messageSize.Y), new Color(94, 150, 255), 0f, Vector2.Zero, new Vector2(1.2f));
+				Vector2 messageSize2 = FontAssets.DeathText.Value.MeasureString(chosenMessage) * 0.7f;
+				ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, chosenMessage, new Vector2(Main.screenWidth / 2f - messageSize2.X / 2f, Main.screenHeight - messageSize2.Y - 20), Color.White, 0f, Vector2.Zero, new Vector2(0.7f));
+			}
+			else
+			{
+				spriteBatch.Begin(0, BlendState.Additive, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.UIScaleMatrix);
+				spriteBatch.Draw
+				(
+					lunaAtmoBackground,
+					new Rectangle(Main.screenWidth - lunaAtmoBackground.Width, Main.screenHeight - lunaAtmoBackground.Height + 50 - (int)(animationTimer * 10), lunaAtmoBackground.Width, lunaAtmoBackground.Height),
+					null,
+					bodyColor
+				);
+				spriteBatch.End();
 
-                spriteBatch.Begin(0, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.UIScaleMatrix);
+				spriteBatch.Begin(0, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.UIScaleMatrix);
 
-                starsDrawing.Draw();
+				starsDrawing.Draw();
 
-                CelestialBody.Draw(earthSmallBackground, earthSmallAtmoBackground, 0.7f, -450f, -200f);
+				CelestialBody.Draw(earthSmallBackground, earthSmallAtmoBackground, 0.7f, -450f, -200f);
 
-                spriteBatch.Draw
-                (
-                    lunaBackground,
-                    new Rectangle(Main.screenWidth - lunaBackground.Width, Main.screenHeight - lunaBackground.Height + 50 - (int)(animationTimer * 10), lunaBackground.Width, lunaBackground.Height),
-                    null,
-                    bodyColor
-                );
+				spriteBatch.Draw
+				(
+					lunaBackground,
+					new Rectangle(Main.screenWidth - lunaBackground.Width, Main.screenHeight - lunaBackground.Height + 50 - (int)(animationTimer * 10), lunaBackground.Width, lunaBackground.Height),
+					null,
+					bodyColor
+				);
 
-                string msgToPlayer = "Earth's Moon"; // Title
-                Vector2 messageSize = FontAssets.DeathText.Value.MeasureString(msgToPlayer) * 1.2f;
-                ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, msgToPlayer, new Vector2(Main.screenWidth / 2f - messageSize.X / 2f, messageSize.Y), Color.White, 0f, Vector2.Zero, new Vector2(1.2f));
-                Vector2 messageSize2 = FontAssets.DeathText.Value.MeasureString(chosenMessage) * 0.7f;
-                ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, chosenMessage, new Vector2(Main.screenWidth / 2f - messageSize2.X / 2f, Main.screenHeight - messageSize2.Y - 20), Color.White, 0f, Vector2.Zero, new Vector2(0.7f));
+				string msgToPlayer = "Earth's Moon"; // Title
+				Vector2 messageSize = FontAssets.DeathText.Value.MeasureString(msgToPlayer) * 1.2f;
+				ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, msgToPlayer, new Vector2(Main.screenWidth / 2f - messageSize.X / 2f, messageSize.Y), Color.White, 0f, Vector2.Zero, new Vector2(1.2f));
+				Vector2 messageSize2 = FontAssets.DeathText.Value.MeasureString(chosenMessage) * 0.7f;
+				ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, chosenMessage, new Vector2(Main.screenWidth / 2f - messageSize2.X / 2f, Main.screenHeight - messageSize2.Y - 20), Color.White, 0f, Vector2.Zero, new Vector2(0.7f));
 
-            }
+			}
 
-            if (WorldGenerator.CurrentGenerationProgress != null) {
-                loadText = WorldGenerator.CurrentGenerationProgress.Message;
-                progressBar.SetProgress(WorldGenerator.CurrentGenerationProgress.TotalProgress, WorldGenerator.CurrentGenerationProgress.Value);
-                progressBar.SetPosition((Main.screenWidth - progressBar.Width.Pixels) / 2, (Main.screenHeight - progressBar.Height.Pixels) / 2);
-                progressBar.DrawSelf(spriteBatch);
-            }
-            else {
-                loadText = Main.statusText;
-            }
+			if (WorldGenerator.CurrentGenerationProgress != null)
+			{
+				loadText = WorldGenerator.CurrentGenerationProgress.Message;
+				progressBar.SetProgress(WorldGenerator.CurrentGenerationProgress.TotalProgress, WorldGenerator.CurrentGenerationProgress.Value);
+				progressBar.SetPosition((Main.screenWidth - progressBar.Width.Pixels) / 2, (Main.screenHeight - progressBar.Height.Pixels) / 2);
+				progressBar.DrawSelf(spriteBatch);
+			}
+			else
+			{
+				loadText = Main.statusText;
+			}
 
-            ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, loadText, new Vector2((float)Main.screenWidth, (float)Main.screenHeight - 100f) / 2f - FontAssets.DeathText.Value.MeasureString(loadText) / 2f, Color.White, 0f, Vector2.Zero, Vector2.One);
+			ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, loadText, new Vector2((float)Main.screenWidth, (float)Main.screenHeight - 100f) / 2f - FontAssets.DeathText.Value.MeasureString(loadText) / 2f, Color.White, 0f, Vector2.Zero, Vector2.One);
 
-            Main.DrawCursor(Main.DrawThickCursor(false), false);
+			Main.DrawCursor(Main.DrawThickCursor(false), false);
 
-            spriteBatch.End();
+			spriteBatch.End();
 
-            animationTimer += 0.125;
-            if (animationTimer > 5)
-                animationTimer = 5;
-        }
-    }
+			animationTimer += 0.125;
+			if (animationTimer > 5)
+				animationTimer = 5;
+		}
+	}
 }
