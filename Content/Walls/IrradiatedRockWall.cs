@@ -3,12 +3,15 @@ using Terraria;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 
-namespace Macrocosm.Content.Walls {
-    public class IrradiatedRockWall : ModWall {
-        public override void SetStaticDefaults() {
-            Main.wallHouse[Type] = false;
-            ItemDrop = ItemType<Items.Placeables.BlocksAndWalls.IrradiatedRockWall>();
-            AddMapEntry(new Color(65, 65, 65));
-        }
-    }
+namespace Macrocosm.Content.Walls
+{
+	public class IrradiatedRockWall : ModWall
+	{
+		public override void SetStaticDefaults()
+		{
+			Main.wallHouse[Type] = false;
+			ItemDrop = ItemType<Items.Placeables.BlocksAndWalls.IrradiatedRockWall>();
+			AddMapEntry(new Color(65, 65, 65));
+		}
+	}
 }
