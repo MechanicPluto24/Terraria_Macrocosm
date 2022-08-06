@@ -51,14 +51,12 @@ namespace Macrocosm.Content.Subworlds.Moon
 		{
 			moonLoadUI.Setup(toEarth: false);
 			SkyManager.Instance.Activate("Macrocosm:MoonSky");
-			MoonSky.SpawnStarsOnMoon();
 		}
 
 		public override void OnExit()
 		{
 			moonLoadUI.Setup(toEarth: true);
 			SkyManager.Instance.Deactivate("Macrocosm:MoonSky");
-			MoonSky.ClearStarsOnMoon();
 		}
 
 		public override void Load()
