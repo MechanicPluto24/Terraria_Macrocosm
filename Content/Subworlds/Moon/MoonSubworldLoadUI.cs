@@ -69,8 +69,8 @@ namespace Macrocosm.Content.Subworlds.Moon
 				lunaBackground = ModContent.Request<Texture2D>("Macrocosm/Assets/LoadingBackgrounds/Luna", AssetRequestMode.ImmediateLoad).Value;
 				lunaAtmoBackground = ModContent.Request<Texture2D>("Macrocosm/Assets/LoadingBackgrounds/LunaAtmo", AssetRequestMode.ImmediateLoad).Value;
 
-				earthSmallBackground = ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/EarthAtmoless2", AssetRequestMode.ImmediateLoad).Value;
-				earthSmallAtmoBackground = ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/EarthAtmo", AssetRequestMode.ImmediateLoad).Value;
+				earthSmallBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/EarthAtmoless", AssetRequestMode.ImmediateLoad).Value;
+				earthSmallAtmoBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/EarthAtmo", AssetRequestMode.ImmediateLoad).Value;
 
 				earthBackground = ModContent.Request<Texture2D>("Macrocosm/Assets/LoadingBackgrounds/Earth", AssetRequestMode.ImmediateLoad).Value;
 				earthAtmoBackground = ModContent.Request<Texture2D>("Macrocosm/Assets/LoadingBackgrounds/EarthAtmo", AssetRequestMode.ImmediateLoad).Value;
@@ -140,7 +140,7 @@ namespace Macrocosm.Content.Subworlds.Moon
 
 				starsDrawing.Draw();
 
-				CelestialBody.Draw(earthSmallBackground, earthSmallAtmoBackground, 0.7f, -450f, -200f);
+				CelestialBody1.Draw(earthSmallBackground, earthSmallAtmoBackground, 0.7f, -450f, -200f);
 
 				spriteBatch.Draw
 				(

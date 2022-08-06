@@ -7,7 +7,7 @@ using Terraria.GameContent;
 using Terraria.Graphics.Effects;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Backgrounds.Moon
+namespace Macrocosm.Content.Backgrounds.Moon
 {
 	public class MoonSurfaceBgStyle : ModSurfaceBackgroundStyle
 	{
@@ -47,16 +47,16 @@ namespace Macrocosm.Backgrounds.Moon
 
 		public override int ChooseCloseTexture(ref float scale, ref double parallax, ref float a, ref float b)
 		{
-			return BackgroundTextureLoader.GetBackgroundSlot("Macrocosm/Backgrounds/Moon/MoonSurfaceMid");
+			return BackgroundTextureLoader.GetBackgroundSlot("Macrocosm/Content/Backgrounds/Moon/MoonSurfaceMid");
 		}
 		public override bool PreDrawCloseBackground(SpriteBatch spriteBatch)
 		{
 			float a = 1300f;
 			float b = 1750f;
 			int[] textureSlots = new int[] {
-				BackgroundTextureLoader.GetBackgroundSlot("Macrocosm/Backgrounds/Moon/MoonSurfaceFar"),
-				BackgroundTextureLoader.GetBackgroundSlot("Macrocosm/Backgrounds/Moon/MoonSurfaceMid"),
-				BackgroundTextureLoader.GetBackgroundSlot("Macrocosm/Backgrounds/Moon/MoonSurfaceNear"),
+				BackgroundTextureLoader.GetBackgroundSlot("Macrocosm/Content/Backgrounds/Moon/MoonSurfaceFar"),
+				BackgroundTextureLoader.GetBackgroundSlot("Macrocosm/Content/Backgrounds/Moon/MoonSurfaceMid"),
+				BackgroundTextureLoader.GetBackgroundSlot("Macrocosm/Content/Backgrounds/Moon/MoonSurfaceNear"),
 			};
 			int length = textureSlots.Length;
 			for (int i = 0; i < textureSlots.Length; i++)

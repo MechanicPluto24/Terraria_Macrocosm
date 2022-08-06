@@ -102,21 +102,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Weapons
 					// Spawn dust
 					if (dustChance > 0.5f && Main.rand.NextFloat() < dustChance * 0.7f)
 					{
-
 						Vector2 outwardsVector = list[^2].DirectionTo(list[^1]).SafeNormalize(Vector2.Zero);
 						Dust dust = Dust.NewDustDirect(list[^1] - texture.Size() / 2, texture.Width, texture.Height, ModContent.DustType<ChandriumDust>(), 0f, 0f, 100, default, Main.rand.NextFloat(1f, 1.5f));
-						//Rectangle r3 = Utils.CenteredRectangle(list[^1], new Vector2(30f, 30f));
 
 						dust.noGravity = true;
 						dust.velocity *= Main.rand.NextFloat() * 0.8f;
 						dust.velocity += outwardsVector * 0.8f;
-
-						//if (Main.rand.NextBool()) {
-						//    ParticleOrchestrator.RequestParticleSpawn(clientOnly: true, ParticleOrchestraType.StardustPunch, new ParticleOrchestraSettings {
-						//        MovementVector = outwardsVector,
-						//        PositionInWorld = r3.Center.ToVector2()
-						//    }, Projectile.owner);
-						//}
 					}
 
 

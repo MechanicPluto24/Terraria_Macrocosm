@@ -1,4 +1,4 @@
-﻿using Macrocosm.Backgrounds.Moon;
+﻿using Macrocosm.Content.Backgrounds.Moon;
 using Macrocosm.Content.Subworlds.Moon.Generation;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
@@ -7,7 +7,6 @@ using Terraria;
 using Terraria.GameInput;
 using Terraria.Graphics.Effects;
 using Terraria.WorldBuilding;
-
 
 namespace Macrocosm.Content.Subworlds.Moon
 {
