@@ -20,8 +20,8 @@ namespace Macrocosm.Content.Backgrounds.Moon
 		private StarsDrawing starsDay;
 		private StarsDrawing starsNight;
 
-		private CelestialBody earth;
-		private CelestialBody sun;
+		private CelestialObject earth;
+		private CelestialObject sun;
 
 		Texture2D skyTexture;
 
@@ -59,10 +59,10 @@ namespace Macrocosm.Content.Backgrounds.Moon
 			starsDay = new StarsDrawing();
 			starsNight = new StarsDrawing();
 
-			sun = new CelestialBody(sunTexture);
-			earth = new CelestialBody(earthBody, earthAtmo, 0.9f);
+			sun = new CelestialObject(sunTexture);
+			earth = new CelestialObject(earthBody, earthAtmo, 0.9f);
 
-			sun.SetSkyRotationMode(CelestialBody.SkyRotationMode.Day);
+			sun.SetSkyRotationMode(CelestialObject.SkyRotationMode.Day);
 
 			earth.SetParallax(0.01f, 0.12f, new Vector2(0f, -200f));
 			earth.SetupShadow(sun, earthBodyShadow, earthAtmoShadow);

@@ -33,7 +33,7 @@ namespace Macrocosm.Content.Subworlds.Moon
 
 		private MacrocosmUIGenProgressBar progressBar;
 
-		private CelestialBody earth;
+		private CelestialObject earth;
 
 		private StarsDrawing starsDrawing = new();
 		private readonly TextFileLoader textFileLoader = new();
@@ -82,7 +82,7 @@ namespace Macrocosm.Content.Subworlds.Moon
 			Texture2D moonProgressBarLargeFill = ModContent.Request<Texture2D>("Macrocosm/Assets/UI/WorldGen/MoonLargeFill", AssetRequestMode.ImmediateLoad).Value;
 			Texture2D moonProgressBarSmallFill = ModContent.Request<Texture2D>("Macrocosm/Assets/UI/WorldGen/MoonSmallFill", AssetRequestMode.ImmediateLoad).Value;
 
-			earth = new CelestialBody(earthSmallBackground, earthSmallAtmoBackground, 0.7f);
+			earth = new CelestialObject(earthSmallBackground, earthSmallAtmoBackground, 0.7f);
 
 			progressBar = new MacrocosmUIGenProgressBar(moonProgressBarTexUpper, moonProgressBarTexLower, moonProgressBarLargeFill, moonProgressBarSmallFill);
 			progressBar.SetPosition(200f, 200f);

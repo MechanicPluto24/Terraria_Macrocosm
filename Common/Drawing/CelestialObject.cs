@@ -5,7 +5,7 @@ using Terraria;
 
 namespace Macrocosm.Common.Drawing
 {
-	public class CelestialBody 
+	public class CelestialObject
 	{
 		public enum SkyRotationMode
 		{
@@ -14,7 +14,6 @@ namespace Macrocosm.Common.Drawing
 			Night,
 			Any
 		}
-
 		public bool HasAtmo => atmoTexture is not null;
 		public bool HasShadow { get; set; } = false;
 
@@ -31,35 +30,31 @@ namespace Macrocosm.Common.Drawing
 		private Vector2 screenPosition;
 
 		private SkyRotationMode rotationMode = SkyRotationMode.None;
-		private bool shouldDraw = true;
 
 		private Texture2D bodyShadowTexture = null;
 		private Texture2D atmoShadowTexture = null;
-		private CelestialBody lightSource = null;
+		private CelestialObject lightSource = null;
 		private float shadowRotation = 0f;
 		private Color shadowColor = Color.White;
 
-		public CelestialBody(Texture2D bodyTexture, Texture2D atmoTexture = null, float scale = 1f, float rotation = 0f)
+		public CelestialObject(Texture2D bodyTexture, Texture2D atmoTexture = null, float scale = 1f, float rotation = 0f)
 		{
 			this.bodyTexture = bodyTexture;
 			this.scale = scale;
 			this.atmoTexture = atmoTexture;
 			this.rotation = rotation;
-		}
-
-		public CelestialBody(Texture2D bodyTexture, Vector2 screenPosition, Texture2D atmoTexture = null, float scale = 1f, float rotation = 0f)
-		{
-			this.bodyTexture = bodyTexture;
-			this.atmoTexture = atmoTexture;
-			this.scale = scale;
-			this.rotation = rotation;
-
-			SetScreenPosition(screenPosition);
 		}
 
 		public void SetScreenPosition(Vector2 position) => screenPosition = position;
 		public void SetScreenPosition(float x, float y) => SetScreenPosition(new Vector2(x, y));
 
+
+		/// <summary>
+		/// Configure parallax settings for the object
+		/// </summary>
+		/// <param name="parallaxX"> Horizontal parallaxing speed  </param>
+		/// <param name="parallaxY"> Vertical parallaxing speed </param>
+		/// <param name="averageOffset"> The offset from the screen center when the player is in the middle of the world </param>
 		public void SetParallax(float parallaxX = 0f, float parallaxY = 0f, Vector2 averageOffset = default)
 		{
 			this.parallaxSpeedX = parallaxX;
@@ -83,9 +78,24 @@ namespace Macrocosm.Common.Drawing
 			));
 		}
 
+		/// <summary>
+		/// Configures rotation of the object on the sky 
+		/// </summary>
+		/// <param name="mode">
+		/// None  - No rotation
+		/// Day   - Only visible during the day (rotation logic will still run)
+		/// Night - Only visible during the night (rotation logic will still run)
+		/// Any   - Cycles during both day and night  
+		/// </param>
 		public void SetSkyRotationMode(SkyRotationMode mode) => rotationMode = mode;
 
-		public void SetupShadow(CelestialBody lightSource = null, Texture2D bodyShadowTexture = null, Texture2D atmoShadowTexture = null)
+		/// <summary>
+		/// Configures shading for the object 
+		/// </summary>
+		/// <param name="lightSource"> The object the shade will rotate away from (leave null for stationary) </param>
+		/// <param name="bodyShadowTexture"> The shadow texture that draws over the object's body (null for none) </param>
+		/// <param name="atmoShadowTexture"> The shadow texture that draws over the object's atmosphere (null for none) </param>
+		public void SetupShadow(CelestialObject lightSource = null, Texture2D bodyShadowTexture = null, Texture2D atmoShadowTexture = null)
 		{
 			HasShadow = true;
 			this.lightSource = lightSource;
@@ -93,9 +103,6 @@ namespace Macrocosm.Common.Drawing
 			this.atmoShadowTexture = atmoShadowTexture;
 		}
 
-		/// <summary>
-		/// Draws a celestial body with an atmosphere at the screen center, with possible offsets and parallax speeds
-		/// </summary>
 		public void DrawSelf(SpriteBatch spriteBatch)
 		{
 			// these are mutually exclusive rn :(
@@ -176,7 +183,7 @@ namespace Macrocosm.Common.Drawing
 			color = new Color((byte)(255f * clouldAlphaMult), (byte)(Color.White.G * clouldAlphaMult), (byte)(Color.White.B * clouldAlphaMult), (byte)(255f * clouldAlphaMult));
 			int angle = (int)(bgTop + timeY * 250.0 + 180.0);
 
-			SetScreenPosition(new Vector2(timeX, angle + Main.sunModY /** parallaxSpeedY*/));
+			SetScreenPosition(new Vector2(timeX, angle + Main.sunModY)); // TODO: add configurable vertical parallax 
 		}
 
 		private bool ShouldDraw()
@@ -227,9 +234,6 @@ namespace Macrocosm.Common.Drawing
 				brightness = (diff * 0.4f * ((float)(totalTime - 70200) / 16200));
 			else
 				brightness = (maxBrightness - ((float)(totalTime - 27000) / 43200));
-
-			Main.NewText(totalTime);
-			Main.NewText(brightness);
 
 			return brightness;
 		}
