@@ -297,11 +297,10 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon
 		public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
 
-			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Unfriendly/Bosses/Moon/CraterDemonGlow", AssetRequestMode.ImmediateLoad).Value;
-			int frameHeight = (glowmask.Height / Main.npcFrameCount[Type]);
-			int frameY = NPC.frame.Y / frameHeight;
+			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Unfriendly/Bosses/Moon/CraterDemonGlow").Value;
+			int frameHeight = (TextureAssets.Npc[Type].Height() / Main.npcFrameCount[Type]);
 
-			spriteBatch.Draw(glowmask, NPC.position - screenPos, glowmask.Frame(1, Main.npcFrameCount[Type], frameY: frameY), Color.White, NPC.rotation, Vector2.Zero, NPC.scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(glowmask, NPC.Center - screenPos, glowmask.Frame(1, Main.npcFrameCount[Type], frameY: NPC.frame.Y / frameHeight), Color.White, NPC.rotation, NPC.Size / 2f, NPC.scale, SpriteEffects.None, 0f);
 		}
 
 		private void DrawBigPortal(SpriteBatch spriteBatch, Texture2D texture, BigPortalInfo info)
@@ -575,7 +574,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon
 						{
 							Vector2 spawn = NPC.Center + new Vector2(Main.rand.NextFloat(-1, 1) * 22 * 16, Main.rand.NextFloat(-1, 1) * 10 * 16);
 
-							NPC.NewNPC(NPC.GetSource_FromAI(), (int)spawn.X, (int)spawn.Y, ModContent.NPCType<MiniCraterDemon>(), ai3: NPC.whoAmI);
+							NPC.NewNPC(NPC.GetSource_FromAI(), (int)spawn.X, (int)spawn.Y, ModContent.NPCType<LesserDemon>(), ai3: NPC.whoAmI);
 
 							//Exhale sound
 							SoundEngine.PlaySound(SoundID.Zombie93, NPC.Center);
@@ -978,7 +977,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon
 			for (int i = 0; i < Main.maxNPCs; i++)
 			{
 				NPC other = Main.npc[i];
-				if (other.active && other.ModNPC is MiniCraterDemon mini && mini.ParentBoss == NPC.whoAmI)
+				if (other.active && other.ModNPC is LesserDemon mini && mini.ParentBoss == NPC.whoAmI)
 					count++;
 			}
 

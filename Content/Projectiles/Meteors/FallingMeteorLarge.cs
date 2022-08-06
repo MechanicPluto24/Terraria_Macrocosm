@@ -6,15 +6,14 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Projectiles
+namespace Macrocosm.Content.Projectiles.Meteors
 {
-	public class FallingMeteor : ModProjectile
+	public class FallingMeteorLarge : ModProjectile
 	{
-
 		public override void SetDefaults()
 		{
-			Projectile.width = 18;
-			Projectile.height = 18;
+			Projectile.width = 64;
+			Projectile.height = 64;
 			Projectile.aiStyle = -1;
 			Projectile.friendly = false;
 			Projectile.hostile = true;
@@ -29,7 +28,6 @@ namespace Macrocosm.Content.Projectiles
 			// handled by server 
 			if (Main.netMode != NetmodeID.MultiplayerClient)
 			{
-
 				#region Spawn Items
 
 				if (Main.rand.NextBool(3))
@@ -103,7 +101,7 @@ namespace Macrocosm.Content.Projectiles
 		override public void AI()
 		{
 
-			Projectile.rotation += (Math.Abs(Projectile.velocity.X) + Math.Abs(Projectile.velocity.Y)) * 0.01f * (float)Projectile.direction;
+			Projectile.rotation += (Math.Abs(Projectile.velocity.X) + Math.Abs(Projectile.velocity.Y)) * 0.01f * Projectile.direction;
 		}
 	}
 }
