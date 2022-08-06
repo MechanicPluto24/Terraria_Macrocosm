@@ -9,7 +9,7 @@ using Terraria.Graphics.Effects;
 using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Backgrounds.Moon
+namespace Macrocosm.Content.Backgrounds.Moon
 {
 	public class MoonSky : CustomSky, ILoadable
 	{
@@ -36,10 +36,10 @@ namespace Macrocosm.Backgrounds.Moon
 
 		public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth)
 		{
-			Texture2D skyTexture = ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/MoonSky").Value;
-			Texture2D sunTexture = ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/Sun_0").Value;
-			Texture2D earthBody = ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/EarthAtmoless2").Value;
-			Texture2D earthAtmo = ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/EarthAtmo").Value;
+			Texture2D skyTexture = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/MoonSky").Value;
+			Texture2D sunTexture = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/Sun_0").Value;
+			Texture2D earthBody = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/EarthAtmoless").Value;
+			Texture2D earthAtmo = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/EarthAtmo").Value;
 
 			if (maxDepth >= float.MaxValue && minDepth < float.MaxValue)
 			{
@@ -57,7 +57,7 @@ namespace Macrocosm.Backgrounds.Moon
 				moonStarsNight.Draw(nightStarBrightness);
 
 				RotatingCelestialBody.Draw(sunTexture, dayTime: true);
-				CelestialBody.Draw(earthBody, earthAtmo, 0.9f, 0f, -200f, 0.01f, 0.12f);
+				CelestialBody1.Draw(earthBody, earthAtmo, 0.9f, 0f, -200f, 0.01f, 0.12f);
 			}
 		}
 
@@ -77,15 +77,15 @@ namespace Macrocosm.Backgrounds.Moon
 		{
 			Texture2D nebula = Main.moonType switch
 			{
-				1 => ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/NebulaYellow").Value,
-				2 => ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/NebulaRinged").Value,
-				3 => ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/NebulaMythril").Value,
-				4 => ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/NebulaBlue").Value,
-				5 => ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/NebulaGreen").Value,
-				6 => ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/NebulaPink").Value,
-				7 => ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/NebulaOrange").Value,
-				8 => ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/NebulaPurple").Value,
-				_ => ModContent.Request<Texture2D>("Macrocosm/Backgrounds/Moon/NebulaNormal").Value,
+				1 => ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/NebulaYellow").Value,
+				2 => ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/NebulaRinged").Value,
+				3 => ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/NebulaMythril").Value,
+				4 => ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/NebulaBlue").Value,
+				5 => ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/NebulaGreen").Value,
+				6 => ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/NebulaPink").Value,
+				7 => ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/NebulaOrange").Value,
+				8 => ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/NebulaPurple").Value,
+				_ => ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/NebulaNormal").Value,
 			};
 
 			Color nebulaColor = Color.White * brightness;

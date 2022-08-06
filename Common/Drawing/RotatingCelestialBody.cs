@@ -8,15 +8,16 @@ namespace Macrocosm.Common.Drawing
 {
 	public static class RotatingCelestialBody
 	{
+		public static Vector2 pos;
+
 		public static void Draw(Texture2D texture, bool dayTime)
 		{
-			int vanillaSkyObjectWidth = dayTime ? TextureAssets.Sun.Width() : TextureAssets.Moon[0].Width();
-			double duration = dayTime ? Main.dayLength : Main.nightLength;
-			short modY = dayTime ? Main.sunModY : Main.moonModY;
+			int sunWidth = TextureAssets.Sun.Width();
+			double duration = Main.dayTime ? Main.dayLength : Main.nightLength;
 
 			int angle;
 			float scale;
-			int timeX = (int)(Main.time / duration * (Main.screenWidth + vanillaSkyObjectWidth * 2)) - vanillaSkyObjectWidth;
+			int timeX = (int)(Main.time / duration * (Main.screenWidth + sunWidth * 2)) - sunWidth;
 			double timeY = Main.time < duration / 2 ? //Gets the Y axis for the angle depending on the time
 					Math.Pow((Main.time / duration - 0.5) * 2.0, 2.0) : //AM
 					Math.Pow(1.0 - Main.time / duration * 2.0, 2.0); //PM
@@ -30,15 +31,19 @@ namespace Macrocosm.Common.Drawing
 				clouldAlphaMult = 0f;
 			}
 
+			angle = (int)(bgTop + timeY * 250.0 + 180.0);
+
+			scale = (float)(1.2 - timeY * 0.4);
+
+			Color color = new Color((byte)(255f * clouldAlphaMult), (byte)(Color.White.G * clouldAlphaMult), (byte)(Color.White.B * clouldAlphaMult), (byte)(255f * clouldAlphaMult));
+
+			Vector2 position = new Vector2(timeX, angle + Main.sunModY);
+			pos = position;
+
+
 			if (dayTime == Main.dayTime)
 			{
-				angle = (int)(bgTop + timeY * 250.0 + 180.0);
-
-				scale = (float)(1.2 - timeY * 0.4);
-
-				Color color = new Color((byte)(255f * clouldAlphaMult), (byte)(Color.White.G * clouldAlphaMult), (byte)(Color.White.B * clouldAlphaMult), (byte)(255f * clouldAlphaMult));
-
-				Main.spriteBatch.Draw(texture, new Vector2(timeX, angle + modY), new Microsoft.Xna.Framework.Rectangle?(new Rectangle(0, 0, texture.Width, texture.Height)),
+				Main.spriteBatch.Draw(texture, position, new Microsoft.Xna.Framework.Rectangle?(new Rectangle(0, 0, texture.Width, texture.Height)),
 					color, rotation, new Vector2(texture.Width / 2, texture.Height / 2), scale, SpriteEffects.None, 0f);
 			}
 		}

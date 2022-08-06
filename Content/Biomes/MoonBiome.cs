@@ -1,4 +1,4 @@
-﻿using Macrocosm.Backgrounds.Moon;
+﻿using Macrocosm.Content.Backgrounds.Moon;
 using Macrocosm.Content.Subworlds.Moon;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
@@ -12,18 +12,22 @@ namespace Macrocosm.Content.Biomes
 		public override SceneEffectPriority Priority => SceneEffectPriority.Environment;
 		public override string BestiaryIcon => "Macrocosm/Assets/FilterIcons/MoonAdjusted";
 		public override string BackgroundPath => "Macrocosm/Assets/Map/Moon";
+		public override string MapBackground => BackgroundPath;
 		public override Color? BackgroundColor => base.BackgroundColor;
 		public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.GetInstance<MoonSurfaceBgStyle>();
 		public override ModUndergroundBackgroundStyle UndergroundBackgroundStyle => ModContent.GetInstance<MoonUgBgStyle>();
 		public override int Music => Main.dayTime ? MusicLoader.GetMusicSlot(Mod, "Sounds/Music/Deadworld") : MusicLoader.GetMusicSlot(Mod, "Sounds/Music/Requiem");
+		
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("The Moon");
 		}
 
+
 		public override void OnInBiome(Player player)
 		{
 			player.GetModPlayer<MacrocosmPlayer>().ZoneMoon = true;
+
 		}
 
 		public override void OnLeave(Player player)
