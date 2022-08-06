@@ -1,10 +1,12 @@
-using System;
-using Terraria.DataStructures;
+using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.Projectiles.Friendly.Weapons;
 using Microsoft.Xna.Framework;
+using System;
 using Terraria;
+using Terraria.DataStructures;
+using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Content.Items.Materials;
 
 namespace Macrocosm.Content.Items.Weapons
 {
@@ -12,12 +14,12 @@ namespace Macrocosm.Content.Items.Weapons
 	{
 		public override void SetStaticDefaults()
 		{
-			
+			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
 
 		public override void SetDefaults()
 		{
-			Item.damage = 150;
+			Item.damage = 125;
 			Item.DamageType = DamageClass.Magic;
 			Item.mana = 30;
 			Item.width = 80;
@@ -25,20 +27,20 @@ namespace Macrocosm.Content.Items.Weapons
 			Item.useTime = 12;
 			Item.useAnimation = 10;
 			Item.useStyle = ItemUseStyleID.Shoot;
-			Item.noMelee = true; //so the item's animation doesn't do damage
+			Item.noMelee = true;
 			Item.knockBack = 5;
 			Item.value = 10000;
 			Item.rare = ItemRarityID.Green;
 			Item.UseSound = SoundID.Item20;
 			Item.autoReuse = true;
-			Item.shoot = ModContent.ProjectileType<DianiteTomeProjectile>();
+			Item.shoot = ModContent.ProjectileType<DianiteTomeProjectileSmall>();
 			Item.shootSpeed = 16f;
 			Item.tileBoost = 50;
 		}
 
 		public override void AddRecipes()
 		{
-			Recipe recipe = Mod.CreateRecipe(Type);
+			Recipe recipe = Recipe.Create(Type);
 			recipe.AddIngredient<LuminiteCrystal>();
 			recipe.AddIngredient<DianiteBar>(12);
 			recipe.AddTile(TileID.WorkBenches);
@@ -47,9 +49,14 @@ namespace Macrocosm.Content.Items.Weapons
 
 		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockBack)
 		{
-			int numberProjectiles = 6 + Main.rand.Next(2);  //This defines how many projectiles to shot
+			int numberProjectiles = 4 + Main.rand.Next(2);  //This defines how many projectiles to shoot
 			for (int index = 0; index < numberProjectiles; ++index)
 			{
+
+				bool bigProjectile = Main.rand.NextBool(4);
+				int projType = bigProjectile ? ModContent.ProjectileType<DianiteTomeProjectile>() : type;
+				damage = (int)(damage * (bigProjectile ? 1.4f : 1f));
+
 				Vector2 vector2_1 = new Vector2((float)((double)player.position.X + (double)player.width * 0.5 + (double)(Main.rand.Next(201) * -player.direction) + ((double)Main.mouseX + (double)Main.screenPosition.X - (double)player.position.X)), (float)((double)player.position.Y + (double)player.height * 0.5 - 600.0));   //this defines the Projectile width, direction and position
 				vector2_1.X = (float)(((double)vector2_1.X + (double)player.Center.X) / 2.0) + (float)Main.rand.Next(-200, 201);
 				vector2_1.Y -= (float)(100 * index);
@@ -61,9 +68,9 @@ namespace Macrocosm.Content.Items.Weapons
 				float num15 = Item.shootSpeed / num14;
 				float num16 = num12 * num15;
 				float num17 = num13 * num15;
-				float SpeedX = num16 + (float)Main.rand.Next(-40, 41) * 0.02f;  //this defines the Projectile X position speed and randomnes
-				float SpeedY = num17 + (float)Main.rand.Next(-40, 41) * 0.02f;  //this defines the Projectile Y position speed and randomnes
-				Projectile.NewProjectile(source, vector2_1.X, vector2_1.Y, SpeedX, SpeedY, type, damage, knockBack, Main.myPlayer, 0.0f, (float)Main.rand.Next(5));
+				float SpeedX = num16 + (float)Main.rand.Next(-40, 41) * 0.02f;  //this defines the Projectile X position speed and randomness
+				float SpeedY = num17 + (float)Main.rand.Next(-40, 41) * 0.02f;  //this defines the Projectile Y position speed and randomness
+				Projectile.NewProjectile(source, vector2_1.X, vector2_1.Y, SpeedX, SpeedY, projType, damage, knockBack, Main.myPlayer, 0.0f, (float)Main.rand.Next(5));
 			}
 			return false;
 		}

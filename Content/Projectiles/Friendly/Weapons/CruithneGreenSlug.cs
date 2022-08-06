@@ -1,13 +1,13 @@
-using System;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Projectiles.Friendly.Weapons {
-	public class CruithneGreenSlug : ModProjectile {
-		public override void SetDefaults() {
+namespace Macrocosm.Content.Projectiles.Friendly.Weapons
+{
+	public class CruithneGreenSlug : ModProjectile
+	{
+		public override void SetDefaults()
+		{
 			Projectile.CloneDefaults(14);
 			AIType = ProjectileID.Bullet;
 			Projectile.width = 4;

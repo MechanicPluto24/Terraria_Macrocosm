@@ -1,16 +1,9 @@
-using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using System;
 using Terraria;
-using Terraria.DataStructures;
-using Terraria.ID;
-using Terraria.Localization;
-using Terraria.Utilities;
-using Terraria.ModLoader;
-using Macrocosm;
-using Terraria.Audio;
 
-namespace Macrocosm.Base.BaseMod {
+namespace Macrocosm.Base.BaseMod
+{
 	public class BaseAI
 	{
 		//------------------------------------------------------//

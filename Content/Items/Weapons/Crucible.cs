@@ -1,22 +1,24 @@
+using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Items.GlobalItems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Content.Dusts;
-using Macrocosm.Common.Utility;
 
 namespace Macrocosm.Content.Items.Weapons
 {
 	public class Crucible : ModItem
 	{
-		public override void SetStaticDefaults() 
+		public override void SetStaticDefaults()
 		{
-			// DisplayName.SetDefault("BasicSword"); // By default, capitalization in classnames will add spaces to the display name. You can customize the display name here by uncommenting this line.
 			Tooltip.SetDefault("A sword forged from the fires of Hell itself" + "\n'The only thing they fear is you.'");
+			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
+
 		}
-        
-		public override void SetDefaults() 
+
+		public override void SetDefaults()
 		{
 			Item.damage = 666;
 			Item.DamageType = DamageClass.Melee;
@@ -44,9 +46,9 @@ namespace Macrocosm.Content.Items.Weapons
 			Lighting.AddLight(Item.Center, Color.Red.ToVector3() * 0.85f * Main.essScale);
 		}
 
-		public override void AddRecipes() 
+		public override void AddRecipes()
 		{
-			Recipe recipe = Mod.CreateRecipe(Type);
+			Recipe recipe = Recipe.Create(Type);
 			recipe.AddIngredient(ItemID.HellstoneBar, 20);
 			recipe.AddIngredient(ItemID.SoulofFright, 10);
 			recipe.AddTile(TileID.WorkBenches);

@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terraria.GameContent.UI;
+﻿using Terraria.GameContent.UI;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Currency
 {
-	public class CurrencyManager
+	public class CurrencyManager : ILoadable
 	{
-		public static int UnuCredit;
+		public void Load(Mod mod)
+		{
+			LoadCurrencies();
+		}
+		public void Unload() { }
+
+		public static int UnuCredit { get; set; }
 		public static void LoadCurrencies()
 		{
 			UnuCredit = CustomCurrencyManager.RegisterCurrency(new MoonCoinData(ModContent.ItemType<MoonCoin>(), 999999L));
