@@ -1,19 +1,19 @@
 using Microsoft.Xna.Framework;
-using System;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
-using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Weapons
 {
 	public class Cruithne3753 : ModItem
 	{
-		public override void SetStaticDefaults() 
+		public override void SetStaticDefaults()
 		{
-            DisplayName.SetDefault("Cruithne 3753");
+			DisplayName.SetDefault("Cruithne 3753");
 			Tooltip.SetDefault("Two different firing modes");
+			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
 
 		public override void SetDefaults()
@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Items.Weapons
 			Item.height = 16;
 			Item.useTime = 34;
 			Item.useAnimation = 34;
-			Item.useStyle = ItemUseStyleID.Shoot; // was HoldingOut
+			Item.useStyle = ItemUseStyleID.Shoot;
 			Item.noMelee = true;
 			Item.knockBack = 8f;
 			Item.value = 10000;
@@ -47,13 +47,13 @@ namespace Macrocosm.Content.Items.Weapons
 			{
 				Item.useTime = 68;
 				Item.useAnimation = 68;
-				Item.shoot =  ProjectileType<Content.Projectiles.Friendly.Weapons.CruithneBlackSlug>();
+				Item.shoot = ModContent.ProjectileType<Projectiles.Friendly.Weapons.CruithneBlackSlug>();
 			}
 			else
 			{
 				Item.useTime = 34;
 				Item.useAnimation = 34;
-				Item.shoot =  ProjectileType<Content.Projectiles.Friendly.Weapons.CruithneGreenSlug>();
+				Item.shoot = ModContent.ProjectileType<Projectiles.Friendly.Weapons.CruithneGreenSlug>();
 			}
 			return base.CanUseItem(player);
 		}
@@ -73,9 +73,6 @@ namespace Macrocosm.Content.Items.Weapons
 			return false;
 		}
 
-		public override Vector2? HoldoutOffset()
-		{
-			return new Vector2(-12, 0);
-		}
+		public override Vector2? HoldoutOffset() => new Vector2(-12, 0);
 	}
 }

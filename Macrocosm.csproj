@@ -8,6 +8,11 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Sounds\Custom\**" />
+    <EmbeddedResource Remove="Sounds\Custom\**" />
+    <None Remove="Sounds\Custom\**" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Remove="Common\Base\BaseMod\Obsolete\Base\BaseAI.cs" />
     <Compile Remove="Common\Base\BaseMod\Obsolete\Base\BaseConstants.cs" />
     <Compile Remove="Common\Base\BaseMod\Obsolete\Base\BaseDrawing.cs" />

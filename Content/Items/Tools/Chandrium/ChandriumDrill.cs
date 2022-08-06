@@ -1,12 +1,12 @@
-﻿using Terraria;
-using Terraria.ID;
+﻿using Macrocosm.Content.Projectiles.Friendly.Tools;
+using Terraria;
 using Terraria.GameContent.Creative;
+using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Content.Projectiles.Tools;
 
 namespace Macrocosm.Content.Items.Tools.Chandrium
 {
-    public class ChandriumDrill : ModItem
+	public class ChandriumDrill : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

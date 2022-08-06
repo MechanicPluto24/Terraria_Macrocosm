@@ -4,21 +4,21 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Materials
 {
-    public class ActivationCore : ModItem
-    {
-        public override void SetStaticDefaults()
-        {
-            Tooltip.SetDefault("There are large amounts of energy emanating from within the core, maybe you could ");
-        }
+	public class ActivationCore : ModItem
+	{
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("There are large amounts of energy emanating from within the core, maybe you could ");
+		}
 
-        public override void SetDefaults()
-        {
-            Item.width = 20;
-            Item.height = 20;
-            Item.maxStack = 1;
-            Item.value = 100;
-            Item.rare = ItemRarityID.Blue;
+		public override void SetDefaults()
+		{
+			Item.width = 20;
+			Item.height = 20;
+			Item.maxStack = 1;
+			Item.value = 100;
+			Item.rare = ItemRarityID.Blue;
 
-        }
-    }
+		}
+	}
 }

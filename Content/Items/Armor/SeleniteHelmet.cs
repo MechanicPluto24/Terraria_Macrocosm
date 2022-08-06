@@ -1,18 +1,18 @@
-using Terraria;
-using Terraria.ModLoader;
-using Terraria.ID;
 using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Items.Materials;
+using Terraria;
+using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Armor
 {
 	[AutoloadEquip(EquipType.Head)]
 	public class SeleniteHelmet : ModItem
 	{
-		public override void SetStaticDefaults() 
+		public override void SetStaticDefaults()
 		{
 		}
-		public override void SetDefaults() 
+		public override void SetDefaults()
 		{
 			Item.width = 18;
 			Item.height = 18;
@@ -26,7 +26,7 @@ namespace Macrocosm.Content.Items.Armor
 			return head.type == ModContent.ItemType<SeleniteHelmet>() && body.type == ModContent.ItemType<SeleniteBreastplate>() && legs.type == ModContent.ItemType<SeleniteLeggings>();
 		}
 
-		public override void UpdateArmorSet(Player player) 
+		public override void UpdateArmorSet(Player player)
 		{
 			player.GetModPlayer<MacrocosmPlayer>().accMoonArmor = true;
 			player.setBonus = "Pressurized spacesuit allows for safe exploration of other celestial bodies"
@@ -35,9 +35,9 @@ namespace Macrocosm.Content.Items.Armor
 			player.buffImmune[ModContent.BuffType<SuitBreach>()] = true;
 		}
 
-		public override void AddRecipes() 
+		public override void AddRecipes()
 		{
-			Recipe recipe = Mod.CreateRecipe(Type);
+			Recipe recipe = Recipe.Create(Type);
 			recipe.AddIngredient(ModContent.ItemType<SeleniteBar>(), 8);
 			recipe.AddTile(TileID.WorkBenches);
 			recipe.Register();

@@ -1,7 +1,7 @@
+using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
-using Terraria.ID;
-using Terraria;
 
 namespace Macrocosm.Content.Items.Placeables.BlocksAndWalls
 {
@@ -9,7 +9,7 @@ namespace Macrocosm.Content.Items.Placeables.BlocksAndWalls
 	{
 		public override void SetStaticDefaults()
 		{
-			
+
 		}
 
 		public override void SetDefaults()
@@ -28,8 +28,8 @@ namespace Macrocosm.Content.Items.Placeables.BlocksAndWalls
 
 		public override void AddRecipes()
 		{
-            
-			Recipe recipe = Mod.CreateRecipe(Type, 4);
+
+			Recipe recipe = Recipe.Create(Type, 4);
 			recipe.AddIngredient<Regolith>();
 			recipe.AddTile(TileID.WorkBenches);
 			recipe.Register();

@@ -1,9 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Content.Dusts;
+using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.ID;
 using Terraria.GameContent.Creative;
+using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Content.Dusts;
 
 namespace Macrocosm.Content.Items.Tools.Chandrium
 {
