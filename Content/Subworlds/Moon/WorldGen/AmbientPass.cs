@@ -17,7 +17,6 @@ namespace Macrocosm.Content.Subworlds.Moon.Generation
 			int skipX = 0;
 			for (int tileX = 1; tileX < Main.maxTilesX - 1; tileX++)
 			{
-
 				progress.Set(tileX / Main.maxTilesX);
 
 				if (skipX > 0)
@@ -32,7 +31,6 @@ namespace Macrocosm.Content.Subworlds.Moon.Generation
 					{
 						if (Main.tile[tileX, tileY].HasTile && Main.tile[tileX, tileY].BlockType == Terraria.ID.BlockType.Solid)
 						{
-							//WorldGen.PlaceTile(tileX, tileY - 1, (ushort)ModContent.TileType<RegolithRockSmall>(), true, true, style: WorldGen.genRand.Next(10));
 							WorldGen.PlaceSmallPile(tileX, tileY - 1, WorldGen.genRand.Next(10), 0, (ushort)ModContent.TileType<RegolithRockSmall>());
 							skipX = WorldGen.genRand.Next(5, 50);
 							break;

@@ -1,15 +1,19 @@
 using System.Collections.Generic;
 using Terraria;
 
-namespace Macrocosm.Common.Drawing.Stars
+namespace Macrocosm.Common.Drawing
 {
 	public class StarsDrawing
 	{
 
 		private readonly List<MacrocosmStar> stars = new();
 
-		public bool None => stars.Count == 0;
+		public int Count => stars.Count;
+		public bool None => Count == 0;
 		public void Clear() => stars.Clear();
+
+		public MacrocosmStar StarAt(int index) => stars[index];
+		public MacrocosmStar RandStar() => StarAt(Main.rand.Next(Count-1));
 
 		public void SpawnStars(int minStars, int maxStars, float baseScale = 1f, float twinkleFactor = 0.4f)
 		{

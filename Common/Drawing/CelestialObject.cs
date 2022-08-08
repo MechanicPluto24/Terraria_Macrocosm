@@ -147,7 +147,7 @@ namespace Macrocosm.Common.Drawing
 				shadowColor = Color.White;
 				shadowColor.A = (byte)(255f * ScaleBrightnessNoonToMidnight(0f ,1f));
 
-				if (atmoShadowTexture is not null)
+				if (atmoShadowTexture is not null && HasAtmo)
 				{
 					spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.EffectMatrix);
 					spriteBatch.Draw(atmoShadowTexture, screenPosition, null, shadowColor, shadowRotation, atmoTexture.Size() / 2, scale, default, 0f);
