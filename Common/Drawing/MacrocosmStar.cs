@@ -5,15 +5,16 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.Utilities;
 
-namespace Macrocosm.Common.Drawing.Stars
+namespace Macrocosm.Common.Drawing
 {
 	public class MacrocosmStar : Star
 	{
 		public Texture2D texture;
-
-		public Color color;
-
 		public float brightness;
+
+		private Color color;
+		private Color newColor;
+		private bool colorOverridden = false;
 
 		/// <summary>
 		/// Adapted from Star.SpawnStars
@@ -33,7 +34,7 @@ namespace Macrocosm.Common.Drawing.Stars
 			rotation = fastRandom.Next(628) * 0.01f;
 			scale = fastRandom.Next(70, 130) * 0.006f * baseScale;
 			twinkle = Math.Clamp(fastRandom.Next(1, 101) * 0.01f, 1f - twinkleFactor, 1f);
-			twinkleSpeed = (fastRandom.Next(30, 110) * 0.0001f); // TODO: add constructor argument for this
+			twinkleSpeed = fastRandom.Next(30, 110) * 0.0001f; // TODO: add constructor argument for this
 
 			if (fastRandom.Next(2) == 0)
 				twinkleSpeed *= -1f;
@@ -71,28 +72,50 @@ namespace Macrocosm.Common.Drawing.Stars
 			TwinkleColor();
 		}
 
+		public void OverrideColor(float r, float g, float b) => OverrideColor(new Color(r, g, b));
+		public void OverrideColor(Color color)
+		{
+			newColor = color;
+			newColor.A = this.color.A;
+			colorOverridden = true;
+		}
+
 		/// <summary>
 		/// Adapted from Main.DrawStarsInBackround
 		/// </summary>
 		private void TwinkleColor()
 		{
+
+			int red;
+			int green;
+			int blue;
 			float fade = 1f - fadeIn;
-			int red = (int)((float)(155) * twinkle * fade);
-			int green = (int)((float)(155) * twinkle * fade);
-			int blue = (int)((float)(155) * twinkle * fade);
 
-			red = (red + green + blue) / 3;
+			if (!colorOverridden)
+			{
+				red = (int)(155 * twinkle * fade);
+				green = (int)(155 * twinkle * fade);
+				blue = (int)(155 * twinkle * fade);
 
-			if (red <= 0)
-				return;
+				red = (red + green + blue) / 3;
 
-			red = (int)((double)red * 1.4);
+				if (red <= 0)
+					return;
 
-			if (red > 255)
-				red = 255;
+				red = (int)(red * 1.4);
 
-			green = red;
-			blue = red;
+				if (red > 255)
+					red = 255;
+
+				green = red;
+				blue = red;
+			}
+			else
+			{
+				red = (int)(newColor.R);
+				green = (int)(newColor.G);
+				blue = (int)(newColor.B);
+			}
 
 			color.R = (byte)red;
 			color.G = (byte)green;

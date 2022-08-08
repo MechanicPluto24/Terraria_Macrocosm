@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Common.Drawing;
-using Macrocosm.Common.Drawing.Stars;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -76,6 +75,9 @@ namespace Macrocosm.Content.Backgrounds.Moon
 
 			starsDay.SpawnStars(100, 130, 1.4f, 0.05f);
 			starsNight.SpawnStars(600, 700, 0.8f, 0.05f);
+
+			starsDay.RandStar().OverrideColor(Color.Tomato * 0.7f);
+
 			Intensity = 0.002f;
 			Active = true;
 		}

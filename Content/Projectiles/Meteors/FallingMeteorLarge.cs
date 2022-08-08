@@ -45,8 +45,8 @@ namespace Macrocosm.Content.Projectiles.Meteors
 
 				// let the server do it for every player
 
-				float maxDist = 110f * 16f; // 110 tiles max distance (least screenshake) 
-				float maxScreenshake = 40f; // max screenshake (up to 100) for distance = 0
+				float maxDist = 140f * 16f; // 140 tiles max distance (least screenshake) 
+				float maxScreenshake = 80f; // max screenshake (up to 100) for distance = 0
 
 				for (int i = 0; i < 255; i++)
 				{

@@ -1,5 +1,4 @@
 using Macrocosm.Common.Drawing;
-using Macrocosm.Common.Drawing.Stars;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.Utility;
 using Macrocosm.Common.Utility.IO;
