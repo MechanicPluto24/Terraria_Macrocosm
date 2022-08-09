@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.Dusts;
+﻿using Macrocosm.Common.Utility;
+using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -121,13 +122,12 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon
 		public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
 			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Unfriendly/Bosses/Moon/LesserDemonGlow").Value;
-			int frameHeight = (TextureAssets.Npc[Type].Height() / Main.npcFrameCount[Type]);
 
 			SpriteEffects effect = (NPC.rotation > MathHelper.PiOver2 && NPC.rotation < 3 * MathHelper.PiOver2) || (NPC.rotation < -MathHelper.PiOver2 && NPC.rotation > -3 * MathHelper.PiOver2)
 				? SpriteEffects.FlipVertically
 				: SpriteEffects.None;
 
-			spriteBatch.Draw(glowmask, NPC.Center - screenPos, glowmask.Frame(1, Main.npcFrameCount[Type], frameY: NPC.frame.Y / frameHeight), Color.White, NPC.rotation, NPC.Size / 2f, NPC.scale, effect, 0f);
+			NPC.DrawGlowmask(spriteBatch, glowmask, screenPos, new Vector2(0, 9), effect);
 		}
 
 		public override void AI()

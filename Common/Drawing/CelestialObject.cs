@@ -85,7 +85,7 @@ namespace Macrocosm.Common.Drawing
 		/// None  - No rotation
 		/// Day   - Only visible during the day (rotation logic will still run)
 		/// Night - Only visible during the night (rotation logic will still run)
-		/// Any   - Cycles during both day and night  
+		/// Any   - Cycle during both day and night  
 		/// </param>
 		public void SetSkyRotationMode(SkyRotationMode mode) => rotationMode = mode;
 

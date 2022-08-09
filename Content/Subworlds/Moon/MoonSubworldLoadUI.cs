@@ -19,8 +19,6 @@ namespace Macrocosm.Content.Subworlds.Moon
 
 		private Texture2D lunaBackground;
 		private Texture2D lunaAtmoBackground;
-		private Texture2D earthSmallBackground;
-		private Texture2D earthSmallAtmoBackground;
 
 		private Texture2D earthBackground;
 		private Texture2D earthAtmoBackground;
@@ -98,7 +96,7 @@ namespace Macrocosm.Content.Subworlds.Moon
 
 			if (toEarth)
 			{
-				spriteBatch.Begin(0, BlendState.Additive, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.UIScaleMatrix);
+				spriteBatch.Begin(0, BlendState.Additive, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.EffectMatrix);
 				spriteBatch.Draw
 				(
 					earthAtmoBackground,
@@ -109,9 +107,9 @@ namespace Macrocosm.Content.Subworlds.Moon
 				);
 				spriteBatch.End();
 
-				spriteBatch.Begin(0, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.UIScaleMatrix);
+				spriteBatch.Begin(0, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.EffectMatrix);
 
-				starsDrawing.Draw();
+				starsDrawing.DrawSelf(spriteBatch);
 
 				spriteBatch.Draw
 				(
@@ -128,7 +126,7 @@ namespace Macrocosm.Content.Subworlds.Moon
 			}
 			else
 			{
-				spriteBatch.Begin(0, BlendState.Additive, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.UIScaleMatrix);
+				spriteBatch.Begin(0, BlendState.Additive, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.EffectMatrix);
 				spriteBatch.Draw
 				(
 					lunaAtmoBackground,
@@ -136,14 +134,19 @@ namespace Macrocosm.Content.Subworlds.Moon
 					null,
 					bodyColor
 				);
+
 				spriteBatch.End();
 
-				spriteBatch.Begin(0, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.UIScaleMatrix);
-
-				starsDrawing.Draw();
+				spriteBatch.Begin(0, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.EffectMatrix);
 
 				earth.SetScreenPosition(510, 200);
 				earth.DrawSelf(spriteBatch);
+
+				spriteBatch.End();
+
+				spriteBatch.Begin(0, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.EffectMatrix);
+
+				starsDrawing.DrawSelf(spriteBatch);
 
 				spriteBatch.Draw
 				(

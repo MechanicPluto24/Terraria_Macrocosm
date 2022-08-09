@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Base.BaseMod;
+using Macrocosm.Common.Utility;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Items.Materials;
@@ -37,7 +38,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon
 			NPC.knockBackResist = 0f;
 			NPC.noGravity = true;
 			NPC.noTileCollide = true;
-			AnimationType = NPCID.MeteorHead;
+			//AnimationType = NPCID.MeteorHead;
 			SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBiome>().Type }; // Associates this NPC with the Moon Biome in Bestiary
 		}
 
@@ -58,30 +59,10 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon
 				NPC.TargetClosest(true);
 			}
 
-			Move(Vector2.Zero);
+			NPC.Move(player.Center, Vector2.Zero);
 			bool playerActive = player != null && player.active && !player.dead;
 			BaseAI.LookAt(playerActive ? player.Center : NPC.Center + NPC.velocity, NPC, 0);
 		}
-		public void Move(Vector2 offset, float speed = 3f, float turnResistance = 0.5f)
-		{
-			Player player = Main.player[NPC.target];
-			Vector2 moveTo = player.Center + offset; // Gets the point that the NPC will be moving to.
-			Vector2 move = moveTo - NPC.Center;
-			float magnitude = Magnitude(move);
-			if (magnitude > speed)
-			{
-				move *= speed / magnitude;
-			}
-			move = (NPC.velocity * turnResistance + move) / (turnResistance + 1f);
-			magnitude = Magnitude(move);
-			if (magnitude > speed)
-			{
-				move *= speed / magnitude;
-			}
-			NPC.velocity = move;
-		}
-
-		private static float Magnitude(Vector2 mag) => (float)Math.Sqrt(mag.X * mag.X + mag.Y * mag.Y);
 
 		public override void OnHitPlayer(Player player, int damage, bool crit)
 		{
