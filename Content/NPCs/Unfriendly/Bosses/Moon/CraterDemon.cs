@@ -61,7 +61,8 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon
 				if (!visible)
 					return;
 
-				float rotationsPerSecond = fast ? 3.1f : 1.8f;
+				//float rotationsPerSecond = fast ? 3.1f : 1.8f;
+				float rotationsPerSecond = fast ? 1.8f : 0.5f;
 				rotation -= MathHelper.ToRadians(rotationsPerSecond * 6f);
 			}
 		}
@@ -296,11 +297,8 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon
 
 		public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
-
 			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Unfriendly/Bosses/Moon/CraterDemonGlow").Value;
-			int frameHeight = (TextureAssets.Npc[Type].Height() / Main.npcFrameCount[Type]);
-
-			spriteBatch.Draw(glowmask, NPC.Center - screenPos, glowmask.Frame(1, Main.npcFrameCount[Type], frameY: NPC.frame.Y / frameHeight), Color.White, NPC.rotation, NPC.Size / 2f, NPC.scale, SpriteEffects.None, 0f);
+			NPC.DrawGlowmask(spriteBatch, glowmask, screenPos, new Vector2(0, 4));
 		}
 
 		private void DrawBigPortal(SpriteBatch spriteBatch, Texture2D texture, BigPortalInfo info)
@@ -308,7 +306,8 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon
 			if (!info.visible)
 				return;
 
-			spriteBatch.Draw(texture, info.center - Main.screenPosition, null, Color.White * info.alpha, info.rotation, texture.Size() / 2f, info.scale, SpriteEffects.None, 0);
+			spriteBatch.Draw(texture, info.center - Main.screenPosition, null, Color.White * info.alpha * 0.5f, (0f - info.rotation) * 0.65f, texture.Size() / 2f, info.scale * 1.3f, SpriteEffects.FlipHorizontally, 0);
+			spriteBatch.Draw(texture, info.center - Main.screenPosition, null, Color.White * info.alpha, info.rotation, texture.Size() / 2f, info.scale, SpriteEffects.None, 0);	
 		}
 
 		private int GetAnimationSetFrame()
@@ -925,6 +924,26 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon
 			bigPortal.Update();
 			bigPortal2.Update();
 		}
+
+		public override void HitEffect(int hitDirection, double damage)
+		{
+			SpawnDusts();
+
+
+			if (Main.dedServ)
+				return;
+
+			var entitySource = NPC.GetSource_Death();
+
+			if (NPC.life <= 0)
+			{
+				Gore.NewGore(entitySource, NPC.position, NPC.velocity, Mod.Find<ModGore>("CraterDemonGoreFace").Type);
+				Gore.NewGore(entitySource, NPC.position, NPC.velocity, Mod.Find<ModGore>("CraterDemonGoreHead").Type);
+				Gore.NewGore(entitySource, NPC.position, NPC.velocity, Mod.Find<ModGore>("CraterDemonGoreJaw").Type);
+			}
+		}
+
+
 
 		private void SetTargetZAxisRotation(Player player, out Vector2 targetCenter)
 		{

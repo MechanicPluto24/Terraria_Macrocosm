@@ -61,9 +61,9 @@ namespace Macrocosm.Common.Drawing
 			texture = tex;
 		}
 
-		public void Draw()
+		public void DrawSelf(SpriteBatch spriteBatch)
 		{
-			Main.spriteBatch.Draw(texture, position, null, color, rotation, texture.Size() / 2, scale * twinkle, default, 0f);
+			spriteBatch.Draw(texture, position, null, color, rotation, texture.Size() / 2, scale * twinkle, default, 0f);
 		}
 
 		public new void Update()

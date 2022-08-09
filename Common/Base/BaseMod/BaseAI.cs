@@ -16,6 +16,7 @@ namespace Macrocosm.Base.BaseMod
 		//  Author(s): Grox the Great, Yoraiz0r                 //
 		//------------------------------------------------------//
 
+
 		public static void Look(Projectile p, int lookType = 0, float rotAddon = 0f, float rotAmount = 0.1f, bool flipSpriteDir = false)
 		{
 			Look(p, ref p.rotation, ref p.spriteDirection, lookType, rotAddon, rotAmount, flipSpriteDir);

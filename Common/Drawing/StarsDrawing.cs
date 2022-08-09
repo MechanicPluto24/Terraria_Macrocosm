@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using Terraria;
 
@@ -25,7 +26,7 @@ namespace Macrocosm.Common.Drawing
 			}
 		}
 
-		public void Draw(float brightness = 1f)
+		public void DrawSelf(SpriteBatch spriteBatch, float brightness = 1f)
 		{
 			if (None)
 				return;
@@ -34,7 +35,7 @@ namespace Macrocosm.Common.Drawing
 			{
 				star.brightness = brightness;
 				star.Update();
-				star.Draw();
+				star.DrawSelf(spriteBatch);
 			}
 		}
 
