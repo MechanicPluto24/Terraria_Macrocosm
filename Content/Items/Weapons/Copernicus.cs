@@ -10,11 +10,12 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons
 {
-	public class AssaultRifle : ModItem
+	public class Copernicus : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Assault Rifle");
+			DisplayName.SetDefault("Copernicus");
+			Tooltip.SetDefault("Right click to fire a grenade");
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
 
@@ -51,11 +52,19 @@ namespace Macrocosm.Content.Items.Weapons
 		{
 			if (player.altFunctionUse == 2)
 			{
-				SoundEngine.PlaySound(CustomSounds.GrenadeLauncherThunk);
+				SoundEngine.PlaySound(CustomSounds.GrenadeLauncherThunk with 
+				{ 
+					Volume = 0.7f
+					//SoundLimitBehavior = SoundLimitBehavior.IgnoreNew 
+				});
 			}
 			else
 			{
-				SoundEngine.PlaySound(CustomSounds.AssaultRifle);
+				SoundEngine.PlaySound(CustomSounds.AssaultRifle with
+				{
+					Volume = 0.7f
+					//SoundLimitBehavior = SoundLimitBehavior.IgnoreNew
+				});
 			}
 
 			return true;

@@ -1,5 +1,7 @@
 ﻿
+using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Materials;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
@@ -13,7 +15,7 @@ namespace Macrocosm.Content.Items.Miscellaneous
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Geode");
-			Tooltip.SetDefault("Right click to crack open!");
+			Tooltip.SetDefault("Consumable/nRight click to smash open!");
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
 
@@ -35,6 +37,17 @@ namespace Macrocosm.Content.Items.Miscellaneous
 			{
 				int itemType = Utils.SelectRandom(Main.rand, ModContent.ItemType<ArtemiteOre>(), ModContent.ItemType<ChandriumOre>(), ModContent.ItemType<SeleniteOre>(), ModContent.ItemType<DianiteOre>());
 				player.QuickSpawnItem(player.GetSource_OpenItem(Type), itemType, Main.rand.Next(1, 4));
+			}
+		}
+
+		public override void Update(ref float gravity, ref float maxFallSpeed)
+		{
+			if (Main.rand.NextBool(8))
+			{
+				Dust dust = Dust.NewDustDirect(Item.position, Item.width, Item.height/2, ModContent.DustType<SmokeDust>(), newColor: new Color(16, 16, 16, 128));
+				dust.velocity.X = Main.rand.NextFloat(-0.2f, 0.2f);
+				dust.velocity.Y = -0.4f;
+				dust.noGravity = true;
 			}
 		}
 	}

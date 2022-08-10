@@ -16,10 +16,10 @@ namespace Macrocosm.Content.Projectiles.Meteors
 			Projectile.width = 48;
 			Projectile.height = 48;
 			Projectile.aiStyle = -1;
-			Projectile.friendly = false;
-			Projectile.hostile = true;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
 			Projectile.damage = 500;
-			Projectile.penetrate = 1;
+			Projectile.penetrate = -1;
 			Projectile.tileCollide = true;
 		}
 
@@ -48,7 +48,7 @@ namespace Macrocosm.Content.Projectiles.Meteors
 				// let the server do it for every player
 
 				float maxDist = 110f * 16f; // 110 tiles max distance (least screenshake) 
-				float maxScreenshake = 60f; // max screenshake (up to 100) for distance = 0
+				float maxScreenshake = 75f; // max screenshake (up to 100) for distance = 0
 
 				for (int i = 0; i < 255; i++)
 				{
@@ -60,7 +60,7 @@ namespace Macrocosm.Content.Projectiles.Meteors
 						float distance = Vector2.Distance(player.Center, Projectile.Center);
 
 						if (distance < maxDist)
-							player.GetModPlayer<MacrocosmPlayer>().ScreenShakeIntensity = maxScreenshake - distance / maxDist * maxScreenshake;
+							player.GetModPlayer<MacrocosmPlayer>().ScreenShakeIntensity += maxScreenshake - distance / maxDist * maxScreenshake;
 					}
 				}
 
@@ -73,16 +73,16 @@ namespace Macrocosm.Content.Projectiles.Meteors
 
 				#region Dusts
 
-				for (int i = 0; i < Main.rand.Next(60, 80); i++)
+				for (int i = 0; i < Main.rand.Next(100, 120); i++)
 				{
 					Dust dust = Dust.NewDustDirect(
-						new Vector2(Projectile.position.X, Projectile.position.Y + 1.5f * Projectile.height),
+						new Vector2(Projectile.position.X, Projectile.position.Y + 1.25f * Projectile.height),
 						Projectile.width,
 						Projectile.height,
 						ModContent.DustType<RegolithDust>(),
-						Main.rand.NextFloat(-1f, 1f),
-						Main.rand.NextFloat(0f, -5f),
-						Scale: Main.rand.NextFloat(1.5f, 2f)
+						Main.rand.NextFloat(-2f, 2f),
+						Main.rand.NextFloat(0f, -7.5f),
+						Scale: Main.rand.NextFloat(1f, 1.4f)
 					);
 
 					dust.noGravity = false;
@@ -102,8 +102,22 @@ namespace Macrocosm.Content.Projectiles.Meteors
 
 		override public void AI()
 		{
-
 			Projectile.rotation += (Math.Abs(Projectile.velocity.X) + Math.Abs(Projectile.velocity.Y)) * 0.01f * Projectile.direction;
+
+			if (Main.rand.NextBool(3))
+			{
+				Dust dust = Dust.NewDustDirect(
+						new Vector2(Projectile.position.X, Projectile.position.Y),
+						Projectile.width,
+						Projectile.height,
+						ModContent.DustType<RegolithDust>(),
+						0f,
+						0f,
+						Scale: Main.rand.NextFloat(1f, 1.4f)
+					);
+
+				dust.noGravity = true;
+			}
 		}
 	}
 }

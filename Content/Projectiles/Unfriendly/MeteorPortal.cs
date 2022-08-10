@@ -57,6 +57,7 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 
 					Terraria.Audio.SoundEngine.PlaySound(SoundID.Item20, Projectile.Center);
 				}
+				SpawnDusts();
 			}
 
 			Projectile.alpha = (int)Projectile.ai[0];
@@ -66,6 +67,9 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 			Projectile.width = (int)(defWidth * Projectile.scale);
 			Projectile.height = (int)(defHeight * Projectile.scale);
 			Projectile.Center = center;
+
+
+			
 		}
 
 		public override Color? GetAlpha(Color lightColor)
@@ -80,6 +84,51 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 			Main.EntitySpriteDraw(texture2D, Projectile.Center - Main.screenPosition, null, value * 0.84f, Projectile.rotation, texture2D.Size() / 2f,
 				Projectile.scale, SpriteEffects.None, 0);
 			return false;
+		}
+
+
+		/// <summary>
+		/// Copied from Lunar Portal Staff
+		/// </summary>
+		private void SpawnDusts()
+		{
+			if (Main.rand.Next(2) == 0)
+			{
+				Vector2 vector95 = Vector2.UnitY.RotatedByRandom(6.2831854820251465);
+				Dust dust47 = Main.dust[Dust.NewDust(Projectile.Center - vector95 * 30f, 0, 0, 229)];
+				dust47.noGravity = true;
+				dust47.position = Projectile.Center - vector95 * Main.rand.Next(10, 21);
+				dust47.velocity = vector95.RotatedBy(1.5707963705062866) * 6f;
+				dust47.scale = 0.5f + Main.rand.NextFloat();
+				dust47.fadeIn = 0.5f;
+				dust47.customData = Projectile.Center;
+				dust47.color = new Color(0, 255, 0); // doesn't work 
+			}
+
+			if (Main.rand.Next(2) == 0)
+			{
+				Vector2 vector96 = Vector2.UnitY.RotatedByRandom(6.2831854820251465);
+				Dust dust48 = Main.dust[Dust.NewDust(Projectile.Center - vector96 * 30f, 0, 0, 240)];
+				dust48.noGravity = true;
+				dust48.position = Projectile.Center - vector96 * 30f;
+				dust48.velocity = vector96.RotatedBy(-1.5707963705062866) * 3f;
+				dust48.scale = 0.5f + Main.rand.NextFloat();
+				dust48.fadeIn = 0.5f;
+				dust48.customData = Projectile.Center;
+				dust48.color = new Color(0, 255, 0); // doesn't work 
+			}
+
+			if (Projectile.ai[0] < 0f)
+			{
+				Vector2 center13 = Projectile.Center;
+				int num932 = Dust.NewDust(center13 - Vector2.One * 8f, 16, 16, 229, Projectile.velocity.X / 2f, Projectile.velocity.Y / 2f);
+				Dust dust2 = Main.dust[num932];
+				dust2.velocity *= 2f;
+				Main.dust[num932].noGravity = true;
+				Main.dust[num932].scale = Utils.SelectRandom<float>(Main.rand, 0.8f, 1.65f);
+				Main.dust[num932].customData = this;
+				Main.dust[num932].color = new Color(0, 255, 0); // doesn't work 
+			}
 		}
 	}
 }

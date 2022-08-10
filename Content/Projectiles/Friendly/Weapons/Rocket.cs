@@ -29,6 +29,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Weapons
 			Projectile.light = .5f;
 		}
 
+		public override void ModifyDamageHitbox(ref Rectangle hitbox)
+		{
+			if ((Projectile.rotation < 0 && Projectile.rotation <= MathHelper.PiOver4 && Projectile.rotation >= MathHelper.PiOver4 * 3) || (Projectile.rotation >= 0 &&Projectile.rotation > MathHelper.PiOver4 && Projectile.rotation <= MathHelper.PiOver4 * 3))
+				hitbox = new Rectangle((int)Projectile.position.X, (int)Projectile.position.Y, Projectile.height, Projectile.width);
+			else
+				hitbox = new Rectangle((int)Projectile.position.X, (int)Projectile.position.Y, Projectile.width, Projectile.height);
+		}
+
 		/// <summary>
 		/// Adapted from Projectile.AI_016() for homing snowman rockets
 		/// </summary>

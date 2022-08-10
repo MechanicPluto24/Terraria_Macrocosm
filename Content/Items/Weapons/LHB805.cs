@@ -11,11 +11,11 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons
 {
-	public class Minigun : ModItem
+	public class LHB805 : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Minigun");
+			DisplayName.SetDefault("LHB-805");
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
 
@@ -32,7 +32,7 @@ namespace Macrocosm.Content.Items.Weapons
 			Item.value = Item.sellPrice(silver: 700); //sells for 700 silver (7 gold)
 			Item.rare = ItemRarityID.Green; // the color that the item's name will be in-game
 			Item.autoReuse = true; // if you can hold click to automatically use it again
-			Item.shoot = ModContent.ProjectileType<MinigunProjectile>(); //this gun uses a holdout projectile
+			Item.shoot = ModContent.ProjectileType<LHB805Projectile>(); //this gun uses a holdout projectile
 			Item.shootSpeed = 32f; // the speed of the projectile (measured in pixels per frame)
 			Item.DamageType = DamageClass.Ranged; //deals melee damage
 			Item.damage = 45; //the damage of your gun
@@ -44,7 +44,7 @@ namespace Macrocosm.Content.Items.Weapons
 
 		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
-			Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<MinigunProjectile>(), damage, knockback, player.whoAmI);
+			Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<LHB805Projectile>(), damage, knockback, player.whoAmI);
 			return false;
 		}
 	}

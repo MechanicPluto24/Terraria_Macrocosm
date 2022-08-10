@@ -1,11 +1,13 @@
+using Macrocosm.Sounds;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Weapons
 {
-    public class ColtProjectile : ModProjectile
+    public class ArchersLineProjectile : ModProjectile
 	{
 		public override string Texture => "Terraria/Images/Projectile_14";
 		public bool[] hitList = new bool[Main.maxNPCs]; //Used to keep track of every NPC hit
@@ -24,6 +26,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Weapons
 
 		public override void OnHitNPC(NPC npc, int damage, float knockback, bool crit)
 		{
+
+			Projectile.damage -= 10;
+
 			hitList[npc.whoAmI] = true; //Make sure the projectile won't aim directly for this NPC
 			int target = GetTarget(600, Projectile.Center); //Keeps track of the current target, set to -1 to ensure no NPC by default
 
@@ -37,7 +42,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Weapons
 					Projectile.velocity = shootVel;
 					Projectile.rotation = Main.npc[target].Center.ToRotation();
 				}
+
+				SoundEngine.PlaySound(CustomSounds.Ricochet with { Volume = 0.3f });
 			}
+
 			base.OnHitNPC(npc, damage, knockback, crit);
 		}
 

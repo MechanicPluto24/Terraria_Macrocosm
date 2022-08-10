@@ -7,12 +7,12 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons
 {
-    public class Colt : ModItem
+    public class ArchersLine : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Dovah's Colt");
-			Tooltip.SetDefault("Always shoots special bullets that redirect to nearby enemies after hitting");
+			DisplayName.SetDefault("Archer's Line");
+			Tooltip.SetDefault("Bullets ricochet from one enemy to another");
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
 
@@ -38,7 +38,10 @@ namespace Macrocosm.Content.Items.Weapons
 
 		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
 		{
-			type = ModContent.ProjectileType<ColtProjectile>();
+			position += new Vector2(0, -5); // muzzle offset 
+			type = ModContent.ProjectileType<ArchersLineProjectile>();
 		}
+
+		public override Vector2? HoldoutOffset() => new Vector2(-14, 0);
 	}
 }
