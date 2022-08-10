@@ -9,11 +9,12 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons
 {
-	public class RocketLauncher : ModItem
+	public class NWA12691 : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Rocket Launcher");
+			DisplayName.SetDefault("NWA-12691");
+			Tooltip.SetDefault("Right click to lock onto an enemy");
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
 
@@ -23,8 +24,8 @@ namespace Macrocosm.Content.Items.Weapons
 			Item.DamageType = DamageClass.Ranged;
 			Item.width = 70;
 			Item.height = 26;
-			Item.useTime = 8;
-			Item.useAnimation = 8;
+			Item.useTime = 12;
+			Item.useAnimation = 12;
 			Item.useStyle = ItemUseStyleID.Shoot;
 			Item.noMelee = true;
 			Item.channel = true;
@@ -42,33 +43,31 @@ namespace Macrocosm.Content.Items.Weapons
 
 		public override bool AltFunctionUse(Player player) => true;
 
+		public override void ModifyItemScale(Player player, ref float scale)
+		{
+			scale = player.altFunctionUse == 2 ? 0f : 1f;
+		}
+
 		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
-
 			if (player.altFunctionUse == 2)
 			{
-
 				int id = -1;
-				bool removeAll = false;
+				bool found = false;
 
 				for (int i = 0; i < Main.maxNPCs; i++)
 				{
+					NPC npc = Main.npc[i];
+					InstancedGlobalNPC modNPC;
 
-					if (Main.npc[i].CanBeChasedBy() && Main.npc[i].getRect().Intersects(new Rectangle((int)(Main.MouseWorld.X - 10f), (int)(Main.MouseWorld.Y - 10f), 20, 20)))
+					if (Main.npc[i].TryGetGlobalNPC(out modNPC))
 					{
-						id = i;
-						removeAll = true;
-						Main.NewText("ID is " + id.ToString());
-					}
-				}
+						modNPC.targetedBy[player.whoAmI] = false;
 
-				if (removeAll)
-				{
-					for (int i = 0; i < Main.maxNPCs; i++)
-					{
-						if (Main.npc[i].TryGetGlobalNPC(out InstancedGlobalNPC npc))
+						if (!found && npc.CanBeChasedBy() && Main.npc[i].getRect().Intersects(new Rectangle((int)(Main.MouseWorld.X - 10f), (int)(Main.MouseWorld.Y - 10f), 20, 20)))
 						{
-							npc.targetedBy[player.whoAmI] = false;
+							id = i;
+							found = true;
 						}
 					}
 				}
@@ -81,7 +80,6 @@ namespace Macrocosm.Content.Items.Weapons
 					}
 				}
 
-
 				return false;
 			}
 
@@ -90,7 +88,7 @@ namespace Macrocosm.Content.Items.Weapons
 
 		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
 		{
-
+			position += new Vector2(0, -4); // barrel offset 
 			type = ModContent.ProjectileType<Rocket>();
 		}
 	}

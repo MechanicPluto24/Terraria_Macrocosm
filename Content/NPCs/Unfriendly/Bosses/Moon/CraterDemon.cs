@@ -61,8 +61,6 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon
 				if (!visible)
 					return;
 
-				//float rotationsPerSecond = fast ? 3.1f : 1.8f;
-				//float rotationsPerSecond = fast ? 1.8f : 0.5f;
 				float rotationsPerSecond = fast ? 1.3f : 0.5f;
 				rotation -= MathHelper.ToRadians(rotationsPerSecond * 6f);
 			}

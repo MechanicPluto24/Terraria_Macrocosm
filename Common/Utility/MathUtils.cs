@@ -24,10 +24,14 @@ namespace Macrocosm.Common.Utility
 		/// <param name="theta"> The rotation angle (in radians) </param>
 		/// <returns> The rotated point coordinates </returns>
 		public static Vector2 RotatingPoint(Vector2 origin, Vector2 offset, float theta)
-			=> new(
+		{
+			offset += origin;
+			return new(
 				origin.X + (offset.X - origin.X) * (float)Math.Cos(theta) - (offset.Y - origin.Y) * (float)Math.Sin(theta),
 				origin.Y + (offset.X - origin.X) * (float)Math.Sin(theta) + (offset.Y - origin.Y) * (float)Math.Cos(theta)
 			);
+		}
+			
 
 		/// <summary>
 		/// Applies a logarithmic derivative to <paramref name="value"/>

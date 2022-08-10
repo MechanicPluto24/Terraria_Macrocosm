@@ -1,14 +1,13 @@
-﻿using Macrocosm.Content.Projectiles.Meteors;
-using Macrocosm.Content.Subworlds.Moon;
-using Macrocosm.Content.Tiles;
-using Microsoft.Xna.Framework;
-using SubworldLibrary;
-using System;
+﻿using System;
 using Terraria;
-using Terraria.DataStructures;
-using Terraria.GameContent.Creative;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using Terraria.GameContent.Creative;
+using Terraria.GameContent.Events;
+using SubworldLibrary;
+using Macrocosm.Content.Subworlds.Moon;
+using Macrocosm.Content.Tiles;
+using Terraria.Graphics.Effects;
 
 namespace Macrocosm.Content
 {
@@ -34,20 +33,25 @@ namespace Macrocosm.Content
 
 		public override void PreUpdateWorld()
 		{
-
 			// Syncs the moon type over the overworld and subworlds 
 			if (Main.moonType != MoonType)
 				Main.moonType = MoonType;
 
+			// these are needed for subworlds with NormalUpdates turned on 
 			if (SubworldSystem.AnyActive<Macrocosm>())
 			{
 				Main.numClouds = 0;
 				Main.windSpeedCurrent = 0;
 				Main.weatherCounter = 0;
 				Star.starfallBoost = 0; // Tricky way to stop vanilla fallen stars for spawning with NormalUpdates turned on 
+				
+				Main.slimeRain = false;
+				Main.slimeRainTime = 0;
+				SkyManager.Instance["Slime"].Deactivate();
+				Main.StopSlimeRain(false);
 
+				LanternNight.WorldClear();
 				Main.StopRain(); // Rain, rain, go away, come again another day
-				Main.StopSlimeRain();
 			}
 		}
 

@@ -1,19 +1,13 @@
-﻿- clean up the mg code, add gores, stop playback if interrupted 
-- adjust colt holdout
-- crescen ghoul ai improv
-- finish juggernaut 
-- finish current weapons 
-- meteor size variation, gores, effects
-- add ambient rocks to moon generation
+﻿- finish juggernaut 
+- tweak crescent ghoul & clavite ai 
+- finish Calcic Cane, Claw Wrench 
+- meteor gores, effects
+- add ambient rocks (medium, large) to moon generation
 - improve CD fight
 - edit info display for moon phase and weather 
 - fix accelerated time passing not working (sleeping)
 - bestiary portraits for CD and minions
 - lower projectile, gore gravity on moon 
 - disable graveyards on the moon??
-- remove lantern nights
-- Meteors need dust particles while travelling through the air
-- Meteoric Geodes need little dust + smoke particles while on the ground (if possible)
-- Medium and large meteors need bigger explosion particle effects
 - Crater Demon portals (small and large) need particles similar to how the particles are produced by the Lunar Portal staff; lighter sprite produces glowing particles, darker sprite produces dark particles
 - find a way to sync bestiary data across subworlds ??????
