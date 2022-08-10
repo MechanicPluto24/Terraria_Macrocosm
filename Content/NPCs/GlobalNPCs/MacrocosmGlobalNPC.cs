@@ -12,7 +12,6 @@ namespace Macrocosm.NPCs.GlobalNPCs
 {
 	public class MacrocosmGlobalNPC : GlobalNPC
 	{
-
 		public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
 		{
 			if (npc.ModNPC is MoonEnemy)

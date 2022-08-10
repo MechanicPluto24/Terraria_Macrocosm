@@ -13,7 +13,7 @@ namespace Macrocosm.Content.Items.Weapons
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Dovah's Rocket Launcher");
+			DisplayName.SetDefault("Rocket Launcher");
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
 
@@ -91,7 +91,7 @@ namespace Macrocosm.Content.Items.Weapons
 		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
 		{
 
-			type = ModContent.ProjectileType<DovahRocket>();
+			type = ModContent.ProjectileType<Rocket>();
 		}
 	}
 }

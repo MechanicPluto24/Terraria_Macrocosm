@@ -141,7 +141,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon
 			{
 				Vector2 drawPos = NPC.oldPos[i] + NPC.Size / 2 - Main.screenPosition;
 				Color color = NPC.GetAlpha(drawColor) * (((float)NPC.oldPos.Length - i) / NPC.oldPos.Length);
-				spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, drawPos, NPC.frame, color * 0.6f, NPC.rotation + 0.36f * i, NPC.Size/2, NPC.scale, SpriteEffects.None, 0f);
+				spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, drawPos, NPC.frame, color * 0.6f, NPC.rotation - 0.36f * i, NPC.Size/2, NPC.scale, SpriteEffects.None, 0f);
 			}
 
 			return true;
