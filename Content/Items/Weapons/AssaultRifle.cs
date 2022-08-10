@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Items.Weapons
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Dovah's Assault Rifle");
+			DisplayName.SetDefault("Assault Rifle");
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
 

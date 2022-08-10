@@ -8,9 +8,8 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Weapons
 {
-	public class DovahRocket : ModProjectile
+	public class Rocket : ModProjectile
 	{
-
 		public ref float AI_HomingTimer => ref Projectile.ai[0];
 
 		public override void SetStaticDefaults()
