@@ -307,7 +307,41 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon
 				return;
 
 			spriteBatch.Draw(texture, info.center - Main.screenPosition, null, Color.White * info.alpha * 0.5f, (0f - info.rotation) * 0.65f, texture.Size() / 2f, info.scale * 1.3f, SpriteEffects.FlipHorizontally, 0);
-			spriteBatch.Draw(texture, info.center - Main.screenPosition, null, Color.White * info.alpha, info.rotation, texture.Size() / 2f, info.scale, SpriteEffects.None, 0);	
+			spriteBatch.Draw(texture, info.center - Main.screenPosition, null, Color.White * info.alpha, info.rotation, texture.Size() / 2f, info.scale, SpriteEffects.None, 0);
+
+			if(info.scale > 0.9f && Vector2.Distance(info.center, NPC.Center) > 10f)
+				SpawnPortalDusts(info);
+		}
+
+		private void SpawnPortalDusts(BigPortalInfo info)
+		{
+			for(int i = 0; i < 3; i++)
+			{
+				int type = ModContent.DustType<PortalLightGreenDust>();
+				Vector2 rotVector1 = Vector2.UnitY.RotatedByRandom(6.2831854820251465);
+				Dust lightDust = Main.dust[Dust.NewDust(info.center - rotVector1 * 30f, 0, 0, type)];
+				lightDust.noGravity = true;
+				lightDust.position = info.center - rotVector1 * Main.rand.Next(10, 80);
+				lightDust.velocity = rotVector1.RotatedBy(1.5707963705062866) * 6f;
+				lightDust.scale = 1.2f + Main.rand.NextFloat();
+				lightDust.fadeIn = 0.5f;
+				lightDust.customData = info.center;
+
+			}
+			/*
+			if (false)
+			{
+				int type = ModContent.DustType<PortalDarkGreenDust>();
+				Vector2 rotVector2 = Vector2.UnitY.RotatedByRandom(6.2831854820251465);
+				Dust darkDust = Main.dust[Dust.NewDust(info.center - rotVector2 * 30f, 0, 0, type)];
+				darkDust.noGravity = true;
+				darkDust.position = info.center - rotVector2 * 30f;
+				darkDust.velocity = rotVector2.RotatedBy(-1.5707963705062866) * 1.8f;
+				darkDust.scale = 1.2f + Main.rand.NextFloat();
+				darkDust.fadeIn = 0.5f;
+				darkDust.customData = info.center;
+			}
+			*/
 		}
 
 		private int GetAnimationSetFrame()
@@ -927,8 +961,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon
 
 		public override void HitEffect(int hitDirection, double damage)
 		{
-			SpawnDusts();
-
+			SpawnDusts(10);
 
 			if (Main.dedServ)
 				return;
@@ -1003,17 +1036,17 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon
 			return count;
 		}
 
-		private void SpawnDusts()
+		private void SpawnDusts(int number = 20)
 		{
 			GetHitboxRects(out Rectangle head, out Rectangle jaw);
 
 			var type = ModContent.DustType<RegolithDust>();
 			var pos = head.Location.ToVector2();
-			for (int i = 0; i < 20; i++)
+			for (int i = 0; i < number; i++)
 				SpawnDustsInner(pos, head.Width, head.Height, type);
 
 			pos = jaw.Location.ToVector2();
-			for (int i = 0; i < 8; i++)
+			for (int i = 0; i < number/2; i++)
 				SpawnDustsInner(pos, jaw.Width, jaw.Height, type);
 		}
 

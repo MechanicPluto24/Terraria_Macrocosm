@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon;
+﻿using Macrocosm.Content.Dusts;
+using Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -67,9 +68,6 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 			Projectile.width = (int)(defWidth * Projectile.scale);
 			Projectile.height = (int)(defHeight * Projectile.scale);
 			Projectile.Center = center;
-
-
-			
 		}
 
 		public override Color? GetAlpha(Color lightColor)
@@ -86,48 +84,36 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 			return false;
 		}
 
-
 		/// <summary>
-		/// Copied from Lunar Portal Staff
+		/// Adapted from Lunar Portal Staff
 		/// </summary>
 		private void SpawnDusts()
 		{
-			if (Main.rand.Next(2) == 0)
+			if (Main.rand.NextBool(2))
 			{
-				Vector2 vector95 = Vector2.UnitY.RotatedByRandom(6.2831854820251465);
-				Dust dust47 = Main.dust[Dust.NewDust(Projectile.Center - vector95 * 30f, 0, 0, 229)];
-				dust47.noGravity = true;
-				dust47.position = Projectile.Center - vector95 * Main.rand.Next(10, 21);
-				dust47.velocity = vector95.RotatedBy(1.5707963705062866) * 6f;
-				dust47.scale = 0.5f + Main.rand.NextFloat();
-				dust47.fadeIn = 0.5f;
-				dust47.customData = Projectile.Center;
-				dust47.color = new Color(0, 255, 0); // doesn't work 
+				int type = Main.rand.NextBool() ? ModContent.DustType<PortalLightOrangeDust>() : ModContent.DustType<PortalLightGreenDust>();
+				Vector2 rotVector1 = Vector2.UnitY.RotatedByRandom(6.2831854820251465);
+				Dust lightDust = Main.dust[Dust.NewDust(Projectile.Center - rotVector1 * 30f, 0, 0, type)];
+				lightDust.noGravity = true;
+				lightDust.position = Projectile.Center - rotVector1 * Main.rand.Next(10, 21);
+				lightDust.velocity = rotVector1.RotatedBy(1.5707963705062866) * 6f;
+				lightDust.scale = 1.2f + Main.rand.NextFloat();
+				lightDust.fadeIn = 0.5f;
+				lightDust.customData = Projectile.Center;
+
 			}
 
-			if (Main.rand.Next(2) == 0)
+			if (Main.rand.NextBool(2))
 			{
-				Vector2 vector96 = Vector2.UnitY.RotatedByRandom(6.2831854820251465);
-				Dust dust48 = Main.dust[Dust.NewDust(Projectile.Center - vector96 * 30f, 0, 0, 240)];
-				dust48.noGravity = true;
-				dust48.position = Projectile.Center - vector96 * 30f;
-				dust48.velocity = vector96.RotatedBy(-1.5707963705062866) * 3f;
-				dust48.scale = 0.5f + Main.rand.NextFloat();
-				dust48.fadeIn = 0.5f;
-				dust48.customData = Projectile.Center;
-				dust48.color = new Color(0, 255, 0); // doesn't work 
-			}
-
-			if (Projectile.ai[0] < 0f)
-			{
-				Vector2 center13 = Projectile.Center;
-				int num932 = Dust.NewDust(center13 - Vector2.One * 8f, 16, 16, 229, Projectile.velocity.X / 2f, Projectile.velocity.Y / 2f);
-				Dust dust2 = Main.dust[num932];
-				dust2.velocity *= 2f;
-				Main.dust[num932].noGravity = true;
-				Main.dust[num932].scale = Utils.SelectRandom<float>(Main.rand, 0.8f, 1.65f);
-				Main.dust[num932].customData = this;
-				Main.dust[num932].color = new Color(0, 255, 0); // doesn't work 
+				int type = Main.rand.NextBool() ? ModContent.DustType<PortalDarkOrangeDust>() : ModContent.DustType<PortalDarkGreenDust>();
+				Vector2 rotVector2 = Vector2.UnitY.RotatedByRandom(6.2831854820251465);
+				Dust darkDust = Main.dust[Dust.NewDust(Projectile.Center - rotVector2 * 30f, 0, 0, type)];
+				darkDust.noGravity = true;
+				darkDust.position = Projectile.Center - rotVector2 * 30f;
+				darkDust.velocity = rotVector2.RotatedBy(-1.5707963705062866) * 3f;
+				darkDust.scale = 1.2f + Main.rand.NextFloat();
+				darkDust.fadeIn = 0.5f;
+				darkDust.customData = Main.projectile[Projectile.whoAmI];
 			}
 		}
 	}

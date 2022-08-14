@@ -57,20 +57,20 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 			if (++Projectile.frameCounter >= 4)
 			{
 				Projectile.frameCounter = 0;
-				Projectile.frame = ++Projectile.frame % Main.projFrames[Projectile.type]; // 6 frames @ 4 ticks/frame
+				Projectile.frame = ++Projectile.frame % Main.projFrames[Type]; // 6 frames @ 4 ticks/frame
 			}
 		}
 
 		public override bool PreDraw(ref Color lightColor)
 		{
 
-			Texture2D tex = TextureAssets.Projectile[Projectile.type].Value;
+			Texture2D tex = TextureAssets.Projectile[Type].Value;
 
-			Rectangle sourceRect = tex.Frame(1, Main.projFrames[Projectile.type], frameY: Projectile.frame);
+			Rectangle sourceRect = tex.Frame(1, Main.projFrames[Type], frameY: Projectile.frame);
 
 			Vector2 origin = Projectile.Size / 2f + new Vector2(6, 32);
 
-			Main.EntitySpriteDraw(TextureAssets.Projectile[Projectile.type].Value, Projectile.Center - Main.screenPosition,
+			Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition,
 				sourceRect, Color.White, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
 
 			return false;
