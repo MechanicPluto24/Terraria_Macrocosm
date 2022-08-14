@@ -2,19 +2,24 @@
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Materials;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.DataStructures;
+using Terraria.GameContent;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Miscellaneous
 {
-	public class MoonGeode : ModItem
+	public class MeteoricChunk : ModItem
 	{
+		private int frameY = 0;
+		private bool flip = false;
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Geode");
+			DisplayName.SetDefault("Meteoric Chunk");
 			Tooltip.SetDefault("Consumable/nRight click to smash open!");
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
@@ -26,6 +31,12 @@ namespace Macrocosm.Content.Items.Miscellaneous
 			Item.maxStack = 999;
 			Item.value = Item.sellPrice(silver: 1);
 			Item.rare = ItemRarityID.Blue;
+		}
+
+		public override void OnSpawn(IEntitySource source)
+		{
+			frameY = Main.rand.Next(3);
+			flip = Main.rand.NextBool();
 		}
 
 		public override bool CanRightClick() => true;
@@ -49,6 +60,26 @@ namespace Macrocosm.Content.Items.Miscellaneous
 				dust.velocity.Y = -0.4f;
 				dust.noGravity = true;
 			}
+		}
+
+		public override bool PreDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
+		{
+			Draw(spriteBatch, frameY, flip, Item.position - Main.screenPosition, lightColor, rotation, Item.Size / 2, scale);
+			return false;
+		}
+
+		public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
+		{
+			Draw(spriteBatch, 1, false, position - Main.screenPosition, drawColor, 0f, origin, scale);
+			return false;
+		}
+
+		private void Draw(SpriteBatch spriteBatch, int frameY, bool flip, Vector2 position, Color color, float rotation, Vector2 origin, float scale)
+		{
+			Texture2D texture = TextureAssets.Item[Type].Value;
+			SpriteEffects effects = flip ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+			Rectangle sourceRect = texture.Frame(1, 4, frameY: frameY);
+			spriteBatch.Draw(texture, Item.Center - Main.screenPosition, sourceRect, color, rotation, origin, scale, effects, 0f);
 		}
 	}
 }
