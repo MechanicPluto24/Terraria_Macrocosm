@@ -16,7 +16,7 @@ namespace Macrocosm.Common.Utility
 		/// <param name="lightColor"> Computed environment color </param>
 		/// <param name="drawOffset"> Offset to draw from texture center at 0 rotation </param>
 		/// <param name="texture"> Leave null to draw as entity with the loaded texture </param>
-		public static void DrawAnimated(this Projectile proj, Color lightColor, Vector2 drawOffset = default, Texture2D texture = null)
+		public static void DrawAnimated(this Projectile proj, Color lightColor, SpriteEffects effect, Vector2 drawOffset = default, Texture2D texture = null)
 		{
 			bool drawEntity = false;
 
@@ -26,14 +26,12 @@ namespace Macrocosm.Common.Utility
 				drawEntity = true;
 			}
 
-			Vector2 position = (proj.position - Main.screenPosition).Floor();
+			Vector2 position = proj.Center - Main.screenPosition;
 
 			int numFrames = Main.projFrames[proj.type];
 			Rectangle sourceRect = texture.Frame(1, numFrames, frameY: proj.frame);
 
 			Vector2 origin = new Vector2(texture.Width / 2, texture.Height / numFrames / 2) - new Vector2(drawOffset.X, drawOffset.Y * proj.spriteDirection);
-
-			SpriteEffects effect = proj.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None;
 
 			if (drawEntity)
 				Main.EntitySpriteDraw(texture, position, sourceRect, lightColor, proj.rotation, origin, proj.scale, effect, 0);
@@ -45,7 +43,7 @@ namespace Macrocosm.Common.Utility
 		/// Draws an animated projectile glowmask
 		/// (Only tested for held projectiles)  
 		/// </summary>
-		public static void DrawAnimatedGlowmask(this Projectile proj, Texture2D glowmask, Color lightColor, Vector2 drawOffset = default) 
-			=> proj.DrawAnimated(lightColor, drawOffset + new Vector2(0,-2), glowmask);
+		public static void DrawAnimatedGlowmask(this Projectile proj, Texture2D glowmask, Color lightColor, SpriteEffects effect, Vector2 drawOffset = default) 
+			=> proj.DrawAnimated(lightColor, effect, drawOffset + new Vector2(0,-2), glowmask);
 	}
 }

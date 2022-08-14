@@ -51,14 +51,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Weapons
 
 		public override bool PreDraw(ref Color lightColor)
 		{
-			Projectile.DrawAnimated(lightColor, new Vector2(5, 10));
+			Projectile.DrawAnimated(lightColor, Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None, new Vector2(5, 10));
 			return false;
 		}
 
 		public override void PostDraw(Color lightColor)
 		{
 			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Weapons/LHB805ProjectileGlow").Value;
-			Projectile.DrawAnimatedGlowmask(glowmask, Color.White, new Vector2(5, 10));
+			Projectile.DrawAnimatedGlowmask(glowmask, Color.White, Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None, new Vector2(5, 10));
 		}
 
 		public override void AI()

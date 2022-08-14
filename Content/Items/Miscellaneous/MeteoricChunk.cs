@@ -20,8 +20,8 @@ namespace Macrocosm.Content.Items.Miscellaneous
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Meteoric Chunk");
-			Tooltip.SetDefault("Consumable/nRight click to smash open!");
-			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
+			Tooltip.SetDefault("Consumable\nRight click to smash open!");
+			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 50;
 		}
 
 		override public void SetDefaults()
@@ -55,22 +55,28 @@ namespace Macrocosm.Content.Items.Miscellaneous
 		{
 			if (Main.rand.NextBool(8))
 			{
-				Dust dust = Dust.NewDustDirect(Item.position, Item.width, Item.height/2, ModContent.DustType<SmokeDust>(), newColor: new Color(16, 16, 16, 128));
+				Dust dust = Dust.NewDustDirect(Item.position, Item.width, Item.height/2, ModContent.DustType<SmokeDust>(), newColor: new Color(160, 160, 160, 255));
 				dust.velocity.X = Main.rand.NextFloat(-0.2f, 0.2f);
 				dust.velocity.Y = -0.4f;
 				dust.noGravity = true;
 			}
 		}
 
+		/// <summary>
+		/// Draw with a random frame and flipping in the world  
+		/// </summary>
 		public override bool PreDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
 		{
-			Draw(spriteBatch, frameY, flip, Item.position - Main.screenPosition, lightColor, rotation, Item.Size / 2, scale);
+			Draw(spriteBatch, frameY, flip, Item.Center - Main.screenPosition, lightColor, rotation, Item.Size / 2, scale);
 			return false;
 		}
 
+		/// <summary>
+		/// Draw with the default appearance in the inventory 
+		/// </summary>
 		public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
 		{
-			Draw(spriteBatch, 1, false, position - Main.screenPosition, drawColor, 0f, origin, scale);
+			Draw(spriteBatch, 0, false, position - new Vector2(Item.width/3,0), drawColor, 0f, origin, scale * 4);
 			return false;
 		}
 
@@ -79,7 +85,7 @@ namespace Macrocosm.Content.Items.Miscellaneous
 			Texture2D texture = TextureAssets.Item[Type].Value;
 			SpriteEffects effects = flip ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 			Rectangle sourceRect = texture.Frame(1, 4, frameY: frameY);
-			spriteBatch.Draw(texture, Item.Center - Main.screenPosition, sourceRect, color, rotation, origin, scale, effects, 0f);
+			spriteBatch.Draw(texture, position, sourceRect, color, rotation, origin, scale, effects, 0f);
 		}
 	}
 }

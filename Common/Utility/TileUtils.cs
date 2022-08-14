@@ -6,7 +6,10 @@ namespace Macrocosm.Common.Utility
 {
 	public static class TileUtils
 	{
-		public static bool BlendLikeDirt(int i, int j,int typeToBlendWith, bool resetFrame)
+		public static bool BlendLikeDirt(int i, int j, int typeToBlendWith, bool resetFrame, bool noDirt) =>
+			noDirt ? BlendLikeDirt(i, j, typeToBlendWith, resetFrame) : BlendLikeDirt(i, j, typeToBlendWith, resetFrame, 180);
+
+		public static bool BlendLikeDirt(int i, int j,int typeToBlendWith, bool resetFrame, int frameOffsetY = 0)
 		{
 			Tile tile = Main.tile[i, j];
 			int type = tile.TileType;
@@ -78,15 +81,15 @@ namespace Macrocosm.Common.Utility
 					{
 						case 0:
 							frame.X = 144;
-							frame.Y = 108;
+							frame.Y = frameOffsetY + 108;
 							break;
 						case 1:
 							frame.X = 162;
-							frame.Y = 108;
+							frame.Y = frameOffsetY + 108;
 							break;
 						default:
 							frame.X = 180;
-							frame.Y = 108;
+							frame.Y = frameOffsetY + 108;
 							break;
 					}
 
@@ -98,15 +101,15 @@ namespace Macrocosm.Common.Utility
 					{
 						case 0:
 							frame.X = 144;
-							frame.Y = 90;
+							frame.Y = frameOffsetY + 90;
 							break;
 						case 1:
 							frame.X = 162;
-							frame.Y = 90;
+							frame.Y = frameOffsetY + 90;
 							break;
 						default:
 							frame.X = 180;
-							frame.Y = 90;
+							frame.Y = frameOffsetY + 90;
 							break;
 					}
 
@@ -118,15 +121,15 @@ namespace Macrocosm.Common.Utility
 					{
 						case 0:
 							frame.X = 162;
-							frame.Y = 126;
+							frame.Y = frameOffsetY + 126;
 							break;
 						case 1:
 							frame.X = 162;
-							frame.Y = 144;
+							frame.Y = frameOffsetY + 144;
 							break;
 						default:
 							frame.X = 162;
-							frame.Y = 162;
+							frame.Y = frameOffsetY + 162;
 							break;
 					}
 
@@ -138,15 +141,15 @@ namespace Macrocosm.Common.Utility
 					{
 						case 0:
 							frame.X = 144;
-							frame.Y = 126;
+							frame.Y = frameOffsetY + 126;
 							break;
 						case 1:
 							frame.X = 144;
-							frame.Y = 144;
+							frame.Y = frameOffsetY + 144;
 							break;
 						default:
 							frame.X = 144;
-							frame.Y = 162;
+							frame.Y = frameOffsetY + 162;
 							break;
 					}
 
@@ -158,15 +161,15 @@ namespace Macrocosm.Common.Utility
 					{
 						case 0:
 							frame.X = 36;
-							frame.Y = 90;
+							frame.Y = frameOffsetY + 90;
 							break;
 						case 1:
 							frame.X = 36;
-							frame.Y = 126;
+							frame.Y = frameOffsetY + 126;
 							break;
 						default:
 							frame.X = 36;
-							frame.Y = 162;
+							frame.Y = frameOffsetY + 162;
 							break;
 					}
 
@@ -179,15 +182,15 @@ namespace Macrocosm.Common.Utility
 					{
 						case 0:
 							frame.X = 54;
-							frame.Y = 90;
+							frame.Y = frameOffsetY + 90;
 							break;
 						case 1:
 							frame.X = 54;
-							frame.Y = 126;
+							frame.Y = frameOffsetY + 126;
 							break;
 						default:
 							frame.X = 54;
-							frame.Y = 162;
+							frame.Y = frameOffsetY + 162;
 							break;
 					}
 
@@ -200,15 +203,15 @@ namespace Macrocosm.Common.Utility
 					{
 						case 0:
 							frame.X = 36;
-							frame.Y = 108;
+							frame.Y = frameOffsetY + 108;
 							break;
 						case 1:
 							frame.X = 36;
-							frame.Y = 144;
+							frame.Y = frameOffsetY + 144;
 							break;
 						default:
 							frame.X = 36;
-							frame.Y = 180;
+							frame.Y = frameOffsetY + 180;
 							break;
 					}
 
@@ -221,15 +224,15 @@ namespace Macrocosm.Common.Utility
 					{
 						case 0:
 							frame.X = 54;
-							frame.Y = 108;
+							frame.Y = frameOffsetY + 108;
 							break;
 						case 1:
 							frame.X = 54;
-							frame.Y = 144;
+							frame.Y = frameOffsetY + 144;
 							break;
 						default:
 							frame.X = 54;
-							frame.Y = 180;
+							frame.Y = frameOffsetY + 180;
 							break;
 					}
 
@@ -242,15 +245,15 @@ namespace Macrocosm.Common.Utility
 					{
 						case 0:
 							frame.X = 180;
-							frame.Y = 126;
+							frame.Y = frameOffsetY + 126;
 							break;
 						case 1:
 							frame.X = 180;
-							frame.Y = 144;
+							frame.Y = frameOffsetY + 144;
 							break;
 						default:
 							frame.X = 180;
-							frame.Y = 162;
+							frame.Y = frameOffsetY + 162;
 							break;
 					}
 
@@ -263,15 +266,15 @@ namespace Macrocosm.Common.Utility
 					{
 						case 0:
 							frame.X = 144;
-							frame.Y = 180;
+							frame.Y = frameOffsetY + 180;
 							break;
 						case 1:
 							frame.X = 162;
-							frame.Y = 180;
+							frame.Y = frameOffsetY + 180;
 							break;
 						default:
 							frame.X = 180;
-							frame.Y = 180;
+							frame.Y = frameOffsetY + 180;
 							break;
 					}
 
@@ -284,15 +287,15 @@ namespace Macrocosm.Common.Utility
 					{
 						case 0:
 							frame.X = 198;
-							frame.Y = 90;
+							frame.Y = frameOffsetY + 90;
 							break;
 						case 1:
 							frame.X = 198;
-							frame.Y = 108;
+							frame.Y = frameOffsetY + 108;
 							break;
 						default:
 							frame.X = 198;
-							frame.Y = 126;
+							frame.Y = frameOffsetY + 126;
 							break;
 					}
 
@@ -306,15 +309,15 @@ namespace Macrocosm.Common.Utility
 					{
 						case 0:
 							frame.X = 198;
-							frame.Y = 144;
+							frame.Y = frameOffsetY + 144;
 							break;
 						case 1:
 							frame.X = 198;
-							frame.Y = 162;
+							frame.Y = frameOffsetY + 162;
 							break;
 						default:
 							frame.X = 198;
-							frame.Y = 180;
+							frame.Y = frameOffsetY + 180;
 							break;
 					}
 
@@ -328,15 +331,15 @@ namespace Macrocosm.Common.Utility
 					{
 						case 0:
 							frame.X = 216;
-							frame.Y = 144;
+							frame.Y = frameOffsetY + 144;
 							break;
 						case 1:
 							frame.X = 216;
-							frame.Y = 162;
+							frame.Y = frameOffsetY + 162;
 							break;
 						default:
 							frame.X = 216;
-							frame.Y = 180;
+							frame.Y = frameOffsetY + 180;
 							break;
 					}
 
@@ -350,15 +353,15 @@ namespace Macrocosm.Common.Utility
 					{
 						case 0:
 							frame.X = 216;
-							frame.Y = 90;
+							frame.Y = frameOffsetY + 90;
 							break;
 						case 1:
 							frame.X = 216;
-							frame.Y = 108;
+							frame.Y = frameOffsetY + 108;
 							break;
 						default:
 							frame.X = 216;
-							frame.Y = 126;
+							frame.Y = frameOffsetY + 126;
 							break;
 					}
 
@@ -372,15 +375,15 @@ namespace Macrocosm.Common.Utility
 					{
 						case 0:
 							frame.X = 108;
-							frame.Y = 198;
+							frame.Y = frameOffsetY + 198;
 							break;
 						case 1:
 							frame.X = 126;
-							frame.Y = 198;
+							frame.Y = frameOffsetY + 198;
 							break;
 						default:
 							frame.X = 144;
-							frame.Y = 198;
+							frame.Y = frameOffsetY + 198;
 							break;
 					}
 
@@ -397,15 +400,15 @@ namespace Macrocosm.Common.Utility
 						{
 							case 0:
 								frame.X = 18;
-								frame.Y = 108;
+								frame.Y = frameOffsetY + 108;
 								break;
 							case 1:
 								frame.X = 18;
-								frame.Y = 144;
+								frame.Y = frameOffsetY + 144;
 								break;
 							default:
 								frame.X = 18;
-								frame.Y = 180;
+								frame.Y = frameOffsetY + 180;
 								break;
 						}
 					}
@@ -416,15 +419,15 @@ namespace Macrocosm.Common.Utility
 						{
 							case 0:
 								frame.X = 0;
-								frame.Y = 108;
+								frame.Y = frameOffsetY + 108;
 								break;
 							case 1:
 								frame.X = 0;
-								frame.Y = 144;
+								frame.Y = frameOffsetY + 144;
 								break;
 							default:
 								frame.X = 0;
-								frame.Y = 180;
+								frame.Y = frameOffsetY + 180;
 								break;
 						}
 					}
@@ -435,15 +438,15 @@ namespace Macrocosm.Common.Utility
 						{
 							case 0:
 								frame.X = 18;
-								frame.Y = 90;
+								frame.Y = frameOffsetY + 90;
 								break;
 							case 1:
 								frame.X = 18;
-								frame.Y = 126;
+								frame.Y = frameOffsetY + 126;
 								break;
 							default:
 								frame.X = 18;
-								frame.Y = 162;
+								frame.Y = frameOffsetY + 162;
 								break;
 						}
 					}
@@ -454,15 +457,15 @@ namespace Macrocosm.Common.Utility
 						{
 							case 0:
 								frame.X = 0;
-								frame.Y = 90;
+								frame.Y = frameOffsetY + 90;
 								break;
 							case 1:
 								frame.X = 0;
-								frame.Y = 126;
+								frame.Y = frameOffsetY + 126;
 								break;
 							default:
 								frame.X = 0;
-								frame.Y = 162;
+								frame.Y = frameOffsetY + 162;
 								break;
 						}
 					}
@@ -477,15 +480,15 @@ namespace Macrocosm.Common.Utility
 					{
 						case 0:
 							frame.X = 234;
-							frame.Y = 0;
+							frame.Y = frameOffsetY + 0;
 							break;
 						case 1:
 							frame.X = 252;
-							frame.Y = 0;
+							frame.Y = frameOffsetY + 0;
 							break;
 						default:
 							frame.X = 270;
-							frame.Y = 0;
+							frame.Y = frameOffsetY + 0;
 							break;
 					}
 
@@ -497,15 +500,15 @@ namespace Macrocosm.Common.Utility
 					{
 						case 0:
 							frame.X = 234;
-							frame.Y = 18;
+							frame.Y = frameOffsetY + 18;
 							break;
 						case 1:
 							frame.X = 252;
-							frame.Y = 18;
+							frame.Y = frameOffsetY + 18;
 							break;
 						default:
 							frame.X = 270;
-							frame.Y = 18;
+							frame.Y = frameOffsetY + 18;
 							break;
 					}
 
@@ -517,15 +520,15 @@ namespace Macrocosm.Common.Utility
 					{
 						case 0:
 							frame.X = 234;
-							frame.Y = 36;
+							frame.Y = frameOffsetY + 36;
 							break;
 						case 1:
 							frame.X = 252;
-							frame.Y = 36;
+							frame.Y = frameOffsetY + 36;
 							break;
 						default:
 							frame.X = 270;
-							frame.Y = 36;
+							frame.Y = frameOffsetY + 36;
 							break;
 					}
 
@@ -537,15 +540,15 @@ namespace Macrocosm.Common.Utility
 					{
 						case 0:
 							frame.X = 234;
-							frame.Y = 54;
+							frame.Y = frameOffsetY + 54;
 							break;
 						case 1:
 							frame.X = 252;
-							frame.Y = 54;
+							frame.Y = frameOffsetY + 54;
 							break;
 						default:
 							frame.X = 270;
-							frame.Y = 54;
+							frame.Y = frameOffsetY + 54;
 							break;
 					}
 
@@ -560,15 +563,15 @@ namespace Macrocosm.Common.Utility
 						{
 							case 0:
 								frame.X = 72;
-								frame.Y = 144;
+								frame.Y = frameOffsetY + 144;
 								break;
 							case 1:
 								frame.X = 72;
-								frame.Y = 162;
+								frame.Y = frameOffsetY + 162;
 								break;
 							default:
 								frame.X = 72;
-								frame.Y = 180;
+								frame.Y = frameOffsetY + 180;
 								break;
 						}
 
@@ -580,15 +583,15 @@ namespace Macrocosm.Common.Utility
 						{
 							case 0:
 								frame.X = 72;
-								frame.Y = 90;
+								frame.Y = frameOffsetY + 90;
 								break;
 							case 1:
 								frame.X = 72;
-								frame.Y = 108;
+								frame.Y = frameOffsetY + 108;
 								break;
 							default:
 								frame.X = 72;
-								frame.Y = 126;
+								frame.Y = frameOffsetY + 126;
 								break;
 						}
 
@@ -603,15 +606,15 @@ namespace Macrocosm.Common.Utility
 						{
 							case 0:
 								frame.X = 90;
-								frame.Y = 144;
+								frame.Y = frameOffsetY + 144;
 								break;
 							case 1:
 								frame.X = 90;
-								frame.Y = 162;
+								frame.Y = frameOffsetY + 162;
 								break;
 							default:
 								frame.X = 90;
-								frame.Y = 180;
+								frame.Y = frameOffsetY + 180;
 								break;
 						}
 
@@ -623,15 +626,15 @@ namespace Macrocosm.Common.Utility
 						{
 							case 0:
 								frame.X = 90;
-								frame.Y = 90;
+								frame.Y = frameOffsetY + 90;
 								break;
 							case 1:
 								frame.X = 90;
-								frame.Y = 108;
+								frame.Y = frameOffsetY + 108;
 								break;
 							default:
 								frame.X = 90;
-								frame.Y = 126;
+								frame.Y = frameOffsetY + 126;
 								break;
 						}
 
@@ -646,15 +649,15 @@ namespace Macrocosm.Common.Utility
 						{
 							case 0:
 								frame.X = 0;
-								frame.Y = 198;
+								frame.Y = frameOffsetY + 198;
 								break;
 							case 1:
 								frame.X = 18;
-								frame.Y = 198;
+								frame.Y = frameOffsetY + 198;
 								break;
 							default:
 								frame.X = 36;
-								frame.Y = 198;
+								frame.Y = frameOffsetY + 198;
 								break;
 						}
 
@@ -666,15 +669,15 @@ namespace Macrocosm.Common.Utility
 						{
 							case 0:
 								frame.X = 54;
-								frame.Y = 198;
+								frame.Y = frameOffsetY + 198;
 								break;
 							case 1:
 								frame.X = 72;
-								frame.Y = 198;
+								frame.Y = frameOffsetY + 198;
 								break;
 							default:
 								frame.X = 90;
-								frame.Y = 198;
+								frame.Y = frameOffsetY + 198;
 								break;
 						}
 
@@ -689,15 +692,15 @@ namespace Macrocosm.Common.Utility
 						{
 							case 0:
 								frame.X = 0;
-								frame.Y = 216;
+								frame.Y = frameOffsetY + 216;
 								break;
 							case 1:
 								frame.X = 18;
-								frame.Y = 216;
+								frame.Y = frameOffsetY + 216;
 								break;
 							default:
 								frame.X = 36;
-								frame.Y = 216;
+								frame.Y = frameOffsetY + 216;
 								break;
 						}
 
@@ -709,15 +712,15 @@ namespace Macrocosm.Common.Utility
 						{
 							case 0:
 								frame.X = 54;
-								frame.Y = 216;
+								frame.Y = frameOffsetY + 216;
 								break;
 							case 1:
 								frame.X = 72;
-								frame.Y = 216;
+								frame.Y = frameOffsetY + 216;
 								break;
 							default:
 								frame.X = 90;
-								frame.Y = 216;
+								frame.Y = frameOffsetY + 216;
 								break;
 						}
 
@@ -732,15 +735,15 @@ namespace Macrocosm.Common.Utility
 						{
 							case 0:
 								frame.X = 108;
-								frame.Y = 216;
+								frame.Y = frameOffsetY + 216;
 								break;
 							case 1:
 								frame.X = 108;
-								frame.Y = 234;
+								frame.Y = frameOffsetY + 234;
 								break;
 							default:
 								frame.X = 108;
-								frame.Y = 252;
+								frame.Y = frameOffsetY + 252;
 								break;
 						}
 
@@ -753,15 +756,15 @@ namespace Macrocosm.Common.Utility
 						{
 							case 0:
 								frame.X = 126;
-								frame.Y = 144;
+								frame.Y = frameOffsetY + 144;
 								break;
 							case 1:
 								frame.X = 126;
-								frame.Y = 162;
+								frame.Y = frameOffsetY + 162;
 								break;
 							default:
 								frame.X = 126;
-								frame.Y = 180;
+								frame.Y = frameOffsetY + 180;
 								break;
 						}
 
@@ -773,15 +776,15 @@ namespace Macrocosm.Common.Utility
 						{
 							case 0:
 								frame.X = 126;
-								frame.Y = 90;
+								frame.Y = frameOffsetY + 90;
 								break;
 							case 1:
 								frame.X = 126;
-								frame.Y = 108;
+								frame.Y = frameOffsetY + 108;
 								break;
 							default:
 								frame.X = 126;
-								frame.Y = 126;
+								frame.Y = frameOffsetY + 126;
 								break;
 						}
 
@@ -796,15 +799,15 @@ namespace Macrocosm.Common.Utility
 						{
 							case 0:
 								frame.X = 162;
-								frame.Y = 198;
+								frame.Y = frameOffsetY + 198;
 								break;
 							case 1:
 								frame.X = 180;
-								frame.Y = 198;
+								frame.Y = frameOffsetY + 198;
 								break;
 							default:
 								frame.X = 198;
-								frame.Y = 198;
+								frame.Y = frameOffsetY + 198;
 								break;
 						}
 
@@ -817,15 +820,15 @@ namespace Macrocosm.Common.Utility
 						{
 							case 0:
 								frame.X = 0;
-								frame.Y = 252;
+								frame.Y = frameOffsetY + 252;
 								break;
 							case 1:
 								frame.X = 18;
-								frame.Y = 252;
+								frame.Y = frameOffsetY + 252;
 								break;
 							default:
 								frame.X = 36;
-								frame.Y = 252;
+								frame.Y = frameOffsetY + 252;
 								break;
 						}
 
@@ -837,15 +840,15 @@ namespace Macrocosm.Common.Utility
 						{
 							case 0:
 								frame.X = 54;
-								frame.Y = 252;
+								frame.Y = frameOffsetY + 252;
 								break;
 							case 1:
 								frame.X = 72;
-								frame.Y = 252;
+								frame.Y = frameOffsetY + 252;
 								break;
 							default:
 								frame.X = 90;
-								frame.Y = 252;
+								frame.Y = frameOffsetY + 252;
 								break;
 						}
 
@@ -858,15 +861,15 @@ namespace Macrocosm.Common.Utility
 					{
 						case 0:
 							frame.X = 108;
-							frame.Y = 144;
+							frame.Y = frameOffsetY + 144;
 							break;
 						case 1:
 							frame.X = 108;
-							frame.Y = 162;
+							frame.Y = frameOffsetY + 162;
 							break;
 						default:
 							frame.X = 108;
-							frame.Y = 180;
+							frame.Y = frameOffsetY + 180;
 							break;
 					}
 
@@ -878,15 +881,15 @@ namespace Macrocosm.Common.Utility
 					{
 						case 0:
 							frame.X = 108;
-							frame.Y = 90;
+							frame.Y = frameOffsetY + 90;
 							break;
 						case 1:
 							frame.X = 108;
-							frame.Y = 108;
+							frame.Y = frameOffsetY + 108;
 							break;
 						default:
 							frame.X = 108;
-							frame.Y = 126;
+							frame.Y = frameOffsetY + 126;
 							break;
 					}
 
@@ -898,15 +901,15 @@ namespace Macrocosm.Common.Utility
 					{
 						case 0:
 							frame.X = 0;
-							frame.Y = 234;
+							frame.Y = frameOffsetY + 234;
 							break;
 						case 1:
 							frame.X = 18;
-							frame.Y = 234;
+							frame.Y = frameOffsetY + 234;
 							break;
 						default:
 							frame.X = 36;
-							frame.Y = 234;
+							frame.Y = frameOffsetY + 234;
 							break;
 					}
 
@@ -918,15 +921,15 @@ namespace Macrocosm.Common.Utility
 					{
 						case 0:
 							frame.X = 54;
-							frame.Y = 234;
+							frame.Y = frameOffsetY + 234;
 							break;
 						case 1:
 							frame.X = 72;
-							frame.Y = 234;
+							frame.Y = frameOffsetY + 234;
 							break;
 						default:
 							frame.X = 90;
-							frame.Y = 234;
+							frame.Y = frameOffsetY + 234;
 							break;
 					}
 
@@ -934,162 +937,165 @@ namespace Macrocosm.Common.Utility
 				}
 			}
 
-			#endregion 
-
-			#region Slopes
-			int blockType = (int)tile.BlockType;
-
-			//if (TileID.Sets.HasSlopeFrames[type])
-			//{
-			if (blockType == 0)
-			{
-				bool upSlope = type == up && tileUp.TopSlope;
-				bool leftSlope = type == left && tileLeft.LeftSlope;
-				bool rightSlope = type == right && tileRight.RightSlope;
-				bool downSlope = type == down && tileDown.BottomSlope;
-				int frameOffsetX = 0;
-				int frameOffsetY = 0;
-				if (upSlope.ToInt() + leftSlope.ToInt() + rightSlope.ToInt() + downSlope.ToInt() > 2)
-				{
-					int slopeCount1 = (tileUp.Slope == SlopeType.SlopeDownLeft).ToInt() + (tileRight.Slope == SlopeType.SlopeDownLeft).ToInt() + (tileDown.Slope == SlopeType.SlopeUpRight).ToInt() + (tileLeft.Slope == SlopeType.SlopeUpRight).ToInt();
-					int slopeCount2 = (tileUp.Slope == SlopeType.SlopeDownRight).ToInt() + (tileRight.Slope == SlopeType.SlopeUpLeft).ToInt() + (tileDown.Slope == SlopeType.SlopeUpLeft).ToInt() + (tileLeft.Slope == SlopeType.SlopeDownRight).ToInt();
-					
-					if (slopeCount1 == slopeCount2)
-					{
-						frameOffsetX = 2;
-						frameOffsetY = 4;
-					}
-					else if (slopeCount1 > slopeCount2)
-					{
-						bool upLeftSolid = type == upLeft && tileUpLeft.Slope == SlopeType.Solid;
-						bool downRightSolid = type == downRight && tileDownRight.Slope == SlopeType.Solid; ;
-						if (upLeftSolid && downRightSolid)
-						{
-							frameOffsetY = 4;
-						}
-						else if (downRightSolid)
-						{
-							frameOffsetX = 6;
-						}
-						else
-						{
-							frameOffsetX = 7;
-							frameOffsetY = 1;
-						}
-					}
-					else
-					{
-						bool upRightSolid = type == upRight && tileUpRight.Slope == SlopeType.Solid;
-						bool downLeftSolid = type == downLeft && tileDownLeft.Slope == SlopeType.Solid;
-						if (upRightSolid && downLeftSolid)
-						{
-							frameOffsetY = 4;
-							frameOffsetX = 1;
-						}
-						else if (downLeftSolid)
-						{
-							frameOffsetX = 7;
-						}
-						else
-						{
-							frameOffsetX = 6;
-							frameOffsetY = 1;
-						}
-					}
-
-					frame.X = (18 + frameOffsetX) * 18;
-					frame.Y = frameOffsetY * 18;
-				}
-				else
-				{
-					if (upSlope && leftSlope && type == down && type == right)
-					{
-						frameOffsetY = 2;
-					}
-					else if (upSlope && rightSlope && type == down && type == left)
-					{
-						frameOffsetX = 1;
-						frameOffsetY = 2;
-					}
-					else if (rightSlope && downSlope && type == up && type == left)
-					{
-						frameOffsetX = 1;
-						frameOffsetY = 3;
-					}
-					else if (downSlope && leftSlope && type == up && type == right)
-					{
-						frameOffsetY = 3;
-					}
-
-					if (frameOffsetX != 0 || frameOffsetY != 0)
-					{
-						frame.X = (18 + frameOffsetX) * 18;
-						frame.Y = frameOffsetY * 18;
-					}
-				}
-			}
-
-			if (blockType >= 2 && (frame.X < 0 || frame.Y < 0))
-			{
-				int num40 = -1;
-				int num41 = -1;
-				int num42 = -1;
-				int num43 = 0;
-				int num44 = 0;
-				switch (blockType)
-				{
-					case 2:
-						num40 = left;
-						num41 = down;
-						num42 = downLeft;
-						num43++;
-						break;
-					case 3:
-						num40 = right;
-						num41 = down;
-						num42 = downRight;
-						break;
-					case 4:
-						num40 = left;
-						num41 = up;
-						num42 = upLeft;
-						num43++;
-						num44++;
-						break;
-					case 5:
-						num40 = right;
-						num41 = up;
-						num42 = upRight;
-						num44++;
-						break;
-				}
-
-				if (type != num40 || type != num41 || type != num42)
-				{
-					if (type == num40 && type == num41)
-					{
-						num43 += 2;
-					}
-					else if (type == num40)
-					{
-						num43 += 4;
-					}
-					else if (type == num41)
-					{
-						num43 += 4;
-						num44 += 2;
-					}
-					else
-					{
-						num43 += 2;
-						num44 += 2;
-					}
-				}
-
-				frame.X = (18 + num43) * 18;
-				frame.Y = num44 * 18;
-			}
 			#endregion
+
+			// not sure if this is needed
+			if (TileID.Sets.HasSlopeFrames[type])
+			{
+
+				int blockType = (int)tile.BlockType;
+
+				if (blockType == 0)
+				{
+					bool upSlope = type == up && tileUp.TopSlope;
+					bool leftSlope = type == left && tileLeft.LeftSlope;
+					bool rightSlope = type == right && tileRight.RightSlope;
+					bool downSlope = type == down && tileDown.BottomSlope;
+
+					int slopeOffsetX = 0;
+					int slopeOffsetY = 0;
+
+					if (upSlope.ToInt() + leftSlope.ToInt() + rightSlope.ToInt() + downSlope.ToInt() > 2)
+					{
+						int slopeCount1 = (tileUp.Slope == SlopeType.SlopeDownLeft).ToInt() + (tileRight.Slope == SlopeType.SlopeDownLeft).ToInt() + (tileDown.Slope == SlopeType.SlopeUpRight).ToInt() + (tileLeft.Slope == SlopeType.SlopeUpRight).ToInt();
+						int slopeCount2 = (tileUp.Slope == SlopeType.SlopeDownRight).ToInt() + (tileRight.Slope == SlopeType.SlopeUpLeft).ToInt() + (tileDown.Slope == SlopeType.SlopeUpLeft).ToInt() + (tileLeft.Slope == SlopeType.SlopeDownRight).ToInt();
+
+						if (slopeCount1 == slopeCount2)
+						{
+							slopeOffsetX = 2;
+							slopeOffsetY = 4;
+						}
+						else if (slopeCount1 > slopeCount2)
+						{
+							bool upLeftSolid = type == upLeft && tileUpLeft.Slope == SlopeType.Solid;
+							bool downRightSolid = type == downRight && tileDownRight.Slope == SlopeType.Solid; ;
+							if (upLeftSolid && downRightSolid)
+							{
+								slopeOffsetY = 4;
+							}
+							else if (downRightSolid)
+							{
+								slopeOffsetX = 6;
+							}
+							else
+							{
+								slopeOffsetX = 7;
+								slopeOffsetY = 1;
+							}
+						}
+						else
+						{
+							bool upRightSolid = type == upRight && tileUpRight.Slope == SlopeType.Solid;
+							bool downLeftSolid = type == downLeft && tileDownLeft.Slope == SlopeType.Solid;
+							if (upRightSolid && downLeftSolid)
+							{
+								slopeOffsetY = 4;
+								slopeOffsetX = 1;
+							}
+							else if (downLeftSolid)
+							{
+								slopeOffsetX = 7;
+							}
+							else
+							{
+								slopeOffsetX = 6;
+								slopeOffsetY = 1;
+							}
+						}
+
+						frame.X = (18 + slopeOffsetX) * 18;
+						frame.Y = frameOffsetY + slopeOffsetY * 18;
+					}
+					else
+					{
+						if (upSlope && leftSlope && type == down && type == right)
+						{
+							slopeOffsetY = 2;
+						}
+						else if (upSlope && rightSlope && type == down && type == left)
+						{
+							slopeOffsetX = 1;
+							slopeOffsetY = 2;
+						}
+						else if (rightSlope && downSlope && type == up && type == left)
+						{
+							slopeOffsetX = 1;
+							slopeOffsetY = 3;
+						}
+						else if (downSlope && leftSlope && type == up && type == right)
+						{
+							slopeOffsetY = 3;
+						}
+
+						if (slopeOffsetX != 0 || slopeOffsetY != 0)
+						{
+							frame.X = (18 + slopeOffsetX) * 18;
+							frame.Y = frameOffsetY + slopeOffsetY * 18;
+						}
+					}
+				}
+
+				if (blockType >= 2 && (frame.X < 0 || frame.Y < 0))
+				{
+					int num40 = -1;
+					int num41 = -1;
+					int num42 = -1;
+					int num43 = 0;
+					int num44 = 0;
+					switch (blockType)
+					{
+						case 2:
+							num40 = left;
+							num41 = down;
+							num42 = downLeft;
+							num43++;
+							break;
+						case 3:
+							num40 = right;
+							num41 = down;
+							num42 = downRight;
+							break;
+						case 4:
+							num40 = left;
+							num41 = up;
+							num42 = upLeft;
+							num43++;
+							num44++;
+							break;
+						case 5:
+							num40 = right;
+							num41 = up;
+							num42 = upRight;
+							num44++;
+							break;
+					}
+
+					if (type != num40 || type != num41 || type != num42)
+					{
+						if (type == num40 && type == num41)
+						{
+							num43 += 2;
+						}
+						else if (type == num40)
+						{
+							num43 += 4;
+						}
+						else if (type == num41)
+						{
+							num43 += 4;
+							num44 += 2;
+						}
+						else
+						{
+							num43 += 2;
+							num44 += 2;
+						}
+					}
+
+					frame.X = (18 + num43) * 18;
+					frame.Y = frameOffsetY + num44 * 18;
+				}
+			}
 
 			//this is done by vanilla code..
 			#region Basic framing
@@ -1488,6 +1494,8 @@ namespace Macrocosm.Common.Utility
 
 			Main.tile[i, j].TileFrameX = (short)frame.X;
 			Main.tile[i, j].TileFrameY = (short)frame.Y;
+
+			Main.NewText(frame);
 
 			if (frame.X == -1 || frame.Y == -1)
 				return true;

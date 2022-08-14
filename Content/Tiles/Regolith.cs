@@ -29,6 +29,6 @@ namespace Macrocosm.Content.Tiles
 		{
 			type = Dust.NewDust(new Vector2(i, j).ToWorldCoordinates(), 16, 16, ModContent.DustType<RegolithDust>());
 			return false;
-		}
+		} 
 	}
 }

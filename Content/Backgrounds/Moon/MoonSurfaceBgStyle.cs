@@ -76,8 +76,7 @@ namespace Macrocosm.Content.Backgrounds.Moon
 				{
 					bgTop = 320;
 				}
-				//Color backColor = typeof(Main).GetFieldValue<Color>("backColor", Main.instance);
-				Color backColor = ColorManipulator.ToGrayscale(typeof(Main).GetFieldValue<Color>("ColorOfSurfaceBackgroundsBase", Main.instance));
+				Color backColor = typeof(Main).GetFieldValue<Color>("ColorOfSurfaceBackgroundsBase", Main.instance).ToGrayscale();
 				int bgLoops = Main.screenWidth / bgW + 2;
 				if (Main.screenPosition.Y < Main.worldSurface * 16.0 + 16.0)
 				{
