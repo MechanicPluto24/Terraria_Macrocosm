@@ -35,7 +35,7 @@ namespace Macrocosm.Content.Projectiles.Meteors
 				if (Main.rand.NextBool(3))
 				{
 					//int type = Utils.SelectRandom<int>(Main.rand, SomeGeode, SomeOtherGeode); -- maybe WeigthedRandom?
-					int type = ModContent.ItemType<MoonGeode>();
+					int type = ModContent.ItemType<MeteoricChunk>();
 					Vector2 position = new Vector2(Projectile.position.X, Projectile.position.Y - Projectile.height);
 					int itemIdx = Item.NewItem(Projectile.GetSource_FromThis(), position, new Vector2(Projectile.width, Projectile.height), type);
 					NetMessage.SendData(MessageID.SyncItem, -1, -1, null, itemIdx, 1f);

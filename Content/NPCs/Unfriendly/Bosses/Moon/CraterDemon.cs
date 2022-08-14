@@ -182,9 +182,10 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon
 
 			NPC.npcSlots = 40f;
 
-			Music = MusicID.Boss1;
-
 			NPC.HitSound = SoundID.NPCHit2;
+
+			if (!Main.dedServ)
+				Music = MusicLoader.GetMusicSlot(Mod, "Sounds/Music/SpaceInvader");
 		}
 
 		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
