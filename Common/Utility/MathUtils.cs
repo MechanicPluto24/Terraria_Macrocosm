@@ -31,7 +31,7 @@ namespace Macrocosm.Common.Utility
 				origin.Y + (offset.X - origin.X) * (float)Math.Sin(theta) + (offset.Y - origin.Y) * (float)Math.Cos(theta)
 			);
 		}
-			
+
 
 		/// <summary>
 		/// Applies a logarithmic derivative to <paramref name="value"/>

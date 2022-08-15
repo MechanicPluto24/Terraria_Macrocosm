@@ -1,12 +1,9 @@
 ﻿using Macrocosm.Content.Projectiles.Meteors;
 using Macrocosm.Content.Subworlds.Moon;
-using Macrocosm.Content.Tiles;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
 using System;
 using Terraria;
-using Terraria.DataStructures;
-using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Utilities;
@@ -19,7 +16,7 @@ namespace Macrocosm.Content
 		{
 			Small,
 			Medium,
-			Large 
+			Large
 		}
 		public static float MeteorBoostMoon { get => meteorBoost; set => meteorBoost = value; }
 
@@ -33,7 +30,7 @@ namespace Macrocosm.Content
 				UpdateMeteorsMoon();
 			}
 		}
-		
+
 		private void UpdateMeteorsMoon()
 		{
 			if (Main.netMode == NetmodeID.MultiplayerClient)
@@ -41,7 +38,7 @@ namespace Macrocosm.Content
 
 			timePass += Main.desiredWorldEventsUpdateRate;
 
-			int closestPlayer = 0; 
+			int closestPlayer = 0;
 
 			for (int l = 1; l <= (int)timePass; l++)
 			{
@@ -70,7 +67,7 @@ namespace Macrocosm.Content
 				{
 					float speedX = Main.rand.Next(-100, 101);
 					float speedY = Main.rand.Next(200) + 100;
-					float mult = 12 / (float)Math.Sqrt(speedX * speedX + speedY * speedY);
+					float mult = 8 / (float)Math.Sqrt(speedX * speedX + speedY * speedY);
 					speedX *= mult;
 					speedY *= mult;
 

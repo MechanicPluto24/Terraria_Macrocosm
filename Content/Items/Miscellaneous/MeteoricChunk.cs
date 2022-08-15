@@ -55,7 +55,7 @@ namespace Macrocosm.Content.Items.Miscellaneous
 		{
 			if (Main.rand.NextBool(8))
 			{
-				Dust dust = Dust.NewDustDirect(Item.position, Item.width, Item.height/2, ModContent.DustType<SmokeDust>(), newColor: new Color(160, 160, 160, 255));
+				Dust dust = Dust.NewDustDirect(Item.position, Item.width, Item.height / 2, ModContent.DustType<SmokeDust>(), newColor: new Color(160, 160, 160, 255));
 				dust.velocity.X = Main.rand.NextFloat(-0.2f, 0.2f);
 				dust.velocity.Y = -0.4f;
 				dust.noGravity = true;
@@ -76,7 +76,7 @@ namespace Macrocosm.Content.Items.Miscellaneous
 		/// </summary>
 		public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
 		{
-			Draw(spriteBatch, 0, false, position - new Vector2(Item.width/3,0), drawColor, 0f, origin, scale * 4);
+			Draw(spriteBatch, 0, false, position - new Vector2(Item.width / 3, 0), drawColor, 0f, origin, scale * 4);
 			return false;
 		}
 

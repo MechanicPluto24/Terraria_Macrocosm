@@ -4,7 +4,6 @@ using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Items.Materials;
 using Microsoft.Xna.Framework;
-using System;
 using Terraria;
 using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
@@ -19,7 +18,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon
 		{
 			base.SetStaticDefaults();
 
-			Main.npcFrameCount[NPC.type] = Main.npcFrameCount[NPCID.MeteorHead];
+			Main.npcFrameCount[NPC.type] = 2;
 		}
 
 		public override void SetDefaults()
@@ -62,6 +61,24 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon
 			NPC.Move(player.Center, Vector2.Zero);
 			bool playerActive = player != null && player.active && !player.dead;
 			BaseAI.LookAt(playerActive ? player.Center : NPC.Center + NPC.velocity, NPC, 0);
+		}
+
+		public override void FindFrame(int frameHeight)
+		{
+			int frameSpeed = 15;
+
+			NPC.frameCounter++;   
+
+			if (NPC.frameCounter >= frameSpeed)
+			{
+				NPC.frameCounter = 0;
+				NPC.frame.Y += frameHeight;
+
+				if (NPC.frame.Y >= Main.npcFrameCount[Type] * frameHeight)
+				{
+					NPC.frame.Y = 0;
+				}
+			}
 		}
 
 		public override void OnHitPlayer(Player player, int damage, bool crit)

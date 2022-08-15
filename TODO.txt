@@ -5,6 +5,5 @@
 - improve CD fight
 - edit info display for moon phase and weather 
 - fix accelerated time passing not working (sleeping)
-- bestiary portraits for CD and minions
 - disable graveyards on the moon
 - find a way to sync bestiary data across subworlds ???

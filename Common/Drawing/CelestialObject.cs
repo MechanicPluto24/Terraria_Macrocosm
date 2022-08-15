@@ -136,16 +136,16 @@ namespace Macrocosm.Common.Drawing
 			#region Shadow
 			if (HasShadow)
 			{
-				if(lightSource is not null)
+				if (lightSource is not null)
 				{
 					shadowRotation = (screenPosition - lightSource.screenPosition).ToRotation();
 
 					if (!Main.dayTime)
 						shadowRotation -= MathHelper.Pi;
 				}
-				
+
 				shadowColor = Color.White;
-				shadowColor.A = (byte)(255f * ScaleBrightnessNoonToMidnight(0f ,1f));
+				shadowColor.A = (byte)(255f * ScaleBrightnessNoonToMidnight(0f, 1f));
 
 				if (atmoShadowTexture is not null && HasAtmo)
 				{

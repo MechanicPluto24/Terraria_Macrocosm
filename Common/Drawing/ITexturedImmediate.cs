@@ -10,12 +10,12 @@
 		/// <summary>
 		/// Set to true when textures were loaded
 		/// </summary>
-		bool TexLoaded { get; set; } 
+		bool TexLoaded { get; set; }
 
 		/// <summary>
 		/// Call this in the constructor/initializer/draw method, conditioned by TexLoaded 
 		/// Load all required textures with AssetRequestMode.ImmediateLoad
 		/// </summary>
-		void LoadTextures(); 
+		void LoadTextures();
 	}
 }

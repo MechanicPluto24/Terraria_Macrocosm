@@ -1,9 +1,9 @@
 ﻿using Macrocosm.Common.Utility;
+using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Projectiles.Unfriendly;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using System;
 using System.IO;
 using Terraria;
@@ -158,6 +158,14 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon
 			NPCID.Sets.TrailingMode[NPC.type] = 0;
 
 			NPCID.Sets.BossBestiaryPriority.Add(Type);
+
+			NPCID.Sets.NPCBestiaryDrawModifiers bestiaryData = new(0)
+			{
+				Frame = 1,
+				Position = new Vector2(0f, 8f)
+			};
+
+			NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, bestiaryData);
 		}
 
 		private int baseWidth, baseHeight;
@@ -183,6 +191,8 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon
 			NPC.npcSlots = 40f;
 
 			NPC.HitSound = SoundID.NPCHit2;
+
+			SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBiome>().Type }; // Associates this NPC with the Moon Biome in Bestiary
 
 			if (!Main.dedServ)
 				Music = MusicLoader.GetMusicSlot(Mod, "Sounds/Music/SpaceInvader");
@@ -309,13 +319,13 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon
 			spriteBatch.Draw(texture, info.center - Main.screenPosition, null, Color.White * info.alpha * 0.5f, (0f - info.rotation) * 0.65f, texture.Size() / 2f, info.scale * 1.3f, SpriteEffects.FlipHorizontally, 0);
 			spriteBatch.Draw(texture, info.center - Main.screenPosition, null, Color.White * info.alpha, info.rotation, texture.Size() / 2f, info.scale, SpriteEffects.None, 0);
 
-			if(info.scale > 0.9f && Vector2.Distance(info.center, NPC.Center) > 10f)
+			if (info.scale > 0.9f && Vector2.Distance(info.center, NPC.Center) > 25f)
 				SpawnPortalDusts(info);
 		}
 
 		private void SpawnPortalDusts(BigPortalInfo info)
 		{
-			for(int i = 0; i < 3; i++)
+			for (int i = 0; i < 3; i++)
 			{
 				int type = ModContent.DustType<PortalLightGreenDust>();
 				Vector2 rotVector1 = Vector2.UnitY.RotatedByRandom(6.2831854820251465);
@@ -607,7 +617,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon
 						{
 							Vector2 spawn = NPC.Center + new Vector2(Main.rand.NextFloat(-1, 1) * 22 * 16, Main.rand.NextFloat(-1, 1) * 10 * 16);
 
-							NPC.NewNPC(NPC.GetSource_FromAI(), (int)spawn.X, (int)spawn.Y, ModContent.NPCType<LesserDemon>(), ai3: NPC.whoAmI);
+							NPC.NewNPC(NPC.GetSource_FromAI(), (int)spawn.X, (int)spawn.Y, ModContent.NPCType<CraterImp>(), ai3: NPC.whoAmI);
 
 							//Exhale sound
 							SoundEngine.PlaySound(SoundID.Zombie93, NPC.Center);
@@ -1029,7 +1039,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon
 			for (int i = 0; i < Main.maxNPCs; i++)
 			{
 				NPC other = Main.npc[i];
-				if (other.active && other.ModNPC is LesserDemon mini && mini.ParentBoss == NPC.whoAmI)
+				if (other.active && other.ModNPC is CraterImp mini && mini.ParentBoss == NPC.whoAmI)
 					count++;
 			}
 
@@ -1046,7 +1056,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon
 				SpawnDustsInner(pos, head.Width, head.Height, type);
 
 			pos = jaw.Location.ToVector2();
-			for (int i = 0; i < number/2; i++)
+			for (int i = 0; i < number / 2; i++)
 				SpawnDustsInner(pos, jaw.Width, jaw.Height, type);
 		}
 
@@ -1070,7 +1080,14 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon
 		}
 
 		public override Color? GetAlpha(Color drawColor)
-			=> drawColor * (1f - targetAlpha / 255f);
+		{
+			if (NPC.IsABestiaryIconDummy)
+			{
+				// This is required because we have NPC.alpha = 255, in the bestiary it would look transparent
+				return NPC.GetBestiaryEntryColor();
+			}
+			return drawColor * (1f - targetAlpha / 255f);
+		}
 
 		public override bool? CanBeHitByItem(Player player, Item item)
 			=> CanBeHitByThing(player.GetSwungItemHitbox());

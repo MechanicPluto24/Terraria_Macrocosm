@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons
 {
-    public class ArchersLine : ModItem
+	public class ArchersLine : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
@@ -30,7 +30,7 @@ namespace Macrocosm.Content.Items.Weapons
 			Item.value = 10000;
 			Item.rare = ItemRarityID.Purple;
 			Item.shoot = ProjectileID.PurificationPowder; // For some reason, all the guns in the vanilla source have this.
-			//Item.autoReuse = true;
+														  //Item.autoReuse = true;
 			Item.shootSpeed = 20f;
 			Item.useAmmo = AmmoID.Bullet;
 			Item.UseSound = SoundID.Item38;

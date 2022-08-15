@@ -1,5 +1,4 @@
 using SubworldLibrary;
-using Terraria.GameContent.Ambience;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Hooks

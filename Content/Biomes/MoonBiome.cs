@@ -17,7 +17,7 @@ namespace Macrocosm.Content.Biomes
 		public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.GetInstance<MoonSurfaceBgStyle>();
 		public override ModUndergroundBackgroundStyle UndergroundBackgroundStyle => ModContent.GetInstance<MoonUgBgStyle>();
 		public override int Music => Main.dayTime ? MusicLoader.GetMusicSlot(Mod, "Sounds/Music/Deadworld") : MusicLoader.GetMusicSlot(Mod, "Sounds/Music/Requiem");
-		
+
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("The Moon");

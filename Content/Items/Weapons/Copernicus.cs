@@ -52,8 +52,8 @@ namespace Macrocosm.Content.Items.Weapons
 		{
 			if (player.altFunctionUse == 2)
 			{
-				SoundEngine.PlaySound(CustomSounds.GrenadeLauncherThunk with 
-				{ 
+				SoundEngine.PlaySound(CustomSounds.GrenadeLauncherThunk with
+				{
 					Volume = 0.7f
 					//SoundLimitBehavior = SoundLimitBehavior.IgnoreNew 
 				});

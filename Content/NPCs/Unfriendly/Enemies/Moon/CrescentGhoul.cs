@@ -6,9 +6,7 @@ using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Materials;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using Terraria;
-using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
@@ -26,7 +24,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon
 			Dash
 		}
 
-		public ActionState AI_State  
+		public ActionState AI_State
 		{
 			get => (ActionState)NPC.ai[0];
 			set => NPC.ai[0] = (int)value;
@@ -88,7 +86,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon
 					bool playerActive = player != null && player.active && !player.dead;
 					BaseAI.LookAt(playerActive ? player.Center : NPC.Center + NPC.velocity, NPC, 0);
 
-					if(AI_Timer > 200 && Vector2.Distance(NPC.Center, player.Center) < 300f)
+					if (AI_Timer > 200 && Vector2.Distance(NPC.Center, player.Center) < 300f)
 					{
 						AI_Timer = 0;
 						AI_State = ActionState.Dash;
@@ -141,7 +139,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon
 			{
 				Vector2 drawPos = NPC.oldPos[i] + NPC.Size / 2 - Main.screenPosition;
 				Color color = NPC.GetAlpha(drawColor) * (((float)NPC.oldPos.Length - i) / NPC.oldPos.Length);
-				spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, drawPos, NPC.frame, color * 0.6f, NPC.rotation - 0.36f * i, NPC.Size/2, NPC.scale, SpriteEffects.None, 0f);
+				spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, drawPos, NPC.frame, color * 0.6f, NPC.rotation - 0.36f * i, NPC.Size / 2, NPC.scale, SpriteEffects.None, 0f);
 			}
 
 			return true;
@@ -158,18 +156,18 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon
 		{
 			NPC.frame.Y = (int)(NPC.frameCounter / 10) * frameHeight;
 
-			if(NPC.localAI[0] == 0f)
+			if (NPC.localAI[0] == 0f)
 			{
 				NPC.frameCounter++;
 
 				if (NPC.frameCounter >= 39)
 					NPC.localAI[0] = 1f;
-			} 
-			else if(NPC.localAI[0] == 1f)
+			}
+			else if (NPC.localAI[0] == 1f)
 			{
 				NPC.frameCounter--;
 
-				if(NPC.frameCounter <= 0)
+				if (NPC.frameCounter <= 0)
 					NPC.localAI[0] = 0f;
 			}
 			else
