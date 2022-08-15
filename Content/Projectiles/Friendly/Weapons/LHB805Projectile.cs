@@ -1,14 +1,13 @@
+using Macrocosm.Common.Utility;
+using Macrocosm.Content.Gores;
+using Macrocosm.Sounds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Utilities;
 using Terraria;
-using Terraria.GameContent;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Common.Utility;
-using Terraria.Audio;
-using Macrocosm.Sounds;
-using ReLogic.Utilities;
-using Macrocosm.Content.Gores;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Weapons
 {
@@ -17,13 +16,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Weapons
 
 		private const int windupFrames = 4; // number of windup animaton frames
 		private const int shootFrames = 6;  // number of shooting animaton frames
-				    
+
 		private const int startTicksPerFrame = 8; // tpf at the start of the animation
 		private const int maxTicksPerFrame = 3;   // tpf cap after fullFireRateTime
-				    
-		private const int windupTime = 45;		  // ticks till start of shooting 
+
+		private const int windupTime = 45;        // ticks till start of shooting 
 		private const int fullFireRateTime = 80;  // ticks to reach full fire rate 
-				    
+
 		private const int fireRateStart = 6;      // fireRateFreqStart the ticks period between fires at the start of shooting
 		private const int fireRateCap = 1;        // fireRateFreqMaxthe ticks period between fires after fullFireRateTime
 
@@ -181,7 +180,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Weapons
 					SoundLimitBehavior = SoundLimitBehavior.IgnoreNew
 				});
 			}
-			else if(AI_Windup == windupTime)
+			else if (AI_Windup == windupTime)
 			{
 				playingSoundId = SoundEngine.PlaySound(CustomSounds.MinigunFire with
 				{

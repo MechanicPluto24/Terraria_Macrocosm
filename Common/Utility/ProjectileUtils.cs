@@ -20,7 +20,7 @@ namespace Macrocosm.Common.Utility
 		{
 			bool drawEntity = false;
 
-			if(texture is null)
+			if (texture is null)
 			{
 				texture = TextureAssets.Projectile[proj.type].Value;
 				drawEntity = true;
@@ -43,7 +43,7 @@ namespace Macrocosm.Common.Utility
 		/// Draws an animated projectile glowmask
 		/// (Only tested for held projectiles)  
 		/// </summary>
-		public static void DrawAnimatedGlowmask(this Projectile proj, Texture2D glowmask, Color lightColor, SpriteEffects effect, Vector2 drawOffset = default) 
-			=> proj.DrawAnimated(lightColor, effect, drawOffset + new Vector2(0,-2), glowmask);
+		public static void DrawAnimatedGlowmask(this Projectile proj, Texture2D glowmask, Color lightColor, SpriteEffects effect, Vector2 drawOffset = default)
+			=> proj.DrawAnimated(lightColor, effect, drawOffset + new Vector2(0, -2), glowmask);
 	}
 }

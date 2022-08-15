@@ -26,7 +26,7 @@ namespace Macrocosm.Content.Backgrounds.Moon
 
 		const float fadeOutTimeDawn = 7200f; //  4:30 -  6:30: nebula and night stars dim
 		const float fadeInTimeDusk = 46800f; // 17:30 - 19:30: nebula and night stars brighten
-		public bool TexLoaded { get ; set; } = false;
+		public bool TexLoaded { get; set; } = false;
 
 		public void Load(Mod mod)
 		{
@@ -107,7 +107,7 @@ namespace Macrocosm.Content.Backgrounds.Moon
 				starsNight.DrawSelf(spriteBatch, nightStarBrightness);
 
 				sun.DrawSelf(spriteBatch);
-				earth.DrawSelf(spriteBatch);	
+				earth.DrawSelf(spriteBatch);
 			}
 		}
 
@@ -178,7 +178,7 @@ namespace Macrocosm.Content.Backgrounds.Moon
 			return 1f - Intensity;
 		}
 
-	
+
 
 		public override void Reset()
 		{

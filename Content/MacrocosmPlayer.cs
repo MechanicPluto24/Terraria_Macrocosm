@@ -40,7 +40,7 @@ namespace Macrocosm.Content
 
 		public override void PostUpdateMiscEffects()
 		{
-			if (ZoneMoon)
+			if (SubworldSystem.IsActive<Moon>())
 				Player.gravity = 0.068f;
 
 			if (accMoonArmorDebuff > 0)
@@ -55,7 +55,6 @@ namespace Macrocosm.Content
 
 		public override void ModifyScreenPosition()
 		{
-
 			ScreenShakeIntensity = MathHelper.Clamp(ScreenShakeIntensity, 0, 100);
 
 			if (ScreenShakeIntensity > 0.1f)

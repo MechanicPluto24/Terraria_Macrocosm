@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Weapons
 {
-    public class ArchersLineProjectile : ModProjectile
+	public class ArchersLineProjectile : ModProjectile
 	{
 		public override string Texture => "Terraria/Images/Projectile_14";
 		public bool[] hitList = new bool[Main.maxNPCs]; //Used to keep track of every NPC hit

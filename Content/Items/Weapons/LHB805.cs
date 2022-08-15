@@ -1,9 +1,6 @@
-using Macrocosm.Common.Utility;
 using Macrocosm.Content.Projectiles.Friendly.Weapons;
-using Macrocosm.Sounds;
 using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.GameContent.Creative;
 using Terraria.ID;

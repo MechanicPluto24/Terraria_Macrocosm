@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Utility;
+using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -11,7 +12,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon
 {
-	public class LesserDemon : ModNPC
+	public class CraterImp : ModNPC
 	{
 		public ref float AI_Timer => ref NPC.ai[0];
 		public ref float AI_Attack => ref NPC.ai[1];
@@ -34,15 +35,13 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Crater Demonite");
-			Main.npcFrameCount[NPC.type] = 4;
+ 			Main.npcFrameCount[NPC.type] = 4;
 			NPCID.Sets.TrailCacheLength[NPC.type] = 5;
 			NPCID.Sets.TrailingMode[NPC.type] = 0;
 
 			NPCID.Sets.NPCBestiaryDrawModifiers bestiaryData = new(0)
 			{
-				Frame = 2,
-				Position = new Vector2(-2f, 0f),
+				Position = new Vector2(0f, 4f),
 				Velocity = 1f
 			};
 
@@ -63,6 +62,8 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon
 
 			NPC.HitSound = SoundID.NPCHit2;
 			NPC.DeathSound = SoundID.NPCDeath2;
+
+			SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBiome>().Type }; // Associates this NPC with the Moon Biome in Bestiary
 		}
 
 		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
@@ -80,6 +81,9 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon
 		public override void FindFrame(int frameHeight)
 		{
 			NPC.frame.Y = targetFrame * frameHeight;
+
+			if (NPC.IsABestiaryIconDummy)
+				CycleAnimation();
 		}
 
 		public override void OnHitPlayer(Player target, int damage, bool crit)
@@ -89,7 +93,14 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon
 		}
 
 		public override Color? GetAlpha(Color drawColor)
-			=> drawColor * (1f - targetAlpha / 255f);
+		{
+			if (NPC.IsABestiaryIconDummy)
+			{
+				// This is required because we have NPC.alpha = 255, in the bestiary it would look transparent
+				return NPC.GetBestiaryEntryColor();
+			}
+			return drawColor * (1f - targetAlpha / 255f);
+		}
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Vector2 vector, Color drawColor)
 		{
@@ -116,12 +127,18 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon
 
 			spriteBatch.Draw(texture, NPC.Center - Main.screenPosition, NPC.frame, color, NPC.rotation, NPC.Size / 2f, NPC.scale, effect, 0);
 
+			if (NPC.IsABestiaryIconDummy)
+				return true;
+
 			return false;
 		}
 
 		public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
-			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Unfriendly/Bosses/Moon/LesserDemonGlow").Value;
+			if (NPC.IsABestiaryIconDummy)
+				return;
+
+			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Unfriendly/Bosses/Moon/CraterImpGlow").Value;
 
 			SpriteEffects effect = (NPC.rotation > MathHelper.PiOver2 && NPC.rotation < 3 * MathHelper.PiOver2) || (NPC.rotation < -MathHelper.PiOver2 && NPC.rotation > -3 * MathHelper.PiOver2)
 				? SpriteEffects.FlipVertically

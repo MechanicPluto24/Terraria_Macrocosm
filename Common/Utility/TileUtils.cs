@@ -9,7 +9,7 @@ namespace Macrocosm.Common.Utility
 		public static bool BlendLikeDirt(int i, int j, int typeToBlendWith, bool resetFrame, bool noDirt) =>
 			noDirt ? BlendLikeDirt(i, j, typeToBlendWith, resetFrame) : BlendLikeDirt(i, j, typeToBlendWith, resetFrame, 180);
 
-		public static bool BlendLikeDirt(int i, int j,int typeToBlendWith, bool resetFrame, int frameOffsetY = 0)
+		public static bool BlendLikeDirt(int i, int j, int typeToBlendWith, bool resetFrame, int frameOffsetY = 0)
 		{
 			Tile tile = Main.tile[i, j];
 			int type = tile.TileType;
@@ -34,8 +34,8 @@ namespace Macrocosm.Common.Utility
 
 			Vector2 frame = new(-1, -1);
 			int variation = 0;
-			if(resetFrame)
-				variation = WorldGen.genRand.Next(0,2);
+			if (resetFrame)
+				variation = WorldGen.genRand.Next(0, 2);
 
 			#region Ignore other blocks
 

@@ -24,7 +24,7 @@ namespace Macrocosm.NPCs.GlobalNPCs
 			Color color = new Color(255, 255, 255, 64);
 			Vector2 position = npc.Center - screenPos;
 			float rotation = (float)(Main.timeForVisualEffects / 20);
-			spriteBatch.Draw(crosshair, position, null, color, rotation, crosshair.Size()/2, 1.5f, SpriteEffects.None, 0f);
+			spriteBatch.Draw(crosshair, position, null, color, rotation, crosshair.Size() / 2, 1.5f, SpriteEffects.None, 0f);
 		}
 	}
 }

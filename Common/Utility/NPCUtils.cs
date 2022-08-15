@@ -71,7 +71,7 @@ namespace Macrocosm.Common.Utility
 			return npc != Main.npc.Length;  //Return false if we couldn't generate an NPC
 		}
 
-		public static void DrawGlowmask(this NPC npc, SpriteBatch spriteBatch, Texture2D glowmask, Vector2 screenPos, Vector2 drawOffset = default,  SpriteEffects effect = SpriteEffects.None)
+		public static void DrawGlowmask(this NPC npc, SpriteBatch spriteBatch, Texture2D glowmask, Vector2 screenPos, Vector2 drawOffset = default, SpriteEffects effect = SpriteEffects.None)
 		{
 			int numFrames = Main.npcFrameCount[npc.type];
 			int frameHeight = TextureAssets.Npc[npc.type].Height() / numFrames;

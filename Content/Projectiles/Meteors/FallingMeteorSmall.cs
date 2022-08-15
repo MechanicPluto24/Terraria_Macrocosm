@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Utility;
-using Macrocosm.Content.Dusts;
+﻿using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Gores;
 using Macrocosm.Content.Items.Miscellaneous;
 using Microsoft.Xna.Framework;
@@ -92,7 +91,7 @@ namespace Macrocosm.Content.Projectiles.Meteors
 				#region Gores
 				for (int i = 0; i < Main.rand.Next(2, 4); i++)
 				{
-					Gore.NewGore(Projectile.GetSource_FromThis(), Projectile.position, new Vector2(Projectile.velocity.X * 0.5f, -Projectile.velocity.Y * 1f) * Main.rand.NextFloat(0.5f, 1f), ModContent.GoreType<RegolithDebris>());
+					Gore.NewGore(Projectile.GetSource_FromThis(), Projectile.position, new Vector2(Projectile.velocity.X * 0.5f, -Projectile.velocity.Y * 0.6f) * Main.rand.NextFloat(0.5f, 1f), ModContent.GoreType<RegolithDebris>());
 				}
 				#endregion
 
@@ -117,7 +116,7 @@ namespace Macrocosm.Content.Projectiles.Meteors
 						0f,
 						Scale: Main.rand.NextFloat(1f, 1.2f)
 					);
-				 
+
 				dust.noGravity = true;
 			}
 		}

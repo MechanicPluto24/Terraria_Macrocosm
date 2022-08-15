@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Macrocosm.Content.Subworlds.Moon;
+using Macrocosm.Content.Tiles;
+using SubworldLibrary;
+using System;
 using Terraria;
-using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
 using Terraria.GameContent.Creative;
 using Terraria.GameContent.Events;
-using SubworldLibrary;
-using Macrocosm.Content.Subworlds.Moon;
-using Macrocosm.Content.Tiles;
 using Terraria.Graphics.Effects;
+using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content
 {
@@ -44,7 +44,7 @@ namespace Macrocosm.Content
 				Main.windSpeedCurrent = 0;
 				Main.weatherCounter = 0;
 				Star.starfallBoost = 0; // Tricky way to stop vanilla fallen stars for spawning with NormalUpdates turned on 
-				
+
 				Main.slimeRain = false;
 				Main.slimeRainTime = 0;
 				SkyManager.Instance["Slime"].Deactivate();
