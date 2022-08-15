@@ -11,9 +11,8 @@ namespace Macrocosm.Content.Items.GlobalItems
 		{
 			if (SubworldSystem.IsActive<Moon>())
 			{
-				// base values (0.1, 7) divided by 6a
-				gravity = 0.0333f;
-				maxFallSpeed = 2.333f;
+				gravity = 0.0333f;     // base is 0.1f
+				maxFallSpeed = 2.333f; // base is 7
 			}
 		}
 	}

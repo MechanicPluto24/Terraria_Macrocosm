@@ -24,9 +24,5 @@ namespace Macrocosm.Common.Hooks
 				return orig(inv, context, slot, checkItem);
 			}
 		}
-
-
-
-
 	}
 }

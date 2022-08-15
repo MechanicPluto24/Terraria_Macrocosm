@@ -33,6 +33,7 @@ namespace Macrocosm.Content
 
 		private void UpdateMeteorsMoon()
 		{
+			// handled by server 
 			if (Main.netMode == NetmodeID.MultiplayerClient)
 				return;
 
