@@ -21,36 +21,32 @@ namespace Macrocosm.Common.Hooks
 		private static void RemoveItemLight(On.Terraria.Item.orig_UpdateItem_VisualEffects orig, Item item)
 		{
 			if (SubworldSystem.AnyActive<Macrocosm>() && TorchGlobalItem.IsTorch(item))
-			{
 				return;
-			}
+
 			orig(item);
 		}
 
 		private static bool DisableTorchHolding(On.Terraria.Player.orig_CanVisuallyHoldItem orig, Player self, Item item)
 		{
 			if (SubworldSystem.AnyActive<Macrocosm>() && TorchGlobalItem.IsTorch(item))
-			{
 				return false;
-			}
+
 			return orig(self, item);
 		}
 
 		private static void RemoveHeldLight(On.Terraria.Player.orig_ItemCheck_EmitHeldItemLight orig, Player self, Item item)
 		{
 			if (SubworldSystem.AnyActive<Macrocosm>() && TorchGlobalItem.IsTorch(item))
-			{
 				return;
-			}
+
 			orig(self, item);
 		}
 
 		private static int RemoveTorchDust(On.Terraria.WorldGen.orig_KillTile_MakeTileDust orig, int i, int j, Tile tileCache)
 		{
 			if (SubworldSystem.AnyActive<Macrocosm>() && LightSourceGlobalTile.IsTileWithFlame(i, j, tileCache.TileType))
-			{
 				return -1;
-			}
+
 			return orig(i, j, tileCache);
 		}
 	}

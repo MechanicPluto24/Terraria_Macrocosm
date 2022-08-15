@@ -15,24 +15,19 @@ namespace Macrocosm.Content.Items.GlobalItems
 
 		public override void Load()
 		{
-			for (int type = 0; type < ItemID.Count; type++)
-			{ // vanilla only 
-
+			for (int type = 0; type < ItemID.Count; type++) // vanilla only 
+			{ 
 				Item item = new(type);
 
 				if (item.flame)
-				{
 					flameItems.Add(type);
-				}
 			}
 		}
 
 		public override void HoldItem(Item item, Player player)
 		{
 			if (HasFlame(item) && IsTorch(item)) // excluding Nightglow and Brand of the Inferno
-			{
 				item.flame = !SubworldSystem.AnyActive<Macrocosm>();
-			}
 		}
 	}
 }

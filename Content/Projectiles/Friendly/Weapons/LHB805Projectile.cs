@@ -44,8 +44,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Weapons
 			Projectile.height = 1;
 		}
 
-		private Player Player => Main.player[Projectile.owner];
-		private bool StillInUse => Player.channel && Player.HasAmmo(Player.inventory[Player.selectedItem]) && !Player.noItems && !Player.CCed;
+		private Player OwnerPlayer => Main.player[Projectile.owner];
+		private bool StillInUse => OwnerPlayer.channel && OwnerPlayer.HasAmmo(OwnerPlayer.inventory[OwnerPlayer.selectedItem]) && !OwnerPlayer.noItems && !OwnerPlayer.CCed;
 		private bool CanShoot => AI_Windup >= windupTime;
 
 		public override bool PreDraw(ref Color lightColor)
@@ -76,17 +76,17 @@ namespace Macrocosm.Content.Projectiles.Friendly.Weapons
 
 		private void PlayerVisuals()
 		{
-			Projectile.Center = Player.Center;
+			Projectile.Center = OwnerPlayer.Center;
 			Projectile.rotation = Projectile.velocity.ToRotation();
 
 			Projectile.spriteDirection = Projectile.direction;
 
-			Player.ChangeDir(Projectile.direction);
-			Player.heldProj = Projectile.whoAmI;
-			Player.itemTime = 2;
-			Player.itemAnimation = 2;
+			OwnerPlayer.ChangeDir(Projectile.direction);
+			OwnerPlayer.heldProj = Projectile.whoAmI;
+			OwnerPlayer.itemTime = 2;
+			OwnerPlayer.itemAnimation = 2;
 
-			Player.itemRotation = (Projectile.velocity * Projectile.direction).ToRotation();
+			OwnerPlayer.itemRotation = (Projectile.velocity * Projectile.direction).ToRotation();
 		}
 
 		private void Aim()
@@ -98,7 +98,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Weapons
 
 			// Change a portion of the gun's current velocity so that it points to the mouse. This gives smooth movement over time.
 			aim = Vector2.Normalize(Vector2.Lerp(Vector2.Normalize(Projectile.velocity), aim, 1));
-			aim *= Player.HeldItem.shootSpeed;
+			aim *= OwnerPlayer.HeldItem.shootSpeed;
 
 			if (aim != Projectile.velocity)
 				Projectile.netUpdate = true;
@@ -124,7 +124,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Weapons
 			}
 			else
 			{
-				Player.GetModPlayer<MacrocosmPlayer>().ScreenShakeIntensity += 0.2f;
+				OwnerPlayer.GetModPlayer<MacrocosmPlayer>().ScreenShakeIntensity += 0.2f;
 
 				if (Projectile.frameCounter >= windupTicksPerFrame)
 				{
@@ -140,19 +140,19 @@ namespace Macrocosm.Content.Projectiles.Friendly.Weapons
 		{
 			if (CanShoot)
 			{
-				int damage = Player.GetWeaponDamage(Player.inventory[Player.selectedItem]); //makes the damage your weapon damage + the ammunition used.
+				int damage = OwnerPlayer.GetWeaponDamage(OwnerPlayer.inventory[OwnerPlayer.selectedItem]); //makes the damage your weapon damage + the ammunition used.
 				int projToShoot = ProjectileID.Bullet;
-				float knockback = Player.inventory[Player.selectedItem].knockBack;
+				float knockback = OwnerPlayer.inventory[OwnerPlayer.selectedItem].knockBack;
 
 				if (StillInUse)
-					Player.PickAmmo(Player.inventory[Player.selectedItem], out projToShoot, out float speed, out damage, out knockback, out var usedAmmoItemId); //uses ammunition from inventory
+					OwnerPlayer.PickAmmo(OwnerPlayer.inventory[OwnerPlayer.selectedItem], out projToShoot, out float speed, out damage, out knockback, out var usedAmmoItemId); //uses ammunition from inventory
 
 				Vector2 rotPoint = MathUtils.RotatingPoint(Projectile.Center, new Vector2(40, 8 * Projectile.spriteDirection), Projectile.rotation);
 
 				// gradually increase fire rate
 				int fireFreq = (int)MathHelper.Clamp(MathHelper.Lerp(fireRateStart, fireRateCap, (AI_Windup - windupTime) / (fullFireRateTime - windupTime)), fireRateCap, fireRateStart);// Main.rand.NextBool()
 
-				if (AI_Windup % fireFreq == 0)
+				if (AI_Windup % fireFreq == 0 && Main.myPlayer == Projectile.owner)
 					Projectile.NewProjectile(Projectile.InheritSource(Projectile), rotPoint, Vector2.Normalize(Projectile.velocity).RotatedByRandom(MathHelper.ToRadians(14)) * 10f, projToShoot, damage, knockback, Projectile.owner, default, Projectile.GetByUUID(Projectile.owner, Projectile.whoAmI));
 
 				#region Spawn bullet shells as gore
