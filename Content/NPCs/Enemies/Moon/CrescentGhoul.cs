@@ -13,7 +13,7 @@ using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon
+namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
 	public class CrescentGhoul : MoonEnemy
 	{
@@ -111,14 +111,14 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon
 
 		public override void OnHitPlayer(Player player, int damage, bool crit)
 		{
-			if (player.GetModPlayer<MacrocosmPlayer>().accMoonArmor)
+			if (player.Macrocosm().accMoonArmor)
 			{
 				player.AddBuff(ModContent.BuffType<SuitBreach>(), 600, true);
 			}
 		}
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
 		{
-			return spawnInfo.Player.GetModPlayer<MacrocosmPlayer>().ZoneMoon && !Main.dayTime && spawnInfo.SpawnTileY <= Main.worldSurface + 100 ? .1f : 0f;
+			return spawnInfo.Player.Macrocosm().ZoneMoon && !Main.dayTime && spawnInfo.SpawnTileY <= Main.worldSurface + 100 ? .1f : 0f;
 		}
 
 		public override void ModifyNPCLoot(NPCLoot loot)
@@ -147,7 +147,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon
 
 		public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
-			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Unfriendly/Enemies/Moon/CrescentGhoulGlow").Value;
+			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Enemies/Moon/CrescentGhoul_Glow").Value;
 			SpriteEffects effect = NPC.spriteDirection == -1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 			NPC.DrawGlowmask(spriteBatch, glowmask, screenPos, effect: effect);
 		}

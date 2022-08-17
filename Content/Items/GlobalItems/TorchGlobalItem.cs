@@ -26,7 +26,7 @@ namespace Macrocosm.Content.Items.GlobalItems
 
 		public override void HoldItem(Item item, Player player)
 		{
-			if (HasFlame(item) && IsTorch(item)) // excluding Nightglow and Brand of the Inferno
+			if (HasFlame(item) && IsTorch(item)) // excluding NightGlow and Brand of the Inferno
 				item.flame = !SubworldSystem.AnyActive<Macrocosm>();
 		}
 	}

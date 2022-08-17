@@ -10,7 +10,7 @@ using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon
+namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
 	public class Clavite : MoonEnemy
 	{
@@ -83,7 +83,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon
 
 		public override void OnHitPlayer(Player player, int damage, bool crit)
 		{
-			if (player.GetModPlayer<MacrocosmPlayer>().accMoonArmor)
+			if (player.Macrocosm().accMoonArmor)
 			{
 				// Now only suit breaches players with said suit 
 				player.AddBuff(ModContent.BuffType<SuitBreach>(), 600, true);
@@ -91,7 +91,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon
 		}
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
 		{
-			return spawnInfo.Player.GetModPlayer<MacrocosmPlayer>().ZoneMoon && Main.dayTime && spawnInfo.SpawnTileY <= Main.worldSurface + 100 ? .1f : 0f;
+			return spawnInfo.Player.Macrocosm().ZoneMoon && Main.dayTime && spawnInfo.SpawnTileY <= Main.worldSurface + 100 ? .1f : 0f;
 		}
 
 		public override void ModifyNPCLoot(NPCLoot loot)

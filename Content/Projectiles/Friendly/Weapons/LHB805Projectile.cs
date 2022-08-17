@@ -56,7 +56,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Weapons
 
 		public override void PostDraw(Color lightColor)
 		{
-			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Weapons/LHB805ProjectileGlow").Value;
+			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Weapons/LHB805Projectile_Glow").Value;
 			Projectile.DrawAnimatedGlowmask(glowmask, Color.White, Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None, new Vector2(5, 10));
 		}
 
@@ -124,7 +124,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Weapons
 			}
 			else
 			{
-				OwnerPlayer.GetModPlayer<MacrocosmPlayer>().ScreenShakeIntensity += 0.2f;
+				OwnerPlayer.SetScreenshake(0.2f);
 
 				if (Projectile.frameCounter >= windupTicksPerFrame)
 				{

@@ -1,4 +1,4 @@
-using Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon;
+using Macrocosm.Content.NPCs.Enemies.Moon;
 using System;
 using System.Collections.Generic;
 using Terraria.ModLoader;

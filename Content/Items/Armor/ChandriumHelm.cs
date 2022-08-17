@@ -1,3 +1,4 @@
+using Macrocosm.Common.Utility;
 using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Items.Materials;
 using Terraria;
@@ -7,7 +8,7 @@ using Terraria.ModLoader;
 namespace Macrocosm.Content.Items.Armor
 {
 	[AutoloadEquip(EquipType.Head)]
-	public class SeleniteHelmet : ModItem
+	public class ChandriumHelm : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
@@ -23,12 +24,12 @@ namespace Macrocosm.Content.Items.Armor
 
 		public override bool IsArmorSet(Item head, Item body, Item legs)
 		{
-			return head.type == ModContent.ItemType<SeleniteHelmet>() && body.type == ModContent.ItemType<SeleniteBreastplate>() && legs.type == ModContent.ItemType<SeleniteLeggings>();
+			return head.type == ModContent.ItemType<ChandriumHelm>() && body.type == ModContent.ItemType<ChandriumBreastplate>() && legs.type == ModContent.ItemType<ChandriumLeggings>();
 		}
 
 		public override void UpdateArmorSet(Player player)
 		{
-			player.GetModPlayer<MacrocosmPlayer>().accMoonArmor = true;
+			player.Macrocosm().accMoonArmor = true;
 			player.setBonus = "Pressurized spacesuit allows for safe exploration of other celestial bodies"
 							+ "\nTier 1 extraterrestrial protection"
 							+ "\nVastly extends underwater breathing time";
@@ -38,7 +39,7 @@ namespace Macrocosm.Content.Items.Armor
 		public override void AddRecipes()
 		{
 			Recipe recipe = Recipe.Create(Type);
-			recipe.AddIngredient(ModContent.ItemType<SeleniteBar>(), 8);
+			recipe.AddIngredient(ModContent.ItemType<ChandriumBar>(), 8);
 			recipe.AddTile(TileID.WorkBenches);
 			recipe.Register();
 		}

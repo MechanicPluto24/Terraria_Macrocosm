@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.Dusts;
+﻿using Macrocosm.Common.Utility;
+using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Gores;
 using Macrocosm.Content.Items.Miscellaneous;
 using Microsoft.Xna.Framework;
@@ -60,7 +61,7 @@ namespace Macrocosm.Content.Projectiles.Meteors
 						float distance = Vector2.Distance(player.Center, Projectile.Center);
 
 						if (distance < maxDist)
-							player.GetModPlayer<MacrocosmPlayer>().ScreenShakeIntensity += maxScreenshake - distance / maxDist * maxScreenshake;
+							player.SetScreenshake(maxScreenshake - distance / maxDist * maxScreenshake);
 					}
 				}
 

@@ -1,3 +1,4 @@
+using Macrocosm.Common.Utility;
 using Macrocosm.NPCs.GlobalNPCs;
 using Microsoft.Xna.Framework;
 using System;
@@ -59,7 +60,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Weapons
 
 				for (int i = 0; i < 200; i++)
 				{
-					if (Main.npc[i].CanBeChasedBy(this) && Main.npc[i].GetGlobalNPC<InstancedGlobalNPC>().targetedBy[Projectile.owner])
+					if (Main.npc[i].CanBeChasedBy(this) && Main.npc[i].Macrocosm().targetedBy[Projectile.owner])
 					{
 						float targetCenterX = Main.npc[i].position.X + (float)(Main.npc[i].width / 2);
 						float targetCenterY = Main.npc[i].position.Y + (float)(Main.npc[i].height / 2);

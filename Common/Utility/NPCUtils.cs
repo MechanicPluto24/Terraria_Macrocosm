@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.NPCs.GlobalNPCs;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
@@ -10,6 +11,8 @@ namespace Macrocosm.Common.Utility
 {
 	public static class NPCUtils
 	{
+		public static MacrocosmNPC Macrocosm(this NPC npc) => npc.GetGlobalNPC<MacrocosmNPC>();
+
 		/// <summary>
 		/// Scales this <paramref name="npc"/>'s health by the scale <paramref name="factor"/> provided.
 		/// </summary>

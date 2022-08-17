@@ -3,7 +3,7 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon
+namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
 	/// <summary>
 	/// Abstract class for every moon enemy 
