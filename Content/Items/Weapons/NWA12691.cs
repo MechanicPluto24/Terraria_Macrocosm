@@ -1,3 +1,4 @@
+using Macrocosm.Common.Utility;
 using Macrocosm.Content.Projectiles.Friendly.Weapons;
 using Macrocosm.NPCs.GlobalNPCs;
 using Microsoft.Xna.Framework;
@@ -58,27 +59,18 @@ namespace Macrocosm.Content.Items.Weapons
 				for (int i = 0; i < Main.maxNPCs; i++)
 				{
 					NPC npc = Main.npc[i];
-					InstancedGlobalNPC modNPC;
 
-					if (Main.npc[i].TryGetGlobalNPC(out modNPC))
+					npc.Macrocosm().targetedBy[player.whoAmI] = false;
+
+					if (!found && npc.CanBeChasedBy() && Main.npc[i].getRect().Intersects(new Rectangle((int)(Main.MouseWorld.X - 10f), (int)(Main.MouseWorld.Y - 10f), 20, 20)))
 					{
-						modNPC.targetedBy[player.whoAmI] = false;
-
-						if (!found && npc.CanBeChasedBy() && Main.npc[i].getRect().Intersects(new Rectangle((int)(Main.MouseWorld.X - 10f), (int)(Main.MouseWorld.Y - 10f), 20, 20)))
-						{
-							id = i;
-							found = true;
-						}
+						id = i;
+						found = true;
 					}
 				}
 
 				if (id > -1 && id < Main.maxNPCs)
-				{
-					if (Main.npc[id].TryGetGlobalNPC(out InstancedGlobalNPC npc))
-					{
-						npc.targetedBy[player.whoAmI] = true;
-					}
-				}
+					Main.npc[id].Macrocosm().targetedBy[player.whoAmI] = true;
 
 				return false;
 			}

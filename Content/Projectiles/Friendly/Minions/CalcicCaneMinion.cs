@@ -9,11 +9,14 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Minions
 {
+	/// <summary>
+	/// This is based off ExampleMod for now 
+	/// </summary>
 	public class CalcicCaneMinion : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Example Minion");
+			DisplayName.SetDefault("Crater Imp");
 			Main.projFrames[Type] = 10;
 			ProjectileID.Sets.MinionTargettingFeature[Type] = true;
 

@@ -1,3 +1,4 @@
+using Macrocosm.Common.Utility;
 using Macrocosm.Content.Items.Materials;
 using Microsoft.Xna.Framework;
 using System;
@@ -7,7 +8,7 @@ using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon
+namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
 	public class BloodMoonJuggernaut : MoonEnemy
 	{
@@ -32,7 +33,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon
 		public override void SetStaticDefaults()
 		{
 			base.SetStaticDefaults();
-
+			DisplayName.SetDefault("Juggernaut");
 			Main.npcFrameCount[Type] = 32;
 		}
 
@@ -65,7 +66,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon
 
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
 		{
-			return spawnInfo.Player.GetModPlayer<MacrocosmPlayer>().ZoneMoon && Main.bloodMoon ? .1f : 0f;
+			return spawnInfo.Player.Macrocosm().ZoneMoon && Main.bloodMoon ? .1f : 0f;
 		}
 
 		public override void AI()

@@ -7,7 +7,7 @@ using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon
+namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
 	public class RegolithSlime : MoonEnemy
 	{

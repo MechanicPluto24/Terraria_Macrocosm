@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.Backgrounds.Moon;
+﻿using Macrocosm.Common.Utility;
+using Macrocosm.Content.Backgrounds.Moon;
 using Macrocosm.Content.Subworlds.Moon;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
@@ -26,13 +27,13 @@ namespace Macrocosm.Content.Biomes
 
 		public override void OnInBiome(Player player)
 		{
-			player.GetModPlayer<MacrocosmPlayer>().ZoneMoon = true;
+			player.Macrocosm().ZoneMoon = true;
 
 		}
 
 		public override void OnLeave(Player player)
 		{
-			player.GetModPlayer<MacrocosmPlayer>().ZoneMoon = false;
+			player.Macrocosm().ZoneMoon = false;
 		}
 
 		public override bool IsBiomeActive(Player player)

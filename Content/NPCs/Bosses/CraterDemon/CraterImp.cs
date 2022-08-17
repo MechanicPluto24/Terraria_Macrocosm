@@ -10,7 +10,7 @@ using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon
+namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 {
 	public class CraterImp : ModNPC
 	{
@@ -89,7 +89,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon
 		public override void OnHitPlayer(Player target, int damage, bool crit)
 		{
 			if (Main.expertMode)
-				target.GetModPlayer<MacrocosmPlayer>().accMoonArmorDebuff = 80;
+				target.Macrocosm().accMoonArmorDebuff = 80;
 		}
 
 		public override Color? GetAlpha(Color drawColor)
@@ -138,7 +138,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon
 			if (NPC.IsABestiaryIconDummy)
 				return;
 
-			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Unfriendly/Bosses/Moon/CraterImpGlow").Value;
+			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Bosses/CraterDemon/CraterImpGlow").Value;
 
 			SpriteEffects effect = (NPC.rotation > MathHelper.PiOver2 && NPC.rotation < 3 * MathHelper.PiOver2) || (NPC.rotation < -MathHelper.PiOver2 && NPC.rotation > -3 * MathHelper.PiOver2)
 				? SpriteEffects.FlipVertically

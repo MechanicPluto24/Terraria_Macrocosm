@@ -35,6 +35,7 @@ namespace Macrocosm.Content.Items.Weapons
 			Item.damage = 45; //the damage of your gun
 			Item.reuseDelay = 8;
 			Item.useAmmo = AmmoID.Bullet; //uses bullets as ammunition
+			Item.mana = 0;
 		}
 
 		public override bool CanUseItem(Player player) => player.ownedProjectileCounts[Item.shoot] <= 0;

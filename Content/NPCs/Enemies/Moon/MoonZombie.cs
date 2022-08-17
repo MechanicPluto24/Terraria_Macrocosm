@@ -1,3 +1,4 @@
+using Macrocosm.Common.Utility;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Items.Materials;
 using Terraria;
@@ -6,7 +7,7 @@ using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon
+namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
 	public class MoonZombie : MoonEnemy
 	{
@@ -47,7 +48,7 @@ namespace Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon
 
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
 		{
-			return spawnInfo.Player.GetModPlayer<MacrocosmPlayer>().ZoneMoon && !Main.dayTime ? .1f : 0f;
+			return spawnInfo.Player.Macrocosm().ZoneMoon && !Main.dayTime ? .1f : 0f;
 		}
 
 		public override void AI()

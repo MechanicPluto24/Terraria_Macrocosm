@@ -1,5 +1,6 @@
 using Macrocosm.Common.Utility;
 using Macrocosm.Content.Buffs.Debuffs;
+using Macrocosm.Content.Items.Materials;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -7,11 +8,10 @@ using Terraria.ModLoader;
 namespace Macrocosm.Content.Items.Armor
 {
 	[AutoloadEquip(EquipType.Head)]
-	public class AstronautHelmet : ModItem
+	public class SeleniteHeadgear : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Astronaut Helmet");
 		}
 		public override void SetDefaults()
 		{
@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Items.Armor
 
 		public override bool IsArmorSet(Item head, Item body, Item legs)
 		{
-			return head.type == ModContent.ItemType<AstronautHelmet>() && body.type == ModContent.ItemType<AstronautSuit>() && legs.type == ModContent.ItemType<AstronautLeggings>();
+			return head.type == ModContent.ItemType<SeleniteHeadgear>() && body.type == ModContent.ItemType<SeleniteBreastplate>() && legs.type == ModContent.ItemType<SeleniteLeggings>();
 		}
 
 		public override void UpdateArmorSet(Player player)
@@ -39,7 +39,7 @@ namespace Macrocosm.Content.Items.Armor
 		public override void AddRecipes()
 		{
 			Recipe recipe = Recipe.Create(Type);
-			recipe.AddIngredient(ItemID.DirtBlock, 10);
+			recipe.AddIngredient(ModContent.ItemType<SeleniteBar>(), 8);
 			recipe.AddTile(TileID.WorkBenches);
 			recipe.Register();
 		}

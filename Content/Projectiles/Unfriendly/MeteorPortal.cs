@@ -1,5 +1,5 @@
 ﻿using Macrocosm.Content.Dusts;
-using Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon;
+using Macrocosm.Content.NPCs.Bosses.CraterDemon;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
