@@ -13,7 +13,6 @@ namespace Macrocosm.Content.Dusts
 	/// </summary>
 	public class FlamingMeteorDust : ModDust
 	{
-
 		public override string Texture => null;
 
 		public override void OnSpawn(Dust dust)

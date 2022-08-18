@@ -44,7 +44,7 @@ namespace Macrocosm.Content.Items.GlobalItems
 
 			if (heldItem.TryGetGlobalItem(out GlowmaskGlobalItem result))
 			{
-				Texture2D glowTexture = result.glowTexture;
+				Texture2D glowTexture = result.texture;
 
 				if (glowTexture != null)
 				{
@@ -207,7 +207,7 @@ namespace Macrocosm.Content.Items.GlobalItems
 	/// </summary>
 	public class GlowmaskGlobalItem : GlobalItem
 	{
-		public Texture2D glowTexture = null;
+		public Texture2D texture = null;
 		public int glowOffsetY = 0;
 		public int glowOffsetX = 0;
 		public override bool InstancePerEntity => true;
@@ -217,9 +217,8 @@ namespace Macrocosm.Content.Items.GlobalItems
 		}
 		public override void PostDrawInWorld(Item item, SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
 		{
-			if (glowTexture != null)
+			if (texture != null)
 			{
-				Texture2D texture = glowTexture;
 				spriteBatch.Draw
 				(
 					texture,

@@ -85,7 +85,7 @@ namespace Macrocosm.Common.Drawing
 		/// None  - No rotation
 		/// Day   - Only visible during the day (rotation logic will still run)
 		/// Night - Only visible during the night (rotation logic will still run)
-		/// Any   - Cycles during both day and night  
+		/// Any   - Cycle during both day and night  
 		/// </param>
 		public void SetSkyRotationMode(SkyRotationMode mode) => rotationMode = mode;
 
@@ -136,18 +136,18 @@ namespace Macrocosm.Common.Drawing
 			#region Shadow
 			if (HasShadow)
 			{
-				if(lightSource is not null)
+				if (lightSource is not null)
 				{
 					shadowRotation = (screenPosition - lightSource.screenPosition).ToRotation();
 
 					if (!Main.dayTime)
 						shadowRotation -= MathHelper.Pi;
 				}
-				
-				shadowColor = Color.White;
-				shadowColor.A = (byte)(255f * ScaleBrightnessNoonToMidnight(0f ,1f));
 
-				if (atmoShadowTexture is not null)
+				shadowColor = Color.White;
+				shadowColor.A = (byte)(255f * ScaleBrightnessNoonToMidnight(0f, 1f));
+
+				if (atmoShadowTexture is not null && HasAtmo)
 				{
 					spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.EffectMatrix);
 					spriteBatch.Draw(atmoShadowTexture, screenPosition, null, shadowColor, shadowRotation, atmoTexture.Size() / 2, scale, default, 0f);

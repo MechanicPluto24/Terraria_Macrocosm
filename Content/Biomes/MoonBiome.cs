@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.Backgrounds.Moon;
+﻿using Macrocosm.Common.Utility;
+using Macrocosm.Content.Backgrounds.Moon;
 using Macrocosm.Content.Subworlds.Moon;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
@@ -17,7 +18,7 @@ namespace Macrocosm.Content.Biomes
 		public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.GetInstance<MoonSurfaceBgStyle>();
 		public override ModUndergroundBackgroundStyle UndergroundBackgroundStyle => ModContent.GetInstance<MoonUgBgStyle>();
 		public override int Music => Main.dayTime ? MusicLoader.GetMusicSlot(Mod, "Sounds/Music/Deadworld") : MusicLoader.GetMusicSlot(Mod, "Sounds/Music/Requiem");
-		
+
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("The Moon");
@@ -26,13 +27,13 @@ namespace Macrocosm.Content.Biomes
 
 		public override void OnInBiome(Player player)
 		{
-			player.GetModPlayer<MacrocosmPlayer>().ZoneMoon = true;
+			player.Macrocosm().ZoneMoon = true;
 
 		}
 
 		public override void OnLeave(Player player)
 		{
-			player.GetModPlayer<MacrocosmPlayer>().ZoneMoon = false;
+			player.Macrocosm().ZoneMoon = false;
 		}
 
 		public override bool IsBiomeActive(Player player)

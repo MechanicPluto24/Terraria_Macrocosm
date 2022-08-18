@@ -1,5 +1,5 @@
 using Macrocosm.Content.Items.Currency;
-using Macrocosm.Content.NPCs.Unfriendly.Enemies.Moon;
+using Macrocosm.Content.NPCs.Enemies.Moon;
 using Macrocosm.Content.Subworlds.Moon;
 using SubworldLibrary;
 using System.Collections.Generic;
@@ -10,9 +10,11 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.NPCs.GlobalNPCs
 {
+	/// <summary>
+	/// Global NPC for general NPC modifications (loot, spawn pools)
+	/// </summary>
 	public class MacrocosmGlobalNPC : GlobalNPC
 	{
-
 		public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
 		{
 			if (npc.ModNPC is MoonEnemy)

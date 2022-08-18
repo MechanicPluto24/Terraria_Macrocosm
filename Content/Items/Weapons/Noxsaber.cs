@@ -1,3 +1,4 @@
+using Macrocosm.Common.Utility;
 using Macrocosm.Content.Items.GlobalItems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -31,7 +32,7 @@ namespace Macrocosm.Content.Items.Weapons
 			Item.rare = ItemRarityID.Red;
 			Item.UseSound = SoundID.Item15;
 			Item.autoReuse = true; // Lets you use the item without clicking the mouse repeatedly (i.e. swinging swords)
-			Item.GetGlobalItem<GlowmaskGlobalItem>().glowTexture = ModContent.Request<Texture2D>("Macrocosm/Content/Items/Weapons/Noxsaber_Glow").Value;
+			Item.Glowmask().texture = ModContent.Request<Texture2D>("Macrocosm/Content/Items/Weapons/Noxsaber_Glow").Value;
 		}
 
 		public override void MeleeEffects(Player player, Rectangle hitbox)

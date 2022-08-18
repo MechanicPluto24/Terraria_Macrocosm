@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Macrocosm.Content.Items.GlobalItems;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 
@@ -6,6 +7,9 @@ namespace Macrocosm.Common.Utility
 {
 	public static class ItemUtils
 	{
+
+		public static GlowmaskGlobalItem Glowmask(this Item item) => item.GetGlobalItem<GlowmaskGlobalItem>(); 
+
 
 		/// <summary>
 		/// Helper method that converts the first rocket ammo found in the inventory 

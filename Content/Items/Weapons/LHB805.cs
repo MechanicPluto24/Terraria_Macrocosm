@@ -1,0 +1,49 @@
+using Macrocosm.Content.Projectiles.Friendly.Weapons;
+using Microsoft.Xna.Framework;
+using Terraria;
+using Terraria.DataStructures;
+using Terraria.GameContent.Creative;
+using Terraria.ID;
+using Terraria.ModLoader;
+
+namespace Macrocosm.Content.Items.Weapons
+{
+	public class LHB805 : ModItem
+	{
+		public override void SetStaticDefaults()
+		{
+			DisplayName.SetDefault("LHB-805");
+			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
+		}
+
+		public override void SetDefaults()
+		{
+			Item.CloneDefaults(ItemID.LastPrism);
+			Item.width = 74; // hitbox width of the item
+			Item.height = 32; // hitbox height of the item
+			Item.useTime = 7; // The item's use time in ticks (60 ticks == 1 second.)
+			Item.useAnimation = 7; // The length of the item's use animation in ticks (60 ticks == 1 second.)
+			Item.useStyle = ItemUseStyleID.Shoot; // how you use the item (swinging, holding out, etc)
+			Item.noMelee = true; //so the item's animation doesn't do damage
+			Item.knockBack = 0; // Sets the item's knockback. Note that projectiles shot by this weapon will use its and the used ammunition's knockback added together.
+			Item.value = Item.sellPrice(silver: 700); //sells for 700 silver (7 gold)
+			Item.rare = ItemRarityID.Green; // the color that the item's name will be in-game
+			Item.autoReuse = true; // if you can hold click to automatically use it again
+			Item.shoot = ModContent.ProjectileType<LHB805Projectile>(); //this gun uses a holdout projectile
+			Item.shootSpeed = 32f; // the speed of the projectile (measured in pixels per frame)
+			Item.DamageType = DamageClass.Ranged; //deals melee damage
+			Item.damage = 45; //the damage of your gun
+			Item.reuseDelay = 8;
+			Item.useAmmo = AmmoID.Bullet; //uses bullets as ammunition
+			Item.mana = 0;
+		}
+
+		public override bool CanUseItem(Player player) => player.ownedProjectileCounts[Item.shoot] <= 0;
+
+		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+		{
+			Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<LHB805Projectile>(), damage, knockback, player.whoAmI);
+			return false;
+		}
+	}
+}

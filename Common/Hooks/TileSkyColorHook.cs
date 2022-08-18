@@ -20,7 +20,7 @@ namespace Macrocosm.Common.Hooks
 		{
 			if (SubworldSystem.IsActive<Moon>())
 			{
-				Color colorOfTheSkies = ColorManipulator.ToGrayscale(Main.ColorOfTheSkies);
+				Color colorOfTheSkies = Main.ColorOfTheSkies.ToGrayscale();
 
 				Main.tileColor.R = (byte)((colorOfTheSkies.R + colorOfTheSkies.G + colorOfTheSkies.B + colorOfTheSkies.R * 7) / 10);
 				Main.tileColor.G = (byte)((colorOfTheSkies.R + colorOfTheSkies.G + colorOfTheSkies.B + colorOfTheSkies.G * 7) / 10);

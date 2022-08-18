@@ -1,4 +1,5 @@
-﻿using Terraria;
+﻿using Macrocosm.Common.Utility;
+using Terraria;
 
 namespace Macrocosm.Content.Biomes
 {
@@ -22,7 +23,7 @@ namespace Macrocosm.Content.Biomes
 		public override void OnInBiome(Player player)
 		{
 			base.OnInBiome(player);
-			player.GetModPlayer<MacrocosmPlayer>().ZoneBasalt = true;
+			player.Macrocosm().ZoneBasalt = true;
 		}
 
 		public override bool IsBiomeActive(Player player)
