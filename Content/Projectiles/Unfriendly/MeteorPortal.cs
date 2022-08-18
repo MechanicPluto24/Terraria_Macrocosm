@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon;
+﻿using Macrocosm.Content.Dusts;
+using Macrocosm.Content.NPCs.Bosses.CraterDemon;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -57,6 +58,7 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 
 					Terraria.Audio.SoundEngine.PlaySound(SoundID.Item20, Projectile.Center);
 				}
+				SpawnDusts();
 			}
 
 			Projectile.alpha = (int)Projectile.ai[0];
@@ -80,6 +82,39 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 			Main.EntitySpriteDraw(texture2D, Projectile.Center - Main.screenPosition, null, value * 0.84f, Projectile.rotation, texture2D.Size() / 2f,
 				Projectile.scale, SpriteEffects.None, 0);
 			return false;
+		}
+
+		/// <summary>
+		/// Adapted from Lunar Portal Staff
+		/// </summary>
+		private void SpawnDusts()
+		{
+			if (Main.rand.NextBool(2))
+			{
+				int type = Main.rand.NextBool() ? ModContent.DustType<PortalLightOrangeDust>() : ModContent.DustType<PortalLightGreenDust>();
+				Vector2 rotVector1 = Vector2.UnitY.RotatedByRandom(6.2831854820251465);
+				Dust lightDust = Main.dust[Dust.NewDust(Projectile.Center - rotVector1 * 30f, 0, 0, type)];
+				lightDust.noGravity = true;
+				lightDust.position = Projectile.Center - rotVector1 * Main.rand.Next(10, 21);
+				lightDust.velocity = rotVector1.RotatedBy(1.5707963705062866) * 6f;
+				lightDust.scale = 1.2f + Main.rand.NextFloat();
+				lightDust.fadeIn = 0.5f;
+				lightDust.customData = Projectile.Center;
+
+			}
+
+			if (Main.rand.NextBool(2))
+			{
+				int type = Main.rand.NextBool() ? ModContent.DustType<PortalDarkOrangeDust>() : ModContent.DustType<PortalDarkGreenDust>();
+				Vector2 rotVector2 = Vector2.UnitY.RotatedByRandom(6.2831854820251465);
+				Dust darkDust = Main.dust[Dust.NewDust(Projectile.Center - rotVector2 * 30f, 0, 0, type)];
+				darkDust.noGravity = true;
+				darkDust.position = Projectile.Center - rotVector2 * 30f;
+				darkDust.velocity = rotVector2.RotatedBy(-1.5707963705062866) * 3f;
+				darkDust.scale = 1.2f + Main.rand.NextFloat();
+				darkDust.fadeIn = 0.5f;
+				darkDust.customData = Main.projectile[Projectile.whoAmI];
+			}
 		}
 	}
 }

@@ -1,5 +1,5 @@
 ﻿using Macrocosm.Common.Utility;
-using Macrocosm.Content.NPCs.Unfriendly.Bosses.Moon;
+using Macrocosm.Content.NPCs.Bosses.CraterDemon;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
@@ -32,7 +32,7 @@ namespace Macrocosm.Content.Items.Consumables.BossSummons
 		}
 
 		public override bool CanUseItem(Player player)
-			=> player.GetModPlayer<MacrocosmPlayer>().ZoneMoon && NPC.downedMoonlord && !NPC.AnyNPCs(ModContent.NPCType<CraterDemon>());
+			=> player.Macrocosm().ZoneMoon && NPC.downedMoonlord && !NPC.AnyNPCs(ModContent.NPCType<CraterDemon>());
 
 		public override bool? UseItem(Player player)
 		{

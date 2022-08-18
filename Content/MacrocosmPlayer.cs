@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.Buffs.Debuffs;
+﻿using Macrocosm.Common.Utility;
+using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Subworlds.Moon;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
@@ -19,7 +20,7 @@ namespace Macrocosm.Content
 		public float ScreenShakeIntensity
 		{
 			get => screenShakeIntensity;
-			set => screenShakeIntensity = value;
+			set => screenShakeIntensity = MathHelper.Clamp(value, 0, 100);
 		}
 
 		public override void ResetEffects()
@@ -31,7 +32,7 @@ namespace Macrocosm.Content
 		{
 			if (SubworldSystem.IsActive<Moon>())
 			{
-				if (!Player.GetModPlayer<MacrocosmPlayer>().accMoonArmor)
+				if (!Player.Macrocosm().accMoonArmor)
 				{
 					Player.AddBuff(ModContent.BuffType<SuitBreach>(), 2);
 				}
@@ -40,7 +41,7 @@ namespace Macrocosm.Content
 
 		public override void PostUpdateMiscEffects()
 		{
-			if (ZoneMoon)
+			if (SubworldSystem.IsActive<Moon>())
 				Player.gravity = 0.068f;
 
 			if (accMoonArmorDebuff > 0)
@@ -55,8 +56,7 @@ namespace Macrocosm.Content
 
 		public override void ModifyScreenPosition()
 		{
-
-			ScreenShakeIntensity = MathHelper.Clamp(ScreenShakeIntensity, 0, 100);
+			#region Screenshake
 
 			if (ScreenShakeIntensity > 0.1f)
 			{
@@ -64,16 +64,7 @@ namespace Macrocosm.Content
 				ScreenShakeIntensity *= 0.9f;
 			}
 
-			//YOO NO LONGER NEEDED - Feldy
-			/*      
-            const float oldMaxScreenPosY = 11864f;  // Ignore the magic numbers :peepohappy: (bruhh)
-            const float maxScreenPosY = 15164f;
-            if (SubworldSystem.AnyActive<Macrocosm>()) {
-                 if (Main.screenPosition.Y >= maxScreenPosY) {
-                     Main.screenPosition = new Vector2(Main.screenPosition.X, maxScreenPosY);
-                 }
-            }
-            */
+			#endregion
 		}
 	}
 }

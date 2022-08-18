@@ -10,7 +10,7 @@ namespace Macrocosm.Content.Dusts
 		{
 			dust.noLight = true;
 			// dust.velocity.Y = -1.5f;
-			dust.scale = Main.rand.NextFloat(1, 1.35f);
+			dust.scale += Main.rand.NextFloat(0f, 0.35f);
 		}
 
 		public override bool Update(Dust dust)

@@ -1,5 +1,4 @@
 using Macrocosm.Common.Drawing;
-using Macrocosm.Common.Drawing.Stars;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.Utility;
 using Macrocosm.Common.Utility.IO;
@@ -17,14 +16,8 @@ namespace Macrocosm.Content.Subworlds.Moon
 {
 	public class MoonSubworldLoadUI : UIWorldLoad, ITexturedImmediate
 	{
-
 		private Texture2D lunaBackground;
-		private Texture2D lunaAtmoBackground;
-		private Texture2D earthSmallBackground;
-		private Texture2D earthSmallAtmoBackground;
-
 		private Texture2D earthBackground;
-		private Texture2D earthAtmoBackground;
 
 		private bool toEarth;
 
@@ -63,20 +56,17 @@ namespace Macrocosm.Content.Subworlds.Moon
 			}
 		}
 
-		private void LoadTextures()
+		public void LoadTextures()
 		{
 			if (TexLoaded)
 				return;
 
-			lunaBackground = ModContent.Request<Texture2D>("Macrocosm/Assets/LoadingBackgrounds/Luna", AssetRequestMode.ImmediateLoad).Value;
-			lunaAtmoBackground = ModContent.Request<Texture2D>("Macrocosm/Assets/LoadingBackgrounds/LunaAtmo", AssetRequestMode.ImmediateLoad).Value;
-
-			earthBackground = ModContent.Request<Texture2D>("Macrocosm/Assets/LoadingBackgrounds/Earth", AssetRequestMode.ImmediateLoad).Value;
-			earthAtmoBackground = ModContent.Request<Texture2D>("Macrocosm/Assets/LoadingBackgrounds/EarthAtmo", AssetRequestMode.ImmediateLoad).Value;
+			lunaBackground = ModContent.Request<Texture2D>("Macrocosm/Assets/LoadingBackgrounds/Luna", AssetRequestMode.ImmediateLoad).Value.PremultiplyTexture();
+			earthBackground = ModContent.Request<Texture2D>("Macrocosm/Assets/LoadingBackgrounds/Earth", AssetRequestMode.ImmediateLoad).Value.PremultiplyTexture(); ;
 
 			Texture2D earthSmallBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/EarthAtmoless", AssetRequestMode.ImmediateLoad).Value;
 			Texture2D earthSmallAtmoBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/EarthAtmo", AssetRequestMode.ImmediateLoad).Value;
-			
+
 			Texture2D moonProgressBarTexUpper = ModContent.Request<Texture2D>("Macrocosm/Assets/UI/WorldGen/ProgressBarMoon", AssetRequestMode.ImmediateLoad).Value;
 			Texture2D moonProgressBarTexLower = ModContent.Request<Texture2D>("Macrocosm/Assets/UI/WorldGen/ProgressBarMoon_Lower", AssetRequestMode.ImmediateLoad).Value;
 			Texture2D moonProgressBarLargeFill = ModContent.Request<Texture2D>("Macrocosm/Assets/UI/WorldGen/MoonLargeFill", AssetRequestMode.ImmediateLoad).Value;
@@ -99,20 +89,9 @@ namespace Macrocosm.Content.Subworlds.Moon
 
 			if (toEarth)
 			{
-				spriteBatch.Begin(0, BlendState.Additive, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.UIScaleMatrix);
-				spriteBatch.Draw
-				(
-					earthAtmoBackground,
-					new Rectangle(Main.screenWidth - earthAtmoBackground.Width, Main.screenHeight - earthAtmoBackground.Height + 50 - (int)(animationTimer * 10), earthAtmoBackground.Width, earthAtmoBackground.Height),
-					null,
-					bodyColor
+				spriteBatch.Begin(0, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.EffectMatrix);
 
-				);
-				spriteBatch.End();
-
-				spriteBatch.Begin(0, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.UIScaleMatrix);
-
-				starsDrawing.Draw();
+				starsDrawing.DrawSelf(spriteBatch);
 
 				spriteBatch.Draw
 				(
@@ -129,22 +108,16 @@ namespace Macrocosm.Content.Subworlds.Moon
 			}
 			else
 			{
-				spriteBatch.Begin(0, BlendState.Additive, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.UIScaleMatrix);
-				spriteBatch.Draw
-				(
-					lunaAtmoBackground,
-					new Rectangle(Main.screenWidth - lunaAtmoBackground.Width, Main.screenHeight - lunaAtmoBackground.Height + 50 - (int)(animationTimer * 10), lunaAtmoBackground.Width, lunaAtmoBackground.Height),
-					null,
-					bodyColor
-				);
-				spriteBatch.End();
-
-				spriteBatch.Begin(0, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.UIScaleMatrix);
-
-				starsDrawing.Draw();
+				spriteBatch.Begin(0, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.EffectMatrix);
 
 				earth.SetScreenPosition(510, 200);
 				earth.DrawSelf(spriteBatch);
+
+				spriteBatch.End();
+
+				spriteBatch.Begin(0, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.EffectMatrix);
+
+				starsDrawing.DrawSelf(spriteBatch);
 
 				spriteBatch.Draw
 				(
@@ -183,11 +156,6 @@ namespace Macrocosm.Content.Subworlds.Moon
 			animationTimer += 0.125;
 			if (animationTimer > 5)
 				animationTimer = 5;
-		}
-
-		void ITexturedImmediate.LoadTextures()
-		{
-			throw new System.NotImplementedException();
 		}
 	}
 }

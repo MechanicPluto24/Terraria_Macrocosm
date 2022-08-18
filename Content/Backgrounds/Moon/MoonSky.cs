@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Common.Drawing;
-using Macrocosm.Common.Drawing.Stars;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -27,7 +26,7 @@ namespace Macrocosm.Content.Backgrounds.Moon
 
 		const float fadeOutTimeDawn = 7200f; //  4:30 -  6:30: nebula and night stars dim
 		const float fadeInTimeDusk = 46800f; // 17:30 - 19:30: nebula and night stars brighten
-		public bool TexLoaded { get ; set; } = false;
+		public bool TexLoaded { get; set; } = false;
 
 		public void Load(Mod mod)
 		{
@@ -76,6 +75,9 @@ namespace Macrocosm.Content.Backgrounds.Moon
 
 			starsDay.SpawnStars(100, 130, 1.4f, 0.05f);
 			starsNight.SpawnStars(600, 700, 0.8f, 0.05f);
+
+			starsDay.RandStar().OverrideColor(Color.Tomato * 0.7f); // Mars :) 
+
 			Intensity = 0.002f;
 			Active = true;
 		}
@@ -101,11 +103,11 @@ namespace Macrocosm.Content.Backgrounds.Moon
 
 				DrawMoonNebula(nebulaBrightness);
 
-				starsDay.Draw();
-				starsNight.Draw(nightStarBrightness);
+				starsDay.DrawSelf(spriteBatch);
+				starsNight.DrawSelf(spriteBatch, nightStarBrightness);
 
 				sun.DrawSelf(spriteBatch);
-				earth.DrawSelf(spriteBatch);	
+				earth.DrawSelf(spriteBatch);
 			}
 		}
 
@@ -176,7 +178,7 @@ namespace Macrocosm.Content.Backgrounds.Moon
 			return 1f - Intensity;
 		}
 
-	
+
 
 		public override void Reset()
 		{

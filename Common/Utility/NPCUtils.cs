@@ -1,6 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.NPCs.GlobalNPCs;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.Localization;
 
@@ -8,6 +11,8 @@ namespace Macrocosm.Common.Utility
 {
 	public static class NPCUtils
 	{
+		public static MacrocosmNPC Macrocosm(this NPC npc) => npc.GetGlobalNPC<MacrocosmNPC>();
+
 		/// <summary>
 		/// Scales this <paramref name="npc"/>'s health by the scale <paramref name="factor"/> provided.
 		/// </summary>
@@ -68,6 +73,36 @@ namespace Macrocosm.Common.Utility
 
 			return npc != Main.npc.Length;  //Return false if we couldn't generate an NPC
 		}
+
+		public static void DrawGlowmask(this NPC npc, SpriteBatch spriteBatch, Texture2D glowmask, Vector2 screenPos, Vector2 drawOffset = default, SpriteEffects effect = SpriteEffects.None)
+		{
+			int numFrames = Main.npcFrameCount[npc.type];
+			int frameHeight = TextureAssets.Npc[npc.type].Height() / numFrames;
+			int frame = npc.frame.Y / frameHeight;
+			Rectangle sourceRect = glowmask.Frame(1, numFrames, frameY: frame);
+			Vector2 origin = new Vector2(TextureAssets.Npc[npc.type].Width() / 2, frameHeight / 2) - drawOffset;
+			spriteBatch.Draw(glowmask, npc.Center - screenPos, sourceRect, Color.White, npc.rotation, origin, npc.scale, effect, 0f);
+		}
+
+		public static void Move(this NPC npc, Vector2 moveTo, Vector2 offset, float speed = 3f, float turnResistance = 0.5f)
+		{
+			moveTo += offset; // Gets the point that the NPC will be moving to.
+			Vector2 move = moveTo - npc.Center;
+			float magnitude = Magnitude(move);
+			if (magnitude > speed)
+			{
+				move *= speed / magnitude;
+			}
+			move = (npc.velocity * turnResistance + move) / (turnResistance + 1f);
+			magnitude = Magnitude(move);
+			if (magnitude > speed)
+			{
+				move *= speed / magnitude;
+			}
+			npc.velocity = move;
+		}
+
+		private static float Magnitude(Vector2 mag) => (float)Math.Sqrt(mag.X * mag.X + mag.Y * mag.Y);
 
 		public static void UpdateScaleAndHitbox(this NPC npc, int baseWidth, int baseHeight, float newScale)
 		{

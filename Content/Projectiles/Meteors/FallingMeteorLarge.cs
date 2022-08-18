@@ -1,4 +1,6 @@
-﻿using Macrocosm.Content.Dusts;
+﻿using Macrocosm.Common.Utility;
+using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Gores;
 using Macrocosm.Content.Items.Miscellaneous;
 using Microsoft.Xna.Framework;
 using System;
@@ -15,10 +17,10 @@ namespace Macrocosm.Content.Projectiles.Meteors
 			Projectile.width = 64;
 			Projectile.height = 64;
 			Projectile.aiStyle = -1;
-			Projectile.friendly = false;
-			Projectile.hostile = true;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
 			Projectile.damage = 500;
-			Projectile.penetrate = 1;
+			Projectile.penetrate = -1;
 			Projectile.tileCollide = true;
 		}
 
@@ -30,13 +32,17 @@ namespace Macrocosm.Content.Projectiles.Meteors
 			{
 				#region Spawn Items
 
-				if (Main.rand.NextBool(3))
+				// can spawn two geodes
+				for (int i = 0; i < 2; i++)
 				{
-					//int type = Utils.SelectRandom<int>(Main.rand, SomeGeode, SomeOtherGeode); -- maybe WeigthedRandom?
-					int type = ModContent.ItemType<MoonGeode>();
-					Vector2 position = new Vector2(Projectile.position.X, Projectile.position.Y - Projectile.height);
-					int itemIdx = Item.NewItem(Projectile.GetSource_FromThis(), position, new Vector2(Projectile.width, Projectile.height), type);
-					NetMessage.SendData(MessageID.SyncItem, -1, -1, null, itemIdx, 1f);
+					if (Main.rand.NextBool(3))
+					{
+						//int type = Utils.SelectRandom<int>(Main.rand, SomeGeode, SomeOtherGeode); -- maybe WeigthedRandom?
+						int type = ModContent.ItemType<MeteoricChunk>();
+						Vector2 position = new Vector2(Projectile.position.X, Projectile.position.Y - Projectile.height);
+						int itemIdx = Item.NewItem(Projectile.GetSource_FromThis(), position, new Vector2(Projectile.width, Projectile.height), type);
+						NetMessage.SendData(MessageID.SyncItem, -1, -1, null, itemIdx, 1f);
+					}
 				}
 
 				#endregion
@@ -45,8 +51,8 @@ namespace Macrocosm.Content.Projectiles.Meteors
 
 				// let the server do it for every player
 
-				float maxDist = 110f * 16f; // 110 tiles max distance (least screenshake) 
-				float maxScreenshake = 40f; // max screenshake (up to 100) for distance = 0
+				float maxDist = 140f * 16f; // 140 tiles max distance (least screenshake) 
+				float maxScreenshake = 100f; // max screenshake (up to 100) for distance = 0
 
 				for (int i = 0; i < 255; i++)
 				{
@@ -58,7 +64,7 @@ namespace Macrocosm.Content.Projectiles.Meteors
 						float distance = Vector2.Distance(player.Center, Projectile.Center);
 
 						if (distance < maxDist)
-							player.GetModPlayer<MacrocosmPlayer>().ScreenShakeIntensity = maxScreenshake - distance / maxDist * maxScreenshake;
+							player.SetScreenshake(maxScreenshake - distance / maxDist * maxScreenshake);
 					}
 				}
 
@@ -71,16 +77,16 @@ namespace Macrocosm.Content.Projectiles.Meteors
 
 				#region Dusts
 
-				for (int i = 0; i < Main.rand.Next(60, 80); i++)
+				for (int i = 0; i < Main.rand.Next(140, 160); i++)
 				{
 					Dust dust = Dust.NewDustDirect(
-						new Vector2(Projectile.position.X, Projectile.position.Y + 1.5f * Projectile.height),
+						new Vector2(Projectile.position.X, Projectile.position.Y + 1.25f * Projectile.height),
 						Projectile.width,
 						Projectile.height,
 						ModContent.DustType<RegolithDust>(),
-						Main.rand.NextFloat(-1f, 1f),
-						Main.rand.NextFloat(0f, -5f),
-						Scale: Main.rand.NextFloat(1.5f, 2f)
+						Main.rand.NextFloat(-3f, 3f),
+						Main.rand.NextFloat(0f, -10f),
+						Scale: Main.rand.NextFloat(1f, 1.6f)
 					);
 
 					dust.noGravity = false;
@@ -89,6 +95,11 @@ namespace Macrocosm.Content.Projectiles.Meteors
 				#endregion
 
 				#region Gores
+
+				for (int i = 0; i < Main.rand.Next(6, 8); i++)
+				{
+					Gore.NewGore(Projectile.GetSource_FromThis(), Projectile.position, new Vector2(Projectile.velocity.X * 0.5f, -Projectile.velocity.Y * 0.8f) * Main.rand.NextFloat(0.5f, 1f), ModContent.GoreType<RegolithDebris>());
+				}
 
 				#endregion
 
@@ -102,6 +113,21 @@ namespace Macrocosm.Content.Projectiles.Meteors
 		{
 
 			Projectile.rotation += (Math.Abs(Projectile.velocity.X) + Math.Abs(Projectile.velocity.Y)) * 0.01f * Projectile.direction;
+
+			if (Main.rand.NextBool(2))
+			{
+				Dust dust = Dust.NewDustDirect(
+						new Vector2(Projectile.position.X, Projectile.position.Y),
+						Projectile.width,
+						Projectile.height,
+						ModContent.DustType<RegolithDust>(),
+						0f,
+						0f,
+						Scale: Main.rand.NextFloat(1f, 1.6f)
+					);
+
+				dust.noGravity = true;
+			}
 		}
 	}
 }
