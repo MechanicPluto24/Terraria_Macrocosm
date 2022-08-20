@@ -13,17 +13,17 @@ namespace Macrocosm.NPCs.GlobalNPCs
 		public override bool InstancePerEntity => true;
 		protected override bool CloneNewInstances => false;
 
-		public bool[] targetedBy = new bool[Main.maxPlayers];
+		public bool[] TargetedBy = new bool[Main.maxPlayers];
 
 		public override void PostDraw(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
-			if (targetedBy[Main.LocalPlayer.whoAmI])
+			if (TargetedBy[Main.LocalPlayer.whoAmI])
 				DrawCrosshair(npc, spriteBatch, screenPos, drawColor);
 		}
 
 		private void DrawCrosshair(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
-			Texture2D crosshair = ModContent.Request<Texture2D>("Macrocosm/Assets/UI/Crosshair").Value;
+			Texture2D crosshair = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Crosshair").Value;
 			Color color = new Color(255, 255, 255, 64);
 			Vector2 position = npc.Center - screenPos;
 			float rotation = (float)(Main.timeForVisualEffects / 20);

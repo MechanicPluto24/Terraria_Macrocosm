@@ -6,10 +6,7 @@ namespace Macrocosm.Common.Utility
 {
 	public static class TileUtils
 	{
-		public static bool BlendLikeDirt(int i, int j, int typeToBlendWith, bool resetFrame, bool noDirt) =>
-			noDirt ? BlendLikeDirt(i, j, typeToBlendWith, resetFrame) : BlendLikeDirt(i, j, typeToBlendWith, resetFrame, 180);
-
-		public static bool BlendLikeDirt(int i, int j, int typeToBlendWith, bool resetFrame, int frameOffsetY = 0)
+		public static bool BlendLikeDirt(int i, int j, int typeToBlendWith, int frameOffsetY = 0, bool asDirt = false)
 		{
 			Tile tile = Main.tile[i, j];
 			int type = tile.TileType;
@@ -23,6 +20,7 @@ namespace Macrocosm.Common.Utility
 			Tile tileLeft = Main.tile[i - 1, j];
 			Tile tileUpLeft = Main.tile[i - 1, j - 1];
 
+
 			int up = tileUp.HasTile ? tileUp.TileType : -1;
 			int upRight = tileUpRight.HasTile ? tileUpRight.TileType : -1;
 			int right = tileRight.HasTile ? tileRight.TileType : -1;
@@ -33,26 +31,49 @@ namespace Macrocosm.Common.Utility
 			int upLeft = tileUpLeft.HasTile ? tileUpLeft.TileType : -1;
 
 			Vector2 frame = new(-1, -1);
-			int variation = 0;
-			if (resetFrame)
-				variation = WorldGen.genRand.Next(0, 2);
+
+			int variation = WorldGen.genRand.Next(3);
 
 			#region Ignore other blocks
 
-			if (up > -1 && up != type && up != typeToBlendWith)
+			if (up > -1 && up != type && up != typeToBlendWith) 
 				up = -1;
 
-			if (down > -1 && down != type && down != typeToBlendWith)
+			if (down > -1 && down != type && down != typeToBlendWith) 
 				down = -1;
 
 			if (left > -1 && left != type && left != typeToBlendWith)
 				left = -1;
 
-			if (right > -1 && right != type && right != typeToBlendWith)
+			if (right > -1 && right != type && right != typeToBlendWith) 
 				right = -1;
 
 			#endregion
-
+			
+			if (asDirt)
+			{
+				if (up == typeToBlendWith)
+				{
+					WorldGen.TileFrame(i, j - 1);
+					up = HasBlendingFrame(i, j - 1) ? type : -1;
+				}
+				if (down == typeToBlendWith)
+				{
+					WorldGen.TileFrame(i, j + 1);
+					down = HasBlendingFrame(i, j + 1) ? type : -1;
+				}
+				if (left == typeToBlendWith)
+				{
+					WorldGen.TileFrame(i - 1, j);
+					left = HasBlendingFrame(i - 1, j) ? type : -1;
+				}
+				if (right == typeToBlendWith)
+				{
+					WorldGen.TileFrame(i + 1, j);
+					right = HasBlendingFrame(i + 1, j) ? type : -1;
+				}
+			}
+			
 			#region Ignore unconnected slopes
 
 			if (tileUp.Slope == SlopeType.SlopeUpLeft || tileUp.Slope == SlopeType.SlopeUpRight)
@@ -72,7 +93,6 @@ namespace Macrocosm.Common.Utility
 			#endregion
 
 			#region Blending
-
 			if (up != -1 && down != -1 && left != -1 && right != -1)
 			{
 				if (up == typeToBlendWith && down == type && left == type && right == type)
@@ -929,20 +949,18 @@ namespace Macrocosm.Common.Utility
 							break;
 						default:
 							frame.X = 90;
-							frame.Y = frameOffsetY + 234;
+							frame.Y = frameOffsetY + frameOffsetY + 234;
 							break;
 					}
 
 					//mergeRight = true;
 				}
 			}
-
 			#endregion
 
-			// not sure if this is needed
+			// not sure if this will be ever needed
 			if (TileID.Sets.HasSlopeFrames[type])
 			{
-
 				int blockType = (int)tile.BlockType;
 
 				if (blockType == 0)
@@ -1004,7 +1022,7 @@ namespace Macrocosm.Common.Utility
 						}
 
 						frame.X = (18 + slopeOffsetX) * 18;
-						frame.Y = frameOffsetY + slopeOffsetY * 18;
+						frame.Y = frameOffsetY + frameOffsetY + slopeOffsetY * 18;
 					}
 					else
 					{
@@ -1097,10 +1115,8 @@ namespace Macrocosm.Common.Utility
 				}
 			}
 
-			//this is done by vanilla code..
 			#region Basic framing
-			/*
-			if (rectangle.X < 0 || rectangle.Y < 0)
+			if (frame.X < 0 || frame.Y < 0)
 			{
 				if (up == type && down == type && left == type && right == type)
 				{
@@ -1109,16 +1125,16 @@ namespace Macrocosm.Common.Utility
 						switch (variation)
 						{
 							case 0:
-								rectangle.X = 108;
-								rectangle.Y = 18;
+								frame.X = 108;
+								frame.Y = frameOffsetY + 18;
 								break;
 							case 1:
-								rectangle.X = 126;
-								rectangle.Y = 18;
+								frame.X = 126;
+								frame.Y = frameOffsetY + 18;
 								break;
 							default:
-								rectangle.X = 144;
-								rectangle.Y = 18;
+								frame.X = 144;
+								frame.Y = frameOffsetY + 18;
 								break;
 						}
 					}
@@ -1127,16 +1143,16 @@ namespace Macrocosm.Common.Utility
 						switch (variation)
 						{
 							case 0:
-								rectangle.X = 108;
-								rectangle.Y = 36;
+								frame.X = 108;
+								frame.Y = frameOffsetY + 36;
 								break;
 							case 1:
-								rectangle.X = 126;
-								rectangle.Y = 36;
+								frame.X = 126;
+								frame.Y = frameOffsetY + 36;
 								break;
 							default:
-								rectangle.X = 144;
-								rectangle.Y = 36;
+								frame.X = 144;
+								frame.Y = frameOffsetY + 36;
 								break;
 						}
 					}
@@ -1145,16 +1161,16 @@ namespace Macrocosm.Common.Utility
 						switch (variation)
 						{
 							case 0:
-								rectangle.X = 180;
-								rectangle.Y = 0;
+								frame.X = 180;
+								frame.Y = frameOffsetY + 0;
 								break;
 							case 1:
-								rectangle.X = 180;
-								rectangle.Y = 18;
+								frame.X = 180;
+								frame.Y = frameOffsetY + 18;
 								break;
 							default:
-								rectangle.X = 180;
-								rectangle.Y = 36;
+								frame.X = 180;
+								frame.Y = frameOffsetY + 36;
 								break;
 						}
 					}
@@ -1163,16 +1179,16 @@ namespace Macrocosm.Common.Utility
 						switch (variation)
 						{
 							case 0:
-								rectangle.X = 198;
-								rectangle.Y = 0;
+								frame.X = 198;
+								frame.Y = frameOffsetY + 0;
 								break;
 							case 1:
-								rectangle.X = 198;
-								rectangle.Y = 18;
+								frame.X = 198;
+								frame.Y = frameOffsetY + 18;
 								break;
 							default:
-								rectangle.X = 198;
-								rectangle.Y = 36;
+								frame.X = 198;
+								frame.Y = frameOffsetY + 36;
 								break;
 						}
 					}
@@ -1181,16 +1197,16 @@ namespace Macrocosm.Common.Utility
 						switch (variation)
 						{
 							case 0:
-								rectangle.X = 18;
-								rectangle.Y = 18;
+								frame.X = 18;
+								frame.Y = frameOffsetY + 18;
 								break;
 							case 1:
-								rectangle.X = 36;
-								rectangle.Y = 18;
+								frame.X = 36;
+								frame.Y = frameOffsetY + 18;
 								break;
 							default:
-								rectangle.X = 54;
-								rectangle.Y = 18;
+								frame.X = 54;
+								frame.Y = frameOffsetY + 18;
 								break;
 						}
 					}
@@ -1200,16 +1216,16 @@ namespace Macrocosm.Common.Utility
 					switch (variation)
 					{
 						case 0:
-							rectangle.X = 18;
-							rectangle.Y = 0;
+							frame.X = 18;
+							frame.Y = frameOffsetY + 0;
 							break;
 						case 1:
-							rectangle.X = 36;
-							rectangle.Y = 0;
+							frame.X = 36;
+							frame.Y = frameOffsetY + 0;
 							break;
 						default:
-							rectangle.X = 54;
-							rectangle.Y = 0;
+							frame.X = 54;
+							frame.Y = frameOffsetY + 0;
 							break;
 					}
 				}
@@ -1218,16 +1234,16 @@ namespace Macrocosm.Common.Utility
 					switch (variation)
 					{
 						case 0:
-							rectangle.X = 18;
-							rectangle.Y = 36;
+							frame.X = 18;
+							frame.Y = frameOffsetY + 36;
 							break;
 						case 1:
-							rectangle.X = 36;
-							rectangle.Y = 36;
+							frame.X = 36;
+							frame.Y = frameOffsetY + 36;
 							break;
 						default:
-							rectangle.X = 54;
-							rectangle.Y = 36;
+							frame.X = 54;
+							frame.Y = frameOffsetY + 36;
 							break;
 					}
 				}
@@ -1236,16 +1252,16 @@ namespace Macrocosm.Common.Utility
 					switch (variation)
 					{
 						case 0:
-							rectangle.X = 0;
-							rectangle.Y = 0;
+							frame.X = 0;
+							frame.Y = frameOffsetY + 0;
 							break;
 						case 1:
-							rectangle.X = 0;
-							rectangle.Y = 18;
+							frame.X = 0;
+							frame.Y = frameOffsetY + 18;
 							break;
 						default:
-							rectangle.X = 0;
-							rectangle.Y = 36;
+							frame.X = 0;
+							frame.Y = frameOffsetY + 36;
 							break;
 					}
 				}
@@ -1254,16 +1270,16 @@ namespace Macrocosm.Common.Utility
 					switch (variation)
 					{
 						case 0:
-							rectangle.X = 72;
-							rectangle.Y = 0;
+							frame.X = 72;
+							frame.Y = frameOffsetY + 0;
 							break;
 						case 1:
-							rectangle.X = 72;
-							rectangle.Y = 18;
+							frame.X = 72;
+							frame.Y = frameOffsetY + 18;
 							break;
 						default:
-							rectangle.X = 72;
-							rectangle.Y = 36;
+							frame.X = 72;
+							frame.Y = frameOffsetY + 36;
 							break;
 					}
 				}
@@ -1272,16 +1288,16 @@ namespace Macrocosm.Common.Utility
 					switch (variation)
 					{
 						case 0:
-							rectangle.X = 0;
-							rectangle.Y = 54;
+							frame.X = 0;
+							frame.Y = frameOffsetY + 54;
 							break;
 						case 1:
-							rectangle.X = 36;
-							rectangle.Y = 54;
+							frame.X = 36;
+							frame.Y = frameOffsetY + 54;
 							break;
 						default:
-							rectangle.X = 72;
-							rectangle.Y = 54;
+							frame.X = 72;
+							frame.Y = frameOffsetY + 54;
 							break;
 					}
 				}
@@ -1290,16 +1306,16 @@ namespace Macrocosm.Common.Utility
 					switch (variation)
 					{
 						case 0:
-							rectangle.X = 18;
-							rectangle.Y = 54;
+							frame.X = 18;
+							frame.Y = frameOffsetY + 54;
 							break;
 						case 1:
-							rectangle.X = 54;
-							rectangle.Y = 54;
+							frame.X = 54;
+							frame.Y = frameOffsetY + 54;
 							break;
 						default:
-							rectangle.X = 90;
-							rectangle.Y = 54;
+							frame.X = 90;
+							frame.Y = frameOffsetY + 54;
 							break;
 					}
 				}
@@ -1308,16 +1324,16 @@ namespace Macrocosm.Common.Utility
 					switch (variation)
 					{
 						case 0:
-							rectangle.X = 0;
-							rectangle.Y = 72;
+							frame.X = 0;
+							frame.Y = frameOffsetY + 72;
 							break;
 						case 1:
-							rectangle.X = 36;
-							rectangle.Y = 72;
+							frame.X = 36;
+							frame.Y = frameOffsetY + 72;
 							break;
 						default:
-							rectangle.X = 72;
-							rectangle.Y = 72;
+							frame.X = 72;
+							frame.Y = frameOffsetY + 72;
 							break;
 					}
 				}
@@ -1326,16 +1342,16 @@ namespace Macrocosm.Common.Utility
 					switch (variation)
 					{
 						case 0:
-							rectangle.X = 18;
-							rectangle.Y = 72;
+							frame.X = 18;
+							frame.Y = frameOffsetY + 72;
 							break;
 						case 1:
-							rectangle.X = 54;
-							rectangle.Y = 72;
+							frame.X = 54;
+							frame.Y = frameOffsetY + 72;
 							break;
 						default:
-							rectangle.X = 90;
-							rectangle.Y = 72;
+							frame.X = 90;
+							frame.Y = frameOffsetY + 72;
 							break;
 					}
 				}
@@ -1344,16 +1360,16 @@ namespace Macrocosm.Common.Utility
 					switch (variation)
 					{
 						case 0:
-							rectangle.X = 90;
-							rectangle.Y = 0;
+							frame.X = 90;
+							frame.Y = frameOffsetY + 0;
 							break;
 						case 1:
-							rectangle.X = 90;
-							rectangle.Y = 18;
+							frame.X = 90;
+							frame.Y = frameOffsetY + 18;
 							break;
 						default:
-							rectangle.X = 90;
-							rectangle.Y = 36;
+							frame.X = 90;
+							frame.Y = frameOffsetY + 36;
 							break;
 					}
 				}
@@ -1362,16 +1378,16 @@ namespace Macrocosm.Common.Utility
 					switch (variation)
 					{
 						case 0:
-							rectangle.X = 108;
-							rectangle.Y = 72;
+							frame.X = 108;
+							frame.Y = frameOffsetY + 72;
 							break;
 						case 1:
-							rectangle.X = 126;
-							rectangle.Y = 72;
+							frame.X = 126;
+							frame.Y = frameOffsetY + 72;
 							break;
 						default:
-							rectangle.X = 144;
-							rectangle.Y = 72;
+							frame.X = 144;
+							frame.Y = frameOffsetY + 72;
 							break;
 					}
 				}
@@ -1380,16 +1396,16 @@ namespace Macrocosm.Common.Utility
 					switch (variation)
 					{
 						case 0:
-							rectangle.X = 108;
-							rectangle.Y = 0;
+							frame.X = 108;
+							frame.Y = frameOffsetY + 0;
 							break;
 						case 1:
-							rectangle.X = 126;
-							rectangle.Y = 0;
+							frame.X = 126;
+							frame.Y = frameOffsetY + 0;
 							break;
 						default:
-							rectangle.X = 144;
-							rectangle.Y = 0;
+							frame.X = 144;
+							frame.Y = frameOffsetY + 0;
 							break;
 					}
 				}
@@ -1398,16 +1414,16 @@ namespace Macrocosm.Common.Utility
 					switch (variation)
 					{
 						case 0:
-							rectangle.X = 108;
-							rectangle.Y = 54;
+							frame.X = 108;
+							frame.Y = frameOffsetY + 54;
 							break;
 						case 1:
-							rectangle.X = 126;
-							rectangle.Y = 54;
+							frame.X = 126;
+							frame.Y = frameOffsetY + 54;
 							break;
 						default:
-							rectangle.X = 144;
-							rectangle.Y = 54;
+							frame.X = 144;
+							frame.Y = frameOffsetY + 54;
 							break;
 					}
 				}
@@ -1416,16 +1432,16 @@ namespace Macrocosm.Common.Utility
 					switch (variation)
 					{
 						case 0:
-							rectangle.X = 162;
-							rectangle.Y = 0;
+							frame.X = 162;
+							frame.Y = frameOffsetY + 0;
 							break;
 						case 1:
-							rectangle.X = 162;
-							rectangle.Y = 18;
+							frame.X = 162;
+							frame.Y = frameOffsetY + 18;
 							break;
 						default:
-							rectangle.X = 162;
-							rectangle.Y = 36;
+							frame.X = 162;
+							frame.Y = frameOffsetY + 36;
 							break;
 					}
 				}
@@ -1434,16 +1450,16 @@ namespace Macrocosm.Common.Utility
 					switch (variation)
 					{
 						case 0:
-							rectangle.X = 216;
-							rectangle.Y = 0;
+							frame.X = 216;
+							frame.Y = frameOffsetY + 0;
 							break;
 						case 1:
-							rectangle.X = 216;
-							rectangle.Y = 18;
+							frame.X = 216;
+							frame.Y = frameOffsetY + 18;
 							break;
 						default:
-							rectangle.X = 216;
-							rectangle.Y = 36;
+							frame.X = 216;
+							frame.Y = frameOffsetY + 36;
 							break;
 					}
 				}
@@ -1452,55 +1468,52 @@ namespace Macrocosm.Common.Utility
 					switch (variation)
 					{
 						case 0:
-							rectangle.X = 162;
-							rectangle.Y = 54;
+							frame.X = 162;
+							frame.Y = frameOffsetY + 54;
 							break;
 						case 1:
-							rectangle.X = 180;
-							rectangle.Y = 54;
+							frame.X = 180;
+							frame.Y = frameOffsetY + 54;
 							break;
 						default:
-							rectangle.X = 198;
-							rectangle.Y = 54;
+							frame.X = 198;
+							frame.Y = frameOffsetY + 54;
 							break;
 					}
 				}
 			}
 
-
-			if (rectangle.X <= -1 || rectangle.Y <= -1)
+			if (frame.X <= -1 || frame.Y <= -1)
 			{
-				if (variation <= 0)
+				switch (variation)
 				{
-					rectangle.X = 18;
-					rectangle.Y = 18;
-				}
-				else if (variation == 1)
-				{
-					rectangle.X = 36;
-					rectangle.Y = 18;
-				}
-
-				if (variation >= 2)
-				{
-					rectangle.X = 54;
-					rectangle.Y = 18;
+					case 0:
+						frame.X = 18;
+						frame.Y = frameOffsetY + 18;
+						break;
+					case 1:
+						frame.X = 36;
+						frame.Y = frameOffsetY + 18;
+						break;
+					default:
+						frame.X = 54;
+						frame.Y = frameOffsetY + 18;
+						break;
 				}
 			}
-			*/
-
 			#endregion
-			// ... (when returning true)
+
+			//if ((frame.X == -1 || frame.Y == -1))
+			//	return true;
 
 			Main.tile[i, j].TileFrameX = (short)frame.X;
 			Main.tile[i, j].TileFrameY = (short)frame.Y;
 
-			Main.NewText(frame);
-
-			if (frame.X == -1 || frame.Y == -1)
-				return true;
-
-			return false;
+			return false; 
 		}
+
+		public static bool HasBlendingFrame(int i, int j) => Main.tile[i, j].TileFrameX >= 234 || Main.tile[i, j].TileFrameY >= 90;
+		public static bool HasBlendingFrame(this Tile tile) => tile.TileFrameX >= 234 || tile.TileFrameY >= 90;
+
 	}
 }

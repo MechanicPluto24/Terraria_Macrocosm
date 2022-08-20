@@ -15,7 +15,7 @@ namespace Macrocosm.Common.Drawing
 			Any
 		}
 		public bool HasAtmo => atmoTexture is not null;
-		public bool HasShadow { get; set; } = false;
+		public bool HasShadow = false;
 
 		private Texture2D bodyTexture;
 		private Texture2D atmoTexture;

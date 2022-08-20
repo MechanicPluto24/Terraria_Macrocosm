@@ -4,11 +4,15 @@ using Terraria.ModLoader;
 using SubworldLibrary;
 using Macrocosm.Content.Subworlds.Moon;
 using Terraria;
+using Macrocosm.Content.Subworlds;
 
 namespace Macrocosm.Common.Hooks
 {
 	public class GoreGravityIL : ILoadable
 	{
+
+		private const float baseGravity = 0.2f;
+
 		public void Load(Mod mod)
 		{
 			IL.Terraria.Gore.Update += LowerGoreGravity;
@@ -36,10 +40,10 @@ namespace Macrocosm.Common.Hooks
 		// replace gravity increment with desired value 
 		private static float GetGoreGravity()
 		{
-			if (SubworldSystem.IsActive<Moon>())
-				return 0.033f; // base gravity divided by 6 
+			if (SubworldSystem.AnyActive<Macrocosm>())
+				return baseGravity * MacrocosmSubworld.Current().GravityMultiplier;
 
-			return 0.2f;
+			return baseGravity;
 		}
 
 	}

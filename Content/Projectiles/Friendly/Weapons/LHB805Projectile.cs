@@ -160,7 +160,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Weapons
 				if (!Main.dedServ && AI_Windup % (fireFreq * 1.5) == 0)
 				{
 					Vector2 position = Projectile.Center - new Vector2(-20, 0) * Projectile.spriteDirection;
-					Vector2 velocity = new Vector2(3f * Projectile.spriteDirection, 3f);
+					Vector2 velocity = new Vector2(1.2f * Projectile.spriteDirection, 4f);
 					Gore.NewGore(Projectile.GetSource_FromThis(), position, velocity, ModContent.GoreType<MinigunShell>());
 				}
 

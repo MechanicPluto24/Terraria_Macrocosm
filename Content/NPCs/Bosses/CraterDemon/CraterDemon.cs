@@ -195,7 +195,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBiome>().Type }; // Associates this NPC with the Moon Biome in Bestiary
 
 			if (!Main.dedServ)
-				Music = MusicLoader.GetMusicSlot(Mod, "Sounds/Music/SpaceInvader");
+				Music = MusicLoader.GetMusicSlot(Mod, "Assets/Music/SpaceInvader");
 		}
 
 		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
@@ -222,7 +222,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 		public override void OnHitPlayer(Player target, int damage, bool crit)
 		{
-			target.Macrocosm().accMoonArmorDebuff = Main.expertMode ? 5 * 60 : 2 * 60;
+			target.Macrocosm().AccMoonArmorDebuff = Main.expertMode ? 5 * 60 : 2 * 60;
 		}
 
 		private void UpdateScale(float newScale)
@@ -307,7 +307,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 		public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
-			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Unfriendly/Bosses/Moon/CraterDemon_Glow").Value;
+			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Bosses/CraterDemon/CraterDemon_Glow").Value;
 			NPC.DrawGlowmask(spriteBatch, glowmask, screenPos, new Vector2(0, 4));
 		}
 
@@ -336,7 +336,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 				lightDust.scale = 1.2f + Main.rand.NextFloat();
 				lightDust.fadeIn = 0.5f;
 				lightDust.customData = info.center;
-
 			}
 			/*
 			if (false)

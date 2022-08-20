@@ -8,10 +8,10 @@ namespace Macrocosm.Content.Items.GlobalItems
 {
 	public class TorchGlobalItem : GlobalItem
 	{
-		private static readonly List<int> flameItems = new();
-
 		public static bool IsTorch(Item item) => ItemID.Sets.Torches[item.type];
 		public static bool HasFlame(Item item) => flameItems.Contains(item.type);
+
+		private static readonly List<int> flameItems = new();
 
 		public override void Load()
 		{

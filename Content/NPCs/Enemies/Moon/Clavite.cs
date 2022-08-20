@@ -1,4 +1,4 @@
-﻿using Macrocosm.Base.BaseMod;
+﻿using Macrocosm.Common.Base;
 using Macrocosm.Common.Utility;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Buffs.Debuffs;
@@ -83,7 +83,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		public override void OnHitPlayer(Player player, int damage, bool crit)
 		{
-			if (player.Macrocosm().accMoonArmor)
+			if (player.Macrocosm().AccMoonArmor)
 			{
 				// Now only suit breaches players with said suit 
 				player.AddBuff(ModContent.BuffType<SuitBreach>(), 600, true);

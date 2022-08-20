@@ -11,6 +11,15 @@ namespace Macrocosm.Content.Items.Armor
 	{
 		public override void SetStaticDefaults()
 		{
+			ArmorIDs.Body.Sets.IncludedCapeBack[EquipLoader.GetEquipSlot(Mod, Name, EquipType.Body)] = capeSlot;
+			ArmorIDs.Body.Sets.IncludedCapeBackFemale[EquipLoader.GetEquipSlot(Mod, Name, EquipType.Body)] = capeSlot;
+		}
+
+		private int capeSlot;
+
+		public override void Load()
+		{
+			capeSlot = EquipLoader.AddEquipTexture(Mod, "Macrocosm/Content/Items/Armor/ChandriumCape", EquipType.Back, name: "ChandriumCape");
 		}
 
 		public override void SetDefaults()

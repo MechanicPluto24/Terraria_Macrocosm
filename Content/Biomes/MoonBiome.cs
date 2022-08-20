@@ -11,19 +11,18 @@ namespace Macrocosm.Content.Biomes
 	public class MoonBiome : ModBiome
 	{
 		public override SceneEffectPriority Priority => SceneEffectPriority.Environment;
-		public override string BestiaryIcon => "Macrocosm/Assets/FilterIcons/MoonAdjusted";
-		public override string BackgroundPath => "Macrocosm/Assets/Map/Moon";
+		public override string BestiaryIcon => "Macrocosm/Assets/Textures/FilterIcons/MoonAdjusted";
+		public override string BackgroundPath => "Macrocosm/Assets/Textures/Map/Moon";
 		public override string MapBackground => BackgroundPath;
 		public override Color? BackgroundColor => base.BackgroundColor;
 		public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.GetInstance<MoonSurfaceBgStyle>();
 		public override ModUndergroundBackgroundStyle UndergroundBackgroundStyle => ModContent.GetInstance<MoonUgBgStyle>();
-		public override int Music => Main.dayTime ? MusicLoader.GetMusicSlot(Mod, "Sounds/Music/Deadworld") : MusicLoader.GetMusicSlot(Mod, "Sounds/Music/Requiem");
+		public override int Music => Main.dayTime ? MusicLoader.GetMusicSlot(Mod, "Assets/Music/Deadworld") : MusicLoader.GetMusicSlot(Mod, "Assets/Music/Requiem");
 
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("The Moon");
 		}
-
 
 		public override void OnInBiome(Player player)
 		{

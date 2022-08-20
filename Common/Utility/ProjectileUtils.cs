@@ -8,6 +8,21 @@ namespace Macrocosm.Common.Utility
 {
 	public static class ProjectileUtils
 	{
+		public static void Explode(this Projectile projectile, float blastRadius)
+		{
+			projectile.tileCollide = false;
+			projectile.timeLeft = 2; 
+			projectile.penetrate = -1;
+			projectile.alpha = 255;
+			
+			projectile.position.X += projectile.width / 2;
+			projectile.position.Y += projectile.height / 2;
+			projectile.width = (int)blastRadius;
+			projectile.height = (int)blastRadius;
+			projectile.position.X -= projectile.width / 2;
+			projectile.position.Y -= projectile.height / 2;
+		}
+
 		/// <summary>
 		/// Draws an animated projectile, leave texture null to draw as entity with the loaded texture
 		/// (Only tested for held projectiles)  

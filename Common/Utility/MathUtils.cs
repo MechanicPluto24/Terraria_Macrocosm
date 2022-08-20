@@ -11,7 +11,7 @@ namespace Macrocosm.Common.Utility
 		/// Converts the polar coordinates of a point to it's cartesian ones
 		/// </summary>
 		/// <param name="radius"> The radius, i.e. the L2 distance between the point and the origin </param>
-		/// <param name="theta"> The angle of theta (in radians) with respect to the positive X axis </param>
+		/// <param name="theta"> The angle (in radians) with respect to the positive X axis </param>
 		/// <returns> The point's cartesian coordinates relative to the origin  </returns>
 		public static Vector2 PolarVector(float radius, float theta)
 			=> new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta)) * radius;

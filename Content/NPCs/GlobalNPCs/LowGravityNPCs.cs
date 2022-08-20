@@ -1,8 +1,8 @@
-using Macrocosm.Content.Subworlds.Moon;
 using SubworldLibrary;
 using System.Reflection;
 using Terraria;
 using Terraria.ModLoader;
+using Macrocosm.Content.Subworlds;
 
 namespace Macrocosm.Content.NPCs.GlobalNPCs
 {
@@ -11,8 +11,9 @@ namespace Macrocosm.Content.NPCs.GlobalNPCs
 		public override bool InstancePerEntity => true;
 		protected override bool CloneNewInstances => true;
 
-		public static FieldInfo NPCGravity { get; private set; }
+		private const float defaultGravity = 0.3f; 
 
+		public static FieldInfo NPCGravity { get; private set; }
 		public override void Load()
 		{
 			NPCGravity = typeof(NPC).GetField("gravity", BindingFlags.NonPublic | BindingFlags.Static);
@@ -22,8 +23,9 @@ namespace Macrocosm.Content.NPCs.GlobalNPCs
 		private static void NPC_UpdateNPC_UpdateGravity(On.Terraria.NPC.orig_UpdateNPC_UpdateGravity orig, NPC self, out float maxFallSpeed)
 		{
 			orig(self, out maxFallSpeed);
-			if (SubworldSystem.IsActive<Moon>())
-				NPCGravity.SetValue(null, 0.05f);
+
+			if (SubworldSystem.AnyActive<Macrocosm>())
+				NPCGravity.SetValue(null, defaultGravity * MacrocosmSubworld.Current().GravityMultiplier);
 		}
 	}
 }
