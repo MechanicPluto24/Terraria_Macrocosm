@@ -24,6 +24,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Weapons
 			Projectile.height = 38;
 			Projectile.aiStyle = -1;
 			Projectile.friendly = true;
+			Projectile.penetrate = -1;
 			Projectile.DamageType = DamageClass.Ranged;
 			Projectile.tileCollide = true;
 			Projectile.ignoreWater = true;
@@ -60,7 +61,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Weapons
 
 				for (int i = 0; i < 200; i++)
 				{
-					if (Main.npc[i].CanBeChasedBy(this) && Main.npc[i].Macrocosm().targetedBy[Projectile.owner])
+					if (Main.npc[i].CanBeChasedBy(this) && Main.npc[i].Macrocosm().TargetedBy[Projectile.owner])
 					{
 						float targetCenterX = Main.npc[i].position.X + (float)(Main.npc[i].width / 2);
 						float targetCenterY = Main.npc[i].position.Y + (float)(Main.npc[i].height / 2);
@@ -163,17 +164,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Weapons
 
 		public override bool OnTileCollide(Vector2 oldVelocity)
 		{
-
-			Projectile.tileCollide = false;
-			Projectile.timeLeft = 3;
-			Explode();
-			return true;
+			Projectile.Explode(100);
+			return false;
 		}
 
 		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
 		{
-			Projectile.timeLeft = 0;
-			Explode();
+			Projectile.Explode(100);
 		}
 
 		public void Explode()

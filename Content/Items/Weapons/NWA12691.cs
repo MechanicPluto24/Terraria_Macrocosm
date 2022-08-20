@@ -60,7 +60,8 @@ namespace Macrocosm.Content.Items.Weapons
 				{
 					NPC npc = Main.npc[i];
 
-					npc.Macrocosm().targetedBy[player.whoAmI] = false;
+					if (npc.TryGetGlobalNPC(out MacrocosmNPC macNpc))
+						macNpc.TargetedBy[player.whoAmI] = false;
 
 					if (!found && npc.CanBeChasedBy() && Main.npc[i].getRect().Intersects(new Rectangle((int)(Main.MouseWorld.X - 10f), (int)(Main.MouseWorld.Y - 10f), 20, 20)))
 					{
@@ -70,7 +71,7 @@ namespace Macrocosm.Content.Items.Weapons
 				}
 
 				if (id > -1 && id < Main.maxNPCs)
-					Main.npc[id].Macrocosm().targetedBy[player.whoAmI] = true;
+					Main.npc[id].Macrocosm().TargetedBy[player.whoAmI] = true;
 
 				return false;
 			}

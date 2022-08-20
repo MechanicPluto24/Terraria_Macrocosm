@@ -25,7 +25,7 @@ namespace Macrocosm.Content.Items.Miscellaneous
 		{
 
 			Recipe recipe = Recipe.Create(Type);
-			recipe.AddIngredient<ActivationCore>();
+			recipe.AddIngredient<CortexFragment>();
 			recipe.AddIngredient<UnpoweredKey>();
 			recipe.AddTile(TileID.WorkBenches);
 			recipe.Register();

@@ -301,9 +301,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Minions
 
 		public override void PostDraw(Color lightColor)
 		{
-			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Minions/CalcicCaneMinionGlow").Value;
+			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Minions/CalcicCaneMinion_Glow").Value;
 			SpriteEffects effect = Projectile.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-			Vector2 offset = Projectile.spriteDirection == -1 ? Vector2.Zero : new Vector2(0, 4);
+			Vector2 offset = Projectile.spriteDirection == -1 ? new Vector2(0, -1) : new Vector2(0, 5);
 			Projectile.DrawAnimatedGlowmask(glowmask, Color.White, effect, offset);
 		}
 	}

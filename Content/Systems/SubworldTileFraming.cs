@@ -2,9 +2,9 @@ using SubworldLibrary;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm
+namespace Macrocosm.Content.Systems
 {
-	public class MacrocosmSystem : ModSystem
+	public class SubworldTileFraming : ModSystem
 	{
 		internal static void INTERNAL_SubworldTileFraming()
 		{
@@ -24,7 +24,7 @@ namespace Macrocosm
 		private bool _anySubworldActiveLastTick;
 		public override void PostUpdateEverything()
 		{
-			_anySubworldActive = SubworldSystem.AnyActive(Macrocosm.Instance);
+			_anySubworldActive = SubworldSystem.AnyActive<Macrocosm>();
 			if (_anySubworldActive && !_anySubworldActiveLastTick)
 				INTERNAL_SubworldTileFraming();
 

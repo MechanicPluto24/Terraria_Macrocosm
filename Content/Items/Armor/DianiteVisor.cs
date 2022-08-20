@@ -29,7 +29,7 @@ namespace Macrocosm.Content.Items.Armor
 
 		public override void UpdateArmorSet(Player player)
 		{
-			player.Macrocosm().accMoonArmor = true;
+			player.Macrocosm().AccMoonArmor = true;
 			player.setBonus = "Pressurized spacesuit allows for safe exploration of other celestial bodies"
 							+ "\nTier 1 extraterrestrial protection"
 							+ "\nVastly extends underwater breathing time";

@@ -89,7 +89,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		public override void OnHitPlayer(Player target, int damage, bool crit)
 		{
 			if (Main.expertMode)
-				target.Macrocosm().accMoonArmorDebuff = 80;
+				target.Macrocosm().AccMoonArmorDebuff = 80;
 		}
 
 		public override Color? GetAlpha(Color drawColor)
@@ -138,7 +138,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			if (NPC.IsABestiaryIconDummy)
 				return;
 
-			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Bosses/CraterDemon/CraterImpGlow").Value;
+			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Bosses/CraterDemon/CraterImp_Glow").Value;
 
 			SpriteEffects effect = (NPC.rotation > MathHelper.PiOver2 && NPC.rotation < 3 * MathHelper.PiOver2) || (NPC.rotation < -MathHelper.PiOver2 && NPC.rotation > -3 * MathHelper.PiOver2)
 				? SpriteEffects.FlipVertically

@@ -14,10 +14,19 @@ namespace Macrocosm.Content.Subworlds.Moon
 	/// Why isn't anyone else working on this
 	/// I have saved the day - Ryan
 	/// </summary>
-	public class Moon : Subworld
+	public class Moon : MacrocosmSubworld
 	{
-		public override bool NormalUpdates => true;
-		//public override int Width => 2000;
+		/// <summary>
+		/// 8 times slower than on Earth (a Terrarian lunar month lasts for 8 in-game days)
+		/// </summary>
+		public override double TimeRate => 0.125;
+
+		/// <summary>
+		/// about 6 times lower than default (1, as on Earth)
+		/// </summary>
+		public override float GravityMultiplier => 0.166f; 
+
+		public override bool NormalUpdates => false;
 		public override int Width => 2200;
 		public override int Height => 1200;
 		public override bool ShouldSave => true;
@@ -35,7 +44,6 @@ namespace Macrocosm.Content.Subworlds.Moon
 			new FinishPass("FinishPass", 0.1f)
 		};
 
-		public const float TimeRate = 0.125f;
 
 		private MoonSubworldLoadUI moonLoadUI;
 		private GroundPass genGroundPass;

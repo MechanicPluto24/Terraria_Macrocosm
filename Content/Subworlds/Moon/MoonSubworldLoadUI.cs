@@ -25,7 +25,6 @@ namespace Macrocosm.Content.Subworlds.Moon
 		private string chosenMessage;
 
 		private MacrocosmUIGenProgressBar progressBar;
-
 		private CelestialObject earth;
 
 		private StarsDrawing starsDrawing = new();
@@ -47,13 +46,10 @@ namespace Macrocosm.Content.Subworlds.Moon
 			starsDrawing.Clear();
 
 			if (toEarth)
-			{
 				starsDrawing.SpawnStars(150, 200);
-			}
 			else
-			{
 				starsDrawing.SpawnStars(200, 250, twinkleFactor: 0.1f);
-			}
+
 		}
 
 		public void LoadTextures()
@@ -61,16 +57,16 @@ namespace Macrocosm.Content.Subworlds.Moon
 			if (TexLoaded)
 				return;
 
-			lunaBackground = ModContent.Request<Texture2D>("Macrocosm/Assets/LoadingBackgrounds/Luna", AssetRequestMode.ImmediateLoad).Value.PremultiplyTexture();
-			earthBackground = ModContent.Request<Texture2D>("Macrocosm/Assets/LoadingBackgrounds/Earth", AssetRequestMode.ImmediateLoad).Value.PremultiplyTexture(); ;
+			lunaBackground = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/LoadingBackgrounds/Luna", AssetRequestMode.ImmediateLoad).Value.PremultiplyTexture();
+			earthBackground = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/LoadingBackgrounds/Earth", AssetRequestMode.ImmediateLoad).Value.PremultiplyTexture(); ;
 
 			Texture2D earthSmallBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/EarthAtmoless", AssetRequestMode.ImmediateLoad).Value;
 			Texture2D earthSmallAtmoBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/EarthAtmo", AssetRequestMode.ImmediateLoad).Value;
 
-			Texture2D moonProgressBarTexUpper = ModContent.Request<Texture2D>("Macrocosm/Assets/UI/WorldGen/ProgressBarMoon", AssetRequestMode.ImmediateLoad).Value;
-			Texture2D moonProgressBarTexLower = ModContent.Request<Texture2D>("Macrocosm/Assets/UI/WorldGen/ProgressBarMoon_Lower", AssetRequestMode.ImmediateLoad).Value;
-			Texture2D moonProgressBarLargeFill = ModContent.Request<Texture2D>("Macrocosm/Assets/UI/WorldGen/MoonLargeFill", AssetRequestMode.ImmediateLoad).Value;
-			Texture2D moonProgressBarSmallFill = ModContent.Request<Texture2D>("Macrocosm/Assets/UI/WorldGen/MoonSmallFill", AssetRequestMode.ImmediateLoad).Value;
+			Texture2D moonProgressBarTexUpper = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/WorldGen/ProgressBarMoon", AssetRequestMode.ImmediateLoad).Value;
+			Texture2D moonProgressBarTexLower = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/WorldGen/ProgressBarMoon_Lower", AssetRequestMode.ImmediateLoad).Value;
+			Texture2D moonProgressBarLargeFill = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/WorldGen/MoonLargeFill", AssetRequestMode.ImmediateLoad).Value;
+			Texture2D moonProgressBarSmallFill = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/WorldGen/MoonSmallFill", AssetRequestMode.ImmediateLoad).Value;
 
 			earth = new CelestialObject(earthSmallBackground, earthSmallAtmoBackground, 0.7f);
 

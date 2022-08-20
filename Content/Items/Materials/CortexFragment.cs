@@ -4,11 +4,10 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Materials
 {
-	public class ActivationCore : ModItem
+	public class CortexFragment : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault("There are large amounts of energy emanating from within the core, maybe you could ");
 		}
 
 		public override void SetDefaults()
