@@ -31,11 +31,8 @@ namespace Macrocosm.Content.Biomes
 			player.Macrocosm().ZoneBasalt = false;
 		}
 
-		public override bool IsBiomeActive(Player player)
-		{
-			// TODO: replace this with basalt biome tiles 
-			return TileCountSystem.TileCounts.RegolithCount > 40;
-		}
+		public override bool IsBiomeActive(Player player) => TileCountSystem.TileCounts.RegolithCount > 40;
+	
 	}
 }
 

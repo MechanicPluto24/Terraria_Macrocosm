@@ -20,14 +20,14 @@ namespace Macrocosm
 
 			#region Ryan's mods calls
 			if (ModLoader.TryGetMod("TerrariaAmbience", out Mod ta))
-				ta?.Call("AddTilesToList", null, "Stone", Array.Empty<string>(), new int[] 
+				ta.Call("AddTilesToList", null, "Stone", Array.Empty<string>(), new int[] 
 				{ 
 					ModContent.TileType<Regolith>(),
 					ModContent.TileType<Protolith>()
 				});
 
 			if (ModLoader.TryGetMod("TerrariaAmbienceAPI", out Mod taAPI))
-				taAPI?.Call("Ambience", this, "MoonAmbience", "Assets/Sounds/Ambient/Moon", 1f, 0.0075f, new Func<bool>(SubworldSystem.IsActive<Moon>));
+				taAPI.Call("Ambience", this, "MoonAmbience", "Assets/Sounds/Ambient/Moon", 1f, 0.0075f, new Func<bool>(SubworldSystem.IsActive<Moon>));
 			#endregion
 		}
 
