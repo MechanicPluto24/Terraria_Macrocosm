@@ -10,7 +10,7 @@ namespace Macrocosm.Content.Walls
 		public override void SetStaticDefaults()
 		{
 			Main.wallHouse[Type] = false;
-			ItemDrop = ItemType<Items.Placeables.BlocksAndWalls.PyramidPlateWall>();
+			ItemDrop = ItemType<Items.Placeable.BlocksAndWalls.PyramidPlateWall>();
 			AddMapEntry(new Color(65, 65, 65));
 		}
 	}

@@ -1,4 +1,4 @@
-﻿using Macrocosm.Content.Subworlds.Moon.Generation;
+﻿using Macrocosm.Content.WorldGeneration.Moon;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
 using System.Collections.Generic;

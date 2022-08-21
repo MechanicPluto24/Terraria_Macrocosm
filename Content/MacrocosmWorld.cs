@@ -28,14 +28,14 @@ namespace Macrocosm.Content
 
 		public override void PreUpdateWorld()
 		{
-			MacrocosmSubworld activeSubworld = (MacrocosmSubworld)SubworldSystem.Current;
-
 			// Syncs the moon type over the overworld and subworlds 
 			if (Main.moonType != MoonType)
 				Main.moonType = MoonType;
 
 			if (SubworldSystem.AnyActive<Macrocosm>())
 			{
+				MacrocosmSubworld activeSubworld = (MacrocosmSubworld)SubworldSystem.Current;
+
 				UpdateTime(activeSubworld);
 				CustomUpdates(activeSubworld);
 				GameMechanicsUpdates();
