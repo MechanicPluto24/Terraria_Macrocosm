@@ -103,6 +103,7 @@ namespace Macrocosm.Content.Projectiles.Meteors
 
 				dust.noGravity = false;
 			}
+
 		}
 
 		public virtual void SpawnGores()

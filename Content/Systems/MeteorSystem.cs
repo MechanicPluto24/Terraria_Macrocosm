@@ -43,7 +43,7 @@ namespace Macrocosm.Content.Systems
 				// Dependent on world size
 				float frequency = Main.maxTilesX / 4200f;
 
-				frequency *= MeteorBoostMoon;
+				frequency *= MeteorBoostMoon * 15;
 
 				if (!((float)Main.rand.Next(8000) < 10f * frequency))
 					continue;
@@ -74,7 +74,7 @@ namespace Macrocosm.Content.Systems
 					choice.Add(MeteorType.Medium, 3);
 					choice.Add(MeteorType.Large, 1);
 
-					var source = Projectile.GetSource_NaturalSpawn();
+					var source = Main.player[closestPlayer].GetSource_Misc("FallingStar");
 
 					switch ((MeteorType)choice)
 					{

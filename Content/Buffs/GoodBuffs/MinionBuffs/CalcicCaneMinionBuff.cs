@@ -1,4 +1,4 @@
-﻿using Macrocosm.Content.Projectiles.Friendly.Minions;
+﻿using Macrocosm.Content.Projectiles.Friendly.Summon;
 using Terraria;
 using Terraria.ModLoader;
 

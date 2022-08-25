@@ -11,7 +11,8 @@ namespace Macrocosm.Content.Items.Materials.Chunks
 		{
 			DisplayName.SetDefault("Nubis Chunk");
 			Tooltip.SetDefault("'It spins akin to a galaxy'");
-			ItemID.Sets.ItemNoGravity[Item.type] = true;
+			ItemID.Sets.ItemNoGravity[Type] = true;
+			ItemID.Sets.AnimatesAsSoul[Type] = true;
 			Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(6, 7)); // NOTE: TicksPerFrame, Frames
 		}
 

@@ -1,4 +1,4 @@
-using Macrocosm.Content.Projectiles.Friendly.Weapons;
+using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.GameContent.Creative;

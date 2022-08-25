@@ -1,5 +1,5 @@
 using Macrocosm.Common.Utility;
-using Macrocosm.Content.Projectiles.Friendly.Weapons;
+using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.NPCs.GlobalNPCs;
 using Microsoft.Xna.Framework;
 using Terraria;
