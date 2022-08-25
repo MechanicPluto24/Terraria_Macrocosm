@@ -1,5 +1,5 @@
 using Macrocosm.Content.Items.Materials;
-using Macrocosm.Content.Projectiles.Friendly.Weapons;
+using Macrocosm.Content.Projectiles.Friendly.Magic;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;

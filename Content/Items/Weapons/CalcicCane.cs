@@ -1,5 +1,5 @@
 ﻿using Macrocosm.Content.Buffs.GoodBuffs.MinionBuffs;
-using Macrocosm.Content.Projectiles.Friendly.Minions;
+using Macrocosm.Content.Projectiles.Friendly.Summon;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;

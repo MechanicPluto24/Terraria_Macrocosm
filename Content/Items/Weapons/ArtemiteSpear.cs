@@ -1,5 +1,5 @@
 ﻿using Macrocosm.Content.Items.Materials;
-using Macrocosm.Content.Projectiles.Friendly.Weapons;
+using Macrocosm.Content.Projectiles.Friendly.Melee;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent.Creative;

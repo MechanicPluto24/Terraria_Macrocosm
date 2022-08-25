@@ -1,5 +1,5 @@
 ﻿using Macrocosm.Content.Items.Materials;
-using Macrocosm.Content.Projectiles.Friendly.Weapons;
+using Macrocosm.Content.Projectiles.Friendly.Summon;
 using Terraria;
 using Terraria.GameContent.Creative;
 using Terraria.ID;

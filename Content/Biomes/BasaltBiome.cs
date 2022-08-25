@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Utility;
+﻿using Macrocosm.Common.Hooks;
+using Macrocosm.Common.Utility;
 using Macrocosm.Content.Systems;
 using Terraria;
 

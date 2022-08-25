@@ -47,13 +47,13 @@ namespace Macrocosm.Content.Items.Weapons
 			{
 				Item.useTime = 68;
 				Item.useAnimation = 68;
-				Item.shoot = ModContent.ProjectileType<Projectiles.Friendly.Weapons.CruithneBlackSlug>();
+				Item.shoot = ModContent.ProjectileType<Macrocosm.Content.Projectiles.Friendly.Ranged.CruithneBlackSlug>();
 			}
 			else
 			{
 				Item.useTime = 34;
 				Item.useAnimation = 34;
-				Item.shoot = ModContent.ProjectileType<Projectiles.Friendly.Weapons.CruithneGreenSlug>();
+				Item.shoot = ModContent.ProjectileType<Macrocosm.Content.Projectiles.Friendly.Ranged.CruithneGreenSlug>();
 			}
 			return base.CanUseItem(player);
 		}
