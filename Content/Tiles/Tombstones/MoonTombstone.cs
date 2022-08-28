@@ -12,6 +12,9 @@ namespace Macrocosm.Content.Tiles.Tombstones
 {
 	public class MoonTombstone : ModTile
 	{
+
+		public const int frameHeight = 36;
+
 		public override void SetStaticDefaults()
 		{
 			Main.tileFrameImportant[Type] = true;
@@ -35,9 +38,8 @@ namespace Macrocosm.Content.Tiles.Tombstones
 
 		public override void KillMultiTile(int i, int j, int frameX, int frameY)
 		{
-			Item.NewItem(new EntitySource_TileBreak(i, j), i * 16, j * 16, 32, 32, StyleToItem(frameX));
+			Item.NewItem(new EntitySource_TileBreak(i, j), i * 16, j * 16, 32, 32, StyleToItem(frameY / frameHeight));
 		}
-
 
 		public static int StyleToItem(int style) => styleToItem[style];
 
@@ -47,10 +49,10 @@ namespace Macrocosm.Content.Tiles.Tombstones
 			foreach(var pair in styleToItem)
 			{
 				if(pair.Value == item)
-					return pair.Key;
+					return pair.Key * 2 + 1;
 			}
 
-			return -1;
+			return 0;
 		}
 
 		private static Dictionary<int, int> styleToItem = new()

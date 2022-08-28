@@ -1,5 +1,6 @@
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Buffs.Debuffs;
+using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Materials;
 using Terraria;
 using Terraria.GameContent.Bestiary;
@@ -71,7 +72,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		{
 			for (int i = 0; i < 10; i++)
 			{
-				int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.TintableDust);
+				int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, ModContent.DustType<RegolithDust>());
 				Dust dust = Main.dust[dustIndex];
 				dust.velocity.X *= dust.velocity.X * 1.25f * hitDirection + Main.rand.Next(0, 100) * 0.015f;
 				dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;

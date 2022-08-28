@@ -80,7 +80,7 @@ namespace Macrocosm.Common.Utility
 			int frameHeight = TextureAssets.Npc[npc.type].Height() / numFrames;
 			int frame = npc.frame.Y / frameHeight;
 			Rectangle sourceRect = glowmask.Frame(1, numFrames, frameY: frame);
-			Vector2 origin = new Vector2(TextureAssets.Npc[npc.type].Width() / 2, frameHeight / 2) - drawOffset;
+			Vector2 origin = new Vector2(TextureAssets.Npc[npc.type].Width() / 2f, frameHeight / 2f) - drawOffset;
 			spriteBatch.Draw(glowmask, npc.Center - screenPos, sourceRect, Color.White, npc.rotation, origin, npc.scale, effect, 0f);
 		}
 

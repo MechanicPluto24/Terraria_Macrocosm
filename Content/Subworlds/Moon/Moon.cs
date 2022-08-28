@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Terraria;
 using Terraria.GameInput;
 using Terraria.Graphics.Effects;
+using Terraria.Map;
 using Terraria.WorldBuilding;
 
 namespace Macrocosm.Content.Subworlds.Moon
@@ -35,13 +36,23 @@ namespace Macrocosm.Content.Subworlds.Moon
 		{
 			genGroundPass,
 			new CraterPass("CraterPass", 1f),
-			new BackgroundPass("BackgroundPass", 1f),
-			new RegolithPass("RegolithPass", 5f),
+ 			new RegolithPass("RegolithPass", 5f),
 			new OrePass("OrePass", 0.75f),
 			new CavePass("CavePass", 1f, genGroundPass.RockLayerHigh, genGroundPass.RockLayerHigh),
 			new ScuffedSmoothPass("ScuffedSmoothPass", 1f),
 			new AmbientPass("AmbientPass", 0.2f),
 			new FinishPass("FinishPass", 0.1f)
+		};
+
+		public override Dictionary<MapColorType, Color> MapColors => new()
+		{
+			{MapColorType.SkyUpper, new Color(10, 10, 10)},
+			{MapColorType.SkyLower, new Color(40, 40, 40)},
+			{MapColorType.UndergroundUpper, new Color(40, 40, 40)},
+			{MapColorType.UndergroundLower, new Color(30, 30, 30)},
+ 			{MapColorType.CavernUpper, new Color(30, 30, 30)},
+ 			{MapColorType.CavernLower, new Color(30, 30, 30)},
+ 			{MapColorType.Underworld,  new Color(30, 30, 30)}
 		};
 
 
@@ -58,13 +69,13 @@ namespace Macrocosm.Content.Subworlds.Moon
 		{
 			moonLoadUI.Setup(toEarth: false);
 			SkyManager.Instance.Activate("Macrocosm:MoonSky");
-		}
+ 		}
 
 		public override void OnExit()
 		{
 			moonLoadUI.Setup(toEarth: true);
 			SkyManager.Instance.Deactivate("Macrocosm:MoonSky");
-		}
+ 		}
 
 		public override void Load()
 		{

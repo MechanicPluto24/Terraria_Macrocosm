@@ -8,6 +8,7 @@ using System;
 using System.IO;
 using Terraria;
 using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.GameContent.Bestiary;
 using Terraria.ID;
@@ -156,8 +157,23 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			Main.npcFrameCount[NPC.type] = 6;
 			NPCID.Sets.TrailCacheLength[NPC.type] = 5;
 			NPCID.Sets.TrailingMode[NPC.type] = 0;
-
+			NPCID.Sets.MPAllowedEnemies[Type] = true;
 			NPCID.Sets.BossBestiaryPriority.Add(Type);
+
+			NPCDebuffImmunityData debuffData = new NPCDebuffImmunityData
+			{
+				SpecificallyImmuneTo = new int[] {
+					BuffID.OnFire,
+					BuffID.OnFire3,
+					BuffID.CursedInferno,
+					BuffID.Confused,
+					BuffID.Poisoned,
+					BuffID.Venom
+				}
+			};
+
+			NPCID.Sets.DebuffImmunitySets.Add(Type, debuffData);
+
 
 			NPCID.Sets.NPCBestiaryDrawModifiers bestiaryData = new(0)
 			{
@@ -985,8 +1001,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			}
 		}
 
-
-
 		private void SetTargetZAxisRotation(Player player, out Vector2 targetCenter)
 		{
 			float rad = MathHelper.ToRadians(ZAxisRotationThreshold * 2);
@@ -1081,10 +1095,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		public override Color? GetAlpha(Color drawColor)
 		{
 			if (NPC.IsABestiaryIconDummy)
-			{
-				// This is required because we have NPC.alpha = 255, in the bestiary it would look transparent
-				return NPC.GetBestiaryEntryColor();
-			}
+				return NPC.GetBestiaryEntryColor(); // This is required because we have NPC.alpha = 255, in the bestiary it would look transparent
+
 			return drawColor * (1f - targetAlpha / 255f);
 		}
 
