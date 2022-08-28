@@ -17,7 +17,8 @@ namespace Macrocosm.Content.Biomes
 		public override Color? BackgroundColor => base.BackgroundColor;
 		public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.GetInstance<MoonSurfaceBgStyle>();
 		public override ModUndergroundBackgroundStyle UndergroundBackgroundStyle => ModContent.GetInstance<MoonUgBgStyle>();
-		public override int Music => Main.dayTime ? MusicLoader.GetMusicSlot(Mod, "Assets/Music/Deadworld") : MusicLoader.GetMusicSlot(Mod, "Assets/Music/Requiem");
+ 		public override int Music => Main.dayTime ? MusicLoader.GetMusicSlot(Mod, "Assets/Music/Deadworld") : MusicLoader.GetMusicSlot(Mod, "Assets/Music/Requiem");
+
 
 		public override void SetStaticDefaults()
 		{
@@ -27,7 +28,6 @@ namespace Macrocosm.Content.Biomes
 		public override void OnInBiome(Player player)
 		{
 			player.Macrocosm().ZoneMoon = true;
-
 		}
 
 		public override void OnLeave(Player player)

@@ -43,7 +43,7 @@ namespace Macrocosm.Content.Systems
 				// Dependent on world size
 				float frequency = Main.maxTilesX / 4200f;
 
-				frequency *= MeteorBoostMoon * 15;
+				frequency *= MeteorBoostMoon;
 
 				if (!((float)Main.rand.Next(8000) < 10f * frequency))
 					continue;

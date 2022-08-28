@@ -1,9 +1,10 @@
 using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.DataStructures;
-using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.DataStructures;
+using Terraria.GameContent.Creative;
+using Macrocosm.Content.Projectiles.Friendly.Ranged;
 
 namespace Macrocosm.Content.Items.Weapons
 {
@@ -47,13 +48,13 @@ namespace Macrocosm.Content.Items.Weapons
 			{
 				Item.useTime = 68;
 				Item.useAnimation = 68;
-				Item.shoot = ModContent.ProjectileType<Macrocosm.Content.Projectiles.Friendly.Ranged.CruithneBlackSlug>();
+				Item.shoot = ModContent.ProjectileType<CruithneBlackSlug>();
 			}
 			else
 			{
 				Item.useTime = 34;
 				Item.useAnimation = 34;
-				Item.shoot = ModContent.ProjectileType<Macrocosm.Content.Projectiles.Friendly.Ranged.CruithneGreenSlug>();
+				Item.shoot = ModContent.ProjectileType<CruithneGreenSlug>();
 			}
 			return base.CanUseItem(player);
 		}

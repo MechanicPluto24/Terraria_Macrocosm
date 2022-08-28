@@ -25,8 +25,8 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 		protected override void ApplyPass(GenerationProgress progress, GameConfiguration configuration)
 		{
 			progress.Message = "Landing on the Moon...";
-			Main.worldSurface = surfaceLayer + 20; // Hides the underground layer just out of bounds
-			Main.rockLayer = surfaceLayer + 60; // Hides the cavern layer way out of bounds
+			Main.worldSurface = surfaceLayer + 40; // Hides the underground layer just out of bounds
+			Main.rockLayer = surfaceLayer + 222; // Hides the cavern layer way out of bounds
 
 			int surfaceHeight = (int)surfaceLayer; // If the moon's world size is variable, this probably should depend on that
 			rockLayerLow = surfaceHeight;

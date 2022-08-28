@@ -4,6 +4,7 @@ using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Items.Materials;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
@@ -26,8 +27,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 			base.SetDefaults();
 
-			NPC.width = 60;
-			NPC.height = 60;
+			NPC.width = 56;
+			NPC.height = 56;
 			NPC.lifeMax = 2500;
 			NPC.damage = 60;
 			NPC.defense = 60;

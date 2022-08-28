@@ -88,7 +88,7 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 							{
 								if (Main.tile[tileX + 1, tileY].TileType != 190 && Main.tile[tileX + 1, tileY].TileType != 48 && Main.tile[tileX + 1, tileY].TileType != 232 && WorldGen.SolidTile(tileX - 1, tileY + 1) && WorldGen.SolidTile(tileX + 1, tileY) && !Main.tile[tileX - 1, tileY].HasTile && !Main.tile[tileX + 1, tileY - 1].HasTile)
 								{
-									WorldGen.PlaceTile(tileX, tileY, Main.tile[tileX, tileY + 1].TileType);
+									WorldGen.PlaceTile(tileX, tileY, Main.tile[tileX, tileY + 1].TileType, mute: true);
 									if (WorldGen.genRand.NextBool(2))
 										WorldGen.SlopeTile(tileX, tileY, 2);
 									else
@@ -97,7 +97,7 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 
 								if (Main.tile[tileX - 1, tileY].TileType != 190 && Main.tile[tileX - 1, tileY].TileType != 48 && Main.tile[tileX - 1, tileY].TileType != 232 && WorldGen.SolidTile(tileX + 1, tileY + 1) && WorldGen.SolidTile(tileX - 1, tileY) && !Main.tile[tileX + 1, tileY].HasTile && !Main.tile[tileX - 1, tileY - 1].HasTile)
 								{
-									WorldGen.PlaceTile(tileX, tileY, Main.tile[tileX, tileY + 1].TileType);
+									WorldGen.PlaceTile(tileX, tileY, Main.tile[tileX, tileY + 1].TileType, mute: true);
 									if (WorldGen.genRand.NextBool(2))
 										WorldGen.SlopeTile(tileX, tileY, 1);
 									else

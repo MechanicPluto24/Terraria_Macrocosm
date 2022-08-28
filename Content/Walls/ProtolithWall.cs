@@ -5,13 +5,13 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Walls
 {
-	public class RegolithWall : ModWall
+	public class ProtolithWall : ModWall
 	{
 		public override void SetStaticDefaults()
 		{
 			Main.wallHouse[Type] = false; // Unsafe wall
-			ItemDrop = ItemType<Items.Placeable.BlocksAndWalls.RegolithWall>();
-			AddMapEntry(new Color(45, 45, 45));
+			ItemDrop = ItemType<Items.Placeable.BlocksAndWalls.ProtolithWall>();
+			AddMapEntry(new Color(25, 25, 25));
 		}
 	}
 }

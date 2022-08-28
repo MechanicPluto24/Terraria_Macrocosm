@@ -29,7 +29,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		public ActionState AI_State
 		{
 			get => (ActionState)NPC.ai[0];
-			set => NPC.ai[0] = (int)value;
+			set => NPC.ai[0] = (float)value;
 		}
 
 		public ref float AI_Timer => ref NPC.ai[1];
