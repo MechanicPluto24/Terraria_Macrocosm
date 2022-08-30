@@ -5,7 +5,7 @@ using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Weapons
+namespace Macrocosm.Content.Items.Weapons.Ranged
 {
 	public class ArchersLine : ModItem
 	{

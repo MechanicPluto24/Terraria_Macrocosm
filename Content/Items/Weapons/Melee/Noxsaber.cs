@@ -1,5 +1,4 @@
 using Macrocosm.Common.Utility;
-using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.GlobalItems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -8,43 +7,44 @@ using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Weapons
+namespace Macrocosm.Content.Items.Weapons.Melee
 {
-	public class Crucible : ModItem
+	public class Noxsaber : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault("A sword forged from the fires of Hell itself" + "\n'The only thing they fear is you.'");
+			DisplayName.SetDefault("The Noxsaber"); // By default, capitalization in classnames will add spaces to the display name. You can customize the display name here by uncommenting this line.
+			Tooltip.SetDefault("An ancient black energy saber, stolen from the temple of a long dead cult");
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
-
 		}
 
 		public override void SetDefaults()
 		{
-			Item.damage = 666;
+			Item.damage = 777;
 			Item.DamageType = DamageClass.Melee;
-			Item.width = 76;
-			Item.height = 76;
-			Item.useTime = 20;
-			Item.useAnimation = 20;
-			Item.useStyle = ItemUseStyleID.Swing; // 1 = sword
+			Item.width = 100;
+			Item.height = 100;
+			Item.useTime = 15;
+			Item.useAnimation = 15;
+			Item.useStyle = ItemUseStyleID.Swing;
 			Item.knockBack = 6f;
 			Item.value = 10000;
 			Item.rare = ItemRarityID.Red;
-			Item.UseSound = SoundID.Item20;
+			Item.UseSound = SoundID.Item15;
 			Item.autoReuse = true; // Lets you use the item without clicking the mouse repeatedly (i.e. swinging swords)
-			Item.Glowmask().texture = ModContent.Request<Texture2D>("Macrocosm/Content/Items/Weapons/Crucible_Glow").Value;
+			Item.Glowmask().texture = ModContent.Request<Texture2D>("Macrocosm/Content/Items/Weapons/Melee/Noxsaber_Glow").Value;
 		}
+
 		public override void MeleeEffects(Player player, Rectangle hitbox)
 		{
-			if (Main.rand.NextBool(2))
-			{
-				int dust = Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, ModContent.DustType<CrucibleDust>());
-			}
+			//if (Main.rand.NextBool(2))
+			//{
+			//	int dust = Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, ModContent.DustType<CrucibleDust>());
+			//}
 		}
 		public override void PostUpdate()
 		{
-			Lighting.AddLight(Item.Center, Color.Red.ToVector3() * 0.85f * Main.essScale);
+			Lighting.AddLight(Item.Center, Color.White.ToVector3() * 0.85f * Main.essScale);
 		}
 
 		public override void AddRecipes()

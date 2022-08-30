@@ -4,7 +4,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items
+namespace Macrocosm.Content.Items.Dev
 {
 	class Teleporter : ModItem
 	{
@@ -27,14 +27,11 @@ namespace Macrocosm.Content.Items
 		public override bool? UseItem(Player player)
 		{
 			if (!SubworldSystem.AnyActive<Macrocosm>())
-			{
-				SubworldSystem.Enter<Moon>();
-			}
-			else
-			{
-				SubworldSystem.Exit();
-			}
-			return true;
+ 				SubworldSystem.Enter<Moon>();
+ 			else
+ 				SubworldSystem.Exit();
+
+ 			return true;
 		}
 	}
 }

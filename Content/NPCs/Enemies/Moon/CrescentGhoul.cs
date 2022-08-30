@@ -245,7 +245,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			{
 				Vector2 drawPos = NPC.oldPos[i] + NPC.Size / 2 - Main.screenPosition;
 				Color color = NPC.GetAlpha(drawColor) * (((float)NPC.oldPos.Length - i) / NPC.oldPos.Length);
-				spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, drawPos, NPC.frame, color * 0.6f, NPC.rotation - 0.48f * i, NPC.Size / 2, NPC.scale, SpriteEffects.None, 0f);
+				SpriteEffects effect = NPC.spriteDirection == -1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+				spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, drawPos, NPC.frame, color * 0.6f, NPC.rotation - 0.48f * i, NPC.Size / 2, NPC.scale, effect, 0f);
 			}
 
 			return true;
@@ -255,7 +256,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		{
 			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Enemies/Moon/CrescentGhoul_Glow").Value;
 			SpriteEffects effect = NPC.spriteDirection == -1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
-			NPC.DrawGlowmask(spriteBatch, glowmask, screenPos, effect: effect);
+ 			int frameHeight = TextureAssets.Npc[Type].Height() / Main.npcFrameCount[Type];
+			spriteBatch.Draw(glowmask, NPC.Center - Main.screenPosition, NPC.frame, Color.White, NPC.rotation, new Vector2(TextureAssets.Npc[Type].Width() / 2f, frameHeight / 2f), NPC.scale, effect, 0f);
 		}
 
 		public override void FindFrame(int frameHeight)

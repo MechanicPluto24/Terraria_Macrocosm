@@ -5,7 +5,7 @@ using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Weapons
+namespace Macrocosm.Content.Items.Weapons.Melee
 {
 	public class ArtemiteGreatsword : ModItem
 	{
@@ -28,7 +28,7 @@ namespace Macrocosm.Content.Items.Weapons
 			Item.rare = ItemRarityID.Green;
 			Item.UseSound = SoundID.Item1;
 			Item.autoReuse = true;
-			Item.shoot = ModContent.ProjectileType<ArtemiteGreatswordProjectile>();
+			Item.shoot = ModContent.ProjectileType<ArtemiteSwordProjectile>();
 			Item.shootSpeed = 10f;
 		}
 
