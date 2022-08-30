@@ -6,7 +6,7 @@ using Terraria.DataStructures;
 using Terraria.GameContent.Creative;
 using Macrocosm.Content.Projectiles.Friendly.Ranged;
 
-namespace Macrocosm.Content.Items.Weapons
+namespace Macrocosm.Content.Items.Weapons.Ranged
 {
 	public class Cruithne3753 : ModItem
 	{

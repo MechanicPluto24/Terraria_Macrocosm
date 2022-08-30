@@ -4,12 +4,12 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
-	public class ArtemiteGreatswordProjectile : ModProjectile
+	public class ArtemiteSwordProjectile : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{
 			//DisplayName.SetDefault("Crescent Moon");
-			DisplayName.SetDefault("Artemite Greatsword");
+			DisplayName.SetDefault("Artemite Sword");
 		}
 
 		public override void SetDefaults()
@@ -23,15 +23,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			Projectile.ignoreWater = true;
 		}
 
-		private int initialTimeleft;
-		private bool saved = false;
-
+ 
 		public override void AI()
 		{
-
-			if (!saved)
-				initialTimeleft = Projectile.timeLeft;
-
 			Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
 		}
 	}

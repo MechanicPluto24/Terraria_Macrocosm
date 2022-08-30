@@ -7,7 +7,7 @@ using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Weapons
+namespace Macrocosm.Content.Items.Weapons.Summon
 {
 	public class CalcicCane : ModItem
 	{

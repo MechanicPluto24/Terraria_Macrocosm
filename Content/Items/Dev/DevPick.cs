@@ -2,7 +2,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Tools
+namespace Macrocosm.Content.Items.Dev
 {
 	public class DevPick : ModItem
 	{

@@ -118,6 +118,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		public override bool PreDraw(SpriteBatch spriteBatch, Vector2 vector, Color drawColor)
 		{
 			Texture2D texture = TextureAssets.Npc[NPC.type].Value;
+			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Bosses/CraterDemon/CraterImp_Glow").Value;
 
 			Color color = GetAlpha(drawColor) ?? Color.White;
 
@@ -132,9 +133,12 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 				{
 					Vector2 drawPos = NPC.oldPos[i] - Main.screenPosition + NPC.Size / 2f;
 
-					Color draw = color * (((float)NPC.oldPos.Length - i) / NPC.oldPos.Length);
-
-					spriteBatch.Draw(texture, drawPos, NPC.frame, draw * 0.6f, NPC.rotation, NPC.Size / 2f, NPC.scale, effect, 0f);
+					Color trailColor = color * (((float)NPC.oldPos.Length - i) / NPC.oldPos.Length);
+					spriteBatch.Draw(texture, drawPos, NPC.frame, trailColor * 0.6f, NPC.rotation, NPC.Size / 2f, NPC.scale, effect, 0f);
+					
+					// trailing glowmask (behind the trail and the npc)
+					Color glowColor = (Color)(GetAlpha(Color.White) * (((float)NPC.oldPos.Length - i) / NPC.oldPos.Length));
+					spriteBatch.Draw(glowmask, drawPos, NPC.frame, glowColor * 0.6f, NPC.rotation, NPC.Size / 2f, NPC.scale, effect, 0f);
 				}
 			}
 
@@ -157,7 +161,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 				? SpriteEffects.FlipVertically
 				: SpriteEffects.None;
 
-			NPC.DrawGlowmask(spriteBatch, glowmask, screenPos, new Vector2(0, 9), effect);
+			spriteBatch.Draw(glowmask, NPC.Center - Main.screenPosition, NPC.frame, (Color)GetAlpha(Color.White), NPC.rotation, NPC.Size / 2f, NPC.scale, effect, 0f);
 		}
 
 		public override void AI()
@@ -347,12 +351,30 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			}
 		}
 
+		public override void HitEffect(int hitDirection, double damage)
+		{
+			CraterDemon.SpawnDustsInner(NPC.position, NPC.width, NPC.height, ModContent.DustType<RegolithDust>());
+
+			if (Main.dedServ)
+				return;
+
+			var entitySource = NPC.GetSource_Death();
+
+			if (NPC.life <= 0)
+			{
+				for (int i = 0; i < 15; i++)
+					CraterDemon.SpawnDustsInner(NPC.position, NPC.width, NPC.height, ModContent.DustType<RegolithDust>());
+
+				Gore.NewGore(entitySource, NPC.position, NPC.velocity, Mod.Find<ModGore>("CraterImpGoreFace").Type);
+				Gore.NewGore(entitySource, NPC.position, NPC.velocity, Mod.Find<ModGore>("CraterImpGoreHead").Type);
+				Gore.NewGore(entitySource, NPC.position, NPC.velocity, Mod.Find<ModGore>("CraterImpGoreJaw").Type);
+			}
+ 		}
+
 		private void SpawnDusts()
 		{
-			var type = ModContent.DustType<RegolithDust>();
-
 			for (int i = 0; i < 4; i++)
-				CraterDemon.SpawnDustsInner(NPC.position, NPC.width, NPC.height, type);
+				CraterDemon.SpawnDustsInner(NPC.position, NPC.width, NPC.height, ModContent.DustType<RegolithDust>());
 		}
 	}
 }
