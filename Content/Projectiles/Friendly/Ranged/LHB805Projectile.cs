@@ -30,10 +30,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Minigun");
+			DisplayName.SetDefault("LHB-805");
 			Main.projFrames[Type] = 10;
 			ProjectileID.Sets.NeedsUUID[Type] = true;
-
 		}
 
 		public override void SetDefaults()

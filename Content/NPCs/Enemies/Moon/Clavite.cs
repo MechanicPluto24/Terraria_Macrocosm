@@ -84,11 +84,11 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		public override void OnHitPlayer(Player player, int damage, bool crit)
 		{
-			if (player.Macrocosm().AccMoonArmor)
-			{
-				// Now only suit breaches players with said suit 
-				player.AddBuff(ModContent.BuffType<SuitBreach>(), 600, true);
-			}
+			//if (player.Macrocosm().AccMoonArmor)
+			//{
+			//	// Now only suit breaches players with said suit 
+			//	player.AddBuff(ModContent.BuffType<SuitBreach>(), 600, true);
+			//}
 		}
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
 		{

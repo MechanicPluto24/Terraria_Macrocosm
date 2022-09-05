@@ -84,7 +84,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 
 			float kbResist = 0.3f;
-
 			float chaseUpwardsMult = 8f;
 
 			// the radius where the ghoul will slow down and start rising above the player 
@@ -215,13 +214,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			}
 		}
 
-		public override void OnHitPlayer(Player player, int damage, bool crit)
-		{
-			if (player.Macrocosm().AccMoonArmor)
-			{
-				player.AddBuff(ModContent.BuffType<SuitBreach>(), 600, true);
-			}
-		}
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
 		{
 			return spawnInfo.Player.Macrocosm().ZoneMoon && !Main.dayTime && spawnInfo.SpawnTileY <= Main.worldSurface + 100 ? .1f : 0f;

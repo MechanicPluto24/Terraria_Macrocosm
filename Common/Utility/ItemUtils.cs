@@ -27,6 +27,9 @@ namespace Macrocosm.Common.Utility
 			Item launcher = new(copyWeaponType);
 			Item ammo = player.ChooseAmmo(launcher);
 
+			if (ammo is null)
+				return 0;
+
 			int type;
 
 			// for mini nukes, liquid rockets

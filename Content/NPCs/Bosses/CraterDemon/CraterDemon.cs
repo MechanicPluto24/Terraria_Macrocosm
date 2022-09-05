@@ -1,18 +1,27 @@
-﻿using Macrocosm.Common.Utility;
-using Macrocosm.Content.Biomes;
-using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Projectiles.Unfriendly;
+﻿using System;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.IO;
 using Terraria;
-using Terraria.Audio;
-using Terraria.DataStructures;
-using Terraria.GameContent;
-using Terraria.GameContent.Bestiary;
 using Terraria.ID;
+using Terraria.Audio;
 using Terraria.ModLoader;
+using Terraria.GameContent;
+using Terraria.DataStructures;
+using Terraria.GameContent.Bestiary;
+using Terraria.GameContent.ItemDropRules;
+using Macrocosm.Common.Utility;
+using Macrocosm.Content.Biomes;
+using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Items.Consumables.BossBags;
+using Macrocosm.Content.Projectiles.Unfriendly;
+using Macrocosm.Content.Items.Placeable.Trophies;
+using Macrocosm.Content.Items.Weapons.Summon;
+using Macrocosm.Content.Items.Weapons.Ranged;
+using Macrocosm.Content.Items.Currency;
+using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.Systems;
+using Macrocosm.Content.NPCs.Friendly.TownNPCs;
 
 namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 {
@@ -233,7 +242,38 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 		public override void BossLoot(ref string name, ref int potionType)
 		{
-			potionType = ItemID.GreaterHealingPotion;
+			potionType = ItemID.SuperHealingPotion;
+		}
+
+		public override void ModifyNPCLoot(NPCLoot npcLoot)
+		{
+			npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<CraterDemonBossBag>()));
+			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<CraterDemonTrophy>(), 10));
+			//npcLoot.Add(ItemDropRule.MasterModeCommonDrop(ModContent.ItemType<CraterDemonRelic>()));
+			//npcLoot.Add(ItemDropRule.MasterModeDropOnAllPlayers(ModContent.ItemType<CraterDemonMMPet>(), 4));
+
+			LeadingConditionRule notExpertRule = new LeadingConditionRule(new Conditions.NotExpert());
+			//notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<CraterDemonBossMask>(), 7));
+
+			notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<MoonCoin>(), 1, 30, 60));
+			notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<DeliriumPlating>(), 1, 5, 15));
+
+			notExpertRule.OnSuccess(ItemDropRule.OneFromOptions(1, 
+				ModContent.ItemType<CalcicCane>(),
+				ModContent.ItemType<Cruithne3753>()
+				/*, ModContent.ItemType<CrystalPortalThingy>() */
+				/*, ModContent.ItemType<ChampionBlade>() */
+				));
+
+			npcLoot.Add(notExpertRule);
+		}
+
+		public override void OnKill()
+		{
+			if (!DownedBossSystem.DownedCraterDemon)
+				NPC.NewNPC(NPC.GetSource_NaturalSpawn(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<MoonChampion>(), 10); // 10 seconds of immunity 
+
+			NPC.SetEventFlagCleared(ref DownedBossSystem.DownedCraterDemon, -1);
 		}
 
 		public override void OnHitPlayer(Player target, int damage, bool crit)
@@ -318,7 +358,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 				Color glowColor = (Color)GetAlpha(Color.White) * (((float)NPC.oldPos.Length - i) / NPC.oldPos.Length);
 				spriteBatch.Draw(glowmask, drawPos, NPC.frame, glowColor * 0.6f, NPC.rotation, Vector2.Zero, NPC.scale, SpriteEffects.None, 0f);
-
 			}
 
 			return true;
@@ -356,20 +395,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 				lightDust.fadeIn = 0.5f;
 				lightDust.customData = info.center;
 			}
-			/*
-			if (false)
-			{
-				int type = ModContent.DustType<PortalDarkGreenDust>();
-				Vector2 rotVector2 = Vector2.UnitY.RotatedByRandom(6.2831854820251465);
-				Dust darkDust = Main.dust[Dust.NewDust(info.center - rotVector2 * 30f, 0, 0, type)];
-				darkDust.noGravity = true;
-				darkDust.position = info.center - rotVector2 * 30f;
-				darkDust.velocity = rotVector2.RotatedBy(-1.5707963705062866) * 1.8f;
-				darkDust.scale = 1.2f + Main.rand.NextFloat();
-				darkDust.fadeIn = 0.5f;
-				darkDust.customData = info.center;
-			}
-			*/
 		}
 
 		private int GetAnimationSetFrame()
