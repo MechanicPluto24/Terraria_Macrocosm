@@ -44,7 +44,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
 		public override Vector2? HoldoutOffset() => new Vector2(-10, 0);
 
-		public override bool AltFunctionUse(Player player) => altUseCounter == altUseCooldown;
+		public override bool AltFunctionUse(Player player) => altUseCounter == altUseCooldown && ItemUtils.ToRocketProjectileID(player, ItemID.GrenadeLauncher) != 0;
 
 		public override bool CanUseItem(Player player) => true;
 

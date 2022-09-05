@@ -18,12 +18,27 @@ namespace Macrocosm.Content
 		public bool ZoneMoon = false;
 		public bool ZoneBasalt = false;
 
+		#region Screenshake mechanic 
 		private float screenShakeIntensity = 0f;
 		public float ScreenShakeIntensity
 		{
 			get => screenShakeIntensity;
 			set => screenShakeIntensity = MathHelper.Clamp(value, 0, 100);
 		}
+		#endregion
+
+		#region Stamina mechanic
+		private float staminaRegenCooldown = 90f;
+		private float staminaRegenPeriod = 60f;
+		public void ResetStaminaCooldown(float value) => staminaRegenCooldown = value;
+
+		private float meleeStamina = 1f;
+		public float MeleeStamina
+		{
+			get => meleeStamina;
+			set => meleeStamina = MathHelper.Clamp(value, 0.01f, 1f);
+		}
+		#endregion
 
 		public override void ResetEffects()
 		{
@@ -34,11 +49,9 @@ namespace Macrocosm.Content
 		{
 			if (SubworldSystem.IsActive<Moon>())
 			{
-				if (!Player.Macrocosm().AccMoonArmor)
-				{
-					Player.AddBuff(ModContent.BuffType<SuitBreach>(), 2);
-				}
-			}
+				if (!AccMoonArmor)
+ 					Player.AddBuff(ModContent.BuffType<SuitBreach>(), 2);
+ 			}
 		}
 
 		public override void PostUpdateMiscEffects()
@@ -48,12 +61,14 @@ namespace Macrocosm.Content
 
 			if (AccMoonArmorDebuff > 0)
 				Player.buffImmune[ModContent.BuffType<SuitBreach>()] = false;
+
+			UpdateStamina();
+			UpdateBuffs();
+
 		}
 
 		public override void PostUpdate()
 		{
-			if (AccMoonArmorDebuff > 0)
-				AccMoonArmorDebuff--;
 		}
 
 		public override void ModifyScreenPosition()
@@ -62,6 +77,29 @@ namespace Macrocosm.Content
 			{
 				Main.screenPosition += new Vector2(Main.rand.NextFloat(ScreenShakeIntensity), Main.rand.NextFloat(ScreenShakeIntensity));
 				ScreenShakeIntensity *= 0.9f;
+			}
+		}
+
+		private void UpdateBuffs()
+		{
+			if (AccMoonArmorDebuff > 0)
+				AccMoonArmorDebuff--;
+		}
+
+		private void UpdateStamina()
+		{
+			if (MeleeStamina < 1f)
+			{
+				staminaRegenCooldown--;
+				if (staminaRegenCooldown <= 0f)
+				{
+					staminaRegenCooldown = 0f;
+					MeleeStamina += 0.2f / staminaRegenPeriod;
+				}
+			}
+			else
+			{
+				ResetStaminaCooldown(90f);
 			}
 		}
 	}

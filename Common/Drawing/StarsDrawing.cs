@@ -26,7 +26,7 @@ namespace Macrocosm.Common.Drawing
 			}
 		}
 
-		public void DrawSelf(SpriteBatch spriteBatch, float brightness = 1f)
+		public void Draw(SpriteBatch spriteBatch, float brightness = 1f)
 		{
 			if (None)
 				return;
@@ -35,7 +35,7 @@ namespace Macrocosm.Common.Drawing
 			{
 				star.Brightness = brightness;
 				star.Update();
-				star.DrawSelf(spriteBatch);
+				star.Draw(spriteBatch);
 			}
 		}
 	}

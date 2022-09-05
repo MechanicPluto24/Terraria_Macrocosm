@@ -166,6 +166,14 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 		public override void AI()
 		{
+
+			if (!Main.npc[ParentBoss].active || Main.npc[ParentBoss].type != ModContent.NPCType<CraterDemon>())
+			{
+				NPC.life = 0;
+				NPC.HitEffect();
+				NPC.active = false;
+			}
+
 			if (!spawned)
 			{
 				spawned = true;
