@@ -1,17 +1,27 @@
-﻿using Macrocosm.Common.Utility;
-using Macrocosm.Content.Biomes;
-using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Projectiles.Unfriendly;
+﻿using System;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.IO;
 using Terraria;
-using Terraria.Audio;
-using Terraria.GameContent;
-using Terraria.GameContent.Bestiary;
 using Terraria.ID;
+using Terraria.Audio;
 using Terraria.ModLoader;
+using Terraria.GameContent;
+using Terraria.DataStructures;
+using Terraria.GameContent.Bestiary;
+using Terraria.GameContent.ItemDropRules;
+using Macrocosm.Common.Utility;
+using Macrocosm.Content.Biomes;
+using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Items.Consumables.BossBags;
+using Macrocosm.Content.Projectiles.Unfriendly;
+using Macrocosm.Content.Items.Placeable.Trophies;
+using Macrocosm.Content.Items.Weapons.Summon;
+using Macrocosm.Content.Items.Weapons.Ranged;
+using Macrocosm.Content.Items.Currency;
+using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.Systems;
+using Macrocosm.Content.NPCs.Friendly.TownNPCs;
 
 namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 {
@@ -156,8 +166,23 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			Main.npcFrameCount[NPC.type] = 6;
 			NPCID.Sets.TrailCacheLength[NPC.type] = 5;
 			NPCID.Sets.TrailingMode[NPC.type] = 0;
-
+			NPCID.Sets.MPAllowedEnemies[Type] = true;
 			NPCID.Sets.BossBestiaryPriority.Add(Type);
+
+			NPCDebuffImmunityData debuffData = new NPCDebuffImmunityData
+			{
+				SpecificallyImmuneTo = new int[] {
+					BuffID.OnFire,
+					BuffID.OnFire3,
+					BuffID.CursedInferno,
+					BuffID.Confused,
+					BuffID.Poisoned,
+					BuffID.Venom
+				}
+			};
+
+			NPCID.Sets.DebuffImmunitySets.Add(Type, debuffData);
+
 
 			NPCID.Sets.NPCBestiaryDrawModifiers bestiaryData = new(0)
 			{
@@ -195,7 +220,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBiome>().Type }; // Associates this NPC with the Moon Biome in Bestiary
 
 			if (!Main.dedServ)
-				Music = MusicLoader.GetMusicSlot(Mod, "Sounds/Music/SpaceInvader");
+				Music = MusicLoader.GetMusicSlot(Mod, "Assets/Music/SpaceInvader");
 		}
 
 		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
@@ -217,12 +242,43 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 		public override void BossLoot(ref string name, ref int potionType)
 		{
-			potionType = ItemID.GreaterHealingPotion;
+			potionType = ItemID.SuperHealingPotion;
+		}
+
+		public override void ModifyNPCLoot(NPCLoot npcLoot)
+		{
+			npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<CraterDemonBossBag>()));
+			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<CraterDemonTrophy>(), 10));
+			//npcLoot.Add(ItemDropRule.MasterModeCommonDrop(ModContent.ItemType<CraterDemonRelic>()));
+			//npcLoot.Add(ItemDropRule.MasterModeDropOnAllPlayers(ModContent.ItemType<CraterDemonMMPet>(), 4));
+
+			LeadingConditionRule notExpertRule = new LeadingConditionRule(new Conditions.NotExpert());
+			//notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<CraterDemonBossMask>(), 7));
+
+			notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<MoonCoin>(), 1, 30, 60));
+			notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<DeliriumPlating>(), 1, 5, 15));
+
+			notExpertRule.OnSuccess(ItemDropRule.OneFromOptions(1, 
+				ModContent.ItemType<CalcicCane>(),
+				ModContent.ItemType<Cruithne3753>()
+				/*, ModContent.ItemType<CrystalPortalThingy>() */
+				/*, ModContent.ItemType<ChampionBlade>() */
+				));
+
+			npcLoot.Add(notExpertRule);
+		}
+
+		public override void OnKill()
+		{
+			if (!DownedBossSystem.DownedCraterDemon)
+				NPC.NewNPC(NPC.GetSource_NaturalSpawn(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<MoonChampion>(), 10); // 10 seconds of immunity 
+
+			NPC.SetEventFlagCleared(ref DownedBossSystem.DownedCraterDemon, -1);
 		}
 
 		public override void OnHitPlayer(Player target, int damage, bool crit)
 		{
-			target.Macrocosm().accMoonArmorDebuff = Main.expertMode ? 5 * 60 : 2 * 60;
+			target.Macrocosm().AccMoonArmorDebuff = Main.expertMode ? 5 * 60 : 2 * 60;
 		}
 
 		private void UpdateScale(float newScale)
@@ -281,25 +337,27 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
 			//Draw portals
-			//Texture2D portal = mod.GetTexture("Content/NPCs/Unfriendly/Bosses/Moon/BigPortal");
-			Texture2D portal = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Bosses/CraterDemon/BigPortal").Value;
+ 			Texture2D portal = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Bosses/CraterDemon/BigPortal").Value;
 
 			DrawBigPortal(spriteBatch, portal, bigPortal);
 			DrawBigPortal(spriteBatch, portal, bigPortal2);
 
 			if (AI_Attack == Attack_SummonMeteors && Math.Abs(NPC.velocity.X) < 0.1f && Math.Abs(NPC.velocity.Y) < 0.1f)
 				return true;
-
+			
 			if (AI_Attack == Attack_ChargeAtPlayer && AI_AttackProgress > 2 && NPC.alpha >= 160)
 				return true;
+
+			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Bosses/CraterDemon/CraterDemon_Glow").Value;
 
 			for (int i = 0; i < NPC.oldPos.Length; i++)
 			{
 				Vector2 drawPos = NPC.oldPos[i] - Main.screenPosition + new Vector2(0, 4);
+				Color trailColor = NPC.GetAlpha(drawColor) * (((float)NPC.oldPos.Length - i) / NPC.oldPos.Length);
+				spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, drawPos, NPC.frame, trailColor * 0.6f, NPC.rotation, Vector2.Zero, NPC.scale, SpriteEffects.None, 0f);
 
-				Color color = NPC.GetAlpha(drawColor) * (((float)NPC.oldPos.Length - i) / NPC.oldPos.Length);
-
-				spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, drawPos, NPC.frame, color * 0.6f, NPC.rotation, Vector2.Zero, NPC.scale, SpriteEffects.None, 0f);
+				Color glowColor = (Color)GetAlpha(Color.White) * (((float)NPC.oldPos.Length - i) / NPC.oldPos.Length);
+				spriteBatch.Draw(glowmask, drawPos, NPC.frame, glowColor * 0.6f, NPC.rotation, Vector2.Zero, NPC.scale, SpriteEffects.None, 0f);
 			}
 
 			return true;
@@ -307,8 +365,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 		public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
-			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Unfriendly/Bosses/Moon/CraterDemon_Glow").Value;
-			NPC.DrawGlowmask(spriteBatch, glowmask, screenPos, new Vector2(0, 4));
+			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Bosses/CraterDemon/CraterDemon_Glow").Value;
+			spriteBatch.Draw(glowmask, NPC.position - screenPos + new Vector2(0, 4), NPC.frame, (Color)GetAlpha(Color.White), NPC.rotation, Vector2.Zero, NPC.scale, SpriteEffects.None, 0f);
 		}
 
 		private void DrawBigPortal(SpriteBatch spriteBatch, Texture2D texture, BigPortalInfo info)
@@ -336,22 +394,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 				lightDust.scale = 1.2f + Main.rand.NextFloat();
 				lightDust.fadeIn = 0.5f;
 				lightDust.customData = info.center;
-
 			}
-			/*
-			if (false)
-			{
-				int type = ModContent.DustType<PortalDarkGreenDust>();
-				Vector2 rotVector2 = Vector2.UnitY.RotatedByRandom(6.2831854820251465);
-				Dust darkDust = Main.dust[Dust.NewDust(info.center - rotVector2 * 30f, 0, 0, type)];
-				darkDust.noGravity = true;
-				darkDust.position = info.center - rotVector2 * 30f;
-				darkDust.velocity = rotVector2.RotatedBy(-1.5707963705062866) * 1.8f;
-				darkDust.scale = 1.2f + Main.rand.NextFloat();
-				darkDust.fadeIn = 0.5f;
-				darkDust.customData = info.center;
-			}
-			*/
 		}
 
 		private int GetAnimationSetFrame()
@@ -980,13 +1023,13 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 			if (NPC.life <= 0)
 			{
+				SpawnDusts(30);
+
 				Gore.NewGore(entitySource, NPC.position, NPC.velocity, Mod.Find<ModGore>("CraterDemonGoreFace").Type);
 				Gore.NewGore(entitySource, NPC.position, NPC.velocity, Mod.Find<ModGore>("CraterDemonGoreHead").Type);
 				Gore.NewGore(entitySource, NPC.position, NPC.velocity, Mod.Find<ModGore>("CraterDemonGoreJaw").Type);
 			}
 		}
-
-
 
 		private void SetTargetZAxisRotation(Player player, out Vector2 targetCenter)
 		{
@@ -1082,10 +1125,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		public override Color? GetAlpha(Color drawColor)
 		{
 			if (NPC.IsABestiaryIconDummy)
-			{
-				// This is required because we have NPC.alpha = 255, in the bestiary it would look transparent
-				return NPC.GetBestiaryEntryColor();
-			}
+				return NPC.GetBestiaryEntryColor(); // This is required because we have NPC.alpha = 255, in the bestiary it would look transparent
+
 			return drawColor * (1f - targetAlpha / 255f);
 		}
 

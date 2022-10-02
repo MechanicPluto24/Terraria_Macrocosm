@@ -74,16 +74,6 @@ namespace Macrocosm.Common.Utility
 			return npc != Main.npc.Length;  //Return false if we couldn't generate an NPC
 		}
 
-		public static void DrawGlowmask(this NPC npc, SpriteBatch spriteBatch, Texture2D glowmask, Vector2 screenPos, Vector2 drawOffset = default, SpriteEffects effect = SpriteEffects.None)
-		{
-			int numFrames = Main.npcFrameCount[npc.type];
-			int frameHeight = TextureAssets.Npc[npc.type].Height() / numFrames;
-			int frame = npc.frame.Y / frameHeight;
-			Rectangle sourceRect = glowmask.Frame(1, numFrames, frameY: frame);
-			Vector2 origin = new Vector2(TextureAssets.Npc[npc.type].Width() / 2, frameHeight / 2) - drawOffset;
-			spriteBatch.Draw(glowmask, npc.Center - screenPos, sourceRect, Color.White, npc.rotation, origin, npc.scale, effect, 0f);
-		}
-
 		public static void Move(this NPC npc, Vector2 moveTo, Vector2 offset, float speed = 3f, float turnResistance = 0.5f)
 		{
 			moveTo += offset; // Gets the point that the NPC will be moving to.

@@ -22,6 +22,13 @@ namespace Macrocosm.Content.Items.Armor
 			Item.defense = 26;
 		}
 
+		private int capeSlot;
+
+		public override void Load()
+		{
+			capeSlot = EquipLoader.AddEquipTexture(Mod, "Macrocosm/Content/Items/Armor/ChandriumCape", EquipType.Back, name: "Chandrium Cape", item: this);
+		}
+
 		public override bool IsArmorSet(Item head, Item body, Item legs)
 		{
 			return head.type == ModContent.ItemType<ChandriumHelm>() && body.type == ModContent.ItemType<ChandriumBreastplate>() && legs.type == ModContent.ItemType<ChandriumLeggings>();
@@ -29,7 +36,7 @@ namespace Macrocosm.Content.Items.Armor
 
 		public override void UpdateArmorSet(Player player)
 		{
-			player.Macrocosm().accMoonArmor = true;
+			player.Macrocosm().AccMoonArmor = true;
 			player.setBonus = "Pressurized spacesuit allows for safe exploration of other celestial bodies"
 							+ "\nTier 1 extraterrestrial protection"
 							+ "\nVastly extends underwater breathing time";

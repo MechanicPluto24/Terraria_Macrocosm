@@ -1,9 +1,10 @@
-﻿using Macrocosm.Base.BaseMod;
+﻿using Macrocosm.Common.Base;
 using Macrocosm.Common.Utility;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Items.Materials;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
@@ -26,8 +27,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 			base.SetDefaults();
 
-			NPC.width = 60;
-			NPC.height = 60;
+			NPC.width = 56;
+			NPC.height = 56;
 			NPC.lifeMax = 2500;
 			NPC.damage = 60;
 			NPC.defense = 60;
@@ -83,11 +84,11 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		public override void OnHitPlayer(Player player, int damage, bool crit)
 		{
-			if (player.Macrocosm().accMoonArmor)
-			{
-				// Now only suit breaches players with said suit 
-				player.AddBuff(ModContent.BuffType<SuitBreach>(), 600, true);
-			}
+			//if (player.Macrocosm().AccMoonArmor)
+			//{
+			//	// Now only suit breaches players with said suit 
+			//	player.AddBuff(ModContent.BuffType<SuitBreach>(), 600, true);
+			//}
 		}
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
 		{

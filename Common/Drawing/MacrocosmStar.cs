@@ -9,9 +9,9 @@ namespace Macrocosm.Common.Drawing
 {
 	public class MacrocosmStar : Star
 	{
-		public Texture2D texture;
-		public float brightness;
+		public float Brightness;
 
+		private Texture2D texture;
 		private Color color;
 		private Color newColor;
 		private bool colorOverridden = false;
@@ -26,7 +26,7 @@ namespace Macrocosm.Common.Drawing
 			FastRandom fastRandom = FastRandom.CreateWithRandomSeed();
 
 			texture = TextureAssets.Star[fastRandom.Next(0, 4)].Value;
-			brightness = 1f;
+			Brightness = 1f;
 			color = Color.White;
 
 			position.X = fastRandom.Next(1921);
@@ -61,7 +61,7 @@ namespace Macrocosm.Common.Drawing
 			texture = tex;
 		}
 
-		public void DrawSelf(SpriteBatch spriteBatch)
+		public void Draw(SpriteBatch spriteBatch)
 		{
 			spriteBatch.Draw(texture, position, null, color, rotation, texture.Size() / 2, scale * twinkle, default, 0f);
 		}
@@ -121,7 +121,7 @@ namespace Macrocosm.Common.Drawing
 			color.G = (byte)green;
 			color.B = (byte)blue;
 
-			color *= brightness;
+			color *= Brightness;
 		}
 	}
 }

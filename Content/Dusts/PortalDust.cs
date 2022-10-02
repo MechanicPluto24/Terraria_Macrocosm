@@ -4,10 +4,14 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Dusts
 {
-
 	public abstract class PortalDust : ModDust
 	{
 		public override string Texture => "Macrocosm/Content/Dusts/PortalDust";
+
+		public override void OnSpawn(Dust dust)
+		{
+			dust.noLight = true; 
+		}
 	}
 
 	public class PortalLightGreenDust : PortalDust
@@ -15,6 +19,7 @@ namespace Macrocosm.Content.Dusts
 
 		public override void OnSpawn(Dust dust)
 		{
+			base.OnSpawn(dust);
 			dust.frame = new Rectangle(0, Main.rand.Next(0, 2) * 10, 10, 10);
 		}
 
@@ -61,6 +66,7 @@ namespace Macrocosm.Content.Dusts
 	{
 		public override void OnSpawn(Dust dust)
 		{
+			base.OnSpawn(dust);
 			dust.frame = new Rectangle(10, Main.rand.Next(0, 2) * 10, 10, 10);
 		}
 
@@ -105,6 +111,7 @@ namespace Macrocosm.Content.Dusts
 
 		public override void OnSpawn(Dust dust)
 		{
+			base.OnSpawn(dust);
 			dust.frame = new Rectangle(20, Main.rand.Next(0, 2) * 10, 10, 10);
 		}
 		public override bool Update(Dust dust)
@@ -144,6 +151,7 @@ namespace Macrocosm.Content.Dusts
 	{
 		public override void OnSpawn(Dust dust)
 		{
+			base.OnSpawn(dust);
 			dust.frame = new Rectangle(30, Main.rand.Next(0, 2) * 10, 10, 10);
 		}
 

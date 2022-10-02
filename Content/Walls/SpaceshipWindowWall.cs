@@ -10,7 +10,7 @@ namespace Macrocosm.Content.Walls
 		public override void SetStaticDefaults()
 		{
 			Main.wallHouse[Type] = false;
-			ItemDrop = ItemType<Items.Placeables.BlocksAndWalls.SpaceshipWindowWall>();
+			ItemDrop = ItemType<Items.Placeable.BlocksAndWalls.SpaceshipWindowWall>();
 			AddMapEntry(new Color(0, 178, 209));
 		}
 		public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)

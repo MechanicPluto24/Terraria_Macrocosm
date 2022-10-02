@@ -15,7 +15,7 @@ namespace Macrocosm.NPCs.GlobalNPCs
 
 		public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
 		{
-			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<ActivationCore>(), 10));
+			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<CortexFragment>(), 10));
 		}
 
 

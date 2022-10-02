@@ -11,7 +11,8 @@ namespace Macrocosm.Content.Items.Materials.Chunks
 		{
 			DisplayName.SetDefault("Turben Chunk");
 			Tooltip.SetDefault("'Emitting enough light to blind'");
-			ItemID.Sets.ItemNoGravity[Item.type] = true;
+			ItemID.Sets.ItemNoGravity[Type] = true;
+			ItemID.Sets.AnimatesAsSoul[Type] = true;
 			Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(5, 11)); // NOTE: TicksPerFrame, Frames
 		}
 

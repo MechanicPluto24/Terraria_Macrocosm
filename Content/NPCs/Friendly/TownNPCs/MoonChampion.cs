@@ -1,7 +1,10 @@
 using Macrocosm.Content.Biomes;
+using Macrocosm.Content.Items.Armor;
 using Macrocosm.Content.Items.Currency;
 using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.Items.Weapons.Ranged;
 using Macrocosm.Content.Subworlds.Moon;
+using Macrocosm.Content.Systems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SubworldLibrary;
@@ -62,14 +65,7 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
 		}
 
 		public override bool CanTownNPCSpawn(int numTownNPCs, int money)
-		{
-			Player player = Main.player[Main.myPlayer];
-			if (player.HasItem(ModContent.ItemType<MoonCoin>()))
-			{
-				return true;
-			}
-			return false;
-		}
+			=> DownedBossSystem.DownedCraterDemon;
 
 		public override List<string> SetNPCNameList()
 		{
@@ -102,14 +98,11 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
 			if (Main.dayTime)
 			{
 				chatBag.Add("The Moon is not so bad once you get used to it! I personally find it quite beautiful! Just stay indoors during the night, I shall defend you from those evil Moon monsters!");
-				if (Main.rand.NextFloat() < 0.2f)
-				{
-					// Note to all: Yes, this is a TF2 reference.
-					chatBag.Add("Am I a good Moon Champion? If I wasn't a good Moon Champion, I wouldn't be sitting here discussing it with you now would I?");
-				}
 				chatBag.Add("I found an old space lander once! It looked abandoned, and there was this weird pole with cloth attached to it. Do you know anything about this?");
 				chatBag.Add("Earth looks very pretty! I want to visit it someday, but I do not know how to leave the Moon...");
-			}
+				if (Main.rand.NextFloat() < 0.2f)
+					chatBag.Add("Am I a good Moon Champion? If I wasn't a good Moon Champion, I wouldn't be sitting here discussing it with you now would I?"); // Note to all: Yes, this is a TF2 reference.
+ 			}
 			else
 			{
 				chatBag.Add("Human, I am curious, is the Earth made of cheese?");
@@ -118,14 +111,11 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
 			}
 			int unuCount = player.CountItem(ModContent.ItemType<MoonCoin>());
 			if (unuCount > 0)
-			{
-				chatBag.Add($"I see you have {player.CountItem(ModContent.ItemType<MoonCoin>())} Moon coin{(unuCount == 1 ? "" : "s")}! Why don't you try spending them here?");
-			}
-			else
-			{
-				chatBag.Add("Hmm, you appear to have no Moon coins, try killing some Moon monsters to get some!");
-			}
-			chatBag.Add("What was I doing on the Moon before I got eaten? I was fighting Moon monsters, of course!");
+ 				chatBag.Add($"I see you have {player.CountItem(ModContent.ItemType<MoonCoin>())} Moon coin{(unuCount == 1 ? "" : "s")}! Why don't you try spending them here?");
+ 			else
+ 				chatBag.Add("Hmm, you appear to have no Moon coins, try killing some Moon monsters to get some!");
+
+ 			chatBag.Add("What was I doing on the Moon before I got eaten? I was fighting Moon monsters, of course!");
 			// Reference to Houston Space Center, Texas
 			chatBag.Add("A while back I discovered I could tune in on human conversations if they were happening close enough to the Moon! I kept hearing the word 'Houston' come up in their conversations. I would like to meet this Houston some day!");
 			// Reference to "SPACE IS COOL" Songify Remix by SCHMOYOHO
@@ -159,22 +149,21 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
 			}
 			else
 			{
-				switch (Main.rand.Next(3))
+				Main.npcChatText = Main.rand.Next(3) switch
 				{
-					case 1:
-						Main.npcChatText = "Monsters on the Moon drop these strange coins! If you can find enough of them, I'll trade them for some supplies!";
-						break;
-					case 2:
-						Main.npcChatText = "Be prepared for anything, and stay alert! The Moon is a very dangerous place crawling with all kinds of monsters, always be ready for anything!";
-						break;
-					default:
-						Main.npcChatText = "If you wish to explore the Moon, do not forget your spacesuit!";
-						break;
-				}
+					1 => "Monsters on the Moon drop these strange coins! If you can find enough of them, I'll trade them for some supplies!",
+					2 => "Be prepared for anything, and stay alert! The Moon is a very dangerous place crawling with all kinds of monsters, always be ready for anything!",
+					_ => "If you wish to explore the Moon, do not forget your spacesuit!",
+				};
 			}
 		}
 		public override void PostAI()
 		{
+			if (NPC.ai[0]-- > 0)
+				NPC.immortal = true;
+			else 
+				NPC.immortal = false;
+
 			if (!SubworldSystem.IsActive<Moon>())
 				NPC.active = false;
 		}
@@ -188,9 +177,14 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
 				shop.item[nextSlotRef].SetDefaults(type);
 				shop.item[nextSlotRef].shopCustomPrice = price;
 				shop.item[nextSlotRef].shopSpecialCurrency = CurrencyManager.UnuCredit;
-				return shop.item[nextSlotRef];
+				return shop.item[nextSlotRef++];
 			}
-			AddNewSlot(ref nextSlot, ModContent.ItemType<ChandriumBar>(), 20);
+
+			// for testing, subject to change  
+			AddNewSlot(ref nextSlot, ItemID.SuperHealingPotion, 3);
+			AddNewSlot(ref nextSlot, ModContent.ItemType<AstronautHelmet>(), 20);
+			AddNewSlot(ref nextSlot, ModContent.ItemType<AstronautSuit>(), 20);
+			AddNewSlot(ref nextSlot, ModContent.ItemType<AstronautLeggings>(), 20);
 		}
 		public override void TownNPCAttackStrength(ref int damage, ref float knockback)
 		{

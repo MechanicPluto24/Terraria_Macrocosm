@@ -15,7 +15,7 @@ namespace Macrocosm.Content.Tiles
 			Main.tileMergeDirt[Type] = false;
 			MinPick = 10000;
 			MineResist = 3f;
-			ItemDrop = ItemType<Items.Placeables.BlocksAndWalls.SpaceshipWindow>();
+			ItemDrop = ItemType<Items.Placeable.BlocksAndWalls.SpaceshipWindow>();
 			AddMapEntry(new Color(109, 233, 255));
 		}
 		public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)

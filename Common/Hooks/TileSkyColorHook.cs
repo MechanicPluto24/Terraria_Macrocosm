@@ -1,4 +1,4 @@
-using Macrocosm.Common.Utility;
+using Macrocosm.Common.Drawing;
 using Macrocosm.Content.Subworlds.Moon;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
@@ -11,12 +11,10 @@ namespace Macrocosm.Common.Hooks
 	{
 		public void Load(Mod mod)
 		{
-			On.Terraria.Main.ApplyColorOfTheSkiesToTiles += ModifyTileColor;
+			On.Terraria.Main.ApplyColorOfTheSkiesToTiles += Main_ApplyColorOfTheSkiesToTiles;
 		}
 
-		public void Unload() { }
-
-		private static void ModifyTileColor(On.Terraria.Main.orig_ApplyColorOfTheSkiesToTiles orig)
+		private void Main_ApplyColorOfTheSkiesToTiles(On.Terraria.Main.orig_ApplyColorOfTheSkiesToTiles orig)
 		{
 			if (SubworldSystem.IsActive<Moon>())
 			{
@@ -30,7 +28,9 @@ namespace Macrocosm.Common.Hooks
 			{
 				orig();
 			}
-
 		}
+
+		public void Unload() { }
+
 	}
 }
