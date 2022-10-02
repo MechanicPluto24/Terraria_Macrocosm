@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 
@@ -13,6 +14,7 @@ namespace Macrocosm.Content.Items.Currency
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Moon Coin");
+			ItemID.Sets.AnimatesAsSoul[Type] = true;
 			Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(4, 8));
 		}
 		public override void SetDefaults()

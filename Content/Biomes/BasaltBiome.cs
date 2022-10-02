@@ -1,4 +1,6 @@
-﻿using Macrocosm.Common.Utility;
+﻿using Macrocosm.Common.Hooks;
+using Macrocosm.Common.Utility;
+using Macrocosm.Content.Systems;
 using Terraria;
 
 namespace Macrocosm.Content.Biomes
@@ -22,14 +24,16 @@ namespace Macrocosm.Content.Biomes
 
 		public override void OnInBiome(Player player)
 		{
-			base.OnInBiome(player);
 			player.Macrocosm().ZoneBasalt = true;
 		}
 
-		public override bool IsBiomeActive(Player player)
+		public override void OnLeave(Player player)
 		{
-			return MacrocosmWorld.moonBiome > 20;
+			player.Macrocosm().ZoneBasalt = false;
 		}
+
+		public override bool IsBiomeActive(Player player) => TileCountSystem.TileCounts.RegolithCount > 40;
+	
 	}
 }
 

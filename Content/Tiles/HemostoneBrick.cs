@@ -16,7 +16,7 @@ namespace Macrocosm.Content.Tiles
 			Main.tileMergeDirt[Type] = true;
 			MinPick = 275;
 			MineResist = 3f;
-			ItemDrop = ItemType<Items.Placeables.BlocksAndWalls.HemostoneBrick>();
+			ItemDrop = ItemType<Items.Placeable.BlocksAndWalls.HemostoneBrick>();
 			AddMapEntry(new Color(129, 0, 0));
 			HitSound = SoundID.Tink;
 		}

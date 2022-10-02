@@ -1,10 +1,11 @@
-﻿using Macrocosm.Content.Subworlds.Moon.Generation;
+﻿using Macrocosm.Content.WorldGeneration.Moon;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.GameInput;
 using Terraria.Graphics.Effects;
+using Terraria.Map;
 using Terraria.WorldBuilding;
 
 namespace Macrocosm.Content.Subworlds.Moon
@@ -14,10 +15,19 @@ namespace Macrocosm.Content.Subworlds.Moon
 	/// Why isn't anyone else working on this
 	/// I have saved the day - Ryan
 	/// </summary>
-	public class Moon : Subworld
+	public class Moon : MacrocosmSubworld
 	{
-		public override bool NormalUpdates => true;
-		//public override int Width => 2000;
+		/// <summary>
+		/// 8 times slower than on Earth (a Terrarian lunar month lasts for 8 in-game days)
+		/// </summary>
+		public override double TimeRate => 0.125;
+
+		/// <summary>
+		/// about 6 times lower than default (1, as on Earth)
+		/// </summary>
+		public override float GravityMultiplier => 0.166f; 
+
+		public override bool NormalUpdates => false;
 		public override int Width => 2200;
 		public override int Height => 1200;
 		public override bool ShouldSave => true;
@@ -26,8 +36,7 @@ namespace Macrocosm.Content.Subworlds.Moon
 		{
 			genGroundPass,
 			new CraterPass("CraterPass", 1f),
-			new BackgroundPass("BackgroundPass", 1f),
-			new RegolithPass("RegolithPass", 5f),
+ 			new RegolithPass("RegolithPass", 5f),
 			new OrePass("OrePass", 0.75f),
 			new CavePass("CavePass", 1f, genGroundPass.RockLayerHigh, genGroundPass.RockLayerHigh),
 			new ScuffedSmoothPass("ScuffedSmoothPass", 1f),
@@ -35,7 +44,17 @@ namespace Macrocosm.Content.Subworlds.Moon
 			new FinishPass("FinishPass", 0.1f)
 		};
 
-		public const float TimeRate = 0.125f;
+		public override Dictionary<MapColorType, Color> MapColors => new()
+		{
+			{MapColorType.SkyUpper, new Color(10, 10, 10)},
+			{MapColorType.SkyLower, new Color(40, 40, 40)},
+			{MapColorType.UndergroundUpper, new Color(40, 40, 40)},
+			{MapColorType.UndergroundLower, new Color(30, 30, 30)},
+ 			{MapColorType.CavernUpper, new Color(30, 30, 30)},
+ 			{MapColorType.CavernLower, new Color(30, 30, 30)},
+ 			{MapColorType.Underworld,  new Color(30, 30, 30)}
+		};
+
 
 		private MoonSubworldLoadUI moonLoadUI;
 		private GroundPass genGroundPass;
@@ -50,13 +69,13 @@ namespace Macrocosm.Content.Subworlds.Moon
 		{
 			moonLoadUI.Setup(toEarth: false);
 			SkyManager.Instance.Activate("Macrocosm:MoonSky");
-		}
+ 		}
 
 		public override void OnExit()
 		{
 			moonLoadUI.Setup(toEarth: true);
 			SkyManager.Instance.Deactivate("Macrocosm:MoonSky");
-		}
+ 		}
 
 		public override void Load()
 		{

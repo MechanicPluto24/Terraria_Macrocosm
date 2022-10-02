@@ -1,5 +1,6 @@
 using Macrocosm.Common.Utility;
 using Macrocosm.Content.Biomes;
+using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Materials;
 using Terraria;
 using Terraria.GameContent.Bestiary;
@@ -94,21 +95,21 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 			if (NPC.life > 0)
 			{
-				for (int i = 0; i < 10; i++)
+				for (int i = 0; i < 30; i++)
 				{
-					int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.TintableDust);
-					Dust dust = Main.dust[dustIndex];
-					dust.velocity.X *= dust.velocity.X * 1.25f * hitDirection + Main.rand.Next(0, 100) * 0.015f;
-					dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;
+					int dustType = Utils.SelectRandom<int>(Main.rand, DustID.TintableDust, DustID.Blood);
+
+ 					Dust dust = Dust.NewDustDirect(NPC.position, NPC.width, NPC.height, dustType);
+					dust.velocity.X *= (dust.velocity.X + + Main.rand.Next(0, 100) * 0.015f) * hitDirection;
+					dust.velocity.Y =  3f + Main.rand.Next(-50, 51) * 0.01f  ;
 					dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
+					dust.noGravity = true;
 				}
 			}
 
 			if (Main.netMode == NetmodeID.Server)
-			{
-				return; // don't run on the server
-			}
-
+ 				return; // don't run on the server
+ 
 			if (NPC.life <= 0)
 			{
 				var entitySource = NPC.GetSource_Death();

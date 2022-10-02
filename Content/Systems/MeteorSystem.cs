@@ -8,7 +8,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Utilities;
 
-namespace Macrocosm.Content
+namespace Macrocosm.Content.Systems
 {
 	class MeteorSystem : ModSystem
 	{
@@ -18,17 +18,14 @@ namespace Macrocosm.Content
 			Medium,
 			Large
 		}
-		public static float MeteorBoostMoon { get => meteorBoost; set => meteorBoost = value; }
+		public static float MeteorBoostMoon = 1f;
 
-		private static float meteorBoost = 1f;
 		private double timePass = 0.0;
 
 		public override void PostUpdateWorld()
 		{
 			if (SubworldSystem.IsActive<Moon>())
-			{
 				UpdateMeteorsMoon();
-			}
 		}
 
 		private void UpdateMeteorsMoon()
@@ -77,13 +74,13 @@ namespace Macrocosm.Content
 					choice.Add(MeteorType.Medium, 3);
 					choice.Add(MeteorType.Large, 1);
 
-					var source = Projectile.GetSource_NaturalSpawn();
+					var source = Main.player[closestPlayer].GetSource_Misc("FallingStar");
 
 					switch ((MeteorType)choice)
 					{
-						case MeteorType.Small: Projectile.NewProjectile(source, position.X, position.Y, speedX, speedY, ModContent.ProjectileType<FallingMeteorSmall>(), 500, 0f, closestPlayer); break;
-						case MeteorType.Medium: Projectile.NewProjectile(source, position.X, position.Y, speedX, speedY, ModContent.ProjectileType<FallingMeteorMedium>(), 750, 0f, closestPlayer); break;
-						case MeteorType.Large: Projectile.NewProjectile(source, position.X, position.Y, speedX, speedY, ModContent.ProjectileType<FallingMeteorLarge>(), 1000, 0f, closestPlayer); break;
+						case MeteorType.Small: Projectile.NewProjectile(source, position.X, position.Y, speedX, speedY, ModContent.ProjectileType<MoonMeteorSmall>(), 500, 0f, closestPlayer); break;
+						case MeteorType.Medium: Projectile.NewProjectile(source, position.X, position.Y, speedX, speedY, ModContent.ProjectileType<MoonMeteorMedium>(), 1000, 0f, closestPlayer); break;
+						case MeteorType.Large: Projectile.NewProjectile(source, position.X, position.Y, speedX, speedY, ModContent.ProjectileType<MoonMeteorLarge>(), 1500, 0f, closestPlayer); break;
 					}
 				}
 			}

@@ -1,9 +1,10 @@
 using MonoMod.Cil;
-using Mono.Cecil.Cil;
+using Terraria;
 using Terraria.ModLoader;
 using SubworldLibrary;
+using Macrocosm.Content.Subworlds;
 using Macrocosm.Content.Subworlds.Moon;
-using Terraria;
+using Macrocosm.Content.Subworlds.Earth;
 
 namespace Macrocosm.Common.Hooks
 {
@@ -11,12 +12,12 @@ namespace Macrocosm.Common.Hooks
 	{
 		public void Load(Mod mod)
 		{
-			IL.Terraria.Gore.Update += LowerGoreGravity;
+			IL.Terraria.Gore.Update += Gore_Update;
 		}
 
 		public void Unload() { }
 
-		private static void LowerGoreGravity(ILContext il)
+		private static void Gore_Update(ILContext il)
 		{
 			var c = new ILCursor(il);
 
@@ -26,7 +27,7 @@ namespace Macrocosm.Common.Hooks
 				i => i.MatchLdcI4(430)
 				)) return;
 
-			// matches "velocity.Y += 0.2f"
+			// matches "velocity.Y += 0.2f" ... this might break if other mods alter gore gravity 
 			if (!c.TryGotoNext(i => i.MatchLdcR4(0.2f))) return;
 
 			c.Remove();
@@ -36,10 +37,10 @@ namespace Macrocosm.Common.Hooks
 		// replace gravity increment with desired value 
 		private static float GetGoreGravity()
 		{
-			if (SubworldSystem.IsActive<Moon>())
-				return 0.033f; // base gravity divided by 6 
+			if (SubworldSystem.AnyActive<Macrocosm>())
+				return Earth.BaseGravity * MacrocosmSubworld.Current().GravityMultiplier;
 
-			return 0.2f;
+			return Earth.BaseGravity;
 		}
 
 	}
