@@ -176,10 +176,10 @@ namespace Macrocosm.Common.Drawing
 		/// <summary>
 		/// Resets the orbit tree down from this CelestialBody 
 		/// </summary>
-		public void ResetOrbitChildren()
+		public void ClearOrbitChildren()
 		{
 			foreach(CelestialBody child in orbitChildren)
-				child.ResetOrbitChildren();
+				child.ClearOrbitChildren();
 
 			orbitChildren.Clear();
 		}
@@ -219,7 +219,6 @@ namespace Macrocosm.Common.Drawing
 			#endregion
 
 			spriteBatch.End();
-
 
 			spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, state);
 
@@ -310,7 +309,11 @@ namespace Macrocosm.Common.Drawing
 			else
 			{
 				radius = (float)((orbitEllipse.X * orbitEllipse.Y) / Math.Sqrt(orbitEllipse.X * orbitEllipse.X * Math.Pow(Math.Sin(OrbitRotation), 2) + orbitEllipse.Y * orbitEllipse.Y * Math.Pow(Math.Cos(OrbitRotation), 2)));
-				orbitRotation += orbitSpeed; // * what goes here? 
+ 
+				// still feels off :sadcat:
+				float perigee = Math.Min(orbitEllipse.X, orbitEllipse.Y);
+				float apogee = Math.Max(orbitEllipse.X, orbitEllipse.Y);
+				orbitRotation += MathHelper.Lerp(orbitSpeed * (perigee / apogee), orbitSpeed, Utils.GetLerpValue(apogee, perigee, radius));
 			}
 
 			SetPositionPolar(orbitParent, radius, orbitRotation);

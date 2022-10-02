@@ -1,10 +1,12 @@
-﻿- finish juggernaut 
+﻿- finish juggernaut, leaper
 - tweak crescent ghoul & clavite ai 
 - finish Calcic Cane, Claw Wrench 
 - add ambient rocks (medium, large) to moon generation
 - improve CD fight
+- add rocket 
 
 Potential:
+- finish elliptical orbits for CelestialBody
 - disable (proper) wings flight on moon 
 - edit info display for moon phase and weather 
 - fix accelerated time passing not working (sleeping)

@@ -1,14 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using Macrocosm.Common.Drawing;
+using Macrocosm.Common.Utility;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
-using Macrocosm.Content.Backgrounds.Moon;
-using Macrocosm.Common.Drawing;
-using Terraria.UI.Chat;
-using Macrocosm.Common.Utility;
 
 namespace Macrocosm.Content
 {
@@ -16,9 +14,9 @@ namespace Macrocosm.Content
 	{
 
 		private const string assetPath = "Macrocosm/Assets/Textures/Menu/";
-
-		private readonly StarsDrawing stars = new();
 		private readonly List<CelestialBody> celestialBodies = new();
+
+		public readonly StarsDrawing Stars = new();
 
 		public readonly CelestialBody Sun = new(ModContent.Request<Texture2D>(assetPath + "CelestialBodies/Sun", AssetRequestMode.ImmediateLoad).Value, 
 					        					 ModContent.Request<Texture2D>(assetPath + "CelestialBodies/SunCorona", AssetRequestMode.ImmediateLoad).Value);
@@ -84,14 +82,15 @@ namespace Macrocosm.Content
 
 		public override void OnSelected()
 		{
-			stars.SpawnStars(350, 500, 0.8f);
+			Stars.SpawnStars(350, 500, 0.8f);
 			SetupCelestialBodies();
  		}
 
 		public override void OnDeselected()
 		{
-			stars.Clear();
- 		}
+			Stars.Clear();
+			Sun.ClearOrbitChildren();
+		}
 
 		public override bool PreDrawLogo(SpriteBatch spriteBatch, ref Vector2 logoDrawCenter, ref float logoRotation, ref float logoScale, ref Color drawColor)
 		{
@@ -107,7 +106,7 @@ namespace Macrocosm.Content
 
 			spriteBatch.Restore(state);
 
-			stars.Draw(spriteBatch);
+			Stars.Draw(spriteBatch);
 
 			// includes all orbiting descendants in the tree 
 			Sun.SetPosition(Main.screenWidth / 2, Main.screenHeight / 2);
@@ -125,7 +124,6 @@ namespace Macrocosm.Content
 				body.Scale = 0.6f;
 
 			Sun.Scale = 0.85f;
-			Sun.ResetOrbitChildren();
 
 			Sun.SetPosition(Main.screenWidth / 2, Main.screenHeight / 2);
 			Vulcan.SetOrbitParent(Sun, 174, Rand(), 0.0022f);
@@ -133,7 +131,7 @@ namespace Macrocosm.Content
 			Venus.SetOrbitParent(Sun, 238, Rand(), 0.0014f);
 
 			Earth.SetOrbitParent(Sun, 288, Rand(), 0.001f);
-			Luna.SetOrbitParent(Earth, 36, Rand(), 0.02f);
+			Luna.SetOrbitParent(Earth, 36, Rand(), 0.018f);
 
 			Mars.SetOrbitParent(Sun, 330, Rand(), 0.0008f);
 			Phobos.SetOrbitParent(Mars, 20, Rand(), 0.014f);
