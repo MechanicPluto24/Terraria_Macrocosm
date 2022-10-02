@@ -149,18 +149,12 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
 			}
 			else
 			{
-				switch (Main.rand.Next(3))
+				Main.npcChatText = Main.rand.Next(3) switch
 				{
-					case 1:
-						Main.npcChatText = "Monsters on the Moon drop these strange coins! If you can find enough of them, I'll trade them for some supplies!";
-						break;
-					case 2:
-						Main.npcChatText = "Be prepared for anything, and stay alert! The Moon is a very dangerous place crawling with all kinds of monsters, always be ready for anything!";
-						break;
-					default:
-						Main.npcChatText = "If you wish to explore the Moon, do not forget your spacesuit!";
-						break;
-				}
+					1 => "Monsters on the Moon drop these strange coins! If you can find enough of them, I'll trade them for some supplies!",
+					2 => "Be prepared for anything, and stay alert! The Moon is a very dangerous place crawling with all kinds of monsters, always be ready for anything!",
+					_ => "If you wish to explore the Moon, do not forget your spacesuit!",
+				};
 			}
 		}
 		public override void PostAI()

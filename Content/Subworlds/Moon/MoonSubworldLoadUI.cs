@@ -44,13 +44,11 @@ namespace Macrocosm.Content.Subworlds.Moon
 
 			Texture2D moonProgressBarTexUpper = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/WorldGen/ProgressBarMoon", AssetRequestMode.ImmediateLoad).Value;
 			Texture2D moonProgressBarTexLower = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/WorldGen/ProgressBarMoon_Lower", AssetRequestMode.ImmediateLoad).Value;
-			Texture2D moonProgressBarLargeFill = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/WorldGen/MoonLargeFill", AssetRequestMode.ImmediateLoad).Value;
-			Texture2D moonProgressBarSmallFill = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/WorldGen/MoonSmallFill", AssetRequestMode.ImmediateLoad).Value;
 
 			earth = new CelestialBody(earthSmallBackground, earthSmallAtmoBackground, 0.7f);
 
-			progressBar = new MacrocosmUIGenProgressBar(moonProgressBarTexUpper, moonProgressBarTexLower, moonProgressBarLargeFill, moonProgressBarSmallFill);
-			progressBar.SetPosition(200f, 200f);
+			progressBar = new MacrocosmUIGenProgressBar(moonProgressBarTexUpper, moonProgressBarTexLower, new Color(56, 10, 28), new Color(155, 38, 74), new Color(6, 53, 27), new Color(93, 228, 162));
+ 			progressBar.SetPosition(200f, 200f);
 		}
 
 		public void Setup(bool toEarth)
