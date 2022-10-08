@@ -7,7 +7,7 @@ namespace Macrocosm.Content.Systems
 {
 	public class DownedBossSystem : ModSystem
 	{
-		public static bool DownedCraterDemon { get; set; } = false;
+		public static bool DownedCraterDemon = false;
  
 		public override void OnWorldLoad()
 		{
