@@ -1,7 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Common.Drawing;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using Terraria;
 using Terraria.GameContent;
+using Terraria.Graphics;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -13,6 +16,9 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Flaming Meteor");
+			ProjectileID.Sets.TrailCacheLength[Type] = 20;
+			ProjectileID.Sets.TrailingMode[Type] = 0;
+
 			Main.projFrames[Type] = 6;
 		}
 
@@ -42,15 +48,23 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 			if (Projectile.velocity != Vector2.Zero)
 				Projectile.rotation = Projectile.velocity.ToRotation() - MathHelper.PiOver2;
 
-			if (Main.rand.NextFloat() < 0.35f)
-			{
-				int num5 = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Torch, Projectile.velocity.X * 0.4f, Projectile.velocity.Y * 0.4f, 128, default, 3f);
-				Main.dust[num5].noGravity = true;
-				Main.dust[num5].velocity.X *= 2f;
-				Main.dust[num5].velocity.Y *= 1.5f;
 
-				if (num5 % 2 == 0)
-					Main.dust[num5].color = new Color(0, 255, 100);
+			float dustTrailCount = MathHelper.Lerp(0f, 2f, Utils.GetLerpValue(0f, 16f, Math.Abs(Projectile.velocity.Y))) +
+								  MathHelper.Lerp(0f, 1f, Utils.GetLerpValue(0f, 9.25f, Math.Abs(Projectile.velocity.X)));
+
+			for (int i = 0; i < dustTrailCount; i++)
+			{
+				if (Math.Abs(Projectile.velocity.Y) < 0.5f && Math.Abs(Projectile.velocity.X) < 0.5f)
+					break;
+
+				Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.Torch, Projectile.velocity.X * 0.4f, Projectile.velocity.Y * 0.4f, 128, default, 3f);
+				dust.noGravity = true;
+				dust.velocity.X *= 2f;
+				dust.velocity.Y *= 1.5f;
+				dust.scale = MathHelper.Lerp(0.5f, 2.5f, Utils.GetLerpValue(28, 0, Vector2.Distance(dust.position, Projectile.Center)));
+
+				if (dust.dustIndex % 2 == 0)
+					dust.color = new Color(0, 255, 100);
 			}
 
 
@@ -67,8 +81,7 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 			Texture2D tex = TextureAssets.Projectile[Type].Value;
 
 			Rectangle sourceRect = tex.Frame(1, Main.projFrames[Type], frameY: Projectile.frame);
-
-			Vector2 origin = Projectile.Size / 2f + new Vector2(6, 32);
+ 			Vector2 origin = Projectile.Size / 2f + new Vector2(6, 32);
 
 			Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition,
 				sourceRect, Color.White, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);

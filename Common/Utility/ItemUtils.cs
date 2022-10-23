@@ -1,6 +1,9 @@
 ﻿using Macrocosm.Content.Items.GlobalItems;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 
 namespace Macrocosm.Common.Utility
@@ -51,6 +54,39 @@ namespace Macrocosm.Common.Utility
 
 		}
 
+		public static void DrawBossBagEffect(this Item item, SpriteBatch spriteBatch, Color colorFront, Color colorBack, float rotation, float scale)
+		{
+			Texture2D texture = TextureAssets.Item[item.type].Value;
+			Rectangle frame = texture.Frame();
+
+			Vector2 frameOrigin = frame.Size() / 2f;
+			Vector2 offset = new Vector2(item.width / 2 - frameOrigin.X, item.height - frame.Height);
+			Vector2 drawPos = item.position - Main.screenPosition + frameOrigin + offset;
+
+			float time = Main.GlobalTimeWrappedHourly;
+			float timer = item.timeSinceItemSpawned / 240f + time * 0.04f;
+
+			time %= 4f;
+			time /= 2f;
+
+			if (time >= 1f)
+				time = 2f - time;
+
+			time = time * 0.5f + 0.5f;
+
+			for (float i = 0f; i < 1f; i += 0.25f)
+			{
+				float radians = (i + timer) * MathHelper.TwoPi;
+				spriteBatch.Draw(texture, drawPos + new Vector2(0f, 8f).RotatedBy(radians) * time, frame, colorFront, rotation, frameOrigin, scale, SpriteEffects.None, 0);
+			}
+
+			for (float i = 0f; i < 1f; i += 0.34f)
+			{
+				float radians = (i + timer) * MathHelper.TwoPi;
+				spriteBatch.Draw(texture, drawPos + new Vector2(0f, 4f).RotatedBy(radians) * time, frame, colorBack, rotation, frameOrigin, scale, SpriteEffects.None, 0);
+			}
+		}
+
 		/// <summary>
 		/// Copied private method from vanilla 
 		/// </summary>
@@ -59,6 +95,5 @@ namespace Macrocosm.Common.Utility
 			pickedProjectileId = 0;
 			return AmmoID.Sets.SpecificLauncherAmmoProjectileMatches.TryGetValue(launcher, out Dictionary<int, int> value) && value.TryGetValue(ammo, out pickedProjectileId);
 		}
-
 	}
 }

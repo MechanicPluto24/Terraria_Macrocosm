@@ -247,21 +247,28 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 		public override void ModifyNPCLoot(NPCLoot npcLoot)
 		{
-			npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<CraterDemonBossBag>()));
+			// common drops (non-boss bag)
 			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<CraterDemonTrophy>(), 10));
+
+			// EM drop
+			npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<CraterDemonBossBag>()));
+
+			// MM drops
 			//npcLoot.Add(ItemDropRule.MasterModeCommonDrop(ModContent.ItemType<CraterDemonRelic>()));
 			//npcLoot.Add(ItemDropRule.MasterModeDropOnAllPlayers(ModContent.ItemType<CraterDemonMMPet>(), 4));
+
+			// BELOW: for normal mode, same as boss bag (excluding Broken Hero Shield)
 
 			LeadingConditionRule notExpertRule = new LeadingConditionRule(new Conditions.NotExpert());
 			//notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<CraterDemonBossMask>(), 7));
 
 			notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<MoonCoin>(), 1, 30, 60));
-			notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<DeliriumPlating>(), 1, 5, 15));
+			notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<DeliriumPlating>(), 1, 30, 90));
 
 			notExpertRule.OnSuccess(ItemDropRule.OneFromOptions(1, 
 				ModContent.ItemType<CalcicCane>(),
 				ModContent.ItemType<Cruithne3753>()
-				/*, ModContent.ItemType<CrystalPortalThingy>() */
+				/*, ModContent.ItemType<JewelOfShowers>() */
 				/*, ModContent.ItemType<ChampionBlade>() */
 				));
 

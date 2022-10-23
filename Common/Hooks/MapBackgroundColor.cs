@@ -59,13 +59,9 @@ namespace Macrocosm.Common.Hooks
 			HellPosition = (ushort)HellPositionF.GetValue(null);
 		}
 
-		/// <summary>
-		/// Adapted from vanilla code 
-		/// </summary>
+		/// <summary> Adapted from vanilla code </summary>
 		private Color ComputeGradient(Color from, Color to, float value) => new Color((byte)((float)(int)from.R * (1f - value) + (float)(int)to.R * value), (byte)((float)(int)from.G * (1f - value) + (float)(int)to.G * value), (byte)((float)(int)from.B * (1f - value) + (float)(int)to.B * value));
 		 
-
 		public void Unload() { }
-
 	}
 }
