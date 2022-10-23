@@ -97,16 +97,19 @@ namespace Macrocosm.Content.WorldGeneration
 						else if (addTile || Main.tile[k, l].HasTile)
 							WorldGen.PlaceTile(k, l, tileType, true, true);
 
-						if (addWall)
+						if (wallType == -1)
 						{
 							Main.tile[k, l].Clear(Terraria.DataStructures.TileDataType.Wall);
 						}
 						else if (wallType > 0)
 						{
-							if(Main.tile[k, l].WallType != wallType)
-								Main.tile[k, l].Clear(Terraria.DataStructures.TileDataType.Wall);
+							if (addWall || (!addWall && Main.tile[k, l].WallType != 0))
+							{
+								if (Main.tile[k, l].WallType != 0)
+									Main.tile[k, l].Clear(Terraria.DataStructures.TileDataType.Wall);
 
-							WorldGen.PlaceWall(k, l, wallType, mute: true);
+								WorldGen.PlaceWall(k, l, wallType, mute: true);
+							}
 						}
  					}
 				}

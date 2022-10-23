@@ -109,8 +109,7 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 		private void AddBlocks(GenerationProgress progress)
 		{
 			int trueSurfaceY = -1;
-			bool addWall;
-
+ 
 			int spreadCounter = (int)Main.worldSurface;
 
 			int startX = CenterX - biomeWidth / 2;
@@ -124,7 +123,8 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 				for (int tileY = 1; tileY < biomeHeight; tileY++)
 				{
 					// TileRunner will place walls unconditionally only below the surface 
-					int wallType = tileY > (int)(Main.worldSurface * 1.2) ? ModContent.WallType<IrradiatedRockWall>() : 0;
+					int wallType = ModContent.WallType<IrradiatedRockWall>();
+					bool addWall = tileY > (int)(Main.worldSurface * 1.4);
 
 					// Spread the irradiated rocks periodically on biome edges  
 					if ((tileX == startX || tileX == stopX - 1 || tileY == biomeHeight - 1) && spreadCounter-- == 0)
@@ -136,7 +136,7 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 						if (tileY == biomeHeight - 1)
 							strength += 40;
 
-						WorldGenUtils.TileRunner(tileX, tileY, strength, steps, ModContent.TileType<IrradiatedRock>(), addTile: false, wallType, addWall: false);
+						WorldGenUtils.TileRunner(tileX, tileY, strength, steps, ModContent.TileType<IrradiatedRock>(), addTile: false, wallType, addWall: addWall);
 						spreadCounter = 80;
 					}
 
