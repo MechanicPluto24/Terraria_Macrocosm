@@ -38,7 +38,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
 		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
 		{
-			position += new Vector2(0, -5); // muzzle offset 
+ 			position += new Vector2(0, -5); // muzzle offset 
 			type = ModContent.ProjectileType<ArchersLineProjectile>();
 		}
 

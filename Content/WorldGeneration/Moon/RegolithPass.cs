@@ -28,7 +28,7 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 							WorldGen.PlaceTile(tileX, tileY, (ushort)ModContent.TileType<Tiles.Regolith>(), true, true);
 						}
 
-						if (CheckTile6WayBelow(tileX, tileY) && regolithChance > 2.0)
+						if (WorldGenUtils.CheckTile6WayBelow(tileX, tileY) && regolithChance > 2.0)
 							Main.tile[tileX, tileY].WallType = (ushort)ModContent.WallType<RegolithWall>();
 
 
@@ -58,17 +58,6 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 				}
 			}
 		}
-
-		public bool CheckTile6WayBelow(int tileX, int tileY)
-			=>  Main.tile[tileX, tileY].HasTile &&  // Current tile is active
-				Main.tile[tileX - 1, tileY].HasTile &&  // Left tile is active
-				Main.tile[tileX + 1, tileY].HasTile &&  // Right tile is active
-				Main.tile[tileX, tileY + 1].HasTile &&  // Bottom tile is active
-				Main.tile[tileX - 1, tileY + 1].HasTile &&  // Bottom-left tile is active
-				Main.tile[tileX + 1, tileY + 1].HasTile &&  // Bottom-right tile is active
-													   // The following will help to make the walls slightly lower than the terrain
-				Main.tile[tileX, tileY - 2].HasTile; // Top tile is active
-
 
 	}
 }

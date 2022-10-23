@@ -77,6 +77,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			if (Main.rand.NextBool(25))
 				SpawnDusts();
 
+			Main.NewText(AI_AttackTimer);
+
  			if (Main.netMode == NetmodeID.MultiplayerClient || !NPC.HasPlayerTarget)
 				return;
 

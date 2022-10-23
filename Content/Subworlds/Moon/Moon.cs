@@ -17,20 +17,15 @@ namespace Macrocosm.Content.Subworlds.Moon
 	/// </summary>
 	public class Moon : MacrocosmSubworld
 	{
-		/// <summary>
-		/// 8 times slower than on Earth (a Terrarian lunar month lasts for 8 in-game days)
-		/// </summary>
+		/// <summary>  8 times slower than on Earth (a Terrarian lunar month lasts for 8 in-game days) </summary>
 		public override double TimeRate => 0.125;
-
-		/// <summary>
-		/// about 6 times lower than default (1, as on Earth)
-		/// </summary>
+		/// <summary> About 6 times lower than default (1, as on Earth) </summary>
 		public override float GravityMultiplier => 0.166f; 
 
 		public override bool NormalUpdates => false;
-		public override int Width => 2200;
+		public override int Width => 4200;
 		public override int Height => 1200;
-		public override bool ShouldSave => true;
+		public override bool ShouldSave => false;
 		public override bool NoPlayerSaving => false;
 		public override List<GenPass> Tasks => new()
 		{
@@ -39,6 +34,7 @@ namespace Macrocosm.Content.Subworlds.Moon
  			new RegolithPass("RegolithPass", 5f),
 			new OrePass("OrePass", 0.75f),
 			new CavePass("CavePass", 1f, genGroundPass.RockLayerHigh, genGroundPass.RockLayerHigh),
+			new IrradiationPass("IrradiationPass", 3f),
 			new ScuffedSmoothPass("ScuffedSmoothPass", 1f),
 			new AmbientPass("AmbientPass", 0.2f),
 			new FinishPass("FinishPass", 0.1f)

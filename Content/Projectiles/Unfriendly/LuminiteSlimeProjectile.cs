@@ -1,10 +1,13 @@
 ﻿using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Utility;
+using Macrocosm.Content.Dusts;
 using Macrocosm.Content.NPCs.Enemies.Moon;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using Terraria;
 using Terraria.GameContent;
+using Terraria.Graphics;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -40,14 +43,18 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 
 		public override bool PreDraw(ref Color lightColor)
 		{
+
+			Projectile.DrawTrail(Vector2.Zero, 4f, 1f, new Color(98, 211, 168) * lightColor.GetLuminance());
+
+			/*
 			int count = ProjectileID.Sets.TrailCacheLength[Type];
 
 			if (AI_Timer < 40)
- 				count /= 2;
-				 
+				count /= 2;
 			for (int i = 0; i < count; i++)
- 				Main.spriteBatch.Draw(TextureAssets.Projectile[Type].Value, Projectile.oldPos[i] - Main.screenPosition, lightColor * (1f - ((float)i/count)));
- 		 
+				Main.spriteBatch.Draw(TextureAssets.Projectile[Type].Value, Projectile.oldPos[i] - Main.screenPosition, lightColor * (1f - ((float)i/count)));
+			*/
+
 			return true;
 		}
 
@@ -57,15 +64,15 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 			float baseShootSpeed = 12f;
 			float shootDeviation = 0.5f;
 
-			if (Main.npc[Projectile.owner].type != ModContent.NPCType<LuminiteSlime>())
-				Projectile.active = false;
+			//if (Main.npc[Projectile.owner].type != ModContent.NPCType<LuminiteSlime>())
+			//	Projectile.active = false;
  
 		    if(AI_Timer++ == timeToShoot)
 			{
 				if (Main.netMode == NetmodeID.MultiplayerClient)
 					return;
 
-				float aimAngle = (Main.player[TargetPlayer].Center - Projectile.Center ).ToRotation();
+				float aimAngle = (Main.player[TargetPlayer].Center - Projectile.Center).ToRotation();
 				float shootSpeed = baseShootSpeed + Main.rand.NextFloat(-shootDeviation, shootDeviation);
 				Projectile.velocity = MathUtils.PolarVector(shootSpeed, aimAngle);
 

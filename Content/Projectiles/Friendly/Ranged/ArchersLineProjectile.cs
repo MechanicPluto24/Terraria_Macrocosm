@@ -1,3 +1,4 @@
+using Macrocosm.Common.Drawing;
 using Macrocosm.Sounds;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -10,7 +11,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 	public class ArchersLineProjectile : ModProjectile
 	{
 		public override string Texture => "Terraria/Images/Projectile_14";
-		private bool[] hitList = new bool[Main.maxNPCs]; //Used to keep track of every NPC hit
+		private readonly bool[] hitList = new bool[Main.maxNPCs]; //Used to keep track of every NPC hit
+
+		public override void SetStaticDefaults()
+		{
+			ProjectileID.Sets.TrailCacheLength[Type] = 10;
+			ProjectileID.Sets.TrailingMode[Type] = 0;
+		}
 
 		public override void SetDefaults()
 		{
@@ -22,6 +29,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			Projectile.penetrate = 10;
 			Projectile.localNPCHitCooldown = -1;
 			Projectile.usesLocalNPCImmunity = true;
+		}
+
+		public override bool PreDraw(ref Color lightColor)
+		{
+			Projectile.DrawTrail(Vector2.Zero, 2f, 0.5f, new Color(254, 121, 2) * lightColor.GetLuminance(), new Color(184, 58, 24) * lightColor.GetLuminance());
+			return true;
 		}
 
 		public override void OnHitNPC(NPC npc, int damage, float knockback, bool crit)
@@ -45,6 +58,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 				SoundEngine.PlaySound(CustomSounds.Ricochet with { Volume = 0.3f });
 			}
+
+			Projectile.velocity *= 0.9f;
+
 
 			base.OnHitNPC(npc, damage, knockback, crit);
 		}
