@@ -25,12 +25,11 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 			double largeCaveFreq = 0.00013;
 
 			int smallCaveWallChance = 5; // 1/x chance to spread walls  
-			int largeCaveClearChance = 3; // 1/x chance co clear walls 
+			int largeCaveChance = 10; // 1/x chance to spread walls 
 			int wallGenHeight = (int)Main.rockLayer + 100;
 
 			int airTileType = -1;
 			int protolithWallType = ModContent.WallType<ProtolithWall>();
-
 
 			List<Point> smallCaves = new();
 			List<Point> largeCaves = new();
@@ -61,7 +60,6 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 				smallCaves.Add(new Point(tileX, tileY));
 				WorldGen.TileRunner(tileX, tileY, WorldGen.genRand.Next(8, 15), WorldGen.genRand.Next(7, 30), airTileType);
 			}
-
  
 			//generate large caves 
 			for (int largeCaveSpot = 0; largeCaveSpot < (int)((double)(Main.maxTilesX * Main.maxTilesY) * largeCaveFreq); largeCaveSpot++)
@@ -90,11 +88,16 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 			{
 				if (cave.Y > wallGenHeight)
 				{
-					if (WorldGen.genRand.NextBool(largeCaveClearChance))
-						WorldGen.Spread.Wall2(cave.X, cave.Y, 0); // limited spread
-				}
+					WorldGen.maxWallOut2 *= 3;
+
+					if (WorldGen.genRand.NextBool(largeCaveChance))
+						WorldGen.Spread.Wall2(cave.X, cave.Y, protolithWallType); // limited spread
+					else
+						WorldGen.Spread.Wall2(cave.X, cave.Y, 0);
+
+					WorldGen.maxWallOut2 /= 3;
+ 				}
 			}
 		}
- 
 	}
 }
