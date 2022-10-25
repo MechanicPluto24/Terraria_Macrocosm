@@ -1,5 +1,5 @@
+using Macrocosm.Common;
 using Macrocosm.Common.Drawing;
-using Macrocosm.Sounds;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
@@ -56,7 +56,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 					Projectile.rotation = Main.npc[target].Center.ToRotation();
 				}
 
-				SoundEngine.PlaySound(CustomSounds.Ricochet with { Volume = 0.3f });
+				SoundEngine.PlaySound(SFX.Ricochet with { Volume = 0.3f });
 			}
 
 			Projectile.velocity *= 0.9f;
