@@ -1,15 +1,13 @@
-﻿using Macrocosm.Common.Utility;
-using Macrocosm.Content.Buffs.Debuffs;
-using Macrocosm.Content.Items.Accessories.CelestialBulwark;
-using Macrocosm.Content.Subworlds;
-using Macrocosm.Content.Subworlds.Moon;
+﻿using System;
 using Microsoft.Xna.Framework;
-using SubworldLibrary;
 using Terraria;
 using Terraria.ModLoader;
-using Terraria.ID;
+using Terraria.Graphics.Effects;
+using SubworldLibrary;
+using Macrocosm.Content.Buffs.Debuffs;
+using Macrocosm.Content.Subworlds;
+using Macrocosm.Content.Subworlds.Moon;
 using Macrocosm.Content.Dusts;
-using System;
 
 namespace Macrocosm.Content
 {
@@ -20,6 +18,7 @@ namespace Macrocosm.Content
 
 		public bool ZoneMoon = false;
 		public bool ZoneBasalt = false;
+		public bool ZoneIrradiation = false;
 
 		#region Screenshake mechanic 
 
@@ -72,7 +71,6 @@ namespace Macrocosm.Content
 		public override void ResetEffects()
 		{
 			AccMoonArmor = false;
-
 			ResetDashEffects();
 		}
 
@@ -89,7 +87,6 @@ namespace Macrocosm.Content
  					Player.AddBuff(ModContent.BuffType<SuitBreach>(), 2);
  			}
 
-
 			celestialBulwarkVisible = (Player.shield == EquipLoader.GetEquipSlot(Macrocosm.Instance, "CelestialBulwark", EquipType.Shield));
 
 			if (celestialBulwarkVisible)
@@ -104,8 +101,10 @@ namespace Macrocosm.Content
 			if (AccMoonArmorDebuff > 0)
 				Player.buffImmune[ModContent.BuffType<SuitBreach>()] = false;
 
-			UpdateStamina();
 			UpdateBuffs();
+			UpdateStamina();
+
+			UpdateFilterEffects();
 		}
 
 		public override void ModifyScreenPosition()
@@ -137,6 +136,22 @@ namespace Macrocosm.Content
 			else
 			{
 				ResetStaminaCooldown(90f);
+			}
+		}
+
+		private void UpdateFilterEffects()
+		{
+			if (ZoneIrradiation)
+			{
+				if (!Filters.Scene["Macrocosm:RadiationNoiseEffect"].IsActive())
+					Filters.Scene.Activate("Macrocosm:RadiationNoiseEffect");
+
+				Filters.Scene["Macrocosm:RadiationNoiseEffect"].GetShader().UseIntensity(0.4f);
+			}
+			else
+			{
+				if (Filters.Scene["Macrocosm:RadiationNoiseEffect"].IsActive())
+					Filters.Scene.Deactivate("Macrocosm:RadiationNoiseEffect");
 			}
 		}
 

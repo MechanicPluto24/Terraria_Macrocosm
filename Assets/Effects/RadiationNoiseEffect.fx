@@ -20,19 +20,24 @@ float uSaturation;
 float4 uSourceRect;
 float2 uZoom;
 
+// some pseudo random noise generation 
+float RandomNoise(float2 coords, float seed)
+{
+    return frac(sin(dot(coords, float2(12.9898, 78.233))) * 43758.5453 * seed);
+}
+
 float4 RadiationNoiseEffect(float2 coords : TEXCOORD0) : COLOR0
 {
-    float2 position = uScreenResolution * coords + uScreenPosition;
     float4 color = tex2D(uImage0, coords);
     
-    color.rgb -= uIntensity * frac(sin(dot(coords, float2(12.9898, 78.233))) * 43758.5453 * sin(uTime));
+    color.rgb -= uIntensity * 0.42 * RandomNoise(coords, sin(uTime));
        
     return color;
 }
 
 technique Technique1
 {
-    pass RadiationNoiseEffectPass
+    pass RadiationNoiseEffect
     {
         PixelShader = compile ps_2_0 RadiationNoiseEffect();
     }

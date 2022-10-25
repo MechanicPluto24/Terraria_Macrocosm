@@ -1,6 +1,6 @@
 ﻿using Terraria.Audio;
 
-namespace Macrocosm.Common
+namespace Macrocosm.Assets.Sounds
 {
 	public static class SFX
 	{

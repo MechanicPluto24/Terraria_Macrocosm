@@ -1,4 +1,4 @@
-using Macrocosm.Common;
+using Macrocosm.Assets.Sounds;
 using Macrocosm.Common.Utility;
 using Macrocosm.Content.Gores;
 using Microsoft.Xna.Framework;
