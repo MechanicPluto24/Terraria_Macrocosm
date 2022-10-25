@@ -1,11 +1,14 @@
 using Macrocosm.Common.Utility;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Terraria.Graphics.Effects;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.GameContent;
+using Terraria.Graphics.Shaders;
 using Terraria.UI.Chat;
 
 namespace Macrocosm.Common.Drawing
@@ -211,7 +214,7 @@ namespace Macrocosm.Common.Drawing
 			spriteBatch.End();
 			#endregion
 
-			spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, state); 
+			spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, state);
 
 			#region Atmosphere
 			if (atmoTexture is not null)
@@ -224,6 +227,7 @@ namespace Macrocosm.Common.Drawing
 
 			#region Body
 			spriteBatch.Draw(bodyTexture, Position, null, Color.White, Rotation, bodyTexture.Size() / 2, Scale, default, 0f);
+
 			#endregion
 
 			#region Draw children in front

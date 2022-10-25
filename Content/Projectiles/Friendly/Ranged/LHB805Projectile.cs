@@ -1,6 +1,6 @@
+using Macrocosm.Common;
 using Macrocosm.Common.Utility;
 using Macrocosm.Content.Gores;
-using Macrocosm.Sounds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Utilities;
@@ -173,7 +173,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		{
 			if (AI_Windup == 0f)
 			{
-				playingSoundId = SoundEngine.PlaySound(CustomSounds.MinigunWindup with
+				playingSoundId = SoundEngine.PlaySound(SFX.MinigunWindup with
 				{
 					Volume = 0.3f,
 					SoundLimitBehavior = SoundLimitBehavior.IgnoreNew
@@ -181,7 +181,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			}
 			else if (AI_Windup == windupTime)
 			{
-				playingSoundId = SoundEngine.PlaySound(CustomSounds.MinigunFire with
+				playingSoundId = SoundEngine.PlaySound(SFX.MinigunFire with
 				{
 					Volume = 0.3f,
 					IsLooped = true,

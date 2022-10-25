@@ -1,3 +1,4 @@
+using Macrocosm.Common;
 using Macrocosm.Content.Subworlds.Moon;
 using Macrocosm.Content.Tiles;
 using Microsoft.Xna.Framework.Graphics;
@@ -17,6 +18,8 @@ namespace Macrocosm
 		public override void Load()
 		{
 			EmptyTex = ModContent.Request<Texture2D>(EmptyTexPath, ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+
+			EffectLoader.LoadEffects();
 
 			#region Ryan's mods calls
 			if (ModLoader.TryGetMod("TerrariaAmbience", out Mod ta))

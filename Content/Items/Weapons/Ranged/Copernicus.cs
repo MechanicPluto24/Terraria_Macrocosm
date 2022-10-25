@@ -1,6 +1,6 @@
+using Macrocosm.Common;
 using Macrocosm.Common.Utility;
 using Macrocosm.Content.Projectiles.Friendly.Ranged;
-using Macrocosm.Sounds;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
@@ -53,7 +53,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 		{
 			if (player.altFunctionUse == 2)
 			{
-				SoundEngine.PlaySound(CustomSounds.GrenadeLauncherThunk with
+				SoundEngine.PlaySound(SFX.GrenadeLauncherThunk with
 				{
 					Volume = 0.7f
 					//SoundLimitBehavior = SoundLimitBehavior.IgnoreNew 
@@ -61,7 +61,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			}
 			else
 			{
-				SoundEngine.PlaySound(CustomSounds.AssaultRifle with
+				SoundEngine.PlaySound(SFX.AssaultRifle with
 				{
 					Volume = 0.7f
 					//SoundLimitBehavior = SoundLimitBehavior.IgnoreNew

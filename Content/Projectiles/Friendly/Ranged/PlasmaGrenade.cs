@@ -1,10 +1,6 @@
-using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Utility;
-using Macrocosm.Sounds;
 using Microsoft.Xna.Framework;
-using System;
 using Terraria;
-using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
