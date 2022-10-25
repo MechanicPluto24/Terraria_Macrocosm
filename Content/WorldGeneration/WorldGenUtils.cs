@@ -34,7 +34,8 @@ namespace Macrocosm.Content.WorldGeneration
 			   Main.tile[tileX    , tileY - 2].HasTile; // Top tile is active (will help to make the walls slightly lower than the terrain)
 
 		#region Custom TileRunners
-		public static void TileRunner(int i, int j, double strength, int steps, int tileType, bool addTile = false, int wallType = 0, bool addWall = false, float speedX = 0.0f, float speedY = 0.0f, bool noYChange = false, int ignoreTileType = -1) { 
+		/// <summary> Used to spread walls alongside tiles. FIXME: Y change is too high </summary>
+		public static void TileWallRunner(int i, int j, double strength, int steps, int tileType, bool addTile = false, int wallType = 0, bool addWall = false, float speedX = 0.0f, float speedY = 0.0f, bool noYChange = false, int ignoreTileType = -1) { 
 			
 			double num = strength;
 			double num2 = steps;

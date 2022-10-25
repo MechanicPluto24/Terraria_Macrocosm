@@ -136,7 +136,7 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 						if (tileY == biomeHeight - 1)
 							strength += 40;
 
-						WorldGenUtils.TileRunner(tileX, tileY, strength, steps, ModContent.TileType<IrradiatedRock>(), addTile: false, wallType, addWall: addWall);
+						WorldGenUtils.TileWallRunner(tileX, tileY, strength, steps, ModContent.TileType<IrradiatedRock>(), addTile: false, wallType, addWall: addWall);
 						spreadCounter = 80;
 					}
 

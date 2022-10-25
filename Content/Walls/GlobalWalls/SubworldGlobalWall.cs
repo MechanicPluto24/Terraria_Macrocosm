@@ -12,9 +12,9 @@ namespace Macrocosm.Content.Tiles.GlobalWalls
 		{
 			if (SubworldSystem.AnyActive<Macrocosm>() && (r == 0 || g == 0 || b == 0))
 			{
-				r = 0.01f;
-				g = 0.01f;
-				b = 0.01f;
+				r += 0.01f;
+				g += 0.01f;
+				b += 0.01f;
 			}
 		}
 	}

@@ -1,3 +1,4 @@
+using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Utility;
 using Macrocosm.NPCs.GlobalNPCs;
 using Microsoft.Xna.Framework;
@@ -9,13 +10,16 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-	public class Rocket : ModProjectile
+	public class NWARocket : ModProjectile
 	{
 		public ref float AI_HomingTimer => ref Projectile.ai[0];
 
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Rocket");
+			ProjectileID.Sets.TrailCacheLength[Type] = 30;
+			ProjectileID.Sets.TrailingMode[Type] = 0;
+
 		}
 
 		public override void SetDefaults()
@@ -29,6 +33,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			Projectile.tileCollide = true;
 			Projectile.ignoreWater = true;
 			Projectile.light = .5f;
+		}
+
+		public override bool PreDraw(ref Color lightColor)
+		{
+			// draw trail if not exploded yet 
+			if (Projectile.width == 16)
+				Projectile.DrawTrail(new Vector2(0,0), 7f, 1f, new Color(255, 129, 1, 255), new Color(255, 255, 0, 0));
+			
+			return true;
 		}
 
 		public override void ModifyDamageHitbox(ref Rectangle hitbox)

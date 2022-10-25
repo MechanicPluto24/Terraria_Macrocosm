@@ -1,4 +1,5 @@
 using Macrocosm.Common.Utility;
+using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Sounds;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -91,8 +92,8 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
 			if (player.altFunctionUse == 2)
 			{
-
-				type = ItemUtils.ToRocketProjectileID(player, ItemID.GrenadeLauncher);
+				//type = ItemUtils.ToRocketProjectileID(player, ItemID.GrenadeLauncher);
+				type = ModContent.ProjectileType<PlasmaGrenade>();
 				position.Y += 2;
 				velocity /= 3f;
 			}

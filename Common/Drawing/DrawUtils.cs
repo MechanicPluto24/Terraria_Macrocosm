@@ -124,8 +124,14 @@ namespace Macrocosm.Common.Drawing
 					Vector2 v1 = oldPos[k] + origin + rotatableOffsetFromCenter.RotatedBy(oldRot[k]);
 					Vector2 v2 = oldPos[k - 1] + origin + rotatableOffsetFromCenter.RotatedBy(oldRot[k - 1]) - v1;
  					float brightness = Utils.Remap(k, 0f, oldPos.Length, 1f, 0f);
-					Color color = (endColor is null) ? startColor * brightness : Color.Lerp(startColor, (Color)endColor, brightness);
- 					Main.EntitySpriteDraw(TextureAssets.MagicPixel.Value, v1 - Main.screenPosition, rect, color, v2.ToRotation() + (float)Math.PI / 2f, new Vector2((float)rect.Width / 2f, rect.Height), new Vector2(MathHelper.Lerp(startWidth, endWidth, (float)k/oldPos.Length), v2.Length()), SpriteEffects.None, 1);
+					Color color = (endColor is null) ? startColor * brightness : Color.Lerp((Color)endColor, startColor, brightness);
+
+					SpriteBatch spriteBatch = Main.spriteBatch;
+					SpriteBatchState state = spriteBatch.SaveState();
+					spriteBatch.EndIfBeginCalled();
+					spriteBatch.Begin(SpriteSortMode.Deferred, blendState: BlendState.NonPremultiplied, state);
+					Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, v1 - Main.screenPosition, rect, color, v2.ToRotation() + (float)Math.PI / 2f, new Vector2((float)rect.Width / 2f, rect.Height), new Vector2(MathHelper.Lerp(startWidth, endWidth, (float)k/oldPos.Length), v2.Length()), SpriteEffects.None, 1);
+					spriteBatch.Restore(state);
 				}
 			}
 		}

@@ -80,8 +80,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			int idleFrameInitial = 0;
 			int idleFrameCount = 10;
 
-			int leapFrameInitial = 10;
-			int leapFrameCount = 7;
+			//int leapFrameInitial = 10;
+			//int leapFrameCount = 7;
 
 			int midAirFrame = 16;
 
