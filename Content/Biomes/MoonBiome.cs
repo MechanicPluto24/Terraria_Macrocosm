@@ -35,7 +35,8 @@ namespace Macrocosm.Content.Biomes
 			player.Macrocosm().ZoneMoon = false;
 		}
 
-		public override bool IsBiomeActive(Player player) => SubworldSystem.IsActive<Moon>();
+		public override bool IsBiomeActive(Player player) 
+			=> SubworldSystem.IsActive<Moon>();
 
 	}
 }

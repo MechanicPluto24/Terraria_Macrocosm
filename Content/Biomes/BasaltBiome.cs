@@ -7,16 +7,6 @@ namespace Macrocosm.Content.Biomes
 {
 	public class BasaltBiome : MoonBiome
 	{
-		// Inherited from the base MoonBiome
-
-		// public override SceneEffectPriority Priority => SceneEffectPriority.BiomeHigh;
-		// public override string BestiaryIcon => base.BestiaryIcon;
-		// public override string BackgroundPath => base.BackgroundPath;
-		// public override Color? BackgroundColor => base.BackgroundColor;
-		// public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => new MoonSurfaceBgStyle();
-
-		//public override int Music => base.Music;
-
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Basalt");
@@ -32,7 +22,8 @@ namespace Macrocosm.Content.Biomes
 			player.Macrocosm().ZoneBasalt = false;
 		}
 
-		public override bool IsBiomeActive(Player player) => TileCountSystem.TileCounts.RegolithCount > 40;
+		public override bool IsBiomeActive(Player player) 
+			=> TileCountSystem.TileCounts.RegolithCount > 40;
 	
 	}
 }

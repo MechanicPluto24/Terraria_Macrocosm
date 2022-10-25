@@ -1,4 +1,4 @@
-using Macrocosm.Common;
+using Macrocosm.Assets.Sounds;
 using Macrocosm.Common.Drawing;
 using Microsoft.Xna.Framework;
 using Terraria;
