@@ -19,7 +19,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			DisplayName.SetDefault("Rocket");
 			ProjectileID.Sets.TrailCacheLength[Type] = 30;
 			ProjectileID.Sets.TrailingMode[Type] = 0;
-
 		}
 
 		public override void SetDefaults()
@@ -39,8 +38,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		{
 			// draw trail if not exploded yet 
 			if (Projectile.width == 16)
-				Projectile.DrawTrail(new Vector2(0,0), 7f, 1f, new Color(255, 129, 1, 255), new Color(255, 255, 0, 0));
-			
+				Projectile.DrawTrail(new Vector2(0,0), 7f, 1f, new Color(255, 197, 155, 255), new Color(255, 68, 1, 50)); 
+
 			return true;
 		}
 
@@ -52,9 +51,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 				hitbox = new Rectangle((int)Projectile.position.X, (int)Projectile.position.Y, Projectile.width, Projectile.height);
 		}
 
-		/// <summary>
-		/// Adapted from Projectile.AI_016() for homing snowman rockets
-		/// </summary>
+		/// <summary> Adapted from Projectile.AI_016() for homing snowman rockets </summary>
 		public override void AI()
 		{
 
@@ -136,7 +133,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 				Vector2 dustVelocity = Vector2.Zero;
 				if (i == 1)
 					dustVelocity = Projectile.velocity * 0.5f;
-
 
 				if (!(Projectile.localAI[1] > 9f))
 					continue;
