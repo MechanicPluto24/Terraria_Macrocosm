@@ -22,6 +22,7 @@ namespace Macrocosm.Content
 		public bool ZoneBasalt = false;
 
 		#region Screenshake mechanic 
+
 		private float screenShakeIntensity = 0f;
 		public float ScreenShakeIntensity
 		{
@@ -31,6 +32,7 @@ namespace Macrocosm.Content
 		#endregion
 
 		#region Stamina mechanic
+
 		private float staminaRegenCooldown = 90f;
 		private float staminaRegenPeriod = 60f;
 		public void ResetStaminaCooldown(float value) => staminaRegenCooldown = value;
@@ -44,7 +46,6 @@ namespace Macrocosm.Content
 		#endregion
 
 		#region Dash mechanic 
-
 
  		public bool AccDashHorizontal = false;
 		public bool AccDashVertical = false;

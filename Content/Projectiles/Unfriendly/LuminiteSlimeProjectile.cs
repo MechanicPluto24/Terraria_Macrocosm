@@ -44,7 +44,7 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 		public override bool PreDraw(ref Color lightColor)
 		{
 
-			Projectile.DrawTrail(Vector2.Zero, 4f, 1f, new Color(98, 211, 168) * lightColor.GetLuminance());
+			Projectile.DrawTrail(Vector2.Zero, 4f, 1f, new Color(98, 211, 168, 255) * lightColor.GetLuminance(), new Color(98, 211, 168, 1));
 
 			/*
 			int count = ProjectileID.Sets.TrailCacheLength[Type];

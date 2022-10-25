@@ -469,7 +469,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		public override void FindFrame(int frameHeight)
 		{
 			int set = GetAnimationSetFrame();
-
 			NPC.frame.Y = frameHeight * set;
 		}
 
