@@ -36,7 +36,7 @@ namespace Macrocosm.Content.Biomes
 		}
 
 		public override bool IsBiomeActive(Player player)
-			=> TileCountSystem.TileCounts.IrradiatedRockCount > 100;
+			=> TileCountSystem.TileCounts.IrradiatedRockCount > 400;
 
 	}
 }

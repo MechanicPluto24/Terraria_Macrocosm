@@ -8,6 +8,7 @@ using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Subworlds;
 using Macrocosm.Content.Subworlds.Moon;
 using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Systems;
 
 namespace Macrocosm.Content
 {
@@ -19,6 +20,8 @@ namespace Macrocosm.Content
 		public bool ZoneMoon = false;
 		public bool ZoneBasalt = false;
 		public bool ZoneIrradiation = false;
+
+		public float RadNoiseIntensity = 0f; 
 
 		#region Screenshake mechanic 
 
@@ -72,6 +75,8 @@ namespace Macrocosm.Content
 		{
 			AccMoonArmor = false;
 			ResetDashEffects();
+
+			RadNoiseIntensity = 0f;
 		}
 
 		public override void PreUpdateMovement()
@@ -146,7 +151,9 @@ namespace Macrocosm.Content
 				if (!Filters.Scene["Macrocosm:RadiationNoiseEffect"].IsActive())
 					Filters.Scene.Activate("Macrocosm:RadiationNoiseEffect");
 
-				Filters.Scene["Macrocosm:RadiationNoiseEffect"].GetShader().UseIntensity(0.4f);
+				RadNoiseIntensity += 0.45f * Utils.GetLerpValue(400, 10000, TileCountSystem.TileCounts.IrradiatedRockCount, clamped: true);
+
+ 				Filters.Scene["Macrocosm:RadiationNoiseEffect"].GetShader().UseIntensity(RadNoiseIntensity);
 			}
 			else
 			{
