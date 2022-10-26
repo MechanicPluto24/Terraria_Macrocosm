@@ -52,22 +52,10 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 		public override bool? UseItem(Player player)
 		{
 			if (player.altFunctionUse == 2)
-			{
-				SoundEngine.PlaySound(SFX.GrenadeLauncherThunk with
-				{
-					Volume = 0.7f
-					//SoundLimitBehavior = SoundLimitBehavior.IgnoreNew 
-				});
-			}
-			else
-			{
-				SoundEngine.PlaySound(SFX.AssaultRifle with
-				{
-					Volume = 0.7f
-					//SoundLimitBehavior = SoundLimitBehavior.IgnoreNew
-				});
-			}
-
+ 				SoundEngine.PlaySound(SFX.GrenadeLauncherThunk with { Volume = 0.7f });
+ 			else
+ 				SoundEngine.PlaySound(SFX.AssaultRifle with { Volume = 0.7f });
+ 
 			return true;
 		}
 
