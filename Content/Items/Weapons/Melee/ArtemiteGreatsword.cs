@@ -28,7 +28,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 			Item.rare = ItemRarityID.Green;
 			Item.UseSound = SoundID.Item1;
 			Item.autoReuse = true;
-			Item.shoot = ModContent.ProjectileType<ArtemiteSwordProjectile>();
+			//Item.shoot = ...
 			Item.shootSpeed = 10f;
 		}
 

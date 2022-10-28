@@ -30,7 +30,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			Item.value = 10000;
 			Item.rare = ItemRarityID.Purple;
 			Item.shoot = ProjectileID.PurificationPowder; // For some reason, all the guns in the vanilla source have this.
-														  //Item.autoReuse = true;
+			Item.autoReuse = true;
 			Item.shootSpeed = 20f;
 			Item.useAmmo = AmmoID.Bullet;
 			Item.UseSound = SoundID.Item38;

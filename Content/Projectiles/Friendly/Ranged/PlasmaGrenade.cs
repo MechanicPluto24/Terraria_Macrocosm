@@ -28,13 +28,16 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 			Projectile.timeLeft = 180;
 
+			Projectile.tileCollide = true;
+
 			Projectile.friendly = true;
-			Projectile.penetrate = -1;
+			Projectile.hostile = false;
+ 			Projectile.penetrate = -1;
 			Projectile.localNPCHitCooldown = -1;
 			Projectile.usesLocalNPCImmunity = true;
 
 			Projectile.aiStyle = ProjAIStyleID.Explosive;
-			AIType = ProjectileID.GrenadeI;
+			AIType = ProjectileID.Grenade;
 		}
 
 		public override bool PreKill(int timeLeft)

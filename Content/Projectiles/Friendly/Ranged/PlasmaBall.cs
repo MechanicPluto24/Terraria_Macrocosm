@@ -17,7 +17,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 	{
 		public override void SetStaticDefaults()
 		{
-			ProjectileID.Sets.TrailCacheLength[Type] = 5;
+			ProjectileID.Sets.TrailCacheLength[Type] = 7;
 			ProjectileID.Sets.TrailingMode[Type] = 0;
 		}
 
@@ -55,7 +55,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		 
 		public override bool PreDraw(ref Color lightColor)
 		{
-			Projectile.DrawTrail(Vector2.Zero, 4f, 1f, new Color(104, 255, 255) * lightColor.GetLuminance(), new Color(104, 255, 255, 0) * lightColor.GetLuminance());
+			Projectile.DrawTrail(Vector2.Zero, 4f, 1f, new Color(104, 255, 255), new Color(104, 255, 255, 0));
 			return true;
 		}
 
