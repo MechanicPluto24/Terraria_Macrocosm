@@ -19,6 +19,7 @@ namespace Macrocosm.Content.Subworlds.Moon
 	{
 		/// <summary>  8 times slower than on Earth (a Terrarian lunar month lasts for 8 in-game days) </summary>
 		public override double TimeRate => 0.125;
+
 		/// <summary> About 6 times lower than default (1, as on Earth) </summary>
 		public override float GravityMultiplier => 0.166f; 
 
@@ -50,7 +51,6 @@ namespace Macrocosm.Content.Subworlds.Moon
  			{MapColorType.CavernLower, new Color(30, 30, 30)},
  			{MapColorType.Underworld,  new Color(30, 30, 30)}
 		};
-
 
 		private MoonSubworldLoadUI moonLoadUI;
 		private GroundPass genGroundPass;

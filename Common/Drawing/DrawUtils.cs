@@ -137,8 +137,8 @@ namespace Macrocosm.Common.Drawing
 		}
 
 		/// <summary> Gets the perceived luminance of a color using the NTSC standard as a normalized value </summary>
-		public static float GetLuminance(this Color rgbColor) 
-			=>0.299f * rgbColor.R / 255 + 0.587f * rgbColor.G / 255 + 0.114f * rgbColor.B / 255;
+		public static float GetLuminance(this Color rgbColor)
+			=> 0.299f * rgbColor.R / 255 + 0.587f * rgbColor.G / 255 + 0.114f * rgbColor.B / 255;
 
 
 		/// <summary> Gets the perceived luminance of a color using the NTSC standard as a byte </summary>

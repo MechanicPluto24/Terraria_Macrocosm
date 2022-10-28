@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.IO;
 using Terraria.WorldBuilding;
@@ -10,6 +12,12 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 		public CraterPass(string name, float loadWeight) : base(name, loadWeight) { }
 
 		protected override void ApplyPass(GenerationProgress progress, GameConfiguration configuration)
+		{
+			GenerateCraters(progress);
+			ErodeEdges(progress);
+		}
+
+		private void GenerateCraters(GenerationProgress progress)
 		{
 			progress.Message = "Sculpting the Moon...";
 			for (int craterPass = 0; craterPass < 2; craterPass++)
@@ -33,7 +41,7 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 
 				for (int i = 0; i < Main.maxTilesX; i++)
 				{
-					progress.Set(i / (float)(Main.maxTilesX - 1));
+					progress.Set(0.8f * (i / (float)(Main.maxTilesX - 1)));
 					// The moon has craters... Therefore, we gotta make some flat ellipses in the world gen code!
 					if (WorldGen.genRand.Next(0, craterDenominatorChance) == 0 && i > lastMaxTileX + lastXRadius)
 					{
@@ -119,6 +127,57 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 						lastXRadius = diameterX / 2;
 					}
 				}
+			}
+		}
+
+		/// <summary> Some cleanup of rough edges </summary>
+		private void ErodeEdges(GenerationProgress progress)
+		{
+			int numPasses = 2; // clear edges twice
+			for (int clearPass = 0; clearPass < numPasses; clearPass++)
+			{
+				List<Point> list = new();
+				for (int tileX = 2; tileX < Main.maxTilesX - 2; tileX++)
+				{
+					progress.Set(0.8f + (0.1f * clearPass) + (0.1f * (tileX / (float)(Main.maxTilesX - 1))));
+
+					for (int tileY = 2; tileY < Main.maxTilesY - 2; tileY++)
+					{
+						// check if there's a tile, so it won't check all the surrounding tiles for nothing
+						if (Main.tile[tileX, tileY].HasTile)
+						{
+							// if there are some tiles below..
+							bool tilesBelow = Main.tile[tileX, tileY + 1].HasTile &&
+										      Main.tile[tileX, tileY + 2].HasTile;
+
+							// ..and no tiles above
+							bool tilesAbove = Main.tile[tileX - 1, tileY - 1].HasTile &&
+											  Main.tile[tileX    , tileY - 1].HasTile &&
+											  Main.tile[tileX + 1, tileY - 1].HasTile;
+
+							// check if there are tiles on the right and right-down
+							bool tilesRight = Main.tile[tileX + 1, tileY    ].HasTile &&
+											  Main.tile[tileX + 1, tileY + 1].HasTile;
+
+							// check if there are tiles on the left and left-down
+							bool tilesLeft = Main.tile[tileX - 1, tileY    ].HasTile &&
+											 Main.tile[tileX - 1, tileY + 1].HasTile;
+
+							// add the tile to a list if there are tiles on one side but not the other (XOR)
+							if (tilesBelow && !tilesAbove && (tilesRight ^ tilesLeft))
+								list.Add(new Point(tileX, tileY));
+
+							break; // so it won't find a tile somewhere below the surface
+						}
+					}
+				}
+
+				foreach (Point p in list)
+				{
+					// clear the found tile 
+					Main.tile[p.X, p.Y].ClearEverything();
+				}
+
 			}
 		}
 	}

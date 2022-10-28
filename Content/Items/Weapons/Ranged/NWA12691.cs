@@ -15,7 +15,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("NWA-12691");
-			Tooltip.SetDefault("Right click to lock onto an enemy");
+			Tooltip.SetDefault("Shoots rockets \nRight click to lock onto an enemy");
 			ItemID.Sets.SkipsInitialUseSound[Item.type] = true;
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
