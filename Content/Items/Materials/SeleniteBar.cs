@@ -1,3 +1,4 @@
+using Macrocosm.Content.Rarities;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -26,6 +27,7 @@ namespace Macrocosm.Content.Items.Materials
 			Item.consumable = true;
 			Item.createTile = TileType<Tiles.SeleniteBar>();
 			Item.placeStyle = 0;
+			Item.rare = ModContent.RarityType<MoonRarityT1>();
 			// Set other Item.X values here
 		}
 

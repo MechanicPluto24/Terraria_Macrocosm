@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Projectiles.Friendly.Summon;
+using Macrocosm.Content.Rarities;
 using Terraria;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
@@ -19,7 +20,7 @@ namespace Macrocosm.Content.Items.Weapons.Summon
 			Item.DefaultToWhip(ModContent.ProjectileType<ChandriumWhipProjectile>(), 220, 2, 4);
 
 			Item.shootSpeed = 4;
-			Item.rare = ItemRarityID.Green;
+			Item.rare = ModContent.RarityType<MoonRarityT1>();
 
 			Item.channel = true;
 		}

@@ -1,5 +1,6 @@
 using Macrocosm.Common.Utility;
 using Macrocosm.Content.Buffs.Debuffs;
+using Macrocosm.Content.Rarities;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -18,7 +19,7 @@ namespace Macrocosm.Content.Items.Vanity.BossMasks
 			Item.width = 24;
 			Item.height = 20;
 			Item.value = 10000;
-			Item.rare = ItemRarityID.Green;
+			Item.rare = ModContent.RarityType<MoonRarityT1>();
 			Item.defense = 26;
 		}
 	}

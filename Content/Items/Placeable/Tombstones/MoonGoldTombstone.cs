@@ -23,6 +23,7 @@ namespace Macrocosm.Content.Items.Placeable.Tombstones
 			Item.consumable = true;
 			Item.createTile = ModContent.TileType<Tiles.Tombstones.MoonTombstone>();
 			Item.placeStyle = Tiles.Tombstones.MoonTombstone.ItemToStyle(Type);
+			Item.rare = ItemRarityID.Purple;
 		}
 	}
 }

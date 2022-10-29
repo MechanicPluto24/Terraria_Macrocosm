@@ -30,7 +30,7 @@ namespace Macrocosm.Content.Items.Miscellaneous
 			Item.height = 32;
 			Item.maxStack = 9999;
 			Item.value = Item.sellPrice(silver: 1);
-			Item.rare = ItemRarityID.Blue;
+			Item.rare = ItemRarityID.Purple;
 		}
 
 		public override void OnSpawn(IEntitySource source)

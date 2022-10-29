@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Content.Buffs.GoodBuffs.MinionBuffs;
 using Macrocosm.Content.Projectiles.Friendly.Summon;
+using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -31,7 +32,7 @@ namespace Macrocosm.Content.Items.Weapons.Summon
 			Item.useAnimation = 36;
 			Item.useStyle = ItemUseStyleID.Swing;
 			Item.value = Item.sellPrice(gold: 30);
-			Item.rare = ItemRarityID.Cyan;
+			Item.rare = ModContent.RarityType<MoonRarityT1>();
 			Item.UseSound = SoundID.Item44;
 
 			Item.noMelee = true;

@@ -1,5 +1,6 @@
 using Macrocosm.Common.Utility;
 using Macrocosm.Content.Items.GlobalItems;
+using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -29,7 +30,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 			Item.useStyle = ItemUseStyleID.Swing;
 			Item.knockBack = 6f;
 			Item.value = 10000;
-			Item.rare = ItemRarityID.Red;
+			Item.rare = ModContent.RarityType<MoonRarityT3>();
 			Item.UseSound = SoundID.Item15;
 			Item.autoReuse = true; // Lets you use the item without clicking the mouse repeatedly (i.e. swinging swords)
 			Item.Glowmask().texture = ModContent.Request<Texture2D>("Macrocosm/Content/Items/Weapons/Melee/Noxsaber_Glow").Value;

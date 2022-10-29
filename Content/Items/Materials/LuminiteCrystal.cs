@@ -18,7 +18,7 @@ namespace Macrocosm.Content.Items.Materials
 			Item.height = 20;
 			Item.maxStack = 9999;
 			Item.value = 100;
-			Item.rare = ItemRarityID.Blue;
+			Item.rare = ItemRarityID.Purple;
 			// Set other Item.X values here
 		}
 

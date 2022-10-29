@@ -17,7 +17,7 @@ namespace Macrocosm.Content.Items.Armor
 			Item.width = 18;
 			Item.height = 18;
 			Item.value = 10000;
-			Item.rare = ItemRarityID.Green;
+			Item.rare = ItemRarityID.Purple;
 			Item.defense = 22;
 		}
 

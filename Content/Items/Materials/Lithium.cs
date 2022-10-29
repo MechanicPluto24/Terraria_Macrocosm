@@ -1,4 +1,5 @@
-﻿using Terraria;
+﻿using Macrocosm.Content.Rarities;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
@@ -26,6 +27,7 @@ namespace Macrocosm.Content.Items.Materials
 			Item.consumable = true;
 			Item.createTile = TileType<Tiles.LithiumOre>();
 			Item.placeStyle = 0;
+			Item.rare = ModContent.RarityType<MoonRarityT1>();
 			// Set other Item.X values here
 		}
 

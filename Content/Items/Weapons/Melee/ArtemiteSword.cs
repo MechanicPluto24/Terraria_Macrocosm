@@ -1,5 +1,6 @@
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Projectiles.Friendly.Melee;
+using Macrocosm.Content.Rarities;
 using Terraria;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
@@ -25,7 +26,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 			Item.useStyle = ItemUseStyleID.Swing;
 			Item.knockBack = 5;
 			Item.value = 10000;
-			Item.rare = ItemRarityID.Green;
+			Item.rare = ModContent.RarityType<MoonRarityT1>();
 			Item.UseSound = SoundID.Item1;
 			Item.autoReuse = true;
 			Item.shoot = ModContent.ProjectileType<ArtemiteSwordProjectile>();

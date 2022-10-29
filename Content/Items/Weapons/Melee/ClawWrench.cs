@@ -1,4 +1,5 @@
 using Macrocosm.Content.Projectiles.Friendly.Melee;
+using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Melee
 {
-    public class ClawWrench : ModItem
+	public class ClawWrench : ModItem
     {
         public override void SetStaticDefaults()
         {
@@ -31,6 +32,8 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.DamageType = DamageClass.Melee;
             Item.noUseGraphic = true;
             Item.channel = true;
+            Item.rare = ModContent.RarityType<MoonRarityT2>();
+
         }
 
         public override void AddRecipes()

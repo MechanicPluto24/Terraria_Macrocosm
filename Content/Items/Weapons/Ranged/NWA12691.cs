@@ -1,5 +1,6 @@
 using Macrocosm.Common.Utility;
 using Macrocosm.Content.Projectiles.Friendly.Ranged;
+using Macrocosm.Content.Rarities;
 using Macrocosm.NPCs.GlobalNPCs;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -33,7 +34,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			Item.channel = true;
 			Item.knockBack = 8f;
 			Item.value = 10000;
-			Item.rare = ItemRarityID.Purple;
+			Item.rare = ModContent.RarityType<MoonRarityT2>();
 			Item.UseSound = SoundID.Item11;
 			Item.shoot = ProjectileID.PurificationPowder; // For some reason, all the guns in the vanilla source have this.
 			Item.autoReuse = true;

@@ -1,5 +1,6 @@
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Projectiles.Friendly.Magic;
+using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -31,7 +32,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 			Item.noMelee = true;
 			Item.knockBack = 5;
 			Item.value = 10000;
-			Item.rare = ItemRarityID.Green;
+			Item.rare = ModContent.RarityType<MoonRarityT1>();
 			Item.UseSound = SoundID.Item20;
 			Item.autoReuse = true;
 			Item.shoot = ModContent.ProjectileType<DianiteTomeProjectileSmall>();

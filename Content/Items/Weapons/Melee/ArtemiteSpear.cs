@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Projectiles.Friendly.Melee;
+using Macrocosm.Content.Rarities;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent.Creative;
@@ -20,27 +21,20 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 
 		public override void SetDefaults()
 		{
-			// Common Properties
-			Item.rare = ItemRarityID.Green; // Assign this item a rarity level of Pink
-			Item.value = Item.sellPrice(gold: 1); // The number and type of coins item can be sold for to an NPC
-
-			// Use Properties
-			Item.useStyle = ItemUseStyleID.Shoot; // How you use the item (swinging, holding out, etc.)
-			Item.useAnimation = 18; // The length of the item's use animation in ticks (60 ticks == 1 second.)
-			Item.useTime = 24; // The length of the item's use time in ticks (60 ticks == 1 second.)
-			Item.UseSound = SoundID.Item71; // The sound that this item plays when used.
-			Item.autoReuse = true; // Allows the player to hold click to automatically use the item again. Most spears don't autoReuse, but it's possible when used in conjunction with CanUseItem()
-
-			// Weapon Properties
+ 			Item.rare = ModContent.RarityType<MoonRarityT1>();
+			Item.value = Item.sellPrice(gold: 1);  
+			Item.useStyle = ItemUseStyleID.Shoot; 
+			Item.useAnimation = 18;  
+			Item.useTime = 24;  
+			Item.UseSound = SoundID.Item71;  
+			Item.autoReuse = true;  
 			Item.damage = 225;
 			Item.knockBack = 6.5f;
-			Item.noUseGraphic = true; // When true, the item's sprite will not be visible while the item is in use. This is true because the spear projectile is what's shown so we do not want to show the spear sprite as well.
-			Item.DamageType = DamageClass.MeleeNoSpeed;
-			Item.noMelee = true; // Allows the item's animation to do damage. This is important because the spear is actually a projectile instead of an item. This prevents the melee hitbox of this item.
-
-			// Projectile Properties
-			Item.shootSpeed = 1f; // The speed of the projectile measured in pixels per frame.
-			Item.shoot = ModContent.ProjectileType<ArtemiteSpearProjectile>(); // The projectile that is fired from this weapon
+			Item.noUseGraphic = true;  
+			Item.DamageType = DamageClass.MeleeNoSpeed; 
+			Item.noMelee = true;  
+			Item.shootSpeed = 1f;  
+			Item.shoot = ModContent.ProjectileType<ArtemiteSpearProjectile>();  
 		}
 
 		public override bool CanUseItem(Player player)

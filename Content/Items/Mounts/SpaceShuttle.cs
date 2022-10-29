@@ -19,7 +19,7 @@ namespace Macrocosm.Content.Items.Mounts
 			Item.useAnimation = 20;
 			Item.useStyle = ItemUseStyleID.Swing;
 			Item.value = 300;
-			Item.rare = ItemRarityID.Pink;
+			Item.rare = ItemRarityID.Purple;
 			Item.noMelee = true;
 			Item.mountType = ModContent.MountType<SpaceShuttleMount>();
 		}

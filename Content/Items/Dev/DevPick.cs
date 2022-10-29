@@ -1,3 +1,4 @@
+using Macrocosm.Content.Rarities;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -23,7 +24,7 @@ namespace Macrocosm.Content.Items.Dev
 			Item.useStyle = ItemUseStyleID.Swing;
 			Item.knockBack = 6;
 			Item.value = 10000;
-			Item.rare = ItemRarityID.Green;
+			Item.rare = ModContent.RarityType<MoonRarityT3>();
 			Item.UseSound = SoundID.Item1;
 			Item.autoReuse = true;
 			Item.tileBoost = 50;

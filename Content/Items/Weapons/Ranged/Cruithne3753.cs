@@ -5,6 +5,7 @@ using Terraria.ModLoader;
 using Terraria.DataStructures;
 using Terraria.GameContent.Creative;
 using Macrocosm.Content.Projectiles.Friendly.Ranged;
+using Macrocosm.Content.Rarities;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
@@ -29,7 +30,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			Item.noMelee = true;
 			Item.knockBack = 8f;
 			Item.value = 10000;
-			Item.rare = ItemRarityID.Purple;
+			Item.rare = ModContent.RarityType<MoonRarityT1>();
 			Item.UseSound = SoundID.Item38;
 			Item.autoReuse = true;
 			Item.shoot = ProjectileID.PurificationPowder;
