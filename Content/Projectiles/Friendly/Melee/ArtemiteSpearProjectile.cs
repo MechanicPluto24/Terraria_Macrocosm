@@ -21,7 +21,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			Projectile.CloneDefaults(ProjectileID.Spear); // Clone the default values for a vanilla spear. Spear specific values set for width, height, aiStyle, friendly, penetrate, tileCollide, scale, hide, ownerHitCheck, and melee.
 			Projectile.width = 36;
 			Projectile.height = 36;
-		}
+			Projectile.scale = 1.1f;
+ 		}
 
 		public override bool PreAI()
 		{
@@ -69,7 +70,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			{
 				if (Main.rand.NextBool(3))
 				{
-					Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<ArtemiteDust>(), Projectile.velocity.X * 2f, Projectile.velocity.Y * 2f, Scale: 1.2f);
+					Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<ArtemiteDust>(), Projectile.velocity.X * 2f, Projectile.velocity.Y * 2f, Scale: .9f);
 				}
 			}
 

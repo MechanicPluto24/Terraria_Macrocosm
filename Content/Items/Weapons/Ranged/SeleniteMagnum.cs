@@ -4,7 +4,8 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.GameContent.Creative;
 using Macrocosm.Content.Items.Materials;
- 
+using Macrocosm.Content.Rarities;
+
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
 	public class SeleniteMagnum : ModItem
@@ -26,7 +27,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			Item.noMelee = true;
 			Item.knockBack = 4f;
 			Item.value = 10000;
-			Item.rare = ItemRarityID.Purple;
+			Item.rare = ModContent.RarityType<MoonRarityT1>();
 			Item.shoot = ProjectileID.PurificationPowder;  
 			Item.autoReuse = true;
 			Item.shootSpeed = 20f;

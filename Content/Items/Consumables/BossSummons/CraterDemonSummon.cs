@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.Utility;
 using Macrocosm.Content.NPCs.Bosses.CraterDemon;
+using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
@@ -24,7 +25,7 @@ namespace Macrocosm.Content.Items.Consumables.BossSummons
 			Item.height = 18;
 			Item.scale = 1f;
 			Item.maxStack = 20;
-			Item.rare = ItemRarityID.Red;
+			Item.rare = ModContent.RarityType<MoonRarityT1>();
 			Item.useAnimation = 45;
 			Item.useTime = 45;
 			Item.useStyle = ItemUseStyleID.HoldUp;
