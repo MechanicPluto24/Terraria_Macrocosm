@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.NPCs.GlobalNPCs
+namespace Macrocosm.Common.Global.GlobalNPCs
 {
 	/// <summary>
 	/// Global NPC for NPC instances

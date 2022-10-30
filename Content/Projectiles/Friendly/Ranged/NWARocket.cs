@@ -1,6 +1,5 @@
 using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Utility;
-using Macrocosm.NPCs.GlobalNPCs;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;

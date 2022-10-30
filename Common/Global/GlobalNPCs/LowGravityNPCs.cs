@@ -4,14 +4,14 @@ using Terraria;
 using Terraria.ModLoader;
 using Macrocosm.Content.Subworlds;
 
-namespace Macrocosm.Content.NPCs.GlobalNPCs
+namespace Macrocosm.Common.Global.GlobalNPCs
 {
 	public class LowGravityNPC : GlobalNPC
 	{
 		public override bool InstancePerEntity => true;
 		protected override bool CloneNewInstances => true;
 
-		private const float defaultGravity = 0.3f; 
+		private const float defaultGravity = 0.3f;
 
 		public static FieldInfo NPCGravity { get; private set; }
 		public override void Load()

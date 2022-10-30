@@ -5,7 +5,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
-namespace Macrocosm.Content.Tiles.GlobalTiles
+namespace Macrocosm.Common.Global.GlobalTiles
 {
 	public class LightSourceGlobalTile : GlobalTile
 	{

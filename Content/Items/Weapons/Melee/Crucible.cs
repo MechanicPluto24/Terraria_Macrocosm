@@ -1,6 +1,5 @@
 using Macrocosm.Common.Utility;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Items.GlobalItems;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

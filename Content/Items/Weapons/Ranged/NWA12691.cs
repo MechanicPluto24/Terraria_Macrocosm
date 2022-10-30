@@ -1,7 +1,7 @@
+using Macrocosm.Common.Global.GlobalNPCs;
 using Macrocosm.Common.Utility;
 using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Content.Rarities;
-using Macrocosm.NPCs.GlobalNPCs;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
