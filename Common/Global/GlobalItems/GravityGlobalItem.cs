@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 using Macrocosm.Content.Subworlds.Moon;
 using Macrocosm.Content.Subworlds;
 
-namespace Macrocosm.Content.Items.GlobalItems
+namespace Macrocosm.Common.Global.GlobalItems
 {
 	public class GravityGlobalItem : GlobalItem
 	{
@@ -16,7 +16,7 @@ namespace Macrocosm.Content.Items.GlobalItems
 			if (SubworldSystem.AnyActive<Macrocosm>())
 			{
 				// doubled them so it feels closer to the gravity of the rest of entities
-				gravity = defaultGravity * 2f * MacrocosmSubworld.Current().GravityMultiplier;  
+				gravity = defaultGravity * 2f * MacrocosmSubworld.Current().GravityMultiplier;
 				maxFallSpeed = defaultmaxFallSpeed * 2f * MacrocosmSubworld.Current().GravityMultiplier;
 			}
 		}

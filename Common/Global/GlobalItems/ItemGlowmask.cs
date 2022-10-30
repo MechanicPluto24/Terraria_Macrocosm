@@ -8,7 +8,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace Macrocosm.Content.Items.GlobalItems
+namespace Macrocosm.Common.Global.GlobalItems
 {
 
 	/// <summary>

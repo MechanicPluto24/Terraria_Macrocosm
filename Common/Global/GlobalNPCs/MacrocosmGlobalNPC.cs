@@ -8,7 +8,7 @@ using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.NPCs.GlobalNPCs
+namespace Macrocosm.Common.Global.GlobalNPCs
 {
 	/// <summary>
 	/// Global NPC for general NPC modifications (loot, spawn pools)

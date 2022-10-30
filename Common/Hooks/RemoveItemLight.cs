@@ -1,5 +1,5 @@
-﻿using Macrocosm.Content.Items.GlobalItems;
-using Macrocosm.Content.Tiles.GlobalTiles;
+﻿using Macrocosm.Common.Global.GlobalItems;
+using Macrocosm.Common.Global.GlobalTiles;
 using SubworldLibrary;
 using Terraria;
 using Terraria.ModLoader;
