@@ -45,7 +45,7 @@ namespace Macrocosm.Content.Systems
 
 				frequency *= MeteorBoostMoon;
 
-				if (!((float)Main.rand.Next(8000) < 10f * frequency))
+				if (!((float)Main.rand.Next(8000) < frequency))
 					continue;
 
 				Vector2 position = new((Main.rand.Next(Main.maxTilesX - 50) + 100) * 16, Main.rand.Next((int)((double)Main.maxTilesY * 0.05)) * 16);

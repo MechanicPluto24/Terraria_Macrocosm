@@ -64,6 +64,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			if (TimeToLive <= 0)
 				return;
 
+			Lighting.AddLight(Projectile.Center, new Vector3(0.407f, 1f, 1f) * Projectile.scale * 0.5f);
+
 			float decelerationFactor = ((float)TimeToLive - Projectile.timeLeft) / TimeToLive;
 			Projectile.velocity *= MathHelper.Lerp(0.9f, 0.85f, decelerationFactor);
 

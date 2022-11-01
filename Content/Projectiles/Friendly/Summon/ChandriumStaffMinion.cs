@@ -1,6 +1,5 @@
 using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Utility;
-using Macrocosm.Content.Buffs.GoodBuffs;
 using Macrocosm.Content.Buffs.GoodBuffs.MinionBuffs;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Gores;
@@ -15,19 +14,16 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Summon
 {
-	/// <summary>
-	/// This is based off ExampleMod for now 
-	/// </summary>
-	public class CalcicCaneMinion : ModProjectile
+	public class ChandriumStaffMinion : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Crater Imp");
-			Main.projFrames[Type] = 10;
+			DisplayName.SetDefault("Crescent Ghoul");
+			Main.projFrames[Type] = 4;
 			ProjectileID.Sets.MinionTargettingFeature[Type] = true;
 
 			ProjectileID.Sets.TrailCacheLength[Type] = 6;
-			ProjectileID.Sets.TrailingMode[Type] = 0;
+			ProjectileID.Sets.TrailingMode[Type] = 2;
 
 			Main.projPet[Type] = true;
 
@@ -48,6 +44,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 			Projectile.penetrate = -1;
 		}
 
+		public bool HasTarget
+		{
+			get => Projectile.localAI[0] != 0f;
+			set => Projectile.localAI[0] = value ? 1f : 0f;
+		}
+
 		public override bool? CanCutTiles() => false;
 
 		public override bool MinionContactDamage() => true;
@@ -57,28 +59,45 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 			Player owner = Main.player[Projectile.owner];
 
 			if (!CheckActive(owner))
-			{
-				return;
-			}
-
+ 				return;
+ 
 			GeneralBehavior(owner, out Vector2 vectorToIdlePosition, out float distanceToIdlePosition);
 			SearchForTargets(owner, out bool foundTarget, out float distanceFromTarget, out Vector2 targetCenter);
 			Movement(foundTarget, distanceFromTarget, targetCenter, distanceToIdlePosition, vectorToIdlePosition);
 			Visuals(foundTarget);
+
+			HasTarget = foundTarget;
 		}
 
+		public override void OnSpawn(IEntitySource source)
+		{
+			Projectile.alpha = 255;
+			for (int i = 0; i < 60; i++)
+			{
+ 				Vector2 position = Projectile.position;
+				Vector2 velocity = Main.rand.NextVector2Circular(0.5f, 0.5f);
 
+				Dust dust;
+				if (i % 10 == 0)
+				{
+					dust = Dust.NewDustDirect(position, Projectile.width, Projectile.height, ModContent.DustType<CrescentMoonParticle>(), velocity.X, velocity.Y, Scale: Main.rand.NextFloat(0.8f, 1.1f));
+					dust.velocity = velocity * 5f;
+				}
+
+				dust = Dust.NewDustDirect(position, Projectile.width, Projectile.height, ModContent.DustType<ChandriumDust>(), velocity.X, velocity.Y, Scale: Main.rand.NextFloat(0.8f, 1.2f));
+			}
+		}
 
 		private bool CheckActive(Player owner)
 		{
 			if (owner.dead || !owner.active)
 			{
-				owner.ClearBuff(ModContent.BuffType<CalcicCaneMinionBuff>());
+				owner.ClearBuff(ModContent.BuffType<ChandriumStaffMinionBuff>());
 
 				return false;
 			}
 
-			if (owner.HasBuff(ModContent.BuffType<CalcicCaneMinionBuff>()))
+			if (owner.HasBuff(ModContent.BuffType<ChandriumStaffMinionBuff>()))
 			{
 				Projectile.timeLeft = 2;
 			}
@@ -144,7 +163,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
 		private void SearchForTargets(Player owner, out bool foundTarget, out float distanceFromTarget, out Vector2 targetCenter)
 		{
-
 			distanceFromTarget = 700f;
 			targetCenter = Projectile.position;
 			foundTarget = false;
@@ -201,13 +219,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 		private void Movement(bool foundTarget, float distanceFromTarget, Vector2 targetCenter, float distanceToIdlePosition, Vector2 vectorToIdlePosition)
 		{
 			// Default movement parameters (here for attacking)
-			float speed = 8f;
-			float inertia = 20f;
+			float speed = 45f;
+			float inertia = 60f;
 
 			if (foundTarget)
 			{
 				// Minion has a target: attack (here, fly towards the enemy)
-				if (distanceFromTarget > 40f)
+				if (distanceFromTarget > 80f)
 				{
 					// The immediate range around the target (so it doesn't latch onto it when close)
 					Vector2 direction = targetCenter - Projectile.Center;
@@ -253,65 +271,89 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
 		private void Visuals(bool hasTarget)
 		{
-			// So it will lean slightly towards the direction it's moving
-			Projectile.rotation = Projectile.velocity.X * 0.05f;
-			Projectile.spriteDirection = Projectile.direction;
+			int frameSpeed = 10;
 
-			// This is a simple "loop through all frames from top to bottom" animation
-			int frameSpeed = 15;
+			if (Projectile.alpha >= 0)
+				Projectile.alpha -= 4;
 
-			Projectile.frameCounter++;
-
-			// frames 0 - 3: attack frames (+0 idle)
 			if (hasTarget)
 			{
-				if (Projectile.frameCounter >= frameSpeed)
-				{
-					Projectile.frameCounter = 0;
-					Projectile.frame++;
-
-					if (Projectile.frame >= 4)
-					{
-						Projectile.frame = 0;
-					}
-				}
+				Projectile.rotation += 0.3f;
+				Projectile.frame = 0;
+				Projectile.localAI[0] = 0f;
 			}
-			// frame 0 + frames 4-9: idle frames 
 			else
 			{
-				// idle animation is played randomly or every ten seconds 
-				if ((Main.rand.NextBool(300) || Main.timeForVisualEffects % 600 == 0) && Projectile.frame == 0)
-				{
-					Projectile.frame = 4;
-				}
+				// So it will lean slightly towards the direction it's moving
+				Projectile.rotation = Projectile.velocity.X * 0.05f;
+				Projectile.spriteDirection = Projectile.direction;
 
-				// if animation is ongoing
-				if (Projectile.frame >= 4)
+				if (Projectile.localAI[0] == 0f)
 				{
-					if (Projectile.frameCounter >= frameSpeed)
+					if (Projectile.frameCounter++ == frameSpeed)
 					{
 						Projectile.frameCounter = 0;
-						Projectile.frame++;
 
-						if (Projectile.frame >= Main.projFrames[Type])
+						if (Projectile.frame == Main.projFrames[Type] - 1)
 						{
-							Projectile.frame = 0;
+							Projectile.localAI[0] = 1f;
+							Projectile.frameCounter = frameSpeed;
+						}
+						else
+						{
+							Projectile.frame++;
 						}
 					}
 				}
-				// else default frame 
+				else if (Projectile.localAI[0] == 1f)
+				{
+					if (Projectile.frameCounter-- == 0)
+					{
+						Projectile.frameCounter = frameSpeed;
+
+						if (Projectile.frame == 0)
+						{
+							Projectile.localAI[0] = 0f;
+							Projectile.frameCounter = 0;
+						}
+						else
+						{
+							Projectile.frame--;
+						}
+					}
+				}
 				else
 				{
-					Projectile.frame = 0;
+					Projectile.localAI[0] = 0f;
 				}
 			}
 		}
+
+		public override bool PreDraw(ref Color lightColor)
+		{
+			if (!HasTarget)
+				return true;
+
+			ProjectileID.Sets.TrailingMode[Type] = 2;
+
+			for (int i = 0; i < Projectile.oldPos.Length; i++)
+			{
+				Texture2D tex = TextureAssets.Projectile[Type].Value;
+				Vector2 drawPos = Projectile.oldPos[i] + Projectile.Size / 2 - Main.screenPosition;
+				Color color = Projectile.GetAlpha(lightColor) * (((float)Projectile.oldPos.Length - i) / Projectile.oldPos.Length);
+				SpriteEffects effect = Projectile.oldSpriteDirection[i] == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+				Main.spriteBatch.Draw(tex, drawPos, tex.Frame(1, Main.projFrames[Type], frameY: Projectile.frame), color * 0.6f, Projectile.oldRot[i], Projectile.Size / 2, Projectile.scale, effect, 0f);
+			}
+
+			return true;
+		}
+
 		public override void PostDraw(Color lightColor)
 		{
-			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Summon/CalcicCaneMinion_Glow").Value;
+			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Summon/ChandriumStaffMinion_Glow").Value;
 			SpriteEffects effect = Projectile.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-			Vector2 offset = Projectile.spriteDirection == -1 ? new Vector2(0, -1) : new Vector2(0, 5);
-			Projectile.DrawAnimatedGlowmask(glowmask, Color.White, effect, offset);
+			Vector2 offset = new Vector2(0, 2);
+			Projectile.DrawAnimatedGlowmask(glowmask, Color.White * ((float)Projectile.alpha/255), effect, offset);
 		}
 	}
 }

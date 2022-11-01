@@ -21,7 +21,9 @@ namespace Macrocosm.Content
 		public bool ZoneBasalt = false;
 		public bool ZoneIrradiation = false;
 
-		public float RadNoiseIntensity = 0f; 
+		public float RadNoiseIntensity = 0f;
+
+		public int ChandriumEmpowermentStacks = 0;
 
 		#region Screenshake mechanic 
 
@@ -73,7 +75,7 @@ namespace Macrocosm.Content
 
 		public override void ResetEffects()
 		{
-			AccMoonArmor = false;
+ 			AccMoonArmor = false;
 			ResetDashEffects();
 
 			RadNoiseIntensity = 0f;
@@ -242,7 +244,7 @@ namespace Macrocosm.Content
 						Main.dust[dustIdx].position.Y += Main.rand.Next(-5, 6);
 						Main.dust[dustIdx].velocity.X *= 0.6f;
  						Main.dust[dustIdx].scale *= 1.4f + (float)Main.rand.Next(20) * 0.01f;
-					}
+ 					}
 				}
 
 				#endregion

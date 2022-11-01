@@ -10,6 +10,8 @@ using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.Graphics.Shaders;
 using Terraria.UI.Chat;
+using SubworldLibrary;
+using Macrocosm.Content.Subworlds;
 
 namespace Macrocosm.Common.Drawing
 {
@@ -67,7 +69,7 @@ namespace Macrocosm.Common.Drawing
 		private Vector2 ScreenCenter => new(Main.screenWidth / 2, Main.screenHeight / 2);
 		#endregion
 
-		public CelestialBody(Texture2D bodyTexture, Texture2D atmoTexture = null, float scale = 1f, float rotation = 0f)
+		public CelestialBody(Texture2D bodyTexture = null, Texture2D atmoTexture = null, float scale = 1f, float rotation = 0f)
 		{
 			this.bodyTexture = bodyTexture;
 			this.Scale = scale;
@@ -189,8 +191,7 @@ namespace Macrocosm.Common.Drawing
 
 		public void Draw(SpriteBatch spriteBatch)
 		{
-			// FIXME: these are mutually exclusive rn :(
-			if (parallaxSpeedX > 0f || parallaxSpeedY > 0f || averageOffset != default)
+ 			if (parallaxSpeedX > 0f || parallaxSpeedY > 0f || averageOffset != default)
 				Parallax(); // stationary parallaxing mode 
 			else if (rotationMode != SkyRotationMode.None)
 				Rotate(); // rotate even if not drawing, it affects the shadow rotation  
@@ -203,44 +204,28 @@ namespace Macrocosm.Common.Drawing
 			SpriteBatchState state = spriteBatch.SaveState();
 			spriteBatch.EndIfBeginCalled();
 
-			#region Draw children behind
+            DrawChildren(spriteBatch, state, inFront: false);
 
-			spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, state);
-			foreach (CelestialBody child in orbitChildren)
-			{
-				if (child.OrbitRotation >= 0f)
-					child.Draw(spriteBatch);
-			}
-			spriteBatch.End();
-			#endregion
-
-			spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, state);
-
-			#region Atmosphere
+			// Draw atmosphere 
 			if (atmoTexture is not null)
- 				spriteBatch.Draw(atmoTexture, Position, null, Color.White, Rotation, atmoTexture.Size() / 2, Scale, default, 0f);
-			#endregion
-
-			spriteBatch.End();
-
-			spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, state);
-
-			#region Body
-			spriteBatch.Draw(bodyTexture, Position, null, Color.White, Rotation, bodyTexture.Size() / 2, Scale, default, 0f);
-
-			#endregion
-
-			#region Draw children in front
-
-			foreach (CelestialBody child in orbitChildren)
 			{
-				if (child.OrbitRotation < 0f)
-					child.Draw(spriteBatch);
+				spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, state);
+				spriteBatch.Draw(atmoTexture, Position, null, Color.White, Rotation, atmoTexture.Size() / 2, Scale, default, 0f);
+				spriteBatch.End();
 			}
 
-			#endregion
+			// Draw main body 
+			if (bodyTexture is not null)
+			{
+				spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, state);
+				spriteBatch.Draw(bodyTexture, Position, null, Color.White, Rotation, bodyTexture.Size() / 2, Scale, default, 0f);
+				spriteBatch.End();
+			}
 
-			#region Shadow
+			DrawChildren(spriteBatch, state, inFront: true);
+
+			spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, state);
+			#region Draw shadow
 			if (HasShadow)
 			{
 				if (lightSource is not null)
@@ -261,10 +246,22 @@ namespace Macrocosm.Common.Drawing
  					spriteBatch.Draw(bodyShadowTexture, Position, null, shadowColor, shadowRotation, atmoTexture.Size() / 2, Scale, default, 0f);
  			}
 			#endregion
-
 			spriteBatch.End();
+
 			spriteBatch.Restore(state);
 		}
+        
+        private void DrawChildren(SpriteBatch spriteBatch, SpriteBatchState state, bool inFront)
+        {
+			spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, state);
+			foreach (CelestialBody child in orbitChildren)
+			{
+				if ((child.OrbitRotation >= orbitAngle && !inFront) || (child.OrbitRotation < orbitAngle && inFront))
+					child.Draw(spriteBatch);
+			}
+			spriteBatch.End();
+        }
+        
 		private void Parallax()
 		{
 			// surface layer dimensions in game coordinates 
@@ -283,7 +280,13 @@ namespace Macrocosm.Common.Drawing
 
 		private void Rotate()
 		{
-			double duration = Main.dayTime ? Main.dayLength : Main.nightLength;
+            double duration;
+            
+            if(SubworldSystem.AnyActive<Macrocosm>())
+                duration = Main.dayTime ? MacrocosmSubworld.Current().DayLenght : MacrocosmSubworld.Current().DayLenght;
+            else 
+                duration = Main.dayTime ? Main.dayLength : Main.nightLength;
+
 			double bgTop = -Main.screenPosition.Y / (Main.worldSurface * 16.0 - 600.0) * 200.0;
 
 			int timeX = (int)(Main.time / duration * (Main.screenWidth + bodyTexture.Width * 2)) - bodyTexture.Width;
@@ -309,15 +312,17 @@ namespace Macrocosm.Common.Drawing
 			{
 				radius = orbitEllipse.X;
 				orbitRotation += orbitSpeed;
-			}
+ 			}
 			else
 			{
-				radius = (float)((orbitEllipse.X * orbitEllipse.Y) / Math.Sqrt(orbitEllipse.X * orbitEllipse.X * Math.Pow(Math.Sin(OrbitRotation), 2) + orbitEllipse.Y * orbitEllipse.Y * Math.Pow(Math.Cos(OrbitRotation), 2)));
+				radius = (float)((orbitEllipse.X * orbitEllipse.Y) / Math.Sqrt(orbitEllipse.X * orbitEllipse.X * Math.Pow(Math.Sin(OrbitRotation + orbitAngle), 2) + orbitEllipse.Y * orbitEllipse.Y * Math.Pow(Math.Cos(OrbitRotation + orbitAngle), 2)));
  
-				// still feels off :sadcat:
-				float perigee = Math.Min(orbitEllipse.X, orbitEllipse.Y);
+ 				float perigee = Math.Min(orbitEllipse.X, orbitEllipse.Y);
 				float apogee = Math.Max(orbitEllipse.X, orbitEllipse.Y);
-				orbitRotation += MathHelper.Lerp(orbitSpeed * (perigee / apogee), orbitSpeed, Utils.GetLerpValue(apogee, perigee, radius));
+ 
+ 				float period = MathHelper.TwoPi / orbitSpeed; // period of a circle, ot ellipse 
+				float angularSpeed = (MathHelper.Pi / (period * radius * radius)) * (perigee + apogee) * (float)Math.Sqrt(perigee * apogee);
+				orbitRotation += angularSpeed;
 			}
 
 			SetPositionPolar(orbitParent, radius, orbitRotation);
