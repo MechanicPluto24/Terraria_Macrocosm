@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework;
 using System;
 using Terraria;
 using Terraria.Audio;
+using Terraria.Graphics;
+using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -35,9 +37,41 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 		public override bool PreDraw(ref Color lightColor)
 		{
-			// draw trail if not exploded yet 
-			if (Projectile.width == 16)
-				Projectile.DrawTrail(new Vector2(0,0), 7f, 1f, new Color(255, 197, 155, 255), new Color(255, 68, 1, 50)); 
+			// adjust rotations manually (due to TrailingMode = 0)
+			if(Projectile.rotation > -MathHelper.PiOver4 && Projectile.rotation < MathHelper.PiOver4)
+			{
+				for (int i = 0; i < Projectile.oldRot.Length; i++)
+					Projectile.oldRot[i] = MathHelper.PiOver2;
+			}
+
+ 
+			// draw trail
+			VertexStrip vertexStrip = new VertexStrip();
+			MiscShaderData miscShaderData = GameShaders.Misc["RainbowRod"]; 
+			miscShaderData.UseSaturation(-3f);
+			miscShaderData.UseOpacity(Projectile.localAI[1]);
+			miscShaderData.Apply();
+			vertexStrip.PrepareStripWithProceduralPadding(Projectile.oldPos, Projectile.oldRot, StripColors, StripWidth, -Main.screenPosition + Projectile.Size / 2f, true);
+
+			if (Projectile.alpha < 1)
+				vertexStrip.DrawTrail();
+
+			Main.pixelShader.CurrentTechnique.Passes[0].Apply();
+
+			Color StripColors(float progressOnStrip)
+			{
+ 				float lerpValue = Utils.GetLerpValue(0f, 0.5f, progressOnStrip, clamped: true);
+				Color result = Color.Lerp(Color.Lerp(Color.White, new Color(255, 197, 155, 255), 1.115f * 0.5f), new Color(255, 68, 1, 255), lerpValue) * (1f - Utils.GetLerpValue(0f, 0.98f, progressOnStrip));
+				result.A /= 8;
+				return result;
+			}
+
+			float StripWidth(float progressOnStrip)
+			{
+				float lerpValue = Utils.GetLerpValue(0f, 0.06f + 1.115f * 0.01f, progressOnStrip, clamped: true);
+				lerpValue = 1f - (1f - lerpValue) * (1f - lerpValue);
+				return MathHelper.Lerp(20f, 100f, progressOnStrip) * lerpValue;
+			}
 
 			return true;
 		}
@@ -117,6 +151,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			Projectile.localAI[1] += 1f;
 			if (Projectile.localAI[1] > 6f)
 			{
+				Projectile.localAI[1] = 6f;
 				Projectile.alpha = 0;
 			}
 			else
@@ -168,6 +203,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			}
 
 			#endregion
+
+
 		}
 
 		public override bool OnTileCollide(Vector2 oldVelocity)
@@ -228,22 +265,22 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 					if (i == 1)
 						multVelocity = 0.8f;
 
-					int goreSmoke = Gore.NewGore(Projectile.GetSource_FromThis(), new Vector2(Projectile.position.X, Projectile.position.Y), default, Main.rand.Next(GoreID.Smoke1, GoreID.Smoke3));
+					int goreSmoke = Gore.NewGore(Projectile.GetSource_FromThis(), new Vector2(Projectile.Center.X, Projectile.Center.Y), default, Main.rand.Next(GoreID.Smoke1, GoreID.Smoke3));
 					Gore gore = Main.gore[goreSmoke];
 					gore.velocity *= multVelocity;
 					Main.gore[goreSmoke].velocity.X += 1f;
 					Main.gore[goreSmoke].velocity.Y += 1f;
-					goreSmoke = Gore.NewGore(Projectile.GetSource_FromThis(), new Vector2(Projectile.position.X, Projectile.position.Y), default, Main.rand.Next(GoreID.Smoke1, GoreID.Smoke3));
+					goreSmoke = Gore.NewGore(Projectile.GetSource_FromThis(), new Vector2(Projectile.Center.X, Projectile.Center.Y), default, Main.rand.Next(GoreID.Smoke1, GoreID.Smoke3));
 					gore = Main.gore[goreSmoke];
 					gore.velocity *= multVelocity;
 					Main.gore[goreSmoke].velocity.X -= 1f;
 					Main.gore[goreSmoke].velocity.Y += 1f;
-					goreSmoke = Gore.NewGore(Projectile.GetSource_FromThis(), new Vector2(Projectile.position.X, Projectile.position.Y), default, Main.rand.Next(GoreID.Smoke1, GoreID.Smoke3));
+					goreSmoke = Gore.NewGore(Projectile.GetSource_FromThis(), new Vector2(Projectile.Center.X, Projectile.Center.Y), default, Main.rand.Next(GoreID.Smoke1, GoreID.Smoke3));
 					gore = Main.gore[goreSmoke];
 					gore.velocity *= multVelocity;
 					Main.gore[goreSmoke].velocity.X += 1f;
 					Main.gore[goreSmoke].velocity.Y -= 1f;
-					goreSmoke = Gore.NewGore(Projectile.GetSource_FromThis(), new Vector2(Projectile.position.X, Projectile.position.Y), default, Main.rand.Next(GoreID.Smoke1, GoreID.Smoke3));
+					goreSmoke = Gore.NewGore(Projectile.GetSource_FromThis(), new Vector2(Projectile.Center.X, Projectile.Center.Y), default, Main.rand.Next(GoreID.Smoke1, GoreID.Smoke3));
 					gore = Main.gore[goreSmoke];
 					gore.velocity *= multVelocity;
 					Main.gore[goreSmoke].velocity.X -= 1f;

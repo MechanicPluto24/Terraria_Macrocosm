@@ -16,7 +16,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 		public override void SetStaticDefaults()
 		{
-			 
+			ProjectileID.Sets.TrailCacheLength[Type] = 40;
+			ProjectileID.Sets.TrailingMode[Type] = 2;
 		}
 
 		public override void SetDefaults()
@@ -57,6 +58,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 				Vector2 velocity = MathUtils.PolarVector(speed, theta);
 				Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, velocity, ModContent.ProjectileType<PlasmaBall>(), (int)(Projectile.damage * 0.5f), 0f, Projectile.owner, ai0: 200);
 			}
+
+			Lighting.AddLight(Projectile.Center, 0.407f, 1f, 1f);
 
 			return true;
 		}

@@ -131,29 +131,31 @@ namespace Macrocosm.Content
 			Venus.SetOrbitParent(Sun, 238, Rand(), 0.0014f);
 
 			Earth.SetOrbitParent(Sun, 288, Rand(), 0.001f);
-			Luna.SetOrbitParent(Earth, 36, Rand(), 0.018f);
+ 			Luna.SetOrbitParent(Earth, new Vector2(36, 10), 0f, Rand(), 0.018f);
 
 			Mars.SetOrbitParent(Sun, 330, Rand(), 0.0008f);
-			Phobos.SetOrbitParent(Mars, 20, Rand(), 0.014f);
-			Deimos.SetOrbitParent(Mars, 24, Rand(), 0.016f);
+			Phobos.SetOrbitParent(Mars, new Vector2(20, 8), 0.2f, Rand(), 0.014f);
+			Deimos.SetOrbitParent(Mars, new Vector2(24, 10), -0.4f, Rand(), 0.016f);
 
 			Ceres.SetOrbitParent(Sun, 362, Rand(), 0.0006f);
 
 			Jupiter.SetOrbitParent(Sun, 410, Rand(), 0.0004f);
-			Io.SetOrbitParent(Jupiter, 48, Rand(), 0.012f);
-			Europa.SetOrbitParent(Jupiter, 56, Rand(), 0.01f);
+			Io.SetOrbitParent(Jupiter, new Vector2(48, 20), 0.2f, Rand(), 0.012f);
+			Europa.SetOrbitParent(Jupiter, new Vector2(54, 18), 0.1f, Rand(), 0.01f);
 
 			Saturn.SetOrbitParent(Sun, 514, Rand(), 0.00037f);
-			Titan.SetOrbitParent(Saturn, 40, Rand(), 0.012f);
+			Titan.SetOrbitParent(Saturn, new Vector2(52, 28), 0.8f, Rand(), 0.012f);
 
 			Ouranos.SetOrbitParent(Sun, 622, Rand(), 0.0003f);
-			Miranda.SetOrbitParent(Ouranos, 42, Rand(), 0.017f);
+			Miranda.SetOrbitParent(Ouranos, new Vector2(42, 18), 0f, Rand(), 0.017f);
 
 			Neptune.SetOrbitParent(Sun, 700, Rand(), 0.00027f);
-			Triton.SetOrbitParent(Neptune, 36, Rand(), 0.018f);
+			Triton.SetOrbitParent(Neptune, new Vector2(36,26), 0.9f, Rand(), 0.018f);
 
-			Pluto.SetOrbitParent(Sun, 760, Rand(), 0.00022f);
-			Charon.SetOrbitParent(Pluto, 14, Rand(), 0.021f);
+			CelestialBody plutoBarycenter = new();
+			plutoBarycenter.SetOrbitParent(Sun, new Vector2(760, 620), 0.28f, Rand(), 0.00022f);
+			plutoBarycenter.AddOrbitChild(Pluto, 4, 0f, 0.005f);
+			Pluto.AddOrbitChild(Charon, 18, 3.14f, 0.008f);
 
 			Eris.SetOrbitParent(Sun, 810, Rand(), 0.00018f);
  		}

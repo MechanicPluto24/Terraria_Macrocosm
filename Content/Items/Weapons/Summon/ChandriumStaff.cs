@@ -1,5 +1,4 @@
-﻿using Macrocosm.Content.Buffs.GoodBuffs;
-using Macrocosm.Content.Buffs.GoodBuffs.MinionBuffs;
+﻿using Macrocosm.Content.Buffs.GoodBuffs.MinionBuffs;
 using Macrocosm.Content.Projectiles.Friendly.Summon;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
@@ -11,11 +10,11 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Summon
 {
-	public class CalcicCane : ModItem
+	public class ChandriumStaff : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault("Summons a Crater Imp to fight for you");
+			Tooltip.SetDefault("Summons a Crescent Ghoul to fight for you");
 
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 			ItemID.Sets.GamepadWholeScreenUseRange[Item.type] = true;
@@ -38,9 +37,9 @@ namespace Macrocosm.Content.Items.Weapons.Summon
 
 			Item.noMelee = true;
 			Item.DamageType = DamageClass.Summon;
-			Item.buffType = ModContent.BuffType<CalcicCaneMinionBuff>();
+			Item.buffType = ModContent.BuffType<ChandriumStaffMinionBuff>();
 
-			Item.shoot = ModContent.ProjectileType<CalcicCaneMinion>();
+			Item.shoot = ModContent.ProjectileType<ChandriumStaffMinion>();
 		}
 
 		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
