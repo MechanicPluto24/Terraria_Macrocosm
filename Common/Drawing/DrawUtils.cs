@@ -65,7 +65,7 @@ namespace Macrocosm.Common.Drawing
 		}
 
 		public static void Begin(this SpriteBatch spriteBatch, SpriteSortMode sortMode, BlendState blendState, SpriteBatchState state)
-			=>	spriteBatch.Begin(sortMode, blendState, state.samplerState, state.depthStencilState, state.rasterizerState, state.effect, state.matrix);
+			=> spriteBatch.Begin(sortMode, blendState, state.samplerState, state.depthStencilState, state.rasterizerState, state.effect, state.matrix);
 
 		public static void Begin(this SpriteBatch spriteBatch, BlendState blendState, SpriteBatchState state)
 			=> spriteBatch.Begin(state.sortMode, blendState, state.samplerState, state.depthStencilState, state.rasterizerState, state.effect, state.matrix);

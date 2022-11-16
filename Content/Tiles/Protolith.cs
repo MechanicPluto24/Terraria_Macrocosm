@@ -16,7 +16,8 @@ namespace Macrocosm.Content.Tiles
 			Main.tileLighted[Type] = true;
 			Main.tileMergeDirt[Type] = true;
 			Main.tileMerge[Type][ModContent.TileType<Regolith>()] = true;
-			MinPick = 225;
+			Main.tileMerge[Type][ModContent.TileType<IrradiatedRock>()] = true;
+ 			MinPick = 225;
 			MineResist = 3f;
 			ItemDrop = ModContent.ItemType<Items.Placeable.BlocksAndWalls.Protolith>();
 			AddMapEntry(new Color(65, 65, 65));
@@ -30,6 +31,8 @@ namespace Macrocosm.Content.Tiles
 		}
 
 		public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
-			=> TileUtils.BlendLikeDirt(i, j, ModContent.TileType<Regolith>());
+			//=> TileUtils.BlendLikeDirt(i, j, ModContent.TileType<Regolith>()); 
+			=> true;
+			 
 	}
 }

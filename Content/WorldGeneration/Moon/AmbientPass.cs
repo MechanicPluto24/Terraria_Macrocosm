@@ -14,7 +14,7 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 		/// <summary>
 		/// Randomly places ambient rocks on The Moon's surface 
 		/// </summary>
-		/// TODO: Medium and large (>1x1) variations, underground gen 
+		/// TODO: large (>1x1) variations, underground gen 
 		protected override void ApplyPass(GenerationProgress progress, GameConfiguration configuration)
 		{
 			progress.Message = "Placing rocks on the moon...";
@@ -30,15 +30,34 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 					continue;
 				}
 
-				if (WorldGen.genRand.NextBool(20))
+				// rocks on the surface 
+				if (WorldGen.genRand.NextBool(15))
 				{
-					for (int tileY = 1; tileY < Main.worldSurface; tileY++)
+					// small rocks
+					if (!WorldGen.genRand.NextBool(5))
 					{
-						if (Main.tile[tileX, tileY].HasTile && Main.tile[tileX, tileY].BlockType == Terraria.ID.BlockType.Solid)
+						for (int tileY = 1; tileY < Main.worldSurface; tileY++)
 						{
-							WorldGen.PlaceTile(tileX, tileY - 1, ModContent.TileType<RegolithRockSmall>(), style: WorldGen.genRand.Next(10), mute: true);
- 							skipX = WorldGen.genRand.Next(5, 50);
-							break;
+							if (Main.tile[tileX, tileY].HasTile && Main.tile[tileX, tileY].BlockType == Terraria.ID.BlockType.Solid)
+							{
+								WorldGen.PlaceTile(tileX, tileY - 1, ModContent.TileType<RegolithRockSmall>(), style: WorldGen.genRand.Next(10), mute: true);
+								skipX = WorldGen.genRand.Next(2, 25);
+								break;
+							}
+						}
+					}
+					// medium rocks
+					else
+					{
+						for (int tileY = 1; tileY < Main.worldSurface; tileY++)
+						{
+							if (Main.tile[tileX, tileY].HasTile && Main.tile[tileX, tileY].BlockType == Terraria.ID.BlockType.Solid &&
+							    Main.tile[tileX + 1, tileY].HasTile && Main.tile[tileX + 1, tileY].BlockType == Terraria.ID.BlockType.Solid)
+							{
+								WorldGen.PlaceTile(tileX, tileY - 1, ModContent.TileType<RegolithRockMedium>(), style: WorldGen.genRand.Next(6), mute: true);
+								skipX = WorldGen.genRand.Next(2, 25);
+								break;
+							}
 						}
 					}
 				}

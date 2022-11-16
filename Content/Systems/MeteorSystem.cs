@@ -78,9 +78,9 @@ namespace Macrocosm.Content.Systems
 
 					switch ((MeteorType)choice)
 					{
-						case MeteorType.Small: Projectile.NewProjectile(source, position.X, position.Y, speedX, speedY, ModContent.ProjectileType<MoonMeteorSmall>(), 500, 0f, closestPlayer); break;
-						case MeteorType.Medium: Projectile.NewProjectile(source, position.X, position.Y, speedX, speedY, ModContent.ProjectileType<MoonMeteorMedium>(), 1000, 0f, closestPlayer); break;
-						case MeteorType.Large: Projectile.NewProjectile(source, position.X, position.Y, speedX, speedY, ModContent.ProjectileType<MoonMeteorLarge>(), 1500, 0f, closestPlayer); break;
+						case MeteorType.Small: Projectile.NewProjectile(source, position.X, position.Y, speedX, speedY, ModContent.ProjectileType<MoonMeteorSmall>(), 500, 0f, 255); break;
+						case MeteorType.Medium: Projectile.NewProjectile(source, position.X, position.Y, speedX, speedY, ModContent.ProjectileType<MoonMeteorMedium>(), 1000, 0f, 255); break;
+						case MeteorType.Large: Projectile.NewProjectile(source, position.X, position.Y, speedX, speedY, ModContent.ProjectileType<MoonMeteorLarge>(), 1500, 0f, 255); break;
 					}
 				}
 			}

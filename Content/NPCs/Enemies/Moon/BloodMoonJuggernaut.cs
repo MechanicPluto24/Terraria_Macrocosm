@@ -28,7 +28,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		private float punchCooldown = 180f; // min ticks between attacks 
 		private float dashSpeed = 12f; // initial dash speed and cap 
-		private float dashDeceleration = 2f; // deceleration factor of the dash
+		private float dashDeceleration = 8f; // deceleration factor of the dash
 
 		public override void SetStaticDefaults()
 		{
@@ -60,7 +60,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 				BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Events.BloodMoon,
 
 				new FlavorTextBestiaryInfoElement(
-					"Big mofo")
+					"A hulking, tanky behemoth of alien flesh, bone, and fury. Get too close and they'll slug your bloody entrails into orbit!")
 			});
 		}
 
@@ -218,22 +218,22 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		private void AI_Sprint()
 		{
+			bool tileBelow = Main.tile[(int)(NPC.Center.X / 16), (int)((NPC.Center.Y + NPC.height / 2) / 16)].HasTile;
+
 			NPC.defense = 120;
 			NPC.damage = 300;
 
 			if (Math.Abs(NPC.velocity.Y) > 0.5f) // if falling 
 			{
 				NPC.velocity.Y += 0.1f;              // accelerate 	
-				NPC.velocity.X = NPC.direction * 6f; // cap horiz velocity?? 
+				NPC.velocity.X = NPC.direction * 3f; // cap horiz velocity?? 
 			}
-			else
-			{
-				NPC.velocity.X += NPC.direction * 0.4f; // accelerate
-				if (Math.Abs(NPC.velocity.X) >= 8f)
-				{
-					NPC.velocity.X = NPC.direction * 8f; // up to 8f
-				}
+
+			if(Math.Abs(NPC.Center.X - Main.player[NPC.target].Center.X) > 30f && tileBelow)
+			{ 
+				NPC.velocity.X = NPC.direction * 4f;	
 			}
+
 		}
 
 		// Frame 0		  : idle

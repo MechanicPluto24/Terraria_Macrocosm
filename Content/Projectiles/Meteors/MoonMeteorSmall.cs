@@ -18,6 +18,8 @@ namespace Macrocosm.Content.Projectiles.Meteors
 			Height = 32;
 			Damage = 500;
 
+			DisplayName = "Small Meteor";
+
 			ScreenshakeMaxDist = 90f * 16f;
 			ScreenshakeIntensity = 50f;
 

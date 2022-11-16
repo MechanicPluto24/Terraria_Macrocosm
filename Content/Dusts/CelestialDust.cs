@@ -22,6 +22,8 @@ namespace Macrocosm.Content.Dusts
 
 			dust.color = MacrocosmWorld.CelestialColor.NewAlpha(0.8f);
 
+			Lighting.AddLight(dust.position, dust.color.ToVector3() * 0.6f);
+
 			if (dust.scale < 0f)
  				dust.active = false;
 

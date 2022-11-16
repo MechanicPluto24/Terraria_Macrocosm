@@ -1,7 +1,7 @@
 ﻿using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Utility;
+using Macrocosm.Content.Buffs.GoodBuffs;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Gores;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -31,12 +31,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 			Projectile.WhipSettings.RangeMultiplier = 1.9f;
 		}
 
+		// AI timer for whip swing 
 		private float Timer
 		{
 			get => Projectile.ai[0];
 			set => Projectile.ai[0] = value;
 		}
 
+		// flag that stores if an npcs has already been hit in the current swing 
 		private bool HitNPC
 		{
 			get => Projectile.ai[1] != 0f;
@@ -48,15 +50,21 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 		// TODO: this might need some netcode 
 		public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
 		{
+			// increase count only once per whip swing 
 			if(!HitNPC && HitStacks < 3)
 			{
-				HitStacks++;
-				HitNPC = true;
+				HitStacks++;   // this is a ref to a ModPlayer
+				HitNPC = true; // set hit flag to true so stacks won't increase on every npc hit 
 			}  
 
+			// if stronger hit is ready, ignore hit flag  
 			if (HitStacks >= 3)
 			{
+				// increase damage 
  				damage = (int)(damage * 1.2f);
+
+				// clear buff on successful hit 
+				Main.player[Projectile.owner].ClearBuff(ModContent.BuffType<ChandriumEmpowerment>());
 
 				// FIXME: how do i sync these 
 				#region Visual effects
@@ -67,15 +75,18 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 					Dust dust;
 					if (i % 20 == 0)
 					{
+						// chandrium particles
 						dust = Dust.NewDustDirect(position, target.width, target.height, ModContent.DustType<CrescentMoonParticle>(), velocity.X, velocity.Y, Scale: Main.rand.NextFloat(0.8f, 1.1f));
 						dust.velocity = velocity * 5f;
 					}
+					// chandrium dust 
 					dust = Dust.NewDustDirect(position, target.width, target.height, ModContent.DustType<ChandriumDust>(), velocity.X, velocity.Y, Scale: Main.rand.NextFloat(0.8f, 1.2f));
 				}
 				#endregion
 			}
-			else
+			else  
 			{
+				// fewer regular dust on non-empowered hit (regardless of hit flag) 
 				for (int i = 0; i < 5; i++)
 				{
 					Vector2 position = target.position;
@@ -88,26 +99,35 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
 		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
 		{
+			// minions will attack the npcs hit with this whip 
 			Main.player[Projectile.owner].MinionAttackTargetNPC = target.whoAmI;
 		}
 
 		public override void OnSpawn(IEntitySource source)
 		{
+			// on spawn reset the hit npc flag 
 			HitNPC = false;
 		}
 
 		public override void Kill(int timeLeft)
 		{
 			if (Projectile.owner == Main.myPlayer)
+			{
+				// reset stacks on end of successful empowered hit 
 				if (HitStacks >= 3)
 					HitStacks = 0;
+
+				// add buff 
+				if (HitStacks == 2)
+					Main.player[Projectile.owner].AddBuff(ModContent.BuffType<ChandriumEmpowerment>(), 60 * 5);
+			}
+
  		}
 
 		private int frameWidth = 14;
 		private int frameHeight = 26;
 
 		// This method draws a line between all points of the whip, in case there's empty space between the sprites.
-
 		private void DrawLine(List<Vector2> list)
 		{
 			Texture2D texture = TextureAssets.FishingLine.Value;
@@ -168,7 +188,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 					scale = MathHelper.Lerp(0.4f, 1.3f, Utils.GetLerpValue(0.1f, 0.7f, t, true) * Utils.GetLerpValue(0.9f, 0.7f, t, true));
 
 					#region Shine whip tip
-					if (Main.player[Projectile.owner].Macrocosm().ChandriumEmpowermentStacks == 2)
+					if (Main.player[Projectile.owner].HasBuff(ModContent.BuffType<ChandriumEmpowerment>()))
 					{
 						if (Projectile.localAI[0] < 1f)
 							Projectile.localAI[0] += 0.2f;

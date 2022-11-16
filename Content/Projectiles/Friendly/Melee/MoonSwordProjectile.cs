@@ -1,5 +1,9 @@
+using Macrocosm.Common.Drawing;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Graphics;
+using Terraria.Graphics.Shaders;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Melee
@@ -9,7 +13,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 		public override void SetStaticDefaults()
 		{
 			Main.projFrames[Type] = 6;
-			DisplayName.SetDefault("Moonlight Greatsword");
+			ProjectileID.Sets.TrailCacheLength[Type] = 20;
+			ProjectileID.Sets.TrailingMode[Type] = 3;
+			DisplayName.SetDefault("Moon Sword");
 		}
 
 		public override void SetDefaults()
@@ -21,6 +27,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			Projectile.DamageType = DamageClass.Melee;
 			Projectile.tileCollide = false;
 			Projectile.ignoreWater = true;
+			Projectile.penetrate = 5;
+		}
+
+		// PreDraw
+		public override bool PreDraw(ref Color lightColor)
+		{
+			return true;
 		}
 
 		public override void AI()
@@ -35,9 +48,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 				if (Projectile.frame >= Main.projFrames[Type])
  					Projectile.frame = 0;
  			}
- 
 		}
-
-	
 	}
 }
