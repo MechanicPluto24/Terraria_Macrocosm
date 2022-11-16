@@ -8,6 +8,7 @@ using Terraria.ModLoader;
 using Macrocosm.Common.Utility;
 using System;
 using Terraria.DataStructures;
+using Macrocosm.Content.Players;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
@@ -34,7 +35,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 		public override void OnSpawn(IEntitySource source)
 		{
             SwingTime /= OwnerPlayer.GetAttackSpeed(DamageClass.Melee);
-            SwingTime += SwingTime * (1f - OwnerPlayer.Macrocosm().MeleeStamina);
+            SwingTime += SwingTime * (1f - OwnerPlayer.GetModPlayer<StaminaPlayer>().MeleeStamina);
             Projectile.timeLeft = (int)SwingTime;
         }
 
@@ -62,8 +63,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
 		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
 		{
-            OwnerPlayer.Macrocosm().MeleeStamina -= 0.15f;
-            OwnerPlayer.Macrocosm().ResetStaminaCooldown(90);
+            OwnerPlayer.GetModPlayer<StaminaPlayer>().MeleeStamina -= 0.15f;
+            OwnerPlayer.GetModPlayer<StaminaPlayer>().ResetStaminaCooldown(90);
         }
 
 		public override void ModifyDamageHitbox(ref Rectangle hitbox)

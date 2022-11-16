@@ -27,7 +27,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			Projectile.aiStyle = -1;
 			Projectile.friendly = true;
 			Projectile.DamageType = DamageClass.Melee;
-			Projectile.penetrate = 3;
+			Projectile.penetrate = -1;
 			Projectile.usesLocalNPCImmunity = true;
 			Projectile.tileCollide = false;
 			Projectile.ignoreWater = true;

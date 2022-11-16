@@ -18,11 +18,13 @@ namespace Macrocosm.Content.Projectiles.Meteors
 			Height = 64;
 			Damage = 1500;
 
+			DisplayName = "Large Meteor";
+
 			ScreenshakeMaxDist = 140f * 16f;
 			ScreenshakeIntensity = 100f;
 
 			RotationMultiplier = 0.01f;
-			BlastRadiusMultiplier = 2;
+			BlastRadiusMultiplier = 3.5f;
 
 			DustType = ModContent.DustType<RegolithDust>();
 			ImpactDustCount = Main.rand.Next(140, 160);

@@ -7,6 +7,7 @@ using Macrocosm.Common.Utility;
 using Microsoft.Xna.Framework.Graphics;
 using Macrocosm.Common.Drawing;
 using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.Players;
 
 namespace Macrocosm.Content.Items.Accessories.CelestialBulwark
 {
@@ -40,11 +41,11 @@ namespace Macrocosm.Content.Items.Accessories.CelestialBulwark
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
-			player.Macrocosm().AccDashHorizontal = true;
-			player.Macrocosm().AccDashVelocity = 14f;
-			player.Macrocosm().AccDashDamage = Item.damage;
-			player.Macrocosm().AccDashKnockback = Item.knockBack;
-			player.Macrocosm().AccDashImmuneTime = 6;
+			player.GetModPlayer<DashPlayer>().AccDashHorizontal = true;
+			player.GetModPlayer<DashPlayer>().AccDashVelocity = 14f;
+			player.GetModPlayer<DashPlayer>().AccDashDamage = Item.damage;
+			player.GetModPlayer<DashPlayer>().AccDashKnockback = Item.knockBack;
+			player.GetModPlayer<DashPlayer>().AccDashImmuneTime = 6;
 		}
 
 		public override void AddRecipes()

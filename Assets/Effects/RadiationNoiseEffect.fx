@@ -30,7 +30,7 @@ float4 RadiationNoiseEffect(float2 coords : TEXCOORD0) : COLOR0
 {
     float4 color = tex2D(uImage0, coords);
     
-    color.rgb -= uIntensity * 0.42 * RandomNoise(coords, sin(uTime));
+    color.rgb -= uIntensity * RandomNoise(coords, sin(uTime));
        
     return color;
 }

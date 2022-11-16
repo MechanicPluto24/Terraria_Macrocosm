@@ -4,6 +4,7 @@ using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.Tiles;
 using Macrocosm.Content.Projectiles.Unfriendly;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -60,7 +61,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
 		{
-			return (spawnInfo.SpawnTileY > Main.rockLayer) ? 0.1f : 0f;
+			return (spawnInfo.SpawnTileY > Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Protolith>()) ? 0.1f : 0f;
 		}
 
 		public override void OnSpawn(IEntitySource source)

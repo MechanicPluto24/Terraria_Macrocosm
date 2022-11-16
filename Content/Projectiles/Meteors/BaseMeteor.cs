@@ -16,6 +16,8 @@ namespace Macrocosm.Content.Projectiles.Meteors
 		public int Height;
 		public int Damage;
 
+		public string DisplayName;
+
 		public float ScreenshakeMaxDist;
 		public float ScreenshakeIntensity;
 
@@ -33,11 +35,16 @@ namespace Macrocosm.Content.Projectiles.Meteors
 		public int GoreCount;
 		public Vector2 GoreVelocity;
 
+		public override void SetStaticDefaults()
+		{
+			base.DisplayName.SetDefault(DisplayName);
+		}
+
 		public override void SetDefaults()
 		{
 			Projectile.aiStyle = -1;
 			Projectile.friendly = true;
-			Projectile.hostile = false;
+			Projectile.hostile = true;
 			Projectile.penetrate = -1;
 			Projectile.tileCollide = true;
 

@@ -2,7 +2,6 @@ using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Utility;
 using Macrocosm.Content.Buffs.GoodBuffs.MinionBuffs;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Gores;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
