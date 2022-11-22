@@ -1,7 +1,4 @@
 ﻿using Macrocosm.Common.Utility;
-using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Gores;
-using Macrocosm.Content.Items.Miscellaneous;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -27,9 +24,11 @@ namespace Macrocosm.Content.Projectiles.Meteors
 		public int DustType = -1;
 		public int ImpactDustCount;
 		public Vector2 ImpactDustSpeed;
-		public float ImpactDustScaleMin;
-		public float ImpactDustScaleMax;
-		public int AiDustChanceDenominator;
+
+		public float DustScaleMin;
+		public float DustScaleMax;
+
+		public int AI_DustChanceDenominator;
 
 		public int GoreType = -1;
 		public int GoreCount;
@@ -84,8 +83,8 @@ namespace Macrocosm.Content.Projectiles.Meteors
 
 		override public void AI()
 		{
-			AIRotation();
-			AIDusts();
+			AI_Rotation();
+			AI_SpawnDusts();
 			ExtraAI();
 
 
@@ -96,21 +95,25 @@ namespace Macrocosm.Content.Projectiles.Meteors
 			if (DustType < 0)
 				return;
 
+			SpawnImpactDusts(DustType);
+		}
+
+		public void SpawnImpactDusts(int dustType, bool noGravity = false)
+		{
 			for (int i = 0; i < ImpactDustCount; i++)
 			{
 				Dust dust = Dust.NewDustDirect(
 					new Vector2(Projectile.Center.X, Projectile.Center.Y + 0.25f * Projectile.height),
 					Width,
 					Height,
-					DustType,
+					dustType,
 					Main.rand.NextFloat(-ImpactDustSpeed.X, ImpactDustSpeed.X),
 					Main.rand.NextFloat(0f, -ImpactDustSpeed.Y),
-					Scale: Main.rand.NextFloat(ImpactDustScaleMin, ImpactDustScaleMax)
+					Scale: Main.rand.NextFloat(DustScaleMin, DustScaleMax)
 				);
 
-				dust.noGravity = false;
+				dust.noGravity = noGravity;
 			}
-
 		}
 
 		public virtual void SpawnGores()
@@ -146,33 +149,41 @@ namespace Macrocosm.Content.Projectiles.Meteors
 			}
 		}
 
-		public virtual void AIRotation()
+		public virtual void AI_Rotation()
 		{
 			Projectile.rotation += (Math.Abs(Projectile.velocity.X) + Math.Abs(Projectile.velocity.Y)) * RotationMultiplier * Projectile.direction;
 
 		}
 
-		public virtual void AIDusts()
+		/// <summary> Override for custom dusts spawning </summary>
+		public virtual void AI_SpawnDusts()
 		{
 			if (DustType == -1)
 				return;
+			
+			AI_SpawnDusts(DustType);
+		}
 
-			if (Main.rand.NextBool(AiDustChanceDenominator))
+		/// <summary> Call for custom dust types, different from the DustType property </summary>
+		public void AI_SpawnDusts(int dustType)
+		{
+			if (Main.rand.NextBool(AI_DustChanceDenominator))
 			{
 				Dust dust = Dust.NewDustDirect(
 						new Vector2(Projectile.position.X, Projectile.position.Y),
 						Projectile.width,
 						Projectile.height,
-						DustType,
+						dustType,
 						0f,
 						0f,
-						Scale: Main.rand.NextFloat(ImpactDustScaleMin, ImpactDustScaleMax)
+						Scale: Main.rand.NextFloat(DustScaleMin, DustScaleMax)
 					);
 
 				dust.noGravity = true;
 			}
 		}
 
+		/// <summary> Use for special AI </summary>
 		public virtual void ExtraAI() { }
 		
 	}

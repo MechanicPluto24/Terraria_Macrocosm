@@ -10,7 +10,7 @@ using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Miscellaneous
+namespace Macrocosm.Content.Items.Chunks
 {
 	public class MeteoricChunk : ModItem
 	{
@@ -62,18 +62,14 @@ namespace Macrocosm.Content.Items.Miscellaneous
 			}
 		}
 
-		/// <summary>
-		/// Draw with a random frame and flipping in the world  
-		/// </summary>
+		/// <summary> Draw with a random frame and flipping in the world </summary>
 		public override bool PreDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
 		{
 			Draw(spriteBatch, frameY, flip, Item.Center - Main.screenPosition, lightColor, rotation, Item.Size / 2, scale);
 			return false;
 		}
 
-		/// <summary>
-		/// Draw with the default appearance in the inventory 
-		/// </summary>
+		/// <summary> Draw with the default appearance in the inventory </summary>
 		public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
 		{
 			Draw(spriteBatch, 0, false, position - new Vector2(Item.width / 3, 0), drawColor, 0f, origin, scale * 4);

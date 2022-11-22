@@ -47,8 +47,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		const float attackCooldown = 280f;
 
- 		// Not used for this particular AIType
- 		public ref float AI_AttackTimer => ref NPC.ai[1];
+ 		public ref float AI_AttackTimer => ref NPC.ai[1]; // Not used in vanilla code for this particular AIType
 
 		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
 		{
@@ -71,7 +70,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		public override void PostAI()
 		{
-			// fall down faster (better for underground enemies)
+			// fall down faster (better behavior for underground enemies)
 			if (NPC.velocity.Y < 0f)
 				NPC.velocity.Y += 0.1f;
 
@@ -131,7 +130,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		private void SpawnDusts()
 		{
-			Vector2 dustVelocity = MathUtils.PolarVector(0.01f, MiscUtils.RandomRotation());
+			Vector2 dustVelocity = MathUtils.PolarVector(0.01f, MathUtils.RandomRotation());
 			Dust.NewDust(NPC.position, NPC.width, NPC.height, ModContent.DustType<LuminiteDust>(), dustVelocity.X, dustVelocity.Y, newColor: Color.White * 0.1f);
 		}
 	}

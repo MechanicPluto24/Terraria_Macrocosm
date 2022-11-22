@@ -33,13 +33,13 @@ namespace Macrocosm.Common.Hooks
 				return orig(ref tile);
 
 			if (tile.Type >= SkyPosition && tile.Type <= SkyPosition + 255) 
-				return ComputeGradient(MacrocosmSubworld.Current().MapColors[MapColorType.SkyUpper], MacrocosmSubworld.Current().MapColors[MapColorType.SkyLower], (tile.Type - SkyPosition) / 255f);
+				return MapColorLerp(MacrocosmSubworld.Current().MapColors[MapColorType.SkyUpper], MacrocosmSubworld.Current().MapColors[MapColorType.SkyLower], (tile.Type - SkyPosition) / 255f);
 
 			if (tile.Type >= DirtPosition && tile.Type <= DirtPosition + 255)
-				return ComputeGradient(MacrocosmSubworld.Current().MapColors[MapColorType.UndergroundUpper], MacrocosmSubworld.Current().MapColors[MapColorType.UndergroundLower], (tile.Type - DirtPosition) / 255f);
+				return MapColorLerp(MacrocosmSubworld.Current().MapColors[MapColorType.UndergroundUpper], MacrocosmSubworld.Current().MapColors[MapColorType.UndergroundLower], (tile.Type - DirtPosition) / 255f);
 
 			if (tile.Type >= RockPosition && tile.Type <= RockPosition + 255)
-				return ComputeGradient(MacrocosmSubworld.Current().MapColors[MapColorType.CavernUpper], MacrocosmSubworld.Current().MapColors[MapColorType.CavernLower], (tile.Type - RockPosition) / 255f);
+				return MapColorLerp(MacrocosmSubworld.Current().MapColors[MapColorType.CavernUpper], MacrocosmSubworld.Current().MapColors[MapColorType.CavernLower], (tile.Type - RockPosition) / 255f);
 
 			if (tile.Type == HellPosition)
 				return MacrocosmSubworld.Current().MapColors[MapColorType.Underworld];
@@ -60,7 +60,8 @@ namespace Macrocosm.Common.Hooks
 		}
 
 		/// <summary> Adapted from vanilla code </summary>
-		private Color ComputeGradient(Color from, Color to, float value) => new Color((byte)((float)(int)from.R * (1f - value) + (float)(int)to.R * value), (byte)((float)(int)from.G * (1f - value) + (float)(int)to.G * value), (byte)((float)(int)from.B * (1f - value) + (float)(int)to.B * value));
+		private static Color MapColorLerp(Color from, Color to, float value)
+			=> new Color((byte)((float)(int)from.R * (1f - value) + (float)(int)to.R * value), (byte)((float)(int)from.G * (1f - value) + (float)(int)to.G * value), (byte)((float)(int)from.B * (1f - value) + (float)(int)to.B * value));
 		 
 		public void Unload() { }
 	}
