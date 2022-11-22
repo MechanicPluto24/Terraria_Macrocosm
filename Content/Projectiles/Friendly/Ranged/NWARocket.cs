@@ -35,47 +35,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			Projectile.light = .5f;
 		}
 
-		public override bool PreDraw(ref Color lightColor)
-		{
-			// adjust rotations manually (due to TrailingMode = 0)
-			if(Projectile.rotation > -MathHelper.PiOver4 && Projectile.rotation < MathHelper.PiOver4)
-			{
-				for (int i = 0; i < Projectile.oldRot.Length; i++)
-					Projectile.oldRot[i] = MathHelper.PiOver2;
-			}
-
- 
-			// draw trail
-			VertexStrip vertexStrip = new VertexStrip();
-			MiscShaderData miscShaderData = GameShaders.Misc["RainbowRod"]; 
-			miscShaderData.UseSaturation(-3f);
-			miscShaderData.UseOpacity(Projectile.localAI[1]);
-			miscShaderData.Apply();
-			vertexStrip.PrepareStripWithProceduralPadding(Projectile.oldPos, Projectile.oldRot, StripColors, StripWidth, -Main.screenPosition + Projectile.Size / 2f, true);
-
-			if (Projectile.alpha < 1)
-				vertexStrip.DrawTrail();
-
-			Main.pixelShader.CurrentTechnique.Passes[0].Apply();
-
-			Color StripColors(float progressOnStrip)
-			{
- 				float lerpValue = Utils.GetLerpValue(0f, 0.5f, progressOnStrip, clamped: true);
-				Color result = Color.Lerp(Color.Lerp(Color.White, new Color(255, 197, 155, 255), 1.115f * 0.5f), new Color(255, 68, 1, 255), lerpValue) * (1f - Utils.GetLerpValue(0f, 0.98f, progressOnStrip));
-				result.A /= 8;
-				return result;
-			}
-
-			float StripWidth(float progressOnStrip)
-			{
-				float lerpValue = Utils.GetLerpValue(0f, 0.06f + 1.115f * 0.01f, progressOnStrip, clamped: true);
-				lerpValue = 1f - (1f - lerpValue) * (1f - lerpValue);
-				return MathHelper.Lerp(20f, 100f, progressOnStrip) * lerpValue;
-			}
-
-			return true;
-		}
-
 		public override void ModifyDamageHitbox(ref Rectangle hitbox)
 		{
 			if (Projectile.rotation < 0 && Projectile.rotation <= MathHelper.PiOver4 && Projectile.rotation >= MathHelper.PiOver4 * 3 || Projectile.rotation >= 0 && Projectile.rotation > MathHelper.PiOver4 && Projectile.rotation <= MathHelper.PiOver4 * 3)
@@ -87,7 +46,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		/// <summary> Adapted from Projectile.AI_016() for homing snowman rockets </summary>
 		public override void AI()
 		{
-
 			#region Homing
 
 			float x = Projectile.position.X;
@@ -203,8 +161,46 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			}
 
 			#endregion
+		}
 
+		public override bool PreDraw(ref Color lightColor)
+		{
+			// adjust rotations manually (due to TrailingMode = 0 instead of 3)
+			if (Projectile.rotation > -MathHelper.PiOver4 && Projectile.rotation < MathHelper.PiOver4)
+			{
+				for (int i = 0; i < Projectile.oldRot.Length; i++)
+					Projectile.oldRot[i] = MathHelper.PiOver2;
+			}
 
+			// draw trail
+			VertexStrip vertexStrip = new VertexStrip();
+			MiscShaderData miscShaderData = GameShaders.Misc["RainbowRod"];
+			miscShaderData.UseSaturation(-3f);
+			miscShaderData.UseOpacity(Projectile.localAI[1]);
+			miscShaderData.Apply();
+			vertexStrip.PrepareStripWithProceduralPadding(Projectile.oldPos, Projectile.oldRot, StripColors, StripWidth, -Main.screenPosition + Projectile.Size / 2f, true);
+
+			if (Projectile.alpha < 1)
+				vertexStrip.DrawTrail();
+
+			Main.pixelShader.CurrentTechnique.Passes[0].Apply();
+
+			Color StripColors(float progressOnStrip)
+			{
+				float lerpValue = Utils.GetLerpValue(0f, 0.5f, progressOnStrip, clamped: true);
+				Color result = Color.Lerp(Color.Lerp(Color.White, new Color(255, 197, 155, 255), 1.115f * 0.5f), new Color(255, 68, 1, 255), lerpValue) * (1f - Utils.GetLerpValue(0f, 0.98f, progressOnStrip));
+				result.A /= 8;
+				return result;
+			}
+
+			float StripWidth(float progressOnStrip)
+			{
+				float lerpValue = Utils.GetLerpValue(0f, 0.06f + 1.115f * 0.01f, progressOnStrip, clamped: true);
+				lerpValue = 1f - (1f - lerpValue) * (1f - lerpValue);
+				return MathHelper.Lerp(20f, 100f, progressOnStrip) * lerpValue;
+			}
+
+			return true;
 		}
 
 		public override bool OnTileCollide(Vector2 oldVelocity)
@@ -218,27 +214,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			Projectile.Explode(100);
 		}
 
-		public void Explode()
-		{
-			Projectile.velocity = Vector2.Zero;
-			Projectile.penetrate = -1;
-			Projectile.alpha = 255;
-			Projectile.knockBack = 12f;
-
-			Projectile.position.X += Projectile.width / 2;
-			Projectile.position.Y += Projectile.height / 2;
-			Projectile.width = 100;
-			Projectile.height = 100;
-			Projectile.position.X -= Projectile.width / 2;
-			Projectile.position.Y -= Projectile.height / 2;
-		}
-
 		public override void Kill(int timeLeft)
 		{
 
 			if (Main.netMode != NetmodeID.Server)
 			{
-
 				SoundEngine.PlaySound(SoundID.Item14, Projectile.position);
 
 				for (int i = 0; i < 30; i++)

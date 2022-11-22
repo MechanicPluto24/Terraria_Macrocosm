@@ -62,8 +62,6 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 				SpawnDusts();
 			}
 
-
-
 			Projectile.alpha = (int)MathHelper.Clamp((int)Projectile.ai[0], 0f, 255f);
 
 			Vector2 center = Projectile.Center;
@@ -103,19 +101,17 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 			return false;
 		}
 
-		/// <summary>
-		/// Adapted from Lunar Portal Staff
-		/// </summary>
+		/// <summary> Adapted from Lunar Portal Staff </summary>
 		private void SpawnDusts()
 		{
 			if (Main.rand.NextBool(1))
 			{
 				int type = Main.rand.NextBool() ? ModContent.DustType<PortalLightOrangeDust>() : ModContent.DustType<PortalLightGreenDust>();
-				Vector2 rotVector1 = Vector2.UnitY.RotatedByRandom(6.2831854820251465);
+				Vector2 rotVector1 = Vector2.UnitY.RotatedByRandom(MathHelper.TwoPi);
 				Dust lightDust = Main.dust[Dust.NewDust(Projectile.Center - rotVector1 * 30f, 0, 0, type)];
 				lightDust.noGravity = true;
 				lightDust.position = Projectile.Center - rotVector1 * Main.rand.Next(10, 21);
-				lightDust.velocity = rotVector1.RotatedBy(1.5707963705062866) * 6f;
+				lightDust.velocity = rotVector1.RotatedBy(MathHelper.PiOver2) * 6f;
 				lightDust.scale = 1.2f + Main.rand.NextFloat();
 				lightDust.fadeIn = 0.5f;
 				lightDust.customData = Projectile.Center;
@@ -125,11 +121,11 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 			if (Main.rand.NextBool(2))
 			{
 				int type = Main.rand.NextBool() ? ModContent.DustType<PortalDarkOrangeDust>() : ModContent.DustType<PortalDarkGreenDust>();
-				Vector2 rotVector2 = Vector2.UnitY.RotatedByRandom(6.2831854820251465);
+				Vector2 rotVector2 = Vector2.UnitY.RotatedByRandom(MathHelper.TwoPi);
 				Dust darkDust = Main.dust[Dust.NewDust(Projectile.Center - rotVector2 * 30f, 0, 0, type)];
 				darkDust.noGravity = true;
 				darkDust.position = Projectile.Center - rotVector2 * 30f;
-				darkDust.velocity = rotVector2.RotatedBy(-1.5707963705062866) * 3f;
+				darkDust.velocity = rotVector2.RotatedBy(-MathHelper.PiOver2) * 3f;
 				darkDust.scale = 1.2f + Main.rand.NextFloat();
 				darkDust.fadeIn = 0.5f;
 				darkDust.customData = Main.projectile[Projectile.whoAmI];
