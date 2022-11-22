@@ -15,7 +15,7 @@ namespace Macrocosm.Content.Projectiles.Meteors
 			Height = 44;
 			Damage = 1500;
 
-			DisplayName = "Vortex Meteor";
+			MeteorName = "Vortex Meteor";
 
 			ScreenshakeMaxDist = 140f * 16f;
 			ScreenshakeIntensity = 100f;

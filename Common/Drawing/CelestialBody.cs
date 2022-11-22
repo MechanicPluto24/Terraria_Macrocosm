@@ -225,6 +225,7 @@ namespace Macrocosm.Common.Drawing
 			DrawChildren(spriteBatch, state, inFront: true);
 
 			spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, state);
+
 			#region Draw shadow
 			if (HasShadow)
 			{
@@ -246,6 +247,7 @@ namespace Macrocosm.Common.Drawing
  					spriteBatch.Draw(bodyShadowTexture, Position, null, shadowColor, shadowRotation, atmoTexture.Size() / 2, Scale, default, 0f);
  			}
 			#endregion
+
 			spriteBatch.End();
 
 			spriteBatch.Restore(state);
@@ -320,7 +322,7 @@ namespace Macrocosm.Common.Drawing
  				float perigee = Math.Min(orbitEllipse.X, orbitEllipse.Y);
 				float apogee = Math.Max(orbitEllipse.X, orbitEllipse.Y);
  
- 				float period = MathHelper.TwoPi / orbitSpeed; // period of a circle, ot ellipse 
+ 				float period = MathHelper.TwoPi / orbitSpeed; // period of a circle, not ellipse 
 				float angularSpeed = (MathHelper.Pi / (period * radius * radius)) * (perigee + apogee) * (float)Math.Sqrt(perigee * apogee);
 				orbitRotation += angularSpeed;
 			}

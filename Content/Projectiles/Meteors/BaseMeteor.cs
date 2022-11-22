@@ -13,7 +13,7 @@ namespace Macrocosm.Content.Projectiles.Meteors
 		public int Height;
 		public int Damage;
 
-		public string DisplayName;
+		public string MeteorName;
 
 		public float ScreenshakeMaxDist;
 		public float ScreenshakeIntensity;
@@ -36,7 +36,7 @@ namespace Macrocosm.Content.Projectiles.Meteors
 
 		public override void SetStaticDefaults()
 		{
-			base.DisplayName.SetDefault(DisplayName);
+			base.DisplayName.SetDefault(MeteorName);
 		}
 
 		public override void SetDefaults()
