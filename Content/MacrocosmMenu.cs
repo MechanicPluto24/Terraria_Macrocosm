@@ -160,6 +160,6 @@ namespace Macrocosm.Content
 			Eris.SetOrbitParent(Sun, 810, Rand(), 0.00018f);
  		}
 
-		private static float Rand() => MiscUtils.RandomRotation();
+		private static float Rand() => MathUtils.RandomRotation();
 	}
 }

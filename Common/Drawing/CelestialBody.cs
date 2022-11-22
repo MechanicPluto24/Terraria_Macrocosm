@@ -283,11 +283,11 @@ namespace Macrocosm.Common.Drawing
             double duration;
             
             if(SubworldSystem.AnyActive<Macrocosm>())
-                duration = Main.dayTime ? MacrocosmSubworld.Current().DayLenght : MacrocosmSubworld.Current().DayLenght;
+                duration = Main.dayTime ? MacrocosmSubworld.Current().DayLenght : MacrocosmSubworld.Current().NightLenght;
             else 
                 duration = Main.dayTime ? Main.dayLength : Main.nightLength;
 
-			double bgTop = -Main.screenPosition.Y / (Main.worldSurface * 16.0 - 600.0) * 200.0;
+			double bgTop = -(Main.LocalPlayer.Center.Y - Main.screenHeight / 2) / (Main.worldSurface * 16.0 - 600.0) * 200.0;
 
 			int timeX = (int)(Main.time / duration * (Main.screenWidth + bodyTexture.Width * 2)) - bodyTexture.Width;
 			double timeY = Main.time < duration / 2 ? //Gets the Y axis for the angle depending on the time

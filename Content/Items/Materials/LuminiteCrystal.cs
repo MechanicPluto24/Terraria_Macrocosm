@@ -1,4 +1,3 @@
-using Macrocosm.Content.Items.Materials.Chunks;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

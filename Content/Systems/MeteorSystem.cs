@@ -69,19 +69,32 @@ namespace Macrocosm.Content.Systems
 					speedX *= mult;
 					speedY *= mult;
 
-					WeightedRandom<MeteorType> choice = new(Main.rand);
-					choice.Add(MeteorType.Small, 6);
-					choice.Add(MeteorType.Medium, 3);
-					choice.Add(MeteorType.Large, 1);
+					WeightedRandom<int> choice = new(Main.rand);
+					choice.Add(ModContent.ProjectileType<MoonMeteorSmall>(), 50.0);
+					choice.Add(ModContent.ProjectileType<MoonMeteorMedium>(), 33.0);
+					choice.Add(ModContent.ProjectileType<MoonMeteorLarge>(), 12.0);
+
+					choice.Add(ModContent.ProjectileType<SolarMeteor>(), 2.0);
+					choice.Add(ModContent.ProjectileType<NebulaMeteor>(), 2.0);
+					choice.Add(ModContent.ProjectileType<StardustMeteor>(), 2.0);
+					choice.Add(ModContent.ProjectileType<VortexMeteor>(), 2.0);
 
 					var source = Main.player[closestPlayer].GetSource_Misc("FallingStar");
 
-					switch ((MeteorType)choice)
-					{
-						case MeteorType.Small: Projectile.NewProjectile(source, position.X, position.Y, speedX, speedY, ModContent.ProjectileType<MoonMeteorSmall>(), 500, 0f, 255); break;
-						case MeteorType.Medium: Projectile.NewProjectile(source, position.X, position.Y, speedX, speedY, ModContent.ProjectileType<MoonMeteorMedium>(), 1000, 0f, 255); break;
-						case MeteorType.Large: Projectile.NewProjectile(source, position.X, position.Y, speedX, speedY, ModContent.ProjectileType<MoonMeteorLarge>(), 1500, 0f, 255); break;
-					}
+					int type = choice;
+					int damage;
+
+					if (type == ModContent.ProjectileType<MoonMeteorSmall>())
+						damage = 500;
+					else if (type == ModContent.ProjectileType<MoonMeteorMedium>())
+						damage = 1000;
+					else if (type == ModContent.ProjectileType<MoonMeteorLarge>())
+						damage = 1500;
+					else
+						damage = 2000;
+
+					Projectile.NewProjectile(source, position.X, position.Y, speedX, speedY, type, damage, 0f, 255); break;
+				
 				}
 			}
 

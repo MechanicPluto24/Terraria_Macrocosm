@@ -1,7 +1,7 @@
 ﻿using Macrocosm.Common.Utility;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Gores;
-using Macrocosm.Content.Items.Miscellaneous;
+using Macrocosm.Content.Items.Chunks;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -24,14 +24,14 @@ namespace Macrocosm.Content.Projectiles.Meteors
 			ScreenshakeIntensity = 50f;
 
 			RotationMultiplier = 0.01f;
-			BlastRadiusMultiplier = 2;
+			BlastRadiusMultiplier = 3.5f;
 
 			DustType = ModContent.DustType<RegolithDust>();
 			ImpactDustCount = Main.rand.Next(60, 80);
 			ImpactDustSpeed = new Vector2(1f, 5f);
-			ImpactDustScaleMin = 1f;
-			ImpactDustScaleMax = 1.2f;
-			AiDustChanceDenominator = 4;
+			DustScaleMin = 1f;
+			DustScaleMax = 1.2f;
+			AI_DustChanceDenominator = 4;
 
 			GoreType = ModContent.GoreType<RegolithDebris>();
 			GoreCount = Main.rand.Next(2, 4);
@@ -43,7 +43,7 @@ namespace Macrocosm.Content.Projectiles.Meteors
 			if (Main.rand.NextBool(3))
 			{
 				int type = ModContent.ItemType<MeteoricChunk>();
-				Vector2 position = new Vector2(Projectile.position.X, Projectile.position.Y - Projectile.height);
+				Vector2 position = new Vector2(Projectile.position.X + Width/2, Projectile.position.Y - Height);
 				int itemIdx = Item.NewItem(Projectile.GetSource_FromThis(), position, new Vector2(Projectile.width, Projectile.height), type);
 				NetMessage.SendData(MessageID.SyncItem, -1, -1, null, itemIdx, 1f);
 			}

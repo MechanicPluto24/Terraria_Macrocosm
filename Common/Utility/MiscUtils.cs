@@ -18,6 +18,5 @@ namespace Macrocosm.Common.Utility
 			int frameY = dustId * 10 / 1000 * 30 + Main.rand.Next(3) * 10;
 			return new Rectangle(frameX, frameY, 8, 8);
 		}
-		public static float RandomRotation() => Main.rand.NextFloat(-MathHelper.Pi, MathHelper.Pi);
 	}
 }

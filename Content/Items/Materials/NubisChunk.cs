@@ -3,7 +3,7 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Materials.Chunks
+namespace Macrocosm.Content.Items.Materials
 {
 	public class NubisChunk : ModItem
 	{

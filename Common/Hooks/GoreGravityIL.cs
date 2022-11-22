@@ -3,7 +3,6 @@ using Terraria;
 using Terraria.ModLoader;
 using SubworldLibrary;
 using Macrocosm.Content.Subworlds;
-using Macrocosm.Content.Subworlds.Moon;
 using Macrocosm.Content.Subworlds.Earth;
 
 namespace Macrocosm.Common.Hooks

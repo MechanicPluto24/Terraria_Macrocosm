@@ -96,7 +96,7 @@ namespace Macrocosm.Content.Backgrounds.Moon
 				float nightStarBrightness = ComputeBrightness(fadeOutTimeDawn, fadeInTimeDusk, 0.1f, 0.8f);
 
 				DrawMoonNebula(nebulaBrightness);
-				
+
 				starsDay.Draw(spriteBatch);
 				starsNight.Draw(spriteBatch, nightStarBrightness);
 				
@@ -119,10 +119,9 @@ namespace Macrocosm.Content.Backgrounds.Moon
 				8 => ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/NebulaPurple").Value,
 				_ => ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/NebulaNormal").Value,
 			};
-
-			Color nebulaColor = Color.White * brightness;
-			nebulaColor.A = 0;
-
+			
+			Color nebulaColor = (Color.White * brightness).NewAlpha(0f);			
+			
 			Main.spriteBatch.Draw(nebula, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), nebulaColor);
 		}
 
