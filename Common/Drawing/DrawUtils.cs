@@ -3,6 +3,7 @@ using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.GameContent;
 
 namespace Macrocosm.Common.Drawing
@@ -179,5 +180,6 @@ namespace Macrocosm.Common.Drawing
 
 			return texture;
 		}
+
 	}
 }
