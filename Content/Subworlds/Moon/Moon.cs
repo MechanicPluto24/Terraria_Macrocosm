@@ -17,6 +17,8 @@ namespace Macrocosm.Content.Subworlds.Moon
 	/// </summary>
 	public class Moon : MacrocosmSubworld
 	{
+		public static Moon Instance => new();
+		
 		/// <summary>  8 times slower than on Earth (a Terrarian lunar month lasts for 8 in-game days) </summary>
 		public override double TimeRate => 0.125;
 
@@ -40,6 +42,26 @@ namespace Macrocosm.Content.Subworlds.Moon
 			new AmbientPass("AmbientPass", 0.2f),
 			new FinishPass("FinishPass", 0.1f)
 		};
+		
+		public override SubworldData SubworldData => new()
+		{
+			DisplayName = "The Moon",
+			Gravity = GravityMultiplier,
+			Radius = 1737.4f,
+			DayPeriod = 8,
+			ThreatLevel = 2,
+			Hazards = new() 
+			{
+				"No atmosphere",
+				"Meteor storms",
+				"Solar storms"
+			}
+		};
+
+		public override bool CanTravelTo()
+		{
+			return !SubworldSystem.IsActive<Moon>();
+		}
 
 		public override Dictionary<MapColorType, Color> MapColors => new()
 		{

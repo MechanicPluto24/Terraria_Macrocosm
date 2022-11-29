@@ -1,8 +1,11 @@
 ﻿using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Utility;
 using Macrocosm.Content.Buffs.GoodBuffs.MountBuffs;
+using Macrocosm.Content.Rocket.UI;
+using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SubworldLibrary;
 using System;
 using System.Linq;
 using Terraria;
@@ -18,14 +21,15 @@ namespace Macrocosm.Content.Rocket
 {
 	public class RocketCommandModuleTile : ModTile
 	{
-		int width = 6;
-		int height = 6;
+		const int width = 6;
+		const int height = 6;
 
 		public override void SetStaticDefaults()
 		{	
 			Main.tileFrameImportant[Type] = true;
 			Main.tileSolid[Type] = false;
 			Main.tileNoAttach[Type] = true;
+			MinPick = 1000;
 
 			DustType = -1;
 			HitSound = SoundID.MenuClose; // huh
@@ -90,31 +94,38 @@ namespace Macrocosm.Content.Rocket
 				Main.npcChatText = string.Empty;
 			}
 
-			width = 6;
-			height = 6;
-
 			if (TileUtils.TryGetTileEntityAs(i, j, out RocketCommandModuleTileEntity entity) && player.TryGetModPlayer(out RocketPlayer rocketPlayer))
 			{
-				rocketPlayer.InRocket = true;
-				int rocketId = NPC.NewNPC(null, (entity.Position.X + width / 2) * 16 , (entity.Position.Y + height) * 16, ModContent.NPCType<Rocket>(), ai0: player.whoAmI);
-				Main.npc[rocketId].position.Y -= 3.5f;
-				Main.npc[rocketId].position.X += 2f;
-				entity.Kill(entity.Position.X, entity.Position.Y);
-				WorldGen.KillTile(entity.Position.X, entity.Position.Y);
+				RocketUI.Show(new Point16(i, j));
 				return true;
 			}
 
 			return false;
 		}
+
+		public static void Launch(string subworldName, Point16 tePos)
+		{
+			if (TileUtils.TryGetTileEntityAs(tePos.X, tePos.Y, out RocketCommandModuleTileEntity entity) && Main.LocalPlayer.TryGetModPlayer(out RocketPlayer rocketPlayer))
+			{
+				rocketPlayer.TargetSubworldID = subworldName;
+				rocketPlayer.InRocket = true;
+				int rocketId = NPC.NewNPC(null, (entity.Position.X + width / 2) * 16, (entity.Position.Y + height) * 16, ModContent.NPCType<Rocket>(), ai0: rocketPlayer.Player.whoAmI);
+				Main.npc[rocketId].position.Y -= 3.5f;
+				Main.npc[rocketId].position.X += 2f;
+				entity.Kill(entity.Position.X, entity.Position.Y);
+				WorldGen.KillTile(entity.Position.X, entity.Position.Y);
+			}
+		}
 	}
 
 	public class RocketCommandModuleTileEntity : ModTileEntity
 	{
-		public override void PostGlobalUpdate()
+
+
+		public override void PreGlobalUpdate()
 		{
 			bool found = false;
-
-			// get first value in dictionary
+			
 			foreach (ModTileEntity entity in manager.EnumerateEntities().Values.OfType<ModTileEntity>())
 			{
 				if (entity is RocketCommandModuleTileEntity)
