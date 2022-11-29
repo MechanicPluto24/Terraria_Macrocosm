@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
+using System;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
@@ -9,7 +10,8 @@ namespace Macrocosm.Content.Rocket
 	public class RocketPlayer : ModPlayer
 	{
 		public bool InRocket;
-
+		
+		public string TargetSubworldID;
 
 		public override void ResetEffects()
 		{

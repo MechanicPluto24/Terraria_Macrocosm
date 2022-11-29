@@ -21,7 +21,6 @@ namespace Macrocosm.Content.Rocket
 { 
 	public class Rocket : ModNPC
 	{
-
 		public override void SetDefaults()
 		{
 			NPC.width = 84;
@@ -36,99 +35,150 @@ namespace Macrocosm.Content.Rocket
 			NPC.noTileCollide = true;
 		}
 		
-		int playerId
+		/// <summary> The player in the command module </summary>
+		public int PlayerID
 		{
 			get => (int)NPC.ai[0];
 			set => NPC.ai[0] = value;
 		}
 
-		Player player => Main.player[playerId];
+		Player player => Main.player[PlayerID];
 		RocketPlayer rocketPlayer => player.GetModPlayer<RocketPlayer>();
+
+		/// <summary> Rocket sequence timer </summary>
+		public int FlightTime
+		{
+			get => (int)NPC.ai[1];
+			set => NPC.ai[1] = value;
+		}
+
+		// The world Y coordinate for entering the target subworld
+		private float worldExitPosY = 20 * 16f;
+		
+		// Acceleration values 
+		private float flightAcceleration = 0.1f;   // mid-flight
+		private float liftoffAcceleration = 0.05f; // during liftoff
+		private float startAcceleration = 0.02f;   // initial 
+
+
+		private float maxFlightSpeed = 25f;
+
+		// Number of ticks of the launch countdown (seconds * 60 ticks/sec)
+		private int liftoffTime = 180;
+
+		// Get the initial vertical position
+		private float startYPosition;
+		public override void OnSpawn(IEntitySource source)
+		{
+			startYPosition = NPC.Center.Y;
+		}
+
+		/// <summary> 
+		/// Gets a tick count approximation needed to reach the sky 
+		/// (tough to get it exact since acceleration is not constant and speed is capped) 
+		/// </summary>
+		public float TimeToReachSky => (liftoffTime + 60) + MathF.Sqrt(2 * (startYPosition - worldExitPosY) / flightAcceleration);
+
+		public float Progress => Utils.GetLerpValue(180, TimeToReachSky, FlightTime + 1, clamped: true);
+		public float InvProgress => 1f - Progress;
+
 
 		public override void AI()
 		{
  			NPC.direction = 1;
 			NPC.spriteDirection = -1;
 
-			NPC.ai[1]++;
+			FlightTime++;
 
-			if (NPC.ai[1] > 180)
+			if (FlightTime >= liftoffTime)
 			{
-				float progress = Utils.GetLerpValue(180, 600, NPC.ai[1] + 1);
- 				float invProgress = 1f - progress;
-
-				if (NPC.ai[1] == 181)
-					player.Macrocosm().ScreenShakeIntensity += 60f;		
-				if (NPC.ai[1] == 220)
-					player.Macrocosm().ScreenShakeIntensity += 20f;
-				if (NPC.ai[1] == 240)
-					player.Macrocosm().ScreenShakeIntensity += 10f;
-				else
-					player.Macrocosm().ScreenShakeIntensity = 15f * invProgress;
-
-				if (NPC.ai[1] >= 260)
-					NPC.velocity.Y -= 0.1f;
-				else if (NPC.ai[1] >= 220)
-					NPC.velocity.Y -= 0.05f;
-				else 
-					NPC.velocity.Y -= 0.02f;
-
-				for(int i = 0; i < 10; i++)
-				{
-					for(int g = 0; g < 3; g++)
-					{
-						if (Main.rand.NextBool((int)(10 + (10 * invProgress))))
-						{
-							int type = Main.rand.NextFromList<int>(GoreID.Smoke1, GoreID.Smoke2, GoreID.Smoke3);
-							Gore.NewGore(NPC.GetSource_FromAI(), NPC.position + new Vector2(Main.rand.Next(0, NPC.width / 2), NPC.height - NPC.height / 4), new Vector2(Main.rand.NextFloat(-2f, 2f), Main.rand.NextFloat(-1f, 6f)), type);
-
-						}
-
-					}
- 					 
-					Dust dust = Dust.NewDustDirect(NPC.position + new Vector2(0 + (int)((float)NPC.width/2f * progress) , NPC.height), (int)((float)NPC.width * invProgress), (int)((float)30 * progress), DustID.Flare, Main.rand.NextFloat(-2f, 2f), Main.rand.NextFloat(5f, 20f) * progress, Scale: Main.rand.NextFloat(1.2f, 2.4f));
-					dust.noGravity = false;
-				}
-
+				SetAcceleration();
+				SetScreenshake();
+				VisualEffects();
  			}
 
-			if(NPC.position.Y < 1 * 16)
+			if(NPC.position.Y < worldExitPosY)
 			{
 				rocketPlayer.InRocket = false;
 				NPC.active = false;
-
-				if (SubworldSystem.AnyActive<Macrocosm>())
-				{
-					if (MacrocosmSubworld.Current() is Moon)
-						SubworldSystem.Exit(); // here could be the planet selection logic 
-				}
-				else 
-					SubworldSystem.Enter<Moon>();
+				EnterDestinationSubworld();
 			}
 		}
 
-		public override void OnKill()
+		private void EnterDestinationSubworld()
 		{
- 			rocketPlayer.InRocket = false;
- 		}
+			if (rocketPlayer.TargetSubworldID == "Earth")
+				SubworldSystem.Exit();
+			else if (rocketPlayer.TargetSubworldID.Equals("") && rocketPlayer.TargetSubworldID is not null)
+				SubworldSystem.Enter("Macrocosm:" + rocketPlayer.TargetSubworldID);
+		}
+
+		private void SetAcceleration()
+		{
+			if (Math.Abs(NPC.velocity.Y) > maxFlightSpeed)
+				return;
+
+			if (FlightTime >= liftoffTime + 60)
+				NPC.velocity.Y -= flightAcceleration;
+			else if (FlightTime >= liftoffTime + 40)
+				NPC.velocity.Y -= liftoffAcceleration;
+			else
+				NPC.velocity.Y -= startAcceleration;
+		}
+
+		private void SetScreenshake()
+		{
+			if (FlightTime >= liftoffTime && FlightTime < liftoffTime + 5)
+				player.Macrocosm().ScreenShakeIntensity = 80f;
+			if (FlightTime >= liftoffTime + 5 && FlightTime < liftoffTime + 40)
+				player.Macrocosm().ScreenShakeIntensity = 40f;
+			if (FlightTime >= liftoffTime + 20 && FlightTime < liftoffTime + 60)
+				player.Macrocosm().ScreenShakeIntensity = 20f;
+			else
+				player.Macrocosm().ScreenShakeIntensity = 15f * InvProgress;
+		}
+
+		private void VisualEffects()
+		{
+			int dustCnt = FlightTime > liftoffTime + 40 ? 10 : 4;
+ 			for (int i = 0; i < dustCnt; i++)
+			{
+				Dust dust = Dust.NewDustDirect(NPC.position + new Vector2(0 + (int)((float)NPC.width / 2f * (Progress * 0.5f)), NPC.height - (NPC.height / 2 * Progress)), (int)((float)NPC.width * (InvProgress * 0.5f + 0.5f)), 1, DustID.Flare, Main.rand.NextFloat(-4f, 4f), Main.rand.NextFloat(20f, 200f) * Progress, Scale: Main.rand.NextFloat(1.5f, 3f));
+				dust.noGravity = false;
+			}
+ 			
+
+			for (int g = 0; g < 3; g++)
+			{
+				if (Main.rand.NextBool(2))
+				{
+					int type = Main.rand.NextFromList<int>(GoreID.Smoke1, GoreID.Smoke2, GoreID.Smoke3);
+					Gore.NewGore(NPC.GetSource_FromAI(), NPC.position + new Vector2(Main.rand.Next(0, NPC.width / 2), NPC.height - NPC.height / 4), new Vector2(Main.rand.NextFloat(-4f, 4f), Main.rand.NextFloat(0, 8f)), type);
+				}
+			}
+		}
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
-			if (NPC.ai[1] < 180f)
+			if (FlightTime < liftoffTime)
 			{
-				string text = (3 - (int)NPC.ai[1]/60).ToString();
+				string text = (liftoffTime/60 - (int)FlightTime/60).ToString();
 				ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, text, NPC.Center + new Vector2(-15, -90) - Main.screenPosition, Color.Red, 0f, Vector2.Zero, new Vector2(1.2f));
 			}
 			
 			return true;
 		}
 
+		public override void OnKill()
+		{
+			rocketPlayer.InRocket = false;
+		}
+
+		/// <summary> Make the rocket draw over players </summary>
 		public override void DrawBehind(int index)
 		{
 			Main.instance.DrawCacheNPCsOverPlayers.Add(index);
 		}
-
-
 
 	}
 }
