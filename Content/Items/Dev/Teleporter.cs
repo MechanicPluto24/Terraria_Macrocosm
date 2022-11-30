@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Content.Rarities;
+using Macrocosm.Content.Rocket;
 using Macrocosm.Content.Subworlds.Moon;
 using SubworldLibrary;
 using Terraria;
@@ -28,9 +29,9 @@ namespace Macrocosm.Content.Items.Dev
 		public override bool? UseItem(Player player)
 		{
 			if (!SubworldSystem.AnyActive<Macrocosm>())
- 				SubworldSystem.Enter<Moon>();
- 			else
- 				SubworldSystem.Exit();
+				SubworldSystem.Enter(Main.LocalPlayer.GetModPlayer<RocketPlayer>().TargetSubworldID);
+			else
+				SubworldSystem.Exit();
 
  			return true;
 		}

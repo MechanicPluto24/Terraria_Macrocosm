@@ -18,27 +18,30 @@ namespace Macrocosm.Content.Subworlds
 		Underworld
 	}
 
-	/// <summary> Stores information about this subworld </summary>
+	/// <summary> Stores information about Macrocosm Subworlds </summary>
 	public struct SubworldData
-	{
-		public string DisplayName;
-		
-		public float Gravity;         // in G
-		public float Radius;          // in km
-		public float DayPeriod;		  // in Earth hours
-		public float ThreatLevel;     // scale 1-10 (?)
-		public List<string> Hazards;  
+	{		
+		public string DisplayName = "";
+
+		public float Gravity = 0f;         // in G
+		public float Radius = 0f;          // in km
+		public float DayPeriod = 0f;       // in Earth hours
+		public float ThreatLevel = 0f;     // scale 1-10 (?)
+		public List<string> Hazards = new();
+
+		public SubworldData() { }
 	}
 
 	public abstract class MacrocosmSubworld : Subworld
 	{
 		public static MacrocosmSubworld Current() => SubworldSystem.Current as MacrocosmSubworld;
 		public static bool AnyActive() => SubworldSystem.AnyActive<Macrocosm>();
-
+		
 		public virtual double TimeRate { get; set; } = 1.0;
 		public virtual double DayLenght { get; set; } = Main.dayLength;
 		public virtual double NightLenght { get; set; } = Main.nightLength;
 		public virtual float GravityMultiplier { get; set; } = 1f;
+
 		public virtual Dictionary<MapColorType, Color> MapColors { get; } = null;
 		public virtual SubworldData SubworldData { get; }
 		public virtual bool CanTravelTo() => true;

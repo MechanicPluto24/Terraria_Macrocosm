@@ -69,7 +69,7 @@ namespace Macrocosm.Content.Subworlds.Moon
 		{
 			string loadText;
 
-			Color bodyColor = Color.White * (float)(animationTimer / 5) * 0.8f;  // color of the celestial body
+			Color bodyColor = Color.White * (float)(animationTimer / 5) * 1f;  // color of the celestial body
 			bodyColor.A = byte.MaxValue;                                         // keep it opaque
 
 			spriteBatch.Begin(0, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.EffectMatrix);
@@ -90,6 +90,8 @@ namespace Macrocosm.Content.Subworlds.Moon
 				ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, msgToPlayer, new Vector2(Main.screenWidth / 2f - messageSize.X / 2f, messageSize.Y), new Color(94, 150, 255), 0f, Vector2.Zero, new Vector2(1.2f));
 				Vector2 messageSize2 = FontAssets.DeathText.Value.MeasureString(chosenMessage) * 0.7f;
 				ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, chosenMessage, new Vector2(Main.screenWidth / 2f - messageSize2.X / 2f, Main.screenHeight - messageSize2.Y - 20), Color.White, 0f, Vector2.Zero, new Vector2(0.7f));
+
+
 			}
 			else
 			{
@@ -98,6 +100,8 @@ namespace Macrocosm.Content.Subworlds.Moon
 
 				starsDrawing.Draw(spriteBatch);
 
+				spriteBatch.EndIfBeginCalled();
+				spriteBatch.Begin(0, BlendState.NonPremultiplied, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.EffectMatrix);
 				spriteBatch.Draw
 				(
 					lunaBackground,
@@ -111,7 +115,8 @@ namespace Macrocosm.Content.Subworlds.Moon
 				ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, msgToPlayer, new Vector2(Main.screenWidth / 2f - messageSize.X / 2f, messageSize.Y), Color.White, 0f, Vector2.Zero, new Vector2(1.2f));
 				Vector2 messageSize2 = FontAssets.DeathText.Value.MeasureString(chosenMessage) * 0.7f;
 				ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, chosenMessage, new Vector2(Main.screenWidth / 2f - messageSize2.X / 2f, Main.screenHeight - messageSize2.Y - 20), Color.White, 0f, Vector2.Zero, new Vector2(0.7f));
-
+				spriteBatch.End();
+				spriteBatch.Begin(0, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.EffectMatrix);
 			}
 
 			if (WorldGenerator.CurrentGenerationProgress != null)

@@ -1,10 +1,13 @@
-﻿using Macrocosm.Content.Subworlds;
+﻿using Macrocosm.Common.Drawing;
+using Macrocosm.Content.Subworlds;
 using Macrocosm.Content.Subworlds.Earth;
 using Macrocosm.Content.Subworlds.Moon;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SubworldLibrary;
 using System.Collections.Generic;
+using System.Linq;
+using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.UI;
@@ -13,43 +16,73 @@ namespace Macrocosm.Content.Rocket.UI
 {
 	public class UINavigationPanel : UIElement
 	{
-
 		public UINavigationMap CurrentMap;
+
+		private UIPanel BackgroundPanel;
 
 		private UINavigationMap EarthSystem;
 		private UINavigationMap SolarSystemOuter;
 		private UINavigationMap SolarSystemInner;
 
+		private UINavigationZoomButton ZoomInButton;
+		private UINavigationZoomButton ZoomOutButton;
+
 		public override void OnInitialize()
 		{
-			Width.Set(606, 0);
-			Height.Set(234, 0);
+			Width.Set(586, 0);
+			Height.Set(224, 0);
 			HAlign = 0.5f;
 			VAlign = 0.1f;
-			UIPanel panel = new();
-			panel.Width.Set(Width.Pixels, 0f);
-			panel.Height.Set(Height.Pixels, 0f);
+			BackgroundPanel = new();
+			BackgroundPanel.Width.Set(Width.Pixels, 0f);
+			BackgroundPanel.Height.Set(Height.Pixels, 0f);
 
 			InitializePanelContent();
 			CurrentMap = GetInitialNavigationMap();
 
-			panel.Append(CurrentMap);
-			Append(panel);
+			Append(BackgroundPanel);
+			Append(ZoomInButton);
+			Append(ZoomOutButton);
+			Append(CurrentMap);
 		}
 
 
 		public void InitializePanelContent()
 		{
-			EarthSystem = new(ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/UI/UINavigationMap_Earth", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value);
+			Texture2D zoomInButton = ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/UI/UINavigationZoomIn", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+			Texture2D zoomInBorder = ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/UI/UINavigationZoomInBorder", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+			Texture2D zoomOutButton = ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/UI/UINavigationZoomOut", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+			Texture2D zoomOutBorder = ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/UI/UINavigationZoomOutBorder", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
 
-			EarthSystem.AddTarget(new UIMapTarget(new Vector2(60, 20), 170, 174, () => SubworldSystem.AnyActive<Macrocosm>(), Earth.SubworldData));
-			EarthSystem.AddTarget(new UIMapTarget(new Vector2(428, 34), 48, 50, () => Moon.Instance.CanTravelTo(), Moon.Instance.SubworldData));
+			ZoomInButton = new(zoomInButton, zoomInBorder, new Vector2(6, 88));
+			ZoomInButton.OnClick += (_, _) => ZoomIn();
+			ZoomOutButton = new(zoomOutButton, zoomOutBorder, new Vector2(6, 118));
+			ZoomOutButton.OnClick += (_, _) => ZoomOut();
+
+			EarthSystem = new(ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/UI/UINavigationMap_Earth", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value);
+			SolarSystemInner = new(ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/UI/UINavigationMap_Inner", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value);
+			SolarSystemOuter = new(ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/UI/UINavigationMap_Outer", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value);
+
+			EarthSystem.AddTarget(new UIMapTarget(new Vector2(64, 24), 160, 160, Earth.SubworldData, () => SubworldSystem.AnyActive<Macrocosm>()));
+			EarthSystem.AddTarget(new UIMapTarget(new Vector2(428, 34), 48, 48, Moon.Instance));
 			EarthSystem.Prev = SolarSystemInner;
 
-			SolarSystemInner = new(ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/UI/UINavigationMap_Inner", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value);
+			SolarSystemInner.AddTarget(new UIMapTarget(new Vector2(246, 86), 32, 32, SubworldDataStorage.Sun));
+			SolarSystemInner.AddTarget(new UIMapTarget(new Vector2(226, 88),  6, 6, SubworldDataStorage.Vulcan));
+			SolarSystemInner.AddTarget(new UIMapTarget(new Vector2(302, 128), 6, 6, SubworldDataStorage.Mercury));
+			SolarSystemInner.AddTarget(new UIMapTarget(new Vector2(164, 76),  6, 6, SubworldDataStorage.Venus));
+			SolarSystemInner.AddTarget(new UIMapTarget(new Vector2(366, 58),  6, 6, Earth.SubworldData, () => SubworldSystem.AnyActive<Macrocosm>()), EarthSystem);
+			SolarSystemInner.AddTarget(new UIMapTarget(new Vector2(70, 122),  6, 6, SubworldDataStorage.Mars));
 			SolarSystemInner.Prev = SolarSystemOuter;
 
-			SolarSystemOuter = new(ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/UI/UINavigationMap_Outer", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value);
+			SolarSystemOuter.AddTarget(new UIMapTarget(new Vector2(256, 96), 12, 12, SubworldDataStorage.Sun), SolarSystemInner);
+			SolarSystemOuter.AddTarget(new UIMapTarget(new Vector2(282, 106), 9, 9, SubworldDataStorage.Jupiter));
+			SolarSystemOuter.AddTarget(new UIMapTarget(new Vector2(220, 116), 9, 9, SubworldDataStorage.Saturn));
+			SolarSystemOuter.AddTarget(new UIMapTarget(new Vector2(334, 72), 9, 9, SubworldDataStorage.Ouranos));
+			SolarSystemOuter.AddTarget(new UIMapTarget(new Vector2(182, 42), 9, 9, SubworldDataStorage.Neptune));
+			SolarSystemOuter.AddTarget(new UIMapTarget(new Vector2(410, 156), 9, 9, SubworldDataStorage.Pluto));
+			SolarSystemOuter.AddTarget(new UIMapTarget(new Vector2(44, 20), 9, 9, SubworldDataStorage.Eris));
+			SolarSystemOuter.Next = SolarSystemInner;
 		}
 
 		/// <summary> Use this determining the default navigation map based on the current subworld </summary>
@@ -64,14 +97,38 @@ namespace Macrocosm.Content.Rocket.UI
 			// ...
 		}
 
+		public override void Update(GameTime gameTime)
+		{
+			base.Update(gameTime);
+
+			UIMapTarget solarSystemOuterTarget = SolarSystemOuter.GetSelectedTarget();
+			if (solarSystemOuterTarget == null)
+				SolarSystemOuter.Next = SolarSystemInner;
+			else
+				SolarSystemOuter.Next = CurrentMap.Next;
+
+		}
+
+		public void UpdateCurrentMap(UINavigationMap newMap)
+		{
+			if (newMap == null)
+				return;
+
+			RemoveChild(CurrentMap);
+			CurrentMap = newMap;
+			Append(CurrentMap);
+			Activate();
+		}
+
 		public void ZoomIn()
 		{
-			CurrentMap = CurrentMap.Next ?? CurrentMap;
-		}
+			UpdateCurrentMap(CurrentMap.Next);
+ 		}
 
 		public void ZoomOut()
 		{
-			CurrentMap = CurrentMap.Prev ?? CurrentMap;
+			UpdateCurrentMap(CurrentMap.Prev);
+
 		}
 	}
 }

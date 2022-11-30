@@ -51,31 +51,5 @@ namespace Macrocosm.Content.Rocket.UI
 			UIDisplayText.SetText(Text);
 			UIDisplayName.SetText(Name);
 		}
-
-		public static string ParseSubworldData(UIMapTarget target)
-		{
-			if (target is null)
-				return "";
-
-			string text = "";
-			SubworldData data = target.TargetWorldData;
-
-			text += $"Gravity: {data.Gravity} G\n";
-			text += $"Radius: {data.Radius} km\n";
-			text += $"Day Period: {data.DayPeriod} days\n";
-			text += $"Threat Level: {data.ThreatLevel}\n";
-
-			if (data.Hazards is null || data.Hazards.Count <= 0)
-				return text;
-
-			string hazards = "";
-			foreach (string hazard in data.Hazards)
-				hazards += $"- {hazard} \n";
-
-			text += $"Hazards:\n{hazards}";
-
-			return text;
-
-		}
 	}
 }

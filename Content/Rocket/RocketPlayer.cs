@@ -43,6 +43,7 @@ namespace Macrocosm.Content.Rocket
 		{
 			if (InRocket)
 				Player.noItems = true;
-		}
+
+ 		}
 	}
 }
