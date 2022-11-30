@@ -107,7 +107,7 @@ namespace Macrocosm.Content.Rocket
 		{
 			if (TileUtils.TryGetTileEntityAs(tePos.X, tePos.Y, out RocketCommandModuleTileEntity entity) && Main.LocalPlayer.TryGetModPlayer(out RocketPlayer rocketPlayer))
 			{
-				rocketPlayer.TargetSubworldID = subworldName;
+				//rocketPlayer.TargetSubworldID = subworldName;
 				rocketPlayer.InRocket = true;
 				int rocketId = NPC.NewNPC(null, (entity.Position.X + width / 2) * 16, (entity.Position.Y + height) * 16, ModContent.NPCType<Rocket>(), ai0: rocketPlayer.Player.whoAmI);
 				Main.npc[rocketId].position.Y -= 3.5f;

@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using Terraria;
 using Terraria.UI;
 
 namespace Macrocosm.Content.Rocket.UI
@@ -31,10 +32,21 @@ namespace Macrocosm.Content.Rocket.UI
 			Append(target);
 		}
 
+		
+
 		public override void Update(GameTime gameTime)
 		{
-			if(nextTargetChildMap.Count > 0)
-				Next = nextTargetChildMap[GetSelectedTarget()];
+			base.Update(gameTime);
+
+			if (nextTargetChildMap.Count > 0)
+			{
+				UIMapTarget target = GetSelectedTarget();
+
+				if (target != null && nextTargetChildMap.TryGetValue(target, out UINavigationMap navMap))
+					Next = navMap;
+				else 
+					Next = null;
+			}
 		}
 
 		public UIMapTarget GetSelectedTarget()
@@ -47,11 +59,20 @@ namespace Macrocosm.Content.Rocket.UI
 
 			return null;
 		}
-		
+
+		public void ClearAllTargets()
+		{
+			foreach (UIElement element in Children)
+			{
+				if (element is UIMapTarget target)
+					target.Selected = false;
+			}
+		}
+
 		public override void OnInitialize()
 		{
-			Width.Set(Parent.Width.Pixels - 80, 0);
-			Height.Set(Parent.Height.Pixels, 0);
+			Width.Set(Background.Width, 0);
+			Height.Set(Background.Height, 0);
 			HAlign = 0.5f;
 			VAlign = 0.5f;
 		}

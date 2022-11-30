@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.Subworlds;
+﻿using Macrocosm.Common.Drawing;
+using Macrocosm.Content.Subworlds;
 using Macrocosm.Content.Subworlds.Moon;
 using Microsoft.Xna.Framework;
 using System;
@@ -32,7 +33,8 @@ namespace Macrocosm.Content.Rocket.UI
 
 		public override void UpdateUI(GameTime gameTime)
 		{
-			State = new RocketUIState(); // delete this
+			if(Main.LocalPlayer.controlHook)
+				State = new RocketUIState();
 
 			lastGameTime = gameTime;
 			if (Interface?.CurrentState != null)
@@ -104,22 +106,31 @@ namespace Macrocosm.Content.Rocket.UI
 		{
 			// Don't delete this or the UIElements attached to this UIState will cease to function
 			base.Update(gameTime);
-			
+
 			UIMapTarget target = NavigationPanel.CurrentMap.GetSelectedTarget();
  			WorldInfoPanel.Name = target is null ? "" : target.TargetWorldData.DisplayName;
-			WorldInfoPanel.Text = UIWorldInfoPanel.ParseSubworldData(target);
+			WorldInfoPanel.Text = target is null ? "" : target.ParseSubworldData();
+
+			Main.LocalPlayer.GetModPlayer<RocketPlayer>().TargetSubworldID = target is null ? "" : target.TargetID;
+
 
 			if (target is null)
 			{
-				LaunchButton.TextColor = Color.Red;
+				LaunchButton.TextColor = Color.Gold;
 				LaunchButton.Text = "NO TARGET";
 				LaunchButton.OnClick += (_,_) => { };
 			}
+			else if(target.CanLaunch())
+			{
+				LaunchButton.TextColor = new Color(0, 255, 0);
+				LaunchButton.Text = "LAUNCH";
+				LaunchButton.OnClick += (_,_) => RocketCommandModuleTile.Launch(target.TargetID, RocketPosition);
+			}
 			else
 			{
-				LaunchButton.TextColor = Color.Green;
-				LaunchButton.Text = "LAUNCH";
-				LaunchButton.OnClick += (_,_) => RocketCommandModuleTile.Launch(target.TargetWorldData.DisplayName, RocketPosition);
+				LaunchButton.TextColor = Color.Red;
+				LaunchButton.Text = "NOPE";
+				LaunchButton.OnClick += (_, _) => { };
 			}
 
 			Player player = Main.LocalPlayer;

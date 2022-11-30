@@ -109,8 +109,8 @@ namespace Macrocosm.Content.Rocket
 		{
 			if (rocketPlayer.TargetSubworldID == "Earth")
 				SubworldSystem.Exit();
-			else if (rocketPlayer.TargetSubworldID.Equals("") && rocketPlayer.TargetSubworldID is not null)
-				SubworldSystem.Enter("Macrocosm:" + rocketPlayer.TargetSubworldID);
+			else if (rocketPlayer.TargetSubworldID != null && !rocketPlayer.TargetSubworldID.Equals(""))
+				SubworldSystem.Enter(rocketPlayer.TargetSubworldID);
 		}
 
 		private void SetAcceleration()
