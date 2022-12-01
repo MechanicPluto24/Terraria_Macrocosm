@@ -157,6 +157,10 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 		private BigPortalInfo bigPortal;
 		private BigPortalInfo bigPortal2;
+		
+		private Vector2 portalTarget;
+		private Vector2 portalTarget2;
+		private int portalAttackCount;
 
 		public const int PortalTimerMax = (int)(4f * 60 + 1.5f * 60 + 24);  //Portal spawning leadup + time portals are active before they shrink
 
@@ -311,6 +315,11 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			bigPortal.Write(writer);
 			bigPortal2.Write(writer);
 
+			writer.WriteVector2(portalTarget);
+			writer.WriteVector2(portalTarget2);
+
+			writer.Write(portalAttackCount);
+
 			if (hasCustomTarget)
 				writer.WriteVector2(movementTarget.Value);
 
@@ -329,6 +338,11 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 			bigPortal.Read(reader);
 			bigPortal2.Read(reader);
+
+			portalTarget = reader.ReadVector2();
+			portalTarget2 = reader.ReadVector2();
+
+			portalAttackCount = reader.ReadInt32();
 
 			movementTarget = hasCustomTarget ? (Vector2?)reader.ReadVector2() : null;
 
@@ -645,10 +659,13 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 						for (int i = 0; i < count; i++)
 						{
-							Vector2 spawn = orig + new Vector2(Main.rand.NextFloat(-1, 1) * 40 * 16, Main.rand.NextFloat(-1, 1) * 6 * 16);
+							if (Main.netMode != NetmodeID.MultiplayerClient)
+							{
+								Vector2 spawn = orig + new Vector2(Main.rand.NextFloat(-1, 1) * 40 * 16, Main.rand.NextFloat(-1, 1) * 6 * 16);
 
-							Projectile.NewProjectile(NPC.GetSource_FromAI(), spawn, Vector2.Zero, ModContent.ProjectileType<MeteorPortal>(), MiscUtils.TrueDamage(Main.expertMode ? 140 : 90), 0f, Main.myPlayer);
-							// TODO: netcode
+								int portalID = Projectile.NewProjectile(NPC.GetSource_FromAI(), spawn, Vector2.Zero, ModContent.ProjectileType<MeteorPortal>(), MiscUtils.TrueDamage(Main.expertMode ? 140 : 90), 0f, Main.myPlayer);
+								Main.projectile[portalID].netUpdate = true;
+							}
 						}
 
 						AI_AttackProgress++;
@@ -664,15 +681,16 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 					{
 						if (AI_Timer % 75 == 0)
 						{
-							Vector2 spawn = NPC.Center + new Vector2(Main.rand.NextFloat(-1, 1) * 22 * 16, Main.rand.NextFloat(-1, 1) * 10 * 16);
-
-							NPC.NewNPC(NPC.GetSource_FromAI(), (int)spawn.X, (int)spawn.Y, ModContent.NPCType<CraterImp>(), ai3: NPC.whoAmI);
-
-							//Exhale sound
-							SoundEngine.PlaySound(SoundID.Zombie93, NPC.Center);
-
+							if (Main.netMode != NetmodeID.MultiplayerClient)
+							{
+								Vector2 spawn = NPC.Center + new Vector2(Main.rand.NextFloat(-1, 1) * 22 * 16, Main.rand.NextFloat(-1, 1) * 10 * 16);
+								int craterImpID = NPC.NewNPC(NPC.GetSource_FromAI(), (int)spawn.X, (int)spawn.Y, ModContent.NPCType<CraterImp>(), ai3: NPC.whoAmI);
+								Main.npc[craterImpID].netUpdate = true;
+							}
 							// TODO: netcode
 
+							SoundEngine.PlaySound(SoundID.Zombie93, NPC.Center);
+							
 							AI_AttackProgress++;
 						}
 					}
@@ -711,24 +729,30 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 						{
 							AI_AttackProgress++;
 
-							//Spawn portal -- must be close to boss and player
-							Vector2 spawn;
-							const float playerDistMax = 40 * 16;
-							int tries = 0;
-							bool success = false;
-							do
+							if(Main.netMode != NetmodeID.MultiplayerClient)
 							{
-								spawn = NPC.Center + Main.rand.NextVector2Unit() * 40 * 16;
-								tries++;
-							} while (tries < 1000 && (success = player.DistanceSQ(spawn) >= playerDistMax * playerDistMax));
+								//Spawn portal -- must be close to boss and player
+								Vector2 spawn;
+								const float playerDistMax = 40 * 16;
+								int tries = 0;
+								bool success = false;
+								do
+								{
+									spawn = NPC.Center + Main.rand.NextVector2Unit() * 40 * 16;
+									tries++;
+								} while (tries < 1000 && (success = player.DistanceSQ(spawn) >= playerDistMax * playerDistMax));
 
-							if (!success && tries == 1000)
-							{
-								//Failsafe: put the portal directly on the target player
-								spawn = player.Center;
+								if (!success && tries == 1000)
+								{
+									//Failsafe: put the portal directly on the target player
+									spawn = player.Center;
+								}
+
+								portalTarget = spawn;
+								NPC.netUpdate = true;
 							}
-
-							SpawnBigPortal(spawn, ref bigPortal);
+							
+							SpawnBigPortal(portalTarget, ref bigPortal);
 						}
 					}
 					else if (AI_AttackProgress == 1)
@@ -828,11 +852,15 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 						//Wait, then spawn a portal
 						if (AI_Timer <= 0)
 						{
-							Vector2 offset = Main.rand.NextVector2Unit() * 30 * 16;
+							if(Main.netMode != NetmodeID.MultiplayerClient)
+							{
+								portalTarget2 = Main.rand.NextVector2Unit() * 30 * 16;
+								NPC.netUpdate = true;
+							}
 
 							//Second portal is where the boss will end up
-							SpawnBigPortal(player.Center + offset, ref bigPortal, fast: true);
-							SpawnBigPortal(player.Center - offset, ref bigPortal2, fast: true);
+							SpawnBigPortal(player.Center + portalTarget2, ref bigPortal, fast: true);
+							SpawnBigPortal(player.Center - portalTarget2, ref bigPortal2, fast: true);
 							bigPortal2.visible = false;
 
 							NPC.Center = bigPortal.center;
@@ -886,9 +914,15 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 							NPC.Center = bigPortal.center;
 							NPC.velocity = NPC.DirectionTo(player.Center) * chargeVelocity;
 
-							SoundEngine.PlaySound(SoundID.ForceRoar, NPC.position); // there was a -1 here but the style is correct 
+							SoundEngine.PlaySound(SoundID.ForceRoar, NPC.position);
 
-							if (repeatCount >= (Main.expertMode ? Main.rand.Next(5, 8) : Main.rand.Next(2, 5)))
+							if (Main.netMode != NetmodeID.MultiplayerClient)
+							{
+								portalAttackCount = Main.expertMode ? Main.rand.Next(5, 8) : Main.rand.Next(2, 5);
+								NPC.netUpdate = true;
+							}
+
+							if (repeatCount >= portalAttackCount)
 							{
 								//Stop the repetition
 								bigPortal2.visible = false;

@@ -12,10 +12,14 @@ namespace Macrocosm.Content.Rocket.UI
 	{
 		public string Text = "";
 		public Color TextColor;
-		
+
 		UIText buttonText;
 		UIPanel buttonPanel;
 
+		public UILaunchButton()
+		{
+			
+		}
 
 		public override void OnInitialize()
 		{
@@ -27,9 +31,10 @@ namespace Macrocosm.Content.Rocket.UI
 			buttonPanel = new();
 			buttonPanel.Width.Set(Width.Pixels, 0);
 			buttonPanel.Height.Set(Height.Pixels, 0);
-			
-			buttonText = new("", 1.1f, true)
+
+			buttonText = new(Terraria.Localization.LocalizedText.Empty)
 			{
+				IsWrapped = false,
 				HAlign = 0.5f,
 				VAlign = 0.5f,
 				TextColor = Color.White

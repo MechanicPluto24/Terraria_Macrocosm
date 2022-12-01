@@ -54,8 +54,12 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 				Projectile.ai[0] = 0f;
 				if (Projectile.timeLeft % 14 == 0)
 				{
-					Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, (-Vector2.UnitY).RotatedByRandom(20) * Main.rand.NextFloat(6f, 9.25f), ModContent.ProjectileType<FlamingMeteor>(),
-						(int)(Projectile.damage * 0.4f), Projectile.knockBack, Projectile.owner, 0f, 0f);
+					if (Main.netMode != NetmodeID.MultiplayerClient)
+					{
+						int meteorID = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, (-Vector2.UnitY).RotatedByRandom(20) * Main.rand.NextFloat(6f, 9.25f), ModContent.ProjectileType<FlamingMeteor>(),
+							(int)(Projectile.damage * 0.4f), Projectile.knockBack, Projectile.owner, 0f, 0f);
+						Main.projectile[meteorID].netUpdate = true;
+					}
 
 					Terraria.Audio.SoundEngine.PlaySound(SoundID.Item20, Projectile.Center);
 				}

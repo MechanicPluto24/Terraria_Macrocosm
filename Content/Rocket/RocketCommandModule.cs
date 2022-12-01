@@ -19,7 +19,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Rocket
 {
-	public class RocketCommandModuleTile : ModTile
+	public class RocketCommandModule : ModTile
 	{
 		const int width = 6;
 		const int height = 6;
@@ -44,7 +44,7 @@ namespace Macrocosm.Content.Rocket
 			TileObjectData.newTile.CoordinateHeights = heights;
 			TileObjectData.newTile.Origin = new Point16(0, height - 1);
 			TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile, width, 0);
-			TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(ModContent.GetInstance<RocketCommandModuleTileEntity>().Hook_AfterPlacement, -1, 0, false);
+			TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(ModContent.GetInstance<RocketCommandModuleTE>().Hook_AfterPlacement, -1, 0, false);
 
 			TileObjectData.addTile(Type);
 
@@ -60,7 +60,7 @@ namespace Macrocosm.Content.Rocket
 		public override void KillMultiTile(int i, int j, int frameX, int frameY)
 		{
 			Point16 origin = TileUtils.GetTileOrigin(i, j);
-			ModContent.GetInstance<RocketCommandModuleTileEntity>().Kill(origin.X, origin.Y);
+			ModContent.GetInstance<RocketCommandModuleTE>().Kill(origin.X, origin.Y);
 		}
 
 		public override bool RightClick(int i, int j)
@@ -94,9 +94,9 @@ namespace Macrocosm.Content.Rocket
 				Main.npcChatText = string.Empty;
 			}
 
-			if (TileUtils.TryGetTileEntityAs(i, j, out RocketCommandModuleTileEntity entity) && player.TryGetModPlayer(out RocketPlayer rocketPlayer))
+			if (TileUtils.TryGetTileEntityAs(i, j, out RocketCommandModuleTE entity) && player.TryGetModPlayer(out RocketPlayer rocketPlayer))
 			{
-				RocketUI.Show(new Point16(i, j));
+				RocketSystem.Instance.ShowUI(new Point16(i, j));
 				return true;
 			}
 
@@ -105,11 +105,11 @@ namespace Macrocosm.Content.Rocket
 
 		public static void Launch(string subworldName, Point16 tePos)
 		{
-			if (TileUtils.TryGetTileEntityAs(tePos.X, tePos.Y, out RocketCommandModuleTileEntity entity) && Main.LocalPlayer.TryGetModPlayer(out RocketPlayer rocketPlayer))
+			if (TileUtils.TryGetTileEntityAs(tePos.X, tePos.Y, out RocketCommandModuleTE entity) && Main.LocalPlayer.TryGetModPlayer(out RocketPlayer rocketPlayer))
 			{
 				//rocketPlayer.TargetSubworldID = subworldName;
 				rocketPlayer.InRocket = true;
-				int rocketId = NPC.NewNPC(null, (entity.Position.X + width / 2) * 16, (entity.Position.Y + height) * 16, ModContent.NPCType<Rocket>(), ai0: rocketPlayer.Player.whoAmI);
+				int rocketId = NPC.NewNPC(null, (entity.Position.X + width / 2) * 16, (entity.Position.Y + height) * 16, ModContent.NPCType<RocketEntity>(), ai0: rocketPlayer.Player.whoAmI);
 				Main.npc[rocketId].position.Y -= 3.5f;
 				Main.npc[rocketId].position.X += 2f;
 				entity.Kill(entity.Position.X, entity.Position.Y);
@@ -118,17 +118,15 @@ namespace Macrocosm.Content.Rocket
 		}
 	}
 
-	public class RocketCommandModuleTileEntity : ModTileEntity
+	public class RocketCommandModuleTE : ModTileEntity
 	{
-
-
 		public override void PreGlobalUpdate()
 		{
 			bool found = false;
 			
 			foreach (ModTileEntity entity in manager.EnumerateEntities().Values.OfType<ModTileEntity>())
 			{
-				if (entity is RocketCommandModuleTileEntity)
+				if (entity is RocketCommandModuleTE)
 				{
 					if (found)
 					{
@@ -147,7 +145,7 @@ namespace Macrocosm.Content.Rocket
 		{
 			Tile tile = Main.tile[x, y];
 
-			return tile.HasTile && tile.TileType == ModContent.TileType<RocketCommandModuleTile>();
+			return tile.HasTile && tile.TileType == ModContent.TileType<RocketCommandModule>();
 		}
 
 		public override int Hook_AfterPlacement(int i, int j, int type, int style, int direction, int alternate)
