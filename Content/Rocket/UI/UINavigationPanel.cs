@@ -4,6 +4,7 @@ using Macrocosm.Content.Subworlds.Earth;
 using Macrocosm.Content.Subworlds.Moon;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using SubworldLibrary;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,19 +50,19 @@ namespace Macrocosm.Content.Rocket.UI
 
 		public void InitializePanelContent()
 		{
-			Texture2D zoomInButton = ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/UI/UINavigationZoomIn", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-			Texture2D zoomInBorder = ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/UI/UINavigationZoomInBorder", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-			Texture2D zoomOutButton = ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/UI/UINavigationZoomOut", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-			Texture2D zoomOutBorder = ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/UI/UINavigationZoomOutBorder", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+			Texture2D zoomInButton = ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/UI/UINavigationZoomIn", AssetRequestMode.ImmediateLoad).Value;
+			Texture2D zoomInBorder = ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/UI/UINavigationZoomInBorder", AssetRequestMode.ImmediateLoad).Value;
+			Texture2D zoomOutButton = ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/UI/UINavigationZoomOut", AssetRequestMode.ImmediateLoad).Value;
+			Texture2D zoomOutBorder = ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/UI/UINavigationZoomOutBorder", AssetRequestMode.ImmediateLoad).Value;
 
 			ZoomInButton = new(zoomInButton, zoomInBorder, new Vector2(6, 88));
 			ZoomInButton.OnClick += (_, _) => ZoomIn();
 			ZoomOutButton = new(zoomOutButton, zoomOutBorder, new Vector2(6, 118));
 			ZoomOutButton.OnClick += (_, _) => ZoomOut();
 
-			EarthSystem = new(ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/UI/UINavigationMap_Earth", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value);
-			SolarSystemInner = new(ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/UI/UINavigationMap_Inner", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value);
-			SolarSystemOuter = new(ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/UI/UINavigationMap_Outer", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value);
+			EarthSystem = new(ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/UI/UINavigationMap_Earth", AssetRequestMode.ImmediateLoad).Value);
+			SolarSystemInner = new(ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/UI/UINavigationMap_Inner", AssetRequestMode.ImmediateLoad).Value, defaultNext: GetInitialNavigationMap());
+			SolarSystemOuter = new(ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/UI/UINavigationMap_Outer", AssetRequestMode.ImmediateLoad).Value, defaultNext: SolarSystemInner);
 
 			EarthSystem.AddTarget(new UIMapTarget(new Vector2(64, 24), 160, 160, Earth.SubworldData, () => SubworldSystem.AnyActive<Macrocosm>()));
 			EarthSystem.AddTarget(new UIMapTarget(new Vector2(428, 34), 48, 48, Moon.Instance));
@@ -85,7 +86,7 @@ namespace Macrocosm.Content.Rocket.UI
 			SolarSystemOuter.Next = SolarSystemInner;
 		}
 
-		/// <summary> Use this determining the default navigation map based on the current subworld </summary>
+		/// <summary> Use this for determining the default navigation map based on the current subworld </summary>
 		public UINavigationMap GetInitialNavigationMap()
 		{
 			// if(SubworldSystem.IsActive<Moon>() || !SubworldSystem.AnyActive<Macrocosm>())
@@ -101,12 +102,11 @@ namespace Macrocosm.Content.Rocket.UI
 		{
 			base.Update(gameTime);
 
-			UIMapTarget solarSystemOuterTarget = SolarSystemOuter.GetSelectedTarget();
-			if (solarSystemOuterTarget == null)
-				SolarSystemOuter.Next = SolarSystemInner;
-			else
-				SolarSystemOuter.Next = CurrentMap.Next;
-
+			//UIMapTarget solarSystemOuterTarget = SolarSystemOuter.GetSelectedTarget();
+			//if (solarSystemOuterTarget == null)
+			//	SolarSystemOuter.Next = SolarSystemInner;
+			//else
+			//	SolarSystemOuter.Next = CurrentMap.Next;
 		}
 
 		public void UpdateCurrentMap(UINavigationMap newMap)
@@ -114,15 +114,23 @@ namespace Macrocosm.Content.Rocket.UI
 			if (newMap == null)
 				return;
 
+			UINavigationMap prevMap = CurrentMap;
 			RemoveChild(CurrentMap);
 			CurrentMap = newMap;
+			CurrentMap.ShowAnimation(prevMap.Background);
 			Append(CurrentMap);
+
 			Activate();
 		}
 
-		public void ZoomIn()
+		public void ZoomIn(bool useDefault = true)
 		{
-			UpdateCurrentMap(CurrentMap.Next);
+			UINavigationMap nextMap = CurrentMap.Next;
+
+			if (useDefault)
+				nextMap ??= CurrentMap.DefaultNext;
+		
+			UpdateCurrentMap(nextMap);
  		}
 
 		public void ZoomOut()

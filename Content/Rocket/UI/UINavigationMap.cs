@@ -1,8 +1,10 @@
-﻿using Macrocosm.Content.Subworlds;
+﻿using Macrocosm.Common.Drawing;
+using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.UI;
 
 namespace Macrocosm.Content.Rocket.UI
@@ -13,15 +15,23 @@ namespace Macrocosm.Content.Rocket.UI
 		
 		public UINavigationMap Next = null;
 		public UINavigationMap Prev = null;
+		public UINavigationMap DefaultNext = null;
 
 		private Dictionary<UIMapTarget, UINavigationMap> nextTargetChildMap = new();
 
-		public UINavigationMap(Texture2D tex, UINavigationMap next = null, UINavigationMap prev = null)
+		private bool showAnimationActive = false;
+		private Texture2D animationPrevTexture;
+
+		float alpha = 1f;
+		float alphaSpeed = 0.02f;
+
+		public UINavigationMap(Texture2D tex, UINavigationMap next = null, UINavigationMap prev = null, UINavigationMap defaultNext = null)
 		{
 			Background = tex;
 			
 			Next = next;
 			Prev = prev;
+			DefaultNext = defaultNext;
 		}
 
 		public void AddTarget(UIMapTarget target, UINavigationMap childMap = null)
@@ -31,8 +41,6 @@ namespace Macrocosm.Content.Rocket.UI
 			
 			Append(target);
 		}
-
-		
 
 		public override void Update(GameTime gameTime)
 		{
@@ -47,10 +55,25 @@ namespace Macrocosm.Content.Rocket.UI
 				else 
 					Next = null;
 			}
+
+			if (showAnimationActive)
+			{
+				alpha += alphaSpeed;
+
+				if (alpha >= 1f)
+				{
+					showAnimationActive = false;
+					alpha = 1f;
+					//Append(this);
+				}
+			}
 		}
 
 		public UIMapTarget GetSelectedTarget()
 		{
+			if (showAnimationActive)
+				return null;
+
 			foreach (UIElement element in Children)
 			{
 				if (element is UIMapTarget target && target.Selected)
@@ -80,7 +103,35 @@ namespace Macrocosm.Content.Rocket.UI
 		protected override void DrawSelf(SpriteBatch spriteBatch)
 		{
 			CalculatedStyle dimensions = GetDimensions();
-			spriteBatch.Draw(Background, dimensions.ToRectangle(), Color.White);
+
+			bool specialDraw = animationPrevTexture is not null && showAnimationActive;
+
+			spriteBatch.Draw(TextureAssets.BlackTile.Value, GetDimensions().ToRectangle(), Color.Black);
+
+			SpriteBatchState state = new();
+			if (specialDraw)
+			{
+				state = spriteBatch.SaveState();
+				spriteBatch.End();
+				spriteBatch.Begin(BlendState.NonPremultiplied, state);
+
+				spriteBatch.Draw(animationPrevTexture, dimensions.Position(), null, Color.White.NewAlpha(1 - alpha), 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+			}
+
+			spriteBatch.Draw(Background, dimensions.Position(), null, Color.White.NewAlpha(alpha), 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+
+			if (specialDraw)
+				spriteBatch.Restore(state);
+
+
+		}
+
+		public void ShowAnimation(Texture2D previousTexture)
+		{
+			showAnimationActive = true;
+			animationPrevTexture = previousTexture;
+			alpha = 0f;
+			ClearAllTargets();
 		}
 	}
 }

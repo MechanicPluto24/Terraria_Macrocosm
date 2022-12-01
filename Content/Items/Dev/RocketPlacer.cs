@@ -25,7 +25,7 @@ namespace Macrocosm.Content.Items.Dev
 			Item.useAnimation = 1;
 			Item.useStyle = ItemUseStyleID.Swing;
 			Item.UseSound = SoundID.Item6;
-			Item.createTile = ModContent.TileType<RocketCommandModuleTile>();
+			Item.createTile = ModContent.TileType<RocketCommandModule>();
 
 		}
 	}

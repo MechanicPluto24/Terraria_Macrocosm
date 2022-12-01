@@ -1,7 +1,9 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.IO;
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Common.Global.GlobalNPCs
 {
@@ -14,6 +16,11 @@ namespace Macrocosm.Common.Global.GlobalNPCs
 		protected override bool CloneNewInstances => false;
 
 		public bool[] TargetedBy = new bool[Main.maxPlayers];
+
+		public void SyncTargetedBy(int npcId, int playerId, bool value)
+		{
+			 // TODO
+		}
 
 		public override void PostDraw(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{

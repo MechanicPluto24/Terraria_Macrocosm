@@ -21,7 +21,7 @@ namespace Macrocosm.Content.Rocket
 		{
 			if (InRocket)
 			{
-				int rocketId = NPC.FindFirstNPC(ModContent.NPCType<Rocket>());
+				int rocketId = NPC.FindFirstNPC(ModContent.NPCType<RocketEntity>());
 				NPC rocket;
 
 				if(rocketId >= 0)

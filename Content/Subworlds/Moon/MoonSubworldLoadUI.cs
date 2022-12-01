@@ -36,8 +36,8 @@ namespace Macrocosm.Content.Subworlds.Moon
 
 		public MoonSubworldLoadUI()
 		{
-			lunaBackground = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/LoadingBackgrounds/Luna", AssetRequestMode.ImmediateLoad).Value.ToPremultiplied();
-			earthBackground = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/LoadingBackgrounds/Earth", AssetRequestMode.ImmediateLoad).Value.ToPremultiplied(); ;
+			lunaBackground = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/LoadingBackgrounds/Luna", AssetRequestMode.ImmediateLoad).Value;
+			earthBackground = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/LoadingBackgrounds/Earth", AssetRequestMode.ImmediateLoad).Value;
 
 			Texture2D earthSmallBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/EarthAtmoless", AssetRequestMode.ImmediateLoad).Value;
 			Texture2D earthSmallAtmoBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/EarthAtmo", AssetRequestMode.ImmediateLoad).Value;
@@ -70,7 +70,7 @@ namespace Macrocosm.Content.Subworlds.Moon
 			string loadText;
 
 			Color bodyColor = Color.White * (float)(animationTimer / 5) * 1f;  // color of the celestial body
-			bodyColor.A = byte.MaxValue;                                         // keep it opaque
+			bodyColor.A = byte.MaxValue;                                       // keep it opaque
 
 			spriteBatch.Begin(0, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.EffectMatrix);
 
@@ -78,6 +78,8 @@ namespace Macrocosm.Content.Subworlds.Moon
 			{
 				starsDrawing.Draw(spriteBatch);
 
+				spriteBatch.EndIfBeginCalled();
+				spriteBatch.Begin(0, BlendState.NonPremultiplied, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.EffectMatrix);
 				spriteBatch.Draw
 				(
 					earthBackground,
@@ -91,7 +93,8 @@ namespace Macrocosm.Content.Subworlds.Moon
 				Vector2 messageSize2 = FontAssets.DeathText.Value.MeasureString(chosenMessage) * 0.7f;
 				ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, chosenMessage, new Vector2(Main.screenWidth / 2f - messageSize2.X / 2f, Main.screenHeight - messageSize2.Y - 20), Color.White, 0f, Vector2.Zero, new Vector2(0.7f));
 
-
+				spriteBatch.End();
+				spriteBatch.Begin(0, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.EffectMatrix);
 			}
 			else
 			{

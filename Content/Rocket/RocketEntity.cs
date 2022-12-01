@@ -19,7 +19,7 @@ using Terraria.UI.Chat;
 
 namespace Macrocosm.Content.Rocket
 { 
-	public class Rocket : ModNPC
+	public class RocketEntity : ModNPC
 	{
 		public override void SetDefaults()
 		{

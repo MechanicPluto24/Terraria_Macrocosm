@@ -12,12 +12,17 @@ namespace Macrocosm.Content.Rocket.UI
 {
 	public class UIMapTarget : UIElement
 	{
+		/// <summary> Subworld data displayed in the info panel </summary>
 		public SubworldData TargetWorldData = default;
+
+		/// <summary> The subworld ID used for accessing the subworld </summary>
 		public string TargetID;
 
+		/// <summary> Function to determine whether the subworld is accesible </summary>
 		public delegate bool FuncCanLaunch();
 		public readonly FuncCanLaunch CanLaunch = () => false;
 
+		/// <summary> The current selected  </summary>
 		public bool Selected;
 
 		/// <summary>
@@ -78,7 +83,7 @@ namespace Macrocosm.Content.Rocket.UI
 
 			OnRightClick += (_, _) => { Selected = false; };
 
-			OnDoubleClick += (_, _) => { (Parent.Parent as UINavigationPanel).ZoomIn(); };
+			OnDoubleClick += (_, _) => { (Parent.Parent as UINavigationPanel).ZoomIn(useDefault: false); };
 
 			//OnRightDoubleClick += (_, _) => { (Parent.Parent as UINavigationPanel).ZoomOut();  };
 		}
@@ -91,7 +96,6 @@ namespace Macrocosm.Content.Rocket.UI
 			Texture2D outline = ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/UI/UISelectionOutline").Value;
 
 			SpriteBatchState state = spriteBatch.SaveState();
-
 			spriteBatch.End();
 			spriteBatch.Begin(BlendState.NonPremultiplied, state);
 
@@ -106,7 +110,6 @@ namespace Macrocosm.Content.Rocket.UI
 				spriteBatch.Draw(outline, rect, Color.Gold);
 
 			spriteBatch.Restore(state);
-
 		}
 
 		public string ParseSubworldData()

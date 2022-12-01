@@ -130,6 +130,9 @@ namespace Macrocosm.Content
 		/// </summary>
 		private static void FreezeEnvironment()
 		{
+			if (Main.gameMenu)
+				return;
+
 			Main.numClouds = 0;
 			Main.windSpeedCurrent = 0;
 			Main.weatherCounter = 0;

@@ -99,8 +99,6 @@ namespace Macrocosm.Content.Subworlds.Moon
 		{
 			SubworldSystem.hideUnderworld = true;
 			SubworldSystem.noReturn = true;
-			Main.numClouds = 0;
-			Main.raining = false;
 		}
 
 		public override void DrawSetup(GameTime gameTime)

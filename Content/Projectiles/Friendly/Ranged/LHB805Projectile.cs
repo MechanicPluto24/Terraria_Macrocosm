@@ -28,6 +28,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 		public ref float AI_Windup => ref Projectile.ai[0];
 
+		
+
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("LHB-805");
@@ -86,12 +88,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			OwnerPlayer.itemAnimation = 2;
 
 			OwnerPlayer.itemRotation = (Projectile.velocity * Projectile.direction).ToRotation();
+
+			Projectile.netUpdate = true;
 		}
 
 		private void Aim()
 		{
 			// Get the player's current aiming direction as a normalized vector.
 			Vector2 aim = Vector2.Normalize(Main.MouseWorld - Projectile.Center);
+
 			if (aim.HasNaNs())
 				aim = Vector2.UnitY;
 
@@ -99,7 +104,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			aim = Vector2.Normalize(Vector2.Lerp(Vector2.Normalize(Projectile.velocity), aim, 1));
 			aim *= OwnerPlayer.HeldItem.shootSpeed;
 
-			if (aim != Projectile.velocity)
+			if (aim != Projectile.velocity && Main.netMode != NetmodeID.MultiplayerClient)
 				Projectile.netUpdate = true;
 
 			Projectile.velocity = aim;
