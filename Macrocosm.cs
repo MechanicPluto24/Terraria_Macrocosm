@@ -7,9 +7,23 @@ using Terraria.Graphics.Shaders;
 using SubworldLibrary;
 using Macrocosm.Content.Subworlds.Moon;
 using Macrocosm.Content.Tiles;
+using System.IO;
+using Macrocosm.Content.Players;
+using Terraria.ID;
+using Macrocosm.Common.Base;
+using Macrocosm.Content.Rocket;
 
 namespace Macrocosm
 {
+
+	public enum MessageType : byte
+	{
+		SyncNPCTargeting,
+		SyncDashDirection,
+		BeginRocketLaunchSequence,
+		SyncPlayerRocketStatus
+	}
+
 	public class Macrocosm : Mod
 	{
 		public static Mod Instance => ModContent.GetInstance<Macrocosm>();
@@ -48,6 +62,50 @@ namespace Macrocosm
 				taAPI.Call("Ambience", this, "MoonAmbience", "Assets/Sounds/Ambient/Moon", 1f, 0.0075f, new Func<bool>(SubworldSystem.IsActive<Moon>));
 
 			#endregion
+		}
+
+		public override void HandlePacket(BinaryReader reader, int whoAmI)
+		{
+			MessageType messageType = (MessageType)reader.ReadByte();
+
+			switch (messageType)
+			{
+				case MessageType.SyncDashDirection:
+					int dashPlayerID = reader.ReadByte();
+					DashPlayer dashPlayer= Main.player[dashPlayerID].GetModPlayer<DashPlayer>();
+
+					int newDir = reader.ReadByte();
+					dashPlayer.DashDirection = (DashPlayer.DashDir)newDir;
+
+					if (Main.netMode == NetmodeID.Server)
+						dashPlayer.SyncPlayer(-1, whoAmI, false);
+
+					break;
+
+				case MessageType.BeginRocketLaunchSequence:
+					int captainPlayer = reader.ReadByte();
+					short tePosX = reader.ReadInt16();
+					short tePosY = reader.ReadInt16();
+
+					if(Main.netMode == NetmodeID.Server)
+						RocketCommandModule.Launch(captainPlayer, new Terraria.DataStructures.Point16(tePosX, tePosY));
+
+					break;
+
+				case MessageType.SyncPlayerRocketStatus:
+					int rocketPlayerID = reader.ReadByte();
+					RocketPlayer rocketPlayer = Main.player[rocketPlayerID].GetModPlayer<RocketPlayer>();
+					rocketPlayer.InRocket = reader.ReadBoolean();
+
+					if (Main.netMode == NetmodeID.Server)
+						rocketPlayer.SyncPlayer(-1, whoAmI, false);
+
+					break;
+
+				default:
+					Logger.WarnFormat("Macrocosm: Unknown Message type: {messageType}", messageType);
+					break;
+			}
 		}
 	}
 }

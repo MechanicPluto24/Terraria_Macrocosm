@@ -35,7 +35,7 @@ namespace Macrocosm.Content.Rocket
 			HitSound = SoundID.MenuClose; // huh
 
 			int[] heights = new int[6];
-			Array.Fill<int>(heights, 16);
+			Array.Fill(heights, 16);
 
 			TileObjectData.newTile.CopyFrom(TileObjectData.Style1x1);
 			TileObjectData.newTile.Width = width;
@@ -103,67 +103,58 @@ namespace Macrocosm.Content.Rocket
 			return false;
 		}
 
-		public static void Launch(string subworldName, Point16 tePos)
+		/// <summary>
+		/// Begin the launch sequence. Handled by the server
+		/// </summary>
+		/// <param name="captainPlayer"></param>
+		/// <param name="tePos"></param>
+		public static void Launch(int captainPlayer, Point16 tePos)
 		{
-			if (TileUtils.TryGetTileEntityAs(tePos.X, tePos.Y, out RocketCommandModuleTE entity) && Main.LocalPlayer.TryGetModPlayer(out RocketPlayer rocketPlayer))
+			if (TileUtils.TryGetTileEntityAs(tePos.X, tePos.Y, out RocketCommandModuleTE entity) && Main.player[captainPlayer].TryGetModPlayer(out RocketPlayer rocketPlayer))
 			{
-				//rocketPlayer.TargetSubworldID = subworldName;
 				rocketPlayer.InRocket = true;
-				int rocketId = NPC.NewNPC(null, (entity.Position.X + width / 2) * 16, (entity.Position.Y + height) * 16, ModContent.NPCType<RocketEntity>(), ai0: rocketPlayer.Player.whoAmI);
+				rocketPlayer.UpdateStatus(true);
+
+				int rocketId = NPC.NewNPC(null, (entity.Position.X + width / 2) * 16, (entity.Position.Y + height) * 16, ModContent.NPCType<RocketEntity>(), ai0: captainPlayer);
 				Main.npc[rocketId].position.Y -= 3.5f;
 				Main.npc[rocketId].position.X += 2f;
+				NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, rocketId);
+
 				entity.Kill(entity.Position.X, entity.Position.Y);
 				WorldGen.KillTile(entity.Position.X, entity.Position.Y);
+				NetMessage.SendTileSquare(-1, entity.Position.X, entity.Position.Y, width, height);
+				NetMessage.SendData(MessageID.TileEntitySharing, -1, -1, null, entity.ID);
 			}
 		}
 	}
 
 	public class RocketCommandModuleTE : ModTileEntity
 	{
-		public override void PreGlobalUpdate()
-		{
-			bool found = false;
-			
-			foreach (ModTileEntity entity in manager.EnumerateEntities().Values.OfType<ModTileEntity>())
-			{
-				if (entity is RocketCommandModuleTE)
-				{
-					if (found)
-					{
-						entity.Kill(entity.Position.X, entity.Position.Y);
-						WorldGen.KillTile(entity.Position.X, entity.Position.Y);
-					}
-					else
-					{
-						found = true;
-					}
-				}
-			}
-		}
-
 		public override bool IsTileValidForEntity(int x, int y)
 		{
 			Tile tile = Main.tile[x, y];
-
 			return tile.HasTile && tile.TileType == ModContent.TileType<RocketCommandModule>();
 		}
 
 		public override int Hook_AfterPlacement(int i, int j, int type, int style, int direction, int alternate)
 		{
+			TileObjectData tileData = TileObjectData.GetTileData(type, style, alternate);
+			int topLeftX = i - tileData.Origin.X;
+			int topLeftY = j - tileData.Origin.Y;
+
 			if (Main.netMode == NetmodeID.MultiplayerClient)
 			{
 				//Sync the entire multitile's area. 
-				int width = 6;
-				int height = 6;
-				NetMessage.SendTileSquare(Main.myPlayer, i, j, width, height);
+				NetMessage.SendTileSquare(Main.myPlayer, topLeftX, topLeftY, tileData.Width, tileData.Height);
 
 				//Sync the placement of the tile entity with other clients
-				NetMessage.SendData(MessageID.TileEntityPlacement, -1, -1, null, i, j, Type);
+				NetMessage.SendData(MessageID.TileEntityPlacement, -1, -1, null, topLeftX, topLeftY, Type);
+
+				return -1;
 			}
 
 			//ModTileEntity.Place() handles checking if the entity can be placed, then places it
-			Point16 tileOrigin = new Point16(0, 5);
-			int placedEntity = Place(i - tileOrigin.X, j - tileOrigin.Y);
+			int placedEntity = Place(topLeftX, topLeftY);
 			return placedEntity;
 		}
 

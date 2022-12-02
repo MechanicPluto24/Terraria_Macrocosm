@@ -400,6 +400,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 			if (info.scale > 0.9f && Vector2.Distance(info.center, NPC.Center) > 25f)
 				SpawnPortalDusts(info);
+
+			Lighting.AddLight(info.center, new Vector3(30, 255, 105) / 255 * info.scale * 2f);
 		}
 
 		private void SpawnPortalDusts(BigPortalInfo info)
@@ -863,7 +865,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 							SpawnBigPortal(player.Center - portalTarget2, ref bigPortal2, fast: true);
 							bigPortal2.visible = false;
 
-							NPC.Center = bigPortal.center;
+							NPC.Center = portalTarget2;
 							NPC.velocity = Vector2.Zero;
 
 							AI_AttackProgress++;

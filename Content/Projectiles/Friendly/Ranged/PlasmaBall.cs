@@ -75,7 +75,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 				Projectile.active = false;
 
 			Dust dust;
-			if (Main.rand.NextBool(40))
+			if (Main.rand.NextBool(30))
 			{
 				dust = Dust.NewDustDirect(Projectile.Center, 1, 1, ModContent.DustType<PlasmaBallDust>(), Scale: Main.rand.NextFloat(0.3f, 0.5f));
 				dust.customData = Main.projectile[Projectile.whoAmI];

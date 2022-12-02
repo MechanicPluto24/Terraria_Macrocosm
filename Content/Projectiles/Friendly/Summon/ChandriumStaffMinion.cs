@@ -53,12 +53,21 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
 		public override bool MinionContactDamage() => true;
 
+
+		private bool spawned = false;
+
 		public override void AI()
 		{
 			Player owner = Main.player[Projectile.owner];
 
 			if (!CheckActive(owner))
  				return;
+
+			if (!spawned)
+			{
+				SpawnDusts();
+				spawned = true;
+			}
  
 			GeneralBehavior(owner, out Vector2 vectorToIdlePosition, out float distanceToIdlePosition);
 			SearchForTargets(owner, out bool foundTarget, out float distanceFromTarget, out Vector2 targetCenter);
@@ -71,9 +80,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 		public override void OnSpawn(IEntitySource source)
 		{
 			Projectile.alpha = 255;
+			spawned = false;
+		}
+
+		private void SpawnDusts()
+		{
 			for (int i = 0; i < 60; i++)
 			{
- 				Vector2 position = Projectile.position;
+				Vector2 position = Projectile.position;
 				Vector2 velocity = Main.rand.NextVector2Circular(0.5f, 0.5f);
 
 				Dust dust;
@@ -181,7 +195,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 				}
 			}
 
-			if (!foundTarget)
+			if (!foundTarget && Projectile.alpha < 1)
 			{
 				// This code is required either way, used for finding a target
 				for (int i = 0; i < Main.maxNPCs; i++)
@@ -347,12 +361,5 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 			return true;
 		}
 
-		public override void PostDraw(Color lightColor)
-		{
-			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Summon/ChandriumStaffMinion_Glow").Value;
-			SpriteEffects effect = Projectile.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-			Vector2 offset = new Vector2(0, 2);
-			Projectile.DrawAnimatedGlowmask(glowmask, Color.White * ((float)Projectile.alpha/255), effect, offset);
-		}
 	}
 }

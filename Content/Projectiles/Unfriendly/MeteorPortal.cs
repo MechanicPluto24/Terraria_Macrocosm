@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Drawing;
+using Macrocosm.Common.Utility;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.NPCs.Bosses.CraterDemon;
 using Microsoft.Xna.Framework;
@@ -68,6 +69,18 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 
 			Projectile.alpha = (int)MathHelper.Clamp((int)Projectile.ai[0], 0f, 255f);
 
+			if(Projectile.alpha < 240)
+			{
+				Vector2 lightPos1 = MathUtils.RotatingPoint(Projectile.Center, new Vector2(0, 40), Projectile.rotation);
+				Vector2 lightPos2 = lightPos1.RotatedBy(MathHelper.PiOver2, Projectile.Center);
+				Vector2 lightPos3 = lightPos2.RotatedBy(MathHelper.PiOver2, Projectile.Center);
+				Vector2 lightPos4 = lightPos3.RotatedBy(MathHelper.PiOver2, Projectile.Center);
+				Lighting.AddLight(lightPos1, new Color(239, 105, 19).ToVector3() * Projectile.scale);
+				Lighting.AddLight(lightPos2, new Color(30, 255, 105).ToVector3() * Projectile.scale);
+				Lighting.AddLight(lightPos3, new Color(239, 105, 19).ToVector3() * Projectile.scale);
+				Lighting.AddLight(lightPos4, new Color(30, 255, 105).ToVector3() * Projectile.scale);
+			}
+
 			Vector2 center = Projectile.Center;
 			Projectile.scale = 0.05f + 0.95f * (1f - Projectile.alpha / 255f);
 			Projectile.width = (int)(defWidth * Projectile.scale);
@@ -88,7 +101,7 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 			Main.spriteBatch.EndIfBeginCalled();
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, state);
 
-			Main.EntitySpriteDraw(texture2D, Projectile.Center - Main.screenPosition, null, (value * 0.2f).NewAlpha(1f - Projectile.alpha/255f), (0f - Projectile.rotation) * 0.65f, texture2D.Size() / 2f,
+			Main.EntitySpriteDraw(texture2D, Projectile.Center - Main.screenPosition, null, (value * 0.35f).NewAlpha(1f - Projectile.alpha/255f), (0f - Projectile.rotation) * 0.65f, texture2D.Size() / 2f,
 				Projectile.scale * 1.23f, SpriteEffects.FlipHorizontally, 0);
 
 			Main.EntitySpriteDraw(texture2D, Projectile.Center - Main.screenPosition, null, value * 0.84f, Projectile.rotation, texture2D.Size() / 2f,

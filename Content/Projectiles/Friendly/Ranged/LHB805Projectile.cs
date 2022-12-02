@@ -94,6 +94,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 		private void Aim()
 		{
+			if(OwnerPlayer.whoAmI != Main.myPlayer)
+				return;
+
 			// Get the player's current aiming direction as a normalized vector.
 			Vector2 aim = Vector2.Normalize(Main.MouseWorld - Projectile.Center);
 
@@ -108,6 +111,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 				Projectile.netUpdate = true;
 
 			Projectile.velocity = aim;
+
+			if(Projectile.velocity != Projectile.oldVelocity)
+				Projectile.netUpdate = true;
 		}
 
 		private void Animate()

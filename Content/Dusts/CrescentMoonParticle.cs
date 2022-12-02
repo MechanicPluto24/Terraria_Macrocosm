@@ -44,6 +44,8 @@ namespace Macrocosm.Content.Dusts
 			if (dust.scale < 0.3f)
 				dust.active = false;
 
+			Lighting.AddLight(dust.position, new Vector3(0.607f, 0.258f, 0.847f) * dust.scale);
+
 			return false;
 		}
 	}
