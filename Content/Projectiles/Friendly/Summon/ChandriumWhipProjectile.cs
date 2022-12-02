@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
@@ -47,7 +48,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
 		private ref int HitStacks => ref Main.player[Projectile.owner].Macrocosm().ChandriumEmpowermentStacks;
 
-		// TODO: this might need some netcode 
+		// Extra AI data used for the on-hit effects 
+		private bool onHitEffect = false;
+		private bool empoweredHit = false;
+		private int hitNpcId = 0;
+
 		public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
 		{
 			// increase count only once per whip swing 
@@ -55,9 +60,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 			{
 				HitStacks++;   // this is a ref to a ModPlayer
 				HitNPC = true; // set hit flag to true so stacks won't increase on every npc hit 
-			}  
+			}
 
-			// if stronger hit is ready, ignore hit flag  
+			onHitEffect = true;
+			hitNpcId = target.whoAmI;
+
+			// if empowered hit is ready, ignore hit flag  
 			if (HitStacks >= 3)
 			{
 				// increase damage 
@@ -66,9 +74,36 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 				// clear buff on successful hit 
 				Main.player[Projectile.owner].ClearBuff(ModContent.BuffType<ChandriumEmpowerment>());
 
-				// FIXME: how do i sync these 
-				#region Visual effects
-				for (int i = 0; i < 60; i++)
+				empoweredHit = true;
+			}
+			else  
+			{
+				empoweredHit = false;
+			}
+
+			Projectile.netUpdate = true;
+		}
+
+		public override void SendExtraAI(BinaryWriter writer)
+		{
+			writer.Write(onHitEffect);
+			writer.Write(empoweredHit);
+			writer.Write(hitNpcId);
+		}
+
+		public override void ReceiveExtraAI(BinaryReader reader)
+		{
+			onHitEffect = reader.ReadBoolean();
+			empoweredHit = reader.ReadBoolean();
+			hitNpcId = reader.ReadInt32();
+		}
+
+		/// <summary> Spawn dusts on hit, called on the owner client </summary>
+		public void SpawnDusts(NPC target, bool empowered, bool update = false)
+		{
+			if (empowered)
+			{
+  				for (int i = 0; i < 60; i++)
 				{
 					Vector2 position = target.position;
 					Vector2 velocity = Main.rand.NextVector2Circular(0.5f, 0.5f);
@@ -82,9 +117,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 					// chandrium dust 
 					dust = Dust.NewDustDirect(position, target.width, target.height, ModContent.DustType<ChandriumDust>(), velocity.X, velocity.Y, Scale: Main.rand.NextFloat(0.8f, 1.2f));
 				}
-				#endregion
 			}
-			else  
+			else
 			{
 				// fewer regular dust on non-empowered hit (regardless of hit flag) 
 				for (int i = 0; i < 5; i++)
@@ -96,7 +130,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 			}
 		}
 
-
 		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
 		{
 			// minions will attack the npcs hit with this whip 
@@ -107,6 +140,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 		{
 			// on spawn reset the hit npc flag 
 			HitNPC = false;
+		}
+
+		public override void AI()
+		{
+			if (onHitEffect)
+			{
+				SpawnDusts(Main.npc[hitNpcId], empoweredHit);
+				onHitEffect = false;
+			}
 		}
 
 		public override void Kill(int timeLeft)
@@ -195,7 +237,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
 						Main.EntitySpriteDraw(TextureAssets.Extra[89].Value, pos - Main.screenPosition, null, new Color(177, 107, 219, 255), 0f + rotation, TextureAssets.Extra[89].Size() / 2f, Projectile.localAI[0], flip, 0);
 						Main.EntitySpriteDraw(TextureAssets.Extra[89].Value, pos - Main.screenPosition, null, new Color(177, 107, 219, 255), MathHelper.PiOver2 + rotation, TextureAssets.Extra[89].Size() / 2f, Projectile.localAI[0], flip, 0);
-						//Lighting.AddLight(pos, new Vector3(177, 107, 219) / 255);
+						Lighting.AddLight(pos, new Vector3(0.607f, 0.258f, 0.847f));
 					}
 					#endregion
 

@@ -65,7 +65,7 @@ namespace Macrocosm.Content
 			if (ScreenShakeIntensity > 0.1f)
 			{
 				Main.screenPosition += new Vector2(Main.rand.NextFloat(ScreenShakeIntensity), Main.rand.NextFloat(ScreenShakeIntensity));
-				ScreenShakeIntensity *= 0.9f;
+				 ScreenShakeIntensity *= 0.9f;
 			}
 		}
 

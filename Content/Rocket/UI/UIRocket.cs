@@ -44,6 +44,8 @@ namespace Macrocosm.Content.Rocket.UI
 			// Don't delete this or the UIElements attached to this UIState will cease to function
 			base.Update(gameTime);
 
+			Main.LocalPlayer.mouseInterface = true;
+
 			UIMapTarget target = NavigationPanel.CurrentMap.GetSelectedTarget();
  			WorldInfoPanel.Name = target is null ? "" : target.TargetWorldData.DisplayName;
 			WorldInfoPanel.Text = target is null ? "" : target.ParseSubworldData();
@@ -77,7 +79,12 @@ namespace Macrocosm.Content.Rocket.UI
 		
 		private void LaunchButton_OnClick(UIMouseEvent evt, UIElement listeningElement)
 		{
-			RocketCommandModule.Launch(NavigationPanel.CurrentMap.GetSelectedTarget().TargetID, RocketPosition);
+			ModPacket packet = Macrocosm.Instance.GetPacket();
+			packet.Write((byte)MessageType.BeginRocketLaunchSequence);
+			packet.Write((byte)Main.myPlayer);
+			packet.Write(RocketPosition.X);
+			packet.Write(RocketPosition.Y);
+			packet.Send();
 		}
 	}
 }

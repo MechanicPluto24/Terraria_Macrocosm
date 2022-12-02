@@ -48,17 +48,16 @@ namespace Macrocosm.Content.Projectiles.Meteors
 
 		public override void SpawnImpactDusts()
 		{
- 			SpawnImpactDusts(DustID.YellowStarDust);
-			SpawnImpactDusts(DustID.DungeonWater, noGravity: true);
+ 			SpawnImpactDusts(DustID.YellowStarDust, noGravity: false);
 
 			ParticleOrchestraSettings settings;
 
-			for(int i = 0; i < Main.rand.Next(30, 40); i++)
+			for(int i = 0; i < Main.rand.Next(30, 50); i++)
 			{
 				settings = new()
 				{
 					PositionInWorld = Projectile.Center + new Vector2(Width, Height).RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(),
-					MovementVector = Vector2.One.RotatedByRandom(MathHelper.TwoPi) * 10f
+					MovementVector = new Vector2(Main.rand.NextFloat(-10, 10), Main.rand.NextFloat(0f, -20f)) 
 				};
 
 				ParticleOrchestrator.SpawnParticlesDirect(ParticleOrchestraType.StardustPunch, settings);

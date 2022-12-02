@@ -18,6 +18,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		{
 			ProjectileID.Sets.TrailCacheLength[Type] = 40;
 			ProjectileID.Sets.TrailingMode[Type] = 2;
+			ProjectileID.Sets.RocketsSkipDamageForPlayers[Type] = true;
 		}
 
 		public override void SetDefaults()
@@ -38,17 +39,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			Projectile.usesLocalNPCImmunity = true;
 
 			Projectile.aiStyle = ProjAIStyleID.Explosive;
-			AIType = ProjectileID.Grenade;
+			AIType = ProjectileID.GrenadeI;
 		}
 
 		public override bool PreKill(int timeLeft)
 		{
-			PlasmaBallCount = 100;
+			PlasmaBallCount = 50;
 
-			if (Main.netMode == NetmodeID.MultiplayerClient)
-				return true;
-
-			if (PlasmaBallCount <= 0)
+			if (PlasmaBallCount <= 0 || Projectile.owner != Main.myPlayer)
 				return true;
 
 			for (float i = 0; i < MathHelper.TwoPi; i += MathHelper.TwoPi / PlasmaBallCount)

@@ -306,12 +306,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 				}
 			}
 		}
-		public override void PostDraw(Color lightColor)
-		{
-			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Summon/CalcicCaneMinion_Glow").Value;
-			SpriteEffects effect = Projectile.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-			Vector2 offset = Projectile.spriteDirection == -1 ? new Vector2(0, -1) : new Vector2(0, 5);
-			Projectile.DrawAnimatedGlowmask(glowmask, Color.White, effect, offset);
-		}
+		
 	}
 }

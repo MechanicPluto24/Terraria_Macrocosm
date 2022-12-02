@@ -2,6 +2,11 @@
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
+using Macrocosm;
+using Terraria.ID;
+using log4net.Repository.Hierarchy;
+using Macrocosm.Common.Utility;
+using Macrocosm.Common.Base;
 
 namespace Macrocosm.Content.Players
 {
@@ -22,13 +27,14 @@ namespace Macrocosm.Content.Players
 		public int AccDashDuration = 35;
 
 		public enum DashDir { Down, Up, Right, Left, None = -1 }
-
-		private DashDir dashDir = DashDir.None;
+		
+		public DashDir DashDirection = DashDir.None;
 		private int dashDelay = 0;
 		private int dashTimer = 0;
 
 
 		private bool celestialBulwarkVisible = false;
+
 
 		public override void PostUpdateBuffs()
 		{
@@ -38,37 +44,26 @@ namespace Macrocosm.Content.Players
 				Lighting.AddLight(Player.Center, MacrocosmWorld.CelestialColor.ToVector3() * 0.4f);
 		}
 
-		private void StartDashVisuals()
+		public override void clientClone(ModPlayer clientClone)
 		{
-			if (celestialBulwarkVisible)
+			(clientClone as DashPlayer).DashDirection = DashDirection;
+		}
+
+		public override void SendClientChanges(ModPlayer clientPlayer)
+		{
+			if ((clientPlayer as DashPlayer).DashDirection != DashDirection)
 			{
-				for (int i = 0; i < 30; i++)
-				{
-					int dustIdx = Dust.NewDust(new Vector2(Player.position.X - 20, Player.position.Y - 10), Player.width + 20, Player.height + 10, ModContent.DustType<CelestialDust>(), Player.direction * -1f, 0f, 0, default, 2f);
-					Main.dust[dustIdx].position.X += Main.rand.Next(-5, 6);
-					Main.dust[dustIdx].position.Y += Main.rand.Next(-5, 6);
-					Main.dust[dustIdx].velocity.X *= 0.6f;
-					Main.dust[dustIdx].scale *= 1.4f + (float)Main.rand.Next(20) * 0.01f;
-				}
+				SyncPlayer(-1, Main.myPlayer, false);
 			}
 		}
 
-		private void DashVisuals()
+		public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)
 		{
-			if (celestialBulwarkVisible)
-			{
-				for (int k = 0; k < 3; k++)
-				{
-					int dustType = ModContent.DustType<CelestialDust>();
-					//int dustIdx = ((Player.velocity.Y != 0f) ? 
-					//	Dust.NewDust(new Vector2(Player.position.X, Player.position.Y + Player.height / 2 - 8f), Player.width, 16, dustType, 0f, 0f, 100, default, 1.4f) : 
-					//	Dust.NewDust(new Vector2(Player.position.X, Player.position.Y + Player.height - 4f), Player.width, 8, dustType, 0f, 0f, 100, default, 1.4f));
-
-					int dustIdx = Dust.NewDust(new Vector2(Player.position.X, Player.position.Y), Player.width, Player.height, dustType, 0f, 0f, 100, default, 1.4f);
-					Main.dust[dustIdx].velocity *= 0.1f;
-					Main.dust[dustIdx].scale *= 1f + (float)Main.rand.Next(20) * 0.01f;
-				}
-			}
+			ModPacket packet = Mod.GetPacket();
+			packet.Write((byte)MessageType.SyncDashDirection);
+			packet.Write((byte)Player.whoAmI);
+			packet.Write((byte)DashDirection);
+			packet.Send(toWho, fromWho);
 		}
 
 		public override void ResetEffects()
@@ -88,16 +83,25 @@ namespace Macrocosm.Content.Players
 			// ResetEffects is called not long after player.doubleTapCardinalTimer's values have been set
 			// When a directional key is pressed and released, vanilla starts a 15 tick (1/4 second) timer during which a second press activates a dash
 			// If the timers are set to 15, then this is the first press just processed by the vanilla logic.  Otherwise, it's a double-tap
-			if (Player.controlDown && Player.releaseDown && Player.doubleTapCardinalTimer[(int)DashDir.Down] < 15)
-				dashDir = DashDir.Down;
-			else if (Player.controlUp && Player.releaseUp && Player.doubleTapCardinalTimer[(int)DashDir.Up] < 15)
-				dashDir = DashDir.Up;
-			else if (Player.controlRight && Player.releaseRight && Player.doubleTapCardinalTimer[(int)DashDir.Right] < 15)
-				dashDir = DashDir.Right;
-			else if (Player.controlLeft && Player.releaseLeft && Player.doubleTapCardinalTimer[(int)DashDir.Left] < 15)
-				dashDir = DashDir.Left;
+
+			if(Player.whoAmI == Main.myPlayer)
+			{
+				if (Player.controlDown && Player.releaseDown && Player.doubleTapCardinalTimer[(int)DashDir.Down] < 15)
+					DashDirection = DashDir.Down;
+				else if (Player.controlUp && Player.releaseUp && Player.doubleTapCardinalTimer[(int)DashDir.Up] < 15)
+					DashDirection = DashDir.Up;
+				else if (Player.controlRight && Player.releaseRight && Player.doubleTapCardinalTimer[(int)DashDir.Right] < 15)
+					DashDirection = DashDir.Right;
+				else if (Player.controlLeft && Player.releaseLeft && Player.doubleTapCardinalTimer[(int)DashDir.Left] < 15)
+					DashDirection = DashDir.Left;
+				else
+					DashDirection = DashDir.None;
+			}
 			else
-				dashDir = DashDir.None;
+			{
+				// FIXME: this gets reset again here right after syncing with modpackets
+				DashDirection = DashDir.None;
+			}
 		}
 
 		public override void PreUpdateMovement()
@@ -106,11 +110,14 @@ namespace Macrocosm.Content.Players
 						  !Player.setSolar && // player isn't wearing solar armor
 						  !Player.mount.Active;    // player isn't mounted, since dashes on a mount look weird
 
-			if (canDash && dashDir != DashDir.None && dashDelay == 0)
+			// INFO: since other clients have DashDir.None for this player because of the reset, this entire code does not run
+			// since general movement in synced automatically, and dash collision is synced below,
+			// the only inconsistency remaining is the lack of dust effects
+			if (canDash && DashDirection != DashDir.None && dashDelay == 0)
 			{
 				Vector2 newVelocity = Player.velocity;
 
-				switch (dashDir)
+				switch (DashDirection)
 				{
 					// Only apply the dash velocity if our current speed in the wanted direction is less than DashVelocity
 					case DashDir.Up when Player.velocity.Y > -AccDashVelocity && AccDashVertical:
@@ -119,7 +126,7 @@ namespace Macrocosm.Content.Players
 							// Y-velocity is set here
 							// If the direction requested was DashUp, then we adjust the velocity to make the dash appear "faster" due to gravity being immediately in effect
 							// This adjustment is roughly 1.3x the intended dash velocity
-							float dashDirection = dashDir == DashDir.Down ? 1 : -1.3f;
+							float dashDirection = DashDirection == DashDir.Down ? 1 : -1.3f;
 							newVelocity.Y = dashDirection * AccDashVelocity;
 							break;
 						}
@@ -127,7 +134,7 @@ namespace Macrocosm.Content.Players
 					case DashDir.Right when Player.velocity.X < AccDashVelocity && AccDashHorizontal:
 						{
 							// X-velocity is set here
-							float dashDirection = dashDir == DashDir.Right ? 1 : -1;
+							float dashDirection = DashDirection == DashDir.Right ? 1 : -1;
 							newVelocity.X = dashDirection * AccDashVelocity;
 							break;
 						}
@@ -140,6 +147,7 @@ namespace Macrocosm.Content.Players
 				dashTimer = AccDashDuration;
 				Player.velocity = newVelocity;
 
+				// TODO: sync this
 				StartDashVisuals();
 			}
 
@@ -155,65 +163,109 @@ namespace Macrocosm.Content.Players
 				Player.armorEffectDrawShadowEOCShield = true;
 				dashTimer--;
 
+				// TODO: sync this
 				DashVisuals();
 
 				#region Dash damage
 
-				if (Player.eocHit < 0)
+				// collision with NPCs and the knockback that comes afterwards have to be synced 
+				if (Player.whoAmI == Main.myPlayer)
 				{
-					if (AccDashDamage > 0f)
+					if (Player.eocHit < 0)
 					{
-						Rectangle rectangle = new((int)(Player.position.X + Player.velocity.X * 0.5f - 4.0f), (int)(Player.position.Y + Player.velocity.Y * 0.5f - 4.0f), Player.width + 8, Player.height + 8);
-
-						for (int i = 0; i < Main.maxNPCs; i++)
+						if (AccDashDamage > 0f)
 						{
-							NPC npc = Main.npc[i];
+							Rectangle rectangle = new((int)(Player.position.X + Player.velocity.X * 0.5f - 4.0f), (int)(Player.position.Y + Player.velocity.Y * 0.5f - 4.0f), Player.width + 8, Player.height + 8);
 
-							if (!npc.active || npc.dontTakeDamage || npc.friendly || (npc.aiStyle == Terraria.ID.NPCAIStyleID.Fairy && !(npc.ai[2] <= 1f)) || !Player.CanNPCBeHitByPlayerOrPlayerProjectile(npc))
-								continue;
-
-							Rectangle rect = npc.getRect();
-							if (rectangle.Intersects(rect) && (npc.noTileCollide || Player.CanHit(npc)))
+							for (int i = 0; i < Main.maxNPCs; i++)
 							{
-								float damage = AccDashDamage * Player.GetDamage(DamageClass.Melee).Multiplicative;
-								float knockback = AccDashKnockback;
-								int direction = Player.direction;
-								bool crit = false;
+								NPC npc = Main.npc[i];
 
-								if (Player.kbGlove)
-									knockback *= 2f;
+								if (!npc.active || npc.dontTakeDamage || npc.friendly || (npc.aiStyle == Terraria.ID.NPCAIStyleID.Fairy && !(npc.ai[2] <= 1f)) || !Player.CanNPCBeHitByPlayerOrPlayerProjectile(npc))
+									continue;
 
-								if (Player.kbBuff)
-									knockback *= 1.5f;
+								Rectangle rect = npc.getRect();
+								if (rectangle.Intersects(rect) && (npc.noTileCollide || Player.CanHit(npc)))
+								{
+									float damage = AccDashDamage * Player.GetDamage(DamageClass.Melee).Multiplicative;
+									float knockback = AccDashKnockback;
+									int direction = Player.direction;
+									bool crit = false;
 
-								if (Main.rand.Next(100) < Player.GetTotalCritChance(DamageClass.Melee))
-									crit = true;
+									if (Player.kbGlove)
+										knockback *= 2f;
 
-								if (Player.velocity.X < 0f)
-									direction = -1;
+									if (Player.kbBuff)
+										knockback *= 1.5f;
 
-								if (Player.velocity.X > 0f)
-									direction = 1;
+									if (Main.rand.Next(100) < Player.GetTotalCritChance(DamageClass.Melee))
+										crit = true;
 
-								if (Player.whoAmI == Main.myPlayer)
-									Player.ApplyDamageToNPC(npc, (int)damage, knockback, direction, crit);
+									if (Player.velocity.X < 0f)
+										direction = -1;
 
-								Player.eocDash = 10;
-								Player.dashDelay = AccDashCooldown;
-								Player.velocity.X = -direction * AccDashVelocity * 0.75f;
-								Player.velocity.Y = -1f * AccDashVelocity * 0.25f;
-								Player.GiveImmuneTimeForCollisionAttack(AccDashImmuneTime);
-								Player.eocHit = i;
+									if (Player.velocity.X > 0f)
+										direction = 1;
+
+									if (Player.whoAmI == Main.myPlayer)
+										Player.ApplyDamageToNPC(npc, (int)damage, knockback, direction, crit);
+
+									Player.eocDash = 10;
+									Player.dashDelay = AccDashCooldown;
+									Player.velocity.X = -direction * AccDashVelocity * 0.75f;
+									Player.velocity.Y = -1f * AccDashVelocity * 0.25f;
+									Player.GiveImmuneTimeForCollisionAttack(AccDashImmuneTime);
+									Player.eocHit = i;
+
+								}
 							}
 						}
 					}
-				}
-				else if ((!Player.controlLeft || !(Player.velocity.X < 0f)) && (!Player.controlRight || !(Player.velocity.X > 0f)))
-				{
-					Player.velocity.X *= 0.95f;
+					else if ((!Player.controlLeft || !(Player.velocity.X < 0f)) && (!Player.controlRight || !(Player.velocity.X > 0f)))
+					{
+						Player.velocity.X *= 0.95f;
+					}
+
+ 					NetMessage.SendData(MessageID.PlayerControls, number: Player.whoAmI);
 				}
 
+
 				#endregion
+			}
+		}
+		
+		public void StartDashVisuals()
+		{
+			if (celestialBulwarkVisible)
+			{
+				for (int i = 0; i < 30; i++)
+				{
+					int dustIdx = Dust.NewDust(new Vector2(Player.position.X - 20, Player.position.Y - 10), Player.width + 20, Player.height + 10, ModContent.DustType<CelestialDust>(), Player.direction * -1f, 0f, 0, default, 2f);
+					Main.dust[dustIdx].position.X += Main.rand.Next(-5, 6);
+					Main.dust[dustIdx].position.Y += Main.rand.Next(-5, 6);
+					Main.dust[dustIdx].velocity.X *= 0.6f;
+					Main.dust[dustIdx].scale *= 1.4f + (float)Main.rand.Next(20) * 0.01f;
+				}
+			}
+		}
+
+		public void DashVisuals()
+		{
+			if (celestialBulwarkVisible)
+			{
+				for (int k = 0; k < 3; k++)
+				{
+					int dustType = ModContent.DustType<CelestialDust>();
+					//int dustIdx = ((Player.velocity.Y != 0f) ? 
+					//	Dust.NewDust(new Vector2(Player.position.X, Player.position.Y + Player.height / 2 - 8f), Player.width, 16, dustType, 0f, 0f, 100, default, 1.4f) : 
+					//	Dust.NewDust(new Vector2(Player.position.X, Player.position.Y + Player.height - 4f), Player.width, 8, dustType, 0f, 0f, 100, default, 1.4f));
+
+					int dustIdx = Dust.NewDust(new Vector2(Player.position.X, Player.position.Y), Player.width, Player.height, dustType, 0f, 0f, 100, default, 1.4f);
+					Main.dust[dustIdx].velocity *= 0.1f;
+					Main.dust[dustIdx].scale *= 1f + (float)Main.rand.Next(20) * 0.01f;
+				}
+
+				Player.ghost = false;
 			}
 		}
 	}
