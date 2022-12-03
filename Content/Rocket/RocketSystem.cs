@@ -38,16 +38,19 @@ namespace Macrocosm.Content.Rocket
 				State = new UIRocket();
 
 			lastGameTime = gameTime;
+			
 			if (Interface?.CurrentState != null)
-			{
-				Interface.Update(gameTime);
-			}
+ 				Interface.Update(gameTime);
 		}
 
-		public void ShowUI(Point16 rocketPosition = default)
+		public void ShowUI(int rocketId)
 		{
-			State.RocketPosition = rocketPosition;
-			Interface.SetState(State);
+			if(rocketId >= 0 && rocketId < Main.maxNPCs)
+			{
+				Main.playerInventory = true;
+				State.RocketID = rocketId;
+				Interface.SetState(State);
+			}
 		}
 
 		public void HideUI()

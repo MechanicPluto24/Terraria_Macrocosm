@@ -18,10 +18,11 @@ namespace Macrocosm.Content.Rocket.UI
 		
 		public override void OnInitialize()
 		{
-			Width.Set(250, 0);
+			Width.Set(245, 0);
 			Height.Set(400, 0);
-			HAlign = 0.05f;
-			VAlign = 0.9f;
+			Left.Set(10, 0f);
+			Top.Set(249, 0f);
+			Recalculate();
 
 			UIPanel panel = new();
 			panel.Width.Set(Width.Pixels, 0);
@@ -36,9 +37,9 @@ namespace Macrocosm.Content.Rocket.UI
 
 			UIDisplayText = new(Text, 1.1f, false)
 			{
-				HAlign = 0.2f,
 				TextColor = Color.White
 			};
+			UIDisplayText.Left.Set(6f, 0f);
 			UIDisplayText.Top.Set(40, 0f);
 
 			panel.Append(UIDisplayText);

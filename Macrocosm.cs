@@ -84,11 +84,10 @@ namespace Macrocosm
 
 				case MessageType.BeginRocketLaunchSequence:
 					int captainPlayer = reader.ReadByte();
-					short tePosX = reader.ReadInt16();
-					short tePosY = reader.ReadInt16();
+					int rocketId = reader.ReadByte();
 
-					if(Main.netMode == NetmodeID.Server)
-						RocketCommandModule.Launch(captainPlayer, new Terraria.DataStructures.Point16(tePosX, tePosY));
+					if (Main.netMode == NetmodeID.Server)
+						(Main.npc[rocketId].ModNPC as Rocket).Launch(captainPlayer);
 
 					break;
 

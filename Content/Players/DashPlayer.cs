@@ -97,11 +97,11 @@ namespace Macrocosm.Content.Players
 				else
 					DashDirection = DashDir.None;
 			}
-			else
-			{
-				// FIXME: this gets reset again here right after syncing with modpackets
-				DashDirection = DashDir.None;
-			}
+			//else
+			//{
+			//	// FIXME: this gets reset again here right after syncing with modpackets
+			//	DashDirection = DashDir.None;
+			//}
 		}
 
 		public override void PreUpdateMovement()

@@ -12,12 +12,12 @@ namespace Macrocosm.Content.Items.Dev
 	{
 		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault("Places a rocket");
+			Tooltip.SetDefault("Places a rocket.");
 		}
 		public override void SetDefaults()
 		{
-			Item.width = 36;
-			Item.height = 36;
+			Item.width = 14;
+			Item.height = 38;
 			Item.rare = ModContent.RarityType<MoonRarityT3>();
 			Item.value = 100000;
 			Item.maxStack = 1;
@@ -25,8 +25,7 @@ namespace Macrocosm.Content.Items.Dev
 			Item.useAnimation = 1;
 			Item.useStyle = ItemUseStyleID.Swing;
 			Item.UseSound = SoundID.Item6;
-			Item.createTile = ModContent.TileType<RocketCommandModule>();
-
+			Item.createTile = ModContent.TileType<RocketLaunchPad>();
 		}
 	}
 }

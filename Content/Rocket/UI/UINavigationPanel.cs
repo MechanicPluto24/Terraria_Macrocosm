@@ -32,8 +32,8 @@ namespace Macrocosm.Content.Rocket.UI
 		{
 			Width.Set(586, 0);
 			Height.Set(224, 0);
+			Top.Set(10, 0);
 			HAlign = 0.5f;
-			VAlign = 0.1f;
 			BackgroundPanel = new();
 			BackgroundPanel.Width.Set(Width.Pixels, 0f);
 			BackgroundPanel.Height.Set(Height.Pixels, 0f);

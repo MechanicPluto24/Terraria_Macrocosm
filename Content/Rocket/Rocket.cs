@@ -4,6 +4,8 @@ using Macrocosm.Content.Buffs.GoodBuffs;
 using Macrocosm.Content.Buffs.GoodBuffs.MinionBuffs;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Gores;
+using Macrocosm.Content.Items.Dev;
+using Macrocosm.Content.Rocket.UI;
 using Macrocosm.Content.Subworlds;
 using Macrocosm.Content.Subworlds.Moon;
 using Microsoft.Xna.Framework;
@@ -18,13 +20,17 @@ using Terraria.ModLoader;
 using Terraria.UI.Chat;
 
 namespace Macrocosm.Content.Rocket
-{ 
-	public class RocketEntity : ModNPC
+{
+	[AutoloadHead]
+	public class Rocket : ModNPC
 	{
+		public override string Texture => "Macrocosm/Content/Rocket/RocketCommandPod"; 
+
+		public static NPC First => Main.npc[NPC.FindFirstNPC(ModContent.NPCType<Rocket>())];
 		public override void SetDefaults()
 		{
 			NPC.width = 84;
-			NPC.height = 84;
+			NPC.height = 564;
 
 			NPC.friendly = true;
 			NPC.damage = 0;
@@ -34,7 +40,7 @@ namespace Macrocosm.Content.Rocket
 			NPC.noGravity = true;
 			NPC.noTileCollide = true;
 		}
-		
+
 		/// <summary> The player in the command module </summary>
 		public int PlayerID
 		{
@@ -52,6 +58,12 @@ namespace Macrocosm.Content.Rocket
 			set => NPC.ai[1] = value;
 		}
 
+		public bool Launching
+		{
+			get => NPC.ai[2] != 0;
+			set => NPC.ai[2] = value ? 1f : 0f;
+		}
+
 		// The world Y coordinate for entering the target subworld
 		private float worldExitPosY = 20 * 16f;
 		
@@ -59,7 +71,6 @@ namespace Macrocosm.Content.Rocket
 		private float flightAcceleration = 0.1f;   // mid-flight
 		private float liftoffAcceleration = 0.05f; // during liftoff
 		private float startAcceleration = 0.02f;   // initial 
-
 
 		private float maxFlightSpeed = 25f;
 
@@ -82,11 +93,15 @@ namespace Macrocosm.Content.Rocket
 		public float Progress => Utils.GetLerpValue(180, TimeToReachSky, FlightTime + 1, clamped: true);
 		public float InvProgress => 1f - Progress;
 
-
 		public override void AI()
 		{
  			NPC.direction = 1;
 			NPC.spriteDirection = -1;
+
+			Interact();
+
+			if (!Launching)
+				return;
 
 			FlightTime++;
 
@@ -100,6 +115,9 @@ namespace Macrocosm.Content.Rocket
 			if(NPC.position.Y < worldExitPosY)
 			{
 				rocketPlayer.InRocket = false;
+				if (Main.netMode == NetmodeID.Server)
+					rocketPlayer.UpdateStatus(false);
+
 				NPC.active = false;
 				EnterDestinationSubworld();
 			}
@@ -107,10 +125,44 @@ namespace Macrocosm.Content.Rocket
 
 		private void EnterDestinationSubworld()
 		{
+			if (Main.netMode == NetmodeID.Server)
+				return;
+
 			if (rocketPlayer.TargetSubworldID == "Earth")
 				SubworldSystem.Exit();
 			//else if (rocketPlayer.TargetSubworldID != null && !rocketPlayer.TargetSubworldID.Equals(""))
 			//	SubworldSystem.Enter(rocketPlayer.TargetSubworldID);
+		}
+
+		public void Interact()
+		{
+			if (Main.netMode == NetmodeID.Server)
+				return;
+
+			if (NPC.Hitbox.Contains(Main.MouseWorld.ToPoint()) && !UIRocket.Displayed && !Launching)
+			{
+				if (Main.mouseRight)
+					UIRocket.Show(NPC.whoAmI);
+				else
+				{
+					Main.LocalPlayer.cursorItemIconEnabled = true;
+					Main.LocalPlayer.cursorItemIconID = ModContent.ItemType<RocketPlacer>();
+				}
+			}
+		}
+
+		public void Launch(int captainPlayer)
+		{
+			PlayerID = captainPlayer;
+
+			if (Main.player[captainPlayer].TryGetModPlayer(out RocketPlayer rocketPlayer))
+			{
+				rocketPlayer.InRocket = true;
+				if (Main.netMode == NetmodeID.Server)
+					rocketPlayer.UpdateStatus(true);
+
+				Launching = true;
+			}
 		}
 
 		private void SetAcceleration()
@@ -143,41 +195,57 @@ namespace Macrocosm.Content.Rocket
 			int dustCnt = FlightTime > liftoffTime + 40 ? 10 : 4;
  			for (int i = 0; i < dustCnt; i++)
 			{
-				Dust dust = Dust.NewDustDirect(NPC.position + new Vector2(0 + (int)((float)NPC.width / 2f * (Progress * 0.5f)), NPC.height - (NPC.height / 2 * Progress)), (int)((float)NPC.width * (InvProgress * 0.5f + 0.5f)), 1, DustID.Flare, Main.rand.NextFloat(-4f, 4f), Main.rand.NextFloat(20f, 200f) * Progress, Scale: Main.rand.NextFloat(1.5f, 3f));
+				Dust dust = Dust.NewDustDirect(NPC.position + new Vector2(-10, NPC.height - 15 - 50 * Progress), (int)((float)NPC.width + 20), 1, DustID.Flare, Main.rand.NextFloat(-4f, 4f), Main.rand.NextFloat(20f, 200f) * Progress, Scale: Main.rand.NextFloat(1.5f, 3f));
 				dust.noGravity = false;
 			}
  			
-
 			for (int g = 0; g < 3; g++)
 			{
 				if (Main.rand.NextBool(2))
 				{
 					int type = Main.rand.NextFromList<int>(GoreID.Smoke1, GoreID.Smoke2, GoreID.Smoke3);
-					Gore.NewGore(NPC.GetSource_FromAI(), NPC.position + new Vector2(Main.rand.Next(0, NPC.width / 2), NPC.height - NPC.height / 4), new Vector2(Main.rand.NextFloat(-4f, 4f), Main.rand.NextFloat(0, 8f)), type);
+					Gore.NewGore(NPC.GetSource_FromAI(), NPC.position + new Vector2(Main.rand.Next(-25, NPC.width), NPC.height - 15 - 30 * Progress), new Vector2(Main.rand.NextFloat(-4f, 4f), Main.rand.NextFloat(0, 8f)), type);
 				}
 			}
 		}
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
-			if (FlightTime < liftoffTime)
+			if (Launching && FlightTime < liftoffTime)
 			{
 				string text = (liftoffTime/60 - (int)FlightTime/60).ToString();
-				ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, text, NPC.Center + new Vector2(-15, -90) - Main.screenPosition, Color.Red, 0f, Vector2.Zero, new Vector2(1.2f));
+				ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, text, NPC.position + new Vector2(26, -90) - Main.screenPosition, Color.Red, 0f, Vector2.Zero, new Vector2(1.2f));
 			}
-			
-			return true;
+
+			Texture2D commandPod = TextureAssets.Npc[Type].Value;
+			Texture2D serviceModule = ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/RocketServiceModule").Value;
+			Texture2D reactorModule = ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/RocketReactorModule").Value;
+			Texture2D engineModule = ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/RocketEngineModule").Value;
+
+			Main.EntitySpriteDraw(commandPod, NPC.position - Main.screenPosition, null, NPC.color, NPC.rotation, Vector2.Zero, 1f, SpriteEffects.None, 0);
+
+			Vector2 servicePos = NPC.position + commandPod.Size()/2 + new Vector2(-1, commandPod.Height) - Main.screenPosition;
+			Vector2 reactorPos = servicePos + new Vector2(0, serviceModule.Height / 2 + reactorModule.Height / 2);
+			Vector2 enginePos = reactorPos + new Vector2(0, reactorModule.Height / 2 + engineModule.Height / 2);
+			spriteBatch.Draw(serviceModule, servicePos, null, NPC.color, NPC.rotation, new Vector2(serviceModule.Width / 2, serviceModule.Height / 2), 1f, SpriteEffects.None, 0f);
+			spriteBatch.Draw(reactorModule, reactorPos, null, NPC.color, NPC.rotation, new Vector2(reactorModule.Width / 2, reactorModule.Height / 2), 1f, SpriteEffects.None, 0f);
+			spriteBatch.Draw(engineModule, enginePos, null, NPC.color, NPC.rotation, new Vector2(engineModule.Width / 2, engineModule.Height / 2), 1f, SpriteEffects.None, 0f);
+
+			return false;
 		}
 
 		public override void OnKill()
 		{
 			rocketPlayer.InRocket = false;
+			if (Main.netMode == NetmodeID.Server)
+				rocketPlayer.UpdateStatus(false);
 		}
 
-		/// <summary> Make the rocket draw over players </summary>
+		/// <summary> Make the rocket draw over players during launch </summary>
 		public override void DrawBehind(int index)
 		{
-			Main.instance.DrawCacheNPCsOverPlayers.Add(index);
+			if(Launching)
+				Main.instance.DrawCacheNPCsOverPlayers.Add(index);
 		}
 
 	}

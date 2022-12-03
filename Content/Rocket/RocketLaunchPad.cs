@@ -19,32 +19,32 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Rocket
 {
-	public class RocketCommandModule : ModTile
+	public class RocketLaunchPad : ModTile
 	{
 		const int width = 6;
-		const int height = 6;
+		const int height = 1;
 
 		public override void SetStaticDefaults()
 		{	
 			Main.tileFrameImportant[Type] = true;
-			Main.tileSolid[Type] = false;
+			Main.tileSolid[Type] = true;
 			Main.tileNoAttach[Type] = true;
 			MinPick = 1000;
 
 			DustType = -1;
 			HitSound = SoundID.MenuClose; // huh
 
-			int[] heights = new int[6];
-			Array.Fill(heights, 16);
+			//int[] heights = new int[6];
+			//Array.Fill(heights, 16);
 
-			TileObjectData.newTile.CopyFrom(TileObjectData.Style1x1);
+			TileObjectData.newTile.CopyFrom(TileObjectData.Style1xX);
 			TileObjectData.newTile.Width = width;
 			TileObjectData.newTile.Height = height;
 			//TileObjectData.newTile.AnchorValidTiles = { ModContent.TileType<RocketServiceModule> };
-			TileObjectData.newTile.CoordinateHeights = heights;
+			//TileObjectData.newTile.CoordinateHeights = heights;
 			TileObjectData.newTile.Origin = new Point16(0, height - 1);
 			TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile, width, 0);
-			TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(ModContent.GetInstance<RocketCommandModuleTE>().Hook_AfterPlacement, -1, 0, false);
+			TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(ModContent.GetInstance<RocketLaunchPadTE>().Hook_AfterPlacement, -1, 0, false);
 
 			TileObjectData.addTile(Type);
 
@@ -60,7 +60,7 @@ namespace Macrocosm.Content.Rocket
 		public override void KillMultiTile(int i, int j, int frameX, int frameY)
 		{
 			Point16 origin = TileUtils.GetTileOrigin(i, j);
-			ModContent.GetInstance<RocketCommandModuleTE>().Kill(origin.X, origin.Y);
+			ModContent.GetInstance<RocketLaunchPadTE>().Kill(origin.X, origin.Y);
 		}
 
 		public override bool RightClick(int i, int j)
@@ -94,46 +94,22 @@ namespace Macrocosm.Content.Rocket
 				Main.npcChatText = string.Empty;
 			}
 
-			if (TileUtils.TryGetTileEntityAs(i, j, out RocketCommandModuleTE entity) && player.TryGetModPlayer(out RocketPlayer rocketPlayer))
+			if (TileUtils.TryGetTileEntityAs(i, j, out RocketLaunchPadTE entity) && player.TryGetModPlayer(out RocketPlayer rocketPlayer))
 			{
-				RocketSystem.Instance.ShowUI(new Point16(i, j));
-				return true;
+				//RocketSystem.Instance.ShowBuildingUI(new Point16(i, j));
+				//return true;
 			}
 
 			return false;
 		}
-
-		/// <summary>
-		/// Begin the launch sequence. Handled by the server
-		/// </summary>
-		/// <param name="captainPlayer"></param>
-		/// <param name="tePos"></param>
-		public static void Launch(int captainPlayer, Point16 tePos)
-		{
-			if (TileUtils.TryGetTileEntityAs(tePos.X, tePos.Y, out RocketCommandModuleTE entity) && Main.player[captainPlayer].TryGetModPlayer(out RocketPlayer rocketPlayer))
-			{
-				rocketPlayer.InRocket = true;
-				rocketPlayer.UpdateStatus(true);
-
-				int rocketId = NPC.NewNPC(null, (entity.Position.X + width / 2) * 16, (entity.Position.Y + height) * 16, ModContent.NPCType<RocketEntity>(), ai0: captainPlayer);
-				Main.npc[rocketId].position.Y -= 3.5f;
-				Main.npc[rocketId].position.X += 2f;
-				NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, rocketId);
-
-				entity.Kill(entity.Position.X, entity.Position.Y);
-				WorldGen.KillTile(entity.Position.X, entity.Position.Y);
-				NetMessage.SendTileSquare(-1, entity.Position.X, entity.Position.Y, width, height);
-				NetMessage.SendData(MessageID.TileEntitySharing, -1, -1, null, entity.ID);
-			}
-		}
 	}
 
-	public class RocketCommandModuleTE : ModTileEntity
+	public class RocketLaunchPadTE : ModTileEntity
 	{
 		public override bool IsTileValidForEntity(int x, int y)
 		{
 			Tile tile = Main.tile[x, y];
-			return tile.HasTile && tile.TileType == ModContent.TileType<RocketCommandModule>();
+			return tile.HasTile && tile.TileType == ModContent.TileType<RocketLaunchPad>();
 		}
 
 		public override int Hook_AfterPlacement(int i, int j, int type, int style, int direction, int alternate)
@@ -142,6 +118,10 @@ namespace Macrocosm.Content.Rocket
 			int topLeftX = i - tileData.Origin.X;
 			int topLeftY = j - tileData.Origin.Y;
 
+			int rocketNpcWidth = 139;
+			int rocketNpcHeight = 470;
+			int rocketID = NPC.NewNPC(new EntitySource_TileEntity(this), (int)(topLeftX * 16f), (int)(topLeftY * 16f - rocketNpcHeight), ModContent.NPCType<Rocket>());
+
 			if (Main.netMode == NetmodeID.MultiplayerClient)
 			{
 				//Sync the entire multitile's area. 
@@ -149,6 +129,8 @@ namespace Macrocosm.Content.Rocket
 
 				//Sync the placement of the tile entity with other clients
 				NetMessage.SendData(MessageID.TileEntityPlacement, -1, -1, null, topLeftX, topLeftY, Type);
+
+				NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, rocketID);
 
 				return -1;
 			}
