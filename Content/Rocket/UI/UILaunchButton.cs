@@ -23,16 +23,17 @@ namespace Macrocosm.Content.Rocket.UI
 
 		public override void OnInitialize()
 		{
-			Width.Set(305, 0);
+			Width.Set(285, 0);
 			Height.Set(75, 0);
 			HAlign = 0.5f;
-			VAlign = 0.945f;
+			Top.Set(572, 0f);
+			Recalculate();
 
 			buttonPanel = new();
 			buttonPanel.Width.Set(Width.Pixels, 0);
 			buttonPanel.Height.Set(Height.Pixels, 0);
 
-			buttonText = new(Terraria.Localization.LocalizedText.Empty)
+			buttonText = new(Terraria.Localization.LocalizedText.Empty, 0.9f, true)
 			{
 				IsWrapped = false,
 				HAlign = 0.5f,

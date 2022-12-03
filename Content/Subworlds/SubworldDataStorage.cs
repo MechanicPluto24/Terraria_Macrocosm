@@ -46,7 +46,7 @@ namespace Macrocosm.Content.Subworlds
 			DisplayName = "Mars",
 			Gravity = 0.38f,
 			Radius = 3389.5f,
-			DayPeriod = 24.62296f,
+			DayPeriod = 24.62f,
 			ThreatLevel = 3
  		};
 

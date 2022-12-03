@@ -22,7 +22,7 @@ namespace Macrocosm.Content.Rocket
 		{
 			if ((clientPlayer as RocketPlayer).InRocket != InRocket)
 			{
-				SyncPlayer(-1, 255, false);
+				SyncPlayer(-1, -1, false);
 			}
 		}
 
@@ -48,19 +48,19 @@ namespace Macrocosm.Content.Rocket
 		{
 			if (InRocket)
 			{
-				int rocketId = NPC.FindFirstNPC(ModContent.NPCType<RocketEntity>());
+				int rocketId = NPC.FindFirstNPC(ModContent.NPCType<Rocket>());
 				NPC rocket;
 
 				if(rocketId >= 0)
 				{
 					rocket = Main.npc[rocketId];
-					if(Player.whoAmI == Main.myPlayer)
-					{
+					//if(Player.whoAmI == Main.myPlayer)
+					//{
 						Player.moveSpeed = 0f;
 						Player.velocity = rocket.velocity;
-						Player.Center = rocket.Center + new Vector2(0, 20);
-						NetMessage.SendData(MessageID.PlayerControls, number: Player.whoAmI);
-					}
+						Player.Center = new Vector2(rocket.position.X + rocket.width / 2 - 2f, rocket.position.Y + 50);
+						//NetMessage.SendData(MessageID.PlayerControls, number: Player.whoAmI);
+					//}
 					
  				}
 				else
