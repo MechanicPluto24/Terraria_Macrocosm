@@ -218,18 +218,18 @@ namespace Macrocosm.Content.Rocket
 			}
 
 			Texture2D commandPod = TextureAssets.Npc[Type].Value;
-			Texture2D serviceModule = ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/RocketServiceModule").Value;
-			Texture2D reactorModule = ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/RocketReactorModule").Value;
-			Texture2D engineModule = ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/RocketEngineModule").Value;
+			Texture2D serviceModule = ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/RocketServiceModule", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+			Texture2D reactorModule = ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/RocketReactorModule", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+			Texture2D engineModule = ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/RocketEngineModule", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
 
-			Main.EntitySpriteDraw(commandPod, NPC.position - Main.screenPosition, null, NPC.color, NPC.rotation, Vector2.Zero, 1f, SpriteEffects.None, 0);
+			spriteBatch.Draw(commandPod, NPC.position - Main.screenPosition, null, drawColor, NPC.rotation, Vector2.Zero, 1f, SpriteEffects.None, 0);
 
 			Vector2 servicePos = NPC.position + commandPod.Size()/2 + new Vector2(-1, commandPod.Height) - Main.screenPosition;
 			Vector2 reactorPos = servicePos + new Vector2(0, serviceModule.Height / 2 + reactorModule.Height / 2);
 			Vector2 enginePos = reactorPos + new Vector2(0, reactorModule.Height / 2 + engineModule.Height / 2);
-			spriteBatch.Draw(serviceModule, servicePos, null, NPC.color, NPC.rotation, new Vector2(serviceModule.Width / 2, serviceModule.Height / 2), 1f, SpriteEffects.None, 0f);
-			spriteBatch.Draw(reactorModule, reactorPos, null, NPC.color, NPC.rotation, new Vector2(reactorModule.Width / 2, reactorModule.Height / 2), 1f, SpriteEffects.None, 0f);
-			spriteBatch.Draw(engineModule, enginePos, null, NPC.color, NPC.rotation, new Vector2(engineModule.Width / 2, engineModule.Height / 2), 1f, SpriteEffects.None, 0f);
+			spriteBatch.Draw(serviceModule, servicePos, null, drawColor, NPC.rotation, new Vector2(serviceModule.Width / 2, serviceModule.Height / 2), 1f, SpriteEffects.None, 0);
+			spriteBatch.Draw(reactorModule, reactorPos, null, drawColor, NPC.rotation, new Vector2(reactorModule.Width / 2, reactorModule.Height / 2), 1f, SpriteEffects.None, 0);
+			spriteBatch.Draw(engineModule, enginePos, null, drawColor, NPC.rotation, new Vector2(engineModule.Width / 2, engineModule.Height / 2), 1f, SpriteEffects.None, 0);
 
 			return false;
 		}

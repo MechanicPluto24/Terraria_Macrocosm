@@ -118,10 +118,6 @@ namespace Macrocosm.Content.Rocket
 			int topLeftX = i - tileData.Origin.X;
 			int topLeftY = j - tileData.Origin.Y;
 
-			int rocketNpcWidth = 139;
-			int rocketNpcHeight = 470;
-			int rocketID = NPC.NewNPC(new EntitySource_TileEntity(this), (int)(topLeftX * 16f), (int)(topLeftY * 16f - rocketNpcHeight), ModContent.NPCType<Rocket>());
-
 			if (Main.netMode == NetmodeID.MultiplayerClient)
 			{
 				//Sync the entire multitile's area. 
@@ -130,20 +126,28 @@ namespace Macrocosm.Content.Rocket
 				//Sync the placement of the tile entity with other clients
 				NetMessage.SendData(MessageID.TileEntityPlacement, -1, -1, null, topLeftX, topLeftY, Type);
 
-				NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, rocketID);
-
 				return -1;
 			}
 
 			//ModTileEntity.Place() handles checking if the entity can be placed, then places it
 			int placedEntity = Place(topLeftX, topLeftY);
+
+			if (Main.netMode == NetmodeID.SinglePlayer)
+				PlaceRocket(topLeftX, topLeftY);
+			
 			return placedEntity;
+		}
+
+		public int PlaceRocket(int rocketX, int rocketY)
+		{
+			return NPC.NewNPC(new EntitySource_TileEntity(this), (int)(rocketX * 16f), (int)(rocketY * 16f + 10f), ModContent.NPCType<Rocket>());
 		}
 
 		public override void OnNetPlace()
 		{
-			if (Main.netMode == NetmodeID.Server)
-				NetMessage.SendData(MessageID.TileEntitySharing, -1, -1, null, ID, Position.X, Position.Y);
+			int rocketId = PlaceRocket(Position.X, Position.Y);
+			NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, rocketId);
+			NetMessage.SendData(MessageID.TileEntitySharing, -1, -1, null, ID, Position.X, Position.Y);
 		}
 
 		public override void OnKill()
