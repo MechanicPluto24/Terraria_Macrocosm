@@ -1,12 +1,8 @@
-﻿
-
-using Macrocosm.Content.Subworlds;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using Terraria;
-using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
+using Terraria.GameContent.UI.Elements;
 
 namespace Macrocosm.Content.Rocket.UI
 {
@@ -24,6 +20,11 @@ namespace Macrocosm.Content.Rocket.UI
 			DisplayValue = value;
 			HoverText = hoverText;
 
+			Initialize();
+		}
+		
+		public override void OnInitialize()
+		{
 			Width.Set(0f, 0.98f);
 			Height.Set(38f, 0f);
 
@@ -35,11 +36,6 @@ namespace Macrocosm.Content.Rocket.UI
 			DisplayText.Left.Set(40, 0f);
 
 			Append(DisplayText);
-		}
-		
-		public override void OnInitialize()
-		{
-			
 		}
 
 		public override void Update(GameTime gameTime)

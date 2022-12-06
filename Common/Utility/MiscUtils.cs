@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.UI;
 
 namespace Macrocosm.Common.Utility
 {
@@ -17,6 +18,13 @@ namespace Macrocosm.Common.Utility
 			int frameX = dustId * 10 % 1000;
 			int frameY = dustId * 10 / 1000 * 30 + Main.rand.Next(3) * 10;
 			return new Rectangle(frameX, frameY, 8, 8);
+		}
+
+		public static UIElement Clone(this UIElement original)
+		{
+			UIElement newElement = new UIElement();
+			newElement.CopyStyle(original);
+			return newElement;
 		}
 	}
 }
