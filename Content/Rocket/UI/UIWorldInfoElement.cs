@@ -16,7 +16,6 @@ namespace Macrocosm.Content.Rocket.UI
 		public string DisplayValue = "";
 		public string HoverText = "";
 
-		private UIPanel Background;
 		private UIText DisplayText;
 
 		public UIWorldInfoElement(Texture2D icon, string value, string hoverText)
@@ -43,14 +42,9 @@ namespace Macrocosm.Content.Rocket.UI
 			
 		}
 
-		private void Background_OnUpdate(UIElement affectedElement)
-		{
-
-		}
-
 		public override void Update(GameTime gameTime)
 		{
-
+			base.Update(gameTime);
 			if (IsMouseHovering)
 				Main.instance.MouseText(HoverText);
 
@@ -61,10 +55,8 @@ namespace Macrocosm.Content.Rocket.UI
 		protected override void DrawSelf(SpriteBatch spriteBatch)
 		{
 			base.DrawSelf(spriteBatch);
+
 			CalculatedStyle dimensions = GetDimensions();
-
-			
-
 			spriteBatch.Draw(Icon, dimensions.Position() + new Vector2(dimensions.Width * 0.062f, dimensions.Height * 0.18f), Color.White);
 		}
 	}
