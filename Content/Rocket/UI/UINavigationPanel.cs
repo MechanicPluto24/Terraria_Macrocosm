@@ -101,12 +101,6 @@ namespace Macrocosm.Content.Rocket.UI
 		public override void Update(GameTime gameTime)
 		{
 			base.Update(gameTime);
-
-			//UIMapTarget solarSystemOuterTarget = SolarSystemOuter.GetSelectedTarget();
-			//if (solarSystemOuterTarget == null)
-			//	SolarSystemOuter.Next = SolarSystemInner;
-			//else
-			//	SolarSystemOuter.Next = CurrentMap.Next;
 		}
 
 		public void UpdateCurrentMap(UINavigationMap newMap)
@@ -136,7 +130,6 @@ namespace Macrocosm.Content.Rocket.UI
 		public void ZoomOut()
 		{
 			UpdateCurrentMap(CurrentMap.Prev);
-
 		}
 	}
 }

@@ -50,11 +50,10 @@ namespace Macrocosm.Content.Subworlds.Moon
 			Radius = 1737.4f,
 			DayPeriod = 8,
 			ThreatLevel = 2,
-			Hazards = new() 
+			Hazards = new()
 			{
-				"No atmosphere",
-				"Meteor storms",
-				"Solar storms"
+				{"Meteors", "Meteor storms" },
+				{"SolarStorms", "Solar storms" }
 			}
 		};
 

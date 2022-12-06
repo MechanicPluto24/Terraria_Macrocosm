@@ -111,27 +111,5 @@ namespace Macrocosm.Content.Rocket.UI
 
 			spriteBatch.Restore(state);
 		}
-
-		public string ParseSubworldData()
-		{
-			string text = "";
-			SubworldData data = TargetWorldData;
-
-			if(data.Gravity > 0) text += $"Gravity: {data.Gravity} G\n";
-			if(data.Radius > 0) text += $"Radius: {data.Radius} km\n";
-			if(data.DayPeriod > 0) text += $"Day Period: {data.DayPeriod} days\n";
-			if(data.ThreatLevel > 0) text += $"Threat Level: {data.ThreatLevel}\n";
-
-			if (data.Hazards.Count <= 0)
-				return text;
-
-			string hazards = "";
-			foreach (string hazard in data.Hazards)
-				hazards += $"- {hazard} \n";
-
-			text += $"Hazards:\n{hazards}";
-
-			return text;
-		}
 	}
 }

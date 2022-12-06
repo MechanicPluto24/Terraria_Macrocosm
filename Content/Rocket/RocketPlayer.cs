@@ -31,6 +31,7 @@ namespace Macrocosm.Content.Rocket
 			UpdateStatus(InRocket);
 		}
 
+		/// <summary> This should be called on the server, when it updates a client's values </summary>
 		public void UpdateStatus(bool inRocket)
 		{
 			ModPacket packet = Mod.GetPacket();
@@ -54,20 +55,15 @@ namespace Macrocosm.Content.Rocket
 				if(rocketId >= 0)
 				{
 					rocket = Main.npc[rocketId];
-					//if(Player.whoAmI == Main.myPlayer)
-					//{
-						Player.moveSpeed = 0f;
-						Player.velocity = rocket.velocity;
-						Player.Center = new Vector2(rocket.position.X + rocket.width / 2 - 2f, rocket.position.Y + 50);
-						//NetMessage.SendData(MessageID.PlayerControls, number: Player.whoAmI);
-					//}
-					
+ 
+					Player.moveSpeed = 0f;
+					Player.velocity = rocket.velocity;
+					Player.Center = new Vector2(rocket.position.X + rocket.width / 2 - 2f, rocket.position.Y + 50);
  				}
 				else
 				{
 					InRocket = false;
-				}
-					
+				}	
 			}
 		}
 
