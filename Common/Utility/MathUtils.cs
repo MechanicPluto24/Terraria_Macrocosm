@@ -20,7 +20,7 @@ namespace Macrocosm.Common.Utility
 		/// Gets the position of a point rotating about an origin using a rotation matrix
 		/// </summary>
 		/// <param name="origin"> The rotation origin </param>
-		/// <param name="offset"> The offset of the point from the origin when there is no rotation (<paramref name="theta"> = 0) </param>
+		/// <param name="offset"> The offset of the point from the origin when there is no rotation (<paramref name="theta"> = 0f) </param>
 		/// <param name="theta"> The rotation angle (in radians) </param>
 		/// <returns> The rotated point coordinates </returns>
 		public static Vector2 RotatingPoint(Vector2 origin, Vector2 offset, float theta)
@@ -31,7 +31,7 @@ namespace Macrocosm.Common.Utility
 				origin.Y + (offset.X - origin.X) * (float)Math.Sin(theta) + (offset.Y - origin.Y) * (float)Math.Cos(theta)
 			);
 		}
-
+		
 		public static float RandomRotation() 
 			=> Main.rand.NextFloat(-MathHelper.Pi, MathHelper.Pi);
 

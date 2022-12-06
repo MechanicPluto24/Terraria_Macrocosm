@@ -27,7 +27,12 @@ namespace Macrocosm.Content.Subworlds
 		public float Radius = 0f;          // in km
 		public float DayPeriod = 0f;       // in Earth hours
 		public float ThreatLevel = 0f;     // scale 1-10 (?)
-		public List<string> Hazards = new();
+
+		public string SpecialGravity = "";
+		public string SpecialRadius = "";
+		public string SpecialDayPeriod = "";
+
+		public Dictionary<string, string> Hazards = new();
 
 		public SubworldData() { }
 	}

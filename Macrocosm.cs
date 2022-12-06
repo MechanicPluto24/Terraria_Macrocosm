@@ -71,35 +71,41 @@ namespace Macrocosm
 			switch (messageType)
 			{
 				case MessageType.SyncDashDirection:
-					int dashPlayerID = reader.ReadByte();
-					DashPlayer dashPlayer= Main.player[dashPlayerID].GetModPlayer<DashPlayer>();
+					{ 
+						int dashPlayerID = reader.ReadByte();
+						DashPlayer dashPlayer= Main.player[dashPlayerID].GetModPlayer<DashPlayer>();
 
-					int newDir = reader.ReadByte();
-					dashPlayer.DashDirection = (DashPlayer.DashDir)newDir;
+						int newDir = reader.ReadByte();
+						dashPlayer.DashDirection = (DashPlayer.DashDir)newDir;
 
-					if (Main.netMode == NetmodeID.Server)
-						dashPlayer.SyncPlayer(-1, whoAmI, false);
+						if (Main.netMode == NetmodeID.Server)
+							dashPlayer.SyncPlayer(-1, whoAmI, false);
 
-					break;
+						break;
+					}
 
 				case MessageType.BeginRocketLaunchSequence:
-					int captainPlayer = reader.ReadByte();
-					int rocketId = reader.ReadByte();
+					{
+						int commanderPlayer = reader.ReadByte();
+						int rocketId = reader.ReadByte();
 
-					if (Main.netMode == NetmodeID.Server)
-						(Main.npc[rocketId].ModNPC as Rocket).Launch(captainPlayer);
+						if (Main.netMode == NetmodeID.Server)
+							(Main.npc[rocketId].ModNPC as Rocket).Launch(commanderPlayer);
 
-					break;
+						break;
+					}
 
 				case MessageType.SyncPlayerRocketStatus:
-					int rocketPlayerID = reader.ReadByte();
-					RocketPlayer rocketPlayer = Main.player[rocketPlayerID].GetModPlayer<RocketPlayer>();
-					rocketPlayer.InRocket = reader.ReadBoolean();
+					{
+						int rocketPlayerID = reader.ReadByte();
+						RocketPlayer rocketPlayer = Main.player[rocketPlayerID].GetModPlayer<RocketPlayer>();
+						rocketPlayer.InRocket = reader.ReadBoolean();
 
-					if (Main.netMode == NetmodeID.Server)
-						rocketPlayer.SyncPlayer(-1, whoAmI, false);
+						if (Main.netMode == NetmodeID.Server)
+							rocketPlayer.SyncPlayer(-1, whoAmI, false);
 
-					break;
+						break;
+					}
 
 				default:
 					Logger.WarnFormat("Macrocosm: Unknown Message type: {messageType}", messageType);

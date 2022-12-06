@@ -64,7 +64,6 @@ namespace Macrocosm.Content.Rocket.UI
 				{
 					showAnimationActive = false;
 					alpha = 1f;
-					//Append(this);
 				}
 			}
 		}
@@ -122,8 +121,6 @@ namespace Macrocosm.Content.Rocket.UI
 
 			if (specialDraw)
 				spriteBatch.Restore(state);
-
-
 		}
 
 		public void ShowAnimation(Texture2D previousTexture)

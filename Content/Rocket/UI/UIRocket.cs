@@ -67,9 +67,11 @@ namespace Macrocosm.Content.Rocket.UI
 			UIMapTarget target = NavigationPanel.CurrentMap.GetSelectedTarget();
 			player.GetModPlayer<RocketPlayer>().TargetSubworldID = target is null ? "" : target.TargetID;
 
- 			WorldInfoPanel.Name = target is null ? "" : target.TargetWorldData.DisplayName;
-			WorldInfoPanel.Text = target is null ? "" : target.ParseSubworldData();
-
+			string prevName = WorldInfoPanel.Name;
+			WorldInfoPanel.Name = target is null ? "" : target.TargetWorldData.DisplayName;
+			if (target is not null && prevName != WorldInfoPanel.Name)
+ 				WorldInfoPanel.FillWithInfo(target.TargetWorldData);
+ 
 			if (target is null)
 			{
 				LaunchButton.TextColor = Color.Gold;
@@ -104,8 +106,6 @@ namespace Macrocosm.Content.Rocket.UI
 			{
 				(Rocket.ModNPC as Rocket).Launch(Main.myPlayer);
 			}
-
-			
 		}
 	}
 }

@@ -151,11 +151,11 @@ namespace Macrocosm.Content.Rocket
 			}
 		}
 
-		public void Launch(int captainPlayer)
+		public void Launch(int commanderPlayer)
 		{
-			PlayerID = captainPlayer;
+			PlayerID = commanderPlayer;
 
-			if (Main.player[captainPlayer].TryGetModPlayer(out RocketPlayer rocketPlayer))
+			if (Main.player[commanderPlayer].TryGetModPlayer(out RocketPlayer rocketPlayer))
 			{
 				rocketPlayer.InRocket = true;
 				if (Main.netMode == NetmodeID.Server)
