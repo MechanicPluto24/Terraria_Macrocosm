@@ -22,6 +22,8 @@ namespace Macrocosm.Content.Rocket.UI
 		public delegate bool FuncCanLaunch();
 		public readonly FuncCanLaunch CanLaunch = () => false;
 
+		public bool IsSelectable => CanLaunch() || (Parent as UINavigationMap).Next != null;
+
 		/// <summary> The current selected  </summary>
 		public bool Selected;
 
@@ -101,7 +103,7 @@ namespace Macrocosm.Content.Rocket.UI
 
 			if (Selected)
 			{
-				if (CanLaunch())
+				if (IsSelectable)
 					spriteBatch.Draw(outline, rect, Color.Green);
 				else
 					spriteBatch.Draw(outline, rect, Color.Red);

@@ -42,6 +42,8 @@ namespace Macrocosm.Content.Rocket.UI
 			BackgroundPanel.Append(WorldInfoPanel);
 
 			LaunchButton = new();
+			LaunchButton.ZoomIn = NavigationPanel.ZoomIn;
+			LaunchButton.Launch = LaunchRocket;
 			BackgroundPanel.Append(LaunchButton);
 		}
 
@@ -58,10 +60,9 @@ namespace Macrocosm.Content.Rocket.UI
 			player.mouseInterface = true;
 
 			if (!Rocket.active || player.dead || !player.active || Main.editChest || Main.editSign || player.talkNPC >= 0 || !Main.playerInventory ||
-				!player.InInteractionRange((int)Rocket.Center.X / 16, (int)Rocket.Center.Y / 16) || player.GetModPlayer<RocketPlayer>().InRocket)
-			{
-				Hide();
-				return;
+				!player.InInteractionRange((int)Rocket.Center.X / 16, (int)Rocket.Center.Y / 16) || (Rocket.ModNPC as Rocket).Launching) {
+					Hide();
+					return;
 			}
 
 			UIMapTarget target = NavigationPanel.CurrentMap.GetSelectedTarget();
@@ -71,28 +72,20 @@ namespace Macrocosm.Content.Rocket.UI
 			WorldInfoPanel.Name = target is null ? "" : target.TargetWorldData.DisplayName;
 			if (target is not null && prevName != WorldInfoPanel.Name)
  				WorldInfoPanel.FillWithInfo(target.TargetWorldData);
- 
+			else if(target is null)
+				WorldInfoPanel.FillWithInfo(new Subworlds.SubworldData());
+
 			if (target is null)
-			{
-				LaunchButton.TextColor = Color.Gold;
-				LaunchButton.Text = "NO TARGET";
-				LaunchButton.OnClick -= LaunchButton_OnClick;
-			}
-			else if(!target.CanLaunch())
-			{
-				LaunchButton.TextColor = Color.Red;
-				LaunchButton.Text = "NOPE";
-				LaunchButton.OnClick -= LaunchButton_OnClick;
-			}
-			else
-			{
-				LaunchButton.TextColor = new Color(0, 255, 0);
-				LaunchButton.Text = "LAUNCH";
-				LaunchButton.OnClick += LaunchButton_OnClick;
-			}
-		}
+ 				LaunchButton.ButtonState = UILaunchButton.ButtonStateType.NoTarget;
+ 			else if(NavigationPanel.CurrentMap.Next != null)
+ 				LaunchButton.ButtonState = UILaunchButton.ButtonStateType.ZoomIn;
+ 			else if(!target.CanLaunch())
+ 				LaunchButton.ButtonState = UILaunchButton.ButtonStateType.CantReach;
+ 			else
+ 				LaunchButton.ButtonState = UILaunchButton.ButtonStateType.Launch;
+ 		}
 		
-		private void LaunchButton_OnClick(UIMouseEvent evt, UIElement listeningElement)
+		private void LaunchRocket()
 		{
 			if(Main.netMode == NetmodeID.MultiplayerClient)
 			{
