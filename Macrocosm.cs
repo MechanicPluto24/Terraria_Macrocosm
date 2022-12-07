@@ -15,7 +15,6 @@ using Macrocosm.Content.Rocket;
 
 namespace Macrocosm
 {
-
 	public enum MessageType : byte
 	{
 		SyncNPCTargeting,

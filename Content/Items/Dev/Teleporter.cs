@@ -28,11 +28,14 @@ namespace Macrocosm.Content.Items.Dev
 		}
 		public override bool? UseItem(Player player)
 		{
-			if (!SubworldSystem.AnyActive<Macrocosm>())
-				SubworldSystem.Enter<Moon>();
-			else
-				SubworldSystem.Exit();
-
+			if(player.whoAmI == Main.myPlayer)
+			{
+				if (!SubworldSystem.AnyActive<Macrocosm>())
+					SubworldSystem.Enter("Macrocosm/Moon");
+				else
+					SubworldSystem.Exit();
+			}
+			
  			return true;
 		}
 	}

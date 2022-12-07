@@ -46,22 +46,28 @@ namespace Macrocosm.Content.Rocket
 		{
 		}
 
+
 		public override void PreUpdateMovement()
 		{
 			if (InRocket)
 			{
 				int rocketId = NPC.FindFirstNPC(ModContent.NPCType<Rocket>());
-				NPC rocket = Main.npc[rocketId];
+				NPC rocket;
 
 				if(rocketId >= 0)
 				{
-					if ((Player.controlInv || Player.controlMount) && !(rocket.ModNPC as Rocket).Launching)
-						InRocket = false;
+					rocket = Main.npc[rocketId];
 
-					if (!(rocket.ModNPC as Rocket).Launching)
-						UIRocket.Show(rocketId);
-					else
-						UIRocket.Hide();
+					if(Player.whoAmI == Main.myPlayer)
+					{
+						if ((Player.controlInv || Player.controlMount) && !(rocket.ModNPC as Rocket).Launching)
+							InRocket = false;
+
+						if (!(rocket.ModNPC as Rocket).Launching)
+							UIRocket.Show(rocketId);
+						else
+							UIRocket.Hide();
+					}
 
 					Player.moveSpeed = 0f;
 					Player.velocity = rocket.velocity;
@@ -72,7 +78,7 @@ namespace Macrocosm.Content.Rocket
 					InRocket = false;
 				}	
 			}
-			else
+			else if (Player.whoAmI == Main.myPlayer)
 				UIRocket.Hide();
 		}
 
@@ -82,7 +88,6 @@ namespace Macrocosm.Content.Rocket
 			{
 				Player.noItems = true;
 			}
-
  		}
 	}
 }

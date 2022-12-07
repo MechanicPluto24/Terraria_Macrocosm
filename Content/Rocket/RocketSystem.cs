@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 
@@ -45,7 +46,10 @@ namespace Macrocosm.Content.Rocket
 
 		public void ShowUI(int rocketId)
 		{
-			if(rocketId >= 0 && rocketId < Main.maxNPCs)
+			if (Main.netMode == NetmodeID.Server && Interface.CurrentState is not null)
+				return;  
+
+			if (rocketId >= 0 && rocketId < Main.maxNPCs) // && (Main.npc[rocketId].ModNPC as Rocket).PlayerID == Main.myPlayer
 			{
 				Main.playerInventory = true;
 				State.RocketID = rocketId;
@@ -55,7 +59,8 @@ namespace Macrocosm.Content.Rocket
 
 		public void HideUI()
 		{
-			Interface?.SetState(null);
+			if(Main.netMode != NetmodeID.Server)
+				Interface?.SetState(null);
 		}
 
 		public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)

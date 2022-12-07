@@ -56,6 +56,9 @@ namespace Macrocosm.Content
 			{
 				MacrocosmSubworld activeSubworld = SubworldSystem.Current as MacrocosmSubworld;
 
+				SubworldSystem.hideUnderworld = true;
+				SubworldSystem.noReturn = false;
+
 				UpdateTime(activeSubworld);
 				CustomUpdates(activeSubworld);
 				GameMechanicsUpdates();
@@ -140,7 +143,10 @@ namespace Macrocosm.Content
 
 			Main.slimeRain = false;
 			Main.slimeRainTime = 0;
-			SkyManager.Instance["Slime"].Deactivate();
+
+			//if(SkyManager.Instance["Slime"] is not null)
+			//	SkyManager.Instance["Slime"].Deactivate();
+
 			Main.StopSlimeRain(false);
 
 			LanternNight.WorldClear();
