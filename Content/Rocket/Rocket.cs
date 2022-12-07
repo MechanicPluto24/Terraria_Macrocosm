@@ -130,8 +130,8 @@ namespace Macrocosm.Content.Rocket
 
 			if (rocketPlayer.TargetSubworldID == "Earth")
 				SubworldSystem.Exit();
-			//else if (rocketPlayer.TargetSubworldID != null && !rocketPlayer.TargetSubworldID.Equals(""))
-			//	SubworldSystem.Enter(rocketPlayer.TargetSubworldID);
+			else if (rocketPlayer.TargetSubworldID != null && !rocketPlayer.TargetSubworldID.Equals(""))
+				SubworldSystem.Enter(rocketPlayer.TargetSubworldID);
 		}
 
 		public void Interact()
@@ -139,10 +139,10 @@ namespace Macrocosm.Content.Rocket
 			if (Main.netMode == NetmodeID.Server)
 				return;
 
-			if (NPC.Hitbox.Contains(Main.MouseWorld.ToPoint()) && !UIRocket.Displayed && !Launching)
+			if (NPC.Hitbox.Contains(Main.MouseWorld.ToPoint()) && !Launching)
 			{
 				if (Main.mouseRight)
-					UIRocket.Show(NPC.whoAmI);
+					EmbarkPlayer_Local();
 				else
 				{
 					Main.LocalPlayer.cursorItemIconEnabled = true;
@@ -151,18 +151,37 @@ namespace Macrocosm.Content.Rocket
 			}
 		}
 
-		public void Launch(int commanderPlayer)
+		public void EmbarkPlayer_Server(int playerId, bool asCommander = false)
 		{
-			PlayerID = commanderPlayer;
+			PlayerID = playerId;
 
-			if (Main.player[commanderPlayer].TryGetModPlayer(out RocketPlayer rocketPlayer))
+			if (Main.player[playerId].TryGetModPlayer(out RocketPlayer rocketPlayer))
 			{
 				rocketPlayer.InRocket = true;
 				if (Main.netMode == NetmodeID.Server)
 					rocketPlayer.UpdateStatus(true);
-
-				Launching = true;
 			}
+		}
+
+		public void EmbarkPlayer_Local()
+		{
+			if (Main.netMode == NetmodeID.MultiplayerClient)
+			{
+				ModPacket packet = Macrocosm.Instance.GetPacket();
+				packet.Write((byte)MessageType.EmbarkPlayerInRocket);
+				packet.Write((byte)Main.myPlayer);
+				packet.Write((byte)NPC.whoAmI);
+				packet.Send();
+			}
+			else if (Main.netMode == NetmodeID.SinglePlayer)
+			{
+				Main.LocalPlayer.GetModPlayer<RocketPlayer>().InRocket = true;
+			}
+		}
+
+		public void Launch()
+		{
+			Launching = true;
 		}
 
 		private void SetAcceleration()
@@ -244,7 +263,7 @@ namespace Macrocosm.Content.Rocket
 		/// <summary> Make the rocket draw over players during launch </summary>
 		public override void DrawBehind(int index)
 		{
-			if(Launching)
+			if(rocketPlayer.InRocket)
 				Main.instance.DrawCacheNPCsOverPlayers.Add(index);
 		}
 

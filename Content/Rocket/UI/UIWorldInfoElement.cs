@@ -9,16 +9,23 @@ namespace Macrocosm.Content.Rocket.UI
 	public class UIWorldInfoElement : UIPanel
 	{
 		public Texture2D Icon;
-		public string DisplayValue = "";
+		public string DisplayText = "";
+		public string DisplayTextUnits = "";
 		public string HoverText = "";
 
-		private UIText DisplayText;
+		public Color DisplayValueColor = Color.White;
 
-		public UIWorldInfoElement(Texture2D icon, string value, string hoverText)
+		private UIText UIDisplayText;
+
+		public UIWorldInfoElement(Texture2D icon, string text, string hoverText = "", string units = "",  Color valueColor = default)
 		{
 			Icon = icon;
-			DisplayValue = value;
+			DisplayText = text;
+			DisplayTextUnits = units;
 			HoverText = hoverText;
+
+			if(valueColor != default)
+				DisplayValueColor = valueColor;
 
 			Initialize();
 		}
@@ -29,23 +36,26 @@ namespace Macrocosm.Content.Rocket.UI
 			Height.Set(38f, 0f);
 
 			BackgroundColor = new Color(43, 56, 101);
-			BorderColor = BackgroundColor * 1.1f;
+			BorderColor = BackgroundColor * 2f;
 
-			DisplayText = new(DisplayValue, 0.9f, false);
-			DisplayText.VAlign = 0.5f;
-			DisplayText.Left.Set(40, 0f);
+			UIDisplayText = new(DisplayText, 0.9f, false);
+			UIDisplayText.VAlign = 0.5f;
+			UIDisplayText.Left.Set(40, 0f);
 
-			Append(DisplayText);
+			Append(UIDisplayText);
 		}
 
 		public override void Update(GameTime gameTime)
 		{
 			base.Update(gameTime);
+
+			UIDisplayText.TextColor = DisplayValueColor; 
+
 			if (IsMouseHovering)
 				Main.instance.MouseText(HoverText);
 
-			if (DisplayText is not null && !DisplayText.Text.Equals(DisplayValue))
-				DisplayText.SetText(DisplayValue);
+			if (UIDisplayText is not null)
+				UIDisplayText.SetText(DisplayText + " " + DisplayTextUnits);
 		}
 
 		protected override void DrawSelf(SpriteBatch spriteBatch)
@@ -53,7 +63,7 @@ namespace Macrocosm.Content.Rocket.UI
 			base.DrawSelf(spriteBatch);
 
 			CalculatedStyle dimensions = GetDimensions();
-			spriteBatch.Draw(Icon, dimensions.Position() + new Vector2(dimensions.Width * 0.062f, dimensions.Height * 0.18f), Color.White);
+			spriteBatch.Draw(Icon, dimensions.Position() + new Vector2(dimensions.Width * 0.062f, dimensions.Height * 0.185f), Color.White);
 		}
 	}
 }

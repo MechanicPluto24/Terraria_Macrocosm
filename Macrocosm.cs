@@ -20,7 +20,8 @@ namespace Macrocosm
 	{
 		SyncNPCTargeting,
 		SyncDashDirection,
-		BeginRocketLaunchSequence,
+		EmbarkPlayerInRocket,
+		LaunchRocket,
 		SyncPlayerRocketStatus
 	}
 
@@ -84,13 +85,23 @@ namespace Macrocosm
 						break;
 					}
 
-				case MessageType.BeginRocketLaunchSequence:
+				case MessageType.EmbarkPlayerInRocket:
 					{
-						int commanderPlayer = reader.ReadByte();
+						int playerId = reader.ReadByte();
 						int rocketId = reader.ReadByte();
 
 						if (Main.netMode == NetmodeID.Server)
-							(Main.npc[rocketId].ModNPC as Rocket).Launch(commanderPlayer);
+							(Main.npc[rocketId].ModNPC as Rocket).EmbarkPlayer_Server(playerId);
+
+						break;
+					}
+
+				case MessageType.LaunchRocket:
+					{
+						int rocketId = reader.ReadByte();
+
+						if (Main.netMode == NetmodeID.Server)
+							(Main.npc[rocketId].ModNPC as Rocket).Launch();
 
 						break;
 					}

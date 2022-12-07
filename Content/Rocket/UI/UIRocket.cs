@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
@@ -43,10 +44,9 @@ namespace Macrocosm.Content.Rocket.UI
 
 			LaunchButton = new();
 			LaunchButton.ZoomIn = NavigationPanel.ZoomIn;
-			LaunchButton.Launch = LaunchRocket;
+     		LaunchButton.Launch = LaunchRocket;
 			BackgroundPanel.Append(LaunchButton);
 		}
-
 		public override void OnDeactivate()
 		{
 		}
@@ -60,7 +60,7 @@ namespace Macrocosm.Content.Rocket.UI
 			player.mouseInterface = true;
 
 			if (!Rocket.active || player.dead || !player.active || Main.editChest || Main.editSign || player.talkNPC >= 0 || !Main.playerInventory ||
-				!player.InInteractionRange((int)Rocket.Center.X / 16, (int)Rocket.Center.Y / 16) || (Rocket.ModNPC as Rocket).Launching) {
+				!player.InInteractionRange((int)Rocket.Center.X / 16, (int)Rocket.Center.Y / 16) || (Rocket.ModNPC as Rocket).Launching || player.controlMount) {
 					Hide();
 					return;
 			}
@@ -69,35 +69,36 @@ namespace Macrocosm.Content.Rocket.UI
 			player.GetModPlayer<RocketPlayer>().TargetSubworldID = target is null ? "" : target.TargetID;
 
 			string prevName = WorldInfoPanel.Name;
-			WorldInfoPanel.Name = target is null ? "" : target.TargetWorldData.DisplayName;
+			WorldInfoPanel.Name = target is null ? "" : target.TargetWorldInfo.DisplayName;
 			if (target is not null && prevName != WorldInfoPanel.Name)
- 				WorldInfoPanel.FillWithInfo(target.TargetWorldData);
-			else if(target is null)
-				WorldInfoPanel.FillWithInfo(new Subworlds.SubworldData());
+				WorldInfoPanel.FillWithInfo(target.TargetWorldInfo);
+			else if (target is null)
+				WorldInfoPanel.ClearInfo();
 
 			if (target is null)
- 				LaunchButton.ButtonState = UILaunchButton.ButtonStateType.NoTarget;
- 			else if(NavigationPanel.CurrentMap.Next != null)
- 				LaunchButton.ButtonState = UILaunchButton.ButtonStateType.ZoomIn;
- 			else if(!target.CanLaunch())
- 				LaunchButton.ButtonState = UILaunchButton.ButtonStateType.CantReach;
- 			else
- 				LaunchButton.ButtonState = UILaunchButton.ButtonStateType.Launch;
- 		}
-		
+				LaunchButton.ButtonState = UILaunchButton.ButtonStateType.NoTarget;
+			else if (NavigationPanel.CurrentMap.Next != null)
+				LaunchButton.ButtonState = UILaunchButton.ButtonStateType.ZoomIn;
+			else if (target.AlreadyHere)
+				LaunchButton.ButtonState = UILaunchButton.ButtonStateType.AlreadyHere;
+			else if (!target.CanLaunch())
+				LaunchButton.ButtonState = UILaunchButton.ButtonStateType.CantReach;
+			else
+				LaunchButton.ButtonState = UILaunchButton.ButtonStateType.Launch;
+		}
+
 		private void LaunchRocket()
 		{
 			if(Main.netMode == NetmodeID.MultiplayerClient)
 			{
 				ModPacket packet = Macrocosm.Instance.GetPacket();
-				packet.Write((byte)MessageType.BeginRocketLaunchSequence);
-				packet.Write((byte)Main.myPlayer);
+				packet.Write((byte)MessageType.LaunchRocket);
 				packet.Write((byte)RocketID);
 				packet.Send();
-			}
-			else
+			} 
+			else if(Main.netMode == NetmodeID.SinglePlayer)
 			{
-				(Rocket.ModNPC as Rocket).Launch(Main.myPlayer);
+				(Rocket.ModNPC as Rocket).Launching = true;
 			}
 		}
 	}

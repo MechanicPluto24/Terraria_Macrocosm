@@ -13,16 +13,19 @@ namespace Macrocosm.Content.Rocket.UI
 	public class UIMapTarget : UIElement
 	{
 		/// <summary> Subworld data displayed in the info panel </summary>
-		public SubworldData TargetWorldData = default;
+		public WorldInfo TargetWorldInfo = default;
 
 		/// <summary> The subworld ID used for accessing the subworld </summary>
 		public string TargetID;
+		private string targetName = "A";
 
 		/// <summary> Function to determine whether the subworld is accesible </summary>
 		public delegate bool FuncCanLaunch();
 		public readonly FuncCanLaunch CanLaunch = () => false;
 
 		public bool IsSelectable => CanLaunch() || (Parent as UINavigationMap).Next != null;
+
+		public bool AlreadyHere => targetName == (SubworldSystem.AnyActive<Macrocosm>() ? SubworldSystem.Current.Name : "Earth");
 
 		/// <summary> The current selected  </summary>
 		public bool Selected;
@@ -47,14 +50,15 @@ namespace Macrocosm.Content.Rocket.UI
 		/// <param name="position"> The map target's position relative to the top corner of the NavigationMap </param>
 		/// <param name="width"> Interactible area width in pixels </param>
 		/// <param name="height"> Interactible area height in pixels </param>
-		/// <param name="targetWorldData"> Information about the world, empty by default </param>
+		/// <param name="targetWorldInfo"> Information about the world, empty by default </param>
 		/// <param name="canLaunch"> Function that determines whether the target is selectable, defaults to false </param>
 		/// <param name="targetID"> The special ID of the target, handled in the RocketNPC entity code. If not set it will use the info panel display name </param>
-		public UIMapTarget(Vector2 position, float width, float height, SubworldData targetWorldData = default, FuncCanLaunch canLaunch = null, string targetID = "") : this(position, width, height)
+		public UIMapTarget(Vector2 position, float width, float height, WorldInfo targetWorldInfo = default, FuncCanLaunch canLaunch = null, string targetID = "") : this(position, width, height)
 		{
-			TargetWorldData = targetWorldData;
-			this.CanLaunch = canLaunch ?? this.CanLaunch;	
-			TargetID = targetID.Equals("") ? targetWorldData.DisplayName : targetID;
+			TargetWorldInfo = targetWorldInfo;
+			this.CanLaunch = canLaunch ?? this.CanLaunch;
+			TargetID = targetID.Equals("") ? targetWorldInfo.DisplayName : targetID;
+			targetName = TargetID;
 		}
 
 		/// <summary>
@@ -66,9 +70,10 @@ namespace Macrocosm.Content.Rocket.UI
 		/// <param name="targetSubworld"> The subworld (instance) associated with the map target </param>
 		public UIMapTarget(Vector2 position, float width, float height, MacrocosmSubworld targetSubworld) : this(position, width, height)
 		{
-			TargetWorldData = targetSubworld.SubworldData; 
+			TargetWorldInfo = targetSubworld.WorldInfo; 
 			CanLaunch = () => targetSubworld.CanTravelTo();
-			TargetID = Macrocosm.Instance.Name + "/" + targetSubworld.Name; 
+			targetName = targetSubworld.Name;
+			TargetID = Macrocosm.Instance.Name + "/" + targetName;
 		}
 
 		public override void OnInitialize()
@@ -105,6 +110,8 @@ namespace Macrocosm.Content.Rocket.UI
 			{
 				if (IsSelectable)
 					spriteBatch.Draw(outline, rect, Color.Green);
+				else if (AlreadyHere)
+					spriteBatch.Draw(outline, rect, Color.Gray);
 				else
 					spriteBatch.Draw(outline, rect, Color.Red);
 			}
