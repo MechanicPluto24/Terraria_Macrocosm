@@ -4,6 +4,7 @@ using Macrocosm.Common.Utility;
 using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.UI;
@@ -63,51 +64,64 @@ namespace Macrocosm.Content.Rocket.UI
 
 		}
 
-		public void FillWithInfo(SubworldData data)
-		{
-			UIInfoElements.Clear();
-
-			string iconPath = "Macrocosm/Content/Rocket/UI/Icons/";
-
-			UIHorizontalSeparator uIHorizontalSeparator = new UIHorizontalSeparator
-			{
-				Width = StyleDimension.FromPixelsAndPercent(0f, 0.98f),
-				Color = new Color(89, 116, 213, 255) * 0.9f
-			};
-
-			string gravData = data.SpecialGravity != "" ? data.SpecialGravity : data.Gravity > 0 ? data.Gravity.ToString() + " G" : "";
-			if (gravData != "")
-				UIInfoElements.Add(new UIWorldInfoElement(ModContent.Request<Texture2D>(iconPath + "Gravity").Value, gravData, "Gravity"));
-
-			string radiusData = data.SpecialRadius != "" ? data.SpecialRadius : data.Radius > 0 ? data.Radius.ToString() + " km": "";
-			if (radiusData != "")
-				UIInfoElements.Add(new UIWorldInfoElement(ModContent.Request<Texture2D>(iconPath + "Radius").Value, radiusData, "Radius"));
-
-			string dayLenghtData = data.SpecialDayPeriod != "" ? data.SpecialDayPeriod : data.DayPeriod > 0 ? data.DayPeriod.ToString() + " days" : "";
-			if (dayLenghtData != "")
-				UIInfoElements.Add(new UIWorldInfoElement(ModContent.Request<Texture2D>(iconPath + "DayPeriod").Value, dayLenghtData, "Day period"));
-
-			string threatData = data.ThreatLevel > 0 ? data.ThreatLevel.ToString() : "";
-			if (threatData != "")
-				UIInfoElements.Add(new UIWorldInfoElement(ModContent.Request<Texture2D>(iconPath + "ThreatLevel").Value, threatData, "Threat Level"));
-
-			if(data.Hazards.Count > 0)
-			{
-				UIInfoElements.Add(uIHorizontalSeparator);
-
-				foreach (var hazard in data.Hazards)
-				{
-					UIInfoElements.Add(new UIWorldInfoElement(ModContent.Request<Texture2D>(iconPath + hazard.Key).Value, hazard.Value, "Hazard"));
-				}
-			}
-			
- 			UIInfoElements.Recalculate();
-		}
-
 		public override void Update(GameTime gameTime)
 		{
 			base.Update(gameTime);
 			UIDisplayName.SetText(Name);
+		}
+
+		public void ClearInfo() => UIInfoElements.Clear();
+
+		public void FillWithInfo(WorldInfo info)
+		{
+			UIInfoElements.Clear();
+
+			string iconPath = "Macrocosm/Content/Rocket/UI/Icons/";
+			AssetRequestMode mode = AssetRequestMode.ImmediateLoad;
+
+			if(info.FlavorText != "")
+			{
+				UIInfoElements.Add(new UIWorldInfoTextPanel(info.FlavorText));
+				UIInfoElements.Add(new UIHorizontalSeparator()
+				{
+					Width = StyleDimension.FromPixelsAndPercent(0f, 0.98f),
+					Color = new Color(89, 116, 213, 255) * 0.9f
+				});
+			}
+
+			if (info.Gravity != "" || info.Gravity > 0f)
+				UIInfoElements.Add(new UIWorldInfoElement(ModContent.Request<Texture2D>(iconPath + "Gravity", mode).Value, 
+					info.Gravity, "Gravity", WorldInfoHelper.GetUnitText(WorldInfoUnitType.Gravity, info.Gravity.HasSpecial())));
+
+			if (info.Radius != "" || info.Radius > 0f)
+				UIInfoElements.Add(new UIWorldInfoElement(ModContent.Request<Texture2D>(iconPath + "Radius", mode).Value, 
+					info.Radius, "Radius", WorldInfoHelper.GetUnitText(WorldInfoUnitType.Radius, info.Radius.HasSpecial())));
+
+			if (info.DayPeriod != "" || info.DayPeriod > 0f)
+				UIInfoElements.Add(new UIWorldInfoElement(ModContent.Request<Texture2D>(iconPath + "DayPeriod", mode).Value,
+					info.DayPeriod, "Day period", WorldInfoHelper.GetUnitText(WorldInfoUnitType.DayPeriod, info.DayPeriod.HasSpecial())));
+
+			if (info.ThreatLevel > 0)
+				UIInfoElements.Add(new UIWorldInfoElement(ModContent.Request<Texture2D>(iconPath + "ThreatLevel", mode).Value,
+					info.GetThreatLevelCombined(), "Threat Level", valueColor: info.GetThreatColor()));
+
+			if(info.Hazards.Count > 0)
+			{
+
+				UIInfoElements.Add(new UIHorizontalSeparator()
+				{
+					Width = StyleDimension.FromPixelsAndPercent(0f, 0.98f),
+					Color = new Color(89, 116, 213, 255) * 0.9f
+				});
+
+				// no, i refuse to iterate over a dictionary
+				foreach (string hazardKey in info.GetHazardKeys())
+				{
+					UIInfoElements.Add(new UIWorldInfoElement(ModContent.Request<Texture2D>(iconPath + hazardKey, mode).Value, info.Hazards[hazardKey], "Hazard"));
+				}
+			}
+			
+ 			UIInfoElements.Recalculate();
 		}
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Rocket.UI;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -50,12 +51,18 @@ namespace Macrocosm.Content.Rocket
 			if (InRocket)
 			{
 				int rocketId = NPC.FindFirstNPC(ModContent.NPCType<Rocket>());
-				NPC rocket;
+				NPC rocket = Main.npc[rocketId];
 
 				if(rocketId >= 0)
 				{
-					rocket = Main.npc[rocketId];
- 
+					if ((Player.controlInv || Player.controlMount) && !(rocket.ModNPC as Rocket).Launching)
+						InRocket = false;
+
+					if (!(rocket.ModNPC as Rocket).Launching)
+						UIRocket.Show(rocketId);
+					else
+						UIRocket.Hide();
+
 					Player.moveSpeed = 0f;
 					Player.velocity = rocket.velocity;
 					Player.Center = new Vector2(rocket.position.X + rocket.width / 2 - 2f, rocket.position.Y + 50);
@@ -65,6 +72,8 @@ namespace Macrocosm.Content.Rocket
 					InRocket = false;
 				}	
 			}
+			else
+				UIRocket.Hide();
 		}
 
 		public override void PreUpdateBuffs()

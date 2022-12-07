@@ -12,14 +12,8 @@ namespace Macrocosm.Content.Rocket.UI
 
 	public class UILaunchButton : UIElement
 	{
-		public string Text = "";
-		public Color TextColor;
-
 		public delegate void OnClick_ZoomIn(bool useDefault);
 		public OnClick_ZoomIn ZoomIn = (bool useDefault) => { };
-
-		public delegate void OnClick_Embark();
-		public OnClick_Embark Embark = () => { };
 
 		public delegate void OnClick_Launch();
 		public OnClick_Launch Launch = () => { };
@@ -34,8 +28,8 @@ namespace Macrocosm.Content.Rocket.UI
 		{
 			NoTarget,
 			CantReach,
+			AlreadyHere,
 			ZoomIn,
-			Embark,
 			Launch
 		}
 
@@ -65,54 +59,58 @@ namespace Macrocosm.Content.Rocket.UI
 
 		public override void Update(GameTime gameTime)
 		{
-
-			OnClick -= UILaunchButton_OnClick_Embark;
 			OnClick -= UILaunchButton_OnClick_Launch;
 			OnClick -= UILaunchButton_OnClick_ZoomIn;
 			CanClick = true;
 
+			string text = "";
+			Color textColor = Color.White;
+			float textScale = 0.9f;
+
 			switch (ButtonState)
 			{
 				case ButtonStateType.NoTarget:
-					TextColor = Color.Gold;
-					Text = "NO TARGET";
+					textColor = Color.Gold;
+					text = "NO TARGET";
 					CanClick = false;
 					break;
 
 				case ButtonStateType.CantReach:
-					TextColor = Color.Red;
-					Text = "CAN'T REACH";
+					textColor = Color.Red;
+					textScale = 0.75f;
+					text = "INACCESSIBLE";
+					CanClick = false;
+					break;
+
+				case ButtonStateType.AlreadyHere:
+					textColor = Color.Gray * 1.3f;
+					textScale = 0.58f;
+					text = "CURRENT LOCATION";
 					CanClick = false;
 					break;
 
 				case ButtonStateType.ZoomIn:
-					TextColor = Color.White;
-					Text = "ZOOM IN";
+					textColor = Color.White;
+					text = "ZOOM IN";
+					textScale = 1.05f;
 					OnClick += UILaunchButton_OnClick_ZoomIn;
 					break;
 
-				case ButtonStateType.Embark:
-					TextColor = new Color(0, 200, 0);
-					Text = "Embark";
-					OnClick += UILaunchButton_OnClick_Embark;
-					break;
-
 				case ButtonStateType.Launch:
-					TextColor = new Color(0, 255, 0);
-					Text = "LAUNCH";
+					textColor = new Color(0, 255, 0);
+					textScale = 1.1f;
+					text = "LAUNCH";
 					OnClick += UILaunchButton_OnClick_Launch;
 					break;
 
 				default:
-					TextColor = Color.White;
-					Text = "DEFAULT";
 					CanClick = false;
 					break;
 			}
 
 
-			buttonText.TextColor = TextColor;
-			buttonText.SetText(Text);
+			buttonText.TextColor = textColor;
+			buttonText.SetText(text, textScale, true);
 
 			if (!CanClick)
 			{
@@ -138,10 +136,6 @@ namespace Macrocosm.Content.Rocket.UI
 			ZoomIn(false);
 		}
 
-		private void UILaunchButton_OnClick_Embark(UIMouseEvent evt, UIElement listeningElement)
-		{
-			Embark();
-		}
 
 		private void UILaunchButton_OnClick_Launch(UIMouseEvent evt, UIElement listeningElement)
 		{

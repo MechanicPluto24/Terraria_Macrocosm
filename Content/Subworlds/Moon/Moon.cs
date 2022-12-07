@@ -43,7 +43,7 @@ namespace Macrocosm.Content.Subworlds.Moon
 			new FinishPass("FinishPass", 0.1f)
 		};
 		
-		public override SubworldData SubworldData => new()
+		public override WorldInfo WorldInfo => new()
 		{
 			DisplayName = "The Moon",
 			Gravity = GravityMultiplier,
@@ -54,7 +54,10 @@ namespace Macrocosm.Content.Subworlds.Moon
 			{
 				{"Meteors", "Meteor storms" },
 				{"SolarStorms", "Solar storms" }
-			}
+			},
+			FlavorText = "Homeworld of the infamous Moon Lord, the Earth's Moon is a desolate, " +
+			"airless rock with an unforgiving environment. The Moon is well known for its high" +
+			" concentration of precious luminite, guarded by alien terrors that dwell beneath the dead moonscape."
 		};
 
 		public override bool CanTravelTo()

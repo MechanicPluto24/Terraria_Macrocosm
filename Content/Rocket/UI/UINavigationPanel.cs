@@ -106,39 +106,41 @@ namespace Macrocosm.Content.Rocket.UI
 
 		private void InitializePanelContent()
 		{
-			Texture2D zoomInButton = ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/UI/UINavigationZoomIn", AssetRequestMode.ImmediateLoad).Value;
-			Texture2D zoomInBorder = ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/UI/UINavigationZoomInBorder", AssetRequestMode.ImmediateLoad).Value;
-			Texture2D zoomOutButton = ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/UI/UINavigationZoomOut", AssetRequestMode.ImmediateLoad).Value;
-			Texture2D zoomOutBorder = ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/UI/UINavigationZoomOutBorder", AssetRequestMode.ImmediateLoad).Value;
+			AssetRequestMode mode = AssetRequestMode.ImmediateLoad;
+
+			Texture2D zoomInButton = ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/UI/UINavigationZoomIn", mode).Value;
+			Texture2D zoomInBorder = ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/UI/UINavigationZoomInBorder", mode).Value;
+			Texture2D zoomOutButton = ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/UI/UINavigationZoomOut", mode).Value;
+			Texture2D zoomOutBorder = ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/UI/UINavigationZoomOutBorder", mode).Value;
 
 			ZoomInButton = new(zoomInButton, zoomInBorder, new Vector2(6, 88));
 			ZoomInButton.OnClick += (_, _) => ZoomIn();
 			ZoomOutButton = new(zoomOutButton, zoomOutBorder, new Vector2(6, 118));
 			ZoomOutButton.OnClick += (_, _) => ZoomOut();
 
-			EarthSystem = new(ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/UI/UINavigationMap_Earth", AssetRequestMode.ImmediateLoad).Value);
-			SolarSystemInner = new(ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/UI/UINavigationMap_Inner", AssetRequestMode.ImmediateLoad).Value, defaultNext: GetInitialNavigationMap());
-			SolarSystemOuter = new(ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/UI/UINavigationMap_Outer", AssetRequestMode.ImmediateLoad).Value, defaultNext: SolarSystemInner);
+			EarthSystem = new(ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/UI/UINavigationMap_Earth", mode).Value);
+			SolarSystemInner = new(ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/UI/UINavigationMap_Inner", mode).Value, defaultNext: GetInitialNavigationMap());
+			SolarSystemOuter = new(ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/UI/UINavigationMap_Outer", mode).Value, defaultNext: SolarSystemInner);
 
-			EarthSystem.AddTarget(new UIMapTarget(new Vector2(64, 24), 160, 160, Earth.SubworldData, () => SubworldSystem.AnyActive<Macrocosm>()));
+			EarthSystem.AddTarget(new UIMapTarget(new Vector2(64, 24), 160, 160, Earth.WorldInfo, () => SubworldSystem.AnyActive<Macrocosm>()));
 			EarthSystem.AddTarget(new UIMapTarget(new Vector2(428, 34), 48, 48, Moon.Instance));
 			EarthSystem.Prev = SolarSystemInner;
 
-			SolarSystemInner.AddTarget(new UIMapTarget(new Vector2(246, 86), 32, 32, SubworldDataStorage.Sun));
-			SolarSystemInner.AddTarget(new UIMapTarget(new Vector2(226, 88), 6, 6, SubworldDataStorage.Vulcan));
-			SolarSystemInner.AddTarget(new UIMapTarget(new Vector2(302, 128), 6, 6, SubworldDataStorage.Mercury));
-			SolarSystemInner.AddTarget(new UIMapTarget(new Vector2(164, 76), 6, 6, SubworldDataStorage.Venus));
-			SolarSystemInner.AddTarget(new UIMapTarget(new Vector2(366, 58), 6, 6, Earth.SubworldData), EarthSystem);
-			SolarSystemInner.AddTarget(new UIMapTarget(new Vector2(70, 122), 6, 6, SubworldDataStorage.Mars));
+			SolarSystemInner.AddTarget(new UIMapTarget(new Vector2(246, 86), 32, 32, WorldInfoStorage.Sun));
+			SolarSystemInner.AddTarget(new UIMapTarget(new Vector2(226, 88), 6, 6, WorldInfoStorage.Vulcan));
+			SolarSystemInner.AddTarget(new UIMapTarget(new Vector2(302, 128), 6, 6, WorldInfoStorage.Mercury));
+			SolarSystemInner.AddTarget(new UIMapTarget(new Vector2(164, 76), 6, 6, WorldInfoStorage.Venus));
+			SolarSystemInner.AddTarget(new UIMapTarget(new Vector2(366, 58), 6, 6, Earth.WorldInfo), EarthSystem);
+			SolarSystemInner.AddTarget(new UIMapTarget(new Vector2(70, 122), 6, 6, WorldInfoStorage.Mars));
 			SolarSystemInner.Prev = SolarSystemOuter;
 
-			SolarSystemOuter.AddTarget(new UIMapTarget(new Vector2(256, 96), 12, 12, new SubworldData() { DisplayName = "    Inner\nSolar System"}), SolarSystemInner);
-			SolarSystemOuter.AddTarget(new UIMapTarget(new Vector2(282, 106), 9, 9, SubworldDataStorage.Jupiter));
-			SolarSystemOuter.AddTarget(new UIMapTarget(new Vector2(220, 116), 9, 9, SubworldDataStorage.Saturn));
-			SolarSystemOuter.AddTarget(new UIMapTarget(new Vector2(334, 72), 9, 9, SubworldDataStorage.Ouranos));
-			SolarSystemOuter.AddTarget(new UIMapTarget(new Vector2(182, 42), 9, 9, SubworldDataStorage.Neptune));
-			SolarSystemOuter.AddTarget(new UIMapTarget(new Vector2(410, 156), 9, 9, SubworldDataStorage.Pluto));
-			SolarSystemOuter.AddTarget(new UIMapTarget(new Vector2(44, 20), 9, 9, SubworldDataStorage.Eris));
+			SolarSystemOuter.AddTarget(new UIMapTarget(new Vector2(256, 96), 12, 12, WorldInfoStorage.InnerSolarSystem), SolarSystemInner);
+			SolarSystemOuter.AddTarget(new UIMapTarget(new Vector2(282, 106), 9, 9, WorldInfoStorage.Jupiter));
+			SolarSystemOuter.AddTarget(new UIMapTarget(new Vector2(220, 116), 9, 9, WorldInfoStorage.Saturn));
+			SolarSystemOuter.AddTarget(new UIMapTarget(new Vector2(334, 72), 9, 9, WorldInfoStorage.Ouranos));
+			SolarSystemOuter.AddTarget(new UIMapTarget(new Vector2(182, 42), 9, 9, WorldInfoStorage.Neptune));
+			SolarSystemOuter.AddTarget(new UIMapTarget(new Vector2(410, 156), 9, 9, WorldInfoStorage.Pluto));
+			SolarSystemOuter.AddTarget(new UIMapTarget(new Vector2(44, 20), 9, 9, WorldInfoStorage.Eris));
 			SolarSystemOuter.Next = SolarSystemInner;
 		}
 	}
