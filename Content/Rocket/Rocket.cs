@@ -41,6 +41,8 @@ namespace Macrocosm.Content.Rocket
 			NPC.noTileCollide = true;
 		}
 
+		public override bool CheckActive() => false;
+
 		/// <summary> The player in the command module </summary>
 		public int PlayerID
 		{
@@ -260,10 +262,21 @@ namespace Macrocosm.Content.Rocket
 				rocketPlayer.UpdateStatus(false);
 		}
 
+		public bool AnyEmbarkedPlayers()
+		{
+			for(int i = 0; i < Main.maxPlayers; i++)
+			{
+				if (Main.player[i].GetModPlayer<RocketPlayer>().InRocket)
+					return true;
+			}
+
+			return false;
+		}
+
 		/// <summary> Make the rocket draw over players during launch </summary>
 		public override void DrawBehind(int index)
 		{
-			if(rocketPlayer.InRocket)
+			if(AnyEmbarkedPlayers())
 				Main.instance.DrawCacheNPCsOverPlayers.Add(index);
 		}
 
