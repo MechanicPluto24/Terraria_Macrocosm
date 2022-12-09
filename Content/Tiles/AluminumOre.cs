@@ -6,7 +6,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Tiles
 {
-	public class LithiumOre : ModTile
+	public class AluminumOre : ModTile
 	{
 		public override void SetStaticDefaults()
 		{
@@ -23,8 +23,8 @@ namespace Macrocosm.Content.Tiles
 			MineResist = 5f;
 
 			ModTranslation name = CreateMapEntryName();
-			name.SetDefault("Lithium");
-			AddMapEntry(new Color(108, 101, 112), name);
+			name.SetDefault("Aluminum Ore");
+			AddMapEntry(new Color(225, 217, 228), name);
 
 			DustType = 84;
 			ItemDrop = ItemType<Items.Materials.LithiumOre>();

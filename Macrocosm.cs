@@ -87,10 +87,11 @@ namespace Macrocosm
 				case MessageType.EmbarkPlayerInRocket:
 					{
 						int playerId = reader.ReadByte();
+						bool asCommander = reader.ReadBoolean();
 						int rocketId = reader.ReadByte();
 
 						if (Main.netMode == NetmodeID.Server)
-							(Main.npc[rocketId].ModNPC as Rocket).EmbarkPlayer_Server(playerId);
+							(Main.npc[rocketId].ModNPC as Rocket).ReceiveEmbarkedPlayer(playerId, asCommander);
 
 						break;
 					}
@@ -109,7 +110,10 @@ namespace Macrocosm
 					{
 						int rocketPlayerID = reader.ReadByte();
 						RocketPlayer rocketPlayer = Main.player[rocketPlayerID].GetModPlayer<RocketPlayer>();
-						rocketPlayer.InRocket = reader.ReadBoolean();
+						BitsByte bb = reader.ReadByte();
+						rocketPlayer.InRocket = bb[0];
+						rocketPlayer.AsCommander = bb[1];
+						rocketPlayer.TargetSubworldID = reader.ReadString();
 
 						if (Main.netMode == NetmodeID.Server)
 							rocketPlayer.SyncPlayer(-1, whoAmI, false);

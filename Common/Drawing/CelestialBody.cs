@@ -83,6 +83,13 @@ namespace Macrocosm.Common.Drawing
 		public void SetPositionPolar(float radius, float theta) => Position = ScreenCenter + MathUtils.PolarVector(radius, theta);
 		public void SetPositionPolar(CelestialBody referenceBody, float radius, float theta) => Position = referenceBody.Position + MathUtils.PolarVector(radius, theta);
 
+		public void SetTextures(Texture2D bodyTexture = null, Texture2D atmoTexture = null, Texture2D bodyShadowTexture = null, Texture2D atmoShadowTexture = null)
+		{
+			this.bodyTexture = bodyTexture;
+			this.atmoTexture = atmoTexture;
+			this.bodyShadowTexture = bodyShadowTexture;
+			this.atmoShadowTexture = atmoShadowTexture;
+		}
 
 		/// <summary>
 		/// Configure parallax settings for the object while drawn in a world's sky 
