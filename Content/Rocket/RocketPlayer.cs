@@ -11,17 +11,26 @@ namespace Macrocosm.Content.Rocket
 {
 	public class RocketPlayer : ModPlayer
 	{
-		public bool InRocket { get; set; }
-		public string TargetSubworldID { get; set; }
+		public bool InRocket { get; set; } = false;
+		public bool AsCommander { get; set; } = false;
+		public string TargetSubworldID { get; set; } = "";
 
 		public override void clientClone(ModPlayer clientClone)
 		{
-			(clientClone as RocketPlayer).InRocket = InRocket;
+			RocketPlayer cloneRocketPlayer = clientClone as RocketPlayer;
+
+			cloneRocketPlayer.InRocket = InRocket;
+			cloneRocketPlayer.AsCommander = InRocket;
+			cloneRocketPlayer.TargetSubworldID = TargetSubworldID;
 		}
 
 		public override void SendClientChanges(ModPlayer clientPlayer)
 		{
-			if ((clientPlayer as RocketPlayer).InRocket != InRocket)
+			RocketPlayer clientRocketPlayer = clientPlayer as RocketPlayer;
+
+			if (clientRocketPlayer.InRocket != InRocket ||
+				clientRocketPlayer.AsCommander != InRocket ||
+				clientRocketPlayer.TargetSubworldID != TargetSubworldID)
 			{
 				SyncPlayer(-1, -1, false);
 			}
@@ -29,21 +38,18 @@ namespace Macrocosm.Content.Rocket
 
 		public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)
 		{
-			UpdateStatus(InRocket);
-		}
-
-		/// <summary> This should be called on the server, when it updates a client's values </summary>
-		public void UpdateStatus(bool inRocket)
-		{
 			ModPacket packet = Mod.GetPacket();
 			packet.Write((byte)MessageType.SyncPlayerRocketStatus);
 			packet.Write((byte)Player.whoAmI);
-			packet.Write(inRocket);
+			packet.Write(new BitsByte(InRocket, AsCommander));
+			packet.Write(TargetSubworldID);
 			packet.Send();
 		}
 
 		public override void ResetEffects()
 		{
+			if (!InRocket)
+				AsCommander = false;
 		}
 
 
@@ -71,7 +77,7 @@ namespace Macrocosm.Content.Rocket
 
 					Player.moveSpeed = 0f;
 					Player.velocity = rocket.velocity;
-					Player.Center = new Vector2(rocket.position.X + rocket.width / 2 - 2f, rocket.position.Y + 50);
+					Player.Center = new Vector2(rocket.position.X + rocket.width / 2 - 2f, rocket.position.Y + 50) + (AsCommander ? new Vector2(0, 50) : Vector2.Zero);
  				}
 				else
 				{

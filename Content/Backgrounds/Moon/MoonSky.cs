@@ -8,6 +8,7 @@ using Terraria.GameContent;
 using Terraria.Graphics.Effects;
 using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Default;
 
 namespace Macrocosm.Content.Backgrounds.Moon
 {
@@ -22,7 +23,17 @@ namespace Macrocosm.Content.Backgrounds.Moon
 		private CelestialBody earth;
 		private CelestialBody sun;
 
-		Texture2D skyTexture;
+		private Texture2D skyTexture;
+
+		private Texture2D sunTexture;  
+
+		private Texture2D earthBody;  
+		private Texture2D earthBodyDrunk;  
+		private Texture2D earthBodyFlat;  
+
+		private Texture2D earthAtmo; 
+		private Texture2D earthBodyShadow; 
+		private Texture2D earthAtmoShadow;  
 
 		const float fadeOutTimeDawn = 7200f; //  4:30 -  6:30: nebula and night stars dim
 		const float fadeInTimeDusk = 46800f; // 17:30 - 19:30: nebula and night stars brighten
@@ -31,11 +42,14 @@ namespace Macrocosm.Content.Backgrounds.Moon
 		{
 			skyTexture = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/MoonSky", AssetRequestMode.ImmediateLoad).Value;
 
-			Texture2D sunTexture = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/Sun_0", AssetRequestMode.ImmediateLoad).Value;
-			Texture2D earthBody = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/EarthAtmoless", AssetRequestMode.ImmediateLoad).Value;
-			Texture2D earthAtmo = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/EarthAtmo", AssetRequestMode.ImmediateLoad).Value;
-			Texture2D earthBodyShadow = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/EarthShadowMask", AssetRequestMode.ImmediateLoad).Value;
-			Texture2D earthAtmoShadow = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/EarthAtmoShadowMask", AssetRequestMode.ImmediateLoad).Value;
+			sunTexture = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/Sun_0", AssetRequestMode.ImmediateLoad).Value;
+			earthBody = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/EarthAtmoless", AssetRequestMode.ImmediateLoad).Value;
+			earthBodyDrunk = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/EarthDrunk", AssetRequestMode.ImmediateLoad).Value;
+			earthBodyFlat = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/EarthFlat", AssetRequestMode.ImmediateLoad).Value;
+			
+			earthAtmo = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/EarthAtmo", AssetRequestMode.ImmediateLoad).Value;
+			earthBodyShadow = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/EarthShadowMask", AssetRequestMode.ImmediateLoad).Value;
+			earthAtmoShadow = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/EarthAtmoShadowMask", AssetRequestMode.ImmediateLoad).Value;
 
 			starsDay = new StarsDrawing();
 			starsNight = new StarsDrawing();
@@ -125,6 +139,16 @@ namespace Macrocosm.Content.Backgrounds.Moon
 			Main.spriteBatch.Draw(nebula, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), nebulaColor);
 		}
 
+		private void SetEarthTextures()
+		{
+			if (AprilFools.CheckAprilFools())
+				earth.SetTextures(earthBodyFlat);
+			else if (Main.drunkWorld)
+				earth.SetTextures(earthBodyDrunk, earthAtmo, earthBodyShadow, earthAtmoShadow);
+			else
+				earth.SetTextures(earthBody, earthAtmo, earthBodyShadow, earthAtmoShadow);
+		}
+
 		private static float ComputeBrightness(double fadeOutTimeDawn, double fadeInTimeDusk, float maxBrightnessDay, float maxBrightnessNigt)
 		{
 			float brightness;
@@ -151,6 +175,7 @@ namespace Macrocosm.Content.Backgrounds.Moon
 		public override void Update(GameTime gameTime)
 		{
 			Intensity = Active ? Math.Min(1f, 0.01f + Intensity) : Math.Max(0f, Intensity - 0.01f);
+			SetEarthTextures();
 		}
 
 		public override Color OnTileColor(Color inColor)

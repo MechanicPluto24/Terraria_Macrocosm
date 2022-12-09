@@ -43,15 +43,7 @@ namespace Macrocosm.Content.Rocket
 
 		public override bool CheckActive() => false;
 
-		/// <summary> The player in the command module </summary>
-		public int PlayerID
-		{
-			get => (int)NPC.ai[0];
-			set => NPC.ai[0] = value;
-		}
-
-		Player player => Main.player[PlayerID];
-		RocketPlayer rocketPlayer => player.GetModPlayer<RocketPlayer>();
+		public RocketPlayer GetRocketPlayer(int playerID) => Main.player[playerID].GetModPlayer<RocketPlayer>();
 
 		/// <summary> Rocket sequence timer </summary>
 		public int FlightTime
@@ -66,6 +58,7 @@ namespace Macrocosm.Content.Rocket
 			set => NPC.ai[2] = value ? 1f : 0f;
 		}
 
+		#region Private vars
 		// The world Y coordinate for entering the target subworld
 		private float worldExitPosY = 20 * 16f;
 		
@@ -81,6 +74,8 @@ namespace Macrocosm.Content.Rocket
 
 		// Get the initial vertical position
 		private float startYPosition;
+		#endregion
+
 		public override void OnSpawn(IEntitySource source)
 		{
 			startYPosition = NPC.Center.Y;
@@ -100,10 +95,12 @@ namespace Macrocosm.Content.Rocket
  			NPC.direction = 1;
 			NPC.spriteDirection = -1;
 
-			Interact();
-
 			if (!Launching)
+			{
+				Interact();
+				LookForCommander();
 				return;
+			}
 
 			FlightTime++;
 
@@ -116,13 +113,42 @@ namespace Macrocosm.Content.Rocket
 
 			if(NPC.position.Y < worldExitPosY)
 			{
-				rocketPlayer.InRocket = false;
-				if (Main.netMode == NetmodeID.Server)
-					rocketPlayer.UpdateStatus(false);
-
-				NPC.active = false;
+				Despawn();
 				EnterDestinationSubworld();
 			}
+		}
+
+		private void LookForCommander()
+		{
+			if (Main.netMode == NetmodeID.SinglePlayer)
+				return;
+
+			if (!TryFindingCommander(out _) && AnyEmbarkedPlayers(out int id))
+				GetRocketPlayer(id).AsCommander = true;
+		}
+
+		public override void OnKill()
+		{
+			Despawn();
+		}
+
+		private void Despawn()
+		{
+			if(Main.netMode == NetmodeID.SinglePlayer)
+			{
+ 				GetRocketPlayer(Main.myPlayer).InRocket = false;
+				GetRocketPlayer(Main.myPlayer).AsCommander = false;
+			}
+ 			else
+			{
+				for (int i = 0; i < Main.maxPlayers; i++)
+				{
+					GetRocketPlayer(i).InRocket = false;
+					GetRocketPlayer(i).AsCommander = false;
+				}
+			}
+
+			NPC.active = false;
 		}
 
 		private void EnterDestinationSubworld()
@@ -130,11 +156,25 @@ namespace Macrocosm.Content.Rocket
 			if (Main.netMode == NetmodeID.Server)
 				return;
 
-			if (rocketPlayer.TargetSubworldID == "Earth")
+			RocketPlayer commander;
+			if (Main.netMode == NetmodeID.SinglePlayer)
+ 				commander = GetRocketPlayer(Main.myPlayer);
+ 			else  
+			{
+				if (TryFindingCommander(out int id))
+					commander = GetRocketPlayer(id);
+				else if (AnyEmbarkedPlayers(out id))
+					commander = GetRocketPlayer(id);
+				else
+					return;
+ 			}
+
+			if(commander.TargetSubworldID == "Earth")
 				SubworldSystem.Exit();
-			else if (rocketPlayer.TargetSubworldID != null && !rocketPlayer.TargetSubworldID.Equals(""))
-				SubworldSystem.Enter(rocketPlayer.TargetSubworldID);
+			else if (commander.TargetSubworldID != null && !commander.TargetSubworldID.Equals(""))
+				SubworldSystem.Enter(commander.TargetSubworldID);
 		}
+
 
 		public void Interact()
 		{
@@ -144,41 +184,55 @@ namespace Macrocosm.Content.Rocket
 			if (NPC.Hitbox.Contains(Main.MouseWorld.ToPoint()) && !Launching)
 			{
 				if (Main.mouseRight)
-					EmbarkPlayer_Local();
+				{
+					bool noCommander = (Main.netMode == NetmodeID.SinglePlayer) || !TryFindingCommander(out _);
+					GetRocketPlayer(Main.myPlayer).InRocket = true;
+					GetRocketPlayer(Main.myPlayer).AsCommander = noCommander;
+
+					if (Main.netMode == NetmodeID.MultiplayerClient)
+						SendEmbarkedPlayer(Main.myPlayer, noCommander);
+				}
 				else
 				{
-					Main.LocalPlayer.cursorItemIconEnabled = true;
-					Main.LocalPlayer.cursorItemIconID = ModContent.ItemType<RocketPlacer>();
+					if(RocketSystem.Instance.State is not null)
+					{
+						Main.LocalPlayer.cursorItemIconEnabled = true;
+						Main.LocalPlayer.cursorItemIconID = ModContent.ItemType<RocketPlacer>();
+					}
 				}
 			}
 		}
 
-		public void EmbarkPlayer_Server(int playerId, bool asCommander = false)
+		private bool TryFindingCommander(out int playerID)
 		{
-			PlayerID = playerId;
-
-			if (Main.player[playerId].TryGetModPlayer(out RocketPlayer rocketPlayer))
+			for(int i = 0; i < Main.maxPlayers; i++)
 			{
-				rocketPlayer.InRocket = true;
-				if (Main.netMode == NetmodeID.Server)
-					rocketPlayer.UpdateStatus(true);
+				RocketPlayer rocketPlayer = GetRocketPlayer(i);
+				if (rocketPlayer.InRocket && rocketPlayer.AsCommander)
+				{
+					playerID = i;
+					return true;
+				}
 			}
+
+			playerID = -1;
+			return false;
 		}
 
-		public void EmbarkPlayer_Local()
+		public void SendEmbarkedPlayer(int playerID, bool asCommander)
 		{
-			if (Main.netMode == NetmodeID.MultiplayerClient)
-			{
-				ModPacket packet = Macrocosm.Instance.GetPacket();
-				packet.Write((byte)MessageType.EmbarkPlayerInRocket);
-				packet.Write((byte)Main.myPlayer);
-				packet.Write((byte)NPC.whoAmI);
-				packet.Send();
-			}
-			else if (Main.netMode == NetmodeID.SinglePlayer)
-			{
-				Main.LocalPlayer.GetModPlayer<RocketPlayer>().InRocket = true;
-			}
+			ModPacket packet = Macrocosm.Instance.GetPacket();
+			packet.Write((byte)MessageType.EmbarkPlayerInRocket);
+			packet.Write((byte)playerID);
+			packet.Write(asCommander);
+			packet.Write((byte)NPC.whoAmI);
+			packet.Send();
+		}
+
+		public void ReceiveEmbarkedPlayer(int playerID, bool asCommander)
+		{
+			GetRocketPlayer(playerID).InRocket = true;
+			GetRocketPlayer(playerID).AsCommander = asCommander;
 		}
 
 		public void Launch()
@@ -200,6 +254,15 @@ namespace Macrocosm.Content.Rocket
 		}
 
 		private void SetScreenshake()
+		{
+			if (Main.netMode == NetmodeID.SinglePlayer)
+				SetScreenshakeInternal(Main.LocalPlayer);
+			else
+				for (int i = 0; i < Main.maxPlayers; i++)
+					SetScreenshakeInternal(Main.player[i]);
+		}
+
+		public void SetScreenshakeInternal(Player player)
 		{
 			if (FlightTime >= liftoffTime && FlightTime < liftoffTime + 5)
 				player.Macrocosm().ScreenShakeIntensity = 80f;
@@ -255,28 +318,30 @@ namespace Macrocosm.Content.Rocket
 			return false;
 		}
 
-		public override void OnKill()
+		public bool AnyEmbarkedPlayers(out int first)
 		{
-			rocketPlayer.InRocket = false;
-			if (Main.netMode == NetmodeID.Server)
-				rocketPlayer.UpdateStatus(false);
-		}
-
-		public bool AnyEmbarkedPlayers()
-		{
-			for(int i = 0; i < Main.maxPlayers; i++)
+			if(Main.netMode == NetmodeID.SinglePlayer)
 			{
-				if (Main.player[i].GetModPlayer<RocketPlayer>().InRocket)
-					return true;
+				first = Main.myPlayer;
+				return GetRocketPlayer(first).InRocket;
 			}
 
+			for(int i = 0; i < Main.maxPlayers; i++)
+			{
+				if (GetRocketPlayer(i).InRocket)
+				{
+					first = i;
+					return true;
+				}
+			}
+			first = -1;
 			return false;
 		}
 
 		/// <summary> Make the rocket draw over players during launch </summary>
 		public override void DrawBehind(int index)
 		{
-			if(AnyEmbarkedPlayers())
+			if(AnyEmbarkedPlayers(out _))
 				Main.instance.DrawCacheNPCsOverPlayers.Add(index);
 		}
 
