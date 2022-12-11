@@ -1,3 +1,4 @@
+
 using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Utility;
 using Microsoft.Xna.Framework;
@@ -18,7 +19,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
  			DisplayName.SetDefault("Moonlight Greatsword");
 		}
 
-		public override string Texture => "Macrocosm/Assets/Textures/Swing";
+		public override string Texture => "Macrocosm/Content/Projectiles/Friendly/Melee/Swing";
+
 
 		public override void SetDefaults()
 		{

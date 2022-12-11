@@ -224,7 +224,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBiome>().Type }; // Associates this NPC with the Moon Biome in Bestiary
 
 			if (!Main.dedServ)
-				Music = MusicLoader.GetMusicSlot(Mod, "Assets/Music/SpaceInvader");
+				Music = MusicLoader.GetMusicSlot(Mod, "Content/Music/SpaceInvader");
 		}
 
 		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)

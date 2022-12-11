@@ -1,4 +1,6 @@
-﻿using Macrocosm.Content.WorldGeneration.Moon;
+﻿using Macrocosm.Content.Systems;
+using Macrocosm.Content.UI.LoadingScreens;
+using Macrocosm.Content.WorldGeneration.Moon;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
 using System.Collections.Generic;
@@ -46,9 +48,9 @@ namespace Macrocosm.Content.Subworlds.Moon
 		public override WorldInfo WorldInfo => new()
 		{
 			DisplayName = "The Moon",
-			Gravity = GravityMultiplier,
-			Radius = 1737.4f,
-			DayPeriod = 8,
+			Gravity = new(GravityMultiplier, UnitType.Gravity),
+			Radius = new(1737.4f, UnitType.Radius),
+			DayPeriod = new(8, UnitType.DayPeriod),
 			ThreatLevel = 2,
 			Hazards = new()
 			{
@@ -97,9 +99,13 @@ namespace Macrocosm.Content.Subworlds.Moon
 			SkyManager.Instance.Deactivate("Macrocosm:MoonSky");
  		}
 
-		public override void Load()
+		public override void PreUpdateWorld()
 		{
-			
+			if (MacrocosmWorld.IsDusk && Main.rand.NextBool(9))
+				Main.bloodMoon = true;
+
+			if (MacrocosmWorld.IsDawn && Main.bloodMoon)
+				Main.bloodMoon = false;
 		}
 
 		public override void DrawSetup(GameTime gameTime)

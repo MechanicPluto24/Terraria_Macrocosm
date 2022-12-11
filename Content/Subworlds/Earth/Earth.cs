@@ -14,9 +14,9 @@ namespace Macrocosm.Content.Subworlds.Earth
 		public static WorldInfo WorldInfo => new()
 		{
 			DisplayName = "Earth",
-			Gravity = 1f,
-			Radius = 6371f,
-			DayPeriod = 1f,
+			Gravity = new(1f, UnitType.Gravity),
+			Radius = new(6371f, UnitType.Radius),
+			DayPeriod = new(1, UnitType.DayPeriod),
 			ThreatLevel = 1,
 			Hazards = new(),
 			FlavorText = "Third planet from the Sun, and homeworld of humanity. " +

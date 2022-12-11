@@ -28,15 +28,10 @@ namespace Macrocosm
 	{
 		public static Mod Instance => ModContent.GetInstance<Macrocosm>();
 
-		public const string EmptyTexPath = "Macrocosm/Assets/Textures/Empty";
-		public const string EffectAssetPath = "Macrocosm/Assets/Effects/";
-
-		public static Texture2D EmptyTex { get; set; }
+		public const string EffectAssetPath = "Macrocosm/Content/Effects/";
 
 		public override void Load()
 		{
-			EmptyTex = ModContent.Request<Texture2D>(EmptyTexPath, ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-
 			ModCalls();
 			LoadEffects();
 		}
@@ -91,7 +86,7 @@ namespace Macrocosm
 						int rocketId = reader.ReadByte();
 
 						if (Main.netMode == NetmodeID.Server)
-							(Main.npc[rocketId].ModNPC as Rocket).ReceiveEmbarkedPlayer(playerId, asCommander);
+							(Main.npc[rocketId].ModNPC as RocketNPC).ReceiveEmbarkedPlayer(playerId, asCommander, rocketId);
 
 						break;
 					}
@@ -101,7 +96,7 @@ namespace Macrocosm
 						int rocketId = reader.ReadByte();
 
 						if (Main.netMode == NetmodeID.Server)
-							(Main.npc[rocketId].ModNPC as Rocket).Launch();
+							(Main.npc[rocketId].ModNPC as RocketNPC).Launch();
 
 						break;
 					}
@@ -113,6 +108,7 @@ namespace Macrocosm
 						BitsByte bb = reader.ReadByte();
 						rocketPlayer.InRocket = bb[0];
 						rocketPlayer.AsCommander = bb[1];
+						rocketPlayer.RocketID = reader.ReadByte();
 						rocketPlayer.TargetSubworldID = reader.ReadString();
 
 						if (Main.netMode == NetmodeID.Server)

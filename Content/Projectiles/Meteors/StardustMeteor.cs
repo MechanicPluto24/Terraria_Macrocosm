@@ -1,5 +1,5 @@
 ﻿using Macrocosm.Common.Utility;
-using Macrocosm.Content.Items.Chunks;
+using Macrocosm.Content.Items.MeteorChunks;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.GameContent.Drawing;

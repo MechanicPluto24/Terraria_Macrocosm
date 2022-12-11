@@ -1,27 +1,18 @@
-﻿using Macrocosm.Common.Drawing;
-using Macrocosm.Common.Utility;
-using Macrocosm.Content.Buffs.GoodBuffs.MountBuffs;
-using Macrocosm.Content.Rocket.UI;
-using Macrocosm.Content.Subworlds;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using SubworldLibrary;
-using System;
-using System.Linq;
+﻿using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.Audio;
-using Terraria.DataStructures;
-using Terraria.Enums;
 using Terraria.ID;
-using Terraria.Localization;
+using Terraria.Enums;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
+using Terraria.Localization;
+using Terraria.DataStructures;
+using Macrocosm.Common.Utility;
 
 namespace Macrocosm.Content.Rocket
 {
 	public class RocketLaunchPad : ModTile
 	{
-		const int width = 6;
+		const int width = 18;
 		const int height = 1;
 
 		public override void SetStaticDefaults()
@@ -32,16 +23,12 @@ namespace Macrocosm.Content.Rocket
 			MinPick = 1000;
 
 			DustType = -1;
-			HitSound = SoundID.MenuClose; // huh
-
-			//int[] heights = new int[6];
-			//Array.Fill(heights, 16);
+			HitSound = SoundID.Tink;
 
 			TileObjectData.newTile.CopyFrom(TileObjectData.Style1xX);
 			TileObjectData.newTile.Width = width;
 			TileObjectData.newTile.Height = height;
-			//TileObjectData.newTile.AnchorValidTiles = { ModContent.TileType<RocketServiceModule> };
-			//TileObjectData.newTile.CoordinateHeights = heights;
+
 			TileObjectData.newTile.Origin = new Point16(0, height - 1);
 			TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile, width, 0);
 			TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(ModContent.GetInstance<RocketLaunchPadTE>().Hook_AfterPlacement, -1, 0, false);
@@ -49,13 +36,12 @@ namespace Macrocosm.Content.Rocket
 			TileObjectData.addTile(Type);
 
 			ModTranslation name = CreateMapEntryName();
-			name.SetDefault("Rocket");
+			name.SetDefault("Launch Pad");
 
 			AddMapEntry(new Color(200, 200, 200), name);
 		}
 
-		public override bool CanPlace(int i, int j)
-			=> true;
+		public override bool CanPlace(int i, int j) => true;
 
 		public override void KillMultiTile(int i, int j, int frameX, int frameY)
 		{
@@ -140,7 +126,7 @@ namespace Macrocosm.Content.Rocket
 
 		public int PlaceRocket(int rocketX, int rocketY)
 		{
-			return NPC.NewNPC(new EntitySource_TileEntity(this), (int)(rocketX * 16f), (int)(rocketY * 16f + 10f), ModContent.NPCType<Rocket>());
+			return NPC.NewNPC(new EntitySource_TileEntity(this), (int)((rocketX + 9) * 16f), (int)(rocketY * 16f + 10f), ModContent.NPCType<RocketNPC>());
 		}
 
 		public override void OnNetPlace()

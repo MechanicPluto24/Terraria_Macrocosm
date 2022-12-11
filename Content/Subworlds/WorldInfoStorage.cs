@@ -8,17 +8,17 @@ namespace Macrocosm.Content.Subworlds
 		public static WorldInfo Sun = new()
 		{
 			DisplayName = "The Sun",
-			Gravity = 28f,
-			Radius = 695700f,
-			DayPeriod = 0f,
+			Gravity = new(28f, UnitType.Gravity),
+			Radius = new(695700f, UnitType.Radius),
+			DayPeriod = 0,
 			ThreatLevel = 9
 		};
 
 		public static WorldInfo Vulcan = new()
 		{
 			DisplayName = "Vulcan",
-			Gravity = 0f,
-			Radius = 0f,
+			Gravity = new(1f, UnitType.Gravity),
+			Radius = new(100f, UnitType.Radius),
 			DayPeriod = "Tidally Locked",
 			ThreatLevel = 0
 		};
@@ -26,81 +26,81 @@ namespace Macrocosm.Content.Subworlds
 		public static WorldInfo Mercury = new()
 		{
 			DisplayName = "Mercury",
-			Gravity = 0.38f,
-			Radius = 2439.7f,
-			DayPeriod = 58f,
+			Gravity = new(0.38f, UnitType.Gravity),
+			Radius = new(2439.7f, UnitType.Radius),
+			DayPeriod = new(58f, UnitType.DayPeriod),
 			ThreatLevel = 0
 		};
 
 		public static WorldInfo Venus = new()
 		{
 			DisplayName = "Venus",
-			Gravity = 0.9f,
-			Radius = 6051.8f,
-			DayPeriod = 116f,
+			Gravity = new(0.9f, UnitType.Gravity),
+			Radius = new(6051.8f, UnitType.Radius),
+			DayPeriod = new(116f, UnitType.DayPeriod),
 			ThreatLevel = 0
 		};
 
 		public static WorldInfo Mars = new()
 		{
 			DisplayName = "Mars",
-			Gravity = 0.38f,
-			Radius = 3389.5f,
-			DayPeriod = 24.62f,
+			Gravity = new(0.38f, UnitType.Gravity),
+			Radius = new(3389.5f, UnitType.Radius),
+			DayPeriod = new(24.62f, UnitType.DayPeriod),
 			ThreatLevel = 3
 		};
 
 		public static WorldInfo Jupiter = new()
 		{
 			DisplayName = "Jupiter",
-			Gravity = 2.52f,
-			Radius = 69911f,
-			DayPeriod = 0.3f,
+			Gravity = new(2.52f, UnitType.Gravity),
+			Radius = new(69911f, UnitType.Radius),
+			DayPeriod = new(0.3f, UnitType.DayPeriod),
 			ThreatLevel = 0
 		};
 
 		public static WorldInfo Saturn = new()
 		{
 			DisplayName = "Saturn",
-			Gravity = 1.065f,
-			Radius = 58232f,
-			DayPeriod = 0.43f,
+			Gravity = new(1.065f, UnitType.Gravity),
+			Radius = new(58232f, UnitType.Radius),
+			DayPeriod = new(0.43f, UnitType.DayPeriod),
 			ThreatLevel = 0
 		};
 
 		public static WorldInfo Ouranos = new()
 		{
 			DisplayName = "Ouranos",
-			Gravity = 0.89f,
-			Radius = 25362f,
-			DayPeriod = 0.718f,
+			Gravity = new(0.89f, UnitType.Gravity),
+			Radius = new(25362f, UnitType.Radius),
+			DayPeriod = new(0.718f, UnitType.DayPeriod),
 			ThreatLevel = 0
 		};
 
 		public static WorldInfo Neptune = new()
 		{
 			DisplayName = "Neptune",
-			Gravity = 1.14f,
-			Radius = 24622f,
-			DayPeriod = 0.671f,
+			Gravity = new(1.14f, UnitType.Gravity),
+			Radius = new(24622f, UnitType.Radius),
+			DayPeriod = new(0.671f, UnitType.DayPeriod),
 			ThreatLevel = 0
 		};
 
 		public static WorldInfo Pluto = new()
 		{
 			DisplayName = "Pluto",
-			Gravity = 0.064f,
-			Radius = 1188.3f,
-			DayPeriod = 153.3f,
+			Gravity = new(0.064f, UnitType.Gravity),
+			Radius = new(1188.3f, UnitType.Radius),
+			DayPeriod = new(153.3f, UnitType.DayPeriod),
 			ThreatLevel = 0
 		};
 
 		public static WorldInfo Eris = new()
 		{
 			DisplayName = "Eris",
-			Gravity = 0.44f,
-			Radius = 1163f,
-			DayPeriod = 0f,
+			Gravity = new(0.44f, UnitType.Gravity),
+			Radius = new(1163f, UnitType.Radius),
+			DayPeriod = new(0f, UnitType.DayPeriod),
 			ThreatLevel = 0
 		};
 

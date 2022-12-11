@@ -18,9 +18,9 @@ namespace Macrocosm.Content.Subworlds
 
 		public string FlavorText = "";
 
-		public WorldInfoValue Gravity = 0f;
-		public WorldInfoValue Radius = 0f;
-		public WorldInfoValue DayPeriod = 0f;
+		public WorldInfoValue Gravity = new(0f, UnitType.Gravity);
+		public WorldInfoValue Radius = new(0f, UnitType.Radius);
+		public WorldInfoValue DayPeriod = new(0f, UnitType.DayPeriod);
 
 		/// <summary> 
 		/// The threat level of this subworld. Use <see cref = "GetThreatLevelText"> this method </see> 
@@ -55,7 +55,6 @@ namespace Macrocosm.Content.Subworlds
 			else
 				return Color.Purple;
 		}
-
 
 		private string[] threatLevelToText =
 		{

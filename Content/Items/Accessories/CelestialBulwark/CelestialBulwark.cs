@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Macrocosm.Common.Drawing;
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Players;
+using Macrocosm.Content.Systems;
 
 namespace Macrocosm.Content.Items.Accessories.CelestialBulwark
 {
