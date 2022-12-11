@@ -6,6 +6,7 @@ using Terraria.GameContent;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Macrocosm.Common.Drawing;
+using Macrocosm.Content.Systems;
 
 namespace Macrocosm.Content.DrawLayers
 {

@@ -1,5 +1,5 @@
 ﻿using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Rocket.UI;
+using Macrocosm.Content.UI.Rocket;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -13,14 +13,17 @@ namespace Macrocosm.Content.Rocket
 	{
 		public bool InRocket { get; set; } = false;
 		public bool AsCommander { get; set; } = false;
+		public int RocketID { get; set; } 
 		public string TargetSubworldID { get; set; } = "";
+
 
 		public override void clientClone(ModPlayer clientClone)
 		{
 			RocketPlayer cloneRocketPlayer = clientClone as RocketPlayer;
 
 			cloneRocketPlayer.InRocket = InRocket;
-			cloneRocketPlayer.AsCommander = InRocket;
+			cloneRocketPlayer.AsCommander = AsCommander;
+			cloneRocketPlayer.RocketID = RocketID;
 			cloneRocketPlayer.TargetSubworldID = TargetSubworldID;
 		}
 
@@ -29,7 +32,8 @@ namespace Macrocosm.Content.Rocket
 			RocketPlayer clientRocketPlayer = clientPlayer as RocketPlayer;
 
 			if (clientRocketPlayer.InRocket != InRocket ||
-				clientRocketPlayer.AsCommander != InRocket ||
+				clientRocketPlayer.AsCommander != AsCommander ||
+				clientRocketPlayer.RocketID != RocketID ||
 				clientRocketPlayer.TargetSubworldID != TargetSubworldID)
 			{
 				SyncPlayer(-1, -1, false);
@@ -42,6 +46,7 @@ namespace Macrocosm.Content.Rocket
 			packet.Write((byte)MessageType.SyncPlayerRocketStatus);
 			packet.Write((byte)Player.whoAmI);
 			packet.Write(new BitsByte(InRocket, AsCommander));
+			packet.Write((byte)RocketID);
 			packet.Write(TargetSubworldID);
 			packet.Send();
 		}
@@ -49,35 +54,34 @@ namespace Macrocosm.Content.Rocket
 		public override void ResetEffects()
 		{
 			if (!InRocket)
-				AsCommander = false;
-		}
+ 				AsCommander = false;
+  		}
 
 
 		public override void PreUpdateMovement()
 		{
 			if (InRocket)
 			{
-				int rocketId = NPC.FindFirstNPC(ModContent.NPCType<Rocket>());
-				NPC rocket;
+ 				NPC rocket;
 
-				if(rocketId >= 0)
+				if(RocketID >= 0 && RocketID < Main.maxNPCs)
 				{
-					rocket = Main.npc[rocketId];
+					rocket = Main.npc[RocketID];
 
 					if(Player.whoAmI == Main.myPlayer)
 					{
-						if ((Player.controlInv || Player.controlMount) && !(rocket.ModNPC as Rocket).Launching)
+						if ((Player.controlInv || Player.controlMount) && !(rocket.ModNPC as RocketNPC).Launching)
 							InRocket = false;
 
-						if (!(rocket.ModNPC as Rocket).Launching)
-							UIRocket.Show(rocketId);
+						if (!(rocket.ModNPC as RocketNPC).Launching)
+							UIRocket.Show(RocketID);
 						else
 							UIRocket.Hide();
 					}
 
 					Player.moveSpeed = 0f;
 					Player.velocity = rocket.velocity;
-					Player.Center = new Vector2(rocket.position.X + rocket.width / 2 - 2f, rocket.position.Y + 50) + (AsCommander ? new Vector2(0, 50) : Vector2.Zero);
+					Player.Center = new Vector2(rocket.position.X + rocket.width / 2 - 2f, rocket.position.Y + 100) - (AsCommander ? new Vector2(0, 50) : Vector2.Zero);
  				}
 				else
 				{
@@ -93,6 +97,7 @@ namespace Macrocosm.Content.Rocket
 			if (InRocket)
 			{
 				Player.noItems = true;
+				Player.releaseMount = true;
 			}
  		}
 	}

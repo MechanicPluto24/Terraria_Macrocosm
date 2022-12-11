@@ -28,6 +28,8 @@ namespace Macrocosm.Content.Subworlds
 		public virtual double NightLenght { get; set; } = Main.nightLength;
 		public virtual float GravityMultiplier { get; set; } = 1f;
 
+		public virtual void PreUpdateWorld() { }
+
 		public virtual Dictionary<MapColorType, Color> MapColors { get; } = null;
 		public virtual WorldInfo WorldInfo { get; }
 		public virtual bool CanTravelTo() => true;

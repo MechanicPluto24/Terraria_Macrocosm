@@ -1,6 +1,6 @@
 ﻿using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Gores;
-using Macrocosm.Content.Items.Chunks;
+using Macrocosm.Content.Items.MeteorChunks;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;

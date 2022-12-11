@@ -18,7 +18,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
  			DisplayName.SetDefault("Artemite Greatsword");
 		}
 
-		public override string Texture => "Macrocosm/Assets/Textures/Swing";
+		public override string Texture => "Macrocosm/Content/Projectiles/Friendly/Melee/Swing";
 
 		public override void SetDefaults()
 		{

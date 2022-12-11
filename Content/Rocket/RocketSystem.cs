@@ -1,4 +1,4 @@
-﻿using Macrocosm.Content.Rocket.UI;
+﻿using Macrocosm.Content.UI.Rocket;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;

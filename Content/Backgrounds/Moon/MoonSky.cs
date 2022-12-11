@@ -42,8 +42,8 @@ namespace Macrocosm.Content.Backgrounds.Moon
 		{
 			skyTexture = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/MoonSky", AssetRequestMode.ImmediateLoad).Value;
 
-			sunTexture = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/Sun_0", AssetRequestMode.ImmediateLoad).Value;
-			earthBody = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/EarthAtmoless", AssetRequestMode.ImmediateLoad).Value;
+			sunTexture = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/Sun", AssetRequestMode.ImmediateLoad).Value;
+			earthBody = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/Earth", AssetRequestMode.ImmediateLoad).Value;
 			earthBodyDrunk = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/EarthDrunk", AssetRequestMode.ImmediateLoad).Value;
 			earthBodyFlat = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/EarthFlat", AssetRequestMode.ImmediateLoad).Value;
 			
@@ -68,8 +68,7 @@ namespace Macrocosm.Content.Backgrounds.Moon
 			if (Main.dedServ)
 				return;
 
-			MoonSky moonSky = new MoonSky();
-
+			MoonSky moonSky = new();
 			Filters.Scene["Macrocosm:MoonSky"] = new Filter(new ScreenShaderData("FilterMiniTower").UseColor(0f, 0f, 0f).UseOpacity(0f), EffectPriority.High);
 			SkyManager.Instance["Macrocosm:MoonSky"] = moonSky;
 		}
@@ -82,9 +81,8 @@ namespace Macrocosm.Content.Backgrounds.Moon
 			starsNight.SpawnStars(600, 700, 0.8f, 0.05f);
 
 			MacrocosmStar mars = starsDay.RandStar(); // :) 
-			mars.OverrideColor(Color.Tomato * 0.7f);
+			mars.OverrideColor(Color.OrangeRed * 0.7f);
 			mars.scale *= 1.4f;
-
 
 			Intensity = 0.002f;
 			Active = true;

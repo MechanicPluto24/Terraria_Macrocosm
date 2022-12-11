@@ -5,27 +5,76 @@ using System.Globalization;
 
 namespace Macrocosm.Content.Subworlds
 {
+	public enum UnitType
+	{
+		None,
+		Gravity,
+		Radius,
+		DayPeriod
+	}
+
 	public struct WorldInfoValue
 	{
 		private float number = 0f;
 		private string specialValue = "";
+		private UnitType unitType = UnitType.None;
 
 		public float Number { get => number; set => number = value; }
 		public string SpecialValue { get => specialValue; set => specialValue = value; }
 
 		public bool HasSpecial() => specialValue != "";
 
-		public WorldInfoValue(float number = 0f, string special = "")
+		public void SetUnits(UnitType type)
 		{
-			this.number = number;
+			unitType = type;
+		}
+
+		/// <summary>
+		/// Used for unit conversion (TODO) 
+		/// </summary>
+		/// <param name="type"> The type of this unit </param>
+		/// <param name="special"> Whether to skip the logic (has special value) </param>
+		/// <returns></returns>
+		public string GetUnitText(bool singular = false)
+		{
+			if (!HasSpecial())
+				return unitType switch
+				{
+					UnitType.Gravity => "G",
+					UnitType.Radius => "km",
+					UnitType.DayPeriod => singular ? "day" : "days", // localize this lmao
+					_ => "",
+				};
+
+			return "";
+		}
+
+		public WorldInfoValue(string special)
+		{
+			number = float.MinValue;
+			unitType = UnitType.None;
 			specialValue = special;
 		}
 
+		public WorldInfoValue(float number, UnitType type = UnitType.None)
+		{
+			this.number = number;
+			unitType = type;
+			specialValue = "";
+		}
+
+		/// <summary>
+		/// Assign the structure a text value which will reset the numeric values
+		/// </summary>
 		public static implicit operator WorldInfoValue(string value)
-			=> new(special: value);
+			=> new(value);
  
+		/// <summary>
+		/// Assign the structure a numeric value using a float literal. 
+		/// This will reset the unit type!
+		/// </summary>
 		public static implicit operator WorldInfoValue(float number) 
-			=> new(number: number);
+			=> new(number);
 
 		public static implicit operator string(WorldInfoValue value) 
 			 => value.HasSpecial() ? value.specialValue : String.Format("{0:n}", value.Number).TrimEnd('0').TrimEnd('.');
@@ -68,6 +117,6 @@ namespace Macrocosm.Content.Subworlds
  		}
 
 		public override int GetHashCode()
-			=> specialValue.GetHashCode() ^ number.GetHashCode();
+			=> specialValue.GetHashCode() ^ number.GetHashCode() ^ unitType.GetHashCode();
 	}
 }
