@@ -94,9 +94,7 @@ namespace Macrocosm
 				case MessageType.LaunchRocket:
 					{
 						int rocketId = reader.ReadByte();
-
-						if (Main.netMode == NetmodeID.Server)
-							(Main.npc[rocketId].ModNPC as RocketNPC).Launch();
+						(Main.npc[rocketId].ModNPC as RocketNPC).Launch();
 
 						break;
 					}

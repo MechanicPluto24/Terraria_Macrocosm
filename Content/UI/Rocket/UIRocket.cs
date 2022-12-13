@@ -88,16 +88,14 @@ namespace Macrocosm.Content.UI.Rocket
 
 		private void LaunchRocket()
 		{
+			(Rocket.ModNPC as RocketNPC).Launch();
+
 			if (Main.netMode == NetmodeID.MultiplayerClient)
 			{
 				ModPacket packet = Macrocosm.Instance.GetPacket();
 				packet.Write((byte)MessageType.LaunchRocket);
 				packet.Write((byte)RocketID);
 				packet.Send();
-			}
-			else if (Main.netMode == NetmodeID.SinglePlayer)
-			{
-				(Rocket.ModNPC as RocketNPC).Launching = true;
 			}
 		}
 	}

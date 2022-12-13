@@ -13,7 +13,7 @@ namespace Macrocosm.Content.Rocket
 	{
 		public bool InRocket { get; set; } = false;
 		public bool AsCommander { get; set; } = false;
-		public int RocketID { get; set; } 
+		public int RocketID { get; set; } = -1;
 		public string TargetSubworldID { get; set; } = "";
 
 
@@ -53,8 +53,18 @@ namespace Macrocosm.Content.Rocket
 
 		public override void ResetEffects()
 		{
-			if (!InRocket)
+			if (RocketID < 0 || RocketID >= Main.maxNPCs)
+				InRocket = false;
+			else if (Main.npc[RocketID].ModNPC is null)
+				InRocket = false;
+
+			if (!InRocket) 
+			{
  				AsCommander = false;
+				RocketID = -1;
+				Player.mouseInterface = false;
+				Player.noItems = false;
+			}
   		}
 
 
@@ -62,31 +72,23 @@ namespace Macrocosm.Content.Rocket
 		{
 			if (InRocket)
 			{
- 				NPC rocket;
+				NPC rocket = Main.npc[RocketID];
 
-				if(RocketID >= 0 && RocketID < Main.maxNPCs)
+				if(Player.whoAmI == Main.myPlayer)
 				{
-					rocket = Main.npc[RocketID];
+					if ((Player.controlInv || Player.controlMount) && !(rocket.ModNPC as RocketNPC).Launching)
+						InRocket = false;
 
-					if(Player.whoAmI == Main.myPlayer)
-					{
-						if ((Player.controlInv || Player.controlMount) && !(rocket.ModNPC as RocketNPC).Launching)
-							InRocket = false;
+					if (!(rocket.ModNPC as RocketNPC).Launching)
+						UIRocket.Show(RocketID);
+					else
+						UIRocket.Hide();
+				}
 
-						if (!(rocket.ModNPC as RocketNPC).Launching)
-							UIRocket.Show(RocketID);
-						else
-							UIRocket.Hide();
-					}
-
-					Player.moveSpeed = 0f;
-					Player.velocity = rocket.velocity;
-					Player.Center = new Vector2(rocket.position.X + rocket.width / 2 - 2f, rocket.position.Y + 100) - (AsCommander ? new Vector2(0, 50) : Vector2.Zero);
- 				}
-				else
-				{
-					InRocket = false;
-				}	
+				Player.moveSpeed = 0f;
+				Player.velocity = rocket.velocity;
+				Player.Center = new Vector2(rocket.position.X + rocket.width / 2 - 2f, rocket.position.Y + 100) - (AsCommander ? new Vector2(0, 50) : Vector2.Zero);
+ 
 			}
 			else if (Player.whoAmI == Main.myPlayer)
 				UIRocket.Hide();
