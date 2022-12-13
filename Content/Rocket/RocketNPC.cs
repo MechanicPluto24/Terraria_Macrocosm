@@ -302,7 +302,8 @@ namespace Macrocosm.Content.Rocket
 		public void Launch()
 		{
 			Launching = true;
-		}
+			NPC.netUpdate= true;
+ 		}
 
 		private void VisualEffects()
 		{

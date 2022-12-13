@@ -24,7 +24,7 @@ namespace Macrocosm.Common.Hooks
 					// here could be a switch statement based on the subworld
 					int tombstoneType = ModContent.ProjectileType<MoonTombstone>(); 
 
-					// wether to drop a normal or golden tombstone 
+					// whether to drop a normal or golden tombstone 
 					float golden = 0f;
 					if (coinsOwned > 100000)
 						golden = 1f;

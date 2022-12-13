@@ -10,18 +10,18 @@ using Terraria.ModLoader;
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
 	// These three class showcase usage of the WormHead, WormBody and WormTail ExampleMod classes from Worm.cs
-	internal class MoonWormHead : WormHead
+	internal class CraterCrawlerHead : WormHead
 	{
-		public override int BodyType => ModContent.NPCType<MoonWormBody>();
-		public override int TailType => ModContent.NPCType<MoonWormTail>();
+		public override int BodyType => ModContent.NPCType<CraterCrawlerBody>();
+		public override int TailType => ModContent.NPCType<CraterCrawlerTail>();
 
 		public override void SetStaticDefaults() 
 		{
-			DisplayName.SetDefault("Moon Worm");
+			DisplayName.SetDefault("Crater Crawler");
 
 			var drawModifier = new NPCID.Sets.NPCBestiaryDrawModifiers(0)    // Influences how the NPC looks in the Bestiary
 			{   
-				CustomTexturePath = "Macrocosm/Content/NPCs/Enemies/Moon/MoonWorm_Bestiary", // If the NPC is multiple parts like a worm, a custom texture for the Bestiary is encouraged.
+				CustomTexturePath = "Macrocosm/Content/NPCs/Enemies/Moon/CraterCrawler_Bestiary", // If the NPC is multiple parts like a worm, a custom texture for the Bestiary is encouraged.
 				Position = new Vector2(40f, 24f),
 				PortraitPositionXOverride = 0f,
 				PortraitPositionYOverride = 12f
@@ -34,12 +34,12 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			NPC.CloneDefaults(NPCID.DiggerHead);
 			NPC.damage = 100;
 			NPC.defense = 20;
-			NPC.width = 92;
-			NPC.height = 92;
+			NPC.width = 20;
+			NPC.height = 20;
 			NPC.aiStyle = -1;
 
 			SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBiome>().Type }; // Associates this NPC with the Moon Biome in Bestiary
-
+			 
 		}
 
 		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry) 
@@ -51,7 +51,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 				//BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Times.NightTime,
 
 				// Sets the description of this NPC that is listed in the bestiary.
-				new FlavorTextBestiaryInfoElement("BIG boi")
+				new FlavorTextBestiaryInfoElement("Evil boi")
 			});
 		}
 
@@ -59,10 +59,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		{
 			// Set the segment variance
 			// If you want the segment length to be constant, set these two properties to the same value
-			MinSegmentLength = 12;
-			MaxSegmentLength = 18;
-			FlipSprite = true;
-
+			MinSegmentLength = 16;
+			MaxSegmentLength = 24;
+ 
 			CommonWormInit(this);
 		}
 
@@ -85,6 +84,11 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		}
 
 		public override void AI() {
+
+
+			
+
+
 			if (Main.netMode != NetmodeID.MultiplayerClient) 
 			{
 				// tick down the attack counter.
@@ -101,12 +105,11 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		}
 	}
 
-	internal class MoonWormBody : WormBody
+	internal class CraterCrawlerBody : WormBody
 	{
 		public override void SetStaticDefaults() 
 		{
-			Main.npcFrameCount[Type] = 2;
-			DisplayName.SetDefault("Moon Worm");
+ 			DisplayName.SetDefault("Crater Crawler");
 			NPCID.Sets.NPCBestiaryDrawModifiers value = new NPCID.Sets.NPCBestiaryDrawModifiers(0) { Hide = true }; // Hides this NPC from the Bestiary, useful for multi-part NPCs whom you only want one entry.
 			NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
 		}
@@ -116,33 +119,31 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			NPC.CloneDefaults(NPCID.DiggerBody);
 			NPC.damage = 80;
 			NPC.defense = 30;
-			NPC.width = 58;
-			NPC.height = 58;
+			NPC.width = 16;
+			NPC.height = 16;
 			NPC.aiStyle = -1;
+			Main.npcFrameCount[Type] = 1;
 		}
 
 		public override void Init() 
 		{
-			FlipSprite = true;
-			MoonWormHead.CommonWormInit(this);
+ 			CraterCrawlerHead.CommonWormInit(this);
 		}
 
 		public override void OnSpawn(IEntitySource source)
 		{
-			NPC.frameCounter = Main.rand.Next(2);
-		}
+ 		}
 
 		public override void FindFrame(int frameHeight)
 		{
-			NPC.frame.Y = (int)NPC.frameCounter * frameHeight;
- 		}
+  		}
 	}
 
-	internal class MoonWormTail : WormTail
+	internal class CraterCrawlerTail : WormTail
 	{
 		public override void SetStaticDefaults() 
 		{
-			DisplayName.SetDefault("Moon Worm");
+			DisplayName.SetDefault("Crater Crawler");
 
 			NPCID.Sets.NPCBestiaryDrawModifiers value = new(0) 
 			{
@@ -156,15 +157,15 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			NPC.CloneDefaults(NPCID.DiggerTail);
 			NPC.damage = 84;
 			NPC.defense = 64;
-			NPC.width = 54;
-			NPC.height = 54;
+			NPC.width = 30;
+			NPC.height = 30;
 			NPC.aiStyle = -1;
 		}
 
 		public override void Init() 
 		{
 			FlipSprite = true;
-			MoonWormHead.CommonWormInit(this);
+			CraterCrawlerHead.CommonWormInit(this);
 		}
 	}
 }

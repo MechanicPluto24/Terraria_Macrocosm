@@ -22,6 +22,7 @@ using Macrocosm.Content.Items.Currency;
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Systems;
 using Macrocosm.Content.NPCs.Friendly.TownNPCs;
+using Macrocosm.Common.Base;
 
 namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 {
@@ -617,9 +618,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 						} while (attack == oldAttack);
 
 						SetAttack(attack);
-						NPC.netUpdate = true;
-
 						oldAttack = (int)AI_Attack;
+
+						NPC.netUpdate = true;
 					}
 
 					break;
@@ -841,10 +842,13 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 							if (repeatCount == 0)
 								SoundEngine.PlaySound(SoundID.Zombie105, NPC.Center); //Cultist laugh sound
-
+																					
 							//Wait for a random amount of time
-							AI_Timer = Main.expertMode ? Main.rand.Next(40, 90 + 1) : Main.rand.Next(100, 220 + 1);
-							NPC.netUpdate = true;
+							if (Main.netMode != NetmodeID.MultiplayerClient) {
+
+								AI_Timer = Main.expertMode ? Main.rand.Next(40, 90 + 1) : Main.rand.Next(100, 220 + 1);
+								NPC.netUpdate = true;
+							}
 
 							movementTarget = null;
 						}
