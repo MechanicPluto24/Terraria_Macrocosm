@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -14,6 +15,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			Projectile.height = 4;
 			Projectile.extraUpdates = 3;
 			Projectile.timeLeft = 270;
+		}
+
+		public override bool OnTileCollide(Vector2 oldVelocity)
+		{
+			Point coordinates = (Projectile.Center * oldVelocity).ToTileCoordinates();
+			WorldGen.KillTile(coordinates.X, coordinates.Y + 1, effectOnly: true);
+			return true;
 		}
 	}
 }

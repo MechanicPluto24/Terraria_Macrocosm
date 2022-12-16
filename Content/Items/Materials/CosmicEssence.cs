@@ -19,6 +19,8 @@ namespace Macrocosm.Content.Items.Materials
 			Item.maxStack = 9999;
 			Item.value = 100;
 			Item.rare = ModContent.RarityType<MoonRarityT1>();
+			Item.material = true;
+
 		}
 
 		public override void AddRecipes()

@@ -25,7 +25,6 @@ namespace Macrocosm.Content
 
 			if (ShiniesIndex != -1)
 			{
-				// 5. We register our world generation pass by passing in a name and the method that will execute our world generation code.	
 				tasks.Insert(ShiniesIndex + 1, new PassLegacy("Macrocosm Earth Worldgen", GenerateOres));
 			}
 		}

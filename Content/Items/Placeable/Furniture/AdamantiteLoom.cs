@@ -23,7 +23,7 @@ namespace Macrocosm.Content.Items.Placeable.Furniture
             Item.useTime = 10;
             Item.useStyle = ItemUseStyleID.Swing;
             Item.consumable = true;
-            Item.createTile = ModContent.TileType<Tiles.Furniture.TitaniumLoom>();
+            Item.createTile = ModContent.TileType<Tiles.Furniture.IndustrialLoom>();
             Item.placeStyle = 1;
         }
     }

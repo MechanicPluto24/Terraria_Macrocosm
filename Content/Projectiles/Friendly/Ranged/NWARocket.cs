@@ -1,3 +1,4 @@
+using Macrocosm.Common.Base;
 using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Utility;
 using Microsoft.Xna.Framework;
@@ -17,7 +18,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Rocket");
+			DisplayName.SetDefault("NWA-12691");
 			ProjectileID.Sets.TrailCacheLength[Type] = 30;
 			ProjectileID.Sets.TrailingMode[Type] = 0;
 		}
@@ -62,7 +63,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 				for (int i = 0; i < 200; i++)
 				{
-					if (Main.npc[i].CanBeChasedBy(this) && Main.npc[i].Macrocosm().TargetedBy[Projectile.owner])
+					// only run locally
+					if (Projectile.owner == Main.myPlayer && Main.npc[i].CanBeChasedBy(this) && Main.npc[i].Macrocosm().Targeted)
 					{
 						float targetCenterX = Main.npc[i].position.X + Main.npc[i].width / 2;
 						float targetCenterY = Main.npc[i].position.Y + Main.npc[i].height / 2;
@@ -82,6 +84,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			{
 				x = Projectile.position.X + Projectile.width / 2 + Projectile.velocity.X * 100f;
 				y = Projectile.position.Y + Projectile.height / 2 + Projectile.velocity.Y * 100f;
+			}
+			else
+			{
+				Projectile.netUpdate = true; // targeting was done locally, needs syncing 
 			}
 
 			Vector2 maxVelocity = (new Vector2(x, y) - Projectile.Center).SafeNormalize(-Vector2.UnitY) * 16f;
@@ -165,9 +171,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 		public override bool PreDraw(ref Color lightColor)
 		{
-			// adjust rotations manually (due to TrailingMode = 0 instead of 3)
-			if (Projectile.rotation > -MathHelper.PiOver4 && Projectile.rotation < MathHelper.PiOver4)
-			{
+ 			// adjust rotations manually (due to TrailingMode = 0 instead of 3) -- it just looks better  
+			if (Projectile.rotation > -MathHelper.PiOver4 && Projectile.rotation < MathHelper.PiOver4 || 
+				Projectile.rotation < -(MathHelper.PiOver4 + MathHelper.PiOver2) ||
+				Projectile.rotation > MathHelper.PiOver4 + MathHelper.PiOver2) {
+
 				for (int i = 0; i < Projectile.oldRot.Length; i++)
 					Projectile.oldRot[i] = MathHelper.PiOver2;
 			}
@@ -206,6 +214,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		public override bool OnTileCollide(Vector2 oldVelocity)
 		{
 			Projectile.Explode(100);
+			Point coordinates = Projectile.Center.ToTileCoordinates();
+			WorldGen.KillTile(coordinates.X, coordinates.Y, effectOnly: true);
 			return false;
 		}
 

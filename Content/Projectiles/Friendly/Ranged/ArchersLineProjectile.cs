@@ -37,9 +37,16 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			return true;
 		}
 
+		public override bool OnTileCollide(Vector2 oldVelocity)
+		{
+			Point coordinates = Projectile.Center.ToTileCoordinates();
+			WorldGen.KillTile(coordinates.X, coordinates.Y, effectOnly: true);
+
+			return true;
+		}
+
 		public override void OnHitNPC(NPC npc, int damage, float knockback, bool crit)
 		{
-
 			Projectile.damage -= 10;
 
 			hitList[npc.whoAmI] = true; //Make sure the projectile won't aim directly for this NPC
@@ -60,9 +67,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			}
 
 			Projectile.velocity *= 0.9f;
-
-
-			base.OnHitNPC(npc, damage, knockback, crit);
+			Projectile.netUpdate = true;
 		}
 
 		public int GetTarget(float maxRange, Vector2 shootingSpot) //Function to find a NPC to target

@@ -17,6 +17,8 @@ namespace Macrocosm.Content.Items.Materials
 			Item.maxStack = 1;
 			Item.value = 100;
 			Item.rare = ItemRarityID.Green;
+			Item.material = true;
+
 		}
 
 		public override void AddRecipes()

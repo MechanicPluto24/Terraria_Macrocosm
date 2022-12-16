@@ -10,7 +10,6 @@ namespace Macrocosm.Content.Items.Materials
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Refined Aluminum");
 		}
 
 		public override void SetDefaults()
@@ -28,6 +27,7 @@ namespace Macrocosm.Content.Items.Materials
 			//Item.createTile = TileType<Tiles.AluminumBar>();
 			Item.placeStyle = 0;
 			Item.rare = ItemRarityID.White;
+			Item.material = true;
 			// Set other Item.X values here
 		}
 

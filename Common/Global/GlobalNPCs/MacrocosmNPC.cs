@@ -1,9 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.IO;
 using Terraria;
 using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Common.Global.GlobalNPCs
 {
@@ -15,16 +13,13 @@ namespace Macrocosm.Common.Global.GlobalNPCs
 		public override bool InstancePerEntity => true;
 		protected override bool CloneNewInstances => false;
 
-		public bool[] TargetedBy = new bool[Main.maxPlayers];
-
-		public void SyncTargetedBy(int npcId, int playerId, bool value)
-		{
-			 // TODO
-		}
+		// this is only set on the local client
+		// any projectiles who use this need syncing 
+		public bool Targeted; 
 
 		public override void PostDraw(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
-			if (TargetedBy[Main.LocalPlayer.whoAmI])
+			if (Targeted)
 				DrawCrosshair(npc, spriteBatch, screenPos, drawColor);
 		}
 
