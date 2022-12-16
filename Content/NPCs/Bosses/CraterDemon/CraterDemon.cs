@@ -22,7 +22,6 @@ using Macrocosm.Content.Items.Currency;
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Systems;
 using Macrocosm.Content.NPCs.Friendly.TownNPCs;
-using Macrocosm.Common.Base;
 
 namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 {
@@ -158,7 +157,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 		private BigPortalInfo bigPortal;
 		private BigPortalInfo bigPortal2;
-		
+
 		private Vector2 portalTarget;
 		private Vector2 portalTarget2;
 		private int portalAttackCount;
@@ -270,7 +269,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<MoonCoin>(), 1, 30, 60));
 			notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<DeliriumPlating>(), 1, 30, 90));
 
-			notExpertRule.OnSuccess(ItemDropRule.OneFromOptions(1, 
+			notExpertRule.OnSuccess(ItemDropRule.OneFromOptions(1,
 				ModContent.ItemType<CalcicCane>(),
 				ModContent.ItemType<Cruithne3753>()
 				/*, ModContent.ItemType<JewelOfShowers>() */
@@ -316,15 +315,15 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			bigPortal.Write(writer);
 			bigPortal2.Write(writer);
 
-			writer.WriteVector2(portalTarget);
-			writer.WriteVector2(portalTarget2);
-
-			writer.Write(portalAttackCount);
-
 			if (hasCustomTarget)
 				writer.WriteVector2(movementTarget.Value);
 
-			writer.Write(oldAttack);
+			writer.Write((byte)oldAttack);
+
+			writer.WriteVector2(portalTarget);
+			writer.WriteVector2(portalTarget2);
+
+			writer.Write((byte)portalAttackCount);
 		}
 
 		public override void ReceiveExtraAI(BinaryReader reader)
@@ -340,14 +339,14 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			bigPortal.Read(reader);
 			bigPortal2.Read(reader);
 
+			movementTarget = hasCustomTarget ? (Vector2?)reader.ReadVector2() : null;
+
+			oldAttack = reader.ReadByte();
+
 			portalTarget = reader.ReadVector2();
 			portalTarget2 = reader.ReadVector2();
 
-			portalAttackCount = reader.ReadInt32();
-
-			movementTarget = hasCustomTarget ? (Vector2?)reader.ReadVector2() : null;
-
-			oldAttack = reader.ReadInt32();
+			portalAttackCount = reader.ReadByte();
 		}
 
 		public override void BossHeadSlot(ref int index)
@@ -359,14 +358,14 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
 			//Draw portals
- 			Texture2D portal = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Bosses/CraterDemon/BigPortal").Value;
+			Texture2D portal = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Bosses/CraterDemon/BigPortal").Value;
 
 			DrawBigPortal(spriteBatch, portal, bigPortal);
 			DrawBigPortal(spriteBatch, portal, bigPortal2);
 
 			if (AI_Attack == Attack_SummonMeteors && Math.Abs(NPC.velocity.X) < 0.1f && Math.Abs(NPC.velocity.Y) < 0.1f)
 				return true;
-			
+
 			if (AI_Attack == Attack_ChargeAtPlayer && AI_AttackProgress > 2 && NPC.alpha >= 160)
 				return true;
 
@@ -402,7 +401,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			if (info.scale > 0.9f && Vector2.Distance(info.center, NPC.Center) > 25f)
 				SpawnPortalDusts(info);
 
-			Lighting.AddLight(info.center, new Vector3(30, 255, 105) / 255 * info.scale * 2f);
+			Lighting.AddLight(info.center, new Vector3(30, 255, 105) / 255 * info.scale * 3f);
+
 		}
 
 		private void SpawnPortalDusts(BigPortalInfo info)
@@ -608,7 +608,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 					FloatTowardsTarget(player);
 
-					if (AI_Timer <= 0)
+					if (AI_Timer <= 0 && Main.netMode != NetmodeID.MultiplayerClient)
 					{
 						//Prevent the same attack from being rolled twice in a row
 						int attack;
@@ -617,9 +617,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 							attack = Main.rand.Next(Attack_SummonMeteors, Attack_ChargeAtPlayer + 1);
 						} while (attack == oldAttack);
 
-						SetAttack(attack);
 						oldAttack = (int)AI_Attack;
-
+						SetAttack(attack);
 						NPC.netUpdate = true;
 					}
 
@@ -660,9 +659,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 						int count = Main.expertMode ? 4 : 2;
 
-						for (int i = 0; i < count; i++)
+						if (Main.netMode != NetmodeID.MultiplayerClient)
 						{
-							if (Main.netMode != NetmodeID.MultiplayerClient)
+							for (int i = 0; i < count; i++)
 							{
 								Vector2 spawn = orig + new Vector2(Main.rand.NextFloat(-1, 1) * 40 * 16, Main.rand.NextFloat(-1, 1) * 6 * 16);
 
@@ -690,10 +689,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 								int craterImpID = NPC.NewNPC(NPC.GetSource_FromAI(), (int)spawn.X, (int)spawn.Y, ModContent.NPCType<CraterImp>(), ai3: NPC.whoAmI);
 								Main.npc[craterImpID].netUpdate = true;
 							}
-							// TODO: netcode
-
+							//Exhale sound
 							SoundEngine.PlaySound(SoundID.Zombie93, NPC.Center);
-							
 							AI_AttackProgress++;
 						}
 					}
@@ -732,7 +729,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 						{
 							AI_AttackProgress++;
 
-							if(Main.netMode != NetmodeID.MultiplayerClient)
+							if (Main.netMode != NetmodeID.MultiplayerClient)
 							{
 								//Spawn portal -- must be close to boss and player
 								Vector2 spawn;
@@ -754,7 +751,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 								portalTarget = spawn;
 								NPC.netUpdate = true;
 							}
-							
+
 							SpawnBigPortal(portalTarget, ref bigPortal);
 						}
 					}
@@ -842,10 +839,10 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 							if (repeatCount == 0)
 								SoundEngine.PlaySound(SoundID.Zombie105, NPC.Center); //Cultist laugh sound
-																					
-							//Wait for a random amount of time
-							if (Main.netMode != NetmodeID.MultiplayerClient) {
 
+							//Wait for a random amount of time
+							if (Main.netMode != NetmodeID.MultiplayerClient)
+							{
 								AI_Timer = Main.expertMode ? Main.rand.Next(40, 90 + 1) : Main.rand.Next(100, 220 + 1);
 								NPC.netUpdate = true;
 							}
@@ -858,17 +855,19 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 						//Wait, then spawn a portal
 						if (AI_Timer <= 0)
 						{
-							if(Main.netMode != NetmodeID.MultiplayerClient)
+							if (Main.netMode != NetmodeID.MultiplayerClient)
 							{
-								portalTarget2 = Main.rand.NextVector2Unit() * 30 * 16;
+								portalTarget  = Main.rand.NextVector2Unit() * 30 * 16;
+								portalTarget2 = portalTarget;
 								NPC.netUpdate = true;
 							}
 
 							//Second portal is where the boss will end up
-							SpawnBigPortal(player.Center + portalTarget2, ref bigPortal, fast: true);
+							SpawnBigPortal(player.Center + portalTarget, ref bigPortal, fast: true);
 							SpawnBigPortal(player.Center - portalTarget2, ref bigPortal2, fast: true);
 							bigPortal2.visible = false;
 
+							//NPC.Center = bigPortal.center;
 							NPC.Center = portalTarget2;
 							NPC.velocity = Vector2.Zero;
 
@@ -920,7 +919,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 							NPC.Center = bigPortal.center;
 							NPC.velocity = NPC.DirectionTo(player.Center) * chargeVelocity;
 
-							SoundEngine.PlaySound(SoundID.ForceRoar, NPC.position);
+							SoundEngine.PlaySound(SoundID.ForceRoar, NPC.position); 
 
 							if (Main.netMode != NetmodeID.MultiplayerClient)
 							{

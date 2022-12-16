@@ -28,6 +28,8 @@ namespace Macrocosm.Content.Items.Materials
 			//Item.createTile = TileType<Tiles.SiliconOre>();
 			Item.placeStyle = 0;
 			Item.rare = ItemRarityID.White;
+			Item.material = true;
+
 			// Set other Item.X values here
 		}
 

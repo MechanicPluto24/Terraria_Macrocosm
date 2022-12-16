@@ -28,6 +28,7 @@ namespace Macrocosm.Content.Items.Materials
 			Item.createTile = TileType<Tiles.ArtemiteOre>();
 			Item.placeStyle = 0;
 			Item.rare = ModContent.RarityType<MoonRarityT1>();
+			Item.material = true;
 
 			// Set other Item.X values here
 		}

@@ -62,14 +62,9 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 				{
 					NPC npc = Main.npc[i];
 
-					if (npc.TryGetGlobalNPC(out MacrocosmNPC macNpc) && Main.netMode != NetmodeID.MultiplayerClient)
-					{
-						bool wasTargeted = macNpc.TargetedBy[player.whoAmI];
-						macNpc.TargetedBy[player.whoAmI] = false;
-						
-						if(wasTargeted)
-							macNpc.SyncTargetedBy(i, player.whoAmI, false);
-					}
+					if (npc.TryGetGlobalNPC(out MacrocosmNPC macNpc))
+ 						macNpc.Targeted = false;
+			 
 
 					if (!found && npc.CanBeChasedBy() && Main.npc[i].getRect().Intersects(new Rectangle((int)(Main.MouseWorld.X - 10f), (int)(Main.MouseWorld.Y - 10f), 20, 20)))
 					{
@@ -80,8 +75,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
 				if (id > -1 && id < Main.maxNPCs)
 				{
-					Main.npc[id].Macrocosm().TargetedBy[player.whoAmI] = true;
-					Main.npc[id].Macrocosm().SyncTargetedBy(id, player.whoAmI, true);
+					Main.npc[id].Macrocosm().Targeted = true;
 				}
 
 				return false;

@@ -28,8 +28,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 		public ref float AI_Windup => ref Projectile.ai[0];
 
-		
-
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("LHB-805");

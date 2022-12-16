@@ -1,5 +1,5 @@
 using Macrocosm.Content.Biomes;
-using Macrocosm.Content.Items.Armor;
+using Macrocosm.Content.Items.Armor.Astronaut;
 using Macrocosm.Content.Items.Currency;
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Items.Weapons.Ranged;
@@ -17,7 +17,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
 {
-	[AutoloadHead]
+    [AutoloadHead]
 	public class MoonChampion : ModNPC
 	{
 		public override void SetStaticDefaults()

@@ -10,7 +10,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture
 {
-    public class TitaniumLoom : ModTile
+    public class IndustrialLoom : ModTile
     {
         public override void SetStaticDefaults()
         {
@@ -26,6 +26,7 @@ namespace Macrocosm.Content.Tiles.Furniture
             TileObjectData.addTile(Type);
 
             HitSound = SoundID.Dig;
+            DustType = -1;
 
             AnimationFrameHeight = 36;
 
