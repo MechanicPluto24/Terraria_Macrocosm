@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -56,7 +57,7 @@ namespace Macrocosm.Common.Utility
 			=> new(point.X * 16f, point.Y * 16f);
 
 
-		public static bool BlendLikeDirt(int i, int j, int typeToBlendWith, int frameOffsetY = 0, bool asDirt = false)
+		public static bool BlendLikeDirt(int i, int j, int[] typeToBlendWith, int frameOffsetY = 0, bool asDirt = false)
 		{
 			Tile tile = Main.tile[i, j];
 			int type = tile.TileType;
@@ -80,44 +81,49 @@ namespace Macrocosm.Common.Utility
 			int left = tileLeft.HasTile ? tileLeft.TileType : -1;
 			int upLeft = tileUpLeft.HasTile ? tileUpLeft.TileType : -1;
 
+			bool blendUp = typeToBlendWith.Contains(up);
+			bool blendDown = typeToBlendWith.Contains(down);
+			bool blendLeft = typeToBlendWith.Contains(left);
+			bool blendRight = typeToBlendWith.Contains(right);
+
 			Vector2 frame = new(-1, -1);
 
 			int variation = WorldGen.genRand.Next(3);
 
 			#region Ignore other blocks
 
-			if (up > -1 && up != type && up != typeToBlendWith) 
+			if (up > -1 && up != type && !blendUp) 
 				up = -1;
 
-			if (down > -1 && down != type && down != typeToBlendWith) 
+			if (down > -1 && down != type && !blendDown) 
 				down = -1;
 
-			if (left > -1 && left != type && left != typeToBlendWith)
+			if (left > -1 && left != type && !blendLeft)
 				left = -1;
 
-			if (right > -1 && right != type && right != typeToBlendWith) 
+			if (right > -1 && right != type && !blendRight) 
 				right = -1;
 
 			#endregion
 			
 			if (asDirt)
 			{
-				if (up == typeToBlendWith)
+				if (blendUp)
 				{
 					WorldGen.TileFrame(i, j - 1);
 					up = HasBlendingFrame(i, j - 1) ? type : -1;
 				}
-				if (down == typeToBlendWith)
+				if (blendDown)
 				{
 					WorldGen.TileFrame(i, j + 1);
 					down = HasBlendingFrame(i, j + 1) ? type : -1;
 				}
-				if (left == typeToBlendWith)
+				if (blendLeft)
 				{
 					WorldGen.TileFrame(i - 1, j);
 					left = HasBlendingFrame(i - 1, j) ? type : -1;
 				}
-				if (right == typeToBlendWith)
+				if (blendRight)
 				{
 					WorldGen.TileFrame(i + 1, j);
 					right = HasBlendingFrame(i + 1, j) ? type : -1;
@@ -145,7 +151,7 @@ namespace Macrocosm.Common.Utility
 			#region Blending
 			if (up != -1 && down != -1 && left != -1 && right != -1)
 			{
-				if (up == typeToBlendWith && down == type && left == type && right == type)
+				if (blendUp && down == type && left == type && right == type)
 				{
 					switch (variation)
 					{
@@ -165,7 +171,7 @@ namespace Macrocosm.Common.Utility
 
 					//mergeUp = true;
 				}
-				else if (up == type && down == typeToBlendWith && left == type && right == type)
+				else if (up == type && blendDown && left == type && right == type)
 				{
 					switch (variation)
 					{
@@ -185,7 +191,7 @@ namespace Macrocosm.Common.Utility
 
 					//mergeDown = true;
 				}
-				else if (up == type && down == type && left == typeToBlendWith && right == type)
+				else if (up == type && down == type && blendLeft && right == type)
 				{
 					switch (variation)
 					{
@@ -205,7 +211,7 @@ namespace Macrocosm.Common.Utility
 
 					//mergeLeft = true;
 				}
-				else if (up == type && down == type && left == type && right == typeToBlendWith)
+				else if (up == type && down == type && left == type && blendRight)
 				{
 					switch (variation)
 					{
@@ -225,7 +231,7 @@ namespace Macrocosm.Common.Utility
 
 					//mergeRight = true;
 				}
-				else if (up == typeToBlendWith && down == type && left == typeToBlendWith && right == type)
+				else if (blendUp && down == type && blendLeft && right == type)
 				{
 					switch (variation)
 					{
@@ -246,7 +252,7 @@ namespace Macrocosm.Common.Utility
 					//mergeUp = true;
 					//mergeLeft = true;
 				}
-				else if (up == typeToBlendWith && down == type && left == type && right == typeToBlendWith)
+				else if (blendUp && down == type && left == type && blendRight)
 				{
 					switch (variation)
 					{
@@ -267,7 +273,7 @@ namespace Macrocosm.Common.Utility
 					//mergeUp = true;
 					//mergeRight = true;
 				}
-				else if (up == type && down == typeToBlendWith && left == typeToBlendWith && right == type)
+				else if (up == type && blendDown && blendLeft && right == type)
 				{
 					switch (variation)
 					{
@@ -288,7 +294,7 @@ namespace Macrocosm.Common.Utility
 					//mergeDown = true;
 					//mergeLeft = true;
 				}
-				else if (up == type && down == typeToBlendWith && left == type && right == typeToBlendWith)
+				else if (up == type && blendDown && left == type && blendRight)
 				{
 					switch (variation)
 					{
@@ -309,7 +315,7 @@ namespace Macrocosm.Common.Utility
 					//mergeDown = true;
 					//mergeRight = true;
 				}
-				else if (up == type && down == type && left == typeToBlendWith && right == typeToBlendWith)
+				else if (up == type && down == type && blendLeft && blendRight)
 				{
 					switch (variation)
 					{
@@ -330,7 +336,7 @@ namespace Macrocosm.Common.Utility
 					//mergeLeft = true;
 					//mergeRight = true;
 				}
-				else if (up == typeToBlendWith && down == typeToBlendWith && left == type && right == type)
+				else if (blendUp && blendDown && left == type && right == type)
 				{
 					switch (variation)
 					{
@@ -351,7 +357,7 @@ namespace Macrocosm.Common.Utility
 					//mergeUp = true;
 					//mergeDown = true;
 				}
-				else if (up == typeToBlendWith && down == type && left == typeToBlendWith && right == typeToBlendWith)
+				else if (blendUp && down == type && blendLeft && blendRight)
 				{
 					switch (variation)
 					{
@@ -373,7 +379,7 @@ namespace Macrocosm.Common.Utility
 					//mergeLeft = true;
 					//mergeRight = true;
 				}
-				else if (up == type && down == typeToBlendWith && left == typeToBlendWith && right == typeToBlendWith)
+				else if (up == type && blendDown && blendLeft && blendRight)
 				{
 					switch (variation)
 					{
@@ -395,7 +401,7 @@ namespace Macrocosm.Common.Utility
 					//mergeLeft = true;
 					//mergeRight = true;
 				}
-				else if (up == typeToBlendWith && down == typeToBlendWith && left == type && right == typeToBlendWith)
+				else if (blendUp && blendDown && left == type && blendRight)
 				{
 					switch (variation)
 					{
@@ -417,7 +423,7 @@ namespace Macrocosm.Common.Utility
 					//mergeDown = true;
 					//mergeRight = true;
 				}
-				else if (up == typeToBlendWith && down == typeToBlendWith && left == typeToBlendWith && right == type)
+				else if (blendUp && blendDown && blendLeft && right == type)
 				{
 					switch (variation)
 					{
@@ -439,7 +445,7 @@ namespace Macrocosm.Common.Utility
 					//mergeDown = true;
 					//mergeLeft = true;
 				}
-				else if (up == typeToBlendWith && down == typeToBlendWith && left == typeToBlendWith && right == typeToBlendWith)
+				else if (blendUp && blendDown && blendLeft && blendRight)
 				{
 					switch (variation)
 					{
@@ -464,7 +470,7 @@ namespace Macrocosm.Common.Utility
 				}
 				else if (up == type && down == type && left == type && right == type)
 				{
-					if (upLeft == typeToBlendWith)
+					if (typeToBlendWith.Contains(upLeft))
 					{
 						switch (variation)
 						{
@@ -483,7 +489,7 @@ namespace Macrocosm.Common.Utility
 						}
 					}
 
-					if (upRight == typeToBlendWith)
+					if (typeToBlendWith.Contains(upRight))
 					{
 						switch (variation)
 						{
@@ -502,7 +508,7 @@ namespace Macrocosm.Common.Utility
 						}
 					}
 
-					if (downLeft == typeToBlendWith)
+					if (typeToBlendWith.Contains(downLeft))
 					{
 						switch (variation)
 						{
@@ -521,7 +527,7 @@ namespace Macrocosm.Common.Utility
 						}
 					}
 
-					if (downRight == typeToBlendWith)
+					if (typeToBlendWith.Contains(downRight))
 					{
 						switch (variation)
 						{
@@ -544,7 +550,7 @@ namespace Macrocosm.Common.Utility
 			else
 			{
 
-				if (up == -1 && down == typeToBlendWith && left == type && right == type)
+				if (up == -1 && blendDown && left == type && right == type)
 				{
 					switch (variation)
 					{
@@ -564,7 +570,7 @@ namespace Macrocosm.Common.Utility
 
 					//mergeDown = true;
 				}
-				else if (up == typeToBlendWith && down == -1 && left == type && right == type)
+				else if (blendUp && down == -1 && left == type && right == type)
 				{
 					switch (variation)
 					{
@@ -584,7 +590,7 @@ namespace Macrocosm.Common.Utility
 
 					//mergeUp = true;
 				}
-				else if (up == type && down == type && left == -1 && right == typeToBlendWith)
+				else if (up == type && down == type && left == -1 && blendRight)
 				{
 					switch (variation)
 					{
@@ -604,7 +610,7 @@ namespace Macrocosm.Common.Utility
 
 					//mergeRight = true;
 				}
-				else if (up == type && down == type && left == typeToBlendWith && right == -1)
+				else if (up == type && down == type && blendLeft && right == -1)
 				{
 					switch (variation)
 					{
@@ -627,7 +633,7 @@ namespace Macrocosm.Common.Utility
 
 				if (up != -1 && down != -1 && left == -1 && right == type)
 				{
-					if (up == typeToBlendWith && down == type)
+					if (blendUp && down == type)
 					{
 						switch (variation)
 						{
@@ -647,7 +653,7 @@ namespace Macrocosm.Common.Utility
 
 						//mergeUp = true;
 					}
-					else if (down == typeToBlendWith && up == type)
+					else if (blendDown && up == type)
 					{
 						switch (variation)
 						{
@@ -670,7 +676,7 @@ namespace Macrocosm.Common.Utility
 				}
 				else if (up != -1 && down != -1 && left == type && right == -1)
 				{
-					if (up == typeToBlendWith && down == type)
+					if (blendUp && down == type)
 					{
 						switch (variation)
 						{
@@ -690,7 +696,7 @@ namespace Macrocosm.Common.Utility
 
 						//mergeUp = true;
 					}
-					else if (down == typeToBlendWith && up == type)
+					else if (blendDown && up == type)
 					{
 						switch (variation)
 						{
@@ -713,7 +719,7 @@ namespace Macrocosm.Common.Utility
 				}
 				else if (up == -1 && down == type && left != -1 && right != -1)
 				{
-					if (left == typeToBlendWith && right == type)
+					if (blendLeft && right == type)
 					{
 						switch (variation)
 						{
@@ -733,7 +739,7 @@ namespace Macrocosm.Common.Utility
 
 						//mergeLeft = true;
 					}
-					else if (right == typeToBlendWith && left == type)
+					else if (blendRight && left == type)
 					{
 						switch (variation)
 						{
@@ -756,7 +762,7 @@ namespace Macrocosm.Common.Utility
 				}
 				else if (up == type && down == -1 && left != -1 && right != -1)
 				{
-					if (left == typeToBlendWith && right == type)
+					if (blendLeft && right == type)
 					{
 						switch (variation)
 						{
@@ -776,7 +782,7 @@ namespace Macrocosm.Common.Utility
 
 						//mergeLeft = true;
 					}
-					else if (right == typeToBlendWith && left == type)
+					else if (blendRight && left == type)
 					{
 						switch (variation)
 						{
@@ -799,7 +805,7 @@ namespace Macrocosm.Common.Utility
 				}
 				else if (up != -1 && down != -1 && left == -1 && right == -1)
 				{
-					if (up == typeToBlendWith && down == typeToBlendWith)
+					if (blendUp && blendDown)
 					{
 						switch (variation)
 						{
@@ -820,7 +826,7 @@ namespace Macrocosm.Common.Utility
 						//mergeUp = true;
 						//mergeDown = true;
 					}
-					else if (up == typeToBlendWith)
+					else if (blendUp)
 					{
 						switch (variation)
 						{
@@ -840,7 +846,7 @@ namespace Macrocosm.Common.Utility
 
 						//mergeUp = true;
 					}
-					else if (down == typeToBlendWith)
+					else if (blendDown)
 					{
 						switch (variation)
 						{
@@ -863,7 +869,7 @@ namespace Macrocosm.Common.Utility
 				}
 				else if (up == -1 && down == -1 && left != -1 && right != -1)
 				{
-					if (left == typeToBlendWith && right == typeToBlendWith)
+					if (blendLeft && blendRight)
 					{
 						switch (variation)
 						{
@@ -884,7 +890,7 @@ namespace Macrocosm.Common.Utility
 						//mergeLeft = true;
 						//mergeRight = true;
 					}
-					else if (left == typeToBlendWith)
+					else if (blendLeft)
 					{
 						switch (variation)
 						{
@@ -904,7 +910,7 @@ namespace Macrocosm.Common.Utility
 
 						//mergeLeft = true;
 					}
-					else if (right == typeToBlendWith)
+					else if (blendRight)
 					{
 						switch (variation)
 						{
@@ -925,7 +931,7 @@ namespace Macrocosm.Common.Utility
 						//mergeRight = true;
 					}
 				}
-				else if (up == typeToBlendWith && down == -1 && left == -1 && right == -1)
+				else if (blendUp && down == -1 && left == -1 && right == -1)
 				{
 					switch (variation)
 					{
@@ -945,7 +951,7 @@ namespace Macrocosm.Common.Utility
 
 					//mergeUp = true;
 				}
-				else if (up == -1 && down == typeToBlendWith && left == -1 && right == -1)
+				else if (up == -1 && blendDown && left == -1 && right == -1)
 				{
 					switch (variation)
 					{
@@ -965,7 +971,7 @@ namespace Macrocosm.Common.Utility
 
 					//mergeDown = true;
 				}
-				else if (up == -1 && down == -1 && left == typeToBlendWith && right == -1)
+				else if (up == -1 && down == -1 && blendLeft && right == -1)
 				{
 					switch (variation)
 					{
@@ -985,7 +991,7 @@ namespace Macrocosm.Common.Utility
 
 					//mergeLeft = true;
 				}
-				else if (up == -1 && down == -1 && left == -1 && right == typeToBlendWith)
+				else if (up == -1 && down == -1 && left == -1 && blendRight)
 				{
 					switch (variation)
 					{
@@ -1553,8 +1559,8 @@ namespace Macrocosm.Common.Utility
 			}
 			#endregion
 
-			//if ((frame.X == -1 || frame.Y == -1))
-			//	return true;
+			if ((frame.X == -1 || frame.Y == -1))
+				return true;
 
 			Main.tile[i, j].TileFrameX = (short)frame.X;
 			Main.tile[i, j].TileFrameY = (short)frame.Y;

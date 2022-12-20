@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 namespace Macrocosm.Content.Subworlds
 {
 	
-
 	/// <summary> Stores information about Macrocosm Subworlds </summary>
 	public struct WorldInfo
 	{

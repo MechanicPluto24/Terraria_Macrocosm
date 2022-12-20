@@ -61,7 +61,7 @@ namespace Macrocosm.Content.Players
 		public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)
 		{
 			ModPacket packet = Mod.GetPacket();
-			packet.Write((byte)MessageType.SyncDashDirection);
+			packet.Write((byte)MessageType.SyncPlayerDashDirection);
 			packet.Write((byte)Player.whoAmI);
 			packet.Write((byte)DashDirection);
 			packet.Send(toWho, fromWho);
