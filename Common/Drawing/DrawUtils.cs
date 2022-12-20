@@ -166,7 +166,9 @@ namespace Macrocosm.Common.Drawing
 		/// <summary> Returns a premultiplied copy of a texture </summary>
 		public static Texture2D ToPremultiplied(this Texture2D texture)
 		{
-			Terraria.Main.QueueMainThreadAction(() =>
+			Texture2D newTexture = new(texture.GraphicsDevice, texture.Width, texture.Height);
+
+			Main.QueueMainThreadAction(() =>
 			{
 				Color[] buffer = new Color[texture.Width * texture.Height];
 				texture.GetData(buffer);
@@ -175,10 +177,10 @@ namespace Macrocosm.Common.Drawing
 					buffer[i] = Color.FromNonPremultiplied(
 						buffer[i].R, buffer[i].G, buffer[i].B, buffer[i].A);
 				}
-				texture.SetData(buffer);
+				newTexture.SetData(buffer);
 			});
 
-			return texture;
+			return newTexture;
 		}
 
 	}

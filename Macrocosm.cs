@@ -17,11 +17,10 @@ namespace Macrocosm
 {
 	public enum MessageType : byte
 	{
-		SyncNPCTargeting,
-		SyncDashDirection,
+		SyncPlayerDashDirection,
+		SyncPlayerRocketStatus,
 		EmbarkPlayerInRocket,
-		LaunchRocket,
-		SyncPlayerRocketStatus
+		LaunchRocket
 	}
 
 	public class Macrocosm : Mod
@@ -65,7 +64,7 @@ namespace Macrocosm
 
 			switch (messageType)
 			{
-				case MessageType.SyncDashDirection:
+				case MessageType.SyncPlayerDashDirection:
 					{ 
 						int dashPlayerID = reader.ReadByte();
 						DashPlayer dashPlayer= Main.player[dashPlayerID].GetModPlayer<DashPlayer>();
@@ -75,26 +74,6 @@ namespace Macrocosm
 
 						if (Main.netMode == NetmodeID.Server)
 							dashPlayer.SyncPlayer(-1, whoAmI, false);
-
-						break;
-					}
-
-				case MessageType.EmbarkPlayerInRocket:
-					{
-						int playerId = reader.ReadByte();
-						bool asCommander = reader.ReadBoolean();
-						int rocketId = reader.ReadByte();
-
-						if (Main.netMode == NetmodeID.Server)
-							(Main.npc[rocketId].ModNPC as RocketNPC).ReceiveEmbarkedPlayer(playerId, asCommander, rocketId);
-
-						break;
-					}
-
-				case MessageType.LaunchRocket:
-					{
-						int rocketId = reader.ReadByte();
-						(Main.npc[rocketId].ModNPC as RocketNPC).Launch();
 
 						break;
 					}
@@ -111,6 +90,35 @@ namespace Macrocosm
 
 						if (Main.netMode == NetmodeID.Server)
 							rocketPlayer.SyncPlayer(-1, whoAmI, false);
+
+						break;
+					}
+
+				case MessageType.EmbarkPlayerInRocket:
+					{
+						int playerId = reader.ReadByte();
+						bool asCommander = reader.ReadBoolean();
+						int rocketId = reader.ReadByte();
+						RocketNPC rocket = Main.npc[rocketId].ModNPC as RocketNPC;
+
+						// Server receives embark status from client interaction 
+						if (Main.netMode == NetmodeID.Server)
+							rocket.ReceiveEmbarkedPlayer(playerId, asCommander, rocketId);
+
+						break;
+					}
+
+				case MessageType.LaunchRocket:
+					{
+						int rocketId = reader.ReadByte();
+						RocketNPC rocket = Main.npc[rocketId].ModNPC as RocketNPC;
+
+						// launch on the server
+						rocket.Launch(); 
+
+						// send the launch message to the other clients
+						if (Main.netMode == NetmodeID.Server)
+							rocket.SendLaunchMessage(ignoreClient: whoAmI); 
 
 						break;
 					}

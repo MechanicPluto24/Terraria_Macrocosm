@@ -33,6 +33,7 @@ namespace Macrocosm.Content.Rocket
 
 			NPC.friendly = true;
 			NPC.damage = 0;
+			NPC.dontTakeDamage = true;
 			NPC.lifeMax = 1;
 			NPC.ShowNameOnHover = false;
 
@@ -128,17 +129,18 @@ namespace Macrocosm.Content.Rocket
 			{
 				if (Main.mouseRight)
 				{
-					bool noCommander = (Main.netMode == NetmodeID.SinglePlayer) || !TryFindingCommander(out _);
+					bool noCommanderInRocket = (Main.netMode == NetmodeID.SinglePlayer) || !TryFindingCommander(out _);
 					GetRocketPlayer(Main.myPlayer).InRocket = true;
-					GetRocketPlayer(Main.myPlayer).AsCommander = noCommander;
+					GetRocketPlayer(Main.myPlayer).AsCommander = noCommanderInRocket;
 					GetRocketPlayer(Main.myPlayer).RocketID = NPC.whoAmI;
 
+					// Interaction is done locally. Send embark status to the server.
 					if (Main.netMode == NetmodeID.MultiplayerClient)
-						SendEmbarkedPlayer(Main.myPlayer, noCommander);
+						SendEmbarkedPlayer(Main.myPlayer, noCommanderInRocket);
 				}
 				else
 				{
-					if(RocketSystem.Instance.State is not null)
+					if(!UIRocket.Active)
 					{
 						Main.LocalPlayer.cursorItemIconEnabled = true;
 						Main.LocalPlayer.cursorItemIconID = ModContent.ItemType<RocketPlacer>();
@@ -194,6 +196,7 @@ namespace Macrocosm.Content.Rocket
 		{
 			Despawn();
 		}
+
 		private void Despawn()
 		{
 			if(Main.netMode == NetmodeID.SinglePlayer)
@@ -250,6 +253,9 @@ namespace Macrocosm.Content.Rocket
 		{
 			for(int i = 0; i < Main.maxPlayers; i++)
 			{
+				if (!Main.player[i].active)
+					continue;
+
 				RocketPlayer rocketPlayer = GetRocketPlayer(i);
 				if (CheckPlayerInRocket(i) && rocketPlayer.AsCommander)
 				{
@@ -272,6 +278,9 @@ namespace Macrocosm.Content.Rocket
 
 			for(int i = 0; i < Main.maxPlayers; i++)
 			{
+				if (!Main.player[i].active)
+					continue;
+
 				if (CheckPlayerInRocket(i))
 				{
 					first = i;
@@ -302,8 +311,19 @@ namespace Macrocosm.Content.Rocket
 		public void Launch()
 		{
 			Launching = true;
-			NPC.netUpdate= true;
+			NPC.netUpdate = true;
  		}
+
+		public void SendLaunchMessage(int toClient = -1, int ignoreClient = -1)
+		{
+			if (Main.netMode == NetmodeID.SinglePlayer)
+				return;
+
+			ModPacket packet = Macrocosm.Instance.GetPacket();
+			packet.Write((byte)MessageType.LaunchRocket);
+			packet.Write((byte)NPC.whoAmI);
+			packet.Send(toClient, ignoreClient);
+		}
 
 		private void VisualEffects()
 		{
@@ -349,7 +369,7 @@ namespace Macrocosm.Content.Rocket
 			return false;
 		}
 
-		/// <summary> Make the rocket draw over players during launch </summary>
+		/// <summary> Make the rocket draw over players while players are embarked </summary>
 		public override void DrawBehind(int index)
 		{
 			if(AnyEmbarkedPlayers(out _))

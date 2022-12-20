@@ -21,8 +21,7 @@ namespace Macrocosm.Content.UI.Rocket
 
 		public static void Show(int rocketId) => RocketSystem.Instance.ShowUI(rocketId);
 		public static void Hide() => RocketSystem.Instance.HideUI();
-
-		public static bool Displayed => RocketSystem.Instance.Interface?.CurrentState != null;
+		public static bool Active => RocketSystem.Instance.Interface?.CurrentState is not null;
 
 		public override void OnInitialize()
 		{
@@ -88,15 +87,11 @@ namespace Macrocosm.Content.UI.Rocket
 
 		private void LaunchRocket()
 		{
-			(Rocket.ModNPC as RocketNPC).Launch();
+			RocketNPC rocket = Rocket.ModNPC as RocketNPC;
+			rocket.Launch(); // launch rocket on the local sp/mp client
 
 			if (Main.netMode == NetmodeID.MultiplayerClient)
-			{
-				ModPacket packet = Macrocosm.Instance.GetPacket();
-				packet.Write((byte)MessageType.LaunchRocket);
-				packet.Write((byte)RocketID);
-				packet.Send();
-			}
+				rocket.SendLaunchMessage(); // send launch message to the server
 		}
 	}
 }

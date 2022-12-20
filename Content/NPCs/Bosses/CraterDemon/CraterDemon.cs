@@ -159,7 +159,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		private BigPortalInfo bigPortal2;
 
 		private Vector2 portalTarget;
-		private Vector2 portalTarget2;
+		private Vector2 portalOffset;
 		private int portalAttackCount;
 
 		public const int PortalTimerMax = (int)(4f * 60 + 1.5f * 60 + 24);  //Portal spawning leadup + time portals are active before they shrink
@@ -318,10 +318,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			if (hasCustomTarget)
 				writer.WriteVector2(movementTarget.Value);
 
-			writer.Write((byte)oldAttack);
-
+			writer.Write(oldAttack);
 			writer.WriteVector2(portalTarget);
-			writer.WriteVector2(portalTarget2);
+			writer.WriteVector2(portalOffset);
 
 			writer.Write((byte)portalAttackCount);
 		}
@@ -341,10 +340,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 			movementTarget = hasCustomTarget ? (Vector2?)reader.ReadVector2() : null;
 
-			oldAttack = reader.ReadByte();
-
+			oldAttack = reader.ReadInt32();
 			portalTarget = reader.ReadVector2();
-			portalTarget2 = reader.ReadVector2();
+			portalOffset = reader.ReadVector2();
 
 			portalAttackCount = reader.ReadByte();
 		}
@@ -402,7 +400,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 				SpawnPortalDusts(info);
 
 			Lighting.AddLight(info.center, new Vector3(30, 255, 105) / 255 * info.scale * 3f);
-
 		}
 
 		private void SpawnPortalDusts(BigPortalInfo info)
@@ -486,6 +483,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		public override void FindFrame(int frameHeight)
 		{
 			int set = GetAnimationSetFrame();
+
 			NPC.frame.Y = frameHeight * set;
 		}
 
@@ -841,6 +839,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 								SoundEngine.PlaySound(SoundID.Zombie105, NPC.Center); //Cultist laugh sound
 
 							//Wait for a random amount of time
+							//Wait for a random amount of time
 							if (Main.netMode != NetmodeID.MultiplayerClient)
 							{
 								AI_Timer = Main.expertMode ? Main.rand.Next(40, 90 + 1) : Main.rand.Next(100, 220 + 1);
@@ -857,18 +856,17 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 						{
 							if (Main.netMode != NetmodeID.MultiplayerClient)
 							{
-								portalTarget  = Main.rand.NextVector2Unit() * 30 * 16;
-								portalTarget2 = portalTarget;
+								portalOffset = Main.rand.NextVector2Unit() * 30 * 16;
+								
 								NPC.netUpdate = true;
 							}
 
 							//Second portal is where the boss will end up
-							SpawnBigPortal(player.Center + portalTarget, ref bigPortal, fast: true);
-							SpawnBigPortal(player.Center - portalTarget2, ref bigPortal2, fast: true);
+							SpawnBigPortal(player.Center + portalOffset, ref bigPortal, fast: true);
+							SpawnBigPortal(player.Center - portalOffset, ref bigPortal2, fast: true);
 							bigPortal2.visible = false;
 
-							//NPC.Center = bigPortal.center;
-							NPC.Center = portalTarget2;
+							NPC.Center = portalOffset;
 							NPC.velocity = Vector2.Zero;
 
 							AI_AttackProgress++;
@@ -919,7 +917,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 							NPC.Center = bigPortal.center;
 							NPC.velocity = NPC.DirectionTo(player.Center) * chargeVelocity;
 
-							SoundEngine.PlaySound(SoundID.ForceRoar, NPC.position); 
+							SoundEngine.PlaySound(SoundID.ForceRoar, NPC.position);
 
 							if (Main.netMode != NetmodeID.MultiplayerClient)
 							{
