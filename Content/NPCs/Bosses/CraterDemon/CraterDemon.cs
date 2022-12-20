@@ -262,7 +262,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			//npcLoot.Add(ItemDropRule.MasterModeDropOnAllPlayers(ModContent.ItemType<CraterDemonMMPet>(), 4));
 
 			// BELOW: for normal mode, same as boss bag (excluding Broken Hero Shield)
-
 			LeadingConditionRule notExpertRule = new LeadingConditionRule(new Conditions.NotExpert());
 			//notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<CraterDemonBossMask>(), 7));
 
@@ -273,7 +272,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 				ModContent.ItemType<CalcicCane>(),
 				ModContent.ItemType<Cruithne3753>()
 				/*, ModContent.ItemType<JewelOfShowers>() */
-				/*, ModContent.ItemType<ChampionBlade>() */
+				/*, ModContent.ItemType<ChampionsBlade>() */
 				));
 
 			npcLoot.Add(notExpertRule);

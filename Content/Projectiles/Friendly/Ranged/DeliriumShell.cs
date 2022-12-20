@@ -19,8 +19,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 		public override bool OnTileCollide(Vector2 oldVelocity)
 		{
-			Point coordinates = Projectile.Center.ToTileCoordinates();
-			WorldGen.KillTile(coordinates.X, coordinates.Y, effectOnly: true);
+			Collision.HitTiles(Projectile.position, oldVelocity, Projectile.width, Projectile.height);
 			return true;
 		}
 	}

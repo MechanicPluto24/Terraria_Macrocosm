@@ -15,9 +15,9 @@ namespace Macrocosm.Content.Items.Materials
 		{
 			Item.width = 20;
 			Item.height = 20;
-			Item.maxStack = 1;
+			Item.maxStack = 9999;
 			Item.value = 100;
-			Item.rare = ModContent.RarityType<MoonRarityT1>();
+			Item.rare = ModContent.RarityType<MoonRarityT2>();
 			Item.material = true;
 
 		}

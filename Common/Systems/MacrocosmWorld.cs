@@ -29,8 +29,7 @@ namespace Macrocosm.Content.Systems
 		public static float CelestialStylePercent;
 		private static int celesialCounter = 0;
 
-		//public static Color NebulaColor = new(232, 0, 255);
-		public static Color NebulaColor = new(165, 0, 204);
+ 		public static Color NebulaColor = new(165, 0, 204);
 		public static Color StardustColor = new(0, 187, 255);
 		public static Color VortexColor = new(0, 255, 180);
 		public static Color SolarColor = new(255, 191, 0);
@@ -137,8 +136,6 @@ namespace Macrocosm.Content.Systems
 				celesialCounter = 0;
 				CelestialStyle = NextCelestialStyle;
 			}
-
-			NebulaColor = new(165, 0, 204);
 
 			CelestialStylePercent = celesialCounter / cyclePeriod;
 
