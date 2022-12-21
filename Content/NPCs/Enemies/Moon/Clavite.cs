@@ -115,10 +115,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 				dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
 			}
 
-			if (Main.netMode == NetmodeID.Server)
-			{
-				return; // don't run on the server
-			}
+			if (Main.dedServ)
+				return;
 
 			if (NPC.life <= 0)
 			{

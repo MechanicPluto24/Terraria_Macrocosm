@@ -2,9 +2,8 @@
 
 namespace Macrocosm.Content.Subworlds
 {
-	internal static class WorldInfoStorage
+	public static class WorldInfoStorage
 	{
-
 		public static WorldInfo Sun = new()
 		{
 			DisplayName = "The Sun",

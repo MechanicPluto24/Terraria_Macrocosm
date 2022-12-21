@@ -112,7 +112,6 @@ namespace Macrocosm.Content.UI.Rocket
 					Color = new Color(89, 116, 213, 255) * 0.9f
 				});
 
-				// no, i refuse to iterate over a dictionary
 				foreach (string hazardKey in info.GetHazardKeys())
 				{
 					UIInfoElements.Add(new UIWorldInfoElement(ModContent.Request<Texture2D>(iconPath + hazardKey, mode).Value, info.Hazards[hazardKey], "Hazard"));

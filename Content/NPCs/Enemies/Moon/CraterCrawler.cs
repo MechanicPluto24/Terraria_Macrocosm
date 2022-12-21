@@ -39,7 +39,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			NPC.aiStyle = -1;
 
 			SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBiome>().Type }; // Associates this NPC with the Moon Biome in Bestiary
-			 
 		}
 
 		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry) 
@@ -83,12 +82,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			attackCounter = reader.ReadInt32();
 		}
 
-		public override void AI() {
-
-
-			
-
-
+		public override void AI() 
+		{
 			if (Main.netMode != NetmodeID.MultiplayerClient) 
 			{
 				// tick down the attack counter.
@@ -164,7 +159,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		public override void Init() 
 		{
-			FlipSprite = true;
+			FlipSprite = false;
 			CraterCrawlerHead.CommonWormInit(this);
 		}
 	}

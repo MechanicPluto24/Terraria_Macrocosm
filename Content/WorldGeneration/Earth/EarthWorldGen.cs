@@ -31,7 +31,6 @@ namespace Macrocosm.Content
 
 		private void GenerateOres(GenerationProgress progress, GameConfiguration configuration)
 		{
-
 			int aluminumType = ModContent.TileType<AluminumOre>();
 			int lithiumType = ModContent.TileType<LithiumOre>();
 			int oilShaleType = ModContent.TileType<OilShale>();

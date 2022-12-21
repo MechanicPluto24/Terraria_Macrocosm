@@ -17,20 +17,20 @@ namespace Macrocosm.Content.UI.Rocket
 
 		/// <summary> The subworld ID used for accessing the subworld </summary>
 		public string TargetID;
-		private string targetName = "A";
+		private string targetName = "default";
 
 		/// <summary> Function to determine whether the subworld is accesible </summary>
 		public delegate bool FuncCanLaunch();
 		public readonly FuncCanLaunch CanLaunch = () => false;
 
 		public Texture2D SelectionOutline = ModContent.Request<Texture2D>("Macrocosm/Content/UI/Rocket/Buttons/SelectionOutlineSmall", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-
 		public bool IsSelectable => CanLaunch() || (Parent as UINavigationMap).Next != null;
-
 		public bool AlreadyHere => targetName == (SubworldSystem.AnyActive<Macrocosm>() ? SubworldSystem.Current.Name : "Earth");
 
-		/// <summary> The current selected  </summary>
+		/// <summary> Target selected  </summary>
 		public bool Selected;
+
+		private float rotation = 0f;
 
 		/// <summary>
 		/// Creates a new UIMapTarget
@@ -44,7 +44,6 @@ namespace Macrocosm.Content.UI.Rocket
 			Height.Set(height + 40, 0);
 			Top.Set(position.Y - 20, 0);
 			Left.Set(position.X - 20, 0);
-
 		}
 
 		/// <summary>
@@ -106,6 +105,11 @@ namespace Macrocosm.Content.UI.Rocket
  			Vector2 pos = new Vector2(rect.Center.X, rect.Center.Y);
 			Vector2 origin = new Vector2(SelectionOutline.Width / 2, SelectionOutline.Height / 2);
 
+			if (!Selected)
+				rotation = 0f;
+			else 
+				rotation += 0.008f;
+
 			SpriteBatchState state = spriteBatch.SaveState();
 			spriteBatch.End();
 			spriteBatch.Begin(BlendState.NonPremultiplied, state);
@@ -113,11 +117,11 @@ namespace Macrocosm.Content.UI.Rocket
 			if (Selected)
 			{
 				if (IsSelectable)
-					spriteBatch.Draw(SelectionOutline, pos, null, new Color(0, 255, 0), 0f, origin, 1f, SpriteEffects.None, 0f);
+					spriteBatch.Draw(SelectionOutline, pos, null, new Color(0, 255, 0), rotation, origin, 1f, SpriteEffects.None, 0f);
 				else if (AlreadyHere)
-					spriteBatch.Draw(SelectionOutline, pos, null, Color.Gray, 0f, origin, 1f, SpriteEffects.None, 0f);
+					spriteBatch.Draw(SelectionOutline, pos, null, Color.Gray, rotation, origin, 1f, SpriteEffects.None, 0f);
 				else
-					spriteBatch.Draw(SelectionOutline, pos, null, new Color(255, 0, 0), 0f, origin, 1f, SpriteEffects.None, 0f);
+					spriteBatch.Draw(SelectionOutline, pos, null, new Color(255, 0, 0), rotation, origin, 1f, SpriteEffects.None, 0f);
 			}
 			else if (IsMouseHovering)
 				spriteBatch.Draw(SelectionOutline, pos, null, Color.Gold, 0f, origin, 1f, SpriteEffects.None, 0f);

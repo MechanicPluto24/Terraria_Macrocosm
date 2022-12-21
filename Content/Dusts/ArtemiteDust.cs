@@ -7,12 +7,9 @@ namespace Macrocosm.Content.Dusts
 	{
 		public override bool Update(Dust dust)
 		{
-			//float lightMultiplier = 0.25f;
-
 			dust.position += dust.velocity;
 			dust.rotation += 0.1f * (dust.dustIndex % 2 == 0 ? -1 : 1);
-			//dust.scale -= 0.05f; was too short lived 
-			dust.scale -= 0.02f;
+ 			dust.scale -= 0.02f;
 
 			float lightMultiplier = 0.25f * dust.scale;
 

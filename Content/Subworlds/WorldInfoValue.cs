@@ -12,7 +12,6 @@ namespace Macrocosm.Content.Subworlds
 		Radius,
 		DayPeriod
 	}
-
 	public struct WorldInfoValue
 	{
 		private float value = 0f;

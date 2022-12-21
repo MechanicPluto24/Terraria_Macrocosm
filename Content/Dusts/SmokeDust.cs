@@ -5,7 +5,6 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Dusts
 {
-
 	/// <summary>
 	/// Using vanilla texture of DustID.Smoke
 	/// </summary>
