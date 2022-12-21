@@ -20,7 +20,6 @@ namespace Macrocosm.Content.Items.Accessories.CelestialBulwark
 			Tooltip.SetDefault("Allows the player to dash into the enemy\nDouble tap a direction");
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
-
 		public override void SetDefaults()
 		{
 			Item.damage = 120;
@@ -98,6 +97,5 @@ namespace Macrocosm.Content.Items.Accessories.CelestialBulwark
 
 			spriteBatch.Restore(state);
 		}
-
 	}
 }

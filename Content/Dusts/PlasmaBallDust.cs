@@ -12,7 +12,6 @@ namespace Macrocosm.Content.Dusts
 
 		public override void OnSpawn(Dust dust)
 		{
-			//dust.noLight = true;
 			dust.scale = Main.rand.NextFloat(1, 1.35f);
 			vanishSpeed = Main.rand.NextFloat(0.04f, 0.01f);
 		}

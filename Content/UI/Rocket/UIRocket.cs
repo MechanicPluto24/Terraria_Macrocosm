@@ -68,6 +68,7 @@ namespace Macrocosm.Content.UI.Rocket
 
 			string prevName = WorldInfoPanel.Name;
 			WorldInfoPanel.Name = target is null ? "" : target.TargetWorldInfo.DisplayName;
+
 			if (target is not null && prevName != WorldInfoPanel.Name)
 				WorldInfoPanel.FillWithInfo(target.TargetWorldInfo);
 			else if (target is null)

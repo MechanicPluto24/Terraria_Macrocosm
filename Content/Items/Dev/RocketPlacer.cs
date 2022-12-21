@@ -18,7 +18,7 @@ namespace Macrocosm.Content.Items.Dev
 		{
 			Item.width = 14;
 			Item.height = 38;
-			Item.rare = ModContent.RarityType<MoonRarityT3>();
+			Item.rare = ModContent.RarityType<DevRarity>();
 			Item.value = 100000;
 			Item.maxStack = 1;
 			Item.useTime = 1;

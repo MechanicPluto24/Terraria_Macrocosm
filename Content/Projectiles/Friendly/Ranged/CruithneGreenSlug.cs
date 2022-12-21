@@ -15,11 +15,18 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			Projectile.height = 4;
 			Projectile.extraUpdates = 3;
 			Projectile.timeLeft = 270;
+			Projectile.light = 0f;
 		}
 
 		public override bool OnTileCollide(Vector2 oldVelocity)
 		{
 			Collision.HitTiles(Projectile.position, oldVelocity, Projectile.width, Projectile.height);
+			return true;
+		}
+
+		public override bool PreAI()
+		{
+			Lighting.AddLight(Projectile.position, new Color(30, 255, 105).ToVector3() * 0.6f);
 			return true;
 		}
 	}

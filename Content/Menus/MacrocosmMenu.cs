@@ -44,28 +44,31 @@ namespace Macrocosm.Content.Menu
 
 		public MacrocosmMenu()
 		{
-			celestialBodies.Add(Sun);
-			celestialBodies.Add(Vulcan);
-			celestialBodies.Add(Mercury);
-			celestialBodies.Add(Venus);
-			celestialBodies.Add(Earth);
-			celestialBodies.Add(Luna);
-			celestialBodies.Add(Mars);
-			celestialBodies.Add(Phobos);
-			celestialBodies.Add(Deimos);
-			celestialBodies.Add(Ceres);
-			celestialBodies.Add(Jupiter);
-			celestialBodies.Add(Io);
-			celestialBodies.Add(Europa);
-			celestialBodies.Add(Saturn);
-			celestialBodies.Add(Titan);
-			celestialBodies.Add(Ouranos);
-			celestialBodies.Add(Miranda);
-			celestialBodies.Add(Neptune);
-			celestialBodies.Add(Triton);
-			celestialBodies.Add(Pluto);
-			celestialBodies.Add(Charon);
-			celestialBodies.Add(Eris);
+			celestialBodies = new()
+			{
+				Sun,
+ 				Vulcan,
+				Mercury,
+				Venus,
+				Earth,
+				Luna,
+				Mars,
+				Phobos,
+				Deimos,
+				Ceres,
+				Jupiter,
+				Io,
+				Europa,
+				Saturn,
+				Titan,
+				Ouranos,
+				Miranda,
+				Neptune,
+				Triton,
+				Pluto,
+				Charon,
+				Eris
+			};
 		}
 
 		public override Asset<Texture2D> Logo => ModContent.Request<Texture2D>(assetPath + "Logo");

@@ -45,16 +45,20 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
 		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
-			// the effect could look like this
-			//for (int i = 0; i < 10; i++)
-			//	Projectile.NewProjectile(null, position + new Vector2(- 5 + i * Math.Sign(velocity.X) * 2, - 5 + i * Math.Sign(velocity.Y) * 2f), velocity * 0.33f, ProjectileID.ChargedBlasterOrb, 0, 0);
-			//
+			 //the effect could look like this
+		 
+				//Projectile.NewProjectile(null, position - new Vector2(0, 7), velocity * 0.33f, ProjectileID.ChargedBlasterOrb, 0, 0);
+				//Projectile.NewProjectile(null, position - new Vector2(0, 5), velocity * 0.33f, ProjectileID.ChargedBlasterOrb, 0, 0);
+				//Projectile.NewProjectile(null, position, velocity * 0.36f, ProjectileID.ChargedBlasterOrb, 0, 0);
+				//Projectile.NewProjectile(null, position - new Vector2(0, -5), velocity * 0.33f, ProjectileID.ChargedBlasterOrb, 0, 0);
+				//Projectile.NewProjectile(null, position - new Vector2(0, -7), velocity * 0.33f, ProjectileID.ChargedBlasterOrb, 0, 0);
+			
 			return true;
 		}
 
 		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
 		{
-			//	type = ProjectileID.ShadowFlameArrow;
+				//type = ProjectileID.ShadowFlameArrow;
 		}
 
 		public override void AddRecipes()

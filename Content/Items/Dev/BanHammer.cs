@@ -23,7 +23,7 @@ namespace Macrocosm.Content.Items.Dev
 			Item.useStyle = ItemUseStyleID.Swing;
 			Item.knockBack = 1000;
 			Item.value = 10000;
-			Item.rare = ModContent.RarityType<MoonRarityT3>();
+			Item.rare = ModContent.RarityType<DevRarity>();
 			Item.UseSound = SoundID.Item1;
 			Item.autoReuse = false;
 		}

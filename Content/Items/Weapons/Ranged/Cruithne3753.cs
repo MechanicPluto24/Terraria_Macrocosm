@@ -78,8 +78,11 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
 		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
 		{
-			if (player.altFunctionUse == 2)                                                                                                                                                                                                  
+			if (player.altFunctionUse == 2)
+			{
 				velocity *= 0.2f;
+				position.Y -= 4f;
+			}                                                                                                                                                                                            
  		}
 
 		public override Vector2? HoldoutOffset() => new Vector2(-12, 0);

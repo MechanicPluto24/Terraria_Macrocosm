@@ -48,7 +48,6 @@ namespace Macrocosm.Content.DrawLayers
 
 			if (drawInfo.drawPlayer.mount.Cart)
 				drawInfo.DrawDataCache.Reverse(drawInfo.DrawDataCache.Count - 2, 2);
-
 		}
 	}
 }

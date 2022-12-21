@@ -363,7 +363,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		public override void HitEffect(int hitDirection, double damage)
 		{
-
 			if (NPC.life > 0)
 			{
 				for (int i = 0; i < 10; i++)
@@ -376,11 +375,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 				}
 			}
 
-			if (Main.netMode == NetmodeID.Server)
-			{
-				return; // don't run on the server
-			}
-
+			if (Main.dedServ)
+ 				return; // don't run on the server
+ 
 			var entitySource = NPC.GetSource_Death();
 
 			if (NPC.life <= NPC.lifeMax / 2 && AI_State != (float)ActionState.Sprint)

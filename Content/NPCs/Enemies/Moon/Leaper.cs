@@ -12,7 +12,6 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-
 	// incomplete
 	// (TODO: leaps)
 	public class Leaper : MoonEnemy
@@ -22,7 +21,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			base.SetStaticDefaults();
  			Main.npcFrameCount[Type] = 24;
 		}
-
 		public override void SetDefaults()
 		{
 			base.SetDefaults();

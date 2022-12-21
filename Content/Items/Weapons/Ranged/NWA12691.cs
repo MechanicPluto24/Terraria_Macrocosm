@@ -27,8 +27,8 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			Item.DamageType = DamageClass.Ranged;
 			Item.width = 70;
 			Item.height = 26;
-			Item.useTime = 12;
-			Item.useAnimation = 12;
+			Item.useTime = 40;
+			Item.useAnimation = 40;
 			Item.useStyle = ItemUseStyleID.Shoot;
 			Item.noMelee = true;
 			Item.channel = true;
@@ -38,7 +38,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			Item.UseSound = SoundID.Item11;
 			Item.shoot = ProjectileID.PurificationPowder; // For some reason, all the guns in the vanilla source have this.
 			Item.autoReuse = true;
-			Item.shootSpeed = 7f;
+			Item.shootSpeed = 12f;
 			Item.useAmmo = AmmoID.Rocket;
 		}
 
@@ -64,7 +64,6 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
 					if (npc.TryGetGlobalNPC(out MacrocosmNPC macNpc))
  						macNpc.Targeted = false;
-			 
 
 					if (!found && npc.CanBeChasedBy() && Main.npc[i].getRect().Intersects(new Rectangle((int)(Main.MouseWorld.X - 10f), (int)(Main.MouseWorld.Y - 10f), 20, 20)))
 					{
@@ -74,10 +73,8 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 				}
 
 				if (id > -1 && id < Main.maxNPCs)
-				{
-					Main.npc[id].Macrocosm().Targeted = true;
-				}
-
+ 					Main.npc[id].Macrocosm().Targeted = true;
+ 
 				return false;
 			}
 
@@ -86,7 +83,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
 		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
 		{
-			position += new Vector2(0, -4); // barrel offset 
+			position += new Vector2(5, -4); // barrel offset 
 			type = ModContent.ProjectileType<NWARocket>();
 		}
 	}

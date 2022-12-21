@@ -72,16 +72,13 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			});
 		}
 
-		/// <summary>
-		/// Adapted from Corite AI 
-		/// </summary>
+		/// <summary> Adapted from Corite AI </summary>
 		public override void AI()
 		{
 			if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active)
 				NPC.TargetClosest(true);
 
 			bool playerActive = Main.player[NPC.target] != null && Main.player[NPC.target].active && !Main.player[NPC.target].dead;
-
 
 			float kbResist = 0.3f;
 			float chaseUpwardsMult = 8f;
@@ -287,10 +284,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 				dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
 			}
 
-			if (Main.netMode == NetmodeID.Server)
-			{
-				return; // don't run on the server
-			}
+			if (Main.dedServ)
+				return;
 
 			if (NPC.life <= 0)
 			{

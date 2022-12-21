@@ -31,7 +31,6 @@ namespace Macrocosm.Content.Dusts
 			return true;
 		}
 
-
 		public override Color? GetAlpha(Dust dust, Color lightColor)
 		{
 			return new Color(lightColor.R, lightColor.G, lightColor.B, 255);

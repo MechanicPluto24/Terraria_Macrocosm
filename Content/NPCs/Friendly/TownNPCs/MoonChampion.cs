@@ -82,7 +82,6 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
             };
 		}
 
-
 		// NOTE: I cannot guarentee that all of this code is in tip-top shape, so if there is anything off, just let ryan know :poggers:
 		// "Ok I think I made it in tip-top shape now probably" - 4mbr0s3 2
 		public override string GetChat()
@@ -180,7 +179,7 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
 				return shop.item[nextSlotRef++];
 			}
 
-			// for testing, subject to change  
+			// for testing, subject to change - Feldy
 			AddNewSlot(ref nextSlot, ItemID.SuperHealingPotion, 3);
 			AddNewSlot(ref nextSlot, ModContent.ItemType<AstronautHelmet>(), 20);
 			AddNewSlot(ref nextSlot, ModContent.ItemType<AstronautSuit>(), 20);

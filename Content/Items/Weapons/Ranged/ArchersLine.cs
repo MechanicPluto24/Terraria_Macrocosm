@@ -16,7 +16,6 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			Tooltip.SetDefault("Bullets ricochet from one enemy to another");
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
-
 		public override void SetDefaults()
 		{
 			Item.damage = 200;

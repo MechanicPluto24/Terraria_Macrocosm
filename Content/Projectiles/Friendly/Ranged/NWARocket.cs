@@ -1,6 +1,8 @@
 using Macrocosm.Common.Base;
 using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Utility;
+using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Tiles.Furniture;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -48,7 +50,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		public override void AI()
 		{
 			#region Homing
-
 			float x = Projectile.position.X;
 			float y = Projectile.position.Y;
 
@@ -112,7 +113,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 			#region Visual Effects
 
-			Projectile.localAI[1] += 1f;
+			// alpha fade-in
+			Projectile.localAI[1] += 0.6f;
 			if (Projectile.localAI[1] > 6f)
 			{
 				Projectile.localAI[1] = 6f;
@@ -123,11 +125,21 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 				Projectile.alpha = (int)(255f - 42f * Projectile.localAI[1]) + 100;
 				if (Projectile.alpha > 255)
 					Projectile.alpha = 255;
+
+				// spawn some dusts as barrel flash
+				for (int i = 0; i < 10; i++)
+				{
+					Dust dust = Dust.NewDustDirect(Projectile.position + new Vector2(0, 0), Projectile.width, Projectile.height, DustID.Torch, Scale: 3);
+					dust.velocity = (Projectile.velocity.SafeNormalize(Vector2.UnitX) * Main.rand.NextFloat(6f, 12f)).RotatedByRandom(MathHelper.PiOver4 * 0.4);
+					dust.noLight = false;
+					dust.alpha = 200;
+					dust.noGravity = true;
+				}
 			}
 
+			// spawn dust trail
 			for (int i = 0; i < 2; i++)
 			{
-
 				Vector2 dustVelocity = Vector2.Zero;
 				if (i == 1)
 					dustVelocity = Projectile.velocity * 0.5f;
@@ -226,11 +238,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 		public override void Kill(int timeLeft)
 		{
-
 			if (Main.netMode != NetmodeID.Server)
 			{
 				SoundEngine.PlaySound(SoundID.Item14, Projectile.position);
 
+				#region Spawn dusts
 				for (int i = 0; i < 30; i++)
 				{
 					int dustSmoke = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, DustID.Smoke, 0f, 0f, 100, default, 1.5f);
@@ -248,7 +260,20 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 					dust = Main.dust[dustFlame];
 					dust.velocity *= 3f;
 				}
+				#endregion
 
+				#region Spawn trail dust
+				for (int i = 0; i < Projectile.oldPos.Length; i++)
+				{
+					for (int j = 0; j < 3; j++)
+					{
+						Vector2 pos = Projectile.oldPos[i];
+						Dust dust = Dust.NewDustDirect(new Vector2(pos.X , pos.Y), 20, 20, DustID.Torch, Scale: 0.07f * (Projectile.oldPos.Length - i));
+					}
+				}
+				#endregion
+
+				#region Spawn Smoke Gores
 				for (int i = 0; i < 2; i++)
 				{
 					float multVelocity = 0.4f;
@@ -276,6 +301,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 					Main.gore[goreSmoke].velocity.X -= 1f;
 					Main.gore[goreSmoke].velocity.Y -= 1f;
 				}
+				#endregion
 			}
 		}
 	}
