@@ -73,11 +73,11 @@ namespace Macrocosm.Content.Menu
 
 		public override Asset<Texture2D> Logo => ModContent.Request<Texture2D>(assetPath + "Logo");
 
-		public override Asset<Texture2D> SunTexture => ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/Empty");
+		//public override Asset<Texture2D> SunTexture => ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/Empty");
 
-		public override Asset<Texture2D> MoonTexture => ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/Empty");
+		//public override Asset<Texture2D> MoonTexture => ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/Empty");
 
-		public override int Music => MusicLoader.GetMusicSlot(Mod, "Assets/Music/Deadworld");
+		public override int Music => MusicLoader.GetMusicSlot(Mod, "Content/Music/Deadworld");
 
 		public override ModSurfaceBackgroundStyle MenuBackgroundStyle => base.MenuBackgroundStyle;
 

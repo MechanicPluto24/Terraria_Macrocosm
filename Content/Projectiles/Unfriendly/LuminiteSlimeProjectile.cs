@@ -64,10 +64,8 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 			float baseShootSpeed = 12f;
 			float shootDeviation = 0.5f;
 
-			//if (Main.npc[Projectile.owner].type != ModContent.NPCType<LuminiteSlime>())
-			//	Projectile.active = false;
- 
-		    if(AI_Timer++ == timeToShoot)
+			AI_Timer++;
+			if (AI_Timer == timeToShoot)
 			{
 				if (Main.netMode == NetmodeID.MultiplayerClient)
 					return;
