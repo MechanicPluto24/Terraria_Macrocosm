@@ -65,12 +65,21 @@ namespace Macrocosm.Common.Drawing
 				};
 		}
 
+		public static void Begin(this SpriteBatch spriteBatch, SpriteSortMode sortMode, BlendState blendState, Effect effect, SpriteBatchState state)
+	=> spriteBatch.Begin(sortMode, blendState, state.samplerState, state.depthStencilState, state.rasterizerState, effect, state.matrix);
+
 		public static void Begin(this SpriteBatch spriteBatch, SpriteSortMode sortMode, BlendState blendState, SpriteBatchState state)
 			=> spriteBatch.Begin(sortMode, blendState, state.samplerState, state.depthStencilState, state.rasterizerState, state.effect, state.matrix);
 
 		public static void Begin(this SpriteBatch spriteBatch, BlendState blendState, SpriteBatchState state)
 			=> spriteBatch.Begin(state.sortMode, blendState, state.samplerState, state.depthStencilState, state.rasterizerState, state.effect, state.matrix);
- 
+
+		public static void Begin(this SpriteBatch spriteBatch, BlendState blendState, Effect effect, SpriteBatchState state)
+			=> spriteBatch.Begin(state.sortMode, blendState, state.samplerState, state.depthStencilState, state.rasterizerState, effect, state.matrix);
+
+		public static void Begin(this SpriteBatch spriteBatch, Effect effect, SpriteBatchState state)
+			=> spriteBatch.Begin(state.sortMode, state.blendState, state.samplerState, state.depthStencilState, state.rasterizerState, effect, state.matrix);
+
 
 		/// <summary> Restores the SpriteBatch parameters stored in a SpriteBatchState </summary>
 		public static void Restore(this SpriteBatch spriteBatch, SpriteBatchState state)

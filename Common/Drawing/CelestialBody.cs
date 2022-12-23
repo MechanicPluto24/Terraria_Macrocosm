@@ -12,6 +12,7 @@ using Terraria.Graphics.Shaders;
 using Terraria.UI.Chat;
 using SubworldLibrary;
 using Macrocosm.Content.Subworlds;
+using System.Linq;
 
 namespace Macrocosm.Common.Drawing
 {
