@@ -43,18 +43,7 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 
 		public override bool PreDraw(ref Color lightColor)
 		{
-
 			Projectile.DrawTrail(Vector2.Zero, 4f, 1f, new Color(98, 211, 168, 255) * lightColor.GetLuminance(), new Color(98, 211, 168, 1));
-
-			/*
-			int count = ProjectileID.Sets.TrailCacheLength[Type];
-
-			if (AI_Timer < 40)
-				count /= 2;
-			for (int i = 0; i < count; i++)
-				Main.spriteBatch.Draw(TextureAssets.Projectile[Type].Value, Projectile.oldPos[i] - Main.screenPosition, lightColor * (1f - ((float)i/count)));
-			*/
-
 			return true;
 		}
 

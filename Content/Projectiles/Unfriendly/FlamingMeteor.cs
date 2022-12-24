@@ -78,18 +78,13 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 
 		public override bool PreDraw(ref Color lightColor)
 		{
-
 			Texture2D tex = TextureAssets.Projectile[Type].Value;
 
 			Rectangle sourceRect = tex.Frame(1, Main.projFrames[Type], frameY: Projectile.frame);
  			Vector2 origin = Projectile.Size / 2f + new Vector2(6, 32);
 
-			/// -------------
-
 			ProjectileID.Sets.TrailCacheLength[Type] = 60;
 			ProjectileID.Sets.TrailingMode[Type] = 3;
-
-
 
 			if (Projectile.rotation > -MathHelper.PiOver4 && Projectile.rotation < MathHelper.PiOver4)
 			{
@@ -147,13 +142,10 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 				return MathHelper.Lerp(1f, 100f, progressOnStrip) * lerpValue;
 			}
 
-			/// ------------dd=
-
 			Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition,
 				sourceRect, Color.White.NewAlpha(0.2f), Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
 
 			Main.spriteBatch.Restore(state);
-
 
 			return false;
 		}

@@ -98,7 +98,7 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 
 			SpriteBatchState state = Main.spriteBatch.SaveState();
 
-			Main.spriteBatch.EndIfBeginCalled();
+			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, state);
 
 			Main.EntitySpriteDraw(texture2D, Projectile.Center - Main.screenPosition, null, (value * 0.35f).NewAlpha(1f - Projectile.alpha/255f), (0f - Projectile.rotation) * 0.65f, texture2D.Size() / 2f,
@@ -132,7 +132,6 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 				lightDust.scale = 1.2f + Main.rand.NextFloat();
 				lightDust.fadeIn = 0.5f;
 				lightDust.customData = Projectile.Center;
-
 			}
 
 			if (Main.rand.NextBool(2))

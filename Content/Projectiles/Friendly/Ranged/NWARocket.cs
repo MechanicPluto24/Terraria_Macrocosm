@@ -17,6 +17,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 	public class NWARocket : ModProjectile
 	{
 		public ref float AI_HomingTimer => ref Projectile.ai[0];
+		public ref float AI_AccelerationTimer => ref Projectile.ai[1];
 
 		public override void SetStaticDefaults()
 		{
@@ -49,6 +50,16 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		/// <summary> Adapted from Projectile.AI_016() for homing snowman rockets </summary>
 		public override void AI()
 		{
+			#region Acceleration
+
+			float timeToReachTopSpeed = 100;
+			if(AI_AccelerationTimer < timeToReachTopSpeed)
+			{
+				AI_AccelerationTimer++;
+ 			}
+
+			#endregion
+
 			#region Homing
 			float x = Projectile.position.X;
 			float y = Projectile.position.Y;
@@ -62,7 +73,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			{
 				AI_HomingTimer = minHomingTime;
 
-				for (int i = 0; i < 200; i++)
+				for (int i = 0; i < Main.maxNPCs; i++)
 				{
 					// only run locally
 					if (Projectile.owner == Main.myPlayer && Main.npc[i].CanBeChasedBy(this) && Main.npc[i].Macrocosm().Targeted)
@@ -91,7 +102,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 				Projectile.netUpdate = true; // targeting was done locally, needs syncing 
 			}
 
-			Vector2 maxVelocity = (new Vector2(x, y) - Projectile.Center).SafeNormalize(-Vector2.UnitY) * 16f;
+			Vector2 maxVelocity = (new Vector2(x, y) - Projectile.Center).SafeNormalize(-Vector2.UnitY) * (10f + 6f * (AI_AccelerationTimer / timeToReachTopSpeed));
 			Projectile.velocity = Vector2.Lerp(Projectile.velocity, maxVelocity, 0.083333336f);
 
 			#endregion
