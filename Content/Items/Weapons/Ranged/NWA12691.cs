@@ -27,8 +27,8 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			Item.DamageType = DamageClass.Ranged;
 			Item.width = 70;
 			Item.height = 26;
-			Item.useTime = 40;
-			Item.useAnimation = 40;
+			Item.useTime = 34;
+			Item.useAnimation = 34;
 			Item.useStyle = ItemUseStyleID.Shoot;
 			Item.noMelee = true;
 			Item.channel = true;
@@ -38,7 +38,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			Item.UseSound = SoundID.Item11;
 			Item.shoot = ProjectileID.PurificationPowder; // For some reason, all the guns in the vanilla source have this.
 			Item.autoReuse = true;
-			Item.shootSpeed = 12f;
+			Item.shootSpeed = 4f;
 			Item.useAmmo = AmmoID.Rocket;
 		}
 

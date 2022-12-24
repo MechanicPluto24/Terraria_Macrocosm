@@ -22,6 +22,7 @@ using Macrocosm.Content.Items.Currency;
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Systems;
 using Macrocosm.Content.NPCs.Friendly.TownNPCs;
+using Macrocosm.Content.Items.Vanity.BossMasks;
 
 namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 {
@@ -263,7 +264,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 			// BELOW: for normal mode, same as boss bag (excluding Broken Hero Shield)
 			LeadingConditionRule notExpertRule = new LeadingConditionRule(new Conditions.NotExpert());
-			//notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<CraterDemonBossMask>(), 7));
+			notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<CraterDemonMask>(), 7));
 
 			notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<MoonCoin>(), 1, 30, 60));
 			notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<DeliriumPlating>(), 1, 30, 90));
@@ -856,7 +857,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 							if (Main.netMode != NetmodeID.MultiplayerClient)
 							{
 								portalOffset = Main.rand.NextVector2Unit() * 30 * 16;
-								
 								NPC.netUpdate = true;
 							}
 
@@ -865,7 +865,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 							SpawnBigPortal(player.Center - portalOffset, ref bigPortal2, fast: true);
 							bigPortal2.visible = false;
 
-							NPC.Center = portalOffset;
+							NPC.Center = bigPortal.center;
 							NPC.velocity = Vector2.Zero;
 
 							AI_AttackProgress++;
