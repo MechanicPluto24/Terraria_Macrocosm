@@ -11,7 +11,10 @@ namespace Macrocosm.Common.Hooks
 			On.Terraria.UI.ItemSlot.PickItemMovementAction += MoonCoin_AllowCoinSlotPlacement;
 		}
 
-		public void Unload() { }
+		public void Unload() 
+		{
+			On.Terraria.UI.ItemSlot.PickItemMovementAction -= MoonCoin_AllowCoinSlotPlacement;
+		}
 
 		private int MoonCoin_AllowCoinSlotPlacement(On.Terraria.UI.ItemSlot.orig_PickItemMovementAction orig, Item[] inv, int context, int slot, Item checkItem)
 		{

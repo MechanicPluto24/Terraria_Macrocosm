@@ -14,7 +14,10 @@ namespace Macrocosm.Common.Hooks
 			IL.Terraria.Gore.Update += Gore_Update;
 		}
 
-		public void Unload() { }
+		public void Unload() 
+		{
+			IL.Terraria.Gore.Update -= Gore_Update;
+		}
 
 		private static void Gore_Update(ILContext il)
 		{

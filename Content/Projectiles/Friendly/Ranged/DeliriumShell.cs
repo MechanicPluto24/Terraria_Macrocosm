@@ -1,17 +1,20 @@
-using Macrocosm.Common.Drawing;
-using Macrocosm.Common.Utility;
-using Macrocosm.Content.Dusts;
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Macrocosm.Content.Dusts;
+using Macrocosm.Common.Drawing;
+using Macrocosm.Common.Utility;
+using Macrocosm.Common.Global.GlobalProjectiles;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-	public class DeliriumShell : ModProjectile
+	public class DeliriumShell : ModProjectile, IBullet, IExplosive
 	{
+		public float BlastRadius => 35;
+
 		public override void SetDefaults()
 		{
 			Projectile.CloneDefaults(14);
@@ -48,24 +51,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 				dust.noGravity = true;
 			}
 
-			return true;
-		}
-
-		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
-		{
-			Projectile.Explode(35);
-			Projectile.Kill();
-		}
-
-		public override void OnHitPvp(Player target, int damage, bool crit)
-		{
-			Projectile.Explode(35);
-		}
-
-		public override bool OnTileCollide(Vector2 oldVelocity)
-		{
-			Projectile.Explode(35);
-			Collision.HitTiles(Projectile.position, oldVelocity, Projectile.width, Projectile.height);
 			return true;
 		}
 

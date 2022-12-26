@@ -1,5 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Common.Drawing.Trails;
+using Macrocosm.Common.Global.GlobalProjectiles;
+using Macrocosm.Content.Items.Weapons.Ranged;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using Terraria;
 using Terraria.GameContent;
 
@@ -8,6 +12,17 @@ namespace Macrocosm.Common.Utility
 {
 	public static class ProjectileUtils
 	{
+		public static void SetTrail<T>(this Projectile projectile) where T : Trail
+		{
+			if(projectile.TryGetGlobalProjectile(out MacrocosmGlobalProjectile globalProj))
+			{
+ 				globalProj.Trail = Activator.CreateInstance<T>();
+				globalProj.Trail.Owner = projectile;
+			}
+ 		}
+
+		public static Trail GetTrail(this Projectile projectile) => projectile.GetGlobalProjectile<MacrocosmGlobalProjectile>().Trail; 
+
 		public static void Explode(this Projectile projectile, float blastRadius)
 		{
 			projectile.tileCollide = false;
@@ -21,6 +36,8 @@ namespace Macrocosm.Common.Utility
 			projectile.height = (int)blastRadius;
 			projectile.position.X -= projectile.width / 2;
 			projectile.position.Y -= projectile.height / 2;
+
+			projectile.netUpdate = true;
 		}
 
 		/// <summary>

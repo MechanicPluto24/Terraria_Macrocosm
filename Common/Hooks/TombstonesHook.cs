@@ -15,6 +15,11 @@ namespace Macrocosm.Common.Hooks
 			On.Terraria.Player.DropTombstone += Player_DropTombstone;
 		}
 
+		public void Unload() 
+		{
+			On.Terraria.Player.DropTombstone -= Player_DropTombstone;
+		}
+
 		private void Player_DropTombstone(On.Terraria.Player.orig_DropTombstone orig, Player self, int coinsOwned, NetworkText deathText, int hitDirection)
 		{
 			if (SubworldSystem.AnyActive<Macrocosm>())
@@ -55,6 +60,5 @@ namespace Macrocosm.Common.Hooks
 			}
  		}
 
-		public void Unload() { }
 	}
 }

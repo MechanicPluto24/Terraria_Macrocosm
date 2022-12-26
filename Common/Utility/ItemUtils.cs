@@ -10,8 +10,10 @@ namespace Macrocosm.Common.Utility
 {
 	public static class ItemUtils
 	{
+		public static GlowmaskGlobalItem Glowmask(this Item item) => item.GetGlobalItem<GlowmaskGlobalItem>();
 
-		public static GlowmaskGlobalItem Glowmask(this Item item) => item.GetGlobalItem<GlowmaskGlobalItem>(); 
+		/// <summary> Returns whether this item instance is a torch </summary>
+		public static bool IsTorch(this Item item) => TorchGlobalItem.IsTorch(item);
 
 		/// <summary>
 		/// Helper method that converts the first rocket ammo found in the inventory 

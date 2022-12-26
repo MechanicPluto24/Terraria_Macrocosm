@@ -6,10 +6,12 @@ using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Macrocosm.Common.Global.GlobalProjectiles;
+using Macrocosm.Content.Dusts;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-	public class SeleniteArrow : ModProjectile
+	public class SeleniteArrow : ModProjectile, IBullet
 	{
 		public override void SetDefaults()
 		{
@@ -36,21 +38,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 			Lighting.AddLight(Projectile.Center, new Color(255, 255, 255).ToVector3() * 0.6f);
 
-			for (int i = 0; i < 2; i++)
+			for (int i = 0; i < 1; i++)
 			{
-				Dust dust = Dust.NewDustDirect(Projectile.position + new Vector2(-2 * Projectile.spriteDirection, 26).RotatedBy(Projectile.rotation), 12, 12, DustID.Electric, Projectile.velocity.X);
+				Dust dust = Dust.NewDustDirect(Projectile.position + new Vector2(0, 26).RotatedBy(Projectile.rotation), 12, 12, ModContent.DustType<LuminiteSparkDust>(), Projectile.velocity.X);
 				dust.scale = Main.rand.NextFloat(0.6f, 1f);
 				dust.noGravity = true;
 				dust.velocity = Projectile.velocity;
-				dust.alpha = 255 - (int)(255f * Projectile.scale);
 			}
 
-			return true;
-		}
-
-		public override bool OnTileCollide(Vector2 oldVelocity)
-		{
-			Collision.HitTiles(Projectile.position, oldVelocity, Projectile.width, Projectile.height);
 			return true;
 		}
 
@@ -58,27 +53,26 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		{
 			for (int i = 0; i < 20; i++)
 			{
-				Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.Electric, Projectile.velocity.X);
+				Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<LuminiteSparkDust>(), Projectile.velocity.X);
 				dust.velocity = (Projectile.velocity.SafeNormalize(Vector2.UnitX) * Main.rand.NextFloat(2f, 4f)).RotatedByRandom(MathHelper.TwoPi);
 				dust.noLight = false;
-				dust.alpha = 200;
 				dust.noGravity = true;
 			}
 		}
 
-		//SpriteBatchState state;
-		//public override bool PreDraw(ref Color lightColor)
-		//{
-		//	Texture2D tex = TextureAssets.Projectile[Type].Value;
-		//	state = Main.spriteBatch.SaveState();
-		//	Main.spriteBatch.End();
-		//	Main.spriteBatch.Begin(BlendState.AlphaBlend, state);
-		//	Main.EntitySpriteDraw(tex, Projectile.Center - Main.screenPosition, null, (new Color(106, 255, 255) * lightColor.GetLuminance()).NewAlpha((byte)Projectile.alpha), Projectile.rotation, tex.Size() / 2, Projectile.scale, SpriteEffects.None, 0);
-		//	return false;
-		//}
-		//public override void PostDraw(Color lightColor)
-		//{
-		//	Main.spriteBatch.Restore(state);
-		//}
+		SpriteBatchState state;
+		public override bool PreDraw(ref Color lightColor)
+		{
+			Texture2D tex = TextureAssets.Projectile[Type].Value;
+			//state = Main.spriteBatch.SaveState();
+			//Main.spriteBatch.End();
+			//Main.spriteBatch.Begin(BlendState.AlphaBlend, state);
+			Main.EntitySpriteDraw(tex, Projectile.Center - Main.screenPosition, null, new Color(51, 185, 131, 50), Projectile.rotation, tex.Size() / 2, Projectile.scale, SpriteEffects.None, 0);
+			return false;
+		}
+		public override void PostDraw(Color lightColor)
+		{
+			//Main.spriteBatch.Restore(state);
+		}
 	}
 }
