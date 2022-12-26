@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Reflection;
 
 namespace Macrocosm.Common.Utility
@@ -24,5 +25,18 @@ namespace Macrocosm.Common.Utility
 			FieldInfo field = type.GetField(fieldName, flags.Value);
 			return (T)field.GetValue(obj);
 		}
+
+		public static Type[] GetImplementedInterfaces(this Type type, Type interfaceType)   
+			=> type.GetInterfaces().Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == interfaceType).ToArray();
+
+		// i have no idea what i am doing 
+		public static Type GetGenericOfInterface(this Type type, Type interfaceType, int interfaceIndex = 0, int genericTypeIndex = 0)
+		{
+			Type[] types = type.GetImplementedInterfaces(interfaceType);
+			return types[interfaceIndex].GetGenericArguments()[genericTypeIndex];
+		}
+
+
+
 	}
 }

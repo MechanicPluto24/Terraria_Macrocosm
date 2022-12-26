@@ -26,6 +26,10 @@ namespace Macrocosm.Common.Hooks
 			On.Terraria.Map.MapHelper.GetMapTileXnaColor += MapHelper_GetMapTileXnaColor;
 			GetLookupPositions();
 		}
+		public void Unload() 
+		{
+			On.Terraria.Map.MapHelper.GetMapTileXnaColor -= MapHelper_GetMapTileXnaColor;
+		}
 
 		private Color MapHelper_GetMapTileXnaColor(On.Terraria.Map.MapHelper.orig_GetMapTileXnaColor orig, ref MapTile tile)
 		{
@@ -63,6 +67,5 @@ namespace Macrocosm.Common.Hooks
 		private static Color MapColorLerp(Color from, Color to, float value)
 			=> new Color((byte)((float)(int)from.R * (1f - value) + (float)(int)to.R * value), (byte)((float)(int)from.G * (1f - value) + (float)(int)to.G * value), (byte)((float)(int)from.B * (1f - value) + (float)(int)to.B * value));
 		 
-		public void Unload() { }
 	}
 }

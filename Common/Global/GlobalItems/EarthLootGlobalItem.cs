@@ -33,7 +33,7 @@ namespace Macrocosm.Common.Global.GlobalItems
 				// about 14% chance to override result with 1 silicon
 				if (Main.rand.NextBool(7))
 				{
- 					resultType = ModContent.ItemType<SiliconOre>();
+					resultType = ModContent.ItemType<SiliconOre>();
 					resultStack = 1;
 				}
 
@@ -54,11 +54,10 @@ namespace Macrocosm.Common.Global.GlobalItems
 			int oilShaleType = ModContent.ItemType<OilShale>();
 			int siliconType = ModContent.ItemType<SiliconOre>();
 
-			// chances are based off vanilla loot, multiplied by the number of ore/bar types in the pool for each crate
-			// keep in mind that they are independent from vanilla loot pools i.e you can get both gold & aluminum bars
+			// chances are based off vanilla loot, denominators multiplied by the number of ore/bar types already in the pool for each crate
+			// keep in mind that they are independent from vanilla loot pools i.e. you can get both gold & aluminum bars
 			if (ItemID.Sets.IsFishingCrate[item.type])
 			{
-
 				if (item.type == ItemID.WoodenCrate) 
 				{
 					itemLoot.Add(ItemDropRule.NotScalingWithLuck(aluminumOreType, 7 * 4, 4, 15));  
@@ -108,7 +107,7 @@ namespace Macrocosm.Common.Global.GlobalItems
 				}
 				else
 				{
- 					itemLoot.Add(ItemDropRule.NotScalingWithLuck(aluminumBarType, 12 * 4, 10, 20));
+					itemLoot.Add(ItemDropRule.NotScalingWithLuck(aluminumBarType, 12 * 4, 10, 20));
 
 					// this is to avoid getting both lithium & aluminum ores
 					itemLoot.Add(ItemDropRule.SequentialRulesNotScalingWithLuck(14 * 4, new IItemDropRule[]

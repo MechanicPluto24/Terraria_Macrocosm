@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Drawing;
+using Macrocosm.Common.Drawing.Sky;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -12,7 +13,7 @@ using Terraria.ModLoader.Default;
 
 namespace Macrocosm.Content.Backgrounds.Moon
 {
-	public class MoonSky : CustomSky, ILoadable
+    public class MoonSky : CustomSky, ILoadable
 	{
 		public bool Active;
 		public float Intensity;

@@ -13,6 +13,10 @@ namespace Macrocosm.Common.Hooks
 		{
 			On.Terraria.Main.ApplyColorOfTheSkiesToTiles += Main_ApplyColorOfTheSkiesToTiles;
 		}
+		public void Unload() 
+		{
+			On.Terraria.Main.ApplyColorOfTheSkiesToTiles -= Main_ApplyColorOfTheSkiesToTiles;
+		}
 
 		private void Main_ApplyColorOfTheSkiesToTiles(On.Terraria.Main.orig_ApplyColorOfTheSkiesToTiles orig)
 		{
@@ -30,7 +34,6 @@ namespace Macrocosm.Common.Hooks
 			}
 		}
 
-		public void Unload() { }
 
 	}
 }

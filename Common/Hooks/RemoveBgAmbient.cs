@@ -11,6 +11,11 @@ namespace Macrocosm.Common.Hooks
 			On.Terraria.GameContent.Ambience.AmbienceServer.Update += AmbienceServer_Update;
 		}
 
+		public void Unload()
+		{
+			On.Terraria.GameContent.Ambience.AmbienceServer.Update -= AmbienceServer_Update;
+		}
+
 		private void AmbienceServer_Update(On.Terraria.GameContent.Ambience.AmbienceServer.orig_Update orig, AmbienceServer self)
 		{
 			if (SubworldSystem.AnyActive<Macrocosm>())
@@ -18,7 +23,5 @@ namespace Macrocosm.Common.Hooks
 
 			orig(self);
 		}
-
-		public void Unload() { }
 	}
 }

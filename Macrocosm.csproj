@@ -6,15 +6,25 @@
     <TargetFramework>net6.0</TargetFramework>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <LangVersion>latest</LangVersion>
+    <Platforms>AnyCPU;x86</Platforms>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
     <Optimize>False</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <Optimize>True</Optimize>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <Optimize>True</Optimize>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Content\Items\Weapons\Summon\CalcicCane - Copy.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Content\Projectiles\Unfriendly\dvamhgqs.i4q~" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="tModLoader.CodeAssist" Version="0.1.*" />
@@ -25,6 +35,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Common\Drawing\Particles\" />
     <Folder Include="Content\Projectiles\Friendly\Misc\" />
   </ItemGroup>
 </Project>

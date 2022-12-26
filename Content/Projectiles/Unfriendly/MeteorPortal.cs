@@ -23,7 +23,6 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 		{
 			DisplayName.SetDefault("Meteor Portal");
 		}
-
 		public override void SetDefaults()
 		{
 			defWidth = defHeight = Projectile.width = Projectile.height = 40;
@@ -34,7 +33,6 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 			Projectile.penetrate = -1;
 			Projectile.alpha = 255;
 		}
-
 		public override void AI()
 		{
 			if (!spawned)
@@ -69,18 +67,6 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 
 			Projectile.alpha = (int)MathHelper.Clamp((int)Projectile.ai[0], 0f, 255f);
 
-			//if(Projectile.alpha < 240)
-			//{
-			//	Vector2 lightPos1 = MathUtils.RotatingPoint(Projectile.Center, new Vector2(0, 40), Projectile.rotation);
-			//	Vector2 lightPos2 = lightPos1.RotatedBy(MathHelper.PiOver2, Projectile.Center);
-			//	Vector2 lightPos3 = lightPos2.RotatedBy(MathHelper.PiOver2, Projectile.Center);
-			//	Vector2 lightPos4 = lightPos3.RotatedBy(MathHelper.PiOver2, Projectile.Center);
-			//	Lighting.AddLight(lightPos1, new Color(239, 105, 19).ToVector3() * Projectile.scale);
-			//	Lighting.AddLight(lightPos2, new Color(30, 255, 105).ToVector3() * Projectile.scale);
-			//	Lighting.AddLight(lightPos3, new Color(239, 105, 19).ToVector3() * Projectile.scale);
-			//	Lighting.AddLight(lightPos4, new Color(30, 255, 105).ToVector3() * Projectile.scale);
-			//}
-
 			Vector2 center = Projectile.Center;
 			Projectile.scale = 0.05f + 0.95f * (1f - Projectile.alpha / 255f);
 			Projectile.width = (int)(defWidth * Projectile.scale);
@@ -113,7 +99,8 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 			Main.EntitySpriteDraw(texture2D, Projectile.Center - Main.screenPosition, null, value * 1f, (0f - Projectile.rotation) * 0.65f, texture2D.Size() / 2f,
 			Projectile.scale * 0.8f, SpriteEffects.None, 0);
 
-			Main.spriteBatch.Restore(state);
+			Main.spriteBatch.End();
+			Main.spriteBatch.Begin(BlendState.AlphaBlend, state);
 
 			return false;
 		}

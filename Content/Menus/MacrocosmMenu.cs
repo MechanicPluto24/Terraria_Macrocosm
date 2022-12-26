@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Drawing;
+using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Utility;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Menu
 {
-	public class MacrocosmMenu : ModMenu
+    public class MacrocosmMenu : ModMenu
 	{
 
 		private const string assetPath = "Macrocosm/Content/Menus/";

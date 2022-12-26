@@ -1,4 +1,5 @@
 using Macrocosm.Common.Drawing;
+using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Utility;
 using Macrocosm.Common.Utility.IO;
 using Macrocosm.Content.UI.WorldGen;
@@ -14,7 +15,7 @@ using Terraria.WorldBuilding;
 
 namespace Macrocosm.Content.UI.LoadingScreens
 {
-	public class MoonSubworldLoadUI : UIWorldLoad
+    public class MoonSubworldLoadUI : UIWorldLoad
 	{
 		private Texture2D lunaBackground;
 		private Texture2D earthBackground;
