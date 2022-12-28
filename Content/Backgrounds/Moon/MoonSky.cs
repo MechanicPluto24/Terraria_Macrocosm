@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Sky;
+using Macrocosm.Common.Utility;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -10,6 +11,7 @@ using Terraria.Graphics.Effects;
 using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Default;
+using static Terraria.ModLoader.PlayerDrawLayer;
 
 namespace Macrocosm.Content.Backgrounds.Moon
 {
@@ -61,8 +63,24 @@ namespace Macrocosm.Content.Backgrounds.Moon
 			sun.SetupSkyRotation(SkyRotationMode.Day);
 
 			earth.SetParallax(0.01f, 0.12f, new Vector2(0f, -200f));
-			//earth.SetupOverlays(earthBodyShadow, earthAtmoShadow);
-			earth.SetLightSouce(sun);
+ 
+			earth.SetLightSource(sun);
+			earth.ConfigureShader = (float rotation, out float intensity, out Vector2 offset) =>
+			{
+				Vector2 screenSize = Main.ScreenSize.ToVector2();
+				float distance = Vector2.Distance(earth.Position / screenSize, earth.LightSource.Position / screenSize);
+				float offsetRadius = MathHelper.Lerp(0.12f, 0.56f, 1 - distance);
+ 
+				if (!Main.dayTime)
+				{
+ 					offsetRadius = MathHelper.Lerp(0.56f, 0.01f, 1 - distance);
+					rotation += MathHelper.Pi;
+				}
+
+				offset = MathUtils.PolarVector(offsetRadius, rotation);
+
+				intensity = 0.96f;
+			}; 
 		}
 
 		public void Load(Mod mod)

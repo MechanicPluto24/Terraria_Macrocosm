@@ -47,7 +47,7 @@ namespace Macrocosm.Content.Menu
 		{
 			celestialBodies = new()
 			{
-				Sun,
+				//Sun,
  				Vulcan,
 				Mercury,
 				Venus,
@@ -97,6 +97,9 @@ namespace Macrocosm.Content.Menu
 
 		public override bool PreDrawLogo(SpriteBatch spriteBatch, ref Vector2 logoDrawCenter, ref float logoRotation, ref float logoScale, ref Color drawColor)
 		{
+
+			Main.dayTime = true;
+
 			Rectangle screen = new(0, 0, Main.screenWidth + 1, Main.screenHeight + 1);
 			spriteBatch.Draw(TextureAssets.BlackTile.Value, screen, Color.Black);
 
@@ -124,7 +127,16 @@ namespace Macrocosm.Content.Menu
 		private void SetupCelestialBodies()
 		{
 			foreach (CelestialBody body in celestialBodies)
+			{
 				body.Scale = 0.6f;
+
+				body.SetLightSource(Sun);
+				body.ConfigureShader = (float rotation, out float intensity, out Vector2 offset) =>
+				{
+					intensity = 0.9f;
+					offset = MathUtils.PolarVector(0.15f, rotation);
+				};
+ 			}
 
 			Sun.Scale = 0.85f;
 
