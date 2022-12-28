@@ -12,7 +12,7 @@ using Macrocosm.Content.Systems;
 
 namespace Macrocosm.Content.Items.Accessories.CelestialBulwark
 {
-	[AutoloadEquip(EquipType.Shield)]
+    [AutoloadEquip(EquipType.Shield)]
 	public class CelestialBulwark : ModItem
 	{
 		public override void SetStaticDefaults()
@@ -41,11 +41,12 @@ namespace Macrocosm.Content.Items.Accessories.CelestialBulwark
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
-			player.GetModPlayer<DashPlayer>().AccDashHorizontal = true;
-			player.GetModPlayer<DashPlayer>().AccDashVelocity = 14f;
-			player.GetModPlayer<DashPlayer>().AccDashDamage = Item.damage;
-			player.GetModPlayer<DashPlayer>().AccDashKnockback = Item.knockBack;
-			player.GetModPlayer<DashPlayer>().AccDashImmuneTime = 6;
+			DashPlayer dashPlayer = player.DashPlayer();
+			dashPlayer.AccDashHorizontal = true;
+			dashPlayer.AccDashVelocity = 14f;
+			dashPlayer.AccDashDamage = Item.damage;
+			dashPlayer.AccDashKnockback = Item.knockBack;
+			dashPlayer.AccDashImmuneTime = 6;
 		}
 
 		public override void AddRecipes()

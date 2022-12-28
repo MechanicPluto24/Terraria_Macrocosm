@@ -61,7 +61,8 @@ namespace Macrocosm.Content.Backgrounds.Moon
 			sun.SetupSkyRotation(SkyRotationMode.Day);
 
 			earth.SetParallax(0.01f, 0.12f, new Vector2(0f, -200f));
-			earth.SetupShadow(sun, earthBodyShadow, earthAtmoShadow);
+			//earth.SetupOverlays(earthBodyShadow, earthAtmoShadow);
+			earth.SetLightSouce(sun);
 		}
 
 		public void Load(Mod mod)

@@ -16,7 +16,6 @@ namespace Macrocosm.Content.Subworlds
 		CavernLower,
 		Underworld
 	}
-
 	public abstract class MacrocosmSubworld : Subworld, IModType
 	{
 		/// <summary> Get the current subworld instance. Earth returns null </summary>

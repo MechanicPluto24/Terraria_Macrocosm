@@ -1,7 +1,9 @@
-﻿using Macrocosm.Content.Dusts;
+﻿using Macrocosm.Common.Utility;
+using Macrocosm.Content.Dusts;
 using Macrocosm.Content.UI.Rocket;
 using Microsoft.Xna.Framework;
 using System;
+using System.IO;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -9,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rocket
 {
-	public class RocketPlayer : ModPlayer
+    public class RocketPlayer : ModPlayer
 	{
 		public bool InRocket { get; set; } = false;
 		public bool AsCommander { get; set; } = false;
@@ -49,6 +51,20 @@ namespace Macrocosm.Content.Rocket
 			packet.Write((byte)RocketID);
 			packet.Write(TargetSubworldID);
 			packet.Send();
+		}
+
+		public static void ReceiveSyncPlayer(BinaryReader reader, int whoAmI)
+		{
+			int rocketPlayerID = reader.ReadByte();
+			RocketPlayer rocketPlayer = Main.player[rocketPlayerID].RocketPlayer();
+			BitsByte bb = reader.ReadByte();
+			rocketPlayer.InRocket = bb[0];
+			rocketPlayer.AsCommander = bb[1];
+			rocketPlayer.RocketID = reader.ReadByte();
+			rocketPlayer.TargetSubworldID = reader.ReadString();
+
+			if (Main.netMode == NetmodeID.Server)
+				rocketPlayer.SyncPlayer(-1, whoAmI, false);
 		}
 
 		public override void ResetEffects()

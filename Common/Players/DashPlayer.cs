@@ -8,10 +8,11 @@ using log4net.Repository.Hierarchy;
 using Macrocosm.Common.Utility;
 using Macrocosm.Common.Base;
 using Macrocosm.Content.Systems;
+using System.IO;
 
 namespace Macrocosm.Content.Players
 {
-	public class DashPlayer : ModPlayer
+    public class DashPlayer : ModPlayer
 	{
 
 		public bool AccDashHorizontal = false;
@@ -65,6 +66,18 @@ namespace Macrocosm.Content.Players
 			packet.Write((byte)Player.whoAmI);
 			packet.Write((byte)DashDirection);
 			packet.Send(toWho, fromWho);
+		}
+
+		public static void ReceiveSyncPlayer(BinaryReader reader, int whoAmI)
+		{
+			int dashPlayerID = reader.ReadByte();
+			DashPlayer dashPlayer = Main.player[dashPlayerID].DashPlayer();
+
+			int newDir = reader.ReadByte();
+			dashPlayer.DashDirection = (DashPlayer.DashDir)newDir;
+
+			if (Main.netMode == NetmodeID.Server)
+				dashPlayer.SyncPlayer(-1, whoAmI, false);
 		}
 
 		public override void ResetEffects()

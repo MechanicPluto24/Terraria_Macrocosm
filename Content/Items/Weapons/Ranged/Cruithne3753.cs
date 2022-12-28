@@ -38,11 +38,8 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			Item.useAmmo = AmmoID.Bullet;
 		}
 
-		public override bool AltFunctionUse(Player player)
-		{
-			return true;
-		}
-
+		public override bool AltFunctionUse(Player player) => true;
+ 
 		public override bool CanUseItem(Player player)
 		{
 			if (player.altFunctionUse == 2)

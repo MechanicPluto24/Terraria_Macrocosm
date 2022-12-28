@@ -1,7 +1,7 @@
-using Macrocosm.Assets.Sounds;
 using Macrocosm.Common.Utility;
 using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Content.Rarities;
+using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
@@ -12,7 +12,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
-	public class Copernicus : ModItem
+    public class Copernicus : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
