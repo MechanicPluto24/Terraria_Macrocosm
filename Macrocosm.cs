@@ -1,5 +1,7 @@
 using System;
+using System.IO;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.Graphics.Effects;
@@ -7,10 +9,7 @@ using Terraria.Graphics.Shaders;
 using SubworldLibrary;
 using Macrocosm.Content.Subworlds.Moon;
 using Macrocosm.Content.Tiles;
-using System.IO;
 using Macrocosm.Content.Players;
-using Terraria.ID;
-using Macrocosm.Common.Base;
 using Macrocosm.Content.Rocket;
 
 namespace Macrocosm
@@ -27,7 +26,9 @@ namespace Macrocosm
 	{
 		public static Mod Instance => ModContent.GetInstance<Macrocosm>();
 
-		public const string EffectAssetPath = "Macrocosm/Content/Effects/";
+		public const string EffectAssetPath = "Macrocosm/Assets/Effects/";
+		public const string EmptyTexPath = "Macrocosm/Assets/Textures/Empty";
+		public static Texture2D EmptyTex => ModContent.Request<Texture2D>(EmptyTexPath).Value;
 
 		public override void Load()
 		{
@@ -37,7 +38,9 @@ namespace Macrocosm
 
 		private static void LoadEffects()
 		{
-			Filters.Scene["Macrocosm:RadiationNoiseEffect"] = new Filter(new ScreenShaderData(new Ref<Effect>(ModContent.Request<Effect>(EffectAssetPath + "RadiationNoiseEffect", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value), "RadiationNoiseEffect"));
+			AssetRequestMode mode = AssetRequestMode.ImmediateLoad;
+			
+			Filters.Scene["Macrocosm:RadiationNoiseEffect"] = new Filter(new ScreenShaderData(new Ref<Effect>(ModContent.Request<Effect>(EffectAssetPath + "RadiationNoiseEffect", mode).Value), "RadiationNoiseEffect"));
 			Filters.Scene["Macrocosm:RadiationNoiseEffect"].Load();
 		}
 
@@ -65,64 +68,21 @@ namespace Macrocosm
 			switch (messageType)
 			{
 				case MessageType.SyncPlayerDashDirection:
-					{ 
-						int dashPlayerID = reader.ReadByte();
-						DashPlayer dashPlayer= Main.player[dashPlayerID].GetModPlayer<DashPlayer>();
-
-						int newDir = reader.ReadByte();
-						dashPlayer.DashDirection = (DashPlayer.DashDir)newDir;
-
-						if (Main.netMode == NetmodeID.Server)
-							dashPlayer.SyncPlayer(-1, whoAmI, false);
-
+ 						DashPlayer.ReceiveSyncPlayer(reader, whoAmI);
 						break;
-					}
-
+ 
 				case MessageType.SyncPlayerRocketStatus:
-					{
-						int rocketPlayerID = reader.ReadByte();
-						RocketPlayer rocketPlayer = Main.player[rocketPlayerID].GetModPlayer<RocketPlayer>();
-						BitsByte bb = reader.ReadByte();
-						rocketPlayer.InRocket = bb[0];
-						rocketPlayer.AsCommander = bb[1];
-						rocketPlayer.RocketID = reader.ReadByte();
-						rocketPlayer.TargetSubworldID = reader.ReadString();
-
-						if (Main.netMode == NetmodeID.Server)
-							rocketPlayer.SyncPlayer(-1, whoAmI, false);
-
+ 						RocketPlayer.ReceiveSyncPlayer(reader, whoAmI);
 						break;
-					}
-
+ 
 				case MessageType.EmbarkPlayerInRocket:
-					{
-						int playerId = reader.ReadByte();
-						bool asCommander = reader.ReadBoolean();
-						int rocketId = reader.ReadByte();
-						RocketNPC rocket = Main.npc[rocketId].ModNPC as RocketNPC;
-
-						// Server receives embark status from client interaction 
-						if (Main.netMode == NetmodeID.Server)
-							rocket.ReceiveEmbarkedPlayer(playerId, asCommander, rocketId);
-
+ 						RocketNPC.ReceiveEmbarkedPlayer(reader, whoAmI);
 						break;
-					}
-
+ 
 				case MessageType.LaunchRocket:
-					{
-						int rocketId = reader.ReadByte();
-						RocketNPC rocket = Main.npc[rocketId].ModNPC as RocketNPC;
-
-						// launch on the server
-						rocket.Launch(); 
-
-						// send the launch message to the other clients
-						if (Main.netMode == NetmodeID.Server)
-							rocket.SendLaunchMessage(ignoreClient: whoAmI); 
-
+ 						RocketNPC.ReceiveLaunchMessage(reader, whoAmI);
 						break;
-					}
-
+ 
 				default:
 					Logger.WarnFormat("Macrocosm: Unknown Message type: {messageType}", messageType);
 					break;

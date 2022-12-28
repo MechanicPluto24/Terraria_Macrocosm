@@ -1,15 +1,9 @@
-﻿using Macrocosm.Common.Drawing;
-using Macrocosm.Common.Utility;
-using Macrocosm.Content.Dusts;
-using Macrocosm.Content.NPCs.Enemies.Moon;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
+﻿using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.GameContent;
-using Terraria.Graphics;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Macrocosm.Content.Dusts;
+using Macrocosm.Common.Drawing;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
@@ -55,7 +49,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		 
 		public override bool PreDraw(ref Color lightColor)
 		{
-			Projectile.DrawTrail(Vector2.Zero, 4f, 1f, new Color(104, 255, 255), new Color(104, 255, 255, 0));
+			Projectile.DrawSimpleTrail(Vector2.Zero, 4f, 1f, new Color(104, 255, 255), new Color(104, 255, 255, 0));
 			return true;
 		}
 

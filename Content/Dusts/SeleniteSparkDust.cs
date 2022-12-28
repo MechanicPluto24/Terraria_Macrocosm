@@ -1,23 +1,20 @@
-using System;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria;
-using Terraria.ModLoader;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utility;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
+using Terraria;
+using Terraria.GameContent;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Dusts
 {
-	public class LuminiteSparkDust : ModDust, IDustCustomDraw
+	public class SeleniteSparkDust : ModDust, IDustCustomDraw
 	{
-		public override void OnSpawn(Dust dust)
-		{
-		}
-
 		public override bool Update(Dust dust)
 		{
 			dust.position += dust.velocity;
-			//dust.rotation += dust.dustIndex % 2 == 0 ? 0.5f : -0.5f; 
+			dust.rotation += dust.dustIndex % 2 == 0 ? 0.5f : -0.5f; 
 
 			float clampedScale = dust.scale;
 			if (clampedScale > 1f)
@@ -44,6 +41,7 @@ namespace Macrocosm.Content.Dusts
 		public bool DrawDust(SpriteBatch spriteBatch, Dust dust, Texture2D texture, Rectangle dustFrame)
 		{
 			float count = Math.Abs(dust.velocity.X) + Math.Abs(dust.velocity.Y) * 3f;
+
 			if (count > 10f)
 				count = 10f;
 

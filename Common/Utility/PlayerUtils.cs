@@ -7,9 +7,8 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Utility
 {
-	public static class PlayerUtils
+    public static class PlayerUtils
 	{
-		public static MacrocosmPlayer Macrocosm(this Player player) => player.GetModPlayer<MacrocosmPlayer>();
 		public static void SetScreenshake(this Player player, float value) => player.Macrocosm().ScreenShakeIntensity += value;
 
 		public static Rectangle GetSwungItemHitbox(this Player player)

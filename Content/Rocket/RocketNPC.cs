@@ -18,10 +18,11 @@ using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI.Chat;
+using System.IO;
 
 namespace Macrocosm.Content.Rocket
 {
-	public class RocketNPC : ModNPC
+    public class RocketNPC : ModNPC
 	{
 		public override string Texture => "Macrocosm/Content/Rocket/RocketCommandPod"; 
 
@@ -43,7 +44,7 @@ namespace Macrocosm.Content.Rocket
 
 		public override bool CheckActive() => false;
 
-		public RocketPlayer GetRocketPlayer(int playerID) => Main.player[playerID].GetModPlayer<RocketPlayer>();
+		public RocketPlayer GetRocketPlayer(int playerID) => Main.player[playerID].RocketPlayer();
 		public bool CheckPlayerInRocket(int playerID) => GetRocketPlayer(playerID).InRocket && GetRocketPlayer(playerID).RocketID == NPC.whoAmI;
 		public bool CheckPlayerCommander(int playerID) => GetRocketPlayer(playerID).AsCommander && GetRocketPlayer(playerID).RocketID == NPC.whoAmI;
 
@@ -301,12 +302,21 @@ namespace Macrocosm.Content.Rocket
 			packet.Send();
 		}
 
-		public void ReceiveEmbarkedPlayer(int playerID, bool asCommander, int rocketId)
+		public static void ReceiveEmbarkedPlayer(BinaryReader reader, int whoAmI)
 		{
-			GetRocketPlayer(playerID).InRocket = true;
-			GetRocketPlayer(playerID).AsCommander = asCommander;
-			GetRocketPlayer(playerID).RocketID = rocketId;
-		}
+			int playerId = reader.ReadByte();
+			bool asCommander = reader.ReadBoolean();
+			int rocketId = reader.ReadByte();
+			RocketNPC rocket = Main.npc[rocketId].ModNPC as RocketNPC;
+
+			// Server receives embark status from client interaction 
+			if (Main.netMode == NetmodeID.Server)
+			{
+				rocket.GetRocketPlayer(playerId).InRocket = true;
+				rocket.GetRocketPlayer(playerId).AsCommander = asCommander;
+				rocket.GetRocketPlayer(playerId).RocketID = rocketId;
+			}
+ 		}
 
 		public void Launch()
 		{
@@ -323,6 +333,19 @@ namespace Macrocosm.Content.Rocket
 			packet.Write((byte)MessageType.LaunchRocket);
 			packet.Write((byte)NPC.whoAmI);
 			packet.Send(toClient, ignoreClient);
+		}
+
+		public static void ReceiveLaunchMessage(BinaryReader reader, int whoAmI)
+		{
+			int rocketId = reader.ReadByte();
+			RocketNPC rocket = Main.npc[rocketId].ModNPC as RocketNPC;
+
+			// launch on the server
+			rocket.Launch();
+
+			// send the launch message to the other clients
+			if (Main.netMode == NetmodeID.Server)
+				rocket.SendLaunchMessage(ignoreClient: whoAmI);
 		}
 
 		private void VisualEffects()

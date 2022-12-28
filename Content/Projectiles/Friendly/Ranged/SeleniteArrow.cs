@@ -22,7 +22,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			Projectile.light = 0f;
 			Projectile.friendly = true;
 		}
-
 		public override bool PreAI()
 		{
 			if (Projectile.velocity.X < 0f)
@@ -38,10 +37,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 			Lighting.AddLight(Projectile.Center, new Color(255, 255, 255).ToVector3() * 0.6f);
 
-			for (int i = 0; i < 1; i++)
+			for (int i = 0; i < 2; i++)
 			{
-				Dust dust = Dust.NewDustDirect(Projectile.position + new Vector2(0, 26).RotatedBy(Projectile.rotation), 12, 12, ModContent.DustType<LuminiteSparkDust>(), Projectile.velocity.X);
-				dust.scale = Main.rand.NextFloat(0.6f, 1f);
+				Dust dust = Dust.NewDustDirect(Projectile.position + new Vector2(0, 26).RotatedBy(Projectile.rotation), 12, 12, ModContent.DustType<SeleniteSparkDust>(), Projectile.velocity.X);
+				dust.scale = Main.rand.NextFloat(0.4f, 0.8f);
 				dust.noGravity = true;
 				dust.velocity = Projectile.velocity;
 			}
@@ -53,26 +52,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		{
 			for (int i = 0; i < 20; i++)
 			{
-				Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<LuminiteSparkDust>(), Projectile.velocity.X);
+				Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<SeleniteSparkDust>(), Projectile.velocity.X);
 				dust.velocity = (Projectile.velocity.SafeNormalize(Vector2.UnitX) * Main.rand.NextFloat(2f, 4f)).RotatedByRandom(MathHelper.TwoPi);
 				dust.noLight = false;
 				dust.noGravity = true;
 			}
 		}
 
-		SpriteBatchState state;
-		public override bool PreDraw(ref Color lightColor)
-		{
-			Texture2D tex = TextureAssets.Projectile[Type].Value;
-			//state = Main.spriteBatch.SaveState();
-			//Main.spriteBatch.End();
-			//Main.spriteBatch.Begin(BlendState.AlphaBlend, state);
-			Main.EntitySpriteDraw(tex, Projectile.Center - Main.screenPosition, null, new Color(51, 185, 131, 50), Projectile.rotation, tex.Size() / 2, Projectile.scale, SpriteEffects.None, 0);
-			return false;
-		}
-		public override void PostDraw(Color lightColor)
-		{
-			//Main.spriteBatch.Restore(state);
-		}
+		public override Color? GetAlpha(Color lightColor)
+			=> new Color(255, 255, 255, 50);
 	}
 }

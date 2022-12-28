@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.Rocket;
+﻿using Macrocosm.Common.Utility;
+using Macrocosm.Content.Rocket;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
@@ -8,7 +9,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.UI.Rocket
 {
-	public class UIRocket : UIState
+    public class UIRocket : UIState
 	{
 		public int RocketID { get; set; } = -1;
 
@@ -64,7 +65,7 @@ namespace Macrocosm.Content.UI.Rocket
 			}
 
 			UIMapTarget target = NavigationPanel.CurrentMap.GetSelectedTarget();
-			player.GetModPlayer<RocketPlayer>().TargetSubworldID = target is null ? "" : target.TargetID;
+			player.RocketPlayer().TargetSubworldID = target is null ? "" : target.TargetID;
 
 			string prevName = WorldInfoPanel.Name;
 			WorldInfoPanel.Name = target is null ? "" : target.TargetWorldInfo.DisplayName;

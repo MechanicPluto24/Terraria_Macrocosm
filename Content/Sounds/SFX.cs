@@ -1,16 +1,16 @@
 ﻿using Terraria.Audio;
 
-namespace Macrocosm.Assets.Sounds
+namespace Macrocosm.Content.Sounds
 {
-	public static class SFX
-	{
-		public const string SoundAssetPath = "Macrocosm/Content/Sounds/SFX/";
+    public static class SFX
+    {
+        public const string SFXPath = "Macrocosm/Assets/Sounds/SFX/";
 
-		public static readonly SoundStyle AssaultRifle = new(SoundAssetPath + "AssaultRifle_", 4);
-		public static readonly SoundStyle GrenadeLauncherThunk = new(SoundAssetPath + "GrenadeLauncherThunk");
-		public static readonly SoundStyle MinigunWindup = new(SoundAssetPath + "MinigunWindup");
-		public static readonly SoundStyle MinigunFire = new(SoundAssetPath + "MinigunFire");
-		public static readonly SoundStyle MinigunWinddown = new(SoundAssetPath + "MinigunWinddown");
-		public static readonly SoundStyle Ricochet = new(SoundAssetPath + "Ricochet_", 6);
-	}
+        public static readonly SoundStyle AssaultRifle = new(SFXPath + "AssaultRifle_", 4);
+        public static readonly SoundStyle GrenadeLauncherThunk = new(SFXPath + "GrenadeLauncherThunk");
+        public static readonly SoundStyle MinigunWindup = new(SFXPath + "MinigunWindup");
+        public static readonly SoundStyle MinigunFire = new(SFXPath + "MinigunFire");
+        public static readonly SoundStyle MinigunWinddown = new(SFXPath + "MinigunWinddown");
+        public static readonly SoundStyle Ricochet = new(SFXPath + "Ricochet_", 6);
+    }
 }

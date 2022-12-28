@@ -8,7 +8,6 @@ namespace Macrocosm.Common.Utility
 {
 	public static class TileUtils
 	{
-
 		/// <summary>
 		/// Gets the top-left tile of a multitile
 		/// </summary>

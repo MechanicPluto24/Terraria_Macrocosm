@@ -1,6 +1,6 @@
-using Macrocosm.Assets.Sounds;
 using Macrocosm.Common.Utility;
 using Macrocosm.Content.Gores;
+using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Utilities;
@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-	public class LHB805Projectile : ModProjectile
+    public class LHB805Projectile : ModProjectile
 	{
 
 		private const int windupFrames = 4; // number of windup animaton frames

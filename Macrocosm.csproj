@@ -35,7 +35,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Common\Drawing\Particles\" />
+    <Folder Include="Assets\Textures\" />
     <Folder Include="Content\Projectiles\Friendly\Misc\" />
   </ItemGroup>
 </Project>

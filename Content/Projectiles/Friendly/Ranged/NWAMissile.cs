@@ -233,8 +233,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 				for (int j = 0; j < 3; j++)
 				{
 					Vector2 pos = Projectile.oldPos[i];
-					Dust dust = Dust.NewDustDirect(new Vector2(pos.X, pos.Y), 20, 20, DustID.Torch, Scale: 0.07f * (Projectile.oldPos.Length - i));
-				}
+					Dust dust = Dust.NewDustDirect(new Vector2(pos.X, pos.Y), 20, 20, DustID.Torch, Projectile.oldVelocity.X, Projectile.oldVelocity.Y, Scale: 0.07f * (Projectile.oldPos.Length - i));
+ 				}
 			}
 			#endregion
 
