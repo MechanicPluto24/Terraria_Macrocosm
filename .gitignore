@@ -348,3 +348,5 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+/Assets/Effects/SunAnimatrionEffectTest.fx
+/Assets/Effects/SunAnimatrionEffect.fx
