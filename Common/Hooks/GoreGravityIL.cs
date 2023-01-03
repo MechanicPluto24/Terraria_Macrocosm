@@ -3,11 +3,10 @@ using Terraria;
 using Terraria.ModLoader;
 using SubworldLibrary;
 using Macrocosm.Content.Subworlds;
-using Macrocosm.Content.Subworlds.Earth;
 
 namespace Macrocosm.Common.Hooks
 {
-	public class GoreGravityIL : ILoadable
+    public class GoreGravityIL : ILoadable
 	{
 		public void Load(Mod mod)
 		{
@@ -40,9 +39,9 @@ namespace Macrocosm.Common.Hooks
 		private static float GetGoreGravity()
 		{
 			if (SubworldSystem.AnyActive<Macrocosm>())
-				return Earth.BaseGravity * MacrocosmSubworld.Current().GravityMultiplier;
+				return Earth.BaseGoreGravity * MacrocosmSubworld.Current().GravityMultiplier;
 
-			return Earth.BaseGravity;
+			return Earth.BaseGoreGravity;
 		}
 
 	}

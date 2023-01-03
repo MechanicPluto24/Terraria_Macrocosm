@@ -3,11 +3,11 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Common.Drawing;
+using Macrocosm.Common.Utils;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
- 	public class PlasmaBall : ModProjectile
+    public class PlasmaBall : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{

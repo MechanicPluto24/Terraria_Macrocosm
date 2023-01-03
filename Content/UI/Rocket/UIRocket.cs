@@ -1,4 +1,4 @@
-﻿using Macrocosm.Common.Utility;
+﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rocket;
 using Microsoft.Xna.Framework;
 using Terraria;

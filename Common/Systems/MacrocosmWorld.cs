@@ -9,7 +9,6 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Macrocosm.Content.Tiles;
 using Macrocosm.Content.Subworlds;
-using Macrocosm.Content.Subworlds.Moon;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
 
@@ -42,7 +41,7 @@ namespace Macrocosm.Content.Systems
 		{
 			if (SubworldSystem.AnyActive<Macrocosm>())
 			{
-				MacrocosmSubworld activeSubworld = SubworldSystem.Current as MacrocosmSubworld;
+				MacrocosmSubworld activeSubworld = MacrocosmSubworld.Current();
 
 				SubworldSystem.hideUnderworld = true;
 				SubworldSystem.noReturn = false;
@@ -52,8 +51,20 @@ namespace Macrocosm.Content.Systems
 				activeSubworld.PreUpdateWorld();
 
 				GameMechanicsUpdates();
-				FreezeEnvironment();
+
+				if(activeSubworld.NormalUpdates)
+					FreezeEnvironment();
 			}
+		}
+
+		public override void PostUpdateWorld()
+		{
+			if (SubworldSystem.AnyActive<Macrocosm>())
+			{
+				MacrocosmSubworld activeSubworld = MacrocosmSubworld.Current();
+				activeSubworld.PostUpdateWorld();
+			}
+
 		}
 
 		public override void PostUpdateEverything()
@@ -85,9 +96,7 @@ namespace Macrocosm.Content.Systems
 			}
 		}
 
-		/// <summary>
-		/// These are needed for subworlds with NormalUpdates turned on 
-		/// </summary>
+		/// <summary>  Freezes environment factors like rain or clouds. Required when NormalUpdates are turned on.</summary>
 		private static void FreezeEnvironment()
 		{
 			if (Main.gameMenu)
@@ -96,13 +105,12 @@ namespace Macrocosm.Content.Systems
 			Main.numClouds = 0;
 			Main.windSpeedCurrent = 0;
 			Main.weatherCounter = 0;
-			Star.starfallBoost = 0; // Tricky way to stop vanilla fallen stars for spawning with NormalUpdates turned on 
+
+			// Tricky way to stop vanilla fallen stars for spawning when NormalUpdates are turned on 
+			Star.starfallBoost = 0;
 
 			Main.slimeRain = false;
 			Main.slimeRainTime = 0;
-
-			//if(SkyManager.Instance["Slime"] is not null)
-			//	SkyManager.Instance["Slime"].Deactivate();
 
 			Main.StopSlimeRain(false);
 

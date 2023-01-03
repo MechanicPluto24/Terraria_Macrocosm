@@ -6,8 +6,8 @@ using Terraria;
 using Terraria.ModLoader;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
-using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Common.Utility;
+using Macrocosm.Common.Drawing.Dusts;
+using Macrocosm.Common.Utils;
 
 namespace Macrocosm.Common.Hooks
 {
@@ -42,18 +42,18 @@ namespace Macrocosm.Common.Hooks
 			// move cursor to (ldfld bool Terraria.Dust::active)
 			// target instruction gets the dust active status on the stack
 			// next instruction will be a branch instruction that
-			//	bypasses the dust drawing 
+			//	bypasses the dust drawing if false
 			c.Index += 6;
 
 			// load dust loop index on the stack
 			c.Emit(OpCodes.Ldloc_3);
 
 			// call method that reads the active field and the dust index from the stack 
-			// and pushes the return value on the stack
-			// if it returns true, regular vanilla drawing will happen
+			// the method calls the custom drawing logic, then pushes the return value on the stack
+			// if it returns true, regular vanilla drawing will still happen
 			// if false, dust will not be drawn, happens when:
 			//		- dust is not active (same as vanilla)
-			//		- vanilla dust drawing is disabled for this type
+			//		- vanilla dust drawing is disabled for this type in the custom drawing logic
 			c.EmitDelegate(DustCustomDraw);
 		}
 

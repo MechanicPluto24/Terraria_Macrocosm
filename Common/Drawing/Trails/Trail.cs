@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Common.Drawing.Particles;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Steamworks;
 using System;
@@ -12,7 +13,7 @@ namespace Macrocosm.Common.Drawing.Trails
 	public abstract class Trail
 	{
 		public abstract MiscShaderData TrailShader { get; }
-		public virtual Projectile Owner { get; set; }
+		public virtual object Owner { get; set; }
 
 		public virtual float Opacity { get; set; } = 1f;
 		public virtual float Saturation { get; set; } = -1f;
@@ -34,7 +35,10 @@ namespace Macrocosm.Common.Drawing.Trails
 
 		public virtual void Draw()
 		{ 
-			Draw(Owner.oldPos, Owner.oldRot, Owner.Size / 2);
+			if(Owner is Projectile projectile)
+				Draw(projectile.oldPos, projectile.oldRot, projectile.Size / 2);
+			else if (Owner is Particle particle)
+				Draw(particle.OldPositions, particle.OldRotations, particle.Size / 2);
 		}
 
 		public virtual void Draw(Vector2[] positions, float[] rotations, Vector2 offset)

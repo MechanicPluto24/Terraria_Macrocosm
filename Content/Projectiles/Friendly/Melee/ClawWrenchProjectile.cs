@@ -5,7 +5,7 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Common.Utility;
+using Macrocosm.Common.Utils;
 using System;
 using Terraria.DataStructures;
 using Macrocosm.Content.Players;
@@ -82,7 +82,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
 		public override void ModifyDamageHitbox(ref Rectangle hitbox)
 		{
-            Vector2 polar = MathUtils.PolarVector(35, Projectile.rotation + (Projectile.spriteDirection == -1 ? MathHelper.PiOver4 : MathHelper.PiOver2 + MathHelper.PiOver4));
+            Vector2 polar = Utility.PolarVector(35, Projectile.rotation + (Projectile.spriteDirection == -1 ? MathHelper.PiOver4 : MathHelper.PiOver2 + MathHelper.PiOver4));
             hitbox.X -= (int)polar.X;
             hitbox.Y -= (int)polar.Y;
  		}

@@ -1,4 +1,4 @@
-﻿using Macrocosm.Common.Utility;
+﻿using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -17,7 +17,7 @@ namespace Macrocosm.Content.Dusts
 
 		public override void OnSpawn(Dust dust)
 		{
-			dust.frame = MiscUtils.VanillaDustFrame(DustID.Torch);
+			dust.frame = Utility.VanillaDustFrame(DustID.Torch);
 		}
 
 		public override bool Update(Dust dust)

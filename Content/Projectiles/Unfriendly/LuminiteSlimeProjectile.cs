@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Drawing;
-using Macrocosm.Common.Utility;
+﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.NPCs.Enemies.Moon;
 using Microsoft.Xna.Framework;
@@ -13,7 +12,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Unfriendly
 {
- 	public class LuminiteSlimeProjectile : ModProjectile
+    public class LuminiteSlimeProjectile : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{
@@ -61,7 +60,7 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 
 				float aimAngle = (Main.player[TargetPlayer].Center - Projectile.Center).ToRotation();
 				float shootSpeed = baseShootSpeed + Main.rand.NextFloat(-shootDeviation, shootDeviation);
-				Projectile.velocity = MathUtils.PolarVector(shootSpeed, aimAngle);
+				Projectile.velocity = Utility.PolarVector(shootSpeed, aimAngle);
 
 				Projectile.netUpdate = true;
 			}

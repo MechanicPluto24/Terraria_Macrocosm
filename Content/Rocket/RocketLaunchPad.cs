@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 using Terraria.ObjectData;
 using Terraria.Localization;
 using Terraria.DataStructures;
-using Macrocosm.Common.Utility;
+using Macrocosm.Common.Utils;
 
 namespace Macrocosm.Content.Rocket
 {
@@ -45,7 +45,7 @@ namespace Macrocosm.Content.Rocket
 
 		public override void KillMultiTile(int i, int j, int frameX, int frameY)
 		{
-			Point16 origin = TileUtils.GetTileOrigin(i, j);
+			Point16 origin = Utility.GetTileOrigin(i, j);
 			ModContent.GetInstance<RocketLaunchPadTE>().Kill(origin.X, origin.Y);
 		}
 
@@ -80,7 +80,7 @@ namespace Macrocosm.Content.Rocket
 				Main.npcChatText = string.Empty;
 			}
 
-			if (TileUtils.TryGetTileEntityAs(i, j, out RocketLaunchPadTE entity) && player.TryGetModPlayer(out RocketPlayer rocketPlayer))
+			if (Utility.TryGetTileEntityAs(i, j, out RocketLaunchPadTE entity) && player.TryGetModPlayer(out RocketPlayer rocketPlayer))
 			{
 				//RocketSystem.Instance.ShowBuildingUI(new Point16(i, j));
 				//return true;

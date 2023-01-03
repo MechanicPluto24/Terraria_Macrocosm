@@ -1,5 +1,5 @@
 ﻿using Macrocosm.Common.Base;
-using Macrocosm.Common.Utility;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Items.Materials;

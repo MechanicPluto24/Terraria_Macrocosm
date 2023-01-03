@@ -3,7 +3,7 @@ using Macrocosm.Content.Items.Armor.Astronaut;
 using Macrocosm.Content.Items.Currency;
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Items.Weapons.Ranged;
-using Macrocosm.Content.Subworlds.Moon;
+using Macrocosm.Content.Subworlds;
 using Macrocosm.Content.Systems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

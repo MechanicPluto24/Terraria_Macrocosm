@@ -1,4 +1,4 @@
-using Macrocosm.Common.Utility;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Buffs.Debuffs;
 using Terraria;
 using Terraria.ID;

@@ -1,4 +1,4 @@
-using Macrocosm.Common.Drawing;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Dusts;
@@ -14,7 +14,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-	public class RadioactiveSlime : MoonEnemy
+    public class RadioactiveSlime : MoonEnemy
 	{
 		public override void SetStaticDefaults()
 		{

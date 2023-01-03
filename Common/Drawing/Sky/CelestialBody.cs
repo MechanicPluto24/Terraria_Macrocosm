@@ -1,4 +1,4 @@
-using Macrocosm.Common.Utility;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.Graphics.Effects;
@@ -14,7 +14,6 @@ using SubworldLibrary;
 using Macrocosm.Content.Subworlds;
 using System.Linq;
 using Terraria.ModLoader;
-using Macrocosm.Content.Subworlds.Earth;
 
 namespace Macrocosm.Common.Drawing.Sky
 {
@@ -47,9 +46,12 @@ namespace Macrocosm.Common.Drawing.Sky
         public delegate void FuncConfigureShader(float rotation, out float intensity, out Vector2 offsetRadius);
         public FuncConfigureShader ConfigureShader = null;
 
-        #region Private vars 
+		public delegate Effect FuncOverrideShader();
+		public FuncOverrideShader OverrideShader = null;
 
-        private Texture2D bodyTexture;
+		#region Private vars 
+
+		private Texture2D bodyTexture;
         private Texture2D atmoTexture;
 
         private Vector2 averageOffset = default;
@@ -89,9 +91,9 @@ namespace Macrocosm.Common.Drawing.Sky
 
         public void SetPosition(float x, float y) => Position = new Vector2(x, y);
         public void SetPositionRelative(CelestialBody reference, Vector2 offset) => Position = reference.Position + offset;
-        public void SetPositionPolar(Vector2 origin, float radius, float theta) => Position = origin + MathUtils.PolarVector(radius, theta);
-        public void SetPositionPolar(float radius, float theta) => Position = ScreenCenter + MathUtils.PolarVector(radius, theta);
-        public void SetPositionPolar(CelestialBody referenceBody, float radius, float theta) => Position = referenceBody.Position + MathUtils.PolarVector(radius, theta);
+        public void SetPositionPolar(Vector2 origin, float radius, float theta) => Position = origin + Utility.PolarVector(radius, theta);
+        public void SetPositionPolar(float radius, float theta) => Position = ScreenCenter + Utility.PolarVector(radius, theta);
+        public void SetPositionPolar(CelestialBody referenceBody, float radius, float theta) => Position = referenceBody.Position + Utility.PolarVector(radius, theta);
         
 		public void SetLightSource(CelestialBody lightSource) => this.lightSource = lightSource;
 
@@ -207,7 +209,7 @@ namespace Macrocosm.Common.Drawing.Sky
             orbitChildren.Clear();
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, bool withChildren = true)
         {
             if (parallaxSpeedX > 0f || parallaxSpeedY > 0f || averageOffset != default)
                 Parallax(); // stationary parallaxing mode 
@@ -223,12 +225,18 @@ namespace Macrocosm.Common.Drawing.Sky
             spriteBatch.EndIfBeginCalled();
 
             Effect shader = null;
-			if (lightSource is not null && ConfigureShader is not null)
+            if(OverrideShader is not null)
+            {
+                shader = OverrideShader();
+            }
+			else if (lightSource is not null && ConfigureShader is not null)
             {
 				shader = ModContent.Request<Effect>("Macrocosm/Assets/Effects/CelestialBodyShading", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-                
-                float rotation = (Position - lightSource.Position).ToRotation();
+
+				float rotation = (Position - lightSource.Position).ToRotation();
 				ConfigureShader(rotation, out float intensity, out Vector2 offset);
+
+                offset *= 0.8f;
 
                 shader.Parameters["uOffset"].SetValue(offset);
                 shader.Parameters["uIntensity"].SetValue(intensity);
@@ -239,7 +247,7 @@ namespace Macrocosm.Common.Drawing.Sky
             // Draw atmosphere 
             if (atmoTexture is not null)
 			{
-                spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, shader, state);
+                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, shader, state);
                 spriteBatch.Draw(atmoTexture, Position, null, Color.White, Rotation, atmoTexture.Size() / 2, Scale, default, 0f);
                 spriteBatch.End();
             }
@@ -247,7 +255,7 @@ namespace Macrocosm.Common.Drawing.Sky
             // Draw main body 
             if (bodyTexture is not null)
             {
-                spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, shader, state);
+                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, shader, state);
                 spriteBatch.Draw(bodyTexture, Position, null, Color.White, Rotation, bodyTexture.Size() / 2, Scale, default, 0f);
                 spriteBatch.End();
             }
@@ -267,7 +275,7 @@ namespace Macrocosm.Common.Drawing.Sky
             }
 			#endregion
 
-			spriteBatch.End();
+			spriteBatch.EndIfBeginCalled();
 
             spriteBatch.Restore(state);
         }
@@ -278,7 +286,7 @@ namespace Macrocosm.Common.Drawing.Sky
             foreach (CelestialBody child in orbitChildren)
             {
                 if (child.OrbitRotation >= orbitAngle && !inFront || child.OrbitRotation < orbitAngle && inFront)
-                    child.Draw(spriteBatch);
+                    child.Draw(spriteBatch, withChildren: true);
             }
             spriteBatch.End();
         }

@@ -1,6 +1,6 @@
-﻿using Macrocosm.Common.Utility;
+﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Backgrounds.Moon;
-using Macrocosm.Content.Subworlds.Moon;
+using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
 using Terraria;
@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Biomes
 {
-	public class MoonBiome : ModBiome
+    public class MoonBiome : ModBiome
 	{
 		public override SceneEffectPriority Priority => SceneEffectPriority.Environment;
 		public override string BestiaryIcon => "Macrocosm/Content/Biomes/Filters/MoonAdjusted";

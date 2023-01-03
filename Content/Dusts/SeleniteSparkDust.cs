@@ -1,5 +1,5 @@
-using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Common.Utility;
+using Macrocosm.Common.Drawing.Dusts;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;

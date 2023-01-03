@@ -5,13 +5,12 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Common.Drawing;
-using Macrocosm.Common.Utility;
+using Macrocosm.Common.Utils;
 using Macrocosm.Common.Global.GlobalProjectiles;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-	public class DeliriumShell : ModProjectile, IBullet, IExplosive
+    public class DeliriumShell : ModProjectile, IBullet, IExplosive
 	{
 		public float BlastRadius => 35;
 

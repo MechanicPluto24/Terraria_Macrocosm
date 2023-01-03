@@ -1,4 +1,4 @@
-﻿using Macrocosm.Common.Drawing;
+﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -9,7 +9,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.UI.Rocket
 {
-	public class UINavigationMap : UIElement
+    public class UINavigationMap : UIElement
 	{
 		public Texture2D Background;
 

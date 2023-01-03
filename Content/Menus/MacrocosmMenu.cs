@@ -1,6 +1,5 @@
-﻿using Macrocosm.Common.Drawing;
-using Macrocosm.Common.Drawing.Sky;
-using Macrocosm.Common.Utility;
+﻿using Macrocosm.Common.Drawing.Sky;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -97,14 +96,11 @@ namespace Macrocosm.Content.Menu
 
 		public override bool PreDrawLogo(SpriteBatch spriteBatch, ref Vector2 logoDrawCenter, ref float logoRotation, ref float logoScale, ref Color drawColor)
 		{
-
-			Main.dayTime = true;
-
 			Rectangle screen = new(0, 0, Main.screenWidth + 1, Main.screenHeight + 1);
 			spriteBatch.Draw(TextureAssets.BlackTile.Value, screen, Color.Black);
 
 			SpriteBatchState state = spriteBatch.SaveState();
-			spriteBatch.EndIfBeginCalled();
+			spriteBatch.End();
 			spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, state);
 
 			spriteBatch.Draw(ModContent.Request<Texture2D>(assetPath + "MilkyWay").Value, screen, Color.White.NewAlpha(0.6f));
@@ -114,9 +110,10 @@ namespace Macrocosm.Content.Menu
 
 			Stars.Draw(spriteBatch);
 
-			// includes all orbiting descendants in the tree 
 			Sun.SetPosition(Main.screenWidth / 2, Main.screenHeight / 2);
-			Sun.Draw(spriteBatch);
+
+			// includes all orbiting descendants in the tree 
+			Sun.Draw(spriteBatch, withChildren: true);
 
 			logoScale *= 0.65f;
 			drawColor = Color.White;
@@ -134,13 +131,13 @@ namespace Macrocosm.Content.Menu
 				body.ConfigureShader = (float rotation, out float intensity, out Vector2 offset) =>
 				{
 					intensity = 0.9f;
-					offset = MathUtils.PolarVector(0.15f, rotation);
+					offset = Utility.PolarVector(0.15f, rotation);
 				};
  			}
 
 			Sun.Scale = 0.85f;
-
 			Sun.SetPosition(Main.screenWidth / 2, Main.screenHeight / 2);
+
 			Vulcan.SetOrbitParent(Sun, 174, Rand(), 0.0022f);
 			Mercury.SetOrbitParent(Sun, 204, Rand(), 0.0018f);
 			Venus.SetOrbitParent(Sun, 238, Rand(), 0.0014f);
@@ -175,6 +172,6 @@ namespace Macrocosm.Content.Menu
 			Eris.SetOrbitParent(Sun, 810, Rand(), 0.00018f);
 		}
 
-		private static float Rand() => MathUtils.RandomRotation();
+		private static float Rand() => Utility.RandomRotation();
 	}
 }

@@ -1,5 +1,5 @@
-﻿using Macrocosm.Common.Utility;
-using Macrocosm.Content.Subworlds;
+﻿using Macrocosm.Common.Utils;
+using Macrocosm.Content.Subworlds.WorldInfomation;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -9,7 +9,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.UI.Rocket
 {
-	public class UIWorldInfoPanel : UIPanel
+    public class UIWorldInfoPanel : UIPanel
 	{
 		public string Name = "";
 

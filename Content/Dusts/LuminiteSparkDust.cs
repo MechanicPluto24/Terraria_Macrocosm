@@ -3,8 +3,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ModLoader;
-using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Common.Utility;
+using Macrocosm.Common.Drawing.Dusts;
+using Macrocosm.Common.Utils;
 
 namespace Macrocosm.Content.Dusts
 {

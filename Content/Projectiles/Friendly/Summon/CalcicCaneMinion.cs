@@ -1,5 +1,5 @@
 using Macrocosm.Common.Drawing;
-using Macrocosm.Common.Utility;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Buffs.GoodBuffs;
 using Macrocosm.Content.Buffs.GoodBuffs.MinionBuffs;
 using Macrocosm.Content.Dusts;

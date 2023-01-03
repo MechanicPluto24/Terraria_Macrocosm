@@ -10,7 +10,7 @@ using Terraria.GameContent;
 using Terraria.DataStructures;
 using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
-using Macrocosm.Common.Utility;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Consumables.BossBags;
@@ -663,7 +663,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 							{
 								Vector2 spawn = orig + new Vector2(Main.rand.NextFloat(-1, 1) * 40 * 16, Main.rand.NextFloat(-1, 1) * 6 * 16);
 
-								int portalID = Projectile.NewProjectile(NPC.GetSource_FromAI(), spawn, Vector2.Zero, ModContent.ProjectileType<MeteorPortal>(), MiscUtils.TrueDamage(Main.expertMode ? 140 : 90), 0f, Main.myPlayer);
+								int portalID = Projectile.NewProjectile(NPC.GetSource_FromAI(), spawn, Vector2.Zero, ModContent.ProjectileType<MeteorPortal>(), Utility.TrueDamage(Main.expertMode ? 140 : 90), 0f, Main.myPlayer);
 								Main.projectile[portalID].netUpdate = true;
 							}
 						}
@@ -767,7 +767,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 						}
 						else
 						{
-							bigPortal.scale = MathUtils.ScaleLogarithmic(bigPortal.scale, 1f, 2.7219f, 1f / 60f);
+							bigPortal.scale = Utility.ScaleLogarithmic(bigPortal.scale, 1f, 2.7219f, 1f / 60f);
 							bigPortal.alpha = bigPortal.scale;
 						}
 
@@ -800,14 +800,14 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 						//Shrink (factor of 4.3851 makes it reach 0.01 in around 60 ticks, 12.2753 ~= 20 ticks)
 						const float epsilon = 0.01f;
 						if (NPC.scale > epsilon)
-							UpdateScale(MathUtils.ScaleLogarithmic(NPC.scale, 0f, repeatCount == 0 ? 4.3851f : 12.2753f, 1f / 60f));
+							UpdateScale(Utility.ScaleLogarithmic(NPC.scale, 0f, repeatCount == 0 ? 4.3851f : 12.2753f, 1f / 60f));
 
 						targetAlpha = 255f * (1f - NPC.scale);
 
 						if (AI_Timer <= 0)
 						{
 							//Shrink the portal, but a bit slower
-							bigPortal.scale = MathUtils.ScaleLogarithmic(bigPortal.scale, 0f, repeatCount == 0 ? 2.7219f : 9.2153f, 1f / 60f);
+							bigPortal.scale = Utility.ScaleLogarithmic(bigPortal.scale, 0f, repeatCount == 0 ? 2.7219f : 9.2153f, 1f / 60f);
 							bigPortal.alpha = bigPortal.scale;
 						}
 
@@ -874,7 +874,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 					else if (repeatRelative == 2)
 					{
 						//Make the portal grow FAST (9.9583 results in around 26 ticks)
-						bigPortal.scale = MathUtils.ScaleLogarithmic(bigPortal.scale, 1f, 9.9583f, 1f / 60f);
+						bigPortal.scale = Utility.ScaleLogarithmic(bigPortal.scale, 1f, 9.9583f, 1f / 60f);
 						bigPortal.alpha = bigPortal.scale;
 
 						if (bigPortal.scale >= 0.99f)
@@ -894,7 +894,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 						//15.7025 ~= 16 ticks to go from 0.01 to 1
 						if (NPC.scale < 0.99f)
-							UpdateScale(MathUtils.ScaleLogarithmic(NPC.scale, 1, 15.7025f, 1f / 60f));
+							UpdateScale(Utility.ScaleLogarithmic(NPC.scale, 1, 15.7025f, 1f / 60f));
 						else
 							UpdateScale(1f);
 
@@ -944,7 +944,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 						//First portal disappears once the boss leaves within 22 update ticks of its center
 						if (NPC.DistanceSQ(bigPortal.center) > activeDist * activeDist)
 						{
-							bigPortal.scale = MathUtils.ScaleLogarithmic(bigPortal.scale, 0f, 15.2753f, 1f / 60f);
+							bigPortal.scale = Utility.ScaleLogarithmic(bigPortal.scale, 0f, 15.2753f, 1f / 60f);
 							bigPortal.alpha = bigPortal.scale;
 
 							if (bigPortal.scale <= 0.01f)
@@ -957,7 +957,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 						if (bigPortal2.visible)
 						{
-							bigPortal2.scale = MathUtils.ScaleLogarithmic(bigPortal2.scale, 1f, 15.2753f, 1f / 60f);
+							bigPortal2.scale = Utility.ScaleLogarithmic(bigPortal2.scale, 1f, 15.2753f, 1f / 60f);
 							bigPortal2.alpha = bigPortal2.scale;
 
 							if (bigPortal2.scale >= 0.99f)
@@ -1018,7 +1018,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 						NPC.velocity *= 1f - 8.5f / 60f;
 
 						//5.9192 ~= 45 ticks to reach 0.01 scale
-						bigPortal.scale = MathUtils.ScaleLogarithmic(bigPortal.scale, 0f, 5.9192f, 1f / 60f);
+						bigPortal.scale = Utility.ScaleLogarithmic(bigPortal.scale, 0f, 5.9192f, 1f / 60f);
 
 						if (Math.Abs(NPC.velocity.X) < 0.05f && Math.Abs(NPC.velocity.Y) <= 0.05f)
 							NPC.velocity = Vector2.Zero;

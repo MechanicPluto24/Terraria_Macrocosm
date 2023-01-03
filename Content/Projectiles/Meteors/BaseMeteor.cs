@@ -1,5 +1,5 @@
 ﻿using Macrocosm.Common.Global.GlobalProjectiles;
-using Macrocosm.Common.Utility;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -142,7 +142,7 @@ namespace Macrocosm.Content.Projectiles.Meteors
 					float distance = Vector2.Distance(player.Center, Projectile.Center);
 					if (distance < ScreenshakeMaxDist)
 					{
-						player.SetScreenshake(ScreenshakeIntensity - distance / ScreenshakeMaxDist * ScreenshakeIntensity);
+						player.AddScreenshake(ScreenshakeIntensity - distance / ScreenshakeMaxDist * ScreenshakeIntensity);
 					}
 				}
 			}
