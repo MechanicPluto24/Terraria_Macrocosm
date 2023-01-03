@@ -1,3 +1,4 @@
+using Macrocosm.Common.Global;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
@@ -34,7 +35,7 @@ namespace Macrocosm.Content.Tiles
 
 		public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
 		{
+			//return TileBlend.BlendLikeDirt(i, j, new int[] { ModContent.TileType<Protolith>(), ModContent.TileType<IrradiatedRock>() }, asDirt: true);
 			return true;
- 		}
 	}
 }
