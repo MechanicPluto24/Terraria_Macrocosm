@@ -10,7 +10,7 @@ using Macrocosm.Content.Items.Currency;
 using Macrocosm.Content.Items.Weapons.Summon;
 using Macrocosm.Content.Items.Weapons.Ranged;
 using Macrocosm.Content.Items.Materials;
-using Macrocosm.Common.Utility;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Vanity.BossMasks;
 
 namespace Macrocosm.Content.Items.Consumables.BossBags

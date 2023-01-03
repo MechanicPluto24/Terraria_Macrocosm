@@ -7,21 +7,14 @@ using Terraria.ModLoader;
 using Terraria.Graphics.Effects;
 using Terraria.Graphics.Shaders;
 using SubworldLibrary;
-using Macrocosm.Content.Subworlds.Moon;
 using Macrocosm.Content.Tiles;
 using Macrocosm.Content.Players;
 using Macrocosm.Content.Rocket;
+using Macrocosm.Content.Subworlds;
+using Macrocosm.Common.Netcode;
 
 namespace Macrocosm
 {
-	public enum MessageType : byte
-	{
-		SyncPlayerDashDirection,
-		SyncPlayerRocketStatus,
-		EmbarkPlayerInRocket,
-		LaunchRocket
-	}
-
 	public class Macrocosm : Mod
 	{
 		public static Mod Instance => ModContent.GetInstance<Macrocosm>();
@@ -63,30 +56,7 @@ namespace Macrocosm
 
 		public override void HandlePacket(BinaryReader reader, int whoAmI)
 		{
-			MessageType messageType = (MessageType)reader.ReadByte();
-
-			switch (messageType)
-			{
-				case MessageType.SyncPlayerDashDirection:
- 						DashPlayer.ReceiveSyncPlayer(reader, whoAmI);
-						break;
- 
-				case MessageType.SyncPlayerRocketStatus:
- 						RocketPlayer.ReceiveSyncPlayer(reader, whoAmI);
-						break;
- 
-				case MessageType.EmbarkPlayerInRocket:
- 						RocketNPC.ReceiveEmbarkedPlayer(reader, whoAmI);
-						break;
- 
-				case MessageType.LaunchRocket:
- 						RocketNPC.ReceiveLaunchMessage(reader, whoAmI);
-						break;
- 
-				default:
-					Logger.WarnFormat("Macrocosm: Unknown Message type: {messageType}", messageType);
-					break;
-			}
+			PacketHandler.HandlePacket(reader, whoAmI);
 		}
 	}
 }

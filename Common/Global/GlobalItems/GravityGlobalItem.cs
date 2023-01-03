@@ -1,7 +1,6 @@
 ﻿using SubworldLibrary;
 using Terraria;
 using Terraria.ModLoader;
-using Macrocosm.Content.Subworlds.Moon;
 using Macrocosm.Content.Subworlds;
 
 namespace Macrocosm.Common.Global.GlobalItems

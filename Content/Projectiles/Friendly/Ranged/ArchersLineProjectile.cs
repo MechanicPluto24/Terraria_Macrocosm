@@ -1,5 +1,5 @@
-using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Global.GlobalProjectiles;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using Terraria;

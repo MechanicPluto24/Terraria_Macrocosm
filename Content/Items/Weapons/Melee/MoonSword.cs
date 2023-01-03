@@ -1,8 +1,6 @@
 ﻿using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.Enums;
-using Terraria.Audio;
 using Terraria.GameContent.Creative;
 using Microsoft.Xna.Framework;
 using Macrocosm.Content.Projectiles.Friendly.Melee;
@@ -15,7 +13,6 @@ namespace Macrocosm.Content.Items.Weapons.Melee
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Moonlight Greatsword");
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
 

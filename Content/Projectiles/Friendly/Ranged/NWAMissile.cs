@@ -2,7 +2,7 @@ using Macrocosm.Common.Base;
 using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Trails;
 using Macrocosm.Common.Global.GlobalProjectiles;
-using Macrocosm.Common.Utility;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Tiles.Furniture;
 using Macrocosm.Content.Trails;
@@ -233,7 +233,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 				for (int j = 0; j < 3; j++)
 				{
 					Vector2 pos = Projectile.oldPos[i];
-					Dust dust = Dust.NewDustDirect(new Vector2(pos.X, pos.Y), 20, 20, DustID.Torch, Projectile.oldVelocity.X, Projectile.oldVelocity.Y, Scale: 0.07f * (Projectile.oldPos.Length - i));
+					Dust dust = Dust.NewDustDirect(new Vector2(pos.X, pos.Y), 20, 20, DustID.Torch, Projectile.oldVelocity.X * 0.5f, Projectile.oldVelocity.Y * 0.5f, Scale: 0.07f * (Projectile.oldPos.Length - i));
  				}
 			}
 			#endregion

@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Drawing;
-using Macrocosm.Common.Utility;
+﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.NPCs.Bosses.CraterDemon;
 using Microsoft.Xna.Framework;
@@ -11,8 +10,8 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Unfriendly
 {
-	//Had to salvage it from an extracted DLL, so no comments.  Oops.  -- absoluteAquarian
-	public class MeteorPortal : ModProjectile
+    //Had to salvage it from an extracted DLL, so no comments.  Oops.  -- absoluteAquarian
+    public class MeteorPortal : ModProjectile
 	{
 		private int defWidth;
 		private int defHeight;

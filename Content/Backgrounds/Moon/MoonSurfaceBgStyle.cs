@@ -1,5 +1,4 @@
-using Macrocosm.Common.Drawing;
-using Macrocosm.Common.Utility;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -10,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Backgrounds.Moon
 {
-	public class MoonSurfaceBgStyle : ModSurfaceBackgroundStyle
+    public class MoonSurfaceBgStyle : ModSurfaceBackgroundStyle
 	{
 		// Use this to keep far Backgrounds like the mountains.
 		public override void ModifyFarFades(float[] fades, float transitionSpeed)

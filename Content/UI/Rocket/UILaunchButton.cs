@@ -6,8 +6,6 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.UI.Rocket
 {
-
-
 	public class UILaunchButton : UIElement
 	{
 		public delegate void OnClick_ZoomIn(bool useDefault);
@@ -21,7 +19,6 @@ namespace Macrocosm.Content.UI.Rocket
 		private UIText buttonText;
 		private UIPanel buttonPanel;
 
-		public ButtonStateType ButtonState;
 		public enum ButtonStateType
 		{
 			NoTarget,
@@ -30,7 +27,8 @@ namespace Macrocosm.Content.UI.Rocket
 			ZoomIn,
 			Launch
 		}
-
+		public ButtonStateType ButtonState;
+		
 		public override void OnInitialize()
 		{
 			Width.Set(285, 0);

@@ -5,12 +5,12 @@ using Microsoft.Xna.Framework;
 using Terraria.GameContent;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using Macrocosm.Common.Drawing;
 using Macrocosm.Content.Systems;
+using Macrocosm.Common.Utils;
 
 namespace Macrocosm.Content.DrawLayers
 {
-	public class CelestialBulwarkLayer : PlayerDrawLayer
+    public class CelestialBulwarkLayer : PlayerDrawLayer
 	{
 		public override Position GetDefaultPosition()
 			=> new AfterParent(PlayerDrawLayers.Shield);

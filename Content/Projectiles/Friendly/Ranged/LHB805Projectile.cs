@@ -1,4 +1,4 @@
-using Macrocosm.Common.Utility;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Gores;
 using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
@@ -132,7 +132,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			}
 			else
 			{
-				OwnerPlayer.SetScreenshake(0.2f);
+				OwnerPlayer.AddScreenshake(0.2f);
 
 				if (Projectile.frameCounter >= windupTicksPerFrame)
 				{
@@ -155,7 +155,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 				if (StillInUse)
 					OwnerPlayer.PickAmmo(OwnerPlayer.inventory[OwnerPlayer.selectedItem], out projToShoot, out float speed, out damage, out knockback, out var usedAmmoItemId); //uses ammunition from inventory
 
-				Vector2 rotPoint = MathUtils.RotatingPoint(Projectile.Center, new Vector2(40, 8 * Projectile.spriteDirection), Projectile.rotation);
+				Vector2 rotPoint = Utility.RotatingPoint(Projectile.Center, new Vector2(40, 8 * Projectile.spriteDirection), Projectile.rotation);
 
 				// gradually increase fire rate
 				int fireFreq = (int)MathHelper.Clamp(MathHelper.Lerp(fireRateStart, fireRateCap, (AI_Windup - windupTime) / (fullFireRateTime - windupTime)), fireRateCap, fireRateStart);// Main.rand.NextBool()

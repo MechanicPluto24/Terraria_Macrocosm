@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Utility;
+﻿using Macrocosm.Common.Netcode;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.UI.Rocket;
 using Microsoft.Xna.Framework;

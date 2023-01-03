@@ -1,6 +1,5 @@
 ﻿using Macrocosm.Content.Rarities;
 using Macrocosm.Content.Rocket;
-using Macrocosm.Content.Subworlds.Moon;
 using SubworldLibrary;
 using Terraria;
 using Terraria.ID;

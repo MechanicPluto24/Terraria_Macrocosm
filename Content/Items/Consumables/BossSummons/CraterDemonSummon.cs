@@ -1,4 +1,4 @@
-﻿using Macrocosm.Common.Utility;
+﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.NPCs.Bosses.CraterDemon;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
@@ -37,7 +37,7 @@ namespace Macrocosm.Content.Items.Consumables.BossSummons
 
 		public override bool? UseItem(Player player)
 		{
-			if (NPCUtils.SummonBossDirectlyWithMessage(player.Center - new Vector2(0f, 240f), ModContent.NPCType<CraterDemon>()))
+			if (Utility.SummonBossDirectlyWithMessage(player.Center - new Vector2(0f, 240f), ModContent.NPCType<CraterDemon>()))
 				SoundEngine.PlaySound(SoundID.ForceRoar, player.position);
 
 			return true;

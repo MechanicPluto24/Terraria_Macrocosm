@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Utility;
-using Macrocosm.Content.Items.MeteorChunks;
+﻿using Macrocosm.Content.Items.MeteorChunks;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -14,7 +13,7 @@ namespace Macrocosm.Content.Projectiles.Meteors
 			Width = 52;
 			Height = 44;
 			Damage = 1500;
-
+			
 			MeteorName = "Vortex Meteor";
 
 			ScreenshakeMaxDist = 140f * 16f;

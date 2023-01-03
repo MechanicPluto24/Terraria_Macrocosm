@@ -1,5 +1,5 @@
 using Macrocosm.Common.Drawing;
-using Macrocosm.Common.Utility;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Buffs.GoodBuffs;
 using Macrocosm.Content.Buffs.GoodBuffs.MinionBuffs;
 using Macrocosm.Content.Dusts;
@@ -7,7 +7,6 @@ using Macrocosm.Content.Gores;
 using Macrocosm.Content.Items.Dev;
 using Macrocosm.Content.UI.Rocket;
 using Macrocosm.Content.Subworlds;
-using Macrocosm.Content.Subworlds.Moon;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SubworldLibrary;
@@ -19,6 +18,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI.Chat;
 using System.IO;
+using Macrocosm.Common.Netcode;
 
 namespace Macrocosm.Content.Rocket
 {
@@ -295,7 +295,7 @@ namespace Macrocosm.Content.Rocket
 		public void SendEmbarkedPlayer(int playerID, bool asCommander)
 		{
 			ModPacket packet = Macrocosm.Instance.GetPacket();
-			packet.Write((byte)MessageType.EmbarkPlayerInRocket);
+			packet.Write((byte)MessageType.SyncEmbarkInRocket);
 			packet.Write((byte)playerID);
 			packet.Write(asCommander);
 			packet.Write((byte)NPC.whoAmI);
@@ -330,7 +330,7 @@ namespace Macrocosm.Content.Rocket
 				return;
 
 			ModPacket packet = Macrocosm.Instance.GetPacket();
-			packet.Write((byte)MessageType.LaunchRocket);
+			packet.Write((byte)MessageType.SyncLaunchRocket);
 			packet.Write((byte)NPC.whoAmI);
 			packet.Send(toClient, ignoreClient);
 		}

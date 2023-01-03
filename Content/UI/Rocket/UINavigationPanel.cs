@@ -1,7 +1,6 @@
 ﻿using Macrocosm.Common.Drawing;
 using Macrocosm.Content.Subworlds;
-using Macrocosm.Content.Subworlds.Earth;
-using Macrocosm.Content.Subworlds.Moon;
+using Macrocosm.Content.Subworlds.WorldInfomation;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -15,7 +14,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.UI.Rocket
 {
-	public class UINavigationPanel : UIElement
+    public class UINavigationPanel : UIElement
 	{
 		public UINavigationMap CurrentMap;
 

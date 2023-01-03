@@ -1,6 +1,6 @@
-﻿using Macrocosm.Common.Drawing;
+﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Subworlds;
-using Macrocosm.Content.Subworlds.Earth;
+using Macrocosm.Content.Subworlds.WorldInfomation;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SubworldLibrary;
@@ -10,7 +10,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.UI.Rocket
 {
-	public class UIMapTarget : UIElement
+    public class UIMapTarget : UIElement
 	{
 		/// <summary> Subworld data displayed in the info panel </summary>
 		public WorldInfo TargetWorldInfo = default;

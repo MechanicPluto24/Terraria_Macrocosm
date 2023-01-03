@@ -1,7 +1,6 @@
-using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Sky;
-using Macrocosm.Common.Utility;
-using Macrocosm.Common.Utility.IO;
+using Macrocosm.Common.Utils;
+using Macrocosm.Common.Utils.IO;
 using Macrocosm.Content.UI.WorldGen;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -32,7 +31,7 @@ namespace Macrocosm.Content.UI.LoadingScreens
 		private readonly TextFileLoader textFileLoader = new();
 
 		public void ResetAnimation() => animationTimer = 0;
-		public void NewStatusMessage() => chosenMessage = toEarth ? ListRandom.Pick(textFileLoader.Parse("Content/Subworlds/Earth/EarthMessages")) : ListRandom.Pick(textFileLoader.Parse("Content/Subworlds/Moon/MoonMessages"));
+		public void NewStatusMessage() => chosenMessage = toEarth ? ListRandom.Pick(textFileLoader.Parse("Content/Subworlds/Messages/EarthMessages")) : ListRandom.Pick(textFileLoader.Parse("Content/Subworlds/Messages/MoonMessages"));
 
 		public MoonSubworldLoadUI()
 		{

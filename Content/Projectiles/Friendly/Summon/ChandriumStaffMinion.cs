@@ -1,7 +1,9 @@
 using Macrocosm.Common.Drawing;
-using Macrocosm.Common.Utility;
+using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Buffs.GoodBuffs.MinionBuffs;
 using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -13,7 +15,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Summon
 {
-	public class ChandriumStaffMinion : ModProjectile
+    public class ChandriumStaffMinion : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{
@@ -87,14 +89,18 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 		{
 			for (int i = 0; i < 60; i++)
 			{
-				Vector2 position = Projectile.position;
+				Vector2 position = Projectile.Center;
 				Vector2 velocity = Main.rand.NextVector2Circular(0.5f, 0.5f);
 
 				Dust dust;
 				if (i % 10 == 0)
 				{
-					dust = Dust.NewDustDirect(position, Projectile.width, Projectile.height, ModContent.DustType<CrescentMoonParticle>(), velocity.X, velocity.Y, Scale: Main.rand.NextFloat(0.8f, 1.1f));
-					dust.velocity = velocity * 5f;
+					Particle.CreateParticle<CrescentMoonParticle>(particle =>
+					{
+						particle.Position = position;
+						particle.Velocity = velocity * 5f;
+						particle.Scale = Main.rand.NextFloat(0.8f, 1.1f);
+					});
 				}
 
 				dust = Dust.NewDustDirect(position, Projectile.width, Projectile.height, ModContent.DustType<ChandriumDust>(), velocity.X, velocity.Y, Scale: Main.rand.NextFloat(0.8f, 1.2f));

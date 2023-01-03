@@ -1,4 +1,4 @@
-using Macrocosm.Common.Utility;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -53,7 +53,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			{
 				float speed = Main.rand.NextFloat(5f, 15f);
 				float theta = i + Main.rand.NextFloat(-MathHelper.PiOver4, MathHelper.PiOver4) * 0.5f;
-				Vector2 velocity = MathUtils.PolarVector(speed, theta);
+				Vector2 velocity = Utility.PolarVector(speed, theta);
 				Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, velocity, ModContent.ProjectileType<PlasmaBall>(), (int)(Projectile.damage * 0.5f), 0f, Projectile.owner, ai0: 200);
 			}
 

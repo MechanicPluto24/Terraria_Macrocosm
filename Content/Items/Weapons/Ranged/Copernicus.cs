@@ -1,4 +1,4 @@
-using Macrocosm.Common.Utility;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Content.Rarities;
 using Macrocosm.Content.Sounds;
@@ -44,7 +44,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 		private int altUseCounter = 30;
 		public override Vector2? HoldoutOffset() => new Vector2(-10, 0);
 
-		public override bool AltFunctionUse(Player player) => altUseCounter == altUseCooldown && ItemUtils.ToRocketProjectileID(player, ItemID.GrenadeLauncher) != 0;
+		public override bool AltFunctionUse(Player player) => altUseCounter == altUseCooldown && Utility.ToRocketProjectileID(player, ItemID.GrenadeLauncher) != 0;
 
 		public override bool CanUseItem(Player player) => true;
 

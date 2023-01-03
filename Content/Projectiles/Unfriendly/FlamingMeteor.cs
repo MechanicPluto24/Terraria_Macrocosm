@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Drawing;
-using Macrocosm.Common.Utility;
+﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Trails;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,8 +12,8 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Unfriendly
 {
-	//Had to salvage it from an extracted DLL, so no comments.  Oops.  -- absoluteAquarian
-	public class FlamingMeteor : ModProjectile
+    //Had to salvage it from an extracted DLL, so no comments.  Oops.  -- absoluteAquarian
+    public class FlamingMeteor : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{

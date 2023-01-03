@@ -1,4 +1,5 @@
 ﻿
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Materials;
 using Microsoft.Xna.Framework;
@@ -54,19 +55,14 @@ namespace Macrocosm.Content.Items.MeteorChunks
 
 		public override void PostDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
 		{
-			ParticleOrchestraSettings settings;
-
-			if(Main.rand.NextBool(4))
+			if (Main.rand.NextBool(6))
 			{
-				settings = new()
-				{
-					PositionInWorld = Item.Center + new Vector2(Item.width, Item.height).RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(),
-					MovementVector = Vector2.One.RotatedByRandom(MathHelper.TwoPi) * 2
-				};
+				Vector2 position = Item.Center + new Vector2(Item.width, Item.height).RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat();
+				Vector2 velocity = Vector2.One.RotatedByRandom(MathHelper.TwoPi) * 1.2f;
 
-				ParticleOrchestrator.SpawnParticlesDirect(ParticleOrchestraType.StardustPunch, settings);
+				Particle.CreateParticle(ParticleOrchestraType.StardustPunch, position, velocity);
 			}
-		}
+ 		}
 	}
 }
 

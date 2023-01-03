@@ -1,5 +1,5 @@
 using Macrocosm.Common.Global.GlobalNPCs;
-using Macrocosm.Common.Utility;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;

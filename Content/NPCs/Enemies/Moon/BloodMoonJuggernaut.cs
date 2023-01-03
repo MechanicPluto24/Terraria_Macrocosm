@@ -1,4 +1,4 @@
-using Macrocosm.Common.Utility;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Materials;
 using Microsoft.Xna.Framework;
 using System;

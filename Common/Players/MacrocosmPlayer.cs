@@ -6,13 +6,16 @@ using Terraria.Graphics.Effects;
 using SubworldLibrary;
 using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Subworlds;
-using Macrocosm.Content.Subworlds.Moon;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Systems;
+using Macrocosm.Content.Particles;
+using Macrocosm.Content.Buffs.GoodBuffs;
+using Macrocosm.Common.Drawing.Particles;
+using Terraria.GameContent;
 
 namespace Macrocosm.Content.Players
 {
-	public class MacrocosmPlayer : ModPlayer
+    public class MacrocosmPlayer : ModPlayer
 	{
 		public bool AccMoonArmor = false;
 		public int AccMoonArmorDebuff = 0;
@@ -22,6 +25,7 @@ namespace Macrocosm.Content.Players
 		public bool ZoneIrradiation = false;
 
 		public float RadNoiseIntensity = 0f;
+
 		public int ChandriumEmpowermentStacks = 0;
 
 		#region Screenshake mechanic 
@@ -82,7 +86,7 @@ namespace Macrocosm.Content.Players
 				if (!Filters.Scene["Macrocosm:RadiationNoiseEffect"].IsActive())
 					Filters.Scene.Activate("Macrocosm:RadiationNoiseEffect");
 
-				RadNoiseIntensity += 0.189f * Utils.GetLerpValue(400, 10000, TileCountSystem.TileCounts.IrradiatedRockCount, clamped: true);
+				RadNoiseIntensity += 0.189f * Utils.GetLerpValue(400, 10000, TileCounts.Instance.IrradiatedRockCount, clamped: true);
 
 				Filters.Scene["Macrocosm:RadiationNoiseEffect"].GetShader().UseIntensity(RadNoiseIntensity);
 			}
