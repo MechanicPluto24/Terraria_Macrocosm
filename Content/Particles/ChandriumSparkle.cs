@@ -15,7 +15,7 @@ using System;
 
 namespace Macrocosm.Content.Particles
 {
-	public class ChandiumSparkleParticle : Particle
+	public class ChandriumSparkle : Particle
 	{
 		public override string TexturePath => Macrocosm.EmptyTexPath;
 
@@ -44,12 +44,9 @@ namespace Macrocosm.Content.Particles
 			float inertia;
 			int whipIdx = -1;
 
-			if (!OwnerPlayer.active || OwnerPlayer.dead)
-				Kill();
-
 			Rotation += Velocity.X * 0.02f;
-			Array.Fill(OldRotations, 0f);
-
+			Scale = 0.7f;
+ 
 			int chandriumWhipType = ModContent.ProjectileType<ChandriumWhipProjectile>();
 			for(int i = 0; i < Main.maxProjectiles; i++)
 			{
@@ -63,60 +60,46 @@ namespace Macrocosm.Content.Particles
 
 			bool whipActive = whipIdx >= 0;
 
-			if (!whipActive)
+
+			if (!OwnerPlayer.active || OwnerPlayer.dead)
 			{
-				Scale = 0.8f;
-				Vector2 vectorToIdlePosition = OwnerPlayer.Center - Center;
-				float distanceToIdlePosition = vectorToIdlePosition.Length();
+				Kill();
+				return;
+			}
+ 
+			Vector2 vectorToIdlePosition = OwnerPlayer.Center - Center;
+			float distanceToIdlePosition = vectorToIdlePosition.Length();
 
-				if (distanceToIdlePosition > 40f)
-				{
-					speed = 26f;
-					inertia = 80f;
-				}
-				else
-				{
-					speed = 12f;
-					inertia = 60f;
-				}
-
-				if (distanceToIdlePosition > 20f)
-				{
-					vectorToIdlePosition.Normalize();
-					vectorToIdlePosition *= speed;
-					Velocity = (Velocity * (inertia - 1) + vectorToIdlePosition) / inertia;
-				}
-				else if (Velocity == Vector2.Zero)
-				{
-					Velocity.X = -2f;
-					Velocity.Y = -0.5f;
-				}
+			if (distanceToIdlePosition > 40f)
+			{
+				speed = 26f;
+				inertia = 80f;
 			}
 			else
 			{
-				Scale = 1.2f;
-				//ChandriumWhipProjectile whip = Main.projectile[whipIdx].ModProjectile as ChandriumWhipProjectile;
-				//Velocity = (whip.TipPosition - Center);
-				Velocity = (Main.projectile[whipIdx].position - Center);
-
-				if (TimeLeft <= 1)
-					TimeLeft = 1;
+				speed = 12f;
+				inertia = 60f;
 			}
 
-			for (int i = 0; i < 3; i++)
+			if (distanceToIdlePosition > 20f)
 			{
-				Dust dust2 = Dust.NewDustDirect(Position - new Vector2(10f * Scale), (int)(20 * Scale), (int)(20 * Scale), DustID.WitherLightning, Velocity.X * 0.2f, Velocity.Y * 0.2f, Scale: Main.rand.NextFloat(0.6f, 1.2f));
-				dust2.noGravity = true;
+				vectorToIdlePosition.Normalize();
+				vectorToIdlePosition *= speed;
+				Velocity = (Velocity * (inertia - 1) + vectorToIdlePosition) / inertia;
 			}
-
+			else if (Velocity == Vector2.Zero)
+			{
+				Velocity.X = -2f;
+				Velocity.Y = -0.5f;
+			}
  		}
 		
 		public override void OnKill()
 		{
-			for (int i = 0; i < 50; i++)
+			for (int i = 0; i < 10; i++)
 			{
-				Dust dust = Dust.NewDustDirect(Position, 32, 32, DustID.WitherLightning, Velocity.X);
-				dust.velocity = (Velocity.SafeNormalize(Vector2.UnitX) * Main.rand.NextFloat(1f, 2f)).RotatedByRandom(MathHelper.TwoPi);
+				Dust dust = Dust.NewDustDirect(Position, 32, 32, ModContent.DustType<ChandriumSparkDust>(), Velocity.X);
+				dust.velocity = (Velocity.SafeNormalize(Vector2.UnitX) * Main.rand.NextFloat(1f, 1.5f)).RotatedByRandom(MathHelper.TwoPi);
 				dust.noLight = false;
 				dust.noGravity = true;
 			}

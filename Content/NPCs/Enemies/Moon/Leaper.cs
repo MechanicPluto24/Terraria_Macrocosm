@@ -1,4 +1,3 @@
-using Macrocosm.Common.Base;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Items.Materials;
@@ -12,9 +11,9 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-	// incomplete
-	// (TODO: leaps)
-	public class Leaper : MoonEnemy
+    // incomplete
+    // (TODO: leaps)
+    public class Leaper : MoonEnemy
 	{
 		public override void SetStaticDefaults()
 		{
@@ -58,8 +57,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		{
 
 			// add slimeAI for leaps? 
-
-			BaseAI.AIZombie(NPC, ref NPC.ai, false, true, velMax: 4, maxJumpTilesX: 15, maxJumpTilesY: 10, moveInterval: 0.07f);
+			Utility.AIZombie(NPC, ref NPC.ai, false, true, velMax: 4, maxJumpTilesX: 15, maxJumpTilesY: 10, moveInterval: 0.07f);
 
 			if (NPC.velocity.Y < 0f)
 				NPC.velocity.Y += 0.1f;

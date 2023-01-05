@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Base;
-using Macrocosm.Content.Tiles.Ambient;
+﻿using Macrocosm.Content.Tiles.Ambient;
 using Terraria;
 using Terraria.IO;
 using Terraria.ModLoader;

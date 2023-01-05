@@ -14,6 +14,7 @@ using SubworldLibrary;
 using Macrocosm.Content.Subworlds;
 using System.Linq;
 using Terraria.ModLoader;
+using Macrocosm.Common.Subworlds;
 
 namespace Macrocosm.Common.Drawing.Sky
 {
@@ -236,7 +237,7 @@ namespace Macrocosm.Common.Drawing.Sky
 				float rotation = (Position - lightSource.Position).ToRotation();
 				ConfigureShader(rotation, out float intensity, out Vector2 offset);
 
-                offset *= 0.8f;
+                offset *= 0.65f;
 
                 shader.Parameters["uOffset"].SetValue(offset);
                 shader.Parameters["uIntensity"].SetValue(intensity);
@@ -309,12 +310,7 @@ namespace Macrocosm.Common.Drawing.Sky
 
         private void Rotate()
         {
-            double duration;
-
-            if (SubworldSystem.AnyActive<Macrocosm>())
-                duration = Main.dayTime ? MacrocosmSubworld.Current().DayLenght : MacrocosmSubworld.Current().NightLenght;
-            else
-                duration = Main.dayTime ? Main.dayLength : Main.nightLength;
+            double duration = Main.dayTime ? MacrocosmSubworld.CurrentDayLenght : MacrocosmSubworld.CurrentNightLenght;
 
             double bgTop = -(Main.LocalPlayer.Center.Y - Main.screenHeight / 2) / (Main.worldSurface * 16.0 - 600.0) * 200.0;
 

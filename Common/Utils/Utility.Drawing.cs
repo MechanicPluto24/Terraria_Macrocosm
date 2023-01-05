@@ -1,4 +1,5 @@
 using System;
+using Macrocosm.Common.Drawing.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -43,9 +44,8 @@ namespace Macrocosm.Common.Utils
         public static void DrawSimpleTrail(this NPC npc, Vector2 rotatableOffsetFromCenter, float startWidth, float endWidth, Color startColor, Color? endColor = null)
             => DrawSimpleTrail(npc.Size / 2f, npc.oldPos, npc.oldRot, rotatableOffsetFromCenter, startWidth, endWidth, startColor, endColor);
 
-
-        /// <summary> Adapted from Terraria.Main.DrawTrail </summary>
-        private static void DrawSimpleTrail(Vector2 origin, Vector2[] oldPos, float[] oldRot, Vector2 rotatableOffsetFromCenter, float startWidth, float endWidth, Color startColor, Color? endColor = null)
+		/// <summary> Adapted from Terraria.Main.DrawTrail </summary>
+		public static void DrawSimpleTrail(Vector2 origin, Vector2[] oldPos, float[] oldRot, Vector2 rotatableOffsetFromCenter, float startWidth, float endWidth, Color startColor, Color? endColor = null)
         {
             Rectangle rect = new(0, 0, 1, 1);
             for (int k = oldPos.Length - 1; k > 0; k--)
@@ -88,13 +88,32 @@ namespace Macrocosm.Common.Utils
         public static Color NewAlpha(this Color color, float alpha)
             => new(color.R, color.G, color.B, (byte)(alpha * 255));
 
-
         public static Color NewAlpha(this Color color, byte alpha)
             => new(color.R, color.G, color.B, alpha);
+        
+
+		/// <summary> Convenience method for getting lighting color using an npc or projectile position.</summary>
+		public static Color GetLightColor(Vector2 position)
+		{
+			return Lighting.GetColor((int)(position.X / 16f), (int)(position.Y / 16f));
+		}
+
+		/// <summary> Convenience method for adding lighting using an npc or projectile position, using a Color instance for color. </summary>
+		public static void AddLight(Vector2 position, Color color, float brightnessDivider = 1F)
+		{
+			AddLight(position, color.R / 255F, color.G / 255F, color.B / 255F, brightnessDivider);
+		}
 
 
-        /// <summary> Returns a premultiplied copy of a texture </summary>
-        public static Texture2D ToPremultiplied(this Texture2D texture)
+		/// <summary> Convenience method for adding lighting using an npc or projectile position with 0f - 1f color values. </summary>
+		public static void AddLight(Vector2 position, float colorR, float colorG, float colorB, float brightnessDivider = 1f)
+		{
+			Lighting.AddLight((int)(position.X / 16f), (int)(position.Y / 16f), colorR / brightnessDivider, colorG / brightnessDivider, colorB / brightnessDivider);
+		}
+
+
+		/// <summary> Returns a premultiplied copy of a texture </summary>
+		public static Texture2D ToPremultiplied(this Texture2D texture)
         {
             Texture2D newTexture = new(texture.GraphicsDevice, texture.Width, texture.Height);
 

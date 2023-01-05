@@ -2,11 +2,8 @@
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
-using Macrocosm;
 using Terraria.ID;
-using log4net.Repository.Hierarchy;
 using Macrocosm.Common.Utils;
-using Macrocosm.Common.Base;
 using Macrocosm.Content.Systems;
 using System.IO;
 using Macrocosm.Common.Netcode;

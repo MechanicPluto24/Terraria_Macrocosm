@@ -1,3 +1,4 @@
+
 using Macrocosm.Common.Drawing.Dusts;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
@@ -20,8 +21,7 @@ namespace Macrocosm.Content.Dusts
 			if (clampedScale > 1f)
  				clampedScale = 1f;
 
-			if (!dust.noLight)
-				Lighting.AddLight((int)(dust.position.X / 16f), (int)(dust.position.Y / 16f), clampedScale * 0.2f, clampedScale * 0.725f, clampedScale * 0.51f);
+ 			Lighting.AddLight((int)(dust.position.X / 16f), (int)(dust.position.Y / 16f), clampedScale * 0.2f, clampedScale * 0.725f, clampedScale * 0.51f);
 
 			if (dust.noGravity)
 				dust.velocity *= 0.93f;
@@ -36,9 +36,9 @@ namespace Macrocosm.Content.Dusts
 		public override bool MidUpdate(Dust dust) => false;
 
 		public override Color? GetAlpha(Dust dust, Color lightColor)
-			=> Color.White;
+			=> Color.White.NewAlpha(127);
 
-		public bool DrawDust(SpriteBatch spriteBatch, Dust dust, Texture2D texture, Rectangle dustFrame)
+		public bool DrawDust(Dust dust, SpriteBatch spriteBatch, Vector2 screenPosition, Texture2D texture, Rectangle dustFrame)
 		{
 			float count = Math.Abs(dust.velocity.X) + Math.Abs(dust.velocity.Y) * 3f;
 
@@ -50,7 +50,7 @@ namespace Macrocosm.Content.Dusts
 				Vector2 trailPosition = dust.position - dust.velocity * n;
 				float scale = dust.scale * (1f - n / 10f);
 				Color color = Lighting.GetColor((int)(dust.position.X + 4.0) / 16, (int)(dust.position.Y + 4.0) / 16);
-				spriteBatch.Draw(texture, trailPosition - Main.screenPosition, dustFrame, dust.GetAlpha(color), dust.rotation, new Vector2(4f, 4f), scale, SpriteEffects.None, 0f);
+				spriteBatch.Draw(texture, trailPosition - screenPosition, dustFrame, dust.GetAlpha(color), dust.rotation, new Vector2(4f, 4f), scale, SpriteEffects.None, 0f);
 			}
 
 			return true;

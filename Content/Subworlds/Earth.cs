@@ -1,7 +1,5 @@
-﻿using Macrocosm.Content.Subworlds.WorldInfomation;
-using Microsoft.Xna.Framework;
-using System.Collections.Generic;
-using Terraria.WorldBuilding;
+﻿using Macrocosm.Common.Subworlds;
+using Terraria;
 
 namespace Macrocosm.Content.Subworlds
 {
@@ -10,11 +8,16 @@ namespace Macrocosm.Content.Subworlds
     /// </summary>
     public static class Earth
     {
-        public const float BaseGoreGravity = 0.2f;
-        public const float BaseNPCGravity = 0.3f;
-        public const float BaseGravityMultiplier = 1f;
+		public const double TimeRate = 1.0;
 
-        public const double BaseTimeRate = 1.0;
+        public static double DayLenght => Main.dayLength;
+		public static double NightLenght => Main.nightLength;
+
+        public const float GoreGravity = 0.2f;
+        public const float NPCGravity = 0.3f;
+        public const float GravityMultiplier = 1f;
+		public const float ItemGravity = 0.1f;
+		public const float ItemMaxFallSpeed = 7;
 
         public static WorldInfo WorldInfo => new()
         {

@@ -3,6 +3,7 @@ using System.Reflection;
 using Terraria;
 using Terraria.ModLoader;
 using Macrocosm.Content.Subworlds;
+using Macrocosm.Common.Subworlds;
 
 namespace Macrocosm.Common.Global.GlobalNPCs
 {
@@ -22,8 +23,8 @@ namespace Macrocosm.Common.Global.GlobalNPCs
 		{
 			orig(self, out maxFallSpeed);
 
-			if (SubworldSystem.AnyActive<Macrocosm>())
-				NPCGravity.SetValue(null, Earth.BaseNPCGravity * MacrocosmSubworld.Current().GravityMultiplier);
+			if (MacrocosmSubworld.AnyActive)
+				NPCGravity.SetValue(null, Earth.NPCGravity * MacrocosmSubworld.Current.GravityMultiplier);
 		}
 	}
 }

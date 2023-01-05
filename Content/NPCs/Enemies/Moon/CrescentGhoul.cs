@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Base;
-using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Dusts;
@@ -16,7 +15,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-	public class CrescentGhoul : MoonEnemy
+    public class CrescentGhoul : MoonEnemy
 	{
 		public enum ActionState
 		{
@@ -110,7 +109,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 				kbResist *= Main.GameModeInfo.KnockbackToEnemiesMultiplier;
 
 			if(AI_State != ActionState.Spin)
-				BaseAI.LookAt(playerActive ? Main.player[NPC.target].Center : NPC.Center + NPC.velocity, NPC, 0);
+				Utility.LookAt(playerActive ? Main.player[NPC.target].Center : NPC.Center + NPC.velocity, NPC, 0);
 
 			if (AI_State == ActionState.Chase)
 			{

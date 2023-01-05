@@ -1,19 +1,12 @@
-using Macrocosm.Common.Base;
-using Macrocosm.Common.Drawing;
-using Macrocosm.Common.Drawing.Trails;
-using Macrocosm.Common.Global.GlobalProjectiles;
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Tiles.Furniture;
-using Macrocosm.Content.Trails;
-using Microsoft.Xna.Framework;
 using System;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
-using Terraria.Graphics;
-using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Macrocosm.Common.Utils;
+using Macrocosm.Content.Trails;
+using Macrocosm.Common.Global.GlobalProjectiles;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {

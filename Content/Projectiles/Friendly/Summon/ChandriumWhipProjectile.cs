@@ -14,6 +14,7 @@ using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
+using static Terraria.ModLoader.PlayerDrawLayer;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Summon
 {
@@ -61,6 +62,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 			{
 				HitStacks++;   // this is a ref to a ModPlayer
 				HitNPC = true; // set hit flag to true so stacks won't increase on every npc hit 
+
+				//if(HitStacks >= 2)
+				//	Particle.CreateParticle<ChandiumSparkleParticle>(particle =>
+				//	{
+				//		particle.Position = Projectile.Center;
+				//	});
 			}
 
 			onHitEffect = true;
@@ -111,10 +118,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 					Dust dust;
 					if (i % 20 == 0)
 					{
-						// chandrium particles
-						//dust = Dust.NewDustDirect(position, target.width, target.height, ModContent.DustType<CrescentMoonParticle>(), velocity.X, velocity.Y, Scale: );
-
-						Particle.CreateParticle<CrescentMoonParticle>(particle =>
+						 
+						Particle.CreateParticle<ChandriumCrescentMoon>(particle =>
 						{
 							particle.Position = position;
 							particle.Velocity = velocity * 5f;

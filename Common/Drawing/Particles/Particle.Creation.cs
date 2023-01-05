@@ -38,7 +38,7 @@ namespace Macrocosm.Common.Drawing.Particles
 		public static T CreateParticle<T>(Action<T> particleAction) where T : Particle
 		{
 			T particle = (T)Activator.CreateInstance(typeof(T));
-			ParticleSystem.Particles.Add(particle);
+			ParticleManager.Particles.Add(particle);
 
 			particleAction.Invoke(particle);
 

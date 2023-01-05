@@ -66,7 +66,7 @@ namespace Macrocosm.Common.Hooks
 			ModDust modDust = ModContent.GetModDust(dust.type);
 
 			if (modDust is IDustCustomDraw dustDrawer)
-				return dustDrawer.DrawDust(Main.spriteBatch, dust, dust.GetTexture(), dust.frame);
+				return dustDrawer.DrawDust(dust, Main.spriteBatch, Main.screenPosition, dust.GetTexture(), dust.frame);
  
 			return true;
 		}

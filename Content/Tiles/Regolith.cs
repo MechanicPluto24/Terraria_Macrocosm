@@ -2,12 +2,13 @@ using Macrocosm.Common.Global;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
+using System.Linq;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles
-{
+{ 
 	public class Regolith : ModTile
 	{
 		public override void SetStaticDefaults()
@@ -37,5 +38,6 @@ namespace Macrocosm.Content.Tiles
 		{
 			//return TileBlend.BlendLikeDirt(i, j, new int[] { ModContent.TileType<Protolith>(), ModContent.TileType<IrradiatedRock>() }, asDirt: true);
 			return true;
+		}
 	}
 }

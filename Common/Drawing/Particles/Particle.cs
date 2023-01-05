@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Macrocosm.Common.Drawing.Trails;
 using static Terraria.ModLoader.PlayerDrawLayer;
+using Macrocosm.Common.Utils;
 
 namespace Macrocosm.Common.Drawing.Particles
 {
@@ -17,29 +18,28 @@ namespace Macrocosm.Common.Drawing.Particles
 	public abstract partial class Particle : ModType
 	{
 		/// <summary> Cached particle type as integer index, used for netcode purposes </summary>
-		public int Type => type == -1 ? (type = ParticleSystem.Types.IndexOf(this.GetType())) : type;
+		public int Type => type == -1 ? (type = ParticleManager.Types.IndexOf(this.GetType())) : type;
 		private int type = -1;
 
 		/// <summary> Index of this particle in the active particle collection </summary>
-		public int WhoAmI => ParticleSystem.Particles.IndexOf(this);
+		public int WhoAmI => ParticleManager.Particles.IndexOf(this);
 
 		#region Loading
 
 		public override void Load()
 		{
-			Texture = ModContent.Request<Texture2D>(TexturePath, AssetRequestMode.ImmediateLoad).Value;
+			ParticleManager.Textures.Add(ModContent.Request<Texture2D>(TexturePath, AssetRequestMode.ImmediateLoad).Value);
 			OnLoad();
 		}
 
 		public override void Unload()
 		{
-			Texture = null;
 			OnUnload();
 		}
 
 		protected sealed override void Register()
 		{
-			ParticleSystem.Types.Add(GetType());
+			ParticleManager.Types.Add(GetType());
 		}
 
 		#endregion
@@ -50,13 +50,11 @@ namespace Macrocosm.Common.Drawing.Particles
 			TimeLeft = SpawnTimeLeft;
 			Active = true;
 
-			InitializeTrailArrays();
-
 			OnSpawn();
 		}
 
 		/// <summary> The <c>Particle</c>'s texture, autoloaded </summary>
-		public static Texture2D Texture { get; private set; }
+		public Texture2D Texture => ParticleManager.Textures[Type];
 
 		/// <summary> The texture size of this <c>Particle</c> </summary>
 		// TODO: Maybe replace this to a configurable size if ever implementing particle collision
@@ -172,7 +170,11 @@ namespace Macrocosm.Common.Drawing.Particles
 
 		#endregion
 
-		#region Trail
+		#region Trails
+
+		public void DrawSimpleTrail(Vector2 rotatableOffsetFromCenter, float startWidth, float endWidth, Color startColor, Color? endColor = null)
+				=> Utility.DrawSimpleTrail(Size / 2f, OldPositions, OldRotations, rotatableOffsetFromCenter, startWidth, endWidth, startColor, endColor);
+
 
 		/// <summary> The <see cref="Trails.Trail"> Trail </see> object bound to this <c>Particle</c> </summary>
 		public Trail Trail { get; private set; }
@@ -185,6 +187,7 @@ namespace Macrocosm.Common.Drawing.Particles
 			Trail = Activator.CreateInstance<T>();
 			Trail.Owner = this;
 		}
+
  		public virtual int TrailCacheLenght { get; set; } = 1;
 
 		public Vector2 OldPosition => OldPositions[0];
@@ -192,6 +195,20 @@ namespace Macrocosm.Common.Drawing.Particles
 
 		public Vector2[] OldPositions = new Vector2[1];
 		public float[] OldRotations = new float[1];
+
+		private void PopulateTrailParameters() 
+		{
+			InitializeTrailArrays();
+
+			OldPositions[0] = Position;
+			OldRotations[0] = Rotation;
+
+			for (int i = TrailCacheLenght - 1; i > 0; i--)
+			{
+ 				OldPositions[i] = OldPositions[i - 1];
+				OldRotations[i] = OldRotations[i - 1];
+ 			}
+		}
 
 		private void InitializeTrailArrays()
 		{
@@ -208,22 +225,6 @@ namespace Macrocosm.Common.Drawing.Particles
 			}
 		}
 
-		private void PopulateTrailParameters() 
-		{
-			OldPositions[0] = Position;
-			OldRotations[0] = Rotation;
-
-			for (int i = TrailCacheLenght - 1; i > 0; i--)
-			{
-
-				if (Vector2.Distance(Position, OldPositions[i]) < Main.screenWidth)
-					OldPositions[i] = OldPositions[i - 1];
-				else
-					OldPositions[i] = Position;
-
-				OldRotations[i] = OldRotations[i - 1];
- 			}
-		}
 		#endregion
 	}
 }

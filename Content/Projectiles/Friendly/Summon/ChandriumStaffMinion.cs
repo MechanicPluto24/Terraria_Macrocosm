@@ -95,7 +95,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 				Dust dust;
 				if (i % 10 == 0)
 				{
-					Particle.CreateParticle<CrescentMoonParticle>(particle =>
+					Particle.CreateParticle<ChandriumCrescentMoon>(particle =>
 					{
 						particle.Position = position;
 						particle.Velocity = velocity * 5f;

@@ -29,8 +29,8 @@ namespace Macrocosm.Common.Drawing.Sky
             Brightness = 1f;
             color = Color.White;
 
-            position.X = fastRandom.Next(1921);
-            position.Y = fastRandom.Next(1201);
+            position.X = fastRandom.Next(Main.screenWidth + 1);
+            position.Y = fastRandom.Next(Main.screenHeight + 1);
             rotation = fastRandom.Next(628) * 0.01f;
             scale = fastRandom.Next(70, 130) * 0.006f * baseScale;
             twinkle = Math.Clamp(fastRandom.Next(1, 101) * 0.01f, 1f - twinkleFactor, 1f);

@@ -18,15 +18,18 @@ namespace Macrocosm.Common.Drawing.Particles
 	}
 
 	/// <summary> Particle system by sucss, Nurby & Feldy @ PellucidMod </summary>
-	public class ParticleSystem : ModSystem
+	public class ParticleManager : ModSystem
 	{
 		public static List<Type> Types { get; private set; }
 		public static List<Particle> Particles { get; private set; }
+
+		public static List<Texture2D> Textures;
 
 		public override void Load()
 		{
 			Types = new List<Type>();
 			Particles = new List<Particle>();
+			Textures = new List<Texture2D>();
 
 			On.Terraria.Main.DrawBlack += DrawParticles_Tiles;
 			On.Terraria.Main.DrawProjectiles += DrawParticles_Projectiles;
@@ -37,7 +40,8 @@ namespace Macrocosm.Common.Drawing.Particles
 		{
 			Types = null;
 			Particles = null;
-			
+			Textures = null;
+
 			On.Terraria.Main.DrawBlack -= DrawParticles_Tiles;
 			On.Terraria.Main.DrawProjectiles -= DrawParticles_Projectiles;
 			On.Terraria.Main.DrawNPCs -= DrawParticles_NPCs;

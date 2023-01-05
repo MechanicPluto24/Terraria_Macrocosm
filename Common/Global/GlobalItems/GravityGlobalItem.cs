@@ -2,21 +2,21 @@
 using Terraria;
 using Terraria.ModLoader;
 using Macrocosm.Content.Subworlds;
+using Macrocosm.Common.Subworlds;
 
 namespace Macrocosm.Common.Global.GlobalItems
 {
 	public class GravityGlobalItem : GlobalItem
 	{
-		private const float defaultGravity = 0.1f;
-		private const float defaultmaxFallSpeed = 7;
-
 		public override void Update(Item item, ref float gravity, ref float maxFallSpeed)
 		{
-			if (SubworldSystem.AnyActive<Macrocosm>())
+			// - doubled them so it feels closer to the gravity of the rest of entities
+			// - used constants because gravity and maxFallSpeed are not reset to default values
+			// - check for our subworlds in order to minimize the effect of this^ on other mods
+			if (MacrocosmSubworld.AnyActive)
 			{
-				// doubled them so it feels closer to the gravity of the rest of entities
-				gravity = defaultGravity * 2f * MacrocosmSubworld.Current().GravityMultiplier;
-				maxFallSpeed = defaultmaxFallSpeed * 2f * MacrocosmSubworld.Current().GravityMultiplier;
+				gravity = Earth.ItemGravity * 2f * MacrocosmSubworld.Current.GravityMultiplier;
+				maxFallSpeed = Earth.ItemMaxFallSpeed * 2f * MacrocosmSubworld.Current.GravityMultiplier;
 			}
 		}
 	}
