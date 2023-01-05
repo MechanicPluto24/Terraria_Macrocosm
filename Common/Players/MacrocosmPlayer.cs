@@ -12,6 +12,7 @@ using Macrocosm.Content.Particles;
 using Macrocosm.Content.Buffs.GoodBuffs;
 using Macrocosm.Common.Drawing.Particles;
 using Terraria.GameContent;
+using Macrocosm.Common.Subworlds;
 
 namespace Macrocosm.Content.Players
 {
@@ -75,8 +76,8 @@ namespace Macrocosm.Content.Players
 
 		private void UpdateGravity()
 		{
-			if (SubworldSystem.AnyActive<Macrocosm>())
-				Player.gravity = Player.defaultGravity * MacrocosmSubworld.Current().GravityMultiplier;
+			if (MacrocosmSubworld.AnyActive)
+				Player.gravity = Player.defaultGravity * MacrocosmSubworld.Current.GravityMultiplier;
 		}
 
 		private void UpdateFilterEffects()

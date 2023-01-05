@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Tiles;
 using Macrocosm.Content.Walls;
 using Microsoft.Xna.Framework;
@@ -136,7 +137,7 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 						if (tileY == biomeHeight - 1)
 							strength += 40;
 
-						WorldGenUtils.TileWallRunner(tileX, tileY, strength, steps, ModContent.TileType<IrradiatedRock>(), addTile: false, wallType, addWall: addWall);
+						Utility.TileWallRunner(tileX, tileY, strength, steps, ModContent.TileType<IrradiatedRock>(), addTile: false, wallType, addWall: addWall);
 						spreadCounter = 80;
 					}
 
@@ -149,7 +150,7 @@ namespace Macrocosm.Content.WorldGeneration.Moon
  						Main.tile[tileX, tileY].Clear(Terraria.DataStructures.TileDataType.Wall);
 
 					// place walls behind tiles or somewhere below the local surface level
-					if ((Main.tile[tileX, tileY].HasTile && WorldGenUtils.CheckTile6WayBelow(tileX, tileY)) || (tileY > trueSurfaceY + WorldGen.genRand.Next(1,3) && trueSurfaceY > 0))
+					if ((Main.tile[tileX, tileY].HasTile && Utility.CheckTile6WayBelow(tileX, tileY)) || (tileY > trueSurfaceY + WorldGen.genRand.Next(1,3) && trueSurfaceY > 0))
 						WorldGen.PlaceWall(tileX, tileY, ModContent.WallType<IrradiatedRockWall>(), true);
  
 					// replace existing tiles 

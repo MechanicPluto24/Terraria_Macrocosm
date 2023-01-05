@@ -11,10 +11,10 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.Utilities;
 
-namespace Macrocosm.Common.Base
+namespace Macrocosm.Common.Utils
 {
-    public class BaseUtility
-    {
+	public static partial class Utility
+	{
         //------------------------------------------------------//
         //------------------BASE UTILITY CLASS------------------//
         //------------------------------------------------------//
@@ -22,7 +22,6 @@ namespace Macrocosm.Common.Base
         //------------------------------------------------------//
         //  Author(s): Grox the Great                           //
         //------------------------------------------------------// 
-
         public static string[] GetLoadedMods()
         {
             return ModLoader.Mods.Reverse().Select(m => m.Name).ToArray();
@@ -33,11 +32,6 @@ namespace Macrocosm.Common.Base
             ILog logger = LogManager.GetLogger("Terraria");
             logger.Info(logText);
         }
-
-        //public static void LogFancy(string logText)
-        //{
-        //	LogFancy("", logText, null);
-        //}		
 
         public static void LogFancy(string prefix, Exception e)
         {
@@ -419,7 +413,7 @@ namespace Macrocosm.Common.Base
         /* 
          * Returns a color of the rainbow. Percent goes from 0 to 1.
          */
-        public Color Rainbow(float percent)
+        public static Color Rainbow(float percent)
         {
             Color r = new(255, 50, 50);
             Color g = new(50, 255, 50);
@@ -575,8 +569,8 @@ namespace Macrocosm.Common.Base
             int distance = maxDistance - minDistance;
             if (!circular)
             {
-                float newPosX = pos.X + (Main.rand.NextBool(2)? -(minDistance + rand.Next(distance)) : minDistance + rand.Next(distance));
-                float newPosY = pos.Y + (Main.rand.NextBool(2)? -(minDistance + rand.Next(distance)) : minDistance + rand.Next(distance));
+                float newPosX = pos.X + (Main.rand.NextBool(2) ? -(minDistance + rand.Next(distance)) : minDistance + rand.Next(distance));
+                float newPosY = pos.Y + (Main.rand.NextBool(2) ? -(minDistance + rand.Next(distance)) : minDistance + rand.Next(distance));
                 return new Vector2(newPosX, newPosY);
             }
 

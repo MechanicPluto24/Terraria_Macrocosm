@@ -3,6 +3,7 @@ using Terraria;
 using Terraria.ModLoader;
 using SubworldLibrary;
 using Macrocosm.Content.Subworlds;
+using Macrocosm.Common.Subworlds;
 
 namespace Macrocosm.Common.Hooks
 {
@@ -38,11 +39,10 @@ namespace Macrocosm.Common.Hooks
 		// replace gravity increment with desired value 
 		private static float GetGoreGravity()
 		{
-			if (SubworldSystem.AnyActive<Macrocosm>())
-				return Earth.BaseGoreGravity * MacrocosmSubworld.Current().GravityMultiplier;
+			if(MacrocosmSubworld.AnyActive)
+				return Earth.GoreGravity * MacrocosmSubworld.Current.GravityMultiplier;
 
-			return Earth.BaseGoreGravity;
+			return Earth.GoreGravity;
 		}
-
 	}
 }

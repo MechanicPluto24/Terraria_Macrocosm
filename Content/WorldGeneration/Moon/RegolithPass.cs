@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.Walls;
+﻿using Macrocosm.Common.Utils;
+using Macrocosm.Content.Walls;
 using Terraria;
 using Terraria.IO;
 using Terraria.ModLoader;
@@ -28,7 +29,7 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 							WorldGen.PlaceTile(tileX, tileY, (ushort)ModContent.TileType<Tiles.Regolith>(), true, true);
 						}
 
-						if (WorldGenUtils.CheckTile6WayBelow(tileX, tileY) && regolithChance > 2.0)
+						if (Utility.CheckTile6WayBelow(tileX, tileY) && regolithChance > 2.0)
 							Main.tile[tileX, tileY].WallType = (ushort)ModContent.WallType<RegolithWall>();
 
 

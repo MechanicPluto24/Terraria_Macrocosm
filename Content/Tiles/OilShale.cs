@@ -14,8 +14,6 @@ namespace Macrocosm.Content.Tiles
 			TileID.Sets.Ore[Type] = true;
 			Main.tileSpelunker[Type] = true; // The tile will be affected by spelunker highlighting
 			Main.tileOreFinderPriority[Type] = 320; // Metal Detector value, see https://terraria.gamepedia.com/Metal_Detector
-			Main.tileMerge[Type][TileID.Sandstone] = true;
-			Main.tileMerge[TileID.Sandstone][Type] = true;
 			Main.tileSolid[Type] = true;
 			Main.tileBlockLight[Type] = true;
 			Main.tileLighted[Type] = true;
@@ -31,7 +29,7 @@ namespace Macrocosm.Content.Tiles
 			HitSound = SoundID.Tink;
 		}
 
-		//public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
-		//	=> TileBlend.BlendLikeDirt(i, j, TileID.Sandstone);
+		public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
+			=> true;
 	}
 }

@@ -23,12 +23,14 @@ namespace Macrocosm.Common.Utils
 
 		public static Trail GetTrail(this Projectile projectile) => projectile.GetGlobalProjectile<MacrocosmProjectile>().Trail; 
 
-		public static void Explode(this Projectile projectile, float blastRadius)
+		public static void Explode(this Projectile projectile, float blastRadius, int timeLeft = 2)
 		{
 			projectile.tileCollide = false;
-			projectile.timeLeft = 2; 
+			projectile.timeLeft = timeLeft; 
 			projectile.penetrate = -1;
 			projectile.alpha = 255;
+
+			projectile.velocity = Vector2.Zero;
 			
 			projectile.position.X += projectile.width / 2;
 			projectile.position.Y += projectile.height / 2;

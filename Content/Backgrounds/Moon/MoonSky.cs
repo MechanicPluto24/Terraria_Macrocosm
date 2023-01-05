@@ -78,7 +78,7 @@ namespace Macrocosm.Content.Backgrounds.Moon
 					rotation += MathHelper.Pi;
 				}
 
-				offset = Utility.PolarVector(offsetRadius, rotation);
+				offset = Utility.PolarVector(offsetRadius, rotation) * 0.65f;
 
 				intensity = 0.96f;
 			}; 

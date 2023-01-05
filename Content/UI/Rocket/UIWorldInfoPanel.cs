@@ -1,5 +1,5 @@
-﻿using Macrocosm.Common.Utils;
-using Macrocosm.Content.Subworlds.WorldInfomation;
+﻿using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;

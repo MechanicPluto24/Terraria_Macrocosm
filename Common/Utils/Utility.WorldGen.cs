@@ -1,17 +1,46 @@
-using System;
-using Microsoft.Xna.Framework;
+﻿using Macrocosm.Content.Tiles;
 using Terraria;
+using Terraria.IO;
 using Terraria.ID;
-using Terraria.Localization;
-using Terraria.ObjectData;
+using Terraria.ModLoader;
 using Terraria.WorldBuilding;
+using Microsoft.Xna.Framework;
+using System;
+using Terraria.ObjectData;
+using Terraria.Localization;
+using Macrocosm.Content.WorldGeneration.Base;
 
-namespace Macrocosm.Common.Base
+namespace Macrocosm.Common.Utils
 {
-	public class BaseWorldGen
-	{
+    public static partial class Utility
+    {
+        public static void GenerateOre(int TileType, double percent, int strength, int steps, int replaceTileType = -1)
+        {
+            for (int k = 0; k < (int)(Main.maxTilesX * Main.maxTilesY * percent); k++)
+            {
+                int x = WorldGen.genRand.Next(0, Main.maxTilesX);
+                int y = WorldGen.genRand.Next(0, Main.maxTilesY);
+                if (Main.tile[x, y].HasTile && Main.tile[x, y].TileType == replaceTileType || replaceTileType == -1)
+                {
+                    WorldGen.TileRunner(x, y, strength, steps, TileType);
+                }
+            }
+        }
+
+        public static bool CheckTile6WayBelow(int tileX, int tileY)
+            => Main.tile[tileX, tileY].HasTile &&  // Current tile is active
+               Main.tile[tileX - 1, tileY].HasTile &&  // Left tile is active
+               Main.tile[tileX + 1, tileY].HasTile &&  // Right tile is active
+               Main.tile[tileX, tileY + 1].HasTile &&  // Bottom tile is active
+               Main.tile[tileX - 1, tileY + 1].HasTile &&  // Bottom-left tile is active
+               Main.tile[tileX + 1, tileY + 1].HasTile &&  // Bottom-right tile is active						 
+               Main.tile[tileX, tileY - 2].HasTile; // Top tile is active (will help to make the walls slightly lower than the terrain)
+
+
+		#region BaseMod BaseWorldGen
+
 		//------------------------------------------------------//
-		//---------------BASE WORLDGEN CLASS--------------------//
+		//------------------- BASE WORLDGEN --------------------//
 		//------------------------------------------------------//
 		// Contains methods for generating various things into  //
 		// the world.                                           //
@@ -52,10 +81,10 @@ namespace Macrocosm.Common.Base
 		}
 
 		/*
-         * Iterates downwards and returns the first Y position that has a tile in it.
-         * startY : The y to begin iteration at.
-         * solid : True if the tile must be solid.
-         */
+			* Iterates downwards and returns the first Y position that has a tile in it.
+			* startY : The y to begin iteration at.
+			* solid : True if the tile must be solid.
+			*/
 		public static int GetFirstTileFloor(int x, int startY, bool solid = true)
 		{
 			if (!WorldGen.InWorld(x, startY)) return startY;
@@ -68,10 +97,10 @@ namespace Macrocosm.Common.Base
 		}
 
 		/*
-         * Iterates upwards and returns the first Y position that has a tile in it.
-         * startY : The y to begin iteration at.
-         * solid : True if the tile must be solid.
-         */
+			* Iterates upwards and returns the first Y position that has a tile in it.
+			* startY : The y to begin iteration at.
+			* solid : True if the tile must be solid.
+			*/
 		public static int GetFirstTileCeiling(int x, int startY, bool solid = true)
 		{
 			if (!WorldGen.InWorld(x, startY)) return startY;
@@ -106,8 +135,8 @@ namespace Macrocosm.Common.Base
 		}
 
 		/*
-         * returns the first Y position below the possible spawning height of floating islands.
-         */
+			* returns the first Y position below the possible spawning height of floating islands.
+			*/
 		public static int GetBelowFloatingIslandY()
 		{
 			int size = GetWorldSize();
@@ -115,9 +144,9 @@ namespace Macrocosm.Common.Base
 		}
 
 		/**
-         * Returns the current world size.
-         * 1 == small, 2 == medium, 3 == large.
-         */
+			* Returns the current world size.
+			* 1 == small, 2 == medium, 3 == large.
+			*/
 		public static int GetWorldSize()
 		{
 			if (Main.maxTilesX == 4200) { return 1; }
@@ -129,15 +158,15 @@ namespace Macrocosm.Common.Base
 		}
 
 		/**
-         *  Replaces tiles within a certain radius with the replacements. (Circular)
-		 *
-         *  position : the position of the center. (NOTE THIS IS NPC/PROJECTILE COORDS NOT TILE)
-         *  radius : The radius from the position you want to replace to.
-         *  tiles : the array of tiles you want to replace.
-         *  replacements : the array of replacement tiles. (it goes by using the same index as tiles. Ie, tiles[0] will be replaced with replacements[0].)
-         *  sync : the conditional over which of wether to sync or not.
-		 *  silent : If true, prevents sounds and dusts.
-         */
+			*  Replaces tiles within a certain radius with the replacements. (Circular)
+			*
+			*  position : the position of the center. (NOTE THIS IS NPC/PROJECTILE COORDS NOT TILE)
+			*  radius : The radius from the position you want to replace to.
+			*  tiles : the array of tiles you want to replace.
+			*  replacements : the array of replacement tiles. (it goes by using the same index as tiles. Ie, tiles[0] will be replaced with replacements[0].)
+			*  sync : the conditional over which of wether to sync or not.
+			*  silent : If true, prevents sounds and dusts.
+			*/
 		public static void ReplaceTiles(Vector2 position, int radius, int[] tiles, int[] replacements, bool silent = false, bool sync = true)
 		{
 			int radiusLeft = (int)(position.X / 16f - radius);
@@ -160,7 +189,7 @@ namespace Macrocosm.Common.Base
 					{
 						int currentType = Main.tile[x1, y1].TileType;
 						int index = 0;
-						if (BaseUtility.InArray(tiles, currentType, ref index))
+						if (Utility.InArray(tiles, currentType, ref index))
 						{
 							GenerateTile(x1, y1, replacements[index], -1, 0, true, false, -2, silent, false);
 						}
@@ -194,7 +223,7 @@ namespace Macrocosm.Common.Base
 					{
 						int currentType = Main.tile[x1, y1].WallType;
 						int index = 0;
-						if (BaseUtility.InArray(walls, currentType, ref index))
+						if (Utility.InArray(walls, currentType, ref index))
 						{
 							GenerateTile(x1, y1, -1, replacements[index], 0, true, false, -2, silent, false);
 						}
@@ -208,9 +237,9 @@ namespace Macrocosm.Common.Base
 		}
 
 		/**
-         *  Completely kills a chest at X, Y and removes all items within it.
-         *  (note this does not remove the tile itself)
-         */
+			*  Completely kills a chest at X, Y and removes all items within it.
+			*  (note this does not remove the tile itself)
+			*/
 		public static bool KillChestAndItems(int x, int y)
 		{
 			for (int i = 0; i < 1000; i++)
@@ -225,11 +254,11 @@ namespace Macrocosm.Common.Base
 		}
 
 		/**
-         *  Generates a single tile of liquid.
-         *  isLava == true if you want lava instead of water.
-         *  updateFlow == true if you want the flow to update after placement. (almost definitely yes)
-         *  liquidHeight is the height given to the liquid. (0 - 255)
-         */
+			*  Generates a single tile of liquid.
+			*  isLava == true if you want lava instead of water.
+			*  updateFlow == true if you want the flow to update after placement. (almost definitely yes)
+			*  liquidHeight is the height given to the liquid. (0 - 255)
+			*/
 		public static void GenerateLiquid(int x, int y, int liquidType, bool updateFlow = true, int liquidHeight = 255, bool sync = true)
 		{
 			Tile Mtile = Main.tile[x, y];
@@ -247,9 +276,9 @@ namespace Macrocosm.Common.Base
 		}
 
 		/**
-         *  Generates a width by height block of liquid with x, y being the top-left corner. 
-         *  isLava == true if you want lava instead of water.
-         */
+			*  Generates a width by height block of liquid with x, y being the top-left corner. 
+			*  isLava == true if you want lava instead of water.
+			*/
 		public static void GenerateLiquid(int x, int y, int width, int height, int liquidType, bool updateFlow = true, int liquidHeight = 255, bool sync = true)
 		{
 			for (int x1 = 0; x1 < width; x1++)
@@ -267,16 +296,16 @@ namespace Macrocosm.Common.Base
 		}
 
 		/*
-         *  Generates a single tile and wall at the given coordinates. (if the tile is > 1 x 1 it assumes the passed in coordinate is the top left)
-         *  tile : type of tile to place. -1 means don't do anything tile related, -2 is used in conjunction with active == false to make air.
-         *  wall : type of wall to place. -1 means don't do anything wall related. -2 is used to remove the wall already there.
-         *  tileStyle : the style of the given tile. 
-         *  active : If false, will make the tile 'air' and show the wall only.
-         *  removeLiquid : If true, it will remove liquids in the generating area.
-		 *  slope : if -2, keep the current slope. if -1, make it a halfbrick, otherwise make it the slope given.
-		 *  silent : If true, will not display dust nor sound.
-         *  sync : If true, will sync the client and server.
-         */
+			*  Generates a single tile and wall at the given coordinates. (if the tile is > 1 x 1 it assumes the passed in coordinate is the top left)
+			*  tile : type of tile to place. -1 means don't do anything tile related, -2 is used in conjunction with active == false to make air.
+			*  wall : type of wall to place. -1 means don't do anything wall related. -2 is used to remove the wall already there.
+			*  tileStyle : the style of the given tile. 
+			*  active : If false, will make the tile 'air' and show the wall only.
+			*  removeLiquid : If true, it will remove liquids in the generating area.
+			*  slope : if -2, keep the current slope. if -1, make it a halfbrick, otherwise make it the slope given.
+			*  silent : If true, will not display dust nor sound.
+			*  sync : If true, will sync the client and server.
+			*/
 		public static void GenerateTile(int x, int y, int tile, int wall, int tileStyle = 0, bool active = true, bool removeLiquid = true, int slope = -2, bool silent = false, bool sync = true)
 		{
 			try
@@ -297,7 +326,7 @@ namespace Macrocosm.Common.Base
 					if (width > 1 || height > 1)
 					{
 						int xs = x, ys = y;
-						Vector2 newPos = BaseTile.FindTopLeft(xs, ys);
+						Vector2 newPos = Utility.FindTopLeft(xs, ys);
 						for (int x1 = 0; x1 < width; x1++)
 						{
 							for (int y1 = 0; y1 < height; y1++)
@@ -393,18 +422,18 @@ namespace Macrocosm.Common.Base
 			}
 			catch (Exception e)
 			{
-				BaseUtility.LogFancy("TILEGEN ERROR:", e);
+				Utility.LogFancy("TILEGEN ERROR:", e);
 			}
 		}
 
 		#region worldgen
 
 		/**
-		 *  Generates a line of tiles/walls from one point to another point.
-		 *  
-		 *  thickness: How thick to make the walls of the line.
-	     *  sync : If true, will sync the client and server.
-		 */
+			*  Generates a line of tiles/walls from one point to another point.
+			*  
+			*  thickness: How thick to make the walls of the line.
+			*  sync : If true, will sync the client and server.
+			*/
 		public static void GenerateLine(GenConditions gen, int x, int y, int endX, int endY, int thickness, bool sync = true)
 		{
 			if (gen == null) throw new Exception("GenConditions cannot be null!");
@@ -460,7 +489,7 @@ namespace Macrocosm.Common.Base
 				float length = Vector2.Distance(start, end);
 				float way = 0f;
 
-				float rot = BaseUtility.RotationTo(start, end); if (rot < 0f) rot = (float)(Math.PI * 2f) - Math.Abs(rot);
+				float rot = Utility.RotationTo(start, end); if (rot < 0f) rot = (float)(Math.PI * 2f) - Math.Abs(rot);
 				float rotPercent = MathHelper.Lerp(0f, 1f, rot / (float)(Math.PI * 2f));
 				bool horizontal = rotPercent is < 0.125f or > 0.375f and < 0.625f or > 0.825f;
 				int tileIndex = -1, wallIndex = -1;
@@ -499,13 +528,13 @@ namespace Macrocosm.Common.Base
 		}
 
 		/**
-		 *  Generates a hollow hallway with (x, y) as the top left. 
-		 *  Note that (endX, endY) is NOT the actual end of the hallway, but the end of the inner wall.
-		 *  
-		 *  thickness: How thick to make the walls of the hallway.
-		 *  height: The height of the hallway. (width if it's going up/down)
-         *  sync : If true, will sync the client and server.
-		 */
+			*  Generates a hollow hallway with (x, y) as the top left. 
+			*  Note that (endX, endY) is NOT the actual end of the hallway, but the end of the inner wall.
+			*  
+			*  thickness: How thick to make the walls of the hallway.
+			*  height: The height of the hallway. (width if it's going up/down)
+			*  sync : If true, will sync the client and server.
+			*/
 		public static void GenerateHall(GenConditions gen, int x, int y, int endX, int endY, int thickness, int height, bool sync = true)
 		{
 			if (gen == null) throw new Exception("GenConditions cannot be null!");
@@ -514,7 +543,7 @@ namespace Macrocosm.Common.Base
 			bool negativeX = endX < x, negativeY = endY < y;
 			int nx = negativeX ? -1 : 1, ny = negativeY ? -1 : 1;
 			Vector2 start = new(x, y), end = new(endX, endY);
-			float rotPercent = MathHelper.Lerp(0f, 1f, BaseUtility.RotationTo(start, end) / (float)(Math.PI * 2f));
+			float rotPercent = MathHelper.Lerp(0f, 1f, Utility.RotationTo(start, end) / (float)(Math.PI * 2f));
 			bool horizontal = rotPercent is < 0.125f or > 0.375f and < 0.625f or > 0.825f;
 			Vector2 topEnd = new(endX, endY);
 			int[] clearInt = { -2 };
@@ -531,20 +560,20 @@ namespace Macrocosm.Common.Base
 		}
 
 		/**
-		 *  Generates a hollow trapezoid with (x, y) as the top left. 
-		 *  Note that (endX, endY) is NOT the actual end of the room, but the end of the inner wall.
-		 *  
-		 *  thickness: How thick to make the walls of the trapezoid.
-		 *  height: The height of the trapezoid.
-         *  sync : If true, will sync the client and server.
-		 */
+			*  Generates a hollow trapezoid with (x, y) as the top left. 
+			*  Note that (endX, endY) is NOT the actual end of the room, but the end of the inner wall.
+			*  
+			*  thickness: How thick to make the walls of the trapezoid.
+			*  height: The height of the trapezoid.
+			*  sync : If true, will sync the client and server.
+			*/
 		public static void GenerateTrapezoid(GenConditions gen, int x, int y, int endX, int endY, int thickness, int height, bool sync = true)
 		{
 			if (gen == null) throw new Exception("GenConditions cannot be null!");
 			if (endX < x) { int temp = x; x = endX; endX = temp; }
 			//if (endY < y) { int temp = y; y = endY; endY = temp; }
 			Vector2 start = new(x, y), end = new(endX, endY);
-			float rotPercent = MathHelper.Lerp(0f, 1f, BaseUtility.RotationTo(start, end) / (float)(Math.PI * 2f));
+			float rotPercent = MathHelper.Lerp(0f, 1f, Utility.RotationTo(start, end) / (float)(Math.PI * 2f));
 			bool horizontal = rotPercent is < 0.125f or > 0.375f and < 0.625f or > 0.825f;
 			Vector2 topEnd = new(endX, endY);
 			Vector2 wallStart = new(x + thickness, y + thickness), wallEnd = new(horizontal ? endX : endX + thickness, horizontal ? endY + thickness : endY);
@@ -564,19 +593,19 @@ namespace Macrocosm.Common.Base
 		#endregion
 
 		/**
-		 *  Generates a width by height hollow room with x, y being the top-left corner of the room, using wall as the walls in the space in the middle.
-		 */
+			*  Generates a width by height hollow room with x, y being the top-left corner of the room, using wall as the walls in the space in the middle.
+			*/
 		public static void GenerateRoomOld(int x, int y, int width, int height, int tile, int wall)
 		{
 			GenerateRoomOld(x, y, width, height, tile, tile, tile, wall);
 		}
 
 		/**
-         *  Generates a width by height hollow room with x, y being the top-left corner of the room, using wall as the walls in the space in the middle.
-         *  Making any of the tile vars -1 will result in that piece of the structure not generating. (ie if tileSides == -1, both sides will be w/e was there
-         *  before them.)
-         *  wallEnds : true if you want every tile to have walls behind them instead of just the tileless ones.
-         */
+			*  Generates a width by height hollow room with x, y being the top-left corner of the room, using wall as the walls in the space in the middle.
+			*  Making any of the tile vars -1 will result in that piece of the structure not generating. (ie if tileSides == -1, both sides will be w/e was there
+			*  before them.)
+			*  wallEnds : true if you want every tile to have walls behind them instead of just the tileless ones.
+			*/
 		public static void GenerateRoomOld(int x, int y, int width, int height, int tileSides, int tileFloor, int tileCeiling, int wall, bool wallEnds = false, int sideThickness = 1, int floorThickness = 1, int ceilingThickness = 1, bool sync = true)
 		{
 			if (tileSides != -1 && sideThickness > 1) { width += sideThickness; x -= sideThickness / 2; }
@@ -617,10 +646,10 @@ namespace Macrocosm.Common.Base
 		}
 
 		/**
-         *  Generates a chest with the given item IDs. 
-         *  randomAmounts should be true if the item(s) should have a random stack amount (between 1-5).
-         *  randomPrefix should be true if the item(s) should get a random prefix.
-         */
+			*  Generates a chest with the given item IDs. 
+			*  randomAmounts should be true if the item(s) should have a random stack amount (between 1-5).
+			*  randomPrefix should be true if the item(s) should get a random prefix.
+			*/
 		public static void GenerateChest(int x, int y, int type, int chestStyle, int[] stackIDs, bool randomAmounts = false, bool randomPrefix = false, bool sync = true)
 		{
 			int[] amounts = new int[20];
@@ -632,9 +661,9 @@ namespace Macrocosm.Common.Base
 		}
 
 		/**
-         *  Generates a chest with the given item IDs and stack amounts. 
-         *  randomPrefix should be true if the item should get a random prefix.
-         */
+			*  Generates a chest with the given item IDs and stack amounts. 
+			*  randomPrefix should be true if the item should get a random prefix.
+			*/
 		public static void GenerateChest(int x, int y, int type, int chestStyle, int[] stackIDs, int[] stackAmounts, bool randomPrefix = false, bool sync = true)
 		{
 			int[] prefixes = new int[20];
@@ -646,8 +675,8 @@ namespace Macrocosm.Common.Base
 		}
 
 		/**
-         *  Generates a chest with the given item ids, prefixes and stack amounts.
-         */
+			*  Generates a chest with the given item ids, prefixes and stack amounts.
+			*/
 		public static void GenerateChest(int x, int y, int type, int chestStyle, int[] stackIDs, int[] stackAmounts, int[] stackPrefixes, bool sync = true)
 		{
 			int num2 = WorldGen.PlaceChest(x - 1, y, (ushort)type, false, chestStyle);
@@ -821,359 +850,220 @@ namespace Macrocosm.Common.Base
 			}
 			Main.tileSolid[137] = true;
 		}
-	}
 
-	/*
-	 * A class used by the newer gen methods to make calling them easier without needing to provide a ton of parameters multiple times.
-	 * 
-	 *  tiles: An array of tiles to use to generate this hallway.
-	 *  orderTiles: If true, gets tile ids in order; otherwise gets them at random.
-	 *  walls: An array of walls to use to generate the inside of this hallway. Default is none.
-	 *  orderWalls: If true, gets wall ids in order; otherwise gets them at random.
-	 *  slope: if true, smoothes the gen with slopes.
-	 *  CanPlace(x, y, tileID, wallID): an optional Func that can be used to have custom behavior about placing tiles. 
-	 *  CanPlaceWall(x, y, tileID, wallID): an optional Func that can be used to have custom behavior about placing walls. 
-	 */
-	public class GenConditions
-	{
-		public int[] tiles;
-		public int[] walls;
-		public bool orderTiles = false;
-		public bool orderWalls = false;
-		public bool slope = false;
-		public Func<int, int, int, int, bool> CanPlace = null;
-		public Func<int, int, int, int, bool> CanPlaceWall = null;
+		#endregion
 
-		public int GetTile(int index)
-		{
-			return tiles == null || tiles.Length <= index ? -1 : tiles[index];
-		}
+		#region Custom TileRunners
+		/// <summary> Used to spread walls alongside tiles. FIXME: Y change is too high </summary>
+		public static void TileWallRunner(int i, int j, double strength, int steps, int tileType, bool addTile = false, int wallType = 0, bool addWall = false, float speedX = 0.0f, float speedY = 0.0f, bool noYChange = false, int ignoreTileType = -1)
+        {
 
-		public int GetWall(int index)
-		{
-			return walls == null || walls.Length <= index ? -1 : walls[index];
-		}
-	}
+            double num = strength;
+            double num2 = steps;
 
-	#region Custom GenShapes
-	public class ShapeChasmSideways : GenShape
-	{
-		public int startheight = 20, endheight = 5, length = 60, variance, randomHeading;
-		public float[] heightVariance;
-		public bool dir = true;
+            Vector2 val = default;
+            Vector2 val2 = default;
 
-		public ShapeChasmSideways(int startheight, int endheight, int length, int variance, int randomHeading, float[] heightVariance = null, bool dir = true)
-		{
-			this.startheight = startheight;
-			this.endheight = endheight;
-			this.length = length;
-			this.variance = variance;
-			this.randomHeading = randomHeading;
-			this.heightVariance = heightVariance;
-			this.dir = dir;
-		}
+            val.X = i;
+            val.Y = j;
 
-		public void ResetChasmParams(int startheight, int endheight, int length, int variance, int randomHeading, float[] heightVariance = null, bool dir = true)
-		{
-			this.startheight = startheight;
-			this.endheight = endheight;
-			this.length = length;
-			this.variance = variance;
-			this.randomHeading = randomHeading;
-			this.heightVariance = heightVariance;
-			this.dir = dir;
-		}
+            val2.X = WorldGen.genRand.Next(-10, 11) * 0.1f;
+            val2.Y = WorldGen.genRand.Next(-10, 11) * 0.1f;
 
-		private bool DoChasm(Point origin, GenAction action, int startheight, int endheight, int length, int variance, int randomHeading, float[] heightVariance, bool dir)
-		{
-			Point trueOrigin = origin;
-			for (int m = 0; m < length; m++)
-			{
-				int height = (int)MathHelper.Lerp(startheight, endheight, m / (float)length);
-				if (heightVariance != null)
-				{
-					height = Math.Max(endheight, (int)(startheight * BaseUtility.MultiLerp(m / (float)length, heightVariance)));
-				}
-				int x = trueOrigin.X + (dir ? m : -m);
-				int y = trueOrigin.Y + (startheight - height);
-				if (variance != 0)
-				{
-					y += Main.rand.NextBool(2) ? -Main.rand.Next(variance) : Main.rand.Next(variance);
-				}
-				if (randomHeading != 0)
-				{
-					y += randomHeading * (m / 2);
-				}
-				int yend = y + height - (startheight - height);
-				int difference = yend - y;
-				for (int m2 = y; m2 < yend; m2++)
-				{
-					int y2 = m2;
-					if (!UnitApply(action, trueOrigin, x, y2) && _quitOnFail)
-					{
-						return false;
-					}
-				}
-			}
-			return true;
-		}
+            if (speedX != 0.0 || speedY != 0.0)
+            {
+                val2.X = speedX;
+                val2.Y = speedY;
+            }
 
-		public override bool Perform(Point origin, GenAction action)
-		{
-			return DoChasm(origin, action, startheight, endheight, length, variance, randomHeading, heightVariance, dir);
-		}
-	}
+            bool flag = tileType == 368;
+            bool flag2 = tileType == 367;
 
-	public class ShapeChasm : GenShape
-	{
-		public int startwidth = 20, endwidth = 5, depth = 60, variance, randomHeading;
-		public float[] widthVariance;
-		public bool dir = true;
+            while (num > 0.0 && num2 > 0.0)
+            {
+                if (WorldGen.drunkWorldGen && WorldGen.genRand.NextBool(30))
+                    val.X += WorldGen.genRand.Next(-100, 101) * 0.05f;
+                val.Y += WorldGen.genRand.Next(-100, 101) * 0.05f;
 
-		public ShapeChasm(int startwidth, int endwidth, int depth, int variance, int randomHeading, float[] widthVariance = null, bool dir = true)
-		{
-			this.startwidth = startwidth;
-			this.endwidth = endwidth;
-			this.depth = depth;
-			this.variance = variance;
-			this.randomHeading = randomHeading;
-			this.widthVariance = widthVariance;
-			this.dir = dir;
-		}
+                if (val.Y < 0.0 && num2 > 0.0 && tileType == 59)
+                    num2 = 0.0;
 
-		public void ResetChasmParams(int startwidth, int endwidth, int depth, int variance, int randomHeading, float[] widthVariance = null, bool dir = true)
-		{
-			this.startwidth = startwidth;
-			this.endwidth = endwidth;
-			this.depth = depth;
-			this.variance = variance;
-			this.randomHeading = randomHeading;
-			this.widthVariance = widthVariance;
-			this.dir = dir;
-		}
+                num = strength * (num2 / steps);
+                num2 -= 1.0;
+                int num3 = (int)(val.X - num * 0.5);
+                int num4 = (int)(val.X + num * 0.5);
+                int num5 = (int)(val.Y - num * 0.5);
+                int num6 = (int)(val.Y + num * 0.5);
 
-		private bool DoChasm(Point origin, GenAction action, int startwidth, int endwidth, int depth, int variance, int randomHeading, float[] widthVariance, bool dir)
-		{
-			Point trueOrigin = origin;
-			for (int m = 0; m < depth; m++)
-			{
-				int width = (int)MathHelper.Lerp(startwidth, endwidth, m / (float)depth);
-				if (widthVariance != null)
-				{
-					width = Math.Max(endwidth, (int)(startwidth * BaseUtility.MultiLerp(m / (float)depth, widthVariance)));
-				}
-				int x = trueOrigin.X + (startwidth - width);
-				int y = trueOrigin.Y + (dir ? m : -m);
-				if (variance != 0)
-				{
-					x += Main.rand.NextBool(2) ? -Main.rand.Next(variance) : Main.rand.Next(variance);
-				}
-				if (randomHeading != 0)
-				{
-					x += randomHeading * (m / 2);
-				}
-				int xend = x + width - (startwidth - width);
-				for (int m2 = x; m2 < xend; m2++)
-				{
-					int x2 = m2;
-					if (!UnitApply(action, trueOrigin, x2, y) && _quitOnFail)
-					{
-						return false;
-					}
-				}
-			}
-			return true;
-		}
+                if (num3 < 1)
+                    num3 = 1;
 
-		public override bool Perform(Point origin, GenAction action)
-		{
-			return DoChasm(origin, action, startwidth, endwidth, depth, variance, randomHeading, widthVariance, dir);
-		}
-	}
+                if (num4 > Main.maxTilesX - 1)
+                    num4 = Main.maxTilesX - 1;
 
-	#endregion
+                if (num5 < 1)
+                    num5 = 1;
 
-	#region Custom GenActions
-	public class IsInWorld : GenAction
-	{
-		public override bool Apply(Point origin, int x, int y, params object[] args)
-		{
-			if (x < 0 || x > Main.maxTilesX || y < 0 || y > Main.maxTilesY)
-				return Fail();
-			return UnitApply(origin, x, y, args);
-		}
-	}
+                if (num6 > Main.maxTilesY - 1)
+                    num6 = Main.maxTilesY - 1;
 
-	public class SetModTile : GenAction
-	{
-		public ushort type;
-		public short frameX = -1;
-		public short frameY = -1;
-		public bool doFraming;
-		public bool doNeighborFraming;
-		public Func<int, int, Tile, bool> canReplace;
+                for (int k = num3; k < num4; k++)
+                {
+                    for (int l = num5; l < num6; l++)
+                    {
+                        if (ignoreTileType >= 0 && Main.tile[k, l].HasTile && Main.tile[k, l].TileType == ignoreTileType || !(Math.Abs((double)k - val.X) + Math.Abs((double)l - val.Y) < strength * 0.5 * (1.0 + WorldGen.genRand.Next(-10, 11) * 0.015)))
+                            continue;
 
-		public SetModTile(ushort type, bool setSelfFrames = false, bool setNeighborFrames = true)
-		{
-			this.type = type;
-			doFraming = setSelfFrames;
-			doNeighborFraming = setNeighborFrames;
-		}
+                        if (tileType < 0)
+                            Main.tile[k, l].ClearTile();
+                        else if (addTile || Main.tile[k, l].HasTile)
+                            WorldGen.PlaceTile(k, l, tileType, true, true);
 
-		public SetModTile ExtraParams(Func<int, int, Tile, bool> canReplace, int frameX = -1, int frameY = -1)
-		{
-			this.canReplace = canReplace;
-			this.frameX = (short)frameX;
-			this.frameY = (short)frameY;
-			return this;
-		}
+                        if (wallType == -1)
+                        {
+                            Main.tile[k, l].Clear(Terraria.DataStructures.TileDataType.Wall);
+                        }
+                        else if (wallType > 0)
+                        {
+                            if (addWall || !addWall && Main.tile[k, l].WallType != 0)
+                            {
+                                if (Main.tile[k, l].WallType != 0)
+                                    Main.tile[k, l].Clear(Terraria.DataStructures.TileDataType.Wall);
 
-		public override bool Apply(Point origin, int x, int y, params object[] args)
-		{
-			if (x < 0 || x > Main.maxTilesX || y < 0 || y > Main.maxTilesY)
-				return false;
-			if (canReplace == null || canReplace != null && canReplace(x, y, _tiles[x, y]))
-			{
-				_tiles[x, y].ResetToType(type);
-				if (frameX > -1)
-					_tiles[x, y].TileFrameX = frameX;
-				if (frameY > -1)
-					_tiles[x, y].TileFrameY = frameY;
-				if (doFraming)
-				{
-					WorldUtils.TileFrame(x, y, doNeighborFraming);
-				}
-			}
-			return UnitApply(origin, x, y, args);
-		}
-	}
+                                WorldGen.PlaceWall(k, l, wallType, mute: true);
+                            }
+                        }
+                    }
+                }
 
-	public class SetMapBrightness : GenAction
-	{
-		public byte brightness;
+                val += val2;
 
-		public SetMapBrightness(byte brightness)
-		{
-			this.brightness = brightness;
-		}
+                if (!WorldGen.genRand.NextBool(3) && num > 50.0)
+                {
+                    val += val2;
+                    num2 -= 1.0;
+                    val2.Y += WorldGen.genRand.Next(-10, 11) * 0.05f;
+                    val2.X += WorldGen.genRand.Next(-10, 11) * 0.05f;
+                    if (num > 100.0)
+                    {
+                        val += val2;
+                        num2 -= 1.0;
+                        val2.Y += WorldGen.genRand.Next(-10, 11) * 0.05f;
+                        val2.X += WorldGen.genRand.Next(-10, 11) * 0.05f;
+                        if (num > 150.0)
+                        {
+                            val += val2;
+                            num2 -= 1.0;
+                            val2.Y += WorldGen.genRand.Next(-10, 11) * 0.05f;
+                            val2.X += WorldGen.genRand.Next(-10, 11) * 0.05f;
+                            if (num > 200.0)
+                            {
+                                val += val2;
+                                num2 -= 1.0;
+                                val2.Y += WorldGen.genRand.Next(-10, 11) * 0.05f;
+                                val2.X += WorldGen.genRand.Next(-10, 11) * 0.05f;
+                                if (num > 250.0)
+                                {
+                                    val += val2;
+                                    num2 -= 1.0;
+                                    val2.Y += WorldGen.genRand.Next(-10, 11) * 0.05f;
+                                    val2.X += WorldGen.genRand.Next(-10, 11) * 0.05f;
+                                    if (num > 300.0)
+                                    {
+                                        val += val2;
+                                        num2 -= 1.0;
+                                        val2.Y += WorldGen.genRand.Next(-10, 11) * 0.05f;
+                                        val2.X += WorldGen.genRand.Next(-10, 11) * 0.05f;
+                                        if (num > 400.0)
+                                        {
+                                            val += val2;
+                                            num2 -= 1.0;
+                                            val2.Y += WorldGen.genRand.Next(-10, 11) * 0.05f;
+                                            val2.X += WorldGen.genRand.Next(-10, 11) * 0.05f;
+                                            if (num > 500.0)
+                                            {
+                                                val += val2;
+                                                num2 -= 1.0;
+                                                val2.Y += WorldGen.genRand.Next(-10, 11) * 0.05f;
+                                                val2.X += WorldGen.genRand.Next(-10, 11) * 0.05f;
+                                                if (num > 600.0)
+                                                {
+                                                    val += val2;
+                                                    num2 -= 1.0;
+                                                    val2.Y += WorldGen.genRand.Next(-10, 11) * 0.05f;
+                                                    val2.X += WorldGen.genRand.Next(-10, 11) * 0.05f;
+                                                    if (num > 700.0)
+                                                    {
+                                                        val += val2;
+                                                        num2 -= 1.0;
+                                                        val2.Y += WorldGen.genRand.Next(-10, 11) * 0.05f;
+                                                        val2.X += WorldGen.genRand.Next(-10, 11) * 0.05f;
+                                                        if (num > 800.0)
+                                                        {
+                                                            val += val2;
+                                                            num2 -= 1.0;
+                                                            val2.Y += WorldGen.genRand.Next(-10, 11) * 0.05f;
+                                                            val2.X += WorldGen.genRand.Next(-10, 11) * 0.05f;
+                                                            if (num > 900.0)
+                                                            {
+                                                                val += val2;
+                                                                num2 -= 1.0;
+                                                                val2.Y += WorldGen.genRand.Next(-10, 11) * 0.05f;
+                                                                val2.X += WorldGen.genRand.Next(-10, 11) * 0.05f;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                val2.X += WorldGen.genRand.Next(-10, 11) * 0.05f;
 
-		public override bool Apply(Point origin, int x, int y, params object[] args)
-		{
-			if (x < 0 || x > Main.maxTilesX || y < 0 || y > Main.maxTilesY) return false;
-			Main.Map.UpdateLighting(x, y, Math.Max(Main.Map[x, y].Light, brightness));
-			return UnitApply(origin, x, y, args);
-		}
-	}
+                if (val2.X > 1.0)
+                    val2.X = 1.0f;
 
+                if (val2.X < -1.0)
+                    val2.X = -1.0f;
 
-	public class PlaceModWall : GenAction
-	{
-		public ushort type;
-		public bool neighbors;
-		public Func<int, int, Tile, bool> canReplace;
+                if (!noYChange)
+                {
+                    val2.Y += WorldGen.genRand.Next(-10, 11) * 0.05f;
+                    if (val2.Y > 1.0)
+                        val2.Y = 1.0f;
 
-		public PlaceModWall(int type, bool neighbors = true)
-		{
-			this.type = (ushort)type;
-			this.neighbors = neighbors;
-		}
+                    if (val2.Y < -1.0)
+                        val2.Y = -1.0f;
 
-		public PlaceModWall ExtraParams(Func<int, int, Tile, bool> canReplace)
-		{
-			this.canReplace = canReplace;
-			return this;
-		}
+                }
+                else if (num < 3.0)
+                {
+                    if (val2.Y > 1.0)
+                        val2.Y = 1.0f;
 
-		public override bool Apply(Point origin, int x, int y, params object[] args)
-		{
-			if (x < 0 || x > Main.maxTilesX || y < 0 || y > Main.maxTilesY) return false;
-			if (canReplace == null || canReplace != null && canReplace(x, y, _tiles[x, y]))
-			{
-				_tiles[x, y].WallType = type;
-				WorldGen.SquareWallFrame(x, y);
-				if (neighbors)
-				{
-					WorldGen.SquareWallFrame(x + 1, y);
-					WorldGen.SquareWallFrame(x - 1, y);
-					WorldGen.SquareWallFrame(x, y - 1);
-					WorldGen.SquareWallFrame(x, y + 1);
-				}
-			}
-			return UnitApply(origin, x, y, args);
-		}
-	}
+                    if (val2.Y < -1.0)
+                        val2.Y = -1.0f;
+                }
+                if (!noYChange)
+                {
+                    if (val2.Y > 0.5)
+                        val2.Y = 0.5f;
 
-	public class RadialDitherTopMiddle : GenAction
-	{
-		private int _width, _height;
-		private float _innerRadius, _outerRadius;
+                    if (val2.Y < -0.5)
+                        val2.Y = -0.5f;
 
-		public RadialDitherTopMiddle(int width, int height, float innerRadius, float outerRadius)
-		{
-			_width = width;
-			_height = height;
-			_innerRadius = innerRadius;
-			_outerRadius = outerRadius;
-		}
+                    if (val.Y < Main.rockLayer + 100.0)
+                        val2.Y = 1.0f;
 
-		public override bool Apply(Point origin, int x, int y, params object[] args)
-		{
-			Vector2 value = new((float)origin.X + _width / 2, origin.Y);
-			Vector2 value2 = new(x, y);
-			float num = Vector2.Distance(value2, value);
-			float num2 = Math.Max(0f, Math.Min(1f, (num - _innerRadius) / (_outerRadius - _innerRadius)));
-			if (_random.NextDouble() > num2)
-			{
-				return UnitApply(origin, x, y, args);
-			}
-			return Fail();
-		}
-	}
-
-	public class ClearTileSafely : GenAction
-	{
-		private bool _frameNeighbors;
-
-		public ClearTileSafely(bool frameNeighbors = false)
-		{
-			_frameNeighbors = frameNeighbors;
-		}
-
-		public override bool Apply(Point origin, int x, int y, params object[] args)
-		{
-			if (x < 0 || x >= Main.maxTilesX || y < 0 || y >= Main.maxTilesY)
-				return false;
-			_tiles[x, y].ClearTile();
-			if (_frameNeighbors)
-			{
-				WorldGen.TileFrame(x + 1, y);
-				WorldGen.TileFrame(x - 1, y);
-				WorldGen.TileFrame(x, y + 1);
-				WorldGen.TileFrame(x, y - 1);
-			}
-			return UnitApply(origin, x, y, args);
-		}
-	}
-	#endregion
-
-	#region Custom Conditions
-	public class IsNotSloped : GenCondition
-	{
-		protected override bool CheckValidity(int x, int y)
-		{
-			return _tiles[x, y].HasTile && _tiles[x, y].Slope == 0 && !_tiles[x, y].IsHalfBlock;
-		}
-	}
-	public class IsSloped : GenCondition
-	{
-		protected override bool CheckValidity(int x, int y)
-		{
-			return _tiles[x, y].HasTile && (_tiles[x, y].Slope > 0 || _tiles[x, y].IsHalfBlock);
-		}
-	}
-	#endregion
-
-	#region Custom Modifiers
-
-	#endregion
+                    if (val.Y > (double)(Main.maxTilesY - 300))
+                        val2.Y = -1.0f;
+                }
+            }
+        }
+        #endregion
+    }
 }

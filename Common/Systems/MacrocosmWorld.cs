@@ -8,7 +8,7 @@ using Terraria.Graphics.Effects;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Macrocosm.Content.Tiles;
-using Macrocosm.Content.Subworlds;
+using Macrocosm.Common.Subworlds;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
 
@@ -39,9 +39,9 @@ namespace Macrocosm.Content.Systems
 
 		public override void PreUpdateWorld()
 		{
-			if (SubworldSystem.AnyActive<Macrocosm>())
+			if (MacrocosmSubworld.AnyActive)
 			{
-				MacrocosmSubworld activeSubworld = MacrocosmSubworld.Current();
+				MacrocosmSubworld activeSubworld = MacrocosmSubworld.Current;
 
 				SubworldSystem.hideUnderworld = true;
 				SubworldSystem.noReturn = false;
@@ -51,20 +51,17 @@ namespace Macrocosm.Content.Systems
 				activeSubworld.PreUpdateWorld();
 
 				GameMechanicsUpdates();
-
-				if(activeSubworld.NormalUpdates)
-					FreezeEnvironment();
+				FreezeEnvironment();
 			}
 		}
 
 		public override void PostUpdateWorld()
 		{
-			if (SubworldSystem.AnyActive<Macrocosm>())
+			if (MacrocosmSubworld.AnyActive)
 			{
-				MacrocosmSubworld activeSubworld = MacrocosmSubworld.Current();
+				MacrocosmSubworld activeSubworld = MacrocosmSubworld.Current;
 				activeSubworld.PostUpdateWorld();
 			}
-
 		}
 
 		public override void PostUpdateEverything()

@@ -6,7 +6,7 @@ using Terraria;
 
 namespace Macrocosm.Content.Particles
 {
-    public class CrescentMoonParticle : Particle
+    public class ChandriumCrescentMoon : Particle
     {
         bool fadeIn;
 		byte alpha;

@@ -14,11 +14,6 @@ namespace Macrocosm.Common.Drawing.Particles
 	public abstract partial class Particle 
 	{
 		/// <summary>
-		/// Returns <see cref="FieldInfo"/> of every field with <see cref="NetSyncAttribute"/>.
-		/// </summary>
-		public FieldInfo[] NetSyncFieldInfo => this.GetNetSyncFields();
-
-		/// <summary>
 		/// Syncs the particle and particle fields with <see cref="NetSyncAttribute"/> across all clients and the server.
 		/// </summary>
 		public void NetSync(int ignoreClient = -1)
@@ -48,14 +43,14 @@ namespace Macrocosm.Common.Drawing.Particles
 			int particleType = reader.ReadInt32();  // the Type int index
 
 			Particle particle;
-			if (ParticleSystem.Particles.Count <= particleIndex)
+			if (ParticleManager.Particles.Count <= particleIndex)
 			{
-				particle = (Particle)Activator.CreateInstance(ParticleSystem.Types[particleType]);
-				ParticleSystem.Particles.Add(particle);
+				particle = (Particle)Activator.CreateInstance(ParticleManager.Types[particleType]);
+				ParticleManager.Particles.Add(particle);
 			}
 			else
 			{
-				particle = ParticleSystem.Particles[particleIndex];
+				particle = ParticleManager.Particles[particleIndex];
 			}
 
 			 particle.NetReadFields(reader);

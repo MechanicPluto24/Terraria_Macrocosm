@@ -9,10 +9,9 @@ using Terraria.Localization;
 using Terraria.Utilities;
 using Terraria.ModLoader;
 
-
-namespace Macrocosm.Common.Base
+namespace Macrocosm.Common.Utils
 {
-    public class BaseAI
+    public static partial class Utility
     {
         //------------------------------------------------------//
         //-------------------BASE AI CLASS----------------------//
@@ -126,7 +125,7 @@ namespace Macrocosm.Common.Base
                 }
                 else
                 {
-                    projectile.rotation = BaseUtility.RotationTo(targetCenter, projectile.Center) + (projectile.spriteDirection == -1 ? 3.14f : 0f);
+                    projectile.rotation = Utility.RotationTo(targetCenter, projectile.Center) + (projectile.spriteDirection == -1 ? 3.14f : 0f);
                 }
             }
         }
@@ -187,7 +186,7 @@ namespace Macrocosm.Common.Base
             Tile tile = Framing.GetTileSafely(tileX, tileY);
             bool inTile = tile is { HasUnactuatedTile: true } && Main.tileSolid[tile.TileType];
             float prevAI = ai[0];
-            ai[0] = ai[0] == 1 && (dist > Math.Max(lineDist, returnDist / 2f) || !BaseUtility.CanHit(codable.Hitbox, owner.Hitbox)) || dist > returnDist || inTile ? 1 : 0;
+            ai[0] = ai[0] == 1 && (dist > Math.Max(lineDist, returnDist / 2f) || !Utility.CanHit(codable.Hitbox, owner.Hitbox)) || dist > returnDist || inTile ? 1 : 0;
             if (ai[0] != prevAI) { netUpdate = true; }
             if (ai[0] == 0 || ai[0] == 1)
             {
@@ -314,7 +313,7 @@ namespace Macrocosm.Common.Base
                 {
                     if (codable.velocity.X < 0f && moveDirection == -1 || codable.velocity.X > 0f && moveDirection == 1)
                     {
-                        bool test = target != null && !isOwner && targetDistX < 50f && targetDistY > codable.height + codable.height / 2 && targetDistY < 16f * (jumpDistY + 1) && BaseUtility.CanHit(codable.Hitbox, target.Hitbox);
+                        bool test = target != null && !isOwner && targetDistX < 50f && targetDistY > codable.height + codable.height / 2 && targetDistY < 16f * (jumpDistY + 1) && Utility.CanHit(codable.Hitbox, target.Hitbox);
                         Vector2 newVec = AttemptJump(codable.position, codable.velocity, codable.width, codable.height, moveDirection, moveDirectionY, jumpDistX, jumpDistY, maxSpeed, true, target, test);
                         if (tileCollide)
                         {
@@ -334,9 +333,9 @@ namespace Macrocosm.Common.Base
                 Vector2 targetCenter = owner.Center;
                 if (owner.velocity.Y != 0f && dist < 80)
                 {
-                    targetCenter = owner.Center + BaseUtility.RotateVector(default, new Vector2(10, 0f), BaseUtility.RotationTo(codable.Center, owner.Center));
+                    targetCenter = owner.Center + Utility.RotateVector(default, new Vector2(10, 0f), Utility.RotationTo(codable.Center, owner.Center));
                 }
-                Vector2 newVel = BaseUtility.RotateVector(default, new Vector2(maxSpeedFlying, 0f), BaseUtility.RotationTo(codable.Center, targetCenter));
+                Vector2 newVel = Utility.RotateVector(default, new Vector2(maxSpeedFlying, 0f), Utility.RotationTo(codable.Center, targetCenter));
                 if (owner.velocity.Y != 0f && (newVel.X > 0 && codable.velocity.X < 0 || newVel.X < 0 && codable.velocity.X > 0))
                 {
                     codable.velocity *= 0.98f; newVel *= 0.02f; codable.velocity += newVel;
@@ -468,9 +467,9 @@ namespace Macrocosm.Common.Base
                 Vector2 targetCenter = owner.Center;
                 if (owner.velocity.Y != 0f && dist < 80)
                 {
-                    targetCenter = owner.Center + BaseUtility.RotateVector(default, new Vector2(10, 0f), BaseUtility.RotationTo(codable.Center, owner.Center));
+                    targetCenter = owner.Center + Utility.RotateVector(default, new Vector2(10, 0f), Utility.RotationTo(codable.Center, owner.Center));
                 }
-                Vector2 newVel = BaseUtility.RotateVector(default, new Vector2(maxSpeedFlying, 0f), BaseUtility.RotationTo(codable.Center, targetCenter));
+                Vector2 newVel = Utility.RotateVector(default, new Vector2(maxSpeedFlying, 0f), Utility.RotationTo(codable.Center, targetCenter));
                 if (owner.velocity.Y != 0f && (newVel.X > 0 && codable.velocity.X < 0 || newVel.X < 0 && codable.velocity.X > 0))
                 {
                     codable.velocity *= 0.98f; newVel *= 0.02f; codable.velocity += newVel;
@@ -498,10 +497,10 @@ namespace Macrocosm.Common.Base
             if (absolute)
             {
                 moveRot += rotAmount;
-                Vector2 rotVec = BaseUtility.RotateVector(default, new Vector2(rotDistance, 0f), moveRot) + rotateCenter;
+                Vector2 rotVec = Utility.RotateVector(default, new Vector2(rotDistance, 0f), moveRot) + rotateCenter;
                 codable.Center = rotVec;
                 rotVec.Normalize();
-                rotation = BaseUtility.RotationTo(codable.Center, rotateCenter) - 1.57f;
+                rotation = Utility.RotationTo(codable.Center, rotateCenter) - 1.57f;
                 codable.velocity *= 0f;
             }
             else
@@ -512,25 +511,25 @@ namespace Macrocosm.Common.Base
                     if (rotDistance - dist > rotThreshold) //too close, get back into position
                     {
                         moveRot += rotAmount;
-                        Vector2 rotVec = BaseUtility.RotateVector(default, new Vector2(rotDistance, 0f), moveRot) + rotateCenter;
-                        float rot2 = BaseUtility.RotationTo(codable.Center, rotVec);
-                        codable.velocity = BaseUtility.RotateVector(default, new Vector2(5f, 0f), rot2);
-                        rotation = BaseUtility.RotationTo(codable.Center, codable.Center + codable.velocity);
+                        Vector2 rotVec = Utility.RotateVector(default, new Vector2(rotDistance, 0f), moveRot) + rotateCenter;
+                        float rot2 = Utility.RotationTo(codable.Center, rotVec);
+                        codable.velocity = Utility.RotateVector(default, new Vector2(5f, 0f), rot2);
+                        rotation = Utility.RotationTo(codable.Center, codable.Center + codable.velocity);
                     }
                     else
                     {
                         moveRot += rotAmount;
-                        Vector2 rotVec = BaseUtility.RotateVector(default, new Vector2(rotDistance, 0f), moveRot) + rotateCenter;
-                        float rot2 = BaseUtility.RotationTo(codable.Center, rotVec);
-                        codable.velocity = BaseUtility.RotateVector(default, new Vector2(5f, 0f), rot2);
-                        rotation = BaseUtility.RotationTo(codable.Center, codable.Center + codable.velocity);
+                        Vector2 rotVec = Utility.RotateVector(default, new Vector2(rotDistance, 0f), moveRot) + rotateCenter;
+                        float rot2 = Utility.RotationTo(codable.Center, rotVec);
+                        codable.velocity = Utility.RotateVector(default, new Vector2(5f, 0f), rot2);
+                        rotation = Utility.RotationTo(codable.Center, codable.Center + codable.velocity);
                     }
                 }
                 else
                 if (moveTowards)
                 {
                     codable.velocity = AIVelocityLinear(codable, rotateCenter, rotAmount, rotAmount, true);
-                    rotation = BaseUtility.RotationTo(codable.Center, rotateCenter) - 1.57f;
+                    rotation = Utility.RotationTo(codable.Center, rotateCenter) - 1.57f;
                 }
                 else { codable.velocity *= 0.95f; }
             }
@@ -684,7 +683,7 @@ namespace Macrocosm.Common.Base
                 if (npc.velocity.X > 0.3f || npc.velocity.Y > 0.3f) { npc.velocity.X *= 0.95f; }
                 if (canCrossCenter)
                 {
-                    destVec = BaseUtility.GetRandomPosNear(point, rand, minDistance, maxDistance);
+                    destVec = Utility.GetRandomPosNear(point, rand, minDistance, maxDistance);
                 }
                 else
                 {
@@ -704,9 +703,9 @@ namespace Macrocosm.Common.Base
                             closestPoint = corner;
                         }
                     }
-                    if (closestPoint == topLeft || closestPoint == bottomRight) { destVec = rand.NextBool(2)? topRight : bottomLeft; }
+                    if (closestPoint == topLeft || closestPoint == bottomRight) { destVec = rand.NextBool(2) ? topRight : bottomLeft; }
                     else
-                    if (closestPoint == topRight || closestPoint == bottomLeft) { destVec = rand.NextBool(2)? topLeft : bottomRight; }
+                    if (closestPoint == topRight || closestPoint == bottomLeft) { destVec = rand.NextBool(2) ? topLeft : bottomRight; }
                 }
                 ai[0] = destVec.X; ai[1] = destVec.Y;
                 if (Main.netMode == NetmodeID.Server) { npc.netUpdate = true; }
@@ -725,7 +724,7 @@ namespace Macrocosm.Common.Base
             bool tileCollide = codable is NPC nPC ? !nPC.noTileCollide : codable is Projectile projectile && projectile.tileCollide;
             if (direct)
             {
-                Vector2 rotVec = BaseUtility.RotateVector(codable.Center, codable.Center + new Vector2(maxSpeed, 0f), BaseUtility.RotationTo(codable.Center, destVec));
+                Vector2 rotVec = Utility.RotateVector(codable.Center, codable.Center + new Vector2(maxSpeed, 0f), Utility.RotationTo(codable.Center, destVec));
                 returnVelocity = rotVec - codable.Center;
             }
             else
@@ -876,7 +875,7 @@ namespace Macrocosm.Common.Base
             if ((int)Main.time % 120 == 0) p.netUpdate = true;
             if (!plrOwner.active) { p.active = false; return; }
             bool isHead = p.type == wormTypes[0];
-            bool isWorm = BaseUtility.InArray(wormTypes, p.type);
+            bool isWorm = Utility.InArray(wormTypes, p.type);
             bool isTail = p.type == wormTypes[^1];
             int wormWidthHeight = 10;
             if (isWorm)
@@ -1941,7 +1940,7 @@ namespace Macrocosm.Common.Base
                 p.velocity.X *= xScalar;
             }
             else
-            if (!spin) { p.rotation = BaseUtility.RotationTo(p.Center, p.Center + p.velocity) + 1.57f; }
+            if (!spin) { p.rotation = Utility.RotationTo(p.Center, p.Center + p.velocity) + 1.57f; }
             if (p.velocity.Y > maxSpeedY) { p.velocity.Y = maxSpeedY; }
         }
 
@@ -2033,7 +2032,7 @@ namespace Macrocosm.Common.Base
                 }
                 if (direct)
                 {
-                    p.velocity = BaseUtility.RotateVector(default, new Vector2(speedInterval, 0f), BaseUtility.RotationTo(p.Center, center));
+                    p.velocity = Utility.RotateVector(default, new Vector2(speedInterval, 0f), Utility.RotationTo(p.Center, center));
                 }
                 else
                 {
@@ -2214,7 +2213,7 @@ namespace Macrocosm.Common.Base
                 {
                     p.netUpdate = true;
                     Collision.HitTiles(p.position, p.velocity, p.width, p.height);
-                    if (playSound) { SoundEngine.PlaySound(SoundID.Dig,p.position); }
+                    if (playSound) { SoundEngine.PlaySound(SoundID.Dig, p.position); }
                 }
             }
         }
@@ -3157,7 +3156,7 @@ namespace Macrocosm.Common.Base
                 }
                 else
                 {
-                    if (!Main.rand.NextBool(80)|| (double)ai[2] != 0) return;
+                    if (!Main.rand.NextBool(80) || (double)ai[2] != 0) return;
                     ai[2] = 200f;
                     npc.direction *= -1;
                     npc.netUpdate = true;
@@ -3222,7 +3221,7 @@ namespace Macrocosm.Common.Base
                 int tileX2 = (int)((npc.Center.X + 15 * npc.direction) / 16f);
                 int tileY2 = (int)((npc.position.Y + npc.height - 16f) / 16f);
                 //Main.tile[tileX2 - npc.direction, tileY2 + 1].halfBrick();
-                if (canOpenDoors && Main.tile[tileX2, tileY2 - 2].HasUnactuatedTile && Main.tile[tileX2, tileY2 - 2].TileType == 10 && (Main.rand.NextBool(10)|| seekHouse))
+                if (canOpenDoors && Main.tile[tileX2, tileY2 - 2].HasUnactuatedTile && Main.tile[tileX2, tileY2 - 2].TileType == 10 && (Main.rand.NextBool(10) || seekHouse))
                 {
                     if (Main.netMode == NetmodeID.MultiplayerClient)
                         return;
@@ -4190,7 +4189,7 @@ namespace Macrocosm.Common.Base
                 {
                     for (int tY = tileY; tY < tileCenterY; tY++)
                     {
-                        Tile checkTile = BaseWorldGen.GetTileSafely(tX, tY);
+                        Tile checkTile = Utility.GetTileSafely(tX, tY);
                         if (checkTile != null && (checkTile.HasUnactuatedTile && (Main.tileSolid[checkTile.TileType] || Main.tileSolidTop[checkTile.TileType] && checkTile.TileFrameY == 0) || checkTile.LiquidAmount > 64))
                         {
                             Vector2 tPos;
@@ -4199,7 +4198,7 @@ namespace Macrocosm.Common.Base
                             if (npc.position.X + npc.width > tPos.X && npc.position.X < tPos.X + 16f && npc.position.Y + npc.height > tPos.Y && npc.position.Y < tPos.Y + 16f)
                             {
                                 canMove = true;
-                                if (spawnTileDust && Main.rand.NextBool(100)&& checkTile.HasUnactuatedTile)
+                                if (spawnTileDust && Main.rand.NextBool(100) && checkTile.HasUnactuatedTile)
                                 {
                                     WorldGen.KillTile(tX, tY, true, true);
                                 }
@@ -4257,8 +4256,8 @@ namespace Macrocosm.Common.Base
                 else
                 {
                     NPC frontNPC = Main.npc[(int)npc.ai[1]];
-                    Vector2 rotVec = BaseUtility.RotateVector(frontNPC.Center, frontNPC.Center + new Vector2(0f, 30f), frontNPC.rotation);
-                    npc.rotation = BaseUtility.RotationTo(npc.Center, rotVec) + 1.57f;
+                    Vector2 rotVec = Utility.RotateVector(frontNPC.Center, frontNPC.Center + new Vector2(0f, 30f), frontNPC.rotation);
+                    npc.rotation = Utility.RotationTo(npc.Center, rotVec) + 1.57f;
                 }
                 dist = (float)Math.Sqrt(playerCenterX * playerCenterX + playerCenterY * playerCenterY);
                 dist = (dist - npc.width - partDistanceAddon) / dist;
@@ -4390,8 +4389,8 @@ namespace Macrocosm.Common.Base
                 else
                 {
                     NPC frontNPC = Main.npc[(int)npc.ai[1]];
-                    Vector2 rotVec = BaseUtility.RotateVector(frontNPC.Center, frontNPC.Center + new Vector2(0f, 30f), frontNPC.rotation);
-                    npc.rotation = BaseUtility.RotationTo(npc.Center, rotVec) + 1.57f;
+                    Vector2 rotVec = Utility.RotateVector(frontNPC.Center, frontNPC.Center + new Vector2(0f, 30f), frontNPC.rotation);
+                    npc.rotation = Utility.RotationTo(npc.Center, rotVec) + 1.57f;
                 }
                 if (npc.type == wormTypes[0])
                 {
@@ -5045,7 +5044,7 @@ namespace Macrocosm.Common.Base
             }
             catch (Exception e)
             {
-                BaseUtility.LogFancy("ATTEMPT JUMP ERROR:", e);
+                Utility.LogFancy("ATTEMPT JUMP ERROR:", e);
                 return velocity;
             }
         }
@@ -5067,7 +5066,7 @@ namespace Macrocosm.Common.Base
             {
                 int tileX = (int)((npc.Center.X + (npc.width / 2 + 8f) * npc.spriteDirection) / 16f);
                 int tileY = (int)((npc.position.Y + npc.height - 15f) / 16f);
-                if (Framing.GetTileSafely(tileX, tileY - 1).HasUnactuatedTile && (Framing.GetTileSafely(tileX, tileY - 1).TileType == TileID.ClosedDoor /*|| TileLoader.ModdedDoors.Contains(Framing.GetTileSafely(tileX, tileY - 1).TileType)*/))
+                if (Framing.GetTileSafely(tileX, tileY - 1).HasUnactuatedTile && Framing.GetTileSafely(tileX, tileY - 1).TileType == TileID.ClosedDoor /*|| TileLoader.ModdedDoors.Contains(Framing.GetTileSafely(tileX, tileY - 1).TileType)*/)
                 {
                     doorCounter += 1f;
                     tickUpdater = 0f;
@@ -5324,7 +5323,7 @@ namespace Macrocosm.Common.Base
         {
             if (item == null)
                 item = new Item(ItemID.WoodenSword);
-            if (npc.dontTakeDamage || (npc.immortal && npc.type != NPCID.TargetDummy))
+            if (npc.dontTakeDamage || npc.immortal && npc.type != NPCID.TargetDummy)
                 return;
             if (hitThroughDefense) { dmgAmt += (int)(npc.defense * 0.5f); }
             if (damager == null || damager is NPC)
@@ -5895,19 +5894,19 @@ namespace Macrocosm.Common.Base
 
         public static Vector2 TraceTile(Vector2 start, float distance, float rotation, Vector2 ignoreTile, bool npcCheck = true, bool tileCheck = true, bool playerCheck = true, bool ignorePlatforms = true)
         {
-            Vector2 end = BaseUtility.RotateVector(start, start + new Vector2(distance, 0f), rotation);
+            Vector2 end = Utility.RotateVector(start, start + new Vector2(distance, 0f), rotation);
             return Trace(start, end, ignoreTile, 1, npcCheck, tileCheck, playerCheck, 1F, ignorePlatforms);
         }
 
         public static Vector2 TracePlayer(Vector2 start, float distance, float rotation, int ignorePlayer, bool npcCheck = true, bool tileCheck = true, bool playerCheck = true, bool ignorePlatforms = true)
         {
-            Vector2 end = BaseUtility.RotateVector(start, start + new Vector2(distance, 0f), rotation);
+            Vector2 end = Utility.RotateVector(start, start + new Vector2(distance, 0f), rotation);
             return Trace(start, end, ignorePlayer, 0, npcCheck, tileCheck, playerCheck, 1F, ignorePlatforms);
         }
 
         public static Vector2 TraceNPC(Vector2 start, float distance, float rotation, int ignoreNPC, bool npcCheck = true, bool tileCheck = true, bool playerCheck = true, bool ignorePlatforms = true)
         {
-            Vector2 end = BaseUtility.RotateVector(start, start + new Vector2(distance, 0f), rotation);
+            Vector2 end = Utility.RotateVector(start, start + new Vector2(distance, 0f), rotation);
             return Trace(start, end, ignoreNPC, 2, npcCheck, tileCheck, playerCheck, 1F, ignorePlatforms);
         }
 
@@ -5972,7 +5971,7 @@ namespace Macrocosm.Common.Base
                                 Tile tile = Framing.GetTileSafely(vecX, vecY);
                                 if (tile is { HasUnactuatedTile: true })
                                 {
-                                    bool ignoreTile = tileTypesToIgnore is { Length: > 0 } && BaseUtility.InArray(tileTypesToIgnore, tile.TileType);
+                                    bool ignoreTile = tileTypesToIgnore is { Length: > 0 } && Utility.InArray(tileTypesToIgnore, tile.TileType);
                                     if (!ignoreTile && Main.tileSolid[tile.TileType])
                                     {
                                         return returnCenter ? new Vector2(vecX * 16 + 8, vecY * 16 + 8) : v;
@@ -6010,7 +6009,7 @@ namespace Macrocosm.Common.Base
             }
             catch (Exception e)
             {
-                BaseUtility.LogFancy("TRACE ERROR:", e);
+                Utility.LogFancy("TRACE ERROR:", e);
             }
             return end;
         }

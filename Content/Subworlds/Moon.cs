@@ -1,5 +1,5 @@
-﻿using Macrocosm.Content.Projectiles.Meteors;
-using Macrocosm.Content.Subworlds.WorldInfomation;
+﻿using Macrocosm.Common.Subworlds;
+using Macrocosm.Content.Projectiles.Meteors;
 using Macrocosm.Content.Systems;
 using Macrocosm.Content.UI.LoadingScreens;
 using Macrocosm.Content.WorldGeneration.Moon;
@@ -25,13 +25,13 @@ namespace Macrocosm.Content.Subworlds
     /// </summary>
     public class Moon : MacrocosmSubworld
     {
-        public static Moon Instance => new Moon();
+        public static Moon Instance => new();
 
         /// <summary> 8 times slower than on Earth (a Terrarian lunar month lasts for 8 in-game days) </summary>
         public override double TimeRate => 0.125;
 
-        /// <summary> About 6 times lower than default (1, as on Earth) </summary>
-        public override float GravityMultiplier => 0.166f;
+		/// <summary> About 6 times lower than default (1, as on Earth) </summary>
+		public override float GravityMultiplier => 0.166f;
 
         public override bool NormalUpdates => false;
         public override int Width => 4200;

@@ -1,23 +1,21 @@
-using System;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria;
-using Terraria.ModLoader;
 using Macrocosm.Common.Drawing.Dusts;
 using Macrocosm.Common.Utils;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
+using Terraria;
+using Terraria.GameContent;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Dusts
 {
-	public class LuminiteSparkDust : ModDust, IDustCustomDraw
+	public class ChandriumSparkDust : ModDust, IDustCustomDraw
 	{
-		public override void OnSpawn(Dust dust)
-		{
-		}
-
 		public override bool Update(Dust dust)
 		{
+
 			dust.position += dust.velocity;
-			//dust.rotation += dust.dustIndex % 2 == 0 ? 0.5f : -0.5f; 
+			dust.rotation += dust.dustIndex % 2 == 0 ? 0.5f : -0.5f; 
 
 			float clampedScale = dust.scale;
 			if (clampedScale > 1f)
@@ -28,6 +26,8 @@ namespace Macrocosm.Content.Dusts
 
 			if (dust.noGravity)
 				dust.velocity *= 0.93f;
+			else
+				dust.velocity.Y += 0.1f;
 
 			dust.scale -= 0.01f;
 			if (dust.scale < 0.2f)
@@ -39,12 +39,12 @@ namespace Macrocosm.Content.Dusts
 		public override bool MidUpdate(Dust dust) => false;
 
 		public override Color? GetAlpha(Dust dust, Color lightColor)
-				=> Color.White.NewAlpha(0.5f);
+			=> Color.White.NewAlpha(0.5f);
 
-
-		public bool DrawDust(Dust dust, SpriteBatch spriteBatch, Vector2 screenPosition, Texture2D texture, Rectangle dustFrame)
+		public bool DrawDust(Dust dust,SpriteBatch spriteBatch, Vector2 screenPosition, Texture2D texture, Rectangle dustFrame)
 		{
 			float count = Math.Abs(dust.velocity.X) + Math.Abs(dust.velocity.Y) * 3f;
+
 			if (count > 10f)
 				count = 10f;
 
