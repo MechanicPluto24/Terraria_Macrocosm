@@ -1,6 +1,5 @@
-﻿using Macrocosm.Common.Utility;
+﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Backgrounds.Moon;
-using Macrocosm.Content.Subworlds.Moon;
 using Macrocosm.Content.Systems;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
@@ -36,7 +35,7 @@ namespace Macrocosm.Content.Biomes
 		}
 
 		public override bool IsBiomeActive(Player player)
-			=> TileCountSystem.TileCounts.IrradiatedRockCount > 400;
+			=> TileCounts.Instance.IrradiatedRockCount > 400;
 
 	}
 }

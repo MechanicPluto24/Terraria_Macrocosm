@@ -10,7 +10,9 @@ namespace Macrocosm.Content.Dusts
 
 		public override void OnSpawn(Dust dust)
 		{
-			dust.noLight = true; 
+			dust.noLight = false; 
+			dust.color = Color.White;
+			dust.alpha = 0;
 		}
 	}
 
@@ -45,19 +47,20 @@ namespace Macrocosm.Content.Dusts
 				dust.velocity = (dust.velocity * 4f + vector * dust.velocity.Length()) / 5f;
 			}
 
+			if (dust.alpha > 0)
+				dust.alpha -= 24;
+
+			if (!dust.noLight)
+				Lighting.AddLight(dust.position, new Color(30, 255, 105).ToVector3() * 0.6f);
+
 			dust.position += dust.velocity;
 			dust.rotation += 0.1f * (dust.dustIndex % 2 == 0 ? -1 : 1);
 			dust.scale -= 0.08f;
 
-			float lightMultiplier = 0.35f * dust.scale;
-
-			Lighting.AddLight(dust.position, 0.61f * lightMultiplier, 0.26f * lightMultiplier, 0.85f * lightMultiplier);
 
 			if (dust.scale <= 0f)
-			{
-				dust.active = false;
-			}
-
+ 				dust.active = false;
+ 
 			return false;
 		}
 	}
@@ -89,13 +92,13 @@ namespace Macrocosm.Content.Dusts
 				dust.velocity = (dust.velocity * 4f + vector * dust.velocity.Length()) / 5f;
 			}
 
+			if(!dust.noLight)
+				Lighting.AddLight(dust.position, new Color(239, 105, 19).ToVector3() * 0.6f);
+
+
 			dust.position += dust.velocity;
 			dust.rotation += 0.1f * (dust.dustIndex % 2 == 0 ? -1 : 1);
 			dust.scale -= 0.08f;
-
-			float lightMultiplier = 0.35f * dust.scale;
-
-			Lighting.AddLight(dust.position, 0.61f * lightMultiplier, 0.26f * lightMultiplier, 0.85f * lightMultiplier);
 
 			if (dust.scale <= 0f)
 			{
@@ -133,10 +136,6 @@ namespace Macrocosm.Content.Dusts
 			dust.position += dust.velocity;
 			dust.rotation += 0.35f * (dust.dustIndex % 2 == 0 ? -1 : 1);
 			dust.scale -= 0.1f;
-
-			float lightMultiplier = 0.35f * dust.scale;
-
-			Lighting.AddLight(dust.position, 0.61f * lightMultiplier, 0.26f * lightMultiplier, 0.85f * lightMultiplier);
 
 			if (dust.scale <= 0.01f)
 			{
@@ -176,10 +175,6 @@ namespace Macrocosm.Content.Dusts
 			dust.position += dust.velocity;
 			dust.rotation += 0.35f * (dust.dustIndex % 2 == 0 ? -1 : 1);
 			dust.scale -= 0.1f;
-
-			float lightMultiplier = 0.35f * dust.scale;
-
-			Lighting.AddLight(dust.position, 0.61f * lightMultiplier, 0.26f * lightMultiplier, 0.85f * lightMultiplier);
 
 			if (dust.scale <= 0.1f)
 			{

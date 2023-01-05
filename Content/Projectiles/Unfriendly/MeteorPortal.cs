@@ -1,4 +1,4 @@
-﻿using Macrocosm.Common.Drawing;
+﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.NPCs.Bosses.CraterDemon;
 using Microsoft.Xna.Framework;
@@ -10,8 +10,8 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Unfriendly
 {
-	//Had to salvage it from an extracted DLL, so no comments.  Oops.  -- absoluteAquarian
-	public class MeteorPortal : ModProjectile
+    //Had to salvage it from an extracted DLL, so no comments.  Oops.  -- absoluteAquarian
+    public class MeteorPortal : ModProjectile
 	{
 		private int defWidth;
 		private int defHeight;
@@ -22,7 +22,6 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 		{
 			DisplayName.SetDefault("Meteor Portal");
 		}
-
 		public override void SetDefaults()
 		{
 			defWidth = defHeight = Projectile.width = Projectile.height = 40;
@@ -33,7 +32,6 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 			Projectile.penetrate = -1;
 			Projectile.alpha = 255;
 		}
-
 		public override void AI()
 		{
 			if (!spawned)
@@ -54,8 +52,12 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 				Projectile.ai[0] = 0f;
 				if (Projectile.timeLeft % 14 == 0)
 				{
-					Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, (-Vector2.UnitY).RotatedByRandom(20) * Main.rand.NextFloat(6f, 9.25f), ModContent.ProjectileType<FlamingMeteor>(),
-						(int)(Projectile.damage * 0.4f), Projectile.knockBack, Projectile.owner, 0f, 0f);
+					if (Main.netMode != NetmodeID.MultiplayerClient)
+					{
+						int meteorID = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, (-Vector2.UnitY).RotatedByRandom(20) * Main.rand.NextFloat(6f, 9.25f), ModContent.ProjectileType<FlamingMeteor>(),
+							(int)(Projectile.damage * 0.4f), Projectile.knockBack, Projectile.owner, 0f, 0f);
+						Main.projectile[meteorID].netUpdate = true;
+					}
 
 					Terraria.Audio.SoundEngine.PlaySound(SoundID.Item20, Projectile.Center);
 				}
@@ -81,10 +83,10 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 
 			SpriteBatchState state = Main.spriteBatch.SaveState();
 
-			Main.spriteBatch.EndIfBeginCalled();
+			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, state);
 
-			Main.EntitySpriteDraw(texture2D, Projectile.Center - Main.screenPosition, null, (value * 0.2f).NewAlpha(1f - Projectile.alpha/255f), (0f - Projectile.rotation) * 0.65f, texture2D.Size() / 2f,
+			Main.EntitySpriteDraw(texture2D, Projectile.Center - Main.screenPosition, null, (value * 0.35f).NewAlpha(1f - Projectile.alpha/255f), (0f - Projectile.rotation) * 0.65f, texture2D.Size() / 2f,
 				Projectile.scale * 1.23f, SpriteEffects.FlipHorizontally, 0);
 
 			Main.EntitySpriteDraw(texture2D, Projectile.Center - Main.screenPosition, null, value * 0.84f, Projectile.rotation, texture2D.Size() / 2f,
@@ -96,7 +98,8 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 			Main.EntitySpriteDraw(texture2D, Projectile.Center - Main.screenPosition, null, value * 1f, (0f - Projectile.rotation) * 0.65f, texture2D.Size() / 2f,
 			Projectile.scale * 0.8f, SpriteEffects.None, 0);
 
-			Main.spriteBatch.Restore(state);
+			Main.spriteBatch.End();
+			Main.spriteBatch.Begin(BlendState.AlphaBlend, state);
 
 			return false;
 		}
@@ -115,7 +118,6 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 				lightDust.scale = 1.2f + Main.rand.NextFloat();
 				lightDust.fadeIn = 0.5f;
 				lightDust.customData = Projectile.Center;
-
 			}
 
 			if (Main.rand.NextBool(2))

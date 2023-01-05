@@ -1,12 +1,17 @@
 using System;
+using System.IO;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.Graphics.Effects;
 using Terraria.Graphics.Shaders;
 using SubworldLibrary;
-using Macrocosm.Content.Subworlds.Moon;
 using Macrocosm.Content.Tiles;
+using Macrocosm.Content.Players;
+using Macrocosm.Content.Rocket;
+using Macrocosm.Content.Subworlds;
+using Macrocosm.Common.Netcode;
 
 namespace Macrocosm
 {
@@ -14,22 +19,21 @@ namespace Macrocosm
 	{
 		public static Mod Instance => ModContent.GetInstance<Macrocosm>();
 
-		public const string EmptyTexPath = "Macrocosm/Assets/Textures/Empty";
 		public const string EffectAssetPath = "Macrocosm/Assets/Effects/";
-
-		public static Texture2D EmptyTex { get; set; }
+		public const string EmptyTexPath = "Macrocosm/Assets/Textures/Empty";
+		public static Texture2D EmptyTex => ModContent.Request<Texture2D>(EmptyTexPath).Value;
 
 		public override void Load()
 		{
-			EmptyTex = ModContent.Request<Texture2D>(EmptyTexPath, ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-
 			ModCalls();
 			LoadEffects();
 		}
 
 		private static void LoadEffects()
 		{
-			Filters.Scene["Macrocosm:RadiationNoiseEffect"] = new Filter(new ScreenShaderData(new Ref<Effect>(ModContent.Request<Effect>(EffectAssetPath + "RadiationNoiseEffect", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value), "RadiationNoiseEffect"));
+			AssetRequestMode mode = AssetRequestMode.ImmediateLoad;
+			
+			Filters.Scene["Macrocosm:RadiationNoiseEffect"] = new Filter(new ScreenShaderData(new Ref<Effect>(ModContent.Request<Effect>(EffectAssetPath + "RadiationNoiseEffect", mode).Value), "RadiationNoiseEffect"));
 			Filters.Scene["Macrocosm:RadiationNoiseEffect"].Load();
 		}
 
@@ -48,6 +52,11 @@ namespace Macrocosm
 				taAPI.Call("Ambience", this, "MoonAmbience", "Assets/Sounds/Ambient/Moon", 1f, 0.0075f, new Func<bool>(SubworldSystem.IsActive<Moon>));
 
 			#endregion
+		}
+
+		public override void HandlePacket(BinaryReader reader, int whoAmI)
+		{
+			PacketHandler.HandlePacket(reader, whoAmI);
 		}
 	}
 }

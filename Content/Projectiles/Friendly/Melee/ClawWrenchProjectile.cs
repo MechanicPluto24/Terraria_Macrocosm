@@ -5,7 +5,7 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Common.Utility;
+using Macrocosm.Common.Utils;
 using System;
 using Terraria.DataStructures;
 using Macrocosm.Content.Players;
@@ -34,26 +34,39 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
 		public override void OnSpawn(IEntitySource source)
 		{
-            SwingTime /= OwnerPlayer.GetAttackSpeed(DamageClass.Melee);
-            SwingTime += SwingTime * (1f - OwnerPlayer.GetModPlayer<StaminaPlayer>().MeleeStamina);
-            Projectile.timeLeft = (int)SwingTime;
+            spawned = false;
         }
+        bool spawned = false;
 
         public override void AI()
         {
             if (!OwnerPlayer.active || OwnerPlayer.dead || OwnerPlayer.CCed || OwnerPlayer.noItems)
                  return;
 
+			if (!spawned)
+			{
+               SwingTime /= OwnerPlayer.GetAttackSpeed(DamageClass.Melee);
+               SwingTime += SwingTime * (1f - OwnerPlayer.StaminaPlayer().MeleeStamina);
+               Projectile.timeLeft = (int)SwingTime;
+               spawned = true;
+            }
+
             float holdOffset = 2f;
+
             Projectile.spriteDirection = OwnerPlayer.direction;
+
             float swingProgress = Utils.GetLerpValue(SwingTime, 0f, Projectile.timeLeft);
             float start = Projectile.velocity.ToRotation() - MathHelper.PiOver2 * Projectile.spriteDirection;
             float end = Projectile.velocity.ToRotation() + MathHelper.PiOver2 * Projectile.spriteDirection;
             float rotation = MathHelper.Lerp(start, end, swingProgress);
 
-            Projectile.Center = OwnerPlayer.GetFrontHandPosition(Player.CompositeArmStretchAmount.Full, rotation - MathHelper.PiOver2) + rotation.ToRotationVector2() * holdOffset; 
-            Projectile.rotation = (Projectile.Center - OwnerPlayer.Center).ToRotation() + (Projectile.spriteDirection == -1 ? MathHelper.Pi + MathHelper.PiOver4 : - 0.6f);
+            if(OwnerPlayer.whoAmI == Main.myPlayer)
+			{
+                Projectile.Center = OwnerPlayer.GetFrontHandPosition(Player.CompositeArmStretchAmount.Full, rotation - MathHelper.PiOver2) + rotation.ToRotationVector2() * holdOffset;
+                Projectile.netUpdate = true;
+            }
 
+            Projectile.rotation = (Projectile.Center - OwnerPlayer.Center).ToRotation() + (Projectile.spriteDirection == -1 ? MathHelper.Pi + MathHelper.PiOver4 : -0.6f);
             OwnerPlayer.ChangeDir(Math.Sign(Projectile.velocity.X));
             OwnerPlayer.heldProj = Projectile.whoAmI;
             OwnerPlayer.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, rotation - MathHelper.PiOver2);
@@ -63,24 +76,23 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
 		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
 		{
-            OwnerPlayer.GetModPlayer<StaminaPlayer>().MeleeStamina -= 0.15f;
-            OwnerPlayer.GetModPlayer<StaminaPlayer>().ResetStaminaCooldown(90);
+            OwnerPlayer.StaminaPlayer().MeleeStamina -= 0.15f;
+            OwnerPlayer.StaminaPlayer().ResetStaminaCooldown(90);
         }
 
 		public override void ModifyDamageHitbox(ref Rectangle hitbox)
 		{
-            Vector2 polar = MathUtils.PolarVector(35, Projectile.rotation + (Projectile.spriteDirection == -1 ? MathHelper.PiOver4 : MathHelper.PiOver2 + MathHelper.PiOver4));
+            Vector2 polar = Utility.PolarVector(35, Projectile.rotation + (Projectile.spriteDirection == -1 ? MathHelper.PiOver4 : MathHelper.PiOver2 + MathHelper.PiOver4));
             hitbox.X -= (int)polar.X;
             hitbox.Y -= (int)polar.Y;
  		}
-
 
 		public override bool PreDraw(ref Color lightColor)
         {
             SpriteEffects effect = Projectile.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
             Texture2D texture = TextureAssets.Projectile[Type].Value;
             Vector2 orig = texture.Size() / 2 + (Projectile.spriteDirection == -1 ? new Vector2(16, 16) : new Vector2(-16f, 16f));
-            Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, new Rectangle(0, 0, texture.Width, texture.Height), Color.White, Projectile.rotation, orig, 1f, effect, 0);
+            Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, new Rectangle(0, 0, texture.Width, texture.Height), lightColor, Projectile.rotation, orig, 1f, effect, 0);
             return false;
         }
     }

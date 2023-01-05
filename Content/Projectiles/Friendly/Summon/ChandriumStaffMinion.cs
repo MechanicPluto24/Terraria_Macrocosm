@@ -1,7 +1,9 @@
 using Macrocosm.Common.Drawing;
-using Macrocosm.Common.Utility;
+using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Buffs.GoodBuffs.MinionBuffs;
 using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -13,7 +15,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Summon
 {
-	public class ChandriumStaffMinion : ModProjectile
+    public class ChandriumStaffMinion : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{
@@ -53,12 +55,21 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
 		public override bool MinionContactDamage() => true;
 
+
+		private bool spawned = false;
+
 		public override void AI()
 		{
 			Player owner = Main.player[Projectile.owner];
 
 			if (!CheckActive(owner))
  				return;
+
+			if (!spawned)
+			{
+				SpawnDusts();
+				spawned = true;
+			}
  
 			GeneralBehavior(owner, out Vector2 vectorToIdlePosition, out float distanceToIdlePosition);
 			SearchForTargets(owner, out bool foundTarget, out float distanceFromTarget, out Vector2 targetCenter);
@@ -71,16 +82,25 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 		public override void OnSpawn(IEntitySource source)
 		{
 			Projectile.alpha = 255;
+			spawned = false;
+		}
+
+		private void SpawnDusts()
+		{
 			for (int i = 0; i < 60; i++)
 			{
- 				Vector2 position = Projectile.position;
+				Vector2 position = Projectile.Center;
 				Vector2 velocity = Main.rand.NextVector2Circular(0.5f, 0.5f);
 
 				Dust dust;
 				if (i % 10 == 0)
 				{
-					dust = Dust.NewDustDirect(position, Projectile.width, Projectile.height, ModContent.DustType<CrescentMoonParticle>(), velocity.X, velocity.Y, Scale: Main.rand.NextFloat(0.8f, 1.1f));
-					dust.velocity = velocity * 5f;
+					Particle.CreateParticle<ChandriumCrescentMoon>(particle =>
+					{
+						particle.Position = position;
+						particle.Velocity = velocity * 5f;
+						particle.Scale = Main.rand.NextFloat(0.8f, 1.1f);
+					});
 				}
 
 				dust = Dust.NewDustDirect(position, Projectile.width, Projectile.height, ModContent.DustType<ChandriumDust>(), velocity.X, velocity.Y, Scale: Main.rand.NextFloat(0.8f, 1.2f));
@@ -181,7 +201,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 				}
 			}
 
-			if (!foundTarget)
+			if (!foundTarget && Projectile.alpha < 1)
 			{
 				// This code is required either way, used for finding a target
 				for (int i = 0; i < Main.maxNPCs; i++)
@@ -347,12 +367,5 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 			return true;
 		}
 
-		public override void PostDraw(Color lightColor)
-		{
-			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Summon/ChandriumStaffMinion_Glow").Value;
-			SpriteEffects effect = Projectile.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-			Vector2 offset = new Vector2(0, 2);
-			Projectile.DrawAnimatedGlowmask(glowmask, Color.White * ((float)Projectile.alpha/255), effect, offset);
-		}
 	}
 }

@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Base;
-using Macrocosm.Common.Utility;
+﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Items.Materials;
@@ -13,7 +12,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-	public class Clavite : MoonEnemy
+    public class Clavite : MoonEnemy
 	{
 		public override void SetStaticDefaults()
 		{
@@ -61,7 +60,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 			NPC.Move(player.Center, Vector2.Zero);
 			bool playerActive = player != null && player.active && !player.dead;
-			BaseAI.LookAt(playerActive ? player.Center : NPC.Center + NPC.velocity, NPC, 0);
+			Utility.LookAt(playerActive ? player.Center : NPC.Center + NPC.velocity, NPC, 0);
 		}
 
 		public override void FindFrame(int frameHeight)
@@ -115,10 +114,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 				dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
 			}
 
-			if (Main.netMode == NetmodeID.Server)
-			{
-				return; // don't run on the server
-			}
+			if (Main.dedServ)
+				return;
 
 			if (NPC.life <= 0)
 			{

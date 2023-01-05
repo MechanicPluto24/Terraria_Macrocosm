@@ -1,5 +1,5 @@
 ﻿using Macrocosm.Common.Hooks;
-using Macrocosm.Common.Utility;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Systems;
 using Terraria;
 
@@ -23,7 +23,7 @@ namespace Macrocosm.Content.Biomes
 		}
 
 		public override bool IsBiomeActive(Player player) 
-			=> TileCountSystem.TileCounts.RegolithCount > 40;
+			=> TileCounts.Instance.RegolithCount > 40;
 	
 	}
 }

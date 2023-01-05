@@ -1,5 +1,4 @@
-using Macrocosm.Common.Drawing;
-using Macrocosm.Common.Utility;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -11,14 +10,15 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
-	public class MoonSwordSwing : ModProjectile
+    public class MoonSwordSwing : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{
  			DisplayName.SetDefault("Moonlight Greatsword");
 		}
 
-		public override string Texture => "Macrocosm/Assets/Textures/Swing";
+		public override string Texture => "Macrocosm/Content/Projectiles/Friendly/Melee/Swing";
+
 
 		public override void SetDefaults()
 		{

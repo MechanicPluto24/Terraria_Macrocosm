@@ -1,11 +1,12 @@
-using Macrocosm.Common.Drawing;
+using Macrocosm.Common.Utils;
+using Macrocosm.Content.Systems;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Dusts
 {
-	public class CelestialDust : ModDust
+    public class CelestialDust : ModDust
 	{
 		public override void OnSpawn(Dust dust)
 		{

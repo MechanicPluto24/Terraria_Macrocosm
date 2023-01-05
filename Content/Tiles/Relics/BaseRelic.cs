@@ -1,4 +1,4 @@
-﻿using Macrocosm.Common.Drawing;
+﻿using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -17,7 +17,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Relics
 {
-	public abstract class BaseRelic : ModTile
+    public abstract class BaseRelic : ModTile
 	{
 		public virtual string RelicTextureName { get; set; }
 		public virtual bool RightPlaceStyle => true;

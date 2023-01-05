@@ -18,6 +18,8 @@ namespace Macrocosm.Content.Items.Materials
 			Item.value = 10000;
 			Item.rare = ItemRarityID.Expert;
 			Item.expert = true;
+			Item.material = true;
+
 		}
 	}
 }

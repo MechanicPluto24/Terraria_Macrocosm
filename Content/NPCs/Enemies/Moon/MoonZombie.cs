@@ -1,4 +1,4 @@
-using Macrocosm.Common.Utility;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Materials;
@@ -92,7 +92,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		public override void HitEffect(int hitDirection, double damage)
 		{
-
 			if (NPC.life > 0)
 			{
 				for (int i = 0; i < 30; i++)
@@ -107,7 +106,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 				}
 			}
 
-			if (Main.netMode == NetmodeID.Server)
+			if (Main.dedServ)
  				return; // don't run on the server
  
 			if (NPC.life <= 0)

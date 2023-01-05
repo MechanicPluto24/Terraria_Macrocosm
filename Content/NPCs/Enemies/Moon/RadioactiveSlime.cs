@@ -1,9 +1,10 @@
-using Macrocosm.Common.Drawing;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Materials;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
 using Terraria.GameContent.Bestiary;
@@ -13,7 +14,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-	public class RadioactiveSlime : MoonEnemy
+    public class RadioactiveSlime : MoonEnemy
 	{
 		public override void SetStaticDefaults()
 		{
@@ -67,9 +68,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			
 		}
 
-		public override Color? GetAlpha(Color drawColor)
-			=> (Color.White * (0.3f + Main.DiscoColor.GetLuminance() * 0.7f)).NewAlpha(1f);
-
 		public override void HitEffect(int hitDirection, double damage)
 		{
 			for (int i = 0; i < 10; i++)
@@ -80,6 +78,25 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 				dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;
 				dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
 			}
+		}
+
+		public override Color? GetAlpha(Color drawColor)
+			=> (Color.White * (0.3f + Main.DiscoColor.GetLuminance() * 0.7f)).NewAlpha(1f);
+
+
+		private SpriteBatchState state;
+		public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+		{
+			state = spriteBatch.SaveState();
+			spriteBatch.End();
+			spriteBatch.Begin(BlendState.Additive, state);
+
+			return true;
+		}
+
+		public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+		{
+			spriteBatch.Restore(state);
 		}
 	}
 }

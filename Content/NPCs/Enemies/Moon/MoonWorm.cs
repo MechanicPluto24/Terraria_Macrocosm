@@ -21,7 +21,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 			var drawModifier = new NPCID.Sets.NPCBestiaryDrawModifiers(0)    // Influences how the NPC looks in the Bestiary
 			{   
-				CustomTexturePath = "Macrocosm/Content/NPCs/MoonWorm_Bestiary", // If the NPC is multiple parts like a worm, a custom texture for the Bestiary is encouraged.
+				CustomTexturePath = "Macrocosm/Content/NPCs/Enemies/Moon/MoonWorm_Bestiary", // If the NPC is multiple parts like a worm, a custom texture for the Bestiary is encouraged.
 				Position = new Vector2(40f, 24f),
 				PortraitPositionXOverride = 0f,
 				PortraitPositionYOverride = 12f
@@ -48,7 +48,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[] 
 			{
 				// Sets the spawning conditions of this NPC that is listed in the bestiary.
-				BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Times.NightTime,
+				//BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Times.NightTime,
 
 				// Sets the description of this NPC that is listed in the bestiary.
 				new FlavorTextBestiaryInfoElement("BIG boi")
@@ -116,8 +116,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			NPC.CloneDefaults(NPCID.DiggerBody);
 			NPC.damage = 80;
 			NPC.defense = 30;
-			NPC.width = 54;
-			NPC.height = 54;
+			NPC.width = 58;
+			NPC.height = 58;
 			NPC.aiStyle = -1;
 		}
 
@@ -156,8 +156,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			NPC.CloneDefaults(NPCID.DiggerTail);
 			NPC.damage = 84;
 			NPC.defense = 64;
-			NPC.width = 56;
-			NPC.height = 56;
+			NPC.width = 54;
+			NPC.height = 54;
 			NPC.aiStyle = -1;
 		}
 

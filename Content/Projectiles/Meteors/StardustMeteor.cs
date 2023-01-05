@@ -1,5 +1,6 @@
-﻿using Macrocosm.Common.Utility;
-using Macrocosm.Content.Items.Chunks;
+﻿using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Utils;
+using Macrocosm.Content.Items.MeteorChunks;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.GameContent.Drawing;
@@ -48,21 +49,15 @@ namespace Macrocosm.Content.Projectiles.Meteors
 
 		public override void SpawnImpactDusts()
 		{
- 			SpawnImpactDusts(DustID.YellowStarDust);
-			SpawnImpactDusts(DustID.DungeonWater, noGravity: true);
+ 			SpawnImpactDusts(DustID.YellowStarDust, noGravity: false);
 
-			ParticleOrchestraSettings settings;
-
-			for(int i = 0; i < Main.rand.Next(30, 40); i++)
+			for(int i = 0; i < Main.rand.Next(30, 50); i++)
 			{
-				settings = new()
-				{
-					PositionInWorld = Projectile.Center + new Vector2(Width, Height).RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(),
-					MovementVector = Vector2.One.RotatedByRandom(MathHelper.TwoPi) * 10f
-				};
+				Vector2 position = Projectile.Center + new Vector2(Width, Height).RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat();
+				Vector2 velocity = new(Main.rand.NextFloat(-10, 10), Main.rand.NextFloat(0f, -20f));
 
-				ParticleOrchestrator.SpawnParticlesDirect(ParticleOrchestraType.StardustPunch, settings);
+				Particle.CreateParticle(ParticleOrchestraType.StardustPunch, position, velocity);
 			}
- 		}
+		}
 	}
 }

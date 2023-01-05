@@ -15,6 +15,11 @@ namespace Macrocosm.Common.Hooks
 			On.Terraria.Player.DropTombstone += Player_DropTombstone;
 		}
 
+		public void Unload() 
+		{
+			On.Terraria.Player.DropTombstone -= Player_DropTombstone;
+		}
+
 		private void Player_DropTombstone(On.Terraria.Player.orig_DropTombstone orig, Player self, int coinsOwned, NetworkText deathText, int hitDirection)
 		{
 			if (SubworldSystem.AnyActive<Macrocosm>())
@@ -24,7 +29,7 @@ namespace Macrocosm.Common.Hooks
 					// here could be a switch statement based on the subworld
 					int tombstoneType = ModContent.ProjectileType<MoonTombstone>(); 
 
-					// wether to drop a normal or golden tombstone 
+					// whether to drop a normal or golden tombstone 
 					float golden = 0f;
 					if (coinsOwned > 100000)
 						golden = 1f;
@@ -55,6 +60,5 @@ namespace Macrocosm.Common.Hooks
 			}
  		}
 
-		public void Unload() { }
 	}
 }
