@@ -236,9 +236,6 @@ namespace Macrocosm.Common.Drawing.Sky
 
 				float rotation = (Position - lightSource.Position).ToRotation();
 				ConfigureShader(rotation, out float intensity, out Vector2 offset);
-
-                offset *= 0.65f;
-
                 shader.Parameters["uOffset"].SetValue(offset);
                 shader.Parameters["uIntensity"].SetValue(intensity);
   			}
