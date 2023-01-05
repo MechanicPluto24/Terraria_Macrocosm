@@ -1,5 +1,5 @@
 using Macrocosm.Common.Global.GlobalNPCs;
-using Macrocosm.Common.Utility;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
@@ -27,8 +27,8 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			Item.DamageType = DamageClass.Ranged;
 			Item.width = 70;
 			Item.height = 26;
-			Item.useTime = 12;
-			Item.useAnimation = 12;
+			Item.useTime = 34;
+			Item.useAnimation = 34;
 			Item.useStyle = ItemUseStyleID.Shoot;
 			Item.noMelee = true;
 			Item.channel = true;
@@ -38,7 +38,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			Item.UseSound = SoundID.Item11;
 			Item.shoot = ProjectileID.PurificationPowder; // For some reason, all the guns in the vanilla source have this.
 			Item.autoReuse = true;
-			Item.shootSpeed = 7f;
+			Item.shootSpeed = 4f;
 			Item.useAmmo = AmmoID.Rocket;
 		}
 
@@ -63,7 +63,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 					NPC npc = Main.npc[i];
 
 					if (npc.TryGetGlobalNPC(out MacrocosmNPC macNpc))
-						macNpc.TargetedBy[player.whoAmI] = false;
+ 						macNpc.Targeted = false;
 
 					if (!found && npc.CanBeChasedBy() && Main.npc[i].getRect().Intersects(new Rectangle((int)(Main.MouseWorld.X - 10f), (int)(Main.MouseWorld.Y - 10f), 20, 20)))
 					{
@@ -73,8 +73,8 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 				}
 
 				if (id > -1 && id < Main.maxNPCs)
-					Main.npc[id].Macrocosm().TargetedBy[player.whoAmI] = true;
-
+ 					Main.npc[id].Macrocosm().Targeted = true;
+ 
 				return false;
 			}
 
@@ -83,8 +83,8 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
 		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
 		{
-			position += new Vector2(0, -4); // barrel offset 
-			type = ModContent.ProjectileType<NWARocket>();
+			position += new Vector2(5, -4); // barrel offset 
+			type = ModContent.ProjectileType<NWAMissile>();
 		}
 	}
 }

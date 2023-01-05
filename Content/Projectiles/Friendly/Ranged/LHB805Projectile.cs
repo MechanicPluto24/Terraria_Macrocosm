@@ -1,6 +1,6 @@
-using Macrocosm.Assets.Sounds;
-using Macrocosm.Common.Utility;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Gores;
+using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Utilities;
@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-	public class LHB805Projectile : ModProjectile
+    public class LHB805Projectile : ModProjectile
 	{
 
 		private const int windupFrames = 4; // number of windup animaton frames
@@ -86,12 +86,18 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			OwnerPlayer.itemAnimation = 2;
 
 			OwnerPlayer.itemRotation = (Projectile.velocity * Projectile.direction).ToRotation();
+
+			Projectile.netUpdate = true;
 		}
 
 		private void Aim()
 		{
+			if(OwnerPlayer.whoAmI != Main.myPlayer)
+				return;
+
 			// Get the player's current aiming direction as a normalized vector.
 			Vector2 aim = Vector2.Normalize(Main.MouseWorld - Projectile.Center);
+
 			if (aim.HasNaNs())
 				aim = Vector2.UnitY;
 
@@ -99,10 +105,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			aim = Vector2.Normalize(Vector2.Lerp(Vector2.Normalize(Projectile.velocity), aim, 1));
 			aim *= OwnerPlayer.HeldItem.shootSpeed;
 
-			if (aim != Projectile.velocity)
+			if (aim != Projectile.velocity && Main.netMode != NetmodeID.MultiplayerClient)
 				Projectile.netUpdate = true;
 
 			Projectile.velocity = aim;
+
+			if(Projectile.velocity != Projectile.oldVelocity)
+				Projectile.netUpdate = true;
 		}
 
 		private void Animate()
@@ -123,7 +132,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			}
 			else
 			{
-				OwnerPlayer.SetScreenshake(0.2f);
+				OwnerPlayer.AddScreenshake(0.2f);
 
 				if (Projectile.frameCounter >= windupTicksPerFrame)
 				{
@@ -146,7 +155,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 				if (StillInUse)
 					OwnerPlayer.PickAmmo(OwnerPlayer.inventory[OwnerPlayer.selectedItem], out projToShoot, out float speed, out damage, out knockback, out var usedAmmoItemId); //uses ammunition from inventory
 
-				Vector2 rotPoint = MathUtils.RotatingPoint(Projectile.Center, new Vector2(40, 8 * Projectile.spriteDirection), Projectile.rotation);
+				Vector2 rotPoint = Utility.RotatingPoint(Projectile.Center, new Vector2(40, 8 * Projectile.spriteDirection), Projectile.rotation);
 
 				// gradually increase fire rate
 				int fireFreq = (int)MathHelper.Clamp(MathHelper.Lerp(fireRateStart, fireRateCap, (AI_Windup - windupTime) / (fullFireRateTime - windupTime)), fireRateCap, fireRateStart);// Main.rand.NextBool()

@@ -1,15 +1,15 @@
 ﻿using Terraria;
 using Terraria.ModLoader;
 using SubworldLibrary;
-using Macrocosm.Content.Subworlds;
 using Terraria.Map;
 using System;
 using System.Reflection;
 using Microsoft.Xna.Framework;
+using Macrocosm.Common.Subworlds;
 
 namespace Macrocosm.Common.Hooks
 {
-	public class MapBackgroundColor : ILoadable
+    public class MapBackgroundColor : ILoadable
 	{
 		public static ushort SkyPosition;
 		public static ushort DirtPosition;
@@ -26,23 +26,27 @@ namespace Macrocosm.Common.Hooks
 			On.Terraria.Map.MapHelper.GetMapTileXnaColor += MapHelper_GetMapTileXnaColor;
 			GetLookupPositions();
 		}
+		public void Unload() 
+		{
+			On.Terraria.Map.MapHelper.GetMapTileXnaColor -= MapHelper_GetMapTileXnaColor;
+		}
 
 		private Color MapHelper_GetMapTileXnaColor(On.Terraria.Map.MapHelper.orig_GetMapTileXnaColor orig, ref MapTile tile)
 		{
-			if (!SubworldSystem.AnyActive<Macrocosm>() || MacrocosmSubworld.Current().MapColors is null)
+			if (!MacrocosmSubworld.AnyActive || MacrocosmSubworld.Current.MapColors is null)
 				return orig(ref tile);
 
 			if (tile.Type >= SkyPosition && tile.Type <= SkyPosition + 255) 
-				return MapColorLerp(MacrocosmSubworld.Current().MapColors[MapColorType.SkyUpper], MacrocosmSubworld.Current().MapColors[MapColorType.SkyLower], (tile.Type - SkyPosition) / 255f);
+				return MapColorLerp(MacrocosmSubworld.Current.MapColors[MapColorType.SkyUpper], MacrocosmSubworld.Current.MapColors[MapColorType.SkyLower], (tile.Type - SkyPosition) / 255f);
 
 			if (tile.Type >= DirtPosition && tile.Type <= DirtPosition + 255)
-				return MapColorLerp(MacrocosmSubworld.Current().MapColors[MapColorType.UndergroundUpper], MacrocosmSubworld.Current().MapColors[MapColorType.UndergroundLower], (tile.Type - DirtPosition) / 255f);
+				return MapColorLerp(MacrocosmSubworld.Current.MapColors[MapColorType.UndergroundUpper], MacrocosmSubworld.Current.MapColors[MapColorType.UndergroundLower], (tile.Type - DirtPosition) / 255f);
 
 			if (tile.Type >= RockPosition && tile.Type <= RockPosition + 255)
-				return MapColorLerp(MacrocosmSubworld.Current().MapColors[MapColorType.CavernUpper], MacrocosmSubworld.Current().MapColors[MapColorType.CavernLower], (tile.Type - RockPosition) / 255f);
+				return MapColorLerp(MacrocosmSubworld.Current.MapColors[MapColorType.CavernUpper], MacrocosmSubworld.Current.MapColors[MapColorType.CavernLower], (tile.Type - RockPosition) / 255f);
 
 			if (tile.Type == HellPosition)
-				return MacrocosmSubworld.Current().MapColors[MapColorType.Underworld];
+				return MacrocosmSubworld.Current.MapColors[MapColorType.Underworld];
 
 			return orig(ref tile);
 		}
@@ -63,6 +67,5 @@ namespace Macrocosm.Common.Hooks
 		private static Color MapColorLerp(Color from, Color to, float value)
 			=> new Color((byte)((float)(int)from.R * (1f - value) + (float)(int)to.R * value), (byte)((float)(int)from.G * (1f - value) + (float)(int)to.G * value), (byte)((float)(int)from.B * (1f - value) + (float)(int)to.B * value));
 		 
-		public void Unload() { }
 	}
 }

@@ -1,4 +1,5 @@
 using Macrocosm.Common.Drawing;
+using Macrocosm.Common.Drawing.Particles;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
@@ -12,23 +13,30 @@ namespace Macrocosm.Content.Dusts
 
 		public override void OnSpawn(Dust dust)
 		{
-			//dust.noLight = true;
 			dust.scale = Main.rand.NextFloat(1, 1.35f);
 			vanishSpeed = Main.rand.NextFloat(0.04f, 0.01f);
 		}
 
 		public override bool Update(Dust dust)
 		{
-			Projectile owner = new Projectile();
+			object owner;
 			bool hasOwner = false;
+			bool ownerActive = false;
 
 			if (dust.customData is Projectile)
 			{
 				owner = dust.customData as Projectile;
 				hasOwner = true;
+				ownerActive = (owner as Projectile).active;
+			}
+			else if(dust.customData is Particle)
+			{
+				owner = dust.customData as Particle;
+				hasOwner = true;
+				ownerActive = (owner as Particle).Active;
 			}
 
-			if (!hasOwner || owner.active == false)
+			if (!hasOwner || ownerActive == false)
 				dust.scale -= vanishSpeed * 3f;
 			else
 				dust.scale -= vanishSpeed * 0.7f;

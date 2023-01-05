@@ -1,7 +1,10 @@
 using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
+using System;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -12,9 +15,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Selenite Diffuser");
-			Tooltip.SetDefault("Shoots an arrow that slows to a stop\nOnce this arrow slows down all the way, it will shoot a spread o");
-			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
+  			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 
 		}
 		public override void SetDefaults()
@@ -40,6 +41,16 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 		public override Vector2? HoldoutOffset()
 		{
 			return new Vector2(6, 0);
+		}
+
+		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+		{
+			return true;
+		}
+
+		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
+		{
+			type = ModContent.ProjectileType<SeleniteArrow>();
 		}
 
 		public override void AddRecipes()

@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Utility;
+﻿using Macrocosm.Common.Global;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -31,7 +32,7 @@ namespace Macrocosm.Content.Tiles
 		}
 
 		public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
-			//=> TileUtils.BlendLikeDirt(i, j, ModContent.TileType<Regolith>()); 
+			//=> TileBlend.BlendLikeDirt(i, j, ModContent.TileType<Regolith>()); 
 			=> true;
 			 
 	}

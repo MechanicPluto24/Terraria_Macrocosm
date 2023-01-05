@@ -1,4 +1,4 @@
-﻿using Macrocosm.Common.Utility;
+﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Projectiles.Friendly.Summon;
 using Terraria;
 using Terraria.ModLoader;

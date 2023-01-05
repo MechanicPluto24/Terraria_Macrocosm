@@ -7,6 +7,7 @@ using Terraria.WorldBuilding;
 
 namespace Macrocosm.Content.WorldGeneration.Moon
 {
+	// Crater generation by Ambrose
 	public class CraterPass : GenPass
 	{
 		public CraterPass(string name, float loadWeight) : base(name, loadWeight) { }

@@ -1,7 +1,7 @@
-using Macrocosm.Assets.Sounds;
-using Macrocosm.Common.Utility;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Content.Rarities;
+using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
@@ -12,7 +12,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
-	public class Copernicus : ModItem
+    public class Copernicus : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
@@ -20,7 +20,6 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			Tooltip.SetDefault("Right click to launch a plasma ball grenade");
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
-
 		public override void SetDefaults()
 		{
 			Item.damage = 150;
@@ -43,10 +42,9 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
 		private int altUseCooldown = 30;
 		private int altUseCounter = 30;
-
 		public override Vector2? HoldoutOffset() => new Vector2(-10, 0);
 
-		public override bool AltFunctionUse(Player player) => altUseCounter == altUseCooldown && ItemUtils.ToRocketProjectileID(player, ItemID.GrenadeLauncher) != 0;
+		public override bool AltFunctionUse(Player player) => altUseCounter == altUseCooldown && Utility.GetRocketAmmoProjectileID(player, ItemID.GrenadeLauncher) != 0;
 
 		public override bool CanUseItem(Player player) => true;
 
@@ -81,7 +79,6 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
 			if (player.altFunctionUse == 2)
 			{
-				//type = ItemUtils.ToRocketProjectileID(player, ItemID.GrenadeLauncher);
 				type = ModContent.ProjectileType<PlasmaGrenade>();
 				position.Y += 2;
 				velocity /= 3f;

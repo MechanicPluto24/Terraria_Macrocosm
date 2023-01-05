@@ -1,4 +1,5 @@
-using Macrocosm.Common.Utility;
+using Macrocosm.Common.Global;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -24,6 +25,7 @@ namespace Macrocosm.Content.Tiles
 
 		public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
 		{
+			//return TileBlend.BlendLikeDirt(i, j, new int[] { ModContent.TileType<Regolith>(), ModContent.TileType<Protolith>() });
 			return true;
 		}
 	}

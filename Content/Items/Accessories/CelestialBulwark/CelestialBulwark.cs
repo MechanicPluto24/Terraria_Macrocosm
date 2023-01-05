@@ -3,15 +3,15 @@ using Terraria;
 using Terraria.ID;
 using Terraria.GameContent.Creative;
 using Terraria.ModLoader;
-using Macrocosm.Common.Utility;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework.Graphics;
-using Macrocosm.Common.Drawing;
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Players;
+using Macrocosm.Content.Systems;
 
 namespace Macrocosm.Content.Items.Accessories.CelestialBulwark
 {
-	[AutoloadEquip(EquipType.Shield)]
+    [AutoloadEquip(EquipType.Shield)]
 	public class CelestialBulwark : ModItem
 	{
 		public override void SetStaticDefaults()
@@ -19,7 +19,6 @@ namespace Macrocosm.Content.Items.Accessories.CelestialBulwark
 			Tooltip.SetDefault("Allows the player to dash into the enemy\nDouble tap a direction");
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
-
 		public override void SetDefaults()
 		{
 			Item.damage = 120;
@@ -41,11 +40,12 @@ namespace Macrocosm.Content.Items.Accessories.CelestialBulwark
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
-			player.GetModPlayer<DashPlayer>().AccDashHorizontal = true;
-			player.GetModPlayer<DashPlayer>().AccDashVelocity = 14f;
-			player.GetModPlayer<DashPlayer>().AccDashDamage = Item.damage;
-			player.GetModPlayer<DashPlayer>().AccDashKnockback = Item.knockBack;
-			player.GetModPlayer<DashPlayer>().AccDashImmuneTime = 6;
+			DashPlayer dashPlayer = player.DashPlayer();
+			dashPlayer.AccDashHorizontal = true;
+			dashPlayer.AccDashVelocity = 14f;
+			dashPlayer.AccDashDamage = Item.damage;
+			dashPlayer.AccDashKnockback = Item.knockBack;
+			dashPlayer.AccDashImmuneTime = 6;
 		}
 
 		public override void AddRecipes()
@@ -97,6 +97,5 @@ namespace Macrocosm.Content.Items.Accessories.CelestialBulwark
 
 			spriteBatch.Restore(state);
 		}
-
 	}
 }

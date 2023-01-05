@@ -38,32 +38,30 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			Item.useAmmo = AmmoID.Bullet;
 		}
 
-		public override bool AltFunctionUse(Player player)
-		{
-			return true;
-		}
-
+		public override bool AltFunctionUse(Player player) => true;
+ 
 		public override bool CanUseItem(Player player)
 		{
 			if (player.altFunctionUse == 2)
 			{
 				Item.useTime = 68;
 				Item.useAnimation = 68;
-				Item.shoot = ModContent.ProjectileType<CruithneBlackSlug>();
+ 				Item.shoot = ModContent.ProjectileType<DeliriumShell>();
 			}
 			else
 			{
 				Item.useTime = 34;
 				Item.useAnimation = 34;
-				Item.shoot = ModContent.ProjectileType<CruithneGreenSlug>();
+ 				Item.shoot = ModContent.ProjectileType<CruithneGreenSlug>();
 			}
 			return base.CanUseItem(player);
 		}
 
 		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockBack)
 		{
-			int numberProjectiles = player.altFunctionUse == 2 ? 12 : 6;
-			int degree = player.altFunctionUse == 2 ? 20 : 10;
+			int numberProjectiles = player.altFunctionUse == 2 ? 1 : 6;
+			int degree = player.altFunctionUse == 2 ? 0 : 12;
+ 
 			for (int i = 0; i < numberProjectiles; i++)
 			{
 				Vector2 muzzleOffset = Vector2.Normalize(velocity) * 12f;
@@ -74,6 +72,15 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			}
 			return false;
 		}
+
+		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
+		{
+			if (player.altFunctionUse == 2)
+			{
+				velocity *= 0.2f;
+				position.Y -= 4f;
+			}                                                                                                                                                                                            
+ 		}
 
 		public override Vector2? HoldoutOffset() => new Vector2(-12, 0);
 	}

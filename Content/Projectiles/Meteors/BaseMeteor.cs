@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Utility;
+﻿using Macrocosm.Common.Global.GlobalProjectiles;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -7,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Meteors
 {
-	public abstract class BaseMeteor : ModProjectile
+	public abstract class BaseMeteor : ModProjectile, IExplosive
 	{
 		public int Width;
 		public int Height;
@@ -33,6 +34,8 @@ namespace Macrocosm.Content.Projectiles.Meteors
 		public int GoreType = -1;
 		public int GoreCount;
 		public Vector2 GoreVelocity;
+
+		public float BlastRadius => Width * BlastRadiusMultiplier;
 
 		public override void SetStaticDefaults()
 		{
@@ -72,12 +75,10 @@ namespace Macrocosm.Content.Projectiles.Meteors
 
 		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
 		{
-			Projectile.Explode(Width * BlastRadiusMultiplier);
 		}
 
 		public override bool OnTileCollide(Vector2 oldVelocity)
 		{
-			Projectile.Explode(Width * BlastRadiusMultiplier);
 			return false;
 		}
 
@@ -86,8 +87,6 @@ namespace Macrocosm.Content.Projectiles.Meteors
 			AI_Rotation();
 			AI_SpawnDusts();
 			ExtraAI();
-
-
 		}
 
 		public virtual void SpawnImpactDusts()
@@ -143,7 +142,7 @@ namespace Macrocosm.Content.Projectiles.Meteors
 					float distance = Vector2.Distance(player.Center, Projectile.Center);
 					if (distance < ScreenshakeMaxDist)
 					{
-						player.SetScreenshake(ScreenshakeIntensity - distance / ScreenshakeMaxDist * ScreenshakeIntensity);
+						player.AddScreenshake(ScreenshakeIntensity - distance / ScreenshakeMaxDist * ScreenshakeIntensity);
 					}
 				}
 			}

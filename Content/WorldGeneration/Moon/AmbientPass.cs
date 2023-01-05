@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Base;
-using Macrocosm.Content.Tiles.Ambient;
+﻿using Macrocosm.Content.Tiles.Ambient;
 using Terraria;
 using Terraria.IO;
 using Terraria.ModLoader;
@@ -14,7 +13,7 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 		/// <summary>
 		/// Randomly places ambient rocks on The Moon's surface 
 		/// </summary>
-		/// TODO: large (>1x1) variations, underground gen 
+		/// TODO: large variations, underground gen 
 		protected override void ApplyPass(GenerationProgress progress, GameConfiguration configuration)
 		{
 			progress.Message = "Placing rocks on the moon...";

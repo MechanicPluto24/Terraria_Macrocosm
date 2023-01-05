@@ -1,4 +1,4 @@
-using Macrocosm.Common.Utility;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Materials;
@@ -99,7 +99,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		{
 			for (int i = 0; i < Main.rand.Next(3, 7); i++)
 			{
-				Vector2 projVelocity = MathUtils.PolarVector(2.6f, Main.rand.NextFloat(-MathHelper.Pi + MathHelper.PiOver4, -MathHelper.PiOver4));
+				Vector2 projVelocity = Utility.PolarVector(2.6f, Main.rand.NextFloat(-MathHelper.Pi + MathHelper.PiOver4, -MathHelper.PiOver4));
 				Projectile proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, projVelocity, ModContent.ProjectileType<LuminiteSlimeProjectile>(), (int)(NPC.damage * 0.75f), 1f, NPC.whoAmI, ai1: NPC.target);
 				proj.netUpdate = true;
 			}
@@ -128,7 +128,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		private void SpawnDusts()
 		{
-			Vector2 dustVelocity = MathUtils.PolarVector(0.01f, MathUtils.RandomRotation());
+			Vector2 dustVelocity = Utility.PolarVector(0.01f, Utility.RandomRotation());
 			Dust.NewDust(NPC.position, NPC.width, NPC.height, ModContent.DustType<LuminiteDust>(), dustVelocity.X, dustVelocity.Y, newColor: Color.White * 0.1f);
 		}
 	}

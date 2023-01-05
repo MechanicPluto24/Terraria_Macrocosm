@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Drawing;
+﻿using Macrocosm.Common.Utils;
+using Macrocosm.Content.Trails;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -11,8 +12,8 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Unfriendly
 {
-	//Had to salvage it from an extracted DLL, so no comments.  Oops.  -- absoluteAquarian
-	public class FlamingMeteor : ModProjectile
+    //Had to salvage it from an extracted DLL, so no comments.  Oops.  -- absoluteAquarian
+    public class FlamingMeteor : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{
@@ -32,6 +33,8 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 			Projectile.tileCollide = false;
 			Projectile.timeLeft = 600;
 			Projectile.penetrate = -1;
+
+			Projectile.SetTrail<FlamingMeteorTrail>();
 		}
 
 		public override void OnHitPlayer(Player target, int damage, bool crit)
@@ -78,18 +81,13 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 
 		public override bool PreDraw(ref Color lightColor)
 		{
-
 			Texture2D tex = TextureAssets.Projectile[Type].Value;
 
 			Rectangle sourceRect = tex.Frame(1, Main.projFrames[Type], frameY: Projectile.frame);
  			Vector2 origin = Projectile.Size / 2f + new Vector2(6, 32);
 
-			/// -------------
-
 			ProjectileID.Sets.TrailCacheLength[Type] = 60;
 			ProjectileID.Sets.TrailingMode[Type] = 3;
-
-
 
 			if (Projectile.rotation > -MathHelper.PiOver4 && Projectile.rotation < MathHelper.PiOver4)
 			{
@@ -99,60 +97,17 @@ namespace Macrocosm.Content.Projectiles.Unfriendly
 
 			SpriteBatchState state = Main.spriteBatch.SaveState();
 
-			Main.spriteBatch.EndIfBeginCalled();
-			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, state);
+			Main.spriteBatch.End();
+			Main.spriteBatch.Begin(BlendState.Additive, state);
 
-			// draw trail
-			VertexStrip vertexStrip = new VertexStrip();
-			VertexStrip vertexStrip2 = new VertexStrip();
-			MiscShaderData miscShaderData = GameShaders.Misc["RainbowRod"];
-			miscShaderData.UseSaturation(-2f);
-			miscShaderData.UseOpacity(1f);
-			miscShaderData.Apply();
-			vertexStrip.PrepareStripWithProceduralPadding(Projectile.oldPos, Projectile.oldRot, StripColors, StripWidth, -Main.screenPosition + Projectile.Size / 2f, true);
-			vertexStrip2.PrepareStripWithProceduralPadding(Projectile.oldPos, Projectile.oldRot, StripColors2, StripWidth2, -Main.screenPosition + Projectile.Size / 2f, true);
+			//Projectile.GetTrail().SetTexture3("Images/Extra_201");
+			Projectile.GetTrail().Draw();
 
-			vertexStrip2.DrawTrail();
-			vertexStrip.DrawTrail();
-
-			Main.pixelShader.CurrentTechnique.Passes[0].Apply();
-
-			Color StripColors(float progressOnStrip)
-			{
-				float lerpValue = Utils.GetLerpValue(0f, 0.5f, progressOnStrip, clamped: true);
-				Color result = Color.Lerp(Color.Lerp(Color.White, new Color(224, 115, 20, 255), 1.115f * 0.5f), new Color(224, 115, 20, 255), lerpValue) * (1f - Utils.GetLerpValue(0.5f, 0.98f, progressOnStrip));
-				result.A /= 8;
-				return result;
-			}
-
-			Color StripColors2(float progressOnStrip)
-			{
-				float lerpValue = Utils.GetLerpValue(0f, 0.5f, progressOnStrip, clamped: true);
-				Color result = Color.Lerp(Color.Lerp(Color.White, new Color(0, 217, 102, 255), 1.115f * 0.5f), new Color(0, 217, 102, 255), lerpValue) * (1f - Utils.GetLerpValue(0.3f, 0.98f, progressOnStrip));
-				result.A /= 8;
-				return result;
-			}
-
-			float StripWidth(float progressOnStrip)
-			{
-				float lerpValue = Utils.GetLerpValue(0f, 0.06f + 1.115f * 0.01f, progressOnStrip, clamped: true);
-				lerpValue = 1f - (1f - lerpValue) * (1f - lerpValue);
-				return MathHelper.Lerp(1f, 240f, progressOnStrip) * lerpValue;
-			}
-
-			float StripWidth2(float progressOnStrip)
-			{
-				float lerpValue = Utils.GetLerpValue(0f, 0.06f + 1.115f * 0.01f, progressOnStrip, clamped: true);
-				lerpValue = 1f - (1f - lerpValue) * (1f - lerpValue);
-				return MathHelper.Lerp(1f, 100f, progressOnStrip) * lerpValue;
-			}
-
-			/// ------------dd=
+			Main.spriteBatch.End();
+			Main.spriteBatch.Begin(BlendState.AlphaBlend, state);
 
 			Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition,
 				sourceRect, Color.White.NewAlpha(0.2f), Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
-
-			Main.spriteBatch.Restore(state);
 
 
 			return false;

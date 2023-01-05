@@ -30,14 +30,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Thrown
 			if (Main.netMode != NetmodeID.MultiplayerClient)
 			{
 				if (Main.moonType >= 8)
-				{
-					MacrocosmWorld.MoonType = 0;
-				}
-				else
-				{
-					MacrocosmWorld.MoonType++;
-				}
-			}
+ 					Main.moonType = 0;
+ 				else
+ 					Main.moonType++;
+ 			}
 
 			NetMessage.SendData(MessageID.WorldData);
 		}
