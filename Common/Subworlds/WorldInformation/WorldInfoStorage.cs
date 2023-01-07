@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Macrocosm.Common.Subworlds
+namespace Macrocosm.Common.Subworlds.WorldInformation
 {
     public static class WorldInfoStorage
     {

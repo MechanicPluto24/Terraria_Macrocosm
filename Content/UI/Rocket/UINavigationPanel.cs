@@ -1,16 +1,15 @@
-﻿using Macrocosm.Common.Drawing;
-using Macrocosm.Common.Subworlds;
-using Macrocosm.Content.Subworlds;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using SubworldLibrary;
-using System.Collections.Generic;
-using System.Linq;
 using Terraria;
-using Terraria.GameContent.UI.Elements;
-using Terraria.ModLoader;
 using Terraria.UI;
+using Terraria.ModLoader;
+using Terraria.GameContent.UI.Elements;
+using SubworldLibrary;
+using Macrocosm.Content.Subworlds;
+using Macrocosm.Common.Subworlds.WorldInformation;
 
 namespace Macrocosm.Content.UI.Rocket
 {

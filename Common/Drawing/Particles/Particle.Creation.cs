@@ -11,13 +11,16 @@ namespace Macrocosm.Common.Drawing.Particles
 	public partial class Particle
 	{
 		/// <summary>
-		/// Creates a new particle with the specified position and velocity.
+		/// Creates a new particle with the specified parameters. Sync only when absolutely necessary.
 		/// </summary>
 		/// <typeparam name="T">Type of the particle.</typeparam>
 		/// <param name="position">Position of the newly created particle.</param>
 		/// <param name="velocity">Velocity of the newly created particle.</param>s
-		/// <returns></returns>
-		public static T CreateParticle<T>(Vector2 position, Vector2 velocity, float rotation = 0f, float scale = 1f, bool shouldSyncOnSpawn = false) where T : Particle
+		/// <param name="rotation">Rotation of the newly created particle</param>
+		/// <param name="scale">Scale of the newly created particle </param>
+		/// <param name="shouldSync"> Whether to sync the particle spawn and its <see cref="Common.Netcode.NetSyncAttribute"> NetSync </see> fields </param>
+		/// <returns> The particle instance </returns>
+		public static T CreateParticle<T>(Vector2 position, Vector2 velocity, float rotation = 0f, float scale = 1f, bool shouldSync = false) where T : Particle
 		{
 			return CreateParticle<T>(particle =>
 			{
@@ -25,24 +28,24 @@ namespace Macrocosm.Common.Drawing.Particles
 				particle.Velocity = velocity;
 				particle.Rotation = rotation;
 				particle.Scale = scale;
-				particle.ShouldSyncOnSpawn = shouldSyncOnSpawn;
-			});
+			}, shouldSync);
 		}
 
 		/// <summary>
-		/// Creates a new particle with the specified action.
+		/// Creates a new particle with the specified action. Sync only when absolutely necessary.
 		/// </summary>
 		/// <typeparam name="T">Type of the particle.</typeparam>
 		/// <param name="particleAction">Action to invoke on the newly created particle.</param>
-		/// <returns></returns>
-		public static T CreateParticle<T>(Action<T> particleAction) where T : Particle
+		/// <param name="shouldSync"> Whether to sync the particle spawn and its <see cref="Common.Netcode.NetSyncAttribute"> NetSync </see> fields </param>
+		/// <returns> The particle instance </returns>
+		public static T CreateParticle<T>(Action<T> particleAction, bool shouldSync = false) where T : Particle
 		{
 			T particle = (T)Activator.CreateInstance(typeof(T));
 			ParticleManager.Particles.Add(particle);
 
 			particleAction.Invoke(particle);
 
-			if(particle.ShouldSyncOnSpawn)
+			if(shouldSync)
 				particle.NetSync();
 
 			return particle;

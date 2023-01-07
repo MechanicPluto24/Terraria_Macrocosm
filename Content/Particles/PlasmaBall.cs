@@ -6,6 +6,7 @@ using Macrocosm.Content.Dusts;
 using Macrocosm.Common.Utils;
 using Macrocosm.Common.Drawing.Particles;
 using Microsoft.Xna.Framework.Graphics;
+using Macrocosm.Common.Netcode;
 
 namespace Macrocosm.Content.Particles
 {
@@ -19,11 +20,11 @@ namespace Macrocosm.Content.Particles
 			DrawSimpleTrail(Vector2.Zero, 4f, 1f, new Color(104, 255, 255), new Color(104, 255, 255, 0));
 
 			// draw circular glow
-			Texture2D glow = ModContent.Request<Texture2D>("Macrocosm/Content/Particles/PlasmaBallEffect").Value;
+			Texture2D glow = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/SimpleGlow").Value;
 			var state = spriteBatch.SaveState();
 			spriteBatch.End();
 			spriteBatch.Begin(BlendState.Additive, state);
-			spriteBatch.Draw(glow, Center - screenPosition, null, new Color(89, 151, 193), Rotation, glow.Size() / 2, 0.0375f * Scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(glow, Center - screenPosition, null, new Color(89, 151, 193), 0f, glow.Size() / 2, 0.0375f * Scale, SpriteEffects.None, 0f);
 			spriteBatch.Restore(state);
 			
 			spriteBatch.Draw(Texture, Center - screenPosition, null, Color.White, Rotation, Size / 2, Scale, SpriteEffects.None, 0f);

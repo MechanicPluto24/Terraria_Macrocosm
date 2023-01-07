@@ -5,6 +5,7 @@ using Terraria.Map;
 using System;
 using System.Reflection;
 using Microsoft.Xna.Framework;
+using Macrocosm.Content.Subworlds;
 using Macrocosm.Common.Subworlds;
 
 namespace Macrocosm.Common.Hooks

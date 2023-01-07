@@ -10,7 +10,7 @@ using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Projectiles.Unfriendly
+namespace Macrocosm.Content.Projectiles.Hostile
 {
     //Had to salvage it from an extracted DLL, so no comments.  Oops.  -- absoluteAquarian
     public class FlamingMeteor : ModProjectile

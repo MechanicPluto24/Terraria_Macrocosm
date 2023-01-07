@@ -1,7 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
-using SubworldLibrary;
+using Terraria;
 using Terraria.ModLoader;
+using SubworldLibrary;
+using Macrocosm.Content.UI.LoadingScreens;
+using Macrocosm.Common.Subworlds.WorldInformation;
 using Macrocosm.Content.Subworlds;
 
 namespace Macrocosm.Common.Subworlds
@@ -19,8 +22,9 @@ namespace Macrocosm.Common.Subworlds
 
 		/// <summary> The gravity multiplier, measured in G (Earth has 1G) </summary>
  		public virtual float GravityMultiplier { get; set; } = Earth.GravityMultiplier;
-		
-		
+
+		public virtual void SetDefaults() { }
+
 		/// <summary> Pre Update logic for this subworld. Not called on multiplayer clients </summary>
 		public virtual void PreUpdateWorld() { }
 
@@ -30,10 +34,43 @@ namespace Macrocosm.Common.Subworlds
 		/// <summary> Specifies the conditions for reaching this particular subworld </summary>
 		public virtual bool CanTravelTo() => true;
 
+		/// <summary> Called when entering a subworld. </summary>
+		public virtual void OnEnterWorld() { }
+
+		/// <summary> Called when exiting a subworld. </summary>
+		public virtual void OnExitWorld() { }
+
 		/// <summary> The map background color for each depth layer (Surface, Underground, Cavern, Underworld) </summary>
 		public virtual Dictionary<MapColorType, Color> MapColors { get; } = null;
 
 		/// <summary> Flavor information about this subworld, displayed in the navigation UI </summary>
 		public virtual WorldInfo WorldInfo { get; }
+
+		/// <summary> The loading screen. Assign new instance in the constructor. </summary>
+		protected LoadingScreen LoadingScreen;
+		public override void OnEnter()
+		{
+			LoadingScreen?.Setup();
+			OnEnterWorld();
+		}
+
+		public override void OnExit()
+		{
+			Earth.LoadingScreen.Setup();
+			OnExitWorld();
+		}
+
+		public override void DrawMenu(GameTime gameTime)
+		{
+			if (AnyActive)
+			{
+				if(LoadingScreen is null)
+					LoadingScreen.Draw(Main.spriteBatch);
+				else 
+					base.DrawMenu(gameTime);
+			}
+			else
+				Earth.LoadingScreen.Draw(Main.spriteBatch);
+		}
 	}
 }

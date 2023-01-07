@@ -60,9 +60,6 @@ namespace Macrocosm.Common.Drawing.Particles
 		// TODO: Maybe replace this to a configurable size if ever implementing particle collision
 		public Vector2 Size => Texture.Size();
 					
-		/// <summary> Whether the particle should sync on spawn </summary>
-		public bool ShouldSyncOnSpawn { get; set; } = false;
-
 		/// <summary> Whether the current particle instance is active </summary>
 		public bool Active { get; private set; }
 

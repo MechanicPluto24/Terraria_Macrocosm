@@ -117,15 +117,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 					Vector2 velocity = Main.rand.NextVector2Circular(0.2f, 0.2f);
 					Dust dust;
 					if (i % 20 == 0)
-					{
-						 
-						Particle.CreateParticle<ChandriumCrescentMoon>(particle =>
-						{
-							particle.Position = position;
-							particle.Velocity = velocity * 5f;
-							particle.Scale = Main.rand.NextFloat(1.2f, 1.4f);
-						});
-						
+					{ 
+						Particle.CreateParticle<ChandriumCrescentMoon>(position, velocity, scale: Main.rand.NextFloat(1.2f, 1.4f));
 					}
 					// chandrium dust 
 					dust = Dust.NewDustDirect(position, target.width, target.height, ModContent.DustType<ChandriumDust>(), velocity.X, velocity.Y, Scale: Main.rand.NextFloat(0.8f, 1.2f));

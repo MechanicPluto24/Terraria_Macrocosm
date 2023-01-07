@@ -51,7 +51,7 @@ namespace Macrocosm.Content.Rocket
 			packet.Write(new BitsByte(InRocket, AsCommander));
 			packet.Write((byte)RocketID);
 			packet.Write(TargetSubworldID);
-			packet.Send();
+			packet.Send(toWho, fromWho);
 		}
 
 		public static void ReceiveSyncPlayer(BinaryReader reader, int whoAmI)

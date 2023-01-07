@@ -35,7 +35,6 @@ namespace Macrocosm.Content.Players
 
 		private bool celestialBulwarkVisible = false;
 
-
 		public override void PostUpdateBuffs()
 		{
 			celestialBulwarkVisible = (Player.shield == EquipLoader.GetEquipSlot(Macrocosm.Instance, "CelestialBulwark", EquipType.Shield));

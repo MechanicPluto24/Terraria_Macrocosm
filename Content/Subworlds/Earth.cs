@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Subworlds;
+﻿using Macrocosm.Common.Subworlds.WorldInformation;
+using Macrocosm.Content.UI.LoadingScreens;
 using Terraria;
 
 namespace Macrocosm.Content.Subworlds
@@ -18,6 +19,9 @@ namespace Macrocosm.Content.Subworlds
         public const float GravityMultiplier = 1f;
 		public const float ItemGravity = 0.1f;
 		public const float ItemMaxFallSpeed = 7;
+
+        private static EarthLoadingScreen loadingScreen;
+		public static EarthLoadingScreen LoadingScreen { get { loadingScreen ??= new(); return loadingScreen ;} }
 
         public static WorldInfo WorldInfo => new()
         {

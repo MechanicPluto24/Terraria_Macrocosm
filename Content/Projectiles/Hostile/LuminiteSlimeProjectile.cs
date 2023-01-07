@@ -10,7 +10,7 @@ using Terraria.Graphics;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Projectiles.Unfriendly
+namespace Macrocosm.Content.Projectiles.Hostile
 {
     public class LuminiteSlimeProjectile : ModProjectile
 	{

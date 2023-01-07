@@ -14,7 +14,7 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Consumables.BossBags;
-using Macrocosm.Content.Projectiles.Unfriendly;
+using Macrocosm.Content.Projectiles.Hostile;
 using Macrocosm.Content.Items.Placeable.Trophies;
 using Macrocosm.Content.Items.Weapons.Summon;
 using Macrocosm.Content.Items.Weapons.Ranged;

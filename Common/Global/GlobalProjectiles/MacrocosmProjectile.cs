@@ -60,8 +60,10 @@ namespace Macrocosm.Common.Global.GlobalProjectiles
 			if (projectile.ModProjectile is null)
 				return;
 
-			if (!projectile.ModProjectile.NetWriteFields(binaryWriter))
-				binaryWriter.Dispose();
+			//if (!projectile.ModProjectile.NetWriteFields(binaryWriter, bitWriter))
+			//	binaryWriter.Dispose();
+
+			projectile.ModProjectile.NetWriteFields(binaryWriter, bitWriter);
 		}
 
 		public override void ReceiveExtraAI(Projectile projectile, BitReader bitReader, BinaryReader binaryReader)
@@ -69,7 +71,7 @@ namespace Macrocosm.Common.Global.GlobalProjectiles
 			if (projectile.ModProjectile is null)
 				return;
 
-			projectile.ModProjectile.NetReadFields(binaryReader);
+			projectile.ModProjectile.NetReadFields(binaryReader, bitReader);
 		}
 	}
 }

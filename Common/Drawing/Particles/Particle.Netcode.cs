@@ -11,8 +11,11 @@ using Macrocosm.Common.Netcode;
 
 namespace Macrocosm.Common.Drawing.Particles
 {
-	public abstract partial class Particle 
+	public partial class Particle 
 	{
+		public const int MaxParticles = ushort.MaxValue;
+		public const int MaxParticleTypes = ushort.MaxValue;
+
 		/// <summary>
 		/// Syncs the particle and particle fields with <see cref="NetSyncAttribute"/> across all clients and the server.
 		/// </summary>
@@ -20,12 +23,12 @@ namespace Macrocosm.Common.Drawing.Particles
 		{
 			if (Main.netMode == NetmodeID.SinglePlayer || WhoAmI < 0)
 				return;
-
+			
 			ModPacket packet = Macrocosm.Instance.GetPacket();
 
 			packet.Write((byte)MessageType.SyncParticle);
-			packet.Write(WhoAmI);
-			packet.Write(Type);
+			packet.Write((ushort)WhoAmI);
+			packet.Write((ushort)Type);
 
 			if (this.NetWriteFields(packet)) // Check if the writer was able to write all the fields.
 				 packet.Send(-1, ignoreClient);
@@ -39,8 +42,8 @@ namespace Macrocosm.Common.Drawing.Particles
 		/// <param name="reader"></param>
 		public static void SyncParticle(BinaryReader reader, int clientWhoAmI)
 		{
-			int particleIndex = reader.ReadInt32(); // the Particle WhoAmI
-			int particleType = reader.ReadInt32();  // the Type int index
+			int particleIndex = reader.ReadUInt16(); // the Particle WhoAmI
+			int particleType = reader.ReadUInt16();  // the Type int index
 
 			Particle particle;
 			if (ParticleManager.Particles.Count <= particleIndex)
@@ -53,8 +56,8 @@ namespace Macrocosm.Common.Drawing.Particles
 				particle = ParticleManager.Particles[particleIndex];
 			}
 
-			 particle.NetReadFields(reader);
-
+			particle.NetReadFields(reader);
+			
 			if (Main.netMode == NetmodeID.Server)
 				particle.NetSync(ignoreClient: clientWhoAmI);
 		}

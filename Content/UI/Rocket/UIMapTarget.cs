@@ -1,5 +1,7 @@
 ﻿using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.Subworlds.WorldInformation;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SubworldLibrary;

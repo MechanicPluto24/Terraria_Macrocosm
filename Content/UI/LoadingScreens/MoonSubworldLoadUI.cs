@@ -1,20 +1,20 @@
 using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Utils;
 using Macrocosm.Common.Utils.IO;
-using Macrocosm.Content.UI.WorldGen;
+using Macrocosm.Content.UI.LoadingScreens;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
 using Terraria.GameContent;
-using Terraria.GameContent.UI.States;
 using Terraria.ModLoader;
 using Terraria.UI.Chat;
 using Terraria.WorldBuilding;
 
 namespace Macrocosm.Content.UI.LoadingScreens
 {
-    public class MoonSubworldLoadUI : UIWorldLoad
+	/*
+    public class MoonSubworldLoadUI 
 	{
 		private Texture2D lunaBackground;
 		private Texture2D earthBackground;
@@ -24,7 +24,7 @@ namespace Macrocosm.Content.UI.LoadingScreens
 		private double animationTimer;
 		private string chosenMessage;
 
-		private MacrocosmUIGenProgressBar progressBar;
+		private UIWorldGenProgressBar progressBar;
 		private CelestialBody earth;
 
 		private StarsDrawing starsDrawing = new();
@@ -41,12 +41,12 @@ namespace Macrocosm.Content.UI.LoadingScreens
 			Texture2D earthSmallBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/Earth", AssetRequestMode.ImmediateLoad).Value;
 			Texture2D earthSmallAtmoBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/EarthAtmo", AssetRequestMode.ImmediateLoad).Value;
 
-			Texture2D moonProgressBarTexUpper = ModContent.Request<Texture2D>("Macrocosm/Content/UI/WorldGen/ProgressBarMoon", AssetRequestMode.ImmediateLoad).Value;
-			Texture2D moonProgressBarTexLower = ModContent.Request<Texture2D>("Macrocosm/Content/UI/WorldGen/ProgressBarMoon_Lower", AssetRequestMode.ImmediateLoad).Value;
+			Texture2D moonProgressBarTexUpper = ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/WorldGen/ProgressBarMoon", AssetRequestMode.ImmediateLoad).Value;
+			Texture2D moonProgressBarTexLower = ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/WorldGen/ProgressBarMoon_Lower", AssetRequestMode.ImmediateLoad).Value;
 
 			earth = new CelestialBody(earthSmallBackground, earthSmallAtmoBackground, 0.7f);
 
-			progressBar = new MacrocosmUIGenProgressBar(moonProgressBarTexUpper, moonProgressBarTexLower, new Color(56, 10, 28), new Color(155, 38, 74), new Color(6, 53, 27), new Color(93, 228, 162));
+			progressBar = new UIWorldGenProgressBar(moonProgressBarTexUpper, moonProgressBarTexLower,);
 			progressBar.SetPosition(200f, 200f);
 		}
 
@@ -64,7 +64,7 @@ namespace Macrocosm.Content.UI.LoadingScreens
 				starsDrawing.SpawnStars(200, 250, twinkleFactor: 0.1f);
 		}
 
-		public new void DrawSelf(SpriteBatch spriteBatch)
+		public void Draw(SpriteBatch spriteBatch)
 		{
 			string loadText;
 
@@ -104,13 +104,7 @@ namespace Macrocosm.Content.UI.LoadingScreens
 
 				spriteBatch.EndIfBeginCalled();
 				spriteBatch.Begin(0, BlendState.NonPremultiplied, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.EffectMatrix);
-				spriteBatch.Draw
-				(
-					lunaBackground,
-					new Rectangle(Main.screenWidth - lunaBackground.Width, Main.screenHeight - lunaBackground.Height + 50 - (int)(animationTimer * 10), lunaBackground.Width, lunaBackground.Height),
-					null,
-					bodyColor
-				);
+				
 
 				string msgToPlayer = "Earth's Moon"; // Title
 				Vector2 messageSize = FontAssets.DeathText.Value.MeasureString(msgToPlayer) * 1.2f;
@@ -126,7 +120,7 @@ namespace Macrocosm.Content.UI.LoadingScreens
 				loadText = WorldGenerator.CurrentGenerationProgress.Message;
 				progressBar.SetProgress(WorldGenerator.CurrentGenerationProgress.TotalProgress, WorldGenerator.CurrentGenerationProgress.Value);
 				progressBar.SetPosition((Main.screenWidth - progressBar.Width.Pixels) / 2, (Main.screenHeight - progressBar.Height.Pixels) / 2);
-				progressBar.DrawSelf(spriteBatch);
+				progressBar.Draw(spriteBatch);
 			}
 			else
 			{
@@ -139,9 +133,8 @@ namespace Macrocosm.Content.UI.LoadingScreens
 
 			spriteBatch.End();
 
-			animationTimer += 0.125;
-			if (animationTimer > 5)
-				animationTimer = 5;
+			
 		}
 	}
+	*/
 }

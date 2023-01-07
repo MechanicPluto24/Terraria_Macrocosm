@@ -1,4 +1,4 @@
-﻿using Macrocosm.Common.Subworlds;
+﻿using Macrocosm.Common.Subworlds.WorldInformation;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

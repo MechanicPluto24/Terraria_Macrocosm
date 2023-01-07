@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Subworlds;
-using Macrocosm.Content.Projectiles.Meteors;
+﻿using Macrocosm.Content.Projectiles.Environment.Meteors;
 using Macrocosm.Content.Systems;
 using Macrocosm.Content.UI.LoadingScreens;
 using Macrocosm.Content.WorldGeneration.Moon;
@@ -15,6 +14,8 @@ using Terraria.Map;
 using Terraria.ModLoader;
 using Terraria.Utilities;
 using Terraria.WorldBuilding;
+using Macrocosm.Common.Subworlds.WorldInformation;
+using Macrocosm.Common.Subworlds;
 
 namespace Macrocosm.Content.Subworlds
 {
@@ -25,7 +26,8 @@ namespace Macrocosm.Content.Subworlds
     /// </summary>
     public class Moon : MacrocosmSubworld
     {
-        public static Moon Instance => new();
+        private static Moon instance;
+        public static Moon Instance { get { instance ??= new(); return instance; } }
 
         /// <summary> 8 times slower than on Earth (a Terrarian lunar month lasts for 8 in-game days) </summary>
         public override double TimeRate => 0.125;
@@ -38,7 +40,9 @@ namespace Macrocosm.Content.Subworlds
         public override int Height => 1200;
         public override bool ShouldSave => true;
         public override bool NoPlayerSaving => false;
-        public override List<GenPass> Tasks => new()
+
+		private GroundPass genGroundPass;
+		public override List<GenPass> Tasks => new()
         {
             genGroundPass,
             new CraterPass("CraterPass", 1f),
@@ -84,24 +88,20 @@ namespace Macrocosm.Content.Subworlds
             {MapColorType.Underworld,  new Color(30, 30, 30)}
         };
 
-        private MoonSubworldLoadUI moonLoadUI;
-        private GroundPass genGroundPass;
-
         public Moon()
         {
-            moonLoadUI = new();
+            LoadingScreen = new MoonLoadingScreen();
+
             genGroundPass = new GroundPass("GroundPass", 8f, Width, Height);
         }
 
-        public override void OnEnter()
+		public override void OnEnterWorld()
         {
-            moonLoadUI.Setup(toEarth: false);
             SkyManager.Instance.Activate("Macrocosm:MoonSky");
         }
 
-        public override void OnExit()
+        public override void OnExitWorld()
         {
-            moonLoadUI.Setup(toEarth: true);
             SkyManager.Instance.Deactivate("Macrocosm:MoonSky");
         }
 
@@ -116,18 +116,6 @@ namespace Macrocosm.Content.Subworlds
 		{
 			UpdateMeteors();
 		}
-
-		public override void DrawSetup(GameTime gameTime)
-        {
-            PlayerInput.SetZoom_Unscaled();
-            Main.instance.GraphicsDevice.Clear(Color.Black);
-            DrawMenu(gameTime);
-        }
-
-        public override void DrawMenu(GameTime gameTime)
-        {
-            moonLoadUI.DrawSelf(Main.spriteBatch);
-        }
 
 		#region Moon events
 

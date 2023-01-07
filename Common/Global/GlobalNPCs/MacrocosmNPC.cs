@@ -29,7 +29,7 @@ namespace Macrocosm.Common.Global.GlobalNPCs
 		private void DrawCrosshair(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
 			Texture2D crosshair = ModContent.Request<Texture2D>("Macrocosm/Content/UI/Crosshair").Value;
-			Color color = new Color(255, 255, 255, 64);
+			Color color = new(255, 255, 255, 64);
 			Vector2 position = npc.Center - screenPos;
 			float rotation = (float)(Main.timeForVisualEffects / 20);
 			spriteBatch.Draw(crosshair, position, null, color, rotation, crosshair.Size() / 2, 1.5f, SpriteEffects.None, 0f);
@@ -39,9 +39,11 @@ namespace Macrocosm.Common.Global.GlobalNPCs
 		{
 			if (npc.ModNPC is null)
 				return;
-			
-			if (!npc.ModNPC.NetWriteFields(binaryWriter))
-				binaryWriter.Dispose();
+
+			//if (!npc.ModNPC.NetWriteFields(binaryWriter, bitWriter))
+			//	binaryWriter.Dispose();
+
+			npc.ModNPC.NetWriteFields(binaryWriter, bitWriter);
 		}
 
 		public override void ReceiveExtraAI(NPC npc, BitReader bitReader, BinaryReader binaryReader)
@@ -49,7 +51,7 @@ namespace Macrocosm.Common.Global.GlobalNPCs
 			if (npc.ModNPC is null)
 				return;
 
-			npc.ModNPC.NetReadFields(binaryReader);
+			npc.ModNPC.NetReadFields(binaryReader, bitReader);
 		}
 	}
 }

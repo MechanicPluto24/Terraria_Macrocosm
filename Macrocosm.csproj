@@ -24,7 +24,7 @@
     <Compile Remove="Content\Items\Weapons\Summon\CalcicCane - Copy.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="Content\Projectiles\Unfriendly\dvamhgqs.i4q~" />
+    <None Remove="Content\Projectiles\Hostile\dvamhgqs.i4q~" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="tModLoader.CodeAssist" Version="0.1.*" />
@@ -35,7 +35,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Assets\Textures\" />
     <Folder Include="Content\Projectiles\Friendly\Misc\" />
   </ItemGroup>
 </Project>
