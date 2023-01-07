@@ -3,7 +3,7 @@ using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Tiles;
-using Macrocosm.Content.Projectiles.Unfriendly;
+using Macrocosm.Content.Projectiles.Hostile;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;

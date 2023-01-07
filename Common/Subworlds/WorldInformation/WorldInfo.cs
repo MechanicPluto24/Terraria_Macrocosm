@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Macrocosm.Common.Subworlds
+namespace Macrocosm.Common.Subworlds.WorldInformation
 {
-    /// <summary> Stores information about Macrocosm Subworlds </summary>
+    /// <summary> Stores information about Macrocosm Subworlds. </summary>
     public struct WorldInfo
     {
         public WorldInfo() { }

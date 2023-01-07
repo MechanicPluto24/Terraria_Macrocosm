@@ -8,9 +8,10 @@ using Terraria.Graphics.Effects;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Macrocosm.Content.Tiles;
-using Macrocosm.Common.Subworlds;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
+using Macrocosm.Content.Subworlds;
+using Macrocosm.Common.Subworlds;
 
 namespace Macrocosm.Content.Systems
 {

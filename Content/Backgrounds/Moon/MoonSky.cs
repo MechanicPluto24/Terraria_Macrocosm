@@ -102,7 +102,7 @@ namespace Macrocosm.Content.Backgrounds.Moon
 			starsNight.SpawnStars(600, 700, 0.8f, 0.05f);
 
 			MacrocosmStar mars = starsDay.RandStar(); // :) 
-			mars.OverrideColor(Color.OrangeRed * 0.7f);
+			mars.OverrideColor(new Color(224, 137, 8, 220));
 			mars.scale *= 1.4f;
 
 			Intensity = 0.002f;
@@ -168,8 +168,6 @@ namespace Macrocosm.Content.Backgrounds.Moon
 			else
 				earth.SetTextures(earthBody, earthAtmo, earthBodyShadow, earthAtmoShadow);
 		}
-
-
 
 		private static float ComputeBrightness(double fadeOutTimeDawn, double fadeInTimeDusk, float maxBrightnessDay, float maxBrightnessNigt)
 		{

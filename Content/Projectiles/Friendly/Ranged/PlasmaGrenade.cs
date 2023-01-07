@@ -1,10 +1,10 @@
 using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Common.Global.GlobalProjectiles;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
 using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
+using System.IO;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -25,6 +25,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			get => (int)Projectile.ai[1];
 			set => Projectile.ai[1] = value;
 		}
+
+		public const int BlastRadius = 200;
+		
+		// TODO: use NetSync attribute when i found out why it's not working 
+		private bool scheduleParticleSpawn;
 		
 		public override void SetStaticDefaults()
 		{
@@ -58,14 +63,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			PlasmaBallCount = 300;
 		}
 
-		public override bool PreAI()
-		{
-			return true;
-		}
-
 		public override void AI()
 		{
 			Lighting.AddLight(Projectile.Center, 0.407f, 1f, 1f);
+
+			if (scheduleParticleSpawn)
+				SpawnParticles();
 
 			if (Exploded)
 				return;
@@ -137,21 +140,41 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			if (Exploded)
 				return;
 
-			Projectile.Explode(200, 95);
-			
-			if (PlasmaBallCount > 0 && Projectile.owner == Main.myPlayer)
-			{
-				for (float i = 0; i < MathHelper.TwoPi; i += MathHelper.TwoPi / PlasmaBallCount)
-				{
-					float speed = Main.rand.NextFloat(2f, 15f);
-					float theta = i + Main.rand.NextFloat(-MathHelper.PiOver4, MathHelper.PiOver4) * 0.5f;
-					Vector2 velocity = Utility.PolarVector(speed, theta);
+			Projectile.Explode(BlastRadius, 95);
 
-					Particle.CreateParticle<PlasmaBall>(Projectile.Center, velocity, scale: Main.rand.NextFloat(0.2f, 1.2f), shouldSyncOnSpawn: true);
-				}
+			if (Projectile.owner == Main.myPlayer)
+			{
+				scheduleParticleSpawn = true;
+				Projectile.netUpdate = true;
 			}
 
 			Exploded = true;
+		}
+
+		public void SpawnParticles()
+		{
+			Vector2 netOffset = Projectile.owner != Main.myPlayer ? new Vector2(BlastRadius/2) : Vector2.Zero;
+
+			for (float i = 0; i < MathHelper.TwoPi; i += MathHelper.TwoPi / PlasmaBallCount)
+			{
+				float speed = Main.rand.NextFloat(2f, 15f);
+				float theta = i + Main.rand.NextFloat(-MathHelper.PiOver4, MathHelper.PiOver4) * 0.5f;
+				Vector2 velocity = Utility.PolarVector(speed, theta);
+
+				Particle.CreateParticle<PlasmaBall>(Projectile.Center + netOffset, velocity, scale: Main.rand.NextFloat(0.2f, 1.2f));
+			}
+
+			scheduleParticleSpawn = false;
+		}
+
+		public override void SendExtraAI(BinaryWriter writer)
+		{
+			writer.Write(scheduleParticleSpawn);
+		}
+
+		public override void ReceiveExtraAI(BinaryReader reader)
+		{
+			scheduleParticleSpawn = reader.ReadBoolean();
 		}
 	}
 }

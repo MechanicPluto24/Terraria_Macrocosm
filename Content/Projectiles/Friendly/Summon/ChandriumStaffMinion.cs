@@ -90,17 +90,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 			for (int i = 0; i < 60; i++)
 			{
 				Vector2 position = Projectile.Center;
-				Vector2 velocity = Main.rand.NextVector2Circular(0.5f, 0.5f);
+				Vector2 velocity = Main.rand.NextVector2Circular(0.5f, 0.5f) * 5f;
 
 				Dust dust;
 				if (i % 10 == 0)
 				{
-					Particle.CreateParticle<ChandriumCrescentMoon>(particle =>
-					{
-						particle.Position = position;
-						particle.Velocity = velocity * 5f;
-						particle.Scale = Main.rand.NextFloat(0.8f, 1.1f);
-					});
+					Particle.CreateParticle<ChandriumCrescentMoon>(position, velocity, scale: Main.rand.NextFloat(0.8f, 1.1f));
 				}
 
 				dust = Dust.NewDustDirect(position, Projectile.width, Projectile.height, ModContent.DustType<ChandriumDust>(), velocity.X, velocity.Y, Scale: Main.rand.NextFloat(0.8f, 1.2f));

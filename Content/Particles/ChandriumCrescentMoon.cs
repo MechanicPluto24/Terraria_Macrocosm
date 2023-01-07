@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,7 +11,7 @@ namespace Macrocosm.Content.Particles
     {
         bool fadeIn;
 		byte alpha;
-
+        
 		public override void OnSpawn()
         {
             fadeIn = true;

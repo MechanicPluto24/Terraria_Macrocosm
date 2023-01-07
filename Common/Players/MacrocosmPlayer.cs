@@ -6,12 +6,7 @@ using Terraria.Graphics.Effects;
 using SubworldLibrary;
 using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Subworlds;
-using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Systems;
-using Macrocosm.Content.Particles;
-using Macrocosm.Content.Buffs.GoodBuffs;
-using Macrocosm.Common.Drawing.Particles;
-using Terraria.GameContent;
 using Macrocosm.Common.Subworlds;
 
 namespace Macrocosm.Content.Players

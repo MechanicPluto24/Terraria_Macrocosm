@@ -3,7 +3,7 @@
 using System;
 using System.Globalization;
 
-namespace Macrocosm.Common.Subworlds
+namespace Macrocosm.Common.Subworlds.WorldInformation
 {
     public enum UnitType
     {

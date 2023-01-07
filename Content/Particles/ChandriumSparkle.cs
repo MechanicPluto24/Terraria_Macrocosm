@@ -21,9 +21,9 @@ namespace Macrocosm.Content.Particles
 
 		public override int TrailCacheLenght => 15;
 
-		[NetSync] public int owner;
+		[NetSync] public byte Owner;
 
-		public Player OwnerPlayer => Main.player[owner];
+		public Player OwnerPlayer => Main.player[Owner];
 
 		public override int SpawnTimeLeft => 5 * 60;
 
