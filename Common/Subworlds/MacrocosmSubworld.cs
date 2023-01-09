@@ -64,7 +64,7 @@ namespace Macrocosm.Common.Subworlds
 		{
 			if (AnyActive)
 			{
-				if(LoadingScreen is null)
+				if(LoadingScreen is not null)
 					LoadingScreen.Draw(Main.spriteBatch);
 				else 
 					base.DrawMenu(gameTime);

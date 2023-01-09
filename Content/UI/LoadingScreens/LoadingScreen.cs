@@ -19,6 +19,8 @@ namespace Macrocosm.Content.UI.LoadingScreens
 	/// <summary> Loading screen, displayed when traveling to/from subworlds </summary>
     public abstract class LoadingScreen 
 	{
+		public static bool CurrentlyActive { get; set; }
+
 		/// <summary> The title parameters </summary>
 		public virtual TitleData Title { get; set; } = new TitleData()
 		{
@@ -42,7 +44,7 @@ namespace Macrocosm.Content.UI.LoadingScreens
 		public virtual void Setup() { }
 
 		/// <summary> Used for miscellaneous update tasks </summary>
-		public virtual void Update() { }
+		public virtual void OnUpdate() { }
 
 		/// <summary> Draw elements before the title, status messages, progress bar, etc. are drawn. </summary>
 		public virtual void PreDraw(SpriteBatch spriteBatch) { }
@@ -52,15 +54,16 @@ namespace Macrocosm.Content.UI.LoadingScreens
 
 		private void InternalUpdate()
 		{
+			CurrentlyActive = true;
+
 			if (ProgressBar is not null && WorldGenerator.CurrentGenerationProgress is not null)
 				ProgressBar.SetProgress(WorldGenerator.CurrentGenerationProgress.TotalProgress, WorldGenerator.CurrentGenerationProgress.Value);
 
 			Main.gameTips.Update();
 
 			UpdateAnimation();
-			Update();
+			OnUpdate();
 		}
-
 
 		/// <summary> Update the animation counter. Override for non-default behaviour. </summary>
 		public virtual void UpdateAnimation()
@@ -68,7 +71,7 @@ namespace Macrocosm.Content.UI.LoadingScreens
 			if (AnimationTimer <= 5)
 				AnimationTimer += 0.125;
 		}
-		
+
 		/// <summary> Draws the loading screen. </summary>
 		public void Draw(SpriteBatch spriteBatch) 
 		{
@@ -98,6 +101,6 @@ namespace Macrocosm.Content.UI.LoadingScreens
 			Main.gameTips.Draw();
 
 			PostDraw(spriteBatch);
-		}
+ 		}
 	}
 }

@@ -428,28 +428,29 @@ Mods: {
 
 		GameTips: {
 
-			Vanilla_Tip1: (TEST) You can visit other planets if you manage to build a rocket (TEST)
+			Generic_Tip1: (TEST) You can visit other planets if you manage to build a rocket (TEST)
 
-			Moon: {
-				Moon_Tip1: You've taken your first step into a larger world.
-				Moon_Tip2: The Moon takes much longer to rotate than the Earth. Make sure you have enough supplies to last through the night.
-				Moon_Tip3: Is the Moon really made of cheese? Dig down to its core to find out.
-				Moon_Tip4: Even on this airless rock, life finds a way. Always remain on guard.
-				Moon_Tip5: Take advantage of the Moon's low gravity, but remember your enemies will do the same.
-				Moon_Tip6: When the sanguine hour comes, it's time to hide.
-				Moon_Tip7: No atmosphere means no torches, but there are other ways of illuminating the darkness.
-				Moon_Tip8: Beware of solar storms!
-				Moon_Tip9: Moon Lord was just the beginning. What other horrors await you on our silver satellite?
+			LoadingScreen: {
+				Moon: {
+					Moon_Tip1: You've taken your first step into a larger world.
+					Moon_Tip2: The Moon takes much longer to rotate than the Earth. Make sure you have enough supplies to last through the night.
+					Moon_Tip3: Is the Moon really made of cheese? Dig down to its core to find out.
+					Moon_Tip4: Even on this airless rock, life finds a way. Always remain on guard.
+					Moon_Tip5: Take advantage of the Moon's low gravity, but remember your enemies will do the same.
+					Moon_Tip6: When the sanguine hour comes, it's time to hide.
+					Moon_Tip7: No atmosphere means no torches, but there are other ways of illuminating the darkness.
+					Moon_Tip8: Beware of solar storms!
+					Moon_Tip9: Moon Lord was just the beginning. What other horrors await you on our silver satellite?
+				}
+
+				Earth: {
+					Earth_Tip1: Returning for a beer?
+					Earth_Tip2: Did you know that there are more than 1 quadrillion ants roaming our Earth?
+					Earth_Tip3: Normal gravity can be quite punishing after a long trek in zero-g. You'll get used to it.
+					Earth_Tip4: Nearly seven billion deaths within the first 24 hours.
+					Earth_Tip5: You are never truly safe.
+				}
 			}
-
-			Earth: {
-				Earth_Tip1: Returning for a beer?
-				Earth_Tip2: Did you know that there are more than 1 quadrillion ants roaming our Earth?
-				Earth_Tip3: Normal gravity can be quite punishing after a long trek in zero-g. You'll get used to it.
-				Earth_Tip4: Nearly seven billion deaths within the first 24 hours.
-				Earth_Tip5: You are never truly safe.
-			}
-
 		}
 	}
 }

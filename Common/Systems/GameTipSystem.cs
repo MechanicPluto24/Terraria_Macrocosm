@@ -1,22 +1,91 @@
 ﻿using Terraria;
-using Macrocosm.Common.Subworlds;
 using System.Collections.Generic;
-using System.Linq;
 using Terraria.ModLoader;
+using Microsoft.Xna.Framework;
+using Macrocosm.Content.UI.LoadingScreens;
+using MonoMod.Cil;
+using Terraria.GameContent.UI;
+using Terraria.Localization;
+using System.Text.RegularExpressions;
+using Macrocosm.Common.Subworlds;
+using System.Reflection.PortableExecutable;
+using Macrocosm.Common.Utils;
+using Terraria.GameContent;
 
 namespace Macrocosm.Common.Systems
 {
 
 	public class GameTipSystem : ModSystem
 	{
+		public override void Load()
+		{
+			IL.Terraria.GameContent.UI.GameTipsDisplay.AddNewTip += GameTipsDisplay_AddNewTip;
+		}
 
+		/// <summary> IL Hook for manipulating game tips. </summary>
+		private void GameTipsDisplay_AddNewTip(ILContext il)
+		{
+			var c = new ILCursor(il);
+
+			// matches the code that fetches a random language key
+			// stored as a local variable (index 0) and then constructs a new GameTip 
+			if (!c.TryGotoNext(
+				i => i.MatchLdloc(2),
+				i => i.MatchStloc(0),
+				i => i.MatchLdarg(0),
+				i => i.MatchLdfld<GameTipsDisplay>("_currentTips"),
+				i => i.MatchLdloc(0), // <-
+				i => i.MatchLdarg(1)
+			)) return;
+
+			// move the cursor to the instruction that loads
+			// the acquired language key from the evaluation stack
+			c.Index += 5;
+
+			// the key is captured from the stack by our hook,
+			// either returning it back, or returning another language key, for custom game tips
+			c.EmitDelegate(GetCustomTipText);
+		}
+
+
+		/// <summary> 
+		/// Returns the localization key of the next game tip. Can return either one determined by our custom logic, 
+		/// or return a random <paramref name="textKey"/>, determined by the game prior to this hook.
+		/// <para>  Adding new Subworld LoadingScreen specific game tip has to be done in the localization files, under GameTips/LoadingScreens/[SubworldClassNameHere] </para>
+		/// </summary>
+		/// <param name="textKey"> The next game tip localization key </param>
+		private string GetCustomTipText(string textKey)
+		{
+			// If a loading screen is currently drawing..
+			if (LoadingScreen.CurrentlyActive)
+			{
+				// ..get the LoadingScreen specific GameTips, respective to the active subworld..
+				LocalizedText[] messages = Language.FindAll(Lang.CreateDialogFilter("Mods.Macrocosm.GameTips.LoadingScreen." + MacrocosmSubworld.AnyActive ? MacrocosmSubworld.Current.Name : "Earth"));
+
+				// .. and return a random message from that list
+				if (messages.Length > 0)
+ 					return messages[Main.rand.Next(messages.Length)].Key;
+ 			}
+
+			// Otherwise, pass the original key and let the logic run unaffected
+			return textKey;
+		}
+
+
+		public override void UpdateUI(GameTime gameTime)
+		{
+			// Reset the flag that tells us that a current custom loading screen is drawing
+			// This will be set to true in the current update cycle if any LoadingScreen is drawing 
+			LoadingScreen.CurrentlyActive = false;
+		}
 
 		public override void ModifyGameTipVisibility(IReadOnlyList<GameTipData> gameTips)
 		{
-			foreach(var data in gameTips) 
+			// Hide LoadingScreen specific GameTips from the regular pool
+			foreach (var data in gameTips) 
 			{
-				//if (!data.FullName.Contains("Macrocosm/Moon"))
-				//	data.Hide();
+				if (data.FullName.Contains("Macrocosm/GameTips/LoadingScreen"))
+					data.Hide();
 			}
 		}
 	}
