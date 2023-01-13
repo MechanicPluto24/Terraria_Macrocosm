@@ -22,11 +22,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			Projectile.height = 14;
 			Projectile.extraUpdates = 3;
 			Projectile.timeLeft = 270;
+			Projectile.light = 0f;
 		}
 
 		bool spawned = false;
 		public override bool PreAI()
 		{
+
+			Lighting.AddLight(Projectile.Center, new Color(101, 242, 139).ToVector3());
+
 			if (!spawned)
 			{
 				// spawn some dusts as "muzzle flash"

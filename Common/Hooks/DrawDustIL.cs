@@ -36,7 +36,7 @@ namespace Macrocosm.Common.Hooks
 				i => i.MatchLdelemRef(),
 				i => i.MatchStloc(4),
 				i => i.MatchLdloc(4),
-				i => i.MatchLdfld<Dust>(nameof(Dust.active)) // <-
+				i => i.MatchLdfld<Dust>(nameof(Dust.active)) // <- reading of dust.active
  			)) return;
 
 			// move cursor to (ldfld bool Terraria.Dust::active)

@@ -7,7 +7,7 @@ namespace Macrocosm.Common.Netcode
 	/// For ModNPC and ModProjectile, this should be used only after filling up the respective ai[] array.
 	/// The fields are synced whenever:  <list type="">
 	///		<item> - <see cref="Drawing.Particles.Particle.NetSync(int)"> Particle.NetSync() </see> is called </item>
-	///		<item> - NPC.netUpdate or Projectile.netUpdate are set to true </item>
+	///		<item> - NPC.netUpdate or Projectile.netUpdate are set to true, or the corresponding NetMessage is sent </item>
 	/// </list> </summary>
 	[AttributeUsage(AttributeTargets.Field)]
 	public class NetSyncAttribute : Attribute { }

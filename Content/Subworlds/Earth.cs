@@ -1,5 +1,5 @@
-﻿using Macrocosm.Common.Subworlds.WorldInformation;
-using Macrocosm.Content.UI.LoadingScreens;
+﻿using Macrocosm.Content.UI.LoadingScreens;
+using Macrocosm.Content.UI.Rocket.WorldInformation;
 using Terraria;
 
 namespace Macrocosm.Content.Subworlds
@@ -23,17 +23,6 @@ namespace Macrocosm.Content.Subworlds
         private static EarthLoadingScreen loadingScreen;
 		public static EarthLoadingScreen LoadingScreen { get { loadingScreen ??= new(); return loadingScreen ;} }
 
-        public static WorldInfo WorldInfo => new()
-        {
-            DisplayName = "Earth",
-            Gravity = new(1f, UnitType.Gravity),
-            Radius = new(6371f, UnitType.Radius),
-            DayPeriod = new(1, UnitType.DayPeriod),
-            ThreatLevel = 1,
-            Hazards = new(),
-            FlavorText = "Third planet from the Sun, and homeworld of humanity. " +
-            "Covered in lush green forests, liquid oceans, and an oxygen-rich atmosphere, " +
-            "it is the ideal world for life to comfortably thrive."
-        };
+      
     }
 }

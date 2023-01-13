@@ -4,8 +4,8 @@ using Terraria;
 using Terraria.ModLoader;
 using SubworldLibrary;
 using Macrocosm.Content.UI.LoadingScreens;
-using Macrocosm.Common.Subworlds.WorldInformation;
 using Macrocosm.Content.Subworlds;
+using Macrocosm.Content.UI.Rocket.WorldInformation;
 
 namespace Macrocosm.Common.Subworlds
 {
@@ -42,9 +42,6 @@ namespace Macrocosm.Common.Subworlds
 
 		/// <summary> The map background color for each depth layer (Surface, Underground, Cavern, Underworld) </summary>
 		public virtual Dictionary<MapColorType, Color> MapColors { get; } = null;
-
-		/// <summary> Flavor information about this subworld, displayed in the navigation UI </summary>
-		public virtual WorldInfo WorldInfo { get; }
 
 		/// <summary> The loading screen. Assign new instance in the constructor. </summary>
 		protected LoadingScreen LoadingScreen;

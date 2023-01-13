@@ -8,13 +8,15 @@ namespace Macrocosm.Content.Items.Placeable.Trophies
 {
 	public class CraterDemonTrophy : ModItem
 	{
-		public override void SetStaticDefaults() {
+		public override void SetStaticDefaults()
+		{
 			DisplayName.SetDefault("Crater Demon Trophy");
 
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
 
-		public override void SetDefaults() {
+		public override void SetDefaults() 
+		{
 			Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Trophies.CraterDemonTrophy>());
 
 			Item.width = 32;

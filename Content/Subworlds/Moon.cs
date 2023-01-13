@@ -14,8 +14,8 @@ using Terraria.Map;
 using Terraria.ModLoader;
 using Terraria.Utilities;
 using Terraria.WorldBuilding;
-using Macrocosm.Common.Subworlds.WorldInformation;
 using Macrocosm.Common.Subworlds;
+using Macrocosm.Content.UI.Rocket.WorldInformation;
 
 namespace Macrocosm.Content.Subworlds
 {
@@ -53,23 +53,6 @@ namespace Macrocosm.Content.Subworlds
             new ScuffedSmoothPass("ScuffedSmoothPass", 1f),
             new AmbientPass("AmbientPass", 0.2f),
             new FinishPass("FinishPass", 0.1f)
-        };
-
-        public override WorldInfo WorldInfo => new()
-        {
-            DisplayName = "The Moon",
-            Gravity = new(GravityMultiplier, UnitType.Gravity),
-            Radius = new(1737.4f, UnitType.Radius),
-            DayPeriod = new(8, UnitType.DayPeriod),
-            ThreatLevel = 2,
-            Hazards = new()
-            {
-                {"Meteors", "Meteor storms" },
-                {"SolarStorms", "Solar storms" }
-            },
-            FlavorText = "Homeworld of the infamous Moon Lord, the Earth's Moon is a desolate, " +
-            "airless rock with an unforgiving environment. The Moon is well known for its high" +
-            " concentration of precious luminite, guarded by alien terrors that dwell beneath the dead moonscape."
         };
 
         public override bool CanTravelTo()
