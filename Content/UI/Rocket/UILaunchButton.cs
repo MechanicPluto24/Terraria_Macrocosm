@@ -19,7 +19,7 @@ namespace Macrocosm.Content.UI.Rocket
 		private UIText buttonText;
 		private UIPanel buttonPanel;
 
-		public enum ButtonStateType
+		public enum StateType
 		{
 			NoTarget,
 			CantReach,
@@ -27,7 +27,7 @@ namespace Macrocosm.Content.UI.Rocket
 			ZoomIn,
 			Launch
 		}
-		public ButtonStateType ButtonState;
+		public StateType ButtonState;
 		
 		public override void OnInitialize()
 		{
@@ -65,34 +65,34 @@ namespace Macrocosm.Content.UI.Rocket
 
 			switch (ButtonState)
 			{
-				case ButtonStateType.NoTarget:
+				case StateType.NoTarget:
 					textColor = Color.Gold;
 					text = "NO TARGET";
 					CanClick = false;
 					break;
 
-				case ButtonStateType.CantReach:
+				case StateType.CantReach:
 					textColor = Color.Red;
 					textScale = 0.75f;
 					text = "INACCESSIBLE";
 					CanClick = false;
 					break;
 
-				case ButtonStateType.AlreadyHere:
+				case StateType.AlreadyHere:
 					textColor = Color.Gray * 1.3f;
 					textScale = 0.58f;
 					text = "CURRENT LOCATION";
 					CanClick = false;
 					break;
 
-				case ButtonStateType.ZoomIn:
+				case StateType.ZoomIn:
 					textColor = Color.White;
 					text = "ZOOM IN";
 					textScale = 1.05f;
 					OnClick += UILaunchButton_OnClick_ZoomIn;
 					break;
 
-				case ButtonStateType.Launch:
+				case StateType.Launch:
 					textColor = new Color(0, 255, 0);
 					textScale = 1.1f;
 					text = "LAUNCH";

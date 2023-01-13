@@ -46,6 +46,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 			Projectile.DamageType = DamageClass.Summon;
 			Projectile.minionSlots = 1f;
 			Projectile.penetrate = -1;
+
+			Projectile.ai[1] = 141;
 		}
 
 		public override bool? CanCutTiles() => false;
@@ -209,11 +211,29 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 				// Minion has a target: attack (here, fly towards the enemy)
 				if (distanceFromTarget > 40f)
 				{
+					if (Projectile.ai[1] < 120) 
+					{
+						Projectile.ai[1]++;
+					}
+					else if(Projectile.ai[1] < 140)
+					{
+						speed = 0f;
+						Projectile.ai[1]++;
+					}
+					else
+					{
+						Projectile.ai[1] = 0;
+						speed *= 10f;
+						inertia = 10f;
+					}
+
+					Utility.Chat(Projectile.ai[1].ToString());
+
+
 					// The immediate range around the target (so it doesn't latch onto it when close)
 					Vector2 direction = targetCenter - Projectile.Center;
 					direction.Normalize();
 					direction *= speed;
-
 					Projectile.velocity = (Projectile.velocity * (inertia - 1) + direction) / inertia;
 				}
 			}

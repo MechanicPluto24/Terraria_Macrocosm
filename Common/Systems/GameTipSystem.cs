@@ -22,6 +22,12 @@ namespace Macrocosm.Common.Systems
 			IL.Terraria.GameContent.UI.GameTipsDisplay.AddNewTip += GameTipsDisplay_AddNewTip;
 		}
 
+		public override void Unload()
+		{
+			IL.Terraria.GameContent.UI.GameTipsDisplay.AddNewTip -= GameTipsDisplay_AddNewTip;
+		}
+
+
 		/// <summary> IL Hook for manipulating game tips. </summary>
 		private void GameTipsDisplay_AddNewTip(ILContext il)
 		{
@@ -34,7 +40,7 @@ namespace Macrocosm.Common.Systems
 				i => i.MatchStloc(0),
 				i => i.MatchLdarg(0),
 				i => i.MatchLdfld<GameTipsDisplay>("_currentTips"),
-				i => i.MatchLdloc(0), // <-
+				i => i.MatchLdloc(0), // <- loading the textKey
 				i => i.MatchLdarg(1)
 			)) return;
 
@@ -60,7 +66,7 @@ namespace Macrocosm.Common.Systems
 			if (LoadingScreen.CurrentlyActive)
 			{
 				// ..get the LoadingScreen specific GameTips, respective to the active subworld..
-				LocalizedText[] messages = Language.FindAll(Lang.CreateDialogFilter("Mods.Macrocosm.GameTips.LoadingScreen." + MacrocosmSubworld.AnyActive ? MacrocosmSubworld.Current.Name : "Earth"));
+				LocalizedText[] messages = Language.FindAll(Lang.CreateDialogFilter("Mods.Macrocosm.GameTips.LoadingScreen." + (MacrocosmSubworld.AnyActive ? MacrocosmSubworld.Current.Name : "Earth")));
 
 				// .. and return a random message from that list
 				if (messages.Length > 0)

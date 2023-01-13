@@ -83,7 +83,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
 		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
 		{
-			position += new Vector2(5, -4); // barrel offset 
+			position += Utility.PolarVector(40f, velocity.ToRotation()) + Utility.PolarVector(player.velocity.Length() * 2, player.velocity.ToRotation());
 			type = ModContent.ProjectileType<NWAMissile>();
 		}
 	}

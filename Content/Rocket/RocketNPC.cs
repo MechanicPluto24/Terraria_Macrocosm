@@ -245,8 +245,8 @@ namespace Macrocosm.Content.Rocket
 			{
 				if (commander.TargetSubworldID == "Earth")
 					SubworldSystem.Exit();
-				else if (commander.TargetSubworldID != null && !commander.TargetSubworldID.Equals(""))
-					SubworldSystem.Enter(commander.TargetSubworldID);
+				else if (commander.TargetSubworldID != null && commander.TargetSubworldID != "")
+					SubworldSystem.Enter(Macrocosm.Instance.Name + "/" + commander.TargetSubworldID);
 			}
 		}
 

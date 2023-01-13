@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rocket;
+using Macrocosm.Content.UI.Rocket.WorldInformation;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
@@ -37,8 +38,8 @@ namespace Macrocosm.Content.UI.Rocket
 			NavigationPanel = new();
 			BackgroundPanel.Append(NavigationPanel);
 
-			WorldInfoPanel = new();
-			BackgroundPanel.Append(WorldInfoPanel);
+			//WorldInfoPanel = new("");
+			//BackgroundPanel.Append(WorldInfoPanel);
 
 			LaunchButton = new();
 			LaunchButton.ZoomIn = NavigationPanel.ZoomIn;
@@ -64,27 +65,41 @@ namespace Macrocosm.Content.UI.Rocket
 				return;
 			}
 
-			UIMapTarget target = NavigationPanel.CurrentMap.GetSelectedTarget();
+			lastTarget = target;
+			target = NavigationPanel.CurrentMap.GetSelectedTarget();
 			player.RocketPlayer().TargetSubworldID = target is null ? "" : target.TargetID;
 
-			string prevName = WorldInfoPanel.Name;
-			WorldInfoPanel.Name = target is null ? "" : target.TargetWorldInfo.DisplayName;
+			GenerateInfoPanel(target, lastTarget);
+			SetButtonStatus(target);
+		}
 
-			if (target is not null && prevName != WorldInfoPanel.Name)
-				WorldInfoPanel.FillWithInfo(target.TargetWorldInfo);
-			else if (target is null)
-				WorldInfoPanel.ClearInfo();
+		private UIMapTarget lastTarget;
+		private UIMapTarget target;
 
+		private void GenerateInfoPanel(UIMapTarget target, UIMapTarget lastTarget)
+		{
+			if (target is not null && target != lastTarget)
+			{
+				if (WorldInfoPanel is not null)
+					BackgroundPanel.RemoveChild(WorldInfoPanel);
+
+				WorldInfoPanel = WorldInfoDatabase.GetValue(target.TargetID).ProvideUI();
+				BackgroundPanel.Append(WorldInfoPanel);
+			}
+		}
+
+		private void SetButtonStatus(UIMapTarget target)
+		{
 			if (target is null)
-				LaunchButton.ButtonState = UILaunchButton.ButtonStateType.NoTarget;
+				LaunchButton.ButtonState = UILaunchButton.StateType.NoTarget;
 			else if (NavigationPanel.CurrentMap.Next != null)
-				LaunchButton.ButtonState = UILaunchButton.ButtonStateType.ZoomIn;
+				LaunchButton.ButtonState = UILaunchButton.StateType.ZoomIn;
 			else if (target.AlreadyHere)
-				LaunchButton.ButtonState = UILaunchButton.ButtonStateType.AlreadyHere;
+				LaunchButton.ButtonState = UILaunchButton.StateType.AlreadyHere;
 			else if (!target.CanLaunch())
-				LaunchButton.ButtonState = UILaunchButton.ButtonStateType.CantReach;
+				LaunchButton.ButtonState = UILaunchButton.StateType.CantReach;
 			else
-				LaunchButton.ButtonState = UILaunchButton.ButtonStateType.Launch;
+				LaunchButton.ButtonState = UILaunchButton.StateType.Launch;
 		}
 
 		private void LaunchRocket()

@@ -16,9 +16,10 @@ namespace Macrocosm.Content.UI.LoadingScreens
 		public Color Color;
 	}
 
-	/// <summary> Loading screen, displayed when traveling to/from subworlds </summary>
+	/// <summary> Loading screen, displayed when traveling to/from subworlds. </summary>
     public abstract class LoadingScreen 
 	{
+		/// <summary> Whether there is any type of LoadingScreen active right now. </summary>
 		public static bool CurrentlyActive { get; set; }
 
 		/// <summary> The title parameters </summary>
@@ -85,7 +86,10 @@ namespace Macrocosm.Content.UI.LoadingScreens
 
 				if(ProgressBar is not null)
 				{
-					ProgressBar.SetPosition((Main.screenWidth - ProgressBar.Width.Pixels) / 2, (Main.screenHeight - ProgressBar.Height.Pixels) / 2);
+					ProgressBar.SetPosition(
+						(int)((Main.screenWidth - ProgressBar.Width.Pixels) / 2f),
+						(int)((Main.screenHeight - ProgressBar.Height.Pixels) / 2f)
+					);
 					ProgressBar.Draw(spriteBatch);
 				}
 			}

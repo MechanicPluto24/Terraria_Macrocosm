@@ -452,5 +452,163 @@ Mods: {
 				}
 			}
 		}
+
+        WorldInfo: {
+			
+			Gravity: {
+				Name: Gravity
+				Unit: G
+				Unit2: mps_sq
+				Unstable: Unstable
+			}
+
+			Radius: {
+				Name: Radius
+				Unit: km
+				Unit2: mi
+			}
+
+			DayPeriod: {
+				Name: Day Period
+				Unit: days
+				UnitSingular: day
+				TidallyLocked : Tidally Locked
+			}
+
+			ThreatLevel: {
+				Name: Threat Level
+				Threat1: Harmless
+				Threat2: Arduous
+				Threat3: Challenging
+				Threat4: Dangerous
+				Threat5: Treacherous
+				Threat6: Lethal
+				Threat7: Cataclysmic
+				Threat8: Nightmare
+				Threat9: Apollyon
+				Threat10: Unknown
+			}
+
+			Hazard: {
+				Name: Hazard
+				MeteorStorms: Meteor Storms
+				SolarStorms: Solar Storms
+			}
+		}
+		
+		Worlds: {
+		
+    		Sun: {
+    			DisplayName: The Sun
+    			FlavorText: test
+    		}
+    
+    		Vulcan: {
+    			DisplayName: Vulcan
+    			FlavorText: test
+    		}
+    
+            Mercury: {
+    			DisplayName: Mercury
+    			FlavorText: test 
+    		}
+    
+            Venus: {
+    			DisplayName: Venus
+    			FlavorText: test
+    		}
+
+            Earth: {
+				DisplayName: Earth
+				FlavorText: Third planet from the Sun, and homeworld of humanity. Covered in lush green forests, liquid oceans, and an oxygen-rich atmosphere, it is the ideal world for life to comfortably thrive.
+			}
+				
+            Moon: {
+				DisplayName: The Moon 
+				FlavorText: Homeworld of the infamous Moon Lord, the Earth's Moon is a desolate, airless rock with an unforgiving environment. The Moon is well known for its high concentration of precious luminite, guarded by alien terrors that dwell beneath the dead moonscape.
+			}
+
+             Mars: {
+    			DisplayName: Mars
+    			FlavorText: test
+    		}
+    
+             Phobos: {
+    			DisplayName: Phobos
+    			FlavorText: test
+    		}
+    
+             Deimos: {
+    			DisplayName: Deimos
+    			FlavorText: test
+    		}
+    
+             Ceres: {
+    			DisplayName: Ceres
+    			FlavorText: test
+    		}
+    
+             Jupiter: {
+    			DisplayName: Jupiter
+    			FlavorText: test
+    		}
+    
+             Io: {
+    			DisplayName: Io
+    			FlavorText: test
+    		}
+    
+             Europa: {
+    			DisplayName: Europa
+    			FlavorText: test
+    		}
+    
+             Saturn: {
+    			DisplayName: Saturn
+    			FlavorText: test
+    		}
+    
+             Titan: {
+    			DisplayName: Titan
+    			FlavorText: test
+    		}
+    
+             Ouranos: {
+    			DisplayName: Ouranos
+    			FlavorText: test
+    		}
+    
+             Miranda: {
+    			DisplayName: Miranda
+    			FlavorText: test
+    		}
+    
+             Neptune: {
+    			DisplayName: Neptune
+    			FlavorText: test
+    		}
+    
+             Triton: {
+    			DisplayName: Triton
+    			FlavorText: test
+    		}
+    
+             Pluto: {
+    			DisplayName: Pluto
+    			FlavorText: test
+    		}
+    
+             Charon: {
+    			DisplayName: Charon
+    			FlavorText: test
+    		}
+    
+             Eris: {
+    			DisplayName: Eris
+    			FlavorText: test
+    		}
+		}
+        
+		
 	}
 }

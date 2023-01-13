@@ -57,7 +57,6 @@ namespace Macrocosm.Content.Dusts
 			dust.rotation += 0.1f * (dust.dustIndex % 2 == 0 ? -1 : 1);
 			dust.scale -= 0.08f;
 
-
 			if (dust.scale <= 0f)
  				dust.active = false;
  
