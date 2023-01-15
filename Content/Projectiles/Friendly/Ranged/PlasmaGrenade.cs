@@ -93,9 +93,26 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 				Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<Dusts.PlasmaBallDust>(), Scale: Main.rand.NextFloat(0.8f, 1.2f));
 			}
 
+			//ShootToKill();
+
 			if (Projectile.timeLeft < 5)
 			{
 				Explode();
+			}
+		}
+
+		// for testing
+		private void ShootToKill()
+		{
+			for(int i = 0; i < Main.maxProjectiles; i++)
+			{
+				Projectile other = Main.projectile[i];
+
+				if (other.type == Type || other.owner != Projectile.owner)
+					continue;
+
+				if (other.Hitbox.Intersects(Projectile.Hitbox))
+					Explode();
 			}
 		}
 

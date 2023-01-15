@@ -1,21 +1,17 @@
-﻿using Macrocosm.Content.Projectiles.Environment.Meteors;
-using Macrocosm.Content.Systems;
-using Macrocosm.Content.UI.LoadingScreens;
-using Macrocosm.Content.WorldGeneration.Moon;
-using Microsoft.Xna.Framework;
-using SubworldLibrary;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.GameInput;
-using Terraria.Graphics.Effects;
 using Terraria.ID;
-using Terraria.Map;
 using Terraria.ModLoader;
 using Terraria.Utilities;
 using Terraria.WorldBuilding;
+using Terraria.Graphics.Effects;
 using Macrocosm.Common.Subworlds;
-using Macrocosm.Content.UI.Rocket.WorldInformation;
+using Macrocosm.Content.Systems;
+using Macrocosm.Content.UI.LoadingScreens;
+using Macrocosm.Content.WorldGeneration.Moon;
+using Macrocosm.Content.Projectiles.Environment.Meteors;
 
 namespace Macrocosm.Content.Subworlds
 {

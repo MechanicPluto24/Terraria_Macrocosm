@@ -1,6 +1,5 @@
-﻿using Macrocosm.Content.UI.LoadingScreens;
-using Macrocosm.Content.UI.Rocket.WorldInformation;
-using Terraria;
+﻿using Terraria;
+using Macrocosm.Content.UI.LoadingScreens;
 
 namespace Macrocosm.Content.Subworlds
 {

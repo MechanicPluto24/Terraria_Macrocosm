@@ -6,22 +6,22 @@ using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace Macrocosm.Content.UI.Rocket.WorldInformation
+namespace Macrocosm.Content.UI.Rocket
 {
-    public class UIWorldInfoPanel : UIPanel
+    public class UIInfoPanel : UIPanel
     {
         private string name = "";
 
         private UIText uIDisplayName;
         private UIList uIInfoElements;
 
-		public UIWorldInfoPanel(string displayName)
-		{
-			name = displayName;
-			Initialize();
-		}
+        public UIInfoPanel(string displayName)
+        {
+            name = displayName;
+            Initialize();
+        }
 
-		public override void OnInitialize()
+        public override void OnInitialize()
         {
             Width.Set(245, 0);
             Height.Set(400, 0);
@@ -32,7 +32,7 @@ namespace Macrocosm.Content.UI.Rocket.WorldInformation
             BackgroundColor = new Color(73, 94, 171);
 
             UIList uIList = new()
-			{
+            {
                 Width = StyleDimension.FromPixelsAndPercent(0f, 1f),
                 Height = StyleDimension.FromPixelsAndPercent(0f, 1f)
             };
@@ -77,7 +77,7 @@ namespace Macrocosm.Content.UI.Rocket.WorldInformation
             uIInfoElements.Add(element);
         }
 
-		public void ClearInfo() => uIInfoElements.Clear();
+        public void ClearInfo() => uIInfoElements.Clear();
 
     }
 }

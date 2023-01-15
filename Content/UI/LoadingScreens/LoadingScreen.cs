@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
 using Terraria.GameContent;
+using Terraria.Localization;
 using Terraria.UI.Chat;
 using Terraria.WorldBuilding;
 
@@ -11,7 +12,7 @@ namespace Macrocosm.Content.UI.LoadingScreens
 	/// <summary> Title parameters. Used for loading screens. </summary>
 	public struct TitleData
 	{
-		public string Text;
+		public string TextKey;
 		public float Scale;
 		public Color Color;
 	}
@@ -25,7 +26,7 @@ namespace Macrocosm.Content.UI.LoadingScreens
 		/// <summary> The title parameters </summary>
 		public virtual TitleData Title { get; set; } = new TitleData()
 		{
-			Text = "",
+			TextKey = "",
 			Scale = 1f,
 			Color = Color.White
 		};
@@ -98,8 +99,9 @@ namespace Macrocosm.Content.UI.LoadingScreens
 				message = Main.statusText;
 			}
 
-			Vector2 titleSize = FontAssets.DeathText.Value.MeasureString(Title.Text) * Title.Scale;
-			ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, Title.Text, new Vector2(Main.screenWidth / 2f - titleSize.X / 2f, titleSize.Y), Title.Color, 0f, Vector2.Zero, new Vector2(Title.Scale));
+			string text = Language.GetTextValue("Mods.Macrocosm.Worlds." + Title.TextKey + ".DisplayName");
+			Vector2 titleSize = FontAssets.DeathText.Value.MeasureString(text) * Title.Scale;
+			ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, text, new Vector2(Main.screenWidth / 2f - titleSize.X / 2f, titleSize.Y), Title.Color, 0f, Vector2.Zero, new Vector2(Title.Scale));
 			
 			ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, message, new Vector2(Main.screenWidth, Main.screenHeight - 100f) / 2f - FontAssets.DeathText.Value.MeasureString(message) / 2f, Color.White, 0f, Vector2.Zero, Vector2.One);
 			Main.gameTips.Draw();

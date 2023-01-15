@@ -1,7 +1,6 @@
 ﻿using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Subworlds;
-using Macrocosm.Content.UI.Rocket.WorldInformation;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SubworldLibrary;
@@ -99,15 +98,14 @@ namespace Macrocosm.Content.UI.Rocket
 		protected override void DrawSelf(SpriteBatch spriteBatch)
 		{
 			Rectangle rect = GetDimensions().ToRectangle();
- 			Vector2 pos = new Vector2(rect.Center.X, rect.Center.Y);
-			Vector2 origin = new Vector2(selectionOutline.Width / 2, selectionOutline.Height / 2);
+			Vector2 pos = GetDimensions().Center();
+			Vector2 origin = new(selectionOutline.Width / 2f, selectionOutline.Height / 2f);
 
+			rotation += 0.006f;
 			if (!Selected)
 				rotation = 0f;
-			else 
-				rotation += 0.008f;
-
-			SpriteBatchState state = spriteBatch.SaveState();
+ 
+			var state = spriteBatch.SaveState();
 			spriteBatch.End();
 			spriteBatch.Begin(BlendState.NonPremultiplied, state);
 

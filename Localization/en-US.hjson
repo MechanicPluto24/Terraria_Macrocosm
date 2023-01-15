@@ -498,24 +498,26 @@ Mods: {
 		
 		Worlds: {
 		
+			InnerSolarSystem.DisplayName = Inner Solar System
+
     		Sun: {
     			DisplayName: The Sun
-    			FlavorText: test
+    			FlavorText: default
     		}
     
     		Vulcan: {
     			DisplayName: Vulcan
-    			FlavorText: test
+    			FlavorText: default
     		}
     
             Mercury: {
     			DisplayName: Mercury
-    			FlavorText: test 
+    			FlavorText: default 
     		}
     
             Venus: {
     			DisplayName: Venus
-    			FlavorText: test
+    			FlavorText: default
     		}
 
             Earth: {
@@ -530,82 +532,82 @@ Mods: {
 
              Mars: {
     			DisplayName: Mars
-    			FlavorText: test
+    			FlavorText: default
     		}
     
              Phobos: {
     			DisplayName: Phobos
-    			FlavorText: test
+    			FlavorText: default
     		}
     
              Deimos: {
     			DisplayName: Deimos
-    			FlavorText: test
+    			FlavorText: default
     		}
     
              Ceres: {
     			DisplayName: Ceres
-    			FlavorText: test
+    			FlavorText: default
     		}
     
              Jupiter: {
     			DisplayName: Jupiter
-    			FlavorText: test
+    			FlavorText: default
     		}
     
              Io: {
     			DisplayName: Io
-    			FlavorText: test
+    			FlavorText: default
     		}
     
              Europa: {
     			DisplayName: Europa
-    			FlavorText: test
+    			FlavorText: default
     		}
     
              Saturn: {
     			DisplayName: Saturn
-    			FlavorText: test
+    			FlavorText: default
     		}
     
              Titan: {
     			DisplayName: Titan
-    			FlavorText: test
+    			FlavorText: default
     		}
     
              Ouranos: {
     			DisplayName: Ouranos
-    			FlavorText: test
+    			FlavorText: default
     		}
     
              Miranda: {
     			DisplayName: Miranda
-    			FlavorText: test
+    			FlavorText: default
     		}
     
              Neptune: {
     			DisplayName: Neptune
-    			FlavorText: test
+    			FlavorText: default
     		}
     
              Triton: {
     			DisplayName: Triton
-    			FlavorText: test
+    			FlavorText: default
     		}
     
              Pluto: {
     			DisplayName: Pluto
-    			FlavorText: test
+    			FlavorText: default
     		}
     
              Charon: {
     			DisplayName: Charon
-    			FlavorText: test
+    			FlavorText: default
     		}
     
              Eris: {
     			DisplayName: Eris
-    			FlavorText: test
+    			FlavorText: default
     		}
 		}
         

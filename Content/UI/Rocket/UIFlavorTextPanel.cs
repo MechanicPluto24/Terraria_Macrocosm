@@ -7,13 +7,13 @@ using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace Macrocosm.Content.UI.Rocket.WorldInformation
+namespace Macrocosm.Content.UI.Rocket
 {
-    public class UIWorldInfoTextPanel : UIPanel
+    public class UIFlavorTextPanel : UIPanel
     {
         private string text;
 
-        public UIWorldInfoTextPanel(string text)
+        public UIFlavorTextPanel(string text)
         {
             this.text = text;
             Initialize();
@@ -28,7 +28,7 @@ namespace Macrocosm.Content.UI.Rocket.WorldInformation
             PaddingLeft = 4f;
             PaddingRight = 4f;
 
-            UIText uIText = new UIText(text, 0.8f)
+            UIText uIText = new(text, 0.8f)
             {
                 HAlign = 0f,
                 VAlign = 0f,
