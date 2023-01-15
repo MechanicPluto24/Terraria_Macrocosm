@@ -5,7 +5,6 @@ using Terraria.ModLoader;
 using SubworldLibrary;
 using Macrocosm.Content.UI.LoadingScreens;
 using Macrocosm.Content.Subworlds;
-using Macrocosm.Content.UI.Rocket.WorldInformation;
 
 namespace Macrocosm.Common.Subworlds
 {

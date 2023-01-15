@@ -1,6 +1,5 @@
 ﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rocket;
-using Macrocosm.Content.UI.Rocket.WorldInformation;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
@@ -19,7 +18,7 @@ namespace Macrocosm.Content.UI.Rocket
 		UIPanel BackgroundPanel;
 		UILaunchButton LaunchButton;
 		UINavigationPanel NavigationPanel;
-		UIWorldInfoPanel WorldInfoPanel;
+		UIInfoPanel WorldInfoPanel;
 
 		public static void Show(int rocketId) => RocketSystem.Instance.ShowUI(rocketId);
 		public static void Hide() => RocketSystem.Instance.HideUI();
@@ -38,8 +37,8 @@ namespace Macrocosm.Content.UI.Rocket
 			NavigationPanel = new();
 			BackgroundPanel.Append(NavigationPanel);
 
-			//WorldInfoPanel = new("");
-			//BackgroundPanel.Append(WorldInfoPanel);
+			WorldInfoPanel = new("");
+			BackgroundPanel.Append(WorldInfoPanel);
 
 			LaunchButton = new();
 			LaunchButton.ZoomIn = NavigationPanel.ZoomIn;
@@ -49,6 +48,10 @@ namespace Macrocosm.Content.UI.Rocket
 		public override void OnDeactivate()
 		{
 		}
+
+		
+		private UIMapTarget lastTarget;
+		private UIMapTarget target;
 
 		public override void Update(GameTime gameTime)
 		{
@@ -69,26 +72,29 @@ namespace Macrocosm.Content.UI.Rocket
 			target = NavigationPanel.CurrentMap.GetSelectedTarget();
 			player.RocketPlayer().TargetSubworldID = target is null ? "" : target.TargetID;
 
-			GenerateInfoPanel(target, lastTarget);
-			SetButtonStatus(target);
+			GetInfoPanel();
+			SetButtonStatus();
 		}
 
-		private UIMapTarget lastTarget;
-		private UIMapTarget target;
-
-		private void GenerateInfoPanel(UIMapTarget target, UIMapTarget lastTarget)
+	
+		private void GetInfoPanel()
 		{
 			if (target is not null && target != lastTarget)
 			{
-				if (WorldInfoPanel is not null)
-					BackgroundPanel.RemoveChild(WorldInfoPanel);
-
+				BackgroundPanel.RemoveChild(WorldInfoPanel);
 				WorldInfoPanel = WorldInfoDatabase.GetValue(target.TargetID).ProvideUI();
 				BackgroundPanel.Append(WorldInfoPanel);
 			}
+
+			// variant that removes the target on deselection or navigating to the next map
+			/*
+				WorldInfoPanel.Remove();
+				WorldInfoPanel = (target is not null) ? WorldInfoDatabase.GetValue(target.TargetID).ProvideUI() : new UIInfoPanel("");
+				BackgroundPanel.Append(WorldInfoPanel);
+			*/
 		}
 
-		private void SetButtonStatus(UIMapTarget target)
+		private void SetButtonStatus()
 		{
 			if (target is null)
 				LaunchButton.ButtonState = UILaunchButton.StateType.NoTarget;

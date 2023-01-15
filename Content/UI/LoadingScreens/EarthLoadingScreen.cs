@@ -27,7 +27,7 @@ namespace Macrocosm.Content.UI.LoadingScreens
 
 		public override TitleData Title => new()
 		{
-			Text = "Earth", //FIXME: localize
+			TextKey = "Earth", //FIXME: localize
 			Scale = 1.2f,
 			Color = new Color(94, 150, 255)
 		};

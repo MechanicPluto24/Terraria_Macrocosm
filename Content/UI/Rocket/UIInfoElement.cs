@@ -7,9 +7,9 @@ using Terraria.ModLoader;
 using ReLogic.Content;
 using Terraria.Localization;
 
-namespace Macrocosm.Content.UI.Rocket.WorldInformation
+namespace Macrocosm.Content.UI.Rocket
 {
-    public class UIWorldInfoElement : UIPanel
+    public class UIInfoElement : UIPanel
     {
         public Texture2D Icon;
         private readonly string displayText = "";
@@ -20,7 +20,7 @@ namespace Macrocosm.Content.UI.Rocket.WorldInformation
 
         private UIText UIDisplayText;
 
-        public UIWorldInfoElement(Texture2D icon, string text, string hoverText = "", string units = "", Color valueColor = default)
+        public UIInfoElement(Texture2D icon, string text, string hoverText = "", string units = "", Color valueColor = default)
         {
             Icon = icon;
             displayText = text;

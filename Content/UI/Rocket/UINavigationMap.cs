@@ -68,6 +68,27 @@ namespace Macrocosm.Content.UI.Rocket
 			}
 		}
 
+		public bool TryFindTargetBy(string ID, out UIMapTarget target)
+		{
+			target = FindTargetBy(ID);
+			if (target is not null)
+				return true;
+
+			return false;
+		}
+
+		public UIMapTarget FindTargetBy(string ID)
+		{
+			foreach(UIElement element in Children)
+			{
+				if (element is UIMapTarget target && target.TargetID == ID)
+					return target;
+			}
+
+			return null;
+		}
+
+
 		public UIMapTarget GetSelectedTarget()
 		{
 			if (showAnimationActive)
