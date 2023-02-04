@@ -14,7 +14,7 @@ namespace Macrocosm.Common.Utils
 {
     public static partial class Utility
     {
-        public static void GenerateOre(int TileType, double percent, int strength, int steps, int replaceTileType = -1)
+        public static void GenerateOre(int tileType, double percent, int strength, int steps, int replaceTileType = -1)
         {
             for (int k = 0; k < (int)(Main.maxTilesX * Main.maxTilesY * percent); k++)
             {
@@ -22,7 +22,7 @@ namespace Macrocosm.Common.Utils
                 int y = WorldGen.genRand.Next(0, Main.maxTilesY);
                 if (Main.tile[x, y].HasTile && Main.tile[x, y].TileType == replaceTileType || replaceTileType == -1)
                 {
-                    WorldGen.TileRunner(x, y, strength, steps, TileType);
+                    WorldGen.TileRunner(x, y, strength, steps, tileType);
                 }
             }
         }

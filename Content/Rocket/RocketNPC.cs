@@ -19,6 +19,7 @@ using Terraria.ModLoader;
 using Terraria.UI.Chat;
 using System.IO;
 using Macrocosm.Common.Netcode;
+using Macrocosm.Common.Subworlds;
 
 namespace Macrocosm.Content.Rocket
 {
@@ -60,6 +61,8 @@ namespace Macrocosm.Content.Rocket
 			get => NPC.ai[2] != 0;
 			set => NPC.ai[2] = value ? 1f : 0f;
 		}
+
+		public ref float Fuel => ref NPC.ai[3];
 
 		#region Private vars
 		// The world Y coordinate for entering the target subworld
@@ -346,6 +349,19 @@ namespace Macrocosm.Content.Rocket
 			// send the launch message to the other clients
 			if (Main.netMode == NetmodeID.Server)
 				rocket.SendLaunchMessage(ignoreClient: whoAmI);
+		}
+
+		public bool CheckFlightPathObstruction()
+		{
+			int startY = (int)((NPC.Center.Y - NPC.height/2) / 16);
+			
+			for(int offsetX = 0; offsetX < (NPC.width/16); offsetX++)
+			{
+				if (Utility.GetFirstTileCeiling((int)(NPC.position.X / 16f) + offsetX, startY, solid: true) != 10)
+					return false;
+			}
+
+			return true;
 		}
 
 		private void VisualEffects()

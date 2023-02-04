@@ -1,10 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Terraria.Localization;
 using Terraria.UI;
 
 namespace Macrocosm.Content.UI.Rocket
 {
-    public abstract class BasicInfoElement
+    public class BasicInfoElement
     {
         protected float value = float.MinValue;
         protected string specialValueLangKey = "default";
@@ -29,8 +30,8 @@ namespace Macrocosm.Content.UI.Rocket
         }
 
         protected virtual Texture2D GetIcon() => null;
-        protected virtual string GetText() => "";
-        protected virtual string HoverText => "";
+		protected virtual string GetText() => Language.GetTextValue(specialValueLangKey);
+		protected virtual string HoverText => "";
         protected virtual string Units => "";
         protected virtual Color TextColor => Color.White;
 

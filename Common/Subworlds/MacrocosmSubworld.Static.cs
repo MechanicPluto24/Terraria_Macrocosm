@@ -20,6 +20,12 @@ namespace Macrocosm.Common.Subworlds
 		/// Earth returns null! You should check for <see cref="AnyActive"/> before accessing this. </summary>
 		public static MacrocosmSubworld Current => SubworldSystem.Current as MacrocosmSubworld;
 
+		/// <summary> 
+		/// Safely get the current active subworld string ID, matching the subworld class name. 
+		/// Returns <c>Earth</c> if none active.
+		/// </summary>
+		public static string SafeCurrentID => AnyActive ? Current.Name : "Earth";
+
 		/// <summary> Whether there is any active subworld belonging to this mod </summary>
 		public static bool AnyActive => SubworldSystem.AnyActive<Macrocosm>();
 

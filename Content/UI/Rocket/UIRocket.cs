@@ -1,24 +1,30 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rocket;
 using Microsoft.Xna.Framework;
+using System;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.UI;
 
 namespace Macrocosm.Content.UI.Rocket
 {
-    public class UIRocket : UIState
+	public class UIRocket : UIState
 	{
 		public int RocketID { get; set; } = -1;
 
 		private NPC Rocket => Main.npc[RocketID];
 
-		UIPanel BackgroundPanel;
-		UILaunchButton LaunchButton;
-		UINavigationPanel NavigationPanel;
-		UIInfoPanel WorldInfoPanel;
+		UIPanel UIBackgroundPanel;
+		UILaunchButton UILaunchButton;
+		UINavigationPanel UINavigationPanel;
+		UIInfoPanel UIWorldInfoPanel;
+
+		UIFlightChecklist UIFlightChecklist;
+		//ChecklistInfo ChecklistState;
 
 		public static void Show(int rocketId) => RocketSystem.Instance.ShowUI(rocketId);
 		public static void Hide() => RocketSystem.Instance.HideUI();
@@ -26,33 +32,36 @@ namespace Macrocosm.Content.UI.Rocket
 
 		public override void OnInitialize()
 		{
-			BackgroundPanel = new();
-			BackgroundPanel.Width.Set(855, 0f);
-			BackgroundPanel.Height.Set(680, 0f);
-			BackgroundPanel.HAlign = 0.5f;
-			BackgroundPanel.VAlign = 0.5f;
-			BackgroundPanel.BackgroundColor = new Color(33, 43, 79) * 0.8f;
-			Append(BackgroundPanel);
+			UIBackgroundPanel = new();
+			UIBackgroundPanel.Width.Set(855, 0f);
+			UIBackgroundPanel.Height.Set(680, 0f);
+			UIBackgroundPanel.HAlign = 0.5f;
+			UIBackgroundPanel.VAlign = 0.5f;
+			UIBackgroundPanel.BackgroundColor = new Color(33, 43, 79) * 0.8f;
+			Append(UIBackgroundPanel);
 
-			NavigationPanel = new();
-			BackgroundPanel.Append(NavigationPanel);
+			UINavigationPanel = new();
+			UIBackgroundPanel.Append(UINavigationPanel);
 
-			WorldInfoPanel = new("");
-			BackgroundPanel.Append(WorldInfoPanel);
+			UIWorldInfoPanel = new("");
+			UIBackgroundPanel.Append(UIWorldInfoPanel);
 
-			LaunchButton = new();
-			LaunchButton.ZoomIn = NavigationPanel.ZoomIn;
-			LaunchButton.Launch = LaunchRocket;
-			BackgroundPanel.Append(LaunchButton);
+			UIFlightChecklist = new(Language.GetTextValue("Mods.Macrocosm.WorldInfo.Checklist.DisplayName"));
+			UIBackgroundPanel.Append(UIFlightChecklist);
+			//ChecklistState = new();
+
+			UILaunchButton = new();
+			UILaunchButton.ZoomIn = UINavigationPanel.ZoomIn;
+			UILaunchButton.Launch = LaunchRocket;
+			UIBackgroundPanel.Append(UILaunchButton);
 		}
+
 		public override void OnDeactivate()
 		{
 		}
 
-		
 		private UIMapTarget lastTarget;
 		private UIMapTarget target;
-
 		public override void Update(GameTime gameTime)
 		{
 			// Don't delete this or the UIElements attached to this UIState will cease to function
@@ -69,21 +78,21 @@ namespace Macrocosm.Content.UI.Rocket
 			}
 
 			lastTarget = target;
-			target = NavigationPanel.CurrentMap.GetSelectedTarget();
+			target = UINavigationPanel.CurrentMap.GetSelectedTarget();
 			player.RocketPlayer().TargetSubworldID = target is null ? "" : target.TargetID;
 
 			GetInfoPanel();
-			SetButtonStatus();
+			UpdateChecklist();
+			UpdateLaunchButton();
 		}
 
-	
 		private void GetInfoPanel()
 		{
 			if (target is not null && target != lastTarget)
 			{
-				BackgroundPanel.RemoveChild(WorldInfoPanel);
-				WorldInfoPanel = WorldInfoDatabase.GetValue(target.TargetID).ProvideUI();
-				BackgroundPanel.Append(WorldInfoPanel);
+				UIBackgroundPanel.RemoveChild(UIWorldInfoPanel);
+				UIWorldInfoPanel = WorldInfoDatabase.GetValue(target.TargetID).ProvideUI();
+				UIBackgroundPanel.Append(UIWorldInfoPanel);
 			}
 
 			// variant that removes the target on deselection or navigating to the next map
@@ -94,18 +103,54 @@ namespace Macrocosm.Content.UI.Rocket
 			*/
 		}
 
-		private void SetButtonStatus()
+		private void UpdateChecklist()
+		{
+			RocketNPC rocket = Rocket.ModNPC as RocketNPC;
+
+			if (target is null || MacrocosmSubworld.SafeCurrentID == target.TargetID)
+			{
+				UIFlightChecklist.Destination.State = false;
+				UIFlightChecklist.Fuel.State = false;
+				UIFlightChecklist.Obstruction.State = false;
+			}
+			else
+			{
+				UIFlightChecklist.Destination.State = true;
+				UIFlightChecklist.Fuel.State = rocket.Fuel >= RocketFuelLookup.GetFuelCost(MacrocosmSubworld.SafeCurrentID, target.TargetID);
+				UIFlightChecklist.Obstruction.State = rocket.CheckFlightPathObstruction();
+			}
+
+			
+			
+		}
+
+		private bool CheckCanLaunch()
+		{
+			if (!target.CanLaunch())
+				return false;
+
+			RocketNPC rocket = Rocket.ModNPC as RocketNPC;
+
+			if (rocket.Fuel < RocketFuelLookup.GetFuelCost(MacrocosmSubworld.SafeCurrentID, target.TargetID))
+				return false;
+
+			if(!rocket.CheckFlightPathObstruction())
+				return false;
+
+			return true;
+		}
+		private void UpdateLaunchButton()
 		{
 			if (target is null)
-				LaunchButton.ButtonState = UILaunchButton.StateType.NoTarget;
-			else if (NavigationPanel.CurrentMap.Next != null)
-				LaunchButton.ButtonState = UILaunchButton.StateType.ZoomIn;
+				UILaunchButton.ButtonState = UILaunchButton.StateType.NoTarget;
+			else if (UINavigationPanel.CurrentMap.Next != null)
+				UILaunchButton.ButtonState = UILaunchButton.StateType.ZoomIn;
 			else if (target.AlreadyHere)
-				LaunchButton.ButtonState = UILaunchButton.StateType.AlreadyHere;
-			else if (!target.CanLaunch())
-				LaunchButton.ButtonState = UILaunchButton.StateType.CantReach;
+				UILaunchButton.ButtonState = UILaunchButton.StateType.AlreadyHere;
+			else if (!CheckCanLaunch())
+				UILaunchButton.ButtonState = UILaunchButton.StateType.CantReach;
 			else
-				LaunchButton.ButtonState = UILaunchButton.StateType.Launch;
+				UILaunchButton.ButtonState = UILaunchButton.StateType.Launch;
 		}
 
 		private void LaunchRocket()

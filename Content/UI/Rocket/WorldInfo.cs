@@ -13,7 +13,7 @@ namespace Macrocosm.Content.UI.Rocket
     public class WorldInfo
     {
         private string worldNameKey;
-        private List<BasicInfoElement> elements { get; set; }
+        private List<BasicInfoElement> elements;
 
         public void Add(BasicInfoElement element) { elements.Add(element); }
 

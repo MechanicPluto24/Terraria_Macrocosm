@@ -59,7 +59,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			OwnerPlayer.ChangeDir(Projectile.direction);
 			OwnerPlayer.heldProj = Projectile.whoAmI;
 			OwnerPlayer.itemTime = 2;
-			OwnerPlayer.itemAnimation = 2;
+			OwnerPlayer.itemAnimation = 3;
 
 			OwnerPlayer.itemRotation = (Projectile.velocity * Projectile.direction).ToRotation();
 

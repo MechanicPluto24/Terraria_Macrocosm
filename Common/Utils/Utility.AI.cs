@@ -251,7 +251,7 @@ namespace Macrocosm.Common.Utils
 		 * stepSpeed : Used for walking up slopes.
 		 * minionPos : The minion's position in the minion lineup.
 		 * jumpDistX : The minion's max jump distance on the X axis.
-		 * jumpDistY : The minion's max jump distance on the Y axis.
+		 * jumpDistY : The minion's max jump distance on the Y axis. v 
 		 * lineDist : The distance between each minion when they line up.
 		 * returnDist : The distance to 'fly' back to the player.
 		 * teleportDist : The distance to instantly teleport to the player.
