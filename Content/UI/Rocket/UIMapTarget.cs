@@ -22,7 +22,7 @@ namespace Macrocosm.Content.UI.Rocket
 		public readonly FuncCanLaunch CanLaunch = () => false;
 
 		public bool IsSelectable => CanLaunch() || OwnerMap.Next != null;
-		public bool AlreadyHere => TargetID == (MacrocosmSubworld.AnyActive ? MacrocosmSubworld.Current.Name : "Earth");
+		public bool AlreadyHere => TargetID == MacrocosmSubworld.SafeCurrentID;
 
 		/// <summary> Target selected </summary>
 		public bool Selected;

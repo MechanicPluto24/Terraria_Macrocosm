@@ -494,12 +494,35 @@ Mods: {
 				MeteorStorms: Meteor Storms
 				SolarStorms: Solar Storms
 			}
+
+			Checklist: {
+			
+				DisplayName: Pre-flight checklist
+			
+				Fuel: {
+					Good: Enough fuel
+					Bad: Not enough fuel
+					GoodHover: You have enough fuel to launch the rocket
+					BadHover: You need more fuel to launch the rocket
+				}
+
+				Destination: {
+					Good: Destination selected
+					Bad: No destination selected
+					GoodHover: You have selected a destination for the rocket
+					BadHover: You need to select a destination for the rocket
+				}
+
+				Obstruction: {
+					Good: View unobstructed
+					Bad: View obstructed
+					GoodHover: The rocket has a clear flight path
+					BadHover: There is an obstruction in the rocket's flight path
+				}
+			}
 		}
 		
 		Worlds: {
-		
-			InnerSolarSystem.DisplayName = Inner Solar System
-
     		Sun: {
     			DisplayName: The Sun
     			FlavorText: default
