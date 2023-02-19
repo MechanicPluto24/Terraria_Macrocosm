@@ -29,8 +29,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			Projectile.width = 16;
 			Projectile.height = 38;
 			Projectile.aiStyle = -1;
-			Projectile.friendly = true;
 			Projectile.penetrate = -1;
+			Projectile.friendly = true;
 			Projectile.DamageType = DamageClass.Ranged;
 			Projectile.tileCollide = true;
 			Projectile.ignoreWater = true;
@@ -42,7 +42,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		public override void ModifyDamageHitbox(ref Rectangle hitbox)
 		{
 			// FIXME: left rotation 
-			if (Projectile.rotation < 0 && Projectile.rotation <= MathHelper.PiOver4 && Projectile.rotation >= MathHelper.PiOver4 * 3 || Projectile.rotation >= 0 && Projectile.rotation > MathHelper.PiOver4 && Projectile.rotation <= MathHelper.PiOver4 * 3)
+			float rotation = Math.Abs(Projectile.rotation);
+			if (rotation < 0 && rotation <= MathHelper.PiOver4 && rotation >= MathHelper.PiOver4 * 3 || rotation >= 0 && rotation > MathHelper.PiOver4 && rotation <= MathHelper.PiOver4 * 3)
 				hitbox = new Rectangle((int)Projectile.position.X, (int)Projectile.position.Y, Projectile.height, Projectile.width);
 			else
 				hitbox = new Rectangle((int)Projectile.position.X, (int)Projectile.position.Y, Projectile.width, Projectile.height);

@@ -24,7 +24,6 @@ namespace Macrocosm.Content.UI.Rocket
 		UIInfoPanel UIWorldInfoPanel;
 
 		UIFlightChecklist UIFlightChecklist;
-		//ChecklistInfo ChecklistState;
 
 		public static void Show(int rocketId) => RocketSystem.Instance.ShowUI(rocketId);
 		public static void Hide() => RocketSystem.Instance.HideUI();
@@ -119,9 +118,6 @@ namespace Macrocosm.Content.UI.Rocket
 				UIFlightChecklist.Fuel.State = rocket.Fuel >= RocketFuelLookup.GetFuelCost(MacrocosmSubworld.SafeCurrentID, target.TargetID);
 				UIFlightChecklist.Obstruction.State = rocket.CheckFlightPathObstruction();
 			}
-
-			
-			
 		}
 
 		private bool CheckCanLaunch()

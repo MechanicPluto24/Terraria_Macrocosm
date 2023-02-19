@@ -9,7 +9,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Macrocosm.Common.Drawing.Trails;
-using static Terraria.ModLoader.PlayerDrawLayer;
 using Macrocosm.Common.Utils;
 
 namespace Macrocosm.Common.Drawing.Particles
@@ -139,8 +138,7 @@ namespace Macrocosm.Common.Drawing.Particles
 		{
 			spriteBatch.Draw(Texture, Position - screenPosition, GetFrame(), lightColor, Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
 
-			if (Trail is not null)
-				Trail.Draw();
+			Trail?.Draw();
 		}
 
 		public void Update()
@@ -168,7 +166,6 @@ namespace Macrocosm.Common.Drawing.Particles
 		#endregion
 
 		#region Trails
-
 		public void DrawSimpleTrail(Vector2 rotatableOffsetFromCenter, float startWidth, float endWidth, Color startColor, Color? endColor = null)
 				=> Utility.DrawSimpleTrail(Size / 2f, OldPositions, OldRotations, rotatableOffsetFromCenter, startWidth, endWidth, startColor, endColor);
 

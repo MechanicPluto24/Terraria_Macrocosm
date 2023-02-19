@@ -12,5 +12,8 @@ namespace Macrocosm.Content.Sounds
         public static readonly SoundStyle MinigunFire = new(SFXPath + "MinigunFire");
         public static readonly SoundStyle MinigunWinddown = new(SFXPath + "MinigunWinddown");
         public static readonly SoundStyle Ricochet = new(SFXPath + "Ricochet_", 6);
+        public static readonly SoundStyle HandheldThrusterFlame = new(SFXPath + "HandheldThrusterFlame");
+        public static readonly SoundStyle HandheldThrusterOverheat= new(SFXPath + "HandheldThrusterOverheat");
+        
     }
 }

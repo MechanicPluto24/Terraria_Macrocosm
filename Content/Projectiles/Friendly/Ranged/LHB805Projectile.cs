@@ -49,9 +49,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			PlaySounds();
 
 			AI_Windup++;
-
-			if (!StillInUse)
-				Projectile.Kill();
 		}
 
 		private float WindupProgress => MathHelper.Clamp((AI_Windup / fullFireRateTime), 0, 1);
