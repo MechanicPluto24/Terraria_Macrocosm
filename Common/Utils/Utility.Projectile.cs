@@ -57,10 +57,10 @@ namespace Macrocosm.Common.Utils
 		/// <param name="lightColor"> Computed environment color </param>
 		/// <param name="drawOffset"> Offset to draw from texture center at 0 rotation </param>
 		/// <param name="texture"> Leave null to draw as entity with the loaded texture </param>
-		public static void DrawAnimated(this Projectile proj, Color lightColor, SpriteEffects effect, Vector2 drawOffset = default, Texture2D texture = null)
+		public static void DrawAnimated(this Projectile proj, Color lightColor, SpriteEffects effect, Vector2 drawOffset = default, Texture2D texture = null, Rectangle? frame = null, Effect shader = null)
 		{
 			bool drawEntity = false;
-
+			
 			if (texture is null)
 			{
 				texture = TextureAssets.Projectile[proj.type].Value;
@@ -70,21 +70,32 @@ namespace Macrocosm.Common.Utils
 			Vector2 position = proj.Center - Main.screenPosition;
 
 			int numFrames = Main.projFrames[proj.type];
-			Rectangle sourceRect = texture.Frame(1, numFrames, frameY: proj.frame);
+			Rectangle sourceRect = frame ?? texture.Frame(1, numFrames, frameY: proj.frame);
 
 			Vector2 origin = new Vector2(texture.Width / 2, texture.Height / numFrames / 2) - new Vector2(drawOffset.X, drawOffset.Y * proj.spriteDirection);
+
+			SpriteBatchState state = Main.spriteBatch.SaveState();
+			if (shader is not null)
+			{
+				Main.spriteBatch.End();
+				Main.spriteBatch.Begin(shader, state);
+			}
 
 			if (drawEntity)
 				Main.EntitySpriteDraw(texture, position, sourceRect, lightColor, proj.rotation, origin, proj.scale, effect, 0);
 			else
 				Main.spriteBatch.Draw(texture, position, sourceRect, lightColor, proj.rotation, origin, proj.scale, effect, 0f);
+
+			if (shader is not null)
+				Main.spriteBatch.Restore(state);
+
 		}
 
 		/// <summary>
 		/// Draws an animated projectile glowmask
 		/// (Only tested for held projectiles)  
 		/// </summary>
-		public static void DrawAnimatedGlowmask(this Projectile proj, Texture2D glowmask, Color lightColor, SpriteEffects effect, Vector2 drawOffset = default)
-			=> proj.DrawAnimated(lightColor, effect, drawOffset + new Vector2(0, -2), glowmask);
+		public static void DrawAnimatedGlowmask(this Projectile proj, Texture2D glowmask, Color lightColor, SpriteEffects effect, Vector2 drawOffset = default, Rectangle? frame = null)
+			=> proj.DrawAnimated(lightColor, effect, drawOffset + new Vector2(0, -2), glowmask, frame);
 	}
 }

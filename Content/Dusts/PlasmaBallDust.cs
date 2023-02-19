@@ -36,6 +36,8 @@ namespace Macrocosm.Content.Dusts
 				ownerActive = (owner as Particle).Active;
 			}
 
+			dust.position += dust.velocity;
+
 			if (!hasOwner || ownerActive == false)
 				dust.scale -= vanishSpeed * 3f;
 			else

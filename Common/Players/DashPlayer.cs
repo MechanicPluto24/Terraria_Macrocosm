@@ -275,8 +275,6 @@ namespace Macrocosm.Content.Players
 					Main.dust[dustIdx].velocity *= 0.1f;
 					Main.dust[dustIdx].scale *= 1f + (float)Main.rand.Next(20) * 0.01f;
 				}
-
-				Player.ghost = false;
 			}
 		}
 	}
