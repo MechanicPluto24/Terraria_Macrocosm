@@ -14,8 +14,8 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Experimental Handheld Engine");
-			Tooltip.SetDefault("CHANGEME");
+			// DisplayName.SetDefault("Experimental Handheld Engine");
+			// Tooltip.SetDefault("CHANGEME");
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
 

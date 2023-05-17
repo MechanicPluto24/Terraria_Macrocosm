@@ -5,6 +5,7 @@ using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
@@ -79,8 +80,8 @@ namespace Macrocosm.Common.Utils
 
 		public static void AddMapEntry(ModTile tile, Color color, string name)
 		{
-			ModTranslation name2 = tile.CreateMapEntryName();
-			name2.SetDefault(name);
+			LocalizedText name2 = tile.CreateMapEntryName();
+			// name2.SetDefault(name);
 			tile.AddMapEntry(color, name2);
 		}
 

@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 	{
 		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault("A sword forged from the fires of Hell itself" + "\n'The only thing they fear is you.'");
+			// Tooltip.SetDefault("A sword forged from the fires of Hell itself" + "\n'The only thing they fear is you.'");
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 
 		}

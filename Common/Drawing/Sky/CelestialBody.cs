@@ -28,26 +28,44 @@ namespace Macrocosm.Common.Drawing.Sky
 
     public class CelestialBody
     {
+        /// <summary> The CelestialBody's texture width </summary>
         public float Width => bodyTexture.Width;
+        /// <summary> The CelestialBody's texture width </summary>
         public float Height => bodyTexture.Height;
 
+        /// <summary> Whether the CelestialBody has an atmosphere texture </summary>
         public bool HasAtmo => atmoTexture is not null;
+
+        /// <summary> Whether the CelestialBody has an overlaying texture (legacy shading) </summary>
         public bool HasOverlay = false;
 
         /// <summary> Position on the screen </summary>
         public Vector2 Position { get; set; }
+
+        /// <summary> The CelestialBody's scale </summary>
         public float Scale { get => scale; set => scale = value; }
+
+        /// <summary> The CelestialBody's rotation </summary>
         public float Rotation { get => rotation; set => rotation = value; }
-		public CelestialBody LightSource { get => lightSource; set => lightSource = value; }
-		public float OverlayRotation { get => overlayRotation; set => overlayRotation = value; }
+
+        /// <summary> References another CelestialBody as a source of light </summary>
+        public CelestialBody LightSource { get => lightSource; set => lightSource = value; }
+
+        /// <summary> Rotation of the CelestialBody overlay </summary>
+        public float OverlayRotation { get => overlayRotation; set => overlayRotation = value; }
+
+        /// <summary> The rotation of the CelestialBody's orbit around another CelestialBody </summary>
         public float OrbitRotation { get => orbitRotation % MathHelper.TwoPi - MathHelper.Pi; set => orbitRotation = value; }
+
+        /// <summary> The CelestialBody's orbit angular speed around another CelestialBody </summary>
         public float OrbitSpeed { get => orbitSpeed; set => orbitSpeed = value; }
 
-
         public delegate void FuncConfigureShader(float rotation, out float intensity, out Vector2 offsetRadius);
+        /// <summary> Enable and configure the parameters of the default CelestialBody shading effect. Also needs a valid light source </summary>
         public FuncConfigureShader ConfigureShader = null;
 
 		public delegate Effect FuncOverrideShader();
+        /// <summary> Override and configure a CelestialBody's custom shader, return the desired Effect </summary>
 		public FuncOverrideShader OverrideShader = null;
 
 		#region Private vars 
@@ -90,20 +108,32 @@ namespace Macrocosm.Common.Drawing.Sky
             Rotation = rotation;
         }
 
+        /// <summary> Set the position using absolut coordinates </summary>
         public void SetPosition(float x, float y) => Position = new Vector2(x, y);
-        public void SetPositionRelative(CelestialBody reference, Vector2 offset) => Position = reference.Position + offset;
-        public void SetPositionPolar(Vector2 origin, float radius, float theta) => Position = origin + Utility.PolarVector(radius, theta);
-        public void SetPositionPolar(float radius, float theta) => Position = ScreenCenter + Utility.PolarVector(radius, theta);
-        public void SetPositionPolar(CelestialBody referenceBody, float radius, float theta) => Position = referenceBody.Position + Utility.PolarVector(radius, theta);
-        
-		public void SetLightSource(CelestialBody lightSource) => this.lightSource = lightSource;
 
-		public void SetTextures(Texture2D bodyTexture = null, Texture2D atmoTexture = null, Texture2D bodyShadowTexture = null, Texture2D atmoShadowTexture = null)
+        /// <summary> Set the position relative to another CelestialBody </summary>
+        public void SetPositionRelative(CelestialBody reference, Vector2 offset) => Position = reference.Position + offset;
+
+        /// <summary> Set the position using a reference point and polar coordinates </summary>
+        public void SetPositionPolar(Vector2 origin, float radius, float theta) => Position = origin + Utility.PolarVector(radius, theta);
+
+        /// <summary> Set the position using polar coordinates, with the screen center as origin </summary>
+        public void SetPositionPolar(float radius, float theta) => Position = ScreenCenter + Utility.PolarVector(radius, theta);
+
+        /// <summary> Set the position using polar coordinates, with the position of another CelestialBody as origin </summary>
+        public void SetPositionPolar(CelestialBody referenceBody, float radius, float theta) => Position = referenceBody.Position + Utility.PolarVector(radius, theta);
+
+        /// <summary> Set the lightsource CelestialBody of this CelestialBody </summary>
+        public void SetLightSource(CelestialBody lightSource) => this.lightSource = lightSource;
+
+        /// <summary> Set the composing textures of the CelestialBody </summary>
+        public void SetTextures(Texture2D bodyTexture = null, Texture2D atmoTexture = null, Texture2D bodyOverlayTexture = null, Texture2D atmoOverlayTexture = null)
         {
+            // TODO: ignore nulls and add a better removal mechanism?
             this.bodyTexture = bodyTexture;
             this.atmoTexture = atmoTexture;
-            this.bodyOverlayTexture = bodyShadowTexture;
-            this.atmoOverlayTexture = atmoShadowTexture;
+            this.bodyOverlayTexture = bodyOverlayTexture;
+            this.atmoOverlayTexture = atmoOverlayTexture;
         }
 
         /// <summary>
@@ -210,6 +240,11 @@ namespace Macrocosm.Common.Drawing.Sky
             orbitChildren.Clear();
         }
 
+        /// <summary>
+        /// Draw this CelestialBody
+        /// </summary>
+        /// <param name="spriteBatch"> The SpriteBatch </param>
+        /// <param name="withChildren"> Whether to draw the CelestialBody with all its orbiting children </param>
         public void Draw(SpriteBatch spriteBatch, bool withChildren = true)
         {
             if (parallaxSpeedX > 0f || parallaxSpeedY > 0f || averageOffset != default)

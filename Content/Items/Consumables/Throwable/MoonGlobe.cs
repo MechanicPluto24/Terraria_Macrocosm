@@ -9,8 +9,8 @@ namespace Macrocosm.Content.Items.Consumables.Throwable
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Moon Globe");
-			Tooltip.SetDefault("Toss it to change how the Moon looks!");
+			// DisplayName.SetDefault("Moon Globe");
+			// Tooltip.SetDefault("Toss it to change how the Moon looks!");
 		}
 
 		public override void SetDefaults()

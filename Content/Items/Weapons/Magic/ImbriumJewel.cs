@@ -10,7 +10,6 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 	{
 		public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Imbrium Jewel");
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
             Item.staff[Item.type] = true;
         }
@@ -31,7 +30,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
             Item.rare = ItemRarityID.Purple;
 			Item.UseSound = SoundID.Item8;
 			Item.autoReuse = true;
-			Item.shoot = ModContent.ProjectileType<ImbriumJewelProj>();
+			Item.shoot = ModContent.ProjectileType<ImbriumJewelProjectile>();
 			Item.shootSpeed = 8f;
 		}
 	}

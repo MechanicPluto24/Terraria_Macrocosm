@@ -15,8 +15,7 @@ namespace Macrocosm.Content.Tiles
 			Main.tileMergeDirt[Type] = false;
 			MinPick = 225;
 			MineResist = 4f;
-			ItemDrop = ItemType<Items.Placeable.BlocksAndWalls.MoonBasePlating>();
-			AddMapEntry(new Color(180, 180, 180));
+ 			AddMapEntry(new Color(180, 180, 180));
 		}
 		public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
 		{

@@ -9,7 +9,7 @@ namespace Macrocosm.Content.Items.Dev
 	{
 		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault("BEGONE.");
+			// Tooltip.SetDefault("BEGONE.");
 		}
 
 		public override void SetDefaults()

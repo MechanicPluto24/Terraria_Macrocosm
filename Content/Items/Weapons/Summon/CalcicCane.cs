@@ -15,7 +15,7 @@ namespace Macrocosm.Content.Items.Weapons.Summon
 	{
 		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault("Summons a Crater Imp to fight for you");
+			// Tooltip.SetDefault("Summons a Crater Imp to fight for you");
 
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 			ItemID.Sets.GamepadWholeScreenUseRange[Item.type] = true;

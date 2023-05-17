@@ -9,7 +9,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 		public override void SetStaticDefaults()
 		{
 			//DisplayName.SetDefault("Crescent Moon");
-			DisplayName.SetDefault("Artemite Sword");
+			// DisplayName.SetDefault("Artemite Sword");
 		}
 
 		public override void SetDefaults()

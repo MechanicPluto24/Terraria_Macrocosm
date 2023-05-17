@@ -2,6 +2,7 @@ using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles
@@ -22,13 +23,12 @@ namespace Macrocosm.Content.Tiles
 			MinPick = 225;
 			MineResist = 5f;
 
-			ModTranslation name = CreateMapEntryName();
-			name.SetDefault("Dianite Ore");
+			LocalizedText name = CreateMapEntryName();
+			// name.SetDefault("Dianite Ore");
 			AddMapEntry(new Color(210, 116, 75), name);
 
 			DustType = 84;
-			ItemDrop = ModContent.ItemType<Items.Materials.DianiteOre>();
-			HitSound = SoundID.Tink;
+ 			HitSound = SoundID.Tink;
 			//mineResist = 4f;
 			//minPick = 200;
 		}

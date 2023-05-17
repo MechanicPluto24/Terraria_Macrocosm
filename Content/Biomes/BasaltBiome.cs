@@ -9,7 +9,7 @@ namespace Macrocosm.Content.Biomes
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Basalt");
+			// DisplayName.SetDefault("Basalt");
 		}
 
 		public override void OnInBiome(Player player)

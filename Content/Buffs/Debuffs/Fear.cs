@@ -7,8 +7,8 @@ namespace Macrocosm.Content.Buffs.Debuffs
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Fear");
-			Description.SetDefault("OH GOD WHAT IS THAT!?");
+			// DisplayName.SetDefault("Fear");
+			// Description.SetDefault("OH GOD WHAT IS THAT!?");
 			Main.debuff[Type] = true;
 			Main.buffNoSave[Type] = true;
 			Main.buffNoTimeDisplay[Type] = false;

@@ -11,14 +11,14 @@ namespace Macrocosm.Common.Hooks
 	{
 		public void Load(Mod mod)
 		{
-			On.Terraria.Main.ApplyColorOfTheSkiesToTiles += Main_ApplyColorOfTheSkiesToTiles;
+			Terraria.On_Main.ApplyColorOfTheSkiesToTiles += Main_ApplyColorOfTheSkiesToTiles;
 		}
 		public void Unload() 
 		{
-			On.Terraria.Main.ApplyColorOfTheSkiesToTiles -= Main_ApplyColorOfTheSkiesToTiles;
+			Terraria.On_Main.ApplyColorOfTheSkiesToTiles -= Main_ApplyColorOfTheSkiesToTiles;
 		}
 
-		private void Main_ApplyColorOfTheSkiesToTiles(On.Terraria.Main.orig_ApplyColorOfTheSkiesToTiles orig)
+		private void Main_ApplyColorOfTheSkiesToTiles(Terraria.On_Main.orig_ApplyColorOfTheSkiesToTiles orig)
 		{
 			if (SubworldSystem.IsActive<Moon>())
 			{

@@ -10,7 +10,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Artemite Spear");
+			// DisplayName.SetDefault("Artemite Spear");
 		}
 
 		public override void SetDefaults()

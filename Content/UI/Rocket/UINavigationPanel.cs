@@ -124,9 +124,9 @@ namespace Macrocosm.Content.UI.Rocket
 			Texture2D outlineLarge = ModContent.Request<Texture2D>(path + "Buttons/SelectionOutlineLarge", mode).Value;
 
 			ZoomInButton = new(zoomInButton, zoomInBorder, new Vector2(6, 88));
-			ZoomInButton.OnClick += (_, _) => ZoomIn();
+			ZoomInButton.OnLeftClick += (_, _) => ZoomIn();
 			ZoomOutButton = new(zoomOutButton, zoomOutBorder, new Vector2(6, 118));
-			ZoomOutButton.OnClick += (_, _) => ZoomOut();
+			ZoomOutButton.OnLeftClick += (_, _) => ZoomOut();
 
 			EarthSystem = new(ModContent.Request<Texture2D>(path + "Maps/EarthSystem", mode).Value);
 			SolarSystemInner = new(ModContent.Request<Texture2D>(path + "Maps/SolarSystemInner", mode).Value, defaultNext: GetInitialNavigationMap());

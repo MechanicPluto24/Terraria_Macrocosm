@@ -16,10 +16,10 @@ namespace Macrocosm.Common.Global.GlobalNPCs
 		public override void Load()
 		{
 			NPCGravity = typeof(NPC).GetField("gravity", BindingFlags.NonPublic | BindingFlags.Static);
-			On.Terraria.NPC.UpdateNPC_UpdateGravity += NPC_UpdateNPC_UpdateGravity;
+			Terraria.On_NPC.UpdateNPC_UpdateGravity += NPC_UpdateNPC_UpdateGravity;
 		}
 
-		private static void NPC_UpdateNPC_UpdateGravity(On.Terraria.NPC.orig_UpdateNPC_UpdateGravity orig, NPC self, out float maxFallSpeed)
+		private static void NPC_UpdateNPC_UpdateGravity(Terraria.On_NPC.orig_UpdateNPC_UpdateGravity orig, NPC self, out float maxFallSpeed)
 		{
 			orig(self, out maxFallSpeed);
 

@@ -15,7 +15,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			Main.projFrames[Type] = 6;
 			ProjectileID.Sets.TrailCacheLength[Type] = 20;
 			ProjectileID.Sets.TrailingMode[Type] = 3;
-			DisplayName.SetDefault("Moon Sword");
+			// DisplayName.SetDefault("Moon Sword");
 		}
 
 		public override void SetDefaults()
