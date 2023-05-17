@@ -11,18 +11,17 @@ namespace Macrocosm.Common.Hooks
 			On.Terraria.UI.ItemSlot.PickItemMovementAction += MoonCoin_AllowCoinSlotPlacement;
 		}
 
-		public void Unload() { }
+		public void Unload() 
+		{
+			On.Terraria.UI.ItemSlot.PickItemMovementAction -= MoonCoin_AllowCoinSlotPlacement;
+		}
 
 		private int MoonCoin_AllowCoinSlotPlacement(On.Terraria.UI.ItemSlot.orig_PickItemMovementAction orig, Item[] inv, int context, int slot, Item checkItem)
 		{
 			if (context == 1 && checkItem.type == ModContent.ItemType<MoonCoin>())
-			{
-				return 0;
-			}
-			else
-			{
-				return orig(inv, context, slot, checkItem);
-			}
-		}
+ 				return 0;
+ 			else
+ 				return orig(inv, context, slot, checkItem);
+ 		}
 	}
 }

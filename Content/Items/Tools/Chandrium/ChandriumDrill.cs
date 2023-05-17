@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Content.Projectiles.Friendly.Tools;
+using Macrocosm.Content.Rarities;
 using Terraria;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
@@ -25,7 +26,7 @@ namespace Macrocosm.Content.Items.Tools.Chandrium
 			Item.channel = true;
 			Item.knockBack = 0;
 			Item.value = Item.sellPrice(gold: 8);
-			Item.rare = ItemRarityID.Purple;
+			Item.rare = ModContent.RarityType<MoonRarityT1>();
 			Item.UseSound = SoundID.Item23;
 			Item.autoReuse = true;
 			Item.useTurn = true;

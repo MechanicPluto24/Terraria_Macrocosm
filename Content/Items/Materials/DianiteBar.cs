@@ -1,7 +1,7 @@
+using Macrocosm.Content.Rarities;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Materials
 {
@@ -16,7 +16,7 @@ namespace Macrocosm.Content.Items.Materials
 		{
 			Item.width = 20;
 			Item.height = 20;
-			Item.maxStack = 999;
+			Item.maxStack = 9999;
 			Item.value = 750;
 			Item.useStyle = ItemUseStyleID.Swing;
 			Item.useTurn = true;
@@ -24,9 +24,11 @@ namespace Macrocosm.Content.Items.Materials
 			Item.useTime = 10;
 			Item.autoReuse = true;
 			Item.consumable = true;
-			Item.createTile = TileType<Tiles.DianiteBar>();
+			Item.createTile = ModContent.TileType<Tiles.DianiteBar>();
 			Item.placeStyle = 0;
-			// Set other Item.X values here
+			Item.rare = ModContent.RarityType<MoonRarityT1>();
+			Item.material = true;
+
 		}
 
 		public override void AddRecipes()

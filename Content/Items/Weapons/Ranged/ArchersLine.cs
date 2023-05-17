@@ -1,4 +1,5 @@
 using Macrocosm.Content.Projectiles.Friendly.Ranged;
+using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.GameContent.Creative;
@@ -15,7 +16,6 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			Tooltip.SetDefault("Bullets ricochet from one enemy to another");
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
-
 		public override void SetDefaults()
 		{
 			Item.damage = 200;
@@ -28,9 +28,9 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			Item.noMelee = true;
 			Item.knockBack = 4f;
 			Item.value = 10000;
-			Item.rare = ItemRarityID.Purple;
+			Item.rare = ModContent.RarityType<MoonRarityT2>();
 			Item.shoot = ProjectileID.PurificationPowder; // For some reason, all the guns in the vanilla source have this.
-														  //Item.autoReuse = true;
+			Item.autoReuse = true;
 			Item.shootSpeed = 20f;
 			Item.useAmmo = AmmoID.Bullet;
 			Item.UseSound = SoundID.Item38;
@@ -38,7 +38,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
 		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
 		{
-			position += new Vector2(0, -5); // muzzle offset 
+ 			position += new Vector2(0, -5); // muzzle offset 
 			type = ModContent.ProjectileType<ArchersLineProjectile>();
 		}
 

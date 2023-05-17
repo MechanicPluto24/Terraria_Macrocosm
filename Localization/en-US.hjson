@@ -1,8 +1,639 @@
-﻿Mods: {
-    Macrocosm: {    
-        BiomeName: {
-            MoonBiome: The Moon
-            BasaltBiome: Basalt
-        }
-    }
+﻿
+Mods: {
+	Macrocosm: {
+		Biomes: {
+			MoonBiome.DisplayName: The Moon
+			BasaltBiome.DisplayName: Basalt
+			IrradiationBiome.DisplayName: The Irradiation
+		}
+
+		Buffs: {
+			Fear: {
+				DisplayName: Fear
+				Description: OH GOD WHAT IS THAT!?
+			}
+
+			SuitBreach: {
+				DisplayName: Suit Breach
+				Description: Your blood is boiling from the lack of atmospheric pressure!
+			}
+
+			ChandriumEmpowerment: {
+				DisplayName: Chandrium Empowerment
+				Description: Your next hit with your Chandrium Whip will deal increased damage!
+			}
+
+			CalcicCaneMinionBuff: {
+				DisplayName: Crater Imp
+				Description: This lesser demon will fight for you!
+			}
+
+			ChandriumStaffMinionBuff: {
+				DisplayName: Crescent Ghoul
+				Description: This Crescent Ghoul will fight for you!
+			}
+
+			SpaceShuttle: {
+				DisplayName: Space Shuttle
+				Description: In memory of STS-51-L and STS-107.
+			}
+		}
+
+		Items: {
+			CelestialBulwark: {
+				DisplayName: Celestial Bulwark
+				Tooltip:
+					'''
+					Allows the player to dash into the enemy
+					Double tap a direction
+					'''
+			}
+
+			AluminumBoots.DisplayName: Aluminum Boots
+			AluminumBreastplate.DisplayName: Aluminum Breastplate
+			AluminumHelmet.DisplayName: Aluminum Helmet
+			ArtemiteBreastplate.DisplayName: Artemite Breastplate
+			ArtemiteHelmet.DisplayName: Artemite Helmet
+			ArtemiteLeggings.DisplayName: Artemite Leggings
+			AstronautHelmet.DisplayName: Astronaut Helmet
+			AstronautLeggings.DisplayName: Astronaut Leggings
+			AstronautSuit.DisplayName: Astronaut Suit
+			ChandriumBreastplate.DisplayName: Chandrium Breastplate
+			ChandriumHelm.DisplayName: Chandrium Helm
+			ChandriumLeggings.DisplayName: Chandrium Leggings
+			DianiteBreastplate.DisplayName: Dianite Breastplate
+			DianiteLeggings.DisplayName: Dianite Leggings
+			DianiteVisor.DisplayName: Dianite Visor
+			SeleniteBreastplate.DisplayName: Selenite Breastplate
+			SeleniteHeadgear.DisplayName: Selenite Headgear
+			SeleniteLeggings.DisplayName: Selenite Leggings
+
+			CraterDemonBossBag: {
+				DisplayName: Treasure Bag (Crater Demon)
+				Tooltip: "{$CommonItemTooltip.RightClickToOpen}"
+			}
+
+			CraterDemonSummon: {
+				DisplayName: Lunar Skull
+				Tooltip:
+					'''
+					Summons the Crater Demon
+					Must be used on the Moon
+					'''
+			}
+
+			MoonGlobe: {
+				DisplayName: Moon Globe
+				Tooltip: Toss it to change how the Moon looks!
+			}
+
+			MoonCoin.DisplayName: Moon Coin
+
+			BanHammer: {
+				DisplayName: Ban Hammer
+				Tooltip: BEGONE.
+			}
+
+			DevPick: {
+				DisplayName: Dev Pick
+				Tooltip: Dev Pickaxe
+			}
+
+			RocketPlacer: {
+				DisplayName: Rocket Placer
+				Tooltip: Places a rocket.
+			}
+
+			Teleporter: {
+				DisplayName: Teleporter
+				Tooltip: Teleports the user to and from the Moon
+			}
+
+			AluminumBar.DisplayName: Aluminum Bar
+			AluminumOre.DisplayName: Aluminum Ore
+			ArtemiteBar.DisplayName: Artemite Bar
+			ArtemiteOre.DisplayName: Artemite Ore
+			BrokenHeroShield.DisplayName: Broken Hero Shield
+			ChandriumBar.DisplayName: Chandrium Bar
+			ChandriumOre.DisplayName: Chandrium Ore
+
+			CinisChunk: {
+				DisplayName: Cinis Chunk
+				Tooltip: "'The core in the middle holds many universes inside'"
+			}
+
+			NubisChunk: {
+				DisplayName: Nubis Chunk
+				Tooltip: "'It spins akin to a galaxy'"
+			}
+
+			SidusChunk: {
+				DisplayName: Sidus Chunk
+				Tooltip: "'The fire burns like a star'"
+			}
+
+			TurbenChunk: {
+				DisplayName: Turben Chunk
+				Tooltip: "'Emitting enough light to blind'"
+			}
+
+			CortexFragment.DisplayName: Cortex Fragment
+			CosmicDust.DisplayName: Cosmic Dust
+			CosmicEssence.DisplayName: Cosmic Essence
+			DeliriumPlating.DisplayName: Delirium Plating
+			DianiteBar.DisplayName: Dianite Bar
+			DianiteOre.DisplayName: Dianite Ore
+			LithiumOre.DisplayName: Lithium
+			LuminiteCrystal.DisplayName: Luminite Crystal
+			OilShale.DisplayName: Oil Shale
+			OxygenTank.DisplayName: Oxygen Tank
+			PrintedCircuitBoard.DisplayName: Printed Circuit Board
+			SeleniteBar.DisplayName: Selenite Bar
+			SeleniteOre.DisplayName: Selenite Ore
+			SiliconOre.DisplayName: Raw Silicon
+
+			MeteoricChunk: {
+				DisplayName: Meteoric Chunk
+				Tooltip:
+					'''
+					Consumable
+					Right click to smash open!
+					'''
+			}
+
+			NebulaChunk: {
+				DisplayName: Nebula Chunk
+				Tooltip:
+					'''
+					Consumable
+					Right click to smash open!
+					'''
+			}
+
+			SolarChunk: {
+				DisplayName: Solar Chunk
+				Tooltip:
+					'''
+					Consumable
+					Right click to smash open!
+					'''
+			}
+
+			StardustChunk: {
+				DisplayName: Stardust Chunk
+				Tooltip:
+					'''
+					Consumable
+					Right click to smash open!
+					'''
+			}
+
+			VortexChunk: {
+				DisplayName: Vortex Chunk
+				Tooltip:
+					'''
+					Consumable
+					Right click to smash open!
+					'''
+			}
+
+			SpaceShuttle: {
+				DisplayName: Space Shuttle
+				Tooltip: In memory of STS-51-L and STS-107.
+			}
+
+			Hemostone.DisplayName: Hemostone
+			HemostoneBrick.DisplayName: Hemostone Brick
+			HemostoneBrickWall.DisplayName: Hemostone Brick Wall
+			HemostoneWall.DisplayName: Hemostone Wall
+			IrradiatedBrick.DisplayName: Irradiated Brick
+			IrradiatedBrickWall.DisplayName: Irradiated Brick Wall
+			IrradiatedRock.DisplayName: Irradiated Rock
+			IrradiatedRockWall.DisplayName: Irradiated Rock Wall
+			MoonBasePlating.DisplayName: Lunar Plating
+			Protolith.DisplayName: Protolith
+			ProtolithWall.DisplayName: Protolith Wall
+			PyramidPlate.DisplayName: Pyramid Plate
+			PyramidPlateWall.DisplayName: Pyramid Plate Wall
+			Regolith.DisplayName: Regolith
+			RegolithBrick.DisplayName: Regolith Brick
+			RegolithBrickWall.DisplayName: Regolith Brick Wall
+			RegolithWall.DisplayName: Regolith Wall
+			SpaceshipCore.DisplayName: Spaceship Core
+			SpaceshipFlooring.DisplayName: Spaceship Flooring
+			SpaceshipPlate.DisplayName: Spaceship Plate
+			SpaceshipPlateWall.DisplayName: Spaceship Plate Wall
+			SpaceshipWindow.DisplayName: Spaceship Window
+			SpaceshipWindowWall.DisplayName: Spaceship Window Wall
+			SuperResistantGlass.DisplayName: Super Resistant Glass
+			Tendril.DisplayName: Tendril
+			AdamantiteLoom.DisplayName: Adamantite Loom
+			MoonBaseTerminal.DisplayName: Moon Base Terminal
+			SolarPanelLarge.DisplayName: Large Solar Panel
+			TitaniumLoom.DisplayName: Titanium Loom
+
+			BloodSunRising: {
+				DisplayName: Blood Sun Rising
+				Tooltip: "'L. Reda'"
+			}
+
+			DarkFortress: {
+				DisplayName: Dark Fortress
+				Tooltip: "'L. Reda'"
+			}
+
+			Empress: {
+				DisplayName: Empress
+				Tooltip: "'L. Reda'"
+			}
+
+			Overlord: {
+				DisplayName: Overlord
+				Tooltip: "'L. Reda'"
+			}
+
+			Retributor: {
+				DisplayName: Retributor
+				Tooltip: "'L. Reda'"
+			}
+
+			WhenDayBreaks: {
+				DisplayName: When Day Breaks
+				Tooltip: "'L. Reda'"
+			}
+
+			CraterDemonRelic.DisplayName: Crater Demon Relic
+			MoonGoldTombstone.DisplayName: Moon Gold Tombstone
+			MoonTombstone.DisplayName: Moon Tombstone
+			CraterDemonTrophy.DisplayName: Crater Demon Trophy
+			AluminumAxe.DisplayName: Aluminum Axe
+			AluminumHammer.DisplayName: Aluminum Hammer
+			AluminumPickaxe.DisplayName: Aluminum Pickaxe
+			ArtemiteAxe.DisplayName: Artemite Axe
+			ArtemiteDrill.DisplayName: Artemite Drill
+			ArtemiteHammer.DisplayName: Artemite Hammer
+			ArtemitePickaxe.DisplayName: Artemite Pickaxe
+			ChandriumAxe.DisplayName: Chandrium Axe
+			ChandriumDrill.DisplayName: Chandrium Drill
+			ChandriumHammer.DisplayName: Chandrium Hammer
+			ChandriumPickaxe.DisplayName: Chandrium Pickaxe
+			DianiteAxe.DisplayName: Dianite Axe
+			DianiteDrill.DisplayName: Dianite Drill
+			DianiteHammer.DisplayName: Dianite Hammer
+			DianitePickaxe.DisplayName: Dianite Pickaxe
+			SeleniteAxe.DisplayName: Selenite Axe
+			SeleniteDrill.DisplayName: Selenite Drill
+			SeleniteHammer.DisplayName: Selenite Hammer
+			SelenitePickaxe.DisplayName: Selenite Pickaxe
+			CraterDemonMask.DisplayName: Crater Demon Mask
+			DianiteFork.DisplayName: Dianite Fork
+			DianiteTome.DisplayName: Dianite Tome
+			AluminumBroadsword.DisplayName: Aluminum Broadsword
+			AluminumShortsword.DisplayName: Aluminum Shortsword
+			ArtemiteGreatsword.DisplayName: Artemite Greatsword
+			ArtemiteSpear.DisplayName: Artemite Spear
+			ArtemiteSword.DisplayName: Artemite Sword
+			ClawWrench.DisplayName: Claw Wrench
+
+			Crucible: {
+				DisplayName: Crucible
+				Tooltip:
+					'''
+					A sword forged from the fires of Hell itself
+					'The only thing they fear is you.'
+					'''
+			}
+
+			MoonSword.DisplayName: Moon Sword
+
+			Noxsaber: {
+				DisplayName: The Noxsaber
+				Tooltip: An ancient black energy saber, stolen from the temple of a long dead cult
+			}
+
+			AluminumBow.DisplayName: Aluminum Bow
+
+			ArchersLine: {
+				DisplayName: Archer's Line
+				Tooltip: Bullets ricochet from one enemy to another
+			}
+
+			Copernicus: {
+				DisplayName: Copernicus
+				Tooltip: Right click to launch a plasma ball grenade
+			}
+
+			Cruithne3753: {
+				DisplayName: Cruithne-3753
+				Tooltip: Two different firing modes
+			}
+
+			LHB805.DisplayName: LHB-805
+
+			NWA12691: {
+				DisplayName: NWA-12691
+				Tooltip:
+					'''
+					Shoots rockets 
+					Right click to lock onto an enemy
+					'''
+			}
+
+			SeleniteBow.DisplayName: Selenite Bow
+			SeleniteMagnum.DisplayName: Selenite Magnum
+
+			CalcicCane: {
+				DisplayName: Calcic Cane
+				Tooltip: Summons a Crater Imp to fight for you
+			}
+
+			ChandriumStaff: {
+				DisplayName: Chandrium Staff
+				Tooltip: Summons a Crescent Ghoul to fight for you
+			}
+
+			ChandriumWhip.DisplayName: Chandrium Whip
+		}
+
+		NPCs: {
+			CraterDemon.DisplayName: Crater Demon
+			CraterImp.DisplayName: Crater Imp
+			BloodMoonJuggernaut.DisplayName: Juggernaut
+			Clavite.DisplayName: Clavite
+			CraterCrawlerBody.DisplayName: Crater Crawler
+			CraterCrawlerHead.DisplayName: Crater Crawler
+			CraterCrawlerTail.DisplayName: Crater Crawler
+			CrescentGhoul.DisplayName: Crescent Ghoul
+			Leaper.DisplayName: Leaper
+			LuminiteSlime.DisplayName: Luminite Slime
+			MoonWormBody.DisplayName: Moon Worm
+			MoonWormHead.DisplayName: Moon Worm
+			MoonWormTail.DisplayName: Moon Worm
+			MoonZombie.DisplayName: Zombie Astronaut
+			RadioactiveSlime.DisplayName: Radioactive Slime
+			RegolithSlime.DisplayName: Regolith Slime
+			MoonChampion.DisplayName: Moon Champion
+			RocketNPC.DisplayName: Rocket N P C
+		}
+
+		Projectiles: {
+			MoonMeteorLarge.DisplayName: Large Meteor
+			MoonMeteorMedium.DisplayName: Medium Meteor
+			MoonMeteorSmall.DisplayName: Small Meteor
+			NebulaMeteor.DisplayName: Nebula Meteor
+			SolarMeteor.DisplayName: Solar Meteor
+			StardustMeteor.DisplayName: Stardust Meteor
+			VortexMeteor.DisplayName: Vortex Meteor
+			DianiteTomeProjectile.DisplayName: Dianite Meteor
+			DianiteTomeProjectileSmall.DisplayName: Dianite Meteor
+			AluminumShortswordProjectile.DisplayName: Aluminum Shortsword
+			ArtemiteGreatswordSwing.DisplayName: Artemite Greatsword
+			ArtemiteSpearProjectile.DisplayName: Artemite Spear
+			ArtemiteSpearProjectileShoot.DisplayName: Artemite Spear
+			ArtemiteSwordProjectile.DisplayName: Artemite Sword
+			ClawWrenchProjectile.DisplayName: Claw Wrench Projectile
+			MoonSwordProjectile.DisplayName: Moon Sword
+			MoonSwordSwing.DisplayName: Moonlight Greatsword
+			ArchersLineProjectile.DisplayName: Archers Line Projectile
+			CruithneGreenSlug.DisplayName: Cruithne Green Slug
+			DeliriumShell.DisplayName: Delirium Shell
+			LHB805Projectile.DisplayName: LHB-805
+			NWAMissile.DisplayName: NWA-12691
+			PlasmaGrenade.DisplayName: Plasma Grenade
+			SeleniteArrow.DisplayName: Selenite Arrow
+			CalcicCaneMinion.DisplayName: Crater Imp
+			ChandriumStaffMinion.DisplayName: Crescent Ghoul
+			ChandriumWhipProjectile.DisplayName: Chandrium Whip Projectile
+			MoonGlobeProjectile.DisplayName: Moon Globe Projectile
+			MoonTombstone.DisplayName: Moon Tombstone
+			ArtemiteDrillProjectile.DisplayName: Artemite Drill Projectile
+			ChandriumDrillProjectile.DisplayName: Chandrium Drill Projectile
+			DianiteDrillProjectile.DisplayName: Dianite Drill Projectile
+			SeleniteDrillProjectile.DisplayName: Selenite Drill Projectile
+			FlamingMeteor.DisplayName: Flaming Meteor
+			LuminiteSlimeProjectile.DisplayName: Luminite Slime
+			MeteorPortal.DisplayName: Meteor Portal
+		}
+
+		Tiles: {
+			RocketLaunchPad.MapEntry: Launch Pad
+			AluminumOre.MapEntry: Aluminum
+			ArtemiteOre.MapEntry: Artemite Ore
+			ChandriumOre.MapEntry: Chandrium Ore
+			DianiteOre.MapEntry: Dianite Ore
+			LithiumOre.MapEntry: Lithium
+			OilShale.MapEntry: Oil Shale
+			SeleniteOre.MapEntry: Selenite Ore
+		}
+
+		GameTips: {
+
+			Generic_Tip1: (TEST) You can visit other planets if you manage to build a rocket (TEST)
+
+			LoadingScreen: {
+				Moon: {
+					Moon_Tip1: You've taken your first step into a larger world.
+					Moon_Tip2: The Moon takes much longer to rotate than the Earth. Make sure you have enough supplies to last through the night.
+					Moon_Tip3: Is the Moon really made of cheese? Dig down to its core to find out.
+					Moon_Tip4: Even on this airless rock, life finds a way. Always remain on guard.
+					Moon_Tip5: Take advantage of the Moon's low gravity, but remember your enemies will do the same.
+					Moon_Tip6: When the sanguine hour comes, it's time to hide.
+					Moon_Tip7: No atmosphere means no torches, but there are other ways of illuminating the darkness.
+					Moon_Tip8: Beware of solar storms!
+					Moon_Tip9: Moon Lord was just the beginning. What other horrors await you on our silver satellite?
+				}
+
+				Earth: {
+					Earth_Tip1: Returning for a beer?
+					Earth_Tip2: Did you know that there are more than 1 quadrillion ants roaming our Earth?
+					Earth_Tip3: Normal gravity can be quite punishing after a long trek in zero-g. You'll get used to it.
+					Earth_Tip4: Nearly seven billion deaths within the first 24 hours.
+					Earth_Tip5: You are never truly safe.
+				}
+			}
+		}
+
+        WorldInfo: {
+			
+			Gravity: {
+				Name: Gravity
+				Unit: G
+				Unit2: mps_sq
+				Unstable: Unstable
+			}
+
+			Radius: {
+				Name: Radius
+				Unit: km
+				Unit2: mi
+			}
+
+			DayPeriod: {
+				Name: Day Period
+				Unit: days
+				UnitSingular: day
+				TidallyLocked : Tidally Locked
+			}
+
+			ThreatLevel: {
+				Name: Threat Level
+				Threat1: Harmless
+				Threat2: Arduous
+				Threat3: Challenging
+				Threat4: Dangerous
+				Threat5: Treacherous
+				Threat6: Lethal
+				Threat7: Cataclysmic
+				Threat8: Nightmare
+				Threat9: Apollyon
+				Threat10: Unknown
+			}
+
+			Hazard: {
+				Name: Hazard
+				MeteorStorms: Meteor Storms
+				SolarStorms: Solar Storms
+			}
+
+			Checklist: {
+			
+				DisplayName: Pre-flight checklist
+			
+				Fuel: {
+					Good: Enough fuel
+					Bad: Not enough fuel
+					GoodHover: You have enough fuel to launch the rocket
+					BadHover: You need more fuel to launch the rocket
+				}
+
+				Destination: {
+					Good: Destination selected
+					Bad: No destination selected
+					GoodHover: You have selected a destination for the rocket
+					BadHover: You need to select a destination for the rocket
+				}
+
+				Obstruction: {
+					Good: View unobstructed
+					Bad: View obstructed
+					GoodHover: The rocket has a clear flight path
+					BadHover: There is an obstruction in the rocket's flight path
+				}
+			}
+		}
+		
+		Worlds: {
+    		Sun: {
+    			DisplayName: The Sun
+    			FlavorText: default
+    		}
+    
+    		Vulcan: {
+    			DisplayName: Vulcan
+    			FlavorText: default
+    		}
+    
+            Mercury: {
+    			DisplayName: Mercury
+    			FlavorText: default 
+    		}
+    
+            Venus: {
+    			DisplayName: Venus
+    			FlavorText: default
+    		}
+
+            Earth: {
+				DisplayName: Earth
+				FlavorText: Third planet from the Sun, and homeworld of humanity. Covered in lush green forests, liquid oceans, and an oxygen-rich atmosphere, it is the ideal world for life to comfortably thrive.
+			}
+				
+            Moon: {
+				DisplayName: The Moon 
+				FlavorText: Homeworld of the infamous Moon Lord, the Earth's Moon is a desolate, airless rock with an unforgiving environment. The Moon is well known for its high concentration of precious luminite, guarded by alien terrors that dwell beneath the dead moonscape.
+			}
+
+             Mars: {
+    			DisplayName: Mars
+    			FlavorText: default
+    		}
+    
+             Phobos: {
+    			DisplayName: Phobos
+    			FlavorText: default
+    		}
+    
+             Deimos: {
+    			DisplayName: Deimos
+    			FlavorText: default
+    		}
+    
+             Ceres: {
+    			DisplayName: Ceres
+    			FlavorText: default
+    		}
+    
+             Jupiter: {
+    			DisplayName: Jupiter
+    			FlavorText: default
+    		}
+    
+             Io: {
+    			DisplayName: Io
+    			FlavorText: default
+    		}
+    
+             Europa: {
+    			DisplayName: Europa
+    			FlavorText: default
+    		}
+    
+             Saturn: {
+    			DisplayName: Saturn
+    			FlavorText: default
+    		}
+    
+             Titan: {
+    			DisplayName: Titan
+    			FlavorText: default
+    		}
+    
+             Ouranos: {
+    			DisplayName: Ouranos
+    			FlavorText: default
+    		}
+    
+             Miranda: {
+    			DisplayName: Miranda
+    			FlavorText: default
+    		}
+    
+             Neptune: {
+    			DisplayName: Neptune
+    			FlavorText: default
+    		}
+    
+             Triton: {
+    			DisplayName: Triton
+    			FlavorText: default
+    		}
+    
+             Pluto: {
+    			DisplayName: Pluto
+    			FlavorText: default
+    		}
+    
+             Charon: {
+    			DisplayName: Charon
+    			FlavorText: default
+    		}
+    
+             Eris: {
+    			DisplayName: Eris
+    			FlavorText: default
+    		}
+		}
+        
+		
+	}
 }

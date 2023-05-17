@@ -1,6 +1,9 @@
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Projectiles.Friendly.Melee;
+using Macrocosm.Content.Rarities;
+using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -18,18 +21,29 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 		{
 			Item.damage = 225;
 			Item.DamageType = DamageClass.Melee;
-			Item.width = 40;
-			Item.height = 40;
-			Item.useTime = 10;
-			Item.useAnimation = 10;
+			Item.width = 78;
+			Item.height = 80;
+			Item.useTime = 30;
+			Item.useAnimation = 30;
 			Item.useStyle = ItemUseStyleID.Swing;
+			Item.shoot = ModContent.ProjectileType<ArtemiteGreatswordSwing>();
 			Item.knockBack = 5;
 			Item.value = 10000;
-			Item.rare = ItemRarityID.Green;
+			Item.rare = ModContent.RarityType<MoonRarityT1>();
 			Item.UseSound = SoundID.Item1;
 			Item.autoReuse = true;
-			Item.shoot = ModContent.ProjectileType<ArtemiteSwordProjectile>();
-			Item.shootSpeed = 10f;
+ 		}
+
+		public override void UseItemHitbox(Player player, ref Rectangle hitbox, ref bool noHitbox)
+		{
+			hitbox.Y -= 50;
+ 			hitbox.Height += 50;
+		}
+
+		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+		{
+			Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.MountedCenter, new Vector2(player.direction, 0f), Item.shoot, damage, knockback, player.whoAmI, (float)player.direction * player.gravDir, 30); //, player.GetAdjustedItemScale(Item));
+			return true;
 		}
 
 		public override void AddRecipes()

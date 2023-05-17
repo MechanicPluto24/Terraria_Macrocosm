@@ -4,6 +4,7 @@ using Terraria.IO;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
+using Macrocosm.Common.Utils;
 
 namespace Macrocosm.Content.WorldGeneration.Moon
 {
@@ -15,26 +16,14 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 		{
 			progress.Message = "Mineralizing the Moon...";
 			#region Generate ore veins
-			GenerateOre(ModContent.TileType<ArtemiteOre>(), 0.0001, WorldGen.genRand.Next(5, 9), WorldGen.genRand.Next(5, 9));
-			GenerateOre(ModContent.TileType<ChandriumOre>(), 0.0001, WorldGen.genRand.Next(5, 9), WorldGen.genRand.Next(5, 9));
-			GenerateOre(ModContent.TileType<DianiteOre>(), 0.0001, WorldGen.genRand.Next(5, 9), WorldGen.genRand.Next(5, 9));
-			GenerateOre(ModContent.TileType<SeleniteOre>(), 0.0001, WorldGen.genRand.Next(5, 9), WorldGen.genRand.Next(5, 9));
+			int protolithType = ModContent.TileType<Tiles.Protolith>();
+			Utility.GenerateOre(ModContent.TileType<ArtemiteOre>(), 0.0001, WorldGen.genRand.Next(5, 9), WorldGen.genRand.Next(5, 9), protolithType);
+			Utility.GenerateOre(ModContent.TileType<ChandriumOre>(), 0.0001, WorldGen.genRand.Next(5, 9), WorldGen.genRand.Next(5, 9), protolithType);
+			Utility.GenerateOre(ModContent.TileType<DianiteOre>(), 0.0001, WorldGen.genRand.Next(5, 9), WorldGen.genRand.Next(5, 9), protolithType);
+			Utility.GenerateOre(ModContent.TileType<SeleniteOre>(), 0.0001, WorldGen.genRand.Next(5, 9), WorldGen.genRand.Next(5, 9), protolithType);
 
-			GenerateOre(TileID.LunarOre, 0.00005, WorldGen.genRand.Next(9, 15), WorldGen.genRand.Next(9, 15));
+			Utility.GenerateOre(TileID.LunarOre, 0.00005, WorldGen.genRand.Next(9, 15), WorldGen.genRand.Next(9, 15), protolithType);
 			#endregion
-		}
-
-		void GenerateOre(int TileType, double percent, int strength, int steps)
-		{
-			for (int k = 0; k < (int)((Main.maxTilesX * Main.maxTilesY) * percent); k++)
-			{
-				int x = WorldGen.genRand.Next(0, Main.maxTilesX);
-				int y = WorldGen.genRand.Next(0, Main.maxTilesY);
-				if (Main.tile[x, y].HasTile && Main.tile[x, y].TileType == ModContent.TileType<Tiles.Protolith>())
-				{
-					WorldGen.TileRunner(x, y, strength, steps, TileType);
-				}
-			}
 		}
 	}
 }

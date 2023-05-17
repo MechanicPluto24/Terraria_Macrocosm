@@ -10,6 +10,8 @@ using Macrocosm.Content.Items.Currency;
 using Macrocosm.Content.Items.Weapons.Summon;
 using Macrocosm.Content.Items.Weapons.Ranged;
 using Macrocosm.Content.Items.Materials;
+using Macrocosm.Common.Utils;
+using Macrocosm.Content.Items.Vanity.BossMasks;
 
 namespace Macrocosm.Content.Items.Consumables.BossBags
 {
@@ -27,11 +29,11 @@ namespace Macrocosm.Content.Items.Consumables.BossBags
 
 		public override void SetDefaults()
 		{
-			Item.maxStack = 999;
+			Item.maxStack = 9999;
 			Item.consumable = true;
 			Item.width = 24;
 			Item.height = 24;
-			Item.rare = ItemRarityID.Purple;
+			Item.rare = ItemRarityID.Expert;
 			Item.expert = true; // This makes sure that "Expert" displays in the tooltip and the item name color changes
 		}
 
@@ -39,14 +41,16 @@ namespace Macrocosm.Content.Items.Consumables.BossBags
  
 		public override void ModifyItemLoot(ItemLoot itemLoot)
 		{
-			//itemLoot.Add(ItemDropRule.NotScalingWithLuck(ModContent.ItemType<CraterDemonMask>(), 7));
+		    itemLoot.Add(ItemDropRule.NotScalingWithLuck(ModContent.ItemType<CraterDemonMask>(), 7));
 			itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<MoonCoin>(), 1, 30, 60));
-			itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<DeliriumPlating>(), 1, 5, 15));
+			itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<DeliriumPlating>(), 1, 30, 90));
+
+			itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<BrokenHeroShield>()));
 
 			itemLoot.Add(ItemDropRule.OneFromOptions(1,
 				ModContent.ItemType<CalcicCane>(),
-				ModContent.ItemType<Cruithne3753>()  
-				/*, ModContent.ItemType<CrystalPortalThingy>() */
+				ModContent.ItemType<Cruithne3753>()
+				/*, ModContent.ItemType<JewelOfShowers>() */
 				/*, ModContent.ItemType<ChampionBlade>() */
 				));
 		}
@@ -62,36 +66,10 @@ namespace Macrocosm.Content.Items.Consumables.BossBags
 
 		public override bool PreDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
 		{
-			// Draw the periodic glow effect behind the item when dropped in the world (hence PreDrawInWorld)
-			Texture2D texture = TextureAssets.Item[Item.type].Value;
-			Rectangle frame = texture.Frame();
- 
-			Vector2 frameOrigin = frame.Size() / 2f;
-			Vector2 offset = new Vector2(Item.width / 2 - frameOrigin.X, Item.height - frame.Height);
-			Vector2 drawPos = Item.position - Main.screenPosition + frameOrigin + offset;
+			Color colorFront = new Color(31, 255, 106, 15);
+			Color colorBack = new Color(158, 255, 157, 20);
 
-			float time = Main.GlobalTimeWrappedHourly;
-			float timer = Item.timeSinceItemSpawned / 240f + time * 0.04f;
-
-			time %= 4f;
-			time /= 2f;
-
-			if (time >= 1f)
- 				time = 2f - time;
- 
-			time = time * 0.5f + 0.5f;
-
-			for (float i = 0f; i < 1f; i += 0.25f)
-			{
-				float radians = (i + timer) * MathHelper.TwoPi;
-				spriteBatch.Draw(texture, drawPos + new Vector2(0f, 8f).RotatedBy(radians) * time, frame, new Color(31, 255, 106, 15), rotation, frameOrigin, scale, SpriteEffects.None, 0);
-			}
-
-			for (float i = 0f; i < 1f; i += 0.34f)
-			{
-				float radians = (i + timer) * MathHelper.TwoPi;
-				spriteBatch.Draw(texture, drawPos + new Vector2(0f, 4f).RotatedBy(radians) * time, frame, new Color(158, 255, 157, 20), rotation, frameOrigin, scale, SpriteEffects.None, 0);
-			}
+			Item.DrawBossBagEffect(spriteBatch, colorFront, colorBack, rotation, scale);
 
 			return true;
 		}

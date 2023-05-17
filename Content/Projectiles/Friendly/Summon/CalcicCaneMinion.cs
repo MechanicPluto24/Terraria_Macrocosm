@@ -1,9 +1,15 @@
-using Macrocosm.Common.Utility;
+using Macrocosm.Common.Drawing;
+using Macrocosm.Common.Utils;
+using Macrocosm.Content.Buffs.GoodBuffs;
 using Macrocosm.Content.Buffs.GoodBuffs.MinionBuffs;
+using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Gores;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
+using Terraria.DataStructures;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -40,6 +46,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 			Projectile.DamageType = DamageClass.Summon;
 			Projectile.minionSlots = 1f;
 			Projectile.penetrate = -1;
+
+			Projectile.ai[1] = 141;
 		}
 
 		public override bool? CanCutTiles() => false;
@@ -60,6 +68,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 			Movement(foundTarget, distanceFromTarget, targetCenter, distanceToIdlePosition, vectorToIdlePosition);
 			Visuals(foundTarget);
 		}
+
+
 
 		private bool CheckActive(Player owner)
 		{
@@ -201,11 +211,29 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 				// Minion has a target: attack (here, fly towards the enemy)
 				if (distanceFromTarget > 40f)
 				{
+					if (Projectile.ai[1] < 120) 
+					{
+						Projectile.ai[1]++;
+					}
+					else if(Projectile.ai[1] < 140)
+					{
+						speed = 0f;
+						Projectile.ai[1]++;
+					}
+					else
+					{
+						Projectile.ai[1] = 0;
+						speed *= 10f;
+						inertia = 10f;
+					}
+
+					Utility.Chat(Projectile.ai[1].ToString());
+
+
 					// The immediate range around the target (so it doesn't latch onto it when close)
 					Vector2 direction = targetCenter - Projectile.Center;
 					direction.Normalize();
 					direction *= speed;
-
 					Projectile.velocity = (Projectile.velocity * (inertia - 1) + direction) / inertia;
 				}
 			}
@@ -298,13 +326,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 				}
 			}
 		}
-
-		public override void PostDraw(Color lightColor)
-		{
-			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Summon/CalcicCaneMinion_Glow").Value;
-			SpriteEffects effect = Projectile.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-			Vector2 offset = Projectile.spriteDirection == -1 ? new Vector2(0, -1) : new Vector2(0, 5);
-			Projectile.DrawAnimatedGlowmask(glowmask, Color.White, effect, offset);
-		}
+		
 	}
 }

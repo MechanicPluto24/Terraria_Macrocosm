@@ -10,7 +10,8 @@ namespace Macrocosm.Content.Tiles.Trophies
 {
 	public class CraterDemonTrophy : ModTile
 	{
-		public override void SetStaticDefaults() {
+		public override void SetStaticDefaults()
+		{
 			Main.tileFrameImportant[Type] = true;
 			Main.tileLavaDeath[Type] = true;
 			TileID.Sets.FramesOnKillWall[Type] = true;
@@ -22,7 +23,8 @@ namespace Macrocosm.Content.Tiles.Trophies
 			DustType = DustID.Lead;
 		}
 
-		public override void KillMultiTile(int i, int j, int frameX, int frameY) {
+		public override void KillMultiTile(int i, int j, int frameX, int frameY) 
+		{
 			Item.NewItem(new EntitySource_TileBreak(i, j), i * 16, j * 16, 32, 32, ModContent.ItemType<Items.Placeable.Trophies.CraterDemonTrophy>());
 		}
 	}

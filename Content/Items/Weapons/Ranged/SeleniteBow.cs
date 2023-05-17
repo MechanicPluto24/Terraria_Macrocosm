@@ -1,6 +1,10 @@
 using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.Projectiles.Friendly.Ranged;
+using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
+using System;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -11,16 +15,11 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Selenite Diffuser");
-			Tooltip.SetDefault("Shoots an arrow that slows to a stop\nOnce this arrow slows down all the way, it will shoot a spread o");
-			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
+  			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 
 		}
 		public override void SetDefaults()
 		{
-			// Kinda mentally bored rn so note
-			// TODO: Rework this failiure of a bow - Ryan
-			// Its october and im still bored - Ryan
 			Item.damage = 320;
 			Item.DamageType = DamageClass.Ranged;
 			Item.width = 40;
@@ -31,17 +30,29 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			Item.noMelee = true;
 			Item.knockBack = 4;
 			Item.value = 10000;
-			Item.rare = ItemRarityID.Green;
-			Item.UseSound = SoundID.Item2;
+			Item.rare = ModContent.RarityType<MoonRarityT1>();
+			Item.UseSound = SoundID.Item5;
 			Item.autoReuse = true;
 			Item.shoot = ProjectileID.PurificationPowder;
 			Item.shootSpeed = 20f;
 			Item.useAmmo = AmmoID.Arrow;
 		}
+
 		public override Vector2? HoldoutOffset()
 		{
 			return new Vector2(6, 0);
 		}
+
+		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+		{
+			return true;
+		}
+
+		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
+		{
+			type = ModContent.ProjectileType<SeleniteArrow>();
+		}
+
 		public override void AddRecipes()
 		{
 			Recipe recipe = Recipe.Create(Type);
@@ -49,7 +60,6 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			recipe.AddIngredient(ModContent.ItemType<SeleniteBar>(), 12);
 			recipe.AddTile(TileID.WorkBenches);
 			recipe.Register();
-			// FIXME: Definitely not finalized, someone check with this and see if the values are appropriate
-		}
+ 		}
 	}
 }

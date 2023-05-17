@@ -1,0 +1,73 @@
+﻿using SubworldLibrary;
+using Terraria;
+using Terraria.DataStructures;
+using Terraria.GameContent.Creative;
+using Terraria.GameContent.Events;
+using Terraria.ModLoader;
+using Macrocosm.Content.Subworlds;
+using Microsoft.Xna.Framework;
+using System.Collections.Generic;
+using Terraria.WorldBuilding;
+using Terraria.GameContent.Generation;
+using Terraria.IO;
+using System;
+using Macrocosm.Content.WorldGeneration;
+using Macrocosm.Content.Tiles;
+using Terraria.ID;
+
+namespace Macrocosm.Content
+{
+	class EarthWorldGen : ModSystem
+	{
+		public override void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)
+		{
+			int ShiniesIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Shinies"));
+
+			if (ShiniesIndex != -1)
+			{
+				tasks.Insert(ShiniesIndex + 1, new PassLegacy("Macrocosm Earth Worldgen", GenerateOres));
+			}
+		}
+
+		private void GenerateOres(GenerationProgress progress, GameConfiguration configuration)
+		{
+			int aluminumType = ModContent.TileType<AluminumOre>();
+			int lithiumType = ModContent.TileType<LithiumOre>();
+			int oilShaleType = ModContent.TileType<OilShale>();
+
+			#region Aluminum Generation 
+			for (int i = 0; i < (int)(Main.maxTilesX * Main.maxTilesY * 8E-05); i++)
+ 				WorldGen.TileRunner(WorldGen.genRand.Next(0, Main.maxTilesX), WorldGen.genRand.Next((int)WorldGen.worldSurfaceHigh, (int)WorldGen.rockLayerHigh), WorldGen.genRand.Next(3, 6), WorldGen.genRand.Next(3, 6), aluminumType);
+ 
+			for (int i = 0; i < (int)(Main.maxTilesX * Main.maxTilesY * 0.0002); i++)
+ 				WorldGen.TileRunner(WorldGen.genRand.Next(0, Main.maxTilesX), WorldGen.genRand.Next((int)WorldGen.rockLayerLow, Main.maxTilesY), WorldGen.genRand.Next(3, 7), WorldGen.genRand.Next(3, 7), aluminumType);
+			#endregion
+
+			#region Lithium Generation
+			for (int i = 0; i < (int)(Main.maxTilesX * Main.maxTilesY * 0.0001); i++)
+				WorldGen.TileRunner(WorldGen.genRand.Next(0, Main.maxTilesX), WorldGen.genRand.Next((int)WorldGen.rockLayerLow, Main.maxTilesY), WorldGen.genRand.Next(4, 6), WorldGen.genRand.Next(4, 6), lithiumType);
+			#endregion
+
+			#region Oil Shale Generation
+			for (int i = 0; i < Main.maxTilesX * Main.maxTilesY * 0.00012; i++)
+			{
+				int tileX = WorldGen.genRand.Next(WorldGen.desertHiveLeft, WorldGen.desertHiveRight);
+				int tileY = WorldGen.genRand.Next(WorldGen.desertHiveHigh, WorldGen.desertHiveLow);
+
+				int type = Main.tile[tileX, tileY].TileType;
+
+				bool chance = Main.rand.NextBool(15);
+
+				if (!chance && tileY > WorldGen.desertHiveHigh + (WorldGen.desertHiveLow - WorldGen.desertHiveHigh) * 0.33f)
+					chance = Main.rand.NextBool(5);
+
+				if (!chance && tileY > WorldGen.desertHiveHigh + (WorldGen.desertHiveLow - WorldGen.desertHiveHigh) * 0.66f)
+					chance = Main.rand.NextBool();
+
+				if (chance && TileID.Sets.Conversion.HardenedSand[type] || TileID.Sets.Conversion.Sandstone[type])
+ 					WorldGen.TileRunner(tileX, tileY, WorldGen.genRand.Next(4, 6), WorldGen.genRand.Next(6, 14), oilShaleType);
+			}
+			#endregion
+		}
+	}
+}

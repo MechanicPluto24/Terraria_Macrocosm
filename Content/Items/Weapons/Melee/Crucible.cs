@@ -1,6 +1,6 @@
-using Macrocosm.Common.Utility;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Items.GlobalItems;
+using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -30,7 +30,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 			Item.useStyle = ItemUseStyleID.Swing; // 1 = sword
 			Item.knockBack = 6f;
 			Item.value = 10000;
-			Item.rare = ItemRarityID.Red;
+			Item.rare = ModContent.RarityType<MoonRarityT3>();
 			Item.UseSound = SoundID.Item20;
 			Item.autoReuse = true; // Lets you use the item without clicking the mouse repeatedly (i.e. swinging swords)
 			Item.Glowmask().texture = ModContent.Request<Texture2D>("Macrocosm/Content/Items/Weapons/Melee/Crucible_Glow").Value;

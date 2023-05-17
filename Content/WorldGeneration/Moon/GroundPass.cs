@@ -9,9 +9,12 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 	{
 		private int subworldWidth;
 		private int subworldHeight;
+
 		private double surfaceLayer = 200.0;
 		private double rockLayerLow = 0.0;
 		private double rockLayerHigh = 0.0;
+
+		private int maxSurface = 0;
 
 		public GroundPass(string name, float loadWeight, int subworldWidth, int subworldHeight) : base(name, loadWeight)
 		{
@@ -25,8 +28,8 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 		protected override void ApplyPass(GenerationProgress progress, GameConfiguration configuration)
 		{
 			progress.Message = "Landing on the Moon...";
-			Main.worldSurface = surfaceLayer + 40; // Hides the underground layer just out of bounds
-			Main.rockLayer = surfaceLayer + 222; // Hides the cavern layer way out of bounds
+			Main.worldSurface = surfaceLayer + 40;  
+			Main.rockLayer = surfaceLayer + 222;  
 
 			int surfaceHeight = (int)surfaceLayer; // If the moon's world size is variable, this probably should depend on that
 			rockLayerLow = surfaceHeight;
@@ -53,12 +56,18 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 					}
 				}
 
+				if (maxSurface < surfaceHeight)
+					maxSurface = surfaceHeight;
+
 				if (surfaceHeight < rockLayerLow)
 					rockLayerLow = surfaceHeight;
 
 				if (surfaceHeight > rockLayerHigh)
 					rockLayerHigh = surfaceHeight;
 			}
+
+			// keep the underground backwall below the surface lowest point 
+			Main.worldSurface = maxSurface + 40;
 		}
 	}
 }

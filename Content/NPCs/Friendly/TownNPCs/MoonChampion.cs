@@ -1,9 +1,9 @@
 using Macrocosm.Content.Biomes;
-using Macrocosm.Content.Items.Armor;
+using Macrocosm.Content.Items.Armor.Astronaut;
 using Macrocosm.Content.Items.Currency;
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Items.Weapons.Ranged;
-using Macrocosm.Content.Subworlds.Moon;
+using Macrocosm.Content.Subworlds;
 using Macrocosm.Content.Systems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -17,7 +17,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
 {
-	[AutoloadHead]
+    [AutoloadHead]
 	public class MoonChampion : ModNPC
 	{
 		public override void SetStaticDefaults()
@@ -81,7 +81,6 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
                 "Cooper"   // Joseph Cooper (Interstellar)
             };
 		}
-
 
 		// NOTE: I cannot guarentee that all of this code is in tip-top shape, so if there is anything off, just let ryan know :poggers:
 		// "Ok I think I made it in tip-top shape now probably" - 4mbr0s3 2
@@ -180,7 +179,7 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
 				return shop.item[nextSlotRef++];
 			}
 
-			// for testing, subject to change  
+			// for testing, subject to change - Feldy
 			AddNewSlot(ref nextSlot, ItemID.SuperHealingPotion, 3);
 			AddNewSlot(ref nextSlot, ModContent.ItemType<AstronautHelmet>(), 20);
 			AddNewSlot(ref nextSlot, ModContent.ItemType<AstronautSuit>(), 20);

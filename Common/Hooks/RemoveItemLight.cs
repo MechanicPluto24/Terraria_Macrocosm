@@ -1,5 +1,5 @@
-﻿using Macrocosm.Content.Items.GlobalItems;
-using Macrocosm.Content.Tiles.GlobalTiles;
+﻿using Macrocosm.Common.Global.GlobalItems;
+using Macrocosm.Common.Global.GlobalTiles;
 using SubworldLibrary;
 using Terraria;
 using Terraria.ModLoader;
@@ -16,7 +16,13 @@ namespace Macrocosm.Common.Hooks
 			On.Terraria.WorldGen.KillTile_MakeTileDust += RemoveTorchDust;       // removes particles if tile torch is disabled  
 		}
 
-		public void Unload() { }
+		public void Unload() 
+		{
+			On.Terraria.Item.UpdateItem_VisualEffects -= RemoveDroppedItemLight;
+			On.Terraria.Player.CanVisuallyHoldItem -= DisableTorchHolding;
+			On.Terraria.Player.ItemCheck_EmitHeldItemLight -= RemoveHeldLight;
+			On.Terraria.WorldGen.KillTile_MakeTileDust -= RemoveTorchDust;
+		}
 
 		private static void RemoveDroppedItemLight(On.Terraria.Item.orig_UpdateItem_VisualEffects orig, Item item)
 		{

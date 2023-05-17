@@ -19,10 +19,11 @@ namespace Macrocosm.Content.Items.Placeable.Tombstones
 			Item.useStyle = ItemUseStyleID.Swing;
 			Item.useAnimation = 15;
 			Item.useTime = 10;
-			Item.maxStack = 99;
+			Item.maxStack = 9999;
 			Item.consumable = true;
 			Item.createTile = ModContent.TileType<Tiles.Tombstones.MoonTombstone>();
 			Item.placeStyle = Tiles.Tombstones.MoonTombstone.ItemToStyle(Type);
+			Item.rare = ItemRarityID.Purple;
 		}
 	}
 }

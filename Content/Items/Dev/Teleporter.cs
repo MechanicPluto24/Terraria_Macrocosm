@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.Subworlds.Moon;
+﻿using Macrocosm.Content.Rarities;
+using Macrocosm.Content.Rocket;
 using SubworldLibrary;
 using Terraria;
 using Terraria.ID;
@@ -16,7 +17,7 @@ namespace Macrocosm.Content.Items.Dev
 		{
 			Item.width = 36;
 			Item.height = 36;
-			Item.rare = ItemRarityID.Purple;
+			Item.rare = ModContent.RarityType<DevRarity>();
 			Item.value = 100000;
 			Item.maxStack = 1;
 			Item.useTime = 40;
@@ -26,11 +27,14 @@ namespace Macrocosm.Content.Items.Dev
 		}
 		public override bool? UseItem(Player player)
 		{
-			if (!SubworldSystem.AnyActive<Macrocosm>())
- 				SubworldSystem.Enter<Moon>();
- 			else
- 				SubworldSystem.Exit();
-
+			if(player.whoAmI == Main.myPlayer)
+			{
+				if (!SubworldSystem.AnyActive<Macrocosm>())
+					SubworldSystem.Enter("Macrocosm/Moon");
+				else
+					SubworldSystem.Exit();
+			}
+			
  			return true;
 		}
 	}

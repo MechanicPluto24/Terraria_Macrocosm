@@ -1,3 +1,4 @@
+using Macrocosm.Content.Rarities;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -16,7 +17,7 @@ namespace Macrocosm.Content.Items.Materials
 		{
 			Item.width = 20;
 			Item.height = 20;
-			Item.maxStack = 999;
+			Item.maxStack = 9999;
 			Item.value = 750;
 			Item.useStyle = ItemUseStyleID.Swing;
 			Item.useTurn = true;
@@ -26,6 +27,9 @@ namespace Macrocosm.Content.Items.Materials
 			Item.consumable = true;
 			Item.createTile = TileType<Tiles.ChandriumOre>();
 			Item.placeStyle = 0;
+			Item.rare = ModContent.RarityType<MoonRarityT1>();
+			Item.material = true;
+
 			// Set other Item.X values here
 		}
 
