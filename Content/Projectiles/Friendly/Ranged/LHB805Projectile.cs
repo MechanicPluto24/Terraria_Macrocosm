@@ -1,6 +1,6 @@
-using Macrocosm.Common.Utility;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Gores;
-using Macrocosm.Sounds;
+using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Utilities;
@@ -11,9 +11,8 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-	public class LHB805Projectile : ModProjectile
+    public class LHB805Projectile : HeldGunProjectile
 	{
-
 		private const int windupFrames = 4; // number of windup animaton frames
 		private const int shootFrames = 6;  // number of shooting animaton frames
 
@@ -28,92 +27,39 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 		public ref float AI_Windup => ref Projectile.ai[0];
 
-		public override void SetStaticDefaults()
+		public override float CircularHoldoutOffset => 32f;
+
+		public override void SetProjectileStaticDefaults()
 		{
 			DisplayName.SetDefault("LHB-805");
 			Main.projFrames[Type] = 10;
-			ProjectileID.Sets.NeedsUUID[Type] = true;
 		}
 
-		public override void SetDefaults()
-		{
-			Projectile.CloneDefaults(ProjectileID.LastPrism);
-			Projectile.friendly = false;
-			Projectile.width = 1;
-			Projectile.height = 1;
+		public override void SetProjectileDefaults()
+		{ 
+
 		}
 
-		private Player OwnerPlayer => Main.player[Projectile.owner];
-		private bool StillInUse => OwnerPlayer.channel && OwnerPlayer.HasAmmo(OwnerPlayer.inventory[OwnerPlayer.selectedItem]) && !OwnerPlayer.noItems && !OwnerPlayer.CCed;
 		private bool CanShoot => AI_Windup >= windupTime;
-
-		public override bool PreDraw(ref Color lightColor)
+		public override void ProjectileAI()
 		{
-			Projectile.DrawAnimated(lightColor, Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None, new Vector2(5, 10));
-			return false;
-		}
-
-		public override void PostDraw(Color lightColor)
-		{
-			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Ranged/LHB805Projectile_Glow").Value;
-			Projectile.DrawAnimatedGlowmask(glowmask, Color.White, Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None, new Vector2(5, 10));
-		}
-
-		public override void AI()
-		{
-			PlayerVisuals();
-			Aim();
 			Animate();
 			Shoot();
+			Visuals();
 			PlaySounds();
 
 			AI_Windup++;
-
-			if (!StillInUse)
-				Projectile.Kill();
 		}
 
-		private void PlayerVisuals()
-		{
-			Projectile.Center = OwnerPlayer.Center;
-			Projectile.rotation = Projectile.velocity.ToRotation();
-
-			Projectile.spriteDirection = Projectile.direction;
-
-			OwnerPlayer.ChangeDir(Projectile.direction);
-			OwnerPlayer.heldProj = Projectile.whoAmI;
-			OwnerPlayer.itemTime = 2;
-			OwnerPlayer.itemAnimation = 2;
-
-			OwnerPlayer.itemRotation = (Projectile.velocity * Projectile.direction).ToRotation();
-		}
-
-		private void Aim()
-		{
-			// Get the player's current aiming direction as a normalized vector.
-			Vector2 aim = Vector2.Normalize(Main.MouseWorld - Projectile.Center);
-			if (aim.HasNaNs())
-				aim = Vector2.UnitY;
-
-			// Change a portion of the gun's current velocity so that it points to the mouse. This gives smooth movement over time.
-			aim = Vector2.Normalize(Vector2.Lerp(Vector2.Normalize(Projectile.velocity), aim, 1));
-			aim *= OwnerPlayer.HeldItem.shootSpeed;
-
-			if (aim != Projectile.velocity)
-				Projectile.netUpdate = true;
-
-			Projectile.velocity = aim;
-		}
-
+		private float WindupProgress => MathHelper.Clamp((AI_Windup / fullFireRateTime), 0, 1);
+		private int WindupTicksPerFrame => (int)MathHelper.Clamp(MathHelper.Lerp(startTicksPerFrame, maxTicksPerFrame, WindupProgress), maxTicksPerFrame, startTicksPerFrame);
 		private void Animate()
 		{
 			Projectile.frameCounter++;
 
-			int windupTicksPerFrame = (int)MathHelper.Clamp(MathHelper.Lerp(startTicksPerFrame, maxTicksPerFrame, AI_Windup / fullFireRateTime), maxTicksPerFrame, startTicksPerFrame);
-
 			if (!CanShoot)
 			{
-				if (Projectile.frameCounter >= windupTicksPerFrame)
+				if (Projectile.frameCounter >= WindupTicksPerFrame)
 				{
 					Projectile.frameCounter = 0;
 					Projectile.frame++;
@@ -123,9 +69,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			}
 			else
 			{
-				OwnerPlayer.SetScreenshake(0.2f);
-
-				if (Projectile.frameCounter >= windupTicksPerFrame)
+				if (Projectile.frameCounter >= WindupTicksPerFrame)
 				{
 					Projectile.frameCounter = 0;
 					Projectile.frame++;
@@ -146,7 +90,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 				if (StillInUse)
 					OwnerPlayer.PickAmmo(OwnerPlayer.inventory[OwnerPlayer.selectedItem], out projToShoot, out float speed, out damage, out knockback, out var usedAmmoItemId); //uses ammunition from inventory
 
-				Vector2 rotPoint = MathUtils.RotatingPoint(Projectile.Center, new Vector2(40, 8 * Projectile.spriteDirection), Projectile.rotation);
+				Vector2 rotPoint = Utility.RotatingPoint(Projectile.Center, new Vector2(40, 8 * Projectile.spriteDirection), Projectile.rotation);
 
 				// gradually increase fire rate
 				int fireFreq = (int)MathHelper.Clamp(MathHelper.Lerp(fireRateStart, fireRateCap, (AI_Windup - windupTime) / (fullFireRateTime - windupTime)), fireRateCap, fireRateStart);// Main.rand.NextBool()
@@ -154,26 +98,44 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 				if (AI_Windup % fireFreq == 0 && Main.myPlayer == Projectile.owner)
 					Projectile.NewProjectile(Terraria.Entity.InheritSource(Projectile), rotPoint, Vector2.Normalize(Projectile.velocity).RotatedByRandom(MathHelper.ToRadians(14)) * 10f, projToShoot, damage, knockback, Projectile.owner, default, Projectile.GetByUUID(Projectile.owner, Projectile.whoAmI));
 
-				#region Spawn bullet shells as gore
+				Projectile.position += (new Vector2(Main.rand.NextFloat(2.4f), Main.rand.NextFloat(0.4f))).RotatedBy(Projectile.rotation) * WindupProgress;
 
+				#region Spawn bullet shells as gore
 				if (!Main.dedServ && AI_Windup % (fireFreq * 1.5) == 0)
 				{
 					Vector2 position = Projectile.Center - new Vector2(-20, 0) * Projectile.spriteDirection;
 					Vector2 velocity = new Vector2(1.2f * Projectile.spriteDirection, 4f);
 					Gore.NewGore(Projectile.GetSource_FromThis(), position, velocity, ModContent.GoreType<MinigunShell>());
 				}
-
 				#endregion
 			}
-
 		}
+
+		public void Visuals()
+		{
+			if(CanShoot)
+				Lighting.AddLight(Projectile.position + Utility.PolarVector(80f, Projectile.rotation), TorchID.Torch);
+		}
+
+		public override bool PreDraw(ref Color lightColor)
+		{
+			Projectile.DrawAnimated(lightColor, Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None, new Vector2(5, 10));
+			return false;
+		}
+
+		public override void PostDraw(Color lightColor)
+		{
+			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Ranged/LHB805Projectile_Glow").Value;
+			Projectile.DrawAnimatedGlowmask(glowmask, Color.White, Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None, new Vector2(5, 10));
+		}
+
 
 		private SlotId playingSoundId;
 		private void PlaySounds()
 		{
 			if (AI_Windup == 0f)
 			{
-				playingSoundId = SoundEngine.PlaySound(CustomSounds.MinigunWindup with
+				playingSoundId = SoundEngine.PlaySound(SFX.MinigunWindup with
 				{
 					Volume = 0.3f,
 					SoundLimitBehavior = SoundLimitBehavior.IgnoreNew
@@ -181,7 +143,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			}
 			else if (AI_Windup == windupTime)
 			{
-				playingSoundId = SoundEngine.PlaySound(CustomSounds.MinigunFire with
+				playingSoundId = SoundEngine.PlaySound(SFX.MinigunFire with
 				{
 					Volume = 0.3f,
 					IsLooped = true,

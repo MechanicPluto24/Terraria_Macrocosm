@@ -1,5 +1,7 @@
-using Macrocosm.Common.Utility;
-using Macrocosm.Sounds;
+using Macrocosm.Common.Utils;
+using Macrocosm.Content.Projectiles.Friendly.Ranged;
+using Macrocosm.Content.Rarities;
+using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
@@ -10,15 +12,14 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
-	public class Copernicus : ModItem
+    public class Copernicus : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Copernicus");
-			Tooltip.SetDefault("Right click to fire a grenade");
+			Tooltip.SetDefault("Right click to launch a plasma ball grenade");
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
-
 		public override void SetDefaults()
 		{
 			Item.damage = 150;
@@ -32,7 +33,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			Item.channel = true;
 			Item.knockBack = 8f;
 			Item.value = 10000;
-			Item.rare = ItemRarityID.Purple;
+			Item.rare = ModContent.RarityType<MoonRarityT2>();
 			Item.shoot = ProjectileID.PurificationPowder; // For some reason, all the guns in the vanilla source have this.
 			Item.autoReuse = true;
 			Item.shootSpeed = 20f;
@@ -41,32 +42,19 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
 		private int altUseCooldown = 30;
 		private int altUseCounter = 30;
-
 		public override Vector2? HoldoutOffset() => new Vector2(-10, 0);
 
-		public override bool AltFunctionUse(Player player) => altUseCounter == altUseCooldown && ItemUtils.ToRocketProjectileID(player, ItemID.GrenadeLauncher) != 0;
+		public override bool AltFunctionUse(Player player) => altUseCounter == altUseCooldown && Utility.GetRocketAmmoProjectileID(player, ItemID.GrenadeLauncher) != 0;
 
 		public override bool CanUseItem(Player player) => true;
 
 		public override bool? UseItem(Player player)
 		{
 			if (player.altFunctionUse == 2)
-			{
-				SoundEngine.PlaySound(CustomSounds.GrenadeLauncherThunk with
-				{
-					Volume = 0.7f
-					//SoundLimitBehavior = SoundLimitBehavior.IgnoreNew 
-				});
-			}
-			else
-			{
-				SoundEngine.PlaySound(CustomSounds.AssaultRifle with
-				{
-					Volume = 0.7f
-					//SoundLimitBehavior = SoundLimitBehavior.IgnoreNew
-				});
-			}
-
+ 				SoundEngine.PlaySound(SFX.GrenadeLauncherThunk with { Volume = 0.7f });
+ 			else
+ 				SoundEngine.PlaySound(SFX.AssaultRifle with { Volume = 0.7f });
+ 
 			return true;
 		}
 
@@ -91,8 +79,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
 			if (player.altFunctionUse == 2)
 			{
-
-				type = ItemUtils.ToRocketProjectileID(player, ItemID.GrenadeLauncher);
+				type = ModContent.ProjectileType<PlasmaGrenade>();
 				position.Y += 2;
 				velocity /= 3f;
 			}

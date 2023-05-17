@@ -27,7 +27,7 @@ namespace Macrocosm.Content.Tiles.Furniture
 
             HitSound = SoundID.Dig;
 
-            AddMapEntry(new Color(180, 180, 180), Language.GetText("XERA Terminal"));
+            AddMapEntry(new Color(180, 180, 180), Language.GetText("Moon Base Terminal"));
         }
 
         public override void KillMultiTile(int i, int j, int frameX, int frameY)

@@ -1,5 +1,6 @@
-﻿using Macrocosm.Common.Utility;
+﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.NPCs.Bosses.CraterDemon;
+using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
@@ -24,7 +25,7 @@ namespace Macrocosm.Content.Items.Consumables.BossSummons
 			Item.height = 18;
 			Item.scale = 1f;
 			Item.maxStack = 20;
-			Item.rare = ItemRarityID.Red;
+			Item.rare = ModContent.RarityType<MoonRarityT1>();
 			Item.useAnimation = 45;
 			Item.useTime = 45;
 			Item.useStyle = ItemUseStyleID.HoldUp;
@@ -36,7 +37,7 @@ namespace Macrocosm.Content.Items.Consumables.BossSummons
 
 		public override bool? UseItem(Player player)
 		{
-			if (NPCUtils.SummonBossDirectlyWithMessage(player.Center - new Vector2(0f, 240f), ModContent.NPCType<CraterDemon>()))
+			if (Utility.SummonBossDirectlyWithMessage(player.Center - new Vector2(0f, 240f), ModContent.NPCType<CraterDemon>()))
 				SoundEngine.PlaySound(SoundID.ForceRoar, player.position);
 
 			return true;

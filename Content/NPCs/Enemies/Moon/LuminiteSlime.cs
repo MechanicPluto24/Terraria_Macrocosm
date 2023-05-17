@@ -1,10 +1,9 @@
-using Macrocosm.Common.Base;
-using Macrocosm.Common.Utility;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
-using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Materials;
-using Macrocosm.Content.Projectiles.Unfriendly;
+using Macrocosm.Content.Tiles;
+using Macrocosm.Content.Projectiles.Hostile;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -46,8 +45,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		const float attackCooldown = 280f;
 
- 		// Not used for this particular AIType
- 		public ref float AI_AttackTimer => ref NPC.ai[1];
+ 		public ref float AI_AttackTimer => ref NPC.ai[1]; // Not used in vanilla code for this particular AIType
 
 		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
 		{
@@ -60,7 +58,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
 		{
-			return (spawnInfo.SpawnTileY > Main.rockLayer) ? 0.1f : 0f;
+			return (spawnInfo.SpawnTileY > Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Protolith>()) ? 0.1f : 0f;
 		}
 
 		public override void OnSpawn(IEntitySource source)
@@ -70,7 +68,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		public override void PostAI()
 		{
-			// fall down faster (better for underground enemies)
+			// fall down faster (better behavior for underground enemies)
 			if (NPC.velocity.Y < 0f)
 				NPC.velocity.Y += 0.1f;
 
@@ -101,7 +99,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		{
 			for (int i = 0; i < Main.rand.Next(3, 7); i++)
 			{
-				Vector2 projVelocity = MathUtils.PolarVector(2.6f, Main.rand.NextFloat(-MathHelper.Pi + MathHelper.PiOver4, -MathHelper.PiOver4));
+				Vector2 projVelocity = Utility.PolarVector(2.6f, Main.rand.NextFloat(-MathHelper.Pi + MathHelper.PiOver4, -MathHelper.PiOver4));
 				Projectile proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, projVelocity, ModContent.ProjectileType<LuminiteSlimeProjectile>(), (int)(NPC.damage * 0.75f), 1f, NPC.whoAmI, ai1: NPC.target);
 				proj.netUpdate = true;
 			}
@@ -130,7 +128,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		private void SpawnDusts()
 		{
-			Vector2 dustVelocity = MathUtils.PolarVector(0.01f, MiscUtils.RandomRotation());
+			Vector2 dustVelocity = Utility.PolarVector(0.01f, Utility.RandomRotation());
 			Dust.NewDust(NPC.position, NPC.width, NPC.height, ModContent.DustType<LuminiteDust>(), dustVelocity.X, dustVelocity.Y, newColor: Color.White * 0.1f);
 		}
 	}

@@ -23,11 +23,11 @@ namespace Macrocosm.Content.Tiles
 			MineResist = 5f;
 
 			ModTranslation name = CreateMapEntryName();
-			name.SetDefault("Lithium Ore");
+			name.SetDefault("Lithium");
 			AddMapEntry(new Color(108, 101, 112), name);
 
 			DustType = 84;
-			ItemDrop = ItemType<Items.Materials.Lithium>();
+			ItemDrop = ItemType<Items.Materials.LithiumOre>();
 			HitSound = SoundID.Tink;
 		}
 	}

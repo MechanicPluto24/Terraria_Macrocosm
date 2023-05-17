@@ -1,4 +1,5 @@
 using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.Rarities;
 using Terraria;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
@@ -24,7 +25,7 @@ namespace Macrocosm.Content.Items.Tools.Dianite
 			Item.useStyle = ItemUseStyleID.Swing;
 			Item.knockBack = 6;
 			Item.value = 10000;
-			Item.rare = ItemRarityID.Green;
+			Item.rare = ModContent.RarityType<MoonRarityT1>();
 			Item.UseSound = SoundID.Item1;
 			Item.autoReuse = true;
 			Item.tileBoost = 5;

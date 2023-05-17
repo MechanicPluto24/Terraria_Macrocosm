@@ -10,11 +10,11 @@ using Terraria.GameContent;
 using Terraria.DataStructures;
 using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
-using Macrocosm.Common.Utility;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Consumables.BossBags;
-using Macrocosm.Content.Projectiles.Unfriendly;
+using Macrocosm.Content.Projectiles.Hostile;
 using Macrocosm.Content.Items.Placeable.Trophies;
 using Macrocosm.Content.Items.Weapons.Summon;
 using Macrocosm.Content.Items.Weapons.Ranged;
@@ -22,6 +22,7 @@ using Macrocosm.Content.Items.Currency;
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Systems;
 using Macrocosm.Content.NPCs.Friendly.TownNPCs;
+using Macrocosm.Content.Items.Vanity.BossMasks;
 
 namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 {
@@ -158,6 +159,10 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		private BigPortalInfo bigPortal;
 		private BigPortalInfo bigPortal2;
 
+		private Vector2 portalTarget;
+		private Vector2 portalOffset;
+		private int portalAttackCount;
+
 		public const int PortalTimerMax = (int)(4f * 60 + 1.5f * 60 + 24);  //Portal spawning leadup + time portals are active before they shrink
 
 		public override void SetStaticDefaults()
@@ -247,22 +252,28 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 		public override void ModifyNPCLoot(NPCLoot npcLoot)
 		{
-			npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<CraterDemonBossBag>()));
+			// common drops (non-boss bag)
 			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<CraterDemonTrophy>(), 10));
+
+			// EM drop
+			npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<CraterDemonBossBag>()));
+
+			// MM drops
 			//npcLoot.Add(ItemDropRule.MasterModeCommonDrop(ModContent.ItemType<CraterDemonRelic>()));
 			//npcLoot.Add(ItemDropRule.MasterModeDropOnAllPlayers(ModContent.ItemType<CraterDemonMMPet>(), 4));
 
+			// BELOW: for normal mode, same as boss bag (excluding Broken Hero Shield)
 			LeadingConditionRule notExpertRule = new LeadingConditionRule(new Conditions.NotExpert());
-			//notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<CraterDemonBossMask>(), 7));
+			notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<CraterDemonMask>(), 7));
 
 			notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<MoonCoin>(), 1, 30, 60));
-			notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<DeliriumPlating>(), 1, 5, 15));
+			notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<DeliriumPlating>(), 1, 30, 90));
 
-			notExpertRule.OnSuccess(ItemDropRule.OneFromOptions(1, 
+			notExpertRule.OnSuccess(ItemDropRule.OneFromOptions(1,
 				ModContent.ItemType<CalcicCane>(),
 				ModContent.ItemType<Cruithne3753>()
-				/*, ModContent.ItemType<CrystalPortalThingy>() */
-				/*, ModContent.ItemType<ChampionBlade>() */
+				/*, ModContent.ItemType<JewelOfShowers>() */
+				/*, ModContent.ItemType<ChampionsBlade>() */
 				));
 
 			npcLoot.Add(notExpertRule);
@@ -308,6 +319,10 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 				writer.WriteVector2(movementTarget.Value);
 
 			writer.Write(oldAttack);
+			writer.WriteVector2(portalTarget);
+			writer.WriteVector2(portalOffset);
+
+			writer.Write((byte)portalAttackCount);
 		}
 
 		public override void ReceiveExtraAI(BinaryReader reader)
@@ -326,6 +341,10 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			movementTarget = hasCustomTarget ? (Vector2?)reader.ReadVector2() : null;
 
 			oldAttack = reader.ReadInt32();
+			portalTarget = reader.ReadVector2();
+			portalOffset = reader.ReadVector2();
+
+			portalAttackCount = reader.ReadByte();
 		}
 
 		public override void BossHeadSlot(ref int index)
@@ -337,14 +356,14 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
 			//Draw portals
- 			Texture2D portal = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Bosses/CraterDemon/BigPortal").Value;
+			Texture2D portal = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Bosses/CraterDemon/BigPortal").Value;
 
 			DrawBigPortal(spriteBatch, portal, bigPortal);
 			DrawBigPortal(spriteBatch, portal, bigPortal2);
 
 			if (AI_Attack == Attack_SummonMeteors && Math.Abs(NPC.velocity.X) < 0.1f && Math.Abs(NPC.velocity.Y) < 0.1f)
 				return true;
-			
+
 			if (AI_Attack == Attack_ChargeAtPlayer && AI_AttackProgress > 2 && NPC.alpha >= 160)
 				return true;
 
@@ -379,6 +398,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 			if (info.scale > 0.9f && Vector2.Distance(info.center, NPC.Center) > 25f)
 				SpawnPortalDusts(info);
+
+			Lighting.AddLight(info.center, new Vector3(30, 255, 105) / 255 * info.scale * 3f);
 		}
 
 		private void SpawnPortalDusts(BigPortalInfo info)
@@ -585,7 +606,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 					FloatTowardsTarget(player);
 
-					if (AI_Timer <= 0)
+					if (AI_Timer <= 0 && Main.netMode != NetmodeID.MultiplayerClient)
 					{
 						//Prevent the same attack from being rolled twice in a row
 						int attack;
@@ -594,10 +615,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 							attack = Main.rand.Next(Attack_SummonMeteors, Attack_ChargeAtPlayer + 1);
 						} while (attack == oldAttack);
 
+						oldAttack = (int)AI_Attack;
 						SetAttack(attack);
 						NPC.netUpdate = true;
-
-						oldAttack = (int)AI_Attack;
 					}
 
 					break;
@@ -637,12 +657,15 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 						int count = Main.expertMode ? 4 : 2;
 
-						for (int i = 0; i < count; i++)
+						if (Main.netMode != NetmodeID.MultiplayerClient)
 						{
-							Vector2 spawn = orig + new Vector2(Main.rand.NextFloat(-1, 1) * 40 * 16, Main.rand.NextFloat(-1, 1) * 6 * 16);
+							for (int i = 0; i < count; i++)
+							{
+								Vector2 spawn = orig + new Vector2(Main.rand.NextFloat(-1, 1) * 40 * 16, Main.rand.NextFloat(-1, 1) * 6 * 16);
 
-							Projectile.NewProjectile(NPC.GetSource_FromAI(), spawn, Vector2.Zero, ModContent.ProjectileType<MeteorPortal>(), MiscUtils.TrueDamage(Main.expertMode ? 140 : 90), 0f, Main.myPlayer);
-							// TODO: netcode
+								int portalID = Projectile.NewProjectile(NPC.GetSource_FromAI(), spawn, Vector2.Zero, ModContent.ProjectileType<MeteorPortal>(), Utility.TrueDamage(Main.expertMode ? 140 : 90), 0f, Main.myPlayer);
+								Main.projectile[portalID].netUpdate = true;
+							}
 						}
 
 						AI_AttackProgress++;
@@ -658,15 +681,14 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 					{
 						if (AI_Timer % 75 == 0)
 						{
-							Vector2 spawn = NPC.Center + new Vector2(Main.rand.NextFloat(-1, 1) * 22 * 16, Main.rand.NextFloat(-1, 1) * 10 * 16);
-
-							NPC.NewNPC(NPC.GetSource_FromAI(), (int)spawn.X, (int)spawn.Y, ModContent.NPCType<CraterImp>(), ai3: NPC.whoAmI);
-
+							if (Main.netMode != NetmodeID.MultiplayerClient)
+							{
+								Vector2 spawn = NPC.Center + new Vector2(Main.rand.NextFloat(-1, 1) * 22 * 16, Main.rand.NextFloat(-1, 1) * 10 * 16);
+								int craterImpID = NPC.NewNPC(NPC.GetSource_FromAI(), (int)spawn.X, (int)spawn.Y, ModContent.NPCType<CraterImp>(), ai3: NPC.whoAmI);
+								Main.npc[craterImpID].netUpdate = true;
+							}
 							//Exhale sound
 							SoundEngine.PlaySound(SoundID.Zombie93, NPC.Center);
-
-							// TODO: netcode
-
 							AI_AttackProgress++;
 						}
 					}
@@ -705,24 +727,30 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 						{
 							AI_AttackProgress++;
 
-							//Spawn portal -- must be close to boss and player
-							Vector2 spawn;
-							const float playerDistMax = 40 * 16;
-							int tries = 0;
-							bool success = false;
-							do
+							if (Main.netMode != NetmodeID.MultiplayerClient)
 							{
-								spawn = NPC.Center + Main.rand.NextVector2Unit() * 40 * 16;
-								tries++;
-							} while (tries < 1000 && (success = player.DistanceSQ(spawn) >= playerDistMax * playerDistMax));
+								//Spawn portal -- must be close to boss and player
+								Vector2 spawn;
+								const float playerDistMax = 40 * 16;
+								int tries = 0;
+								bool success = false;
+								do
+								{
+									spawn = NPC.Center + Main.rand.NextVector2Unit() * 40 * 16;
+									tries++;
+								} while (tries < 1000 && (success = player.DistanceSQ(spawn) >= playerDistMax * playerDistMax));
 
-							if (!success && tries == 1000)
-							{
-								//Failsafe: put the portal directly on the target player
-								spawn = player.Center;
+								if (!success && tries == 1000)
+								{
+									//Failsafe: put the portal directly on the target player
+									spawn = player.Center;
+								}
+
+								portalTarget = spawn;
+								NPC.netUpdate = true;
 							}
 
-							SpawnBigPortal(spawn, ref bigPortal);
+							SpawnBigPortal(portalTarget, ref bigPortal);
 						}
 					}
 					else if (AI_AttackProgress == 1)
@@ -739,7 +767,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 						}
 						else
 						{
-							bigPortal.scale = MathUtils.ScaleLogarithmic(bigPortal.scale, 1f, 2.7219f, 1f / 60f);
+							bigPortal.scale = Utility.ScaleLogarithmic(bigPortal.scale, 1f, 2.7219f, 1f / 60f);
 							bigPortal.alpha = bigPortal.scale;
 						}
 
@@ -772,14 +800,14 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 						//Shrink (factor of 4.3851 makes it reach 0.01 in around 60 ticks, 12.2753 ~= 20 ticks)
 						const float epsilon = 0.01f;
 						if (NPC.scale > epsilon)
-							UpdateScale(MathUtils.ScaleLogarithmic(NPC.scale, 0f, repeatCount == 0 ? 4.3851f : 12.2753f, 1f / 60f));
+							UpdateScale(Utility.ScaleLogarithmic(NPC.scale, 0f, repeatCount == 0 ? 4.3851f : 12.2753f, 1f / 60f));
 
 						targetAlpha = 255f * (1f - NPC.scale);
 
 						if (AI_Timer <= 0)
 						{
 							//Shrink the portal, but a bit slower
-							bigPortal.scale = MathUtils.ScaleLogarithmic(bigPortal.scale, 0f, repeatCount == 0 ? 2.7219f : 9.2153f, 1f / 60f);
+							bigPortal.scale = Utility.ScaleLogarithmic(bigPortal.scale, 0f, repeatCount == 0 ? 2.7219f : 9.2153f, 1f / 60f);
 							bigPortal.alpha = bigPortal.scale;
 						}
 
@@ -811,8 +839,12 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 								SoundEngine.PlaySound(SoundID.Zombie105, NPC.Center); //Cultist laugh sound
 
 							//Wait for a random amount of time
-							AI_Timer = Main.expertMode ? Main.rand.Next(40, 90 + 1) : Main.rand.Next(100, 220 + 1);
-							NPC.netUpdate = true;
+							//Wait for a random amount of time
+							if (Main.netMode != NetmodeID.MultiplayerClient)
+							{
+								AI_Timer = Main.expertMode ? Main.rand.Next(40, 90 + 1) : Main.rand.Next(100, 220 + 1);
+								NPC.netUpdate = true;
+							}
 
 							movementTarget = null;
 						}
@@ -822,11 +854,15 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 						//Wait, then spawn a portal
 						if (AI_Timer <= 0)
 						{
-							Vector2 offset = Main.rand.NextVector2Unit() * 30 * 16;
+							if (Main.netMode != NetmodeID.MultiplayerClient)
+							{
+								portalOffset = Main.rand.NextVector2Unit() * 30 * 16;
+								NPC.netUpdate = true;
+							}
 
 							//Second portal is where the boss will end up
-							SpawnBigPortal(player.Center + offset, ref bigPortal, fast: true);
-							SpawnBigPortal(player.Center - offset, ref bigPortal2, fast: true);
+							SpawnBigPortal(player.Center + portalOffset, ref bigPortal, fast: true);
+							SpawnBigPortal(player.Center - portalOffset, ref bigPortal2, fast: true);
 							bigPortal2.visible = false;
 
 							NPC.Center = bigPortal.center;
@@ -838,7 +874,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 					else if (repeatRelative == 2)
 					{
 						//Make the portal grow FAST (9.9583 results in around 26 ticks)
-						bigPortal.scale = MathUtils.ScaleLogarithmic(bigPortal.scale, 1f, 9.9583f, 1f / 60f);
+						bigPortal.scale = Utility.ScaleLogarithmic(bigPortal.scale, 1f, 9.9583f, 1f / 60f);
 						bigPortal.alpha = bigPortal.scale;
 
 						if (bigPortal.scale >= 0.99f)
@@ -858,7 +894,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 						//15.7025 ~= 16 ticks to go from 0.01 to 1
 						if (NPC.scale < 0.99f)
-							UpdateScale(MathUtils.ScaleLogarithmic(NPC.scale, 1, 15.7025f, 1f / 60f));
+							UpdateScale(Utility.ScaleLogarithmic(NPC.scale, 1, 15.7025f, 1f / 60f));
 						else
 							UpdateScale(1f);
 
@@ -880,9 +916,15 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 							NPC.Center = bigPortal.center;
 							NPC.velocity = NPC.DirectionTo(player.Center) * chargeVelocity;
 
-							SoundEngine.PlaySound(SoundID.ForceRoar, NPC.position); // there was a -1 here but the style is correct 
+							SoundEngine.PlaySound(SoundID.ForceRoar, NPC.position);
 
-							if (repeatCount >= (Main.expertMode ? Main.rand.Next(5, 8) : Main.rand.Next(2, 5)))
+							if (Main.netMode != NetmodeID.MultiplayerClient)
+							{
+								portalAttackCount = Main.expertMode ? Main.rand.Next(5, 8) : Main.rand.Next(2, 5);
+								NPC.netUpdate = true;
+							}
+
+							if (repeatCount >= portalAttackCount)
 							{
 								//Stop the repetition
 								bigPortal2.visible = false;
@@ -902,7 +944,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 						//First portal disappears once the boss leaves within 22 update ticks of its center
 						if (NPC.DistanceSQ(bigPortal.center) > activeDist * activeDist)
 						{
-							bigPortal.scale = MathUtils.ScaleLogarithmic(bigPortal.scale, 0f, 15.2753f, 1f / 60f);
+							bigPortal.scale = Utility.ScaleLogarithmic(bigPortal.scale, 0f, 15.2753f, 1f / 60f);
 							bigPortal.alpha = bigPortal.scale;
 
 							if (bigPortal.scale <= 0.01f)
@@ -915,7 +957,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 						if (bigPortal2.visible)
 						{
-							bigPortal2.scale = MathUtils.ScaleLogarithmic(bigPortal2.scale, 1f, 15.2753f, 1f / 60f);
+							bigPortal2.scale = Utility.ScaleLogarithmic(bigPortal2.scale, 1f, 15.2753f, 1f / 60f);
 							bigPortal2.alpha = bigPortal2.scale;
 
 							if (bigPortal2.scale >= 0.99f)
@@ -976,7 +1018,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 						NPC.velocity *= 1f - 8.5f / 60f;
 
 						//5.9192 ~= 45 ticks to reach 0.01 scale
-						bigPortal.scale = MathUtils.ScaleLogarithmic(bigPortal.scale, 0f, 5.9192f, 1f / 60f);
+						bigPortal.scale = Utility.ScaleLogarithmic(bigPortal.scale, 0f, 5.9192f, 1f / 60f);
 
 						if (Math.Abs(NPC.velocity.X) < 0.05f && Math.Abs(NPC.velocity.Y) <= 0.05f)
 							NPC.velocity = Vector2.Zero;

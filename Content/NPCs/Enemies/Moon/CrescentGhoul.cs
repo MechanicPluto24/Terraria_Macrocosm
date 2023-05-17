@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Base;
-using Macrocosm.Common.Utility;
+﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Dusts;
@@ -16,7 +15,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-	public class CrescentGhoul : MoonEnemy
+    public class CrescentGhoul : MoonEnemy
 	{
 		public enum ActionState
 		{
@@ -68,20 +67,17 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[]
 			{
 				new FlavorTextBestiaryInfoElement(
-					" ")
+					"These devious, crescent-shaped aliens prowl the Moon's long nights, hunting and slaughtering whatever they can find.")
 			});
 		}
 
-		/// <summary>
-		/// Adapted from Corite AI 
-		/// </summary>
+		/// <summary> Adapted from Corite AI </summary>
 		public override void AI()
 		{
 			if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active)
 				NPC.TargetClosest(true);
 
 			bool playerActive = Main.player[NPC.target] != null && Main.player[NPC.target].active && !Main.player[NPC.target].dead;
-
 
 			float kbResist = 0.3f;
 			float chaseUpwardsMult = 8f;
@@ -113,7 +109,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 				kbResist *= Main.GameModeInfo.KnockbackToEnemiesMultiplier;
 
 			if(AI_State != ActionState.Spin)
-				BaseAI.LookAt(playerActive ? Main.player[NPC.target].Center : NPC.Center + NPC.velocity, NPC, 0);
+				Utility.LookAt(playerActive ? Main.player[NPC.target].Center : NPC.Center + NPC.velocity, NPC, 0);
 
 			if (AI_State == ActionState.Chase)
 			{
@@ -287,10 +283,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 				dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
 			}
 
-			if (Main.netMode == NetmodeID.Server)
-			{
-				return; // don't run on the server
-			}
+			if (Main.dedServ)
+				return;
 
 			if (NPC.life <= 0)
 			{

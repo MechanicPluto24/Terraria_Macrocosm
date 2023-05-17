@@ -1,5 +1,5 @@
-using Macrocosm.Common.Drawing;
-using Macrocosm.Content.Subworlds.Moon;
+using Macrocosm.Common.Utils;
+using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
 using Terraria;
@@ -7,11 +7,15 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Hooks
 {
-	public class TileSkyColorHook : ILoadable
+    public class TileSkyColorHook : ILoadable
 	{
 		public void Load(Mod mod)
 		{
 			On.Terraria.Main.ApplyColorOfTheSkiesToTiles += Main_ApplyColorOfTheSkiesToTiles;
+		}
+		public void Unload() 
+		{
+			On.Terraria.Main.ApplyColorOfTheSkiesToTiles -= Main_ApplyColorOfTheSkiesToTiles;
 		}
 
 		private void Main_ApplyColorOfTheSkiesToTiles(On.Terraria.Main.orig_ApplyColorOfTheSkiesToTiles orig)
@@ -30,7 +34,6 @@ namespace Macrocosm.Common.Hooks
 			}
 		}
 
-		public void Unload() { }
 
 	}
 }

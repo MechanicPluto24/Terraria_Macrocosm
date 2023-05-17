@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.GameContent.Creative;
@@ -25,7 +26,7 @@ namespace Macrocosm.Content.Items.Tools.Artemite
 			Item.useStyle = ItemUseStyleID.Swing;
 			Item.knockBack = 6;
 			Item.value = Item.sellPrice(gold: 8);
-			Item.rare = ItemRarityID.Purple;
+			Item.rare = ModContent.RarityType<MoonRarityT1>();
 			Item.UseSound = SoundID.Item1;
 			Item.autoReuse = true;
 			Item.useTurn = true;
