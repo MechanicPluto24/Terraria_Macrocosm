@@ -18,8 +18,10 @@ namespace Macrocosm.Content.Rocket
 			fuelLookup = null;
 		}
 
-		public static float GetFuelCost(string location, string destination) 
-			=> fuelLookup[location + "_" + destination];
+		public static float GetFuelCost(string location, string destination)
+		{
+			return 0;// fuelLookup[location + "_" + destination];
+        } 
 
 		private static void Add(string locationKey, string destinationKey, float value) 
 			=> fuelLookup.Add(locationKey + "_" + destinationKey, value);

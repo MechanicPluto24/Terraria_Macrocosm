@@ -17,7 +17,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		public override void SetStaticDefaults() 
 		{
-			DisplayName.SetDefault("Moon Worm");
+			// DisplayName.SetDefault("Moon Worm");
 
 			var drawModifier = new NPCID.Sets.NPCBestiaryDrawModifiers(0)    // Influences how the NPC looks in the Bestiary
 			{   
@@ -106,7 +106,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		public override void SetStaticDefaults() 
 		{
 			Main.npcFrameCount[Type] = 2;
-			DisplayName.SetDefault("Moon Worm");
+			// DisplayName.SetDefault("Moon Worm");
 			NPCID.Sets.NPCBestiaryDrawModifiers value = new NPCID.Sets.NPCBestiaryDrawModifiers(0) { Hide = true }; // Hides this NPC from the Bestiary, useful for multi-part NPCs whom you only want one entry.
 			NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
 		}
@@ -142,7 +142,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 	{
 		public override void SetStaticDefaults() 
 		{
-			DisplayName.SetDefault("Moon Worm");
+			// DisplayName.SetDefault("Moon Worm");
 
 			NPCID.Sets.NPCBestiaryDrawModifiers value = new(0) 
 			{

@@ -55,8 +55,8 @@ namespace Macrocosm.Content.UI.Rocket
 
 		public override void Update(GameTime gameTime)
 		{
-			OnClick -= UILaunchButton_OnClick_Launch;
-			OnClick -= UILaunchButton_OnClick_ZoomIn;
+			OnLeftClick -= UILaunchButton_OnClick_Launch;
+			OnLeftClick -= UILaunchButton_OnClick_ZoomIn;
 			CanClick = true;
 
 			string text = "";
@@ -89,14 +89,14 @@ namespace Macrocosm.Content.UI.Rocket
 					textColor = Color.White;
 					text = "ZOOM IN";
 					textScale = 1.05f;
-					OnClick += UILaunchButton_OnClick_ZoomIn;
+					OnLeftClick += UILaunchButton_OnClick_ZoomIn;
 					break;
 
 				case StateType.Launch:
 					textColor = new Color(0, 255, 0);
 					textScale = 1.1f;
 					text = "LAUNCH";
-					OnClick += UILaunchButton_OnClick_Launch;
+					OnLeftClick += UILaunchButton_OnClick_Launch;
 					break;
 
 				default:

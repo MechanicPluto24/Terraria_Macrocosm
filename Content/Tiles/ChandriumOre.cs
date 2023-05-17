@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 
@@ -22,12 +23,11 @@ namespace Macrocosm.Content.Tiles
 			MinPick = 225;
 			MineResist = 5f;
 
-			ModTranslation name = CreateMapEntryName();
-			name.SetDefault("Chandrium Ore");
+			LocalizedText name = CreateMapEntryName();
+			// name.SetDefault("Chandrium Ore");
 			AddMapEntry(new Color(178, 108, 220), name);
 
 			DustType = 84;
-			ItemDrop = ItemType<Items.Materials.ChandriumOre>();
 			HitSound = SoundID.Tink;
 		}
 		public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)

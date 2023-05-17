@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 
@@ -22,12 +23,11 @@ namespace Macrocosm.Content.Tiles
 			MinPick = 225;
 			MineResist = 5f;
 
-			ModTranslation name = CreateMapEntryName();
-			name.SetDefault("Artemite Ore");
+			LocalizedText name = CreateMapEntryName();
+			// name.SetDefault("Artemite Ore");
 			AddMapEntry(new Color(139, 146, 161), name);
 
 			DustType = 84;
-			ItemDrop = ItemType<Content.Items.Materials.ArtemiteOre>();
 			HitSound = SoundID.Tink;
 			//mineResist = 4f;
 			//minPick = 200;

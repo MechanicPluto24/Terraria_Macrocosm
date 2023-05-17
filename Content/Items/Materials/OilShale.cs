@@ -10,7 +10,7 @@ namespace Macrocosm.Content.Items.Materials
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Oil Shale");
+			// DisplayName.SetDefault("Oil Shale");
 		}
 
 		public override void SetDefaults()

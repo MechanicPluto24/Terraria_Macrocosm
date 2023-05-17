@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 
@@ -20,13 +21,12 @@ namespace Macrocosm.Content.Tiles
 			MinPick = 40;
 			MineResist = 5f;
 
-			ModTranslation name = CreateMapEntryName();
-			name.SetDefault("Oil Shale");
+			LocalizedText name = CreateMapEntryName();
+			// name.SetDefault("Oil Shale");
 			AddMapEntry(new Color(45, 46, 45), name);
 
 			DustType = 84;
-			ItemDrop = ItemType<Items.Materials.OilShale>();
-			HitSound = SoundID.Tink;
+ 			HitSound = SoundID.Tink;
 		}
 
 		public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)

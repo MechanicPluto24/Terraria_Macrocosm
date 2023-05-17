@@ -64,7 +64,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Tombstones
  
 			if (placeTile)
 			{
-				NetMessage.SendObjectPlacment(-1, tileX, tileY, objectData.type, objectData.style, objectData.alternate, objectData.random, Projectile.direction);
+				NetMessage.SendObjectPlacement(-1, tileX, tileY, objectData.type, objectData.style, objectData.alternate, objectData.random, Projectile.direction);
 				SoundEngine.PlaySound(SoundID.Dig, new Vector2(tileX * 16, tileY * 16));
 				int signId = Sign.ReadSign(tileX, tileY);
 				if (signId >= 0)

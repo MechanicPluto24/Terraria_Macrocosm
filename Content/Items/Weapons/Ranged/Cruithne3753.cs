@@ -13,8 +13,8 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Cruithne-3753");
-			Tooltip.SetDefault("Two different firing modes");
+			// DisplayName.SetDefault("Cruithne-3753");
+			// Tooltip.SetDefault("Two different firing modes");
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
 

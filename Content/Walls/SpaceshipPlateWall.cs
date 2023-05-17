@@ -10,7 +10,6 @@ namespace Macrocosm.Content.Walls
 		public override void SetStaticDefaults()
 		{
 			Main.wallHouse[Type] = false;
-			ItemDrop = ItemType<Items.Placeable.BlocksAndWalls.SpaceshipPlateWall>();
 			AddMapEntry(new Color(127, 127, 127));
 		}
 	}

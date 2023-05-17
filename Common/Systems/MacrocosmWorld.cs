@@ -76,7 +76,7 @@ namespace Macrocosm.Content.Systems
 			bool freezeTime = CreativePowerManager.Instance.GetPower<CreativePowers.FreezeTime>().Enabled;
 
 			// TODO: add sleeping multiplier 
-			Main.time += freezeTime ? 0f : subworld.TimeRate * (Main.fastForwardTime ? 60 : timeRateModifier);
+			Main.time += freezeTime ? 0f : subworld.TimeRate * (Main.IsFastForwardingTime() ? 60 : timeRateModifier);
 
 			IsDusk = Main.dayTime && Main.time >= subworld.DayLenght;
 			IsDawn = !Main.dayTime && Main.time >= subworld.NightLenght;

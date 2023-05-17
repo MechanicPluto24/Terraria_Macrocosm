@@ -7,13 +7,12 @@ using Terraria.ID;
 using Terraria.ModLoader;
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
-    public class ImbriumJewelProj2 : ModProjectile
+    public class ImbriumJewelMeteor : ModProjectile
     {
-		public override string Texture => Mod.Name + "/Content/Projectiles/Unfriendly/FlamingMeteor";
+		public override string Texture => Mod.Name + "/Content/Projectiles/Hostile/FlamingMeteor";
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Imbrium Jewel Meteor");
             Main.projFrames[Type] = 6;
         }
 

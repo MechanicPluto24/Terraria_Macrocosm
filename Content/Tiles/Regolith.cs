@@ -20,8 +20,7 @@ namespace Macrocosm.Content.Tiles
 			Main.tileMerge[Type][ModContent.TileType<IrradiatedRock>()] = true;
 			MinPick = 225;
 			MineResist = 3f;
-			ItemDrop = ModContent.ItemType<Items.Placeable.BlocksAndWalls.Regolith>();
-			AddMapEntry(new Color(220, 220, 220));
+ 			AddMapEntry(new Color(220, 220, 220));
 			HitSound = SoundID.Dig;
 		}
 		public override bool HasWalkDust()

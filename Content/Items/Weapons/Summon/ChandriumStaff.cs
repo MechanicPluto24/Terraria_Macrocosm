@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Items.Weapons.Summon
 	{
 		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault("Summons a Crescent Ghoul to fight for you");
+			// Tooltip.SetDefault("Summons a Crescent Ghoul to fight for you");
 
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 			ItemID.Sets.GamepadWholeScreenUseRange[Item.type] = true;

@@ -8,7 +8,7 @@ namespace Macrocosm.Content.Items.Placeable.Furniture
     {
 		public override void SetStaticDefaults()
 		{
-            DisplayName.SetDefault("Large Solar Panel");
+            // DisplayName.SetDefault("Large Solar Panel");
 		}
 
 		public override void SetDefaults()

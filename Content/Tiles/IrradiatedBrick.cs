@@ -16,8 +16,7 @@ namespace Macrocosm.Content.Tiles
 			Main.tileMergeDirt[Type] = true;
 			MinPick = 275;
 			MineResist = 3f;
-			ItemDrop = ItemType<Items.Placeable.BlocksAndWalls.IrradiatedBrick>();
-			AddMapEntry(new Color(129, 117, 0));
+ 			AddMapEntry(new Color(129, 117, 0));
 			HitSound = SoundID.Tink;
 		}
 	}

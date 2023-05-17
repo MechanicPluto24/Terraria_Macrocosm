@@ -59,7 +59,7 @@ namespace Macrocosm.Content.UI.LoadingScreens
 			CurrentlyActive = true;
 
 			if (ProgressBar is not null && WorldGenerator.CurrentGenerationProgress is not null)
-				ProgressBar.SetProgress(WorldGenerator.CurrentGenerationProgress.TotalProgress, WorldGenerator.CurrentGenerationProgress.Value);
+				ProgressBar.SetProgress((float)WorldGenerator.CurrentGenerationProgress.TotalProgress, (float)WorldGenerator.CurrentGenerationProgress.Value);
 
 			Main.gameTips.Update();
 

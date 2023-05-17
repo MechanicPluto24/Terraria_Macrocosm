@@ -8,7 +8,7 @@ namespace Macrocosm.Content.Items.Mounts
 	{
 		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault("In memory of STS-51-L and STS-107.");
+			// Tooltip.SetDefault("In memory of STS-51-L and STS-107.");
 		}
 
 		public override void SetDefaults()

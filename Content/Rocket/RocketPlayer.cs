@@ -20,7 +20,7 @@ namespace Macrocosm.Content.Rocket
 		public string TargetSubworldID { get; set; } = "";
 
 
-		public override void clientClone(ModPlayer clientClone)
+		public override void CopyClientState(ModPlayer clientClone)/* tModPorter Suggestion: Replace Item.Clone usages with Item.CopyNetStateTo */
 		{
 			RocketPlayer cloneRocketPlayer = clientClone as RocketPlayer;
 

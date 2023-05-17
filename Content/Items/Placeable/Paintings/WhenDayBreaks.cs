@@ -9,8 +9,8 @@ namespace Macrocosm.Content.Items.Placeable.Paintings
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("When Day Breaks");
-			Tooltip.SetDefault("'L. Reda'");
+			// DisplayName.SetDefault("When Day Breaks");
+			// Tooltip.SetDefault("'L. Reda'");
 		}
 
 		public override void SetDefaults()

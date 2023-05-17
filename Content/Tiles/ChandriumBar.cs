@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Localization;
@@ -23,17 +24,6 @@ namespace Macrocosm.Content.Tiles
 			TileObjectData.addTile(Type);
 
 			AddMapEntry(new Color(105, 56, 215), Language.GetText("Chandrium Bar")); // localized text for "Metal Bar"
-		}
-
-		public override bool Drop(int x, int y)
-		{
-			Tile t = Main.tile[x, y];
-			int style = t.TileFrameX / 18;
-			if (style == 0)
-			{
-				Item.NewItem(new EntitySource_TileBreak(x, y), x * 16, y * 16, 16, 16, ItemType<Items.Materials.ChandriumBar>());
-			}
-			return base.Drop(x, y);
 		}
 	}
 }

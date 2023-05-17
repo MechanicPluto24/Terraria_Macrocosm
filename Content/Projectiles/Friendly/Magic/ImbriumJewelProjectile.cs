@@ -8,11 +8,10 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
-    public class ImbriumJewelProj : ModProjectile
+    public class ImbriumJewelProjectile : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Imbrium Jewel Projectile");
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 6;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
         }
@@ -51,7 +50,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 {
                     Vector2 shootVel = new Vector2(6, 6).RotatedByRandom(MathHelper.ToRadians(360));
                     Vector2 vector = new Vector2(Projectile.position.X + (float)Projectile.width * 0.5f, Projectile.position.Y + (float)Projectile.height * 0.5f);
-                    Projectile.NewProjectile(Projectile.InheritSource(Projectile), vector, shootVel, ModContent.ProjectileType<ImbriumJewelProj2>(), (int)(Projectile.damage), Projectile.knockBack, Main.player[Projectile.owner].whoAmI);
+                    Projectile.NewProjectile(Projectile.InheritSource(Projectile), vector, shootVel, ModContent.ProjectileType<ImbriumJewelMeteor>(), (int)(Projectile.damage), Projectile.knockBack, Main.player[Projectile.owner].whoAmI);
                     /*int dustFX = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<TheJewelOfShowersDust>());
                     Main.dust[dustFX].position = Projectile.position;
                     Main.dust[dustFX].position.X -= 36;
@@ -59,6 +58,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                     Main.dust[dustFX].rotation = Projectile.rotation;*/
                 }
             }
+
             /*Projectile.ai[1]++;
             if (Projectile.ai[1] >= 15)
             {
@@ -69,9 +69,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                     Main.projectile[proj].rotation = Projectile.rotation;
                 }
             }*/
+
             Lighting.AddLight(Projectile.Center, 0f, 1f, 0f);
             Projectile.rotation = (float)Math.Atan2((double)Projectile.velocity.Y, (double)Projectile.velocity.X);
-            int dust = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, 74, Projectile.velocity.X, Projectile.velocity.Y, 100, default(Color), 1.7f);
+            int dust = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, DustID.GreenFairy, Projectile.velocity.X, Projectile.velocity.Y, 100, default(Color), 1.7f);
             Main.dust[dust].noGravity = true;
         }
 
@@ -79,12 +80,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         {
             //Redraw the projectile with the color not influenced by light
             //Texture2D texture = (Texture2D)ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Magic/TheJewelOfShowersProj");
-            Vector2 drawOrigin = new Vector2(TextureAssets.Projectile[Projectile.type].Value.Width * 0.5f, Projectile.height * 0.5f);
+            Vector2 drawOrigin = new Vector2(TextureAssets.Projectile[Type].Value.Width * 0.5f, Projectile.height * 0.5f);
             for (int k = 0; k < Projectile.oldPos.Length; k++)
             {
                 Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, Projectile.gfxOffY);
                 Color color = Projectile.GetAlpha(lightColor) * ((float)(Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
-                Main.spriteBatch.Draw(TextureAssets.Projectile[Projectile.type].Value, drawPos, null, color, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(TextureAssets.Projectile[Type].Value, drawPos, null, color, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0f);
             }
             return true;
         }

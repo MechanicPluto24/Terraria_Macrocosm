@@ -15,12 +15,12 @@ namespace Macrocosm.Common.Hooks
 	{
 		public void Load(Mod mod)
 		{
-			IL.Terraria.Main.DrawDust += Main_DrawDust;
+			Terraria.IL_Main.DrawDust += Main_DrawDust;
 		}
 
 		public void Unload()
 		{
-			IL.Terraria.Main.DrawDust -= Main_DrawDust;
+			Terraria.IL_Main.DrawDust -= Main_DrawDust;
 		}
 
 		private void Main_DrawDust(ILContext il)

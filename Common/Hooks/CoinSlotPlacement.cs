@@ -8,15 +8,15 @@ namespace Macrocosm.Common.Hooks
 	{
 		public void Load(Mod mod)
 		{
-			On.Terraria.UI.ItemSlot.PickItemMovementAction += MoonCoin_AllowCoinSlotPlacement;
+			Terraria.UI.On_ItemSlot.PickItemMovementAction += MoonCoin_AllowCoinSlotPlacement;
 		}
 
 		public void Unload() 
 		{
-			On.Terraria.UI.ItemSlot.PickItemMovementAction -= MoonCoin_AllowCoinSlotPlacement;
+			Terraria.UI.On_ItemSlot.PickItemMovementAction -= MoonCoin_AllowCoinSlotPlacement;
 		}
 
-		private int MoonCoin_AllowCoinSlotPlacement(On.Terraria.UI.ItemSlot.orig_PickItemMovementAction orig, Item[] inv, int context, int slot, Item checkItem)
+		private int MoonCoin_AllowCoinSlotPlacement(Terraria.UI.On_ItemSlot.orig_PickItemMovementAction orig, Item[] inv, int context, int slot, Item checkItem)
 		{
 			if (context == 1 && checkItem.type == ModContent.ItemType<MoonCoin>())
  				return 0;
