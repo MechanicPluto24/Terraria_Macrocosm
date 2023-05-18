@@ -8,7 +8,7 @@ namespace Macrocosm.Content.Items.Placeable.Furniture
     {
 		public override void SetStaticDefaults()
 		{
-            DisplayName.SetDefault("Adamantite Loom");
+            // DisplayName.SetDefault("Adamantite Loom");
 		}
 
 		public override void SetDefaults()

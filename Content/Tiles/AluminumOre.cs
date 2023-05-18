@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 
@@ -22,12 +23,11 @@ namespace Macrocosm.Content.Tiles
 			MinPick = 40;
 			MineResist = 5f;
 
-			ModTranslation name = CreateMapEntryName();
-			name.SetDefault("Aluminum");
+			LocalizedText name = CreateMapEntryName();
+			// name.SetDefault("Aluminum");
 			AddMapEntry(new Color(225, 217, 228), name);
 
 			DustType = 84;
-			ItemDrop = ItemType<Items.Materials.AluminumOre>();
 			HitSound = SoundID.Tink;
 		}
 	}

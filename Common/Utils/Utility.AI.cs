@@ -3058,7 +3058,7 @@ namespace Macrocosm.Common.Utils
                     SoundEngine.PlaySound(SoundID.Roar, npc.position);
             }
             //prevent a -1, -1 saving scenario
-            if (npc.type >= Main.maxNPCTypes && npc.homeTileX == -1 && npc.homeTileY == -1 || npc.homeTileX == ushort.MaxValue && npc.homeTileY == ushort.MaxValue)
+            if (npc.homeTileX == -1 && npc.homeTileY == -1 || npc.homeTileX == ushort.MaxValue && npc.homeTileY == ushort.MaxValue)
             {
                 npc.homeTileX = (int)npc.Center.X / 16;
                 npc.homeTileY = (int)npc.Center.Y / 16;
@@ -5211,186 +5211,6 @@ namespace Macrocosm.Common.Utils
             return false;
         }
 
-        /* THESE TWO ARE WIP - BROKEN IN TMODLOADER */
-        /*public static LootRule AddLoot(object npcTypes, int type, int amtMin, int amtMax, int chance)
-		{
-			return AddLoot(npcTypes, type, amtMin, amtMax, (float)chance / 100f);
-		}
-		public static LootRule AddLoot(object npcTypes, int type, int amtMin, int amtMax, float chance)
-		{
-			LootRule rule = new LootRule().Chance(chance).Item(type).Stack(amtMin, amtMax);
-			if (npcTypes is int) LootRule.AddFor((int)npcTypes, rule);
-			else if (npcTypes is int[]) LootRule.AddFor((int[])npcTypes, rule);
-			else if (npcTypes is string) LootRule.AddFor((string)npcTypes, rule);
-			else if (npcTypes is string[]) LootRule.AddFor((string[])npcTypes, rule);
-			else if (npcTypes is Tuple<int, int>) LootRule.AddFor((Tuple<int, int>)npcTypes, rule);
-			return rule;
-		}*/
-
-
-
-        public static void DamagePlayer(Player player, int dmgAmt, float knockback, Entity damager, bool dmgVariation = true, bool hitThroughDefense = false)
-        {
-            int hitDirection = damager == null ? 0 : damager.direction;
-            DamagePlayer(player, dmgAmt, knockback, hitDirection, damager, dmgVariation, hitThroughDefense);
-        }
-
-        /*
-         *  Damages the player by the given amount.
-         * 
-         *  dmgAmt : The amount of damage to inflict.
-         *  knockback : The amount of knockback to inflict.
-         *  hitDirection : The direction of the damage.
-         *  damager : The thing actually doing damage (Player, Projectile, NPC or null)
-         *  dmgVariation : If true, the damage will vary based on Main.DamageVar().
-         *  hitThroughDefense : If true, boosts damage to get around player defense.
-         */
-        public static void DamagePlayer(Player player, int dmgAmt, float knockback, int hitDirection, Entity damager, bool dmgVariation = true, bool hitThroughDefense = false)
-        {
-            float defIgnore = 0.5f;
-            if (Main.expertMode)
-                defIgnore = 0.75f;
-            else if (Main.masterMode)
-                defIgnore = 1;
-
-            if (hitThroughDefense) { dmgAmt += (int)(player.statDefense * defIgnore); }
-            if (damager == null)
-            {
-                int parsedDamage = dmgAmt; if (dmgVariation) { parsedDamage = Main.DamageVar(dmgAmt); }
-                player.Hurt(PlayerDeathReason.ByOther(-1), parsedDamage, hitDirection, false, false, false, 0);
-            }
-            else if (damager is Player subPlayer)
-            {
-                int parsedDamage = dmgAmt; if (dmgVariation) { parsedDamage = Main.DamageVar(dmgAmt); }
-
-                player.Hurt(PlayerDeathReason.ByPlayer(subPlayer.whoAmI), parsedDamage, hitDirection, true, false, false, 0);
-                PlayerLoader.OnHitPvp(subPlayer, subPlayer.HeldItem, player, parsedDamage, false);
-                bool crit = false;
-                PlayerLoader.ModifyHitPvp(subPlayer, subPlayer.HeldItem, player, ref parsedDamage, ref crit);
-
-                subPlayer.attackCD = (int)(subPlayer.itemAnimationMax * 0.33f);
-            }
-            else if (damager is Projectile p)
-            {
-                if (p.friendly)
-                {
-                    int parsedDamage = dmgAmt; if (dmgVariation) { parsedDamage = Main.DamageVar(dmgAmt); }
-                    player.Hurt(PlayerDeathReason.ByProjectile(p.owner, p.whoAmI), parsedDamage, hitDirection, true, false, false, 0);
-                    p.playerImmune[player.whoAmI] = 40;
-                    PlayerLoader.OnHitByProjectile(player, p, parsedDamage, false);
-                    bool crit = false;
-                    PlayerLoader.ModifyHitByProjectile(player, p, ref parsedDamage, ref crit);
-                }
-                else if (p.hostile)
-                {
-                    int parsedDamage = dmgAmt; if (dmgVariation) { parsedDamage = Main.DamageVar(dmgAmt); }
-                    player.Hurt(PlayerDeathReason.ByProjectile(-1, p.whoAmI), parsedDamage, hitDirection, false, false, false, 0);
-                    PlayerLoader.OnHitByProjectile(player, p, parsedDamage, false);
-                    bool crit = false;
-                    PlayerLoader.ModifyHitByProjectile(player, p, ref parsedDamage, ref crit);
-                }
-            }
-            else if (damager is NPC npc)
-            {
-                int parsedDamage = dmgAmt; if (dmgVariation) { parsedDamage = Main.DamageVar(dmgAmt); }
-                player.Hurt(PlayerDeathReason.ByNPC(npc.whoAmI), parsedDamage, hitDirection, false, false, false, 0);
-                PlayerLoader.OnHitByNPC(player, npc, parsedDamage, false);
-                bool crit = false;
-                PlayerLoader.ModifyHitByNPC(player, npc, ref parsedDamage, ref crit);
-            }
-        }
-
-        /*
-         *  Damages the given NPC by the given amount.
-         */
-        public static void DamageNPC(NPC npc, int dmgAmt, float knockback, Entity damager, bool dmgVariation = true, bool hitThroughDefense = false, bool crit = false, Item item = null)
-        {
-            int hitDirection = damager == null ? 0 : damager.direction;
-            DamageNPC(npc, dmgAmt, knockback, hitDirection, damager, dmgVariation, hitThroughDefense, crit, item);
-        }
-
-        /*
-         *  Damages the NPC by the given amount.
-         *  
-         *  dmgAmt : The amount of damage to inflict.
-         *  knockback : The amount of knockback to inflict.
-         *  hitDirection : The direction of the damage.
-         *  damager : the thing actually doing damage (Player, Projectile or null)
-         *  dmgVariation : If true, the damage will vary based on Main.DamageVar().
-         *  hitThroughDefense : If true, boosts damage to get around npc defense.
-         */
-        public static void DamageNPC(NPC npc, int dmgAmt, float knockback, int hitDirection, Entity damager, bool dmgVariation = true, bool hitThroughDefense = false, bool crit = false, Item item = null)
-        {
-            if (item == null)
-                item = new Item(ItemID.WoodenSword);
-            if (npc.dontTakeDamage || npc.immortal && npc.type != NPCID.TargetDummy)
-                return;
-            if (hitThroughDefense) { dmgAmt += (int)(npc.defense * 0.5f); }
-            if (damager == null || damager is NPC)
-            {
-                int parsedDamage = dmgAmt; if (dmgVariation) { parsedDamage = Main.DamageVar(dmgAmt); }
-                npc.StrikeNPC(parsedDamage, knockback, hitDirection, crit);
-
-                if (damager is NPC)
-                {
-                    NPCLoader.ModifyHitNPC(damager as NPC, npc, ref parsedDamage, ref knockback, ref crit);
-                    NPCLoader.OnHitNPC(damager as NPC, npc, parsedDamage, knockback, crit);
-                    //npc.attacker = damager;
-                }
-
-                if (Main.netMode != NetmodeID.SinglePlayer)
-                {
-                    NetMessage.SendData(MessageID.DamageNPC, -1, -1, NetworkText.FromLiteral(""), npc.whoAmI, 1, knockback, hitDirection, parsedDamage);
-                }
-            }
-            else if (damager is Projectile p)
-            {
-                if (p.owner == Main.myPlayer && NPCLoader.CanBeHitByProjectile(npc, p) != false)
-                {
-                    int parsedDamage = dmgAmt; if (dmgVariation) { parsedDamage = Main.DamageVar(dmgAmt); }
-                    npc.StrikeNPC(parsedDamage, knockback, hitDirection, crit);
-                    NPCLoader.ModifyHitByProjectile(npc, p, ref parsedDamage, ref knockback, ref crit, ref hitDirection);
-                    NPCLoader.OnHitByProjectile(npc, p, parsedDamage, knockback, crit);
-                    PlayerLoader.ModifyHitNPCWithProj(p, npc, ref parsedDamage, ref knockback, ref crit, ref hitDirection);
-                    PlayerLoader.OnHitNPCWithProj(p, npc, parsedDamage, knockback, crit);
-                    ProjectileLoader.ModifyHitNPC(p, npc, ref parsedDamage, ref knockback, ref crit, ref hitDirection);
-                    ProjectileLoader.OnHitNPC(p, npc, parsedDamage, knockback, crit);
-
-                    if (Main.netMode != NetmodeID.SinglePlayer)
-                        NetMessage.SendData(MessageID.DamageNPC, -1, -1, NetworkText.FromLiteral(""), npc.whoAmI, 1, knockback, hitDirection, parsedDamage);
-
-                    if (p.penetrate != 1) { npc.immune[p.owner] = 10; }
-                }
-            }
-            else if (damager is Player player)
-            {
-                if (player.whoAmI == Main.myPlayer && NPCLoader.CanBeHitByItem(npc, player, item) != false)
-                {
-                    int parsedDamage = dmgAmt; if (dmgVariation) { parsedDamage = Main.DamageVar(dmgAmt); }
-                    npc.StrikeNPC(parsedDamage, knockback, hitDirection, crit);
-                    NPCLoader.ModifyHitByItem(npc, player, item, ref parsedDamage, ref knockback, ref crit);
-                    NPCLoader.OnHitByItem(npc, player, item, parsedDamage, knockback, crit);
-                    PlayerLoader.ModifyHitNPC(player, item, npc, ref parsedDamage, ref knockback, ref crit);
-                    PlayerLoader.OnHitNPC(player, item, npc, parsedDamage, knockback, crit);
-
-                    if (Main.netMode != NetmodeID.SinglePlayer)
-                    {
-                        NetMessage.SendData(MessageID.DamageNPC, -1, -1, NetworkText.FromLiteral(""), npc.whoAmI, 1, knockback, hitDirection, parsedDamage);
-                    }
-                    npc.immune[player.whoAmI] = player.itemAnimation;
-                }
-            }
-        }
-
-        /*
-         * Convenience method that handles killing an NPC and having it drop loot.
-         * If you want the NPC to just dissapear, use KillNPC().
-         */
-        public static void KillNPCWithLoot(NPC npc)
-        {
-            DamageNPC(npc, npc.lifeMax + npc.defense + 1, 0f, 0, null, false, true);
-        }
-
         /*
          * Convenience method that handles killing an NPC without loot.
          */
@@ -5407,6 +5227,7 @@ namespace Macrocosm.Common.Utils
         {
             return GetProjectile(center, projType, owner, default, distance, canAdd);
         }
+
         /*
 		 * Gets the closest Projectile with the given type within the given distance from the center. If distance is -1, it gets the closest Projectile.
 		 * 

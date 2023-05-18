@@ -78,7 +78,7 @@ namespace Macrocosm.Content.UI.Rocket
 
 		public override void OnInitialize()
 		{
-			OnClick += (_, _) =>
+			OnLeftClick += (_, _) =>
 			{
 				foreach (UIElement element in OwnerMap.Children)
 				{
@@ -90,7 +90,7 @@ namespace Macrocosm.Content.UI.Rocket
 
 			OnRightClick += (_, _) => { Selected = false; };
 
-			OnDoubleClick += (_, _) => { OwnerPanel.ZoomIn(useDefault: false); };
+			OnLeftDoubleClick += (_, _) => { OwnerPanel.ZoomIn(useDefault: false); };
 
 			//OnRightDoubleClick += (_, _) => { OwnerPanel.ZoomOut();  };
 		}

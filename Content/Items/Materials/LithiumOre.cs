@@ -10,7 +10,7 @@ namespace Macrocosm.Content.Items.Materials
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Lithium");
+			// DisplayName.SetDefault("Lithium");
 		}
 
 		public override void SetDefaults()

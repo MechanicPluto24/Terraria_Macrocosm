@@ -43,7 +43,7 @@ namespace Macrocosm.Content.Players
 				Lighting.AddLight(Player.Center, MacrocosmWorld.CelestialColor.ToVector3() * 0.4f);
 		}
 
-		public override void clientClone(ModPlayer clientClone)
+		public override void CopyClientState(ModPlayer clientClone)/* tModPorter Suggestion: Replace Item.Clone usages with Item.CopyNetStateTo */
 		{
 			(clientClone as DashPlayer).DashDirection = DashDirection;
 		}

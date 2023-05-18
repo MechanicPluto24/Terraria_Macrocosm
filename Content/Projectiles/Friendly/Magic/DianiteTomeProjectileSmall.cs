@@ -10,7 +10,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Dianite Meteor");
+			// DisplayName.SetDefault("Dianite Meteor");
 			ProjectileID.Sets.TrailCacheLength[Type] = 10;
 			ProjectileID.Sets.TrailingMode[Type] = 0;
 		}

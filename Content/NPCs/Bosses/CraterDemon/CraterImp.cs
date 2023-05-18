@@ -99,7 +99,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 				CycleAnimation();
 		}
 
-		public override void OnHitPlayer(Player target, int damage, bool crit)
+		public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
 		{
 			if (Main.expertMode)
 				target.Macrocosm().AccMoonArmorDebuff = 80;
@@ -359,7 +359,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			}
 		}
 
-		public override void HitEffect(int hitDirection, double damage)
+		public override void HitEffect(NPC.HitInfo hit)
 		{
 			CraterDemon.SpawnDustsInner(NPC.position, NPC.width, NPC.height, ModContent.DustType<RegolithDust>());
 

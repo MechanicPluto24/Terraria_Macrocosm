@@ -39,7 +39,7 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault(MeteorName);
+            // DisplayName.SetDefault(MeteorName);
         }
 
         public override void SetDefaults()
@@ -73,7 +73,7 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
             }
         }
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
         }
 

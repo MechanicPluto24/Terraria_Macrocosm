@@ -18,8 +18,7 @@ namespace Macrocosm.Content.Tiles
 			Main.tileMerge[Type][ModContent.TileType<Regolith>()] = true;
 			MinPick = 275;
 			MineResist = 3f;
-			ItemDrop = ModContent.ItemType<Items.Placeable.BlocksAndWalls.IrradiatedRock>();
-			AddMapEntry(new Color(129, 117, 0));
+ 			AddMapEntry(new Color(129, 117, 0));
 			HitSound = SoundID.Tink;
 		}
 

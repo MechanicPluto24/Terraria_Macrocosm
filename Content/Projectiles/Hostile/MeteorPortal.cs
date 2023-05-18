@@ -20,7 +20,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Meteor Portal");
+			// DisplayName.SetDefault("Meteor Portal");
 		}
 		public override void SetDefaults()
 		{

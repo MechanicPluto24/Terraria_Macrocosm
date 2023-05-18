@@ -8,8 +8,8 @@ namespace Macrocosm.Content.Buffs.GoodBuffs.MountBuffs
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Space Shuttle");
-			Description.SetDefault("In memory of STS-51-L and STS-107.");
+			// DisplayName.SetDefault("Space Shuttle");
+			// Description.SetDefault("In memory of STS-51-L and STS-107.");
 			Main.buffNoTimeDisplay[Type] = true;
 		}
 

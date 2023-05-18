@@ -8,8 +8,8 @@ namespace Macrocosm.Content.Buffs.GoodBuffs.MinionBuffs
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Crater Imp");
-			Description.SetDefault("This lesser demon will fight for you!");
+			// DisplayName.SetDefault("Crater Imp");
+			// Description.SetDefault("This lesser demon will fight for you!");
 
 			Main.buffNoSave[Type] = true;
 			Main.buffNoTimeDisplay[Type] = true;

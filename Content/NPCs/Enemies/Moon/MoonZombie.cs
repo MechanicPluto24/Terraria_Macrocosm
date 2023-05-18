@@ -15,7 +15,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		public override void SetStaticDefaults()
 		{
 			base.SetStaticDefaults();
-			DisplayName.SetDefault("Zombie Astronaut");
+			// DisplayName.SetDefault("Zombie Astronaut");
 			Main.npcFrameCount[Type] = 9;
 		}
 
@@ -90,7 +90,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			loot.Add(ItemDropRule.Common(ModContent.ItemType<DianiteOre>(), 16, 1, 6));   // 1/16 chance to drop 1-6 DianiteOre Ore
 		}
 
-		public override void HitEffect(int hitDirection, double damage)
+		public override void HitEffect(NPC.HitInfo hit)
 		{
 			if (NPC.life > 0)
 			{
@@ -99,7 +99,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 					int dustType = Utils.SelectRandom<int>(Main.rand, DustID.TintableDust, DustID.Blood);
 
  					Dust dust = Dust.NewDustDirect(NPC.position, NPC.width, NPC.height, dustType);
-					dust.velocity.X *= (dust.velocity.X + + Main.rand.Next(0, 100) * 0.015f) * hitDirection;
+					dust.velocity.X *= (dust.velocity.X + + Main.rand.Next(0, 100) * 0.015f) * hit.HitDirection;
 					dust.velocity.Y =  3f + Main.rand.Next(-50, 51) * 0.01f  ;
 					dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
 					dust.noGravity = true;

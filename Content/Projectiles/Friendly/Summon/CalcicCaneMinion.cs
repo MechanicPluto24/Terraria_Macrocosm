@@ -22,7 +22,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Crater Imp");
+			// DisplayName.SetDefault("Crater Imp");
 			Main.projFrames[Type] = 10;
 			ProjectileID.Sets.MinionTargettingFeature[Type] = true;
 

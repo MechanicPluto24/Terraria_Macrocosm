@@ -10,7 +10,6 @@ namespace Macrocosm.Content.Walls
 		public override void SetStaticDefaults()
 		{
 			Main.wallHouse[Type] = false; // Unsafe wall
-			ItemDrop = ItemType<Items.Placeable.BlocksAndWalls.RegolithWall>();
 			AddMapEntry(new Color(45, 45, 45));
 		}
 	}
