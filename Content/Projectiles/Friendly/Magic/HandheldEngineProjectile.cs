@@ -1,5 +1,7 @@
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Particles;
 using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -14,18 +16,18 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
     public class HandheldEngineProjectile : HeldGunProjectile
 	{
-		private int windupFrames = 1; // inactive frame
-		private int shootFrames = 2;  // number of shooting animaton frames
-
-		private int windupTime = 60;  // ticks till start of shooting 
-
-		private int ManaUseRate = 10;
-		private int ManaUseAmount = 5;
-
-		public ref float AI_Windup => ref Projectile.ai[0];
+		public ref float AI_Overheat => ref Projectile.ai[0];
 		public ref float AI_UseCounter => ref Projectile.ai[1];
+		public float AI_Windup = 0;
 
-		private float overheatCounter = 0;
+		private const int windupFrames = 1; // inactive frame
+		private const int shootFrames = 2;  // number of shooting animaton frames
+
+		private readonly int windupTime = 60;  // ticks till start of shooting 
+
+		private readonly int ManaUseRate = 10;
+		private readonly int ManaUseAmount = 5;
+		
 
 		public override float CircularHoldoutOffset => 45;
 
@@ -47,6 +49,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
 			Animate();
 			Shoot();
+			ComputeOverheat();
 			Visuals();
 			PlaySounds();
 
@@ -70,7 +73,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			}
 		}
 
-		private bool hasMana => OwnerPlayer.CheckMana(ManaUseAmount);
+		private bool OwnerHasMana => OwnerPlayer.CheckMana(ManaUseAmount);
 
 		private void Shoot()
 		{
@@ -87,19 +90,16 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 				Vector2 rotPoint2 = Utility.RotatingPoint(Projectile.Center, new Vector2(72, 12 * Projectile.spriteDirection), Projectile.rotation);
 				Vector2 rotPoint3 = Utility.RotatingPoint(Projectile.Center, new Vector2(102, 12 * Projectile.spriteDirection), Projectile.rotation);
 
-				Projectile.NewProjectile(Projectile.GetSource_FromAI(), rotPoint1, Vector2.Zero, ModContent.ProjectileType<StupidShit>(), damage, knockback, OwnerPlayer.whoAmI, Projectile.whoAmI);
-				Projectile.NewProjectile(Projectile.GetSource_FromAI(), rotPoint2, Vector2.Zero, ModContent.ProjectileType<StupidShit>(), damage, knockback, OwnerPlayer.whoAmI, Projectile.whoAmI);
-				Projectile.NewProjectile(Projectile.GetSource_FromAI(), rotPoint3, Vector2.Zero, ModContent.ProjectileType<StupidShit>(), damage, knockback, OwnerPlayer.whoAmI, Projectile.whoAmI);
+				Projectile.NewProjectile(Projectile.GetSource_FromAI(), rotPoint1, Vector2.Zero, ModContent.ProjectileType<HandheldEngineHitbox>(), damage, knockback, OwnerPlayer.whoAmI, Projectile.whoAmI);
+				Projectile.NewProjectile(Projectile.GetSource_FromAI(), rotPoint2, Vector2.Zero, ModContent.ProjectileType<HandheldEngineHitbox>(), damage, knockback, OwnerPlayer.whoAmI, Projectile.whoAmI);
+				Projectile.NewProjectile(Projectile.GetSource_FromAI(), rotPoint3, Vector2.Zero, ModContent.ProjectileType<HandheldEngineHitbox>(), damage, knockback, OwnerPlayer.whoAmI, Projectile.whoAmI);
 
-				Vector2 velocity = Utility.PolarVector(8, MathHelper.WrapAngle(Projectile.rotation)) - OwnerPlayer.velocity * 0.2f;
-				Vector2 offset = Utility.PolarVector(Projectile.direction == 1 ? 4 : -20, Projectile.rotation) + new Vector2(0,16);
-
-				Dust dust;
-				for(int i = 0; i <3; i++)
+				for(int i = 0; i < 10; i++)
 				{
-					dust = Dust.NewDustDirect(rotPoint1 - offset, 24, 24, ModContent.DustType<PlasmaBallDust>(), velocity.X, velocity.Y, Scale: 1f);
-					dust.noGravity = true;
-					dust.alpha = 255;
+					float amp = Main.rand.NextFloat(0, 1f);
+					Vector2 position = rotPoint2 + Main.rand.NextVector2Circular(20, 20);
+					Vector2 velocity = (Utility.PolarVector(8 * (1 - amp), MathHelper.WrapAngle(Projectile.rotation)) - Projectile.velocity.SafeNormalize(Vector2.UnitX)).RotatedByRandom(MathHelper.PiOver4 * 0.4);
+					Particle.CreateParticle<EngineSpark>(position, velocity, Projectile.rotation, Main.rand.NextFloat(1.2f, 1.8f) * (1-amp));
 				}
 			}
 		}
@@ -110,25 +110,28 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 				Lighting.AddLight(Projectile.position + Utility.PolarVector(80f, Projectile.rotation), new Vector3(0.4313f, 0.9764f, 1.0f) * 1.1f);
 		}
 
+		public void ComputeOverheat()
+		{
+			if (!OwnerHasMana)
+			{
+				if (AI_Overheat < 1f)
+					AI_Overheat += 0.002f;
+			}
+			else
+			{
+				if (AI_Overheat > 0f)
+					AI_Overheat -= 0.004f;
+
+				if (AI_Overheat < 0f)
+					AI_Overheat = 0f;
+			}
+		}
+
 		public override bool PreDraw(ref Color lightColor)
 		{
-			if (!hasMana)
-			{
-				if (overheatCounter < 1f)
-					overheatCounter += 0.002f;
-			}
-			else 
-			{
-				if (overheatCounter > 0f)
-					overheatCounter -= 0.004f;
-
-				if (overheatCounter < 0f)
-					overheatCounter = 0f;
-			}
-
 			Effect effect = ModContent.Request<Effect>(Macrocosm.EffectAssetPath + "OverheatGradient", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-			effect.Parameters["uIntensity"].SetValue(overheatCounter);
-			effect.Parameters["uOffset"].SetValue(new Vector2(-0.08f + (-0.2f * (1f - overheatCounter)), 0));
+			effect.Parameters["uIntensity"].SetValue(AI_Overheat);
+			effect.Parameters["uOffset"].SetValue(new Vector2(-0.08f + (-0.2f * (1f - AI_Overheat)), 0));
 
 			Projectile.DrawAnimated(lightColor, Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None, new Vector2(5, 12), shader: effect);
 			return false;
@@ -140,7 +143,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			Texture2D flame = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Magic/HandheldEngineProjectile_Flame").Value;
 			Texture2D warning = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Magic/HandheldEngineProjectile_Warning").Value;
 
-			Projectile.DrawAnimatedGlowmask(glowmask, Color.White, Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None, new Vector2(5, 14));
+			Projectile.DrawAnimatedExtra(glowmask, Color.White, Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None, new Vector2(5, 14));
 
 			SpriteBatchState state = Main.spriteBatch.SaveState();
 
@@ -148,11 +151,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			Main.spriteBatch.Begin(BlendState.Additive, state);
 
 			float alpha = AI_Windup >= windupTime ? 0.9f : MathHelper.SmoothStep(0.1f, 0.9f, AI_Windup / windupTime);
-			Projectile.DrawAnimatedGlowmask(flame, Color.White.NewAlpha(alpha), Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None, new Vector2(5, 14));
+			Projectile.DrawAnimatedExtra(flame, Color.White.NewAlpha(alpha), Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None, new Vector2(5, 14));
 
-			int frameY = hasMana ? 0 : (AI_UseCounter % 24 < 12 ? 1 : 2);
+			int frameY = OwnerHasMana ? 0 : (AI_UseCounter % 24 < 12 ? 1 : 2);
 			Rectangle sourceRect = warning.Frame(1, 3, frameY: frameY);
-			Projectile.DrawAnimatedGlowmask(warning, Color.White.NewAlpha(alpha), Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None, new Vector2(5, 14), sourceRect);
+			Projectile.DrawAnimatedExtra(warning, Color.White.NewAlpha(alpha), Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None, new Vector2(5, 14), frame: sourceRect);
 
 			Main.spriteBatch.Restore(state);
 		}
@@ -168,7 +171,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 				SoundLimitBehavior = SoundLimitBehavior.IgnoreNew
 			});
 
-			if (!hasMana)
+			if (!OwnerHasMana)
 			{
 				playingSoundId_2 = SoundEngine.PlaySound(SFX.HandheldThrusterOverheat with
 				{
@@ -184,22 +187,17 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			if (SoundEngine.TryGetActiveSound(playingSoundId_1, out ActiveSound playingSound1))
 				playingSound1.Stop();
 
-			if (!hasMana && SoundEngine.TryGetActiveSound(playingSoundId_2, out ActiveSound playingSound2))
+			if (!OwnerHasMana && SoundEngine.TryGetActiveSound(playingSoundId_2, out ActiveSound playingSound2))
 				playingSound2.Stop();
 		}
 	}
 
-	public class StupidShit : ModProjectile
+	public class HandheldEngineHitbox : ModProjectile
 	{
 		public override string Texture => Macrocosm.EmptyTexPath;
 
 		private Projectile Owner => Main.projectile[(int)Projectile.ai[0]];
 
-		public bool OrientationVertical
-		{
-			get => Projectile.ai[1] != 0f;
-			set => Projectile.ai[1] = value == true ? 1f : 0f;
-		}
 
 		public override void SetDefaults()
 		{
@@ -210,6 +208,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			Projectile.friendly = true;
 			Projectile.timeLeft = 2;
 			Projectile.tileCollide = false;
+		}
+
+		/*
+		public bool OrientationVertical
+		{
+			get => Projectile.ai[1] != 0f;
+			set => Projectile.ai[1] = value == true ? 1f : 0f;
 		}
 
 		public override void ModifyDamageHitbox(ref Rectangle hitbox)
@@ -229,6 +234,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			if (OrientationVertical)
 				Projectile.Center += Utility.PolarVector(1000, Math.Abs(Owner.rotation));
 		}
+		*/
 	}
 	
 }
