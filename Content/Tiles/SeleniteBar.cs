@@ -24,16 +24,5 @@ namespace Macrocosm.Content.Tiles
 
 			AddMapEntry(new Color(28, 54, 210), Language.GetText("Selenite Bar")); // localized text for "Metal Bar"
 		}
-
-		public override bool Drop(int x, int y)
-		{
-			Tile t = Main.tile[x, y];
-			int style = t.TileFrameX / 18;
-			if (style == 0)
-			{ // It can be useful to share a single tile with multiple styles. This code will let you drop the appropriate bar if you had multiple.
-				Item.NewItem(new EntitySource_TileBreak(x, y), x * 16, y * 16, 16, 16, ItemType<Items.Materials.SeleniteBar>());
-			}
-			return base.Drop(x, y);
-		}
 	}
 }

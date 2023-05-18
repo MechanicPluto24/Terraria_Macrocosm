@@ -33,7 +33,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
 		public override void SetProjectileStaticDefaults()
 		{
-			DisplayName.SetDefault("Experimental Handheld Engine");
+			// DisplayName.SetDefault("Experimental Handheld Engine");
 			Main.projFrames[Type] = windupFrames + shootFrames;
 		}
 

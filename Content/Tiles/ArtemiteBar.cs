@@ -24,16 +24,5 @@ namespace Macrocosm.Content.Tiles
 
 			AddMapEntry(new Color(96, 98, 109), Language.GetText("Artemite Bar"));
 		}
-
-		public override bool Drop(int x, int y)
-		{
-			Tile t = Main.tile[x, y];
-			int style = t.TileFrameX / 18;
-			if (style == 0)
-			{
-				Item.NewItem(new EntitySource_TileBreak(x, y), x * 16, y * 16, 16, 16, ItemType<Items.Materials.ArtemiteBar>());
-			}
-			return base.Drop(x, y);
-		}
 	}
 }

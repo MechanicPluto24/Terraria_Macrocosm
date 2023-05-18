@@ -16,7 +16,7 @@ namespace Macrocosm.Content.Items.Accessories.CelestialBulwark
 	{
 		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault("Allows the player to dash into the enemy\nDouble tap a direction");
+			// Tooltip.SetDefault("Allows the player to dash into the enemy\nDouble tap a direction");
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
 		public override void SetDefaults()

@@ -15,7 +15,6 @@ namespace Macrocosm.Content.Tiles
 			Main.tileMergeDirt[Type] = true;
 			MinPick = 225;
 			MineResist = 3f;
-			ItemDrop = ItemType<Items.Placeable.BlocksAndWalls.RegolithBrick>();
 			AddMapEntry(new Color(65, 65, 65));
 		}
 	}

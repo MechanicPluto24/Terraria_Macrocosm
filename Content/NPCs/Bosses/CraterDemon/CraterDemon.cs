@@ -167,7 +167,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Crater Demon");
+			// DisplayName.SetDefault("Crater Demon");
 			Main.npcFrameCount[NPC.type] = 6;
 			NPCID.Sets.TrailCacheLength[NPC.type] = 5;
 			NPCID.Sets.TrailingMode[NPC.type] = 0;
@@ -237,7 +237,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			});
 		}
 
-		public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
+		public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)/* tModPorter Note: bossLifeScale -> balance (bossAdjustment is different, see the docs for details) */
 		{
 			NPC.ScaleHealthBy(0.35f);  //For comparison, Moon Lord's scale factor is 0.7f
 
@@ -287,7 +287,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			NPC.SetEventFlagCleared(ref DownedBossSystem.DownedCraterDemon, -1);
 		}
 
-		public override void OnHitPlayer(Player target, int damage, bool crit)
+		public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
 		{
 			target.Macrocosm().AccMoonArmorDebuff = Main.expertMode ? 5 * 60 : 2 * 60;
 		}
@@ -1054,7 +1054,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			bigPortal2.Update();
 		}
 
-		public override void HitEffect(int hitDirection, double damage)
+		public override void HitEffect(NPC.HitInfo hit)
 		{
 			SpawnDusts(10);
 
@@ -1186,14 +1186,14 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			return head.Intersects(hitbox) || jaw.Intersects(hitbox) ? null : (bool?)false;
 		}
 
-		public override bool? CanHitNPC(NPC target)
+		public override bool CanHitNPC(NPC target) 
 		{
 			var canHit = CanBeHitByThing(target.Hitbox);
 
 			if (canHit is null)
-				return canHit;
+				return true;
 
-			return hideMapIcon ? (bool?)false : null;
+			return !hideMapIcon; 
 		}
 
 		public override bool CanHitPlayer(Player target, ref int cooldownSlot)

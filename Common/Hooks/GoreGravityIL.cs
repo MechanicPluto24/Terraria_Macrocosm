@@ -11,12 +11,12 @@ namespace Macrocosm.Common.Hooks
 	{
 		public void Load(Mod mod)
 		{
-			IL.Terraria.Gore.Update += Gore_Update;
+			Terraria.IL_Gore.Update += Gore_Update;
 		}
 
 		public void Unload() 
 		{
-			IL.Terraria.Gore.Update -= Gore_Update;
+			Terraria.IL_Gore.Update -= Gore_Update;
 		}
 
 		private static void Gore_Update(ILContext il)

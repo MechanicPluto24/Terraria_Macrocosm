@@ -34,7 +34,7 @@ namespace Macrocosm.Common.Global.GlobalProjectiles
 			return true;
 		}
 
-		public override void OnHitNPC(Projectile projectile, NPC target, int damage, float knockback, bool crit)
+		public override void OnHitNPC(Projectile projectile, NPC target, NPC.HitInfo hit, int damageDone)
 		{ 
 			if(projectile.ModProjectile is IExplosive explosive)
 			{
@@ -43,13 +43,8 @@ namespace Macrocosm.Common.Global.GlobalProjectiles
 			}
 		}
 
-		public override void OnHitPvp(Projectile projectile, Player target, int damage, bool crit)
-		{
-			if (projectile.ModProjectile is IExplosive explosive)
-				explosive.OnCollide(projectile);
-		}
 
-		public override void OnHitPlayer(Projectile projectile, Player target, int damage, bool crit)
+		public override void OnHitPlayer(Projectile projectile, Player target, Player.HurtInfo info)
 		{
 			if (projectile.ModProjectile is IExplosive explosive)
 				explosive.OnCollide(projectile);

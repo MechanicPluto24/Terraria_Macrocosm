@@ -19,12 +19,12 @@ namespace Macrocosm.Common.Systems
 	{
 		public override void Load()
 		{
-			IL.Terraria.GameContent.UI.GameTipsDisplay.AddNewTip += GameTipsDisplay_AddNewTip;
+			Terraria.GameContent.UI.IL_GameTipsDisplay.AddNewTip += GameTipsDisplay_AddNewTip;
 		}
 
 		public override void Unload()
 		{
-			IL.Terraria.GameContent.UI.GameTipsDisplay.AddNewTip -= GameTipsDisplay_AddNewTip;
+			Terraria.GameContent.UI.IL_GameTipsDisplay.AddNewTip -= GameTipsDisplay_AddNewTip;
 		}
 
 

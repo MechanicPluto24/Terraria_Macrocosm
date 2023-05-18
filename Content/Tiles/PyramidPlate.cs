@@ -15,8 +15,7 @@ namespace Macrocosm.Content.Tiles
 			Main.tileMergeDirt[Type] = true;
 			MinPick = 300;
 			MineResist = 3f;
-			ItemDrop = ItemType<Content.Items.Placeable.BlocksAndWalls.PyramidPlate>();
-			AddMapEntry(new Color(22, 22, 22));
+ 			AddMapEntry(new Color(22, 22, 22));
 		}
 	}
 }

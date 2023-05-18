@@ -19,7 +19,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Crescent Ghoul");
+			// DisplayName.SetDefault("Crescent Ghoul");
 			Main.projFrames[Type] = 4;
 			ProjectileID.Sets.MinionTargettingFeature[Type] = true;
 

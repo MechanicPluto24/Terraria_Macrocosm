@@ -136,7 +136,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		{
 		}
 
-		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+		public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			Explode();
 
@@ -144,13 +144,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 				target.AddBuff(BuffID.Slow, 95);
 		}
 
-		public override void OnHitPvp(Player target, int damage, bool crit)
+		public override void OnHitPlayer(Player target, Player.HurtInfo info)
 		{
-			Explode();
-			
-			if (Exploded)
-				target.AddBuff(BuffID.Slow, 95);
-		}
+            Explode();
+
+            if (Exploded)
+                target.AddBuff(BuffID.Slow, 95);
+        }
 
 		public void Explode()
 		{

@@ -127,7 +127,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			loot.Add(ItemDropRule.Common(ModContent.ItemType<DianiteOre>(), 16, 1, 6));   // 1/16 chance to drop 1-6 DianiteOre Ore
 		}
 
-		public override void HitEffect(int hitDirection, double damage)
+		public override void HitEffect(NPC.HitInfo hit)
 		{
 
 			if (NPC.life > 0)
@@ -135,7 +135,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 				for (int i = 0; i < 20; i++)
 				{
 					Dust dust = Dust.NewDustDirect(NPC.position, NPC.width, NPC.height, DustID.Wraith);
-					dust.velocity.X = (dust.velocity.X + Main.rand.Next(0, 100) * 0.02f) * hitDirection;
+					dust.velocity.X = (dust.velocity.X + Main.rand.Next(0, 100) * 0.02f) * hit.HitDirection;
 					dust.velocity.Y = 1f + Main.rand.Next(-50, 51) * 0.01f;
 					dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
 					dust.noGravity = true;

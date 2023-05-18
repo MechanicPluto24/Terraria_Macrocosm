@@ -4,6 +4,7 @@ using Macrocosm.Content.Rocket;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.Localization;
@@ -69,8 +70,8 @@ namespace Macrocosm.Content.UI.Rocket
 			Player player = Main.LocalPlayer;
 			player.mouseInterface = true;
 
-			if (!Rocket.active || player.dead || !player.active || Main.editChest || Main.editSign || player.talkNPC >= 0 || !Main.playerInventory ||
-				!player.InInteractionRange((int)Rocket.Center.X / 16, (int)Rocket.Center.Y / 16) || (Rocket.ModNPC as RocketNPC).Launching || player.controlMount)
+            if (!Rocket.active || player.dead || !player.active || Main.editChest || Main.editSign || player.talkNPC >= 0 || !Main.playerInventory ||
+				!player.InInteractionRange((int)Rocket.Center.X / 16, (int)Rocket.Center.Y / 16, TileReachCheckSettings.Simple) || (Rocket.ModNPC as RocketNPC).Launching || player.controlMount)
 			{
 				Hide();
 				return;

@@ -10,7 +10,7 @@ namespace Macrocosm.Content.Items.Materials
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Raw Silicon");
+			// DisplayName.SetDefault("Raw Silicon");
 		}
 
 		public override void SetDefaults()

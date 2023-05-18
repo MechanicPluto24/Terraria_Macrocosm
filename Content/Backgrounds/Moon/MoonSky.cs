@@ -161,12 +161,20 @@ namespace Macrocosm.Content.Backgrounds.Moon
 
 		private void SetEarthTextures()
 		{
-			if (AprilFools.CheckAprilFools())
+			if (Utility.IsAprilFools())
+			{
+				earth.SetLightSource(null);
 				earth.SetTextures(earthBodyFlat);
-			else if (Main.drunkWorld)
-				earth.SetTextures(earthBodyDrunk, earthAtmo, earthBodyShadow, earthAtmoShadow);
+            } 
 			else
-				earth.SetTextures(earthBody, earthAtmo, earthBodyShadow, earthAtmoShadow);
+			{
+				earth.SetLightSource(sun);
+
+                if (Main.drunkWorld)
+                    earth.SetTextures(earthBodyDrunk, earthAtmo, earthBodyShadow, earthAtmoShadow);
+                else
+                    earth.SetTextures(earthBody, earthAtmo, earthBodyShadow, earthAtmoShadow);
+            }
 		}
 
 		private static float ComputeBrightness(double fadeOutTimeDawn, double fadeInTimeDusk, float maxBrightnessDay, float maxBrightnessNigt)

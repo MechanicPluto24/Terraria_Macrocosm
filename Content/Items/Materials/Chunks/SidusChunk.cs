@@ -9,8 +9,8 @@ namespace Macrocosm.Content.Items.Materials.Chunks
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Sidus Chunk");
-			Tooltip.SetDefault("'The fire burns like a star'");
+			// DisplayName.SetDefault("Sidus Chunk");
+			// Tooltip.SetDefault("'The fire burns like a star'");
 			ItemID.Sets.ItemNoGravity[Type] = true;
 			ItemID.Sets.AnimatesAsSoul[Type] = true;
 			Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(4, 4)); // NOTE: TicksPerFrame, Frames

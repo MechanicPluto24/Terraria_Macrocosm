@@ -16,7 +16,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		{
 			base.SetStaticDefaults();
 
-			DisplayName.SetDefault("Regolith Slime");
+			// DisplayName.SetDefault("Regolith Slime");
 			Main.npcFrameCount[NPC.type] = Main.npcFrameCount[NPCID.BlueSlime];
 		}
 
@@ -49,9 +49,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			});
 		}
 
-		public override void OnHitPlayer(Player player, int damage, bool crit)
+		public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
 		{
-			player.AddBuff(ModContent.BuffType<SuitBreach>(), 600, true);
+            target.AddBuff(ModContent.BuffType<SuitBreach>(), 600, true);
 		}
 
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
@@ -68,13 +68,13 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			loot.Add(ItemDropRule.Common(ModContent.ItemType<DianiteOre>(), 16, 1, 6));   // 1/16 chance to drop 1-6 DianiteOre Ore
 		}
 
-		public override void HitEffect(int hitDirection, double damage)
+		public override void HitEffect(NPC.HitInfo hit)
 		{
 			for (int i = 0; i < 10; i++)
 			{
 				int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, ModContent.DustType<RegolithDust>());
 				Dust dust = Main.dust[dustIndex];
-				dust.velocity.X *= dust.velocity.X * 1.25f * hitDirection + Main.rand.Next(0, 100) * 0.015f;
+				dust.velocity.X *= dust.velocity.X * 1.25f * hit.HitDirection + Main.rand.Next(0, 100) * 0.015f;
 				dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;
 				dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
 			}

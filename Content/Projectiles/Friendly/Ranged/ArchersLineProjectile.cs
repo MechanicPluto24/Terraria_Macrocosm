@@ -38,26 +38,25 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			return true;
 		}
 
-		public override void OnHitNPC(NPC npc, int damage, float knockback, bool crit)
+		public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			Projectile.damage -= 10;
 
-			hitList[npc.whoAmI] = true; //Make sure the projectile won't aim directly for this NPC
-			int target = GetTarget(600, Projectile.Center); //Keeps track of the current target, set to -1 to ensure no NPC by default
+			hitList[target.whoAmI] = true; //Make sure the projectile won't aim directly for this NPC
+			int newTarget = GetTarget(600, Projectile.Center); //Keeps track of the current target, set to -1 to ensure no NPC by default
 
-			if (target != -1)
+			if (newTarget != -1)
 			{
 				if (Projectile.owner == Main.myPlayer)
 				{
-					Vector2 shootVel = Main.npc[target].Center - Projectile.Center;
+					Vector2 shootVel = Main.npc[newTarget].Center - Projectile.Center;
 					shootVel.Normalize();
 					shootVel *= 20f;
 					Projectile.velocity = shootVel;
-					Projectile.rotation = Main.npc[target].Center.ToRotation();
+					Projectile.rotation = Main.npc[newTarget].Center.ToRotation();
 				}
 
 				SoundEngine.PlaySound(SFX.Ricochet with { Volume = 0.3f });
-
 			}
 
 			Projectile.velocity *= 0.9f;

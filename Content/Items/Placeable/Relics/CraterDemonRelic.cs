@@ -9,7 +9,7 @@ namespace Macrocosm.Content.Items.Placeable.Relics
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Crater Demon Relic");
+			// DisplayName.SetDefault("Crater Demon Relic");
 
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}

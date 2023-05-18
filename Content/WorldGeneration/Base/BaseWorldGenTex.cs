@@ -102,7 +102,7 @@ namespace Macrocosm.Content.WorldGeneration.Base
                     if (info.objectID != 0)
                     {
                         WorldGen.PlaceObject(x2, y2, info.objectID);
-                        NetMessage.SendObjectPlacment(-1, x2, y2, info.objectID, 0, 0, -1, -1);
+                        NetMessage.SendObjectPlacement(-1, x2, y2, info.objectID, 0, 0, -1, -1);
                     }
                 }
             }

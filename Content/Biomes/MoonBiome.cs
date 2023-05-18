@@ -22,7 +22,7 @@ namespace Macrocosm.Content.Biomes
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("The Moon");
+			// DisplayName.SetDefault("The Moon");
 		}
 
 		public override void OnInBiome(Player player)

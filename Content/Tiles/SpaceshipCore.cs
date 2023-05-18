@@ -15,7 +15,6 @@ namespace Macrocosm.Content.Tiles
 			Main.tileMergeDirt[Type] = true;
 			MinPick = 10000;
 			MineResist = 3f;
-			ItemDrop = ItemType<Items.Placeable.BlocksAndWalls.SpaceshipCore>();
 			AddMapEntry(new Color(176, 255, 133));
 		}
 	}
