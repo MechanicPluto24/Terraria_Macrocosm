@@ -126,7 +126,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		public override void PostDraw(Color lightColor)
 		{
 			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Ranged/LHB805Projectile_Glow").Value;
-			Projectile.DrawAnimatedGlowmask(glowmask, Color.White, Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None, new Vector2(5, 10));
+			Projectile.DrawAnimatedExtra(glowmask, Color.White, Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None, new Vector2(5, 10));
 		}
 
 

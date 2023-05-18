@@ -17,7 +17,30 @@ namespace Macrocosm.Common.Drawing.Particles
 		/// <param name="position">Position of the newly created particle.</param>
 		/// <param name="velocity">Velocity of the newly created particle.</param>s
 		/// <param name="rotation">Rotation of the newly created particle</param>
-		/// <param name="scale">Scale of the newly created particle </param>
+		/// <param name="scale">Scale of the newly created particle, as a 2-dimensional vector </param>
+		/// <param name="shouldSync"> Whether to sync the particle spawn and its <see cref="Common.Netcode.NetSyncAttribute"> NetSync </see> fields </param>
+		/// <returns> The particle instance </returns>
+		public static T CreateParticle<T>(Vector2 position, Vector2 velocity, float rotation = 0f, Vector2 scale = default, bool shouldSync = false) where T : Particle
+		{
+			if (scale == default) scale = Vector2.One;
+
+			return CreateParticle<T>(particle =>
+			{
+				particle.Position = position;
+				particle.Velocity = velocity;
+				particle.Rotation = rotation;
+				particle.ScaleV = scale;
+			}, shouldSync);
+		}
+
+		/// <summary>
+		/// Creates a new particle with the specified parameters. Sync only when absolutely necessary.
+		/// </summary>
+		/// <typeparam name="T">Type of the particle.</typeparam>
+		/// <param name="position">Position of the newly created particle.</param>
+		/// <param name="velocity">Velocity of the newly created particle.</param>s
+		/// <param name="rotation">Rotation of the newly created particle</param>
+		/// <param name="scale">Scale of the newly created particle, as a scalar </param>
 		/// <param name="shouldSync"> Whether to sync the particle spawn and its <see cref="Common.Netcode.NetSyncAttribute"> NetSync </see> fields </param>
 		/// <returns> The particle instance </returns>
 		public static T CreateParticle<T>(Vector2 position, Vector2 velocity, float rotation = 0f, float scale = 1f, bool shouldSync = false) where T : Particle
@@ -27,7 +50,7 @@ namespace Macrocosm.Common.Drawing.Particles
 				particle.Position = position;
 				particle.Velocity = velocity;
 				particle.Rotation = rotation;
-				particle.Scale = scale;
+				particle.ScaleV = new Vector2(scale);
 			}, shouldSync);
 		}
 

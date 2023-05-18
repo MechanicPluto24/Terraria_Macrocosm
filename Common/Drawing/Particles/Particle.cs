@@ -74,8 +74,15 @@ namespace Macrocosm.Common.Drawing.Particles
 		/// <summary> The <c>Particle</c>'s rotation </summary>
 		[NetSync] public float Rotation = 0f;
 
-		/// <summary> The <c>Particle</c>'s scale </summary>
-		[NetSync] public float Scale = 1f;
+		/// <summary> The <c>Particle</c>'s scale as a 2d vector </summary>
+		[NetSync] public Vector2 ScaleV = new(1f);
+
+		/// <summary> The <c>Particle</c>'s scale as a scalar </summary>
+		public float Scale
+		{
+			get => ScaleV.X;
+			set { ScaleV.X = value; ScaleV.Y = value; }
+		}
 
 		/// <summary> The <c>Particle</c>'s center coordinates in the world </summary>
 		public Vector2 Center => Position + Size / 2;
@@ -136,7 +143,7 @@ namespace Macrocosm.Common.Drawing.Particles
 		/// <param name="lightColor"> The light color at the particle's position </param>
 		public virtual void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor) 
 		{
-			spriteBatch.Draw(Texture, Position - screenPosition, GetFrame(), lightColor, Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(Texture, Position - screenPosition, GetFrame(), lightColor, Rotation, Size * 0.5f, ScaleV, SpriteEffects.None, 0f);
 
 			Trail?.Draw();
 		}

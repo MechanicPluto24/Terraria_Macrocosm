@@ -92,10 +92,10 @@ namespace Macrocosm.Common.Utils
 		}
 
 		/// <summary>
-		/// Draws an animated projectile glowmask
+		/// Draws an animated projectile extra, such as a glowmask
 		/// (Only tested for held projectiles)  
 		/// </summary>
-		public static void DrawAnimatedGlowmask(this Projectile proj, Texture2D glowmask, Color lightColor, SpriteEffects effect, Vector2 drawOffset = default, Rectangle? frame = null)
+		public static void DrawAnimatedExtra(this Projectile proj, Texture2D glowmask, Color lightColor, SpriteEffects effect, Vector2 drawOffset = default, Rectangle? frame = null)
 			=> proj.DrawAnimated(lightColor, effect, drawOffset + new Vector2(0, -2), glowmask, frame);
 	}
 }

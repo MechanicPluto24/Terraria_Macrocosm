@@ -24,10 +24,10 @@ namespace Macrocosm.Content.Particles
 			var state = spriteBatch.SaveState();
 			spriteBatch.End();
 			spriteBatch.Begin(BlendState.Additive, state);
-			spriteBatch.Draw(glow, Center - screenPosition, null, new Color(89, 151, 193), 0f, glow.Size() / 2, 0.0375f * Scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(glow, Center - screenPosition, null, new Color(89, 151, 193), 0f, glow.Size() / 2, 0.0375f * ScaleV, SpriteEffects.None, 0f);
 			spriteBatch.Restore(state);
 			
-			spriteBatch.Draw(Texture, Center - screenPosition, null, Color.White, Rotation, Size / 2, Scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(Texture, Center - screenPosition, null, Color.White, Rotation, Size / 2, ScaleV, SpriteEffects.None, 0f);
  		}
 
 		public override void AI()
