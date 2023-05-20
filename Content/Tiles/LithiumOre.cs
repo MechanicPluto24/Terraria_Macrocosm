@@ -24,7 +24,6 @@ namespace Macrocosm.Content.Tiles
 			MineResist = 5f;
 
 			LocalizedText name = CreateMapEntryName();
-			// name.SetDefault("Lithium");
 			AddMapEntry(new Color(108, 101, 112), name);
 
 			DustType = 84;

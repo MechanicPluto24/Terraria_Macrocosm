@@ -17,7 +17,6 @@ namespace Macrocosm.Content.Projectiles.Hostile
 	{
 		public override void SetStaticDefaults()
 		{
-			// DisplayName.SetDefault("Flaming Meteor");
 			ProjectileID.Sets.TrailCacheLength[Type] = 20;
 			ProjectileID.Sets.TrailingMode[Type] = 0;
 

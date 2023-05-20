@@ -19,7 +19,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 		public override void SetStaticDefaults()
 		{
-			// DisplayName.SetDefault("NWA-12691");
 			ProjectileID.Sets.TrailCacheLength[Type] = 30;
 			ProjectileID.Sets.TrailingMode[Type] = 0;
 		}

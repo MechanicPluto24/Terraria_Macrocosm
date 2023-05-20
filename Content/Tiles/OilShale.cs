@@ -22,7 +22,6 @@ namespace Macrocosm.Content.Tiles
 			MineResist = 5f;
 
 			LocalizedText name = CreateMapEntryName();
-			// name.SetDefault("Oil Shale");
 			AddMapEntry(new Color(45, 46, 45), name);
 
 			DustType = 84;

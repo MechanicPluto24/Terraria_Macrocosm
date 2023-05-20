@@ -843,6 +843,7 @@ Mods: {
 			ImbriumJewelMeteor.DisplayName: Imbrium Jewel
 			HandheldEngineProjectile.DisplayName: Handheld Engine Projectile
 			StupidShit.DisplayName: Stupid Shit
+			HandheldEngineHitbox.DisplayName: Handheld Engine Hitbox
 		}
 
 		Tiles: {
@@ -950,7 +951,6 @@ Mods: {
 		}
 
 		Worlds: {
-
 			InnerSolarSystem: {
 				DisplayName: Inner Solar System
 				FlavorText: default

@@ -31,7 +31,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 		public override void SetProjectileStaticDefaults()
 		{
-			// DisplayName.SetDefault("LHB-805");
 			Main.projFrames[Type] = 10;
 		}
 

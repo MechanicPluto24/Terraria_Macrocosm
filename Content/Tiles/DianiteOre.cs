@@ -24,7 +24,6 @@ namespace Macrocosm.Content.Tiles
 			MineResist = 5f;
 
 			LocalizedText name = CreateMapEntryName();
-			// name.SetDefault("Dianite Ore");
 			AddMapEntry(new Color(210, 116, 75), name);
 
 			DustType = 84;

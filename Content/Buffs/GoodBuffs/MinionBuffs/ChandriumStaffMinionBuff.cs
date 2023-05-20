@@ -8,9 +8,6 @@ namespace Macrocosm.Content.Buffs.GoodBuffs.MinionBuffs
 	{
 		public override void SetStaticDefaults()
 		{
-			// DisplayName.SetDefault("Crescent Ghoul");
-			// Description.SetDefault("This Crescent Ghoul will fight for you!");
-
 			Main.buffNoSave[Type] = true;
 			Main.buffNoTimeDisplay[Type] = true;
 		}

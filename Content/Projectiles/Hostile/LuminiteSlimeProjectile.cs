@@ -16,7 +16,6 @@ namespace Macrocosm.Content.Projectiles.Hostile
 	{
 		public override void SetStaticDefaults()
 		{
-			// DisplayName.SetDefault("Luminite Slime");
 			ProjectileID.Sets.TrailCacheLength[Type] = 5;
 			ProjectileID.Sets.TrailingMode[Type] = 0;
 		}

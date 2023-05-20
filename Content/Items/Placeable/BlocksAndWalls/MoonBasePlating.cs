@@ -9,7 +9,6 @@ namespace Macrocosm.Content.Items.Placeable.BlocksAndWalls
 	{
 		public override void SetStaticDefaults()
 		{
-			// DisplayName.SetDefault("Lunar Plating");
 		}
 
 		public override void SetDefaults()

@@ -24,7 +24,6 @@ namespace Macrocosm.Content.Tiles
 			MineResist = 5f;
 
 			LocalizedText name = CreateMapEntryName();
-			// name.SetDefault("Selenite Ore");
 			AddMapEntry(new Color(137, 155, 170), name);
 
 			DustType = 84;

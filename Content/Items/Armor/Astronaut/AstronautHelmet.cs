@@ -11,7 +11,6 @@ namespace Macrocosm.Content.Items.Armor.Astronaut
     {
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("Astronaut Helmet");
         }
         public override void SetDefaults()
         {

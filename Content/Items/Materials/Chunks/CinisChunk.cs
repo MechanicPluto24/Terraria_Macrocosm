@@ -9,8 +9,6 @@ namespace Macrocosm.Content.Items.Materials.Chunks
 	{
 		public override void SetStaticDefaults()
 		{
-			// DisplayName.SetDefault("Cinis Chunk");
-			// Tooltip.SetDefault("'The core in the middle holds many universes inside'");
 			ItemID.Sets.ItemNoGravity[Type] = true;
 			ItemID.Sets.AnimatesAsSoul[Type] = true;
 			Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(4, 6)); // NOTE: TicksPerFrame, Frames

@@ -11,7 +11,6 @@ namespace Macrocosm.Content.Items.Dev
 	{
 		public override void SetStaticDefaults()
 		{
-			// Tooltip.SetDefault("Teleports the user to and from the Moon");
 		}
 		public override void SetDefaults()
 		{

@@ -12,8 +12,6 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 	{
 		public override void SetStaticDefaults()
 		{
-			// DisplayName.SetDefault("Archer's Line");
-			// Tooltip.SetDefault("Bullets ricochet from one enemy to another");
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
 		public override void SetDefaults()

@@ -24,9 +24,8 @@ namespace Macrocosm.Content.Tiles
 			MineResist = 5f;
 
 			LocalizedText name = CreateMapEntryName();
-			// name.SetDefault("Artemite Ore");
 			AddMapEntry(new Color(139, 146, 161), name);
-
+			
 			DustType = 84;
 			HitSound = SoundID.Tink;
 			//mineResist = 4f;
