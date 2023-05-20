@@ -65,11 +65,13 @@ namespace Macrocosm.Content.UI.LoadingScreens
 			starsDrawing.Draw(spriteBatch);
 			spriteBatch.End();
 
+
 			spriteBatch.Begin(BlendState.NonPremultiplied, state);
 			spriteBatch.Draw
 			(
 				earthBackground,
-				new Rectangle(Main.screenWidth - earthBackground.Width, Main.screenHeight - earthBackground.Height + 50 - (int)(AnimationTimer * 10), earthBackground.Width, earthBackground.Height),
+				//new Rectangle((int)(Main.screenWidth - earthBackground.Width * scale),(int)(Main.screenHeight - earthBackground.Height * scale + 50 - (int)(AnimationTimer * 10)), (int)(earthBackground.Width * scale), (int)(earthBackground.Height * scale)),
+				new Rectangle(0, 50 - (int)(AnimationTimer * 10), Main.screenWidth, Main.screenHeight),
 				null,
 				bodyColor
 			);

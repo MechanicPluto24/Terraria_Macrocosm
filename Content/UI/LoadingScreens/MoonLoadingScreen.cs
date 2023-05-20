@@ -65,14 +65,17 @@ namespace Macrocosm.Content.UI.LoadingScreens
 			starsDrawing.Draw(spriteBatch);
 			spriteBatch.End();
 
+			float scale = (float)Main.screenWidth / 1920f * (float)Main.screenHeight / 1080f; ;
+
 			spriteBatch.Begin(BlendState.NonPremultiplied, state);
 			spriteBatch.Draw(
 					lunaBackground,
-					new Rectangle(Main.screenWidth - lunaBackground.Width, Main.screenHeight - lunaBackground.Height + 50 - (int)(AnimationTimer * 10), lunaBackground.Width, lunaBackground.Height),
+					new Rectangle((int)(Main.screenWidth - lunaBackground.Width * scale),(int)(Main.screenHeight - lunaBackground.Height * scale + 50 - (int)(AnimationTimer * 10)), (int)(lunaBackground.Width * scale), (int)(lunaBackground.Height * scale)),
 					null,
 					bodyColor
 			);
 
+			earth.Scale = scale;
 			earth.Draw(spriteBatch);
 
 			spriteBatch.Restore(state);
