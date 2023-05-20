@@ -1,11 +1,8 @@
 ﻿using Macrocosm.Common.Global.GlobalItems;
 using Macrocosm.Common.Global.GlobalNPCs;
 using Macrocosm.Common.Global.GlobalProjectiles;
-using Macrocosm.Common.Netcode;
 using Macrocosm.Content.Players;
 using Macrocosm.Content.Rocket;
-using System.Linq;
-using System.Reflection;
 using Terraria;
 
 namespace Macrocosm.Common.Utils
@@ -29,7 +26,6 @@ namespace Macrocosm.Common.Utils
 
         public static RocketPlayer RocketPlayer(this Player player)
             => player.GetModPlayer<RocketPlayer>();
-
 
 		public static MacrocosmNPC Macrocosm(this NPC npc)
             => npc.GetGlobalNPC<MacrocosmNPC>();

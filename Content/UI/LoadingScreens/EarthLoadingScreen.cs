@@ -5,6 +5,7 @@ using Macrocosm.Content.UI.LoadingScreens;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Terraria;
 using Terraria.GameContent;
@@ -16,12 +17,22 @@ namespace Macrocosm.Content.UI.LoadingScreens
 {
     public class EarthLoadingScreen : LoadingScreen
 	{
+		private List<Texture2D> earthBackgrounds;
 		private Texture2D earthBackground;
+
 		private StarsDrawing starsDrawing;
 
 		public EarthLoadingScreen()
 		{
-			earthBackground = ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/Backgrounds/Earth", AssetRequestMode.ImmediateLoad).Value;
+			earthBackgrounds = new List<Texture2D>(){
+				ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/Backgrounds/Earth_Africa", AssetRequestMode.ImmediateLoad).Value,
+				ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/Backgrounds/Earth_Asia", AssetRequestMode.ImmediateLoad).Value,
+				ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/Backgrounds/Earth_Australia", AssetRequestMode.ImmediateLoad).Value,
+				ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/Backgrounds/Earth_Europe", AssetRequestMode.ImmediateLoad).Value,
+				ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/Backgrounds/Earth_NorthAmerica", AssetRequestMode.ImmediateLoad).Value,
+				ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/Backgrounds/Earth_SouthAmerica", AssetRequestMode.ImmediateLoad).Value
+			};
+
 			starsDrawing = new();
 		}
 
@@ -35,6 +46,8 @@ namespace Macrocosm.Content.UI.LoadingScreens
 		public override void Setup()
 		{
 			ResetAnimation();
+
+			earthBackground = earthBackgrounds.GetRandom();
 
 			starsDrawing.Clear();
  			starsDrawing.SpawnStars(150, 200);
