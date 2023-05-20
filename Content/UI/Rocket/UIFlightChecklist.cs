@@ -6,7 +6,6 @@ using System.Collections.Generic;
 
 namespace Macrocosm.Content.UI.Rocket
 {
-
     // TODO: make an abstract scrollable list panel class
     public class UIFlightChecklist : UIPanel
     {
