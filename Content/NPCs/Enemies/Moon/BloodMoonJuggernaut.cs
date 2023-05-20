@@ -33,7 +33,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		public override void SetStaticDefaults()
 		{
 			base.SetStaticDefaults();
-			// DisplayName.SetDefault("Juggernaut");
 			Main.npcFrameCount[Type] = 32;
 		}
 

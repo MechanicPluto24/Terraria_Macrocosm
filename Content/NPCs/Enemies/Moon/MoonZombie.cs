@@ -14,8 +14,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 	{
 		public override void SetStaticDefaults()
 		{
-			base.SetStaticDefaults();
-			// DisplayName.SetDefault("Zombie Astronaut");
 			Main.npcFrameCount[Type] = 9;
 		}
 

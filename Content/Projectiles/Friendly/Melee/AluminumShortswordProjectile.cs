@@ -26,7 +26,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
 		public override void SetStaticDefaults()
 		{
-			// DisplayName.SetDefault("Aluminum Shortsword");
 		}
 
 		public override void SetDefaults()

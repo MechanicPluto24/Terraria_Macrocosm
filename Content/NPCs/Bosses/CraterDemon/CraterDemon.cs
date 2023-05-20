@@ -167,7 +167,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 		public override void SetStaticDefaults()
 		{
-			// DisplayName.SetDefault("Crater Demon");
 			Main.npcFrameCount[NPC.type] = 6;
 			NPCID.Sets.TrailCacheLength[NPC.type] = 5;
 			NPCID.Sets.TrailingMode[NPC.type] = 0;

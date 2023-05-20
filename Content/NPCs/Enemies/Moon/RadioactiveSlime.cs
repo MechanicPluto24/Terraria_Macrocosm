@@ -18,9 +18,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 	{
 		public override void SetStaticDefaults()
 		{
-			base.SetStaticDefaults();
-
-			// DisplayName.SetDefault("Radioactive Slime");
 			Main.npcFrameCount[NPC.type] = Main.npcFrameCount[NPCID.BlueSlime];
 		}
 

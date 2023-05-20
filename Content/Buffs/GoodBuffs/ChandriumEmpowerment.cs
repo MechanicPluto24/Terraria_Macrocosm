@@ -9,8 +9,6 @@ namespace Macrocosm.Content.Buffs.GoodBuffs
 	{
 		public override void SetStaticDefaults()
 		{
-			// DisplayName.SetDefault("Chandrium Empowerment");
-			// Description.SetDefault("Your next hit with your Chandrium Whip will deal increased damage!");
 		}
 
 		public override void Update(Player player, ref int buffIndex)

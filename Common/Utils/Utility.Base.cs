@@ -170,7 +170,6 @@ namespace Macrocosm.Common.Utils
             {
                 supertip += tooltips[m] + (m == tooltips.Length - 1 ? "" : "\n");
             }
-            // item.Tooltip.SetDefault(supertip);
         }
 
         public static bool CanHit(Rectangle rect, Rectangle rect2)

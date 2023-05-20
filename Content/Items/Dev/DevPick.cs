@@ -9,7 +9,6 @@ namespace Macrocosm.Content.Items.Dev
 	{
 		public override void SetStaticDefaults()
 		{
-			// Tooltip.SetDefault("Dev Pickaxe");
 		}
 
 		public override void SetDefaults()

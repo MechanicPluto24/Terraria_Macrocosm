@@ -36,7 +36,6 @@ namespace Macrocosm.Content.Rocket
 			TileObjectData.addTile(Type);
 
 			LocalizedText name = CreateMapEntryName();
-			// name.SetDefault("Launch Pad");
 
 			AddMapEntry(new Color(200, 200, 200), name);
 		}

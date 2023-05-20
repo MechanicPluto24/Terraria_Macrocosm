@@ -39,7 +39,6 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
 
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault(MeteorName);
         }
 
         public override void SetDefaults()

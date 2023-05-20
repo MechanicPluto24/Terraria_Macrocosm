@@ -21,7 +21,6 @@ namespace Macrocosm.Content.Biomes
 
 		public override void SetStaticDefaults()
 		{
-			// DisplayName.SetDefault("The Irradiation");
 		}
 
 		public override void OnInBiome(Player player)
