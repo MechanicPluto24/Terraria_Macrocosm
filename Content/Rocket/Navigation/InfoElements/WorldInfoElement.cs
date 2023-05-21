@@ -5,7 +5,7 @@ using Terraria.Localization;
 using Microsoft.Xna.Framework;
 using Macrocosm.Common.Utils;
 
-namespace Macrocosm.Content.UI.Rocket
+namespace Macrocosm.Content.Rocket.Navigation.InfoElements
 {
     public enum InfoType
     {
@@ -35,7 +35,7 @@ namespace Macrocosm.Content.UI.Rocket
 
         protected override Texture2D GetIcon()
         {
-            string iconPath = "Macrocosm/Content/UI/Rocket/Icons/";
+            string iconPath = "Macrocosm/Content/Rocket/NavigationUI/Icons/";
             AssetRequestMode mode = AssetRequestMode.ImmediateLoad;
 
             iconPath += TypeKey;

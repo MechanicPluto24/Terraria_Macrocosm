@@ -1,44 +1,32 @@
-﻿using Microsoft.Xna.Framework;
-using Terraria.UI;
-using Terraria.Localization;
+﻿using Macrocosm.Common.Utils;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria.GameContent.UI.Elements;
-using System.Collections.Generic;
+using Terraria.ModLoader;
+using Terraria.UI;
 
-namespace Macrocosm.Content.UI.Rocket
+namespace Macrocosm.Content.Rocket.Navigation
 {
-    // TODO: make an abstract scrollable list panel class
-    public class UIFlightChecklist : UIPanel
+    // TODO: make an abstract scrollable panel class
+    public class UIInfoPanel : UIPanel
     {
-        // TODO: maybe do a collection of some kind of LaunchCondition class
-        public ChecklistInfoElement Destination = new(ChecklistItemType.Destination);
-        public ChecklistInfoElement Fuel = new(ChecklistItemType.Fuel);
-        public ChecklistInfoElement Obstruction = new(ChecklistItemType.Obstruction);
-
-        private List<BasicInfoElement> elements;
+        private string name = "";
 
         private UIText uIDisplayName;
         private UIList uIInfoElements;
 
-        private string title;
-        public UIFlightChecklist(string title)
+        public UIInfoPanel(string displayName)
         {
-            this.title = title;
-
-            elements = new()
-            {
-                Destination,
-                Fuel,
-                Obstruction
-            };
-
+            name = displayName;
             Initialize();
         }
 
         public override void OnInitialize()
         {
             Width.Set(245, 0);
-            Height.Set(200, 0);
-            Left.Set(576, 0f);
+            Height.Set(400, 0);
+            Left.Set(10, 0f);
             Top.Set(249, 0f);
             SetPadding(0f);
             BorderColor = new Color(89, 116, 213, 255);
@@ -62,7 +50,7 @@ namespace Macrocosm.Content.UI.Rocket
 
             UIScrollbar uIScrollbar = new UIScrollbar();
             uIScrollbar.SetView(150f, 1000f);
-            uIScrollbar.Height.Set(0f, 0.89f);
+            uIScrollbar.Height.Set(0f, 0.95f);
             uIScrollbar.HAlign = 0.99f;
             uIScrollbar.VAlign = 0.5f;
             uIInfoElements.SetScrollbar(uIScrollbar);
@@ -70,25 +58,20 @@ namespace Macrocosm.Content.UI.Rocket
             Append(uIScrollbar);
             uIInfoElements.Width.Set(-20f, 1f);
 
-            uIDisplayName = new(title, 1.2f, false)
+            uIDisplayName = new(name, 1.5f, false)
             {
                 HAlign = 0.43f,
                 Top = new StyleDimension(15, 0f),
                 TextColor = Color.White
             };
             Append(uIDisplayName);
-
-            AddAll();
-
-		}
+        }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-
-            ClearInfo();
-			AddAll();
-		}
+            uIDisplayName.SetText(name);
+        }
 
         public void Add(UIElement element)
         {
@@ -96,12 +79,6 @@ namespace Macrocosm.Content.UI.Rocket
         }
 
         public void ClearInfo() => uIInfoElements.Clear();
-        private void AddAll()
-        {
-			if (elements is not null)
-				foreach (BasicInfoElement element in elements)
-					Add(element.ProvideUI());
-		}
 
     }
 }

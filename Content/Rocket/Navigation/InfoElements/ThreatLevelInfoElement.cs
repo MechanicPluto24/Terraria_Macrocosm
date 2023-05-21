@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework;
 using Macrocosm.Common.Utils;
 using log4net.Core;
 
-namespace Macrocosm.Content.UI.Rocket
+namespace Macrocosm.Content.Rocket.Navigation.InfoElements
 {
     public enum ThreatLevel
     {
@@ -36,7 +36,7 @@ namespace Macrocosm.Content.UI.Rocket
 
         protected override string HoverText => Language.GetTextValue("Mods.Macrocosm.WorldInfo.ThreatLevel.Name");
 
-        protected override Texture2D GetIcon() => ModContent.Request<Texture2D>("Macrocosm/Content/UI/Rocket/Icons/ThreatLevel", AssetRequestMode.ImmediateLoad).Value;
+        protected override Texture2D GetIcon() => ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/NavigationUI/Icons/ThreatLevel", AssetRequestMode.ImmediateLoad).Value;
 
         protected override string GetText()
         {

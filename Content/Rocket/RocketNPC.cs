@@ -5,7 +5,6 @@ using Macrocosm.Content.Buffs.GoodBuffs.MinionBuffs;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Gores;
 using Macrocosm.Content.Items.Dev;
-using Macrocosm.Content.UI.Rocket;
 using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -20,6 +19,7 @@ using Terraria.UI.Chat;
 using System.IO;
 using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Subworlds;
+using Macrocosm.Content.Rocket.Navigation;
 
 namespace Macrocosm.Content.Rocket
 {

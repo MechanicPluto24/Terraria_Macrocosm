@@ -1,7 +1,7 @@
 ﻿using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.UI.Rocket;
+using Macrocosm.Content.Rocket.Navigation;
 using Microsoft.Xna.Framework;
 using System;
 using System.IO;
@@ -72,7 +72,7 @@ namespace Macrocosm.Content.Rocket
 		{
 			if (RocketID < 0 || RocketID >= Main.maxNPCs)
 				InRocket = false;
-			else if (Main.npc[RocketID].ModNPC is null)
+			else if (Main.npc[RocketID].active == false || Main.npc[RocketID].ModNPC is null)
 				InRocket = false;
 
 			if (!InRocket) 
@@ -90,13 +90,14 @@ namespace Macrocosm.Content.Rocket
 			if (InRocket)
 			{
 				NPC rocket = Main.npc[RocketID];
+				RocketNPC modRocket = (rocket.ModNPC as RocketNPC);
 
-				if(Player.whoAmI == Main.myPlayer)
+				if (Player.whoAmI == Main.myPlayer)
 				{
-					if ((Player.controlInv || Player.controlMount) && !(rocket.ModNPC as RocketNPC).Launching)
+					if ((Player.controlInv || Player.controlMount) && !(modRocket.Launching)
 						InRocket = false;
 
-					if (!(rocket.ModNPC as RocketNPC).Launching)
+					if (!modRocket.Launching)
 						UIRocket.Show(RocketID);
 					else
 						UIRocket.Hide();

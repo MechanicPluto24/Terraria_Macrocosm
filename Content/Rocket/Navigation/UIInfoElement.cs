@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 using ReLogic.Content;
 using Terraria.Localization;
 
-namespace Macrocosm.Content.UI.Rocket
+namespace Macrocosm.Content.Rocket.Navigation
 {
     public class UIInfoElement : UIPanel
     {

@@ -1,4 +1,4 @@
-﻿using Macrocosm.Content.UI.Rocket;
+﻿using Macrocosm.Content.Rocket.Navigation;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rocket
 {
-	public class RocketSystem : ModSystem
+    public class RocketSystem : ModSystem
 	{
 		public static RocketSystem Instance => ModContent.GetInstance<RocketSystem>();
 		public UserInterface Interface { get; set; }

@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria.Localization;
 using Terraria.UI;
 
-namespace Macrocosm.Content.UI.Rocket
+namespace Macrocosm.Content.Rocket.Navigation.InfoElements
 {
     public class BasicInfoElement
     {
@@ -30,8 +30,8 @@ namespace Macrocosm.Content.UI.Rocket
         }
 
         protected virtual Texture2D GetIcon() => null;
-		protected virtual string GetText() => Language.GetTextValue(specialValueLangKey);
-		protected virtual string HoverText => "";
+        protected virtual string GetText() => Language.GetTextValue(specialValueLangKey);
+        protected virtual string HoverText => "";
         protected virtual string Units => "";
         protected virtual Color TextColor => Color.White;
 

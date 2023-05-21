@@ -1,16 +1,10 @@
 using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Utils;
-using Macrocosm.Common.Utils.IO;
-using Macrocosm.Content.UI.LoadingScreens;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using System.ComponentModel.DataAnnotations;
 using Terraria;
-using Terraria.GameContent;
 using Terraria.ModLoader;
-using Terraria.UI.Chat;
-using Terraria.WorldBuilding;
 
 namespace Macrocosm.Content.UI.LoadingScreens
 {
@@ -38,7 +32,7 @@ namespace Macrocosm.Content.UI.LoadingScreens
 
 		public override TitleData Title => new()
 		{
-			TextKey = "Moon", //FIXME: localize
+			TextKey = "Moon",  
 			Scale = 1.2f,
 			Color = Color.White
 		};
