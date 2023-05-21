@@ -128,7 +128,7 @@ namespace Macrocosm.Content.Rocket.Navigation
             SolarSystemInner = new(ModContent.Request<Texture2D>(path + "NavigationMaps/SolarSystemInner", mode).Value, defaultNext: GetInitialNavigationMap());
             SolarSystemOuter = new(ModContent.Request<Texture2D>(path + "NavigationMaps/SolarSystemOuter", mode).Value, defaultNext: SolarSystemInner);
 
-            EarthSystem.AddTarget(new UIMapTarget(this, new Vector2(64, 24), 160, 160, "Earth", SubworldSystem.AnyActive<Macrocosm>, outline: outlineLarge));
+            EarthSystem.AddTarget(new UIMapTarget(this, new Vector2(64, 24), 160, 160, "Earth", outline: outlineLarge));
             EarthSystem.AddTarget(new UIMapTarget(this, new Vector2(427, 33), 48, 48, Moon.Instance, outline: outlineMedium));
             EarthSystem.Prev = SolarSystemInner;
 

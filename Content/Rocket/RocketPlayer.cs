@@ -94,7 +94,7 @@ namespace Macrocosm.Content.Rocket
 
 				if (Player.whoAmI == Main.myPlayer)
 				{
-					if ((Player.controlInv || Player.controlMount) && !(modRocket.Launching)
+					if ((Player.controlInv || Player.controlMount) && !(modRocket.Launching))
 						InRocket = false;
 
 					if (!modRocket.Launching)

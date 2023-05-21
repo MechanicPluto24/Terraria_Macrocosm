@@ -4,20 +4,14 @@ using Terraria.Localization;
 using Terraria.GameContent.UI.Elements;
 using System.Collections.Generic;
 using Macrocosm.Content.Rocket.Navigation.InfoElements;
-using Macrocosm.Content.Rocket.Navigation.LaunchConditions;
+using Macrocosm.Content.Rocket.Navigation.LaunchConds;
+using System.Xml.Linq;
 
 namespace Macrocosm.Content.Rocket.Navigation
 {
     // TODO: make an abstract scrollable list panel class
     public class UIFlightChecklist : UIPanel
     {
-        // TODO: maybe do a collection of some kind of LaunchCondition class
-        public ChecklistInfoElement Destination = new(ChecklistItemType.Destination);
-        public ChecklistInfoElement Fuel = new(ChecklistItemType.Fuel);
-        public ChecklistInfoElement Obstruction = new(ChecklistItemType.Obstruction);
-
-        private List<BasicInfoElement> elements;
-
         private UIText uIDisplayName;
         private UIList uIInfoElements;
 
@@ -25,14 +19,6 @@ namespace Macrocosm.Content.Rocket.Navigation
         public UIFlightChecklist(string title)
         {
             this.title = title;
-
-            elements = new()
-            {
-                Destination,
-                Fuel,
-                Obstruction
-            };
-
             Initialize();
         }
 
@@ -79,9 +65,6 @@ namespace Macrocosm.Content.Rocket.Navigation
                 TextColor = Color.White
             };
             Append(uIDisplayName);
-
-            AddAll();
-
         }
 
         public override void Update(GameTime gameTime)
@@ -89,7 +72,6 @@ namespace Macrocosm.Content.Rocket.Navigation
             base.Update(gameTime);
 
             ClearInfo();
-            AddAll();
         }
 
         public void Add(UIElement element)
@@ -97,13 +79,14 @@ namespace Macrocosm.Content.Rocket.Navigation
             uIInfoElements.Add(element);
         }
 
-        public void ClearInfo() => uIInfoElements.Clear();
-        private void AddAll()
-        {
-            if (elements is not null)
-                foreach (BasicInfoElement element in elements)
-                    Add(element.ProvideUI());
-        }
+		public void AddList(List<UIElement> elements)
+		{
+            foreach(UIElement element in elements)
+			    uIInfoElements.Add(element);
+		}
+
+
+		public void ClearInfo() => uIInfoElements.Clear();
 
     }
 }

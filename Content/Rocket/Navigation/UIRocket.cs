@@ -2,6 +2,7 @@
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rocket;
 using Macrocosm.Content.Rocket.Navigation.InfoElements;
+using Macrocosm.Content.Rocket.Navigation.LaunchConds;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -18,7 +19,7 @@ namespace Macrocosm.Content.Rocket.Navigation
     {
         public int RocketID { get; set; } = -1;
 
-        private NPC Rocket => Main.npc[RocketID];
+        private RocketNPC Rocket => Main.npc[RocketID].ModNPC as RocketNPC;
 
         UIPanel UIBackgroundPanel;
         UILaunchButton UILaunchButton;
@@ -27,7 +28,12 @@ namespace Macrocosm.Content.Rocket.Navigation
 
         UIFlightChecklist UIFlightChecklist;
 
-        public static void Show(int rocketId) => RocketSystem.Instance.ShowUI(rocketId);
+		private LaunchCondition selectedLaunchCondition = new("Selected", () => false);
+
+		private LaunchConditions genericLaunchConditions = new();
+
+
+		public static void Show(int rocketId) => RocketSystem.Instance.ShowUI(rocketId);
         public static void Hide() => RocketSystem.Instance.HideUI();
         public static bool Active => RocketSystem.Instance.Interface?.CurrentState is not null;
 
@@ -49,15 +55,19 @@ namespace Macrocosm.Content.Rocket.Navigation
 
             UIFlightChecklist = new(Language.GetTextValue("Mods.Macrocosm.WorldInfo.Checklist.DisplayName"));
             UIBackgroundPanel.Append(UIFlightChecklist);
-            //ChecklistState = new();
 
             UILaunchButton = new();
             UILaunchButton.ZoomIn = UINavigationPanel.ZoomIn;
             UILaunchButton.Launch = LaunchRocket;
             UIBackgroundPanel.Append(UILaunchButton);
-        }
 
-        public override void OnDeactivate()
+			selectedLaunchCondition = new("Selected", () => target is not null && MacrocosmSubworld.SafeCurrentID != target.TargetID);
+
+			genericLaunchConditions.Add(new LaunchCondition("Fuel", () => Rocket.Fuel >= RocketFuelLookup.GetFuelCost(MacrocosmSubworld.SafeCurrentID, target.TargetID)));
+            genericLaunchConditions.Add(new LaunchCondition("Obstruction", () => Rocket.CheckFlightPathObstruction()));
+		}
+
+		public override void OnDeactivate()
         {
         }
 
@@ -71,8 +81,8 @@ namespace Macrocosm.Content.Rocket.Navigation
             Player player = Main.LocalPlayer;
             player.mouseInterface = true;
 
-            if (!Rocket.active || player.dead || !player.active || Main.editChest || Main.editSign || player.talkNPC >= 0 || !Main.playerInventory ||
-                !player.InInteractionRange((int)Rocket.Center.X / 16, (int)Rocket.Center.Y / 16, TileReachCheckSettings.Simple) || (Rocket.ModNPC as RocketNPC).Launching || player.controlMount)
+            if (!Rocket.NPC.active || player.dead || !player.active || Main.editChest || Main.editSign || player.talkNPC >= 0 || !Main.playerInventory ||
+                !player.InInteractionRange((int)Rocket.NPC.Center.X / 16, (int)Rocket.NPC.Center.Y / 16, TileReachCheckSettings.Simple) || Rocket.Launching || player.controlMount)
             {
                 Hide();
                 return;
@@ -104,39 +114,24 @@ namespace Macrocosm.Content.Rocket.Navigation
 			*/
         }
 
+
         private void UpdateChecklist()
         {
-            RocketNPC rocket = Rocket.ModNPC as RocketNPC;
+			UIFlightChecklist.ClearInfo();
 
-            if (target is null || MacrocosmSubworld.SafeCurrentID == target.TargetID)
+			if (!selectedLaunchCondition.Check())
             {
-                UIFlightChecklist.Destination.State = false;
-                UIFlightChecklist.Fuel.State = false;
-                UIFlightChecklist.Obstruction.State = false;
+                UIFlightChecklist.ClearInfo();
+                UIFlightChecklist.Add(selectedLaunchCondition.ProvideUI());
             }
-            else
+            else // target is definitely not null
             {
-                UIFlightChecklist.Destination.State = true;
-                UIFlightChecklist.Fuel.State = rocket.Fuel >= RocketFuelLookup.GetFuelCost(MacrocosmSubworld.SafeCurrentID, target.TargetID);
-                UIFlightChecklist.Obstruction.State = rocket.CheckFlightPathObstruction();
-            }
+                genericLaunchConditions.Merge(target.LaunchConditions);
+                UIFlightChecklist.AddList(genericLaunchConditions.ProvideList());
+			}
         }
 
-        private bool CheckCanLaunch()
-        {
-            if (!target.CanLaunch())
-                return false;
 
-            RocketNPC rocket = Rocket.ModNPC as RocketNPC;
-
-            if (rocket.Fuel < RocketFuelLookup.GetFuelCost(MacrocosmSubworld.SafeCurrentID, target.TargetID))
-                return false;
-
-            if (!rocket.CheckFlightPathObstruction())
-                return false;
-
-            return true;
-        }
         private void UpdateLaunchButton()
         {
             if (target is null)
@@ -145,7 +140,7 @@ namespace Macrocosm.Content.Rocket.Navigation
                 UILaunchButton.ButtonState = UILaunchButton.StateType.ZoomIn;
             else if (target.AlreadyHere)
                 UILaunchButton.ButtonState = UILaunchButton.StateType.AlreadyHere;
-            else if (!CheckCanLaunch())
+            else if (!target.LaunchConditions.Check())
                 UILaunchButton.ButtonState = UILaunchButton.StateType.CantReach;
             else
                 UILaunchButton.ButtonState = UILaunchButton.StateType.Launch;
@@ -153,11 +148,10 @@ namespace Macrocosm.Content.Rocket.Navigation
 
         private void LaunchRocket()
         {
-            RocketNPC rocket = Rocket.ModNPC as RocketNPC;
-            rocket.Launch(); // launch rocket on the local sp/mp client
+            Rocket.Launch(); // launch rocket on the local sp/mp client
 
             if (Main.netMode == NetmodeID.MultiplayerClient)
-                rocket.SendLaunchMessage(); // send launch message to the server
+                Rocket.SendLaunchMessage(); // send launch message to the server
         }
     }
 }
