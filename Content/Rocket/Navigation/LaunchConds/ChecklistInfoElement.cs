@@ -3,7 +3,7 @@ using Terraria.ModLoader;
 using Terraria.Localization;
 using Macrocosm.Content.Rocket.Navigation.InfoElements;
 
-namespace Macrocosm.Content.Rocket.Navigation.LaunchConditions
+namespace Macrocosm.Content.Rocket.Navigation.LaunchConds
 {
     public class ChecklistInfoElement : BasicInfoElement
     {

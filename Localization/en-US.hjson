@@ -928,24 +928,52 @@ Mods: {
 				DisplayName: Pre-flight checklist
 
 				Fuel: {
-					Good: Enough fuel
-					Bad: Not enough fuel
-					GoodHover: You have enough fuel to launch the rocket
-					BadHover: You need more fuel to launch the rocket
+					True: {
+						Display: Enough fuel
+						Hover: You have enough fuel to launch the rocket
+					}
+					
+					False: {
+						Display: Not enough fuel
+						Hover: You need more fuel to launch the rocket
+					}
 				}
 
 				Destination: {
-					Good: Destination selected
-					Bad: No destination selected
-					GoodHover: You have selected a destination for the rocket
-					BadHover: You need to select a destination for the rocket
+					True: {
+						Display: Destination selected
+						Hover: You have selected a destination for the rocket
+					}
+					
+					False: {
+						Display: No destination selected
+						Hover: You need to select a destination for the rocket
+					}
 				}
 
 				Obstruction: {
-					Good: View unobstructed
-					Bad: View obstructed
-					GoodHover: The rocket has a clear flight path
-					BadHover: There is an obstruction in the rocket's flight path
+					True: {
+						Display: View unobstructed
+						Hover: The rocket has a clear flight path
+					}
+					
+					False: {
+						Display:View obstructed
+						Hover: There is an obstruction in the rocket's flight path
+					}
+				}
+
+
+				Obstruction: {
+					True: {
+						Display: View unobstructed
+						Hover: The rocket has a clear flight path
+					}
+					
+					False: {
+						Display:View obstructed
+						Hover: There is an obstruction in the rocket's flight path
+					}
 				}
 			}
 		}

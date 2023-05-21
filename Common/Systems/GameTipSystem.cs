@@ -6,11 +6,7 @@ using Macrocosm.Content.UI.LoadingScreens;
 using MonoMod.Cil;
 using Terraria.GameContent.UI;
 using Terraria.Localization;
-using System.Text.RegularExpressions;
 using Macrocosm.Common.Subworlds;
-using System.Reflection.PortableExecutable;
-using Macrocosm.Common.Utils;
-using Terraria.GameContent;
 
 namespace Macrocosm.Common.Systems
 {

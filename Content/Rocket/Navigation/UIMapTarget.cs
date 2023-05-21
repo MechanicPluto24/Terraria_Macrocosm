@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Rocket.Navigation.LaunchConds;
 using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -19,9 +20,9 @@ namespace Macrocosm.Content.Rocket.Navigation
         public readonly string TargetID = "default";
 
         /// <summary> Determine whether the subworld is accesible </summary>
-        public List<LaunchConditions.LaunchCondition> launchConditions;
+        public LaunchConditions LaunchConditions { get; set; }
 
-        public bool IsSelectable => CanLaunch() || OwnerMap.Next != null;
+        public bool IsSelectable => LaunchConditions.Check() || OwnerMap.Next != null;
         public bool AlreadyHere => TargetID == MacrocosmSubworld.SafeCurrentID;
 
         /// <summary> Target selected </summary>
@@ -41,7 +42,7 @@ namespace Macrocosm.Content.Rocket.Navigation
         /// <param name="targetSubworld"> The subworld (instance) associated with the map target </param>
         public UIMapTarget(UINavigationPanel owner, Vector2 position, float width, float height, MacrocosmSubworld targetSubworld, Texture2D outline = null) : this(owner, position, width, height)
         {
-            CanLaunch = () => targetSubworld.CanTravelTo();
+			LaunchConditions = targetSubworld.LaunchConditions;
             TargetID = targetSubworld.Name;
 
             selectionOutline = outline ?? selectionOutline;
@@ -54,9 +55,9 @@ namespace Macrocosm.Content.Rocket.Navigation
         /// <param name="height"> Interactible area height in pixels </param>
         /// <param name="targetId"> The special ID of the target, handled in <see cref="RocketNPC.EnterDestinationSubworld"/> </param>
         /// <param name="canLaunch"> Function that determines whether the target is selectable, defaults to false </param>
-        public UIMapTarget(UINavigationPanel owner, Vector2 position, float width, float height, string targetId, FuncCanLaunch canLaunch = null, Texture2D outline = null) : this(owner, position, width, height)
+        public UIMapTarget(UINavigationPanel owner, Vector2 position, float width, float height, string targetId, LaunchConditions launchConditions = null, Texture2D outline = null) : this(owner, position, width, height)
         {
-            CanLaunch = canLaunch ?? CanLaunch;
+			LaunchConditions = launchConditions;
             TargetID = targetId;
 
             selectionOutline = outline ?? selectionOutline;
