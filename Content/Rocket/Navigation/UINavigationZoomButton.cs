@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.UI;
 
-namespace Macrocosm.Content.UI.Rocket
+namespace Macrocosm.Content.Rocket.Navigation
 {
     public class UINavigationZoomButton : UIElement
     {

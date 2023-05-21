@@ -8,7 +8,7 @@ using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace Macrocosm.Content.UI.Rocket
+namespace Macrocosm.Content.Rocket.Navigation.InfoElements
 {
     public class WorldInfo
     {
@@ -28,7 +28,7 @@ namespace Macrocosm.Content.UI.Rocket
             this.elements = elements;
         }
 
-        string localizationPath = "Mods.Macrocosm.Worlds.";
+        const string localizationPath = "Mods.Macrocosm.Worlds.";
         public UIInfoPanel ProvideUI()
         {
             UIInfoPanel panel = new(Language.GetTextValue(localizationPath + worldNameKey + ".DisplayName"));

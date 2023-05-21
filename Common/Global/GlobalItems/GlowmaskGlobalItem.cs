@@ -12,7 +12,7 @@ namespace Macrocosm.Common.Global.GlobalItems
 {
 	/// <summary>
 	/// Adds a glowmask field to GlobalItems.
-	/// Code by Hallam
+	/// Code by Hallam 
 	/// </summary>
 	public class GlowmaskGlobalItem : GlobalItem
 	{
