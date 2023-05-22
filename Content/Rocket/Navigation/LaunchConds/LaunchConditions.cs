@@ -20,8 +20,17 @@ namespace Macrocosm.Content.Rocket.Navigation.LaunchConds
         public void Remove(string key)
              => Remove(conditions.Find(x => x.LangKey == key));
 
-        public void Merge(LaunchConditions extraConditions)
+        public void Append(LaunchConditions extraConditions)
             => conditions.AddRange(extraConditions);
+
+        public static LaunchConditions Merge(LaunchConditions conditions1, LaunchConditions conditions2)
+        {
+            LaunchConditions output = new();
+            output.Append(conditions1);
+            output.Append(conditions2);
+
+            return output;
+        }
 
         public bool Check()
         {

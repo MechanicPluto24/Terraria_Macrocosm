@@ -31,7 +31,7 @@ namespace Macrocosm.Content.Rocket.Navigation.InfoElements
 
         protected virtual Texture2D GetIcon() => null;
         protected virtual string GetText() => Language.GetTextValue(specialValueLangKey);
-        protected virtual string HoverText => "";
+        protected virtual string GetHoverText() => "";
         protected virtual string Units => "";
         protected virtual Color TextColor => Color.White;
 
@@ -42,7 +42,7 @@ namespace Macrocosm.Content.Rocket.Navigation.InfoElements
 
             Texture2D icon = GetIcon() ?? Macrocosm.EmptyTex;
 
-            return new UIInfoElement(icon, GetText(), HoverText, Units, TextColor);
+            return new UIInfoElement(icon, GetText(), GetHoverText(), Units, TextColor);
         }
     }
 }

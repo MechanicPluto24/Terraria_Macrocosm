@@ -20,16 +20,15 @@ namespace Macrocosm.Content.Rocket.Navigation
         public readonly string TargetID = "default";
 
         /// <summary> Determine whether the subworld is accesible </summary>
-        public LaunchConditions LaunchConditions { get; set; }
-
-        public bool IsSelectable => LaunchConditions.Check() || OwnerMap.Next != null;
+        public LaunchConditions LaunchConditions { get; set; } = null;
+        public bool IsReachable => CheckLaunchConditions() || OwnerMap.Next != null;
         public bool AlreadyHere => TargetID == MacrocosmSubworld.SafeCurrentID;
 
         /// <summary> Target selected </summary>
         public bool Selected;
 
         // selection outline, has default
-        private readonly Texture2D selectionOutline = ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/NavigationUI/Buttons/SelectionOutlineSmall", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+        private readonly Texture2D selectionOutline = ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/Navigation/Buttons/SelectionOutlineSmall", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
 
         // selection outline rotation
         private float rotation = 0f;
@@ -57,7 +56,7 @@ namespace Macrocosm.Content.Rocket.Navigation
         /// <param name="canLaunch"> Function that determines whether the target is selectable, defaults to false </param>
         public UIMapTarget(UINavigationPanel owner, Vector2 position, float width, float height, string targetId, LaunchConditions launchConditions = null, Texture2D outline = null) : this(owner, position, width, height)
         {
-			LaunchConditions = launchConditions;
+			this.LaunchConditions = launchConditions;
             TargetID = targetId;
 
             selectionOutline = outline ?? selectionOutline;
@@ -77,7 +76,7 @@ namespace Macrocosm.Content.Rocket.Navigation
             Left.Set(position.X - 20, 0);
         }
 
-        public override void OnInitialize()
+		public override void OnInitialize()
         {
             OnLeftClick += (_, _) =>
             {
@@ -96,7 +95,15 @@ namespace Macrocosm.Content.Rocket.Navigation
             //OnRightDoubleClick += (_, _) => { OwnerPanel.ZoomOut();  };
         }
 
-        protected override void DrawSelf(SpriteBatch spriteBatch)
+		public bool CheckLaunchConditions()
+		{
+			if (LaunchConditions is not null)
+				return LaunchConditions.Check();
+
+			return false;
+		}
+
+		protected override void DrawSelf(SpriteBatch spriteBatch)
         {
             Rectangle rect = GetDimensions().ToRectangle();
             Vector2 pos = GetDimensions().Center();
@@ -112,7 +119,7 @@ namespace Macrocosm.Content.Rocket.Navigation
 
             if (Selected)
             {
-                if (IsSelectable)
+                if (IsReachable)
                     spriteBatch.Draw(selectionOutline, pos, null, new Color(0, 255, 0), rotation, origin, 1f, SpriteEffects.None, 0f);
                 else if (AlreadyHere)
                     spriteBatch.Draw(selectionOutline, pos, null, Color.Gray, rotation, origin, 1f, SpriteEffects.None, 0f);

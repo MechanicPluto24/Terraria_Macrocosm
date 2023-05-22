@@ -34,9 +34,9 @@ namespace Macrocosm.Content.Rocket.Navigation.InfoElements
         public ThreatLevelInfoElement(ThreatLevel level) : base((float)level) { }
         public ThreatLevelInfoElement(int level) : base(level) { }
 
-        protected override string HoverText => Language.GetTextValue("Mods.Macrocosm.WorldInfo.ThreatLevel.Name");
+        protected override string GetHoverText() => Language.GetTextValue("Mods.Macrocosm.WorldInfo.ThreatLevel.Name");
 
-        protected override Texture2D GetIcon() => ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/NavigationUI/Icons/ThreatLevel", AssetRequestMode.ImmediateLoad).Value;
+        protected override Texture2D GetIcon() => ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/Navigation/Icons/ThreatLevel", AssetRequestMode.ImmediateLoad).Value;
 
         protected override string GetText()
         {

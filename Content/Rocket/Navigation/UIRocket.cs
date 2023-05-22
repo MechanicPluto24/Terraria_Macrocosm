@@ -29,9 +29,8 @@ namespace Macrocosm.Content.Rocket.Navigation
         UIFlightChecklist UIFlightChecklist;
 
 		private LaunchCondition selectedLaunchCondition = new("Selected", () => false);
-
+		private LaunchCondition hereLaunchCondition = new("NotHere", () => false);
 		private LaunchConditions genericLaunchConditions = new();
-
 
 		public static void Show(int rocketId) => RocketSystem.Instance.ShowUI(rocketId);
         public static void Hide() => RocketSystem.Instance.HideUI();
@@ -53,7 +52,7 @@ namespace Macrocosm.Content.Rocket.Navigation
             UIWorldInfoPanel = new("");
             UIBackgroundPanel.Append(UIWorldInfoPanel);
 
-            UIFlightChecklist = new(Language.GetTextValue("Mods.Macrocosm.WorldInfo.Checklist.DisplayName"));
+            UIFlightChecklist = new(Language.GetTextValue("Mods.Macrocosm.WorldInfo.Common.Checklist"));
             UIBackgroundPanel.Append(UIFlightChecklist);
 
             UILaunchButton = new();
@@ -61,9 +60,10 @@ namespace Macrocosm.Content.Rocket.Navigation
             UILaunchButton.Launch = LaunchRocket;
             UIBackgroundPanel.Append(UILaunchButton);
 
-			selectedLaunchCondition = new("Selected", () => target is not null && MacrocosmSubworld.SafeCurrentID != target.TargetID);
+			selectedLaunchCondition = new("Selected", () => target is not null);
+		    hereLaunchCondition = new("NotHere", () => target is not null && !target.AlreadyHere);
 
-			genericLaunchConditions.Add(new LaunchCondition("Fuel", () => Rocket.Fuel >= RocketFuelLookup.GetFuelCost(MacrocosmSubworld.SafeCurrentID, target.TargetID)));
+		    genericLaunchConditions.Add(new LaunchCondition("Fuel", () => Rocket.Fuel >= RocketFuelLookup.GetFuelCost(MacrocosmSubworld.SafeCurrentID, target.TargetID)));
             genericLaunchConditions.Add(new LaunchCondition("Obstruction", () => Rocket.CheckFlightPathObstruction()));
 		}
 
@@ -120,16 +120,17 @@ namespace Macrocosm.Content.Rocket.Navigation
 			UIFlightChecklist.ClearInfo();
 
 			if (!selectedLaunchCondition.Check())
+                UIFlightChecklist.Add(selectedLaunchCondition.ProvideUI(ChecklistInfoElement.IconType.QuestionMark));
+ 			else if(!hereLaunchCondition.Check())// target is definitely not null
+ 				UIFlightChecklist.Add(hereLaunchCondition.ProvideUI(ChecklistInfoElement.IconType.GrayCrossmark));
+            else
             {
-                UIFlightChecklist.ClearInfo();
-                UIFlightChecklist.Add(selectedLaunchCondition.ProvideUI());
-            }
-            else // target is definitely not null
-            {
-                genericLaunchConditions.Merge(target.LaunchConditions);
-                UIFlightChecklist.AddList(genericLaunchConditions.ProvideList());
+                if (target.LaunchConditions is not null)
+                    UIFlightChecklist.AddList(LaunchConditions.Merge(target.LaunchConditions, genericLaunchConditions).ProvideList());
+                else
+                    UIFlightChecklist.AddList(genericLaunchConditions.ProvideList());
 			}
-        }
+		}
 
 
         private void UpdateLaunchButton()
@@ -140,7 +141,7 @@ namespace Macrocosm.Content.Rocket.Navigation
                 UILaunchButton.ButtonState = UILaunchButton.StateType.ZoomIn;
             else if (target.AlreadyHere)
                 UILaunchButton.ButtonState = UILaunchButton.StateType.AlreadyHere;
-            else if (!target.LaunchConditions.Check())
+            else if (!target.CheckLaunchConditions())
                 UILaunchButton.ButtonState = UILaunchButton.StateType.CantReach;
             else
                 UILaunchButton.ButtonState = UILaunchButton.StateType.Launch;

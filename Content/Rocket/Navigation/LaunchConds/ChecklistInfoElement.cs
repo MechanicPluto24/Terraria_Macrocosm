@@ -7,23 +7,43 @@ namespace Macrocosm.Content.Rocket.Navigation.LaunchConds
 {
     public class ChecklistInfoElement : BasicInfoElement
     {
+        public enum IconType
+        {
+            Checkmark,
+            Crossmark,
+            GrayCrossmark,
+            QuestionMark
+        }
+
         public bool State { get; set; } = false;
 
-        public ChecklistInfoElement(string langKey, bool defaultState = false) : base(langKey) 
+        public IconType TrueIcon { get; set; } = IconType.Checkmark;
+        public IconType FalseIcon { get; set; } = IconType.Crossmark;
+
+		public ChecklistInfoElement(string langKey) : base(langKey)
         {
-            State = defaultState;
         }
 
         protected override Texture2D GetIcon()
         {
             if (State)
-                return ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/NavigationUI/Icons/Checkmark").Value;
+                return ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/Navigation/Icons/" + TrueIcon.ToString()).Value;
             else
-                return ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/NavigationUI/Icons/Crossmark").Value;
+                return ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/Navigation/Icons/" + FalseIcon.ToString()).Value;
         }
 
-        private string KeySelector => State ? ".Good" : ".Bad";
-        protected override string GetText() => Language.GetTextValue("Mods.Macrocosm.WorldInfo.Checklist." + specialValueLangKey + KeySelector);
-        protected override string HoverText => Language.GetTextValue("Mods.Macrocosm.WorldInfo.Checklist." + specialValueLangKey + KeySelector + "Hover");
+        private string KeySelector => specialValueLangKey + "." + (State ? "True" : "False") + ".";
+        protected override string GetText() => Language.GetTextValue("Mods.Macrocosm.WorldInfo.Checklist." + KeySelector + "Display");
+
+		protected override string GetHoverText()
+        {
+            string key = "Mods.Macrocosm.WorldInfo.Checklist." + KeySelector + "Hover";
+			string hoverText = Language.GetTextValue(key);
+
+            if (hoverText is "" or "default" || hoverText == key)
+                return "";
+            else
+                return hoverText;
+	    }
     }
 }

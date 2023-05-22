@@ -799,7 +799,7 @@ Mods: {
 			RadioactiveSlime.DisplayName: Radioactive Slime
 			RegolithSlime.DisplayName: Regolith Slime
 			MoonChampion.DisplayName: Moon Champion
-			RocketNPC.DisplayName: Rocket N P C
+			RocketNPC.DisplayName: Rocket
 		}
 
 		Projectiles: {
@@ -884,6 +884,17 @@ Mods: {
 		}
 
 		WorldInfo: {
+			Common: {
+				Checklist: Pre-flight checklist
+				Crew: Crew
+				Fuel: Fuel
+				NoTarget: No Target
+				CantReach: Inaccessible
+				AlreadyHere: Current Location
+				ZoomIn: Zoom In
+				Launch: Launch
+			}
+
 			Gravity: {
 				Name: Gravity
 				Unit: G
@@ -925,14 +936,12 @@ Mods: {
 			}
 
 			Checklist: {
-				DisplayName: Pre-flight checklist
-
 				Fuel: {
 					True: {
 						Display: Enough fuel
-						Hover: You have enough fuel to launch the rocket
+						Hover: default
 					}
-					
+
 					False: {
 						Display: Not enough fuel
 						Hover: You need more fuel to launch the rocket
@@ -942,9 +951,9 @@ Mods: {
 				Destination: {
 					True: {
 						Display: Destination selected
-						Hover: You have selected a destination for the rocket
+						Hover: default
 					}
-					
+
 					False: {
 						Display: No destination selected
 						Hover: You need to select a destination for the rocket
@@ -953,26 +962,49 @@ Mods: {
 
 				Obstruction: {
 					True: {
-						Display: View unobstructed
-						Hover: The rocket has a clear flight path
+						Display: Path unobstructed
+						Hover: default
 					}
-					
+
 					False: {
-						Display:View obstructed
+						Display: Path obstructed
 						Hover: There is an obstruction in the rocket's flight path
 					}
 				}
 
-
-				Obstruction: {
+				Selected: {
 					True: {
-						Display: View unobstructed
-						Hover: The rocket has a clear flight path
+						Display: default
+						Hover: default
 					}
-					
+
 					False: {
-						Display:View obstructed
-						Hover: There is an obstruction in the rocket's flight path
+						Display: Select a destination
+						Hover: default
+					}
+				}
+
+				NotHere: {
+					True: {
+						Display: default
+						Hover: default
+					}
+
+					False: {
+						Display: You are already here
+						Hover: default
+					}
+				}
+
+				Reactor: {
+					True: {
+						Display: default
+						Hover: default
+					}
+
+					False: {
+						Display: Missing reactor
+						Hover: You need a fusion reactor to reach The Moon
 					}
 				}
 			}
@@ -980,7 +1012,11 @@ Mods: {
 
 		Worlds: {
 			InnerSolarSystem: {
-				DisplayName: Inner Solar System
+				DisplayName:
+					'''
+					Inner Solar
+					  System
+					'''
 				FlavorText: default
 			}
 

@@ -108,7 +108,7 @@ namespace Macrocosm.Content.Rocket.Navigation
         private void InitializePanelContent()
         {
             AssetRequestMode mode = AssetRequestMode.ImmediateLoad;
-            string path = "Macrocosm/Content/Rocket/NavigationUI/";
+            string path = "Macrocosm/Content/Rocket/Navigation/";
 
             Texture2D zoomInButton = ModContent.Request<Texture2D>(path + "Buttons/ZoomIn", mode).Value;
             Texture2D zoomInBorder = ModContent.Request<Texture2D>(path + "Buttons/ZoomInBorder", mode).Value;
@@ -128,7 +128,7 @@ namespace Macrocosm.Content.Rocket.Navigation
             SolarSystemInner = new(ModContent.Request<Texture2D>(path + "NavigationMaps/SolarSystemInner", mode).Value, defaultNext: GetInitialNavigationMap());
             SolarSystemOuter = new(ModContent.Request<Texture2D>(path + "NavigationMaps/SolarSystemOuter", mode).Value, defaultNext: SolarSystemInner);
 
-            EarthSystem.AddTarget(new UIMapTarget(this, new Vector2(64, 24), 160, 160, "Earth", outline: outlineLarge));
+            EarthSystem.AddTarget(new UIMapTarget(this, new Vector2(64, 24), 160, 160, "Earth", Earth.LaunchConditions, outline: outlineLarge));
             EarthSystem.AddTarget(new UIMapTarget(this, new Vector2(427, 33), 48, 48, Moon.Instance, outline: outlineMedium));
             EarthSystem.Prev = SolarSystemInner;
 

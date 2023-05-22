@@ -9,10 +9,10 @@ namespace Macrocosm.Content.Rocket.Navigation.InfoElements
     {
         public HazardInfoElement(string hazardKey) : base(hazardKey) { }
 
-        protected override Texture2D GetIcon() => ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/NavigationUI/Icons/" + specialValueLangKey, AssetRequestMode.ImmediateLoad).Value;
+        protected override Texture2D GetIcon() => ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/Navigation/Icons/" + specialValueLangKey, AssetRequestMode.ImmediateLoad).Value;
 
         protected override string GetText() => Language.GetTextValue("Mods.Macrocosm.WorldInfo.Hazard." + specialValueLangKey);
 
-        protected override string HoverText => Language.GetTextValue("Mods.Macrocosm.WorldInfo.Hazard.Name");
+        protected override string GetHoverText() => Language.GetTextValue("Mods.Macrocosm.WorldInfo.Hazard.Name");
     }
 }

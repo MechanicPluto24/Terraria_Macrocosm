@@ -54,7 +54,7 @@ namespace Macrocosm.Content.Subworlds
 
 		public override LaunchConditions LaunchConditions => new()
 		{
-			new LaunchCondition("MoonLord", () => NPC.downedMoonlord)
+			new LaunchCondition("Reactor", () => NPC.downedMoonlord) // placeholder for now
 		};
 
         public override Dictionary<MapColorType, Color> MapColors => new()
