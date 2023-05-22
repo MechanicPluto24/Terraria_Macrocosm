@@ -25,7 +25,7 @@ namespace Macrocosm.Content.Rocket
 			if(fuelLookup.TryGetValue(key, out float value))
 				return value;
 
-			return 0f;
+			return float.MaxValue;
 		}
 
 

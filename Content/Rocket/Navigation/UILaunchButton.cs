@@ -1,7 +1,9 @@
 ﻿using Macrocosm.Common.Drawing;
 using Microsoft.Xna.Framework;
 using System;
+using System.Runtime.CompilerServices;
 using Terraria.GameContent.UI.Elements;
+using Terraria.Localization;
 using Terraria.UI;
 
 namespace Macrocosm.Content.Rocket.Navigation
@@ -63,31 +65,29 @@ namespace Macrocosm.Content.Rocket.Navigation
             Color textColor = Color.White;
             float textScale = 0.9f;
 
-            switch (ButtonState)
+            text = Language.GetTextValue("Mods.Macrocosm.WorldInfo.Common." + ButtonState.ToString()).ToUpper();
+
+			switch (ButtonState)
             {
                 case StateType.NoTarget:
                     textColor = Color.Gold;
-                    text = "NO TARGET";
                     CanClick = false;
                     break;
 
                 case StateType.CantReach:
                     textColor = Color.Red;
                     textScale = 0.75f;
-                    text = "INACCESSIBLE";
                     CanClick = false;
                     break;
 
                 case StateType.AlreadyHere:
                     textColor = Color.Gray * 1.3f;
                     textScale = 0.58f;
-                    text = "CURRENT LOCATION";
                     CanClick = false;
                     break;
 
                 case StateType.ZoomIn:
                     textColor = Color.White;
-                    text = "ZOOM IN";
                     textScale = 1.05f;
                     OnLeftClick += UILaunchButton_OnClick_ZoomIn;
                     break;
@@ -95,7 +95,6 @@ namespace Macrocosm.Content.Rocket.Navigation
                 case StateType.Launch:
                     textColor = new Color(0, 255, 0);
                     textScale = 1.1f;
-                    text = "LAUNCH";
                     OnLeftClick += UILaunchButton_OnClick_Launch;
                     break;
 

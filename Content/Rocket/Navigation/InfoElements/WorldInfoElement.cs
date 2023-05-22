@@ -35,7 +35,7 @@ namespace Macrocosm.Content.Rocket.Navigation.InfoElements
 
         protected override Texture2D GetIcon()
         {
-            string iconPath = "Macrocosm/Content/Rocket/NavigationUI/Icons/";
+            string iconPath = "Macrocosm/Content/Rocket/Navigation/Icons/";
             AssetRequestMode mode = AssetRequestMode.ImmediateLoad;
 
             iconPath += TypeKey;
@@ -51,7 +51,7 @@ namespace Macrocosm.Content.Rocket.Navigation.InfoElements
             return HasSpecial ? specialValueText : formattedValue;
         }
 
-        protected override string HoverText => Language.GetTextValue(localizationPath + TypeKey + ".Name");
+        protected override string GetHoverText() => Language.GetTextValue(localizationPath + TypeKey + ".Name");
 
         protected override string Units => GetUnitKey();
         private string GetUnitKey()

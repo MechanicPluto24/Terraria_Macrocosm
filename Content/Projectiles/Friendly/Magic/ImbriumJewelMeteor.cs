@@ -18,8 +18,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
         public override void SetDefaults()
         {
-            Projectile.width = 28;
-            Projectile.height = 28;
+            Projectile.width = 18;
+            Projectile.height = 18;
             Projectile.friendly = true;
             Projectile.timeLeft = 120;
             Projectile.DamageType = DamageClass.Magic;
