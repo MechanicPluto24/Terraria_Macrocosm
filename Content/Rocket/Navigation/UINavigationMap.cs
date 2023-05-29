@@ -17,13 +17,13 @@ namespace Macrocosm.Content.Rocket.Navigation
         public UINavigationMap Prev = null;
         public UINavigationMap DefaultNext = null;
 
-        private Dictionary<UIMapTarget, UINavigationMap> nextTargetChildMap = new();
+		private Dictionary<UIMapTarget, UINavigationMap> nextTargetChildMap = new();
 
         private bool showAnimationActive = false;
         private Texture2D animationPrevTexture;
 
-        float alpha = 1f;
-        float alphaSpeed = 0.02f;
+        private float alpha = 1f;
+        private float alphaSpeed = 0.02f;
 
         public UINavigationMap(Texture2D tex, UINavigationMap next = null, UINavigationMap prev = null, UINavigationMap defaultNext = null)
         {
@@ -58,14 +58,14 @@ namespace Macrocosm.Content.Rocket.Navigation
 
             if (showAnimationActive)
             {
-                alpha += alphaSpeed;
+				alpha += alphaSpeed;
 
                 if (alpha >= 1f)
                 {
                     showAnimationActive = false;
                     alpha = 1f;
                 }
-            }
+            } 
         }
 
         public bool TryFindTargetBy(string ID, out UIMapTarget target)
