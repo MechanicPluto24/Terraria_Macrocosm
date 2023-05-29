@@ -92,6 +92,7 @@ namespace Macrocosm.Content.Rocket.Navigation
             target = UINavigationPanel.CurrentMap.GetSelectedTarget();
             player.RocketPlayer().TargetSubworldID = target is null ? "" : target.TargetID;
 
+
             GetInfoPanel();
             UpdateChecklist();
             UpdateLaunchButton();

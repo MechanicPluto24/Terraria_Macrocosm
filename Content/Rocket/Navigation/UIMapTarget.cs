@@ -87,26 +87,33 @@ namespace Macrocosm.Content.Rocket.Navigation
             Left.Set(position.X - 20, 0);
         }
 
+
 		public override void OnInitialize()
         {
             OnLeftClick += (_, _) =>
             {
-                foreach (UIElement element in OwnerMap.Children)
-                {
-                    if (element is UIMapTarget target && !ReferenceEquals(target, this))
-                        target.Selected = false;
-                }
+                OwnerMap.ClearAllTargets();
                 Selected = true;
             };
 
-            OnRightClick += (_, _) => { Selected = false; };
+            OnRightClick += (_, _) => 
+            { 
+                Selected = false; 
+            };
 
-            OnLeftDoubleClick += (_, _) => { OwnerPanel.ZoomIn(useDefault: false); };
+            OnLeftDoubleClick += (_, _) => 
+            { 
+                OwnerPanel.ZoomIn(useDefault: false); 
+            };
 
             //OnRightDoubleClick += (_, _) => { OwnerPanel.ZoomOut();  };
         }
 
-        /// <summary> Check whether all the launch conditions have been met </summary>
+		public override void Update(GameTime gameTime)
+		{
+			base.Update(gameTime);
+		}
+
 		public bool CheckLaunchConditions()
 		{
 			if (LaunchConditions is not null)
