@@ -11,10 +11,16 @@ namespace Macrocosm.Content.Rocket.Navigation
 {
     public class UINavigationMap : UIElement
     {
+        /// <summary> The displayed background texture </summary>
         public Texture2D Background;
 
+        /// <summary> The next navigation map, switched on ZoomIn </summary>
         public UINavigationMap Next = null;
-        public UINavigationMap Prev = null;
+
+		/// <summary> The previous navigation map, switched on ZoomOut </summary>
+		public UINavigationMap Prev = null;
+
+        /// <summary> The next defaul navigation map, switched on non-targeted ZoomIn </summary>
         public UINavigationMap DefaultNext = null;
 
         private Dictionary<UIMapTarget, UINavigationMap> nextTargetChildMap = new();
@@ -34,6 +40,11 @@ namespace Macrocosm.Content.Rocket.Navigation
             DefaultNext = defaultNext;
         }
 
+        /// <summary>
+        /// Adds a new target instance to the navigation map
+        /// </summary>
+        /// <param name="target"> The target instance </param>
+        /// <param name="childMap"> The optionally linked map correspondent to the passed target, user can switch to it on ZoomIn </param>
         public void AddTarget(UIMapTarget target, UINavigationMap childMap = null)
         {
             if (childMap is not null)
@@ -68,6 +79,12 @@ namespace Macrocosm.Content.Rocket.Navigation
             }
         }
 
+        /// <summary>
+        /// Attempts to find a target in this map by its ID
+        /// </summary>
+        /// <param name="ID"> The string ID </param>
+        /// <param name="target"> The output target, null if not found </param>
+        /// <returns> True if said target has been found, false otherwise </returns>
         public bool TryFindTargetBy(string ID, out UIMapTarget target)
         {
             target = FindTargetBy(ID);
@@ -77,6 +94,11 @@ namespace Macrocosm.Content.Rocket.Navigation
             return false;
         }
 
+        /// <summary>
+        /// Find a target by its ID; may return null
+        /// </summary>
+        /// <param name="ID"> The string ID </param>
+        /// <returns> The target instance, null if not found </returns>
         public UIMapTarget FindTargetBy(string ID)
         {
             foreach (UIElement element in Children)
@@ -88,7 +110,10 @@ namespace Macrocosm.Content.Rocket.Navigation
             return null;
         }
 
-
+        /// <summary>
+        /// Find the selected target in the current map, returns null if not found
+        /// </summary>
+        /// <returns> The selected target, null if not found </returns>
         public UIMapTarget GetSelectedTarget()
         {
             if (showAnimationActive)
@@ -103,6 +128,7 @@ namespace Macrocosm.Content.Rocket.Navigation
             return null;
         }
 
+        /// <summary> Clears the "selected" state from all the existing targets </summary>
         public void ClearAllTargets()
         {
             foreach (UIElement element in Children)
@@ -144,6 +170,10 @@ namespace Macrocosm.Content.Rocket.Navigation
                 spriteBatch.Restore(state);
         }
 
+        /// <summary>
+        /// Show a fade transition animation towards this map's texture, from another's
+        /// </summary>
+        /// <param name="previousTexture"> The texture from which the current map's transitions from </param>
         public void ShowAnimation(Texture2D previousTexture)
         {
             showAnimationActive = true;

@@ -14,17 +14,28 @@ namespace Macrocosm.Content.Rocket.Navigation
 {
     public class UIMapTarget : UIElement
     {
+        /// <summary> The panel instance this target belongs to </summary>
         public UINavigationPanel OwnerPanel { get; set; }
-        public UINavigationMap OwnerMap => OwnerPanel.CurrentMap;
 
-        public readonly string TargetID = "default";
+		/// <summary> The navigation map instance this target belongs to </summary>
+		public UINavigationMap OwnerMap => OwnerPanel.CurrentMap;
 
-        /// <summary> Determine whether the subworld is accesible </summary>
+		/// <summary> 
+        /// The identification of this target, used in conjuction with Subworld IDs
+		/// Must be unique in the same <c>UINavigationMap</c>, can have same ID linked targets in other navigation maps
+        /// </summary>
+		public readonly string TargetID = "default";
+
+        /// <summary> Collection to determine whether the subworld is accesible </summary>
         public LaunchConditions LaunchConditions { get; set; } = null;
+
+        /// <summary> Whether the target satisfies the launch conditions </summary>
         public bool IsReachable => CheckLaunchConditions() || OwnerMap.Next != null;
+
+        /// <summary> Whether this target's ID is equal to the current subworld </summary>
         public bool AlreadyHere => TargetID == MacrocosmSubworld.SafeCurrentID;
 
-        /// <summary> Target selected </summary>
+        /// <summary> Whether the target is currently selected </summary>
         public bool Selected;
 
         // selection outline, has default
@@ -95,6 +106,7 @@ namespace Macrocosm.Content.Rocket.Navigation
             //OnRightDoubleClick += (_, _) => { OwnerPanel.ZoomOut();  };
         }
 
+        /// <summary> Check whether all the launch conditions have been met </summary>
 		public bool CheckLaunchConditions()
 		{
 			if (LaunchConditions is not null)
