@@ -101,6 +101,8 @@ namespace Macrocosm.Content.Rocket
  			NPC.direction = 1;
 			NPC.spriteDirection = -1;
 
+			Fuel = 1000f;
+
 			if (!Launching)
 			{
 				Interact();
@@ -398,7 +400,7 @@ namespace Macrocosm.Content.Rocket
 
 			spriteBatch.Draw(commandPod, NPC.position - Main.screenPosition, null, drawColor, NPC.rotation, Vector2.Zero, 1f, SpriteEffects.None, 0);
 
-			Vector2 servicePos = NPC.position + commandPod.Size()/2 + new Vector2(-1, commandPod.Height) - Main.screenPosition;
+			Vector2 servicePos = NPC.position + commandPod.Size()/2 + new Vector2(-2, commandPod.Height + 15) - Main.screenPosition;
 			Vector2 reactorPos = servicePos + new Vector2(0, serviceModule.Height / 2 + reactorModule.Height / 2);
 			Vector2 enginePos = reactorPos + new Vector2(0, reactorModule.Height / 2 + engineModule.Height / 2);
 			spriteBatch.Draw(serviceModule, servicePos, null, drawColor, NPC.rotation, new Vector2(serviceModule.Width / 2, serviceModule.Height / 2), 1f, SpriteEffects.None, 0);

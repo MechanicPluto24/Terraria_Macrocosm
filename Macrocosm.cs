@@ -7,15 +7,15 @@ using Terraria.ModLoader;
 using Terraria.Graphics.Effects;
 using Terraria.Graphics.Shaders;
 using SubworldLibrary;
-using Macrocosm.Content.Tiles;
 using Macrocosm.Content.Players;
 using Macrocosm.Content.Rocket;
 using Macrocosm.Content.Subworlds;
 using Macrocosm.Common.Netcode;
+using Macrocosm.Content.Tiles.Blocks;
 
 namespace Macrocosm
 {
-	public class Macrocosm : Mod
+    public class Macrocosm : Mod
 	{
 		public static Mod Instance => ModContent.GetInstance<Macrocosm>();
 

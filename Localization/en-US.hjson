@@ -790,6 +790,11 @@ Mods: {
 				DisplayName: Handheld Engine
 				Tooltip: ""
 			}
+
+			HazardWall: {
+				DisplayName: Hazard Wall
+				Tooltip: ""
+			}
 		}
 
 		NPCs: {

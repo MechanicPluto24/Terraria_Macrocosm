@@ -81,11 +81,11 @@ namespace Macrocosm.Content.Rocket.Navigation
             RemoveChild(CurrentMap);
             CurrentMap = newMap;
 
-            CurrentMap.ShowAnimation(prevMap.Background);
+            UIMapTarget prevTarget = prevMap.GetSelectedTarget();
+            if (prevTarget is not null && CurrentMap.TryFindTargetBy(prevTarget.TargetID, out UIMapTarget target))
+            	target.Selected = true;
 
-            //UIMapTarget prevTarget = prevMap.GetSelectedTarget();
-            //if (prevTarget is not null && CurrentMap.TryFindTargetBy(prevTarget.TargetID, out UIMapTarget target))
-            //	target.Selected = true;
+            CurrentMap.ShowAnimation(prevMap.Background);
 
             Append(CurrentMap);
             Activate();

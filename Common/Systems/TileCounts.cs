@@ -1,10 +1,10 @@
 ﻿using System;
 using Terraria.ModLoader;
-using Macrocosm.Content.Tiles;
+using Macrocosm.Content.Tiles.Blocks;
 
 namespace Macrocosm.Content.Systems
 {
-	class TileCounts : ModSystem
+    class TileCounts : ModSystem
 	{
 		public int RegolithCount = 0;
 		public int IrradiatedRockCount = 0;
