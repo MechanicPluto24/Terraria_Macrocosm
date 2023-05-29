@@ -44,7 +44,10 @@ namespace Macrocosm.Content.Rocket.Navigation
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-        }
+
+
+
+		}
 
         /// <summary>
         /// Zooms in to the next map
@@ -78,17 +81,22 @@ namespace Macrocosm.Content.Rocket.Navigation
                 return;
 
             UINavigationMap prevMap = CurrentMap;
+
             RemoveChild(CurrentMap);
             CurrentMap = newMap;
 
-            UIMapTarget prevTarget = prevMap.GetSelectedTarget();
-            if (prevTarget is not null && CurrentMap.TryFindTargetBy(prevTarget.TargetID, out UIMapTarget target))
-            	target.Selected = true;
-
             CurrentMap.ShowAnimation(prevMap.Background);
 
-            Append(CurrentMap);
-            Activate();
+			Append(CurrentMap);
+
+			UIMapTarget prevTarget = prevMap.GetSelectedTarget();
+			if (prevTarget is not null && CurrentMap.TryFindTargetBy(prevTarget.TargetID, out UIMapTarget target))
+            {
+				target.Selected = true;
+                prevTarget.Selected = false;
+			}
+
+			Activate();
         }
 
         /// <summary> This method determines the default navigation map based on the current subworld </summary>
