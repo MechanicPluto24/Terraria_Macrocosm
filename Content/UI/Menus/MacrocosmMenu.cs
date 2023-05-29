@@ -131,8 +131,8 @@ namespace Macrocosm.Content.UI.Menus
                 body.SetLightSource(Sun);
                 body.ConfigureShader = (float rotation, out float intensity, out Vector2 offset) =>
                 {
-                    intensity = 0.9f;
-                    offset = Utility.PolarVector(0.15f, rotation);
+                    intensity = 0.95f;
+                    offset = Utility.PolarVector(0.2f, rotation);
                 };
             }
 

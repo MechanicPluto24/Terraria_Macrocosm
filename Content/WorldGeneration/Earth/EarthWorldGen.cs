@@ -12,12 +12,12 @@ using Terraria.GameContent.Generation;
 using Terraria.IO;
 using System;
 using Macrocosm.Content.WorldGeneration;
-using Macrocosm.Content.Tiles;
 using Terraria.ID;
+using Macrocosm.Content.Tiles.Ores;
 
 namespace Macrocosm.Content
 {
-	class EarthWorldGen : ModSystem
+    class EarthWorldGen : ModSystem
 	{
 		public override void ModifyWorldGenTasks(List<GenPass> tasks, ref double totalWeight)
 		{

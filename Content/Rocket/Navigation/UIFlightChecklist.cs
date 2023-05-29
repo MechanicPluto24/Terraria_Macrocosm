@@ -4,7 +4,7 @@ using Terraria.Localization;
 using Terraria.GameContent.UI.Elements;
 using System.Collections.Generic;
 using Macrocosm.Content.Rocket.Navigation.InfoElements;
-using Macrocosm.Content.Rocket.Navigation.LaunchConds;
+using Macrocosm.Content.Rocket.Navigation.LaunchChecklist;
 using System.Xml.Linq;
 
 namespace Macrocosm.Content.Rocket.Navigation

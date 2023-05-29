@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Macrocosm.Content.Walls;
+using Macrocosm.Content.Tiles.Walls;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.IO;
@@ -8,7 +8,7 @@ using Terraria.WorldBuilding;
 
 namespace Macrocosm.Content.WorldGeneration.Moon
 {
-	public class CavePass : GenPass
+    public class CavePass : GenPass
 	{
 		private double rockLayerHigh = 0.0;
 		private double rockLayerLow = 0.0;

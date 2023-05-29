@@ -2,7 +2,7 @@
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rocket;
 using Macrocosm.Content.Rocket.Navigation.InfoElements;
-using Macrocosm.Content.Rocket.Navigation.LaunchConds;
+using Macrocosm.Content.Rocket.Navigation.LaunchChecklist;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -28,8 +28,8 @@ namespace Macrocosm.Content.Rocket.Navigation
 
         UIFlightChecklist UIFlightChecklist;
 
-		private LaunchCondition selectedLaunchCondition = new("Selected", () => false);
-		private LaunchCondition hereLaunchCondition = new("NotHere", () => false);
+		private ChecklistCondition selectedLaunchCondition = new("Selected", () => false);
+		private ChecklistCondition hereLaunchCondition = new("NotHere", () => false);
 		private LaunchConditions genericLaunchConditions = new();
 
 		public static void Show(int rocketId) => RocketSystem.Instance.ShowUI(rocketId);
@@ -63,8 +63,8 @@ namespace Macrocosm.Content.Rocket.Navigation
 			selectedLaunchCondition = new("Selected", () => target is not null);
 		    hereLaunchCondition = new("NotHere", () => target is not null && !target.AlreadyHere);
 
-		    genericLaunchConditions.Add(new LaunchCondition("Fuel", () => Rocket.Fuel >= RocketFuelLookup.GetFuelCost(MacrocosmSubworld.SafeCurrentID, target.TargetID)));
-            genericLaunchConditions.Add(new LaunchCondition("Obstruction", () => Rocket.CheckFlightPathObstruction()));
+		    genericLaunchConditions.Add(new ChecklistCondition("Fuel", CheckFuel));
+            genericLaunchConditions.Add(new ChecklistCondition("Obstruction", () => Rocket.CheckFlightPathObstruction()));
 		}
 
 		public override void OnDeactivate()
@@ -97,31 +97,53 @@ namespace Macrocosm.Content.Rocket.Navigation
             UpdateLaunchButton();
         }
 
+        bool initialState = false;
         private void GetInfoPanel()
         {
+            // Initial state of the info panel; default to the current subworld
+            if (target is null)
+            {
+                if (!initialState)
+                {
+					initialState = true;
+					UIBackgroundPanel.RemoveChild(UIWorldInfoPanel);
+					UIWorldInfoPanel = WorldInfoDatabase.GetValue(MacrocosmSubworld.SafeCurrentID).ProvideUI();
+					UIBackgroundPanel.Append(UIWorldInfoPanel);
+				}
+
+                if(lastTarget is not null)
+                {
+					UIWorldInfoPanel.Remove();
+					UIWorldInfoPanel = new UIInfoPanel("");
+					UIBackgroundPanel.Append(UIWorldInfoPanel);
+				}
+               
+			}
+
+            // Update the info panel on new target 
             if (target is not null && target != lastTarget)
             {
-                UIBackgroundPanel.RemoveChild(UIWorldInfoPanel);
-                UIWorldInfoPanel = WorldInfoDatabase.GetValue(target.TargetID).ProvideUI();
-                UIBackgroundPanel.Append(UIWorldInfoPanel);
-            }
+				UIBackgroundPanel.RemoveChild(UIWorldInfoPanel);
+				UIWorldInfoPanel = WorldInfoDatabase.GetValue(target.TargetID).ProvideUI();
+				UIBackgroundPanel.Append(UIWorldInfoPanel);
+			} 
 
-            // variant that removes the target on deselection or navigating to the next map
-            /*
+			// variant that removes the target on deselection or navigating to the next map
+			/*
 				WorldInfoPanel.Remove();
 				WorldInfoPanel = (target is not null) ? WorldInfoDatabase.GetValue(target.TargetID).ProvideUI() : new UIInfoPanel("");
 				BackgroundPanel.Append(WorldInfoPanel);
 			*/
-        }
+		}
 
 
         private void UpdateChecklist()
         {
 			UIFlightChecklist.ClearInfo();
 
-			if (!selectedLaunchCondition.Check())
+			if (!selectedLaunchCondition.IsMet())
                 UIFlightChecklist.Add(selectedLaunchCondition.ProvideUI(ChecklistInfoElement.IconType.QuestionMark));
- 			else if(!hereLaunchCondition.Check())// target is definitely not null
+ 			else if(!hereLaunchCondition.IsMet()) // target is definitely not null
  				UIFlightChecklist.Add(hereLaunchCondition.ProvideUI(ChecklistInfoElement.IconType.GrayCrossmark));
             else
             {
@@ -153,6 +175,11 @@ namespace Macrocosm.Content.Rocket.Navigation
 
             if (Main.netMode == NetmodeID.MultiplayerClient)
                 Rocket.SendLaunchMessage(); // send launch message to the server
+        }
+
+        private bool CheckFuel()
+        {
+            return Rocket.Fuel >= RocketFuelLookup.GetFuelCost(MacrocosmSubworld.SafeCurrentID, target.TargetID);
         }
     }
 }

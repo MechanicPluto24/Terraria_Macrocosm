@@ -12,7 +12,8 @@ using Macrocosm.Content.Systems;
 using Macrocosm.Content.UI.LoadingScreens;
 using Macrocosm.Content.WorldGeneration.Moon;
 using Macrocosm.Content.Projectiles.Environment.Meteors;
-using Macrocosm.Content.Rocket.Navigation.LaunchConds;
+using Macrocosm.Content.Rocket.Navigation.LaunchChecklist;
+using Macrocosm.Content.Items.Materials;
 
 namespace Macrocosm.Content.Subworlds
 {
@@ -54,7 +55,7 @@ namespace Macrocosm.Content.Subworlds
 
 		public override LaunchConditions LaunchConditions => new()
 		{
-			new LaunchCondition("Reactor", () => NPC.downedMoonlord) // placeholder for now
+			new ChecklistCondition("Reactor", () => Main.LocalPlayer.FindItemInInventoryOrOpenVoidBag(ModContent.ItemType<CortexFragment>(), out _) > 0, hideIfTrue: true) // placeholder for now
 		};
 
         public override Dictionary<MapColorType, Color> MapColors => new()

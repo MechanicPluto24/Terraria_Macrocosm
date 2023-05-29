@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Materials
 {
-	public class DianiteBar : ModItem
+    public class DianiteBar : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Items.Materials
 			Item.useTime = 10;
 			Item.autoReuse = true;
 			Item.consumable = true;
-			Item.createTile = ModContent.TileType<Tiles.DianiteBar>();
+			Item.createTile = ModContent.TileType<Tiles.Bars.DianiteBar>();
 			Item.placeStyle = 0;
 			Item.rare = ModContent.RarityType<MoonRarityT1>();
 			Item.material = true;

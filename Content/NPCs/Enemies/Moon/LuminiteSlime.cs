@@ -2,7 +2,6 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Materials;
-using Macrocosm.Content.Tiles;
 using Macrocosm.Content.Projectiles.Hostile;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -11,10 +10,11 @@ using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Macrocosm.Content.Tiles.Blocks;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-	public class LuminiteSlime : MoonEnemy
+    public class LuminiteSlime : MoonEnemy
 	{
 		public override void SetStaticDefaults()
 		{
