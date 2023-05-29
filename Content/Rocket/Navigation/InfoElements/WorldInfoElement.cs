@@ -26,7 +26,7 @@ namespace Macrocosm.Content.Rocket.Navigation.InfoElements
 
         public WorldInfoElement(float value, InfoType type) : base(value)
         {
-            InfoType = type;
+            InfoType = type; 
         }
 
         private string TypeKey => typeToKey[(int)InfoType];
