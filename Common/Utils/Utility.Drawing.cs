@@ -9,9 +9,9 @@ namespace Macrocosm.Common.Utils
 {
     public static partial class Utility
     {
-		public static Vector2 ScreenCenter => new(Main.screenWidth / 2f, Main.screenHeight / 2f);
+        public static Vector2 ScreenCenter => new(Main.screenWidth / 2f, Main.screenHeight / 2f);
 
-		public static void ManipulateColor(ref Color color, byte amount)
+        public static void ManipulateColor(ref Color color, byte amount)
         {
             color.R += amount;
             color.G += amount;
@@ -23,16 +23,36 @@ namespace Macrocosm.Common.Utils
             color.G += (byte)Math.Round(color.G * amount);
             color.B += (byte)Math.Round(color.B * amount);
         }
-        
-        /// <summary>
-        /// Draw a MagicPixel trail behind a projectile, with length based on the trail cache length  
-        /// </summary>
-        /// <param name="rotatableOffsetFromCenter"> offset from projectile center when rotation is 0 </param>
-        /// <param name="startWidth"> The trail width near the projectile </param>
-        /// <param name="endWidth"> The trail width at its end </param>
-        /// <param name="startColor"> The trail color near the projectile  </param>
-        /// <param name="endColor"> The trail color at its end </param>
-        public static void DrawSimpleTrail(this Projectile proj, Vector2 rotatableOffsetFromCenter, float startWidth, float endWidth, Color startColor, Color? endColor = null)
+
+        public static Vector3[] ToVector3Array(this Color[] colors)
+        {
+            Vector3[] vectors = new Vector3[colors.Length];
+            for (int i = 0; i < colors.Length; i++) 
+            {
+				vectors[i] = colors[i].ToVector3();    
+            }
+            return vectors;
+        }
+
+		public static Vector4[] ToVector4Array(this Color[] colors)
+		{
+			Vector4[] vectors = new Vector4[colors.Length];
+			for (int i = 0; i < colors.Length; i++)
+			{
+				vectors[i] = colors[i].ToVector4();
+			}
+			return vectors;
+		}
+
+		/// <summary>
+		/// Draw a MagicPixel trail behind a projectile, with length based on the trail cache length  
+		/// </summary>
+		/// <param name="rotatableOffsetFromCenter"> offset from projectile center when rotation is 0 </param>
+		/// <param name="startWidth"> The trail width near the projectile </param>
+		/// <param name="endWidth"> The trail width at its end </param>
+		/// <param name="startColor"> The trail color near the projectile  </param>
+		/// <param name="endColor"> The trail color at its end </param>
+		public static void DrawSimpleTrail(this Projectile proj, Vector2 rotatableOffsetFromCenter, float startWidth, float endWidth, Color startColor, Color? endColor = null)
             => DrawSimpleTrail(proj.Size / 2f, proj.oldPos, proj.oldRot, rotatableOffsetFromCenter, startWidth, endWidth, startColor, endColor);
 
         /// <summary>
