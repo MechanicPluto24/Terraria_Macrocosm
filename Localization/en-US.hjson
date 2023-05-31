@@ -3,17 +3,17 @@ Mods: {
 		Biomes: {
 			MoonBiome: {
 				DisplayName: The Moon
-				TownNPCDialogueName: the Moon Biome
+				TownNPCDialogueName: The Moon
 			}
 
 			BasaltBiome: {
 				DisplayName: Basalt
-				TownNPCDialogueName: the Basalt Biome
+				TownNPCDialogueName: The Basalt
 			}
 
 			IrradiationBiome: {
 				DisplayName: The Irradiation
-				TownNPCDialogueName: the Irradiation Biome
+				TownNPCDialogueName: The Irradiation
 			}
 		}
 
@@ -937,6 +937,7 @@ Mods: {
 			Gravity: {
 				Name: Gravity
 				Unit: G
+				UnitSingular: G
 				Unit2: mps_sq
 				Unstable: Unstable
 			}

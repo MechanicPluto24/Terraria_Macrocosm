@@ -30,7 +30,7 @@ namespace Macrocosm.Content.Rocket.Navigation
         public LaunchConditions LaunchConditions { get; set; } = null;
 
         /// <summary> Whether the target satisfies the launch conditions </summary>
-        public bool IsReachable => CheckLaunchConditions() || OwnerMap.Next != null;
+        public bool IsReachable => CheckLaunchConditions();// || OwnerMap.Next != null;
 
         /// <summary> Whether this target's ID is equal to the current subworld </summary>
         public bool AlreadyHere => TargetID == MacrocosmSubworld.SafeCurrentID;
@@ -113,6 +113,8 @@ namespace Macrocosm.Content.Rocket.Navigation
 		{
 			base.Update(gameTime);
 		}
+
+		/// <summary> Check whether all the launch conditions have been met </summary>
 
 		public bool CheckLaunchConditions()
 		{

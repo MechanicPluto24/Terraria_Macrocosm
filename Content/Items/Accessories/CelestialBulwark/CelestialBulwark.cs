@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Players;
 using Macrocosm.Content.Systems;
+using Macrocosm.Common.Drawing;
 
 namespace Macrocosm.Content.Items.Accessories.CelestialBulwark
 {
@@ -68,7 +69,7 @@ namespace Macrocosm.Content.Items.Accessories.CelestialBulwark
 		public override void PostDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
 		{
 			DrawMask(spriteBatch, Item.Center - Main.screenPosition, Item.Size / 2f, scale, rotation);
-			Lighting.AddLight(Item.Center, MacrocosmWorld.CelestialColor.ToVector3());
+			Lighting.AddLight(Item.Center, GlobalVFX.CelestialColor.ToVector3());
 		}
 
 		private Texture2D[] celestialTextures =
@@ -81,10 +82,10 @@ namespace Macrocosm.Content.Items.Accessories.CelestialBulwark
 
 		private void DrawMask(SpriteBatch spriteBatch, Vector2 position, Vector2 origin, float scale = 1f, float rotation = 0f)
 		{
-			Texture2D currentTex = celestialTextures[(int)MacrocosmWorld.CelestialStyle];
-			Texture2D nextTex = celestialTextures[(int)MacrocosmWorld.NextCelestialStyle];
-			Color currentColor = Color.White.NewAlpha(MacrocosmWorld.CelestialStylePercent);
-			Color nextColor = Color.White.NewAlpha(1f - MacrocosmWorld.CelestialStylePercent);
+			Texture2D currentTex = celestialTextures[(int)GlobalVFX.CelestialStyle];
+			Texture2D nextTex = celestialTextures[(int)GlobalVFX.NextCelestialStyle];
+			Color currentColor = Color.White.NewAlpha(GlobalVFX.CelestialStyleProgress);
+			Color nextColor = Color.White.NewAlpha(1f - GlobalVFX.CelestialStyleProgress);
 
 			SpriteBatchState state = spriteBatch.SaveState();
 			spriteBatch.EndIfBeginCalled();

@@ -33,6 +33,8 @@ namespace Macrocosm.Common.Drawing.Sky
         /// <summary> The CelestialBody's texture width </summary>
         public float Height => bodyTexture.Height;
 
+        public Vector2 Size => new(bodyTexture.Width, bodyTexture.Height);
+
         /// <summary> Whether the CelestialBody has an atmosphere texture </summary>
         public bool HasAtmo => atmoTexture is not null;
 
@@ -47,6 +49,8 @@ namespace Macrocosm.Common.Drawing.Sky
 
         /// <summary> The CelestialBody's rotation </summary>
         public float Rotation { get => rotation; set => rotation = value; }
+
+        public Color Color = Color.White;
 
         /// <summary> References another CelestialBody as a source of light </summary>
         public CelestialBody LightSource { get => lightSource; set => lightSource = value; }
@@ -67,6 +71,12 @@ namespace Macrocosm.Common.Drawing.Sky
 		public delegate Effect FuncOverrideShader();
         /// <summary> Override and configure a CelestialBody's custom shader, return the desired Effect </summary>
 		public FuncOverrideShader OverrideShader = null;
+
+        public delegate void FuncOverrideDraw();
+        /// <summary> Override the way this CelestialBody's atmosphere (or any other pre-body texture) is drawn. You must begin and end the SpriteBatch </summary>
+        public FuncOverrideDraw OverrideAtmoDraw = null;
+		/// <summary> Override the way this CelestialBody is drawn. You must begin and end the SpriteBatch </summary>
+		public FuncOverrideDraw OverrideBodyDraw = null;
 
 		#region Private vars 
 
@@ -96,8 +106,6 @@ namespace Macrocosm.Common.Drawing.Sky
         private float orbitRotation = 0f;
         private float orbitSpeed = 0f;
 
-        private Vector2 ScreenCenter => new(Main.screenWidth / 2, Main.screenHeight / 2);
-
 		#endregion
 
 		public CelestialBody(Texture2D bodyTexture = null, Texture2D atmoTexture = null, float scale = 1f, float rotation = 0f)
@@ -118,7 +126,7 @@ namespace Macrocosm.Common.Drawing.Sky
         public void SetPositionPolar(Vector2 origin, float radius, float theta) => Position = origin + Utility.PolarVector(radius, theta);
 
         /// <summary> Set the position using polar coordinates, with the screen center as origin </summary>
-        public void SetPositionPolar(float radius, float theta) => Position = ScreenCenter + Utility.PolarVector(radius, theta);
+        public void SetPositionPolar(float radius, float theta) => Position = Utility.ScreenCenter + Utility.PolarVector(radius, theta);
 
         /// <summary> Set the position using polar coordinates, with the position of another CelestialBody as origin </summary>
         public void SetPositionPolar(CelestialBody referenceBody, float radius, float theta) => Position = referenceBody.Position + Utility.PolarVector(radius, theta);
@@ -278,22 +286,30 @@ namespace Macrocosm.Common.Drawing.Sky
 			DrawChildren(spriteBatch, state, inFront: false);
 
             // Draw atmosphere 
-            if (atmoTexture is not null)
+            if (OverrideAtmoDraw is null)
 			{
-                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, shader, state);
-                spriteBatch.Draw(atmoTexture, Position, null, Color.White, Rotation, atmoTexture.Size() / 2, Scale, default, 0f);
-                spriteBatch.End();
+                if (atmoTexture is not null)
+                {
+					spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, shader, state);
+					spriteBatch.Draw(atmoTexture, Position, null, Color, Rotation, atmoTexture.Size() / 2, Scale, default, 0f);
+					spriteBatch.End();
+				}
             }
+			else OverrideAtmoDraw();
 
-            // Draw main body 
-            if (bodyTexture is not null)
+			// Draw main body 
+			if (OverrideBodyDraw is null)
             {
-                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, shader, state);
-                spriteBatch.Draw(bodyTexture, Position, null, Color.White, Rotation, bodyTexture.Size() / 2, Scale, default, 0f);
-                spriteBatch.End();
+                if (bodyTexture is not null)
+                {
+					spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, shader, state);
+					spriteBatch.Draw(bodyTexture, Position, null, Color, Rotation, bodyTexture.Size() / 2, Scale, default, 0f);
+					spriteBatch.End();
+				}
             }
+            else OverrideBodyDraw();
 
-            DrawChildren(spriteBatch, state, inFront: true);
+			DrawChildren(spriteBatch, state, inFront: true);
 
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, shader, state);
 
@@ -301,10 +317,10 @@ namespace Macrocosm.Common.Drawing.Sky
             if (HasOverlay)
             {
                 if (atmoOverlayTexture is not null && HasAtmo)
-                    spriteBatch.Draw(atmoOverlayTexture, Position, null, Color.White, overlayRotation, atmoTexture.Size() / 2, Scale, default, 0f);
+                    spriteBatch.Draw(atmoOverlayTexture, Position, null, Color, overlayRotation, atmoTexture.Size() / 2, Scale, default, 0f);
             
                 if (bodyOverlayTexture is not null)
-                    spriteBatch.Draw(bodyOverlayTexture, Position, null, Color.White, overlayRotation, atmoTexture.Size() / 2, Scale, default, 0f);
+                    spriteBatch.Draw(bodyOverlayTexture, Position, null, Color, overlayRotation, atmoTexture.Size() / 2, Scale, default, 0f);
             }
 			#endregion
 
@@ -335,8 +351,8 @@ namespace Macrocosm.Common.Drawing.Sky
             float playerPositionToSurfaceCenterY = Main.LocalPlayer.position.Y - surfaceLayerHeight / 2;
 
             Position = new Vector2(
-                ScreenCenter.X - playerPositionToCenterX * parallaxSpeedX + averageOffset.X,
-                ScreenCenter.Y - playerPositionToSurfaceCenterY * parallaxSpeedY + averageOffset.Y
+                Utility.ScreenCenter.X - playerPositionToCenterX * parallaxSpeedX + averageOffset.X,
+                Utility.ScreenCenter.Y - playerPositionToSurfaceCenterY * parallaxSpeedY + averageOffset.Y
             );
         }
 

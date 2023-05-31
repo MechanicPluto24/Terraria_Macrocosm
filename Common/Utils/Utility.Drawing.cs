@@ -9,7 +9,9 @@ namespace Macrocosm.Common.Utils
 {
     public static partial class Utility
     {
-        public static void ManipulateColor(ref Color color, byte amount)
+		public static Vector2 ScreenCenter => new(Main.screenWidth / 2f, Main.screenHeight / 2f);
+
+		public static void ManipulateColor(ref Color color, byte amount)
         {
             color.R += amount;
             color.G += amount;

@@ -44,9 +44,6 @@ namespace Macrocosm.Content.Rocket.Navigation
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-
-
-
 		}
 
         /// <summary>
@@ -148,7 +145,7 @@ namespace Macrocosm.Content.Rocket.Navigation
             SolarSystemInner.AddTarget(new UIMapTarget(this, new Vector2(70, 122), 6, 6, "Mars"));
             SolarSystemInner.Prev = SolarSystemOuter;
 
-            SolarSystemOuter.AddTarget(new UIMapTarget(this, new Vector2(256, 96), 12, 12, "InnerSolarSystem", outline: outlineMedium), SolarSystemInner);
+            SolarSystemOuter.AddTarget(new UIMapTarget(this, new Vector2(256, 96), 12, 12, "Sun", outline: outlineMedium), SolarSystemInner);
             SolarSystemOuter.AddTarget(new UIMapTarget(this, new Vector2(281, 104), 9, 9, "Jupiter"));
             SolarSystemOuter.AddTarget(new UIMapTarget(this, new Vector2(219, 114), 9, 9, "Saturn"));
             SolarSystemOuter.AddTarget(new UIMapTarget(this, new Vector2(333, 70), 9, 9, "Ouranos"));

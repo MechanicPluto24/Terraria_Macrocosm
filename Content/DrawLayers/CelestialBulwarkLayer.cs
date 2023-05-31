@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using Macrocosm.Content.Systems;
 using Macrocosm.Common.Utils;
+using Macrocosm.Common.Drawing;
 
 namespace Macrocosm.Content.DrawLayers
 {
@@ -24,7 +25,7 @@ namespace Macrocosm.Content.DrawLayers
 				return;
 
 			Texture2D texture = ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark/CelestialBulwark_Shield_Mask", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-			Color drawColor = MacrocosmWorld.CelestialColor;
+			Color drawColor = GlobalVFX.CelestialColor;
 
 			if (drawInfo.shadow > 0f)
 				drawColor = (drawColor * (drawInfo.shadow / 4f)).NewAlpha(0.5f);
