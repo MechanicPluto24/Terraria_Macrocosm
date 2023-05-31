@@ -92,7 +92,6 @@ namespace Macrocosm.Content.Rocket.Navigation
             target = UINavigationPanel.CurrentMap.GetSelectedTarget();
             player.RocketPlayer().TargetSubworldID = target is null ? "" : target.TargetID;
 
-
             GetInfoPanel();
             UpdateChecklist();
             UpdateLaunchButton();
@@ -112,29 +111,21 @@ namespace Macrocosm.Content.Rocket.Navigation
 					UIBackgroundPanel.Append(UIWorldInfoPanel);
 				}
 
-                if(lastTarget is not null)
-                {
+				if (lastTarget is not null)
+				{
 					UIWorldInfoPanel.Remove();
 					UIWorldInfoPanel = new UIInfoPanel("");
 					UIBackgroundPanel.Append(UIWorldInfoPanel);
 				}
-               
 			}
 
             // Update the info panel on new target 
-            if (target is not null && target != lastTarget)
+            if (target is not null && (target != lastTarget)) 
             {
 				UIBackgroundPanel.RemoveChild(UIWorldInfoPanel);
 				UIWorldInfoPanel = WorldInfoDatabase.GetValue(target.TargetID).ProvideUI();
 				UIBackgroundPanel.Append(UIWorldInfoPanel);
 			} 
-
-			// variant that removes the target on deselection or navigating to the next map
-			/*
-				WorldInfoPanel.Remove();
-				WorldInfoPanel = (target is not null) ? WorldInfoDatabase.GetValue(target.TargetID).ProvideUI() : new UIInfoPanel("");
-				BackgroundPanel.Append(WorldInfoPanel);
-			*/
 		}
 
 
@@ -154,7 +145,6 @@ namespace Macrocosm.Content.Rocket.Navigation
                     UIFlightChecklist.AddList(genericLaunchConditions.ProvideList());
 			}
 		}
-
 
         private void UpdateLaunchButton()
         {

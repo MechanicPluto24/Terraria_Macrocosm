@@ -1,9 +1,12 @@
-﻿using Macrocosm.Common.Drawing.Sky;
+﻿using Macrocosm.Common.Drawing;
+using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
@@ -19,8 +22,8 @@ namespace Macrocosm.Content.UI.Menus
 
         public readonly StarsDrawing Stars = new();
 
-        public readonly CelestialBody Sun = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Sun", Mode).Value,
-                                                 ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SunCorona", Mode).Value);
+        public readonly CelestialBody Sun = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Sun", Mode).Value);
+
         public readonly CelestialBody Vulcan = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Vulcan", Mode).Value);
         public readonly CelestialBody Mercury = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Mercury", Mode).Value);
         public readonly CelestialBody Venus = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Venus", Mode).Value);
@@ -113,10 +116,12 @@ namespace Macrocosm.Content.UI.Menus
 
             Sun.SetPosition(Main.screenWidth / 2, Main.screenHeight / 2);
 
+            DrawSunCorona();
+
             // includes all orbiting descendants in the tree 
             Sun.Draw(spriteBatch, withChildren: true);
 
-            logoScale *= 0.65f;
+			logoScale *= 0.65f;
             drawColor = Color.White;
 
             return true;
@@ -137,7 +142,7 @@ namespace Macrocosm.Content.UI.Menus
             }
 
             Sun.Scale = 0.85f;
-            Sun.SetPosition(Main.screenWidth / 2, Main.screenHeight / 2);
+            Sun.Position = Utility.ScreenCenter;
 
             Vulcan.SetOrbitParent(Sun, 174, Rand(), 0.0022f);
             Mercury.SetOrbitParent(Sun, 204, Rand(), 0.0018f);
@@ -173,6 +178,33 @@ namespace Macrocosm.Content.UI.Menus
             Eris.SetOrbitParent(Sun, 810, Rand(), 0.00018f);
         }
 
-        private static float Rand() => Utility.RandomRotation();
+
+		private static float Rand() => Utility.RandomRotation();
+
+        private void DrawSunCorona()
+        {
+			Texture2D SunCorona1 = ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SunCorona1", Mode).Value;
+            Texture2D SunCorona2 = ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SunCorona2", Mode).Value;
+            Texture2D SunCorona3 = ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SunCorona3", Mode).Value;
+            Texture2D SunCorona4 = ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SunCorona4", Mode).Value;
+            Texture2D SunCorona5 = ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SunCorona5", Mode).Value;
+
+            SpriteBatch spriteBatch = Main.spriteBatch;
+
+			var state = spriteBatch.SaveState();
+            spriteBatch.End();
+            spriteBatch.Begin(BlendState.NonPremultiplied, state);
+
+            Sun.Color = Color.White;
+            Sun.Rotation += 0.0001f;
+
+			spriteBatch.Draw(SunCorona1, Sun.Position, null, (Color.White * (0.4f + 0.6f * Utility.PositiveSineWave(800, 0f          ))).NewAlpha(1f), 0, SunCorona1.Size() / 2, Sun.Scale         + (0.04f * Utility.SineWave(800, 0f        )), SpriteEffects.None, 0f);
+            spriteBatch.Draw(SunCorona2, Sun.Position, null, (Color.White * (0.6f + 0.4f * Utility.PositiveSineWave(600, MathF.PI / 8))).NewAlpha(1f), 0, SunCorona1.Size() / 2, Sun.Scale         + (0.03f * Utility.SineWave(600, MathF.PI/8)), SpriteEffects.None, 0f);
+            spriteBatch.Draw(SunCorona3, Sun.Position, null, (Color.White * (0.8f + 0.2f * Utility.PositiveSineWave(300, MathF.PI / 4))).NewAlpha(1f), 0, SunCorona1.Size() / 2, Sun.Scale         + (0.03f * Utility.SineWave(300, MathF.PI/4)), SpriteEffects.None, 0f);
+            spriteBatch.Draw(SunCorona4, Sun.Position, null, (Color.White * (0.7f + 0.3f * Utility.PositiveSineWave(300, MathF.PI / 2))).NewAlpha(1f), 0, SunCorona1.Size() / 2, Sun.Scale         + (0.02f * Utility.SineWave(300, MathF.PI/2)), SpriteEffects.None, 0f);
+            spriteBatch.Draw(SunCorona5, Sun.Position, null, (Color.White * (0.6f + 0.4f * Utility.PositiveSineWave(200, MathF.PI / 2))).NewAlpha(1f), 0, SunCorona1.Size() / 2, Sun.Scale * 0.95f + (0.02f * Utility.SineWave(200, MathF.PI/2)), SpriteEffects.None, 0f);
+       
+            spriteBatch.Restore(state);
+        }
     }
 }

@@ -23,6 +23,8 @@ namespace Macrocosm.Content.Rocket.Navigation
         /// <summary> The next defaul navigation map, switched on non-targeted ZoomIn </summary>
         public UINavigationMap DefaultNext = null;
 
+        public bool AnimationActive => showAnimationActive;
+
 		private Dictionary<UIMapTarget, UINavigationMap> nextTargetChildMap = new();
 
         private bool showAnimationActive = false;
@@ -116,8 +118,8 @@ namespace Macrocosm.Content.Rocket.Navigation
         /// <returns> The selected target, null if not found </returns>
         public UIMapTarget GetSelectedTarget()
         {
-            if (showAnimationActive)
-                return null;
+           //if (showAnimationActive)
+           //    return null;
 
             foreach (UIElement element in Children)
             {

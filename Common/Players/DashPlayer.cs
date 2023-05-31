@@ -7,6 +7,7 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Systems;
 using System.IO;
 using Macrocosm.Common.Netcode;
+using Macrocosm.Common.Drawing;
 
 namespace Macrocosm.Content.Players
 {
@@ -40,7 +41,7 @@ namespace Macrocosm.Content.Players
 			celestialBulwarkVisible = (Player.shield == EquipLoader.GetEquipSlot(Macrocosm.Instance, "CelestialBulwark", EquipType.Shield));
 
 			if (celestialBulwarkVisible)
-				Lighting.AddLight(Player.Center, MacrocosmWorld.CelestialColor.ToVector3() * 0.4f);
+				Lighting.AddLight(Player.Center, GlobalVFX.CelestialColor.ToVector3() * 0.4f);
 		}
 
 		public override void CopyClientState(ModPlayer clientClone)/* tModPorter Suggestion: Replace Item.Clone usages with Item.CopyNetStateTo */

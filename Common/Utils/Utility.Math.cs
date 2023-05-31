@@ -34,6 +34,24 @@ namespace Macrocosm.Common.Utils
 		public static float RandomRotation() 
 			=> Main.rand.NextFloat(-MathHelper.Pi, MathHelper.Pi);
 
+		public static float TriangleWave(float period, float phase)
+		{
+			float time = ((float)Main.timeForVisualEffects + phase) % period;
+			float position = time / period;
+			float slope = position < 0.5 ? 4 * position - 1 : -4 * position + 3;
+			return 2 * (slope - 0.5f);
+		}
+
+		public static float SineWave(float period, float phase)
+		{
+			float time = ((float)Main.timeForVisualEffects) % period;
+			float angle = (2 * MathF.PI * (1/period) * time) + phase;
+			return MathF.Sin(angle);
+		}
+
+		public static float PositiveSineWave(float period, float phase)
+			=> (SineWave(period, phase) + 1f) * 0.5f;
+
 		/// <summary>
 		/// Applies a logarithmic derivative to <paramref name="value"/>
 		/// </summary>

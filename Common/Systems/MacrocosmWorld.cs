@@ -20,24 +20,6 @@ namespace Macrocosm.Content.Systems
 		public static bool IsDusk = false;
 		public static bool IsDawn = false;
 
-		#region Celestial disco vars
-		public enum CelestialType { Nebula, Stardust, Vortex, Solar }
-		public static CelestialType CelestialStyle = CelestialType.Nebula;
-		public static CelestialType NextCelestialStyle
-			=> CelestialStyle == CelestialType.Solar ? CelestialType.Nebula : CelestialStyle + 1;
-
-		public static float CelestialStylePercent;
-		private static int celesialCounter = 0;
-
- 		public static Color NebulaColor = new(165, 0, 204);
-		public static Color StardustColor = new(0, 187, 255);
-		public static Color VortexColor = new(0, 255, 180);
-		public static Color SolarColor = new(255, 191, 0);
-
-		public static Color CelestialColor;
-		private static readonly Color[] celestialColors = { NebulaColor, StardustColor, VortexColor, SolarColor };
-		#endregion
-
 		public override void PreUpdateWorld()
 		{
 			if (MacrocosmSubworld.AnyActive)
@@ -63,11 +45,6 @@ namespace Macrocosm.Content.Systems
 				MacrocosmSubworld activeSubworld = MacrocosmSubworld.Current;
 				activeSubworld.PostUpdateWorld();
 			}
-		}
-
-		public override void PostUpdateEverything()
-		{
-			UpdateCelestialStyle();
 		}
 
 		private void UpdateTime(MacrocosmSubworld subworld)
@@ -132,20 +109,6 @@ namespace Macrocosm.Content.Systems
 				Liquid.UpdateLiquid();
 				Liquid.skipCount = 0;
 			}
-		}
-
-		private static void UpdateCelestialStyle()
-		{
-			float cyclePeriod = 90f;
-			if (celesialCounter++ >= (int)cyclePeriod)
-			{
-				celesialCounter = 0;
-				CelestialStyle = NextCelestialStyle;
-			}
-
-			CelestialStylePercent = celesialCounter / cyclePeriod;
-
-			CelestialColor = Color.Lerp(celestialColors[(int)CelestialStyle], celestialColors[(int)NextCelestialStyle], CelestialStylePercent);
 		}
 	}
 }

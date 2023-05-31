@@ -20,12 +20,16 @@ using System.IO;
 using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Content.Rocket.Navigation;
+using System.Collections.Generic;
+using Macrocosm.Content.Rocket.Modules;
+using System.ComponentModel.Design;
+using Microsoft.CodeAnalysis;
 
 namespace Macrocosm.Content.Rocket
 {
     public class RocketNPC : ModNPC
 	{
-		public override string Texture => "Macrocosm/Content/Rocket/RocketCommandPod"; 
+		public override string Texture => Macrocosm.EmptyTexPath; 
 
 		public static NPC First => Main.npc[NPC.FindFirstNPC(ModContent.NPCType<RocketNPC>())];
 		public override void SetDefaults()
@@ -64,6 +68,14 @@ namespace Macrocosm.Content.Rocket
 
 		public ref float Fuel => ref NPC.ai[3];
 
+		public CommandPod CommandPod;
+		public ServiceModule ServiceModule;
+		public ReactorModule ReactorModule;
+		public EngineModule EngineModule;
+		public Boosters Boosters;
+
+		public List<RocketModule> Modules;  
+
 		#region Private vars
 		// The world Y coordinate for entering the target subworld
 		private float worldExitPosY = 20 * 16f;
@@ -85,6 +97,21 @@ namespace Macrocosm.Content.Rocket
 		public override void OnSpawn(IEntitySource source)
 		{
 			startYPosition = NPC.Center.Y;
+
+			CommandPod = new();
+			ServiceModule = new();
+			ReactorModule = new();
+			EngineModule = new();
+			Boosters = new();
+
+			Modules = new()
+			{
+				EngineModule,
+				Boosters,
+				ReactorModule,
+				ServiceModule,
+				CommandPod
+			};
 		}
 
 		/// <summary> 
@@ -131,7 +158,12 @@ namespace Macrocosm.Content.Rocket
 			if (Main.netMode == NetmodeID.Server)
 				return;
 
-			if (NPC.Hitbox.Contains(Main.MouseWorld.ToPoint()) && !Launching)
+			bool hoveringMouse = NPC.Hitbox.Contains(Main.MouseWorld.ToPoint());
+
+			Point location = NPC.Hitbox.ClosestPointInRect(Main.LocalPlayer.Center).ToTileCoordinates();
+			bool inInteractionRange = Main.LocalPlayer.IsInTileInteractionRange(location.X, location.Y, TileReachCheckSettings.Simple);
+
+			if (hoveringMouse && inInteractionRange && !Launching)
 			{
 				if (Main.mouseRight)
 				{
@@ -387,27 +419,23 @@ namespace Macrocosm.Content.Rocket
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
-			if (Launching && FlightTime < liftoffTime)
+			SetModulePositions();
+
+			foreach (RocketModule module in Modules)
 			{
-				string text = (liftoffTime/60 - (int)FlightTime/60).ToString();
-				ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, text, NPC.position + new Vector2(26, -90) - Main.screenPosition, Color.Red, 0f, Vector2.Zero, new Vector2(1.2f));
+				module.Draw(spriteBatch, drawColor);
 			}
 
-			Texture2D commandPod = TextureAssets.Npc[Type].Value;
-			Texture2D serviceModule = ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/RocketServiceModule", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-			Texture2D reactorModule = ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/RocketReactorModule", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-			Texture2D engineModule = ModContent.Request<Texture2D>("Macrocosm/Content/Rocket/RocketEngineModule", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-
-			spriteBatch.Draw(commandPod, NPC.position - Main.screenPosition, null, drawColor, NPC.rotation, Vector2.Zero, 1f, SpriteEffects.None, 0);
-
-			Vector2 servicePos = NPC.position + commandPod.Size()/2 + new Vector2(-2, commandPod.Height + 15) - Main.screenPosition;
-			Vector2 reactorPos = servicePos + new Vector2(0, serviceModule.Height / 2 + reactorModule.Height / 2);
-			Vector2 enginePos = reactorPos + new Vector2(0, reactorModule.Height / 2 + engineModule.Height / 2);
-			spriteBatch.Draw(serviceModule, servicePos, null, drawColor, NPC.rotation, new Vector2(serviceModule.Width / 2, serviceModule.Height / 2), 1f, SpriteEffects.None, 0);
-			spriteBatch.Draw(reactorModule, reactorPos, null, drawColor, NPC.rotation, new Vector2(reactorModule.Width / 2, reactorModule.Height / 2), 1f, SpriteEffects.None, 0);
-			spriteBatch.Draw(engineModule, enginePos, null, drawColor, NPC.rotation, new Vector2(engineModule.Width / 2, engineModule.Height / 2), 1f, SpriteEffects.None, 0);
-
 			return false;
+		}
+
+		private void SetModulePositions()
+		{
+			CommandPod.Position = NPC.position + new Vector2(CommandPod.Texture.Width/2, 0f) - Main.screenPosition;
+			ServiceModule.Position = CommandPod.Position + new Vector2(-2, CommandPod.Texture.Height - 3f);
+			ReactorModule.Position = ServiceModule.Position + new Vector2(0, ServiceModule.Texture.Height) + new Vector2(0, -2);
+			EngineModule.Position = ReactorModule.Position + new Vector2(0, ReactorModule.Texture.Height);
+			Boosters.Position = EngineModule.Position + new Vector2(0, 16);
 		}
 
 		/// <summary> Make the rocket draw over players while players are embarked </summary>
