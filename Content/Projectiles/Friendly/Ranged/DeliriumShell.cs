@@ -71,7 +71,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 		public override bool PreDraw(ref Color lightColor)
 		{
-			Texture2D tex = ModContent.Request<Texture2D>(Texture + "Aura", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+			Texture2D tex = ModContent.Request<Texture2D>(Texture + "Aura").Value;
 			SpriteBatchState state = Main.spriteBatch.SaveState();
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.Additive, state);

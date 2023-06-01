@@ -24,13 +24,15 @@ namespace Macrocosm.Content.UI.LoadingScreens
 
 		public EarthLoadingScreen()
 		{
+			AssetRequestMode mode = AssetRequestMode.ImmediateLoad;
+
 			earthBackgrounds = new List<Texture2D>(){
-				ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/Backgrounds/Earth_Africa", AssetRequestMode.ImmediateLoad).Value,
-				ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/Backgrounds/Earth_Asia", AssetRequestMode.ImmediateLoad).Value,
-				ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/Backgrounds/Earth_Australia", AssetRequestMode.ImmediateLoad).Value,
-				ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/Backgrounds/Earth_Europe", AssetRequestMode.ImmediateLoad).Value,
-				ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/Backgrounds/Earth_NorthAmerica", AssetRequestMode.ImmediateLoad).Value,
-				ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/Backgrounds/Earth_SouthAmerica", AssetRequestMode.ImmediateLoad).Value
+				ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/Backgrounds/Earth_Africa").Value,
+				ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/Backgrounds/Earth_Asia", mode).Value,
+				ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/Backgrounds/Earth_Australia", mode).Value,
+				ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/Backgrounds/Earth_Europe", mode).Value,
+				ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/Backgrounds/Earth_NorthAmerica", mode).Value,
+				ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/Backgrounds/Earth_SouthAmerica", mode).Value
 			};
 
 			starsDrawing = new();
