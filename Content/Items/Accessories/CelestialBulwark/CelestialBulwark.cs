@@ -72,12 +72,12 @@ namespace Macrocosm.Content.Items.Accessories.CelestialBulwark
 			Lighting.AddLight(Item.Center, GlobalVFX.CelestialColor.ToVector3());
 		}
 
-		private Texture2D[] celestialTextures =
+		private static Texture2D[] celestialTextures =
 			{
-				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark/CelestialBulwark_Mask_Nebula", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value,
-				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark/CelestialBulwark_Mask_Stardust", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value,
-				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark/CelestialBulwark_Mask_Vortex", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value,
-				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark/CelestialBulwark_Mask_Solar", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value
+				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark/CelestialBulwark_Mask_Nebula").Value,
+				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark/CelestialBulwark_Mask_Stardust").Value,
+				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark/CelestialBulwark_Mask_Vortex").Value,
+				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark/CelestialBulwark_Mask_Solar").Value
 			};
 
 		private void DrawMask(SpriteBatch spriteBatch, Vector2 position, Vector2 origin, float scale = 1f, float rotation = 0f)

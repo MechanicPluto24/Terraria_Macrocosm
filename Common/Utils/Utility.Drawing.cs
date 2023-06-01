@@ -27,20 +27,20 @@ namespace Macrocosm.Common.Utils
         public static Vector3[] ToVector3Array(this Color[] colors)
         {
             Vector3[] vectors = new Vector3[colors.Length];
+
             for (int i = 0; i < colors.Length; i++) 
-            {
-				vectors[i] = colors[i].ToVector3();    
-            }
-            return vectors;
+ 				vectors[i] = colors[i].ToVector3();    
+
+             return vectors;
         }
 
 		public static Vector4[] ToVector4Array(this Color[] colors)
 		{
 			Vector4[] vectors = new Vector4[colors.Length];
+
 			for (int i = 0; i < colors.Length; i++)
-			{
-				vectors[i] = colors[i].ToVector4();
-			}
+ 				vectors[i] = colors[i].ToVector4();
+
 			return vectors;
 		}
 
