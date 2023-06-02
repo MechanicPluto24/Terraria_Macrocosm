@@ -71,16 +71,7 @@ namespace Macrocosm.Content.Rocket.Modules
 				// Needed for proper alignment of texture and coords at some zoom levels
 				Main.graphics.GraphicsDevice.SamplerStates[1] = SamplerState.PointClamp;
 
-				effect.Parameters["uDebug"].SetValue(false); // will be specified in the Pattern
 				effect.Parameters["uColorNum"].SetValue(8); // will be specified in the Pattern
-
-
-				Vector3[] ColorKeys2 = {
-						new Vector3(0f, 1f, 0f),// Green   - Secondary hull color  
-						new Vector3(1f, 1f, 0f),// Yellow  - Primary hull color
-						new Vector3(1f, 0f, 1f),// Magenta - Background hull color
-						new Vector3(0f, 1f, 1f) // Cyan    - Accent color (for example, the rocket tip)
-					};
 
 				//Pass the color mask keys as a Vector3 array
 				effect.Parameters["uColorKeys0"].SetValue(ColorKeys0);
