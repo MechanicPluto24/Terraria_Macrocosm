@@ -1,4 +1,4 @@
-﻿namespace Macrocosm.Content.Rocket.Modules.Boosters
+﻿namespace Macrocosm.Content.Rocket.Modules
 {
     public class Boosters : RocketModule
     {
