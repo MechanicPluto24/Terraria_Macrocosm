@@ -107,7 +107,7 @@ namespace Macrocosm.Content.Rocket.Navigation
                 {
 					initialState = true;
 					UIBackgroundPanel.RemoveChild(UIWorldInfoPanel);
-					UIWorldInfoPanel = WorldInfoDatabase.GetValue(MacrocosmSubworld.SafeCurrentID).ProvideUI();
+					UIWorldInfoPanel = WorldInfoStorage.GetValue(MacrocosmSubworld.SafeCurrentID).ProvideUI();
 					UIBackgroundPanel.Append(UIWorldInfoPanel);
 				}
 
@@ -123,7 +123,7 @@ namespace Macrocosm.Content.Rocket.Navigation
             if (target is not null && (target != lastTarget)) 
             {
 				UIBackgroundPanel.RemoveChild(UIWorldInfoPanel);
-				UIWorldInfoPanel = WorldInfoDatabase.GetValue(target.TargetID).ProvideUI();
+				UIWorldInfoPanel = WorldInfoStorage.GetValue(target.TargetID).ProvideUI();
 				UIBackgroundPanel.Append(UIWorldInfoPanel);
 			} 
 		}

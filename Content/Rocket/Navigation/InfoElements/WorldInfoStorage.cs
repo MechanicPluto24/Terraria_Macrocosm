@@ -3,29 +3,38 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rocket.Navigation.InfoElements
 {
-    public class WorldInfoDatabase : ILoadable
+    public class WorldInfoStorage : ILoadable
     {
 
-        private static Dictionary<string, WorldInfo> database;
+        private static Dictionary<string, WorldInfo> worldInfoStorage;
 
         public void Load(Mod mod)
         {
-            database = new Dictionary<string, WorldInfo>();
-            PopulateDatabase();
+            worldInfoStorage = new Dictionary<string, WorldInfo>();
+            LoadData();
         }
 
         public void Unload()
         {
-            database = null;
+            worldInfoStorage = null;
         }
 
-        public static WorldInfo GetValue(string key) => database[key];
+        public static WorldInfo GetValue(string key) => worldInfoStorage[key];
 
-        private static void PopulateDatabase()
+
+        /// <summary>
+        /// Populate the World Info data.
+        /// 
+        /// Supports: 
+        ///     WorldInfoElements: generic info elements, specify numeric or string value (e.g. TidallyLocked), and type (Gravity, Radius, Day Lenght etc.) 
+        ///     ThreatLevelInfoElement: the threat level info element, either numeric (1-9) or from ThreatLevel enum
+        ///     HazardInfoElement: the hazards specific to this world (e.g. MeteorStorms) 
+        /// </summary>
+        private static void LoadData()
         {
-            database.Add("InnerSolarSystem", new WorldInfo("InnerSolarSystem"));
+            worldInfoStorage.Add("InnerSolarSystem", new WorldInfo("InnerSolarSystem"));
 
-            database.Add("Sun", new WorldInfo("Sun", new()
+            worldInfoStorage.Add("Sun", new WorldInfo("Sun", new()
             {
                 new WorldInfoElement(28f, InfoType.Gravity),
                 new WorldInfoElement(695700f, InfoType.Radius),
@@ -33,26 +42,26 @@ namespace Macrocosm.Content.Rocket.Navigation.InfoElements
                 new ThreatLevelInfoElement(ThreatLevel.Apollyon)
             }));
 
-            database.Add("Vulcan", new WorldInfo("Vulcan", new()
+            worldInfoStorage.Add("Vulcan", new WorldInfo("Vulcan", new()
             {
                 new WorldInfoElement("TidallyLocked", InfoType.DayPeriod)
             }));
 
-            database.Add("Mercury", new WorldInfo("Mercury", new()
+            worldInfoStorage.Add("Mercury", new WorldInfo("Mercury", new()
             {
                 new WorldInfoElement(0.38f, InfoType.Gravity),
                 new WorldInfoElement(2439.7f, InfoType.Radius),
                 new WorldInfoElement(58f, InfoType.DayPeriod)
             }));
 
-            database.Add("Venus", new WorldInfo("Venus", new()
+            worldInfoStorage.Add("Venus", new WorldInfo("Venus", new()
             {
                 new WorldInfoElement(0.9f, InfoType.Gravity),
                 new WorldInfoElement(6051.8f, InfoType.Radius),
                 new WorldInfoElement(116f, InfoType.DayPeriod)
             }));
 
-            database.Add("Earth", new WorldInfo("Earth", new()
+            worldInfoStorage.Add("Earth", new WorldInfo("Earth", new()
             {
                 new WorldInfoElement(1f, InfoType.Gravity),
                 new WorldInfoElement(6371f, InfoType.Radius),
@@ -61,7 +70,7 @@ namespace Macrocosm.Content.Rocket.Navigation.InfoElements
                 new ThreatLevelInfoElement(ThreatLevel.Harmless)
             }));
 
-            database.Add("Moon", new WorldInfo("Moon", new()
+            worldInfoStorage.Add("Moon", new WorldInfo("Moon", new()
             {
                 new WorldInfoElement(0.125f, InfoType.Gravity),
                 new WorldInfoElement(1737.4f, InfoType.Radius),
@@ -73,99 +82,99 @@ namespace Macrocosm.Content.Rocket.Navigation.InfoElements
                 new HazardInfoElement("SolarStorms")
             }));
 
-            database.Add("Mars", new WorldInfo("Mars", new()
+            worldInfoStorage.Add("Mars", new WorldInfo("Mars", new()
             {
                 new WorldInfoElement(0.38f, InfoType.Gravity),
                 new WorldInfoElement(3389.5f, InfoType.Radius),
                 new WorldInfoElement(24.62f, InfoType.DayPeriod)
             }));
 
-            database.Add("Phobos", new WorldInfo("Phobos", new()
+            worldInfoStorage.Add("Phobos", new WorldInfo("Phobos", new()
             {
                 new WorldInfoElement("Unstable", InfoType.Gravity),
             }));
 
-            database.Add("Deimos", new WorldInfo("Deimos", new()
+            worldInfoStorage.Add("Deimos", new WorldInfo("Deimos", new()
             {
 
             }));
 
-            database.Add("Ceres", new WorldInfo("Ceres", new()
+            worldInfoStorage.Add("Ceres", new WorldInfo("Ceres", new()
             {
 
             }));
 
-            database.Add("Jupiter", new WorldInfo("Jupiter", new()
+            worldInfoStorage.Add("Jupiter", new WorldInfo("Jupiter", new()
             {
                 new WorldInfoElement(2.52f, InfoType.Gravity),
                 new WorldInfoElement(69911f, InfoType.Radius),
                 new WorldInfoElement(0.3f, InfoType.DayPeriod)
             }));
 
-            database.Add("Io", new WorldInfo("Io", new()
+            worldInfoStorage.Add("Io", new WorldInfo("Io", new()
             {
 
             }));
 
-            database.Add("Europa", new WorldInfo("Europa", new()
+            worldInfoStorage.Add("Europa", new WorldInfo("Europa", new()
             {
 
             }));
 
-            database.Add("Saturn", new WorldInfo("Saturn", new()
+            worldInfoStorage.Add("Saturn", new WorldInfo("Saturn", new()
             {
                 new WorldInfoElement(1.065f, InfoType.Gravity),
                 new WorldInfoElement(58232f, InfoType.Radius),
                 new WorldInfoElement(0.43f, InfoType.DayPeriod)
             }));
 
-            database.Add("Titan", new WorldInfo("Titan", new()
+            worldInfoStorage.Add("Titan", new WorldInfo("Titan", new()
             {
 
             }));
 
-            database.Add("Ouranos", new WorldInfo("Ouranos", new()
+            worldInfoStorage.Add("Ouranos", new WorldInfo("Ouranos", new()
             {
                 new WorldInfoElement(0.89f, InfoType.Gravity),
                 new WorldInfoElement(25362f, InfoType.Radius),
                 new WorldInfoElement(0.718f, InfoType.DayPeriod)
             }));
 
-            database.Add("Miranda", new WorldInfo("Miranda", new()
+            worldInfoStorage.Add("Miranda", new WorldInfo("Miranda", new()
             {
 
             }));
 
-            database.Add("Neptune", new WorldInfo("Neptune", new()
+            worldInfoStorage.Add("Neptune", new WorldInfo("Neptune", new()
             {
                 new WorldInfoElement(1.14f, InfoType.Gravity),
                 new WorldInfoElement(24622f , InfoType.Radius),
                 new WorldInfoElement(0.671f, InfoType.DayPeriod)
             }));
 
-            database.Add("Triton", new WorldInfo("Triton", new()
+            worldInfoStorage.Add("Triton", new WorldInfo("Triton", new()
             {
 
             }));
 
-            database.Add("Pluto", new WorldInfo("Pluto", new()
+            worldInfoStorage.Add("Pluto", new WorldInfo("Pluto", new()
             {
                 new WorldInfoElement(0.064f, InfoType.Gravity),
                 new WorldInfoElement(1188.3f , InfoType.Radius),
                 new WorldInfoElement(153.3f, InfoType.DayPeriod)
             }));
 
-            database.Add("Charon", new WorldInfo("Charon", new()
+            worldInfoStorage.Add("Charon", new WorldInfo("Charon", new()
             {
 
             }));
 
-            database.Add("Eris", new WorldInfo("Eris", new()
+            worldInfoStorage.Add("Eris", new WorldInfo("Eris", new()
             {
 
             }));
 
-            database.Add("YanoMoore", new WorldInfo("YanoMoore", new()
+            worldInfoStorage.Add("YanoMoore", new WorldInfo("YanoMoore", new()
             {
 
             }));
