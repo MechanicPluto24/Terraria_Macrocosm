@@ -10,7 +10,7 @@ using System;
 
 namespace Macrocosm.Content.Rocket.Modules
 {
-	public abstract class RocketModule
+    public abstract class RocketModule
 	{
 		public virtual string TexturePath => (GetType().Namespace + "." + GetType().Name).Replace('.', '/');
 
@@ -60,7 +60,7 @@ namespace Macrocosm.Content.Rocket.Modules
 			if (SpecialDraw)
 			{
 				// -- testing, will be configured from an UI		
-				if (this is EngineModule.EngineModule)
+				if (this is EngineModule)
 				{
 					PatternName = "Binary";  		  
 					Colors[0] = Color.White;

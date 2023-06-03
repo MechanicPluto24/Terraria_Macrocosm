@@ -24,11 +24,6 @@ using System.Collections.Generic;
 using Macrocosm.Content.Rocket.Modules;
 using System.ComponentModel.Design;
 using Microsoft.CodeAnalysis;
-using Macrocosm.Content.Rocket.Modules.ServiceModule;
-using Macrocosm.Content.Rocket.Modules.ReactorModule;
-using Macrocosm.Content.Rocket.Modules.Boosters;
-using Macrocosm.Content.Rocket.Modules.CommandPod;
-using Macrocosm.Content.Rocket.Modules.EngineModule;
 
 namespace Macrocosm.Content.Rocket
 {

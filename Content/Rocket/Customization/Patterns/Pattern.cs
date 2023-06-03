@@ -3,26 +3,26 @@ using Microsoft.Xna.Framework;
 using System.Linq;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Rocket.Modules
+namespace Macrocosm.Content.Rocket.Customization.Patterns
 {
-	public class Pattern
-	{
-		public string PatternName { get; set; }
-		public int ColorCount { get; set; }
-		public Color[] DefaultColors { get; set; }
+    public class Pattern
+    {
+        public string PatternName { get; set; }
+        public int ColorCount { get; set; }
+        public Color[] DefaultColors { get; set; }
 
-		//public Texture2D IconTexture { get; set; }
-		//public int ItemType{ get; set; }
+        //public Texture2D IconTexture { get; set; }
+        //public int ItemType{ get; set; }
 
-		public Pattern(string patternName, params Color[] defaultColors)
-		{
-			PatternName = patternName;
-			ColorCount = defaultColors.Length;
-			DefaultColors = defaultColors;
-		}
+        public Pattern(string patternName, params Color[] defaultColors)
+        {
+            PatternName = patternName;
+            ColorCount = defaultColors.Length;
+            DefaultColors = defaultColors;
+        }
 
-		#region Autoload
-		/*
+        #region Autoload
+        /*
 		public void AutoloadPatterns()
 		{
 			// Find all existing patters for this module
@@ -36,6 +36,6 @@ namespace Macrocosm.Content.Rocket.Modules
 			Macrocosm.Instance.Logger.Info(logstring);
 		}
 		*/
-		#endregion
-	}
+        #endregion
+    }
 }
