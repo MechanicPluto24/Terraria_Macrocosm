@@ -90,7 +90,7 @@ namespace Macrocosm.Content.Rocket
 			if (InRocket)
 			{
 				NPC rocket = Main.npc[RocketID];
-				RocketNPC modRocket = (rocket.ModNPC as RocketNPC);
+				Rocket modRocket = (rocket.ModNPC as Rocket);
 
 				if (Player.whoAmI == Main.myPlayer)
 				{
@@ -98,9 +98,9 @@ namespace Macrocosm.Content.Rocket
 						InRocket = false;
 
 					if (!modRocket.Launching)
-						UIRocket.Show(RocketID);
+						UINavigation.Show(RocketID);
 					else
-						UIRocket.Hide();
+						UINavigation.Hide();
 				}
 
 				Player.moveSpeed = 0f;
@@ -109,7 +109,7 @@ namespace Macrocosm.Content.Rocket
  
 			}
 			else if (Player.whoAmI == Main.myPlayer)
-				UIRocket.Hide();
+				UINavigation.Hide();
 		}
 
 		public override void PreUpdateBuffs()

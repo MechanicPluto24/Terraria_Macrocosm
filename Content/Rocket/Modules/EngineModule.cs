@@ -1,13 +1,15 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Terraria;
 using Terraria.ModLoader;
+using Macrocosm.Content.Rocket.Customization;
 
 namespace Macrocosm.Content.Rocket.Modules
 {
     public class EngineModule : RocketModule
     {
-        public override void Draw(SpriteBatch spriteBatch, Color ambientColor)
+		public Nameplate Nameplate = new();
+
+		public override void Draw(SpriteBatch spriteBatch, Color ambientColor)
         {
             // Draw the rear booster behind the engine module (no paintjobs applicable)
             Texture2D boosterRear = ModContent.Request<Texture2D>(TexturePath + "_BoosterRear").Value;
@@ -15,6 +17,8 @@ namespace Macrocosm.Content.Rocket.Modules
 
             // Draw the engine module with the base logic
             base.Draw(spriteBatch, ambientColor);
-        }
+
+            Nameplate.DrawNameplate(spriteBatch, Position + new Vector2(6, 61), ambientColor);
+		}
     }
 }

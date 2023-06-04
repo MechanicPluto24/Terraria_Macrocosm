@@ -1,12 +1,8 @@
 ﻿using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rocket.Navigation.LaunchChecklist;
-using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SubworldLibrary;
-using System;
-using System.Collections.Generic;
 using Terraria.ModLoader;
 using Terraria.UI;
 
@@ -63,7 +59,7 @@ namespace Macrocosm.Content.Rocket.Navigation
         /// <param name="position"> The map target's position relative to the top corner of the NavigationMap </param>
         /// <param name="width"> Interactible area width in pixels </param>
         /// <param name="height"> Interactible area height in pixels </param>
-        /// <param name="targetId"> The special ID of the target, handled in <see cref="RocketNPC.EnterDestinationSubworld"/> </param>
+        /// <param name="targetId"> The special ID of the target, handled in <see cref="Rocket.EnterDestinationSubworld"/> </param>
         /// <param name="canLaunch"> Function that determines whether the target is selectable, defaults to false </param>
         public UIMapTarget(UINavigationPanel owner, Vector2 position, float width, float height, string targetId, LaunchConditions launchConditions = null, Texture2D outline = null) : this(owner, position, width, height)
         {

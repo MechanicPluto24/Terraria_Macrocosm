@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rocket.Navigation.InfoElements
 {
     public class WorldInfoStorage : ILoadable
     {
-
         private static Dictionary<string, WorldInfo> worldInfoStorage;
 
         public void Load(Mod mod)
@@ -19,59 +19,62 @@ namespace Macrocosm.Content.Rocket.Navigation.InfoElements
             worldInfoStorage = null;
         }
 
-        public static WorldInfo GetValue(string key) => worldInfoStorage[key];
+        public static void Add(string key, params BasicInfoElement[] infoElements)
+            => worldInfoStorage.Add(key, new WorldInfo(key, infoElements.ToList()));
 
+        public static WorldInfo GetValue(string key) => worldInfoStorage[key];
+        public static bool TryGetValue(string key, out WorldInfo info) 
+            => worldInfoStorage.TryGetValue(key, out info);
 
         /// <summary>
         /// Populate the World Info data.
         /// 
         /// Supports: 
-        ///     WorldInfoElements: generic info elements, specify numeric or string value (e.g. TidallyLocked), and type (Gravity, Radius, Day Lenght etc.) 
-        ///     ThreatLevelInfoElement: the threat level info element, either numeric (1-9) or from ThreatLevel enum
-        ///     HazardInfoElement: the hazards specific to this world (e.g. MeteorStorms) 
+        ///     WorldInfoElements: generic info elements, specify numeric or string value (e.g. TidallyLocked), and type (Gravity, Radius, Day Lenght etc.).
+        ///     ThreatLevelInfoElement: the threat level info element, either numeric (1-9) or from ThreatLevel enum.
+        ///     HazardInfoElement: the hazards specific to this world (e.g. MeteorStorms).
+        ///     
+        ///     Icons are loaded based on the name, from Navigation/Icons.
+        ///     Text is loaded from the localization files.
         /// </summary>
         private static void LoadData()
         {
-            worldInfoStorage.Add("InnerSolarSystem", new WorldInfo("InnerSolarSystem"));
+            //Add("InnerSolarSystem"
+            //    
+            //);
 
-            worldInfoStorage.Add("Sun", new WorldInfo("Sun", new()
-            {
+            Add("Sun",
                 new WorldInfoElement(28f, InfoType.Gravity),
                 new WorldInfoElement(695700f, InfoType.Radius),
 
                 new ThreatLevelInfoElement(ThreatLevel.Apollyon)
-            }));
+            );
 
-            worldInfoStorage.Add("Vulcan", new WorldInfo("Vulcan", new()
-            {
+            Add("Vulcan",
                 new WorldInfoElement("TidallyLocked", InfoType.DayPeriod)
-            }));
+            );
 
-            worldInfoStorage.Add("Mercury", new WorldInfo("Mercury", new()
-            {
+            Add("Mercury",
                 new WorldInfoElement(0.38f, InfoType.Gravity),
                 new WorldInfoElement(2439.7f, InfoType.Radius),
                 new WorldInfoElement(58f, InfoType.DayPeriod)
-            }));
+            );
 
-            worldInfoStorage.Add("Venus", new WorldInfo("Venus", new()
-            {
+            Add("Venus",
                 new WorldInfoElement(0.9f, InfoType.Gravity),
                 new WorldInfoElement(6051.8f, InfoType.Radius),
                 new WorldInfoElement(116f, InfoType.DayPeriod)
-            }));
+            );
 
-            worldInfoStorage.Add("Earth", new WorldInfo("Earth", new()
-            {
+            Add("Earth",  
                 new WorldInfoElement(1f, InfoType.Gravity),
                 new WorldInfoElement(6371f, InfoType.Radius),
                 new WorldInfoElement(1f, InfoType.DayPeriod),
 
                 new ThreatLevelInfoElement(ThreatLevel.Harmless)
-            }));
+            );
 
-            worldInfoStorage.Add("Moon", new WorldInfo("Moon", new()
-            {
+            Add("Moon",  
                 new WorldInfoElement(0.125f, InfoType.Gravity),
                 new WorldInfoElement(1737.4f, InfoType.Radius),
                 new WorldInfoElement(8f, InfoType.DayPeriod),
@@ -80,104 +83,87 @@ namespace Macrocosm.Content.Rocket.Navigation.InfoElements
 
                 new HazardInfoElement("MeteorStorms"),
                 new HazardInfoElement("SolarStorms")
-            }));
+            );
 
-            worldInfoStorage.Add("Mars", new WorldInfo("Mars", new()
-            {
+            Add("Mars",  
                 new WorldInfoElement(0.38f, InfoType.Gravity),
                 new WorldInfoElement(3389.5f, InfoType.Radius),
                 new WorldInfoElement(24.62f, InfoType.DayPeriod)
-            }));
+            );
 
-            worldInfoStorage.Add("Phobos", new WorldInfo("Phobos", new()
-            {
-                new WorldInfoElement("Unstable", InfoType.Gravity),
-            }));
+            Add("Phobos", 
+                 new WorldInfoElement("Unstable", InfoType.Gravity)
+            );
 
-            worldInfoStorage.Add("Deimos", new WorldInfo("Deimos", new()
-            {
+            Add("Deimos" 
+ 
+            );
 
-            }));
+            Add("Ceres"
+ 
+            );
 
-            worldInfoStorage.Add("Ceres", new WorldInfo("Ceres", new()
-            {
-
-            }));
-
-            worldInfoStorage.Add("Jupiter", new WorldInfo("Jupiter", new()
-            {
+            Add("Jupiter",  
                 new WorldInfoElement(2.52f, InfoType.Gravity),
                 new WorldInfoElement(69911f, InfoType.Radius),
                 new WorldInfoElement(0.3f, InfoType.DayPeriod)
-            }));
+            );
 
-            worldInfoStorage.Add("Io", new WorldInfo("Io", new()
-            {
+            Add("Io"
+ 
+            );
 
-            }));
+            Add("Europa"
 
-            worldInfoStorage.Add("Europa", new WorldInfo("Europa", new()
-            {
+            );
 
-            }));
-
-            worldInfoStorage.Add("Saturn", new WorldInfo("Saturn", new()
-            {
+            Add("Saturn",
                 new WorldInfoElement(1.065f, InfoType.Gravity),
                 new WorldInfoElement(58232f, InfoType.Radius),
                 new WorldInfoElement(0.43f, InfoType.DayPeriod)
-            }));
+            );
 
-            worldInfoStorage.Add("Titan", new WorldInfo("Titan", new()
-            {
+            Add("Titan"
 
-            }));
+            );
 
-            worldInfoStorage.Add("Ouranos", new WorldInfo("Ouranos", new()
-            {
+            Add("Ouranos",
                 new WorldInfoElement(0.89f, InfoType.Gravity),
                 new WorldInfoElement(25362f, InfoType.Radius),
                 new WorldInfoElement(0.718f, InfoType.DayPeriod)
-            }));
+            );
 
-            worldInfoStorage.Add("Miranda", new WorldInfo("Miranda", new()
-            {
+            Add("Miranda"
 
-            }));
+            );
 
-            worldInfoStorage.Add("Neptune", new WorldInfo("Neptune", new()
-            {
+            Add("Neptune",
                 new WorldInfoElement(1.14f, InfoType.Gravity),
                 new WorldInfoElement(24622f , InfoType.Radius),
                 new WorldInfoElement(0.671f, InfoType.DayPeriod)
-            }));
+            );
 
-            worldInfoStorage.Add("Triton", new WorldInfo("Triton", new()
-            {
+            Add("Triton"
 
-            }));
+            );
 
-            worldInfoStorage.Add("Pluto", new WorldInfo("Pluto", new()
-            {
+            Add("Pluto",
                 new WorldInfoElement(0.064f, InfoType.Gravity),
                 new WorldInfoElement(1188.3f , InfoType.Radius),
                 new WorldInfoElement(153.3f, InfoType.DayPeriod)
-            }));
+            );
 
-            worldInfoStorage.Add("Charon", new WorldInfo("Charon", new()
-            {
+            Add("Charon"
 
-            }));
+            );
 
-            worldInfoStorage.Add("Eris", new WorldInfo("Eris", new()
-            {
+            Add("Eris"
 
-            }));
+            );
 
-            worldInfoStorage.Add("YanoMoore", new WorldInfo("YanoMoore", new()
-            {
+            Add("YanoMoore"
 
-            }));
+            );
         }
     }
 }
