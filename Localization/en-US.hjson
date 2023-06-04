@@ -839,6 +839,7 @@ Mods: {
 			}
 
 			Rocket.DisplayName: Rocket
+			ZombieSecurity.DisplayName: Zombie Security
 		}
 
 		Projectiles: {
