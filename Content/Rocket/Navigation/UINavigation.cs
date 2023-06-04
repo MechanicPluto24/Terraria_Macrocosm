@@ -15,11 +15,11 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rocket.Navigation
 {
-    public class UIRocket : UIState
+    public class UINavigation : UIState
     {
         public int RocketID { get; set; } = -1;
 
-        private RocketNPC Rocket => Main.npc[RocketID].ModNPC as RocketNPC;
+        private Rocket Rocket => Main.npc[RocketID].ModNPC as Rocket;
 
         UIPanel UIBackgroundPanel;
         UILaunchButton UILaunchButton;
@@ -81,9 +81,8 @@ namespace Macrocosm.Content.Rocket.Navigation
             Player player = Main.LocalPlayer;
             player.mouseInterface = true;
 
-            if (!Rocket.NPC.active || player.dead || !player.active || Main.editChest || Main.editSign || player.talkNPC >= 0 || !Main.playerInventory ||
-                !player.InInteractionRange((int)Rocket.NPC.Center.X / 16, (int)Rocket.NPC.Center.Y / 16, TileReachCheckSettings.Simple) || Rocket.Launching || player.controlMount)
-            {
+            if (!Rocket.NPC.active || !Rocket.InInteractionRange || Rocket.Launching || player.controlMount || player.UICloseConditions())
+			{
                 Hide();
                 return;
             }
@@ -128,14 +127,14 @@ namespace Macrocosm.Content.Rocket.Navigation
 			} 
 		}
 
-
         private void UpdateChecklist()
         {
 			UIFlightChecklist.ClearInfo();
 
-			if (!selectedLaunchCondition.IsMet())
-                UIFlightChecklist.Add(selectedLaunchCondition.ProvideUI(ChecklistInfoElement.IconType.QuestionMark));
- 			else if(!hereLaunchCondition.IsMet()) // target is definitely not null
+			if (!selectedLaunchCondition.IsMet()) 
+				UIFlightChecklist.Add(selectedLaunchCondition.ProvideUI(ChecklistInfoElement.IconType.QuestionMark));
+			// if selected, target is guaranteed to not be null
+			else if (!hereLaunchCondition.IsMet()) 
  				UIFlightChecklist.Add(hereLaunchCondition.ProvideUI(ChecklistInfoElement.IconType.GrayCrossmark));
             else
             {

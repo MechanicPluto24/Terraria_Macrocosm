@@ -125,7 +125,7 @@ namespace Macrocosm.Content.Rocket
 
 		public int PlaceRocket(int rocketX, int rocketY)
 		{
-			return NPC.NewNPC(new EntitySource_TileEntity(this), (int)((rocketX + 9) * 16f), (int)(rocketY * 16f - 26f), ModContent.NPCType<RocketNPC>());
+			return NPC.NewNPC(new EntitySource_TileEntity(this), (int)((rocketX + 9) * 16f), (int)(rocketY * 16f - 26f), ModContent.NPCType<Rocket>());
 		}
 
 		public override void OnNetPlace()

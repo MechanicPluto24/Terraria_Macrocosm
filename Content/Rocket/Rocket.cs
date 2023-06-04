@@ -27,11 +27,11 @@ using Microsoft.CodeAnalysis;
 
 namespace Macrocosm.Content.Rocket
 {
-    public class RocketNPC : ModNPC
+    public class Rocket : ModNPC
 	{
 		public override string Texture => Macrocosm.EmptyTexPath; 
 
-		public static NPC First => Main.npc[NPC.FindFirstNPC(ModContent.NPCType<RocketNPC>())];
+		public static NPC First => Main.npc[NPC.FindFirstNPC(ModContent.NPCType<Rocket>())];
 		public override void SetDefaults()
 		{
 			NPC.width = 84;
@@ -74,7 +74,9 @@ namespace Macrocosm.Content.Rocket
 		public EngineModule EngineModule;
 		public Boosters Boosters;
 
-		public List<RocketModule> Modules;  
+		public List<RocketModule> Modules;
+
+		public static List<string> ModuleNames = new() { "CommandPod", "ServiceModule", "ReactorModule", "EngineModule", "Boosters" }; 
 
 		#region Private vars
 		// The world Y coordinate for entering the target subworld
@@ -123,11 +125,21 @@ namespace Macrocosm.Content.Rocket
 		public float Progress => Utils.GetLerpValue(liftoffTime, TimeToReachSky, FlightTime + 1, clamped: true);
 		public float InvProgress => 1f - Progress;
 
+		public bool InInteractionRange
+		{
+			get
+			{
+				Point location = NPC.Hitbox.ClosestPointInRect(Main.LocalPlayer.Center).ToTileCoordinates();
+				return Main.LocalPlayer.IsInTileInteractionRange(location.X, location.Y, TileReachCheckSettings.Simple);
+			}
+		}
+
 		public override void AI()
 		{
  			NPC.direction = 1;
 			NPC.spriteDirection = -1;
 
+			// -- testing --
 			Fuel = 1000f;
 
 			if (!Launching)
@@ -160,10 +172,9 @@ namespace Macrocosm.Content.Rocket
 
 			bool hoveringMouse = NPC.Hitbox.Contains(Main.MouseWorld.ToPoint());
 
-			Point location = NPC.Hitbox.ClosestPointInRect(Main.LocalPlayer.Center).ToTileCoordinates();
-			bool inInteractionRange = Main.LocalPlayer.IsInTileInteractionRange(location.X, location.Y, TileReachCheckSettings.Simple);
+			
 
-			if (hoveringMouse && inInteractionRange && !Launching)
+			if (hoveringMouse && InInteractionRange && !Launching)
 			{
 				if (Main.mouseRight)
 				{
@@ -178,7 +189,7 @@ namespace Macrocosm.Content.Rocket
 				}
 				else
 				{
-					if(!UIRocket.Active)
+					if(!UINavigation.Active)
 					{
 						Main.LocalPlayer.cursorItemIconEnabled = true;
 						Main.LocalPlayer.cursorItemIconID = ModContent.ItemType<RocketPlacer>();
@@ -344,7 +355,7 @@ namespace Macrocosm.Content.Rocket
 			int playerId = reader.ReadByte();
 			bool asCommander = reader.ReadBoolean();
 			int rocketId = reader.ReadByte();
-			RocketNPC rocket = Main.npc[rocketId].ModNPC as RocketNPC;
+			Rocket rocket = Main.npc[rocketId].ModNPC as Rocket;
 
 			// Server receives embark status from client interaction 
 			if (Main.netMode == NetmodeID.Server)
@@ -375,7 +386,7 @@ namespace Macrocosm.Content.Rocket
 		public static void ReceiveLaunchMessage(BinaryReader reader, int whoAmI)
 		{
 			int rocketId = reader.ReadByte();
-			RocketNPC rocket = Main.npc[rocketId].ModNPC as RocketNPC;
+			Rocket rocket = Main.npc[rocketId].ModNPC as Rocket;
 
 			// launch on the server
 			rocket.Launch();

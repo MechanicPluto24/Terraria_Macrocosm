@@ -838,7 +838,7 @@ Mods: {
 				}
 			}
 
-			RocketNPC.DisplayName: Rocket
+			Rocket.DisplayName: Rocket
 		}
 
 		Projectiles: {
