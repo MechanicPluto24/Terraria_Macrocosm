@@ -1,7 +1,6 @@
 ﻿using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rocket.Customization
@@ -15,7 +14,7 @@ namespace Macrocosm.Content.Rocket.Customization
 
         public const int MaxChars = 13;
 
-        public void DrawNameplate(SpriteBatch spriteBatch, Vector2 position, Color ambientColor)
+        public void Draw(SpriteBatch spriteBatch, Vector2 position, Color ambientColor)
         {
             Texture2D texture = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/RocketLettersSmall").Value;
 

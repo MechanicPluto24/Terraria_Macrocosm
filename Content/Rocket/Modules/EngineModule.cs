@@ -18,7 +18,7 @@ namespace Macrocosm.Content.Rocket.Modules
             // Draw the engine module with the base logic
             base.Draw(spriteBatch, ambientColor);
 
-            Nameplate.DrawNameplate(spriteBatch, Position + new Vector2(6, 61), ambientColor);
+            Nameplate.Draw(spriteBatch, Position + new Vector2(6, 61), ambientColor);
 		}
     }
 }

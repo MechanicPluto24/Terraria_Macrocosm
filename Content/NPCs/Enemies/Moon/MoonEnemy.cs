@@ -5,9 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-	/// <summary>
-	/// Abstract class for every moon enemy 
-	/// </summary>
+	/// <summary> Base class for every moon enemy </summary>
 	public abstract class MoonEnemy : ModNPC
 	{
 		public override void SetStaticDefaults()
