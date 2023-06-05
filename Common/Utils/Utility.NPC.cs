@@ -11,6 +11,8 @@ namespace Macrocosm.Common.Utils
 {
 	public static partial class Utility
 	{
+		public static int GetFrameHeight(this NPC npc) => TextureAssets.Npc[npc.type].Height() / Main.npcFrameCount[npc.type];
+
 		/// <summary>
 		/// Scales this <paramref name="npc"/>'s health by the scale <paramref name="factor"/> provided.
 		/// </summary>

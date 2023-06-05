@@ -9,7 +9,7 @@ namespace Macrocosm.Content.Rocket.Customization
     {
         public string Text = "";
 
-        public Color[] charColors;
+        //public Color[] charColors;
         public Color TextColor;
 
         public const int MaxChars = 13;

@@ -67,8 +67,8 @@ namespace Macrocosm.Content.Rocket.Modules
 					//(parameters are scalars intentionally)
 					for(int i = 0; i < Pattern.MaxColorCount; i++)
 					{
-						effect.Parameters["uColorKey" + i].SetValue(Pattern.ColorKeys[i]);
-						effect.Parameters["uColor" + i].SetValue(Pattern.Colors[i].ToVector4());
+						effect.Parameters["uColorKey" + i.ToString()].SetValue(Pattern.ColorKeys[i]);
+						effect.Parameters["uColor" + i.ToString()].SetValue(Pattern.Colors[i].ToVector4());
 					}
 
 					//Pass the ambient lighting on the rocket 
@@ -83,9 +83,6 @@ namespace Macrocosm.Content.Rocket.Modules
 					// Change sampler state for proper alignment at all zoom levels 
 					Main.graphics.GraphicsDevice.SamplerStates[2] = SamplerState.PointClamp;
 				}
-
-				// Configure the SamplerState of the pattern.
-				// Needed for proper alignment of texture and coords at some zoom levels
 
 				spriteBatch.End();
 				spriteBatch.Begin(effect, state);
