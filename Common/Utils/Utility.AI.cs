@@ -4654,7 +4654,7 @@ namespace Macrocosm.Common.Utils
                     }
                 }
                 else { ai[0] = 0f; }
-                if (npc.direction == 0) { npc.direction = 1; }
+                if (npc.direction == 0) { npc.direction = -1; }
             }
             //if velocity is less than -1 or greater than 1...
             if (npc.velocity.X < -velMax || npc.velocity.X > velMax)
