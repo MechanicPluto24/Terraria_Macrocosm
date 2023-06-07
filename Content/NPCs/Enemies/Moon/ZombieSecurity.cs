@@ -12,6 +12,8 @@ using Macrocosm.Content.Biomes;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Content.Particles;
 using System.IO;
+using Macrocosm.Content.Projectiles.Friendly.Ranged;
+using Macrocosm.Content.Projectiles.Hostile;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
@@ -23,13 +25,17 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			Shoot 
 		}
 
-		[NetSync] public ActionState AI_State = ActionState.Walk;
+		public ActionState AI_State = ActionState.Walk;
 
 		public enum AimType { Horizontal, Upwards, Downwards }
-		[NetSync] public AimType AimMode;
+		public AimType AimAngle;
 
-		[NetSync] public int ShootCooldownCounter = maxCooldown;
-		[NetSync] public int ShootSequenceCounter = maxShootSequence;
+		public int ShootCooldownCounter = maxCooldown;
+		public int ShootSequenceCounter = 0;
+
+		public int ConsecutiveShotsCounter = 1;
+
+		public int MaxConsecutiveShots = 3;
 
 		public Player TargetPlayer => Main.player[NPC.target];
 
@@ -41,10 +47,11 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		private readonly IntRange walkFrames = new(21, 30);
 		private const int fallingFrame = 31;
 
-		private const int maxCooldown = 320;
-		private const int maxShootSequence = 84;
-		private const int sequenceShoot = 72;
-		private const int visualShoot = 64;
+		private static int maxCooldown = 240;
+		private static int maxShootSequence = 84;
+		private static int sequenceShoot = 72;
+		private static int visualShoot = 64;
+		private static int visualGunDrawEnd = 24;
 		#endregion
 
 		public override void SetStaticDefaults()
@@ -85,6 +92,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		public override void OnSpawn(IEntitySource source)
 		{
 			NPC.frame.Y = NPC.GetFrameHeight() * walkFrames.Start;
+
+			if(Main.netMode != NetmodeID.MultiplayerClient)
+				MaxConsecutiveShots = Main.rand.Next(2, 5);
 		}
 
 		#region Netcode
@@ -94,126 +104,171 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		public override void SendExtraAI(BinaryWriter writer)
 		{
 			writer.Write((byte)AI_State);
-			writer.Write((byte)AimMode);
+			writer.Write((byte)AimAngle);
+
 			writer.Write((ushort)ShootCooldownCounter);
 			writer.Write((ushort)ShootSequenceCounter);
+
+			writer.Write((byte)ConsecutiveShotsCounter);
+			writer.Write((byte)MaxConsecutiveShots);
 		}
 
 		public override void ReceiveExtraAI(BinaryReader reader)
 		{
 			AI_State = (ActionState)reader.ReadByte();
-			AimMode = (AimType)reader.ReadByte();
+			AimAngle = (AimType)reader.ReadByte();
+
 			ShootCooldownCounter = reader.ReadUInt16();
 			ShootSequenceCounter = reader.ReadUInt16();
+
+			ShootSequenceCounter = reader.ReadByte();
+			ShootSequenceCounter = reader.ReadByte();
 		}
 
 		#endregion
 
 		public override void AI()
 		{
-			/* //--- Stuff for debug ---
-			Main.NewText("Shoot sequence: " + ShootSequenceCounter);
-			Main.NewText("Shoot cooldown: " + ShootCooldownCounter);
-			Main.NewText("AI State: " + AI_State.ToString());
-			Main.NewText("Frame Index: " + NPC.frame.Y / NPC.GetFrameHeight());
-			Main.NewText("Frame cnt: " + NPC.frameCounter);
-			Main.NewText("\n\n\n");
-			*/
+			//Main.NewText("Shoot sequence: " + ShootSequenceCounter + "/" + maxShootSequence);
+			//Main.NewText("Shoot cooldown: " + ShootCooldownCounter + "/" + maxCooldown);
+			//Main.NewText("AI State: " + AI_State.ToString());
+			//Main.NewText("Frame Index: " + NPC.frame.Y / NPC.GetFrameHeight() + "/" + fallingFrame);
+			//Main.NewText("Frame cnt: " + NPC.frameCounter);
+			//Main.NewText("Shots: " + ConsecutiveShotsCounter + "/" + MaxConsecutiveShots);
+			//Main.NewText("\n\n");
 
 			NPC.spriteDirection = -NPC.direction;
 
-			// Override some behaviours if NPC was just hit 
 			if (NPC.justHit)
 			{
-				ShootCooldownCounter = maxCooldown / 4; // Reset cooldown with lower value
-				ShootSequenceCounter = 0; // Reset sequence counter!
-				AI_State = ActionState.Walk; // Reset to walk state 
+				ShootCooldownCounter = maxCooldown / 4;
+				ShootSequenceCounter = 0;
+				AI_State = ActionState.Walk;
+				ConsecutiveShotsCounter = 1;
 
-				// Reset shoot animation to first frame (TODO: check if really needed anymore)
-				if(AI_State == ActionState.Shoot)
-					NPC.frame.Y = NPC.GetFrameHeight() * shootFramesCommon.Start; 
+				if (AI_State == ActionState.Shoot)
+					NPC.frame.Y = NPC.GetFrameHeight() * shootFramesCommon.Start;
 			}
-
-			if (AI_State == ActionState.Walk)
-			{
-				// Increase gravity a bit
-				if (NPC.velocity.Y < 0f)
-					NPC.velocity.Y += 0.1f;
-
-				// Base Fighter AI
-				Utility.AIZombie(NPC, ref NPC.ai, false, true, 0);
-
-				ShootCooldownCounter--;
-
-				// Enter shoot state if cooldown passed, clear line of sight, enemy is stationary (vertically?)
-				if (ShootCooldownCounter <= 0 && Collision.CanHit(NPC, TargetPlayer) && NPC.velocity.Y == 0f)
-				{
-					ShootCooldownCounter = maxCooldown; // Reset cooldown
-
-					// Set up the first weapon draw frame (did not find a way to do it right in FindFrame)
-					NPC.frame.Y = NPC.GetFrameHeight() * shootFramesCommon.Start; 
-
-					AI_State = ActionState.Shoot;
-				}
-			} 
-			else
-			{
-				// Exit state if line of sight is broken or shoot sequence succeeded
-				if (!Collision.CanHit(NPC, TargetPlayer) || ShootSequenceCounter >= maxShootSequence)
-				{
-					ShootSequenceCounter = 0;
-					AI_State = ActionState.Walk;
-					return;
-				}
-
-				ShootSequenceCounter++;
-
-				// Freeze horizontal movement
-				NPC.velocity.X *= 0.5f;
-
-				// Orient the NPC towards the player 
-				NPC.direction = Main.player[NPC.target].position.X < NPC.position.X ? -1 : 1;
-
-				int projDamage = 100;
-				int projType = ProjectileID.BulletDeadeye; // TODO: some dedicated bullet?
-				float projSpeed = 120;
-
-				// Aim at target
-				Vector2 aimPosition = new(NPC.position.X + (float)NPC.width * 0.5f, NPC.position.Y + (float)NPC.height * 0.5f);
-
-				float aimSpeedX = TargetPlayer.position.X + (float)TargetPlayer.width * 0.5f - aimPosition.X;
-				float aimSpeedY = TargetPlayer.position.Y + (float)TargetPlayer.height * 0.5f - aimPosition.Y;
-
-				aimSpeedX += (float)Main.rand.Next(-40, 41) * 0.2f;
-				aimSpeedY += (float)Main.rand.Next(-40, 41) * 0.2f;
-
-				float aimLenght = (float)Math.Sqrt(aimSpeedX * aimSpeedX + aimSpeedY * aimSpeedY);
-				NPC.netUpdate = true;
-				aimLenght = projSpeed / aimLenght;
-				aimSpeedX *= aimLenght;
-				aimSpeedY *= aimLenght;
-
-				aimPosition.X += aimSpeedX;
-				aimPosition.Y += aimSpeedY;
-
-				Vector2 aimVelocity = new(aimSpeedX, aimSpeedY);
-
-				// Shoot (TODO: align projectile and particle by angle)
-				if (Main.netMode != NetmodeID.MultiplayerClient && ShootSequenceCounter == sequenceShoot)
-				{
- 					Projectile.NewProjectile(NPC.GetSource_FromAI(), aimPosition.X, aimPosition.Y, aimSpeedX, aimSpeedY, projType, projDamage, 0f, Main.myPlayer);
-					Particle.CreateParticle<DesertEagleFlash>(NPC.Center + aimVelocity * 0.24f, aimVelocity * 0.05f, aimVelocity.ToRotation(), 1f);
-					//NPC.velocity.X = 4f * -NPC.direction;
-				}
  
-				// Get shoot angle
-				if (Math.Abs(aimSpeedX) > Math.Abs(aimSpeedY) * 2f)
-					AimMode = AimType.Horizontal;
- 				else if (aimSpeedY > 0f)
-					AimMode = AimType.Downwards;
- 				else
-					AimMode = AimType.Upwards;
+			if (AI_State == ActionState.Walk)
+				AI_Walk();
+			else
+				AI_Shoot();
+		}
+
+		private void AI_Walk()
+		{
+			// Increase gravity a bit
+			if (NPC.velocity.Y < 0f)
+				NPC.velocity.Y += 0.1f;
+
+			// Base Fighter AI
+			Utility.AIZombie(NPC, ref NPC.ai, false, true, 0);
+
+			ShootCooldownCounter--;
+
+			// Enter shoot state if cooldown passed, clear line of sight, enemy is stationary (vertically?)
+			if (ShootCooldownCounter <= 0 && Collision.CanHit(NPC, TargetPlayer) && NPC.velocity.Y == 0f)
+			{
+				// Reset cooldown
+				ShootCooldownCounter = maxCooldown; 
+
+				// Randomize shoot count
+				if(Main.netMode != NetmodeID.MultiplayerClient)
+					MaxConsecutiveShots = Main.rand.Next(2, 5);
+
+				// Set up the first weapon draw frame (did not find a way to do it right in FindFrame)
+				NPC.frame.Y = NPC.GetFrameHeight() * shootFramesCommon.Start;
+
+				AI_State = ActionState.Shoot;
 			}
+		}
+
+		private void AI_Shoot()
+		{
+			// Exit state if line of sight is broken or shoot sequence succeeded
+			if (!Collision.CanHit(NPC, TargetPlayer) || (ConsecutiveShotsCounter >= MaxConsecutiveShots && ShootSequenceCounter >= maxShootSequence))
+			{
+				ConsecutiveShotsCounter = 1;
+				ShootSequenceCounter = 0;
+				AI_State = ActionState.Walk;
+				return;
+			}
+
+			ShootSequenceCounter++;
+
+			if (ConsecutiveShotsCounter < MaxConsecutiveShots && ShootSequenceCounter >= maxShootSequence)
+			{
+				ConsecutiveShotsCounter++;
+				ShootSequenceCounter = visualGunDrawEnd;
+			}
+
+			// Decelerate horizontal movement
+			NPC.velocity.X *= 0.5f;
+
+			// Orient the NPC towards the player 
+			NPC.direction = Main.player[NPC.target].position.X < NPC.position.X ? -1 : 1;
+
+			int projDamage = 100;
+			int projType = ModContent.ProjectileType<ZombieSecurityBullet>();
+			float projSpeed = 120;
+
+			// Aim
+			Vector2 aimPosition = GetAimPosition(projSpeed);
+			Vector2 aimVelocity = GetAimVelocity(aimPosition, projSpeed);
+
+			// Shoot (TODO: align projectile and particle by angle)
+			if (Main.netMode != NetmodeID.MultiplayerClient && ShootSequenceCounter == sequenceShoot)
+			{
+				Projectile.NewProjectile(NPC.GetSource_FromAI(), aimPosition.X, aimPosition.Y, aimVelocity.X, aimVelocity.Y, projType, projDamage, 0f, Main.myPlayer);
+				Particle.CreateParticle<DesertEagleFlash>(NPC.Center + aimVelocity * 0.24f, aimVelocity * 0.05f, aimVelocity.ToRotation(), 1f, true);
+				//NPC.velocity.X = 4f * -NPC.direction;
+			}
+
+			// Set the aim angle 
+			SetAimMode(aimVelocity);
+		}
+
+		private Vector2 GetAimPosition(float projSpeed)
+		{
+			Vector2 aimPosition = new(NPC.position.X + NPC.width * 0.5f, NPC.position.Y + NPC.height * 0.5f);
+
+			float aimSpeedX = TargetPlayer.position.X + TargetPlayer.width * 0.5f - aimPosition.X;
+			float aimSpeedY = TargetPlayer.position.Y + TargetPlayer.height * 0.5f - aimPosition.Y;
+
+			float aimLength = (float)Math.Sqrt(aimSpeedX * aimSpeedX + aimSpeedY * aimSpeedY);
+			aimLength = projSpeed / aimLength;
+			aimSpeedX *= aimLength;
+			aimSpeedY *= aimLength;
+
+			aimPosition.X += aimSpeedX;
+			aimPosition.Y += aimSpeedY;
+
+			return aimPosition;
+		}
+
+		private Vector2 GetAimVelocity(Vector2 aimPosition, float projSpeed)
+		{
+			Vector2 aimVelocity = new(
+				TargetPlayer.position.X + TargetPlayer.width * 0.5f - aimPosition.X,
+				TargetPlayer.position.Y + TargetPlayer.height * 0.5f - aimPosition.Y
+			);
+
+			float aimLength = (float)Math.Sqrt(aimVelocity.X * aimVelocity.X + aimVelocity.Y * aimVelocity.Y);
+			aimLength = projSpeed / aimLength;
+			aimVelocity *= aimLength;
+
+			return aimVelocity;
+		}
+
+		private void SetAimMode(Vector2 aimVelocity)
+		{
+			if (Math.Abs(aimVelocity.X) > Math.Abs(aimVelocity.Y) * 2f)
+				AimAngle = AimType.Horizontal;
+			else if (aimVelocity.Y > 0f)
+				AimAngle = AimType.Downwards;
+			else
+				AimAngle = AimType.Upwards;
 		}
 
 		// Animation. 
@@ -244,6 +299,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 					if (frameIndex >= walkFrames.End)
  						NPC.frame.Y = frameHeight * walkFrames.Start;
  				}
+				// Shooting animation
 				else if(AI_State == ActionState.Shoot)
 				{
 					NPC.frameCounter += 1f;
@@ -256,9 +312,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 					if (NPC.frameCounter > 6.0)
 					{
 						// After weapon draw animation, sitck to an aim frame, based on the aim angle
-						if (frameIndex > shootFramesCommon.End && ShootSequenceCounter <= visualShoot)
+						if (ShootSequenceCounter >= visualGunDrawEnd && ShootSequenceCounter <= visualShoot)
 						{
-							switch (AimMode)
+							switch (AimAngle)
 							{
 								case AimType.Horizontal:
 									NPC.frame.Y = frameHeight * shootFramesHorizontal.Start;
@@ -283,7 +339,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
  				}
  			}
 			// Air-borne frame
-			else if(NPC.velocity.Y > 1f)
+			else if(MathF.Abs(NPC.velocity.Y) > 1f)
 			{
 				NPC.frameCounter = 0.0;
 				NPC.frame.Y = frameHeight * fallingFrame;
