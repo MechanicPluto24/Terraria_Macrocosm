@@ -1,3 +1,5 @@
+using Macrocosm.Content.Projectiles;
+using Macrocosm.Content.Projectiles.Base;
 using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
@@ -8,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
-	public class ArchersLine : ModItem
+    public class ArchersLine : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

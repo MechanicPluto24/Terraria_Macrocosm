@@ -2,6 +2,7 @@
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Gores;
 using Macrocosm.Content.Items.MeteorChunks;
+using Macrocosm.Content.Projectiles.Base;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -18,8 +19,6 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
             Width = 52;
             Height = 44;
             Damage = 1500;
-
-            MeteorName = "Nebula Meteor";
 
             ScreenshakeMaxDist = 140f * 16f;
             ScreenshakeIntensity = 100f;

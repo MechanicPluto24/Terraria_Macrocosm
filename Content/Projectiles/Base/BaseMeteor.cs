@@ -1,20 +1,18 @@
-﻿using Macrocosm.Common.Global.GlobalProjectiles;
-using Macrocosm.Common.Utils;
+﻿using System;
 using Microsoft.Xna.Framework;
-using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Macrocosm.Common.Utils;
+using Macrocosm.Common.Global.GlobalProjectiles;
 
-namespace Macrocosm.Content.Projectiles.Environment.Meteors
+namespace Macrocosm.Content.Projectiles.Base
 {
     public abstract class BaseMeteor : ModProjectile, IExplosive
     {
         public int Width;
         public int Height;
         public int Damage;
-
-        public string MeteorName;
 
         public float ScreenshakeMaxDist;
         public float ScreenshakeIntensity;

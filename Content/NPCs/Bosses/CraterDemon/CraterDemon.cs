@@ -519,7 +519,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 					spawned = true;
 					targetAlpha = 0f;
 
-					SoundEngine.PlaySound(SoundID.Zombie105, NPC.Center);  //Cultist laugh sound
+					//Cultist laugh sound
+					if (!Main.dedServ)
+						SoundEngine.PlaySound(SoundID.Zombie105, NPC.Center);  
 
 					NPC.netUpdate = true;
 				}
@@ -636,13 +638,18 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 					int max = Main.expertMode ? PortalTimerMax : (int)(PortalTimerMax * 1.5f);
 
 					if ((int)AI_Timer == max - 1)
-						SoundEngine.PlaySound(SoundID.Zombie99, NPC.Center);
+					{
+						if(!Main.dedServ)
+							SoundEngine.PlaySound(SoundID.Zombie99, NPC.Center);
+					}
 					else if ((int)AI_Timer == max - 24)
 					{
 						//Wait until the animation frame changes to the one facing forwards
 						if (GetAnimationSetFrame() == Animation_LookFront_JawOpen)
 						{
-							SoundEngine.PlaySound(SoundID.Zombie93, NPC.Center);
+							if (!Main.dedServ)
+								SoundEngine.PlaySound(SoundID.Zombie93, NPC.Center);
+
 							AI_AttackProgress++;
 						}
 						else
@@ -686,8 +693,11 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 								int craterImpID = NPC.NewNPC(NPC.GetSource_FromAI(), (int)spawn.X, (int)spawn.Y, ModContent.NPCType<CraterImp>(), ai3: NPC.whoAmI);
 								Main.npc[craterImpID].netUpdate = true;
 							}
+
 							//Exhale sound
-							SoundEngine.PlaySound(SoundID.Zombie93, NPC.Center);
+							if (!Main.dedServ)
+								SoundEngine.PlaySound(SoundID.Zombie93, NPC.Center);
+
 							AI_AttackProgress++;
 						}
 					}
@@ -834,7 +844,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 							AI_AttackProgress++;
 
-							if (repeatCount == 0)
+							if (repeatCount == 0 && !Main.dedServ)
 								SoundEngine.PlaySound(SoundID.Zombie105, NPC.Center); //Cultist laugh sound
 
 							//Wait for a random amount of time
@@ -915,7 +925,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 							NPC.Center = bigPortal.center;
 							NPC.velocity = NPC.DirectionTo(player.Center) * chargeVelocity;
 
-							SoundEngine.PlaySound(SoundID.ForceRoar, NPC.position);
+							if (!Main.dedServ)
+								SoundEngine.PlaySound(SoundID.ForceRoar, NPC.position);
 
 							if (Main.netMode != NetmodeID.MultiplayerClient)
 							{
@@ -1109,11 +1120,14 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 					NPC.velocity.Y = speedY;
 			}
 
-			//Play one of two sounds randomly
-			if (Main.rand.NextFloat() < 0.02f / 60f)
-				SoundEngine.PlaySound(SoundID.Zombie96, NPC.Center);
-			else if (Main.rand.NextFloat() < 0.02f / 60f)
-				SoundEngine.PlaySound(SoundID.Zombie5, NPC.Center);
+			if (!Main.dedServ)
+			{
+				//Play one of two sounds randomly
+				if (Main.rand.NextFloat() < 0.02f / 60f)
+					SoundEngine.PlaySound(SoundID.Zombie96, NPC.Center);
+				else if (Main.rand.NextFloat() < 0.02f / 60f)
+					SoundEngine.PlaySound(SoundID.Zombie5, NPC.Center);
+			}		
 		}
 
 		private int CountAliveLesserDemons()
@@ -1159,8 +1173,11 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			info.rotation = 0f;
 			info.fast = fast;
 
-			SoundStyle sound = SoundID.Item84 with { Volume = 0.9f };
-			SoundEngine.PlaySound(sound, info.center);
+			if (!Main.dedServ)
+			{
+				SoundStyle sound = SoundID.Item84 with { Volume = 0.9f };
+				SoundEngine.PlaySound(sound, info.center);
+			}
 		}
 
 		public override Color? GetAlpha(Color drawColor)

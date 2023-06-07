@@ -30,11 +30,10 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		public enum AimType { Horizontal, Upwards, Downwards }
 		public AimType AimAngle;
 
-		public int ShootCooldownCounter = maxCooldown;
-		public int ShootSequenceCounter = 0;
+		public int ShootCooldown = maxCooldown;
+		public int ShootSequence = 0;
 
-		public int ConsecutiveShotsCounter = 1;
-
+		public int ShotsCounter = 1;
 		public int MaxConsecutiveShots = 3;
 
 		public Player TargetPlayer => Main.player[NPC.target];
@@ -94,7 +93,10 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			NPC.frame.Y = NPC.GetFrameHeight() * walkFrames.Start;
 
 			if(Main.netMode != NetmodeID.MultiplayerClient)
+			{
 				MaxConsecutiveShots = Main.rand.Next(2, 5);
+				NPC.netUpdate = true;
+			}
 		}
 
 		#region Netcode
@@ -106,10 +108,10 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			writer.Write((byte)AI_State);
 			writer.Write((byte)AimAngle);
 
-			writer.Write((ushort)ShootCooldownCounter);
-			writer.Write((ushort)ShootSequenceCounter);
+			writer.Write((ushort)ShootCooldown);
+			writer.Write((ushort)ShootSequence);
 
-			writer.Write((byte)ConsecutiveShotsCounter);
+			writer.Write((byte)ShotsCounter);
 			writer.Write((byte)MaxConsecutiveShots);
 		}
 
@@ -118,36 +120,37 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			AI_State = (ActionState)reader.ReadByte();
 			AimAngle = (AimType)reader.ReadByte();
 
-			ShootCooldownCounter = reader.ReadUInt16();
-			ShootSequenceCounter = reader.ReadUInt16();
+			ShootCooldown = reader.ReadUInt16();
+			ShootSequence = reader.ReadUInt16();
 
-			ShootSequenceCounter = reader.ReadByte();
-			ShootSequenceCounter = reader.ReadByte();
+			ShotsCounter = reader.ReadByte();
+			MaxConsecutiveShots = reader.ReadByte();
 		}
 
 		#endregion
 
 		public override void AI()
 		{
-			//Main.NewText("Shoot sequence: " + ShootSequenceCounter + "/" + maxShootSequence);
-			//Main.NewText("Shoot cooldown: " + ShootCooldownCounter + "/" + maxCooldown);
+			//Main.NewText("Shoot sequence: " + ShootSequence + "/" + maxShootSequence);
+			//Main.NewText("Shoot cooldown: " + ShootCooldown + "/" + maxCooldown);
 			//Main.NewText("AI State: " + AI_State.ToString());
 			//Main.NewText("Frame Index: " + NPC.frame.Y / NPC.GetFrameHeight() + "/" + fallingFrame);
 			//Main.NewText("Frame cnt: " + NPC.frameCounter);
-			//Main.NewText("Shots: " + ConsecutiveShotsCounter + "/" + MaxConsecutiveShots);
+			//Main.NewText("Shots: " + ShotsCounter + "/" + MaxConsecutiveShots);
 			//Main.NewText("\n\n");
 
 			NPC.spriteDirection = -NPC.direction;
 
 			if (NPC.justHit)
 			{
-				ShootCooldownCounter = maxCooldown / 4;
-				ShootSequenceCounter = 0;
-				AI_State = ActionState.Walk;
-				ConsecutiveShotsCounter = 1;
+				ShootCooldown = maxCooldown / 4;
+				ShootSequence = 0;
+				ShotsCounter = 1;
 
 				if (AI_State == ActionState.Shoot)
 					NPC.frame.Y = NPC.GetFrameHeight() * shootFramesCommon.Start;
+
+				AI_State = ActionState.Walk;
 			}
  
 			if (AI_State == ActionState.Walk)
@@ -165,17 +168,20 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			// Base Fighter AI
 			Utility.AIZombie(NPC, ref NPC.ai, false, true, 0);
 
-			ShootCooldownCounter--;
+			ShootCooldown--;
 
 			// Enter shoot state if cooldown passed, clear line of sight, enemy is stationary (vertically?)
-			if (ShootCooldownCounter <= 0 && Collision.CanHit(NPC, TargetPlayer) && NPC.velocity.Y == 0f)
+			if (ShootCooldown <= 0 && Collision.CanHit(NPC, TargetPlayer) && NPC.velocity.Y == 0f)
 			{
 				// Reset cooldown
-				ShootCooldownCounter = maxCooldown; 
+				ShootCooldown = maxCooldown; 
 
 				// Randomize shoot count
 				if(Main.netMode != NetmodeID.MultiplayerClient)
+				{
 					MaxConsecutiveShots = Main.rand.Next(2, 5);
+					NPC.netUpdate = true;
+				}
 
 				// Set up the first weapon draw frame (did not find a way to do it right in FindFrame)
 				NPC.frame.Y = NPC.GetFrameHeight() * shootFramesCommon.Start;
@@ -187,20 +193,20 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		private void AI_Shoot()
 		{
 			// Exit state if line of sight is broken or shoot sequence succeeded
-			if (!Collision.CanHit(NPC, TargetPlayer) || (ConsecutiveShotsCounter >= MaxConsecutiveShots && ShootSequenceCounter >= maxShootSequence))
+			if (!Collision.CanHit(NPC, TargetPlayer) || (ShotsCounter >= MaxConsecutiveShots && ShootSequence >= maxShootSequence))
 			{
-				ConsecutiveShotsCounter = 1;
-				ShootSequenceCounter = 0;
+				ShotsCounter = 1;
+				ShootSequence = 0;
 				AI_State = ActionState.Walk;
 				return;
 			}
 
-			ShootSequenceCounter++;
+			ShootSequence++;
 
-			if (ConsecutiveShotsCounter < MaxConsecutiveShots && ShootSequenceCounter >= maxShootSequence)
+			if (ShotsCounter < MaxConsecutiveShots && ShootSequence >= maxShootSequence)
 			{
-				ConsecutiveShotsCounter++;
-				ShootSequenceCounter = visualGunDrawEnd;
+				ShotsCounter++;
+				ShootSequence = visualGunDrawEnd;
 			}
 
 			// Decelerate horizontal movement
@@ -218,11 +224,10 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			Vector2 aimVelocity = GetAimVelocity(aimPosition, projSpeed);
 
 			// Shoot (TODO: align projectile and particle by angle)
-			if (Main.netMode != NetmodeID.MultiplayerClient && ShootSequenceCounter == sequenceShoot)
+			if (Main.netMode != NetmodeID.MultiplayerClient && ShootSequence == sequenceShoot)
 			{
 				Projectile.NewProjectile(NPC.GetSource_FromAI(), aimPosition.X, aimPosition.Y, aimVelocity.X, aimVelocity.Y, projType, projDamage, 0f, Main.myPlayer);
 				Particle.CreateParticle<DesertEagleFlash>(NPC.Center + aimVelocity * 0.24f, aimVelocity * 0.05f, aimVelocity.ToRotation(), 1f, true);
-				//NPC.velocity.X = 4f * -NPC.direction;
 			}
 
 			// Set the aim angle 
@@ -305,14 +310,14 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 					NPC.frameCounter += 1f;
 
 					// Speed up animation for recoil animation  
-					if(ShootSequenceCounter > visualShoot)
+					if(ShootSequence > visualShoot)
 						NPC.frameCounter += 0.2f;
 
 					// Update frame 
 					if (NPC.frameCounter > 6.0)
 					{
 						// After weapon draw animation, sitck to an aim frame, based on the aim angle
-						if (ShootSequenceCounter >= visualGunDrawEnd && ShootSequenceCounter <= visualShoot)
+						if (ShootSequence >= visualGunDrawEnd && ShootSequence <= visualShoot)
 						{
 							switch (AimAngle)
 							{
