@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.MeteorChunks;
+using Macrocosm.Content.Projectiles.Base;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.GameContent.Drawing;
@@ -16,8 +17,6 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
             Width = 52;
             Height = 44;
             Damage = 1500;
-
-            MeteorName = "Stardust Meteor";
 
             ScreenshakeMaxDist = 140f * 16f;
             ScreenshakeIntensity = 100f;

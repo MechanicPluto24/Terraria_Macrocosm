@@ -9,15 +9,15 @@ namespace Macrocosm.Content.Rocket.Navigation.LaunchChecklist
 
 		private readonly Func<bool> predicate = () => false;
 
-		public bool HideIfTrue = true;
+		public bool HideIfMet = true;
 
 		private readonly ChecklistInfoElement checklistInfoElement;
 
-		public ChecklistCondition(string langKey, Func<bool> canLaunch, bool hideIfTrue = false)
+		public ChecklistCondition(string langKey, Func<bool> canLaunch, bool hideIfMet = false)
 		{
 			LangKey = langKey;
 			predicate = canLaunch;
-			HideIfTrue = hideIfTrue;
+			HideIfMet = hideIfMet;
 
 			checklistInfoElement = new(langKey);
 		}

@@ -14,11 +14,8 @@ namespace Macrocosm.Content.Rocket.Navigation
     {
         private UIText uIDisplayName;
         private UIList uIInfoElements;
-
-        private string title;
-        public UIFlightChecklist(string title)
+        public UIFlightChecklist()
         {
-            this.title = title;
             Initialize();
         }
 
@@ -58,7 +55,7 @@ namespace Macrocosm.Content.Rocket.Navigation
             Append(uIScrollbar);
             uIInfoElements.Width.Set(-20f, 1f);
 
-            uIDisplayName = new(title, 1.2f, false)
+            uIDisplayName = new(Language.GetTextValue("Mods.Macrocosm.WorldInfo.Common.Checklist"), 1.2f, false)
             {
                 HAlign = 0.43f,
                 Top = new StyleDimension(15, 0f),
@@ -72,7 +69,9 @@ namespace Macrocosm.Content.Rocket.Navigation
             base.Update(gameTime);
 
             ClearInfo();
-        }
+
+            uIDisplayName.SetText(Language.GetTextValue("Mods.Macrocosm.WorldInfo.Common.Checklist"));
+		}
 
         public void Add(UIElement element)
         {

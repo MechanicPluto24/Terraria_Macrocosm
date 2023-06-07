@@ -2005,10 +2005,10 @@ namespace Macrocosm.Common.Utils
             if (width == -1) { width = Main.player[p.owner].width; }
             if (height == -1) { height = Main.player[p.owner].height; }
             Vector2 center = position + new Vector2(width * 0.5f, height * 0.5f);
-            if (playSound && p.soundDelay == 0)
+            if (playSound && p.soundDelay == 0 && !Main.dedServ)
             {
                 p.soundDelay = 8;
-                SoundEngine.PlaySound(SoundID.Item7, p.position);
+				SoundEngine.PlaySound(SoundID.Item7, p.position);
             }
             if (ai[0] == 0f)
             {
@@ -2213,8 +2213,9 @@ namespace Macrocosm.Common.Utils
                 {
                     p.netUpdate = true;
                     Collision.HitTiles(p.position, p.velocity, p.width, p.height);
-                    if (playSound) { SoundEngine.PlaySound(SoundID.Dig, p.position); }
-                }
+                    if (playSound && !Main.dedServ) 
+                         SoundEngine.PlaySound(SoundID.Dig, p.position); 
+                 }
             }
         }
 
@@ -2301,7 +2302,9 @@ namespace Macrocosm.Common.Utils
                 {
                     if (npc.localAI[0] == 0f)
                     {
-                        SoundEngine.PlaySound(SoundID.Item8, npc.Center);
+						if (!Main.dedServ)
+							SoundEngine.PlaySound(SoundID.Item8, npc.Center);
+
                         npc.TargetClosest();
                         if (npc.direction > 0)
                         {
@@ -3054,7 +3057,7 @@ namespace Macrocosm.Common.Utils
                 npc.life = -1;
                 npc.HitEffect();
                 npc.active = false;
-                if (npc.type == NPCID.OldMan)
+                if (npc.type == NPCID.OldMan && !Main.dedServ)
                     SoundEngine.PlaySound(SoundID.Roar, npc.position);
             }
             //prevent a -1, -1 saving scenario
@@ -3888,7 +3891,9 @@ namespace Macrocosm.Common.Utils
                 int tx = (int)tilePos.X; int ty = (int)tilePos.Y;
                 if (!Main.tile[tx, ty].HasUnactuatedTile || !Main.tileSolid[Main.tile[tx, ty].TileType] || Main.tileSolid[Main.tile[tx, ty].TileType] && Main.tileSolidTop[Main.tile[tx, ty].TileType])
                 {
-                    if (npc.DeathSound != null) SoundEngine.PlaySound((SoundStyle)npc.DeathSound, npc.Center);
+                    if (npc.DeathSound != null && !Main.dedServ) 
+                        SoundEngine.PlaySound((SoundStyle)npc.DeathSound, npc.Center);
+
                     npc.life = -1;
                     npc.HitEffect();
                     npc.active = false;
@@ -4311,7 +4316,9 @@ namespace Macrocosm.Common.Utils
                         if (distSoundDelay < 10f) { distSoundDelay = 10f; }
                         if (distSoundDelay > 20f) { distSoundDelay = 20f; }
                         npc.soundDelay = (int)distSoundDelay;
-                        SoundEngine.PlaySound(SoundID.Roar, npc.position);
+
+						if (!Main.dedServ)
+							SoundEngine.PlaySound(SoundID.Roar, npc.position);
                     }
                     dist = (float)Math.Sqrt(playerCenterX * playerCenterX + playerCenterY * playerCenterY);
                     float absPlayerCenterX = Math.Abs(playerCenterX);

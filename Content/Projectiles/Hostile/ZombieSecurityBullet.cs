@@ -31,7 +31,9 @@ namespace Macrocosm.Content.Projectiles.Hostile
 		{
 			if (!spawned)
 			{
-				SoundEngine.PlaySound(SFX.DesertEagleShoot with { Volume = 0.3f });
+				if(!Main.dedServ)
+					SoundEngine.PlaySound(SFX.DesertEagleShoot with { Volume = 0.3f }, Projectile.position);
+
 				spawned = true;
 			}
 
