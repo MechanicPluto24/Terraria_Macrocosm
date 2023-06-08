@@ -72,7 +72,8 @@ namespace Macrocosm.Content.UI.LoadingScreens
 			earth.Scale = scale;
 			earth.Draw(spriteBatch);
 
-			spriteBatch.Restore(state);
+			spriteBatch.End();
+			spriteBatch.Begin(state);
 		}
 	}
 }

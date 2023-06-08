@@ -1,6 +1,6 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Global.GlobalNPCs;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
-using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Materials;
 using Microsoft.Xna.Framework;
@@ -15,7 +15,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-    public class CrescentGhoul : MoonEnemy
+    public class CrescentGhoul : ModNPC, IMoonEnemy
 	{
 		public enum ActionState
 		{
@@ -59,7 +59,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			NPC.knockBackResist = 0f;
 			NPC.noGravity = true;
 			NPC.noTileCollide = true;
-			SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBiome>().Type }; // Associates NPC NPC with the Moon Biome in Bestiary
 		}
 
 		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)

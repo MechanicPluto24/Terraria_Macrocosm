@@ -146,7 +146,8 @@ namespace Macrocosm.Content.Rocket.Navigation
             else if (IsMouseHovering)
                 spriteBatch.Draw(selectionOutline, pos, null, Color.Gold, 0f, origin, 1f, SpriteEffects.None, 0f);
 
-            spriteBatch.Restore(state);
+			spriteBatch.End();
+			spriteBatch.Begin(state);
         }
     }
 }

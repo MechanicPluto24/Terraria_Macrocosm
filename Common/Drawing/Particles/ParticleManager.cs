@@ -102,7 +102,7 @@ namespace Macrocosm.Common.Drawing.Particles
 			spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, default, default, default, default, Main.GameViewMatrix.ZoomMatrix);
 			DrawParticles(ParticleDrawLayer.BeforeNPCs);
 			spriteBatch.End();
-			spriteBatch.Restore(state1);
+			spriteBatch.Begin(state1);
 				
 			orig(self, behindTiles);
 			
@@ -111,7 +111,7 @@ namespace Macrocosm.Common.Drawing.Particles
 			spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, default, default, default, default, Main.GameViewMatrix.ZoomMatrix);
 			DrawParticles(ParticleDrawLayer.AfterNPCs);
 			spriteBatch.End();
-			spriteBatch.Restore(state2);
+			spriteBatch.Begin(state2);
 		}
 		
 		private void DrawParticles_Projectiles(Terraria.On_Main.orig_DrawProjectiles orig, Terraria.Main self)
@@ -137,7 +137,7 @@ namespace Macrocosm.Common.Drawing.Particles
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, default, default, default, default, Main.GameViewMatrix.ZoomMatrix);
 			DrawParticles(ParticleDrawLayer.BeforeTiles);
 			Main.spriteBatch.End();
-			Main.spriteBatch.Restore(state);
+			Main.spriteBatch.Begin(state);
 			
 			orig(self, force);
 		}

@@ -1,20 +1,17 @@
+using Macrocosm.Common.Global.GlobalNPCs;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
-using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Items.Materials;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using Terraria;
 using Terraria.GameContent.Bestiary;
-using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-    public class RadioactiveSlime : MoonEnemy
+    public class RadioactiveSlime : ModNPC, IMoonEnemy
 	{
 		public override void SetStaticDefaults()
 		{
@@ -93,7 +90,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
-			spriteBatch.Restore(state);
+			spriteBatch.End();
+			spriteBatch.Begin(state);
 		}
 	}
 }

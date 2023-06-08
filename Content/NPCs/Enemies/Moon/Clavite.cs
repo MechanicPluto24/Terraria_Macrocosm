@@ -1,9 +1,8 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Global.GlobalNPCs;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
-using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Items.Materials;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
@@ -12,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-    public class Clavite : MoonEnemy
+    public class Clavite : ModNPC, IMoonEnemy
 	{
 		public override void SetStaticDefaults()
 		{
@@ -38,7 +37,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			NPC.noGravity = true;
 			NPC.noTileCollide = true;
 			//AnimationType = NPCID.MeteorHead;
-			SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBiome>().Type }; // Associates this NPC with the Moon Biome in Bestiary
 		}
 
 		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)

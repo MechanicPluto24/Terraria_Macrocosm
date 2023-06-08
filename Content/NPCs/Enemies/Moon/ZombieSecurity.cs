@@ -5,19 +5,18 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.DataStructures;
 using Terraria.GameContent.Bestiary;
-using Macrocosm.Common;
 using Macrocosm.Common.Utils;
-using Macrocosm.Common.Netcode;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Content.Particles;
 using System.IO;
-using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Content.Projectiles.Hostile;
+using Macrocosm.Common.Global.GlobalNPCs;
+using Macrocosm.Common.DataStructures;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-	public class ZombieSecurity : MoonEnemy
+    public class ZombieSecurity : ModNPC, IMoonEnemy
 	{
 		public enum ActionState 
 		{ 
@@ -71,7 +70,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			NPC.aiStyle = -1;
  			Banner = Item.NPCtoBanner(NPCID.Zombie);
 			BannerItem = Item.BannerToItem(Banner);
-			SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBiome>().Type }; // Associates this NPC with the Moon Biome in Bestiary
 		}
 
 		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)

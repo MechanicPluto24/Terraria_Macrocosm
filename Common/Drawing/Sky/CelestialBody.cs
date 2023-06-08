@@ -324,9 +324,8 @@ namespace Macrocosm.Common.Drawing.Sky
             }
 			#endregion
 
-			spriteBatch.EndIfBeginCalled();
-
-            spriteBatch.Restore(state);
+			spriteBatch.End();
+            spriteBatch.Begin(state);
         }
 
         private void DrawChildren(SpriteBatch spriteBatch, SpriteBatchState state, bool inFront)

@@ -156,7 +156,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			Rectangle sourceRect = warning.Frame(1, 3, frameY: frameY);
 			Projectile.DrawAnimatedExtra(warning, Color.White.NewAlpha(alpha), Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None, new Vector2(5, 14), frame: sourceRect);
 
-			Main.spriteBatch.Restore(state);
+			Main.spriteBatch.End();
+			Main.spriteBatch.Begin(state);
 		}
 
 		private SlotId playingSoundId_1 = default;

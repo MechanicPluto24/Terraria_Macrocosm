@@ -11,10 +11,11 @@ using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Macrocosm.Content.Tiles.Blocks;
+using Macrocosm.Common.Global.GlobalNPCs;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-    public class LuminiteSlime : MoonEnemy
+    public class LuminiteSlime : ModNPC, IMoonEnemy
 	{
 		public override void SetStaticDefaults()
 		{

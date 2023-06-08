@@ -169,7 +169,10 @@ namespace Macrocosm.Content.Rocket.Navigation
             spriteBatch.Draw(Background, dimensions.Position(), null, Color.White.NewAlpha(alpha), 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
 
             if (specialDraw)
-                spriteBatch.Restore(state);
+            {
+				spriteBatch.End();
+				spriteBatch.Begin(state);
+            }
         }
 
         /// <summary>

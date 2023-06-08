@@ -93,7 +93,7 @@ namespace Macrocosm.Content.Rocket.Modules
 			if (SpecialDraw)
 			{
 				spriteBatch.End();
-				spriteBatch.Restore(state);
+				spriteBatch.Begin(state);
 
 				// Clear the tex registers  
 				Main.graphics.GraphicsDevice.Textures[1] = null;
