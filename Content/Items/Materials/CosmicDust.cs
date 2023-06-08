@@ -7,6 +7,8 @@ namespace Macrocosm.Content.Items.Materials
 {
 	public class CosmicDust : ModItem
 	{
+		//This shit is fucking ugly - OmegA
+		//This is a github test btw, I bloody hope this works.
 		public override void SetStaticDefaults()
 		{
 
