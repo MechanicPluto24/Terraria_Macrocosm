@@ -2,6 +2,7 @@ using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
+using Macrocosm.Content.Projectiles.Base;
 using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -50,13 +51,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			Shoot();
 			ComputeOverheat();
 			Visuals();
-			PlaySounds();
+
+			if(!Main.dedServ && StillInUse)
+				PlaySounds();
 
 			AI_UseCounter++;
 			AI_Windup++;
-
-			if (!StillInUse)
-				Projectile.Kill();
 		}
 
 		private void Animate()
@@ -159,25 +159,33 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			Main.spriteBatch.Restore(state);
 		}
 
-		private SlotId playingSoundId_1;
-		private SlotId playingSoundId_2;
+		private SlotId playingSoundId_1 = default;
+		private SlotId playingSoundId_2 = default;
 		private void PlaySounds()
 		{
-			playingSoundId_1 = SoundEngine.PlaySound(SFX.HandheldThrusterFlame with
-			{
-				Volume = 0.3f,
-				IsLooped = true,
-				SoundLimitBehavior = SoundLimitBehavior.IgnoreNew
-			});
+			if (!StillInUse)
+				return;
 
-			if (!OwnerHasMana)
+			if (!playingSoundId_1.IsValid || playingSoundId_1 == default)
+			{
+				playingSoundId_1 = SoundEngine.PlaySound(SFX.HandheldThrusterFlame with
+				{
+					Volume = 0.3f,
+					IsLooped = true,
+					SoundLimitBehavior = SoundLimitBehavior.IgnoreNew
+				},
+			Projectile.position);
+			}
+			
+			if (!OwnerHasMana && (!playingSoundId_2.IsValid || playingSoundId_2 == default))
 			{
 				playingSoundId_2 = SoundEngine.PlaySound(SFX.HandheldThrusterOverheat with
 				{
 					Volume = 0.3f,
 					IsLooped = true,
 					SoundLimitBehavior = SoundLimitBehavior.IgnoreNew
-				});
+				},
+				Projectile.position);
 			}
 		}
 
@@ -186,7 +194,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			if (SoundEngine.TryGetActiveSound(playingSoundId_1, out ActiveSound playingSound1))
 				playingSound1.Stop();
 
-			if (!OwnerHasMana && SoundEngine.TryGetActiveSound(playingSoundId_2, out ActiveSound playingSound2))
+			if (SoundEngine.TryGetActiveSound(playingSoundId_2, out ActiveSound playingSound2))
 				playingSound2.Stop();
 		}
 	}
@@ -196,7 +204,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 		public override string Texture => Macrocosm.EmptyTexPath;
 
 		private Projectile Owner => Main.projectile[(int)Projectile.ai[0]];
-
 
 		public override void SetDefaults()
 		{

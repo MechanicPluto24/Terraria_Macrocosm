@@ -2,6 +2,7 @@
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Gores;
 using Macrocosm.Content.Items.MeteorChunks;
+using Macrocosm.Content.Projectiles.Base;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -17,8 +18,6 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
             Width = 32;
             Height = 32;
             Damage = 500;
-
-            MeteorName = "Small Meteor";
 
             ScreenshakeMaxDist = 90f * 16f;
             ScreenshakeIntensity = 50f;

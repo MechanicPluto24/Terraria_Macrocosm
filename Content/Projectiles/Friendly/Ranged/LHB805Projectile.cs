@@ -1,5 +1,6 @@
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Gores;
+using Macrocosm.Content.Projectiles.Base;
 using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -45,7 +46,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			Animate();
 			Shoot();
 			Visuals();
-			PlaySounds();
+
+			if(!Main.dedServ)
+				PlaySounds();
 
 			AI_Windup++;
 		}
@@ -87,7 +90,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 				float knockback = OwnerPlayer.inventory[OwnerPlayer.selectedItem].knockBack;
 
 				if (StillInUse)
-					OwnerPlayer.PickAmmo(OwnerPlayer.inventory[OwnerPlayer.selectedItem], out projToShoot, out float speed, out damage, out knockback, out var usedAmmoItemId); //uses ammunition from inventory
+				{
+					if (!OwnerPlayer.PickAmmo(OwnerPlayer.inventory[OwnerPlayer.selectedItem], out projToShoot, out float speed, out damage, out knockback, out var usedAmmoItemId)) //uses ammunition from inventory
+						Projectile.Kill();
+				}
 
 				Vector2 rotPoint = Utility.RotatingPoint(Projectile.Center, new Vector2(40, 8 * Projectile.spriteDirection), Projectile.rotation);
 
@@ -103,7 +109,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 				if (!Main.dedServ && AI_Windup % (fireFreq * 1.5) == 0)
 				{
 					Vector2 position = Projectile.Center - new Vector2(-20, 0) * Projectile.spriteDirection;
-					Vector2 velocity = new Vector2(1.2f * Projectile.spriteDirection, 4f);
+					Vector2 velocity = new(1.2f * Projectile.spriteDirection, 4f);
 					Gore.NewGore(Projectile.GetSource_FromThis(), position, velocity, ModContent.GoreType<MinigunShell>());
 				}
 				#endregion
@@ -138,7 +144,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 				{
 					Volume = 0.3f,
 					SoundLimitBehavior = SoundLimitBehavior.IgnoreNew
-				});
+				}, 
+				Projectile.position);
 			}
 			else if (AI_Windup == windupTime)
 			{
@@ -147,7 +154,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 					Volume = 0.3f,
 					IsLooped = true,
 					SoundLimitBehavior = SoundLimitBehavior.IgnoreNew
-				});
+				},
+				Projectile.position);
 			}
 		}
 

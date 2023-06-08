@@ -1,16 +1,9 @@
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Gores;
-using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Utilities;
-using Steamworks;
 using Terraria;
-using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Projectiles.Friendly
+namespace Macrocosm.Content.Projectiles.Base
 {
     public abstract class HeldGunProjectile : ModProjectile
     {
@@ -48,17 +41,18 @@ namespace Macrocosm.Content.Projectiles.Friendly
 
             ProjectileAI();
 
-			if (!StillInUse)
-				Projectile.Kill();
-		}
+            if (!StillInUse)
+                Projectile.Kill();
+        }
 
         protected virtual void PlayerVisuals()
         {
-			if (OwnerPlayer.whoAmI != Main.myPlayer)
-				return;
-
-			Projectile.Center = OwnerPlayer.MountedCenter;
             Projectile.rotation = Projectile.velocity.ToRotation();
+
+            if (OwnerPlayer.whoAmI != Main.myPlayer)
+                return;
+
+            Projectile.Center = OwnerPlayer.MountedCenter;
 
             Projectile.spriteDirection = Projectile.direction;
 
@@ -87,11 +81,11 @@ namespace Macrocosm.Content.Projectiles.Friendly
             aim = Vector2.Normalize(Vector2.Lerp(Vector2.Normalize(Projectile.velocity), aim, 1));
             aim *= CircularHoldoutOffset;
 
-           if ((aim != Projectile.velocity || Projectile.velocity != Projectile.oldVelocity) && Main.netMode != NetmodeID.MultiplayerClient)
-               Projectile.netUpdate = true;
+            if ((aim != Projectile.velocity || Projectile.velocity != Projectile.oldVelocity) && Main.netMode != NetmodeID.MultiplayerClient)
+                Projectile.netUpdate = true;
 
-            if(StillInUse)
-               Projectile.velocity = aim;
+            if (StillInUse)
+                Projectile.velocity = aim;
         }
     }
 }
