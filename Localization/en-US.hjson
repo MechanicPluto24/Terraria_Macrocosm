@@ -814,6 +814,8 @@ Mods: {
 			MoonZombie.DisplayName: Zombie Astronaut
 			RadioactiveSlime.DisplayName: Radioactive Slime
 			RegolithSlime.DisplayName: Regolith Slime
+			Rocket.DisplayName: Rocket
+			ZombieSecurity.DisplayName: Zombie Security
 
 			MoonChampion: {
 				DisplayName: Moon Champion
@@ -837,9 +839,6 @@ Mods: {
 					Princess_LovesNPC: I like {NPCName}.
 				}
 			}
-
-			Rocket.DisplayName: Rocket
-			ZombieSecurity.DisplayName: Zombie Security
 		}
 
 		Projectiles: {
@@ -857,10 +856,10 @@ Mods: {
 			ArtemiteSpearProjectile.DisplayName: Artemite Spear
 			ArtemiteSpearProjectileShoot.DisplayName: Artemite Spear
 			ArtemiteSwordProjectile.DisplayName: Artemite Sword
-			ClawWrenchProjectile.DisplayName: Claw Wrench Projectile
+			ClawWrenchProjectile.DisplayName: Claw Wrench
 			MoonSwordProjectile.DisplayName: Moon Sword
 			MoonSwordSwing.DisplayName: Moonlight Greatsword
-			ArchersLineProjectile.DisplayName: Archers Line Projectile
+			ArchersLineProjectile.DisplayName: Archer's Line
 			CruithneGreenSlug.DisplayName: Cruithne Green Slug
 			DeliriumShell.DisplayName: Delirium Shell
 			LHB805Projectile.DisplayName: LHB-805
@@ -869,26 +868,26 @@ Mods: {
 			SeleniteArrow.DisplayName: Selenite Arrow
 			CalcicCaneMinion.DisplayName: Crater Imp
 			ChandriumStaffMinion.DisplayName: Crescent Ghoul
-			ChandriumWhipProjectile.DisplayName: Chandrium Whip Projectile
-			MoonGlobeProjectile.DisplayName: Moon Globe Projectile
+			ChandriumWhipProjectile.DisplayName: Chandrium Whip
+			MoonGlobeProjectile.DisplayName: Moon Globe
 			MoonTombstone.DisplayName: Moon Tombstone
-			ArtemiteDrillProjectile.DisplayName: Artemite Drill Projectile
-			ChandriumDrillProjectile.DisplayName: Chandrium Drill Projectile
-			DianiteDrillProjectile.DisplayName: Dianite Drill Projectile
-			SeleniteDrillProjectile.DisplayName: Selenite Drill Projectile
+			ArtemiteDrillProjectile.DisplayName: Artemite Drill
+			ChandriumDrillProjectile.DisplayName: Chandrium Drill
+			DianiteDrillProjectile.DisplayName: Dianite Drill
+			SeleniteDrillProjectile.DisplayName: Selenite Drill
 			FlamingMeteor.DisplayName: Flaming Meteor
 			LuminiteSlimeProjectile.DisplayName: Luminite Slime
 			MeteorPortal.DisplayName: Meteor Portal
 			ImbriumJewelProjectile.DisplayName: Imbrium Jewel
 			ImbriumJewelMeteor.DisplayName: Imbrium Jewel
-			HandheldEngineProjectile.DisplayName: Handheld Engine Projectile
-			StupidShit.DisplayName: Stupid Shit
-			HandheldEngineHitbox.DisplayName: Handheld Engine Hitbox
+			HandheldEngineProjectile.DisplayName: Handheld Engine
+			HandheldEngineHitbox.DisplayName: Handheld Engine
+			ZombieSecurityBullet.DisplayName: Zombie Security
 		}
 
 		Tiles: {
 			RocketLaunchPad.MapEntry: Launch Pad
-			AluminumOre.MapEntry: Aluminum
+			AluminumOre.MapEntry: Aluminum Ore
 			ArtemiteOre.MapEntry: Artemite Ore
 			ChandriumOre.MapEntry: Chandrium Ore
 			DianiteOre.MapEntry: Dianite Ore
@@ -898,7 +897,24 @@ Mods: {
 		}
 
 		GameTips: {
-			Generic_Tip1: (TEST) You can visit other planets if you manage to build a rocket (TEST)
+			Generic_Tip1: (TEST) 1 You can visit other planets if you manage to build a rocket (TEST)
+			Generic_Tip2: (TEST) 2 You can visit other planets if you manage to build a rocket (TEST)
+			Generic_Tip3: (TEST) 3 You can visit other planets if you manage to build a rocket (TEST)
+			Generic_Tip4: (TEST) 4 You can visit other planets if you manage to build a rocket (TEST)
+			Generic_Tip5: (TEST) 5 You can visit other planets if you manage to build a rocket (TEST)
+			Generic_Tip6: (TEST) 6 You can visit other planets if you manage to build a rocket (TEST)
+			Generic_Tip7: (TEST) 7 You can visit other planets if you manage to build a rocket (TEST)
+			Generic_Tip8: (TEST) 8 You can visit other planets if you manage to build a rocket (TEST)
+			Generic_Tip9: (TEST) 9 You can visit other planets if you manage to build a rocket (TEST)
+			Generic_Tip10: (TEST) 10 You can visit other planets if you manage to build a rocket (TEST)
+			Generic_Tip11: (TEST) 11 You can visit other planets if you manage to build a rocket (TEST)
+			Generic_Tip12: (TEST) 12 You can visit other planets if you manage to build a rocket (TEST)
+			Generic_Tip13: (TEST) 13 You can visit other planets if you manage to build a rocket (TEST)
+			Generic_Tip14: (TEST) 14 You can visit other planets if you manage to build a rocket (TEST)
+			Generic_Tip15: (TEST) 15 You can visit other planets if you manage to build a rocket (TEST)
+			Generic_Tip16: (TEST) 16 You can visit other planets if you manage to build a rocket (TEST)
+			Generic_Tip17: (TEST) 17 You can visit other planets if you manage to build a rocket (TEST)
+			Generic_Tip18: (TEST) 18 You can visit other planets if you manage to build a rocket (TEST)
 
 			LoadingScreen: {
 				Moon: {
@@ -920,6 +936,118 @@ Mods: {
 					Earth_Tip4: Nearly seven billion deaths within the first 24 hours.
 					Earth_Tip5: You are never truly safe.
 				}
+			}
+		}
+
+		Subworlds: {
+			Sun: {
+				DisplayName: The Sun
+				FlavorText: default
+			}
+
+			Vulcan: {
+				DisplayName: Vulcan
+				FlavorText: default
+			}
+
+			Mercury: {
+				DisplayName: Mercury
+				FlavorText: default
+			}
+
+			Venus: {
+				DisplayName: Venus
+				FlavorText: default
+			}
+
+			Earth: {
+				DisplayName: Earth
+				FlavorText: Third planet from the Sun, and homeworld of humanity. Covered in lush green forests, liquid oceans, and an oxygen-rich atmosphere, it is the ideal world for life to comfortably thrive.
+			}
+
+			Moon: {
+				DisplayName: The Moon
+				FlavorText: Homeworld of the infamous Moon Lord, the Earth's Moon is a desolate, airless rock with an unforgiving environment. The Moon is well known for its high concentration of precious luminite, guarded by alien terrors that dwell beneath the dead moonscape.
+			}
+
+			Mars: {
+				DisplayName: Mars
+				FlavorText: default
+			}
+
+			Phobos: {
+				DisplayName: Phobos
+				FlavorText: default
+			}
+
+			Deimos: {
+				DisplayName: Deimos
+				FlavorText: default
+			}
+
+			Ceres: {
+				DisplayName: Ceres
+				FlavorText: default
+			}
+
+			Jupiter: {
+				DisplayName: Jupiter
+				FlavorText: default
+			}
+
+			Io: {
+				DisplayName: Io
+				FlavorText: default
+			}
+
+			Europa: {
+				DisplayName: Europa
+				FlavorText: default
+			}
+
+			Saturn: {
+				DisplayName: Saturn
+				FlavorText: default
+			}
+
+			Titan: {
+				DisplayName: Titan
+				FlavorText: default
+			}
+
+			Ouranos: {
+				DisplayName: Ouranos
+				FlavorText: default
+			}
+
+			Miranda: {
+				DisplayName: Miranda
+				FlavorText: default
+			}
+
+			Neptune: {
+				DisplayName: Neptune
+				FlavorText: default
+			}
+
+			Triton: {
+				DisplayName: Triton
+				FlavorText: default
+			}
+
+			Pluto: {
+				DisplayName: Pluto
+				FlavorText: default
+			}
+
+			Charon: {
+				DisplayName: Charon
+				FlavorText: default
+			}
+
+			Eris: {
+				DisplayName: Eris
+				FlavorText: default
 			}
 		}
 
@@ -1048,127 +1176,18 @@ Mods: {
 						Hover: You need a fusion reactor to reach The Moon
 					}
 				}
-			}
-		}
 
-		Worlds: {
-			InnerSolarSystem: {
-				DisplayName:
-					'''
-					Inner Solar
-					  System
-					'''
-				FlavorText: default
-			}
+				MoonLord: {
+					True: {
+						Display: default
+						Hover: default
+					}
 
-			Sun: {
-				DisplayName: The Sun
-				FlavorText: default
-			}
-
-			Vulcan: {
-				DisplayName: Vulcan
-				FlavorText: default
-			}
-
-			Mercury: {
-				DisplayName: Mercury
-				FlavorText: default
-			}
-
-			Venus: {
-				DisplayName: Venus
-				FlavorText: default
-			}
-
-			Earth: {
-				DisplayName: Earth
-				FlavorText: Third planet from the Sun, and homeworld of humanity. Covered in lush green forests, liquid oceans, and an oxygen-rich atmosphere, it is the ideal world for life to comfortably thrive.
-			}
-
-			Moon: {
-				DisplayName: The Moon
-				FlavorText: Homeworld of the infamous Moon Lord, the Earth's Moon is a desolate, airless rock with an unforgiving environment. The Moon is well known for its high concentration of precious luminite, guarded by alien terrors that dwell beneath the dead moonscape.
-			}
-
-			Mars: {
-				DisplayName: Mars
-				FlavorText: default
-			}
-
-			Phobos: {
-				DisplayName: Phobos
-				FlavorText: default
-			}
-
-			Deimos: {
-				DisplayName: Deimos
-				FlavorText: default
-			}
-
-			Ceres: {
-				DisplayName: Ceres
-				FlavorText: default
-			}
-
-			Jupiter: {
-				DisplayName: Jupiter
-				FlavorText: default
-			}
-
-			Io: {
-				DisplayName: Io
-				FlavorText: default
-			}
-
-			Europa: {
-				DisplayName: Europa
-				FlavorText: default
-			}
-
-			Saturn: {
-				DisplayName: Saturn
-				FlavorText: default
-			}
-
-			Titan: {
-				DisplayName: Titan
-				FlavorText: default
-			}
-
-			Ouranos: {
-				DisplayName: Ouranos
-				FlavorText: default
-			}
-
-			Miranda: {
-				DisplayName: Miranda
-				FlavorText: default
-			}
-
-			Neptune: {
-				DisplayName: Neptune
-				FlavorText: default
-			}
-
-			Triton: {
-				DisplayName: Triton
-				FlavorText: default
-			}
-
-			Pluto: {
-				DisplayName: Pluto
-				FlavorText: default
-			}
-
-			Charon: {
-				DisplayName: Charon
-				FlavorText: default
-			}
-
-			Eris: {
-				DisplayName: Eris
-				FlavorText: default
+					False: {
+						Display: Missing reactor
+						Hover: You must defeat the Moon Lord to reach The Moon
+					}
+				}
 			}
 		}
 	}

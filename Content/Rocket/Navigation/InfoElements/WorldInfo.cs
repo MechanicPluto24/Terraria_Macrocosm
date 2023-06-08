@@ -28,7 +28,7 @@ namespace Macrocosm.Content.Rocket.Navigation.InfoElements
             this.elements = elements;
         }
 
-        const string localizationPath = "Mods.Macrocosm.Worlds.";
+        const string localizationPath = "Mods.Macrocosm.Subworlds.";
         public UIInfoPanel ProvideUI()
         {
             UIInfoPanel panel = new(Language.GetTextValue(localizationPath + worldNameKey + ".DisplayName"));

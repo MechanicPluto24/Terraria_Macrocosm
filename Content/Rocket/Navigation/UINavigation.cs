@@ -1,16 +1,11 @@
 ﻿using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Rocket;
 using Macrocosm.Content.Rocket.Navigation.InfoElements;
 using Macrocosm.Content.Rocket.Navigation.LaunchChecklist;
 using Microsoft.Xna.Framework;
-using System;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
-using Terraria.Localization;
-using Terraria.ModLoader;
 using Terraria.UI;
 
 namespace Macrocosm.Content.Rocket.Navigation
@@ -52,7 +47,7 @@ namespace Macrocosm.Content.Rocket.Navigation
             UIWorldInfoPanel = new("");
             UIBackgroundPanel.Append(UIWorldInfoPanel);
 
-            UIFlightChecklist = new(Language.GetTextValue("Mods.Macrocosm.WorldInfo.Common.Checklist"));
+            UIFlightChecklist = new();
             UIBackgroundPanel.Append(UIFlightChecklist);
 
             UILaunchButton = new();

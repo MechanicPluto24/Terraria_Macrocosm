@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using Macrocosm.Content.Rocket.Modules;
 using System.ComponentModel.Design;
 using Microsoft.CodeAnalysis;
+using Terraria.GameContent.Bestiary;
 
 namespace Macrocosm.Content.Rocket
 {
@@ -50,8 +51,8 @@ namespace Macrocosm.Content.Rocket
 		public override bool CheckActive() => false;
 
 		public RocketPlayer GetRocketPlayer(int playerID) => Main.player[playerID].RocketPlayer();
-		public bool CheckPlayerInRocket(int playerID) => GetRocketPlayer(playerID).InRocket && GetRocketPlayer(playerID).RocketID == NPC.whoAmI;
-		public bool CheckPlayerCommander(int playerID) => GetRocketPlayer(playerID).AsCommander && GetRocketPlayer(playerID).RocketID == NPC.whoAmI;
+		public bool CheckPlayerInRocket(int playerID) => Main.player[playerID].active && GetRocketPlayer(playerID).InRocket && GetRocketPlayer(playerID).RocketID == NPC.whoAmI;
+		public bool CheckPlayerCommander(int playerID) => Main.player[playerID].active && GetRocketPlayer(playerID).AsCommander && GetRocketPlayer(playerID).RocketID == NPC.whoAmI;
 
 		/// <summary> Rocket sequence timer </summary>
 		public int FlightTime
@@ -98,22 +99,13 @@ namespace Macrocosm.Content.Rocket
 
 		public override void OnSpawn(IEntitySource source)
 		{
-			startYPosition = NPC.Center.Y;
+			
+		}
 
-			CommandPod = new();
-			ServiceModule = new();
-			ReactorModule = new();
-			EngineModule = new();
-			Boosters = new();
-
-			Modules = new()
-			{
-				EngineModule,
-				Boosters,
-				ReactorModule,
-				ServiceModule,
-				CommandPod
-			};
+		public override void SetStaticDefaults()
+		{
+			NPCID.Sets.NPCBestiaryDrawModifiers value = new NPCID.Sets.NPCBestiaryDrawModifiers(0) { Hide = true };
+			NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
 		}
 
 		/// <summary> 
@@ -134,8 +126,16 @@ namespace Macrocosm.Content.Rocket
 			}
 		}
 
+		bool spawned = false;
+
 		public override void AI()
 		{
+			if (!spawned)
+			{
+				OnRocketCreation();
+				spawned = true;
+			}
+
  			NPC.direction = 1;
 			NPC.spriteDirection = -1;
 
@@ -165,14 +165,32 @@ namespace Macrocosm.Content.Rocket
 			}
 		}
 
-		public void Interact()
+		private void OnRocketCreation()
+		{
+			startYPosition = NPC.Center.Y;
+
+			CommandPod = new();
+			ServiceModule = new();
+			ReactorModule = new();
+			EngineModule = new();
+			Boosters = new();
+
+			Modules = new()
+			{
+				EngineModule,
+				Boosters,
+				ReactorModule,
+				ServiceModule,
+				CommandPod
+			};
+		}
+
+		private void Interact()
 		{
 			if (Main.netMode == NetmodeID.Server)
 				return;
 
 			bool hoveringMouse = NPC.Hitbox.Contains(Main.MouseWorld.ToPoint());
-
-			
 
 			if (hoveringMouse && InInteractionRange && !Launching)
 			{
@@ -225,8 +243,13 @@ namespace Macrocosm.Content.Rocket
 			if (Main.netMode == NetmodeID.SinglePlayer)
 				SetScreenshakeInternal(Main.LocalPlayer);
 			else
+			{
 				for (int i = 0; i < Main.maxPlayers; i++)
-					SetScreenshakeInternal(Main.player[i]);
+				{
+					if (Main.player[i].active)
+						SetScreenshakeInternal(Main.player[i]);
+				}
+			}
 		}
 
 		private void SetScreenshakeInternal(Player player)
@@ -358,7 +381,7 @@ namespace Macrocosm.Content.Rocket
 			Rocket rocket = Main.npc[rocketId].ModNPC as Rocket;
 
 			// Server receives embark status from client interaction 
-			if (Main.netMode == NetmodeID.Server)
+			if (Main.netMode == NetmodeID.Server && Main.player[playerId].active)
 			{
 				rocket.GetRocketPlayer(playerId).InRocket = true;
 				rocket.GetRocketPlayer(playerId).AsCommander = asCommander;
