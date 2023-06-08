@@ -26,10 +26,8 @@ namespace Macrocosm.Content.Projectiles.Base
             SetProjectileDefaults();
         }
 
-
         protected Player OwnerPlayer => Main.player[Projectile.owner];
         protected bool StillInUse => OwnerPlayer.channel && !OwnerPlayer.noItems && !OwnerPlayer.CCed;
-
 
         public virtual float CircularHoldoutOffset { get; set; } = 1f;
         public virtual void ProjectileAI() { }

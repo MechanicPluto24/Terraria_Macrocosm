@@ -122,7 +122,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			}
 
 			Main.spriteBatch.End();
-			Main.spriteBatch.Restore(state);
+			Main.spriteBatch.Begin(state);
 			
 			return false;
 		}

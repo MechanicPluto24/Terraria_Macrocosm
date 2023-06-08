@@ -66,7 +66,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Main.spriteBatch.Begin(BlendState.Additive, state);
             Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition,
                 sourceRect, new Color(255, 255, 255, Projectile.alpha), Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
-            Main.spriteBatch.Restore(state);
+
+			Main.spriteBatch.End();
+			Main.spriteBatch.Begin(state);
             return false;
         }
 

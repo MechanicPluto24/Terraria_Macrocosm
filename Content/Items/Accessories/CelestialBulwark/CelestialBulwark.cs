@@ -95,7 +95,8 @@ namespace Macrocosm.Content.Items.Accessories.CelestialBulwark
 			spriteBatch.Draw(currentTex, position, null, nextColor, rotation, origin, scale, SpriteEffects.None, 0f);
 			spriteBatch.Draw(nextTex, position, null, currentColor, rotation, origin, scale, SpriteEffects.None, 0f);
 
-			spriteBatch.Restore(state);
+			spriteBatch.End();
+			spriteBatch.Begin(state);
 		}
 	}
 }

@@ -110,7 +110,8 @@ namespace Macrocosm.Content.UI.Menus
             spriteBatch.Draw(ModContent.Request<Texture2D>(AssetPath + "MilkyWay").Value, screen, Color.White.NewAlpha(0.6f));
             spriteBatch.Draw(ModContent.Request<Texture2D>(AssetPath + "Nebula").Value, screen, Color.White.NewAlpha(0.8f));
 
-            spriteBatch.Restore(state);
+			spriteBatch.End();
+			spriteBatch.Begin(state);
 
             Stars.Draw(spriteBatch);
 
@@ -204,7 +205,8 @@ namespace Macrocosm.Content.UI.Menus
             spriteBatch.Draw(SunCorona4, Sun.Position, null, (Color.White * (0.7f + 0.3f * Utility.PositiveSineWave(300, MathF.PI / 2))).NewAlpha(1f), 0, SunCorona1.Size() / 2, Sun.Scale         + (0.02f * Utility.SineWave(300, MathF.PI/2)), SpriteEffects.None, 0f);
             spriteBatch.Draw(SunCorona5, Sun.Position, null, (Color.White * (0.6f + 0.4f * Utility.PositiveSineWave(200, MathF.PI / 2))).NewAlpha(1f), 0, SunCorona1.Size() / 2, Sun.Scale * 0.95f + (0.02f * Utility.SineWave(200, MathF.PI/2)), SpriteEffects.None, 0f);
        
-            spriteBatch.Restore(state);
+            spriteBatch.End();
+            spriteBatch.Begin(state);
         }
     }
 }

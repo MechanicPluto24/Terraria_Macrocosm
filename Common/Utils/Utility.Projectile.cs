@@ -87,7 +87,10 @@ namespace Macrocosm.Common.Utils
 				Main.spriteBatch.Draw(texture, position, sourceRect, lightColor, proj.rotation, origin, proj.scale, effect, 0f);
 
 			if (shader is not null)
-				Main.spriteBatch.Restore(state);
+			{
+				Main.spriteBatch.End();
+				Main.spriteBatch.Begin(state);
+			}
 
 		}
 

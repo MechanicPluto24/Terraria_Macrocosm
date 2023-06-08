@@ -1,19 +1,18 @@
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Biomes;
-using Macrocosm.Content.Items.Materials;
 using Microsoft.Xna.Framework;
-using System;
 using Terraria;
-using Terraria.GameContent.Bestiary;
-using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.GameContent.Bestiary;
+using Terraria.GameContent.ItemDropRules;
+using Macrocosm.Common.Utils;
+using Macrocosm.Content.Items.Materials;
+using Macrocosm.Common.Global.GlobalNPCs;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
     // incomplete
     // (TODO: leaps)
-    public class Leaper : MoonEnemy
+    public class Leaper : ModNPC, IMoonEnemy
 	{
 		public override void SetStaticDefaults()
 		{
@@ -36,7 +35,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			AIType = NPCID.ZombieMushroom;
 			Banner = Item.NPCtoBanner(NPCID.Zombie);
 			BannerItem = Item.BannerToItem(Banner);
-			SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBiome>().Type }; // Associates this NPC with the Moon Biome in Bestiary
 		}
 
 		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)

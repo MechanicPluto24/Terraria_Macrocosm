@@ -77,8 +77,9 @@ namespace Macrocosm.Content.UI.LoadingScreens
 				null,
 				bodyColor
 			);
-			
-			spriteBatch.Restore(state);
+
+			spriteBatch.End();
+			spriteBatch.Begin(state);
 		}
 	}
 }

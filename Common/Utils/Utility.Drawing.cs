@@ -84,7 +84,8 @@ namespace Macrocosm.Common.Utils
                     spriteBatch.EndIfBeginCalled();
                     spriteBatch.Begin(SpriteSortMode.Deferred, blendState: BlendState.NonPremultiplied, state);
                     Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, v1 - Main.screenPosition, rect, color, v2.ToRotation() + (float)Math.PI / 2f, new Vector2(rect.Width / 2f, rect.Height), new Vector2(MathHelper.Lerp(startWidth, endWidth, (float)k / oldPos.Length), v2.Length()), SpriteEffects.None, 1);
-                    spriteBatch.Restore(state);
+                    spriteBatch.End();
+                    spriteBatch.Begin(state);
                 }
             }
         }

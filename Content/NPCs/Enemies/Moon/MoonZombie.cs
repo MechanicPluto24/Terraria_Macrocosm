@@ -1,3 +1,4 @@
+using Macrocosm.Common.Global.GlobalNPCs;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
@@ -10,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-	public class MoonZombie : MoonEnemy
+	public class MoonZombie : ModNPC, IMoonEnemy
 	{
 		public override void SetStaticDefaults()
 		{
