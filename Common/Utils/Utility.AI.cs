@@ -1992,7 +1992,7 @@ namespace Macrocosm.Common.Utils
          * 
          * ai : A float array that stores AI data. (Note projectile array should be synced!)
          * center : the center of where the boomerang should return to.
-         * playSound : If true, plays the air sound boomerangs make while in the air.
+         * playSound : If true, plays the air sound boomerangs make while in the air. 
          * maxDistance : the maximum 'distance' for the projectile to go before it rebounds.
          * returnDelay : the amount of time in ticks until the projectile returns to it's source.
          * speedInterval : the amount to move the projectile by each tick.
