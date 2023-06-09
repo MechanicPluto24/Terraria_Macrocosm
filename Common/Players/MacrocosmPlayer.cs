@@ -8,6 +8,7 @@ using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Subworlds;
 using Macrocosm.Content.Systems;
 using Macrocosm.Common.Subworlds;
+using Terraria.DataStructures;
 
 namespace Macrocosm.Content.Players
 {
@@ -24,22 +25,41 @@ namespace Macrocosm.Content.Players
 
 		public int ChandriumEmpowermentStacks = 0;
 
-		#region Screenshake mechanic 
-		private float screenShakeIntensity = 0f;
+		/// <summary>
+		/// Chance to not consume ammo from equipment and weapons, stacks additively using +=
+		/// </summary>
+        public float ChanceToNotConsumeAmmo 
+		{ 
+			get => chanceToNotConsumeAmmo; 
+			set => chanceToNotConsumeAmmo = MathHelper.Clamp(value, 0f, 1f);
+		}
+        private float chanceToNotConsumeAmmo = 0f;
+
+        #region Screenshake mechanic 
+        private float screenShakeIntensity = 0f;
 		public float ScreenShakeIntensity
 		{
 			get => screenShakeIntensity;
 			set => screenShakeIntensity = MathHelper.Clamp(value, 0, 100);
 		}
-		#endregion
+        #endregion
 
-		public override void ResetEffects()
+        public override void ResetEffects()
 		{
 			AccMoonArmor = false;
 			RadNoiseIntensity = 0f;
+			ChanceToNotConsumeAmmo = 0f;
 		}
 
-		public override void PostUpdateBuffs()
+        public override bool CanConsumeAmmo(Item weapon, Item ammo)
+        {
+			bool consumeAmmo = true;
+			if (Main.rand.NextFloat() < ChanceToNotConsumeAmmo)
+				consumeAmmo = false;
+			return consumeAmmo;
+        }
+
+        public override void PostUpdateBuffs()
 		{
 			if (SubworldSystem.IsActive<Moon>())
 			{

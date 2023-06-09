@@ -12,6 +12,8 @@ namespace Macrocosm.Content.Items.Armor.Selenite
     {
         public override void SetStaticDefaults()
         {
+            Tooltip.SetDefault("12% increased ranged critical strike chance");
+
         }
 
         public override void SetDefaults()
@@ -20,7 +22,11 @@ namespace Macrocosm.Content.Items.Armor.Selenite
             Item.height = 18;
             Item.value = 10000;
             Item.rare = ModContent.RarityType<MoonRarityT1>();
-            Item.defense = 40;
+            Item.defense = 11;
+        }
+        public override void UpdateEquip(Player player)
+        {
+            player.GetCritChance<RangedDamageClass>() += 12f;
         }
 
         public override void AddRecipes()

@@ -19,7 +19,7 @@ namespace Macrocosm.Content.Items.Armor.Astronaut
             Item.height = 18;
             Item.value = 10000;
             Item.rare = ItemRarityID.Purple;
-            Item.defense = 26;
+            Item.defense = 4;
         }
 
         public override bool IsArmorSet(Item head, Item body, Item legs)

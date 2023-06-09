@@ -13,6 +13,8 @@ namespace Macrocosm.Content.Items.Armor.Chandrium
     {
         public override void SetStaticDefaults()
         {
+            Tooltip.SetDefault("Increases max number of minions by 1"
+                             + "\n25% increased summon damage");
         }
         public override void SetDefaults()
         {
@@ -20,10 +22,15 @@ namespace Macrocosm.Content.Items.Armor.Chandrium
             Item.height = 18;
             Item.value = 10000;
             Item.rare = ModContent.RarityType<MoonRarityT1>();
-            Item.defense = 26;
+            Item.defense = 4;
         }
 
- 
+        public override void UpdateEquip(Player player)
+        {
+            player.maxMinions += 1;
+            player.GetDamage<SummonDamageClass>() += 0.25f;
+        }
+
         public override bool IsArmorSet(Item head, Item body, Item legs)
         {
             return head.type == ModContent.ItemType<ChandriumHelm>() && body.type == ModContent.ItemType<ChandriumBreastplate>() && legs.type == ModContent.ItemType<ChandriumLeggings>();

@@ -2,6 +2,7 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Rarities;
+using Macrocosm.Content.Players;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -13,6 +14,8 @@ namespace Macrocosm.Content.Items.Armor.Selenite
     {
         public override void SetStaticDefaults()
         {
+            Tooltip.SetDefault("10% increased ranged damage"
+                             + "\n15% chance to save ammo");
         }
         public override void SetDefaults()
         {
@@ -20,7 +23,13 @@ namespace Macrocosm.Content.Items.Armor.Selenite
             Item.height = 18;
             Item.value = 10000;
             Item.rare = ModContent.RarityType<MoonRarityT1>();
-            Item.defense = 26;
+            Item.defense = 6;
+        }
+        public override void UpdateEquip(Player player)
+        {
+            var modPlayer = player.Macrocosm();
+            player.GetDamage<RangedDamageClass>() += 0.1f;
+            modPlayer.ChanceToNotConsumeAmmo += 0.15f;
         }
 
         public override bool IsArmorSet(Item head, Item body, Item legs)
