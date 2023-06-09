@@ -5,6 +5,7 @@ using Terraria.ModLoader;
 using SubworldLibrary;
 using Macrocosm.Content.UI.LoadingScreens;
 using Macrocosm.Content.Subworlds;
+using Macrocosm.Content.Rocket.Navigation.LaunchChecklist;
 
 namespace Macrocosm.Common.Subworlds
 {
@@ -31,7 +32,7 @@ namespace Macrocosm.Common.Subworlds
 		public virtual void PostUpdateWorld() { }
 
 		/// <summary> Specifies the conditions for reaching this particular subworld </summary>
-		public virtual bool CanTravelTo() => true;
+		public virtual LaunchConditions LaunchConditions { get; } = new();
 
 		/// <summary> Called when entering a subworld. </summary>
 		public virtual void OnEnterWorld() { }

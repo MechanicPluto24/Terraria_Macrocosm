@@ -17,7 +17,6 @@ namespace Macrocosm.Content.Projectiles.Hostile
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Flaming Meteor");
 			ProjectileID.Sets.TrailCacheLength[Type] = 20;
 			ProjectileID.Sets.TrailingMode[Type] = 0;
 
@@ -37,7 +36,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
 			Projectile.SetTrail<FlamingMeteorTrail>();
 		}
 
-		public override void OnHitPlayer(Player target, int damage, bool crit)
+		public override void OnHitPlayer(Player target, Player.HurtInfo info)
 		{
 			target.AddBuff(BuffID.OnFire, 360, true);
 			target.AddBuff(BuffID.Burning, 90, true);

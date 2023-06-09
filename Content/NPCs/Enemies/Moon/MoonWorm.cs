@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Content.Biomes;
+using Macrocosm.Content.NPCs.Global;
 using Microsoft.Xna.Framework;
 using System.IO;
 using Terraria;
@@ -10,15 +11,13 @@ using Terraria.ModLoader;
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
 	// These three class showcase usage of the WormHead, WormBody and WormTail ExampleMod classes from Worm.cs
-	internal class MoonWormHead : WormHead
+	internal class MoonWormHead : WormHead, IMoonEnemy
 	{
 		public override int BodyType => ModContent.NPCType<MoonWormBody>();
 		public override int TailType => ModContent.NPCType<MoonWormTail>();
 
 		public override void SetStaticDefaults() 
 		{
-			DisplayName.SetDefault("Moon Worm");
-
 			var drawModifier = new NPCID.Sets.NPCBestiaryDrawModifiers(0)    // Influences how the NPC looks in the Bestiary
 			{   
 				CustomTexturePath = "Macrocosm/Content/NPCs/Enemies/Moon/MoonWorm_Bestiary", // If the NPC is multiple parts like a worm, a custom texture for the Bestiary is encouraged.
@@ -33,13 +32,11 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		{
 			NPC.CloneDefaults(NPCID.DiggerHead);
 			NPC.damage = 100;
+			NPC.lifeMax = 1000;
 			NPC.defense = 20;
 			NPC.width = 92;
 			NPC.height = 92;
 			NPC.aiStyle = -1;
-
-			SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBiome>().Type }; // Associates this NPC with the Moon Biome in Bestiary
-
 		}
 
 		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry) 
@@ -106,7 +103,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		public override void SetStaticDefaults() 
 		{
 			Main.npcFrameCount[Type] = 2;
-			DisplayName.SetDefault("Moon Worm");
 			NPCID.Sets.NPCBestiaryDrawModifiers value = new NPCID.Sets.NPCBestiaryDrawModifiers(0) { Hide = true }; // Hides this NPC from the Bestiary, useful for multi-part NPCs whom you only want one entry.
 			NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
 		}
@@ -142,8 +138,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 	{
 		public override void SetStaticDefaults() 
 		{
-			DisplayName.SetDefault("Moon Worm");
-
 			NPCID.Sets.NPCBestiaryDrawModifiers value = new(0) 
 			{
 				Hide = true // Hides this NPC from the Bestiary, useful for multi-part NPCs whom you only want one entry.

@@ -1,11 +1,12 @@
-﻿using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Gores;
-using Macrocosm.Content.Items.MeteorChunks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Gores;
+using Macrocosm.Content.Items.MeteorChunks;
+using Macrocosm.Content.Projectiles.Base;
 
 namespace Macrocosm.Content.Projectiles.Environment.Meteors
 {
@@ -16,8 +17,6 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
             Width = 64;
             Height = 64;
             Damage = 1500;
-
-            MeteorName = "Large Meteor";
 
             ScreenshakeMaxDist = 140f * 16f;
             ScreenshakeIntensity = 100f;

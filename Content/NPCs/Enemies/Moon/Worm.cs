@@ -581,6 +581,12 @@ namespace Macrocosm.Content.NPCs
 	{
 		public sealed override WormSegmentType SegmentType => WormSegmentType.Body;
 
+		public override void SetStaticDefaults()
+		{
+			NPCID.Sets.NPCBestiaryDrawModifiers value = new NPCID.Sets.NPCBestiaryDrawModifiers(0) { Hide = true };
+			NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
+		}
+
 		internal override void BodyTailAI() 
 		{
 			CommonAI_BodyTail(this);
@@ -639,6 +645,12 @@ namespace Macrocosm.Content.NPCs
 	public abstract class WormTail : Worm
 	{
 		public sealed override WormSegmentType SegmentType => WormSegmentType.Tail;
+
+		public override void SetStaticDefaults()
+		{
+			NPCID.Sets.NPCBestiaryDrawModifiers value = new NPCID.Sets.NPCBestiaryDrawModifiers(0) { Hide = true };
+			NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
+		}
 
 		internal override void BodyTailAI() 
 		{

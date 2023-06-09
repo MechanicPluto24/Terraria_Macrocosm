@@ -11,7 +11,6 @@ namespace Macrocosm.Content.Items.Dev
 	{
 		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault("Places a rocket.");
 		}
 		public override void SetDefaults()
 		{

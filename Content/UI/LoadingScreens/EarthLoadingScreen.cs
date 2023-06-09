@@ -5,6 +5,7 @@ using Macrocosm.Content.UI.LoadingScreens;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Terraria;
 using Terraria.GameContent;
@@ -16,12 +17,24 @@ namespace Macrocosm.Content.UI.LoadingScreens
 {
     public class EarthLoadingScreen : LoadingScreen
 	{
+		private List<Texture2D> earthBackgrounds;
 		private Texture2D earthBackground;
+
 		private StarsDrawing starsDrawing;
 
 		public EarthLoadingScreen()
 		{
-			earthBackground = ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/Backgrounds/Earth", AssetRequestMode.ImmediateLoad).Value;
+			AssetRequestMode mode = AssetRequestMode.ImmediateLoad;
+
+			earthBackgrounds = new List<Texture2D>(){
+				ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/Backgrounds/Earth_Africa").Value,
+				ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/Backgrounds/Earth_Asia", mode).Value,
+				ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/Backgrounds/Earth_Australia", mode).Value,
+				ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/Backgrounds/Earth_Europe", mode).Value,
+				ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/Backgrounds/Earth_NorthAmerica", mode).Value,
+				ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/Backgrounds/Earth_SouthAmerica", mode).Value
+			};
+
 			starsDrawing = new();
 		}
 
@@ -35,6 +48,8 @@ namespace Macrocosm.Content.UI.LoadingScreens
 		public override void Setup()
 		{
 			ResetAnimation();
+
+			earthBackground = earthBackgrounds.GetRandom();
 
 			starsDrawing.Clear();
  			starsDrawing.SpawnStars(150, 200);
@@ -52,16 +67,19 @@ namespace Macrocosm.Content.UI.LoadingScreens
 			starsDrawing.Draw(spriteBatch);
 			spriteBatch.End();
 
+
 			spriteBatch.Begin(BlendState.NonPremultiplied, state);
 			spriteBatch.Draw
 			(
 				earthBackground,
-				new Rectangle(Main.screenWidth - earthBackground.Width, Main.screenHeight - earthBackground.Height + 50 - (int)(AnimationTimer * 10), earthBackground.Width, earthBackground.Height),
+				//new Rectangle((int)(Main.screenWidth - earthBackground.Width * scale),(int)(Main.screenHeight - earthBackground.Height * scale + 50 - (int)(AnimationTimer * 10)), (int)(earthBackground.Width * scale), (int)(earthBackground.Height * scale)),
+				new Rectangle(0, 50 - (int)(AnimationTimer * 10), Main.screenWidth, Main.screenHeight),
 				null,
 				bodyColor
 			);
-			
-			spriteBatch.Restore(state);
+
+			spriteBatch.End();
+			spriteBatch.Begin(state);
 		}
 	}
 }

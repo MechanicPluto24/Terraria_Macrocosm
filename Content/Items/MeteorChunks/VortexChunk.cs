@@ -11,8 +11,6 @@ namespace Macrocosm.Content.Items.MeteorChunks
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Vortex Chunk");
-			Tooltip.SetDefault("Consumable\nRight click to smash open!");
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 50;
 		}
 

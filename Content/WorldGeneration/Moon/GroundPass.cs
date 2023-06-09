@@ -5,7 +5,7 @@ using Terraria.WorldBuilding;
 
 namespace Macrocosm.Content.WorldGeneration.Moon
 {
-	public class GroundPass : GenPass
+    public class GroundPass : GenPass
 	{
 		private int subworldWidth;
 		private int subworldHeight;
@@ -35,7 +35,7 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 			rockLayerLow = surfaceHeight;
 			rockLayerHigh = surfaceHeight;
 
-			ushort protolithType = (ushort)ModContent.TileType<Tiles.Protolith>();
+			ushort protolithType = (ushort)ModContent.TileType<Tiles.Blocks.Protolith>();
 
 			// Generate base ground
 			for (int i = 0; i < Main.maxTilesX; i++)

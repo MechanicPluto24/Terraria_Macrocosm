@@ -1,6 +1,6 @@
 ﻿using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Gores;
-using Macrocosm.Content.Tiles;
+using Macrocosm.Content.Tiles.Blocks;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Tombstones
 {
-	public class MoonTombstone : ModProjectile
+    public class MoonTombstone : ModProjectile
 	{
 		public const int normalCount = 1;
 		public const int goldenCount = 1;
@@ -64,7 +64,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Tombstones
  
 			if (placeTile)
 			{
-				NetMessage.SendObjectPlacment(-1, tileX, tileY, objectData.type, objectData.style, objectData.alternate, objectData.random, Projectile.direction);
+				NetMessage.SendObjectPlacement(-1, tileX, tileY, objectData.type, objectData.style, objectData.alternate, objectData.random, Projectile.direction);
 				SoundEngine.PlaySound(SoundID.Dig, new Vector2(tileX * 16, tileY * 16));
 				int signId = Sign.ReadSign(tileX, tileY);
 				if (signId >= 0)
