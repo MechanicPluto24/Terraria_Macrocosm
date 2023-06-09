@@ -14,8 +14,6 @@ namespace Macrocosm.Content.Items.Consumables.BossSummons
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Lunar Skull");
-			Tooltip.SetDefault("Summons the Crater Demon\nMust be used on the Moon");
 			ItemID.Sets.SortingPriorityBossSpawns[Item.type] = 13;
 		}
 

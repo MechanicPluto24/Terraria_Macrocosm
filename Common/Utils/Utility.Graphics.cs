@@ -67,15 +67,9 @@ namespace Macrocosm.Common.Utils
         public static void Begin(this SpriteBatch spriteBatch, Effect effect, SpriteBatchState state)
             => spriteBatch.Begin(state.sortMode, state.blendState, state.samplerState, state.depthStencilState, state.rasterizerState, effect, state.matrix);
 
-
-        /// <summary> Restores the SpriteBatch parameters stored in a SpriteBatchState </summary>
-        public static void Restore(this SpriteBatch spriteBatch, SpriteBatchState state)
-        {
-            spriteBatch.EndIfBeginCalled();
-
-            if (state.beginCalled)
-                spriteBatch.Begin(state.sortMode, state.blendState, state.samplerState, state.depthStencilState, state.rasterizerState, state.effect, state.matrix);
-        }
+        /// <summary> Begins the SpriteBatch with the parameters stored in a SpriteBatchState </summary>
+        public static void Begin(this SpriteBatch spriteBatch, SpriteBatchState state)
+                => spriteBatch.Begin(state.sortMode, state.blendState, state.samplerState, state.depthStencilState, state.rasterizerState, state.effect, state.matrix);
 
         public static void EndIfBeginCalled(this SpriteBatch spriteBatch)
         {

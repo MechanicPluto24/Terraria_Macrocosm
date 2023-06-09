@@ -14,7 +14,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 	{
 		public override void SetStaticDefaults()
 		{
- 			DisplayName.SetDefault("Moonlight Greatsword");
 		}
 
 		public override string Texture => "Macrocosm/Content/Projectiles/Friendly/Melee/Swing";
@@ -123,7 +122,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			}
 
 			Main.spriteBatch.End();
-			Main.spriteBatch.Restore(state);
+			Main.spriteBatch.Begin(state);
 			
 			return false;
 		}

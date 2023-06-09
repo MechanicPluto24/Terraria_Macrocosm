@@ -24,15 +24,15 @@ namespace Macrocosm.Common.Hooks
 
 		public void Load(Mod mod)
 		{
-			On.Terraria.Map.MapHelper.GetMapTileXnaColor += MapHelper_GetMapTileXnaColor;
+			Terraria.Map.On_MapHelper.GetMapTileXnaColor += MapHelper_GetMapTileXnaColor;
 			GetLookupPositions();
 		}
 		public void Unload() 
 		{
-			On.Terraria.Map.MapHelper.GetMapTileXnaColor -= MapHelper_GetMapTileXnaColor;
+			Terraria.Map.On_MapHelper.GetMapTileXnaColor -= MapHelper_GetMapTileXnaColor;
 		}
 
-		private Color MapHelper_GetMapTileXnaColor(On.Terraria.Map.MapHelper.orig_GetMapTileXnaColor orig, ref MapTile tile)
+		private Color MapHelper_GetMapTileXnaColor(Terraria.Map.On_MapHelper.orig_GetMapTileXnaColor orig, ref MapTile tile)
 		{
 			if (!MacrocosmSubworld.AnyActive || MacrocosmSubworld.Current.MapColors is null)
 				return orig(ref tile);

@@ -59,7 +59,7 @@ namespace Macrocosm.Content.UI.LoadingScreens
 			CurrentlyActive = true;
 
 			if (ProgressBar is not null && WorldGenerator.CurrentGenerationProgress is not null)
-				ProgressBar.SetProgress(WorldGenerator.CurrentGenerationProgress.TotalProgress, WorldGenerator.CurrentGenerationProgress.Value);
+				ProgressBar.SetProgress((float)WorldGenerator.CurrentGenerationProgress.TotalProgress, (float)WorldGenerator.CurrentGenerationProgress.Value);
 
 			Main.gameTips.Update();
 
@@ -99,7 +99,7 @@ namespace Macrocosm.Content.UI.LoadingScreens
 				message = Main.statusText;
 			}
 
-			string text = Language.GetTextValue("Mods.Macrocosm.Worlds." + Title.TextKey + ".DisplayName");
+			string text = Language.GetTextValue("Mods.Macrocosm.Subworlds." + Title.TextKey + ".DisplayName");
 			Vector2 titleSize = FontAssets.DeathText.Value.MeasureString(text) * Title.Scale;
 			ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, text, new Vector2(Main.screenWidth / 2f - titleSize.X / 2f, titleSize.Y), Title.Color, 0f, Vector2.Zero, new Vector2(Title.Scale));
 			

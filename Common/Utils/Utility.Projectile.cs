@@ -1,5 +1,5 @@
 ﻿using Macrocosm.Common.Drawing.Trails;
-using Macrocosm.Common.Global.GlobalProjectiles;
+using Macrocosm.Content.Projectiles.Global;
 using Macrocosm.Content.Items.Weapons.Ranged;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -87,15 +87,18 @@ namespace Macrocosm.Common.Utils
 				Main.spriteBatch.Draw(texture, position, sourceRect, lightColor, proj.rotation, origin, proj.scale, effect, 0f);
 
 			if (shader is not null)
-				Main.spriteBatch.Restore(state);
+			{
+				Main.spriteBatch.End();
+				Main.spriteBatch.Begin(state);
+			}
 
 		}
 
 		/// <summary>
-		/// Draws an animated projectile glowmask
+		/// Draws an animated projectile extra, such as a glowmask
 		/// (Only tested for held projectiles)  
 		/// </summary>
-		public static void DrawAnimatedGlowmask(this Projectile proj, Texture2D glowmask, Color lightColor, SpriteEffects effect, Vector2 drawOffset = default, Rectangle? frame = null)
+		public static void DrawAnimatedExtra(this Projectile proj, Texture2D glowmask, Color lightColor, SpriteEffects effect, Vector2 drawOffset = default, Rectangle? frame = null)
 			=> proj.DrawAnimated(lightColor, effect, drawOffset + new Vector2(0, -2), glowmask, frame);
 	}
 }

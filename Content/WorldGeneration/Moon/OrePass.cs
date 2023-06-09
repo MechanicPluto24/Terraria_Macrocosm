@@ -1,14 +1,14 @@
-﻿using Macrocosm.Content.Tiles;
-using Terraria;
+﻿using Terraria;
 using Terraria.IO;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Tiles.Ores;
 
 namespace Macrocosm.Content.WorldGeneration.Moon
 {
-	public class OrePass : GenPass
+    public class OrePass : GenPass
 	{
 		public OrePass(string name, float loadWeight) : base(name, loadWeight) { }
 		
@@ -16,7 +16,7 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 		{
 			progress.Message = "Mineralizing the Moon...";
 			#region Generate ore veins
-			int protolithType = ModContent.TileType<Tiles.Protolith>();
+			int protolithType = ModContent.TileType<Tiles.Blocks.Protolith>();
 			Utility.GenerateOre(ModContent.TileType<ArtemiteOre>(), 0.0001, WorldGen.genRand.Next(5, 9), WorldGen.genRand.Next(5, 9), protolithType);
 			Utility.GenerateOre(ModContent.TileType<ChandriumOre>(), 0.0001, WorldGen.genRand.Next(5, 9), WorldGen.genRand.Next(5, 9), protolithType);
 			Utility.GenerateOre(ModContent.TileType<DianiteOre>(), 0.0001, WorldGen.genRand.Next(5, 9), WorldGen.genRand.Next(5, 9), protolithType);

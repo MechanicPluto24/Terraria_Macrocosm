@@ -6,7 +6,7 @@ using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Common.Global.GlobalProjectiles;
+using Macrocosm.Content.Projectiles.Global;
 using Macrocosm.Content.Dusts;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged

@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Common.Utils;
-using Macrocosm.Content.Walls;
 using Terraria;
 using Terraria.IO;
 using Terraria.ModLoader;
@@ -7,7 +6,7 @@ using Terraria.WorldBuilding;
 
 namespace Macrocosm.Content.WorldGeneration.Moon
 {
-	public class RegolithPass : GenPass
+    public class RegolithPass : GenPass
 	{
 		public RegolithPass(string name, float loadWeight) : base(name, loadWeight) { }
 
@@ -26,11 +25,11 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 						if (regolithChance > 0.1)
 						{
 							Main.tile[tileX, tileY].ClearTile();
-							WorldGen.PlaceTile(tileX, tileY, (ushort)ModContent.TileType<Tiles.Regolith>(), true, true);
+							WorldGen.PlaceTile(tileX, tileY, (ushort)ModContent.TileType<Tiles.Blocks.Regolith>(), true, true);
 						}
 
 						if (Utility.CheckTile6WayBelow(tileX, tileY) && regolithChance > 2.0)
-							Main.tile[tileX, tileY].WallType = (ushort)ModContent.WallType<RegolithWall>();
+							Main.tile[tileX, tileY].WallType = (ushort)ModContent.WallType<Tiles.Walls.RegolithWall>();
 
 
 						regolithChance -= 0.02f;
@@ -51,7 +50,7 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 						double veinChance = (6 - regolithChance) / 6f * 0.006;
 						if (WorldGen.genRand.NextFloat() < veinChance || veinChance == 0)
 						{
-							WorldGen.TileRunner(tileX, tileY, WorldGen.genRand.Next((int)(6 * veinChance / 0.003), (int)(20 * veinChance / 0.003)), WorldGen.genRand.Next(5, 19), ModContent.TileType<Tiles.Protolith>());
+							WorldGen.TileRunner(tileX, tileY, WorldGen.genRand.Next((int)(6 * veinChance / 0.003), (int)(20 * veinChance / 0.003)), WorldGen.genRand.Next(5, 19), ModContent.TileType<Tiles.Blocks.Protolith>());
 						}
 						regolithChance -= 0.02f;
 						if (regolithChance < 0) break;

@@ -1,4 +1,4 @@
-using Macrocosm.Common.Global.GlobalNPCs;
+using Macrocosm.Content.NPCs.Global;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Content.Rarities;
@@ -11,12 +11,10 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
-	public class NWA12691 : ModItem
+    public class NWA12691 : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("NWA-12691");
-			Tooltip.SetDefault("Shoots rockets \nRight click to lock onto an enemy");
 			ItemID.Sets.SkipsInitialUseSound[Item.type] = true;
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
@@ -63,7 +61,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 					NPC npc = Main.npc[i];
 
 					if (npc.TryGetGlobalNPC(out MacrocosmNPC macNpc))
- 						macNpc.Targeted = false;
+ 						macNpc.TargetedByHomingProjectile = false;
 
 					if (!found && npc.CanBeChasedBy() && Main.npc[i].getRect().Intersects(new Rectangle((int)(Main.MouseWorld.X - 10f), (int)(Main.MouseWorld.Y - 10f), 20, 20)))
 					{
@@ -73,7 +71,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 				}
 
 				if (id > -1 && id < Main.maxNPCs)
- 					Main.npc[id].Macrocosm().Targeted = true;
+ 					Main.npc[id].Macrocosm().TargetedByHomingProjectile = true;
  
 				return false;
 			}

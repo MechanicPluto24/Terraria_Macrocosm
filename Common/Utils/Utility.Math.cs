@@ -15,6 +15,9 @@ namespace Macrocosm.Common.Utils
 		public static Vector2 PolarVector(float radius, float theta)
 			=> new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta)) * radius;
 
+		public static float InverseLerp(float from, float to, float value, bool clamped)
+			=> Terraria.Utils.GetLerpValue(from, to, value, clamped);
+
 		/// <summary>
 		/// Gets the position of a point rotating about an origin using a rotation matrix
 		/// </summary>
@@ -33,6 +36,24 @@ namespace Macrocosm.Common.Utils
 		
 		public static float RandomRotation() 
 			=> Main.rand.NextFloat(-MathHelper.Pi, MathHelper.Pi);
+
+		public static float TriangleWave(float period, float phase)
+		{
+			float time = ((float)Main.timeForVisualEffects + phase) % period;
+			float position = time / period;
+			float slope = position < 0.5 ? 4 * position - 1 : -4 * position + 3;
+			return 2 * (slope - 0.5f);
+		}
+
+		public static float SineWave(float period, float phase)
+		{
+			float time = ((float)Main.timeForVisualEffects) % period;
+			float angle = (2 * MathF.PI * (1/period) * time) + phase;
+			return MathF.Sin(angle);
+		}
+
+		public static float PositiveSineWave(float period, float phase)
+			=> (SineWave(period, phase) + 1f) * 0.5f;
 
 		/// <summary>
 		/// Applies a logarithmic derivative to <paramref name="value"/>

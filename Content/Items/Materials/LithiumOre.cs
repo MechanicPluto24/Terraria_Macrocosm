@@ -6,11 +6,10 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Materials
 {
-	public class LithiumOre : ModItem
+    public class LithiumOre : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Lithium");
 		}
 
 		public override void SetDefaults()
@@ -25,7 +24,7 @@ namespace Macrocosm.Content.Items.Materials
 			Item.useTime = 10;
 			Item.autoReuse = true;
 			Item.consumable = true;
-			Item.createTile = TileType<Tiles.LithiumOre>();
+			Item.createTile = TileType<Tiles.Ores.LithiumOre>();
 			Item.placeStyle = 0;
 			Item.rare = ItemRarityID.White;
 			Item.material = true;

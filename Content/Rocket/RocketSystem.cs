@@ -1,4 +1,4 @@
-﻿using Macrocosm.Content.UI.Rocket;
+﻿using Macrocosm.Content.Rocket.Navigation;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -10,11 +10,11 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rocket
 {
-	public class RocketSystem : ModSystem
+    public class RocketSystem : ModSystem
 	{
 		public static RocketSystem Instance => ModContent.GetInstance<RocketSystem>();
 		public UserInterface Interface { get; set; }
-		public UIRocket State { get; set; }
+		public UINavigation UINavigationState { get; set; }
 
 		private GameTime lastGameTime;
 
@@ -24,19 +24,20 @@ namespace Macrocosm.Content.Rocket
 				return;
 
 			Interface = new UserInterface();
-			State = new UIRocket();
-			State.Activate();
+			UINavigationState = new UINavigation();
+			UINavigationState.Activate();
 		}
 
 		public override void Unload()
 		{
-			State = null;
+			UINavigationState = null;
 		}
 
 		public override void UpdateUI(GameTime gameTime)
 		{
+			// testing --- press E to reset UI
 			if (Main.LocalPlayer.controlHook)
-				State = new UIRocket();
+				UINavigationState = new UINavigation();
 
 			lastGameTime = gameTime;
 			
@@ -52,8 +53,8 @@ namespace Macrocosm.Content.Rocket
 			if (rocketId >= 0 && rocketId < Main.maxNPCs) // && (Main.npc[rocketId].ModNPC as Rocket).PlayerID == Main.myPlayer
 			{
 				Main.playerInventory = true;
-				State.RocketID = rocketId;
-				Interface.SetState(State);
+				UINavigationState.RocketID = rocketId;
+				Interface.SetState(UINavigationState);
 			}
 		}
 

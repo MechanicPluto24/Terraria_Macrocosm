@@ -1,7 +1,7 @@
 ﻿using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.UI.Rocket;
+using Macrocosm.Content.Rocket.Navigation;
 using Microsoft.Xna.Framework;
 using System;
 using System.IO;
@@ -20,7 +20,7 @@ namespace Macrocosm.Content.Rocket
 		public string TargetSubworldID { get; set; } = "";
 
 
-		public override void clientClone(ModPlayer clientClone)
+		public override void CopyClientState(ModPlayer clientClone)/* tModPorter Suggestion: Replace Item.Clone usages with Item.CopyNetStateTo */
 		{
 			RocketPlayer cloneRocketPlayer = clientClone as RocketPlayer;
 
@@ -72,7 +72,7 @@ namespace Macrocosm.Content.Rocket
 		{
 			if (RocketID < 0 || RocketID >= Main.maxNPCs)
 				InRocket = false;
-			else if (Main.npc[RocketID].ModNPC is null)
+			else if (Main.npc[RocketID].active == false || Main.npc[RocketID].ModNPC is null)
 				InRocket = false;
 
 			if (!InRocket) 
@@ -90,16 +90,17 @@ namespace Macrocosm.Content.Rocket
 			if (InRocket)
 			{
 				NPC rocket = Main.npc[RocketID];
+				Rocket modRocket = (rocket.ModNPC as Rocket);
 
-				if(Player.whoAmI == Main.myPlayer)
+				if (Player.whoAmI == Main.myPlayer)
 				{
-					if ((Player.controlInv || Player.controlMount) && !(rocket.ModNPC as RocketNPC).Launching)
+					if ((Player.controlInv || Player.controlMount) && !(modRocket.Launching))
 						InRocket = false;
 
-					if (!(rocket.ModNPC as RocketNPC).Launching)
-						UIRocket.Show(RocketID);
+					if (!modRocket.Launching)
+						UINavigation.Show(RocketID);
 					else
-						UIRocket.Hide();
+						UINavigation.Hide();
 				}
 
 				Player.moveSpeed = 0f;
@@ -108,7 +109,7 @@ namespace Macrocosm.Content.Rocket
  
 			}
 			else if (Player.whoAmI == Main.myPlayer)
-				UIRocket.Hide();
+				UINavigation.Hide();
 		}
 
 		public override void PreUpdateBuffs()

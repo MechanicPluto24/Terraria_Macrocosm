@@ -12,6 +12,8 @@ using Macrocosm.Content.Systems;
 using Macrocosm.Content.UI.LoadingScreens;
 using Macrocosm.Content.WorldGeneration.Moon;
 using Macrocosm.Content.Projectiles.Environment.Meteors;
+using Macrocosm.Content.Rocket.Navigation.LaunchChecklist;
+using Macrocosm.Content.Items.Materials;
 
 namespace Macrocosm.Content.Subworlds
 {
@@ -51,10 +53,11 @@ namespace Macrocosm.Content.Subworlds
             new FinishPass("FinishPass", 0.1f)
         };
 
-        public override bool CanTravelTo()
-        {
-            return true;
-        }
+		public override LaunchConditions LaunchConditions => new()
+		{
+			new ChecklistCondition("MoonLord", () => NPC.downedMoonlord, hideIfMet: true) // placeholder for now
+			//new ChecklistCondition("Reactor", () => Main.LocalPlayer.FindItemInInventoryOrOpenVoidBag(ModContent.ItemType<CortexFragment>(), out _) > 0, hideIfTrue: true) 
+		};
 
         public override Dictionary<MapColorType, Color> MapColors => new()
         {

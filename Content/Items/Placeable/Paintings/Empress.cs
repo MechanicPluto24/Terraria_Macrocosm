@@ -9,8 +9,6 @@ namespace Macrocosm.Content.Items.Placeable.Paintings
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Empress");
-			Tooltip.SetDefault("'L. Reda'");
 		}
 
 		public override void SetDefaults()

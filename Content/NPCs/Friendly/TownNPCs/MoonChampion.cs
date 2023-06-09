@@ -64,7 +64,7 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
 			});
 		}
 
-		public override bool CanTownNPCSpawn(int numTownNPCs, int money)
+		public override bool CanTownNPCSpawn(int numTownNPCs)/* tModPorter Suggestion: Copy the implementation of NPC.SpawnAllowed_Merchant in vanilla if you to count money, and be sure to set a flag when unlocked, so you don't count every tick. */
 			=> DownedBossSystem.DownedCraterDemon;
 
 		public override List<string> SetNPCNameList()
@@ -140,11 +140,11 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
 			button2 = "Advice";
 		}
 
-		public override void OnChatButtonClicked(bool firstButton, ref bool shop)
+		public override void OnChatButtonClicked(bool firstButton, ref string shopName)
 		{
 			if (firstButton)
 			{
-				shop = true;
+				shopName = "Shop";
 			}
 			else
 			{
@@ -166,31 +166,34 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
 			if (!SubworldSystem.IsActive<Moon>())
 				NPC.active = false;
 		}
-		// TODO: Bad shop, sprite fast, die hard (ambrose plesea ima die)
-		// No - 4mbr0s3 2
-		// Æ: Sigma
-		public override void SetupShop(Chest shop, ref int nextSlot)
-		{
-			Item AddNewSlot(ref int nextSlotRef, int type, int price)
-			{
-				shop.item[nextSlotRef].SetDefaults(type);
-				shop.item[nextSlotRef].shopCustomPrice = price;
-				shop.item[nextSlotRef].shopSpecialCurrency = CurrencyManager.UnuCredit;
-				return shop.item[nextSlotRef++];
-			}
 
-			// for testing, subject to change - Feldy
-			AddNewSlot(ref nextSlot, ItemID.SuperHealingPotion, 3);
-			AddNewSlot(ref nextSlot, ModContent.ItemType<AstronautHelmet>(), 20);
-			AddNewSlot(ref nextSlot, ModContent.ItemType<AstronautSuit>(), 20);
-			AddNewSlot(ref nextSlot, ModContent.ItemType<AstronautLeggings>(), 20);
-		}
+
+		public override void AddShops()
+		{
+			var shop = new NPCShop(Type);
+
+            void AddNewSlot(int type, int price)
+            {
+				shop.Add(new Item(type) 
+				{ 
+					shopCustomPrice = price,
+					shopSpecialCurrency = CurrencyManager.UnuCredit
+                });
+            }
+
+            // for testing, subject to change - Feldy
+            AddNewSlot(ItemID.SuperHealingPotion, 3);
+            AddNewSlot(ModContent.ItemType<AstronautHelmet>(), 20);
+            AddNewSlot(ModContent.ItemType<AstronautSuit>(), 20);
+            AddNewSlot(ModContent.ItemType<AstronautLeggings>(), 20);
+        }
+
 		public override void TownNPCAttackStrength(ref int damage, ref float knockback)
 		{
 			damage = 125;
 			knockback = 5f;
 		}
-		public override void DrawTownAttackSwing(ref Texture2D item, ref int itemSize, ref float scale, ref Vector2 offset)
+		public override void DrawTownAttackSwing(ref Texture2D item, ref Rectangle itemFrame, ref int itemSize, ref float scale, ref Vector2 offset)
 		{
 			Main.instance.LoadItem(ItemID.None);
 			item = TextureAssets.Item[ItemID.None].Value;

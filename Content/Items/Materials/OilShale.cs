@@ -6,11 +6,10 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Materials
 {
-	public class OilShale : ModItem
+    public class OilShale : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Oil Shale");
 		}
 
 		public override void SetDefaults()
@@ -25,7 +24,7 @@ namespace Macrocosm.Content.Items.Materials
 			Item.useTime = 10;
 			Item.autoReuse = true;
 			Item.consumable = true;
-			Item.createTile = TileType<Tiles.OilShale>();
+			Item.createTile = TileType<Tiles.Ores.OilShale>();
 			Item.placeStyle = 0;
 			Item.rare = ItemRarityID.Blue;
 			Item.material = true;
