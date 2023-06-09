@@ -44,16 +44,17 @@ namespace Macrocosm.Content.Backgrounds.Moon
 
 		public MoonSky()
 		{
-			skyTexture = ModContent.Request<Texture2D>(AssetPath + "MoonSky", AssetRequestMode.ImmediateLoad).Value;
+			AssetRequestMode mode = AssetRequestMode.ImmediateLoad;
+			skyTexture = ModContent.Request<Texture2D>(AssetPath + "MoonSky", mode).Value;
 
-			sunTexture = ModContent.Request<Texture2D>(AssetPath + "Sun", AssetRequestMode.ImmediateLoad).Value;
-			earthBody = ModContent.Request<Texture2D>(AssetPath + "Earth", AssetRequestMode.ImmediateLoad).Value;
-			earthBodyDrunk = ModContent.Request<Texture2D>(AssetPath + "EarthDrunk", AssetRequestMode.ImmediateLoad).Value;
-			earthBodyFlat = ModContent.Request<Texture2D>(AssetPath + "EarthFlat", AssetRequestMode.ImmediateLoad).Value;
+			sunTexture = ModContent.Request<Texture2D>(AssetPath + "Sun", mode).Value;
+			earthBody = ModContent.Request<Texture2D>(AssetPath + "Earth", mode).Value;
+			earthBodyDrunk = ModContent.Request<Texture2D>(AssetPath + "EarthDrunk", mode).Value;
+			earthBodyFlat = ModContent.Request<Texture2D>(AssetPath + "EarthFlat", mode).Value;
 			
-			earthAtmo = ModContent.Request<Texture2D>(AssetPath + "EarthAtmo", AssetRequestMode.ImmediateLoad).Value;
-			earthBodyShadow = ModContent.Request<Texture2D>(AssetPath + "EarthShadowMask", AssetRequestMode.ImmediateLoad).Value;
-			earthAtmoShadow = ModContent.Request<Texture2D>(AssetPath + "EarthAtmoShadowMask", AssetRequestMode.ImmediateLoad).Value;
+			earthAtmo = ModContent.Request<Texture2D>(AssetPath + "EarthAtmo", mode).Value;
+			earthBodyShadow = ModContent.Request<Texture2D>(AssetPath + "EarthShadowMask", mode).Value;
+			earthAtmoShadow = ModContent.Request<Texture2D>(AssetPath + "EarthAtmoShadowMask", mode).Value;
 
 			starsDay = new StarsDrawing();
 			starsNight = new StarsDrawing();
@@ -161,12 +162,20 @@ namespace Macrocosm.Content.Backgrounds.Moon
 
 		private void SetEarthTextures()
 		{
-			if (AprilFools.CheckAprilFools())
+			if (Utility.IsAprilFools())
+			{
+				earth.SetLightSource(null);
 				earth.SetTextures(earthBodyFlat);
-			else if (Main.drunkWorld)
-				earth.SetTextures(earthBodyDrunk, earthAtmo, earthBodyShadow, earthAtmoShadow);
+            } 
 			else
-				earth.SetTextures(earthBody, earthAtmo, earthBodyShadow, earthAtmoShadow);
+			{
+				earth.SetLightSource(sun);
+
+                if (Main.drunkWorld)
+                    earth.SetTextures(earthBodyDrunk, earthAtmo, earthBodyShadow, earthAtmoShadow);
+                else
+                    earth.SetTextures(earthBody, earthAtmo, earthBodyShadow, earthAtmoShadow);
+            }
 		}
 
 		private static float ComputeBrightness(double fadeOutTimeDawn, double fadeInTimeDusk, float maxBrightnessDay, float maxBrightnessNigt)

@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Players;
 using Macrocosm.Content.Systems;
+using Macrocosm.Common.Drawing;
 
 namespace Macrocosm.Content.Items.Accessories.CelestialBulwark
 {
@@ -16,7 +17,6 @@ namespace Macrocosm.Content.Items.Accessories.CelestialBulwark
 	{
 		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault("Allows the player to dash into the enemy\nDouble tap a direction");
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
 		public override void SetDefaults()
@@ -69,23 +69,23 @@ namespace Macrocosm.Content.Items.Accessories.CelestialBulwark
 		public override void PostDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
 		{
 			DrawMask(spriteBatch, Item.Center - Main.screenPosition, Item.Size / 2f, scale, rotation);
-			Lighting.AddLight(Item.Center, MacrocosmWorld.CelestialColor.ToVector3());
+			Lighting.AddLight(Item.Center, GlobalVFX.CelestialColor.ToVector3());
 		}
 
-		private Texture2D[] celestialTextures =
+		private static Texture2D[] celestialTextures =
 			{
-				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark/CelestialBulwark_Mask_Nebula", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value,
-				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark/CelestialBulwark_Mask_Stardust", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value,
-				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark/CelestialBulwark_Mask_Vortex", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value,
-				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark/CelestialBulwark_Mask_Solar", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value
+				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark/CelestialBulwark_Mask_Nebula").Value,
+				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark/CelestialBulwark_Mask_Stardust").Value,
+				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark/CelestialBulwark_Mask_Vortex").Value,
+				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark/CelestialBulwark_Mask_Solar").Value
 			};
 
 		private void DrawMask(SpriteBatch spriteBatch, Vector2 position, Vector2 origin, float scale = 1f, float rotation = 0f)
 		{
-			Texture2D currentTex = celestialTextures[(int)MacrocosmWorld.CelestialStyle];
-			Texture2D nextTex = celestialTextures[(int)MacrocosmWorld.NextCelestialStyle];
-			Color currentColor = Color.White.NewAlpha(MacrocosmWorld.CelestialStylePercent);
-			Color nextColor = Color.White.NewAlpha(1f - MacrocosmWorld.CelestialStylePercent);
+			Texture2D currentTex = celestialTextures[(int)GlobalVFX.CelestialStyle];
+			Texture2D nextTex = celestialTextures[(int)GlobalVFX.NextCelestialStyle];
+			Color currentColor = Color.White.NewAlpha(GlobalVFX.CelestialStyleProgress);
+			Color nextColor = Color.White.NewAlpha(1f - GlobalVFX.CelestialStyleProgress);
 
 			SpriteBatchState state = spriteBatch.SaveState();
 			spriteBatch.EndIfBeginCalled();
@@ -95,7 +95,8 @@ namespace Macrocosm.Content.Items.Accessories.CelestialBulwark
 			spriteBatch.Draw(currentTex, position, null, nextColor, rotation, origin, scale, SpriteEffects.None, 0f);
 			spriteBatch.Draw(nextTex, position, null, currentColor, rotation, origin, scale, SpriteEffects.None, 0f);
 
-			spriteBatch.Restore(state);
+			spriteBatch.End();
+			spriteBatch.Begin(state);
 		}
 	}
 }

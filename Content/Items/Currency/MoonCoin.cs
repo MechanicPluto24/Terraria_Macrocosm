@@ -13,7 +13,6 @@ namespace Macrocosm.Content.Items.Currency
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Moon Coin");
 			ItemID.Sets.AnimatesAsSoul[Type] = true;
 			Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(4, 8));
 		}

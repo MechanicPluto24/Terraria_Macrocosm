@@ -11,21 +11,21 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Utils
 {
-    public static partial class Utility
-    {
-        //------------------------------------------------------//
-        //-------------------BASE AI CLASS----------------------//
-        //------------------------------------------------------//
-        // Contains methods for various AI functions for both   //
-        // NPCs and Projectiles, such as adding lighting,       //
-        // movement, etc.                                       //
-        //------------------------------------------------------//
-        //  Author(s): Grox the Great, Yoraiz0r                 //
-        //------------------------------------------------------//
+	public static partial class Utility
+	{
+		//------------------------------------------------------//
+		//-------------------BASE AI CLASS----------------------//
+		//------------------------------------------------------//
+		// Contains methods for various AI functions for both   //
+		// NPCs and Projectiles, such as adding lighting,       //
+		// movement, etc.                                       //
+		//------------------------------------------------------//
+		//  Author(s): Grox the Great, Yoraiz0r                 //
+		//------------------------------------------------------//
 
-        #region Custom AI Methods
+		#region Custom AI Methods
 
-        public static void AIDive(Projectile projectile, ref int chargeTime, int chargeTimeMax, Vector2 targetCenter)
+		public static void AIDive(Projectile projectile, ref int chargeTime, int chargeTimeMax, Vector2 targetCenter)
         {
             chargeTime = Math.Max(0, chargeTime - 1);
             if (chargeTime > 0)
@@ -1992,7 +1992,7 @@ namespace Macrocosm.Common.Utils
          * 
          * ai : A float array that stores AI data. (Note projectile array should be synced!)
          * center : the center of where the boomerang should return to.
-         * playSound : If true, plays the air sound boomerangs make while in the air.
+         * playSound : If true, plays the air sound boomerangs make while in the air. 
          * maxDistance : the maximum 'distance' for the projectile to go before it rebounds.
          * returnDelay : the amount of time in ticks until the projectile returns to it's source.
          * speedInterval : the amount to move the projectile by each tick.
@@ -2005,10 +2005,10 @@ namespace Macrocosm.Common.Utils
             if (width == -1) { width = Main.player[p.owner].width; }
             if (height == -1) { height = Main.player[p.owner].height; }
             Vector2 center = position + new Vector2(width * 0.5f, height * 0.5f);
-            if (playSound && p.soundDelay == 0)
+            if (playSound && p.soundDelay == 0 && !Main.dedServ)
             {
                 p.soundDelay = 8;
-                SoundEngine.PlaySound(SoundID.Item7, p.position);
+				SoundEngine.PlaySound(SoundID.Item7, p.position);
             }
             if (ai[0] == 0f)
             {
@@ -2213,8 +2213,9 @@ namespace Macrocosm.Common.Utils
                 {
                     p.netUpdate = true;
                     Collision.HitTiles(p.position, p.velocity, p.width, p.height);
-                    if (playSound) { SoundEngine.PlaySound(SoundID.Dig, p.position); }
-                }
+                    if (playSound && !Main.dedServ) 
+                         SoundEngine.PlaySound(SoundID.Dig, p.position); 
+                 }
             }
         }
 
@@ -2301,7 +2302,9 @@ namespace Macrocosm.Common.Utils
                 {
                     if (npc.localAI[0] == 0f)
                     {
-                        SoundEngine.PlaySound(SoundID.Item8, npc.Center);
+						if (!Main.dedServ)
+							SoundEngine.PlaySound(SoundID.Item8, npc.Center);
+
                         npc.TargetClosest();
                         if (npc.direction > 0)
                         {
@@ -3054,11 +3057,11 @@ namespace Macrocosm.Common.Utils
                 npc.life = -1;
                 npc.HitEffect();
                 npc.active = false;
-                if (npc.type == NPCID.OldMan)
+                if (npc.type == NPCID.OldMan && !Main.dedServ)
                     SoundEngine.PlaySound(SoundID.Roar, npc.position);
             }
             //prevent a -1, -1 saving scenario
-            if (npc.type >= Main.maxNPCTypes && npc.homeTileX == -1 && npc.homeTileY == -1 || npc.homeTileX == ushort.MaxValue && npc.homeTileY == ushort.MaxValue)
+            if (npc.homeTileX == -1 && npc.homeTileY == -1 || npc.homeTileX == ushort.MaxValue && npc.homeTileY == ushort.MaxValue)
             {
                 npc.homeTileX = (int)npc.Center.X / 16;
                 npc.homeTileY = (int)npc.Center.Y / 16;
@@ -3888,7 +3891,9 @@ namespace Macrocosm.Common.Utils
                 int tx = (int)tilePos.X; int ty = (int)tilePos.Y;
                 if (!Main.tile[tx, ty].HasUnactuatedTile || !Main.tileSolid[Main.tile[tx, ty].TileType] || Main.tileSolid[Main.tile[tx, ty].TileType] && Main.tileSolidTop[Main.tile[tx, ty].TileType])
                 {
-                    if (npc.DeathSound != null) SoundEngine.PlaySound((SoundStyle)npc.DeathSound, npc.Center);
+                    if (npc.DeathSound != null && !Main.dedServ) 
+                        SoundEngine.PlaySound((SoundStyle)npc.DeathSound, npc.Center);
+
                     npc.life = -1;
                     npc.HitEffect();
                     npc.active = false;
@@ -4311,7 +4316,9 @@ namespace Macrocosm.Common.Utils
                         if (distSoundDelay < 10f) { distSoundDelay = 10f; }
                         if (distSoundDelay > 20f) { distSoundDelay = 20f; }
                         npc.soundDelay = (int)distSoundDelay;
-                        SoundEngine.PlaySound(SoundID.Roar, npc.position);
+
+						if (!Main.dedServ)
+							SoundEngine.PlaySound(SoundID.Roar, npc.position);
                     }
                     dist = (float)Math.Sqrt(playerCenterX * playerCenterX + playerCenterY * playerCenterY);
                     float absPlayerCenterX = Math.Abs(playerCenterX);
@@ -4654,7 +4661,7 @@ namespace Macrocosm.Common.Utils
                     }
                 }
                 else { ai[0] = 0f; }
-                if (npc.direction == 0) { npc.direction = 1; }
+                if (npc.direction == 0) { npc.direction = -1; }
             }
             //if velocity is less than -1 or greater than 1...
             if (npc.velocity.X < -velMax || npc.velocity.X > velMax)
@@ -5211,186 +5218,6 @@ namespace Macrocosm.Common.Utils
             return false;
         }
 
-        /* THESE TWO ARE WIP - BROKEN IN TMODLOADER */
-        /*public static LootRule AddLoot(object npcTypes, int type, int amtMin, int amtMax, int chance)
-		{
-			return AddLoot(npcTypes, type, amtMin, amtMax, (float)chance / 100f);
-		}
-		public static LootRule AddLoot(object npcTypes, int type, int amtMin, int amtMax, float chance)
-		{
-			LootRule rule = new LootRule().Chance(chance).Item(type).Stack(amtMin, amtMax);
-			if (npcTypes is int) LootRule.AddFor((int)npcTypes, rule);
-			else if (npcTypes is int[]) LootRule.AddFor((int[])npcTypes, rule);
-			else if (npcTypes is string) LootRule.AddFor((string)npcTypes, rule);
-			else if (npcTypes is string[]) LootRule.AddFor((string[])npcTypes, rule);
-			else if (npcTypes is Tuple<int, int>) LootRule.AddFor((Tuple<int, int>)npcTypes, rule);
-			return rule;
-		}*/
-
-
-
-        public static void DamagePlayer(Player player, int dmgAmt, float knockback, Entity damager, bool dmgVariation = true, bool hitThroughDefense = false)
-        {
-            int hitDirection = damager == null ? 0 : damager.direction;
-            DamagePlayer(player, dmgAmt, knockback, hitDirection, damager, dmgVariation, hitThroughDefense);
-        }
-
-        /*
-         *  Damages the player by the given amount.
-         * 
-         *  dmgAmt : The amount of damage to inflict.
-         *  knockback : The amount of knockback to inflict.
-         *  hitDirection : The direction of the damage.
-         *  damager : The thing actually doing damage (Player, Projectile, NPC or null)
-         *  dmgVariation : If true, the damage will vary based on Main.DamageVar().
-         *  hitThroughDefense : If true, boosts damage to get around player defense.
-         */
-        public static void DamagePlayer(Player player, int dmgAmt, float knockback, int hitDirection, Entity damager, bool dmgVariation = true, bool hitThroughDefense = false)
-        {
-            float defIgnore = 0.5f;
-            if (Main.expertMode)
-                defIgnore = 0.75f;
-            else if (Main.masterMode)
-                defIgnore = 1;
-
-            if (hitThroughDefense) { dmgAmt += (int)(player.statDefense * defIgnore); }
-            if (damager == null)
-            {
-                int parsedDamage = dmgAmt; if (dmgVariation) { parsedDamage = Main.DamageVar(dmgAmt); }
-                player.Hurt(PlayerDeathReason.ByOther(-1), parsedDamage, hitDirection, false, false, false, 0);
-            }
-            else if (damager is Player subPlayer)
-            {
-                int parsedDamage = dmgAmt; if (dmgVariation) { parsedDamage = Main.DamageVar(dmgAmt); }
-
-                player.Hurt(PlayerDeathReason.ByPlayer(subPlayer.whoAmI), parsedDamage, hitDirection, true, false, false, 0);
-                PlayerLoader.OnHitPvp(subPlayer, subPlayer.HeldItem, player, parsedDamage, false);
-                bool crit = false;
-                PlayerLoader.ModifyHitPvp(subPlayer, subPlayer.HeldItem, player, ref parsedDamage, ref crit);
-
-                subPlayer.attackCD = (int)(subPlayer.itemAnimationMax * 0.33f);
-            }
-            else if (damager is Projectile p)
-            {
-                if (p.friendly)
-                {
-                    int parsedDamage = dmgAmt; if (dmgVariation) { parsedDamage = Main.DamageVar(dmgAmt); }
-                    player.Hurt(PlayerDeathReason.ByProjectile(p.owner, p.whoAmI), parsedDamage, hitDirection, true, false, false, 0);
-                    p.playerImmune[player.whoAmI] = 40;
-                    PlayerLoader.OnHitByProjectile(player, p, parsedDamage, false);
-                    bool crit = false;
-                    PlayerLoader.ModifyHitByProjectile(player, p, ref parsedDamage, ref crit);
-                }
-                else if (p.hostile)
-                {
-                    int parsedDamage = dmgAmt; if (dmgVariation) { parsedDamage = Main.DamageVar(dmgAmt); }
-                    player.Hurt(PlayerDeathReason.ByProjectile(-1, p.whoAmI), parsedDamage, hitDirection, false, false, false, 0);
-                    PlayerLoader.OnHitByProjectile(player, p, parsedDamage, false);
-                    bool crit = false;
-                    PlayerLoader.ModifyHitByProjectile(player, p, ref parsedDamage, ref crit);
-                }
-            }
-            else if (damager is NPC npc)
-            {
-                int parsedDamage = dmgAmt; if (dmgVariation) { parsedDamage = Main.DamageVar(dmgAmt); }
-                player.Hurt(PlayerDeathReason.ByNPC(npc.whoAmI), parsedDamage, hitDirection, false, false, false, 0);
-                PlayerLoader.OnHitByNPC(player, npc, parsedDamage, false);
-                bool crit = false;
-                PlayerLoader.ModifyHitByNPC(player, npc, ref parsedDamage, ref crit);
-            }
-        }
-
-        /*
-         *  Damages the given NPC by the given amount.
-         */
-        public static void DamageNPC(NPC npc, int dmgAmt, float knockback, Entity damager, bool dmgVariation = true, bool hitThroughDefense = false, bool crit = false, Item item = null)
-        {
-            int hitDirection = damager == null ? 0 : damager.direction;
-            DamageNPC(npc, dmgAmt, knockback, hitDirection, damager, dmgVariation, hitThroughDefense, crit, item);
-        }
-
-        /*
-         *  Damages the NPC by the given amount.
-         *  
-         *  dmgAmt : The amount of damage to inflict.
-         *  knockback : The amount of knockback to inflict.
-         *  hitDirection : The direction of the damage.
-         *  damager : the thing actually doing damage (Player, Projectile or null)
-         *  dmgVariation : If true, the damage will vary based on Main.DamageVar().
-         *  hitThroughDefense : If true, boosts damage to get around npc defense.
-         */
-        public static void DamageNPC(NPC npc, int dmgAmt, float knockback, int hitDirection, Entity damager, bool dmgVariation = true, bool hitThroughDefense = false, bool crit = false, Item item = null)
-        {
-            if (item == null)
-                item = new Item(ItemID.WoodenSword);
-            if (npc.dontTakeDamage || npc.immortal && npc.type != NPCID.TargetDummy)
-                return;
-            if (hitThroughDefense) { dmgAmt += (int)(npc.defense * 0.5f); }
-            if (damager == null || damager is NPC)
-            {
-                int parsedDamage = dmgAmt; if (dmgVariation) { parsedDamage = Main.DamageVar(dmgAmt); }
-                npc.StrikeNPC(parsedDamage, knockback, hitDirection, crit);
-
-                if (damager is NPC)
-                {
-                    NPCLoader.ModifyHitNPC(damager as NPC, npc, ref parsedDamage, ref knockback, ref crit);
-                    NPCLoader.OnHitNPC(damager as NPC, npc, parsedDamage, knockback, crit);
-                    //npc.attacker = damager;
-                }
-
-                if (Main.netMode != NetmodeID.SinglePlayer)
-                {
-                    NetMessage.SendData(MessageID.DamageNPC, -1, -1, NetworkText.FromLiteral(""), npc.whoAmI, 1, knockback, hitDirection, parsedDamage);
-                }
-            }
-            else if (damager is Projectile p)
-            {
-                if (p.owner == Main.myPlayer && NPCLoader.CanBeHitByProjectile(npc, p) != false)
-                {
-                    int parsedDamage = dmgAmt; if (dmgVariation) { parsedDamage = Main.DamageVar(dmgAmt); }
-                    npc.StrikeNPC(parsedDamage, knockback, hitDirection, crit);
-                    NPCLoader.ModifyHitByProjectile(npc, p, ref parsedDamage, ref knockback, ref crit, ref hitDirection);
-                    NPCLoader.OnHitByProjectile(npc, p, parsedDamage, knockback, crit);
-                    PlayerLoader.ModifyHitNPCWithProj(p, npc, ref parsedDamage, ref knockback, ref crit, ref hitDirection);
-                    PlayerLoader.OnHitNPCWithProj(p, npc, parsedDamage, knockback, crit);
-                    ProjectileLoader.ModifyHitNPC(p, npc, ref parsedDamage, ref knockback, ref crit, ref hitDirection);
-                    ProjectileLoader.OnHitNPC(p, npc, parsedDamage, knockback, crit);
-
-                    if (Main.netMode != NetmodeID.SinglePlayer)
-                        NetMessage.SendData(MessageID.DamageNPC, -1, -1, NetworkText.FromLiteral(""), npc.whoAmI, 1, knockback, hitDirection, parsedDamage);
-
-                    if (p.penetrate != 1) { npc.immune[p.owner] = 10; }
-                }
-            }
-            else if (damager is Player player)
-            {
-                if (player.whoAmI == Main.myPlayer && NPCLoader.CanBeHitByItem(npc, player, item) != false)
-                {
-                    int parsedDamage = dmgAmt; if (dmgVariation) { parsedDamage = Main.DamageVar(dmgAmt); }
-                    npc.StrikeNPC(parsedDamage, knockback, hitDirection, crit);
-                    NPCLoader.ModifyHitByItem(npc, player, item, ref parsedDamage, ref knockback, ref crit);
-                    NPCLoader.OnHitByItem(npc, player, item, parsedDamage, knockback, crit);
-                    PlayerLoader.ModifyHitNPC(player, item, npc, ref parsedDamage, ref knockback, ref crit);
-                    PlayerLoader.OnHitNPC(player, item, npc, parsedDamage, knockback, crit);
-
-                    if (Main.netMode != NetmodeID.SinglePlayer)
-                    {
-                        NetMessage.SendData(MessageID.DamageNPC, -1, -1, NetworkText.FromLiteral(""), npc.whoAmI, 1, knockback, hitDirection, parsedDamage);
-                    }
-                    npc.immune[player.whoAmI] = player.itemAnimation;
-                }
-            }
-        }
-
-        /*
-         * Convenience method that handles killing an NPC and having it drop loot.
-         * If you want the NPC to just dissapear, use KillNPC().
-         */
-        public static void KillNPCWithLoot(NPC npc)
-        {
-            DamageNPC(npc, npc.lifeMax + npc.defense + 1, 0f, 0, null, false, true);
-        }
-
         /*
          * Convenience method that handles killing an NPC without loot.
          */
@@ -5407,6 +5234,7 @@ namespace Macrocosm.Common.Utils
         {
             return GetProjectile(center, projType, owner, default, distance, canAdd);
         }
+
         /*
 		 * Gets the closest Projectile with the given type within the given distance from the center. If distance is -1, it gets the closest Projectile.
 		 * 
@@ -6032,5 +5860,121 @@ namespace Macrocosm.Common.Utils
             }
             return vList.ToArray();
         }
-    }
+
+		/*
+         * specialized version of DropItem to be used specifically for boss bags.
+		 
+		 * player: The player that is receiving the boss bag loot. If null, works like DropItem.
+         */
+		public static int DropItemBossBag(Player player, Entity codable, int type, int amt, int maxStack, float chance, bool clusterItem = false)
+		{
+			if (player != null)
+			{
+				if ((float)Main.rand.NextDouble() <= chance) player.QuickSpawnItem(codable.GetSource_Death(), type, amt);
+				return -2;
+			}
+			else
+			{
+				return DropItem(codable, type, amt, maxStack, chance, clusterItem);
+			}
+		}
+
+		public static int DropItem(Entity codable, int type, int amt, int maxStack, int chance, bool clusterItem = false)
+		{
+			return DropItem(codable, type, amt, maxStack, (float)chance / 100f, clusterItem);
+		}
+
+		/*
+         * Drops an item from a codable, and returns the item's whoAmI. Mostly convenience for mp support.
+         * If it drops more then one item it will return the last item dropped's whoAmI.
+         * 
+         * amt : the amount of the item to drop.
+         * maxStack : The max stack count per item. (only applies if clusterItem == true)
+         * chance : 0-1. The percent chance of the item drop. If projectile is not 100 and the item does not drop, projectile method returns -1.
+         * clusterItem : If true, it will stick the drops into stacks that fit to the item's maxStack value. If false it drops them as individual items.
+         */
+		public static int DropItem(Entity codable, int type, int amt, int maxStack, float chance, bool clusterItem = false, bool sync = false)
+		{
+			int itemID = -1;
+			if ((sync || Main.netMode != NetmodeID.MultiplayerClient) && (float)Main.rand.NextDouble() <= chance)
+			{
+				if (clusterItem)
+				{
+					int stackCount = 0;
+					int stackCount2 = 0;
+					while (stackCount != amt)
+					{
+						stackCount++; stackCount2++;
+						if (stackCount == amt || stackCount2 == maxStack)
+						{
+							itemID = Item.NewItem(codable.GetSource_Death(), (int)codable.position.X, (int)codable.position.Y, codable.width, codable.height, type, stackCount2, false, 0);
+							if (sync) NetMessage.SendData(MessageID.SyncItem, -1, -1, null, itemID, 0f, 0f, 0f, 0, 0, 0);
+							stackCount2 = 0;
+						}
+					}
+				}
+				else
+				{
+					int count = 0;
+					while (count < amt)
+					{
+						count++;
+						itemID = Item.NewItem(codable.GetSource_Death(), (int)codable.position.X, (int)codable.position.Y, codable.width, codable.height, type, 1, false, 0);
+						if (sync) NetMessage.SendData(MessageID.SyncItem, -1, -1, null, itemID, 0f, 0f, 0f, 0, 0, 0);
+					}
+				}
+			}
+			return itemID;
+		}
+
+		/*
+         * Convenience method that handles killing the projectile and removing it from the game. 
+         * Can be used in Kill() methods to actually kill the projectile while you spawn other things like dust.
+         */
+		public static void KillProjectile(Projectile p)
+		{
+			if (p.owner == Main.myPlayer)
+			{
+				NetMessage.SendData(MessageID.KillProjectile, -1, -1, NetworkText.FromLiteral(""), p.identity, (float)p.owner, 0f, 0f, 0);
+			}
+			p.active = false;
+		}
+
+		/*
+         * Spawns a cloud of smoke given the start, width and height positions.
+         * 
+         * loopAmount : the amount of loops to do. Each loop produces 4 smoke gore.
+         * scale : Scalar for the smoke gore.
+         */
+		public static void SpawnSmoke(Vector2 start, float width, float height, int loopAmount = 2, float scale = 1f)
+		{
+			Vector2 center = start + new Vector2(width * 0.5F, height * 0.5F);
+			UnifiedRandom rand = Main.rand;
+			for (int m = 0; m < loopAmount; m++)
+			{
+				Vector2 gorePos = new Vector2(center.X - 24f, center.Y - 24f);
+				Vector2 velocityDefault = default(Vector2);
+				int goreID = Gore.NewGore(null, gorePos, velocityDefault, Main.rand.Next(61, 64), 1f);
+				Gore gore = Main.gore[goreID];
+				gore.scale = scale * 1.5f;
+				gore.velocity.X = rand.NextBool(2) ? -(gore.velocity.X + 1.5f) : gore.velocity.X + 1.5f;
+				gore.velocity.Y = gore.velocity.Y + 1.5f;
+				goreID = Gore.NewGore(null, gorePos, velocityDefault, Main.rand.Next(61, 64), 1f);
+				gore = Main.gore[goreID];
+				gore.scale = scale * 1.5f;
+				gore.velocity.X = rand.NextBool(2) ? -(gore.velocity.X + 1.5f) : gore.velocity.X + 1.5f;
+				gore.velocity.Y = gore.velocity.Y + 1.5f;
+				goreID = Gore.NewGore(null, gorePos, velocityDefault, Main.rand.Next(61, 64), 1f);
+				gore = Main.gore[goreID];
+				gore.scale = scale * 1.5f;
+				gore.velocity.X = rand.NextBool(2) ? -(gore.velocity.X + 1.5f) : gore.velocity.X + 1.5f;
+				gore.velocity.Y = gore.velocity.Y + 1.5f;
+				goreID = Gore.NewGore(null, gorePos, velocityDefault, Main.rand.Next(61, 64), 1f);
+				gore = Main.gore[goreID];
+				gore.scale = scale * 1.5f;
+				gore.velocity.X = rand.NextBool(2) ? -(gore.velocity.X + 1.5f) : gore.velocity.X + 1.5f;
+				gore.velocity.Y = gore.velocity.Y + 1.5f;
+			}
+		}
+	}
 }
