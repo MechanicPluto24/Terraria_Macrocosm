@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Content.Biomes;
+using Macrocosm.Content.NPCs.Global;
 using Microsoft.Xna.Framework;
 using System.IO;
 using Terraria;
@@ -10,7 +11,7 @@ using Terraria.ModLoader;
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
 	// These three class showcase usage of the WormHead, WormBody and WormTail ExampleMod classes from Worm.cs
-	internal class MoonWormHead : WormHead
+	internal class MoonWormHead : WormHead, IMoonEnemy
 	{
 		public override int BodyType => ModContent.NPCType<MoonWormBody>();
 		public override int TailType => ModContent.NPCType<MoonWormTail>();
@@ -31,13 +32,11 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		{
 			NPC.CloneDefaults(NPCID.DiggerHead);
 			NPC.damage = 100;
+			NPC.lifeMax = 1000;
 			NPC.defense = 20;
 			NPC.width = 92;
 			NPC.height = 92;
 			NPC.aiStyle = -1;
-
-			SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBiome>().Type }; // Associates this NPC with the Moon Biome in Bestiary
-
 		}
 
 		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry) 

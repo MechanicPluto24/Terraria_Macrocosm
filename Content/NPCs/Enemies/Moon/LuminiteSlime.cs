@@ -38,7 +38,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			NPC.aiStyle = 1;
 			AIType = NPCID.Crimslime;
 			AnimationType = NPCID.BlueSlime;
-			SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBiome>().Type }; // Associates this NPC with the Moon Biome in Bestiary
 		}
 
 		const float attackCooldown = 280f;

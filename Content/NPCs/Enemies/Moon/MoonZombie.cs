@@ -34,7 +34,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			AIType = NPCID.ZombieMushroom;
 			Banner = Item.NPCtoBanner(NPCID.Zombie);
 			BannerItem = Item.BannerToItem(Banner);
-			SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBiome>().Type }; // Associates this NPC with the Moon Biome in Bestiary
 		}
 
 		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)

@@ -16,7 +16,7 @@ namespace Macrocosm.Content.NPCs.Global
 
 		public override void SetDefaults(NPC entity)
 		{
-			//entity.ModNPC.SpawnModBiomes = entity.ModNPC.SpawnModBiomes.Prepend(ModContent.GetInstance<MoonBiome>().Type).ToArray();
+			entity.ModNPC.SpawnModBiomes = entity.ModNPC.SpawnModBiomes.Prepend(ModContent.GetInstance<MoonBiome>().Type).ToArray();
 		}
 	}
 }
