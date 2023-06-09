@@ -6,7 +6,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 
 
-namespace Macrocosm.Common.Global.GlobalNPCs
+namespace Macrocosm.Content.NPCs.Global
 {
 	public class MoonLordGlobalNPC : GlobalNPC
 	{

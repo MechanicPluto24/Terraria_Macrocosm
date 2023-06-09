@@ -4,7 +4,7 @@ using Terraria.ID;
 using Terraria.Audio;
 using Terraria.ModLoader;
 using Macrocosm.Content.Sounds;
-using Macrocosm.Common.Global.GlobalProjectiles;
+using Macrocosm.Content.Projectiles.Global;
 using System.IO;
 
 namespace Macrocosm.Content.Projectiles.Base

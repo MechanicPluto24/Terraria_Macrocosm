@@ -11,21 +11,21 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Utils
 {
-    public static partial class Utility
-    {
-        //------------------------------------------------------//
-        //-------------------BASE AI CLASS----------------------//
-        //------------------------------------------------------//
-        // Contains methods for various AI functions for both   //
-        // NPCs and Projectiles, such as adding lighting,       //
-        // movement, etc.                                       //
-        //------------------------------------------------------//
-        //  Author(s): Grox the Great, Yoraiz0r                 //
-        //------------------------------------------------------//
+	public static partial class Utility
+	{
+		//------------------------------------------------------//
+		//-------------------BASE AI CLASS----------------------//
+		//------------------------------------------------------//
+		// Contains methods for various AI functions for both   //
+		// NPCs and Projectiles, such as adding lighting,       //
+		// movement, etc.                                       //
+		//------------------------------------------------------//
+		//  Author(s): Grox the Great, Yoraiz0r                 //
+		//------------------------------------------------------//
 
-        #region Custom AI Methods
+		#region Custom AI Methods
 
-        public static void AIDive(Projectile projectile, ref int chargeTime, int chargeTimeMax, Vector2 targetCenter)
+		public static void AIDive(Projectile projectile, ref int chargeTime, int chargeTimeMax, Vector2 targetCenter)
         {
             chargeTime = Math.Max(0, chargeTime - 1);
             if (chargeTime > 0)
@@ -5860,5 +5860,121 @@ namespace Macrocosm.Common.Utils
             }
             return vList.ToArray();
         }
-    }
+
+		/*
+         * specialized version of DropItem to be used specifically for boss bags.
+		 
+		 * player: The player that is receiving the boss bag loot. If null, works like DropItem.
+         */
+		public static int DropItemBossBag(Player player, Entity codable, int type, int amt, int maxStack, float chance, bool clusterItem = false)
+		{
+			if (player != null)
+			{
+				if ((float)Main.rand.NextDouble() <= chance) player.QuickSpawnItem(codable.GetSource_Death(), type, amt);
+				return -2;
+			}
+			else
+			{
+				return DropItem(codable, type, amt, maxStack, chance, clusterItem);
+			}
+		}
+
+		public static int DropItem(Entity codable, int type, int amt, int maxStack, int chance, bool clusterItem = false)
+		{
+			return DropItem(codable, type, amt, maxStack, (float)chance / 100f, clusterItem);
+		}
+
+		/*
+         * Drops an item from a codable, and returns the item's whoAmI. Mostly convenience for mp support.
+         * If it drops more then one item it will return the last item dropped's whoAmI.
+         * 
+         * amt : the amount of the item to drop.
+         * maxStack : The max stack count per item. (only applies if clusterItem == true)
+         * chance : 0-1. The percent chance of the item drop. If projectile is not 100 and the item does not drop, projectile method returns -1.
+         * clusterItem : If true, it will stick the drops into stacks that fit to the item's maxStack value. If false it drops them as individual items.
+         */
+		public static int DropItem(Entity codable, int type, int amt, int maxStack, float chance, bool clusterItem = false, bool sync = false)
+		{
+			int itemID = -1;
+			if ((sync || Main.netMode != NetmodeID.MultiplayerClient) && (float)Main.rand.NextDouble() <= chance)
+			{
+				if (clusterItem)
+				{
+					int stackCount = 0;
+					int stackCount2 = 0;
+					while (stackCount != amt)
+					{
+						stackCount++; stackCount2++;
+						if (stackCount == amt || stackCount2 == maxStack)
+						{
+							itemID = Item.NewItem(codable.GetSource_Death(), (int)codable.position.X, (int)codable.position.Y, codable.width, codable.height, type, stackCount2, false, 0);
+							if (sync) NetMessage.SendData(MessageID.SyncItem, -1, -1, null, itemID, 0f, 0f, 0f, 0, 0, 0);
+							stackCount2 = 0;
+						}
+					}
+				}
+				else
+				{
+					int count = 0;
+					while (count < amt)
+					{
+						count++;
+						itemID = Item.NewItem(codable.GetSource_Death(), (int)codable.position.X, (int)codable.position.Y, codable.width, codable.height, type, 1, false, 0);
+						if (sync) NetMessage.SendData(MessageID.SyncItem, -1, -1, null, itemID, 0f, 0f, 0f, 0, 0, 0);
+					}
+				}
+			}
+			return itemID;
+		}
+
+		/*
+         * Convenience method that handles killing the projectile and removing it from the game. 
+         * Can be used in Kill() methods to actually kill the projectile while you spawn other things like dust.
+         */
+		public static void KillProjectile(Projectile p)
+		{
+			if (p.owner == Main.myPlayer)
+			{
+				NetMessage.SendData(MessageID.KillProjectile, -1, -1, NetworkText.FromLiteral(""), p.identity, (float)p.owner, 0f, 0f, 0);
+			}
+			p.active = false;
+		}
+
+		/*
+         * Spawns a cloud of smoke given the start, width and height positions.
+         * 
+         * loopAmount : the amount of loops to do. Each loop produces 4 smoke gore.
+         * scale : Scalar for the smoke gore.
+         */
+		public static void SpawnSmoke(Vector2 start, float width, float height, int loopAmount = 2, float scale = 1f)
+		{
+			Vector2 center = start + new Vector2(width * 0.5F, height * 0.5F);
+			UnifiedRandom rand = Main.rand;
+			for (int m = 0; m < loopAmount; m++)
+			{
+				Vector2 gorePos = new Vector2(center.X - 24f, center.Y - 24f);
+				Vector2 velocityDefault = default(Vector2);
+				int goreID = Gore.NewGore(null, gorePos, velocityDefault, Main.rand.Next(61, 64), 1f);
+				Gore gore = Main.gore[goreID];
+				gore.scale = scale * 1.5f;
+				gore.velocity.X = rand.NextBool(2) ? -(gore.velocity.X + 1.5f) : gore.velocity.X + 1.5f;
+				gore.velocity.Y = gore.velocity.Y + 1.5f;
+				goreID = Gore.NewGore(null, gorePos, velocityDefault, Main.rand.Next(61, 64), 1f);
+				gore = Main.gore[goreID];
+				gore.scale = scale * 1.5f;
+				gore.velocity.X = rand.NextBool(2) ? -(gore.velocity.X + 1.5f) : gore.velocity.X + 1.5f;
+				gore.velocity.Y = gore.velocity.Y + 1.5f;
+				goreID = Gore.NewGore(null, gorePos, velocityDefault, Main.rand.Next(61, 64), 1f);
+				gore = Main.gore[goreID];
+				gore.scale = scale * 1.5f;
+				gore.velocity.X = rand.NextBool(2) ? -(gore.velocity.X + 1.5f) : gore.velocity.X + 1.5f;
+				gore.velocity.Y = gore.velocity.Y + 1.5f;
+				goreID = Gore.NewGore(null, gorePos, velocityDefault, Main.rand.Next(61, 64), 1f);
+				gore = Main.gore[goreID];
+				gore.scale = scale * 1.5f;
+				gore.velocity.X = rand.NextBool(2) ? -(gore.velocity.X + 1.5f) : gore.velocity.X + 1.5f;
+				gore.velocity.Y = gore.velocity.Y + 1.5f;
+			}
+		}
+	}
 }

@@ -8,6 +8,8 @@ using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Subworlds;
 using Macrocosm.Content.Systems;
 using Macrocosm.Common.Subworlds;
+using Terraria.DataStructures;
+using Macrocosm.Common.Utils;
 
 namespace Macrocosm.Content.Players
 {
@@ -82,7 +84,7 @@ namespace Macrocosm.Content.Players
 				if (!Filters.Scene["Macrocosm:RadiationNoiseEffect"].IsActive())
 					Filters.Scene.Activate("Macrocosm:RadiationNoiseEffect");
 
-				RadNoiseIntensity += 0.189f * Utils.GetLerpValue(400, 10000, TileCounts.Instance.IrradiatedRockCount, clamped: true);
+				RadNoiseIntensity += 0.189f * Utility.InverseLerp(400, 10000, TileCounts.Instance.IrradiatedRockCount, clamped: true);
 
 				Filters.Scene["Macrocosm:RadiationNoiseEffect"].GetShader().UseIntensity(RadNoiseIntensity);
 			}

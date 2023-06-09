@@ -1,9 +1,9 @@
-﻿using Macrocosm.Common.Global.GlobalItems;
-using Macrocosm.Common.Global.GlobalNPCs;
-using Macrocosm.Common.Global.GlobalProjectiles;
+﻿using Macrocosm.Content.NPCs.Global;
 using Macrocosm.Content.Players;
 using Macrocosm.Content.Rocket;
 using Terraria;
+using Macrocosm.Content.Projectiles.Global;
+using Macrocosm.Content.Items.Global;
 
 namespace Macrocosm.Common.Utils
 {

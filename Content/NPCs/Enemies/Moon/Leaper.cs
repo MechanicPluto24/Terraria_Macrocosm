@@ -6,7 +6,7 @@ using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Materials;
-using Macrocosm.Common.Global.GlobalNPCs;
+using Macrocosm.Content.NPCs.Global;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
@@ -53,7 +53,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		public override void AI()
 		{
-
 			// add slimeAI for leaps? 
 			Utility.AIZombie(NPC, ref NPC.ai, false, true, velMax: 4, maxJumpTilesX: 15, maxJumpTilesY: 10, moveInterval: 0.07f);
 

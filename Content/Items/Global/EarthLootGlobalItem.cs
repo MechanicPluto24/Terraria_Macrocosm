@@ -6,7 +6,7 @@ using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Global.GlobalItems
+namespace Macrocosm.Content.Items.Global
 {
 	public class EarthLootGlobalItem : GlobalItem
 	{

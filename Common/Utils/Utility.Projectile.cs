@@ -1,5 +1,5 @@
 ﻿using Macrocosm.Common.Drawing.Trails;
-using Macrocosm.Common.Global.GlobalProjectiles;
+using Macrocosm.Content.Projectiles.Global;
 using Macrocosm.Content.Items.Weapons.Ranged;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

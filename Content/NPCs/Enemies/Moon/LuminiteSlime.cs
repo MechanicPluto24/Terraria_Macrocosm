@@ -11,7 +11,7 @@ using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Macrocosm.Content.Tiles.Blocks;
-using Macrocosm.Common.Global.GlobalNPCs;
+using Macrocosm.Content.NPCs.Global;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
