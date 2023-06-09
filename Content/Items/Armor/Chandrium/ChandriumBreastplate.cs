@@ -29,7 +29,14 @@ namespace Macrocosm.Content.Items.Armor.Chandrium
             Item.height = 18;
             Item.value = 10000;
             Item.rare = ModContent.RarityType<MoonRarityT1>();
-            Item.defense = 40;
+            Item.defense = 9;
+        }
+
+        public override void UpdateEquip(Player player)
+        {
+            player.maxMinions += 1;
+            player.whipRangeMultiplier += 0.15f;
+            player.GetAttackSpeed<SummonDamageClass>() += 0.15f;
         }
 
         public override void AddRecipes()

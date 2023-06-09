@@ -18,7 +18,7 @@ namespace Macrocosm.Content.Items.Armor.Astronaut
             Item.height = 18;
             Item.value = 10000;
             Item.rare = ItemRarityID.Purple;
-            Item.defense = 22;
+            Item.defense = 6;
         }
 
         public override void UpdateEquip(Player player)
