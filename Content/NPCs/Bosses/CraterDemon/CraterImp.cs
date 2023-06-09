@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
+using Macrocosm.Content.NPCs.Global;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -13,7 +14,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 {
-	public class CraterImp : ModNPC
+	public class CraterImp : ModNPC, IMoonEnemy
 	{
 		public ref float AI_Timer => ref NPC.ai[0];
 		public ref float AI_Attack => ref NPC.ai[1];
@@ -75,8 +76,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 			NPC.HitSound = SoundID.NPCHit2;
 			NPC.DeathSound = SoundID.NPCDeath2;
-
-			SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBiome>().Type }; // Associates this NPC with the Moon Biome in Bestiary
 		}
 
 		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)

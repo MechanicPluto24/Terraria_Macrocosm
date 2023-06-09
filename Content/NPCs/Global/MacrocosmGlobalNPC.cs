@@ -61,8 +61,10 @@ namespace Macrocosm.Content.NPCs.Global
 
 			for (int id = 0; id < NPCLoader.NPCCount; id++)
 			{
-				if (NPCLoader.GetNPC(id) is IMoonEnemy)
-					NPCID.Sets.DebuffImmunitySets.Add(id, moonEnemyDebuffData);
+				ModNPC npc = NPCLoader.GetNPC(id);
+
+				if (npc is IMoonEnemy)
+					NPCID.Sets.DebuffImmunitySets[id] = moonEnemyDebuffData;
 			}
 		}
 	}

@@ -36,7 +36,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			AnimationType = NPCID.BlueSlime;
 			Banner = Item.NPCtoBanner(NPCID.BlueSlime);
 			BannerItem = Item.BannerToItem(Banner);
-			SpawnModBiomes = new int[2] { ModContent.GetInstance<MoonBiome>().Type, ModContent.GetInstance<IrradiationBiome>().Type }; // Associates this NPC with the Moon Biome & Irradiation in Bestiary
+			SpawnModBiomes = new int[1] { ModContent.GetInstance<IrradiationBiome>().Type }; // Associates this NPC with the Moon Biome & Irradiation in Bestiary
 		}
 		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
 		{

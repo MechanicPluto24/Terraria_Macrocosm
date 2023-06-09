@@ -23,11 +23,12 @@ using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Systems;
 using Macrocosm.Content.NPCs.Friendly.TownNPCs;
 using Macrocosm.Content.Items.Vanity.BossMasks;
+using Macrocosm.Content.NPCs.Global;
 
 namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 {
 	[AutoloadBossHead]
-	public class CraterDemon : ModNPC
+	public class CraterDemon : ModNPC, IMoonEnemy
 	{
 		private struct AttackInfo
 		{
@@ -220,8 +221,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			NPC.npcSlots = 40f;
 
 			NPC.HitSound = SoundID.NPCHit2;
-
-			SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBiome>().Type }; // Associates this NPC with the Moon Biome in Bestiary
 
 			if (!Main.dedServ)
 				Music = MusicLoader.GetMusicSlot(Mod, "Assets/Music/SpaceInvader");
