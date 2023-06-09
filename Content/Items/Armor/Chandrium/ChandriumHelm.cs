@@ -13,8 +13,6 @@ namespace Macrocosm.Content.Items.Armor.Chandrium
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Increases max number of minions by 1"
-                             + "\n25% increased summon damage");
         }
         public override void SetDefaults()
         {

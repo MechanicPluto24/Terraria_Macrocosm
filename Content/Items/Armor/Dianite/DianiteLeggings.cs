@@ -11,8 +11,6 @@ namespace Macrocosm.Content.Items.Armor.Dianite
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("5% increased magic damage"
-                             + "\n10% increased movement speed");
         }
 
         public override void SetDefaults()

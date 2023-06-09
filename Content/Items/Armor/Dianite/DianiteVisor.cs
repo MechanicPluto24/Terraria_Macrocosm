@@ -13,8 +13,6 @@ namespace Macrocosm.Content.Items.Armor.Dianite
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Increases maximum mana by 50"
-                             + "\n10% increased magic damage");
         }
         public override void SetDefaults()
         {

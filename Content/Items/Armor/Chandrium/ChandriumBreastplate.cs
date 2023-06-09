@@ -14,9 +14,6 @@ namespace Macrocosm.Content.Items.Armor.Chandrium
         {
             ArmorIDs.Body.Sets.IncludedCapeBack[EquipLoader.GetEquipSlot(Mod, Name, EquipType.Body)] = capeSlot;
             ArmorIDs.Body.Sets.IncludedCapeBackFemale[EquipLoader.GetEquipSlot(Mod, Name, EquipType.Body)] = capeSlot;
-
-            Tooltip.SetDefault("Increases max number of minion by 1"
-                             + "\n15% increased whip range and speed");
         }
 
         private int capeSlot;

@@ -14,8 +14,6 @@ namespace Macrocosm.Content.Items.Armor.Selenite
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("10% increased ranged damage"
-                             + "\n15% chance to save ammo");
         }
         public override void SetDefaults()
         {

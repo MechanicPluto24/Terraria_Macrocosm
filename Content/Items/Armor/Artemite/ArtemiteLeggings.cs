@@ -11,7 +11,6 @@ namespace Macrocosm.Content.Items.Armor.Artemite
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("15% increased melee and movement speed");
         }
 
         public override void SetDefaults()
