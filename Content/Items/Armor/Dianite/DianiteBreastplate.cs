@@ -12,7 +12,6 @@ namespace Macrocosm.Content.Items.Armor.Dianite
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("12% increased magic critical strike chance");
         }
 
         public override void SetDefaults()

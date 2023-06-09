@@ -12,7 +12,6 @@ namespace Macrocosm.Content.Items.Armor.Artemite
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("6% increased melee critical strike chance");
         }
 
 

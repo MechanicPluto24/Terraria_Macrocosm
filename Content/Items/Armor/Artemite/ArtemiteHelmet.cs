@@ -13,7 +13,6 @@ namespace Macrocosm.Content.Items.Armor.Artemite
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("18% increased melee damage");
         }
         public override void SetDefaults()
         {

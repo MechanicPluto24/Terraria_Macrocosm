@@ -59,95 +59,118 @@ Mods: {
 					'''
 			}
 
-			AluminumBoots: {
+		AluminumBoots: {
 				DisplayName: Aluminum Boots
-				Tooltip: ""
 			}
 
 			AluminumBreastplate: {
 				DisplayName: Aluminum Breastplate
-				Tooltip: ""
 			}
 
 			AluminumHelmet: {
 				DisplayName: Aluminum Helmet
-				Tooltip: ""
 			}
 
 			ArtemiteBreastplate: {
 				DisplayName: Artemite Breastplate
-				Tooltip: ""
+				Tooltip: 6% increased melee critical strike chance
 			}
 
 			ArtemiteHelmet: {
 				DisplayName: Artemite Helmet
-				Tooltip: ""
+				Tooltip: 18% increased melee damage
 			}
 
 			ArtemiteLeggings: {
 				DisplayName: Artemite Leggings
-				Tooltip: ""
+				Tooltip: 15% increased melee and movement speed
 			}
 
 			AstronautHelmet: {
 				DisplayName: Astronaut Helmet
-				Tooltip: ""
 			}
 
 			AstronautLeggings: {
 				DisplayName: Astronaut Leggings
-				Tooltip: ""
 			}
 
 			AstronautSuit: {
 				DisplayName: Astronaut Suit
-				Tooltip: ""
 			}
 
 			ChandriumBreastplate: {
 				DisplayName: Chandrium Breastplate
-				Tooltip: ""
+				Tooltip:
+					'''
+					Increases max number of minion by 1
+					15% increased whip range and speed
+					'''
 			}
 
 			ChandriumHelm: {
 				DisplayName: Chandrium Helm
-				Tooltip: ""
+				Tooltip:
+					'''
+					Increases max number of minions by 1
+					25% increased summon damage
+					'''
 			}
 
 			ChandriumLeggings: {
 				DisplayName: Chandrium Leggings
-				Tooltip: ""
+				Tooltip:
+					'''
+					Increases you max number of minions by 1
+					10% increased movement speed
+					'''
 			}
 
 			DianiteBreastplate: {
 				DisplayName: Dianite Breastplate
-				Tooltip: ""
+				Tooltip: 12% increased magic critical strike chance
 			}
 
 			DianiteLeggings: {
 				DisplayName: Dianite Leggings
-				Tooltip: ""
+				Tooltip:
+					'''
+					5% increased magic damage
+					10% increased movement speed
+					'''
 			}
 
 			DianiteVisor: {
 				DisplayName: Dianite Visor
-				Tooltip: ""
+				Tooltip:
+					'''
+					Increases maximum mana by 50
+					10% increased magic damage
+					'''
 			}
 
 			SeleniteBreastplate: {
 				DisplayName: Selenite Breastplate
-				Tooltip: ""
+				Tooltip: 12% increased ranged critical strike chance
 			}
 
 			SeleniteHeadgear: {
 				DisplayName: Selenite Headgear
-				Tooltip: ""
+				Tooltip:
+					'''
+					10% increased ranged damage
+					15% chance to save ammo
+					'''
 			}
 
 			SeleniteLeggings: {
 				DisplayName: Selenite Leggings
-				Tooltip: ""
+				Tooltip:
+					'''
+					5% increased ranged damage
+					20% increased movement speed
+					'''
 			}
+
 
 			CraterDemonBossBag: {
 				DisplayName: Treasure Bag (Crater Demon)

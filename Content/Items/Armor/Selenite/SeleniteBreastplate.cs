@@ -12,8 +12,6 @@ namespace Macrocosm.Content.Items.Armor.Selenite
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("12% increased ranged critical strike chance");
-
         }
 
         public override void SetDefaults()
