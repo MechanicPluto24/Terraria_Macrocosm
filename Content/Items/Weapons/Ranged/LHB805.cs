@@ -13,8 +13,6 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("LHB-805");
-			Tooltip.SetDefault("What's more effective than bullets?\nA whole LOT of bullets.");
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
 

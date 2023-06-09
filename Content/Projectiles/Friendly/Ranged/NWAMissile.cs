@@ -6,7 +6,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Trails;
-using Macrocosm.Common.Global.GlobalProjectiles;
+using Macrocosm.Content.Projectiles.Global;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
@@ -19,7 +19,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("NWA-12691");
 			ProjectileID.Sets.TrailCacheLength[Type] = 30;
 			ProjectileID.Sets.TrailingMode[Type] = 0;
 		}
@@ -78,7 +77,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 				for (int i = 0; i < Main.maxNPCs; i++)
 				{
 					// only run locally
-					if (Projectile.owner == Main.myPlayer && Main.npc[i].CanBeChasedBy(this) && Main.npc[i].Macrocosm().Targeted)
+					if (Projectile.owner == Main.myPlayer && Main.npc[i].CanBeChasedBy(this) && Main.npc[i].Macrocosm().TargetedByHomingProjectile)
 					{
 						float targetCenterX = Main.npc[i].position.X + Main.npc[i].width / 2;
 						float targetCenterY = Main.npc[i].position.Y + Main.npc[i].height / 2;

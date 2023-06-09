@@ -37,11 +37,11 @@ namespace Macrocosm.Common.Netcode
 					break;
 
 				case MessageType.SyncEmbarkInRocket:
-					RocketNPC.ReceiveEmbarkedPlayer(reader, whoAmI);
+					Rocket.ReceiveEmbarkedPlayer(reader, whoAmI);
 					break;
 
 				case MessageType.SyncLaunchRocket:
-					RocketNPC.ReceiveLaunchMessage(reader, whoAmI);
+					Rocket.ReceiveLaunchMessage(reader, whoAmI);
 					break;
 					
 				default:

@@ -8,7 +8,6 @@ namespace Macrocosm.Content.Items.Placeable.Furniture
     {
 		public override void SetStaticDefaults()
 		{
-            DisplayName.SetDefault("Moon Base Terminal");
 		}
 
 		public override void SetDefaults()

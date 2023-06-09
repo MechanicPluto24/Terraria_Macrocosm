@@ -74,7 +74,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             OwnerPlayer.itemAnimation = 2;
         }
 
-		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+		public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
 		{
             OwnerPlayer.StaminaPlayer().MeleeStamina -= 0.15f;
             OwnerPlayer.StaminaPlayer().ResetStaminaCooldown(90);

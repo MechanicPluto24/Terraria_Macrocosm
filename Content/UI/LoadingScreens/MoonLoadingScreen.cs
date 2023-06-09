@@ -1,16 +1,10 @@
 using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Utils;
-using Macrocosm.Common.Utils.IO;
-using Macrocosm.Content.UI.LoadingScreens;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using System.ComponentModel.DataAnnotations;
 using Terraria;
-using Terraria.GameContent;
 using Terraria.ModLoader;
-using Terraria.UI.Chat;
-using Terraria.WorldBuilding;
 
 namespace Macrocosm.Content.UI.LoadingScreens
 {
@@ -22,23 +16,23 @@ namespace Macrocosm.Content.UI.LoadingScreens
 
 		public MoonLoadingScreen()
 		{
-			lunaBackground = ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/Backgrounds/Luna", AssetRequestMode.ImmediateLoad).Value;
+			lunaBackground = ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/Backgrounds/Luna").Value;		
 			starsDrawing = new();
 
-			Texture2D earthSmallBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/Earth", AssetRequestMode.ImmediateLoad).Value;
-			Texture2D earthSmallAtmoBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/EarthAtmo", AssetRequestMode.ImmediateLoad).Value;
+			Texture2D earthSmallBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/Earth").Value;
+			Texture2D earthSmallAtmoBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/EarthAtmo").Value;
 			earth = new CelestialBody(earthSmallBackground, earthSmallAtmoBackground, 0.7f);
 
 			ProgressBar = new(
-			   ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/WorldGen/ProgressBarMoon", AssetRequestMode.ImmediateLoad).Value,
-			   ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/WorldGen/ProgressBarMoon_Lower", AssetRequestMode.ImmediateLoad).Value,
+			   ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/WorldGen/ProgressBarMoon").Value,
+			   ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/WorldGen/ProgressBarMoon_Lower").Value,
 			   new Color(56, 10, 28), new Color(155, 38, 74), new Color(6, 53, 27), new Color(93, 228, 162)
 		   );
 		}
 
 		public override TitleData Title => new()
 		{
-			TextKey = "Moon", //FIXME: localize
+			TextKey = "Moon",  
 			Scale = 1.2f,
 			Color = Color.White
 		};
@@ -65,17 +59,21 @@ namespace Macrocosm.Content.UI.LoadingScreens
 			starsDrawing.Draw(spriteBatch);
 			spriteBatch.End();
 
+			float scale = (float)Main.screenWidth / 1920f * (float)Main.screenHeight / 1080f;
+
 			spriteBatch.Begin(BlendState.NonPremultiplied, state);
 			spriteBatch.Draw(
 					lunaBackground,
-					new Rectangle(Main.screenWidth - lunaBackground.Width, Main.screenHeight - lunaBackground.Height + 50 - (int)(AnimationTimer * 10), lunaBackground.Width, lunaBackground.Height),
+					new Rectangle((int)(Main.screenWidth - lunaBackground.Width * scale),(int)(Main.screenHeight - lunaBackground.Height * scale + 50 - (int)(AnimationTimer * 10)), (int)(lunaBackground.Width * scale), (int)(lunaBackground.Height * scale)),
 					null,
 					bodyColor
 			);
 
+			earth.Scale = scale;
 			earth.Draw(spriteBatch);
 
-			spriteBatch.Restore(state);
+			spriteBatch.End();
+			spriteBatch.Begin(state);
 		}
 	}
 }

@@ -55,7 +55,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 		private bool empoweredHit = false;
 		private int hitNpcId = 0;
 
-		public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+		public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
 		{
 			// increase count only once per whip swing 
 			if(!HitNPC && HitStacks < 3)
@@ -77,7 +77,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 			if (HitStacks >= 3)
 			{
 				// increase damage 
- 				damage = (int)(damage * 1.2f);
+				modifiers.FinalDamage *= 1.2f;
 
 				// clear buff on successful hit 
 				Main.player[Projectile.owner].ClearBuff(ModContent.BuffType<ChandriumEmpowerment>());
@@ -136,7 +136,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 			}
 		}
 
-		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+		public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			// minions will attack the npcs hit with this whip 
 			Main.player[Projectile.owner].MinionAttackTargetNPC = target.whoAmI;

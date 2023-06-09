@@ -16,8 +16,6 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Copernicus");
-			Tooltip.SetDefault("Right click to launch a plasma ball grenade");
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
 		public override void SetDefaults()
@@ -51,9 +49,15 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 		public override bool? UseItem(Player player)
 		{
 			if (player.altFunctionUse == 2)
- 				SoundEngine.PlaySound(SFX.GrenadeLauncherThunk with { Volume = 0.7f });
- 			else
- 				SoundEngine.PlaySound(SFX.AssaultRifle with { Volume = 0.7f });
+			{
+				if(!Main.dedServ)
+ 					SoundEngine.PlaySound(SFX.GrenadeLauncherThunk with { Volume = 0.7f }, player.position);
+			}
+			else
+			{
+				if (!Main.dedServ)
+					SoundEngine.PlaySound(SFX.AssaultRifle with { Volume = 0.7f }, player.position);
+			}
  
 			return true;
 		}

@@ -1,19 +1,18 @@
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Biomes;
-using Macrocosm.Content.Items.Materials;
 using Microsoft.Xna.Framework;
-using System;
 using Terraria;
-using Terraria.GameContent.Bestiary;
-using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.GameContent.Bestiary;
+using Terraria.GameContent.ItemDropRules;
+using Macrocosm.Common.Utils;
+using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.NPCs.Global;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
     // incomplete
     // (TODO: leaps)
-    public class Leaper : MoonEnemy
+    public class Leaper : ModNPC, IMoonEnemy
 	{
 		public override void SetStaticDefaults()
 		{
@@ -36,7 +35,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			AIType = NPCID.ZombieMushroom;
 			Banner = Item.NPCtoBanner(NPCID.Zombie);
 			BannerItem = Item.BannerToItem(Banner);
-			SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBiome>().Type }; // Associates this NPC with the Moon Biome in Bestiary
 		}
 
 		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
@@ -55,7 +53,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		public override void AI()
 		{
-
 			// add slimeAI for leaps? 
 			Utility.AIZombie(NPC, ref NPC.ai, false, true, velMax: 4, maxJumpTilesX: 15, maxJumpTilesY: 10, moveInterval: 0.07f);
 
@@ -127,7 +124,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			loot.Add(ItemDropRule.Common(ModContent.ItemType<DianiteOre>(), 16, 1, 6));   // 1/16 chance to drop 1-6 DianiteOre Ore
 		}
 
-		public override void HitEffect(int hitDirection, double damage)
+		public override void HitEffect(NPC.HitInfo hit)
 		{
 
 			if (NPC.life > 0)
@@ -135,7 +132,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 				for (int i = 0; i < 20; i++)
 				{
 					Dust dust = Dust.NewDustDirect(NPC.position, NPC.width, NPC.height, DustID.Wraith);
-					dust.velocity.X = (dust.velocity.X + Main.rand.Next(0, 100) * 0.02f) * hitDirection;
+					dust.velocity.X = (dust.velocity.X + Main.rand.Next(0, 100) * 0.02f) * hit.HitDirection;
 					dust.velocity.Y = 1f + Main.rand.Next(-50, 51) * 0.01f;
 					dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
 					dust.noGravity = true;

@@ -23,11 +23,12 @@ using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Systems;
 using Macrocosm.Content.NPCs.Friendly.TownNPCs;
 using Macrocosm.Content.Items.Vanity.BossMasks;
+using Macrocosm.Content.NPCs.Global;
 
 namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 {
 	[AutoloadBossHead]
-	public class CraterDemon : ModNPC
+	public class CraterDemon : ModNPC, IMoonEnemy
 	{
 		private struct AttackInfo
 		{
@@ -167,7 +168,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Crater Demon");
 			Main.npcFrameCount[NPC.type] = 6;
 			NPCID.Sets.TrailCacheLength[NPC.type] = 5;
 			NPCID.Sets.TrailingMode[NPC.type] = 0;
@@ -222,8 +222,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 			NPC.HitSound = SoundID.NPCHit2;
 
-			SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBiome>().Type }; // Associates this NPC with the Moon Biome in Bestiary
-
 			if (!Main.dedServ)
 				Music = MusicLoader.GetMusicSlot(Mod, "Assets/Music/SpaceInvader");
 		}
@@ -237,7 +235,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			});
 		}
 
-		public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
+		public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)/* tModPorter Note: bossLifeScale -> balance (bossAdjustment is different, see the docs for details) */
 		{
 			NPC.ScaleHealthBy(0.35f);  //For comparison, Moon Lord's scale factor is 0.7f
 
@@ -287,7 +285,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			NPC.SetEventFlagCleared(ref DownedBossSystem.DownedCraterDemon, -1);
 		}
 
-		public override void OnHitPlayer(Player target, int damage, bool crit)
+		public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
 		{
 			target.Macrocosm().AccMoonArmorDebuff = Main.expertMode ? 5 * 60 : 2 * 60;
 		}
@@ -520,7 +518,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 					spawned = true;
 					targetAlpha = 0f;
 
-					SoundEngine.PlaySound(SoundID.Zombie105, NPC.Center);  //Cultist laugh sound
+					//Cultist laugh sound
+					if (!Main.dedServ)
+						SoundEngine.PlaySound(SoundID.Zombie105, NPC.Center);  
 
 					NPC.netUpdate = true;
 				}
@@ -637,13 +637,18 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 					int max = Main.expertMode ? PortalTimerMax : (int)(PortalTimerMax * 1.5f);
 
 					if ((int)AI_Timer == max - 1)
-						SoundEngine.PlaySound(SoundID.Zombie99, NPC.Center);
+					{
+						if(!Main.dedServ)
+							SoundEngine.PlaySound(SoundID.Zombie99, NPC.Center);
+					}
 					else if ((int)AI_Timer == max - 24)
 					{
 						//Wait until the animation frame changes to the one facing forwards
 						if (GetAnimationSetFrame() == Animation_LookFront_JawOpen)
 						{
-							SoundEngine.PlaySound(SoundID.Zombie93, NPC.Center);
+							if (!Main.dedServ)
+								SoundEngine.PlaySound(SoundID.Zombie93, NPC.Center);
+
 							AI_AttackProgress++;
 						}
 						else
@@ -687,8 +692,11 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 								int craterImpID = NPC.NewNPC(NPC.GetSource_FromAI(), (int)spawn.X, (int)spawn.Y, ModContent.NPCType<CraterImp>(), ai3: NPC.whoAmI);
 								Main.npc[craterImpID].netUpdate = true;
 							}
+
 							//Exhale sound
-							SoundEngine.PlaySound(SoundID.Zombie93, NPC.Center);
+							if (!Main.dedServ)
+								SoundEngine.PlaySound(SoundID.Zombie93, NPC.Center);
+
 							AI_AttackProgress++;
 						}
 					}
@@ -835,7 +843,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 							AI_AttackProgress++;
 
-							if (repeatCount == 0)
+							if (repeatCount == 0 && !Main.dedServ)
 								SoundEngine.PlaySound(SoundID.Zombie105, NPC.Center); //Cultist laugh sound
 
 							//Wait for a random amount of time
@@ -916,7 +924,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 							NPC.Center = bigPortal.center;
 							NPC.velocity = NPC.DirectionTo(player.Center) * chargeVelocity;
 
-							SoundEngine.PlaySound(SoundID.ForceRoar, NPC.position);
+							if (!Main.dedServ)
+								SoundEngine.PlaySound(SoundID.ForceRoar, NPC.position);
 
 							if (Main.netMode != NetmodeID.MultiplayerClient)
 							{
@@ -1054,7 +1063,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			bigPortal2.Update();
 		}
 
-		public override void HitEffect(int hitDirection, double damage)
+		public override void HitEffect(NPC.HitInfo hit)
 		{
 			SpawnDusts(10);
 
@@ -1110,11 +1119,14 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 					NPC.velocity.Y = speedY;
 			}
 
-			//Play one of two sounds randomly
-			if (Main.rand.NextFloat() < 0.02f / 60f)
-				SoundEngine.PlaySound(SoundID.Zombie96, NPC.Center);
-			else if (Main.rand.NextFloat() < 0.02f / 60f)
-				SoundEngine.PlaySound(SoundID.Zombie5, NPC.Center);
+			if (!Main.dedServ)
+			{
+				//Play one of two sounds randomly
+				if (Main.rand.NextFloat() < 0.02f / 60f)
+					SoundEngine.PlaySound(SoundID.Zombie96, NPC.Center);
+				else if (Main.rand.NextFloat() < 0.02f / 60f)
+					SoundEngine.PlaySound(SoundID.Zombie5, NPC.Center);
+			}		
 		}
 
 		private int CountAliveLesserDemons()
@@ -1160,8 +1172,11 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			info.rotation = 0f;
 			info.fast = fast;
 
-			SoundStyle sound = SoundID.Item84 with { Volume = 0.9f };
-			SoundEngine.PlaySound(sound, info.center);
+			if (!Main.dedServ)
+			{
+				SoundStyle sound = SoundID.Item84 with { Volume = 0.9f };
+				SoundEngine.PlaySound(sound, info.center);
+			}
 		}
 
 		public override Color? GetAlpha(Color drawColor)
@@ -1186,14 +1201,14 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			return head.Intersects(hitbox) || jaw.Intersects(hitbox) ? null : (bool?)false;
 		}
 
-		public override bool? CanHitNPC(NPC target)
+		public override bool CanHitNPC(NPC target) 
 		{
 			var canHit = CanBeHitByThing(target.Hitbox);
 
 			if (canHit is null)
-				return canHit;
+				return true;
 
-			return hideMapIcon ? (bool?)false : null;
+			return !hideMapIcon; 
 		}
 
 		public override bool CanHitPlayer(Player target, ref int cooldownSlot)

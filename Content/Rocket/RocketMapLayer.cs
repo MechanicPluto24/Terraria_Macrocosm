@@ -17,7 +17,7 @@ namespace Macrocosm.Content.Rocket
 			for(int i = 0; i < Main.maxNPCs; i++)
 			{
 				NPC npc = Main.npc[i];
-				if (npc.type == ModContent.NPCType<RocketNPC>())
+				if (npc.type == ModContent.NPCType<Rocket>())
 				{
 					Vector2 position = new(
 									      (npc.Center.X) / 16f,

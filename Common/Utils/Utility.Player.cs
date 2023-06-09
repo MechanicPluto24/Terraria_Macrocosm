@@ -9,6 +9,8 @@ namespace Macrocosm.Common.Utils
 {
     public static partial class Utility
 	{
+		public static bool UICloseConditions(this Player player) =>
+			player.dead || !player.active || Main.editChest || Main.editSign || player.talkNPC >= 0 || !Main.playerInventory;
 
 		public static Rectangle GetSwungItemHitbox(this Player player)
 		{

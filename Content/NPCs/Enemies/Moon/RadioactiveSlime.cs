@@ -1,26 +1,20 @@
+using Macrocosm.Content.NPCs.Global;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
-using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Items.Materials;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using Terraria;
 using Terraria.GameContent.Bestiary;
-using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-    public class RadioactiveSlime : MoonEnemy
+    public class RadioactiveSlime : ModNPC, IMoonEnemy
 	{
 		public override void SetStaticDefaults()
 		{
-			base.SetStaticDefaults();
-
-			DisplayName.SetDefault("Radioactive Slime");
 			Main.npcFrameCount[NPC.type] = Main.npcFrameCount[NPCID.BlueSlime];
 		}
 
@@ -42,7 +36,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			AnimationType = NPCID.BlueSlime;
 			Banner = Item.NPCtoBanner(NPCID.BlueSlime);
 			BannerItem = Item.BannerToItem(Banner);
-			SpawnModBiomes = new int[2] { ModContent.GetInstance<MoonBiome>().Type, ModContent.GetInstance<IrradiationBiome>().Type }; // Associates this NPC with the Moon Biome & Irradiation in Bestiary
+			SpawnModBiomes = new int[1] { ModContent.GetInstance<IrradiationBiome>().Type }; // Associates this NPC with the Moon Biome & Irradiation in Bestiary
 		}
 		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
 		{
@@ -53,14 +47,14 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			});
 		}
 
-		public override void OnHitPlayer(Player player, int damage, bool crit)
+		public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
 		{
 			//player.AddBuff(ModContent.BuffType<Irradiated>(), 600, true);
 		}
 
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
 		{
-			return spawnInfo.SpawnTileType == ModContent.TileType<Tiles.IrradiatedRock>() ? 0.1f : 0f;
+			return spawnInfo.SpawnTileType == ModContent.TileType<Tiles.Blocks.IrradiatedRock>() ? 0.1f : 0f;
 		}
 
 		public override void ModifyNPCLoot(NPCLoot loot)
@@ -68,13 +62,13 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			
 		}
 
-		public override void HitEffect(int hitDirection, double damage)
+		public override void HitEffect(NPC.HitInfo hit)
 		{
 			for (int i = 0; i < 10; i++)
 			{
 				int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, ModContent.DustType<LuminiteDust>());
 				Dust dust = Main.dust[dustIndex];
-				dust.velocity.X *= dust.velocity.X * 1.25f * hitDirection + Main.rand.Next(0, 100) * 0.015f;
+				dust.velocity.X *= dust.velocity.X * 1.25f * hit.HitDirection + Main.rand.Next(0, 100) * 0.015f;
 				dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;
 				dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
 			}
@@ -96,7 +90,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
-			spriteBatch.Restore(state);
+			spriteBatch.End();
+			spriteBatch.Begin(state);
 		}
 	}
 }

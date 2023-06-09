@@ -1,9 +1,7 @@
-﻿using Macrocosm.Common.Utils;
-using Macrocosm.Content.Biomes;
-using Macrocosm.Content.Buffs.Debuffs;
+﻿using Macrocosm.Content.NPCs.Global;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Materials;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
@@ -12,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-    public class Clavite : MoonEnemy
+    public class Clavite : ModNPC, IMoonEnemy
 	{
 		public override void SetStaticDefaults()
 		{
@@ -38,7 +36,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			NPC.noGravity = true;
 			NPC.noTileCollide = true;
 			//AnimationType = NPCID.MeteorHead;
-			SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBiome>().Type }; // Associates this NPC with the Moon Biome in Bestiary
 		}
 
 		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
@@ -81,7 +78,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			}
 		}
 
-		public override void OnHitPlayer(Player player, int damage, bool crit)
+		public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
 		{
 			//if (player.Macrocosm().AccMoonArmor)
 			//{
@@ -103,13 +100,13 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			loot.Add(ItemDropRule.Common(ModContent.ItemType<DianiteOre>(), 16, 1, 6));   // 1/16 chance to drop 1-6 DianiteOre Ore
 		}
 
-		public override void HitEffect(int hitDirection, double damage)
+		public override void HitEffect(NPC.HitInfo hit)
 		{
 			for (int i = 0; i < 10; i++)
 			{
 				int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.Stone);
 				Dust dust = Main.dust[dustIndex];
-				dust.velocity.X *= dust.velocity.X * 1.25f * hitDirection + Main.rand.Next(0, 100) * 0.015f;
+				dust.velocity.X *= dust.velocity.X * 1.25f * hit.HitDirection + Main.rand.Next(0, 100) * 0.015f;
 				dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;
 				dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
 			}

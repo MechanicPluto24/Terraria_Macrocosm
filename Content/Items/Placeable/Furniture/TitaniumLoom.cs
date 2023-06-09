@@ -8,8 +8,7 @@ namespace Macrocosm.Content.Items.Placeable.Furniture
     {
 		public override void SetStaticDefaults()
 		{
-            DisplayName.SetDefault("Titanium Loom");
-		}
+ 		}
 
 		public override void SetDefaults()
         {
