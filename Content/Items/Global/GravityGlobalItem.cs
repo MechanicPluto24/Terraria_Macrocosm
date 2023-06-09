@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 using Macrocosm.Content.Subworlds;
 using Macrocosm.Common.Subworlds;
 
-namespace Macrocosm.Common.Global.GlobalItems
+namespace Macrocosm.Content.Items.Global
 {
 	public class GravityGlobalItem : GlobalItem
 	{

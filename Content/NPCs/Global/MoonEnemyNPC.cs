@@ -3,7 +3,7 @@ using System.Linq;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Global.GlobalNPCs
+namespace Macrocosm.Content.NPCs.Global
 {
 	public interface IMoonEnemy
 	{
@@ -16,7 +16,7 @@ namespace Macrocosm.Common.Global.GlobalNPCs
 
 		public override void SetDefaults(NPC entity)
 		{
-			entity.ModNPC.SpawnModBiomes = entity.ModNPC.SpawnModBiomes.Prepend(ModContent.GetInstance<MoonBiome>().Type).ToArray();
+			//entity.ModNPC.SpawnModBiomes = entity.ModNPC.SpawnModBiomes.Prepend(ModContent.GetInstance<MoonBiome>().Type).ToArray();
 		}
 	}
 }

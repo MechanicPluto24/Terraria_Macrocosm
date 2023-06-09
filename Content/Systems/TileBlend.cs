@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria.ID;
 using Terraria;
 using Microsoft.Xna.Framework;
 using Macrocosm.Common.Utils;
 
-namespace Macrocosm.Common.Global
+namespace Macrocosm.Common.Systems
 {
 	/// <summary> This is broken, don't use yet </summary>
 	public static class TileBlend

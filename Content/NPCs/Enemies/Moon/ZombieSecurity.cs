@@ -11,8 +11,8 @@ using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Content.Particles;
 using System.IO;
 using Macrocosm.Content.Projectiles.Hostile;
-using Macrocosm.Common.Global.GlobalNPCs;
 using Macrocosm.Common.DataStructures;
+using Macrocosm.Content.NPCs.Global;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {

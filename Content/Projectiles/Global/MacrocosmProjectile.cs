@@ -1,6 +1,5 @@
 using Macrocosm.Common.Drawing.Trails;
 using Macrocosm.Common.Netcode;
-using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using System;
 using System.IO;
@@ -8,7 +7,7 @@ using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
-namespace Macrocosm.Common.Global.GlobalProjectiles
+namespace Macrocosm.Content.Projectiles.Global
 {
 	public class MacrocosmProjectile : GlobalProjectile
 	{

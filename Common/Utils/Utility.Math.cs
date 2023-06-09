@@ -15,6 +15,9 @@ namespace Macrocosm.Common.Utils
 		public static Vector2 PolarVector(float radius, float theta)
 			=> new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta)) * radius;
 
+		public static float InverseLerp(float from, float to, float value, bool clamped)
+			=> Terraria.Utils.GetLerpValue(from, to, value, clamped);
+
 		/// <summary>
 		/// Gets the position of a point rotating about an origin using a rotation matrix
 		/// </summary>

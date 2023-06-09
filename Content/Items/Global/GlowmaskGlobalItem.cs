@@ -8,7 +8,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace Macrocosm.Common.Global.GlobalItems
+namespace Macrocosm.Content.Items.Global
 {
 	/// <summary>
 	/// Adds a glowmask field to GlobalItems.

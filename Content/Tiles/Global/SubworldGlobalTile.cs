@@ -1,7 +1,7 @@
 using SubworldLibrary;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Global.GlobalTiles
+namespace Macrocosm.Content.Tiles.Global
 {
 	public class SubworldGlobalTile : GlobalTile
 	{

@@ -4,7 +4,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Global.GlobalItems
+namespace Macrocosm.Content.Items.Global
 {
 	public class TorchGlobalItem : GlobalItem
 	{

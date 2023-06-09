@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Global;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;

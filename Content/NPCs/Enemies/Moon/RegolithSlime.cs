@@ -1,4 +1,4 @@
-using Macrocosm.Common.Global.GlobalNPCs;
+using Macrocosm.Content.NPCs.Global;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Dusts;

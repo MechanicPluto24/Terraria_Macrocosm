@@ -1,7 +1,7 @@
 ﻿using Macrocosm.Common.Utils;
 using Terraria;
 
-namespace Macrocosm.Common.Global.GlobalProjectiles
+namespace Macrocosm.Content.Projectiles.Global
 {
 	/// <summary> Interface for all ModProjectile types that explode in contact with the ground or an enemy </summary>
 	public interface IExplosive

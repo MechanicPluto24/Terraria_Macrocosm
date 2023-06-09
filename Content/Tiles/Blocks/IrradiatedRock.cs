@@ -1,4 +1,3 @@
-using Macrocosm.Common.Global;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Terraria;

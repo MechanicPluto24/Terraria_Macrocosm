@@ -1,3 +1,4 @@
+using Macrocosm.Common.Subworlds;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Items.Currency;
 using Macrocosm.Content.Subworlds;
@@ -9,7 +10,7 @@ using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Global.GlobalNPCs
+namespace Macrocosm.Content.NPCs.Global
 {
     /// <summary> Global NPC for general NPC modifications (loot, spawn pools) </summary>
     public class MacrocosmGlobalNPC : GlobalNPC
@@ -38,7 +39,13 @@ namespace Macrocosm.Common.Global.GlobalNPCs
  			}
 		}
 
-		private void SetImmunities()
+		public override void AI(NPC npc)
+		{
+			if (MacrocosmSubworld.AnyActive)
+				npc.GravityMultiplier *= MacrocosmSubworld.Current.GravityMultiplier;
+		}
+
+		private static void SetImmunities()
 		{
 			NPCDebuffImmunityData moonEnemyDebuffData = new()
 			{
@@ -54,7 +61,7 @@ namespace Macrocosm.Common.Global.GlobalNPCs
 
 			for (int id = 0; id < NPCLoader.NPCCount; id++)
 			{
-				if (ContentSamples.NpcsByNetId[id].ModNPC is IMoonEnemy)
+				if (NPCLoader.GetNPC(id) is IMoonEnemy)
 					NPCID.Sets.DebuffImmunitySets.Add(id, moonEnemyDebuffData);
 			}
 		}

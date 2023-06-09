@@ -7,7 +7,7 @@ using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
-namespace Macrocosm.Common.Global.GlobalNPCs
+namespace Macrocosm.Content.NPCs.Global
 {
 	/// <summary> Global NPC for NPC instances </summary>
 	public class MacrocosmNPC : GlobalNPC
@@ -16,22 +16,7 @@ namespace Macrocosm.Common.Global.GlobalNPCs
 		protected override bool CloneNewInstances => false;
 
 		/// <summary> If this is only set on a local client, the logic accessing this needs to be synced </summary>
-		public bool Targeted; 
-
-		public override void PostDraw(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
-		{
-			if (Targeted)
-				DrawCrosshair(npc, spriteBatch, screenPos, drawColor);
-		}
-
-		private void DrawCrosshair(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
-		{
-			Texture2D crosshair = ModContent.Request<Texture2D>("Macrocosm/Content/UI/Crosshair").Value;
-			Color color = new(255, 255, 255, 64);
-			Vector2 position = npc.Center - screenPos;
-			float rotation = (float)(Main.timeForVisualEffects / 20);
-			spriteBatch.Draw(crosshair, position, null, color, rotation, crosshair.Size() / 2, 1.5f, SpriteEffects.None, 0f);
-		}
+		public bool TargetedByHomingProjectile; 
 
 		public override void SendExtraAI(NPC npc, BitWriter bitWriter, BinaryWriter binaryWriter)
 		{
@@ -50,6 +35,21 @@ namespace Macrocosm.Common.Global.GlobalNPCs
 				return;
 
 			npc.ModNPC.NetReadFields(binaryReader, bitReader);
+		}
+
+		public override void PostDraw(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+		{
+			if (TargetedByHomingProjectile)
+				DrawCrosshair(npc, spriteBatch, screenPos, drawColor);
+		}
+
+		private void DrawCrosshair(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+		{
+			Texture2D crosshair = ModContent.Request<Texture2D>("Macrocosm/Content/UI/Crosshair").Value;
+			Color color = new(255, 255, 255, 64);
+			Vector2 position = npc.Center - screenPos;
+			float rotation = (float)(Main.timeForVisualEffects / 20);
+			spriteBatch.Draw(crosshair, position, null, color, rotation, crosshair.Size() / 2, 1.5f, SpriteEffects.None, 0f);
 		}
 	}
 }

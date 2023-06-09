@@ -1,4 +1,4 @@
-﻿using Macrocosm.Common.Global.GlobalNPCs;
+﻿using Macrocosm.Content.NPCs.Global;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
