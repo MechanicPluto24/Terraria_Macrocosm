@@ -11,6 +11,8 @@ namespace Macrocosm.Content.Items.Armor.Chandrium
     {
         public override void SetStaticDefaults()
         {
+            Tooltip.SetDefault("Increases you max number of minions by 1"
+                             + "\n10% increased movement speed");
         }
 
         public override void SetDefaults()
@@ -19,12 +21,13 @@ namespace Macrocosm.Content.Items.Armor.Chandrium
             Item.height = 18;
             Item.value = 10000;
             Item.rare = ModContent.RarityType<MoonRarityT1>();
-            Item.defense = 22;
+            Item.defense = 8;
         }
 
         public override void UpdateEquip(Player player)
         {
-            player.moveSpeed += 0.05f;
+            player.maxMinions += 1;
+            player.moveSpeed += 0.1f;
         }
 
         public override void AddRecipes()

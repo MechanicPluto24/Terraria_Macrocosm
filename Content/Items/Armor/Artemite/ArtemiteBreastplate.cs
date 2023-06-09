@@ -12,7 +12,7 @@ namespace Macrocosm.Content.Items.Armor.Artemite
     {
         public override void SetStaticDefaults()
         {
-
+            Tooltip.SetDefault("6% increased melee critical strike chance");
         }
 
 
@@ -26,7 +26,12 @@ namespace Macrocosm.Content.Items.Armor.Artemite
             Item.height = 18;
             Item.value = 10000;
             Item.rare = ModContent.RarityType<MoonRarityT1>();
-            Item.defense = 40;
+            Item.defense = 15;
+        }
+
+        public override void UpdateEquip(Player player)
+        {
+            player.GetCritChance<MeleeDamageClass>() += 6f;
         }
 
         public override void AddRecipes()
