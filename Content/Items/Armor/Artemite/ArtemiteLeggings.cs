@@ -19,12 +19,13 @@ namespace Macrocosm.Content.Items.Armor.Artemite
             Item.height = 18;
             Item.value = 10000;
             Item.rare = ModContent.RarityType<MoonRarityT1>();
-            Item.defense = 22;
+            Item.defense = 10;
         }
 
         public override void UpdateEquip(Player player)
         {
-            player.moveSpeed += 0.05f;
+            player.GetAttackSpeed<MeleeDamageClass>() += 0.15f;
+            player.moveSpeed += 0.15f;
         }
 
         public override void AddRecipes()

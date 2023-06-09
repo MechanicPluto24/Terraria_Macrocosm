@@ -20,7 +20,13 @@ namespace Macrocosm.Content.Items.Armor.Dianite
             Item.height = 18;
             Item.value = 10000;
             Item.rare = ModContent.RarityType<MoonRarityT1>();
-            Item.defense = 26;
+            Item.defense = 5;
+        }
+
+        public override void UpdateEquip(Player player)
+        {
+            player.statManaMax2 += 60;
+            player.GetDamage<MagicDamageClass>() += 0.1f;
         }
 
         public override bool IsArmorSet(Item head, Item body, Item legs)
