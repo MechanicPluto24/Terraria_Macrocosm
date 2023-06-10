@@ -9,12 +9,22 @@ using Macrocosm.Content.Subworlds;
 using Macrocosm.Content.Systems;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
+using Terraria.Localization;
 
 namespace Macrocosm.Content.Players
 {
+
+	public enum SpaceProtection
+	{
+		None,
+		Tier1,
+		Tier2,
+		Tier3
+	}
+
     public class MacrocosmPlayer : ModPlayer
 	{
-		public bool AccMoonArmor = false;
+		public SpaceProtection SpaceProtection = SpaceProtection.None;
 		public int AccMoonArmorDebuff = 0;
 
 		public bool ZoneMoon = false;
@@ -25,9 +35,7 @@ namespace Macrocosm.Content.Players
 
 		public int ChandriumEmpowermentStacks = 0;
 
-		/// <summary>
-		/// Chance to not consume ammo from equipment and weapons, stacks additively using +=
-		/// </summary>
+		/// <summary> Chance to not consume ammo from equipment and weapons, stacks additively </summary>
         public float ChanceToNotConsumeAmmo 
 		{ 
 			get => chanceToNotConsumeAmmo; 
@@ -35,18 +43,17 @@ namespace Macrocosm.Content.Players
 		}
         private float chanceToNotConsumeAmmo = 0f;
 
-        #region Screenshake mechanic 
-        private float screenShakeIntensity = 0f;
+		/// <summary> Set or add to current screenshake </summary>
 		public float ScreenShakeIntensity
 		{
 			get => screenShakeIntensity;
 			set => screenShakeIntensity = MathHelper.Clamp(value, 0, 100);
 		}
-        #endregion
+        private float screenShakeIntensity = 0f;
 
         public override void ResetEffects()
 		{
-			AccMoonArmor = false;
+			SpaceProtection = SpaceProtection.None;
 			RadNoiseIntensity = 0f;
 			ChanceToNotConsumeAmmo = 0f;
 		}
@@ -54,8 +61,10 @@ namespace Macrocosm.Content.Players
         public override bool CanConsumeAmmo(Item weapon, Item ammo)
         {
 			bool consumeAmmo = true;
+
 			if (Main.rand.NextFloat() < ChanceToNotConsumeAmmo)
 				consumeAmmo = false;
+
 			return consumeAmmo;
         }
 
@@ -63,7 +72,7 @@ namespace Macrocosm.Content.Players
 		{
 			if (SubworldSystem.IsActive<Moon>())
 			{
-				if (!AccMoonArmor)
+				if (SpaceProtection > SpaceProtection.None)
 					Player.AddBuff(ModContent.BuffType<SuitBreach>(), 2);
 			}
 		}
@@ -87,6 +96,12 @@ namespace Macrocosm.Content.Players
 				Main.screenPosition += new Vector2(Main.rand.NextFloat(ScreenShakeIntensity), Main.rand.NextFloat(ScreenShakeIntensity));
 				ScreenShakeIntensity *= 0.9f;
 			}
+		}
+
+		public override void PostUpdateEquips()
+		{
+			if (Player.Macrocosm().SpaceProtection > SpaceProtection.None)
+				Player.setBonus = Language.GetTextValue("Mods.Macrocosm.SetBonuses.SpaceProtection_" + SpaceProtection.ToString());
 		}
 
 		private void UpdateGravity()
