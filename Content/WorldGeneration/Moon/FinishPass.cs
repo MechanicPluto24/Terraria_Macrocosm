@@ -20,12 +20,13 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 
 		public void SetSpawnPoint()
 		{
-			Main.spawnTileX = Main.maxTilesX / 2;
+			int spawnTileX = Main.maxTilesX / 2;
+			Main.spawnTileX = spawnTileX;
 			for (int tileY = 0; tileY < Main.maxTilesY; tileY++)
 			{
-				if (Main.tile[1000, tileY].HasTile)
+				if (Main.tile[spawnTileX, tileY].HasTile)
 				{
-					Main.spawnTileY = tileY - 1;
+					Main.spawnTileY = tileY - 2;
 					break;
 				}
 			}

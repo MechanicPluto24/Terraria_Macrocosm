@@ -59,7 +59,7 @@ namespace Macrocosm.Content.UI.LoadingScreens
 			starsDrawing.Draw(spriteBatch);
 			spriteBatch.End();
 
-			float scale = (float)Main.screenWidth / 1920f * (float)Main.screenHeight / 1080f;
+			float scale = Main.UIScale;
 
 			spriteBatch.Begin(BlendState.NonPremultiplied, state);
 			spriteBatch.Draw(

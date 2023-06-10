@@ -29,11 +29,5 @@ namespace Macrocosm.Content.Tiles.Ores
             DustType = 84;
             HitSound = SoundID.Tink;
         }
-        public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
-        {
-            r = 0.7f;
-            g = 0.4f;
-            b = 0.85f;
-        }
     }
 }
