@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.NPCs.Global;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -101,7 +102,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
 		{
 			if (Main.expertMode)
-				target.Macrocosm().AccMoonArmorDebuff = 80;
+				target.AddBuff(ModContent.BuffType<SuitBreach>(), 80);
 		}
 
 		public override Color? GetAlpha(Color drawColor)

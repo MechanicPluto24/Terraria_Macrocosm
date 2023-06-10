@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
+using static Terraria.ModLoader.ModContent;
 using Terraria.Graphics.Effects;
 using SubworldLibrary;
 using Macrocosm.Content.Buffs.Debuffs;
@@ -25,7 +26,6 @@ namespace Macrocosm.Content.Players
     public class MacrocosmPlayer : ModPlayer
 	{
 		public SpaceProtection SpaceProtection = SpaceProtection.None;
-		public int AccMoonArmorDebuff = 0;
 
 		public bool ZoneMoon = false;
 		public bool ZoneBasalt = false;
@@ -56,9 +56,10 @@ namespace Macrocosm.Content.Players
 			SpaceProtection = SpaceProtection.None;
 			RadNoiseIntensity = 0f;
 			ChanceToNotConsumeAmmo = 0f;
+			Player.buffImmune[BuffType<Depressurized>()] = false;
 		}
 
-        public override bool CanConsumeAmmo(Item weapon, Item ammo)
+		public override bool CanConsumeAmmo(Item weapon, Item ammo)
         {
 			bool consumeAmmo = true;
 
@@ -70,10 +71,25 @@ namespace Macrocosm.Content.Players
 
         public override void PostUpdateBuffs()
 		{
-			if (SubworldSystem.IsActive<Moon>())
+			if (SubworldSystem.AnyActive(Mod))
+            {
+				UpdateSpaceEnvironmentalDebuffs();
+            }
+		}
+
+		public void UpdateSpaceEnvironmentalDebuffs()
+        {
+			SpaceProtection protectTier = Player.Macrocosm().SpaceProtection;
+			if (!Player.RocketPlayer().InRocket)
 			{
-				if (SpaceProtection > SpaceProtection.None)
-					Player.AddBuff(ModContent.BuffType<SuitBreach>(), 2);
+				if (SubworldSystem.IsActive<Moon>())
+				{
+					if (protectTier == SpaceProtection.None)
+						Player.AddBuff(BuffType<Depressurized>(), 2);
+//					if (protectTier <= SpaceProtection.Tier1)
+//						Player.AddBuff(BuffTpye<Irradiated>(), 2);
+				}
+//				else if (SubworldSystem.IsActive<Mars>())
 			}
 		}
 
@@ -81,12 +97,6 @@ namespace Macrocosm.Content.Players
 		{
 			UpdateGravity();
 			UpdateFilterEffects();
-
-			if (AccMoonArmorDebuff > 0)
-			{
-				Player.buffImmune[ModContent.BuffType<SuitBreach>()] = false;
-				AccMoonArmorDebuff--;
-			}
 		}
 
 		public override void ModifyScreenPosition()
@@ -100,8 +110,20 @@ namespace Macrocosm.Content.Players
 
 		public override void PostUpdateEquips()
 		{
+			UpdateSpaceArmourImmunities();
 			if (Player.Macrocosm().SpaceProtection > SpaceProtection.None)
 				Player.setBonus = Language.GetTextValue("Mods.Macrocosm.SetBonuses.SpaceProtection_" + SpaceProtection.ToString());
+		}
+
+		public void UpdateSpaceArmourImmunities()
+        {
+			SpaceProtection protectTier = Player.Macrocosm().SpaceProtection;
+			if (protectTier > SpaceProtection.None)
+				Player.buffImmune[BuffType<Depressurized>()] = true;
+			if (protectTier > SpaceProtection.Tier1)
+            {
+
+            }
 		}
 
 		private void UpdateGravity()
