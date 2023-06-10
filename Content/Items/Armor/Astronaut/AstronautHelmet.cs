@@ -30,8 +30,6 @@ namespace Macrocosm.Content.Items.Armor.Astronaut
         public override void UpdateArmorSet(Player player)
         {
             player.Macrocosm().SpaceProtection = SpaceProtection.Tier1;
-      
-            player.buffImmune[ModContent.BuffType<SuitBreach>()] = true;
         }
 
         public override void AddRecipes()

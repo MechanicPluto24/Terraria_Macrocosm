@@ -13,6 +13,7 @@ using Terraria.GameContent.ItemDropRules;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Items.Consumables.BossBags;
 using Macrocosm.Content.Projectiles.Hostile;
 using Macrocosm.Content.Items.Placeable.Trophies;
@@ -287,7 +288,13 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 		public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
 		{
-			target.Macrocosm().AccMoonArmorDebuff = Main.expertMode ? 5 * 60 : 2 * 60;
+			int breachTime = 120;
+			if (Main.expertMode && !Main.masterMode)
+				breachTime *= 2;
+			else if (Main.masterMode)
+				breachTime *= 3;
+
+			target.AddBuff(ModContent.BuffType<SuitBreach>(), breachTime);
 		}
 
 		private void UpdateScale(float newScale)
