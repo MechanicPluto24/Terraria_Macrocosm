@@ -41,8 +41,6 @@ namespace Macrocosm.Content.Items.Armor.Artemite
         public override void UpdateArmorSet(Player player)
         {
             player.Macrocosm().SpaceProtection = SpaceProtection.Tier1;
-           
-            player.buffImmune[ModContent.BuffType<SuitBreach>()] = true;
         }
 
         public override void AddRecipes()

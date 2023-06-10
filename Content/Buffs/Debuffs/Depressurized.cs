@@ -3,7 +3,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Buffs.Debuffs
 {
-	public class SuitBreach : ModBuff
+	public class Depressurized : ModBuff
 	{
 		public override void SetStaticDefaults()
 		{
@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Buffs.Debuffs
 		}
 		public override void Update(Player player, ref int buffIndex)
 		{
-			player.lifeRegen -= (int)(0.05f * player.statLifeMax2);
+			player.lifeRegen -= (int)(0.1f * player.statLifeMax2);
 		}
 	}
 }
