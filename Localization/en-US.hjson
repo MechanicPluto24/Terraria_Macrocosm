@@ -1199,18 +1199,6 @@ Mods: {
 					}
 				}
 
-				Reactor: {
-					True: {
-						Display: default
-						Hover: default
-					}
-
-					False: {
-						Display: Missing reactor
-						Hover: You need a fusion reactor to reach The Moon
-					}
-				}
-
 				MoonLord: {
 					True: {
 						Display: default
@@ -1218,7 +1206,7 @@ Mods: {
 					}
 
 					False: {
-						Display: Missing reactor
+						Display: Defeat Moon Lord
 						Hover: You must defeat the Moon Lord to reach The Moon
 					}
 				}

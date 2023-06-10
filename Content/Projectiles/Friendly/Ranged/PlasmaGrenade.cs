@@ -42,8 +42,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		{
 			Projectile.DamageType = DamageClass.Ranged;
 
-			Projectile.width = 16;
-			Projectile.height = 16;
+			Projectile.width = 22;
+			Projectile.height = 22;
 
 			Projectile.timeLeft = 180;
 

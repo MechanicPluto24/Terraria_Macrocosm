@@ -55,8 +55,7 @@ namespace Macrocosm.Content.Subworlds
 
 		public override LaunchConditions LaunchConditions => new()
 		{
-			new ChecklistCondition("MoonLord", () => NPC.downedMoonlord, hideIfMet: true) // placeholder for now
-			//new ChecklistCondition("Reactor", () => Main.LocalPlayer.FindItemInInventoryOrOpenVoidBag(ModContent.ItemType<CortexFragment>(), out _) > 0, hideIfTrue: true) 
+			//new ChecklistCondition("MoonLord", () => NPC.downedMoonlord, hideIfMet: true) // placeholder for now
 		};
 
         public override Dictionary<MapColorType, Color> MapColors => new()
