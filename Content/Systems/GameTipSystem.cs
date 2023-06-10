@@ -1,5 +1,4 @@
 ﻿using Terraria;
-using System.Collections.Generic;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using Macrocosm.Content.UI.LoadingScreens;
@@ -49,11 +48,10 @@ namespace Macrocosm.Common.Systems
 			c.EmitDelegate(GetCustomTipText);
 		}
 
-
 		/// <summary> 
 		/// Returns the localization key of the next game tip. Can return either one determined by our custom logic, 
 		/// or return a random <paramref name="textKey"/>, determined by the game prior to this hook.
-		/// <para>  Adding new Subworld LoadingScreen specific game tip has to be done in the localization files, under GameTips/LoadingScreens/[SubworldClassNameHere] </para>
+		/// <para>  Adding new Subworld LoadingScreen specific game tip has to be done in the localization files, under <c>LoadingScreensTips.SubworldClassName</c> </para>
 		/// </summary>
 		/// <param name="textKey"> The next game tip localization key </param>
 		private string GetCustomTipText(string textKey)
@@ -62,7 +60,7 @@ namespace Macrocosm.Common.Systems
 			if (LoadingScreen.CurrentlyActive)
 			{
 				// ..get the LoadingScreen specific GameTips, respective to the active subworld..
-				LocalizedText[] messages = Language.FindAll(Lang.CreateDialogFilter("Mods.Macrocosm.GameTips.LoadingScreen." + (MacrocosmSubworld.AnyActive ? MacrocosmSubworld.Current.Name : "Earth")));
+				LocalizedText[] messages = Language.FindAll(Lang.CreateDialogFilter("Mods.Macrocosm.LoadingScreenTips." + (MacrocosmSubworld.AnyActive ? MacrocosmSubworld.Current.Name : "Earth")));
 
 				// .. and return a random message from that list
 				if (messages.Length > 0)
@@ -73,22 +71,11 @@ namespace Macrocosm.Common.Systems
 			return textKey;
 		}
 
-
+		// This is called only when not in a loading screen.
 		public override void UpdateUI(GameTime gameTime)
 		{
 			// Reset the flag that tells us that a current custom loading screen is drawing
-			// This will be set to true in the current update cycle if any LoadingScreen is drawing 
 			LoadingScreen.CurrentlyActive = false;
-		}
-
-		public override void ModifyGameTipVisibility(IReadOnlyList<GameTipData> gameTips)
-		{
-			// Hide LoadingScreen specific GameTips from the regular pool
-			foreach (var data in gameTips) 
-			{
-				if (data.FullName.Contains("Macrocosm/GameTips/LoadingScreen"))
-					data.Hide();
-			}
 		}
 	}
 }

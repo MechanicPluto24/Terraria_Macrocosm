@@ -1,12 +1,10 @@
-﻿using Macrocosm.Common.Drawing;
-using Macrocosm.Common.Drawing.Particles;
+﻿using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Buffs.GoodBuffs;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using Terraria;
@@ -14,7 +12,6 @@ using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
-using static Terraria.ModLoader.PlayerDrawLayer;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Summon
 {
@@ -48,6 +45,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 			set => Projectile.ai[1] = value ? 1f : 0f;
 		}
 
+		public Vector2 WhipTipPosition;
+
 		private ref int HitStacks => ref Main.player[Projectile.owner].Macrocosm().ChandriumEmpowermentStacks;
 
 		// Extra AI data used for the on-hit effects 
@@ -63,11 +62,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 				HitStacks++;   // this is a ref to a ModPlayer
 				HitNPC = true; // set hit flag to true so stacks won't increase on every npc hit 
 
-				//if(HitStacks >= 2)
-				//	Particle.CreateParticle<ChandiumSparkleParticle>(particle =>
-				//	{
-				//		particle.Position = Projectile.Center;
-				//	});
+				if(HitStacks >= 2)
+					Particle.CreateParticle<ChandriumSparkle>(particle =>
+					{
+						particle.Position = Projectile.Center;
+						particle.Owner = (byte)Projectile.owner;
+					});
 			}
 
 			onHitEffect = true;
@@ -159,7 +159,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
 		public override void Kill(int timeLeft)
 		{
-			if (Projectile.owner == Main.myPlayer)
+			if (Projectile.owner == Main.myPlayer && HitNPC)
 			{
 				// reset stacks on end of successful empowered hit 
 				if (HitStacks >= 3)
@@ -169,7 +169,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 				if (HitStacks == 2)
 					Main.player[Projectile.owner].AddBuff(ModContent.BuffType<ChandriumEmpowerment>(), 60 * 5);
 			}
-
  		}
 
 		private int frameWidth = 14;
@@ -235,7 +234,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 					float t = Timer / timeToFlyOut;
 					scale = MathHelper.Lerp(0.4f, 1.3f, Utils.GetLerpValue(0.1f, 0.7f, t, true) * Utils.GetLerpValue(0.9f, 0.7f, t, true));
 
-					#region Shine whip tip
+					WhipTipPosition = pos;
+
+					/*#region Shine whip tip
 					if (Main.player[Projectile.owner].HasBuff(ModContent.BuffType<ChandriumEmpowerment>()))
 					{
 						if (Projectile.localAI[0] < 1f)
@@ -245,7 +246,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 						Main.EntitySpriteDraw(TextureAssets.Extra[89].Value, pos - Main.screenPosition, null, new Color(177, 107, 219, 255), MathHelper.PiOver2 + rotation, TextureAssets.Extra[89].Size() / 2f, Projectile.localAI[0], flip, 0);
 						Lighting.AddLight(pos, new Vector3(0.607f, 0.258f, 0.847f));
 					}
-					#endregion
+					#endregion*/
 
 					#region Dusts
 					// Depends on whip extenstion
