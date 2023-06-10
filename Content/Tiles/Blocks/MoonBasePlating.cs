@@ -17,9 +17,5 @@ namespace Macrocosm.Content.Tiles.Blocks
             MineResist = 4f;
             AddMapEntry(new Color(180, 180, 180));
         }
-        public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
-        {
-
-        }
     }
 }
