@@ -31,11 +31,5 @@ namespace Macrocosm.Content.Tiles.Ores
             //mineResist = 4f;
             //minPick = 200;
         }
-        public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
-        {
-            r = 0.4f;
-            g = 0.45f;
-            b = 0.85f;
-        }
     }
 }

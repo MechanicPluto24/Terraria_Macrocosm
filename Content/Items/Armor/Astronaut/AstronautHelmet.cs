@@ -1,5 +1,6 @@
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Buffs.Debuffs;
+using Macrocosm.Content.Players;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -28,10 +29,8 @@ namespace Macrocosm.Content.Items.Armor.Astronaut
 
         public override void UpdateArmorSet(Player player)
         {
-            player.Macrocosm().AccMoonArmor = true;
-            player.setBonus = "Pressurized spacesuit allows for safe exploration of other celestial bodies"
-                            + "\nTier 1 extraterrestrial protection"
-                            + "\nVastly extends underwater breathing time";
+            player.Macrocosm().SpaceProtection = SpaceProtection.Tier1;
+      
             player.buffImmune[ModContent.BuffType<SuitBreach>()] = true;
         }
 

@@ -1,6 +1,7 @@
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.Players;
 using Macrocosm.Content.Rarities;
 using Terraria;
 using Terraria.ID;
@@ -36,10 +37,8 @@ namespace Macrocosm.Content.Items.Armor.Chandrium
 
         public override void UpdateArmorSet(Player player)
         {
-            player.Macrocosm().AccMoonArmor = true;
-            player.setBonus = "Pressurized spacesuit allows for safe exploration of other celestial bodies"
-                            + "\nTier 1 extraterrestrial protection"
-                            + "\nVastly extends underwater breathing time";
+            player.Macrocosm().SpaceProtection = SpaceProtection.Tier1;
+         
             player.buffImmune[ModContent.BuffType<SuitBreach>()] = true;
         }
 
