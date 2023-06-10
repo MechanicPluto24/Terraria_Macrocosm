@@ -25,7 +25,7 @@ Mods: {
 
 			SuitBreach: {
 				DisplayName: Suit Breach
-				Description: Your blood is boiling from the lack of atmospheric pressure!
+				Description: A hole has appeared in your suit, your blood begins to boil!
 			}
 
 			ChandriumEmpowerment: {
@@ -46,6 +46,11 @@ Mods: {
 			SpaceShuttle: {
 				DisplayName: Space Shuttle
 				Description: In memory of STS-51-L and STS-107.
+			}
+
+			Depressurized: {
+				DisplayName: Depressurized
+				Description: Your blood is boiling from the lack of atmospheric pressure!
 			}
 		}
 
