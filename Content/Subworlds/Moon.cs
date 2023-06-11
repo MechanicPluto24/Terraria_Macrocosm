@@ -186,7 +186,7 @@ namespace Macrocosm.Content.Subworlds
 					else
 						damage = 2000;
 
-					Projectile.NewProjectile(source, position.X, position.Y, speedX, speedY, type, damage, 0f, 255); break;
+					Projectile.NewProjectile(source, position.X, position.Y, speedX, speedY, type, damage, 0f); break;
 
 				}
 			}

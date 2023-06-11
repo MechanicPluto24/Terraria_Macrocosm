@@ -62,12 +62,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 				HitStacks++;   // this is a ref to a ModPlayer
 				HitNPC = true; // set hit flag to true so stacks won't increase on every npc hit 
 
-				if(HitStacks >= 2)
-					Particle.CreateParticle<ChandriumSparkle>(particle =>
-					{
-						particle.Position = Projectile.Center;
-						particle.Owner = (byte)Projectile.owner;
-					});
+				
 			}
 
 			onHitEffect = true;
@@ -157,17 +152,36 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 			}
 		}
 
+		Particle sparkle;
+
 		public override void Kill(int timeLeft)
 		{
 			if (Projectile.owner == Main.myPlayer && HitNPC)
 			{
-				// reset stacks on end of successful empowered hit 
-				if (HitStacks >= 3)
-					HitStacks = 0;
+				if (HitNPC)
+				{
+					// reset stacks on end of successful empowered hit 
+					if (HitStacks >= 3)
+					{
+						HitStacks = 0;
+						ChandriumEmpowerment.KillParticle();
+					}
 
-				// add buff 
-				if (HitStacks == 2)
-					Main.player[Projectile.owner].AddBuff(ModContent.BuffType<ChandriumEmpowerment>(), 60 * 5);
+					// add buff 
+					if (HitStacks == 2)
+					{
+						sparkle = Particle.CreateParticle<ChandriumSparkle>(particle =>
+						{
+							Main.player[Projectile.owner].AddBuff(ModContent.BuffType<ChandriumEmpowerment>(), 60 * 5);
+
+							particle.Position = WhipTipPosition;
+							particle.Owner = (byte)Projectile.owner;
+						});
+					}
+
+					if (HitStacks == 0 && HitNPC && sparkle is not null)
+						sparkle.Kill();
+				}
 			}
  		}
 

@@ -92,7 +92,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 				if (StillInUse)
 				{
 					if (!OwnerPlayer.PickAmmo(OwnerPlayer.inventory[OwnerPlayer.selectedItem], out projToShoot, out float speed, out damage, out knockback, out var usedAmmoItemId)) //uses ammunition from inventory
-						Projectile.Kill();
+						  Projectile.Kill();
 				}
 
 				Vector2 rotPoint = Utility.RotatingPoint(Projectile.Center, new Vector2(40, 8 * Projectile.spriteDirection), Projectile.rotation);

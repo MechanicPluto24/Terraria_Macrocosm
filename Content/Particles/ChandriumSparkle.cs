@@ -9,8 +9,6 @@ using Terraria.ModLoader;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Buffs.GoodBuffs;
-using Macrocosm.Common.Drawing.Trails;
-using Macrocosm.Content.Trails;
 
 namespace Macrocosm.Content.Particles
 {
@@ -18,7 +16,7 @@ namespace Macrocosm.Content.Particles
 	{
 		public override string TexturePath => Macrocosm.EmptyTexPath;
 
-		public override int TrailCacheLenght => 20;
+		public override int TrailCacheLenght => 10;
 
 		public override ParticleDrawLayer DrawLayer => ParticleDrawLayer.AfterProjectiles;
 
@@ -40,11 +38,25 @@ namespace Macrocosm.Content.Particles
 			spriteBatch.Draw(TextureAssets.Extra[89].Value, Position - screenPosition, null, new Color(177, 107, 219, 127), MathHelper.PiOver2 + Rotation, TextureAssets.Extra[89].Size() / 2f, ScaleV, SpriteEffects.None, 0f);
 			Lighting.AddLight(Position, new Vector3(0.607f, 0.258f, 0.847f));
 
+			
 			for (int i = 1; i < TrailCacheLenght; i++)
 			{
 				float factor = 1f - (i / (float)TrailCacheLenght);
-				spriteBatch.Draw(TextureAssets.Extra[89].Value, Vector2.Lerp(OldPositions[i - 1], OldPositions[i], factor) - screenPosition, null, new Color(177, 107, 219, (byte)(127 * factor/2)), 0f + Rotation, TextureAssets.Extra[89].Size() / 2f, ScaleV, SpriteEffects.None, 0f);
-				spriteBatch.Draw(TextureAssets.Extra[89].Value, Vector2.Lerp(OldPositions[i - 1], OldPositions[i], factor) - screenPosition, null, new Color(177, 107, 219, (byte)(127 * factor/2)), MathHelper.PiOver2 + Rotation, TextureAssets.Extra[89].Size() / 2f, ScaleV, SpriteEffects.None, 0f);
+
+				spriteBatch.Draw(TextureAssets.Extra[89].Value, Vector2.Lerp(OldPositions[i - 1], OldPositions[i], factor) - screenPosition, null, new Color(177, 107, 219, (int)(127 * factor)), 0f + OldRotations[i], TextureAssets.Extra[89].Size() / 2f, ScaleV * factor, SpriteEffects.None, 0f);
+				spriteBatch.Draw(TextureAssets.Extra[89].Value, Vector2.Lerp(OldPositions[i - 1], OldPositions[i], factor) - screenPosition, null, new Color(177, 107, 219, (int)(127 * factor)), MathHelper.PiOver2 + OldRotations[i], TextureAssets.Extra[89].Size() / 2f, ScaleV * factor, SpriteEffects.None, 0f);
+
+				if (whipActive)
+				{
+					for(float s = 0.333f; s < 1f; s += 0.333f)
+					{
+						float lerpFactor = MathHelper.Lerp(factor, 1f - ((i + 1) / (float)TrailCacheLenght), s);
+						spriteBatch.Draw(TextureAssets.Extra[89].Value, Vector2.Lerp(OldPositions[i - 1], OldPositions[i], s * factor) - screenPosition, null, new Color(177, 107, 219, 64), 0f + Rotation, TextureAssets.Extra[89].Size() / 2f, ScaleV * lerpFactor, SpriteEffects.None, 0f);
+						spriteBatch.Draw(TextureAssets.Extra[89].Value, Vector2.Lerp(OldPositions[i - 1], OldPositions[i], s * factor) - screenPosition, null, new Color(177, 107, 219, 64), MathHelper.PiOver2 + Rotation, TextureAssets.Extra[89].Size() / 2f, ScaleV * lerpFactor, SpriteEffects.None, 0f);
+
+					}
+ 				}
+
 				Lighting.AddLight(Position, new Vector3(0.607f, 0.258f, 0.847f) * factor);
 			}
 		}
@@ -69,9 +81,9 @@ namespace Macrocosm.Content.Particles
 				}
 			}
 
-			whipActive = whipIdx >= 0  ;
+			whipActive = whipIdx >= 0;
 
-			if (!OwnerPlayer.active || OwnerPlayer.dead || (!OwnerPlayer.HasBuff<ChandriumEmpowerment>() && TimeLeft < 5*60 - 15))
+			if (!OwnerPlayer.active || OwnerPlayer.dead)
 			{
 				Kill();
 				return;

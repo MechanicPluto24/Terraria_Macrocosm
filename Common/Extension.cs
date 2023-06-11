@@ -7,7 +7,7 @@ using Macrocosm.Content.Items.Global;
 
 namespace Macrocosm.Common.Utils
 {
-    public static class Extensions
+    public static class Extension
     {
         public static MacrocosmProjectile Macrocosm(this Projectile projectile)
             => projectile.GetGlobalProjectile<MacrocosmProjectile>();
