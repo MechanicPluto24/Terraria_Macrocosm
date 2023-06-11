@@ -11,6 +11,8 @@ using Macrocosm.Content.Systems;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Terraria.Localization;
+using System.Collections.Generic;
+using Macrocosm.Common.Drawing.Sky;
 
 namespace Macrocosm.Content.Players
 {
@@ -71,7 +73,7 @@ namespace Macrocosm.Content.Players
 
         public override void PostUpdateBuffs()
 		{
-			if (SubworldSystem.AnyActive(Mod))
+			if (MacrocosmSubworld.AnyActive)
             {
 				UpdateSpaceEnvironmentalDebuffs();
             }
@@ -86,10 +88,10 @@ namespace Macrocosm.Content.Players
 				{
 					if (protectTier == SpaceProtection.None)
 						Player.AddBuff(BuffType<Depressurized>(), 2);
-//					if (protectTier <= SpaceProtection.Tier1)
-//						Player.AddBuff(BuffTpye<Irradiated>(), 2);
-				}
-//				else if (SubworldSystem.IsActive<Mars>())
+     				//if (protectTier <= SpaceProtection.Tier1)
+     					//Player.AddBuff(BuffTpye<Irradiated>(), 2);
+     			}
+     			//else if (SubworldSystem.IsActive<Mars>())
 			}
 		}
 

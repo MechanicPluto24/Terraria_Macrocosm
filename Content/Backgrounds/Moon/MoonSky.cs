@@ -122,6 +122,18 @@ namespace Macrocosm.Content.Backgrounds.Moon
 
 			if (maxDepth >= float.MaxValue && minDepth < float.MaxValue)
 			{
+
+				//var state = spriteBatch.SaveState();
+				//
+				//Effect bloom = ModContent.Request<Effect>("Macrocosm/Assets/Effects/BloomShader", AssetRequestMode.ImmediateLoad).Value;
+				//
+				//// Begin the bloom effect
+				//bloom.CurrentTechnique = bloom.Techniques["Technique1"];
+				//bloom.Parameters["centerCoordinates"].SetValue(sun.Position);
+				//
+				//spriteBatch.End();
+				//spriteBatch.Begin(bloom, state);
+
 				spriteBatch.Draw(TextureAssets.BlackTile.Value, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.Black * Intensity);
 
 				spriteBatch.Draw(skyTexture, new Rectangle(0, Math.Max(0, (int)((Main.worldSurface * 16.0 - Main.screenPosition.Y - 2400.0) * 0.10000000149011612)),
@@ -137,6 +149,9 @@ namespace Macrocosm.Content.Backgrounds.Moon
 				
 				sun.Draw(spriteBatch);
 				earth.Draw(spriteBatch);
+
+				//spriteBatch.End();
+				//spriteBatch.Begin(state);
 			}
 		}
 

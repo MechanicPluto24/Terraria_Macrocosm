@@ -1,12 +1,14 @@
 using Macrocosm.Content.Biomes;
+using Macrocosm.Content.Projectiles.Global;
 using System.Linq;
 using Terraria;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Global
 {
-	public interface IMoonEnemy
+	public interface IMoonEnemy 
 	{
+
 	}
 
 	public class MoonEnemyNPC : GlobalNPC

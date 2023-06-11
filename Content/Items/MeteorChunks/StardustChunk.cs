@@ -49,17 +49,19 @@ namespace Macrocosm.Content.Items.MeteorChunks
 				dust.scale = 1.1f;
  				dust.noGravity = true;
 			}
-		}
 
-		public override void PostDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
-		{
-			if (Main.rand.NextBool(6))
+			if (Main.rand.NextBool(16))
 			{
 				Vector2 position = Item.Center + new Vector2(Item.width, Item.height).RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat();
 				Vector2 velocity = Vector2.One.RotatedByRandom(MathHelper.TwoPi) * 1.2f;
 
 				Particle.CreateParticle(ParticleOrchestraType.StardustPunch, position, velocity);
 			}
+		}
+
+		public override void PostDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
+		{
+			
  		}
 	}
 }
