@@ -9,36 +9,27 @@ namespace Macrocosm.Content.Particles
 {
     public class ChandriumCrescentMoon : Particle
     {
+        bool rotateClockwise = false;
         bool fadeIn;
 		byte alpha;
         
 		public override void OnSpawn()
         {
             fadeIn = true;
+            rotateClockwise = Main.rand.NextBool();
         }
 
         public override void AI()
         {
-            Rotation += 0.16f * (WhoAmI % 2 == 0 ? 1f : -1f);
+            Rotation += 0.16f * (rotateClockwise ? 1f : -1f);
  
             if (alpha <= 24)
                 fadeIn = false;
 
-            if (fadeIn)
-            {
-                alpha -= 15;
-                Scale += 0.01f;
-            }
-            else
-            {
-                alpha++;
-				Scale -= 0.01f;
-            }
-
-			Scale -= 0.01f;
+			Scale -= 0.004f;
             alpha++;
 
-            if (Scale < 0.3f)
+            if (Scale < 0.03f)
                 Kill();
 
             Lighting.AddLight(Position, new Vector3(0.607f, 0.258f, 0.847f) * Scale);
@@ -47,7 +38,13 @@ namespace Macrocosm.Content.Particles
 
 		public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
 		{
-			spriteBatch.Draw(Texture, Position - screenPosition, null, lightColor.NewAlpha(0.5f), Rotation, Texture.Size() / 2f, ScaleV, SpriteEffects.None, 0f);
+            var state = spriteBatch.SaveState();
+
+            spriteBatch.End();
+            spriteBatch.Begin(BlendState.Additive, state);
+			spriteBatch.Draw(Texture, Position - screenPosition, null, new Color(112, 69, 214).NewAlpha(1f), Rotation, Texture.Size() / 2f, ScaleV, SpriteEffects.None, 0f);
+			spriteBatch.End();
+			spriteBatch.Begin(state);
 		}
 	}
 
