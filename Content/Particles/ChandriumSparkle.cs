@@ -34,8 +34,16 @@ namespace Macrocosm.Content.Particles
 
 		public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
 		{
-			spriteBatch.Draw(TextureAssets.Extra[89].Value, Position - screenPosition, null, new Color(177, 107, 219, 127), 0f + Rotation, TextureAssets.Extra[89].Size() / 2f, ScaleV, SpriteEffects.None, 0f);
-			spriteBatch.Draw(TextureAssets.Extra[89].Value, Position - screenPosition, null, new Color(177, 107, 219, 127), MathHelper.PiOver2 + Rotation, TextureAssets.Extra[89].Size() / 2f, ScaleV, SpriteEffects.None, 0f);
+
+			var state = spriteBatch.SaveState();
+
+			spriteBatch.End();
+			spriteBatch.Begin(BlendState.AlphaBlend, state);
+
+			Texture2D tex = TextureAssets.Extra[89].Value;
+
+			spriteBatch.Draw(tex, Position - screenPosition, null, new Color(177, 107, 219, 127), 0f + Rotation, TextureAssets.Extra[89].Size() / 2f, ScaleV, SpriteEffects.None, 0f);
+			spriteBatch.Draw(tex, Position - screenPosition, null, new Color(177, 107, 219, 127), MathHelper.PiOver2 + Rotation, TextureAssets.Extra[89].Size() / 2f, ScaleV, SpriteEffects.None, 0f);
 			Lighting.AddLight(Position, new Vector3(0.607f, 0.258f, 0.847f));
 
 			
@@ -43,22 +51,25 @@ namespace Macrocosm.Content.Particles
 			{
 				float factor = 1f - (i / (float)TrailCacheLenght);
 
-				spriteBatch.Draw(TextureAssets.Extra[89].Value, Vector2.Lerp(OldPositions[i - 1], OldPositions[i], factor) - screenPosition, null, new Color(177, 107, 219, (int)(127 * factor)), 0f + OldRotations[i], TextureAssets.Extra[89].Size() / 2f, ScaleV * factor, SpriteEffects.None, 0f);
-				spriteBatch.Draw(TextureAssets.Extra[89].Value, Vector2.Lerp(OldPositions[i - 1], OldPositions[i], factor) - screenPosition, null, new Color(177, 107, 219, (int)(127 * factor)), MathHelper.PiOver2 + OldRotations[i], TextureAssets.Extra[89].Size() / 2f, ScaleV * factor, SpriteEffects.None, 0f);
+				spriteBatch.Draw(tex, Vector2.Lerp(OldPositions[i - 1], OldPositions[i], factor) - screenPosition, null, new Color(177, 107, 219, (int)(127 * factor)), 0f + OldRotations[i], TextureAssets.Extra[89].Size() / 2f, ScaleV * factor, SpriteEffects.None, 0f);
+				spriteBatch.Draw(tex, Vector2.Lerp(OldPositions[i - 1], OldPositions[i], factor) - screenPosition, null, new Color(177, 107, 219, (int)(127 * factor)), MathHelper.PiOver2 + OldRotations[i], TextureAssets.Extra[89].Size() / 2f, ScaleV * factor, SpriteEffects.None, 0f);
 
-				if (whipActive)
+				if (whipActive) 
 				{
 					for(float s = 0.333f; s < 1f; s += 0.333f)
 					{
 						float lerpFactor = MathHelper.Lerp(factor, 1f - ((i + 1) / (float)TrailCacheLenght), s);
-						spriteBatch.Draw(TextureAssets.Extra[89].Value, Vector2.Lerp(OldPositions[i - 1], OldPositions[i], s * factor) - screenPosition, null, new Color(177, 107, 219, 64), 0f + Rotation, TextureAssets.Extra[89].Size() / 2f, ScaleV * lerpFactor, SpriteEffects.None, 0f);
-						spriteBatch.Draw(TextureAssets.Extra[89].Value, Vector2.Lerp(OldPositions[i - 1], OldPositions[i], s * factor) - screenPosition, null, new Color(177, 107, 219, 64), MathHelper.PiOver2 + Rotation, TextureAssets.Extra[89].Size() / 2f, ScaleV * lerpFactor, SpriteEffects.None, 0f);
+						spriteBatch.Draw(tex, Vector2.Lerp(OldPositions[i - 1], OldPositions[i], s * factor) - screenPosition, null, new Color(177, 107, 219, 64), 0f + Rotation, TextureAssets.Extra[89].Size() / 2f, ScaleV * lerpFactor, SpriteEffects.None, 0f);
+						spriteBatch.Draw(tex, Vector2.Lerp(OldPositions[i - 1], OldPositions[i], s * factor) - screenPosition, null, new Color(177, 107, 219, 64), MathHelper.PiOver2 + Rotation, TextureAssets.Extra[89].Size() / 2f, ScaleV * lerpFactor, SpriteEffects.None, 0f);
 
 					}
  				}
 
 				Lighting.AddLight(Position, new Vector3(0.607f, 0.258f, 0.847f) * factor);
 			}
+
+			spriteBatch.End();
+			spriteBatch.Begin(state);
 		}
 
 		public override void AI()
@@ -68,7 +79,6 @@ namespace Macrocosm.Content.Particles
 			int whipIdx = -1;
 
 			Rotation += Velocity.X * 0.02f;
-			Scale = 0.6f;
  
 			int chandriumWhipType = ModContent.ProjectileType<ChandriumWhipProjectile>();
 			for(int i = 0; i < Main.maxProjectiles; i++)
@@ -89,12 +99,28 @@ namespace Macrocosm.Content.Particles
 				return;
 			}
 
+
 			if (whipActive)
 			{
-				Position = (Main.projectile[whipIdx].ModProjectile as ChandriumWhipProjectile).WhipTipPosition;
-			} 
+				Vector2 targetPosition = (Main.projectile[whipIdx].ModProjectile as ChandriumWhipProjectile).WhipTipPosition;
+				// Update the target position based on your code
+
+				if (targetPosition != Vector2.Zero)
+				{
+					Vector2 currentPosition = OldPosition;
+
+					// Ease the position towards the target
+					currentPosition = Vector2.Lerp(currentPosition, targetPosition, 0.5f);
+
+					// Apply the eased position to the whip tip
+					Position = currentPosition;
+					Scale = 0.9f;
+				}
+				
+			}
 			else
 			{
+				Scale = 0.7f;
 				Vector2 vectorToIdlePosition = OwnerPlayer.Center - Center;
 				float distanceToIdlePosition = vectorToIdlePosition.Length();
 
