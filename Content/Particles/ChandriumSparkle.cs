@@ -9,6 +9,7 @@ using Terraria.ModLoader;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Buffs.GoodBuffs;
+using static Terraria.ModLoader.PlayerDrawLayer;
 
 namespace Macrocosm.Content.Particles
 {
@@ -116,7 +117,6 @@ namespace Macrocosm.Content.Particles
 					Position = currentPosition;
 					Scale = 0.9f;
 				}
-				
 			}
 			else
 			{
