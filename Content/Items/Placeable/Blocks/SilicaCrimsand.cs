@@ -1,12 +1,11 @@
-using Terraria;
+﻿using Terraria.ModLoader;
 using Terraria.ID;
-using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Placeable.Blocks
 {
-	public class RegolithWall : ModItem
+	public class SilicaCrimsand : ModItem
 	{
-		public override void SetStaticDefaults()
+		public override void SetStaticDefaults() 
 		{
 
 		}
@@ -19,19 +18,16 @@ namespace Macrocosm.Content.Items.Placeable.Blocks
 			Item.useTurn = true;
 			Item.autoReuse = true;
 			Item.useAnimation = 15;
-			Item.useTime = 7;
+			Item.useTime = 10;
 			Item.useStyle = ItemUseStyleID.Swing;
 			Item.consumable = true;
-			Item.createWall = ModContent.WallType<Tiles.Walls.RegolithWall>();
+			Item.createTile = ModContent.TileType<Tiles.Blocks.SilicaCrimsand>();
+			//Item.ammo = AmmoID.Sand; Using this Sand in the Sandgun would require PickAmmo code and changes to ExampleSandProjectile or a new ModProjectile.
 		}
 
 		public override void AddRecipes()
 		{
 
-			Recipe recipe = Recipe.Create(Type, 4);
-			recipe.AddIngredient<Regolith>();
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.Register();
 		}
 	}
 }
