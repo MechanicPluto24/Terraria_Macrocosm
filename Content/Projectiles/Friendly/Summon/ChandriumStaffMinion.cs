@@ -360,6 +360,5 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
 			return true;
 		}
-
 	}
 }

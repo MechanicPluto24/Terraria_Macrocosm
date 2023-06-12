@@ -1,23 +1,21 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.ModLoader;
 using Terraria.GameContent;
+using Macrocosm.Common.Utils;
+using Macrocosm.Content.Dusts;
+using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Content.Projectiles.Friendly.Summon;
-using Macrocosm.Common.Netcode;
-using Terraria.ModLoader;
-using Macrocosm.Content.Dusts;
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Buffs.GoodBuffs;
-using static Terraria.ModLoader.PlayerDrawLayer;
-
+ 
 namespace Macrocosm.Content.Particles
 {
 	public class ChandriumSparkle : Particle
 	{
 		public override string TexturePath => Macrocosm.EmptyTexPath;
 
-		public override int TrailCacheLenght => 10;
+		public override int TrailCacheLenght => 8;
 
 		public override ParticleDrawLayer DrawLayer => ParticleDrawLayer.AfterProjectiles;
 
@@ -31,11 +29,10 @@ namespace Macrocosm.Content.Particles
 
 		public override void OnSpawn()
 		{
-  		}
+		}
 
 		public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
 		{
-
 			var state = spriteBatch.SaveState();
 
 			spriteBatch.End();
@@ -47,7 +44,7 @@ namespace Macrocosm.Content.Particles
 			spriteBatch.Draw(tex, Position - screenPosition, null, new Color(177, 107, 219, 127), MathHelper.PiOver2 + Rotation, TextureAssets.Extra[89].Size() / 2f, ScaleV, SpriteEffects.None, 0f);
 			Lighting.AddLight(Position, new Vector3(0.607f, 0.258f, 0.847f));
 
-			
+
 			for (int i = 1; i < TrailCacheLenght; i++)
 			{
 				float factor = 1f - (i / (float)TrailCacheLenght);
@@ -55,18 +52,19 @@ namespace Macrocosm.Content.Particles
 				spriteBatch.Draw(tex, Vector2.Lerp(OldPositions[i - 1], OldPositions[i], factor) - screenPosition, null, new Color(177, 107, 219, (int)(127 * factor)), 0f + OldRotations[i], TextureAssets.Extra[89].Size() / 2f, ScaleV * factor, SpriteEffects.None, 0f);
 				spriteBatch.Draw(tex, Vector2.Lerp(OldPositions[i - 1], OldPositions[i], factor) - screenPosition, null, new Color(177, 107, 219, (int)(127 * factor)), MathHelper.PiOver2 + OldRotations[i], TextureAssets.Extra[89].Size() / 2f, ScaleV * factor, SpriteEffects.None, 0f);
 
-				if (whipActive) 
+				if (whipActive)
 				{
-					for(float s = 0.333f; s < 1f; s += 0.333f)
-					{
-						float lerpFactor = MathHelper.Lerp(factor, 1f - ((i + 1) / (float)TrailCacheLenght), s);
-						spriteBatch.Draw(tex, Vector2.Lerp(OldPositions[i - 1], OldPositions[i], s * factor) - screenPosition, null, new Color(177, 107, 219, 64), 0f + Rotation, TextureAssets.Extra[89].Size() / 2f, ScaleV * lerpFactor, SpriteEffects.None, 0f);
-						spriteBatch.Draw(tex, Vector2.Lerp(OldPositions[i - 1], OldPositions[i], s * factor) - screenPosition, null, new Color(177, 107, 219, 64), MathHelper.PiOver2 + Rotation, TextureAssets.Extra[89].Size() / 2f, ScaleV * lerpFactor, SpriteEffects.None, 0f);
-
-					}
- 				}
-
-				Lighting.AddLight(Position, new Vector3(0.607f, 0.258f, 0.847f) * factor);
+					//for (float s = 0.333f; s < 1f; s += 0.333f)
+					//{	
+					//	// Calculate the eased position using Lerp
+					//	Vector2 easedPosition = Vector2.Lerp(OldPositions[i - 1], OldPositions[i], s);
+					//
+					//	// Draw the sprite with eased position
+					//	spriteBatch.Draw(tex, easedPosition - screenPosition, null, new Color(177, 107, 219, 64), 0f + Rotation, TextureAssets.Extra[89].Size() / 2f, ScaleV * factor, SpriteEffects.None, 0f);
+					//	spriteBatch.Draw(tex, easedPosition - screenPosition, null, new Color(177, 107, 219, 64), MathHelper.PiOver2 + Rotation, TextureAssets.Extra[89].Size() / 2f, ScaleV * factor, SpriteEffects.None, 0f);
+					//}
+					//Lighting.AddLight(Position, new Vector3(0.607f, 0.258f, 0.847f) * factor);
+				}
 			}
 
 			spriteBatch.End();
@@ -100,7 +98,6 @@ namespace Macrocosm.Content.Particles
 				return;
 			}
 
-
 			if (whipActive)
 			{
 				Vector2 targetPosition = (Main.projectile[whipIdx].ModProjectile as ChandriumWhipProjectile).WhipTipPosition;
@@ -115,7 +112,7 @@ namespace Macrocosm.Content.Particles
 
 					// Apply the eased position to the whip tip
 					Position = currentPosition;
-					Scale = 0.9f;
+					Scale = 0.6f;
 				}
 			}
 			else
