@@ -13,9 +13,8 @@ namespace Macrocosm.Content.Tiles.Blocks
 		public override void SetStaticDefaults()
 		{
 			Main.tileSolid[Type] = true;
-			Main.tileBrick[Type] = true;
 			Main.tileMergeDirt[Type] = false;
-			Main.tileBlockLight[Type] = true;
+			Main.tileBlockLight[Type] = true; 
 			Main.tileSand[Type] = false;
 
 			//TileID.Sets.TouchDamageSands[Type] = 15;
