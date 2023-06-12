@@ -828,6 +828,26 @@ Mods: {
 				DisplayName: Hazard Wall
 				Tooltip: ""
 			}
+
+			SilicaCrimsand: {
+				DisplayName: Silica Crimsand
+				Tooltip: ""
+			}
+
+			SilicaEbonsand: {
+				DisplayName: Silica Ebonsand
+				Tooltip: ""
+			}
+
+			SilicaPearlsand: {
+				DisplayName: Silica Pearlsand
+				Tooltip: ""
+			}
+
+			SilicaSand: {
+				DisplayName: Silica Sand
+				Tooltip: ""
+			}
 		}
 
 		NPCs: {
@@ -916,6 +936,10 @@ Mods: {
 			HandheldEngineProjectile.DisplayName: Handheld Engine
 			HandheldEngineHitbox.DisplayName: Handheld Engine
 			ZombieSecurityBullet.DisplayName: Zombie Security
+			SilicaCrimsandProjectile.DisplayName: Silica Crimsand Projectile
+			SilicaEbonsandProjectile.DisplayName: Silica Ebonsand Projectile
+			SilicaPearlsandProjectile.DisplayName: Silica Pearlsand Projectile
+			SilicaSandProjectile.DisplayName: Silica Sand Projectile
 		}
 
 		Tiles: {
