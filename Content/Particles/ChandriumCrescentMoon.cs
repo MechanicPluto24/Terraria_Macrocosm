@@ -26,7 +26,7 @@ namespace Macrocosm.Content.Particles
             if (alpha <= 24)
                 fadeIn = false;
 
-			Scale -= 0.004f;
+			Scale -= 0.003f;
             alpha++;
 
             if (Scale < 0.03f)
@@ -47,6 +47,4 @@ namespace Macrocosm.Content.Particles
 			spriteBatch.Begin(state);
 		}
 	}
-
-    
 }
