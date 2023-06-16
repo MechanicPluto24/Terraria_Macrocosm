@@ -3,31 +3,29 @@ using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Graphics.PackedVector;
 using Terraria;
 
 namespace Macrocosm.Content.Particles
 {
-    public class ChandriumCrescentMoon : Particle
+    public class ImbriumStar : Particle
     {
-        bool rotateClockwise = false;
-		byte alpha;
+        public float Alpha = 1f;
+		byte alpha = 0;
+
+        Color color = Color.White;
         
 		public override void OnSpawn()
         {
-            rotateClockwise = Main.rand.NextBool();
-        }
+            color = Color.Lerp(Color.White, new Color(0, 217, 102, 255), 0.1f + 0.7f * Main.rand.NextFloat());
+		}
 
         public override void AI()
-        {
-            Rotation += 0.16f * (rotateClockwise ? 1f : -1f);
-
+        { 
 			Scale -= 0.003f;
-            alpha++;
 
-            if (Scale < 0.03f)
+            if (Scale < 0.0001f)
                 Kill();
-
-            Lighting.AddLight(Position, new Vector3(0.607f, 0.258f, 0.847f) * Scale);
         }
 
 
@@ -37,7 +35,7 @@ namespace Macrocosm.Content.Particles
 
             spriteBatch.End();
             spriteBatch.Begin(BlendState.Additive, state);
-			spriteBatch.Draw(Texture, Position - screenPosition, null, new Color(112, 69, 214).NewAlpha(1f), Rotation, Texture.Size() / 2f, ScaleV, SpriteEffects.None, 0f);
+			spriteBatch.Draw(Texture, Position - screenPosition, null, color.NewAlpha(Alpha), Rotation, Texture.Size() / 2f, ScaleV, SpriteEffects.None, 0f);
 			spriteBatch.End();
 			spriteBatch.Begin(state);
 		}

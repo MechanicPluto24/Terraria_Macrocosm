@@ -1,3 +1,7 @@
+using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Utils;
+using Macrocosm.Content.Particles;
+using Macrocosm.Content.Trails;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -25,9 +29,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			Projectile.ignoreWater = true;
 			Projectile.light = 1f;
             Projectile.penetrate = -1;
-        }
+		}
 
-        public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough, ref Vector2 hitboxCenterFrac)
+		public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough, ref Vector2 hitboxCenterFrac)
         {
             width = 24;
             height = 24;
@@ -36,7 +40,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
         public override void AI()
         {
-            Projectile.alpha += 2;
+			ProjectileID.Sets.TrailCacheLength[Projectile.type] = 12;
+
+			Projectile.alpha += 2;
             if (Projectile.alpha >= 255)
             {
                 Projectile.Kill();
@@ -51,11 +57,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                     Vector2 shootVel = new Vector2(6, 6).RotatedByRandom(MathHelper.ToRadians(360));
                     Vector2 vector = new Vector2(Projectile.position.X + (float)Projectile.width * 0.5f, Projectile.position.Y + (float)Projectile.height * 0.5f);
                     Projectile.NewProjectile(Projectile.InheritSource(Projectile), vector, shootVel, ModContent.ProjectileType<ImbriumJewelMeteor>(), (int)(Projectile.damage), Projectile.knockBack, Main.player[Projectile.owner].whoAmI);
-                    /*int dustFX = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<TheJewelOfShowersDust>());
-                    Main.dust[dustFX].position = Projectile.position;
-                    Main.dust[dustFX].position.X -= 36;
-                    Main.dust[dustFX].position.Y -= 60;
-                    Main.dust[dustFX].rotation = Projectile.rotation;*/
                 }
             }
 
@@ -72,22 +73,36 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
             Lighting.AddLight(Projectile.Center, 0f, 1f, 0f);
             Projectile.rotation = (float)Math.Atan2((double)Projectile.velocity.Y, (double)Projectile.velocity.X);
-            int dust = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, DustID.GreenFairy, Projectile.velocity.X, Projectile.velocity.Y, 100, default(Color), 1.7f);
-            Main.dust[dust].noGravity = true;
+
+            var star = Particle.CreateParticle<ImbriumStar>(new Vector2(Projectile.position.X, Projectile.position.Y) + Main.rand.NextVector2FromRectangle(new Rectangle(0,0,(int)Projectile.Size.X, (int)Projectile.Size.Y)) , Vector2.Zero, scale: 0.07f);
+            star.Alpha = 1f - Projectile.alpha/255f;
+            //int dust = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, DustID.GreenFairy, Projectile.velocity.X, Projectile.velocity.Y, 100, default(Color), 1.7f);
+            //Main.dust[dust].noGravity = true;
         }
 
         public override bool PreDraw(ref Color lightColor)
         {
-            //Redraw the projectile with the color not influenced by light
-            //Texture2D texture = (Texture2D)ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Magic/TheJewelOfShowersProj");
-            Vector2 drawOrigin = new Vector2(TextureAssets.Projectile[Type].Value.Width * 0.5f, Projectile.height * 0.5f);
+			//Redraw the projectile with the color not influenced by light
+			//Texture2D texture = (Texture2D)ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Magic/TheJewelOfShowersProj");
+
+			Vector2 drawOrigin = new Vector2(TextureAssets.Projectile[Type].Value.Width * 0.5f, Projectile.height * 0.5f);
+
+            var state = Main.spriteBatch.SaveState();
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(BlendState.Additive, state);
+
             for (int k = 0; k < Projectile.oldPos.Length; k++)
             {
                 Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, Projectile.gfxOffY);
                 Color color = Projectile.GetAlpha(lightColor) * ((float)(Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
                 Main.spriteBatch.Draw(TextureAssets.Projectile[Type].Value, drawPos, null, color, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0f);
             }
-            return true;
+
+			Main.spriteBatch.End();
+			Main.spriteBatch.Begin(state);
+
+			return true;
         }
     }
 }
