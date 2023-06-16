@@ -136,7 +136,7 @@ namespace Macrocosm.Content.UI.Menus
 			// includes all orbiting descendants in the tree 
 			Sun.Draw(spriteBatch, withChildren: true);
 
-            return false;
+            return true;
         }
 
         private void SetupCelestialBodies()
