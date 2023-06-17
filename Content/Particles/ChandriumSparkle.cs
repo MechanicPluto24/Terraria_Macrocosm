@@ -108,7 +108,7 @@ namespace Macrocosm.Content.Particles
 					Vector2 currentPosition = OldPosition;
 
 					// Ease the position towards the target
-					currentPosition = Vector2.Lerp(currentPosition, targetPosition, 0.5f);
+					currentPosition = Vector2.Lerp(currentPosition, targetPosition, 0.9f);
 
 					// Apply the eased position to the whip tip
 					Position = currentPosition;
