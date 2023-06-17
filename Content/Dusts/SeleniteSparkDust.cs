@@ -42,8 +42,8 @@ namespace Macrocosm.Content.Dusts
 		{
 			float count = Math.Abs(dust.velocity.X) + Math.Abs(dust.velocity.Y) * 3f;
 
-			if (count > 10f)
-				count = 10f;
+			if (count > 6f)
+				count = 6f;
 
 			for (int n = 0; n < count; n++)
 			{

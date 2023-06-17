@@ -16,7 +16,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 	{
 		public override void SetStaticDefaults()
 		{
-            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 6;
+            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 12;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
         }
 
@@ -35,27 +35,36 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         {
             width = 24;
             height = 24;
-            return true;
+            return false;
         }
 
         public override void AI()
         {
-			ProjectileID.Sets.TrailCacheLength[Projectile.type] = 12;
+            bool collide = WorldGen.SolidTile(Projectile.Center.ToTileCoordinates());
 
 			Projectile.alpha += 2;
-            if (Projectile.alpha >= 255)
+
+			if (collide)
+				Projectile.alpha += 8;
+                    
+			if (Projectile.alpha >= 255)
             {
                 Projectile.Kill();
                 return;
             }
+
+            Projectile.velocity *= MathHelper.SmoothStep(1f, 0.97f, Projectile.alpha / 255f);
+
+
             Projectile.ai[0]++;
-            if (Projectile.ai[0] >= 10)
+
+            if (!collide && Projectile.alpha < 180 && Projectile.ai[0] >= 10)
             {
                 Projectile.ai[0] -= 10;
                 if (Projectile.owner == Main.myPlayer)
                 {
                     Vector2 shootVel = new Vector2(6, 6).RotatedByRandom(MathHelper.ToRadians(360));
-                    Vector2 vector = new Vector2(Projectile.position.X + (float)Projectile.width * 0.5f, Projectile.position.Y + (float)Projectile.height * 0.5f);
+                    Vector2 vector = new (Projectile.position.X + (float)Projectile.width * 0.5f, Projectile.position.Y + (float)Projectile.height * 0.5f);
                     Projectile.NewProjectile(Projectile.InheritSource(Projectile), vector, shootVel, ModContent.ProjectileType<ImbriumJewelMeteor>(), (int)(Projectile.damage), Projectile.knockBack, Main.player[Projectile.owner].whoAmI);
                 }
             }
@@ -74,11 +83,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Lighting.AddLight(Projectile.Center, 0f, 1f, 0f);
             Projectile.rotation = (float)Math.Atan2((double)Projectile.velocity.Y, (double)Projectile.velocity.X);
 
-            var star = Particle.CreateParticle<ImbriumStar>(new Vector2(Projectile.position.X, Projectile.position.Y) + Main.rand.NextVector2FromRectangle(new Rectangle(0,0,(int)Projectile.Size.X, (int)Projectile.Size.Y)) , Vector2.Zero, scale: 0.07f);
-            star.Alpha = 1f - Projectile.alpha/255f;
-            //int dust = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, DustID.GreenFairy, Projectile.velocity.X, Projectile.velocity.Y, 100, default(Color), 1.7f);
-            //Main.dust[dust].noGravity = true;
-        }
+            if(Main.rand.NextFloat() > Projectile.alpha / 255f || Projectile.alpha < 120)
+            {
+				var star = Particle.CreateParticle<ImbriumStar>(new Vector2(Projectile.position.X, Projectile.position.Y) + Main.rand.NextVector2FromRectangle(new Rectangle(0, 0, (int)Projectile.Size.X, (int)Projectile.Size.Y)), Vector2.Zero, scale: 0.07f);
+				star.Alpha = 1f - Projectile.alpha / 255f;
+				//int dust = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, DustID.GreenFairy, Projectile.velocity.X, Projectile.velocity.Y, 100, default(Color), 1.7f);
+				//Main.dust[dust].noGravity = true;
+			}
+		}
 
         public override bool PreDraw(ref Color lightColor)
         {

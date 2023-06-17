@@ -5,6 +5,7 @@ using Terraria.ModLoader;
 using Terraria.GameContent.Creative;
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Rarities;
+using Macrocosm.Content.Projectiles.Friendly.Ranged;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
@@ -37,8 +38,8 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
 		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
 		{
- 			position += new Vector2(0, -3);
-			type = ProjectileID.BulletHighVelocity;
+			position += Vector2.Normalize(velocity) * 30;
+			type = ModContent.ProjectileType<SeleniteMagnumProjectile>();
  		}
 
 		public override Vector2? HoldoutOffset() => new Vector2(4, 0);
