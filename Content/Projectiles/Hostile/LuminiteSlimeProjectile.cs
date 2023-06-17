@@ -5,10 +5,12 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.Graphics;
 using Terraria.ID;
 using Terraria.ModLoader;
+using static Terraria.GameContent.Animations.IL_Actions.Sprites;
 
 namespace Macrocosm.Content.Projectiles.Hostile
 {
@@ -42,7 +44,19 @@ namespace Macrocosm.Content.Projectiles.Hostile
 		public override bool PreDraw(ref Color lightColor)
 		{
 			Projectile.DrawSimpleTrail(Vector2.Zero, 4f, 1f, new Color(98, 211, 168, 255) * lightColor.GetLuminance(), new Color(98, 211, 168, 1));
-			return true;
+
+			// draw circular glow
+			Texture2D glow = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/SimpleGlow").Value;
+			var state = Main.spriteBatch.SaveState();
+			Main.spriteBatch.End();
+			Main.spriteBatch.Begin(BlendState.Additive, state);
+			Main.EntitySpriteDraw(glow, Projectile.Center - Main.screenPosition, null, new Color(89, 151, 193), 0f, glow.Size() / 2, 0.0375f, SpriteEffects.None);
+			Main.spriteBatch.End();
+			Main.spriteBatch.Begin(state);
+
+			Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.position, null, Color.White, 0f, TextureAssets.Projectile[Type].Size() / 2, Projectile.scale, SpriteEffects.None);
+
+			return false;
 		}
 
 		public override void AI()
