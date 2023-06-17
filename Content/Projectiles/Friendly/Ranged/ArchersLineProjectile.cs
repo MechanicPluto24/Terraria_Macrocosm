@@ -8,8 +8,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
     public class ArchersLineProjectile : RicochetBullet
 	{
-		public override string Texture => "Terraria/Images/Projectile_14";
-
 		public override int RicochetCount => 10;
 
 		public override float RicochetSpeed => 20f;
