@@ -924,6 +924,8 @@ Mods: {
 			SeleniteMagnumProjectile.DisplayName: Selenite Magnum Projectile
 			Tycho50Projectile.DisplayName: Tycho50 Projectile
 			Tycho50Bullet.DisplayName: Tycho50 Bullet
+			PhantasmalImpLarge.DisplayName: Phantasmal Imp Large
+			PhantasmalImpSmall.DisplayName: Phantasmal Imp Small
 		}
 
 		Tiles: {
