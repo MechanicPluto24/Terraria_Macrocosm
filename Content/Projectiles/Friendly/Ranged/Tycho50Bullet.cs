@@ -35,7 +35,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 				if(!Main.dedServ)
 					SoundEngine.PlaySound(SFX.DesertEagleShoot with { Volume = 0.3f }, Projectile.position);
 
-				Particle.CreateParticle<DesertEagleFlash>(Projectile.position, Projectile.velocity * 0.4f, Projectile.velocity.ToRotation(), 1f, false);
+				DesertEagleFlash flash = Particle.CreateParticle<DesertEagleFlash>(Projectile.position, Projectile.velocity * 0.4f, Projectile.velocity.ToRotation(), 1f, false);
+				flash.Owner = Projectile;
 
 				spawned = true;
 			}

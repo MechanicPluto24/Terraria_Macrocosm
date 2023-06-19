@@ -12,12 +12,16 @@ using static Terraria.ModLoader.PlayerDrawLayer;
 using Terraria.ID;
 using Macrocosm.Content.Buffs.GoodBuffs;
 using System;
+using Macrocosm.Content.Projectiles.Hostile;
+using Macrocosm.Content.Projectiles.Friendly.Ranged;
 
 namespace Macrocosm.Content.Particles
 {
 	public class DesertEagleFlash : Particle
 	{
 		public override int TrailCacheLenght => 15;
+
+		public Projectile Owner { get; set; }
 
 		public override int SpawnTimeLeft => numFrames * frameSpeed - 1;
 
@@ -55,7 +59,9 @@ namespace Macrocosm.Content.Particles
 
 		public override void AI()
 		{
-			
+			if(!Owner.active && !(Owner.type == ModContent.ProjectileType<ZombieSecurityBullet>() || (Owner.type == ModContent.ProjectileType<Tycho50Bullet>())))
+				Kill();
+
  		}
 		
 		public override void OnKill()
