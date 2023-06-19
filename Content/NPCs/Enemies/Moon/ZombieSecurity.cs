@@ -34,6 +34,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		public int ShootCooldown = maxCooldown;
 		public int ShootSequence = 0;
 
+		public int AttackCooldown = maxCooldown;
+
 		public int ShotsCounter = 1;
 		public int MaxConsecutiveShots = 3;
 
@@ -137,13 +139,14 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		public override void AI()
 		{
-			//Main.NewText("Shoot sequence: " + ShootSequence + "/" + maxShootSequence);
-			//Main.NewText("Shoot cooldown: " + ShootCooldown + "/" + maxCooldown);
-			//Main.NewText("AI State: " + AI_State.ToString());
-			//Main.NewText("Frame Index: " + NPC.frame.Y / NPC.GetFrameHeight() + "/" + fallingFrame);
-			//Main.NewText("Frame cnt: " + NPC.frameCounter);
-			//Main.NewText("Shots: " + ShotsCounter + "/" + MaxConsecutiveShots);
-			//Main.NewText("\n\n");
+			Main.NewText("Shoot sequence: " + ShootSequence + "/" + maxShootSequence);
+			Main.NewText("Shoot cooldown: " + ShootCooldown + "/" + maxCooldown);
+			Main.NewText("Attack cooldown: " + AttackCooldown + "/" + maxCooldown);
+			Main.NewText("AI State: " + AI_State.ToString());
+			Main.NewText("Frame Index: " + NPC.frame.Y / NPC.GetFrameHeight() + "/" + fallingFrame);
+			Main.NewText("Frame cnt: " + NPC.frameCounter);
+			Main.NewText("Shots: " + ShotsCounter + "/" + MaxConsecutiveShots);
+			Main.NewText("\n");
 
 			NPC.spriteDirection = -NPC.direction;
 
@@ -165,6 +168,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 				AI_Shoot();
 		}
 
+		bool CanHit => Collision.CanHit(NPC, TargetPlayer) && Vector2.Distance(NPC.Center, TargetPlayer.Center) > 120f;
+
 		private void AI_Walk()
 		{
 			// Increase gravity a bit
@@ -175,9 +180,25 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			Utility.AIZombie(NPC, ref NPC.ai, false, true, 0);
 
 			ShootCooldown--;
+			AttackCooldown--;
 
+			if (AttackCooldown <= 0 && Vector2.Distance(NPC.Center, TargetPlayer.Center) < 120f)
+			{
+				NPC.velocity.X += (TargetPlayer.Center.X - NPC.Center.X) * 0.04f;
+				NPC.velocity.Y -= 2f;
+				AttackCooldown = maxCooldown;
+			}
+
+			if (NPC.velocity.Y != 0f && Math.Abs(NPC.velocity.X) > 2f)
+			{
+				NPC.direction = Math.Sign(NPC.velocity.X);
+				NPC.rotation = NPC.velocity.X * 0.08f;
+			}
+			else
+				NPC.rotation = 0f;
+ 			
 			// Enter shoot state if cooldown passed, clear line of sight, enemy is stationary (vertically?)
-			if (ShootCooldown <= 0 && Collision.CanHit(NPC, TargetPlayer) && NPC.velocity.Y == 0f)
+			if (ShootCooldown <= 0 && CanHit && NPC.velocity.Y == 0f)
 			{
 				// Reset cooldown
 				ShootCooldown = maxCooldown; 
@@ -198,11 +219,20 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		private void AI_Shoot()
 		{
+			if (!CanHit)
+				NPC.TargetClosest();
+
 			// Exit state if line of sight is broken or shoot sequence succeeded
-			if (!Collision.CanHit(NPC, TargetPlayer) || (ShotsCounter >= MaxConsecutiveShots && ShootSequence >= maxShootSequence))
+			if (!(NPC.HasPlayerTarget && CanHit) || (ShotsCounter >= MaxConsecutiveShots && ShootSequence >= maxShootSequence))
 			{
+				if ((ShotsCounter >= MaxConsecutiveShots && ShootSequence >= maxShootSequence))
+					ShootCooldown = maxCooldown;
+				else
+					ShootCooldown = maxCooldown / 4;
+
 				ShotsCounter = 1;
 				ShootSequence = 0;
+
 				AI_State = ActionState.Walk;
 				return;
 			}
@@ -217,6 +247,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 			// Decelerate horizontal movement
 			NPC.velocity.X *= 0.5f;
+
+			NPC.rotation = 0f;
 
 			// Orient the NPC towards the player 
 			NPC.direction = Main.player[NPC.target].position.X < NPC.position.X ? -1 : 1;
@@ -241,8 +273,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
  				else if(AimAngle == AimType.Downwards)
  					particleAim = aimVelocity.RotatedBy(-0.2f * Math.Sign(aimVelocity.X));
 
-				Projectile.NewProjectile(NPC.GetSource_FromAI(), aimPosition.X, aimPosition.Y, aimVelocity.X, aimVelocity.Y, projType, projDamage, 0f, Main.myPlayer);
-				Particle.CreateParticle<DesertEagleFlash>(NPC.Center + particleAim * 0.24f, aimVelocity * 0.05f, aimVelocity.ToRotation(), 1f, true);
+				Projectile bullet = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), aimPosition, aimVelocity, projType, projDamage, 0f, Main.myPlayer);
+				DesertEagleFlash flash = Particle.CreateParticle<DesertEagleFlash>(NPC.Center + particleAim * 0.24f, aimVelocity * 0.05f, aimVelocity.ToRotation(), 1f, true);
+				flash.Owner = bullet;
 			}
 
 		}
