@@ -25,6 +25,7 @@ using Macrocosm.Content.Systems;
 using Macrocosm.Content.NPCs.Friendly.TownNPCs;
 using Macrocosm.Content.Items.Vanity.BossMasks;
 using Macrocosm.Content.NPCs.Global;
+using Macrocosm.Content.Items.Weapons.Magic;
 
 namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 {
@@ -90,30 +91,41 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		public const int Attack_SummonMeteors = 1;
 		public const int Attack_SummonLesserDemons = 2;
 		public const int Attack_ChargeAtPlayer = 3;
-		public const int Attack_PostCharge = 4;
+		public const int Attack_SummonPhantasmals = 4;
+		public const int Attack_PostCharge = 5;
 
 		private const int Attack_ChargeAtPlayer_RepeatStart = 2;
 		private const int Attack_ChargeAtPlayer_RepeatSubphaseCount = 5;
 
 		private static readonly AttackInfo[] attacks = new AttackInfo[]{
+			// DoNothing
 			new AttackInfo(){
 				initialProgress = null,
 				initialTimer = 90,
 				resetAnimationCounter = false
 			},
+			// SummonMeteors
 			new AttackInfo(){
 				initialProgress = null,
 				initialTimer = PortalTimerMax,
 				resetAnimationCounter = true
 			},
+			// SummonLesserDemons
 			new AttackInfo(){
 				initialProgress = NPC => NPC.CountAliveLesserDemons(),
 				initialTimer = 8 * 60
 			},
+			// ChargeAtPlayer
 			new AttackInfo(){
 				initialProgress = null,
 				initialTimer = 70  //Wait before spawning first portal
 			},
+			// SummonPhantasmals
+			new AttackInfo(){
+				initialProgress = null,
+				initialTimer = 30
+			},
+			// PostCharge
 			new AttackInfo(){
 				initialProgress = null,
 				initialTimer = 45
@@ -130,8 +142,12 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 			AI_Timer = info.initialTimer;
 
-			if (!Main.expertMode)
-				AI_Timer *= 1.5f;
+			if (Main.masterMode)
+				AI_Timer *= 0.75f;
+			else if (Main.expertMode)
+				AI_Timer *= 1f;
+			else
+				AI_Timer *= 1.25f;
 
 			if (info.resetAnimationCounter)
 				AI_AnimationCounter = -1;
@@ -270,8 +286,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 			notExpertRule.OnSuccess(ItemDropRule.OneFromOptions(1,
 				ModContent.ItemType<CalcicCane>(),
-				ModContent.ItemType<Cruithne3753>()
-				/*, ModContent.ItemType<JewelOfShowers>() */
+				ModContent.ItemType<Cruithne3753>(),
+				ModContent.ItemType<ImbriumJewel>()
 				/*, ModContent.ItemType<ChampionsBlade>() */
 				));
 
@@ -593,6 +609,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 					}
 
 					break;
+
 				case FadeAway:
 					NPC.velocity *= 1f - 3f / 60f;
 
@@ -607,6 +624,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 						return;
 					}
 					break;
+
 				case Attack_DoNothing:
 					inertia = DefaultInertia;
 					zAxisLerpStrength = DefaultZAxisLerpStrength;
@@ -619,7 +637,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 						int attack;
 						do
 						{
-							attack = Main.rand.Next(Attack_SummonMeteors, Attack_ChargeAtPlayer + 1);
+							attack = Main.rand.Next(Attack_SummonMeteors, Attack_SummonPhantasmals + 1);
 						} while (attack == oldAttack);
 
 						oldAttack = (int)AI_Attack;
@@ -628,6 +646,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 					}
 
 					break;
+
 				case Attack_SummonMeteors:
 					NPC.defense = NPC.defDefense + 40;
 
@@ -641,7 +660,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 					if (Math.Abs(NPC.velocity.Y) < 0.02f)
 						NPC.velocity.Y = 0f;
 
-					int max = Main.expertMode ? PortalTimerMax : (int)(PortalTimerMax * 1.5f);
+					int max = Main.masterMode ? (int)(PortalTimerMax * 0.5f) : (Main.expertMode ? (int)(PortalTimerMax * 0.75f) : PortalTimerMax);
 
 					if ((int)AI_Timer == max - 1)
 					{
@@ -686,6 +705,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 						SetAttack(Attack_DoNothing);
 
 					break;
+
 				case Attack_SummonLesserDemons:
 					FloatTowardsTarget(player);
 
@@ -719,6 +739,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 					}
 
 					break;
+
 				case Attack_ChargeAtPlayer:
 					inertia = DefaultInertia * 0.1f;
 
@@ -854,10 +875,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 								SoundEngine.PlaySound(SoundID.Zombie105, NPC.Center); //Cultist laugh sound
 
 							//Wait for a random amount of time
-							//Wait for a random amount of time
 							if (Main.netMode != NetmodeID.MultiplayerClient)
 							{
-								AI_Timer = Main.expertMode ? Main.rand.Next(40, 90 + 1) : Main.rand.Next(100, 220 + 1);
+								AI_Timer = Main.masterMode ? Main.rand.Next(10, 40 + 1) : Main.expertMode ? Main.rand.Next(40, 80 + 1) : Main.rand.Next(80, 160 + 1);
 								NPC.netUpdate = true;
 							}
 
@@ -1025,6 +1045,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 						}
 					}
 					break;
+
 				case Attack_PostCharge:
 					if (NPC.velocity == Vector2.Zero && !bigPortal.visible)
 						SetAttack(Attack_DoNothing);
@@ -1043,6 +1064,40 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 							bigPortal = new BigPortalInfo();
 					}
 					break;
+
+				case Attack_SummonPhantasmals:
+
+					if(AI_Timer <= 0)
+					{
+						if (Main.netMode != NetmodeID.MultiplayerClient)
+						{
+
+							int numLarge = Main.rand.Next(1, 3);
+							int numSmall = Main.rand.Next(2, 4);
+
+							for(int i = 0; i < numLarge; i++)
+							{
+								Vector2 position = NPC.Center + new Vector2(Main.rand.Next(10) * NPC.direction, Main.rand.Next(2)).RotatedByRandom(MathHelper.Pi);
+								Vector2 velocity = (NPC.Center - Main.player[NPC.target].Center) * Main.rand.NextFloat(0.2f, 0.3f);
+								int damage = (int)(NPC.damage * (Main.masterMode ? 0.4f : Main.expertMode ? 0.3f : 0.2f)); 
+								int phantasmalImpId = Projectile.NewProjectile(NPC.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<PhantasmalImpLarge>(), damage, 1f, NPC.whoAmI);
+								Main.projectile[phantasmalImpId].netUpdate = true;
+							}
+
+							for (int i = 0; i < numSmall; i++)
+							{
+								Vector2 position = NPC.Center + new Vector2(Main.rand.Next(10) * NPC.direction, Main.rand.Next(2)).RotatedByRandom(MathHelper.Pi);
+								Vector2 velocity = (NPC.Center - Main.player[NPC.target].Center) * Main.rand.NextFloat(0.3f, 0.4f);
+								int damage = (int)(NPC.damage * (Main.masterMode ? 0.3f : Main.expertMode ? 0.2f : 0.1f));
+								int phantasmalImpId = Projectile.NewProjectile(NPC.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<PhantasmalImpSmall>(), damage, 1f, NPC.whoAmI);
+								Main.projectile[phantasmalImpId].netUpdate = true;
+							}
+
+						}
+
+						SetAttack(Attack_DoNothing);
+					}
+				break;
 			}
 
 			AI_Timer--;
