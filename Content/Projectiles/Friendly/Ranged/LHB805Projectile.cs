@@ -18,7 +18,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		private const int shootFrames = 6;  // number of shooting animaton frames
 
 		private const int startTicksPerFrame = 8; // tpf at the start of the animation
-		private const int maxTicksPerFrame = 3;   // tpf cap after fullFireRateTime
+		private const int maxTicksPerFrame = 2;   // tpf cap after fullFireRateTime
 
 		private const int windupTime = 45;        // ticks till start of shooting 
 		private const int fullFireRateTime = 80;  // ticks to reach full fire rate 
@@ -98,7 +98,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 				Vector2 rotPoint = Utility.RotatingPoint(Projectile.Center, new Vector2(40, 8 * Projectile.spriteDirection), Projectile.rotation);
 
 				// gradually increase fire rate
-				int fireFreq = (int)MathHelper.Clamp(MathHelper.Lerp(fireRateStart, fireRateCap, (AI_Windup - windupTime) / (fullFireRateTime - windupTime)), fireRateCap, fireRateStart);// Main.rand.NextBool()
+				int fireFreq = (int)(MathHelper.Clamp(MathHelper.Lerp(fireRateStart, fireRateCap, ((AI_Windup - windupTime) / (fullFireRateTime - windupTime)) * OwnerPlayer.GetAttackSpeed(DamageClass.Ranged)), fireRateCap, fireRateStart));// Main.rand.NextBool()
+
+				Utility.Chat(fireFreq.ToString());
 
 				if (AI_Windup % fireFreq == 0 && Main.myPlayer == Projectile.owner)
 					Projectile.NewProjectile(Terraria.Entity.InheritSource(Projectile), rotPoint, Vector2.Normalize(Projectile.velocity).RotatedByRandom(MathHelper.ToRadians(14)) * 10f, projToShoot, damage, knockback, Projectile.owner, default, Projectile.GetByUUID(Projectile.owner, Projectile.whoAmI));
@@ -156,6 +158,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 					SoundLimitBehavior = SoundLimitBehavior.IgnoreNew
 				},
 				Projectile.position);
+			}
+
+			if (SoundEngine.TryGetActiveSound(playingSoundId, out ActiveSound playingSound))
+			{
+				playingSound.Position = Projectile.position;
 			}
 		}
 

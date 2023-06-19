@@ -6,10 +6,12 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Content.Particles;
 
-namespace Macrocosm.Content.Projectiles.Hostile
+namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-    public class ZombieSecurityBullet : ModProjectile, IBullet
+    public class Tycho50Bullet : ModProjectile, IBullet
 	{
 		public override void SetStaticDefaults()
 		{
@@ -19,12 +21,11 @@ namespace Macrocosm.Content.Projectiles.Hostile
 
 		public override void SetDefaults()
 		{
-			Projectile.CloneDefaults(ProjectileID.BulletDeadeye);
+			Projectile.CloneDefaults(ProjectileID.Bullet);
 			AIType = ProjectileID.Bullet;
 			Projectile.width = 4;
 			Projectile.height = 4;
 		}
-
 
 		bool spawned = false;
 		public override bool PreAI()
@@ -33,6 +34,8 @@ namespace Macrocosm.Content.Projectiles.Hostile
 			{
 				if(!Main.dedServ)
 					SoundEngine.PlaySound(SFX.DesertEagleShoot with { Volume = 0.3f }, Projectile.position);
+
+				Particle.CreateParticle<DesertEagleFlash>(Projectile.position, Projectile.velocity * 0.4f, Projectile.velocity.ToRotation(), 1f, false);
 
 				spawned = true;
 			}

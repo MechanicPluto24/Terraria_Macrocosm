@@ -9,6 +9,10 @@ using System.IO;
 
 namespace Macrocosm.Content.Projectiles.Base
 {
+    /// <summary>
+    /// Base class for a bullet projectile that bounces from enemy to enemy. 
+    /// Call base if overrding SetDefaults, OnHitNPC, PostAI or Send/ReceiveExtraAI
+    /// </summary>
     public abstract class RicochetBullet : ModProjectile, IBullet
     {
         /// <summary> The number of ricochets </summary>
