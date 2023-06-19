@@ -13,6 +13,8 @@ using System.IO;
 using Macrocosm.Content.Projectiles.Hostile;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Content.NPCs.Global;
+using Terraria.GameContent.ItemDropRules;
+using Macrocosm.Content.Items.Weapons.Ranged;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
@@ -84,6 +86,12 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
 		{
 			return spawnInfo.Player.Macrocosm().ZoneMoon && !Main.dayTime ? .08f : 0f;
+		}
+
+		public override void ModifyNPCLoot(NPCLoot loot)
+		{
+			// drop gun, 1/12 normal mode, twice in expert
+			loot.Add(ItemDropRule.ExpertGetsRerolls(ModContent.ItemType<Tycho50>(), 12, 1)); 
 		}
 
 		public override void OnSpawn(IEntitySource source)
@@ -221,15 +229,22 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			Vector2 aimPosition = GetAimPosition(projSpeed);
 			Vector2 aimVelocity = GetAimVelocity(aimPosition, projSpeed);
 
+			// Set the aim angle 
+			SetAimMode(aimVelocity);
+
 			// Shoot (TODO: align projectile and particle by angle)
 			if (Main.netMode != NetmodeID.MultiplayerClient && ShootSequence == sequenceShoot)
 			{
+				Vector2 particleAim = aimVelocity;
+				if(AimAngle == AimType.Upwards)
+ 					particleAim = aimVelocity.RotatedBy(-0.4f * Math.Sign(aimVelocity.X));
+ 				else if(AimAngle == AimType.Downwards)
+ 					particleAim = aimVelocity.RotatedBy(-0.2f * Math.Sign(aimVelocity.X));
+
 				Projectile.NewProjectile(NPC.GetSource_FromAI(), aimPosition.X, aimPosition.Y, aimVelocity.X, aimVelocity.Y, projType, projDamage, 0f, Main.myPlayer);
-				Particle.CreateParticle<DesertEagleFlash>(NPC.Center + aimVelocity * 0.24f, aimVelocity * 0.05f, aimVelocity.ToRotation(), 1f, true);
+				Particle.CreateParticle<DesertEagleFlash>(NPC.Center + particleAim * 0.24f, aimVelocity * 0.05f, aimVelocity.ToRotation(), 1f, true);
 			}
 
-			// Set the aim angle 
-			SetAimMode(aimVelocity);
 		}
 
 		private Vector2 GetAimPosition(float projSpeed)
@@ -349,9 +364,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			}
 		}
 
-		public override void ModifyNPCLoot(NPCLoot loot)
-		{
-		}
 
 		public override void HitEffect(NPC.HitInfo hit)
 		{

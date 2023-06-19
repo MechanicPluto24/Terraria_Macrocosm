@@ -1,3 +1,4 @@
+using Macrocosm.Content.Projectiles.Global;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -5,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-	public class CruithneGreenSlug : ModProjectile
+	public class CruithneGreenSlug : ModProjectile, IBullet
 	{
 		public override void SetDefaults()
 		{
@@ -16,12 +17,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			Projectile.extraUpdates = 3;
 			Projectile.timeLeft = 270;
 			Projectile.light = 0f;
-		}
-
-		public override bool OnTileCollide(Vector2 oldVelocity)
-		{
-			Collision.HitTiles(Projectile.position, oldVelocity, Projectile.width, Projectile.height);
-			return true;
 		}
 
 		public override bool PreAI()

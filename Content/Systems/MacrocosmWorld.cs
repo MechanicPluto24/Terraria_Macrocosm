@@ -55,7 +55,7 @@ namespace Macrocosm.Content.Systems
 			// TODO: add sleeping multiplier 
 			Main.time += freezeTime ? 0f : subworld.TimeRate;//  * (Main.IsFastForwardingTime() ? 60 : timeRateModifier);
 
-			Main.desiredWorldEventsUpdateRate = subworld.TimeRate;
+			//Main.desiredWorldEventsUpdateRate = subworld.TimeRate;
 
 			IsDusk = Main.dayTime && Main.time >= subworld.DayLenght;
 			IsDawn = !Main.dayTime && Main.time >= subworld.NightLenght;

@@ -25,6 +25,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			Projectile.timeLeft = 600;
 		}
 
+		public override void AI()
+		{
+			Lighting.AddLight(Projectile.position, new Color(255, 0, 0).ToVector3() * 0.6f);
+		}
+
 		public override void OnRicochet()
 		{
 			Projectile.damage -= 10;

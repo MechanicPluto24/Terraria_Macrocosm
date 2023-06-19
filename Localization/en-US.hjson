@@ -828,6 +828,11 @@ Mods: {
 				DisplayName: Hazard Wall
 				Tooltip: ""
 			}
+
+			Tycho50: {
+				DisplayName: Tycho .50
+				Tooltip: ""
+			}
 		}
 
 		NPCs: {
@@ -917,6 +922,8 @@ Mods: {
 			HandheldEngineHitbox.DisplayName: Handheld Engine
 			ZombieSecurityBullet.DisplayName: Zombie Security
 			SeleniteMagnumProjectile.DisplayName: Selenite Magnum Projectile
+			Tycho50Projectile.DisplayName: Tycho50 Projectile
+			Tycho50Bullet.DisplayName: Tycho50 Bullet
 		}
 
 		Tiles: {
