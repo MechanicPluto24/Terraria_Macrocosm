@@ -100,7 +100,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			}
 			else
 			{
-				Projectile.netUpdate = true; // targeting was done locally, needs syncing 
+				// targeting was done locally, sync
+				Projectile.netUpdate = true; 
 			}
 
 			Vector2 maxVelocity = (new Vector2(x, y) - Projectile.Center).SafeNormalize(-Vector2.UnitY) * (10f + 6f * (AI_AccelerationTimer / timeToReachTopSpeed));
