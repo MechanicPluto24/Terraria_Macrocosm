@@ -15,16 +15,16 @@ namespace Macrocosm.Content.Projectiles.Hostile
 		{
 			Projectile.width = 26;
 			Projectile.height = 26;
-			Projectile.aiStyle = ProjAIStyleID.Arrow;
-			Projectile.alpha = 255;
 			Projectile.hostile = true;
-			Projectile.penetrate = 3;
 		}
 
 
 		bool spawned = false;
 		public override bool PreAI()
 		{
+			Projectile.direction = System.Math.Sign(Projectile.velocity.X);
+			Projectile.spriteDirection = Projectile.direction;
+			Projectile.rotation = Projectile.velocity.X * 0.05f;
 			return true;
 		}
 

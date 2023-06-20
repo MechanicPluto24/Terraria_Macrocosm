@@ -485,6 +485,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 					else if (AI_AnimationCounter % 26 < 13)
 						set++;
 					break;
+				case Attack_SummonPhantasmals:
+					set++;
+					break;
 				case Attack_PostCharge:
 					if (NPC.velocity != Vector2.Zero)
 						set++;
@@ -637,7 +640,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 						int attack;
 						do
 						{
-							attack = Main.rand.Next(Attack_SummonMeteors, Attack_SummonPhantasmals + 1);
+							attack = Main.rand.Next(Attack_SummonPhantasmals, Attack_SummonPhantasmals + 1);
 						} while (attack == oldAttack);
 
 						oldAttack = (int)AI_Attack;
@@ -686,7 +689,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 						//Spawn portals near and above the player
 						Vector2 orig = player.Center - new Vector2(0, 15 * 16);
 
-						int count = Main.expertMode ? 4 : 2;
+						int count = Main.masterMode ? 4 : (Main.expertMode ? 3 : 2);
 
 						if (Main.netMode != NetmodeID.MultiplayerClient)
 						{
@@ -701,7 +704,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 						AI_AttackProgress++;
 					}
-					else if (AI_AttackProgress == 2 && AI_Timer == 0)
+					else if (AI_AttackProgress == 2 && AI_Timer <= 0)
 						SetAttack(Attack_DoNothing);
 
 					break;
@@ -877,7 +880,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 							//Wait for a random amount of time
 							if (Main.netMode != NetmodeID.MultiplayerClient)
 							{
-								AI_Timer = Main.masterMode ? Main.rand.Next(10, 40 + 1) : Main.expertMode ? Main.rand.Next(40, 80 + 1) : Main.rand.Next(80, 160 + 1);
+								AI_Timer = Main.masterMode ? (Main.rand.Next(10, 40 + 1)) : (Main.expertMode ? Main.rand.Next(40, 80 + 1) : Main.rand.Next(80, 160 + 1));
 								NPC.netUpdate = true;
 							}
 
@@ -1067,37 +1070,52 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 				case Attack_SummonPhantasmals:
 
-					if(AI_Timer <= 0)
+					if (AI_Timer > 1)
 					{
+						//inertia = 100f;
+						NPC.velocity *= 0.98f;
+					}
+					else if (AI_Timer <= 0)
+					{
+						Vector2 targetVelocity = (Main.player[NPC.target].Center - NPC.Center).SafeNormalize(Vector2.Zero);
+
 						if (Main.netMode != NetmodeID.MultiplayerClient)
 						{
-
 							int numLarge = Main.rand.Next(1, 3);
 							int numSmall = Main.rand.Next(2, 4);
 
-							for(int i = 0; i < numLarge; i++)
+
+							for (int i = 0; i < numLarge; i++)
 							{
-								Vector2 position = NPC.Center + new Vector2(Main.rand.Next(10) * NPC.direction, Main.rand.Next(2)).RotatedByRandom(MathHelper.Pi);
-								Vector2 velocity = (NPC.Center - Main.player[NPC.target].Center) * Main.rand.NextFloat(0.2f, 0.3f);
-								int damage = (int)(NPC.damage * (Main.masterMode ? 0.4f : Main.expertMode ? 0.3f : 0.2f)); 
-								int phantasmalImpId = Projectile.NewProjectile(NPC.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<PhantasmalImpLarge>(), damage, 1f, NPC.whoAmI);
-								Main.projectile[phantasmalImpId].netUpdate = true;
+								Vector2 position = NPC.Center + new Vector2(50 * Math.Sign(zAxisRotation), 50) + new Vector2(Main.rand.Next(10) * Math.Sign(zAxisRotation), Main.rand.Next(2));
+								Vector2 velocity = targetVelocity.RotatedByRandom(MathHelper.PiOver4/2) * 10f;
+								int damage = (int)(NPC.damage * (Main.masterMode ? 0.4f : (Main.expertMode ? 0.3f : 0.2f)));
+								int projId = Projectile.NewProjectile(NPC.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<PhantasmalImpLarge>(), damage, 1f, NPC.whoAmI);
+								Main.projectile[projId].netUpdate = true;
 							}
 
 							for (int i = 0; i < numSmall; i++)
 							{
-								Vector2 position = NPC.Center + new Vector2(Main.rand.Next(10) * NPC.direction, Main.rand.Next(2)).RotatedByRandom(MathHelper.Pi);
-								Vector2 velocity = (NPC.Center - Main.player[NPC.target].Center) * Main.rand.NextFloat(0.3f, 0.4f);
-								int damage = (int)(NPC.damage * (Main.masterMode ? 0.3f : Main.expertMode ? 0.2f : 0.1f));
-								int phantasmalImpId = Projectile.NewProjectile(NPC.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<PhantasmalImpSmall>(), damage, 1f, NPC.whoAmI);
-								Main.projectile[phantasmalImpId].netUpdate = true;
+								Vector2 position = NPC.Center + new Vector2(50 * Math.Sign(zAxisRotation), 50) + new Vector2(Main.rand.Next(10) * Math.Sign(zAxisRotation), Main.rand.Next(2));
+								Vector2 velocity = targetVelocity.RotatedByRandom(MathHelper.PiOver4/2) * 10f;
+								int damage = (int)(NPC.damage * (Main.masterMode ? 0.3f : (Main.expertMode ? 0.2f : 0.1f)));
+								int projId = Projectile.NewProjectile(NPC.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<PhantasmalImpSmall>(), damage, 1f, NPC.whoAmI);
+								Main.projectile[projId].netUpdate = true;
 							}
+						}
 
+						for (int i = 0; i < 80; i++)
+						{
+							Dust dust = Dust.NewDustDirect(NPC.Center + new Vector2(20 * Math.Sign(zAxisRotation), 50), 1, 1, ModContent.DustType<PortalLightGreenDust>(), Scale: 2.2f);
+							dust.velocity = (targetVelocity.SafeNormalize(Vector2.UnitX) * Main.rand.NextFloat(6f, 20f)).RotatedByRandom(MathHelper.PiOver4 * 0.6);
+							dust.noLight = false;
+							dust.alpha = 200;
+							dust.noGravity = true;
 						}
 
 						SetAttack(Attack_DoNothing);
 					}
-				break;
+					break;
 			}
 
 			AI_Timer--;
@@ -1244,7 +1262,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		public override Color? GetAlpha(Color drawColor)
 		{
 			if (NPC.IsABestiaryIconDummy)
-				return NPC.GetBestiaryEntryColor(); // This is required because we have NPC.alpha = 255, in the bestiary it would look transparent
+				return NPC.GetBestiaryEntryColor(); // This is required because initially we have NPC.alpha = 255, in the bestiary it would look transparent
 
 			return drawColor * (1f - targetAlpha / 255f);
 		}
