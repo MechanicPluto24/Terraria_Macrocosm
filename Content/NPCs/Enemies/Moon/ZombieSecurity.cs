@@ -139,14 +139,14 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		public override void AI()
 		{
-			Main.NewText("Shoot sequence: " + ShootSequence + "/" + maxShootSequence);
-			Main.NewText("Shoot cooldown: " + ShootCooldown + "/" + maxCooldown);
-			Main.NewText("Attack cooldown: " + AttackCooldown + "/" + maxCooldown);
-			Main.NewText("AI State: " + AI_State.ToString());
-			Main.NewText("Frame Index: " + NPC.frame.Y / NPC.GetFrameHeight() + "/" + fallingFrame);
-			Main.NewText("Frame cnt: " + NPC.frameCounter);
-			Main.NewText("Shots: " + ShotsCounter + "/" + MaxConsecutiveShots);
-			Main.NewText("\n");
+			//Main.NewText("Shoot sequence: " + ShootSequence + "/" + maxShootSequence);
+			//Main.NewText("Shoot cooldown: " + ShootCooldown + "/" + maxCooldown);
+			//Main.NewText("Attack cooldown: " + AttackCooldown + "/" + maxCooldown);
+			//Main.NewText("AI State: " + AI_State.ToString());
+			//Main.NewText("Frame Index: " + NPC.frame.Y / NPC.GetFrameHeight() + "/" + fallingFrame);
+			//Main.NewText("Frame cnt: " + NPC.frameCounter);
+			//Main.NewText("Shots: " + ShotsCounter + "/" + MaxConsecutiveShots);
+			//Main.NewText("\n");
 
 			NPC.spriteDirection = -NPC.direction;
 

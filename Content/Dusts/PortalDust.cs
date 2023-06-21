@@ -11,8 +11,8 @@ namespace Macrocosm.Content.Dusts
 		public override void OnSpawn(Dust dust)
 		{
 			dust.noLight = false; 
-			dust.color = Color.White;
-			dust.alpha = 0;
+			dust.color = Color.Wheat;
+			dust.alpha = 200;
 		}
 	}
 
