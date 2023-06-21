@@ -1,5 +1,3 @@
-
-using Macrocosm.Common.Drawing.Dusts;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Dusts
 {
-	public class SeleniteSparkDust : ModDust, IDustCustomDraw
+	public class SeleniteSparkDust : ModDust
 	{
 		public override bool Update(Dust dust)
 		{
@@ -38,7 +36,7 @@ namespace Macrocosm.Content.Dusts
 		public override Color? GetAlpha(Dust dust, Color lightColor)
 			=> Color.White.NewAlpha(127);
 
-		public bool DrawDust(Dust dust, SpriteBatch spriteBatch, Vector2 screenPosition, Texture2D texture, Rectangle dustFrame)
+		public override bool PreDraw(Dust dust)
 		{
 			float count = Math.Abs(dust.velocity.X) + Math.Abs(dust.velocity.Y) * 3f;
 
@@ -50,7 +48,7 @@ namespace Macrocosm.Content.Dusts
 				Vector2 trailPosition = dust.position - dust.velocity * n;
 				float scale = dust.scale * (1f - n / 10f);
 				Color color = Lighting.GetColor((int)(dust.position.X + 4.0) / 16, (int)(dust.position.Y + 4.0) / 16);
-				spriteBatch.Draw(texture, trailPosition - screenPosition, dustFrame, dust.GetAlpha(color), dust.rotation, new Vector2(4f, 4f), scale, SpriteEffects.None, 0f);
+				Main.spriteBatch.Draw(dust.GetTexture(), trailPosition - Main.screenPosition, dust.frame, dust.GetAlpha(color), dust.rotation, new Vector2(4f, 4f), scale, SpriteEffects.None, 0f);
 			}
 
 			return true;
