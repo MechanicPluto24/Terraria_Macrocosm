@@ -40,7 +40,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
 				Terraria.Audio.SoundEngine.PlaySound(SoundID.Item78, Projectile.Center);
 			}
 
-			Projectile.rotation -= MathHelper.ToRadians(5.4f);
+			Projectile.rotation -= MathHelper.ToRadians(7.4f);
 
 			if (Projectile.timeLeft >= CraterDemon.PortalTimerMax - 90)
 				Projectile.ai[0] -= 2.83333325f;
@@ -60,8 +60,9 @@ namespace Macrocosm.Content.Projectiles.Hostile
 
 					Terraria.Audio.SoundEngine.PlaySound(SoundID.Item20, Projectile.Center);
 				}
-				SpawnDusts();
 			}
+
+			SpawnDusts();
 
 			Projectile.alpha = (int)MathHelper.Clamp((int)Projectile.ai[0], 0f, 255f);
 
@@ -78,18 +79,18 @@ namespace Macrocosm.Content.Projectiles.Hostile
 		public override bool PreDraw(ref Color lightColor)
 		{
 			Texture2D texture2D = TextureAssets.Projectile[Projectile.type].Value;
-			Color value = GetAlpha(lightColor) ?? Color.White;
+			Color value =   Color.White;
 
 			SpriteBatchState state = Main.spriteBatch.SaveState();
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, state);
 
-			Main.EntitySpriteDraw(texture2D, Projectile.Center - Main.screenPosition, null, (value * 0.35f).NewAlpha(1f - Projectile.alpha/255f), (0f - Projectile.rotation) * 0.65f, texture2D.Size() / 2f,
-				Projectile.scale * 1.23f, SpriteEffects.FlipHorizontally, 0);
+			Main.EntitySpriteDraw(texture2D, Projectile.Center - Main.screenPosition, null, (value * 1f).NewAlpha(0.5f - 0.5f * Projectile.alpha/255f), (0f - Projectile.rotation) * 0.65f, texture2D.Size() / 2f,
+				Projectile.scale * 1.4f, SpriteEffects.FlipHorizontally, 0);
 
-			Main.EntitySpriteDraw(texture2D, Projectile.Center - Main.screenPosition, null, value * 0.84f, Projectile.rotation, texture2D.Size() / 2f,
-				Projectile.scale, SpriteEffects.None, 0);
+			Main.EntitySpriteDraw(texture2D, Projectile.Center - Main.screenPosition, null, (value * 0.84f).NewAlpha(0.5f - 0.5f * Projectile.alpha / 255f), Projectile.rotation, texture2D.Size() / 2f,
+				Projectile.scale * 1.2f, SpriteEffects.None, 0);
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, state);
@@ -106,15 +107,15 @@ namespace Macrocosm.Content.Projectiles.Hostile
 		/// <summary> Adapted from Lunar Portal Staff </summary>
 		private void SpawnDusts()
 		{
-			if (Main.rand.NextBool(1))
+			for(int i = 0; i < (int)(6 * (1f - Projectile.ai[0] / 255f)); i++)
 			{
 				int type = Main.rand.NextBool() ? ModContent.DustType<PortalLightOrangeDust>() : ModContent.DustType<PortalLightGreenDust>();
-				Vector2 rotVector1 = Vector2.UnitY.RotatedByRandom(MathHelper.TwoPi);
+				Vector2 rotVector1 = Vector2.UnitY.RotatedByRandom(MathHelper.TwoPi) * 1.6f * (1f - Projectile.ai[0] / 255f);
 				Dust lightDust = Main.dust[Dust.NewDust(Projectile.Center - rotVector1 * 30f, 0, 0, type)];
 				lightDust.noGravity = true;
 				lightDust.position = Projectile.Center - rotVector1 * Main.rand.Next(10, 21);
 				lightDust.velocity = rotVector1.RotatedBy(MathHelper.PiOver2) * 6f;
-				lightDust.scale = 1.2f + Main.rand.NextFloat();
+				lightDust.scale = (0.8f + Main.rand.NextFloat()) * (1f - Projectile.ai[0] / 255f); 
 				lightDust.fadeIn = 0.5f;
 				lightDust.customData = Projectile.Center;
 			}
@@ -122,12 +123,12 @@ namespace Macrocosm.Content.Projectiles.Hostile
 			if (Main.rand.NextBool(2))
 			{
 				int type = Main.rand.NextBool() ? ModContent.DustType<PortalDarkOrangeDust>() : ModContent.DustType<PortalDarkGreenDust>();
-				Vector2 rotVector2 = Vector2.UnitY.RotatedByRandom(MathHelper.TwoPi);
+				Vector2 rotVector2 = Vector2.UnitY.RotatedByRandom(MathHelper.TwoPi) * (1f - Projectile.ai[0] / 255f);
 				Dust darkDust = Main.dust[Dust.NewDust(Projectile.Center - rotVector2 * 30f, 0, 0, type)];
 				darkDust.noGravity = true;
 				darkDust.position = Projectile.Center - rotVector2 * 30f;
 				darkDust.velocity = rotVector2.RotatedBy(-MathHelper.PiOver2) * 3f;
-				darkDust.scale = 1.2f + Main.rand.NextFloat();
+				darkDust.scale = (1.2f + Main.rand.NextFloat()) * (1f - Projectile.ai[0] / 255f); 
 				darkDust.fadeIn = 0.5f;
 				darkDust.customData = Main.projectile[Projectile.whoAmI];
 			}

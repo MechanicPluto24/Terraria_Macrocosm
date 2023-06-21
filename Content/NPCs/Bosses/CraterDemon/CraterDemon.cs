@@ -89,7 +89,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		public const int FadeAway = -1;
 		public const int Attack_DoNothing = 0;
 		public const int Attack_SummonMeteors = 1;
-		public const int Attack_SummonLesserDemons = 2;
+		public const int Attack_SummonCraterImps = 2;
 		public const int Attack_ChargeAtPlayer = 3;
 		public const int Attack_SummonPhantasmals = 4;
 		public const int Attack_PostCharge = 5;
@@ -110,9 +110,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 				initialTimer = PortalTimerMax,
 				resetAnimationCounter = true
 			},
-			// SummonLesserDemons
+			// SummonCraterImps
 			new AttackInfo(){
-				initialProgress = NPC => NPC.CountAliveLesserDemons(),
+				initialProgress = NPC => NPC.CountAliveCraterImps(),
 				initialTimer = 8 * 60
 			},
 			// ChargeAtPlayer
@@ -132,6 +132,59 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			}
 		};
 
+		private enum ScaleType
+		{
+			SetAttackTimer,           // The initial AI timer scaling, based on AttackInfo, when switching attacks
+			SuitBreachTime,           // The multiplying factor of the base suit breach debuff time (2 seconds)
+			MeteorPortalIdleTime,     // The idle time scaling on meteor portal attack
+			MeteorPortalCount,        // Number of meteor portals 
+			MeteorPortalDefenseBoost, // Boost to defense during meteor portal attack
+			CraterImpMaxCount,        // Maximum number of Crater Imp minions that can exist
+			PortalChargeVelocity,     // Charge attack velocity value 
+			PortalWaitTimeMin,        // Minimum wait time between portal attacks 
+			PortalWaitTimeMax,        // Maximum wait time between portal attacks 
+			PortalSecondTime,         // Time to spawn the second portal 
+			PortalAttackCountMin,     // Minimum number of consecutive portal attacks 
+			PortalAttackCountMax,     // Maximum number of consecutive portal attacks 
+			PhantasmalCountSmallMin,  // Minimum number of small phantasmal skulls in an attack 
+			PhantasmalCountSmallMax,  // Maximum number of small phantasmal skulls in an attack 
+			PhantasmalCountLargeMin,  // Minimum number of large phantasmal skulls in an attack 
+			PhantasmalCountLargeMax,  // Maximum number of large phantasmal skulls in an attack 
+		}
+
+		private static readonly float[,] scalingInfo = new float[,]
+		{
+		     // Scaled element on :        NM1, NM2, EM1, EM2, MM1, MM2, FTW1, FTW2
+			 /*SetAttackTimer,           */ { 1.25f, 1.1f, 1f, 0.8f, 0.75f, 0.65f, 0.6f, 0.55f }, 
+			 /*SuitBreachTime,           */ { 120, 120, 240, 240, 260, 260, 300, 300 },                   
+			 /*MeteorPortalIdleTime,     */ { 1f, 0.9f, 0.75f, 0.65f, 0.5f, 0.45f, 0.4f, 0.3f },  
+			 /*MeteorPortalCount,        */ { 2, 2, 3, 3, 4, 4, 5, 5 },                           
+			 /*MeteorPortalDefenseBoost, */ { 40, 40, 50, 50, 50, 50, 60, 60 },            
+			 /*CraterImpMaxCount,        */ { 3, 3, 4, 4, 4, 4, 5, 5 },      
+			 /*PortalChargeVelocity,     */ { 17f, 19f, 24f, 26f, 30f, 32f, 36f, 40f },         
+			 /*PortalWaitTimeMin,        */ { 80, 70, 40, 30, 20, 10, 5, 0 },                   
+			 /*PortalWaitTimeMax,        */ { 160, 150, 80, 70, 40, 30, 10, 5 },                
+			 /*PortalSecondTime,         */ { 60, 55, 35, 30, 25, 20, 15, 10 },                 
+			 /*PortalAttackCountMin,     */ { 2, 3, 4, 5, 4, 5, 6, 7 },                         
+			 /*PortalAttackCountMax,     */ { 4, 5, 8, 9, 8, 9, 10, 11 },
+			 /*PhantasmalCountSmallMin,  */ { 2, 2, 2, 2, 2, 2, 2, 2},
+			 /*PhantasmalCountSmallMax,  */	{ 3, 3, 3, 3, 3, 3, 3 ,3},
+			 /*PhantasmalCountLargeMin,  */	{ 1, 1, 1, 1, 1, 1, 1, 1},
+			 /*PhantasmalCountLargeMax,  */ { 2, 2, 2, 2, 2, 2, 2, 2}
+		};
+
+		private float GetDifficultyScaling(ScaleType scaleType)
+		{
+			int difficultyMode = Main.getGoodWorld ? 6 : 
+								 Main.masterMode   ? 4 : 
+								 Main.expertMode   ? 2 : 
+													 0 ;
+			if (phase2)
+				difficultyMode += 1;
+
+			return scalingInfo[(int)scaleType, difficultyMode];
+		}
+
 		private void SetAttack(int attack)
 		{
 			var info = attacks[attack];
@@ -141,13 +194,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			AI_AttackProgress = info.initialProgress?.Invoke(this) ?? 0;
 
 			AI_Timer = info.initialTimer;
-
-			if (Main.masterMode)
-				AI_Timer *= 0.75f;
-			else if (Main.expertMode)
-				AI_Timer *= 1f;
-			else
-				AI_Timer *= 1.25f;
+			AI_Timer *= GetDifficultyScaling(ScaleType.SetAttackTimer);
 
 			if (info.resetAnimationCounter)
 				AI_AnimationCounter = -1;
@@ -158,6 +205,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 				zAxisLerpStrength = DefaultZAxisLerpStrength;
 			}
 		}
+
+		private bool phase2 = false;
 
 		private bool spawned = false;
 		private float targetAlpha = 255f;
@@ -224,7 +273,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			NPC.knockBackResist = 0f;
 
 			NPC.defense = 100;
-			NPC.damage = 120;
+			NPC.damage = 80;
 			NPC.lifeMax = 110000;  //For comparison, Moon Lord has 145,000 total HP in Normal Mode
 
 			NPC.boss = true;
@@ -254,10 +303,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 		public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)/* tModPorter Note: bossLifeScale -> balance (bossAdjustment is different, see the docs for details) */
 		{
-			NPC.ScaleHealthBy(0.35f);  //For comparison, Moon Lord's scale factor is 0.7f
-
-			NPC.damage = 180;
-			NPC.defense = 150;
+			//For comparison, Moon Lord's scale factor is 0.7f
+			NPC.ScaleHealthBy(0.35f, balance, bossAdjustment);
+			NPC.damage = (int)(NPC.damage * 0.75f * bossAdjustment);
 		}
 
 		public override void BossLoot(ref string name, ref int potionType)
@@ -304,12 +352,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 		public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
 		{
-			int breachTime = 120;
-			if (Main.expertMode && !Main.masterMode)
-				breachTime *= 2;
-			else if (Main.masterMode)
-				breachTime *= 3;
-
+			int breachTime = (int)(GetDifficultyScaling(ScaleType.SuitBreachTime));
 			target.AddBuff(ModContent.BuffType<SuitBreach>(), breachTime);
 		}
 
@@ -326,7 +369,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		public override void SendExtraAI(BinaryWriter writer)
 		{
 			bool hasCustomTarget = movementTarget != null;
-			BitsByte bb = new BitsByte(spawned, ignoreRetargetPlayer, hadNoPlayerTargetForLongEnough, hasCustomTarget);
+			BitsByte bb = new BitsByte(phase2, spawned, ignoreRetargetPlayer, hadNoPlayerTargetForLongEnough, hasCustomTarget);
 			writer.Write(bb);
 
 			writer.Write(targetAlpha);
@@ -350,7 +393,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		{
 			bool hasCustomTarget = false;
 			BitsByte bb = reader.ReadByte();
-			bb.Retrieve(ref spawned, ref ignoreRetargetPlayer, ref hadNoPlayerTargetForLongEnough, ref hasCustomTarget);
+			bb.Retrieve(ref phase2, ref spawned, ref ignoreRetargetPlayer, ref hadNoPlayerTargetForLongEnough, ref hasCustomTarget);
 
 			targetAlpha = reader.ReadSingle();
 			targetZAxisRotation = reader.ReadSingle();
@@ -458,7 +501,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 						set++;
 					break;
 				case Attack_DoNothing:
-				case Attack_SummonLesserDemons:
+				case Attack_SummonCraterImps:
 					if (AI_AnimationCounter % 26 < 13)
 						set++;
 					break;
@@ -640,18 +683,17 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 						int attack;
 						do
 						{
-							attack = Main.rand.Next(Attack_SummonPhantasmals, Attack_SummonPhantasmals + 1);
+							attack = Main.rand.Next(Attack_SummonMeteors, Attack_SummonPhantasmals + 1);
 						} while (attack == oldAttack);
 
 						oldAttack = (int)AI_Attack;
 						SetAttack(attack);
 						NPC.netUpdate = true;
 					}
-
 					break;
 
 				case Attack_SummonMeteors:
-					NPC.defense = NPC.defDefense + 40;
+					NPC.defense = NPC.defDefense + (int)GetDifficultyScaling(ScaleType.MeteorPortalDefenseBoost);
 
 					//Face forwards
 					targetZAxisRotation = 0f;
@@ -663,7 +705,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 					if (Math.Abs(NPC.velocity.Y) < 0.02f)
 						NPC.velocity.Y = 0f;
 
-					int max = Main.masterMode ? (int)(PortalTimerMax * 0.5f) : (Main.expertMode ? (int)(PortalTimerMax * 0.75f) : PortalTimerMax);
+					int max = (int)(PortalTimerMax * GetDifficultyScaling(ScaleType.MeteorPortalIdleTime));
 
 					if ((int)AI_Timer == max - 1)
 					{
@@ -689,7 +731,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 						//Spawn portals near and above the player
 						Vector2 orig = player.Center - new Vector2(0, 15 * 16);
 
-						int count = Main.masterMode ? 4 : (Main.expertMode ? 3 : 2);
+						int count = (int)GetDifficultyScaling(ScaleType.MeteorPortalCount);
 
 						if (Main.netMode != NetmodeID.MultiplayerClient)
 						{
@@ -709,12 +751,12 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 					break;
 
-				case Attack_SummonLesserDemons:
+				case Attack_SummonCraterImps:
 					FloatTowardsTarget(player);
 
-					if (AI_AttackProgress < 3)
+					if (AI_AttackProgress < (int)GetDifficultyScaling(ScaleType.CraterImpMaxCount))
 					{
-						if (AI_Timer % 75 == 0)
+						if (AI_Timer % (int)(75 * GetDifficultyScaling(ScaleType.SetAttackTimer)) == 0)
 						{
 							if (Main.netMode != NetmodeID.MultiplayerClient)
 							{
@@ -735,7 +777,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 						//Go to next attack immediately
 						SetAttack(Attack_DoNothing);
 					}
-					else if (CountAliveLesserDemons() == 0)
+					else if (CountAliveCraterImps() == 0)
 					{
 						//All the minions have been killed.  Transition to the next subphase immediately
 						AI_Timer = 1;
@@ -746,7 +788,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 				case Attack_ChargeAtPlayer:
 					inertia = DefaultInertia * 0.1f;
 
-					float chargeVelocity = Main.expertMode ? 26f : 17f;
+					float chargeVelocity = GetDifficultyScaling(ScaleType.PortalChargeVelocity);
+
 					int repeatRelative = AI_AttackProgress >= Attack_ChargeAtPlayer_RepeatStart
 						? ((int)AI_AttackProgress - Attack_ChargeAtPlayer_RepeatStart) % Attack_ChargeAtPlayer_RepeatSubphaseCount
 						: -1;
@@ -880,7 +923,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 							//Wait for a random amount of time
 							if (Main.netMode != NetmodeID.MultiplayerClient)
 							{
-								AI_Timer = Main.masterMode ? (Main.rand.Next(10, 40 + 1)) : (Main.expertMode ? Main.rand.Next(40, 80 + 1) : Main.rand.Next(80, 160 + 1));
+								AI_Timer = Main.rand.Next((int)GetDifficultyScaling(ScaleType.PortalWaitTimeMin), (int)GetDifficultyScaling(ScaleType.PortalWaitTimeMax) + 1);
 								NPC.netUpdate = true;
 							}
 
@@ -949,7 +992,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 						if (AI_Timer <= 0 && NPC.scale == 1f)
 						{
 							AI_AttackProgress++;
-							AI_Timer = Main.expertMode ? 30 : 60;
+							AI_Timer = (int)GetDifficultyScaling(ScaleType.PortalSecondTime);
 
 							NPC.Center = bigPortal.center;
 							NPC.velocity = NPC.DirectionTo(player.Center) * chargeVelocity;
@@ -959,7 +1002,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 							if (Main.netMode != NetmodeID.MultiplayerClient)
 							{
-								portalAttackCount = Main.expertMode ? Main.rand.Next(5, 8) : Main.rand.Next(2, 5);
+								portalAttackCount = Main.rand.Next((int)GetDifficultyScaling(ScaleType.PortalAttackCountMin), (int)GetDifficultyScaling(ScaleType.PortalAttackCountMax) + 1);
 								NPC.netUpdate = true;
 							}
 
@@ -1073,7 +1116,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 					if (AI_Timer > 1)
 					{
 						//inertia = 100f;
-						NPC.velocity *= 0.98f;
+						NPC.velocity *= 1f - 8.5f / 60f;
 					}
 					else if (AI_Timer <= 0)
 					{
@@ -1081,16 +1124,15 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 						if (Main.netMode != NetmodeID.MultiplayerClient)
 						{
-							int numLarge = Main.rand.Next(1, 3);
-							int numSmall = Main.rand.Next(2, 4);
-
+							int numLarge = Main.rand.Next((int)GetDifficultyScaling(ScaleType.PhantasmalCountLargeMin), (int)GetDifficultyScaling(ScaleType.PhantasmalCountLargeMax) + 1);
+							int numSmall = Main.rand.Next((int)GetDifficultyScaling(ScaleType.PhantasmalCountSmallMin), (int)GetDifficultyScaling(ScaleType.PhantasmalCountSmallMax) + 1);
 
 							for (int i = 0; i < numLarge; i++)
 							{
 								Vector2 position = NPC.Center + new Vector2(50 * Math.Sign(zAxisRotation), 50) + new Vector2(Main.rand.Next(10) * Math.Sign(zAxisRotation), Main.rand.Next(2));
 								Vector2 velocity = targetVelocity.RotatedByRandom(MathHelper.PiOver4/2) * 10f;
-								int damage = (int)(NPC.damage * (Main.masterMode ? 0.4f : (Main.expertMode ? 0.3f : 0.2f)));
-								int projId = Projectile.NewProjectile(NPC.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<PhantasmalImpLarge>(), damage, 1f, NPC.whoAmI);
+								int damage = (int)((float)NPC.damage * 0.7f);
+								int projId = Projectile.NewProjectile(NPC.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<PhantasmalImpLarge>(), damage, 1f, NPC.whoAmI, ai2: player.whoAmI);
 								Main.projectile[projId].netUpdate = true;
 							}
 
@@ -1098,8 +1140,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 							{
 								Vector2 position = NPC.Center + new Vector2(50 * Math.Sign(zAxisRotation), 50) + new Vector2(Main.rand.Next(10) * Math.Sign(zAxisRotation), Main.rand.Next(2));
 								Vector2 velocity = targetVelocity.RotatedByRandom(MathHelper.PiOver4/2) * 10f;
-								int damage = (int)(NPC.damage * (Main.masterMode ? 0.3f : (Main.expertMode ? 0.2f : 0.1f)));
-								int projId = Projectile.NewProjectile(NPC.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<PhantasmalImpSmall>(), damage, 1f, NPC.whoAmI);
+								int damage = (int)((float)NPC.damage * 0.6f);
+								int projId = Projectile.NewProjectile(NPC.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<PhantasmalImpSmall>(), damage, 1f, NPC.whoAmI, ai2: player.whoAmI);
 								Main.projectile[projId].netUpdate = true;
 							}
 						}
@@ -1209,7 +1251,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			}		
 		}
 
-		private int CountAliveLesserDemons()
+		private int CountAliveCraterImps()
 		{
 			int count = 0;
 

@@ -100,8 +100,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 				// gradually increase fire rate
 				int fireFreq = (int)(MathHelper.Clamp(MathHelper.Lerp(fireRateStart, fireRateCap, ((AI_Windup - windupTime) / (fullFireRateTime - windupTime)) * OwnerPlayer.GetAttackSpeed(DamageClass.Ranged)), fireRateCap, fireRateStart));// Main.rand.NextBool()
 
-				Utility.Chat(fireFreq.ToString());
-
 				if (AI_Windup % fireFreq == 0 && Main.myPlayer == Projectile.owner)
 					Projectile.NewProjectile(Terraria.Entity.InheritSource(Projectile), rotPoint, Vector2.Normalize(Projectile.velocity).RotatedByRandom(MathHelper.ToRadians(14)) * 10f, projToShoot, damage, knockback, Projectile.owner, default, Projectile.GetByUUID(Projectile.owner, Projectile.whoAmI));
 
