@@ -18,10 +18,10 @@ ClockworkCorvus, Toxin - Moderator\
 Lincolnennis, Universe - Composer\
 absoluteAquarian, 4mbr0s3 2, Feldy, Hallam, Thanatos, and TheLoneGamer - Programmers\
 Daniel, Dovahkick, Juice, OmegA, and William - Spriters/Artists\
-dontkickmychick - Lorewriter\
+dontkickmychick - Lorewriter
 
 ### Special thanks
-ADVERSE KC, Almarduk, Crowlarghost, Delly, Dracos_V2, Draedon_Gaming, DrakonVörðr, Kiraa, Kirito, Master-Bit, Snowfall-The-Cat, Zetry
+ADVERSE KC, Almarduk, Crowlarghost, Delly, Dracos_V2, Draedon_Gaming, DrakonVÃ¶rÃ°r, Kiraa, Kirito, Master-Bit, Snowfall-The-Cat, Zetry
 
 
 
