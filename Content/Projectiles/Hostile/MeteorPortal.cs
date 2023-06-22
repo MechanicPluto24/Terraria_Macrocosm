@@ -13,6 +13,16 @@ namespace Macrocosm.Content.Projectiles.Hostile
     //Had to salvage it from an extracted DLL, so no comments.  Oops.  -- absoluteAquarian
     public class MeteorPortal : ModProjectile
 	{
+		public ref float AITimer => ref Projectile.ai[0];
+
+		public bool Phase2
+		{
+			get => Projectile.ai[1] != 0f;
+			set => Projectile.ai[1] = value ? 1f : 0f;
+		}
+
+		private int Frame => Phase2 ? 1 : 0;
+
 		private int defWidth;
 		private int defHeight;
 
@@ -36,19 +46,19 @@ namespace Macrocosm.Content.Projectiles.Hostile
 			if (!spawned)
 			{
 				spawned = true;
-				Projectile.ai[0] = 255f;
+				AITimer = 255f;
 				Terraria.Audio.SoundEngine.PlaySound(SoundID.Item78, Projectile.Center);
 			}
 
 			Projectile.rotation -= MathHelper.ToRadians(7.4f);
 
 			if (Projectile.timeLeft >= CraterDemon.PortalTimerMax - 90)
-				Projectile.ai[0] -= 2.83333325f;
+				AITimer -= 2.83333325f;
 			else if (Projectile.timeLeft <= 90)
-				Projectile.ai[0] += 2.83333325f;
+				AITimer += 2.83333325f;
 			else
 			{
-				Projectile.ai[0] = 0f;
+				AITimer = 0f;
 				if (Projectile.timeLeft % 14 == 0)
 				{
 					if (Main.netMode != NetmodeID.MultiplayerClient)
@@ -64,7 +74,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
 
 			SpawnDusts();
 
-			Projectile.alpha = (int)MathHelper.Clamp((int)Projectile.ai[0], 0f, 255f);
+			Projectile.alpha = (int)MathHelper.Clamp((int)AITimer, 0f, 255f);
 
 			Vector2 center = Projectile.Center;
 			Projectile.scale = 0.05f + 0.95f * (1f - Projectile.alpha / 255f);
@@ -76,27 +86,30 @@ namespace Macrocosm.Content.Projectiles.Hostile
 		public override Color? GetAlpha(Color lightColor)
 			=> Color.White * (1f - Projectile.alpha / 255f);
 
+		public Rectangle GetSourceRect()
+		{
+			Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
+			int frameSize = texture.Width / 2;
+			return new Rectangle(frameSize * Frame, 0, frameSize, texture.Height);
+		}
+
 		public override bool PreDraw(ref Color lightColor)
 		{
-			Texture2D texture2D = TextureAssets.Projectile[Projectile.type].Value;
-			Color value =   Color.White;
+			Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
+			Rectangle sourceRect = GetSourceRect();
+			Color color = Color.White;
 
-			SpriteBatchState state = Main.spriteBatch.SaveState();
+			var state = Main.spriteBatch.SaveState();
+			Main.spriteBatch.End();
+			Main.spriteBatch.Begin(BlendState.AlphaBlend, state);
+
+			Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, sourceRect, (color * 1f).NewAlpha(0.5f - 0.5f * Projectile.alpha/255f), (0f - Projectile.rotation) * 0.65f, sourceRect.Size() / 2f, Projectile.scale * 1.4f, SpriteEffects.FlipHorizontally, 0);
+			Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, sourceRect, (color * 0.84f).NewAlpha(0.5f - 0.5f * Projectile.alpha / 255f), Projectile.rotation, sourceRect.Size() / 2f, Projectile.scale * 1.2f, SpriteEffects.None, 0);
 
 			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, state);
+			Main.spriteBatch.Begin(BlendState.Additive, state);
 
-			Main.EntitySpriteDraw(texture2D, Projectile.Center - Main.screenPosition, null, (value * 1f).NewAlpha(0.5f - 0.5f * Projectile.alpha/255f), (0f - Projectile.rotation) * 0.65f, texture2D.Size() / 2f,
-				Projectile.scale * 1.4f, SpriteEffects.FlipHorizontally, 0);
-
-			Main.EntitySpriteDraw(texture2D, Projectile.Center - Main.screenPosition, null, (value * 0.84f).NewAlpha(0.5f - 0.5f * Projectile.alpha / 255f), Projectile.rotation, texture2D.Size() / 2f,
-				Projectile.scale * 1.2f, SpriteEffects.None, 0);
-
-			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, state);
-
-			Main.EntitySpriteDraw(texture2D, Projectile.Center - Main.screenPosition, null, value * 1f, (0f - Projectile.rotation) * 0.65f, texture2D.Size() / 2f,
-			Projectile.scale * 0.8f, SpriteEffects.None, 0);
+		    Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, sourceRect, color * 1f, (0f - Projectile.rotation) * 0.65f, sourceRect.Size() / 2f, Projectile.scale * 0.8f, SpriteEffects.None, 0);
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.AlphaBlend, state);
@@ -107,30 +120,39 @@ namespace Macrocosm.Content.Projectiles.Hostile
 		/// <summary> Adapted from Lunar Portal Staff </summary>
 		private void SpawnDusts()
 		{
-			for(int i = 0; i < (int)(6 * (1f - Projectile.ai[0] / 255f)); i++)
+
+			for(int i = 0; i < (int)(5 * (1f - AITimer / 255f)); i++)
 			{
-				int type = Main.rand.NextBool() ? ModContent.DustType<PortalLightOrangeDust>() : ModContent.DustType<PortalLightGreenDust>();
-				Vector2 rotVector1 = Vector2.UnitY.RotatedByRandom(MathHelper.TwoPi) * 1.6f * (1f - Projectile.ai[0] / 255f);
+				int type = ModContent.DustType<PortalLightGreenDust>();
+
+				if (Phase2 && Main.rand.NextBool())
+					type = ModContent.DustType<PortalLightOrangeDust>();
+
+				Vector2 rotVector1 = Vector2.UnitY.RotatedByRandom(MathHelper.TwoPi) * 1.6f * (1f - AITimer / 255f);
 				Dust lightDust = Main.dust[Dust.NewDust(Projectile.Center - rotVector1 * 30f, 0, 0, type)];
 				lightDust.noGravity = true;
-				lightDust.position = Projectile.Center - rotVector1 * Main.rand.Next(10, 21);
-				lightDust.velocity = rotVector1.RotatedBy(MathHelper.PiOver2) * 6f;
-				lightDust.scale = (0.8f + Main.rand.NextFloat()) * (1f - Projectile.ai[0] / 255f); 
+				lightDust.position = Projectile.Center - rotVector1 * Main.rand.Next(17, 19);
+				lightDust.velocity = rotVector1.RotatedBy(MathHelper.PiOver2) * 2.4f;
+				lightDust.scale = (0.8f + Main.rand.NextFloat()) * (1f - AITimer / 255f); 
 				lightDust.fadeIn = 0.5f;
 				lightDust.customData = Projectile.Center;
 			}
 
-			if (Main.rand.NextBool(2))
+			if(Main.rand.NextBool())
 			{
-				int type = Main.rand.NextBool() ? ModContent.DustType<PortalDarkOrangeDust>() : ModContent.DustType<PortalDarkGreenDust>();
-				Vector2 rotVector2 = Vector2.UnitY.RotatedByRandom(MathHelper.TwoPi) * (1f - Projectile.ai[0] / 255f);
-				Dust darkDust = Main.dust[Dust.NewDust(Projectile.Center - rotVector2 * 30f, 0, 0, type)];
-				darkDust.noGravity = true;
-				darkDust.position = Projectile.Center - rotVector2 * 30f;
-				darkDust.velocity = rotVector2.RotatedBy(-MathHelper.PiOver2) * 3f;
-				darkDust.scale = (1.2f + Main.rand.NextFloat()) * (1f - Projectile.ai[0] / 255f); 
-				darkDust.fadeIn = 0.5f;
-				darkDust.customData = Main.projectile[Projectile.whoAmI];
+				int type = ModContent.DustType<PortalDarkGreenDust>();
+
+				if (Phase2 && Main.rand.NextBool())
+					type = ModContent.DustType<PortalDarkOrangeDust>();
+
+				Vector2 rotVector1 = Vector2.UnitY.RotatedByRandom(MathHelper.TwoPi) * 1.6f * (1f - AITimer / 255f);
+				Dust lightDust = Main.dust[Dust.NewDust(Projectile.Center - rotVector1 * 30f, 0, 0, type)];
+				lightDust.noGravity = true;
+				lightDust.position = Projectile.Center - rotVector1 * Main.rand.Next(30, 40);
+				lightDust.velocity = rotVector1.RotatedBy(MathHelper.PiOver2) * 2f;
+				lightDust.scale = (0.8f + Main.rand.NextFloat()) * (1f - AITimer / 255f);
+				lightDust.fadeIn = 0.5f;
+				lightDust.customData = Projectile.Center;
 			}
 		}
 	}
