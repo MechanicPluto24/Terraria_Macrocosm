@@ -58,7 +58,7 @@ namespace Macrocosm
 
 		private void ApplyResprites()
 		{
-			string respritePath = "Macrocosm/Assets/Textures/Resprites";
+			string respritePath = "Macrocosm/Assets/Textures/Resprites/";
 			TextureAssets.Moon[0] = ModContent.Request<Texture2D>(respritePath + "Moon_0");
 		}
 

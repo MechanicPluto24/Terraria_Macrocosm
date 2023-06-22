@@ -16,7 +16,7 @@ namespace Macrocosm.Content.Rocket.Customization
 
         public void Draw(SpriteBatch spriteBatch, Vector2 position, Color ambientColor)
         {
-            Texture2D texture = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/RocketLettersSmall").Value;
+            Texture2D texture = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/Fonts/RocketLettersSmall").Value;
 
             // testing
             Text = "Feldy 1337";
@@ -34,9 +34,9 @@ namespace Macrocosm.Content.Rocket.Customization
 
 		private static readonly string supportedCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-+!?";
 
-        private static int charactersPerRow = 13;
-        private static int characterWidth   = 2 + 6; // with padding
-        private static int characterHeight  = 2 + 8; // with padding
+        private const int charactersPerRow = 13;
+        private const int characterWidth   = 2 + 6; // with padding
+        private const int characterHeight  = 2 + 8; // with padding
 
 		private static Rectangle GetCharacterRectangle(char c)
         {
