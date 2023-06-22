@@ -12,13 +12,13 @@ Other celestial bodies will be added as development on the mod continues.
 After the Moon is complete, the next celestial body to be visited will be Mars. 
 
 ### Developer Team
-MechanicPluto24 - Creator and Lead Developer
-RighteousRyan - Admin and Lead Coder
-ClockworkCorvus, Toxin - Moderator
-Lincolnennis, Universe - Composer
-absoluteAquarian, 4mbr0s3 2, Feldy, Hallam, Thanatos, and TheLoneGamer - Programmers
-Daniel, Dovahkick, Juice, OmegA, and William - Spriters/Artists
-dontkickmychick - Lorewriter
+MechanicPluto24 - Creator and Lead Developer\
+RighteousRyan - Admin and Lead Coder\
+ClockworkCorvus, Toxin - Moderator\
+Lincolnennis, Universe - Composer\
+absoluteAquarian, 4mbr0s3 2, Feldy, Hallam, Thanatos, and TheLoneGamer - Programmers\
+Daniel, Dovahkick, Juice, OmegA, and William - Spriters/Artists\
+dontkickmychick - Lorewriter\
 
 ### Special thanks
 ADVERSE KC, Almarduk, Crowlarghost, Delly, Dracos_V2, Draedon_Gaming, DrakonVörðr, Kiraa, Kirito, Master-Bit, Snowfall-The-Cat, Zetry
