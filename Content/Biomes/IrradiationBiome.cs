@@ -11,9 +11,10 @@ namespace Macrocosm.Content.Biomes
 	public class IrradiationBiome : MoonBiome
 	{
 		//public override SceneEffectPriority Priority => SceneEffectPriority.Environment;
-		//public override string BestiaryIcon => "Macrocosm/Assets/Textures/FilterIcons/MoonAdjusted";
-		//public override string BackgroundPath => "Macrocosm/Assets/Textures/Map/Moon";
-		//public override string MapBackground => BackgroundPath;
+		public override string BestiaryIcon => Macrocosm.EmptyTexPath;
+		public override string BackgroundPath => Macrocosm.EmptyTexPath;
+		public override string MapBackground => BackgroundPath;
+
 		//public override Color? BackgroundColor => base.BackgroundColor;
 		//public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.GetInstance<MoonSurfaceBgStyle>();
 		//public override ModUndergroundBackgroundStyle UndergroundBackgroundStyle => ModContent.GetInstance<MoonUgBgStyle>();
