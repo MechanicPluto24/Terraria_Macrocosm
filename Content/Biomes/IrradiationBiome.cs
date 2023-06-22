@@ -26,11 +26,13 @@ namespace Macrocosm.Content.Biomes
 
 		public override void OnInBiome(Player player)
 		{
+			base.OnInBiome(player);
 			player.Macrocosm().ZoneIrradiation = true;
 		}
 
 		public override void OnLeave(Player player)
 		{
+			base.OnLeave(player);
 			player.Macrocosm().ZoneIrradiation = false;
 		}
 
