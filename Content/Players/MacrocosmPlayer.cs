@@ -30,6 +30,7 @@ namespace Macrocosm.Content.Players
 		public SpaceProtection SpaceProtection = SpaceProtection.None;
 
 		public bool ZoneMoon = false;
+		public bool ZoneUndergroundMoon = false;
 		public bool ZoneBasalt = false;
 		public bool ZoneIrradiation = false;
 
