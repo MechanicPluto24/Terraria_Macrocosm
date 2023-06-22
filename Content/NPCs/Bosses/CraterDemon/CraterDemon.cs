@@ -26,6 +26,7 @@ using Macrocosm.Content.NPCs.Friendly.TownNPCs;
 using Macrocosm.Content.Items.Vanity.BossMasks;
 using Macrocosm.Content.NPCs.Global;
 using Macrocosm.Content.Items.Weapons.Magic;
+using Microsoft.Xna.Framework.Graphics.PackedVector;
 
 namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 {
@@ -449,7 +450,18 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
 			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Bosses/CraterDemon/CraterDemon_Glow").Value;
-			spriteBatch.Draw(glowmask, NPC.position - screenPos + new Vector2(0, 4), NPC.frame, (Color)GetAlpha(Color.White), NPC.rotation, Vector2.Zero, NPC.scale, SpriteEffects.None, 0f);
+			Texture2D glowmaskPhase2 = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Bosses/CraterDemon/CraterDemon_Glow_Phase2").Value;
+
+			if (phase2)
+			{
+				float alpha = Utility.PositiveSineWave(200);
+				spriteBatch.Draw(glowmask, NPC.position - screenPos + new Vector2(0, 4), NPC.frame, (Color)GetAlpha(Color.White.NewAlpha(alpha)), NPC.rotation, Vector2.Zero, NPC.scale, SpriteEffects.None, 0f);
+				spriteBatch.Draw(glowmaskPhase2, NPC.position - screenPos + new Vector2(0, 4), NPC.frame, (Color)GetAlpha(Color.White.NewAlpha(1f-alpha)), NPC.rotation, Vector2.Zero, NPC.scale, SpriteEffects.None, 0f);
+			}
+			else
+			{
+				spriteBatch.Draw(glowmask, NPC.position - screenPos + new Vector2(0, 4), NPC.frame, (Color)GetAlpha(Color.White), NPC.rotation, Vector2.Zero, NPC.scale, SpriteEffects.None, 0f);
+			}
 		}
 
 		private void DrawBigPortal(SpriteBatch spriteBatch, Texture2D texture, BigPortalInfo info)
@@ -468,7 +480,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 		private void SpawnPortalDusts(BigPortalInfo info)
 		{
-			for (int i = 0; i < 3; i++)
+			for (int i = 0; i < 6; i++)
 			{
 				int type = ModContent.DustType<PortalLightGreenDust>();
 				Vector2 rotVector1 = Vector2.UnitY.RotatedByRandom(6.2831854820251465);
@@ -564,6 +576,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		public override void AI()
 		{
 			NPC.defense = NPC.defDefense;
+
+			if (NPC.life < NPC.lifeMax / 2)
+				phase2 = true;
 
 			if (!spawned)
 			{
@@ -683,7 +698,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 						int attack;
 						do
 						{
-							attack = Main.rand.Next(Attack_SummonMeteors, Attack_SummonPhantasmals + 1);
+							attack = Main.rand.Next(Attack_SummonPhantasmals, Attack_SummonPhantasmals + 1);
 						} while (attack == oldAttack);
 
 						oldAttack = (int)AI_Attack;
@@ -739,7 +754,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 							{
 								Vector2 spawn = orig + new Vector2(Main.rand.NextFloat(-1, 1) * 40 * 16, Main.rand.NextFloat(-1, 1) * 6 * 16);
 
-								int portalID = Projectile.NewProjectile(NPC.GetSource_FromAI(), spawn, Vector2.Zero, ModContent.ProjectileType<MeteorPortal>(), Utility.TrueDamage(Main.expertMode ? 140 : 90), 0f, Main.myPlayer);
+								int portalID = Projectile.NewProjectile(NPC.GetSource_FromAI(), spawn, Vector2.Zero, ModContent.ProjectileType<MeteorPortal>(), Utility.TrueDamage(Main.expertMode ? 140 : 90), 0f, Main.myPlayer, ai1: phase2 ? 1f: 0f);
 								Main.projectile[portalID].netUpdate = true;
 							}
 						}
@@ -1130,18 +1145,18 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 							for (int i = 0; i < numLarge; i++)
 							{
 								Vector2 position = NPC.Center + new Vector2(50 * Math.Sign(zAxisRotation), 50) + new Vector2(Main.rand.Next(10) * Math.Sign(zAxisRotation), Main.rand.Next(2));
-								Vector2 velocity = targetVelocity.RotatedByRandom(MathHelper.PiOver4/2) * 10f;
+								Vector2 velocity = targetVelocity.RotatedByRandom(MathHelper.PiOver4/2) * 7f;
 								int damage = (int)((float)NPC.damage * 0.7f);
-								int projId = Projectile.NewProjectile(NPC.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<PhantasmalImpLarge>(), damage, 1f, NPC.whoAmI, ai2: player.whoAmI);
+								int projId = Projectile.NewProjectile(NPC.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<PhantasmalImpLarge>(), damage, 1f, ai2: player.whoAmI);
 								Main.projectile[projId].netUpdate = true;
 							}
 
 							for (int i = 0; i < numSmall; i++)
 							{
 								Vector2 position = NPC.Center + new Vector2(50 * Math.Sign(zAxisRotation), 50) + new Vector2(Main.rand.Next(10) * Math.Sign(zAxisRotation), Main.rand.Next(2));
-								Vector2 velocity = targetVelocity.RotatedByRandom(MathHelper.PiOver4/2) * 10f;
+								Vector2 velocity = targetVelocity.RotatedByRandom(MathHelper.PiOver4/2) * 8f;
 								int damage = (int)((float)NPC.damage * 0.6f);
-								int projId = Projectile.NewProjectile(NPC.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<PhantasmalImpSmall>(), damage, 1f, NPC.whoAmI, ai2: player.whoAmI);
+								int projId = Projectile.NewProjectile(NPC.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<PhantasmalImpSmall>(), damage, 1f, ai2: player.whoAmI);
 								Main.projectile[projId].netUpdate = true;
 							}
 						}

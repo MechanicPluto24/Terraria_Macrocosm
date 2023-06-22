@@ -19,15 +19,21 @@ namespace Macrocosm.Content.Projectiles.Hostile
 			Projectile.width = 42;
 			Projectile.height = 54;
 			Projectile.hostile = true;
-			Projectile.timeLeft = 5 * 60;
+			Projectile.timeLeft = 3 * 60;
 		}
 
+		public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough, ref Vector2 hitboxCenterFrac)
+			=> false;
+		 
 		bool spawned = false;
 		public override void AI()
 		{
+			if (!TargetPlayer.active)
+				Projectile.Kill();
+
 			Vector2 direction = (TargetPlayer.Center - Projectile.Center).SafeNormalize(Vector2.One);
 
-			Projectile.velocity += direction * 0.1f;
+			Projectile.velocity += direction * 0.4f;
 
 			float maxOffset = MathHelper.ToRadians(3); 
 			float randomOffset = Main.rand.NextFloat(-maxOffset, maxOffset);

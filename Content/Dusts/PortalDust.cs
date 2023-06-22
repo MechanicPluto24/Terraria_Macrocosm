@@ -1,4 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Common.Utils;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -10,10 +13,12 @@ namespace Macrocosm.Content.Dusts
 
 		public override void OnSpawn(Dust dust)
 		{
-			dust.noLight = false; 
-			dust.color = Color.Wheat;
-			dust.alpha = 200;
+			dust.noLight = false;
+			dust.color = Color.White;
+			dust.alpha = 255;
 		}
+
+		public override Color? GetAlpha(Dust dust, Color lightColor) => Color.White;
 	}
 
 	public class PortalLightGreenDust : PortalDust
@@ -162,20 +167,18 @@ namespace Macrocosm.Content.Dusts
 			}
 			else if (dust.customData != null && dust.customData is Vector2)
 			{
-				//Vector2 vector = (Vector2)dust.customData - dust.position;
-				//if (vector != Vector2.Zero)
-				//	vector.Normalize();
-				//
-				//dust.velocity = (dust.velocity * 4f + vector * dust.velocity.Length()) / 5f;
+				Vector2 vector = (Vector2)dust.customData - dust.position;
+				if (vector != Vector2.Zero)
+					vector.Normalize();
 
-				dust.position += (Vector2)dust.customData;
+				dust.velocity = (dust.velocity * 4f + vector * dust.velocity.Length()) / 5f;
 			}
 
 			dust.position += dust.velocity;
 			dust.rotation += 0.35f * (dust.dustIndex % 2 == 0 ? -1 : 1);
 			dust.scale -= 0.1f;
 
-			if (dust.scale <= 0.1f)
+			if (dust.scale <= 0.01f)
 			{
 				dust.active = false;
 			}

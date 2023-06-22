@@ -24,6 +24,7 @@
     <Compile Remove="Content\Items\Weapons\Summon\CalcicCane - Copy.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Content\NPCs\Bosses\CraterDemon\CraterDemon_Glow_Phase2.png" />
     <None Remove="Content\Projectiles\Hostile\dvamhgqs.i4q~" />
   </ItemGroup>
   <ItemGroup>
@@ -35,6 +36,6 @@
     </Reference>
   </ItemGroup>
   <Target BeforeTargets="Build" Name="BuildEffects" Inputs="Assets/Effects/*.fx" Outputs="Assets/Effects/*.xnb">
-	  <Exec Command="fxcompiler.exe" WorkingDirectory="Assets/Effects"/>
+	  <Exec Command="fxcompiler.exe" WorkingDirectory="Assets/Effects" />
   </Target>
 </Project>
