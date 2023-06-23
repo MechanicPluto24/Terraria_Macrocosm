@@ -17,8 +17,8 @@ Mods: {
 			}
 
 			UndergroundMoonBiome: {
-				DisplayName: Underground Moon Biome
-				TownNPCDialogueName: the Underground Moon Biome
+				DisplayName: Underground Moon 
+				TownNPCDialogueName: The Underground Moon Biome
 			}
 		}
 

@@ -36,7 +36,7 @@ namespace Macrocosm.Content.Biomes
 		}
 
 		public override bool IsBiomeActive(Player player) 
-			=> SubworldSystem.IsActive<Moon>() && player.ZoneDirtLayerHeight && player.ZoneRockLayerHeight;
+			=> SubworldSystem.IsActive<Moon>() && player.ZoneDirtLayerHeight || player.ZoneRockLayerHeight;
 
 	}
 }
