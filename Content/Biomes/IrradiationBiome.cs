@@ -10,7 +10,7 @@ namespace Macrocosm.Content.Biomes
 {
 	public class IrradiationBiome : MoonBiome
 	{
-		//public override SceneEffectPriority Priority => SceneEffectPriority.Environment;
+		public override SceneEffectPriority Priority => SceneEffectPriority.Environment;
 		public override string BestiaryIcon => Macrocosm.EmptyTexPath;
 		public override string BackgroundPath => Macrocosm.EmptyTexPath;
 		public override string MapBackground => BackgroundPath;

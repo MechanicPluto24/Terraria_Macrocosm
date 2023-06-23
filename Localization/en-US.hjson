@@ -15,6 +15,11 @@ Mods: {
 				DisplayName: The Irradiation
 				TownNPCDialogueName: The Irradiation
 			}
+
+			UndergroundMoonBiome: {
+				DisplayName: Underground Moon Biome
+				TownNPCDialogueName: the Underground Moon Biome
+			}
 		}
 
 		Buffs: {

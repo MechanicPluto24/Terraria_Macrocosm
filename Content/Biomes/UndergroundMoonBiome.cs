@@ -10,7 +10,7 @@ namespace Macrocosm.Content.Biomes
 {
     public class UndergroundMoonBiome : MoonBiome
 	{
-		public override SceneEffectPriority Priority => SceneEffectPriority.Environment;
+		public override SceneEffectPriority Priority => SceneEffectPriority.BiomeHigh;
 		//public override string BestiaryIcon => "Macrocosm/Assets/Textures/Icons/Moon";
 		//public override string BackgroundPath => "Macrocosm/Assets/Textures/MapBackgrounds/Moon";
 		//public override string MapBackground => BackgroundPath;
@@ -36,7 +36,7 @@ namespace Macrocosm.Content.Biomes
 		}
 
 		public override bool IsBiomeActive(Player player) 
-			=> SubworldSystem.IsActive<Moon>() && player.ZoneRockLayerHeight;
+			=> SubworldSystem.IsActive<Moon>() && player.ZoneDirtLayerHeight && player.ZoneRockLayerHeight;
 
 	}
 }
