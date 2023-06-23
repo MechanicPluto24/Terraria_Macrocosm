@@ -10,7 +10,7 @@ namespace Macrocosm.Content.Biomes
 {
     public class MoonBiome : ModBiome
 	{
-		public override SceneEffectPriority Priority => SceneEffectPriority.Environment;
+		public override SceneEffectPriority Priority => SceneEffectPriority.BiomeMedium;
 		//public override string BestiaryIcon => "Macrocosm/Assets/Textures/Icons/Moon";
 		//public override string BackgroundPath => "Macrocosm/Assets/Textures/MapBackgrounds/Moon";
 		//public override string MapBackground => BackgroundPath;

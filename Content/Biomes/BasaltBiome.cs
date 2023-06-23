@@ -1,13 +1,12 @@
-﻿using Macrocosm.Common.Hooks;
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Systems;
+﻿using Macrocosm.Common.Utils;
 using Terraria;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Biomes
 {
 	public class BasaltBiome : MoonBiome
 	{
-		//public override SceneEffectPriority Priority => SceneEffectPriority.Environment;
+		public override SceneEffectPriority Priority => SceneEffectPriority.BiomeHigh;
 		public override string BestiaryIcon => Macrocosm.EmptyTexPath;
 		public override string BackgroundPath => Macrocosm.EmptyTexPath;
 		public override string MapBackground => BackgroundPath;
