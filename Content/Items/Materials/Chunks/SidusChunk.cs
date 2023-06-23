@@ -19,7 +19,7 @@ namespace Macrocosm.Content.Items.Materials.Chunks
 			Item.width = 30;
 			Item.height = 30;
 			Item.rare = ItemRarityID.Red;
-			Item.maxStack = 9999;
+			Item.maxStack = Item.CommonMaxStack;
 		}
 	}
 }

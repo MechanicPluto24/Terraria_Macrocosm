@@ -20,7 +20,7 @@ namespace Macrocosm.Content.Items.Currency
 		{
 			Item.width = 20;
 			Item.height = 20;
-			Item.maxStack = 9999;
+			Item.maxStack = Item.CommonMaxStack;
 			Item.value = 750;
 		}
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
