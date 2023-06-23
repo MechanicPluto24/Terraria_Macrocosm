@@ -15,14 +15,6 @@ namespace Macrocosm.Content.Projectiles.Hostile
 	{
 		public ref float AITimer => ref Projectile.ai[0];
 
-		public bool Phase2
-		{
-			get => Projectile.ai[1] != 0f;
-			set => Projectile.ai[1] = value ? 1f : 0f;
-		}
-
-		private int Frame => Phase2 ? 1 : 0;
-
 		private int defWidth;
 		private int defHeight;
 
@@ -86,30 +78,22 @@ namespace Macrocosm.Content.Projectiles.Hostile
 		public override Color? GetAlpha(Color lightColor)
 			=> Color.White * (1f - Projectile.alpha / 255f);
 
-		public Rectangle GetSourceRect()
-		{
-			Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
-			int frameSize = texture.Width / 2;
-			return new Rectangle(frameSize * Frame, 0, frameSize, texture.Height);
-		}
-
 		public override bool PreDraw(ref Color lightColor)
 		{
 			Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
-			Rectangle sourceRect = GetSourceRect();
 			Color color = Color.White;
 
 			var state = Main.spriteBatch.SaveState();
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.AlphaBlend, state);
 
-			Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, sourceRect, (color * 1f).NewAlpha(0.5f - 0.5f * Projectile.alpha/255f), (0f - Projectile.rotation) * 0.65f, sourceRect.Size() / 2f, Projectile.scale * 1.4f, SpriteEffects.FlipHorizontally, 0);
-			Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, sourceRect, (color * 0.84f).NewAlpha(0.5f - 0.5f * Projectile.alpha / 255f), Projectile.rotation, sourceRect.Size() / 2f, Projectile.scale * 1.2f, SpriteEffects.None, 0);
+			Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, (color * 1f).NewAlpha(0.5f - 0.5f * Projectile.alpha/255f), (0f - Projectile.rotation) * 0.65f, texture.Size() / 2f, Projectile.scale * 1.4f, SpriteEffects.FlipHorizontally, 0);
+			Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, (color * 0.84f).NewAlpha(0.5f - 0.5f * Projectile.alpha / 255f), Projectile.rotation, texture.Size() / 2f, Projectile.scale * 1.2f, SpriteEffects.None, 0);
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.Additive, state);
 
-		    Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, sourceRect, color * 1f, (0f - Projectile.rotation) * 0.65f, sourceRect.Size() / 2f, Projectile.scale * 0.8f, SpriteEffects.None, 0);
+		    Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, color * 1f, (0f - Projectile.rotation) * 0.65f, texture.Size() / 2f, Projectile.scale * 0.8f, SpriteEffects.None, 0);
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.AlphaBlend, state);
@@ -125,8 +109,8 @@ namespace Macrocosm.Content.Projectiles.Hostile
 			{
 				int type = ModContent.DustType<PortalLightGreenDust>();
 
-				if (Phase2 && Main.rand.NextBool())
-					type = ModContent.DustType<PortalLightOrangeDust>();
+				//if (Main.rand.NextBool())
+				//	type = ModContent.DustType<PortalLightOrangeDust>();
 
 				Vector2 rotVector1 = Vector2.UnitY.RotatedByRandom(MathHelper.TwoPi) * 1.6f * (1f - AITimer / 255f);
 				Dust lightDust = Main.dust[Dust.NewDust(Projectile.Center - rotVector1 * 30f, 0, 0, type)];
@@ -142,8 +126,8 @@ namespace Macrocosm.Content.Projectiles.Hostile
 			{
 				int type = ModContent.DustType<PortalDarkGreenDust>();
 
-				if (Phase2 && Main.rand.NextBool())
-					type = ModContent.DustType<PortalDarkOrangeDust>();
+				//if (Main.rand.NextBool())
+				//	type = ModContent.DustType<PortalDarkOrangeDust>();
 
 				Vector2 rotVector1 = Vector2.UnitY.RotatedByRandom(MathHelper.TwoPi) * 1.6f * (1f - AITimer / 255f);
 				Dust lightDust = Main.dust[Dust.NewDust(Projectile.Center - rotVector1 * 30f, 0, 0, type)];
