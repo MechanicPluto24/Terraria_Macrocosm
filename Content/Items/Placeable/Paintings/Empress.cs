@@ -15,7 +15,7 @@ namespace Macrocosm.Content.Items.Placeable.Paintings
 		{
 			Item.width = 22;
 			Item.height = 32;
-			Item.maxStack = 9999;
+			Item.maxStack = Item.CommonMaxStack;
 			Item.value = 0;
 			Item.useStyle = ItemUseStyleID.Swing;
 			Item.useTurn = true;

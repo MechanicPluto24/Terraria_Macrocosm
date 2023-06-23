@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Items.Materials
 		{
 			Item.width = 34;
 			Item.height = 38;
-			Item.maxStack = 9999;
+			Item.maxStack = Item.CommonMaxStack;
 			Item.value = 10000;
 			Item.rare = ItemRarityID.Expert;
 			Item.expert = true;

@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Materials
 {
-	public class CosmicEssence : ModItem
+	public class SpaceDust : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
@@ -21,18 +21,12 @@ namespace Macrocosm.Content.Items.Materials
 			Item.rare = ModContent.RarityType<MoonRarityT1>();
 			Item.material = true;
 
+			// Set other Item.X values here
 		}
 
 		public override void AddRecipes()
 		{
-			Recipe recipe = Recipe.Create(Type);
-			recipe.AddIngredient(ItemID.FragmentSolar, 5);
-			recipe.AddIngredient(ItemID.FragmentVortex, 5);
-			recipe.AddIngredient(ItemID.FragmentNebula, 5);
-			recipe.AddIngredient(ItemID.FragmentStardust, 5);
-			recipe.AddIngredient<CosmicDust>(25);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.Register();
+			// Recipes here. See Basic Recipe Guide
 		}
 	}
 }
