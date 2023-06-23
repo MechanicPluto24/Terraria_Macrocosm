@@ -160,9 +160,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			 /*SuitBreachTime,           */ { 120, 120, 240, 240, 260, 260, 300, 300 },                   
 			 /*MeteorPortalIdleTime,     */ { 1f, 0.9f, 0.75f, 0.65f, 0.5f, 0.45f, 0.4f, 0.3f },  
 			 /*MeteorPortalCount,        */ { 2, 2, 3, 3, 4, 4, 5, 5 },                           
-			 /*MeteorPortalDefenseBoost, */ { 40, 40, 50, 50, 50, 50, 60, 60 },            
+			 /*MeteorPortalDefenseBoost, */ { 40, 40, 50, 50, 50, 50, 60, 60 },
 			 /*CraterImpMaxCount,        */ { 3, 3, 4, 4, 4, 4, 5, 5 },      
-			 /*PortalChargeVelocity,     */ { 17f, 19f, 24f, 26f, 30f, 32f, 36f, 40f },         
+			 /*PortalChargeVelocity,     */ { 17f, 19f, 24f, 26f, 30f, 32f, 36f, 40f },
 			 /*PortalWaitTimeMin,        */ { 80, 70, 40, 30, 20, 10, 5, 0 },                   
 			 /*PortalWaitTimeMax,        */ { 160, 150, 80, 70, 40, 30, 10, 5 },                
 			 /*PortalSecondTime,         */ { 60, 55, 35, 30, 25, 20, 15, 10 },                 
@@ -452,15 +452,19 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Bosses/CraterDemon/CraterDemon_Glow").Value;
 			Texture2D glowmaskPhase2 = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Bosses/CraterDemon/CraterDemon_Glow_Phase2").Value;
 
+			spriteBatch.Draw(glowmask, NPC.position - screenPos + new Vector2(0, 4), NPC.frame, (Color)GetAlpha(Color.White), NPC.rotation, Vector2.Zero, NPC.scale, SpriteEffects.None, 0f);
+
 			if (phase2)
 			{
-				float alpha = Utility.PositiveSineWave(200);
-				spriteBatch.Draw(glowmask, NPC.position - screenPos + new Vector2(0, 4), NPC.frame, (Color)GetAlpha(Color.White.NewAlpha(alpha)), NPC.rotation, Vector2.Zero, NPC.scale, SpriteEffects.None, 0f);
-				spriteBatch.Draw(glowmaskPhase2, NPC.position - screenPos + new Vector2(0, 4), NPC.frame, (Color)GetAlpha(Color.White.NewAlpha(1f-alpha)), NPC.rotation, Vector2.Zero, NPC.scale, SpriteEffects.None, 0f);
-			}
-			else
-			{
-				spriteBatch.Draw(glowmask, NPC.position - screenPos + new Vector2(0, 4), NPC.frame, (Color)GetAlpha(Color.White), NPC.rotation, Vector2.Zero, NPC.scale, SpriteEffects.None, 0f);
+				//var state = spriteBatch.SaveState();
+				//
+				//spriteBatch.End();
+				//spriteBatch.Begin(BlendState.NonPremultiplied, state);
+				//
+				//spriteBatch.Draw(glowmaskPhase2, NPC.position - screenPos + new Vector2(0, 4), NPC.frame, Color.White, NPC.rotation, Vector2.Zero, NPC.scale, SpriteEffects.None, 0f);
+				//
+				//spriteBatch.End();
+				//spriteBatch.Begin(state);
 			}
 		}
 
@@ -698,10 +702,12 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 						int attack;
 						do
 						{
-							attack = Main.rand.Next(Attack_SummonPhantasmals, Attack_SummonPhantasmals + 1);
+							attack = Main.rand.Next(Attack_SummonMeteors, Attack_SummonPhantasmals + 1);
 						} while (attack == oldAttack);
 
-						oldAttack = (int)AI_Attack;
+						if(oldAttack != Attack_DoNothing)
+							oldAttack = (int)AI_Attack;
+
 						SetAttack(attack);
 						NPC.netUpdate = true;
 					}
