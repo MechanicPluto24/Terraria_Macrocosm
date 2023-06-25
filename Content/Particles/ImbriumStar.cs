@@ -1,16 +1,16 @@
 ﻿using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Graphics.PackedVector;
 using Terraria;
 
 namespace Macrocosm.Content.Particles
 {
     public class ImbriumStar : Particle
     {
-        public float Alpha = 1f;
+        public override string TexturePath => "Macrocosm/Assets/Textures/Star2";
+
+		public float Alpha = 1f;
 		byte alpha = 0;
 
         Color color = Color.White;
