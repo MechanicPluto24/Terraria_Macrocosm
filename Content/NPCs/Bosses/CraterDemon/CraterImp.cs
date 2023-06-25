@@ -266,7 +266,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 						}
 						else
 						{
-							Terraria.Audio.SoundEngine.PlaySound(SoundID.ForceRoar, NPC.Center);
+							Terraria.Audio.SoundEngine.PlaySound(SoundID.ForceRoar with {Pitch = 1.1f, Volume = 0.5f }, NPC.Center);
 
 							Vector2 dir = NPC.DirectionTo(player.Center);
 							NPC.rotation = dir.ToRotation();
