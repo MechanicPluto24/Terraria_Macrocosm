@@ -11,7 +11,6 @@ namespace Macrocosm.Content.Particles
     public class ImbriumStar : Particle
     {
         public float Alpha = 1f;
-		byte alpha = 0;
 
         Color color = Color.White;
         

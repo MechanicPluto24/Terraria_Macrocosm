@@ -55,7 +55,6 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 		public override void AddRecipes()
 		{
 			Recipe recipe = Recipe.Create(Type);
-			recipe.AddIngredient<LuminiteCrystal>();
 			recipe.AddIngredient<ArtemiteBar>(12);
 			recipe.AddTile(TileID.WorkBenches);
 			recipe.Register();

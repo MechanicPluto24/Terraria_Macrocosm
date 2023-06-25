@@ -6,6 +6,8 @@ using Macrocosm.Content.Projectiles.Base;
 using Terraria.ModLoader;
 using Macrocosm.Content.Dusts;
 using Terraria.DataStructures;
+using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Content.Particles;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
@@ -34,13 +36,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		public override void OnRicochetEffect()
 		{
 			for (int i = 0; i < Main.rand.Next(10, 20); i++)
-				Particle.CreateParticle<SeleniteSpark>(Projectile.position, Projectile.velocity.RotatedByRandom(MathHelper.TwoPi) * 0.1f, Scale: 0.3f)
+				Particle.CreateParticle<SeleniteSpark>(Projectile.position, Projectile.velocity.RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(0.1f, 0.15f), scale: 3f);
 		}
 
 		public override bool OnTileCollide(Vector2 oldVelocity)
 		{
 			for(int i = 0; i < Main.rand.Next(10, 20); i++)
-				Particle.CreateParticle<SeleniteSpark>(Projectile.position + Projectile.oldVelocity, Projectile.velocity.RotatedByRandom(MathHelper.TwoPi) * 0.12f, Scale: 0.3f);
+				Particle.CreateParticle<SeleniteSpark>(Projectile.position + Projectile.oldVelocity * 1.2f, Projectile.velocity.RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(0.1f, 0.15f), scale: 2f);
 
 			return true;
 		}

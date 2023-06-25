@@ -47,7 +47,6 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 		public override void AddRecipes()
 		{
 			Recipe recipe = Recipe.Create(Type);
-			recipe.AddIngredient<LuminiteCrystal>();
 			recipe.AddIngredient<DianiteBar>(12);
 			recipe.AddTile(TileID.WorkBenches);
 			recipe.Register();
