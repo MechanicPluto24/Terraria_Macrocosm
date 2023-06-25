@@ -39,10 +39,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 			for (int i = 0; i < 2; i++)
 			{
-				Dust dust = Dust.NewDustDirect(Projectile.position + new Vector2(0, 26).RotatedBy(Projectile.rotation), 12, 12, ModContent.DustType<SeleniteSparkDust>(), Projectile.velocity.X);
-				dust.scale = Main.rand.NextFloat(0.4f, 0.8f);
-				dust.noGravity = true;
-				dust.velocity = Projectile.velocity;
+				Particle.CreateParticle<SeleniteSpark>(Projectile.position + new Vector2(0, 26).RotatedBy(Projectile.rotation), Projectile.velocity,  rotation: Projectile.velocity.X, scale: Main.rand.NextFloat(0.1f, 0.2f));
 			}
 
 			return true;
@@ -50,13 +47,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 		public override void Kill(int timeLeft)
 		{
-			for (int i = 0; i < 20; i++)
-			{
-				Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<SeleniteSparkDust>(), Projectile.velocity.X);
-				dust.velocity = (Projectile.velocity.SafeNormalize(Vector2.UnitX) * Main.rand.NextFloat(2f, 4f)).RotatedByRandom(MathHelper.TwoPi);
-				dust.noLight = false;
-				dust.noGravity = true;
-			}
+			for(int i = 0; i < Main.rand.Next(10, 20); i++)
+				Particle.CreateParticle<SeleniteSpark>(Projectile.position + Projectile.oldVelocity, Projectile.velocity.RotatedByRandom(MathHelper.TwoPi) * 0.12f, Scale: 0.3f);
 		}
 
 		public override Color? GetAlpha(Color lightColor)
