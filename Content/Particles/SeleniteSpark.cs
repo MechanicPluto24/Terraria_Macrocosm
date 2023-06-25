@@ -23,7 +23,7 @@ namespace Macrocosm.Content.Particles
 			var state = spriteBatch.SaveState();
 			spriteBatch.End();
 			spriteBatch.Begin(BlendState.Additive, state);
-			spriteBatch.Draw(glow, Center - screenPosition, null, Color, Rotation, glow.Size() / 2, 0.0375f * ScaleV, SpriteEffects.None, 0f);
+			spriteBatch.Draw(glow, Center - screenPosition, null, Color.NewAlpha(0.8f), Rotation, glow.Size() / 2, 0.0375f * ScaleV, SpriteEffects.None, 0f);
 			spriteBatch.End();
 			spriteBatch.Begin(state);
  		}

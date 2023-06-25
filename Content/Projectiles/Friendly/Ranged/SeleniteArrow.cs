@@ -19,8 +19,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		public override void SetDefaults()
 		{
 			AIType = ProjectileID.Bullet;
-			Projectile.width = 4;
-			Projectile.height = 4;
+			Projectile.width = 14;
+			Projectile.height = 14;
  			Projectile.timeLeft = 270;
 			Projectile.light = 0f;
 			Projectile.friendly = true;
@@ -53,18 +53,18 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		{
 			float count = Math.Abs(Projectile.velocity.X) + Math.Abs(Projectile.velocity.Y) * 10f;
 
-			if (count > 6f)
-				count = 6f;
+			if (count > 20f)
+				count = 20f;
 
 			var state = Main.spriteBatch.SaveState();
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.Additive, state);
 
-			for (int n = 0; n < count; n++)
+			for (int n = 4; n < count; n++)
 			{
-				Vector2 trailPosition = Projectile.Center - Projectile.velocity * n * 0.3f;
-				Main.spriteBatch.Draw(TextureAssets.Projectile[Type].Value, trailPosition - Main.screenPosition, null, Color.White * (1f - (float)n/count), Projectile.rotation, new Vector2(4f, 4f), Projectile.scale, SpriteEffects.None, 0f);
+				Vector2 trailPosition = Projectile.Center - Projectile.velocity * n * 0.2f;
+				Main.spriteBatch.Draw(TextureAssets.Projectile[Type].Value, trailPosition - Main.screenPosition, null, Color.White * (0.8f - (float)n/count), Projectile.rotation, TextureAssets.Projectile[Type].Value.Size()/2f, Projectile.scale, SpriteEffects.None, 0f);
 			}
 
 			Main.spriteBatch.End();
@@ -78,6 +78,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		}
 
 		public override Color? GetAlpha(Color lightColor)
-			=> new Color(255, 255, 255, 255);
+			=> new Color(255, 255, 255, 200);
 	}
 }
