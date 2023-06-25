@@ -17,7 +17,7 @@ Mods: {
 			}
 
 			UndergroundMoonBiome: {
-				DisplayName: Underground Moon 
+				DisplayName: Underground Moon
 				TownNPCDialogueName: The Underground Moon Biome
 			}
 		}
@@ -836,6 +836,11 @@ Mods: {
 
 			Tycho50: {
 				DisplayName: Tycho .50
+				Tooltip: ""
+			}
+
+			SpaceDust: {
+				DisplayName: Space Dust
 				Tooltip: ""
 			}
 		}
