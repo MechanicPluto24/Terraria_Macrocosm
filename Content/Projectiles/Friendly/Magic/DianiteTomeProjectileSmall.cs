@@ -6,29 +6,23 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
-	public class DianiteTomeProjectileSmall : ModProjectile
+	public class DianiteTomeProjectileSmall : DianiteTomeProjectile
 	{
 		public override void SetStaticDefaults()
 		{
-			ProjectileID.Sets.TrailCacheLength[Type] = 10;
-			ProjectileID.Sets.TrailingMode[Type] = 0;
+			base.SetStaticDefaults();
 		}
 
 		public override void SetDefaults()
 		{
+			base.SetDefaults();
 			Projectile.width = 16;
 			Projectile.height = 16;
-			Projectile.aiStyle = 56;
-			Projectile.friendly = true;
-			Projectile.DamageType = DamageClass.Magic;
-			Projectile.tileCollide = false;
-			Projectile.ignoreWater = true;
-			Projectile.light = 1f;
 		}
 
 		public override bool PreDraw(ref Color lightColor)
 		{
-			return true;
+			return base.PreDraw(ref lightColor);
 		}
 	}
 }

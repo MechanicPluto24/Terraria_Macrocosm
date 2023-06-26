@@ -175,7 +175,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 					IsLooped = true,
 					SoundLimitBehavior = SoundLimitBehavior.IgnoreNew
 				},
-			Projectile.position);
+				Projectile.position);
 			}
 			
 			if (!OwnerHasMana && (!playingSoundId_2.IsValid || playingSoundId_2 == default))

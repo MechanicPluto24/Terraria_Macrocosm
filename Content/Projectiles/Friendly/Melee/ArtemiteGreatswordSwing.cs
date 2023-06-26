@@ -95,9 +95,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			color5.G = (byte)((float)(int)color5.G * brightness);
 			color5.B = (byte)((float)(int)color5.R * (0.25f + brightness * 0.75f));
 
-			Main.spriteBatch.Draw(val.Value, vector, frame, color5 * 0.15f, Projectile.rotation + Projectile.ai[0] * 0.01f, origin, scale, effects, 0f);
-			Main.spriteBatch.Draw(val.Value, vector, frame, color3 * brightness * progressScale * 0.3f, Projectile.rotation, origin, scale, effects, 0f);
-		    Main.spriteBatch.Draw(val.Value, vector, frame, color2 * brightness * progressScale * 0.5f, Projectile.rotation, origin, scale * 0.975f, effects, 0f);
+			Main.EntitySpriteDraw(val.Value, vector, frame, color5 * 0.15f, Projectile.rotation + Projectile.ai[0] * 0.01f, origin, scale, effects, 0f);
+			Main.EntitySpriteDraw(val.Value, vector, frame, color3 * brightness * progressScale * 0.3f, Projectile.rotation, origin, scale, effects, 0f);
+		    Main.EntitySpriteDraw(val.Value, vector, frame, color2 * brightness * progressScale * 0.5f, Projectile.rotation, origin, scale * 0.975f, effects, 0f);
 
  			for (float f = 0f; f < 16f; f += 0.5f)
 			{

@@ -355,7 +355,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 				Vector2 drawPos = Projectile.oldPos[i] + Projectile.Size / 2 - Main.screenPosition;
 				Color color = Projectile.GetAlpha(lightColor) * (((float)Projectile.oldPos.Length - i) / Projectile.oldPos.Length);
 				SpriteEffects effect = Projectile.oldSpriteDirection[i] == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-				Main.spriteBatch.Draw(tex, drawPos, tex.Frame(1, Main.projFrames[Type], frameY: Projectile.frame), color * 0.6f, Projectile.oldRot[i], Projectile.Size / 2, Projectile.scale, effect, 0f);
+				Main.EntitySpriteDraw(tex, drawPos, tex.Frame(1, Main.projFrames[Type], frameY: Projectile.frame), color * 0.6f, Projectile.oldRot[i], Projectile.Size / 2, Projectile.scale, effect, 0f);
 			}
 
 			return true;
