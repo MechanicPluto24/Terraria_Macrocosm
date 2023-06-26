@@ -9,31 +9,14 @@ namespace Macrocosm.Common.Drawing
 {
 	internal class CustomBlendStates
 	{
-		public static readonly BlendState Multiply = new BlendState
+		public static readonly BlendState Multiplicative = new BlendState
 		{
+			ColorBlendFunction = BlendFunction.Add,
 			ColorSourceBlend = Blend.DestinationColor,
-			AlphaSourceBlend = Blend.DestinationColor,
 			ColorDestinationBlend = Blend.Zero,
-			AlphaDestinationBlend = Blend.Zero,
 		};
 
-		public static readonly BlendState Screen = new BlendState
-		{
-			ColorSourceBlend = Blend.One,
-			AlphaSourceBlend = Blend.One,
-			ColorDestinationBlend = Blend.InverseSourceColor,
-			AlphaDestinationBlend = Blend.InverseSourceColor,
-		};
-
-		public static readonly BlendState Overlay = new BlendState
-		{
-			ColorSourceBlend = Blend.One,
-			AlphaSourceBlend = Blend.One,
-			ColorDestinationBlend = Blend.InverseSourceAlpha,
-			AlphaDestinationBlend = Blend.InverseSourceAlpha,
-		};
-
-		public static readonly BlendState Subtract = new BlendState
+		public static readonly BlendState Subtractive = new BlendState
 		{
 			ColorSourceBlend = Blend.One,
 			AlphaSourceBlend = Blend.One,
