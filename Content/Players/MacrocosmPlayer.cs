@@ -11,12 +11,10 @@ using Macrocosm.Content.Systems;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Terraria.Localization;
-using System.Collections.Generic;
-using Macrocosm.Common.Drawing.Sky;
+
 
 namespace Macrocosm.Content.Players
 {
-
 	public enum SpaceProtection
 	{
 		None,

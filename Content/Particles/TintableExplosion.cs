@@ -1,11 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
-using Terraria.GameContent;
 using Macrocosm.Common.Drawing.Particles;
-using Terraria.ModLoader;
-using Macrocosm.Content.Projectiles.Hostile;
-using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Common.Utils;
 
 namespace Macrocosm.Content.Particles
@@ -14,17 +10,16 @@ namespace Macrocosm.Content.Particles
 	{
 		public override int TrailCacheLenght => 15;
 
-		public Projectile Owner { get; set; }
+		public Projectile Owner;
+		public Color DrawColor;
+		public int NumberOfInnerReplicas;
+		public float ReplicaScalingFactor;
+		public BlendState BlendState = BlendState.Additive;
 
-		public Color DrawColor { get; set; }
+		public override int FrameNumber => 7;
+		public override int FrameSpeed => 6;
+		public override bool DespawnOnAnimationComplete => true;
 
-		public override int SpawnTimeLeft => numFrames * frameSpeed - 1;
-
-		// TODO: move these to base type
-		private int numFrames = 7;
-		private int currentFrame = 0;
-		private int frameCnt = 0;
-		private int frameSpeed = 6;
 
 		private bool rotateClockwise = false;
 
@@ -33,35 +28,24 @@ namespace Macrocosm.Content.Particles
 			rotateClockwise = Main.rand.NextBool();
   		}
 
-		public override Rectangle? GetFrame()
-		{
-			frameCnt++;
-			if (frameCnt == frameSpeed)
-			{
-				frameCnt = 0;
-				currentFrame++;
-
-				if (currentFrame >= numFrames)
-					currentFrame = 0;
-			}
-
-			int frameHeight = Texture.Height / numFrames;
-			return new Rectangle(0, frameHeight * currentFrame, Texture.Width, frameHeight);
-		}
-
 		public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
 		{
 			var state = spriteBatch.SaveState();
 
 			spriteBatch.End();
-			spriteBatch.Begin(BlendState.Additive, state);
+			spriteBatch.Begin(BlendState, state);
 
-			spriteBatch.Draw(Texture, Position - screenPosition, GetFrame(), DrawColor, Rotation, new Vector2(Size.X, Size.Y/numFrames) * 0.5f, ScaleV, SpriteEffects.None, 0f);
-			Lighting.AddLight(Position, DrawColor.ToVector3());
+			for(int i = 0; i < NumberOfInnerReplicas; i++)
+			{
+				float invProgress = 1f - (float)i / NumberOfInnerReplicas;
+				float scale = Scale * ((1f - ReplicaScalingFactor) + ReplicaScalingFactor * invProgress);
+				spriteBatch.Draw(Texture, Position - screenPosition, GetFrame(), DrawColor, Rotation, Size * 0.5f, scale, SpriteEffects.None, 0f);
+			}
+
+			Lighting.AddLight(Center, DrawColor.ToVector3());
 
 			spriteBatch.End();
 			spriteBatch.Begin(state);
-
 		}
 
 		public override void AI()

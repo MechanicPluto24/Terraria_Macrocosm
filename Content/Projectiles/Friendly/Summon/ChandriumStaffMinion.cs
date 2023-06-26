@@ -94,7 +94,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 				Dust dust;
 				if (i % 10 == 0)
 				{
-					Particle.CreateParticle<ChandriumCrescentMoon>(position, velocity, scale: Main.rand.NextFloat(0.12f, 0.18f));
+					Particle.CreateParticle<ChandriumCrescentMoon>(position, velocity, scale: Main.rand.NextFloat(1.2f, 1.8f));
 				}
 
 				dust = Dust.NewDustDirect(position, Projectile.width, Projectile.height, ModContent.DustType<ChandriumDust>(), velocity.X, velocity.Y, Scale: Main.rand.NextFloat(0.8f, 1.2f));

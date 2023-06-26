@@ -4,42 +4,44 @@ using Terraria.DataStructures;
 
 namespace Macrocosm.Common.DataStructures
 {
+	/// <summary> By GroxTheGreat @ BaseMod, modified by Feldy </summary>
 	public class DrawAnimationPrecise : DrawAnimation
 	{
-		int Width = 0, Height = 0, offsetX = 0, offsetY = 2;
-		bool vertical = true;
-		public DrawAnimationPrecise(int ticksperframe, int frameCount, int w, int h, bool v = true, int offX = 0, int offY = 2)
+		readonly int Width = 0, Height = 0, offsetX = 0, offsetY = 2;
+		readonly bool vertical = true;
+
+		public DrawAnimationPrecise(int ticksperframe, int frameCount, int width, int height, bool vertical = true, int offsetX = 0, int offsetY = 2)
 		{
-			Width = w;
-			Height = h;
-			vertical = v;
-			offsetX = offX;
-			offsetY = offY;
-			this.Frame = 0;
-			this.FrameCounter = 0;
-			this.FrameCount = frameCount;
-			this.TicksPerFrame = ticksperframe;
+			Width = width;
+			Height = height;
+
+			Frame = 0;
+			FrameCounter = 0;
+			FrameCount = frameCount;
+			TicksPerFrame = ticksperframe;
+
+			this.vertical = vertical;
+			this.offsetX = offsetX;
+			this.offsetY = offsetY;
 		}
 
 		public override void Update()
 		{
-			int num = this.FrameCounter + 1;
-			this.FrameCounter = num;
-			if (num >= this.TicksPerFrame)
+			int num = FrameCounter + 1;
+			FrameCounter = num;
+			if (num >= TicksPerFrame)
 			{
-				this.FrameCounter = 0;
-				num = this.Frame + 1;
-				this.Frame = num;
-				if (num >= this.FrameCount)
-				{
-					this.Frame = 0;
-				}
-			}
+				FrameCounter = 0;
+				num = Frame + 1;
+				Frame = num;
+				if (num >= FrameCount)
+ 					Frame = 0;
+ 			}
 		}
 
 		public override Rectangle GetFrame(Texture2D texture, int frameCounterOverride = -1)
 		{
-			return new Rectangle(vertical ? 0 : (this.Width + offsetX) * this.Frame, vertical ? (this.Height + offsetY) * this.Frame : 0, this.Width, this.Height);
+			return new Rectangle(vertical ? 0 : (Width + offsetX) * this.Frame, vertical ? (Height + offsetY) * Frame : 0, Width, Height);
 		}
 	}
 }

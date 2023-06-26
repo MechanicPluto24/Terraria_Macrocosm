@@ -17,7 +17,7 @@ namespace Macrocosm.Common.Drawing.Particles
 		BeforeTiles
 	}
 
-	/// <summary> Particle system by sucss, Nurby & Feldy @ PellucidMod </summary>
+	/// <summary> Particle system by sucss, Nurby & Feldy @ PellucidMod (RIP) </summary>
 	public class ParticleManager : ModSystem
 	{
 		public static List<Type> Types { get; private set; }
@@ -31,9 +31,9 @@ namespace Macrocosm.Common.Drawing.Particles
 			Particles = new List<Particle>();
 			Textures = new List<Texture2D>();
 
-			Terraria.On_Main.DrawBlack += DrawParticles_Tiles;
-			Terraria.On_Main.DrawProjectiles += DrawParticles_Projectiles;
-			Terraria.On_Main.DrawNPCs += DrawParticles_NPCs;
+			On_Main.DrawBlack += DrawParticles_Tiles;
+			On_Main.DrawProjectiles += DrawParticles_Projectiles;
+			On_Main.DrawNPCs += DrawParticles_NPCs;
 		}
 
 		public override void Unload()
@@ -42,9 +42,9 @@ namespace Macrocosm.Common.Drawing.Particles
 			Particles = null;
 			Textures = null;
 
-			Terraria.On_Main.DrawBlack -= DrawParticles_Tiles;
-			Terraria.On_Main.DrawProjectiles -= DrawParticles_Projectiles;
-			Terraria.On_Main.DrawNPCs -= DrawParticles_NPCs;
+			On_Main.DrawBlack -= DrawParticles_Tiles;
+			On_Main.DrawProjectiles -= DrawParticles_Projectiles;
+			On_Main.DrawNPCs -= DrawParticles_NPCs;
 		}
 
 		public override void PreUpdateDusts()
@@ -94,7 +94,7 @@ namespace Macrocosm.Common.Drawing.Particles
 			}
 		}
 
-		private void DrawParticles_NPCs(Terraria.On_Main.orig_DrawNPCs orig, Terraria.Main self, bool behindTiles)
+		private void DrawParticles_NPCs(On_Main.orig_DrawNPCs orig, Main self, bool behindTiles)
 		{
 			SpriteBatch spriteBatch = Main.spriteBatch;
 			SpriteBatchState state1 = spriteBatch.SaveState();
@@ -114,7 +114,7 @@ namespace Macrocosm.Common.Drawing.Particles
 			spriteBatch.Begin(state2);
 		}
 		
-		private void DrawParticles_Projectiles(Terraria.On_Main.orig_DrawProjectiles orig, Terraria.Main self)
+		private void DrawParticles_Projectiles(On_Main.orig_DrawProjectiles orig, Main self)
 		{
 			SpriteBatch spriteBatch = Main.spriteBatch;
 			spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, default, default, default, default, Main.GameViewMatrix.ZoomMatrix);
@@ -128,7 +128,7 @@ namespace Macrocosm.Common.Drawing.Particles
 			spriteBatch.End();
 		}
 
-		private void DrawParticles_Tiles(Terraria.On_Main.orig_DrawBlack orig, Terraria.Main self, bool force)
+		private void DrawParticles_Tiles(On_Main.orig_DrawBlack orig, Main self, bool force)
 		{
 			SpriteBatch spriteBatch = Main.spriteBatch;
 
