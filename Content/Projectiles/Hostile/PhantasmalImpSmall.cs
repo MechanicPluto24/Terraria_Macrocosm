@@ -58,7 +58,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
 
 			Projectile.direction = Math.Sign(Projectile.velocity.X);
 			Projectile.spriteDirection = Projectile.direction;
-			Projectile.rotation = Projectile.velocity.X < 0 ? MathHelper.Pi - Projectile.velocity.ToRotation() : Projectile.velocity.ToRotation();
+			Projectile.rotation = Projectile.velocity.X < 0 ? MathHelper.Pi + Projectile.velocity.ToRotation() : Projectile.velocity.ToRotation();
 
 			if (Projectile.timeLeft < (int)(0.33f * spawnTimeLeft) && Projectile.alpha < 255)
 				Projectile.alpha += 6;
@@ -83,7 +83,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
 				Vector2 drawPos = Projectile.oldPos[i] - Main.screenPosition + Projectile.Size / 2f;
 			
 				Color trailColor = Color.White * (((float)Projectile.oldPos.Length - i) / Projectile.oldPos.Length) * 0.45f * (1f - Projectile.alpha / 255f);
-				Main.spriteBatch.Draw(TextureAssets.Projectile[Type].Value, drawPos, null, trailColor, Projectile.velocity.X < 0 ? MathHelper.Pi - Projectile.oldRot[i] : Projectile.oldRot[i], Projectile.Size / 2f, Projectile.scale, Projectile.oldSpriteDirection[i] == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+				Main.spriteBatch.Draw(TextureAssets.Projectile[Type].Value, drawPos, null, trailColor, Projectile.velocity.X < 0 ? MathHelper.Pi + Projectile.oldRot[i] : Projectile.oldRot[i], Projectile.Size / 2f, Projectile.scale, Projectile.oldSpriteDirection[i] == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
 			}
 
 			Main.spriteBatch.End();
