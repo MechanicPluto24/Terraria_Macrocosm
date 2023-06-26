@@ -124,13 +124,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 				p.Position = Projectile.Center + Main.rand.NextVector2Circular(10f, 10f);
 				p.DrawColor = new Color(255, 104, 9) * Main.rand.NextFloat(0.8f, 0.9f);
 				p.Scale = 1.1f;
-			});
-
-			Particle small = Particle.CreateParticle<TintableExplosion>(p =>
-			{
-				p.Position = Projectile.Center + Main.rand.NextVector2Circular(5f, 5f);
-				p.DrawColor = new Color(255, 104, 9) * Main.rand.NextFloat(0.8f, 0.9f);
-				p.Scale = 0.9f;
+				p.NumberOfInnerReplicas = 2;
+				p.ReplicaScalingFactor = 0.2f;
 			});
 		}
 	}

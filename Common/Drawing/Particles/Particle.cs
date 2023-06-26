@@ -10,10 +10,13 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Macrocosm.Common.Drawing.Trails;
 using Macrocosm.Common.Utils;
+using Terraria.DataStructures;
+using Macrocosm.Common.DataStructures;
+using ReLogic.Peripherals.RGB;
 
 namespace Macrocosm.Common.Drawing.Particles
 {
-	/// <summary> Particle system by sucss, Nurby & Feldy @ PellucidMod </summary>
+	/// <summary> Particle system by sucss, Nurby & Feldy @ PellucidMod (RIP) </summary>
 	public abstract partial class Particle : ModType
 	{
 		/// <summary> Cached particle type as integer index, used for netcode purposes </summary>
@@ -57,7 +60,16 @@ namespace Macrocosm.Common.Drawing.Particles
 
 		/// <summary> The texture size of this <c>Particle</c> </summary>
 		// TODO: Maybe replace this to a configurable size if ever implementing particle collision
-		public Vector2 Size => Texture.Size();
+		public Vector2 Size
+		{
+			get
+			{
+				if(GetFrame() is null)
+					return Texture.Size();
+
+				return GetFrame().Value.Size();
+			}
+		}
 					
 		/// <summary> Whether the current particle instance is active </summary>
 		public bool Active { get; private set; }
@@ -90,8 +102,8 @@ namespace Macrocosm.Common.Drawing.Particles
 		/// <summary> Path to the <c>Particle</c>'s texture, override for custom loading (non-autoload) </summary>
 		public virtual string TexturePath => (this.GetType().Namespace + "." + this.GetType().Name).Replace('.', '/');
 
-		/// <summary> The  <c>Particle</c>'s total lifetime </summary>
-		public virtual int SpawnTimeLeft => 300;
+		/// <summary> The  <c>Particle</c>'s total lifetime. If <see cref="DespawnOnAnimationComplete"/> is true, this defaults to the animation duration. </summary>
+		public virtual int SpawnTimeLeft => DespawnOnAnimationComplete ? FrameNumber * FrameSpeed - 1 : 300;
 
 		/// <summary> Whether the <c>Particle</c> should update its position </summary>
 		public virtual bool ShouldUpdatePosition => true;
@@ -128,17 +140,56 @@ namespace Macrocosm.Common.Drawing.Particles
 		#endregion
 
 		#region Animation
-		
-		/// <summary> Used for animating the <c>Particle</c> </summary>
-		/// <returns> The current frame as a nullabe <see cref="Rectangle"/>, representing the <see cref="Texture"/> coordinates </returns>
-		public virtual Rectangle? GetFrame() => null;
 
-		private Rectangle? frame = null; 
+		/// <summary> If true, particle will despawn on the end of animation </summary>
+		public virtual bool DespawnOnAnimationComplete { get; set; } = false;
+
+		/// <summary> Number of animation frames of this particle </summary>
+		public virtual int FrameNumber { get; set; } = 1;
+
+		/// <summary> Particle animation update speed, in ticks per frame </summary>
+		public virtual int FrameSpeed { get; set; } = 1;
+
+		private int currentFrame = 0;
+		private int frameCnt = 0;
+
+		/// <summary> Used for animating the <c>Particle</c>. By default, updates with <see cref="FrameNumber"/> and <see cref="FrameSpeed"/> </summary>
+		public virtual void UpdateFrame()
+		{
+			if (FrameNumber <= 1)
+				return;
+
+			if (Main.hasFocus)
+			{
+				frameCnt++;
+				if (frameCnt == FrameSpeed)
+				{
+					frameCnt = 0;
+					currentFrame++;
+
+					if (currentFrame >= FrameNumber)
+						currentFrame = 0;
+				}
+			}
+		}
+
+		/// <summary> 
+		/// The current frame, as a nullabe <see cref="Rectangle"/>, representing the source <see cref="Texture"/> coordinates. 
+		/// If null, draws the entire texture.
+		/// </summary>
+		public virtual Rectangle? GetFrame()
+		{ 
+ 			if (FrameNumber <= 1)
+				return null;
+
+			int frameHeight = Texture.Height / FrameNumber;
+			return new Rectangle(0, frameHeight * currentFrame, Texture.Width, frameHeight);
+ 		}
 
 		#endregion
 
 		#region Logic
-		
+
 		/// <summary> Used for drawing the particle. Substract <see cref="Main.screenPosition"> screenPosition </see> from the <see cref="Particle.Position">Position</see> position before drawing </summary>
 		/// <param name="spriteBatch"> The spritebatch </param>
 		/// <param name="screenPosition"> The top-left screen position in the world coordinates </param>
@@ -146,23 +197,21 @@ namespace Macrocosm.Common.Drawing.Particles
 		public virtual void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor) 
 		{
 			spriteBatch.Draw(Texture, Position - screenPosition, GetFrame(), lightColor, Rotation, Size * 0.5f, ScaleV, SpriteEffects.None, 0f);
-
 			Trail?.Draw();
 		}
 
 		public void Update()
 		{
-			if (!Main.hasFocus)
-				return;
-
 			if (ShouldUpdatePosition)
  				Position += Velocity;
 
 			PopulateTrailParameters();
 
 			AI();
-			
-			if(TimeLeft-- <= 0)
+
+			UpdateFrame();
+
+			if (TimeLeft-- <= 0)
   				Kill();
   		}
 
@@ -178,11 +227,11 @@ namespace Macrocosm.Common.Drawing.Particles
 		#endregion
 
 		#region Trails
-		public void DrawSimpleTrail(Vector2 rotatableOffsetFromCenter, float startWidth, float endWidth, Color startColor, Color? endColor = null)
-				=> Utility.DrawSimpleTrail(Size / 2f, OldPositions, OldRotations, rotatableOffsetFromCenter, startWidth, endWidth, startColor, endColor);
+		public void DrawMagicPixelTrail(Vector2 rotatableOffsetFromCenter, float startWidth, float endWidth, Color startColor, Color? endColor = null)
+				=> Utility.DrawMagicPixelTrail(Size / 2f, OldPositions, OldRotations, rotatableOffsetFromCenter, startWidth, endWidth, startColor, endColor);
 
 
-		/// <summary> The <see cref="Trails.VertexTrail"> Trail </see> object bound to this <c>Particle</c> </summary>
+		/// <summary> The <see cref="Trails.VertexTrail"> VertexTrail </see> object bound to this <c>Particle</c> </summary>
 		public VertexTrail Trail { get; private set; }
 		public VertexTrail GetTrail() => Trail;
 

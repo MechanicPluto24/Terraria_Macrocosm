@@ -8,6 +8,7 @@ using Terraria.GameContent.Drawing;
 
 namespace Macrocosm.Common.Drawing.Particles
 {
+	/// <summary> Particle.Creation, by sucss, Nurby & Feldy @ PellucidMod (RIP) </summary>
 	public partial class Particle
 	{
 		/// <summary>

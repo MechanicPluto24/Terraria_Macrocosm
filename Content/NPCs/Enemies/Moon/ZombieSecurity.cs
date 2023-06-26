@@ -274,7 +274,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
  					particleAim = aimVelocity.RotatedBy(-0.2f * Math.Sign(aimVelocity.X));
 
 				Projectile bullet = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), aimPosition, aimVelocity, projType, projDamage, 0f, Main.myPlayer);
-				DesertEagleFlash flash = Particle.CreateParticle<DesertEagleFlash>(NPC.Center + particleAim * 0.24f, aimVelocity * 0.05f, aimVelocity.ToRotation(), 1f, true);
+				GunFireRing flash = Particle.CreateParticle<GunFireRing>(NPC.Center + particleAim * 0.24f, aimVelocity * 0.05f, aimVelocity.ToRotation(), 1f, true);
 				flash.Owner = bullet;
 			}
 

@@ -54,6 +54,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
 		public override void Kill(int timeLeft)
 		{
+			for (int i = 0; i < 8; i++)
+			{
+				Vector2 velocity = Main.rand.NextVector2Circular(25f, 25f);
+				Dust dust = Dust.NewDustDirect(Projectile.position, (int)(Projectile.width), Projectile.height, DustID.Flare, velocity.X, velocity.Y, Scale: 2.2f);
+				dust.noGravity = true;
+			}
+
 			for (int i = 0; i < 2; i++)
 			{
 				Gore smoke = Gore.NewGoreDirect(Projectile.GetSource_Death(), Projectile.position + new Vector2((float)(Projectile.width * Main.rand.Next(100)) / 100f, (float)(Projectile.height * Main.rand.Next(100)) / 100f) - Vector2.One * 10f, default(Vector2), Main.rand.Next(61, 64), Scale: 0.4f);
@@ -62,25 +69,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 				smoke.velocity.Y += Main.rand.Next(-10, 11) * 0.15f;
 			}
 
-			for (int i = 0; i < 8; i++)
-			{
-				Vector2 velocity = Main.rand.NextVector2Circular(25f, 25f);
-				Dust dust = Dust.NewDustDirect(Projectile.position, (int)(Projectile.width), Projectile.height, DustID.Flare, velocity.X, velocity.Y, Scale: 2.2f);
-				dust.noGravity = true;
-			}
-
-			Particle big = Particle.CreateParticle<TintableExplosion>(p =>
+			Particle explosion = Particle.CreateParticle<TintableExplosion>(p =>
 			{
 				p.Position = Projectile.Center + Main.rand.NextVector2Circular(10f, 10f);
 				p.DrawColor = new Color(255, 104, 9) * Main.rand.NextFloat(0.8f, 0.9f);
 				p.Scale = 0.8f;
-			});
-
-			Particle small = Particle.CreateParticle<TintableExplosion>(p =>
-			{
-				p.Position = Projectile.Center + Main.rand.NextVector2Circular(5f, 5f);
-				p.DrawColor = new Color(255, 104, 9) * Main.rand.NextFloat(0.8f, 0.9f);
-				p.Scale = 0.7f;
+				p.NumberOfInnerReplicas = 2;
+				p.ReplicaScalingFactor = 0.2f;
 			});
 		}
 	}

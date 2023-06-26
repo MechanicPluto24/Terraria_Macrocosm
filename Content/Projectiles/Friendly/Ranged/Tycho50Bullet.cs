@@ -35,7 +35,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 				if(!Main.dedServ)
 					SoundEngine.PlaySound(SFX.DesertEagleShoot with { Volume = 0.3f }, Projectile.position);
 
-				DesertEagleFlash flash = Particle.CreateParticle<DesertEagleFlash>(Projectile.position, Projectile.velocity * 0.4f, Projectile.velocity.ToRotation(), 1f, false);
+				GunFireRing flash = Particle.CreateParticle<GunFireRing>(Projectile.position, Projectile.velocity * 0.4f, Projectile.velocity.ToRotation(), 1f, false);
 				flash.Owner = Projectile;
 
 				spawned = true;
@@ -48,7 +48,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 		public override bool PreDraw(ref Color lightColor)
 		{
-			Projectile.DrawSimpleTrail(Vector2.Zero, 2.8f, 0.5f, new Color(255, 162, 141) * lightColor.GetLuminance(), new Color(184, 58, 24, 0) * lightColor.GetLuminance());
+			Projectile.DrawMagicPixelTrail(Vector2.Zero, 2.8f, 0.5f, new Color(255, 162, 141) * lightColor.GetLuminance(), new Color(184, 58, 24, 0) * lightColor.GetLuminance());
 			return true;
 		}
 	}

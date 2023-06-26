@@ -61,8 +61,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 			{
 				HitStacks++;   // this is a ref to a ModPlayer
 				HitNPC = true; // set hit flag to true so stacks won't increase on every npc hit 
-
-				
 			}
 
 			onHitEffect = true;
@@ -112,10 +110,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 					Vector2 velocity = Main.rand.NextVector2Circular(2f, 2f);
 					Dust dust;
 					if (i % 20 == 0)
-					{
-						Particle.CreateParticle<ChandriumCrescentMoon>(position, velocity, scale: Main.rand.NextFloat(0.12f, 0.18f));
-					}
-					// chandrium dust 
+ 						Particle.CreateParticle<ChandriumCrescentMoon>(position, velocity, scale: Main.rand.NextFloat(1.2f, 1.8f));
+
+ 					// chandrium dust 
 					dust = Dust.NewDustDirect(position, target.width, target.height, ModContent.DustType<ChandriumDust>(), velocity.X, velocity.Y, Scale: Main.rand.NextFloat(0.8f, 1.2f));
 				}
 			}
