@@ -75,7 +75,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 
 				float SpeedX = posX * normSpeed + Main.rand.Next(-40, 41) * 0.02f;  //this defines the Projectile X position speed and randomness
 				float SpeedY = posY * normSpeed + Main.rand.Next(-40, 41) * 0.02f;  //this defines the Projectile Y position speed and randomness
-				Projectile.NewProjectile(source, playerOffset.X, playerOffset.Y, SpeedX, SpeedY, projType, damage, knockBack, Main.myPlayer, 0.0f, Main.rand.Next(5));
+				Projectile.NewProjectile(source, playerOffset.X, playerOffset.Y, SpeedX, SpeedY, projType, damage, knockBack, Main.myPlayer, Main.MouseWorld.X, Main.MouseWorld.Y);
 			}
 			return false;
 		}
