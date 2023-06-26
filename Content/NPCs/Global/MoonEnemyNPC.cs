@@ -6,11 +6,6 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Global
 {
-	public interface IMoonEnemy 
-	{
-
-	}
-
 	public class MoonEnemyNPC : GlobalNPC
 	{
 		public override bool InstancePerEntity => true;

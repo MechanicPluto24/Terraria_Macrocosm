@@ -16,7 +16,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 		{
 		}
 
-		public override string Texture => "Macrocosm/Content/Projectiles/Friendly/Melee/Swing";
+		public override string Texture => "Macrocosm/Assets/Textures/Swing";
 
 
 		public override void SetDefaults()

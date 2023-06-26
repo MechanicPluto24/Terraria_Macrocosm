@@ -6,7 +6,7 @@ using Terraria.Graphics.Shaders;
 
 namespace Macrocosm.Content.Trails
 {
-	public class FlamingMeteorTrail : Trail
+	public class FlamingMeteorTrail : VertexTrail
 	{
 		public override MiscShaderData TrailShader => GameShaders.Misc["RainbowRod"];
 

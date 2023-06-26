@@ -1,25 +1,25 @@
 ﻿using Macrocosm.Common.Drawing.Particles;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Steamworks;
-using System;
 using Terraria;
 using Terraria.Graphics;
 using Terraria.Graphics.Shaders;
-using static Terraria.ModLoader.PlayerDrawLayer;
 
 namespace Macrocosm.Common.Drawing.Trails
 {
-	public abstract class Trail
+	public abstract class VertexTrail
 	{
 		public abstract MiscShaderData TrailShader { get; }
 		public virtual object Owner { get; set; }
 
 		public virtual float Opacity { get; set; } = 1f;
 		public virtual float Saturation { get; set; } = -1f;
-	
+
 		public virtual Color? TrailColor { get; set; }
 		public virtual float? TrailWidth { get; set; }
+
+		public void SetImage0(string texturePath) => TrailShader.UseImage0(texturePath);
+		public void SetImage1(string texturePath) => TrailShader.UseImage1(texturePath);
+		public void SetImage2(string texturePath) => TrailShader.UseImage2(texturePath);
 
 		public virtual Color TrailColors(float progressOnStrip) => TrailColor ?? Color.White;
 		public virtual float TrailWidths(float progressOnStrip) => TrailWidth ?? 1f;

@@ -133,6 +133,8 @@ namespace Macrocosm.Common.Drawing.Particles
 		/// <returns> The current frame as a nullabe <see cref="Rectangle"/>, representing the <see cref="Texture"/> coordinates </returns>
 		public virtual Rectangle? GetFrame() => null;
 
+		private Rectangle? frame = null; 
+
 		#endregion
 
 		#region Logic
@@ -150,9 +152,12 @@ namespace Macrocosm.Common.Drawing.Particles
 
 		public void Update()
 		{
-			if(ShouldUpdatePosition)
+			if (!Main.hasFocus)
+				return;
+
+			if (ShouldUpdatePosition)
  				Position += Velocity;
-			
+
 			PopulateTrailParameters();
 
 			AI();
@@ -177,13 +182,13 @@ namespace Macrocosm.Common.Drawing.Particles
 				=> Utility.DrawSimpleTrail(Size / 2f, OldPositions, OldRotations, rotatableOffsetFromCenter, startWidth, endWidth, startColor, endColor);
 
 
-		/// <summary> The <see cref="Trails.Trail"> Trail </see> object bound to this <c>Particle</c> </summary>
-		public Trail Trail { get; private set; }
-		public Trail GetTrail() => Trail;
+		/// <summary> The <see cref="Trails.VertexTrail"> Trail </see> object bound to this <c>Particle</c> </summary>
+		public VertexTrail Trail { get; private set; }
+		public VertexTrail GetTrail() => Trail;
 
-		/// <summary> Binds the <c>Particle</c>'s trail to the specified <see cref="Trails.Trail"> Trail </see> type </summary>
+		/// <summary> Binds the <c>Particle</c>'s trail to the specified <see cref="Trails.VertexTrail"> Trail </see> type </summary>
 		/// <typeparam name="T"> The trail type </typeparam>
-		public void SetTrail<T>() where T : Trail
+		public void SetTrail<T>() where T : VertexTrail
 		{
 			Trail = Activator.CreateInstance<T>();
 			Trail.Owner = this;

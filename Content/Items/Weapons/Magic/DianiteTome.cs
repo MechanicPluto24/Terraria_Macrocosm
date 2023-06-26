@@ -47,6 +47,13 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 			recipe.Register();
 		}
 
+		public override void HoldItem(Player player)
+		{
+			Item.scale = 0.75f;
+		}
+
+		public override Vector2? HoldoutOffset() => new Vector2(10, 8);
+
 		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockBack)
 		{
 			int numProj = 4 + Main.rand.Next(2);  //This defines how many projectiles to shoot
@@ -75,7 +82,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 
 				float SpeedX = posX * normSpeed + Main.rand.Next(-40, 41) * 0.02f;  //this defines the Projectile X position speed and randomness
 				float SpeedY = posY * normSpeed + Main.rand.Next(-40, 41) * 0.02f;  //this defines the Projectile Y position speed and randomness
-				Projectile.NewProjectile(source, playerOffset.X, playerOffset.Y, SpeedX, SpeedY, projType, damage, knockBack, Main.myPlayer, Main.MouseWorld.X, Main.MouseWorld.Y);
+				Projectile.NewProjectile(source, playerOffset.X, playerOffset.Y, SpeedX, SpeedY, projType, damage, knockBack, Main.myPlayer, Main.MouseWorld.Y);
 			}
 			return false;
 		}

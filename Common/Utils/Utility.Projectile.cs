@@ -12,7 +12,7 @@ namespace Macrocosm.Common.Utils
 {
 	public static partial class Utility
 	{
-		public static void SetTrail<T>(this Projectile projectile) where T : Trail
+		public static void SetTrail<T>(this Projectile projectile) where T : VertexTrail
 		{
 			if(projectile.TryGetGlobalProjectile(out MacrocosmProjectile globalProj))
 			{
@@ -21,7 +21,12 @@ namespace Macrocosm.Common.Utils
 			}
  		}
 
-		public static Trail GetTrail(this Projectile projectile) => projectile.GetGlobalProjectile<MacrocosmProjectile>().Trail; 
+		public static VertexTrail GetTrail(this Projectile projectile) => projectile.GetGlobalProjectile<MacrocosmProjectile>().Trail;
+		public static bool TryGetTrail(this Projectile projectile, out VertexTrail trail)
+		{
+			trail = projectile.GetGlobalProjectile<MacrocosmProjectile>().Trail;
+			return trail is not null;
+		}
 
 		public static void Explode(this Projectile projectile, float blastRadius, int timeLeft = 2)
 		{

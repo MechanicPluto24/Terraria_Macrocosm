@@ -12,7 +12,7 @@ namespace Macrocosm.Content.Projectiles.Global
 	public class MacrocosmProjectile : GlobalProjectile
 	{
 		public override bool InstancePerEntity => true;
-		public Trail Trail { get; set; }
+		public VertexTrail Trail { get; set; }
 
 		public override void SetDefaults(Projectile projectile)
 		{
