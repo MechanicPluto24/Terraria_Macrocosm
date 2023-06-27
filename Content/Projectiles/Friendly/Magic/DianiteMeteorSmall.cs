@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
-	public class DianiteTomeProjectileSmall : DianiteTomeProjectile
+	public class DianiteMeteorSmall : DianiteMeteor
 	{
 		public override void SetStaticDefaults()
 		{
@@ -74,8 +74,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 				p.NumberOfInnerReplicas = 4;
 				p.ReplicaScalingFactor = 0.3f;
 			});
-
-			
 		}
 	}
 }

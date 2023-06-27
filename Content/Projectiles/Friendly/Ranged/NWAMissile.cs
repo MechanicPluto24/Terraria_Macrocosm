@@ -9,6 +9,7 @@ using Macrocosm.Content.Trails;
 using Macrocosm.Content.Projectiles.Global;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Content.Particles;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
@@ -17,7 +18,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		public ref float AI_HomingTimer => ref Projectile.ai[0];
 		public ref float AI_AccelerationTimer => ref Projectile.ai[1];
 
-		public float BlastRadius => 100;
+		public float BlastRadius => 120;
 
 		public override void SetStaticDefaults()
 		{
@@ -91,8 +92,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 			if (!hasTarget)
 			{
-				x = Projectile.position.X + Projectile.width / 2 + Projectile.velocity.X * 100f;
-				y = Projectile.position.Y + Projectile.height / 2 + Projectile.velocity.Y * 100f;
+				x = Projectile.position.X + Projectile.width / 2 + Projectile.velocity.X * 20f;
+				y = Projectile.position.Y + Projectile.height / 2 + Projectile.velocity.Y * 20f;
 			}
 			else
 			{
@@ -101,7 +102,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			}
 
 			Vector2 maxVelocity = (new Vector2(x, y) - Projectile.Center).SafeNormalize(-Vector2.UnitY) * (10f + 6f * (AI_AccelerationTimer / timeToReachTopSpeed));
-			Projectile.velocity = Vector2.Lerp(Projectile.velocity, maxVelocity, 0.083333336f);
+			Projectile.velocity = Vector2.Lerp(Projectile.velocity, maxVelocity, 0.093333336f);
 
 			#endregion
 
@@ -134,17 +135,21 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 				Projectile.alpha = (int)(255f - 42f * Projectile.localAI[1]) + 100;
 				if (Projectile.alpha > 255)
 					Projectile.alpha = 255;
+			}
 
+			if(Projectile.localAI[1] < 1.2f)
+			{
 				// spawn some dusts as barrel flash
-				for (int i = 0; i < 10; i++)
+				for (int i = 0; i < 30; i++)
 				{
-					Dust dust = Dust.NewDustDirect(Projectile.position + new Vector2(0, 0), Projectile.width, Projectile.height, DustID.Torch, Scale: 3);
-					dust.velocity = (Projectile.velocity.SafeNormalize(Vector2.UnitX) * Main.rand.NextFloat(6f, 12f)).RotatedByRandom(MathHelper.PiOver4 * 0.4);
+					Dust dust = Dust.NewDustDirect(Projectile.position + new Vector2(0, 0), Projectile.width, Projectile.height, DustID.Flare, Scale: 3);
+					dust.velocity = (Projectile.velocity.SafeNormalize(Vector2.UnitX) * Main.rand.NextFloat(8f, 12f)).RotatedByRandom(MathHelper.PiOver4 * 0.2f) + Main.player[Projectile.owner].velocity;
 					dust.noLight = false;
 					dust.alpha = 200;
 					dust.noGravity = true;
 				}
 			}
+			
 
 			// spawn dust trail
 			for (int i = 0; i < 2; i++)
@@ -200,18 +205,18 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			// Spawn smoke dusts
 			for (int i = 0; i < 30; i++)
 			{
-				Dust dust = Dust.NewDustDirect(Projectile.Center + Projectile.oldVelocity * 5, 1, 1, DustID.Smoke, Main.rand.NextFloat(), Main.rand.NextFloat(), 100, default, 1.5f);
+				Dust dust = Dust.NewDustDirect(Projectile.Center + Projectile.oldVelocity, 1, 1, DustID.Smoke, Main.rand.NextFloat(), Main.rand.NextFloat(), 100, default, 1.5f);
 				dust.velocity *= 1.4f;
 			}
 
 			//Spawn flare dusts
 			for (int i = 0; i < 20; i++)
 			{
-				Dust dust = Dust.NewDustDirect(Projectile.Center + Projectile.oldVelocity * 5, 1, 1, DustID.Flare, Main.rand.NextFloat(), Main.rand.NextFloat(), 100, default, 3.5f);
+				Dust dust = Dust.NewDustDirect(Projectile.Center + Projectile.oldVelocity, 1, 1, DustID.Flare, Main.rand.NextFloat(), Main.rand.NextFloat(), 100, default, 3.5f);
 				dust.noGravity = true;
 				dust.velocity *= 7f;
 
-				dust = Dust.NewDustDirect(Projectile.Center + Projectile.oldVelocity * 5, 1, 1, DustID.Flare, Main.rand.NextFloat(), Main.rand.NextFloat(), 100, default, 1.5f);
+				dust = Dust.NewDustDirect(Projectile.Center + Projectile.oldVelocity, 1, 1, DustID.Flare, Main.rand.NextFloat(), Main.rand.NextFloat(), 100, default, 1.5f);
 				dust.velocity *= 3f;
 				dust.noGravity = true;
 			}
@@ -229,7 +234,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 			var explosion = Particle.CreateParticle<TintableExplosion>(p =>
 			{
-				p.Position = Projectile.Center + Projectile.oldVelocity + Main.rand.NextVector2Circular(10f, 10f);
+				p.Position = Projectile.Center;
 				p.DrawColor = (new Color(195, 115, 62)).NewAlpha(0.6f);
 				p.Scale = 1.2f;
 				p.NumberOfInnerReplicas = 9;
@@ -240,7 +245,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			for (int i = 0; i < 2; i++)
 			{
 				Vector2 velocity = Main.rand.NextVector2CircularEdge(3, 3) * (i == 1 ? 0.8f : 0.4f);
-				Particle.CreateParticle<Smoke>(Projectile.Center + Projectile.oldVelocity, velocity);
+				Particle.CreateParticle<Smoke>(Projectile.Center, velocity);
 			}
 		 
 		}
@@ -249,7 +254,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		{
 			ProjectileID.Sets.TrailCacheLength[Type] = 30;
 			ProjectileID.Sets.TrailingMode[Type] = 3;
-
 
 			Projectile.GetTrail().Opacity = Projectile.localAI[1];
 

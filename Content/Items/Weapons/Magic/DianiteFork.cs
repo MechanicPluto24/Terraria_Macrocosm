@@ -35,7 +35,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 			Item.rare = ModContent.RarityType<MoonRarityT1>();
 			Item.UseSound = SoundID.Item20;
 			Item.autoReuse = true;
-			Item.shoot = ModContent.ProjectileType<DianiteTomeProjectileSmall>();
+			Item.shoot = ModContent.ProjectileType<DianiteMeteorSmall>();
 			Item.shootSpeed = 16f;
 			Item.tileBoost = 50;
 		}

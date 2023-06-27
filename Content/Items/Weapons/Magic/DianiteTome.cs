@@ -34,7 +34,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 			Item.rare = ModContent.RarityType<MoonRarityT1>();
 			Item.UseSound = SoundID.Item20;
 			Item.autoReuse = true;
-			Item.shoot = ModContent.ProjectileType<DianiteTomeProjectileSmall>();
+			Item.shoot = ModContent.ProjectileType<DianiteMeteorSmall>();
 			Item.shootSpeed = 16f;
 			Item.tileBoost = 50;
 		}
@@ -61,7 +61,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 			for (int index = 0; index < numProj; ++index)
 			{
 				bool bigProjectile = Main.rand.NextBool(4);
-				int projType = bigProjectile ? ModContent.ProjectileType<DianiteTomeProjectile>() : type;
+				int projType = bigProjectile ? ModContent.ProjectileType<DianiteMeteor>() : type;
 				damage = (int)(damage * (bigProjectile ? 1.4f : 1f));
 
 				Vector2 playerOffset = new Vector2((float)(player.position.X + player.width * 0.5 + Main.rand.Next(201) * -player.direction + (Main.mouseX + (double)Main.screenPosition.X - player.position.X)), (float)(player.position.Y + player.height * 0.5 - 600.0));   //this defines the Projectile width, direction and position

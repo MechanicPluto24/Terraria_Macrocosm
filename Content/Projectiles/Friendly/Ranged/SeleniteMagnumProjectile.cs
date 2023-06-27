@@ -36,13 +36,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		public override void OnRicochetEffect()
 		{
 			for (int i = 0; i < Main.rand.Next(10, 20); i++)
-				Particle.CreateParticle<SeleniteSpark>(Projectile.position, Projectile.velocity.RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(0.1f, 0.2f), scale: 2.4f);
+				Particle.CreateParticle<SeleniteSpark>(Projectile.position, Projectile.oldVelocity.RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(0.1f, 0.2f), scale: 2.4f);
 		}
 
 		public override bool OnTileCollide(Vector2 oldVelocity)
 		{
 			for(int i = 0; i < Main.rand.Next(10, 20); i++)
-				Particle.CreateParticle<SeleniteSpark>(Projectile.position + Projectile.oldVelocity * 1.2f, Projectile.velocity.RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(0.1f, 0.2f), scale: 2.4f);
+				Particle.CreateParticle<SeleniteSpark>(Projectile.position + Projectile.oldVelocity * 1.2f, Projectile.oldVelocity.RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(0.1f, 0.2f), scale: 2.4f);
 
 			return true;
 		}

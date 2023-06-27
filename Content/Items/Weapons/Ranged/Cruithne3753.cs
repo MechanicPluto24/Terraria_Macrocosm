@@ -22,8 +22,8 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			Item.DamageType = DamageClass.Ranged;
 			Item.width = 52;
 			Item.height = 16;
-			Item.useTime = 34;
-			Item.useAnimation = 34;
+			Item.useTime = 26;
+			Item.useAnimation = 26;
 			Item.useStyle = ItemUseStyleID.Shoot;
 			Item.noMelee = true;
 			Item.knockBack = 8f;
@@ -42,15 +42,16 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 		{
 			if (player.altFunctionUse == 2)
 			{
-				Item.useTime = 68;
-				Item.useAnimation = 68;
- 				Item.shoot = ModContent.ProjectileType<DeliriumShell>();
+				Item.useTime = 30;
+				Item.useAnimation = 30;
+				Item.autoReuse = true;
+				Item.shoot = ModContent.ProjectileType<DeliriumShell>();
 			}
 			else
 			{
-				Item.useTime = 34;
-				Item.useAnimation = 34;
- 				Item.shoot = ModContent.ProjectileType<CruithneGreenSlug>();
+				Item.useTime = 20;
+				Item.useAnimation = 20;
+				Item.shoot = ModContent.ProjectileType<CruithneGreenSlug>();
 			}
 			return base.CanUseItem(player);
 		}
@@ -75,8 +76,8 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 		{
 			if (player.altFunctionUse == 2)
 			{
-				velocity *= 0.2f;
-				position.Y -= 4f;
+				velocity *= 0.8f;
+				position.Y -= 4;
 			}                                                                                                                                                                                            
  		}
 
