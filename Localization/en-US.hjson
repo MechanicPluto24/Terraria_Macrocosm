@@ -936,6 +936,8 @@ Mods: {
 			Tycho50Bullet.DisplayName: Tycho50 Bullet
 			DianiteMeteor.DisplayName: Dianite Meteor
 			DianiteMeteorSmall.DisplayName: Dianite Meteor Small
+			PhantasmalImpLarge.DisplayName: Phantasmal Imp Large
+			PhantasmalImpSmall.DisplayName: Phantasmal Imp Small
 		}
 
 		Tiles: {
