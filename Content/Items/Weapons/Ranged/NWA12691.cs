@@ -8,6 +8,8 @@ using Terraria.DataStructures;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Content.Particles;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
@@ -40,13 +42,18 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			Item.useAmmo = AmmoID.Rocket;
 		}
 
-		public override Vector2? HoldoutOffset() => new Vector2(0, 0);
+		public override Vector2? HoldoutOffset() => new Vector2(-25, -8);
 
 		public override bool AltFunctionUse(Player player) => true;
 
+		public override void HoldItem(Player player)
+		{
+
+		}
+
 		public override void ModifyItemScale(Player player, ref float scale)
 		{
-			scale = player.altFunctionUse == 2 ? 0f : 1f;
+			scale = player.altFunctionUse == 2 ? 1f : 1f;
 		}
 
 		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
@@ -59,7 +66,6 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 				for (int i = 0; i < Main.maxNPCs; i++)
 				{
 					NPC npc = Main.npc[i];
-
 					if (npc.TryGetGlobalNPC(out MacrocosmNPC macNpc))
  						macNpc.TargetedByHomingProjectile = false;
 
@@ -81,7 +87,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
 		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
 		{
-			position += Utility.PolarVector(40f, velocity.ToRotation()) + Utility.PolarVector(player.velocity.Length() * 2, player.velocity.ToRotation());
+			position += new Vector2(0,-10) + Utility.PolarVector(40f, velocity.ToRotation());
 			type = ModContent.ProjectileType<NWAMissile>();
 		}
 	}

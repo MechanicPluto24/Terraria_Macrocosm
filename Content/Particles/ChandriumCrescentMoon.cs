@@ -21,7 +21,7 @@ namespace Macrocosm.Content.Particles
         {
             Rotation += 0.16f * (rotateClockwise ? 1f : -1f);
 
-			Scale -= 0.003f;
+			Scale -= 0.06f;
             alpha++;
 
             if (Scale < 0.03f)

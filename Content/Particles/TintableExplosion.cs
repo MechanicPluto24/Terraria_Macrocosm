@@ -14,10 +14,10 @@ namespace Macrocosm.Content.Particles
 		public Color DrawColor;
 		public int NumberOfInnerReplicas;
 		public float ReplicaScalingFactor;
-		public BlendState BlendState = BlendState.Additive;
+		public BlendState BlendState;
 
 		public override int FrameNumber => 7;
-		public override int FrameSpeed => 6;
+		public override int FrameSpeed => 4;
 		public override bool DespawnOnAnimationComplete => true;
 
 
@@ -30,16 +30,20 @@ namespace Macrocosm.Content.Particles
 
 		public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
 		{
+
+			spriteBatch.Draw(Texture, Position - screenPosition, GetFrame(), DrawColor, Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
+
 			var state = spriteBatch.SaveState();
-
 			spriteBatch.End();
-			spriteBatch.Begin(BlendState, state);
+			spriteBatch.Begin(BlendState.Additive, state);
 
-			for(int i = 0; i < NumberOfInnerReplicas; i++)
+			for (int i = 1; i < NumberOfInnerReplicas; i++)
 			{
-				float invProgress = 1f - (float)i / NumberOfInnerReplicas;
-				float scale = Scale * ((1f - ReplicaScalingFactor) + ReplicaScalingFactor * invProgress);
-				spriteBatch.Draw(Texture, Position - screenPosition, GetFrame(), DrawColor, Rotation, Size * 0.5f, scale, SpriteEffects.None, 0f);
+				float progress = (float)i / NumberOfInnerReplicas;
+				float invProgress = 1f - progress;
+				float scale = Scale * ((ReplicaScalingFactor) + (1f - ReplicaScalingFactor) * invProgress);
+				Color color = DrawColor.NewAlpha(((float)TimeLeft / SpawnTimeLeft) * 0.5f);
+				spriteBatch.Draw(Texture, Position - screenPosition, GetFrame(), color, Rotation, Size * 0.5f, scale, SpriteEffects.None, 0f);
 			}
 
 			Lighting.AddLight(Center, DrawColor.ToVector3());

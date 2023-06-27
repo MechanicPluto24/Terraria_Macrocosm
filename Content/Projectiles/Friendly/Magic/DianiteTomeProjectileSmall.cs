@@ -54,29 +54,28 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
 		public override void Kill(int timeLeft)
 		{
-			for (int i = 0; i < 8; i++)
+			for (int i = 0; i < 30; i++)
 			{
 				Vector2 velocity = Main.rand.NextVector2Circular(25f, 25f);
-				Dust dust = Dust.NewDustDirect(Projectile.position, (int)(Projectile.width), Projectile.height, DustID.Flare, velocity.X, velocity.Y, Scale: 2.2f);
+				Dust dust = Dust.NewDustDirect(Projectile.position + Projectile.oldVelocity, (int)(Projectile.width), Projectile.height, DustID.Flare, velocity.X, velocity.Y, Scale: 2f);
 				dust.noGravity = true;
 			}
 
-			for (int i = 0; i < 2; i++)
-			{
-				Gore smoke = Gore.NewGoreDirect(Projectile.GetSource_Death(), Projectile.position + new Vector2((float)(Projectile.width * Main.rand.Next(100)) / 100f, (float)(Projectile.height * Main.rand.Next(100)) / 100f) - Vector2.One * 10f, default(Vector2), Main.rand.Next(61, 64), Scale: 0.4f);
-				smoke.velocity *= 0.3f;
-				smoke.velocity.X += Main.rand.Next(-10, 11) * 0.15f;
-				smoke.velocity.Y += Main.rand.Next(-10, 11) * 0.15f;
-			}
+			//var smoke = Particle.CreateParticle<Smoke>(Projectile.Center + Projectile.oldVelocity, Vector2.Zero, scale: 0.6f);
+			//smoke.Velocity *= 0.2f;
+			//smoke.Velocity.X += Main.rand.Next(-10, 11) * 0.15f;
+			//smoke.Velocity.Y += Main.rand.Next(-10, 11) * 0.15f;
 
-			Particle explosion = Particle.CreateParticle<TintableExplosion>(p =>
+			var explosion = Particle.CreateParticle<TintableExplosion>(p =>
 			{
-				p.Position = Projectile.Center + Main.rand.NextVector2Circular(10f, 10f);
-				p.DrawColor = new Color(255, 104, 9) * Main.rand.NextFloat(0.8f, 0.9f);
-				p.Scale = 0.8f;
-				p.NumberOfInnerReplicas = 2;
-				p.ReplicaScalingFactor = 0.2f;
+				p.Position = Projectile.Center + Projectile.oldVelocity + Main.rand.NextVector2Circular(10f, 10f);
+				p.DrawColor = (new Color(195, 115, 62)).NewAlpha(0.6f);
+				p.Scale = 0.6f;
+				p.NumberOfInnerReplicas = 4;
+				p.ReplicaScalingFactor = 0.3f;
 			});
+
+			
 		}
 	}
 }

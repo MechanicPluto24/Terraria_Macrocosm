@@ -70,7 +70,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 			if (HitStacks >= 3)
 			{
 				// increase damage 
-				modifiers.FinalDamage *= 1.2f;
+				modifiers.FinalDamage *= 1.4f;
 
 				// clear buff on successful hit 
 				Main.player[Projectile.owner].ClearBuff(ModContent.BuffType<ChandriumEmpowerment>());
@@ -106,11 +106,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 			{
   				for (int i = 0; i < 60; i++)
 				{
-					Vector2 position = target.position;
+					Vector2 position = target.position + new Vector2(Main.rand.Next(target.width), Main.rand.Next(target.height));
 					Vector2 velocity = Main.rand.NextVector2Circular(2f, 2f);
 					Dust dust;
 					if (i % 20 == 0)
- 						Particle.CreateParticle<ChandriumCrescentMoon>(position, velocity, scale: Main.rand.NextFloat(1.2f, 1.8f));
+ 						Particle.CreateParticle<ChandriumCrescentMoon>(position, velocity, scale: Main.rand.NextFloat(0.8f, 1.2f));
 
  					// chandrium dust 
 					dust = Dust.NewDustDirect(position, target.width, target.height, ModContent.DustType<ChandriumDust>(), velocity.X, velocity.Y, Scale: Main.rand.NextFloat(0.8f, 1.2f));

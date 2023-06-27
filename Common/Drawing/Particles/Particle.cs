@@ -13,6 +13,7 @@ using Macrocosm.Common.Utils;
 using Terraria.DataStructures;
 using Macrocosm.Common.DataStructures;
 using ReLogic.Peripherals.RGB;
+using Microsoft.Xna.Framework.Graphics.PackedVector;
 
 namespace Macrocosm.Common.Drawing.Particles
 {
@@ -52,6 +53,9 @@ namespace Macrocosm.Common.Drawing.Particles
 			TimeLeft = SpawnTimeLeft;
 			Active = true;
 
+			if (SetRandomFrameOnSpawn)
+				currentFrame = Main.rand.Next(FrameNumber);
+ 
 			OnSpawn();
 		}
 
@@ -141,6 +145,9 @@ namespace Macrocosm.Common.Drawing.Particles
 
 		#region Animation
 
+		/// <summary> Whether to pick a random frame on spawn </summary>
+		public virtual bool SetRandomFrameOnSpawn => false;
+
 		/// <summary> If true, particle will despawn on the end of animation </summary>
 		public virtual bool DespawnOnAnimationComplete { get; set; } = false;
 
@@ -156,7 +163,8 @@ namespace Macrocosm.Common.Drawing.Particles
 		/// <summary> Used for animating the <c>Particle</c>. By default, updates with <see cref="FrameNumber"/> and <see cref="FrameSpeed"/> </summary>
 		public virtual void UpdateFrame()
 		{
-			if (FrameNumber <= 1)
+			// if not animated or frame was picked on spawn, don't update frame
+			if (FrameNumber <= 1 || SetRandomFrameOnSpawn)
 				return;
 
 			if (Main.hasFocus)
@@ -179,7 +187,8 @@ namespace Macrocosm.Common.Drawing.Particles
 		/// </summary>
 		public virtual Rectangle? GetFrame()
 		{ 
- 			if (FrameNumber <= 1)
+			// if not animated or frame is not picked randomly on spawn, draw the entire texture
+ 			if (FrameNumber <= 1 && !SetRandomFrameOnSpawn)
 				return null;
 
 			int frameHeight = Texture.Height / FrameNumber;

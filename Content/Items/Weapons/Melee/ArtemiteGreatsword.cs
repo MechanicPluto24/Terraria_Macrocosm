@@ -21,7 +21,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 		{
 			Item.damage = 225;
 			Item.DamageType = DamageClass.Melee;
-			Item.width = 78;
+			Item.width = 80;
 			Item.height = 80;
 			Item.useTime = 30;
 			Item.useAnimation = 30;
@@ -32,13 +32,13 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 			Item.rare = ModContent.RarityType<MoonRarityT1>();
 			Item.UseSound = SoundID.Item1;
 			Item.autoReuse = true;
+			Item.noMelee = true;
  		}
 
-		public override void UseItemHitbox(Player player, ref Rectangle hitbox, ref bool noHitbox)
+		public override void UseStyle(Player player, Rectangle heldItemFrame)
 		{
-			hitbox.Y -= 50;
- 			hitbox.Height += 50;
 		}
+
 
 		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{

@@ -99,11 +99,10 @@ namespace Macrocosm.Content.Projectiles.Hostile
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.Additive, state);
 
-			//Projectile.GetTrail().SetTexture3("Images/Extra_201");
 			Projectile.GetTrail().Draw();
 
 			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(BlendState.AlphaBlend, state);
+			Main.spriteBatch.Begin(state);
 
 			Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition,
 				sourceRect, Color.White.NewAlpha(0.2f), Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
