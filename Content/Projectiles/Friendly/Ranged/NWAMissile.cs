@@ -7,6 +7,8 @@ using Terraria.ModLoader;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Trails;
 using Macrocosm.Content.Projectiles.Global;
+using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Content.Particles;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
@@ -26,7 +28,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		public override void SetDefaults()
 		{
 			Projectile.width = 16;
-			Projectile.height = 38;
+			Projectile.height = 16;
 			Projectile.aiStyle = -1;
 			Projectile.penetrate = -1;
 			Projectile.friendly = true;
@@ -40,12 +42,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 		public override void ModifyDamageHitbox(ref Rectangle hitbox)
 		{
-			// FIXME: left rotation 
-			float rotation = Math.Abs(Projectile.rotation);
-			if (rotation < 0 && rotation <= MathHelper.PiOver4 && rotation >= MathHelper.PiOver4 * 3 || rotation >= 0 && rotation > MathHelper.PiOver4 && rotation <= MathHelper.PiOver4 * 3)
-				hitbox = new Rectangle((int)Projectile.position.X, (int)Projectile.position.Y, Projectile.height, Projectile.width);
-			else
-				hitbox = new Rectangle((int)Projectile.position.X, (int)Projectile.position.Y, Projectile.width, Projectile.height);
 		}
 
 		/// <summary> Adapted from Projectile.AI_016() for homing snowman rockets </summary>
@@ -201,79 +197,59 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
  
 			SoundEngine.PlaySound(SoundID.Item14, Projectile.position);
 
-			#region Spawn dusts
+			// Spawn smoke dusts
 			for (int i = 0; i < 30; i++)
 			{
-				int dustSmoke = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, DustID.Smoke, 0f, 0f, 100, default, 1.5f);
-				Dust dust = Main.dust[dustSmoke];
+				Dust dust = Dust.NewDustDirect(Projectile.Center + Projectile.oldVelocity * 5, 1, 1, DustID.Smoke, Main.rand.NextFloat(), Main.rand.NextFloat(), 100, default, 1.5f);
 				dust.velocity *= 1.4f;
 			}
 
+			//Spawn flare dusts
 			for (int i = 0; i < 20; i++)
 			{
-				int dustFlame = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, DustID.Torch, 0f, 0f, 100, default, 3.5f);
-				Main.dust[dustFlame].noGravity = true;
-				Dust dust = Main.dust[dustFlame];
+				Dust dust = Dust.NewDustDirect(Projectile.Center + Projectile.oldVelocity * 5, 1, 1, DustID.Flare, Main.rand.NextFloat(), Main.rand.NextFloat(), 100, default, 3.5f);
+				dust.noGravity = true;
 				dust.velocity *= 7f;
-				dustFlame = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, DustID.Torch, 0f, 0f, 100, default, 1.5f);
-				dust = Main.dust[dustFlame];
-				dust.velocity *= 3f;
-			}
-			#endregion
 
-			#region Spawn trail dust
-			for (int i = 0; i < Projectile.oldPos.Length; i++)
+				dust = Dust.NewDustDirect(Projectile.Center + Projectile.oldVelocity * 5, 1, 1, DustID.Flare, Main.rand.NextFloat(), Main.rand.NextFloat(), 100, default, 1.5f);
+				dust.velocity *= 3f;
+				dust.noGravity = true;
+			}
+
+			//Spawn trail dust
+			for (int i = 2; i < Projectile.oldPos.Length; i++)
 			{
 				for (int j = 0; j < 3; j++)
 				{
 					Vector2 pos = Projectile.oldPos[i];
-					Dust dust = Dust.NewDustDirect(new Vector2(pos.X, pos.Y), 20, 20, DustID.Torch, Projectile.oldVelocity.X * 0.5f, Projectile.oldVelocity.Y * 0.5f, Scale: 0.07f * (Projectile.oldPos.Length - i));
- 				}
+					Dust dust = Dust.NewDustDirect(pos, 20, 20, DustID.Torch, Projectile.oldVelocity.X * 0.5f, Projectile.oldVelocity.Y * 0.5f, Scale: 0.12f * (Projectile.oldPos.Length - i));
+					dust.noGravity = true;
+				}
 			}
-			#endregion
 
-			#region Spawn Smoke Gores
+			var explosion = Particle.CreateParticle<TintableExplosion>(p =>
+			{
+				p.Position = Projectile.Center + Projectile.oldVelocity + Main.rand.NextVector2Circular(10f, 10f);
+				p.DrawColor = (new Color(195, 115, 62)).NewAlpha(0.6f);
+				p.Scale = 1.2f;
+				p.NumberOfInnerReplicas = 9;
+				p.ReplicaScalingFactor = 0.5f;
+			});
+
+			// Spawn Smoke particles
 			for (int i = 0; i < 2; i++)
 			{
-				float multVelocity = 0.4f;
-				if (i == 1)
-					multVelocity = 0.8f;
-
-				int goreSmoke = Gore.NewGore(Projectile.GetSource_FromThis(), new Vector2(Projectile.Center.X, Projectile.Center.Y), default, Main.rand.Next(GoreID.Smoke1, GoreID.Smoke3));
-				Gore gore = Main.gore[goreSmoke];
-				gore.velocity *= multVelocity;
-				Main.gore[goreSmoke].velocity.X += 1f;
-				Main.gore[goreSmoke].velocity.Y += 1f;
-				goreSmoke = Gore.NewGore(Projectile.GetSource_FromThis(), new Vector2(Projectile.Center.X, Projectile.Center.Y), default, Main.rand.Next(GoreID.Smoke1, GoreID.Smoke3));
-				gore = Main.gore[goreSmoke];
-				gore.velocity *= multVelocity;
-				Main.gore[goreSmoke].velocity.X -= 1f;
-				Main.gore[goreSmoke].velocity.Y += 1f;
-				goreSmoke = Gore.NewGore(Projectile.GetSource_FromThis(), new Vector2(Projectile.Center.X, Projectile.Center.Y), default, Main.rand.Next(GoreID.Smoke1, GoreID.Smoke3));
-				gore = Main.gore[goreSmoke];
-				gore.velocity *= multVelocity;
-				Main.gore[goreSmoke].velocity.X += 1f;
-				Main.gore[goreSmoke].velocity.Y -= 1f;
-				goreSmoke = Gore.NewGore(Projectile.GetSource_FromThis(), new Vector2(Projectile.Center.X, Projectile.Center.Y), default, Main.rand.Next(GoreID.Smoke1, GoreID.Smoke3));
-				gore = Main.gore[goreSmoke];
-				gore.velocity *= multVelocity;
-				Main.gore[goreSmoke].velocity.X -= 1f;
-				Main.gore[goreSmoke].velocity.Y -= 1f;
+				Vector2 velocity = Main.rand.NextVector2CircularEdge(3, 3) * (i == 1 ? 0.8f : 0.4f);
+				Particle.CreateParticle<Smoke>(Projectile.Center + Projectile.oldVelocity, velocity);
 			}
-			#endregion
 		 
 		}
 
 		public override bool PreDraw(ref Color lightColor)
 		{
-			// adjust rotations manually (due to TrailingMode = 0 instead of 3) -- it just looks better  
-			if (Projectile.rotation > -MathHelper.PiOver4 && Projectile.rotation < MathHelper.PiOver4 || 
-				Projectile.rotation < -(MathHelper.PiOver4 + MathHelper.PiOver2) ||
-				Projectile.rotation > MathHelper.PiOver4 + MathHelper.PiOver2) {
+			ProjectileID.Sets.TrailCacheLength[Type] = 30;
+			ProjectileID.Sets.TrailingMode[Type] = 3;
 
-				for (int i = 0; i < Projectile.oldRot.Length; i++)
-					Projectile.oldRot[i] = MathHelper.PiOver2;
-			}
 
 			Projectile.GetTrail().Opacity = Projectile.localAI[1];
 

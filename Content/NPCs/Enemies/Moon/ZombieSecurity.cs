@@ -139,14 +139,14 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		public override void AI()
 		{
-			Main.NewText("Shoot sequence: " + ShootSequence + "/" + maxShootSequence);
-			Main.NewText("Shoot cooldown: " + ShootCooldown + "/" + maxCooldown);
-			Main.NewText("Attack cooldown: " + AttackCooldown + "/" + maxCooldown);
-			Main.NewText("AI State: " + AI_State.ToString());
-			Main.NewText("Frame Index: " + NPC.frame.Y / NPC.GetFrameHeight() + "/" + fallingFrame);
-			Main.NewText("Frame cnt: " + NPC.frameCounter);
-			Main.NewText("Shots: " + ShotsCounter + "/" + MaxConsecutiveShots);
-			Main.NewText("\n");
+			//Main.NewText("Shoot sequence: " + ShootSequence + "/" + maxShootSequence);
+			//Main.NewText("Shoot cooldown: " + ShootCooldown + "/" + maxCooldown);
+			//Main.NewText("Attack cooldown: " + AttackCooldown + "/" + maxCooldown);
+			//Main.NewText("AI State: " + AI_State.ToString());
+			//Main.NewText("Frame Index: " + NPC.frame.Y / NPC.GetFrameHeight() + "/" + fallingFrame);
+			//Main.NewText("Frame cnt: " + NPC.frameCounter);
+			//Main.NewText("Shots: " + ShotsCounter + "/" + MaxConsecutiveShots);
+			//Main.NewText("\n");
 
 			NPC.spriteDirection = -NPC.direction;
 
@@ -274,7 +274,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
  					particleAim = aimVelocity.RotatedBy(-0.2f * Math.Sign(aimVelocity.X));
 
 				Projectile bullet = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), aimPosition, aimVelocity, projType, projDamage, 0f, Main.myPlayer);
-				GunFireRing flash = Particle.CreateParticle<GunFireRing>(NPC.Center + particleAim * 0.24f, aimVelocity * 0.05f, aimVelocity.ToRotation(), 1f, true);
+				var flash = Particle.CreateParticle<GunFireRing>(NPC.Center + particleAim * 0.24f, aimVelocity * 0.05f, 1f, aimVelocity.ToRotation(), true);
 				flash.Owner = bullet;
 			}
 

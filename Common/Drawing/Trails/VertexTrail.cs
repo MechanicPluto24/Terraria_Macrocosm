@@ -17,10 +17,6 @@ namespace Macrocosm.Common.Drawing.Trails
 		public virtual Color? TrailColor { get; set; }
 		public virtual float? TrailWidth { get; set; }
 
-		public void SetImage0(string texturePath) => TrailShader.UseImage0(texturePath);
-		public void SetImage1(string texturePath) => TrailShader.UseImage1(texturePath);
-		public void SetImage2(string texturePath) => TrailShader.UseImage2(texturePath);
-
 		public virtual Color TrailColors(float progressOnStrip) => TrailColor ?? Color.White;
 		public virtual float TrailWidths(float progressOnStrip) => TrailWidth ?? 1f;
 

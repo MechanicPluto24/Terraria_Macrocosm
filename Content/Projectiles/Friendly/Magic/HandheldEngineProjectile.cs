@@ -98,7 +98,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 					float amp = Main.rand.NextFloat(0, 1f);
 					Vector2 position = rotPoint2 + Main.rand.NextVector2Circular(20, 20);
 					Vector2 velocity = (Utility.PolarVector(8 * (1 - amp), MathHelper.WrapAngle(Projectile.rotation)) - Projectile.velocity.SafeNormalize(Vector2.UnitX)).RotatedByRandom(MathHelper.PiOver4 * 0.4);
-					Particle.CreateParticle<EngineSpark>(position, velocity, Projectile.rotation, Main.rand.NextFloat(1.2f, 1.8f) * (1-amp));
+					Particle.CreateParticle<EngineSpark>(position, velocity, Main.rand.NextFloat(1.2f, 1.8f) * (1 - amp), Projectile.rotation);
 				}
 			}
 		}

@@ -56,7 +56,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 
 		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockBack)
 		{
-			int numProj = 4 + Main.rand.Next(2);  //This defines how many projectiles to shoot
+			int numProj = 2 + Main.rand.Next(1);  //This defines how many projectiles to shoot
 
 			for (int index = 0; index < numProj; ++index)
 			{
