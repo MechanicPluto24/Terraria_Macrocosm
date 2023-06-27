@@ -46,15 +46,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		public override void Kill(int timeLeft)
 		{
 			for(int i = 0; i < Main.rand.Next(20, 30); i++)
-				Particle.CreateParticle<SeleniteSpark>(Projectile.Center + Projectile.oldVelocity * 0.4f, Projectile.velocity.RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(0.1f, 0.3f), scale: 2f);
+				Particle.CreateParticle<SeleniteSpark>(Projectile.Center + Projectile.oldVelocity * 0.4f, Projectile.oldVelocity.RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(0.1f, 0.3f), scale: 2f);
 		}
 
 		public override bool PreDraw(ref Color lightColor)
 		{
-			float count = Math.Abs(Projectile.velocity.X) + Math.Abs(Projectile.velocity.Y) * 10f;
+			float count = (Math.Abs(Projectile.velocity.X) + Math.Abs(Projectile.velocity.Y)) * 10f;
 
-			if (count > 20f)
-				count = 20f;
+			if (count > 40f)
+				count = 40f;
 
 			var state = Main.spriteBatch.SaveState();
 
@@ -64,7 +64,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			for (int n = 4; n < count; n++)
 			{
 				Vector2 trailPosition = Projectile.Center - Projectile.velocity * n * 0.2f;
-				Main.spriteBatch.Draw(TextureAssets.Projectile[Type].Value, trailPosition - Main.screenPosition, null, Color.White * (0.8f - (float)n/count), Projectile.rotation, TextureAssets.Projectile[Type].Value.Size()/2f, Projectile.scale, SpriteEffects.None, 0f);
+				Main.spriteBatch.Draw(TextureAssets.Projectile[Type].Value, trailPosition - Main.screenPosition, null, Color.White * (0.6f - (float)n/count), Projectile.rotation, TextureAssets.Projectile[Type].Value.Size()/2f, Projectile.scale, SpriteEffects.None, 0f);
 			}
 
 			Main.spriteBatch.End();

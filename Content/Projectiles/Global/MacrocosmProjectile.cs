@@ -16,7 +16,11 @@ namespace Macrocosm.Content.Projectiles.Global
 
 		public override void SetDefaults(Projectile projectile)
 		{
-			
+			if (projectile.ModProjectile is IExplosive explosive)
+			{
+				projectile.penetrate = -1;
+				projectile.tileCollide = true;
+			}
 		}
 
 		public override bool OnTileCollide(Projectile projectile, Vector2 oldVelocity)
@@ -26,6 +30,7 @@ namespace Macrocosm.Content.Projectiles.Global
 
 			if (projectile.ModProjectile is IExplosive explosive)
 			{
+				Collision.HitTiles(projectile.position, oldVelocity, projectile.width, projectile.height);
 				explosive.OnCollide(projectile);
 				return false;
 			}
@@ -38,7 +43,7 @@ namespace Macrocosm.Content.Projectiles.Global
 			if(projectile.ModProjectile is IExplosive explosive)
 			{
 				explosive.OnCollide(projectile);
-				projectile.Kill();  
+				//projectile.Kill();  
 			}
 		}
 

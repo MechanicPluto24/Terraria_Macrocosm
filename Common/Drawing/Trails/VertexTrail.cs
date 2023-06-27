@@ -42,12 +42,11 @@ namespace Macrocosm.Common.Drawing.Trails
 			VertexStrip vertexStrip = new();
 
 			InternalUpdate();
+
 			TrailShader.Apply();
 
-			vertexStrip.PrepareStripWithProceduralPadding(positions, rotations, TrailColors, TrailWidths, offset - Main.screenPosition, true);
+			vertexStrip.PrepareStripWithProceduralPadding(positions, rotations, TrailColors, TrailWidths, offset - Main.screenPosition, false, true);
 			vertexStrip.DrawTrail();
-
-			Main.pixelShader.CurrentTechnique.Passes[0].Apply();
 		}
 	}
 }

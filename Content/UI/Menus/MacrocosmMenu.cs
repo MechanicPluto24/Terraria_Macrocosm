@@ -130,7 +130,6 @@ namespace Macrocosm.Content.UI.Menus
 			logoScale *= 0.65f;
             drawColor = Color.White;
 
-			Sun.Color = Color.White;
 			Sun.Scale = 0.85f + 0.01f * Utility.SineWave(500, MathF.PI / 2);
 
 			// includes all orbiting descendants in the tree 

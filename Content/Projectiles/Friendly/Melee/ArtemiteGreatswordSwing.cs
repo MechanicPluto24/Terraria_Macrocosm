@@ -42,8 +42,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
 		public override void AI()
 		{
-			float scaleFactor = 1.6f;
-			float baseScale = 0.3f;
+			float scaleFactor = 1.8f;
+			float baseScale = 0.1f;
 			float direction = Projectile.ai[0];
 			float progress = Projectile.localAI[0] / Projectile.ai[1];
 			Player player = Main.player[Projectile.owner];
@@ -65,7 +65,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 		{
 			Asset<Texture2D> val = TextureAssets.Projectile[Type];
 
-			Rectangle frame = val.Frame(1, 4);
+			Rectangle frame = val.Frame(1, 4, frameY: 3);
 			Vector2 origin = frame.Size() / 2f;
 
 			Vector2 position = Projectile.Center - Main.screenPosition;
@@ -74,12 +74,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			float progress = Projectile.localAI[0] / Projectile.ai[1];
 			float progressScale = Utils.Remap(progress, 0f, 0.6f, 0f, 1f) * Utils.Remap(progress, 0.6f, 1f, 1f, 0f);
 
-			Color color = Color.LightBlue.NewAlpha(1f - progress) * lightColor.GetLuminance();
+			Color color = new Color(130, 220, 199).NewAlpha(1f - progress) * lightColor.GetLuminance();
 	
-			Main.EntitySpriteDraw(val.Value, position, frame, color * progressScale, Projectile.rotation + Projectile.ai[0] * ((float)Math.PI / 4f) * -1f * (1f - progress), origin, Projectile.scale * 0.95f, effects, 0f);
-			Main.EntitySpriteDraw(val.Value, position, frame, color * 0.15f, Projectile.rotation, origin, Projectile.scale, effects, 0f);
-			Main.EntitySpriteDraw(val.Value, position, frame, color * 0.7f * progressScale * 0.3f, Projectile.rotation, origin, Projectile.scale, effects, 0f);
-		    Main.EntitySpriteDraw(val.Value, position, frame, color * 0.8f * progressScale * 0.5f, Projectile.rotation, origin, Projectile.scale * 0.975f, effects, 0f);
+			Main.EntitySpriteDraw(val.Value, position, val.Frame(1, 4, frameY: 0), color * progressScale, Projectile.rotation + Projectile.ai[0] * ((float)Math.PI / 4f) * -1f * (1f - progress), origin, Projectile.scale * 0.95f, effects, 0f);
+			Main.EntitySpriteDraw(val.Value, position, val.Frame(1, 4, frameY: 1), color * 0.15f, Projectile.rotation, origin, Projectile.scale, effects, 0f);
+			Main.EntitySpriteDraw(val.Value, position, val.Frame(1, 4, frameY: 2), color * 0.7f * progressScale * 0.3f, Projectile.rotation, origin, Projectile.scale, effects, 0f);
+		    Main.EntitySpriteDraw(val.Value, position, val.Frame(1, 4, frameY: 2), color * 0.8f * progressScale * 0.5f, Projectile.rotation, origin, Projectile.scale * 0.975f, effects, 0f);
+		    Main.EntitySpriteDraw(val.Value, position, val.Frame(1, 4, frameY: 3), color * progressScale, Projectile.rotation, origin, Projectile.scale * 0.95f, effects, 0f);
 			
 			return false;
 		}
