@@ -226,9 +226,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 						inertia = 10f;
 					}
 
-					Utility.Chat(Projectile.ai[1].ToString());
-
-
 					// The immediate range around the target (so it doesn't latch onto it when close)
 					Vector2 direction = targetCenter - Projectile.Center;
 					direction.Normalize();

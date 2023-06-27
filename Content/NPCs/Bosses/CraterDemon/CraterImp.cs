@@ -22,11 +22,13 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		public ref float AI_AttackProgress => ref NPC.ai[2];
 		public int ParentBoss => (int)NPC.ai[3];
 
+		public const int Despawning = -3;
 		public const int Spawning = -2;
 		public const int Wait = -1;
 		public const int FloatTowardPlayer = 0;
 		public const int ChargeAtPlayer = 1;
 		public const int Chomp = 2;
+		public const int FadeOut = 3;
 
 		private int targetFrame;
 		private bool spawned;
@@ -166,8 +168,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 		public override void AI()
 		{
-
-			if (!Main.npc[ParentBoss].active || Main.npc[ParentBoss].type != ModContent.NPCType<CraterDemon>())
+			if (AI_Attack != Despawning && !Main.npc[ParentBoss].active || Main.npc[ParentBoss].type != ModContent.NPCType<CraterDemon>())
 			{
 				NPC.life = 0;
 				NPC.HitEffect();
@@ -199,6 +200,20 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 			switch (AI_Attack)
 			{
+				case Despawning:
+
+					NPC.velocity *= 1f - 3f / 60f;
+					targetAlpha += 255f / (2 * 60);
+					SpawnDusts();
+
+					if (targetAlpha > 255)
+ 						NPC.active = false;
+ 
+					targetFrame = 0;
+					NPC.frameCounter = 0;
+					break;
+
+
 				case Spawning:
 					targetAlpha -= 255f / (2 * 60);
 
@@ -266,7 +281,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 						}
 						else
 						{
-							Terraria.Audio.SoundEngine.PlaySound(SoundID.ForceRoar, NPC.Center);
+							Terraria.Audio.SoundEngine.PlaySound(SoundID.ForceRoar with {Pitch = 1.1f, Volume = 0.5f }, NPC.Center);
 
 							Vector2 dir = NPC.DirectionTo(player.Center);
 							NPC.rotation = dir.ToRotation();

@@ -34,6 +34,17 @@ namespace Macrocosm.Common.Utils
 
 		#endregion
 
+		#region Vectors
+
+		public static Vector2 Absolute(this Vector2 vector)
+		{
+			float x = Math.Abs(vector.X);
+			float y = Math.Abs(vector.Y);
+			return new Vector2(x, y);
+		}
+
+		#endregion
+
 		#region Rotation & angles
 
 		/// <summary>
