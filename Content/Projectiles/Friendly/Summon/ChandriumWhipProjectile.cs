@@ -173,7 +173,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
 							particle.Position = WhipTipPosition;
 							particle.Owner = (byte)Projectile.owner;
-						});
+						}, shouldSync: true);
 					}
 
 					if (HitStacks == 0 && HitNPC && sparkle is not null)

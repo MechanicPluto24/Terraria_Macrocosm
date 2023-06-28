@@ -134,7 +134,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			Projectile.DrawAnimatedExtra(glowmask, Color.White, Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None, new Vector2(5, 10));
 		}
 
-
 		private SlotId playingSoundId;
 		private void PlaySounds()
 		{

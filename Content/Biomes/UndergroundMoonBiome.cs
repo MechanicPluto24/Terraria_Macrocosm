@@ -10,14 +10,17 @@ namespace Macrocosm.Content.Biomes
 {
     public class UndergroundMoonBiome : MoonBiome
 	{
-		public override SceneEffectPriority Priority => SceneEffectPriority.BiomeHigh;
-		//public override string BestiaryIcon => "Macrocosm/Assets/Textures/Icons/Moon";
-		//public override string BackgroundPath => "Macrocosm/Assets/Textures/MapBackgrounds/Moon";
-		//public override string MapBackground => BackgroundPath;
+		public override SceneEffectPriority Priority => SceneEffectPriority.Environment;
 		public override Color? BackgroundColor => base.BackgroundColor;
 		public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.GetInstance<MoonSurfaceBgStyle>();
 		public override ModUndergroundBackgroundStyle UndergroundBackgroundStyle => ModContent.GetInstance<MoonUgBgStyle>();
 		public override int Music => MusicLoader.GetMusicSlot(Mod, "Assets/Music/Stygia");
+
+
+		public override string BestiaryIcon => "Macrocosm/Content/Biomes/MoonBiome_Icon";
+		public override string BackgroundPath => "Macrocosm/Content/Biomes/MoonBiome_Background";
+		public override string MapBackground => BackgroundPath;
+
 
 		public override void SetStaticDefaults()
 		{
