@@ -33,6 +33,11 @@ Mods: {
 				Description: A hole has appeared in your suit, your blood begins to boil!
 			}
 
+			Depressurized: {
+				DisplayName: Depressurized
+				Description: Your blood is boiling!
+			}
+
 			ChandriumEmpowerment: {
 				DisplayName: Chandrium Empowerment
 				Description: Your next hit with your Chandrium Whip will deal increased damage!
@@ -51,11 +56,6 @@ Mods: {
 			SpaceShuttle: {
 				DisplayName: Space Shuttle
 				Description: In memory of STS-51-L and STS-107.
-			}
-
-			Depressurized: {
-				DisplayName: Depressurized
-				Description: Your blood is boiling from the lack of atmospheric pressure!
 			}
 		}
 
@@ -193,17 +193,12 @@ Mods: {
 			}
 
 			CraterDemonSummon: {
-				DisplayName: Lunar Skull
+				DisplayName: Daemonic Tablet
 				Tooltip:
 					'''
 					Summons the Crater Demon
 					Must be used on the Moon
 					'''
-			}
-
-			MoonGlobe: {
-				DisplayName: Moon Globe
-				Tooltip: Toss it to change how the Moon looks!
 			}
 
 			MoonCoin: {
@@ -217,8 +212,8 @@ Mods: {
 			}
 
 			DevPick: {
-				DisplayName: Dev Pick
-				Tooltip: Developer Pickaxe
+				DisplayName: Developer Pickaxe
+				Tooltip: ""
 			}
 
 			RocketPlacer: {
@@ -264,26 +259,6 @@ Mods: {
 			ChandriumOre: {
 				DisplayName: Chandrium Ore
 				Tooltip: ""
-			}
-
-			CinisChunk: {
-				DisplayName: Cinis Chunk
-				Tooltip: "'The core in the middle holds many universes inside'"
-			}
-
-			NubisChunk: {
-				DisplayName: Nubis Chunk
-				Tooltip: "'It spins akin to a galaxy'"
-			}
-
-			SidusChunk: {
-				DisplayName: Sidus Chunk
-				Tooltip: "'The fire burns like a star'"
-			}
-
-			TurbenChunk: {
-				DisplayName: Turben Chunk
-				Tooltip: "'Emitting enough light to blind'"
 			}
 
 			CortexFragment: {
@@ -945,15 +920,15 @@ Mods: {
 			HandheldEngineProjectile.DisplayName: Handheld Engine
 			HandheldEngineHitbox.DisplayName: Handheld Engine
 			ZombieSecurityBullet.DisplayName: Zombie Security
-			SeleniteMagnumProjectile.DisplayName: Selenite Magnum  
-			TychoBullet.DisplayName: Tycho .50 
+			SeleniteMagnumProjectile.DisplayName: Selenite Magnum
+			TychoBullet.DisplayName: Tycho .50
 			DianiteMeteor.DisplayName: Dianite Meteor
-			DianiteMeteorSmall.DisplayName: Dianite Meteor  
-			PhantasmalImpLarge.DisplayName: Phantasmal Imp  
-			PhantasmalImpSmall.DisplayName: Phantasmal Imp  
-			MoonPhaseGlobeProjectile.DisplayName: Moon Phase Globe 
-			DianiteForkCoreProjectile.DisplayName: Dianite Fork 
-			DianiteForkProjectile.DisplayName: Dianite Fork 
+			DianiteMeteorSmall.DisplayName: Dianite Meteor
+			PhantasmalImpLarge.DisplayName: Phantasmal Imp
+			PhantasmalImpSmall.DisplayName: Phantasmal Imp
+			MoonPhaseGlobeProjectile.DisplayName: Moon Phase Globe
+			DianiteForkCoreProjectile.DisplayName: Dianite Fork
+			DianiteForkProjectile.DisplayName: Dianite Fork
 		}
 
 		Tiles: {
@@ -968,25 +943,19 @@ Mods: {
 		}
 
 		SetBonuses: {
-
 			SpaceProtection_Tier1:
 				'''
 				Pressurized spacesuit allows for exploration of other celestial bodies.
 				Tier 1 extraterrestrial protection
 				'''
-
 			SpaceProtection_Tier2:
 				'''
 				Lead-lined suit allows for safe exploration of highly irradiated environments.
 				Tier 2 extraterrestrial protection
 				'''
-
 		}
 
-		GameTips: {
-			
-			Generic_Tip1: You may find valuable fossil fuels in the desert.
-		}
+		GameTips.Generic_Tip1: You may find valuable fossil fuels in the desert.
 
 		LoadingScreenTips: {
 			Moon: {

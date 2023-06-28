@@ -6,9 +6,10 @@ namespace Macrocosm.Content.Biomes
 {
 	public class BasaltBiome : MoonBiome
 	{
-		public override SceneEffectPriority Priority => SceneEffectPriority.BiomeHigh;
-		public override string BestiaryIcon => Macrocosm.EmptyTexPath;
-		public override string BackgroundPath => Macrocosm.EmptyTexPath;
+		public override SceneEffectPriority Priority => SceneEffectPriority.Environment;
+
+		public override string BestiaryIcon => "Macrocosm/Content/Biomes/MoonBiome_Icon";
+		public override string BackgroundPath => "Macrocosm/Content/Biomes/MoonBiome_Background";
 		public override string MapBackground => BackgroundPath;
 
 		//public override Color? BackgroundColor => base.BackgroundColor;

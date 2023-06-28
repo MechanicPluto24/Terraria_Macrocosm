@@ -59,9 +59,6 @@ namespace Macrocosm.Content.Projectiles.Global
 			if (projectile.ModProjectile is null)
 				return;
 
-			//if (!projectile.ModProjectile.NetWriteFields(binaryWriter, bitWriter))
-			//	binaryWriter.Dispose();
-
 			projectile.ModProjectile.NetWriteFields(binaryWriter, bitWriter);
 		}
 

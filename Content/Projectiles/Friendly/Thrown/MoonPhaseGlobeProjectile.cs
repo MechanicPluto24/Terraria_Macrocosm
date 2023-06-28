@@ -29,10 +29,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Thrown
 
 			if (Main.netMode != NetmodeID.MultiplayerClient)
 			{
-				if (Main.moonPhase >= 8)
- 					Main.moonPhase = 0;
+				if (Main.moonPhase <= 0)
+ 					Main.moonPhase = 7;
  				else
- 					Main.moonPhase++;
+ 					Main.moonPhase--;
  			}
 
 			NetMessage.SendData(MessageID.WorldData);

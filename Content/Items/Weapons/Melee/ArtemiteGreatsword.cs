@@ -12,11 +12,11 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 {
 	public class ArtemiteGreatsword : ModItem
 	{
-
 		public override void SetStaticDefaults()
 		{
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
+
 		public override void SetDefaults()
 		{
 			Item.damage = 225;
@@ -39,10 +39,9 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 		{
 		}
 
-
 		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
-			Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.MountedCenter, new Vector2(player.direction, 0f), Item.shoot, damage, knockback, player.whoAmI, (float)player.direction * player.gravDir, 30); //, player.GetAdjustedItemScale(Item));
+			Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.MountedCenter, new Vector2(player.direction, 0f), Item.shoot, damage, knockback, player.whoAmI, (float)player.direction * player.gravDir, 32); //, player.GetAdjustedItemScale(Item));
 			return true;
 		}
 

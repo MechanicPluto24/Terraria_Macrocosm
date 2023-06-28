@@ -17,8 +17,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
 		public override void SetDefaults()
 		{
-			Projectile.width = 160;
-			Projectile.height = 160;
+			Projectile.width = 110;
+			Projectile.height = 110;
 			Projectile.aiStyle = -1;
 			Projectile.friendly = true;
 			Projectile.DamageType = DamageClass.Melee;
@@ -35,10 +35,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
 		public override void ModifyDamageHitbox(ref Rectangle hitbox)
 		{
-			Vector2 pos = Projectile.position + new Vector2(80 * Projectile.scale,0).RotatedBy(Projectile.rotation);
+			Vector2 pos = Projectile.position + new Vector2(65 * Projectile.scale,0).RotatedBy(Projectile.rotation);
 			hitbox.X = (int)pos.X;
 			hitbox.Y = (int)pos.Y;
-
 		}
 
 		public override void AI()
@@ -49,7 +48,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			float progress = Projectile.localAI[0] / Projectile.ai[1];
 			Player player = Main.player[Projectile.owner];
 
-			Projectile.localAI[0] += 1.4f;
+			Projectile.localAI[0] += 1.3f;
 
 			Projectile.rotation = (float)Math.PI * direction * progress + Projectile.velocity.ToRotation() + direction * (float)Math.PI + player.fullRotation;
 			Projectile.Center = player.RotatedRelativePoint(player.MountedCenter);
@@ -58,7 +57,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			Projectile.scale *= Main.player[Projectile.owner].GetAdjustedItemScale(Main.item[Main.player[Projectile.owner].selectedItem]);
 			Projectile.scale *= 1.5f;
 
-			if (Projectile.localAI[0] >= Projectile.ai[1])
+			if (Projectile.localAI[0] >= Projectile.ai[1] + 1)
  				Projectile.Kill();
  		}
 
@@ -75,7 +74,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			float progress = Projectile.localAI[0] / Projectile.ai[1];
 			float progressScale = Utils.Remap(progress, 0f, 0.6f, 0f, 1f) * Utils.Remap(progress, 0.6f, 1f, 1f, 0f);
 
-			Color color = new Color(130, 220, 199).NewAlpha(1f - progress) * lightColor.GetLuminance();
+			Color color = new Color(130, 220, 199).NewAlpha(1f - progress);// * lightColor.GetLuminance();
 	
 			Main.EntitySpriteDraw(val.Value, position, val.Frame(1, 4, frameY: 0), color * progressScale, Projectile.rotation + Projectile.ai[0] * ((float)Math.PI / 4f) * -1f * (1f - progress), origin, Projectile.scale * 0.95f, effects, 0f);
 			Main.EntitySpriteDraw(val.Value, position, val.Frame(1, 4, frameY: 1), color * 0.15f, Projectile.rotation, origin, Projectile.scale, effects, 0f);

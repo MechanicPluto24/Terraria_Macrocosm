@@ -54,8 +54,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
 		public override bool MinionContactDamage() => true;
 
-
 		private bool spawned = false;
+
+		public override void PostDraw(Color lightColor)
+		{
+			Texture2D glow = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Summon/ChandriumStaffMinion_Glow").Value;
+			Projectile.DrawAnimatedExtra(glow, Color.White, Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, Projectile.spriteDirection == 1 ? new Vector2(3,6) : new Vector2(3,-2));
+		}
 
 		public override void AI()
 		{

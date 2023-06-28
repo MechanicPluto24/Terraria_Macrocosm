@@ -262,7 +262,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 float centerY = Projectile.position.Y;
                 int projCount = 2;
                 for (int i = 0; i < projCount; i++)
-                    Projectile.NewProjectile(Projectile.GetSource_FromThis(), (int)centerX, (int)centerY, 0, 0, ModContent.ProjectileType<DianiteForkProjectile>(), (int)(Projectile.damage), Projectile.knockBack, Main.player[Projectile.owner].whoAmI, Projectile.whoAmI, (360f / (float)projCount) * i);
+                {
+                    int proj = Projectile.NewProjectile(Projectile.GetSource_FromThis(), (int)centerX, (int)centerY, 0, 0, ModContent.ProjectileType<DianiteForkProjectile>(), (int)(Projectile.damage), Projectile.knockBack, Main.player[Projectile.owner].whoAmI, Projectile.whoAmI, (360f / (float)projCount) * i);
+                    NetMessage.SendData(MessageID.SyncProjectile, -1, -1, null, proj);
+                }
 
                 DoOnce = true;
             }

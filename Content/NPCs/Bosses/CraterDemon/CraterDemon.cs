@@ -924,6 +924,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 					break;
 
 				case Attack_ChargeAtPlayer:
+
 					inertia = DefaultInertia * 0.1f;
 
 					float chargeVelocity = GetDifficultyScaling(DifficultyScale.PortalChargeVelocity);
@@ -1070,15 +1071,19 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 					}
 					else if (repeatRelative == 1)
 					{
-						//Wait, then spawn a portal
-						if (AI_Timer <= 0)
+						// pick a random position a tick before spawning portal (to allow for netsync)
+						if(AI_Timer > 1 * GetDifficultyScaling(DifficultyScale.AttackDurationScaling) && AI_Timer <= 2 * GetDifficultyScaling(DifficultyScale.AttackDurationScaling))
 						{
 							if (Main.netMode != NetmodeID.MultiplayerClient)
 							{
 								portalOffset = Main.rand.NextVector2Unit() * 30 * 16;
 								NPC.netUpdate = true;
 							}
+						}
 
+						//Wait, then spawn a portal
+						if (AI_Timer <= 0)
+						{
 							//Second portal is where the boss will end up
 							SpawnBigPortal(player.Center + portalOffset, ref bigPortal, fast: true);
 							SpawnBigPortal(player.Center - portalOffset, ref bigPortal2, fast: true);

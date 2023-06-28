@@ -53,6 +53,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
 		public override bool MinionContactDamage() => true;
 
+
+		public override void PostDraw(Color lightColor)
+		{
+			Texture2D glow = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Summon/CalcicCaneMinion_Glow").Value;
+			Projectile.DrawAnimatedExtra(glow, Color.White, Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, new Vector2(0, Projectile.spriteDirection == 1 ? 5 : -1));
+		}
+
 		public override void AI()
 		{
 			Player owner = Main.player[Projectile.owner];
@@ -67,8 +74,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 			Movement(foundTarget, distanceFromTarget, targetCenter, distanceToIdlePosition, vectorToIdlePosition);
 			Visuals(foundTarget);
 		}
-
-
 
 		private bool CheckActive(Player owner)
 		{
