@@ -31,7 +31,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			Item.value = Item.sellPrice(silver: 700);
 			Item.rare = ModContent.RarityType<MoonRarityT2>();
 			Item.autoReuse = true; // if you can hold click to automatically use it again
-			Item.shoot = ModContent.ProjectileType<Tycho50Bullet>(); //this gun uses a holdout projectile
+			Item.shoot = ModContent.ProjectileType<TychoBullet>(); //this gun uses a holdout projectile
 			Item.shootSpeed = 32f; // the speed of the projectile (measured in pixels per frame)
 			Item.DamageType = DamageClass.Ranged; //deals melee damage
 			Item.reuseDelay = 8;
@@ -41,7 +41,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
 		{
 			position += new Vector2(44, -4 * Math.Sign(velocity.X)).RotatedBy(velocity.ToRotation());
-			type = ModContent.ProjectileType<Tycho50Bullet>();
+			type = ModContent.ProjectileType<TychoBullet>();
  		}
 
 		public override void HoldItem(Player player)
