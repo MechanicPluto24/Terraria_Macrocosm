@@ -5,9 +5,9 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Thrown
 {
-	public class MoonGlobeProjectile : ModProjectile
+	public class MoonPhaseGlobeProjectile : ModProjectile
 	{
-		public override string Texture => "Macrocosm/Content/Items/Consumables/Throwable/MoonGlobe";
+		public override string Texture => "Macrocosm/Content/Items/Consumables/Throwable/MoonPhaseGlobe";
 
 		public override void SetDefaults()
 		{
@@ -29,10 +29,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Thrown
 
 			if (Main.netMode != NetmodeID.MultiplayerClient)
 			{
-				if (Main.moonType >= 8)
- 					Main.moonType = 0;
+				if (Main.moonPhase >= 8)
+ 					Main.moonPhase = 0;
  				else
- 					Main.moonType++;
+ 					Main.moonPhase++;
  			}
 
 			NetMessage.SendData(MessageID.WorldData);

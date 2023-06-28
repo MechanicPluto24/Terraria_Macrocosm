@@ -68,8 +68,9 @@ namespace Macrocosm.Common.Drawing.Particles
 		{
 			get
 			{
+				// BANDAID: Returns (1,1) on servers
 				if(GetFrame() is null)
-					return Texture.Size();
+					return Texture is null ? new Vector2(1, 1) : Texture.Size();
 
 				return GetFrame().Value.Size();
 			}

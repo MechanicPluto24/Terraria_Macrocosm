@@ -12,7 +12,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-    public class LHB805Projectile : HeldGunProjectile
+    public class LHBMinigunProjectile : HeldGunProjectile
 	{
 		private const int windupFrames = 4; // number of windup animaton frames
 		private const int shootFrames = 6;  // number of shooting animaton frames
@@ -130,7 +130,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 		public override void PostDraw(Color lightColor)
 		{
-			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Ranged/LHB805Projectile_Glow").Value;
+			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Ranged/LHBMinigunProjectile_Glow").Value;
 			Projectile.DrawAnimatedExtra(glowmask, Color.White, Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None, new Vector2(5, 10));
 		}
 

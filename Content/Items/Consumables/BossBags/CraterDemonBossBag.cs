@@ -47,7 +47,7 @@ namespace Macrocosm.Content.Items.Consumables.BossBags
 
 			itemLoot.Add(ItemDropRule.OneFromOptions(1,
 				ModContent.ItemType<CalcicCane>(),
-				ModContent.ItemType<Cruithne3753>(),
+				ModContent.ItemType<Cruithne>(),
 				ModContent.ItemType<ImbriumJewel>()
 				/*, ModContent.ItemType<ChampionBlade>() */
 				));

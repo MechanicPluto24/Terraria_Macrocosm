@@ -9,7 +9,7 @@ using Macrocosm.Content.Rarities;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
-	public class Cruithne3753 : ModItem
+	public class Cruithne : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
@@ -76,7 +76,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 		{
 			if (player.altFunctionUse == 2)
 			{
-				velocity *= 0.8f;
+				velocity *= 0.5f;
 				position.Y -= 4;
 			}                                                                                                                                                                                            
  		}

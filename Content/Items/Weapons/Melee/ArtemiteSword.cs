@@ -1,7 +1,9 @@
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Projectiles.Friendly.Melee;
 using Macrocosm.Content.Rarities;
+using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -29,8 +31,14 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 			Item.rare = ModContent.RarityType<MoonRarityT1>();
 			Item.UseSound = SoundID.Item1;
 			Item.autoReuse = true;
-			Item.shoot = ModContent.ProjectileType<ArtemiteSwordProjectile>();
-			Item.shootSpeed = 10f;
+			Item.shoot = ProjectileID.LightsBane;
+			Item.shootSpeed = 0f;
+		}
+
+		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+		{
+			Projectile.NewProjectile(source, position, velocity, Item.shoot, damage, knockback, player.whoAmI, 10f);
+			return false;
 		}
 
 		public override void AddRecipes()

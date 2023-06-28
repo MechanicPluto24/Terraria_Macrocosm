@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
-	public class LHB805 : ModItem
+	public class LHBMinigun : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
@@ -29,7 +29,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			Item.value = Item.sellPrice(silver: 700); 
 			Item.rare = ModContent.RarityType<MoonRarityT2>();
 			Item.autoReuse = true; // if you can hold click to automatically use it again
-			Item.shoot = ModContent.ProjectileType<LHB805Projectile>(); //this gun uses a holdout projectile
+			Item.shoot = ModContent.ProjectileType<LHBMinigunProjectile>(); //this gun uses a holdout projectile
 			Item.shootSpeed = 32f; // the speed of the projectile (measured in pixels per frame)
 			Item.DamageType = DamageClass.Ranged; //deals melee damage
 			Item.damage = 45; //the damage of your gun
@@ -42,7 +42,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
 		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
-			Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<LHB805Projectile>(), damage, knockback, player.whoAmI);
+			Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<LHBMinigunProjectile>(), damage, knockback, player.whoAmI);
 			return false;
 		}
 	}

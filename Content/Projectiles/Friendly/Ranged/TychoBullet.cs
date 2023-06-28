@@ -11,7 +11,7 @@ using Macrocosm.Content.Particles;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-    public class Tycho50Bullet : ModProjectile, IBullet
+    public class TychoBullet : ModProjectile, IBullet
 	{
 		public override void SetStaticDefaults()
 		{

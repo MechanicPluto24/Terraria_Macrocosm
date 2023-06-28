@@ -10,7 +10,7 @@ using System;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
-	public class Tycho50 : ModItem
+	public class TychoDesertEagle : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
