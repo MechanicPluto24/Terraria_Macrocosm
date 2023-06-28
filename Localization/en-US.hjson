@@ -785,13 +785,18 @@ Mods: {
 				Tooltip: Two different firing modes
 			}
 
-			LHB805: {
-				DisplayName: LHB-805
+			Cruithne: {
+				DisplayName: Cruithne-3753
 				Tooltip: ""
 			}
 
-			NWA12691: {
-				DisplayName: NWA-12691
+			LHBMinigun: {
+				DisplayName: L.H.B.-805
+				Tooltip: ""
+			}
+
+			NWARocketLauncher: {
+				DisplayName: N.W.A.-12691
 				Tooltip:
 					'''
 					Shoots rockets 
@@ -841,6 +846,16 @@ Mods: {
 
 			SpaceDust: {
 				DisplayName: Space Dust
+				Tooltip: ""
+			}
+
+			MoonPhaseGlobe: {
+				DisplayName: Moon Phase Globe
+				Tooltip: ""
+			}
+
+			TychoDesertEagle: {
+				DisplayName: Tycho .50
 				Tooltip: ""
 			}
 		}
@@ -910,14 +925,13 @@ Mods: {
 			ArchersLineProjectile.DisplayName: Archer's Line
 			CruithneGreenSlug.DisplayName: Cruithne Green Slug
 			DeliriumShell.DisplayName: Delirium Shell
-			LHB805Projectile.DisplayName: LHB-805
-			NWAMissile.DisplayName: NWA-12691
+			LHBMinigunProjectile.DisplayName: L.H.B.-805
+			NWAMissile.DisplayName: N.W.A.-12691
 			PlasmaGrenade.DisplayName: Plasma Grenade
 			SeleniteArrow.DisplayName: Selenite Arrow
 			CalcicCaneMinion.DisplayName: Crater Imp
 			ChandriumStaffMinion.DisplayName: Crescent Ghoul
 			ChandriumWhipProjectile.DisplayName: Chandrium Whip
-			MoonGlobeProjectile.DisplayName: Moon Globe
 			MoonTombstone.DisplayName: Moon Tombstone
 			ArtemiteDrillProjectile.DisplayName: Artemite Drill
 			ChandriumDrillProjectile.DisplayName: Chandrium Drill
@@ -931,13 +945,15 @@ Mods: {
 			HandheldEngineProjectile.DisplayName: Handheld Engine
 			HandheldEngineHitbox.DisplayName: Handheld Engine
 			ZombieSecurityBullet.DisplayName: Zombie Security
-			SeleniteMagnumProjectile.DisplayName: Selenite Magnum Projectile
-			Tycho50Projectile.DisplayName: Tycho50 Projectile
-			Tycho50Bullet.DisplayName: Tycho50 Bullet
+			SeleniteMagnumProjectile.DisplayName: Selenite Magnum  
+			TychoBullet.DisplayName: Tycho .50 
 			DianiteMeteor.DisplayName: Dianite Meteor
-			DianiteMeteorSmall.DisplayName: Dianite Meteor Small
-			PhantasmalImpLarge.DisplayName: Phantasmal Imp Large
-			PhantasmalImpSmall.DisplayName: Phantasmal Imp Small
+			DianiteMeteorSmall.DisplayName: Dianite Meteor  
+			PhantasmalImpLarge.DisplayName: Phantasmal Imp  
+			PhantasmalImpSmall.DisplayName: Phantasmal Imp  
+			MoonPhaseGlobeProjectile.DisplayName: Moon Phase Globe 
+			DianiteForkCoreProjectile.DisplayName: Dianite Fork 
+			DianiteForkProjectile.DisplayName: Dianite Fork 
 		}
 
 		Tiles: {
@@ -951,31 +967,25 @@ Mods: {
 			SeleniteOre.MapEntry: Selenite Ore
 		}
 
-		SetBonuses.SpaceProtection_Tier1:
-			'''
-			Pressurized spacesuit allows for exploration of other celestial bodies
-			Tier 1 extraterrestrial protection
-			'''
+		SetBonuses: {
+
+			SpaceProtection_Tier1:
+				'''
+				Pressurized spacesuit allows for exploration of other celestial bodies.
+				Tier 1 extraterrestrial protection
+				'''
+
+			SpaceProtection_Tier2:
+				'''
+				Lead-lined suit allows for safe exploration of highly irradiated environments.
+				Tier 2 extraterrestrial protection
+				'''
+
+		}
 
 		GameTips: {
-			Generic_Tip1: (TEST) 1 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip2: (TEST) 2 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip3: (TEST) 3 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip4: (TEST) 4 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip5: (TEST) 5 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip6: (TEST) 6 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip7: (TEST) 7 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip8: (TEST) 8 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip9: (TEST) 9 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip10: (TEST) 10 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip11: (TEST) 11 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip12: (TEST) 12 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip13: (TEST) 13 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip14: (TEST) 14 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip15: (TEST) 15 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip16: (TEST) 16 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip17: (TEST) 17 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip18: (TEST) 18 You can visit other planets if you manage to build a rocket (TEST)
+			
+			Generic_Tip1: You may find valuable fossil fuels in the desert.
 		}
 
 		LoadingScreenTips: {

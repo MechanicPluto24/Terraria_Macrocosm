@@ -93,7 +93,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		public override void ModifyNPCLoot(NPCLoot loot)
 		{
 			// drop gun, 1/12 normal mode, twice in expert
-			loot.Add(ItemDropRule.ExpertGetsRerolls(ModContent.ItemType<Tycho50>(), 12, 1)); 
+			loot.Add(ItemDropRule.ExpertGetsRerolls(ModContent.ItemType<TychoDesertEagle>(), 12, 1)); 
 		}
 
 		public override void OnSpawn(IEntitySource source)

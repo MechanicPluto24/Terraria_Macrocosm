@@ -17,13 +17,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 	{
 		public ref float AI_HomingTimer => ref Projectile.ai[0];
 		public ref float AI_AccelerationTimer => ref Projectile.ai[1];
+		public ref float AI_InitialDecelerationTimer => ref Projectile.ai[2];
 
 		public float BlastRadius => 120;
 
 		public override void SetStaticDefaults()
 		{
 			ProjectileID.Sets.TrailCacheLength[Type] = 30;
-			ProjectileID.Sets.TrailingMode[Type] = 0;
+			ProjectileID.Sets.TrailingMode[Type] = 3;
 		}
 
 		public override void SetDefaults()
@@ -52,9 +53,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 			float timeToReachTopSpeed = 100;
 			if(AI_AccelerationTimer < timeToReachTopSpeed)
-			{
-				AI_AccelerationTimer++;
-			}
+ 				AI_AccelerationTimer++;
+
+			float timerForInitialDeceleration = 20;
+			if (AI_InitialDecelerationTimer < timerForInitialDeceleration)
+				AI_InitialDecelerationTimer++;
 
 			#endregion
 
@@ -62,8 +65,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			float x = Projectile.position.X;
 			float y = Projectile.position.Y;
 
-			float maxDistance = 800f; // original was 600f
-			float minHomingTime = 20f; // original was 30f
+			float maxDistance = 800f;  
+			float minHomingTime = 35f; 
 
 			bool hasTarget = false;
 			AI_HomingTimer++;
@@ -85,6 +88,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 							x = targetCenterX;
 							y = targetCenterY;
 							hasTarget = true;
+							break;
 						}
 					}
 				}
@@ -102,6 +106,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			}
 
 			Vector2 maxVelocity = (new Vector2(x, y) - Projectile.Center).SafeNormalize(-Vector2.UnitY) * (10f + 6f * (AI_AccelerationTimer / timeToReachTopSpeed));
+			maxVelocity *= (AI_InitialDecelerationTimer / timerForInitialDeceleration);
 			Projectile.velocity = Vector2.Lerp(Projectile.velocity, maxVelocity, 0.093333336f);
 
 			#endregion
@@ -252,9 +257,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 		public override bool PreDraw(ref Color lightColor)
 		{
-			ProjectileID.Sets.TrailCacheLength[Type] = 30;
-			ProjectileID.Sets.TrailingMode[Type] = 3;
-
 			Projectile.GetTrail().Opacity = Projectile.localAI[1];
 
 			if (Projectile.alpha < 1)

@@ -13,7 +13,7 @@ using Macrocosm.Content.Particles;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
-    public class NWA12691 : ModItem
+    public class NWARocketLauncher : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
@@ -87,9 +87,8 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
 		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
 		{
-			position += new Vector2(0,-10) + Utility.PolarVector(20f, velocity.ToRotation());
+			position += new Vector2(0,-10) + Utility.PolarVector(25f, velocity.ToRotation());
 			type = ModContent.ProjectileType<NWAMissile>();
-			velocity += player.velocity;
 		}
 	}
 }

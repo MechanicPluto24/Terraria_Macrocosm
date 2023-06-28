@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Consumables.Throwable
 {
-	public class MoonGlobe : ModItem
+	public class MoonPhaseGlobe : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
@@ -13,7 +13,7 @@ namespace Macrocosm.Content.Items.Consumables.Throwable
 
 		public override void SetDefaults()
 		{
-			Item.DefaultToThrownWeapon(ModContent.ProjectileType<MoonGlobeProjectile>(), 20, 8f);
+			Item.DefaultToThrownWeapon(ModContent.ProjectileType<MoonPhaseGlobeProjectile>(), 20, 8f);
 			Item.UseSound = SoundID.Item106;
 			Item.width = 18;
 			Item.height = 18;

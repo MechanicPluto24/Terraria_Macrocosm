@@ -17,8 +17,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
 		public override void SetDefaults()
 		{
-			Projectile.width = 200;
-			Projectile.height = 200;
+			Projectile.width = 160;
+			Projectile.height = 160;
 			Projectile.aiStyle = -1;
 			Projectile.friendly = true;
 			Projectile.DamageType = DamageClass.Melee;
@@ -35,9 +35,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
 		public override void ModifyDamageHitbox(ref Rectangle hitbox)
 		{
-			Vector2 pos = Projectile.position + new Vector2(100,0).RotatedBy(Projectile.rotation);
+			Vector2 pos = Projectile.position + new Vector2(80 * Projectile.scale,0).RotatedBy(Projectile.rotation);
 			hitbox.X = (int)pos.X;
 			hitbox.Y = (int)pos.Y;
+
 		}
 
 		public override void AI()
