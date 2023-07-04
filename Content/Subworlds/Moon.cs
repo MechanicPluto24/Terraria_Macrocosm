@@ -15,6 +15,7 @@ using Macrocosm.Content.Projectiles.Environment.Meteors;
 using Macrocosm.Content.Rocket.Navigation.LaunchChecklist;
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Common.Utils;
+using Macrocosm.Common.Drawing;
 
 namespace Macrocosm.Content.Subworlds
 {

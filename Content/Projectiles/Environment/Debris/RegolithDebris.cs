@@ -3,9 +3,11 @@ using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Tiles.Ambient;
 using Macrocosm.Content.Tiles.Blocks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -22,8 +24,10 @@ namespace Macrocosm.Content.Projectiles.Environment.Debris
 
         public override void SetDefaults()
         {
-            Projectile.width = 8;
-            Projectile.height = 8;
+            Projectile.width = 4;
+            Projectile.height = 4;
+
+            Projectile.tileCollide = false;
 
             Projectile.timeLeft = TimeToLive;
 
@@ -44,20 +48,28 @@ namespace Macrocosm.Content.Projectiles.Environment.Debris
 
         public override void AI()
         {
-			Projectile.velocity.Y += 0.15f * MacrocosmSubworld.CurrentGravityMultiplier;
+            float gravity = 0.15f * MacrocosmSubworld.CurrentGravityMultiplier; ;
+            Projectile.velocity.Y += gravity;
 			Projectile.rotation += Projectile.velocity.X * 0.05f;
 
             // If colliding, stop and roll on the ground
 			Projectile.velocity = Collision.TileCollision(Projectile.position, Projectile.velocity, Projectile.width, Projectile.height);
-            if (Projectile.velocity.Y == 0f)
+
+            // Roll up slopes
+			Vector4 slopeCollision = Collision.SlopeCollision(Projectile.position, Projectile.velocity, Projectile.width, Projectile.height, gravity, fall: true);
+            Projectile.position = slopeCollision.XY();
+            Projectile.velocity = slopeCollision.ZW();
+
+            // Decelerate while on the ground
+			if (Projectile.velocity.Y == 0f)
             {
                 Projectile.velocity.X *= 0.97f;
 
                 if (Projectile.velocity.X > -0.01 && Projectile.velocity.X < 0.01)
-                    Projectile.velocity.X = 0f;
-            }
+					Projectile.velocity.X = 0f;
+			}
 
-            // Keep time left as it is until the debris stops
+			// Keep time left as it is until the debris stops
 			if (Projectile.velocity != Vector2.Zero)
                  Projectile.timeLeft++;
 
@@ -116,5 +128,19 @@ namespace Macrocosm.Content.Projectiles.Environment.Debris
                 }
             }
         }
-    }
+
+		public override Color? GetAlpha(Color lightColor)
+		{
+			return base.GetAlpha(lightColor);
+		}
+
+		public override bool PreDraw(ref Color lightColor)
+		{
+            Texture2D texture = TextureAssets.Projectile[Type].Value;
+            Rectangle frame = texture.Frame(1, 6, frameY: Projectile.frame);
+			Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, frame, Projectile.GetAlpha(lightColor), Projectile.rotation, frame.Size() / 2f, Projectile.scale, SpriteEffects.None); ;
+
+            return false;
+        }
+	}
 }

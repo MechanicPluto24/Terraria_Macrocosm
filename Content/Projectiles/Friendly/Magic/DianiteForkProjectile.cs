@@ -1,9 +1,11 @@
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Trails;
 using Microsoft.CodeAnalysis;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Terraria;
 using Terraria.GameContent;
@@ -17,9 +19,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
     {
         public override void SetStaticDefaults()
         {
-            ProjectileID.Sets.TrailCacheLength[Type] = 10;
-            ProjectileID.Sets.TrailingMode[Type] = 0;
-        }
+			ProjectileID.Sets.TrailCacheLength[Type] = 15;
+			ProjectileID.Sets.TrailingMode[Type] = 3;
+		}
 
         public override void SetDefaults()
         {
@@ -27,9 +29,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Projectile.height = 8;
             Projectile.friendly = true;
             Projectile.DamageType = DamageClass.Magic;
-            Projectile.tileCollide = false;
+            Projectile.tileCollide = true;
             Projectile.ignoreWater = true;
-            Projectile.penetrate = -1;
+            Projectile.penetrate = 1;
+            Projectile.timeLeft = 45;
 
             Projectile.SetTrail<DianiteForkTrail>();
         }
@@ -96,11 +99,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 spawned = true;
             }
 
-            Lighting.AddLight(Projectile.Center, new Color(255, 146, 0).ToVector3());
-
             AI_Timer++;
 
-            switch (AI_State)
+            // Keep alive unless metting specific conditions
+			Projectile.timeLeft++;
+
+			switch (AI_State)
             {
                 case ActionState.Orbit:
 
@@ -113,7 +117,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                     Vector2 vector = (Parent.Center - Projectile.Center).SafeNormalize(Vector2.UnitY);
 
                     Projectile.rotation = vector.ToRotation() - 1.57f;
-                    OrbitAngle += 12f * Math.Sign(Parent.velocity.X);
+                    OrbitAngle += 12 * Math.Sign(Parent.velocity.X);
 
                     float vX = 12 * MathF.Cos(OrbitAngle / 180 * MathHelper.Pi);
                     float vY = 12 * MathF.Sin(OrbitAngle / 180 * MathHelper.Pi);
@@ -123,7 +127,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                     Projectile.velocity.X = vX;
                     Projectile.velocity.Y = vY;
 
-                    if (AI_Timer >= 60)
+					if (AI_Timer >= 60)
                     {
                         if(Projectile.owner == Main.myPlayer)
                         {
@@ -138,11 +142,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 							// Schedule despawn of the parent projectile
 							if (isTheFirstSpawned)
                             {
-								Parent.timeLeft = 3;
+								Parent.timeLeft = 1;
                                 Parent.netUpdate = true;
                             }
-						}                   
-                    }
+						}
+					}
 
                     break;
 
@@ -156,7 +160,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 							AI_Timer = 0;
 
 							Projectile.penetrate = 1;
-                            originalSpeed = Projectile.velocity.Length();
+							originalSpeed = Projectile.velocity.Length();
 
                             turnSpeed = Main.rand.NextFloat(0.01f, 0.1f);
                             Projectile.netUpdate = true;
@@ -194,34 +198,73 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                         Vector2 direction = (TargetNPC.Center - Projectile.Center).SafeNormalize(Vector2.Zero);
                         Projectile.velocity = Vector2.Lerp(Projectile.velocity, direction * originalSpeed, turnSpeed);
                     }
-                    break;
+                    else
+                    {
+                        Projectile.timeLeft--;
+                    }
+
+					break;
             }
-        }
-        public override bool PreDraw(ref Color lightColor)
+
+
+			Lighting.AddLight(Projectile.Center, new Color(255, 146, 0).ToVector3());
+
+			if (AI_State is ActionState.Orbit)
+			{
+				if (AI_Timer % 3 == 0)
+				{
+					Dust dust = Dust.NewDustDirect(Projectile.Center, 1, 1, ModContent.DustType<DianiteBrightDust>(), -Parent.velocity.X * 0.4f, -Parent.velocity.Y * 0.4f);
+					dust.noGravity = true;
+				}
+			}
+			else
+			{
+				if (AI_Timer % 2 == 0)
+				{
+					Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<DianiteBrightDust>(), -Projectile.velocity.X * 0.4f, -Projectile.velocity.Y * 0.4f);
+					dust.noGravity = true;
+				}
+			}
+		}
+
+
+		public override void Kill(int timeLeft)
+		{
+            if(AI_State is ActionState.Orbit)
+                (Parent.ModProjectile as DianiteForkCoreProjectile).BrokenApartEarly = true;
+
+			for (int i = 0; i < 20; i++)
+            {
+                Vector2 velocity = Main.rand.NextVector2Circular(4, 4);
+                Vector2 extraPosition = AI_State is ActionState.Orbit ? Parent.oldVelocity : Projectile.oldVelocity;
+				Dust dust = Dust.NewDustPerfect(Projectile.position + extraPosition * 2f, ModContent.DustType<DianiteBrightDust>(), velocity, Scale: Main.rand.NextFloat(1f, 1.6f));
+			    dust.noGravity = true;
+            }
+		}
+
+		public override bool PreDraw(ref Color lightColor)
         {
             Texture2D tex = TextureAssets.Projectile[Type].Value;
 			Texture2D glow = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/SimpleGlow").Value;
 			Vector2 origin = Projectile.Size / 2f;
-
-            ProjectileID.Sets.TrailCacheLength[Type] = 15;
-            ProjectileID.Sets.TrailingMode[Type] = 3;
-
-			//Projectile.DrawMagicPixelTrail(Vector2.Zero, 8, 1, Color.Orange, Color.Black.NewAlpha(0));
-
+;
 			var state = Main.spriteBatch.SaveState();
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.Additive, state);
 
+			Projectile.GetTrail().Draw();
 			Main.EntitySpriteDraw(glow, Projectile.Center - Main.screenPosition, null, new Color(215, 101, 0), 0f, glow.Size() / 2, 0.05f * Projectile.scale, SpriteEffects.None, 0f);
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(state);
-			Projectile.GetTrail().Draw();
 
 			Main.EntitySpriteDraw(tex, Projectile.Center - Main.screenPosition,
                 null, Color.White, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
 
-            return false;
+			Main.spriteBatch.End();
+			Main.spriteBatch.Begin(state);
+
+			return false;
         }
     }
 
@@ -235,7 +278,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             set => Projectile.ai[0] = value ? 1f : 0f;
         }
 
-        public override void SetStaticDefaults()
+		public bool BrokenApartEarly
+		{
+			get => Projectile.ai[1] == 1f;
+			set => Projectile.ai[1] = value ? 1f : 0f;
+		}
+
+		public override void SetStaticDefaults()
         {
         }
 
@@ -245,31 +294,47 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Projectile.height = 8;
             Projectile.friendly = true;
             Projectile.DamageType = DamageClass.Magic;
-            Projectile.tileCollide = false;
+            Projectile.tileCollide = true;
             Projectile.ignoreWater = true;
+            Projectile.timeLeft = 61;
         }
 
         public override bool? CanCutTiles() => false;
 
         public override bool? CanHitNPC(NPC npc) => false;
 
+        private List<int> children;
+        private List<Projectile> Children;
+
         public override void AI()
         {
             if (Projectile.owner == Main.myPlayer && !DoOnce)
             {
-                float centerX = Projectile.position.X;
-                float centerY = Projectile.position.Y;
                 int projCount = 2;
-                for (int i = 0; i < projCount; i++)
+
+				for (int i = 0; i < projCount; i++)
                 {
-                    int proj = Projectile.NewProjectile(Projectile.GetSource_FromThis(), (int)centerX, (int)centerY, 0, 0, ModContent.ProjectileType<DianiteForkProjectile>(), (int)(Projectile.damage), Projectile.knockBack, Main.player[Projectile.owner].whoAmI, Projectile.whoAmI, (360f / (float)projCount) * i);
-                    NetMessage.SendData(MessageID.SyncProjectile, -1, -1, null, proj);
+                    Projectile proj = Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<DianiteForkProjectile>(), (int)(Projectile.damage), Projectile.knockBack, Main.player[Projectile.owner].whoAmI, Projectile.whoAmI, (360f / (float)projCount) * i);
+					NetMessage.SendData(MessageID.SyncProjectile, -1, -1, null, proj.whoAmI);
                 }
 
                 DoOnce = true;
             }
         }
 
-    }
+		public override void Kill(int timeLeft)
+		{
+            if (BrokenApartEarly)
+                return;
+
+			for (int i = 0; i < 35; i++)
+			{
+				Vector2 velocity = Main.rand.NextVector2Circular(16, 2f).RotatedBy(Projectile.velocity.ToRotation());
+				Dust dust = Dust.NewDustPerfect(Projectile.position, ModContent.DustType<DianiteBrightDust>(), velocity, Scale: Main.rand.NextFloat(1f, 1.4f));
+				dust.noGravity = true;
+			}
+		}
+
+	}
 }
 

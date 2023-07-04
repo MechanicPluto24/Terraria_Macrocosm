@@ -106,14 +106,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 			{
   				for (int i = 0; i < 60; i++)
 				{
-					Vector2 position = target.position + new Vector2(Main.rand.Next(target.width), Main.rand.Next(target.height));
-					Vector2 velocity = Main.rand.NextVector2Circular(2f, 2f);
+					Vector2 velocity = Main.rand.NextVector2Circular(2.5f, 2.5f);
 					Dust dust;
 					if (i % 20 == 0)
- 						Particle.CreateParticle<ChandriumCrescentMoon>(position, velocity, scale: Main.rand.NextFloat(0.8f, 1.2f));
+ 						Particle.CreateParticle<ChandriumCrescentMoon>(target.position, velocity, scale: Main.rand.NextFloat(0.8f, 1.2f));
 
  					// chandrium dust 
-					dust = Dust.NewDustDirect(position, target.width, target.height, ModContent.DustType<ChandriumDust>(), velocity.X, velocity.Y, Scale: Main.rand.NextFloat(0.8f, 1.2f));
+					
+					dust = Dust.NewDustDirect(target.position, target.width, target.height, ModContent.DustType<ChandriumBrightDust>(), velocity.X, velocity.Y, Scale: Main.rand.NextFloat(0.8f, 1.2f));
+					dust.noGravity = true;
 				}
 			}
 			else
@@ -123,7 +124,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 				{
 					Vector2 position = target.position;
 					Vector2 velocity = Main.rand.NextVector2Circular(0.5f, 0.5f);
-					Dust dust = Dust.NewDustDirect(position, target.width, target.height, ModContent.DustType<ChandriumDust>(), velocity.X, velocity.Y, Scale: Main.rand.NextFloat(0.8f, 1.2f));
+					Dust dust = Dust.NewDustDirect(position, target.width, target.height, ModContent.DustType<ChandriumBrightDust>(), velocity.X, velocity.Y, Scale: Main.rand.NextFloat(0.8f, 1.2f));
+					dust.noGravity = true;
 				}
 			}
 		}

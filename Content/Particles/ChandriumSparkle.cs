@@ -101,16 +101,13 @@ namespace Macrocosm.Content.Particles
 			if (whipActive)
 			{
 				Vector2 targetPosition = (Main.projectile[whipIdx].ModProjectile as ChandriumWhipProjectile).WhipTipPosition;
-				// Update the target position based on your code
-
+ 
 				if (targetPosition != Vector2.Zero)
 				{
 					Vector2 currentPosition = OldPosition;
 
-					// Ease the position towards the target
-					currentPosition = Vector2.Lerp(currentPosition, targetPosition, 0.9f);
+					currentPosition = Vector2.Lerp(currentPosition, targetPosition, 0.8f);
 
-					// Apply the eased position to the whip tip
 					Position = currentPosition;
 					Scale = 0.6f;
 				}
@@ -154,7 +151,7 @@ namespace Macrocosm.Content.Particles
 			for (int i = 0; i < 5; i++)
 			{
 				Vector2 position = Center;
-				Dust dust = Dust.NewDustDirect(position, 32, 32, ModContent.DustType<ChandriumSparkDust>());
+				Dust dust = Dust.NewDustDirect(position, 32, 32, ModContent.DustType<ChandriumBrightDust>());
 				dust.velocity = (Velocity.SafeNormalize(Vector2.UnitX) * Main.rand.NextFloat(1f, 1.4f)).RotatedByRandom(MathHelper.TwoPi);
 				dust.noLight = false;
 				dust.noGravity = true;

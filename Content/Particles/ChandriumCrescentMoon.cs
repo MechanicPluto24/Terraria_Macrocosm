@@ -19,12 +19,12 @@ namespace Macrocosm.Content.Particles
 
         public override void AI()
         {
-            Rotation += 0.16f * (rotateClockwise ? 1f : -1f);
+            Rotation += 0.08f * (rotateClockwise ? 1f : -1f);
 
-			Scale -= 0.06f;
+            Scale -= 0.014f;
             alpha++;
 
-            if (Scale < 0.03f)
+            if (Scale < 0.05f)
                 Kill();
 
             Lighting.AddLight(Position, new Vector3(0.607f, 0.258f, 0.847f) * Scale);

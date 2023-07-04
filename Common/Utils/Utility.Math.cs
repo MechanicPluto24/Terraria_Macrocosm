@@ -81,7 +81,7 @@ namespace Macrocosm.Common.Utils
 
 		#region Signals
 
-		/// <summary> Generates a triangle wave based on the given period and phase. </summary>
+		/// <summary> Generates a triangle wave based on the given period and phase. Use exclusively for visual effects. </summary>
 		/// <param name="period">The duration of one complete cycle of the wave.</param>
 		/// <param name="phase">The starting phase offset of the wave (optional).</param>
 		/// <returns>The value of the triangle wave ranging from -1 to 1.</returns>
@@ -93,7 +93,7 @@ namespace Macrocosm.Common.Utils
 			return 2 * (slope - 0.5f);
 		}
 
-		/// <summary> Generates a sine wave based on the given period and phase. </summary>
+		/// <summary> Generates a sine wave based on the given period and phase. Use exclusively for visual effects.</summary>
 		/// <param name="period">The duration of one complete cycle of the wave.</param>
 		/// <param name="phase">The starting phase offset of the wave (optional).</param>
 		/// <returns>The value of the sine wave ranging from -1 to 1.</returns>
@@ -104,7 +104,7 @@ namespace Macrocosm.Common.Utils
 			return MathF.Sin(angle);
 		}
 
-		/// <summary> Generates a positive-only sine wave based on the given period and phase.</summary>
+		/// <summary> Generates a positive-only sine wave based on the given period and phase. Use exclusively for visual effects.</summary>
 		/// <param name="period">The duration of one complete cycle of the wave.</param>
 		/// <param name="phase">The starting phase offset of the wave (optional).</param>
 		/// <returns> The value of the positive-only sine wave ranging from 0 to 1.</returns>
