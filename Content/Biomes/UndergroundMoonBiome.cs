@@ -29,17 +29,15 @@ namespace Macrocosm.Content.Biomes
 		public override void OnInBiome(Player player)
 		{
 			base.OnInBiome(player);
-			player.Macrocosm().ZoneUndergroundMoon = true;
-		}
+ 		}
 
 		public override void OnLeave(Player player)
 		{
 			base.OnLeave(player);
-			player.Macrocosm().ZoneUndergroundMoon = false;
-		}
+ 		}
 
 		public override bool IsBiomeActive(Player player) 
-			=> SubworldSystem.IsActive<Moon>() && player.ZoneDirtLayerHeight || player.ZoneRockLayerHeight;
+			=> SubworldSystem.IsActive<Moon>() && (player.position.Y > Main.worldSurface);
 
 	}
 }

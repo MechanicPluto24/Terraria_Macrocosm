@@ -30,8 +30,12 @@ namespace Macrocosm.Content.Projectiles.Global
 
 			if (projectile.ModProjectile is IExplosive explosive)
 			{
-				Collision.HitTiles(projectile.position, oldVelocity, projectile.width, projectile.height);
+				// Explosion logic (hitbox, timeleft, penetrate, etc.)
 				explosive.OnCollide(projectile);
+				
+				// Hit tiles visually, in a smaller area than the blast radius
+				Collision.HitTiles(projectile.position, oldVelocity, (int)(projectile.width * 0.6f), (int)(projectile.height * 0.6f));
+
 				return false;
 			}
 
@@ -46,7 +50,6 @@ namespace Macrocosm.Content.Projectiles.Global
 				//projectile.Kill();  
 			}
 		}
-
 
 		public override void OnHitPlayer(Projectile projectile, Player target, Player.HurtInfo info)
 		{

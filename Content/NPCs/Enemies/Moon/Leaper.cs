@@ -7,6 +7,7 @@ using Terraria.GameContent.ItemDropRules;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.NPCs.Global;
+using Macrocosm.Content.Biomes;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
@@ -48,7 +49,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
 		{
-			return spawnInfo.Player.Macrocosm().ZoneMoon && spawnInfo.Player.ZoneRockLayerHeight ? .1f : 0f;
+			return spawnInfo.Player.InModBiome<MoonBiome>() && spawnInfo.Player.ZoneRockLayerHeight ? .1f : 0f;
 		}
 
 		public override void AI()

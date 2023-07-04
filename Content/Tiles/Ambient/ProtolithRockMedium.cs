@@ -21,7 +21,7 @@ namespace Macrocosm.Content.Tiles.Ambient
 			DustType = ModContent.DustType<ProtolithDust>();
 
 			TileObjectData.newTile.CopyFrom(TileObjectData.Style2x1);
-			TileObjectData.newTile.RandomStyleRange = 6;
+
 			TileObjectData.newTile.StyleHorizontal = true;
 			TileObjectData.addTile(Type);
 

@@ -8,15 +8,15 @@ namespace Macrocosm.Common.Hooks
 	{
 		public void Load(Mod mod)
 		{
-			Terraria.GameContent.Ambience.On_AmbienceServer.Update += AmbienceServer_Update;
+			On_AmbienceServer.Update += AmbienceServer_Update;
 		}
 
 		public void Unload()
 		{
-			Terraria.GameContent.Ambience.On_AmbienceServer.Update -= AmbienceServer_Update;
+			On_AmbienceServer.Update -= AmbienceServer_Update;
 		}
 
-		private void AmbienceServer_Update(Terraria.GameContent.Ambience.On_AmbienceServer.orig_Update orig, AmbienceServer self)
+		private void AmbienceServer_Update(On_AmbienceServer.orig_Update orig, AmbienceServer self)
 		{
 			if (SubworldSystem.AnyActive<Macrocosm>())
 				return;

@@ -25,12 +25,10 @@ namespace Macrocosm.Content.Biomes
 
 		public override void OnInBiome(Player player)
 		{
-			player.Macrocosm().ZoneMoon = true;
 		}
 
 		public override void OnLeave(Player player)
 		{
-			player.Macrocosm().ZoneMoon = false;
 		}
 
 		public override bool IsBiomeActive(Player player) 

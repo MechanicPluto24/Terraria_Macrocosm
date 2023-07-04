@@ -184,13 +184,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                                     Projectile.netUpdate = true; // hmm, to test
 
                                 targetNPC = npc.whoAmI;
-
                             }
                         }
                     }
 
                     // Adjust the projectile's velocity towards the target over time
-                    if (TargetNPC is not null)
+                    if (TargetNPC is not null && Vector2.Distance(Projectile.Center, TargetNPC.Center) < homingDistance && TargetNPC.active && !TargetNPC.friendly && TargetNPC.lifeMax > 5 && !TargetNPC.dontTakeDamage)
                     {
                         Vector2 direction = (TargetNPC.Center - Projectile.Center).SafeNormalize(Vector2.Zero);
                         Projectile.velocity = Vector2.Lerp(Projectile.velocity, direction * originalSpeed, turnSpeed);
@@ -213,7 +212,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.Additive, state);
 
-			Main.EntitySpriteDraw(glow, Projectile.Center - Main.screenPosition, null, new Color(255, 101, 0), 0f, glow.Size() / 2, 0.05f * Projectile.scale, SpriteEffects.None, 0f);
+			Main.EntitySpriteDraw(glow, Projectile.Center - Main.screenPosition, null, new Color(215, 101, 0), 0f, glow.Size() / 2, 0.05f * Projectile.scale, SpriteEffects.None, 0f);
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(state);

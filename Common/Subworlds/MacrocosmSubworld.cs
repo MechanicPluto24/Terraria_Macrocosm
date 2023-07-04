@@ -31,6 +31,9 @@ namespace Macrocosm.Common.Subworlds
 		/// <summary> Post Update logic for this subworld. Not called on multiplayer clients </summary>
 		public virtual void PostUpdateWorld() { }
 
+		/// <summary> Modifiy color of the skies (applied to background, tiles, etc.) </summary>
+		public virtual void ModifyColorOfTheSkies(ref Color colorOfTheSkies) { }
+
 		/// <summary> Specifies the conditions for reaching this particular subworld </summary>
 		public virtual LaunchConditions LaunchConditions { get; } = new();
 

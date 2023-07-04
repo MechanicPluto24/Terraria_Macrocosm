@@ -11,8 +11,6 @@ namespace Macrocosm.Content.Particles
         public override string TexturePath => "Macrocosm/Assets/Textures/Star2";
 
 		public float Alpha = 1f;
-		byte alpha = 0;
-
         Color color = Color.White;
         
 		public override void OnSpawn()
