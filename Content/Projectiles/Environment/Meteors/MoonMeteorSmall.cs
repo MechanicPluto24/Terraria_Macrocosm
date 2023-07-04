@@ -3,6 +3,7 @@ using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Gores;
 using Macrocosm.Content.Items.MeteorChunks;
 using Macrocosm.Content.Projectiles.Base;
+using Macrocosm.Content.Projectiles.Environment.Debris;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -32,9 +33,9 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
             DustScaleMax = 1.2f;
             AI_DustChanceDenominator = 4;
 
-            GoreType = ModContent.GoreType<RegolithDebris>();
-            GoreCount = Main.rand.Next(2, 4);
-            GoreVelocity = new Vector2(0.5f, 0.6f);
+            DebrisType = ModContent.ProjectileType<RegolithDebris>();
+            DebrisCount = Main.rand.Next(2, 4);
+            DebrisVelocity = new Vector2(0.5f, 0.6f);
         }
 
         public override void SpawnItems()

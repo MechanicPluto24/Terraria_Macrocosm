@@ -53,7 +53,7 @@ namespace Macrocosm.Content.Items.MeteorChunks
 		{
 			if (Main.rand.NextBool(8))
 			{
-				Dust dust = Dust.NewDustDirect(Item.position, Item.width, Item.height / 2, ModContent.DustType<SmokeDust>(), newColor: new Color(160, 160, 160, 255));
+				Dust dust = Dust.NewDustDirect(Item.position, Item.width, Item.height / 2, ModContent.DustType<SmokeDust>(), newColor: new Color(160, 160, 160, 180));
 				dust.velocity.X = Main.rand.NextFloat(-0.2f, 0.2f);
 				dust.velocity.Y = -0.4f;
 				dust.noGravity = true;

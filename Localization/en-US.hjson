@@ -755,11 +755,6 @@ Mods: {
 				Tooltip: Right click to launch a plasma ball grenade
 			}
 
-			Cruithne3753: {
-				DisplayName: Cruithne-3753
-				Tooltip: Two different firing modes
-			}
-
 			Cruithne: {
 				DisplayName: Cruithne-3753
 				Tooltip: ""
@@ -767,15 +762,19 @@ Mods: {
 
 			LHBMinigun: {
 				DisplayName: L.H.B.-805
-				Tooltip: ""
+				Tooltip:
+					'''
+					What's more effective than bullets?
+					A whole LOT of bullets.
+					'''
 			}
 
 			NWARocketLauncher: {
 				DisplayName: N.W.A.-12691
 				Tooltip:
 					'''
-					Shoots rockets 
-					Right click to lock onto an enemy
+					Shoots rockets .
+					Right click to lock onto an enemy.
 					'''
 			}
 
@@ -811,11 +810,6 @@ Mods: {
 
 			HazardWall: {
 				DisplayName: Hazard Wall
-				Tooltip: ""
-			}
-
-			Tycho50: {
-				DisplayName: Tycho .50
 				Tooltip: ""
 			}
 
@@ -929,17 +923,22 @@ Mods: {
 			MoonPhaseGlobeProjectile.DisplayName: Moon Phase Globe
 			DianiteForkCoreProjectile.DisplayName: Dianite Fork
 			DianiteForkProjectile.DisplayName: Dianite Fork
+			RegolithDebris.DisplayName: Regolith Debris
 		}
 
 		Tiles: {
 			RocketLaunchPad.MapEntry: Launch Pad
+			IndustrialLoom.MapEntry: Industrial Loom
 			AluminumOre.MapEntry: Aluminum Ore
 			ArtemiteOre.MapEntry: Artemite Ore
 			ChandriumOre.MapEntry: Chandrium Ore
 			DianiteOre.MapEntry: Dianite Ore
 			LithiumOre.MapEntry: Lithium
-			OilShale.MapEntry: Oil Shale
 			SeleniteOre.MapEntry: Selenite Ore
+			OilShale.MapEntry: Oil Shale
+			ArtemiteBar.MapEntry: Artemite Bar
+			ChandriumBar.MapEntry: Chandrium Bar
+			DianiteBar.MapEntry: Dianite Bar
 		}
 
 		SetBonuses: {

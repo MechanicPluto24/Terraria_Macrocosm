@@ -11,7 +11,7 @@ using Macrocosm.Content.Systems;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Terraria.Localization;
-
+using Macrocosm.Content.Biomes;
 
 namespace Macrocosm.Content.Players
 {
@@ -27,16 +27,11 @@ namespace Macrocosm.Content.Players
 	{
 		public SpaceProtection SpaceProtection = SpaceProtection.None;
 
-		public bool ZoneMoon = false;
-		public bool ZoneUndergroundMoon = false;
-		public bool ZoneBasalt = false;
-		public bool ZoneIrradiation = false;
-
 		public float RadNoiseIntensity = 0f;
 
 		public int ChandriumEmpowermentStacks = 0;
 
-		/// <summary> Chance to not consume ammo from equipment and weapons, stacks additively </summary>
+		/// <summary> Chance to not consume ammo from equipment and weapons, stacks additively with the vanilla chance </summary>
         public float ChanceToNotConsumeAmmo 
 		{ 
 			get => chanceToNotConsumeAmmo; 
@@ -80,12 +75,11 @@ namespace Macrocosm.Content.Players
 
 		public void UpdateSpaceEnvironmentalDebuffs()
         {
-			SpaceProtection protectTier = Player.Macrocosm().SpaceProtection;
 			if (!Player.RocketPlayer().InRocket)
 			{
 				if (SubworldSystem.IsActive<Moon>())
 				{
-					if (protectTier == SpaceProtection.None)
+					if (SpaceProtection == SpaceProtection.None)
 						Player.AddBuff(BuffType<Depressurized>(), 2);
      				//if (protectTier <= SpaceProtection.Tier1)
      					//Player.AddBuff(BuffTpye<Irradiated>(), 2);
@@ -118,10 +112,9 @@ namespace Macrocosm.Content.Players
 
 		public void UpdateSpaceArmourImmunities()
         {
-			SpaceProtection protectTier = Player.Macrocosm().SpaceProtection;
-			if (protectTier > SpaceProtection.None)
+			if (SpaceProtection > SpaceProtection.None)
 				Player.buffImmune[BuffType<Depressurized>()] = true;
-			if (protectTier > SpaceProtection.Tier1)
+			if (SpaceProtection > SpaceProtection.Tier1)
             {
 
             }
@@ -135,7 +128,7 @@ namespace Macrocosm.Content.Players
 
 		private void UpdateFilterEffects()
 		{
-			if (ZoneIrradiation)
+			if (Player.InModBiome<IrradiationBiome>())
 			{
 				if (!Filters.Scene["Macrocosm:RadiationNoiseEffect"].IsActive())
 					Filters.Scene.Activate("Macrocosm:RadiationNoiseEffect");

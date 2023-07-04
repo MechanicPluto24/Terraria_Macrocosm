@@ -47,7 +47,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
 		{
-			return spawnInfo.Player.Macrocosm().ZoneMoon && !Main.dayTime ? .1f : 0f;
+			return spawnInfo.Player.InModBiome<MoonBiome>() && !Main.dayTime ? .1f : 0f;
 		}
 
 		public override void AI()
