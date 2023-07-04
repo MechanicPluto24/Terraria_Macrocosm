@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using System.Collections.Generic;
-using ReLogic.Content;
-using Terraria.ModLoader;
-using Macrocosm.Common.Netcode;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria;
-using Macrocosm.Common.Drawing.Trails;
+using Terraria.ModLoader;
 using Macrocosm.Common.Utils;
-using Terraria.DataStructures;
-using Macrocosm.Common.DataStructures;
-using ReLogic.Peripherals.RGB;
-using Microsoft.Xna.Framework.Graphics.PackedVector;
+using Macrocosm.Common.Netcode;
+using Macrocosm.Common.Drawing.Trails;
+
 
 namespace Macrocosm.Common.Drawing.Particles
 {
@@ -68,7 +64,7 @@ namespace Macrocosm.Common.Drawing.Particles
 		{
 			get
 			{
-				// BANDAID: Returns (1,1) on servers
+				// BANDAID: Returns (1,1) on servers... now I really have to do that ^
 				if(GetFrame() is null)
 					return Texture is null ? new Vector2(1, 1) : Texture.Size();
 
@@ -77,7 +73,7 @@ namespace Macrocosm.Common.Drawing.Particles
 		}
 					
 		/// <summary> Whether the current particle instance is active </summary>
-		public bool Active { get; private set; }
+		public bool Active { get; protected set; }
 
 		/// <summary> Time left before despawining, in ticks </summary>
 		[NetSync] public int TimeLeft;
@@ -150,16 +146,16 @@ namespace Macrocosm.Common.Drawing.Particles
 		public virtual bool SetRandomFrameOnSpawn => false;
 
 		/// <summary> If true, particle will despawn on the end of animation </summary>
-		public virtual bool DespawnOnAnimationComplete { get; set; } = false;
+		public virtual bool DespawnOnAnimationComplete => false;
 
 		/// <summary> Number of animation frames of this particle </summary>
-		public virtual int FrameNumber { get; set; } = 1;
+		public virtual int FrameNumber => 1;
 
 		/// <summary> Particle animation update speed, in ticks per frame </summary>
-		public virtual int FrameSpeed { get; set; } = 1;
+		public virtual int FrameSpeed => 1;
 
-		private int currentFrame = 0;
-		private int frameCnt = 0;
+		protected int currentFrame = 0;
+		protected int frameCnt = 0;
 
 		/// <summary> Used for animating the <c>Particle</c>. By default, updates with <see cref="FrameNumber"/> and <see cref="FrameSpeed"/> </summary>
 		public virtual void UpdateFrame()
@@ -215,10 +211,8 @@ namespace Macrocosm.Common.Drawing.Particles
 			if (ShouldUpdatePosition)
  				Position += Velocity;
 
-			PopulateTrailParameters();
-
+			PopulateTrailData();
 			AI();
-
 			UpdateFrame();
 
 			if (TimeLeft-- <= 0)
@@ -237,6 +231,7 @@ namespace Macrocosm.Common.Drawing.Particles
 		#endregion
 
 		#region Trails
+
 		public void DrawMagicPixelTrail(Vector2 rotatableOffsetFromCenter, float startWidth, float endWidth, Color startColor, Color? endColor = null)
 				=> Utility.DrawMagicPixelTrail(Size / 2f, OldPositions, OldRotations, rotatableOffsetFromCenter, startWidth, endWidth, startColor, endColor);
 
@@ -253,7 +248,7 @@ namespace Macrocosm.Common.Drawing.Particles
 			Trail.Owner = this;
 		}
 
- 		public virtual int TrailCacheLenght { get; set; } = 1;
+		public virtual int TrailCacheLenght { get; set; } = 1;
 
 		public Vector2 OldPosition => OldPositions[0];
 		public float OldRotation => OldRotations[0];
@@ -261,32 +256,27 @@ namespace Macrocosm.Common.Drawing.Particles
 		public Vector2[] OldPositions = new Vector2[1];
 		public float[] OldRotations = new float[1];
 
-		private void PopulateTrailParameters() 
-		{
-			InitializeTrailArrays();
-
-			OldPositions[0] = Position;
-			OldRotations[0] = Rotation;
-
-			for (int i = TrailCacheLenght - 1; i > 0; i--)
-			{
- 				OldPositions[i] = OldPositions[i - 1];
-				OldRotations[i] = OldRotations[i - 1];
- 			}
-		}
-
-		private void InitializeTrailArrays()
+		private void PopulateTrailData()
 		{
 			if (OldPositions.Length != TrailCacheLenght)
 			{
 				Array.Resize(ref OldPositions, TrailCacheLenght);
 				Array.Fill(OldPositions, Position);
 			}
-			
+
 			if (OldRotations.Length != TrailCacheLenght)
 			{
 				Array.Resize(ref OldRotations, TrailCacheLenght);
 				Array.Fill(OldRotations, Rotation);
+			}
+
+			OldPositions[0] = Position;
+			OldRotations[0] = Rotation;
+
+			for (int i = TrailCacheLenght - 1; i > 0; i--)
+			{
+				OldPositions[i] = OldPositions[i - 1];
+				OldRotations[i] = OldRotations[i - 1];
 			}
 		}
 

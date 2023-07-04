@@ -3,11 +3,16 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Graphics;
 using Terraria.Graphics.Shaders;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Drawing.Trails
 {
-	public abstract class VertexTrail
+	public abstract class VertexTrail : IModType
 	{
+		public Mod Mod { get; }
+		public string Name { get; }
+		public string FullName { get; }
+
 		public abstract MiscShaderData TrailShader { get; }
 		public virtual object Owner { get; set; }
 
