@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
 using Terraria.GameContent;
-
+using System.Reflection;
 
 namespace Macrocosm.Common.Utils
 {
@@ -53,6 +53,13 @@ namespace Macrocosm.Common.Utils
 		/// </summary>
 		public static int TrueDamage(int damage)
 			=> damage / (Main.expertMode ? 4 : 2);
+
+		public static Rectangle GetDamageHitbox(this Projectile proj)
+		{
+			MethodInfo dynMethod = proj.GetType().GetMethod("Damage_GetHitbox",
+				BindingFlags.NonPublic | BindingFlags.Instance);
+			return (Rectangle)dynMethod.Invoke(proj, null);
+		}
 		
 		/// <summary>
 		/// Draws an animated projectile, leave texture null to draw as entity with the loaded texture
