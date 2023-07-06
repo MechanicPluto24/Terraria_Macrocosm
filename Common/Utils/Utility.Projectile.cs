@@ -64,13 +64,9 @@ namespace Macrocosm.Common.Utils
 		/// <param name="texture"> Leave null to draw as entity with the loaded texture </param>
 		public static void DrawAnimated(this Projectile proj, Color lightColor, SpriteEffects effect, Vector2 drawOffset = default, Texture2D texture = null, Rectangle? frame = null, Effect shader = null)
 		{
-			bool drawEntity = false;
-			
+
 			if (texture is null)
-			{
-				texture = TextureAssets.Projectile[proj.type].Value;
-				drawEntity = true;
-			}
+ 				texture = TextureAssets.Projectile[proj.type].Value;
 
 			Vector2 position = proj.Center - Main.screenPosition;
 
@@ -86,10 +82,7 @@ namespace Macrocosm.Common.Utils
 				Main.spriteBatch.Begin(shader, state);
 			}
 
-			if (drawEntity)
-				Main.EntitySpriteDraw(texture, position, sourceRect, lightColor, proj.rotation, origin, proj.scale, effect, 0);
-			else
-				Main.spriteBatch.Draw(texture, position, sourceRect, lightColor, proj.rotation, origin, proj.scale, effect, 0f);
+			Main.EntitySpriteDraw(texture, position, sourceRect, lightColor, proj.rotation, origin, proj.scale, effect, 0);
 
 			if (shader is not null)
 			{
