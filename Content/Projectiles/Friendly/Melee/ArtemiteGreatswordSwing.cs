@@ -1,4 +1,5 @@
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -8,6 +9,7 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
+using static tModPorter.ProgressUpdate;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
@@ -53,9 +55,19 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			Projectile.rotation = (float)Math.PI * direction * progress + Projectile.velocity.ToRotation() + direction * (float)Math.PI + player.fullRotation;
 			Projectile.Center = player.RotatedRelativePoint(player.MountedCenter);
 
-			Projectile.scale = baseScale + progress * scaleFactor;
+			Projectile.scale = baseScale + Utility.QuadraticEaseInOut(progress) * scaleFactor;
 			Projectile.scale *= Main.player[Projectile.owner].GetAdjustedItemScale(Main.item[Main.player[Projectile.owner].selectedItem]);
 			Projectile.scale *= 1.5f;
+
+			Rectangle hitbox = Projectile.GetDamageHitbox();
+			Vector2 hitboxPos = hitbox.Center.ToVector2() - hitbox.Size()/4;
+
+			for(int i = 0; i < (int)(6 * (Projectile.scale/3f)); i++)
+			{
+				Vector2 dustVelocity = new Vector2(Main.rand.NextFloat(8, 22), 0).RotatedBy(Projectile.rotation + Main.rand.NextFloat(MathF.PI/2, MathF.PI/2 * 1.5f)) + Main.player[Projectile.owner].velocity;
+				Dust dust = Dust.NewDustDirect(hitboxPos, 4, 4, ModContent.DustType<LuminiteDust>(), dustVelocity.X, dustVelocity.Y, Scale: Main.rand.NextFloat(2f, 3f));
+				dust.noGravity = true;
+			}
 
 			if (Projectile.localAI[0] >= Projectile.ai[1] + 1)
  				Projectile.Kill();
@@ -63,9 +75,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
 		public override bool PreDraw(ref Color lightColor)
 		{
-			Asset<Texture2D> val = TextureAssets.Projectile[Type];
+			Texture2D texture = TextureAssets.Projectile[Type].Value;
+			Texture2D star = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/Star1").Value;
 
-			Rectangle frame = val.Frame(1, 4, frameY: 3);
+			Rectangle frame = texture.Frame(1, 4, frameY: 3);
 			Vector2 origin = frame.Size() / 2f;
 
 			Vector2 position = Projectile.Center - Main.screenPosition;
@@ -76,12 +89,29 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
 			Color color = new Color(130, 220, 199).NewAlpha(1f - progress);// * lightColor.GetLuminance();
 	
-			Main.EntitySpriteDraw(val.Value, position, val.Frame(1, 4, frameY: 0), color * progressScale, Projectile.rotation + Projectile.ai[0] * ((float)Math.PI / 4f) * -1f * (1f - progress), origin, Projectile.scale * 0.95f, effects, 0f);
-			Main.EntitySpriteDraw(val.Value, position, val.Frame(1, 4, frameY: 1), color * 0.15f, Projectile.rotation, origin, Projectile.scale, effects, 0f);
-			Main.EntitySpriteDraw(val.Value, position, val.Frame(1, 4, frameY: 2), color * 0.7f * progressScale * 0.3f, Projectile.rotation, origin, Projectile.scale, effects, 0f);
-		    Main.EntitySpriteDraw(val.Value, position, val.Frame(1, 4, frameY: 2), color * 0.8f * progressScale * 0.5f, Projectile.rotation, origin, Projectile.scale * 0.975f, effects, 0f);
-		    Main.EntitySpriteDraw(val.Value, position, val.Frame(1, 4, frameY: 3), color * progressScale, Projectile.rotation, origin, Projectile.scale * 0.95f, effects, 0f);
-			
+			Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 0), color * progressScale, Projectile.rotation + Projectile.ai[0] * ((float)Math.PI / 4f) * -1f * (1f - progress), origin, Projectile.scale * 0.95f, effects, 0f);
+			Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 1), color * 0.15f, Projectile.rotation, origin, Projectile.scale, effects, 0f);
+			Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 2), color * 0.7f * progressScale * 0.3f, Projectile.rotation, origin, Projectile.scale, effects, 0f);
+		    Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 2), color * 0.8f * progressScale * 0.5f, Projectile.rotation, origin, Projectile.scale * 0.975f, effects, 0f);
+		    Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), (Color.White * progressScale).NewAlpha(0.4f - 0.2f * progressScale), Projectile.rotation, origin, Projectile.scale * 0.95f, effects, 0f);
+		    Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), (color * progressScale).NewAlpha(0.2f - 0.2f * progressScale), Projectile.rotation, origin, Projectile.scale * 0.75f, effects, 0f);
+		    Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), (color * progressScale).NewAlpha(0.1f - 0.05f *progressScale), Projectile.rotation, origin, Projectile.scale * 0.55f, effects, 0f);
+
+
+			var state = Main.spriteBatch.SaveState();
+			Main.spriteBatch.End();
+			Main.spriteBatch.Begin(BlendState.Additive, state);
+
+			if (progress < 0.95f)
+				for(int i = 0; i < 3; i++)
+				{
+					float scale = Projectile.scale * (0.05f - 0.01f * i);
+					float angle = Projectile.rotation + (i * (MathHelper.PiOver4 / 2f));
+					Main.EntitySpriteDraw(star, position + Utility.PolarVector(76 * Projectile.scale, angle), null, (new Color(168, 255, 255) * (1f + color.A/255f)).NewAlpha(1f), Projectile.rotation + MathHelper.PiOver4, star.Size() / 2f, scale, SpriteEffects.None);
+				}
+
+			Main.spriteBatch.End();
+			Main.spriteBatch.Begin(state);
 			return false;
 		}
 	}

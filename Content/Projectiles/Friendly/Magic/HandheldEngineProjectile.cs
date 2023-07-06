@@ -6,10 +6,14 @@ using Macrocosm.Content.Projectiles.Base;
 using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Graphics.PackedVector;
 using ReLogic.Utilities;
 using System;
 using Terraria;
 using Terraria.Audio;
+using Terraria.GameContent;
+using Terraria.Graphics;
+using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -38,13 +42,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 		}
 
 		public override void SetProjectileDefaults()
-		{ 
-
+		{
 		}
 
 		private bool CanShoot => true;
 		public override void ProjectileAI()
 		{
+
 			Main.projFrames[Type] = windupFrames + shootFrames;
 
 			Animate();
@@ -93,20 +97,37 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 				Projectile.NewProjectile(Projectile.GetSource_FromAI(), rotPoint2, Vector2.Zero, ModContent.ProjectileType<HandheldEngineHitbox>(), damage, knockback, OwnerPlayer.whoAmI, Projectile.whoAmI);
 				Projectile.NewProjectile(Projectile.GetSource_FromAI(), rotPoint3, Vector2.Zero, ModContent.ProjectileType<HandheldEngineHitbox>(), damage, knockback, OwnerPlayer.whoAmI, Projectile.whoAmI);
 
-				for(int i = 0; i < 10; i++)
+				Vector2 rotPoint4 = Utility.RotatingPoint(Projectile.Center, new Vector2(130, 12 * Projectile.spriteDirection), Projectile.rotation);
+				Vector2 rotPoint5 = Utility.RotatingPoint(Projectile.Center, new Vector2(145, 12 * Projectile.spriteDirection), Projectile.rotation);
+
+				Lighting.AddLight(rotPoint1, Color.Lerp(Color.Lerp(new Color(98, 204, 255, 0), new Color(255, 177, 65, 0), AI_Overheat), Color.Lerp(new Color(255, 177, 65), new Color(255, 24, 24), AI_Overheat), 0.25f).ToVector3() * (1.5f - (0.75f * Utility.PositiveSineWave(10))));
+				Lighting.AddLight(rotPoint3, Color.Lerp(Color.Lerp(new Color(98, 204, 255, 0), new Color(255, 177, 65, 0), AI_Overheat), Color.Lerp(new Color(255, 177, 65), new Color(255, 24, 24), AI_Overheat), 0.50f).ToVector3() * (1.2f - (0.6f * Utility.PositiveSineWave(10, 1))));
+				Lighting.AddLight(rotPoint4, Color.Lerp(Color.Lerp(new Color(98, 204, 255, 0), new Color(255, 177, 65, 0), AI_Overheat), Color.Lerp(new Color(255, 177, 65), new Color(255, 24, 24), AI_Overheat), 0.60f).ToVector3() * (0.8f - (0.4f * Utility.PositiveSineWave(10, 2))));
+				Lighting.AddLight(rotPoint5, Color.Lerp(Color.Lerp(new Color(98, 204, 255, 0), new Color(255, 177, 65, 0), AI_Overheat), Color.Lerp(new Color(255, 177, 65), new Color(255, 24, 24), AI_Overheat), 0.75f).ToVector3() * (0.5f - (0.25f * Utility.PositiveSineWave(10, 3))));
+
+				for (int i = 0; i < (int)(10f * MathHelper.Clamp((AI_Windup / windupTime), 0,1)); i++)
 				{
 					float amp = Main.rand.NextFloat(0, 1f);
-					Vector2 position = rotPoint2 + Main.rand.NextVector2Circular(20, 20);
-					Vector2 velocity = (Utility.PolarVector(8 * (1 - amp), MathHelper.WrapAngle(Projectile.rotation)) - Projectile.velocity.SafeNormalize(Vector2.UnitX)).RotatedByRandom(MathHelper.PiOver4 * 0.4);
-					Particle.CreateParticle<EngineSpark>(position, velocity, Main.rand.NextFloat(1.2f, 1.8f) * (1 - amp), Projectile.rotation);
+					Vector2 position = rotPoint1 + Main.rand.NextVector2Circular(12, 20);
+					Vector2 velocity = (Utility.PolarVector(36 * (1 - amp), MathHelper.WrapAngle(Projectile.rotation)) - Projectile.velocity.SafeNormalize(Vector2.UnitX)).RotatedByRandom(MathHelper.PiOver4 * 0.15f) + OwnerPlayer.velocity;
+
+					Particle.CreateParticle<EngineSpark>(p =>
+					{
+						p.Position = position;
+						p.Velocity = velocity;
+						p.Scale = Main.rand.NextFloat(1.2f, 1.8f) * (1 - amp);
+						p.Rotation = Projectile.rotation;
+						p.ColorOnSpawn = Color.White;
+						p.ColorOnDespawn = Color.Lerp(new Color(89, 151, 193), new Color(255, 177, 65), AI_Overheat);
+					});
 				}
 			}
 		}
 
 		public void Visuals()
 		{
-			if(CanShoot)
-				Lighting.AddLight(Projectile.position + Utility.PolarVector(80f, Projectile.rotation), new Vector3(0.4313f, 0.9764f, 1.0f) * 1.1f);
+			//if(CanShoot)
+			//	Lighting.AddLight(Projectile.position + Utility.PolarVector(80f, Projectile.rotation), new Vector3(0.4313f, 0.9764f, 1.0f) * 1.1f);
 		}
 
 		public void ComputeOverheat()
@@ -128,11 +149,60 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
 		public override bool PreDraw(ref Color lightColor)
 		{
-			Effect effect = ModContent.Request<Effect>(Macrocosm.EffectAssetPath + "OverheatGradient", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-			effect.Parameters["uIntensity"].SetValue(AI_Overheat);
-			effect.Parameters["uOffset"].SetValue(new Vector2(-0.08f + (-0.2f * (1f - AI_Overheat)), 0));
+			var state = Main.spriteBatch.SaveState();
+
+			Main.spriteBatch.End();
+			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, state);
+
+			float a = 0.1f + 0.9f * Utility.BounceEaseIn(AI_Windup >= windupTime ? 1f : MathHelper.SmoothStep(0.1f, 1f, AI_Windup / windupTime));
+			float b = Utility.QuadraticEaseOut(MathHelper.Clamp(-0.4f + 0.6f * (AI_Windup / windupTime), 0, 1));
+
+			VertexStrip strip = new();
+			int num = 36;
+			Vector2[] positions = new Vector2[num];
+			float[] rotations = new float[num];
+			Array.Fill(positions, Projectile.Center + (new Vector2(0, 12).RotatedBy(Projectile.rotation) * Projectile.direction) - Main.screenPosition);
+			Array.Fill(rotations, Projectile.rotation + MathHelper.Pi);
+
+			for (int i = 0; i < num; i++)
+			{
+				positions[i] += Utility.PolarVector(4f * i, Projectile.rotation);
+				//Main.spriteBatch.Draw(TextureAssets.InfoIcon[1].Value, positions[i], Color.White);
+			}
+
+			var shader = new MiscShaderData(Main.VertexPixelShaderRef, "MagicMissile")
+							.UseProjectionMatrix(doUse: true)
+							.UseSaturation(-2.4f)
+							.UseImage0(ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/FadeOutMask"))
+							.UseImage1(ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/FadeOutTrail"))
+							.UseImage2(ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/FlamingTrail"));
+
+			shader.Apply();
+
+			strip.PrepareStrip(positions, rotations, 
+				(float p) => Color.Lerp(
+								Color.Lerp(new Color(98, 204, 255, 0), new Color(255, 177, 65, 0), AI_Overheat) * a,
+								Color.Lerp(new Color(255, 177, 65), new Color(255, 24, 24), AI_Overheat) * b,
+								Utility.CubicEaseIn(p) * 0.85f + 0.15f * Utility.PositiveSineWave(40)) * (0.05f + 0.95f * a), 
+							(float p) => MathHelper.Lerp(25, 55 + 30 * Utility.PositiveSineWave(70), p));
+			strip.DrawTrail();
+
+			Main.spriteBatch.End();
+			Main.spriteBatch.Begin(state);
+
+			Effect effect = ModContent.Request<Effect>(Macrocosm.EffectAssetPath + "ColorGradient", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+			Rectangle sourceRect = TextureAssets.Projectile[Type].Frame(1, Main.projFrames[Type], frameY: Projectile.frame);
+
+			effect.Parameters["uSourceRect"].SetValue(new Vector4((float)sourceRect.X, (float)sourceRect.Y, (float)sourceRect.Width, (float)sourceRect.Height));
+			effect.Parameters["uImageSize0"].SetValue(TextureAssets.Projectile[Type].Size());
+
+			effect.Parameters["uColorIntensity"].SetValue(new Vector4(AI_Overheat * 0.8f, 0f, 0f, 1f));
+			effect.Parameters["uOffset"].SetValue(new Vector2(0.35f,0.5f));
+			effect.Parameters["uSize"].SetValue(0.5f * AI_Overheat);
+			effect.Parameters["uSDF"].SetValue(1);
 
 			Projectile.DrawAnimated(lightColor, Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None, new Vector2(5, 12), shader: effect);
+
 			return false;
 		}
 
@@ -141,20 +211,25 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Magic/HandheldEngineProjectile_Glow").Value;
 			Texture2D flame = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Magic/HandheldEngineProjectile_Flame").Value;
 			Texture2D warning = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Magic/HandheldEngineProjectile_Warning").Value;
+			SpriteEffects effects = Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None;
 
-			Projectile.DrawAnimatedExtra(glowmask, Color.White, Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None, new Vector2(5, 14));
+			int frameY = OwnerHasMana ? 0 : (AI_UseCounter % 24 < 12 ? 1 : 2);
+			Rectangle sourceRect = warning.Frame(1, 3, frameY: frameY);
 
-			SpriteBatchState state = Main.spriteBatch.SaveState();
+			float alpha = 0.1f + 0.1f * Utility.QuadraticEaseIn(AI_Windup >= windupTime ? 0.9f : MathHelper.SmoothStep(0.1f, 0.9f, AI_Windup / windupTime));
+
+			var state = Main.spriteBatch.SaveState();
+			Main.spriteBatch.End();
+			Main.spriteBatch.Begin(BlendState.AlphaBlend, state);
+
+			Projectile.DrawAnimatedExtra(glowmask, Color.Lerp(Color.White, new Color(245, 80, 20), AI_Overheat).NewAlpha(0.9f - 0.9f * AI_Overheat), effects, new Vector2(5, 14));
+			Projectile.DrawAnimatedExtra(flame, (Color.Lerp(Color.White, new Color(245, 120, 40), AI_Overheat) * (alpha + 0.9f *  AI_Overheat)).NewAlpha(0f), effects, new Vector2(5, 14));
+
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.Additive, state);
 
-			float alpha = AI_Windup >= windupTime ? 0.9f : MathHelper.SmoothStep(0.1f, 0.9f, AI_Windup / windupTime);
-			Projectile.DrawAnimatedExtra(flame, Color.White.NewAlpha(alpha), Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None, new Vector2(5, 14));
-
-			int frameY = OwnerHasMana ? 0 : (AI_UseCounter % 24 < 12 ? 1 : 2);
-			Rectangle sourceRect = warning.Frame(1, 3, frameY: frameY);
-			Projectile.DrawAnimatedExtra(warning, Color.White.NewAlpha(alpha), Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None, new Vector2(5, 14), frame: sourceRect);
+			Projectile.DrawAnimatedExtra(warning, Color.White, effects, new Vector2(5, 14), frame: sourceRect);
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(state);
@@ -211,7 +286,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			Projectile.width = 30;
 			Projectile.height = 30;
 			Projectile.aiStyle = -1;
-			Projectile.penetrate = -1;
+			Projectile.penetrate = 1;
 			Projectile.friendly = true;
 			Projectile.timeLeft = 2;
 			Projectile.tileCollide = false;

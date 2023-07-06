@@ -148,6 +148,98 @@ namespace Macrocosm.Common.Utils
 		public static float CubicEaseInOut(float t)
 			=> (t < 0.5) ? (4f * t * t * t) : 0.5f + CubicEaseOut(t);
 
+		public static float QuartEaseIn(float t) => t * t * t * t;
+		public static float QuartEaseOut(float t) => 1 - QuartEaseIn(1 - t);
+		public static float QuartEaseInOut(float t)
+		{
+			if (t < 0.5) return QuartEaseIn(t * 2) / 2;
+			return 1 - QuartEaseIn((1 - t) * 2) / 2;
+		}
+
+		public static float QuintEaseIn(float t) => t * t * t * t * t;
+		public static float QuintEaseOut(float t) => 1 - QuintEaseIn(1 - t);
+		public static float QuintEaseInOut(float t)
+		{
+			if (t < 0.5) return QuintEaseIn(t * 2) / 2;
+			return 1 - QuintEaseIn((1 - t) * 2) / 2;
+		}
+
+		public static float SineEaseIn(float t) => (float)-Math.Cos(t * Math.PI / 2);
+		public static float SineEaseOut(float t) => (float)Math.Sin(t * Math.PI / 2);
+		public static float SineEaseInOut(float t) => (float)(Math.Cos(t * Math.PI) - 1) / -2;
+
+		public static float ExpoEaseIn(float t) => (float)Math.Pow(2, 10 * (t - 1));
+		public static float ExpoEaseOut(float t) => 1 - ExpoEaseIn(1 - t);
+		public static float ExpoEaseInOut(float t)
+		{
+			if (t < 0.5) return ExpoEaseIn(t * 2) / 2;
+			return 1 - ExpoEaseIn((1 - t) * 2) / 2;
+		}
+
+		public static float CircEaseIn(float t) => -((float)Math.Sqrt(1 - t * t) - 1);
+		public static float CircEaseOut(float t) => 1 - CircEaseIn(1 - t);
+		public static float CircEaseInOut(float t)
+		{
+			if (t < 0.5) return CircEaseIn(t * 2) / 2;
+			return 1 - CircEaseIn((1 - t) * 2) / 2;
+		}
+
+		public static float ElasticEaseIn(float t) => 1 - ElasticEaseOut(1 - t);
+		public static float ElasticEaseOut(float t)
+		{
+			float p = 0.3f;
+			return (float)Math.Pow(2, -10 * t) * (float)Math.Sin((t - p / 4) * (2 * Math.PI) / p) + 1;
+		}
+		public static float ElasticEaseInOut(float t)
+		{
+			if (t < 0.5) return ElasticEaseIn(t * 2) / 2;
+			return 1 - ElasticEaseIn((1 - t) * 2) / 2;
+		}
+
+		public static float BackEaseIn(float t)
+		{
+			float s = 1.70158f;
+			return t * t * ((s + 1) * t - s);
+		}
+		public static float BackEaseOut(float t) => 1 - BackEaseIn(1 - t);
+		public static float BackEaseInOut(float t)
+		{
+			if (t < 0.5) return BackEaseIn(t * 2) / 2;
+			return 1 - BackEaseIn((1 - t) * 2) / 2;
+		}
+
+		public static float BounceEaseIn(float t) => 1 - BounceEaseOut(1 - t);
+		public static float BounceEaseOut(float t)
+		{
+			float div = 2.75f;
+			float mult = 7.5625f;
+
+			if (t < 1 / div)
+			{
+				return mult * t * t;
+			}
+			else if (t < 2 / div)
+			{
+				t -= 1.5f / div;
+				return mult * t * t + 0.75f;
+			}
+			else if (t < 2.5 / div)
+			{
+				t -= 2.25f / div;
+				return mult * t * t + 0.9375f;
+			}
+			else
+			{
+				t -= 2.625f / div;
+				return mult * t * t + 0.984375f;
+			}
+		}
+		public static float BounceEaseInOut(float t)
+		{
+			if (t < 0.5) return BounceEaseIn(t * 2) / 2;
+			return 1 - BounceEaseIn((1 - t) * 2) / 2;
+		}
+
 		#endregion
 
 		#region Derivatives
