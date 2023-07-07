@@ -230,7 +230,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
 		public override void Kill(int timeLeft)
 		{
-            if(AI_State is ActionState.Orbit)
+            if(AI_State is ActionState.Orbit && Parent is not null && Parent.ModProjectile is DianiteForkCoreProjectile)
                 (Parent.ModProjectile as DianiteForkCoreProjectile).BrokenApartEarly = true;
 
 			for (int i = 0; i < 20; i++)
@@ -252,7 +252,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.Additive, state);
 
-			Projectile.GetTrail().Draw();
+			Projectile.GetTrail().Draw(tex.Size()/2);
 			Main.EntitySpriteDraw(glow, Projectile.Center - Main.screenPosition, null, new Color(215, 101, 0), 0f, glow.Size() / 2, 0.05f * Projectile.scale, SpriteEffects.None, 0f);
 
 			Main.spriteBatch.End();

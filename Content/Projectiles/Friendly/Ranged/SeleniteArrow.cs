@@ -38,6 +38,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 				Projectile.rotation = (float)Math.Atan2(Projectile.velocity.Y, Projectile.velocity.X) + 1.57f;
 			}
 
+			for(int i = 0; i < 2; i++)
+			{
+				Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<SeleniteBrightDust>(), Scale: Main.rand.NextFloat(0.8f, 1f));
+				dust.noGravity = true;
+			}
+			
 			Lighting.AddLight(Projectile.Center, new Color(255, 255, 255).ToVector3() * 0.6f);
 
 			return true;
@@ -46,7 +52,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		public override void Kill(int timeLeft)
 		{
 			for(int i = 0; i < Main.rand.Next(20, 30); i++)
-				Particle.CreateParticle<SeleniteSpark>(Projectile.Center + Projectile.oldVelocity * 0.4f, Projectile.oldVelocity.RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(0.1f, 0.3f), scale: 2f);
+				Particle.CreateParticle<SeleniteSpark>(Projectile.Center + Projectile.oldVelocity * 0.4f, Projectile.oldVelocity.RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(0.1f, 0.2f), scale: 1.7f);
 		}
 
 		public override bool PreDraw(ref Color lightColor)
@@ -63,7 +69,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 			for (int n = 4; n < count; n++)
 			{
-				Vector2 trailPosition = Projectile.Center - Projectile.velocity * n * 0.2f;
+				Vector2 trailPosition = Projectile.Center - Projectile.oldVelocity * n * 0.2f;
 				Main.spriteBatch.Draw(TextureAssets.Projectile[Type].Value, trailPosition - Main.screenPosition, null, Color.White * (0.6f - (float)n/count), Projectile.rotation, TextureAssets.Projectile[Type].Value.Size()/2f, Projectile.scale, SpriteEffects.None, 0f);
 			}
 

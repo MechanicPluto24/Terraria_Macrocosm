@@ -146,7 +146,7 @@ namespace Macrocosm.Common.Utils
 		/// <param name="t">The input value to apply easing to.</param>
 		/// <returns>The eased value based on cubic easing-in-out.</returns>
 		public static float CubicEaseInOut(float t)
-			=> (t < 0.5) ? (4f * t * t * t) : 0.5f + CubicEaseOut(t);
+			=> (t < 0.5) ? (4f * t * t * t) : 1 - MathF.Pow(-2 * t + 2, 3) / 2;
 
 		public static float QuartEaseIn(float t) => t * t * t * t;
 		public static float QuartEaseOut(float t) => 1 - QuartEaseIn(1 - t);

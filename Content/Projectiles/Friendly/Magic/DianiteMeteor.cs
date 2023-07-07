@@ -85,7 +85,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.Additive, state);
 
-			Projectile.GetTrail().Draw();
+			Projectile.GetTrail().Draw(TextureAssets.Projectile[Type].Size() / 2f);
 			for (int n = 2; n < count; n++)
 			{
 				Vector2 trailPosition = Projectile.Center - Projectile.velocity * n * 0.15f;

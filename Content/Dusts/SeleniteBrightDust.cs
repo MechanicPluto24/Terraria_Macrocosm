@@ -12,18 +12,17 @@ namespace Macrocosm.Content.Dusts
 			dust.position += dust.velocity;
 			dust.rotation += dust.dustIndex % 2 == 0 ? 0.5f : -0.5f; 
 
-			float clampedScale = dust.scale;
-			if (clampedScale > 1f)
- 				clampedScale = 1f;
+			if (!dust.noGravity)
+				dust.velocity.Y += 0.9f;
+			else
+				dust.velocity *= 0.84f;
 
- 			Lighting.AddLight((int)(dust.position.X / 16f), (int)(dust.position.Y / 16f), clampedScale * 0.2f, clampedScale * 0.725f, clampedScale * 0.51f);
+			dust.scale -= 0.05f;
 
-			if (dust.noGravity)
-				dust.velocity *= 0.93f;
-
-			dust.scale -= 0.01f;
 			if (dust.scale < 0.2f)
 				dust.active = false;
+
+ 			Lighting.AddLight(dust.position, new Color(177, 230, 204).ToVector3() * 0.4f);
 
 			return false;
 		}

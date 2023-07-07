@@ -45,14 +45,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 		public override void AI()
 		{
 			float scaleFactor = 0.2f;
-			float baseScale = 1.45f;
+			float baseScale = 1.6f;
 			float direction = Projectile.ai[0];
 			float progress = Projectile.localAI[0] / Projectile.ai[1];
 			Player player = Main.player[Projectile.owner];
 
-			Projectile.localAI[0] += 1f;
+			Projectile.localAI[0] += 1.2f * player.GetAttackSpeed(DamageClass.Melee);
 
-			Projectile.rotation = (float)Math.PI * direction * progress + Projectile.velocity.ToRotation() + direction * (float)Math.PI + player.fullRotation;
+			Projectile.rotation =  direction * progress + Projectile.velocity.ToRotation() - MathHelper.PiOver2 * direction;
 			Projectile.Center = player.RotatedRelativePoint(player.MountedCenter) + Projectile.velocity;
 			Projectile.scale = baseScale + progress * scaleFactor;
 			//Projectile.scale *= Main.player[Projectile.owner].GetAdjustedItemScale(Main.item[Main.player[Projectile.owner].selectedItem]);
@@ -91,7 +91,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, state);
 
 			Vector2 starPos = position + (Projectile.rotation + Utils.Remap(progress, 0f, 1f, 0f, (float)Math.PI / 4f) * Projectile.ai[0]).ToRotationVector2() * ((float)val.Width() * 0.5f - 4f) * scale;
-			DrawParticles(Projectile.Opacity, SpriteEffects.None, starPos, color * progressScale * 0.5f, color3, progress, 0f, 0.5f, 0.5f, 1f, 0f, new Vector2(1f, Utils.Remap(progress, 0f, 1f, 0.5f, 1f)) * scale, Vector2.One * scale * 1.5f);
+		    DrawParticles(Projectile.Opacity, SpriteEffects.None, starPos, color * progressScale * 0.5f, color3, progress, 0f, 0.5f, 0.5f, 1f, 0f, new Vector2(1f, Utils.Remap(progress, 0f, 1f, 0.5f, 1f)) * scale, Vector2.One * scale * 1.5f);
 
 			Main.spriteBatch.Draw(val.Value, position, frame, color * brightness * progressScale, Projectile.rotation + Projectile.ai[0] * ((float)Math.PI / 4f) * -1f * (1f - progress), origin, scale * 0.95f, effects, 0f);
 

@@ -28,7 +28,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			Item.noMelee = true;
 			Item.knockBack = 8f;
 			Item.value = 10000;
-			Item.rare = ModContent.RarityType<MoonRarityT1>();
+			Item.rare = ModContent.RarityType<MoonRarityT2>();
 			Item.UseSound = SoundID.Item38;
 			Item.autoReuse = true;
 			Item.shoot = ProjectileID.PurificationPowder;

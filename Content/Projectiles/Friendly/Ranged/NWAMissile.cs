@@ -260,7 +260,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			Projectile.GetTrail().Opacity = Projectile.localAI[1];
 
 			if (Projectile.alpha < 1)
-				Projectile.GetTrail().Draw();
+				Projectile.GetTrail().Draw(Projectile.Size / 2f);
 
 			return true;
 		}

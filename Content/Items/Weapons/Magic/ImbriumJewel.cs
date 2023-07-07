@@ -1,4 +1,5 @@
 using Macrocosm.Content.Projectiles.Friendly.Magic;
+using Macrocosm.Content.Rarities;
 using Terraria;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
@@ -27,7 +28,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 			Item.noMelee = true;
 			Item.knockBack = 8;
             Item.value = Item.sellPrice(0, 20, 0, 0);
-            Item.rare = ItemRarityID.Purple;
+            Item.rare = ModContent.RarityType<MoonRarityT2>();
 			Item.UseSound = SoundID.Item8;
 			Item.autoReuse = true;
 			Item.shoot = ModContent.ProjectileType<ImbriumJewelProjectile>();

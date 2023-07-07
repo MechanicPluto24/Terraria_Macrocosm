@@ -44,7 +44,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 				Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, trailPosition - Main.screenPosition, null, Color.OrangeRed * (0.8f - (float)n / count), Projectile.rotation + ((float)n / count), TextureAssets.Projectile[Type].Value.Size() / 2f, Projectile.scale * (1f - (float)n / count), SpriteEffects.None, 0f);
 			}
 
-			Projectile.GetTrail().Draw();
+			Projectile.GetTrail().Draw(TextureAssets.Projectile[Type].Size() / 2f);
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(state);

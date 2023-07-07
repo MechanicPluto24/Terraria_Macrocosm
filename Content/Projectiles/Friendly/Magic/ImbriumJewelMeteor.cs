@@ -16,7 +16,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 		public override void SetStaticDefaults()
 		{
 			ProjectileID.Sets.TrailCacheLength[Type] = 20;
-			ProjectileID.Sets.TrailingMode[Type] = 0;
+			ProjectileID.Sets.TrailingMode[Type] = 3;
 			Main.projFrames[Type] = 6;
         }
 
@@ -69,7 +69,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
-			Projectile.GetTrail().Draw();
+			Projectile.GetTrail().Draw(Projectile.Size / 2f);
 
 			Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition,
                 sourceRect, new Color(255, 255, 255, Projectile.alpha), Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);

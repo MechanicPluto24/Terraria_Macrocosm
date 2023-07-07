@@ -22,9 +22,6 @@ namespace Macrocosm.Content.Trails
 
 		public override Color TrailColors(float progressOnStrip)
 		{
-			if (progressOnStrip < 0.11f)
-				return new Color(0, 0, 0, 0);
-
 			Color result = Color.Lerp(new Color(255, 101, 0) , new Color(255, 255, 0) * progressOnStrip, progressOnStrip).NewAlpha(127);
 			return result;
 		}

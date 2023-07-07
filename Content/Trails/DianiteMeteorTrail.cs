@@ -20,6 +20,8 @@ namespace Macrocosm.Content.Trails
 
 		public override float TrailWidths(float progressOnStrip)
 		{
+			StartAtZero = true;
+
 			if(Owner is Projectile projectile)
 			{
 				float lerpValue = Utils.GetLerpValue(0f, 0.06f + 1.115f * 0.01f, progressOnStrip, clamped: true);

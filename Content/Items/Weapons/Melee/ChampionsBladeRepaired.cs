@@ -10,47 +10,36 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Melee
 {
-	public class ArtemiteGreatsword : ModItem
+	public class ChampionsBladeRepaired : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
-
 		public override void SetDefaults()
 		{
-			Item.damage = 225;
+			Item.damage = 300;
 			Item.DamageType = DamageClass.Melee;
-			Item.width = 80;
-			Item.height = 80;
-			Item.useTime = 25;
-			Item.useAnimation = 25;
+			Item.width = 40;
+			Item.height = 40;
+			Item.useTime = 15;
+			Item.useAnimation = 15;
 			Item.useStyle = ItemUseStyleID.Swing;
-			Item.shoot = ModContent.ProjectileType<ArtemiteGreatswordSwing>();
 			Item.knockBack = 5;
 			Item.value = 10000;
 			Item.rare = ModContent.RarityType<MoonRarityT1>();
 			Item.UseSound = SoundID.Item1;
 			Item.autoReuse = true;
-			Item.noMelee = true;
- 		}
-
-		public override void UseStyle(Player player, Rectangle heldItemFrame)
-		{
+			Item.shootSpeed = 0f;
 		}
 
 		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
-			Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.MountedCenter, new Vector2(player.direction, 0f), Item.shoot, damage, knockback, player.whoAmI, (float)player.direction * player.gravDir, 32); //, player.GetAdjustedItemScale(Item));
-			return true;
+			return false;
 		}
 
 		public override void AddRecipes()
 		{
-			Recipe recipe = Recipe.Create(Type);
-			recipe.AddIngredient<ArtemiteBar>(12);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.Register();
 		}
 	}
 }

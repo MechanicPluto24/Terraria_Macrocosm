@@ -24,6 +24,12 @@ namespace Macrocosm.Content.Items.Materials
 			// Set other Item.X values here
 		}
 
+		public override void Update(ref float gravity, ref float maxFallSpeed)
+		{
+			if(Main.timeForVisualEffects % 15 == 0)
+			Dust.NewDustPerfect(Item.Center + Main.rand.NextVector2Circular(Item.width * 0.6f, Item.height * 0.6f), DustID.SilverCoin, new Microsoft.Xna.Framework.Vector2(0f, -0.25f), Scale: Main.rand.NextFloat(0.05f, 0.1f));
+		}
+
 		public override void AddRecipes()
 		{
 			// Recipes here. See Basic Recipe Guide
