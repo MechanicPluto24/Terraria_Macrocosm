@@ -17,8 +17,8 @@ namespace Macrocosm.Content.Projectiles.Hostile
 	{
 		public override void SetStaticDefaults()
 		{
-			ProjectileID.Sets.TrailCacheLength[Type] = 20;
-			ProjectileID.Sets.TrailingMode[Type] = 0;
+			ProjectileID.Sets.TrailCacheLength[Type] = 60;
+			ProjectileID.Sets.TrailingMode[Type] = 3;
 
 			Main.projFrames[Type] = 6;
 		}
@@ -85,29 +85,22 @@ namespace Macrocosm.Content.Projectiles.Hostile
 			Rectangle sourceRect = tex.Frame(1, Main.projFrames[Type], frameY: Projectile.frame);
  			Vector2 origin = Projectile.Size / 2f + new Vector2(6, 32);
 
-			ProjectileID.Sets.TrailCacheLength[Type] = 60;
-			ProjectileID.Sets.TrailingMode[Type] = 3;
-
-			if (Projectile.rotation > -MathHelper.PiOver4 && Projectile.rotation < MathHelper.PiOver4)
-			{
-				for (int i = 0; i < Projectile.oldRot.Length; i++)
-					Projectile.oldRot[i] = MathHelper.PiOver2;
-			}
+			
 
 			SpriteBatchState state = Main.spriteBatch.SaveState();
 
 			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(BlendState.Additive, state);
+			Main.spriteBatch.Begin(BlendState.AlphaBlend, state);
 
-			Projectile.GetTrail().Draw();
+			Projectile.GetTrail().Draw(Projectile.Size / 2f);
+
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(state);
 
 			Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition,
-				sourceRect, Color.White.NewAlpha(0.2f), Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
-
-
+				sourceRect, Color.White.NewAlpha(0f), Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
+			
 			return false;
 		}
 

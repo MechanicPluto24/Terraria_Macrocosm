@@ -2,14 +2,11 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using System;
-using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent;
-using Terraria.ID;
 using Terraria.ModLoader;
-using static tModPorter.ProgressUpdate;
+using static Terraria.ModLoader.PlayerDrawLayer;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
@@ -19,8 +16,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
 		public override void SetDefaults()
 		{
-			Projectile.width = 110;
-			Projectile.height = 110;
+			Projectile.width = 120;
+			Projectile.height = 120;
 			Projectile.aiStyle = -1;
 			Projectile.friendly = true;
 			Projectile.DamageType = DamageClass.Melee;
@@ -37,35 +34,39 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
 		public override void ModifyDamageHitbox(ref Rectangle hitbox)
 		{
-			Vector2 pos = Projectile.position + new Vector2(65 * Projectile.scale,0).RotatedBy(Projectile.rotation);
-			hitbox.X = (int)pos.X;
-			hitbox.Y = (int)pos.Y;
 		}
+
+		private Vector2 positionAdjustment => new Vector2(55 * Projectile.scale, 0).RotatedBy(Projectile.rotation);
 
 		public override void AI()
 		{
 			float scaleFactor = 1.8f;
-			float baseScale = 0.1f;
+			float baseScale = 0f;
 			float direction = Projectile.ai[0];
 			float progress = Projectile.localAI[0] / Projectile.ai[1];
 			Player player = Main.player[Projectile.owner];
+			Item item = player.HeldItem;
+			float speed = player.GetTotalAttackSpeed(DamageClass.Melee);
 
-			Projectile.localAI[0] += 1.3f;
+			Projectile.localAI[0] += 1.73f * speed;
 
 			Projectile.rotation = (float)Math.PI * direction * progress + Projectile.velocity.ToRotation() + direction * (float)Math.PI + player.fullRotation;
-			Projectile.Center = player.RotatedRelativePoint(player.MountedCenter);
+			Projectile.Center = player.RotatedRelativePoint(player.MountedCenter) + positionAdjustment;
 
-			Projectile.scale = baseScale + Utility.QuadraticEaseInOut(progress) * scaleFactor;
-			Projectile.scale *= Main.player[Projectile.owner].GetAdjustedItemScale(Main.item[Main.player[Projectile.owner].selectedItem]);
+			Projectile.scale = baseScale + MathHelper.SmoothStep(0,1,progress) * scaleFactor;
+			Projectile.scale *= player.GetAdjustedItemScale(item);
 			Projectile.scale *= 1.5f;
 
-			Rectangle hitbox = Projectile.GetDamageHitbox();
-			Vector2 hitboxPos = hitbox.Center.ToVector2() - hitbox.Size()/4;
+			Vector2 hitboxPos = Projectile.Center - positionAdjustment + Utility.PolarVector(175, Projectile.rotation);
 
-			for(int i = 0; i < (int)(6 * (Projectile.scale/3f)); i++)
+			for (int i = 0; i < (int)(4 * (Projectile.scale < 0.5f ? 0 : 1)); i++)
 			{
-				Vector2 dustVelocity = new Vector2(Main.rand.NextFloat(8, 22), 0).RotatedBy(Projectile.rotation + Main.rand.NextFloat(MathF.PI/2, MathF.PI/2 * 1.5f)) + Main.player[Projectile.owner].velocity;
-				Dust dust = Dust.NewDustDirect(hitboxPos, 4, 4, ModContent.DustType<LuminiteDust>(), dustVelocity.X, dustVelocity.Y, Scale: Main.rand.NextFloat(2f, 3f));
+				Vector2 dustVelocity = new Vector2(Main.rand.NextFloat(1, 10 * speed), 0).RotatedBy(Projectile.rotation + MathHelper.PiOver2 * Projectile.direction) + Main.player[Projectile.owner].velocity;
+				Dust dust = Dust.NewDustDirect(hitboxPos, 1, 1, ModContent.DustType<ArtemiteBrightDust>(), dustVelocity.X, dustVelocity.Y, Scale: Main.rand.NextFloat(2f, 3f));
+				dust.noGravity = true;
+
+				dustVelocity = new Vector2(Main.rand.NextFloat(4, 6), 0).RotatedBy(Projectile.rotation - MathHelper.PiOver2 * Projectile.direction) + Main.player[Projectile.owner].velocity;
+				dust = Dust.NewDustDirect(Vector2.Lerp(Projectile.position, player.Center, 0.5f), Projectile.width / 2, Projectile.height / 2, ModContent.DustType<ArtemiteDust>(), dustVelocity.X, dustVelocity.Y, Scale: Main.rand.NextFloat(0.6f, 1f)); ;
 				dust.noGravity = true;
 			}
 
@@ -81,7 +82,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			Rectangle frame = texture.Frame(1, 4, frameY: 3);
 			Vector2 origin = frame.Size() / 2f;
 
-			Vector2 position = Projectile.Center - Main.screenPosition;
+			Vector2 position = Projectile.Center - positionAdjustment - Main.screenPosition;
 			SpriteEffects effects = Projectile.ai[0] < 0f ? SpriteEffects.FlipVertically : SpriteEffects.None;
 
 			float progress = Projectile.localAI[0] / Projectile.ai[1];
@@ -93,7 +94,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 1), color * 0.15f, Projectile.rotation, origin, Projectile.scale, effects, 0f);
 			Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 2), color * 0.7f * progressScale * 0.3f, Projectile.rotation, origin, Projectile.scale, effects, 0f);
 		    Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 2), color * 0.8f * progressScale * 0.5f, Projectile.rotation, origin, Projectile.scale * 0.975f, effects, 0f);
-		    Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), (Color.White * progressScale).NewAlpha(0.4f - 0.2f * progressScale), Projectile.rotation, origin, Projectile.scale * 0.95f, effects, 0f);
+		    Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), (Color.White * (0.2f - 0.2f * progressScale)).NewAlpha(0.4f - 0.4f * progressScale), Projectile.rotation, origin, Projectile.scale * 0.95f, effects, 0f);
 		    Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), (color * progressScale).NewAlpha(0.2f - 0.2f * progressScale), Projectile.rotation, origin, Projectile.scale * 0.75f, effects, 0f);
 		    Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), (color * progressScale).NewAlpha(0.1f - 0.05f *progressScale), Projectile.rotation, origin, Projectile.scale * 0.55f, effects, 0f);
 
@@ -105,7 +106,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			if (progress < 0.95f)
 				for(int i = 0; i < 3; i++)
 				{
-					float scale = Projectile.scale * (0.05f - 0.01f * i);
+					float scale = Projectile.scale * (0.02f - 0.003f * i);
 					float angle = Projectile.rotation + (i * (MathHelper.PiOver4 / 2f));
 					Main.EntitySpriteDraw(star, position + Utility.PolarVector(76 * Projectile.scale, angle), null, (new Color(168, 255, 255) * (1f + color.A/255f)).NewAlpha(1f), Projectile.rotation + MathHelper.PiOver4, star.Size() / 2f, scale, SpriteEffects.None);
 				}

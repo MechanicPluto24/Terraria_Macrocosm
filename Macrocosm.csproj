@@ -21,12 +21,6 @@
     <Optimize>True</Optimize>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="Assets\Effects\Extra_197.png" />
-    <None Remove="Assets\Textures\BeamLow.png" />
-    <None Remove="Assets\Textures\FlamingTrail.png" />
-    <None Remove="Assets\Textures\Laser1.png" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="tModLoader.CodeAssist" Version="0.1.*" />
   </ItemGroup>
   <ItemGroup>

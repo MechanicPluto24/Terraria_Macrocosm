@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Dusts
 {
-	public class LuminiteDust : ModDust
+	public class ArtemiteBrightDust : ModDust
 	{
 		public override void OnSpawn(Dust dust)
 		{
@@ -15,13 +15,14 @@ namespace Macrocosm.Content.Dusts
 		public override bool Update(Dust dust)
 		{
 			dust.position += dust.velocity;
-			dust.scale -= 0.02f;
-			dust.rotation += (dust.velocity.Y - dust.velocity.X) / 5;
+			dust.rotation += dust.dustIndex % 2 == 0 ? -0.4f : 0.4f;
 
 			if (!dust.noGravity)
-				dust.velocity.Y += 0.01f;
+				dust.velocity.Y += 0.9f;
 			else
 				dust.velocity *= 0.88f;
+
+			dust.scale -= 0.03f;
 
 			if (dust.scale < 0f)
  				dust.active = false;

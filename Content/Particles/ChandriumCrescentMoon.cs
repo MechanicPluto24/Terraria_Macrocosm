@@ -19,9 +19,9 @@ namespace Macrocosm.Content.Particles
 
         public override void AI()
         {
-            Rotation += 0.08f * (rotateClockwise ? 1f : -1f);
+            Rotation += 0.12f * (rotateClockwise ? 1f : -1f);
 
-            Scale -= 0.014f;
+            Scale -= 0.016f;
             alpha++;
 
             if (Scale < 0.05f)

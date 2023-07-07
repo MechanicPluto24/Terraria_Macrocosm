@@ -1,9 +1,11 @@
 using Macrocosm.Common.Drawing;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Buffs.GoodBuffs;
 using Macrocosm.Content.Buffs.GoodBuffs.MinionBuffs;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Gores;
+using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -26,7 +28,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 			ProjectileID.Sets.MinionTargettingFeature[Type] = true;
 
 			ProjectileID.Sets.TrailCacheLength[Type] = 6;
-			ProjectileID.Sets.TrailingMode[Type] = 0;
+			ProjectileID.Sets.TrailingMode[Type] = 2;
 
 			Main.projPet[Type] = true;
 
@@ -46,13 +48,45 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 			Projectile.minionSlots = 1f;
 			Projectile.penetrate = -1;
 
-			Projectile.ai[1] = 141;
+			Projectile.usesLocalNPCImmunity = true;
+			Projectile.localNPCHitCooldown = 20;
+
+			Projectile.alpha = 255;
 		}
+
+		public bool HasTarget
+		{
+			get => Projectile.ai[0] != 0f;
+			set => Projectile.ai[0] = value ? 1f : 0f;
+		}
+
+		public ref float AttackTimer => ref Projectile.ai[1];
 
 		public override bool? CanCutTiles() => false;
 
 		public override bool MinionContactDamage() => true;
 
+		public override Color? GetAlpha(Color lightColor)
+			=> lightColor * (1f - Projectile.alpha / 255f);
+
+		public override bool PreDraw(ref Color lightColor)
+		{
+			Texture2D tex = TextureAssets.Projectile[Type].Value;
+			Texture2D glow = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Summon/CalcicCaneMinion_Glow").Value;
+
+			for (int i = 0; i < Projectile.oldPos.Length; i++)
+			{
+				Vector2 drawPos = Projectile.oldPos[i] + Projectile.Size / 2 - Main.screenPosition;
+				float dashFactor = MathHelper.Clamp(Projectile.velocity.Length(), 0, 20) / 20f;
+				float trailFactor = (((float)Projectile.oldPos.Length - i) / Projectile.oldPos.Length);
+				Color color = Projectile.GetAlpha(lightColor) * trailFactor * dashFactor;
+				SpriteEffects effect = Projectile.oldSpriteDirection[i] == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+				Main.EntitySpriteDraw(tex, drawPos, tex.Frame(1, Main.projFrames[Type], frameY: Projectile.frame), color * 0.6f, Projectile.oldRot[i], Projectile.Size / 2, Projectile.scale, effect, 0f);
+				Main.EntitySpriteDraw(glow, drawPos, tex.Frame(1, Main.projFrames[Type], frameY: Projectile.frame), Color.White * trailFactor * dashFactor, Projectile.oldRot[i], Projectile.Size / 2, Projectile.scale, effect, 0f);
+			}
+
+			return true;
+		}
 
 		public override void PostDraw(Color lightColor)
 		{
@@ -60,20 +94,46 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 			Projectile.DrawAnimatedExtra(glow, Color.White, Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, new Vector2(0, Projectile.spriteDirection == 1 ? 5 : -1));
 		}
 
+		bool spawned = false;
+		public override void OnSpawn(IEntitySource source)
+		{
+		}
+
 		public override void AI()
 		{
-			Player owner = Main.player[Projectile.owner];
-
-			if (!CheckActive(owner))
+			if (!spawned)
 			{
-				return;
+				spawned = true;
 			}
 
+			Player owner = Main.player[Projectile.owner];
+
+			if (Projectile.alpha >= 0)
+			{
+				Projectile.alpha -= 5;
+				SpawnDusts();
+			}
+
+			if (!CheckActive(owner))
+ 				return;
+ 
 			GeneralBehavior(owner, out Vector2 vectorToIdlePosition, out float distanceToIdlePosition);
 			SearchForTargets(owner, out bool foundTarget, out float distanceFromTarget, out Vector2 targetCenter);
 			Movement(foundTarget, distanceFromTarget, targetCenter, distanceToIdlePosition, vectorToIdlePosition);
 			Visuals(foundTarget);
+
+			HasTarget = foundTarget;
 		}
+
+		private void SpawnDusts()
+		{
+			for (int i = 0; i < (int)(5 * (Projectile.alpha/255f)); i++)
+			{
+				Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<RegolithDust>(), Scale: Main.rand.NextFloat(0.4f, 0.6f));
+				dust.velocity = new Vector2(0, Main.rand.NextFloat(1.2f, 2.2f));
+			}
+		}
+
 
 		private bool CheckActive(Player owner)
 		{
@@ -170,7 +230,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 				}
 			}
 
-			if (!foundTarget)
+			if (!foundTarget && Projectile.alpha < 1)
 			{
 				// This code is required either way, used for finding a target
 				for (int i = 0; i < Main.maxNPCs; i++)
@@ -209,31 +269,35 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 			// Default movement parameters (here for attacking)
 			float speed = 8f;
 			float inertia = 20f;
+			bool dash = false;
 
 			if (foundTarget)
 			{
-				// Minion has a target: attack (here, fly towards the enemy)
-				if (distanceFromTarget > 40f)
-				{
-					if (Projectile.ai[1] < 120) 
-					{
-						Projectile.ai[1]++;
-					}
-					else if(Projectile.ai[1] < 140)
-					{
-						speed = 0f;
-						Projectile.ai[1]++;
-					}
-					else
-					{
-						Projectile.ai[1] = 0;
-						speed *= 10f;
-						inertia = 10f;
-					}
 
+				if (AttackTimer < 120)
+				{
+					AttackTimer++;
+				}
+				else if (AttackTimer < 140)
+				{
+					speed = 0f;
+					AttackTimer++;
+				}
+				else
+				{
+					AttackTimer = 0;
+					speed *= 20f * MathHelper.Clamp(distanceFromTarget, 0, 100) / 100;
+					inertia = 10f;
+					dash = true;
+				}
+
+				// Minion has a target: attack (here, fly towards the enemy)
+				if (distanceFromTarget > 60f || dash)
+				{
 					// The immediate range around the target (so it doesn't latch onto it when close)
 					Vector2 direction = targetCenter - Projectile.Center;
 					direction.Normalize();
+
 					direction *= speed;
 					Projectile.velocity = (Projectile.velocity * (inertia - 1) + direction) / inertia;
 				}
@@ -278,7 +342,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 			Projectile.rotation = Projectile.velocity.X * 0.05f;
 			Projectile.spriteDirection = Projectile.direction;
 
-			// This is a simple "loop through all frames from top to bottom" animation
 			int frameSpeed = 15;
 
 			Projectile.frameCounter++;

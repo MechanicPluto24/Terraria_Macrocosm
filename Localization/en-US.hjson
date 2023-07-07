@@ -827,6 +827,16 @@ Mods: {
 				DisplayName: Tycho .50
 				Tooltip: ""
 			}
+
+			ChampionsBladeBroken: {
+				DisplayName: Champion's Blade 
+				Tooltip: ""
+			}
+
+			ChampionsBladeRepaired: {
+				DisplayName: Champion's Blade
+				Tooltip: ""
+			}
 		}
 
 		NPCs: {
@@ -924,6 +934,8 @@ Mods: {
 			DianiteForkCoreProjectile.DisplayName: Dianite Fork
 			DianiteForkProjectile.DisplayName: Dianite Fork
 			RegolithDebris.DisplayName: Regolith Debris
+			ArtemiteSwordSwing.DisplayName: Artemite Sword Swing
+			test.DisplayName: test
 		}
 
 		Tiles: {
