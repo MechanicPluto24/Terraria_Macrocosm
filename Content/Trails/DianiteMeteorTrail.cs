@@ -8,7 +8,9 @@ namespace Macrocosm.Content.Trails
 	public class DianiteMeteorTrail : VertexTrail
 	{
 		public override MiscShaderData TrailShader => GameShaders.Misc["FlameLash"];
-		public override float Saturation => -1.4f; 
+		public override float Saturation => -1.4f;
+
+		public override int StartIndex => 0;
 
 		public override Color TrailColors(float progressOnStrip)
 		{
@@ -20,8 +22,6 @@ namespace Macrocosm.Content.Trails
 
 		public override float TrailWidths(float progressOnStrip)
 		{
-			StartAtZero = true;
-
 			if(Owner is Projectile projectile)
 			{
 				float lerpValue = Utils.GetLerpValue(0f, 0.06f + 1.115f * 0.01f, progressOnStrip, clamped: true);
