@@ -1,11 +1,11 @@
-using Macrocosm.Content.Rarities;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Macrocosm.Content.Items.Global;
 
 namespace Macrocosm.Content.Items.Dev
 {
-	public class BanHammer : ModItem
+	public class BanHammer : ModItem, IDevItem
 	{
 		public override void SetStaticDefaults()
 		{
@@ -22,7 +22,6 @@ namespace Macrocosm.Content.Items.Dev
 			Item.useStyle = ItemUseStyleID.Swing;
 			Item.knockBack = 1000;
 			Item.value = 10000;
-			Item.rare = ModContent.RarityType<DevRarity>();
 			Item.UseSound = SoundID.Item1;
 			Item.autoReuse = false;
 		}

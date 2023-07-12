@@ -1,0 +1,125 @@
+Common: {
+	Navigation: Navigation
+	Customization: Customization
+	Cargo: Cargo
+	Checklist: Pre-flight checklist
+	Crew: Crew
+	Fuel: Fuel
+	ZoomIn: Zoom In
+	ZoomOut: Zoom Out
+	Close: Close
+}
+
+LaunchButton: {
+	NoTarget: NO TARGET
+	CantReach: INACCESSIBLE
+	AlreadyHere: CURRENT LOCATION
+	ZoomIn: ZOOM IN
+	Launch: LAUNCH
+}
+
+Gravity: {
+	Name: Gravity
+	UnitG: "{0} G {1}{2}{3}"
+	UnitMetric: "{0} m/s² {1}{2}{3}"
+	UnitImperial: "{0} ft/s² {1}{2}{3}"
+}
+
+Radius: {
+	Name: Radius
+	UnitMetric: "{0} km {1}{2}{3}"
+	UnitImperial: "{0} {^0:mile;miles} {1}{2}{3}"
+}
+
+DayPeriod: {
+	Name: Day Period
+	UnitDays: "{0} {^0:day;days} {1}{2}{3}"
+	UnitHours: "{0} {^0:hour;hours} {1}{2}{3}"
+}
+
+Special: {
+	TidallyLocked: Tidally Locked
+	Unstable: Unstable
+}
+
+ThreatLevel: {
+	Name: Threat Level
+	Threat1: "{0} - Harmless"
+	Threat2: "{0} - Arduous"
+	Threat3: "{0} - Challenging"
+	Threat4: "{0} - Dangerous"
+	Threat5: "{0} - Treacherous"
+	Threat6: "{0} - Lethal"
+	Threat7: "{0} - Cataclysmic"
+	Threat8: "{0} - Nightmare"
+	Threat9: "{0} - Apollyon"
+	Threat10: "{0} - Unknown"
+}
+
+Hazard: {
+	Name: Hazard
+	MeteorStorms: Meteor Storms
+	SolarStorms: Solar Storms
+}
+
+Checklist: {
+	Fuel: {
+		True: {
+			Display: Enough fuel
+			Hover: default
+		}
+
+		False: {
+			Display: Not enough fuel
+			Hover: You need more fuel to launch the rocket
+		}
+	}
+
+	Destination: {
+		True: {
+			Display: Destination selected
+			Hover: default
+		}
+
+		False: {
+			Display: No destination selected
+			Hover: You need to select a destination for the rocket
+		}
+	}
+
+	Obstruction: {
+		True: {
+			Display: Path unobstructed
+			Hover: default
+		}
+
+		False: {
+			Display: Path obstructed
+			Hover: There is an obstruction in the rocket's flight path
+		}
+	}
+
+	Selected: {
+		True: {
+			Display: default
+			Hover: default
+		}
+
+		False: {
+			Display: Select a destination
+			Hover: default
+		}
+	}
+
+	NotHere: {
+		True: {
+			Display: default
+			Hover: default
+		}
+
+		False: {
+			Display: You are already here
+			Hover: default
+		}
+	}
+}

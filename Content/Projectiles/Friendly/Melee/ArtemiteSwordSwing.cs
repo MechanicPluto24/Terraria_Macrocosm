@@ -13,7 +13,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
 	public class test : ModProjectile
 	{
-		public override string Texture => "Macrocosm/Assets/Textures/Swing";
+		public override string Texture => Macrocosm.TextureAssetsPath + "Swing";
 
 		public override void SetDefaults()
 		{
@@ -29,7 +29,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
 		public override bool PreDraw(ref Color lightColor)
 		{
-			Texture2D texture = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/Swing").Value;
+			Texture2D texture = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Swing").Value;
 
 			ProjectileID.Sets.TrailCacheLength[Type] = 12;
 			ProjectileID.Sets.TrailingMode[Type] = 3;
@@ -60,7 +60,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
 	public class ArtemiteSwordSwing : ModProjectile
 	{
-		public override string Texture => "Macrocosm/Assets/Textures/Swing";
+		public override string Texture => Macrocosm.TextureAssetsPath + "Swing";
 
 		public override void SetDefaults()
 		{
@@ -136,7 +136,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 		public override bool PreDraw(ref Color lightColor)
 		{
 			Texture2D texture = TextureAssets.Projectile[Type].Value;
-			Texture2D star = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/Star1").Value;
+			Texture2D star = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Star1").Value;
 
 			Rectangle frame = texture.Frame(1, 4, frameY: 3);
 			Vector2 origin = frame.Size() / 2f;

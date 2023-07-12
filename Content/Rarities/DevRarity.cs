@@ -1,7 +1,5 @@
 ﻿using Macrocosm.Common.Drawing;
-using Macrocosm.Content.Systems;
 using Microsoft.Xna.Framework;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rarities
@@ -14,5 +12,10 @@ namespace Macrocosm.Content.Rarities
 		{
 			return Type;
 		}
+	}
+
+	public class DevGlobalItem : ModRarity
+	{
+
 	}
 }

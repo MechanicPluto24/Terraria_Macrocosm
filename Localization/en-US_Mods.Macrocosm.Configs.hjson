@@ -1,0 +1,22 @@
+# Localization file for the configs
+
+MacrocosmConfig: {
+	DisplayName: General Configuration
+	UnitSystemHeader: Unit System
+
+	UnitSystem: {
+		Label: Unit system
+		Tooltip: The unit system used to display numeric values
+	}
+
+	DisplayGravityInGs: {
+		Label: Display gravity values in Gs
+		Tooltip: Whether to display the gravity in Gs or gravitational acceleration measured in the current unit system
+	}
+}
+
+UnitSystemType: {
+	Tooltip: ""
+	Metric.Label: Metric
+	Imperial.Label: Imperial
+}

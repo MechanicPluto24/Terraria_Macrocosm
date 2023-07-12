@@ -8,7 +8,7 @@ namespace Macrocosm.Content.Particles
 {
     public class ImbriumStar : Particle
     {
-        public override string TexturePath => "Macrocosm/Assets/Textures/Star2";
+        public override string TexturePath => Macrocosm.TextureAssetsPath + "Star2";
 
 		public float Alpha = 1f;
         Color color = Color.White;

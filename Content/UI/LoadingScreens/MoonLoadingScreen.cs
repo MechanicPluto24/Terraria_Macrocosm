@@ -1,9 +1,11 @@
 using Macrocosm.Common.Drawing.Sky;
+using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.UI.LoadingScreens
@@ -30,12 +32,7 @@ namespace Macrocosm.Content.UI.LoadingScreens
 		   );
 		}
 
-		public override TitleData Title => new()
-		{
-			TextKey = "Moon",  
-			Scale = 1.2f,
-			Color = Color.White
-		};
+		public override LocalizedColorScaleText Title => new(Language.GetText("Mods.Macrocosm.Subworlds.Moon.DisplayName"), Color.White, 1.2f);
 
 		public override void Setup()
 		{

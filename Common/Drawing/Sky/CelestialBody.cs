@@ -266,7 +266,7 @@ namespace Macrocosm.Common.Drawing.Sky
             }
 			else if (lightSource is not null && ConfigureShader is not null)
             {
-				shader = ModContent.Request<Effect>("Macrocosm/Assets/Effects/CelestialBodyShading", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+				shader = ModContent.Request<Effect>(Macrocosm.EffectAssetsPath + "CelestialBodyShading", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
 
 				float rotation = (Position - lightSource.Position).ToRotation();
 				ConfigureShader(rotation, out float intensity, out Vector2 offset);
@@ -337,12 +337,12 @@ namespace Macrocosm.Common.Drawing.Sky
             float surfaceLayerHeight = (float)Main.worldSurface * 16f;
 
             // positions relative to the center origin of the surface layer 
-            float playerPositionToCenterX = Main.LocalPlayer.position.X - worldWidth / 2;
-            float playerPositionToSurfaceCenterY = Main.LocalPlayer.position.Y - surfaceLayerHeight / 2;
+            float screenCenterToWorldCenterX = Utility.ScreenCenterInWorld.X - worldWidth / 2;
+            float screenPositionToWorldSurfaceCenterY = Utility.ScreenCenterInWorld.Y - surfaceLayerHeight / 2;
 
             Position = new Vector2(
-                Utility.ScreenCenter.X - playerPositionToCenterX * parallaxSpeedX + averageOffset.X,
-                Utility.ScreenCenter.Y - playerPositionToSurfaceCenterY * parallaxSpeedY + averageOffset.Y
+                Utility.ScreenCenter.X - screenCenterToWorldCenterX * parallaxSpeedX + averageOffset.X,
+                Utility.ScreenCenter.Y - screenPositionToWorldSurfaceCenterY * parallaxSpeedY + averageOffset.Y
             );
         }
 

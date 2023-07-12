@@ -120,7 +120,7 @@ namespace Macrocosm.Content.UI.Menus
             DrawSunCorona();
 
 			Sun.OverrideShader = () => {
-				Effect effect = ModContent.Request<Effect>("Macrocosm/Assets/Effects/RadialSaturation", AssetRequestMode.ImmediateLoad).Value;
+				Effect effect = ModContent.Request<Effect>(Macrocosm.EffectAssetsPath + "RadialSaturation", AssetRequestMode.ImmediateLoad).Value;
 				effect.Parameters["uCenter"].SetValue(Vector2.One * 0.5f);
 				effect.Parameters["uRadius"].SetValue(0.1f + 0.2f * Utility.PositiveSineWave(500, MathF.PI / 2));
 				effect.Parameters["uIntensity"].SetValue(0.2f * Utility.PositiveSineWave(500, MathF.PI / 2));

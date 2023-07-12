@@ -1,6 +1,6 @@
 ﻿using Terraria;
 using Macrocosm.Content.UI.LoadingScreens;
-using Macrocosm.Content.Rocket.Navigation.LaunchChecklist;
+using Macrocosm.Content.Rockets.Navigation.Checklist;
 using Macrocosm.Common.Subworlds;
 
 namespace Macrocosm.Content.Subworlds
@@ -24,11 +24,8 @@ namespace Macrocosm.Content.Subworlds
         private static EarthLoadingScreen loadingScreen;
 		public static EarthLoadingScreen LoadingScreen { get { loadingScreen ??= new(); return loadingScreen ;} }
 
-        public static LaunchConditions LaunchConditions = new()
+        public static ChecklistConditionCollection LaunchConditions = new()
         {
-            new ChecklistCondition("NotOnEarth", () => MacrocosmSubworld.AnyActive)
         };
-
-      
     }
 }

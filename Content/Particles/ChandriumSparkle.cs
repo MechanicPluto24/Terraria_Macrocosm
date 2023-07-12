@@ -8,10 +8,11 @@ using Macrocosm.Content.Dusts;
 using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Content.Projectiles.Friendly.Summon;
- 
+using Macrocosm.Content.Rockets;
+
 namespace Macrocosm.Content.Particles
 {
-	public class ChandriumSparkle : Particle
+    public class ChandriumSparkle : Particle
 	{
 		public override string TexturePath => Macrocosm.EmptyTexPath;
 
