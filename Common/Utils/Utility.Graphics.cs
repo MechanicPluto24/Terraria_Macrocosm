@@ -65,8 +65,11 @@ namespace Macrocosm.Common.Utils
         public static void Begin(this SpriteBatch spriteBatch, SpriteSortMode sortMode, BlendState blendState, SpriteBatchState state)
             => spriteBatch.Begin(sortMode, blendState, state.SamplerState, state.DepthStencilState, state.RasterizerState, state.Effect, state.Matrix);
 
-        public static void Begin(this SpriteBatch spriteBatch, BlendState blendState, SpriteBatchState state)
-            => spriteBatch.Begin(state.SpriteSortMode, blendState, state.SamplerState, state.DepthStencilState, state.RasterizerState, state.Effect, state.Matrix);
+		public static void Begin(this SpriteBatch spriteBatch, BlendState blendState, SpriteBatchState state)
+			=> spriteBatch.Begin(state.SpriteSortMode, blendState, state.SamplerState, state.DepthStencilState, state.RasterizerState, state.Effect, state.Matrix);
+
+		public static void Begin(this SpriteBatch spriteBatch, BlendState blendState, SamplerState samplerState, SpriteBatchState state)
+            => spriteBatch.Begin(state.SpriteSortMode, blendState, samplerState, state.DepthStencilState, state.RasterizerState, state.Effect, state.Matrix);
 
 		public static void Begin(this SpriteBatch spriteBatch, SamplerState samplerState, SpriteBatchState state)
 		   => spriteBatch.Begin(state.SpriteSortMode, state.BlendState, samplerState, state.DepthStencilState, state.RasterizerState, state.Effect, state.Matrix);

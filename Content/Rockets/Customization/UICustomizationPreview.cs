@@ -85,6 +85,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, state.Effect, state.Matrix);
 
+            // Passing Rocket world position as "screenPosition" cancels it out  
             Rocket.Draw(spriteBatch, Rocket.Position - new Vector2(20, 0), Color.White);
 
 			spriteBatch.End();
@@ -94,9 +95,8 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 			Effect effect = ModContent.Request<Effect>(Macrocosm.EffectAssetsPath + "Pixelate", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
             effect.Parameters["uPixelCount"].SetValue(new Vector2(renderTarget.Width, renderTarget.Height) / (6f * Main.UIScale));
-            effect.Parameters["uBrickOffset"].SetValue(0f);
 
-			spriteBatch.Begin(state.SpriteSortMode, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, state.DepthStencilState, state.RasterizerState, effect, state.Matrix);
+			spriteBatch.Begin(state.SpriteSortMode, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, effect, state.Matrix);
 
 			spriteBatch.Draw(renderTarget, new Rectangle(rect.Center.X - Rocket.Width/4, rect.Y + rect.Height/8, rect.Width, rect.Height), Color.White);
             
