@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using System.Linq;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.Localization;
@@ -97,7 +98,8 @@ namespace Macrocosm.Common.UI
         {
             base.Update(gameTime);
 
-			if (!EntireListVisible() || !HideScrollbarIfNotScrollable)
+            // Method is only called if dynamic scrollbar hiding is active
+			if (!HideScrollbarIfNotScrollable || !EntireListVisible())
             {
                 if (scrollbar is null)
                 {
@@ -115,13 +117,22 @@ namespace Macrocosm.Common.UI
                 }
             }
             else
-                scrollbar = null;
+            {
+                if (Children.Contains(scrollbar))
+                    RemoveChild(scrollbar);
+
+				list.Width.Set(0, 1f);
+
+				scrollbar = null;
+            }
         }
 
         public bool EntireListVisible()
         {
+            list.Recalculate();
+            list.RecalculateChildren();
             float listHeight = list.GetTotalHeight();
-            float panelHeight = list.GetDimensions().Height;
+            float panelHeight = list.GetInnerDimensions().Height;
 
             return listHeight < panelHeight;
 		}

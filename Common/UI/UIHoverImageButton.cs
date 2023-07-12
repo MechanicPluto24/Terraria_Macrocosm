@@ -82,7 +82,9 @@ namespace Macrocosm.Common.UI
 		public override void MouseOver(UIMouseEvent evt)
 		{
 			base.MouseOver(evt);
-			SoundEngine.PlaySound(SoundID.MenuOpen);
+
+			if(CheckInteractible())
+				SoundEngine.PlaySound(SoundID.MenuTick);
 		}
 
 		public override void MouseOut(UIMouseEvent evt)

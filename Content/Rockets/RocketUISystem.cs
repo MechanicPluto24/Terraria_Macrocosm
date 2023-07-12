@@ -49,7 +49,7 @@ namespace Macrocosm.Content.Rockets
 		public override void OnWorldUnload()
 		{
 			UIRocketState = null;
-		}
+		}  
 
 		public override void OnLocalizationsLoaded()
 		{

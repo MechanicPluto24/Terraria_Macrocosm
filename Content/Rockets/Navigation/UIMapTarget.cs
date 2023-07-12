@@ -92,10 +92,12 @@ namespace Macrocosm.Content.Rockets.Navigation
         private UIMapTarget(UINavigationPanel owner, float leftPercent, float topPercent, float widthPercent, float heightPercent)
         {
             OwnerPanel = owner;
-			Left = StyleDimension.FromPercent(leftPercent);
-			Top = StyleDimension.FromPercent(topPercent);
-			Width = StyleDimension.FromPercent(widthPercent);
+			float ownerAspectRatio = owner.Width.Percent / owner.Height.Percent;
+			Width = StyleDimension.FromPercent(0.83f * heightPercent / ownerAspectRatio ) ;
 			Height = StyleDimension.FromPercent(heightPercent);
+
+			Left = StyleDimension.FromPercent(leftPercent - Width.Percent / 2f);
+			Top = StyleDimension.FromPercent(topPercent - Height.Percent / 2f);
 		}
 		
 		public override void OnInitialize()
@@ -179,7 +181,8 @@ namespace Macrocosm.Content.Rockets.Navigation
 		protected override void DrawSelf(SpriteBatch spriteBatch)
         {
 			// debug "hitbox"
-			spriteBatch.Draw(TextureAssets.MagicPixel.Value, GetDimensions().ToRectangle(), Color.Red * 0.4f);
+			Rectangle rect = GetDimensions().ToRectangle();
+			//spriteBatch.Draw(TextureAssets.MagicPixel.Value, rect, Color.Red * 0.4f);
 
 			// Should draw the outline if not fully transparent
 			if (targetOpacity > 0f)
@@ -188,9 +191,9 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 				var state = spriteBatch.SaveState();
 				spriteBatch.End();
-				spriteBatch.Begin(BlendState.NonPremultiplied, state);
+				spriteBatch.Begin(BlendState.NonPremultiplied, SamplerState.AnisotropicClamp, state);
 
-				spriteBatch.Draw(selectionOutline, GetDimensions().Center(), null, drawColor.NewAlpha(targetOpacity), rotation, origin, 0.9f / Main.UIScale, SpriteEffects.None, 0f);
+				spriteBatch.Draw(selectionOutline, rect.Center(), null, drawColor.NewAlpha(targetOpacity), rotation, origin, 0.9f / Main.UIScale, SpriteEffects.None, 0f);
 
 				spriteBatch.End();
 				spriteBatch.Begin(state);

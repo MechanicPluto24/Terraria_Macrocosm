@@ -196,25 +196,10 @@ namespace Macrocosm.Content.Rockets.Navigation
             CalculatedStyle dimensions = GetInnerDimensions();
             Rectangle rect = dimensions.ToRectangle();
 
-            //bool specialDraw =
-
-            //SpriteBatchState state = new();
-            //if (specialDraw)
-            //{
-            //    state = spriteBatch.SaveState();
-            //    spriteBatch.End();
-            //    spriteBatch.Begin(BlendState.NonPremultiplied, state);
             if (animationPrevTexture is not null && showAnimationActive)
                 spriteBatch.Draw(animationPrevTexture, rect, null, Color.White * (1 - opacity));
-            //}
 
-            spriteBatch.Draw(Texture, rect, null, Color.White * opacity);//, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
-
-            //if (specialDraw)
-            //{
-			//	spriteBatch.End();
-			//	spriteBatch.Begin(state);
-            //}
+            spriteBatch.Draw(Texture, rect, null, Color.White * opacity); 
         }
     }
 }
