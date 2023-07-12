@@ -12,7 +12,7 @@ using Macrocosm.Content.Systems;
 using Macrocosm.Content.UI.LoadingScreens;
 using Macrocosm.Content.WorldGeneration.Moon;
 using Macrocosm.Content.Projectiles.Environment.Meteors;
-using Macrocosm.Content.Rocket.Navigation.LaunchChecklist;
+using Macrocosm.Content.Rockets.Navigation.Checklist;
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Common.Utils;
 using Macrocosm.Common.Drawing;
@@ -55,7 +55,7 @@ namespace Macrocosm.Content.Subworlds
             new FinishPass("FinishPass", 0.1f)
         };
 
-		public override LaunchConditions LaunchConditions => new()
+		public override ChecklistConditionCollection LaunchConditions => new()
 		{
 			//new ChecklistCondition("MoonLord", () => NPC.downedMoonlord, hideIfMet: true) // placeholder for now
 		};

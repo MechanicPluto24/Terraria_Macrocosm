@@ -64,8 +64,8 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
 			});
 		}
 
-		public override bool CanTownNPCSpawn(int numTownNPCs)/* tModPorter Suggestion: Copy the implementation of NPC.SpawnAllowed_Merchant in vanilla if you to count money, and be sure to set a flag when unlocked, so you don't count every tick. */
-			=> DownedBossSystem.DownedCraterDemon;
+		public override bool CanTownNPCSpawn(int numTownNPCs) 
+			=> WorldDataSystem.Instance.DownedCraterDemon;
 
 		public override List<string> SetNPCNameList()
 		{

@@ -90,12 +90,12 @@ namespace Macrocosm.Content.Projectiles.Environment.Debris
                     bool placeTile = false;
 
                     // Attempt to place a 1x1 regolith pile
-                    if (TileObject.CanPlace(tileX, tileY, ModContent.TileType<RegolithRockSmall>(), style, Projectile.direction, out TileObject objectData))
+                    if (TileObject.CanPlace(tileX, tileY, ModContent.TileType<RegolithRockSmallNatural>(), style, Projectile.direction, out TileObject objectData))
                         placeTile = TileObject.Place(objectData);
 
                     if (placeTile)
                     {
-                        // Send tile placement to clients if on MP
+                        // Send tile placement to clients if on MP server (not called on clients)
                         if (Main.netMode == NetmodeID.Server)
                         {
                             NetMessage.SendObjectPlacement(-1, tileX, tileY, objectData.type, objectData.style, objectData.alternate, objectData.random, Projectile.direction);
@@ -108,7 +108,7 @@ namespace Macrocosm.Content.Projectiles.Environment.Debris
                 }
             }
 
-            // Dust and sound effects 
+            // Dust and sound effects for all clients
             if (ScheduleAmbientTileSpawnEffect)
             {
                 ScheduleAmbientTileSpawnEffect = false;

@@ -39,7 +39,7 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 						{
 							if (Main.tile[tileX, tileY].HasTile && Main.tile[tileX, tileY].BlockType == Terraria.ID.BlockType.Solid)
 							{
-								WorldGen.PlaceTile(tileX, tileY - 1, ModContent.TileType<RegolithRockSmall>(), style: WorldGen.genRand.Next(10), mute: true);
+								WorldGen.PlaceTile(tileX, tileY - 1, ModContent.TileType<RegolithRockSmallNatural>(), style: WorldGen.genRand.Next(10), mute: true);
 								skipX = WorldGen.genRand.Next(2, 25);
 								break;
 							}
@@ -53,7 +53,7 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 							if (Main.tile[tileX, tileY].HasTile && Main.tile[tileX, tileY].BlockType == Terraria.ID.BlockType.Solid &&
 							    Main.tile[tileX + 1, tileY].HasTile && Main.tile[tileX + 1, tileY].BlockType == Terraria.ID.BlockType.Solid)
 							{
-								WorldGen.PlaceTile(tileX, tileY - 1, ModContent.TileType<RegolithRockMedium>(), style: WorldGen.genRand.Next(6), mute: true);
+								WorldGen.PlaceTile(tileX, tileY - 1, ModContent.TileType<RegolithRockMediumNatural>(), style: WorldGen.genRand.Next(6), mute: true);
 								skipX = WorldGen.genRand.Next(2, 25);
 								break;
 							}

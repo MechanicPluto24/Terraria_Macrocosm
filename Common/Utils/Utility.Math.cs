@@ -115,6 +115,9 @@ namespace Macrocosm.Common.Utils
 
 		#region Easing functions
 
+		/// <summary> Linear easing (for consistency purposes) </summary>
+		public static float EaseLinear(float t) => t;
+
 		/// <summary> Applies quadratic easing-in to the input value.  </summary>
 		/// <param name="t">The input value to apply easing to.</param>
 		/// <returns>The eased value based on quadratic easing-in.</returns>
@@ -122,29 +125,24 @@ namespace Macrocosm.Common.Utils
 
 		/// <summary> Applies quadratic easing-out to the input value. </summary>
 		/// <param name="t">The input value to apply easing to.</param>
-		/// <returns>The eased value based on quadratic easing-out.</returns>
 		public static float QuadraticEaseOut(float t) => t * (2f - t);
 
 		/// <summary>  Applies quadratic easing-in-out to the input value.  </summary>
 		/// <param name="t">The input value to apply easing to.</param>
-		/// <returns>The eased value based on quadratic easing-in-out.</returns>
 		public static float QuadraticEaseInOut(float t)
 			=> (t < 0.5) ? (2f * t * t) : (-1f + (4f - 2f * t) * t);
 
 		/// <summary> Applies cubic easing-in to the input value.  </summary>
 		/// <param name="t">The input value to apply easing to.</param>
-		/// <returns>The eased value based on cubic easing-in.</returns>
 		public static float CubicEaseIn(float t) => t * t * t;
 
 		/// <summary> Applies cubic easing-out to the input value. </summary>
 		/// <param name="t">The input value to apply easing to.</param>
-		/// <returns>The eased value based on cubic easing-out.</returns>
 		public static float CubicEaseOut(float t)
 			=> (t - 1f) * (t - 1f) * (t - 1f) + 1f;
 
 		/// <summary>  Applies cubic easing-in-out to the input value.  </summary>
 		/// <param name="t">The input value to apply easing to.</param>
-		/// <returns>The eased value based on cubic easing-in-out.</returns>
 		public static float CubicEaseInOut(float t)
 			=> (t < 0.5) ? (4f * t * t * t) : 1 - MathF.Pow(-2 * t + 2, 3) / 2;
 

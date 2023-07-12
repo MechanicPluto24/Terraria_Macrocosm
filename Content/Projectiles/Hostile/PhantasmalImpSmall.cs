@@ -34,7 +34,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
 		public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough, ref Vector2 hitboxCenterFrac)
 			=> false;
 		 
-		bool spawned = false;
+		//bool spawned = false;
 		public override void AI()
 		{
 			ProjectileID.Sets.TrailCacheLength[Type] = 10;

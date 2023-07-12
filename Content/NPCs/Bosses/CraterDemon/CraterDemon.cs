@@ -29,7 +29,7 @@ using Macrocosm.Content.Items.Weapons.Magic;
 using Microsoft.Xna.Framework.Graphics.PackedVector;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Content.Particles;
-using Macrocosm.Content.Rocket.Navigation.InfoElements;
+using Macrocosm.Content.Rockets.Navigation.NavigationInfo;
 using Macrocosm.Common.Drawing;
 
 namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
@@ -404,10 +404,16 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 		public override void OnKill()
 		{
-			if (!DownedBossSystem.DownedCraterDemon)
-				NPC.NewNPC(NPC.GetSource_NaturalSpawn(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<MoonChampion>(), 10); // 10 seconds of immunity 
+			// Spawn Moon Champion for the first time 
+			// With 10 seconds of immunity, just in case CD is killed by a meteor
+			if (!WorldDataSystem.Instance.DownedCraterDemon)
+				NPC.NewNPC(NPC.GetSource_NaturalSpawn(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<MoonChampion>(), 10);
 
-			NPC.SetEventFlagCleared(ref DownedBossSystem.DownedCraterDemon, -1);
+			// This is only used currently for lantern night, which we don't want in our subworlds
+			//NPC.SetEventFlagCleared(ref DownedBossSystem.downedCraterDemon, -1);
+
+			// Similar events can still happen with our event listener system
+			WorldDataSystem.Instance.DownedCraterDemon = true;
 		}
 
 		public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
@@ -514,7 +520,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		{
 			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Bosses/CraterDemon/CraterDemon_Glow").Value;
 			Texture2D glowmaskPhase2 = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Bosses/CraterDemon/CraterDemon_Glow_Phase2").Value;
-			Texture2D star = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/Star1").Value;
+			Texture2D star = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Star1").Value;
 
 			spriteBatch.Draw(glowmask, NPC.position - screenPos + new Vector2(0, 4), NPC.frame, (Color)GetAlpha(Color.White), NPC.rotation, Vector2.Zero, NPC.scale, SpriteEffects.None, 0f);
 
