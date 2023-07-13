@@ -109,7 +109,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 		}
 
         /// <summary>
-        /// Removes a target with the specified name ID from the map 
+        /// Removes a target with the specified name ID from the map, if found
         /// </summary>
         /// <param name="targetName"></param>
         public void RemoveTargetByName(string targetName) 

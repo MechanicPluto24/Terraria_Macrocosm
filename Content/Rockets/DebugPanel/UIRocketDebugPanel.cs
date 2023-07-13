@@ -50,7 +50,7 @@ namespace Macrocosm.Content.Rockets.Navigation.DebugPanel
                 PaddingTop = 50f
             };
 
-			toggleButton = new (ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Buttons/Toggle", ReLogic.Content.AssetRequestMode.ImmediateLoad), 32, 32, Point.Zero, new Point(32, 0));
+			toggleButton = new (ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Buttons/Toggle", ReLogic.Content.AssetRequestMode.ImmediateLoad), 32, 32, Point.Zero, new Point(32, 0));
       
 			DebugElementList.Append(DebugText);
 			DebugElementList.Append(toggleButton);

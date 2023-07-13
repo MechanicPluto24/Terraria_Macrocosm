@@ -18,6 +18,10 @@ namespace Macrocosm.Content.Rockets
 
 		private GameTime lastGameTime;
 
+		public static void Show(Rocket rocket) => Instance.ShowUI(rocket);
+		public static void Hide() => Instance.HideUI();
+		public static bool Active => Instance.Interface?.CurrentState is not null;
+
 		public override void Load()
 		{
 			if (Main.dedServ)
@@ -48,6 +52,7 @@ namespace Macrocosm.Content.Rockets
 
 		public override void OnWorldUnload()
 		{
+			UIRocketState.Deactivate();
 			UIRocketState = null;
 		}  
 

@@ -12,11 +12,11 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
-    public class UICustomizationTab : UIPanel
+    public class UICargoTab : UIPanel
     {
         public Rocket Rocket;
 
-		public UICustomizationTab()
+		public UICargoTab()
 		{
 			Initialize();
 		}
@@ -33,7 +33,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 			BackgroundColor = new Color(13, 23, 59, 127);
 			BorderColor = new Color(15, 15, 15, 255);
 
-			Append(new UIText("test")
+			Append(new UIText("test2")
 			{
 				Top = new(0, 0.5f),
 				Left = new(0, 0.5f),
@@ -46,11 +46,6 @@ namespace Macrocosm.Content.Rockets.Navigation
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-		}
-
-		public override void Draw(SpriteBatch spriteBatch)
-		{
-			base.Draw(spriteBatch);
 		}
 	}
 }
