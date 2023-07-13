@@ -343,7 +343,7 @@ namespace Macrocosm.Content.Rockets
 				}
 				else
 				{
-					if(!RocketUIState.Active)
+					if(!RocketUISystem.Active)
 					{
 						Main.LocalPlayer.cursorItemIconEnabled = true;
 						Main.LocalPlayer.cursorItemIconID = ModContent.ItemType<RocketPlacer>();

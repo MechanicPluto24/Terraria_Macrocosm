@@ -16,10 +16,10 @@ namespace Macrocosm.Content.Rockets.Navigation
     {
 		public Rocket Rocket;
 
+        public UICustomizationPreview CustomizationPreview;
+
         private UILaunchButton LaunchButton;
         private UINavigationPanel NavigationPanel;
-
-        private UICustomizationPreview CustomizationPreview;
 
 		private UIListScrollablePanel WorldInfoPanel;
         private UIListScrollablePanel FlightChecklist;
@@ -58,13 +58,14 @@ namespace Macrocosm.Content.Rockets.Navigation
             // TODO: move this to a provider class 
             FlightChecklist = new(new LocalizedColorScaleText(Language.GetText("Mods.Macrocosm.RocketUI.Common.Checklist"), scale: 1.2f))
             {
-                Top = new StyleDimension(0, 0.365f),
+                Top = new(0, 0.365f),
                 HAlign = 0.5f,
-                Width = new StyleDimension(0, 0.34f),
-                Height = new StyleDimension(0, 0.51f),
-				BackgroundColor = new Color(53, 72, 135),
-			    BorderColor = new Color(89, 116, 213, 255)
+                Width = new(0, 0.34f),
+                Height = new(0, 0.51f),
+				BackgroundColor = new(53, 72, 135),
+			    BorderColor = new(89, 116, 213, 255)
 		    };
+
 			FlightChecklist.SetPadding(0f);
 			Append(FlightChecklist);
 

@@ -47,7 +47,7 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
 
         protected override LocalizedText GetHoverText() => Language.GetText("Mods.Macrocosm.RocketUI.ThreatLevel.Name");
 
-        protected override Asset<Texture2D> GetIcon() => ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Icons/ThreatLevel");
+        protected override Asset<Texture2D> GetIcon() => ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Icons/ThreatLevel");
 
 	}
 }

@@ -69,7 +69,7 @@ namespace Macrocosm.Common.UI
 		{
 			CalculatedStyle dimensions = GetDimensions();
 
-			float visibility = CheckInteractible() ? (IsMouseHovering ? visibilityInteractible : visibilityHover) : visibilityNotInteractible;
+			float visibility = CheckInteractible() ? (IsMouseHovering ? visibilityHover : visibilityInteractible ) : visibilityNotInteractible;
 			spriteBatch.Draw(texture.Value, dimensions.Position(), Color.White * visibility);
 			
 			if (borderTexture != null && IsMouseHovering && CheckInteractible())

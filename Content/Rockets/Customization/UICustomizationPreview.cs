@@ -18,7 +18,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 
         public bool CanClick;
 
-        private UIText uITitle;
+		private UIText uITitle;
 
 		public UICustomizationPreview()
 		{
@@ -96,7 +96,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 			Effect effect = ModContent.Request<Effect>(Macrocosm.EffectAssetsPath + "Pixelate", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
             effect.Parameters["uPixelCount"].SetValue(new Vector2(renderTarget.Width, renderTarget.Height) / (6f * Main.UIScale));
 
-			spriteBatch.Begin(state.SpriteSortMode, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, effect, state.Matrix);
+			spriteBatch.Begin(state.SpriteSortMode, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, state.DepthStencilState, state.RasterizerState, effect, state.Matrix);
 
 			spriteBatch.Draw(renderTarget, new Rectangle(rect.Center.X - Rocket.Width/4, rect.Y + rect.Height/8, rect.Width, rect.Height), Color.White);
             

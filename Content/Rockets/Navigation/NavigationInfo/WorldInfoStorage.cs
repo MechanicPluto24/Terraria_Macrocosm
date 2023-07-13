@@ -43,7 +43,7 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
 		///     ThreatLevelInfoElement: the threat level info element, pick from ThreatLevel enum.
 		///     HazardInfoElement: the hazards specific to this world (e.g. MeteorStorms).
 		///     
-		///     Icons are loaded based on the name, from Rockets/Icons.
+		///     Icons are loaded based on the name, from Rockets/Textures/Icons.
 		///     Text is loaded from the localization files.
 		/// </summary>
 		private static void LoadData()

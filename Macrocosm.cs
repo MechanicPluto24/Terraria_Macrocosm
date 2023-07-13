@@ -21,7 +21,7 @@ namespace Macrocosm
 		public const string EffectAssetsPath = "Macrocosm/Assets/Effects/";
 		public const string TextureAssetsPath = "Macrocosm/Assets/Textures/";
 		public const string MusicAssetsPath = "Macrocosm/Assets/Music/";
-		public const string SFXAssetsPath = "Macrocosm/Assets/SFX/";
+		public const string SFXAssetsPath = "Macrocosm/Assets/Sounds/SFX/";
 
 		public const string EmptyTexPath = TextureAssetsPath + "Empty";
 		public static Asset<Texture2D> EmptyTexAsset => ModContent.Request<Texture2D>(EmptyTexPath);

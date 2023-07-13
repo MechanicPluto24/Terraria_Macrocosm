@@ -28,9 +28,9 @@ namespace Macrocosm.Content.Rockets.Navigation.Checklist
         protected override Asset<Texture2D> GetIcon()
         {
             if (State)
-                return ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Icons/" + MetIcon.ToString());
+                return ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Icons/" + MetIcon.ToString());
             else
-                return ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Icons/" + NotMetIcon.ToString());
+                return ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Icons/" + NotMetIcon.ToString());
         }
 
         private string KeySelector => specialValueKey + "." + (State ? "True" : "False") + ".";

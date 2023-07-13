@@ -8,6 +8,8 @@ using Macrocosm.Content.Rockets.Navigation.Checklist;
 using static Terraria.ModLoader.PlayerDrawLayer;
 using Terraria;
 using Terraria.GameContent;
+using static Terraria.GameContent.Animations.IL_Actions.Sprites;
+using System;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
@@ -47,7 +49,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 		}
 
         // selection outline texture, has default
-        private readonly Texture2D selectionOutline = ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Buttons/SelectionOutlineSmall", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+        private readonly Texture2D selectionOutline = ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Buttons/SelectionOutlineSmall", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
 
 		// Selection outline rotation
 		private float rotation = 0f;
@@ -67,7 +69,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 		/// <summary> Creates a new UIMapTarget based on a target Macrocosm Subworld </summary>
 		/// <param name="owner"> The owner navigation panel </param>
 		/// <param name="targetSubworld"> The subworld (instance) associated with the map target </param>
-		public UIMapTarget(UINavigationPanel owner, float leftPercent, float topPercent, float widthPercent, float heightPercent, MacrocosmSubworld targetSubworld, Texture2D outline = null) : this(owner, leftPercent, topPercent, widthPercent, heightPercent)
+		public UIMapTarget(UINavigationPanel owner, float centerXPercent, float centerYPercent, float sizePercent, MacrocosmSubworld targetSubworld, Texture2D outline = null) : this(owner, centerXPercent, centerYPercent, sizePercent)
         {
 			LaunchConditions = targetSubworld.LaunchConditions;
             Name = targetSubworld.Name;
@@ -79,7 +81,7 @@ namespace Macrocosm.Content.Rockets.Navigation
         /// <param name="owner"> The owner navigation panel </param>
         /// <param name="targetId"> The special ID of the target, handled in <see cref="Rocket.EnterDestinationSubworld"/> </param>
         /// <param name="canLaunch"> Function that determines whether the target is selectable, defaults to false </param>
-        public UIMapTarget(UINavigationPanel owner, float leftPercent, float topPercent, float widthPercent, float heightPercent, string targetId, ChecklistConditionCollection launchConditions = null, Texture2D outline = null) : this(owner, leftPercent, topPercent, widthPercent, heightPercent)
+        public UIMapTarget(UINavigationPanel owner, float centerXPercent, float centerYPercent, float sizePercent, string targetId, ChecklistConditionCollection launchConditions = null, Texture2D outline = null) : this(owner, centerXPercent, centerYPercent, sizePercent)
         {
 			this.LaunchConditions = launchConditions;
             Name = targetId;
@@ -89,15 +91,17 @@ namespace Macrocosm.Content.Rockets.Navigation
 
         /// <summary> Creates a new UIMapTarget </summary>
         /// <param name="owner"> The owner navigation panel </param>
-        private UIMapTarget(UINavigationPanel owner, float leftPercent, float topPercent, float widthPercent, float heightPercent)
+        private UIMapTarget(UINavigationPanel owner, float centerXPercent, float centerYPercent, float sizePercent)
         {
             OwnerPanel = owner;
 			float ownerAspectRatio = owner.Width.Percent / owner.Height.Percent;
-			Width = StyleDimension.FromPercent(0.83f * heightPercent / ownerAspectRatio ) ;
-			Height = StyleDimension.FromPercent(heightPercent);
 
-			Left = StyleDimension.FromPercent(leftPercent - Width.Percent / 2f);
-			Top = StyleDimension.FromPercent(topPercent - Height.Percent / 2f);
+			// I don't get why the magic number scaling is necessary to have square size 
+			Width = StyleDimension.FromPercent(0.83f * sizePercent / ownerAspectRatio ); 
+			Height = StyleDimension.FromPercent(sizePercent);
+
+			Left = StyleDimension.FromPercent(centerXPercent - Width.Percent / 2f);
+			Top = StyleDimension.FromPercent(centerYPercent - Height.Percent / 2f);
 		}
 		
 		public override void OnInitialize()
@@ -111,15 +115,9 @@ namespace Macrocosm.Content.Rockets.Navigation
                 }
             };
 
-            OnRightClick += (_, _) => 
-            { 
-                Selected = false; 
-            };
+            OnRightClick += (_, _) => Selected = false;
 
-            OnLeftDoubleClick += (_, _) => 
-            { 
-                OwnerPanel.ZoomIn(useDefault: false); 
-            };
+            OnLeftDoubleClick += (_, _) => OwnerPanel.ZoomIn(useDefault: false);
         }
 
 		public override void Update(GameTime gameTime)
@@ -180,8 +178,9 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 		protected override void DrawSelf(SpriteBatch spriteBatch)
         {
-			// debug "hitbox"
 			Rectangle rect = GetDimensions().ToRectangle();
+			
+			// debug "hitbox"
 			//spriteBatch.Draw(TextureAssets.MagicPixel.Value, rect, Color.Red * 0.4f);
 
 			// Should draw the outline if not fully transparent
@@ -193,7 +192,8 @@ namespace Macrocosm.Content.Rockets.Navigation
 				spriteBatch.End();
 				spriteBatch.Begin(BlendState.NonPremultiplied, SamplerState.AnisotropicClamp, state);
 
-				spriteBatch.Draw(selectionOutline, rect.Center(), null, drawColor.NewAlpha(targetOpacity), rotation, origin, 0.9f / Main.UIScale, SpriteEffects.None, 0f);
+				float scale = 0.918f + (0.98f - 0.918f) * Utility.NormalizedUIScale;
+				spriteBatch.Draw(selectionOutline, rect.Center(), null, drawColor.NewAlpha(targetOpacity), rotation, origin, scale, SpriteEffects.None, 0f);
 
 				spriteBatch.End();
 				spriteBatch.Begin(state);

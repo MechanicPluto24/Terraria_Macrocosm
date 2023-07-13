@@ -100,9 +100,9 @@ namespace Macrocosm.Content.Rockets
 						InRocket = false;
 
 					if (!rocket.Launching)
-						RocketUIState.Show(rocket);
+						RocketUISystem.Show(rocket);
 					else
-						RocketUIState.Hide();
+						RocketUISystem.Hide();
 				}
 
 				Player.moveSpeed = 0f;
@@ -111,7 +111,7 @@ namespace Macrocosm.Content.Rockets
 
 			}
 			else if (Player.whoAmI == Main.myPlayer)
-				RocketUIState.Hide();
+				RocketUISystem.Hide();
 
 			AddCameraModifier();
 		}
