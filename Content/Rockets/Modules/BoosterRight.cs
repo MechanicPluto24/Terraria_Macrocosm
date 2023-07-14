@@ -1,6 +1,6 @@
 ﻿namespace Macrocosm.Content.Rockets.Modules
 {
-    public class Boosters : RocketModule
+    public class BoosterRight : RocketModule
     {
 
     }

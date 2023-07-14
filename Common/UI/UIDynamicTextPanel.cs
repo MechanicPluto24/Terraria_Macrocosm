@@ -12,19 +12,16 @@ namespace Macrocosm.Common.UI
 		public UIDynamicTextPanel(LocalizedColorScaleText text)
         {
 			uIText = text.ProvideUI();
-            Initialize();
         }
 
 		public UIDynamicTextPanel(LocalizedText text, float textScale = 1f, bool large = false)
 		{
 			uIText = new(text, textScale, large);
-			Initialize();
 		}
 
 		public UIDynamicTextPanel(string text, float textScale = 1f, bool large = false)
 		{
 			uIText = new(text, textScale, large);
-			Initialize();
 		}
 
         public void SetText(string text) => uIText.SetText(text);

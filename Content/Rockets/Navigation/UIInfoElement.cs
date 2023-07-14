@@ -25,8 +25,6 @@ namespace Macrocosm.Content.Rockets.Navigation
                 this.hoverText = LocalizedText.Empty;
             else
                 this.hoverText = hoverText;
-
-            Initialize();
         }
 
         public override void OnInitialize()

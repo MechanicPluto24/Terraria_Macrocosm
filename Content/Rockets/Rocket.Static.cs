@@ -8,8 +8,8 @@ namespace Macrocosm.Content.Rockets
 	{
 		public const int MaxRockets = byte.MaxValue;
 
-		public const int DefaultWidth = 84;
-		public const int DefaultHeight = 564;
+		public const int DefaultWidth = 124;
+		public const int DefaultHeight = 584;
 
 		public static Vector2 DefaultSize => new(DefaultWidth, DefaultHeight);
 
@@ -19,7 +19,7 @@ namespace Macrocosm.Content.Rockets
 		{
 			// Rocket will not be managed.. we have to avoid ever reaching this  
 			if (RocketManager.Rockets.Count > MaxRockets)
- 				throw new System.Exception("Max rockets reached. Should not ever reach this point during normal gameplay");
+ 				throw new System.Exception("Max rockets reached. Should not ever reach this point during normal gameplay.");
  
 			Rocket rocket = new()
 			{
@@ -29,6 +29,7 @@ namespace Macrocosm.Content.Rockets
 
 			RocketManager.Rockets.Add(rocket);
 			rocket.NetSync();
+			rocket.OnSpawn();
 			return rocket;
 		}
 	}

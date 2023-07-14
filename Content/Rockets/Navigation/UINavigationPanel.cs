@@ -28,7 +28,6 @@ namespace Macrocosm.Content.Rockets.Navigation
 
         public UINavigationPanel()
         {
-            Initialize();
             WorldDataSystem.Instance.PropertyChanged += (sender, args) => UpdateMapVisibility(args.PropertyName);
         }
 

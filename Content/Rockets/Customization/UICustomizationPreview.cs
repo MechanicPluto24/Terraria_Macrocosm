@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Steamworks;
 using System;
 using System.IO;
 using Terraria;
@@ -15,8 +16,6 @@ namespace Macrocosm.Content.Rockets.Navigation
     public class UICustomizationPreview : UIPanel
     {
         public Rocket Rocket;
-
-        public bool CanClick;
 
 		private UIText uITitle;
 
@@ -33,8 +32,6 @@ namespace Macrocosm.Content.Rockets.Navigation
             Left.Set(0, 0.01f);
             BackgroundColor = new Color(53, 72, 135);
             BorderColor = new Color(89, 116, 213, 255);
-
-			Recalculate();
 
             uITitle = new(Language.GetText("Mods.Macrocosm.RocketUI.Common.Customization"), 0.8f, false)
             {
@@ -75,7 +72,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 			spriteBatch.GraphicsDevice.PresentationParameters.RenderTargetUsage = RenderTargetUsage.PreserveContents;
 			var originalRenderTargets = spriteBatch.GraphicsDevice.GetRenderTargets();
-			RenderTarget2D renderTarget = new (spriteBatch.GraphicsDevice, (int)((Rocket.Width + 240) * Main.UIScale), (int)((Rocket.Height + 140) * Main.UIScale));
+			RenderTarget2D renderTarget = new(spriteBatch.GraphicsDevice, (int)((Rocket.Width) * Main.UIScale) , (int)((Rocket.Height) * Main.UIScale));
 
             var state = spriteBatch.SaveState();
 			spriteBatch.End();
@@ -83,10 +80,9 @@ namespace Macrocosm.Content.Rockets.Navigation
 			spriteBatch.GraphicsDevice.SetRenderTarget(renderTarget);
 			spriteBatch.GraphicsDevice.Clear(Color.Transparent);
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, state.Effect, state.Matrix);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, state.Effect, Main.UIScaleMatrix);
 
-            // Passing Rocket world position as "screenPosition" cancels it out  
-            Rocket.Draw(spriteBatch, Rocket.Position - new Vector2(20, 0), Color.White);
+            Rocket.DrawDummy(spriteBatch, new Vector2(-20, 0), Color.White);
 
 			spriteBatch.End();
 
@@ -98,8 +94,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 			spriteBatch.Begin(state.SpriteSortMode, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, state.DepthStencilState, state.RasterizerState, effect, state.Matrix);
 
-			spriteBatch.Draw(renderTarget, new Rectangle(rect.Center.X - Rocket.Width/4, rect.Y + rect.Height/8, rect.Width, rect.Height), Color.White);
-            
+			spriteBatch.Draw(renderTarget, rect.ShrinkRectangle(30), Color.White);
 			spriteBatch.End();
             spriteBatch.Begin(state);
 

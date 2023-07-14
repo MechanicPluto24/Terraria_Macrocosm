@@ -57,7 +57,8 @@ namespace Macrocosm.Content.Rockets.Customization
 			AddPattern("EngineModule", "Delta" , Color.White, Color.White, new Color(40, 40, 40));
 			AddPattern("EngineModule", "Rainbow", Color.White, Color.Red, Color.Orange, Color.Yellow, Color.Green, Color.Blue, Color.Indigo, Color.Violet);
 
-			AddPattern("Boosters", "Basic");
+			AddPattern("BoosterLeft", "Basic");
+			AddPattern("BoosterRight", "Basic");
 		}
 
 		private static void LoadDetails()

@@ -67,6 +67,15 @@ namespace Macrocosm.Content.Rockets.Navigation
 			Customization = new();
 			Cargo = new();
 
+			Navigation.Activate();
+			Customization.Activate();
+			Cargo.Activate();
+
+			BackgroundPanel.Append(Navigation);
+			Navigation.CustomizationPreview.OnLeftClick += SetTab_Customization;
+			//Navigation.CargoFuelPreview.OnLeftClick += SetTab_Cargo;
+
+
 			TabLeftButton = new(ModContent.Request<Texture2D>(buttonsPath + "BackArrow", mode), ModContent.Request<Texture2D>(buttonsPath + "BackArrowBorder", mode), Language.GetText("Mods.Macrocosm.RocketUI.Common.Customization"))
 			{
 				Top = new(-38,0f),
@@ -88,11 +97,6 @@ namespace Macrocosm.Content.Rockets.Navigation
 			TabRightButton.SetVisibility(1f, 0f, 1f);
 			TabRightButton.OnLeftClick += SetTab_Cargo;
 			BackgroundPanel.Append(TabRightButton);
-
-			BackgroundPanel.Append(Navigation);
-
-			Navigation.CustomizationPreview.OnLeftClick += SetTab_Customization;
-			//Navigation.CargoFuelPreview.OnLeftClick += SetTab_Cargo;
 
 			//DebugPanel = new();
 			//BackgroundPanel.Append(DebugPanel);
@@ -150,7 +154,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 			Player player = Main.LocalPlayer;
 			player.mouseInterface = true;
 
-			if (!Rocket.Active || !Rocket.InInteractionRange || Rocket.Launching || player.controlMount || player.UICloseConditions())
+			if (!Rocket.Active || !Rocket.InInteractionRange || Rocket.InFlight || player.controlMount || player.UICloseConditions())
 			{
 				RocketUISystem.Hide();
 				return;

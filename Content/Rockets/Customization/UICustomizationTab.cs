@@ -1,15 +1,7 @@
-﻿using Macrocosm.Common.Utils;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.IO;
-using Terraria;
-using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
-using Terraria.ID;
-using Terraria.Localization;
-using Terraria.ModLoader;
-
+ 
 namespace Macrocosm.Content.Rockets.Navigation
 {
     public class UICustomizationTab : UIPanel
@@ -18,7 +10,6 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 		public UICustomizationTab()
 		{
-			Initialize();
 		}
 
 		public override void OnInitialize()
@@ -51,6 +42,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 		public override void Draw(SpriteBatch spriteBatch)
 		{
 			base.Draw(spriteBatch);
+			Rocket.DrawDummy(spriteBatch, -GetDimensions().Position(), Color.White);
 		}
 	}
 }

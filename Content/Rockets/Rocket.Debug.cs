@@ -1,5 +1,6 @@
 ﻿
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Rockets.Modules;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.GameContent;
@@ -8,9 +9,19 @@ namespace Macrocosm.Content.Rockets
 {
     public partial class Rocket
 	{
-		public void DrawDebugHitbox()
+		public void DrawDebugBounds()
 		{
-			Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, Hitbox, Color.Red.NewAlpha(0.5f));
+			Rectangle rect = new((int)(Bounds.X - Main.screenPosition.X), (int)(Bounds.Y - Main.screenPosition.Y), Bounds.Width, Bounds.Height);
+			Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, rect, Color.Red.NewAlpha(0.5f));
 		}
+
+		public void DrawDebugModuleHitbox()
+		{
+			foreach(RocketModule module in Modules)
+			{
+				Rectangle rect = new((int)(module.Hitbox.X - Main.screenPosition.X), (int)(module.Hitbox.Y - Main.screenPosition.Y), module.Hitbox.Width, module.Hitbox.Height);
+				Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, rect, Color.Green.NewAlpha(0.5f));
+			}
+ 		}
 	}
 }

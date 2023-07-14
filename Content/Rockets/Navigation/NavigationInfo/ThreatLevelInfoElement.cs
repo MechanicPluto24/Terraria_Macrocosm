@@ -3,14 +3,11 @@
 using Terraria.UI;
 using Microsoft.Xna.Framework.Input;
 using System;
-using System.Globalization;
 using ReLogic.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.ModLoader;
 using Terraria.Localization;
 using Microsoft.Xna.Framework;
-using Macrocosm.Common.Utils;
-using log4net.Core;
 using Macrocosm.Common.UI;
 
 namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
