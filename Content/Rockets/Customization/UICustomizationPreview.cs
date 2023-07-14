@@ -72,7 +72,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 			spriteBatch.GraphicsDevice.PresentationParameters.RenderTargetUsage = RenderTargetUsage.PreserveContents;
 			var originalRenderTargets = spriteBatch.GraphicsDevice.GetRenderTargets();
-			RenderTarget2D renderTarget = new(spriteBatch.GraphicsDevice, (int)((Rocket.Width) * Main.UIScale) , (int)((Rocket.Height) * Main.UIScale));
+			RenderTarget2D renderTarget = new(spriteBatch.GraphicsDevice, (int)(Rocket.Width * Main.UIScale) , (int)(Rocket.Height * Main.UIScale));
 
             var state = spriteBatch.SaveState();
 			spriteBatch.End();
@@ -80,9 +80,9 @@ namespace Macrocosm.Content.Rockets.Navigation
 			spriteBatch.GraphicsDevice.SetRenderTarget(renderTarget);
 			spriteBatch.GraphicsDevice.Clear(Color.Transparent);
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, state.Effect, Main.UIScaleMatrix);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, state.Effect, Main.UIScaleMatrix);
 
-            Rocket.DrawDummy(spriteBatch, new Vector2(-20, 0), Color.White);
+            Rocket.DrawDummy(spriteBatch, new Vector2(0, 0), Color.White);
 
 			spriteBatch.End();
 
@@ -90,11 +90,17 @@ namespace Macrocosm.Content.Rockets.Navigation
 			spriteBatch.GraphicsDevice.PresentationParameters.RenderTargetUsage = RenderTargetUsage.DiscardContents;
 
 			Effect effect = ModContent.Request<Effect>(Macrocosm.EffectAssetsPath + "Pixelate", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-            effect.Parameters["uPixelCount"].SetValue(new Vector2(renderTarget.Width, renderTarget.Height) / (6f * Main.UIScale));
+            effect.Parameters["uPixelCount"].SetValue(new Vector2(renderTarget.Width, renderTarget.Height) / (5.7f * Main.UIScale));
 
-			spriteBatch.Begin(state.SpriteSortMode, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, state.DepthStencilState, state.RasterizerState, effect, state.Matrix);
+			spriteBatch.Begin(state.SpriteSortMode, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, effect, state.Matrix);
 
-			spriteBatch.Draw(renderTarget, rect.ShrinkRectangle(30), Color.White);
+			Rectangle dest = rect;
+			dest.X += 35;
+			dest.Y += 25;
+			dest.Width -= 74;
+			dest.Height -= 38;
+			spriteBatch.Draw(renderTarget, dest, Color.White);
+
 			spriteBatch.End();
             spriteBatch.Begin(state);
 

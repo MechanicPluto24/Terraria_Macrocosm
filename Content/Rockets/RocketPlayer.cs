@@ -23,9 +23,9 @@ namespace Macrocosm.Content.Rockets
 
 		private PanCameraModifier cameraModifier;
 
-		public override void CopyClientState(ModPlayer clientClone)/* tModPorter Suggestion: Replace Item.Clone usages with Item.CopyNetStateTo */
+		public override void CopyClientState(ModPlayer targetCopy)
 		{
-			RocketPlayer cloneRocketPlayer = clientClone as RocketPlayer;
+			RocketPlayer cloneRocketPlayer = targetCopy as RocketPlayer;
 
 			cloneRocketPlayer.InRocket = InRocket;
 			cloneRocketPlayer.AsCommander = AsCommander;

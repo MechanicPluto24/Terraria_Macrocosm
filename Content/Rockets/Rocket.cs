@@ -95,7 +95,7 @@ namespace Macrocosm.Content.Rockets
 		/// <summary> The rocket's right booster </summary>
 		public BoosterRight BoosterRight;
 
-		/// <summary> List of all the rocket's modules </summary>
+		/// <summary> List of all the rocket's modules, in their draw order, different from ModuleNames </summary>
 		public List<RocketModule> Modules;
 
 		#region Private vars
@@ -137,7 +137,7 @@ namespace Macrocosm.Content.Rockets
 			BoosterLeft = new();
 			BoosterRight = new();
 
-			Modules = new() { EngineModule, BoosterLeft, BoosterRight, CommandPod, ServiceModule, ReactorModule };
+			Modules = new() { EngineModule, BoosterLeft, BoosterRight, ReactorModule, ServiceModule, CommandPod};
 		}
 
 		public void OnSpawn()
@@ -217,23 +217,26 @@ namespace Macrocosm.Content.Rockets
 			{
 				module.Draw(spriteBatch, screenPos, drawColor);
 			}
+
+			DrawDebugBounds();
+			DrawDebugModuleHitbox();
 		}
 
 		public void DrawDummy(SpriteBatch spriteBatch, Vector2 offset, Color drawColor)
 		{
 			// Passing Rocket world position as "screenPosition" cancels it out  
-			Draw(spriteBatch, Position + offset, drawColor);
+			Draw(spriteBatch, Position - offset, drawColor);
 		}
 
 		// Set the rocket's modules positions in the world
 		private void SetModuleRelativePositions()
 		{
-			CommandPod.Position = Position + new Vector2(CommandPod.Texture.Width / 2, 0f);
-			ServiceModule.Position = CommandPod.Position + new Vector2(-2, CommandPod.Texture.Height - 2f);
+			CommandPod.Position = Position + new Vector2(CommandPod.Texture.Width/4f + 1, 0);
+			ServiceModule.Position = new Vector2(CommandPod.Position.X, CommandPod.Position.Y) + new Vector2(-20, CommandPod.Texture.Height - 2.1f);
 			ReactorModule.Position = ServiceModule.Position + new Vector2(0, ServiceModule.Texture.Height) + new Vector2(0, -2);
 			EngineModule.Position = ReactorModule.Position + new Vector2(0, ReactorModule.Texture.Height);
-			BoosterLeft.Position = EngineModule.Position + new Vector2(-39, 14);
-			BoosterRight.Position = EngineModule.Position + new Vector2(39, 14);
+			BoosterLeft.Position = new Vector2(EngineModule.Center.X, EngineModule.Position.Y) - new Vector2(BoosterLeft.Texture.Width/2, 0) + new Vector2(-39, 14);
+			BoosterRight.Position = new Vector2(EngineModule.Center.X, EngineModule.Position.Y)  -new Vector2(BoosterLeft.Texture.Width / 2, 0) + new Vector2(39, 14);
 		}
 
 		/// <summary> Gets the RocketPlayer bound to the provided player ID </summary>

@@ -64,7 +64,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 			    BorderColor = new(89, 116, 213, 255)
 		    };
 
-			FlightChecklist.SetPadding(0f);
+			FlightChecklist.SetPadding(2f);
 			Append(FlightChecklist);
 
             LaunchButton = new();
