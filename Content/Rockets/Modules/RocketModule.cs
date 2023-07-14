@@ -13,7 +13,10 @@ namespace Macrocosm.Content.Rockets.Modules
 		public string Name => GetType().Name;
 
 		public Vector2 Position { get; set; }
-		public Vector2 Center => Position + Size / 2f;
+		public Vector2 Center {
+			get => Position + Size / 2f;
+			set => Position = value - Size / 2f;
+		}
 
 		public virtual int Width => Texture.Width;
 		public virtual int Height => Texture.Height;
@@ -21,7 +24,7 @@ namespace Macrocosm.Content.Rockets.Modules
 		public Vector2 Size => new(Width, Height);
 		public Rectangle Hitbox => new((int)Position.X, (int)Position.Y, Width, Height);
 
-		protected Vector2 Origin => new(Texture.Width / 2, 0);
+		protected Vector2 Origin => new(0, 0);
 
 
 		public virtual string TexturePath => (GetType().Namespace + "." + GetType().Name).Replace('.', '/');

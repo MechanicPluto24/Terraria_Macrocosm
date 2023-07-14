@@ -13,7 +13,8 @@ namespace Macrocosm.Content.Rockets
 
 		public static Vector2 DefaultSize => new(DefaultWidth, DefaultHeight);
 
-		public static readonly List<string> ModuleNames = new() { "CommandPod", "ServiceModule", "ReactorModule", "EngineModule", "Boosters" };
+		/// <summary> List of the module names, in the customization access order </summary>
+		public static readonly List<string> ModuleNames = new() { "CommandPod", "ServiceModule", "ReactorModule", "EngineModule", "BoosterLeft", "BoosterRight" };
 
 		public static Rocket Create(Vector2 position)
 		{
