@@ -45,6 +45,48 @@ namespace Macrocosm.Common.Utils
 
 		#endregion
 
+		#region Rectangles
+		public static Rectangle ShrinkRectangle(this Rectangle rectangle, int shrinkAmount)
+		{
+			int newWidth = rectangle.Width - (2 * shrinkAmount);
+			int newHeight = rectangle.Height - (2 * shrinkAmount);
+
+			// Calculate the new position based on the center
+			int newX = rectangle.X + shrinkAmount;
+			int newY = rectangle.Y + shrinkAmount;
+
+			return new Rectangle(newX, newY, newWidth, newHeight);
+		}
+
+
+		public static Rectangle AdjustAspectRatio(this Rectangle rectangle, int targetWidth, int targetHeight)
+		{
+			float aspectRatio = (float)rectangle.Width / rectangle.Height;
+			float targetAspectRatio = (float)targetWidth / targetHeight;
+
+			if (aspectRatio > targetAspectRatio)
+			{
+				// Reduce the width while maintaining the aspect ratio
+				int newWidth = (int)(targetHeight * aspectRatio);
+				int deltaWidth = targetWidth - newWidth;
+				int newX = rectangle.X + (deltaWidth / 2);
+
+				return new Rectangle(newX, rectangle.Y, newWidth, targetHeight);
+			}
+			else if (aspectRatio < targetAspectRatio)
+			{
+				// Reduce the height while maintaining the aspect ratio
+				int newHeight = (int)(targetWidth / aspectRatio);
+				int deltaHeight = targetHeight - newHeight;
+				int newY = rectangle.Y + (deltaHeight / 2);
+
+				return new Rectangle(rectangle.X, newY, targetWidth, newHeight);
+			}
+
+			return new Rectangle(rectangle.X, rectangle.Y, targetWidth, targetHeight);
+		}
+		#endregion
+
 		#region Rotation & angles
 
 		/// <summary>

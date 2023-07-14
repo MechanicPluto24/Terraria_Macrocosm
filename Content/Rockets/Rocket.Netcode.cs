@@ -53,31 +53,5 @@ namespace Macrocosm.Content.Rockets
 			if (Main.netMode == NetmodeID.Server)
 				rocket.NetSync(ignoreClient: clientWhoAmI);
 		}
-
-		public void SendEmbarkedPlayer(int playerID, bool asCommander)
-		{
-			ModPacket packet = Macrocosm.Instance.GetPacket();
-			packet.Write((byte)MessageType.SyncEmbarkInRocket);
-			packet.Write((byte)playerID);
-			packet.Write(asCommander);
-			packet.Write((byte)WhoAmI);
-			packet.Send();
-		}
-
-		public static void ReceiveEmbarkedPlayer(BinaryReader reader, int whoAmI)
-		{
-			int playerId = reader.ReadByte();
-			bool asCommander = reader.ReadBoolean();
-			int rocketId = reader.ReadByte();
-			Rocket rocket = RocketManager.Rockets[rocketId];
-
-			// Server receives embark status from client interaction 
-			if (Main.netMode == NetmodeID.Server && Main.player[playerId].active)
-			{
-				rocket.GetRocketPlayer(playerId).InRocket = true;
-				rocket.GetRocketPlayer(playerId).AsCommander = asCommander;
-				rocket.GetRocketPlayer(playerId).RocketID = rocketId;
-			}
-		}
 	}
 }

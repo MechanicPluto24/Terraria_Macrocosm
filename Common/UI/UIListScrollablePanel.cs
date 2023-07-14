@@ -14,8 +14,6 @@ namespace Macrocosm.Common.UI
 
         public float ListPadding { get; set; } = 3f;
 
-        public float ContainerSize { get; set; } = 0f;
-
         private UIText title;
         private UIList list;
         private UIScrollbar scrollbar;
@@ -28,7 +26,6 @@ namespace Macrocosm.Common.UI
 				this.title = title.ProvideUI();
 
 			this.list = list;
-			Initialize();
 		}
 
 		public UIListScrollablePanel(LocalizedColorScaleText title = null)
@@ -41,8 +38,6 @@ namespace Macrocosm.Common.UI
                 Width = new StyleDimension(0f, 1f),
                 Height = new StyleDimension(0f, 1f)
             };
-
-            Initialize();
         }
 
         public UIListScrollablePanel(LocalizedText title = null)
@@ -56,7 +51,6 @@ namespace Macrocosm.Common.UI
 				Height = new StyleDimension(0f, 1f)
 			};
 
-			Initialize();
 		}
 
 		public UIListScrollablePanel(string title = null)
@@ -69,8 +63,6 @@ namespace Macrocosm.Common.UI
 				Width = new StyleDimension(0f, 1f),
 				Height = new StyleDimension(0f, 1f)
 			};
-
-			Initialize();
 		}
 
 		public override void OnInitialize()

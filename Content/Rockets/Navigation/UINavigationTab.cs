@@ -33,8 +33,6 @@ namespace Macrocosm.Content.Rockets.Navigation
         public UINavigationTab()
         {            
             MacrocosmConfig.Instance.OnConfigChanged += (_,_) => ResetInfoPanel();
-
-			Initialize();
 		}
 
 		public override void OnInitialize()
@@ -115,34 +113,15 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 		private void UpdateInfoPanel()
         {
-            // Initial state of the info panel; default to the current subworld
-            if (target is null)
-            {
-				if (lastTarget is not null)
-				{
-					RemoveChild(WorldInfoPanel);
-					WorldInfoPanel = WorldInfoStorage.GetValue(MacrocosmSubworld.SafeCurrentID).ProvideUI();
-					Append(WorldInfoPanel);
-				}
-			}
-
             // Update the info panel on new target 
             if (target is not null && (target != lastTarget)) 
-            {
-				RemoveChild(WorldInfoPanel);
-				WorldInfoPanel = WorldInfoStorage.GetValue(target.Name).ProvideUI();
-				Append(WorldInfoPanel);
-			} 
-		}
+ 				this.ReplaceChildWith(WorldInfoPanel, WorldInfoStorage.GetValue(target.Name).ProvideUI());
+ 		}
 
         private void ResetInfoPanel()
         {
             if(target is not null)
-            {
-			    RemoveChild(WorldInfoPanel);
-				WorldInfoPanel = WorldInfoStorage.GetValue(target.Name).ProvideUI();
-				Append(WorldInfoPanel);
-            }
+				this.ReplaceChildWith(WorldInfoPanel, WorldInfoStorage.GetValue(target.Name).ProvideUI());
 		}
 
 		// TODO: move this to an UI provider class
@@ -163,6 +142,8 @@ namespace Macrocosm.Content.Rockets.Navigation
                 else
                     FlightChecklist.AddList(genericLaunchConditions.ProvideUIElementList());
 			}
+
+            FlightChecklist.Activate();
 		}
 
 		// TODO: move this to a checker class (same as the UI provider?)

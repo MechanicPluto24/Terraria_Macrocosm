@@ -12,39 +12,35 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
-    public class UICargoTab : UIPanel
+    public class UIRocketPreviewLarge : UIPanel
     {
         public Rocket Rocket;
 
-		public UICargoTab()
+		public UIRocketPreviewLarge()
 		{
 		}
 
 		public override void OnInitialize()
         {
-			Width.Set(0, 1f);
-			Height.Set(0, 1f);
-			HAlign = 0.5f;
-			VAlign = 0.5f;
-
-			SetPadding(2f);
-
-			BackgroundColor = new Color(13, 23, 59, 127);
-			BorderColor = new Color(15, 15, 15, 255);
-
-			Append(new UIText("test2")
-			{
-				Top = new(0, 0.5f),
-				Left = new(0, 0.5f),
-				Width = new(0, 0.2f),
-				Height = new(0, 0.2f)
-			});
-
-		}
+            Width.Set(0, 0.4f);
+            Height.Set(0, 1f);
+            HAlign = 0f;
+            Left.Set(0, 0.6f);
+            BackgroundColor = new Color(53, 72, 135);
+            BorderColor = new Color(89, 116, 213, 255);
+        }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+		}
+
+		public override void Draw(SpriteBatch spriteBatch)
+		{
+            base.Draw(spriteBatch);
+
+            Rocket.DrawDummy(spriteBatch, GetDimensions().Center() - Rocket.Size / 2f, Color.White);
+			
 		}
 	}
 }

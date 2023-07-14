@@ -12,7 +12,6 @@ namespace Macrocosm.Common.Netcode
 		SyncParticle,
 		SyncPlayerDashDirection,
 		SyncRocketData,
-		SyncEmbarkInRocket,
 		SyncPlayerRocketStatus
 	}
 
@@ -40,10 +39,6 @@ namespace Macrocosm.Common.Netcode
 					Rocket.SyncRocketData(reader, whoAmI);
 					break;
 
-				case MessageType.SyncEmbarkInRocket:
-					Rocket.ReceiveEmbarkedPlayer(reader, whoAmI);
-					break;
-					
 				default:
 					Macrocosm.Instance.Logger.WarnFormat("Macrocosm: Unknown Message type: {messageType}", messageType);
  					break;

@@ -20,13 +20,6 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
             worldInfoStorage = null;
         }
 
-        /// <summary> Repopulates the world info data </summary>
-        public static void Reload()
-        {
-			worldInfoStorage = new Dictionary<string, WorldInfoProvider>();
-			LoadData();
-		} 
-
         public static void Add(string key, params InfoElement[] infoElements)
             => worldInfoStorage.Add(key, new WorldInfoProvider(key, infoElements.ToList()));
 
@@ -39,7 +32,7 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
 		/// Populates the World Info data.
 		/// 
 		/// Supports: 
-		///     GravityInfoElement, RadiusInfoElement, DayPeriodInfoElement: generic info elements, specify numeric and/or string value (e.g. TidallyLocked)
+		///     GravityInfoElement, RadiusInfoElement, DayPeriodInfoElement: general info elements, specify numeric and/or string value (e.g. TidallyLocked)
 		///     ThreatLevelInfoElement: the threat level info element, pick from ThreatLevel enum.
 		///     HazardInfoElement: the hazards specific to this world (e.g. MeteorStorms).
 		///     

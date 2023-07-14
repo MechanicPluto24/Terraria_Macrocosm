@@ -87,6 +87,38 @@ namespace Macrocosm.Content.Rockets
 			}
   		}
 
+		public void EmbarkPlayerInRocket(int rocketId, bool asCommander = false)
+		{
+			InRocket = true;
+			RocketID = rocketId;
+			AsCommander = asCommander;
+
+			Player.StopVanityActions();
+			Player.RemoveAllGrapplingHooks();
+
+			if (Player.mount.Active)
+				Player.mount.Dismount(Player);
+
+			Player.sitting.isSitting = true;
+
+			if(Player.whoAmI == Main.myPlayer)
+			{
+				cameraModifier = new(RocketManager.Rockets[RocketID].Center, 0.001f, "PlayerInRocket", Utility.QuadraticEaseIn);
+				Main.instance.CameraModifiers.Add(cameraModifier);
+			}
+		}
+
+		public void DisembarkFromRocket()
+		{
+			InRocket = false;
+			AsCommander = false;
+
+			if (Player.whoAmI == Main.myPlayer)
+			{
+				if (cameraModifier is not null && !cameraModifier.Finished)
+					cameraModifier.ReturnToOriginalPosition = true;
+			}
+		}
 
 		public override void PreUpdateMovement()
 		{
@@ -94,26 +126,26 @@ namespace Macrocosm.Content.Rockets
 			{
 				Rocket rocket = RocketManager.Rockets[RocketID];
 
+				Player.velocity = rocket.Velocity;
+				Player.Center = new Vector2(rocket.Position.X + rocket.Width / 2 - 2f, rocket.Position.Y + 100) - (AsCommander ? new Vector2(0, 50) : Vector2.Zero);
+
 				if (Player.whoAmI == Main.myPlayer)
 				{
-					if ((Player.controlInv || Player.controlMount) && !(rocket.Launching))
-						InRocket = false;
+					// Escape or 'R' will disembark this player, but not during flight
+					if ((Player.controlInv || Player.controlMount) && !(rocket.InFlight))
+						DisembarkFromRocket();
 
-					if (!rocket.Launching)
+					if (!rocket.InFlight)
 						RocketUISystem.Show(rocket);
 					else
 						RocketUISystem.Hide();
 				}
-
-				Player.moveSpeed = 0f;
-				Player.velocity = rocket.Velocity;
-				Player.Center = new Vector2(rocket.Position.X + rocket.Width / 2 - 2f, rocket.Position.Y + 100) - (AsCommander ? new Vector2(0, 50) : Vector2.Zero);
-
 			}
 			else if (Player.whoAmI == Main.myPlayer)
+			{
 				RocketUISystem.Hide();
-
-			AddCameraModifier();
+				Player.sitting.isSitting = false;
+			}
 		}
 
 		public override void PreUpdateBuffs()
@@ -124,25 +156,6 @@ namespace Macrocosm.Content.Rockets
 				Player.releaseMount = true;
 			}
  		}
-
-		// Better than ModifyScreenPosition I suppose?
-		public void AddCameraModifier()
-		{
-			if (Player.whoAmI != Main.myPlayer)
-				return;
-
-			if (InRocket)
-			{
-				Rocket rocket = RocketManager.Rockets[RocketID];
-				cameraModifier = new(rocket.Center, 0.001f, "PlayerInRocket", Utility.QuadraticEaseIn);
-				Main.instance.CameraModifiers.Add(cameraModifier);
-			}
-			else
-			{
-				if(cameraModifier is not null && !cameraModifier.Finished)
- 					cameraModifier.ReturnToOriginalPosition = true;
- 			}
-		}
 	}
 }
 

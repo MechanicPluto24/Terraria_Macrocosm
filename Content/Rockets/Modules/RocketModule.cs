@@ -13,9 +13,16 @@ namespace Macrocosm.Content.Rockets.Modules
 		public string Name => GetType().Name;
 
 		public Vector2 Position { get; set; }
-		protected Vector2 Center => Position + Size / 2f;
-		protected Vector2 Size => new(Texture.Width / 2f, Texture.Height / 2f);
+		public Vector2 Center => Position + Size / 2f;
+
+		public virtual int Width => Texture.Width;
+		public virtual int Height => Texture.Height;
+
+		public Vector2 Size => new(Width, Height);
+		public Rectangle Hitbox => new((int)Position.X, (int)Position.Y, Width, Height);
+
 		protected Vector2 Origin => new(Texture.Width / 2, 0);
+
 
 		public virtual string TexturePath => (GetType().Namespace + "." + GetType().Name).Replace('.', '/');
 		public Texture2D Texture => ModContent.Request<Texture2D>(TexturePath, AssetRequestMode.ImmediateLoad).Value;
@@ -27,9 +34,6 @@ namespace Macrocosm.Content.Rockets.Modules
 		public bool HasDetail => Detail is not null;
 		private bool SpecialDraw => HasPattern || HasDetail;
 
-
-		private SamplerState samplerState1, samplerState2;
-
 		public RocketModule()
 		{
 			Pattern = CustomizationStorage.GetPattern(GetType().Name, "Basic");
@@ -39,15 +43,12 @@ namespace Macrocosm.Content.Rockets.Modules
 		public virtual void Draw(SpriteBatch spriteBatch, Vector2 screenPos, Color ambientColor)
 		{
 			// Load current pattern and apply shader 
-			SpriteBatchState state = spriteBatch.SaveState(); 
+			SpriteBatchState state = spriteBatch.SaveState();
+			SamplerState samplerState = Main.graphics.GraphicsDevice.SamplerStates[1]; 
 			if (SpecialDraw)
 			{
 				// Load the coloring shader
 				Effect effect = ModContent.Request<Effect>(Macrocosm.EffectAssetsPath + "ColorMaskShading", AssetRequestMode.ImmediateLoad).Value;
-
-				// Save sampler states (required) ??
-				samplerState1 = Main.graphics.GraphicsDevice.SamplerStates[1];
-				samplerState2 = Main.graphics.GraphicsDevice.SamplerStates[2];
 
 				// -- testing, will be configured from an UI		
 				if (this is EngineModule)
@@ -102,7 +103,7 @@ namespace Macrocosm.Content.Rockets.Modules
 				Main.graphics.GraphicsDevice.Textures[2] = null;
 
 				// Restore the sampler states
-				Main.graphics.GraphicsDevice.SamplerStates[1] = samplerState1;
+				Main.graphics.GraphicsDevice.SamplerStates[1] = samplerState;
 			}
 		}
 	}
