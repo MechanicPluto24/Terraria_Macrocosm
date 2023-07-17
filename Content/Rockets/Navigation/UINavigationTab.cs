@@ -50,7 +50,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 			NavigationPanel = new();
             Append(NavigationPanel);
 
-            WorldInfoPanel = WorldInfoStorage.GetValue(MacrocosmSubworld.SafeCurrentID).ProvideUI();
+            WorldInfoPanel = WorldInfoStorage.GetValue(MacrocosmSubworld.CurrentPlanet).ProvideUI();
 			Append(WorldInfoPanel);
 
             // TODO: move this to a provider class 
@@ -180,7 +180,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 			Rocket.Launch(); 
         }
 
-        private float GetFuelCost() => RocketFuelLookup.GetFuelCost(MacrocosmSubworld.SafeCurrentID, target.Name);
+        private float GetFuelCost() => RocketFuelLookup.GetFuelCost(MacrocosmSubworld.CurrentPlanet, target.Name);
 
         private bool CheckFuel() => Rocket.Fuel >= GetFuelCost();
 

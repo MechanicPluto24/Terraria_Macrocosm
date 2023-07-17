@@ -5,10 +5,12 @@ using Terraria;
 using Terraria.ModLoader;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.Customization;
+using Terraria.ModLoader.IO;
+using System;
 
 namespace Macrocosm.Content.Rockets.Modules
 {
-    public abstract class RocketModule 
+    public abstract class RocketModule : TagSerializable
 	{
 		public string Name => GetType().Name;
 

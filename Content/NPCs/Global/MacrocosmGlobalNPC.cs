@@ -20,10 +20,10 @@ namespace Macrocosm.Content.NPCs.Global
 			SetImmunities();
 		}
 
-		/// <summary> For generic drops </summary>
+		/// <summary> For common drops </summary>
 		public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
 		{
-			if (SubworldSystem.IsActive<Moon>())
+			if (npc.ModNPC is IMoonEnemy)
 			{
 				npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<MoonCoin>(), 10));
 			}
