@@ -93,17 +93,30 @@ namespace Macrocosm.Content.Rockets
 		{
             for(int i = 0; i < MaxRockets; i++)
             {
+                string key = "Rocket" + i.ToString();
+
                 if (Rockets[i].Active)
                 {
-
+                    tag[key] = Rockets[i];
                 }
             }
 		}
 
-		public override void LoadWorldData(TagCompound tag)
-		{
-			base.LoadWorldData(tag);
-		}
+        public override void LoadWorldData(TagCompound tag)
+        {
+            for (int i = 0; i < MaxRockets; i++)
+            {
+				string key = "Rocket" + i.ToString();
+
+				if (tag.ContainsKey(key))
+                {
+					Rocket rocket = tag.Get<Rocket>(key);
+					Rockets.Add(rocket);
+					rocket.OnSpawn();
+					rocket.NetSync();
+				}
+            }
+        }
 
 		public void CopyRocketData()
         {
