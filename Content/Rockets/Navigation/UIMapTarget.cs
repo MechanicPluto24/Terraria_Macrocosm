@@ -34,7 +34,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 		public bool IsReachable = false; 
 
         /// <summary> Whether this target's ID is equal to the current subworld </summary>
-        public bool AlreadyHere => Name == MacrocosmSubworld.SafeCurrentID;
+        public bool AlreadyHere => Name == MacrocosmSubworld.CurrentPlanet;
 
         /// <summary> Whether the target is currently selected </summary>
         public bool Selected;

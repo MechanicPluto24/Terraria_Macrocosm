@@ -15,7 +15,7 @@ namespace Macrocosm.Content.Rockets
 		/// </summary>
 		public void NetSync(int ignoreClient = -1)
 		{
-			if (Main.netMode == NetmodeID.SinglePlayer || WhoAmI < 0 || WhoAmI > MaxRockets)
+			if (Main.netMode == NetmodeID.SinglePlayer || WhoAmI < 0 || WhoAmI > RocketManager.MaxRockets)
 				return;
 			
 			ModPacket packet = Macrocosm.Instance.GetPacket();

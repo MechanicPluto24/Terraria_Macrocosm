@@ -19,7 +19,7 @@ namespace Macrocosm.Content.Rockets
 		public static Rocket Create(Vector2 position)
 		{
 			// Rocket will not be managed.. we have to avoid ever reaching this  
-			if (RocketManager.Rockets.Count > MaxRockets)
+			if (RocketManager.Rockets.Count > RocketManager.MaxRockets)
  				throw new System.Exception("Max rockets reached. Should not ever reach this point during normal gameplay.");
  
 			Rocket rocket = new()

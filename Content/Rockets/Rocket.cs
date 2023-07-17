@@ -12,32 +12,32 @@ using Macrocosm.Common.Netcode;
 using System.Collections.Generic;
 using Macrocosm.Content.Rockets.Modules;
 using Terraria.Localization;
+using Macrocosm.Common.Subworlds;
 
 namespace Macrocosm.Content.Rockets
 {
-    public partial class Rocket
+    public partial class Rocket 
 	{
+		[NetSync] public bool Active;
+
+
 		[NetSync] public Vector2 Position;
 
 		[NetSync] public Vector2 Velocity;
 
-		[NetSync] public bool Active;
 
 		/// <summary> Rocket sequence timer </summary>
 		[NetSync] public int FlightTime;
 
 		[NetSync] public bool InFlight;
 
+
 		[NetSync] public float FuelCapacity = 1000f;
 
-		/// <summary> The amount of fuel stored in the rocket </summary>
-		public float Fuel
-		{
-			get => fuel;
-			set => fuel = MathHelper.Clamp(value, 0, FuelCapacity);
-		}
+		[NetSync] public string CurrentWorld;
 
-		[NetSync] private float fuel;
+		/// <summary> The amount of fuel stored in the rocket </summary>
+		[NetSync] public float Fuel;
 
 		public int WhoAmI => RocketManager.Rockets.IndexOf(this);
 
@@ -142,6 +142,8 @@ namespace Macrocosm.Content.Rockets
 
 		public void OnSpawn()
 		{
+			CurrentWorld = MacrocosmSubworld.CurrentSubworld;
+
 			startYPosition = Center.Y;
 		}
 
@@ -150,6 +152,7 @@ namespace Macrocosm.Content.Rockets
 		{
 			Position += Velocity;
 
+			// Testing
 			Fuel = 1000f;
 
 			SetModuleRelativePositions();
@@ -177,7 +180,7 @@ namespace Macrocosm.Content.Rockets
             if (Position.Y < worldExitPosY)
 			{
 				EnterDestinationSubworld();
-				Despawn();
+				//Despawn();
 			}
 		}
 
@@ -205,9 +208,10 @@ namespace Macrocosm.Content.Rockets
 			}
 
 			Active = false;
+			NetSync();
 		}
 
-		// Draw the rocket modules
+		/// <summary> Draw the rocket </summary>
 		public void Draw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
 			// Positions (also) set here, in the update method only they lag behind 
@@ -222,6 +226,7 @@ namespace Macrocosm.Content.Rockets
 			DrawDebugModuleHitbox();
 		}
 
+		/// <summary> Draw the rocket as a dummy </summary>
 		public void DrawDummy(SpriteBatch spriteBatch, Vector2 offset, Color drawColor)
 		{
 			// Passing Rocket world position as "screenPosition" cancels it out  

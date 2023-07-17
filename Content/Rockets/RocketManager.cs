@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
+using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SubworldLibrary;
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Rockets
 {
@@ -15,11 +18,13 @@ namespace Macrocosm.Content.Rockets
         AfterNPCs
     }
 
-    public class RocketManager : ModSystem
+    public class RocketManager : ModSystem, ICopyWorldData
     {
         public static List<Rocket> Rockets { get; private set; }
 
-        public override void Load()
+		public const int MaxRockets = byte.MaxValue;
+
+		public override void Load()
         {
 			Rockets = new List<Rocket>();
 
@@ -45,31 +50,34 @@ namespace Macrocosm.Content.Rockets
             for (int i = 0; i < Rockets.Count; i++)
             {
                 Rocket rocket = Rockets[i];
-                rocket.Update();
 
-                if (!rocket.Active)
-                {
+				if (!rocket.Active)
+				{
 					Rockets.RemoveAt(i);
-                    i--;
-                }
+					i--;
+				}
+
+                if (rocket.CurrentWorld != MacrocosmSubworld.CurrentSubworld)
+                    continue;
+
+				rocket.Update();
             }
         }
 
         public static void DespawnAllRockets()
         {
-            for (int i = 0; i < Rockets.Count; i++)
-            {
-                Rockets[i].Despawn();
-                Rockets[i].NetSync();
-
-			}
+			foreach (Rocket rocket in Rockets)
+				rocket.Despawn();
         }
 
         private static void DrawRockets(RocketDrawLayer layer)
         {
             foreach (Rocket rocket in Rockets)
             {
-                if (rocket.DrawLayer == layer)
+				if (rocket.CurrentWorld != MacrocosmSubworld.CurrentSubworld)
+					continue;
+
+				if (rocket.DrawLayer == layer)
                 {
                     Color lightColor = Lighting.GetColor((int)(rocket.Center.X / 16), (int)(rocket.Center.Y / 16));
                     rocket.Draw(Main.spriteBatch, Main.screenPosition, lightColor);
@@ -77,7 +85,37 @@ namespace Macrocosm.Content.Rockets
             }
         }
 
-        private void DrawRocket_NPCs(On_Main.orig_DrawNPCs orig, Main self, bool behindTiles)
+        public override void OnWorldLoad() => Rockets.Clear();
+
+		public override void OnWorldUnload() => Rockets.Clear();
+
+		public override void SaveWorldData(TagCompound tag)
+		{
+            for(int i = 0; i < MaxRockets; i++)
+            {
+                if (Rockets[i].Active)
+                {
+
+                }
+            }
+		}
+
+		public override void LoadWorldData(TagCompound tag)
+		{
+			base.LoadWorldData(tag);
+		}
+
+		public void CopyRocketData()
+        {
+        
+        }
+
+		public void ReadCopiedRocketData()
+		{
+
+		}
+
+		private void DrawRocket_NPCs(On_Main.orig_DrawNPCs orig, Main self, bool behindTiles)
         {
             SpriteBatch spriteBatch = Main.spriteBatch;
             var state1 = spriteBatch.SaveState();
