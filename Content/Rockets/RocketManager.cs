@@ -57,7 +57,7 @@ namespace Macrocosm.Content.Rockets
 					i--;
 				}
 
-                if (rocket.CurrentWorld != MacrocosmSubworld.CurrentSubworld)
+                if (rocket.CurrentSubworld != MacrocosmSubworld.CurrentSubworld)
                     continue;
 
 				rocket.Update();
@@ -74,7 +74,7 @@ namespace Macrocosm.Content.Rockets
         {
             foreach (Rocket rocket in Rockets)
             {
-				if (rocket.CurrentWorld != MacrocosmSubworld.CurrentSubworld)
+				if (rocket.CurrentSubworld != MacrocosmSubworld.CurrentSubworld)
 					continue;
 
 				if (rocket.DrawLayer == layer)
@@ -91,7 +91,7 @@ namespace Macrocosm.Content.Rockets
 
 		public override void SaveWorldData(TagCompound tag)
 		{
-            for(int i = 0; i < MaxRockets; i++)
+            for(int i = 0; i < Rockets.Count; i++)
             {
                 string key = "Rocket" + i.ToString();
 

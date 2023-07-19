@@ -1,25 +1,29 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using System;
+using Macrocosm.Content.Rockets.Modules;
 using Microsoft.Xna.Framework;
-using System.Linq;
-using Terraria.ModLoader;
+using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using System;
-using Macrocosm.Common.Utils;
+using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
     public class Pattern
     {
-        public string Name { get; set; }
-        public string ModuleName { get; set; }
+		public string Name { get; }
+		public string ModuleName { get; }
+
+		public bool Unlocked { get; set; } = true;
 
 		public int ColorCount { get; }
-        public Color[] DefaultColors { get; }
-		public Color[] Colors { get; set; }
+
+		private PatternColorData[] colorData;
+		private Color[] defaultColors;
+		private Color[] colors;
 
 		public const int MaxColorCount = 8;
 
-        public string TexturePath => GetType().Namespace.Replace('.', '/') + "/Patterns/" + ModuleName + "/" + Name;
+		public string TexturePath => GetType().Namespace.Replace('.', '/') + "/Patterns/" + ModuleName + "/" + Name;
 		public Texture2D Texture
 		{
 			get
@@ -31,24 +35,91 @@ namespace Macrocosm.Content.Rockets.Customization
 			}
 		}
 
-		//public Texture2D IconTexture { get; set; }
-		//public int ItemType{ get; set; }
+		public string IconTexturePath => GetType().Namespace.Replace('.', '/') + "/Patterns/Icons/" + Name;
+		public Texture2D IconTexture
+		{
+			get
+			{
+				if (ModContent.RequestIfExists(TexturePath, out Asset<Texture2D> paintMask))
+					return paintMask.Value;
+				else
+					return Macrocosm.EmptyTex;
+			}
+		}
 
-		public Pattern(string moduleName, string patternName, params Color[] defaultColors)
-        {
+		public Pattern(string moduleName, string patternName, bool unlocked, params PatternColorData[] colorData)
+		{
 			ModuleName = moduleName;
-            Name = patternName;
+			Name = patternName;
+			Unlocked = unlocked;
 
-			DefaultColors = new Color[MaxColorCount];
-			Array.Fill(DefaultColors, Color.White.NewAlpha(0));
+			ColorCount = (int)MathHelper.Clamp(colorData.Length, 0, MaxColorCount);
 
-			ColorCount = (int)MathHelper.Clamp(defaultColors.Length, 0, MaxColorCount);
-			
-			for(int i = 0; i < ColorCount; i++)
- 				DefaultColors[i] = defaultColors[i];
+			defaultColors = new Color[MaxColorCount];
+			Array.Fill(defaultColors, Color.Transparent);
 
-			Colors = DefaultColors;
-        }
+			this.colorData = new PatternColorData[MaxColorCount];
+			for (int i = 0; i < ColorCount; i++)
+				this.colorData[i] = colorData[i];
+
+			for (int i = 0; i < ColorCount; i++)
+			{
+				if (!this.colorData[i].IsUserChangeable)
+					defaultColors[i] = this.colorData[i].DefaultColor;
+				else if (this.colorData[i].ColorFunction != null)
+					defaultColors[i] = this.colorData[i].ColorFunction(defaultColors);
+			}
+
+			colors = defaultColors;
+		}
+
+		public Color GetColor(int index)
+		{
+			if (index >= 0 && index < ColorCount)
+			{
+				if (!colorData[index].IsUserChangeable)
+					return colorData[index].DefaultColor;
+				else if (colorData[index].ColorFunction != null)
+				{
+					Color[] tempColors = new Color[ColorCount];
+					Array.Copy(colors, tempColors, ColorCount);
+					return colorData[index].ColorFunction(tempColors);
+				}
+				else 
+					return colors[index];
+			}
+			return Color.Transparent;
+		}
+
+		public bool TrySetColor(int index, Color color)
+		{
+			if (index < 0 || index >= ColorCount || colorData[index].IsUserChangeable || colorData[index].ColorFunction is not null)
+				return false;
+
+			colors[index] = color;
+			return true;
+		}
+
+		public Color GetDefaultColor(int index)
+		{
+			if (index >= 0 && index < ColorCount)
+			{
+				if (colorData[index].ColorFunction != null)
+				{
+					Color[] tempColors = new Color[ColorCount];
+					Array.Copy(colors, tempColors, ColorCount);
+					return colorData[index].ColorFunction(tempColors);
+				}
+				else
+					return colorData[index].DefaultColor;
+			}
+			return Color.Transparent;
+		}
+
+		//public void DrawIconTexture(Vector2 position)
+		//{
+		//
+		//}
 
 		/// <summary> Color mask keys </summary>
 		public static readonly Vector3[] ColorKeys = {
@@ -62,21 +133,47 @@ namespace Macrocosm.Content.Rockets.Customization
 			new Vector3(0f,.5f, 1f)      // Azure
 		};
 
-		#region Autoload
-		/*
-		public void AutoloadPatterns()
-		{
-			// Find all existing patters for this module
-			string lookupString = (HERE + MODULES[n] + "_Pattern_").Replace("Macrocosm/", "");
-			PatternPaths = Macrocosm.Instance.RootContentSource.GetAllAssetsStartingWith(lookupString).ToList();
+		public static readonly Func<TagCompound, Pattern> DESERIALIZER = DeserializeData;
 
-			// Log the pattern list
-			string logstring = "Found " + PatternPaths.Count.ToString() + " pattern" + (PatternPaths.Count == 1 ? "" : "s") + " for rocket module " + GetType().Name + ": ";
-			foreach (var pattern in PatternPaths)
-				logstring += pattern.Replace(lookupString, "").Replace(".rawimg", "") + " ";
-			Macrocosm.Instance.Logger.Info(logstring);
+		public TagCompound SerializeData()
+		{
+			TagCompound tag = new TagCompound
+			{
+				["Name"] = Name,
+				["ModuleName"] = ModuleName,
+				["Unlocked"] = Unlocked,
+				["ColorCount"] = ColorCount
+			};
+
+			// Save the user-changed colors
+			for (int i = 0; i < ColorCount; i++)
+ 				if (colorData[i].IsUserChangeable && colorData[i].ColorFunction is null)
+ 					tag[$"Color{i}"] = colors[i].PackedValue;  
+ 
+			return tag;
 		}
-		*/
-		#endregion
+
+		public static Pattern DeserializeData(TagCompound tag)
+		{
+			string name = tag.GetString("Name");
+			string moduleName = tag.GetString("ModuleName");
+			bool unlocked = tag.GetBool("Unlocked");
+			int colorCount = tag.GetInt("ColorCount");
+
+			Pattern pattern = CustomizationStorage.GetPattern(name, moduleName);
+			pattern.Unlocked = unlocked;
+		
+			// Load the user-changed colors
+			for (int i = 0; i < pattern.ColorCount; i++)
+			{
+				if (pattern.colorData[i].IsUserChangeable && pattern.colorData[i].ColorFunction is null)
+				{
+					uint colorValue = (uint)tag.GetInt($"Color{i}");
+					pattern.colors[i].PackedValue = colorValue;
+				}
+			}
+
+			return pattern;
+		}
 	}
 }

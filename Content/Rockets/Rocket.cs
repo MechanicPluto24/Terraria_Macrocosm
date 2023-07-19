@@ -34,7 +34,7 @@ namespace Macrocosm.Content.Rockets
 
 		[NetSync] public float FuelCapacity = 1000f;
 
-		[NetSync] public string CurrentWorld;
+		[NetSync] public string CurrentSubworld;
 
 		/// <summary> The amount of fuel stored in the rocket </summary>
 		[NetSync] public float Fuel;
@@ -142,7 +142,7 @@ namespace Macrocosm.Content.Rockets
 
 		public void OnSpawn()
 		{
-			CurrentWorld = MacrocosmSubworld.CurrentSubworld;
+			CurrentSubworld = MacrocosmSubworld.CurrentSubworld;
 
 			startYPosition = Center.Y;
 		}
@@ -222,8 +222,8 @@ namespace Macrocosm.Content.Rockets
 				module.Draw(spriteBatch, screenPos, drawColor);
 			}
 
-			DrawDebugBounds();
-			DrawDebugModuleHitbox();
+			//DrawDebugBounds();
+			//DrawDebugModuleHitbox();
 		}
 
 		/// <summary> Draw the rocket as a dummy </summary>
@@ -454,6 +454,9 @@ namespace Macrocosm.Content.Rockets
 					SubworldSystem.Exit();
 				else if (commander.TargetSubworldID != null && commander.TargetSubworldID != "")
 					SubworldSystem.Enter(Macrocosm.Instance.Name + "/" + commander.TargetSubworldID);
+
+				CurrentSubworld = commander.TargetSubworldID;
+				//NetSync();
 			}
 		}
 	}

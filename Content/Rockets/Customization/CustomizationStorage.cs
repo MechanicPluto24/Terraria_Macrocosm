@@ -23,8 +23,8 @@ namespace Macrocosm.Content.Rockets.Customization
 			detailStorage = null;
 		}
 
-		public static void AddPattern(string moduleName, string patternName, params Color[] defaultColors)
-			=> patternStorage.Add(moduleName + "_" + patternName, new Pattern(moduleName, patternName, defaultColors));
+		public static void AddPattern(string moduleName, string patternName, bool unlockedByDefault, params PatternColorData[] colorData)
+			=> patternStorage.Add(moduleName + "_" + patternName, new Pattern(moduleName, patternName, unlockedByDefault, colorData));
 
 		public static Pattern GetPattern(string moduleName, string patternName)
 			=> patternStorage[moduleName + "_" + patternName];
@@ -45,20 +45,20 @@ namespace Macrocosm.Content.Rockets.Customization
 
 		private static void LoadPatterns()
 		{
-			AddPattern("CommandPod", "Basic");
+			AddPattern("CommandPod", "Basic", true);
 
-			AddPattern("ServiceModule", "Basic");
+			AddPattern("ServiceModule", "Basic", true);
 
-			AddPattern("ReactorModule", "Basic");
+			AddPattern("ReactorModule", "Basic", true);
 
-			AddPattern("EngineModule", "Basic");
-			AddPattern("EngineModule", "Binary", Color.White, Color.White, new Color(40, 40, 40));
-			AddPattern("EngineModule", "Saturn", Color.White, Color.White, new Color(40, 40, 40));
-			AddPattern("EngineModule", "Delta" , Color.White, Color.White, new Color(40, 40, 40));
-			AddPattern("EngineModule", "Rainbow", Color.White, Color.Red, Color.Orange, Color.Yellow, Color.Green, Color.Blue, Color.Indigo, Color.Violet);
+			AddPattern("EngineModule", "Basic", true);
+			AddPattern("EngineModule", "Binary", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40)));
+			AddPattern("EngineModule", "Saturn", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40)));
+			AddPattern("EngineModule", "Delta" , true, new(Color.White), new(Color.White), new(new Color(40, 40, 40)));
+			AddPattern("EngineModule", "Rainbow", false, new(Color.White), new(Color.Red), new(Color.Orange), new(Color.Yellow), new(Color.Green), new(Color.Blue), new(Color.Indigo), new(Color.Violet));
 
-			AddPattern("BoosterLeft", "Basic");
-			AddPattern("BoosterRight", "Basic");
+			AddPattern("BoosterLeft", "Basic", true);
+			AddPattern("BoosterRight", "Basic", true);
 		}
 
 		private static void LoadDetails()
