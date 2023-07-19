@@ -76,7 +76,7 @@ namespace Macrocosm.Content.Rockets.Modules
 					for(int i = 0; i < Pattern.MaxColorCount; i++)
 					{
 						effect.Parameters["uColorKey" + i.ToString()].SetValue(Pattern.ColorKeys[i]);
-						effect.Parameters["uColor" + i.ToString()].SetValue(Pattern.Colors[i].ToVector4());
+						effect.Parameters["uColor" + i.ToString()].SetValue(Pattern.GetColor(i).ToVector4());
 					}
 
 					// Get a blend between the general ambient color at the rocket center, and the local color on this module
@@ -110,6 +110,27 @@ namespace Macrocosm.Content.Rockets.Modules
 				// Restore the sampler states
 				Main.graphics.GraphicsDevice.SamplerStates[1] = samplerState;
 			}
+		}
+
+		public static readonly Func<TagCompound, RocketModule> DESERIALIZER = DeserializeData;
+
+		public TagCompound SerializeData()
+		{
+			return new TagCompound
+			{
+				["Name"] = Name,
+				["DetailName"] = Detail.Name,
+				["Pattern"] = Pattern
+			};
+		}
+
+		public static RocketModule DeserializeData(TagCompound tag)
+		{
+			string name = tag.GetString("Name");
+			RocketModule module = Activator.CreateInstance(Type.GetType(name)) as RocketModule;
+			module.Detail = CustomizationStorage.GetDetail(name, tag.GetString("DetailName"));
+			module.Pattern = tag.Get<Pattern>("Pattern");
+			return module;
 		}
 	}
 }

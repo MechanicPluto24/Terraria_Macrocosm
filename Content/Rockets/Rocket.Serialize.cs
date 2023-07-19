@@ -18,7 +18,7 @@ namespace Macrocosm.Content.Rockets
 				[nameof(Fuel)] = Fuel,
 				[nameof(FuelCapacity)] = FuelCapacity,
 
-				[nameof(CurrentWorld)] = CurrentWorld
+				[nameof(CurrentSubworld)] = CurrentSubworld
 
 				// TODO: nested serialization of rocket modules, possbily each will implement it on their own
 
@@ -35,7 +35,7 @@ namespace Macrocosm.Content.Rockets
 				Fuel = tag.GetFloat(nameof(Fuel)),	
 				FuelCapacity = tag.GetFloat(nameof(FuelCapacity)),
 
-				CurrentWorld = tag.GetString(nameof(CurrentWorld))
+				CurrentSubworld = tag.GetString(nameof(CurrentSubworld))
 			};
 		}
 	}
