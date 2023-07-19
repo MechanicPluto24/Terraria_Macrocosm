@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Linq;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
@@ -20,13 +21,17 @@ namespace Macrocosm.Content.Rockets
 
     public class RocketManager : ModSystem, ICopyWorldData
     {
-        public static List<Rocket> Rockets { get; private set; }
+        public static Rocket[] Rockets { get; private set; }
 
 		public const int MaxRockets = byte.MaxValue;
 
+        public static int ActiveRocketCount => Rockets.Count(rocket => rocket.Active);
+
+        public static void AddRocket(Rocket rocket) => Rockets[ActiveRocketCount] = rocket;
+
 		public override void Load()
         {
-			Rockets = new List<Rocket>();
+            Rockets = new Rocket[MaxRockets];
 
             On_Main.DrawProjectiles += DrawRocket_Projectiles;
             On_Main.DrawNPCs += DrawRocket_NPCs;
@@ -47,15 +52,11 @@ namespace Macrocosm.Content.Rockets
 
         private static void UpdateRockets()
         {
-            for (int i = 0; i < Rockets.Count; i++)
+            Main.NewText(ActiveRocketCount);
+
+            for (int i = 0; i < MaxRockets; i++)
             {
                 Rocket rocket = Rockets[i];
-
-				if (!rocket.Active)
-				{
-					Rockets.RemoveAt(i);
-					i--;
-				}
 
                 if (rocket.CurrentSubworld != MacrocosmSubworld.CurrentSubworld)
                     continue;
@@ -85,20 +86,16 @@ namespace Macrocosm.Content.Rockets
             }
         }
 
-        public override void OnWorldLoad() => Rockets.Clear();
+        public override void OnWorldLoad() => Array.Fill(Rockets, new Rocket());
 
-		public override void OnWorldUnload() => Rockets.Clear();
+		public override void OnWorldUnload() => Array.Fill(Rockets, new Rocket());
 
 		public override void SaveWorldData(TagCompound tag)
 		{
-            for(int i = 0; i < Rockets.Count; i++)
+            for(int i = 0; i < MaxRockets; i++)
             {
                 string key = "Rocket" + i.ToString();
-
-                if (Rockets[i].Active)
-                {
-                    tag[key] = Rockets[i];
-                }
+				tag[key] = Rockets[i];
             }
 		}
 
@@ -107,25 +104,40 @@ namespace Macrocosm.Content.Rockets
             for (int i = 0; i < MaxRockets; i++)
             {
 				string key = "Rocket" + i.ToString();
+				Rocket rocket = tag.Get<Rocket>(key);
+                Rockets[i] = rocket;
 
-				if (tag.ContainsKey(key))
+				if (rocket.Active && rocket.CurrentSubworld == MacrocosmSubworld.CurrentSubworld)
                 {
-					Rocket rocket = tag.Get<Rocket>(key);
-					Rockets.Add(rocket);
 					rocket.OnSpawn();
 					rocket.NetSync();
 				}
             }
         }
 
-		public void CopyRocketData()
+		public static void CopyRocketData()
         {
-        
-        }
+			for (int i = 0; i < MaxRockets; i++)
+			{
+				string key = "Rocket" + i.ToString();
+                SubworldSystem.CopyWorldData(key, Rockets[i]);
+			}
+		}
 
-		public void ReadCopiedRocketData()
+		public static void ReadCopiedRocketData()
 		{
+			for (int i = 0; i < MaxRockets; i++)
+			{
+				string key = "Rocket" + i.ToString();
+				Rocket rocket = SubworldSystem.ReadCopiedWorldData<Rocket>(key);
+				Rockets[i] = rocket;
 
+				if (rocket.Active && rocket.CurrentSubworld == MacrocosmSubworld.CurrentSubworld)
+				{
+					rocket.OnSpawn();
+					rocket.NetSync();
+				}
+			}
 		}
 
 		private void DrawRocket_NPCs(On_Main.orig_DrawNPCs orig, Main self, bool behindTiles)

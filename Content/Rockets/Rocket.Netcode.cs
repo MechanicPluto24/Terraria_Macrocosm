@@ -38,10 +38,10 @@ namespace Macrocosm.Content.Rockets
 			int rocketIndex = reader.ReadByte(); // the rocket WhoAmI
 
 			Rocket rocket;
-			if (RocketManager.Rockets.Count <= rocketIndex)
+			if (RocketManager.ActiveRocketCount <= rocketIndex)
 			{
 				rocket = new Rocket();
-				RocketManager.Rockets.Add(rocket);
+				RocketManager.AddRocket(rocket);
 			}
 			else
 			{
