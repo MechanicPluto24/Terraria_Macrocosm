@@ -39,7 +39,7 @@ namespace Macrocosm.Content.Rockets
 		/// <summary> The amount of fuel stored in the rocket </summary>
 		[NetSync] public float Fuel;
 
-		public int WhoAmI => RocketManager.Rockets.IndexOf(this);
+		public int WhoAmI => Array.IndexOf(RocketManager.Rockets, this);
 
 		/// <summary> The rocket's width </summary>
 		public int Width = DefaultWidth;
@@ -450,13 +450,13 @@ namespace Macrocosm.Content.Rockets
 
 			if (CheckPlayerInRocket(Main.myPlayer))
 			{
+				CurrentSubworld = commander.TargetSubworldID;
+				//NetSync();
+
 				if (commander.TargetSubworldID == "Earth")
 					SubworldSystem.Exit();
 				else if (commander.TargetSubworldID != null && commander.TargetSubworldID != "")
 					SubworldSystem.Enter(Macrocosm.Instance.Name + "/" + commander.TargetSubworldID);
-
-				CurrentSubworld = commander.TargetSubworldID;
-				//NetSync();
 			}
 		}
 	}

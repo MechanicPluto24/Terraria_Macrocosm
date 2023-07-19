@@ -7,6 +7,7 @@ using Macrocosm.Content.Subworlds;
 using Macrocosm.Content.Rockets.Navigation.Checklist;
 using Macrocosm.Common.UI;
 using Macrocosm.Content.Systems;
+using Macrocosm.Content.Rockets;
 
 namespace Macrocosm.Common.Subworlds
 {
@@ -74,10 +75,28 @@ namespace Macrocosm.Common.Subworlds
 				Earth.LoadingScreen.Draw(Main.spriteBatch);
 		}
 
-		public override void CopyMainWorldData() => WorldDataSystem.Instance.CopyMainWorldData();
-		public override void ReadCopiedMainWorldData() => WorldDataSystem.Instance.ReadCopiedMainWorldData();
-		public override void CopySubworldData() => WorldDataSystem.Instance.CopySubworldData();
-		public override void ReadCopiedSubworldData() => WorldDataSystem.Instance.ReadCopiedSubworldData();
+		public override void CopyMainWorldData()
+		{
+			WorldDataSystem.Instance.CopyMainWorldData();
+			RocketManager.CopyRocketData();
+		}
 
+		public override void ReadCopiedMainWorldData() 
+		{
+			WorldDataSystem.Instance.ReadCopiedMainWorldData();
+			RocketManager.ReadCopiedRocketData();
+		}
+
+		public override void CopySubworldData() 
+		{
+			WorldDataSystem.Instance.CopySubworldData();
+			RocketManager.CopyRocketData();
+		}
+
+		public override void ReadCopiedSubworldData() 
+		{
+			WorldDataSystem.Instance.ReadCopiedSubworldData();
+			RocketManager.ReadCopiedRocketData();
+		}
 	}
 }

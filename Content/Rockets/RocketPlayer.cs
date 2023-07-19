@@ -73,7 +73,7 @@ namespace Macrocosm.Content.Rockets
 
 		public override void ResetEffects()
 		{
-			if (RocketID < 0 || RocketID >= RocketManager.Rockets.Count)
+			if (RocketID < 0 || RocketID >= RocketManager.ActiveRocketCount)
 				InRocket = false;
 			else if (!RocketManager.Rockets[RocketID].Active)
 				InRocket = false;
