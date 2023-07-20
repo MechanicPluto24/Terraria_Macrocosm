@@ -89,23 +89,22 @@ namespace Macrocosm.Content.Rockets
 
 		public void EmbarkPlayerInRocket(int rocketId, bool asCommander = false)
 		{
-			InRocket = true;
 			RocketID = rocketId;
 			AsCommander = asCommander;
+
+			if(Player.whoAmI == Main.myPlayer)
+			{
+				cameraModifier = new(RocketManager.Rockets[RocketID].Center - new Vector2(Main.screenWidth, Main.screenHeight)/2f, Main.screenPosition, 0.015f, "PlayerInRocket", Utility.QuadraticEaseOut);
+				Main.instance.CameraModifiers.Add(cameraModifier);
+			}
+
+			InRocket = true;
 
 			Player.StopVanityActions();
 			Player.RemoveAllGrapplingHooks();
 
 			if (Player.mount.Active)
 				Player.mount.Dismount(Player);
-
-			Player.sitting.isSitting = true;
-
-			if(Player.whoAmI == Main.myPlayer)
-			{
-				cameraModifier = new(RocketManager.Rockets[RocketID].Center, 0.001f, "PlayerInRocket", Utility.QuadraticEaseIn);
-				Main.instance.CameraModifiers.Add(cameraModifier);
-			}
 		}
 
 		public void DisembarkFromRocket()
@@ -126,6 +125,8 @@ namespace Macrocosm.Content.Rockets
 			{
 				Rocket rocket = RocketManager.Rockets[RocketID];
 
+				Player.sitting.isSitting = true;
+
 				Player.velocity = rocket.Velocity;
 				Player.Center = new Vector2(rocket.Position.X + rocket.Width / 2 - 2f, rocket.Position.Y + 100) - (AsCommander ? new Vector2(0, 50) : Vector2.Zero);
 
@@ -135,7 +136,7 @@ namespace Macrocosm.Content.Rockets
 					if ((Player.controlInv || Player.controlMount) && !(rocket.InFlight))
 						DisembarkFromRocket();
 
-					if (!rocket.InFlight)
+					if (!rocket.InFlight && !rocket.Descending)
 						RocketUISystem.Show(rocket);
 					else
 						RocketUISystem.Hide();
