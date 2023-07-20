@@ -10,6 +10,8 @@ namespace Macrocosm.Content.Rockets.Modules
 {
     public class EngineModule : RocketModule
     {
+		public override int DrawPriority => 0;
+
 		public Nameplate Nameplate = new();
 
 		public override void Draw(SpriteBatch spriteBatch, Vector2 screenPos, Color ambientColor)

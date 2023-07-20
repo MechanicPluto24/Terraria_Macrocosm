@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
@@ -25,10 +26,6 @@ namespace Macrocosm.Content.Rockets
 
 		public const int MaxRockets = byte.MaxValue;
 
-        public static int ActiveRocketCount => Rockets.Count(rocket => rocket.Active);
-
-        public static void AddRocket(Rocket rocket) => Rockets[ActiveRocketCount] = rocket;
-
 		public override void Load()
         {
             Rockets = new Rocket[MaxRockets];
@@ -44,6 +41,22 @@ namespace Macrocosm.Content.Rockets
             On_Main.DrawProjectiles -= DrawRocket_Projectiles;
             On_Main.DrawNPCs -= DrawRocket_NPCs;
         }
+
+		public static int ActiveRocketCount => Rockets.Count(rocket => rocket.Active);
+
+		public static void AddRocket(Rocket rocket)
+		{
+			if (ActiveRocketCount >= MaxRockets)
+				return;
+
+            int index = Rockets.Select((rocket, idx) => new { rocket, idx })
+									.Where(item => item.rocket.Active)
+									.Select(item => item.idx)
+									.FirstOrDefault(); 
+
+            rocket.WhoAmI = index;
+			Rockets[index] = rocket;
+		}
 
 		public override void PostUpdateNPCs()
 		{

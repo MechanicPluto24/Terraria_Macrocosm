@@ -2,6 +2,6 @@
 {
     public class CommandPod : RocketModule
     {
-
-    }
+		public override int DrawPriority => 4;
+	}
 }
