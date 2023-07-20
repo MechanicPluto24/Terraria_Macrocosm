@@ -10,7 +10,7 @@ namespace Macrocosm.Content.Rockets
 
 		public TagCompound SerializeData()
 		{
-			return new TagCompound
+			TagCompound tag = new()
 			{
 				[nameof(Active)] = Active,
 				[nameof(Position)] = Position,
@@ -19,10 +19,14 @@ namespace Macrocosm.Content.Rockets
 				[nameof(FuelCapacity)] = FuelCapacity,
 
 				[nameof(CurrentSubworld)] = CurrentSubworld
-
-				// TODO: nested serialization of rocket modules, possbily each will implement it on their own
-
 			};
+
+			for(int i = 0; i < Modules.Count; i++)
+			{
+				tag[ModuleNames[i]] = Modules[i];
+			}
+
+			return tag;
 		}
 
 		public static Rocket DeserializeData(TagCompound tag)

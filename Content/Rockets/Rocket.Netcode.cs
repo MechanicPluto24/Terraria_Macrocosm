@@ -35,19 +35,10 @@ namespace Macrocosm.Content.Rockets
 		/// <param name="reader"></param>
 		public static void SyncRocketData(BinaryReader reader, int clientWhoAmI)
 		{
-			int rocketIndex = reader.ReadByte(); // the rocket WhoAmI
+			// the rocket WhoAmI
+			int rocketIndex = reader.ReadByte(); 
 
-			Rocket rocket;
-			if (RocketManager.ActiveRocketCount <= rocketIndex)
-			{
-				rocket = new Rocket();
-				RocketManager.AddRocket(rocket);
-			}
-			else
-			{
-				rocket = RocketManager.Rockets[rocketIndex];
-			}
-
+			Rocket rocket = RocketManager.Rockets[rocketIndex];
 			rocket.NetReadFields(reader);
 			
 			if (Main.netMode == NetmodeID.Server)

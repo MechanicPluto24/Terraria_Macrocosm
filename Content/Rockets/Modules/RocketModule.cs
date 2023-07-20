@@ -7,6 +7,7 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.Customization;
 using Terraria.ModLoader.IO;
 using System;
+using Terraria.Graphics;
 
 namespace Macrocosm.Content.Rockets.Modules
 {
@@ -28,6 +29,7 @@ namespace Macrocosm.Content.Rockets.Modules
 
 		protected Vector2 Origin => new(0, 0);
 
+		public virtual int DrawPriority => 0;
 
 		public virtual string TexturePath => (GetType().Namespace + "." + GetType().Name).Replace('.', '/');
 		public Texture2D Texture => ModContent.Request<Texture2D>(TexturePath, AssetRequestMode.ImmediateLoad).Value;
@@ -112,16 +114,21 @@ namespace Macrocosm.Content.Rockets.Modules
 			}
 		}
 
+		protected virtual TagCompound SerializeModuleData() { return new TagCompound(); }
+		protected virtual void DeserializeModuleData(TagCompound tag) { }  
+
+
 		public static readonly Func<TagCompound, RocketModule> DESERIALIZER = DeserializeData;
 
 		public TagCompound SerializeData()
 		{
-			return new TagCompound
-			{
-				["Name"] = Name,
-				["DetailName"] = Detail.Name,
-				["Pattern"] = Pattern
-			};
+			TagCompound tag = SerializeModuleData();
+
+			tag["Name"] = Name;
+			tag["DetailName"] = Detail.Name;
+			tag["Pattern"] = Pattern;
+
+			return tag;
 		}
 
 		public static RocketModule DeserializeData(TagCompound tag)
@@ -130,6 +137,7 @@ namespace Macrocosm.Content.Rockets.Modules
 			RocketModule module = Activator.CreateInstance(Type.GetType(name)) as RocketModule;
 			module.Detail = CustomizationStorage.GetDetail(name, tag.GetString("DetailName"));
 			module.Pattern = tag.Get<Pattern>("Pattern");
+			module.DeserializeModuleData(tag);
 			return module;
 		}
 	}

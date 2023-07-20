@@ -137,12 +137,11 @@ namespace Macrocosm.Content.Rockets.Customization
 
 		public TagCompound SerializeData()
 		{
-			TagCompound tag = new TagCompound
+			TagCompound tag = new()
 			{
 				["Name"] = Name,
 				["ModuleName"] = ModuleName,
-				["Unlocked"] = Unlocked,
-				["ColorCount"] = ColorCount
+				["Unlocked"] = Unlocked
 			};
 
 			// Save the user-changed colors
@@ -157,10 +156,9 @@ namespace Macrocosm.Content.Rockets.Customization
 		{
 			string name = tag.GetString("Name");
 			string moduleName = tag.GetString("ModuleName");
-			bool unlocked = tag.GetBool("Unlocked");
-			int colorCount = tag.GetInt("ColorCount");
 
 			Pattern pattern = CustomizationStorage.GetPattern(name, moduleName);
+			bool unlocked = tag.GetBool("Unlocked");
 			pattern.Unlocked = unlocked;
 		
 			// Load the user-changed colors

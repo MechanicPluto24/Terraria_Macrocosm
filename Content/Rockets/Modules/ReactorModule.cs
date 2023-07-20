@@ -2,6 +2,6 @@
 {
     public class ReactorModule : RocketModule
     {
-
-    }
+		public override int DrawPriority => 2;
+	}
 }

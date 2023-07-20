@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using Macrocosm.Content.Rockets.Modules;
 using Terraria.Localization;
 using Macrocosm.Common.Subworlds;
+using System.Linq;
 
 namespace Macrocosm.Content.Rockets
 {
@@ -39,7 +40,7 @@ namespace Macrocosm.Content.Rockets
 		/// <summary> The amount of fuel stored in the rocket </summary>
 		[NetSync] public float Fuel;
 
-		public int WhoAmI => Array.IndexOf(RocketManager.Rockets, this);
+		public int WhoAmI = -1;
 
 		/// <summary> The rocket's width </summary>
 		public int Width = DefaultWidth;
@@ -95,7 +96,7 @@ namespace Macrocosm.Content.Rockets
 		/// <summary> The rocket's right booster </summary>
 		public BoosterRight BoosterRight;
 
-		/// <summary> List of all the rocket's modules, in their draw order, different from ModuleNames </summary>
+		/// <summary> List of all the rocket's modules, in their order found in ModuleNames </summary>
 		public List<RocketModule> Modules;
 
 		#region Private vars
@@ -137,10 +138,10 @@ namespace Macrocosm.Content.Rockets
 			BoosterLeft = new();
 			BoosterRight = new();
 
-			Modules = new() { EngineModule, BoosterLeft, BoosterRight, ReactorModule, ServiceModule, CommandPod};
+			Modules = new() { CommandPod, ServiceModule, ReactorModule, EngineModule, BoosterLeft, BoosterRight };
 		}
 
-		public void OnSpawn()
+	public void OnSpawn()
 		{
 			CurrentSubworld = MacrocosmSubworld.CurrentSubworld;
 
@@ -217,7 +218,7 @@ namespace Macrocosm.Content.Rockets
 			// Positions (also) set here, in the update method only they lag behind 
 			SetModuleRelativePositions();
 
-			foreach (RocketModule module in Modules)
+			foreach (RocketModule module in Modules.OrderBy(module => module.DrawPriority))
 			{
 				module.Draw(spriteBatch, screenPos, drawColor);
 			}

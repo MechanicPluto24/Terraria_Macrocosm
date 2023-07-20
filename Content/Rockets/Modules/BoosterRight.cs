@@ -2,6 +2,7 @@
 {
     public class BoosterRight : RocketModule
     {
+		public override int DrawPriority => 1;
 
-    }
+	}
 }
