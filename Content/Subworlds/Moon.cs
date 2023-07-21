@@ -46,7 +46,7 @@ namespace Macrocosm.Content.Subworlds
         {
             genGroundPass,
             new CraterPass("CraterPass", 1f),
-             new RegolithPass("RegolithPass", 5f),
+            new RegolithPass("RegolithPass", 5f),
             new OrePass("OrePass", 0.75f),
             new CavePass("CavePass", 1f, genGroundPass.RockLayerHigh, genGroundPass.RockLayerHigh),
             new IrradiationPass("IrradiationPass", 3f),
@@ -88,7 +88,12 @@ namespace Macrocosm.Content.Subworlds
             SkyManager.Instance.Deactivate("Macrocosm:MoonSky");
         }
 
-        public override void PreUpdateWorld()
+		public override bool GetLight(Tile tile, int x, int y, ref FastRandom rand, ref Vector3 color)
+		{
+			return false;
+		}
+
+		public override void PreUpdateWorld()
         {
             UpdateBloodMoon();
             UpdateMeteorStorm();

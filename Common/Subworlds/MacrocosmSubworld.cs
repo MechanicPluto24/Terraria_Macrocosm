@@ -8,6 +8,7 @@ using Macrocosm.Content.Rockets.Navigation.Checklist;
 using Macrocosm.Common.UI;
 using Macrocosm.Content.Systems;
 using Macrocosm.Content.Rockets;
+using Terraria.Utilities;
 
 namespace Macrocosm.Common.Subworlds
 {
@@ -73,6 +74,18 @@ namespace Macrocosm.Common.Subworlds
 			}
 			else
 				Earth.LoadingScreen.Draw(Main.spriteBatch);
+		}
+
+		public override float GetGravity(Entity entity)
+		{
+			if(entity is Player)
+				return Player.defaultGravity * CurrentGravityMultiplier;
+
+			// This is set using the new NPC.GravityMultiplier property in MacrocosmGlobalNPC instead
+			if(entity is NPC)
+				return base.GetGravity(entity);
+
+			return base.GetGravity(entity);
 		}
 
 		public override void CopyMainWorldData()
