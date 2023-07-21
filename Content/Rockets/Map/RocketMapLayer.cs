@@ -17,10 +17,10 @@ namespace Macrocosm.Content.Rockets.Map
 
             foreach (Rocket rocket in RocketManager.Rockets)
             {
-                if(!rocket.Active || rocket.CurrentSubworld != MacrocosmSubworld.CurrentSubworld)
+                if(!rocket.ActiveInCurrentSubworld)
                     continue;
 
-                if (context.Draw(texture, rocket.Center / 16f, Color.White, new SpriteFrame(1, 1, 0, 0), 0.95f, 0.95f, Alignment.Bottom).IsMouseOver)
+                if (context.Draw(texture, (rocket.Center + new Vector2(0, rocket.Height/2f)) / 16f, Color.White, new SpriteFrame(1, 1, 0, 0), 0.95f, 0.95f, Alignment.Bottom).IsMouseOver)
                     text = rocket.DisplayName;
             }
         }

@@ -125,8 +125,12 @@ namespace Macrocosm.Content.Rockets.Modules
 			TagCompound tag = SerializeModuleData();
 
 			tag["Name"] = Name;
-			tag["DetailName"] = Detail.Name;
-			tag["Pattern"] = Pattern;
+
+			if(Detail is not null)
+				tag["DetailName"] = Detail.Name;
+
+			//if(Pattern is not null)
+			//	tag["Pattern"] = Pattern;
 
 			return tag;
 		}
@@ -135,8 +139,13 @@ namespace Macrocosm.Content.Rockets.Modules
 		{
 			string name = tag.GetString("Name");
 			RocketModule module = Activator.CreateInstance(Type.GetType(name)) as RocketModule;
-			module.Detail = CustomizationStorage.GetDetail(name, tag.GetString("DetailName"));
-			module.Pattern = tag.Get<Pattern>("Pattern");
+
+			if(tag.ContainsKey("DetailName"))
+				module.Detail = CustomizationStorage.GetDetail(name, tag.GetString("DetailName"));
+
+			if (tag.ContainsKey("Pattern"))
+				module.Pattern = tag.Get<Pattern>("Pattern");
+
 			module.DeserializeModuleData(tag);
 			return module;
 		}

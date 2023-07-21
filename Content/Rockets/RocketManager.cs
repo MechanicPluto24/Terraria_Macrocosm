@@ -42,6 +42,7 @@ namespace Macrocosm.Content.Rockets
         }
 
 		public static int ActiveRocketCount => Rockets.Count(rocket => rocket.Active);
+		public static int RocketsInCurrentSubworld => Rockets.Count(rocket => rocket.ActiveInCurrentSubworld);
 
 		public static void AddRocket(Rocket rocket)
 		{
@@ -49,7 +50,7 @@ namespace Macrocosm.Content.Rockets
 				return;
 
             int index = Rockets.Select((rocket, idx) => new { rocket, idx })
-									.Where(item => item.rocket.Active)
+									.Where(item => !item.rocket.Active)
 									.Select(item => item.idx)
 									.FirstOrDefault(); 
 
@@ -64,13 +65,13 @@ namespace Macrocosm.Content.Rockets
 
         private static void UpdateRockets()
         {
-            Main.NewText(ActiveRocketCount);
+            Main.NewText(ActiveRocketCount.ToString() + ", " + RocketsInCurrentSubworld.ToString());
 
             for (int i = 0; i < MaxRockets; i++)
             {
                 Rocket rocket = Rockets[i];
 
-                if (rocket.CurrentSubworld != MacrocosmSubworld.CurrentSubworld)
+                if (!rocket.ActiveInCurrentSubworld)
                     continue;
 
 				rocket.Update();
@@ -79,16 +80,18 @@ namespace Macrocosm.Content.Rockets
 
         public static void DespawnAllRockets()
         {
-			foreach (Rocket rocket in Rockets)
-				rocket.Despawn();
+			for (int i = 0; i < MaxRockets; i++)
+                Rockets[i].Despawn();
         }
 
         private static void DrawRockets(RocketDrawLayer layer)
         {
-            foreach (Rocket rocket in Rockets)
-            {
-				if (rocket.CurrentSubworld != MacrocosmSubworld.CurrentSubworld)
-					continue;
+			for (int i = 0; i < MaxRockets; i++)
+			{
+                Rocket rocket = Rockets[i];
+
+                if (!rocket.ActiveInCurrentSubworld)
+                    continue;
 
 				if (rocket.DrawLayer == layer)
                 {
@@ -98,9 +101,15 @@ namespace Macrocosm.Content.Rockets
             }
         }
 
-        public override void OnWorldLoad() => Array.Fill(Rockets, new Rocket());
+        public override void OnWorldLoad() 
+        { 
+ 			Array.Fill(Rockets, new Rocket());
+		}
 
-		public override void OnWorldUnload() => Array.Fill(Rockets, new Rocket());
+        public override void OnWorldUnload() 
+        {
+ 			Array.Fill(Rockets, new Rocket());
+		}
 
 		public override void SaveWorldData(TagCompound tag)
 		{
@@ -117,9 +126,10 @@ namespace Macrocosm.Content.Rockets
             {
 				string key = "Rocket" + i.ToString();
 				Rocket rocket = tag.Get<Rocket>(key);
-                Rockets[i] = rocket;
 
-				if (rocket.Active && rocket.CurrentSubworld == MacrocosmSubworld.CurrentSubworld)
+				Rockets[i] = rocket;
+
+				if (rocket.ActiveInCurrentSubworld)
                 {
 					rocket.OnSpawn();
 					rocket.NetSync();
@@ -142,9 +152,10 @@ namespace Macrocosm.Content.Rockets
 			{
 				string key = "Rocket" + i.ToString();
 				Rocket rocket = SubworldSystem.ReadCopiedWorldData<Rocket>(key);
+
 				Rockets[i] = rocket;
 
-				if (rocket.Active && rocket.CurrentSubworld == MacrocosmSubworld.CurrentSubworld)
+				if (rocket.ActiveInCurrentSubworld)
 				{
 					rocket.OnSpawn();
 					rocket.NetSync();
