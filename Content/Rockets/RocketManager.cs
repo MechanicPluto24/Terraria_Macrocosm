@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Runtime.ExceptionServices;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
@@ -20,7 +19,7 @@ namespace Macrocosm.Content.Rockets
         AfterNPCs
     }
 
-    public class RocketManager : ModSystem, ICopyWorldData
+    public class RocketManager : ModSystem 
     {
         public static Rocket[] Rockets { get; private set; }
 

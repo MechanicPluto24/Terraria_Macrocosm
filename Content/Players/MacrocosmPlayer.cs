@@ -83,7 +83,7 @@ namespace Macrocosm.Content.Players
 
 		public override void PostUpdateMiscEffects()
 		{
-			UpdateGravity();
+			//UpdateGravity();
 			UpdateFilterEffects();
 
 		}
@@ -108,11 +108,11 @@ namespace Macrocosm.Content.Players
             }
 		}
 
-		private void UpdateGravity()
-		{
-			if (MacrocosmSubworld.AnyActive)
-				Player.gravity = Player.defaultGravity * MacrocosmSubworld.Current.GravityMultiplier;
-		}
+		//private void UpdateGravity()
+		//{
+		//	if (MacrocosmSubworld.AnyActive)
+		//		Player.gravity = Player.defaultGravity * MacrocosmSubworld.Current.GravityMultiplier;
+		//}
 
 		private void UpdateFilterEffects()
 		{
