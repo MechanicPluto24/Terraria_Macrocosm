@@ -14,6 +14,8 @@ using Macrocosm.Content.Rockets.Modules;
 using Terraria.Localization;
 using Macrocosm.Common.Subworlds;
 using System.Linq;
+using Terraria.UI.Chat;
+using Terraria.GameContent;
 
 namespace Macrocosm.Content.Rockets
 {
@@ -32,10 +34,14 @@ namespace Macrocosm.Content.Rockets
 
 		[NetSync] public bool InFlight;
 
+		[NetSync] public bool Descending;
+
 
 		[NetSync] public float FuelCapacity = 1000f;
 
 		[NetSync] public string CurrentSubworld;
+
+		public bool ActiveInCurrentSubworld => Active && CurrentSubworld == MacrocosmSubworld.CurrentSubworld;
 
 		/// <summary> The amount of fuel stored in the rocket </summary>
 		[NetSync] public float Fuel;
@@ -141,7 +147,7 @@ namespace Macrocosm.Content.Rockets
 			Modules = new() { CommandPod, ServiceModule, ReactorModule, EngineModule, BoosterLeft, BoosterRight };
 		}
 
-	public void OnSpawn()
+		public void OnSpawn()
 		{
 			CurrentSubworld = MacrocosmSubworld.CurrentSubworld;
 
@@ -165,11 +171,11 @@ namespace Macrocosm.Content.Rockets
 
 				Velocity.Y += 0.1f;
 				Velocity = Collision.TileCollision(Position, Velocity, Width, Height);
-
-				return;
 			}
-
-			FlightTime++;
+			else
+			{
+				FlightTime++;
+			}
 
 			if (FlightTime >= liftoffTime)
 			{
@@ -178,8 +184,18 @@ namespace Macrocosm.Content.Rockets
 				VisualEffects();
  			}
 
-            if (Position.Y < worldExitPosY)
+			if (Descending)
 			{
+				Velocity.Y *= 0.97f;
+
+				if (Velocity.Length() < 0.01f)
+					Descending = false;
+			}
+
+            if (InFlight && Position.Y < worldExitPosY)
+			{
+				InFlight = false;
+				Descending = true;
 				EnterDestinationSubworld();
 				//Despawn();
 			}
@@ -225,6 +241,7 @@ namespace Macrocosm.Content.Rockets
 
 			//DrawDebugBounds();
 			//DrawDebugModuleHitbox();
+			ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, WhoAmI.ToString(), CommandPod.Center - new Vector2(0, 100) - Main.screenPosition, Color.White, 0f, Vector2.Zero, Vector2.One);
 		}
 
 		/// <summary> Draw the rocket as a dummy </summary>
