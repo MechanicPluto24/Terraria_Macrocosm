@@ -135,7 +135,10 @@ namespace Macrocosm.Content.Rockets
 					rocket.NetSync();
 				}
             }
-        }
+
+			return;
+
+		}
 
 		public static void CopyRocketData()
         {
@@ -146,6 +149,7 @@ namespace Macrocosm.Content.Rockets
 			}
 		}
 
+        // If leaving a subworld towards Earth, data saved on the subworld is not preserved (???)
 		public static void ReadCopiedRocketData()
 		{
 			for (int i = 0; i < MaxRockets; i++)
@@ -161,6 +165,8 @@ namespace Macrocosm.Content.Rockets
 					rocket.NetSync();
 				}
 			}
+
+            return;
 		}
 
 		private void DrawRocket_NPCs(On_Main.orig_DrawNPCs orig, Main self, bool behindTiles)
