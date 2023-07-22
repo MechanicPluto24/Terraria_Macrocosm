@@ -275,7 +275,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 				Projectile bullet = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), aimPosition, aimVelocity, projType, projDamage, 0f, Main.myPlayer);
 				var flash = Particle.CreateParticle<GunFireRing>(NPC.Center + particleAim * 0.24f, aimVelocity * 0.05f, 1f, aimVelocity.ToRotation(), true);
-				flash.Owner = bullet;
 			}
 
 		}

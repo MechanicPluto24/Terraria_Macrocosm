@@ -30,6 +30,9 @@ namespace Macrocosm.Content.Rockets
 
 			foreach (string moduleName in ModuleNames)
 				tag[moduleName] = Modules[moduleName];
+
+			if (WhoAmI == 0)
+				Main.NewText("");
  
 			return tag;
 		}
@@ -52,8 +55,25 @@ namespace Macrocosm.Content.Rockets
 			};
 
 			foreach (string moduleName in rocket.ModuleNames)
-				if (tag.ContainsKey(moduleName))
-					rocket.Modules[moduleName] = tag.Get<RocketModule>(moduleName);
+			{
+				RocketModule module = RocketModule.DeserializeData(tag.GetCompound(moduleName));
+
+				Type moduleType = Type.GetType(moduleName);
+				if (moduleType != null && moduleType.IsSubclassOf(typeof(RocketModule)))
+				{
+					RocketModule typedModule = Activator.CreateInstance(moduleType) as RocketModule;
+					rocket.Modules[moduleName] = typedModule;
+				}
+				else
+				{
+					rocket.Modules[moduleName] = module;
+				}
+			}
+
+
+			if (rocket.WhoAmI == 0)
+				Main.NewText("");
+
 
 			return rocket;
 		}

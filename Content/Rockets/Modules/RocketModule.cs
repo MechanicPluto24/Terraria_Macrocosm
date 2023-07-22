@@ -73,15 +73,14 @@ namespace Macrocosm.Content.Rockets.Modules
 					Main.graphics.GraphicsDevice.SamplerStates[1] = SamplerState.PointClamp;
 
 					//Pass the color mask keys as Vector3s and configured colors as Vector4s
-					//Passing the entire color table (MaxColorCount), not only the configurable color count
-					//(parameters are scalars intentionally)
+					//Note: parameters are scalars intentionally, I manually unrolled the loop in the shader to reduce number of branch instructions -- Feldy
 					for(int i = 0; i < Pattern.MaxColorCount; i++)
 					{
 						effect.Parameters["uColorKey" + i.ToString()].SetValue(Pattern.ColorKeys[i]);
 						effect.Parameters["uColor" + i.ToString()].SetValue(Pattern.GetColor(i).ToVector4());
 					}
 
-					// Get a blend between the general ambient color at the rocket center, and the local color on this module
+					// Get a blend between the general ambient color at the rocket center, and the local color on this module's center
 					Color localColor = Color.Lerp(Lighting.GetColor((int)(Center.X) / 16, (int)(Center.Y) / 16), ambientColor, 0.8f);
 
 					//Pass the ambient lighting on the rocket 
@@ -124,6 +123,7 @@ namespace Macrocosm.Content.Rockets.Modules
 		{
 			TagCompound tag = SerializeModuleData();
 
+			tag["Type"] = GetType().Namespace + "." + Name;
 			tag["Name"] = Name;
 
 			if(Detail is not null)
@@ -137,8 +137,9 @@ namespace Macrocosm.Content.Rockets.Modules
 
 		public static RocketModule DeserializeData(TagCompound tag)
 		{
+			string type = tag.GetString("Type");
 			string name = tag.GetString("Name");
-			RocketModule module = Activator.CreateInstance(Type.GetType(name)) as RocketModule;
+			RocketModule module = Activator.CreateInstance(Type.GetType(type)) as RocketModule;
 
 			if(tag.ContainsKey("DetailName"))
 				module.Detail = CustomizationStorage.GetDetail(name, tag.GetString("DetailName"));
