@@ -28,11 +28,9 @@ namespace Macrocosm.Content.Rockets
 				[nameof(CurrentSubworld)] = CurrentSubworld
 			};
 
-			//for(int i = 0; i < Modules.Count; i++)
-			//{
-			//	tag[ModuleNames[i]] = (RocketModule)Modules[i];
-			//}
-
+			foreach (string moduleName in ModuleNames)
+				tag[moduleName] = Modules[moduleName];
+ 
 			return tag;
 		}
 
@@ -52,6 +50,10 @@ namespace Macrocosm.Content.Rockets
 
 				CurrentSubworld = tag.GetString(nameof(CurrentSubworld))
 			};
+
+			foreach (string moduleName in rocket.ModuleNames)
+				if (tag.ContainsKey(moduleName))
+					rocket.Modules[moduleName] = tag.Get<RocketModule>(moduleName);
 
 			return rocket;
 		}

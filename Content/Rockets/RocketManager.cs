@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Linq;
-using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using SubworldLibrary;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
