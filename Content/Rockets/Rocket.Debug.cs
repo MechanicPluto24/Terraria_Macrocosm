@@ -23,5 +23,10 @@ namespace Macrocosm.Content.Rockets
 				Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, rect, Color.Green * 0.5f);
 			}
  		}
+
+		public override string ToString()
+		{
+			return "Active: " + Active + ", WhoAmI: " + WhoAmI + ", CurrentSubworld: " + CurrentSubworld; 
+		}
 	}
 }

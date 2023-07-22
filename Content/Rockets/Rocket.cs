@@ -27,7 +27,7 @@ namespace Macrocosm.Content.Rockets
 		[NetSync] public Vector2 Position;
 
 		[NetSync] public Vector2 Velocity;
-
+		[NetSync] private Vector2 lastVelocity;
 
 		/// <summary> Rocket sequence timer </summary>
 		[NetSync] public int FlightTime;
@@ -157,6 +157,7 @@ namespace Macrocosm.Content.Rockets
 		/// <summary> Update the rocket </summary>
 		public void Update()
 		{
+			Velocity = Collision.TileCollision(Position, Velocity, Width, Height);
 			Position += Velocity;
 
 			// Testing
@@ -166,15 +167,17 @@ namespace Macrocosm.Content.Rockets
 
 			if (!InFlight)
 			{
-				Interact();
-				LookForCommander();
-
 				Velocity.Y += 0.1f;
-				Velocity = Collision.TileCollision(Position, Velocity, Width, Height);
 			}
 			else
 			{
 				FlightTime++;
+			}
+
+			if (Velocity == lastVelocity)
+			{
+				Interact();
+				LookForCommander();
 			}
 
 			if (FlightTime >= liftoffTime)
@@ -183,12 +186,12 @@ namespace Macrocosm.Content.Rockets
 				SetScreenshake();
 				VisualEffects();
  			}
-
 			if (Descending)
 			{
-				Velocity.Y *= 0.97f;
+				if(Velocity.Y > 0)
+					Velocity.Y -= 0.05f;
 
-				if (Velocity.Length() < 0.01f)
+				if (Velocity == lastVelocity)
 					Descending = false;
 			}
 
@@ -199,6 +202,8 @@ namespace Macrocosm.Content.Rockets
 				EnterDestinationSubworld();
 				//Despawn();
 			}
+
+			lastVelocity = Velocity;
 		}
 
 		/// <summary> Safely despawn the rocket </summary>
@@ -225,6 +230,7 @@ namespace Macrocosm.Content.Rockets
 			}
 
 			Active = false;
+			CurrentSubworld = "";
 			NetSync();
 		}
 

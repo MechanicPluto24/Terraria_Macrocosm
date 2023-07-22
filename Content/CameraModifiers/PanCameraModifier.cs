@@ -12,7 +12,7 @@ namespace Macrocosm.Content.CameraModifiers
 		public bool Finished { get; private set; }
 		public bool ReturnToOriginalPosition { get; set; } = false;
 
-		private Vector2 targetPosition;
+		public Vector2 TargetPosition;
 
 		private Vector2 originalScreenPosition;
 
@@ -25,8 +25,9 @@ namespace Macrocosm.Content.CameraModifiers
 		public PanCameraModifier(Vector2 targetPosition, Vector2 originalScreenPosition, float panSpeed, string context, Func<float, float> easingFunction = null)
 		{
 			ReturnToOriginalPosition = false;
+			TargetPosition = targetPosition;
+
 			this.originalScreenPosition = originalScreenPosition;
-			this.targetPosition = targetPosition;
 			this.panSpeed = panSpeed;
 			UniqueIdentity = context;
 			this.easingFunction = easingFunction;
@@ -35,7 +36,8 @@ namespace Macrocosm.Content.CameraModifiers
 		public PanCameraModifier(float offsetFromNormalPosition, float targetDirectionAngle, float panSpeed, string uniqueIdentity, Func<float, float> easingFunction = null)
 		{
 			ReturnToOriginalPosition = false;
-			this.targetPosition = Utility.PolarVector(offsetFromNormalPosition, targetDirectionAngle);
+			TargetPosition = Utility.PolarVector(offsetFromNormalPosition, targetDirectionAngle);
+
 			this.panSpeed = panSpeed;
 			UniqueIdentity = uniqueIdentity;
 			this.easingFunction = easingFunction;
@@ -47,7 +49,7 @@ namespace Macrocosm.Content.CameraModifiers
 			{
 				Finished = true;
 			}
-			else if(Vector2.DistanceSquared(cameraPosition.OriginalCameraPosition, targetPosition) > 0f)
+			else if(Vector2.DistanceSquared(cameraPosition.OriginalCameraPosition, TargetPosition) > 0f)
 			{
 				Vector2 originalPosition = cameraPosition.OriginalCameraPosition;
 
@@ -67,7 +69,7 @@ namespace Macrocosm.Content.CameraModifiers
 				if (easingFunction is not null)
 					localProgress = easingFunction(panProgress);
 
-				cameraPosition.CameraPosition = Vector2.Lerp(originalPosition, targetPosition, localProgress);
+				cameraPosition.CameraPosition = Vector2.Lerp(originalPosition, TargetPosition, localProgress);
  			}
 		}
 	}

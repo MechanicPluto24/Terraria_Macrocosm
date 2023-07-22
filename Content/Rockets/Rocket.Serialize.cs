@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Content.Rockets.Modules;
 using Microsoft.Xna.Framework;
 using System;
+using Terraria;
 using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Rockets
@@ -37,14 +38,13 @@ namespace Macrocosm.Content.Rockets
 
 		public static Rocket DeserializeData(TagCompound tag)
 		{
-			return new Rocket()
-			{
+			Rocket rocket = new() {
 				WhoAmI = tag.GetInt(nameof(WhoAmI)),
 
 				Active = tag.GetBool(nameof(Active)),
 				Position = tag.Get<Vector2>(nameof(Position)),
 
-				Fuel = tag.GetFloat(nameof(Fuel)),	
+				Fuel = tag.GetFloat(nameof(Fuel)),
 				FuelCapacity = tag.GetFloat(nameof(FuelCapacity)),
 
 				InFlight = tag.GetBool(nameof(InFlight)),
@@ -52,6 +52,8 @@ namespace Macrocosm.Content.Rockets
 
 				CurrentSubworld = tag.GetString(nameof(CurrentSubworld))
 			};
+
+			return rocket;
 		}
 	}
 }

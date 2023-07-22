@@ -4,6 +4,7 @@ using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using SubworldLibrary;
 using Terraria;
 using Terraria.ModLoader;
@@ -101,72 +102,35 @@ namespace Macrocosm.Content.Rockets
             }
         }
 
-        public override void OnWorldLoad() 
-        { 
- 			Array.Fill(Rockets, new Rocket());
+		public override void ClearWorld()
+		{
+            Array.Fill(Rockets, new Rocket());
 		}
 
-        public override void OnWorldUnload() 
-        {
- 			Array.Fill(Rockets, new Rocket());
-		}
 
 		public override void SaveWorldData(TagCompound tag)
 		{
-            for(int i = 0; i < MaxRockets; i++)
-            {
-                string key = "Rocket" + i.ToString();
-				tag[key] = Rockets[i];
-            }
+            tag["Rockets"] = Rockets;
 		}
 
         public override void LoadWorldData(TagCompound tag)
         {
-            for (int i = 0; i < MaxRockets; i++)
-            {
-				string key = "Rocket" + i.ToString();
-				Rocket rocket = tag.Get<Rocket>(key);
-
-				Rockets[i] = rocket;
-
-				if (rocket.ActiveInCurrentSubworld)
-                {
-					rocket.OnSpawn();
-					rocket.NetSync();
-				}
-            }
-
-			return;
-
+			Rockets = tag.Get<Rocket[]>("Rockets");
 		}
+
+        // for cross-subworld data copying 
+		public static TagCompound dataCopy = new();
 
 		public static void CopyRocketData()
         {
-			for (int i = 0; i < MaxRockets; i++)
-			{
-				string key = "Rocket" + i.ToString();
-                SubworldSystem.CopyWorldData(key, Rockets[i]);
-			}
+			dataCopy["Rockets"] = Rockets;
+			//SubworldSystem.CopyWorldData("Rockets", Rockets);
 		}
 
-        // If leaving a subworld towards Earth, data saved on the subworld is not preserved (???)
 		public static void ReadCopiedRocketData()
 		{
-			for (int i = 0; i < MaxRockets; i++)
-			{
-				string key = "Rocket" + i.ToString();
-				Rocket rocket = SubworldSystem.ReadCopiedWorldData<Rocket>(key);
-
-				Rockets[i] = rocket;
-
-				if (rocket.ActiveInCurrentSubworld)
-				{
-					rocket.OnSpawn();
-					rocket.NetSync();
-				}
-			}
-
-            return;
+			Rockets = dataCopy.Get<Rocket[]>("Rockets");
+			//Rockets = SubworldSystem.ReadCopiedWorldData<Rocket[]>("Rockets");
 		}
 
 		private void DrawRocket_NPCs(On_Main.orig_DrawNPCs orig, Main self, bool behindTiles)
