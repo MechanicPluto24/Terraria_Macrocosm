@@ -15,9 +15,7 @@ namespace Macrocosm.Content.Rockets
 
 		public static Vector2 DefaultSize => new(DefaultWidth, DefaultHeight);
 
-		/// <summary> List of the module names, in the customization access order </summary>
-		public static readonly List<string> ModuleNames = new() { "CommandPod", "ServiceModule", "ReactorModule", "EngineModule", "BoosterLeft", "BoosterRight" };
-
+		
 		public static Rocket Create(Vector2 position)
 		{
 			// Rocket will not be managed.. we have to avoid ever reaching this  
@@ -34,7 +32,7 @@ namespace Macrocosm.Content.Rockets
 			};
 
 			RocketManager.AddRocket(rocket);
-			rocket.OnSpawn();
+			rocket.OnCreation();
 			rocket.NetSync();
 			return rocket;
 		}

@@ -32,7 +32,7 @@ namespace Macrocosm.Content.UI.LoadingScreens
 		   );
 		}
 
-		public override LocalizedColorScaleText Title => new(Language.GetText("Mods.Macrocosm.Subworlds.Moon.DisplayName"), Color.White, 1.2f);
+		public override LocalizedColorScaleText Title => new(Language.GetText("Mods.Macrocosm.Subworlds.Moon.DisplayName"), Color.White, 1.2f, largeText: true);
 
 		public override void Setup()
 		{

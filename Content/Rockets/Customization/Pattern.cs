@@ -147,7 +147,7 @@ namespace Macrocosm.Content.Rockets.Customization
 			// Save the user-changed colors
 			for (int i = 0; i < ColorCount; i++)
  				if (colorData[i].IsUserChangeable && colorData[i].ColorFunction is null)
- 					tag[$"Color{i}"] = colors[i].PackedValue;  
+ 					tag[$"Color{i}"] = colors[i];  
  
 			return tag;
 		}
@@ -163,13 +163,8 @@ namespace Macrocosm.Content.Rockets.Customization
 		
 			// Load the user-changed colors
 			for (int i = 0; i < pattern.ColorCount; i++)
-			{
 				if (pattern.colorData[i].IsUserChangeable && pattern.colorData[i].ColorFunction is null)
-				{
-					uint colorValue = (uint)tag.GetInt($"Color{i}");
-					pattern.colors[i].PackedValue = colorValue;
-				}
-			}
+					pattern.colors[i] = tag.Get<Color>($"Color{i}");
 
 			return pattern;
 		}

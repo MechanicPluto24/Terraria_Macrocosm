@@ -67,6 +67,8 @@ namespace Macrocosm.Content.Rockets
 			set => Position = value - Size/2f;
 		}
 
+		public bool Stationary => Velocity == lastVelocity;
+
 		/// <summary> The layer this rocket is drawn in </summary>
 		public RocketDrawLayer DrawLayer = RocketDrawLayer.BeforeNPCs;
 
@@ -74,36 +76,38 @@ namespace Macrocosm.Content.Rockets
 		public string DisplayName
 			=> EngineModule.Nameplate.HasNoSupportedChars() ? Language.GetTextValue("Mods.Macrocosm.Common.Rocket") : EngineModule.Nameplate.Text;
 
-		/// <summary> Whether the player can interact with the rocket </summary>
-		public bool InInteractionRange
-		{
-			get
-			{
-				Point location = Bounds.ClosestPointInRect(Main.LocalPlayer.Center).ToTileCoordinates();
-				return Main.LocalPlayer.IsInTileInteractionRange(location.X, location.Y, TileReachCheckSettings.Simple);
-			}
-		}
 
-		/// <summary> The Rocket's command pod </summary>
-		public CommandPod CommandPod;
-
-		/// <summary> The Rocket's service module </summary>
-		public ServiceModule ServiceModule;
-
-		/// <summary> The rocket's reactor module </summary>
-		public ReactorModule ReactorModule;
-
-		/// <summary> The Rocket's engine module </summary>
-		public EngineModule EngineModule;
-
-		/// <summary> The rocket's left booster </summary>
-		public BoosterLeft BoosterLeft;
-
-		/// <summary> The rocket's right booster </summary>
-		public BoosterRight BoosterRight;
+		/// <summary> List of the module names, in the customization access order </summary>
+		public List<string> ModuleNames => Modules.Keys.ToList();
 
 		/// <summary> List of all the rocket's modules, in their order found in ModuleNames </summary>
-		public List<RocketModule> Modules;
+		public Dictionary<string, RocketModule> Modules = new()
+		{
+			{ "CommandPod", new CommandPod() },
+			{ "ServiceModule", new ServiceModule() },
+			{ "ReactorModule", new ReactorModule() },
+			{ "EngineModule", new EngineModule() },
+			{ "BoosterLeft", new BoosterLeft() },
+			{ "BoosterRight", new BoosterRight() }
+		};
+
+		/// <summary> The Rocket's command pod </summary>
+		public CommandPod CommandPod => (CommandPod)Modules["CommandPod"];
+
+		/// <summary> The Rocket's service module </summary>
+		public ServiceModule ServiceModule => (ServiceModule)Modules["ServiceModule"];
+
+		/// <summary> The rocket's reactor module </summary>
+		public ReactorModule ReactorModule => (ReactorModule)Modules["ReactorModule"];
+
+		/// <summary> The Rocket's engine module </summary>
+		public EngineModule EngineModule => (EngineModule)Modules["EngineModule"];
+
+		/// <summary> The rocket's left booster </summary>
+		public BoosterLeft BoosterLeft => (BoosterLeft)Modules["BoosterLeft"];
+
+		/// <summary> The rocket's right booster </summary>
+		public BoosterRight BoosterRight => (BoosterRight)Modules["BoosterRight"];
 
 		#region Private vars
 
@@ -137,20 +141,11 @@ namespace Macrocosm.Content.Rockets
 		/// <summary> Instatiates a rocket. Use <see cref="Create(Vector2)"/> for spawning in world and proper syncing. </summary>
 		public Rocket()
 		{
-			CommandPod = new();
-			ServiceModule = new();
-			ReactorModule = new();
-			EngineModule = new();
-			BoosterLeft = new();
-			BoosterRight = new();
-
-			Modules = new() { CommandPod, ServiceModule, ReactorModule, EngineModule, BoosterLeft, BoosterRight };
 		}
 
-		public void OnSpawn()
+		public void OnCreation()
 		{
 			CurrentSubworld = MacrocosmSubworld.CurrentSubworld;
-
 			startYPosition = Center.Y;
 		}
 
@@ -166,15 +161,11 @@ namespace Macrocosm.Content.Rockets
 			SetModuleRelativePositions();
 
 			if (!InFlight)
-			{
-				Velocity.Y += 0.1f;
-			}
-			else
-			{
-				FlightTime++;
-			}
-
-			if (Velocity == lastVelocity)
+ 				Velocity.Y += 0.1f * MacrocosmSubworld.CurrentGravityMultiplier;
+ 			else
+ 				FlightTime++;
+ 
+			if (Stationary)
 			{
 				Interact();
 				LookForCommander();
@@ -191,7 +182,7 @@ namespace Macrocosm.Content.Rockets
 				if(Velocity.Y > 0)
 					Velocity.Y -= 0.05f;
 
-				if (Velocity == lastVelocity)
+				if (Stationary)
 					Descending = false;
 			}
 
@@ -200,7 +191,6 @@ namespace Macrocosm.Content.Rockets
 				InFlight = false;
 				Descending = true;
 				EnterDestinationSubworld();
-				//Despawn();
 			}
 
 			lastVelocity = Velocity;
@@ -240,7 +230,7 @@ namespace Macrocosm.Content.Rockets
 			// Positions (also) set here, in the update method only they lag behind 
 			SetModuleRelativePositions();
 
-			foreach (RocketModule module in Modules.OrderBy(module => module.DrawPriority))
+			foreach (RocketModule module in Modules.Values.OrderBy(module => module.DrawPriority))
 			{
 				module.Draw(spriteBatch, screenPos, drawColor);
 			}
@@ -351,7 +341,7 @@ namespace Macrocosm.Content.Rockets
 
 		public bool CheckTileCollision()
 		{
-			foreach (RocketModule module in Modules)
+			foreach (RocketModule module in Modules.Values)
 				if (Math.Abs(Collision.TileCollision(module.Position, Velocity, module.Width, module.Height).Y) > 0.1f)
 					return true;
 
@@ -364,7 +354,7 @@ namespace Macrocosm.Content.Rockets
 			if (Main.netMode == NetmodeID.Server)
 				return;
 
-			if (MouseCanInteract() && InInteractionRange && !InFlight)
+			if (MouseCanInteract() && InInteractionRange() && !InFlight)
 			{
 				if (Main.mouseRight)
 				{
@@ -385,12 +375,19 @@ namespace Macrocosm.Content.Rockets
 
 		private bool MouseCanInteract()
 		{
-			foreach (RocketModule module in Modules)
+			foreach (RocketModule module in Modules.Values)
 				if (module.Hitbox.Contains(Main.MouseWorld.ToPoint()))
 					return true;
 
 			return false;
  		}
+
+		// Whether the player can interact with the rocket
+		private bool InInteractionRange()
+		{
+			Point location = Bounds.ClosestPointInRect(Main.LocalPlayer.Center).ToTileCoordinates();
+			return Main.LocalPlayer.IsInTileInteractionRange(location.X, location.Y, TileReachCheckSettings.Simple);
+		}
 
 		// Updates the commander player in real time, in multiplayer scenarios
 		private void LookForCommander()

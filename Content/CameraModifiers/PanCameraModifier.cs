@@ -8,13 +8,20 @@ namespace Macrocosm.Content.CameraModifiers
 {
 	internal class PanCameraModifier : ICameraModifier
 	{
+		/// <summary> The unique ID of this </summary>
 		public string UniqueIdentity { get; private set; }
+
+		/// <summary> Whether this camera modifier has concluded </summary>
 		public bool Finished { get; private set; }
-		public bool ReturnToOriginalPosition { get; set; } = false;
 
-		public Vector2 TargetPosition;
+		/// <summary> Smoothly return to the regular camera position </summary>
+		public bool ReturnToNormalPosition { get; set; } = false;
 
-		private Vector2 originalScreenPosition;
+		/// <summary> The position the camera modifier aims for </summary>
+		public Vector2 TargetPosition { get; set; }
+
+
+		private Vector2 startScreenPosition;
 
 		private float panSpeed;
 
@@ -22,50 +29,49 @@ namespace Macrocosm.Content.CameraModifiers
 
 		private float panProgress;
 
-		public PanCameraModifier(Vector2 targetPosition, Vector2 originalScreenPosition, float panSpeed, string context, Func<float, float> easingFunction = null)
+		/// <summary>
+		/// Create a new panning camera modifier towards a target position.
+		/// </summary>
+		/// <param name="targetPosition"> The target position, can be updated afterwards (<see cref="TargetPosition">) </param>
+		/// <param name="startScreenPosition"> The screen position on camera modifier creation </param>
+		/// <param name="panSpeed"> The panning speed </param>
+		/// <param name="uniqueId"> The unique ID of this </param>
+		/// <param name="easingFunction"> The easing function on the pan progress </param> 
+		public PanCameraModifier(Vector2 targetPosition, Vector2 startScreenPosition, float panSpeed, string uniqueId, Func<float, float> easingFunction = null)
 		{
-			ReturnToOriginalPosition = false;
+			ReturnToNormalPosition = false;
 			TargetPosition = targetPosition;
 
-			this.originalScreenPosition = originalScreenPosition;
+			this.startScreenPosition = startScreenPosition;
 			this.panSpeed = panSpeed;
-			UniqueIdentity = context;
-			this.easingFunction = easingFunction;
-		}
-
-		public PanCameraModifier(float offsetFromNormalPosition, float targetDirectionAngle, float panSpeed, string uniqueIdentity, Func<float, float> easingFunction = null)
-		{
-			ReturnToOriginalPosition = false;
-			TargetPosition = Utility.PolarVector(offsetFromNormalPosition, targetDirectionAngle);
-
-			this.panSpeed = panSpeed;
-			UniqueIdentity = uniqueIdentity;
+			UniqueIdentity = uniqueId;
 			this.easingFunction = easingFunction;
 		}
 
 		public void Update(ref CameraInfo cameraPosition)
 		{
-			if (ReturnToOriginalPosition && panProgress < 0f)
+			// Finished when the pan towards the regular position is done
+			if (ReturnToNormalPosition && panProgress < 0f)
 			{
 				Finished = true;
 			}
 			else if(Vector2.DistanceSquared(cameraPosition.OriginalCameraPosition, TargetPosition) > 0f)
 			{
+				// On return, use the regular camera position (e.g. centered on player)
 				Vector2 originalPosition = cameraPosition.OriginalCameraPosition;
 
-				if (ReturnToOriginalPosition)
+				if (ReturnToNormalPosition)
 				{
 					panProgress -= panSpeed * 0.9f;
 				}
 				else if(panProgress < 1f)
 				{
-					// use original screen position on right click, not the one where the player is in the rocket
-					originalPosition = originalScreenPosition;
+					// Use the provided screen position as a starting point, not the regular screen position
+					originalPosition = startScreenPosition;
 					panProgress += panSpeed;
 				}
 
 				float localProgress = panProgress;
-
 				if (easingFunction is not null)
 					localProgress = easingFunction(panProgress);
 

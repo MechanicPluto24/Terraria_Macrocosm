@@ -39,7 +39,7 @@ namespace Macrocosm.Content.UI.LoadingScreens
 			starsDrawing = new();
 		}
 
-		public override LocalizedColorScaleText Title => new(Language.GetText("Mods.Macrocosm.Subworlds.Earth.DisplayName"), new Color(94, 150, 255), 1.2f);
+		public override LocalizedColorScaleText Title => new(Language.GetText("Mods.Macrocosm.Subworlds.Earth.DisplayName"), new Color(94, 150, 255), 1.2f, largeText: true);
 
 		public override void Setup()
 		{

@@ -115,7 +115,7 @@ namespace Macrocosm.Content.Rockets
 			if (Player.whoAmI == Main.myPlayer)
 			{
 				if (cameraModifier is not null && !cameraModifier.Finished)
-					cameraModifier.ReturnToOriginalPosition = true;
+					cameraModifier.ReturnToNormalPosition = true;
 			}
 		}
 
