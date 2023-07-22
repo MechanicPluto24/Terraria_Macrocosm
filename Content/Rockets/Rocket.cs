@@ -161,7 +161,15 @@ namespace Macrocosm.Content.Rockets
 			SetModuleRelativePositions();
 
 			if (!InFlight)
+			{
  				Velocity.Y += 0.1f * MacrocosmSubworld.CurrentGravityMultiplier;
+
+				if (Descending)
+				{
+					if (Stationary)
+						Descending = false;
+				}
+			}
  			else
  				FlightTime++;
  
@@ -177,14 +185,6 @@ namespace Macrocosm.Content.Rockets
 				SetScreenshake();
 				VisualEffects();
  			}
-			if (Descending)
-			{
-				if(Velocity.Y > 0)
-					Velocity.Y -= 0.05f;
-
-				if (Stationary)
-					Descending = false;
-			}
 
             if (InFlight && Position.Y < worldExitPosY)
 			{
@@ -237,7 +237,7 @@ namespace Macrocosm.Content.Rockets
 
 			//DrawDebugBounds();
 			//DrawDebugModuleHitbox();
-			ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, WhoAmI.ToString(), CommandPod.Center - new Vector2(0, 100) - Main.screenPosition, Color.White, 0f, Vector2.Zero, Vector2.One);
+			//DisplayWhoAmI();
 		}
 
 		/// <summary> Draw the rocket as a dummy </summary>
@@ -316,6 +316,13 @@ namespace Macrocosm.Content.Rockets
 			return false;
 		}
 
+		/// <summary> Whether the local player can interact with the rocket </summary>
+		public bool InInteractionRange()
+		{
+			Point location = Bounds.ClosestPointInRect(Main.LocalPlayer.Center).ToTileCoordinates();
+			return Main.LocalPlayer.IsInTileInteractionRange(location.X, location.Y, TileReachCheckSettings.Simple);
+		}
+
 		/// <summary> Launches the rocket, with syncing </summary>
 		public void Launch()
 		{
@@ -381,13 +388,6 @@ namespace Macrocosm.Content.Rockets
 
 			return false;
  		}
-
-		// Whether the player can interact with the rocket
-		private bool InInteractionRange()
-		{
-			Point location = Bounds.ClosestPointInRect(Main.LocalPlayer.Center).ToTileCoordinates();
-			return Main.LocalPlayer.IsInTileInteractionRange(location.X, location.Y, TileReachCheckSettings.Simple);
-		}
 
 		// Updates the commander player in real time, in multiplayer scenarios
 		private void LookForCommander()

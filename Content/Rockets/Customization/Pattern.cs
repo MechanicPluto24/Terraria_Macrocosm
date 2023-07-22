@@ -8,7 +8,7 @@ using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-    public class Pattern
+    public class Pattern : TagSerializable
     {
 		public string Name { get; }
 		public string ModuleName { get; }
@@ -157,7 +157,7 @@ namespace Macrocosm.Content.Rockets.Customization
 			string name = tag.GetString("Name");
 			string moduleName = tag.GetString("ModuleName");
 
-			Pattern pattern = CustomizationStorage.GetPattern(name, moduleName);
+			Pattern pattern = CustomizationStorage.GetPattern(moduleName, name);
 			bool unlocked = tag.GetBool("Unlocked");
 			pattern.Unlocked = unlocked;
 		
