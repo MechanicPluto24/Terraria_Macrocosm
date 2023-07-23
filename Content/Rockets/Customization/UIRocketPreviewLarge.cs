@@ -1,24 +1,27 @@
 ﻿using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.IO;
 using Terraria;
-using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
-using Terraria.ID;
-using Terraria.Localization;
-using Terraria.ModLoader;
-using Terraria.UI;
+
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
     public class UIRocketPreviewLarge : UIPanel
     {
-        public Rocket Rocket;
+        public Rocket Rocket = new();
 
-		private int currentModule;
-		private int lastModule;
+		public string CurrentModuleName { get; set; } = "CommandPod";
+
+		public int CurrentModuleIndex 
+		{
+			get => Rocket.ModuleNames.IndexOf(CurrentModuleName);
+			set => CurrentModuleName = Rocket.ModuleNames[value];
+		}
+
+		public bool AnimationActive => lastModuleIndex != CurrentModuleIndex;
+
+		private int lastModuleIndex;
 		private float animationCounter;
 		private float moduleOffsetX;
 		private float moduleOffsetY;
@@ -42,29 +45,35 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 		public void UpdateModule(string moduleName)
 		{
-			lastModule = currentModule;
-			currentModule = Rocket.ModuleNames.IndexOf(moduleName);
+			lastModuleIndex = CurrentModuleIndex;
+			CurrentModuleName = moduleName;
 		}
 
-        public override void Update(GameTime gameTime)
+		public void UpdateModule(int moduleIndex)
+		{
+			lastModuleIndex = CurrentModuleIndex;
+			CurrentModuleIndex = moduleIndex;
+		}
+
+		public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
 			if(animationCounter >= 1f)
 			{
 				animationCounter = 0f;
-				lastModule = currentModule;
+				lastModuleIndex = CurrentModuleIndex;
 			}
 
-			if(lastModule != currentModule)
+			if(AnimationActive)
 			{
 				animationCounter += 0.05f;
 			}
 
 			float animation = Utility.QuadraticEaseInOut(animationCounter);
-			moduleOffsetX = MathHelper.Lerp(moduleOffsetsX[lastModule], moduleOffsetsX[currentModule], animation);
-			moduleOffsetY = MathHelper.Lerp(moduleOffsetsY[lastModule], moduleOffsetsY[currentModule], animation);
-			zoom = MathHelper.Lerp(moduleZooms[lastModule], moduleZooms[currentModule], animation);
+			moduleOffsetX = MathHelper.Lerp(moduleOffsetsX[lastModuleIndex], moduleOffsetsX[CurrentModuleIndex], animation);
+			moduleOffsetY = MathHelper.Lerp(moduleOffsetsY[lastModuleIndex], moduleOffsetsY[CurrentModuleIndex], animation);
+			zoom = MathHelper.Lerp(moduleZooms[lastModuleIndex], moduleZooms[CurrentModuleIndex], animation);
 		}
 
 		public override void Draw(SpriteBatch spriteBatch)

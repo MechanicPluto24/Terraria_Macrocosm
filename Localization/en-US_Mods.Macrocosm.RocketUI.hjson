@@ -10,6 +10,15 @@ Common: {
 	Close: Close
 }
 
+Modules: {
+	CommandPod: Command Pod
+	ServiceModule: Service Module
+	ReactorModule: Reactor Module
+	EngineModule: Engine Module
+	BoosterLeft: Left Booster
+	BoosterRight: Right Booster
+}
+
 LaunchButton: {
 	NoTarget: NO TARGET
 	CantReach: INACCESSIBLE

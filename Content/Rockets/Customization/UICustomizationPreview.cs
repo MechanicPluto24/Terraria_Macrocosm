@@ -90,15 +90,15 @@ namespace Macrocosm.Content.Rockets.Navigation
 			spriteBatch.GraphicsDevice.PresentationParameters.RenderTargetUsage = RenderTargetUsage.DiscardContents;
 
 			Effect effect = ModContent.Request<Effect>(Macrocosm.EffectAssetsPath + "Pixelate", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-            effect.Parameters["uPixelCount"].SetValue(new Vector2(renderTarget.Width, renderTarget.Height) / (5.7f * Main.UIScale));
+            effect.Parameters["uPixelCount"].SetValue(new Vector2(renderTarget.Width, renderTarget.Height) / (5.74f * Main.UIScale));
 
-			spriteBatch.Begin(state.SpriteSortMode, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, effect, state.Matrix);
+			spriteBatch.Begin(state.SpriteSortMode, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, state.DepthStencilState, state.RasterizerState, effect, state.Matrix);
 
 			Rectangle dest = rect;
-			dest.X += 35;
-			dest.Y += 25;
-			dest.Width -= 74;
-			dest.Height -= 38;
+			dest.X += 33;
+			dest.Y += 27;
+			dest.Width -= 66;
+			dest.Height -= 36;
 			spriteBatch.Draw(renderTarget, dest, Color.White);
 
 			spriteBatch.End();
