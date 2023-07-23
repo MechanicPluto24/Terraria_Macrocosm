@@ -52,7 +52,7 @@ namespace Macrocosm.Content.Rockets
 		public int Width = DefaultWidth;
 
 		/// <summary> The rocket's height </summary>
-		public int Height = DefaultHeight;
+		public int Height = DefaultHeight + 10;
 
 		/// <summary> The size of the rocket's bounds </summary>
 		public Vector2 Size => new(Width, Height);
@@ -152,7 +152,7 @@ namespace Macrocosm.Content.Rockets
 		/// <summary> Update the rocket </summary>
 		public void Update()
 		{
-			Velocity = Collision.TileCollision(Position, Velocity, Width, Height);
+			Velocity = GetCollisionVelocity();
 			Position += Velocity;
 
 			// Testing
@@ -253,9 +253,9 @@ namespace Macrocosm.Content.Rockets
 			CommandPod.Position = Position + new Vector2(CommandPod.Texture.Width/4f + 1, 0);
 			ServiceModule.Position = new Vector2(CommandPod.Position.X, CommandPod.Position.Y) + new Vector2(-20, CommandPod.Texture.Height - 2.1f);
 			ReactorModule.Position = ServiceModule.Position + new Vector2(0, ServiceModule.Texture.Height) + new Vector2(0, -2);
-			EngineModule.Position = ReactorModule.Position + new Vector2(0, ReactorModule.Texture.Height);
-			BoosterLeft.Position = new Vector2(EngineModule.Center.X, EngineModule.Position.Y) - new Vector2(BoosterLeft.Texture.Width/2, 0) + new Vector2(-39, 14);
-			BoosterRight.Position = new Vector2(EngineModule.Center.X, EngineModule.Position.Y)  -new Vector2(BoosterLeft.Texture.Width / 2, 0) + new Vector2(39, 14);
+			EngineModule.Position = ReactorModule.Position + new Vector2(0, ReactorModule.Texture.Height + 1);
+			BoosterLeft.Position = new Vector2(EngineModule.Center.X, EngineModule.Position.Y) - new Vector2(BoosterLeft.Texture.Width/2, 0) + new Vector2(-37, 16);
+			BoosterRight.Position = new Vector2(EngineModule.Center.X, EngineModule.Position.Y)  -new Vector2(BoosterLeft.Texture.Width / 2, 0) + new Vector2(37, 16);
 		}
 
 		/// <summary> Gets the RocketPlayer bound to the provided player ID </summary>
@@ -380,9 +380,16 @@ namespace Macrocosm.Content.Rockets
 			}
 		}
 
+		private Vector2 GetCollisionVelocity()
+		{
+			// TODO: use lower module hitboxes instead of the rocket bounds
+			return Collision.TileCollision(Position, Velocity, Width, Height);
+		}
+
+
 		private bool MouseCanInteract()
 		{
-			foreach (RocketModule module in Modules.Values)
+			foreach (RocketModule module in Modules.Values.Where((module) => !(module is BoosterRight) && !(module is BoosterLeft)))
 				if (module.Hitbox.Contains(Main.MouseWorld.ToPoint()))
 					return true;
 

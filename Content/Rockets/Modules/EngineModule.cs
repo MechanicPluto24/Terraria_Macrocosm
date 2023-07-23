@@ -11,8 +11,10 @@ namespace Macrocosm.Content.Rockets.Modules
     public class EngineModule : RocketModule
     {
 		public override int DrawPriority => 0;
-
-		public Nameplate Nameplate = new();
+		public bool RearLandingLegRaised { get; set; } = false;
+		public Nameplate Nameplate { get; set; } = new();
+		// Add rear booster and its read landing leg to hixbox
+		public override int Height => base.Height + (RearLandingLegRaised ? 25 : 35);
 
 		public override void Draw(SpriteBatch spriteBatch, Vector2 screenPos, Color ambientColor)
         {
@@ -21,8 +23,9 @@ namespace Macrocosm.Content.Rockets.Modules
             spriteBatch.Begin(SamplerState.PointClamp, state);
 
             // Draw the rear booster behind the engine module (no paintjobs applicable)
-            Texture2D boosterRear = ModContent.Request<Texture2D>(TexturePath + "_BoosterRear").Value;
-            spriteBatch.Draw(boosterRear, Position + new Vector2(0, 18) - screenPos, null, ambientColor, 0f, Origin, 1f, SpriteEffects.None, 0f);
+			int frameX = RearLandingLegRaised ? 1 : 0;
+			Texture2D boosterRear = ModContent.Request<Texture2D>(TexturePath + "_BoosterRear").Value;
+			spriteBatch.Draw(boosterRear, Position + new Vector2(0, 18) - screenPos, boosterRear.Frame(2, 1, frameX), ambientColor, 0f, Origin, 1f, SpriteEffects.None, 0f);
 
 			spriteBatch.End();
 			spriteBatch.Begin(state);
