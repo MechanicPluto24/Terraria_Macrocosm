@@ -42,7 +42,10 @@ namespace Macrocosm.Content.NPCs.Global
 		public override void AI(NPC npc)
 		{
 			if (MacrocosmSubworld.AnyActive)
+			{
 				npc.GravityMultiplier *= MacrocosmSubworld.Current.GravityMultiplier;
+				npc.GravityIgnoresSpace = true;
+			}
 		}
 
 		private static void SetImmunities()

@@ -12,19 +12,19 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 {
 	public class ArtemiteGreatsword : ModItem
 	{
-
 		public override void SetStaticDefaults()
 		{
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
+
 		public override void SetDefaults()
 		{
 			Item.damage = 225;
 			Item.DamageType = DamageClass.Melee;
-			Item.width = 78;
+			Item.width = 80;
 			Item.height = 80;
-			Item.useTime = 30;
-			Item.useAnimation = 30;
+			Item.useTime = 25;
+			Item.useAnimation = 25;
 			Item.useStyle = ItemUseStyleID.Swing;
 			Item.shoot = ModContent.ProjectileType<ArtemiteGreatswordSwing>();
 			Item.knockBack = 5;
@@ -32,24 +32,22 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 			Item.rare = ModContent.RarityType<MoonRarityT1>();
 			Item.UseSound = SoundID.Item1;
 			Item.autoReuse = true;
+			Item.noMelee = true;
  		}
 
-		public override void UseItemHitbox(Player player, ref Rectangle hitbox, ref bool noHitbox)
+		public override void UseStyle(Player player, Rectangle heldItemFrame)
 		{
-			hitbox.Y -= 50;
- 			hitbox.Height += 50;
 		}
 
 		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
-			Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.MountedCenter, new Vector2(player.direction, 0f), Item.shoot, damage, knockback, player.whoAmI, (float)player.direction * player.gravDir, 30); //, player.GetAdjustedItemScale(Item));
+			Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.MountedCenter, new Vector2(player.direction, 0f), Item.shoot, damage, knockback, player.whoAmI, (float)player.direction * player.gravDir, 32); //, player.GetAdjustedItemScale(Item));
 			return true;
 		}
 
 		public override void AddRecipes()
 		{
 			Recipe recipe = Recipe.Create(Type);
-			recipe.AddIngredient<LuminiteCrystal>();
 			recipe.AddIngredient<ArtemiteBar>(12);
 			recipe.AddTile(TileID.WorkBenches);
 			recipe.Register();

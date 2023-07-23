@@ -23,7 +23,8 @@ namespace Macrocosm.Content.Tiles.Bars
             TileObjectData.newTile.LavaDeath = false;
             TileObjectData.addTile(Type);
 
-            AddMapEntry(new Color(161, 68, 48), Language.GetText("Dianite Bar")); // localized text for "Metal Bar"
+			LocalizedText name = CreateMapEntryName();
+			AddMapEntry(new Color(161, 68, 48), name); // localized text for "Metal Bar"
         }
 
         public override bool CreateDust(int i, int j, ref int type)

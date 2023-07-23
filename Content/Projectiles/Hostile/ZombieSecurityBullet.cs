@@ -37,12 +37,14 @@ namespace Macrocosm.Content.Projectiles.Hostile
 				spawned = true;
 			}
 
+			Lighting.AddLight(Projectile.position, new Color(255, 202, 141).ToVector3() * 0.6f);
+
 			return true;
 		}
 
 		public override bool PreDraw(ref Color lightColor)
 		{
-			Projectile.DrawSimpleTrail(Vector2.Zero, 2.8f, 0.5f, new Color(255, 162, 141) * lightColor.GetLuminance(), new Color(184, 58, 24, 0) * lightColor.GetLuminance());
+			Projectile.DrawMagicPixelTrail(Vector2.Zero, 2.8f, 0.5f, new Color(255, 162, 141) * lightColor.GetLuminance(), new Color(184, 58, 24, 0) * lightColor.GetLuminance());
 			return true;
 		}
 	}

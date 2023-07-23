@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Items.MeteorChunks
 		{
 			Item.width = 24;
 			Item.height = 24;
-			Item.maxStack = 9999;
+			Item.maxStack = Item.CommonMaxStack;
 			Item.value = Item.sellPrice(silver: 1);
 			Item.rare = ItemRarityID.Purple;
 		}

@@ -72,7 +72,7 @@ namespace Macrocosm.Content.Rocket.Modules
 					}
 
 					//Pass the ambient lighting on the rocket 
-					effect.Parameters["uAmbientBrightness"].SetValue(ambientColor.GetLuminance());
+					effect.Parameters["uAmbientColor"].SetValue(ambientColor.ToVector3());
 				}
 
 				if (HasDetail)

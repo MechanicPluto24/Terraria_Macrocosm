@@ -57,8 +57,8 @@ namespace Macrocosm.Common.Utils
 		/// <param name="endWidth"> The trail width at its end </param>
 		/// <param name="startColor"> The trail color near the projectile  </param>
 		/// <param name="endColor"> The trail color at its end </param>
-		public static void DrawSimpleTrail(this Projectile proj, Vector2 rotatableOffsetFromCenter, float startWidth, float endWidth, Color startColor, Color? endColor = null)
-            => DrawSimpleTrail(proj.Size / 2f, proj.oldPos, proj.oldRot, rotatableOffsetFromCenter, startWidth, endWidth, startColor, endColor);
+		public static void DrawMagicPixelTrail(this Projectile proj, Vector2 rotatableOffsetFromCenter, float startWidth, float endWidth, Color startColor, Color? endColor = null)
+            => DrawMagicPixelTrail(proj.Size / 2f, proj.oldPos, proj.oldRot, rotatableOffsetFromCenter, startWidth, endWidth, startColor, endColor);
 
         /// <summary>
         /// Draw a MagicPixel trail behind a NPC, with length based on the trail cache length  
@@ -69,10 +69,10 @@ namespace Macrocosm.Common.Utils
         /// <param name="startColor"> The trail color near the NPC </param>
         /// <param name="endColor"> The trail color at its end </param>
         public static void DrawSimpleTrail(this NPC npc, Vector2 rotatableOffsetFromCenter, float startWidth, float endWidth, Color startColor, Color? endColor = null)
-            => DrawSimpleTrail(npc.Size / 2f, npc.oldPos, npc.oldRot, rotatableOffsetFromCenter, startWidth, endWidth, startColor, endColor);
+            => DrawMagicPixelTrail(npc.Size / 2f, npc.oldPos, npc.oldRot, rotatableOffsetFromCenter, startWidth, endWidth, startColor, endColor);
 
 		/// <summary> Adapted from Terraria.Main.DrawTrail </summary>
-		public static void DrawSimpleTrail(Vector2 origin, Vector2[] oldPos, float[] oldRot, Vector2 rotatableOffsetFromCenter, float startWidth, float endWidth, Color startColor, Color? endColor = null)
+		public static void DrawMagicPixelTrail(Vector2 origin, Vector2[] oldPos, float[] oldRot, Vector2 rotatableOffsetFromCenter, float startWidth, float endWidth, Color startColor, Color? endColor = null)
         {
             Rectangle rect = new(0, 0, 1, 1);
             for (int k = oldPos.Length - 1; k > 0; k--)

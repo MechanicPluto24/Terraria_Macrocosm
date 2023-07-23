@@ -9,8 +9,6 @@ using Terraria.GameContent;
 using Terraria.Graphics.Effects;
 using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
-using Terraria.ModLoader.Default;
-using static Terraria.ModLoader.PlayerDrawLayer;
 
 namespace Macrocosm.Content.Backgrounds.Moon
 {
@@ -119,7 +117,6 @@ namespace Macrocosm.Content.Backgrounds.Moon
 
 		public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth)
 		{
-
 			if (maxDepth >= float.MaxValue && minDepth < float.MaxValue)
 			{
 				spriteBatch.Draw(TextureAssets.BlackTile.Value, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.Black * Intensity);

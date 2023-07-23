@@ -7,6 +7,9 @@ using Terraria.ModLoader;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Trails;
 using Macrocosm.Content.Projectiles.Global;
+using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Content.Particles;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
@@ -14,19 +17,20 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 	{
 		public ref float AI_HomingTimer => ref Projectile.ai[0];
 		public ref float AI_AccelerationTimer => ref Projectile.ai[1];
+		public ref float AI_InitialDecelerationTimer => ref Projectile.ai[2];
 
-		public float BlastRadius => 100;
+		public float BlastRadius => 120;
 
 		public override void SetStaticDefaults()
 		{
 			ProjectileID.Sets.TrailCacheLength[Type] = 30;
-			ProjectileID.Sets.TrailingMode[Type] = 0;
+			ProjectileID.Sets.TrailingMode[Type] = 3;
 		}
 
 		public override void SetDefaults()
 		{
 			Projectile.width = 16;
-			Projectile.height = 38;
+			Projectile.height = 16;
 			Projectile.aiStyle = -1;
 			Projectile.penetrate = -1;
 			Projectile.friendly = true;
@@ -40,12 +44,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 		public override void ModifyDamageHitbox(ref Rectangle hitbox)
 		{
-			// FIXME: left rotation 
-			float rotation = Math.Abs(Projectile.rotation);
-			if (rotation < 0 && rotation <= MathHelper.PiOver4 && rotation >= MathHelper.PiOver4 * 3 || rotation >= 0 && rotation > MathHelper.PiOver4 && rotation <= MathHelper.PiOver4 * 3)
-				hitbox = new Rectangle((int)Projectile.position.X, (int)Projectile.position.Y, Projectile.height, Projectile.width);
-			else
-				hitbox = new Rectangle((int)Projectile.position.X, (int)Projectile.position.Y, Projectile.width, Projectile.height);
 		}
 
 		/// <summary> Adapted from Projectile.AI_016() for homing snowman rockets </summary>
@@ -55,9 +53,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 			float timeToReachTopSpeed = 100;
 			if(AI_AccelerationTimer < timeToReachTopSpeed)
-			{
-				AI_AccelerationTimer++;
-			}
+ 				AI_AccelerationTimer++;
+
+			float timerForInitialDeceleration = 20;
+			if (AI_InitialDecelerationTimer < timerForInitialDeceleration)
+				AI_InitialDecelerationTimer++;
 
 			#endregion
 
@@ -65,8 +65,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			float x = Projectile.position.X;
 			float y = Projectile.position.Y;
 
-			float maxDistance = 800f; // original was 600f
-			float minHomingTime = 20f; // original was 30f
+			float maxDistance = 800f;  
+			float minHomingTime = 35f; 
 
 			bool hasTarget = false;
 			AI_HomingTimer++;
@@ -88,6 +88,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 							x = targetCenterX;
 							y = targetCenterY;
 							hasTarget = true;
+							break;
 						}
 					}
 				}
@@ -95,16 +96,18 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 			if (!hasTarget)
 			{
-				x = Projectile.position.X + Projectile.width / 2 + Projectile.velocity.X * 100f;
-				y = Projectile.position.Y + Projectile.height / 2 + Projectile.velocity.Y * 100f;
+				x = Projectile.position.X + Projectile.width / 2 + Projectile.velocity.X * 20f;
+				y = Projectile.position.Y + Projectile.height / 2 + Projectile.velocity.Y * 20f;
 			}
 			else
 			{
-				Projectile.netUpdate = true; // targeting was done locally, needs syncing 
+				// targeting was done locally, sync
+				Projectile.netUpdate = true; 
 			}
 
 			Vector2 maxVelocity = (new Vector2(x, y) - Projectile.Center).SafeNormalize(-Vector2.UnitY) * (10f + 6f * (AI_AccelerationTimer / timeToReachTopSpeed));
-			Projectile.velocity = Vector2.Lerp(Projectile.velocity, maxVelocity, 0.083333336f);
+			maxVelocity *= (AI_InitialDecelerationTimer / timerForInitialDeceleration);
+			Projectile.velocity = Vector2.Lerp(Projectile.velocity, maxVelocity, 0.093333336f);
 
 			#endregion
 
@@ -137,17 +140,21 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 				Projectile.alpha = (int)(255f - 42f * Projectile.localAI[1]) + 100;
 				if (Projectile.alpha > 255)
 					Projectile.alpha = 255;
+			}
 
+			if(Projectile.localAI[1] < 1.2f)
+			{
 				// spawn some dusts as barrel flash
-				for (int i = 0; i < 10; i++)
+				for (int i = 0; i < 30; i++)
 				{
-					Dust dust = Dust.NewDustDirect(Projectile.position + new Vector2(0, 0), Projectile.width, Projectile.height, DustID.Torch, Scale: 3);
-					dust.velocity = (Projectile.velocity.SafeNormalize(Vector2.UnitX) * Main.rand.NextFloat(6f, 12f)).RotatedByRandom(MathHelper.PiOver4 * 0.4);
+					Dust dust = Dust.NewDustDirect(Projectile.position + new Vector2(0, 0), Projectile.width, Projectile.height, DustID.Flare, Scale: 3);
+					dust.velocity = (Projectile.velocity.SafeNormalize(Vector2.UnitX) * Main.rand.NextFloat(8f, 12f)).RotatedByRandom(MathHelper.PiOver4 * 0.2f) + Main.player[Projectile.owner].velocity;
 					dust.noLight = false;
 					dust.alpha = 200;
 					dust.noGravity = true;
 				}
 			}
+			
 
 			// spawn dust trail
 			for (int i = 0; i < 2; i++)
@@ -200,84 +207,60 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
  
 			SoundEngine.PlaySound(SoundID.Item14, Projectile.position);
 
-			#region Spawn dusts
+			// Spawn smoke dusts
 			for (int i = 0; i < 30; i++)
 			{
-				int dustSmoke = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, DustID.Smoke, 0f, 0f, 100, default, 1.5f);
-				Dust dust = Main.dust[dustSmoke];
+				Dust dust = Dust.NewDustDirect(Projectile.Center + Projectile.oldVelocity, 1, 1, DustID.Smoke, Main.rand.NextFloat(), Main.rand.NextFloat(), 100, default, 1.5f);
 				dust.velocity *= 1.4f;
 			}
 
+			//Spawn flare dusts
 			for (int i = 0; i < 20; i++)
 			{
-				int dustFlame = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, DustID.Torch, 0f, 0f, 100, default, 3.5f);
-				Main.dust[dustFlame].noGravity = true;
-				Dust dust = Main.dust[dustFlame];
+				Dust dust = Dust.NewDustDirect(Projectile.Center + Projectile.oldVelocity, 1, 1, DustID.Flare, Main.rand.NextFloat(), Main.rand.NextFloat(), 100, default, 3.5f);
+				dust.noGravity = true;
 				dust.velocity *= 7f;
-				dustFlame = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, DustID.Torch, 0f, 0f, 100, default, 1.5f);
-				dust = Main.dust[dustFlame];
-				dust.velocity *= 3f;
-			}
-			#endregion
 
-			#region Spawn trail dust
-			for (int i = 0; i < Projectile.oldPos.Length; i++)
+				dust = Dust.NewDustDirect(Projectile.Center + Projectile.oldVelocity, 1, 1, DustID.Flare, Main.rand.NextFloat(), Main.rand.NextFloat(), 100, default, 1.5f);
+				dust.velocity *= 3f;
+				dust.noGravity = true;
+			}
+
+			//Spawn trail dust
+			for (int i = 2; i < Projectile.oldPos.Length; i++)
 			{
 				for (int j = 0; j < 3; j++)
 				{
 					Vector2 pos = Projectile.oldPos[i];
-					Dust dust = Dust.NewDustDirect(new Vector2(pos.X, pos.Y), 20, 20, DustID.Torch, Projectile.oldVelocity.X * 0.5f, Projectile.oldVelocity.Y * 0.5f, Scale: 0.07f * (Projectile.oldPos.Length - i));
- 				}
+					Dust dust = Dust.NewDustDirect(pos, 20, 20, DustID.Torch, Projectile.oldVelocity.X * 0.5f, Projectile.oldVelocity.Y * 0.5f, Scale: 0.12f * (Projectile.oldPos.Length - i));
+					dust.noGravity = true;
+				}
 			}
-			#endregion
 
-			#region Spawn Smoke Gores
+			var explosion = Particle.CreateParticle<TintableExplosion>(p =>
+			{
+				p.Position = Projectile.Center;
+				p.DrawColor = (new Color(195, 115, 62)).NewAlpha(0.6f);
+				p.Scale = 1.2f;
+				p.NumberOfInnerReplicas = 9;
+				p.ReplicaScalingFactor = 0.5f;
+			});
+
+			// Spawn Smoke particles
 			for (int i = 0; i < 2; i++)
 			{
-				float multVelocity = 0.4f;
-				if (i == 1)
-					multVelocity = 0.8f;
-
-				int goreSmoke = Gore.NewGore(Projectile.GetSource_FromThis(), new Vector2(Projectile.Center.X, Projectile.Center.Y), default, Main.rand.Next(GoreID.Smoke1, GoreID.Smoke3));
-				Gore gore = Main.gore[goreSmoke];
-				gore.velocity *= multVelocity;
-				Main.gore[goreSmoke].velocity.X += 1f;
-				Main.gore[goreSmoke].velocity.Y += 1f;
-				goreSmoke = Gore.NewGore(Projectile.GetSource_FromThis(), new Vector2(Projectile.Center.X, Projectile.Center.Y), default, Main.rand.Next(GoreID.Smoke1, GoreID.Smoke3));
-				gore = Main.gore[goreSmoke];
-				gore.velocity *= multVelocity;
-				Main.gore[goreSmoke].velocity.X -= 1f;
-				Main.gore[goreSmoke].velocity.Y += 1f;
-				goreSmoke = Gore.NewGore(Projectile.GetSource_FromThis(), new Vector2(Projectile.Center.X, Projectile.Center.Y), default, Main.rand.Next(GoreID.Smoke1, GoreID.Smoke3));
-				gore = Main.gore[goreSmoke];
-				gore.velocity *= multVelocity;
-				Main.gore[goreSmoke].velocity.X += 1f;
-				Main.gore[goreSmoke].velocity.Y -= 1f;
-				goreSmoke = Gore.NewGore(Projectile.GetSource_FromThis(), new Vector2(Projectile.Center.X, Projectile.Center.Y), default, Main.rand.Next(GoreID.Smoke1, GoreID.Smoke3));
-				gore = Main.gore[goreSmoke];
-				gore.velocity *= multVelocity;
-				Main.gore[goreSmoke].velocity.X -= 1f;
-				Main.gore[goreSmoke].velocity.Y -= 1f;
+				Vector2 velocity = Main.rand.NextVector2CircularEdge(3, 3) * (i == 1 ? 0.8f : 0.4f);
+				Particle.CreateParticle<Smoke>(Projectile.Center, velocity);
 			}
-			#endregion
 		 
 		}
 
 		public override bool PreDraw(ref Color lightColor)
 		{
-			// adjust rotations manually (due to TrailingMode = 0 instead of 3) -- it just looks better  
-			if (Projectile.rotation > -MathHelper.PiOver4 && Projectile.rotation < MathHelper.PiOver4 || 
-				Projectile.rotation < -(MathHelper.PiOver4 + MathHelper.PiOver2) ||
-				Projectile.rotation > MathHelper.PiOver4 + MathHelper.PiOver2) {
-
-				for (int i = 0; i < Projectile.oldRot.Length; i++)
-					Projectile.oldRot[i] = MathHelper.PiOver2;
-			}
-
 			Projectile.GetTrail().Opacity = Projectile.localAI[1];
 
 			if (Projectile.alpha < 1)
-				Projectile.GetTrail().Draw();
+				Projectile.GetTrail().Draw(Projectile.Size / 2f);
 
 			return true;
 		}

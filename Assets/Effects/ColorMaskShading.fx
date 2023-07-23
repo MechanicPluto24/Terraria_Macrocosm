@@ -26,8 +26,8 @@ float4 uColor5;
 float4 uColor6;
 float4 uColor7;
 
-// The ambience light brightness onto the object, expressed as a scalar
-float uAmbientBrightness;
+// The ambience light color 
+float3 uAmbientColor;
 
 // Returns the grayscale of a RGB color, using the NTSC formula
 float3 RGBToLuminance(float3 color)
@@ -57,12 +57,12 @@ float4 ColorMaskShading(float2 texCoord : TEXCOORD) : COLOR0
     if (detail.a > 0.0f)
     {
         newColor = float4(detail.rgb * texelBrightness.rgb, detail.a);
-        return float4(newColor.rgb * uAmbientBrightness, color.a);
+        return float4(newColor.rgb * uAmbientColor, color.a);
     }
     
     // Ignore pixel if mask is transparent!
     if (mask.a < 1.0f)
-        return float4(color.rgb * uAmbientBrightness, color.a);
+        return float4(color.rgb * uAmbientColor, color.a);
         
     // Compare the sampled mask pixel with each of the color keys
     // This logic is intentionally unrolled (i.e. not in a loop)
@@ -84,7 +84,7 @@ float4 ColorMaskShading(float2 texCoord : TEXCOORD) : COLOR0
     if (ColorDistance(mask.rgb, uColorKey5) < MAX_COLOR_DIST)
         newColor = uColor5;
        
-    if (ColorDistance(mask.rgb, uColorKey6) < MAX_COLOR_DIST)
+    if (ColorDistance(mask.rgb, uColorKey6) < MAX_COLOR_DIST) 
         newColor = uColor6;
     
     if (ColorDistance(mask.rgb, uColorKey7) < MAX_COLOR_DIST)
@@ -93,7 +93,7 @@ float4 ColorMaskShading(float2 texCoord : TEXCOORD) : COLOR0
     // Blend the original color with the new found, accounting for the ambient brightness 
     // (will return the original if found unrecognized key in the mask) 
     color.rgb = lerp(color.rgb, newColor.rgb * texelBrightness, newColor.a);
-    return float4(color.rgb * uAmbientBrightness, color.a);
+    return float4(color.rgb * uAmbientColor, color.a);
 }
 
 technique Technique1 

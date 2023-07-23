@@ -16,6 +16,7 @@ namespace Macrocosm.Common.Drawing.Sky
         public MacrocosmStar StarAt(int index) => this[index];
         public MacrocosmStar RandStar() => this[Main.rand.Next(Count - 1)];
 
+        private bool spawningDone = false;
         public void SpawnStars(int minStars, int maxStars, float baseScale = 1f, float twinkleFactor = 0.4f)
         {
             int count = Main.rand.Next(minStars, maxStars);
@@ -24,11 +25,13 @@ namespace Macrocosm.Common.Drawing.Sky
             {
                 stars.Add(new MacrocosmStar(baseScale, twinkleFactor));
             }
-        }
+
+			spawningDone = true;
+		}
 
         public void Draw(SpriteBatch spriteBatch, float brightness = 1f)
         {
-            if (None)
+            if (None || !spawningDone)
                 return;
 
             foreach (MacrocosmStar star in stars)

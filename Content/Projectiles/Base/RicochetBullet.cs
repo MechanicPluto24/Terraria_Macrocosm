@@ -9,6 +9,10 @@ using System.IO;
 
 namespace Macrocosm.Content.Projectiles.Base
 {
+    /// <summary>
+    /// Base class for a bullet projectile that bounces from enemy to enemy. 
+    /// Call base if overrding SetDefaults, OnHitNPC, PostAI or Send/ReceiveExtraAI
+    /// </summary>
     public abstract class RicochetBullet : ModProjectile, IBullet
     {
         /// <summary> The number of ricochets </summary>
@@ -32,7 +36,11 @@ namespace Macrocosm.Content.Projectiles.Base
         // Needed since OnHitEffect is only called on the owner
         bool scheduleOnHitEffect = false;
 
-        public override void SetDefaults()
+        private int newTarget = -1;
+        private bool hasNewTarget => newTarget != -1;
+
+
+		public override void SetDefaults()
         {
             Projectile.CloneDefaults(ProjectileID.Bullet);
             AIType = ProjectileID.Bullet;
@@ -48,10 +56,18 @@ namespace Macrocosm.Content.Projectiles.Base
         {
             OnRicochet();
 
-			hitList[target.whoAmI] = true; //Make sure the projectile won't aim directly for this NPC
-            int newTarget = GetTarget(600, Projectile.Center); //Keeps track of the current target, set to -1 to ensure no NPC by default
+            if(Main.netMode == NetmodeID.SinglePlayer)
+            {
+				if (hasNewTarget)
+					SoundEngine.PlaySound(SFX.Ricochet with { Volume = 0.3f }, Projectile.position);
 
-            if (newTarget != -1)
+				OnRicochetEffect();
+			}
+
+			hitList[target.whoAmI] = true; //Make sure the projectile won't aim directly for this NPC
+            newTarget = GetTarget(600, Projectile.Center); //Keeps track of the current target, set to -1 to ensure no NPC by default
+
+            if (hasNewTarget)
             {
                 if (Projectile.owner == Main.myPlayer)
                 {
@@ -62,7 +78,8 @@ namespace Macrocosm.Content.Projectiles.Base
                     Projectile.rotation = Main.npc[newTarget].Center.ToRotation();
                 }
 
-                scheduleOnHitEffect = true;
+				if (Main.netMode == NetmodeID.MultiplayerClient)
+					scheduleOnHitEffect = true;
             }
 
             Projectile.netUpdate = true;

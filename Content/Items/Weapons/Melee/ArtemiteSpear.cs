@@ -43,7 +43,6 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 
 		public override bool? UseItem(Player player)
 		{
-			// Because we're skipping sound playback on use animation start, we have to play it ourselves whenever the item is actually used.
 			if (!Main.dedServ && Item.UseSound.HasValue)
 			{
 				SoundEngine.PlaySound(Item.UseSound.Value, player.Center);
@@ -51,11 +50,9 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 			return null;
 		}
 
-		// Please see Content/ExampleRecipes.cs for a detailed explanation of recipe creation.
 		public override void AddRecipes()
 		{
 			Recipe recipe = Recipe.Create(Type);
-			recipe.AddIngredient<LuminiteCrystal>();
 			recipe.AddIngredient<ArtemiteBar>(12);
 			recipe.AddTile(TileID.WorkBenches);
 			recipe.Register();

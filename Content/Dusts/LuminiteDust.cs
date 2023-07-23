@@ -14,13 +14,19 @@ namespace Macrocosm.Content.Dusts
 
 		public override bool Update(Dust dust)
 		{
-			dust.velocity.Y += 0.01f;
 			dust.position += dust.velocity;
 			dust.scale -= 0.02f;
 			dust.rotation += (dust.velocity.Y - dust.velocity.X) / 5;
 
+			if (!dust.noGravity)
+				dust.velocity.Y += 0.01f;
+			else
+				dust.velocity *= 0.88f;
+
 			if (dust.scale < 0f)
  				dust.active = false;
+
+			Lighting.AddLight(dust.position, new Color(51, 185, 131).ToVector3() * 0.6f);
 
  			return false;
 		}
@@ -28,7 +34,7 @@ namespace Macrocosm.Content.Dusts
 		public override bool MidUpdate(Dust dust) => true;
 
 		public override Color? GetAlpha(Dust dust, Color lightColor)
-			=> new Color(lightColor.R, lightColor.G, lightColor.B, 255);
+			=> Color.White;
  
 	}
 }

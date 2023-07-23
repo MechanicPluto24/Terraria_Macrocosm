@@ -31,7 +31,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.value = Item.sellPrice(0, 0, 90, 0);
             Item.rare = ModContent.RarityType<MoonRarityT3>();
             Item.shoot = ModContent.ProjectileType<MoonSwordProjectile>();
-            Item.shootSpeed = 10;
+            Item.shootSpeed = 20;
         }
 
  

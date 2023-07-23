@@ -14,6 +14,8 @@ using Macrocosm.Content.WorldGeneration.Moon;
 using Macrocosm.Content.Projectiles.Environment.Meteors;
 using Macrocosm.Content.Rocket.Navigation.LaunchChecklist;
 using Macrocosm.Content.Items.Materials;
+using Macrocosm.Common.Utils;
+using Macrocosm.Common.Drawing;
 
 namespace Macrocosm.Content.Subworlds
 {
@@ -55,8 +57,7 @@ namespace Macrocosm.Content.Subworlds
 
 		public override LaunchConditions LaunchConditions => new()
 		{
-			new ChecklistCondition("MoonLord", () => NPC.downedMoonlord, hideIfMet: true) // placeholder for now
-			//new ChecklistCondition("Reactor", () => Main.LocalPlayer.FindItemInInventoryOrOpenVoidBag(ModContent.ItemType<CortexFragment>(), out _) > 0, hideIfTrue: true) 
+			//new ChecklistCondition("MoonLord", () => NPC.downedMoonlord, hideIfMet: true) // placeholder for now
 		};
 
         public override Dictionary<MapColorType, Color> MapColors => new()
@@ -99,9 +100,14 @@ namespace Macrocosm.Content.Subworlds
 			UpdateMeteors();
 		}
 
+		public override void ModifyColorOfTheSkies(ref Color colorOfTheSkies)
+		{
+			colorOfTheSkies = colorOfTheSkies.ToGrayscale();
+		}
+
 		#region Moon events
 
-        public void UpdateBloodMoon()
+		public void UpdateBloodMoon()
         {
 			if (MacrocosmWorld.IsDusk && Main.rand.NextBool(9))
 				Main.bloodMoon = true;
@@ -134,12 +140,9 @@ namespace Macrocosm.Content.Subworlds
 
 			for (int l = 1; l <= (int)timePass; l++)
 			{
-				// Dependent on world size
-				float frequency = Main.maxTilesX / 4200f;
+				float frequency = 2f * MeteorBoost;
 
-				frequency *= MeteorBoost;
-
-				if (!((float)Main.rand.Next(8000) < frequency))
+				if (Main.rand.Next(8000) >= frequency)
 					continue;
 
 				Vector2 position = new((Main.rand.Next(Main.maxTilesX - 50) + 100) * 16, Main.rand.Next((int)((double)Main.maxTilesY * 0.05)) * 16);
@@ -148,7 +151,7 @@ namespace Macrocosm.Content.Subworlds
 				if (!Main.rand.NextBool(4))
 				{
 					closestPlayer = Player.FindClosest(position, 1, 1);
-					if ((double)Main.player[closestPlayer].position.Y < Main.worldSurface * 16.0 && Main.player[closestPlayer].afkCounter < 3600)
+					if (Main.player[closestPlayer].position.Y < Main.worldSurface * 16.0 && Main.player[closestPlayer].afkCounter < 3600)
 					{
 						int offset = Main.rand.Next(1, 640);
 						position.X = Main.player[closestPlayer].position.X + (float)Main.rand.Next(-offset, offset + 1);
@@ -187,8 +190,7 @@ namespace Macrocosm.Content.Subworlds
 					else
 						damage = 2000;
 
-					Projectile.NewProjectile(source, position.X, position.Y, speedX, speedY, type, damage, 0f, 255); break;
-
+					Projectile.NewProjectile(source, position.X, position.Y, speedX, speedY, type, damage, 0f); break;
 				}
 			}
 

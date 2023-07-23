@@ -1,14 +1,7 @@
-﻿
-using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Items.Materials;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
-using Terraria.DataStructures;
-using Terraria.GameContent;
 using Terraria.GameContent.Creative;
-using Terraria.GameContent.Drawing;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -25,7 +18,7 @@ namespace Macrocosm.Content.Items.MeteorChunks
 		{
 			Item.width = 24;
 			Item.height = 24;
-			Item.maxStack = 9999;
+			Item.maxStack = Item.CommonMaxStack;
 			Item.value = Item.sellPrice(silver: 1);
 			Item.rare = ItemRarityID.Purple;
 		}
@@ -49,17 +42,19 @@ namespace Macrocosm.Content.Items.MeteorChunks
 				dust.scale = 1.1f;
  				dust.noGravity = true;
 			}
+
+			//if (Main.rand.NextBool(16))
+			//{
+			//	Vector2 position = Item.Center + new Vector2(Item.width, Item.height).RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat();
+			//	Vector2 velocity = Vector2.One.RotatedByRandom(MathHelper.TwoPi) * 1.2f;
+			//
+			//	Particle.CreateParticle(ParticleOrchestraType.StardustPunch, position, velocity);
+			//}
 		}
 
 		public override void PostDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
 		{
-			if (Main.rand.NextBool(6))
-			{
-				Vector2 position = Item.Center + new Vector2(Item.width, Item.height).RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat();
-				Vector2 velocity = Vector2.One.RotatedByRandom(MathHelper.TwoPi) * 1.2f;
-
-				Particle.CreateParticle(ParticleOrchestraType.StardustPunch, position, velocity);
-			}
+			
  		}
 	}
 }

@@ -23,7 +23,8 @@ namespace Macrocosm.Content.Tiles.Bars
             TileObjectData.newTile.LavaDeath = false;
             TileObjectData.addTile(Type);
 
-            AddMapEntry(new Color(105, 56, 215), Language.GetText("Chandrium Bar")); // localized text for "Metal Bar"
+			LocalizedText name = CreateMapEntryName();
+			AddMapEntry(new Color(105, 56, 215), name); // localized text for "Metal Bar"
         }
     }
 }

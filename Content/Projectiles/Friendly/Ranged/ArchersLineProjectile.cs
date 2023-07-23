@@ -8,8 +8,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
     public class ArchersLineProjectile : RicochetBullet
 	{
-		public override string Texture => "Terraria/Images/Projectile_14";
-
 		public override int RicochetCount => 10;
 
 		public override float RicochetSpeed => 20f;
@@ -27,6 +25,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			Projectile.timeLeft = 600;
 		}
 
+		public override void AI()
+		{
+			Lighting.AddLight(Projectile.position, new Color(255, 0, 0).ToVector3() * 0.6f);
+		}
+
 		public override void OnRicochet()
 		{
 			Projectile.damage -= 10;
@@ -39,7 +42,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 		public override bool PreDraw(ref Color lightColor)
 		{
-			Projectile.DrawSimpleTrail(Vector2.Zero, 2f, 0.5f, new Color(254, 121, 2) * lightColor.GetLuminance(), new Color(184, 58, 24, 0) * lightColor.GetLuminance());
+			Projectile.DrawMagicPixelTrail(Vector2.Zero, 2f, 0.5f, new Color(254, 121, 2) * lightColor.GetLuminance(), new Color(184, 58, 24, 0) * lightColor.GetLuminance());
 			return true;
 		}
 	}

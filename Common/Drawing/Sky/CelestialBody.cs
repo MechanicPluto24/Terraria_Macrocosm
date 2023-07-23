@@ -1,18 +1,9 @@
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Terraria.Graphics.Effects;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using Terraria;
-using Terraria.DataStructures;
-using Terraria.GameContent;
-using Terraria.Graphics.Shaders;
-using Terraria.UI.Chat;
-using SubworldLibrary;
-using Macrocosm.Content.Subworlds;
-using System.Linq;
 using Terraria.ModLoader;
 using Macrocosm.Common.Subworlds;
 
@@ -265,7 +256,7 @@ namespace Macrocosm.Common.Drawing.Sky
             if (!ShouldDraw())
                 return;
 
-            SpriteBatchState state = spriteBatch.SaveState();
+			SpriteBatchState state = spriteBatch.SaveState();
             spriteBatch.EndIfBeginCalled();
 
             Effect shader = null;
