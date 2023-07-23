@@ -63,8 +63,6 @@ namespace Macrocosm.Content.Rockets
 
         private static void UpdateRockets()
         {
-            Main.NewText(ActiveRocketCount.ToString() + ", " + RocketsInCurrentSubworld.ToString());
-
             for (int i = 0; i < MaxRockets; i++)
             {
                 Rocket rocket = Rockets[i];
