@@ -145,8 +145,6 @@ namespace Macrocosm.Content.Rockets.Navigation
 		{
 			base.Update(gameTime);
 
-			WorldDataSystem.Instance.FoundVulcan = false;
-
 			Navigation.Rocket = Rocket;
 			Customization.Rocket = Rocket;
 			Cargo.Rocket = Rocket;

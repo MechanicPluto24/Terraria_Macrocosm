@@ -160,19 +160,23 @@ namespace Macrocosm.Content.Rockets
 
 			SetModuleRelativePositions();
 
-			if (!InFlight)
+			if (InFlight)
+			{
+ 				FlightTime++;
+			}
+			else
 			{
  				Velocity.Y += 0.1f * MacrocosmSubworld.CurrentGravityMultiplier;
-
-				if (Descending)
-				{
-					if (Stationary)
-						Descending = false;
-				}
 			}
- 			else
- 				FlightTime++;
- 
+
+			if (Descending)
+			{
+				// TODO: Add smooth deceleration
+
+				if (Stationary)
+					Descending = false;
+			}
+
 			if (Stationary)
 			{
 				Interact();
@@ -181,7 +185,7 @@ namespace Macrocosm.Content.Rockets
 
 			if (FlightTime >= liftoffTime)
 			{
-				Movement();
+				FlightMovement();
 				SetScreenshake();
 				VisualEffects();
  			}
@@ -400,7 +404,7 @@ namespace Macrocosm.Content.Rockets
 		}
 
 		// Handles the rocket's movement during flight
-		private void Movement()
+		private void FlightMovement()
 		{
 			if (Math.Abs(Velocity.Y) > maxFlightSpeed)
 				return;
