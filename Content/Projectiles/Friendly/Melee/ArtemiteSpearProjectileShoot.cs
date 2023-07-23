@@ -47,8 +47,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			{
 				for (int i = 0; i < Main.rand.Next(30, 40); i++)
 				{
-					Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<ArtemiteDust>(), 0f, .1f, Scale: 1f);
-					dust.velocity.Y *= 0.02f;
+					Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<ArtemiteDust>(), Main.rand.NextFloat(-1.6f, 1.6f), Main.rand.NextFloat(-1.6f, 1.6f), Scale: Main.rand.NextFloat(0.7f, 1f));
+					dust.noGravity = true;
 				}
 			}
 		}

@@ -13,49 +13,13 @@ namespace Macrocosm.Common.Utils
 	{
 		public static int GetFrameHeight(this NPC npc) => TextureAssets.Npc[npc.type].Height() / Main.npcFrameCount[npc.type];
 
-		/// <summary>
-		/// Scales this <paramref name="npc"/>'s health by the scale <paramref name="factor"/> provided.
-		/// </summary>
-		/// <param name="npc">The NPC instance.</param>
-		/// <param name="factor">The scale factor that this <paramref name="npc"/>'s health is scaled by.</param>
-		public static void ScaleHealthBy(this NPC npc, float factor)
-		{
-			float bossScale = CalculateBossHealthScale(out _);
 
-			npc.lifeMax = (int)Math.Ceiling(npc.lifeMax * Main.GameModeInfo.EnemyMaxLifeMultiplier);
-			npc.lifeMax = (int)Math.Ceiling(npc.lifeMax * factor * bossScale);
+		/// <summary>  Scales this <paramref name="npc"/>'s health by the scale <paramref name="factor"/> provided. </summary>
+		public static void ScaleHealthBy(this NPC npc, float factor, float balance, float bossAdjustment)
+		{
+			npc.lifeMax = (int)Math.Ceiling(npc.lifeMax * factor * balance * bossAdjustment);
 		}
 
-		public static float CalculateBossHealthScale(out int playerCount)
-		{
-			//This is what vanila does
-			playerCount = 0;
-			float healthFactor = 1f;
-			float component = 0.35f;
-
-			if (Main.netMode == NetmodeID.SinglePlayer)
-			{
-				playerCount = 1;
-				return 1f;
-			}
-
-			for (int i = 0; i < Main.maxPlayers; i++)
-				if (Main.player[i].active)
-					playerCount++;
-
-			for (int i = 0; i < playerCount; i++)
-			{
-				healthFactor += component;
-				component += (1f - component) / 3f;
-			}
-
-			if (healthFactor > 8f)
-				healthFactor = (healthFactor * 2f + 8f) / 3f;
-			if (healthFactor > 1000f)
-				healthFactor = 1000f;
-
-			return healthFactor;
-		}
 
 		public static bool SummonBossDirectlyWithMessage(Vector2 targetPosition, int type)
 		{

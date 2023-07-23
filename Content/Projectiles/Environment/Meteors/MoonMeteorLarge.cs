@@ -7,6 +7,7 @@ using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Gores;
 using Macrocosm.Content.Items.MeteorChunks;
 using Macrocosm.Content.Projectiles.Base;
+using Macrocosm.Content.Projectiles.Environment.Debris;
 
 namespace Macrocosm.Content.Projectiles.Environment.Meteors
 {
@@ -31,9 +32,9 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
             DustScaleMax = 1.6f;
             AI_DustChanceDenominator = 2;
 
-            GoreType = ModContent.GoreType<RegolithDebris>();
-            GoreCount = Main.rand.Next(6, 8);
-            GoreVelocity = new Vector2(0.5f, 0.8f);
+            DebrisType = ModContent.ProjectileType<RegolithDebris>();
+            DebrisCount = Main.rand.Next(6, 8);
+            DebrisVelocity = new Vector2(0.5f, 0.8f);
         }
 
         public override void SpawnItems()

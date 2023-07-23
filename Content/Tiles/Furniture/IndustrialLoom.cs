@@ -28,7 +28,8 @@ namespace Macrocosm.Content.Tiles.Furniture
 
             AnimationFrameHeight = 36;
 
-            AddMapEntry(new Color(62, 62, 66), Language.GetText("Industrial Loom"));
+			LocalizedText name = CreateMapEntryName();
+			AddMapEntry(new Color(62, 62, 66), name);
         }
 
         public override void KillMultiTile(int i, int j, int frameX, int frameY)

@@ -1,4 +1,7 @@
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Particles;
+using Macrocosm.Content.Trails;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -12,7 +15,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
     {
 		public override void SetStaticDefaults()
 		{
-            Main.projFrames[Type] = 6;
+			ProjectileID.Sets.TrailCacheLength[Type] = 20;
+			ProjectileID.Sets.TrailingMode[Type] = 3;
+			Main.projFrames[Type] = 6;
         }
 
         public override void SetDefaults()
@@ -23,25 +28,24 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Projectile.timeLeft = 120;
             Projectile.DamageType = DamageClass.Magic;
             Projectile.alpha = 0;
-        }
 
-        public override void AI()
+			Projectile.SetTrail<ImbriumMeteorTrail>();
+		}
+
+		public override void AI()
         {
-            Projectile.velocity.Y += 0.1f;
+			Projectile.velocity.Y += 0.1f;
             if (Projectile.velocity.Y > 12f)
                 Projectile.velocity.Y = 12f;
 
             if (Projectile.velocity != Vector2.Zero)
                 Projectile.rotation = Projectile.velocity.ToRotation() - MathHelper.PiOver2;
 
-            if (Main.rand.NextFloat() < 0.8f)
+            if (Main.rand.NextFloat() < 0.5f)
             {
-                int dustIdx = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.GreenTorch, Projectile.velocity.X * 0.4f, Projectile.velocity.Y * 0.4f, 128, new Color(0, 255, 100), 1.8f);
-                Main.dust[dustIdx].noGravity = true;
-                Main.dust[dustIdx].velocity.X *= 2f;
-                Main.dust[dustIdx].velocity.Y *= 1.5f;
+				var star = Particle.CreateParticle<ImbriumStar>(new Vector2(Projectile.position.X, Projectile.position.Y) + Main.rand.NextVector2FromRectangle(new Rectangle(0, 0, (int)Projectile.Size.X, (int)Projectile.Size.Y)), Vector2.Zero, scale: 0.06f);
+                star.Alpha = 0.8f;
             }
-
 
             if (++Projectile.frameCounter >= 4)
             {
@@ -64,7 +68,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             SpriteBatchState state = Main.spriteBatch.SaveState();
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
-            Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition,
+
+			Projectile.GetTrail().Draw(Projectile.Size / 2f);
+
+			Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition,
                 sourceRect, new Color(255, 255, 255, Projectile.alpha), Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
 
 			Main.spriteBatch.End();
@@ -81,12 +88,18 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             SoundEngine.PlaySound(SoundID.Item89, Projectile.position);
             for (int i = 0; i < 10; i++)
             {
-                int dustIdx = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.GreenTorch, Projectile.velocity.X * 0.4f, Projectile.velocity.Y * 0.4f, 128, new Color(255, 255, 255), 3f);
-                Main.dust[dustIdx].noGravity = true;
-                Main.dust[dustIdx].velocity.X *= 2f;
-                Main.dust[dustIdx].velocity.Y *= 1.5f;
-
+				var star = Particle.CreateParticle<ImbriumStar>(new Vector2(Projectile.position.X, Projectile.position.Y) + Main.rand.NextVector2FromRectangle(new Rectangle(0, 0, (int)Projectile.Size.X, (int)Projectile.Size.Y)), Main.rand.NextVector2Circular(1f, 1f), scale: 0.08f);
+				star.Alpha = 0.8f;	
 			}
+
+			for (int j = 0; j < ProjectileID.Sets.TrailCacheLength[Type]; j++)
+			{
+				float progress = 1f - (j / (float)ProjectileID.Sets.TrailCacheLength[Type]);
+				var star = Particle.CreateParticle<ImbriumStar>(Projectile.oldPos[j] + Main.rand.NextVector2FromRectangle(new Rectangle(0, 0, (int)Projectile.Size.X, (int)Projectile.Size.Y)), Main.rand.NextVector2Circular(0.1f, 0.1f), scale: 0.04f * progress);
+				star.Alpha = 0.8f * progress;
+			}
+
+
 		}
     }
 }

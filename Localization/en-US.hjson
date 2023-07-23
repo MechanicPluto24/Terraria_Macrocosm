@@ -15,6 +15,11 @@ Mods: {
 				DisplayName: The Irradiation
 				TownNPCDialogueName: The Irradiation
 			}
+
+			UndergroundMoonBiome: {
+				DisplayName: Underground Moon
+				TownNPCDialogueName: The Underground Moon Biome
+			}
 		}
 
 		Buffs: {
@@ -26,6 +31,11 @@ Mods: {
 			SuitBreach: {
 				DisplayName: Suit Breach
 				Description: A hole has appeared in your suit, your blood begins to boil!
+			}
+
+			Depressurized: {
+				DisplayName: Depressurized
+				Description: Your blood is boiling!
 			}
 
 			ChandriumEmpowerment: {
@@ -46,11 +56,6 @@ Mods: {
 			SpaceShuttle: {
 				DisplayName: Space Shuttle
 				Description: In memory of STS-51-L and STS-107.
-			}
-
-			Depressurized: {
-				DisplayName: Depressurized
-				Description: Your blood is boiling from the lack of atmospheric pressure!
 			}
 		}
 
@@ -188,17 +193,12 @@ Mods: {
 			}
 
 			CraterDemonSummon: {
-				DisplayName: Lunar Skull
+				DisplayName: Daemonic Tablet
 				Tooltip:
 					'''
 					Summons the Crater Demon
 					Must be used on the Moon
 					'''
-			}
-
-			MoonGlobe: {
-				DisplayName: Moon Globe
-				Tooltip: Toss it to change how the Moon looks!
 			}
 
 			MoonCoin: {
@@ -212,8 +212,8 @@ Mods: {
 			}
 
 			DevPick: {
-				DisplayName: Dev Pick
-				Tooltip: Dev Pickaxe
+				DisplayName: Developer Pickaxe
+				Tooltip: ""
 			}
 
 			RocketPlacer: {
@@ -259,26 +259,6 @@ Mods: {
 			ChandriumOre: {
 				DisplayName: Chandrium Ore
 				Tooltip: ""
-			}
-
-			CinisChunk: {
-				DisplayName: Cinis Chunk
-				Tooltip: "'The core in the middle holds many universes inside'"
-			}
-
-			NubisChunk: {
-				DisplayName: Nubis Chunk
-				Tooltip: "'It spins akin to a galaxy'"
-			}
-
-			SidusChunk: {
-				DisplayName: Sidus Chunk
-				Tooltip: "'The fire burns like a star'"
-			}
-
-			TurbenChunk: {
-				DisplayName: Turben Chunk
-				Tooltip: "'Emitting enough light to blind'"
 			}
 
 			CortexFragment: {
@@ -775,22 +755,26 @@ Mods: {
 				Tooltip: Right click to launch a plasma ball grenade
 			}
 
-			Cruithne3753: {
+			Cruithne: {
 				DisplayName: Cruithne-3753
-				Tooltip: Two different firing modes
-			}
-
-			LHB805: {
-				DisplayName: LHB-805
 				Tooltip: ""
 			}
 
-			NWA12691: {
-				DisplayName: NWA-12691
+			LHBMinigun: {
+				DisplayName: L.H.B.-805
 				Tooltip:
 					'''
-					Shoots rockets 
-					Right click to lock onto an enemy
+					What's more effective than bullets?
+					A whole LOT of bullets.
+					'''
+			}
+
+			NWARocketLauncher: {
+				DisplayName: N.W.A.-12691
+				Tooltip:
+					'''
+					Shoots rockets .
+					Right click to lock onto an enemy.
 					'''
 			}
 
@@ -826,6 +810,31 @@ Mods: {
 
 			HazardWall: {
 				DisplayName: Hazard Wall
+				Tooltip: ""
+			}
+
+			SpaceDust: {
+				DisplayName: Space Dust
+				Tooltip: ""
+			}
+
+			MoonPhaseGlobe: {
+				DisplayName: Moon Phase Globe
+				Tooltip: ""
+			}
+
+			TychoDesertEagle: {
+				DisplayName: Tycho .50
+				Tooltip: ""
+			}
+
+			ChampionsBladeBroken: {
+				DisplayName: Champion's Blade 
+				Tooltip: ""
+			}
+
+			ChampionsBladeRepaired: {
+				DisplayName: Champion's Blade
 				Tooltip: ""
 			}
 		}
@@ -895,14 +904,13 @@ Mods: {
 			ArchersLineProjectile.DisplayName: Archer's Line
 			CruithneGreenSlug.DisplayName: Cruithne Green Slug
 			DeliriumShell.DisplayName: Delirium Shell
-			LHB805Projectile.DisplayName: LHB-805
-			NWAMissile.DisplayName: NWA-12691
+			LHBMinigunProjectile.DisplayName: L.H.B.-805
+			NWAMissile.DisplayName: N.W.A.-12691
 			PlasmaGrenade.DisplayName: Plasma Grenade
 			SeleniteArrow.DisplayName: Selenite Arrow
 			CalcicCaneMinion.DisplayName: Crater Imp
 			ChandriumStaffMinion.DisplayName: Crescent Ghoul
 			ChandriumWhipProjectile.DisplayName: Chandrium Whip
-			MoonGlobeProjectile.DisplayName: Moon Globe
 			MoonTombstone.DisplayName: Moon Tombstone
 			ArtemiteDrillProjectile.DisplayName: Artemite Drill
 			ChandriumDrillProjectile.DisplayName: Chandrium Drill
@@ -916,45 +924,49 @@ Mods: {
 			HandheldEngineProjectile.DisplayName: Handheld Engine
 			HandheldEngineHitbox.DisplayName: Handheld Engine
 			ZombieSecurityBullet.DisplayName: Zombie Security
+			SeleniteMagnumProjectile.DisplayName: Selenite Magnum
+			TychoBullet.DisplayName: Tycho .50
+			DianiteMeteor.DisplayName: Dianite Meteor
+			DianiteMeteorSmall.DisplayName: Dianite Meteor
+			PhantasmalImpLarge.DisplayName: Phantasmal Imp
+			PhantasmalImpSmall.DisplayName: Phantasmal Imp
+			MoonPhaseGlobeProjectile.DisplayName: Moon Phase Globe
+			DianiteForkCoreProjectile.DisplayName: Dianite Fork
+			DianiteForkProjectile.DisplayName: Dianite Fork
+			RegolithDebris.DisplayName: Regolith Debris
+			ArtemiteSwordSwing.DisplayName: Artemite Sword Swing
+			test.DisplayName: test
 		}
 
 		Tiles: {
 			RocketLaunchPad.MapEntry: Launch Pad
+			IndustrialLoom.MapEntry: Industrial Loom
 			AluminumOre.MapEntry: Aluminum Ore
 			ArtemiteOre.MapEntry: Artemite Ore
 			ChandriumOre.MapEntry: Chandrium Ore
 			DianiteOre.MapEntry: Dianite Ore
 			LithiumOre.MapEntry: Lithium
-			OilShale.MapEntry: Oil Shale
 			SeleniteOre.MapEntry: Selenite Ore
+			OilShale.MapEntry: Oil Shale
+			ArtemiteBar.MapEntry: Artemite Bar
+			ChandriumBar.MapEntry: Chandrium Bar
+			DianiteBar.MapEntry: Dianite Bar
 		}
 
-		SetBonuses.SpaceProtection_Tier1:
-			'''
-			Pressurized spacesuit allows for exploration of other celestial bodies
-			Tier 1 extraterrestrial protection
-			'''
-
-		GameTips: {
-			Generic_Tip1: (TEST) 1 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip2: (TEST) 2 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip3: (TEST) 3 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip4: (TEST) 4 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip5: (TEST) 5 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip6: (TEST) 6 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip7: (TEST) 7 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip8: (TEST) 8 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip9: (TEST) 9 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip10: (TEST) 10 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip11: (TEST) 11 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip12: (TEST) 12 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip13: (TEST) 13 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip14: (TEST) 14 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip15: (TEST) 15 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip16: (TEST) 16 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip17: (TEST) 17 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip18: (TEST) 18 You can visit other planets if you manage to build a rocket (TEST)
+		SetBonuses: {
+			SpaceProtection_Tier1:
+				'''
+				Pressurized spacesuit allows for exploration of other celestial bodies.
+				Tier 1 extraterrestrial protection
+				'''
+			SpaceProtection_Tier2:
+				'''
+				Lead-lined suit allows for safe exploration of highly irradiated environments.
+				Tier 2 extraterrestrial protection
+				'''
 		}
+
+		GameTips.Generic_Tip1: You may find valuable fossil fuels in the desert.
 
 		LoadingScreenTips: {
 			Moon: {
@@ -1204,18 +1216,6 @@ Mods: {
 					}
 				}
 
-				Reactor: {
-					True: {
-						Display: default
-						Hover: default
-					}
-
-					False: {
-						Display: Missing reactor
-						Hover: You need a fusion reactor to reach The Moon
-					}
-				}
-
 				MoonLord: {
 					True: {
 						Display: default
@@ -1223,7 +1223,7 @@ Mods: {
 					}
 
 					False: {
-						Display: Missing reactor
+						Display: Defeat Moon Lord
 						Hover: You must defeat the Moon Lord to reach The Moon
 					}
 				}

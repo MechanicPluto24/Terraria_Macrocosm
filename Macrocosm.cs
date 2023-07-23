@@ -12,6 +12,7 @@ using Macrocosm.Content.Rocket;
 using Macrocosm.Content.Subworlds;
 using Macrocosm.Common.Netcode;
 using Macrocosm.Content.Tiles.Blocks;
+using Terraria.GameContent;
 
 namespace Macrocosm
 {
@@ -25,8 +26,9 @@ namespace Macrocosm
 
 		public override void Load()
 		{
-			ModCalls();
+			LoadModCalls();
 			LoadEffects();
+			ApplyResprites();
 		}
 
 		private static void LoadEffects()
@@ -37,7 +39,7 @@ namespace Macrocosm
 			Filters.Scene["Macrocosm:RadiationNoiseEffect"].Load();
 		}
 
-		private void ModCalls()
+		private void LoadModCalls()
 		{
 			#region Ryan's mods calls
 
@@ -52,6 +54,12 @@ namespace Macrocosm
 				taAPI.Call("Ambience", this, "MoonAmbience", "Assets/Sounds/Ambient/Moon", 1f, 0.0075f, new Func<bool>(SubworldSystem.IsActive<Moon>));
 
 			#endregion
+		}
+
+		private void ApplyResprites()
+		{
+			string respritePath = "Macrocosm/Assets/Textures/Resprites/";
+			TextureAssets.Moon[0] = ModContent.Request<Texture2D>(respritePath + "Moon_0");
 		}
 
 		public override void HandlePacket(BinaryReader reader, int whoAmI)

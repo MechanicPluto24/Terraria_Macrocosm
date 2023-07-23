@@ -8,6 +8,7 @@ using Terraria.GameContent.Drawing;
 
 namespace Macrocosm.Common.Drawing.Particles
 {
+	/// <summary> Particle.Creation, by sucss, Nurby & Feldy @ PellucidMod (RIP) </summary>
 	public partial class Particle
 	{
 		/// <summary>
@@ -20,10 +21,8 @@ namespace Macrocosm.Common.Drawing.Particles
 		/// <param name="scale">Scale of the newly created particle, as a 2-dimensional vector </param>
 		/// <param name="shouldSync"> Whether to sync the particle spawn and its <see cref="Common.Netcode.NetSyncAttribute"> NetSync </see> fields </param>
 		/// <returns> The particle instance </returns>
-		public static T CreateParticle<T>(Vector2 position, Vector2 velocity, float rotation = 0f, Vector2 scale = default, bool shouldSync = false) where T : Particle
+		public static T CreateParticle<T>(Vector2 position, Vector2 velocity, Vector2 scale, float rotation = 0f, bool shouldSync = false) where T : Particle
 		{
-			if (scale == default) scale = Vector2.One;
-
 			return CreateParticle<T>(particle =>
 			{
 				particle.Position = position;
@@ -43,7 +42,7 @@ namespace Macrocosm.Common.Drawing.Particles
 		/// <param name="scale">Scale of the newly created particle, as a scalar </param>
 		/// <param name="shouldSync"> Whether to sync the particle spawn and its <see cref="Common.Netcode.NetSyncAttribute"> NetSync </see> fields </param>
 		/// <returns> The particle instance </returns>
-		public static T CreateParticle<T>(Vector2 position, Vector2 velocity, float rotation = 0f, float scale = 1f, bool shouldSync = false) where T : Particle
+		public static T CreateParticle<T>(Vector2 position, Vector2 velocity, float scale = 1f, float rotation = 0f, bool shouldSync = false) where T : Particle
 		{
 			return CreateParticle<T>(particle =>
 			{

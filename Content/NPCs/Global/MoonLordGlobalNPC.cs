@@ -10,7 +10,6 @@ namespace Macrocosm.Content.NPCs.Global
 {
 	public class MoonLordGlobalNPC : GlobalNPC
 	{
-
 		public override bool AppliesToEntity(NPC entity, bool lateInstantiation) => entity.type == NPCID.MoonLordCore;
 
 		public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
@@ -18,11 +17,8 @@ namespace Macrocosm.Content.NPCs.Global
 			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<CortexFragment>(), 10));
 		}
 
-
 		public override void SetBestiary(NPC npc, BestiaryDatabase database, BestiaryEntry bestiaryEntry)
 		{
-
-			///bestiaryEntry.Info.RemoveAll(e => (e.GetType() == typeof(FlavorTextBestiaryInfoElement))); // removes the Vanilla lore text
 			bestiaryEntry.Info.RemoveAll(e => e is FlavorTextBestiaryInfoElement); // removes the Vanilla lore text
 
 			bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[] {

@@ -12,11 +12,15 @@ namespace Macrocosm.Content.Projectiles.Global
 	public class MacrocosmProjectile : GlobalProjectile
 	{
 		public override bool InstancePerEntity => true;
-		public Trail Trail { get; set; }
+		public VertexTrail Trail { get; set; }
 
 		public override void SetDefaults(Projectile projectile)
 		{
-			
+			if (projectile.ModProjectile is IExplosive explosive)
+			{
+				projectile.penetrate = -1;
+				projectile.tileCollide = true;
+			}
 		}
 
 		public override bool OnTileCollide(Projectile projectile, Vector2 oldVelocity)
@@ -26,7 +30,12 @@ namespace Macrocosm.Content.Projectiles.Global
 
 			if (projectile.ModProjectile is IExplosive explosive)
 			{
+				// Explosion logic (hitbox, timeleft, penetrate, etc.)
 				explosive.OnCollide(projectile);
+				
+				// Hit tiles visually, in a smaller area than the blast radius
+				Collision.HitTiles(projectile.position, oldVelocity, (int)(projectile.width * 0.6f), (int)(projectile.height * 0.6f));
+
 				return false;
 			}
 
@@ -38,10 +47,9 @@ namespace Macrocosm.Content.Projectiles.Global
 			if(projectile.ModProjectile is IExplosive explosive)
 			{
 				explosive.OnCollide(projectile);
-				projectile.Kill();  
+				//projectile.Kill();  
 			}
 		}
-
 
 		public override void OnHitPlayer(Projectile projectile, Player target, Player.HurtInfo info)
 		{
@@ -53,9 +61,6 @@ namespace Macrocosm.Content.Projectiles.Global
 		{
 			if (projectile.ModProjectile is null)
 				return;
-
-			//if (!projectile.ModProjectile.NetWriteFields(binaryWriter, bitWriter))
-			//	binaryWriter.Dispose();
 
 			projectile.ModProjectile.NetWriteFields(binaryWriter, bitWriter);
 		}

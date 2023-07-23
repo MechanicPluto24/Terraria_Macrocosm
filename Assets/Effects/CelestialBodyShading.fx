@@ -9,7 +9,6 @@ float4 CelestialBodyShading(float2 texCoord : TEXCOORD) : COLOR
 {
     float4 color = tex2D(uImage0, texCoord);
 
-    // Adjust the shade center based on the texture center and user offset
     float2 center = float2(0.5, 0.5) - uOffset.xy;
 
     float2 d = texCoord - center;

@@ -12,6 +12,7 @@ using Macrocosm.Content.Items.Weapons.Ranged;
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Vanity.BossMasks;
+using Macrocosm.Content.Items.Weapons.Magic;
 
 namespace Macrocosm.Content.Items.Consumables.BossBags
 {
@@ -26,7 +27,7 @@ namespace Macrocosm.Content.Items.Consumables.BossBags
 
 		public override void SetDefaults()
 		{
-			Item.maxStack = 9999;
+			Item.maxStack = Item.CommonMaxStack;
 			Item.consumable = true;
 			Item.width = 24;
 			Item.height = 24;
@@ -46,8 +47,8 @@ namespace Macrocosm.Content.Items.Consumables.BossBags
 
 			itemLoot.Add(ItemDropRule.OneFromOptions(1,
 				ModContent.ItemType<CalcicCane>(),
-				ModContent.ItemType<Cruithne3753>()
-				/*, ModContent.ItemType<JewelOfShowers>() */
+				ModContent.ItemType<Cruithne>(),
+				ModContent.ItemType<ImbriumJewel>()
 				/*, ModContent.ItemType<ChampionBlade>() */
 				));
 		}

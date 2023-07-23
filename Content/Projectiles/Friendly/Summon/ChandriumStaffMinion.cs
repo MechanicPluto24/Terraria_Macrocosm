@@ -1,4 +1,3 @@
-using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Buffs.GoodBuffs.MinionBuffs;
@@ -33,7 +32,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
 		public sealed override void SetDefaults()
 		{
-			Projectile.width = 42;
+			Projectile.width = 48;
 			Projectile.height = 48;
 			Projectile.tileCollide = false;
 
@@ -42,20 +41,32 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 			Projectile.DamageType = DamageClass.Summon;
 			Projectile.minionSlots = 1f;
 			Projectile.penetrate = -1;
+
+			Projectile.alpha = 255;
+
+			Projectile.usesLocalNPCImmunity = true;
+			Projectile.localNPCHitCooldown = 20;
 		}
 
 		public bool HasTarget
 		{
-			get => Projectile.localAI[0] != 0f;
-			set => Projectile.localAI[0] = value ? 1f : 0f;
+			get => Projectile.ai[0] != 0f;
+			set => Projectile.ai[0] = value ? 1f : 0f;
 		}
+
+		public ref float AnimationState => ref Projectile.localAI[0];
 
 		public override bool? CanCutTiles() => false;
 
 		public override bool MinionContactDamage() => true;
 
-
 		private bool spawned = false;
+
+		public override void PostDraw(Color lightColor)
+		{
+			Texture2D glow = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Summon/ChandriumStaffMinion_Glow").Value;
+			Projectile.DrawAnimatedExtra(glow, Color.White, Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, Projectile.spriteDirection == 1 ? new Vector2(0,6) : new Vector2(0,-2));
+		}
 
 		public override void AI()
 		{
@@ -80,24 +91,19 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
 		public override void OnSpawn(IEntitySource source)
 		{
-			Projectile.alpha = 255;
-			spawned = false;
 		}
 
 		private void SpawnDusts()
 		{
 			for (int i = 0; i < 60; i++)
 			{
-				Vector2 position = Projectile.Center;
-				Vector2 velocity = Main.rand.NextVector2Circular(0.5f, 0.5f) * 5f;
+				Vector2 velocity = Main.rand.NextVector2Circular(0.5f, 0.5f) * 3f;
 
-				Dust dust;
 				if (i % 10 == 0)
-				{
-					Particle.CreateParticle<ChandriumCrescentMoon>(position, velocity, scale: Main.rand.NextFloat(0.8f, 1.1f));
-				}
-
-				dust = Dust.NewDustDirect(position, Projectile.width, Projectile.height, ModContent.DustType<ChandriumDust>(), velocity.X, velocity.Y, Scale: Main.rand.NextFloat(0.8f, 1.2f));
+ 					Particle.CreateParticle<ChandriumCrescentMoon>(Projectile.Center, velocity, scale: Main.rand.NextFloat(0.6f, 0.7f));
+ 
+				Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<ChandriumBrightDust>(), velocity.X, velocity.Y, Scale: Main.rand.NextFloat(0.8f, 1.2f));
+				dust.noGravity = true;
 			}
 		}
 
@@ -284,16 +290,16 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
 		private void Visuals(bool hasTarget)
 		{
-			int frameSpeed = 10;
+			int frameSpeed = 14;
 
-			if (Projectile.alpha >= 0)
-				Projectile.alpha -= 4;
+			if (Projectile.alpha > 0)
+				Projectile.alpha -= 5;
 
 			if (hasTarget)
 			{
 				Projectile.rotation += 0.3f;
 				Projectile.frame = 0;
-				Projectile.localAI[0] = 0f;
+				AnimationState = 0f;
 			}
 			else
 			{
@@ -301,7 +307,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 				Projectile.rotation = Projectile.velocity.X * 0.05f;
 				Projectile.spriteDirection = Projectile.direction;
 
-				if (Projectile.localAI[0] == 0f)
+				if (AnimationState == 0f)
 				{
 					if (Projectile.frameCounter++ == frameSpeed)
 					{
@@ -309,7 +315,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
 						if (Projectile.frame == Main.projFrames[Type] - 1)
 						{
-							Projectile.localAI[0] = 1f;
+							AnimationState = 1f;
 							Projectile.frameCounter = frameSpeed;
 						}
 						else
@@ -318,15 +324,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 						}
 					}
 				}
-				else if (Projectile.localAI[0] == 1f)
+				else if (AnimationState == 1f)
 				{
-					if (Projectile.frameCounter-- == 0)
+					if (Projectile.frameCounter++ == frameSpeed)
 					{
-						Projectile.frameCounter = frameSpeed;
+						Projectile.frameCounter = 0;
 
 						if (Projectile.frame == 0)
 						{
-							Projectile.localAI[0] = 0f;
+							AnimationState = 0f;
 							Projectile.frameCounter = 0;
 						}
 						else
@@ -337,29 +343,38 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 				}
 				else
 				{
-					Projectile.localAI[0] = 0f;
+					AnimationState = 0f;
 				}
 			}
 		}
 
 		public override bool PreDraw(ref Color lightColor)
 		{
-			if (!HasTarget)
-				return true;
+			Texture2D tex = TextureAssets.Projectile[Type].Value;
+			Vector2 pos = Projectile.position + Projectile.Size / 2 - Main.screenPosition;
+			SpriteEffects effects = Projectile.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
 
-			ProjectileID.Sets.TrailingMode[Type] = 2;
-
-			for (int i = 0; i < Projectile.oldPos.Length; i++)
+			if (Projectile.alpha > 0)
 			{
-				Texture2D tex = TextureAssets.Projectile[Type].Value;
-				Vector2 drawPos = Projectile.oldPos[i] + Projectile.Size / 2 - Main.screenPosition;
-				Color color = Projectile.GetAlpha(lightColor) * (((float)Projectile.oldPos.Length - i) / Projectile.oldPos.Length);
-				SpriteEffects effect = Projectile.oldSpriteDirection[i] == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-				Main.spriteBatch.Draw(tex, drawPos, tex.Frame(1, Main.projFrames[Type], frameY: Projectile.frame), color * 0.6f, Projectile.oldRot[i], Projectile.Size / 2, Projectile.scale, effect, 0f);
+				Main.EntitySpriteDraw(tex, pos, tex.Frame(1, Main.projFrames[Type], frameY: Projectile.frame), (new Color(117, 74, 220) * (Projectile.alpha / 255f)).NewAlpha(0), Projectile.rotation, Projectile.Size / 2, Projectile.scale, effects, 0f);
 			}
 
-			return true;
-		}
+			if (HasTarget)
+			{
+				for (int i = 0; i < Projectile.oldPos.Length; i++)
+				{
+					Vector2 drawPos = Projectile.oldPos[i] + Projectile.Size / 2 - Main.screenPosition;
+					float dashFactor = MathHelper.Clamp(Projectile.velocity.Length(), 0, 20) / 20f;
+					float trailFactor = (((float)Projectile.oldPos.Length - i) / Projectile.oldPos.Length);
+					Color color = Projectile.GetAlpha(lightColor) * dashFactor * trailFactor;
+					SpriteEffects effect = Projectile.oldSpriteDirection[i] == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+					Main.EntitySpriteDraw(tex, drawPos, tex.Frame(1, Main.projFrames[Type], frameY: Projectile.frame), color * 0.6f, Projectile.oldRot[i], Projectile.Size / 2, Projectile.scale, effect, 0f);
+				}
+			}
 
+			Main.EntitySpriteDraw(tex, pos, tex.Frame(1, Main.projFrames[Type], frameY: Projectile.frame), lightColor * (1f - Projectile.alpha/255f), Projectile.rotation, Projectile.Size / 2, Projectile.scale, effects, 0f);
+
+			return false;
+		}
 	}
 }

@@ -34,7 +34,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 			Item.rare = ModContent.RarityType<MoonRarityT1>();
 			Item.UseSound = SoundID.Item20;
 			Item.autoReuse = true;
-			Item.shoot = ModContent.ProjectileType<DianiteTomeProjectileSmall>();
+			Item.shoot = ModContent.ProjectileType<DianiteMeteorSmall>();
 			Item.shootSpeed = 16f;
 			Item.tileBoost = 50;
 		}
@@ -42,20 +42,26 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 		public override void AddRecipes()
 		{
 			Recipe recipe = Recipe.Create(Type);
-			recipe.AddIngredient<LuminiteCrystal>();
 			recipe.AddIngredient<DianiteBar>(12);
 			recipe.AddTile(TileID.WorkBenches);
 			recipe.Register();
 		}
 
+		public override void HoldItem(Player player)
+		{
+			Item.scale = 0.75f;
+		}
+
+		public override Vector2? HoldoutOffset() => new Vector2(10, 8);
+
 		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockBack)
 		{
-			int numProj = 4 + Main.rand.Next(2);  //This defines how many projectiles to shoot
+			int numProj = 2 + Main.rand.Next(1);  //This defines how many projectiles to shoot
 
 			for (int index = 0; index < numProj; ++index)
 			{
 				bool bigProjectile = Main.rand.NextBool(4);
-				int projType = bigProjectile ? ModContent.ProjectileType<DianiteTomeProjectile>() : type;
+				int projType = bigProjectile ? ModContent.ProjectileType<DianiteMeteor>() : type;
 				damage = (int)(damage * (bigProjectile ? 1.4f : 1f));
 
 				Vector2 playerOffset = new Vector2((float)(player.position.X + player.width * 0.5 + Main.rand.Next(201) * -player.direction + (Main.mouseX + (double)Main.screenPosition.X - player.position.X)), (float)(player.position.Y + player.height * 0.5 - 600.0));   //this defines the Projectile width, direction and position
@@ -76,7 +82,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 
 				float SpeedX = posX * normSpeed + Main.rand.Next(-40, 41) * 0.02f;  //this defines the Projectile X position speed and randomness
 				float SpeedY = posY * normSpeed + Main.rand.Next(-40, 41) * 0.02f;  //this defines the Projectile Y position speed and randomness
-				Projectile.NewProjectile(source, playerOffset.X, playerOffset.Y, SpeedX, SpeedY, projType, damage, knockBack, Main.myPlayer, 0.0f, Main.rand.Next(5));
+				Projectile.NewProjectile(source, playerOffset.X, playerOffset.Y, SpeedX, SpeedY, projType, damage, knockBack, Main.myPlayer, Main.MouseWorld.Y);
 			}
 			return false;
 		}
