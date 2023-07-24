@@ -4,7 +4,6 @@ using Terraria.ModLoader;
 using Macrocosm.Content.Rockets.Customization;
 using Terraria;
 using Macrocosm.Common.Utils;
-using Macrocosm.Common.Drawing;
 
 namespace Macrocosm.Content.Rockets.Modules
 {
@@ -13,8 +12,9 @@ namespace Macrocosm.Content.Rockets.Modules
 		public override int DrawPriority => 0;
 		public bool RearLandingLegRaised { get; set; } = false;
 		public Nameplate Nameplate { get; set; } = new();
+
 		// Add rear booster and its read landing leg to hixbox
-		public override int Height => base.Height + (RearLandingLegRaised ? 25 : 35);
+		public override Rectangle Hitbox => base.Hitbox with { Height = base.Hitbox.Height + (RearLandingLegRaised ? 18 : 26) };
 
 		public override void Draw(SpriteBatch spriteBatch, Vector2 screenPos, Color ambientColor)
         {

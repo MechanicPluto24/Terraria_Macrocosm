@@ -72,7 +72,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 			spriteBatch.GraphicsDevice.PresentationParameters.RenderTargetUsage = RenderTargetUsage.PreserveContents;
 			var originalRenderTargets = spriteBatch.GraphicsDevice.GetRenderTargets();
-			RenderTarget2D renderTarget = new(spriteBatch.GraphicsDevice, (int)(Rocket.Width * Main.UIScale) , (int)(Rocket.Height * Main.UIScale));
+			RenderTarget2D renderTarget = new(spriteBatch.GraphicsDevice, (int)(Rocket.Bounds.Width * Main.UIScale) , (int)(Rocket.Bounds.Height * Main.UIScale));
 
             var state = spriteBatch.SaveState();
 			spriteBatch.End();
@@ -90,15 +90,15 @@ namespace Macrocosm.Content.Rockets.Navigation
 			spriteBatch.GraphicsDevice.PresentationParameters.RenderTargetUsage = RenderTargetUsage.DiscardContents;
 
 			Effect effect = ModContent.Request<Effect>(Macrocosm.EffectAssetsPath + "Pixelate", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-            effect.Parameters["uPixelCount"].SetValue(new Vector2(renderTarget.Width, renderTarget.Height) / (5.74f * Main.UIScale));
+            effect.Parameters["uPixelCount"].SetValue(new Vector2(renderTarget.Width, renderTarget.Height) / (6f * Main.UIScale));
 
 			spriteBatch.Begin(state.SpriteSortMode, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, state.DepthStencilState, state.RasterizerState, effect, state.Matrix);
 
 			Rectangle dest = rect;
-			dest.X += 33;
+			dest.X += 10;
 			dest.Y += 27;
-			dest.Width -= 66;
-			dest.Height -= 36;
+			dest.Width -= 20;
+			dest.Height -= 34;
 			spriteBatch.Draw(renderTarget, dest, Color.White);
 
 			spriteBatch.End();

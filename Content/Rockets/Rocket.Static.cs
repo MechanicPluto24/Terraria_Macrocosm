@@ -10,12 +10,6 @@ namespace Macrocosm.Content.Rockets
 	{
 		public const int MaxRockets = byte.MaxValue;
 
-		public const int DefaultWidth = 124;
-		public const int DefaultHeight = 584;
-
-		public static Vector2 DefaultSize => new(DefaultWidth, DefaultHeight);
-
-		
 		public static Rocket Create(Vector2 position)
 		{
 			// Rocket will not be managed.. we have to avoid ever reaching this  

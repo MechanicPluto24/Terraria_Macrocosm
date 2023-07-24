@@ -35,7 +35,7 @@ namespace Macrocosm.Content.Items.Dev
 				}
 				else
 				{
-					Rocket.Create(Main.MouseWorld - Rocket.DefaultSize / 2f);
+					Rocket.Create(Main.MouseWorld - Rocket.Size / 2f);
 				}
 			}
 

@@ -20,7 +20,7 @@ namespace Macrocosm.Content.Rockets.Map
                 if(!rocket.ActiveInCurrentSubworld)
                     continue;
 
-                if (context.Draw(texture, (rocket.Center + new Vector2(0, rocket.Height/2f)) / 16f, Color.White, new SpriteFrame(1, 1, 0, 0), 0.95f, 0.95f, Alignment.Bottom).IsMouseOver)
+                if (context.Draw(texture, (rocket.Center + new Vector2(0, rocket.Bounds.Height/2f)) / 16f, Color.White, new SpriteFrame(1, 1, 0, 0), 0.95f, 0.95f, Alignment.Bottom).IsMouseOver)
                     text = rocket.DisplayName;
             }
         }

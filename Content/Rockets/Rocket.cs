@@ -21,41 +21,56 @@ namespace Macrocosm.Content.Rockets
 {
     public partial class Rocket 
 	{
-		[NetSync] public bool Active;
-
-
-		[NetSync] public Vector2 Position;
-
-		[NetSync] public Vector2 Velocity;
-		[NetSync] private Vector2 lastVelocity;
-
-		/// <summary> Rocket sequence timer </summary>
-		[NetSync] public int FlightTime;
-
-		[NetSync] public bool InFlight;
-
-		[NetSync] public bool Descending;
-
-
-		[NetSync] public float FuelCapacity = 1000f;
-
-		[NetSync] public string CurrentSubworld;
-
-		public bool ActiveInCurrentSubworld => Active && CurrentSubworld == MacrocosmSubworld.CurrentSubworld;
-
-		/// <summary> The amount of fuel stored in the rocket </summary>
-		[NetSync] public float Fuel;
-
+		/// <summary> The rocket's identifier </summary>
 		public int WhoAmI = -1;
 
-		/// <summary> The rocket's width </summary>
-		public int Width = DefaultWidth;
+		/// <summary> Whether the rocket is currently active </summary>
+		[NetSync] public bool Active;
 
-		/// <summary> The rocket's height </summary>
-		public int Height = DefaultHeight + 10;
+		/// <summary> The rocket's top-left coodrinates in the world </summary>
+		[NetSync] public Vector2 Position;
+
+		/// <summary> The rocket's velocity </summary>
+		[NetSync] public Vector2 Velocity;
+
+		/// <summary> The rocket's sequence timer </summary>
+		[NetSync] public int FlightTime;
+
+		/// <summary> Whether the rocket has been launched </summary>
+		[NetSync] public bool InFlight;
+
+		/// <summary> Whether the rocket is landing </summary>
+		[NetSync] public bool Landing;
+
+		/// <summary> The initial vertical position </summary>
+		[NetSync] public float StartPositionY;
+
+		/// <summary> The target landing horizontal position </summary>
+		[NetSync] public Vector2 TargetLandingPosition;
+
+		/// <summary> The world Y coordinate for entering the target subworld </summary>
+		public const float WorldExitPositionY = 20 * 16f;
+
+		/// <summary> The amount of fuel currently stored in the rocket, as an absolute value </summary>
+		[NetSync] public float Fuel;
+
+		/// <summary> The rocket's fuel capacity as an absoulute value </summary>
+		[NetSync] public float FuelCapacity = 1000f;
+
+		/// <summary> The rocket's current world, "Earth" if active and not in a subworld. Other mod's subworlds have the mod name prepended </summary>
+		[NetSync] public string CurrentSubworld;
+
+		/// <summary> Whether the rocket is active in the current subworld and should be updated and visible </summary>
+		public bool ActiveInCurrentSubworld => Active && CurrentSubworld == MacrocosmSubworld.CurrentSubworld;
+
+		/// <summary> The rocket's bounds width </summary>
+		public static int Width = 276;
+
+		/// <summary> The rocket's bounds height </summary>
+		public static int Height = 594;
 
 		/// <summary> The size of the rocket's bounds </summary>
-		public Vector2 Size => new(Width, Height);
+		public static Vector2 Size => new(Width, Height);
 
 		/// <summary> The rectangle occupied by the Rocket in the world </summary>
 		public Rectangle Bounds => new((int)Position.X, (int)Position.Y, Width, Height);
@@ -67,7 +82,7 @@ namespace Macrocosm.Content.Rockets
 			set => Position = value - Size/2f;
 		}
 
-		public bool Stationary => Velocity == lastVelocity;
+		public bool Stationary => Velocity.LengthSquared() < 0.1f;
 
 		/// <summary> The layer this rocket is drawn in </summary>
 		public RocketDrawLayer DrawLayer = RocketDrawLayer.BeforeNPCs;
@@ -111,30 +126,15 @@ namespace Macrocosm.Content.Rockets
 
 		#region Private vars
 
-		// The world Y coordinate for entering the target subworld
-		private float worldExitPosY = 20 * 16f;
-		
-		// Acceleration values 
-		private float flightAcceleration = 0.1f;   // mid-flight
-		private float liftoffAcceleration = 0.05f; // during liftoff
-		private float startAcceleration = 0.02f;   // initial 
-
 		private float maxFlightSpeed = 25f;
 
 		// Number of ticks of the launch countdown (seconds * 60 ticks/sec)
 		private int liftoffTime = 180;
 
-		// Store the initial vertical position
-		private float startYPosition;
+		public float FlightProgress => 1f - ((Center.Y - WorldExitPositionY) / (StartPositionY - WorldExitPositionY));
 
-		// Gets a tick count approximation needed to reach the sky (tough to get it exact since acceleration is not constant and speed is capped) 
-		private float TimeToReachSky => (liftoffTime + 60) + MathF.Sqrt(2 * (startYPosition - worldExitPosY) / flightAcceleration);
-
-		// Approximated flight progress
-		private float FlightProgress => Utils.GetLerpValue(liftoffTime, TimeToReachSky, FlightTime + 1, clamped: true);
-
-		// The inverse value of the flight progress
-		private float InvProgress => 1f - FlightProgress;
+		// TODO: assign a value to TargetLandingPosition
+		public float LandingProgress => Center.Y / TargetLandingPosition.Y;
 
 		#endregion
 
@@ -146,7 +146,7 @@ namespace Macrocosm.Content.Rockets
 		public void OnCreation()
 		{
 			CurrentSubworld = MacrocosmSubworld.CurrentSubworld;
-			startYPosition = Center.Y;
+			StartPositionY = Center.Y;
 		}
 
 		/// <summary> Update the rocket </summary>
@@ -159,23 +159,7 @@ namespace Macrocosm.Content.Rockets
 			Fuel = 1000f;
 
 			SetModuleRelativePositions();
-
-			if (InFlight)
-			{
- 				FlightTime++;
-			}
-			else
-			{
- 				Velocity.Y += 0.1f * MacrocosmSubworld.CurrentGravityMultiplier;
-			}
-
-			if (Descending)
-			{
-				// TODO: Add smooth deceleration
-
-				if (Stationary)
-					Descending = false;
-			}
+			Movement();
 
 			if (Stationary)
 			{
@@ -183,21 +167,12 @@ namespace Macrocosm.Content.Rockets
 				LookForCommander();
 			}
 
-			if (FlightTime >= liftoffTime)
-			{
-				FlightMovement();
-				SetScreenshake();
-				VisualEffects();
- 			}
-
-            if (InFlight && Position.Y < worldExitPosY)
+            if (InFlight && Position.Y < WorldExitPositionY)
 			{
 				InFlight = false;
-				Descending = true;
+				Landing = true;
 				EnterDestinationSubworld();
 			}
-
-			lastVelocity = Velocity;
 		}
 
 		/// <summary> Safely despawn the rocket </summary>
@@ -254,10 +229,10 @@ namespace Macrocosm.Content.Rockets
 		// Set the rocket's modules positions in the world
 		private void SetModuleRelativePositions()
 		{
-			CommandPod.Position = Position + new Vector2(CommandPod.Texture.Width/4f + 1, 0);
-			ServiceModule.Position = new Vector2(CommandPod.Position.X, CommandPod.Position.Y) + new Vector2(-20, CommandPod.Texture.Height - 2.1f);
-			ReactorModule.Position = ServiceModule.Position + new Vector2(0, ServiceModule.Texture.Height) + new Vector2(0, -2);
-			EngineModule.Position = ReactorModule.Position + new Vector2(0, ReactorModule.Texture.Height + 1);
+			CommandPod.Position = Position + new Vector2(Width/2f - CommandPod.Hitbox.Width/2f, 0);
+			ServiceModule.Position = CommandPod.Position + new Vector2(-6, CommandPod.Hitbox.Height - 2.1f);
+			ReactorModule.Position = ServiceModule.Position + new Vector2(-2, ServiceModule.Hitbox.Height - 2);
+			EngineModule.Position = ReactorModule.Position + new Vector2(-18, ReactorModule.Hitbox.Height);
 			BoosterLeft.Position = new Vector2(EngineModule.Center.X, EngineModule.Position.Y) - new Vector2(BoosterLeft.Texture.Width/2, 0) + new Vector2(-37, 16);
 			BoosterRight.Position = new Vector2(EngineModule.Center.X, EngineModule.Position.Y)  -new Vector2(BoosterLeft.Texture.Width / 2, 0) + new Vector2(37, 16);
 		}
@@ -353,7 +328,7 @@ namespace Macrocosm.Content.Rockets
 		public bool CheckTileCollision()
 		{
 			foreach (RocketModule module in Modules.Values)
-				if (Math.Abs(Collision.TileCollision(module.Position, Velocity, module.Width, module.Height).Y) > 0.1f)
+				if (Math.Abs(Collision.TileCollision(module.Position, Velocity, module.Hitbox.Width, module.Hitbox.Height).Y) > 0.1f)
 					return true;
 
 			return false;
@@ -365,11 +340,10 @@ namespace Macrocosm.Content.Rockets
 			if (Main.netMode == NetmodeID.Server)
 				return;
 
-			if (MouseCanInteract() && InInteractionRange() && !InFlight)
+			if (MouseCanInteract() && InInteractionRange() && !InFlight && !GetRocketPlayer(Main.myPlayer).InRocket)
 			{
 				if (Main.mouseRight)
 				{
-					Utility.UICloseOthers();
 					bool noCommanderInRocket = (Main.netMode == NetmodeID.SinglePlayer) || !TryFindingCommander(out _);
 					GetRocketPlayer(Main.myPlayer).EmbarkPlayerInRocket(WhoAmI, noCommanderInRocket);
 				}
@@ -386,8 +360,15 @@ namespace Macrocosm.Content.Rockets
 
 		private Vector2 GetCollisionVelocity()
 		{
-			// TODO: use lower module hitboxes instead of the rocket bounds
-			return Collision.TileCollision(Position, Velocity, Width, Height);
+			Vector2 minCollisionVelocity = new(float.MaxValue, float.MaxValue);
+
+			foreach (RocketModule module in Modules.Values)
+			{
+				Vector2 collisionVelocity = Collision.TileCollision(module.Position, Velocity, module.Hitbox.Width, module.Hitbox.Height);
+				if (collisionVelocity.LengthSquared() < minCollisionVelocity.LengthSquared())
+					minCollisionVelocity = collisionVelocity;
+ 			}
+			return minCollisionVelocity;
 		}
 
 
@@ -411,17 +392,39 @@ namespace Macrocosm.Content.Rockets
 		}
 
 		// Handles the rocket's movement during flight
-		private void FlightMovement()
+		private void Movement()
 		{
-			if (Math.Abs(Velocity.Y) > maxFlightSpeed)
-				return;
+			if (InFlight)
+ 				FlightTime++;
+ 			else
+ 				Velocity.Y += 0.1f * MacrocosmSubworld.CurrentGravityMultiplier;
+ 
+			if (Landing)
+			{
+				// TODO: Add smooth deceleration
 
-			if (FlightTime >= liftoffTime + 60)
-				Velocity.Y -= flightAcceleration;
-			else if (FlightTime >= liftoffTime + 40)
-				Velocity.Y -= liftoffAcceleration;
-			else
-				Velocity.Y -= startAcceleration;
+				if (Stationary && LandingProgress > 0.9f)
+					Landing = false;
+			}
+
+
+			if (FlightTime >= liftoffTime)
+			{
+				float flightAcceleration = 0.1f;   // mid-flight
+				float liftoffAcceleration = 0.05f; // during liftoff
+				float startAcceleration = 0.01f;   // initial 
+
+				if (Velocity.Y < maxFlightSpeed)
+					if (FlightTime >= liftoffTime + 60)
+						Velocity.Y -= flightAcceleration;
+					else if (FlightTime >= liftoffTime + 40)
+						Velocity.Y -= liftoffAcceleration;
+					else
+						Velocity.Y -= startAcceleration;
+
+				SetScreenshake();
+				//VisualEffects();
+			}	
 		}
 
 		// Sets the screenshake during flight 
@@ -429,14 +432,10 @@ namespace Macrocosm.Content.Rockets
 		{
 			float intenstity;
 
-			if (FlightTime >= liftoffTime && FlightTime < liftoffTime + 5)
-				intenstity = 80f;
-			if (FlightTime >= liftoffTime + 5 && FlightTime < liftoffTime + 40)
-				intenstity = 40f;
-			if (FlightTime >= liftoffTime + 20 && FlightTime < liftoffTime + 60)
-				intenstity = 20f;
+			if (FlightTime >= liftoffTime && FlightProgress < 0.05f)
+				intenstity = 30f;
 			else
-				intenstity = 15f * InvProgress;
+				intenstity = 15f * (1f - Utility.QuadraticEaseOut(FlightProgress));
 
 			Main.LocalPlayer.AddScreenshake(intenstity, "RocketFlight");
 		}

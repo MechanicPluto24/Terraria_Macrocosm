@@ -105,6 +105,8 @@ namespace Macrocosm.Content.Rockets
 
 			if (Player.mount.Active)
 				Player.mount.Dismount(Player);
+
+			Utility.UICloseOthers();
 		}
 
 		public void DisembarkFromRocket()
@@ -128,7 +130,7 @@ namespace Macrocosm.Content.Rockets
 				Player.sitting.isSitting = true;
 
 				Player.velocity = rocket.Velocity;
-				Player.Center = new Vector2(rocket.Position.X + rocket.Width / 2 - 2f, rocket.Position.Y + 100) - (AsCommander ? new Vector2(0, 50) : Vector2.Zero);
+				Player.Center = new Vector2(rocket.Center.X, rocket.Position.Y + 110) - (AsCommander ? new Vector2(0, 50) : Vector2.Zero);
 				cameraModifier.TargetPosition = RocketManager.Rockets[RocketID].Center - new Vector2(Main.screenWidth, Main.screenHeight) / 2f;
 
 				if (Player.whoAmI == Main.myPlayer)
@@ -137,7 +139,7 @@ namespace Macrocosm.Content.Rockets
 					if ((Player.controlInv || Player.controlMount) && !(rocket.InFlight))
 						DisembarkFromRocket();
 
-					if (!rocket.InFlight && !rocket.Descending)
+					if (!rocket.InFlight && !rocket.Landing)
 						RocketUISystem.Show(rocket);
 					else
 						RocketUISystem.Hide();
@@ -148,6 +150,8 @@ namespace Macrocosm.Content.Rockets
 				RocketUISystem.Hide();
 				Player.sitting.isSitting = false;
 			}
+
+			
 		}
 
 		public override void PreUpdateBuffs()
