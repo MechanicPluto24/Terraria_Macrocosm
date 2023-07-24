@@ -20,7 +20,9 @@ namespace Macrocosm.Content.Rockets
 				[nameof(Position)] = Position,
 
 				[nameof(InFlight)] = InFlight,
-				[nameof(Descending)] = Descending,
+				[nameof(Landing)] = Landing,
+
+				[nameof(TargetLandingPosition)] = TargetLandingPosition,
 
 				[nameof(Fuel)] = Fuel,
 				[nameof(FuelCapacity)] = FuelCapacity,
@@ -48,8 +50,10 @@ namespace Macrocosm.Content.Rockets
 				Fuel = tag.GetFloat(nameof(Fuel)),
 				FuelCapacity = tag.GetFloat(nameof(FuelCapacity)),
 
+				TargetLandingPosition = tag.Get<Vector2>(nameof(TargetLandingPosition)),
+
 				InFlight = tag.GetBool(nameof(InFlight)),
-				Descending = tag.GetBool(nameof(Descending)),
+				Landing = tag.GetBool(nameof(Landing)),
 
 				CurrentSubworld = tag.GetString(nameof(CurrentSubworld))
 			};

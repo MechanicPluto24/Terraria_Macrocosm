@@ -9,10 +9,9 @@ namespace Macrocosm.Content.Rockets.Modules
     {
 		public override int DrawPriority => 1;
 
-		public override int Width => base.Width + 78;
-		public override int Height => base.Height + 11;
+		public override Rectangle Hitbox => base.Hitbox with { Width = base.Hitbox.Width + 78, Height = base.Hitbox.Height + 8 };
 
-		protected virtual Vector2 LandingLegDrawOffset => new(28, 210);
+		protected virtual Vector2 LandingLegDrawOffset => new(28, 208);
 
 		/// <summary> The current landing leg animation frame </summary>
 		public int CurrentFrame { get; set; } = MaxFrames - 1;
@@ -24,7 +23,7 @@ namespace Macrocosm.Content.Rockets.Modules
 			base.Draw(spriteBatch, screenPos, ambientColor);
 
 			Texture2D tex = ModContent.Request<Texture2D>(TexturePath + "_LandingLegs").Value;
-			spriteBatch.Draw(tex, Position + LandingLegDrawOffset - screenPos, tex.Frame(1, MaxFrames, frameY: CurrentFrame), Color.White);
+			spriteBatch.Draw(tex, Position + LandingLegDrawOffset - screenPos, tex.Frame(1, MaxFrames, frameY: CurrentFrame), ambientColor);
 		}
 	}
 }
