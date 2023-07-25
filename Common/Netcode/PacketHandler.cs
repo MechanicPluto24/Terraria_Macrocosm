@@ -2,7 +2,7 @@
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Players;
-using Macrocosm.Content.Rocket;
+using Macrocosm.Content.Rockets;
 using System.IO;
 using Terraria;
 
@@ -12,10 +12,9 @@ namespace Macrocosm.Common.Netcode
 	{
 		SyncParticle,
 		SyncPlayerDashDirection,
-		SyncPlayerRocketStatus,
-		SyncEmbarkInRocket,
-		SyncLaunchRocket,
-		SyncModProjectile
+        SyncRocketData,
+        SyncPlayerRocketStatus,
+        SyncModProjectile
 	}
 
 	public class PacketHandler
@@ -34,18 +33,13 @@ namespace Macrocosm.Common.Netcode
 					DashPlayer.ReceiveSyncPlayer(reader, whoAmI);
 					break;
 
-				case MessageType.SyncPlayerRocketStatus:
-					RocketPlayer.ReceiveSyncPlayer(reader, whoAmI);
-					break;
-
-				case MessageType.SyncEmbarkInRocket:
-					Rocket.ReceiveEmbarkedPlayer(reader, whoAmI);
-					break;
-
-				case MessageType.SyncLaunchRocket:
-					Rocket.ReceiveLaunchMessage(reader, whoAmI);
-					break;
-				case MessageType.SyncModProjectile:
+                case MessageType.SyncPlayerRocketStatus:
+                    RocketPlayer.ReceiveSyncPlayer(reader, whoAmI);
+                    break;
+                case MessageType.SyncRocketData:
+                    Rocket.SyncRocketData(reader, whoAmI);
+                    break;
+                case MessageType.SyncModProjectile:
 					SyncModProjectile(reader);
 					break;
 				default:
