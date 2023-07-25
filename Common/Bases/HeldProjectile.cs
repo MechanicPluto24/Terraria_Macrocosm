@@ -36,6 +36,7 @@ namespace Macrocosm.Common.Bases
             Item.autoReuse = true;
             Item.noUseGraphic = true;
             Item.noMelee = true;
+            Item.useTurn = true;
 
             if (GetInstance<T>().KillMode == HeldProjectile.HeldProjectileKillMode.Manual)
             {
@@ -61,7 +62,7 @@ namespace Macrocosm.Common.Bases
             Manual
         }
         public abstract HeldProjectileKillMode KillMode { get; }
-        protected Player Player => Main.player[Projectile.owner];
+        public Player Player => Main.player[Projectile.owner];
         protected int Damage => Projectile.damage;
         protected short ShootProjectile => (short)Projectile.ai[0];
         protected Vector2 DirectionToMouse 
@@ -76,7 +77,7 @@ namespace Macrocosm.Common.Bases
                 Projectile.ai[1] = value.Y;
             }
         }
-        protected bool shouldDie = false;
+        private bool shouldDie = false;
         protected Item Item { get; private set; }
         private bool shouldRunOnSpawn = true;
 
@@ -94,7 +95,6 @@ namespace Macrocosm.Common.Bases
             Projectile.friendly = true;
             Projectile.hostile = false;
             Projectile.timeLeft = 999;
-            Projectile.extraUpdates = 1;
 
             ResetDefaults();
         }
@@ -136,10 +136,40 @@ namespace Macrocosm.Common.Bases
                 DirectionToMouse = Player.RotatedRelativePoint(Player.MountedCenter).DirectionTo(Main.MouseWorld);
             }
 
+            Player.heldProj = Projectile.whoAmI;
+
             return true;
         }
 
-        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox) => false;
+        /// <summary>
+        /// Kills the <see cref="HeldProjectile"/> properly.
+        /// </summary>
+        public void UnAlive()
+        {
+            shouldDie = true;
+        }
+
+        /// <summary>
+        /// If this is set to <c>null</c> there will be no collision.
+        /// </summary>
+        public virtual (Vector2 startPosition, Vector2 endPosition, float width)? LineCollision => null;
+        public sealed override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
+        {
+            if (LineCollision is null)
+            {
+                return false;
+            }
+
+            float _ = 0;
+            return Collision.CheckAABBvLineCollision(
+                targetHitbox.TopLeft(),
+                targetHitbox.Size(), 
+                LineCollision.Value.startPosition, 
+                LineCollision.Value.endPosition,
+                LineCollision.Value.width,
+                ref _
+            );
+        }
 
         public virtual void Draw(Color lightColor) { }
 
