@@ -15,6 +15,11 @@ Mods: {
 				DisplayName: The Irradiation
 				TownNPCDialogueName: The Irradiation
 			}
+
+			UndergroundMoonBiome: {
+				DisplayName: Underground Moon Biome
+				TownNPCDialogueName: the Underground Moon Biome
+			}
 		}
 
 		Buffs: {
@@ -780,6 +785,11 @@ Mods: {
 				Tooltip: Two different firing modes
 			}
 
+			Cruithne: {
+				DisplayName: Cruithne
+				Tooltip: ""
+			}
+
 			LHB805: {
 				DisplayName: LHB-805
 				Tooltip: ""
@@ -826,6 +836,51 @@ Mods: {
 
 			HazardWall: {
 				DisplayName: Hazard Wall
+				Tooltip: ""
+			}
+
+			MoonPhaseGlobe: {
+				DisplayName: Moon Phase Globe
+				Tooltip: ""
+			}
+
+			Moonstone: {
+				DisplayName: Moonstone
+				Tooltip: ""
+			}
+
+			SpaceDust: {
+				DisplayName: Space Dust
+				Tooltip: ""
+			}
+
+			Freedomfaller: {
+				DisplayName: Freedomfaller
+				Tooltip: ""
+			}
+
+			ChampionsBladeBroken: {
+				DisplayName: Champions Blade Broken
+				Tooltip: ""
+			}
+
+			ChampionsBladeRepaired: {
+				DisplayName: Champions Blade Repaired
+				Tooltip: ""
+			}
+
+			LHBMinigun: {
+				DisplayName: L H B Minigun
+				Tooltip: ""
+			}
+
+			NWARocketLauncher: {
+				DisplayName: N W A Rocket Launcher
+				Tooltip: ""
+			}
+
+			TychoDesertEagle: {
+				DisplayName: Tycho Desert Eagle
 				Tooltip: ""
 			}
 		}
@@ -917,6 +972,19 @@ Mods: {
 			HandheldEngineHitbox.DisplayName: Handheld Engine
 			ZombieSecurityBullet.DisplayName: Zombie Security
 			GreatswordHeldProjectile.DisplayName: Greatsword Held Projectile
+			RegolithDebris.DisplayName: Regolith Debris
+			DianiteForkCoreProjectile.DisplayName: Dianite Fork Core Projectile
+			DianiteForkProjectile.DisplayName: Dianite Fork Projectile
+			DianiteMeteor.DisplayName: Dianite Meteor
+			DianiteMeteorSmall.DisplayName: Dianite Meteor Small
+			ArtemiteSwordSwing.DisplayName: Artemite Sword Swing
+			test.DisplayName: test
+			LHBMinigunProjectile.DisplayName: L H B Minigun Projectile
+			SeleniteMagnumProjectile.DisplayName: Selenite Magnum Projectile
+			TychoBullet.DisplayName: Tycho Bullet
+			MoonPhaseGlobeProjectile.DisplayName: Moon Phase Globe Projectile
+			PhantasmalImpLarge.DisplayName: Phantasmal Imp Large
+			PhantasmalImpSmall.DisplayName: Phantasmal Imp Small
 		}
 
 		Tiles: {
@@ -928,6 +996,10 @@ Mods: {
 			LithiumOre.MapEntry: Lithium
 			OilShale.MapEntry: Oil Shale
 			SeleniteOre.MapEntry: Selenite Ore
+			ArtemiteBar.MapEntry: Artemite Bar
+			ChandriumBar.MapEntry: Chandrium Bar
+			DianiteBar.MapEntry: Dianite Bar
+			IndustrialLoom.MapEntry: Industrial Loom
 		}
 
 		SetBonuses.SpaceProtection_Tier1:

@@ -36,12 +36,15 @@ namespace Macrocosm.Common.Netcode
                 case MessageType.SyncPlayerRocketStatus:
                     RocketPlayer.ReceiveSyncPlayer(reader, whoAmI);
                     break;
+
                 case MessageType.SyncRocketData:
                     Rocket.SyncRocketData(reader, whoAmI);
                     break;
+
                 case MessageType.SyncModProjectile:
 					SyncModProjectile(reader);
 					break;
+
 				default:
 					Macrocosm.Instance.Logger.WarnFormat("Macrocosm: Unknown Message type: {messageType}", messageType);
  					break;
