@@ -23,7 +23,7 @@ namespace Macrocosm.Content.Items.Placeable.Paintings
 			Item.useTime = 10;
 			Item.autoReuse = true;
 			Item.consumable = true;
-			Item.createTile = TileType<Content.Tiles.Paintings.DarkFortress>();
+			Item.createTile = TileType<Tiles.Paintings.DarkFortress>();
 			Item.placeStyle = 0;
 		}
 

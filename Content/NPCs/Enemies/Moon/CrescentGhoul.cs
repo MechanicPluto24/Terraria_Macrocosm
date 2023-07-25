@@ -65,8 +65,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		{
 			bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[]
 			{
-				new FlavorTextBestiaryInfoElement(
-					"These devious, crescent-shaped aliens prowl the Moon's long nights, hunting and slaughtering whatever they can find.")
+				//BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Times.NightTime,
 			});
 		}
 

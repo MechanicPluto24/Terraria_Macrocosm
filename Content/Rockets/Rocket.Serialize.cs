@@ -12,6 +12,7 @@ namespace Macrocosm.Content.Rockets
 
 		public TagCompound SerializeData()
 		{
+			// TODO: should only save non-default values
 			TagCompound tag = new()
 			{
 				[nameof(WhoAmI)] = WhoAmI,
@@ -30,18 +31,20 @@ namespace Macrocosm.Content.Rockets
 				[nameof(CurrentSubworld)] = CurrentSubworld
 			};
 
+			if (TargetLandingPosition != Vector2.Zero)
+				tag[nameof(TargetLandingPosition)] = TargetLandingPosition;
+
 			foreach (string moduleName in ModuleNames)
 				tag[moduleName] = Modules[moduleName];
 
-			if (WhoAmI == 0)
-				Main.NewText("");
- 
 			return tag;
 		}
 
 		public static Rocket DeserializeData(TagCompound tag)
 		{
-			Rocket rocket = new() {
+			// TODO: should add tag.ContainsKey checks
+			Rocket rocket = new()
+			{
 				WhoAmI = tag.GetInt(nameof(WhoAmI)),
 
 				Active = tag.GetBool(nameof(Active)),
@@ -50,13 +53,16 @@ namespace Macrocosm.Content.Rockets
 				Fuel = tag.GetFloat(nameof(Fuel)),
 				FuelCapacity = tag.GetFloat(nameof(FuelCapacity)),
 
-				TargetLandingPosition = tag.Get<Vector2>(nameof(TargetLandingPosition)),
-
 				InFlight = tag.GetBool(nameof(InFlight)),
 				Landing = tag.GetBool(nameof(Landing)),
 
 				CurrentSubworld = tag.GetString(nameof(CurrentSubworld))
 			};
+
+
+			if (tag.ContainsKey(nameof(TargetLandingPosition)))
+				rocket.TargetLandingPosition = tag.Get<Vector2>(nameof(TargetLandingPosition));
+
 
 			foreach (string moduleName in rocket.ModuleNames)
 			{
@@ -65,7 +71,7 @@ namespace Macrocosm.Content.Rockets
 				Type moduleType = Type.GetType(moduleName);
 				if (moduleType != null && moduleType.IsSubclassOf(typeof(RocketModule)))
 				{
-					RocketModule typedModule = Activator.CreateInstance(moduleType) as RocketModule;
+					var typedModule = Activator.CreateInstance(moduleType) as RocketModule;
 					rocket.Modules[moduleName] = typedModule;
 				}
 				else
@@ -73,11 +79,6 @@ namespace Macrocosm.Content.Rockets
 					rocket.Modules[moduleName] = module;
 				}
 			}
-
-
-			if (rocket.WhoAmI == 0)
-				Main.NewText("");
-
 
 			return rocket;
 		}

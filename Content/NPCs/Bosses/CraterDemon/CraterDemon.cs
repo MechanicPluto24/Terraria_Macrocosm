@@ -352,14 +352,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 				Music = MusicLoader.GetMusicSlot(Mod, "Assets/Music/SpaceInvader");
 		}
 
-		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
-		{
-			bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[]
-			{
-				new FlavorTextBestiaryInfoElement(
-					"This massive meteorite demon is a member of a race that invaded the Moon long ago, and bears the scars of an ancient war.")
-			});
-		}
 
 		public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)/* tModPorter Note: bossLifeScale -> balance (bossAdjustment is different, see the docs for details) */
 		{
@@ -389,7 +381,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			LeadingConditionRule notExpertRule = new LeadingConditionRule(new Conditions.NotExpert());
 			notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<CraterDemonMask>(), 7));
 
-			notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<MoonCoin>(), 1, 30, 60));
+			notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<Moonstone>(), 1, 30, 60));
 			notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<DeliriumPlating>(), 1, 30, 90));
 
 			notExpertRule.OnSuccess(ItemDropRule.OneFromOptions(1,
@@ -404,10 +396,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 		public override void OnKill()
 		{
-			// Spawn Moon Champion for the first time 
-			// With 10 seconds of immunity, just in case CD is killed by a meteor
 			if (!WorldDataSystem.Instance.DownedCraterDemon)
-				NPC.NewNPC(NPC.GetSource_NaturalSpawn(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<MoonChampion>(), 10);
+				NPC.NewNPC(NPC.GetSource_NaturalSpawn(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<MoonChampion>());
 
 			// This is only used currently for lantern night, which we don't want in our subworlds
 			//NPC.SetEventFlagCleared(ref DownedBossSystem.downedCraterDemon, -1);

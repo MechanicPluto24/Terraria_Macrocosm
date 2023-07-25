@@ -11,6 +11,7 @@ using Macrocosm.Content.Subworlds;
 using Macrocosm.Common.Netcode;
 using Macrocosm.Content.Tiles.Blocks;
 using Terraria.GameContent;
+using Terraria.ModLoader.Core;
 
 namespace Macrocosm
 {
@@ -26,6 +27,8 @@ namespace Macrocosm
 		public const string EmptyTexPath = TextureAssetsPath + "Empty";
 		public static Asset<Texture2D> EmptyTexAsset => ModContent.Request<Texture2D>(EmptyTexPath);
 		public static Texture2D EmptyTex => EmptyTexAsset.Value;
+
+		public static Type[] GetTypes() => AssemblyManager.GetLoadableTypes(Instance.Code);
 
 		public override void Load()
 		{

@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Content.Tiles.Ambient;
 using Terraria;
 using Terraria.IO;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
 
@@ -16,7 +17,7 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 		/// TODO: large variations, underground gen 
 		protected override void ApplyPass(GenerationProgress progress, GameConfiguration configuration)
 		{
-			progress.Message = "Placing rocks on the moon...";
+			progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.AmbientPass");
 
 			int skipX = 0;
 			for (int tileX = 1; tileX < Main.maxTilesX - 1; tileX++)

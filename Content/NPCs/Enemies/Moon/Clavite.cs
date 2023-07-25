@@ -36,17 +36,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			NPC.knockBackResist = 0f;
 			NPC.noGravity = true;
 			NPC.noTileCollide = true;
-			//AnimationType = NPCID.MeteorHead;
-		}
-
-		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
-		{
-			bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[]
-			{
-				new FlavorTextBestiaryInfoElement(
-					"A ravenous alien that prowls the surface of the Moon, attacking and charging at anything it finds.")
-			});
-		}
+ 		}
 
 		public override void AI()
 		{

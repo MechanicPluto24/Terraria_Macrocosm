@@ -13,6 +13,9 @@ namespace Macrocosm.Content.Rockets.Customization
         public string Name { get; set; }
         public string ModuleName { get; set; }
 
+		public bool Unlocked { get; set; }	
+		public bool UnlockedByDefault { get; private set; }	
+
         public string TexturePath => GetType().Namespace.Replace('.', '/') + "/Details/" + ModuleName + "/" + Name;
 		public Texture2D Texture
 		{
@@ -28,10 +31,13 @@ namespace Macrocosm.Content.Rockets.Customization
 		//public Texture2D IconTexture { get; set; }
 		//public int ItemType{ get; set; }
 
-		public Detail(string moduleName, string patternName)
+		public Detail(string moduleName, string patternName, bool unlockedByDefault)
         {
 			ModuleName = moduleName;
             Name = patternName;
-        }
+
+			UnlockedByDefault = unlockedByDefault;
+			Unlocked = unlockedByDefault;
+		}
 	}
 }

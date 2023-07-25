@@ -11,10 +11,11 @@ namespace Macrocosm.Content.Items.Currency
 		}
 		public void Unload() { }
 
-		public static int UnuCredit { get; set; }
+		public static int MoonStone { get; set; }
+
 		public static void LoadCurrencies()
 		{
-			UnuCredit = CustomCurrencyManager.RegisterCurrency(new MoonCoinData(ModContent.ItemType<MoonCoin>(), 999999L));
+			MoonStone = CustomCurrencyManager.RegisterCurrency(new MoonstoneData(ModContent.ItemType<Moonstone>(), 999999L));
 		}
 	}
 }

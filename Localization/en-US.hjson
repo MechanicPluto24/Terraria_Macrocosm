@@ -201,8 +201,10 @@ Mods: {
 					'''
 			}
 
-			MoonCoin: {
-				DisplayName: Moon Coin
+			Moonstone: {
+				DisplayName: Moonstone
+				TooltipChampion: These are a currency for the Moon Champion, but unfortunately he is not with you
+				TooltipNoChampion: These are a currency for {0}, the Moon Champion
 				Tooltip: ""
 			}
 
@@ -213,12 +215,12 @@ Mods: {
 
 			DevPick: {
 				DisplayName: Developer Pickaxe
-				Tooltip: ""
+				Tooltip: It's actually good as a weapon
 			}
 
 			RocketPlacer: {
 				DisplayName: Rocket Placer
-				Tooltip: Places a rocket.
+				Tooltip: Places a rocket. <right> to despawn all rockets in the Solar System
 			}
 
 			Teleporter: {
@@ -336,7 +338,7 @@ Mods: {
 				Tooltip:
 					'''
 					Consumable
-					Right click to smash open!
+					<right> to smash open!
 					'''
 			}
 
@@ -345,7 +347,7 @@ Mods: {
 				Tooltip:
 					'''
 					Consumable
-					Right click to smash open!
+					<right> to smash open!
 					'''
 			}
 
@@ -354,7 +356,7 @@ Mods: {
 				Tooltip:
 					'''
 					Consumable
-					Right click to smash open!
+					<right> to smash open!
 					'''
 			}
 
@@ -363,7 +365,7 @@ Mods: {
 				Tooltip:
 					'''
 					Consumable
-					Right click to smash open!
+					<right> to smash open!
 					'''
 			}
 
@@ -372,7 +374,7 @@ Mods: {
 				Tooltip:
 					'''
 					Consumable
-					Right click to smash open!
+					<right> to smash open!
 					'''
 			}
 
@@ -554,6 +556,11 @@ Mods: {
 			WhenDayBreaks: {
 				DisplayName: When Day Breaks
 				Tooltip: "'L. Reda'"
+			}
+
+			Freedomfaller: {
+				DisplayName: Freedomfaller
+				Tooltip: "'T. Williams'"
 			}
 
 			CraterDemonRelic: {
@@ -752,7 +759,7 @@ Mods: {
 
 			Copernicus: {
 				DisplayName: Copernicus
-				Tooltip: Right click to launch a plasma ball grenade
+				Tooltip: <right> to launch a plasma ball grenade
 			}
 
 			Cruithne: {
@@ -774,7 +781,7 @@ Mods: {
 				Tooltip:
 					'''
 					Shoots rockets .
-					Right click to lock onto an enemy.
+					<right> to lock onto an enemy.
 					'''
 			}
 
@@ -840,27 +847,80 @@ Mods: {
 		}
 
 		NPCs: {
-			CraterDemon.DisplayName: Crater Demon
-			CraterImp.DisplayName: Crater Imp
-			BloodMoonJuggernaut.DisplayName: Juggernaut
-			Clavite.DisplayName: Clavite
+			CraterDemon: {
+				DisplayName: Crater Demon
+				BestiaryFlavorText: This massive meteorite demon is a member of a race that invaded the Moon long ago, and bears the scars of an ancient war.
+			}
+
+			CraterImp: {
+				DisplayName: Crater Imp
+				BestiaryFlavorText: Smaller companions of the infamous Crater Demon, these lesser demons aid their master in combat.
+			}
+
+			BloodMoonJuggernaut: {
+				DisplayName: Juggernaut
+				BestiaryFlavorText: A hulking, tanky behemoth of alien flesh, bone, and fury. Get too close and they'll slug your bloody entrails into orbit!
+			}
+
+			Clavite: {
+				DisplayName: Clavite
+				BestiaryFlavorText: A ravenous alien that prowls the surface of the Moon, attacking and charging at anything it finds.
+			}
+
+			CraterCrawlerHead: {
+				DisplayName: Crater Crawler
+				BestiaryFlavorText: ""
+			}
+
 			CraterCrawlerBody.DisplayName: Crater Crawler
-			CraterCrawlerHead.DisplayName: Crater Crawler
 			CraterCrawlerTail.DisplayName: Crater Crawler
-			CrescentGhoul.DisplayName: Crescent Ghoul
-			Leaper.DisplayName: Leaper
-			LuminiteSlime.DisplayName: Luminite Slime
+
+			CrescentGhoul: {
+				DisplayName: Crescent Ghoul
+				BestiaryFlavorText: These devious, crescent-shaped aliens prowl the Moon's long nights, hunting and slaughtering whatever they can find.
+			}
+
+			Leaper: {
+				DisplayName: Leaper
+				BestiaryFlavorText: ""
+			}
+
+			LuminiteSlime: {
+				DisplayName: Luminite Slime
+				BestiaryFlavorText: Some slimes beneath the Moon's surface develop an attraction to luminite, consuming so much that it becomes part of their makeup.
+			}
+
+			MoonWormHead: {
+				DisplayName: Moon Worm
+				BestiaryFlavorText: The head of the mysterious moon worm, featuring sensory appendages that help it navigate underground.
+			}
+
 			MoonWormBody.DisplayName: Moon Worm
-			MoonWormHead.DisplayName: Moon Worm
 			MoonWormTail.DisplayName: Moon Worm
-			MoonZombie.DisplayName: Zombie Astronaut
-			RadioactiveSlime.DisplayName: Radioactive Slime
-			RegolithSlime.DisplayName: Regolith Slime
-			Rocket.DisplayName: Rocket
-			ZombieSecurity.DisplayName: Zombie Security
+
+			MoonZombie: {
+				DisplayName: Zombie Astronaut
+				BestiaryFlavorText: As if zombies weren't bad enough on Earth, the Moon is infested with undead astronauts from long abandoned human colonies.
+			}
+
+			RadioactiveSlime: {
+				DisplayName: Radioactive Slime
+				BestiaryFlavorText: These slimes have absorbed high amounts of uranium, chromium, and other radioactive materials. Handle with care!
+			}
+
+			RegolithSlime: {
+				DisplayName: Regolith Slime
+				BestiaryFlavorText: Even extreme environments such as the Moon can host equally extreme types of slimes, mixing with the Moon's silvery regolith.
+			}
+
+			ZombieSecurity: {
+				DisplayName: Zombie Security
+				BestiaryFlavorText: Remnants of the crater's security personnel, now reanimated and patrolling the area as undead sentinels.
+			}
 
 			MoonChampion: {
 				DisplayName: Moon Champion
+				BestiaryFlavorText: A mysterious, superhuman lunatic who has dedicated his life to protecting the Moon, and challenging all who threaten it.
 
 				TownNPCMood: {
 					Content: I am content.
@@ -879,6 +939,41 @@ Mods: {
 					HateNPC: I hate {NPCName}.
 					LikeNPC_Princess: I like {NPCName}.
 					Princess_LovesNPC: I like {NPCName}.
+				}
+
+				Chat: {
+					Shop: Shop
+					Advice: Advice
+					ShopName: Shop
+					FirstTime: Woah... Thank you, human! You have saved me from that scary Moon monster! Perhaps you are also a champion of the Moon?
+					Day1: The Moon is not so bad once you get used to it! I personally find it quite beautiful! Just stay indoors during the night, I shall defend you from those evil Moon monsters!
+					Day2: I found an old space lander once! It looked abandoned, and there was this weird pole with cloth attached to it. Do you know anything about this?
+					Day3: Earth looks very pretty! I want to visit it someday, but I do not know how to leave the Moon...
+					// Note to all: Yes, this is a TF2 reference.
+					DayRare: Am I a good Moon Champion? If I wasn't a good Moon Champion, I wouldn't be sitting here discussing it with you now would I?
+					Night1: Human, I am curious, is the Earth made of cheese?
+					Night2: Stand alert, human! Night-time lasts far longer than it does on Earth, and lots of scary monsters emerge from the craters and shadows looking for food!
+					Night3: You look troubled, are you afraid of those Moon monsters? Do not be, for I will defend you! Those Moon monsters will never defeat me!
+					Moonstones: I see you have {0} {^0:Moonstone;Moonstones}! Why don't you try spending them here?
+					NoMoonstones: Hmm, you appear to have no Moonstones, try killing some Moon monsters to get some!
+					Standard1: What was I doing on the Moon before I got eaten? I was fighting Moon monsters, of course!
+					//Reference to Houston Space Center, Texas
+					Standard2: A while back I discovered I could tune in on human conversations if they were happening close enough to the Moon! I kept hearing the word 'Houston' come up in their conversations. I would like to meet this Houston some day!
+					// Reference to "SPACE IS COOL" Songify Remix by SCHMOYOHO
+					Standard3: Space is so cool! There are thousands of billions of billions of stars and galaxies! There is nothing I like more than space!
+					// Reference to "Space Oddity" by David Bowie
+					Standard4: Planet Earth is blue, and there's nothing I can do...
+					// References to Touhou lore ;)
+					Standard5: So, what made you join the Lunar War? What do you mean you don't know any war?
+					Standard6: If you humans keep trying to establish bases here, you'll soon meet the wrath of the Lunarians.
+					Standard7: How does it feel to be free from the confinements of Earth? You're lucky to have made it here. I know a fugitive princess who met an opposite fate.
+					Standard8: There are many here who fled to Earth when war was declared with the Invasion of 1969. I stayed to watch the fireworks.
+					Standard9: Are you looking for the Lunar Civilization? A barrier hides its existence, and, because you are human, I'm afraid you can't even come close. Well, there was an exception. One mysterious... shrine maiden.
+					// LoLK reference
+					Standard10: A few years ago, there was chaos in these lunar outskirts. You should've seen it yourself.
+					Advice1: Monsters on the Moon drop these strange coins! If you can find enough of them, I'll trade them for some supplies!
+					Advice2: Be prepared for anything, and stay alert! The Moon is a very dangerous place crawling with all kinds of monsters, always be ready for anything!
+					Advice3: If you wish to explore the Moon, do not forget your spacesuit!
 				}
 			}
 		}
@@ -1106,5 +1201,28 @@ Mods: {
 				FlavorText: default
 			}
 		}
+
+		WorldGen: {
+			Moon: {
+				GroundPass: Landing on the Moon...
+				CraterPass: Sculpting the Moon...
+				RegolithPass: Sending meteors to the Moon...
+				OrePass: Mineralizing the Moon...
+				CavePass: Carving the Moon...
+				IrradiationPass: Irradiating the Moon...
+				ScuffedSmoothPass: Smoothening the Moon...
+				AmbientPass: Placing rocks on the moon...
+				FinishPass: Final touches...
+			}
+		}
 	}
+}
+
+Bestiary_FlavorText: {
+	npc_MoonLordCore: The Vortex Titan, and ruler of the Moon. His strength and abilities are matched only by his obsession with conquering Earth.
+	npc_LunarTowerStardust: Infused with the celestial ashes of long dead stars, this tower brings forth the servants of Moon Lord to conquer the Earth.
+	npc_LunarTowerNebula: Infused with the swirling gases of a stellar nebula, this tower brings forth the servants of Moon Lord to conquer the Earth.
+	npc_LunarTowerSolar: Infused with the incandescent fury of a star, this tower brings forth the servants of Moon Lord to conquer the Earth.
+	npc_LunarTowerVortex: Infused with the ceaseless storms of a cosmic vortex, this tower brings forth the servants of Moon Lord to conquer the Earth.
+	npc_CultistBoss: A fanatical leader brainwashed into bringing forth the apocalypse, and preparing the world for the arrival of the Moon Lord.
 }

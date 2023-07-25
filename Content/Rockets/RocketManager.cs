@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -15,9 +16,9 @@ namespace Macrocosm.Content.Rockets
         AfterProjectiles,
         BeforeNPCs,
         AfterNPCs
-    }
+    } 
 
-    public class RocketManager : ModSystem 
+    public class RocketManager : ModSystem
     {
         public static Rocket[] Rockets { get; private set; }
 
@@ -97,35 +98,38 @@ namespace Macrocosm.Content.Rockets
             }
         }
 
+        
+		public override void OnWorldLoad()
+		{
+			for (int i = 0; i < MaxRockets; i++)
+			{
+				Rocket rocket = Rockets[i];
+
+				if (!rocket.ActiveInCurrentSubworld)
+					continue;
+
+                rocket.OnWorldLoad();
+			}
+		}
+        
+        
 		public override void ClearWorld()
 		{
             Array.Fill(Rockets, new Rocket());
 		}
 
+		public override void SaveWorldData(TagCompound tag) => SaveRocketData(tag); 
+        public override void LoadWorldData(TagCompound tag) => ReadSavedRocketData(tag);
 
-		public override void SaveWorldData(TagCompound tag)
-		{
-            tag["Rockets"] = Rockets;
-		}
-
-        public override void LoadWorldData(TagCompound tag)
+        public static void SaveRocketData(TagCompound dataCopyTag) 
         {
-			Rockets = tag.Get<Rocket[]>("Rockets");
+			dataCopyTag[nameof(Rockets)] = Rockets;
 		}
 
-        // for cross-subworld data copying 
-		public static TagCompound dataCopy = new();
-
-		public static void CopyRocketData()
+        public static void ReadSavedRocketData(TagCompound dataCopyTag) 
         {
-			dataCopy["Rockets"] = Rockets;
-			//SubworldSystem.CopyWorldData("Rockets", Rockets);
-		}
-
-		public static void ReadCopiedRocketData()
-		{
-			Rockets = dataCopy.Get<Rocket[]>("Rockets");
-			//Rockets = SubworldSystem.ReadCopiedWorldData<Rocket[]>("Rockets");
+			if (dataCopyTag.ContainsKey(nameof(Rockets)))
+				Rockets = dataCopyTag.Get<Rocket[]>(nameof(Rockets));
 		}
 
 		private void DrawRocket_NPCs(On_Main.orig_DrawNPCs orig, Main self, bool behindTiles)

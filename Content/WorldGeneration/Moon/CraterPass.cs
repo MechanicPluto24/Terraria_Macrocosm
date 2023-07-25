@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.IO;
+using Terraria.Localization;
 using Terraria.WorldBuilding;
 
 namespace Macrocosm.Content.WorldGeneration.Moon
@@ -20,7 +21,7 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 
 		private void GenerateCraters(GenerationProgress progress)
 		{
-			progress.Message = "Sculpting the Moon...";
+			progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.CraterPass");
 			for (int craterPass = 0; craterPass < 2; craterPass++)
 			{
 				int lastMaxTileX = 0;

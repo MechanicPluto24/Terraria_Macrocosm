@@ -40,7 +40,7 @@ namespace Macrocosm.Content.Items.Consumables.BossBags
 		public override void ModifyItemLoot(ItemLoot itemLoot)
 		{
 		    itemLoot.Add(ItemDropRule.NotScalingWithLuck(ModContent.ItemType<CraterDemonMask>(), 7));
-			itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<MoonCoin>(), 1, 30, 60));
+			itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<Moonstone>(), 1, 30, 60));
 			itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<DeliriumPlating>(), 1, 30, 90));
 
 			itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<BrokenHeroShield>()));

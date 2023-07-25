@@ -3,24 +3,37 @@ using Microsoft.Xna.Framework;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-	public readonly struct PatternColorData
+	public class PatternColorData
 	{
-		public readonly bool IsUserChangeable { get; }
-		public readonly Func<Color[], Color> ColorFunction { get; }
-		public readonly Color DefaultColor { get; }
+		public bool IsUserChangeable { get; }
+		public Color DefaultColor { get; }
+		public Color UserColor { get; set; }
+		public PatternColorFunction ColorFunction { get; set; }
 
-		public PatternColorData(Color defaultColor, bool isUserChangeable = false)
-		{
-			IsUserChangeable = isUserChangeable;
-			ColorFunction = null;
-			DefaultColor = defaultColor;
-		}
+		public bool HasColorFunction => ColorFunction != null;
 
-		public PatternColorData(Func<Color[], Color> colorFunction = null)
+		public PatternColorData()
 		{
 			IsUserChangeable = false;
-			ColorFunction = colorFunction;
 			DefaultColor = Color.Transparent;
+			UserColor = Color.Transparent;
+			ColorFunction = null;
+		}
+
+		public PatternColorData(Color defaultColor, bool isUserChangeable = true)
+		{
+			IsUserChangeable = isUserChangeable;
+			DefaultColor = defaultColor;
+			UserColor = defaultColor;
+			ColorFunction = null;
+		}
+
+		public PatternColorData(PatternColorFunction colorFunction)
+		{
+			IsUserChangeable = false;
+			DefaultColor = Color.Transparent;
+			UserColor = Color.Transparent;
+			ColorFunction = colorFunction;
 		}
 	}
 }
