@@ -142,15 +142,16 @@ namespace Macrocosm.Content.Rockets.Modules
 		{
 			string type = tag.GetString("Type");
 			string name = tag.GetString("Name");
-			RocketModule module = Activator.CreateInstance(Type.GetType(type)) as RocketModule;
 
-			if(tag.ContainsKey("DetailName"))
+			RocketModule module = Activator.CreateInstance(Type.GetType(type)) as RocketModule;
+			module.DeserializeModuleData(tag);
+
+			if (tag.ContainsKey("DetailName"))
 				module.Detail = CustomizationStorage.GetDetail(name, tag.GetString("DetailName"));
 
 			if (tag.ContainsKey("Pattern"))
 				module.Pattern = tag.Get<Pattern>("Pattern");
 
-			module.DeserializeModuleData(tag);
 			return module;
 		}
 	}

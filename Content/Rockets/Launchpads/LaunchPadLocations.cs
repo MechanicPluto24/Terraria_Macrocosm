@@ -67,22 +67,26 @@ namespace Macrocosm.Content.Rockets.Construction
 		public static Vector2 GetDefaultLocation(string subworldId)
 		{
 			if(None(subworldId))
+ 				return Vector2.Zero;
+ 
+			return GetLocations(subworldId)[0];
+		}
+
+		public static bool TryGetDefaultLocation(string subworldId, out Vector2 defaultLocation)
+		{
+			if (None(subworldId))
 			{
-				Macrocosm.Instance.Logger.Warn("No default location for subworld " + subworldId);
-				return Vector2.Zero;
+				defaultLocation = Vector2.Zero;
+				return false;
 			}
 
-			return GetLocations(subworldId)[0];
+			defaultLocation = GetLocations(subworldId)[0];
+			return true;
 		}
 
 		public override void PostWorldGen()
 		{
 			SetDefaultLocation("Earth", Utility.SpawnWorldPosition);
-		}
-
-		public override void OnWorldLoad()
-		{
-			SetDefaultLocation(MacrocosmSubworld.CurrentSubworld, Utility.SpawnWorldPosition);
 		}
 
 		public override void ClearWorld()
@@ -105,6 +109,8 @@ namespace Macrocosm.Content.Rockets.Construction
 			foreach (var location in launchPadLocations)
 				if(tag.ContainsKey("LaunchPads_" + location.Key))
 					launchPadLocations[location.Key] = (List<Vector2>)tag.GetList<Vector2>("LaunchPads_" + location.Key);
+
+			SetDefaultLocation(MacrocosmSubworld.CurrentSubworld, Utility.SpawnWorldPosition);
 		}
 	}
 }

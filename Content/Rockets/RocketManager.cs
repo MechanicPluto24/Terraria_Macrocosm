@@ -2,6 +2,7 @@
 using System.Linq;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Rockets.Construction;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -98,21 +99,6 @@ namespace Macrocosm.Content.Rockets
             }
         }
 
-        
-		public override void OnWorldLoad()
-		{
-			for (int i = 0; i < MaxRockets; i++)
-			{
-				Rocket rocket = Rockets[i];
-
-				if (!rocket.ActiveInCurrentSubworld)
-					continue;
-
-                rocket.OnWorldLoad();
-			}
-		}
-        
-        
 		public override void ClearWorld()
 		{
             Array.Fill(Rockets, new Rocket());
@@ -130,6 +116,21 @@ namespace Macrocosm.Content.Rockets
         {
 			if (dataCopyTag.ContainsKey(nameof(Rockets)))
 				Rockets = dataCopyTag.Get<Rocket[]>(nameof(Rockets));
+
+            OnWorldSpawn();
+		}
+
+		private static void OnWorldSpawn()
+		{
+			for (int i = 0; i < MaxRockets; i++)
+			{
+				Rocket rocket = Rockets[i];
+
+				if (!rocket.ActiveInCurrentSubworld)
+					continue;
+
+				rocket.OnWorldSpawn();
+			}
 		}
 
 		private void DrawRocket_NPCs(On_Main.orig_DrawNPCs orig, Main self, bool behindTiles)
