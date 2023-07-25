@@ -28,8 +28,8 @@ namespace Macrocosm.Content.Rockets.Navigation
 		private float zoom;
 
 		private float[] moduleZooms = { 0.35f, 0.35f, 0.35f, 0.55f, 0.52f, 0.52f };
-		private float[] moduleOffsetsX = { 0f, 0f, 0f, 40f, 118f, -51f };
-		private float[] moduleOffsetsY = { 140f, -40f, -320f, -440f, -520f, -520f };
+		private float[] moduleOffsetsX =  { -220f, -220f, -220f, -80f, 40f, -250f };
+		private float[] moduleOffsetsY = { 140f, -40f, -320f, -460f, -520f, -520f };
 
 		public UIRocketPreviewLarge()
 		{
@@ -59,7 +59,7 @@ namespace Macrocosm.Content.Rockets.Navigation
         {
             base.Update(gameTime);
 
-			if(animationCounter >= 1f)
+			if (animationCounter >= 1f)
 			{
 				animationCounter = 0f;
 				lastModuleIndex = CurrentModuleIndex;

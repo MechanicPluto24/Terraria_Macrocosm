@@ -46,7 +46,7 @@ namespace Macrocosm.Content.Rockets
 		/// <summary> The initial vertical position </summary>
 		[NetSync] public float StartPositionY;
 
-		/// <summary> The target landing horizontal position </summary>
+		/// <summary> The target landing position </summary>
 		[NetSync] public Vector2 TargetLandingPosition;
 
 		/// <summary> The world Y coordinate for entering the target subworld </summary>
@@ -125,19 +125,15 @@ namespace Macrocosm.Content.Rockets
 		/// <summary> The rocket's right booster </summary>
 		public BoosterRight BoosterRight => (BoosterRight)Modules["BoosterRight"];
 
-		#region Private vars
-
-		private float maxFlightSpeed = 25f;
-
 		// Number of ticks of the launch countdown (seconds * 60 ticks/sec)
 		private int liftoffTime = 180;
+		private float maxFlightSpeed = 25f;
 
 		public float FlightProgress => 1f - ((Center.Y - WorldExitPositionY) / (StartPositionY - WorldExitPositionY));
 
 		// TODO: assign a value to TargetLandingPosition
 		public float LandingProgress => Center.Y / TargetLandingPosition.Y;
 
-		#endregion
 
 		/// <summary> Instatiates a rocket. Use <see cref="Create(Vector2)"/> for spawning in world and proper syncing. </summary>
 		public Rocket()
@@ -147,13 +143,18 @@ namespace Macrocosm.Content.Rockets
 		public void OnCreation()
 		{
 			CurrentSubworld = MacrocosmSubworld.CurrentSubworld;
-			StartPositionY = Center.Y;
 		}
 
-		public void OnWorldLoad()
+		public void OnWorldSpawn()
 		{
-			if(TargetLandingPosition == Vector2.Zero)
- 				TargetLandingPosition = LaunchPadLocations.GetDefaultLocation(CurrentSubworld);
+			if (Landing)
+			{
+				// This is to ensure the location is properly assigned if subworld was just generated
+				if (TargetLandingPosition == default)
+					TargetLandingPosition = LaunchPadLocations.GetDefaultLocation(CurrentSubworld);
+
+				Center = new(TargetLandingPosition.X, Center.Y);
+			}	
 		}
 
 		/// <summary> Update the rocket </summary>
@@ -313,6 +314,7 @@ namespace Macrocosm.Content.Rockets
 		public void Launch()
 		{
 			InFlight = true;
+			StartPositionY = Position.Y;
 			NetSync();
 		}
 
@@ -491,15 +493,25 @@ namespace Macrocosm.Content.Rockets
 				CurrentSubworld = commander.TargetSubworldID;
 				//NetSync();
 
-				// if(commander.TargetLaunchPad is not null)
-				//   TargetLandingPosition = commander.TargetLaunchPad;
+				// if(commander.TargetLandingPosition != Vector2.Zero) // (or nullable Vector2?)
+				//   TargetLandingPosition = commander.TargetLandingPosition;
 				// else 
-				TargetLandingPosition = LaunchPadLocations.GetDefaultLocation(CurrentSubworld);
-
+				TargetLandingPosition = LaunchPadLocations.GetDefaultLocation(commander.TargetSubworldID);
+ 
 				if (commander.TargetSubworldID == "Earth")
 					SubworldSystem.Exit();
 				else if (commander.TargetSubworldID != null && commander.TargetSubworldID != "")
-					SubworldSystem.Enter(Macrocosm.Instance.Name + "/" + commander.TargetSubworldID);
+				{
+					if (!SubworldSystem.Enter(Macrocosm.Instance.Name + "/" + commander.TargetSubworldID))
+					{
+						// Stay here if entering the subworld fails, for whatever reason
+						CurrentSubworld = MacrocosmSubworld.CurrentSubworld;
+						string message = "Error: Failed entering target subworld: " + commander.TargetSubworldID + ", staying on " + MacrocosmSubworld.CurrentSubworld;
+
+						Utility.Chat(message, Color.Red);
+						Macrocosm.Instance.Logger.Error(message);
+					}
+				}
 			}
 		}
 	}
