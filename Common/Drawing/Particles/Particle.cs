@@ -1,20 +1,18 @@
 ﻿using System;
-using System.Linq;
-using System.Reflection;
-using System.Collections.Generic;
-using ReLogic.Content;
-using Terraria.ModLoader;
-using Macrocosm.Common.Netcode;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria;
-using Macrocosm.Common.Drawing.Trails;
+using Terraria.ModLoader;
 using Macrocosm.Common.Utils;
+using Macrocosm.Common.Netcode;
+using Macrocosm.Common.Drawing.Trails;
+
 
 namespace Macrocosm.Common.Drawing.Particles
 {
-	/// <summary> Particle system by sucss, Nurby & Feldy @ PellucidMod </summary>
-	public abstract partial class Particle : ModType
+    /// <summary> Particle system by sucss, Nurby & Feldy @ PellucidMod (RIP) </summary>
+    public abstract partial class Particle : ModType
 	{
 		/// <summary> Cached particle type as integer index, used for netcode purposes </summary>
 		public int Type => type == -1 ? (type = ParticleManager.Types.IndexOf(this.GetType())) : type;
@@ -49,6 +47,9 @@ namespace Macrocosm.Common.Drawing.Particles
 			TimeLeft = SpawnTimeLeft;
 			Active = true;
 
+			if (SetRandomFrameOnSpawn)
+				currentFrame = Main.rand.Next(FrameNumber);
+ 
 			OnSpawn();
 		}
 
@@ -57,10 +58,20 @@ namespace Macrocosm.Common.Drawing.Particles
 
 		/// <summary> The texture size of this <c>Particle</c> </summary>
 		// TODO: Maybe replace this to a configurable size if ever implementing particle collision
-		public Vector2 Size => Texture.Size();
+		public Vector2 Size
+		{
+			get
+			{
+				// BANDAID: Returns (1,1) on servers... now I really have to do that ^
+				if(GetFrame() is null)
+					return Texture is null ? new Vector2(1, 1) : Texture.Size();
+
+				return GetFrame().Value.Size();
+			}
+		}
 					
 		/// <summary> Whether the current particle instance is active </summary>
-		public bool Active { get; private set; }
+		public bool Active { get; protected set; }
 
 		/// <summary> Time left before despawining, in ticks </summary>
 		[NetSync] public int TimeLeft;
@@ -90,8 +101,8 @@ namespace Macrocosm.Common.Drawing.Particles
 		/// <summary> Path to the <c>Particle</c>'s texture, override for custom loading (non-autoload) </summary>
 		public virtual string TexturePath => (this.GetType().Namespace + "." + this.GetType().Name).Replace('.', '/');
 
-		/// <summary> The  <c>Particle</c>'s total lifetime </summary>
-		public virtual int SpawnTimeLeft => 300;
+		/// <summary> The  <c>Particle</c>'s total lifetime. If <see cref="DespawnOnAnimationComplete"/> is true, this defaults to the animation duration. </summary>
+		public virtual int SpawnTimeLeft => DespawnOnAnimationComplete ? FrameNumber * FrameSpeed - 1 : 300;
 
 		/// <summary> Whether the <c>Particle</c> should update its position </summary>
 		public virtual bool ShouldUpdatePosition => true;
@@ -128,15 +139,61 @@ namespace Macrocosm.Common.Drawing.Particles
 		#endregion
 
 		#region Animation
-		
-		/// <summary> Used for animating the <c>Particle</c> </summary>
-		/// <returns> The current frame as a nullabe <see cref="Rectangle"/>, representing the <see cref="Texture"/> coordinates </returns>
-		public virtual Rectangle? GetFrame() => null;
+
+		/// <summary> Whether to pick a random frame on spawn </summary>
+		public virtual bool SetRandomFrameOnSpawn => false;
+
+		/// <summary> If true, particle will despawn on the end of animation </summary>
+		public virtual bool DespawnOnAnimationComplete => false;
+
+		/// <summary> Number of animation frames of this particle </summary>
+		public virtual int FrameNumber => 1;
+
+		/// <summary> Particle animation update speed, in ticks per frame </summary>
+		public virtual int FrameSpeed => 1;
+
+		protected int currentFrame = 0;
+		protected int frameCnt = 0;
+
+		/// <summary> Used for animating the <c>Particle</c>. By default, updates with <see cref="FrameNumber"/> and <see cref="FrameSpeed"/> </summary>
+		public virtual void UpdateFrame()
+		{
+			// if not animated or frame was picked on spawn, don't update frame
+			if (FrameNumber <= 1 || SetRandomFrameOnSpawn)
+				return;
+
+			if (Main.hasFocus)
+			{
+				frameCnt++;
+				if (frameCnt == FrameSpeed)
+				{
+					frameCnt = 0;
+					currentFrame++;
+
+					if (currentFrame >= FrameNumber)
+						currentFrame = 0;
+				}
+			}
+		}
+
+		/// <summary> 
+		/// The current frame, as a nullabe <see cref="Rectangle"/>, representing the source <see cref="Texture"/> coordinates. 
+		/// If null, draws the entire texture.
+		/// </summary>
+		public virtual Rectangle? GetFrame()
+		{ 
+			// if not animated or frame is not picked randomly on spawn, draw the entire texture
+ 			if (FrameNumber <= 1 && !SetRandomFrameOnSpawn)
+				return null;
+
+			int frameHeight = Texture.Height / FrameNumber;
+			return new Rectangle(0, frameHeight * currentFrame, Texture.Width, frameHeight);
+ 		}
 
 		#endregion
 
 		#region Logic
-		
+
 		/// <summary> Used for drawing the particle. Substract <see cref="Main.screenPosition"> screenPosition </see> from the <see cref="Particle.Position">Position</see> position before drawing </summary>
 		/// <param name="spriteBatch"> The spritebatch </param>
 		/// <param name="screenPosition"> The top-left screen position in the world coordinates </param>
@@ -144,20 +201,19 @@ namespace Macrocosm.Common.Drawing.Particles
 		public virtual void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor) 
 		{
 			spriteBatch.Draw(Texture, Position - screenPosition, GetFrame(), lightColor, Rotation, Size * 0.5f, ScaleV, SpriteEffects.None, 0f);
-
 			Trail?.Draw();
 		}
 
 		public void Update()
 		{
-			if(ShouldUpdatePosition)
+			if (ShouldUpdatePosition)
  				Position += Velocity;
-			
-			PopulateTrailParameters();
 
+			PopulateTrailData();
 			AI();
-			
-			if(TimeLeft-- <= 0)
+			UpdateFrame();
+
+			if (TimeLeft-- <= 0)
   				Kill();
   		}
 
@@ -173,23 +229,24 @@ namespace Macrocosm.Common.Drawing.Particles
 		#endregion
 
 		#region Trails
-		public void DrawSimpleTrail(Vector2 rotatableOffsetFromCenter, float startWidth, float endWidth, Color startColor, Color? endColor = null)
-				=> Utility.DrawSimpleTrail(Size / 2f, OldPositions, OldRotations, rotatableOffsetFromCenter, startWidth, endWidth, startColor, endColor);
+
+		public void DrawMagicPixelTrail(Vector2 rotatableOffsetFromCenter, float startWidth, float endWidth, Color startColor, Color? endColor = null)
+				=> Utility.DrawMagicPixelTrail(Size / 2f, OldPositions, OldRotations, rotatableOffsetFromCenter, startWidth, endWidth, startColor, endColor);
 
 
-		/// <summary> The <see cref="Trails.Trail"> Trail </see> object bound to this <c>Particle</c> </summary>
-		public Trail Trail { get; private set; }
-		public Trail GetTrail() => Trail;
+		/// <summary> The <see cref="Trails.VertexTrail"> VertexTrail </see> object bound to this <c>Particle</c> </summary>
+		public VertexTrail Trail { get; private set; }
+		public VertexTrail GetTrail() => Trail;
 
-		/// <summary> Binds the <c>Particle</c>'s trail to the specified <see cref="Trails.Trail"> Trail </see> type </summary>
+		/// <summary> Binds the <c>Particle</c>'s trail to the specified <see cref="Trails.VertexTrail"> Trail </see> type </summary>
 		/// <typeparam name="T"> The trail type </typeparam>
-		public void SetTrail<T>() where T : Trail
+		public void SetTrail<T>() where T : VertexTrail
 		{
 			Trail = Activator.CreateInstance<T>();
 			Trail.Owner = this;
 		}
 
- 		public virtual int TrailCacheLenght { get; set; } = 1;
+		public virtual int TrailCacheLenght { get; set; } = 1;
 
 		public Vector2 OldPosition => OldPositions[0];
 		public float OldRotation => OldRotations[0];
@@ -197,32 +254,27 @@ namespace Macrocosm.Common.Drawing.Particles
 		public Vector2[] OldPositions = new Vector2[1];
 		public float[] OldRotations = new float[1];
 
-		private void PopulateTrailParameters() 
-		{
-			InitializeTrailArrays();
-
-			OldPositions[0] = Position;
-			OldRotations[0] = Rotation;
-
-			for (int i = TrailCacheLenght - 1; i > 0; i--)
-			{
- 				OldPositions[i] = OldPositions[i - 1];
-				OldRotations[i] = OldRotations[i - 1];
- 			}
-		}
-
-		private void InitializeTrailArrays()
+		private void PopulateTrailData()
 		{
 			if (OldPositions.Length != TrailCacheLenght)
 			{
 				Array.Resize(ref OldPositions, TrailCacheLenght);
 				Array.Fill(OldPositions, Position);
 			}
-			
+
 			if (OldRotations.Length != TrailCacheLenght)
 			{
 				Array.Resize(ref OldRotations, TrailCacheLenght);
 				Array.Fill(OldRotations, Rotation);
+			}
+
+			OldPositions[0] = Position;
+			OldRotations[0] = Rotation;
+
+			for (int i = TrailCacheLenght - 1; i > 0; i--)
+			{
+				OldPositions[i] = OldPositions[i - 1];
+				OldRotations[i] = OldRotations[i - 1];
 			}
 		}
 

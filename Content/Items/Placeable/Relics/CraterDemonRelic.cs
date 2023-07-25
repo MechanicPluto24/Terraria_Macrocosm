@@ -18,7 +18,7 @@ namespace Macrocosm.Content.Items.Placeable.Relics
 
 			Item.width = 30;
 			Item.height = 40;
-			Item.maxStack = 9999;
+			Item.maxStack = Item.CommonMaxStack;
 			Item.rare = ItemRarityID.Master;
 			Item.master = true; 
 			Item.value = Item.buyPrice(0, 5);

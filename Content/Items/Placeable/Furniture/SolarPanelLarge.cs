@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Items.Placeable.Furniture
         {
             Item.width = 44;
             Item.height = 34;
-            Item.maxStack = 9999;
+            Item.maxStack = Item.CommonMaxStack;
             Item.useTurn = true;
             Item.autoReuse = true;
             Item.useAnimation = 15;

@@ -50,7 +50,7 @@ namespace Macrocosm.Content.Projectiles.Base
             if (OwnerPlayer.whoAmI != Main.myPlayer)
                 return;
 
-            Projectile.Center = OwnerPlayer.MountedCenter;
+            Projectile.Center = OwnerPlayer.MountedCenter + new Vector2(0, OwnerPlayer.gfxOffY);
 
             Projectile.spriteDirection = Projectile.direction;
 

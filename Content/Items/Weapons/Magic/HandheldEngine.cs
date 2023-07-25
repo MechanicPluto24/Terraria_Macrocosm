@@ -31,7 +31,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 			Item.rare = ModContent.RarityType<MoonRarityT2>();
 			Item.autoReuse = true;  
 			Item.shoot = ModContent.ProjectileType<HandheldEngineProjectile>();  
-			Item.shootSpeed = 32f;  
+			Item.shootSpeed = 1f;  
 			Item.DamageType = DamageClass.Magic;  
 			Item.damage = 150;  
 			Item.reuseDelay = 8;

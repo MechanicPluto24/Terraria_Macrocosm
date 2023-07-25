@@ -28,7 +28,6 @@ namespace Macrocosm.Content.Items.Weapons.Summon
 		public override void AddRecipes()
 		{
 			Recipe recipe = Recipe.Create(Type);
-			recipe.AddIngredient<LuminiteCrystal>();
 			recipe.AddIngredient<ChandriumBar>(12);
 			recipe.AddTile(TileID.WorkBenches);
 			recipe.Register();

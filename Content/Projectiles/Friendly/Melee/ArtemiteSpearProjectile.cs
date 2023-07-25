@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.Dusts;
+﻿using Macrocosm.Common.Utils;
+using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -9,7 +10,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 	public class ArtemiteSpearProjectile : ModProjectile
 	{
 		protected virtual float HoldoutRangeMin => 50f;
-		protected virtual float HoldoutRangeMax => 200f;
+		protected virtual float HoldoutRangeMax => 160f;
 
 		public override void SetStaticDefaults()
 		{
@@ -20,7 +21,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			Projectile.CloneDefaults(ProjectileID.Spear); // Clone the default values for a vanilla spear. Spear specific values set for width, height, aiStyle, friendly, penetrate, tileCollide, scale, hide, ownerHitCheck, and melee.
 			Projectile.width = 36;
 			Projectile.height = 36;
-			Projectile.scale = 1.1f;
+			Projectile.scale = 0.95f;
  		}
 
 		public override bool PreAI()
@@ -55,7 +56,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			Projectile.Center = player.MountedCenter + Vector2.SmoothStep(Projectile.velocity * (HoldoutRangeMin + holdoutOffset), Projectile.velocity * HoldoutRangeMax, progress);
 
 			// Apply proper rotation to the sprite.
-			Projectile.rotation += MathHelper.ToRadians(Projectile.spriteDirection == -1 ? 45f : 135f);
+			Projectile.rotation += MathHelper.ToRadians(Projectile.spriteDirection == -1 ? 40f : 135f);
 
 			if (Projectile.timeLeft == halfDuration)
 			{
@@ -69,7 +70,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			{
 				if (Main.rand.NextBool(3))
 				{
-					Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<ArtemiteDust>(), Projectile.velocity.X * 2f, Projectile.velocity.Y * 2f, Scale: .9f);
+					Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<ArtemiteDust>(), Projectile.velocity.X * 2f, Projectile.velocity.Y * 2f, Scale: 0.6f);
 				}
 			}
 

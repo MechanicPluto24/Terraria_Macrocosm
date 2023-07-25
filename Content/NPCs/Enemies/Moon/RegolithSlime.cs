@@ -37,14 +37,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			Banner = Item.NPCtoBanner(NPCID.BlueSlime);
 			BannerItem = Item.BannerToItem(Banner);
 		}
-		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
-		{
-			bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[]
-			{
-				new FlavorTextBestiaryInfoElement(
-					"Even extreme environments such as the Moon can host equally extreme types of slimes, mixing with the Moon's silvery regolith.")
-			});
-		}
 
 		public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
 		{
@@ -58,7 +50,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		public override void ModifyNPCLoot(NPCLoot loot)
 		{
-			loot.Add(ItemDropRule.Common(ModContent.ItemType<CosmicDust>()));             // Always drop 1 cosmic dust
+			loot.Add(ItemDropRule.Common(ModContent.ItemType<SpaceDust>()));             // Always drop 1 cosmic dust
 			loot.Add(ItemDropRule.Common(ModContent.ItemType<ArtemiteOre>(), 16, 1, 6));  // 1/16 chance to drop 1-6 Artemite Ore
 			loot.Add(ItemDropRule.Common(ModContent.ItemType<ChandriumOre>(), 16, 1, 6)); // 1/16 chance to drop 1-6 Chandrium Ore
 			loot.Add(ItemDropRule.Common(ModContent.ItemType<SeleniteOre>(), 16, 1, 6));  // 1/16 chance to drop 1-6 Selenite Ore

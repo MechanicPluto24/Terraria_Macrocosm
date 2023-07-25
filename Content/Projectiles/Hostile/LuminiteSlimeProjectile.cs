@@ -1,12 +1,9 @@
 ﻿using Macrocosm.Common.Utils;
-using Macrocosm.Content.Dusts;
-using Macrocosm.Content.NPCs.Enemies.Moon;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
 using Terraria.GameContent;
-using Terraria.Graphics;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -41,8 +38,20 @@ namespace Macrocosm.Content.Projectiles.Hostile
 
 		public override bool PreDraw(ref Color lightColor)
 		{
-			Projectile.DrawSimpleTrail(Vector2.Zero, 4f, 1f, new Color(98, 211, 168, 255) * lightColor.GetLuminance(), new Color(98, 211, 168, 1));
-			return true;
+			Projectile.DrawMagicPixelTrail(Vector2.Zero, 4f, 1f, new Color(98, 211, 168, 255) * lightColor.GetLuminance(), new Color(98, 211, 168, 1));
+
+			// draw circular glow
+			Texture2D glow = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "SimpleGlow").Value;
+			var state = Main.spriteBatch.SaveState();
+			Main.spriteBatch.End();
+			Main.spriteBatch.Begin(BlendState.Additive, state);
+			Main.EntitySpriteDraw(glow, Projectile.Center - Main.screenPosition, null, new Color(89, 151, 193) * lightColor.GetLuminance(), 0f, glow.Size() / 2, 0.0375f, SpriteEffects.None);
+			Main.spriteBatch.End();
+			Main.spriteBatch.Begin(state);
+
+			Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition, null, Color.White * lightColor.GetLuminance(), 0f, TextureAssets.Projectile[Type].Size() / 2, Projectile.scale, SpriteEffects.None);
+
+			return false;
 		}
 
 		public override void AI()

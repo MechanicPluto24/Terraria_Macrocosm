@@ -1,21 +1,28 @@
-﻿using Terraria;
+﻿using Macrocosm.Common.Utils;
+using Macrocosm.Content.Rockets.Construction;
+using Terraria;
 using Terraria.IO;
+using Terraria.Localization;
 using Terraria.WorldBuilding;
 
 namespace Macrocosm.Content.WorldGeneration.Moon
 {
 	public class FinishPass : GenPass
 	{
-		public FinishPass(string name, float loadWeight) : base(name, loadWeight) { }
+		private string subworld;
+
+		public FinishPass(string name, float loadWeight, string subworld) : base(name, loadWeight) 
+		{ 
+			this.subworld = subworld;
+		}
 
 		protected override void ApplyPass(GenerationProgress progress, GameConfiguration configuration)
 		{
-
-			progress.Message = "Final touches...";
+			progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.FinishPass");
 
 			SetSpawnPoint();
 			Main.dayTime = true;
-
+			Main.time = 0;
 		}
 
 		public void SetSpawnPoint()
@@ -27,6 +34,7 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 				if (Main.tile[spawnTileX, tileY].HasTile)
 				{
 					Main.spawnTileY = tileY - 2;
+					LaunchPadLocations.SetDefaultLocation(subworld, Utility.SpawnWorldPosition);
 					break;
 				}
 			}

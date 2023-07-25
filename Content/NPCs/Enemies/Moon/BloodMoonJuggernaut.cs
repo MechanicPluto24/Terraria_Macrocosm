@@ -8,6 +8,7 @@ using Terraria.ModLoader;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.NPCs.Global;
+using Macrocosm.Content.Biomes;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
@@ -58,15 +59,12 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[]
 			{
 				BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Events.BloodMoon,
-
-				new FlavorTextBestiaryInfoElement(
-					"A hulking, tanky behemoth of alien flesh, bone, and fury. Get too close and they'll slug your bloody entrails into orbit!")
 			});
 		}
 
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
 		{
-			return spawnInfo.Player.Macrocosm().ZoneMoon && Main.bloodMoon ? .1f : 0f;
+			return spawnInfo.Player.InModBiome<MoonBiome>() && Main.bloodMoon ? .1f : 0f;
 		}
 
 		public override void AI()
@@ -354,7 +352,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		public override void ModifyNPCLoot(NPCLoot loot)
 		{
-			loot.Add(ItemDropRule.Common(ModContent.ItemType<CosmicDust>()));             // Always drop 1 cosmic dust
+			loot.Add(ItemDropRule.Common(ModContent.ItemType<SpaceDust>()));             // Always drop 1 cosmic dust
 			loot.Add(ItemDropRule.Common(ModContent.ItemType<ArtemiteOre>(), 16, 1, 6));  // 1/16 chance to drop 1-6 Artemite Ore
 			loot.Add(ItemDropRule.Common(ModContent.ItemType<ChandriumOre>(), 16, 1, 6)); // 1/16 chance to drop 1-6 Chandrium Ore
 			loot.Add(ItemDropRule.Common(ModContent.ItemType<SeleniteOre>(), 16, 1, 6));  // 1/16 chance to drop 1-6 Selenite Ore

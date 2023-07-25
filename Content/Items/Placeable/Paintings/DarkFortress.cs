@@ -15,7 +15,7 @@ namespace Macrocosm.Content.Items.Placeable.Paintings
 		{
 			Item.width = 32;
 			Item.height = 32;
-			Item.maxStack = 9999;
+			Item.maxStack = Item.CommonMaxStack;
 			Item.value = 0;
 			Item.useStyle = ItemUseStyleID.Swing;
 			Item.useTurn = true;
@@ -23,7 +23,7 @@ namespace Macrocosm.Content.Items.Placeable.Paintings
 			Item.useTime = 10;
 			Item.autoReuse = true;
 			Item.consumable = true;
-			Item.createTile = TileType<Content.Tiles.Paintings.DarkFortress>();
+			Item.createTile = TileType<Tiles.Paintings.DarkFortress>();
 			Item.placeStyle = 0;
 		}
 

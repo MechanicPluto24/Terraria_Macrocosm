@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Utils;
+using Macrocosm.Content.Biomes;
 using Macrocosm.Content.NPCs.Bosses.CraterDemon;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
@@ -22,7 +23,7 @@ namespace Macrocosm.Content.Items.Consumables.BossSummons
 			Item.width = 20;
 			Item.height = 18;
 			Item.scale = 1f;
-			Item.maxStack = 20;
+			Item.maxStack =  Item.CommonMaxStack;
 			Item.rare = ModContent.RarityType<MoonRarityT1>();
 			Item.useAnimation = 45;
 			Item.useTime = 45;
@@ -31,7 +32,7 @@ namespace Macrocosm.Content.Items.Consumables.BossSummons
 		}
 
 		public override bool CanUseItem(Player player)
-			=> player.Macrocosm().ZoneMoon && NPC.downedMoonlord && !NPC.AnyNPCs(ModContent.NPCType<CraterDemon>());
+			=> player.InModBiome<MoonBiome>() && NPC.downedMoonlord && !NPC.AnyNPCs(ModContent.NPCType<CraterDemon>());
 
 		public override bool? UseItem(Player player)
 		{

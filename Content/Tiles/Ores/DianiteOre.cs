@@ -19,7 +19,7 @@ namespace Macrocosm.Content.Tiles.Ores
             Main.tileMergeDirt[Type] = true;
             Main.tileSolid[Type] = true;
             Main.tileBlockLight[Type] = true;
-            Main.tileLighted[Type] = true;
+           // Main.tileLighted[Type] = true;
             MinPick = 225;
             MineResist = 5f;
 
