@@ -4,6 +4,7 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Players;
 using Macrocosm.Content.Rocket;
 using System.IO;
+using Terraria;
 
 namespace Macrocosm.Common.Netcode
 {
@@ -13,7 +14,8 @@ namespace Macrocosm.Common.Netcode
 		SyncPlayerDashDirection,
 		SyncPlayerRocketStatus,
 		SyncEmbarkInRocket,
-		SyncLaunchRocket
+		SyncLaunchRocket,
+		SyncModProjectile
 	}
 
 	public class PacketHandler
@@ -43,10 +45,26 @@ namespace Macrocosm.Common.Netcode
 				case MessageType.SyncLaunchRocket:
 					Rocket.ReceiveLaunchMessage(reader, whoAmI);
 					break;
-					
+				case MessageType.SyncModProjectile:
+					SyncModProjectile(reader);
+					break;
 				default:
 					Macrocosm.Instance.Logger.WarnFormat("Macrocosm: Unknown Message type: {messageType}", messageType);
  					break;
+			}
+		}
+
+		public static void SyncModProjectile(BinaryReader reader)
+		{
+			ushort whoAmI = reader.ReadUInt16();
+			Projectile projectile;
+			if (
+				Main.projectile.Length < whoAmI 
+				&& (projectile = Main.projectile[whoAmI]) is not null 
+				&& projectile.ModProjectile is not null
+				)
+			{
+				projectile.ModProjectile.NetReadFields(reader);
 			}
 		}
 	}
