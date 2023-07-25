@@ -4,7 +4,6 @@ using Terraria.DataStructures;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
-using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Tiles.Bars
 {
@@ -22,7 +21,8 @@ namespace Macrocosm.Content.Tiles.Bars
             TileObjectData.newTile.LavaDeath = false;
             TileObjectData.addTile(Type);
 
-            AddMapEntry(new Color(96, 98, 109), Language.GetText("Artemite Bar"));
+            LocalizedText name = CreateMapEntryName();
+			AddMapEntry(new Color(96, 98, 109), name);
         }
     }
 }

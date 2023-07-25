@@ -7,6 +7,7 @@ using Terraria.GameContent.ItemDropRules;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.NPCs.Global;
+using Macrocosm.Content.Biomes;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
@@ -35,6 +36,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			AIType = NPCID.ZombieMushroom;
 			Banner = Item.NPCtoBanner(NPCID.Zombie);
 			BannerItem = Item.BannerToItem(Banner);
+
+			SpawnModBiomes = new int[1] { ModContent.GetInstance<UndergroundMoonBiome>().Type };
 		}
 
 		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
@@ -48,7 +51,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
 		{
-			return spawnInfo.Player.Macrocosm().ZoneMoon && spawnInfo.Player.ZoneRockLayerHeight ? .1f : 0f;
+			return spawnInfo.Player.InModBiome<MoonBiome>() && spawnInfo.Player.ZoneRockLayerHeight ? .1f : 0f;
 		}
 
 		public override void AI()
@@ -117,7 +120,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		public override void ModifyNPCLoot(NPCLoot loot)
 		{
-			loot.Add(ItemDropRule.Common(ModContent.ItemType<CosmicDust>()));             // Always drop 1 cosmic dust
+			loot.Add(ItemDropRule.Common(ModContent.ItemType<SpaceDust>()));             // Always drop 1 cosmic dust
 			loot.Add(ItemDropRule.Common(ModContent.ItemType<ArtemiteOre>(), 16, 1, 6));  // 1/16 chance to drop 1-6 Artemite Ore
 			loot.Add(ItemDropRule.Common(ModContent.ItemType<ChandriumOre>(), 16, 1, 6)); // 1/16 chance to drop 1-6 Chandrium Ore
 			loot.Add(ItemDropRule.Common(ModContent.ItemType<SeleniteOre>(), 16, 1, 6));  // 1/16 chance to drop 1-6 Selenite Ore

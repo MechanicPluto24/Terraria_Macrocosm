@@ -1,11 +1,11 @@
-using Macrocosm.Content.Rarities;
+using Macrocosm.Content.Items.Global;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Dev
 {
-	public class DevPick : ModItem
+	public class DevPick : ModItem, IDevItem
 	{
 		public override void SetStaticDefaults()
 		{
@@ -23,7 +23,6 @@ namespace Macrocosm.Content.Items.Dev
 			Item.useStyle = ItemUseStyleID.Swing;
 			Item.knockBack = 6;
 			Item.value = 10000;
-			Item.rare = ModContent.RarityType<DevRarity>();
 			Item.UseSound = SoundID.Item1;
 			Item.autoReuse = true;
 			Item.tileBoost = 50;

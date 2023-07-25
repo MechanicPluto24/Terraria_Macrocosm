@@ -3,9 +3,16 @@ using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
 using SubworldLibrary;
-using Macrocosm.Content.UI.LoadingScreens;
 using Macrocosm.Content.Subworlds;
-using Macrocosm.Content.Rocket.Navigation.LaunchChecklist;
+using Macrocosm.Content.Rockets.Navigation.Checklist;
+using Macrocosm.Common.UI;
+using Macrocosm.Content.Systems;
+using Macrocosm.Content.Rockets;
+using Terraria.Utilities;
+using System.Linq;
+using Terraria.ModLoader.IO;
+using Macrocosm.Content.Rockets.Customization;
+using Macrocosm.Content.Rockets.Construction;
 
 namespace Macrocosm.Common.Subworlds
 {
@@ -31,8 +38,11 @@ namespace Macrocosm.Common.Subworlds
 		/// <summary> Post Update logic for this subworld. Not called on multiplayer clients </summary>
 		public virtual void PostUpdateWorld() { }
 
+		/// <summary> Modifiy color of the skies (applied to background, tiles, etc.) </summary>
+		public virtual void ModifyColorOfTheSkies(ref Color colorOfTheSkies) { }
+
 		/// <summary> Specifies the conditions for reaching this particular subworld </summary>
-		public virtual LaunchConditions LaunchConditions { get; } = new();
+		public virtual ChecklistConditionCollection LaunchConditions { get; } = new();
 
 		/// <summary> Called when entering a subworld. </summary>
 		public virtual void OnEnterWorld() { }
@@ -69,5 +79,37 @@ namespace Macrocosm.Common.Subworlds
 			else
 				Earth.LoadingScreen.Draw(Main.spriteBatch);
 		}
+
+		public override float GetGravity(Entity entity)
+		{
+			if(entity is Player)
+				return Player.defaultGravity * CurrentGravityMultiplier;
+
+			// This is set using the new NPC.GravityMultiplier property in MacrocosmGlobalNPC instead
+			if(entity is NPC)
+				return base.GetGravity(entity);
+
+			return base.GetGravity(entity);
+		}
+
+		private TagCompound dataCopyTag = new();
+		public override void CopyMainWorldData()
+		{
+			WorldDataSystem.Instance.CopyWorldData(dataCopyTag);
+			RocketManager.SaveRocketData(dataCopyTag);
+			CustomizationStorage.SaveUnlockedStatus(dataCopyTag);
+			LaunchPadLocations.SaveLocations(dataCopyTag);
+ 		}
+
+		public override void ReadCopiedMainWorldData()
+		{
+			WorldDataSystem.Instance.ReadCopiedWorldData(dataCopyTag);
+			RocketManager.ReadSavedRocketData(dataCopyTag);
+			CustomizationStorage.LoadUnlockedStatus(dataCopyTag); 
+		}
+
+		// Should these be different?
+		public override void CopySubworldData() => CopyMainWorldData();
+		public override void ReadCopiedSubworldData() => ReadCopiedMainWorldData();
 	}
 }

@@ -1,13 +1,13 @@
-﻿using Macrocosm.Content.Rarities;
-using Macrocosm.Content.Rocket;
-using SubworldLibrary;
+﻿using SubworldLibrary;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Macrocosm.Content.Rarities;
+using Macrocosm.Content.Items.Global;
 
 namespace Macrocosm.Content.Items.Dev
 {
-	class Teleporter : ModItem
+	class Teleporter : ModItem, IDevItem
 	{
 		public override void SetStaticDefaults()
 		{

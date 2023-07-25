@@ -1,3 +1,4 @@
+using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
@@ -11,29 +12,19 @@ namespace Macrocosm.Common.Hooks
 	{
 		public void Load(Mod mod)
 		{
-			Terraria.On_Main.ApplyColorOfTheSkiesToTiles += Main_ApplyColorOfTheSkiesToTiles;
+			On_Main.SetBackColor += On_Main_SetBackColor;
 		}
 		public void Unload() 
 		{
-			Terraria.On_Main.ApplyColorOfTheSkiesToTiles -= Main_ApplyColorOfTheSkiesToTiles;
+			On_Main.SetBackColor -= On_Main_SetBackColor;
 		}
 
-		private void Main_ApplyColorOfTheSkiesToTiles(Terraria.On_Main.orig_ApplyColorOfTheSkiesToTiles orig)
+		private void On_Main_SetBackColor(On_Main.orig_SetBackColor orig, Main.InfoToSetBackColor info, out Color sunColor, out Color moonColor)
 		{
-			if (SubworldSystem.IsActive<Moon>())
-			{
-				Color colorOfTheSkies = Main.ColorOfTheSkies.ToGrayscale();
+			orig(info, out sunColor, out moonColor);
 
-				Main.tileColor.R = (byte)((colorOfTheSkies.R + colorOfTheSkies.G + colorOfTheSkies.B + colorOfTheSkies.R * 7) / 10);
-				Main.tileColor.G = (byte)((colorOfTheSkies.R + colorOfTheSkies.G + colorOfTheSkies.B + colorOfTheSkies.G * 7) / 10);
-				Main.tileColor.B = (byte)((colorOfTheSkies.R + colorOfTheSkies.G + colorOfTheSkies.B + colorOfTheSkies.B * 7) / 10);
-			}
-			else
-			{
-				orig();
-			}
-		}
-
-
+			if (MacrocosmSubworld.AnyActive)
+ 				MacrocosmSubworld.Current.ModifyColorOfTheSkies(ref Main.ColorOfTheSkies);
+ 		}
 	}
 }

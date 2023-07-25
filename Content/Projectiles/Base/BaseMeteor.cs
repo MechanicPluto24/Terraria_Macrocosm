@@ -29,9 +29,9 @@ namespace Macrocosm.Content.Projectiles.Base
 
         public int AI_DustChanceDenominator;
 
-        public int GoreType = -1;
-        public int GoreCount;
-        public Vector2 GoreVelocity;
+        public int DebrisType = -1;
+        public int DebrisCount;
+        public Vector2 DebrisVelocity;
 
         public float BlastRadius => Width * BlastRadiusMultiplier;
 
@@ -58,7 +58,7 @@ namespace Macrocosm.Content.Projectiles.Base
             if (Main.netMode != NetmodeID.Server)
             {
                 SpawnImpactDusts();
-                SpawnGores();
+                SpawnDebris();
                 ImpactSounds();
             }
 
@@ -112,17 +112,16 @@ namespace Macrocosm.Content.Projectiles.Base
             }
         }
 
-        public virtual void SpawnGores()
+        public virtual void SpawnDebris()
         {
-            if (GoreType < 0)
+            if (DebrisType < 0)
                 return;
 
-            for (int i = 0; i < GoreCount; i++)
+            for (int i = 0; i < DebrisCount; i++)
             {
-                Gore.NewGore(Projectile.GetSource_FromThis(),
-                    new Vector2(Projectile.Center.X, Projectile.Center.Y),
-                    new Vector2(Projectile.velocity.X * GoreVelocity.X, -Projectile.velocity.Y * GoreVelocity.Y) * Main.rand.NextFloat(0.5f, 1f),
-                    GoreType);
+                Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center,
+                new Vector2(DebrisVelocity.X * Main.rand.NextFloat(-6f, 6f), DebrisVelocity.Y * Main.rand.NextFloat(-4f, -1f)), 
+                DebrisType, 0, 0f, 255);
             }
         }
 
@@ -139,7 +138,7 @@ namespace Macrocosm.Content.Projectiles.Base
                     float distance = Vector2.Distance(player.Center, Projectile.Center);
                     if (distance < ScreenshakeMaxDist)
                     {
-                        player.AddScreenshake(ScreenshakeIntensity - distance / ScreenshakeMaxDist * ScreenshakeIntensity);
+                        player.AddScreenshake(ScreenshakeIntensity - distance / ScreenshakeMaxDist * ScreenshakeIntensity, context: FullName + Projectile.whoAmI.ToString());
                     }
                 }
             }

@@ -19,7 +19,7 @@ namespace Macrocosm.Content.Items.Placeable.Trophies
 
 			Item.width = 32;
 			Item.height = 32;
-			Item.maxStack = 9999;
+			Item.maxStack = Item.CommonMaxStack;
 			Item.rare = ModContent.RarityType<MoonRarityT1>();
 			Item.value = Item.buyPrice(0, 1);
 		}

@@ -56,7 +56,6 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 		public override void AddRecipes()
 		{
 			Recipe recipe = Recipe.Create(Type);
-			recipe.AddIngredient(ModContent.ItemType<LuminiteCrystal>(), 1);
 			recipe.AddIngredient(ModContent.ItemType<SeleniteBar>(), 12);
 			recipe.AddTile(TileID.WorkBenches);
 			recipe.Register();

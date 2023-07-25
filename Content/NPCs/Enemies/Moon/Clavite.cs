@@ -7,6 +7,7 @@ using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Macrocosm.Content.Biomes;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
@@ -35,17 +36,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			NPC.knockBackResist = 0f;
 			NPC.noGravity = true;
 			NPC.noTileCollide = true;
-			//AnimationType = NPCID.MeteorHead;
-		}
-
-		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
-		{
-			bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[]
-			{
-				new FlavorTextBestiaryInfoElement(
-					"A ravenous alien that prowls the surface of the Moon, attacking and charging at anything it finds.")
-			});
-		}
+ 		}
 
 		public override void AI()
 		{
@@ -88,12 +79,12 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		}
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
 		{
-			return spawnInfo.Player.Macrocosm().ZoneMoon && Main.dayTime && spawnInfo.SpawnTileY <= Main.worldSurface + 100 ? .1f : 0f;
+			return spawnInfo.Player.InModBiome<MoonBiome>() && Main.dayTime && spawnInfo.SpawnTileY <= Main.worldSurface + 100 ? .1f : 0f;
 		}
 
 		public override void ModifyNPCLoot(NPCLoot loot)
 		{
-			loot.Add(ItemDropRule.Common(ModContent.ItemType<CosmicDust>()));             // Always drop 1 cosmic dust
+			loot.Add(ItemDropRule.Common(ModContent.ItemType<SpaceDust>()));             // Always drop 1 cosmic dust
 			loot.Add(ItemDropRule.Common(ModContent.ItemType<ArtemiteOre>(), 16, 1, 6));  // 1/16 chance to drop 1-6 Artemite Ore
 			loot.Add(ItemDropRule.Common(ModContent.ItemType<ChandriumOre>(), 16, 1, 6)); // 1/16 chance to drop 1-6 Chandrium Ore
 			loot.Add(ItemDropRule.Common(ModContent.ItemType<SeleniteOre>(), 16, 1, 6));  // 1/16 chance to drop 1-6 Selenite Ore

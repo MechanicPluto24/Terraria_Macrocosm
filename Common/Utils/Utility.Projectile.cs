@@ -6,13 +6,13 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
 using Terraria.GameContent;
-
+using System.Reflection;
 
 namespace Macrocosm.Common.Utils
 {
 	public static partial class Utility
 	{
-		public static void SetTrail<T>(this Projectile projectile) where T : Trail
+		public static void SetTrail<T>(this Projectile projectile) where T : VertexTrail
 		{
 			if(projectile.TryGetGlobalProjectile(out MacrocosmProjectile globalProj))
 			{
@@ -21,7 +21,12 @@ namespace Macrocosm.Common.Utils
 			}
  		}
 
-		public static Trail GetTrail(this Projectile projectile) => projectile.GetGlobalProjectile<MacrocosmProjectile>().Trail; 
+		public static VertexTrail GetTrail(this Projectile projectile) => projectile.GetGlobalProjectile<MacrocosmProjectile>().Trail;
+		public static bool TryGetTrail(this Projectile projectile, out VertexTrail trail)
+		{
+			trail = projectile.GetGlobalProjectile<MacrocosmProjectile>().Trail;
+			return trail is not null;
+		}
 
 		public static void Explode(this Projectile projectile, float blastRadius, int timeLeft = 2)
 		{
@@ -48,6 +53,13 @@ namespace Macrocosm.Common.Utils
 		/// </summary>
 		public static int TrueDamage(int damage)
 			=> damage / (Main.expertMode ? 4 : 2);
+
+		public static Rectangle GetDamageHitbox(this Projectile proj)
+		{
+			MethodInfo dynMethod = proj.GetType().GetMethod("Damage_GetHitbox",
+				BindingFlags.NonPublic | BindingFlags.Instance);
+			return (Rectangle)dynMethod.Invoke(proj, null);
+		}
 		
 		/// <summary>
 		/// Draws an animated projectile, leave texture null to draw as entity with the loaded texture
@@ -59,13 +71,9 @@ namespace Macrocosm.Common.Utils
 		/// <param name="texture"> Leave null to draw as entity with the loaded texture </param>
 		public static void DrawAnimated(this Projectile proj, Color lightColor, SpriteEffects effect, Vector2 drawOffset = default, Texture2D texture = null, Rectangle? frame = null, Effect shader = null)
 		{
-			bool drawEntity = false;
-			
+
 			if (texture is null)
-			{
-				texture = TextureAssets.Projectile[proj.type].Value;
-				drawEntity = true;
-			}
+ 				texture = TextureAssets.Projectile[proj.type].Value;
 
 			Vector2 position = proj.Center - Main.screenPosition;
 
@@ -81,10 +89,7 @@ namespace Macrocosm.Common.Utils
 				Main.spriteBatch.Begin(shader, state);
 			}
 
-			if (drawEntity)
-				Main.EntitySpriteDraw(texture, position, sourceRect, lightColor, proj.rotation, origin, proj.scale, effect, 0);
-			else
-				Main.spriteBatch.Draw(texture, position, sourceRect, lightColor, proj.rotation, origin, proj.scale, effect, 0f);
+			Main.EntitySpriteDraw(texture, position, sourceRect, lightColor, proj.rotation, origin, proj.scale, effect, 0);
 
 			if (shader is not null)
 			{
@@ -98,7 +103,7 @@ namespace Macrocosm.Common.Utils
 		/// Draws an animated projectile extra, such as a glowmask
 		/// (Only tested for held projectiles)  
 		/// </summary>
-		public static void DrawAnimatedExtra(this Projectile proj, Texture2D glowmask, Color lightColor, SpriteEffects effect, Vector2 drawOffset = default, Rectangle? frame = null)
-			=> proj.DrawAnimated(lightColor, effect, drawOffset + new Vector2(0, -2), glowmask, frame);
+		public static void DrawAnimatedExtra(this Projectile proj, Texture2D glowmask, Color color, SpriteEffects effect, Vector2 drawOffset = default, Rectangle? frame = null)
+			=> proj.DrawAnimated(color, effect, drawOffset + new Vector2(0, -2), glowmask, frame);
 	}
 }

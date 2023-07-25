@@ -18,7 +18,7 @@ namespace Macrocosm.Common.Hooks
 
 		private int MoonCoin_AllowCoinSlotPlacement(Terraria.UI.On_ItemSlot.orig_PickItemMovementAction orig, Item[] inv, int context, int slot, Item checkItem)
 		{
-			if (context == 1 && checkItem.type == ModContent.ItemType<MoonCoin>())
+			if (context == 1 && checkItem.type == ModContent.ItemType<Moonstone>())
  				return 0;
  			else
  				return orig(inv, context, slot, checkItem);

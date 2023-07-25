@@ -42,8 +42,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		{
 			Projectile.DamageType = DamageClass.Ranged;
 
-			Projectile.width = 16;
-			Projectile.height = 16;
+			Projectile.width = 22;
+			Projectile.height = 22;
 
 			Projectile.timeLeft = 180;
 
@@ -68,7 +68,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			Lighting.AddLight(Projectile.Center, 0.407f, 1f, 1f);
 
 			if (scheduleParticleSpawn)
-				SpawnParticles();
+ 				SpawnParticles();
 
 			if (Exploded)
 				return;
@@ -86,7 +86,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			}
 
 			Projectile.velocity.Y += gravity;
-			Projectile.rotation += Projectile.velocity.X * 0.1f;
+			Projectile.rotation += Projectile.velocity.X * 0.05f;
 
 			if (Main.rand.NextBool(2))
 			{

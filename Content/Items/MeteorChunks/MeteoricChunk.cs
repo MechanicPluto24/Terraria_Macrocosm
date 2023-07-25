@@ -26,7 +26,7 @@ namespace Macrocosm.Content.Items.MeteorChunks
 		{
 			Item.width = 32;
 			Item.height = 32;
-			Item.maxStack = 9999;
+			Item.maxStack = Item.CommonMaxStack;
 			Item.value = Item.sellPrice(silver: 1);
 			Item.rare = ItemRarityID.Purple;
 		}
@@ -53,7 +53,7 @@ namespace Macrocosm.Content.Items.MeteorChunks
 		{
 			if (Main.rand.NextBool(8))
 			{
-				Dust dust = Dust.NewDustDirect(Item.position, Item.width, Item.height / 2, ModContent.DustType<SmokeDust>(), newColor: new Color(160, 160, 160, 255));
+				Dust dust = Dust.NewDustDirect(Item.position, Item.width, Item.height / 2, ModContent.DustType<SmokeDust>(), newColor: new Color(160, 160, 160, 180));
 				dust.velocity.X = Main.rand.NextFloat(-0.2f, 0.2f);
 				dust.velocity.Y = -0.4f;
 				dust.noGravity = true;

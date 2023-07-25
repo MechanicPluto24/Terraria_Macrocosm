@@ -7,20 +7,20 @@ namespace Macrocosm.Content.Dusts
 	{
 		public override bool Update(Dust dust)
 		{
-			dust.position += dust.velocity;
-			dust.rotation += 0.1f * (dust.dustIndex % 2 == 0 ? -1 : 1);
+			dust.rotation += 0.3f * (dust.dustIndex % 2 == 0 ? -1 : 1);
  			dust.scale -= 0.02f;
 
-			float lightMultiplier = 0.25f * dust.scale;
-
-			Lighting.AddLight(dust.position, 1 * lightMultiplier, 1 * lightMultiplier, 1 * lightMultiplier);
+			if (!dust.noGravity)
+				dust.velocity.Y += 0.1f;
+			else
+				dust.velocity *= 0.96f;
 
 			if (dust.scale <= 0f)
-			{
-				dust.active = false;
-			}
+ 				dust.active = false;
 
-			return true;
+			dust.position += dust.velocity;
+ 
+			return false;
 		}
 	}
 }
