@@ -74,15 +74,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			NPC.aiStyle = -1;
  			Banner = Item.NPCtoBanner(NPCID.Zombie);
 			BannerItem = Item.BannerToItem(Banner);
-		}
 
-		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
-		{
-			bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[]
-			{
-				new FlavorTextBestiaryInfoElement(
-					"")
-			});
+			//SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBaseBiome>() }
 		}
 
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)

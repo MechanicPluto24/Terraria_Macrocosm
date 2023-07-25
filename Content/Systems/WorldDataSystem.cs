@@ -1,4 +1,5 @@
-﻿using SubworldLibrary;
+﻿using Macrocosm.Common.Subworlds;
+using SubworldLibrary;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -102,33 +103,9 @@ namespace Macrocosm.Content.Systems
 			foundVulcan = tag.ContainsKey(nameof(foundVulcan));
 		}
 
-		public void CopySubworldData()
-		{
-			// Moon flags
-			SubworldSystem.CopyWorldData(nameof(downedCraterDemon), downedCraterDemon);
-			SubworldSystem.CopyWorldData(nameof(downedMoonBeast), downedMoonBeast);
-			SubworldSystem.CopyWorldData(nameof(downedDementoxin), downedDementoxin);
-			SubworldSystem.CopyWorldData(nameof(downedLunalgamate), downedLunalgamate);
+		public void CopyWorldData(TagCompound dataCopyTag) => SaveWorldData(dataCopyTag);
 
-			// Global flags
-			SubworldSystem.CopyWorldData(nameof(foundVulcan), foundVulcan);
-		}
-
-		public void ReadCopiedSubworldData() 
-		{
-			// Moon flags
-			SubworldSystem.ReadCopiedWorldData<bool>(nameof(downedCraterDemon));
-			SubworldSystem.ReadCopiedWorldData<bool>(nameof(downedMoonBeast));
-			SubworldSystem.ReadCopiedWorldData<bool>(nameof(downedDementoxin));
-			SubworldSystem.ReadCopiedWorldData<bool>(nameof(downedLunalgamate));
-
-			// Global flags 
-			SubworldSystem.ReadCopiedWorldData<bool>(nameof(foundVulcan));
-		}
-
-		// Should these be different?
-		public void CopyMainWorldData() => CopySubworldData();
-		public void ReadCopiedMainWorldData() => ReadCopiedSubworldData();
+		public void ReadCopiedWorldData(TagCompound dataCopyTag) => LoadWorldData(dataCopyTag);
 
 		public override void NetSend(BinaryWriter writer)
 		{

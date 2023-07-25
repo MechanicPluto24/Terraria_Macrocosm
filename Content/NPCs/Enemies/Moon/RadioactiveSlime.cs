@@ -36,15 +36,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			AnimationType = NPCID.BlueSlime;
 			Banner = Item.NPCtoBanner(NPCID.BlueSlime);
 			BannerItem = Item.BannerToItem(Banner);
-			SpawnModBiomes = new int[1] { ModContent.GetInstance<IrradiationBiome>().Type }; // Associates this NPC with the Moon Biome & Irradiation in Bestiary
-		}
-		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
-		{
-			bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[]
-			{
-				new FlavorTextBestiaryInfoElement(
-					"These slimes have absorbed high amounts of uranium, chromium, and other radioactive materials. Handle with care!")
-			});
+			SpawnModBiomes = new int[1] { ModContent.GetInstance<IrradiationBiome>().Type };  
 		}
 
 		public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)

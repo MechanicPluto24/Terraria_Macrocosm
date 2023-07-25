@@ -36,15 +36,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			BannerItem = Item.BannerToItem(Banner);
 		}
 
-		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
-		{
-			bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[]
-			{
-				new FlavorTextBestiaryInfoElement(
-					"As if zombies weren't bad enough on Earth, the Moon is infested with undead astronauts from long abandoned human colonies.")
-			});
-		}
-
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
 		{
 			return spawnInfo.Player.InModBiome<MoonBiome>() && !Main.dayTime ? .1f : 0f;

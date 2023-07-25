@@ -1,4 +1,5 @@
 using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Items.Currency;
 using Macrocosm.Content.Subworlds;
@@ -6,8 +7,10 @@ using SubworldLibrary;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Global
@@ -25,7 +28,7 @@ namespace Macrocosm.Content.NPCs.Global
 		{
 			if (npc.ModNPC is IMoonEnemy)
 			{
-				npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<MoonCoin>(), 10));
+				npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Moonstone>(), 10));
 			}
 		}
 
@@ -46,6 +49,20 @@ namespace Macrocosm.Content.NPCs.Global
 				npc.GravityMultiplier *= MacrocosmSubworld.Current.GravityMultiplier;
 				npc.GravityIgnoresSpace = true;
 			}
+		}
+
+		public override void SetBestiary(NPC npc, BestiaryDatabase database, BestiaryEntry bestiaryEntry)
+		{
+			if (npc.ModNPC is null || npc.ModNPC.Mod != Macrocosm.Instance)
+				return;
+
+			LocalizedText flavorText = Utility.GetLocalizedTextOrEmpty("Mods.Macrocosm.NPCs." + npc.ModNPC.Name + ".BestiaryFlavorText");
+			if (flavorText != LocalizedText.Empty)
+			{
+				bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[] {
+					new FlavorTextBestiaryInfoElement(flavorText.Key)
+				});
+			} 
 		}
 
 		private static void SetImmunities()

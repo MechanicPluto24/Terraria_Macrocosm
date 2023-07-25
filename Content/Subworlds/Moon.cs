@@ -52,7 +52,7 @@ namespace Macrocosm.Content.Subworlds
             new IrradiationPass("IrradiationPass", 3f),
             new ScuffedSmoothPass("ScuffedSmoothPass", 1f),
             new AmbientPass("AmbientPass", 0.2f),
-            new FinishPass("FinishPass", 0.1f)
+            new FinishPass("FinishPass", 0.1f, Name)
         };
 
 		public override ChecklistConditionCollection LaunchConditions => new()

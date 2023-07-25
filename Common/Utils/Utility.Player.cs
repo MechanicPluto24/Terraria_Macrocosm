@@ -10,6 +10,9 @@ namespace Macrocosm.Common.Utils
 {
     public static partial class Utility
 	{
+		public static Point SpawnTile => new(Main.spawnTileX, Main.spawnTileY);
+		public static Vector2 SpawnWorldPosition => new(Main.spawnTileX * 16f, Main.spawnTileY * 16f);
+
 		public static bool UICloseConditions(this Player player) =>
 			player.dead || !player.active || Main.editChest || Main.editSign || player.talkNPC >= 0 || !Main.playerInventory;
 

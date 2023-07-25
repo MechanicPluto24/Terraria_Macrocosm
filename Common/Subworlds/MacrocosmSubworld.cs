@@ -9,6 +9,10 @@ using Macrocosm.Common.UI;
 using Macrocosm.Content.Systems;
 using Macrocosm.Content.Rockets;
 using Terraria.Utilities;
+using System.Linq;
+using Terraria.ModLoader.IO;
+using Macrocosm.Content.Rockets.Customization;
+using Macrocosm.Content.Rockets.Construction;
 
 namespace Macrocosm.Common.Subworlds
 {
@@ -88,28 +92,24 @@ namespace Macrocosm.Common.Subworlds
 			return base.GetGravity(entity);
 		}
 
+		private TagCompound dataCopyTag = new();
 		public override void CopyMainWorldData()
 		{
-			WorldDataSystem.Instance.CopyMainWorldData();
-			RocketManager.CopyRocketData();
+			WorldDataSystem.Instance.CopyWorldData(dataCopyTag);
+			RocketManager.SaveRocketData(dataCopyTag);
+			CustomizationStorage.SaveUnlockedStatus(dataCopyTag);
+			LaunchPadLocations.SaveLocations(dataCopyTag);
+ 		}
+
+		public override void ReadCopiedMainWorldData()
+		{
+			WorldDataSystem.Instance.ReadCopiedWorldData(dataCopyTag);
+			RocketManager.ReadSavedRocketData(dataCopyTag);
+			CustomizationStorage.LoadUnlockedStatus(dataCopyTag); 
 		}
 
-		public override void ReadCopiedMainWorldData() 
-		{
-			WorldDataSystem.Instance.ReadCopiedMainWorldData();
-			RocketManager.ReadCopiedRocketData();
-		}
-
-		public override void CopySubworldData() 
-		{
-			WorldDataSystem.Instance.CopySubworldData();
-			RocketManager.CopyRocketData();
-		}
-
-		public override void ReadCopiedSubworldData() 
-		{
-			WorldDataSystem.Instance.ReadCopiedSubworldData();
-			RocketManager.ReadCopiedRocketData();
-		}
+		// Should these be different?
+		public override void CopySubworldData() => CopyMainWorldData();
+		public override void ReadCopiedSubworldData() => ReadCopiedMainWorldData();
 	}
 }

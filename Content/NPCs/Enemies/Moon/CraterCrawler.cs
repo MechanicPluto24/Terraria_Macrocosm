@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Content.Biomes;
+using Macrocosm.Content.NPCs.Global;
 using Microsoft.Xna.Framework;
 using System.IO;
 using Terraria;
@@ -10,7 +11,7 @@ using Terraria.ModLoader;
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
 	// These three class showcase usage of the WormHead, WormBody and WormTail ExampleMod classes from Worm.cs
-	internal class CraterCrawlerHead : WormHead
+	internal class CraterCrawlerHead : WormHead, IMoonEnemy
 	{
 		public override int BodyType => ModContent.NPCType<CraterCrawlerBody>();
 		public override int TailType => ModContent.NPCType<CraterCrawlerTail>();
@@ -44,9 +45,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			{
 				// Sets the spawning conditions of this NPC that is listed in the bestiary.
 				//BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Times.NightTime,
-
-				// Sets the description of this NPC that is listed in the bestiary.
-				new FlavorTextBestiaryInfoElement("Evil boi")
 			});
 		}
 

@@ -17,6 +17,7 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
 
         public void Unload()
         {
+            worldInfoStorage.Clear();
             worldInfoStorage = null;
         }
 

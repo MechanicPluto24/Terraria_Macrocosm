@@ -16,6 +16,7 @@ using Macrocosm.Common.Subworlds;
 using System.Linq;
 using Terraria.UI.Chat;
 using Terraria.GameContent;
+using Macrocosm.Content.Rockets.Construction;
 
 namespace Macrocosm.Content.Rockets
 {
@@ -147,6 +148,12 @@ namespace Macrocosm.Content.Rockets
 		{
 			CurrentSubworld = MacrocosmSubworld.CurrentSubworld;
 			StartPositionY = Center.Y;
+		}
+
+		public void OnWorldLoad()
+		{
+			if(TargetLandingPosition == Vector2.Zero)
+ 				TargetLandingPosition = LaunchPadLocations.GetDefaultLocation(CurrentSubworld);
 		}
 
 		/// <summary> Update the rocket </summary>
@@ -483,6 +490,11 @@ namespace Macrocosm.Content.Rockets
 			{
 				CurrentSubworld = commander.TargetSubworldID;
 				//NetSync();
+
+				// if(commander.TargetLaunchPad is not null)
+				//   TargetLandingPosition = commander.TargetLaunchPad;
+				// else 
+				TargetLandingPosition = LaunchPadLocations.GetDefaultLocation(CurrentSubworld);
 
 				if (commander.TargetSubworldID == "Earth")
 					SubworldSystem.Exit();

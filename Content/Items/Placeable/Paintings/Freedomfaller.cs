@@ -5,7 +5,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Placeable.Paintings
 {
-	public class Empress : ModItem
+	public class Freedomfaller : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
@@ -13,8 +13,8 @@ namespace Macrocosm.Content.Items.Placeable.Paintings
 
 		public override void SetDefaults()
 		{
-			Item.width = 22;
-			Item.height = 32;
+			Item.width = 26;
+			Item.height = 26;
 			Item.maxStack = Item.CommonMaxStack;
 			Item.value = 0;
 			Item.useStyle = ItemUseStyleID.Swing;
@@ -23,7 +23,7 @@ namespace Macrocosm.Content.Items.Placeable.Paintings
 			Item.useTime = 10;
 			Item.autoReuse = true;
 			Item.consumable = true;
-			Item.createTile = TileType<Tiles.Paintings.Empress>();
+			Item.createTile = TileType<Tiles.Paintings.Freedomfaller>();
 			Item.placeStyle = 0;
 		}
 
