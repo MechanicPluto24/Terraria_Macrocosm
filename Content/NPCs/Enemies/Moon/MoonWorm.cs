@@ -46,9 +46,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			{
 				// Sets the spawning conditions of this NPC that is listed in the bestiary.
 				//BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Times.NightTime,
-
-				// Sets the description of this NPC that is listed in the bestiary.
-				new FlavorTextBestiaryInfoElement("BIG boi")
 			});
 		}
 

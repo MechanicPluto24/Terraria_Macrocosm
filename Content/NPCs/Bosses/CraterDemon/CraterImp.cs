@@ -85,12 +85,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		{
 			int associatedNPCType = ModContent.NPCType<CraterDemon>();
 			bestiaryEntry.UIInfoProvider = new CommonEnemyUICollectionInfoProvider(ContentSamples.NpcBestiaryCreditIdsByNpcNetIds[associatedNPCType], quickUnlock: true);
-
-			bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[]
-			{
-				new FlavorTextBestiaryInfoElement(
-					"Smaller companions of the infamous Crater Demon, these lesser demons aid their master in combat.")
-			});
 		}
 
 		public override void FindFrame(int frameHeight)

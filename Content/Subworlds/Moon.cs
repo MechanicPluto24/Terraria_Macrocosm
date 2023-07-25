@@ -12,7 +12,7 @@ using Macrocosm.Content.Systems;
 using Macrocosm.Content.UI.LoadingScreens;
 using Macrocosm.Content.WorldGeneration.Moon;
 using Macrocosm.Content.Projectiles.Environment.Meteors;
-using Macrocosm.Content.Rocket.Navigation.LaunchChecklist;
+using Macrocosm.Content.Rockets.Navigation.Checklist;
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Common.Utils;
 using Macrocosm.Common.Drawing;
@@ -46,16 +46,16 @@ namespace Macrocosm.Content.Subworlds
         {
             genGroundPass,
             new CraterPass("CraterPass", 1f),
-             new RegolithPass("RegolithPass", 5f),
+            new RegolithPass("RegolithPass", 5f),
             new OrePass("OrePass", 0.75f),
             new CavePass("CavePass", 1f, genGroundPass.RockLayerHigh, genGroundPass.RockLayerHigh),
             new IrradiationPass("IrradiationPass", 3f),
             new ScuffedSmoothPass("ScuffedSmoothPass", 1f),
             new AmbientPass("AmbientPass", 0.2f),
-            new FinishPass("FinishPass", 0.1f)
+            new FinishPass("FinishPass", 0.1f, Name)
         };
 
-		public override LaunchConditions LaunchConditions => new()
+		public override ChecklistConditionCollection LaunchConditions => new()
 		{
 			//new ChecklistCondition("MoonLord", () => NPC.downedMoonlord, hideIfMet: true) // placeholder for now
 		};
@@ -88,7 +88,12 @@ namespace Macrocosm.Content.Subworlds
             SkyManager.Instance.Deactivate("Macrocosm:MoonSky");
         }
 
-        public override void PreUpdateWorld()
+		public override bool GetLight(Tile tile, int x, int y, ref FastRandom rand, ref Vector3 color)
+		{
+			return false;
+		}
+
+		public override void PreUpdateWorld()
         {
             UpdateBloodMoon();
             UpdateMeteorStorm();

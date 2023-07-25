@@ -21,6 +21,13 @@
     <Optimize>True</Optimize>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Content\Items\Placeable\Paintings\Freedomfaller.png" />
+    <None Remove="Content\Tiles\Paintings\Freedomfaller.png" />
+    <None Remove="Content\Tiles\Paintings\HourglassTwins.png" />
+    <None Remove="Content\Tiles\Paintings\InvaderZimBlueprint.png" />
+    <None Remove="Content\Tiles\Paintings\TimberHearth.png" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="tModLoader.CodeAssist" Version="0.1.*" />
   </ItemGroup>
   <ItemGroup>
@@ -28,7 +35,7 @@
       <HintPath>lib\SubworldLibrary.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <Target BeforeTargets="Build" Name="BuildEffects" Inputs="Assets/Effects/*.fx" Outputs="Assets/Effects/*.xnb">
-	  <Exec Command="fxcompiler.exe" WorkingDirectory="Assets/Effects" />
-  </Target>
+  <!-- <Target BeforeTargets="Build" Name="BuildEffects" Inputs="Assets/Effects/*.fx" Outputs="Assets/Effects/*.xnb"> -->
+   <!-- <Exec Command="fxcompiler.exe" WorkingDirectory="Assets/Effects" /> -->
+  <!-- </Target> -->
 </Project>

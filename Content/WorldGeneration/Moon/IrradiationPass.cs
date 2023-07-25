@@ -6,6 +6,7 @@ using Macrocosm.Content.Tiles.Walls;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.IO;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
 
@@ -32,7 +33,7 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 
 		protected override void ApplyPass(GenerationProgress progress, GameConfiguration configuration)
 		{
-			progress.Message = "Irradiating the Moon..."; //FIXME: change this lol 
+			progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.IrradiationPass");
 			CenterX = GetBiomeCenterX();
 			ClearMainHole(progress);
 			AddBlocks(progress);

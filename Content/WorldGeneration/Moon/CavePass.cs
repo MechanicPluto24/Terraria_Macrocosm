@@ -3,6 +3,7 @@ using Macrocosm.Content.Tiles.Walls;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.IO;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
 
@@ -21,6 +22,8 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 
 		protected override void ApplyPass(GenerationProgress progress, GameConfiguration configuration)
 		{
+			progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.CavePass");
+
 			double smallCaveFreq = 0.0009;
 			double largeCaveFreq = 0.00013;
 
@@ -34,7 +37,6 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 			List<Point> smallCaves = new();
 			List<Point> largeCaves = new();
  
-			progress.Message = "Carving the Moon...";
 
 			// generate small caves in the protolith layer 
 			for (int smallCaveSpot = 0; smallCaveSpot < (int)((double)(Main.maxTilesX * Main.maxTilesY) * smallCaveFreq); smallCaveSpot++)

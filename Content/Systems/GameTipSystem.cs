@@ -1,16 +1,16 @@
 ﻿using Terraria;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
-using Macrocosm.Content.UI.LoadingScreens;
 using MonoMod.Cil;
 using Terraria.GameContent.UI;
 using Terraria.Localization;
 using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.UI;
 
 namespace Macrocosm.Common.Systems
 {
 
-	public class GameTipSystem : ModSystem
+    public class GameTipSystem : ModSystem
 	{
 		public override void Load()
 		{

@@ -1,6 +1,6 @@
 ﻿using Macrocosm.Content.NPCs.Global;
 using Macrocosm.Content.Players;
-using Macrocosm.Content.Rocket;
+using Macrocosm.Content.Rockets;
 using Terraria;
 using Macrocosm.Content.Projectiles.Global;
 using Macrocosm.Content.Items.Global;
@@ -15,8 +15,8 @@ namespace Macrocosm.Common.Utils
         public static MacrocosmPlayer Macrocosm(this Player player)
             => player.GetModPlayer<MacrocosmPlayer>();
 
-		public static void AddScreenshake(this Player player, float value) 
-            => player.Macrocosm().ScreenShakeIntensity += value;
+		public static void AddScreenshake(this Player player, float value, string context) 
+            => player.Macrocosm().AddScreenshake(value, context);
         
         public static DashPlayer DashPlayer(this Player player)
             => player.GetModPlayer<DashPlayer>();

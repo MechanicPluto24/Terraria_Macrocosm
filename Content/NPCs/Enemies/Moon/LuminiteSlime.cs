@@ -38,20 +38,13 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			NPC.aiStyle = 1;
 			AIType = NPCID.Crimslime;
 			AnimationType = NPCID.BlueSlime;
+
+			SpawnModBiomes = new int[1] { ModContent.GetInstance<UndergroundMoonBiome>().Type };
 		}
 
 		const float attackCooldown = 280f;
 
  		public ref float AI_AttackTimer => ref NPC.ai[1]; // Not used in vanilla code for this particular AIType
-
-		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
-		{
-			bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[]
-			{
-				new FlavorTextBestiaryInfoElement(
-					"")
-			});
-		}
 
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
 		{

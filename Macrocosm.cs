@@ -7,12 +7,11 @@ using Terraria.ModLoader;
 using Terraria.Graphics.Effects;
 using Terraria.Graphics.Shaders;
 using SubworldLibrary;
-using Macrocosm.Content.Players;
-using Macrocosm.Content.Rocket;
 using Macrocosm.Content.Subworlds;
 using Macrocosm.Common.Netcode;
 using Macrocosm.Content.Tiles.Blocks;
 using Terraria.GameContent;
+using Terraria.ModLoader.Core;
 
 namespace Macrocosm
 {
@@ -20,9 +19,16 @@ namespace Macrocosm
 	{
 		public static Mod Instance => ModContent.GetInstance<Macrocosm>();
 
-		public const string EffectAssetPath = "Macrocosm/Assets/Effects/";
-		public const string EmptyTexPath = "Macrocosm/Assets/Textures/Empty";
-		public static Texture2D EmptyTex => ModContent.Request<Texture2D>(EmptyTexPath).Value;
+		public const string EffectAssetsPath = "Macrocosm/Assets/Effects/";
+		public const string TextureAssetsPath = "Macrocosm/Assets/Textures/";
+		public const string MusicAssetsPath = "Macrocosm/Assets/Music/";
+		public const string SFXAssetsPath = "Macrocosm/Assets/Sounds/SFX/";
+
+		public const string EmptyTexPath = TextureAssetsPath + "Empty";
+		public static Asset<Texture2D> EmptyTexAsset => ModContent.Request<Texture2D>(EmptyTexPath);
+		public static Texture2D EmptyTex => EmptyTexAsset.Value;
+
+		public static Type[] GetTypes() => AssemblyManager.GetLoadableTypes(Instance.Code);
 
 		public override void Load()
 		{
@@ -35,8 +41,8 @@ namespace Macrocosm
 		{
 			AssetRequestMode mode = AssetRequestMode.ImmediateLoad;
 			
-			Filters.Scene["Macrocosm:RadiationNoiseEffect"] = new Filter(new ScreenShaderData(new Ref<Effect>(ModContent.Request<Effect>(EffectAssetPath + "RadiationNoiseEffect", mode).Value), "RadiationNoiseEffect"));
-			Filters.Scene["Macrocosm:RadiationNoiseEffect"].Load();
+			Filters.Scene["Macrocosm:RadiationNoise"] = new Filter(new ScreenShaderData(new Ref<Effect>(ModContent.Request<Effect>(EffectAssetsPath + "RadiationNoise", mode).Value), "RadiationNoise"));
+			Filters.Scene["Macrocosm:RadiationNoise"].Load();
 		}
 
 		private void LoadModCalls()
@@ -58,7 +64,7 @@ namespace Macrocosm
 
 		private void ApplyResprites()
 		{
-			string respritePath = "Macrocosm/Assets/Textures/Resprites/";
+			string respritePath = Macrocosm.TextureAssetsPath + "Resprites/";
 			TextureAssets.Moon[0] = ModContent.Request<Texture2D>(respritePath + "Moon_0");
 		}
 

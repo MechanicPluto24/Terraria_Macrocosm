@@ -1,15 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using Terraria.GameContent.Drawing;
 
 namespace Macrocosm.Common.Drawing.Particles
 {
-	/// <summary> Particle.Creation, by sucss, Nurby & Feldy @ PellucidMod (RIP) </summary>
-	public partial class Particle
+    /// <summary> Particle.Creation, by sucss, Nurby & Feldy @ PellucidMod (RIP) </summary>
+    public partial class Particle
 	{
 		/// <summary>
 		/// Creates a new particle with the specified parameters. Sync only when absolutely necessary.

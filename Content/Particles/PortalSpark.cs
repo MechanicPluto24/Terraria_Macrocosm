@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria.ModLoader;
 using Macrocosm.Common.Utils;
 using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Content.Rockets;
 
 namespace Macrocosm.Content.Particles
 {
@@ -16,7 +17,7 @@ namespace Macrocosm.Content.Particles
 
 		public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
 		{
-			Texture2D glow = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/CurvedGlow").Value;
+			Texture2D glow = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "CurvedGlow").Value;
 			var state = spriteBatch.SaveState();
 			spriteBatch.End();
 			spriteBatch.Begin(BlendState.Additive, state);

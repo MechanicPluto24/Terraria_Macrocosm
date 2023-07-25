@@ -23,8 +23,8 @@ namespace Macrocosm.Content.Trails
 		{
 			shader = new MiscShaderData(Main.VertexPixelShaderRef, "MagicMissile")
 						.UseProjectionMatrix(doUse: true)
-						.UseImage0(ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/FadeOutMask"))
-						.UseImage1(ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/FadeOutMask"))
+						.UseImage0(ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "FadeOutMask"))
+						.UseImage1(ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "FadeOutMask"))
 						.UseImage2("Images/Extra_193");
 
 			float lerp = Utility.InverseLerp(0, 0.01f, progressOnStrip);

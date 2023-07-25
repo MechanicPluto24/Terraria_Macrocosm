@@ -2,12 +2,13 @@
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
 using Macrocosm.Content.Projectiles.Friendly.Summon;
+using Macrocosm.Content.Rockets;
 using Terraria;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Buffs.GoodBuffs
 {
-	public class ChandriumEmpowerment : ModBuff
+    public class ChandriumEmpowerment : ModBuff
 	{
 		public override void SetStaticDefaults()
 		{

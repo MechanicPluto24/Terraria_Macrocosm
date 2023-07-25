@@ -29,7 +29,7 @@ using Macrocosm.Content.Items.Weapons.Magic;
 using Microsoft.Xna.Framework.Graphics.PackedVector;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Content.Particles;
-using Macrocosm.Content.Rocket.Navigation.InfoElements;
+using Macrocosm.Content.Rockets.Navigation.NavigationInfo;
 using Macrocosm.Common.Drawing;
 
 namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
@@ -352,14 +352,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 				Music = MusicLoader.GetMusicSlot(Mod, "Assets/Music/SpaceInvader");
 		}
 
-		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
-		{
-			bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[]
-			{
-				new FlavorTextBestiaryInfoElement(
-					"This massive meteorite demon is a member of a race that invaded the Moon long ago, and bears the scars of an ancient war.")
-			});
-		}
 
 		public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)/* tModPorter Note: bossLifeScale -> balance (bossAdjustment is different, see the docs for details) */
 		{
@@ -389,7 +381,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			LeadingConditionRule notExpertRule = new LeadingConditionRule(new Conditions.NotExpert());
 			notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<CraterDemonMask>(), 7));
 
-			notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<MoonCoin>(), 1, 30, 60));
+			notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<Moonstone>(), 1, 30, 60));
 			notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<DeliriumPlating>(), 1, 30, 90));
 
 			notExpertRule.OnSuccess(ItemDropRule.OneFromOptions(1,
@@ -404,10 +396,14 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 		public override void OnKill()
 		{
-			if (!DownedBossSystem.DownedCraterDemon)
-				NPC.NewNPC(NPC.GetSource_NaturalSpawn(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<MoonChampion>(), 10); // 10 seconds of immunity 
+			if (!WorldDataSystem.Instance.DownedCraterDemon)
+				NPC.NewNPC(NPC.GetSource_NaturalSpawn(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<MoonChampion>());
 
-			NPC.SetEventFlagCleared(ref DownedBossSystem.DownedCraterDemon, -1);
+			// This is only used currently for lantern night, which we don't want in our subworlds
+			//NPC.SetEventFlagCleared(ref DownedBossSystem.downedCraterDemon, -1);
+
+			// Similar events can still happen with our event listener system
+			WorldDataSystem.Instance.DownedCraterDemon = true;
 		}
 
 		public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
@@ -514,7 +510,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		{
 			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Bosses/CraterDemon/CraterDemon_Glow").Value;
 			Texture2D glowmaskPhase2 = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Bosses/CraterDemon/CraterDemon_Glow_Phase2").Value;
-			Texture2D star = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/Star1").Value;
+			Texture2D star = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Star1").Value;
 
 			spriteBatch.Draw(glowmask, NPC.position - screenPos + new Vector2(0, 4), NPC.frame, (Color)GetAlpha(Color.White), NPC.rotation, Vector2.Zero, NPC.scale, SpriteEffects.None, 0f);
 

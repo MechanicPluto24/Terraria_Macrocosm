@@ -2,7 +2,7 @@
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Players;
-using Macrocosm.Content.Rocket;
+using Macrocosm.Content.Rockets;
 using System.IO;
 
 namespace Macrocosm.Common.Netcode
@@ -11,9 +11,8 @@ namespace Macrocosm.Common.Netcode
 	{
 		SyncParticle,
 		SyncPlayerDashDirection,
-		SyncPlayerRocketStatus,
-		SyncEmbarkInRocket,
-		SyncLaunchRocket
+		SyncRocketData,
+		SyncPlayerRocketStatus
 	}
 
 	public class PacketHandler
@@ -36,14 +35,10 @@ namespace Macrocosm.Common.Netcode
 					RocketPlayer.ReceiveSyncPlayer(reader, whoAmI);
 					break;
 
-				case MessageType.SyncEmbarkInRocket:
-					Rocket.ReceiveEmbarkedPlayer(reader, whoAmI);
+				case MessageType.SyncRocketData:
+					Rocket.SyncRocketData(reader, whoAmI);
 					break;
 
-				case MessageType.SyncLaunchRocket:
-					Rocket.ReceiveLaunchMessage(reader, whoAmI);
-					break;
-					
 				default:
 					Macrocosm.Instance.Logger.WarnFormat("Macrocosm: Unknown Message type: {messageType}", messageType);
  					break;

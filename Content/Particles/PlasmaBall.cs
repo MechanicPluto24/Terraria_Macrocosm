@@ -20,7 +20,7 @@ namespace Macrocosm.Content.Particles
 			DrawMagicPixelTrail(Vector2.Zero, 4f, 1f, new Color(104, 255, 255), new Color(104, 255, 255, 0));
 
 			// draw circular glow
-			Texture2D glow = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/SimpleGlow").Value;
+			Texture2D glow = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "SimpleGlow").Value;
 
 			var state = spriteBatch.SaveState();
 			spriteBatch.End();
