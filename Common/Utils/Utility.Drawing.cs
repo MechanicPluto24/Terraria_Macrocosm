@@ -16,7 +16,11 @@ namespace Macrocosm.Common.Utils
     {
         public static Vector2 ScreenCenter => new(Main.screenWidth / 2f, Main.screenHeight / 2f);
 
-        public static void ManipulateColor(ref Color color, byte amount)
+		public static Vector2 ScreenCenterInWorld => Main.screenPosition + ScreenCenter;
+
+		public static float NormalizedUIScale => (Main.UIScale - 0.5f) / (2.0f - 0.5f);
+
+		public static void ManipulateColor(ref Color color, byte amount)
         {
             color.R += amount;
             color.G += amount;

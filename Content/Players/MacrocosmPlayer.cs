@@ -12,6 +12,7 @@ using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Terraria.Localization;
 using Macrocosm.Content.Biomes;
+using Macrocosm.Content.CameraModifiers;
 
 namespace Macrocosm.Content.Players
 {
@@ -38,14 +39,6 @@ namespace Macrocosm.Content.Players
 			set => chanceToNotConsumeAmmo = MathHelper.Clamp(value, 0f, 1f);
 		}
         private float chanceToNotConsumeAmmo = 0f;
-
-		/// <summary> Set or add to current screenshake </summary>
-		public float ScreenShakeIntensity
-		{
-			get => screenShakeIntensity;
-			set => screenShakeIntensity = MathHelper.Clamp(value, 0, 100);
-		}
-        private float screenShakeIntensity = 0f;
 
         public override void ResetEffects()
 		{
@@ -90,18 +83,13 @@ namespace Macrocosm.Content.Players
 
 		public override void PostUpdateMiscEffects()
 		{
-			UpdateGravity();
+			//UpdateGravity();
 			UpdateFilterEffects();
+
 		}
 
-		public override void ModifyScreenPosition()
-		{
-			if (ScreenShakeIntensity > 0.1f)
-			{
-				Main.screenPosition += new Vector2(Main.rand.NextFloat(ScreenShakeIntensity), Main.rand.NextFloat(ScreenShakeIntensity));
-				ScreenShakeIntensity *= 0.9f;
-			}
-		}
+		public void AddScreenshake(float intensity, string context) 
+			=> Main.instance.CameraModifiers.Add(new ScreenshakeCameraModifier(intensity, context));
 
 		public override void PostUpdateEquips()
 		{
@@ -120,27 +108,27 @@ namespace Macrocosm.Content.Players
             }
 		}
 
-		private void UpdateGravity()
-		{
-			if (MacrocosmSubworld.AnyActive)
-				Player.gravity = Player.defaultGravity * MacrocosmSubworld.Current.GravityMultiplier;
-		}
+		//private void UpdateGravity()
+		//{
+		//	if (MacrocosmSubworld.AnyActive)
+		//		Player.gravity = Player.defaultGravity * MacrocosmSubworld.Current.GravityMultiplier;
+		//}
 
 		private void UpdateFilterEffects()
 		{
 			if (Player.InModBiome<IrradiationBiome>())
 			{
-				if (!Filters.Scene["Macrocosm:RadiationNoiseEffect"].IsActive())
-					Filters.Scene.Activate("Macrocosm:RadiationNoiseEffect");
+				if (!Filters.Scene["Macrocosm:RadiationNoise"].IsActive())
+					Filters.Scene.Activate("Macrocosm:RadiationNoise");
 
 				RadNoiseIntensity += 0.189f * Utility.InverseLerp(400, 10000, TileCounts.Instance.IrradiatedRockCount, clamped: true);
 
-				Filters.Scene["Macrocosm:RadiationNoiseEffect"].GetShader().UseIntensity(RadNoiseIntensity);
+				Filters.Scene["Macrocosm:RadiationNoise"].GetShader().UseIntensity(RadNoiseIntensity);
 			}
 			else
 			{
-				if (Filters.Scene["Macrocosm:RadiationNoiseEffect"].IsActive())
-					Filters.Scene.Deactivate("Macrocosm:RadiationNoiseEffect");
+				if (Filters.Scene["Macrocosm:RadiationNoise"].IsActive())
+					Filters.Scene.Deactivate("Macrocosm:RadiationNoise");
 			}
 		}
 	}

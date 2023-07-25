@@ -45,6 +45,48 @@ namespace Macrocosm.Common.Utils
 
 		#endregion
 
+		#region Rectangles
+		public static Rectangle ShrinkRectangle(this Rectangle rectangle, int shrinkAmount)
+		{
+			int newWidth = rectangle.Width - (2 * shrinkAmount);
+			int newHeight = rectangle.Height - (2 * shrinkAmount);
+
+			// Calculate the new position based on the center
+			int newX = rectangle.X + shrinkAmount;
+			int newY = rectangle.Y + shrinkAmount;
+
+			return new Rectangle(newX, newY, newWidth, newHeight);
+		}
+
+
+		public static Rectangle AdjustAspectRatio(this Rectangle rectangle, int targetWidth, int targetHeight)
+		{
+			float aspectRatio = (float)rectangle.Width / rectangle.Height;
+			float targetAspectRatio = (float)targetWidth / targetHeight;
+
+			if (aspectRatio > targetAspectRatio)
+			{
+				// Reduce the width while maintaining the aspect ratio
+				int newWidth = (int)(targetHeight * aspectRatio);
+				int deltaWidth = targetWidth - newWidth;
+				int newX = rectangle.X + (deltaWidth / 2);
+
+				return new Rectangle(newX, rectangle.Y, newWidth, targetHeight);
+			}
+			else if (aspectRatio < targetAspectRatio)
+			{
+				// Reduce the height while maintaining the aspect ratio
+				int newHeight = (int)(targetWidth / aspectRatio);
+				int deltaHeight = targetHeight - newHeight;
+				int newY = rectangle.Y + (deltaHeight / 2);
+
+				return new Rectangle(rectangle.X, newY, targetWidth, newHeight);
+			}
+
+			return new Rectangle(rectangle.X, rectangle.Y, targetWidth, targetHeight);
+		}
+		#endregion
+
 		#region Rotation & angles
 
 		/// <summary>
@@ -115,6 +157,9 @@ namespace Macrocosm.Common.Utils
 
 		#region Easing functions
 
+		/// <summary> Linear easing (for consistency purposes) </summary>
+		public static float EaseLinear(float t) => t;
+
 		/// <summary> Applies quadratic easing-in to the input value.  </summary>
 		/// <param name="t">The input value to apply easing to.</param>
 		/// <returns>The eased value based on quadratic easing-in.</returns>
@@ -122,29 +167,24 @@ namespace Macrocosm.Common.Utils
 
 		/// <summary> Applies quadratic easing-out to the input value. </summary>
 		/// <param name="t">The input value to apply easing to.</param>
-		/// <returns>The eased value based on quadratic easing-out.</returns>
 		public static float QuadraticEaseOut(float t) => t * (2f - t);
 
 		/// <summary>  Applies quadratic easing-in-out to the input value.  </summary>
 		/// <param name="t">The input value to apply easing to.</param>
-		/// <returns>The eased value based on quadratic easing-in-out.</returns>
 		public static float QuadraticEaseInOut(float t)
 			=> (t < 0.5) ? (2f * t * t) : (-1f + (4f - 2f * t) * t);
 
 		/// <summary> Applies cubic easing-in to the input value.  </summary>
 		/// <param name="t">The input value to apply easing to.</param>
-		/// <returns>The eased value based on cubic easing-in.</returns>
 		public static float CubicEaseIn(float t) => t * t * t;
 
 		/// <summary> Applies cubic easing-out to the input value. </summary>
 		/// <param name="t">The input value to apply easing to.</param>
-		/// <returns>The eased value based on cubic easing-out.</returns>
 		public static float CubicEaseOut(float t)
 			=> (t - 1f) * (t - 1f) * (t - 1f) + 1f;
 
 		/// <summary>  Applies cubic easing-in-out to the input value.  </summary>
 		/// <param name="t">The input value to apply easing to.</param>
-		/// <returns>The eased value based on cubic easing-in-out.</returns>
 		public static float CubicEaseInOut(float t)
 			=> (t < 0.5) ? (4f * t * t * t) : 1 - MathF.Pow(-2 * t + 2, 3) / 2;
 

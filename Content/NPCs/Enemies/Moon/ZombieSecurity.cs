@@ -74,15 +74,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			NPC.aiStyle = -1;
  			Banner = Item.NPCtoBanner(NPCID.Zombie);
 			BannerItem = Item.BannerToItem(Banner);
-		}
 
-		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
-		{
-			bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[]
-			{
-				new FlavorTextBestiaryInfoElement(
-					"")
-			});
+			//SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBaseBiome>() }
 		}
 
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
@@ -275,7 +268,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 				Projectile bullet = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), aimPosition, aimVelocity, projType, projDamage, 0f, Main.myPlayer);
 				var flash = Particle.CreateParticle<GunFireRing>(NPC.Center + particleAim * 0.24f, aimVelocity * 0.05f, 1f, aimVelocity.ToRotation(), true);
-				flash.Owner = bullet;
 			}
 
 		}

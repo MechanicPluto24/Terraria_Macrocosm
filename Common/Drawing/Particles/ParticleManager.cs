@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Drawing.Particles
 {
-	public enum ParticleDrawLayer
+    public enum ParticleDrawLayer
 	{
 		BeforeProjectiles,
 		AfterProjectiles,

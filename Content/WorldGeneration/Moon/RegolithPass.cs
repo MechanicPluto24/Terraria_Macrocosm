@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.Utils;
 using Terraria;
 using Terraria.IO;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
 
@@ -12,7 +13,7 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 
 		protected override void ApplyPass(GenerationProgress progress, GameConfiguration configuration)
 		{
-			progress.Message = "Sending meteors to the Moon...";
+			progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.RegolithPass");
 			for (int tileX = 1; tileX < Main.maxTilesX - 1; tileX++)
 			{
 				float progressPercent = tileX / (float)(Main.maxTilesX - 1);

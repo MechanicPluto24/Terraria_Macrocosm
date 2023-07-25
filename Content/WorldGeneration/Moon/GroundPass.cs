@@ -1,5 +1,6 @@
 ﻿using Terraria;
 using Terraria.IO;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
 
@@ -27,7 +28,7 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 
 		protected override void ApplyPass(GenerationProgress progress, GameConfiguration configuration)
 		{
-			progress.Message = "Landing on the Moon...";
+			progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.GroundPass");
 			Main.worldSurface = surfaceLayer + 40;  
 			Main.rockLayer = surfaceLayer + 222;  
 

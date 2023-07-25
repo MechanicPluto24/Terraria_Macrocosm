@@ -17,6 +17,7 @@ namespace Macrocosm.Content.NPCs.Global
 			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<CortexFragment>(), 10));
 		}
 
+		/*
 		public override void SetBestiary(NPC npc, BestiaryDatabase database, BestiaryEntry bestiaryEntry)
 		{
 			bestiaryEntry.Info.RemoveAll(e => e is FlavorTextBestiaryInfoElement); // removes the Vanilla lore text
@@ -27,6 +28,7 @@ namespace Macrocosm.Content.NPCs.Global
 			});
 
 		}
+		*/
 	}
 }
 

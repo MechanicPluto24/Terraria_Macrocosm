@@ -59,9 +59,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[]
 			{
 				BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Events.BloodMoon,
-
-				new FlavorTextBestiaryInfoElement(
-					"A hulking, tanky behemoth of alien flesh, bone, and fury. Get too close and they'll slug your bloody entrails into orbit!")
 			});
 		}
 

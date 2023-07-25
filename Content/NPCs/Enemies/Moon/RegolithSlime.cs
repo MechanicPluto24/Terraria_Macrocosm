@@ -37,14 +37,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			Banner = Item.NPCtoBanner(NPCID.BlueSlime);
 			BannerItem = Item.BannerToItem(Banner);
 		}
-		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
-		{
-			bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[]
-			{
-				new FlavorTextBestiaryInfoElement(
-					"Even extreme environments such as the Moon can host equally extreme types of slimes, mixing with the Moon's silvery regolith.")
-			});
-		}
 
 		public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
 		{

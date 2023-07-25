@@ -1,6 +1,7 @@
 ﻿using Terraria;
 using Terraria.ID;
 using Terraria.IO;
+using Terraria.Localization;
 using Terraria.WorldBuilding;
 
 namespace Macrocosm.Content.WorldGeneration.Moon
@@ -11,7 +12,7 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 
 		protected override void ApplyPass(GenerationProgress progress, GameConfiguration configuration)
 		{
-			progress.Message = "Smoothening the Moon...";
+			progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.ScuffedSmoothPass");
 			// WARNING x WARNING x WARNING
 			// Heavily nested code copied from decompiled code
 			for (int tileX = 20; tileX < Main.maxTilesX - 20; tileX++)

@@ -138,7 +138,7 @@ namespace Macrocosm.Content.Projectiles.Base
                     float distance = Vector2.Distance(player.Center, Projectile.Center);
                     if (distance < ScreenshakeMaxDist)
                     {
-                        player.AddScreenshake(ScreenshakeIntensity - distance / ScreenshakeMaxDist * ScreenshakeIntensity);
+                        player.AddScreenshake(ScreenshakeIntensity - distance / ScreenshakeMaxDist * ScreenshakeIntensity, context: FullName + Projectile.whoAmI.ToString());
                     }
                 }
             }

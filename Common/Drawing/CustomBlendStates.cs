@@ -1,22 +1,17 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Macrocosm.Common.Drawing
 {
 	internal class CustomBlendStates
 	{
-		public static readonly BlendState Multiplicative = new BlendState
+		public static readonly BlendState Multiplicative = new()
 		{
 			ColorBlendFunction = BlendFunction.Add,
 			ColorSourceBlend = Blend.DestinationColor,
 			ColorDestinationBlend = Blend.Zero,
 		};
 
-		public static readonly BlendState Subtractive = new BlendState
+		public static readonly BlendState Subtractive = new()
 		{
 			ColorSourceBlend = Blend.One,
 			AlphaSourceBlend = Blend.One,
