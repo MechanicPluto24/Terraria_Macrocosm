@@ -5,6 +5,8 @@ using System.Linq;
 using System.Reflection;
 using Terraria;
 using Terraria.Chat;
+using Terraria.ID;
+using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Common.Netcode
@@ -26,7 +28,13 @@ namespace Macrocosm.Common.Netcode
 		/// <returns><c>true</c> if all fields were written succesfully else <c>false</c>.</returns>
 		public static bool NetWriteFields(this object obj, BinaryWriter binaryWriter, BitWriter bitWriter = null)
 		{
-			foreach (FieldInfo fieldInfo in obj.GetNetSyncFields())
+			FieldInfo[] netSyncFields = obj.GetNetSyncFields();
+			if (netSyncFields.Length == 0)
+			{
+				return false;
+			}
+
+            foreach (FieldInfo fieldInfo in netSyncFields)
 			{
 				string fieldType = fieldInfo.FieldType.Name;
 
@@ -81,6 +89,24 @@ namespace Macrocosm.Common.Netcode
  					fieldInfo.SetValue(obj, typeof(BinaryReader).GetMethod($"Read{fieldInfo.FieldType.Name}").Invoke(binaryReader, null)); 	
 				}
 			}
+		}
+
+		public static void NetSyncFields(this ModProjectile modProjectile)
+		{
+            if (Main.netMode == NetmodeID.SinglePlayer)
+			{
+                return;
+            }
+
+            ModPacket modPacket = Macrocosm.Instance.GetPacket();
+            modPacket.Write((byte)MessageType.SyncModProjectile);
+            modPacket.Write((ushort)modProjectile.Projectile.whoAmI);
+            if (modProjectile.NetWriteFields(modPacket))
+			{
+                modPacket.Send();
+			}
+			
+            modPacket.Dispose();
 		}
 	}
 }

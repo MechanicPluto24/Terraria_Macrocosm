@@ -1,7 +1,9 @@
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Projectiles.Friendly.Melee;
 using Macrocosm.Content.Rarities;
+using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -33,7 +35,23 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 			Item.shootSpeed = 10f;
 		}
 
-		public override void AddRecipes()
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+        {
+            Projectile.NewProjectile(
+				player.GetSource_ItemUse(Item), 
+				player.MountedCenter, 
+				new Vector2(player.direction, 0f), 
+				ModContent.ProjectileType<ArtemiteGreatswordSwing>(), 
+				damage, 
+				knockback, 
+				player.whoAmI, 
+				player.direction * player.gravDir, 
+				30
+			);
+            return true;
+        }
+
+        public override void AddRecipes()
 		{
 			Recipe recipe = Recipe.Create(Type);
 			recipe.AddIngredient<LuminiteCrystal>();

@@ -916,6 +916,7 @@ Mods: {
 			HandheldEngineProjectile.DisplayName: Handheld Engine
 			HandheldEngineHitbox.DisplayName: Handheld Engine
 			ZombieSecurityBullet.DisplayName: Zombie Security
+			GreatswordHeldProjectile.DisplayName: Greatsword Held Projectile
 		}
 
 		Tiles: {
