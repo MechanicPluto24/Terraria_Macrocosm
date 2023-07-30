@@ -47,7 +47,7 @@ namespace Macrocosm.Content.Rockets.Modules
 		
 		public RocketModule()
 		{
-			Pattern = CustomizationStorage.GetPattern(GetType().Name, "Basic");
+			Pattern = CustomizationStorage.GetPattern(GetType().Name, "Basic").Clone();
 		}
 
 		public virtual void Draw(SpriteBatch spriteBatch, Vector2 screenPos, Color ambientColor)
@@ -63,9 +63,8 @@ namespace Macrocosm.Content.Rockets.Modules
 				// -- testing, will be configured from an UI		
 				if (this is EngineModule)
 				{
-					Pattern = CustomizationStorage.GetPattern("EngineModule", "Binary");
-					//Detail = CustomizationStorage.GetDetail(...)
-				}
+					Pattern = CustomizationStorage.GetPattern("EngineModule", "Binary").Clone();
+ 				}
 
 				if (HasPattern)
 				{

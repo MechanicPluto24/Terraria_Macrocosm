@@ -78,11 +78,12 @@ namespace Macrocosm.Content.Rockets.Customization
 
 		public bool TrySetColor(int index, Color color)
 		{
-			if (index < 0 || index >= ColorCount || !colorData[index].IsUserChangeable || colorData[index].HasColorFunction)
+			if (index < 0 || index >= ColorCount || !colorData[index].IsUserChangeable)
 				return false;
 
+            colorData[index].ColorFunction = null;
 			colorData[index].UserColor = color;
-			return true;
+            return true;
 		}
 
 		public bool TrySetColor(int index, PatternColorFunction colorFunction)
@@ -123,7 +124,9 @@ namespace Macrocosm.Content.Rockets.Customization
 			new Vector3(0f,.5f, 1f)      // Azure
 		};
 
-		public static readonly Func<TagCompound, Pattern> DESERIALIZER = DeserializeData;
+		public Pattern Clone() => DeserializeData(SerializeData());
+
+        public static readonly Func<TagCompound, Pattern> DESERIALIZER = DeserializeData;
 
 		public TagCompound SerializeData()
 		{
@@ -146,7 +149,8 @@ namespace Macrocosm.Content.Rockets.Customization
 			string name = tag.GetString("Name");
 			string moduleName = tag.GetString("ModuleName");
 
-			Pattern pattern = CustomizationStorage.GetPattern(moduleName, name);
+			Pattern originalPatternData = CustomizationStorage.GetPattern(moduleName, name);
+            Pattern pattern = new(moduleName, name, originalPatternData.UnlockedByDefault, originalPatternData.colorData);
 
 			// Load the user-changed colors
 			for (int i = 0; i < pattern.ColorCount; i++)

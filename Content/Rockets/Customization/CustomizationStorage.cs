@@ -40,7 +40,7 @@ namespace Macrocosm.Content.Rockets.Customization
 		public static void AddPattern(string moduleName, string patternName, bool unlockedByDefault, params PatternColorData[] colorData)
 			=> patterns.Add(moduleName + "_" + patternName, new Pattern(moduleName, patternName, unlockedByDefault, colorData));
 
-		public static Pattern GetPattern(string moduleName, string patternName)
+        public static Pattern GetPattern(string moduleName, string patternName)
 			=> patterns[moduleName + "_" + patternName];
 
 		public static bool TryGetPattern(string moduleName, string patternName, out Pattern pattern)
