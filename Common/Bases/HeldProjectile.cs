@@ -19,32 +19,35 @@ namespace Macrocosm.Common.Bases
 {
     internal abstract class HeldProjectileItem<T> : ModItem where T: HeldProjectile
     {
-        protected virtual void ResetDefaults() { }
+        public virtual void SetDefaultsHeldProjectile() { }
+        public virtual bool CanUseItemHeldProjectile(Player player) => true;
+
+        /// <summary>
+        /// Use SetDefaultsHeldProjectile instead.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <returns></returns>
         public sealed override void SetDefaults()
         {
             Item.damage = 99;
             Item.DamageType = DamageClass.Melee;
             Item.width = 0;
             Item.height = 0;
-            Item.useTime = 30;
-            Item.useAnimation = 30;
+            Item.useTime = Item.useAnimation = 1;
             Item.useStyle = ItemUseStyleID.Swing;
             Item.shoot = ProjectileType<T>();
             Item.knockBack = 5;
             Item.value = 10000;
-            Item.UseSound = SoundID.Item1;
             Item.autoReuse = true;
             Item.noUseGraphic = true;
             Item.noMelee = true;
-            Item.useTurn = true;
 
             if (GetInstance<T>().KillMode == HeldProjectile.HeldProjectileKillMode.Manual)
             {
                 Item.channel = true;
-                Item.autoReuse = false;
             }
 
-            ResetDefaults();
+            SetDefaultsHeldProjectile();
         }
 
         public sealed override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
@@ -52,6 +55,15 @@ namespace Macrocosm.Common.Bases
             Projectile.NewProjectile(source, position, velocity, ProjectileType<T>(), damage, knockback, player.whoAmI, type);
             return false;
         }
+
+        /// <summary>
+        /// Use CanUseItemHeldProjectile instead.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <returns></returns>
+        public sealed override bool CanUseItem(Player player) => Main.projectile.FirstOrDefault(
+            projectile => projectile.ModProjectile is T && projectile.owner == player.whoAmI && projectile.active
+        ) is null && CanUseItemHeldProjectile(player);
     }
 
     internal abstract class HeldProjectile : ModProjectile
@@ -64,21 +76,14 @@ namespace Macrocosm.Common.Bases
         public abstract HeldProjectileKillMode KillMode { get; }
         public Player Player => Main.player[Projectile.owner];
         protected int Damage => Projectile.damage;
-        protected short ShootProjectile => (short)Projectile.ai[0];
-        protected Vector2 DirectionToMouse 
-        { 
-            get
-            {
-                return new Vector2(Projectile.ai[1], Projectile.ai[2]);
-            }
-            private set 
-            {
-                Projectile.ai[0] = value.X;
-                Projectile.ai[1] = value.Y;
-            }
-        }
+        /// <summary>
+        /// The projectile type the item would have shot based on ammo.
+        /// </summary>
+        protected short ShootProjectileType => (short)Projectile.ai[0];
+
         private bool shouldDie = false;
-        protected Item Item { get; private set; }
+        protected EntitySource_ItemUse_WithAmmo Source { get; private set; }
+        protected Item Item => Source.Item;
         private bool shouldRunOnSpawn = true;
 
         protected virtual void ResetDefaults() { }
@@ -95,6 +100,9 @@ namespace Macrocosm.Common.Bases
             Projectile.friendly = true;
             Projectile.hostile = false;
             Projectile.timeLeft = 999;
+            Projectile.extraUpdates = 2;
+            Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = 999;
 
             ResetDefaults();
         }
@@ -105,7 +113,7 @@ namespace Macrocosm.Common.Bases
                 source is EntitySource_ItemUse_WithAmmo itemSource
                 )
             {
-                Item = itemSource.Item;
+                Source = itemSource;
             }
             else
             {
@@ -123,7 +131,7 @@ namespace Macrocosm.Common.Bases
 
             if (!shouldDie)
             {
-                Projectile.timeLeft = Projectile.extraUpdates + 2;
+                Projectile.timeLeft = Projectile.extraUpdates;
             }
 
             if (Player.HeldItem != Item || (Player.ItemAnimationEndingOrEnded && KillMode == HeldProjectileKillMode.OnAnimationEnd))
@@ -131,15 +139,12 @@ namespace Macrocosm.Common.Bases
                 shouldDie = true;
             }
 
-            if (Main.myPlayer == Projectile.owner)
-            {
-                DirectionToMouse = Player.RotatedRelativePoint(Player.MountedCenter).DirectionTo(Main.MouseWorld);
-            }
-
             Player.heldProj = Projectile.whoAmI;
 
             return true;
         }
+
+        public sealed override bool ShouldUpdatePosition() => false;
 
         /// <summary>
         /// Kills the <see cref="HeldProjectile"/> properly.

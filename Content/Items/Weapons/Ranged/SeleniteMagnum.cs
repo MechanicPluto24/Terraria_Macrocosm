@@ -6,17 +6,26 @@ using Terraria.GameContent.Creative;
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Rarities;
 using Macrocosm.Content.Projectiles.Friendly.Ranged;
+using Macrocosm.Common.Bases;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
-	public class SeleniteMagnum : ModItem
+	internal class SeleniteMagnum : GunHeldProjectileItem
 	{
-		public override void SetStaticDefaults()
+		public override GunHeldProjectileData GunHeldProjectileData => new()
+		{
+			GunBarrelPosition = new(18, 7),
+			CenterYOffset = 4,
+			MuzzleOffset = 20,
+			Recoil = (7, 1.1f)
+		};
+
+        public override void SetStaticDefaults()
 		{
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
 
-		public override void SetDefaults()
+		public override void SetDefaultsHeldProjectile()
 		{
 			Item.damage = 150;
 			Item.DamageType = DamageClass.Ranged;

@@ -7,17 +7,26 @@ using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Rarities;
 using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using System;
+using Macrocosm.Common.Bases;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
-	public class TychoDesertEagle : ModItem
+    internal class TychoDesertEagle : GunHeldProjectileItem
 	{
-		public override void SetStaticDefaults()
+		public override GunHeldProjectileData GunHeldProjectileData => new()
+		{
+			GunBarrelPosition = new(22, 6),
+            CenterYOffset = 9,
+            MuzzleOffset = 30,
+            Recoil = (9, 1.8f)
+        };
+
+        public override void SetStaticDefaults()
 		{
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
 
-		public override void SetDefaults()
+		public override void SetDefaultsHeldProjectile()
 		{
 			Item.damage = 150;
 			Item.DamageType = DamageClass.Ranged;
