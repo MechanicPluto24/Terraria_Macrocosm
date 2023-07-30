@@ -36,8 +36,8 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 
 		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
-			Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.MountedCenter, new Vector2(player.direction, 0f), Item.shoot, damage, knockback, player.whoAmI, (float)player.direction * player.gravDir, 180); 
-			return true;
+            Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.MountedCenter, new Vector2(player.direction, 0f), Item.shoot, damage, knockback, player.whoAmI, (float)player.direction * player.gravDir, 24); //, player.GetAdjustedItemScale(Item));
+            return false;
 		}
 
         public override void AddRecipes()

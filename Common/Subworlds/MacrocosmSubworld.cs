@@ -92,24 +92,32 @@ namespace Macrocosm.Common.Subworlds
 			return base.GetGravity(entity);
 		}
 
-		private TagCompound dataCopyTag = new();
+		// Data to copy between subworlds, also provided to SubLib
+		private TagCompound dataCopyTag;
 		public override void CopyMainWorldData()
 		{
-			WorldDataSystem.Instance.CopyWorldData(dataCopyTag);
+            dataCopyTag = new();
+
+            WorldDataSystem.Instance.CopyWorldData(dataCopyTag);
 			RocketManager.SaveRocketData(dataCopyTag);
 			CustomizationStorage.SaveUnlockedStatus(dataCopyTag);
 			LaunchPadLocations.SaveLocations(dataCopyTag);
+
+			// This is to ensure the data is properly transfered by SubLib code to subservers in MP 
+			SubworldSystem.CopyWorldData("Macrocosm:copiedData", dataCopyTag);
  		}
 
 		public override void ReadCopiedMainWorldData()
 		{
 			WorldDataSystem.Instance.ReadCopiedWorldData(dataCopyTag);
 			RocketManager.ReadSavedRocketData(dataCopyTag);
-			CustomizationStorage.LoadUnlockedStatus(dataCopyTag); 
-		}
+			CustomizationStorage.LoadUnlockedStatus(dataCopyTag);
 
-		// Should these be different?
-		public override void CopySubworldData() => CopyMainWorldData();
+			dataCopyTag = null;
+        }
+
+        // Should these be different?
+        public override void CopySubworldData() => CopyMainWorldData();
 		public override void ReadCopiedSubworldData() => ReadCopiedMainWorldData();
 	}
 }
