@@ -6,17 +6,28 @@ using Terraria.DataStructures;
 using Terraria.GameContent.Creative;
 using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Content.Rarities;
+using Macrocosm.Common.Bases;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
-	public class Cruithne : ModItem
+	internal class Cruithne : GunHeldProjectileItem
 	{
-		public override void SetStaticDefaults()
+		public override GunHeldProjectileData GunHeldProjectileData => new()
+		{
+			GunBarrelPosition = new Vector2(25, 6),
+			CenterYOffset = 6,
+			MuzzleOffset = 40,
+			Recoil = (11, 0.8f),
+			RecoilDiminish = 0.95f
+		};
+
+        public override void SetStaticDefaults()
 		{
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
-		}
+            ItemID.Sets.ItemsThatAllowRepeatedRightClick[Type] = true;
+        }
 
-		public override void SetDefaults()
+		public override void SetDefaultsHeldProjectile()
 		{
 			Item.damage = 80;
 			Item.DamageType = DamageClass.Ranged;
@@ -38,7 +49,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
 		public override bool AltFunctionUse(Player player) => true;
  
-		public override bool CanUseItem(Player player)
+		public override bool CanUseItemHeldProjectile(Player player)
 		{
 			if (player.altFunctionUse == 2)
 			{
@@ -53,7 +64,8 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 				Item.useAnimation = 20;
 				Item.shoot = ModContent.ProjectileType<CruithneGreenSlug>();
 			}
-			return base.CanUseItem(player);
+
+			return true;
 		}
 
 		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockBack)

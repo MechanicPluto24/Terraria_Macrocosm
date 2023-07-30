@@ -19,19 +19,13 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 		{
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
-		protected override void ResetDefaults()
+		public override void SetDefaultsHeldProjectile()
 		{
 			Item.damage = 225;
 			Item.DamageType = DamageClass.Melee;
-			Item.width = 78;
-			Item.height = 80;
-			Item.useTime = 30;
-			Item.useAnimation = 30;
-			Item.useStyle = ItemUseStyleID.Swing;
 			Item.knockBack = 5;
 			Item.value = 10000;
 			Item.rare = ModContent.RarityType<MoonRarityT1>();
-			Item.UseSound = SoundID.Item1;
  		}
 
 		public override void AddRecipes()

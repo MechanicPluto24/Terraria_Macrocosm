@@ -1,3 +1,4 @@
+using Macrocosm.Common.Bases;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Content.Rarities;
@@ -12,13 +13,14 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
-    public class Copernicus : ModItem
+    internal class Copernicus : GunHeldProjectileItem
 	{
 		public override void SetStaticDefaults()
 		{
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
+			ItemID.Sets.ItemsThatAllowRepeatedRightClick[Type] = true;
 		}
-		public override void SetDefaults()
+		public override void SetDefaultsHeldProjectile()
 		{
 			Item.damage = 150;
 			Item.DamageType = DamageClass.Ranged;
@@ -40,11 +42,18 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
 		private int altUseCooldown = 30;
 		private int altUseCounter = 30;
-		public override Vector2? HoldoutOffset() => new Vector2(-10, 0);
+
+        public override GunHeldProjectileData GunHeldProjectileData => new()
+		{
+			GunBarrelPosition = new Vector2(30f, 10f),
+			CenterYOffset = 9f,
+			MuzzleOffset = 45f,
+            RecoilDiminish = 0.9f
+        };
+
+        public override Vector2? HoldoutOffset() => new Vector2(-10, 0);
 
 		public override bool AltFunctionUse(Player player) => altUseCounter == altUseCooldown && Utility.GetRocketAmmoProjectileID(player, ItemID.GrenadeLauncher) != 0;
-
-		public override bool CanUseItem(Player player) => true;
 
 		public override bool? UseItem(Player player)
 		{
@@ -69,11 +78,6 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
 			if (altUseCounter == 0)
 				altUseCounter = altUseCooldown;
-		}
-
-		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
-		{
-			return true;
 		}
 
 		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)

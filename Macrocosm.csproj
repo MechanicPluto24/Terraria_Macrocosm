@@ -21,6 +21,7 @@
     <Optimize>True</Optimize>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Assets\DebugCross.png" />
     <None Remove="Content\Items\Placeable\Paintings\Freedomfaller.png" />
     <None Remove="Content\Tiles\Paintings\Freedomfaller.png" />
     <None Remove="Content\Tiles\Paintings\HourglassTwins.png" />

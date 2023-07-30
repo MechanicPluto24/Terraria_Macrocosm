@@ -985,6 +985,7 @@ Mods: {
 			MoonPhaseGlobeProjectile.DisplayName: Moon Phase Globe Projectile
 			PhantasmalImpLarge.DisplayName: Phantasmal Imp Large
 			PhantasmalImpSmall.DisplayName: Phantasmal Imp Small
+			GunHeldProjectile.DisplayName: Gun Held Projectile
 		}
 
 		Tiles: {
