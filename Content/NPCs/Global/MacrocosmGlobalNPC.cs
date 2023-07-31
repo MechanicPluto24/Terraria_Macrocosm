@@ -44,7 +44,7 @@ namespace Macrocosm.Content.NPCs.Global
 
 		public override void AI(NPC npc)
 		{
-			if (MacrocosmSubworld.AnyActive)
+			if (SubworldSystem.AnyActive<Macrocosm>())
 			{
 				npc.GravityMultiplier *= MacrocosmSubworld.Current.GravityMultiplier;
 				npc.GravityIgnoresSpace = true;

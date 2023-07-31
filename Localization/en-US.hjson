@@ -17,8 +17,8 @@ Mods: {
 			}
 
 			UndergroundMoonBiome: {
-				DisplayName: Underground Moon Biome
-				TownNPCDialogueName: the Underground Moon Biome
+				DisplayName: Underground Moon
+				TownNPCDialogueName: The Underground Moon Biome
 			}
 		}
 
@@ -31,6 +31,11 @@ Mods: {
 			SuitBreach: {
 				DisplayName: Suit Breach
 				Description: A hole has appeared in your suit, your blood begins to boil!
+			}
+
+			Depressurized: {
+				DisplayName: Depressurized
+				Description: Your blood is boiling!
 			}
 
 			ChandriumEmpowerment: {
@@ -51,11 +56,6 @@ Mods: {
 			SpaceShuttle: {
 				DisplayName: Space Shuttle
 				Description: In memory of STS-51-L and STS-107.
-			}
-
-			Depressurized: {
-				DisplayName: Depressurized
-				Description: Your blood is boiling from the lack of atmospheric pressure!
 			}
 		}
 
@@ -193,7 +193,7 @@ Mods: {
 			}
 
 			CraterDemonSummon: {
-				DisplayName: Lunar Skull
+				DisplayName: Daemonic Tablet
 				Tooltip:
 					'''
 					Summons the Crater Demon
@@ -201,13 +201,10 @@ Mods: {
 					'''
 			}
 
-			MoonGlobe: {
-				DisplayName: Moon Globe
-				Tooltip: Toss it to change how the Moon looks!
-			}
-
-			MoonCoin: {
-				DisplayName: Moon Coin
+			Moonstone: {
+				DisplayName: Moonstone
+				TooltipChampion: These are a currency for the Moon Champion, but unfortunately he is not with you
+				TooltipNoChampion: These are a currency for {0}, the Moon Champion
 				Tooltip: ""
 			}
 
@@ -217,13 +214,13 @@ Mods: {
 			}
 
 			DevPick: {
-				DisplayName: Dev Pick
-				Tooltip: Dev Pickaxe
+				DisplayName: Developer Pickaxe
+				Tooltip: It's actually good as a weapon
 			}
 
 			RocketPlacer: {
 				DisplayName: Rocket Placer
-				Tooltip: Places a rocket.
+				Tooltip: Places a rocket. <right> to despawn all rockets in the Solar System
 			}
 
 			Teleporter: {
@@ -264,26 +261,6 @@ Mods: {
 			ChandriumOre: {
 				DisplayName: Chandrium Ore
 				Tooltip: ""
-			}
-
-			CinisChunk: {
-				DisplayName: Cinis Chunk
-				Tooltip: "'The core in the middle holds many universes inside'"
-			}
-
-			NubisChunk: {
-				DisplayName: Nubis Chunk
-				Tooltip: "'It spins akin to a galaxy'"
-			}
-
-			SidusChunk: {
-				DisplayName: Sidus Chunk
-				Tooltip: "'The fire burns like a star'"
-			}
-
-			TurbenChunk: {
-				DisplayName: Turben Chunk
-				Tooltip: "'Emitting enough light to blind'"
 			}
 
 			CortexFragment: {
@@ -361,7 +338,7 @@ Mods: {
 				Tooltip:
 					'''
 					Consumable
-					Right click to smash open!
+					<right> to smash open!
 					'''
 			}
 
@@ -370,7 +347,7 @@ Mods: {
 				Tooltip:
 					'''
 					Consumable
-					Right click to smash open!
+					<right> to smash open!
 					'''
 			}
 
@@ -379,7 +356,7 @@ Mods: {
 				Tooltip:
 					'''
 					Consumable
-					Right click to smash open!
+					<right> to smash open!
 					'''
 			}
 
@@ -388,7 +365,7 @@ Mods: {
 				Tooltip:
 					'''
 					Consumable
-					Right click to smash open!
+					<right> to smash open!
 					'''
 			}
 
@@ -397,7 +374,7 @@ Mods: {
 				Tooltip:
 					'''
 					Consumable
-					Right click to smash open!
+					<right> to smash open!
 					'''
 			}
 
@@ -581,6 +558,11 @@ Mods: {
 				Tooltip: "'L. Reda'"
 			}
 
+			Freedomfaller: {
+				DisplayName: Freedomfaller
+				Tooltip: "'T. Williams'"
+			}
+
 			CraterDemonRelic: {
 				DisplayName: Crater Demon Relic
 				Tooltip: ""
@@ -737,7 +719,7 @@ Mods: {
 			}
 
 			ArtemiteSword: {
-				DisplayName: Artemite Sword
+				DisplayName: Artemite Straightsword
 				Tooltip: ""
 			}
 
@@ -777,30 +759,29 @@ Mods: {
 
 			Copernicus: {
 				DisplayName: Copernicus
-				Tooltip: Right click to launch a plasma ball grenade
-			}
-
-			Cruithne3753: {
-				DisplayName: Cruithne-3753
-				Tooltip: Two different firing modes
+				Tooltip: <right> to launch a plasma ball grenade
 			}
 
 			Cruithne: {
-				DisplayName: Cruithne
+				DisplayName: Cruithne-3753
 				Tooltip: ""
 			}
 
-			LHB805: {
-				DisplayName: LHB-805
-				Tooltip: ""
+			LHBMinigun: {
+				DisplayName: L.H.B.-805
+				Tooltip:
+					'''
+					What's more effective than bullets?
+					A whole LOT of bullets.
+					'''
 			}
 
-			NWA12691: {
-				DisplayName: NWA-12691
+			NWARocketLauncher: {
+				DisplayName: N.W.A.-12691
 				Tooltip:
 					'''
 					Shoots rockets 
-					Right click to lock onto an enemy
+					<right> to lock onto an enemy
 					'''
 			}
 
@@ -839,74 +820,107 @@ Mods: {
 				Tooltip: ""
 			}
 
-			MoonPhaseGlobe: {
-				DisplayName: Moon Phase Globe
-				Tooltip: ""
-			}
-
-			Moonstone: {
-				DisplayName: Moonstone
-				Tooltip: ""
-			}
-
 			SpaceDust: {
 				DisplayName: Space Dust
 				Tooltip: ""
 			}
 
-			Freedomfaller: {
-				DisplayName: Freedomfaller
-				Tooltip: ""
-			}
-
-			ChampionsBladeBroken: {
-				DisplayName: Champions Blade Broken
-				Tooltip: ""
-			}
-
-			ChampionsBladeRepaired: {
-				DisplayName: Champions Blade Repaired
-				Tooltip: ""
-			}
-
-			LHBMinigun: {
-				DisplayName: L H B Minigun
-				Tooltip: ""
-			}
-
-			NWARocketLauncher: {
-				DisplayName: N W A Rocket Launcher
+			MoonPhaseGlobe: {
+				DisplayName: Moon Phase Globe
 				Tooltip: ""
 			}
 
 			TychoDesertEagle: {
-				DisplayName: Tycho Desert Eagle
+				DisplayName: Tycho .50
+				Tooltip: ""
+			}
+
+			ChampionsBladeBroken: {
+				DisplayName: Champion's Blade
+				Tooltip: ""
+			}
+
+			ChampionsBladeRepaired: {
+				DisplayName: Champion's Blade
 				Tooltip: ""
 			}
 		}
 
 		NPCs: {
-			CraterDemon.DisplayName: Crater Demon
-			CraterImp.DisplayName: Crater Imp
-			BloodMoonJuggernaut.DisplayName: Juggernaut
-			Clavite.DisplayName: Clavite
+			CraterDemon: {
+				DisplayName: Crater Demon
+				BestiaryFlavorText: This massive meteorite demon is a member of a race that invaded the Moon long ago, and bears the scars of an ancient war.
+			}
+
+			CraterImp: {
+				DisplayName: Crater Imp
+				BestiaryFlavorText: Smaller companions of the infamous Crater Demon, these lesser demons aid their master in combat.
+			}
+
+			BloodMoonJuggernaut: {
+				DisplayName: Juggernaut
+				BestiaryFlavorText: A hulking, tanky behemoth of alien flesh, bone, and fury. Get too close and they'll slug your bloody entrails into orbit!
+			}
+
+			Clavite: {
+				DisplayName: Clavite
+				BestiaryFlavorText: A ravenous alien that prowls the surface of the Moon, attacking and charging at anything it finds.
+			}
+
+			CraterCrawlerHead: {
+				DisplayName: Crater Crawler
+				BestiaryFlavorText: ""
+			}
+
 			CraterCrawlerBody.DisplayName: Crater Crawler
-			CraterCrawlerHead.DisplayName: Crater Crawler
 			CraterCrawlerTail.DisplayName: Crater Crawler
-			CrescentGhoul.DisplayName: Crescent Ghoul
-			Leaper.DisplayName: Leaper
-			LuminiteSlime.DisplayName: Luminite Slime
+
+			CrescentGhoul: {
+				DisplayName: Crescent Ghoul
+				BestiaryFlavorText: These devious, crescent-shaped aliens prowl the Moon's long nights, hunting and slaughtering whatever they can find.
+			}
+
+			Leaper: {
+				DisplayName: Leaper
+				BestiaryFlavorText: ""
+			}
+
+			LuminiteSlime: {
+				DisplayName: Luminite Slime
+				BestiaryFlavorText: Some slimes beneath the Moon's surface develop an attraction to luminite, consuming so much that it becomes part of their makeup.
+			}
+
+			MoonWormHead: {
+				DisplayName: Moon Worm
+				BestiaryFlavorText: The head of the mysterious moon worm, featuring sensory appendages that help it navigate underground.
+			}
+
 			MoonWormBody.DisplayName: Moon Worm
-			MoonWormHead.DisplayName: Moon Worm
 			MoonWormTail.DisplayName: Moon Worm
-			MoonZombie.DisplayName: Zombie Astronaut
-			RadioactiveSlime.DisplayName: Radioactive Slime
-			RegolithSlime.DisplayName: Regolith Slime
-			Rocket.DisplayName: Rocket
-			ZombieSecurity.DisplayName: Zombie Security
+
+			MoonZombie: {
+				DisplayName: Zombie Astronaut
+				BestiaryFlavorText: As if zombies weren't bad enough on Earth, the Moon is infested with undead astronauts from long abandoned human colonies.
+			}
+
+			RadioactiveSlime: {
+				DisplayName: Radioactive Slime
+				BestiaryFlavorText: These slimes have absorbed high amounts of uranium, chromium, and other radioactive materials. Handle with care!
+			}
+
+			RegolithSlime: {
+				DisplayName: Regolith Slime
+				BestiaryFlavorText: Even extreme environments such as the Moon can host equally extreme types of slimes, mixing with the Moon's silvery regolith.
+			}
+
+			ZombieSecurity: {
+				DisplayName: Zombie Security
+				BestiaryFlavorText: Remnants of the crater's security personnel, now reanimated and patrolling the area as undead sentinels.
+			}
 
 			MoonChampion: {
 				DisplayName: Moon Champion
+				BestiaryFlavorText: A mysterious, superhuman lunatic who has dedicated his life to protecting the Moon, and challenging all who threaten it.
 
 				TownNPCMood: {
 					Content: I am content.
@@ -926,6 +940,41 @@ Mods: {
 					LikeNPC_Princess: I like {NPCName}.
 					Princess_LovesNPC: I like {NPCName}.
 				}
+
+				Chat: {
+					Shop: Shop
+					Advice: Advice
+					ShopName: Shop
+					FirstTime: Woah... Thank you, human! You have saved me from that scary Moon monster! Perhaps you are also a champion of the Moon?
+					Day1: The Moon is not so bad once you get used to it! I personally find it quite beautiful! Just stay indoors during the night, I shall defend you from those evil Moon monsters!
+					Day2: I found an old space lander once! It looked abandoned, and there was this weird pole with cloth attached to it. Do you know anything about this?
+					Day3: Earth looks very pretty! I want to visit it someday, but I do not know how to leave the Moon...
+					// Note to all: Yes, this is a TF2 reference.
+					DayRare: Am I a good Moon Champion? If I wasn't a good Moon Champion, I wouldn't be sitting here discussing it with you now would I?
+					Night1: Human, I am curious, is the Earth made of cheese?
+					Night2: Stand alert, human! Night-time lasts far longer than it does on Earth, and lots of scary monsters emerge from the craters and shadows looking for food!
+					Night3: You look troubled, are you afraid of those Moon monsters? Do not be, for I will defend you! Those Moon monsters will never defeat me!
+					Moonstones: I see you have {0} {^0:Moonstone;Moonstones}! Why don't you try spending them here?
+					NoMoonstones: Hmm, you appear to have no Moonstones, try killing some Moon monsters to get some!
+					Standard1: What was I doing on the Moon before I got eaten? I was fighting Moon monsters, of course!
+					//Reference to Houston Space Center, Texas
+					Standard2: A while back I discovered I could tune in on human conversations if they were happening close enough to the Moon! I kept hearing the word 'Houston' come up in their conversations. I would like to meet this Houston some day!
+					// Reference to "SPACE IS COOL" Songify Remix by SCHMOYOHO
+					Standard3: Space is so cool! There are thousands of billions of billions of stars and galaxies! There is nothing I like more than space!
+					// Reference to "Space Oddity" by David Bowie
+					Standard4: Planet Earth is blue, and there's nothing I can do...
+					// References to Touhou lore ;)
+					Standard5: So, what made you join the Lunar War? What do you mean you don't know any war?
+					Standard6: If you humans keep trying to establish bases here, you'll soon meet the wrath of the Lunarians.
+					Standard7: How does it feel to be free from the confinements of Earth? You're lucky to have made it here. I know a fugitive princess who met an opposite fate.
+					Standard8: There are many here who fled to Earth when war was declared with the Invasion of 1969. I stayed to watch the fireworks.
+					Standard9: Are you looking for the Lunar Civilization? A barrier hides its existence, and, because you are human, I'm afraid you can't even come close. Well, there was an exception. One mysterious... shrine maiden.
+					// LoLK reference
+					Standard10: A few years ago, there was chaos in these lunar outskirts. You should've seen it yourself.
+					Advice1: Monsters on the Moon drop these strange coins! If you can find enough of them, I'll trade them for some supplies!
+					Advice2: Be prepared for anything, and stay alert! The Moon is a very dangerous place crawling with all kinds of monsters, always be ready for anything!
+					Advice3: If you wish to explore the Moon, do not forget your spacesuit!
+				}
 			}
 		}
 
@@ -940,24 +989,23 @@ Mods: {
 			DianiteTomeProjectile.DisplayName: Dianite Meteor
 			DianiteTomeProjectileSmall.DisplayName: Dianite Meteor
 			AluminumShortswordProjectile.DisplayName: Aluminum Shortsword
-			ArtemiteGreatswordSwing.DisplayName: Artemite Greatsword
+			ArtemiteSwordSwing.DisplayName: Artemite Straightsword
 			ArtemiteSpearProjectile.DisplayName: Artemite Spear
 			ArtemiteSpearProjectileShoot.DisplayName: Artemite Spear
-			ArtemiteSwordProjectile.DisplayName: Artemite Sword
+			ArtemiteSwordProjectile.DisplayName: Artemite Straightsword
 			ClawWrenchProjectile.DisplayName: Claw Wrench
 			MoonSwordProjectile.DisplayName: Moon Sword
 			MoonSwordSwing.DisplayName: Moonlight Greatsword
 			ArchersLineProjectile.DisplayName: Archer's Line
 			CruithneGreenSlug.DisplayName: Cruithne Green Slug
 			DeliriumShell.DisplayName: Delirium Shell
-			LHB805Projectile.DisplayName: LHB-805
-			NWAMissile.DisplayName: NWA-12691
+			LHBMinigunProjectile.DisplayName: L.H.B.-805
+			NWAMissile.DisplayName: N.W.A.-12691
 			PlasmaGrenade.DisplayName: Plasma Grenade
 			SeleniteArrow.DisplayName: Selenite Arrow
 			CalcicCaneMinion.DisplayName: Crater Imp
 			ChandriumStaffMinion.DisplayName: Crescent Ghoul
 			ChandriumWhipProjectile.DisplayName: Chandrium Whip
-			MoonGlobeProjectile.DisplayName: Moon Globe
 			MoonTombstone.DisplayName: Moon Tombstone
 			ArtemiteDrillProjectile.DisplayName: Artemite Drill
 			ChandriumDrillProjectile.DisplayName: Chandrium Drill
@@ -971,64 +1019,40 @@ Mods: {
 			HandheldEngineProjectile.DisplayName: Handheld Engine
 			HandheldEngineHitbox.DisplayName: Handheld Engine
 			ZombieSecurityBullet.DisplayName: Zombie Security
-			GreatswordHeldProjectile.DisplayName: Greatsword Held Projectile
-			RegolithDebris.DisplayName: Regolith Debris
-			DianiteForkCoreProjectile.DisplayName: Dianite Fork Core Projectile
-			DianiteForkProjectile.DisplayName: Dianite Fork Projectile
+			SeleniteMagnumProjectile.DisplayName: Selenite Magnum
+			TychoBullet.DisplayName: Tycho .50
 			DianiteMeteor.DisplayName: Dianite Meteor
-			DianiteMeteorSmall.DisplayName: Dianite Meteor Small
-			ArtemiteSwordSwing.DisplayName: Artemite Sword Swing
-			test.DisplayName: test
-			LHBMinigunProjectile.DisplayName: L H B Minigun Projectile
-			SeleniteMagnumProjectile.DisplayName: Selenite Magnum Projectile
-			TychoBullet.DisplayName: Tycho Bullet
-			MoonPhaseGlobeProjectile.DisplayName: Moon Phase Globe Projectile
-			PhantasmalImpLarge.DisplayName: Phantasmal Imp Large
-			PhantasmalImpSmall.DisplayName: Phantasmal Imp Small
-			GunHeldProjectile.DisplayName: Gun Held Projectile
+			DianiteMeteorSmall.DisplayName: Dianite Meteor
+			PhantasmalImpLarge.DisplayName: Phantasmal Imp
+			PhantasmalImpSmall.DisplayName: Phantasmal Imp
+			MoonPhaseGlobeProjectile.DisplayName: Moon Phase Globe
+			DianiteForkCoreProjectile.DisplayName: Dianite Fork
+			DianiteForkProjectile.DisplayName: Dianite Fork
+			RegolithDebris.DisplayName: Regolith Debris
+      ArtemiteSwordSwing.DisplayName: Artemite Sword
 		}
 
 		Tiles: {
 			RocketLaunchPad.MapEntry: Launch Pad
+			IndustrialLoom.MapEntry: Industrial Loom
 			AluminumOre.MapEntry: Aluminum Ore
 			ArtemiteOre.MapEntry: Artemite Ore
 			ChandriumOre.MapEntry: Chandrium Ore
 			DianiteOre.MapEntry: Dianite Ore
 			LithiumOre.MapEntry: Lithium
-			OilShale.MapEntry: Oil Shale
 			SeleniteOre.MapEntry: Selenite Ore
+			OilShale.MapEntry: Oil Shale
 			ArtemiteBar.MapEntry: Artemite Bar
 			ChandriumBar.MapEntry: Chandrium Bar
 			DianiteBar.MapEntry: Dianite Bar
-			IndustrialLoom.MapEntry: Industrial Loom
 		}
 
-		SetBonuses.SpaceProtection_Tier1:
-			'''
-			Pressurized spacesuit allows for exploration of other celestial bodies
-			Tier 1 extraterrestrial protection
-			'''
-
-		GameTips: {
-			Generic_Tip1: (TEST) 1 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip2: (TEST) 2 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip3: (TEST) 3 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip4: (TEST) 4 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip5: (TEST) 5 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip6: (TEST) 6 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip7: (TEST) 7 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip8: (TEST) 8 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip9: (TEST) 9 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip10: (TEST) 10 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip11: (TEST) 11 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip12: (TEST) 12 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip13: (TEST) 13 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip14: (TEST) 14 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip15: (TEST) 15 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip16: (TEST) 16 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip17: (TEST) 17 You can visit other planets if you manage to build a rocket (TEST)
-			Generic_Tip18: (TEST) 18 You can visit other planets if you manage to build a rocket (TEST)
+		Common: {
+			Rocket: Rocket
+			DevItem: Developer Item
 		}
+
+		GameTips.Generic_Tip1: You may find valuable fossil fuels in the desert.
 
 		LoadingScreenTips: {
 			Moon: {
@@ -1050,6 +1074,19 @@ Mods: {
 				Earth_Tip4: Nearly seven billion deaths within the first 24 hours.
 				Earth_Tip5: You are never truly safe.
 			}
+		}
+
+		SetBonuses: {
+			SpaceProtection_Tier1:
+				'''
+				Pressurized spacesuit allows for exploration of other celestial bodies.
+				Tier 1 extraterrestrial protection
+				'''
+			SpaceProtection_Tier2:
+				'''
+				Lead-lined suit allows for safe exploration of highly irradiated environments.
+				Tier 2 extraterrestrial protection
+				'''
 		}
 
 		Subworlds: {
@@ -1164,144 +1201,27 @@ Mods: {
 			}
 		}
 
-		WorldInfo: {
-			Common: {
-				Checklist: Pre-flight checklist
-				Crew: Crew
-				Fuel: Fuel
-				NoTarget: No Target
-				CantReach: Inaccessible
-				AlreadyHere: Current Location
-				ZoomIn: Zoom In
-				Launch: Launch
-			}
-
-			Gravity: {
-				Name: Gravity
-				Unit: G
-				UnitSingular: G
-				Unit2: mps_sq
-				Unstable: Unstable
-			}
-
-			Radius: {
-				Name: Radius
-				Unit: km
-				Unit2: mi
-			}
-
-			DayPeriod: {
-				Name: Day Period
-				Unit: days
-				UnitSingular: day
-				TidallyLocked: Tidally Locked
-			}
-
-			ThreatLevel: {
-				Name: Threat Level
-				Threat1: Harmless
-				Threat2: Arduous
-				Threat3: Challenging
-				Threat4: Dangerous
-				Threat5: Treacherous
-				Threat6: Lethal
-				Threat7: Cataclysmic
-				Threat8: Nightmare
-				Threat9: Apollyon
-				Threat10: Unknown
-			}
-
-			Hazard: {
-				Name: Hazard
-				MeteorStorms: Meteor Storms
-				SolarStorms: Solar Storms
-			}
-
-			Checklist: {
-				Fuel: {
-					True: {
-						Display: Enough fuel
-						Hover: default
-					}
-
-					False: {
-						Display: Not enough fuel
-						Hover: You need more fuel to launch the rocket
-					}
-				}
-
-				Destination: {
-					True: {
-						Display: Destination selected
-						Hover: default
-					}
-
-					False: {
-						Display: No destination selected
-						Hover: You need to select a destination for the rocket
-					}
-				}
-
-				Obstruction: {
-					True: {
-						Display: Path unobstructed
-						Hover: default
-					}
-
-					False: {
-						Display: Path obstructed
-						Hover: There is an obstruction in the rocket's flight path
-					}
-				}
-
-				Selected: {
-					True: {
-						Display: default
-						Hover: default
-					}
-
-					False: {
-						Display: Select a destination
-						Hover: default
-					}
-				}
-
-				NotHere: {
-					True: {
-						Display: default
-						Hover: default
-					}
-
-					False: {
-						Display: You are already here
-						Hover: default
-					}
-				}
-
-				Reactor: {
-					True: {
-						Display: default
-						Hover: default
-					}
-
-					False: {
-						Display: Missing reactor
-						Hover: You need a fusion reactor to reach The Moon
-					}
-				}
-
-				MoonLord: {
-					True: {
-						Display: default
-						Hover: default
-					}
-
-					False: {
-						Display: Missing reactor
-						Hover: You must defeat the Moon Lord to reach The Moon
-					}
-				}
+		WorldGen: {
+			Moon: {
+				GroundPass: Landing on the Moon...
+				CraterPass: Sculpting the Moon...
+				RegolithPass: Sending meteors to the Moon...
+				OrePass: Mineralizing the Moon...
+				CavePass: Carving the Moon...
+				IrradiationPass: Irradiating the Moon...
+				ScuffedSmoothPass: Smoothening the Moon...
+				AmbientPass: Placing rocks on the moon...
+				FinishPass: Final touches...
 			}
 		}
 	}
+}
+
+Bestiary_FlavorText: {
+	npc_MoonLordCore: The Vortex Titan, and ruler of the Moon. His strength and abilities are matched only by his obsession with conquering Earth.
+	npc_LunarTowerStardust: Infused with the celestial ashes of long dead stars, this tower brings forth the servants of Moon Lord to conquer the Earth.
+	npc_LunarTowerNebula: Infused with the swirling gases of a stellar nebula, this tower brings forth the servants of Moon Lord to conquer the Earth.
+	npc_LunarTowerSolar: Infused with the incandescent fury of a star, this tower brings forth the servants of Moon Lord to conquer the Earth.
+	npc_LunarTowerVortex: Infused with the ceaseless storms of a cosmic vortex, this tower brings forth the servants of Moon Lord to conquer the Earth.
+	npc_CultistBoss: A fanatical leader brainwashed into bringing forth the apocalypse, and preparing the world for the arrival of the Moon Lord.
 }

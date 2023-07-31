@@ -60,7 +60,7 @@ namespace Macrocosm.Content.Players
 
         public override void PostUpdateBuffs()
 		{
-			if (MacrocosmSubworld.AnyActive)
+			if (SubworldSystem.AnyActive<Macrocosm>())
             {
 				UpdateSpaceEnvironmentalDebuffs();
             }

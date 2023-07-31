@@ -34,7 +34,7 @@ namespace Macrocosm.Common.Hooks
 
 		private Color MapHelper_GetMapTileXnaColor(Terraria.Map.On_MapHelper.orig_GetMapTileXnaColor orig, ref MapTile tile)
 		{
-			if (!MacrocosmSubworld.AnyActive || MacrocosmSubworld.Current.MapColors is null)
+			if (!SubworldSystem.AnyActive<Macrocosm>() || MacrocosmSubworld.Current.MapColors is null)
 				return orig(ref tile);
 
 			if (tile.Type >= SkyPosition && tile.Type <= SkyPosition + 255) 

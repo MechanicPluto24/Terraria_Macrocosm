@@ -25,7 +25,7 @@ namespace Macrocosm.Common.Subworlds
 		/// Returns <c>Earth</c> if none active. 
 		/// Use this for situations where we want other mods subworlds to behave like Earth.
 		/// </summary>
-		public static string CurrentPlanet => AnyActive ? Current.Name : "Earth";
+		public static string CurrentPlanet => SubworldSystem.AnyActive<Macrocosm>() ? Current.Name : "Earth";
 
 		/// <summary>
 		/// Get the current active subworld string ID, matching the subworld class name. 
@@ -36,22 +36,19 @@ namespace Macrocosm.Common.Subworlds
 		public static string CurrentSubworld { 
 			get 
 			{
-				if (AnyActive)
+				if (SubworldSystem.AnyActive<Macrocosm>())
 					return Current.Name;
-				else if (SubworldSystem.Current is not null)
+				else if (SubworldSystem.AnyActive())
 					return SubworldSystem.Current.Mod.Name + ":" + SubworldSystem.Current.Name;
 				else
 					return "Earth";
 			} 
 		}
 
-		/// <summary> Whether there is any active subworld belonging to Macrocosm </summary>
-		public static bool AnyActive => SubworldSystem.AnyActive<Macrocosm>();
-
 		// TODO: We could protect the original properties get them only via statics?
-		public static double CurrentTimeRate => AnyActive ? Current.TimeRate : Earth.TimeRate;
-		public static double CurrentDayLenght => AnyActive ? Current.DayLenght : Earth.DayLenght;
-		public static double CurrentNightLenght => AnyActive ? Current.NightLenght : Earth.NightLenght;
-		public static float CurrentGravityMultiplier => AnyActive ? Current.GravityMultiplier : Earth.GravityMultiplier;
+		public static double CurrentTimeRate => SubworldSystem.AnyActive<Macrocosm>() ? Current.TimeRate : Earth.TimeRate;
+		public static double CurrentDayLenght => SubworldSystem.AnyActive<Macrocosm>() ? Current.DayLenght : Earth.DayLenght;
+		public static double CurrentNightLenght => SubworldSystem.AnyActive<Macrocosm>() ? Current.NightLenght : Earth.NightLenght;
+		public static float CurrentGravityMultiplier => SubworldSystem.AnyActive<Macrocosm>() ? Current.GravityMultiplier : Earth.GravityMultiplier;
 	}
 }

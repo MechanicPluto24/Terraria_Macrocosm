@@ -15,7 +15,7 @@ namespace Macrocosm.Content.Systems
 
 		public override void PreUpdateWorld()
 		{
-			if (MacrocosmSubworld.AnyActive)
+			if (SubworldSystem.AnyActive<Macrocosm>())
 			{
 				MacrocosmSubworld activeSubworld = MacrocosmSubworld.Current;
 
@@ -33,7 +33,7 @@ namespace Macrocosm.Content.Systems
 
 		public override void PostUpdateWorld()
 		{
-			if (MacrocosmSubworld.AnyActive)
+			if (SubworldSystem.AnyActive<Macrocosm>())
  				MacrocosmSubworld.Current.PostUpdateWorld(); 
 		}
 
