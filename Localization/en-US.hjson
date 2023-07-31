@@ -1029,7 +1029,7 @@ Mods: {
 			DianiteForkCoreProjectile.DisplayName: Dianite Fork
 			DianiteForkProjectile.DisplayName: Dianite Fork
 			RegolithDebris.DisplayName: Regolith Debris
-			GreatswordHeldProjectile.DisplayName: Greatsword Held Projectile
+      ArtemiteSwordSwing.DisplayName: Artemite Sword
 		}
 
 		Tiles: {
