@@ -846,6 +846,27 @@ Mods: {
 			}
 		}
 
+			SilicaCrimsand: {
+				DisplayName: Silica Crimsand
+				Tooltip: ""
+			}
+
+			SilicaEbonsand: {
+				DisplayName: Silica Ebonsand
+				Tooltip: ""
+			}
+
+			SilicaPearlsand: {
+				DisplayName: Silica Pearlsand
+				Tooltip: ""
+			}
+
+			SilicaSand: {
+				DisplayName: Silica Sand
+				Tooltip: ""
+			}
+		}
+
 		NPCs: {
 			CraterDemon: {
 				DisplayName: Crater Demon
@@ -1030,6 +1051,10 @@ Mods: {
 			DianiteForkProjectile.DisplayName: Dianite Fork
 			RegolithDebris.DisplayName: Regolith Debris
       ArtemiteSwordSwing.DisplayName: Artemite Sword
+			SilicaCrimsandProjectile.DisplayName: Silica Crimsand Projectile
+			SilicaEbonsandProjectile.DisplayName: Silica Ebonsand Projectile
+			SilicaPearlsandProjectile.DisplayName: Silica Pearlsand Projectile
+			SilicaSandProjectile.DisplayName: Silica Sand Projectile
 		}
 
 		Tiles: {
