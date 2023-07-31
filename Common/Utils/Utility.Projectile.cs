@@ -1,13 +1,12 @@
 ﻿using Macrocosm.Common.Drawing.Trails;
 using Macrocosm.Content.Projectiles.Global;
-using Macrocosm.Content.Items.Weapons.Ranged;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
-using static Terraria.ModLoader.PlayerDrawLayer;
+using System.Reflection;
 
 namespace Macrocosm.Common.Utils
 {

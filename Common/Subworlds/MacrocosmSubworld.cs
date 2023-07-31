@@ -54,18 +54,18 @@ namespace Macrocosm.Common.Subworlds
 		/// <summary> The map background color for each depth layer (Surface, Underground, Cavern, Underworld) </summary>
 		public virtual Dictionary<MapColorType, Color> MapColors { get; } = null;
 
-		public override int ReturnDestination => int.MinValue;
-
 		/// <summary> The loading screen. Assign new instance in the constructor. </summary>
 		protected LoadingScreen LoadingScreen;
 		public override void OnEnter()
 		{
+			SubworldSystem.noReturn = true;
 			LoadingScreen?.Setup();
 			OnEnterWorld();
 		}
 
 		public override void OnExit()
 		{
+			SubworldSystem.noReturn = false;
 			Earth.LoadingScreen.Setup();
 			OnExitWorld();
 		}

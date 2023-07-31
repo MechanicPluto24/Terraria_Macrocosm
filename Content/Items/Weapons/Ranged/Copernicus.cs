@@ -45,7 +45,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
         public override GunHeldProjectileData GunHeldProjectileData => new()
 		{
-			GunBarrelPosition = new Vector2(30f, 10f),
+			GunBarrelPosition = new Vector2(26f, 7f),
 			CenterYOffset = 9f,
 			MuzzleOffset = 45f,
             RecoilDiminish = 0.9f
@@ -94,7 +94,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			else
 			{
 				type = defaulType;
-				position -= new Vector2(2 * player.direction, 2); // so bullets line up with the muzzle
+				position -= new Vector2(4 * player.direction, 2); // so bullets line up with the muzzle
 			}
 		}
 	}

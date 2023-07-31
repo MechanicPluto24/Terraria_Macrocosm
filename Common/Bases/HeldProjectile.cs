@@ -22,6 +22,8 @@ namespace Macrocosm.Common.Bases
         public virtual void SetDefaultsHeldProjectile() { }
         public virtual bool CanUseItemHeldProjectile(Player player) => true;
 
+        public float ProjectileScale;
+
         /// <summary>
         /// Use SetDefaultsHeldProjectile instead.
         /// </summary>
@@ -48,11 +50,15 @@ namespace Macrocosm.Common.Bases
             }
 
             SetDefaultsHeldProjectile();
-        }
+
+            if(ProjectileScale == default)
+                ProjectileScale = Item.scale;
+		}
 
         public sealed override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            Projectile.NewProjectile(source, position, velocity, ProjectileType<T>(), damage, knockback, player.whoAmI, type);
+			Projectile projectile = Projectile.NewProjectileDirect(source, position, velocity, ProjectileType<T>(), damage, knockback, player.whoAmI, type);
+            projectile.scale = ProjectileScale;
             return false;
         }
 
@@ -139,7 +145,10 @@ namespace Macrocosm.Common.Bases
                 shouldDie = true;
             }
 
-            Player.heldProj = Projectile.whoAmI;
+            // This might fix the issue with changing the aim while the projectile is alive, but creates a stutter for some reason
+            //Player.ChangeDir(MathF.Abs(Projectile.rotation) <= MathHelper.PiOver2 ? 1 : -1);
+
+			Player.heldProj = Projectile.whoAmI;
 
             return true;
         }
