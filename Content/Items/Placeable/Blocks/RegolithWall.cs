@@ -1,7 +1,6 @@
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Placeable.Blocks
 {
@@ -23,7 +22,7 @@ namespace Macrocosm.Content.Items.Placeable.Blocks
 			Item.useTime = 7;
 			Item.useStyle = ItemUseStyleID.Swing;
 			Item.consumable = true;
-			Item.createWall = WallType<Tiles.Walls.RegolithWall>();
+			Item.createWall = ModContent.WallType<Tiles.Walls.RegolithWall>();
 		}
 
 		public override void AddRecipes()
