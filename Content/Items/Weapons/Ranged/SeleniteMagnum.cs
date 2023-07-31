@@ -17,7 +17,8 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			GunBarrelPosition = new(18, 7),
 			CenterYOffset = 4,
 			MuzzleOffset = 20,
-			Recoil = (7, 1.1f)
+			Recoil = (7, 1.1f),
+			UseBackArm = false
 		};
 
         public override void SetStaticDefaults()

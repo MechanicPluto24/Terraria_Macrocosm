@@ -844,6 +844,26 @@ Mods: {
 				DisplayName: Champion's Blade
 				Tooltip: ""
 			}
+
+			SilicaCrimsand: {
+				DisplayName: Silica Crimsand
+				Tooltip: ""
+			}
+
+			SilicaEbonsand: {
+				DisplayName: Silica Ebonsand
+				Tooltip: ""
+			}
+
+			SilicaPearlsand: {
+				DisplayName: Silica Pearlsand
+				Tooltip: ""
+			}
+
+			SilicaSand: {
+				DisplayName: Silica Sand
+				Tooltip: ""
+			}
 		}
 
 		NPCs: {
@@ -989,7 +1009,7 @@ Mods: {
 			DianiteTomeProjectile.DisplayName: Dianite Meteor
 			DianiteTomeProjectileSmall.DisplayName: Dianite Meteor
 			AluminumShortswordProjectile.DisplayName: Aluminum Shortsword
-			ArtemiteSwordSwing.DisplayName: Artemite Straightsword
+			ArtemiteSwordSwing.DisplayName: Artemite Sword
 			ArtemiteSpearProjectile.DisplayName: Artemite Spear
 			ArtemiteSpearProjectileShoot.DisplayName: Artemite Spear
 			ArtemiteSwordProjectile.DisplayName: Artemite Straightsword
@@ -1029,7 +1049,12 @@ Mods: {
 			DianiteForkCoreProjectile.DisplayName: Dianite Fork
 			DianiteForkProjectile.DisplayName: Dianite Fork
 			RegolithDebris.DisplayName: Regolith Debris
-      ArtemiteSwordSwing.DisplayName: Artemite Sword
+			SilicaCrimsandProjectile.DisplayName: Silica Crimsand
+			SilicaEbonsandProjectile.DisplayName: Silica Ebonsand
+			SilicaPearlsandProjectile.DisplayName: Silica Pearlsand
+			SilicaSandProjectile.DisplayName: Silica Sand
+			GreatswordHeldProjectile.DisplayName: Greatsword Held Projectile
+			GunHeldProjectile.DisplayName: Gun Held Projectile
 		}
 
 		Tiles: {

@@ -18,7 +18,8 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			GunBarrelPosition = new(22, 6),
             CenterYOffset = 9,
             MuzzleOffset = 30,
-            Recoil = (9, 1.8f)
+            Recoil = (9, 1.8f),
+			UseBackArm = false,
         };
 
         public override void SetStaticDefaults()
@@ -45,6 +46,8 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			Item.DamageType = DamageClass.Ranged; //deals melee damage
 			Item.reuseDelay = 8;
 			Item.useAmmo = AmmoID.Bullet; //uses bullets as ammunition
+
+			ProjectileScale = 0.75f;
 		}
 
 		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
@@ -53,10 +56,6 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			type = ModContent.ProjectileType<TychoBullet>();
  		}
 
-		public override void HoldItem(Player player)
-		{
-			Item.scale = 0.75f;
-		}
 
 		public override Vector2? HoldoutOffset() => new Vector2(4, 0);
 
