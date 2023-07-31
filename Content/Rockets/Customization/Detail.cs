@@ -8,10 +8,12 @@ using Macrocosm.Common.Utils;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-    public class Detail
+    public class Detail : IUnlockable
     {
         public string Name { get; set; }
         public string ModuleName { get; set; }
+
+		public string GetKey() => ModuleName + "_" + Name;
 
 		public bool Unlocked { get; set; }	
 		public bool UnlockedByDefault { get; private set; }	
@@ -39,5 +41,6 @@ namespace Macrocosm.Content.Rockets.Customization
 			UnlockedByDefault = unlockedByDefault;
 			Unlocked = unlockedByDefault;
 		}
+
 	}
 }

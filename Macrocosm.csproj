@@ -25,10 +25,10 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="SubworldLibrary">
-      <HintPath>..\ModAssemblies\SubworldLibrary.dll</HintPath>
+      <HintPath>References\SubworldLibrary.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <!-- <Target BeforeTargets="Build" Name="BuildEffects" Inputs="Assets/Effects/*.fx" Outputs="Assets/Effects/*.xnb"> -->
-   <!-- <Exec Command="fxcompiler.exe" WorkingDirectory="Assets/Effects" /> -->
-  <!-- </Target> -->
+    <!-- <Target BeforeTargets="Build" Name="BuildEffects" Inputs="Assets/Effects/*.fx" Outputs="Assets/Effects/*.xnb"> -->
+        <!-- <Exec Command="fxcompiler.exe" WorkingDirectory="Assets/Effects" /> -->
+    <!-- </Target> -->
 </Project>

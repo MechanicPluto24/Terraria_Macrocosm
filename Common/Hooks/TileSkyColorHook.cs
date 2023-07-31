@@ -23,7 +23,7 @@ namespace Macrocosm.Common.Hooks
 		{
 			orig(info, out sunColor, out moonColor);
 
-			if (MacrocosmSubworld.AnyActive)
+			if (SubworldSystem.AnyActive<Macrocosm>())
  				MacrocosmSubworld.Current.ModifyColorOfTheSkies(ref Main.ColorOfTheSkies);
  		}
 	}

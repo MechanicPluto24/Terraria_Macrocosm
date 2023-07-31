@@ -47,14 +47,15 @@ namespace Macrocosm.Content.Rockets.Modules
 		
 		public RocketModule()
 		{
-			Pattern = CustomizationStorage.GetPattern(GetType().Name, "Basic").Clone();
+			Pattern = CustomizationStorage.GetPattern(GetType().Name, "Basic");
 		}
 
 		public virtual void Draw(SpriteBatch spriteBatch, Vector2 screenPos, Color ambientColor)
 		{
 			// Load current pattern and apply shader 
 			SpriteBatchState state = spriteBatch.SaveState();
-			SamplerState samplerState = Main.graphics.GraphicsDevice.SamplerStates[1]; 
+			SamplerState samplerState1 = Main.graphics.GraphicsDevice.SamplerStates[1]; 
+			SamplerState samplerState2 = Main.graphics.GraphicsDevice.SamplerStates[2]; 
 			if (SpecialDraw)
 			{
 				// Load the coloring shader
@@ -63,7 +64,10 @@ namespace Macrocosm.Content.Rockets.Modules
 				// -- testing, will be configured from an UI		
 				if (this is EngineModule)
 				{
-					Pattern = CustomizationStorage.GetPattern("EngineModule", "Binary").Clone();
+					Pattern = CustomizationStorage.GetPattern(Name, "Binary");
+
+					if(Main.timeForVisualEffects % 100 == 0)
+						Detail = CustomizationStorage.GetDetail(Name, "Flag_" + Utility.CountryCodesAlpha3.GetRandom());
  				}
 
 				if (HasPattern)
@@ -93,6 +97,8 @@ namespace Macrocosm.Content.Rockets.Modules
 				{
 					// Pass the detail to the shader via the S2 register
 					Main.graphics.GraphicsDevice.Textures[2] = Detail.Texture;
+					Main.graphics.GraphicsDevice.SamplerStates[2] = SamplerState.PointClamp;
+
 				}
 
 				spriteBatch.End();
@@ -111,7 +117,8 @@ namespace Macrocosm.Content.Rockets.Modules
 				Main.graphics.GraphicsDevice.Textures[2] = null;
 
 				// Restore the sampler states
-				Main.graphics.GraphicsDevice.SamplerStates[1] = samplerState;
+				Main.graphics.GraphicsDevice.SamplerStates[1] = samplerState1;
+				Main.graphics.GraphicsDevice.SamplerStates[2] = samplerState2;
 			}
 		}
 
