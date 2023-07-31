@@ -5,6 +5,8 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Macrocosm.Common.Netcode;
+using SubworldLibrary;
+using Macrocosm.Common.Utils;
 
 namespace Macrocosm.Content.Rockets
 {
@@ -23,10 +25,21 @@ namespace Macrocosm.Content.Rockets
 			packet.Write((byte)MessageType.SyncRocketData);
 			packet.Write((byte)WhoAmI);
 
-			if (this.NetWriteFields(packet)) // Check if the writer was able to write all the fields.
+			if (WriteToPacket(packet))  
 				 packet.Send(-1, ignoreClient);
 
 			packet.Dispose();
+		}
+
+		public bool WriteToPacket(ModPacket packet)
+		{
+			packet.Write((byte)MessageType.SyncRocketData);
+			packet.Write((byte)WhoAmI);
+
+			if (this.NetWriteFields(packet)) // Check if the writer was able to write all the fields.
+				return true;
+
+			return false;
 		}
 
 		/// <summary>
@@ -42,7 +55,21 @@ namespace Macrocosm.Content.Rockets
 			rocket.NetReadFields(reader);
 			
 			if (Main.netMode == NetmodeID.Server)
+			{
+				// Bounce to all other clients, minus the sender
 				rocket.NetSync(ignoreClient: clientWhoAmI);
+
+				// TO TEST: might need another sublib patch
+				/*
+				ModPacket packet = Macrocosm.Instance.GetPacket();
+				rocket.WriteToPacket(packet);
+ 
+				if (SubworldSystem.AnyActive())
+ 					SubworldSystem.SendToMainServer(Macrocosm.Instance, packet.GetBuffer());
+				else 
+					SubworldSystem.SendToAllSubservers(Macrocosm.Instance, packet.GetBuffer());
+				*/
+			}
 		}
 	}
 }

@@ -13,10 +13,11 @@ using System.Linq;
 using Terraria.ModLoader.IO;
 using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.Construction;
+using System;
 
 namespace Macrocosm.Common.Subworlds
 {
-    public abstract partial class MacrocosmSubworld : Subworld, IModType
+    public abstract partial class MacrocosmSubworld : Subworld 
 	{
 		/// <summary> Time rate of this subworld, compared to Earth's (1.0) </summary>
  		public virtual double TimeRate { get; set; } = Earth.TimeRate;
@@ -53,6 +54,8 @@ namespace Macrocosm.Common.Subworlds
 		/// <summary> The map background color for each depth layer (Surface, Underground, Cavern, Underworld) </summary>
 		public virtual Dictionary<MapColorType, Color> MapColors { get; } = null;
 
+		public override int ReturnDestination => int.MinValue;
+
 		/// <summary> The loading screen. Assign new instance in the constructor. </summary>
 		protected LoadingScreen LoadingScreen;
 		public override void OnEnter()
@@ -69,7 +72,7 @@ namespace Macrocosm.Common.Subworlds
 
 		public override void DrawMenu(GameTime gameTime)
 		{
-			if (AnyActive)
+			if (SubworldSystem.AnyActive<Macrocosm>())
 			{
 				if(LoadingScreen is not null)
 					LoadingScreen.Draw(Main.spriteBatch);
@@ -92,24 +95,33 @@ namespace Macrocosm.Common.Subworlds
 			return base.GetGravity(entity);
 		}
 
-		private TagCompound dataCopyTag = new();
+		// Data to copy between subworlds, also provided to SubLib
+		private TagCompound dataCopyTag;
 		public override void CopyMainWorldData()
 		{
-			WorldDataSystem.Instance.CopyWorldData(dataCopyTag);
+            dataCopyTag = new();
+
+            WorldDataSystem.Instance.CopyWorldData(dataCopyTag);
 			RocketManager.SaveRocketData(dataCopyTag);
 			CustomizationStorage.SaveUnlockedStatus(dataCopyTag);
 			LaunchPadLocations.SaveLocations(dataCopyTag);
+
+			// This is to ensure the data is properly transfered by SubLib code to subservers in MP 
+			SubworldSystem.CopyWorldData("Macrocosm:copiedData", dataCopyTag);
  		}
 
 		public override void ReadCopiedMainWorldData()
 		{
 			WorldDataSystem.Instance.ReadCopiedWorldData(dataCopyTag);
 			RocketManager.ReadSavedRocketData(dataCopyTag);
-			CustomizationStorage.LoadUnlockedStatus(dataCopyTag); 
-		}
+			CustomizationStorage.LoadUnlockedStatus(dataCopyTag);
+			LaunchPadLocations.LoadLocations(dataCopyTag);
 
-		// Should these be different?
-		public override void CopySubworldData() => CopyMainWorldData();
+			dataCopyTag = null;
+        }
+
+        // Should these be different?
+        public override void CopySubworldData() => CopyMainWorldData();
 		public override void ReadCopiedSubworldData() => ReadCopiedMainWorldData();
 	}
 }

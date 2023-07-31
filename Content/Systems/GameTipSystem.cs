@@ -6,6 +6,7 @@ using Terraria.GameContent.UI;
 using Terraria.Localization;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.UI;
+using SubworldLibrary;
 
 namespace Macrocosm.Common.Systems
 {
@@ -60,7 +61,7 @@ namespace Macrocosm.Common.Systems
 			if (LoadingScreen.CurrentlyActive)
 			{
 				// ..get the LoadingScreen specific GameTips, respective to the active subworld..
-				LocalizedText[] messages = Language.FindAll(Lang.CreateDialogFilter("Mods.Macrocosm.LoadingScreenTips." + (MacrocosmSubworld.AnyActive ? MacrocosmSubworld.Current.Name : "Earth")));
+				LocalizedText[] messages = Language.FindAll(Lang.CreateDialogFilter("Mods.Macrocosm.LoadingScreenTips." + (SubworldSystem.AnyActive<Macrocosm>() ? MacrocosmSubworld.Current.Name : "Earth")));
 
 				// .. and return a random message from that list
 				if (messages.Length > 0)

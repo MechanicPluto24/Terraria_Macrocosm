@@ -9,10 +9,12 @@ using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-    public class Pattern : TagSerializable
+    public class Pattern : TagSerializable, IUnlockable
     {
 		public string Name { get; }
 		public string ModuleName { get; }
+
+		public string GetKey() => ModuleName + "_" + Name;
 
 		public bool Unlocked { get; set; }
 		public bool UnlockedByDefault { get; private set; }
@@ -67,7 +69,7 @@ namespace Macrocosm.Content.Rockets.Customization
 			if (index >= 0 && index < ColorCount)
 			{
 				if (colorData[index].HasColorFunction)
-					return colorData[index].ColorFunction.Invoke(colorData.Select(c => c.UserColor).ToArray());
+					return colorData[index].ColorFunction.Invoke(colorData.Select((c, i) => i == index ? Color.Transparent : GetColor(i)).ToArray());
 				else if (!colorData[index].IsUserChangeable)
 					return colorData[index].DefaultColor;
  				else 
@@ -76,13 +78,31 @@ namespace Macrocosm.Content.Rockets.Customization
 			return Color.Transparent;
 		}
 
+		public void SetColor(int index, Color color)
+		{
+			if (index < 0 || index >= ColorCount || !colorData[index].IsUserChangeable)
+				return;
+
+			colorData[index].ColorFunction = null;
+			colorData[index].UserColor = color;
+		}
+
 		public bool TrySetColor(int index, Color color)
 		{
-			if (index < 0 || index >= ColorCount || !colorData[index].IsUserChangeable || colorData[index].HasColorFunction)
+			if (index < 0 || index >= ColorCount || !colorData[index].IsUserChangeable)
 				return false;
 
+            colorData[index].ColorFunction = null;
 			colorData[index].UserColor = color;
-			return true;
+            return true;
+		}
+
+		public void SetColor(int index, PatternColorFunction colorFunction)
+		{
+			if (index < 0 || index >= ColorCount || !colorData[index].IsUserChangeable)
+				return;
+
+			colorData[index].ColorFunction = colorFunction;
 		}
 
 		public bool TrySetColor(int index, PatternColorFunction colorFunction)
@@ -94,25 +114,30 @@ namespace Macrocosm.Content.Rockets.Customization
 			return true;
 		}
 
+		/*
 		public Color GetDefaultColor(int index)
 		{
 			if (index >= 0 && index < ColorCount)
 			{
 				if (colorData[index].HasColorFunction)
-					return colorData[index].ColorFunction.Invoke(colorData.Select(c => c.UserColor).ToArray());
+					return colorData[index].ColorFunction.Invoke(colorData.Select(c => c.DefaultColor).ToArray());
 				else
 					return colorData[index].DefaultColor;
 			}
 			return Color.Transparent;
 		}
+		*/
 
-		//public void DrawIconTexture(Vector2 position)
-		//{
-		//
-		//}
+		/*
+		public void DrawIconTexture(Vector2 position)
+		{
+		
+		}
+		*/
 
 		/// <summary> Color mask keys </summary>
-		public static readonly Vector3[] ColorKeys = {
+		public static Vector3[] ColorKeys { get; } = 
+		{
 			new Vector3(0f, 1f, 1f),     // Cyan (Rocket tip, booster tips, etc.)
 			new Vector3(1f, 0f, 1f),     // Magenta (The "background" of the pattern)
 			new Vector3(1f, 1f, 0f),     // Yellow  
@@ -123,7 +148,10 @@ namespace Macrocosm.Content.Rockets.Customization
 			new Vector3(0f,.5f, 1f)      // Azure
 		};
 
-		public static readonly Func<TagCompound, Pattern> DESERIALIZER = DeserializeData;
+
+		public Pattern Clone() => DeserializeData(SerializeData());
+
+        public static readonly Func<TagCompound, Pattern> DESERIALIZER = DeserializeData;
 
 		public TagCompound SerializeData()
 		{
@@ -146,7 +174,9 @@ namespace Macrocosm.Content.Rockets.Customization
 			string name = tag.GetString("Name");
 			string moduleName = tag.GetString("ModuleName");
 
-			Pattern pattern = CustomizationStorage.GetPattern(moduleName, name);
+			Pattern originalPatternData = CustomizationStorage.GetPatternReference(moduleName, name);
+			PatternColorData[] colorData = originalPatternData.colorData.Select(data => data.Clone()).ToArray();
+			Pattern pattern = new(moduleName, name, originalPatternData.UnlockedByDefault, colorData);
 
 			// Load the user-changed colors
 			for (int i = 0; i < pattern.ColorCount; i++)
