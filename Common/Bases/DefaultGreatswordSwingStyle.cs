@@ -10,16 +10,16 @@ namespace Macrocosm.Common.Bases
 {
     internal class DefaultGreatswordSwingStyle : GreatswordSwingStyle
     {
-        private const float MAX_SWING_TIMER = 35;
-        private float swingTimer = 1;
-        private float SwingTime => swingTimer / MAX_SWING_TIMER;
-        private const float MAX_REST_TIMER = 6;
-        private float restTimer = 1;
-        private float RestTime => swingTimer / MAX_SWING_TIMER;
+        private float? maxSwingTimer = null;
+        private float swingTimer = 1f;
+        private float SwingTime => swingTimer / maxSwingTimer.Value;
+        private const float MAX_REST_TIMER = 8f;
+        private float restTimer = 1f;
         private float? initialArmRotation = null;
-        public override bool Update(ref float armRotation, ref float projectileRotation)
+        public override bool Update(ref float armRotation, ref float projectileRotation, float charge)
         {
-            if (swingTimer >= MAX_SWING_TIMER)
+            maxSwingTimer ??= 88 - 20 * charge;
+            if (swingTimer >= maxSwingTimer)
             {
                 restTimer++;
                 if (restTimer >= MAX_REST_TIMER)
@@ -27,19 +27,18 @@ namespace Macrocosm.Common.Bases
                     return false;
                 }
 
+                armRotation += 0.01f;
                 return true;
             }
 
-            if (initialArmRotation is null)
-            {
-                initialArmRotation = armRotation;
-            }
+            initialArmRotation ??= armRotation;
 
-            armRotation = MathHelper.Lerp(initialArmRotation.Value, initialArmRotation.Value + MathHelper.Pi, MathF.Pow(MathF.Sin(MathHelper.PiOver2 * SwingTime), 2f));
-            projectileRotation = MathHelper.Lerp(projectileRotation, armRotation + MathHelper.Pi * 0.7f, SwingTime);
+            float progress = MathF.Pow(MathF.Sin(MathHelper.PiOver2 * SwingTime), 4);
+
+            armRotation = MathHelper.Lerp(initialArmRotation.Value, initialArmRotation.Value + MathHelper.Pi * 1.15f, progress);
+            projectileRotation = MathHelper.Lerp(projectileRotation, armRotation + MathHelper.Pi * 0.6f, progress);
 
             swingTimer++;
-
             return true;
         }
     }
