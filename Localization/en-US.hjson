@@ -1051,10 +1051,10 @@ Mods: {
 			DianiteForkProjectile.DisplayName: Dianite Fork
 			RegolithDebris.DisplayName: Regolith Debris
       ArtemiteSwordSwing.DisplayName: Artemite Sword
-			SilicaCrimsandProjectile.DisplayName: Silica Crimsand Projectile
-			SilicaEbonsandProjectile.DisplayName: Silica Ebonsand Projectile
-			SilicaPearlsandProjectile.DisplayName: Silica Pearlsand Projectile
-			SilicaSandProjectile.DisplayName: Silica Sand Projectile
+			SilicaCrimsandProjectile.DisplayName: Silica Crimsand 
+			SilicaEbonsandProjectile.DisplayName: Silica Ebonsand 
+			SilicaPearlsandProjectile.DisplayName: Silica Pearlsand 
+			SilicaSandProjectile.DisplayName: Silica Sand 
 		}
 
 		Tiles: {
