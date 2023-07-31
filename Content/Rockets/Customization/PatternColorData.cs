@@ -35,5 +35,16 @@ namespace Macrocosm.Content.Rockets.Customization
 			UserColor = Color.Transparent;
 			ColorFunction = colorFunction;
 		}
+
+		public PatternColorData Clone()
+		{
+			PatternColorData clonedData = new(this.DefaultColor, this.IsUserChangeable)
+			{
+				UserColor = this.UserColor,
+				ColorFunction = this.ColorFunction
+			};
+
+			return clonedData;
+		}
 	}
 }

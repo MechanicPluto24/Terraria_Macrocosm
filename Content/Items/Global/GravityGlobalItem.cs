@@ -13,7 +13,7 @@ namespace Macrocosm.Content.Items.Global
 			// - doubled them so it feels closer to the gravity of the rest of entities
 			// - used constants because gravity and maxFallSpeed are not reset to default values
 			// - check for our subworlds in order to minimize the impact of this^ on other mods
-			if (MacrocosmSubworld.AnyActive)
+			if (SubworldSystem.AnyActive<Macrocosm>())
 			{
 				gravity = Earth.ItemGravity * 2f * MacrocosmSubworld.Current.GravityMultiplier;
 				maxFallSpeed = Earth.ItemMaxFallSpeed * 2f * MacrocosmSubworld.Current.GravityMultiplier;

@@ -19,7 +19,7 @@ MechanicPluto24 - Creator and Lead Developer\
 RighteousRyan - Admin and Lead Coder\
 ClockworkCorvus, Toxin - Moderator\
 Lincolnennis, Universe - Composer\
-absoluteAquarian, 4mbr0s3 2, Feldy, Hallam, Thanatos, and TheLoneGamer - Programmers\
+absoluteAquarian, 4mbr0s3 2, Feldy, Hallam, sucss, Thanatos, and TheLoneGamer - Programmers\
 Daniel, Dovahkick, Juice, OmegA, and William - Spriters/Artists\
 dontkickmychick - Lorewriter
 

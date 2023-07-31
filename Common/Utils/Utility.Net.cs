@@ -8,6 +8,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Localization;
 using Macrocosm;
+using XPT.Core.Audio.MP3Sharp.Decoding;
 
 namespace Macrocosm.Common.Utils
 {
@@ -16,6 +17,15 @@ namespace Macrocosm.Common.Utils
 		public static void SendData(int dataType, int dataA, int dataB, string text, int playerID, float dataC, float dataD, float dataE, int clientType)
 		{
 			NetMessage.SendData(dataType, dataA, dataB, NetworkText.FromLiteral(text), playerID, dataC, dataD, dataE, clientType);
+		}
+
+        public static byte[] GetBuffer(this ModPacket packet)
+        {
+			var len = (ushort)packet.BaseStream.Position;
+			packet.Seek(0, SeekOrigin.Begin);
+			packet.Write(len);
+			packet.Close();
+			return ((MemoryStream)packet.BaseStream).GetBuffer();
 		}
 
         public static ModPacket WriteToPacket(ModPacket packet, byte msg, params object[] param)

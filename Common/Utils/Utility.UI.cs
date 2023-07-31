@@ -5,7 +5,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Common.Utils
 {
-	public partial class Utility
+	public static partial class Utility
 	{
 		public static void ReplaceChildWith(this UIElement parent, UIElement toRemove, UIElement newElement)
 		{
