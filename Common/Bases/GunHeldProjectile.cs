@@ -13,6 +13,7 @@ using System.IO;
 using Terraria.GameContent;
 using Mono.Cecil;
 using static Terraria.ModLoader.PlayerDrawLayer;
+using Macrocosm.Common.Utils;
 
 namespace Macrocosm.Common.Bases
 {
@@ -31,6 +32,8 @@ namespace Macrocosm.Common.Bases
         public float MuzzleOffset { get; init; } = 0f;
         public (float horizontal, float rotation) Recoil { get; init; } = (6f, 0.2f);
         public float RecoilDiminish { get; init; } = 0.92f;
+
+        public bool UseBackArm { get; init; } = true;
     }
 
     internal abstract class GunHeldProjectileItem : HeldProjectileItem<GunHeldProjectile>
@@ -138,7 +141,9 @@ namespace Macrocosm.Common.Bases
             Projectile.rotation = DirectionToMouse.ToRotation() + -currentRecoil.Y * Player.direction;
 
             Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, Projectile.rotation - MathHelper.PiOver2);
-            Player.SetCompositeArmBack(true, Player.CompositeArmStretchAmount.ThreeQuarters, Projectile.rotation - MathHelper.PiOver2);
+
+			if(GunHeldProjectileData.UseBackArm) 
+			    Player.SetCompositeArmBack(true, Player.CompositeArmStretchAmount.ThreeQuarters, Projectile.rotation - MathHelper.PiOver2);
 
             currentRecoil *= GunHeldProjectileData.RecoilDiminish;
         }

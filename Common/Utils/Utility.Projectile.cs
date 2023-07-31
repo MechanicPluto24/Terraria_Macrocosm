@@ -1,11 +1,11 @@
 ﻿using Macrocosm.Common.Drawing.Trails;
 using Macrocosm.Content.Projectiles.Global;
-using Macrocosm.Content.Items.Weapons.Ranged;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
 using Terraria.GameContent;
+using Terraria.ID;
 using System.Reflection;
 
 namespace Macrocosm.Common.Utils
@@ -96,14 +96,100 @@ namespace Macrocosm.Common.Utils
 				Main.spriteBatch.End();
 				Main.spriteBatch.Begin(state);
 			}
-
 		}
 
 		/// <summary>
 		/// Draws an animated projectile extra, such as a glowmask
 		/// (Only tested for held projectiles)  
 		/// </summary>
-		public static void DrawAnimatedExtra(this Projectile proj, Texture2D glowmask, Color color, SpriteEffects effect, Vector2 drawOffset = default, Rectangle? frame = null)
-			=> proj.DrawAnimated(color, effect, drawOffset + new Vector2(0, -2), glowmask, frame);
+		public static void DrawAnimatedExtra(this Projectile proj, Texture2D glowmask, Color lightColor, SpriteEffects effect, Vector2 drawOffset = default, Rectangle? frame = null)
+			=> proj.DrawAnimated(lightColor, effect, drawOffset + new Vector2(0, -2), glowmask, frame);
+
+
+		public static void AIFallingBlock(Projectile projectile, bool falling)
+		{
+			projectile.tileCollide = true;
+			projectile.localAI[1] = 0f;
+
+			if (projectile.ai[0] == 1f)
+			{
+				if (!falling)
+				{
+					projectile.ai[1] += 1f;
+
+					if (projectile.ai[1] >= 60f)
+					{
+						projectile.ai[1] = 60f;
+						projectile.velocity.Y += 0.2f;
+					}
+				}
+				else
+					projectile.velocity.Y += 0.41f;
+			}
+			else if (projectile.ai[0] == 2f)
+			{
+				projectile.velocity.Y += 0.2f;
+
+				if (projectile.velocity.X < -0.04f)
+					projectile.velocity.X += 0.04f;
+				else if (projectile.velocity.X > 0.04f)
+					projectile.velocity.X -= 0.04f;
+				else
+					projectile.velocity.X = 0f;
+			}
+
+			projectile.rotation += 0.1f;
+
+			if (projectile.velocity.Y > 10f)
+				projectile.velocity.Y = 10f;
+		}
+
+		public static void FallingBlockCreateTile(Projectile projectile, int createTileType, int createItemType)
+		{
+			if (projectile.owner == Main.myPlayer && !projectile.noDropItem)
+			{
+				int tileX = (int)(projectile.position.X + projectile.width / 2) / 16;
+				int tileY = (int)(projectile.position.Y + projectile.width / 2) / 16;
+
+				Tile tile = Main.tile[tileX, tileY];
+
+				bool placed = false;
+				int item = -1;
+
+				if (tile.HasUnactuatedTile && tile.IsHalfBlock && projectile.velocity.Y > 0f && Math.Abs(projectile.velocity.Y) > Math.Abs(projectile.velocity.X))
+					tileY--;
+
+				if (!tile.HasTile)
+				{
+					Tile tileBelow = Main.tile[tileX, tileY + 1];
+					bool canNotPlace = tileY < Main.maxTilesY - 2 && tileBelow.HasTile && tileBelow.TileType == TileID.MinecartTrack && WorldGen.BlockBelowMakesSandFall(tileX, tileY);
+
+					if (!canNotPlace)
+						placed = WorldGen.PlaceTile(tileX, tileY, createTileType, false, true);
+
+					if (!canNotPlace && tile.HasTile && tile.IsHalfBlock && tile.TileType == createTileType)
+					{
+						if (tileBelow.IsHalfBlock || tileBelow.Slope != 0)
+						{
+							WorldGen.SlopeTile(tileX, tileY + 1, 0);
+
+							if (Main.netMode == NetmodeID.Server)
+								NetMessage.SendData(MessageID.TileManipulation, -1, -1, null, 14, tileX, tileY + 1);
+						}
+
+						if (Main.netMode != NetmodeID.SinglePlayer)
+							NetMessage.SendData(MessageID.TileManipulation, -1, -1, null, 1, tileX, tileY, createTileType);
+					}
+					else if (!placed)
+					{
+						item = Item.NewItem(projectile.GetSource_DropAsItem(), (int)projectile.position.X, (int)projectile.position.Y, projectile.width, projectile.height, createItemType);
+					}
+				}
+				else  
+				{
+					item = Item.NewItem(projectile.GetSource_DropAsItem(), (int)projectile.position.X, (int)projectile.position.Y, projectile.width, projectile.height, createItemType);
+				}
+			}
+		}
 	}
 }
