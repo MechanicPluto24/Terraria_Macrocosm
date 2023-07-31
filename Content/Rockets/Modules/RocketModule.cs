@@ -65,9 +65,6 @@ namespace Macrocosm.Content.Rockets.Modules
 				if (this is EngineModule)
 				{
 					Pattern = CustomizationStorage.GetPattern(Name, "Binary");
-
-					if(Main.timeForVisualEffects % 100 == 0)
-						Detail = CustomizationStorage.GetDetail(Name, "Flag_" + Utility.CountryCodesAlpha3.GetRandom());
  				}
 
 				if (HasPattern)
