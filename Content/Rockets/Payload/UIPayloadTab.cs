@@ -10,13 +10,13 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Rockets.Navigation
+namespace Macrocosm.Content.Rockets.Payload
 {
-    public class UICargoTab : UIPanel
+    public class UIPayloadTab : UIPanel
     {
         public Rocket Rocket;
 
-		public UICargoTab()
+		public UIPayloadTab()
 		{
 		}
 
@@ -32,7 +32,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 			BackgroundColor = new Color(13, 23, 59, 127);
 			BorderColor = new Color(15, 15, 15, 255);
 
-			Append(new UIText("test2")
+			Append(new UIText("payload")
 			{
 				Top = new(0, 0.5f),
 				Left = new(0, 0.5f),

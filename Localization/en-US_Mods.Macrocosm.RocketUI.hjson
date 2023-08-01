@@ -1,7 +1,7 @@
 Common: {
 	Navigation: Navigation
 	Customization: Customization
-	Cargo: Cargo
+	Payload: Payload
 	Checklist: Pre-flight checklist
 	Crew: Crew
 	Fuel: Fuel

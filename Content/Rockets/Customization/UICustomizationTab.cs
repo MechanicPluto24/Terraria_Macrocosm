@@ -15,6 +15,10 @@ namespace Macrocosm.Content.Rockets.Navigation
 		public UIRocketModulePicker ModulePicker;
 		public UIPanel CustomizationPanelBackground;
 
+		public UINameplateConfig NameplateConfig;
+		public UIDetailConfig DetailConfig;
+		public UIPatternConfig PatternConfig;
+
 		public UICustomizationTab()
 		{
 		}
@@ -67,6 +71,18 @@ namespace Macrocosm.Content.Rockets.Navigation
 			ModulePicker.RightButton.CheckInteractible = () => !RocketPreview.AnimationActive;
 
 			CustomizationPanelBackground.Append(ModulePicker);
+
+			NameplateConfig = new();
+			DetailConfig = new();
+			PatternConfig = new();
+
+			NameplateConfig.Activate();
+			DetailConfig.Activate();
+			PatternConfig.Activate();
+
+			CustomizationPanelBackground.Append(NameplateConfig);
+			CustomizationPanelBackground.Append(DetailConfig);
+			CustomizationPanelBackground.Append(PatternConfig);
 		}
 
 		private void LeftButton_OnLeftClick(Terraria.UI.UIMouseEvent evt, Terraria.UI.UIElement listeningElement)
@@ -97,6 +113,10 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 			RocketPreview.Rocket = Rocket;
 			ModulePicker.CurrentModuleName = RocketPreview.CurrentModuleName;
+
+			NameplateConfig.Rocket = Rocket;
+			DetailConfig.Rocket = Rocket;
+			PatternConfig.Rocket = Rocket;
 		}
 
 		public override void Draw(SpriteBatch spriteBatch)
