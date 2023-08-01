@@ -16,7 +16,6 @@ namespace Macrocosm.Content.Rockets.Customization
 	{
 		public Rocket Rocket;
 
-
 		private UICharacterNameButton uITextBox;
 
 		public UINameplateConfig()
@@ -42,31 +41,14 @@ namespace Macrocosm.Content.Rockets.Customization
 				//TextColor = Color.White,
 			};
 
-			uITextBox.OnLeftMouseDown += Click_Naming;
-
 			Append(uITextBox);
 		}
 
 		public override void Update(GameTime gameTime)
 		{
 			base.Update(gameTime);
-
-			//var display = Utility.GetLocalizedTextOrEmpty("Mods.Macrocosm.Common." + Rocket.DisplayName);
-			//
-			//if(display == LocalizedText.Empty)
-			//	uITextBox.SetText(Rocket.DisplayName);
-			//else
-			//	uITextBox.SetText(display.Value);
-
 		}
 
-		private void Click_Naming(UIMouseEvent evt, UIElement listeningElement)
-		{
-			Main.clrInput();
-			UIVirtualKeyboard uIVirtualKeyboard = new UIVirtualKeyboard(Lang.menu[45].Value, "", (_) => { }, () => { }, 0, allowEmpty: true);
-			uIVirtualKeyboard.SetMaxInputLength(20);
-			Main.MenuUI.SetState(uIVirtualKeyboard);
-		}
 
 		public override void Draw(SpriteBatch spriteBatch)
 		{
