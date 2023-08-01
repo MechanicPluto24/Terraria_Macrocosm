@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Linq;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.Modules;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
@@ -128,12 +130,43 @@ namespace Macrocosm.Content.Rockets.Customization
 		}
 		*/
 
-		/*
-		public void DrawIconTexture(Vector2 position)
+		public void DrawIcon(SpriteBatch spriteBatch, Vector2 position)
 		{
-		
+			// Load the coloring shader
+			Effect effect = ModContent.Request<Effect>(Macrocosm.EffectAssetsPath + "ColorMaskShading", AssetRequestMode.ImmediateLoad).Value;
+
+			// Pass the pattern icon to the shader via the S1 register
+			Main.graphics.GraphicsDevice.Textures[1] = IconTexture;
+
+			// Change sampler state for proper alignment at all UI scales 
+			SamplerState samplerState = spriteBatch.GraphicsDevice.SamplerStates[1];
+			Main.graphics.GraphicsDevice.SamplerStates[1] = SamplerState.PointClamp;
+
+			//Pass the color mask keys as Vector3s and configured colors as Vector4s
+			//Note: parameters are scalars intentionally, I manually unrolled the loop in the shader to reduce number of branch instructions -- Feldy
+			for (int i = 0; i < MaxColorCount; i++)
+			{
+				effect.Parameters["uColorKey" + i.ToString()].SetValue(ColorKeys[i]);
+				effect.Parameters["uColor" + i.ToString()].SetValue(GetColor(i).ToVector4());
+			}
+
+			effect.Parameters["uAmbientColor"].SetValue(Color.White.ToVector3());
+
+			var state = spriteBatch.SaveState();
+			spriteBatch.End();
+			spriteBatch.Begin(state.SpriteSortMode, state.BlendState, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, effect, state.Matrix);
+ 
+			spriteBatch.Draw(IconTexture, position, Color.White);
+
+			spriteBatch.End();
+			spriteBatch.Begin(state);
+
+			// Clear the tex registers  
+			Main.graphics.GraphicsDevice.Textures[1] = null;
+
+			// Restore the sampler states
+			Main.graphics.GraphicsDevice.SamplerStates[1] = samplerState;
 		}
-		*/
 
 		/// <summary> Color mask keys </summary>
 		public static Vector3[] ColorKeys { get; } = 

@@ -1,7 +1,5 @@
-﻿using Humanizer;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
-
 using Terraria.GameContent.UI.Elements;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -32,6 +30,7 @@ namespace Macrocosm.Content.Rockets.Customization
 			Width.Set(0, 0.42f);
 			Height.Set(0, 0.25f);
 			HAlign = 0.5f;
+			Top.Set(0f, 0.095f);
 			BackgroundColor = new Color(53, 72, 135);
 			BorderColor = new Color(89, 116, 213, 255);
 			SetPadding(0f);

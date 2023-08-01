@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.Navigation.DebugPanel;
+using Macrocosm.Content.Rockets.Payload;
 using Macrocosm.Content.Systems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -25,7 +26,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 		private UINavigationTab Navigation;
 		private UICustomizationTab Customization;
-		private UICargoTab Cargo;
+		private UIPayloadTab Payload;
 
 		//private UIRocketDebugPanel DebugPanel;
 
@@ -65,15 +66,15 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 			Navigation = new();
 			Customization = new();
-			Cargo = new();
+			Payload = new();
 
 			Navigation.Activate();
 			Customization.Activate();
-			Cargo.Activate();
+			Payload.Activate();
 
 			BackgroundPanel.Append(Navigation);
 			Navigation.CustomizationPreview.OnLeftClick += SetTab_Customization;
-			//Navigation.CargoFuelPreview.OnLeftClick += SetTab_Cargo;
+			//Navigation.PayloadFuelPreview.OnLeftClick += SetTab_Payload;
 
 
 			TabLeftButton = new(ModContent.Request<Texture2D>(buttonsPath + "BackArrow", mode), ModContent.Request<Texture2D>(buttonsPath + "BackArrowBorder", mode), Language.GetText("Mods.Macrocosm.RocketUI.Common.Customization"))
@@ -87,15 +88,15 @@ namespace Macrocosm.Content.Rockets.Navigation
 			TabLeftButton.OnLeftClick += SetTab_Customization;
 			BackgroundPanel.Append(TabLeftButton);
 
-			TabRightButton = new(ModContent.Request<Texture2D>(buttonsPath + "ForwardArrow", mode), ModContent.Request<Texture2D>(buttonsPath + "ForwardArrowBorder", mode), Language.GetText("Mods.Macrocosm.RocketUI.Common.Cargo"))
+			TabRightButton = new(ModContent.Request<Texture2D>(buttonsPath + "ForwardArrow", mode), ModContent.Request<Texture2D>(buttonsPath + "ForwardArrowBorder", mode), Language.GetText("Mods.Macrocosm.RocketUI.Common.Payload"))
 			{
 				Top = new(-38, 0f),
 				Left = new(0, 0.955f),
 
-				CheckInteractible = () => !BackgroundPanel.Children.Contains(Cargo)
+				CheckInteractible = () => !BackgroundPanel.Children.Contains(Payload)
 			};
 			TabRightButton.SetVisibility(1f, 0f, 1f);
-			TabRightButton.OnLeftClick += SetTab_Cargo;
+			TabRightButton.OnLeftClick += SetTab_Payload;
 			BackgroundPanel.Append(TabRightButton);
 
 			//DebugPanel = new();
@@ -108,16 +109,16 @@ namespace Macrocosm.Content.Rockets.Navigation
 			BackgroundPanel.Append(Customization);
 			Title.SetText(Language.GetText("Mods.Macrocosm.RocketUI.Common.Customization"));
 
-			TabRightButton.OnLeftClick -= SetTab_Cargo;
+			TabRightButton.OnLeftClick -= SetTab_Payload;
 			TabRightButton.OnLeftClick += SetTab_Navigation;
 			TabRightButton.HoverText = Language.GetText("Mods.Macrocosm.RocketUI.Common.Navigation");
 		}
 
-		private void SetTab_Cargo(UIMouseEvent evt, UIElement listeningElement)
+		private void SetTab_Payload(UIMouseEvent evt, UIElement listeningElement)
 		{
 			BackgroundPanel.RemoveChild(Navigation);
-			BackgroundPanel.Append(Cargo);
-			Title.SetText(Language.GetText("Mods.Macrocosm.RocketUI.Common.Cargo"));
+			BackgroundPanel.Append(Payload);
+			Title.SetText(Language.GetText("Mods.Macrocosm.RocketUI.Common.Payload"));
 
 			TabLeftButton.OnLeftClick -= SetTab_Customization;
 			TabLeftButton.OnLeftClick += SetTab_Navigation;
@@ -127,7 +128,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 		private void SetTab_Navigation(UIMouseEvent evt, UIElement listeningElement)
 		{
 			BackgroundPanel.RemoveChild(Customization);
-			BackgroundPanel.RemoveChild(Cargo);  
+			BackgroundPanel.RemoveChild(Payload);  
 
 			BackgroundPanel.Append(Navigation);
 			Title.SetText(Language.GetText("Mods.Macrocosm.RocketUI.Common.Navigation"));
@@ -137,8 +138,8 @@ namespace Macrocosm.Content.Rockets.Navigation
 			TabLeftButton.HoverText = Language.GetText("Mods.Macrocosm.RocketUI.Common.Customization");
 
 			TabRightButton.OnLeftClick -= SetTab_Navigation;
-			TabRightButton.OnLeftClick += SetTab_Cargo;
-			TabRightButton.HoverText = Language.GetText("Mods.Macrocosm.RocketUI.Common.Cargo");
+			TabRightButton.OnLeftClick += SetTab_Payload;
+			TabRightButton.HoverText = Language.GetText("Mods.Macrocosm.RocketUI.Common.Payload");
 		}
 
 		public override void Update(GameTime gameTime)
@@ -147,7 +148,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 			Navigation.Rocket = Rocket;
 			Customization.Rocket = Rocket;
-			Cargo.Rocket = Rocket;
+			Payload.Rocket = Rocket;
 
 			Player player = Main.LocalPlayer;
 			player.mouseInterface = true;
