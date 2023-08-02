@@ -88,10 +88,14 @@ namespace Macrocosm.Content.Rockets
 		/// <summary> The layer this rocket is drawn in </summary>
 		public RocketDrawLayer DrawLayer = RocketDrawLayer.BeforeNPCs;
 
-		/// <summary> The Rocket's name, set by the user, defaults to a localized "Rocket" name </summary>
+		/// <summary> The Rocket's name, if not set by the user, defaults to a localized "Rocket" name </summary>
 		public string DisplayName
 			=> EngineModule.Nameplate.HasNoSupportedChars() ? Language.GetTextValue("Mods.Macrocosm.Common.Rocket") : EngineModule.Nameplate.Text;
 
+		/// <summary> The Rocket's name, set by the user </summary>
+		public string AssignedName => EngineModule.Nameplate.Text;
+
+		public void SetName(string name) => EngineModule.Nameplate.Text = name;
 
 		/// <summary> List of the module names, in the customization access order </summary>
 		public List<string> ModuleNames => Modules.Keys.ToList();
@@ -166,7 +170,6 @@ namespace Macrocosm.Content.Rockets
 			// Testing
 			Fuel = 1000f;
 
-			SetModuleRelativePositions();
 			Movement();
 
 			if (Stationary)

@@ -7,6 +7,8 @@ namespace Macrocosm.Common.Utils
 {
 	public static partial class Utility
 	{
+		public static float NormalizedUIScale => (Main.UIScale - 0.5f) / (2.0f - 0.5f);
+
 		public static void ReplaceChildWith(this UIElement parent, UIElement toRemove, UIElement newElement)
 		{
 			parent.RemoveChild(toRemove);

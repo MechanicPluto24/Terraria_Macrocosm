@@ -10,22 +10,16 @@ namespace Macrocosm.Content.Rockets.Customization
     {
         public string Text = "";
 
-        //public Color[] charColors;
-        public Color TextColor;
+        public Color TextColor = Color.White;
 
         public const int MaxChars = 13;
 
         public void Draw(SpriteBatch spriteBatch, Vector2 position, Color ambientColor)
         {
             Texture2D texture = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Fonts/RocketLettersSmall").Value;
-
-            // testing
-            Text = "Feldy  1337";
-            TextColor = Color.Yellow;
-
             int numChars = (int)MathHelper.Clamp(Text.Length, 0 , MaxChars);
 
-            for(int i = 0; i < numChars; i++)
+			for (int i = 0; i < numChars; i++)
             {
 				spriteBatch.Draw(texture, new Vector2(position.X, position.Y + (i * characterHeight)), GetCharacterRectangle(Text[i]), TextColor * ambientColor.GetLuminance(), 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
 			}
@@ -40,9 +34,9 @@ namespace Macrocosm.Content.Rockets.Customization
             return false;
         }
 
-		public static bool SupportsChar(char c) => supportedCharacters.IndexOf(char.ToUpper(c)) != -1;
+		public static bool SupportsChar(char c) => SupportedCharacters.IndexOf(char.ToUpper(c)) != -1;
 
-		private static readonly string supportedCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-+!?";
+		public static readonly string SupportedCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-+!? ";
 
         private const int charactersPerRow = 13;
         private const int characterWidth   = 2 + 6; // with padding
@@ -50,7 +44,7 @@ namespace Macrocosm.Content.Rockets.Customization
 
 		private static Rectangle GetCharacterRectangle(char c)
         {
-			int index = supportedCharacters.IndexOf(char.ToUpper(c));
+			int index = SupportedCharacters.IndexOf(char.ToUpper(c));
 
  			// Character not found in the sheet
 			if (index == -1)

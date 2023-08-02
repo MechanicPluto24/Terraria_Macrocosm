@@ -67,6 +67,7 @@ namespace Macrocosm.Content.Rockets
 
 			Main.playerInventory = true;
 			UIRocketState.Rocket = rocket;
+			UIRocketState.RocketDummy = rocket.Clone();
 			Interface.SetState(UIRocketState);
 		}
 
