@@ -8,6 +8,9 @@ namespace Macrocosm.Content.Rockets
 {
 	public partial class Rocket : TagSerializable
 	{
+
+		public Rocket Clone() => DeserializeData(SerializeData());
+
 		public static readonly Func<TagCompound, Rocket> DESERIALIZER = DeserializeData;
 
 		public TagCompound SerializeData()
@@ -32,7 +35,10 @@ namespace Macrocosm.Content.Rockets
 			if (TargetLandingPosition != Vector2.Zero) tag[nameof(TargetLandingPosition)] = TargetLandingPosition;
 
 			foreach (string moduleName in ModuleNames)
+			{
 				tag[moduleName] = Modules[moduleName];
+				tag[moduleName + "_Type"] = Modules[moduleName].FullName;
+			}
 
 			return tag;
 		}
@@ -61,11 +67,14 @@ namespace Macrocosm.Content.Rockets
 
 			foreach (string moduleName in rocket.ModuleNames)
 			{
-				Type moduleType = Type.GetType(moduleName);
-				if (moduleType != null && moduleType.IsSubclassOf(typeof(RocketModule)))
+				if(tag.ContainsKey(moduleName + "_Type"))
 				{
-					var module = RocketModule.DeserializeData(tag.GetCompound(moduleName));
-					rocket.Modules[moduleName] = module;
+					Type moduleType = Type.GetType(tag.GetString(moduleName + "_Type"));
+					if (moduleType != null && moduleType.IsSubclassOf(typeof(RocketModule)))
+					{
+						var module = RocketModule.DeserializeData(tag.GetCompound(moduleName));
+						rocket.Modules[moduleName] = module;
+					}
 				}
 			}
 

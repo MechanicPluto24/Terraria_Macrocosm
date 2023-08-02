@@ -168,7 +168,7 @@ namespace Macrocosm.Content.Rockets
 
             orig(self);
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, default, default, Main.GameViewMatrix.ZoomMatrix);
+			spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, default, default, Main.GameViewMatrix.ZoomMatrix);
            
             DrawRockets(RocketDrawLayer.AfterProjectiles);
             

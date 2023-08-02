@@ -1,13 +1,19 @@
-﻿using Macrocosm.Content.Rockets.Customization;
+﻿using Macrocosm.Common.UI;
+using Macrocosm.Common.Utils;
+using Macrocosm.Content.Rockets.Customization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Terraria;
 using Terraria.GameContent.UI.Elements;
- 
+using Terraria.UI;
+
 namespace Macrocosm.Content.Rockets.Navigation
 {
     public class UICustomizationTab : UIPanel
     {
         public Rocket Rocket;
+        public Rocket RocketDummy;
 
 		public UIRocketPreviewLarge RocketPreview;
 		public UIPanel RocketPreviewBackground;
@@ -18,6 +24,8 @@ namespace Macrocosm.Content.Rockets.Navigation
 		public UINameplateConfig NameplateConfig;
 		public UIDetailConfig DetailConfig;
 		public UIPatternConfig PatternConfig;
+
+		public UIColorHSLProvider HSLMenu;
 
 		public UICustomizationTab()
 		{
@@ -30,7 +38,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 			HAlign = 0.5f;
 			VAlign = 0.5f;
 
-			SetPadding(14f);
+			SetPadding(6f);
 
 			BackgroundColor = new Color(13, 23, 59, 127);
 			BorderColor = new Color(15, 15, 15, 255);
@@ -44,7 +52,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 				BackgroundColor = new Color(53, 72, 135),
 				BorderColor = new Color(89, 116, 213, 255)
 			};
-			RocketPreviewBackground.SetPadding(2f);
+			RocketPreviewBackground.SetPadding(6f);
 			RocketPreviewBackground.OverflowHidden = true;
 			Append(RocketPreviewBackground);
 
@@ -60,7 +68,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 				BackgroundColor = new Color(53, 72, 135),
 				BorderColor = new Color(89, 116, 213, 255)
 			};
-			CustomizationPanelBackground.SetPadding(10f);
+			CustomizationPanelBackground.SetPadding(6f);
 			Append(CustomizationPanelBackground);
 
 			ModulePicker = new();
@@ -72,7 +80,29 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 			CustomizationPanelBackground.Append(ModulePicker);
 
-			NameplateConfig = new();
+			NameplateConfig = new()
+			{
+				OnFocusSet = () => 
+				{
+					RocketPreview.UpdateModule("EngineModule");
+					ModulePicker.CurrentModuleName = "EngineModule";
+					HSLMenu.SetColorHSL(RocketDummy.EngineModule.Nameplate.TextColor.ToHSL());
+				},
+
+				CheckTextSubmit = () =>
+				{
+					if (Main.keyState.IsKeyDown(Keys.Enter))
+					{
+						Rocket.SetName(NameplateConfig.Text);
+						Rocket.EngineModule.Nameplate.TextColor = HSLMenu.PendingColor;
+						RocketDummy = Rocket.Clone();
+						return true;
+					}
+
+					return false;
+				}
+			};
+
 			DetailConfig = new();
 			PatternConfig = new();
 
@@ -83,6 +113,12 @@ namespace Macrocosm.Content.Rockets.Navigation
 			CustomizationPanelBackground.Append(NameplateConfig);
 			CustomizationPanelBackground.Append(DetailConfig);
 			CustomizationPanelBackground.Append(PatternConfig);
+
+			HSLMenu = new();
+			UIPanel hslPanel = HSLMenu.ProvideHSLMenu();
+			CustomizationPanelBackground.Append(hslPanel);
+			hslPanel.Activate();
+			HSLMenu.SetColorSetEvent(HSLMenu_OnSliderClick);
 		}
 
 		private void LeftButton_OnLeftClick(Terraria.UI.UIMouseEvent evt, Terraria.UI.UIElement listeningElement)
@@ -95,6 +131,8 @@ namespace Macrocosm.Content.Rockets.Navigation
 			else
 				RocketPreview.UpdateModule(RocketPreview.CurrentModuleIndex - 1);
 
+			ModulePicker.CurrentModuleName = RocketPreview.CurrentModuleName;
+
 		}
 		private void RightButton_OnLeftClick(Terraria.UI.UIMouseEvent evt, Terraria.UI.UIElement listeningElement)
 		{
@@ -105,18 +143,34 @@ namespace Macrocosm.Content.Rockets.Navigation
 				RocketPreview.UpdateModule(0);
 			else
 				RocketPreview.UpdateModule(RocketPreview.CurrentModuleIndex + 1);
+
+			ModulePicker.CurrentModuleName = RocketPreview.CurrentModuleName;
+		}
+
+		private void HSLMenu_OnSliderClick(Terraria.UI.UIMouseEvent evt, Terraria.UI.UIElement listeningElement)
+		{
+			
 		}
 
 		public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
-			RocketPreview.Rocket = Rocket;
-			ModulePicker.CurrentModuleName = RocketPreview.CurrentModuleName;
+			RocketPreview.Rocket = RocketDummy;
+			NameplateConfig.Rocket = RocketDummy;
 
-			NameplateConfig.Rocket = Rocket;
-			DetailConfig.Rocket = Rocket;
-			PatternConfig.Rocket = Rocket;
+			if (!NameplateConfig.TextBoxHasFocus)
+			{
+				NameplateConfig.SetText(RocketDummy.AssignedName);
+			}
+			else
+			{
+				RocketDummy.EngineModule.Nameplate.TextColor = HSLMenu.PendingColor;
+				RocketDummy.SetName(NameplateConfig.Text);
+			}
+
+			DetailConfig.Rocket = RocketDummy;
+			PatternConfig.Rocket = RocketDummy;
 		}
 
 		public override void Draw(SpriteBatch spriteBatch)

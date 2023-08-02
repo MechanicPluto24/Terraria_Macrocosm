@@ -15,6 +15,8 @@ namespace Macrocosm.Content.Rockets.Modules
 	{
 		public string Name => GetType().Name;
 
+		public string FullName => GetType().Namespace + "." + Name;
+
 		/// <summary> This module's draw priority </summary>
 		public abstract int DrawPriority { get; }
 
@@ -61,11 +63,25 @@ namespace Macrocosm.Content.Rockets.Modules
 				// Load the coloring shader
 				Effect effect = ModContent.Request<Effect>(Macrocosm.EffectAssetsPath + "ColorMaskShading", AssetRequestMode.ImmediateLoad).Value;
 
+				CustomizationStorage.Reset();
 				// -- testing, will be configured from an UI		
 				if (this is EngineModule)
-				{
+ 					Pattern = CustomizationStorage.GetPattern(Name, "Binary");
+
+				if (this is ServiceModule)
 					Pattern = CustomizationStorage.GetPattern(Name, "Binary");
- 				}
+
+				if (this is ReactorModule)
+					Pattern = CustomizationStorage.GetPattern(Name, "Binary");
+
+				if (this is CommandPod)
+					Pattern = CustomizationStorage.GetPattern(Name, "Binary");
+
+				if (this is BoosterRight && this is not BoosterLeft)
+				{
+					Pattern = CustomizationStorage.GetPattern(Name, "Basic");
+					Pattern.SetColor(1, new Color(40, 40, 40));
+				}
 
 				if (HasPattern)
 				{
@@ -129,7 +145,7 @@ namespace Macrocosm.Content.Rockets.Modules
 		{
 			TagCompound tag = SerializeModuleData();
 
-			tag["Type"] = GetType().Namespace + "." + Name;
+			tag["Type"] = FullName;
 			tag["Name"] = Name;
 
 			if(Detail is not null)

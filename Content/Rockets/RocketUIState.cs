@@ -18,6 +18,7 @@ namespace Macrocosm.Content.Rockets.Navigation
     public class RocketUIState : UIState
     {
         public Rocket Rocket;
+        public Rocket RocketDummy;
 
 		private UIText Title;
 		private UIDragablePanel BackgroundPanel;
@@ -148,6 +149,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 			Navigation.Rocket = Rocket;
 			Customization.Rocket = Rocket;
+			Customization.RocketDummy = RocketDummy;
 			Payload.Rocket = Rocket;
 
 			Player player = Main.LocalPlayer;

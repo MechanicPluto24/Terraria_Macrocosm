@@ -18,40 +18,6 @@ namespace Macrocosm.Common.Utils
 
 		public static Vector2 ScreenCenterInWorld => Main.screenPosition + ScreenCenter;
 
-		public static float NormalizedUIScale => (Main.UIScale - 0.5f) / (2.0f - 0.5f);
-
-		public static void ManipulateColor(ref Color color, byte amount)
-        {
-            color.R += amount;
-            color.G += amount;
-            color.B += amount;
-        }
-        public static void ManipulateColor(ref Color color, float amount)
-        {
-            color.R *= (byte)Math.Round(color.R * amount);
-            color.G += (byte)Math.Round(color.G * amount);
-            color.B += (byte)Math.Round(color.B * amount);
-        }
-
-        public static Vector3[] ToVector3Array(this Color[] colors)
-        {
-            Vector3[] vectors = new Vector3[colors.Length];
-
-            for (int i = 0; i < colors.Length; i++) 
- 				vectors[i] = colors[i].ToVector3();    
-
-             return vectors;
-        }
-
-		public static Vector4[] ToVector4Array(this Color[] colors)
-		{
-			Vector4[] vectors = new Vector4[colors.Length];
-
-			for (int i = 0; i < colors.Length; i++)
- 				vectors[i] = colors[i].ToVector4();
-
-			return vectors;
-		}
 
 		/// <summary>
 		/// Draw a MagicPixel trail behind a projectile, with length based on the trail cache length  
@@ -99,31 +65,7 @@ namespace Macrocosm.Common.Utils
             }
         }
 
-        /// <summary> Gets the perceived luminance of a color using the NTSC standard as a normalized value </summary>
-        public static float GetLuminance(this Color rgbColor)
-            => 0.299f * rgbColor.R / 255 + 0.587f * rgbColor.G / 255 + 0.114f * rgbColor.B / 255;
-
-
-        /// <summary> Gets the perceived luminance of a color using the NTSC standard as a byte </summary>
-        public static byte GetLuminance_Byte(this Color rgbColor) => (byte)(rgbColor.GetLuminance() * 255);
-
-
-        /// <summary> Returns the RGB grayscale of a color using the NTSC standard </summary>
-        public static Color ToGrayscale(this Color rgbColor)
-        {
-            Color result = new();
-            result.R = result.G = result.B = rgbColor.GetLuminance_Byte();
-            result.A = rgbColor.A;
-            return result;
-        }
-
-        public static Color NewAlpha(this Color color, float alpha)
-            => new(color.R, color.G, color.B, (byte)(alpha * 255));
-
-        public static Color NewAlpha(this Color color, byte alpha)
-            => new(color.R, color.G, color.B, alpha);
-        
-
+    
 		/// <summary> Convenience method for getting lighting color using an npc or projectile position.</summary>
 		public static Color GetLightColor(Vector2 position)
 		{
@@ -143,26 +85,6 @@ namespace Macrocosm.Common.Utils
 			Lighting.AddLight((int)(position.X / 16f), (int)(position.Y / 16f), colorR / brightnessDivider, colorG / brightnessDivider, colorB / brightnessDivider);
 		}
 
-
-		/// <summary> Returns a premultiplied copy of a texture </summary>
-		public static Texture2D ToPremultiplied(this Texture2D texture)
-        {
-            Texture2D newTexture = new(texture.GraphicsDevice, texture.Width, texture.Height);
-
-            Main.QueueMainThreadAction(() =>
-            {
-                Color[] buffer = new Color[texture.Width * texture.Height];
-                texture.GetData(buffer);
-                for (int i = 0; i < buffer.Length; i++)
-                {
-                    buffer[i] = Color.FromNonPremultiplied(
-                        buffer[i].R, buffer[i].G, buffer[i].B, buffer[i].A);
-                }
-                newTexture.SetData(buffer);
-            });
-
-            return newTexture;
-        }
 
 		#region BaseMod BaseDrawing
 

@@ -4,6 +4,7 @@ using Terraria.ModLoader;
 using Macrocosm.Content.Rockets.Customization;
 using Terraria;
 using Macrocosm.Common.Utils;
+using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Rockets.Modules
 {
@@ -42,5 +43,23 @@ namespace Macrocosm.Content.Rockets.Modules
 			spriteBatch.End();
 			spriteBatch.Begin(state);
 		}
-    }
+
+		protected override TagCompound SerializeModuleData()
+		{
+			return new()
+			{
+				["NameplateText"] = Nameplate.Text,
+				["NameplateColor"] = Nameplate.TextColor
+			};
+		}
+
+		protected override void DeserializeModuleData(TagCompound tag)
+		{
+			if (tag.ContainsKey("NameplateText"))
+				Nameplate.Text = tag.GetString("NameplateText");
+
+			if (tag.ContainsKey("NameplateColor"))
+				Nameplate.TextColor = tag.Get<Color>("NameplateColor");
+		}
+	}
 }

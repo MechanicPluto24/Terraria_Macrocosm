@@ -42,8 +42,8 @@ namespace Macrocosm.Content.Rockets.Navigation
 			HAlign = 0.5f;
 			VAlign = 0.5f;
 
-            SetPadding(2f);
-
+            SetPadding(3f);
+ 
             BackgroundColor = new Color(13, 23, 59, 127);
             BorderColor = new Color(15, 15, 15, 255);
 
