@@ -16,7 +16,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 		{
 			GunBarrelPosition = new Vector2(25, 6),
 			CenterYOffset = 6,
-			MuzzleOffset = 40,
+			MuzzleOffset = 33,
 			Recoil = (11, 0.8f),
 			RecoilDiminish = 0.95f
 		};

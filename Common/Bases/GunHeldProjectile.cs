@@ -70,6 +70,7 @@ namespace Macrocosm.Common.Bases
         }
 
         private Vector2 currentRecoil;
+        private int frame;
 
         private void UpdateCenterAndDirection()
         {
@@ -91,8 +92,6 @@ namespace Macrocosm.Common.Bases
 
             GunTexture = gunHeldProjectileItem.HeldProjectileTexture;
             GunHeldProjectileData = gunHeldProjectileItem.GunHeldProjectileData;
-
-            currentRecoil = new Vector2(GunHeldProjectileData.Recoil.horizontal, GunHeldProjectileData.Recoil.rotation);
 
             if (Main.myPlayer != Projectile.owner)
             {
@@ -138,12 +137,28 @@ namespace Macrocosm.Common.Bases
         public override void AI()
         {
             UpdateCenterAndDirection();
-            Projectile.rotation = DirectionToMouse.ToRotation() + -currentRecoil.Y * Player.direction;
+
+            float mouseDirectionRotation = DirectionToMouse.ToRotation();
+            int newPlayerDirection = MathF.Abs(mouseDirectionRotation) <= MathHelper.PiOver2 ? 1 : -1;
+            if (newPlayerDirection != Player.direction)
+            {
+                Player.ChangeDir(newPlayerDirection);
+                currentRecoil.Y *= -1;
+            }
+
+            Projectile.rotation = mouseDirectionRotation - currentRecoil.Y * Player.direction;
 
             Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, Projectile.rotation - MathHelper.PiOver2);
 
-			if(GunHeldProjectileData.UseBackArm) 
-			    Player.SetCompositeArmBack(true, Player.CompositeArmStretchAmount.ThreeQuarters, Projectile.rotation - MathHelper.PiOver2);
+            if (GunHeldProjectileData.UseBackArm)
+            {
+                Player.SetCompositeArmBack(true, Player.CompositeArmStretchAmount.ThreeQuarters, Projectile.rotation - MathHelper.PiOver2);
+            }
+
+            if (frame++ == Projectile.extraUpdates)
+            {
+                currentRecoil = new Vector2(GunHeldProjectileData.Recoil.horizontal, GunHeldProjectileData.Recoil.rotation);
+            }
 
             currentRecoil *= GunHeldProjectileData.RecoilDiminish;
         }

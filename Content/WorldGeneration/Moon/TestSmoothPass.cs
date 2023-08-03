@@ -23,15 +23,15 @@ namespace Macrocosm.Content.WorldGeneration.Moon
                     for (int j = 20; j < Main.maxTilesY - 20; j++)
                     {
                         TileNeighbourInfo neighbourInfo = new(i, j);
-                        if (neighbourInfo.SolidCount > 4)
+                        if (neighbourInfo.Solid.Count > 4)
                         {
                             Main.tile[i, j].Get<TileWallWireStateData>().HasTile = true;
-                            if (neighbourInfo.SolidCount < 7)
+                            if (neighbourInfo.Solid.Count < 7)
                             {
                                 WorldGen.SlopeTile(i, j);
                             }
                         }
-                        else if (neighbourInfo.SolidCount < 4)
+                        else if (neighbourInfo.Solid.Count < 4)
                         {
                             Main.tile[i, j].Get<TileWallWireStateData>().HasTile = false;
                         }
