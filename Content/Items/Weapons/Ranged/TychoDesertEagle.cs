@@ -22,6 +22,8 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			UseBackArm = false,
         };
 
+        public override float? ProjectileScale => 0.75f;
+
         public override void SetStaticDefaults()
 		{
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
@@ -46,8 +48,6 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			Item.DamageType = DamageClass.Ranged; //deals melee damage
 			Item.reuseDelay = 8;
 			Item.useAmmo = AmmoID.Bullet; //uses bullets as ammunition
-
-			ProjectileScale = 0.75f;
 		}
 
 		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)

@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Terraria;
 using Terraria.Audio;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Utilities.Terraria.Utilities;
@@ -64,6 +65,7 @@ namespace Macrocosm.Common.Bases
 
         private float armRotation = 0f;
         private int chargeEndPlayerDirection = 1;
+        private float hitTimer = 0f;
         protected override void OnSpawn()
         {
             if (Item.ModItem is GreatswordHeldProjectileItem greatswordHeldProjectileItem) 
@@ -130,11 +132,15 @@ namespace Macrocosm.Common.Bases
             Projectile.Center = Player.RotatedRelativePoint(Player.MountedCenter) + armDirection * 18;
             Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, localArmRot);
             Player.SetCompositeArmBack(true, Player.CompositeArmStretchAmount.Full, localArmRot + 0.1f * Player.direction);
+
+            hitTimer *= 0.95f;
         }
 
         public override (Vector2 startPosition, Vector2 endPosition, float width)? LineCollision => (
             Projectile.Center,
-            Projectile.Center + ((Projectile.rotation - MathHelper.PiOver4) * Player.direction).ToRotationVector2() * SwordLenght,
+            Projectile.Center + (
+                (Projectile.rotation - MathHelper.PiOver4) * Player.direction + (Player.direction == -1 ? MathHelper.Pi : 0f)
+            ).ToRotationVector2() * SwordLenght,
             SwordWidth
         );
 
@@ -145,6 +151,11 @@ namespace Macrocosm.Common.Bases
                 ChargeBasedDamageRatio.max,
                 Charge
             );
+        }
+
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            hitTimer = 1f;
         }
 
         public override bool? CanHitNPC(NPC target) => state == GreatswordState.Swing ? null : false;

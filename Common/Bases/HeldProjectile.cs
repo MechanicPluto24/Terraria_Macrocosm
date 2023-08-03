@@ -22,7 +22,7 @@ namespace Macrocosm.Common.Bases
         public virtual void SetDefaultsHeldProjectile() { }
         public virtual bool CanUseItemHeldProjectile(Player player) => true;
 
-        public float ProjectileScale;
+        public virtual float? ProjectileScale => null;
 
         /// <summary>
         /// Use SetDefaultsHeldProjectile instead.
@@ -50,15 +50,12 @@ namespace Macrocosm.Common.Bases
             }
 
             SetDefaultsHeldProjectile();
-
-            if(ProjectileScale == default)
-                ProjectileScale = Item.scale;
 		}
 
         public sealed override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
 			Projectile projectile = Projectile.NewProjectileDirect(source, position, velocity, ProjectileType<T>(), damage, knockback, player.whoAmI, type);
-            projectile.scale = ProjectileScale;
+            projectile.scale = ProjectileScale ?? Item.scale;
             return false;
         }
 
@@ -79,6 +76,7 @@ namespace Macrocosm.Common.Bases
             OnAnimationEnd,
             Manual
         }
+
         public abstract HeldProjectileKillMode KillMode { get; }
         public Player Player => Main.player[Projectile.owner];
         protected int Damage => Projectile.damage;

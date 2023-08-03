@@ -10,18 +10,31 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Content.Particles;
+using Macrocosm.Common.Bases;
+using Macrocosm.Content.Projectiles.Base;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
-    public class NWARocketLauncher : ModItem
+    internal class NWARocketLauncher : GunHeldProjectileItem
 	{
-		public override void SetStaticDefaults()
+        public override GunHeldProjectileData GunHeldProjectileData => new()
+		{
+            GunBarrelPosition = new Vector2(40, 13),
+            CenterYOffset = 8,
+            MuzzleOffset = 33,
+            Recoil = (14, 0.1f),
+            RecoilDiminish = 0.985f
+        };
+
+        public int HeldProjectileType => throw new System.NotImplementedException();
+
+        public override void SetStaticDefaults()
 		{
 			ItemID.Sets.SkipsInitialUseSound[Item.type] = true;
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
 
-		public override void SetDefaults()
+		public override void SetDefaultsHeldProjectile()
 		{
 			Item.damage = 150;
 			Item.DamageType = DamageClass.Ranged;

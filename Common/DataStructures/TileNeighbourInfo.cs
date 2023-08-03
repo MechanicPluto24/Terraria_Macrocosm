@@ -6,94 +6,66 @@ using System.Threading.Tasks;
 using Terraria.ID;
 using Terraria;
 using Macrocosm.Common.Utils;
+using static Macrocosm.Common.Bases.TileNeighbourInfo;
 
 namespace Macrocosm.Common.Bases
 {
     public record TileNeighbourInfo(int I, int J)
     {
-        public static bool CoordinatesOutOfBounds(int i, int j) => i >= Main.maxTilesX || j >= Main.maxTilesY || i < 0 || j < 0;
-
-        private bool? top;
-        public bool Top => top ??= (CoordinatesOutOfBounds(I, J - 1) || Main.tile[I, J - 1].HasTile);
-
-        private bool? topRight;
-        public bool TopRight => topRight ??= (CoordinatesOutOfBounds(I + 1, J - 1) || Main.tile[I + 1, J - 1].HasTile);
-
-        private bool? topleft;
-        public bool TopLeft => topleft ??= (CoordinatesOutOfBounds(I - 1, J - 1) || Main.tile[I - 1, J - 1].HasTile);
-
-        private bool? bottom;
-        public bool Bottom => bottom ??= (CoordinatesOutOfBounds(I, J + 1) || Main.tile[I, J + 1].HasTile);
-
-        private bool? bottomRight;
-        public bool BottomRight => bottomRight ??= (CoordinatesOutOfBounds(I + 1, J + 1) || Main.tile[I + 1, J + 1].HasTile);
-
-        private bool? bottomLeft;
-        public bool BottomLeft => bottomLeft ??= (CoordinatesOutOfBounds(I - 1, J + 1) || Main.tile[I - 1, J + 1].HasTile);
-
-        private bool? right;
-        public bool Right => right ??= (CoordinatesOutOfBounds(I + 1, J) || Main.tile[I + 1, J].HasTile);
-
-        private bool? left;
-        public bool Left => left ??= (CoordinatesOutOfBounds(I - 1, J) || Main.tile[I - 1, J].HasTile);
-
-        private int? solidCount;
-        public int SolidCount
+        private static bool CoordinatesOutOfBounds(int i, int j) => i >= Main.maxTilesX || j >= Main.maxTilesY || i < 0 || j < 0;
+        public abstract record CountableNeighbourInfo(int I, int J)
         {
-            get
-            {
-                if (solidCount is null)
-                {
-                    solidCount = 0;
-                    for (int x = I - 1; x < I + 2; x++)
-                    {
-                        for (int y = J - 1; y < J + 2; y++)
-                        {
-                            if ((x == I && y == J))
-                            {
-                                continue;
-                            }
+            protected abstract bool ShouldCount(Tile tile);
 
-                            if (CoordinatesOutOfBounds(x, y) || (Main.tile[x, y].HasTile && Main.tileSolid[Main.tile[x, y].TileType]))
-                            {
-                                solidCount++;
-                            }
-                        }
-                    }
-                }
+            private bool? top;
+            public bool Top => top ??= (CoordinatesOutOfBounds(I, J - 1) || ShouldCount(Main.tile[I, J - 1]));
 
-                return solidCount.Value;
-            }
+            private bool? topRight;
+            public bool TopRight => topRight ??= (CoordinatesOutOfBounds(I + 1, J - 1) || ShouldCount(Main.tile[I + 1, J - 1]));
+
+            private bool? topleft;
+            public bool TopLeft => topleft ??= (CoordinatesOutOfBounds(I - 1, J - 1) || ShouldCount(Main.tile[I - 1, J - 1]));
+
+            private bool? bottom;
+            public bool Bottom => bottom ??= (CoordinatesOutOfBounds(I, J + 1) || ShouldCount(Main.tile[I, J + 1]));
+
+            private bool? bottomRight;
+            public bool BottomRight => bottomRight ??= (CoordinatesOutOfBounds(I + 1, J + 1) || ShouldCount(Main.tile[I + 1, J + 1]));
+
+            private bool? bottomLeft;
+            public bool BottomLeft => bottomLeft ??= (CoordinatesOutOfBounds(I - 1, J + 1) || ShouldCount(Main.tile[I - 1, J + 1]));
+
+            private bool? right;
+            public bool Right => right ??= (CoordinatesOutOfBounds(I + 1, J) || ShouldCount(Main.tile[I + 1, J]));
+
+            private bool? left;
+            public bool Left => left ??= (CoordinatesOutOfBounds(I - 1, J) || ShouldCount(Main.tile[I - 1, J]));
+
+            private int? solidCount;
+            public int Count => solidCount ??= (Top ? 1 : 0)
+                            + (TopRight ? 1 : 0)
+                            + (TopLeft ? 1 : 0)
+                            + (Bottom ? 1 : 0)
+                            + (BottomRight ? 1 : 0)
+                            + (BottomLeft ? 1 : 0)
+                            + (Right ? 1 : 0)
+                            + (Left ? 1 : 0);
         }
 
-        private int? wallCount;
-        public int WallCount
+        public record SolidInfo(int I, int J) : CountableNeighbourInfo(I, J)
         {
-            get
-            {
-                if (wallCount is null)
-                {
-                    wallCount = 0;
-                    for (int x = I - 1; x < I + 2; x++)
-                    {
-                        for (int y = J - 1; y < J + 2; y++)
-                        {
-                            if ((x == I && y == J))
-                            {
-                                continue;
-                            }
-
-                            if (CoordinatesOutOfBounds(x, y) || Main.tile[x, y].WallType != WallID.None)
-                            {
-                                wallCount++;
-                            }
-                        }
-                    }
-                }
-
-
-                return wallCount.Value;
-            }
+            protected override bool ShouldCount(Tile tile) => tile.HasTile;
         }
+
+        public record WallInfo(int I, int J) : CountableNeighbourInfo(I, J)
+        {
+            protected override bool ShouldCount(Tile tile) => tile.WallType != WallID.None;
+        }
+
+        private SolidInfo solid;
+        public SolidInfo Solid => solid ??= new SolidInfo(I, J);
+
+        private WallInfo wall;
+        public WallInfo Wall => wall ??= new WallInfo(I, J);
     }
 }
