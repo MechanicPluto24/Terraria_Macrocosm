@@ -16,6 +16,7 @@ using Macrocosm.Content.Rockets.Navigation.Checklist;
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Common.Utils;
 using Macrocosm.Common.Drawing;
+using Macrocosm.Common.DataStructures;
 
 namespace Macrocosm.Content.Subworlds
 {
@@ -42,7 +43,7 @@ namespace Macrocosm.Content.Subworlds
         public override bool NoPlayerSaving => false;
 
 		private GroundPass genGroundPass;
-		public override List<GenPass> Tasks => new()
+		public override List<GenPass> Tasks => new() /*new MoonGenPassCollection().Tasks;*/
         {
             genGroundPass,
             new CraterPass("CraterPass", 1f),

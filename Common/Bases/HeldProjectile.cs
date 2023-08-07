@@ -161,26 +161,9 @@ namespace Macrocosm.Common.Bases
             shouldDie = true;
         }
 
-        /// <summary>
-        /// If this is set to <c>null</c> there will be no collision.
-        /// </summary>
-        public virtual (Vector2 startPosition, Vector2 endPosition, float width)? LineCollision => null;
-        public sealed override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
+        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
-            if (LineCollision is null)
-            {
-                return false;
-            }
-
-            float _ = 0;
-            return Collision.CheckAABBvLineCollision(
-                targetHitbox.TopLeft(),
-                targetHitbox.Size(), 
-                LineCollision.Value.startPosition, 
-                LineCollision.Value.endPosition,
-                LineCollision.Value.width,
-                ref _
-            );
+            return false;
         }
 
         public virtual void Draw(Color lightColor) { }

@@ -9,11 +9,192 @@ using System;
 using Terraria.ObjectData;
 using Terraria.Localization;
 using Macrocosm.Content.WorldGeneration.Base;
+using Macrocosm.Common.Bases;
 
 namespace Macrocosm.Common.Utils
 {
     public static partial class Utility
     {
+        public static bool CoordinatesOutOfBounds(int i, int j) => i >= Main.maxTilesX || j >= Main.maxTilesY || i < 0 || j < 0;
+
+        public static void ForEachInRectangle(Rectangle rectangle, Action<int, int> action)
+        {
+            for (int i = rectangle.X; i < rectangle.X + rectangle.Width; i++)
+            {
+                for (int j = rectangle.Y; j < rectangle.Y + rectangle.Height; j++)
+                {
+                    action(i, j);
+                }
+            }
+        }
+
+        public static void ForEachInRectangle(int i, int j, int width, int height, Action<int, int> action)
+        {
+            ForEachInRectangle(new Rectangle(i, j, width, height), action);
+        }
+
+        public static void FastPlaceTile(int i, int j, ushort tileType)
+        {
+            if (CoordinatesOutOfBounds(i, j))
+            {
+                return;
+            }
+
+            Tile tile = Main.tile[i, j];
+            tile.TileType = tileType;
+            tile.Get<TileWallWireStateData>().HasTile = true;
+        }
+
+        public static void FastRemoveTile(int i, int j)
+        {
+            if (CoordinatesOutOfBounds(i, j))
+            {
+                return;
+            }
+
+            Main.tile[i, j].Get<TileWallWireStateData>().HasTile = false;
+        }
+
+        public static void FastPlaceWall(int i, int j, ushort wallType)
+        {
+            if (CoordinatesOutOfBounds(i, j))
+            {
+                return;
+            }
+
+            Main.tile[i, j].WallType = wallType;
+        }
+
+        public static void ForEachInCircle(int i, int j, int width, int height, Action<int, int> action)
+        {
+            ForEachInRectangle(
+                i - (int)width / 2,
+                j - (int)height / 2,
+                width,
+                height,
+                (iLocal, jLocal) =>
+                {
+                    if (MathF.Pow((iLocal - i) / (width * 0.5f), 2) + MathF.Pow((jLocal - j) / (height * 0.5f), 2) - 1 >= 0)
+                    {
+                        return;
+                    }
+
+                    action(iLocal, jLocal);
+                }
+            );
+        }
+
+        public static void ForEachInCircle(int i, int j, int radius, Action<int, int> action)
+        {
+            ForEachInCircle(i, j, radius * 2, radius * 2, action);
+        }
+
+        public static void TileRunner(int i, int j, ushort tileType, Range repeatCount, Range sprayRadius, Range blobSize, float density = 0.5f, int smoothing = 4)
+        {
+            int sprayRandom = Main.rand.Next(repeatCount);
+
+            int posI = i;
+            int posJ = j;
+            for (int x = 0; x < sprayRandom; x++)
+            {
+                posI += Main.rand.NextDirection(sprayRadius);
+                posJ += Main.rand.NextDirection(sprayRadius);
+
+                int radius = Main.rand.Next(blobSize);
+                float densityClamped = Math.Clamp(density, 0f, 1f);
+                ForEachInCircle(
+                    posI,
+                    posJ,
+                    radius,
+                    radius,
+                    (i, j) =>
+                    {
+                        if (Main.rand.NextFloat() > densityClamped)
+                        {
+                            return;
+                        }
+
+                        FastPlaceTile(i, j, tileType);
+                    }
+                );
+
+                for (int y = 0; y < smoothing; y++)
+                {
+                    ForEachInCircle(
+                    posI,
+                    posJ,
+                    radius,
+                    radius,
+                    (i, j) =>
+                    {
+                        int solidCount = new TileNeighbourInfo(i, j).Solid.Count;
+                        if (solidCount > 4)
+                        {
+                            FastPlaceTile(i, j, tileType);
+                        }
+                        else if (solidCount < 4)
+                        {
+                            FastRemoveTile(i, j);
+                        }
+                    }
+                );
+                }
+            }
+        }
+
+        public static void WallRunner(int i, int j, ushort wallType, Range repeatCount, Range sprayRadius, Range blobSize, float density = 0.5f, int smoothing = 4)
+        {
+            int sprayRandom = Main.rand.Next(repeatCount);
+
+            int posI = i;
+            int posJ = j;
+            for (int x = 0; x < sprayRandom; x++)
+            {
+                posI += Main.rand.NextDirection(sprayRadius);
+                posJ += Main.rand.NextDirection(sprayRadius);
+
+                int radius = Main.rand.Next(blobSize);
+                float densityClamped = Math.Clamp(density, 0f, 1f);
+                ForEachInCircle(
+                    posI,
+                    posJ,
+                    radius,
+                    radius,
+                    (i, j) =>
+                    {
+                        if (Main.rand.NextFloat() > densityClamped)
+                        {
+                            return;
+                        }
+
+                        FastPlaceWall(i, j, wallType);
+                    }
+                );
+
+                for (int y = 0; y < smoothing; y++)
+                {
+                    ForEachInCircle(
+                    posI,
+                    posJ,
+                    radius,
+                    radius,
+                    (i, j) =>
+                    {
+                        int wallCount = new TileNeighbourInfo(i, j).Wall.Count;
+                        if (wallCount > 4)
+                        {
+                            FastPlaceWall(i, j, wallType);
+                        }
+                        else if (wallCount < 4)
+                        {
+                            FastRemoveTile(i, j);
+                        }
+                    }
+                );
+                }
+            }
+        }
+
         public static void GenerateOre(int tileType, double percent, int strength, int steps, int replaceTileType = -1)
         {
             for (int k = 0; k < (int)(Main.maxTilesX * Main.maxTilesY * percent); k++)

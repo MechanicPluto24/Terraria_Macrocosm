@@ -41,8 +41,8 @@ namespace Macrocosm.Common.Bases
             private bool? left;
             public bool Left => left ??= (CoordinatesOutOfBounds(I - 1, J) || ShouldCount(Main.tile[I - 1, J]));
 
-            private int? solidCount;
-            public int Count => solidCount ??= (Top ? 1 : 0)
+            private int? count;
+            public int Count => count ??= (Top ? 1 : 0)
                             + (TopRight ? 1 : 0)
                             + (TopLeft ? 1 : 0)
                             + (Bottom ? 1 : 0)
