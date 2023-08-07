@@ -10,7 +10,7 @@ namespace Macrocosm.Content.Tiles.Walls
         public override void SetStaticDefaults()
         {
             Main.wallHouse[Type] = false;
-            AddMapEntry(new Color(65, 65, 65));
+            AddMapEntry(new Color(64, 64, 58));
         }
     }
 }
