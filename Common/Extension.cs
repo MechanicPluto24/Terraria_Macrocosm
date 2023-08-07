@@ -4,6 +4,8 @@ using Macrocosm.Content.Rockets;
 using Terraria;
 using Macrocosm.Content.Projectiles.Global;
 using Macrocosm.Content.Items.Global;
+using System;
+using Terraria.Utilities;
 
 namespace Macrocosm.Common.Utils
 {
@@ -32,5 +34,15 @@ namespace Macrocosm.Common.Utils
 
         public static GlowmaskGlobalItem Glowmask(this Item item)
             => item.GetGlobalItem<GlowmaskGlobalItem>();
-	}
+
+        public static int Next(this UnifiedRandom random, Range range)
+        {
+            return random.Next(range.Start.Value, range.End.Value);
+        }
+
+        public static int NextDirection(this UnifiedRandom random, Range range)
+        {
+            return random.Next(range) * (random.NextBool() ? 1 : -1);
+        }
+    }
 }

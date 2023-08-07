@@ -5,6 +5,7 @@ using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
@@ -136,13 +137,20 @@ namespace Macrocosm.Common.Bases
             hitTimer *= 0.95f;
         }
 
-        public override (Vector2 startPosition, Vector2 endPosition, float width)? LineCollision => (
-            Projectile.Center,
-            Projectile.Center + (
-                (Projectile.rotation - MathHelper.PiOver4) * Player.direction + (Player.direction == -1 ? MathHelper.Pi : 0f)
-            ).ToRotationVector2() * SwordLenght,
-            SwordWidth
-        );
+        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
+        {
+            float _ = 0;
+            return Collision.CheckAABBvLineCollision(
+                targetHitbox.TopLeft(),
+                targetHitbox.Size(),
+                Projectile.Center,
+                Projectile.Center + (
+                    (Projectile.rotation - MathHelper.PiOver4) * Player.direction + (Player.direction == -1 ? MathHelper.Pi : 0f)
+                ).ToRotationVector2() * SwordLenght,
+                SwordWidth,
+                ref _
+            );
+        }
 
         public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
         {
