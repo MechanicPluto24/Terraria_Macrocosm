@@ -39,12 +39,12 @@ namespace Macrocosm.Content.Subworlds
         public override bool NormalUpdates => false;
         public override int Width => 4200;
         public override int Height => 1200;
-        public override bool ShouldSave => true;
+        public override bool ShouldSave => false;
         public override bool NoPlayerSaving => false;
 
 		private GroundPass genGroundPass;
-		public override List<GenPass> Tasks => new() /*new MoonGenPassCollection().Tasks;*/
-        {
+		public override List<GenPass> Tasks => /*new()*/ new MoonGenPassCollection().Tasks;
+        /*{
             genGroundPass,
             new CraterPass("CraterPass", 1f),
             new RegolithPass("RegolithPass", 5f),
@@ -54,7 +54,7 @@ namespace Macrocosm.Content.Subworlds
             new ScuffedSmoothPass("ScuffedSmoothPass", 1f),
             new AmbientPass("AmbientPass", 0.2f),
             new FinishPass("FinishPass", 0.1f, Name)
-        };
+        };*/
 
 		public override ChecklistConditionCollection LaunchConditions => new()
 		{

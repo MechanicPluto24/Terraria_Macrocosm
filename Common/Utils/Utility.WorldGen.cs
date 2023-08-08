@@ -55,14 +55,14 @@ namespace Macrocosm.Common.Utils
             Main.tile[i, j].Get<TileWallWireStateData>().HasTile = false;
         }
 
-        public static void FastPlaceWall(int i, int j, ushort wallType)
+        public static void FastPlaceWall(int i, int j, int wallType)
         {
             if (CoordinatesOutOfBounds(i, j))
             {
                 return;
             }
 
-            Main.tile[i, j].WallType = wallType;
+            Main.tile[i, j].WallType =  (ushort)wallType;
         }
 
         public static void ForEachInCircle(int i, int j, int width, int height, Action<int, int> action)
