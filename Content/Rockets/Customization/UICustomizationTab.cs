@@ -156,10 +156,10 @@ namespace Macrocosm.Content.Rockets.Navigation
         {
             base.Update(gameTime);
 
-			RocketPreview.Rocket = RocketDummy;
-			NameplateConfig.Rocket = RocketDummy;
+			RocketPreview.RocketDummy = RocketDummy;
+			NameplateConfig.RocketDummy = RocketDummy;
 
-			if (!NameplateConfig.TextBoxHasFocus)
+			if (!NameplateConfig.HasFocus)
 			{
 				NameplateConfig.SetText(RocketDummy.AssignedName);
 			}
