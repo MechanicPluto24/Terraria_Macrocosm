@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
 using Terraria.UI;
-using static Terraria.ModLoader.PlayerDrawLayer;
 
 
 namespace Macrocosm.Common.UI
