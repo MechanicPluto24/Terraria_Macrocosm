@@ -18,6 +18,7 @@ using static Terraria.ModLoader.ModContent;
 using static Macrocosm.Common.Utils.Utility;
 using Humanizer;
 using static Humanizer.On;
+using Macrocosm.Content.Tiles.Walls;
 
 namespace Macrocosm.Content.WorldGeneration.Moon
 {
@@ -28,7 +29,10 @@ namespace Macrocosm.Content.WorldGeneration.Moon
         public float SurfaceHeightFrequency { get; } = 30f;
         public float TerrainPercentage { get; } = 0.8f;
         private int GroundY => (int)(Main.maxTilesY * (1f - TerrainPercentage));
-        private float FunnySurfaceEquation(float x) => MathF.Sin(2f * x) + MathF.Sin(MathHelper.Pi * x) + 0.4f * MathF.Cos(10f * x);
+        private static float FunnySurfaceEquation(float x) => MathF.Sin(2f * x) + MathF.Sin(MathHelper.Pi * x) + 0.4f * MathF.Cos(10f * x);
+        private float? startYOffset;
+        private float StartYOffset => startYOffset ??= Main.rand.NextFloat() * 2.23f;
+        private int SurfaceHeight(int i) => (int)(FunnySurfaceEquation(i * SurfaceWidthFrequency + StartYOffset) * SurfaceHeightFrequency) + GroundY;
 
         [GenPass(InsertMode.First)]
         private void TerrainPass(GenerationProgress progress)
@@ -39,15 +43,14 @@ namespace Macrocosm.Content.WorldGeneration.Moon
             ushort protolithType = (ushort)TileType<Tiles.Blocks.Protolith>();
             int groundY = GroundY;
 
-            Main.worldSurface = groundY + SurfaceHeightFrequency;
+            Main.worldSurface = groundY + SurfaceHeightFrequency * 2 + 15;
             Main.rockLayer = Main.worldSurface + RegolithLayerHeight;
 
             PerlinNoise2D noise = new(Seed.Random);
-            float startYOffset = Main.rand.NextFloat() * 2.23f;
 
             for (int i = 0; i < Main.maxTilesX; i++)
             {
-                int startJ = (int)(FunnySurfaceEquation(i * SurfaceWidthFrequency + startYOffset) * SurfaceHeightFrequency) + groundY;
+                int startJ = SurfaceHeight(i);
                 for (int j = startJ; j < Main.maxTilesY; j++)
                 {
                     progress.Set((float)(j + i * Main.maxTilesY) / (Main.maxTilesX * Main.maxTilesY));
@@ -58,13 +61,6 @@ namespace Macrocosm.Content.WorldGeneration.Moon
                         )
                     {
                         FastPlaceTile(i, j, protolithType);
-                        /*WorldGen.PlaceTile(
-                            i, 
-                            j, 
-                            protolithType, 
-                            true, 
-                            true
-                        );*/
                     }
                 }
             }           
@@ -113,6 +109,7 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 
             float randomOffset = Main.rand.NextFloat() * 4.23f;
             ushort regolithType = (ushort)TileType<Tiles.Blocks.Regolith>();
+
             for (int i = 0; i < Main.maxTilesX; i++)
             {
                 int offset = (int)(FunnySurfaceEquation(i * 0.02f + randomOffset) * 9f);
@@ -129,8 +126,38 @@ namespace Macrocosm.Content.WorldGeneration.Moon
                     {
                         maxJ = j + RegolithLayerHeight + offset;
                     }
-                    else if (j > maxJ.Value)
+                    else if (j >= maxJ.Value)
                     {
+                        if (j % 2 == 0)
+                        {
+                            int veinLength = Main.rand.Next(10) switch
+                            {
+                                > 7 => 26,
+                                _ => 8,
+                            };
+                            float veinEqOffset = Main.rand.NextFloat() * 12.2f;
+                            int jOffset = 0;
+                            while (jOffset < veinLength)
+                            {
+                                ForEachInCircle(
+                                    i + (int)(FunnySurfaceEquation(jOffset * 0.1f + veinEqOffset) * 2f),
+                                    j + jOffset,
+                                    (float)jOffset / veinLength > 0.6f ? 1 : 2,
+                                    (i1, j1) =>
+                                    {
+                                        if (CoordinatesOutOfBounds(i1, j1) || !Main.tile[i1, j1].HasTile)
+                                        {
+                                            return;
+                                        }
+
+                                        FastPlaceTile(i1, j1, regolithType);
+                                    }
+                                );
+
+                                jOffset += 1;
+                            }
+                        }
+
                         break;
                     }
 
@@ -140,38 +167,52 @@ namespace Macrocosm.Content.WorldGeneration.Moon
         }
 
         [GenPass(nameof(RegolithPass), InsertMode.After)]
+        private void WallPass()
+        {
+            int regolithWall = WallType<RegolithWall>();
+            int protolithWall = WallType<ProtolithWall>();
+            for (int i = 0; i < Main.maxTilesX; i++)
+            {
+                int startJ = SurfaceHeight(i) + 10;
+                for (int j = startJ; j < Main.maxTilesY; j++)
+                {
+                    FastPlaceWall(i, j, j < startJ + RegolithLayerHeight ? regolithWall : protolithWall);
+                }
+            }
+        }
+
+        [GenPass(nameof(WallPass), InsertMode.After)]
         private void CraterPass(GenerationProgress progress)
         {
             progress.Message = "Metoeoroer";
 
-            void SpawnMeteors(float chance, Range minMaxRadius)
+            void SpawnMeteors(Range minMaxCount, Range minMaxRadius)
             {
-                for (int i = 0; i < Main.maxTilesX; i += Main.rand.Next(minMaxRadius))
+                int count = Main.rand.Next(minMaxCount);
+                for (int x = 0; x < count; x++)
                 {
-                    if (Main.rand.NextFloat() < chance)
+                    int i = (int)((x + Main.rand.NextFloat() * 0.9f) * (Main.maxTilesX / count));
+                    for (int j = 0; j < Main.maxTilesY; j++)
                     {
-                        for (int j = 0; j < Main.maxTilesY; j++)
+                        if (Main.tile[i, j].HasTile)
                         {
-                            if (Main.tile[i, j].HasTile)
-                            {
-                                int radius = Main.rand.Next(minMaxRadius);
-                                ForEachInCircle(
-                                    i,
-                                    j - (int)(radius * 0.3f),
-                                    radius,
-                                    FastRemoveTile
-                                );
+                            int radius = Main.rand.Next(minMaxRadius);
+                            ForEachInCircle(
+                                i,
+                                j - (int)(radius * 0.6f),
+                                radius,
+                                FastRemoveTile
+                            );
 
-                                break;
-                            }
+                            break;
                         }
                     }
                 }
             }
 
-            SpawnMeteors(0.05f, 100..150);
-            SpawnMeteors(0.10f, 30..40);
-            SpawnMeteors(0.25f, 7..15);
+            SpawnMeteors(2..5, 100..150);
+            SpawnMeteors(5..6, 30..40);
+            SpawnMeteors(25..36, 7..15);
         }
 
         [GenPass(InsertMode.Last)]
