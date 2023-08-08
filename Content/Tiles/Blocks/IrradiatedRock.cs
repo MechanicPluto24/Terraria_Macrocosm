@@ -17,7 +17,7 @@ namespace Macrocosm.Content.Tiles.Blocks
             Main.tileMerge[Type][ModContent.TileType<Regolith>()] = true;
             MinPick = 275;
             MineResist = 3f;
-            AddMapEntry(new Color(129, 117, 0));
+            AddMapEntry(new Color(199, 199, 184));
             HitSound = SoundID.Tink;
         }
 
