@@ -9,14 +9,14 @@ namespace Macrocosm.Content.Rockets.Navigation
 {
     public class UIRocketPreviewLarge : UIPanel
     {
-        public Rocket Rocket = new();
+        public Rocket RocketDummy = new();
 
 		public string CurrentModuleName { get; set; } = "CommandPod";
 
 		public int CurrentModuleIndex 
 		{
-			get => Rocket.ModuleNames.IndexOf(CurrentModuleName);
-			set => CurrentModuleName = Rocket.ModuleNames[value];
+			get => RocketDummy.ModuleNames.IndexOf(CurrentModuleName);
+			set => CurrentModuleName = RocketDummy.ModuleNames[value];
 		}
 
 		public bool AnimationActive => lastModuleIndex != CurrentModuleIndex;
@@ -92,15 +92,10 @@ namespace Macrocosm.Content.Rockets.Navigation
             spriteBatch.End();
             spriteBatch.Begin(state.SpriteSortMode, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, state.DepthStencilState, overflowHiddenRasterizerState, state.Effect, matrix);
 
-            Rocket.DrawDummy(spriteBatch, (GetDimensions().Position() + new Vector2(moduleOffsetX, moduleOffsetY)) * zoom, Color.White);
+            RocketDummy.DrawDummy(spriteBatch, (GetDimensions().Position() + new Vector2(moduleOffsetX, moduleOffsetY)) * zoom, Color.White);
 
 			spriteBatch.End();
 			spriteBatch.Begin(state);
-		}
-
-		public override Rectangle GetViewCullingArea()
-		{
-			return base.GetViewCullingArea();
 		}
 	}
 }

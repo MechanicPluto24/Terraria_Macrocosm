@@ -66,7 +66,7 @@ namespace Macrocosm.Content.Rockets.Modules
 				CustomizationStorage.Reset();
 				// -- testing, will be configured from an UI		
 				if (this is EngineModule)
- 					Pattern = CustomizationStorage.GetPattern(Name, "Binary");
+					Pattern = CustomizationStorage.GetPattern(Name, "Binary");
 
 				if (this is ServiceModule)
 					Pattern = CustomizationStorage.GetPattern(Name, "Binary");

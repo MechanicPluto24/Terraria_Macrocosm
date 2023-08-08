@@ -27,12 +27,15 @@
     <None Remove="Content\Rockets\Customization\Patterns\Icons\Delta.png" />
     <None Remove="Content\Rockets\Customization\Patterns\Icons\Rainbow.png" />
     <None Remove="Content\Rockets\Customization\Patterns\Icons\Saturn.png" />
+    <None Remove="Content\Rockets\Textures\Buttons\AlignBottom.png" />
     <None Remove="Content\Rockets\Textures\Buttons\AlignCenterHorizontal.png" />
     <None Remove="Content\Rockets\Textures\Buttons\AlignCenterVertical.png" />
-    <None Remove="Content\Rockets\Textures\Buttons\AlignDown.png" />
     <None Remove="Content\Rockets\Textures\Buttons\AlignLeft.png" />
     <None Remove="Content\Rockets\Textures\Buttons\AlignRight.png" />
-    <None Remove="Content\Rockets\Textures\Buttons\AlignUp.png" />
+    <None Remove="Content\Rockets\Textures\Buttons\AlignTop.png" />
+    <None Remove="Content\Rockets\Textures\Buttons\SmallPanel.png" />
+    <None Remove="Content\Rockets\Textures\Buttons\SmallPanelBorder.png" />
+    <None Remove="Content\Rockets\Textures\Buttons\SmallPanelHoverBorder.png" />
     <None Remove="Content\Rockets\Textures\Buttons\WhiteCheckmark.png" />
   </ItemGroup>
   <ItemGroup>

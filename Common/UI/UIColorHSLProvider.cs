@@ -10,6 +10,7 @@ using ReLogic.OS;
 using Terraria.Audio;
 using Terraria.ID;
 using Macrocosm.Common.Utils;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Common.UI
 {
@@ -27,7 +28,7 @@ namespace Macrocosm.Common.UI
 		private Vector3 currentColorHSL;
 
 		private UIText hslText; 
-		private UIElement container;
+		private UIPanel container;
 
 		private UIColoredSlider hueSlider;
 		private UIColoredSlider saturationSlider;
@@ -39,7 +40,7 @@ namespace Macrocosm.Common.UI
 
 		public UIPanel ProvideHSLMenu()
 		{
-			UIPanel container = new()
+			container = new()
 			{
 				Width = new(0f, 0.485f),
 				Height = new(0, 0.25f),
@@ -77,7 +78,7 @@ namespace Macrocosm.Common.UI
 			uIPanel.Append(hslText);
 			container.Append(uIPanel);
 
-			UIColoredImageButton copyButton = new(Main.Assets.Request<Texture2D>("Images/UI/CharCreation/Copy"), isSmall: true)
+			UIPanelIconButton copyButton = new(Main.Assets.Request<Texture2D>("Images/UI/CharCreation/Copy"))
 			{
 				VAlign = 1f,
 				HAlign = 0f,
@@ -88,7 +89,7 @@ namespace Macrocosm.Common.UI
 			container.Append(copyButton);
 			copyHexButton = copyButton;
 
-			UIColoredImageButton pasteButton = new(Main.Assets.Request<Texture2D>("Images/UI/CharCreation/Paste"), isSmall: true)
+			UIPanelIconButton pasteButton = new(Main.Assets.Request<Texture2D>("Images/UI/CharCreation/Paste"))
 			{
 				VAlign = 1f,
 				HAlign = 0f,
@@ -99,7 +100,7 @@ namespace Macrocosm.Common.UI
 			container.Append(pasteButton);
 			pasteHexButton = pasteButton;
 
-			UIColoredImageButton randomizeButton = new(Main.Assets.Request<Texture2D>("Images/UI/CharCreation/Randomize"), isSmall: true)
+			UIPanelIconButton randomizeButton = new(Main.Assets.Request<Texture2D>("Images/UI/CharCreation/Randomize"))
 			{
 				VAlign = 1f,
 				HAlign = 0f,

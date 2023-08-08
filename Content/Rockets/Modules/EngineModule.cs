@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Rockets.Modules
 		public bool RearLandingLegRaised { get; set; } = false;
 		public Nameplate Nameplate { get; set; } = new();
 
-		// Add rear booster and its read landing leg to hixbox
+		// Add rear booster and its read landing leg to the hixbox
 		public override Rectangle Hitbox => base.Hitbox with { Height = base.Hitbox.Height + (RearLandingLegRaised ? 18 : 26) };
 
 		public override void Draw(SpriteBatch spriteBatch, Vector2 screenPos, Color ambientColor)
@@ -38,7 +38,7 @@ namespace Macrocosm.Content.Rockets.Modules
 			spriteBatch.Begin(SamplerState.PointClamp, state);
 
 			// Draw the nameplate
-			Nameplate.Draw(spriteBatch, new Vector2(Center.X, Position.Y) + new Vector2(6, 61) - screenPos, ambientColor);
+			Nameplate.Draw(spriteBatch, new Vector2(Center.X, Position.Y) - screenPos, ambientColor);
 
 			spriteBatch.End();
 			spriteBatch.Begin(state);
@@ -48,18 +48,14 @@ namespace Macrocosm.Content.Rockets.Modules
 		{
 			return new()
 			{
-				["NameplateText"] = Nameplate.Text,
-				["NameplateColor"] = Nameplate.TextColor
+				[nameof(Nameplate)] = Nameplate,
 			};
 		}
 
 		protected override void DeserializeModuleData(TagCompound tag)
 		{
-			if (tag.ContainsKey("NameplateText"))
-				Nameplate.Text = tag.GetString("NameplateText");
-
-			if (tag.ContainsKey("NameplateColor"))
-				Nameplate.TextColor = tag.Get<Color>("NameplateColor");
+			if (tag.ContainsKey(nameof(Nameplate)))
+				Nameplate = tag.Get<Nameplate>(nameof(Nameplate));
 		}
 	}
 }
