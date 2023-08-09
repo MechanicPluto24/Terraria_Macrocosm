@@ -8,8 +8,6 @@ namespace Macrocosm.Content.Rockets
 {
     public partial class Rocket 
 	{
-		public const int MaxRockets = byte.MaxValue;
-
 		public static Rocket Create(Vector2 position)
 		{
 			// Rocket will not be managed.. we have to avoid ever reaching this  

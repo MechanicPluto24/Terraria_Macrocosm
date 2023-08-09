@@ -1,6 +1,5 @@
 ﻿using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Rockets.Navigation.DebugPanel;
 using Macrocosm.Content.Rockets.Payload;
 using Macrocosm.Content.Systems;
 using Microsoft.Xna.Framework;
@@ -18,7 +17,6 @@ namespace Macrocosm.Content.Rockets.Navigation
     public class RocketUIState : UIState
     {
         public Rocket Rocket;
-        public Rocket RocketDummy;
 
 		private UIText Title;
 		private UIDragablePanel BackgroundPanel;
@@ -149,7 +147,6 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 			Navigation.Rocket = Rocket;
 			Customization.Rocket = Rocket;
-			Customization.RocketDummy = RocketDummy;
 			Payload.Rocket = Rocket;
 
 			Player player = Main.LocalPlayer;

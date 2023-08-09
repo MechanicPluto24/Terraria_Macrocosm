@@ -1,33 +1,61 @@
-﻿using Macrocosm.Common.Utils;
-using Macrocosm.Content.Rockets.Modules;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using Terraria;
+using System.Linq;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using Macrocosm.Common.Utils;
+using Macrocosm.Common.DataStructures;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
     public class Nameplate : TagSerializable
     {
-        public string Text { get; set; } = "";
+		// the text
+		private string text = "";
 
-        public Color TextColor { get; set; } = Color.White;
+		/// <summary> The display text, formatted </summary>
+        public string Text 
+		{
+			get => text;
+			set => text = FormatText(value);
+		}
 
-        public enum AlignmentModeHorizontal { Left, Center, Right };
-        public enum AlignmentModeVertical { Top, Center, Bottom };
+		/// <summary> The nameplate text color on the rocket hull </summary>
+		public Color TextColor { get; set; } = Color.White;
 
-        public AlignmentModeHorizontal HorizontalAlignment { get; set; } = AlignmentModeHorizontal.Right;
-        public AlignmentModeVertical VerticalAlignment { get; set; } = AlignmentModeVertical.Top;
+		/// <summary> The nameplate's horizontal text alignment on the rocket </summary>
+		public TextAlignmentHorizontal HorizontalAlignment { get; set; } = TextAlignmentHorizontal.Right;
 
+		/// <summary> The nameplate's vertical text alignment on the rocket </summary>
+		public TextAlignmentVertical VerticalAlignment { get; set; } = TextAlignmentVertical.Top;
 
+		/// <summary> Max number of characters supported on the nameplate </summary>
         public const int MaxChars = 13;
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 position, Color ambientColor)
+		/// <summary> The characters that can bew displayed on the rocket's hull </summary>
+		public static readonly string DisplayCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-+!? ";
+
+		/// <summary> The characters supported by the rocket's name. Lowercase letters are displayed as uppercase on the hull </summary>
+		public static readonly string SupportedCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-+!? ";
+
+		// Number of characters por row in the spritesheet
+		private const int charactersPerRow = 13;
+
+		// A character's dimensions in the spritesheet, with padding
+		private const int characterWidth = 2 + 6; 
+		private const int characterHeight = 2 + 8;  
+
+		/// <summary> Formats the input text so the output can only contain the supported characters (including lowercase letters) </summary>
+		public static string FormatText(string text) => new(text.Where(SupportedCharacters.Contains).ToArray());
+
+		/// <summary> Whether the rocket's name supports this character </summary>
+		public static bool SupportsChar(char c) => SupportedCharacters.IndexOf(c) != -1;
+
+		public void Draw(SpriteBatch spriteBatch, Vector2 position, Color ambientColor)
         {
             Texture2D texture = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Fonts/RocketLettersSmall").Value;
-            int numChars = (int)MathHelper.Clamp(Text.Length, 0 , MaxChars);
+            int numChars = (int)MathHelper.Clamp(text.Length, 0, MaxChars);
 
             float offsetX = 6;
             float offsetY = 61;
@@ -35,50 +63,56 @@ namespace Macrocosm.Content.Rockets.Customization
 
             switch (HorizontalAlignment)
             {
-                case AlignmentModeHorizontal.Left: offsetX = -15; break;
-                case AlignmentModeHorizontal.Center: offsetX = -4; break;
-                case AlignmentModeHorizontal.Right: offsetX = 7f; break;
+                case TextAlignmentHorizontal.Left: 
+					offsetX = -15;
+					break;
+                case TextAlignmentHorizontal.Center: 
+					offsetX = -4;
+					break;
+                case TextAlignmentHorizontal.Right:
+					offsetX = 7f;
+					break;
             }
 
 			switch (VerticalAlignment)
 			{
-				case AlignmentModeVertical.Top:
+				case TextAlignmentVertical.Top:
 					offsetY = 61; 
 					break;
-				case AlignmentModeVertical.Center:
+				case TextAlignmentVertical.Center:
 					offsetY = 126 - (totalTextHeight / 2); 
 					break;
-				case AlignmentModeVertical.Bottom:
+				case TextAlignmentVertical.Bottom:
 					offsetY = 191 - totalTextHeight; 
 					break;
 			}
 
 			for (int i = 0; i < numChars; i++)
 			{
-				spriteBatch.Draw(texture, new Vector2(position.X + offsetX, position.Y + offsetY + (i * characterHeight)), GetCharacterRectangle(Text[i]), TextColor * ambientColor.GetLuminance(), 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+				spriteBatch.Draw(texture, new Vector2(position.X + offsetX, position.Y + offsetY + (i * characterHeight)), GetCharacterRectangle(text[i]), TextColor * ambientColor.GetLuminance(), 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
 			}
 		}
 
-        public bool HasNoSupportedChars()
+		/// <summary> Whether the current rocket name is valid </summary>
+        public bool IsValid()
         {
-            foreach(char c in Text)
-                 if (SupportsChar(c))
-                    return true;
+			bool foundNonWhitespace = false;
+
+            foreach(char c in text)
+			{
+                 if (!SupportsChar(c))
+                    return false;
+
+				if (c != ' ')
+					foundNonWhitespace = true;
+			}
  
-            return false;
+            return foundNonWhitespace;
         }
-
-		public static bool SupportsChar(char c) => SupportedCharacters.IndexOf(char.ToUpper(c)) != -1;
-
-		public static readonly string SupportedCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-+!? ";
-
-        private const int charactersPerRow = 13;
-        private const int characterWidth   = 2 + 6; // with padding
-        private const int characterHeight  = 2 + 8; // with padding
 
 		private static Rectangle GetCharacterRectangle(char c)
         {
-			int index = SupportedCharacters.IndexOf(char.ToUpper(c));
+			int index = DisplayCharacters.IndexOf(char.ToUpper(c));
 
  			// Character not found in the sheet
 			if (index == -1)
@@ -99,7 +133,7 @@ namespace Macrocosm.Content.Rockets.Customization
 		{
 			return new()
 			{
-				[nameof(Text)] = Text,
+				[nameof(text)] = text,
 				[nameof(TextColor)] = TextColor,
 				[nameof(HorizontalAlignment)] = (int)HorizontalAlignment,
 				[nameof(VerticalAlignment)] = (int)VerticalAlignment,
@@ -111,17 +145,17 @@ namespace Macrocosm.Content.Rockets.Customization
         {
             Nameplate nameplate = new();
 
-			if (tag.ContainsKey(nameof(Text)))
-				nameplate.Text = tag.GetString(nameof(Text));
+			if (tag.ContainsKey(nameof(text)))
+				nameplate.text = tag.GetString(nameof(text));
 
 			if (tag.ContainsKey(nameof(TextColor)))
 				nameplate.TextColor = tag.Get<Color>(nameof(TextColor));
 
 			if (tag.ContainsKey(nameof(HorizontalAlignment)))
-				nameplate.HorizontalAlignment = (AlignmentModeHorizontal)tag.GetInt(nameof(HorizontalAlignment));
+				nameplate.HorizontalAlignment = (TextAlignmentHorizontal)tag.GetInt(nameof(HorizontalAlignment));
 
 			if (tag.ContainsKey(nameof(VerticalAlignment)))
-				nameplate.VerticalAlignment = (AlignmentModeVertical)tag.GetInt(nameof(VerticalAlignment));
+				nameplate.VerticalAlignment = (TextAlignmentVertical)tag.GetInt(nameof(VerticalAlignment));
 
             return nameplate;
 		}

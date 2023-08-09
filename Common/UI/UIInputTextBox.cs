@@ -25,13 +25,11 @@ namespace Macrocosm.Common.UI
 
 		public bool HasFocus { get; set; }
 
-		public Action OnFocusSet { get; set; }
+		public Action OnFocusGain { get; set; }
 
 		public Action OnTextChange { get; set; }
 
 		public Func<string, string> FormatText { get; set; } = (text) => text;
-
-		public Func<bool> CheckTextSubmit { get; set; } = () => false;
 
  		public Color? HoverBorderColor { get; set; }
 		private Color normalBorderColor;
@@ -45,6 +43,9 @@ namespace Macrocosm.Common.UI
 		public override void OnInitialize()
 		{
 			base.OnInitialize();
+
+			PaddingLeft = 4f;
+			PaddingRight = 4f;
 
 			Append(textField);
 			textField.OnTextChange += (_, _) => { OnTextChange?.Invoke(); };
@@ -62,7 +63,7 @@ namespace Macrocosm.Common.UI
 
 			if (HasFocus)
 			{
-				if (Main.keyState.IsKeyDown(Keys.Escape) || CheckTextSubmit())
+				if (Main.keyState.IsKeyDown(Keys.Escape) && !Main.oldKeyState.IsKeyDown(Keys.Escape))
 					HasFocus = false;
 			}
 
@@ -80,7 +81,7 @@ namespace Macrocosm.Common.UI
 		private void UIInputTextBox_OnLeftClick(UIMouseEvent evt, UIElement listeningElement)
 		{
 			if(!HasFocus)
-				OnFocusSet?.Invoke();
+				OnFocusGain?.Invoke();
 
 			HasFocus = true;
 		}

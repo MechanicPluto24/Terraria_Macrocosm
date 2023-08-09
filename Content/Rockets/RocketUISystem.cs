@@ -1,5 +1,7 @@
-﻿using Macrocosm.Content.Rockets.Navigation;
+﻿using Macrocosm.Common.Utils;
+using Macrocosm.Content.Rockets.Navigation;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -67,7 +69,6 @@ namespace Macrocosm.Content.Rockets
 
 			Main.playerInventory = true;
 			UIRocketState.Rocket = rocket;
-			UIRocketState.RocketDummy = rocket.Clone();
 			Interface.SetState(UIRocketState);
 		}
 
@@ -79,9 +80,19 @@ namespace Macrocosm.Content.Rockets
 
 		public override void UpdateUI(GameTime gameTime)
 		{
-			// testing --- press E to reset UI
-			if (Main.LocalPlayer.controlHook)
+			// press Ctrl + Shift + E to reset UI
+			if (Interface.CurrentState is not null &&
+				Main.keyState.IsKeyDown(Keys.LeftControl) &&
+				Main.keyState.IsKeyDown(Keys.LeftShift) &&
+				Main.keyState.IsKeyDown(Keys.E) && !Main.oldKeyState.IsKeyDown(Keys.E))
+			{
+				Rocket rocket = UIRocketState.Rocket;
 				UIRocketState = new RocketUIState();
+				UIRocketState.Activate();
+				Utility.Chat("Reset rocket UI", Color.Lime);
+				HideUI();
+				ShowUI(rocket);
+			}
 
 			lastGameTime = gameTime;
 

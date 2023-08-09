@@ -5,10 +5,11 @@ using Macrocosm.Content.Rockets.Customization;
 using Terraria;
 using Macrocosm.Common.Utils;
 using Terraria.ModLoader.IO;
+using ReLogic.Content;
 
 namespace Macrocosm.Content.Rockets.Modules
 {
-    public class EngineModule : RocketModule
+    public class EngineModule : AnimatedRocketModule
     {
 		public override int DrawPriority => 0;
 		public bool RearLandingLegRaised { get; set; } = false;
@@ -23,10 +24,14 @@ namespace Macrocosm.Content.Rockets.Modules
             spriteBatch.End();
             spriteBatch.Begin(SamplerState.PointClamp, state);
 
-            // Draw the rear booster behind the engine module (no paintjobs applicable)
-			int frameX = RearLandingLegRaised ? 1 : 0;
-			Texture2D boosterRear = ModContent.Request<Texture2D>(TexturePath + "_BoosterRear").Value;
-			spriteBatch.Draw(boosterRear, Position + new Vector2(0, 18) - screenPos, boosterRear.Frame(2, 1, frameX), ambientColor, 0f, Origin, 1f, SpriteEffects.None, 0f);
+			// Draw the rear landing behind the rear booster 
+			Texture2D rearLandingLeg = ModContent.Request<Texture2D>(TexturePath + "_LandingLeg", AssetRequestMode.ImmediateLoad).Value;
+			spriteBatch.Draw(rearLandingLeg, Position + new Vector2(Texture.Width / 2f - rearLandingLeg.Width/2f, 314f) - screenPos, rearLandingLeg.Frame(1, NumberOfFrames, frameY: CurrentFrame), ambientColor);
+
+			// Draw the rear booster behind the engine module 
+			Texture2D boosterRear = ModContent.Request<Texture2D>(TexturePath + "_BoosterRear", AssetRequestMode.ImmediateLoad).Value;
+			spriteBatch.Draw(boosterRear, Position + new Vector2(Texture.Width/2f - boosterRear.Width/2f, 293.5f) - screenPos, null, ambientColor, 0f, Origin, 1f, SpriteEffects.None, 0f);
+
 
 			spriteBatch.End();
 			spriteBatch.Begin(state);

@@ -17,6 +17,7 @@ using System.Linq;
 using Terraria.UI.Chat;
 using Terraria.GameContent;
 using Macrocosm.Content.Rockets.Construction;
+using Macrocosm.Content.Rockets.Customization;
 
 namespace Macrocosm.Content.Rockets
 {
@@ -83,19 +84,21 @@ namespace Macrocosm.Content.Rockets
 			set => Position = value - Size/2f;
 		}
 
+		/// <summary> Whether the rocket is currently stationary </summary>
 		public bool Stationary => Velocity.LengthSquared() < 0.1f;
 
 		/// <summary> The layer this rocket is drawn in </summary>
 		public RocketDrawLayer DrawLayer = RocketDrawLayer.BeforeNPCs;
 
+		/// <summary> This rocket's engine module nameplate </summary>
+		public Nameplate Nameplate => EngineModule.Nameplate;
+
 		/// <summary> The Rocket's name, if not set by the user, defaults to a localized "Rocket" name </summary>
 		public string DisplayName
-			=> EngineModule.Nameplate.HasNoSupportedChars() ? Language.GetTextValue("Mods.Macrocosm.Common.Rocket") : EngineModule.Nameplate.Text;
+			=> Nameplate.IsValid() ? AssignedName : Language.GetTextValue("Mods.Macrocosm.Common.Rocket");
 
 		/// <summary> The Rocket's name, set by the user </summary>
 		public string AssignedName => EngineModule.Nameplate.Text;
-
-		public void SetName(string name) => EngineModule.Nameplate.Text = name;
 
 		/// <summary> List of the module names, in the customization access order </summary>
 		public List<string> ModuleNames => Modules.Keys.ToList();
@@ -140,8 +143,10 @@ namespace Macrocosm.Content.Rockets
 
 
 		/// <summary> Instatiates a rocket. Use <see cref="Create(Vector2)"/> for spawning in world and proper syncing. </summary>
-		public Rocket()
+		public Rocket(bool isDummy = false)
 		{
+			if (!isDummy)
+				RefreshCustomizationDummy();
 		}
 
 		public void OnCreation()
@@ -151,6 +156,8 @@ namespace Macrocosm.Content.Rockets
 
 		public void OnWorldSpawn()
 		{
+			ResetAnimation();
+
 			if (Landing)
 			{
 				// This is to ensure the location is properly assigned if subworld was just generated
@@ -180,6 +187,7 @@ namespace Macrocosm.Content.Rockets
 
             if (InFlight && Position.Y < WorldExitPositionY)
 			{
+				ResetAnimation();
 				InFlight = false;
 				Landing = true;
 				EnterDestinationSubworld();
@@ -228,13 +236,6 @@ namespace Macrocosm.Content.Rockets
 			//DrawDebugBounds();
 			//DrawDebugModuleHitbox();
 			//DisplayWhoAmI();
-		}
-
-		/// <summary> Draw the rocket as a dummy </summary>
-		public void DrawDummy(SpriteBatch spriteBatch, Vector2 offset, Color drawColor)
-		{
-			// Passing Rocket world position as "screenPosition" cancels it out  
-			Draw(spriteBatch, Position - offset, drawColor);
 		}
 
 		// Set the rocket's modules positions in the world
@@ -407,18 +408,37 @@ namespace Macrocosm.Content.Rockets
 		private void Movement()
 		{
 			if (InFlight)
- 				FlightTime++;
- 			else
+			{
+				UpdateModuleAnimation();
+
+				if (FlightProgress > 0.1f)
+					SetModuleAnimation(landing: false);
+
+				FlightTime++;
+			}
+			else
+			{
  				Velocity.Y += 0.1f * MacrocosmSubworld.CurrentGravityMultiplier;
+			}
  
 			if (Landing)
 			{
 				// TODO: Add smooth deceleration
 
-				if (Stationary && LandingProgress > 0.9f)
-					Landing = false;
-			}
+				UpdateModuleAnimation();
 
+				if (LandingProgress > 0.7f)
+				{
+					SetModuleAnimation(landing: true);
+				}
+
+				if (Stationary && LandingProgress > 0.9f)
+				{
+					RocketUISystem.Show(this);
+					Landing = false;
+					ResetAnimation();
+				}
+			}
 
 			if (FlightTime >= liftoffTime)
 			{
@@ -436,6 +456,45 @@ namespace Macrocosm.Content.Rockets
 
 				SetScreenshake();
 				//VisualEffects();
+			}	
+		}
+
+		private void UpdateModuleAnimation()
+		{
+			foreach (RocketModule module in Modules.Values)
+				if (module is AnimatedRocketModule animatedModule)
+					animatedModule.UpdateAnimation();
+ 		}
+
+		private void SetModuleAnimation(bool landing = false)
+		{
+			foreach (RocketModule module in Modules.Values)
+			{
+				if (module is AnimatedRocketModule animatedModule)
+				{
+					if (landing)
+						animatedModule.StartAnimation();
+					else 
+						animatedModule.StartReverseAnimation();
+
+					animatedModule.ShouldAnimate = false;
+				}
+			}
+		}
+
+		private void ResetAnimation()
+		{
+			foreach (RocketModule module in Modules.Values)
+			{
+				if (module is AnimatedRocketModule animatedModule)
+				{
+					if(Landing)
+						animatedModule.CurrentFrame = 0;
+					else
+						animatedModule.CurrentFrame = AnimatedRocketModule.NumberOfFrames - 1;
+
+					animatedModule.ShouldAnimate = true;
+				}
 			}	
 		}
 
