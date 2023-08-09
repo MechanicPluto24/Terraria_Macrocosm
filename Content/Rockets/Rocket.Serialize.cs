@@ -8,9 +8,6 @@ namespace Macrocosm.Content.Rockets
 {
 	public partial class Rocket : TagSerializable
 	{
-
-		public Rocket Clone() => DeserializeData(SerializeData());
-
 		public static readonly Func<TagCompound, Rocket> DESERIALIZER = DeserializeData;
 
 		public TagCompound SerializeData()
@@ -45,8 +42,10 @@ namespace Macrocosm.Content.Rockets
 
 		public static Rocket DeserializeData(TagCompound tag)
 		{
+			bool isDummy = tag.ContainsKey("isDummy");
+
 			// TODO: should add tag.ContainsKey checks for values that are not saved if default
-			Rocket rocket = new()
+			Rocket rocket = new(isDummy)
 			{
 				WhoAmI = tag.GetInt(nameof(WhoAmI)),
 
@@ -77,6 +76,9 @@ namespace Macrocosm.Content.Rockets
 					}
 				}
 			}
+
+			if(!isDummy)
+				rocket.RefreshCustomizationDummy();
 
 			return rocket;
 		}

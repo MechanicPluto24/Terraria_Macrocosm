@@ -7,26 +7,39 @@ using System;
 using System.Linq;
 using Terraria.UI;
 using Terraria.ModLoader;
+using Macrocosm.Common.DataStructures;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
 	public class UINameplateConfig : UIPanel
 	{
-		public Rocket RocketDummy = new();
+		public Rocket Rocket = new();
 
 		private UIInputTextBox uITextBox;
 
-		public string Text => uITextBox.Text;
+		public string Text
+		{
+			get => uITextBox.Text;
+			set => uITextBox.SetText(Nameplate.FormatText(value));
+		}
+
 		public bool HasFocus
 		{
 			get => uITextBox.HasFocus;
-			set => uITextBox.HasFocus = value;
+			set
+			{
+				uITextBox.HasFocus = value;
+
+				if (value)
+					OnFocusGain();
+			}
 		}
+		
+		/// <summary> Called when focus is gained </summary>
+		public Action OnFocusGain { get; set; } = () => { };
 
-		public void SetText(string text) => uITextBox.SetText(text);	
-
-		public Action OnFocusSet = () => { };
-		public Func<bool> CheckTextSubmit = () => false;
+		/// <summary> Called when focus is lost </summary>
+		public Action OnFocusLost { get; set; } = () => { };
 
 		UISelectableIconButton alignLeft;
 		UISelectableIconButton alignCenterHorizontal;
@@ -51,7 +64,7 @@ namespace Macrocosm.Content.Rockets.Customization
 
 			uITextBox = new(Language.GetText("Mods.Macrocosm.Common.Rocket").Value)
 			{
-				Width = new(0f, 0.43f),
+				Width = new(0f, 0.54f),
 				Height = new(0f, 0.82f),
 				HAlign = 0.02f,
 				VAlign = 0.5f,
@@ -59,10 +72,9 @@ namespace Macrocosm.Content.Rockets.Customization
 				BorderColor = new Color(89, 116, 213, 255),
 				HoverBorderColor = Color.Gold,
 				TextMaxLenght = Nameplate.MaxChars,
-				OnFocusSet = OnFocusSet,
-				CheckTextSubmit = CheckTextSubmit,
+				OnFocusGain = OnFocusGain,
 				TextScale = 1.2f,
-				FormatText = (text) => new(text.ToUpperInvariant().Where(Nameplate.SupportedCharacters.Contains).ToArray())
+				FormatText = Nameplate.FormatText
 			};
 			Append(uITextBox);
 
@@ -72,7 +84,7 @@ namespace Macrocosm.Content.Rockets.Customization
 			{
 				VAlign = 0.5f,
 				HAlign = 0f,
-				Left = StyleDimension.FromPercent(0.45f)
+				Left = StyleDimension.FromPercent(0.56f)
 			};
 			alignLeft.OnLeftClick += AlignLeft_OnLeftClick;
 			Append(alignLeft);
@@ -80,7 +92,7 @@ namespace Macrocosm.Content.Rockets.Customization
 			alignCenterHorizontal = new(ModContent.Request<Texture2D>(path + "AlignCenterHorizontal"))
 			{
 				VAlign = 0.5f,
-				Left = StyleDimension.FromPercent(0.52f)
+				Left = StyleDimension.FromPercent(0.628f)
 			};
 			alignCenterHorizontal.OnLeftClick += AlignCenterHorizontal_OnLeftClick;
 			Append(alignCenterHorizontal);
@@ -88,7 +100,7 @@ namespace Macrocosm.Content.Rockets.Customization
 			alignRight = new(ModContent.Request<Texture2D>(path + "AlignRight"))
 			{
 				VAlign = 0.5f,
-				Left = StyleDimension.FromPercent(0.592f)
+				Left = StyleDimension.FromPercent(0.696f)
 			};
 			alignRight.OnLeftClick += AlignRight_OnLeftClick;
 			Append(alignRight);
@@ -96,7 +108,7 @@ namespace Macrocosm.Content.Rockets.Customization
 			alignTop = new(ModContent.Request<Texture2D>(path + "AlignTop"))
 			{
 				VAlign = 0.5f,
-				Left = StyleDimension.FromPercent(0.68f)
+				Left = StyleDimension.FromPercent(0.78f)
 			};
 			alignTop.OnLeftClick += AlignTop_OnLeftClick;
 			Append(alignTop);
@@ -104,7 +116,7 @@ namespace Macrocosm.Content.Rockets.Customization
 			alignCenterVertical = new(ModContent.Request<Texture2D>(path + "AlignCenterVertical"))
 			{
 				VAlign = 0.5f,
-				Left = StyleDimension.FromPercent(0.752f)
+				Left = StyleDimension.FromPercent(0.848f)
 			};
 			alignCenterVertical.OnLeftClick += AlignCenterVertical_OnLeftClick;
 			Append(alignCenterVertical);
@@ -112,7 +124,7 @@ namespace Macrocosm.Content.Rockets.Customization
 			alignBottom = new(ModContent.Request<Texture2D>(path + "AlignBottom"))
 			{
 				VAlign = 0.5f,
-				Left = StyleDimension.FromPercent(0.825f)
+				Left = StyleDimension.FromPercent(0.917f)
 			};
 			alignBottom.OnLeftClick += AlignBottom_OnLeftClick;
 			Append(alignBottom);
@@ -124,10 +136,15 @@ namespace Macrocosm.Content.Rockets.Customization
 			base.Update(gameTime);
 
 			if (HasFocus)
+			{
+				Rocket.CustomizationDummy.Nameplate.Text = Text;
 				BorderColor = Color.Gold;
+			}
 			else
+			{
+				Text = Rocket.CustomizationDummy.AssignedName;
 				BorderColor = new Color(89, 116, 213, 255);
-
+			}
 
 			alignCenterHorizontal.Selected = false; 
 			alignCenterVertical.Selected = false;
@@ -136,61 +153,55 @@ namespace Macrocosm.Content.Rockets.Customization
 			alignLeft.Selected = false;
 			alignTop.Selected = false;
 
-			switch(RocketDummy.EngineModule.Nameplate.HorizontalAlignment)
+			switch(Rocket.CustomizationDummy.Nameplate.HorizontalAlignment)
 			{
-				case Nameplate.AlignmentModeHorizontal.Left: alignLeft.Selected = true; break;
-				case Nameplate.AlignmentModeHorizontal.Right:alignRight.Selected = true; break;
-				case Nameplate.AlignmentModeHorizontal.Center: alignCenterHorizontal.Selected = true; break;
+				case TextAlignmentHorizontal.Left: alignLeft.Selected = true; break;
+				case TextAlignmentHorizontal.Right: alignRight.Selected = true; break;
+				case TextAlignmentHorizontal.Center: alignCenterHorizontal.Selected = true; break;
 			}
 
-			switch (RocketDummy.EngineModule.Nameplate.VerticalAlignment)
+			switch (Rocket.CustomizationDummy.Nameplate.VerticalAlignment)
 			{
-				case Nameplate.AlignmentModeVertical.Top: alignTop.Selected = true; break;
-				case Nameplate.AlignmentModeVertical.Bottom: alignBottom.Selected = true; break;
-				case Nameplate.AlignmentModeVertical.Center: alignCenterVertical.Selected = true; break;
+				case TextAlignmentVertical.Top: alignTop.Selected = true; break;
+				case TextAlignmentVertical.Bottom: alignBottom.Selected = true; break;
+				case TextAlignmentVertical.Center: alignCenterVertical.Selected = true; break;
 			}
 		}
 
 		private void AlignLeft_OnLeftClick(UIMouseEvent evt, UIElement listeningElement)
 		{
 			HasFocus = true;
-			OnFocusSet();
-			RocketDummy.EngineModule.Nameplate.HorizontalAlignment = Nameplate.AlignmentModeHorizontal.Left;
+			Rocket.CustomizationDummy.Nameplate.HorizontalAlignment = TextAlignmentHorizontal.Left;
 		}
 
 		private void AlignCenterHorizontal_OnLeftClick(UIMouseEvent evt, UIElement listeningElement)
 		{
 			HasFocus = true;
-			OnFocusSet();
-			RocketDummy.EngineModule.Nameplate.HorizontalAlignment = Nameplate.AlignmentModeHorizontal.Center;
+			Rocket.CustomizationDummy.Nameplate.HorizontalAlignment = TextAlignmentHorizontal.Center;
 		}
 
 		private void AlignRight_OnLeftClick(UIMouseEvent evt, UIElement listeningElement)
 		{
 			HasFocus = true;
-			OnFocusSet();
-			RocketDummy.EngineModule.Nameplate.HorizontalAlignment = Nameplate.AlignmentModeHorizontal.Right;
+			Rocket.CustomizationDummy.Nameplate.HorizontalAlignment = TextAlignmentHorizontal.Right;
 		}
 
 		private void AlignTop_OnLeftClick(UIMouseEvent evt, UIElement listeningElement)
 		{
 			HasFocus = true;
-			OnFocusSet();
-			RocketDummy.EngineModule.Nameplate.VerticalAlignment = Nameplate.AlignmentModeVertical.Top;
+			Rocket.CustomizationDummy.Nameplate.VerticalAlignment = TextAlignmentVertical.Top;
 		}
 
 		private void AlignCenterVertical_OnLeftClick(UIMouseEvent evt, UIElement listeningElement)
 		{
 			HasFocus = true;
-			OnFocusSet();
-			RocketDummy.EngineModule.Nameplate.VerticalAlignment = Nameplate.AlignmentModeVertical.Center;
+			Rocket.CustomizationDummy.Nameplate.VerticalAlignment = TextAlignmentVertical.Center;
 		}
 
 		private void AlignBottom_OnLeftClick(UIMouseEvent evt, UIElement listeningElement)
 		{
 			HasFocus = true;
-			OnFocusSet();
-			RocketDummy.EngineModule.Nameplate.VerticalAlignment = Nameplate.AlignmentModeVertical.Bottom;
+			Rocket.CustomizationDummy.Nameplate.VerticalAlignment = TextAlignmentVertical.Bottom;
 		}
 	}
 }

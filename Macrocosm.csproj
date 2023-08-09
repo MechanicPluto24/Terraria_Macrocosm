@@ -37,6 +37,11 @@
     <None Remove="Content\Rockets\Textures\Buttons\SmallPanelBorder.png" />
     <None Remove="Content\Rockets\Textures\Buttons\SmallPanelHoverBorder.png" />
     <None Remove="Content\Rockets\Textures\Buttons\WhiteCheckmark.png" />
+    <None Remove="Content\Rockets\Textures\Symbols\GoldQuestionMark.png" />
+    <None Remove="Content\Rockets\Textures\Symbols\GrayCrossmark.png" />
+    <None Remove="Content\Rockets\Textures\Symbols\GrayNoMark.png" />
+    <None Remove="Content\Rockets\Textures\Symbols\GreenCheckmark.png" />
+    <None Remove="Content\Rockets\Textures\Symbols\RedCrossmark.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="tModLoader.CodeAssist" Version="0.1.*" />

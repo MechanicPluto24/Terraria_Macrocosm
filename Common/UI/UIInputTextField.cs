@@ -62,7 +62,8 @@ namespace Macrocosm.Common.UI
 			if(currentText.Length > TextMaxLenght)
 				currentText = currentText[..TextMaxLenght];
 
-			string displayString = FormatText(currentText);
+			currentText = FormatText(currentText);
+			string displayString = currentText;
 
 			if (CurrentlyInputtingText)
 			{
