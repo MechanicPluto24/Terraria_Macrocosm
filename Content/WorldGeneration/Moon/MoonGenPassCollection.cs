@@ -19,6 +19,8 @@ using static Macrocosm.Common.Utils.Utility;
 using Humanizer;
 using static Humanizer.On;
 using Macrocosm.Content.Tiles.Walls;
+using Macrocosm.Content.Tiles.Blocks;
+using Macrocosm.Content.Tiles.Ores;
 
 namespace Macrocosm.Content.WorldGeneration.Moon
 {
@@ -40,7 +42,7 @@ namespace Macrocosm.Content.WorldGeneration.Moon
             progress.Message = "Terrain";
 
             Range hallownest = 35..59;
-            ushort protolithType = (ushort)TileType<Tiles.Blocks.Protolith>();
+            ushort protolithType = (ushort)TileType<Protolith>();
             int groundY = GroundY;
 
             Main.worldSurface = groundY + SurfaceHeightFrequency * 2 + 15;
@@ -182,6 +184,78 @@ namespace Macrocosm.Content.WorldGeneration.Moon
         }
 
         [GenPass(nameof(WallPass), InsertMode.After)]
+        private void IrradiationPass(GenerationProgress progress)
+        {
+            progress.Message = "Piss";
+
+            ushort irradiationRockType = (ushort)TileType<IrradiatedRock>();
+            ushort irradiationWallType = (ushort)WallType<IrradiatedRockWall>();
+            Range irradiationSpawnRange = 20..80;
+            int irradiationHeight = 550;
+
+            int i = (int)(
+                0.01f * (
+                    Main.maxTilesX * irradiationSpawnRange.Start.Value
+                    + Main.maxTilesX * Main.rand.Next(0, irradiationSpawnRange.End.Value - irradiationSpawnRange.Start.Value)
+                )
+            );
+
+            int j = SurfaceHeight(i);
+            for (int x = 0; x < irradiationHeight; x++)
+            {
+                progress.Set((float)x / irradiationHeight / 2f);
+                for (int y = 0; y < 8; y++)
+                {
+                    int radius = (int)(70f * (1f - (float)x / irradiationHeight) + 8f * (MathF.Sin(x * 0.1f) + 1f));
+                    ForEachInCircle(
+                        i + Main.rand.NextDirection((int)(radius * 0.25f)..(int)(radius * 0.6f)) + (int)(70f * MathF.Sin(x * 0.1f)),
+                        j + x + Main.rand.NextDirection((int)(radius * 0.1f)..(int)(radius * 0.3f)),
+                        (int)(radius * Main.rand.NextFloat()),
+                        (int)(radius * Main.rand.NextFloat()),
+                        FastRemoveTile
+                    );
+                }
+            }
+
+            for (int radius, x = 0; x < irradiationHeight; x += 1 + (int)(radius * 0.1f))
+            {
+                progress.Set(0.5f + (float)x / irradiationHeight / 2f);
+                radius = (int)(300f * (1f - (float)x / irradiationHeight));
+                int iOffset = i + Main.rand.NextDirection(10..130);
+                int jOffset = j + x + Main.rand.NextDirection(20..30);
+                ForEachInCircle(
+                    iOffset,
+                    jOffset,
+                    radius,
+                    (i1, j1) =>
+                    {
+                        if (CoordinatesOutOfBounds(i1, j1)) 
+                        {
+                            return;
+                        }
+
+                        float iDistance = Math.Abs(iOffset - i1) / (radius * 0.5f);
+                        float jDistance = Math.Abs(jOffset - j1) / (radius * 0.5f);
+                        if (Main.rand.NextFloat() < iDistance * 0.5f || Main.rand.NextFloat() < jDistance * 0.5f)
+                        {
+                            return;
+                        }
+
+                        if (Main.tile[i1, j1].WallType != WallID.None)
+                        {
+                            FastPlaceWall(i1, j1, irradiationWallType);
+                        }
+
+                        if (Main.tile[i1, j1].HasTile)
+                        {
+                            FastPlaceTile(i1, j1, irradiationRockType);
+                        }
+                    }
+                );
+            }
+        }
+
+        [GenPass(nameof(IrradiationPass), InsertMode.After)]
         private void CraterPass(GenerationProgress progress)
         {
             progress.Message = "Metoeoroer";
@@ -213,6 +287,40 @@ namespace Macrocosm.Content.WorldGeneration.Moon
             SpawnMeteors(2..5, 100..150);
             SpawnMeteors(5..6, 30..40);
             SpawnMeteors(25..36, 7..15);
+        }
+
+        [GenPass(nameof(CraterPass), InsertMode.After)]
+        private void OrePass(GenerationProgress progress)
+        {
+            progress.Message = "Shi";
+
+            int protolithType = TileType<Protolith>();
+            /*GenerateOre(TileType<ArtemiteOre>(), 0.0001, WorldGen.genRand.Next(5, 9), WorldGen.genRand.Next(5, 9), protolithType);
+            GenerateOre(TileType<ChandriumOre>(), 0.0001, WorldGen.genRand.Next(5, 9), WorldGen.genRand.Next(5, 9), protolithType);
+            GenerateOre(TileType<DianiteOre>(), 0.0001, WorldGen.genRand.Next(5, 9), WorldGen.genRand.Next(5, 9), protolithType);
+            GenerateOre(TileType<SeleniteOre>(), 0.0001, WorldGen.genRand.Next(5, 9), WorldGen.genRand.Next(5, 9), protolithType);
+
+            GenerateOre(TileID.LunarOre, 0.00005, WorldGen.genRand.Next(9, 15), WorldGen.genRand.Next(9, 15), protolithType);*/
+
+            void SpreadOre(ushort replaceTileType, ushort oreType, float chance, Range repeatCount, Range sprayRadius, Range blobSize)
+            {
+                for (int i = 0; i < Main.maxTilesX; i++)
+                {
+                    for (int j = (int)Main.rockLayer; j < Main.maxTilesY; j++)
+                    {
+                        if (Main.tile[i, j].HasTile && Main.tile[i, j].TileType == replaceTileType && Main.rand.NextFloat() < chance)
+                        {
+                            BlobTileRunner(i, j, oreType, repeatCount, sprayRadius, blobSize);
+                        }
+                    }
+                }
+            }
+
+            SpreadOre((ushort)protolithType, (ushort)TileType<ArtemiteOre>(), 0.00026f, 6..9, 3..5, 7..9);
+            SpreadOre((ushort)protolithType, (ushort)TileType<ChandriumOre>(), 0.00026f, 5..7, 6..8, 8..10);
+            SpreadOre((ushort)protolithType, (ushort)TileType<DianiteOre>(), 0.00026f, 7..9, 2..4, 6..8);
+            SpreadOre((ushort)protolithType, (ushort)TileType<SeleniteOre>(), 0.00026f, 3..5, 6..12, 9..12);
+            SpreadOre((ushort)protolithType, TileID.LunarOre, 0.0002f, 4..6, 7..12, 12..15);
         }
 
         [GenPass(InsertMode.Last)]

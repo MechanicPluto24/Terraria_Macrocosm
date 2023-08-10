@@ -62,10 +62,18 @@ namespace Macrocosm.Common.Bases
             protected override bool ShouldCount(Tile tile) => tile.WallType != WallID.None;
         }
 
+        public record TypedSolidInfo(int I, int J, ushort Type) : CountableNeighbourInfo(I, J)
+        {
+            protected override bool ShouldCount(Tile tile) => tile.HasTile && tile.TileType == Type;
+        }
+
         private SolidInfo solid;
         public SolidInfo Solid => solid ??= new SolidInfo(I, J);
 
         private WallInfo wall;
         public WallInfo Wall => wall ??= new WallInfo(I, J);
+
+        private TypedSolidInfo typedSolid;
+        public TypedSolidInfo TypedSolid(ushort type) => typedSolid is null || typedSolid.Type != type ? (typedSolid = new TypedSolidInfo(I, J, type)) : typedSolid;
     }
 }

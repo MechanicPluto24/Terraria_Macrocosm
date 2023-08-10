@@ -10,6 +10,7 @@ using Terraria.ObjectData;
 using Terraria.Localization;
 using Macrocosm.Content.WorldGeneration.Base;
 using Macrocosm.Common.Bases;
+using System.Collections.Generic;
 
 namespace Macrocosm.Common.Utils
 {
@@ -89,9 +90,11 @@ namespace Macrocosm.Common.Utils
             ForEachInCircle(i, j, radius * 2, radius * 2, action);
         }
 
-        public static void TileRunner(int i, int j, ushort tileType, Range repeatCount, Range sprayRadius, Range blobSize, float density = 0.5f, int smoothing = 4)
+        public static void BlobTileRunner(int i, int j, ushort tileType, Range repeatCount, Range sprayRadius, Range blobSize, float density = 0.5f, int smoothing = 4)
         {
             int sprayRandom = Main.rand.Next(repeatCount);
+
+			Dictionary<(int, int), ushort> replacedTypes = new();
 
             int posI = i;
             int posJ = j;
@@ -109,11 +112,15 @@ namespace Macrocosm.Common.Utils
                     radius,
                     (i, j) =>
                     {
-                        if (Main.rand.NextFloat() > densityClamped)
+                        if (CoordinatesOutOfBounds(i, j) || Main.rand.NextFloat() > densityClamped)
                         {
                             return;
                         }
-
+						if (Main.tile[i, j].HasTile && !replacedTypes.ContainsKey((i, j)))
+						{
+                            replacedTypes.Add((i, j), Main.tile[i, j].TileType);
+                        }
+						
                         FastPlaceTile(i, j, tileType);
                     }
                 );
@@ -121,28 +128,35 @@ namespace Macrocosm.Common.Utils
                 for (int y = 0; y < smoothing; y++)
                 {
                     ForEachInCircle(
-                    posI,
-                    posJ,
-                    radius,
-                    radius,
-                    (i, j) =>
-                    {
-                        int solidCount = new TileNeighbourInfo(i, j).Solid.Count;
-                        if (solidCount > 4)
-                        {
-                            FastPlaceTile(i, j, tileType);
-                        }
-                        else if (solidCount < 4)
-                        {
-                            FastRemoveTile(i, j);
-                        }
-                    }
-                );
+						posI,
+						posJ,
+						radius,
+						radius,
+						(i, j) =>
+						{
+							int solidCount = new TileNeighbourInfo(i, j).TypedSolid(tileType).Count;
+							if (solidCount > 4)
+							{
+								FastPlaceTile(i, j, tileType);
+							}
+							else if (solidCount < 4)
+							{
+								if (replacedTypes.TryGetValue((i, j), out ushort replacedType))
+								{
+									FastPlaceTile(i, j, replacedType);
+								}
+								else if (Main.tile[i, j].HasTile && Main.tile[i, j].TileType == tileType)
+								{
+									FastRemoveTile(i, j);
+								}
+							}
+						}
+					);
                 }
             }
         }
 
-        public static void WallRunner(int i, int j, ushort wallType, Range repeatCount, Range sprayRadius, Range blobSize, float density = 0.5f, int smoothing = 4)
+        public static void BlobWallRunner(int i, int j, ushort wallType, Range repeatCount, Range sprayRadius, Range blobSize, float density = 0.5f, int smoothing = 4)
         {
             int sprayRandom = Main.rand.Next(repeatCount);
 
