@@ -9,7 +9,6 @@ namespace Macrocosm.Content.Rockets.Modules
     {
 		public override Rectangle Hitbox => base.Hitbox with { X = base.Hitbox.X - 78 };
 
-		/// <summary> The draw offset of this booster's landing leg </summary>
-		protected override Vector2 LandingLegDrawOffset => base.LandingLegDrawOffset with { X = -78 };
+		protected override Vector2 LandingLegDrawOffset => new(-78, 208);
 	}
 }

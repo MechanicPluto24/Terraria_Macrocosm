@@ -1,8 +1,7 @@
-﻿using log4net.Repository.Hierarchy;
-using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Content.Players;
 using Macrocosm.Content.Rockets;
+using Macrocosm.Content.Rockets.LaunchPads;
 using System.IO;
 using Terraria;
 
@@ -11,9 +10,10 @@ namespace Macrocosm.Common.Netcode
 	public enum MessageType : byte
 	{
 		SyncParticle,
-		SyncPlayerDashDirection,
         SyncRocketData,
+		SyncLaunchPadData,
         SyncPlayerRocketStatus,
+		SyncPlayerDashDirection,
         SyncModProjectile
 	}
 
@@ -29,17 +29,21 @@ namespace Macrocosm.Common.Netcode
 					Particle.SyncParticle(reader, whoAmI);
 					break;
 
-				case MessageType.SyncPlayerDashDirection:
-					DashPlayer.ReceiveSyncPlayer(reader, whoAmI);
+                case MessageType.SyncRocketData:
+                    Rocket.SyncRocketData(reader, whoAmI);
+                    break;
+
+				case MessageType.SyncLaunchPadData:
+					LaunchPad.SyncLaunchPadData(reader, whoAmI);
 					break;
 
                 case MessageType.SyncPlayerRocketStatus:
                     RocketPlayer.ReceiveSyncPlayer(reader, whoAmI);
                     break;
 
-                case MessageType.SyncRocketData:
-                    Rocket.SyncRocketData(reader, whoAmI);
-                    break;
+				case MessageType.SyncPlayerDashDirection:
+					DashPlayer.ReceiveSyncPlayer(reader, whoAmI);
+					break;
 
                 case MessageType.SyncModProjectile:
 					SyncModProjectile(reader);

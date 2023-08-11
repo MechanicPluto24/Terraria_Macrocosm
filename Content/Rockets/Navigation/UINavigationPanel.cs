@@ -134,7 +134,7 @@ namespace Macrocosm.Content.Rockets.Navigation
             {
                 if (WorldDataSystem.Instance.FoundVulcan)
                 {
-					SolarSystemInner.AddTarget(new UIMapTarget(this, 0.4361f, 0.445f, 0.1f, "Vulcan"));
+					SolarSystemInner.AddTarget(new UIMapTarget(this, new Vector2(226, 88), 12, 12, "Vulcan"));
 					SolarSystemInner.Texture = ModContent.Request<Texture2D>(navigationMapsPath + "SolarSystemInnerVulcan", AssetRequestMode.ImmediateLoad).Value;
                 }
                 else
@@ -176,26 +176,28 @@ namespace Macrocosm.Content.Rockets.Navigation
 			EarthSystem = new(ModContent.Request<Texture2D>(navigationMapsPath + "EarthSystem", mode).Value);
             SolarSystemInner = new(ModContent.Request<Texture2D>(navigationMapsPath + "SolarSystemInner", mode).Value, defaultNext: GetInitialNavigationMap());
             SolarSystemOuter = new(ModContent.Request<Texture2D>(navigationMapsPath + "SolarSystemOuter", mode).Value, defaultNext: SolarSystemInner);
-	
-			EarthSystem.AddTarget(new UIMapTarget(this, 0.276f, 0.511f, 0.795f , "Earth", Earth.LaunchConditions, outline: outlineLarge));
-            EarthSystem.AddTarget(new UIMapTarget(this, 0.85786f, 0.2818f, 0.25f, Moon.Instance, outline: outlineMedium));
-            EarthSystem.Prev = SolarSystemInner;
 
-			SolarSystemInner.AddTarget(new UIMapTarget(this, 0.499f, 0.5f, 0.2f, "Sun", outline: outlineMedium));
-			SolarSystemInner.AddTarget(new UIMapTarget(this, 0.581f, 0.639f, 0.1f, "Mercury"));
-			SolarSystemInner.AddTarget(new UIMapTarget(this, 0.319f, 0.385f, 0.1f, "Venus"));
-			SolarSystemInner.AddTarget(new UIMapTarget(this, 0.702f, 0.295f, 0.1f, "Earth", Earth.LaunchConditions), EarthSystem);
-			SolarSystemInner.AddTarget(new UIMapTarget(this, 0.14f, 0.61f, 0.1f, "Mars"));
+			EarthSystem.AddTarget(new UIMapTarget(this, new Vector2(64, 24), 160, 160, "Earth", Earth.LaunchConditions, outline: outlineLarge));
+			EarthSystem.AddTarget(new UIMapTarget(this, new Vector2(424, 32), 48, 48, Moon.Instance, outline: outlineMedium));
+			EarthSystem.Prev = SolarSystemInner;
+
+			SolarSystemInner.AddTarget(new UIMapTarget(this, new Vector2(245, 85), 32, 32, "Sun", outline: outlineMedium));
+			SolarSystemInner.AddTarget(new UIMapTarget(this, new Vector2(297, 123), 12, 12, "Mercury"));
+			SolarSystemInner.AddTarget(new UIMapTarget(this, new Vector2(160, 72), 12, 12, "Venus"));
+			SolarSystemInner.AddTarget(new UIMapTarget(this, new Vector2(361, 54), 12, 12, "Earth", Earth.LaunchConditions), EarthSystem);
+			SolarSystemInner.AddTarget(new UIMapTarget(this, new Vector2(67, 117), 12, 12, "Mars"));
+
 			SolarSystemInner.Prev = SolarSystemOuter;
 
-            SolarSystemOuter.AddTarget(new UIMapTarget(this, 0.5f, 0.5f, 0.1f, "Sun", outline: outlineMedium), SolarSystemInner);
-            SolarSystemOuter.AddTarget(new UIMapTarget(this, 0.4255f, 0.5837f, 0.1f, "Jupiter"));
-            SolarSystemOuter.AddTarget(new UIMapTarget(this, 0.5423f, 0.534f, 0.1f, "Saturn"));
-            SolarSystemOuter.AddTarget(new UIMapTarget(this, 0.641f, 0.3635f, 0.1f, "Ouranos"));
-            SolarSystemOuter.AddTarget(new UIMapTarget(this, 0.353f, 0.224f, 0.1f, "Neptune"));
-            SolarSystemOuter.AddTarget(new UIMapTarget(this, 0.7855f, 0.7787f, 0.1f, "Pluto"));
-            SolarSystemOuter.AddTarget(new UIMapTarget(this, 0.09f, 0.115f, 0.1f, "Eris"));
-            SolarSystemOuter.Next = SolarSystemInner;
+			SolarSystemOuter.AddTarget(new UIMapTarget(this, new Vector2(255, 95), 12, 12, "Sun", outline: outlineMedium), SolarSystemInner);
+			SolarSystemOuter.AddTarget(new UIMapTarget(this, new Vector2(277, 102), 12, 12, "Jupiter"));
+			SolarSystemOuter.AddTarget(new UIMapTarget(this, new Vector2(216, 111), 12, 12, "Saturn"));
+			SolarSystemOuter.AddTarget(new UIMapTarget(this, new Vector2(329, 68), 12, 12, "Ouranos"));
+			SolarSystemOuter.AddTarget(new UIMapTarget(this, new Vector2(178, 38), 12, 12, "Neptune"));
+			SolarSystemOuter.AddTarget(new UIMapTarget(this, new Vector2(405, 151), 12, 12, "Pluto"));
+			SolarSystemOuter.AddTarget(new UIMapTarget(this, new Vector2(41, 17), 12, 12, "Eris"));
+
+			SolarSystemOuter.Next = SolarSystemInner;
 
             UpdateMapVisibility("Any");
 		}

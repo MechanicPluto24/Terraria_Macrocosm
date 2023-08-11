@@ -23,16 +23,16 @@ namespace Macrocosm.Common.UI
 		public bool HoverTextOnButonNotInteractible { get; set; } = false;
 
 
-		private Asset<Texture2D> texture;
+		protected Asset<Texture2D> texture;
 
-		private Asset<Texture2D> borderTexture;
+		protected Asset<Texture2D> borderTexture;
 
 
-		private float visibilityInteractible = 1f;
+		protected float visibilityInteractible = 1f;
 
-		private float visibilityHover = 0.8f;
+		protected float visibilityHover = 0.8f;
 
-		private float visibilityNotInteractible = 0.4f;
+		protected float visibilityNotInteractible = 0.4f;
 
 
 		public UIHoverImageButton(Asset<Texture2D> texture, Asset<Texture2D> borderTexture = null, LocalizedText hoverText = null) 
