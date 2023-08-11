@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ModLoader.IO;
@@ -69,7 +70,9 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			Rectangle rect = Hitbox;
 			rect.X -= (int)screenPosition.X; 
 			rect.Y -= (int)screenPosition.Y;
-			spriteBatch.Draw(TextureAssets.ColorBlip.Value, rect, Color.Gold * 0.25f);
+
+			if (Hitbox.Contains((int)Main.MouseWorld.X, (int)Main.MouseWorld.Y)) 
+				spriteBatch.Draw(TextureAssets.ColorBlip.Value, rect, Color.Gold * 0.25f);
 		}
 		
 		public static readonly Func<TagCompound, LaunchPad> DESERIALIZER = DeserializeData;
