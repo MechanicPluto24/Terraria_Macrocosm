@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 {
     public class UINavigationTab : UIPanel
     {
-		public Rocket Rocket;
+		public Rocket Rocket = new();
 
         public UICustomizationPreview CustomizationPreview;
 
