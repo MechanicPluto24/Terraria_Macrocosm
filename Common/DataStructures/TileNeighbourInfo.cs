@@ -54,7 +54,7 @@ namespace Macrocosm.Common.Bases
 
         public record SolidInfo(int I, int J) : CountableNeighbourInfo(I, J)
         {
-            protected override bool ShouldCount(Tile tile) => tile.HasTile;
+            protected override bool ShouldCount(Tile tile) => tile.HasTile && tile.BlockType == BlockType.Solid;
         }
 
         public record WallInfo(int I, int J) : CountableNeighbourInfo(I, J)
@@ -62,7 +62,7 @@ namespace Macrocosm.Common.Bases
             protected override bool ShouldCount(Tile tile) => tile.WallType != WallID.None;
         }
 
-        public record TypedSolidInfo(int I, int J, ushort Type) : CountableNeighbourInfo(I, J)
+        public record TypedInfo(int I, int J, ushort Type) : CountableNeighbourInfo(I, J)
         {
             protected override bool ShouldCount(Tile tile) => tile.HasTile && tile.TileType == Type;
         }
@@ -73,7 +73,7 @@ namespace Macrocosm.Common.Bases
         private WallInfo wall;
         public WallInfo Wall => wall ??= new WallInfo(I, J);
 
-        private TypedSolidInfo typedSolid;
-        public TypedSolidInfo TypedSolid(ushort type) => typedSolid is null || typedSolid.Type != type ? (typedSolid = new TypedSolidInfo(I, J, type)) : typedSolid;
+        private TypedInfo typedSolid;
+        public TypedInfo TypedSolid(ushort type) => typedSolid is null || typedSolid.Type != type ? (typedSolid = new TypedInfo(I, J, type)) : typedSolid;
     }
 }

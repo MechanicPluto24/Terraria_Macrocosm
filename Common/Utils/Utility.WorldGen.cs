@@ -56,6 +56,16 @@ namespace Macrocosm.Common.Utils
             Main.tile[i, j].Get<TileWallWireStateData>().HasTile = false;
         }
 
+        public static void FastRemoveWall(int i, int j)
+        {
+            if (CoordinatesOutOfBounds(i, j))
+            {
+                return;
+            }
+
+            Main.tile[i, j].WallType = WallID.None;
+        }
+
         public static void FastPlaceWall(int i, int j, int wallType)
         {
             if (CoordinatesOutOfBounds(i, j))
@@ -90,7 +100,18 @@ namespace Macrocosm.Common.Utils
             ForEachInCircle(i, j, radius * 2, radius * 2, action);
         }
 
-        public static void BlobTileRunner(int i, int j, ushort tileType, Range repeatCount, Range sprayRadius, Range blobSize, float density = 0.5f, int smoothing = 4)
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="i"></param>
+		/// <param name="j"></param>
+		/// <param name="tileType">if set to < 0 removes tiles.</param>
+		/// <param name="repeatCount"></param>
+		/// <param name="sprayRadius"></param>
+		/// <param name="blobSize"></param>
+		/// <param name="density"></param>
+		/// <param name="smoothing"></param>
+        public static void BlobTileRunner(int i, int j, int tileType, Range repeatCount, Range sprayRadius, Range blobSize, float density = 0.5f, int smoothing = 4)
         {
             int sprayRandom = Main.rand.Next(repeatCount);
 
@@ -116,12 +137,20 @@ namespace Macrocosm.Common.Utils
                         {
                             return;
                         }
+
 						if (Main.tile[i, j].HasTile && !replacedTypes.ContainsKey((i, j)))
 						{
                             replacedTypes.Add((i, j), Main.tile[i, j].TileType);
                         }
-						
-                        FastPlaceTile(i, j, tileType);
+
+						if (tileType < 0)
+						{
+							FastRemoveTile(i, j);
+						}
+						else
+						{
+                            FastPlaceTile(i, j, (ushort)tileType);
+                        }
                     }
                 );
 
@@ -134,10 +163,25 @@ namespace Macrocosm.Common.Utils
 						radius,
 						(i, j) =>
 						{
-							int solidCount = new TileNeighbourInfo(i, j).TypedSolid(tileType).Count;
+							if (tileType < 0)
+							{
+								int solidCountRemover = new TileNeighbourInfo(i, j).Solid.Count;
+								if (solidCountRemover > 4 && replacedTypes.TryGetValue((i, j), out ushort replacedType))
+								{
+                                    FastPlaceTile(i, j, replacedType);
+                                }
+                                else if (solidCountRemover < 4)
+								{
+                                    FastRemoveTile(i, j);
+                                }
+
+                                return;
+							}
+
+							int solidCount = new TileNeighbourInfo(i, j).TypedSolid((ushort)tileType).Count;
 							if (solidCount > 4)
 							{
-								FastPlaceTile(i, j, tileType);
+								FastPlaceTile(i, j, (ushort)tileType);
 							}
 							else if (solidCount < 4)
 							{

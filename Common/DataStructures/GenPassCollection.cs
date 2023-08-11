@@ -29,11 +29,11 @@ namespace Macrocosm.Common.DataStructures
                             methodInfo.Invoke(this, null);
                             break;
                         case 1:
-                            if (parameterInfos[0].ParameterType == progress.GetType())
+                            if (parameterInfos[0].ParameterType == progress?.GetType())
                             {
                                 methodInfo.Invoke(this, new object[] { progress });
                             }
-                            else if (parameterInfos[0].ParameterType == configuration.GetType())
+                            else if (parameterInfos[0].ParameterType == configuration?.GetType())
                             {
                                 methodInfo.Invoke(this, new object[] { configuration });
                             }
@@ -43,11 +43,11 @@ namespace Macrocosm.Common.DataStructures
                             }
                             break;
                         case 2:
-                            if (parameterInfos[0].ParameterType == progress.GetType() && parameterInfos[1].ParameterType == configuration.GetType())
+                            if (parameterInfos[0].ParameterType == progress?.GetType() && parameterInfos[1].ParameterType == configuration?.GetType())
                             {
                                 methodInfo.Invoke(this, new object[] { progress, configuration });
                             }
-                            else if (parameterInfos[0].ParameterType == configuration.GetType() && parameterInfos[1].ParameterType == progress.GetType())
+                            else if (parameterInfos[0].ParameterType == configuration?.GetType() && parameterInfos[1].ParameterType == progress?.GetType())
                             {
                                 methodInfo.Invoke(this, new object[] { configuration, progress });
                             }
