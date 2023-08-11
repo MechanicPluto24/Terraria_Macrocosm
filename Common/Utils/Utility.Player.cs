@@ -3,14 +3,16 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
-using Terraria.Localization;
+using Terraria.DataStructures;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Utils
 {
     public static partial class Utility
 	{
-		public static Point SpawnTile => new(Main.spawnTileX, Main.spawnTileY);
+		public static (int x, int y) SpawnTile => (Main.spawnTileX, Main.spawnTileY);
+		public static Point SpawnTilePoint => new(Main.spawnTileX, Main.spawnTileY);
+		public static Point16 SpawnTilePoint16 => new(Main.spawnTileX, Main.spawnTileY);
 		public static Vector2 SpawnWorldPosition => new(Main.spawnTileX * 16f, Main.spawnTileY * 16f);
 
 		public static Rectangle GetSwungItemHitbox(this Player player)

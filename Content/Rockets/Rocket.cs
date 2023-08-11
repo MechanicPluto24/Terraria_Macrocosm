@@ -14,10 +14,8 @@ using Macrocosm.Content.Rockets.Modules;
 using Terraria.Localization;
 using Macrocosm.Common.Subworlds;
 using System.Linq;
-using Terraria.UI.Chat;
-using Terraria.GameContent;
-using Macrocosm.Content.Rockets.Construction;
 using Macrocosm.Content.Rockets.Customization;
+using Macrocosm.Content.Rockets.LaunchPads;
 
 namespace Macrocosm.Content.Rockets
 {
@@ -162,7 +160,7 @@ namespace Macrocosm.Content.Rockets
 			{
 				// This is to ensure the location is properly assigned if subworld was just generated
 				if (TargetLandingPosition == default)
-					TargetLandingPosition = LaunchPadLocations.GetDefaultLocation(CurrentSubworld);
+					TargetLandingPosition = LaunchPadManager.GetDefaultLaunchPad(CurrentSubworld).Position;
 
 				Center = new(TargetLandingPosition.X, Center.Y);
 			}	
@@ -491,7 +489,7 @@ namespace Macrocosm.Content.Rockets
 					if(Landing)
 						animatedModule.CurrentFrame = 0;
 					else
-						animatedModule.CurrentFrame = AnimatedRocketModule.NumberOfFrames - 1;
+						animatedModule.CurrentFrame = animatedModule.NumberOfFrames - 1;
 
 					animatedModule.ShouldAnimate = true;
 				}
@@ -558,7 +556,7 @@ namespace Macrocosm.Content.Rockets
 				// if(commander.TargetLandingPosition != Vector2.Zero) // (or nullable Vector2?)
 				//   TargetLandingPosition = commander.TargetLandingPosition;
 				// else 
-				TargetLandingPosition = LaunchPadLocations.GetDefaultLocation(commander.TargetSubworldID);
+				TargetLandingPosition = LaunchPadManager.GetDefaultLaunchPad(commander.TargetSubworldID).Position;
  
 				if (commander.TargetSubworldID == "Earth")
 					SubworldSystem.Exit();

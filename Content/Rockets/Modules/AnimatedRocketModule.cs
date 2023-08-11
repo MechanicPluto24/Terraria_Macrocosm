@@ -1,23 +1,12 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
-using Terraria;
-using Terraria.ModLoader;
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Rockets.Customization;
-using Terraria.ModLoader.IO;
-using System;
-using Terraria.Graphics;
-
-namespace Macrocosm.Content.Rockets.Modules
+﻿namespace Macrocosm.Content.Rockets.Modules
 {
     public abstract class AnimatedRocketModule : RocketModule
 	{
 		/// <summary> The current animation frame </summary>
-		public int CurrentFrame { get; set; } = NumberOfFrames - 1;
+		public int CurrentFrame { get; set; } = 9;
 
 		/// <summary> The total number of frames </summary>
-		public const int NumberOfFrames = 10;
+		public virtual int NumberOfFrames { get; set; } = 10;
 
 		public int FrameSpeed { get; set; } = 4;
 
