@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 {
     public class UINavigationTab : UIPanel
     {
-		public Rocket Rocket;
+		public Rocket Rocket = new();
 
         public UICustomizationPreview CustomizationPreview;
 
@@ -42,8 +42,8 @@ namespace Macrocosm.Content.Rockets.Navigation
 			HAlign = 0.5f;
 			VAlign = 0.5f;
 
-            SetPadding(2f);
-
+            SetPadding(3f);
+ 
             BackgroundColor = new Color(13, 23, 59, 127);
             BorderColor = new Color(15, 15, 15, 255);
 
@@ -130,11 +130,11 @@ namespace Macrocosm.Content.Rockets.Navigation
         {
 			FlightChecklist.ClearList();
 
-			if (!selectedLaunchCondition.Met()) 
-				FlightChecklist.Add(selectedLaunchCondition.ProvideUI(ChecklistInfoElement.IconType.QuestionMark));
+			if (!selectedLaunchCondition.IsMet()) 
+				FlightChecklist.Add(selectedLaunchCondition.ProvideUI(ChecklistInfoElement.ExtraIconType.GoldQuestionMark));
 			// if selected, target is guaranteed to not be null
-			else if (!hereLaunchCondition.Met()) 
- 				FlightChecklist.Add(hereLaunchCondition.ProvideUI(ChecklistInfoElement.IconType.GrayCrossmark));
+			else if (!hereLaunchCondition.IsMet()) 
+ 				FlightChecklist.Add(hereLaunchCondition.ProvideUI(ChecklistInfoElement.ExtraIconType.GrayCrossmark));
             else
             {
                 if (target.LaunchConditions is not null)
@@ -149,7 +149,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 		// TODO: move this to a checker class (same as the UI provider?)
 		public bool CheckLaunchConditions()
         {
-            bool met = selectedLaunchCondition.Met() && hereLaunchCondition.Met() && genericLaunchConditions.MetAll();
+            bool met = selectedLaunchCondition.IsMet() && hereLaunchCondition.IsMet() && genericLaunchConditions.MetAll();
 
             if (target is not null)
             {

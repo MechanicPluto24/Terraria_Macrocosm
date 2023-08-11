@@ -40,6 +40,12 @@ namespace Macrocosm.Content.Rockets.Customization
 			specialFunctions = null;
 		}
 
+		public static void Reset()
+		{
+			ModContent.GetInstance<CustomizationStorage>().Unload();
+			ModContent.GetInstance<CustomizationStorage>().Load();
+		}
+
 		/// <summary>
 		/// Gets a pattern <b> reference </b> from the pattern storage. Don't use this if you're modifying pattern data.
 		/// </summary>
@@ -194,15 +200,22 @@ namespace Macrocosm.Content.Rockets.Customization
 		private static void LoadPatterns()
 		{
 			AddPattern("CommandPod", "Basic", true);
+			AddPattern("CommandPod", "Binary", true, new(Color.White), new(Color.White), new(new Color(80, 80, 80)));
+			AddPattern("CommandPod", "Astra", true, new(Color.Transparent), new(Color.DarkBlue), new(Color.White), new((colors) => Color.Lerp(colors[1], colors[2], 0.5f)));
 
 			AddPattern("ServiceModule", "Basic", true);
+			AddPattern("ServiceModule", "Binary", true, new(Color.White), new(Color.White), new(new Color(80, 80, 80))); 
+			AddPattern("ServiceModule", "Astra", true, new(Color.White), new(Color.DarkBlue), new(Color.White), new((colors) => Color.Lerp(colors[1], colors[2], 0.5f)));
 
 			AddPattern("ReactorModule", "Basic", true);
+			AddPattern("ReactorModule", "Binary", true, new(Color.White), new(Color.White), new(new Color(50, 50, 50)));
+			AddPattern("ReactorModule", "Astra", true, new(Color.White), new(Color.DarkBlue), new(Color.White), new((colors) => Color.Lerp(colors[1], colors[2], 0.5f)));
 
 			AddPattern("EngineModule", "Basic", true);
-			AddPattern("EngineModule", "Binary", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40)));
+			AddPattern("EngineModule", "Binary", true, new(Color.White), new(Color.White), new(new Color(50, 50, 50)));
 			AddPattern("EngineModule", "Saturn", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40)));
 			AddPattern("EngineModule", "Delta", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40)));
+			AddPattern("EngineModule", "Astra", true, new(Color.White), new(Color.DarkBlue), new(Color.White), new((colors) => Color.Lerp(colors[1], colors[2], 0.5f)));
 			AddPattern("EngineModule", "Rainbow", false, new(Color.White), new(Color.Red), new(Color.Orange), new(Color.Yellow), new(Color.Green), new(Color.Blue), new(Color.Indigo), new(Color.Violet));
 
 			AddPattern("BoosterLeft", "Basic", true);

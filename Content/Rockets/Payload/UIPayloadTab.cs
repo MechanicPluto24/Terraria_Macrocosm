@@ -1,22 +1,13 @@
-﻿using Macrocosm.Common.Utils;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.IO;
-using Terraria;
-using Terraria.GameContent;
+﻿using Microsoft.Xna.Framework;
 using Terraria.GameContent.UI.Elements;
-using Terraria.ID;
-using Terraria.Localization;
-using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Rockets.Navigation
+namespace Macrocosm.Content.Rockets.Payload
 {
-    public class UICargoTab : UIPanel
+    public class UIPayloadTab : UIPanel
     {
-        public Rocket Rocket;
+        public Rocket Rocket = new();
 
-		public UICargoTab()
+		public UIPayloadTab()
 		{
 		}
 
@@ -32,7 +23,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 			BackgroundColor = new Color(13, 23, 59, 127);
 			BorderColor = new Color(15, 15, 15, 255);
 
-			Append(new UIText("test2")
+			Append(new UIText("Payload")
 			{
 				Top = new(0, 0.5f),
 				Left = new(0, 0.5f),

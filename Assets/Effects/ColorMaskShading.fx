@@ -26,6 +26,9 @@ float4 uColor5;
 float4 uColor6;
 float4 uColor7;
 
+// Whether this detail displays on non-customizable areas of the rocket
+bool uDetailUseMask;
+
 // The ambience light color 
 float3 uAmbientColor;
 
@@ -55,9 +58,10 @@ float4 ColorMaskShading(float2 texCoord : TEXCOORD) : COLOR0
     float4 newColor = color;
     
     if (detail.a > 0.0f)
-    {
-        newColor = float4(detail.rgb * texelBrightness.rgb, detail.a);
-        return float4(newColor.rgb * uAmbientColor, color.a);
+    { 
+        float tranparency = uDetailUseMask ? mask.a : detail.a;
+        newColor = float4(detail.rgb * texelBrightness.rgb, 1.0f);
+        return float4(newColor.rgb * uAmbientColor, tranparency);
     }
     
     // Ignore pixel if mask is transparent!
