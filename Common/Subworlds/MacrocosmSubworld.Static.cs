@@ -18,7 +18,7 @@ namespace Macrocosm.Common.Subworlds
 	{
 		/// <summary> Get the current <c>MacrocosmSubworld</c> active instance. 
 		/// Earth returns null! You should check for <see cref="AnyActive"/> before accessing this. </summary>
-		public static MacrocosmSubworld Current => SubworldSystem.Current as MacrocosmSubworld;
+		public static MacrocosmSubworld Current => SubworldSystem.AnyActive<Macrocosm>() ? SubworldSystem.Current as MacrocosmSubworld : null;
 
 		/// <summary> 
 		/// Get the current active Macrocosm subworld string ID, matching the subworld class name. 
@@ -39,7 +39,7 @@ namespace Macrocosm.Common.Subworlds
 				if (SubworldSystem.AnyActive<Macrocosm>())
 					return Current.Name;
 				else if (SubworldSystem.AnyActive())
-					return SubworldSystem.Current.Mod.Name + ":" + SubworldSystem.Current.Name;
+					return SubworldSystem.Current.Mod.Name + "/" + SubworldSystem.Current.Name;
 				else
 					return "Earth";
 			} 

@@ -864,6 +864,11 @@ Mods: {
 				DisplayName: Silica Sand
 				Tooltip: ""
 			}
+
+			LaunchPadMarker: {
+				DisplayName: Launchpad Marker
+				Tooltip: ""
+			}
 		}
 
 		NPCs: {
@@ -1070,6 +1075,7 @@ Mods: {
 			ArtemiteBar.MapEntry: Artemite Bar
 			ChandriumBar.MapEntry: Chandrium Bar
 			DianiteBar.MapEntry: Dianite Bar
+			LaunchPadMarker.MapEntry: Launchpad Marker
 		}
 
 		Common: {

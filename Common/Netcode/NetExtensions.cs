@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using Terraria;
 using Terraria.Chat;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -41,6 +42,14 @@ namespace Macrocosm.Common.Netcode
 				if (fieldType == "Vector2")
 				{
 					binaryWriter.WriteVector2((Vector2)fieldInfo.GetValue(obj));
+				}
+				else if(fieldType == "Point")
+				{
+					binaryWriter.WritePoint((Point)fieldInfo.GetValue(obj));
+				}
+				else if (fieldType == "Point16")
+				{
+					binaryWriter.WritePoint16((Point16)fieldInfo.GetValue(obj));
 				}
 				else if (fieldType == "bool" && bitWriter is not null)
 				{
@@ -80,7 +89,15 @@ namespace Macrocosm.Common.Netcode
 				{
  					fieldInfo.SetValue(obj, binaryReader.ReadVector2());
 				}
- 				else if (fieldType == "bool" && bitReader is not null)
+				else if(fieldType == "Point")
+				{
+					fieldInfo.SetValue(obj, binaryReader.ReadPoint());
+				}
+				else if (fieldType == "Point16")
+				{
+					fieldInfo.SetValue(obj, binaryReader.ReadPoint16());
+				}
+				else if (fieldType == "bool" && bitReader is not null)
 				{
  					fieldInfo.SetValue(obj, bitReader.ReadBit());	
 				}
@@ -89,6 +106,32 @@ namespace Macrocosm.Common.Netcode
  					fieldInfo.SetValue(obj, typeof(BinaryReader).GetMethod($"Read{fieldInfo.FieldType.Name}").Invoke(binaryReader, null)); 	
 				}
 			}
+		}
+
+		public static void WritePoint(this BinaryWriter writer, Point point)
+		{
+			writer.Write(point.X);
+			writer.Write(point.Y);
+		}
+
+		public static Point ReadPoint(this BinaryReader reader)
+		{
+			int x = reader.ReadInt32();
+			int y = reader.ReadInt32();
+			return new Point(x, y);
+		}
+
+		public static void WritePoint16(this BinaryWriter writer, Point16 point)
+		{
+			writer.Write(point.X);
+			writer.Write(point.Y);
+		}
+
+		public static Point16 ReadPoint16(this BinaryReader reader)
+		{
+			short x = reader.ReadInt16();
+			short y = reader.ReadInt16();
+			return new Point16(x, y);
 		}
 
 		public static void NetSyncFields(this ModProjectile modProjectile)

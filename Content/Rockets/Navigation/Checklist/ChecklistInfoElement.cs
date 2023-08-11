@@ -8,29 +8,29 @@ namespace Macrocosm.Content.Rockets.Navigation.Checklist
 {
     public class ChecklistInfoElement : InfoElement
     {
-        public enum IconType
+        public enum ExtraIconType
         {
-            Checkmark,
-            Crossmark,
+            GreenCheckmark,
+            RedCrossmark,
             GrayCrossmark,
-            QuestionMark
+            GoldQuestionMark
         }
 
         public bool State { get; set; } = false;
 
-        public IconType MetIcon { get; set; } = IconType.Checkmark;
-        public IconType NotMetIcon { get; set; } = IconType.Crossmark;
+        public ExtraIconType MetIcon { get; set; } = ExtraIconType.GreenCheckmark;
+        public ExtraIconType NotMetIcon { get; set; } = ExtraIconType.RedCrossmark;
 
 		public ChecklistInfoElement(string langKey) : base(langKey)
         {
         }
 
-        protected override Asset<Texture2D> GetIcon()
+        protected override Asset<Texture2D> GetExtraIcon()
         {
             if (State)
-                return ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Icons/" + MetIcon.ToString());
+                return ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Symbols/" + MetIcon.ToString());
             else
-                return ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Icons/" + NotMetIcon.ToString());
+                return ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Symbols/" + NotMetIcon.ToString());
         }
 
         private string KeySelector => specialValueKey + "." + (State ? "True" : "False") + ".";

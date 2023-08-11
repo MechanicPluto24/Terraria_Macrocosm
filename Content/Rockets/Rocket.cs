@@ -14,9 +14,8 @@ using Macrocosm.Content.Rockets.Modules;
 using Terraria.Localization;
 using Macrocosm.Common.Subworlds;
 using System.Linq;
-using Terraria.UI.Chat;
-using Terraria.GameContent;
-using Macrocosm.Content.Rockets.Construction;
+using Macrocosm.Content.Rockets.Customization;
+using Macrocosm.Content.Rockets.LaunchPads;
 
 namespace Macrocosm.Content.Rockets
 {
@@ -83,15 +82,21 @@ namespace Macrocosm.Content.Rockets
 			set => Position = value - Size/2f;
 		}
 
+		/// <summary> Whether the rocket is currently stationary </summary>
 		public bool Stationary => Velocity.LengthSquared() < 0.1f;
 
 		/// <summary> The layer this rocket is drawn in </summary>
 		public RocketDrawLayer DrawLayer = RocketDrawLayer.BeforeNPCs;
 
-		/// <summary> The Rocket's name, set by the user, defaults to a localized "Rocket" name </summary>
-		public string DisplayName
-			=> EngineModule.Nameplate.HasNoSupportedChars() ? Language.GetTextValue("Mods.Macrocosm.Common.Rocket") : EngineModule.Nameplate.Text;
+		/// <summary> This rocket's engine module nameplate </summary>
+		public Nameplate Nameplate => EngineModule.Nameplate;
 
+		/// <summary> The Rocket's name, if not set by the user, defaults to a localized "Rocket" name </summary>
+		public string DisplayName
+			=> Nameplate.IsValid() ? AssignedName : Language.GetTextValue("Mods.Macrocosm.Common.Rocket");
+
+		/// <summary> The Rocket's name, set by the user </summary>
+		public string AssignedName => EngineModule.Nameplate.Text;
 
 		/// <summary> List of the module names, in the customization access order </summary>
 		public List<string> ModuleNames => Modules.Keys.ToList();
@@ -136,8 +141,10 @@ namespace Macrocosm.Content.Rockets
 
 
 		/// <summary> Instatiates a rocket. Use <see cref="Create(Vector2)"/> for spawning in world and proper syncing. </summary>
-		public Rocket()
+		public Rocket(bool isDummy = false)
 		{
+			if (!isDummy)
+				RefreshCustomizationDummy();
 		}
 
 		public void OnCreation()
@@ -147,11 +154,13 @@ namespace Macrocosm.Content.Rockets
 
 		public void OnWorldSpawn()
 		{
+			ResetAnimation();
+
 			if (Landing)
 			{
 				// This is to ensure the location is properly assigned if subworld was just generated
 				if (TargetLandingPosition == default)
-					TargetLandingPosition = LaunchPadLocations.GetDefaultLocation(CurrentSubworld);
+					TargetLandingPosition = LaunchPadManager.GetDefaultLaunchPad(CurrentSubworld).Position;
 
 				Center = new(TargetLandingPosition.X, Center.Y);
 			}	
@@ -166,7 +175,6 @@ namespace Macrocosm.Content.Rockets
 			// Testing
 			Fuel = 1000f;
 
-			SetModuleRelativePositions();
 			Movement();
 
 			if (Stationary)
@@ -177,6 +185,7 @@ namespace Macrocosm.Content.Rockets
 
             if (InFlight && Position.Y < WorldExitPositionY)
 			{
+				ResetAnimation();
 				InFlight = false;
 				Landing = true;
 				EnterDestinationSubworld();
@@ -225,13 +234,6 @@ namespace Macrocosm.Content.Rockets
 			//DrawDebugBounds();
 			//DrawDebugModuleHitbox();
 			//DisplayWhoAmI();
-		}
-
-		/// <summary> Draw the rocket as a dummy </summary>
-		public void DrawDummy(SpriteBatch spriteBatch, Vector2 offset, Color drawColor)
-		{
-			// Passing Rocket world position as "screenPosition" cancels it out  
-			Draw(spriteBatch, Position - offset, drawColor);
 		}
 
 		// Set the rocket's modules positions in the world
@@ -303,13 +305,6 @@ namespace Macrocosm.Content.Rockets
 			return false;
 		}
 
-		/// <summary> Whether the local player can interact with the rocket </summary>
-		public bool InInteractionRange()
-		{
-			Point location = Bounds.ClosestPointInRect(Main.LocalPlayer.Center).ToTileCoordinates();
-			return Main.LocalPlayer.IsInTileInteractionRange(location.X, location.Y, TileReachCheckSettings.Simple);
-		}
-
 		/// <summary> Launches the rocket, with syncing </summary>
 		public void Launch()
 		{
@@ -349,7 +344,7 @@ namespace Macrocosm.Content.Rockets
 			if (Main.netMode == NetmodeID.Server)
 				return;
 
-			if (MouseCanInteract() && InInteractionRange() && !InFlight && !GetRocketPlayer(Main.myPlayer).InRocket)
+			if (MouseCanInteract() && Bounds.InPlayerInteractionRange() && !InFlight && !GetRocketPlayer(Main.myPlayer).InRocket)
 			{
 				if (Main.mouseRight)
 				{
@@ -404,18 +399,37 @@ namespace Macrocosm.Content.Rockets
 		private void Movement()
 		{
 			if (InFlight)
- 				FlightTime++;
- 			else
+			{
+				UpdateModuleAnimation();
+
+				if (FlightProgress > 0.1f)
+					SetModuleAnimation(landing: false);
+
+				FlightTime++;
+			}
+			else
+			{
  				Velocity.Y += 0.1f * MacrocosmSubworld.CurrentGravityMultiplier;
+			}
  
 			if (Landing)
 			{
 				// TODO: Add smooth deceleration
 
-				if (Stationary && LandingProgress > 0.9f)
-					Landing = false;
-			}
+				UpdateModuleAnimation();
 
+				if (LandingProgress > 0.7f)
+				{
+					SetModuleAnimation(landing: true);
+				}
+
+				if (Stationary && LandingProgress > 0.9f)
+				{
+					RocketUISystem.Show(this);
+					Landing = false;
+					ResetAnimation();
+				}
+			}
 
 			if (FlightTime >= liftoffTime)
 			{
@@ -433,6 +447,45 @@ namespace Macrocosm.Content.Rockets
 
 				SetScreenshake();
 				//VisualEffects();
+			}	
+		}
+
+		private void UpdateModuleAnimation()
+		{
+			foreach (RocketModule module in Modules.Values)
+				if (module is AnimatedRocketModule animatedModule)
+					animatedModule.UpdateAnimation();
+ 		}
+
+		private void SetModuleAnimation(bool landing = false)
+		{
+			foreach (RocketModule module in Modules.Values)
+			{
+				if (module is AnimatedRocketModule animatedModule)
+				{
+					if (landing)
+						animatedModule.StartAnimation();
+					else 
+						animatedModule.StartReverseAnimation();
+
+					animatedModule.ShouldAnimate = false;
+				}
+			}
+		}
+
+		private void ResetAnimation()
+		{
+			foreach (RocketModule module in Modules.Values)
+			{
+				if (module is AnimatedRocketModule animatedModule)
+				{
+					if(Landing)
+						animatedModule.CurrentFrame = 0;
+					else
+						animatedModule.CurrentFrame = animatedModule.NumberOfFrames - 1;
+
+					animatedModule.ShouldAnimate = true;
+				}
 			}	
 		}
 
@@ -496,7 +549,7 @@ namespace Macrocosm.Content.Rockets
 				// if(commander.TargetLandingPosition != Vector2.Zero) // (or nullable Vector2?)
 				//   TargetLandingPosition = commander.TargetLandingPosition;
 				// else 
-				TargetLandingPosition = LaunchPadLocations.GetDefaultLocation(commander.TargetSubworldID);
+				TargetLandingPosition = LaunchPadManager.GetDefaultLaunchPad(commander.TargetSubworldID).Position;
  
 				if (commander.TargetSubworldID == "Earth")
 					SubworldSystem.Exit();
