@@ -22,9 +22,6 @@ namespace Macrocosm.Content.Rockets
 			
 			ModPacket packet = Macrocosm.Instance.GetPacket();
 
-			packet.Write((byte)MessageType.SyncRocketData);
-			packet.Write((byte)WhoAmI);
-
 			if (WriteToPacket(packet))  
 				 packet.Send(-1, ignoreClient);
 

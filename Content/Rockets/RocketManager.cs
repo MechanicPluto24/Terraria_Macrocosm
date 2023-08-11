@@ -59,6 +59,7 @@ namespace Macrocosm.Content.Rockets
 
 		public override void PostUpdateNPCs()
 		{
+            Utility.Chat(ActiveRocketCount + ", " + RocketsInCurrentSubworld);
             UpdateRockets();
 		}
 

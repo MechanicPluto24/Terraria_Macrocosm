@@ -16,7 +16,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 {
     public class RocketUIState : UIState
     {
-        public Rocket Rocket;
+        public Rocket Rocket = new();
 
 		private UIText Title;
 		private UIDragablePanel BackgroundPanel;
@@ -152,7 +152,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 			Player player = Main.LocalPlayer;
 			player.mouseInterface = true;
 
-			if (!Rocket.Active || !Rocket.InInteractionRange() || Rocket.InFlight || player.controlMount || player.UICloseConditions())
+			if (!Rocket.Active || !Rocket.Bounds.InPlayerInteractionRange() || Rocket.InFlight || player.controlMount || player.UICloseConditions())
 			{
 				RocketUISystem.Hide();
 				return;

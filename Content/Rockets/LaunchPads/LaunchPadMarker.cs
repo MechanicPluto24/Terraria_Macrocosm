@@ -51,7 +51,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
     public class LaunchPadMarkerTE : ModTileEntity
     {
-		public int CheckInterval { get; set; } = 60; 
+		public int CheckInterval { get; set; } = 30; 
 		public int CheckDistance { get; set; } = 20;
 
 		public LaunchPad LaunchPad { get; set; }
@@ -92,11 +92,8 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
 					LaunchPad = LaunchPadManager.GetLaunchPadAtTileCoordinates(MacrocosmSubworld.CurrentSubworld, new(x, y));
 					if (LaunchPad is null)
-					{
-						LaunchPad = new LaunchPad(new(x, y));
-						LaunchPadManager.Add(MacrocosmSubworld.CurrentSubworld, LaunchPad);
-					}
-
+ 						LaunchPad = LaunchPad.Create(MacrocosmSubworld.CurrentSubworld, x, y);
+ 
 					Pair.LaunchPad = LaunchPad;
 					LaunchPad.EndTile = Pair.Position;
 					

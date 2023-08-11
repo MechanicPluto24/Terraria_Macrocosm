@@ -48,12 +48,18 @@ namespace Macrocosm.Content.Rockets
 
 		public override void OnWorldLoad()
 		{
+			if (Main.netMode == NetmodeID.Server)
+				return;
+
 			UIRocketState = new RocketUIState();
 			UIRocketState.Activate();
 		}
 
 		public override void OnWorldUnload()
 		{
+			if (Main.netMode == NetmodeID.Server)
+				return;
+			
 			UIRocketState.Deactivate();
 			UIRocketState = null;
 		}  

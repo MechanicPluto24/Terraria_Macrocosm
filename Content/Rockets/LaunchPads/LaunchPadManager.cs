@@ -57,6 +57,9 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			return new List<LaunchPad>();
 		}
 
+
+		public static LaunchPad GetLaunchPadAtTileCoordinates(string subworldId, int startTileX, int startTileY)
+			=> GetLaunchPadAtTileCoordinates(subworldId,new(startTileX, startTileY));
 		public static LaunchPad GetLaunchPadAtTileCoordinates(string subworldId, Point16 startTile)
 			=> GetLaunchPads(subworldId).FirstOrDefault(lp => lp.StartTile == startTile);
 
@@ -69,25 +72,17 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 		public static void SetDefaultLaunchPad(string subworldId, LaunchPad launchPad)
 		{
 			List<LaunchPad> launchPads = GetLaunchPads(subworldId);
-			foreach (var lp in launchPads)
- 				lp.IsDefault = false;
  
-			launchPad.IsDefault = true;
+			LaunchPad existingDefault = GetDefaultLaunchPad(subworldId);
+ 
+			int defaultIndex = launchPads.IndexOf(existingDefault);
 
-			if (None(subworldId))
-			{
-				Add(subworldId, launchPad);
-			}
+			if (defaultIndex >= 0)
+ 				launchPads[defaultIndex] = launchPad;
 			else
-			{
-				LaunchPad existingDefault = launchPads.FirstOrDefault(lp => lp.IsDefault);
-				if (existingDefault != null)
- 					existingDefault.IsDefault = false;
- 
-				int defaultIndex = launchPads.IndexOf(existingDefault);
-				if (defaultIndex >= 0)
- 					launchPads[defaultIndex] = launchPad;
- 			}
+				Add(subworldId, launchPad);
+
+			launchPad.IsDefault = true;
 		}
 
 		private int checkTimer;
@@ -108,7 +103,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
 		public override void PostDrawTiles()
 		{
-			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, null, null, null, Main.GameViewMatrix.ZoomMatrix);
 
 			if (launchPadStorage.ContainsKey(MacrocosmSubworld.CurrentSubworld))
  				foreach (LaunchPad launchPad in launchPadStorage[MacrocosmSubworld.CurrentSubworld])

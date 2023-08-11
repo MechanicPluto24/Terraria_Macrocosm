@@ -15,6 +15,12 @@ namespace Macrocosm.Common.Utils
 		public static Point16 SpawnTilePoint16 => new(Main.spawnTileX, Main.spawnTileY);
 		public static Vector2 SpawnWorldPosition => new(Main.spawnTileX * 16f, Main.spawnTileY * 16f);
 
+		public static bool InPlayerInteractionRange(this Rectangle rectangle)
+		{
+			Point location = rectangle.ClosestPointInRect(Main.LocalPlayer.Center).ToTileCoordinates();
+			return Main.LocalPlayer.IsInTileInteractionRange(location.X, location.Y, TileReachCheckSettings.Simple);
+		}
+
 		public static Rectangle GetSwungItemHitbox(this Player player)
 		{
 			//Found in Player.cs

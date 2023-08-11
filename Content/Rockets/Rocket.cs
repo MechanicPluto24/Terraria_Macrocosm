@@ -305,13 +305,6 @@ namespace Macrocosm.Content.Rockets
 			return false;
 		}
 
-		/// <summary> Whether the local player can interact with the rocket </summary>
-		public bool InInteractionRange()
-		{
-			Point location = Bounds.ClosestPointInRect(Main.LocalPlayer.Center).ToTileCoordinates();
-			return Main.LocalPlayer.IsInTileInteractionRange(location.X, location.Y, TileReachCheckSettings.Simple);
-		}
-
 		/// <summary> Launches the rocket, with syncing </summary>
 		public void Launch()
 		{
@@ -351,7 +344,7 @@ namespace Macrocosm.Content.Rockets
 			if (Main.netMode == NetmodeID.Server)
 				return;
 
-			if (MouseCanInteract() && InInteractionRange() && !InFlight && !GetRocketPlayer(Main.myPlayer).InRocket)
+			if (MouseCanInteract() && Bounds.InPlayerInteractionRange() && !InFlight && !GetRocketPlayer(Main.myPlayer).InRocket)
 			{
 				if (Main.mouseRight)
 				{
