@@ -68,42 +68,47 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 		/// <summary> Creates a new UIMapTarget based on a target Macrocosm Subworld </summary>
 		/// <param name="owner"> The owner navigation panel </param>
+		/// <param name="position"> The map target's position relative to the top corner of the NavigationMap </param>
+		/// <param name="width"> Interactible area width in pixels </param>
+		/// <param name="height"> Interactible area height in pixels </param>
 		/// <param name="targetSubworld"> The subworld (instance) associated with the map target </param>
-		public UIMapTarget(UINavigationPanel owner, float centerXPercent, float centerYPercent, float sizePercent, MacrocosmSubworld targetSubworld, Texture2D outline = null) : this(owner, centerXPercent, centerYPercent, sizePercent)
-        {
+		public UIMapTarget(UINavigationPanel owner, Vector2 position, float width, float height, MacrocosmSubworld targetSubworld, Texture2D outline = null) : this(owner, position, width, height)
+		{
 			LaunchConditions = targetSubworld.LaunchConditions;
-            Name = targetSubworld.Name;
+			Name = targetSubworld.Name;
 
-            selectionOutline = outline ?? selectionOutline;
-        }
-
-        /// <summary>  Creates a new UIMapTarget with the given custom data. Used for special navigation, like towards Earth  </summary>
-        /// <param name="owner"> The owner navigation panel </param>
-        /// <param name="targetId"> The special ID of the target, handled in <see cref="Rocket.EnterDestinationSubworld"/> </param>
-        /// <param name="canLaunch"> Function that determines whether the target is selectable, defaults to false </param>
-        public UIMapTarget(UINavigationPanel owner, float centerXPercent, float centerYPercent, float sizePercent, string targetId, ChecklistConditionCollection launchConditions = null, Texture2D outline = null) : this(owner, centerXPercent, centerYPercent, sizePercent)
-        {
-			this.LaunchConditions = launchConditions;
-            Name = targetId;
-
-            selectionOutline = outline ?? selectionOutline;
-        }
-
-        /// <summary> Creates a new UIMapTarget </summary>
-        /// <param name="owner"> The owner navigation panel </param>
-        private UIMapTarget(UINavigationPanel owner, float centerXPercent, float centerYPercent, float sizePercent)
-        {
-            OwnerPanel = owner;
-			float ownerAspectRatio = owner.Width.Percent / owner.Height.Percent;
-
-			// I don't get why the magic number scaling is necessary to have square size 
-			Width = StyleDimension.FromPercent(0.83f * sizePercent / ownerAspectRatio ); 
-			Height = StyleDimension.FromPercent(sizePercent);
-
-			Left = StyleDimension.FromPercent(centerXPercent - Width.Percent / 2f);
-			Top = StyleDimension.FromPercent(centerYPercent - Height.Percent / 2f);
+			selectionOutline = outline ?? selectionOutline;
 		}
-		
+
+		/// <summary>  Creates a new UIMapTarget with the given custom data. Used for special navigation, like towards Earth  </summary>
+		/// <param name="owner"> The owner navigation panel </param>
+		/// <param name="position"> The map target's position relative to the top corner of the NavigationMap </param>
+		/// <param name="width"> Interactible area width in pixels </param>
+		/// <param name="height"> Interactible area height in pixels </param>
+		/// <param name="targetId"> The special ID of the target, handled in <see cref="Rocket.EnterDestinationSubworld"/> </param>
+		/// <param name="canLaunch"> Function that determines whether the target is selectable, defaults to false </param>
+		public UIMapTarget(UINavigationPanel owner, Vector2 position, float width, float height, string targetId, ChecklistConditionCollection launchConditions = null, Texture2D outline = null) : this(owner, position, width, height)
+		{
+			this.LaunchConditions = launchConditions;
+			Name = targetId;
+
+			selectionOutline = outline ?? selectionOutline;
+		}
+
+		/// <summary> Creates a new UIMapTarget </summary>
+		/// <param name="owner"> The owner navigation panel </param>
+		/// <param name="position"> The map target's position relative to the top corner of the NavigationMap </param>
+		/// <param name="width"> Interactible area width in pixels </param>
+		/// <param name="height"> Interactible area height in pixels </param>
+		private UIMapTarget(UINavigationPanel owner, Vector2 position, float width, float height)
+		{
+			OwnerPanel = owner;
+			Width.Set(width, 0);
+			Height.Set(height, 0);
+			Top.Set(position.Y, 0);
+			Left.Set(position.X, 0);
+		}
+
 		public override void OnInitialize()
         {			
 			OnLeftClick += (_, _) =>
@@ -181,7 +186,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 			Rectangle rect = GetDimensions().ToRectangle();
 			
 			// debug "hitbox"
-			//spriteBatch.Draw(TextureAssets.MagicPixel.Value, rect, Color.Red * 0.4f);
+			//spriteBatch.Draw(TextureAssets.MagicPixel.Value, rect, Color.Green.NewAlpha(0.1f));
 
 			// Should draw the outline if not fully transparent
 			if (targetOpacity > 0f)

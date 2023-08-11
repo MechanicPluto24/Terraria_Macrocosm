@@ -12,8 +12,8 @@ using Terraria.Utilities;
 using System.Linq;
 using Terraria.ModLoader.IO;
 using Macrocosm.Content.Rockets.Customization;
-using Macrocosm.Content.Rockets.Construction;
 using System;
+using Macrocosm.Content.Rockets.LaunchPads;
 
 namespace Macrocosm.Common.Subworlds
 {
@@ -104,7 +104,7 @@ namespace Macrocosm.Common.Subworlds
             WorldDataSystem.Instance.CopyWorldData(dataCopyTag);
 			RocketManager.SaveRocketData(dataCopyTag);
 			CustomizationStorage.SaveUnlockedStatus(dataCopyTag);
-			LaunchPadLocations.SaveLocations(dataCopyTag);
+			LaunchPadManager.SaveLaunchPads(dataCopyTag);
 
 			// This is to ensure the data is properly transfered by SubLib code to subservers in MP 
 			SubworldSystem.CopyWorldData("Macrocosm:copiedData", dataCopyTag);
@@ -115,7 +115,7 @@ namespace Macrocosm.Common.Subworlds
 			WorldDataSystem.Instance.ReadCopiedWorldData(dataCopyTag);
 			RocketManager.ReadSavedRocketData(dataCopyTag);
 			CustomizationStorage.LoadUnlockedStatus(dataCopyTag);
-			LaunchPadLocations.LoadLocations(dataCopyTag);
+			LaunchPadManager.LoadLaunchPads(dataCopyTag);
 
 			dataCopyTag = null;
         }

@@ -107,6 +107,9 @@ namespace Macrocosm.Content.Rockets
 				Player.mount.Dismount(Player);
 
 			Utility.UICloseOthers();
+
+			if (Player.whoAmI == Main.myPlayer)
+				RocketUISystem.Show(RocketManager.Rockets[RocketID]);
 		}
 
 		public void DisembarkFromRocket()
@@ -139,9 +142,7 @@ namespace Macrocosm.Content.Rockets
 					if ((Player.controlInv || Player.controlMount) && !(rocket.InFlight))
 						DisembarkFromRocket();
 
-					if (!rocket.InFlight && !rocket.Landing)
-						RocketUISystem.Show(rocket);
-					else
+					if (rocket.InFlight || rocket.Landing)
 						RocketUISystem.Hide();
 				}
 			}

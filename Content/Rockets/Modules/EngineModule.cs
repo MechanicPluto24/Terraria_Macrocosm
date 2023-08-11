@@ -4,16 +4,18 @@ using Terraria.ModLoader;
 using Macrocosm.Content.Rockets.Customization;
 using Terraria;
 using Macrocosm.Common.Utils;
+using Terraria.ModLoader.IO;
+using ReLogic.Content;
 
 namespace Macrocosm.Content.Rockets.Modules
 {
-    public class EngineModule : RocketModule
+    public class EngineModule : AnimatedRocketModule
     {
 		public override int DrawPriority => 0;
 		public bool RearLandingLegRaised { get; set; } = false;
 		public Nameplate Nameplate { get; set; } = new();
 
-		// Add rear booster and its read landing leg to hixbox
+		// Add rear booster and its read landing leg to the hixbox
 		public override Rectangle Hitbox => base.Hitbox with { Height = base.Hitbox.Height + (RearLandingLegRaised ? 18 : 26) };
 
 		public override void Draw(SpriteBatch spriteBatch, Vector2 screenPos, Color ambientColor)
@@ -22,10 +24,14 @@ namespace Macrocosm.Content.Rockets.Modules
             spriteBatch.End();
             spriteBatch.Begin(SamplerState.PointClamp, state);
 
-            // Draw the rear booster behind the engine module (no paintjobs applicable)
-			int frameX = RearLandingLegRaised ? 1 : 0;
-			Texture2D boosterRear = ModContent.Request<Texture2D>(TexturePath + "_BoosterRear").Value;
-			spriteBatch.Draw(boosterRear, Position + new Vector2(0, 18) - screenPos, boosterRear.Frame(2, 1, frameX), ambientColor, 0f, Origin, 1f, SpriteEffects.None, 0f);
+			// Draw the rear landing behind the rear booster 
+			Texture2D rearLandingLeg = ModContent.Request<Texture2D>(TexturePath + "_LandingLeg", AssetRequestMode.ImmediateLoad).Value;
+			spriteBatch.Draw(rearLandingLeg, Position + new Vector2(Texture.Width / 2f - rearLandingLeg.Width/2f, 314f) - screenPos, rearLandingLeg.Frame(1, NumberOfFrames, frameY: CurrentFrame), ambientColor);
+
+			// Draw the rear booster behind the engine module 
+			Texture2D boosterRear = ModContent.Request<Texture2D>(TexturePath + "_BoosterRear", AssetRequestMode.ImmediateLoad).Value;
+			spriteBatch.Draw(boosterRear, Position + new Vector2(Texture.Width/2f - boosterRear.Width/2f, 293.5f) - screenPos, null, ambientColor, 0f, Origin, 1f, SpriteEffects.None, 0f);
+
 
 			spriteBatch.End();
 			spriteBatch.Begin(state);
@@ -37,10 +43,24 @@ namespace Macrocosm.Content.Rockets.Modules
 			spriteBatch.Begin(SamplerState.PointClamp, state);
 
 			// Draw the nameplate
-			Nameplate.Draw(spriteBatch, new Vector2(Center.X, Position.Y) + new Vector2(6, 61) - screenPos, ambientColor);
+			Nameplate.Draw(spriteBatch, new Vector2(Center.X, Position.Y) - screenPos, ambientColor);
 
 			spriteBatch.End();
 			spriteBatch.Begin(state);
 		}
-    }
+
+		protected override TagCompound SerializeModuleData()
+		{
+			return new()
+			{
+				[nameof(Nameplate)] = Nameplate,
+			};
+		}
+
+		protected override void DeserializeModuleData(TagCompound tag)
+		{
+			if (tag.ContainsKey(nameof(Nameplate)))
+				Nameplate = tag.Get<Nameplate>(nameof(Nameplate));
+		}
+	}
 }

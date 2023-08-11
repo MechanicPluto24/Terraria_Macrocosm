@@ -92,15 +92,10 @@ namespace Macrocosm.Content.Rockets.Navigation
             spriteBatch.End();
             spriteBatch.Begin(state.SpriteSortMode, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, state.DepthStencilState, overflowHiddenRasterizerState, state.Effect, matrix);
 
-            Rocket.DrawDummy(spriteBatch, (GetDimensions().Position() + new Vector2(moduleOffsetX, moduleOffsetY)) * zoom, Color.White);
+            Rocket.DrawCustomizationDummy(spriteBatch, (GetDimensions().Position() + new Vector2(moduleOffsetX, moduleOffsetY)) * zoom, Color.White);
 
 			spriteBatch.End();
 			spriteBatch.Begin(state);
-		}
-
-		public override Rectangle GetViewCullingArea()
-		{
-			return base.GetViewCullingArea();
 		}
 	}
 }
