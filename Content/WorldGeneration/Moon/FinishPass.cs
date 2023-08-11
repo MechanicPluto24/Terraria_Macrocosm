@@ -1,5 +1,5 @@
 ﻿using Macrocosm.Common.Utils;
-using Macrocosm.Content.Rockets.Construction;
+using Macrocosm.Content.Rockets.LaunchPads;
 using Terraria;
 using Terraria.IO;
 using Terraria.Localization;
@@ -34,7 +34,7 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 				if (Main.tile[spawnTileX, tileY].HasTile)
 				{
 					Main.spawnTileY = tileY - 2;
-					LaunchPadLocations.SetDefaultLocation(subworld, Utility.SpawnWorldPosition);
+					LaunchPadManager.SetDefaultLaunchPad(subworld, new(Utility.SpawnTilePoint16));
 					break;
 				}
 			}

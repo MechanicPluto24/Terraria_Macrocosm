@@ -2,7 +2,6 @@
 using System.Linq;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Rockets.Construction;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;

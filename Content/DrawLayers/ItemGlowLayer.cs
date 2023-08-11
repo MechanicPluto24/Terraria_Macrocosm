@@ -42,7 +42,7 @@ namespace Macrocosm.Content.DrawLayers
 
 			if (heldItem.TryGetGlobalItem(out GlowmaskGlobalItem result))
 			{
-				Texture2D glowTexture = result.texture;
+				Texture2D glowTexture = result.Texture;
 
 				if (glowTexture != null)
 				{
