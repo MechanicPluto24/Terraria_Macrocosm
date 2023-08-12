@@ -79,10 +79,13 @@ namespace Macrocosm.Content.Rockets
         public static void DespawnAllRockets()
         {
 			for (int i = 0; i < MaxRockets; i++)
+            {
                 Rockets[i].Despawn();
-        }
+				Rockets[i] = new Rocket();
+			}
+		}
 
-        private static void DrawRockets(RocketDrawLayer layer)
+		private static void DrawRockets(RocketDrawLayer layer)
         {
 			for (int i = 0; i < MaxRockets; i++)
 			{
@@ -101,8 +104,9 @@ namespace Macrocosm.Content.Rockets
 
 		public override void ClearWorld()
 		{
-            Array.Fill(Rockets, new Rocket());
-		}
+			for (int i = 0; i < MaxRockets; i++)
+ 				Rockets[i] = new Rocket();
+ 		}
 
 		public override void SaveWorldData(TagCompound tag) => SaveRocketData(tag); 
         public override void LoadWorldData(TagCompound tag) => ReadSavedRocketData(tag);

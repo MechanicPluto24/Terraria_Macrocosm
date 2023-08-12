@@ -1,16 +1,10 @@
-﻿using Macrocosm.Common.Subworlds;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Terraria;
 using Terraria.GameContent.Generation;
 using Terraria.IO;
 using Terraria.WorldBuilding;
-using static Terraria.Main.CurrentFrameFlags;
 
 namespace Macrocosm.Common.DataStructures
 {

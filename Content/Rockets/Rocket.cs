@@ -16,6 +16,7 @@ using Macrocosm.Common.Subworlds;
 using System.Linq;
 using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.LaunchPads;
+using System.ComponentModel.Design;
 
 namespace Macrocosm.Content.Rockets
 {
@@ -160,7 +161,12 @@ namespace Macrocosm.Content.Rockets
 			{
 				// This is to ensure the location is properly assigned if subworld was just generated
 				if (TargetLandingPosition == default)
-					TargetLandingPosition = LaunchPadManager.GetDefaultLaunchPad(CurrentSubworld).Position;
+				{
+					LaunchPad launchPad = LaunchPadManager.GetDefaultLaunchPad(CurrentSubworld);
+
+					if (launchPad is not null)
+						TargetLandingPosition = launchPad.Position;
+				}
 
 				Center = new(TargetLandingPosition.X, Center.Y);
 			}	
@@ -250,6 +256,24 @@ namespace Macrocosm.Content.Rockets
 		/// <summary> Gets the RocketPlayer bound to the provided player ID </summary>
 		/// <param name="playerID"> The player ID </param>
 		public RocketPlayer GetRocketPlayer(int playerID) => Main.player[playerID].RocketPlayer();
+
+		/// <summary> Gets the commander of this rocket </summary>
+		public RocketPlayer GetCommander()
+		{
+			if (Main.netMode == NetmodeID.SinglePlayer)
+			{
+				return GetRocketPlayer(Main.myPlayer);
+			}
+			else
+			{
+				if (TryFindingCommander(out int id))
+					return GetRocketPlayer(id);
+				else if (AnyEmbarkedPlayers(out id))
+					return GetRocketPlayer(id);
+				else
+					return null;
+			}
+		}
 
 		/// <summary> Checks whether the provided player ID is on this rocket </summary>
 		/// <param name="playerID"> The player ID </param>
@@ -528,44 +552,43 @@ namespace Macrocosm.Content.Rockets
 			if (Main.netMode == NetmodeID.Server)
 				return;
 
-			RocketPlayer commander;
-			if (Main.netMode == NetmodeID.SinglePlayer)
- 				commander = GetRocketPlayer(Main.myPlayer);
- 			else  
-			{
-				if (TryFindingCommander(out int id))
-					commander = GetRocketPlayer(id);
-				else if (AnyEmbarkedPlayers(out id))
-					commander = GetRocketPlayer(id);
-				else
-					return;
- 			}
-
 			if (CheckPlayerInRocket(Main.myPlayer))
 			{
+				RocketPlayer commander = GetCommander();
+
+				if(commander is null)
+				{
+					HandleWorldTravelFailure("Error: Could not find the commander of Rocket " + WhoAmI);
+					return;
+				}
+
 				CurrentSubworld = commander.TargetSubworldID;
 				//NetSync();
 
-				// if(commander.TargetLandingPosition != Vector2.Zero) // (or nullable Vector2?)
-				//   TargetLandingPosition = commander.TargetLandingPosition;
-				// else 
-				TargetLandingPosition = LaunchPadManager.GetDefaultLaunchPad(commander.TargetSubworldID).Position;
- 
+				//LaunchPad launchPad = commander.SelectedLaunchPad;
+				LaunchPad launchPad = LaunchPadManager.GetDefaultLaunchPad(commander.TargetSubworldID);
+
+				if(launchPad is not null) 
+					TargetLandingPosition = launchPad.Position;
+				else
+					TargetLandingPosition = default;
+
 				if (commander.TargetSubworldID == "Earth")
 					SubworldSystem.Exit();
 				else if (commander.TargetSubworldID != null && commander.TargetSubworldID != "")
 				{
 					if (!SubworldSystem.Enter(Macrocosm.Instance.Name + "/" + commander.TargetSubworldID))
-					{
-						// Stay here if entering the subworld fails, for whatever reason
-						CurrentSubworld = MacrocosmSubworld.CurrentSubworld;
-						string message = "Error: Failed entering target subworld: " + commander.TargetSubworldID + ", staying on " + MacrocosmSubworld.CurrentSubworld;
-
-						Utility.Chat(message, Color.Red);
-						Macrocosm.Instance.Logger.Error(message);
-					}
-				}
+						HandleWorldTravelFailure("Error: Failed entering target subworld: " + commander.TargetSubworldID + ", staying on " + MacrocosmSubworld.CurrentSubworld);
+ 				}
 			}
+		}
+
+		// Called if travel to the target subworld fails
+		private void HandleWorldTravelFailure(string message)
+		{
+			CurrentSubworld = MacrocosmSubworld.CurrentSubworld;
+			Utility.Chat(message, Color.Red);
+			Macrocosm.Instance.Logger.Error(message);
 		}
 	}
 }

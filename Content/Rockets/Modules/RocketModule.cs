@@ -33,12 +33,14 @@ namespace Macrocosm.Content.Rockets.Modules
 			set => Position = value - Size / 2f;
 		}
 
-		/// <summary> The module's collision hitbox. To get dimensions, use <see cref="Hitbox.Width"/> and <see cref="Hitbox.Height"/> </summary>
-		public virtual Rectangle Hitbox => new((int)Position.X, (int)Position.Y, Texture.Width, Texture.Height);
+		public abstract int Width { get; }
+		public abstract int Height { get; }
 
 		/// <summary> The module's hitbox size as a vector </summary>
 		public Vector2 Size => new(Hitbox.Width, Hitbox.Height);
 
+		/// <summary> The module's collision hitbox. </summary>
+		public virtual Rectangle Hitbox => new((int)Position.X, (int)Position.Y, Width, Height);
 
 		/// <summary> The module's draw origin </summary>
 		protected virtual Vector2 Origin => new(0, 0);
