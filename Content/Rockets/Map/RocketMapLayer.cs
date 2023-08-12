@@ -17,7 +17,7 @@ namespace Macrocosm.Content.Rockets.Map
 
             foreach (Rocket rocket in RocketManager.Rockets)
             {
-                if(!rocket.ActiveInCurrentSubworld)
+                if(!rocket.ActiveInCurrentWorld)
                     continue;
 
                 if (context.Draw(texture, (rocket.Center + new Vector2(0, rocket.Bounds.Height/2f)) / 16f, Color.White, new SpriteFrame(1, 1, 0, 0), 0.95f, 0.95f, Alignment.Bottom).IsMouseOver)

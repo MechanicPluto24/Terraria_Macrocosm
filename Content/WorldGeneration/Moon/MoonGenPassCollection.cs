@@ -491,7 +491,6 @@ namespace Macrocosm.Content.WorldGeneration.Moon
                 if (Main.tile[spawnTileX, tileY].HasTile)
 				{
                     Main.spawnTileY = tileY - 2;
-                    LaunchPadManager.SetDefaultLaunchPad(Subworlds.Moon.Instance.Name, new LaunchPad(Main.spawnTileX, Main.spawnTileY));
 					break;
                 }
             }
