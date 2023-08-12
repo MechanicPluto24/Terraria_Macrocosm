@@ -95,11 +95,9 @@ namespace Macrocosm.Common.Subworlds
 			return base.GetGravity(entity);
 		}
 
-		// Data to copy between subworlds, also provided to SubLib
-		private TagCompound dataCopyTag;
 		public override void CopyMainWorldData()
 		{
-            dataCopyTag = new();
+			TagCompound dataCopyTag = new();
 
             WorldDataSystem.Instance.CopyWorldData(dataCopyTag);
 			RocketManager.SaveRocketData(dataCopyTag);
@@ -112,12 +110,12 @@ namespace Macrocosm.Common.Subworlds
 
 		public override void ReadCopiedMainWorldData()
 		{
+			TagCompound dataCopyTag = SubworldSystem.ReadCopiedWorldData<TagCompound>("Macrocosm:copiedData");
+
 			WorldDataSystem.Instance.ReadCopiedWorldData(dataCopyTag);
 			RocketManager.ReadSavedRocketData(dataCopyTag);
 			CustomizationStorage.LoadUnlockedStatus(dataCopyTag);
 			LaunchPadManager.LoadLaunchPads(dataCopyTag);
-
-			dataCopyTag = null;
         }
 
         // Should these be different?

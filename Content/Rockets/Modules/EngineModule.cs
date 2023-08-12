@@ -15,8 +15,8 @@ namespace Macrocosm.Content.Rockets.Modules
 		public bool RearLandingLegRaised { get; set; } = false;
 		public Nameplate Nameplate { get; set; } = new();
 
-		// Add rear booster and its read landing leg to the hixbox
-		public override Rectangle Hitbox => base.Hitbox with { Height = base.Hitbox.Height + (RearLandingLegRaised ? 18 : 26) };
+		public override int Width => 120;
+		public override int Height => 302 + (RearLandingLegRaised ? 18 : 26);
 
 		public override void Draw(SpriteBatch spriteBatch, Vector2 screenPos, Color ambientColor)
         {

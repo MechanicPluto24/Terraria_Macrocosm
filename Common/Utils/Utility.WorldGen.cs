@@ -11,6 +11,7 @@ using Terraria.Localization;
 using Macrocosm.Content.WorldGeneration.Base;
 using Macrocosm.Common.Bases;
 using System.Collections.Generic;
+using Macrocosm.Common.DataStructures;
 
 namespace Macrocosm.Common.Utils
 {

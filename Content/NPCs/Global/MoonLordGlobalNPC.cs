@@ -16,19 +16,6 @@ namespace Macrocosm.Content.NPCs.Global
 		{
 			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<CortexFragment>(), 10));
 		}
-
-		/*
-		public override void SetBestiary(NPC npc, BestiaryDatabase database, BestiaryEntry bestiaryEntry)
-		{
-			bestiaryEntry.Info.RemoveAll(e => e is FlavorTextBestiaryInfoElement); // removes the Vanilla lore text
-
-			bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[] {
-				new FlavorTextBestiaryInfoElement(
-					"The Vortex Titan, and ruler of the Moon. His strength and abilities are matched only by his obsession with conquering Earth.")
-			});
-
-		}
-		*/
 	}
 }
 

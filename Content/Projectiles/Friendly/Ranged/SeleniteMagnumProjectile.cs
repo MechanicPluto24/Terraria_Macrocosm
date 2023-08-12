@@ -2,12 +2,12 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Projectiles.Base;
 using Terraria.ModLoader;
 using Macrocosm.Content.Dusts;
 using Terraria.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Content.Particles;
+using Macrocosm.Common.Bases;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {

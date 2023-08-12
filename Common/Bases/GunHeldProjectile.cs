@@ -138,6 +138,9 @@ namespace Macrocosm.Common.Bases
         {
             UpdateCenterAndDirection();
 
+            if (Projectile.owner != Main.myPlayer)
+                return;
+
             float mouseDirectionRotation = DirectionToMouse.ToRotation();
             int newPlayerDirection = MathF.Abs(mouseDirectionRotation) <= MathHelper.PiOver2 ? 1 : -1;
             if (newPlayerDirection != Player.direction)
@@ -161,6 +164,8 @@ namespace Macrocosm.Common.Bases
             }
 
             currentRecoil *= GunHeldProjectileData.RecoilDiminish;
+
+            Projectile.netUpdate = true;
         }
 
         public override void Draw(Color lightColor)
