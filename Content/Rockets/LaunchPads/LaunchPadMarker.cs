@@ -90,9 +90,9 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
 					MarkerState = MarkerState.Vacant;
 
-					LaunchPad = LaunchPadManager.GetLaunchPadAtTileCoordinates(MacrocosmSubworld.CurrentSubworld, new(x, y));
+					LaunchPad = LaunchPadManager.GetLaunchPadAtTileCoordinates(MacrocosmSubworld.CurrentWorld, new(x, y));
 					if (LaunchPad is null)
- 						LaunchPad = LaunchPad.Create(MacrocosmSubworld.CurrentSubworld, x, y);
+ 						LaunchPad = LaunchPad.Create(MacrocosmSubworld.CurrentWorld, x, y);
  
 					Pair.LaunchPad = LaunchPad;
 					LaunchPad.EndTile = Pair.Position;
@@ -179,7 +179,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			{
 				if (HasLaunchPad)
 				{
-					LaunchPadManager.Remove(MacrocosmSubworld.CurrentSubworld, LaunchPad);
+					LaunchPadManager.Remove(MacrocosmSubworld.CurrentWorld, LaunchPad);
 					LaunchPad = null;
 					//TODO: NetSync ?
 				}
@@ -247,7 +247,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 				Pair.IsPair = false;
 
 			if (HasLaunchPad)
-				LaunchPadManager.Remove(MacrocosmSubworld.CurrentSubworld, LaunchPad);
+				LaunchPadManager.Remove(MacrocosmSubworld.CurrentWorld, LaunchPad);
         }
     }
 }

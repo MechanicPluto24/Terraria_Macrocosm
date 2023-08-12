@@ -33,7 +33,7 @@ namespace Macrocosm.Common.Subworlds
 		/// Returns <c>Earth</c> if none active.
 		/// Use this for situations where other mods' subworlds will behave differently from Earth (the main world).
 		/// </summary>
-		public static string CurrentSubworld { 
+		public static string CurrentWorld { 
 			get 
 			{
 				if (SubworldSystem.AnyActive<Macrocosm>())

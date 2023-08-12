@@ -14,6 +14,7 @@ using Terraria.ModLoader.IO;
 using Macrocosm.Content.Rockets.Customization;
 using System;
 using Macrocosm.Content.Rockets.LaunchPads;
+using Terraria.ID;
 
 namespace Macrocosm.Common.Subworlds
 {
@@ -95,9 +96,10 @@ namespace Macrocosm.Common.Subworlds
 			return base.GetGravity(entity);
 		}
 
+		TagCompound dataCopyTag;
 		public override void CopyMainWorldData()
 		{
-			TagCompound dataCopyTag = new();
+			dataCopyTag = new();
 
             WorldDataSystem.Instance.CopyWorldData(dataCopyTag);
 			RocketManager.SaveRocketData(dataCopyTag);
@@ -110,7 +112,10 @@ namespace Macrocosm.Common.Subworlds
 
 		public override void ReadCopiedMainWorldData()
 		{
-			TagCompound dataCopyTag = SubworldSystem.ReadCopiedWorldData<TagCompound>("Macrocosm:copiedData");
+			// The data is sent to a MP subserver as packets, as it doesn't exist in its memory otherwise
+			// For some reason, this returns wrong data in single player, possibly even in MP, using the local tag in memory
+			if(Main.netMode != NetmodeID.SinglePlayer)
+				dataCopyTag = SubworldSystem.ReadCopiedWorldData<TagCompound>("Macrocosm:copiedData");
 
 			WorldDataSystem.Instance.ReadCopiedWorldData(dataCopyTag);
 			RocketManager.ReadSavedRocketData(dataCopyTag);

@@ -59,16 +59,16 @@ namespace Macrocosm.Content.Rockets
 		[NetSync] public float FuelCapacity = 1000f;
 
 		/// <summary> The rocket's current world, "Earth" if active and not in a subworld. Other mod's subworlds have the mod name prepended </summary>
-		[NetSync] public string CurrentSubworld;
+		[NetSync] public string CurrentWorld;
 
-		/// <summary> Whether the rocket is active in the current subworld and should be updated and visible </summary>
-		public bool ActiveInCurrentSubworld => Active && CurrentSubworld == MacrocosmSubworld.CurrentSubworld;
+		/// <summary> Whether the rocket is active in the current world and should be updated and visible </summary>
+		public bool ActiveInCurrentWorld => Active && CurrentWorld == MacrocosmSubworld.CurrentWorld;
 
 		/// <summary> The rocket's bounds width </summary>
-		public static int Width = 276;
+		public const int Width = 276;
 
 		/// <summary> The rocket's bounds height </summary>
-		public static int Height = 594;
+		public const int Height = 594;
 
 		/// <summary> The size of the rocket's bounds </summary>
 		public static Vector2 Size => new(Width, Height);
@@ -150,27 +150,35 @@ namespace Macrocosm.Content.Rockets
 
 		public void OnCreation()
 		{
-			CurrentSubworld = MacrocosmSubworld.CurrentSubworld;
+			CurrentWorld = MacrocosmSubworld.CurrentWorld;
 		}
 
+		/// <summary> Called when spawning into a new world </summary>
 		public void OnWorldSpawn()
 		{
 			ResetAnimation();
 
-			if (Landing)
+			if (Landing && ActiveInCurrentWorld)
 			{
-				// This is to ensure the location is properly assigned if subworld was just generated
+				// Travel to spawn point if a specific launchpad has not been set
 				if (TargetLandingPosition == default)
-				{
-					LaunchPad launchPad = LaunchPadManager.GetDefaultLaunchPad(CurrentSubworld);
-
-					if (launchPad is not null)
-						TargetLandingPosition = launchPad.Position;
-				}
-
+ 					TargetLandingPosition = Utility.SpawnWorldPosition;
+ 
 				Center = new(TargetLandingPosition.X, Center.Y);
 			}	
 		}
+
+		/// <summary> Called when a subworld is generated </summary>
+		public void OnSubworldGenerated() 
+		{
+			if (Landing && ActiveInCurrentWorld)
+			{
+				// Target landing position always defaults to the spawn point just set on worldgen
+				TargetLandingPosition = Utility.SpawnWorldPosition;
+				Center = new(TargetLandingPosition.X, Center.Y);
+			}
+		}
+
 
 		/// <summary> Update the rocket </summary>
 		public void Update()
@@ -222,7 +230,7 @@ namespace Macrocosm.Content.Rockets
 			}
 
 			Active = false;
-			CurrentSubworld = "";
+			CurrentWorld = "";
 			NetSync();
 		}
 
@@ -562,11 +570,11 @@ namespace Macrocosm.Content.Rockets
 					return;
 				}
 
-				CurrentSubworld = commander.TargetSubworldID;
+				CurrentWorld = commander.TargetSubworldID;
 				//NetSync();
 
 				//LaunchPad launchPad = commander.SelectedLaunchPad;
-				LaunchPad launchPad = LaunchPadManager.GetDefaultLaunchPad(commander.TargetSubworldID);
+				LaunchPad launchPad = null; 
 
 				if(launchPad is not null) 
 					TargetLandingPosition = launchPad.Position;
@@ -578,7 +586,7 @@ namespace Macrocosm.Content.Rockets
 				else if (commander.TargetSubworldID != null && commander.TargetSubworldID != "")
 				{
 					if (!SubworldSystem.Enter(Macrocosm.Instance.Name + "/" + commander.TargetSubworldID))
-						HandleWorldTravelFailure("Error: Failed entering target subworld: " + commander.TargetSubworldID + ", staying on " + MacrocosmSubworld.CurrentSubworld);
+						HandleWorldTravelFailure("Error: Failed entering target subworld: " + commander.TargetSubworldID + ", staying on " + MacrocosmSubworld.CurrentWorld);
  				}
 			}
 		}
@@ -586,7 +594,7 @@ namespace Macrocosm.Content.Rockets
 		// Called if travel to the target subworld fails
 		private void HandleWorldTravelFailure(string message)
 		{
-			CurrentSubworld = MacrocosmSubworld.CurrentSubworld;
+			CurrentWorld = MacrocosmSubworld.CurrentWorld;
 			Utility.Chat(message, Color.Red);
 			Macrocosm.Instance.Logger.Error(message);
 		}

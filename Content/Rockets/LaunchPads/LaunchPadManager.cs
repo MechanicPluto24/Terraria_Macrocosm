@@ -45,7 +45,6 @@ namespace Macrocosm.Content.Rockets.LaunchPads
  		}
 
 		public static bool Any(string subworldId) => GetLaunchPads(subworldId).Any();
-		public static bool AnyNonDefault(string subworldId) => GetLaunchPads(subworldId).Any(lp => !lp.IsDefault);
 		public static bool None(string subworldId) => !Any(subworldId);
 
 
@@ -63,28 +62,6 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 		public static LaunchPad GetLaunchPadAtTileCoordinates(string subworldId, Point16 startTile)
 			=> GetLaunchPads(subworldId).FirstOrDefault(lp => lp.StartTile == startTile);
 
-		public static LaunchPad GetDefaultLaunchPad(string subworldId)
-		{
-			List<LaunchPad> launchPads = GetLaunchPads(subworldId);
-			return launchPads.FirstOrDefault(lp => lp.IsDefault);
-		}
-
-		public static void SetDefaultLaunchPad(string subworldId, LaunchPad launchPad)
-		{
-			List<LaunchPad> launchPads = GetLaunchPads(subworldId);
- 
-			LaunchPad existingDefault = GetDefaultLaunchPad(subworldId);
- 
-			int defaultIndex = launchPads.IndexOf(existingDefault);
-
-			if (defaultIndex >= 0)
- 				launchPads[defaultIndex] = launchPad;
-			else
-				Add(subworldId, launchPad);
-
-			launchPad.IsDefault = true;
-		}
-
 		private int checkTimer;
 
 		public override void PostUpdateNPCs()
@@ -95,8 +72,8 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			{
 				checkTimer = 0;
 
-				if (launchPadStorage.ContainsKey(MacrocosmSubworld.CurrentSubworld))
-					foreach (LaunchPad launchPad in launchPadStorage[MacrocosmSubworld.CurrentSubworld])
+				if (launchPadStorage.ContainsKey(MacrocosmSubworld.CurrentWorld))
+					foreach (LaunchPad launchPad in launchPadStorage[MacrocosmSubworld.CurrentWorld])
 						launchPad.Update();
 			}
 		}
@@ -105,16 +82,11 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 		{
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, null, null, null, Main.GameViewMatrix.ZoomMatrix);
 
-			if (launchPadStorage.ContainsKey(MacrocosmSubworld.CurrentSubworld))
- 				foreach (LaunchPad launchPad in launchPadStorage[MacrocosmSubworld.CurrentSubworld])
+			if (launchPadStorage.ContainsKey(MacrocosmSubworld.CurrentWorld))
+ 				foreach (LaunchPad launchPad in launchPadStorage[MacrocosmSubworld.CurrentWorld])
  					launchPad.Draw(Main.spriteBatch, Main.screenPosition);
  
 			Main.spriteBatch.End();
-		}
-
-		public override void PostWorldGen()
-		{
-			SetDefaultLaunchPad("Earth", new LaunchPad(Utility.SpawnTilePoint16));
 		}
 
 		public override void ClearWorld()
@@ -137,8 +109,6 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			foreach (var lpKvp in launchPadStorage)
 				if (tag.ContainsKey(lpKvp.Key))
 					launchPadStorage[lpKvp.Key] = (List<LaunchPad>)tag.GetList<LaunchPad>(lpKvp.Key);
-
-			SetDefaultLaunchPad(MacrocosmSubworld.CurrentSubworld, new LaunchPad(Utility.SpawnTilePoint16));
  		}
 	}
 }

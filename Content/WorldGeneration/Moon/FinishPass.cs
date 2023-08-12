@@ -34,7 +34,6 @@ namespace Macrocosm.Content.WorldGeneration.Moon
 				if (Main.tile[spawnTileX, tileY].HasTile)
 				{
 					Main.spawnTileY = tileY - 2;
-					LaunchPadManager.SetDefaultLaunchPad(subworld, new(Utility.SpawnTilePoint16));
 					break;
 				}
 			}
