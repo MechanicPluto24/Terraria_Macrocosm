@@ -102,7 +102,7 @@ namespace Macrocosm.Content.Rockets
 		/// <summary> List of the module names, in the customization access order </summary>
 		public List<string> ModuleNames => Modules.Keys.ToList();
 
-		/// <summary> List of all the rocket's modules, in their order found in ModuleNames </summary>
+		/// <summary> Dictionary of all the rocket's modules by name, in their order found in ModuleNames </summary>
 		public Dictionary<string, RocketModule> Modules = new()
 		{
 			{ "CommandPod", new CommandPod() },

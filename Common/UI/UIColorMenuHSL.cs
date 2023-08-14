@@ -11,10 +11,11 @@ using Terraria.Audio;
 using Terraria.ID;
 using Macrocosm.Common.Utils;
 using Terraria.ModLoader;
+using System;
 
 namespace Macrocosm.Common.UI
 {
-	public class UIColorHSLProvider
+	public class UIColorMenuHSL : UIPanel
 	{
 		public enum HSLSliderId
 		{
@@ -23,99 +24,125 @@ namespace Macrocosm.Common.UI
 			Luminance
 		}
 
-		public Color PendingColor { get; private set; }
+		public Color PendingColor { get; private set; } = Color.White;
+		public Color PreviousColor { get; private set; } = Color.White;
 
-		private Vector3 currentColorHSL;
+		private Vector3 currentColorHSL = Color.White.ToHSL();
+
+		private UIPanel container;
 
 		private UIText hslText; 
-		private UIPanel container;
+		private UIPanel hslTextPanel; 
 
 		private UIColoredSlider hueSlider;
 		private UIColoredSlider saturationSlider;
 		private UIColoredSlider luminanceSlider;
 
-		private UIElement copyHexButton;
-		private UIElement pasteHexButton;
-		private UIElement randomColorButton;
+		private UIPanelIconButton copyButton;
+		private UIPanelIconButton pasteButton;
+		private UIPanelIconButton randomizeButton;
 
-		public UIPanel ProvideHSLMenu()
+		public UIColorMenuHSL()
 		{
-			container = new()
-			{
-				Width = new(0f, 0.485f),
-				Height = new(0, 0.25f),
-				HAlign = 0.98f,
-				Top = new(0f, 0.095f),
-				BackgroundColor = new Color(53, 72, 135),
-			    BorderColor = new Color(89, 116, 213, 255)
-			};
-
-			container.SetPadding(10f);
+			Width = new(0f, 0.62f);
+			Height = new(0, 0.25f);
+			BackgroundColor = new Color(53, 72, 135);
+			BorderColor = new Color(89, 116, 213, 255);
+ 
+			SetPadding(6f);
 
 			hueSlider = CreateHSLSlider(HSLSliderId.Hue);
 			saturationSlider = CreateHSLSlider(HSLSliderId.Saturation);
 			luminanceSlider = CreateHSLSlider(HSLSliderId.Luminance);
 
-			container.Append(hueSlider);
-			container.Append(saturationSlider);
-			container.Append(luminanceSlider);
-			UIPanel uIPanel = new()
+			Append(hueSlider);
+			Append(saturationSlider);
+			Append(luminanceSlider);
+
+			hslTextPanel = new()
 			{
-				VAlign = 1f,
-				HAlign = 1f,
-				Width = StyleDimension.FromPixelsAndPercent(0f, 0.4f),
-				Height = StyleDimension.FromPixelsAndPercent(0f, 0.235f),
+				VAlign = 0.94f,
+				Width = new(0f, 0.36f),
+				Height = new(0f, 0.22f),
+				Left = new(0f, 0.03f),
 				BackgroundColor = new Color(53, 72, 135),
 				BorderColor = new Color(89, 116, 213, 255)
 			};
+			hslTextPanel.SetPadding(2f);
 
-			hslText = new("#FFFFFF", 0.9f)
+			hslText = new("#FFFFFF", 1f)
 			{
-				VAlign = 0.5f,
+				VAlign = 0.45f,
 				HAlign = 0.5f
 			};
 
-			uIPanel.Append(hslText);
-			container.Append(uIPanel);
+			hslTextPanel.Append(hslText);
+			Append(hslTextPanel);
 
-			UIPanelIconButton copyButton = new(Main.Assets.Request<Texture2D>("Images/UI/CharCreation/Copy"))
+			copyButton = new(Main.Assets.Request<Texture2D>("Images/UI/CharCreation/Copy"))
 			{
-				VAlign = 1f,
-				HAlign = 0f,
-				Left = StyleDimension.FromPixelsAndPercent(0f, 0f)
+				VAlign = 0.93f,
+				Left = new(0f, 0.45f),
+				HoverText = Language.GetText("Mods.Macrocosm.UI.Common.CopyColorHex")
 			};
-
 			copyButton.OnLeftMouseDown += Click_CopyHex;
-			container.Append(copyButton);
-			copyHexButton = copyButton;
+			Append(copyButton);
 
-			UIPanelIconButton pasteButton = new(Main.Assets.Request<Texture2D>("Images/UI/CharCreation/Paste"))
+			pasteButton = new(Main.Assets.Request<Texture2D>("Images/UI/CharCreation/Paste"))
 			{
-				VAlign = 1f,
-				HAlign = 0f,
-				Left = StyleDimension.FromPixelsAndPercent(40f, 0f)
+				VAlign = 0.93f,
+				Left = new(0f, 0.61f),
+				HoverText = Language.GetText("Mods.Macrocosm.UI.Common.PasteColorHex")
+
 			};
 
 			pasteButton.OnLeftMouseDown += Click_PasteHex;
-			container.Append(pasteButton);
-			pasteHexButton = pasteButton;
+			Append(pasteButton);
 
-			UIPanelIconButton randomizeButton = new(Main.Assets.Request<Texture2D>("Images/UI/CharCreation/Randomize"))
+			randomizeButton = new(Main.Assets.Request<Texture2D>("Images/UI/CharCreation/Randomize"))
 			{
-				VAlign = 1f,
-				HAlign = 0f,
-				Left = StyleDimension.FromPixelsAndPercent(80f, 0f)
+				VAlign = 0.93f,
+				Left = new(0f, 0.77f),
+				HoverText = Language.GetText("Mods.Macrocosm.UI.Common.RandomizeColor")
 			};
 
 			randomizeButton.OnLeftMouseDown += Click_RandomizeSingleColor;
-			container.Append(randomizeButton);
-			randomColorButton = randomizeButton;
+			Append(randomizeButton);
+		}
 
-			copyButton.SetSnapPoint("Low", 0);
-			pasteButton.SetSnapPoint("Low", 1);
-			randomizeButton.SetSnapPoint("Low", 2);
+		public void SetupApplyAndCancelButtons(Action onApplyButtonClicked, Action onCancelButtonClicked)
+		{
+			hslTextPanel.Left = new(0f, 0.01f);
+			copyButton.Left = new(0f, 0.38f);
+			pasteButton.Left = new(0f, 0.5f);
+			randomizeButton.Left = new(0f, 0.625f);
 
-			return container;
+			UIPanelIconButton applyButton = new(ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Symbols/CheckmarkWhite"))
+			{
+				VAlign = 0.93f,
+				Left = new(0f, 0.88f),
+				HoverText = Language.GetText("Mods.Macrocosm.UI.Common.ApplyColor")
+
+			};
+			applyButton.OnLeftClick += (_, _) => 
+			{
+				CaptureCurrentColor();
+				onApplyButtonClicked();
+			};
+			Append(applyButton);
+
+			UIPanelIconButton cancelButton = new(ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Symbols/CrossmarkWhite"))
+			{
+				VAlign = 0.93f,
+				Left = new(0f, 0.76f),
+				HoverText = Language.GetText("Mods.Macrocosm.UI.Common.CancelColor")
+			};
+			cancelButton.OnLeftClick += (_, _) => 
+			{ 
+				SetColorRGB(PreviousColor);
+				onCancelButtonClicked();
+			};
+			Append(cancelButton);
 		}
 
 		public void SetColorSetEvent(UIElement.MouseEvent mouseEvent)
@@ -128,10 +155,10 @@ namespace Macrocosm.Common.UI
 		public UIColoredSlider CreateHSLSlider(HSLSliderId id)
 		{
 			UIColoredSlider uIColoredSlider = CreateHSLSliderButtonBase(id);
-			uIColoredSlider.Width = StyleDimension.FromPixelsAndPercent(0f, 1f);
-			uIColoredSlider.Left.Set(-10f, 0f);
+			uIColoredSlider.Width.Set(0f, 1f);
+			uIColoredSlider.Left.Set(0f, -0.15f);
 			uIColoredSlider.Top.Set(0f, 0.2f * (int)id);
-			uIColoredSlider.SetSnapPoint("Middle", (int)id);
+ 			uIColoredSlider.SetSnapPoint("Middle", (int)id);
 			return uIColoredSlider;
 		}
 
@@ -234,6 +261,18 @@ namespace Macrocosm.Common.UI
 				currentColorHSL = hsl;
 				UpdateHexText(Utility.HSLToRGB(hsl));
 			}
+		}
+
+		public void CaptureCurrentColor()
+		{
+			PreviousColor = Utility.HSLToRGB(currentColorHSL);
+		}
+
+		public void SetColorRGB(Color rgb)
+		{
+			PendingColor = rgb;
+			currentColorHSL = rgb.ToHSL();
+			UpdateHexText(rgb);
 		}
 
 		public void SetColorHSL(Vector3 hsl)

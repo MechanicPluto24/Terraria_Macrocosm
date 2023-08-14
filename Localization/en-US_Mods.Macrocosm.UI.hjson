@@ -1,0 +1,176 @@
+Common: {
+	AlignLeft: Align left
+	AlignRight: Align right
+	AlignCenterHorizontal: Align center
+	AlignTop: Align top
+	AlignBottom: Align bottom
+	AlignCenterVertical: Align center
+	CopyColorHex: Copy color to clipboard
+	PasteColorHex: Paste color from clipboard
+	RandomizeColor: Randomize color
+	ApplyColor: Apply color
+	CancelColor: Discard color
+}
+
+Rocket: {
+	Common: {
+		Close: Close
+		Navigation: Navigation
+		Checklist: Pre-flight checklist
+		Crew: Crew
+		ZoomIn: Zoom In
+		ZoomOut: Zoom Out
+		Payload: Payload
+		Fuel: Fuel
+		Customization: Customization
+		CustomizationApply: Apply rocket appearance changes
+		CustomizationCancel: Discard rocket appearance changes
+		ResetModule: Reset module to default appearance
+		ResetRocket: Reset rocket to default appearance
+	}
+
+	Modules: {
+		CommandPod: Command Pod
+		ServiceModule: Service Module
+		ReactorModule: Reactor Module
+		EngineModule: Engine Module
+		BoosterLeft: Left Booster
+		BoosterRight: Right Booster
+	}
+
+	LaunchButton: {
+		NoTarget: NO TARGET
+		CantReach: INACCESSIBLE
+		AlreadyHere: CURRENT LOCATION
+		ZoomIn: ZOOM IN
+		Launch: LAUNCH
+	}
+
+	Gravity: {
+		Name: Gravity
+		UnitG: "{0} G {1}{2}{3}"
+		UnitMetric: "{0} m/s² {1}{2}{3}"
+		UnitImperial: "{0} ft/s² {1}{2}{3}"
+	}
+
+	Radius: {
+		Name: Radius
+		UnitMetric: "{0} km {1}{2}{3}"
+		UnitImperial: "{0} {^0:mile;miles} {1}{2}{3}"
+	}
+
+	DayPeriod: {
+		Name: Day Period
+		UnitDays: "{0} {^0:day;days} {1}{2}{3}"
+		UnitHours: "{0} {^0:hour;hours} {1}{2}{3}"
+	}
+
+	Special: {
+		TidallyLocked: Tidally Locked
+		Unstable: Unstable
+	}
+
+	ThreatLevel: {
+		Name: Threat Level
+		Threat1: "{0} - Harmless"
+		Threat2: "{0} - Arduous"
+		Threat3: "{0} - Challenging"
+		Threat4: "{0} - Dangerous"
+		Threat5: "{0} - Treacherous"
+		Threat6: "{0} - Lethal"
+		Threat7: "{0} - Cataclysmic"
+		Threat8: "{0} - Nightmare"
+		Threat9: "{0} - Apollyon"
+		Threat10: "{0} - Unknown"
+	}
+
+	Hazard: {
+		Name: Hazard
+		MeteorStorms: Meteor Storms
+		SolarStorms: Solar Storms
+	}
+
+	Checklist: {
+		Fuel: {
+			True: {
+				Display: Enough fuel
+				Hover: default
+			}
+
+			False: {
+				Display: Not enough fuel
+				Hover: You need more fuel to launch the rocket
+			}
+		}
+
+		Destination: {
+			True: {
+				Display: Destination selected
+				Hover: default
+			}
+
+			False: {
+				Display: No destination selected
+				Hover: You need to select a destination for the rocket
+			}
+		}
+
+		Obstruction: {
+			True: {
+				Display: Path unobstructed
+				Hover: default
+			}
+
+			False: {
+				Display: Path obstructed
+				Hover: There is an obstruction in the rocket's flight path
+			}
+		}
+
+		Selected: {
+			True: {
+				Display: default
+				Hover: default
+			}
+
+			False: {
+				Display: Select a destination
+				Hover: default
+			}
+		}
+
+		NotHere: {
+			True: {
+				Display: default
+				Hover: default
+			}
+
+			False: {
+				Display: You are already here
+				Hover: default
+			}
+		}
+	}
+}
+
+LoadingScreenTips: {
+	Moon: {
+		Moon_Tip1: You've taken your first step into a larger world.
+		Moon_Tip2: The Moon takes much longer to rotate than the Earth. Make sure you have enough supplies to last through the night.
+		Moon_Tip3: Is the Moon really made of cheese? Dig down to its core to find out.
+		Moon_Tip4: Even on this airless rock, life finds a way. Always remain on guard.
+		Moon_Tip5: Take advantage of the Moon's low gravity, but remember your enemies will do the same.
+		Moon_Tip6: When the sanguine hour comes, it's time to hide.
+		Moon_Tip7: No atmosphere means no torches, but there are other ways of illuminating the darkness.
+		Moon_Tip8: Beware of solar storms!
+		Moon_Tip9: Moon Lord was just the beginning. What other horrors await you on our silver satellite?
+	}
+
+	Earth: {
+		Earth_Tip1: Returning for a beer?
+		Earth_Tip2: Did you know that there are more than 1 quadrillion ants roaming our Earth?
+		Earth_Tip3: Normal gravity can be quite punishing after a long trek in zero-g. You'll get used to it.
+		Earth_Tip4: Nearly seven billion deaths within the first 24 hours.
+		Earth_Tip5: You are never truly safe.
+	}
+}

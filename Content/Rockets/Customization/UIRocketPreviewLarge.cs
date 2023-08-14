@@ -7,9 +7,9 @@ using Terraria.GameContent.UI.Elements;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
-    public class UIRocketPreviewLarge : UIPanel
-    {
-        public Rocket Rocket = new();
+    public class UIRocketPreviewLarge : UIPanel, IRocketDataConsumer
+	{
+        public Rocket Rocket { get; set; }  
 
 		public string CurrentModuleName { get; set; } = "CommandPod";
 

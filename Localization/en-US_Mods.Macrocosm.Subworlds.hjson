@@ -1,0 +1,109 @@
+Sun: {
+	DisplayName: The Sun
+	FlavorText: default
+}
+
+Vulcan: {
+	DisplayName: Vulcan
+	FlavorText: default
+}
+
+Mercury: {
+	DisplayName: Mercury
+	FlavorText: default
+}
+
+Venus: {
+	DisplayName: Venus
+	FlavorText: default
+}
+
+Earth: {
+	DisplayName: Earth
+	FlavorText: Third planet from the Sun, and homeworld of humanity. Covered in lush green forests, liquid oceans, and an oxygen-rich atmosphere, it is the ideal world for life to comfortably thrive.
+}
+
+Moon: {
+	DisplayName: The Moon
+	FlavorText: Homeworld of the infamous Moon Lord, the Earth's Moon is a desolate, airless rock with an unforgiving environment. The Moon is well known for its high concentration of precious luminite, guarded by alien terrors that dwell beneath the dead moonscape.
+}
+
+Mars: {
+	DisplayName: Mars
+	FlavorText: default
+}
+
+Phobos: {
+	DisplayName: Phobos
+	FlavorText: default
+}
+
+Deimos: {
+	DisplayName: Deimos
+	FlavorText: default
+}
+
+Ceres: {
+	DisplayName: Ceres
+	FlavorText: default
+}
+
+Jupiter: {
+	DisplayName: Jupiter
+	FlavorText: default
+}
+
+Io: {
+	DisplayName: Io
+	FlavorText: default
+}
+
+Europa: {
+	DisplayName: Europa
+	FlavorText: default
+}
+
+Saturn: {
+	DisplayName: Saturn
+	FlavorText: default
+}
+
+Titan: {
+	DisplayName: Titan
+	FlavorText: default
+}
+
+Ouranos: {
+	DisplayName: Ouranos
+	FlavorText: default
+}
+
+Miranda: {
+	DisplayName: Miranda
+	FlavorText: default
+}
+
+Neptune: {
+	DisplayName: Neptune
+	FlavorText: default
+}
+
+Triton: {
+	DisplayName: Triton
+	FlavorText: default
+}
+
+Pluto: {
+	DisplayName: Pluto
+	FlavorText: default
+}
+
+Charon: {
+	DisplayName: Charon
+	FlavorText: default
+}
+
+Eris: {
+	DisplayName: Eris
+	FlavorText: default
+}

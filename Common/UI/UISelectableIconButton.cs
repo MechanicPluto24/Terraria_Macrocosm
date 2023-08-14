@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System;
 using Terraria;
 using Terraria.UI;
 
@@ -13,7 +14,28 @@ namespace Macrocosm.Common.UI
 
 		public bool DrawBorderIfSelected { get; set; } = true;
 
-		public bool Selected { get; set; }
+		public Action OnSelected { get; set; } = () => { };
+		public Action OnDeselected { get; set; } = () => { };
+
+		private bool selected;
+		public bool Selected 
+		{
+			get => selected;
+			set
+			{
+				if(!selected && value)
+					OnSelected();
+				
+				if(selected && !value)
+					OnDeselected();
+
+				selected = value;
+			}
+		}
+
+		public UISelectableIconButton() : base(Macrocosm.EmptyTexAsset)
+		{
+		}
 
 		public UISelectableIconButton(Asset<Texture2D> texture) : base(texture)
 		{
@@ -32,7 +54,7 @@ namespace Macrocosm.Common.UI
 		{
 			base.DrawSelf(spriteBatch);
 
-			if (Selected)
+			if (selected)
 			{
 				if(DrawBorderIfSelected)
 					spriteBatch.Draw(borderTexture.Value, GetDimensions().Position() + new Vector2(GetDimensions().Width, GetDimensions().Height) / 2f, null, BackPanelHoverBorderColor, 0f, borderTexture.Size() / 2f, 1f, SpriteEffects.None, 0f);
