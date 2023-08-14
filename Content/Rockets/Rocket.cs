@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework.Graphics;
 using SubworldLibrary;
 using System;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Macrocosm.Common.Netcode;
@@ -16,7 +15,6 @@ using Macrocosm.Common.Subworlds;
 using System.Linq;
 using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.LaunchPads;
-using System.ComponentModel.Design;
 
 namespace Macrocosm.Content.Rockets
 {

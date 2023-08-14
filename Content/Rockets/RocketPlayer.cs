@@ -138,13 +138,17 @@ namespace Macrocosm.Content.Rockets
 				if (Player.whoAmI == Main.myPlayer)
 				{
 					cameraModifier.TargetPosition = RocketManager.Rockets[RocketID].Center - new Vector2(Main.screenWidth, Main.screenHeight) / 2f;
-					
+
+					bool escapePressed = Player.controlInv && RocketUISystem.Active;
+
 					// Escape or 'R' will disembark this player, but not during flight
-					if ((Player.controlInv || Player.controlMount) && !(rocket.InFlight))
+					if ((escapePressed || Player.controlMount) && !(rocket.InFlight))
 						DisembarkFromRocket();
 
 					if (rocket.InFlight || rocket.Landing)
 						RocketUISystem.Hide();
+					else if (!RocketUISystem.Active)
+						RocketUISystem.Show(rocket);
 				}
 			}
 			else if (Player.whoAmI == Main.myPlayer)
@@ -155,8 +159,6 @@ namespace Macrocosm.Content.Rockets
 				if(cameraModifier is not null)
 					cameraModifier.ReturnToNormalPosition = true;
 			}
-
-			
 		}
 
 		public override void PreUpdateBuffs()

@@ -1,7 +1,6 @@
 ﻿using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.Payload;
-using Macrocosm.Content.Systems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -117,7 +116,6 @@ namespace Macrocosm.Content.Rockets.Navigation
 			});
 		}
 
-		// TODO: the tabbing logic with interface could use some linked list behavior (?)
 		private void SwitchTab(ITabUIElement newTab)
 		{
 			//window.GetChildrenWhere((child) => child is ITabUIElement).Cast<ITabUIElement>().ToList().ForEach((tab) => tab.OnTabClose());
@@ -134,6 +132,9 @@ namespace Macrocosm.Content.Rockets.Navigation
 			});
 		}
 
+
+		// TODO: There must be a way to unhardcode all of these. -- Feldy
+		// The tabbing logic with interface could use some linked list behavior (?) 
 		private void SetTab_Customization(UIMouseEvent evt, UIElement listeningElement)
 		{
 			SwitchTab(customization);
@@ -171,10 +172,6 @@ namespace Macrocosm.Content.Rockets.Navigation
 		public override void Update(GameTime gameTime)
 		{
 			base.Update(gameTime);
-
-			navigation.Rocket = Rocket;
-			customization.Rocket = Rocket;
-			payload.Rocket = Rocket;
 
 			Player player = Main.LocalPlayer;
 			player.mouseInterface = true;

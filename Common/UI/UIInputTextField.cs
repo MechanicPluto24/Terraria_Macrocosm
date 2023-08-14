@@ -49,9 +49,15 @@ namespace Macrocosm.Common.UI
 		}
 		protected override void DrawSelf(SpriteBatch spriteBatch)
 		{
-            Terraria.GameInput.PlayerInput.WritingText = CurrentlyInputtingText;
-			Main.instance.HandleIME();
-			string newString = Main.GetInputText(currentText);
+			string newString = currentText;
+
+			if (CurrentlyInputtingText)
+			{
+				Terraria.GameInput.PlayerInput.WritingText = CurrentlyInputtingText;
+				Main.instance.HandleIME();
+				newString = Main.GetInputText(currentText);
+			}
+           
 			if (newString != currentText)
 			{
 				currentText = newString;
