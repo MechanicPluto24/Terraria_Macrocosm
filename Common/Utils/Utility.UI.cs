@@ -6,6 +6,7 @@ using Macrocosm.Common.UI;
 using System;
 using System.Xml.Linq;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Input;
 
 namespace Macrocosm.Common.Utils
 {
@@ -60,6 +61,11 @@ namespace Macrocosm.Common.Utils
 			toRemove.Activate();
 		}
 
+		public static bool KeyPressed(this KeyboardState state, Keys key) => state.IsKeyDown(key) && !Main.oldKeyState.IsKeyDown(key);
+		public static bool KeyReleased(this KeyboardState state, Keys key) => !state.IsKeyDown(key) && Main.oldKeyState.IsKeyDown(key);
+		public static bool KeyPressed(Keys key) => Main.keyState.KeyPressed(key);
+        public static bool KeyReleased(Keys key) => Main.keyState.KeyReleased(key);
+   
 		public static bool UICloseConditions(this Player player) =>
             player.dead || !player.active || Main.editChest || Main.editSign || player.talkNPC >= 0 || !Main.playerInventory;
 

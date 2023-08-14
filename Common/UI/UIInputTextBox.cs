@@ -1,17 +1,12 @@
-﻿using Terraria.UI;
-using Terraria.GameContent.UI.Elements;
+﻿using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria.GameInput;
-using Terraria;
-using System.Linq;
 using Microsoft.Xna.Framework.Input;
-using System;
-using Terraria.Localization;
+using Terraria;
+using Terraria.GameContent.UI.Elements;
 
 namespace Macrocosm.Common.UI
 {
-	public class UIInputTextBox : UIPanel
+	public class UIInputTextBox : UIPanel, IFocusable
 	{
 		private UIInputTextField textField;
 
@@ -31,21 +26,8 @@ namespace Macrocosm.Common.UI
 
 		public int TextMaxLenght { get; set; } = 20;
 
-		private bool hasFocus;
-		public bool HasFocus
-		{
-			get => hasFocus;
-			set
-			{
-				if (value && !hasFocus)
-					OnFocusGain();
-
-				if (!value && hasFocus)
-					OnFocusLost();
-
-				hasFocus = value;
-			}
-		}
+		public bool HasFocus { get; set; }
+		public string FocusContext { get; set; }
 
 		public Action OnFocusGain { get; set; } = () => { };
 		public Action OnFocusLost { get; set; } = () => { };
@@ -101,11 +83,6 @@ namespace Macrocosm.Common.UI
 				BorderColor = HoverBorderColor.Value;
 			else
 				BorderColor = normalBorderColor;
-		}
-
-		public override void Draw(SpriteBatch spriteBatch)
-		{
-			base.Draw(spriteBatch);
 		}
 	}
 }

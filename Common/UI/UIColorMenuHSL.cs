@@ -12,6 +12,7 @@ using Terraria.ID;
 using Macrocosm.Common.Utils;
 using Terraria.ModLoader;
 using System;
+using Microsoft.Xna.Framework.Input;
 
 namespace Macrocosm.Common.UI
 {
@@ -29,8 +30,6 @@ namespace Macrocosm.Common.UI
 
 		private Vector3 currentColorHSL = Color.White.ToHSL();
 
-		private UIPanel container;
-
 		private UIText hslText; 
 		private UIPanel hslTextPanel; 
 
@@ -41,6 +40,11 @@ namespace Macrocosm.Common.UI
 		private UIPanelIconButton copyButton;
 		private UIPanelIconButton pasteButton;
 		private UIPanelIconButton randomizeButton;
+
+		private UIPanelIconButton applyButton;
+		private UIPanelIconButton cancelButton;
+		private Action onApplyButtonClicked;
+		private Action onCancelButtonClicked;
 
 		public UIColorMenuHSL()
 		{
@@ -85,7 +89,7 @@ namespace Macrocosm.Common.UI
 				Left = new(0f, 0.45f),
 				HoverText = Language.GetText("Mods.Macrocosm.UI.Common.CopyColorHex")
 			};
-			copyButton.OnLeftMouseDown += Click_CopyHex;
+			copyButton.OnLeftMouseDown += (_,_) => CopyHex();
 			Append(copyButton);
 
 			pasteButton = new(Main.Assets.Request<Texture2D>("Images/UI/CharCreation/Paste"))
@@ -96,7 +100,7 @@ namespace Macrocosm.Common.UI
 
 			};
 
-			pasteButton.OnLeftMouseDown += Click_PasteHex;
+			pasteButton.OnLeftMouseDown += (_, _) => PasteHex();
 			Append(pasteButton);
 
 			randomizeButton = new(Main.Assets.Request<Texture2D>("Images/UI/CharCreation/Randomize"))
@@ -106,42 +110,37 @@ namespace Macrocosm.Common.UI
 				HoverText = Language.GetText("Mods.Macrocosm.UI.Common.RandomizeColor")
 			};
 
-			randomizeButton.OnLeftMouseDown += Click_RandomizeSingleColor;
+			randomizeButton.OnLeftMouseDown += (_, _) => RandomizeColor();
 			Append(randomizeButton);
 		}
 
 		public void SetupApplyAndCancelButtons(Action onApplyButtonClicked, Action onCancelButtonClicked)
 		{
 			hslTextPanel.Left = new(0f, 0.01f);
-			copyButton.Left = new(0f, 0.38f);
-			pasteButton.Left = new(0f, 0.5f);
-			randomizeButton.Left = new(0f, 0.625f);
+			copyButton.Left = new(0f, 0.39f);
+			pasteButton.Left = new(0f, 0.51f);
+			randomizeButton.Left = new(0f, 0.632f);
 
-			UIPanelIconButton applyButton = new(ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Symbols/CheckmarkWhite"))
+			applyButton = new(ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Symbols/CheckmarkWhite"))
 			{
 				VAlign = 0.93f,
 				Left = new(0f, 0.88f),
 				HoverText = Language.GetText("Mods.Macrocosm.UI.Common.ApplyColor")
 
 			};
-			applyButton.OnLeftClick += (_, _) => 
-			{
-				CaptureCurrentColor();
-				onApplyButtonClicked();
-			};
+			applyButton.OnLeftClick += (_, _) => AcceptChanges();
+			this.onApplyButtonClicked = onApplyButtonClicked;
 			Append(applyButton);
 
-			UIPanelIconButton cancelButton = new(ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Symbols/CrossmarkWhite"))
+			cancelButton = new(ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Symbols/CrossmarkWhite"))
 			{
 				VAlign = 0.93f,
 				Left = new(0f, 0.76f),
 				HoverText = Language.GetText("Mods.Macrocosm.UI.Common.CancelColor")
 			};
-			cancelButton.OnLeftClick += (_, _) => 
-			{ 
-				SetColorRGB(PreviousColor);
-				onCancelButtonClicked();
-			};
+			cancelButton.OnLeftClick += (_, _) => DiscardChanges();
+			this.onCancelButtonClicked = onCancelButtonClicked;
+			 
 			Append(cancelButton);
 		}
 
@@ -244,14 +243,52 @@ namespace Macrocosm.Common.UI
 			};
 		}
 
+		public void CaptureKeyboard(Action postCapture = null)
+		{
+			Main.blockInput = Parent is not null;
 
-		private void Click_CopyHex(UIMouseEvent evt, UIElement listeningElement)
+			if (Main.keyState.PressingControl())
+			{
+				if (Main.keyState.KeyPressed(Keys.C) || Main.keyState.KeyPressed(Keys.Insert))
+				{
+					CopyHex();
+					copyButton.TriggerRemoteInteraction(5);
+				}
+				else if (Main.keyState.KeyPressed(Keys.V))
+				{
+					PasteHex();
+					pasteButton.TriggerRemoteInteraction(5);
+				}
+				else if (Main.keyState.KeyPressed(Keys.R))
+				{
+					RandomizeColor();
+					randomizeButton.TriggerRemoteInteraction(5);
+				}
+			}
+
+			if (postCapture is not null)
+				postCapture();
+		}
+
+		private void AcceptChanges()
+		{
+			CaptureCurrentColor();
+			onApplyButtonClicked();
+		}
+
+		private void DiscardChanges()
+		{
+			SetColorRGB(PreviousColor);
+			onCancelButtonClicked();
+		}
+
+		private void CopyHex()
 		{
 			SoundEngine.PlaySound(SoundID.MenuTick);
 			Platform.Get<IClipboard>().Value = hslText.Text;
 		}
 
-		private void Click_PasteHex(UIMouseEvent evt, UIElement listeningElement)
+		private void PasteHex()
 		{
 			SoundEngine.PlaySound(SoundID.MenuTick);
 			string value = Platform.Get<IClipboard>().Value;
@@ -262,6 +299,16 @@ namespace Macrocosm.Common.UI
 				UpdateHexText(Utility.HSLToRGB(hsl));
 			}
 		}
+
+		private void RandomizeColor()
+		{
+			SoundEngine.PlaySound(SoundID.MenuTick);
+			Vector3 randomColorVector = new(Main.rand.NextFloat(), Main.rand.NextFloat(), Main.rand.NextFloat());
+			PendingColor = Utility.HSLToRGB(randomColorVector);
+			currentColorHSL = randomColorVector;
+			UpdateHexText(Utility.HSLToRGB(randomColorVector));
+		}
+
 
 		public void CaptureCurrentColor()
 		{
@@ -282,14 +329,7 @@ namespace Macrocosm.Common.UI
 			UpdateHexText(Utility.HSLToRGB(hsl));
 		}
 
-		private void Click_RandomizeSingleColor(UIMouseEvent evt, UIElement listeningElement)
-		{
-			SoundEngine.PlaySound(SoundID.MenuTick);			
-			Vector3 randomColorVector = new(Main.rand.NextFloat(), Main.rand.NextFloat(), Main.rand.NextFloat());
-			PendingColor = Utility.HSLToRGB(randomColorVector);
-			currentColorHSL = randomColorVector;
-			UpdateHexText(Utility.HSLToRGB(randomColorVector));
-		}
+		
 
 		private void UpdateHexText(Color pendingColor)
 		{
