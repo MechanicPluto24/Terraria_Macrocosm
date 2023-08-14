@@ -137,11 +137,8 @@ namespace Macrocosm.Content.Rockets
 
 				if (Player.whoAmI == Main.myPlayer)
 				{
-					if (InRocket)
-						cameraModifier.TargetPosition = RocketManager.Rockets[RocketID].Center - new Vector2(Main.screenWidth, Main.screenHeight) / 2f;
-					else
-						cameraModifier.ReturnToNormalPosition = true;
-
+					cameraModifier.TargetPosition = RocketManager.Rockets[RocketID].Center - new Vector2(Main.screenWidth, Main.screenHeight) / 2f;
+					
 					// Escape or 'R' will disembark this player, but not during flight
 					if ((Player.controlInv || Player.controlMount) && !(rocket.InFlight))
 						DisembarkFromRocket();
@@ -154,6 +151,9 @@ namespace Macrocosm.Content.Rockets
 			{
 				RocketUISystem.Hide();
 				Player.sitting.isSitting = false;
+
+				if(cameraModifier is not null)
+					cameraModifier.ReturnToNormalPosition = true;
 			}
 
 			

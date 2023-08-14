@@ -37,7 +37,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 			BorderColor = new Color(89, 116, 213, 255);
 			Recalculate();
 
-            buttonText = new(Terraria.Localization.LocalizedText.Empty, 0.9f, true)
+            buttonText = new(LocalizedText.Empty, 0.9f, true)
             {
                 IsWrapped = false,
                 HAlign = 0.5f,
@@ -62,7 +62,7 @@ namespace Macrocosm.Content.Rockets.Navigation
             // TODO: add dynamic scaling
             float textScale = 0.9f;
 
-            text = Language.GetText("Mods.Macrocosm.RocketUI.LaunchButton." + ButtonState.ToString());
+            text = Language.GetText("Mods.Macrocosm.UI.Rocket.LaunchButton." + ButtonState.ToString());
 
 			switch (ButtonState)
             {

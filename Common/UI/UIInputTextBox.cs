@@ -15,25 +15,47 @@ namespace Macrocosm.Common.UI
 	{
 		private UIInputTextField textField;
 
-		public string Text => textField.Text;
+		public string Text 
+		{
+			get => textField.Text;
+			set => textField.Text = value;
+		}
 
-		public void SetText(string text) => textField.Text = text;
+		public Color TextColor
+		{
+			get => textField.TextColor;
+			set => textField.TextColor = value;	
+		}
 
 		public float TextScale { get; set; } = 1f;
 
 		public int TextMaxLenght { get; set; } = 20;
 
-		public bool HasFocus { get; set; }
+		private bool hasFocus;
+		public bool HasFocus
+		{
+			get => hasFocus;
+			set
+			{
+				if (value && !hasFocus)
+					OnFocusGain();
 
-		public Action OnFocusGain { get; set; }
+				if (!value && hasFocus)
+					OnFocusLost();
 
-		public Action OnTextChange { get; set; }
+				hasFocus = value;
+			}
+		}
+
+		public Action OnFocusGain { get; set; } = () => { };
+		public Action OnFocusLost { get; set; } = () => { };
+
+		public Action OnTextChange { get; set; } = () => { };
 
 		public Func<string, string> FormatText { get; set; } = (text) => text;
 
  		public Color? HoverBorderColor { get; set; }
 		private Color normalBorderColor;
-
 
 		public UIInputTextBox(string defaultText)
 		{
@@ -44,14 +66,17 @@ namespace Macrocosm.Common.UI
 		{
 			base.OnInitialize();
 
-			PaddingLeft = 4f;
+			PaddingLeft = 8f;
 			PaddingRight = 4f;
 
 			Append(textField);
-			textField.OnTextChange += (_, _) => { OnTextChange?.Invoke(); };
+
+			textField.OnTextChange += (_, _) => { OnTextChange.Invoke(); };
+
 			textField.FormatText = FormatText;
 			textField.TextMaxLenght = TextMaxLenght;
-			OnLeftClick += UIInputTextBox_OnLeftClick;
+
+			OnLeftClick += (_, _) => { HasFocus = true; };
 
 			normalBorderColor = BorderColor;
 			HoverBorderColor ??= BorderColor;
@@ -76,14 +101,6 @@ namespace Macrocosm.Common.UI
 				BorderColor = HoverBorderColor.Value;
 			else
 				BorderColor = normalBorderColor;
-		}
-
-		private void UIInputTextBox_OnLeftClick(UIMouseEvent evt, UIElement listeningElement)
-		{
-			if(!HasFocus)
-				OnFocusGain?.Invoke();
-
-			HasFocus = true;
 		}
 
 		public override void Draw(SpriteBatch spriteBatch)

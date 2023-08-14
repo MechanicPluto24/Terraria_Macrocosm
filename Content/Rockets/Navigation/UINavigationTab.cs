@@ -12,11 +12,11 @@ using Macrocosm.Common.Config;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
-    public class UINavigationTab : UIPanel
+    public class UINavigationTab : UIPanel, ITabUIElement, IRocketDataConsumer
     {
-		public Rocket Rocket = new();
+		public Rocket Rocket { get; set; } 
 
-        public UICustomizationPreview CustomizationPreview;
+		public UICustomizationPreview CustomizationPreview;
 
         private UILaunchButton LaunchButton;
         private UINavigationPanel NavigationPanel;
@@ -54,7 +54,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 			Append(WorldInfoPanel);
 
             // TODO: move this to a provider class 
-            FlightChecklist = new(new LocalizedColorScaleText(Language.GetText("Mods.Macrocosm.RocketUI.Common.Checklist"), scale: 1.2f))
+            FlightChecklist = new(new LocalizedColorScaleText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Checklist"), scale: 1.2f))
             {
                 Top = new(0, 0.365f),
                 HAlign = 0.5f,
@@ -86,9 +86,11 @@ namespace Macrocosm.Content.Rockets.Navigation
         {
         }
 
+
         private UIMapTarget lastTarget;
         private UIMapTarget target;
-        public override void Update(GameTime gameTime)
+
+		public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
@@ -131,10 +133,10 @@ namespace Macrocosm.Content.Rockets.Navigation
 			FlightChecklist.ClearList();
 
 			if (!selectedLaunchCondition.IsMet()) 
-				FlightChecklist.Add(selectedLaunchCondition.ProvideUI(ChecklistInfoElement.ExtraIconType.GoldQuestionMark));
+				FlightChecklist.Add(selectedLaunchCondition.ProvideUI(ChecklistInfoElement.ExtraIconType.QuestionMarkGold));
 			// if selected, target is guaranteed to not be null
 			else if (!hereLaunchCondition.IsMet()) 
- 				FlightChecklist.Add(hereLaunchCondition.ProvideUI(ChecklistInfoElement.ExtraIconType.GrayCrossmark));
+ 				FlightChecklist.Add(hereLaunchCondition.ProvideUI(ChecklistInfoElement.ExtraIconType.CrossmarkGray));
             else
             {
                 if (target.LaunchConditions is not null)

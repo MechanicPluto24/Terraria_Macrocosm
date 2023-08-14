@@ -47,7 +47,6 @@ namespace Macrocosm.Common.UI
 		{
 			this.hintText = hintText;
 		}
-
 		protected override void DrawSelf(SpriteBatch spriteBatch)
 		{
             Terraria.GameInput.PlayerInput.WritingText = CurrentlyInputtingText;
@@ -74,9 +73,9 @@ namespace Macrocosm.Common.UI
 			CalculatedStyle space = GetDimensions();
 
 			if (currentText.Length == 0 && !ForceHideHintText)
- 				Terraria.Utils.DrawBorderString(spriteBatch, hintText, new Vector2(space.X, space.Y), HintColor, TextScale, anchory: 0.05f);
+ 				Terraria.Utils.DrawBorderString(spriteBatch, hintText, new Vector2(space.X, space.Y), HintColor, TextScale, anchory: 0.12f);
 			else
- 				Terraria.Utils.DrawBorderString(spriteBatch, displayString, new Vector2(space.X, space.Y), TextColor, TextScale, anchory: 0.05f);
+ 				Terraria.Utils.DrawBorderString(spriteBatch, displayString, new Vector2(space.X, space.Y), TextColor, TextScale, anchory: 0.12f);
  		}
 	}
 }

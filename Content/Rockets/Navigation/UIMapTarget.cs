@@ -1,15 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Terraria;
 using Terraria.UI;
 using Terraria.ModLoader;
 using Macrocosm.Common.Utils;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Content.Rockets.Navigation.Checklist;
-using static Terraria.ModLoader.PlayerDrawLayer;
-using Terraria;
-using Terraria.GameContent;
-using static Terraria.GameContent.Animations.IL_Actions.Sprites;
-using System;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {

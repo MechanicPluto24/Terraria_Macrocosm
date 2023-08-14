@@ -1,35 +1,50 @@
-﻿using Macrocosm.Common.UI;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Terraria.ModLoader;
+using Terraria.GameContent.UI.Elements;
+using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.Customization;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Terraria;
-using Terraria.GameContent.UI.Elements;
-using Terraria.ModLoader;
+using Macrocosm.Common.DataStructures;
+using Terraria.Localization;
 using Terraria.UI;
+using System;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
-    public class UICustomizationTab : UIPanel
+    public class UICustomizationTab : UIPanel, ITabUIElement, IRocketDataConsumer
     {
-        public Rocket Rocket = new();
+        public Rocket Rocket { get; set; } 
 
-		public UIRocketPreviewLarge RocketPreview;
-		public UIPanel RocketPreviewBackground;
+		private UIPanel RocketPreviewBackground;
+		private UIRocketPreviewLarge RocketPreview;
 
-		public UIPanelIconButton ApplyButton;
-		public UIPanelIconButton CancelButton;
-		public UIPanel ControlButtonsBackground;
+		private UIPanel CustomizationPanelBackground;
 
-		public UIRocketModulePicker ModulePicker;
-		public UIPanel CustomizationPanelBackground;
+		private UIPanel modulePicker;
+		private UIText modulePickerTitle;
+		private string currentModuleName = "CommandPod";
 
-		public UINameplateConfig NameplateConfig;
-		public UIDetailConfig DetailConfig;
-		public UIPatternConfig PatternConfig;
+		private UIPanel CustomizationControlPanel;
+		private UIPanelIconButton applyButton;
+		private UIPanelIconButton cancelButton;
+		private UIPanelIconButton resetModuleButton;
+		private UIPanelIconButton resetRocketButton;
 
-		public UIColorHSLProvider HSLMenu;
+		private UIPanel nameplateConfigPanel;
+		private UIInputTextBox nameplateTextBox;
+		private UISelectableIconButton nameplateColorPicker;
+		private UISelectableIconButton alignLeft;
+		private UISelectableIconButton alignCenterHorizontal;
+		private UISelectableIconButton alignRight;
+		private UISelectableIconButton alignTop;
+		private UISelectableIconButton alignCenterVertical;
+		private UISelectableIconButton alignBottom;
+
+		public UIPanel DetailConfig;
+		public UIPanel PatternConfig;
+
+		public UIColorMenuHSL HSLMenu;
 
 		public UICustomizationTab()
 		{
@@ -56,7 +71,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 				BackgroundColor = new Color(53, 72, 135),
 				BorderColor = new Color(89, 116, 213, 255)
 			};
-			RocketPreviewBackground.SetPadding(6f);
+			RocketPreviewBackground.SetPadding(2f);
 			RocketPreviewBackground.OverflowHidden = true;
 			RocketPreviewBackground.Activate();
 			Append(RocketPreviewBackground);
@@ -75,90 +90,144 @@ namespace Macrocosm.Content.Rockets.Navigation
 			CustomizationPanelBackground.SetPadding(6f);
 			Append(CustomizationPanelBackground);
 
-			ModulePicker = new();
-			ModulePicker.Activate();
-			ModulePicker.LeftButton.OnLeftClick += LeftButton_OnLeftClick;
-			ModulePicker.LeftButton.CheckInteractible = () => !RocketPreview.AnimationActive;
-			ModulePicker.RightButton.OnLeftClick += RightButton_OnLeftClick;
-			ModulePicker.RightButton.CheckInteractible = () => !RocketPreview.AnimationActive;
+			modulePicker = CreateModulePicker();
+			CustomizationPanelBackground.Append(modulePicker);
 
-			CustomizationPanelBackground.Append(ModulePicker);
+			nameplateConfigPanel = CreateNameplateConfigPanel();
+			CustomizationPanelBackground.Append(nameplateConfigPanel);
 
-			NameplateConfig = new()
-			{
-				OnFocusGain = () => 
-				{
-					RocketPreview.UpdateModule("EngineModule");
-					ModulePicker.CurrentModuleName = "EngineModule";
-					HSLMenu.SetColorHSL(Rocket.CustomizationDummy.Nameplate.TextColor.ToHSL());
-				}
-			};
-
-			CustomizationPanelBackground.Append(NameplateConfig);
-
-			DetailConfig = new();
+			DetailConfig = CreateDetailConfigPanel();
 			CustomizationPanelBackground.Append(DetailConfig);
 
-			PatternConfig = new();
+			PatternConfig = CreatePatternConfigPanel();
 			CustomizationPanelBackground.Append(PatternConfig);
+			 
+			CustomizationControlPanel = CreateControlPanel();
+			CustomizationPanelBackground.Append(CustomizationControlPanel);
 
-			HSLMenu = new();
-			UIPanel hslPanel = HSLMenu.ProvideHSLMenu();
-			CustomizationPanelBackground.Append(hslPanel);
-			HSLMenu.SetColorSetEvent(HSLMenu_OnSliderClick);
-
-			ControlButtonsBackground = new()
+			HSLMenu = new()
 			{
-				Width = new(0f, 0.17f),
-				Height = new(0f, 0.08f),
-				Left = new(0f, 0.8f),
-				Top = new(0f, 0.45f),
-				BackgroundColor = new Color(53, 72, 135),
-				BorderColor = new Color(89, 116, 213, 255)
-			};
-			ControlButtonsBackground.SetPadding(2f);
-			CustomizationPanelBackground.Append(ControlButtonsBackground);
-
-			ApplyButton = new(ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Symbols/GreenCheckmark"))
-			{
-				VAlign = 0.5f,
-				Left = new(0f, 0.5f)
-			};
-			ApplyButton.OnLeftClick += (_, _) => Rocket.ApplyCustomizationChanges();
-			ControlButtonsBackground.Append(ApplyButton);
-
-			CancelButton = new(ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Symbols/RedCrossmark"))
-			{
-				VAlign = 0.5f,
-				Left = new(0f, 0.05f)
+				HAlign = 0.98f,
+				Top = new(0f, 0.092f)
 			};
 
-			CancelButton.OnLeftClick += (_, _) =>
-			{
-				NameplateConfig.HasFocus = false;
-				Rocket.RefreshCustomizationDummy();
-			};
-			ControlButtonsBackground.Append(CancelButton);
+			HSLMenu.SetupApplyAndCancelButtons(() => nameplateColorPicker.Selected = false, () => nameplateColorPicker.Selected = false);
 
 			CustomizationPanelBackground.Activate();
 		}
 
+		public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
 
-		private void LeftButton_OnLeftClick(Terraria.UI.UIMouseEvent evt, Terraria.UI.UIElement listeningElement)
-		{
-			if (RocketPreview.AnimationActive)
-				return;
+			RocketPreview.Rocket = Rocket;
 
-			if (RocketPreview.CurrentModuleIndex == 0)
-				RocketPreview.UpdateModule(Rocket.Modules.Count - 1);
+			modulePickerTitle.SetText(Language.GetText("Mods.Macrocosm.UI.Rocket.Modules." + currentModuleName));
+
+			if (nameplateTextBox.HasFocus)
+				Rocket.CustomizationDummy.Nameplate.Text = nameplateTextBox.Text;
 			else
-				RocketPreview.UpdateModule(RocketPreview.CurrentModuleIndex - 1);
+				nameplateTextBox.Text = Rocket.CustomizationDummy.AssignedName;
 
-			ModulePicker.CurrentModuleName = RocketPreview.CurrentModuleName;
+			if (nameplateColorPicker.Selected)
+			{
+				Rocket.CustomizationDummy.Nameplate.TextColor = HSLMenu.PendingColor;
+				nameplateColorPicker.BackPanelColor = HSLMenu.PendingColor;
+				//nameplateTextBox.TextColor = HSLMenuProvider.PendingColor; // I don't think we want colored text in the text box lol -- Feldy
+			} 
+			else
+			{
+				nameplateColorPicker.BackPanelColor = Rocket.CustomizationDummy.Nameplate.TextColor;
+				//nameplateTextBox.TextColor = Rocket.CustomizationDummy.Nameplate.TextColor;
+			}
 
-			NameplateConfig.HasFocus = false;
+			alignCenterHorizontal.Selected = false;
+			alignCenterVertical.Selected = false;
+			alignBottom.Selected = false;
+			alignRight.Selected = false;
+			alignLeft.Selected = false;
+			alignTop.Selected = false;
+
+			switch (Rocket.CustomizationDummy.Nameplate.HorizontalAlignment)
+			{
+				case TextAlignmentHorizontal.Left: alignLeft.Selected = true; break;
+				case TextAlignmentHorizontal.Right: alignRight.Selected = true; break;
+				case TextAlignmentHorizontal.Center: alignCenterHorizontal.Selected = true; break;
+			}
+
+			switch (Rocket.CustomizationDummy.Nameplate.VerticalAlignment)
+			{
+				case TextAlignmentVertical.Top: alignTop.Selected = true; break;
+				case TextAlignmentVertical.Bottom: alignBottom.Selected = true; break;
+				case TextAlignmentVertical.Center: alignCenterVertical.Selected = true; break;
+			}
 		}
-		private void RightButton_OnLeftClick(Terraria.UI.UIMouseEvent evt, Terraria.UI.UIElement listeningElement)
+
+		public void OnTabClose()
+		{
+			NameplateElementsLoseFocus();
+		}
+
+		private void ApplyCustomizationChanges()
+		{
+			NameplateElementsLoseFocus();
+			Rocket.ApplyCustomizationChanges();
+		}
+
+		private void CancelCustomizationChanges()
+		{
+			NameplateElementsLoseFocus();
+			Rocket.RefreshCustomizationDummy();
+		}
+
+		private void ResetRocketToDefaults()
+		{
+			NameplateElementsLoseFocus();
+			Rocket.ResetCustomizationDummyToDefault();
+		}
+
+		private void ResetCurrentModuleToDefaults()
+		{
+			NameplateElementsLoseFocus();
+			Rocket.ResetDummyModuleToDefault(currentModuleName);
+		}
+
+		private void NameplateTextOnFocusGain()
+		{
+			JumpToModule("EngineModule");
+			nameplateColorPicker.Selected = false;
+		}
+
+		private void NameplateColorPickerOnSelected()
+		{
+			JumpToModule("EngineModule");
+
+			HSLMenu.SetColorHSL(Rocket.CustomizationDummy.Nameplate.TextColor.ToHSL());
+			HSLMenu.CaptureCurrentColor();
+			CustomizationPanelBackground.ReplaceChildWith(CustomizationControlPanel, HSLMenu);
+
+			nameplateTextBox.HasFocus = false;
+		}
+
+		private void NameplateColorPickerOnDeselected()
+		{
+			Rocket.CustomizationDummy.Nameplate.TextColor = HSLMenu.PreviousColor;
+			CustomizationPanelBackground.ReplaceChildWith(HSLMenu, CustomizationControlPanel);
+		}
+
+		private void JumpToModule(string moduleName)
+		{
+			RocketPreview.UpdateModule(moduleName);
+			currentModuleName = moduleName;
+		}
+
+		private void NameplateElementsLoseFocus()
+		{
+			nameplateTextBox.HasFocus = false;
+			nameplateColorPicker.Selected = false;
+		}
+
+		private void NextModule()
 		{
 			if (RocketPreview.AnimationActive)
 				return;
@@ -168,32 +237,296 @@ namespace Macrocosm.Content.Rockets.Navigation
 			else
 				RocketPreview.UpdateModule(RocketPreview.CurrentModuleIndex + 1);
 
-			ModulePicker.CurrentModuleName = RocketPreview.CurrentModuleName;
+			currentModuleName = RocketPreview.CurrentModuleName;
 
-			NameplateConfig.HasFocus = false;
+			NameplateElementsLoseFocus();
 		}
 
-		private void HSLMenu_OnSliderClick(Terraria.UI.UIMouseEvent evt, Terraria.UI.UIElement listeningElement)
+		private void PreviousModule()
 		{
-			
+			if (RocketPreview.AnimationActive)
+				return;
+
+			if (RocketPreview.CurrentModuleIndex == 0)
+				RocketPreview.UpdateModule(Rocket.Modules.Count - 1);
+			else
+				RocketPreview.UpdateModule(RocketPreview.CurrentModuleIndex - 1);
+
+			currentModuleName = RocketPreview.CurrentModuleName;
+
+			NameplateElementsLoseFocus();
 		}
 
-		public override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
+		private const string buttonsPath = "Macrocosm/Content/Rockets/Textures/Buttons/";
+		private const string symbolsPath = "Macrocosm/Content/Rockets/Textures/Symbols/";
 
-			RocketPreview.Rocket = Rocket;
-			NameplateConfig.Rocket = Rocket;
-			DetailConfig.Rocket = Rocket;
-			PatternConfig.Rocket = Rocket;
-
-			if (NameplateConfig.HasFocus)
- 				Rocket.CustomizationDummy.Nameplate.TextColor = HSLMenu.PendingColor;
-		}
-
-		public override void Draw(SpriteBatch spriteBatch)
+		private UIPanel CreateModulePicker()
 		{
-			base.Draw(spriteBatch);
+			var mode = ReLogic.Content.AssetRequestMode.ImmediateLoad;
+
+			modulePicker = new()
+			{
+				Width = new(0, 0.36f),
+				Height = new(0, 0.25f),
+				HAlign = 0.007f,
+				Top = new(0f, 0.092f),
+				BackgroundColor = new Color(53, 72, 135),
+				BorderColor = new Color(89, 116, 213, 255),
+			};
+			modulePicker.SetPadding(0f);
+
+			modulePickerTitle = new(Language.GetText("Mods.Macrocosm.UI.Rocket.Modules." + currentModuleName), 0.9f, false)
+			{
+				IsWrapped = false,
+				HAlign = 0.5f,
+				VAlign = 0.05f,
+				TextColor = Color.White
+			};
+			modulePicker.Append(modulePickerTitle);
+
+			UIPanel moduleIconPreviewPanel = new()
+			{ 
+				Width = new(0f, 0.6f),
+				Height = new(0f, 0.7f),
+				HAlign = 0.5f,
+				VAlign = 0.6f,
+				BackgroundColor = new Color(53, 72, 135),
+				BorderColor = new Color(89, 116, 213, 255)
+			};
+			modulePicker.Append(moduleIconPreviewPanel);
+
+			UIHoverImageButton leftButton = new(ModContent.Request<Texture2D>(buttonsPath + "BackArrow", mode), ModContent.Request<Texture2D>(buttonsPath + "BackArrowBorder", mode))
+			{
+				VAlign = 0.5f,
+				Left = new StyleDimension(0f, 0f),
+			};
+			leftButton.SetVisibility(1f, 1f, 1f);
+			leftButton.CheckInteractible = () => !RocketPreview.AnimationActive;
+			leftButton.OnLeftClick += (_, _) => PreviousModule();
+			modulePicker.Append(leftButton);
+
+			UIHoverImageButton rightButton = new(ModContent.Request<Texture2D>(buttonsPath + "ForwardArrow", mode), ModContent.Request<Texture2D>(buttonsPath + "ForwardArrowBorder", mode))
+			{
+				VAlign = 0.5f,
+				Left = new StyleDimension(0, 0.79f),
+			};
+			rightButton.SetVisibility(1f, 1f, 1f);
+			rightButton.CheckInteractible = () => !RocketPreview.AnimationActive;
+			rightButton.OnLeftClick += (_, _) => NextModule();
+			modulePicker.Append(rightButton);
+
+			return modulePicker;
+		}
+
+		private UIPanel CreateControlPanel()
+		{
+			CustomizationControlPanel = new()
+			{
+				Width = new(0f, 0.62f),
+				Height = new(0, 0.25f),
+				HAlign = 0.98f,
+				Top = new(0f, 0.092f),
+				BackgroundColor = new Color(53, 72, 135),
+				BorderColor = new Color(89, 116, 213, 255)
+			};
+			CustomizationControlPanel.SetPadding(2f);
+			CustomizationPanelBackground.Append(CustomizationControlPanel);
+
+			resetRocketButton = new(ModContent.Request<Texture2D>(symbolsPath + "ResetRed"))
+			{
+				VAlign = 0.9f,
+				Left = new(0f, 0.22f),
+				HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Common.ResetRocket")
+
+			};
+			resetRocketButton.OnLeftClick += (_, _) => ResetRocketToDefaults();
+			CustomizationControlPanel.Append(resetRocketButton);
+
+			resetModuleButton = new(ModContent.Request<Texture2D>(symbolsPath + "ResetGray"))
+			{
+				VAlign = 0.9f,
+				Left = new(0f, 0.34f),
+				HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Common.ResetModule")
+			};
+			resetModuleButton.OnLeftClick += (_, _) => ResetCurrentModuleToDefaults();
+			CustomizationControlPanel.Append(resetModuleButton);
+
+			cancelButton = new(ModContent.Request<Texture2D>(symbolsPath + "CrossmarkRed")) 
+			{
+				VAlign = 0.9f,
+				Left = new(0f, 0.46f),
+				HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Common.CustomizationCancel")
+			};
+			cancelButton.OnLeftClick += (_, _) => CancelCustomizationChanges();
+			CustomizationControlPanel.Append(cancelButton);
+
+			applyButton = new(ModContent.Request<Texture2D>(symbolsPath + "CheckmarkGreen"))
+			{
+				VAlign = 0.9f,
+				Left = new(0f, 0.58f),
+				HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Common.CustomizationApply")
+			};
+			applyButton.OnLeftClick += (_, _) => ApplyCustomizationChanges();
+			CustomizationControlPanel.Append(applyButton);
+			return CustomizationControlPanel;
+		}
+
+		private UIPanel CreateNameplateConfigPanel()
+		{
+			nameplateConfigPanel = new()
+			{
+				Width = new StyleDimension(0, 0.99f),
+				Height = new StyleDimension(0, 0.08f),
+				HAlign = 0.5f,
+				BackgroundColor = new Color(53, 72, 135),
+				BorderColor = new Color(89, 116, 213, 255),
+			};
+			nameplateConfigPanel.SetPadding(0f);
+
+			nameplateTextBox = new(Language.GetText("Mods.Macrocosm.Common.Rocket").Value)
+			{
+				Width = new(0f, 0.46f),
+				Height = new(0f, 0.74f),
+				HAlign = 0.02f,
+				VAlign = 0.55f,
+				BackgroundColor = new Color(53, 72, 135),
+				BorderColor = new Color(89, 116, 213, 255),
+				HoverBorderColor = Color.Gold,
+				TextMaxLenght = Nameplate.MaxChars,
+				TextScale = 1f,
+				FormatText = Nameplate.FormatText,
+				OnFocusGain = NameplateTextOnFocusGain
+
+			};
+			nameplateConfigPanel.Append(nameplateTextBox);
+
+			nameplateColorPicker = new()
+			{
+				VAlign = 0.5f,
+				HAlign = 0f,
+				Left = new(0f, 0.482f)
+			};
+
+			nameplateColorPicker.OnLeftClick += (_, _) => { nameplateColorPicker.Selected = true; };
+			nameplateColorPicker.OnSelected = NameplateColorPickerOnSelected;
+
+			nameplateColorPicker.OnRightClick += (_, _) => { nameplateColorPicker.Selected = false; };
+			nameplateColorPicker.OnDeselected += NameplateColorPickerOnDeselected;
+	
+			nameplateConfigPanel.Append(nameplateColorPicker);
+
+			alignLeft = new(ModContent.Request<Texture2D>(symbolsPath + "AlignLeft"))
+			{
+				VAlign = 0.5f,
+				HAlign = 0f,
+				Left = new(0f, 0.56f),
+				HoverText = Language.GetText("Mods.Macrocosm.UI.Common.AlignLeft")
+			};
+
+			alignLeft.OnLeftClick += (_, _) =>
+			{
+				JumpToModule("EngineModule");
+				Rocket.CustomizationDummy.Nameplate.HorizontalAlignment = TextAlignmentHorizontal.Left;
+			};
+			nameplateConfigPanel.Append(alignLeft);
+
+			alignCenterHorizontal = new(ModContent.Request<Texture2D>(symbolsPath + "AlignCenterHorizontal"))
+			{
+				VAlign = 0.5f,
+				Left = new(0f, 0.628f),
+				HoverText = Language.GetText("Mods.Macrocosm.UI.Common.AlignCenterHorizontal")
+
+			};
+			alignCenterHorizontal.OnLeftClick += (_, _) =>
+			{
+				JumpToModule("EngineModule");
+				Rocket.CustomizationDummy.Nameplate.HorizontalAlignment = TextAlignmentHorizontal.Center;
+			};
+			nameplateConfigPanel.Append(alignCenterHorizontal);
+
+			alignRight = new(ModContent.Request<Texture2D>(symbolsPath + "AlignRight"))
+			{
+				VAlign = 0.5f,
+				Left = new(0f, 0.696f),
+				HoverText = Language.GetText("Mods.Macrocosm.UI.Common.AlignRight")
+			};
+			alignRight.OnLeftClick += (_, _) =>
+			{
+				JumpToModule("EngineModule");
+				Rocket.CustomizationDummy.Nameplate.HorizontalAlignment = TextAlignmentHorizontal.Right;
+			};
+			nameplateConfigPanel.Append(alignRight);
+
+			alignTop = new(ModContent.Request<Texture2D>(symbolsPath + "AlignTop"))
+			{
+				VAlign = 0.5f,
+				Left = new(0f, 0.78f),
+				HoverText = Language.GetText("Mods.Macrocosm.UI.Common.AlignTop")
+			};
+			alignTop.OnLeftClick += (_, _) =>
+			{
+				JumpToModule("EngineModule");
+				Rocket.CustomizationDummy.Nameplate.VerticalAlignment = TextAlignmentVertical.Top;
+			};
+			nameplateConfigPanel.Append(alignTop);
+
+			alignCenterVertical = new(ModContent.Request<Texture2D>(symbolsPath + "AlignCenterVertical"))
+			{
+				VAlign = 0.5f,
+				Left = new(0f, 0.848f),
+				HoverText = Language.GetText("Mods.Macrocosm.UI.Common.AlignCenterVertical")
+			};
+			alignCenterVertical.OnLeftClick += (_, _) =>
+			{
+				JumpToModule("EngineModule");
+				Rocket.CustomizationDummy.Nameplate.VerticalAlignment = TextAlignmentVertical.Center;
+			};
+			nameplateConfigPanel.Append(alignCenterVertical);
+
+			alignBottom = new(ModContent.Request<Texture2D>(symbolsPath + "AlignBottom"))
+			{
+				VAlign = 0.5f,
+				Left = new(0f, 0.917f),
+				HoverText = Language.GetText("Mods.Macrocosm.UI.Common.AlignBottom")
+			};
+			alignBottom.OnLeftClick += (_, _) =>
+			{
+				JumpToModule("EngineModule");
+				Rocket.CustomizationDummy.Nameplate.VerticalAlignment = TextAlignmentVertical.Bottom;
+			};
+			nameplateConfigPanel.Append(alignBottom);
+
+			return nameplateConfigPanel;
+		}
+
+		private UIPanel CreateDetailConfigPanel()
+		{
+			UIPanel detailConfigPanel = new()
+			{
+				Width = new(0, 0.99f),
+				Height = new(0, 0.4f),
+				HAlign = 0.5f,
+				Top = new(0f, 0.595f),
+				BackgroundColor = new Color(53, 72, 135),
+				BorderColor = new Color(89, 116, 213, 255),
+			};
+			detailConfigPanel.SetPadding(0f);
+			return detailConfigPanel;
+		}
+
+		private UIPanel CreatePatternConfigPanel()
+		{
+			UIPanel patternConfigPanel = new()
+			{
+				Width = new(0, 0.99f),
+				Height = new(0, 0.22f),
+				HAlign = 0.5f,
+				Top = new(0f, 0.36f),
+				BackgroundColor = new Color(53, 72, 135),
+				BorderColor = new Color(89, 116, 213, 255)
+			};
+			patternConfigPanel.SetPadding(0f);
+			return patternConfigPanel;
 		}
 	}
 }

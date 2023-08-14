@@ -7,9 +7,9 @@ using Macrocosm.Common.UI;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-	public class UIRocketModulePicker : UIPanel
+	public class UIRocketModulePicker : UIPanel, IRocketDataConsumer
 	{
-		public Rocket Rocket;
+		public Rocket Rocket { get; set; }
 
 		public UIHoverImageButton RightButton;
 		public UIHoverImageButton LeftButton;
@@ -37,7 +37,7 @@ namespace Macrocosm.Content.Rockets.Customization
 			BorderColor = new Color(89, 116, 213, 255);
 			SetPadding(0f);
 
-			uITitle = new(Language.GetText("Mods.Macrocosm.RocketUI.Modules." + CurrentModuleName), 0.9f, false)
+			uITitle = new(Language.GetText("Mods.Macrocosm.UI.Rocket.Modules." + CurrentModuleName), 0.9f, false)
 			{
 				IsWrapped = false,
 				HAlign = 0.5f,
@@ -78,7 +78,7 @@ namespace Macrocosm.Content.Rockets.Customization
 		public override void Update(GameTime gameTime)
 		{
 			base.Update(gameTime);
-			uITitle.SetText(Language.GetText("Mods.Macrocosm.RocketUI.Modules." + CurrentModuleName));
+			uITitle.SetText(Language.GetText("Mods.Macrocosm.UI.Rocket.Modules." + CurrentModuleName));
 		}
 
 		public override void Draw(SpriteBatch spriteBatch)

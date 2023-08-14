@@ -65,6 +65,16 @@ namespace Macrocosm.Common.UI
 			visibilityHover = MathHelper.Clamp(whenHovering, 0f, 1f);
 		}
 
+		public override void Update(GameTime gameTime)
+		{
+			base.Update(gameTime);
+
+			if (IsMouseHovering && HoverText is not null && (HoverTextOnButonNotInteractible || CheckInteractible()))
+			{
+				Main.instance.MouseText(HoverText.Value, "", 0, 0, hackedMouseX: Main.mouseX + 6, hackedMouseY: Main.mouseY + 6, noOverride: true);
+			}
+		}
+
 		protected override void DrawSelf(SpriteBatch spriteBatch)
 		{
 			CalculatedStyle dimensions = GetDimensions();
@@ -74,9 +84,6 @@ namespace Macrocosm.Common.UI
 			
 			if (borderTexture != null && IsMouseHovering && CheckInteractible())
  				spriteBatch.Draw(borderTexture.Value, dimensions.Position(), Color.White);
- 
-			if (IsMouseHovering && HoverText is not null && (HoverTextOnButonNotInteractible || CheckInteractible()))
-				Main.hoverItemName = HoverText.Value;
 		}
 
 		public override void MouseOver(UIMouseEvent evt)

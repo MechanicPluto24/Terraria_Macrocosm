@@ -14,20 +14,18 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
-    public class RocketUIState : UIState
+    public class RocketUIState : UIState, IRocketDataConsumer
     {
-        public Rocket Rocket = new();
+        public Rocket Rocket { get; set; } 
 
-		private UIText Title;
-		private UIDragablePanel BackgroundPanel;
-		private UIHoverImageButton TabLeftButton;
-		private UIHoverImageButton TabRightButton;
+		private UIText title;
+		private UIDragablePanel window;
+		private UIHoverImageButton tabLeftButton;
+		private UIHoverImageButton tabRightButton;
 
-		private UINavigationTab Navigation;
-		private UICustomizationTab Customization;
-		private UIPayloadTab Payload;
-
-		//private UIRocketDebugPanel DebugPanel;
+		private UINavigationTab navigation;
+		private UICustomizationTab customization;
+		private UIPayloadTab payload;
 
 		public RocketUIState() 
 		{
@@ -40,114 +38,143 @@ namespace Macrocosm.Content.Rockets.Navigation
         {
 			var mode = ReLogic.Content.AssetRequestMode.ImmediateLoad;
 
-            BackgroundPanel = new();
-            BackgroundPanel.Width.Set(875f, 0f);
-            BackgroundPanel.Height.Set(720f, 0f);
-            BackgroundPanel.HAlign = 0.5f;
-            BackgroundPanel.VAlign = 0.5f;
-			BackgroundPanel.SetPadding(6f);
-			BackgroundPanel.PaddingTop = 40f;
+            window = new();
+            window.Width.Set(875f, 0f);
+            window.Height.Set(720f, 0f);
+            window.HAlign = 0.5f;
+            window.VAlign = 0.5f;
+			window.SetPadding(6f);
+			window.PaddingTop = 40f;
 
-			BackgroundPanel.BackgroundColor = new Color(89, 116, 213);
+			window.BackgroundColor = new Color(89, 116, 213);
 
-			Append(BackgroundPanel);
+			Append(window);
 
-			Title = new(Language.GetText("Mods.Macrocosm.RocketUI.Common.Navigation"), 0.6f, true)
-			{
+			title = new(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Navigation"), 0.6f, true)
+			{	
 				IsWrapped = false,
 				HAlign = 0.5f,
 				VAlign = 0.005f,
 				Top = new(-34, 0),
 				TextColor = Color.White
 			};
-			BackgroundPanel.Append(Title);
+			window.Append(title);
 
 
-			Navigation = new();
-			Customization = new();
-			Payload = new();
+			navigation = new();
+			customization = new();
+			payload = new();
 
-			Navigation.Activate();
-			Customization.Activate();
-			Payload.Activate();
+			navigation.Activate();
+			customization.Activate();
+			payload.Activate();
 
-			BackgroundPanel.Append(Navigation);
-			Navigation.CustomizationPreview.OnLeftClick += SetTab_Customization;
+			window.Append(navigation);
+			navigation.CustomizationPreview.OnLeftClick += SetTab_Customization;
 			//Navigation.PayloadFuelPreview.OnLeftClick += SetTab_Payload;
 
-
-			TabLeftButton = new(ModContent.Request<Texture2D>(buttonsPath + "BackArrow", mode), ModContent.Request<Texture2D>(buttonsPath + "BackArrowBorder", mode), Language.GetText("Mods.Macrocosm.RocketUI.Common.Customization"))
+			tabLeftButton = new(ModContent.Request<Texture2D>(buttonsPath + "BackArrow", mode), ModContent.Request<Texture2D>(buttonsPath + "BackArrowBorder", mode), Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Customization"))
 			{
 				Top = new(-38,0f),
 				Left = new(0, 0.005f),
 				
-				CheckInteractible = () => !BackgroundPanel.Children.Contains(Customization)
+				CheckInteractible = () => !window.Children.Contains(customization)
 			};
-			TabLeftButton.SetVisibility(1f, 0f, 1f);
-			TabLeftButton.OnLeftClick += SetTab_Customization;
-			BackgroundPanel.Append(TabLeftButton);
+			tabLeftButton.SetVisibility(1f, 0f, 1f);
+			tabLeftButton.OnLeftClick += SetTab_Customization;
+			window.Append(tabLeftButton);
 
-			TabRightButton = new(ModContent.Request<Texture2D>(buttonsPath + "ForwardArrow", mode), ModContent.Request<Texture2D>(buttonsPath + "ForwardArrowBorder", mode), Language.GetText("Mods.Macrocosm.RocketUI.Common.Payload"))
+			tabRightButton = new(ModContent.Request<Texture2D>(buttonsPath + "ForwardArrow", mode), ModContent.Request<Texture2D>(buttonsPath + "ForwardArrowBorder", mode), Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Payload"))
 			{
 				Top = new(-38, 0f),
 				Left = new(0, 0.955f),
 
-				CheckInteractible = () => !BackgroundPanel.Children.Contains(Payload)
+				CheckInteractible = () => !window.Children.Contains(payload)
 			};
-			TabRightButton.SetVisibility(1f, 0f, 1f);
-			TabRightButton.OnLeftClick += SetTab_Payload;
-			BackgroundPanel.Append(TabRightButton);
+			tabRightButton.SetVisibility(1f, 0f, 1f);
+			tabRightButton.OnLeftClick += SetTab_Payload;
+			window.Append(tabRightButton);
+		}
 
-			//DebugPanel = new();
-			//BackgroundPanel.Append(DebugPanel);
+		public void OnShow()
+		{
+			window.ExecuteRecursively((uIElement) => 
+			{
+				if (uIElement is IRocketDataConsumer rocketDataConsumer)
+					rocketDataConsumer.Rocket = Rocket;
+
+				if (uIElement is ITabUIElement tab)
+					tab.OnTabOpen();
+			});
+ 		}
+
+		public void OnHide()
+		{
+			window.ExecuteRecursively((uIElement) =>
+			{
+				if (uIElement is ITabUIElement tab)
+					tab.OnTabClose();
+			});
+		}
+
+		// TODO: the tabbing logic with interface could use some linked list behavior (?)
+		private void SwitchTab(ITabUIElement newTab)
+		{
+			//window.GetChildrenWhere((child) => child is ITabUIElement).Cast<ITabUIElement>().ToList().ForEach((tab) => tab.OnTabClose());
+			(window.Children.FirstOrDefault(child => child is ITabUIElement) as ITabUIElement).OnTabClose();
+			window.RemoveAllChildrenWhere((child) => child is ITabUIElement && child != newTab as UIElement);
+
+			newTab.OnTabOpen();
+			window.Append(newTab as UIElement);
+
+			window.ExecuteRecursively((uIElement) =>
+			{
+				if (uIElement is IRocketDataConsumer rocketDataConsumer)
+					rocketDataConsumer.Rocket = Rocket;
+			});
 		}
 
 		private void SetTab_Customization(UIMouseEvent evt, UIElement listeningElement)
 		{
-			BackgroundPanel.RemoveChild(Navigation);
-			BackgroundPanel.Append(Customization);
-			Title.SetText(Language.GetText("Mods.Macrocosm.RocketUI.Common.Customization"));
+			SwitchTab(customization);
+			title.SetText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Customization"));
 
-			TabRightButton.OnLeftClick -= SetTab_Payload;
-			TabRightButton.OnLeftClick += SetTab_Navigation;
-			TabRightButton.HoverText = Language.GetText("Mods.Macrocosm.RocketUI.Common.Navigation");
+			tabRightButton.OnLeftClick -= SetTab_Payload;
+			tabRightButton.OnLeftClick += SetTab_Navigation;
+			tabRightButton.HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Navigation");
 		}
 
 		private void SetTab_Payload(UIMouseEvent evt, UIElement listeningElement)
 		{
-			BackgroundPanel.RemoveChild(Navigation);
-			BackgroundPanel.Append(Payload);
-			Title.SetText(Language.GetText("Mods.Macrocosm.RocketUI.Common.Payload"));
+			SwitchTab(payload);
+			title.SetText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Payload"));
 
-			TabLeftButton.OnLeftClick -= SetTab_Customization;
-			TabLeftButton.OnLeftClick += SetTab_Navigation;
-			TabLeftButton.HoverText = Language.GetText("Mods.Macrocosm.RocketUI.Common.Navigation");
+			tabLeftButton.OnLeftClick -= SetTab_Customization;
+			tabLeftButton.OnLeftClick += SetTab_Navigation;
+			tabLeftButton.HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Navigation");
 		}
 
 		private void SetTab_Navigation(UIMouseEvent evt, UIElement listeningElement)
 		{
-			BackgroundPanel.RemoveChild(Customization);
-			BackgroundPanel.RemoveChild(Payload);  
+			SwitchTab(navigation);
+			title.SetText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Navigation"));
 
-			BackgroundPanel.Append(Navigation);
-			Title.SetText(Language.GetText("Mods.Macrocosm.RocketUI.Common.Navigation"));
+			tabLeftButton.OnLeftClick -= SetTab_Navigation;
+			tabLeftButton.OnLeftClick += SetTab_Customization;
+			tabLeftButton.HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Customization");
 
-			TabLeftButton.OnLeftClick -= SetTab_Navigation;
-			TabLeftButton.OnLeftClick += SetTab_Customization;
-			TabLeftButton.HoverText = Language.GetText("Mods.Macrocosm.RocketUI.Common.Customization");
-
-			TabRightButton.OnLeftClick -= SetTab_Navigation;
-			TabRightButton.OnLeftClick += SetTab_Payload;
-			TabRightButton.HoverText = Language.GetText("Mods.Macrocosm.RocketUI.Common.Payload");
+			tabRightButton.OnLeftClick -= SetTab_Navigation;
+			tabRightButton.OnLeftClick += SetTab_Payload;
+			tabRightButton.HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Payload");
 		}
 
 		public override void Update(GameTime gameTime)
 		{
 			base.Update(gameTime);
 
-			Navigation.Rocket = Rocket;
-			Customization.Rocket = Rocket;
-			Payload.Rocket = Rocket;
+			navigation.Rocket = Rocket;
+			customization.Rocket = Rocket;
+			payload.Rocket = Rocket;
 
 			Player player = Main.LocalPlayer;
 			player.mouseInterface = true;
