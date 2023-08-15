@@ -18,7 +18,7 @@ namespace Macrocosm.Common.UI
 
 		public bool LargeText = false;
 
-		/// <summary> / Create a new LocalizedColorScaleText. You may get the desired LocalizedText with <see cref="Language.GetText(string)"/> </summary>
+		/// <summary> Create a new LocalizedColorScaleText. You may get the desired LocalizedText with <see cref="Language.GetText(string)"/> </summary>
 		/// <param name="text"> The localized text </param>
 		/// <param name="color"> The text color </param>
 		/// <param name="scale"> The text scale </param>

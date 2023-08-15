@@ -99,7 +99,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 			detailConfig = CreateDetailConfigPanel();
 			customizationPanelBackground.Append(detailConfig);
 
-			patternConfig = CreatePatternConfigPanel();
+			patternConfig = CustomizationStorage.ProvidePatternUI(currentModuleName);
 			customizationPanelBackground.Append(patternConfig);
 			 
 			customizationControlPanel = CreateControlPanel();
@@ -210,6 +210,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 		{
 			rocketPreview.UpdateModule(moduleName);
 			currentModuleName = moduleName;
+			customizationPanelBackground.ReplaceChildWith(patternConfig, CustomizationStorage.ProvidePatternUI(currentModuleName));
 		}
 
 		private void NameplateElementsLoseFocus()
@@ -230,6 +231,8 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 			currentModuleName = rocketPreview.CurrentModuleName;
 
+			customizationPanelBackground.ReplaceChildWith(patternConfig, CustomizationStorage.ProvidePatternUI(currentModuleName));
+
 			NameplateElementsLoseFocus();
 		}
 
@@ -244,6 +247,8 @@ namespace Macrocosm.Content.Rockets.Navigation
 				rocketPreview.UpdateModule(rocketPreview.CurrentModuleIndex - 1);
 
 			currentModuleName = rocketPreview.CurrentModuleName;
+
+			customizationPanelBackground.ReplaceChildWith(patternConfig, CustomizationStorage.ProvidePatternUI(currentModuleName));
 
 			NameplateElementsLoseFocus();
 		}
@@ -508,29 +513,14 @@ namespace Macrocosm.Content.Rockets.Navigation
 			UIPanel detailConfigPanel = new()
 			{
 				Width = new(0, 0.99f),
-				Height = new(0, 0.4f),
-				HAlign = 0.5f,
-				Top = new(0f, 0.595f),
-				BackgroundColor = new Color(53, 72, 135),
-				BorderColor = new Color(89, 116, 213, 255),
-			};
-			detailConfigPanel.SetPadding(0f);
-			return detailConfigPanel;
-		}
-
-		private UIPanel CreatePatternConfigPanel()
-		{
-			UIPanel patternConfigPanel = new()
-			{
-				Width = new(0, 0.99f),
 				Height = new(0, 0.22f),
 				HAlign = 0.5f,
 				Top = new(0f, 0.36f),
 				BackgroundColor = new Color(53, 72, 135),
 				BorderColor = new Color(89, 116, 213, 255)
 			};
-			patternConfigPanel.SetPadding(0f);
-			return patternConfigPanel;
+			detailConfigPanel.SetPadding(0f);
+			return detailConfigPanel;
 		}
 	}
 }

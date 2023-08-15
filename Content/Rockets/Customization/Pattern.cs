@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.Modules;
 using Microsoft.Xna.Framework;
@@ -43,7 +44,7 @@ namespace Macrocosm.Content.Rockets.Customization
 		{
 			get
 			{
-				if (ModContent.RequestIfExists(TexturePath, out Asset<Texture2D> paintMask))
+				if (ModContent.RequestIfExists(IconTexturePath, out Asset<Texture2D> paintMask))
 					return paintMask.Value;
 				else
 					return Macrocosm.EmptyTex;
@@ -130,10 +131,16 @@ namespace Macrocosm.Content.Rockets.Customization
 		}
 		*/
 
+		public UIPatternIcon ProvideUI()
+		{
+			UIPatternIcon icon = new(this);
+			return icon;
+		}
+
 		public void DrawIcon(SpriteBatch spriteBatch, Vector2 position)
 		{
 			// Load the coloring shader
-			Effect effect = ModContent.Request<Effect>(Macrocosm.EffectAssetsPath + "ColorMaskShading", AssetRequestMode.ImmediateLoad).Value;
+			Effect effect = ModContent.Request<Effect>(Macrocosm.EffectAssetsPath + "SimpleColorMaskShading", AssetRequestMode.ImmediateLoad).Value;
 
 			// Pass the pattern icon to the shader via the S1 register
 			Main.graphics.GraphicsDevice.Textures[1] = IconTexture;
@@ -149,8 +156,6 @@ namespace Macrocosm.Content.Rockets.Customization
 				effect.Parameters["uColorKey" + i.ToString()].SetValue(ColorKeys[i]);
 				effect.Parameters["uColor" + i.ToString()].SetValue(GetColor(i).ToVector4());
 			}
-
-			effect.Parameters["uAmbientColor"].SetValue(Color.White.ToVector3());
 
 			var state = spriteBatch.SaveState();
 			spriteBatch.End();

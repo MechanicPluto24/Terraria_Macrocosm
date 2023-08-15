@@ -34,6 +34,9 @@
     <AdditionalFiles Remove="Localization\en-US_Mods.Macrocosm.WorldGen.hjson" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Assets\Textures\UI\LargePanel.png" />
+    <None Remove="Assets\Textures\UI\LargePanelBorder.png" />
+    <None Remove="Assets\Textures\UI\LargePanelHoverBorder.png" />
     <None Remove="Content\Rockets\Customization\Patterns\Icons\Astra.png" />
     <None Remove="Content\Rockets\Customization\Patterns\Icons\Basic.png" />
     <None Remove="Content\Rockets\Customization\Patterns\Icons\Binary.png" />
