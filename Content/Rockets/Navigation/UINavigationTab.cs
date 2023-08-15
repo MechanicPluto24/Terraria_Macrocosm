@@ -50,7 +50,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 			NavigationPanel = new();
             Append(NavigationPanel);
 
-            WorldInfoPanel = WorldInfoStorage.GetValue(MacrocosmSubworld.CurrentPlanet).ProvideUI();
+            WorldInfoPanel = WorldInfo.ProvideUI(MacrocosmSubworld.CurrentPlanet);
 			Append(WorldInfoPanel);
 
             // TODO: move this to a provider class 
@@ -96,8 +96,6 @@ namespace Macrocosm.Content.Rockets.Navigation
 
             Player player = Main.LocalPlayer;
 
-            UpdateRocketInstance();
-
 			lastTarget = target;
             target = NavigationPanel.CurrentMap.GetSelectedTarget();
             player.RocketPlayer().TargetSubworldID = target is null ? "" : target.Name;
@@ -107,23 +105,17 @@ namespace Macrocosm.Content.Rockets.Navigation
             UpdateLaunchButton();
         }
 
-        // could have an interface and parent checks for all children and passes the rocket instance?
-        public void UpdateRocketInstance()
-        {
-            CustomizationPreview.Rocket = Rocket;
-        }
-
 		private void UpdateInfoPanel()
         {
             // Update the info panel on new target 
             if (target is not null && (target != lastTarget)) 
- 				this.ReplaceChildWith(WorldInfoPanel, WorldInfoStorage.GetValue(target.Name).ProvideUI());
+ 				this.ReplaceChildWith(WorldInfoPanel, WorldInfo.ProvideUI(target.Name));
  		}
 
         private void ResetInfoPanel()
         {
             if(target is not null)
-				this.ReplaceChildWith(WorldInfoPanel, WorldInfoStorage.GetValue(target.Name).ProvideUI());
+				this.ReplaceChildWith(WorldInfoPanel, WorldInfo.ProvideUI(target.Name));
 		}
 
 		// TODO: move this to an UI provider class

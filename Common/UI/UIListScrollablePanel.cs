@@ -20,55 +20,62 @@ namespace Macrocosm.Common.UI
 
         private bool hasTitle = false;
 
+		public UIListScrollablePanel()
+		{
+			list = new()
+			{
+				Width = new(0f, 1f),
+				Height = new(0f, 1f)
+			};
+		}
+
+		public UIListScrollablePanel(LocalizedColorScaleText title)
+        {
+			this.title = title.ProvideUI();
+
+			list = new()
+			{
+				Width = new(0f, 1f),
+				Height = new(0f, 1f)
+			};
+		}
+
+        public UIListScrollablePanel(LocalizedText title)
+        {
+            this.title = new(title);
+
+			list = new()
+			{
+				Width = new(0f, 1f),
+				Height = new(0f, 1f)
+			};
+		}
+
+		public UIListScrollablePanel(string title)
+		{
+			this.title = new(title);
+
+			list = new()
+			{
+				Width = new(0f, 1f),
+				Height = new(0f, 1f)
+			};
+		}
+
 		public UIListScrollablePanel(UIList list, LocalizedColorScaleText title = null)
 		{
-			if(title is not null)
+			if (title is not null)
 				this.title = title.ProvideUI();
 
 			this.list = list;
 		}
 
-		public UIListScrollablePanel(LocalizedColorScaleText title = null)
-        {
-            if(title is not null)
-			    this.title = title.ProvideUI();
-
-			list = new()
-            {
-                Width = new StyleDimension(0f, 1f),
-                Height = new StyleDimension(0f, 1f)
-            };
-        }
-
-        public UIListScrollablePanel(LocalizedText title = null)
-        {
-            if (title is not null)
-                this.title = new(title);
-
-			list = new()
-			{
-				Width = new StyleDimension(0f, 1f),
-				Height = new StyleDimension(0f, 1f)
-			};
-
-		}
-
-		public UIListScrollablePanel(string title = null)
-		{
-			if (title is not null)
-				this.title = new(title);
-
-			list = new()
-			{
-				Width = new StyleDimension(0f, 1f),
-				Height = new StyleDimension(0f, 1f)
-			};
-		}
-
 		public override void OnInitialize()
         {
-            list.SetPadding(6f);
-            list.Width.Set(0f, 1f);
+			list ??= new();
+			list.Width = new(0f, 1f);
+			list.Height = new(0f, 1f);
+			list.SetPadding(6f);
             list.ListPadding = ListPadding;
 
             if (title is not null)
@@ -86,7 +93,39 @@ namespace Macrocosm.Common.UI
             Append(list);
         }
 
-        public override void Update(GameTime gameTime)
+		public bool EntireListVisible()
+		{
+			list.Recalculate();
+			list.RecalculateChildren();
+			float listHeight = list.GetTotalHeight();
+			float panelHeight = list.GetInnerDimensions().Height;
+
+			return listHeight < panelHeight;
+		}
+
+		public void Add(UIElement element)
+		{
+			list.Add(element);
+		}
+
+		public void AddList(List<UIElement> elements)
+		{
+			foreach (UIElement element in elements)
+				Add(element);
+		}
+
+		public void ClearList() => list.Clear();
+
+		public void AppendSeparator()
+		{
+			Add(new UIHorizontalSeparator()
+			{
+				Width = StyleDimension.FromPercent(0.98f),
+				Color = new Color(89, 116, 213, 255) * 0.9f
+			});
+		}
+
+		public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
@@ -118,29 +157,5 @@ namespace Macrocosm.Common.UI
 				scrollbar = null;
             }
         }
-
-        public bool EntireListVisible()
-        {
-            list.Recalculate();
-            list.RecalculateChildren();
-            float listHeight = list.GetTotalHeight();
-            float panelHeight = list.GetInnerDimensions().Height;
-
-            return listHeight < panelHeight;
-		}
-
-        public void Add(UIElement element)
-        {
-            list.Add(element);
-        }
-
-        public void AddList(List<UIElement> elements)
-        {
-            foreach (UIElement element in elements)
-                Add(element);
-        }
-
-        public void ClearList() => list.Clear();
-
-    }
+	}
 }

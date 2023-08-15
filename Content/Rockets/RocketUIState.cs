@@ -174,8 +174,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 			base.Update(gameTime);
 
 			Player player = Main.LocalPlayer;
-			player.mouseInterface = true;
-
+	
 			if (!Rocket.Active || !Rocket.Bounds.InPlayerInteractionRange() || Rocket.InFlight || player.controlMount || player.UICloseConditions())
 			{
 				RocketUISystem.Hide();
