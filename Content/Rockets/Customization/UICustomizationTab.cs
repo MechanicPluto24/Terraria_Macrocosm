@@ -204,8 +204,8 @@ namespace Macrocosm.Content.Rockets.Navigation
 				{
 					currentPatternIcon.HasFocus = true;
 
-					//if(patternColorPickers is null)
-					//	CreatePatternColorPickers();
+					if(patternColorPickers is null)
+						CreatePatternColorPickers();
 				}
 			}
 
