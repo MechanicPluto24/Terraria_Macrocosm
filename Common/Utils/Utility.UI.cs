@@ -7,6 +7,9 @@ using System;
 using System.Xml.Linq;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Input;
+using Terraria.ModLoader.UI;
+using System.Linq;
+using Microsoft.Xna.Framework;
 
 namespace Macrocosm.Common.Utils
 {
@@ -18,7 +21,7 @@ namespace Macrocosm.Common.Utils
 		/// <summary>  Removes all chidren of this element that match a predicate </summary>
 		/// <param name="element"> The element being processed </param>
 		/// <param name="match"> The predicate to filter the elements </param>
-		public static void RemoveAllChildrenWhere(this UIElement element, Predicate<UIElement> match) 
+		public static void RemoveAllChildrenWhere(this UIElement element, Func<UIElement, bool> match) 
         {
 			List<UIElement> childrenToRemove = new();
 
@@ -33,7 +36,7 @@ namespace Macrocosm.Common.Utils
 		/// <summary> Gets a list of all the children of this element that match a predicate </summary>
 		/// <param name="element"> The element being processed </param>
 		/// <param name="match"> The predicate to filter the elements </param>
-		public static List<UIElement> GetChildrenWhere(this UIElement element, Predicate<UIElement> match)
+		public static List<UIElement> GetChildrenWhere(this UIElement element, Func<UIElement, bool> match)
 		{
 			List<UIElement> matchedChildren = new();
 
@@ -48,7 +51,7 @@ namespace Macrocosm.Common.Utils
 		/// <param name="element"> The element being processed </param>
 		/// <param name="match"> The predicate to filter the elements </param>
 		// Did not test this lol -- Feldy
-		public static List<UIElement> GetChildrenRecursivelyWhere(this UIElement element, Predicate<UIElement> match)
+		public static List<UIElement> GetChildrenRecursivelyWhere(this UIElement element, Func<UIElement, bool> match)
 		{
 			List<UIElement> matchedChildren = new();
 
@@ -62,31 +65,42 @@ namespace Macrocosm.Common.Utils
 		}
 
 		/// <summary> 
-		/// Schedules the replace of a child UIElement from this parent with another, on the next update tick. 
+		/// Schedules the replace of a child UIElement from this parent with another, on the next update tick. <br> 
+		/// If replacing the same element with an updated version, make sure you also update the reference of 
+		/// the old element so it points to the new element before calling this method. </br>
 		/// </summary>
 		/// <param name="parent"> The parent </param>
-		/// <param name="toRemove"> The child to replace </param>
+		/// <param name="toRemove"> The child to be replaced </param>
 		/// <param name="newElement"> The element to replace the child with </param>
+		/// <param name="updateReference"> Whether to also update the old element reference with the new one </param>
 		// This is preferred instead of immediate replacement since, if the method is called while updating, where 
 		// the children are also iterated upon, the children collection would be modified, causing an exception
 		public static void ReplaceChildWith(this UIElement parent, UIElement toRemove, UIElement newElement)
 		{
-            UIElement.ElementEvent replaceHandler = null;
+			UIElement.ElementEvent replaceHandler = null;
 
-            // This handler is called before the actual updating takes place
-		    replaceHandler = new UIElement.ElementEvent((element) =>
+			// This handler is called before the actual updating takes place
+			replaceHandler = new UIElement.ElementEvent((element) =>
             {
-                if (element.HasChild(toRemove))
-				    element.RemoveChild(toRemove);
+				int childrenCount = element.Children.Count();
 
-			    element.Append(newElement);
+				if (element.HasChild(toRemove)) 
+ 					element.RemoveChild(toRemove);
+ 	
+				element.Append(newElement);
 				newElement.Activate();
 
-                // Detach this handler once complete, we don't want it to run every tick from now on
-			    element.OnUpdate -= replaceHandler;
+				if (childrenCount != element.Children.Count())
+				{
+					Chat("Failed to replace child properly. Make sure you also update the reference of newElement if replacing the same element with an updated version.", Color.Yellow);
+					Macrocosm.Instance.Logger.Warn("Failed to replace child properly. Make sure you also update the reference of newElement if replacing the same element with an updated version.");
+				}
+					
+				// Detach this handler once complete, we don't want it to run every tick from now on
+				element.OnUpdate -= replaceHandler;
 		    });
 
-            // If called during or after the Update method, this schedules the replacement in the next tick
+            // If method called during or after the Update method, this schedules the replacement in the next tick
             parent.OnUpdate += replaceHandler;
 		}
 

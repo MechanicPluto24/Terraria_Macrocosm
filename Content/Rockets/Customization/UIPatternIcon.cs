@@ -10,9 +10,9 @@ using Terraria.UI;
 
 namespace Macrocosm.Common.UI
 {
-	public class UIPatternIcon : UIFocusIconButton
+	public class UIPatternIcon : UIFocusIconButton, IFocusable
 	{
-		private Pattern pattern;
+		public Pattern Pattern { get; set; }
 
 		public UIPatternIcon(Pattern pattern)
 		: base
@@ -23,16 +23,20 @@ namespace Macrocosm.Common.UI
 			ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanelHoverBorder", AssetRequestMode.ImmediateLoad)
 		) 
 		{
-			this.pattern = pattern;
-			OverflowHidden = true;
+			Pattern = pattern;
+		}
+
+		public override void OnInitialize()
+		{
+ 			FocusContext = "PatternSelection";
+			OnLeftClick += (_, _) => { HasFocus = true; };
 		}
 
 		protected override void DrawSelf(SpriteBatch spriteBatch)
 		{
 			base.DrawSelf(spriteBatch);
-
-			var dimensions = GetInnerDimensions();
-			pattern.DrawIcon(spriteBatch, dimensions.Position());
+			var dimensions = GetOuterDimensions();
+			Pattern.DrawIcon(spriteBatch, dimensions.Position());
 		}
 	}
 }

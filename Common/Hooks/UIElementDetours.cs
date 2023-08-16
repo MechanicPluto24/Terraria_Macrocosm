@@ -35,7 +35,9 @@ namespace Macrocosm.Common.Hooks
 
 		private void On_UIElement_Draw(On_UIElement.orig_Draw orig, UIElement self, SpriteBatch spriteBatch)
 		{
+
 			orig(self, spriteBatch);
+
 		}
 
 		private void On_UIElement_Update(On_UIElement.orig_Update orig, UIElement self, Microsoft.Xna.Framework.GameTime gameTime)

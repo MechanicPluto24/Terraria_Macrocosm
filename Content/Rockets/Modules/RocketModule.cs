@@ -51,7 +51,7 @@ namespace Macrocosm.Content.Rockets.Modules
 		
 		public RocketModule()
 		{
-			Pattern = CustomizationStorage.GetPattern(GetType().Name, "Basic");
+			Pattern = CustomizationStorage.GetDefaultPattern(GetType().Name);
 		}
 
 		public virtual void Draw(SpriteBatch spriteBatch, Vector2 screenPos, Color ambientColor)
@@ -64,27 +64,7 @@ namespace Macrocosm.Content.Rockets.Modules
 			{
 				// Load the coloring shader
 				Effect effect = ModContent.Request<Effect>(Macrocosm.EffectAssetsPath + "ColorMaskShading", AssetRequestMode.ImmediateLoad).Value;
-
-				CustomizationStorage.Reset();
-				// -- testing, will be configured from an UI		
-				if (this is EngineModule)
-					Pattern = CustomizationStorage.GetPattern(Name, "Binary");
-
-				if (this is ServiceModule)
-					Pattern = CustomizationStorage.GetPattern(Name, "Binary");
-
-				if (this is ReactorModule)
-					Pattern = CustomizationStorage.GetPattern(Name, "Binary");
-
-				if (this is CommandPod)
-					Pattern = CustomizationStorage.GetPattern(Name, "Binary");
-
-				if (this is BoosterRight && this is not BoosterLeft)
-				{
-					Pattern = CustomizationStorage.GetPattern(Name, "Basic");
-					Pattern.SetColor(1, new Color(40, 40, 40));
-				}
-
+			
 				if (HasPattern)
 				{
 					// Pass the pattern to the shader via the S1 register

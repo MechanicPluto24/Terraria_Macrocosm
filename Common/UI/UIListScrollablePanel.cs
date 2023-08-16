@@ -1,4 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
@@ -8,8 +10,8 @@ using Terraria.UI;
 
 namespace Macrocosm.Common.UI
 {
-    public class UIListScrollablePanel : UIPanel
-    {
+    public class UIListScrollablePanel : UIPanel, IEnumerable<UIElement>
+	{
         public bool HideScrollbarIfNotScrollable { get; set; } = true;
 
         public float ListPadding { get; set; } = 3f;
@@ -18,64 +20,61 @@ namespace Macrocosm.Common.UI
         private UIList list;
         private UIScrollbar scrollbar;
 
+		public float ListOuterPadding { get; set; } = 6f;
+		public StyleDimension ListWidthWithScrollbar { get; set; } = new(0f, 0.915f);
+		public StyleDimension ListWidthWithoutScrollbar { get; set; } = new(0f, 1f);
+
+		public StyleDimension ScrollbarWidth { get; set; } = new(0f, 1f);
+		public StyleDimension ScrollbarHeight { get; set; } = new(0f, 0.94f);
+		public StyleDimension ScrollbarTop { get; set; } = default;
+		public StyleDimension ScrollbarLeft { get; set; } = default;
+
+		public float ScrollbarHAlign { get; set; } = 0.98f;
+		public float ScrollbarVAlign { get; set; } = 0.5f;
+
+		public bool HasScrollbar => scrollbar is not null;
+		public bool HasTitle => title is not null;
+
         private bool hasTitle = false;
 
 		public UIListScrollablePanel()
 		{
-			list = new()
-			{
-				Width = new(0f, 1f),
-				Height = new(0f, 1f)
-			};
+			list = new();
 		}
 
-		public UIListScrollablePanel(LocalizedColorScaleText title)
-        {
-			this.title = title.ProvideUI();
-
-			list = new()
-			{
-				Width = new(0f, 1f),
-				Height = new(0f, 1f)
-			};
-		}
-
-        public UIListScrollablePanel(LocalizedText title)
-        {
-            this.title = new(title);
-
-			list = new()
-			{
-				Width = new(0f, 1f),
-				Height = new(0f, 1f)
-			};
-		}
-
-		public UIListScrollablePanel(string title)
+		public UIListScrollablePanel(string titleKey) : this(Language.GetText(titleKey)) 
 		{
-			this.title = new(title);
+		}
 
-			list = new()
-			{
-				Width = new(0f, 1f),
-				Height = new(0f, 1f)
-			};
+		public UIListScrollablePanel(LocalizedText title) : this(new LocalizedColorScaleText(title)) 
+		{
+		}
+
+		public UIListScrollablePanel(LocalizedColorScaleText title) : this()
+		{
+			this.title = title.ProvideUI();
+		}
+
+		public UIListScrollablePanel(List<UIElement> list, LocalizedColorScaleText title = null)
+		{
+			this.title = title?.ProvideUI();
+
+			this.list = new();
+			list.AddRange(list);
 		}
 
 		public UIListScrollablePanel(UIList list, LocalizedColorScaleText title = null)
 		{
-			if (title is not null)
-				this.title = title.ProvideUI();
-
+			this.title = title?.ProvideUI();
 			this.list = list;
 		}
 
 		public override void OnInitialize()
         {
 			list ??= new();
-			list.Width = new(0f, 1f);
+			list.Width = ListWidthWithoutScrollbar;
 			list.Height = new(0f, 1f);
-			list.SetPadding(6f);
+			list.SetPadding(ListOuterPadding);
             list.ListPadding = ListPadding;
 
             if (title is not null)
@@ -103,20 +102,29 @@ namespace Macrocosm.Common.UI
 			return listHeight < panelHeight;
 		}
 
-		public void Add(UIElement element)
-		{
-			list.Add(element);
-		}
-
-		public void AddList(List<UIElement> elements)
-		{
-			foreach (UIElement element in elements)
-				Add(element);
-		}
-
+		public void Add(UIElement element) => list.Add(element);
 		public void ClearList() => list.Clear();
+		public void AddRange(List<UIElement> elements) => list.AddRange(elements);
 
-		public void AppendSeparator()
+		public IEnumerable<T> OfType<T>(bool recursive = true) where T : UIElement
+		{
+			if(!recursive)
+				return list.OfType<T>();
+
+			List<T> result = new();
+			foreach (UIElement element in list)
+			{
+				element.ExecuteRecursively(child =>
+				{
+					if (child is T typedChild)
+ 						result.Add(typedChild);
+ 				});
+			}
+
+			return result;
+		}
+
+		public void AddSeparator()
 		{
 			Add(new UIHorizontalSeparator()
 			{
@@ -134,14 +142,19 @@ namespace Macrocosm.Common.UI
             {
                 if (scrollbar is null)
                 {
-                    scrollbar = new();
-                    scrollbar.Height.Set(0f, 0.94f);
-                    scrollbar.HAlign = 0.98f;
-                    scrollbar.VAlign = 0.5f;
-                    list.SetScrollbar(scrollbar);
+					scrollbar = new()
+					{
+						HAlign = ScrollbarHAlign,
+						VAlign = ScrollbarVAlign,
+						Height = ScrollbarHeight,
+						Width = ScrollbarWidth,
+						Top = ScrollbarTop,
+						Left = ScrollbarLeft
+					};
+					list.SetScrollbar(scrollbar);
                     Append(scrollbar);
 
-                    list.Width.Set(0, 0.92f);
+					list.Width = ListWidthWithScrollbar;
 
                     if(hasTitle)
                         title.Left = new(0, -0.05f);
@@ -152,10 +165,20 @@ namespace Macrocosm.Common.UI
                 if (Children.Contains(scrollbar))
                     RemoveChild(scrollbar);
 
-				list.Width.Set(0, 1f);
+				list.Width = ListWidthWithoutScrollbar;
 
 				scrollbar = null;
             }
         }
+
+		public IEnumerator<UIElement> GetEnumerator()
+		{
+			return ((IEnumerable<UIElement>)list).GetEnumerator();
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return ((IEnumerable)list).GetEnumerator();
+		}
 	}
 }
