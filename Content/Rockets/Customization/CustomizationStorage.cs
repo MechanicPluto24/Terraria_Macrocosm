@@ -68,9 +68,12 @@ namespace Macrocosm.Content.Rockets.Customization
 		public static Pattern GetPattern(string moduleName, string patternName)
 			=> patterns[(moduleName, patternName)].Clone();
 
+		public static Pattern GetDefaultPattern(string moduleName)
+			=> patterns[(moduleName, "Basic")].Clone();
+
 		public static List<Pattern> GetUnlockedPatterns(string moduleName, bool asClones = true) => GetPatternsWhere(moduleName, (pattern) => pattern.Unlocked, asClones);
 
-		public static List<Pattern> GetPatternsWhere(string moduleName, Predicate<Pattern> match, bool asClones = true)
+		public static List<Pattern> GetPatternsWhere(string moduleName, Func<Pattern, bool> match, bool asClones = true)
 		{
 			var patternsForModule = patterns
 				.Where(kvp => kvp.Key.moduleName == moduleName && match(kvp.Value))
@@ -223,35 +226,59 @@ namespace Macrocosm.Content.Rockets.Customization
 			UIListScrollablePanel listPanel = new()
 			{
 				Width = new(0, 0.99f),
-				Height = new(0, 0.4f),
+				Height = new(0, 0.8f),
 				HAlign = 0.5f,
-				Top = new(0f, 0.595f),
+				Top = new(0f, 0.2f),
 				BackgroundColor = new Color(53, 72, 135),
-				BorderColor = new Color(89, 116, 213, 255)
+				BorderColor = new Color(89, 116, 213, 255),
+				ListPadding = 0f,
+				ScrollbarHeight = new(0f, 0.9f),
+				ScrollbarHAlign = 0.99f,
+				ListWidthWithScrollbar = new(0, 1f),
+				ListWidthWithoutScrollbar = new(0, 1f)
 			};
 			listPanel.SetPadding(0f);
- 
+
 			var patterns = GetUnlockedPatterns(moduleName);
 			int count = patterns.Count;
 
-			UIElement patternIconRow = new()
+			int iconsPerRow = 9;
+			float iconSize;
+			float iconOffsetLeft;
+			float iconOffsetTop;
+
+			if (count <= iconsPerRow)
 			{
-				Width = StyleDimension.FromPixelsAndPercent(0f, 1f),
-				Height = StyleDimension.FromPixelsAndPercent(48 * (count / 10 + ((count % 10 != 0) ? 1 : 0)), 0f)
+				iconSize = 44f + 7f;
+				iconOffsetLeft = 3f;
+				iconOffsetTop = 2f;
+			} 
+			else
+			{
+				iconSize = 44f + 5f;
+				iconOffsetLeft = 3f;
+				iconOffsetTop = 2f;
+			}
+
+			UIElement patternIconContainer = new()
+			{
+				Width = new(0f, 1f),
+				Height = new(iconSize * (count / iconsPerRow + ((count % iconsPerRow != 0) ? 1 : 0)), 0f),
 			};
 
-			listPanel.Add(patternIconRow);
-			patternIconRow.SetPadding(0f);
+			listPanel.Add(patternIconContainer);
+			patternIconContainer.SetPadding(0f);
 
 			for (int i = 0; i < count; i++)
 			{
 				Pattern pattern = patterns[i];
 				UIPatternIcon icon = pattern.ProvideUI();
 
-				icon.Left = StyleDimension.FromPixels((float)(i % 10) * 48f + 1f);
-				icon.Top = StyleDimension.FromPixels((float)(i / 10) * 48f + 1f);
+				icon.Left = new((i % iconsPerRow) * iconSize + iconOffsetLeft, 0f);
+				icon.Top = new((i / iconsPerRow) * iconSize + iconOffsetTop, 0f);
 
-				patternIconRow.Append(icon);
+				icon.Activate();
+				patternIconContainer.Append(icon);
 			}
 
 			return listPanel;
@@ -261,26 +288,36 @@ namespace Macrocosm.Content.Rockets.Customization
 		{
 			AddPattern("CommandPod", "Basic", true, new(Color.White), new(Color.White));
 			AddPattern("CommandPod", "Binary", true, new(Color.White), new(Color.White), new(new Color(80, 80, 80)));
-			AddPattern("CommandPod", "Astra", true, new(Color.Transparent), new(Color.DarkBlue), new(Color.White), new((colors) => Color.Lerp(colors[1], colors[2], 0.5f)));
+			AddPattern("CommandPod", "Astra", true, new(Color.White), new(Color.DarkBlue), new(Color.White), new((colors) => Color.Lerp(colors[1], colors[2], 0.5f)));
 
-			AddPattern("ServiceModule", "Basic", true, new(Color.Transparent), new(Color.White));
-			AddPattern("ServiceModule", "Binary", true, new(Color.White), new(Color.White), new(new Color(80, 80, 80))); 
-			AddPattern("ServiceModule", "Astra", true, new(Color.White), new(Color.DarkBlue), new(Color.White), new((colors) => Color.Lerp(colors[1], colors[2], 0.5f)));
+			AddPattern("ServiceModule", "Basic", true, new(Color.Transparent, false), new(Color.White));
+			AddPattern("ServiceModule", "Binary", true, new(Color.Transparent, false), new(Color.White), new(new Color(80, 80, 80))); 
+			AddPattern("ServiceModule", "Astra", true, new(Color.Transparent, false), new(Color.DarkBlue), new(Color.White), new((colors) => Color.Lerp(colors[1], colors[2], 0.5f)));
 
-			AddPattern("ReactorModule", "Basic", true, new(Color.Transparent), new(Color.White));
-			AddPattern("ReactorModule", "Binary", true, new(Color.White), new(Color.White), new(new Color(50, 50, 50)));
-			AddPattern("ReactorModule", "Astra", true, new(Color.White), new(Color.DarkBlue), new(Color.White), new((colors) => Color.Lerp(colors[1], colors[2], 0.5f)));
+			AddPattern("ReactorModule", "Basic", true, new(Color.Transparent, false), new(Color.White));
+			AddPattern("ReactorModule", "Binary", true, new(Color.Transparent, false), new(Color.White), new(new Color(50, 50, 50)));
+			AddPattern("ReactorModule", "Astra", true, new(Color.Transparent, false), new(Color.DarkBlue), new(Color.White), new((colors) => Color.Lerp(colors[1], colors[2], 0.5f)));
 
-			AddPattern("EngineModule", "Basic", true, new(Color.Transparent), new(Color.White));
-			AddPattern("EngineModule", "Binary", true, new(Color.White), new(Color.White), new(new Color(50, 50, 50)));
-			AddPattern("EngineModule", "Saturn", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40)));
-			AddPattern("EngineModule", "Delta", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40)));
-			AddPattern("EngineModule", "Astra", true, new(Color.White), new(Color.DarkBlue), new(Color.White), new((colors) => Color.Lerp(colors[1], colors[2], 0.5f)));
-			AddPattern("EngineModule", "Rainbow", false, new(Color.White), new(Color.Red), new(Color.Orange), new(Color.Yellow), new(Color.Green), new(Color.Blue), new(Color.Indigo), new(Color.Violet));
+			AddPattern("EngineModule", "Basic", true, new(Color.Transparent, false), new(Color.White));
+			AddPattern("EngineModule", "Binary", true, new(Color.Transparent, false), new(Color.White), new(new Color(50, 50, 50)));
+			AddPattern("EngineModule", "Saturn", true, new(Color.Transparent, false), new(Color.White), new(new Color(40, 40, 40)));
+			AddPattern("EngineModule", "Delta", true, new(Color.Transparent, false), new(Color.White), new(new Color(40, 40, 40)));
+			AddPattern("EngineModule", "Astra", true, new(Color.Transparent, false), new(Color.DarkBlue), new(Color.White), new((colors) => Color.Lerp(colors[1], colors[2], 0.5f)));
+			AddPattern("EngineModule", "Rainbow", true, new(Color.Transparent, false), new(Color.Red), new(Color.Orange), new(Color.Yellow), new(Color.Green), new(Color.Blue), new(Color.Indigo), new(Color.Violet));
 
 			AddPattern("BoosterLeft", "Basic", true, new(Color.White), new(Color.White));
 			AddPattern("BoosterRight", "Basic", true, new(Color.White), new(Color.White));
-		}
+
+			// Just for testing the scrollbar
+			for (int i = 2; i < 7; i++)
+ 				AddPattern("ServiceModule", "Basic" + i, true, new(Color.Transparent), new(Color.White));
+ 
+			for (int i = 2; i < 8; i++)
+ 				AddPattern("ReactorModule", "Basic" + i, true, new(Color.Transparent), new(Color.White));
+
+			for (int i = 2; i < 74; i++)
+ 				AddPattern("EngineModule", "Basic" + i, true, new(Color.White), new(Color.White));
+ 		}
 
 		private static void LoadDetails()
 		{

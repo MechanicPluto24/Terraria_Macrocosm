@@ -9,12 +9,16 @@ using Macrocosm.Common.DataStructures;
 using Terraria.Localization;
 using Terraria.UI;
 using System;
+using System.Linq;
+using Terraria;
+using System.Collections.Generic;
+using Macrocosm.Content.Rockets.Modules;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
     public class UICustomizationTab : UIPanel, ITabUIElement, IRocketDataConsumer
     {
-        public Rocket Rocket { get; set; } 
+		public Rocket Rocket { get; set; }  
 
 		private UIPanel rocketPreviewBackground;
 		private UIRocketPreviewLarge rocketPreview;
@@ -23,7 +27,10 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 		private UIPanel modulePicker;
 		private UIText modulePickerTitle;
+		private UIHoverImageButton leftButton;
+		private UIHoverImageButton rightButton;
 		private string currentModuleName = "CommandPod";
+		private RocketModule currentModule;
 
 		private UIPanel customizationControlPanel;
 		private UIPanelIconButton applyButton;
@@ -41,10 +48,16 @@ namespace Macrocosm.Content.Rockets.Navigation
 		private UIFocusIconButton alignCenterVertical;
 		private UIFocusIconButton alignBottom;
 
-		private UIPanel detailConfig;
-		private UIPanel patternConfig;
+		private UIPanel detailConfigPanel;
 
+		private UIPanel patternConfigPanel;
+		private UIListScrollablePanel patternSelector;
+		private UIPatternIcon currentPatternIcon;
+
+		private List<(UIFocusIconButton picker, int index)> patternColorPickers;
+		
 		private UIColorMenuHSL hslMenu;
+
 
 		public UICustomizationTab()
 		{
@@ -76,7 +89,10 @@ namespace Macrocosm.Content.Rockets.Navigation
 			rocketPreviewBackground.Activate();
 			Append(rocketPreviewBackground);
 
-			rocketPreview = new();
+			rocketPreview = new()
+			{
+				OnModuleChange = OnCurrentModuleChange
+			};
 			rocketPreviewBackground.Append(rocketPreview);
 
 			customizationPanelBackground = new()
@@ -96,11 +112,11 @@ namespace Macrocosm.Content.Rockets.Navigation
 			nameplateConfigPanel = CreateNameplateConfigPanel();
 			customizationPanelBackground.Append(nameplateConfigPanel);
 
-			detailConfig = CreateDetailConfigPanel();
-			customizationPanelBackground.Append(detailConfig);
+			detailConfigPanel = CreateDetailConfigPanel();
+			customizationPanelBackground.Append(detailConfigPanel);
 
-			patternConfig = CustomizationStorage.ProvidePatternUI(currentModuleName);
-			customizationPanelBackground.Append(patternConfig);
+			patternConfigPanel = CreatePatternConfigPanel();
+			customizationPanelBackground.Append(patternConfigPanel);
 			 
 			customizationControlPanel = CreateControlPanel();
 			customizationPanelBackground.Append(customizationControlPanel);
@@ -111,7 +127,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 				Top = new(0f, 0.092f)
 			};
 
-			hslMenu.SetupApplyAndCancelButtons(() => nameplateColorPicker.HasFocus = false, () => nameplateColorPicker.HasFocus = false);
+			hslMenu.SetupApplyAndCancelButtons(ColorPickersLoseFocus, ColorPickersLoseFocus);
 
 			customizationPanelBackground.Activate();
 		}
@@ -120,25 +136,45 @@ namespace Macrocosm.Content.Rockets.Navigation
         {
             base.Update(gameTime);
 
+			currentModule = Rocket.CustomizationDummy.Modules[currentModuleName];
 			modulePickerTitle.SetText(Language.GetText("Mods.Macrocosm.UI.Rocket.Modules." + currentModuleName));
 
+			UpdatePatternConfig();
+
+			UpdatePatternColorPickers();
+			UpdateNamplateTextBox();
+			UpdateNameplateColorPicker();
+			UpdateNameplateAlignButtons();
+			UpdateHSLMenuVisibility();
+
+			
+		}
+
+		private void UpdateNamplateTextBox()
+		{
 			if (nameplateTextBox.HasFocus)
 				Rocket.CustomizationDummy.Nameplate.Text = nameplateTextBox.Text;
 			else
 				nameplateTextBox.Text = Rocket.CustomizationDummy.AssignedName;
+		}
 
+		private void UpdateNameplateColorPicker()
+		{
 			if (nameplateColorPicker.HasFocus)
 			{
 				Rocket.CustomizationDummy.Nameplate.TextColor = hslMenu.PendingColor;
 				nameplateColorPicker.BackPanelColor = hslMenu.PendingColor;
-				//nameplateTextBox.TextColor = HSLMenuProvider.PendingColor; // I don't think we want colored text in the text box lol -- Feldy
-			} 
+				//nameplateTextBox.TextColor = hslMenu.PendingColor; // I don't think we want colored text in the text box lol -- Feldy
+			}
 			else
 			{
 				nameplateColorPicker.BackPanelColor = Rocket.CustomizationDummy.Nameplate.TextColor;
 				//nameplateTextBox.TextColor = Rocket.CustomizationDummy.Nameplate.TextColor;
 			}
+		}
 
+		private void UpdateNameplateAlignButtons()
+		{
 			switch (Rocket.CustomizationDummy.Nameplate.HorizontalAlignment)
 			{
 				case TextAlignmentHorizontal.Left: alignLeft.HasFocus = true; break;
@@ -152,11 +188,69 @@ namespace Macrocosm.Content.Rockets.Navigation
 				case TextAlignmentVertical.Bottom: alignBottom.HasFocus = true; break;
 				case TextAlignmentVertical.Center: alignCenterVertical.HasFocus = true; break;
 			}
-
-			if(nameplateColorPicker.HasFocus)
-				hslMenu.CaptureKeyboard();
 		}
 
+		private UIPatternIcon UpdatePatternConfig()
+		{
+			Pattern currentPattern = Rocket.CustomizationDummy.Modules[currentModuleName].Pattern;
+
+			if (patternSelector.Any())
+			{
+				currentPatternIcon = patternSelector.OfType<UIPatternIcon>()
+					.Where((icon) => icon.Pattern.Name == currentPattern.Name)
+					.FirstOrDefault();
+
+				if(currentPatternIcon is not null)
+				{
+					currentPatternIcon.HasFocus = true;
+
+					//if(patternColorPickers is null)
+					//	CreatePatternColorPickers();
+				}
+			}
+
+			return currentPatternIcon;
+ 		}
+
+		private void UpdatePatternColorPickers()
+		{
+			foreach (var (picker, index) in patternColorPickers)
+			{
+				if (picker.HasFocus)
+				{
+					currentPatternIcon.Pattern.SetColor(index, hslMenu.PendingColor);
+					currentModule.Pattern.SetColor(index, hslMenu.PendingColor);
+				}
+
+				picker.BackPanelColor = currentModule.Pattern.GetColor(index);
+			}
+		}
+
+		private void UpdateHSLMenuVisibility()
+		{
+			bool visible = false;
+
+			foreach (var (picker, index) in patternColorPickers)
+				if (picker.HasFocus)
+					visible = true;
+
+			if (nameplateColorPicker.HasFocus)
+				visible = true;
+
+			if (visible)
+			{
+				hslMenu.CaptureKeyboard();
+
+				if (customizationPanelBackground.HasChild(customizationControlPanel))
+					customizationPanelBackground.ReplaceChildWith(customizationControlPanel, hslMenu);
+			}
+			else
+			{
+				if (customizationPanelBackground.HasChild(hslMenu))
+					customizationPanelBackground.ReplaceChildWith(hslMenu, customizationControlPanel);
+			}
+		}
+ 
 		public void OnTabClose()
 		{
 			NameplateElementsLoseFocus();
@@ -178,6 +272,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 		{
 			NameplateElementsLoseFocus();
 			Rocket.ResetCustomizationDummyToDefault();
+			RefreshPatternColorPickers();
 		}
 
 		private void ResetCurrentModuleToDefaults()
@@ -188,29 +283,21 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 		private void NameplateTextOnFocusGain()
 		{
-			JumpToModule("EngineModule");
+			rocketPreview.SetModule("EngineModule");
 		}
 
 		private void NameplateColorPickerOnFocusGain()
 		{
-			JumpToModule("EngineModule");
+			rocketPreview.SetModule("EngineModule");
 
 			hslMenu.SetColorHSL(Rocket.CustomizationDummy.Nameplate.TextColor.ToHSL());
 			hslMenu.CaptureCurrentColor();
-			customizationPanelBackground.ReplaceChildWith(customizationControlPanel, hslMenu);
+
+			PatternColorPickersLoseFocus();
 		}
 
 		private void NameplateColorPickerOnFocusLost()
 		{
-			Rocket.CustomizationDummy.Nameplate.TextColor = hslMenu.PreviousColor;
-			customizationPanelBackground.ReplaceChildWith(hslMenu, customizationControlPanel);
-		}
-
-		private void JumpToModule(string moduleName)
-		{
-			rocketPreview.UpdateModule(moduleName);
-			currentModuleName = moduleName;
-			customizationPanelBackground.ReplaceChildWith(patternConfig, CustomizationStorage.ProvidePatternUI(currentModuleName));
 		}
 
 		private void NameplateElementsLoseFocus()
@@ -219,38 +306,65 @@ namespace Macrocosm.Content.Rockets.Navigation
 			nameplateColorPicker.HasFocus = false;
 		}
 
-		private void NextModule()
+		private void OnCurrentModuleChange(string moduleName, int moduleIndex)
 		{
-			if (rocketPreview.AnimationActive)
-				return;
-
-			if (rocketPreview.CurrentModuleIndex == Rocket.Modules.Count - 1)
-				rocketPreview.UpdateModule(0);
-			else
-				rocketPreview.UpdateModule(rocketPreview.CurrentModuleIndex + 1);
-
-			currentModuleName = rocketPreview.CurrentModuleName;
-
-			customizationPanelBackground.ReplaceChildWith(patternConfig, CustomizationStorage.ProvidePatternUI(currentModuleName));
-
-			NameplateElementsLoseFocus();
+			currentModuleName = moduleName;
+			customizationPanelBackground.ReplaceChildWith(patternConfigPanel, CreatePatternConfigPanel());
+			RefreshPatternColorPickers();
 		}
 
-		private void PreviousModule()
+		public void SelectPattern(UIPatternIcon icon)
 		{
-			if (rocketPreview.AnimationActive)
-				return;
+			currentPatternIcon = icon;
+			Rocket.CustomizationDummy.Modules[currentModuleName].Pattern = currentPatternIcon.Pattern;
+			RefreshPatternColorPickers();
+		}
 
-			if (rocketPreview.CurrentModuleIndex == 0)
-				rocketPreview.UpdateModule(Rocket.Modules.Count - 1);
-			else
-				rocketPreview.UpdateModule(rocketPreview.CurrentModuleIndex - 1);
+		private void RefreshPatternColorPickers()
+		{
+			UpdatePatternConfig();
 
-			currentModuleName = rocketPreview.CurrentModuleName;
+			if(patternColorPickers is not null)
+				foreach (var (picker, _) in patternColorPickers)
+					picker.Remove();
 
-			customizationPanelBackground.ReplaceChildWith(patternConfig, CustomizationStorage.ProvidePatternUI(currentModuleName));
+			CreatePatternColorPickers();
+		}
 
+		private void ColorPickersLoseFocus()
+		{
+			if (nameplateColorPicker.HasFocus)
+ 				Rocket.CustomizationDummy.Nameplate.TextColor = hslMenu.PreviousColor;
+ 
+			nameplateColorPicker.HasFocus = false;
+			PatternColorPickersLoseFocus();
+		}
+
+		private void PatternColorPickersLoseFocus()
+		{
+
+			if (patternColorPickers is not null)
+				foreach (var (picker, index) in patternColorPickers)
+					picker.HasFocus = false;
+		}
+
+		private void PatternColorPickerOnFocusGain()
+		{
 			NameplateElementsLoseFocus();
+
+			var indexes = currentModule.Pattern.GetUserModifiableIndexes();
+			foreach (var (picker, index) in patternColorPickers)
+			{
+				if (picker.HasFocus)
+				{
+					hslMenu.CaptureCurrentColor();
+					hslMenu.SetColorHSL(currentModule.Pattern.GetColor(index).ToHSL());
+				}
+			}
+		}
+
+		private void PatternColorPickerOnFocusLost()
+		{
 		}
 
 		private const string buttonsPath = "Macrocosm/Content/Rockets/Textures/Buttons/";
@@ -291,24 +405,32 @@ namespace Macrocosm.Content.Rockets.Navigation
 			};
 			modulePicker.Append(moduleIconPreviewPanel);
 
-			UIHoverImageButton leftButton = new(ModContent.Request<Texture2D>(buttonsPath + "BackArrow", mode), ModContent.Request<Texture2D>(buttonsPath + "BackArrowBorder", mode))
+			leftButton = new(ModContent.Request<Texture2D>(buttonsPath + "BackArrow", mode), ModContent.Request<Texture2D>(buttonsPath + "BackArrowBorder", mode))
 			{
 				VAlign = 0.5f,
 				Left = new StyleDimension(0f, 0f),
 			};
 			leftButton.SetVisibility(1f, 1f, 1f);
 			leftButton.CheckInteractible = () => !rocketPreview.AnimationActive;
-			leftButton.OnLeftClick += (_, _) => PreviousModule();
+			leftButton.OnLeftClick += (_, _) => 
+			{ 
+				rocketPreview.PreviousModule();
+				NameplateElementsLoseFocus();
+			};
 			modulePicker.Append(leftButton);
 
-			UIHoverImageButton rightButton = new(ModContent.Request<Texture2D>(buttonsPath + "ForwardArrow", mode), ModContent.Request<Texture2D>(buttonsPath + "ForwardArrowBorder", mode))
+			rightButton = new(ModContent.Request<Texture2D>(buttonsPath + "ForwardArrow", mode), ModContent.Request<Texture2D>(buttonsPath + "ForwardArrowBorder", mode))
 			{
 				VAlign = 0.5f,
 				Left = new StyleDimension(0, 0.79f),
 			};
 			rightButton.SetVisibility(1f, 1f, 1f);
 			rightButton.CheckInteractible = () => !rocketPreview.AnimationActive;
-			rightButton.OnLeftClick += (_, _) => NextModule();
+			rightButton.OnLeftClick += (_, _) => 
+			{
+				rocketPreview.NextModule();
+				NameplateElementsLoseFocus();
+			};
 			modulePicker.Append(rightButton);
 
 			return modulePicker;
@@ -391,7 +513,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 				TextMaxLenght = Nameplate.MaxChars,
 				TextScale = 1f,
 				FormatText = Nameplate.FormatText,
-				FocusContext = "NameplateEdit",
+				FocusContext = "TextBox",
 				OnFocusGain = NameplateTextOnFocusGain
 
 			};
@@ -402,7 +524,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 				VAlign = 0.5f,
 				HAlign = 0f,
 				Left = new(0f, 0.482f),
-				FocusContext = "NameplateEdit"
+				FocusContext = "RocketCustomizationColorPicker"
 			};
 
 			nameplateColorPicker.OnLeftClick += (_, _) => { nameplateColorPicker.HasFocus = true; };
@@ -422,7 +544,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 				FocusContext = "HorizontalAlignment",
 				OnFocusGain = () =>
 				{
-					JumpToModule("EngineModule");
+					rocketPreview.SetModule("EngineModule");
 					Rocket.CustomizationDummy.Nameplate.HorizontalAlignment = TextAlignmentHorizontal.Left;
 				}
 			};
@@ -438,7 +560,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 				FocusContext = "HorizontalAlignment",
 				OnFocusGain = () =>
 				{
-					JumpToModule("EngineModule");
+					rocketPreview.SetModule("EngineModule");
 					Rocket.CustomizationDummy.Nameplate.HorizontalAlignment = TextAlignmentHorizontal.Center;
 				}
 			};
@@ -453,7 +575,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 				FocusContext = "HorizontalAlignment",
 				OnFocusGain = () =>
 				{
-					JumpToModule("EngineModule");
+					rocketPreview.SetModule("EngineModule");
 					Rocket.CustomizationDummy.Nameplate.HorizontalAlignment = TextAlignmentHorizontal.Right;
 				}
 			};
@@ -468,7 +590,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 				FocusContext = "VerticalAlignment",
 				OnFocusGain = () =>
 				{
-					JumpToModule("EngineModule");
+					rocketPreview.SetModule("EngineModule");
 					Rocket.CustomizationDummy.Nameplate.VerticalAlignment = TextAlignmentVertical.Top;
 				}
 			};
@@ -483,7 +605,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 				FocusContext = "VerticalAlignment",
 				OnFocusGain = () =>
 				{
-					JumpToModule("EngineModule");
+					rocketPreview.SetModule("EngineModule");
 					Rocket.CustomizationDummy.Nameplate.VerticalAlignment = TextAlignmentVertical.Center;
 				}
 			};
@@ -498,7 +620,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 				FocusContext = "VerticalAlignment",
 				OnFocusGain = () =>
 				{
-					JumpToModule("EngineModule");
+					rocketPreview.SetModule("EngineModule");
 					Rocket.CustomizationDummy.Nameplate.VerticalAlignment = TextAlignmentVertical.Bottom;
 				}
 			};
@@ -510,7 +632,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 		private UIPanel CreateDetailConfigPanel()
 		{
-			UIPanel detailConfigPanel = new()
+			detailConfigPanel = new()
 			{
 				Width = new(0, 0.99f),
 				Height = new(0, 0.22f),
@@ -521,6 +643,59 @@ namespace Macrocosm.Content.Rockets.Navigation
 			};
 			detailConfigPanel.SetPadding(0f);
 			return detailConfigPanel;
+		}
+
+		private UIPanel CreatePatternConfigPanel()
+		{
+			patternConfigPanel = new()
+			{
+				Width = new(0, 0.99f),
+				Height = new(0, 0.4f),
+				HAlign = 0.5f,
+				Top = new(0f, 0.595f),
+				BackgroundColor = new Color(53, 72, 135),
+				BorderColor = new Color(89, 116, 213, 255),
+			};
+			patternConfigPanel.SetPadding(6f);
+			patternConfigPanel.PaddingTop = 0f;
+
+			patternSelector = CustomizationStorage.ProvidePatternUI(currentModuleName);
+			var icons = patternSelector.OfType<UIPatternIcon>().ToList();
+
+			icons.ForEach((icon) => icon.OnLeftClick += (_, icon) => SelectPattern(icon as UIPatternIcon));
+
+			patternConfigPanel.Append(patternSelector);
+
+			return patternConfigPanel;
+		}
+
+		private List<(UIFocusIconButton, int)> CreatePatternColorPickers()
+		{
+			patternColorPickers = new();
+
+			var indexes = currentPatternIcon.Pattern.GetUserModifiableIndexes();
+
+			for(int i = 0; i < indexes.Count; i++)
+			{
+				UIFocusIconButton colorPicker = new()
+				{
+					HAlign = 0f,
+					Top = new(0f, 0.04f),
+					Left = new(40f * i + 3f, 0f),
+					FocusContext = "RocketCustomizationColorPicker"
+				};
+
+				colorPicker.OnLeftClick += (_, _) => { colorPicker.HasFocus = true; };
+				colorPicker.OnFocusGain = PatternColorPickerOnFocusGain;
+
+				colorPicker.OnRightClick += (_, _) => { colorPicker.HasFocus = false; };
+				colorPicker.OnFocusLost += PatternColorPickerOnFocusLost;
+
+				patternConfigPanel.Append(colorPicker);
+				patternColorPickers.Add((colorPicker, indexes[i]));
+			}	
+
+			return patternColorPickers;
 		}
 	}
 }

@@ -45,6 +45,12 @@ namespace Macrocosm.Content.Rockets
 			Nameplate.HorizontalAlignment = CustomizationDummy.Nameplate.HorizontalAlignment;
 			Nameplate.VerticalAlignment = CustomizationDummy.Nameplate.VerticalAlignment;
 
+			foreach(var moduleName in ModuleNames)
+			{
+				Modules[moduleName].Detail = CustomizationDummy.Modules[moduleName].Detail;
+				Modules[moduleName].Pattern = CustomizationDummy.Modules[moduleName].Pattern.Clone();
+			}
+
 			RefreshCustomizationDummy();
 		}
 
@@ -55,7 +61,7 @@ namespace Macrocosm.Content.Rockets
 			foreach(var moduleKvp in CustomizationDummy.Modules)
 			{
 				moduleKvp.Value.Detail = null;
-				moduleKvp.Value.Pattern = CustomizationStorage.GetPattern(moduleKvp.Key, "Basic");
+				moduleKvp.Value.Pattern = CustomizationStorage.GetDefaultPattern(moduleKvp.Key);
 			}
 		}
 
@@ -65,7 +71,7 @@ namespace Macrocosm.Content.Rockets
  				CustomizationDummy.EngineModule.Nameplate = new();
 
 			CustomizationDummy.Modules[name].Detail = null;
-			CustomizationDummy.Modules[name].Pattern = CustomizationStorage.GetPattern(name, "Basic");
+			CustomizationDummy.Modules[name].Pattern = CustomizationStorage.GetDefaultPattern(name);
 		}
 	}
 }

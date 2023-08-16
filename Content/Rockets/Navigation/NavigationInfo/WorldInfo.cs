@@ -41,10 +41,10 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
 
 		    UIListScrollablePanel listPanel = new(new LocalizedColorScaleText(Language.GetText(localizationPath + subworldName + ".DisplayName"), scale: 1.2f))
 			{
-				Width = new StyleDimension(0, 0.31f),
-				Height = new StyleDimension(0, 0.62f),
-				Left = new StyleDimension(0, 0.01f),
-				Top = new StyleDimension(0, 0.365f),
+				Width = new(0, 0.31f),
+				Height = new(0, 0.62f),
+				Left = new(0, 0.01f),
+				Top = new(0, 0.365f),
 				BackgroundColor = new Color(53, 72, 135),
 				BorderColor = new Color(89, 116, 213, 255)
 			};
@@ -54,7 +54,7 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
 			if (flavorText != LocalizedText.Empty && flavorText.Value != "default")
 			{
 				listPanel.Add(new UIDynamicTextPanel(new LocalizedColorScaleText(flavorText, Color.White, scale: 0.85f)));
-				listPanel.AppendSeparator();
+				listPanel.AddSeparator();
 			}
 
 			List<InfoElement> elements = worldInfoStorage[subworldName];
@@ -66,7 +66,7 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
 				{
 					if (!foundHazards && element is HazardInfoElement)
 					{
-						listPanel.AppendSeparator();
+						listPanel.AddSeparator();
 						foundHazards = true;
 					}
 

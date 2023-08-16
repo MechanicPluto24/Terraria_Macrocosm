@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.Modules;
@@ -21,6 +23,9 @@ namespace Macrocosm.Content.Rockets.Customization
 
 		public bool Unlocked { get; set; }
 		public bool UnlockedByDefault { get; private set; }
+
+		public bool IsDefault => Name == "Basic";
+		public bool HasDefaultColors { get; private set; } = true;
 
 		public int ColorCount { get; }
 		public const int MaxColorCount = 8;
@@ -73,7 +78,7 @@ namespace Macrocosm.Content.Rockets.Customization
 			{
 				if (colorData[index].HasColorFunction)
 					return colorData[index].ColorFunction.Invoke(colorData.Select((c, i) => i == index ? Color.Transparent : GetColor(i)).ToArray());
-				else if (!colorData[index].IsUserChangeable)
+				else if (!colorData[index].IsUserModifiable)
 					return colorData[index].DefaultColor;
  				else 
 					return colorData[index].UserColor;
@@ -81,36 +86,50 @@ namespace Macrocosm.Content.Rockets.Customization
 			return Color.Transparent;
 		}
 
+		public List<int> GetUserModifiableIndexes()
+		{
+			List<int> result = new();
+
+			for (int i = 0; i < ColorCount; i++)
+				if (colorData[i].IsUserModifiable && !colorData[i].HasColorFunction)
+					result.Add(i);
+
+			return result;
+		}
+
 		public void SetColor(int index, Color color)
 		{
-			if (index < 0 || index >= ColorCount || !colorData[index].IsUserChangeable)
+			if (index < 0 || index >= ColorCount || !colorData[index].IsUserModifiable)
 				return;
 
+			HasDefaultColors = false;
 			colorData[index].ColorFunction = null;
 			colorData[index].UserColor = color;
 		}
 
 		public bool TrySetColor(int index, Color color)
 		{
-			if (index < 0 || index >= ColorCount || !colorData[index].IsUserChangeable)
+			if (index < 0 || index >= ColorCount || !colorData[index].IsUserModifiable)
 				return false;
 
-            colorData[index].ColorFunction = null;
+			HasDefaultColors = false;
+			colorData[index].ColorFunction = null;
 			colorData[index].UserColor = color;
             return true;
 		}
 
 		public void SetColor(int index, PatternColorFunction colorFunction)
 		{
-			if (index < 0 || index >= ColorCount || !colorData[index].IsUserChangeable)
+			if (index < 0 || index >= ColorCount || !colorData[index].IsUserModifiable)
 				return;
 
+			HasDefaultColors = false;
 			colorData[index].ColorFunction = colorFunction;
 		}
 
 		public bool TrySetColor(int index, PatternColorFunction colorFunction)
 		{
-			if (index < 0 || index >= ColorCount || !colorData[index].IsUserChangeable)
+			if (index < 0 || index >= ColorCount || !colorData[index].IsUserModifiable)
 				return false;
 
 			colorData[index].ColorFunction = colorFunction;
@@ -161,7 +180,7 @@ namespace Macrocosm.Content.Rockets.Customization
 			spriteBatch.End();
 			spriteBatch.Begin(state.SpriteSortMode, state.BlendState, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, effect, state.Matrix);
  
-			spriteBatch.Draw(IconTexture, position, Color.White);
+			spriteBatch.Draw(IconTexture, position, null, Color.White, 0f, Vector2.Zero, 0.995f, SpriteEffects.None, 0f);
 
 			spriteBatch.End();
 			spriteBatch.Begin(state);
@@ -201,7 +220,7 @@ namespace Macrocosm.Content.Rockets.Customization
 
 			// Save the user-changed colors
 			for (int i = 0; i < ColorCount; i++)
- 				if (colorData[i].IsUserChangeable && !colorData[i].HasColorFunction)
+ 				if (colorData[i].IsUserModifiable && !colorData[i].HasColorFunction)
 					tag[$"UserColor{i}"] = colorData[i].UserColor;  
  
 			return tag;
@@ -218,7 +237,7 @@ namespace Macrocosm.Content.Rockets.Customization
 
 			// Load the user-changed colors
 			for (int i = 0; i < pattern.ColorCount; i++)
-				if (tag.ContainsKey($"UserColor{i}") && pattern.colorData[i].IsUserChangeable && !pattern.colorData[i].HasColorFunction)
+				if (tag.ContainsKey($"UserColor{i}") && pattern.colorData[i].IsUserModifiable && !pattern.colorData[i].HasColorFunction)
 					pattern.colorData[i].UserColor = tag.Get<Color>($"UserColor{i}");
 
 			return pattern;
