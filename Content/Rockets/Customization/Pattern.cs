@@ -74,14 +74,17 @@ namespace Macrocosm.Content.Rockets.Customization
 
 		public Color GetColor(int index)
 		{
+			// TODO: Please Feldy use a struct or something :( -- Feldy 
+			var data = colorData.Select(data => data.Clone()).ToArray();
+
 			if (index >= 0 && index < ColorCount)
 			{
-				if (colorData[index].HasColorFunction)
-					return colorData[index].ColorFunction.Invoke(colorData.Select((c, i) => i == index ? Color.Transparent : GetColor(i)).ToArray());
-				else if (!colorData[index].IsUserModifiable)
-					return colorData[index].DefaultColor;
+				if (data[index].HasColorFunction)
+					return data[index].ColorFunction.Invoke(data.Select((c, i) => i == index ? Color.Transparent : GetColor(i)).ToArray());
+				else if (!data[index].IsUserModifiable)
+					return data[index].DefaultColor;
  				else 
-					return colorData[index].UserColor;
+					return data[index].UserColor;
 			}
 			return Color.Transparent;
 		}
