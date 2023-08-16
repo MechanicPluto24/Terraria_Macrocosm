@@ -243,26 +243,24 @@ namespace Macrocosm.Common.UI
 			};
 		}
 
-		public void CaptureKeyboard(Action postCapture = null)
+		public void UpdateKeyboardCapture(Action postCapture = null)
 		{
-			Main.blockInput = Parent is not null;
-
 			if (Main.keyState.PressingControl())
 			{
 				if (Main.keyState.KeyPressed(Keys.C) || Main.keyState.KeyPressed(Keys.Insert))
 				{
 					CopyHex();
-					copyButton.TriggerRemoteInteraction(5);
+					copyButton.TriggerRemoteInteraction();
 				}
 				else if (Main.keyState.KeyPressed(Keys.V))
 				{
 					PasteHex();
-					pasteButton.TriggerRemoteInteraction(5);
+					pasteButton.TriggerRemoteInteraction();
 				}
 				else if (Main.keyState.KeyPressed(Keys.R))
 				{
 					RandomizeColor();
-					randomizeButton.TriggerRemoteInteraction(5);
+					randomizeButton.TriggerRemoteInteraction();
 				}
 			}
 

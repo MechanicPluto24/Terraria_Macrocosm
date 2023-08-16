@@ -78,7 +78,7 @@ namespace Macrocosm.Common.UI
 				remoteInteractionFeedbackTicks--;
 		}
 
-		public void TriggerRemoteInteraction(int ticks)
+		public void TriggerRemoteInteraction(int ticks = 10)
 		{
 			if (!CheckInteractible())
 				return;
@@ -93,7 +93,7 @@ namespace Macrocosm.Common.UI
 			float visibility = CheckInteractible() ? (IsMouseHovering ? visibilityHover : visibilityInteractible ) : visibilityNotInteractible;
 			spriteBatch.Draw(texture.Value, dimensions.Position(), Color.White * visibility);
 			
-			if (borderTexture != null && (IsMouseHovering || remoteInteractionFeedbackTicks > 0) && CheckInteractible())
+			if (borderTexture != null && (IsMouseHovering && CheckInteractible()) || remoteInteractionFeedbackTicks > 0)
  				spriteBatch.Draw(borderTexture.Value, dimensions.Position(), Color.White);
 		}
 

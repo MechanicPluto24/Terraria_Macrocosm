@@ -232,6 +232,7 @@ namespace Macrocosm.Content.Rockets.Customization
 				BackgroundColor = new Color(53, 72, 135),
 				BorderColor = new Color(89, 116, 213, 255),
 				ListPadding = 0f,
+				ListOuterPadding = 2f,
 				ScrollbarHeight = new(0f, 0.9f),
 				ScrollbarHAlign = 0.99f,
 				ListWidthWithScrollbar = new(0, 1f),
@@ -250,14 +251,14 @@ namespace Macrocosm.Content.Rockets.Customization
 			if (count <= iconsPerRow)
 			{
 				iconSize = 44f + 7f;
-				iconOffsetLeft = 3f;
-				iconOffsetTop = 2f;
+				iconOffsetLeft = 8f;
+				iconOffsetTop = 7f;
 			} 
 			else
 			{
 				iconSize = 44f + 5f;
-				iconOffsetLeft = 3f;
-				iconOffsetTop = 2f;
+				iconOffsetLeft = 7f;
+				iconOffsetTop = 7f;
 			}
 
 			UIElement patternIconContainer = new()

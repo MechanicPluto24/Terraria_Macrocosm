@@ -8,8 +8,8 @@ Common: {
 	CopyColorHex: Copy color to clipboard
 	PasteColorHex: Paste color from clipboard
 	RandomizeColor: Randomize color
-	ApplyColor: Apply color
-	CancelColor: Discard color
+	ApplyColor: Accept color changes
+	CancelColor: Discard color changes
 }
 
 Rocket: {
@@ -27,6 +27,7 @@ Rocket: {
 		CustomizationCancel: Discard rocket appearance changes
 		ResetModule: Reset module to default appearance
 		ResetRocket: Reset rocket to default appearance
+		ResetPattern: Reset pattern to default appearance
 	}
 
 	Modules: {

@@ -1,43 +1,24 @@
-﻿using Macrocosm.Common.UI;
-using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
-using System;
-using Terraria.ModLoader;
+﻿using System.Collections.Generic;
 using Terraria.UI;
-using System.Linq;
-using Terraria;
-using Macrocosm.Common.Utils;
+using Terraria.ModLoader;
+using Macrocosm.Common.UI;
 
 namespace Macrocosm.Common.Hooks
 {
 	internal class UIElementDetours : ILoadable
 	{
-		private Dictionary<string, IFocusable> focusedElementsByContext = new Dictionary<string, IFocusable>();
+		private static Dictionary<string, IFocusable> focusedElementsByContext;
 
 		public void Load(Mod mod)
 		{
-			On_UIElement.Draw += On_UIElement_Draw;
 			On_UIElement.Update += On_UIElement_Update;
-			On_UIElement.OnInitialize += On_UIElement_OnInitialize;
+			focusedElementsByContext = new();
 		}
 
 		public void Unload()
 		{
-			On_UIElement.Draw -= On_UIElement_Draw;
 			On_UIElement.Update -= On_UIElement_Update;
-			On_UIElement.OnInitialize -= On_UIElement_OnInitialize;
-		}
-
-		private void On_UIElement_OnInitialize(On_UIElement.orig_OnInitialize orig, UIElement self)
-		{
-			orig(self);
- 		}
-
-		private void On_UIElement_Draw(On_UIElement.orig_Draw orig, UIElement self, SpriteBatch spriteBatch)
-		{
-
-			orig(self, spriteBatch);
-
+			focusedElementsByContext = null;
 		}
 
 		private void On_UIElement_Update(On_UIElement.orig_Update orig, UIElement self, Microsoft.Xna.Framework.GameTime gameTime)
@@ -45,9 +26,10 @@ namespace Macrocosm.Common.Hooks
 			orig(self, gameTime);
 			HandleFocus(self);
 		}
-
+		
 		private void HandleFocus(UIElement element)
 		{
+			// TODO: call OnFocusGain/Lost even if the element does not have a focus context 
 			if (element is IFocusable focusable && focusable.FocusContext is not null)
 			{
 				IFocusable current;
