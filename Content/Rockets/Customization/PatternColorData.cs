@@ -8,7 +8,7 @@ namespace Macrocosm.Content.Rockets.Customization
 		public readonly bool IsUserModifiable { get; }
 		public readonly Color DefaultColor { get; }
 		public readonly Color UserColor { get; }
-		public readonly PatternColorFunction ColorFunction { get; }
+		public readonly ColorFunction ColorFunction { get; }
 
 		public bool HasColorFunction => ColorFunction != null;
 
@@ -36,7 +36,7 @@ namespace Macrocosm.Content.Rockets.Customization
 			ColorFunction = new(colorFunction);
 		}
 
-		public PatternColorData(PatternColorFunction colorFunction)
+		public PatternColorData(ColorFunction colorFunction)
 		{
 			IsUserModifiable = false;
 			DefaultColor = Color.Transparent;
@@ -59,11 +59,8 @@ namespace Macrocosm.Content.Rockets.Customization
 			return new PatternColorData(DefaultColor, newUserColor);
 		}
 
-		public PatternColorData WithColorFunction(PatternColorFunction function)
+		public PatternColorData WithColorFunction(ColorFunction function)
 		{
-			if (!IsUserModifiable)
-				return this;
-
 			return new PatternColorData(function);
 		}
 	}

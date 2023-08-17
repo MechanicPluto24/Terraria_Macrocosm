@@ -1,19 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using Macrocosm.Common.Drawing;
-using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.UI;
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Rockets.Navigation.NavigationInfo;
-using Macrocosm.Content.Rockets.Navigation;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.Localization;
+using Terraria.UI;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using Terraria.GameContent.UI.Elements;
-using Terraria.UI;
+using Macrocosm.Common.UI;
+using Macrocosm.Common.Utils;
+using Macrocosm.Common.Drawing;
+using Hjson;
+using Terraria.IO;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
@@ -21,17 +18,18 @@ namespace Macrocosm.Content.Rockets.Customization
 	{
 		private static Dictionary<(string moduleName, string patternName), Pattern> patterns;
 		private static Dictionary<(string moduleName, string detailName), Detail> details;
-		private static Dictionary<string, PatternColorFunction> specialFunctions;
 
-		private static IEnumerable<IUnlockable> Unlockables => Utility.Concatenate<IUnlockable>(patterns.Values, details.Values, specialFunctions.Values);
+		private static Dictionary<string, ColorFunction> functions;
+
+		private static IEnumerable<IUnlockable> Unlockables => Utility.Concatenate<IUnlockable>(patterns.Values, details.Values, functions.Values);
 			
 		public override void Load()
 		{
 			patterns = new Dictionary<(string,string), Pattern>();
 			details = new Dictionary<(string, string), Detail>();
-			specialFunctions = new Dictionary<string, PatternColorFunction>();
+ 			functions = new Dictionary<string, ColorFunction>();
 
-			LoadSpecialFunctions(); // Load functions first, as they might be used in the pattern loading
+			LoadFunctions(); // Load functions first, as they are used in the pattern loading
 			LoadPatterns();
 			LoadDetails();
 		}
@@ -40,10 +38,10 @@ namespace Macrocosm.Content.Rockets.Customization
 		{
 			patterns.Clear();
 			details.Clear();
-			specialFunctions.Clear();
+			functions.Clear();
 			patterns = null;
 			details = null;
-			specialFunctions = null;
+			functions = null;
 		}
 
 		public static void Reset()
@@ -142,11 +140,11 @@ namespace Macrocosm.Content.Rockets.Customization
 			 => details[(moduleName, detailName)].Unlocked = unlockedState;
 
 
-		public static PatternColorFunction GetFunction(string functionName)
-			=> specialFunctions[functionName];
+		public static ColorFunction GetFunction(string functionName)
+			=> functions[functionName];
 
-		public static bool TryGetFunction(string functionName, out PatternColorFunction function)
-			=> specialFunctions.TryGetValue(functionName, out function);
+		public static bool TryGetFunction(string functionName, out ColorFunction function)
+			=> functions.TryGetValue(functionName, out function);
 
 		/// <summary>
 		/// Sets the unlocked status on a dynamic color. This affects all players, in all subworlds.
@@ -154,7 +152,7 @@ namespace Macrocosm.Content.Rockets.Customization
 		/// <param name="functionName"> The function name </param>
 		/// <param name="unlockedState"> The unlocked state to set </param>
 		public static void SetFunctionUnlockedStatus(string functionName, bool unlockedState = true)
-			 => specialFunctions[functionName].Unlocked = unlockedState;
+			 => functions[functionName].Unlocked = unlockedState;
 
 		public override void ClearWorld()
 		{
@@ -207,17 +205,27 @@ namespace Macrocosm.Content.Rockets.Customization
 		}
 
 		/// <summary>
-		/// Adds a dynamic color function to the function storage
+		/// Adds a dynamic color function expression to the function storage
 		/// The function has an array of 8 <see cref="Color"/>s as parameter, representing the current pattern colors:
 		/// <code> (colors) => expressionHere </code> 
 		/// </summary>
 		/// <param name="functionName"> The function identifier name </param>
 		/// <param name="function"> The function expression </param>
 		/// <param name="unlockedbyDefault"> Whether  </param>
-		private static void AddSpecialFunction(string functionName, Func<Color[], Color> function, bool unlockedbyDefault = false)
+		private static void AddFunction(string functionName, Func<Color[], Color> function, bool unlockedbyDefault = false)
 		{
-			PatternColorFunction specialFunction = new(function, functionName, unlockedbyDefault);
-			specialFunctions.Add(specialFunction.GetKey(), specialFunction);
+			ColorFunction func = new(function, functionName, unlockedbyDefault);
+			functions.Add(func.GetKey(), func);
+		}
+
+		/// <summary>
+		/// Adds a dynamic color function to the function storage
+		/// The function has an array of 8 <see cref="Color"/>s as parameter, representing the current pattern colors.
+		/// </summary>
+		/// <param name="function"> The function object </param>
+		private static void AddFunction(ColorFunction function)
+		{
+			functions.Add(function.GetKey(), function);
 		}
 
 		private const string localizationPath = "Mods.Macrocosm.Subworlds.";
@@ -285,22 +293,17 @@ namespace Macrocosm.Content.Rockets.Customization
 			return listPanel;
 		}
 
-		// TODO: load these from some file: hjson, JSON, xml, NBT - to decide -- Feldy
+		private static void LoadFunctions()
+		{
+			AddFunction("Disco", (colors) => Main.DiscoColor);
+			AddFunction("Celestial", (colors) => GlobalVFX.CelestialColor);
+		}
+
+		// TODO: load these from JSON
 		private static void LoadPatterns()
 		{
-			/*
-			"Astra"
-			"Basic"
-			"Binary"
-			"Delta"
-			"Hazard"
-			"Helix"
-			"Redstone"
-			"Saturn"
-			*/
-
 			static Color lerpHalf(Color[] colors) => Color.Lerp(colors[1], colors[2], 0.5f);
- 
+
 			AddPattern("CommandPod", "Basic", true, new(Color.White), new(Color.White));
 			AddPattern("CommandPod", "Astra", true, new(Color.White), new(Color.DarkBlue), new(Color.White), new(lerpHalf));
 			AddPattern("CommandPod", "Binary", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40)));
@@ -371,26 +374,5 @@ namespace Macrocosm.Content.Rockets.Customization
 			foreach (var country in Utility.CountryCodesAlpha3)
 				AddDetail("EngineModule", "Flag_" + country, true);
 		}
-
-		private static void LoadSpecialFunctions()
-		{
-			AddSpecialFunction("Disco", (colors) => Main.DiscoColor);
-			AddSpecialFunction("Celestial", (colors) => GlobalVFX.CelestialColor);
-		}
-
-		/*
-		public void AutoloadPatterns()
-		{
-			// Find all existing patters for this module
-			string lookupString = (HERE + MODULES[n] + "_Pattern_").Replace("Macrocosm/", "");
-			PatternPaths = Macrocosm.Instance.RootContentSource.GetAllAssetsStartingWith(lookupString).ToList();
-
-			// Log the pattern list
-			string logstring = "Found " + PatternPaths.Count.ToString() + " pattern" + (PatternPaths.Count == 1 ? "" : "s") + " for rocket module " + MODULES[n] + ": ";
-			foreach (var pattern in PatternPaths)
-				logstring += pattern.Replace(lookupString, "").Replace(".rawimg", "") + " ";
-			Macrocosm.Instance.Logger.Info(logstring);
-		}
-		*/
 	}
 }
