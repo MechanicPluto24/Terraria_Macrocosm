@@ -435,7 +435,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 			currentModule.Pattern = defaultPattern.Clone();
 			currentPatternIcon.Pattern = defaultPattern.Clone();
 
-			if(GetFocusedColorPicker(out var item))
+			if(GetFocusedColorPicker(out var item) && item.colorIndex >= 0)
 			{
 				item.picker.BackPanelColor = defaultPattern.GetColor(item.colorIndex);
 			}
