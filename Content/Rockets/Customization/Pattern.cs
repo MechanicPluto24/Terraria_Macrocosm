@@ -114,7 +114,7 @@ namespace Macrocosm.Content.Rockets.Customization
 
 		}
 
-		public bool SetColor(int index, PatternColorFunction colorFunction)
+		public bool SetColor(int index, ColorFunction colorFunction)
 		{
 			if (index < 0 || index >= MaxColorCount || !ColorData[index].IsUserModifiable)
 				return false;
