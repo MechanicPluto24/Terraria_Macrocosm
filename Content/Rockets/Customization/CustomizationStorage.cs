@@ -190,7 +190,7 @@ namespace Macrocosm.Content.Rockets.Customization
 		/// <param name="colorData"> The color data (default colors, whether they are user changeable, dynamic color function) </param>
 		private static void AddPattern(string moduleName, string patternName, bool unlockedByDefault, params PatternColorData[] colorData)
 		{
-			Pattern pattern = new Pattern(moduleName, patternName, unlockedByDefault, colorData);
+			Pattern pattern = new(moduleName, patternName, unlockedByDefault, colorData);
 			patterns.Add((moduleName, patternName), pattern);
 		}
 
@@ -272,7 +272,7 @@ namespace Macrocosm.Content.Rockets.Customization
 
 			for (int i = 0; i < count; i++)
 			{
-				Pattern pattern = patterns[i];
+				Pattern pattern = patterns[i].Clone();
 				UIPatternIcon icon = pattern.ProvideUI();
 
 				icon.Left = new((i % iconsPerRow) * iconSize + iconOffsetLeft, 0f);
@@ -300,60 +300,60 @@ namespace Macrocosm.Content.Rockets.Customization
 			*/
 
 			static Color lerpHalf(Color[] colors) => Color.Lerp(colors[1], colors[2], 0.5f);
-
+ 
 			AddPattern("CommandPod", "Basic", true, new(Color.White), new(Color.White));
 			AddPattern("CommandPod", "Astra", true, new(Color.White), new(Color.DarkBlue), new(Color.White), new(lerpHalf));
-			AddPattern("CommandPod", "Binary", true, new(Color.White), new(Color.White), new(new Color(80, 80, 80)));
-			AddPattern("CommandPod", "Delta", true, new(Color.White), new(Color.White), new(new Color(80, 80, 80)));
-			AddPattern("CommandPod", "Hazard", true, new(Color.White), new(new Color(80, 80, 80)), new(new Color(134, 128, 0)));
-			AddPattern("CommandPod", "Helix", true, new(Color.White), new(Color.Red), new(Color.Orange), new(Color.Yellow), new(Color.Green), new(Color.Blue), new(Color.Indigo));
-			AddPattern("CommandPod", "Redstone", true, new(Color.White), new(Color.White), new(new Color(80, 80, 80)));
-			AddPattern("CommandPod", "Saturn", true, new(Color.White), new(Color.White), new(new Color(80, 80, 80)));
+			AddPattern("CommandPod", "Binary", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40)));
+			AddPattern("CommandPod", "Delta", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40)));
+			AddPattern("CommandPod", "Hazard", true, new(Color.White), new(new Color(40, 40, 40)), new(new Color(176, 168, 0)));
+			AddPattern("CommandPod", "Helix", true, new(Color.White), new(Color.Red), new(Color.Orange), new(Color.Yellow), new(Color.Green, false), new(Color.Blue, false), new(Color.Indigo, false), new(Color.Violet));
+			AddPattern("CommandPod", "Redstone", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40)));
+			AddPattern("CommandPod", "Saturn", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40)));
 
 			AddPattern("ServiceModule", "Basic", true, new(), new(Color.White));
 			AddPattern("ServiceModule", "Astra", true, new(), new(Color.DarkBlue), new(Color.White), new(lerpHalf));
-			AddPattern("ServiceModule", "Binary", true, new(), new(Color.White), new(new Color(80, 80, 80))); 
-			AddPattern("ServiceModule", "Delta", true, new(), new(Color.White), new(new Color(80, 80, 80))); 
-			AddPattern("ServiceModule", "Hazard", true, new(), new(new Color(80, 80, 80)), new(new Color(134, 128, 0)));
-			AddPattern("ServiceModule", "Helix", true, new(), new(Color.Red), new(Color.Orange), new(Color.Yellow), new(Color.Green), new(Color.Blue), new(Color.Indigo));
-			AddPattern("ServiceModule", "Redstone", true, new(), new(Color.White), new(new Color(80, 80, 80))); 
-			AddPattern("ServiceModule", "Saturn", true, new(), new(Color.White), new(new Color(80, 80, 80)));   
+			AddPattern("ServiceModule", "Binary", true, new(), new(Color.White), new(new Color(40, 40, 40))); 
+			AddPattern("ServiceModule", "Delta", true, new(), new(Color.White), new(new Color(40, 40, 40))); 
+			AddPattern("ServiceModule", "Hazard", true, new(), new(new Color(40, 40, 40)), new(new Color(176, 168, 0)));
+			AddPattern("ServiceModule", "Helix", true, new(), new(Color.Red), new(Color.Orange), new(Color.Yellow), new(Color.Green), new(Color.Blue), new(Color.Indigo), new(Color.Violet, false));
+			AddPattern("ServiceModule", "Redstone", true, new(), new(Color.White), new(new Color(40, 40, 40))); 
+			AddPattern("ServiceModule", "Saturn", true, new(), new(Color.White), new(new Color(40, 40, 40)));   
 
 			AddPattern("ReactorModule", "Basic", true, new(), new(Color.White));
 			AddPattern("ReactorModule", "Astra", true, new(), new(Color.DarkBlue), new(Color.White), new(lerpHalf));
-			AddPattern("ReactorModule", "Binary", true, new(), new(Color.White), new(new Color(50, 50, 50)));
-			AddPattern("ReactorModule", "Delta", true, new(), new(Color.White), new(new Color(50, 50, 50)), new(lerpHalf));
-			AddPattern("ReactorModule", "Hazard", true, new(), new(new Color(80, 80, 80)), new(new Color(134, 128, 0)));
-			AddPattern("ReactorModule", "Helix", true, new(), new(Color.Red), new(Color.Orange), new(Color.Yellow), new(), new(Color.Blue), new(Color.Indigo), new(Color.Violet));
-			AddPattern("ReactorModule", "Redstone", true, new(), new(Color.White), new(new Color(50, 50, 50)));
-			AddPattern("ReactorModule", "Saturn", true, new(), new(Color.White), new(new Color(50, 50, 50)));
+			AddPattern("ReactorModule", "Binary", true, new(), new(Color.White), new(new Color(40, 40, 40)));
+			AddPattern("ReactorModule", "Delta", true, new(), new(Color.White), new(new Color(40, 40, 40)), new(lerpHalf));
+			AddPattern("ReactorModule", "Hazard", true, new(), new(new Color(40, 40, 40)), new(new Color(176, 168, 0)));
+			AddPattern("ReactorModule", "Helix", true, new(), new(Color.Red), new(Color.Orange), new(Color.Yellow), new(Color.Green, false), new(Color.Blue), new(Color.Indigo), new(Color.Violet));
+			AddPattern("ReactorModule", "Redstone", true, new(), new(Color.White), new(new Color(40, 40, 40)));
+			AddPattern("ReactorModule", "Saturn", true, new(), new(Color.White), new(new Color(40, 40, 40)));
 
 			AddPattern("EngineModule", "Basic", true, new(), new(Color.White));
 			AddPattern("EngineModule", "Astra", true, new(), new(Color.DarkBlue), new(Color.White), new(lerpHalf));
 			AddPattern("EngineModule", "Binary", true, new(), new(Color.White), new(new Color(40, 40, 40)));
 			AddPattern("EngineModule", "Delta", true, new(), new(Color.White), new(new Color(40, 40, 40)));
-			AddPattern("EngineModule", "Hazard", true, new(), new(new Color(40, 40, 40)), new(new Color(134, 128, 0)));
+			AddPattern("EngineModule", "Hazard", true, new(), new(new Color(40, 40, 40)), new(new Color(176, 168, 0)));
 			AddPattern("EngineModule", "Helix", true, new(), new(Color.Red), new(Color.Orange), new(Color.Yellow), new(Color.Green), new(Color.Blue), new(Color.Indigo), new(Color.Violet));
 			AddPattern("EngineModule", "Redstone", true, new(), new(Color.White), new(new Color(40, 40, 40)));
 			AddPattern("EngineModule", "Saturn", true, new(), new(Color.White), new(new Color(40, 40, 40)));
 
 			AddPattern("BoosterLeft", "Basic", true, new(Color.White), new(Color.White));
 			AddPattern("BoosterLeft", "Astra", true, new(Color.White), new(Color.DarkBlue), new(Color.White), new(lerpHalf));
-			AddPattern("BoosterLeft", "Binary", true, new(Color.White), new(Color.White), new(new Color(80, 80, 80))); 
-			AddPattern("BoosterLeft", "Delta", true, new(Color.White), new(Color.White), new(new Color(80, 80, 80))); 
-			AddPattern("BoosterLeft", "Hazard", true, new(Color.White), new(new Color(80, 80, 80)), new(new Color(134, 128, 0)));
-			AddPattern("BoosterLeft", "Helix", true, new(Color.White), new(Color.Red), new(Color.Orange), new(Color.Yellow), new(Color.Green), new(Color.Blue), new(Color.Indigo), new(Color.Violet)); 
-			AddPattern("BoosterLeft", "Redstone", true, new(Color.White), new(Color.White), new(new Color(80, 80, 80))); 
-			AddPattern("BoosterLeft", "Saturn", true, new(Color.White), new(Color.White), new(new Color(80, 80, 80)));
+			AddPattern("BoosterLeft", "Binary", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40))); 
+			AddPattern("BoosterLeft", "Delta", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40))); 
+			AddPattern("BoosterLeft", "Hazard", true, new(Color.White), new(new Color(40, 40, 40)), new(new Color(176, 168, 0)));
+			AddPattern("BoosterLeft", "Helix", true, new(Color.White), new(Color.Red), new(Color.Orange), new(Color.Yellow), new(Color.Green), new(Color.Blue), new(Color.Indigo), new(Color.Violet));
+			AddPattern("BoosterLeft", "Redstone", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40))); 
+			AddPattern("BoosterLeft", "Saturn", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40)));
 
 			AddPattern("BoosterRight", "Basic", true, new(Color.White), new(Color.White));
 			AddPattern("BoosterRight", "Astra", true, new(Color.White), new(Color.DarkBlue), new(Color.White), new(lerpHalf));
-			AddPattern("BoosterRight", "Binary", true, new(Color.White), new(Color.White), new(new Color(80, 80, 80)));
-			AddPattern("BoosterRight", "Delta", true, new(Color.White), new(Color.White), new(new Color(80, 80, 80)));
-			AddPattern("BoosterRight", "Hazard", true, new(Color.White), new(new Color(80, 80, 80)), new(new Color(134, 128, 0)));
+			AddPattern("BoosterRight", "Binary", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40)));
+			AddPattern("BoosterRight", "Delta", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40)));
+			AddPattern("BoosterRight", "Hazard", true, new(Color.White), new(new Color(40, 40, 40)), new(new Color(176, 168, 0)));
 			AddPattern("BoosterRight", "Helix", true, new(Color.White), new(Color.Red), new(Color.Orange), new(Color.Yellow), new(Color.Green), new(Color.Blue), new(Color.Indigo), new(Color.Violet));
-			AddPattern("BoosterRight", "Redstone", true, new(Color.White), new(Color.White), new(new Color(80, 80, 80)));
-			AddPattern("BoosterRight", "Saturn", true, new(Color.White), new(Color.White), new(new Color(80, 80, 80)));
+			AddPattern("BoosterRight", "Redstone", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40)));
+			AddPattern("BoosterRight", "Saturn", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40)));
 
 			// Just for testing the scrollbar
 			for (int i = 1; i <= 7; i++)

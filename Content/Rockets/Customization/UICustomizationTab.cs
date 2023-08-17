@@ -123,7 +123,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 			customizationControlPanel = CreateControlPanel();
 			customizationPanelBackground.Append(customizationControlPanel);
 
-			hslMenu = new()
+			hslMenu = new(0.75f)
 			{
 				HAlign = 0.98f,
 				Top = new(0f, 0.092f)
@@ -379,7 +379,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 		{
 			patternColorPickers = new();
 
-			var indexes = currentPatternIcon.Pattern.GetUserModifiableIndexes();
+			var indexes = currentPatternIcon.Pattern.UserModifiableIndexes;
 
 			float iconSize = 32f + 8f;
 			float iconLeftOffset = 3f;
