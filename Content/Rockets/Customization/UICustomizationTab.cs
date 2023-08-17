@@ -279,12 +279,14 @@ namespace Macrocosm.Content.Rockets.Navigation
 		private void PickPreviousModule()
 		{
 			rocketPreview.PreviousModule();
+			RefreshPatternColorPickers();
 			AllLoseFocus();
 		}
 
 		private void PickNextModule()
 		{
 			rocketPreview.NextModule();
+			RefreshPatternColorPickers();
 			AllLoseFocus();
 		}
 
@@ -428,9 +430,16 @@ namespace Macrocosm.Content.Rockets.Navigation
 		{
 			//UpdatePatternConfig();
 			ColorPickersLoseFocus();
+
 			var defaultPattern = CustomizationStorage.GetPattern(currentModuleName, currentModule.Pattern.Name);
-			currentModule.Pattern = defaultPattern;
-			currentPatternIcon.Pattern = defaultPattern;
+			currentModule.Pattern = defaultPattern.Clone();
+			currentPatternIcon.Pattern = defaultPattern.Clone();
+
+			if(GetFocusedColorPicker(out var item))
+			{
+				item.picker.BackPanelColor = defaultPattern.GetColor(item.colorIndex);
+			}
+
 		}
 		#endregion
 
