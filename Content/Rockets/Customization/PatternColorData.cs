@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Rockets.Customization
 
 		public PatternColorData()
 		{
-			IsUserModifiable = true;
+			IsUserModifiable = false;
 			DefaultColor = Color.Transparent;
 			UserColor = Color.Transparent;
 			ColorFunction = null;
