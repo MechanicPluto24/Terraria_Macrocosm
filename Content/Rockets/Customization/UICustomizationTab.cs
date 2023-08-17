@@ -60,6 +60,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 		private List<(UIFocusIconButton picker, int colorIndex)> patternColorPickers;
 		
 		private UIColorMenuHSL hslMenu;
+		private float luminanceSliderFactor = 0.85f;
 
 		public UICustomizationTab()
 		{
@@ -123,7 +124,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 			customizationControlPanel = CreateControlPanel();
 			customizationPanelBackground.Append(customizationControlPanel);
 
-			hslMenu = new(0.85f)
+			hslMenu = new(luminanceSliderFactor)
 			{
 				HAlign = 0.98f,
 				Top = new(0f, 0.092f)
