@@ -123,7 +123,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 			customizationControlPanel = CreateControlPanel();
 			customizationPanelBackground.Append(customizationControlPanel);
 
-			hslMenu = new(0.75f)
+			hslMenu = new(0.85f)
 			{
 				HAlign = 0.98f,
 				Top = new(0f, 0.092f)
@@ -275,7 +275,6 @@ namespace Macrocosm.Content.Rockets.Navigation
 		#endregion
 
 		#region Control actions
-
 		private void PickPreviousModule()
 		{
 			rocketPreview.PreviousModule();
@@ -493,7 +492,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 		{
 			rocketPreview.SetModule("EngineModule");
 
-			hslMenu.SetColorHSL(Rocket.CustomizationDummy.Nameplate.TextColor.ToHSL());
+			hslMenu.SetColorHSL(Rocket.CustomizationDummy.Nameplate.TextColor.ToScaledHSL(0.75f));
 			hslMenu.CaptureCurrentColor();
 		}
 
@@ -505,7 +504,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 		{
 			if(GetFocusedColorPicker(out var item) && item.colorIndex >= 0)
 			{
-				hslMenu.SetColorHSL(currentModule.Pattern.GetColor(item.colorIndex).ToHSL());
+				hslMenu.SetColorHSL(currentModule.Pattern.GetColor(item.colorIndex).ToScaledHSL(0.75f));
 				hslMenu.CaptureCurrentColor();
 			}
 		}
