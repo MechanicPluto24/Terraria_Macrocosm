@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using Macrocosm.Common.UI;
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Rockets.Modules;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using Macrocosm.Common.UI;
+using Macrocosm.Common.Utils;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
@@ -27,10 +25,12 @@ namespace Macrocosm.Content.Rockets.Customization
 		public bool IsDefault => Name == "Basic";
 		public bool HasDefaultColors { get; private set; } = true;
 
-		public int ColorCount { get; }
-		public const int MaxColorCount = 8;
+		public List<int> UserModifiableIndexes { get; } = new();
+		public int UserModifiableColorCount => UserModifiableIndexes.Count;
 
-		private PatternColorData[] colorData;
+		private PatternColorData[] ColorData { get; init; }
+
+		public const int MaxColorCount = 8;
 
 		public string TexturePath => GetType().Namespace.Replace('.', '/') + "/Patterns/" + ModuleName + "/" + Name;
 		public Texture2D Texture
@@ -56,7 +56,7 @@ namespace Macrocosm.Content.Rockets.Customization
 			}
 		}
 
-		public Pattern(string moduleName, string patternName, bool unlockedByDefault, params PatternColorData[] colorData)
+		public Pattern(string moduleName, string patternName, bool unlockedByDefault, params PatternColorData[] defaultColorData)
 		{
 			ModuleName = moduleName;
 			Name = patternName;
@@ -64,27 +64,35 @@ namespace Macrocosm.Content.Rockets.Customization
 			UnlockedByDefault = unlockedByDefault;
 			Unlocked = unlockedByDefault;
 
-			ColorCount = (int)MathHelper.Clamp(colorData.Length, 0, MaxColorCount);
+			ColorData = new PatternColorData[MaxColorCount];
+			Array.Fill(ColorData, new PatternColorData());
 
-			this.colorData = new PatternColorData[MaxColorCount];
-			Array.Fill(this.colorData, new PatternColorData());
-			for (int i = 0; i < ColorCount; i++)
-				this.colorData[i] = colorData[i];
+			for (int i = 0; i < defaultColorData.Length; i++)
+			{
+				if (defaultColorData[i].HasColorFunction)
+				{
+					ColorData[i] = new(defaultColorData[i].ColorFunction);
+				}
+				else
+				{
+					ColorData[i] = new(defaultColorData[i].DefaultColor, defaultColorData[i].IsUserModifiable);
+
+					if(defaultColorData[i].IsUserModifiable)
+						UserModifiableIndexes.Add(i);
+				}
+ 			}
 		}
 
 		public Color GetColor(int index)
 		{
-			// TODO: Please Feldy use a struct or something :( -- Feldy 
-			var data = colorData.Select(data => data.Clone()).ToArray();
-
-			if (index >= 0 && index < ColorCount)
+			if (index >= 0 && index < MaxColorCount)
 			{
-				if (data[index].HasColorFunction)
-					return data[index].ColorFunction.Invoke(data.Select((c, i) => i == index ? Color.Transparent : GetColor(i)).ToArray());
-				else if (!data[index].IsUserModifiable)
-					return data[index].DefaultColor;
+				if (ColorData[index].HasColorFunction)
+					return ColorData[index].ColorFunction.Invoke(ColorData.Select((c, i) => i == index ? Color.Transparent : GetColor(i)).ToArray());
+				else if (!ColorData[index].IsUserModifiable)
+					return ColorData[index].DefaultColor;
  				else 
-					return data[index].UserColor;
+					return ColorData[index].UserColor;
 			}
 			return Color.Transparent;
 		}
@@ -92,50 +100,27 @@ namespace Macrocosm.Content.Rockets.Customization
 		public List<int> GetUserModifiableIndexes()
 		{
 			List<int> result = new();
-
-			for (int i = 0; i < ColorCount; i++)
-				if (colorData[i].IsUserModifiable && !colorData[i].HasColorFunction)
-					result.Add(i);
-
 			return result;
 		}
 
-		public void SetColor(int index, Color color)
+		public bool SetColor(int index, Color color)
 		{
-			if (index < 0 || index >= ColorCount || !colorData[index].IsUserModifiable)
-				return;
-
-			HasDefaultColors = false;
-			colorData[index].ColorFunction = null;
-			colorData[index].UserColor = color;
-		}
-
-		public bool TrySetColor(int index, Color color)
-		{
-			if (index < 0 || index >= ColorCount || !colorData[index].IsUserModifiable)
+			if (index < 0 || index >= MaxColorCount || !ColorData[index].IsUserModifiable)
 				return false;
 
 			HasDefaultColors = false;
-			colorData[index].ColorFunction = null;
-			colorData[index].UserColor = color;
-            return true;
+			ColorData[index] = ColorData[index].WithUserColor(color);
+			return true;
+
 		}
 
-		public void SetColor(int index, PatternColorFunction colorFunction)
+		public bool SetColor(int index, PatternColorFunction colorFunction)
 		{
-			if (index < 0 || index >= ColorCount || !colorData[index].IsUserModifiable)
-				return;
-
-			HasDefaultColors = false;
-			colorData[index].ColorFunction = colorFunction;
-		}
-
-		public bool TrySetColor(int index, PatternColorFunction colorFunction)
-		{
-			if (index < 0 || index >= ColorCount || !colorData[index].IsUserModifiable)
+			if (index < 0 || index >= MaxColorCount || !ColorData[index].IsUserModifiable)
 				return false;
 
-			colorData[index].ColorFunction = colorFunction;
+			HasDefaultColors = false;
+			ColorData[index] = ColorData[index].WithColorFunction(colorFunction);
 			return true;
 		}
 
@@ -222,9 +207,9 @@ namespace Macrocosm.Content.Rockets.Customization
 			};
 
 			// Save the user-changed colors
-			for (int i = 0; i < ColorCount; i++)
- 				if (colorData[i].IsUserModifiable && !colorData[i].HasColorFunction)
-					tag[$"UserColor{i}"] = colorData[i].UserColor;  
+			for (int i = 0; i < MaxColorCount; i++)
+ 				if (ColorData[i].IsUserModifiable && !ColorData[i].HasColorFunction)
+					tag[$"UserColor{i}"] = ColorData[i].UserColor;  
  
 			return tag;
 		}
@@ -235,13 +220,12 @@ namespace Macrocosm.Content.Rockets.Customization
 			string moduleName = tag.GetString("ModuleName");
 
 			Pattern originalPatternData = CustomizationStorage.GetPatternReference(moduleName, name);
-			PatternColorData[] colorData = originalPatternData.colorData.Select(data => data.Clone()).ToArray();
-			Pattern pattern = new(moduleName, name, originalPatternData.UnlockedByDefault, colorData);
+			Pattern pattern = new(moduleName, name, originalPatternData.UnlockedByDefault, originalPatternData.ColorData);
 
 			// Load the user-changed colors
-			for (int i = 0; i < pattern.ColorCount; i++)
-				if (tag.ContainsKey($"UserColor{i}") && pattern.colorData[i].IsUserModifiable && !pattern.colorData[i].HasColorFunction)
-					pattern.colorData[i].UserColor = tag.Get<Color>($"UserColor{i}");
+			for (int i = 0; i < MaxColorCount; i++)
+				if (tag.ContainsKey($"UserColor{i}") && pattern.ColorData[i].IsUserModifiable && !pattern.ColorData[i].HasColorFunction)
+					pattern.ColorData[i] = pattern.ColorData[i].WithUserColor(tag.Get<Color>($"UserColor{i}"));
 
 			return pattern;
 		}

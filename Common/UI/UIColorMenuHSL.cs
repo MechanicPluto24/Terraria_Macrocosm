@@ -28,6 +28,8 @@ namespace Macrocosm.Common.UI
 		public Color PendingColor { get; private set; } = Color.White;
 		public Color PreviousColor { get; private set; } = Color.White;
 
+		public float LuminanceSliderFactor { get; init; } = 0.85f;
+
 		private Vector3 currentColorHSL = Color.White.ToHSL();
 
 		private UIText hslText; 
@@ -46,8 +48,10 @@ namespace Macrocosm.Common.UI
 		private Action onApplyButtonClicked;
 		private Action onCancelButtonClicked;
 
-		public UIColorMenuHSL()
+		public UIColorMenuHSL(float luminanceSliderFactor = 0.85f)
 		{
+			LuminanceSliderFactor = luminanceSliderFactor;
+			
 			Width = new(0f, 0.62f);
 			Height = new(0, 0.25f);
 			BackgroundColor = new Color(53, 72, 135);
@@ -226,7 +230,7 @@ namespace Macrocosm.Common.UI
 					break;
 			}
 
-			Color color = Utility.HSLToRGB(currentColorHSL);
+			Color color = Utility.ScaledHSLToRGB(currentColorHSL, LuminanceSliderFactor);
 			PendingColor = color;
 
 			UpdateHexText(color);
@@ -236,9 +240,9 @@ namespace Macrocosm.Common.UI
 		{
 			return id switch
 			{
-				HSLSliderId.Hue => Utility.HSLToRGB(pointAt, 1f, 0.5f),
-				HSLSliderId.Saturation => Utility.HSLToRGB(currentColorHSL.X, pointAt, currentColorHSL.Z),
-				HSLSliderId.Luminance => Utility.HSLToRGB(currentColorHSL.X, currentColorHSL.Y, pointAt),
+				HSLSliderId.Hue => Utility.ScaledHSLToRGB(pointAt, 1f, 0.5f, LuminanceSliderFactor),
+				HSLSliderId.Saturation => Utility.ScaledHSLToRGB(currentColorHSL.X, pointAt, currentColorHSL.Z, LuminanceSliderFactor),
+				HSLSliderId.Luminance => Utility.ScaledHSLToRGB(currentColorHSL.X, currentColorHSL.Y, pointAt, LuminanceSliderFactor),
 				_ => Color.White,
 			};
 		}
@@ -290,11 +294,11 @@ namespace Macrocosm.Common.UI
 		{
 			SoundEngine.PlaySound(SoundID.MenuTick);
 			string value = Platform.Get<IClipboard>().Value;
-			if (Utility.TryGetColorFromHex(value, out var hsl))
+			if (Utility.TryGetColorFromHex(value, out var hsl, LuminanceSliderFactor))
 			{
-				PendingColor = Utility.HSLToRGB(hsl);
+				PendingColor = Utility.ScaledHSLToRGB(hsl, LuminanceSliderFactor);
 				currentColorHSL = hsl;
-				UpdateHexText(Utility.HSLToRGB(hsl));
+				UpdateHexText(Utility.ScaledHSLToRGB(hsl, LuminanceSliderFactor));
 			}
 		}
 
@@ -302,32 +306,30 @@ namespace Macrocosm.Common.UI
 		{
 			SoundEngine.PlaySound(SoundID.MenuTick);
 			Vector3 randomColorVector = new(Main.rand.NextFloat(), Main.rand.NextFloat(), Main.rand.NextFloat());
-			PendingColor = Utility.HSLToRGB(randomColorVector);
+			PendingColor = Utility.ScaledHSLToRGB(randomColorVector, LuminanceSliderFactor);
 			currentColorHSL = randomColorVector;
-			UpdateHexText(Utility.HSLToRGB(randomColorVector));
+			UpdateHexText(Utility.ScaledHSLToRGB(randomColorVector, LuminanceSliderFactor));
 		}
 
 
 		public void CaptureCurrentColor()
 		{
-			PreviousColor = Utility.HSLToRGB(currentColorHSL);
+			PreviousColor = Utility.ScaledHSLToRGB(currentColorHSL, LuminanceSliderFactor);
 		}
 
 		public void SetColorRGB(Color rgb)
 		{
 			PendingColor = rgb;
-			currentColorHSL = rgb.ToHSL();
+			currentColorHSL = rgb.ToScaledHSL(LuminanceSliderFactor);
 			UpdateHexText(rgb);
 		}
 
 		public void SetColorHSL(Vector3 hsl)
 		{
-			PendingColor = Utility.HSLToRGB(hsl);
+			PendingColor = Utility.ScaledHSLToRGB(hsl, LuminanceSliderFactor);
 			currentColorHSL = hsl;
-			UpdateHexText(Utility.HSLToRGB(hsl));
+			UpdateHexText(Utility.ScaledHSLToRGB(hsl, LuminanceSliderFactor));
 		}
-
-		
 
 		private void UpdateHexText(Color pendingColor)
 		{
