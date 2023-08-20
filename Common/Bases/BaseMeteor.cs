@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Projectiles.Global;
 
-namespace Macrocosm.Content.Projectiles.Base
+namespace Macrocosm.Common.Bases
 {
     public abstract class BaseMeteor : ModProjectile, IExplosive
     {
@@ -120,7 +120,7 @@ namespace Macrocosm.Content.Projectiles.Base
             for (int i = 0; i < DebrisCount; i++)
             {
                 Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center,
-                new Vector2(DebrisVelocity.X * Main.rand.NextFloat(-6f, 6f), DebrisVelocity.Y * Main.rand.NextFloat(-4f, -1f)), 
+                new Vector2(DebrisVelocity.X * Main.rand.NextFloat(-6f, 6f), DebrisVelocity.Y * Main.rand.NextFloat(-4f, -1f)),
                 DebrisType, 0, 0f, 255);
             }
         }

@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Content.Rockets.Customization;
+using Macrocosm.Content.Rockets.Modules;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Macrocosm.Content.Rockets
@@ -43,7 +45,33 @@ namespace Macrocosm.Content.Rockets
 			Nameplate.HorizontalAlignment = CustomizationDummy.Nameplate.HorizontalAlignment;
 			Nameplate.VerticalAlignment = CustomizationDummy.Nameplate.VerticalAlignment;
 
+			foreach(var moduleName in ModuleNames)
+			{
+				Modules[moduleName].Detail = CustomizationDummy.Modules[moduleName].Detail;
+				Modules[moduleName].Pattern = CustomizationDummy.Modules[moduleName].Pattern.Clone();
+			}
+
 			RefreshCustomizationDummy();
+		}
+
+		public void ResetCustomizationDummyToDefault()
+		{
+			CustomizationDummy.EngineModule.Nameplate = new();
+
+			foreach(var moduleKvp in CustomizationDummy.Modules)
+			{
+				moduleKvp.Value.Detail = null;
+				moduleKvp.Value.Pattern = CustomizationStorage.GetDefaultPattern(moduleKvp.Key);
+			}
+		}
+
+		public void ResetDummyModuleToDefault(string name)
+		{
+			if(name is "EngineModule")
+ 				CustomizationDummy.EngineModule.Nameplate = new();
+
+			CustomizationDummy.Modules[name].Detail = null;
+			CustomizationDummy.Modules[name].Pattern = CustomizationStorage.GetDefaultPattern(name);
 		}
 	}
 }

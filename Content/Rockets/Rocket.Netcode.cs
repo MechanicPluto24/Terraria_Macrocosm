@@ -49,6 +49,7 @@ namespace Macrocosm.Content.Rockets
 			int rocketIndex = reader.ReadByte(); 
 
 			Rocket rocket = RocketManager.Rockets[rocketIndex];
+			rocket.WhoAmI = rocketIndex;
 			rocket.NetReadFields(reader);
 			
 			if (Main.netMode == NetmodeID.Server)

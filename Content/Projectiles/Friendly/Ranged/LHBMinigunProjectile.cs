@@ -1,6 +1,6 @@
+using Macrocosm.Common.Bases;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Gores;
-using Macrocosm.Content.Projectiles.Base;
 using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -12,7 +12,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-    public class LHBMinigunProjectile : HeldGunProjectile
+    public class LHBMinigunProjectile : ChargedGunHeldProjectile
 	{
 		private const int windupFrames = 4; // number of windup animaton frames
 		private const int shootFrames = 6;  // number of shooting animaton frames

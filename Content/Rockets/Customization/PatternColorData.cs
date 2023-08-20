@@ -3,26 +3,26 @@ using Microsoft.Xna.Framework;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-	public class PatternColorData
+	public readonly struct PatternColorData
 	{
-		public bool IsUserChangeable { get; }
-		public Color DefaultColor { get; }
-		public Color UserColor { get; set; }
-		public PatternColorFunction ColorFunction { get; set; }
+		public readonly bool IsUserModifiable { get; }
+		public readonly Color DefaultColor { get; }
+		public readonly Color UserColor { get; }
+		public readonly PatternColorFunction ColorFunction { get; }
 
 		public bool HasColorFunction => ColorFunction != null;
 
 		public PatternColorData()
 		{
-			IsUserChangeable = true;
+			IsUserModifiable = false;
 			DefaultColor = Color.Transparent;
 			UserColor = Color.Transparent;
 			ColorFunction = null;
 		}
 
-		public PatternColorData(Color defaultColor, bool isUserChangeable = true)
+		public PatternColorData(Color defaultColor, bool isUserModifiable = true)
 		{
-			IsUserChangeable = isUserChangeable;
+			IsUserModifiable = isUserModifiable;
 			DefaultColor = defaultColor;
 			UserColor = defaultColor;
 			ColorFunction = null;
@@ -30,7 +30,7 @@ namespace Macrocosm.Content.Rockets.Customization
 
 		public PatternColorData(Func<Color[], Color> colorFunction)
 		{
-			IsUserChangeable = false;
+			IsUserModifiable = false;
 			DefaultColor = Color.Transparent;
 			UserColor = Color.Transparent;
 			ColorFunction = new(colorFunction);
@@ -38,21 +38,33 @@ namespace Macrocosm.Content.Rockets.Customization
 
 		public PatternColorData(PatternColorFunction colorFunction)
 		{
-			IsUserChangeable = false;
+			IsUserModifiable = false;
 			DefaultColor = Color.Transparent;
 			UserColor = Color.Transparent;
 			ColorFunction = colorFunction;
 		}
 
-		public PatternColorData Clone()
+		private PatternColorData(Color defaultColor, Color userColor)
 		{
-			PatternColorData clonedData = new(this.DefaultColor, this.IsUserChangeable)
-			{
-				UserColor = this.UserColor,
-				ColorFunction = this.ColorFunction
-			};
+			DefaultColor = defaultColor;
+			UserColor = userColor;
+			IsUserModifiable = true;
+		}
 
-			return clonedData;
+		public PatternColorData WithUserColor(Color newUserColor)
+		{
+			if (!IsUserModifiable || HasColorFunction)
+ 				return this;
+ 
+			return new PatternColorData(DefaultColor, newUserColor);
+		}
+
+		public PatternColorData WithColorFunction(PatternColorFunction function)
+		{
+			if (!IsUserModifiable)
+				return this;
+
+			return new PatternColorData(function);
 		}
 	}
 }

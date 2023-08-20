@@ -1,0 +1,34 @@
+Fear: {
+	DisplayName: Fear
+	Description: OH GOD WHAT IS THAT!?
+}
+
+SuitBreach: {
+	DisplayName: Suit Breach
+	Description: A hole has appeared in your suit, your blood begins to boil!
+}
+
+Depressurized: {
+	DisplayName: Depressurized
+	Description: Your blood is boiling!
+}
+
+ChandriumEmpowerment: {
+	DisplayName: Chandrium Empowerment
+	Description: Your next hit with your Chandrium Whip will deal increased damage!
+}
+
+CalcicCaneMinionBuff: {
+	DisplayName: Crater Imp
+	Description: This lesser demon will fight for you!
+}
+
+ChandriumStaffMinionBuff: {
+	DisplayName: Crescent Ghoul
+	Description: This Crescent Ghoul will fight for you!
+}
+
+SpaceShuttle: {
+	DisplayName: Space Shuttle
+	Description: In memory of STS-51-L and STS-107.
+}

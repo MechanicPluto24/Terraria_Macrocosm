@@ -13,11 +13,15 @@ namespace Macrocosm.Common.Systems
 
     public class GameTipSystem : ModSystem
 	{
+		public const string LoadingScreenTipsLocalizationPath = "Mods.Macrocosm.UI.LoadingScreenTips.";
+
 		public override void Load()
 		{
 			IL_GameTipsDisplay.AddNewTip += GameTipsDisplay_AddNewTip;
+			On_GameTipsDisplay.GameTip.IsExpiring += GameTip_IsExpiring;
 		}
 
+	
 		public override void Unload()
 		{
 			IL_GameTipsDisplay.AddNewTip -= GameTipsDisplay_AddNewTip;
@@ -61,7 +65,7 @@ namespace Macrocosm.Common.Systems
 			if (LoadingScreen.CurrentlyActive)
 			{
 				// ..get the LoadingScreen specific GameTips, respective to the active subworld..
-				LocalizedText[] messages = Language.FindAll(Lang.CreateDialogFilter("Mods.Macrocosm.LoadingScreenTips." + (SubworldSystem.AnyActive<Macrocosm>() ? MacrocosmSubworld.Current.Name : "Earth")));
+				LocalizedText[] messages = Language.FindAll(Lang.CreateDialogFilter(LoadingScreenTipsLocalizationPath + (SubworldSystem.AnyActive<Macrocosm>() ? MacrocosmSubworld.Current.Name : "Earth")));
 
 				// .. and return a random message from that list
 				if (messages.Length > 0)
@@ -71,6 +75,29 @@ namespace Macrocosm.Common.Systems
 			// Otherwise, pass the original key and let the logic run unaffected
 			return textKey;
 		}
+
+		/// <summary> Detour that ensures vanilla game tips will expire quickly when in a Macrocosm loading screen </summary>
+		// TODO: this could use an IL edit instead of reflection
+		private bool GameTip_IsExpiring(On_GameTipsDisplay.GameTip.orig_IsExpiring orig, object self, double currentTime)
+		{
+			if (LoadingScreen.CurrentlyActive)
+			{
+				var field = self.GetType().GetField("_textKey");
+				if(field is null)
+					return orig(self, currentTime);
+
+				LocalizedText text = field.GetValue(self) as LocalizedText;
+				if(text is null)
+					return orig(self, currentTime);
+
+				return !text.Key.Contains(LoadingScreenTipsLocalizationPath);
+			}
+			else
+			{
+				return orig(self, currentTime);
+			}
+		}
+
 
 		// This is called only when not in a loading screen.
 		public override void UpdateUI(GameTime gameTime)

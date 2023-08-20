@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework.Graphics;
 using SubworldLibrary;
 using System;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Macrocosm.Common.Netcode;
@@ -58,16 +57,16 @@ namespace Macrocosm.Content.Rockets
 		[NetSync] public float FuelCapacity = 1000f;
 
 		/// <summary> The rocket's current world, "Earth" if active and not in a subworld. Other mod's subworlds have the mod name prepended </summary>
-		[NetSync] public string CurrentSubworld;
+		[NetSync] public string CurrentWorld;
 
-		/// <summary> Whether the rocket is active in the current subworld and should be updated and visible </summary>
-		public bool ActiveInCurrentSubworld => Active && CurrentSubworld == MacrocosmSubworld.CurrentSubworld;
+		/// <summary> Whether the rocket is active in the current world and should be updated and visible </summary>
+		public bool ActiveInCurrentWorld => Active && CurrentWorld == MacrocosmSubworld.CurrentWorld;
 
 		/// <summary> The rocket's bounds width </summary>
-		public static int Width = 276;
+		public const int Width = 276;
 
 		/// <summary> The rocket's bounds height </summary>
-		public static int Height = 594;
+		public const int Height = 594;
 
 		/// <summary> The size of the rocket's bounds </summary>
 		public static Vector2 Size => new(Width, Height);
@@ -101,7 +100,7 @@ namespace Macrocosm.Content.Rockets
 		/// <summary> List of the module names, in the customization access order </summary>
 		public List<string> ModuleNames => Modules.Keys.ToList();
 
-		/// <summary> List of all the rocket's modules, in their order found in ModuleNames </summary>
+		/// <summary> Dictionary of all the rocket's modules by name, in their order found in ModuleNames </summary>
 		public Dictionary<string, RocketModule> Modules = new()
 		{
 			{ "CommandPod", new CommandPod() },
@@ -149,22 +148,35 @@ namespace Macrocosm.Content.Rockets
 
 		public void OnCreation()
 		{
-			CurrentSubworld = MacrocosmSubworld.CurrentSubworld;
+			CurrentWorld = MacrocosmSubworld.CurrentWorld;
 		}
 
+		/// <summary> Called when spawning into a new world </summary>
 		public void OnWorldSpawn()
 		{
 			ResetAnimation();
 
-			if (Landing)
+			if (Landing && ActiveInCurrentWorld)
 			{
-				// This is to ensure the location is properly assigned if subworld was just generated
+				// Travel to spawn point if a specific launchpad has not been set
 				if (TargetLandingPosition == default)
-					TargetLandingPosition = LaunchPadManager.GetDefaultLaunchPad(CurrentSubworld).Position;
-
+ 					TargetLandingPosition = Utility.SpawnWorldPosition;
+ 
 				Center = new(TargetLandingPosition.X, Center.Y);
 			}	
 		}
+
+		/// <summary> Called when a subworld is generated </summary>
+		public void OnSubworldGenerated() 
+		{
+			if (Landing && ActiveInCurrentWorld)
+			{
+				// Target landing position always defaults to the spawn point just set on worldgen
+				TargetLandingPosition = Utility.SpawnWorldPosition;
+				Center = new(TargetLandingPosition.X, Center.Y);
+			}
+		}
+
 
 		/// <summary> Update the rocket </summary>
 		public void Update()
@@ -216,7 +228,7 @@ namespace Macrocosm.Content.Rockets
 			}
 
 			Active = false;
-			CurrentSubworld = "";
+			CurrentWorld = "";
 			NetSync();
 		}
 
@@ -250,6 +262,24 @@ namespace Macrocosm.Content.Rockets
 		/// <summary> Gets the RocketPlayer bound to the provided player ID </summary>
 		/// <param name="playerID"> The player ID </param>
 		public RocketPlayer GetRocketPlayer(int playerID) => Main.player[playerID].RocketPlayer();
+
+		/// <summary> Gets the commander of this rocket </summary>
+		public RocketPlayer GetCommander()
+		{
+			if (Main.netMode == NetmodeID.SinglePlayer)
+			{
+				return GetRocketPlayer(Main.myPlayer);
+			}
+			else
+			{
+				if (TryFindingCommander(out int id))
+					return GetRocketPlayer(id);
+				else if (AnyEmbarkedPlayers(out id))
+					return GetRocketPlayer(id);
+				else
+					return null;
+			}
+		}
 
 		/// <summary> Checks whether the provided player ID is on this rocket </summary>
 		/// <param name="playerID"> The player ID </param>
@@ -528,44 +558,43 @@ namespace Macrocosm.Content.Rockets
 			if (Main.netMode == NetmodeID.Server)
 				return;
 
-			RocketPlayer commander;
-			if (Main.netMode == NetmodeID.SinglePlayer)
- 				commander = GetRocketPlayer(Main.myPlayer);
- 			else  
-			{
-				if (TryFindingCommander(out int id))
-					commander = GetRocketPlayer(id);
-				else if (AnyEmbarkedPlayers(out id))
-					commander = GetRocketPlayer(id);
-				else
-					return;
- 			}
-
 			if (CheckPlayerInRocket(Main.myPlayer))
 			{
-				CurrentSubworld = commander.TargetSubworldID;
+				RocketPlayer commander = GetCommander();
+
+				if(commander is null)
+				{
+					HandleWorldTravelFailure("Error: Could not find the commander of Rocket " + WhoAmI);
+					return;
+				}
+
+				CurrentWorld = commander.TargetSubworldID;
 				//NetSync();
 
-				// if(commander.TargetLandingPosition != Vector2.Zero) // (or nullable Vector2?)
-				//   TargetLandingPosition = commander.TargetLandingPosition;
-				// else 
-				TargetLandingPosition = LaunchPadManager.GetDefaultLaunchPad(commander.TargetSubworldID).Position;
- 
+				//LaunchPad launchPad = commander.SelectedLaunchPad;
+				LaunchPad launchPad = null; 
+
+				if(launchPad is not null) 
+					TargetLandingPosition = launchPad.Position;
+				else
+					TargetLandingPosition = default;
+
 				if (commander.TargetSubworldID == "Earth")
 					SubworldSystem.Exit();
 				else if (commander.TargetSubworldID != null && commander.TargetSubworldID != "")
 				{
 					if (!SubworldSystem.Enter(Macrocosm.Instance.Name + "/" + commander.TargetSubworldID))
-					{
-						// Stay here if entering the subworld fails, for whatever reason
-						CurrentSubworld = MacrocosmSubworld.CurrentSubworld;
-						string message = "Error: Failed entering target subworld: " + commander.TargetSubworldID + ", staying on " + MacrocosmSubworld.CurrentSubworld;
-
-						Utility.Chat(message, Color.Red);
-						Macrocosm.Instance.Logger.Error(message);
-					}
-				}
+						HandleWorldTravelFailure("Error: Failed entering target subworld: " + commander.TargetSubworldID + ", staying on " + MacrocosmSubworld.CurrentWorld);
+ 				}
 			}
+		}
+
+		// Called if travel to the target subworld fails
+		private void HandleWorldTravelFailure(string message)
+		{
+			CurrentWorld = MacrocosmSubworld.CurrentWorld;
+			Utility.Chat(message, Color.Red);
+			Macrocosm.Instance.Logger.Error(message);
 		}
 	}
 }

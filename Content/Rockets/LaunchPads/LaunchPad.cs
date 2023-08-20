@@ -19,7 +19,6 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 		[NetSync] public Point16 StartTile;
 		[NetSync] public Point16 EndTile;
 		[NetSync] public bool HasRocket;
-		[NetSync] public bool IsDefault;
 
 		public int Width => EndTile.X + 1 - StartTile.X;
 		public Rectangle Hitbox => new((int)(StartTile.X * 16f), (int)(StartTile.Y * 16f), Width * 16, 16);
@@ -49,15 +48,6 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 		{
 			LaunchPad launchPad = new(startTileX, startTileY, endTileX, endTileY);
 
-			/*
-			LaunchPad existingLaunchPad = LaunchPadManager.GetLaunchPadAtTileCoordinates(subworldId, new(startTileX, startTileY));
-			if (existingLaunchPad is not null)
-			{
-				// NetSync ? 
-				return existingLaunchPad;
-			}
-			*/
-
 			LaunchPadManager.Add(subworldId, launchPad);
 			launchPad.NetSync(subworldId);
 			return launchPad;
@@ -69,14 +59,11 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
 		public void Update()
 		{
-			if (IsDefault)
-				return;
-
 			for(int i = 0; i < RocketManager.MaxRockets; i++)
 			{
 				Rocket rocket = RocketManager.Rockets[i];
 
-				if (rocket.ActiveInCurrentSubworld)
+				if (rocket.ActiveInCurrentWorld)
 				{
 					if (Hitbox.Intersects(rocket.Bounds))
 						HasRocket = true;
@@ -166,7 +153,6 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 				[nameof(StartTile)] = StartTile,
 				[nameof(EndTile)] = EndTile,
 				[nameof(HasRocket)] = HasRocket,
-				[nameof(IsDefault)] = IsDefault
 			};
 
 			return tag;
@@ -177,7 +163,6 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			LaunchPad launchPad = new()
 			{
 				HasRocket = tag.ContainsKey(nameof(HasRocket)),
-				IsDefault = tag.ContainsKey(nameof(IsDefault))
 			};
 
 			if (tag.ContainsKey(nameof(StartTile)))

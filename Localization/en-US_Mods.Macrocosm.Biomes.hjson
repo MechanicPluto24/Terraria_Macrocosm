@@ -1,0 +1,19 @@
+MoonBiome: {
+	DisplayName: The Moon
+	TownNPCDialogueName: The Moon
+}
+
+BasaltBiome: {
+	DisplayName: Basalt
+	TownNPCDialogueName: The Basalt
+}
+
+IrradiationBiome: {
+	DisplayName: The Irradiation
+	TownNPCDialogueName: The Irradiation
+}
+
+UndergroundMoonBiome: {
+	DisplayName: Underground Moon
+	TownNPCDialogueName: The Underground Moon Biome
+}

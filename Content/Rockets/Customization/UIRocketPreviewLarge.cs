@@ -1,23 +1,26 @@
 ﻿using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
-    public class UIRocketPreviewLarge : UIPanel
-    {
-        public Rocket Rocket = new();
+    public class UIRocketPreviewLarge : UIPanel, IRocketDataConsumer
+	{
+        public Rocket Rocket { get; set; }  
 
-		public string CurrentModuleName { get; set; } = "CommandPod";
+		public string CurrentModuleName { get; private set; } = "CommandPod";
 
 		public int CurrentModuleIndex 
 		{
 			get => Rocket.ModuleNames.IndexOf(CurrentModuleName);
-			set => CurrentModuleName = Rocket.ModuleNames[value];
+			private set => CurrentModuleName = Rocket.ModuleNames[value];
 		}
+
+		public Action<string, int> OnModuleChange { get; set; }
 
 		public bool AnimationActive => lastModuleIndex != CurrentModuleIndex;
 
@@ -43,16 +46,48 @@ namespace Macrocosm.Content.Rockets.Navigation
 			BorderColor = Color.Transparent;	
         }
 
-		public void UpdateModule(string moduleName)
+		public void SetModule(string moduleName)
 		{
+			bool changed = CurrentModuleName != moduleName;
+
 			lastModuleIndex = CurrentModuleIndex;
 			CurrentModuleName = moduleName;
+
+			if (changed)
+				OnModuleChange(CurrentModuleName, CurrentModuleIndex);
 		}
 
-		public void UpdateModule(int moduleIndex)
+		public void SetModule(int moduleIndex)
 		{
+			bool changed = CurrentModuleIndex != moduleIndex;
+
 			lastModuleIndex = CurrentModuleIndex;
 			CurrentModuleIndex = moduleIndex;
+
+			if(changed)
+				OnModuleChange(CurrentModuleName, CurrentModuleIndex);
+		}
+
+		public void NextModule()
+		{
+			if (AnimationActive)
+				return;
+
+			if (CurrentModuleIndex == Rocket.Modules.Count - 1)
+				SetModule(0);
+			else
+				SetModule(CurrentModuleIndex + 1);
+		}
+
+		public void PreviousModule()
+		{
+			if (AnimationActive)
+				return;
+
+			if (CurrentModuleIndex == 0)
+				SetModule(Rocket.Modules.Count - 1);
+			else
+				SetModule(CurrentModuleIndex - 1);
 		}
 
 		public override void Update(GameTime gameTime)

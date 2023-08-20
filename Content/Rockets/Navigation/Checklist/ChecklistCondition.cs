@@ -32,7 +32,7 @@ namespace Macrocosm.Content.Rockets.Navigation.Checklist
 			return uIElement;
 		}
 
-		public virtual UIElement ProvideUI(ChecklistInfoElement.ExtraIconType notMetIcon = ChecklistInfoElement.ExtraIconType.RedCrossmark, ChecklistInfoElement.ExtraIconType metIcon = ChecklistInfoElement.ExtraIconType.GreenCheckmark)
+		public virtual UIElement ProvideUI(ChecklistInfoElement.ExtraIconType notMetIcon = ChecklistInfoElement.ExtraIconType.CrossmarkRed, ChecklistInfoElement.ExtraIconType metIcon = ChecklistInfoElement.ExtraIconType.CheckmarkGreen)
 		{
 			checklistInfoElement.NotMetIcon = notMetIcon;
 			checklistInfoElement.MetIcon = metIcon;
