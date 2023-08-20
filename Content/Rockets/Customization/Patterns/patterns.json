@@ -1,0 +1,549 @@
+[
+  {
+    "patternName": "Basic",
+    "moduleName": "CommandPod",
+    "unlockedByDefault": true,
+    "colorData": [
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#FFFFFF" }
+    ]
+  },
+  {
+    "patternName": "Astra",
+    "moduleName": "CommandPod",
+    "unlockedByDefault": true,
+    "colorData": [
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#00008B" },
+      { "defaultColor": "#FFFFFF" },
+      {
+        "colorFunction": "Lerp",
+        "params": [ [1,2], 0.5 ]
+      }
+    ]
+  },
+  {
+    "patternName": "Binary",
+    "moduleName": "CommandPod",
+    "unlockedByDefault": true,
+    "colorData": [
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#282828" }
+    ]
+  },
+  {
+    "patternName": "Delta",
+    "moduleName": "CommandPod",
+    "unlockedByDefault": true,
+    "colorData": [
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#282828" }
+    ]
+  },
+  {
+    "patternName": "Hazard",
+    "moduleName": "CommandPod",
+    "unlockedByDefault": true,
+    "colorData": [
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#282828" },
+      { "defaultColor": "#B0A800" }
+    ]
+  },
+  {
+    "patternName": "Helix",
+    "moduleName": "CommandPod",
+    "unlockedByDefault": true,
+    "colorData": [
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#FF0000" },
+      { "defaultColor": "#FFA500" },
+      { "defaultColor": "#FFFF00" },
+      {
+        "defaultColor": "#008000",
+        "userModifiable": false
+      },
+      {
+        "defaultColor": "#0000FF",
+        "userModifiable": false
+      },
+      {
+        "defaultColor": "#4B0082",
+        "userModifiable": false
+      },
+      { "defaultColor": "#EE82EE" }
+    ]
+  },
+  {
+    "patternName": "Redstone",
+    "moduleName": "CommandPod",
+    "unlockedByDefault": true,
+    "colorData": [
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#282828" }
+    ]
+  },
+  {
+    "patternName": "Saturn",
+    "moduleName": "CommandPod",
+    "unlockedByDefault": true,
+    "colorData": [
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#282828" }
+    ]
+  },
+  {
+    "patternName": "Basic",
+    "moduleName": "ServiceModule",
+    "unlockedByDefault": true,
+    "colorData": [
+      "default",
+      { "defaultColor": "#FFFFFF" }
+    ]
+  },
+  {
+    "patternName": "Astra",
+    "moduleName": "ServiceModule",
+    "unlockedByDefault": true,
+    "colorData": [
+      "default",
+      { "defaultColor": "#00008B" },
+      { "defaultColor": "#FFFFFF" },
+      {
+        "colorFunction": "Lerp",
+        "params": [ [ 1, 2 ], 0.5 ]
+      }
+    ]
+  },
+  {
+    "patternName": "Binary",
+    "moduleName": "ServiceModule",
+    "unlockedByDefault": true,
+    "colorData": [
+      "default",
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#282828" }
+    ]
+  },
+  {
+    "patternName": "Delta",
+    "moduleName": "ServiceModule",
+    "unlockedByDefault": true,
+    "colorData": [
+      "default",
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#282828" }
+    ]
+  },
+  {
+    "patternName": "Hazard",
+    "moduleName": "ServiceModule",
+    "unlockedByDefault": true,
+    "colorData": [
+      "default",
+      { "defaultColor": "#282828" },
+      { "defaultColor": "#B0A800" }
+    ]
+  },
+  {
+    "patternName": "Helix",
+    "moduleName": "ServiceModule",
+    "unlockedByDefault": true,
+    "colorData": [
+      "default",
+      { "defaultColor": "#FF0000" },
+      { "defaultColor": "#FFA500" },
+      { "defaultColor": "#FFFF00" },
+      { "defaultColor": "#008000" },
+      { "defaultColor": "#0000FF" },
+      { "defaultColor": "#4B0082" },
+      {
+        "defaultColor": "#EE82EE",
+        "userModifiable": false
+      }
+    ]
+  },
+  {
+    "patternName": "Redstone",
+    "moduleName": "ServiceModule",
+    "unlockedByDefault": true,
+    "colorData": [
+      "default",
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#282828" }
+    ]
+  },
+  {
+    "patternName": "Saturn",
+    "moduleName": "ServiceModule",
+    "unlockedByDefault": true,
+    "colorData": [
+      "default",
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#282828" }
+    ]
+  },
+  {
+    "patternName": "Basic",
+    "moduleName": "ReactorModule",
+    "unlockedByDefault": true,
+    "colorData": [
+      "default",
+      { "defaultColor": "#FFFFFF" }
+    ]
+  },
+  {
+    "patternName": "Astra",
+    "moduleName": "ReactorModule",
+    "unlockedByDefault": true,
+    "colorData": [
+      "default",
+      { "defaultColor": "#00008B" },
+      { "defaultColor": "#FFFFFF" },
+      {
+        "colorFunction": "Lerp",
+        "params": [ [ 1, 2 ], 0.5 ]
+      }
+    ]
+  },
+  {
+    "patternName": "Binary",
+    "moduleName": "ReactorModule",
+    "unlockedByDefault": true,
+    "colorData": [
+      "default",
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#282828" }
+    ]
+  },
+  {
+    "patternName": "Delta",
+    "moduleName": "ReactorModule",
+    "unlockedByDefault": true,
+    "colorData": [
+      "default",
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#282828" },
+      {
+        "colorFunction": "Lerp",
+        "params": [ [ 1, 2 ], 0.5 ]
+      }
+    ]
+  },
+  {
+    "patternName": "Hazard",
+    "moduleName": "ReactorModule",
+    "unlockedByDefault": true,
+    "colorData": [
+      "default",
+      { "defaultColor": "#282828" },
+      { "defaultColor": "#B0A800" }
+    ]
+  },
+  {
+    "patternName": "Helix",
+    "moduleName": "ReactorModule",
+    "unlockedByDefault": true,
+    "colorData": [
+      "default",
+      { "defaultColor": "#FF0000" },
+      { "defaultColor": "#FFA500" },
+      { "defaultColor": "#FFFF00" },
+      {
+        "defaultColor": "#008000",
+        "userModifiable": false
+      },
+      { "defaultColor": "#0000FF" },
+      { "defaultColor": "#4B0082" },
+      { "defaultColor": "#EE82EE" }
+    ]
+  },
+  {
+    "patternName": "Redstone",
+    "moduleName": "ReactorModule",
+    "unlockedByDefault": true,
+    "colorData": [
+      "default",
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#282828" }
+    ]
+  },
+  {
+    "patternName": "Saturn",
+    "moduleName": "ReactorModule",
+    "unlockedByDefault": true,
+    "colorData": [
+      "default",
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#282828" }
+    ]
+  },
+  {
+    "patternName": "Basic",
+    "moduleName": "EngineModule",
+    "unlockedByDefault": true,
+    "colorData": [
+      "default",
+      { "defaultColor": "#FFFFFF" }
+    ]
+  },
+  {
+    "patternName": "Astra",
+    "moduleName": "EngineModule",
+    "unlockedByDefault": true,
+    "colorData": [
+      "default",
+      { "defaultColor": "#00008B" },
+      { "defaultColor": "#FFFFFF" },
+      {
+        "colorFunction": "Lerp",
+        "params": [ [ 1, 2 ], 0.5 ]
+      }
+    ]
+  },
+  {
+    "patternName": "Binary",
+    "moduleName": "EngineModule",
+    "unlockedByDefault": true,
+    "colorData": [
+      "default",
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#282828" }
+    ]
+  },
+  {
+    "patternName": "Delta",
+    "moduleName": "EngineModule",
+    "unlockedByDefault": true,
+    "colorData": [
+      "default",
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#282828" }
+    ]
+  },
+  {
+    "patternName": "Hazard",
+    "moduleName": "EngineModule",
+    "unlockedByDefault": true,
+    "colorData": [
+      "default",
+      { "defaultColor": "#282828" },
+      { "defaultColor": "#B0A800" }
+    ]
+  },
+  {
+    "patternName": "Helix",
+    "moduleName": "EngineModule",
+    "unlockedByDefault": true,
+    "colorData": [
+      "default",
+      { "defaultColor": "#FF0000" },
+      { "defaultColor": "#FFA500" },
+      { "defaultColor": "#FFFF00" },
+      { "defaultColor": "#008000" },
+      { "defaultColor": "#0000FF" },
+      { "defaultColor": "#4B0082" },
+      { "defaultColor": "#EE82EE" }
+    ]
+  },
+  {
+    "patternName": "Redstone",
+    "moduleName": "EngineModule",
+    "unlockedByDefault": true,
+    "colorData": [
+      "default",
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#282828" }
+    ]
+  },
+  {
+    "patternName": "Saturn",
+    "moduleName": "EngineModule",
+    "unlockedByDefault": true,
+    "colorData": [
+      "default",
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#282828" }
+    ]
+  },
+  {
+    "patternName": "Basic",
+    "moduleName": "BoosterLeft",
+    "unlockedByDefault": true,
+    "colorData": [
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#FFFFFF" }
+    ]
+  },
+  {
+    "patternName": "Astra",
+    "moduleName": "BoosterLeft",
+    "unlockedByDefault": true,
+    "colorData": [
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#00008B" },
+      { "defaultColor": "#FFFFFF" },
+      {
+        "colorFunction": "Lerp",
+        "params": [ [ 1, 2 ], 0.5 ]
+      }
+    ]
+  },
+  {
+    "patternName": "Binary",
+    "moduleName": "BoosterLeft",
+    "unlockedByDefault": true,
+    "colorData": [
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#282828" }
+    ]
+  },
+  {
+    "patternName": "Delta",
+    "moduleName": "BoosterLeft",
+    "unlockedByDefault": true,
+    "colorData": [
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#282828" }
+    ]
+  },
+  {
+    "patternName": "Hazard",
+    "moduleName": "BoosterLeft",
+    "unlockedByDefault": true,
+    "colorData": [
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#282828" },
+      { "defaultColor": "#B0A800" }
+    ]
+  },
+  {
+    "patternName": "Helix",
+    "moduleName": "BoosterLeft",
+    "unlockedByDefault": true,
+    "colorData": [
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#FF0000" },
+      { "defaultColor": "#FFA500" },
+      { "defaultColor": "#FFFF00" },
+      { "defaultColor": "#008000" },
+      { "defaultColor": "#0000FF" },
+      { "defaultColor": "#4B0082" },
+      { "defaultColor": "#EE82EE" }
+    ]
+  },
+  {
+    "patternName": "Redstone",
+    "moduleName": "BoosterLeft",
+    "unlockedByDefault": true,
+    "colorData": [
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#282828" }
+    ]
+  },
+  {
+    "patternName": "Saturn",
+    "moduleName": "BoosterLeft",
+    "unlockedByDefault": true,
+    "colorData": [
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#282828" }
+    ]
+  },
+  {
+    "patternName": "Basic",
+    "moduleName": "BoosterRight",
+    "unlockedByDefault": true,
+    "colorData": [
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#FFFFFF" }
+    ]
+  },
+  {
+    "patternName": "Astra",
+    "moduleName": "BoosterRight",
+    "unlockedByDefault": true,
+    "colorData": [
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#00008B" },
+      { "defaultColor": "#FFFFFF" },
+      {
+        "colorFunction": "Lerp",
+        "params": [ [ 1, 2 ], 0.5 ]
+      }
+    ]
+  },
+  {
+    "patternName": "Binary",
+    "moduleName": "BoosterRight",
+    "unlockedByDefault": true,
+    "colorData": [
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#282828" }
+    ]
+  },
+  {
+    "patternName": "Delta",
+    "moduleName": "BoosterRight",
+    "unlockedByDefault": true,
+    "colorData": [
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#282828" }
+    ]
+  },
+  {
+    "patternName": "Hazard",
+    "moduleName": "BoosterRight",
+    "unlockedByDefault": true,
+    "colorData": [
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#282828" },
+      { "defaultColor": "#B0A800" }
+    ]
+  },
+  {
+    "patternName": "Helix",
+    "moduleName": "BoosterRight",
+    "unlockedByDefault": true,
+    "colorData": [
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#FF0000" },
+      { "defaultColor": "#FFA500" },
+      { "defaultColor": "#FFFF00" },
+      { "defaultColor": "#008000" },
+      { "defaultColor": "#0000FF" },
+      { "defaultColor": "#4B0082" },
+      { "defaultColor": "#EE82EE" }
+    ]
+  },
+  {
+    "patternName": "Redstone",
+    "moduleName": "BoosterRight",
+    "unlockedByDefault": true,
+    "colorData": [
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#282828" }
+    ]
+  },
+  {
+    "patternName": "Saturn",
+    "moduleName": "BoosterRight",
+    "unlockedByDefault": true,
+    "colorData": [
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#FFFFFF" },
+      { "defaultColor": "#282828" }
+    ]
+  }
+]

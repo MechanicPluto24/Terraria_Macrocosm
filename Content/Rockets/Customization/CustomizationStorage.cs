@@ -11,6 +11,8 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Common.Drawing;
 using Hjson;
 using Terraria.IO;
+using Newtonsoft.Json.Linq;
+using System.IO;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
@@ -302,71 +304,64 @@ namespace Macrocosm.Content.Rockets.Customization
 		// TODO: load these from JSON
 		private static void LoadPatterns()
 		{
-			static Color lerpHalf(Color[] colors) => Color.Lerp(colors[1], colors[2], 0.5f);
+			try
+			{
+				string jsonString = File.ReadAllText("Macrocosm/Content/Rockets/Customization/Patterns/patterns.json");
+				JArray patternsArray = JArray.Parse(jsonString);
 
-			AddPattern("CommandPod", "Basic", true, new(Color.White), new(Color.White));
-			AddPattern("CommandPod", "Astra", true, new(Color.White), new(Color.DarkBlue), new(Color.White), new(lerpHalf));
-			AddPattern("CommandPod", "Binary", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40)));
-			AddPattern("CommandPod", "Delta", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40)));
-			AddPattern("CommandPod", "Hazard", true, new(Color.White), new(new Color(40, 40, 40)), new(new Color(176, 168, 0)));
-			AddPattern("CommandPod", "Helix", true, new(Color.White), new(Color.Red), new(Color.Orange), new(Color.Yellow), new(Color.Green, false), new(Color.Blue, false), new(Color.Indigo, false), new(Color.Violet));
-			AddPattern("CommandPod", "Redstone", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40)));
-			AddPattern("CommandPod", "Saturn", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40)));
+				foreach (JObject patternObject in patternsArray.Cast<JObject>())
+				{
+					string moduleName = patternObject.Value<string>("moduleName");
+					string patternName = patternObject.Value<string>("patternName");
+					bool unlockedByDefault = patternObject.Value<bool>("unlockedByDefault");
 
-			AddPattern("ServiceModule", "Basic", true, new(), new(Color.White));
-			AddPattern("ServiceModule", "Astra", true, new(), new(Color.DarkBlue), new(Color.White), new(lerpHalf));
-			AddPattern("ServiceModule", "Binary", true, new(), new(Color.White), new(new Color(40, 40, 40))); 
-			AddPattern("ServiceModule", "Delta", true, new(), new(Color.White), new(new Color(40, 40, 40))); 
-			AddPattern("ServiceModule", "Hazard", true, new(), new(new Color(40, 40, 40)), new(new Color(176, 168, 0)));
-			AddPattern("ServiceModule", "Helix", true, new(), new(Color.Red), new(Color.Orange), new(Color.Yellow), new(Color.Green), new(Color.Blue), new(Color.Indigo), new(Color.Violet, false));
-			AddPattern("ServiceModule", "Redstone", true, new(), new(Color.White), new(new Color(40, 40, 40))); 
-			AddPattern("ServiceModule", "Saturn", true, new(), new(Color.White), new(new Color(40, 40, 40)));   
+					JArray colorDataArray = patternObject.Value<JArray>("colorData");
+					List<PatternColorData> colorDatas = new();
 
-			AddPattern("ReactorModule", "Basic", true, new(), new(Color.White));
-			AddPattern("ReactorModule", "Astra", true, new(), new(Color.DarkBlue), new(Color.White), new(lerpHalf));
-			AddPattern("ReactorModule", "Binary", true, new(), new(Color.White), new(new Color(40, 40, 40)));
-			AddPattern("ReactorModule", "Delta", true, new(), new(Color.White), new(new Color(40, 40, 40)), new(lerpHalf));
-			AddPattern("ReactorModule", "Hazard", true, new(), new(new Color(40, 40, 40)), new(new Color(176, 168, 0)));
-			AddPattern("ReactorModule", "Helix", true, new(), new(Color.Red), new(Color.Orange), new(Color.Yellow), new(Color.Green, false), new(Color.Blue), new(Color.Indigo), new(Color.Violet));
-			AddPattern("ReactorModule", "Redstone", true, new(), new(Color.White), new(new Color(40, 40, 40)));
-			AddPattern("ReactorModule", "Saturn", true, new(), new(Color.White), new(new Color(40, 40, 40)));
+					foreach (JObject colorDataObject in colorDataArray.Cast<JObject>())
+					{
+						bool isDefault = colorDataObject.Value<string>("default") is not null;
+						string colorHex = colorDataObject.Value<string>("defaultColor");
+						string colorFunction = colorDataObject.Value<string>("colorFunction");
 
-			AddPattern("EngineModule", "Basic", true, new(), new(Color.White));
-			AddPattern("EngineModule", "Astra", true, new(), new(Color.DarkBlue), new(Color.White), new(lerpHalf));
-			AddPattern("EngineModule", "Binary", true, new(), new(Color.White), new(new Color(40, 40, 40)));
-			AddPattern("EngineModule", "Delta", true, new(), new(Color.White), new(new Color(40, 40, 40)));
-			AddPattern("EngineModule", "Hazard", true, new(), new(new Color(40, 40, 40)), new(new Color(176, 168, 0)));
-			AddPattern("EngineModule", "Helix", true, new(), new(Color.Red), new(Color.Orange), new(Color.Yellow), new(Color.Green), new(Color.Blue), new(Color.Indigo), new(Color.Violet));
-			AddPattern("EngineModule", "Redstone", true, new(), new(Color.White), new(new Color(40, 40, 40)));
-			AddPattern("EngineModule", "Saturn", true, new(), new(Color.White), new(new Color(40, 40, 40)));
+						if (!string.IsNullOrEmpty(colorFunction))
+						{
+							JArray parameters = patternObject.Value<JArray>("params");
+							colorDatas.Add(new(ColorFunction.CreateFunctionByName(colorFunction, parameters?.ToObject<object[]>())));
+						}
+						else if(!string.IsNullOrEmpty("defaultColor"))
+						{
+							bool userModifiable = colorDataObject.Value<bool?>("userModifiable") ?? true;
 
-			AddPattern("BoosterLeft", "Basic", true, new(Color.White), new(Color.White));
-			AddPattern("BoosterLeft", "Astra", true, new(Color.White), new(Color.DarkBlue), new(Color.White), new(lerpHalf));
-			AddPattern("BoosterLeft", "Binary", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40))); 
-			AddPattern("BoosterLeft", "Delta", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40))); 
-			AddPattern("BoosterLeft", "Hazard", true, new(Color.White), new(new Color(40, 40, 40)), new(new Color(176, 168, 0)));
-			AddPattern("BoosterLeft", "Helix", true, new(Color.White), new(Color.Red), new(Color.Orange), new(Color.Yellow), new(Color.Green), new(Color.Blue), new(Color.Indigo), new(Color.Violet));
-			AddPattern("BoosterLeft", "Redstone", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40))); 
-			AddPattern("BoosterLeft", "Saturn", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40)));
+							if (Utility.TryGetColorFromHex(colorHex, out Color defaultColor))
+								colorDatas.Add(new(defaultColor, userModifiable));
+							else
+								throw new ArgumentException($"Error: Invalid color code: {colorHex}");
 
-			AddPattern("BoosterRight", "Basic", true, new(Color.White), new(Color.White));
-			AddPattern("BoosterRight", "Astra", true, new(Color.White), new(Color.DarkBlue), new(Color.White), new(lerpHalf));
-			AddPattern("BoosterRight", "Binary", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40)));
-			AddPattern("BoosterRight", "Delta", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40)));
-			AddPattern("BoosterRight", "Hazard", true, new(Color.White), new(new Color(40, 40, 40)), new(new Color(176, 168, 0)));
-			AddPattern("BoosterRight", "Helix", true, new(Color.White), new(Color.Red), new(Color.Orange), new(Color.Yellow), new(Color.Green), new(Color.Blue), new(Color.Indigo), new(Color.Violet));
-			AddPattern("BoosterRight", "Redstone", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40)));
-			AddPattern("BoosterRight", "Saturn", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40)));
+						}
+						else if (isDefault)
+						{
+							colorDatas.Add(new());
+						}
+					}
 
-			// Just for testing the scrollbar
-			for (int i = 1; i <= 7; i++)
- 				AddPattern("ServiceModule", "Test" + i, true, new(Color.Transparent), new(Color.White));
- 
-			for (int i = 1; i <= 8; i++)
- 				AddPattern("ReactorModule", "Test" + i, true, new(Color.Transparent), new(Color.White));
+					AddPattern(moduleName, patternName, unlockedByDefault, colorDatas.ToArray());
+				}
+			}
+			catch (Exception ex)
+			{
+				Macrocosm.Instance.Logger.Error(ex.Message);
+			}
 
-			for (int i = 1; i <= 74; i++)
- 				AddPattern("EngineModule", "Test" + i, true, new(Color.White), new(Color.White));
+			//// Just for testing the scrollbar
+			//for (int i = 1; i <= 7; i++)
+ 			//	AddPattern("ServiceModule", "Test" + i, true, new(Color.Transparent), new(Color.White));
+ 			//
+			//for (int i = 1; i <= 8; i++)
+ 			//	AddPattern("ReactorModule", "Test" + i, true, new(Color.Transparent), new(Color.White));
+			//
+			//for (int i = 1; i <= 74; i++)
+ 			//	AddPattern("EngineModule", "Test" + i, true, new(Color.White), new(Color.White));
  		}
 
 		private static void LoadDetails()
