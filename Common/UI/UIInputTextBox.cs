@@ -1,39 +1,43 @@
-﻿using Terraria.UI;
-using Terraria.GameContent.UI.Elements;
+﻿using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria.GameInput;
-using Terraria;
-using System.Linq;
 using Microsoft.Xna.Framework.Input;
-using System;
-using Terraria.Localization;
+using Terraria;
+using Terraria.GameContent.UI.Elements;
 
 namespace Macrocosm.Common.UI
 {
-	public class UIInputTextBox : UIPanel
+	public class UIInputTextBox : UIPanel, IFocusable
 	{
 		private UIInputTextField textField;
 
-		public string Text => textField.Text;
+		public string Text 
+		{
+			get => textField.Text;
+			set => textField.Text = value;
+		}
 
-		public void SetText(string text) => textField.Text = text;
+		public Color TextColor
+		{
+			get => textField.TextColor;
+			set => textField.TextColor = value;	
+		}
 
 		public float TextScale { get; set; } = 1f;
 
 		public int TextMaxLenght { get; set; } = 20;
 
 		public bool HasFocus { get; set; }
+		public string FocusContext { get; set; }
 
-		public Action OnFocusGain { get; set; }
+		public Action OnFocusGain { get; set; } = () => { };
+		public Action OnFocusLost { get; set; } = () => { };
 
-		public Action OnTextChange { get; set; }
+		public Action OnTextChange { get; set; } = () => { };
 
 		public Func<string, string> FormatText { get; set; } = (text) => text;
 
  		public Color? HoverBorderColor { get; set; }
 		private Color normalBorderColor;
-
 
 		public UIInputTextBox(string defaultText)
 		{
@@ -44,14 +48,17 @@ namespace Macrocosm.Common.UI
 		{
 			base.OnInitialize();
 
-			PaddingLeft = 4f;
+			PaddingLeft = 8f;
 			PaddingRight = 4f;
 
 			Append(textField);
-			textField.OnTextChange += (_, _) => { OnTextChange?.Invoke(); };
+
+			textField.OnTextChange += (_, _) => { OnTextChange.Invoke(); };
+
 			textField.FormatText = FormatText;
 			textField.TextMaxLenght = TextMaxLenght;
-			OnLeftClick += UIInputTextBox_OnLeftClick;
+
+			OnLeftClick += (_, _) => { HasFocus = true; };
 
 			normalBorderColor = BorderColor;
 			HoverBorderColor ??= BorderColor;
@@ -76,19 +83,6 @@ namespace Macrocosm.Common.UI
 				BorderColor = HoverBorderColor.Value;
 			else
 				BorderColor = normalBorderColor;
-		}
-
-		private void UIInputTextBox_OnLeftClick(UIMouseEvent evt, UIElement listeningElement)
-		{
-			if(!HasFocus)
-				OnFocusGain?.Invoke();
-
-			HasFocus = true;
-		}
-
-		public override void Draw(SpriteBatch spriteBatch)
-		{
-			base.Draw(spriteBatch);
 		}
 	}
 }

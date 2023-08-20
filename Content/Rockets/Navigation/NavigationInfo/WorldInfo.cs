@@ -1,17 +1,23 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Common.UI;
+using Macrocosm.Common.Utils;
+using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
+using Terraria.GameContent.UI.Elements;
+using Terraria.Localization;
 using Terraria.ModLoader;
+using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
 {
-    public class WorldInfoStorage : ILoadable
-    {
-        private static Dictionary<string, WorldInfoProvider> worldInfoStorage;
+    public class WorldInfo : ILoadable
+	{
+        private static Dictionary<string, List<InfoElement>> worldInfoStorage;
 
         public void Load(Mod mod)
         {
-			worldInfoStorage = new Dictionary<string, WorldInfoProvider>();
+			worldInfoStorage = new Dictionary<string, List<InfoElement>>();
 			LoadData();
         }
 
@@ -21,24 +27,69 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
             worldInfoStorage = null;
         }
 
-        public static void Add(string key, params InfoElement[] infoElements)
-            => worldInfoStorage.Add(key, new WorldInfoProvider(key, infoElements.ToList()));
+		public static void Add(string key, params InfoElement[] infoElements)
+            => worldInfoStorage.Add(key, infoElements.ToList());
 
-        public static WorldInfoProvider GetValue(string key) => worldInfoStorage[key];
+        public static List<InfoElement> GetInfoElements(string key) => worldInfoStorage[key];
    
-        public static bool TryGetValue(string key, out WorldInfoProvider info) 
+        public static bool TryGetValue(string key, out List<InfoElement> info) 
             => worldInfoStorage.TryGetValue(key, out info);
+
+		public static UIListScrollablePanel ProvideUI(string subworldName)
+		{
+			string localizationPath = "Mods.Macrocosm.Subworlds.";
+
+		    UIListScrollablePanel listPanel = new(new LocalizedColorScaleText(Language.GetText(localizationPath + subworldName + ".DisplayName"), scale: 1.2f))
+			{
+				Width = new(0, 0.31f),
+				Height = new(0, 0.62f),
+				Left = new(0, 0.01f),
+				Top = new(0, 0.365f),
+				BackgroundColor = new Color(53, 72, 135),
+				BorderColor = new Color(89, 116, 213, 255)
+			};
+			listPanel.SetPadding(0f);
+
+			LocalizedText flavorText = Utility.GetLocalizedTextOrEmpty(localizationPath + subworldName + ".FlavorText");
+			if (flavorText != LocalizedText.Empty && flavorText.Value != "default")
+			{
+				listPanel.Add(new UIDynamicTextPanel(new LocalizedColorScaleText(flavorText, Color.White, scale: 0.85f)));
+				listPanel.AddSeparator();
+			}
+
+			List<InfoElement> elements = worldInfoStorage[subworldName];
+
+			if (elements is not null)
+			{
+				bool foundHazards = false;
+				foreach (InfoElement element in elements)
+				{
+					if (!foundHazards && element is HazardInfoElement)
+					{
+						listPanel.AddSeparator();
+						foundHazards = true;
+					}
+
+					listPanel.Add(element.ProvideUI());
+				}
+			}
+
+			return listPanel;
+		}
 
 		/// <summary>
 		/// Populates the World Info data.
-		/// 
+		/// <br> <br>
 		/// Supports: 
-		///     GravityInfoElement, RadiusInfoElement, DayPeriodInfoElement: general info elements, specify numeric and/or string value (e.g. TidallyLocked)
-		///     ThreatLevelInfoElement: the threat level info element, pick from ThreatLevel enum.
-		///     HazardInfoElement: the hazards specific to this world (e.g. MeteorStorms).
-		///     
-		///     Icons are loaded based on the name, from Rockets/Textures/Icons.
-		///     Text is loaded from the localization files.
+		/// <list type="bullet">
+		///     <item> <see cref="GravityInfoElement"/>, <see cref="RadiusInfoElement"/>, <see cref="DayPeriodInfoElement"/>: general info elements, specify numeric and/or string value (e.g. TidallyLocked) </item>
+		///     <item> <see cref="ThreatLevelInfoElement"/>: the threat level info element, pick from ThreatLevel enum. </item>
+		///     <item> <see cref="HazardInfoElement"/>: the hazards specific to this world (e.g. MeteorStorms). </item>
+		/// </list>
+		///          
+		///     <br> Icons are loaded based on the name, from Rockets/Textures/Icons. </br>
+		///     <br> Text is loaded from the localization files. </br>
+		/// </br> </br>
 		/// </summary>
 		private static void LoadData()
         {

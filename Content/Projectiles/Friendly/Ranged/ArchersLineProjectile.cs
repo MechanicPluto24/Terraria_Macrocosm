@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Projectiles.Base;
+using Macrocosm.Common.Bases;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {

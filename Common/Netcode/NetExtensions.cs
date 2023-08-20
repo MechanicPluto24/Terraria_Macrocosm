@@ -18,7 +18,7 @@ namespace Macrocosm.Common.Netcode
 		/// <summary>
 		/// Returns the <see cref="FieldInfo"/> of every field of <c>this</c> that has the <see cref="NetSyncAttribute"/>.
 		/// </summary>
-		public static FieldInfo[] GetNetSyncFields(this object obj) => obj.GetType().GetFields()
+		public static FieldInfo[] GetNetSyncFields(this object obj) => obj.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
 									.Where(fieldInfo => fieldInfo.GetCustomAttribute<NetSyncAttribute>() is not null)
 									.OrderBy(fieldInfo => fieldInfo.Name).ToArray();
 

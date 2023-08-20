@@ -1,5 +1,5 @@
-﻿using Macrocosm.Content.Items.MeteorChunks;
-using Macrocosm.Content.Projectiles.Base;
+﻿using Macrocosm.Common.Bases;
+using Macrocosm.Content.Items.MeteorChunks;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;

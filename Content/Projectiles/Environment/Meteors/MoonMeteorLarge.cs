@@ -6,8 +6,8 @@ using Terraria.ModLoader;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Gores;
 using Macrocosm.Content.Items.MeteorChunks;
-using Macrocosm.Content.Projectiles.Base;
 using Macrocosm.Content.Projectiles.Environment.Debris;
+using Macrocosm.Common.Bases;
 
 namespace Macrocosm.Content.Projectiles.Environment.Meteors
 {

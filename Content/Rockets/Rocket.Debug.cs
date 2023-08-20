@@ -33,7 +33,7 @@ namespace Macrocosm.Content.Rockets
 
 		public override string ToString()
 		{
-			return "Active: " + Active + ", WhoAmI: " + WhoAmI + ", CurrentSubworld: " + CurrentSubworld; 
+			return "Active: " + Active + ", WhoAmI: " + WhoAmI + ", CurrentSubworld: " + CurrentWorld; 
 		}
 	}
 }

@@ -1,5 +1,7 @@
 ﻿using Macrocosm.Common.Utils;
+using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.Navigation;
+using Macrocosm.Content.Rockets.Navigation.NavigationInfo;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -75,12 +77,15 @@ namespace Macrocosm.Content.Rockets
 
 			Main.playerInventory = true;
 			UIRocketState.Rocket = rocket;
+			UIRocketState.OnShow();
 			Interface.SetState(UIRocketState);
 		}
 
 		public void HideUI()
 		{
-			if(Main.netMode != NetmodeID.Server)
+			UIRocketState.OnHide();
+
+			if (Main.netMode != NetmodeID.Server)
 				Interface?.SetState(null);
 		}
 
@@ -96,6 +101,7 @@ namespace Macrocosm.Content.Rockets
 				UIRocketState = new RocketUIState();
 				UIRocketState.Activate();
 				Utility.Chat("Reset rocket UI", Color.Lime);
+				CustomizationStorage.Reset();
 				HideUI();
 				ShowUI(rocket);
 			}
@@ -103,7 +109,12 @@ namespace Macrocosm.Content.Rockets
 			lastGameTime = gameTime;
 
 			if (Interface?.CurrentState != null)
+			{
+				Main.LocalPlayer.mouseInterface = true;
+				Main.mouseRightRelease = false;
+
 				Interface.Update(gameTime);
+			}
 		}
 
 		public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)

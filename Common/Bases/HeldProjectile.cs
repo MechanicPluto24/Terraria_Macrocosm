@@ -1,4 +1,6 @@
-﻿using Macrocosm.Content.Projectiles.Friendly.Melee;
+﻿using Macrocosm.Common.Netcode;
+using Macrocosm.Common.Utils;
+using Macrocosm.Content.Projectiles.Friendly.Melee;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using System;
@@ -80,14 +82,17 @@ namespace Macrocosm.Common.Bases
         public abstract HeldProjectileKillMode KillMode { get; }
         public Player Player => Main.player[Projectile.owner];
         protected int Damage => Projectile.damage;
+
         /// <summary>
         /// The projectile type the item would have shot based on ammo.
         /// </summary>
         protected short ShootProjectileType => (short)Projectile.ai[0];
 
-        private bool shouldDie = false;
+        private bool shouldDie;
+
         protected EntitySource_ItemUse_WithAmmo Source { get; private set; }
-        protected Item Item => Source.Item;
+        protected Item Item => Source is not null ? Source.Item : Player.HeldItem;
+
         private bool shouldRunOnSpawn = true;
 
         protected virtual void ResetDefaults() { }
@@ -142,9 +147,6 @@ namespace Macrocosm.Common.Bases
             {
                 shouldDie = true;
             }
-
-            // This might fix the issue with changing the aim while the projectile is alive, but creates a stutter for some reason
-            //Player.ChangeDir(MathF.Abs(Projectile.rotation) <= MathHelper.PiOver2 ? 1 : -1);
 
 			Player.heldProj = Projectile.whoAmI;
 
