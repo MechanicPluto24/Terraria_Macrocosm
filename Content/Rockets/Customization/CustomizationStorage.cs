@@ -306,7 +306,7 @@ namespace Macrocosm.Content.Rockets.Customization
 		{
 			try
 			{
-				string jsonString = File.ReadAllText("Macrocosm/Content/Rockets/Customization/Patterns/patterns.json");
+				string jsonString = Utility.GetTextFromFile("Content/Rockets/Customization/Patterns/patterns.json");
 				JArray patternsArray = JArray.Parse(jsonString);
 
 				foreach (JObject patternObject in patternsArray.Cast<JObject>())
@@ -327,7 +327,11 @@ namespace Macrocosm.Content.Rockets.Customization
 						if (!string.IsNullOrEmpty(colorFunction))
 						{
 							JArray parameters = patternObject.Value<JArray>("params");
-							colorDatas.Add(new(ColorFunction.CreateFunctionByName(colorFunction, parameters?.ToObject<object[]>())));
+
+							if(parameters is not null)
+								colorDatas.Add(new(ColorFunction.CreateFunctionByName(colorFunction, parameters.ToObject<object[]>())));
+							else 
+								throw new ArgumentException("Color function parameters not specified.");
 						}
 						else if(!string.IsNullOrEmpty("defaultColor"))
 						{
@@ -342,6 +346,10 @@ namespace Macrocosm.Content.Rockets.Customization
 						else if (isDefault)
 						{
 							colorDatas.Add(new());
+						}
+						else
+						{
+							throw new ArgumentException("Invalid entry for Pattern color data.");
 						}
 					}
 
