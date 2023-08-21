@@ -52,8 +52,8 @@ namespace Macrocosm.Content.Rockets.Customization
 			{
 				return name switch
 				{
-					"Lerp" or "lerp" => CreateLerpFunction((int[])parameters[0], (float)parameters[1]),
-					"Map" or "map" => CreateMapFunction((int)parameters[0]),
+					"Lerp" or "lerp" => CreateLerpFunction(Convert.ToInt32(parameters[0]), Convert.ToInt32(parameters[1]), Convert.ToSingle(parameters[2])),
+					"Map" or "map" => CreateMapFunction(Convert.ToInt32(parameters[0])),
 					_ => throw new ArgumentException($"Unknown function name: {name}")
 				}; 
 			}
@@ -81,18 +81,13 @@ namespace Macrocosm.Content.Rockets.Customization
 		public static ColorFunction CreateMapFunction(int index)
 		{
 			Color map(Color[] colors) => colors[index];
-			return new(map);
+			return new(map, "Map");
 		}
 
-		public static ColorFunction CreateLerpFunction(int[] indexes, float amount)
+		public static ColorFunction CreateLerpFunction(int index1, int index2, float amount)
 		{
-			Color lerp(Color[] colors)
-			{
-				Color[] selectedColors = indexes.Select(index => colors[index]).ToArray();
-				return Color.Lerp(selectedColors[0], selectedColors[1], amount);
-			}
-
-			return new(lerp);
+			Color lerp(Color[] colors) => Color.Lerp(colors[index1], colors[index2], amount);
+			return new(lerp, "Lerp");
 		}
 	}
 

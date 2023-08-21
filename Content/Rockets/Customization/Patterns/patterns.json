@@ -101,7 +101,7 @@
     "moduleName": "ServiceModule",
     "unlockedByDefault": true,
     "colorData": [
-      "default",
+      {},
       { "defaultColor": "#FFFFFF" }
     ]
   },
@@ -110,12 +110,12 @@
     "moduleName": "ServiceModule",
     "unlockedByDefault": true,
     "colorData": [
-      "default",
+      {},
       { "defaultColor": "#00008B" },
       { "defaultColor": "#FFFFFF" },
       {
         "colorFunction": "Lerp",
-        "params": [ [ 1, 2 ], 0.5 ]
+        "params": [ 1, 2 , 0.5 ]
       }
     ]
   },
@@ -124,7 +124,7 @@
     "moduleName": "ServiceModule",
     "unlockedByDefault": true,
     "colorData": [
-      "default",
+      {},
       { "defaultColor": "#FFFFFF" },
       { "defaultColor": "#282828" }
     ]
@@ -134,7 +134,7 @@
     "moduleName": "ServiceModule",
     "unlockedByDefault": true,
     "colorData": [
-      "default",
+      {},
       { "defaultColor": "#FFFFFF" },
       { "defaultColor": "#282828" }
     ]
@@ -144,7 +144,7 @@
     "moduleName": "ServiceModule",
     "unlockedByDefault": true,
     "colorData": [
-      "default",
+      {},
       { "defaultColor": "#282828" },
       { "defaultColor": "#B0A800" }
     ]
@@ -154,7 +154,7 @@
     "moduleName": "ServiceModule",
     "unlockedByDefault": true,
     "colorData": [
-      "default",
+      {},
       { "defaultColor": "#FF0000" },
       { "defaultColor": "#FFA500" },
       { "defaultColor": "#FFFF00" },
@@ -172,7 +172,7 @@
     "moduleName": "ServiceModule",
     "unlockedByDefault": true,
     "colorData": [
-      "default",
+      {},
       { "defaultColor": "#FFFFFF" },
       { "defaultColor": "#282828" }
     ]
@@ -182,7 +182,7 @@
     "moduleName": "ServiceModule",
     "unlockedByDefault": true,
     "colorData": [
-      "default",
+      {},
       { "defaultColor": "#FFFFFF" },
       { "defaultColor": "#282828" }
     ]
@@ -192,7 +192,7 @@
     "moduleName": "ReactorModule",
     "unlockedByDefault": true,
     "colorData": [
-      "default",
+      {},
       { "defaultColor": "#FFFFFF" }
     ]
   },
@@ -201,12 +201,12 @@
     "moduleName": "ReactorModule",
     "unlockedByDefault": true,
     "colorData": [
-      "default",
+      {},
       { "defaultColor": "#00008B" },
       { "defaultColor": "#FFFFFF" },
       {
         "colorFunction": "Lerp",
-        "params": [ [ 1, 2 ], 0.5 ]
+        "params": [ 1, 2 , 0.5 ]
       }
     ]
   },
@@ -215,7 +215,7 @@
     "moduleName": "ReactorModule",
     "unlockedByDefault": true,
     "colorData": [
-      "default",
+      {},
       { "defaultColor": "#FFFFFF" },
       { "defaultColor": "#282828" }
     ]
@@ -225,12 +225,12 @@
     "moduleName": "ReactorModule",
     "unlockedByDefault": true,
     "colorData": [
-      "default",
+      {},
       { "defaultColor": "#FFFFFF" },
       { "defaultColor": "#282828" },
       {
         "colorFunction": "Lerp",
-        "params": [ [ 1, 2 ], 0.5 ]
+        "params": [ 1, 2 , 0.5 ]
       }
     ]
   },
@@ -239,7 +239,7 @@
     "moduleName": "ReactorModule",
     "unlockedByDefault": true,
     "colorData": [
-      "default",
+      {},
       { "defaultColor": "#282828" },
       { "defaultColor": "#B0A800" }
     ]
@@ -249,7 +249,7 @@
     "moduleName": "ReactorModule",
     "unlockedByDefault": true,
     "colorData": [
-      "default",
+      {},
       { "defaultColor": "#FF0000" },
       { "defaultColor": "#FFA500" },
       { "defaultColor": "#FFFF00" },
@@ -267,7 +267,7 @@
     "moduleName": "ReactorModule",
     "unlockedByDefault": true,
     "colorData": [
-      "default",
+      {},
       { "defaultColor": "#FFFFFF" },
       { "defaultColor": "#282828" }
     ]
@@ -277,7 +277,7 @@
     "moduleName": "ReactorModule",
     "unlockedByDefault": true,
     "colorData": [
-      "default",
+      {},
       { "defaultColor": "#FFFFFF" },
       { "defaultColor": "#282828" }
     ]
@@ -287,7 +287,7 @@
     "moduleName": "EngineModule",
     "unlockedByDefault": true,
     "colorData": [
-      "default",
+      {},
       { "defaultColor": "#FFFFFF" }
     ]
   },
@@ -296,12 +296,12 @@
     "moduleName": "EngineModule",
     "unlockedByDefault": true,
     "colorData": [
-      "default",
+      {},
       { "defaultColor": "#00008B" },
       { "defaultColor": "#FFFFFF" },
       {
         "colorFunction": "Lerp",
-        "params": [ [ 1, 2 ], 0.5 ]
+        "params": [ 1, 2 , 0.5 ]
       }
     ]
   },
@@ -310,7 +310,7 @@
     "moduleName": "EngineModule",
     "unlockedByDefault": true,
     "colorData": [
-      "default",
+      {},
       { "defaultColor": "#FFFFFF" },
       { "defaultColor": "#282828" }
     ]
@@ -320,7 +320,7 @@
     "moduleName": "EngineModule",
     "unlockedByDefault": true,
     "colorData": [
-      "default",
+      {},
       { "defaultColor": "#FFFFFF" },
       { "defaultColor": "#282828" }
     ]
@@ -330,7 +330,7 @@
     "moduleName": "EngineModule",
     "unlockedByDefault": true,
     "colorData": [
-      "default",
+      {},
       { "defaultColor": "#282828" },
       { "defaultColor": "#B0A800" }
     ]
@@ -340,7 +340,7 @@
     "moduleName": "EngineModule",
     "unlockedByDefault": true,
     "colorData": [
-      "default",
+      {},
       { "defaultColor": "#FF0000" },
       { "defaultColor": "#FFA500" },
       { "defaultColor": "#FFFF00" },
@@ -355,7 +355,7 @@
     "moduleName": "EngineModule",
     "unlockedByDefault": true,
     "colorData": [
-      "default",
+      {},
       { "defaultColor": "#FFFFFF" },
       { "defaultColor": "#282828" }
     ]
@@ -365,7 +365,7 @@
     "moduleName": "EngineModule",
     "unlockedByDefault": true,
     "colorData": [
-      "default",
+      {},
       { "defaultColor": "#FFFFFF" },
       { "defaultColor": "#282828" }
     ]
@@ -389,7 +389,7 @@
       { "defaultColor": "#FFFFFF" },
       {
         "colorFunction": "Lerp",
-        "params": [ [ 1, 2 ], 0.5 ]
+        "params": [ 1, 2 , 0.5 ]
       }
     ]
   },
@@ -477,7 +477,7 @@
       { "defaultColor": "#FFFFFF" },
       {
         "colorFunction": "Lerp",
-        "params": [ [ 1, 2 ], 0.5 ]
+        "params": [ 1, 2 , 0.5 ]
       }
     ]
   },
