@@ -30,23 +30,18 @@ namespace Macrocosm.Common.Utils
 			return false;
 		}
 
-
 		public static bool TryGetColorFromHex(string hexString, out Vector3 hsl, float luminanceFactor = 1f)
 		{
-			if (hexString.StartsWith("#"))
-				hexString = hexString[1..];
-
-			if (hexString.Length <= 6 && uint.TryParse(hexString, NumberStyles.HexNumber, CultureInfo.CurrentCulture, out var result))
+			if (TryGetColorFromHex(hexString, out Color rgb))
 			{
-				uint b = result & 0xFFu;
-				uint g = (result >> 8) & 0xFFu;
-				uint r = (result >> 16) & 0xFFu;
-				hsl = (new Color((int)r, (int)g, (int)b)).ToScaledHSL(luminanceFactor);
+				hsl = rgb.ToScaledHSL(luminanceFactor);
 				return true;
 			}
-
-			hsl = Vector3.Zero;
-			return false;
+			else
+			{
+				hsl = Vector3.Zero;
+				return false;
+			}
 		}
 
 

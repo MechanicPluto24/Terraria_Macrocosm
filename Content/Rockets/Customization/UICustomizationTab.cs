@@ -259,18 +259,37 @@ namespace Macrocosm.Content.Rockets.Navigation
 		{
 			Main.blockInput = !Main.keyState.KeyPressed(Keys.Escape) && !Main.keyState.KeyPressed(Keys.R);
 
+			bool colorPickerSelected = GetFocusedColorPicker(out var colorPicker);
+			int indexInList = patternColorPickers.IndexOf(colorPicker);
+
 			if (Main.keyState.KeyPressed(Keys.Left))
 			{
-				leftButton.TriggerRemoteInteraction();
-				PickPreviousModule();
+				if(colorPicker.colorIndex >= 0)
+				{
+					if (indexInList - 1 >= 0)
+						patternColorPickers[indexInList - 1].picker.HasFocus = true;
+				} 
+				else
+				{
+					leftButton.TriggerRemoteInteraction();
+					PickPreviousModule();
+				}
 			}
 			else if(Main.keyState.KeyPressed(Keys.Right))
 			{
-				rightButton.TriggerRemoteInteraction();
-				PickNextModule();
+				if (colorPicker.colorIndex >= 0)
+				{
+					if (indexInList + 1 < patternColorPickers.Count)
+						patternColorPickers[indexInList + 1].picker.HasFocus = true;
+				}
+				else
+				{
+					rightButton.TriggerRemoteInteraction();
+					PickNextModule();
+				}
 			}
 
-			if (GetFocusedColorPicker(out _))
+			if (colorPickerSelected)
  				hslMenu.UpdateKeyboardCapture();
 		}
 		#endregion
@@ -493,7 +512,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 		{
 			rocketPreview.SetModule("EngineModule");
 
-			hslMenu.SetColorHSL(Rocket.CustomizationDummy.Nameplate.TextColor.ToScaledHSL(0.75f));
+			hslMenu.SetColorHSL(Rocket.CustomizationDummy.Nameplate.TextColor.ToScaledHSL(luminanceSliderFactor));
 			hslMenu.CaptureCurrentColor();
 		}
 
@@ -505,7 +524,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 		{
 			if(GetFocusedColorPicker(out var item) && item.colorIndex >= 0)
 			{
-				hslMenu.SetColorHSL(currentModule.Pattern.GetColor(item.colorIndex).ToScaledHSL(0.75f));
+				hslMenu.SetColorHSL(currentModule.Pattern.GetColor(item.colorIndex).ToScaledHSL(luminanceSliderFactor));
 				hslMenu.CaptureCurrentColor();
 			}
 		}

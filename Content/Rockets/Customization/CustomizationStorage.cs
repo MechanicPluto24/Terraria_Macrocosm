@@ -194,6 +194,11 @@ namespace Macrocosm.Content.Rockets.Customization
 			patterns.Add((moduleName, patternName), pattern);
 		}
 
+		private static void AddPattern(Pattern pattern)
+		{
+			patterns.Add((pattern.ModuleName, pattern.Name), pattern);
+		}
+
 		/// <summary>
 		/// Adds a detail to the detail storage
 		/// </summary>
@@ -306,56 +311,11 @@ namespace Macrocosm.Content.Rockets.Customization
 		{
 			try
 			{
-				string jsonString = Utility.GetTextFromFile("Content/Rockets/Customization/Patterns/patterns.json");
-				JArray patternsArray = JArray.Parse(jsonString);
+				JArray patternsArray = Utility.ParseJSONFromFile("Content/Rockets/Customization/Patterns/patterns.json");
 
-				foreach (JObject patternObject in patternsArray.Cast<JObject>())
-				{
-					string moduleName = patternObject.Value<string>("moduleName");
-					string patternName = patternObject.Value<string>("patternName");
-					bool unlockedByDefault = patternObject.Value<bool>("unlockedByDefault");
-
-					JArray colorDataArray = patternObject.Value<JArray>("colorData");
-					List<PatternColorData> colorDatas = new();
-
-					foreach (JObject colorDataObject in colorDataArray.Cast<JObject>())
-					{
-						bool isDefault = colorDataObject.Value<string>("default") is not null;
-						string colorHex = colorDataObject.Value<string>("defaultColor");
-						string colorFunction = colorDataObject.Value<string>("colorFunction");
-
-						if (!string.IsNullOrEmpty(colorFunction))
-						{
-							JArray parameters = patternObject.Value<JArray>("params");
-
-							if(parameters is not null)
-								colorDatas.Add(new(ColorFunction.CreateFunctionByName(colorFunction, parameters.ToObject<object[]>())));
-							else 
-								throw new ArgumentException("Color function parameters not specified.");
-						}
-						else if(!string.IsNullOrEmpty("defaultColor"))
-						{
-							bool userModifiable = colorDataObject.Value<bool?>("userModifiable") ?? true;
-
-							if (Utility.TryGetColorFromHex(colorHex, out Color defaultColor))
-								colorDatas.Add(new(defaultColor, userModifiable));
-							else
-								throw new ArgumentException($"Error: Invalid color code: {colorHex}");
-
-						}
-						else if (isDefault)
-						{
-							colorDatas.Add(new());
-						}
-						else
-						{
-							throw new ArgumentException("Invalid entry for Pattern color data.");
-						}
-					}
-
-					AddPattern(moduleName, patternName, unlockedByDefault, colorDatas.ToArray());
-				}
-			}
+				foreach (JObject patternObject in patternsArray)
+ 					AddPattern(Pattern.FromJSON(patternObject.ToString()));
+ 			}
 			catch (Exception ex)
 			{
 				Macrocosm.Instance.Logger.Error(ex.Message);
