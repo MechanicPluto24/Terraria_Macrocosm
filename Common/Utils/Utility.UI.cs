@@ -82,7 +82,7 @@ namespace Macrocosm.Common.Utils
 			// This handler is called before the actual updating takes place
 			replaceHandler = new UIElement.ElementEvent((element) =>
             {
-				int childrenCount = element.Children.Count();
+				//int childrenCount = element.Children.Count();
 
 				if (element.HasChild(toRemove)) 
  					element.RemoveChild(toRemove);
@@ -90,11 +90,11 @@ namespace Macrocosm.Common.Utils
 				element.Append(newElement);
 				newElement.Activate();
 
-				if (childrenCount != element.Children.Count())
-				{
-					Chat("Failed to replace child properly. Make sure you also update the reference of newElement if replacing the same element with an updated version.", Color.Yellow);
-					Macrocosm.Instance.Logger.Warn("Failed to replace child properly. Make sure you also update the reference of newElement if replacing the same element with an updated version.");
-				}
+				//if (childrenCount != element.Children.Count())
+				//{
+				//	Chat("Failed to replace child properly. Make sure you also update the reference of newElement if replacing the same element with an updated version.", Color.Yellow);
+				//	Macrocosm.Instance.Logger.Warn("Failed to replace child properly. Make sure you also update the reference of newElement if replacing the same element with an updated version.");
+				//}
 					
 				// Detach this handler once complete, we don't want it to run every tick from now on
 				element.OnUpdate -= replaceHandler;

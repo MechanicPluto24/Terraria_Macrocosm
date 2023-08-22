@@ -11,17 +11,22 @@ using Terraria.ModLoader.IO;
 namespace Macrocosm.Content.Rockets.Customization
 {
     public partial class Pattern : TagSerializable
-    {
-		public string ToJSON() => ToJObject().ToString(Formatting.Indented);
+	{ 
+		public string ToJSON(bool includeUnlocked = false, bool includeNonModifiableColors = false, bool includeColorFunctions = false) => ToJObject().ToString(Formatting.Indented);
 
-		public JObject ToJObject()
+		public JObject ToJObject(bool includeUnlocked = false, bool includeNonModifiableColors = false, bool includeColorFunctions = false)
 		{
 			JObject jsonObject = new()
 			{
 				["patternName"] = Name,
-				["moduleName"] = ModuleName,
-				["unlockedByDefault"] = UnlockedByDefault
+				["moduleName"] = ModuleName
 			};
+
+			if (includeUnlocked)
+			{
+				jsonObject["unlocked"] = Unlocked;
+				jsonObject["unlockedByDefault"] = UnlockedByDefault;
+			}
 
 			JArray colorDataArray = new();
 			foreach (var colorData in ColorData)
@@ -30,13 +35,29 @@ namespace Macrocosm.Content.Rockets.Customization
 
 				if (colorData.HasColorFunction)
 				{
-					colorDataObject["colorFunction"] = colorData.ColorFunction.Name;
-					//colorDataObject["params"] = new JArray(colorData.ColorFunction.Parameters);
+					if (includeColorFunctions)
+					{
+						colorDataObject["colorFunction"] = colorData.ColorFunction.Name;
+						//colorDataObject["params"] = new JArray(colorData.ColorFunction.Parameters);
+					}
+					else
+					{
+						colorDataObject = new JObject();
+					}
 				}
 				else
 				{
-					colorDataObject["color"] = colorData.Color.GetHexText();
-					colorDataObject["userModifiable"] = colorData.IsUserModifiable;
+					if (includeNonModifiableColors || colorData.IsUserModifiable)
+					{
+						colorDataObject["color"] = colorData.Color.GetHexText();
+
+						if(!colorData.IsUserModifiable)
+							colorDataObject["userModifiable"] = false;
+					}
+					else
+					{
+						colorDataObject = new JObject();
+					}
 				}
 
 				colorDataArray.Add(colorDataObject);
@@ -44,7 +65,7 @@ namespace Macrocosm.Content.Rockets.Customization
 
 			jsonObject["colorData"] = colorDataArray;
 
-			return jsonObject;
+			return jsonObject; 
 		}
 
 		public static Pattern FromJSON(string json) => FromJObject(JObject.Parse(json));

@@ -12,15 +12,15 @@ namespace Macrocosm.Common.Hooks
 {
     public class MapBackgroundColor : ILoadable
 	{
-		public static ushort SkyPosition;
-		public static ushort DirtPosition;
-		public static ushort RockPosition;
-		public static ushort HellPosition;
+		private static ushort skyPosition;
+		private static ushort dirtPosition;
+		private static ushort rockPosition;
+		private static ushort hellPosition;
 
-		private static FieldInfo SkyPositionF;  
-		private static FieldInfo DirtPositionF; 
-		private static FieldInfo RockPositionF; 
-		private static FieldInfo HellPositionF; 
+		private static FieldInfo fieldSkyPosition;  
+		private static FieldInfo fieldDirtPosition; 
+		private static FieldInfo fieldRockPosition; 
+		private static FieldInfo fieldHellPosition; 
 
 		public void Load(Mod mod)
 		{
@@ -37,16 +37,16 @@ namespace Macrocosm.Common.Hooks
 			if (!SubworldSystem.AnyActive<Macrocosm>() || MacrocosmSubworld.Current.MapColors is null)
 				return orig(ref tile);
 
-			if (tile.Type >= SkyPosition && tile.Type <= SkyPosition + 255) 
-				return MapColorLerp(MacrocosmSubworld.Current.MapColors[MapColorType.SkyUpper], MacrocosmSubworld.Current.MapColors[MapColorType.SkyLower], (tile.Type - SkyPosition) / 255f);
+			if (tile.Type >= skyPosition && tile.Type <= skyPosition + 255) 
+				return MapColorLerp(MacrocosmSubworld.Current.MapColors[MapColorType.SkyUpper], MacrocosmSubworld.Current.MapColors[MapColorType.SkyLower], (tile.Type - skyPosition) / 255f);
 
-			if (tile.Type >= DirtPosition && tile.Type <= DirtPosition + 255)
-				return MapColorLerp(MacrocosmSubworld.Current.MapColors[MapColorType.UndergroundUpper], MacrocosmSubworld.Current.MapColors[MapColorType.UndergroundLower], (tile.Type - DirtPosition) / 255f);
+			if (tile.Type >= dirtPosition && tile.Type <= dirtPosition + 255)
+				return MapColorLerp(MacrocosmSubworld.Current.MapColors[MapColorType.UndergroundUpper], MacrocosmSubworld.Current.MapColors[MapColorType.UndergroundLower], (tile.Type - dirtPosition) / 255f);
 
-			if (tile.Type >= RockPosition && tile.Type <= RockPosition + 255)
-				return MapColorLerp(MacrocosmSubworld.Current.MapColors[MapColorType.CavernUpper], MacrocosmSubworld.Current.MapColors[MapColorType.CavernLower], (tile.Type - RockPosition) / 255f);
+			if (tile.Type >= rockPosition && tile.Type <= rockPosition + 255)
+				return MapColorLerp(MacrocosmSubworld.Current.MapColors[MapColorType.CavernUpper], MacrocosmSubworld.Current.MapColors[MapColorType.CavernLower], (tile.Type - rockPosition) / 255f);
 
-			if (tile.Type == HellPosition)
+			if (tile.Type == hellPosition)
 				return MacrocosmSubworld.Current.MapColors[MapColorType.Underworld];
 
 			return orig(ref tile);
@@ -54,14 +54,14 @@ namespace Macrocosm.Common.Hooks
 
 		private void GetLookupPositions()
 		{
-			SkyPositionF = typeof(MapHelper).GetField("skyPosition", BindingFlags.NonPublic | BindingFlags.Static);
-			DirtPositionF = typeof(MapHelper).GetField("dirtPosition", BindingFlags.NonPublic | BindingFlags.Static);
-			RockPositionF = typeof(MapHelper).GetField("rockPosition", BindingFlags.NonPublic | BindingFlags.Static);
-			HellPositionF = typeof(MapHelper).GetField("hellPosition", BindingFlags.NonPublic | BindingFlags.Static);
-			SkyPosition = (ushort)SkyPositionF.GetValue(null);
-			DirtPosition = (ushort)DirtPositionF.GetValue(null);
-			RockPosition = (ushort)RockPositionF.GetValue(null);
-			HellPosition = (ushort)HellPositionF.GetValue(null);
+			fieldSkyPosition = typeof(MapHelper).GetField("skyPosition", BindingFlags.NonPublic | BindingFlags.Static);
+			fieldDirtPosition = typeof(MapHelper).GetField("dirtPosition", BindingFlags.NonPublic | BindingFlags.Static);
+			fieldRockPosition = typeof(MapHelper).GetField("rockPosition", BindingFlags.NonPublic | BindingFlags.Static);
+			fieldHellPosition = typeof(MapHelper).GetField("hellPosition", BindingFlags.NonPublic | BindingFlags.Static);
+			skyPosition = (ushort)fieldSkyPosition.GetValue(null);
+			dirtPosition = (ushort)fieldDirtPosition.GetValue(null);
+			rockPosition = (ushort)fieldRockPosition.GetValue(null);
+			hellPosition = (ushort)fieldHellPosition.GetValue(null);
 		}
 
 		/// <summary> Adapted from vanilla code </summary>
