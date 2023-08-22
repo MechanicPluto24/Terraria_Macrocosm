@@ -1,20 +1,16 @@
-﻿using Microsoft.Xna.Framework;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.ModLoader;
+using Terraria.ID;
+using Terraria.ModLoader.IO;
 using SubworldLibrary;
-using Macrocosm.Content.Subworlds;
-using Macrocosm.Content.Rockets.Navigation.Checklist;
 using Macrocosm.Common.UI;
 using Macrocosm.Content.Systems;
 using Macrocosm.Content.Rockets;
-using Terraria.Utilities;
-using System.Linq;
-using Terraria.ModLoader.IO;
-using Macrocosm.Content.Rockets.Customization;
-using System;
+using Macrocosm.Content.Subworlds;
 using Macrocosm.Content.Rockets.LaunchPads;
-using Terraria.ID;
+using Macrocosm.Content.Rockets.Customization;
+using Macrocosm.Content.Rockets.Navigation.Checklist;
 
 namespace Macrocosm.Common.Subworlds
 {

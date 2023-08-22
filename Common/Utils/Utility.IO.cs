@@ -1,4 +1,5 @@
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 
 namespace Macrocosm.Common.Utils
@@ -13,6 +14,28 @@ namespace Macrocosm.Common.Utils
 
 		public static JArray ParseJSONFromFile(string path)
 			=> JArray.Parse(GetTextFromFile(path));
+
+		public static void PrettyPrintJSON(ref string text)
+		{
+			string[] array = text.Split(new string[1] { "\r\n" }, StringSplitOptions.None);
+			foreach (string text2 in array)
+			{
+				if (text2.Contains(": {"))
+				{
+					string text3 = text2[..text2.IndexOf('"')];
+					string text4 = text2 + "\r\n  ";
+					string newValue = text4.Replace(": {\r\n  ", ": \r\n" + text3 + "{\r\n  ");
+					text = text.Replace(text4, newValue);
+				}
+			}
+
+			text = text.Replace("[\r\n        ", "[");
+			text = text.Replace("[\r\n      ", "[");
+			text = text.Replace("\"\r\n      ", "\"");
+			text = text.Replace("\",\r\n        ", "\", ");
+			text = text.Replace("\",\r\n      ", "\", ");
+			text = text.Replace("\r\n    ]", "]");
+		}
 
 		public static T[] ToObjectRecursive<T>(this JArray jArray)
 		{

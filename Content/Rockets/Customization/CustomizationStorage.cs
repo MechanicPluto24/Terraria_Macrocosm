@@ -18,6 +18,9 @@ namespace Macrocosm.Content.Rockets.Customization
 {
 	public class CustomizationStorage : ModSystem
 	{
+
+		public static bool Populated { get; private set; }
+
 		private static Dictionary<(string moduleName, string patternName), Pattern> patterns;
 		private static Dictionary<(string moduleName, string detailName), Detail> details;
 
@@ -34,6 +37,8 @@ namespace Macrocosm.Content.Rockets.Customization
 			LoadFunctions(); // Load functions first, as they are used in the pattern loading
 			LoadPatterns();
 			LoadDetails();
+
+			Populated = true;
 		}
 
 		public override void Unload()
@@ -306,14 +311,13 @@ namespace Macrocosm.Content.Rockets.Customization
 			AddFunction("Celestial", (colors) => GlobalVFX.CelestialColor);
 		}
 
-		// TODO: load these from JSON
 		private static void LoadPatterns()
 		{
 			try
 			{
 				JArray patternsArray = Utility.ParseJSONFromFile("Content/Rockets/Customization/Patterns/patterns.json");
 
-				foreach (JObject patternObject in patternsArray)
+				foreach (JObject patternObject in patternsArray.Cast<JObject>())
  					AddPattern(Pattern.FromJSON(patternObject.ToString()));
  			}
 			catch (Exception ex)
@@ -321,15 +325,15 @@ namespace Macrocosm.Content.Rockets.Customization
 				Macrocosm.Instance.Logger.Error(ex.Message);
 			}
 
-			//// Just for testing the scrollbar
-			//for (int i = 1; i <= 7; i++)
- 			//	AddPattern("ServiceModule", "Test" + i, true, new(Color.Transparent), new(Color.White));
- 			//
-			//for (int i = 1; i <= 8; i++)
- 			//	AddPattern("ReactorModule", "Test" + i, true, new(Color.Transparent), new(Color.White));
-			//
-			//for (int i = 1; i <= 74; i++)
- 			//	AddPattern("EngineModule", "Test" + i, true, new(Color.White), new(Color.White));
+			// Just for testing the scrollbar
+			for (int i = 1; i <= 7; i++)
+ 				AddPattern("ServiceModule", "Test" + i, true, new(Color.Transparent), new(Color.White));
+ 			
+			for (int i = 1; i <= 8; i++)
+ 				AddPattern("ReactorModule", "Test" + i, true, new(Color.Transparent), new(Color.White));
+			
+			for (int i = 1; i <= 74; i++)
+ 				AddPattern("EngineModule", "Test" + i, true, new(Color.White), new(Color.White));
  		}
 
 		private static void LoadDetails()

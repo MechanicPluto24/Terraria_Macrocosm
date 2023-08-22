@@ -14,25 +14,38 @@ namespace Macrocosm.Content.Rockets.Modules
 		protected virtual JObject SerializeCustomizationData() { return new JObject(); }
 		protected virtual void DeserializeCustomizationData(string json) { }
 
-		public string ToJSON() => ToJObject().ToString(Formatting.Indented);
+		public string GetCustomizationDataJSON() => GetCustomizationDataToJObject().ToString(Formatting.Indented);
 
-		public JObject ToJObject()
+		public JObject GetCustomizationDataToJObject()
 		{
 			JObject jsonObject = new()
 			{
-				["moduleName"] = char.ToLower(Name[0]) + Name[1..],
-				["pattern"] = Pattern.ToJSON()
+				["moduleName"] = Name,
+				["pattern"] = Pattern.ToJObject()
 			};
 
-			jsonObject.Add(SerializeCustomizationData());
+			//jsonObject.Add(SerializeCustomizationData());
 
 			return jsonObject;
 		}
 
+		public void ApplyCustomizationDataFromJObject(JObject jObject)
+		{
+			try
+			{
+				Pattern = Pattern.FromJObject(jObject["pattern"].Value<JObject>());
+			}
+			catch (Exception ex)
+			{
+				Utility.Chat(ex.Message);
+				Macrocosm.Instance.Logger.Warn(ex.Message);
+			}
+			//DeserializeCustomizationData(json);
+		}
+
 		public void ApplyCustomizationDataFromJSON(string json) 
 		{
-			Pattern = Pattern.FromJObject(JObject.Parse(json));
-			DeserializeCustomizationData(json);
+			ApplyCustomizationDataFromJObject(JObject.Parse(json));
 		}
 
 		protected virtual TagCompound SerializeModuleData() { return new TagCompound(); }

@@ -1,5 +1,6 @@
 ﻿
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Rockets.Modules;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,16 @@ namespace Macrocosm.Content.Rockets
 {
     public partial class Rocket 
 	{
+		public static readonly List<string> DefaultModuleNames = new()
+		{
+			"CommandPod", 
+			"ServiceModule", 
+			"ReactorModule", 
+			"EngineModule", 
+			"BoosterLeft", 
+			"BoosterRight"
+		};
+
 		public static Rocket Create(Vector2 position)
 		{
 			// Rocket will not be managed.. we have to avoid ever reaching this  

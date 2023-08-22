@@ -14,6 +14,11 @@ using Terraria;
 using System.Collections.Generic;
 using Macrocosm.Content.Rockets.Modules;
 using Microsoft.Xna.Framework.Input;
+using ReLogic.OS;
+using System.Xml;
+using Terraria.Audio;
+using Terraria.ID;
+using Terraria.GameInput;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
@@ -264,11 +269,19 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 				if (customizationPanelBackground.HasChild(rocketCustomizationControlPanel))
 					customizationPanelBackground.ReplaceChildWith(rocketCustomizationControlPanel, hslMenu);
+
+				if (customizationPanelBackground.HasChild(moduleCustomizationControlPanel))
+					customizationPanelBackground.ReplaceChildWith(moduleCustomizationControlPanel, hslMenu);
 			}
 			else
 			{
 				if (customizationPanelBackground.HasChild(hslMenu))
-					customizationPanelBackground.ReplaceChildWith(hslMenu, rocketCustomizationControlPanel);
+				{
+					if(rocketPreview.ZoomedOut)
+						customizationPanelBackground.ReplaceChildWith(hslMenu, rocketCustomizationControlPanel);
+					else
+						customizationPanelBackground.ReplaceChildWith(hslMenu, moduleCustomizationControlPanel);
+				}
 			}
 		}
 
@@ -333,6 +346,22 @@ namespace Macrocosm.Content.Rockets.Navigation
 			RefreshPatternColorPickers();
 		}
 
+		private void OnPreviewZoomIn()
+		{
+			rocketPreviewZoomButton.SetImage(ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Buttons/ZoomOutButton"));
+
+			if(!GetFocusedColorPicker(out _))
+				customizationPanelBackground.ReplaceChildWith(rocketCustomizationControlPanel, moduleCustomizationControlPanel);
+		}
+
+		private void OnPreviewZoomOut()
+		{
+			rocketPreviewZoomButton.SetImage(ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Buttons/ZoomInButton"));
+
+			if (!GetFocusedColorPicker(out _))
+				customizationPanelBackground.ReplaceChildWith(moduleCustomizationControlPanel, rocketCustomizationControlPanel);
+		}
+
 		private void ApplyCustomizationChanges()
 		{
 			AllLoseFocus();
@@ -342,8 +371,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 			RefreshPatternColorPickers();
 		}
 
-		//discard
-		private void CancelCustomizationChanges()
+		private void DiscardCustomizationChanges()
 		{
 			AllLoseFocus();
 
@@ -371,6 +399,55 @@ namespace Macrocosm.Content.Rockets.Navigation
 			CustomizationDummy.ResetModuleCustomizationToDefault(currentModuleName);
 
 			RefreshPatternColorPickers();
+		}
+
+		private void CopyRocketData()
+		{
+			SoundEngine.PlaySound(SoundID.MenuTick);
+			string json = CustomizationDummy.GetCustomizationDataJSON();
+			//Utility.PrettyPrintJSON(ref json);
+			Platform.Get<IClipboard>().Value = json;
+		}
+
+		private void PasteRocketData()
+		{
+			SoundEngine.PlaySound(SoundID.MenuTick);
+			string json = Platform.Get<IClipboard>().Value;
+
+			try
+			{
+				CustomizationDummy.ApplyRocketCustomizationFromJSON(json);
+				RefreshPatternColorPickers();
+			}
+			catch (Exception ex)
+			{
+				Utility.Chat(ex.Message);
+			}
+		}
+
+		private void CopyModuleData()
+		{
+			SoundEngine.PlaySound(SoundID.MenuTick);
+			string json = currentModule.GetCustomizationDataJSON();
+			//Utility.PrettyPrintJSON(ref json);
+			Platform.Get<IClipboard>().Value = json;
+		}
+
+		private void PasteModuleData()
+		{
+			SoundEngine.PlaySound(SoundID.MenuTick);
+			string json = Platform.Get<IClipboard>().Value;
+
+			try
+			{
+				currentModule.ApplyCustomizationDataFromJSON(json);
+				RefreshPatternColorPickers();
+			}
+			catch (Exception ex)
+			{
+				Utility.Chat(ex.Message);
+			}
+
 		}
 
 		private void OnHSLMenuCancel()
@@ -405,15 +482,18 @@ namespace Macrocosm.Content.Rockets.Navigation
 		private void RefreshPatternColorPickers()
 		{
 			UpdatePatternConfig();
+			ClearPatternColorPickers();
+			CreatePatternColorPickers();
+		}
 
+		private void ClearPatternColorPickers()
+		{
 			if (patternColorPickers is not null)
 				foreach (var (picker, _) in patternColorPickers)
 					picker.Remove();
 
 			colorPickerSeparator?.Remove();
 			resetPatternButton?.Remove();
-
-			CreatePatternColorPickers();
 		}
 
 		private List<(UIFocusIconButton, int)> CreatePatternColorPickers()
@@ -450,7 +530,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 				Height = new(32f, 0f),
 				Top = new(0f, 0.04f),
 				Left = new(iconSize * indexes.Count + iconLeftOffset - 1f, 0f),
-				Color = new Color(89, 116, 213, 255) * 0.9f
+				Color = new Color(89, 116, 213, 255) * 1.1f
 			};
 			patternConfigPanel.Append(colorPickerSeparator);
 
@@ -459,7 +539,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 				HAlign = 0f,
 				Top = new(0f, 0.04f),
 				Left = new(iconSize * indexes.Count + iconLeftOffset + 7f, 0f),
-				HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Common.ResetPattern")
+				HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Customization.ResetPattern")
 			};
 			resetPatternButton.OnLeftClick += (_, _) => ResetCurrentPatternToDefaults();
 			patternConfigPanel.Append(resetPatternButton);
@@ -579,16 +659,17 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 			rocketPreview = new()
 			{
+				OnZoomedIn = OnPreviewZoomIn,
+				OnZoomedOut = OnPreviewZoomOut,
 				OnModuleChange = OnCurrentModuleChange,
-				OnZoomedOut = () => customizationPanelBackground.ReplaceChildWith(moduleCustomizationControlPanel, rocketCustomizationControlPanel),
-				OnZoomedIn = () => customizationPanelBackground.ReplaceChildWith(rocketCustomizationControlPanel, moduleCustomizationControlPanel),
 			};
 			rocketPreviewBackground.Append(rocketPreview);
 
-			rocketPreviewZoomButton = new(ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Buttons/ZoomInButton"))
+			rocketPreviewZoomButton = new(ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Buttons/ZoomOutButton"), ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Buttons/ZoomButtonBorder"))
 			{
 				Left = new(10, 0),
-				Top = new(10, 0)
+				Top = new(10, 0),
+				HoverText = Language.GetText("Mods.Macrocosm.UI.Common.ZoomOut")
 			};
 			rocketPreviewZoomButton.OnLeftClick += (_, _) => rocketPreview.ZoomedOut = !rocketPreview.ZoomedOut;
 			rocketPreviewBackground.Append(rocketPreviewZoomButton);
@@ -670,53 +751,69 @@ namespace Macrocosm.Content.Rockets.Navigation
 			rocketCustomizationControlPanel.SetPadding(2f);
 			customizationPanelBackground.Append(rocketCustomizationControlPanel);
 
+			rocketCopyButton = new(Main.Assets.Request<Texture2D>("Images/UI/CharCreation/Copy"))
+			{
+				VAlign = 0.9f,
+				Left = new(0f, 0.18f),   
+				HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Customization.CopyRocket")
+			};
+			rocketCopyButton.OnLeftMouseDown += (_, _) => CopyRocketData();
+			rocketCustomizationControlPanel.Append(rocketCopyButton);
+
+			rocketPasteButton = new(Main.Assets.Request<Texture2D>("Images/UI/CharCreation/Paste"))
+			{
+				VAlign = 0.9f,
+				Left = new(0f, 0.295f),   
+				HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Customization.PasteRocket")
+			};
+			rocketPasteButton.OnLeftMouseDown += (_, _) => PasteRocketData();
+			rocketCustomizationControlPanel.Append(rocketPasteButton);
+
+			UIVerticalSeparator separator1 = new()
+			{
+				Height = new(32f, 0f),
+				VAlign = 0.9f,
+				Left = new(0f, 0.425f),   
+				Color = new Color(89, 116, 213, 255) * 1.1f
+			};
+			rocketCustomizationControlPanel.Append(separator1);
+
 			rocketResetButton = new(ModContent.Request<Texture2D>(symbolsPath + "ResetRed"))
 			{
 				VAlign = 0.9f,
-				Left = new(0f, 0.34f),
-				HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Common.ResetRocket")
-
+				Left = new(0f, 0.448f),  
+				HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Customization.ResetRocket")
 			};
 			rocketResetButton.OnLeftClick += (_, _) => ResetRocketToDefaults();
 			rocketCustomizationControlPanel.Append(rocketResetButton);
 
-			rocketCancelButton = new(ModContent.Request<Texture2D>(symbolsPath + "CrossmarkRed")) 
+			UIVerticalSeparator separator2 = new()
+			{
+				Height = new(32f, 0f),
+				VAlign = 0.9f,
+				Left = new(0f, 0.571f),   
+				Color = new Color(89, 116, 213, 255) * 1.1f
+			};
+			rocketCustomizationControlPanel.Append(separator2);
+
+			rocketCancelButton = new(ModContent.Request<Texture2D>(symbolsPath + "CrossmarkRed"))
 			{
 				VAlign = 0.9f,
-				Left = new(0f, 0.46f),
-				HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Common.CustomizationCancel")
+				Left = new(0f, 0.6f), 
+				HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Customization.Cancel")
 			};
-			rocketCancelButton.OnLeftClick += (_, _) => CancelCustomizationChanges();
+			rocketCancelButton.OnLeftClick += (_, _) => DiscardCustomizationChanges();
 			rocketCustomizationControlPanel.Append(rocketCancelButton);
 
 			rocketApplyButton = new(ModContent.Request<Texture2D>(symbolsPath + "CheckmarkGreen"))
 			{
 				VAlign = 0.9f,
-				Left = new(0f, 0.58f),
-				HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Common.CustomizationApply")
+				Left = new(0f, 0.715f),   
+				HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Customization.Apply")
 			};
 			rocketApplyButton.OnLeftClick += (_, _) => ApplyCustomizationChanges();
 			rocketCustomizationControlPanel.Append(rocketApplyButton);
 
-			rocketCopyButton = new(Main.Assets.Request<Texture2D>("Images/UI/CharCreation/Copy"))
-			{
-				VAlign = 0.63f,
-				Left = new(0f, 0.45f),
-				HoverText = Language.GetText("Mods.Macrocosm.UI.Common.CopyColorHex")
-			};
-			rocketCopyButton.OnLeftMouseDown += (_, _) => { };
-			rocketCustomizationControlPanel.Append(rocketCopyButton);
-
-			rocketPasteButton = new(Main.Assets.Request<Texture2D>("Images/UI/CharCreation/Paste"))
-			{
-				VAlign = 0.63f,
-				Left = new(0f, 0.61f),
-				HoverText = Language.GetText("Mods.Macrocosm.UI.Common.PasteColorHex")
-
-			};
-
-			rocketPasteButton.OnLeftMouseDown += (_, _) => { };
-			rocketCustomizationControlPanel.Append(rocketPasteButton);
 
 			/*
 			randomizeButton = new(Main.Assets.Request<Texture2D>("Images/UI/CharCreation/Randomize"))
@@ -747,52 +844,68 @@ namespace Macrocosm.Content.Rockets.Navigation
 			moduleCustomizationControlPanel.SetPadding(2f);
 			customizationPanelBackground.Append(moduleCustomizationControlPanel);
 
+			moduleCopyButton = new(Main.Assets.Request<Texture2D>("Images/UI/CharCreation/Copy"))
+			{
+				VAlign = 0.9f,
+				Left = new(0f, 0.18f),
+				HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Customization.CopyModule")
+			};
+			moduleCopyButton.OnLeftMouseDown += (_, _) => CopyModuleData();
+			moduleCustomizationControlPanel.Append(moduleCopyButton);
+
+			UIVerticalSeparator separator1 = new()
+			{
+				Height = new(32f, 0f),
+				VAlign = 0.9f,
+				Left = new(0f, 0.425f),
+				Color = new Color(89, 116, 213, 255) * 1.1f
+			};
+			moduleCustomizationControlPanel.Append(separator1);
+
+			modulePasteButton = new(Main.Assets.Request<Texture2D>("Images/UI/CharCreation/Paste"))
+			{
+				VAlign = 0.9f,
+				Left = new(0f, 0.295f),
+				HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Customization.PasteModule")
+			};
+			modulePasteButton.OnLeftMouseDown += (_, _) => PasteModuleData();
+			moduleCustomizationControlPanel.Append(modulePasteButton);
+
 			moduleResetButton = new(ModContent.Request<Texture2D>(symbolsPath + "ResetWhite"))
 			{
 				VAlign = 0.9f,
-				Left = new(0f, 0.34f),
-				HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Common.ResetModule")
+				Left = new(0f, 0.448f),
+				HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Customization.ResetRocket")
 			};
 			moduleResetButton.OnLeftClick += (_, _) => ResetCurrentModuleToDefaults();
 			moduleCustomizationControlPanel.Append(moduleResetButton);
 
+			UIVerticalSeparator separator2 = new()
+			{
+				Height = new(32f, 0f),
+				VAlign = 0.9f,
+				Left = new(0f, 0.571f),
+				Color = new Color(89, 116, 213, 255) * 1.1f
+			};
+			moduleCustomizationControlPanel.Append(separator2);
+
 			rocketCancelButton = new(ModContent.Request<Texture2D>(symbolsPath + "CrossmarkRed"))
 			{
 				VAlign = 0.9f,
-				Left = new(0f, 0.46f),
-				HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Common.CustomizationCancel")
+				Left = new(0f, 0.6f),
+				HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Customization.Cancel")
 			};
-			rocketCancelButton.OnLeftClick += (_, _) => CancelCustomizationChanges();
+			rocketCancelButton.OnLeftClick += (_, _) => DiscardCustomizationChanges();
 			moduleCustomizationControlPanel.Append(rocketCancelButton);
 
 			rocketApplyButton = new(ModContent.Request<Texture2D>(symbolsPath + "CheckmarkGreen"))
 			{
 				VAlign = 0.9f,
-				Left = new(0f, 0.58f),
-				HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Common.CustomizationApply")
+				Left = new(0f, 0.715f),
+				HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Customization.Apply")
 			};
 			rocketApplyButton.OnLeftClick += (_, _) => ApplyCustomizationChanges();
 			moduleCustomizationControlPanel.Append(rocketApplyButton);
-
-			moduleCopyButton = new(Main.Assets.Request<Texture2D>("Images/UI/CharCreation/Copy"))
-			{
-				VAlign = 0.63f,
-				Left = new(0f, 0.45f),
-				HoverText = Language.GetText("Mods.Macrocosm.UI.Common.CopyColorHex")
-			};
-			moduleCopyButton.OnLeftMouseDown += (_, _) => { };
-			moduleCustomizationControlPanel.Append(moduleCopyButton);
-
-			modulePasteButton = new(Main.Assets.Request<Texture2D>("Images/UI/CharCreation/Paste"))
-			{
-				VAlign = 0.63f,
-				Left = new(0f, 0.61f),
-				HoverText = Language.GetText("Mods.Macrocosm.UI.Common.PasteColorHex")
-
-			};
-
-			modulePasteButton.OnLeftMouseDown += (_, _) => { };
-			moduleCustomizationControlPanel.Append(modulePasteButton);
 
 			return moduleCustomizationControlPanel;
 		}
