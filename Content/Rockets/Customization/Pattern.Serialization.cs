@@ -63,6 +63,16 @@ namespace Macrocosm.Content.Rockets.Customization
 				colorDataArray.Add(colorDataObject);
 			}
 
+			// Remove trailing empty JObjects
+			for (int i = colorDataArray.Count - 1; i >= 0; i--)
+			{
+				if (colorDataArray[i].Type == JTokenType.Object && !colorDataArray[i].HasValues)
+					colorDataArray.RemoveAt(i);
+				else
+					break;
+			}
+ 
+
 			jsonObject["colorData"] = colorDataArray;
 
 			return jsonObject; 
@@ -73,7 +83,15 @@ namespace Macrocosm.Content.Rockets.Customization
 		public static Pattern FromJObject(JObject patternObject)
 		{
 			string moduleName = patternObject.Value<string>("moduleName");
+
+			if (!Rocket.DefaultModuleNames.Contains(moduleName))
+				throw new SerializationException("Error: Invalid module name.");
+
 			string patternName = patternObject.Value<string>("patternName");
+
+			if (CustomizationStorage.Populated && !CustomizationStorage.TryGetPattern(moduleName, patternName, out _) )
+				throw new SerializationException("Error: Invalid pattern name.");
+
 			bool unlockedByDefault = patternObject.Value<bool>("unlockedByDefault");
 
 			JArray colorDataArray = patternObject.Value<JArray>("colorData");
@@ -81,7 +99,7 @@ namespace Macrocosm.Content.Rockets.Customization
 
 			foreach (JObject colorDataObject in colorDataArray.Cast<JObject>())
 			{
-				string colorHex = colorDataObject.Value<string>("defaultColor");
+				string colorHex = colorDataObject.Value<string>("color");
 				string colorFunction = colorDataObject.Value<string>("colorFunction");
 
 				if (!string.IsNullOrEmpty(colorFunction))
@@ -91,16 +109,16 @@ namespace Macrocosm.Content.Rockets.Customization
 					if (parameters is not null)
 						colorDatas.Add(new(ColorFunction.CreateFunctionByName(colorFunction, parameters.ToObjectRecursive<object>())));
 					else
-						throw new SerializationException("Color function parameters not specified.");
+						throw new SerializationException("$Error: Color function parameters not specified.");
 				}
 				else if (!string.IsNullOrEmpty(colorHex))
 				{
 					bool userModifiable = colorDataObject.Value<bool?>("userModifiable") ?? true;
 
-					if (Utility.TryGetColorFromHex(colorHex, out Color defaultColor))
-						colorDatas.Add(new(defaultColor, userModifiable));
+					if (Utility.TryGetColorFromHex(colorHex, out Color color))
+						colorDatas.Add(new(color, userModifiable));
 					else
-						throw new SerializationException($"Error: Invalid color code: {colorHex}");
+						throw new SerializationException($"Error: Invalid color code: {colorHex}.");
 				}
 				else
 				{

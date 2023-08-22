@@ -53,12 +53,12 @@ namespace Macrocosm.Content.Rockets
 			Modules[moduleName].Pattern = CustomizationStorage.GetDefaultPattern(moduleName);
 		}
 
-		public string GetRocketCustomizationJSON()
+		public string GetCustomizationDataJSON()
 		{
 			JArray jArray = new();
 
 			foreach (var moduleKvp in Modules)
- 				jArray.Add(moduleKvp.Value.ToJObject());
+ 				jArray.Add(moduleKvp.Value.GetCustomizationDataToJObject());
  
 			return jArray.ToString(Formatting.Indented);
 		}
@@ -68,7 +68,8 @@ namespace Macrocosm.Content.Rockets
 			foreach (var moduleKvp in Modules)
 			{
 				var jArray = JArray.Parse(json);
-				moduleKvp.Value.ApplyCustomizationDataFromJSON(jArray.FirstOrDefault(obj => obj["moduleName"] != null && obj["moduleName"].ToString() == moduleKvp.Key).ToString());
+				JObject jObject = jArray.Cast<JObject>().FirstOrDefault(obj => obj["moduleName"].Value<string>() == moduleKvp.Key);
+				moduleKvp.Value.ApplyCustomizationDataFromJObject(jObject);
 			}
 		}
 	}

@@ -26,6 +26,7 @@ namespace Macrocosm.Content.Rockets.Customization
 
 		public List<int> UserModifiableIndexes { get; } = new();
 		public int UserModifiableColorCount => UserModifiableIndexes.Count;
+		public int DefinitionColorCount { get; private set; }
 
 		[JsonProperty]
 		private PatternColorData[] ColorData { get; init; }
