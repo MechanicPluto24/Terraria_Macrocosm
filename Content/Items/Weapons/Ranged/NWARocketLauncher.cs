@@ -8,10 +8,7 @@ using Terraria.DataStructures;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Content.Particles;
 using Macrocosm.Common.Bases;
-using Macrocosm.Content.Projectiles.Base;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {

@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Linq;
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Rockets.Modules;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using Macrocosm.Common.UI;
+using Macrocosm.Common.Utils;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
@@ -21,10 +22,15 @@ namespace Macrocosm.Content.Rockets.Customization
 		public bool Unlocked { get; set; }
 		public bool UnlockedByDefault { get; private set; }
 
-		public int ColorCount { get; }
-		public const int MaxColorCount = 8;
+		public bool IsDefault => Name == "Basic";
+		public bool HasDefaultColors { get; private set; } = true;
 
-		private PatternColorData[] colorData;
+		public List<int> UserModifiableIndexes { get; } = new();
+		public int UserModifiableColorCount => UserModifiableIndexes.Count;
+
+		private PatternColorData[] ColorData { get; init; }
+
+		public const int MaxColorCount = 8;
 
 		public string TexturePath => GetType().Namespace.Replace('.', '/') + "/Patterns/" + ModuleName + "/" + Name;
 		public Texture2D Texture
@@ -43,14 +49,14 @@ namespace Macrocosm.Content.Rockets.Customization
 		{
 			get
 			{
-				if (ModContent.RequestIfExists(TexturePath, out Asset<Texture2D> paintMask))
+				if (ModContent.RequestIfExists(IconTexturePath, out Asset<Texture2D> paintMask))
 					return paintMask.Value;
 				else
 					return Macrocosm.EmptyTex;
 			}
 		}
 
-		public Pattern(string moduleName, string patternName, bool unlockedByDefault, params PatternColorData[] colorData)
+		public Pattern(string moduleName, string patternName, bool unlockedByDefault, params PatternColorData[] defaultColorData)
 		{
 			ModuleName = moduleName;
 			Name = patternName;
@@ -58,61 +64,63 @@ namespace Macrocosm.Content.Rockets.Customization
 			UnlockedByDefault = unlockedByDefault;
 			Unlocked = unlockedByDefault;
 
-			ColorCount = (int)MathHelper.Clamp(colorData.Length, 0, MaxColorCount);
+			ColorData = new PatternColorData[MaxColorCount];
+			Array.Fill(ColorData, new PatternColorData());
 
-			this.colorData = new PatternColorData[MaxColorCount];
-			Array.Fill(this.colorData, new PatternColorData());
-			for (int i = 0; i < ColorCount; i++)
-				this.colorData[i] = colorData[i];
+			for (int i = 0; i < defaultColorData.Length; i++)
+			{
+				if (defaultColorData[i].HasColorFunction)
+				{
+					ColorData[i] = new(defaultColorData[i].ColorFunction);
+				}
+				else
+				{
+					ColorData[i] = new(defaultColorData[i].DefaultColor, defaultColorData[i].IsUserModifiable);
+
+					if(defaultColorData[i].IsUserModifiable)
+						UserModifiableIndexes.Add(i);
+				}
+ 			}
 		}
 
 		public Color GetColor(int index)
 		{
-			if (index >= 0 && index < ColorCount)
+			if (index >= 0 && index < MaxColorCount)
 			{
-				if (colorData[index].HasColorFunction)
-					return colorData[index].ColorFunction.Invoke(colorData.Select((c, i) => i == index ? Color.Transparent : GetColor(i)).ToArray());
-				else if (!colorData[index].IsUserChangeable)
-					return colorData[index].DefaultColor;
+				if (ColorData[index].HasColorFunction)
+					return ColorData[index].ColorFunction.Invoke(ColorData.Select((c, i) => i == index ? Color.Transparent : GetColor(i)).ToArray());
+				else if (!ColorData[index].IsUserModifiable)
+					return ColorData[index].DefaultColor;
  				else 
-					return colorData[index].UserColor;
+					return ColorData[index].UserColor;
 			}
 			return Color.Transparent;
 		}
 
-		public void SetColor(int index, Color color)
+		public List<int> GetUserModifiableIndexes()
 		{
-			if (index < 0 || index >= ColorCount || !colorData[index].IsUserChangeable)
-				return;
-
-			colorData[index].ColorFunction = null;
-			colorData[index].UserColor = color;
+			List<int> result = new();
+			return result;
 		}
 
-		public bool TrySetColor(int index, Color color)
+		public bool SetColor(int index, Color color)
 		{
-			if (index < 0 || index >= ColorCount || !colorData[index].IsUserChangeable)
+			if (index < 0 || index >= MaxColorCount || !ColorData[index].IsUserModifiable)
 				return false;
 
-            colorData[index].ColorFunction = null;
-			colorData[index].UserColor = color;
-            return true;
+			HasDefaultColors = false;
+			ColorData[index] = ColorData[index].WithUserColor(color);
+			return true;
+
 		}
 
-		public void SetColor(int index, PatternColorFunction colorFunction)
+		public bool SetColor(int index, PatternColorFunction colorFunction)
 		{
-			if (index < 0 || index >= ColorCount || !colorData[index].IsUserChangeable)
-				return;
-
-			colorData[index].ColorFunction = colorFunction;
-		}
-
-		public bool TrySetColor(int index, PatternColorFunction colorFunction)
-		{
-			if (index < 0 || index >= ColorCount || !colorData[index].IsUserChangeable)
+			if (index < 0 || index >= MaxColorCount || !ColorData[index].IsUserModifiable)
 				return false;
 
-			colorData[index].ColorFunction = colorFunction;
+			HasDefaultColors = false;
+			ColorData[index] = ColorData[index].WithColorFunction(colorFunction);
 			return true;
 		}
 
@@ -130,10 +138,16 @@ namespace Macrocosm.Content.Rockets.Customization
 		}
 		*/
 
+		public UIPatternIcon ProvideUI()
+		{
+			UIPatternIcon icon = new(this);
+			return icon;
+		}
+
 		public void DrawIcon(SpriteBatch spriteBatch, Vector2 position)
 		{
 			// Load the coloring shader
-			Effect effect = ModContent.Request<Effect>(Macrocosm.EffectAssetsPath + "ColorMaskShading", AssetRequestMode.ImmediateLoad).Value;
+			Effect effect = ModContent.Request<Effect>(Macrocosm.EffectAssetsPath + "SimpleColorMaskShading", AssetRequestMode.ImmediateLoad).Value;
 
 			// Pass the pattern icon to the shader via the S1 register
 			Main.graphics.GraphicsDevice.Textures[1] = IconTexture;
@@ -150,13 +164,11 @@ namespace Macrocosm.Content.Rockets.Customization
 				effect.Parameters["uColor" + i.ToString()].SetValue(GetColor(i).ToVector4());
 			}
 
-			effect.Parameters["uAmbientColor"].SetValue(Color.White.ToVector3());
-
 			var state = spriteBatch.SaveState();
 			spriteBatch.End();
 			spriteBatch.Begin(state.SpriteSortMode, state.BlendState, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, effect, state.Matrix);
  
-			spriteBatch.Draw(IconTexture, position, Color.White);
+			spriteBatch.Draw(IconTexture, position, null, Color.White, 0f, Vector2.Zero, 0.995f, SpriteEffects.None, 0f);
 
 			spriteBatch.End();
 			spriteBatch.Begin(state);
@@ -195,9 +207,9 @@ namespace Macrocosm.Content.Rockets.Customization
 			};
 
 			// Save the user-changed colors
-			for (int i = 0; i < ColorCount; i++)
- 				if (colorData[i].IsUserChangeable && !colorData[i].HasColorFunction)
-					tag[$"UserColor{i}"] = colorData[i].UserColor;  
+			for (int i = 0; i < MaxColorCount; i++)
+ 				if (ColorData[i].IsUserModifiable && !ColorData[i].HasColorFunction)
+					tag[$"UserColor{i}"] = ColorData[i].UserColor;  
  
 			return tag;
 		}
@@ -208,13 +220,12 @@ namespace Macrocosm.Content.Rockets.Customization
 			string moduleName = tag.GetString("ModuleName");
 
 			Pattern originalPatternData = CustomizationStorage.GetPatternReference(moduleName, name);
-			PatternColorData[] colorData = originalPatternData.colorData.Select(data => data.Clone()).ToArray();
-			Pattern pattern = new(moduleName, name, originalPatternData.UnlockedByDefault, colorData);
+			Pattern pattern = new(moduleName, name, originalPatternData.UnlockedByDefault, originalPatternData.ColorData);
 
 			// Load the user-changed colors
-			for (int i = 0; i < pattern.ColorCount; i++)
-				if (tag.ContainsKey($"UserColor{i}") && pattern.colorData[i].IsUserChangeable && !pattern.colorData[i].HasColorFunction)
-					pattern.colorData[i].UserColor = tag.Get<Color>($"UserColor{i}");
+			for (int i = 0; i < MaxColorCount; i++)
+				if (tag.ContainsKey($"UserColor{i}") && pattern.ColorData[i].IsUserModifiable && !pattern.ColorData[i].HasColorFunction)
+					pattern.ColorData[i] = pattern.ColorData[i].WithUserColor(tag.Get<Color>($"UserColor{i}"));
 
 			return pattern;
 		}

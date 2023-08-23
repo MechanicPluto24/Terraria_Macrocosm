@@ -1,11 +1,13 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Common.UI;
+using Microsoft.Xna.Framework;
 using Terraria.GameContent.UI.Elements;
+using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Payload
 {
-    public class UIPayloadTab : UIPanel
+    public class UIPayloadTab : UIPanel, ITabUIElement, IRocketDataConsumer
     {
-        public Rocket Rocket = new();
+        public Rocket Rocket { get; set; }  
 
 		public UIPayloadTab()
 		{
@@ -33,7 +35,7 @@ namespace Macrocosm.Content.Rockets.Payload
 
 		}
 
-        public override void Update(GameTime gameTime)
+		public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 		}

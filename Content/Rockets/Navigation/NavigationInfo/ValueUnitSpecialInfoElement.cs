@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
 
 		protected string infoElementKey => this.GetType().Name.Replace("InfoElement", "");
 
-		private const string specialValuesPath = "Mods.Macrocosm.RocketUI.Special.";
+		private const string specialValuesPath = "Mods.Macrocosm.UI.Rocket.Special.";
 
 		public ValueUnitSpecialInfoElement(string specialValueKey) : base(specialValueKey)
 		{
@@ -60,7 +60,7 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
 
 		protected override LocalizedColorScaleText GetText() => new(formattedLocalizedText, scale: 0.9f);
 
-		protected override LocalizedText GetHoverText() => Language.GetText("Mods.Macrocosm.RocketUI." + infoElementKey + ".Name");
+		protected override LocalizedText GetHoverText() => Language.GetText("Mods.Macrocosm.UI.Rocket." + infoElementKey + ".Name");
 
 		protected override Asset<Texture2D> GetIcon() => ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Icons/" + infoElementKey);
 

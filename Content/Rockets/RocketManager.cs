@@ -41,7 +41,7 @@ namespace Macrocosm.Content.Rockets
         }
 
 		public static int ActiveRocketCount => Rockets.Count(rocket => rocket.Active);
-		public static int RocketsInCurrentSubworld => Rockets.Count(rocket => rocket.ActiveInCurrentSubworld);
+		public static int RocketsInCurrentSubworld => Rockets.Count(rocket => rocket.ActiveInCurrentWorld);
 
 		public static void AddRocket(Rocket rocket)
 		{
@@ -59,7 +59,6 @@ namespace Macrocosm.Content.Rockets
 
 		public override void PostUpdateNPCs()
 		{
-            Utility.Chat(ActiveRocketCount + ", " + RocketsInCurrentSubworld);
             UpdateRockets();
 		}
 
@@ -69,7 +68,7 @@ namespace Macrocosm.Content.Rockets
             {
                 Rocket rocket = Rockets[i];
 
-                if (!rocket.ActiveInCurrentSubworld)
+                if (!rocket.ActiveInCurrentWorld)
                     continue;
 
 				rocket.Update();
@@ -79,16 +78,19 @@ namespace Macrocosm.Content.Rockets
         public static void DespawnAllRockets()
         {
 			for (int i = 0; i < MaxRockets; i++)
+            {
                 Rockets[i].Despawn();
-        }
+				Rockets[i] = new Rocket();
+			}
+		}
 
-        private static void DrawRockets(RocketDrawLayer layer)
+		private static void DrawRockets(RocketDrawLayer layer)
         {
 			for (int i = 0; i < MaxRockets; i++)
 			{
                 Rocket rocket = Rockets[i];
 
-                if (!rocket.ActiveInCurrentSubworld)
+                if (!rocket.ActiveInCurrentWorld)
                     continue;
 
 				if (rocket.DrawLayer == layer)
@@ -101,8 +103,9 @@ namespace Macrocosm.Content.Rockets
 
 		public override void ClearWorld()
 		{
-            Array.Fill(Rockets, new Rocket());
-		}
+			for (int i = 0; i < MaxRockets; i++)
+ 				Rockets[i] = new Rocket();
+ 		}
 
 		public override void SaveWorldData(TagCompound tag) => SaveRocketData(tag); 
         public override void LoadWorldData(TagCompound tag) => ReadSavedRocketData(tag);
@@ -126,10 +129,25 @@ namespace Macrocosm.Content.Rockets
 			{
 				Rocket rocket = Rockets[i];
 
-				if (!rocket.ActiveInCurrentSubworld)
+				if (!rocket.ActiveInCurrentWorld)
 					continue;
 
 				rocket.OnWorldSpawn();
+			}
+		}
+
+        public override void PostWorldGen() => OnWorldGenerated();
+
+        public static void OnWorldGenerated()
+        {
+			for (int i = 0; i < MaxRockets; i++)
+			{
+				Rocket rocket = Rockets[i];
+
+				if (!rocket.ActiveInCurrentWorld)
+					continue;
+
+				rocket.OnSubworldGenerated();
 			}
 		}
 

@@ -3,9 +3,9 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Projectiles.Base
+namespace Macrocosm.Common.Bases
 {
-    public abstract class HeldGunProjectile : ModProjectile
+    public abstract class ChargedGunHeldProjectile : ModProjectile
     {
         public virtual void SetProjectileStaticDefaults() { }
 
@@ -70,10 +70,7 @@ namespace Macrocosm.Content.Projectiles.Base
                 return;
 
             // Get the player's current aiming direction as a normalized vector.
-            Vector2 aim = Vector2.Normalize(Main.MouseWorld - Projectile.Center);
-
-            if (aim.HasNaNs())
-                aim = Vector2.UnitY;
+            Vector2 aim = (Main.MouseWorld - Projectile.Center).SafeNormalize(Vector2.UnitY);
 
             // Change a portion of the gun's current velocity so that it points to the mouse. This gives smooth movement over time.
             aim = Vector2.Normalize(Vector2.Lerp(Vector2.Normalize(Projectile.velocity), aim, 1));

@@ -1,0 +1,822 @@
+CelestialBulwark: {
+	DisplayName: Celestial Bulwark
+	Tooltip:
+		'''
+		Allows the player to dash into the enemy
+		Double tap a direction
+		'''
+}
+
+AluminumBoots: {
+	DisplayName: Aluminum Boots
+	Tooltip: ""
+}
+
+AluminumBreastplate: {
+	DisplayName: Aluminum Breastplate
+	Tooltip: ""
+}
+
+AluminumHelmet: {
+	DisplayName: Aluminum Helmet
+	Tooltip: ""
+}
+
+ArtemiteBreastplate: {
+	DisplayName: Artemite Breastplate
+	Tooltip: 6% increased melee critical strike chance
+}
+
+ArtemiteHelmet: {
+	DisplayName: Artemite Helmet
+	Tooltip: 18% increased melee damage
+}
+
+ArtemiteLeggings: {
+	DisplayName: Artemite Leggings
+	Tooltip: 15% increased melee and movement speed
+}
+
+AstronautHelmet: {
+	DisplayName: Astronaut Helmet
+	Tooltip: ""
+}
+
+AstronautLeggings: {
+	DisplayName: Astronaut Leggings
+	Tooltip: ""
+}
+
+AstronautSuit: {
+	DisplayName: Astronaut Suit
+	Tooltip: ""
+}
+
+ChandriumBreastplate: {
+	DisplayName: Chandrium Breastplate
+	Tooltip:
+		'''
+		Increases max number of minion by 1
+		15% increased whip range and speed
+		'''
+}
+
+ChandriumHelm: {
+	DisplayName: Chandrium Helm
+	Tooltip:
+		'''
+		Increases max number of minions by 1
+		25% increased summon damage
+		'''
+}
+
+ChandriumLeggings: {
+	DisplayName: Chandrium Leggings
+	Tooltip:
+		'''
+		Increases you max number of minions by 1
+		10% increased movement speed
+		'''
+}
+
+DianiteBreastplate: {
+	DisplayName: Dianite Breastplate
+	Tooltip: 12% increased magic critical strike chance
+}
+
+DianiteLeggings: {
+	DisplayName: Dianite Leggings
+	Tooltip:
+		'''
+		5% increased magic damage
+		10% increased movement speed
+		'''
+}
+
+DianiteVisor: {
+	DisplayName: Dianite Visor
+	Tooltip:
+		'''
+		Increases maximum mana by 50
+		10% increased magic damage
+		'''
+}
+
+SeleniteBreastplate: {
+	DisplayName: Selenite Breastplate
+	Tooltip: 12% increased ranged critical strike chance
+}
+
+SeleniteHeadgear: {
+	DisplayName: Selenite Headgear
+	Tooltip:
+		'''
+		10% increased ranged damage
+		15% chance to save ammo
+		'''
+}
+
+SeleniteLeggings: {
+	DisplayName: Selenite Leggings
+	Tooltip:
+		'''
+		5% increased ranged damage
+		20% increased movement speed
+		'''
+}
+
+CraterDemonBossBag: {
+	DisplayName: Treasure Bag (Crater Demon)
+	Tooltip: "{$CommonItemTooltip.RightClickToOpen}"
+}
+
+CraterDemonSummon: {
+	DisplayName: Daemonic Tablet
+	Tooltip:
+		'''
+		Summons the Crater Demon
+		Must be used on the Moon
+		'''
+}
+
+Moonstone: {
+	DisplayName: Moonstone
+	TooltipChampion: These are a currency for the Moon Champion, but unfortunately he is not with you
+	TooltipNoChampion: These are a currency for {0}, the Moon Champion
+	Tooltip: ""
+}
+
+BanHammer: {
+	DisplayName: Ban Hammer
+	Tooltip: BEGONE.
+}
+
+DevPick: {
+	DisplayName: Developer Pickaxe
+	Tooltip: It's actually good as a weapon
+}
+
+RocketPlacer: {
+	DisplayName: Rocket Placer
+	Tooltip: Places a rocket. <right> to despawn all rockets in the Solar System
+}
+
+Teleporter: {
+	DisplayName: Teleporter
+	Tooltip: Teleports the user to and from the Moon
+}
+
+AluminumBar: {
+	DisplayName: Aluminum Bar
+	Tooltip: ""
+}
+
+AluminumOre: {
+	DisplayName: Aluminum Ore
+	Tooltip: ""
+}
+
+ArtemiteBar: {
+	DisplayName: Artemite Bar
+	Tooltip: ""
+}
+
+ArtemiteOre: {
+	DisplayName: Artemite Ore
+	Tooltip: ""
+}
+
+BrokenHeroShield: {
+	DisplayName: Broken Hero Shield
+	Tooltip: ""
+}
+
+ChandriumBar: {
+	DisplayName: Chandrium Bar
+	Tooltip: ""
+}
+
+ChandriumOre: {
+	DisplayName: Chandrium Ore
+	Tooltip: ""
+}
+
+CortexFragment: {
+	DisplayName: Cortex Fragment
+	Tooltip: ""
+}
+
+CosmicDust: {
+	DisplayName: Cosmic Dust
+	Tooltip: ""
+}
+
+CosmicEssence: {
+	DisplayName: Cosmic Essence
+	Tooltip: ""
+}
+
+DeliriumPlating: {
+	DisplayName: Delirium Plating
+	Tooltip: ""
+}
+
+DianiteBar: {
+	DisplayName: Dianite Bar
+	Tooltip: ""
+}
+
+DianiteOre: {
+	DisplayName: Dianite Ore
+	Tooltip: ""
+}
+
+LithiumOre: {
+	DisplayName: Lithium
+	Tooltip: ""
+}
+
+LuminiteCrystal: {
+	DisplayName: Luminite Crystal
+	Tooltip: ""
+}
+
+OilShale: {
+	DisplayName: Oil Shale
+	Tooltip: ""
+}
+
+OxygenTank: {
+	DisplayName: Oxygen Tank
+	Tooltip: ""
+}
+
+PrintedCircuitBoard: {
+	DisplayName: Printed Circuit Board
+	Tooltip: ""
+}
+
+SeleniteBar: {
+	DisplayName: Selenite Bar
+	Tooltip: ""
+}
+
+SeleniteOre: {
+	DisplayName: Selenite Ore
+	Tooltip: ""
+}
+
+SiliconOre: {
+	DisplayName: Raw Silicon
+	Tooltip: ""
+}
+
+MeteoricChunk: {
+	DisplayName: Meteoric Chunk
+	Tooltip:
+		'''
+		Consumable
+		<right> to smash open!
+		'''
+}
+
+NebulaChunk: {
+	DisplayName: Nebula Chunk
+	Tooltip:
+		'''
+		Consumable
+		<right> to smash open!
+		'''
+}
+
+SolarChunk: {
+	DisplayName: Solar Chunk
+	Tooltip:
+		'''
+		Consumable
+		<right> to smash open!
+		'''
+}
+
+StardustChunk: {
+	DisplayName: Stardust Chunk
+	Tooltip:
+		'''
+		Consumable
+		<right> to smash open!
+		'''
+}
+
+VortexChunk: {
+	DisplayName: Vortex Chunk
+	Tooltip:
+		'''
+		Consumable
+		<right> to smash open!
+		'''
+}
+
+SpaceShuttle: {
+	DisplayName: Space Shuttle
+	Tooltip: In memory of STS-51-L and STS-107.
+}
+
+Hemostone: {
+	DisplayName: Hemostone
+	Tooltip: ""
+}
+
+HemostoneBrick: {
+	DisplayName: Hemostone Brick
+	Tooltip: ""
+}
+
+HemostoneBrickWall: {
+	DisplayName: Hemostone Brick Wall
+	Tooltip: ""
+}
+
+HemostoneWall: {
+	DisplayName: Hemostone Wall
+	Tooltip: ""
+}
+
+IrradiatedBrick: {
+	DisplayName: Irradiated Brick
+	Tooltip: ""
+}
+
+IrradiatedBrickWall: {
+	DisplayName: Irradiated Brick Wall
+	Tooltip: ""
+}
+
+IrradiatedRock: {
+	DisplayName: Irradiated Rock
+	Tooltip: ""
+}
+
+IrradiatedRockWall: {
+	DisplayName: Irradiated Rock Wall
+	Tooltip: ""
+}
+
+MoonBasePlating: {
+	DisplayName: Lunar Plating
+	Tooltip: ""
+}
+
+Protolith: {
+	DisplayName: Protolith
+	Tooltip: ""
+}
+
+ProtolithWall: {
+	DisplayName: Protolith Wall
+	Tooltip: ""
+}
+
+PyramidPlate: {
+	DisplayName: Pyramid Plate
+	Tooltip: ""
+}
+
+PyramidPlateWall: {
+	DisplayName: Pyramid Plate Wall
+	Tooltip: ""
+}
+
+Regolith: {
+	DisplayName: Regolith
+	Tooltip: ""
+}
+
+RegolithBrick: {
+	DisplayName: Regolith Brick
+	Tooltip: ""
+}
+
+RegolithBrickWall: {
+	DisplayName: Regolith Brick Wall
+	Tooltip: ""
+}
+
+RegolithWall: {
+	DisplayName: Regolith Wall
+	Tooltip: ""
+}
+
+SpaceshipCore: {
+	DisplayName: Spaceship Core
+	Tooltip: ""
+}
+
+SpaceshipFlooring: {
+	DisplayName: Spaceship Flooring
+	Tooltip: ""
+}
+
+SpaceshipPlate: {
+	DisplayName: Spaceship Plate
+	Tooltip: ""
+}
+
+SpaceshipPlateWall: {
+	DisplayName: Spaceship Plate Wall
+	Tooltip: ""
+}
+
+SpaceshipWindow: {
+	DisplayName: Spaceship Window
+	Tooltip: ""
+}
+
+SpaceshipWindowWall: {
+	DisplayName: Spaceship Window Wall
+	Tooltip: ""
+}
+
+SuperResistantGlass: {
+	DisplayName: Super Resistant Glass
+	Tooltip: ""
+}
+
+Tendril: {
+	DisplayName: Tendril
+	Tooltip: ""
+}
+
+AdamantiteLoom: {
+	DisplayName: Adamantite Loom
+	Tooltip: ""
+}
+
+MoonBaseTerminal: {
+	DisplayName: Moon Base Terminal
+	Tooltip: ""
+}
+
+SolarPanelLarge: {
+	DisplayName: Large Solar Panel
+	Tooltip: ""
+}
+
+TitaniumLoom: {
+	DisplayName: Titanium Loom
+	Tooltip: ""
+}
+
+BloodSunRising: {
+	DisplayName: Blood Sun Rising
+	Tooltip: "'L. Reda'"
+}
+
+DarkFortress: {
+	DisplayName: Dark Fortress
+	Tooltip: "'L. Reda'"
+}
+
+Empress: {
+	DisplayName: Empress
+	Tooltip: "'L. Reda'"
+}
+
+Overlord: {
+	DisplayName: Overlord
+	Tooltip: "'L. Reda'"
+}
+
+Retributor: {
+	DisplayName: Retributor
+	Tooltip: "'L. Reda'"
+}
+
+WhenDayBreaks: {
+	DisplayName: When Day Breaks
+	Tooltip: "'L. Reda'"
+}
+
+Freedomfaller: {
+	DisplayName: Freedomfaller
+	Tooltip: "'T. Williams'"
+}
+
+CraterDemonRelic: {
+	DisplayName: Crater Demon Relic
+	Tooltip: ""
+}
+
+MoonGoldTombstone: {
+	DisplayName: Moon Gold Tombstone
+	Tooltip: ""
+}
+
+MoonTombstone: {
+	DisplayName: Moon Tombstone
+	Tooltip: ""
+}
+
+CraterDemonTrophy: {
+	DisplayName: Crater Demon Trophy
+	Tooltip: ""
+}
+
+AluminumAxe: {
+	DisplayName: Aluminum Axe
+	Tooltip: ""
+}
+
+AluminumHammer: {
+	DisplayName: Aluminum Hammer
+	Tooltip: ""
+}
+
+AluminumPickaxe: {
+	DisplayName: Aluminum Pickaxe
+	Tooltip: ""
+}
+
+ArtemiteAxe: {
+	DisplayName: Artemite Axe
+	Tooltip: ""
+}
+
+ArtemiteDrill: {
+	DisplayName: Artemite Drill
+	Tooltip: ""
+}
+
+ArtemiteHammer: {
+	DisplayName: Artemite Hammer
+	Tooltip: ""
+}
+
+ArtemitePickaxe: {
+	DisplayName: Artemite Pickaxe
+	Tooltip: ""
+}
+
+ChandriumAxe: {
+	DisplayName: Chandrium Axe
+	Tooltip: ""
+}
+
+ChandriumDrill: {
+	DisplayName: Chandrium Drill
+	Tooltip: ""
+}
+
+ChandriumHammer: {
+	DisplayName: Chandrium Hammer
+	Tooltip: ""
+}
+
+ChandriumPickaxe: {
+	DisplayName: Chandrium Pickaxe
+	Tooltip: ""
+}
+
+DianiteAxe: {
+	DisplayName: Dianite Axe
+	Tooltip: ""
+}
+
+DianiteDrill: {
+	DisplayName: Dianite Drill
+	Tooltip: ""
+}
+
+DianiteHammer: {
+	DisplayName: Dianite Hammer
+	Tooltip: ""
+}
+
+DianitePickaxe: {
+	DisplayName: Dianite Pickaxe
+	Tooltip: ""
+}
+
+SeleniteAxe: {
+	DisplayName: Selenite Axe
+	Tooltip: ""
+}
+
+SeleniteDrill: {
+	DisplayName: Selenite Drill
+	Tooltip: ""
+}
+
+SeleniteHammer: {
+	DisplayName: Selenite Hammer
+	Tooltip: ""
+}
+
+SelenitePickaxe: {
+	DisplayName: Selenite Pickaxe
+	Tooltip: ""
+}
+
+CraterDemonMask: {
+	DisplayName: Crater Demon Mask
+	Tooltip: ""
+}
+
+DianiteFork: {
+	DisplayName: Dianite Fork
+	Tooltip: ""
+}
+
+DianiteTome: {
+	DisplayName: Dianite Tome
+	Tooltip: ""
+}
+
+ImbriumJewel: {
+	DisplayName: Imbrium Jewel
+	Tooltip: ""
+}
+
+AluminumBroadsword: {
+	DisplayName: Aluminum Broadsword
+	Tooltip: ""
+}
+
+AluminumShortsword: {
+	DisplayName: Aluminum Shortsword
+	Tooltip: ""
+}
+
+ArtemiteGreatsword: {
+	DisplayName: Artemite Greatsword
+	Tooltip: ""
+}
+
+ArtemiteSpear: {
+	DisplayName: Artemite Spear
+	Tooltip: ""
+}
+
+ArtemiteSword: {
+	DisplayName: Artemite Straightsword
+	Tooltip: ""
+}
+
+ClawWrench: {
+	DisplayName: Claw Wrench
+	Tooltip: ""
+}
+
+Crucible: {
+	DisplayName: Crucible
+	Tooltip:
+		'''
+		A sword forged from the fires of Hell itself
+		'The only thing they fear is you.'
+		'''
+}
+
+MoonSword: {
+	DisplayName: Moon Sword
+	Tooltip: ""
+}
+
+Noxsaber: {
+	DisplayName: The Noxsaber
+	Tooltip: An ancient black energy saber, stolen from the temple of a long dead cult
+}
+
+AluminumBow: {
+	DisplayName: Aluminum Bow
+	Tooltip: ""
+}
+
+ArchersLine: {
+	DisplayName: Archer's Line
+	Tooltip: Bullets ricochet from one enemy to another
+}
+
+Copernicus: {
+	DisplayName: Copernicus
+	Tooltip: <right> to launch a plasma ball grenade
+}
+
+Cruithne: {
+	DisplayName: Cruithne-3753
+	Tooltip: ""
+}
+
+LHBMinigun: {
+	DisplayName: L.H.B.-805
+	Tooltip:
+		'''
+		What's more effective than bullets?
+		A whole LOT of bullets.
+		'''
+}
+
+NWARocketLauncher: {
+	DisplayName: N.W.A.-12691
+	Tooltip:
+		'''
+		Shoots rockets 
+		<right> to lock onto an enemy
+		'''
+}
+
+SeleniteBow: {
+	DisplayName: Selenite Bow
+	Tooltip: ""
+}
+
+SeleniteMagnum: {
+	DisplayName: Selenite Magnum
+	Tooltip: ""
+}
+
+CalcicCane: {
+	DisplayName: Calcic Cane
+	Tooltip: Summons a Crater Imp to fight for you
+}
+
+ChandriumStaff: {
+	DisplayName: Chandrium Staff
+	Tooltip: Summons a Crescent Ghoul to fight for you
+}
+
+ChandriumWhip: {
+	DisplayName: Chandrium Whip
+	Tooltip: ""
+}
+
+HandheldEngine: {
+	DisplayName: Handheld Engine
+	Tooltip: ""
+}
+
+HazardWall: {
+	DisplayName: Hazard Wall
+	Tooltip: ""
+}
+
+SpaceDust: {
+	DisplayName: Space Dust
+	Tooltip: ""
+}
+
+MoonPhaseGlobe: {
+	DisplayName: Moon Phase Globe
+	Tooltip: ""
+}
+
+TychoDesertEagle: {
+	DisplayName: Tycho .50
+	Tooltip: ""
+}
+
+ChampionsBladeBroken: {
+	DisplayName: Champion's Blade
+	Tooltip: ""
+}
+
+ChampionsBladeRepaired: {
+	DisplayName: Champion's Blade
+	Tooltip: ""
+}
+
+SilicaCrimsand: {
+	DisplayName: Silica Crimsand
+	Tooltip: ""
+}
+
+SilicaEbonsand: {
+	DisplayName: Silica Ebonsand
+	Tooltip: ""
+}
+
+SilicaPearlsand: {
+	DisplayName: Silica Pearlsand
+	Tooltip: ""
+}
+
+SilicaSand: {
+	DisplayName: Silica Sand
+	Tooltip: ""
+}
+
+LaunchPadMarker: {
+	DisplayName: Launchpad Marker
+	Tooltip: ""
+}
+
+SetBonuses: {
+	SpaceProtection_Tier1:
+		'''
+		Pressurized spacesuit allows for exploration of other celestial bodies.
+		Tier 1 extraterrestrial protection
+		'''
+	SpaceProtection_Tier2:
+		'''
+		Lead-lined suit allows for safe exploration of highly irradiated environments.
+		Tier 2 extraterrestrial protection
+		'''
+}

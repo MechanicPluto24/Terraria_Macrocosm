@@ -1,12 +1,10 @@
-using Macrocosm.Content.Projectiles;
-using Macrocosm.Content.Projectiles.Base;
-using Macrocosm.Content.Projectiles.Friendly.Ranged;
-using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.GameContent.Creative;
+using Macrocosm.Content.Rarities;
+using Macrocosm.Content.Projectiles.Friendly.Ranged;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {

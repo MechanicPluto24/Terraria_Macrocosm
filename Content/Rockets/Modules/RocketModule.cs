@@ -33,12 +33,14 @@ namespace Macrocosm.Content.Rockets.Modules
 			set => Position = value - Size / 2f;
 		}
 
-		/// <summary> The module's collision hitbox. To get dimensions, use <see cref="Hitbox.Width"/> and <see cref="Hitbox.Height"/> </summary>
-		public virtual Rectangle Hitbox => new((int)Position.X, (int)Position.Y, Texture.Width, Texture.Height);
+		public abstract int Width { get; }
+		public abstract int Height { get; }
 
 		/// <summary> The module's hitbox size as a vector </summary>
 		public Vector2 Size => new(Hitbox.Width, Hitbox.Height);
 
+		/// <summary> The module's collision hitbox. </summary>
+		public virtual Rectangle Hitbox => new((int)Position.X, (int)Position.Y, Width, Height);
 
 		/// <summary> The module's draw origin </summary>
 		protected virtual Vector2 Origin => new(0, 0);
@@ -49,7 +51,7 @@ namespace Macrocosm.Content.Rockets.Modules
 		
 		public RocketModule()
 		{
-			Pattern = CustomizationStorage.GetPattern(GetType().Name, "Basic");
+			Pattern = CustomizationStorage.GetDefaultPattern(GetType().Name);
 		}
 
 		public virtual void Draw(SpriteBatch spriteBatch, Vector2 screenPos, Color ambientColor)
@@ -62,27 +64,7 @@ namespace Macrocosm.Content.Rockets.Modules
 			{
 				// Load the coloring shader
 				Effect effect = ModContent.Request<Effect>(Macrocosm.EffectAssetsPath + "ColorMaskShading", AssetRequestMode.ImmediateLoad).Value;
-
-				CustomizationStorage.Reset();
-				// -- testing, will be configured from an UI		
-				if (this is EngineModule)
-					Pattern = CustomizationStorage.GetPattern(Name, "Binary");
-
-				if (this is ServiceModule)
-					Pattern = CustomizationStorage.GetPattern(Name, "Binary");
-
-				if (this is ReactorModule)
-					Pattern = CustomizationStorage.GetPattern(Name, "Binary");
-
-				if (this is CommandPod)
-					Pattern = CustomizationStorage.GetPattern(Name, "Binary");
-
-				if (this is BoosterRight && this is not BoosterLeft)
-				{
-					Pattern = CustomizationStorage.GetPattern(Name, "Basic");
-					Pattern.SetColor(1, new Color(40, 40, 40));
-				}
-
+			
 				if (HasPattern)
 				{
 					// Pass the pattern to the shader via the S1 register

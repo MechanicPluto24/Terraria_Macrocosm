@@ -11,6 +11,7 @@ using Terraria.Localization;
 using Macrocosm.Content.WorldGeneration.Base;
 using Macrocosm.Common.Bases;
 using System.Collections.Generic;
+using Macrocosm.Common.DataStructures;
 
 namespace Macrocosm.Common.Utils
 {
@@ -113,7 +114,7 @@ namespace Macrocosm.Common.Utils
 		/// <param name="smoothing"></param>
         public static void BlobTileRunner(int i, int j, int tileType, Range repeatCount, Range sprayRadius, Range blobSize, float density = 0.5f, int smoothing = 4)
         {
-            int sprayRandom = Main.rand.Next(repeatCount);
+            int sprayRandom = WorldGen.genRand.Next(repeatCount);
 
 			Dictionary<(int, int), ushort> replacedTypes = new();
 
@@ -121,10 +122,10 @@ namespace Macrocosm.Common.Utils
             int posJ = j;
             for (int x = 0; x < sprayRandom; x++)
             {
-                posI += Main.rand.NextDirection(sprayRadius);
-                posJ += Main.rand.NextDirection(sprayRadius);
+                posI += WorldGen.genRand.NextDirection(sprayRadius);
+                posJ += WorldGen.genRand.NextDirection(sprayRadius);
 
-                int radius = Main.rand.Next(blobSize);
+                int radius = WorldGen.genRand.Next(blobSize);
                 float densityClamped = Math.Clamp(density, 0f, 1f);
                 ForEachInCircle(
                     posI,
@@ -133,7 +134,7 @@ namespace Macrocosm.Common.Utils
                     radius,
                     (i, j) =>
                     {
-                        if (CoordinatesOutOfBounds(i, j) || Main.rand.NextFloat() > densityClamped)
+                        if (CoordinatesOutOfBounds(i, j) || WorldGen.genRand.NextFloat() > densityClamped)
                         {
                             return;
                         }
@@ -202,16 +203,16 @@ namespace Macrocosm.Common.Utils
 
         public static void BlobWallRunner(int i, int j, ushort wallType, Range repeatCount, Range sprayRadius, Range blobSize, float density = 0.5f, int smoothing = 4)
         {
-            int sprayRandom = Main.rand.Next(repeatCount);
+            int sprayRandom = WorldGen.genRand.Next(repeatCount);
 
             int posI = i;
             int posJ = j;
             for (int x = 0; x < sprayRandom; x++)
             {
-                posI += Main.rand.NextDirection(sprayRadius);
-                posJ += Main.rand.NextDirection(sprayRadius);
+                posI += WorldGen.genRand.NextDirection(sprayRadius);
+                posJ += WorldGen.genRand.NextDirection(sprayRadius);
 
-                int radius = Main.rand.Next(blobSize);
+                int radius = WorldGen.genRand.Next(blobSize);
                 float densityClamped = Math.Clamp(density, 0f, 1f);
                 ForEachInCircle(
                     posI,
@@ -220,7 +221,7 @@ namespace Macrocosm.Common.Utils
                     radius,
                     (i, j) =>
                     {
-                        if (Main.rand.NextFloat() > densityClamped)
+                        if (WorldGen.genRand.NextFloat() > densityClamped)
                         {
                             return;
                         }
