@@ -2,7 +2,6 @@
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Rockets.Construction;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
 using System;
@@ -32,7 +31,7 @@ namespace Macrocosm.Content.WorldGeneration.Moon
     {
         public int RegolithLayerHeight { get; } = 200;
         public float SurfaceWidthFrequency { get; } = 0.003f;
-        public float SurfaceHeightFrequency { get; } = 32f;
+        public float SurfaceHeightFrequency { get; } = 20f;
         public float TerrainPercentage { get; } = 0.8f;
         private int GroundY => (int)(Main.maxTilesY * (1f - TerrainPercentage));
         private static float FunnySurfaceEquation(float x) => MathF.Sin(2f * x) + MathF.Sin(MathHelper.Pi * x) + 0.4f * MathF.Cos(10f * x);
@@ -47,8 +46,8 @@ namespace Macrocosm.Content.WorldGeneration.Moon
             Range hallownest = 35..55;
             ushort protolithType = (ushort)TileType<Protolith>();
 
-            Main.worldSurface = GroundY + SurfaceHeightFrequency * 2 + 15;
-            Main.rockLayer = Main.worldSurface + RegolithLayerHeight;
+            Main.worldSurface = GroundY + RegolithLayerHeight;
+            Main.rockLayer = Main.worldSurface + RegolithLayerHeight * 0.5f;
 
             PerlinNoise2D noise = new(Seed.Random);
             StartYOffset = Main.rand.NextFloat() * 2.3f;
@@ -70,6 +69,92 @@ namespace Macrocosm.Content.WorldGeneration.Moon
                 }
             }
 
+            for (int i = 0; i < Main.maxTilesX; i++)
+            {
+                if (WorldGen.genRand.NextFloat() < 0.01f)
+                {
+                    int j = WorldGen.genRand.Next((int)Main.rockLayer, Main.maxTilesY - 250);
+                    ForEachInCircle(
+                        i,
+                        j,
+                        WorldGen.genRand.Next(20, 55),
+                        (i, j) =>
+                        {
+                            if (WorldGen.genRand.NextFloat() < 0.4f)
+                            {
+                                FastRemoveTile(i, j);
+                            }
+                        }
+                    );
+                }
+            }
+        }
+
+        [GenPass(nameof(TerrainPass), InsertMode.After)]
+        private void WallPass()
+        {
+            int regolithWall = WallType<RegolithWall>();
+            int protolithWall = WallType<ProtolithWall>();
+
+            for (int i = 0; i < Main.maxTilesX; i++)
+            {
+                int wallPlaceStart = SurfaceHeight(i) + 15;
+                for (int j = wallPlaceStart; j < Main.maxTilesY; j++)
+                {
+                    FastPlaceWall(i, j, j < wallPlaceStart + RegolithLayerHeight ? regolithWall : protolithWall);
+                }
+            }
+        }
+
+        [GenPass(nameof(WallPass), InsertMode.After)]
+        private void CraterPass(GenerationProgress progress)
+        {
+            progress.Message = "Metoeoroer";
+
+            void SpawnMeteors(Range minMaxCount, Range minMaxRadius)
+            {
+                int count = WorldGen.genRand.Next(minMaxCount);
+                for (int x = 0; x < count; x++)
+                {
+                    int i = (int)((x + WorldGen.genRand.NextFloat() * 0.9f) * (Main.maxTilesX / count));
+                    for (int j = 0; j < Main.maxTilesY; j++)
+                    {
+                        if (Main.tile[i, j].HasTile)
+                        {
+                            int radius = WorldGen.genRand.Next(minMaxRadius);
+                            ForEachInCircle(
+                                i,
+                                j - (int)(radius * 0.6f),
+                                radius,
+                                (i1, j1) =>
+                                {
+                                    FastRemoveWall(i1, j1);
+
+                                    float iDistance = (float)Math.Abs(i - i1) / radius;
+                                    float jDistance = (float)Math.Abs(j - j1) / radius;
+                                    if (WorldGen.genRand.NextFloat() < iDistance * 0.6f || WorldGen.genRand.NextFloat() < jDistance * 0.6f)
+                                    {
+                                        return;
+                                    }
+
+                                    FastRemoveTile(i1, j1);
+                                }
+                            );
+
+                            break;
+                        }
+                    }
+                }
+            }
+
+            SpawnMeteors(2..5, 100..150);
+            SpawnMeteors(5..6, 30..40);
+            SpawnMeteors(25..36, 7..15);
+        }
+
+        [GenPass(nameof(CraterPass), InsertMode.After)]
+        private void SurfaceTunnelPass(GenerationProgress progress)
+        {
             float verticalTunnelSpawnChance = 0.005f;
             int verticalTunnelSpread = 230;
             int verticalTunnelLength = RegolithLayerHeight + 170;
@@ -78,10 +163,12 @@ namespace Macrocosm.Content.WorldGeneration.Moon
             int skipI = 0;
             for (int i = 0; i < Main.maxTilesX; i++)
             {
+                progress.Set((float)i / Main.maxTilesX);
+
                 if (skipI > 0)
                 {
                     skipI--;
-                    continue;
+                    continue;  
                 }
 
                 if (WorldGen.genRand.NextFloat() < verticalTunnelSpawnChance)
@@ -137,29 +224,9 @@ namespace Macrocosm.Content.WorldGeneration.Moon
                     }
                 }
             }
-
-            for (int i = 0; i < Main.maxTilesX; i++)
-            {
-                if (WorldGen.genRand.NextFloat() < 0.01f)
-                {
-                    int j = WorldGen.genRand.Next((int)Main.rockLayer, Main.maxTilesY - 250);
-                    ForEachInCircle(
-                        i,
-                        j,
-                        WorldGen.genRand.Next(20, 55),
-                        (i, j) =>
-                        {
-                            if (WorldGen.genRand.NextFloat() < 0.4f)
-                            {
-                                FastRemoveTile(i, j);
-                            }
-                        }
-                    );
-                }
-            }
         }
 
-        [GenPass(nameof(TerrainPass), InsertMode.After)]
+        [GenPass(nameof(SurfaceTunnelPass), InsertMode.After)]
         private void SmoothPass(GenerationProgress progress)
         {
             progress.Message = "Smoothie";
@@ -249,22 +316,6 @@ namespace Macrocosm.Content.WorldGeneration.Moon
             }
         }
 
-        [GenPass(nameof(RegolithPass), InsertMode.After)]
-        private void WallPass()
-        {
-            int regolithWall = WallType<RegolithWall>();
-            int protolithWall = WallType<ProtolithWall>();
-
-            for (int i = 0; i < Main.maxTilesX; i++)
-            {
-                int startJ = SurfaceHeight(i) + 10;
-                for (int j = startJ; j < Main.maxTilesY; j++)
-                {
-                    FastPlaceWall(i, j, j < startJ + RegolithLayerHeight ? regolithWall : protolithWall);
-                }
-            }
-        }
-
         /*[GenPass(nameof(WallPass), InsertMode.After)]
         private void IrradiationPass(GenerationProgress progress)
         {
@@ -337,45 +388,7 @@ namespace Macrocosm.Content.WorldGeneration.Moon
             }
         }*/
 
-        [GenPass(nameof(WallPass), InsertMode.After)]
-        private void CraterPass(GenerationProgress progress)
-        {
-            progress.Message = "Metoeoroer";
-
-            void SpawnMeteors(Range minMaxCount, Range minMaxRadius)
-            {
-                int count = WorldGen.genRand.Next(minMaxCount);
-                for (int x = 0; x < count; x++)
-                {
-                    int i = (int)((x + WorldGen.genRand.NextFloat() * 0.9f) * (Main.maxTilesX / count));
-                    for (int j = 0; j < Main.maxTilesY; j++)
-                    {
-                        if (Main.tile[i, j].HasTile)
-                        {
-                            int radius = WorldGen.genRand.Next(minMaxRadius);
-                            ForEachInCircle(
-                                i,
-                                j - (int)(radius * 0.6f),
-                                radius,
-                                (i, j) =>
-                                {
-                                    FastRemoveTile(i, j);
-                                    FastRemoveWall(i, j);
-                                }
-                            );
-
-                            break;
-                        }
-                    }
-                }
-            }
-
-            SpawnMeteors(2..5, 100..150);
-            SpawnMeteors(5..6, 30..40);
-            SpawnMeteors(25..36, 7..15);
-        }
-
-        [GenPass(nameof(CraterPass), InsertMode.After)]
+        [GenPass(nameof(RegolithPass), InsertMode.After)]
         private void OrePass(GenerationProgress progress)
         {
             progress.Message = "Shi";
