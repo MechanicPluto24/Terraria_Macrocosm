@@ -28,6 +28,8 @@ namespace Macrocosm.Common.UI
 		protected Asset<Texture2D> borderTexture;
 
 
+		protected int remoteInteractionFeedbackTicks = 0;
+
 		protected float visibilityInteractible = 1f;
 
 		protected float visibilityHover = 0.8f;
@@ -65,6 +67,25 @@ namespace Macrocosm.Common.UI
 			visibilityHover = MathHelper.Clamp(whenHovering, 0f, 1f);
 		}
 
+		public override void Update(GameTime gameTime)
+		{
+			base.Update(gameTime);
+
+			if (IsMouseHovering && HoverText is not null && (HoverTextOnButonNotInteractible || CheckInteractible()))
+ 				Main.instance.MouseText(HoverText.Value, "", 0, 0, hackedMouseX: Main.mouseX + 6, hackedMouseY: Main.mouseY + 6, noOverride: true);
+ 
+			if (remoteInteractionFeedbackTicks > 0)
+				remoteInteractionFeedbackTicks--;
+		}
+
+		public void TriggerRemoteInteraction(int ticks = 10)
+		{
+			if (!CheckInteractible())
+				return;
+
+			remoteInteractionFeedbackTicks = ticks;
+		}
+
 		protected override void DrawSelf(SpriteBatch spriteBatch)
 		{
 			CalculatedStyle dimensions = GetDimensions();
@@ -72,11 +93,8 @@ namespace Macrocosm.Common.UI
 			float visibility = CheckInteractible() ? (IsMouseHovering ? visibilityHover : visibilityInteractible ) : visibilityNotInteractible;
 			spriteBatch.Draw(texture.Value, dimensions.Position(), Color.White * visibility);
 			
-			if (borderTexture != null && IsMouseHovering && CheckInteractible())
+			if (borderTexture != null && (IsMouseHovering && CheckInteractible()) || remoteInteractionFeedbackTicks > 0)
  				spriteBatch.Draw(borderTexture.Value, dimensions.Position(), Color.White);
- 
-			if (IsMouseHovering && HoverText is not null && (HoverTextOnButonNotInteractible || CheckInteractible()))
-				Main.hoverItemName = HoverText.Value;
 		}
 
 		public override void MouseOver(UIMouseEvent evt)

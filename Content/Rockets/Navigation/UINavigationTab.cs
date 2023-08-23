@@ -12,17 +12,17 @@ using Macrocosm.Common.Config;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
-    public class UINavigationTab : UIPanel
+    public class UINavigationTab : UIPanel, ITabUIElement, IRocketDataConsumer
     {
-		public Rocket Rocket = new();
+		public Rocket Rocket { get; set; } 
 
-        public UICustomizationPreview CustomizationPreview;
+		public UICustomizationPreview CustomizationPreview { get; set; }
 
-        private UILaunchButton LaunchButton;
-        private UINavigationPanel NavigationPanel;
+        private UILaunchButton launchButton;
+        private UINavigationPanel navigationPanel;
 
-		private UIListScrollablePanel WorldInfoPanel;
-        private UIListScrollablePanel FlightChecklist;
+		private UIListScrollablePanel worldInfoPanel;
+        private UIListScrollablePanel flightChecklist;
 
         // TODO: move these to a checker (+UI provider?) class
 		private ChecklistConditionCollection genericLaunchConditions = new();
@@ -47,14 +47,14 @@ namespace Macrocosm.Content.Rockets.Navigation
             BackgroundColor = new Color(13, 23, 59, 127);
             BorderColor = new Color(15, 15, 15, 255);
 
-			NavigationPanel = new();
-            Append(NavigationPanel);
+			navigationPanel = new();
+            Append(navigationPanel);
 
-            WorldInfoPanel = WorldInfoStorage.GetValue(MacrocosmSubworld.CurrentPlanet).ProvideUI();
-			Append(WorldInfoPanel);
+            worldInfoPanel = WorldInfo.ProvideUI(MacrocosmSubworld.CurrentPlanet);
+			Append(worldInfoPanel);
 
             // TODO: move this to a provider class 
-            FlightChecklist = new(new LocalizedColorScaleText(Language.GetText("Mods.Macrocosm.RocketUI.Common.Checklist"), scale: 1.2f))
+            flightChecklist = new(new LocalizedColorScaleText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Checklist"), scale: 1.2f))
             {
                 Top = new(0, 0.365f),
                 HAlign = 0.5f,
@@ -64,13 +64,13 @@ namespace Macrocosm.Content.Rockets.Navigation
 			    BorderColor = new(89, 116, 213, 255)
 		    };
 
-			FlightChecklist.SetPadding(2f);
-			Append(FlightChecklist);
+			flightChecklist.SetPadding(2f);
+			Append(flightChecklist);
 
-            LaunchButton = new();
-            LaunchButton.ZoomIn = NavigationPanel.ZoomIn;
-            LaunchButton.Launch = LaunchRocket;
-            Append(LaunchButton);
+            launchButton = new();
+            launchButton.ZoomIn = navigationPanel.ZoomIn;
+            launchButton.Launch = LaunchRocket;
+            Append(launchButton);
 
 			CustomizationPreview = new();
 			Append(CustomizationPreview);
@@ -86,18 +86,18 @@ namespace Macrocosm.Content.Rockets.Navigation
         {
         }
 
+
         private UIMapTarget lastTarget;
         private UIMapTarget target;
-        public override void Update(GameTime gameTime)
+
+		public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
             Player player = Main.LocalPlayer;
 
-            UpdateRocketInstance();
-
 			lastTarget = target;
-            target = NavigationPanel.CurrentMap.GetSelectedTarget();
+            target = navigationPanel.CurrentMap.GetSelectedTarget();
             player.RocketPlayer().TargetSubworldID = target is null ? "" : target.Name;
 
             UpdateInfoPanel();
@@ -105,45 +105,39 @@ namespace Macrocosm.Content.Rockets.Navigation
             UpdateLaunchButton();
         }
 
-        // could have an interface and parent checks for all children and passes the rocket instance?
-        public void UpdateRocketInstance()
-        {
-            CustomizationPreview.Rocket = Rocket;
-        }
-
 		private void UpdateInfoPanel()
         {
             // Update the info panel on new target 
             if (target is not null && (target != lastTarget)) 
- 				this.ReplaceChildWith(WorldInfoPanel, WorldInfoStorage.GetValue(target.Name).ProvideUI());
+ 				this.ReplaceChildWith(worldInfoPanel, worldInfoPanel = WorldInfo.ProvideUI(target.Name));
  		}
 
         private void ResetInfoPanel()
         {
             if(target is not null)
-				this.ReplaceChildWith(WorldInfoPanel, WorldInfoStorage.GetValue(target.Name).ProvideUI());
+				this.ReplaceChildWith(worldInfoPanel, worldInfoPanel = WorldInfo.ProvideUI(target.Name));
 		}
 
 		// TODO: move this to an UI provider class
 		// FIXME: list is cleared and populated every tick, should be a better way to do this?
 		private void UpdateChecklist()
         {
-			FlightChecklist.ClearList();
+			flightChecklist.ClearList();
 
 			if (!selectedLaunchCondition.IsMet()) 
-				FlightChecklist.Add(selectedLaunchCondition.ProvideUI(ChecklistInfoElement.ExtraIconType.GoldQuestionMark));
+				flightChecklist.Add(selectedLaunchCondition.ProvideUI(ChecklistInfoElement.ExtraIconType.QuestionMarkGold));
 			// if selected, target is guaranteed to not be null
 			else if (!hereLaunchCondition.IsMet()) 
- 				FlightChecklist.Add(hereLaunchCondition.ProvideUI(ChecklistInfoElement.ExtraIconType.GrayCrossmark));
+ 				flightChecklist.Add(hereLaunchCondition.ProvideUI(ChecklistInfoElement.ExtraIconType.CrossmarkGray));
             else
             {
                 if (target.LaunchConditions is not null)
-                    FlightChecklist.AddList(ChecklistConditionCollection.Merge(target.LaunchConditions, genericLaunchConditions).ProvideUIElementList());
+                    flightChecklist.AddRange(ChecklistConditionCollection.Merge(target.LaunchConditions, genericLaunchConditions).ProvideUIElementList());
                 else
-                    FlightChecklist.AddList(genericLaunchConditions.ProvideUIElementList());
+                    flightChecklist.AddRange(genericLaunchConditions.ProvideUIElementList());
 			}
 
-            FlightChecklist.Activate();
+            flightChecklist.Activate();
 		}
 
 		// TODO: move this to a checker class (same as the UI provider?)
@@ -163,15 +157,15 @@ namespace Macrocosm.Content.Rockets.Navigation
         private void UpdateLaunchButton()
         {
             if (target is null)
-                LaunchButton.ButtonState = UILaunchButton.StateType.NoTarget;
-            else if (NavigationPanel.CurrentMap.HasNext) 
-                LaunchButton.ButtonState = UILaunchButton.StateType.ZoomIn;
+                launchButton.ButtonState = UILaunchButton.StateType.NoTarget;
+            else if (navigationPanel.CurrentMap.HasNext) 
+                launchButton.ButtonState = UILaunchButton.StateType.ZoomIn;
             else if (target.AlreadyHere)
-                LaunchButton.ButtonState = UILaunchButton.StateType.AlreadyHere;
+                launchButton.ButtonState = UILaunchButton.StateType.AlreadyHere;
             else if (!CheckLaunchConditions())
-                LaunchButton.ButtonState = UILaunchButton.StateType.CantReach;
+                launchButton.ButtonState = UILaunchButton.StateType.CantReach;
             else
-                LaunchButton.ButtonState = UILaunchButton.StateType.Launch;
+                launchButton.ButtonState = UILaunchButton.StateType.Launch;
         }
 
         private void LaunchRocket()

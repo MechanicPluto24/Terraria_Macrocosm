@@ -23,7 +23,7 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
 
 			value = MathF.Round(value, 2);
 
-			return Language.GetText("Mods.Macrocosm.RocketUI.DayPeriod.Unit" + units);
+			return Language.GetText("Mods.Macrocosm.UI.Rocket.DayPeriod.Unit" + units);
 		}
 
 	}

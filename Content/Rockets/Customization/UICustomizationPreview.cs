@@ -13,9 +13,9 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
-    public class UICustomizationPreview : UIPanel
+    public class UICustomizationPreview : UIPanel, IRocketDataConsumer
     {
-        public Rocket Rocket;
+        public Rocket Rocket { get; set; } 
 
 		private UIText uITitle;
 
@@ -33,7 +33,7 @@ namespace Macrocosm.Content.Rockets.Navigation
             BackgroundColor = new Color(53, 72, 135);
             BorderColor = new Color(89, 116, 213, 255);
 
-            uITitle = new(Language.GetText("Mods.Macrocosm.RocketUI.Common.Customization"), 0.8f, false)
+            uITitle = new(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Customization"), 0.8f, false)
             {
                 IsWrapped = false,
                 HAlign = 0.5f,

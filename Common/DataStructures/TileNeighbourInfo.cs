@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Terraria;
 using Terraria.ID;
-using Terraria;
-using Macrocosm.Common.Utils;
-using static Macrocosm.Common.Bases.TileNeighbourInfo;
 
-namespace Macrocosm.Common.Bases
+namespace Macrocosm.Common.DataStructures
 {
     public record TileNeighbourInfo(int I, int J)
     {

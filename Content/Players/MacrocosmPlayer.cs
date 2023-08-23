@@ -95,7 +95,7 @@ namespace Macrocosm.Content.Players
 		{
 			UpdateSpaceArmourImmunities();
 			if (Player.Macrocosm().SpaceProtection > SpaceProtection.None)
-				Player.setBonus = Language.GetTextValue("Mods.Macrocosm.SetBonuses.SpaceProtection_" + SpaceProtection.ToString());
+				Player.setBonus = Language.GetTextValue("Mods.Macrocosm.Items.SetBonuses.SpaceProtection_" + SpaceProtection.ToString());
 		}
 
 		public void UpdateSpaceArmourImmunities()

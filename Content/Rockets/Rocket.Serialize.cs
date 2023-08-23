@@ -17,7 +17,7 @@ namespace Macrocosm.Content.Rockets
 				[nameof(WhoAmI)] = WhoAmI,
 
 				[nameof(Active)] = Active,
-				[nameof(CurrentSubworld)] = CurrentSubworld,
+				[nameof(CurrentWorld)] = CurrentWorld,
 
 				[nameof(Position)] = Position,
 
@@ -49,7 +49,7 @@ namespace Macrocosm.Content.Rockets
 			{
 				WhoAmI = tag.GetInt(nameof(WhoAmI)),
 
-				CurrentSubworld = tag.GetString(nameof(CurrentSubworld)),
+				CurrentWorld = tag.GetString(nameof(CurrentWorld)),
 				Active = tag.GetBool(nameof(Active)),
 
 				Position = tag.Get<Vector2>(nameof(Position)),

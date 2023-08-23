@@ -1,8 +1,8 @@
+using Macrocosm.Common.Bases;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
-using Macrocosm.Content.Projectiles.Base;
 using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -19,7 +19,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
-    public class HandheldEngineProjectile : HeldGunProjectile
+    public class HandheldEngineProjectile : ChargedGunHeldProjectile
 	{
 		public ref float AI_Overheat => ref Projectile.ai[0];
 		public ref float AI_UseCounter => ref Projectile.ai[1];

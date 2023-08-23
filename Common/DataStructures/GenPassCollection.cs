@@ -1,16 +1,13 @@
-﻿using Macrocosm.Common.Subworlds;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+﻿using Macrocosm.Content.Rockets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 using Terraria.GameContent.Generation;
 using Terraria.IO;
+using Terraria.Localization;
 using Terraria.WorldBuilding;
-using static Terraria.Main.CurrentFrameFlags;
 
 namespace Macrocosm.Common.DataStructures
 {
@@ -108,6 +105,7 @@ namespace Macrocosm.Common.DataStructures
             {
                 (GenPassAttribute, MethodInfo)? firstGenPassAttribute = null;
                 (GenPassAttribute, MethodInfo)? lastGenPassAttribute = null;
+                (GenPassAttribute, MethodInfo)? postGenPassAttribute = null;
                 List<(GenPassAttribute, MethodInfo)> genPassAttributes = new();
                 foreach (MethodInfo methodInfo in GetType().GetRuntimeMethods())
                 {
@@ -137,6 +135,10 @@ namespace Macrocosm.Common.DataStructures
                         lastGenPassAttribute = (genPassAttribute, methodInfo);
                         continue;
                     }
+                    else if(genPassAttribute.InsertMode == InsertMode.PostGen)
+                    {
+                        postGenPassAttribute = (genPassAttribute, methodInfo);
+                    }
 
                     genPassAttributes.Add((genPassAttribute, methodInfo));
                 }
@@ -165,6 +167,11 @@ namespace Macrocosm.Common.DataStructures
                     tasks.Add(CreateGenPass(lastGenPassAttribute.Value.Item2));
                 }
 
+                if (postGenPassAttribute.HasValue)
+                { 
+                    tasks.Add(CreateGenPass(postGenPassAttribute.Value.Item2));
+				}
+
                 if (tasks.Count < genPassAttributes.Count)
                 {
                     Macrocosm.Instance.Logger.Error("Error while inserting passes. Missed some passes.");
@@ -172,17 +179,22 @@ namespace Macrocosm.Common.DataStructures
 
                 return tasks;
             }
-        } 
-    }
+        }
 
-    [AttributeUsage(AttributeTargets.Method)]
+		[GenPass(InsertMode.PostGen)]
+		public void CommonPostSubworldGenHooks(GenerationProgress progress)
+		{
+            RocketManager.OnWorldGenerated();
+		}
+	}
+
+
+	[AttributeUsage(AttributeTargets.Method)]
     internal class GenPassAttribute : Attribute
     {
         public string InsertName { get; }
         public InsertMode InsertMode { get; }
         public double LoadWeight { get; }
-
-
 
         public GenPassAttribute(string insertName, InsertMode insertMode, double loadWeight = 0.0)
         {
@@ -199,6 +211,7 @@ namespace Macrocosm.Common.DataStructures
         Before,
         After,
         First,
-        Last
+        Last,
+        PostGen
     }
 }

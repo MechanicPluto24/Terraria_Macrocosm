@@ -49,7 +49,7 @@ namespace Macrocosm.Common.UI
 			spriteBatch.Draw(backPanelTexture.Value, position, null, BackPanelColor * (IsMouseHovering ? visibilityHover : visibilityInteractible), 0f, backPanelTexture.Size() / 2f, 1f, SpriteEffects.None, 0f);
 			spriteBatch.Draw(backPanelBorderTexture.Value, position, null, BackPanelBorderColor * (IsMouseHovering ? visibilityHover : visibilityInteractible), 0f, backPanelBorderTexture.Size() / 2f, 1f, SpriteEffects.None, 0f);
 
-			if (IsMouseHovering)
+			if (IsMouseHovering || remoteInteractionFeedbackTicks > 0)
 				spriteBatch.Draw(borderTexture.Value, position, null, BackPanelHoverBorderColor, 0f, borderTexture.Size() / 2f, 1f, SpriteEffects.None, 0f);
 
 			spriteBatch.Draw(texture.Value, position, null, IconColor, 0f, texture.Size() / 2f, 1f, SpriteEffects.None, 0f);

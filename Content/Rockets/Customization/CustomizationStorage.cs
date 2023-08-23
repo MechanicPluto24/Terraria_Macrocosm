@@ -3,26 +3,32 @@ using System.Collections.Generic;
 using System.Linq;
 using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Rockets.Navigation.NavigationInfo;
+using Macrocosm.Content.Rockets.Navigation;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using Terraria.GameContent.UI.Elements;
+using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
 	public class CustomizationStorage : ModSystem
 	{
-		private static Dictionary<string, Pattern> patterns;
-		private static Dictionary<string, Detail> details;
+		private static Dictionary<(string moduleName, string patternName), Pattern> patterns;
+		private static Dictionary<(string moduleName, string detailName), Detail> details;
 		private static Dictionary<string, PatternColorFunction> specialFunctions;
 
 		private static IEnumerable<IUnlockable> Unlockables => Utility.Concatenate<IUnlockable>(patterns.Values, details.Values, specialFunctions.Values);
 			
 		public override void Load()
 		{
-			patterns = new Dictionary<string, Pattern>();
-			details = new Dictionary<string, Detail>();
+			patterns = new Dictionary<(string,string), Pattern>();
+			details = new Dictionary<(string, string), Detail>();
 			specialFunctions = new Dictionary<string, PatternColorFunction>();
 
 			LoadSpecialFunctions(); // Load functions first, as they might be used in the pattern loading
@@ -52,7 +58,7 @@ namespace Macrocosm.Content.Rockets.Customization
 		/// <param name="moduleName"> The rocket module this pattern belongs to </param>
 		/// <param name="patternName"> The pattern name </param>
 		public static Pattern GetPatternReference(string moduleName, string patternName)
-			=> patterns[moduleName + "_" + patternName];
+			=> patterns[(moduleName,patternName)];
 
 		/// <summary>
 		/// Gets a pattern <b> clone </b> from the pattern storage. As it is a clone, it can be modified freely.
@@ -60,7 +66,24 @@ namespace Macrocosm.Content.Rockets.Customization
 		/// <param name="moduleName"> The rocket module this pattern belongs to </param>
 		/// <param name="patternName"> The pattern name </param>
 		public static Pattern GetPattern(string moduleName, string patternName)
-			=> patterns[moduleName + "_" + patternName].Clone();
+			=> patterns[(moduleName, patternName)].Clone();
+
+		public static Pattern GetDefaultPattern(string moduleName)
+			=> patterns[(moduleName, "Basic")].Clone();
+
+		public static List<Pattern> GetUnlockedPatterns(string moduleName, bool asClones = true) => GetPatternsWhere(moduleName, (pattern) => pattern.Unlocked, asClones);
+
+		public static List<Pattern> GetPatternsWhere(string moduleName, Func<Pattern, bool> match, bool asClones = true)
+		{
+			var patternsForModule = patterns
+				.Where(kvp => kvp.Key.moduleName == moduleName && match(kvp.Value))
+				.Select(kvp => kvp.Value).ToList();
+
+			if(asClones)
+				patternsForModule.ForEach((pattern) => pattern.Clone());
+
+			return patternsForModule;
+		}
 
 		/// <summary>
 		/// Attempts to get a pattern <b> clone </b> from the pattern storage. As it is a clone, it can be modified freely.
@@ -71,7 +94,7 @@ namespace Macrocosm.Content.Rockets.Customization
 		/// <returns> Whether the specified pattern has been found </returns>
 		public static bool TryGetPattern(string moduleName, string patternName, out Pattern pattern)
 		{
-			bool foundPattern = patterns.TryGetValue(moduleName + "_" + patternName, out pattern);
+			bool foundPattern = patterns.TryGetValue((moduleName, patternName), out pattern);
 
 			if (foundPattern)
  				pattern.Clone();
@@ -88,7 +111,7 @@ namespace Macrocosm.Content.Rockets.Customization
 		/// <param name="patternName"> The pattern name </param>
 		/// <param name="unlockedState"> The unlocked state to set </param>
 		public static void SetPatternUnlockedStatus(string moduleName, string patternName, bool unlockedState = true)
-			 => patterns[moduleName + "_" + patternName].Unlocked = unlockedState;
+			 => patterns[(moduleName, patternName)].Unlocked = unlockedState;
 
 		/// <summary>
 		/// Gets the detail reference from the detail storage.
@@ -96,7 +119,7 @@ namespace Macrocosm.Content.Rockets.Customization
 		/// <param name="moduleName"> The rocket module this detail belongs to </param>
 		/// <param name="detailName"> The detail name </param>
 		public static Detail GetDetail(string moduleName, string detailName)
-			=> details[moduleName + "_" + detailName];
+			=> details[(moduleName, detailName)];
 
 		/// <summary>
 		/// Attempts to get a detail reference from the detail storage.
@@ -106,7 +129,7 @@ namespace Macrocosm.Content.Rockets.Customization
 		/// <param name="detail"> The detail, null if not found </param>
 		/// <returns> Whether the specified detail has been found </returns>
 		public static bool TryGetDetail(string moduleName, string detailName, out Detail detail)
-			=> details.TryGetValue(moduleName + "_" + detailName, out detail);
+			=> details.TryGetValue((moduleName, detailName), out detail);
 
 
 		/// <summary>
@@ -116,7 +139,7 @@ namespace Macrocosm.Content.Rockets.Customization
 		/// <param name="detailName"> The detail name </param>
 		/// <param name="unlockedState"> The unlocked state to set </param>
 		public static void SetDetailUnlockedStatus(string moduleName, string detailName, bool unlockedState = true)
-			 => details[moduleName + "_" + detailName].Unlocked = unlockedState;
+			 => details[(moduleName, detailName)].Unlocked = unlockedState;
 
 
 		public static PatternColorFunction GetFunction(string functionName)
@@ -131,7 +154,7 @@ namespace Macrocosm.Content.Rockets.Customization
 		/// <param name="functionName"> The function name </param>
 		/// <param name="unlockedState"> The unlocked state to set </param>
 		public static void SetFunctionUnlockedStatus(string functionName, bool unlockedState = true)
-			 => details[functionName].Unlocked = unlockedState;
+			 => specialFunctions[functionName].Unlocked = unlockedState;
 
 		public override void ClearWorld()
 		{
@@ -167,8 +190,8 @@ namespace Macrocosm.Content.Rockets.Customization
 		/// <param name="colorData"> The color data (default colors, whether they are user changeable, dynamic color function) </param>
 		private static void AddPattern(string moduleName, string patternName, bool unlockedByDefault, params PatternColorData[] colorData)
 		{
-			Pattern pattern = new Pattern(moduleName, patternName, unlockedByDefault, colorData);
-			patterns.Add(pattern.GetKey(), pattern);
+			Pattern pattern = new(moduleName, patternName, unlockedByDefault, colorData);
+			patterns.Add((moduleName, patternName), pattern);
 		}
 
 		/// <summary>
@@ -180,7 +203,7 @@ namespace Macrocosm.Content.Rockets.Customization
 		private static void AddDetail(string moduleName, string detailName, bool unlockedByDefault = false)
 		{
 			Detail detail = new(moduleName, detailName, unlockedByDefault);
-			details.Add(detail.GetKey(), detail);
+			details.Add((moduleName, detailName), detail);
 		}
 
 		/// <summary>
@@ -197,30 +220,151 @@ namespace Macrocosm.Content.Rockets.Customization
 			specialFunctions.Add(specialFunction.GetKey(), specialFunction);
 		}
 
+		private const string localizationPath = "Mods.Macrocosm.Subworlds.";
+		public static UIListScrollablePanel ProvidePatternUI(string moduleName)
+		{
+			UIListScrollablePanel listPanel = new()
+			{
+				Width = new(0, 0.99f),
+				Height = new(0, 0.8f),
+				HAlign = 0.5f,
+				Top = new(0f, 0.2f),
+				BackgroundColor = new Color(53, 72, 135),
+				BorderColor = new Color(89, 116, 213, 255),
+				ListPadding = 0f,
+				ListOuterPadding = 2f,
+				ScrollbarHeight = new(0f, 0.9f),
+				ScrollbarHAlign = 0.99f,
+				ListWidthWithScrollbar = new(0, 1f),
+				ListWidthWithoutScrollbar = new(0, 1f)
+			};
+			listPanel.SetPadding(0f);
+
+			var patterns = GetUnlockedPatterns(moduleName);
+			int count = patterns.Count;
+
+			int iconsPerRow = 9;
+			float iconSize;
+			float iconOffsetLeft;
+			float iconOffsetTop;
+
+			if (count <= iconsPerRow)
+			{
+				iconSize = 44f + 7f;
+				iconOffsetLeft = 8f;
+				iconOffsetTop = 7f;
+			} 
+			else
+			{
+				iconSize = 44f + 5f;
+				iconOffsetLeft = 7f;
+				iconOffsetTop = 7f;
+			}
+
+			UIElement patternIconContainer = new()
+			{
+				Width = new(0f, 1f),
+				Height = new(iconSize * (count / iconsPerRow + ((count % iconsPerRow != 0) ? 1 : 0)), 0f),
+			};
+
+			listPanel.Add(patternIconContainer);
+			patternIconContainer.SetPadding(0f);
+
+			for (int i = 0; i < count; i++)
+			{
+				Pattern pattern = patterns[i].Clone();
+				UIPatternIcon icon = pattern.ProvideUI();
+
+				icon.Left = new((i % iconsPerRow) * iconSize + iconOffsetLeft, 0f);
+				icon.Top = new((i / iconsPerRow) * iconSize + iconOffsetTop, 0f);
+
+				icon.Activate();
+				patternIconContainer.Append(icon);
+			}
+
+			return listPanel;
+		}
+
+		// TODO: load these from some file: hjson, JSON, xml, NBT - to decide -- Feldy
 		private static void LoadPatterns()
 		{
-			AddPattern("CommandPod", "Basic", true);
-			AddPattern("CommandPod", "Binary", true, new(Color.White), new(Color.White), new(new Color(80, 80, 80)));
-			AddPattern("CommandPod", "Astra", true, new(Color.Transparent), new(Color.DarkBlue), new(Color.White), new((colors) => Color.Lerp(colors[1], colors[2], 0.5f)));
+			/*
+			"Astra"
+			"Basic"
+			"Binary"
+			"Delta"
+			"Hazard"
+			"Helix"
+			"Redstone"
+			"Saturn"
+			*/
 
-			AddPattern("ServiceModule", "Basic", true);
-			AddPattern("ServiceModule", "Binary", true, new(Color.White), new(Color.White), new(new Color(80, 80, 80))); 
-			AddPattern("ServiceModule", "Astra", true, new(Color.White), new(Color.DarkBlue), new(Color.White), new((colors) => Color.Lerp(colors[1], colors[2], 0.5f)));
+			static Color lerpHalf(Color[] colors) => Color.Lerp(colors[1], colors[2], 0.5f);
+ 
+			AddPattern("CommandPod", "Basic", true, new(Color.White), new(Color.White));
+			AddPattern("CommandPod", "Astra", true, new(Color.White), new(Color.DarkBlue), new(Color.White), new(lerpHalf));
+			AddPattern("CommandPod", "Binary", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40)));
+			AddPattern("CommandPod", "Delta", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40)));
+			AddPattern("CommandPod", "Hazard", true, new(Color.White), new(new Color(40, 40, 40)), new(new Color(176, 168, 0)));
+			AddPattern("CommandPod", "Helix", true, new(Color.White), new(Color.Red), new(Color.Orange), new(Color.Yellow), new(Color.Green, false), new(Color.Blue, false), new(Color.Indigo, false), new(Color.Violet));
+			AddPattern("CommandPod", "Redstone", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40)));
+			AddPattern("CommandPod", "Saturn", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40)));
 
-			AddPattern("ReactorModule", "Basic", true);
-			AddPattern("ReactorModule", "Binary", true, new(Color.White), new(Color.White), new(new Color(50, 50, 50)));
-			AddPattern("ReactorModule", "Astra", true, new(Color.White), new(Color.DarkBlue), new(Color.White), new((colors) => Color.Lerp(colors[1], colors[2], 0.5f)));
+			AddPattern("ServiceModule", "Basic", true, new(), new(Color.White));
+			AddPattern("ServiceModule", "Astra", true, new(), new(Color.DarkBlue), new(Color.White), new(lerpHalf));
+			AddPattern("ServiceModule", "Binary", true, new(), new(Color.White), new(new Color(40, 40, 40))); 
+			AddPattern("ServiceModule", "Delta", true, new(), new(Color.White), new(new Color(40, 40, 40))); 
+			AddPattern("ServiceModule", "Hazard", true, new(), new(new Color(40, 40, 40)), new(new Color(176, 168, 0)));
+			AddPattern("ServiceModule", "Helix", true, new(), new(Color.Red), new(Color.Orange), new(Color.Yellow), new(Color.Green), new(Color.Blue), new(Color.Indigo), new(Color.Violet, false));
+			AddPattern("ServiceModule", "Redstone", true, new(), new(Color.White), new(new Color(40, 40, 40))); 
+			AddPattern("ServiceModule", "Saturn", true, new(), new(Color.White), new(new Color(40, 40, 40)));   
 
-			AddPattern("EngineModule", "Basic", true);
-			AddPattern("EngineModule", "Binary", true, new(Color.White), new(Color.White), new(new Color(50, 50, 50)));
-			AddPattern("EngineModule", "Saturn", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40)));
-			AddPattern("EngineModule", "Delta", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40)));
-			AddPattern("EngineModule", "Astra", true, new(Color.White), new(Color.DarkBlue), new(Color.White), new((colors) => Color.Lerp(colors[1], colors[2], 0.5f)));
-			AddPattern("EngineModule", "Rainbow", false, new(Color.White), new(Color.Red), new(Color.Orange), new(Color.Yellow), new(Color.Green), new(Color.Blue), new(Color.Indigo), new(Color.Violet));
+			AddPattern("ReactorModule", "Basic", true, new(), new(Color.White));
+			AddPattern("ReactorModule", "Astra", true, new(), new(Color.DarkBlue), new(Color.White), new(lerpHalf));
+			AddPattern("ReactorModule", "Binary", true, new(), new(Color.White), new(new Color(40, 40, 40)));
+			AddPattern("ReactorModule", "Delta", true, new(), new(Color.White), new(new Color(40, 40, 40)), new(lerpHalf));
+			AddPattern("ReactorModule", "Hazard", true, new(), new(new Color(40, 40, 40)), new(new Color(176, 168, 0)));
+			AddPattern("ReactorModule", "Helix", true, new(), new(Color.Red), new(Color.Orange), new(Color.Yellow), new(Color.Green, false), new(Color.Blue), new(Color.Indigo), new(Color.Violet));
+			AddPattern("ReactorModule", "Redstone", true, new(), new(Color.White), new(new Color(40, 40, 40)));
+			AddPattern("ReactorModule", "Saturn", true, new(), new(Color.White), new(new Color(40, 40, 40)));
 
-			AddPattern("BoosterLeft", "Basic", true);
-			AddPattern("BoosterRight", "Basic", true);
-		}
+			AddPattern("EngineModule", "Basic", true, new(), new(Color.White));
+			AddPattern("EngineModule", "Astra", true, new(), new(Color.DarkBlue), new(Color.White), new(lerpHalf));
+			AddPattern("EngineModule", "Binary", true, new(), new(Color.White), new(new Color(40, 40, 40)));
+			AddPattern("EngineModule", "Delta", true, new(), new(Color.White), new(new Color(40, 40, 40)));
+			AddPattern("EngineModule", "Hazard", true, new(), new(new Color(40, 40, 40)), new(new Color(176, 168, 0)));
+			AddPattern("EngineModule", "Helix", true, new(), new(Color.Red), new(Color.Orange), new(Color.Yellow), new(Color.Green), new(Color.Blue), new(Color.Indigo), new(Color.Violet));
+			AddPattern("EngineModule", "Redstone", true, new(), new(Color.White), new(new Color(40, 40, 40)));
+			AddPattern("EngineModule", "Saturn", true, new(), new(Color.White), new(new Color(40, 40, 40)));
+
+			AddPattern("BoosterLeft", "Basic", true, new(Color.White), new(Color.White));
+			AddPattern("BoosterLeft", "Astra", true, new(Color.White), new(Color.DarkBlue), new(Color.White), new(lerpHalf));
+			AddPattern("BoosterLeft", "Binary", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40))); 
+			AddPattern("BoosterLeft", "Delta", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40))); 
+			AddPattern("BoosterLeft", "Hazard", true, new(Color.White), new(new Color(40, 40, 40)), new(new Color(176, 168, 0)));
+			AddPattern("BoosterLeft", "Helix", true, new(Color.White), new(Color.Red), new(Color.Orange), new(Color.Yellow), new(Color.Green), new(Color.Blue), new(Color.Indigo), new(Color.Violet));
+			AddPattern("BoosterLeft", "Redstone", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40))); 
+			AddPattern("BoosterLeft", "Saturn", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40)));
+
+			AddPattern("BoosterRight", "Basic", true, new(Color.White), new(Color.White));
+			AddPattern("BoosterRight", "Astra", true, new(Color.White), new(Color.DarkBlue), new(Color.White), new(lerpHalf));
+			AddPattern("BoosterRight", "Binary", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40)));
+			AddPattern("BoosterRight", "Delta", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40)));
+			AddPattern("BoosterRight", "Hazard", true, new(Color.White), new(new Color(40, 40, 40)), new(new Color(176, 168, 0)));
+			AddPattern("BoosterRight", "Helix", true, new(Color.White), new(Color.Red), new(Color.Orange), new(Color.Yellow), new(Color.Green), new(Color.Blue), new(Color.Indigo), new(Color.Violet));
+			AddPattern("BoosterRight", "Redstone", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40)));
+			AddPattern("BoosterRight", "Saturn", true, new(Color.White), new(Color.White), new(new Color(40, 40, 40)));
+
+			// Just for testing the scrollbar
+			for (int i = 1; i <= 7; i++)
+ 				AddPattern("ServiceModule", "Test" + i, true, new(Color.Transparent), new(Color.White));
+ 
+			for (int i = 1; i <= 8; i++)
+ 				AddPattern("ReactorModule", "Test" + i, true, new(Color.Transparent), new(Color.White));
+
+			for (int i = 1; i <= 74; i++)
+ 				AddPattern("EngineModule", "Test" + i, true, new(Color.White), new(Color.White));
+ 		}
 
 		private static void LoadDetails()
 		{
