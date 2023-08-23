@@ -18,8 +18,7 @@ namespace Macrocosm.Content.Rockets.Customization
 {
 	public class CustomizationStorage : ModSystem
 	{
-
-		public static bool Populated { get; private set; }
+		public static bool Initialized { get; private set; }
 
 		private static Dictionary<(string moduleName, string patternName), Pattern> patterns;
 		private static Dictionary<(string moduleName, string detailName), Detail> details;
@@ -38,7 +37,7 @@ namespace Macrocosm.Content.Rockets.Customization
 			LoadPatterns();
 			LoadDetails();
 
-			Populated = true;
+			Initialized = true;
 		}
 
 		public override void Unload()
@@ -49,6 +48,8 @@ namespace Macrocosm.Content.Rockets.Customization
 			patterns = null;
 			details = null;
 			functions = null;
+
+			Initialized = false;
 		}
 
 		public static void Reset()
@@ -81,10 +82,11 @@ namespace Macrocosm.Content.Rockets.Customization
 		public static List<Pattern> GetPatternsWhere(string moduleName, Func<Pattern, bool> match, bool asClones = true)
 		{
 			var patternsForModule = patterns
-				.Where(kvp => kvp.Key.moduleName == moduleName && match(kvp.Value))
-				.Select(kvp => kvp.Value).ToList();
+				.Select(kvp => kvp.Value)
+				.Where(pattern => pattern.ModuleName == moduleName && match(pattern))
+				.ToList();
 
-			if(asClones)
+			if (asClones)
 				patternsForModule.ForEach((pattern) => pattern.Clone());
 
 			return patternsForModule;
@@ -99,14 +101,16 @@ namespace Macrocosm.Content.Rockets.Customization
 		/// <returns> Whether the specified pattern has been found </returns>
 		public static bool TryGetPattern(string moduleName, string patternName, out Pattern pattern)
 		{
-			bool foundPattern = patterns.TryGetValue((moduleName, patternName), out pattern);
-
-			if (foundPattern)
- 				pattern.Clone();
-  			else
+			if (patterns.TryGetValue((moduleName, patternName), out Pattern defaultPattern))
+			{
+				pattern = defaultPattern.Clone();
+				return true;
+			}
+			else
+			{
  				pattern = null;
-
-			return foundPattern;
+				return false;
+			}
 		}
 
 		/// <summary>

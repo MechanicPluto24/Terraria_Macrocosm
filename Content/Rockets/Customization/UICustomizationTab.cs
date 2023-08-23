@@ -41,7 +41,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 			} 
 		}
 
-		private Dictionary<Rocket, List<Pattern>> dummyPatternEdits = new();
+		private Dictionary<(Rocket rocket, string moduleName), List<UIPatternIcon>> dummyPatternEdits = new();
 
 		private UIPanel rocketPreviewBackground;
 		private UIHoverImageButton rocketPreviewZoomButton;
@@ -205,6 +205,9 @@ namespace Macrocosm.Content.Rockets.Navigation
 						CreatePatternColorPickers();
 				}
 			}
+
+			if (currentPatternIcon is not null)
+				currentPatternIcon.Pattern.SetColorData(currentPattern.ColorData);
 		}
 
 		private void UpdatePatternColorPickers()
@@ -213,8 +216,20 @@ namespace Macrocosm.Content.Rockets.Navigation
 			{
 				if (picker.HasFocus)
 				{
-					currentPatternIcon.Pattern.SetColor(colorIndex, hslMenu.PendingColor);
-					currentModule.Pattern.SetColor(colorIndex, hslMenu.PendingColor);
+					if (rocketPreview.ZoomedOut)
+					{
+						foreach (var module in CustomizationDummy.Modules)
+						{
+							var modulePattern = CustomizationDummy.Modules[module.Key].Pattern;
+
+							if (modulePattern.Name == currentPatternIcon.Pattern.Name)
+ 								modulePattern.SetColor(colorIndex, hslMenu.PendingColor);
+ 						}
+					}
+					else
+					{
+						currentModule.Pattern.SetColor(colorIndex, hslMenu.PendingColor);
+					}
 				}
 
 				picker.BackPanelColor = currentModule.Pattern.GetColor(colorIndex);
@@ -339,10 +354,19 @@ namespace Macrocosm.Content.Rockets.Navigation
 			AllLoseFocus();
 		}
 
+		private void JumpToModule(string moduleName)
+		{
+			rocketPreview.SetModule("EngineModule");
+			RefreshPatternColorPickers();
+		}
+
 		private void OnCurrentModuleChange(string moduleName, int moduleIndex)
 		{
 			currentModuleName = moduleName;
+			UpdateCurrentModule();
+
 			customizationPanelBackground.ReplaceChildWith(patternConfigPanel, CreatePatternConfigPanel());
+
 			RefreshPatternColorPickers();
 		}
 
@@ -350,7 +374,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 		{
 			rocketPreviewZoomButton.SetImage(ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Buttons/ZoomOutButton"));
 
-			if(!GetFocusedColorPicker(out _))
+			if (!GetFocusedColorPicker(out _))
 				customizationPanelBackground.ReplaceChildWith(rocketCustomizationControlPanel, moduleCustomizationControlPanel);
 		}
 
@@ -405,7 +429,6 @@ namespace Macrocosm.Content.Rockets.Navigation
 		{
 			SoundEngine.PlaySound(SoundID.MenuTick);
 			string json = CustomizationDummy.GetCustomizationDataJSON();
-			//Utility.PrettyPrintJSON(ref json);
 			Platform.Get<IClipboard>().Value = json;
 		}
 
@@ -429,7 +452,6 @@ namespace Macrocosm.Content.Rockets.Navigation
 		{
 			SoundEngine.PlaySound(SoundID.MenuTick);
 			string json = currentModule.GetCustomizationDataJSON();
-			//Utility.PrettyPrintJSON(ref json);
 			Platform.Get<IClipboard>().Value = json;
 		}
 
@@ -457,8 +479,21 @@ namespace Macrocosm.Content.Rockets.Navigation
 				if (item.colorIndex >= 0)
 				{
 					item.picker.BackPanelColor = hslMenu.PreviousColor;
-					currentPatternIcon.Pattern.SetColor(item.colorIndex, hslMenu.PreviousColor);
-					currentModule.Pattern.SetColor(item.colorIndex, hslMenu.PreviousColor);
+
+					if (rocketPreview.ZoomedOut)
+					{
+						foreach (var module in CustomizationDummy.Modules)
+						{
+							var modulePattern = CustomizationDummy.Modules[module.Key].Pattern;
+
+							if (modulePattern.Name == currentPatternIcon.Pattern.Name)
+								modulePattern.SetColor(item.colorIndex, hslMenu.PendingColor, evenIfNotUserModifiable: true);
+						}
+					}
+					else
+					{
+						currentModule.Pattern.SetColor(item.colorIndex, hslMenu.PreviousColor);
+					}	
 				}
 				else if (item.colorIndex == -1)
 				{
@@ -475,12 +510,45 @@ namespace Macrocosm.Content.Rockets.Navigation
 		public void SelectPattern(UIPatternIcon icon)
 		{
 			currentPatternIcon = icon;
-			CustomizationDummy.Modules[currentModuleName].Pattern = currentPatternIcon.Pattern;
+
+			var key = (Rocket, currentModuleName);
+			if (dummyPatternEdits.ContainsKey(key))
+ 				dummyPatternEdits[key].Add(icon);  
+ 			else
+ 				dummyPatternEdits.Add(key, new List<UIPatternIcon> { icon });  
+
+			if (rocketPreview.ZoomedOut)
+			{
+				foreach(var module in CustomizationDummy.Modules)
+				{
+					if(CustomizationStorage.TryGetPattern(module.Key, icon.Pattern.Name, out Pattern defaultPattern))
+					{
+						var currentPattern = defaultPattern.Clone();
+
+						for(int i = 0; i < Pattern.MaxColorCount; i++)
+						{
+							if (defaultPattern.ColorData[i].HasColorFunction && icon.Pattern.ColorData[i].HasColorFunction)
+								currentPattern.SetColorFunction(i, icon.Pattern.ColorData[i].ColorFunction);
+							else if (currentPattern.ColorData[i].IsUserModifiable && icon.Pattern.ColorData[i].IsUserModifiable)
+								currentPattern.SetColor(i, icon.Pattern.ColorData[i].Color);
+						}
+
+						CustomizationDummy.Modules[module.Key].Pattern = currentPattern;
+					}
+				}
+			}
+			else
+			{
+				//currentModule.Pattern = CustomizationStorage.GetPattern(icon.Pattern.ModuleName, icon.Pattern.Name);
+				currentModule.Pattern = icon.Pattern.Clone();
+			}
+
 			RefreshPatternColorPickers();
 		}
 
 		private void RefreshPatternColorPickers()
 		{
+			UpdateCurrentModule();
 			UpdatePatternConfig();
 			ClearPatternColorPickers();
 			CreatePatternColorPickers();
@@ -500,7 +568,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 		{
 			patternColorPickers = new();
 
-			var indexes = currentPatternIcon.Pattern.UserModifiableIndexes;
+			var indexes = currentModule.Pattern.UserModifiableIndexes;
 
 			float iconSize = 32f + 8f;
 			float iconLeftOffset = 3f;
@@ -603,7 +671,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 		private void NameplateTextOnFocusGain()
 		{
-			rocketPreview.SetModule("EngineModule");
+			JumpToModule("EngineModule");
 		}
 
 		private void NameplateTextOnFocusLost()
@@ -612,7 +680,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 		private void NameplateColorPickerOnFocusGain()
 		{
-			rocketPreview.SetModule("EngineModule");
+			JumpToModule("EngineModule");
 
 			hslMenu.SetColorHSL(CustomizationDummy.Nameplate.TextColor.ToScaledHSL(luminanceSliderFactor));
 			hslMenu.CaptureCurrentColor();
@@ -966,7 +1034,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 				FocusContext = "HorizontalAlignment",
 				OnFocusGain = () =>
 				{
-					rocketPreview.SetModule("EngineModule");
+					JumpToModule("EngineModule");
 					CustomizationDummy.Nameplate.HorizontalAlignment = TextAlignmentHorizontal.Left;
 				}
 			};
@@ -982,7 +1050,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 				FocusContext = "HorizontalAlignment",
 				OnFocusGain = () =>
 				{
-					rocketPreview.SetModule("EngineModule");
+					JumpToModule("EngineModule");
 					CustomizationDummy.Nameplate.HorizontalAlignment = TextAlignmentHorizontal.Center;
 				}
 			};
@@ -997,7 +1065,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 				FocusContext = "HorizontalAlignment",
 				OnFocusGain = () =>
 				{
-					rocketPreview.SetModule("EngineModule");
+					JumpToModule("EngineModule");
 					CustomizationDummy.Nameplate.HorizontalAlignment = TextAlignmentHorizontal.Right;
 				}
 			};
@@ -1012,7 +1080,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 				FocusContext = "VerticalAlignment",
 				OnFocusGain = () =>
 				{
-					rocketPreview.SetModule("EngineModule");
+					JumpToModule("EngineModule");
 					CustomizationDummy.Nameplate.VerticalAlignment = TextAlignmentVertical.Top;
 				}
 			};
@@ -1027,7 +1095,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 				FocusContext = "VerticalAlignment",
 				OnFocusGain = () =>
 				{
-					rocketPreview.SetModule("EngineModule");
+					JumpToModule("EngineModule");
 					CustomizationDummy.Nameplate.VerticalAlignment = TextAlignmentVertical.Center;
 				}
 			};
@@ -1042,7 +1110,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 				FocusContext = "VerticalAlignment",
 				OnFocusGain = () =>
 				{
-					rocketPreview.SetModule("EngineModule");
+					JumpToModule("EngineModule");
 					CustomizationDummy.Nameplate.VerticalAlignment = TextAlignmentVertical.Bottom;
 				}
 			};
@@ -1082,9 +1150,22 @@ namespace Macrocosm.Content.Rockets.Navigation
 			patternConfigPanel.PaddingTop = 0f;
 
 			patternSelector = CustomizationStorage.ProvidePatternUI(currentModuleName);
+
 			var icons = patternSelector.OfType<UIPatternIcon>().ToList();
 
-			icons.ForEach((icon) => icon.OnLeftClick += (_, icon) => SelectPattern(icon as UIPatternIcon));
+			foreach (var icon in icons)
+			{
+				icon.OnLeftClick += (_, icon) => SelectPattern(icon as UIPatternIcon);
+
+				var key = (Rocket, currentModuleName);
+				if (dummyPatternEdits.ContainsKey(key))
+				{
+					UIPatternIcon foundIcon = dummyPatternEdits[key].FirstOrDefault(stored => stored.Pattern.Name == icon.Pattern.Name);
+
+					//if (foundIcon != null)
+ 					//	icon.Pattern = foundIcon.Pattern.Clone();
+ 				}
+			}
 
 			patternConfigPanel.Append(patternSelector);
 

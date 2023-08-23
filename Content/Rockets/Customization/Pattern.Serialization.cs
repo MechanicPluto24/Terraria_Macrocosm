@@ -89,7 +89,7 @@ namespace Macrocosm.Content.Rockets.Customization
 
 			string patternName = patternObject.Value<string>("patternName");
 
-			if (CustomizationStorage.Populated && !CustomizationStorage.TryGetPattern(moduleName, patternName, out _) )
+			if (CustomizationStorage.Initialized && !CustomizationStorage.TryGetPattern(moduleName, patternName, out _) )
 				throw new SerializationException("Error: Invalid pattern name.");
 
 			bool unlockedByDefault = patternObject.Value<bool>("unlockedByDefault");
