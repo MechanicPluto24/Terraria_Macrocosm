@@ -12,10 +12,8 @@ namespace Macrocosm.Content.Rockets.Customization
 {
     public partial class Pattern : IUnlockable
     {
-		[JsonProperty]
 		public string Name { get; }
 
-		[JsonProperty]
 		public string ModuleName { get; }
 
 		public bool Unlocked { get; set; }
@@ -28,8 +26,7 @@ namespace Macrocosm.Content.Rockets.Customization
 		public int UserModifiableColorCount => UserModifiableIndexes.Count;
 		public int DefinitionColorCount { get; private set; }
 
-		[JsonProperty]
-		private PatternColorData[] ColorData { get; init; }
+		public PatternColorData[] ColorData { get; init; }
 
 		public const int MaxColorCount = 8;
 
@@ -98,15 +95,14 @@ namespace Macrocosm.Content.Rockets.Customization
 			return Color.Transparent;
 		}
 
-		public bool SetColor(int index, Color color)
+		public bool SetColor(int index, Color color, bool evenIfNotUserModifiable = false)
 		{
-			if (index < 0 || index >= MaxColorCount || !ColorData[index].IsUserModifiable)
+			if (index < 0 || index >= MaxColorCount || (!evenIfNotUserModifiable && !ColorData[index].IsUserModifiable))
 				return false;
 
 			HasDefaultColors = false;
 			ColorData[index] = ColorData[index].WithUserColor(color);
 			return true;
-
 		}
 
 		public bool SetColorFunction(int index, ColorFunction colorFunction)
@@ -117,6 +113,14 @@ namespace Macrocosm.Content.Rockets.Customization
 			HasDefaultColors = false; //?
 			ColorData[index] = ColorData[index].WithColorFunction(colorFunction);
 			return true;
+		}
+
+		public PatternColorData[] GetColorData() => ColorData;
+
+		public void SetColorData(params PatternColorData[] colorData)
+		{
+			for (int i = 0; i < colorData.Length; i++)
+				ColorData[i] = colorData[i];
 		}
 
 		public UIPatternIcon ProvideUI()
