@@ -1148,7 +1148,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 			var key = (Rocket, currentModuleName);
 			if (!dummyPatternEdits.ContainsKey(key))
- 				dummyPatternEdits[key] = icons;
+ 				dummyPatternEdits[key] = icons;                                   
  
 			foreach (var icon in icons)
   				icon.OnLeftClick += (_, icon) => SelectPattern(icon as UIPatternIcon);
