@@ -15,10 +15,8 @@ using System.Collections.Generic;
 using Macrocosm.Content.Rockets.Modules;
 using Microsoft.Xna.Framework.Input;
 using ReLogic.OS;
-using System.Xml;
 using Terraria.Audio;
 using Terraria.ID;
-using Terraria.GameInput;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
@@ -189,25 +187,24 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 		private void UpdatePatternConfig()
 		{
-			Pattern currentPattern = CustomizationDummy.Modules[currentModuleName].Pattern;
+			Pattern currentDummyPattern = CustomizationDummy.Modules[currentModuleName].Pattern;
 
 			if (patternSelector.Any())
 			{
-				currentPatternIcon = patternSelector.OfType<UIPatternIcon>()
-					.Where((icon) => icon.Pattern.Name == currentPattern.Name)
-					.FirstOrDefault();
+				if(dummyPatternEdits.ContainsKey((Rocket, currentModuleName)))
+					currentPatternIcon = dummyPatternEdits[(Rocket, currentModuleName)]
+						.Where((icon) => icon.Pattern.Name == currentDummyPattern.Name)
+						.FirstOrDefault();
 
 				if (currentPatternIcon is not null)
 				{
+					currentPatternIcon.Pattern.SetColorData(currentDummyPattern.ColorData);
 					currentPatternIcon.HasFocus = true;
 
 					if (patternColorPickers is null)
 						CreatePatternColorPickers();
 				}
 			}
-
-			if (currentPatternIcon is not null)
-				currentPatternIcon.Pattern.SetColorData(currentPattern.ColorData);
 		}
 
 		private void UpdatePatternColorPickers()
@@ -222,7 +219,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 						{
 							var modulePattern = CustomizationDummy.Modules[module.Key].Pattern;
 
-							if (modulePattern.Name == currentPatternIcon.Pattern.Name)
+							if (modulePattern.Name == currentPatternIcon.Pattern.Name && hslMenu.PreviousColor != hslMenu.PendingColor)
  								modulePattern.SetColor(colorIndex, hslMenu.PendingColor);
  						}
 					}
@@ -382,6 +379,8 @@ namespace Macrocosm.Content.Rockets.Navigation
 		{
 			rocketPreviewZoomButton.SetImage(ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Buttons/ZoomInButton"));
 
+			ColorPickersLoseFocus();
+
 			if (!GetFocusedColorPicker(out _))
 				customizationPanelBackground.ReplaceChildWith(moduleCustomizationControlPanel, rocketCustomizationControlPanel);
 		}
@@ -510,12 +509,6 @@ namespace Macrocosm.Content.Rockets.Navigation
 		public void SelectPattern(UIPatternIcon icon)
 		{
 			currentPatternIcon = icon;
-
-			var key = (Rocket, currentModuleName);
-			if (dummyPatternEdits.ContainsKey(key))
- 				dummyPatternEdits[key].Add(icon);  
- 			else
- 				dummyPatternEdits.Add(key, new List<UIPatternIcon> { icon });  
 
 			if (rocketPreview.ZoomedOut)
 			{
@@ -1153,20 +1146,13 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 			var icons = patternSelector.OfType<UIPatternIcon>().ToList();
 
+			var key = (Rocket, currentModuleName);
+			if (!dummyPatternEdits.ContainsKey(key))
+ 				dummyPatternEdits[key] = icons;
+ 
 			foreach (var icon in icons)
-			{
-				icon.OnLeftClick += (_, icon) => SelectPattern(icon as UIPatternIcon);
-
-				var key = (Rocket, currentModuleName);
-				if (dummyPatternEdits.ContainsKey(key))
-				{
-					UIPatternIcon foundIcon = dummyPatternEdits[key].FirstOrDefault(stored => stored.Pattern.Name == icon.Pattern.Name);
-
-					//if (foundIcon != null)
- 					//	icon.Pattern = foundIcon.Pattern.Clone();
- 				}
-			}
-
+  				icon.OnLeftClick += (_, icon) => SelectPattern(icon as UIPatternIcon);
+ 
 			patternConfigPanel.Append(patternSelector);
 
 			return patternConfigPanel;
