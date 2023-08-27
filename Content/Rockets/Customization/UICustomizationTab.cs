@@ -195,25 +195,24 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 		private void UpdatePatternConfig()
 		{
-			Pattern currentPattern = CustomizationDummy.Modules[currentModuleName].Pattern;
+			Pattern currentDummyPattern = CustomizationDummy.Modules[currentModuleName].Pattern;
 
 			if (patternSelector.Any())
 			{
-				currentPatternIcon = patternSelector.OfType<UIPatternIcon>()
-					.Where((icon) => icon.Pattern.Name == currentPattern.Name)
-					.FirstOrDefault();
+				if(dummyPatternEdits.ContainsKey((Rocket, currentModuleName)))
+					currentPatternIcon = dummyPatternEdits[(Rocket, currentModuleName)]
+						.Where((icon) => icon.Pattern.Name == currentDummyPattern.Name)
+						.FirstOrDefault();
 
 				if (currentPatternIcon is not null)
 				{
+					currentPatternIcon.Pattern.SetColorData(currentDummyPattern.ColorData);
 					currentPatternIcon.HasFocus = true;
 
 					if (patternColorPickers is null)
 						CreatePatternColorPickers();
 				}
 			}
-
-			if (currentPatternIcon is not null)
-				currentPatternIcon.Pattern.SetColorData(currentPattern.ColorData);
 		}
 
 		private void UpdatePatternColorPickers()
@@ -228,7 +227,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 						{
 							var modulePattern = CustomizationDummy.Modules[module.Key].Pattern;
 
-							if (modulePattern.Name == currentPatternIcon.Pattern.Name)
+							if (modulePattern.Name == currentPatternIcon.Pattern.Name && hslMenu.PreviousColor != hslMenu.PendingColor)
  								modulePattern.SetColor(colorIndex, hslMenu.PendingColor);
  						}
 					}

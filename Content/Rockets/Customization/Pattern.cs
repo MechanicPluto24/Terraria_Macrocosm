@@ -22,11 +22,10 @@ namespace Macrocosm.Content.Rockets.Customization
 		public bool IsDefault => Name == "Basic";
 		public bool HasDefaultColors { get; private set; } = true;
 
+		public PatternColorData[] ColorData { get; init; }
+
 		public List<int> UserModifiableIndexes { get; } = new();
 		public int UserModifiableColorCount => UserModifiableIndexes.Count;
-		public int DefinitionColorCount { get; private set; }
-
-		public PatternColorData[] ColorData { get; init; }
 
 		public const int MaxColorCount = 8;
 
@@ -115,11 +114,9 @@ namespace Macrocosm.Content.Rockets.Customization
 			return true;
 		}
 
-		public PatternColorData[] GetColorData() => ColorData;
-
 		public void SetColorData(params PatternColorData[] colorData)
 		{
-			for (int i = 0; i < colorData.Length; i++)
+			for (int i = 0; i < MaxColorCount; i++)
 				ColorData[i] = colorData[i];
 		}
 
