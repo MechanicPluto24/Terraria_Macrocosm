@@ -1,69 +1,49 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using Microsoft.Xna.Framework;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-	public readonly struct PatternColorData
+	public readonly struct PatternColorData 
 	{
 		public readonly bool IsUserModifiable { get; }
-		public readonly Color DefaultColor { get; }
-		public readonly Color UserColor { get; }
-		public readonly PatternColorFunction ColorFunction { get; }
+		public readonly Color Color { get; }
+		public readonly ColorFunction ColorFunction { get; }
 
 		public bool HasColorFunction => ColorFunction != null;
 
 		public PatternColorData()
 		{
 			IsUserModifiable = false;
-			DefaultColor = Color.Transparent;
-			UserColor = Color.Transparent;
+			Color = Color.Transparent;
 			ColorFunction = null;
 		}
 
 		public PatternColorData(Color defaultColor, bool isUserModifiable = true)
 		{
 			IsUserModifiable = isUserModifiable;
-			DefaultColor = defaultColor;
-			UserColor = defaultColor;
+			Color = defaultColor;
 			ColorFunction = null;
 		}
 
-		public PatternColorData(Func<Color[], Color> colorFunction)
+		public PatternColorData(ColorFunction colorFunction)
 		{
 			IsUserModifiable = false;
-			DefaultColor = Color.Transparent;
-			UserColor = Color.Transparent;
-			ColorFunction = new(colorFunction);
-		}
-
-		public PatternColorData(PatternColorFunction colorFunction)
-		{
-			IsUserModifiable = false;
-			DefaultColor = Color.Transparent;
-			UserColor = Color.Transparent;
+			Color = Color.Transparent;
 			ColorFunction = colorFunction;
 		}
 
-		private PatternColorData(Color defaultColor, Color userColor)
-		{
-			DefaultColor = defaultColor;
-			UserColor = userColor;
-			IsUserModifiable = true;
-		}
 
 		public PatternColorData WithUserColor(Color newUserColor)
 		{
 			if (!IsUserModifiable || HasColorFunction)
  				return this;
  
-			return new PatternColorData(DefaultColor, newUserColor);
+			return new PatternColorData(newUserColor);
 		}
 
-		public PatternColorData WithColorFunction(PatternColorFunction function)
+		public PatternColorData WithColorFunction(ColorFunction function)
 		{
-			if (!IsUserModifiable)
-				return this;
-
 			return new PatternColorData(function);
 		}
 	}

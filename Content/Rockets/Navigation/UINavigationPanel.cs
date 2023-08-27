@@ -157,7 +157,7 @@ namespace Macrocosm.Content.Rockets.Navigation
             Texture2D outlineMedium = ModContent.Request<Texture2D>(buttonsPath + "SelectionOutlineMedium", mode).Value;
             Texture2D outlineLarge = ModContent.Request<Texture2D>(buttonsPath + "SelectionOutlineLarge", mode).Value;
 
-            ZoomInButton = new(zoomInButton, zoomButtonBorder, Language.GetText("Mods.Macrocosm.UI.Rocket.Common.ZoomIn"))
+            ZoomInButton = new(zoomInButton, zoomButtonBorder, Language.GetText("Mods.Macrocosm.UI.Common.ZoomIn"))
             {
                 Top = StyleDimension.FromPercent(0.37f),
 				Left = StyleDimension.FromPercent(0.011f),
@@ -165,7 +165,7 @@ namespace Macrocosm.Content.Rockets.Navigation
             ZoomInButton.OnLeftClick += (_, _) => ZoomIn();
             ZoomInButton.CheckInteractible = () => CurrentMap.HasNext || CurrentMap.HasDefaultNext;
 
-            ZoomOutButton = new(zoomOutButton, zoomButtonBorder, Language.GetText("Mods.Macrocosm.UI.Rocket.Common.ZoomOut"))
+            ZoomOutButton = new(zoomOutButton, zoomButtonBorder, Language.GetText("Mods.Macrocosm.UI.Common.ZoomOut"))
             {
 				Top = StyleDimension.FromPercent(0.52f),
 				Left = StyleDimension.FromPercent(0.011f),
