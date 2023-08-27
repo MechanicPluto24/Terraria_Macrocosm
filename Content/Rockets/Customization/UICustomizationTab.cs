@@ -15,16 +15,26 @@ using System.Collections.Generic;
 using Macrocosm.Content.Rockets.Modules;
 using Microsoft.Xna.Framework.Input;
 using ReLogic.OS;
-using System.Xml;
 using Terraria.Audio;
 using Terraria.ID;
-using Terraria.GameInput;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
     public class UICustomizationTab : UIPanel, ITabUIElement, IRocketDataConsumer
     {
-		public Rocket Rocket { get; set; } = new Rocket();
+		private Rocket rocket = new();
+		public Rocket Rocket {
+			get => rocket;
+			set
+			{
+				bool changed = rocket != value;
+				rocket = value;
+
+				if (changed)
+					OnRocketChanged();
+			}
+		} 
+
 
 		private readonly Dictionary<Rocket, Rocket> rocketDummyPairs = new();
 		public Rocket CustomizationDummy { 
@@ -41,7 +51,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 			} 
 		}
 
-		private Dictionary<(Rocket rocket, string moduleName), List<UIPatternIcon>> dummyPatternEdits = new();
+		private readonly Dictionary<(Rocket rocket, string moduleName), List<UIPatternIcon>> dummyPatternEdits = new();
 
 		private UIPanel rocketPreviewBackground;
 		private UIHoverImageButton rocketPreviewZoomButton;
@@ -62,13 +72,6 @@ namespace Macrocosm.Content.Rockets.Navigation
 		private UIPanelIconButton rocketResetButton;
 		private UIPanelIconButton rocketCopyButton;
 		private UIPanelIconButton rocketPasteButton;
-
-		private UIPanel moduleCustomizationControlPanel;
-		private UIPanelIconButton moduleApplyButton;
-		private UIPanelIconButton moduleCancelButton;
-		private UIPanelIconButton moduleResetButton;
-		private UIPanelIconButton moduleCopyButton;
-		private UIPanelIconButton modulePasteButton;
 
 		private UIPanel nameplateConfigPanel;
 		private UIInputTextBox nameplateTextBox;
@@ -136,9 +139,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 			customizationPanelBackground.Append(patternConfigPanel);
 			 
 			rocketCustomizationControlPanel = CreateRocketControlPanel();
-			moduleCustomizationControlPanel = CreateModuleControlPanel();
-			//customizationPanelBackground.Append(rocketCustomizationControlPanel);
-			customizationPanelBackground.Append(moduleCustomizationControlPanel);
+			customizationPanelBackground.Append(rocketCustomizationControlPanel);
 
 			hslMenu = new(luminanceSliderFactor)
 			{
@@ -178,6 +179,11 @@ namespace Macrocosm.Content.Rockets.Navigation
 			UpdateHSLMenuVisibility();
 
 			UpdateKeyboardCapture();
+		}
+
+		private void OnRocketChanged()
+		{
+			RefreshPatternConfigPanel();
 		}
 
 		#region Update methods
@@ -284,19 +290,11 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 				if (customizationPanelBackground.HasChild(rocketCustomizationControlPanel))
 					customizationPanelBackground.ReplaceChildWith(rocketCustomizationControlPanel, hslMenu);
-
-				if (customizationPanelBackground.HasChild(moduleCustomizationControlPanel))
-					customizationPanelBackground.ReplaceChildWith(moduleCustomizationControlPanel, hslMenu);
 			}
 			else
 			{
 				if (customizationPanelBackground.HasChild(hslMenu))
-				{
-					if(rocketPreview.ZoomedOut)
-						customizationPanelBackground.ReplaceChildWith(hslMenu, rocketCustomizationControlPanel);
-					else
-						customizationPanelBackground.ReplaceChildWith(hslMenu, moduleCustomizationControlPanel);
-				}
+					customizationPanelBackground.ReplaceChildWith(hslMenu, rocketCustomizationControlPanel);
 			}
 		}
 
@@ -356,7 +354,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 		private void JumpToModule(string moduleName)
 		{
-			rocketPreview.SetModule("EngineModule");
+			rocketPreview.SetModule(moduleName);
 			RefreshPatternColorPickers();
 		}
 
@@ -364,26 +362,23 @@ namespace Macrocosm.Content.Rockets.Navigation
 		{
 			currentModuleName = moduleName;
 			UpdateCurrentModule();
+			RefreshPatternConfigPanel();
+		}
 
+		private void RefreshPatternConfigPanel()
+		{
 			customizationPanelBackground.ReplaceChildWith(patternConfigPanel, CreatePatternConfigPanel());
-
 			RefreshPatternColorPickers();
 		}
 
 		private void OnPreviewZoomIn()
 		{
 			rocketPreviewZoomButton.SetImage(ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Buttons/ZoomOutButton"));
-
-			if (!GetFocusedColorPicker(out _))
-				customizationPanelBackground.ReplaceChildWith(rocketCustomizationControlPanel, moduleCustomizationControlPanel);
 		}
 
 		private void OnPreviewZoomOut()
 		{
 			rocketPreviewZoomButton.SetImage(ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Buttons/ZoomInButton"));
-
-			if (!GetFocusedColorPicker(out _))
-				customizationPanelBackground.ReplaceChildWith(moduleCustomizationControlPanel, rocketCustomizationControlPanel);
 		}
 
 		private void ApplyCustomizationChanges()
@@ -412,15 +407,6 @@ namespace Macrocosm.Content.Rockets.Navigation
 			AllLoseFocus();
 
 			CustomizationDummy.ResetCustomizationToDefault();
-
-			RefreshPatternColorPickers();
-		}
-
-		private void ResetCurrentModuleToDefaults()
-		{
-			AllLoseFocus();
-
-			CustomizationDummy.ResetModuleCustomizationToDefault(currentModuleName);
 
 			RefreshPatternColorPickers();
 		}
@@ -509,13 +495,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 		#region Pattern selection methods
 		public void SelectPattern(UIPatternIcon icon)
 		{
-			currentPatternIcon = icon;
-
-			var key = (Rocket, currentModuleName);
-			if (dummyPatternEdits.ContainsKey(key))
- 				dummyPatternEdits[key].Add(icon);  
- 			else
- 				dummyPatternEdits.Add(key, new List<UIPatternIcon> { icon });  
+			currentPatternIcon = dummyPatternEdits[(Rocket, currentModuleName)].FirstOrDefault(stored => stored.Pattern.Name == icon.Pattern.Name);
 
 			if (rocketPreview.ZoomedOut)
 			{
@@ -846,7 +826,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 			};
 			rocketCustomizationControlPanel.Append(separator1);
 
-			rocketResetButton = new(ModContent.Request<Texture2D>(symbolsPath + "ResetRed"))
+			rocketResetButton = new(ModContent.Request<Texture2D>(symbolsPath + "ResetGray"))
 			{
 				VAlign = 0.9f,
 				Left = new(0f, 0.448f),  
@@ -897,87 +877,6 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 			return rocketCustomizationControlPanel;
 		}
-
-		private UIPanel CreateModuleControlPanel()
-		{
-			moduleCustomizationControlPanel = new()
-			{
-				Width = new(0f, 0.62f),
-				Height = new(0, 0.25f),
-				HAlign = 0.98f,
-				Top = new(0f, 0.092f),
-				BackgroundColor = new Color(53, 72, 135),
-				BorderColor = new Color(89, 116, 213, 255)
-			};
-			moduleCustomizationControlPanel.SetPadding(2f);
-			customizationPanelBackground.Append(moduleCustomizationControlPanel);
-
-			moduleCopyButton = new(Main.Assets.Request<Texture2D>("Images/UI/CharCreation/Copy"))
-			{
-				VAlign = 0.9f,
-				Left = new(0f, 0.18f),
-				HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Customization.CopyModule")
-			};
-			moduleCopyButton.OnLeftMouseDown += (_, _) => CopyModuleData();
-			moduleCustomizationControlPanel.Append(moduleCopyButton);
-
-			UIVerticalSeparator separator1 = new()
-			{
-				Height = new(32f, 0f),
-				VAlign = 0.9f,
-				Left = new(0f, 0.425f),
-				Color = new Color(89, 116, 213, 255) * 1.1f
-			};
-			moduleCustomizationControlPanel.Append(separator1);
-
-			modulePasteButton = new(Main.Assets.Request<Texture2D>("Images/UI/CharCreation/Paste"))
-			{
-				VAlign = 0.9f,
-				Left = new(0f, 0.295f),
-				HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Customization.PasteModule")
-			};
-			modulePasteButton.OnLeftMouseDown += (_, _) => PasteModuleData();
-			moduleCustomizationControlPanel.Append(modulePasteButton);
-
-			moduleResetButton = new(ModContent.Request<Texture2D>(symbolsPath + "ResetWhite"))
-			{
-				VAlign = 0.9f,
-				Left = new(0f, 0.448f),
-				HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Customization.ResetRocket")
-			};
-			moduleResetButton.OnLeftClick += (_, _) => ResetCurrentModuleToDefaults();
-			moduleCustomizationControlPanel.Append(moduleResetButton);
-
-			UIVerticalSeparator separator2 = new()
-			{
-				Height = new(32f, 0f),
-				VAlign = 0.9f,
-				Left = new(0f, 0.571f),
-				Color = new Color(89, 116, 213, 255) * 1.1f
-			};
-			moduleCustomizationControlPanel.Append(separator2);
-
-			rocketCancelButton = new(ModContent.Request<Texture2D>(symbolsPath + "CrossmarkRed"))
-			{
-				VAlign = 0.9f,
-				Left = new(0f, 0.6f),
-				HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Customization.Cancel")
-			};
-			rocketCancelButton.OnLeftClick += (_, _) => DiscardCustomizationChanges();
-			moduleCustomizationControlPanel.Append(rocketCancelButton);
-
-			rocketApplyButton = new(ModContent.Request<Texture2D>(symbolsPath + "CheckmarkGreen"))
-			{
-				VAlign = 0.9f,
-				Left = new(0f, 0.715f),
-				HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Customization.Apply")
-			};
-			rocketApplyButton.OnLeftClick += (_, _) => ApplyCustomizationChanges();
-			moduleCustomizationControlPanel.Append(rocketApplyButton);
-
-			return moduleCustomizationControlPanel;
-		}
-
 
 		private UIPanel CreateNameplateConfigPanel()
 		{
@@ -1149,23 +1048,22 @@ namespace Macrocosm.Content.Rockets.Navigation
 			patternConfigPanel.SetPadding(6f);
 			patternConfigPanel.PaddingTop = 0f;
 
-			patternSelector = CustomizationStorage.ProvidePatternUI(currentModuleName);
-
-			var icons = patternSelector.OfType<UIPatternIcon>().ToList();
-
-			foreach (var icon in icons)
+			foreach (var module in Rocket.Modules.Keys)
 			{
-				icon.OnLeftClick += (_, icon) => SelectPattern(icon as UIPatternIcon);
+				var icons = CustomizationStorage.ProvidePatternUI(module);
 
-				var key = (Rocket, currentModuleName);
-				if (dummyPatternEdits.ContainsKey(key))
+				var key = (Rocket, module);
+				if (!dummyPatternEdits.ContainsKey(key))
+					dummyPatternEdits[key] = icons.OfType<UIPatternIcon>().ToList();
+
+				if (module == currentModuleName)
 				{
-					UIPatternIcon foundIcon = dummyPatternEdits[key].FirstOrDefault(stored => stored.Pattern.Name == icon.Pattern.Name);
+					patternSelector = icons;
 
-					//if (foundIcon != null)
- 					//	icon.Pattern = foundIcon.Pattern.Clone();
- 				}
-			}
+					foreach (var icon in patternSelector.OfType<UIPatternIcon>().ToList())
+						icon.OnLeftClick += (_, icon) => SelectPattern(icon as UIPatternIcon);
+				}
+ 			}
 
 			patternConfigPanel.Append(patternSelector);
 
