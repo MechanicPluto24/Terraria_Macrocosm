@@ -140,10 +140,8 @@ namespace Macrocosm.Content.Rockets
 
 
 		/// <summary> Instatiates a rocket. Use <see cref="Create(Vector2)"/> for spawning in world and proper syncing. </summary>
-		public Rocket(bool isDummy = false)
+		public Rocket()
 		{
-			if (!isDummy)
-				RefreshCustomizationDummy();
 		}
 
 		public void OnCreation()

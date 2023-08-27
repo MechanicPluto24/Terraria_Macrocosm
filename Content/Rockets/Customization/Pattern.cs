@@ -4,20 +4,17 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using Terraria;
 using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
 using Macrocosm.Common.UI;
-using Macrocosm.Common.Utils;
+using Newtonsoft.Json;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-    public class Pattern : TagSerializable, IUnlockable
+    public partial class Pattern : IUnlockable
     {
 		public string Name { get; }
-		public string ModuleName { get; }
 
-		public string GetKey() => ModuleName + "_" + Name;
+		public string ModuleName { get; }
 
 		public bool Unlocked { get; set; }
 		public bool UnlockedByDefault { get; private set; }
@@ -25,10 +22,10 @@ namespace Macrocosm.Content.Rockets.Customization
 		public bool IsDefault => Name == "Basic";
 		public bool HasDefaultColors { get; private set; } = true;
 
+		public PatternColorData[] ColorData { get; init; }
+
 		public List<int> UserModifiableIndexes { get; } = new();
 		public int UserModifiableColorCount => UserModifiableIndexes.Count;
-
-		private PatternColorData[] ColorData { get; init; }
 
 		public const int MaxColorCount = 8;
 
@@ -75,7 +72,7 @@ namespace Macrocosm.Content.Rockets.Customization
 				}
 				else
 				{
-					ColorData[i] = new(defaultColorData[i].DefaultColor, defaultColorData[i].IsUserModifiable);
+					ColorData[i] = new(defaultColorData[i].Color, defaultColorData[i].IsUserModifiable);
 
 					if(defaultColorData[i].IsUserModifiable)
 						UserModifiableIndexes.Add(i);
@@ -83,101 +80,50 @@ namespace Macrocosm.Content.Rockets.Customization
  			}
 		}
 
+		public string GetKey() => ModuleName + "_" + Name;
+
 		public Color GetColor(int index)
 		{
 			if (index >= 0 && index < MaxColorCount)
 			{
 				if (ColorData[index].HasColorFunction)
 					return ColorData[index].ColorFunction.Invoke(ColorData.Select((c, i) => i == index ? Color.Transparent : GetColor(i)).ToArray());
-				else if (!ColorData[index].IsUserModifiable)
-					return ColorData[index].DefaultColor;
  				else 
-					return ColorData[index].UserColor;
+					return ColorData[index].Color;
 			}
 			return Color.Transparent;
 		}
 
-		public List<int> GetUserModifiableIndexes()
+		public bool SetColor(int index, Color color, bool evenIfNotUserModifiable = false)
 		{
-			List<int> result = new();
-			return result;
-		}
-
-		public bool SetColor(int index, Color color)
-		{
-			if (index < 0 || index >= MaxColorCount || !ColorData[index].IsUserModifiable)
+			if (index < 0 || index >= MaxColorCount || (!evenIfNotUserModifiable && !ColorData[index].IsUserModifiable))
 				return false;
 
 			HasDefaultColors = false;
 			ColorData[index] = ColorData[index].WithUserColor(color);
 			return true;
-
 		}
 
-		public bool SetColor(int index, PatternColorFunction colorFunction)
+		public bool SetColorFunction(int index, ColorFunction colorFunction)
 		{
 			if (index < 0 || index >= MaxColorCount || !ColorData[index].IsUserModifiable)
 				return false;
 
-			HasDefaultColors = false;
+			HasDefaultColors = false; //?
 			ColorData[index] = ColorData[index].WithColorFunction(colorFunction);
 			return true;
 		}
 
-		/*
-		public Color GetDefaultColor(int index)
+		public void SetColorData(params PatternColorData[] colorData)
 		{
-			if (index >= 0 && index < ColorCount)
-			{
-				if (colorData[index].HasColorFunction)
-					return colorData[index].ColorFunction.Invoke(colorData.Select(c => c.DefaultColor).ToArray());
-				else
-					return colorData[index].DefaultColor;
-			}
-			return Color.Transparent;
+			for (int i = 0; i < MaxColorCount; i++)
+				ColorData[i] = colorData[i];
 		}
-		*/
 
 		public UIPatternIcon ProvideUI()
 		{
 			UIPatternIcon icon = new(this);
 			return icon;
-		}
-
-		public void DrawIcon(SpriteBatch spriteBatch, Vector2 position)
-		{
-			// Load the coloring shader
-			Effect effect = ModContent.Request<Effect>(Macrocosm.EffectAssetsPath + "SimpleColorMaskShading", AssetRequestMode.ImmediateLoad).Value;
-
-			// Pass the pattern icon to the shader via the S1 register
-			Main.graphics.GraphicsDevice.Textures[1] = IconTexture;
-
-			// Change sampler state for proper alignment at all UI scales 
-			SamplerState samplerState = spriteBatch.GraphicsDevice.SamplerStates[1];
-			Main.graphics.GraphicsDevice.SamplerStates[1] = SamplerState.PointClamp;
-
-			//Pass the color mask keys as Vector3s and configured colors as Vector4s
-			//Note: parameters are scalars intentionally, I manually unrolled the loop in the shader to reduce number of branch instructions -- Feldy
-			for (int i = 0; i < MaxColorCount; i++)
-			{
-				effect.Parameters["uColorKey" + i.ToString()].SetValue(ColorKeys[i]);
-				effect.Parameters["uColor" + i.ToString()].SetValue(GetColor(i).ToVector4());
-			}
-
-			var state = spriteBatch.SaveState();
-			spriteBatch.End();
-			spriteBatch.Begin(state.SpriteSortMode, state.BlendState, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, effect, state.Matrix);
- 
-			spriteBatch.Draw(IconTexture, position, null, Color.White, 0f, Vector2.Zero, 0.995f, SpriteEffects.None, 0f);
-
-			spriteBatch.End();
-			spriteBatch.Begin(state);
-
-			// Clear the tex registers  
-			Main.graphics.GraphicsDevice.Textures[1] = null;
-
-			// Restore the sampler states
-			Main.graphics.GraphicsDevice.SamplerStates[1] = samplerState;
 		}
 
 		/// <summary> Color mask keys </summary>
@@ -192,42 +138,5 @@ namespace Macrocosm.Content.Rockets.Customization
 			new Vector3(1f,.5f, 0f),     // Orange
 			new Vector3(0f,.5f, 1f)      // Azure
 		};
-
-
-		public Pattern Clone() => DeserializeData(SerializeData());
-
-        public static readonly Func<TagCompound, Pattern> DESERIALIZER = DeserializeData;
-
-		public TagCompound SerializeData()
-		{
-			TagCompound tag = new()
-			{
-				["Name"] = Name,
-				["ModuleName"] = ModuleName
-			};
-
-			// Save the user-changed colors
-			for (int i = 0; i < MaxColorCount; i++)
- 				if (ColorData[i].IsUserModifiable && !ColorData[i].HasColorFunction)
-					tag[$"UserColor{i}"] = ColorData[i].UserColor;  
- 
-			return tag;
-		}
-
-		public static Pattern DeserializeData(TagCompound tag)
-		{
-			string name = tag.GetString("Name");
-			string moduleName = tag.GetString("ModuleName");
-
-			Pattern originalPatternData = CustomizationStorage.GetPatternReference(moduleName, name);
-			Pattern pattern = new(moduleName, name, originalPatternData.UnlockedByDefault, originalPatternData.ColorData);
-
-			// Load the user-changed colors
-			for (int i = 0; i < MaxColorCount; i++)
-				if (tag.ContainsKey($"UserColor{i}") && pattern.ColorData[i].IsUserModifiable && !pattern.ColorData[i].HasColorFunction)
-					pattern.ColorData[i] = pattern.ColorData[i].WithUserColor(tag.Get<Color>($"UserColor{i}"));
-
-			return pattern;
-		}
 	}
 }
