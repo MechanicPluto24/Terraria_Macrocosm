@@ -10,6 +10,8 @@ Common: {
 	RandomizeColor: Randomize color
 	ApplyColor: Accept color changes
 	CancelColor: Discard color changes
+	ZoomIn: Zoom In
+	ZoomOut: Zoom Out
 }
 
 Rocket: {
@@ -18,13 +20,18 @@ Rocket: {
 		Navigation: Navigation
 		Checklist: Pre-flight checklist
 		Crew: Crew
-		ZoomIn: Zoom In
-		ZoomOut: Zoom Out
 		Payload: Payload
 		Fuel: Fuel
 		Customization: Customization
-		CustomizationApply: Apply rocket appearance changes
-		CustomizationCancel: Discard rocket appearance changes
+	}
+
+	Customization: {
+		Apply: Apply rocket appearance changes
+		Cancel: Discard rocket appearance changes
+		CopyModule: Copy module appearance
+		PasteModule: Paste module appearance
+		CopyRocket: Copy rocket appearance
+		PasteRocket: Paste rocket appearance
 		ResetModule: Reset module to default appearance
 		ResetRocket: Reset rocket to default appearance
 		ResetPattern: Reset pattern to default appearance

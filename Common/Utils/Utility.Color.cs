@@ -4,13 +4,7 @@ using Macrocosm.Common.Drawing.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
-using Terraria.DataStructures;
-using Terraria.GameContent;
-using Terraria.Graphics.Shaders;
-using Terraria.ObjectData;
-using Terraria.ID;
 using System.Globalization;
-using Microsoft.Xna.Framework.Audio;
 
 namespace Macrocosm.Common.Utils
 {
@@ -18,7 +12,7 @@ namespace Macrocosm.Common.Utils
     {
 		public static string GetHexText(this Color color) => "#" + color.Hex3().ToUpper();
 
-		public static bool TryGetColorFromHex(string hexString, out Vector3 hsl, float luminanceFactor = 1f)
+		public static bool TryGetColorFromHex(string hexString, out Color color)
 		{
 			if (hexString.StartsWith("#"))
 				hexString = hexString[1..];
@@ -28,13 +22,28 @@ namespace Macrocosm.Common.Utils
 				uint b = result & 0xFFu;
 				uint g = (result >> 8) & 0xFFu;
 				uint r = (result >> 16) & 0xFFu;
-				hsl = (new Color((int)r, (int)g, (int)b)).ToScaledHSL(luminanceFactor);
+				color = new Color((int)r, (int)g, (int)b);
 				return true;
 			}
 
-			hsl = Vector3.Zero;
+			color = Color.White;
 			return false;
 		}
+
+		public static bool TryGetColorFromHex(string hexString, out Vector3 hsl, float luminanceFactor = 1f)
+		{
+			if (TryGetColorFromHex(hexString, out Color rgb))
+			{
+				hsl = rgb.ToScaledHSL(luminanceFactor);
+				return true;
+			}
+			else
+			{
+				hsl = Vector3.Zero;
+				return false;
+			}
+		}
+
 
 		public static Vector3 RGBToHSL(Color color) => color.ToHSL();
 		public static Vector3 ToHSL(this Color color) => Main.rgbToHsl(color);

@@ -11,7 +11,7 @@ using Terraria.Graphics;
 
 namespace Macrocosm.Content.Rockets.Modules
 {
-    public abstract class RocketModule : TagSerializable
+    public abstract partial class RocketModule 
 	{
 		public string Name => GetType().Name;
 
@@ -115,45 +115,6 @@ namespace Macrocosm.Content.Rockets.Modules
 				Main.graphics.GraphicsDevice.SamplerStates[1] = samplerState1;
 				Main.graphics.GraphicsDevice.SamplerStates[2] = samplerState2;
 			}
-		}
-
-		protected virtual TagCompound SerializeModuleData() { return new TagCompound(); }
-		protected virtual void DeserializeModuleData(TagCompound tag) { }  
-
-
-		public static readonly Func<TagCompound, RocketModule> DESERIALIZER = DeserializeData;
-
-		public TagCompound SerializeData()
-		{
-			TagCompound tag = SerializeModuleData();
-
-			tag["Type"] = FullName;
-			tag["Name"] = Name;
-
-			if(Detail is not null)
-				tag["DetailName"] = Detail.Name;
-
-			if(Pattern is not null)
-				tag["Pattern"] = Pattern;
-
-			return tag;
-		}
-
-		public static RocketModule DeserializeData(TagCompound tag)
-		{
-			string type = tag.GetString("Type");
-			string name = tag.GetString("Name");
-
-			RocketModule module = Activator.CreateInstance(Type.GetType(type)) as RocketModule;
-			module.DeserializeModuleData(tag);
-
-			if (tag.ContainsKey("DetailName"))
-				module.Detail = CustomizationStorage.GetDetail(name, tag.GetString("DetailName"));
-
-			if (tag.ContainsKey("Pattern"))
-				module.Pattern = tag.Get<Pattern>("Pattern");
-
-			return module;
 		}
 	}
 }
