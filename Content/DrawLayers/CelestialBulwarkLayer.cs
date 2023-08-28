@@ -11,7 +11,7 @@ using Macrocosm.Common.Drawing;
 
 namespace Macrocosm.Content.DrawLayers
 {
-    public class CelestialBulwarkLayer : PlayerDrawLayer
+    internal class CelestialBulwarkLayer : PlayerDrawLayer
 	{
 		public override Position GetDefaultPosition()
 			=> new AfterParent(PlayerDrawLayers.Shield);

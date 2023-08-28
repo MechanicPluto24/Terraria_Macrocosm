@@ -6,7 +6,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Materials
 {
-	public class SiliconOre : ModItem
+	internal class SiliconOre : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

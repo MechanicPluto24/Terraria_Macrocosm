@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 namespace Macrocosm.Content.Items.Armor.Dianite
 {
     [AutoloadEquip(EquipType.Head)]
-    public class DianiteVisor : ModItem
+    internal class DianiteVisor : ModItem
     {
         public override void SetStaticDefaults()
         {

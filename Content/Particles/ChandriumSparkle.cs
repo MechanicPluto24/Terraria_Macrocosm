@@ -12,7 +12,7 @@ using Macrocosm.Content.Rockets;
 
 namespace Macrocosm.Content.Particles
 {
-    public class ChandriumSparkle : Particle
+    internal class ChandriumSparkle : Particle
 	{
 		public override string TexturePath => Macrocosm.EmptyTexPath;
 

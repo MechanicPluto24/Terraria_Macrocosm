@@ -8,7 +8,7 @@ namespace Macrocosm.Content.Items.Global
 {
 	public interface IDevItem { }
 
-	public class DevGlobalItem : GlobalItem
+	internal class DevGlobalItem : GlobalItem
 	{
 		public override bool AppliesToEntity(Item entity, bool lateInstantiation) => entity.ModItem is IDevItem;
 

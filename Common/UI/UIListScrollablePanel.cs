@@ -10,7 +10,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Common.UI
 {
-    public class UIListScrollablePanel : UIPanel, IEnumerable<UIElement>
+    internal class UIListScrollablePanel : UIPanel, IEnumerable<UIElement>
 	{
         public bool HideScrollbarIfNotScrollable { get; set; } = true;
 

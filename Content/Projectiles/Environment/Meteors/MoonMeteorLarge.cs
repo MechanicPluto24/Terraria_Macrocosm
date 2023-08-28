@@ -11,7 +11,7 @@ using Macrocosm.Common.Bases;
 
 namespace Macrocosm.Content.Projectiles.Environment.Meteors
 {
-    public class MoonMeteorLarge : BaseMeteor
+    internal class MoonMeteorLarge : BaseMeteor
     {
         public MoonMeteorLarge()
         {

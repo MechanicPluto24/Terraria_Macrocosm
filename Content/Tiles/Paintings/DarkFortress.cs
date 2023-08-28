@@ -9,7 +9,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Tiles.Paintings
 {
-	public class DarkFortress : ModTile
+	internal class DarkFortress : ModTile
 	{
 		public override void SetStaticDefaults()
 		{

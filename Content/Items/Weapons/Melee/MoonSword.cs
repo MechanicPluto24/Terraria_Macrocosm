@@ -9,7 +9,7 @@ using Terraria.DataStructures;
 
 namespace Macrocosm.Content.Items.Weapons.Melee
 {
-    public class MoonSword : ModItem
+    internal class MoonSword : ModItem
     {
         public override void SetStaticDefaults()
         {
@@ -45,7 +45,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 
    
     /*
-    public class ChampionsBladeProjectile : ModProjectile
+    internal class ChampionsBladeProjectile : ModProjectile
     {
         protected virtual float HoldoutRangeMin => 25;
         protected virtual float HoldoutRangeMax => 50;

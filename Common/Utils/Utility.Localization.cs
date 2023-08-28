@@ -6,7 +6,7 @@ using Terraria.Localization;
 
 namespace Macrocosm.Common.Utils
 {
-	public static partial class Utility
+	internal static partial class Utility
 	{
 		public static string GetLanguageValueOrEmpty(string key)
 		{

@@ -9,7 +9,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Tiles.Paintings
 {
-	public class Retributor : ModTile
+	internal class Retributor : ModTile
 	{
 		public override void SetStaticDefaults()
 		{

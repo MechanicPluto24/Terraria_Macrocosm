@@ -16,7 +16,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Macrocosm.Common.UI
 {
-	public class UIColorMenuHSL : UIPanel
+	internal class UIColorMenuHSL : UIPanel
 	{
 		public enum HSLSliderId
 		{

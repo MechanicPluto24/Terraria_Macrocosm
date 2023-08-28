@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 namespace Macrocosm.Content.Items.Armor.Astronaut
 {
     [AutoloadEquip(EquipType.Legs)]
-    public class AstronautLeggings : ModItem
+    internal class AstronautLeggings : ModItem
     {
         public override void SetStaticDefaults()
         {

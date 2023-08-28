@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Tools.Dianite
 {
-	public class DianitePickaxe : ModItem
+	internal class DianitePickaxe : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

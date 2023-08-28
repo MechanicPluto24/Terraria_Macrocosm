@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
-    public class MoonSwordSwing : ModProjectile
+    internal class MoonSwordSwing : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{

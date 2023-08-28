@@ -9,7 +9,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Tiles.Paintings
 {
-	public class Empress : ModTile
+	internal class Empress : ModTile
 	{
 		public override void SetStaticDefaults()
 		{

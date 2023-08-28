@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Tools.Selenite
 {
-	public class SeleniteHammer : ModItem
+	internal class SeleniteHammer : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

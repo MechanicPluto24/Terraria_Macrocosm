@@ -8,7 +8,7 @@ namespace Macrocosm.Content.Subworlds
     /// <summary>
     /// Not really a subworld but could be used for consistency purposes
     /// </summary>
-    public static class Earth
+    internal static class Earth
     {
 		public const double TimeRate = 1.0;
 

@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Summon
 {
-	public class ChandriumStaff : ModItem
+	internal class ChandriumStaff : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

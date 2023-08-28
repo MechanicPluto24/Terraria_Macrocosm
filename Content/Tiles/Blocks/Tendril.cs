@@ -5,7 +5,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Tiles.Blocks
 {
-    public class Tendril : ModTile
+    internal class Tendril : ModTile
     {
         public override void SetStaticDefaults()
         {

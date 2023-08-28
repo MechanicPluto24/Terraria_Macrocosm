@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Summon
 {
-	public class CalcicCane : ModItem
+	internal class CalcicCane : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

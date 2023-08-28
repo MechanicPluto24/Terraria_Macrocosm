@@ -5,7 +5,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Tiles.Walls
 {
-    public class PyramidPlateWall : ModWall
+    internal class PyramidPlateWall : ModWall
     {
         public override void SetStaticDefaults()
         {

@@ -5,7 +5,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Placeable.Paintings
 {
-	public class WhenDayBreaks : ModItem
+	internal class WhenDayBreaks : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

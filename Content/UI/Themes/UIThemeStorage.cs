@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 
 namespace Macrocosm.Content.UI.Themes
 {
-    public class UIThemeStorage : ILoadable
+    internal class UIThemeStorage : ILoadable
     {
         private static Dictionary<string, UITheme> themeStorage;
 

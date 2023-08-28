@@ -5,11 +5,10 @@ using Terraria.DataStructures;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
-using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Tiles.Bars
 {
-    public class DianiteBar : ModTile
+    internal class DianiteBar : ModTile
     {
         public override void SetStaticDefaults()
         {
@@ -24,12 +23,12 @@ namespace Macrocosm.Content.Tiles.Bars
             TileObjectData.addTile(Type);
 
 			LocalizedText name = CreateMapEntryName();
-			AddMapEntry(new Color(161, 68, 48), name); // localized text for "Metal Bar"
+			AddMapEntry(new Color(161, 68, 48), name);  
         }
 
         public override bool CreateDust(int i, int j, ref int type)
         {
-            type = Dust.NewDust(new Vector2(i, j).ToWorldCoordinates(), 16, 16, DustType<DianiteDust>());
+            type = Dust.NewDust(new Vector2(i, j).ToWorldCoordinates(), 16, 16, ModContent.DustType<DianiteDust>());
             return false;
         }
     }

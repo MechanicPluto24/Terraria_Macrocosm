@@ -7,7 +7,7 @@ using System;
 
 namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
 {
-	public class RadiusInfoElement : ValueUnitSpecialInfoElement
+	internal class RadiusInfoElement : ValueUnitSpecialInfoElement
 	{
 		public RadiusInfoElement(string specialValueKey) : base(specialValueKey) { }
 

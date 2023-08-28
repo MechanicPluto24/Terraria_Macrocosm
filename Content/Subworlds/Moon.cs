@@ -25,7 +25,7 @@ namespace Macrocosm.Content.Subworlds
     /// Why isn't anyone else working on this
     /// I have saved the day - Ryan
     /// </summary>
-    public class Moon : MacrocosmSubworld
+    internal class Moon : MacrocosmSubworld
     {
         private static Moon instance;
         public static Moon Instance { get { instance ??= new(); return instance; } }

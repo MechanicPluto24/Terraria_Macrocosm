@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 namespace Macrocosm.Content.Items.Armor.Dianite
 {
     [AutoloadEquip(EquipType.Body)]
-    public class DianiteBreastplate : ModItem
+    internal class DianiteBreastplate : ModItem
     {
         public override void SetStaticDefaults()
         {

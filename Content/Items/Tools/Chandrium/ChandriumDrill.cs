@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Tools.Chandrium
 {
-	public class ChandriumDrill : ModItem
+	internal class ChandriumDrill : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

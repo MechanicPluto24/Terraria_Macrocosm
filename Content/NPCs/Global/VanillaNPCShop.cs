@@ -5,7 +5,7 @@ using Macrocosm.Content.Items.Placeable.Paintings;
 
 namespace Macrocosm.Content.NPCs.Global
 {
-	public class VanillaNPCShop : GlobalNPC
+	internal class VanillaNPCShop : GlobalNPC
 	{
 		public override void ModifyShop(NPCShop shop)
 		{

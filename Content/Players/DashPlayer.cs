@@ -11,7 +11,7 @@ using Macrocosm.Common.Drawing;
 
 namespace Macrocosm.Content.Players
 {
-    public class DashPlayer : ModPlayer
+    internal class DashPlayer : ModPlayer
 	{
 
 		public bool AccDashHorizontal = false;

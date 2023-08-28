@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Environment.Meteors
 {
-    public class StardustMeteor : BaseMeteor
+    internal class StardustMeteor : BaseMeteor
     {
         public StardustMeteor()
         {

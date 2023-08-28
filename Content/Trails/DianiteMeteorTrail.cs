@@ -5,7 +5,7 @@ using Terraria.Graphics.Shaders;
 
 namespace Macrocosm.Content.Trails
 {
-	public class DianiteMeteorTrail : VertexTrail
+	internal class DianiteMeteorTrail : VertexTrail
 	{
 		public override MiscShaderData TrailShader => GameShaders.Misc["FlameLash"];
 		public override float Saturation => -1.4f;

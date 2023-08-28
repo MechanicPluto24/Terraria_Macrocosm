@@ -12,7 +12,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Environment.Meteors
 {
-    public class SolarMeteor : BaseMeteor
+    internal class SolarMeteor : BaseMeteor
     {
         public SolarMeteor()
         {

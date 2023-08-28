@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Utils
 {
-    public static partial class Utility
+    internal static partial class Utility
 	{
 		public static (int x, int y) SpawnTile => (Main.spawnTileX, Main.spawnTileY);
 		public static Point SpawnTilePoint => new(Main.spawnTileX, Main.spawnTileY);

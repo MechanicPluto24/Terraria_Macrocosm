@@ -11,7 +11,7 @@ using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Projectiles.Global
 {
-	public class MacrocosmProjectile : GlobalProjectile
+	internal class MacrocosmProjectile : GlobalProjectile
 	{
 		public override bool InstancePerEntity => true;
 		public VertexTrail Trail { get; set; }

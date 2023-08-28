@@ -10,7 +10,7 @@ using Macrocosm.Common.Subworlds;
 
 namespace Macrocosm.Common.Hooks
 {
-    public class MapBackgroundColor : ILoadable
+    internal class MapBackgroundColor : ILoadable
 	{
 		private static ushort skyPosition;
 		private static ushort dirtPosition;

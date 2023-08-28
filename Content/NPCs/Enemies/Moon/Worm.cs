@@ -24,7 +24,7 @@ namespace Macrocosm.Content.NPCs
 	/// <summary>
 	/// The base ExampleMod class for non-separating Worm enemies.
 	/// </summary>
-	public abstract class Worm : ModNPC
+	internal abstract class Worm : ModNPC
 	{
 		/*  ai[] usage:
 		 *  
@@ -140,7 +140,7 @@ namespace Macrocosm.Content.NPCs
 	/// <summary>
 	/// The base class for head segment NPCs of Worm enemies
 	/// </summary>
-	public abstract class WormHead : Worm
+	internal abstract class WormHead : Worm
 	{
 		public sealed override WormSegmentType SegmentType => WormSegmentType.Head;
 
@@ -577,7 +577,7 @@ namespace Macrocosm.Content.NPCs
 		}
 	}
 
-	public abstract class WormBody : Worm
+	internal abstract class WormBody : Worm
 	{
 		public sealed override WormSegmentType SegmentType => WormSegmentType.Body;
 
@@ -642,7 +642,7 @@ namespace Macrocosm.Content.NPCs
 	}
 
 	// Since the body and tail segments share the same AI
-	public abstract class WormTail : Worm
+	internal abstract class WormTail : Worm
 	{
 		public sealed override WormSegmentType SegmentType => WormSegmentType.Tail;
 

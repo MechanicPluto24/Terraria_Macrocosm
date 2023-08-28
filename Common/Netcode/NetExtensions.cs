@@ -13,7 +13,7 @@ using Terraria.ModLoader.IO;
 namespace Macrocosm.Common.Netcode
 {
 	/// <summary> Code by sucss & Feldy @ PellucidMod </summary>
-	public static class NetExtensions
+	internal static class NetExtensions
 	{
 		/// <summary>
 		/// Returns the <see cref="FieldInfo"/> of every field of <c>this</c> that has the <see cref="NetSyncAttribute"/>.

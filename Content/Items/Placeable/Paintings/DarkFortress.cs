@@ -5,7 +5,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Placeable.Paintings
 {
-	public class DarkFortress : ModItem
+	internal class DarkFortress : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

@@ -9,7 +9,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Ambient
 {
-	public abstract class RegolithRockSmallBase : ModTile
+	internal abstract class RegolithRockSmallBase : ModTile
 	{
 		// We want both tiles to use the same texture
 		public override string Texture => "Macrocosm/Content/Tiles/Ambient/RegolithRockSmall";
@@ -36,7 +36,7 @@ namespace Macrocosm.Content.Tiles.Ambient
 	}
 
 	// This is the fake tile that will be placed by the Rubblemaker.
-	public class RegolithRockSmallFake : RegolithRockSmallBase
+	internal class RegolithRockSmallFake : RegolithRockSmallBase
 	{
 		public override void SetStaticDefaults() {
 			// Call to base SetStaticDefaults. Must inherit static defaults from base type 
@@ -51,7 +51,7 @@ namespace Macrocosm.Content.Tiles.Ambient
 	}
 
 	// This is the natural tile, this version is placed during world generation
-	public class RegolithRockSmallNatural : RegolithRockSmallBase
+	internal class RegolithRockSmallNatural : RegolithRockSmallBase
 	{
 		public override void SetStaticDefaults() {
 			base.SetStaticDefaults();

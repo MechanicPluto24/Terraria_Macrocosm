@@ -8,7 +8,7 @@ namespace Macrocosm.Content.Dusts
 	/// <summary>
 	/// Using vanilla texture of DustID.Smoke
 	/// </summary>
-	public class SmokeDust : ModDust
+	internal class SmokeDust : ModDust
 	{
 		public override string Texture => null;
 

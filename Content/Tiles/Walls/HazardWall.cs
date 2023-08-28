@@ -5,7 +5,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Tiles.Walls
 {
-    public class HazardWall : ModWall
+    internal class HazardWall : ModWall
     {
         public override void SetStaticDefaults()
         {

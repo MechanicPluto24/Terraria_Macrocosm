@@ -12,7 +12,7 @@ using Macrocosm.Content.Projectiles.Environment.Sands;
 
 namespace Macrocosm.Common.Utils
 {
-	public static partial class Utility
+	internal static partial class Utility
 	{
 		/// <summary>
 		/// Gets the top-left tile of a multitile

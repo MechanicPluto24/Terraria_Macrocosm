@@ -5,7 +5,7 @@ using Macrocosm.Content.Items.Global;
 
 namespace Macrocosm.Content.Items.Dev
 {
-	public class BanHammer : ModItem, IDevItem
+	internal class BanHammer : ModItem, IDevItem
 	{
 		public override void SetStaticDefaults()
 		{

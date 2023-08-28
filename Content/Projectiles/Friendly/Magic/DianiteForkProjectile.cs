@@ -15,7 +15,7 @@ using Terraria.ModLoader;
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
     // Parent projectile class below
-    public class DianiteForkProjectile : ModProjectile
+    internal class DianiteForkProjectile : ModProjectile
     {
         public override void SetStaticDefaults()
         {
@@ -268,7 +268,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         }
     }
 
-    public class DianiteForkCoreProjectile : ModProjectile
+    internal class DianiteForkCoreProjectile : ModProjectile
     {
         public override string Texture => "Terraria/Images/Projectile_0";
 

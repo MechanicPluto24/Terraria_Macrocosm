@@ -7,7 +7,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Tiles.Ores
 {
-    public class SeleniteOre : ModTile
+    internal class SeleniteOre : ModTile
     {
         public override void SetStaticDefaults()
         {

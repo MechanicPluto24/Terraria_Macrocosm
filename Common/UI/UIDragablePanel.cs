@@ -6,7 +6,7 @@ using Terraria.UI;
 namespace Macrocosm.Common.UI
 {
 	/// <summary> Dragable UI panel, courtesy of ExampleMod </summary>
-	public class UIDragablePanel : UIPanel
+	internal class UIDragablePanel : UIPanel
 	{
 		public bool IgnoreChildren = true;
 

@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Melee
 {
-	public class Noxsaber : ModItem
+	internal class Noxsaber : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

@@ -5,7 +5,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Tiles.Walls
 {
-    public class RegolithBrickWall : ModWall
+    internal class RegolithBrickWall : ModWall
     {
         public override void SetStaticDefaults()
         {

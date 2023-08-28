@@ -21,7 +21,7 @@ using Terraria.ModLoader.IO;
 namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
 {
     [AutoloadHead]
-	public class MoonChampion : ModNPC
+	internal class MoonChampion : ModNPC
 	{
 		public bool HasBeenChatWithForTheFirstTime = false;
 

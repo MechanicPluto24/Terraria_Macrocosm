@@ -6,7 +6,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Tiles.Blocks
 {
-    public class Hemostone : ModTile
+    internal class Hemostone : ModTile
     {
         public override void SetStaticDefaults()
         {

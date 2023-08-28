@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Placeable.Furniture
 {
-    public class TitaniumLoom : ModItem
+    internal class TitaniumLoom : ModItem
     {
 		public override void SetStaticDefaults()
 		{

@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Thrown
 {
-	public class MoonPhaseGlobeProjectile : ModProjectile
+	internal class MoonPhaseGlobeProjectile : ModProjectile
 	{
 		public override string Texture => "Macrocosm/Content/Items/Consumables/Throwable/MoonPhaseGlobe";
 

@@ -17,7 +17,7 @@ namespace Macrocosm.Common.Netcode
         SyncModProjectile
 	}
 
-	public class PacketHandler
+	internal class PacketHandler
 	{
 		public static void HandlePacket(BinaryReader reader, int whoAmI)
 		{

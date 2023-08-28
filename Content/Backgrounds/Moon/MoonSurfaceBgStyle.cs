@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Backgrounds.Moon
 {
-	public class MoonSurfaceBgStyle : ModSurfaceBackgroundStyle
+	internal class MoonSurfaceBgStyle : ModSurfaceBackgroundStyle
 	{
 		public override int ChooseFarTexture() => -1;
 		public override int ChooseMiddleTexture() => -1;

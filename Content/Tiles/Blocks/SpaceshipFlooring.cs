@@ -5,7 +5,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Tiles.Blocks
 {
-    public class SpaceshipFlooring : ModTile
+    internal class SpaceshipFlooring : ModTile
     {
         public override void SetStaticDefaults()
         {

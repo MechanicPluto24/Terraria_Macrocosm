@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Hostile
 {
-	public class PhantasmalImpSmall : ModProjectile
+	internal class PhantasmalImpSmall : ModProjectile
 	{
 		public Player TargetPlayer => Main.player[(int)Projectile.ai[2]];
 

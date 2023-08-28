@@ -9,7 +9,7 @@ using ReLogic.Content;
 
 namespace Macrocosm.Content.Rockets.Modules
 {
-    public class EngineModule : AnimatedRocketModule
+    internal class EngineModule : AnimatedRocketModule
     {
 		public override int DrawPriority => 0;
 		public bool RearLandingLegRaised { get; set; } = false;

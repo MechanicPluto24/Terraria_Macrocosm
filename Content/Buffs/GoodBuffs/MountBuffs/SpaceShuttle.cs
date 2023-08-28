@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Buffs.GoodBuffs.MountBuffs
 {
-	public class SpaceShuttle : ModBuff
+	internal class SpaceShuttle : ModBuff
 	{
 		public override void SetStaticDefaults()
 		{

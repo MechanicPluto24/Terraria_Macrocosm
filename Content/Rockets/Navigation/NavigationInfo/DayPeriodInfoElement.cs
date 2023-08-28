@@ -8,7 +8,7 @@ using System;
 
 namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
 {
-    public class DayPeriodInfoElement : ValueUnitSpecialInfoElement
+    internal class DayPeriodInfoElement : ValueUnitSpecialInfoElement
     {
 		public DayPeriodInfoElement(string specialValueKey) : base(specialValueKey) { }
 
