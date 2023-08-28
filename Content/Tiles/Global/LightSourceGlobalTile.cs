@@ -7,7 +7,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Global
 {
-	public class LightSourceGlobalTile : GlobalTile
+	internal class LightSourceGlobalTile : GlobalTile
 	{
 		/// <summary>
 		/// Turns off placed torches, campfires and other blocks with fire when placed on our subworlds 

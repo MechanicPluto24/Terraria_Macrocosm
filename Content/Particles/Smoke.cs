@@ -8,7 +8,7 @@ using Terraria;
 
 namespace Macrocosm.Content.Particles
 {
-    public class Smoke : Particle
+    internal class Smoke : Particle
     {
         public override int FrameNumber => 3;
         public override bool SetRandomFrameOnSpawn => true;

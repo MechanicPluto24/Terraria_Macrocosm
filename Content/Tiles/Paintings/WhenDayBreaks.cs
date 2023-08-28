@@ -9,7 +9,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Tiles.Paintings
 {
-	public class WhenDayBreaks : ModTile
+	internal class WhenDayBreaks : ModTile
 	{
 		public override void SetStaticDefaults()
 		{

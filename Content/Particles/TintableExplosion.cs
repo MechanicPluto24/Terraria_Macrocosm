@@ -6,15 +6,13 @@ using Macrocosm.Common.Utils;
 
 namespace Macrocosm.Content.Particles
 {
-	public class TintableExplosion : Particle
+	internal class TintableExplosion : Particle
 	{
 		public override int TrailCacheLenght => 15;
 
-		public Projectile Owner;
 		public Color DrawColor;
 		public int NumberOfInnerReplicas;
 		public float ReplicaScalingFactor;
-		public BlendState BlendState;
 
 		public override int FrameNumber => 7;
 		public override int FrameSpeed => 4;

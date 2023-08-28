@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Consumables.Throwable
 {
-	public class MoonPhaseGlobe : ModItem
+	internal class MoonPhaseGlobe : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

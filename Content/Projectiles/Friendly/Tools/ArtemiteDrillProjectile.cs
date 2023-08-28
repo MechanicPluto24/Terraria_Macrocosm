@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Tools
 {
-	public class ArtemiteDrillProjectile : ModProjectile
+	internal class ArtemiteDrillProjectile : ModProjectile
 	{
 		public override void SetDefaults()
 		{

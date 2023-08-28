@@ -13,7 +13,7 @@ using Terraria.ModLoader;
 namespace Macrocosm.Content.Projectiles.Hostile
 {
     //Had to salvage it from an extracted DLL, so no comments.  Oops.  -- absoluteAquarian
-    public class FlamingMeteor : ModProjectile
+    internal class FlamingMeteor : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{

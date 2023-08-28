@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
-	public class ArtemiteSwordProjectile : ModProjectile
+	internal class ArtemiteSwordProjectile : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{

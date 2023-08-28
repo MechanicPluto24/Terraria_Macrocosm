@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Tombstones
 {
-    public class MoonTombstone : ModProjectile
+    internal class MoonTombstone : ModProjectile
 	{
 		public const int normalCount = 1;
 		public const int goldenCount = 1;

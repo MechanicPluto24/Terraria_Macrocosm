@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Tools.Aluminum
 {
-	public class AluminumHammer : ModItem
+	internal class AluminumHammer : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

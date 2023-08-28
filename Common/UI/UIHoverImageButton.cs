@@ -11,7 +11,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Common.UI
 {
-	public class UIHoverImageButton : UIElement
+	internal class UIHoverImageButton : UIElement
 	{
 		/// <summary> Tooltip text, shown on hover </summary>
 		public LocalizedText HoverText { get; set; }

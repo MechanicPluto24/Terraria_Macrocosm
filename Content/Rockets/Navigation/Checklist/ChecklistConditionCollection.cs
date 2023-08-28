@@ -5,7 +5,7 @@ using System.Collections;
 
 namespace Macrocosm.Content.Rockets.Navigation.Checklist
 {
-    public class ChecklistConditionCollection : IEnumerable<ChecklistCondition>
+    internal class ChecklistConditionCollection : IEnumerable<ChecklistCondition>
     {
 		private List<ChecklistCondition> conditions = new();
 

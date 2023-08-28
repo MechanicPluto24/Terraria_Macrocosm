@@ -7,7 +7,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
-    public class InfoElement 
+    internal class InfoElement 
     {
         protected float value = float.MinValue;
         protected string specialValueKey = "default";

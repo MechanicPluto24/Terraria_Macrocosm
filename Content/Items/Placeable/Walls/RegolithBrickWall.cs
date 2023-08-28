@@ -5,7 +5,7 @@ using Macrocosm.Content.Items.Placeable.Blocks;
 
 namespace Macrocosm.Content.Items.Placeable.Walls
 {
-    public class RegolithBrickWall : ModItem
+    internal class RegolithBrickWall : ModItem
     {
         public override void SetStaticDefaults()
         {

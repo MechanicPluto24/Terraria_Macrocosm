@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Utils
 {
-    public partial class Utility
+    internal partial class Utility
     {
         public static void Draw(this Vector2 position, int drawTime)
         {
@@ -28,7 +28,7 @@ namespace Macrocosm.Common.Utils
         }
     }
 
-    public class DebugDrawData
+    internal class DebugDrawData
     {
         public DebugDrawData(Vector2 position, int drawTime)
         {
@@ -53,7 +53,7 @@ namespace Macrocosm.Common.Utils
         }
     }
 
-    public class DebugDrawing : ILoadable
+    internal class DebugDrawing : ILoadable
     {
         public static List<DebugDrawData> DrawDatas { get; private set; }
         private static Texture2D DebugCrossTexture { get; set; }

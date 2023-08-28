@@ -12,7 +12,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.MeteorChunks
 {
-	public class MeteoricChunk : ModItem
+	internal class MeteoricChunk : ModItem
 	{
 		private int frameY = 0;
 		private bool flip = false;

@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 namespace Macrocosm.Content.Items.Armor.Aluminum
 {
     [AutoloadEquip(EquipType.Body)]
-    public class AluminumBreastplate : ModItem
+    internal class AluminumBreastplate : ModItem
     {
         public override void SetStaticDefaults()
         {

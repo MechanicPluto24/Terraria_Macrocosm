@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 
 namespace Macrocosm.Common.UI
 {
-	public class UIInputTextField : UIElement
+	internal class UIInputTextField : UIElement
 	{
 
 		private readonly string hintText;

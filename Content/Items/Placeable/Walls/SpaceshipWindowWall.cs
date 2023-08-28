@@ -6,7 +6,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Placeable.Walls
 {
-    public class SpaceshipWindowWall : ModItem
+    internal class SpaceshipWindowWall : ModItem
     {
         public override void SetStaticDefaults()
         {

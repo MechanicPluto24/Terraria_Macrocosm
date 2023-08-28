@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Modules
 {
-    public class BoosterLeft : BoosterRight
+    internal class BoosterLeft : BoosterRight
     {
 		public override Rectangle Hitbox => base.Hitbox with { X = base.Hitbox.X - 78 };
 

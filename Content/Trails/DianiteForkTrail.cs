@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Trails
 {
-	public class DianiteForkTrail : VertexTrail
+	internal class DianiteForkTrail : VertexTrail
 	{
 		private static MiscShaderData shader = new MiscShaderData(Main.VertexPixelShaderRef, "MagicMissile")
 			.UseProjectionMatrix(doUse: true)

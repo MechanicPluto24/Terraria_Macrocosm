@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Melee
 {
-	public class AluminumBroadsword : ModItem
+	internal class AluminumBroadsword : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

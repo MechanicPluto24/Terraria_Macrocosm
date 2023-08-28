@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Macrocosm.Content.Rockets
 {
-	public partial class Rocket 
+	internal partial class Rocket 
 	{
 		public Rocket Clone() => DeserializeData(SerializeData());
 

@@ -8,7 +8,7 @@ using Terraria.ID;
 
 namespace Macrocosm.Common.Utils
 {
-	public static partial class Utility
+	internal static partial class Utility
 	{
 		/// <summary> Returns whether this item instance is a torch </summary>
 		public static bool IsTorch(this Item item) => TorchGlobalItem.IsTorch(item);

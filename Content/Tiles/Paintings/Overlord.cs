@@ -9,7 +9,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Tiles.Paintings
 {
-	public class Overlord : ModTile
+	internal class Overlord : ModTile
 	{
 		public override void SetStaticDefaults()
 		{

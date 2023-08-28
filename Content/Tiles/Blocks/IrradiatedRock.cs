@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles.Blocks
 {
-    public class IrradiatedRock : ModTile
+    internal class IrradiatedRock : ModTile
     {
         public override void SetStaticDefaults()
         {

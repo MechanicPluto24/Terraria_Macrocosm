@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Melee
 {
-	public class Crucible : ModItem
+	internal class Crucible : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

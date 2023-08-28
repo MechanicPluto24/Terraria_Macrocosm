@@ -5,7 +5,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Tiles.Walls
 {
-    public class SpaceshipWindowWall : ModWall
+    internal class SpaceshipWindowWall : ModWall
     {
         public override void SetStaticDefaults()
         {

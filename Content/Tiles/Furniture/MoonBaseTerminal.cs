@@ -9,7 +9,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture
 {
-    public class MoonBaseTerminal : ModTile
+    internal class MoonBaseTerminal : ModTile
     {
         public override void SetStaticDefaults()
         {

@@ -19,7 +19,8 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             CenterYOffset = 9,
             MuzzleOffset = 30,
             Recoil = (9, 1.8f),
-			UseBackArm = false,
+			RecoilStartFrame = 3,
+			UseBackArm = false
         };
 
         public override float? ProjectileScale => 0.75f;

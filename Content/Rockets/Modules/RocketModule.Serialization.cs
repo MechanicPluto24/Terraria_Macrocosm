@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 
 namespace Macrocosm.Content.Rockets.Modules
 {
-    public abstract partial class RocketModule : TagSerializable
+    internal abstract partial class RocketModule : TagSerializable
 	{
 		protected virtual JObject SerializeCustomizationData() { return new JObject(); }
 		protected virtual void DeserializeCustomizationData(string json) { }

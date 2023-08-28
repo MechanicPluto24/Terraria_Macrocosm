@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Tools.Selenite
 {
-	public class SeleniteDrill : ModItem
+	internal class SeleniteDrill : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

@@ -11,7 +11,7 @@ using Macrocosm.Content.Particles;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-    public class TychoBullet : ModProjectile, IBullet
+    internal class TychoBullet : ModProjectile, IBullet
 	{
 		public override void SetStaticDefaults()
 		{
@@ -28,6 +28,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		}
 
 		bool spawned = false;
+		int flashTimer;
 		public override bool PreAI()
 		{
 			if (!spawned)
@@ -35,10 +36,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 				if(!Main.dedServ)
 					SoundEngine.PlaySound(SFX.DesertEagleShoot with { Volume = 0.3f }, Projectile.position);
 
-				var flash = Particle.CreateParticle<GunFireRing>(Projectile.position, Projectile.velocity * 0.4f, 1f, Projectile.velocity.ToRotation(), false);
-
 				spawned = true;
 			}
+
+			if(flashTimer++ == 1)
+				Particle.CreateParticle<GunFireRing>(Projectile.position, Projectile.velocity * 0.8f, 1f, Projectile.velocity.ToRotation(), false);
 
 			Lighting.AddLight(Projectile.position, new Color(255, 202, 141).ToVector3() * 0.6f);
 

@@ -9,7 +9,7 @@ using ReLogic.Content;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
-    public class UIInfoElement : UIPanel
+    internal class UIInfoElement : UIPanel
     {
         private readonly Asset<Texture2D> icon;
         private readonly Asset<Texture2D> extraIcon;

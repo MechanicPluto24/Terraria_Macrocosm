@@ -13,7 +13,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Environment.Debris
 {
-    public class RegolithDebris : ModProjectile
+    internal class RegolithDebris : ModProjectile
     {
         private const int TimeToLive = 60;
 

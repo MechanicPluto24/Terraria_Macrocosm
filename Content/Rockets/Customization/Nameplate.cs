@@ -9,7 +9,7 @@ using Macrocosm.Common.DataStructures;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-    public class Nameplate : TagSerializable
+    internal class Nameplate : TagSerializable
     {
 		// the text
 		private string text = "";

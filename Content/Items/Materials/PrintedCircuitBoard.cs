@@ -5,7 +5,7 @@ using Terraria.GameContent.Creative;
 
 namespace Macrocosm.Content.Items.Materials
 {
-	public class PrintedCircuitBoard : ModItem
+	internal class PrintedCircuitBoard : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

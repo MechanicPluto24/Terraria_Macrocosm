@@ -9,7 +9,7 @@ using Macrocosm.Content.Rockets.Navigation.Checklist;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
-    public class UIMapTarget : UIElement
+    internal class UIMapTarget : UIElement
     {
         /// <summary> The panel instance this target belongs to </summary>
         public UINavigationPanel OwnerPanel { get; set; }

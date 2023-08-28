@@ -3,7 +3,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Currency
 {
-	public class CurrencyManager : ILoadable
+	internal class CurrencyManager : ILoadable
 	{
 		public void Load(Mod mod)
 		{

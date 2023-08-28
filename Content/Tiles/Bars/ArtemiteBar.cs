@@ -1,3 +1,4 @@
+using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -7,7 +8,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Bars
 {
-    public class ArtemiteBar : ModTile
+    internal class ArtemiteBar : ModTile
     {
         public override void SetStaticDefaults()
         {
@@ -24,5 +25,12 @@ namespace Macrocosm.Content.Tiles.Bars
             LocalizedText name = CreateMapEntryName();
 			AddMapEntry(new Color(96, 98, 109), name);
         }
-    }
+
+		public override bool CreateDust(int i, int j, ref int type)
+		{
+			type = Dust.NewDust(new Vector2(i, j).ToWorldCoordinates(), 16, 16, ModContent.DustType<ArtemiteDust>());
+			return false;
+		}
+
+	}
 }

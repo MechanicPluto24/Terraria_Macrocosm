@@ -6,7 +6,7 @@ using Macrocosm.Common.Subworlds;
 
 namespace Macrocosm.Content.Items.Global
 {
-	public class GravityGlobalItem : GlobalItem
+	internal class GravityGlobalItem : GlobalItem
 	{
 		public override void Update(Item item, ref float gravity, ref float maxFallSpeed)
 		{

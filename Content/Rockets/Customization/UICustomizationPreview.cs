@@ -13,7 +13,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
-    public class UICustomizationPreview : UIPanel, IRocketDataConsumer
+    internal class UICustomizationPreview : UIPanel, IRocketDataConsumer
     {
         public Rocket Rocket { get; set; } 
 

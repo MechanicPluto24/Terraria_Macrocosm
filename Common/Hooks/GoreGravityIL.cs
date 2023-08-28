@@ -7,7 +7,7 @@ using Macrocosm.Common.Subworlds;
 
 namespace Macrocosm.Common.Hooks
 {
-    public class GoreGravityIL : ILoadable
+    internal class GoreGravityIL : ILoadable
 	{
 		public void Load(Mod mod)
 		{

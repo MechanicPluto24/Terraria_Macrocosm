@@ -18,7 +18,7 @@ namespace Macrocosm.Content.Rockets
         AfterNPCs
     } 
 
-    public class RocketManager : ModSystem
+    internal class RocketManager : ModSystem
     {
         public static Rocket[] Rockets { get; private set; }
 

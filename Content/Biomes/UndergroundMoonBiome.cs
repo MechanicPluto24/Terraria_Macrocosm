@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Biomes
 {
-    public class UndergroundMoonBiome : MoonBiome
+    internal class UndergroundMoonBiome : MoonBiome
 	{
 		public override SceneEffectPriority Priority => SceneEffectPriority.Environment;
 		public override Color? BackgroundColor => base.BackgroundColor;

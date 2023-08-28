@@ -11,7 +11,7 @@ namespace Macrocosm.Content.Dusts
 	/// <summary>
 	/// Using vanilla texture and adapted from DustID.FrameBurst (270)
 	/// </summary>
-	public class FlamingMeteorDust : ModDust
+	internal class FlamingMeteorDust : ModDust
 	{
 		public override string Texture => null;
 

@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Items.Global
 	/// Adds a glowmask field to GlobalItems.
 	/// Code by Hallam 
 	/// </summary>
-	public class GlowmaskGlobalItem : GlobalItem
+	internal class GlowmaskGlobalItem : GlobalItem
 	{
 		public Texture2D Texture = null;
 		public int GlowOffsetY = 0;

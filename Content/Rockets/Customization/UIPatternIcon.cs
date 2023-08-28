@@ -11,7 +11,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Common.UI
 {
-	public class UIPatternIcon : UIFocusIconButton, IFocusable
+	internal class UIPatternIcon : UIFocusIconButton, IFocusable
 	{
 		public Pattern Pattern { get; set; }
 

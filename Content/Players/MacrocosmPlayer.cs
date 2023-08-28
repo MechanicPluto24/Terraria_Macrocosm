@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Players
 		Tier3
 	}
 
-    public class MacrocosmPlayer : ModPlayer
+    internal class MacrocosmPlayer : ModPlayer
 	{
 		public SpaceProtection SpaceProtection = SpaceProtection.None;
 

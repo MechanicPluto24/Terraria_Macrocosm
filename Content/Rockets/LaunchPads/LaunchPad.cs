@@ -14,7 +14,7 @@ using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Rockets.LaunchPads
 {
-	public class LaunchPad : TagSerializable
+	internal class LaunchPad : TagSerializable
 	{
 		[NetSync] public Point16 StartTile;
 		[NetSync] public Point16 EndTile;

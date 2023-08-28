@@ -9,7 +9,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Tiles.Paintings
 {
-	public class Freedomfaller : ModTile
+	internal class Freedomfaller : ModTile
 	{
 		public override void SetStaticDefaults()
 		{

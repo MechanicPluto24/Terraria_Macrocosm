@@ -14,7 +14,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets
 {
-    public class RocketUISystem : ModSystem
+    internal class RocketUISystem : ModSystem
 	{
 		public static RocketUISystem Instance => ModContent.GetInstance<RocketUISystem>();
 		public UserInterface Interface { get; set; }

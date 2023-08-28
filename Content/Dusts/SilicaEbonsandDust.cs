@@ -3,7 +3,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Dusts
 {
-	public class SilicaEbonsandDust : ModDust
+	internal class SilicaEbonsandDust : ModDust
 	{
 		public override bool Update(Dust dust)
 		{

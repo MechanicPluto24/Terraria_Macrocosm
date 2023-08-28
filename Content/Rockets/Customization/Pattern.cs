@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-    public partial class Pattern : IUnlockable
+    internal partial class Pattern : IUnlockable
     {
 		public string Name { get; }
 

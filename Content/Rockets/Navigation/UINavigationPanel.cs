@@ -13,7 +13,7 @@ using System.IO;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
-    public class UINavigationPanel : UIPanel
+    internal class UINavigationPanel : UIPanel
     {
         public UINavigationMap CurrentMap;
 

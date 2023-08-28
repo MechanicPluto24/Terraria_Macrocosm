@@ -10,7 +10,7 @@ using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Rockets.LaunchPads
 {
-	public class LaunchPadManager : ModSystem
+	internal class LaunchPadManager : ModSystem
 	{
 		private static Dictionary<string, List<LaunchPad>> launchPadStorage;
 

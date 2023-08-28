@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles.Global
 {
-	public class SubworldGlobalWall : GlobalWall
+	internal class SubworldGlobalWall : GlobalWall
 	{
 		/// <summary>
 		/// Unnoticeable lighting due to bad rendering at some subworld heigths for pitch black walls

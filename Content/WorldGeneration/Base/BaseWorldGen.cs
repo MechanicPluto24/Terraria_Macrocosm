@@ -19,7 +19,7 @@ namespace Macrocosm.Content.WorldGeneration.Base
 	 *  CanPlace(x, y, tileID, wallID): an optional Func that can be used to have custom behavior about placing tiles. 
 	 *  CanPlaceWall(x, y, tileID, wallID): an optional Func that can be used to have custom behavior about placing walls. 
 	 */
-    public class GenConditions
+    internal class GenConditions
     {
         public int[] tiles;
         public int[] walls;
@@ -41,7 +41,7 @@ namespace Macrocosm.Content.WorldGeneration.Base
     }
 
     #region Custom GenShapes
-    public class ShapeChasmSideways : GenShape
+    internal class ShapeChasmSideways : GenShape
     {
         public int startheight = 20, endheight = 5, length = 60, variance, randomHeading;
         public float[] heightVariance;
@@ -109,7 +109,7 @@ namespace Macrocosm.Content.WorldGeneration.Base
         }
     }
 
-    public class ShapeChasm : GenShape
+    internal class ShapeChasm : GenShape
     {
         public int startwidth = 20, endwidth = 5, depth = 60, variance, randomHeading;
         public float[] widthVariance;
@@ -179,7 +179,7 @@ namespace Macrocosm.Content.WorldGeneration.Base
     #endregion
 
     #region Custom GenActions
-    public class IsInWorld : GenAction
+    internal class IsInWorld : GenAction
     {
         public override bool Apply(Point origin, int x, int y, params object[] args)
         {
@@ -189,7 +189,7 @@ namespace Macrocosm.Content.WorldGeneration.Base
         }
     }
 
-    public class SetModTile : GenAction
+    internal class SetModTile : GenAction
     {
         public ushort type;
         public short frameX = -1;
@@ -233,7 +233,7 @@ namespace Macrocosm.Content.WorldGeneration.Base
         }
     }
 
-    public class SetMapBrightness : GenAction
+    internal class SetMapBrightness : GenAction
     {
         public byte brightness;
 
@@ -251,7 +251,7 @@ namespace Macrocosm.Content.WorldGeneration.Base
     }
 
 
-    public class PlaceModWall : GenAction
+    internal class PlaceModWall : GenAction
     {
         public ushort type;
         public bool neighbors;
@@ -288,7 +288,7 @@ namespace Macrocosm.Content.WorldGeneration.Base
         }
     }
 
-    public class RadialDitherTopMiddle : GenAction
+    internal class RadialDitherTopMiddle : GenAction
     {
         private int _width, _height;
         private float _innerRadius, _outerRadius;
@@ -315,7 +315,7 @@ namespace Macrocosm.Content.WorldGeneration.Base
         }
     }
 
-    public class ClearTileSafely : GenAction
+    internal class ClearTileSafely : GenAction
     {
         private bool _frameNeighbors;
 
@@ -342,14 +342,14 @@ namespace Macrocosm.Content.WorldGeneration.Base
     #endregion
 
     #region Custom Conditions
-    public class IsNotSloped : GenCondition
+    internal class IsNotSloped : GenCondition
     {
         protected override bool CheckValidity(int x, int y)
         {
             return _tiles[x, y].HasTile && _tiles[x, y].Slope == 0 && !_tiles[x, y].IsHalfBlock;
         }
     }
-    public class IsSloped : GenCondition
+    internal class IsSloped : GenCondition
     {
         protected override bool CheckValidity(int x, int y)
         {

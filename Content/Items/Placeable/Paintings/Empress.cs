@@ -5,7 +5,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Placeable.Paintings
 {
-	public class Empress : ModItem
+	internal class Empress : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

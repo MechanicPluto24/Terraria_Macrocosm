@@ -16,7 +16,7 @@ using System.IO;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-	public class CustomizationStorage : ModSystem
+	internal class CustomizationStorage : ModSystem
 	{
 		public static bool Initialized { get; private set; }
 

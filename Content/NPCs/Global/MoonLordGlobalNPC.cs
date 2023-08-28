@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Global
 {
-	public class MoonLordGlobalNPC : GlobalNPC
+	internal class MoonLordGlobalNPC : GlobalNPC
 	{
 		public override bool AppliesToEntity(NPC entity, bool lateInstantiation) => entity.type == NPCID.MoonLordCore;
 

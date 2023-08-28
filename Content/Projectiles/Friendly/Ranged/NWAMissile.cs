@@ -13,7 +13,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-	public class NWAMissile : ModProjectile, IExplosive
+	internal class NWAMissile : ModProjectile, IExplosive
 	{
 		public ref float AI_HomingTimer => ref Projectile.ai[0];
 		public ref float AI_AccelerationTimer => ref Projectile.ai[1];

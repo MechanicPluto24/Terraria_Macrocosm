@@ -15,7 +15,7 @@ using Macrocosm.Content.Particles;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
-	public class DianiteMeteor : ModProjectile
+	internal class DianiteMeteor : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{
