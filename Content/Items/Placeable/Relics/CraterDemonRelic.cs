@@ -5,7 +5,7 @@ using Terraria.GameContent.Creative;
 
 namespace Macrocosm.Content.Items.Placeable.Relics
 {
-	public class CraterDemonRelic : ModItem
+	internal class CraterDemonRelic : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

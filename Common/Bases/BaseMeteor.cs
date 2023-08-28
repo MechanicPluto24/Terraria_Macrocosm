@@ -8,7 +8,7 @@ using Macrocosm.Content.Projectiles.Global;
 
 namespace Macrocosm.Common.Bases
 {
-    public abstract class BaseMeteor : ModProjectile, IExplosive
+    internal abstract class BaseMeteor : ModProjectile, IExplosive
     {
         public int Width;
         public int Height;

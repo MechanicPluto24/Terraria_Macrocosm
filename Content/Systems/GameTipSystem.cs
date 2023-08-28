@@ -11,7 +11,7 @@ using SubworldLibrary;
 namespace Macrocosm.Common.Systems
 {
 
-    public class GameTipSystem : ModSystem
+    internal class GameTipSystem : ModSystem
 	{
 		public const string LoadingScreenTipsLocalizationPath = "Mods.Macrocosm.UI.LoadingScreenTips.";
 

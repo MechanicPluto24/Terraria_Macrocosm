@@ -3,7 +3,7 @@ using Terraria.ID;
 
 namespace Macrocosm.Content.Items.Placeable.Blocks
 {
-	public class SilicaEbonsand : ModItem
+	internal class SilicaEbonsand : ModItem
 	{
 		public override void SetStaticDefaults() 
 		{

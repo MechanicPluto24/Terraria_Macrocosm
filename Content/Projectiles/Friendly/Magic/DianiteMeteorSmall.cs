@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
-	public class DianiteMeteorSmall : DianiteMeteor
+	internal class DianiteMeteorSmall : DianiteMeteor
 	{
 		public override void SetStaticDefaults()
 		{

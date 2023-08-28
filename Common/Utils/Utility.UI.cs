@@ -13,7 +13,7 @@ using Microsoft.Xna.Framework;
 
 namespace Macrocosm.Common.Utils
 {
-	public static partial class Utility
+	internal static partial class Utility
 	{
         /// <summary> Normalized UI scale, ranges from 0.0f to 1.0f </summary>
 		public static float NormalizedUIScale => (Main.UIScale - 0.5f) / (2.0f - 0.5f);

@@ -2,7 +2,7 @@
 
 namespace Macrocosm.Content.Sounds
 {
-    public static class SFX
+    internal static class SFX
     {
         public const string SFXPath = Macrocosm.SFXAssetsPath;
 

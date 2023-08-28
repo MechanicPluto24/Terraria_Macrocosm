@@ -7,7 +7,7 @@ using Terraria.WorldBuilding;
 
 namespace Macrocosm.Content.WorldGeneration.Moon
 {
-	public class AmbientPass : GenPass
+	internal class AmbientPass : GenPass
 	{
 		public AmbientPass(string name, float loadWeight) : base(name, loadWeight) { }
 

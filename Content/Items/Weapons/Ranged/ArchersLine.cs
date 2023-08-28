@@ -5,16 +5,18 @@ using Terraria.ModLoader;
 using Terraria.GameContent.Creative;
 using Macrocosm.Content.Rarities;
 using Macrocosm.Content.Projectiles.Friendly.Ranged;
+using Macrocosm.Common.Bases;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
-    public class ArchersLine : ModItem
+    internal class ArchersLine : GunHeldProjectileItem
 	{
 		public override void SetStaticDefaults()
 		{
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
-		public override void SetDefaults()
+
+		public override void SetDefaultsHeldProjectile()
 		{
 			Item.damage = 200;
 			Item.DamageType = DamageClass.Ranged;
@@ -34,12 +36,17 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			Item.UseSound = SoundID.Item38;
 		}
 
+		public override GunHeldProjectileData GunHeldProjectileData => new()
+		{
+			GunBarrelPosition = new Vector2(26f, 7f),
+			CenterYOffset = 9f,
+			MuzzleOffset = 45f,
+			RecoilDiminish = 0.9f
+		};
+
 		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
 		{
- 			position += new Vector2(0, -5); // muzzle offset 
 			type = ModContent.ProjectileType<ArchersLineProjectile>();
 		}
-
-		public override Vector2? HoldoutOffset() => new Vector2(-14, 0);
 	}
 }

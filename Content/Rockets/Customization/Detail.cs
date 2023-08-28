@@ -8,7 +8,7 @@ using Macrocosm.Common.Utils;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-    public class Detail : IUnlockable
+    internal class Detail : IUnlockable
     {
         public string Name { get; set; }
         public string ModuleName { get; set; }

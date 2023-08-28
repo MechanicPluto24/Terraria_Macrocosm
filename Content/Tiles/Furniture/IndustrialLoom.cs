@@ -8,7 +8,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture
 {
-    public class IndustrialLoom : ModTile
+    internal class IndustrialLoom : ModTile
     {
         public override void SetStaticDefaults()
         {

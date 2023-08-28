@@ -6,7 +6,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Materials
 {
-    public class SeleniteBar : ModItem
+    internal class SeleniteBar : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
@@ -25,7 +25,7 @@ namespace Macrocosm.Content.Items.Materials
 			Item.useTime = 10;
 			Item.autoReuse = true;
 			Item.consumable = true;
-			Item.createTile = TileType<Tiles.Blocks.SeleniteBar>();
+			Item.createTile = TileType<Tiles.Bars.SeleniteBar>();
 			Item.placeStyle = 0;
 			Item.rare = ModContent.RarityType<MoonRarityT1>();
 			Item.material = true;

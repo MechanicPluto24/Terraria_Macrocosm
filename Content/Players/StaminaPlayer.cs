@@ -3,7 +3,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Players
 {
-	public class StaminaPlayer : ModPlayer
+	internal class StaminaPlayer : ModPlayer
 	{
 		private float staminaRegenCooldown = 90f;
 		private float staminaRegenPeriod = 60f;

@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Hostile
 {
-    public class PhantasmalImpLarge : PhantasmalImpSmall
+    internal class PhantasmalImpLarge : PhantasmalImpSmall
 	{
 		public override void SetDefaults()
 		{

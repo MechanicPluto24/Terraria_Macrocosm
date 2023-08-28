@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Buffs.GoodBuffs
 {
-    public class ChandriumEmpowerment : ModBuff
+    internal class ChandriumEmpowerment : ModBuff
 	{
 		public override void SetStaticDefaults()
 		{

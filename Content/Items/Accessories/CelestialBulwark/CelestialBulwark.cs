@@ -13,7 +13,7 @@ using Macrocosm.Common.Drawing;
 namespace Macrocosm.Content.Items.Accessories.CelestialBulwark
 {
     [AutoloadEquip(EquipType.Shield)]
-	public class CelestialBulwark : ModItem
+	internal class CelestialBulwark : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

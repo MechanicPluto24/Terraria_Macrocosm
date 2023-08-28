@@ -5,7 +5,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
-    public class UILaunchButton : UIPanel
+    internal class UILaunchButton : UIPanel
     {
         public delegate void OnClick_ZoomIn(bool useDefault);
         public OnClick_ZoomIn ZoomIn = (useDefault) => { };

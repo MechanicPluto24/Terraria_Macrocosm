@@ -10,7 +10,7 @@ using Macrocosm.Common.Netcode;
 
 namespace Macrocosm.Content.Particles
 {
-    public class PlasmaBall : Particle
+    internal class PlasmaBall : Particle
 	{
 		public override int SpawnTimeLeft => 95;
 		public override int TrailCacheLenght => 7;

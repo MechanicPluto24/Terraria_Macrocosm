@@ -9,7 +9,7 @@ using Macrocosm.Common.Subworlds;
 
 namespace Macrocosm.Content.Rockets.Map
 {
-    public class RocketMapLayer : ModMapLayer
+    internal class RocketMapLayer : ModMapLayer
     {
         public override void Draw(ref MapOverlayDrawContext context, ref string text)
         {

@@ -8,7 +8,7 @@ using ReLogic.Content;
 
 namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
 {
-	public abstract class ValueUnitSpecialInfoElement : InfoElement
+	internal abstract class ValueUnitSpecialInfoElement : InfoElement
 	{
 		protected LocalizedText formattedLocalizedText;
 

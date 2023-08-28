@@ -5,7 +5,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Placeable.Blocks
 {
-    public class HemostoneBrick : ModItem
+    internal class HemostoneBrick : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

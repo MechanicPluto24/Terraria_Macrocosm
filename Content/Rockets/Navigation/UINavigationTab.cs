@@ -12,7 +12,7 @@ using Macrocosm.Common.Config;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
-    public class UINavigationTab : UIPanel, ITabUIElement, IRocketDataConsumer
+    internal class UINavigationTab : UIPanel, ITabUIElement, IRocketDataConsumer
     {
 		public Rocket Rocket { get; set; } 
 

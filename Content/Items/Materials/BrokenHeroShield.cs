@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Materials
 {
-	public class BrokenHeroShield : ModItem
+	internal class BrokenHeroShield : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

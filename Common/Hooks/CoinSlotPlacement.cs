@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Hooks
 {
-	public class CoinSlotPlacement : ILoadable
+	internal class CoinSlotPlacement : ILoadable
 	{
 		public void Load(Mod mod)
 		{

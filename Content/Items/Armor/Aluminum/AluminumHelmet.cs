@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 namespace Macrocosm.Content.Items.Armor.Aluminum
 {
     [AutoloadEquip(EquipType.Head)]
-    public class AluminumHelmet : ModItem
+    internal class AluminumHelmet : ModItem
     {
         public override void SetStaticDefaults()
         {

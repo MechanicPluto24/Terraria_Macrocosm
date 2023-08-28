@@ -6,7 +6,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Common.Utils
 {
-	public static partial class Utility
+	internal static partial class Utility
 	{
 		/// <summary> Gets the dust spritesheet of this vanilla dust type as a rectangle </summary>
 		public static Rectangle VanillaDustFrame(int dustType)

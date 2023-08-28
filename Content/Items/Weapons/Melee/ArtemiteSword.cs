@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Melee
 {
-	public class ArtemiteSword : ModItem
+	internal class ArtemiteSword : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

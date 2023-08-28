@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-    public class MoonZombie : ModNPC, IMoonEnemy
+    internal class MoonZombie : ModNPC, IMoonEnemy
 	{
 		public override void SetStaticDefaults()
 		{

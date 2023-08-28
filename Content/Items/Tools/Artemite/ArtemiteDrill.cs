@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Tools.Artemite
 {
-	public class ArtemiteDrill : ModItem
+	internal class ArtemiteDrill : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

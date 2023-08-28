@@ -9,7 +9,7 @@ using Macrocosm.Common.Config;
 
 namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
 {
-	public class GravityInfoElement : ValueUnitSpecialInfoElement
+	internal class GravityInfoElement : ValueUnitSpecialInfoElement
 	{
 		public GravityInfoElement(string specialValueKey) : base(specialValueKey) { }
 

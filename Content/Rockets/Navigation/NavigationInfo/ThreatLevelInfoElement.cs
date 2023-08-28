@@ -27,7 +27,7 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
         Unknown
     }
 
-    public class ThreatLevelInfoElement : InfoElement
+    internal class ThreatLevelInfoElement : InfoElement
     {
 
 		private LocalizedText formattedLocalizedText;

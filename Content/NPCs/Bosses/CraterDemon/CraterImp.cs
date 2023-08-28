@@ -15,7 +15,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 {
-	public class CraterImp : ModNPC, IMoonEnemy
+	internal class CraterImp : ModNPC, IMoonEnemy
 	{
 		public ref float AI_Timer => ref NPC.ai[0];
 		public ref float AI_Attack => ref NPC.ai[1];

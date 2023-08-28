@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Global
 {
-	public class EarthLootGlobalItem : GlobalItem
+	internal class EarthLootGlobalItem : GlobalItem
 	{
 		public override void ExtractinatorUse(int extractType, int extractinatorBlockType, ref int resultType, ref int resultStack)
 		{

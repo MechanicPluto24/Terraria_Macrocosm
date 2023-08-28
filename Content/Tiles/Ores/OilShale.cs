@@ -7,7 +7,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Tiles.Ores
 {
-    public class OilShale : ModTile
+    internal class OilShale : ModTile
     {
         public override void SetStaticDefaults()
         {

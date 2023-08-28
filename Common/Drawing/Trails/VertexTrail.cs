@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Drawing.Trails
 {
-	public abstract class VertexTrail : IModType
+	internal abstract class VertexTrail : IModType
 	{
 		public Mod Mod { get; }
 		public string Name { get; }

@@ -8,7 +8,7 @@ using Macrocosm.Content.Projectiles.Environment.Sands;
 
 namespace Macrocosm.Content.Tiles.Blocks
 {
-    public class SilicaCrimsand : ModTile
+    internal class SilicaCrimsand : ModTile
 	{
 		public override void SetStaticDefaults()
 		{

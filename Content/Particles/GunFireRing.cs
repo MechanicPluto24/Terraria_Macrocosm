@@ -6,10 +6,10 @@ using Macrocosm.Content.Projectiles.Friendly.Ranged;
 
 namespace Macrocosm.Content.Particles
 {
-	public class GunFireRing : Particle
+	internal class GunFireRing : Particle
 	{
 		public override int FrameNumber => 4;
-		public override int FrameSpeed => 6;
+		public override int FrameSpeed => 8;
 		public override bool DespawnOnAnimationComplete => true;
 
 		public override void OnSpawn()
@@ -18,6 +18,7 @@ namespace Macrocosm.Content.Particles
 
 		public override void AI()
 		{
+			Velocity *= 0.94f;
  		}
 		
 		public override void OnKill()

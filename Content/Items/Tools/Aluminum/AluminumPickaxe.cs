@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Tools.Aluminum
 {
-	public class AluminumPickaxe : ModItem
+	internal class AluminumPickaxe : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

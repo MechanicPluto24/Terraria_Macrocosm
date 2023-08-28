@@ -18,7 +18,7 @@ using Macrocosm.Content.Rockets.LaunchPads;
 
 namespace Macrocosm.Content.Rockets
 {
-    public partial class Rocket 
+    internal partial class Rocket 
 	{
 		/// <summary> The rocket's identifier </summary>
 		public int WhoAmI = -1;

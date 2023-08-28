@@ -10,7 +10,7 @@ using Macrocosm.Content.Rockets;
 
 namespace Macrocosm.Content.Particles
 {
-    public class SeleniteSpark : Particle
+    internal class SeleniteSpark : Particle
 	{
 		public override int SpawnTimeLeft => 250;
 		public override string TexturePath => Macrocosm.EmptyTexPath;

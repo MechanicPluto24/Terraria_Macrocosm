@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 namespace Macrocosm.Content.Items.Consumables.BossSummons
 {
 	//Had to salvage it from an extracted DLL, so no comments.  Oops.  -- absoluteAquarian
-	public class CraterDemonSummon : ModItem
+	internal class CraterDemonSummon : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

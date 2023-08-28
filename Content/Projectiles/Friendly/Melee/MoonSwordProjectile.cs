@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
-	public class MoonSwordProjectile : ModProjectile
+	internal class MoonSwordProjectile : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{

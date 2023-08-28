@@ -6,7 +6,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Materials
 {
-    public class OilShale : ModItem
+    internal class OilShale : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

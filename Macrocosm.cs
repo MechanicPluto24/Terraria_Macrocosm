@@ -15,7 +15,7 @@ using Terraria.ModLoader.Core;
 
 namespace Macrocosm
 {
-    public class Macrocosm : Mod
+    internal class Macrocosm : Mod
 	{
 		public static Mod Instance => ModContent.GetInstance<Macrocosm>();
 

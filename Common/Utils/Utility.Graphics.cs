@@ -6,7 +6,7 @@ using Terraria;
 
 namespace Macrocosm.Common.Utils
 {
-    public readonly struct SpriteBatchState
+    internal readonly struct SpriteBatchState
     {
         public readonly bool BeginCalled;
         public readonly SpriteSortMode SpriteSortMode;
@@ -30,7 +30,7 @@ namespace Macrocosm.Common.Utils
 		}
 	}
 
-    public static partial class Utility
+    internal static partial class Utility
     {
         /// <summary> Saves the SpriteBatch parameters in a struct </summary>
         public static SpriteBatchState SaveState(this SpriteBatch spriteBatch)

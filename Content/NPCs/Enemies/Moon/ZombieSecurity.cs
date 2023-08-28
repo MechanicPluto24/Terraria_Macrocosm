@@ -18,7 +18,7 @@ using Macrocosm.Content.Items.Weapons.Ranged;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-    public class ZombieSecurity : ModNPC, IMoonEnemy
+    internal class ZombieSecurity : ModNPC, IMoonEnemy
 	{
 		public enum ActionState 
 		{ 

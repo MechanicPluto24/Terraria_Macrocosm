@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Dusts
 {
-	public class ChandriumBrightDust : ModDust
+	internal class ChandriumBrightDust : ModDust
 	{
 		public override bool Update(Dust dust)
 		{

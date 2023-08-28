@@ -12,7 +12,7 @@ using Macrocosm.Content.Biomes;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-    public class BloodMoonJuggernaut : ModNPC, IMoonEnemy
+    internal class BloodMoonJuggernaut : ModNPC, IMoonEnemy
 	{
 		public enum ActionState
 		{
