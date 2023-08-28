@@ -16,7 +16,7 @@ using Terraria.WorldBuilding;
 
 namespace Macrocosm.Content.UI.LoadingScreens
 {
-    public class EarthLoadingScreen : LoadingScreen
+    internal class EarthLoadingScreen : LoadingScreen
 	{
 		private List<Texture2D> earthBackgrounds;
 		private Texture2D earthBackground;

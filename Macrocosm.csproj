@@ -37,6 +37,13 @@
     <None Remove="Assets\Textures\UI\LargePanel.png" />
     <None Remove="Assets\Textures\UI\LargePanelBorder.png" />
     <None Remove="Assets\Textures\UI\LargePanelHoverBorder.png" />
+    <None Remove="Content\Items\Materials\SteelBar.png" />
+    <None Remove="Content\Items\Tools\Steel\SteelHamaxe.png" />
+    <None Remove="Content\Items\Tools\Steel\SteelPickaxe.png" />
+    <None Remove="Content\Items\Weapons\Melee\ManisolBlades.png" />
+    <None Remove="Content\Items\Weapons\Melee\Procellarum.png" />
+    <None Remove="Content\Items\Weapons\Ranged\SteelCrossbow.png" />
+    <None Remove="Content\Items\Weapons\Ranged\SteelRifle.png" />
     <None Remove="Content\Rockets\Customization\Patterns\BoosterLeft\Astra.png" />
     <None Remove="Content\Rockets\Customization\Patterns\BoosterLeft\Binary.png" />
     <None Remove="Content\Rockets\Customization\Patterns\BoosterLeft\Delta.png" />
@@ -99,6 +106,7 @@
     <None Remove="Content\Rockets\Textures\Symbols\NoSignGray.png" />
     <None Remove="Content\Rockets\Textures\Symbols\QuestionMarkGold.png" />
     <None Remove="Content\Rockets\Textures\Symbols\ResetWhite.png" />
+    <None Remove="Content\Tiles\Bars\SteelBar.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="tModLoader.CodeAssist" Version="0.1.*" />

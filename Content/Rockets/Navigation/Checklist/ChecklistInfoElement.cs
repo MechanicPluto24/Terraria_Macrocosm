@@ -6,7 +6,7 @@ using ReLogic.Content;
 
 namespace Macrocosm.Content.Rockets.Navigation.Checklist
 {
-    public class ChecklistInfoElement : InfoElement
+    internal class ChecklistInfoElement : InfoElement
     {
         public enum ExtraIconType
         {

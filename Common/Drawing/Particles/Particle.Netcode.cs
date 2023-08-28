@@ -9,7 +9,7 @@ using Macrocosm.Common.Netcode;
 namespace Macrocosm.Common.Drawing.Particles
 {
     /// <summary> Particle.Netcode by sucss, Nurby & Feldy @ PellucidMod (RIP) </summary>
-    public partial class Particle 
+    internal partial class Particle 
 	{
 		public const int MaxParticles = ushort.MaxValue;
 		public const int MaxParticleTypes = ushort.MaxValue;

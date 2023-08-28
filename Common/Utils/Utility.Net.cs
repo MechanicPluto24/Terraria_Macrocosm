@@ -7,7 +7,7 @@ using Terraria.Localization;
 
 namespace Macrocosm.Common.Utils
 {
-	public static partial class Utility
+	internal static partial class Utility
 	{
 		public static void SendData(int dataType, int dataA, int dataB, string text, int playerID, float dataC, float dataD, float dataE, int clientType)
 		{

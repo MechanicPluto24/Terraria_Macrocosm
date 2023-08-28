@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
 	/// <summary> Adapted from ExampleMod </summary>
-	public class AluminumShortswordProjectile : ModProjectile
+	internal class AluminumShortswordProjectile : ModProjectile
 	{
 		public override string Texture => "Macrocosm/Content/Items/Weapons/Melee/AluminumShortsword";
 

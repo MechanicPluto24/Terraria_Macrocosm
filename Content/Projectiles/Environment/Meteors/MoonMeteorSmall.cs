@@ -12,7 +12,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Environment.Meteors
 {
-    public class MoonMeteorSmall : BaseMeteor
+    internal class MoonMeteorSmall : BaseMeteor
     {
         public MoonMeteorSmall()
         {

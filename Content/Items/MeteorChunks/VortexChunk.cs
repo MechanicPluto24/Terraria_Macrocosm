@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.MeteorChunks
 {
-	public class VortexChunk : ModItem
+	internal class VortexChunk : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

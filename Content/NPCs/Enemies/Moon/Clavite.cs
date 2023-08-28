@@ -11,7 +11,7 @@ using Macrocosm.Content.Biomes;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-    public class Clavite : ModNPC, IMoonEnemy
+    internal class Clavite : ModNPC, IMoonEnemy
 	{
 		public override void SetStaticDefaults()
 		{

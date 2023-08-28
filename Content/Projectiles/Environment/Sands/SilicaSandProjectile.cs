@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Environment.Sands
 {
-    public class SilicaSandProjectile : ModProjectile
+    internal class SilicaSandProjectile : ModProjectile
     {
         protected bool falling = true;
         protected int tileType;

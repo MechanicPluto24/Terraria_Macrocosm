@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Melee
 {
-	public class ChampionsBladeBroken : ModItem
+	internal class ChampionsBladeBroken : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

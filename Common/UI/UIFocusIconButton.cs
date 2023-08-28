@@ -8,7 +8,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Common.UI
 {
-	public class UIFocusIconButton : UIPanelIconButton, IFocusable
+	internal class UIFocusIconButton : UIPanelIconButton, IFocusable
 	{
 		public Color FocusedBackPanelColor { get; set; } = new Color(37, 52, 96);
 

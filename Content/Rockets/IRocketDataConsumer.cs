@@ -1,7 +1,7 @@
 ﻿
 namespace Macrocosm.Content.Rockets
 {
-	public interface IRocketDataConsumer
+	internal interface IRocketDataConsumer
 	{
 		public Rocket Rocket { get; set; } 
 	}

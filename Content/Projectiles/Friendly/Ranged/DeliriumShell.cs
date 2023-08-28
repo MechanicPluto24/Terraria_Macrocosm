@@ -13,7 +13,7 @@ using Terraria.GameContent;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-    public class DeliriumShell : ModProjectile, IBullet, IExplosive
+    internal class DeliriumShell : ModProjectile, IBullet, IExplosive
 	{
 		public float BlastRadius => 100;
 

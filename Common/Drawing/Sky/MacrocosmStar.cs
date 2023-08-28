@@ -7,7 +7,7 @@ using Terraria.Utilities;
 
 namespace Macrocosm.Common.Drawing.Sky
 {
-    public class MacrocosmStar : Star
+    internal class MacrocosmStar : Star
     {
         public float Brightness;
 

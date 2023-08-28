@@ -5,7 +5,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Placeable.Blocks
 {
-    public class Tendril : ModItem
+    internal class Tendril : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

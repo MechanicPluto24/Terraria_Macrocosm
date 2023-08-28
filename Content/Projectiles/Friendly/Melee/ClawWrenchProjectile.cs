@@ -12,7 +12,7 @@ using Macrocosm.Content.Players;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
-    public class ClawWrenchProjectile : ModProjectile
+    internal class ClawWrenchProjectile : ModProjectile
     {
         public override bool ShouldUpdatePosition() => false;
 

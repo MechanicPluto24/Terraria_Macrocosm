@@ -7,7 +7,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Tiles.Ores
 {
-    public class ChandriumOre : ModTile
+    internal class ChandriumOre : ModTile
     {
         public override void SetStaticDefaults()
         {

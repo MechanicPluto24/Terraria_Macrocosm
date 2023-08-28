@@ -6,7 +6,7 @@ using Macrocosm.Common.Bases;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-    public class ArchersLineProjectile : RicochetBullet
+    internal class ArchersLineProjectile : RicochetBullet
 	{
 		public override int RicochetCount => 10;
 

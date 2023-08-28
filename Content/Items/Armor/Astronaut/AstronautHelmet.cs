@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 namespace Macrocosm.Content.Items.Armor.Astronaut
 {
     [AutoloadEquip(EquipType.Head)]
-    public class AstronautHelmet : ModItem
+    internal class AstronautHelmet : ModItem
     {
         public override void SetStaticDefaults()
         {

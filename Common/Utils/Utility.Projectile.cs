@@ -10,7 +10,7 @@ using System.Reflection;
 
 namespace Macrocosm.Common.Utils
 {
-	public static partial class Utility
+	internal static partial class Utility
 	{
 		public static void SetTrail<T>(this Projectile projectile) where T : VertexTrail
 		{

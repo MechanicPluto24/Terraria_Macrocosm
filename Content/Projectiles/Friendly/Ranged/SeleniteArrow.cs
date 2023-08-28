@@ -14,7 +14,7 @@ using Macrocosm.Common.Utils;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-	public class SeleniteArrow : ModProjectile, IBullet
+	internal class SeleniteArrow : ModProjectile, IBullet
 	{
 		public override void SetDefaults()
 		{

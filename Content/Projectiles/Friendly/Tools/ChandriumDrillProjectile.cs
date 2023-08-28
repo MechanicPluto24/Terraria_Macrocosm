@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Tools
 {
-	public class ChandriumDrillProjectile : ModProjectile
+	internal class ChandriumDrillProjectile : ModProjectile
 	{
 		public override void SetDefaults()
 		{

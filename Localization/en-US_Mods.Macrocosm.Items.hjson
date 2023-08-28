@@ -820,3 +820,33 @@ SetBonuses: {
 		Tier 2 extraterrestrial protection
 		'''
 }
+
+SteelBar: {
+	DisplayName: Steel Bar
+	Tooltip: ""
+}
+
+SteelHamaxe: {
+	DisplayName: Steel Hamaxe
+	Tooltip: ""
+}
+
+SteelPickaxe: {
+	DisplayName: Steel Pickaxe
+	Tooltip: ""
+}
+
+SteelZweihander: {
+	DisplayName: Steel Zweihander
+	Tooltip: ""
+}
+
+SteelCrossbow: {
+	DisplayName: Steel Crossbow
+	Tooltip: ""
+}
+
+SteelRifle: {
+	DisplayName: Steel Rifle
+	Tooltip: ""
+}

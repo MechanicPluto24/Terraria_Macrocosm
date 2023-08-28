@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Dev
 {
-	public class DevPick : ModItem, IDevItem
+	internal class DevPick : ModItem, IDevItem
 	{
 		public override void SetStaticDefaults()
 		{

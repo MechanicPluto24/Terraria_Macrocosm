@@ -6,7 +6,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Materials
 {
-	public class AluminumBar : ModItem
+	internal class AluminumBar : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Items.Materials
 			Item.useTime = 10;
 			Item.autoReuse = true;
 			Item.consumable = true;
-			//Item.createTile = TileType<Tiles.AluminumBar>();
+			Item.createTile = TileType<Tiles.Bars.AluminumBar>();
 			Item.placeStyle = 0;
 			Item.rare = ItemRarityID.White;
 			Item.material = true;

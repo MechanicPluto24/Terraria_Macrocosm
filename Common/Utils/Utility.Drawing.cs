@@ -12,7 +12,7 @@ using Terraria.ID;
 
 namespace Macrocosm.Common.Utils
 {
-    public static partial class Utility
+    internal static partial class Utility
     {
         public static Vector2 ScreenCenter => new(Main.screenWidth / 2f, Main.screenHeight / 2f);
 

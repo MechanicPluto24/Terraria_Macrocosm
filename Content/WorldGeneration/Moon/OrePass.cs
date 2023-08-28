@@ -9,7 +9,7 @@ using Terraria.Localization;
 
 namespace Macrocosm.Content.WorldGeneration.Moon
 {
-    public class OrePass : GenPass
+    internal class OrePass : GenPass
 	{
 		public OrePass(string name, float loadWeight) : base(name, loadWeight) { }
 		

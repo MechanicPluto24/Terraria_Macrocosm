@@ -5,7 +5,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Tiles.Blocks
 {
-    public class SuperResistantGlass : ModTile
+    internal class SuperResistantGlass : ModTile
     {
         public override void SetStaticDefaults()
         {

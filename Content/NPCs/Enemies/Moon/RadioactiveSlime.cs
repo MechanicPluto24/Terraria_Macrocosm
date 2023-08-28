@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-    public class RadioactiveSlime : ModNPC, IMoonEnemy
+    internal class RadioactiveSlime : ModNPC, IMoonEnemy
 	{
 		public override void SetStaticDefaults()
 		{

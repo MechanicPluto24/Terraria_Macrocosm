@@ -9,7 +9,7 @@ using Terraria.Utilities;
 
 namespace Macrocosm.Common.Utils
 {
-    public static class Extension
+    internal static class Extension
     {
         public static MacrocosmProjectile Macrocosm(this Projectile projectile)
             => projectile.GetGlobalProjectile<MacrocosmProjectile>();

@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Placeable.Furniture
 {
-    public class SolarPanelLarge : ModItem
+    internal class SolarPanelLarge : ModItem
     {
 		public override void SetStaticDefaults()
 		{

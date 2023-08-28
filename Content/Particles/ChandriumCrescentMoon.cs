@@ -7,7 +7,7 @@ using Terraria;
 
 namespace Macrocosm.Content.Particles
 {
-    public class ChandriumCrescentMoon : Particle
+    internal class ChandriumCrescentMoon : Particle
     {
         bool rotateClockwise = false;
 		byte alpha;

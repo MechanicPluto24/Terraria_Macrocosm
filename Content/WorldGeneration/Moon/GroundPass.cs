@@ -6,7 +6,7 @@ using Terraria.WorldBuilding;
 
 namespace Macrocosm.Content.WorldGeneration.Moon
 {
-    public class GroundPass : GenPass
+    internal class GroundPass : GenPass
 	{
 		private int subworldWidth;
 		private int subworldHeight;

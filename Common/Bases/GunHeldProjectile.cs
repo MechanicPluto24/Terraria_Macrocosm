@@ -21,18 +21,25 @@ namespace Macrocosm.Common.Bases
     {
         public GunHeldProjectileData() { }
 
-        /// <summary>
-        /// The <c>Y</c> of this should be set to the barrel <c>Y</c> on the sprite, the <c>X</c> should be somewhere near the grip point.
-        /// </summary>
+        /// <summary> The <c>Y</c> of this should be set to the barrel <c>Y</c> on the sprite, the <c>X</c> should be somewhere near the grip point. </summary>
         public Vector2 GunBarrelPosition { get; init; } = Vector2.Zero;
-        /// <summary>
-        /// Should be the <c>Y</c> distance from barrel to grip holding position.
-        /// </summary>
+
+        /// <summary> Should be the <c>Y</c> distance from barrel to grip holding position. </summary>
         public float CenterYOffset { get; init; } = 0f;
+
+        /// <summary> The offset from where projectiles are shot </summary>
         public float MuzzleOffset { get; init; } = 0f;
+
+        /// <summary> The initial recoil animation horizontal offset and rotation </summary>
         public (float horizontal, float rotation) Recoil { get; init; } = (6f, 0.2f);
+
+        /// <summary> The diminishing multiplier of the recoil animation. Should be smaller than 1f </summary>
         public float RecoilDiminish { get; init; } = 0.92f;
 
+        /// <summary> The animation frame where the recoil is applied </summary>
+        public int RecoilStartFrame { get; init; } = 3;
+
+        /// <summary> Whether the player also uses the back arm to hold the projectile </summary>
         public bool UseBackArm { get; init; } = true;
     }
 
@@ -158,7 +165,7 @@ namespace Macrocosm.Common.Bases
                 Player.SetCompositeArmBack(true, Player.CompositeArmStretchAmount.ThreeQuarters, Projectile.rotation - MathHelper.PiOver2);
             }
 
-            if (frame++ == Projectile.extraUpdates)
+            if (frame++ == Projectile.extraUpdates * GunHeldProjectileData.RecoilStartFrame)
             {
                 currentRecoil = new Vector2(GunHeldProjectileData.Recoil.horizontal, GunHeldProjectileData.Recoil.rotation);
             }

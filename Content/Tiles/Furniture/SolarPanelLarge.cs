@@ -9,7 +9,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture
 {
-    public class SolarPanelLarge : ModTile
+    internal class SolarPanelLarge : ModTile
     {
         public override void SetStaticDefaults()
         {

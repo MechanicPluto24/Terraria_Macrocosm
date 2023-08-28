@@ -12,7 +12,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
-    public class ImbriumJewelProjectile : ModProjectile
+    internal class ImbriumJewelProjectile : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{

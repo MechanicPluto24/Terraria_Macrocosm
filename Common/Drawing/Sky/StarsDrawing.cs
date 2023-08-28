@@ -4,7 +4,7 @@ using Terraria;
 
 namespace Macrocosm.Common.Drawing.Sky
 {
-    public class StarsDrawing
+    internal class StarsDrawing
     {
         private readonly List<MacrocosmStar> stars = new();
 

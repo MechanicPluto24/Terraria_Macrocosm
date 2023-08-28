@@ -7,7 +7,7 @@ using Macrocosm.Common.Utils;
 
 namespace Macrocosm.Content.Dusts
 {
-	public class LuminiteSparkDust : ModDust
+	internal class LuminiteSparkDust : ModDust
 	{
 		public override void OnSpawn(Dust dust)
 		{

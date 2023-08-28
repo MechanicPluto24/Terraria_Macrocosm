@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Materials
 {
-	public class DeliriumPlating : ModItem
+	internal class DeliriumPlating : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-	public readonly struct PatternColorData 
+	internal readonly struct PatternColorData 
 	{
 		public readonly bool IsUserModifiable { get; }
 		public readonly Color Color { get; }

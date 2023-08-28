@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-	public class ColorFunction : IUnlockable
+	internal class ColorFunction : IUnlockable
 	{
 		public string Name { get; } = "";
 

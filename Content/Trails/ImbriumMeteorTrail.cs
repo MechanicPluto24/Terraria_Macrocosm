@@ -7,7 +7,7 @@ using Terraria.Graphics.Shaders;
 
 namespace Macrocosm.Content.Trails
 {
-	public class ImbriumMeteorTrail : VertexTrail
+	internal class ImbriumMeteorTrail : VertexTrail
 	{
 		public override MiscShaderData TrailShader => GameShaders.Misc["MagicMissile"];
 

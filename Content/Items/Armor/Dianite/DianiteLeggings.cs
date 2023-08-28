@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 namespace Macrocosm.Content.Items.Armor.Dianite
 {
     [AutoloadEquip(EquipType.Legs)]
-    public class DianiteLeggings : ModItem
+    internal class DianiteLeggings : ModItem
     {
         public override void SetStaticDefaults()
         {

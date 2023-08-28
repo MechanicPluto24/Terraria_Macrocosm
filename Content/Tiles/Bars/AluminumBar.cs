@@ -1,14 +1,13 @@
+using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
-using static Terraria.ModLoader.ModContent;
 
-namespace Macrocosm.Content.Tiles.Blocks
+namespace Macrocosm.Content.Tiles.Bars
 {
-    public class SeleniteBar : ModTile
+    internal class AluminumBar : ModTile
     {
         public override void SetStaticDefaults()
         {
@@ -22,7 +21,14 @@ namespace Macrocosm.Content.Tiles.Blocks
             TileObjectData.newTile.LavaDeath = false;
             TileObjectData.addTile(Type);
 
-            AddMapEntry(new Color(28, 54, 210), Language.GetText("Selenite Bar")); // localized text for "Metal Bar"
+            LocalizedText name = CreateMapEntryName();
+			AddMapEntry(new Color(165, 187, 199), name);
         }
-    }
+		public override bool CreateDust(int i, int j, ref int type)
+		{
+			//type = Dust.NewDust(new Vector2(i, j).ToWorldCoordinates(), 16, 16, ModContent.DustType<AluminumDust>);
+			return false;
+		}
+
+	}
 }

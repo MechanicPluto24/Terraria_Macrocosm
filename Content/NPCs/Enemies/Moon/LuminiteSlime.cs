@@ -15,7 +15,7 @@ using Macrocosm.Content.NPCs.Global;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-    public class LuminiteSlime : ModNPC, IMoonEnemy
+    internal class LuminiteSlime : ModNPC, IMoonEnemy
 	{
 		public override void SetStaticDefaults()
 		{

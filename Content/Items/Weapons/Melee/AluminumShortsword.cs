@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Melee
 {
-	public class AluminumShortsword : ModItem
+	internal class AluminumShortsword : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

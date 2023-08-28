@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Placeable.Blocks
 {
-	public class RegolithWall : ModItem
+	internal class RegolithWall : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

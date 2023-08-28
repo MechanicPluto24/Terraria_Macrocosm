@@ -1,6 +1,6 @@
 namespace Macrocosm.Common.Utils.IO
 {
-	public class TextFileLoader : IFileLoader<string[]>
+	internal class TextFileLoader : IFileLoader<string[]>
 	{
 		public string[] Parse(string path)
 		{

@@ -11,7 +11,7 @@ using Macrocosm.Common.Bases;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-    public class SeleniteMagnumProjectile : RicochetBullet
+    internal class SeleniteMagnumProjectile : RicochetBullet
 	{
 		public override int RicochetCount => 2;
 

@@ -16,7 +16,7 @@ using Macrocosm.Content.Items.Weapons.Magic;
 
 namespace Macrocosm.Content.Items.Consumables.BossBags
 {
- 	public class CraterDemonBossBag : ModItem
+ 	internal class CraterDemonBossBag : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

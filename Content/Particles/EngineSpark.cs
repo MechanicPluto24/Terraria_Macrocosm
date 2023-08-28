@@ -9,7 +9,7 @@ using Macrocosm.Content.Rockets;
 
 namespace Macrocosm.Content.Particles
 {
-    public class EngineSpark : Particle
+    internal class EngineSpark : Particle
 	{
 		public override int SpawnTimeLeft => 10;
 		public override string TexturePath => Macrocosm.EmptyTexPath;

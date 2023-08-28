@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Melee
 {
-	public class ClawWrench : ModItem
+	internal class ClawWrench : ModItem
     {
         public override void SetStaticDefaults()
         {

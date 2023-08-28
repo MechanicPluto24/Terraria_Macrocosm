@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Tools.Artemite
 {
-	public class ArtemiteHammer : ModItem
+	internal class ArtemiteHammer : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

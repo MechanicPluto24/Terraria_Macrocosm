@@ -3,7 +3,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Buffs.Debuffs
 {
-	public class SuitBreach : ModBuff
+	internal class SuitBreach : ModBuff
 	{
 		public override void SetStaticDefaults()
 		{

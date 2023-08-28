@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
-    public class UINavigationMap : UIElement
+    internal class UINavigationMap : UIElement
 	{
 		/// <summary> The next navigation map, switched on zoom in </summary>
 		public UINavigationMap Next = null;

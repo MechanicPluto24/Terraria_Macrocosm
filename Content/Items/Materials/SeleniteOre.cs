@@ -6,7 +6,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Materials
 {
-    public class SeleniteOre : ModItem
+    internal class SeleniteOre : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

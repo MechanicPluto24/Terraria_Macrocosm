@@ -10,7 +10,7 @@ using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-    public partial class Pattern : TagSerializable
+    internal partial class Pattern : TagSerializable
 	{ 
 		public string ToJSON(bool includeUnlocked = false, bool includeNonModifiableColors = false, bool includeColorFunctions = false) => ToJObject().ToString(Formatting.Indented);
 

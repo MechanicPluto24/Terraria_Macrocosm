@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 namespace Macrocosm.Content.Items.Armor.Selenite
 {
     [AutoloadEquip(EquipType.Legs)]
-    public class SeleniteLeggings : ModItem
+    internal class SeleniteLeggings : ModItem
     {
         public override void SetStaticDefaults()
         {

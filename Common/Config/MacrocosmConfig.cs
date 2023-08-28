@@ -5,7 +5,7 @@ using Terraria.ModLoader.Config;
 namespace Macrocosm.Common.Config
 {
 	/// <summary> Config class for miscellaneous configuration, client-side only </summary>
-	public class MacrocosmConfig : ModConfig
+	internal class MacrocosmConfig : ModConfig
 	{
 		/// <summary> This config's instance, assigned by tML before Macrocosm content loads! </summary>
 		public static MacrocosmConfig Instance;

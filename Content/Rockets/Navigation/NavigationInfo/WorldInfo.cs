@@ -11,7 +11,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
 {
-    public class WorldInfo : ILoadable
+    internal class WorldInfo : ILoadable
 	{
         private static Dictionary<string, List<InfoElement>> worldInfoStorage;
 

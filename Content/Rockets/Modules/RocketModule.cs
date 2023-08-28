@@ -11,7 +11,7 @@ using Terraria.Graphics;
 
 namespace Macrocosm.Content.Rockets.Modules
 {
-    public abstract partial class RocketModule 
+    internal abstract partial class RocketModule 
 	{
 		public string Name => GetType().Name;
 

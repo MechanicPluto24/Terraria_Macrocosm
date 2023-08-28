@@ -1,3 +1,4 @@
+using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using Terraria;
@@ -5,11 +6,10 @@ using Terraria.DataStructures;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
-using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Tiles.Bars
 {
-    public class ChandriumBar : ModTile
+    internal class ChandriumBar : ModTile
     {
         public override void SetStaticDefaults()
         {
@@ -24,7 +24,13 @@ namespace Macrocosm.Content.Tiles.Bars
             TileObjectData.addTile(Type);
 
 			LocalizedText name = CreateMapEntryName();
-			AddMapEntry(new Color(105, 56, 215), name); // localized text for "Metal Bar"
+			AddMapEntry(new Color(105, 56, 215), name);  
         }
-    }
+
+		public override bool CreateDust(int i, int j, ref int type)
+		{
+			type = Dust.NewDust(new Vector2(i, j).ToWorldCoordinates(), 16, 16, ModContent.DustType<ChandriumDust>());
+			return false;
+		}
+	}
 }

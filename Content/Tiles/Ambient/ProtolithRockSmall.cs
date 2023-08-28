@@ -7,7 +7,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Ambient
 {
-	public class ProtolithRockSmall : ModTile
+	internal class ProtolithRockSmall : ModTile
 	{
 		public override void SetStaticDefaults()
 		{

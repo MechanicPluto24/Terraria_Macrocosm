@@ -35,7 +35,7 @@ using Macrocosm.Common.Drawing;
 namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 {
 	[AutoloadBossHead]
-	public class CraterDemon : ModNPC, IMoonEnemy
+	internal class CraterDemon : ModNPC, IMoonEnemy
 	{
 		private struct AttackInfo
 		{

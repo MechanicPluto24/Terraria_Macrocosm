@@ -6,7 +6,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Placeable.Walls
 {
-    public class IrradiatedRockWall : ModItem
+    internal class IrradiatedRockWall : ModItem
     {
         public override void SetStaticDefaults()
         {

@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Trails
 {
-	public class MissileTrail : VertexTrail
+	internal class MissileTrail : VertexTrail
 	{
 		public override MiscShaderData TrailShader => GameShaders.Misc["RainbowRod"];
 		public override float Saturation => -2f;

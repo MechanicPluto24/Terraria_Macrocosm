@@ -6,7 +6,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Materials
 {
-    public class ArtemiteBar : ModItem
+    internal class ArtemiteBar : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

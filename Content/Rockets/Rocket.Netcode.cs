@@ -10,7 +10,7 @@ using Macrocosm.Common.Utils;
 
 namespace Macrocosm.Content.Rockets
 {
-    public partial class Rocket 
+    internal partial class Rocket 
 	{
 		/// <summary>
 		/// Syncs the rocket fields with <see cref="NetSyncAttribute"/> across all clients and the server.

@@ -5,7 +5,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Tiles.Blocks
 {
-    public class SpaceshipWindow : ModTile
+    internal class SpaceshipWindow : ModTile
     {
         public override void SetStaticDefaults()
         {

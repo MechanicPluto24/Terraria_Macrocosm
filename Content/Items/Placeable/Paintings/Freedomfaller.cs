@@ -5,7 +5,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Placeable.Paintings
 {
-	public class Freedomfaller : ModItem
+	internal class Freedomfaller : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

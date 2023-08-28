@@ -8,7 +8,7 @@ using System.Globalization;
 
 namespace Macrocosm.Common.Utils
 {
-    public static partial class Utility
+    internal static partial class Utility
     {
 		public static string GetHexText(this Color color) => "#" + color.Hex3().ToUpper();
 

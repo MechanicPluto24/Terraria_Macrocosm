@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Magic
 {
-	public class HandheldEngine : ModItem
+	internal class HandheldEngine : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
