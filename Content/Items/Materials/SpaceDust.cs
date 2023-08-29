@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Materials
 {
-	internal class SpaceDust : ModItem
+	public class SpaceDust : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

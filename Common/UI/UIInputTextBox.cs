@@ -6,7 +6,7 @@ using Terraria.GameContent.UI.Elements;
 
 namespace Macrocosm.Common.UI
 {
-	internal class UIInputTextBox : UIPanel, IFocusable
+	public class UIInputTextBox : UIPanel, IFocusable
 	{
 		private UIInputTextField textField;
 

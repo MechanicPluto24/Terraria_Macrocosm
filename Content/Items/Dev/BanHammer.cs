@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Dev
 {
-	internal class BanHammer : ModItem, IDevItem
+	public class BanHammer : ModItem, IDevItem
 	{
 		public override void SetStaticDefaults()
 		{

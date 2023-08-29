@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Melee
 {
-	internal class SteelZweihander : GreatswordHeldProjectileItem
+	public class SteelZweihander : GreatswordHeldProjectileItem
 	{
 		public override Vector2 SpriteHandlePosition => new(12, 52);
 

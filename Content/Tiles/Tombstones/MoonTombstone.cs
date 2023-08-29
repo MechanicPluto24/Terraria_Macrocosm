@@ -9,7 +9,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Tombstones
 {
-	internal class MoonTombstone : ModTile
+	public class MoonTombstone : ModTile
 	{
 
 		public const int frameHeight = 36;

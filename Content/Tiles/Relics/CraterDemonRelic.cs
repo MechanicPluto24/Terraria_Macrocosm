@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles.Relics
 {
-	internal class CraterDemonRelic : BaseRelic
+	public class CraterDemonRelic : BaseRelic
 	{
 		public override string RelicTextureName => "Macrocosm/Content/Tiles/Relics/CraterDemonRelic";
 

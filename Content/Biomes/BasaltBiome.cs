@@ -3,7 +3,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Biomes
 {
-	internal class BasaltBiome : MoonBiome
+	public class BasaltBiome : MoonBiome
 	{
 		public override SceneEffectPriority Priority => SceneEffectPriority.Environment;
 

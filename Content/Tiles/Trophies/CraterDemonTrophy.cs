@@ -8,7 +8,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Trophies
 {
-	internal class CraterDemonTrophy : ModTile
+	public class CraterDemonTrophy : ModTile
 	{
 		public override void SetStaticDefaults()
 		{

@@ -14,7 +14,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Summon
 {
-	internal class ChandriumStaffMinion : ModProjectile
+	public class ChandriumStaffMinion : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{

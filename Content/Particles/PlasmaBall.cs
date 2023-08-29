@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Particles
 {
-	internal class PlasmaBall : Particle
+	public class PlasmaBall : Particle
 	{
 		public override int SpawnTimeLeft => 95;
 		public override int TrailCacheLenght => 7;

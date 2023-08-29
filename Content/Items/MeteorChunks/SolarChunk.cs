@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.MeteorChunks
 {
-	internal class SolarChunk : ModItem
+	public class SolarChunk : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

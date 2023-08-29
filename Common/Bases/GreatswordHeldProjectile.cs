@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Bases
 {
-	internal abstract class GreatswordHeldProjectileItem : HeldProjectileItem<GreatswordHeldProjectile>
+	public abstract class GreatswordHeldProjectileItem : HeldProjectileItem<GreatswordHeldProjectile>
     {
         public abstract Vector2 SpriteHandlePosition { get; }
 
@@ -28,7 +28,7 @@ namespace Macrocosm.Common.Bases
         public Texture2D HeldProjectileTexture => ModContent.Request<Texture2D>(HeldProjectileTexturePath, AssetRequestMode.ImmediateLoad).Value;
     }
 
-    internal class GreatswordHeldProjectile : HeldProjectile
+    public class GreatswordHeldProjectile : HeldProjectile
     {
         public override string Texture => "Terraria/Images/Item_0";
         public sealed override HeldProjectileKillMode KillMode => HeldProjectileKillMode.Manual;
@@ -184,7 +184,7 @@ namespace Macrocosm.Common.Bases
         }
     }
 
-    internal class GreatswordGlobalNPC : GlobalNPC 
+    public class GreatswordGlobalNPC : GlobalNPC 
     {
         public override bool InstancePerEntity => true;
         public bool HasMark { get; private set; }

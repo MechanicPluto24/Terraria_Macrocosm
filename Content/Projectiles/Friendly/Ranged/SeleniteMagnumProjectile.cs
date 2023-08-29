@@ -6,7 +6,7 @@ using Terraria;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-	internal class SeleniteMagnumProjectile : RicochetBullet
+	public class SeleniteMagnumProjectile : RicochetBullet
 	{
 		public override int RicochetCount => 2;
 

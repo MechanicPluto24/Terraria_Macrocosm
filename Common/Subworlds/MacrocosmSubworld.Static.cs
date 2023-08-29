@@ -14,7 +14,7 @@ namespace Macrocosm.Common.Subworlds
 		Underworld
 	}
 
-	internal partial class MacrocosmSubworld 
+	public partial class MacrocosmSubworld 
 	{
 		/// <summary> Get the current <c>MacrocosmSubworld</c> active instance. 
 		/// Earth returns null! You should check for <see cref="AnyActive"/> before accessing this. </summary>

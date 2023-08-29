@@ -6,7 +6,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Materials
 {
-	internal class ChandriumBar : ModItem
+	public class ChandriumBar : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Melee
 {
-	internal class ArtemiteGreatsword : GreatswordHeldProjectileItem
+	public class ArtemiteGreatsword : GreatswordHeldProjectileItem
 	{
 		public override Vector2 SpriteHandlePosition => new(23, 59);
 

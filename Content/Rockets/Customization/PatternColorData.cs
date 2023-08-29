@@ -2,7 +2,7 @@
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-	internal readonly struct PatternColorData 
+	public readonly struct PatternColorData 
 	{
 		public readonly bool IsUserModifiable { get; }
 		public readonly Color Color { get; }

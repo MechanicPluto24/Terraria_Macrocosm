@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.UI.LoadingScreens
 {
-	internal class MoonLoadingScreen : LoadingScreen
+	public class MoonLoadingScreen : LoadingScreen
 	{
 		private Texture2D lunaBackground;
 		private StarsDrawing starsDrawing;

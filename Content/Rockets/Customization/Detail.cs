@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-	internal class Detail : IUnlockable
+	public class Detail : IUnlockable
     {
         public string Name { get; set; }
         public string ModuleName { get; set; }

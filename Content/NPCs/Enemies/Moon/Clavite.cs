@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-	internal class Clavite : ModNPC, IMoonEnemy
+	public class Clavite : ModNPC, IMoonEnemy
 	{
 		public override void SetStaticDefaults()
 		{

@@ -14,7 +14,7 @@ using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Common.Subworlds
 {
-	internal abstract partial class MacrocosmSubworld : Subworld 
+	public abstract partial class MacrocosmSubworld : Subworld 
 	{
 		/// <summary> Time rate of this subworld, compared to Earth's (1.0) </summary>
  		public virtual double TimeRate { get; set; } = Earth.TimeRate;

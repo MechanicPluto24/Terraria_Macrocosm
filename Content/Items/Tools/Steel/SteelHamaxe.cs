@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Tools.Steel
 {
-	internal class SteelHamaxe : ModItem
+	public class SteelHamaxe : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

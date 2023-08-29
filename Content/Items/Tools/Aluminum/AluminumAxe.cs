@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Tools.Aluminum
 {
-	internal class AluminumAxe : ModItem
+	public class AluminumAxe : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

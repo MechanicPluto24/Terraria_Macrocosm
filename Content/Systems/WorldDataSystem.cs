@@ -7,7 +7,7 @@ using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Systems
 {
-	internal class WorldDataSystem : ModSystem, INotifyPropertyChanged
+	public class WorldDataSystem : ModSystem, INotifyPropertyChanged
 	{
 		/// <summary> The instance </summary>
 		public static WorldDataSystem Instance => ModContent.GetInstance<WorldDataSystem>();

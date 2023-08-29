@@ -5,7 +5,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Materials
 {
-	internal class SteelBar : ModItem
+	public class SteelBar : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

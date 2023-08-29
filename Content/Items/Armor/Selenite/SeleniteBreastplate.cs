@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 namespace Macrocosm.Content.Items.Armor.Selenite
 {
 	[AutoloadEquip(EquipType.Body)]
-    internal class SeleniteBreastplate : ModItem
+    public class SeleniteBreastplate : ModItem
     {
         public override void SetStaticDefaults()
         {

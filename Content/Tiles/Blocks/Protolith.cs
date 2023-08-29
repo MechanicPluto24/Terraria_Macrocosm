@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles.Blocks
 {
-	internal class Protolith : ModTile
+	public class Protolith : ModTile
     {
         public override void SetStaticDefaults()
         {

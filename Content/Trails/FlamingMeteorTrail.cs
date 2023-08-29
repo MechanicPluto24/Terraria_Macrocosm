@@ -7,7 +7,7 @@ using Terraria.Graphics.Shaders;
 
 namespace Macrocosm.Content.Trails
 {
-	internal class FlamingMeteorTrail : VertexTrail
+	public class FlamingMeteorTrail : VertexTrail
 	{
 		private static MiscShaderData shader = new MiscShaderData(Main.VertexPixelShaderRef, "MagicMissile")
 							.UseProjectionMatrix(doUse: true)

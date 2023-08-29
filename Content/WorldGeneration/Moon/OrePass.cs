@@ -9,7 +9,7 @@ using Terraria.WorldBuilding;
 
 namespace Macrocosm.Content.WorldGeneration.Moon
 {
-	internal class OrePass : GenPass
+	public class OrePass : GenPass
 	{
 		public OrePass(string name, float loadWeight) : base(name, loadWeight) { }
 		

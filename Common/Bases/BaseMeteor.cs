@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Bases
 {
-	internal abstract class BaseMeteor : ModProjectile, IExplosive
+	public abstract class BaseMeteor : ModProjectile, IExplosive
     {
         public int Width;
         public int Height;

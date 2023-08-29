@@ -7,7 +7,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Bars
 {
-	internal class SeleniteBar : ModTile
+	public class SeleniteBar : ModTile
     {
         public override void SetStaticDefaults()
         {

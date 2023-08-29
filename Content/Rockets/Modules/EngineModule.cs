@@ -9,7 +9,7 @@ using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Rockets.Modules
 {
-	internal class EngineModule : AnimatedRocketModule
+	public class EngineModule : AnimatedRocketModule
     {
 		public override int DrawPriority => 0;
 		public bool RearLandingLegRaised { get; set; } = false;

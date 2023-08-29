@@ -2,7 +2,7 @@
 
 namespace Macrocosm.Content.Rockets.Modules
 {
-	internal class BoosterRight : Booster
+	public class BoosterRight : Booster
     {
 		public override int Width => 46;
 		public override int Height => 304;

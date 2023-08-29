@@ -6,7 +6,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Materials
 {
-	internal class DianiteOre : ModItem
+	public class DianiteOre : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

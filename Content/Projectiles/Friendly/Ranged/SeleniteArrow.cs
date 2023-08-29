@@ -13,7 +13,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-	internal class SeleniteArrow : ModProjectile, IBullet
+	public class SeleniteArrow : ModProjectile, IBullet
 	{
 		public override void SetDefaults()
 		{

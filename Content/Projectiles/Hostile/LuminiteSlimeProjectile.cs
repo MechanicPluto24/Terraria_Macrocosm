@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Hostile
 {
-	internal class LuminiteSlimeProjectile : ModProjectile
+	public class LuminiteSlimeProjectile : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{

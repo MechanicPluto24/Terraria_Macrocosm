@@ -14,7 +14,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-	internal class LuminiteSlime : ModNPC, IMoonEnemy
+	public class LuminiteSlime : ModNPC, IMoonEnemy
 	{
 		public override void SetStaticDefaults()
 		{

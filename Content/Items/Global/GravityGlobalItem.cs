@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Global
 {
-	internal class GravityGlobalItem : GlobalItem
+	public class GravityGlobalItem : GlobalItem
 	{
 		public override void Update(Item item, ref float gravity, ref float maxFallSpeed)
 		{

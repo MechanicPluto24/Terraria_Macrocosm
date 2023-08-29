@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.DrawLayers
 {
-	internal class CelestialBulwarkLayer : PlayerDrawLayer
+	public class CelestialBulwarkLayer : PlayerDrawLayer
 	{
 		public override Position GetDefaultPosition()
 			=> new AfterParent(PlayerDrawLayers.Shield);

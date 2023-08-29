@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
-	internal class SeleniteBow : ModItem
+	public class SeleniteBow : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

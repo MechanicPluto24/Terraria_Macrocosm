@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Materials
 {
-	internal class CortexFragment : ModItem
+	public class CortexFragment : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Navigation.Checklist
 {
-	internal class ChecklistInfoElement : InfoElement
+	public class ChecklistInfoElement : InfoElement
     {
         public enum ExtraIconType
         {

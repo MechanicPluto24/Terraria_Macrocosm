@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-	internal class PlasmaGrenade : ModProjectile
+	public class PlasmaGrenade : ModProjectile
 	{
 		public bool Exploded
 		{
