@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Macrocosm.Common.Utils
 {
-	internal static partial class Utility
+	public static partial class Utility
 	{
 		/// <summary> Concatenates IEnumberable collections into a single collection</summary>
 		public static IEnumerable<T> Concatenate<T>(params IEnumerable<T>[] collections)

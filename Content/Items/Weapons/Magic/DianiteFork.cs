@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Magic
 {
-	internal class DianiteFork : ModItem
+	public class DianiteFork : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

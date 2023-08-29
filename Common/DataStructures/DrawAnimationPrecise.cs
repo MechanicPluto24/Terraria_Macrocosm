@@ -5,7 +5,7 @@ using Terraria.DataStructures;
 namespace Macrocosm.Common.DataStructures
 {
 	/// <summary> By GroxTheGreat @ BaseMod, modified by Feldy </summary>
-	internal class DrawAnimationPrecise : DrawAnimation
+	public class DrawAnimationPrecise : DrawAnimation
 	{
 		readonly int Width = 0, Height = 0, offsetX = 0, offsetY = 2;
 		readonly bool vertical = true;

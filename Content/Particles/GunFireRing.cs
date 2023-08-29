@@ -2,7 +2,7 @@
 
 namespace Macrocosm.Content.Particles
 {
-	internal class GunFireRing : Particle
+	public class GunFireRing : Particle
 	{
 		public override int FrameNumber => 4;
 		public override int FrameSpeed => 8;

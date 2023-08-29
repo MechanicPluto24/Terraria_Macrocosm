@@ -5,7 +5,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Placeable.Blocks
 {
-	internal class PyramidPlate : ModItem
+	public class PyramidPlate : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

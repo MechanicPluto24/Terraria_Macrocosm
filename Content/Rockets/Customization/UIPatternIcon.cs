@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.UI
 {
-	internal class UIPatternIcon : UIFocusIconButton, IFocusable
+	public class UIPatternIcon : UIFocusIconButton, IFocusable
 	{
 		public Pattern Pattern { get; set; }
 

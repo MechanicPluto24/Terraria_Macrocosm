@@ -13,7 +13,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
 	// incomplete
 	// (TODO: leaps)
-	internal class Leaper : ModNPC, IMoonEnemy
+	public class Leaper : ModNPC, IMoonEnemy
 	{
 		public override void SetStaticDefaults()
 		{

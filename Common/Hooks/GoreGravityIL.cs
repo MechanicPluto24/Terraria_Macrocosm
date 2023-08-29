@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Hooks
 {
-	internal class GoreGravityIL : ILoadable
+	public class GoreGravityIL : ILoadable
 	{
 		public void Load(Mod mod)
 		{

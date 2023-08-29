@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Dusts
 {
-	internal class PlasmaBallDust : ModDust
+	public class PlasmaBallDust : ModDust
 	{
 
 		float vanishSpeed;

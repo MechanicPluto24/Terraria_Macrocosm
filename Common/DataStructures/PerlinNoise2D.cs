@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace Macrocosm.Common.DataStructures
 {
-	internal class PerlinNoise2D
+	public class PerlinNoise2D
     {
         public Seed Seed { get; set; }
         public InterpolationType InterpolationType { get; set; }
@@ -54,7 +54,7 @@ namespace Macrocosm.Common.DataStructures
         private static float Lerp(float a, float b, float t) => a + t * (b - a);
     }
 
-    internal enum InterpolationType
+    public enum InterpolationType
     {
         Linear
     }

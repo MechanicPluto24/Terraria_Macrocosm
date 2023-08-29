@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Tools.Steel
 {
-	internal class SteelPickaxe : ModItem
+	public class SteelPickaxe : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

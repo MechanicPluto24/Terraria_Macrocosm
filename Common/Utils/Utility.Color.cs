@@ -5,7 +5,7 @@ using Terraria;
 
 namespace Macrocosm.Common.Utils
 {
-	internal static partial class Utility
+	public static partial class Utility
     {
 		public static string GetHexText(this Color color) => "#" + color.Hex3().ToUpper();
 

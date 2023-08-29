@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Mounts
 {
-	internal class SpaceShuttleMount : ModMount
+	public class SpaceShuttleMount : ModMount
 	{
 		public override void SetStaticDefaults()
 		{

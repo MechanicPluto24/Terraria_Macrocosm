@@ -5,7 +5,7 @@ using Terraria.WorldBuilding;
 
 namespace Macrocosm.Content.WorldGeneration.Moon
 {
-	internal class FinishPass : GenPass
+	public class FinishPass : GenPass
 	{
 		private string subworld;
 

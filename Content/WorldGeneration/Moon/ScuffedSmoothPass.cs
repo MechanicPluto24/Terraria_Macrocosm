@@ -6,7 +6,7 @@ using Terraria.WorldBuilding;
 
 namespace Macrocosm.Content.WorldGeneration.Moon
 {
-	internal class ScuffedSmoothPass : GenPass
+	public class ScuffedSmoothPass : GenPass
 	{
 		public ScuffedSmoothPass(string name, float loadWeight) : base(name, loadWeight) { }
 

@@ -5,7 +5,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Common.UI
 {
-	internal class UIDynamicTextPanel : UIPanel
+	public class UIDynamicTextPanel : UIPanel
     {
 		private UIText uIText;
 

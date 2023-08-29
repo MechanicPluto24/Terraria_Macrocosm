@@ -3,7 +3,7 @@ using Terraria.Localization;
 
 namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
 {
-	internal class DayPeriodInfoElement : ValueUnitSpecialInfoElement
+	public class DayPeriodInfoElement : ValueUnitSpecialInfoElement
     {
 		public DayPeriodInfoElement(string specialValueKey) : base(specialValueKey) { }
 

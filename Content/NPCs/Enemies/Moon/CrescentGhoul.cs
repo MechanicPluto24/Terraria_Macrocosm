@@ -15,7 +15,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-	internal class CrescentGhoul : ModNPC, IMoonEnemy
+	public class CrescentGhoul : ModNPC, IMoonEnemy
 	{
 		public enum ActionState
 		{

@@ -6,7 +6,7 @@ using Terraria.GameContent.Drawing;
 namespace Macrocosm.Common.Drawing.Particles
 {
 	/// <summary> Particle.Creation, by sucss, Nurby & Feldy @ PellucidMod (RIP) </summary>
-	internal partial class Particle
+	public partial class Particle
 	{
 		/// <summary>
 		/// Creates a new particle with the specified parameters. Sync only when absolutely necessary.

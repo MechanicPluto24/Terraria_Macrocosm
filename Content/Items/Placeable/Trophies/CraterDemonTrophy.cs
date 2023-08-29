@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Placeable.Trophies
 {
-	internal class CraterDemonTrophy : ModItem
+	public class CraterDemonTrophy : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

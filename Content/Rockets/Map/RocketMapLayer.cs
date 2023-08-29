@@ -7,7 +7,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Map
 {
-	internal class RocketMapLayer : ModMapLayer
+	public class RocketMapLayer : ModMapLayer
     {
         public override void Draw(ref MapOverlayDrawContext context, ref string text)
         {

@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace Macrocosm.Common.Utils
 {
-	internal static partial class Utility
+	public static partial class Utility
 	{
 		public static object GetFieldValue(this Type type, string fieldName, object obj = null, BindingFlags? flags = null)
 		{

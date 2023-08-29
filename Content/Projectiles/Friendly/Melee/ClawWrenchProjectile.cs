@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
-	internal class ClawWrenchProjectile : ModProjectile
+	public class ClawWrenchProjectile : ModProjectile
     {
         public override bool ShouldUpdatePosition() => false;
 

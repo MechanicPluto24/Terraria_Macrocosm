@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Tools.Artemite
 {
-	internal class ArtemitePickaxe : ModItem
+	public class ArtemitePickaxe : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

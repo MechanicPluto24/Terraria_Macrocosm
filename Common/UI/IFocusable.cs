@@ -2,7 +2,7 @@
 
 namespace Macrocosm.Common.UI
 {
-	internal interface IFocusable
+	public interface IFocusable
 	{
 		public bool HasFocus { get; set; }
 

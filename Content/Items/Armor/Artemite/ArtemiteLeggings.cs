@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 namespace Macrocosm.Content.Items.Armor.Artemite
 {
 	[AutoloadEquip(EquipType.Legs)]
-    internal class ArtemiteLeggings : ModItem
+    public class ArtemiteLeggings : ModItem
     {
         public override void SetStaticDefaults()
         {

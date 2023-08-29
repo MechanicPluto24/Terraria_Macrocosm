@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-	internal partial class Pattern : IUnlockable
+	public partial class Pattern : IUnlockable
     {
 		public string Name { get; }
 

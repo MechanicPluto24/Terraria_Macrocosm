@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Currency
 {
-	internal class Moonstone : ModItem
+	public class Moonstone : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.UI.Menus
 {
-	internal class MacrocosmMenu : ModMenu
+	public class MacrocosmMenu : ModMenu
     {
         private const string AssetPath = "Macrocosm/Content/UI/Menus/";
 		private const AssetRequestMode Mode = AssetRequestMode.ImmediateLoad;

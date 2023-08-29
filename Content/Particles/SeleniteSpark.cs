@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Particles
 {
-	internal class SeleniteSpark : Particle
+	public class SeleniteSpark : Particle
 	{
 		public override int SpawnTimeLeft => 250;
 		public override string TexturePath => Macrocosm.EmptyTexPath;

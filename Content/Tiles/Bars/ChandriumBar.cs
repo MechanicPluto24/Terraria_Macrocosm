@@ -7,7 +7,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Bars
 {
-	internal class ChandriumBar : ModTile
+	public class ChandriumBar : ModTile
     {
         public override void SetStaticDefaults()
         {

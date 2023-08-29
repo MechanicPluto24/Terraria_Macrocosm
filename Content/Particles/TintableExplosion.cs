@@ -6,7 +6,7 @@ using Terraria;
 
 namespace Macrocosm.Content.Particles
 {
-	internal class TintableExplosion : Particle
+	public class TintableExplosion : Particle
 	{
 		public override int TrailCacheLenght => 15;
 

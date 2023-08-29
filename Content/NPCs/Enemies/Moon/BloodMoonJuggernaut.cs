@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-	internal class BloodMoonJuggernaut : ModNPC, IMoonEnemy
+	public class BloodMoonJuggernaut : ModNPC, IMoonEnemy
 	{
 		public enum ActionState
 		{

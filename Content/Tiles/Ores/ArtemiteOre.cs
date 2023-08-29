@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles.Ores
 {
-	internal class ArtemiteOre : ModTile
+	public class ArtemiteOre : ModTile
     {
         public override void SetStaticDefaults()
         {

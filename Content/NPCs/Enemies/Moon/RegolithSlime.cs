@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-	internal class RegolithSlime : ModNPC, IMoonEnemy
+	public class RegolithSlime : ModNPC, IMoonEnemy
 	{
 		public override void SetStaticDefaults()
 		{

@@ -5,7 +5,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Placeable.Paintings
 {
-	internal class Overlord : ModItem
+	public class Overlord : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

@@ -11,7 +11,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
-	internal class UINavigationPanel : UIPanel
+	public class UINavigationPanel : UIPanel
     {
         public UINavigationMap CurrentMap;
 

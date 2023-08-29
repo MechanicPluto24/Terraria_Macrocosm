@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rarities
 {
-	internal class DevRarity : ModRarity
+	public class DevRarity : ModRarity
 	{
 		public override Color RarityColor => GlobalVFX.CelestialColor;
 
@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Rarities
 		}
 	}
 
-	internal class DevGlobalItem : ModRarity
+	public class DevGlobalItem : ModRarity
 	{
 
 	}

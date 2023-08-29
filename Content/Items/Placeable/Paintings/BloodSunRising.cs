@@ -5,7 +5,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Placeable.Paintings
 {
-	internal class BloodSunRising : ModItem
+	public class BloodSunRising : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

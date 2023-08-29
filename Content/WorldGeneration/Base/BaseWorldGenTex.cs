@@ -7,7 +7,7 @@ using Terraria.ID;
 
 namespace Macrocosm.Content.WorldGeneration.Base
 {
-	internal class BaseWorldGenTex
+	public class BaseWorldGenTex
     {
         public static Dictionary<Color, int> colorToLiquid;
         public static Dictionary<Color, int> colorToSlope;
@@ -72,7 +72,7 @@ namespace Macrocosm.Content.WorldGeneration.Base
         }
     }
 
-    internal class TexGen
+    public class TexGen
     {
         public int width, height;
         public TileInfo[,] tileGen;
@@ -109,7 +109,7 @@ namespace Macrocosm.Content.WorldGeneration.Base
         }
     }
 
-    internal class TileInfo
+    public class TileInfo
     {
         public int tileID = -1, tileStyle, wallID = -1, objectID;
         public int liquidType = -1, liquidAmt; //liquidType can be 0 (water), 1 (lava), 2 (honey)

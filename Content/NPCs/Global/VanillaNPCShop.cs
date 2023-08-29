@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Global
 {
-	internal class VanillaNPCShop : GlobalNPC
+	public class VanillaNPCShop : GlobalNPC
 	{
 		public override void ModifyShop(NPCShop shop)
 		{

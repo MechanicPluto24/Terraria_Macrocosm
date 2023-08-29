@@ -6,7 +6,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
-	internal class UINavigationMap : UIElement
+	public class UINavigationMap : UIElement
 	{
 		/// <summary> The next navigation map, switched on zoom in </summary>
 		public UINavigationMap Next = null;

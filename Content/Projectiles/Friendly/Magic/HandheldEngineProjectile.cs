@@ -16,7 +16,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
-	internal class HandheldEngineProjectile : ChargedGunHeldProjectile
+	public class HandheldEngineProjectile : ChargedGunHeldProjectile
 	{
 		public ref float AI_Overheat => ref Projectile.ai[0];
 		public ref float AI_UseCounter => ref Projectile.ai[1];

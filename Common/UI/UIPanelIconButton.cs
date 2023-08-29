@@ -7,7 +7,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Common.UI
 {
-	internal class UIPanelIconButton : UIHoverImageButton
+	public class UIPanelIconButton : UIHoverImageButton
 	{
 		public Color IconColor { get; set; } = Color.White;
 		public Color BackPanelHoverBorderColor { get; set; } = Color.Gold;

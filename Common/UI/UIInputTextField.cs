@@ -6,7 +6,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Common.UI
 {
-	internal class UIInputTextField : UIElement
+	public class UIInputTextField : UIElement
 	{
 
 		private readonly string hintText;

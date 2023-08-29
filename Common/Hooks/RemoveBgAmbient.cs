@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Hooks
 {
-	internal class RemoveBgAmbient : ILoadable
+	public class RemoveBgAmbient : ILoadable
 	{
 		public void Load(Mod mod)
 		{

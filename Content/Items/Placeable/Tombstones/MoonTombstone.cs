@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Placeable.Tombstones
 {
-	internal class MoonTombstone : ModItem
+	public class MoonTombstone : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

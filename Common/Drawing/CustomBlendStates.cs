@@ -2,7 +2,7 @@
 
 namespace Macrocosm.Common.Drawing
 {
-	internal class CustomBlendStates
+	public class CustomBlendStates
 	{
 		public static readonly BlendState Multiplicative = new()
 		{

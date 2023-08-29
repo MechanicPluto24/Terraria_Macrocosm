@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 namespace Macrocosm.Common.Drawing.Particles
 {
 	/// <summary> Particle.Netcode by sucss, Nurby & Feldy @ PellucidMod (RIP) </summary>
-	internal partial class Particle 
+	public partial class Particle 
 	{
 		public const int MaxParticles = ushort.MaxValue;
 		public const int MaxParticleTypes = ushort.MaxValue;

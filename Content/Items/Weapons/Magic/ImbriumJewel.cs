@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Magic
 {
-	internal class ImbriumJewel : ModItem
+	public class ImbriumJewel : ModItem
 	{
 		public override void SetStaticDefaults()
         {

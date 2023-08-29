@@ -13,7 +13,7 @@ using Terraria.Utilities;
 
 namespace Macrocosm.Common.Utils
 {
-	internal static partial class Utility
+	public static partial class Utility
 	{
         //------------------------------------------------------//
         //------------------BASE UTILITY CLASS------------------//

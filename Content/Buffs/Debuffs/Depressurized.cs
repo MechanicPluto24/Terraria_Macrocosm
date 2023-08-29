@@ -3,7 +3,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Buffs.Debuffs
 {
-	internal class Depressurized : ModBuff
+	public class Depressurized : ModBuff
 	{
 		public override void SetStaticDefaults()
 		{

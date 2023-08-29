@@ -5,7 +5,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Placeable.Paintings
 {
-	internal class Retributor : ModItem
+	public class Retributor : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

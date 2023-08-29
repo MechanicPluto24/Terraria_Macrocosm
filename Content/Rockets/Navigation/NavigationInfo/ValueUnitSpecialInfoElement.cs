@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
 {
-	internal abstract class ValueUnitSpecialInfoElement : InfoElement
+	public abstract class ValueUnitSpecialInfoElement : InfoElement
 	{
 		protected LocalizedText formattedLocalizedText;
 

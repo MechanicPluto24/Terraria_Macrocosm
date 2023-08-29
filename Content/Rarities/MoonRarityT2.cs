@@ -3,7 +3,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rarities
 {
-	internal class MoonRarityT2 : ModRarity
+	public class MoonRarityT2 : ModRarity
 	{
 		public override Color RarityColor => new(64, 224, 208); // turquoise color 
 

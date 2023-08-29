@@ -17,7 +17,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 		Inactive
 	};
 
-	internal class LaunchPadMarker : ModTile
+	public class LaunchPadMarker : ModTile
     {
         public override void SetStaticDefaults()
         {
@@ -47,7 +47,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 		}
 	}
 
-    internal class LaunchPadMarkerTE : ModTileEntity
+    public class LaunchPadMarkerTE : ModTileEntity
     {
 		public int CheckInterval { get; set; } = 30; 
 		public int CheckDistance { get; set; } = 20;

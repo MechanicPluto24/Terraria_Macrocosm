@@ -9,7 +9,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
-	internal class UIInfoElement : UIPanel
+	public class UIInfoElement : UIPanel
     {
         private readonly Asset<Texture2D> icon;
         private readonly Asset<Texture2D> extraIcon;

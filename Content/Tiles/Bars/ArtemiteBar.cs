@@ -7,7 +7,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Bars
 {
-	internal class ArtemiteBar : ModTile
+	public class ArtemiteBar : ModTile
     {
         public override void SetStaticDefaults()
         {

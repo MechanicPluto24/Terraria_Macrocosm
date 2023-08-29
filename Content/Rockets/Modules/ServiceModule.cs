@@ -2,7 +2,7 @@
 
 namespace Macrocosm.Content.Rockets.Modules
 {
-	internal class ServiceModule : RocketModule
+	public class ServiceModule : RocketModule
     {
 		public override int DrawPriority => 3;
 

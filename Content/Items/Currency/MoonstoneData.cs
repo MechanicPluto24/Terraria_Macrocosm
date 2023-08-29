@@ -5,7 +5,7 @@ using Terraria.Localization;
 
 namespace Macrocosm.Content.Items.Currency
 {
-	internal class MoonstoneData : CustomCurrencySingleCoin
+	public class MoonstoneData : CustomCurrencySingleCoin
 	{
 		public MoonstoneData(int coinItemID, long currencyCap) : base(coinItemID, currencyCap) { }
 	
