@@ -1,5 +1,4 @@
 using Macrocosm.Content.Items.Materials;
-using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.GameContent.Creative;

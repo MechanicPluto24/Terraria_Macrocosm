@@ -3,14 +3,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.Localization;
 using Terraria.UI;
 
 namespace Macrocosm.Common.UI
 {
-    internal class UIListScrollablePanel : UIPanel, IEnumerable<UIElement>
+	internal class UIListScrollablePanel : UIPanel, IEnumerable<UIElement>
 	{
         public bool HideScrollbarIfNotScrollable { get; set; } = true;
 

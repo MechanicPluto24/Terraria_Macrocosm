@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Drawing.Particles
 {
-    public enum ParticleDrawLayer
+	public enum ParticleDrawLayer
 	{
 		BeforeProjectiles,
 		AfterProjectiles,

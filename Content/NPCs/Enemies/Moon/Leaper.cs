@@ -1,19 +1,19 @@
-using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-using Terraria.GameContent.Bestiary;
-using Terraria.GameContent.ItemDropRules;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.NPCs.Global;
-using Macrocosm.Content.Biomes;
+using Microsoft.Xna.Framework;
+using Terraria;
+using Terraria.GameContent.Bestiary;
+using Terraria.GameContent.ItemDropRules;
+using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-    // incomplete
-    // (TODO: leaps)
-    internal class Leaper : ModNPC, IMoonEnemy
+	// incomplete
+	// (TODO: leaps)
+	internal class Leaper : ModNPC, IMoonEnemy
 	{
 		public override void SetStaticDefaults()
 		{

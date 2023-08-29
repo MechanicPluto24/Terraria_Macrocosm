@@ -1,15 +1,15 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Utils;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Linq;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using Macrocosm.Common.Utils;
-using Macrocosm.Common.DataStructures;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-    internal class Nameplate : TagSerializable
+	internal class Nameplate : TagSerializable
     {
 		// the text
 		private string text = "";

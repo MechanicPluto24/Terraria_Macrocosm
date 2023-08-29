@@ -3,7 +3,7 @@ using Terraria.ID;
 
 namespace Macrocosm.Common.DataStructures
 {
-    public record TileNeighbourInfo(int I, int J)
+	public record TileNeighbourInfo(int I, int J)
     {
         private static bool CoordinatesOutOfBounds(int i, int j) => i >= Main.maxTilesX || j >= Main.maxTilesY || i < 0 || j < 0;
         public abstract record CountableNeighbourInfo(int I, int J)

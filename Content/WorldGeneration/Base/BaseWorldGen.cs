@@ -1,14 +1,11 @@
-using System;
 using Microsoft.Xna.Framework;
+using System;
 using Terraria;
-using Terraria.ID;
-using Terraria.Localization;
-using Terraria.ObjectData;
 using Terraria.WorldBuilding;
 
 namespace Macrocosm.Content.WorldGeneration.Base
 {
-    /*
+	/*
 	 * A class used by the newer gen methods to make calling them easier without needing to provide a ton of parameters multiple times.
 	 * 
 	 *  tiles: An array of tiles to use to generate this hallway.
@@ -19,7 +16,7 @@ namespace Macrocosm.Content.WorldGeneration.Base
 	 *  CanPlace(x, y, tileID, wallID): an optional Func that can be used to have custom behavior about placing tiles. 
 	 *  CanPlaceWall(x, y, tileID, wallID): an optional Func that can be used to have custom behavior about placing walls. 
 	 */
-    internal class GenConditions
+	internal class GenConditions
     {
         public int[] tiles;
         public int[] walls;

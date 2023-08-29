@@ -1,6 +1,4 @@
 using Macrocosm.Content.Items.Materials;
-using SubworldLibrary;
-using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;

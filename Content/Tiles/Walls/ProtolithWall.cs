@@ -1,11 +1,10 @@
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
-using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Tiles.Walls
 {
-    internal class ProtolithWall : ModWall
+	internal class ProtolithWall : ModWall
     {
         public override void SetStaticDefaults()
         {

@@ -3,15 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Terraria;
 using Terraria.GameContent.Generation;
 using Terraria.IO;
-using Terraria.Localization;
 using Terraria.WorldBuilding;
 
 namespace Macrocosm.Common.DataStructures
 {
-    internal abstract class GenPassCollection
+	internal abstract class GenPassCollection
     {
         private PassLegacy CreateGenPass(MethodInfo methodInfo)
         {

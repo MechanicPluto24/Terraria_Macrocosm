@@ -1,11 +1,9 @@
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Trails;
-using Microsoft.CodeAnalysis;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using Terraria;
 using Terraria.GameContent;
@@ -14,8 +12,8 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
-    // Parent projectile class below
-    internal class DianiteForkProjectile : ModProjectile
+	// Parent projectile class below
+	internal class DianiteForkProjectile : ModProjectile
     {
         public override void SetStaticDefaults()
         {

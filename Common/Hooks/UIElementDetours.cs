@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using Terraria.UI;
+﻿using Macrocosm.Common.UI;
+using System.Collections.Generic;
 using Terraria.ModLoader;
-using Macrocosm.Common.UI;
+using Terraria.UI;
 
 namespace Macrocosm.Common.Hooks
 {

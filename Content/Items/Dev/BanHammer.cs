@@ -1,7 +1,7 @@
+using Macrocosm.Content.Items.Global;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Content.Items.Global;
 
 namespace Macrocosm.Content.Items.Dev
 {

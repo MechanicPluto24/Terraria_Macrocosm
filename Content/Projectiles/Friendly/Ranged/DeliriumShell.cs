@@ -1,19 +1,17 @@
-using System;
+using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Utils;
+using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Particles;
+using Macrocosm.Content.Projectiles.Global;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Content.Dusts;
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Projectiles.Global;
-using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Content.Particles;
-using Terraria.GameContent;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-    internal class DeliriumShell : ModProjectile, IBullet, IExplosive
+	internal class DeliriumShell : ModProjectile, IBullet, IExplosive
 	{
 		public float BlastRadius => 100;
 

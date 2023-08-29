@@ -13,7 +13,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
-    internal class RocketUIState : UIState, IRocketDataConsumer
+	internal class RocketUIState : UIState, IRocketDataConsumer
     {
         public Rocket Rocket { get; set; } 
 

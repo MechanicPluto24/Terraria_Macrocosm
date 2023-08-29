@@ -1,15 +1,14 @@
-﻿using Microsoft.Xna.Framework;
-using Terraria;
-using System;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria.ModLoader;
+﻿using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
-using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Content.Rockets;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
+using Terraria;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Particles
 {
-    internal class EngineSpark : Particle
+	internal class EngineSpark : Particle
 	{
 		public override int SpawnTimeLeft => 10;
 		public override string TexturePath => Macrocosm.EmptyTexPath;

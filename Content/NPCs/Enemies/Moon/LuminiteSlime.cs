@@ -2,20 +2,19 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.NPCs.Global;
 using Macrocosm.Content.Projectiles.Hostile;
+using Macrocosm.Content.Tiles.Blocks;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Content.Tiles.Blocks;
-using Macrocosm.Content.NPCs.Global;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-    internal class LuminiteSlime : ModNPC, IMoonEnemy
+	internal class LuminiteSlime : ModNPC, IMoonEnemy
 	{
 		public override void SetStaticDefaults()
 		{

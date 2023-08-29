@@ -1,23 +1,14 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terraria.DataStructures;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using System.IO;
-using Terraria.GameContent;
-using Mono.Cecil;
-using static Terraria.ModLoader.PlayerDrawLayer;
-using Macrocosm.Common.Utils;
 
 namespace Macrocosm.Common.Bases
 {
-    internal struct GunHeldProjectileData
+	internal struct GunHeldProjectileData
     {
         public GunHeldProjectileData() { }
 

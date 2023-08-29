@@ -1,5 +1,4 @@
-﻿using Macrocosm.Content.Rarities;
-using Terraria;
+﻿using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;

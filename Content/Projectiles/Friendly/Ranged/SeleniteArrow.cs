@@ -1,16 +1,15 @@
-using Terraria.GameContent;
-using Macrocosm.Common.Drawing;
+using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Utils;
+using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Particles;
+using Macrocosm.Content.Projectiles.Global;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Content.Projectiles.Global;
-using Macrocosm.Content.Dusts;
-using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Content.Particles;
-using Macrocosm.Common.Utils;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {

@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Armor.Chandrium
 {
-    [AutoloadEquip(EquipType.Body)]
+	[AutoloadEquip(EquipType.Body)]
     internal class ChandriumBreastplate : ModItem
     {
         public override void SetStaticDefaults()

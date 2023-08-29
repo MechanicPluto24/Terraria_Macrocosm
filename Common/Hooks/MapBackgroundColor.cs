@@ -1,16 +1,13 @@
-﻿using Terraria;
-using Terraria.ModLoader;
-using SubworldLibrary;
-using Terraria.Map;
-using System;
-using System.Reflection;
+﻿using Macrocosm.Common.Subworlds;
 using Microsoft.Xna.Framework;
-using Macrocosm.Content.Subworlds;
-using Macrocosm.Common.Subworlds;
+using SubworldLibrary;
+using System.Reflection;
+using Terraria.Map;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Hooks
 {
-    internal class MapBackgroundColor : ILoadable
+	internal class MapBackgroundColor : ILoadable
 	{
 		private static ushort skyPosition;
 		private static ushort dirtPosition;

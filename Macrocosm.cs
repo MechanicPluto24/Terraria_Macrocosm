@@ -1,21 +1,21 @@
-using System;
-using System.IO;
+using Macrocosm.Common.Netcode;
+using Macrocosm.Content.Subworlds;
+using Macrocosm.Content.Tiles.Blocks;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using SubworldLibrary;
+using System;
+using System.IO;
 using Terraria;
-using Terraria.ModLoader;
+using Terraria.GameContent;
 using Terraria.Graphics.Effects;
 using Terraria.Graphics.Shaders;
-using SubworldLibrary;
-using Macrocosm.Content.Subworlds;
-using Macrocosm.Common.Netcode;
-using Macrocosm.Content.Tiles.Blocks;
-using Terraria.GameContent;
+using Terraria.ModLoader;
 using Terraria.ModLoader.Core;
 
 namespace Macrocosm
 {
-    internal class Macrocosm : Mod
+	internal class Macrocosm : Mod
 	{
 		public static Mod Instance => ModContent.GetInstance<Macrocosm>();
 

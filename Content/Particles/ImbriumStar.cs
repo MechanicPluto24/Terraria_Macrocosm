@@ -6,7 +6,7 @@ using Terraria;
 
 namespace Macrocosm.Content.Particles
 {
-    internal class ImbriumStar : Particle
+	internal class ImbriumStar : Particle
     {
         public override string TexturePath => Macrocosm.TextureAssetsPath + "Star2";
 

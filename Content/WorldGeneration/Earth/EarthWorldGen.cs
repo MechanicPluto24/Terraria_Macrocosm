@@ -1,23 +1,15 @@
-﻿using SubworldLibrary;
-using Terraria;
-using Terraria.DataStructures;
-using Terraria.GameContent.Creative;
-using Terraria.GameContent.Events;
-using Terraria.ModLoader;
-using Macrocosm.Content.Subworlds;
-using Microsoft.Xna.Framework;
+﻿using Macrocosm.Content.Tiles.Ores;
 using System.Collections.Generic;
-using Terraria.WorldBuilding;
+using Terraria;
 using Terraria.GameContent.Generation;
-using Terraria.IO;
-using System;
-using Macrocosm.Content.WorldGeneration;
 using Terraria.ID;
-using Macrocosm.Content.Tiles.Ores;
+using Terraria.IO;
+using Terraria.ModLoader;
+using Terraria.WorldBuilding;
 
 namespace Macrocosm.Content
 {
-    class EarthWorldGen : ModSystem
+	class EarthWorldGen : ModSystem
 	{
 		public override void ModifyWorldGenTasks(List<GenPass> tasks, ref double totalWeight)
 		{

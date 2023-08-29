@@ -1,11 +1,10 @@
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
-using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Tiles.Blocks
 {
-    internal class Tendril : ModTile
+	internal class Tendril : ModTile
     {
         public override void SetStaticDefaults()
         {

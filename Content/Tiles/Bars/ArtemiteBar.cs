@@ -1,14 +1,13 @@
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Bars
 {
-    internal class ArtemiteBar : ModTile
+	internal class ArtemiteBar : ModTile
     {
         public override void SetStaticDefaults()
         {

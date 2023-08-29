@@ -12,7 +12,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Backgrounds.Moon
 {
-    internal class MoonSky : CustomSky, ILoadable
+	internal class MoonSky : CustomSky, ILoadable
 	{
 		public bool Active;
 		public float Intensity;

@@ -1,12 +1,12 @@
-using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Reflection;
 using Terraria;
 
 
 namespace Macrocosm.Common.Utils
 {
-    internal readonly struct SpriteBatchState
+	internal readonly struct SpriteBatchState
     {
         public readonly bool BeginCalled;
         public readonly SpriteSortMode SpriteSortMode;

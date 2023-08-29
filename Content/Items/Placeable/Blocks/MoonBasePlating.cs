@@ -5,7 +5,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Placeable.Blocks
 {
-    internal class MoonBasePlating : ModItem
+	internal class MoonBasePlating : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

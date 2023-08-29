@@ -1,15 +1,15 @@
-﻿using Terraria;
+﻿using Macrocosm.Content.Projectiles.Friendly.Melee;
+using Macrocosm.Content.Rarities;
+using Microsoft.Xna.Framework;
+using Terraria;
+using Terraria.DataStructures;
+using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.GameContent.Creative;
-using Microsoft.Xna.Framework;
-using Macrocosm.Content.Projectiles.Friendly.Melee;
-using Macrocosm.Content.Rarities;
-using Terraria.DataStructures;
 
 namespace Macrocosm.Content.Items.Weapons.Melee
 {
-    internal class MoonSword : ModItem
+	internal class MoonSword : ModItem
     {
         public override void SetStaticDefaults()
         {

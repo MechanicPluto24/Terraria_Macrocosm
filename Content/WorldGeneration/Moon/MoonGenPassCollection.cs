@@ -1,33 +1,20 @@
-﻿using Macrocosm.Common.Bases;
-using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Subworlds;
+﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
-using Microsoft.Xna.Framework;
-using SubworldLibrary;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-using Terraria.WorldBuilding;
-using static Terraria.ModLoader.ModContent;
-using static Macrocosm.Common.Utils.Utility;
-using Humanizer;
-using static Humanizer.On;
-using Macrocosm.Content.Tiles.Walls;
+using Macrocosm.Content.Tiles.Ambient;
 using Macrocosm.Content.Tiles.Blocks;
 using Macrocosm.Content.Tiles.Ores;
-using System.Threading;
-using log4net.Repository.Hierarchy;
-using Macrocosm.Content.Tiles.Ambient;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Macrocosm.Content.Tiles.Walls;
+using Microsoft.Xna.Framework;
+using System;
+using Terraria;
+using Terraria.ID;
+using Terraria.WorldBuilding;
+using static Macrocosm.Common.Utils.Utility;
+using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.WorldGeneration.Moon
 {
-    internal class MoonGenPassCollection : GenPassCollection
+	internal class MoonGenPassCollection : GenPassCollection
     {
         public int RegolithLayerHeight { get; } = 200;
         public float SurfaceWidthFrequency { get; } = 0.003f;

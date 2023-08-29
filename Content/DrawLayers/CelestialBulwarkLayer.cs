@@ -1,17 +1,14 @@
-﻿using Terraria;
-using Terraria.ModLoader;
-using Terraria.DataStructures;
-using Microsoft.Xna.Framework;
-using Terraria.GameContent;
-using Microsoft.Xna.Framework.Graphics;
-using System;
-using Macrocosm.Content.Systems;
+﻿using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Utils;
-using Macrocosm.Common.Drawing;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Terraria;
+using Terraria.DataStructures;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.DrawLayers
 {
-    internal class CelestialBulwarkLayer : PlayerDrawLayer
+	internal class CelestialBulwarkLayer : PlayerDrawLayer
 	{
 		public override Position GetDefaultPosition()
 			=> new AfterParent(PlayerDrawLayers.Shield);

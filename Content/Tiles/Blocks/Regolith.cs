@@ -1,14 +1,13 @@
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
-using System.Linq;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles.Blocks
 {
-    internal class Regolith : ModTile
+	internal class Regolith : ModTile
     {
         public override void SetStaticDefaults()
         {

@@ -1,11 +1,10 @@
 ﻿using Macrocosm.Common.UI;
 using Microsoft.Xna.Framework;
 using Terraria.GameContent.UI.Elements;
-using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Payload
 {
-    internal class UIPayloadTab : UIPanel, ITabUIElement, IRocketDataConsumer
+	internal class UIPayloadTab : UIPanel, ITabUIElement, IRocketDataConsumer
     {
         public Rocket Rocket { get; set; }  
 

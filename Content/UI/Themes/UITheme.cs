@@ -1,13 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using System;
 using Terraria;
 
 namespace Macrocosm.Content.UI.Themes
 {
 	// Not yet sure on how we'll do the implementation
-    internal class UITheme
+	internal class UITheme
     {
 		public Color PanelBackgroundColor { get; set; }
         public Color PanelBorderColor { get; set; }

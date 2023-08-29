@@ -1,20 +1,17 @@
 ﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.Navigation;
-using Macrocosm.Content.Rockets.Navigation.NavigationInfo;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
 using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets
 {
-    internal class RocketUISystem : ModSystem
+	internal class RocketUISystem : ModSystem
 	{
 		public static RocketUISystem Instance => ModContent.GetInstance<RocketUISystem>();
 		public UserInterface Interface { get; set; }

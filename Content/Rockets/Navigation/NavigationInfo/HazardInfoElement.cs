@@ -1,12 +1,12 @@
-﻿using ReLogic.Content;
+﻿using Macrocosm.Common.UI;
 using Microsoft.Xna.Framework.Graphics;
-using Terraria.ModLoader;
+using ReLogic.Content;
 using Terraria.Localization;
-using Macrocosm.Common.UI;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
 {
-    internal class HazardInfoElement : InfoElement
+	internal class HazardInfoElement : InfoElement
     {
         public HazardInfoElement(string hazardKey) : base(hazardKey) { }
 

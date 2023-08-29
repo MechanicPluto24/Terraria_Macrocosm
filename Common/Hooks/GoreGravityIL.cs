@@ -1,13 +1,13 @@
+using Macrocosm.Common.Subworlds;
+using Macrocosm.Content.Subworlds;
 using MonoMod.Cil;
+using SubworldLibrary;
 using Terraria;
 using Terraria.ModLoader;
-using SubworldLibrary;
-using Macrocosm.Content.Subworlds;
-using Macrocosm.Common.Subworlds;
 
 namespace Macrocosm.Common.Hooks
 {
-    internal class GoreGravityIL : ILoadable
+	internal class GoreGravityIL : ILoadable
 	{
 		public void Load(Mod mod)
 		{

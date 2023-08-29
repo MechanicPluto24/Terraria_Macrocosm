@@ -1,18 +1,13 @@
-﻿
-
-using Terraria.UI;
-using Microsoft.Xna.Framework.Input;
-using System;
-using ReLogic.Content;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria.ModLoader;
-using Terraria.Localization;
+﻿using Macrocosm.Common.UI;
 using Microsoft.Xna.Framework;
-using Macrocosm.Common.UI;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
+using Terraria.Localization;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
 {
-    public enum ThreatLevel
+	public enum ThreatLevel
     {
         None,
         Harmless,
