@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles.Walls
 {
-	internal class HemostoneWall : ModWall
+	public class HemostoneWall : ModWall
     {
         public override void SetStaticDefaults()
         {

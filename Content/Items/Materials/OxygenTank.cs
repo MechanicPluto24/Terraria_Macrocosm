@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Materials
 {
-	internal class OxygenTank : ModItem
+	public class OxygenTank : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

@@ -9,7 +9,7 @@ using Terraria.ModLoader.IO;
 namespace Macrocosm.Content.NPCs.Global
 {
 	/// <summary> Global NPC for NPC instances </summary>
-	internal class MacrocosmNPC : GlobalNPC
+	public class MacrocosmNPC : GlobalNPC
 	{
 		public override bool InstancePerEntity => true;
 		protected override bool CloneNewInstances => false;

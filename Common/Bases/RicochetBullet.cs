@@ -13,7 +13,7 @@ namespace Macrocosm.Common.Bases
 	/// Base class for a bullet projectile that bounces from enemy to enemy. 
 	/// Call base if overrding SetDefaults, OnHitNPC, PostAI or Send/ReceiveExtraAI
 	/// </summary>
-	internal abstract class RicochetBullet : ModProjectile, IBullet
+	public abstract class RicochetBullet : ModProjectile, IBullet
     {
         /// <summary> The number of ricochets </summary>
         public virtual int RicochetCount { get; set; } = 2;

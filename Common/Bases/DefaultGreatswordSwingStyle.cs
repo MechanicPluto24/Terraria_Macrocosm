@@ -3,7 +3,7 @@ using System;
 
 namespace Macrocosm.Common.Bases
 {
-	internal class DefaultGreatswordSwingStyle : GreatswordSwingStyle
+	public class DefaultGreatswordSwingStyle : GreatswordSwingStyle
     {
         private float? maxSwingTimer = null;
         private float swingTimer = 1f;

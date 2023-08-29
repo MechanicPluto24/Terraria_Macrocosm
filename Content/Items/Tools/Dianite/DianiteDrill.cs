@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Tools.Dianite
 {
-	internal class DianiteDrill : ModItem
+	public class DianiteDrill : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

@@ -4,7 +4,7 @@ using Terraria.Utilities;
 
 namespace Macrocosm.Common.DataStructures
 {
-	internal class CellularAutomaton
+	public class CellularAutomaton
     {
         public Cell[][] Map { get; }
         public CellularAutomaton(int width, int height, Seed seed, float fill = 0.5f, int smoothing = 4)
@@ -98,7 +98,7 @@ namespace Macrocosm.Common.DataStructures
         }
     }
 
-    internal enum Cell : uint
+    public enum Cell : uint
     {
         Air,
         Terrain

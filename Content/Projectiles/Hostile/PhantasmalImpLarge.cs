@@ -2,7 +2,7 @@ using Terraria;
 
 namespace Macrocosm.Content.Projectiles.Hostile
 {
-	internal class PhantasmalImpLarge : PhantasmalImpSmall
+	public class PhantasmalImpLarge : PhantasmalImpSmall
 	{
 		public override void SetDefaults()
 		{

@@ -20,7 +20,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
-	internal class UICustomizationTab : UIPanel, ITabUIElement, IRocketDataConsumer
+	public class UICustomizationTab : UIPanel, ITabUIElement, IRocketDataConsumer
     {
 		private Rocket rocket = new();
 		public Rocket Rocket {

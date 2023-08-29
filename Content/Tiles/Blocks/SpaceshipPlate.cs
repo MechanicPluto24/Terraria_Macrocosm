@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles.Blocks
 {
-	internal class SpaceshipPlate : ModTile
+	public class SpaceshipPlate : ModTile
     {
         public override void SetStaticDefaults()
         {

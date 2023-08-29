@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
-	internal class ArtemiteSpearProjectile : ModProjectile
+	public class ArtemiteSpearProjectile : ModProjectile
 	{
 		protected virtual float HoldoutRangeMin => 50f;
 		protected virtual float HoldoutRangeMax => 160f;

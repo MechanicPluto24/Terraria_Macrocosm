@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.UI
 {
-	internal class UIWorldGenProgressBar : UIGenProgressBar
+	public class UIWorldGenProgressBar : UIGenProgressBar
     {
         private readonly Texture2D texUpper;
         private readonly Texture2D texLower;

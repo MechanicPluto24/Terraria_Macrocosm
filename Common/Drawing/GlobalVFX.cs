@@ -3,7 +3,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Drawing
 {
-	internal class GlobalVFX : ModSystem
+	public class GlobalVFX : ModSystem
 	{
 		
 		#region Celestial Disco

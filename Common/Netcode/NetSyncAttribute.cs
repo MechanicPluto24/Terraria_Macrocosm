@@ -17,5 +17,5 @@ namespace Macrocosm.Common.Netcode
 	///		<item> <c>NPC.netUpdate</c> or <c>Projectile.netUpdate</c> are set to true, or the corresponding NetMessage is sent </item>
 	/// </list> </summary>
 	[AttributeUsage(AttributeTargets.Field)]
-	internal class NetSyncAttribute : Attribute { }
+	public class NetSyncAttribute : Attribute { }
 }

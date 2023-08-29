@@ -15,7 +15,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 	/// <summary>
 	/// This is based off ExampleMod for now 
 	/// </summary>
-	internal class CalcicCaneMinion : ModProjectile
+	public class CalcicCaneMinion : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{

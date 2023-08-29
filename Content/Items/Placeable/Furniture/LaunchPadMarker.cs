@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Placeable.Furniture
 {
-	internal class LaunchPadMarker : ModItem
+	public class LaunchPadMarker : ModItem
 	{
 		public override void SetDefaults()
 		{

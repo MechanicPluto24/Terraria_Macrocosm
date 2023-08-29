@@ -5,7 +5,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Materials
 {
-	internal class LithiumOre : ModItem
+	public class LithiumOre : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

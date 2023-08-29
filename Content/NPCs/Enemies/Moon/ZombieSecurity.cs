@@ -17,7 +17,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-	internal class ZombieSecurity : ModNPC, IMoonEnemy
+	public class ZombieSecurity : ModNPC, IMoonEnemy
 	{
 		public enum ActionState 
 		{ 

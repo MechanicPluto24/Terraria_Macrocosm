@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
-	internal class ImbriumJewelProjectile : ModProjectile
+	public class ImbriumJewelProjectile : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{

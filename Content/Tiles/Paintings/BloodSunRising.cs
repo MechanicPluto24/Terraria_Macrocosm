@@ -9,7 +9,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Tiles.Paintings
 {
-	internal class BloodSunRising : ModTile
+	public class BloodSunRising : ModTile
 	{
 		public override void SetStaticDefaults()
 		{

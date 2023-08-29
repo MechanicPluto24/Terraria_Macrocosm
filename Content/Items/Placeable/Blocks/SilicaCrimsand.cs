@@ -3,7 +3,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Placeable.Blocks
 {
-	internal class SilicaCrimsand : ModItem
+	public class SilicaCrimsand : ModItem
 	{
 		public override void SetStaticDefaults() 
 		{

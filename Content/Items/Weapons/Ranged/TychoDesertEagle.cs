@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
-	internal class TychoDesertEagle : GunHeldProjectileItem
+	public class TychoDesertEagle : GunHeldProjectileItem
 	{
 		public override GunHeldProjectileData GunHeldProjectileData => new()
 		{

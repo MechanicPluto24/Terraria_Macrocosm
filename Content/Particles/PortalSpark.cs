@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Particles
 {
-	internal class PortalSpark : Particle
+	public class PortalSpark : Particle
 	{
 		public override int SpawnTimeLeft => 250;
 		public override string TexturePath => Macrocosm.EmptyTexPath;

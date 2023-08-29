@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-	internal class ColorFunction : IUnlockable
+	public class ColorFunction : IUnlockable
 	{
 		public string Name { get; } = "";
 

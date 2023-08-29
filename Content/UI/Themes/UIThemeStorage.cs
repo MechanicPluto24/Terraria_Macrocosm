@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.UI.Themes
 {
-	internal class UIThemeStorage : ILoadable
+	public class UIThemeStorage : ILoadable
     {
         private static Dictionary<string, UITheme> themeStorage;
 

@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Summon
 {
-	internal class ChandriumWhip : ModItem
+	public class ChandriumWhip : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

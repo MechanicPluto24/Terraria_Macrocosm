@@ -12,7 +12,7 @@ using Terraria.ModLoader;
 namespace Macrocosm.Content.Items.Accessories.CelestialBulwark
 {
 	[AutoloadEquip(EquipType.Shield)]
-	internal class CelestialBulwark : ModItem
+	public class CelestialBulwark : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

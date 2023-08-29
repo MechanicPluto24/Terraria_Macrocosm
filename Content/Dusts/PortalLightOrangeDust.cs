@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Dusts
 {
-	internal class PortalLightOrangeDust : ModDust
+	public class PortalLightOrangeDust : ModDust
 	{
 		public override Color? GetAlpha(Dust dust, Color lightColor) => Color.White;
 

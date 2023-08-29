@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles.Blocks
 {
-	internal class SilicaEbonsand : ModTile
+	public class SilicaEbonsand : ModTile
 	{
 		public override void SetStaticDefaults()
 		{

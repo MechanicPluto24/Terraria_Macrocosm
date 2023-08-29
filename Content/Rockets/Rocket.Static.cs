@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Macrocosm.Content.Rockets
 {
-	internal partial class Rocket 
+	public partial class Rocket 
 	{
 		public static readonly List<string> DefaultModuleNames = new()
 		{

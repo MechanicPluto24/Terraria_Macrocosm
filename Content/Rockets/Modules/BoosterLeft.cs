@@ -2,7 +2,7 @@
 
 namespace Macrocosm.Content.Rockets.Modules
 {
-	internal class BoosterLeft : BoosterRight
+	public class BoosterLeft : BoosterRight
     {
 		public override Rectangle Hitbox => base.Hitbox with { X = base.Hitbox.X - 78 };
 

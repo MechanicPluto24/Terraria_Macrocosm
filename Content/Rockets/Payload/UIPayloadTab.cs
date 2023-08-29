@@ -4,7 +4,7 @@ using Terraria.GameContent.UI.Elements;
 
 namespace Macrocosm.Content.Rockets.Payload
 {
-	internal class UIPayloadTab : UIPanel, ITabUIElement, IRocketDataConsumer
+	public class UIPayloadTab : UIPanel, ITabUIElement, IRocketDataConsumer
     {
         public Rocket Rocket { get; set; }  
 

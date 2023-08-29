@@ -9,7 +9,7 @@ using Terraria.WorldBuilding;
 
 namespace Macrocosm.Content.WorldGeneration.Moon
 {
-	internal class CavePass : GenPass
+	public class CavePass : GenPass
 	{
 		private double rockLayerHigh = 0.0;
 		private double rockLayerLow = 0.0;

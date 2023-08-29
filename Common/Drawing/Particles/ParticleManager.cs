@@ -18,7 +18,7 @@ namespace Macrocosm.Common.Drawing.Particles
 	}
 
 	/// <summary> Particle system by sucss, Nurby & Feldy @ PellucidMod (RIP) </summary>
-	internal class ParticleManager : ModSystem
+	public class ParticleManager : ModSystem
 	{
 		public static List<Type> Types { get; private set; }
 		public static List<Particle> Particles { get; private set; }

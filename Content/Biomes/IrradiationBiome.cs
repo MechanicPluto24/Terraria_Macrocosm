@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Biomes
 {
-	internal class IrradiationBiome : MoonBiome
+	public class IrradiationBiome : MoonBiome
 	{
 		public override SceneEffectPriority Priority => SceneEffectPriority.Environment;
 

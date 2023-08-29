@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Bases
 {
-	internal struct GunHeldProjectileData
+	public struct GunHeldProjectileData
     {
         public GunHeldProjectileData() { }
 
@@ -34,7 +34,7 @@ namespace Macrocosm.Common.Bases
         public bool UseBackArm { get; init; } = true;
     }
 
-    internal abstract class GunHeldProjectileItem : HeldProjectileItem<GunHeldProjectile>
+    public abstract class GunHeldProjectileItem : HeldProjectileItem<GunHeldProjectile>
     {
         public abstract GunHeldProjectileData GunHeldProjectileData { get; }
         public virtual string HeldProjectileTexturePath => Texture;
@@ -47,7 +47,7 @@ namespace Macrocosm.Common.Bases
         public Texture2D HeldProjectileTexture => ModContent.Request<Texture2D>(HeldProjectileTexturePath, AssetRequestMode.ImmediateLoad).Value;
     }
 
-    internal class GunHeldProjectile : HeldProjectile
+    public class GunHeldProjectile : HeldProjectile
     {
         public override string Texture => "Terraria/Images/Item_0";
         public override HeldProjectileKillMode KillMode => HeldProjectileKillMode.OnAnimationEnd;

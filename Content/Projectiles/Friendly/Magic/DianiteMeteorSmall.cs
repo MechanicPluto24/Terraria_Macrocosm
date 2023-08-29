@@ -10,7 +10,7 @@ using Terraria.ID;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
-	internal class DianiteMeteorSmall : DianiteMeteor
+	public class DianiteMeteorSmall : DianiteMeteor
 	{
 		public override void SetStaticDefaults()
 		{

@@ -5,7 +5,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Materials
 {
-	internal class AluminumOre : ModItem
+	public class AluminumOre : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

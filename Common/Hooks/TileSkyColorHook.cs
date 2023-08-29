@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Hooks
 {
-	internal class TileSkyColorHook : ILoadable
+	public class TileSkyColorHook : ILoadable
 	{
 		public void Load(Mod mod)
 		{

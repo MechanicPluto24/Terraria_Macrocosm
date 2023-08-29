@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Tools
 {
-	internal class DianiteDrillProjectile : ModProjectile
+	public class DianiteDrillProjectile : ModProjectile
 	{
 		public override void SetDefaults()
 		{

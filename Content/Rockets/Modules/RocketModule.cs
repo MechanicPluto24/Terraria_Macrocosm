@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Modules
 {
-	internal abstract partial class RocketModule 
+	public abstract partial class RocketModule 
 	{
 		public string Name => GetType().Name;
 

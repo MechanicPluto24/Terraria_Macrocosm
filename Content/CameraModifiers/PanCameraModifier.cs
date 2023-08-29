@@ -4,7 +4,7 @@ using Terraria.Graphics.CameraModifiers;
 
 namespace Macrocosm.Content.CameraModifiers
 {
-	internal class PanCameraModifier : ICameraModifier
+	public class PanCameraModifier : ICameraModifier
 	{
 		/// <summary> The unique ID of this </summary>
 		public string UniqueIdentity { get; private set; }

@@ -9,7 +9,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
-	internal class UIMapTarget : UIElement
+	public class UIMapTarget : UIElement
     {
         /// <summary> The panel instance this target belongs to </summary>
         public UINavigationPanel OwnerPanel { get; set; }

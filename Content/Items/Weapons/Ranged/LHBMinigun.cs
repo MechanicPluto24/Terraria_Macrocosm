@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
-	internal class LHBMinigun : ModItem
+	public class LHBMinigun : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

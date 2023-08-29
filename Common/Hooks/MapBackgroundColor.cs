@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Hooks
 {
-	internal class MapBackgroundColor : ILoadable
+	public class MapBackgroundColor : ILoadable
 	{
 		private static ushort skyPosition;
 		private static ushort dirtPosition;

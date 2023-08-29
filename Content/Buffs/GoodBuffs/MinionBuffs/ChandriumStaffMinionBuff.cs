@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Buffs.GoodBuffs.MinionBuffs
 {
-	internal class ChandriumStaffMinionBuff : ModBuff
+	public class ChandriumStaffMinionBuff : ModBuff
 	{
 		public override void SetStaticDefaults()
 		{

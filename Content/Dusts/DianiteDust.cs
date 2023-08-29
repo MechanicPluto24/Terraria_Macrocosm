@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Dusts
 {
-	internal class DianiteDust : ModDust
+	public class DianiteDust : ModDust
 	{
 		public override void OnSpawn(Dust dust)
 		{

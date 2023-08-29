@@ -9,7 +9,7 @@ using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-	internal class Nameplate : TagSerializable
+	public class Nameplate : TagSerializable
     {
 		// the text
 		private string text = "";

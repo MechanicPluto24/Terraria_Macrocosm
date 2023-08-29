@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Tools.Selenite
 {
-	internal class SelenitePickaxe : ModItem
+	public class SelenitePickaxe : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

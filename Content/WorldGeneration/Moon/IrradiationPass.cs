@@ -10,7 +10,7 @@ using Terraria.WorldBuilding;
 
 namespace Macrocosm.Content.WorldGeneration.Moon
 {
-	internal class IrradiationPass : GenPass
+	public class IrradiationPass : GenPass
 	{
 		public int CenterX;
 

@@ -17,7 +17,7 @@ namespace Macrocosm.Common.Drawing.Sky
         Any
     }
 
-    internal class CelestialBody
+    public class CelestialBody
     {
         /// <summary> The CelestialBody's texture width </summary>
         public float Width => bodyTexture.Width;

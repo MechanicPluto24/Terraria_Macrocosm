@@ -10,7 +10,7 @@ using Terraria.ID;
 
 namespace Macrocosm.Common.Utils
 {
-	internal static partial class Utility
+	public static partial class Utility
 	{
 		public static void SetTrail<T>(this Projectile projectile) where T : VertexTrail
 		{

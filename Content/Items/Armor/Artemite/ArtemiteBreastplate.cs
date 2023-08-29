@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 namespace Macrocosm.Content.Items.Armor.Artemite
 {
 	[AutoloadEquip(EquipType.Body)]
-    internal class ArtemiteBreastplate : ModItem
+    public class ArtemiteBreastplate : ModItem
     {
         public override void SetStaticDefaults()
         {
