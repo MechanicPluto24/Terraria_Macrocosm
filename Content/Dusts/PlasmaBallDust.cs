@@ -1,4 +1,3 @@
-using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Particles;
 using Microsoft.Xna.Framework;
 using Terraria;

@@ -1,11 +1,10 @@
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
-using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Tiles.Blocks
 {
-    internal class SpaceshipPlate : ModTile
+	internal class SpaceshipPlate : ModTile
     {
         public override void SetStaticDefaults()
         {

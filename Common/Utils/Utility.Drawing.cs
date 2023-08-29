@@ -1,18 +1,17 @@
-using System;
-using System.Collections.Generic;
-using Macrocosm.Common.Drawing.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.Graphics.Shaders;
-using Terraria.ObjectData;
 using Terraria.ID;
+using Terraria.ObjectData;
 
 namespace Macrocosm.Common.Utils
 {
-    internal static partial class Utility
+	internal static partial class Utility
     {
         public static Vector2 ScreenCenter => new(Main.screenWidth / 2f, Main.screenHeight / 2f);
 

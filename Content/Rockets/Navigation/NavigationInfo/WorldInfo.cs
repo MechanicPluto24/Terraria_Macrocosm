@@ -3,15 +3,12 @@ using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
-using Terraria.GameContent.UI.Elements;
 using Terraria.Localization;
 using Terraria.ModLoader;
-using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
 {
-    internal class WorldInfo : ILoadable
+	internal class WorldInfo : ILoadable
 	{
         private static Dictionary<string, List<InfoElement>> worldInfoStorage;
 

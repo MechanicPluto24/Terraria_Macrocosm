@@ -1,17 +1,16 @@
-﻿using Macrocosm.Content.Dusts;
-using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.ModLoader;
-using Terraria.ID;
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Systems;
-using System.IO;
+﻿using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Netcode;
-using Macrocosm.Common.Drawing;
+using Macrocosm.Common.Utils;
+using Macrocosm.Content.Dusts;
+using Microsoft.Xna.Framework;
+using System.IO;
+using Terraria;
+using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Players
 {
-    internal class DashPlayer : ModPlayer
+	internal class DashPlayer : ModPlayer
 	{
 
 		public bool AccDashHorizontal = false;

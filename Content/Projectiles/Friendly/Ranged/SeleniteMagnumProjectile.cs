@@ -1,17 +1,12 @@
-using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.ID;
-using Macrocosm.Common.Utils;
-using Terraria.ModLoader;
-using Macrocosm.Content.Dusts;
-using Terraria.DataStructures;
+using Macrocosm.Common.Bases;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Content.Particles;
-using Macrocosm.Common.Bases;
+using Microsoft.Xna.Framework;
+using Terraria;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-    internal class SeleniteMagnumProjectile : RicochetBullet
+	internal class SeleniteMagnumProjectile : RicochetBullet
 	{
 		public override int RicochetCount => 2;
 

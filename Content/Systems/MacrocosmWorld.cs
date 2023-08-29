@@ -1,10 +1,10 @@
-﻿using Terraria;
-using Terraria.ModLoader;
-using Terraria.DataStructures;
-using Terraria.GameContent.Events;
-using Terraria.GameContent.Creative;
+﻿using Macrocosm.Common.Subworlds;
 using SubworldLibrary;
-using Macrocosm.Common.Subworlds;
+using Terraria;
+using Terraria.DataStructures;
+using Terraria.GameContent.Creative;
+using Terraria.GameContent.Events;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Systems
 {

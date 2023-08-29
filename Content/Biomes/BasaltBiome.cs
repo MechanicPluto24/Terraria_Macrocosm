@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Utils;
-using Terraria;
+﻿using Terraria;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Biomes

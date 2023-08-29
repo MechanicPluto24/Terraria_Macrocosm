@@ -3,10 +3,10 @@ using Macrocosm.Content.Projectiles.Global;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Reflection;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
-using System.Reflection;
 
 namespace Macrocosm.Common.Utils
 {

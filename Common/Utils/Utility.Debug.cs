@@ -1,17 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Mono.Cecil;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Utils
 {
-    internal partial class Utility
+	internal partial class Utility
     {
         public static void Draw(this Vector2 position, int drawTime)
         {

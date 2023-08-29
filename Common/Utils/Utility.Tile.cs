@@ -1,14 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
-using System.Collections.Generic;
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
-using Macrocosm.Content.Projectiles.Environment.Sands;
 
 namespace Macrocosm.Common.Utils
 {

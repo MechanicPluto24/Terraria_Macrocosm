@@ -1,15 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Terraria;
-using Terraria.UI;
+using Terraria.DataStructures;
 using Terraria.Map;
 using Terraria.ModLoader;
-using Terraria.DataStructures;
-using Macrocosm.Common.Subworlds;
+using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Map
 {
-    internal class RocketMapLayer : ModMapLayer
+	internal class RocketMapLayer : ModMapLayer
     {
         public override void Draw(ref MapOverlayDrawContext context, ref string text)
         {

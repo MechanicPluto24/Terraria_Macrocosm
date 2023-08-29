@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles.Ores
 {
-    internal class DianiteOre : ModTile
+	internal class DianiteOre : ModTile
     {
         public override void SetStaticDefaults()
         {

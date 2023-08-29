@@ -1,11 +1,6 @@
-﻿using ReLogic.Content;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria.ModLoader;
-using Terraria.Localization;
-using Microsoft.Xna.Framework;
-using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Config;
 using System;
-using Macrocosm.Common.Config;
+using Terraria.Localization;
 
 namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
 {

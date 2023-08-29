@@ -1,16 +1,14 @@
-﻿using System;
+﻿using Macrocosm.Common.Netcode;
+using Macrocosm.Common.Utils;
+using SubworldLibrary;
 using System.IO;
-using System.Linq;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Common.Netcode;
-using SubworldLibrary;
-using Macrocosm.Common.Utils;
 
 namespace Macrocosm.Content.Rockets
 {
-    internal partial class Rocket 
+	internal partial class Rocket 
 	{
 		/// <summary>
 		/// Syncs the rocket fields with <see cref="NetSyncAttribute"/> across all clients and the server.

@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -7,7 +6,7 @@ using Terraria;
 
 namespace Macrocosm.Content.Particles
 {
-    internal class ChandriumCrescentMoon : Particle
+	internal class ChandriumCrescentMoon : Particle
     {
         bool rotateClockwise = false;
 		byte alpha;

@@ -1,14 +1,10 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework;
-using System.Linq;
-using Terraria.ModLoader;
 using ReLogic.Content;
-using System;
-using Macrocosm.Common.Utils;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-    internal class Detail : IUnlockable
+	internal class Detail : IUnlockable
     {
         public string Name { get; set; }
         public string ModuleName { get; set; }

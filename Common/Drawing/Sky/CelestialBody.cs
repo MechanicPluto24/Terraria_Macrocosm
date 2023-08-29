@@ -1,3 +1,4 @@
+using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -5,11 +6,10 @@ using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
-using Macrocosm.Common.Subworlds;
 
 namespace Macrocosm.Common.Drawing.Sky
 {
-    public enum SkyRotationMode
+	public enum SkyRotationMode
     {
         None,
         Day,

@@ -1,14 +1,9 @@
-﻿using ReLogic.Content;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria.ModLoader;
+﻿using System;
 using Terraria.Localization;
-using Microsoft.Xna.Framework;
-using Macrocosm.Common.Utils;
-using System;
 
 namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
 {
-    internal class DayPeriodInfoElement : ValueUnitSpecialInfoElement
+	internal class DayPeriodInfoElement : ValueUnitSpecialInfoElement
     {
 		public DayPeriodInfoElement(string specialValueKey) : base(specialValueKey) { }
 

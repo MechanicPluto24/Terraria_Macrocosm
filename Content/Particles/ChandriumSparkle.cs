@@ -1,18 +1,17 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria;
-using Terraria.ModLoader;
-using Terraria.GameContent;
+﻿using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Common.Netcode;
-using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Content.Projectiles.Friendly.Summon;
-using Macrocosm.Content.Rockets;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Terraria;
+using Terraria.GameContent;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Particles
 {
-    internal class ChandriumSparkle : Particle
+	internal class ChandriumSparkle : Particle
 	{
 		public override string TexturePath => Macrocosm.EmptyTexPath;
 

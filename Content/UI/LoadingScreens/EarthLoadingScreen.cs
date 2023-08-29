@@ -1,22 +1,17 @@
 using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
-using Macrocosm.Common.Utils.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using Terraria;
-using Terraria.GameContent;
 using Terraria.Localization;
 using Terraria.ModLoader;
-using Terraria.UI.Chat;
-using Terraria.WorldBuilding;
 
 namespace Macrocosm.Content.UI.LoadingScreens
 {
-    internal class EarthLoadingScreen : LoadingScreen
+	internal class EarthLoadingScreen : LoadingScreen
 	{
 		private List<Texture2D> earthBackgrounds;
 		private Texture2D earthBackground;

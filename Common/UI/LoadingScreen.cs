@@ -1,17 +1,14 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.OS.Windows;
-using System;
 using Terraria;
 using Terraria.GameContent;
-using Terraria.Localization;
 using Terraria.UI.Chat;
 using Terraria.WorldBuilding;
 
 namespace Macrocosm.Common.UI
 {
-    /// <summary> Loading screen, displayed when traveling to/from subworlds. </summary>
-    internal abstract class LoadingScreen
+	/// <summary> Loading screen, displayed when traveling to/from subworlds. </summary>
+	internal abstract class LoadingScreen
     {
         /// <summary> Whether there is any type of LoadingScreen active right now. </summary>
         public static bool CurrentlyActive { get; set; }

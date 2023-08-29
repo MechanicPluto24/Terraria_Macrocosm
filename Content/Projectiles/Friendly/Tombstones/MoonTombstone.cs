@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Gores;
 using Macrocosm.Content.Tiles.Blocks;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -10,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Tombstones
 {
-    internal class MoonTombstone : ModProjectile
+	internal class MoonTombstone : ModProjectile
 	{
 		public const int normalCount = 1;
 		public const int goldenCount = 1;

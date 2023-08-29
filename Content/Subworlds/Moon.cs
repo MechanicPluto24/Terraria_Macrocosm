@@ -1,31 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.Utils;
+using Macrocosm.Content.Projectiles.Environment.Meteors;
+using Macrocosm.Content.Rockets.Navigation.Checklist;
+using Macrocosm.Content.Systems;
+using Macrocosm.Content.UI.LoadingScreens;
+using Macrocosm.Content.WorldGeneration.Moon;
 using Microsoft.Xna.Framework;
+using System;
+using System.Collections.Generic;
 using Terraria;
+using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Utilities;
 using Terraria.WorldBuilding;
-using Terraria.Graphics.Effects;
-using Macrocosm.Common.Subworlds;
-using Macrocosm.Content.Systems;
-using Macrocosm.Content.UI.LoadingScreens;
-using Macrocosm.Content.WorldGeneration.Moon;
-using Macrocosm.Content.Projectiles.Environment.Meteors;
-using Macrocosm.Content.Rockets.Navigation.Checklist;
-using Macrocosm.Content.Items.Materials;
-using Macrocosm.Common.Utils;
-using Macrocosm.Common.Drawing;
-using Macrocosm.Common.DataStructures;
 
 namespace Macrocosm.Content.Subworlds
 {
-    /// <summary>
-    /// Moon terrain and crater generation by 4mbr0s3 2
-    /// Why isn't anyone else working on this
-    /// I have saved the day - Ryan
-    /// </summary>
-    internal class Moon : MacrocosmSubworld
+	/// <summary>
+	/// Moon terrain and crater generation by 4mbr0s3 2
+	/// Why isn't anyone else working on this
+	/// I have saved the day - Ryan
+	/// </summary>
+	internal class Moon : MacrocosmSubworld
     {
         private static Moon instance;
         public static Moon Instance { get { instance ??= new(); return instance; } }

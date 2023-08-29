@@ -1,7 +1,6 @@
 ﻿using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
@@ -9,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Hostile
 {
-    internal class LuminiteSlimeProjectile : ModProjectile
+	internal class LuminiteSlimeProjectile : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{

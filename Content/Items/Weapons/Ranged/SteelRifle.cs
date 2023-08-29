@@ -1,19 +1,13 @@
 using Macrocosm.Common.Bases;
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Projectiles.Friendly.Ranged;
-using Macrocosm.Content.Rarities;
-using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.Audio;
-using Terraria.DataStructures;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
-    internal class SteelRifle : GunHeldProjectileItem
+	internal class SteelRifle : GunHeldProjectileItem
 	{
 		public override void SetStaticDefaults()
 		{

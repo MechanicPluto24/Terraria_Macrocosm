@@ -1,24 +1,24 @@
+using Macrocosm.Common.Netcode;
+using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Dev;
+using Macrocosm.Content.Rockets.Customization;
+using Macrocosm.Content.Rockets.LaunchPads;
+using Macrocosm.Content.Rockets.Modules;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SubworldLibrary;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Terraria;
 using Terraria.ID;
-using Terraria.ModLoader;
-using Macrocosm.Common.Netcode;
-using System.Collections.Generic;
-using Macrocosm.Content.Rockets.Modules;
 using Terraria.Localization;
-using Macrocosm.Common.Subworlds;
-using System.Linq;
-using Macrocosm.Content.Rockets.Customization;
-using Macrocosm.Content.Rockets.LaunchPads;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets
 {
-    internal partial class Rocket 
+	internal partial class Rocket 
 	{
 		/// <summary> The rocket's identifier </summary>
 		public int WhoAmI = -1;

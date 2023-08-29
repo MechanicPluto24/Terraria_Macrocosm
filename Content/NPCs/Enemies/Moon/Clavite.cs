@@ -1,17 +1,16 @@
-﻿using Macrocosm.Content.NPCs.Global;
-using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Utils;
+using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.NPCs.Global;
 using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Content.Biomes;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-    internal class Clavite : ModNPC, IMoonEnemy
+	internal class Clavite : ModNPC, IMoonEnemy
 	{
 		public override void SetStaticDefaults()
 		{

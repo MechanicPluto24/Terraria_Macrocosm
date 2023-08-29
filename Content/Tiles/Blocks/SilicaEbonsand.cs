@@ -1,14 +1,14 @@
+using Macrocosm.Common.Utils;
+using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Projectiles.Environment.Sands;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Projectiles.Environment.Sands;
 
 namespace Macrocosm.Content.Tiles.Blocks
 {
-    internal class SilicaEbonsand : ModTile
+	internal class SilicaEbonsand : ModTile
 	{
 		public override void SetStaticDefaults()
 		{

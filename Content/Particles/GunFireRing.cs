@@ -1,8 +1,4 @@
-﻿using Terraria;
-using Macrocosm.Common.Drawing.Particles;
-using Terraria.ModLoader;
-using Macrocosm.Content.Projectiles.Hostile;
-using Macrocosm.Content.Projectiles.Friendly.Ranged;
+﻿using Macrocosm.Common.Drawing.Particles;
 
 namespace Macrocosm.Content.Particles
 {

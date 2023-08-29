@@ -1,13 +1,13 @@
-using System.Collections.Generic;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 
 namespace Macrocosm.Content.WorldGeneration.Base
 {
-    internal class BaseWorldGenTex
+	internal class BaseWorldGenTex
     {
         public static Dictionary<Color, int> colorToLiquid;
         public static Dictionary<Color, int> colorToSlope;

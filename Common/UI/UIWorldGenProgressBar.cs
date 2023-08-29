@@ -2,14 +2,14 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
+using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Common.UI
 {
-    internal class UIWorldGenProgressBar : UIGenProgressBar
+	internal class UIWorldGenProgressBar : UIGenProgressBar
     {
         private readonly Texture2D texUpper;
         private readonly Texture2D texLower;

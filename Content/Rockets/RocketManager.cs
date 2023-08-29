@@ -1,16 +1,14 @@
-﻿using System;
-using System.Linq;
-using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Linq;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Rockets
 {
-    public enum RocketDrawLayer
+	public enum RocketDrawLayer
     {
         BeforeProjectiles,
         AfterProjectiles,

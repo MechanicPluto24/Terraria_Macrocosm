@@ -1,7 +1,7 @@
 ﻿namespace Macrocosm.Common.DataStructures
 {
-    /// <summary> Integer range, inspired by Terraria.Utilities.IntRange </summary>
-    public struct IntRange
+	/// <summary> Integer range, inspired by Terraria.Utilities.IntRange </summary>
+	public struct IntRange
     {
         /// <summary> Range start </summary>
         public int Start;

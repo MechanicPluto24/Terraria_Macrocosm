@@ -1,16 +1,12 @@
-﻿using Macrocosm.Common.Utils;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
+﻿using Microsoft.Xna.Framework;
 using Terraria.GameContent.UI.Elements;
 using Terraria.Localization;
-using Terraria.ModLoader;
 using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
-    // TODO: make an abstract scrollable panel class
-    internal class UICrewPanel : UIPanel
+	// TODO: make an abstract scrollable panel class
+	internal class UICrewPanel : UIPanel
     {
         private LocalizedText title;
 

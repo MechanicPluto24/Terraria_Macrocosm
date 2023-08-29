@@ -1,5 +1,6 @@
-using Macrocosm.Content.NPCs.Global;
+using Macrocosm.Common.Bases;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.NPCs.Global;
 using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
@@ -8,11 +9,10 @@ using Terraria.DataStructures;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Common.Bases;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
-    internal class NWARocketLauncher : GunHeldProjectileItem
+	internal class NWARocketLauncher : GunHeldProjectileItem
 	{
         public override GunHeldProjectileData GunHeldProjectileData => new()
 		{

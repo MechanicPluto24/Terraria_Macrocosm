@@ -1,17 +1,15 @@
-﻿using Microsoft.Xna.Framework;
-using System;
+﻿using Macrocosm.Common.Bases;
+using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Items.MeteorChunks;
+using Macrocosm.Content.Projectiles.Environment.Debris;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Gores;
-using Macrocosm.Content.Items.MeteorChunks;
-using Macrocosm.Content.Projectiles.Environment.Debris;
-using Macrocosm.Common.Bases;
 
 namespace Macrocosm.Content.Projectiles.Environment.Meteors
 {
-    internal class MoonMeteorLarge : BaseMeteor
+	internal class MoonMeteorLarge : BaseMeteor
     {
         public MoonMeteorLarge()
         {

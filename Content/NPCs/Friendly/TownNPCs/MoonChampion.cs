@@ -1,8 +1,6 @@
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Items.Armor.Astronaut;
 using Macrocosm.Content.Items.Currency;
-using Macrocosm.Content.Items.Materials;
-using Macrocosm.Content.Items.Weapons.Ranged;
 using Macrocosm.Content.Subworlds;
 using Macrocosm.Content.Systems;
 using Microsoft.Xna.Framework;
@@ -12,7 +10,6 @@ using System.Collections.Generic;
 using System.IO;
 using Terraria;
 using Terraria.GameContent;
-using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -20,7 +17,7 @@ using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
 {
-    [AutoloadHead]
+	[AutoloadHead]
 	internal class MoonChampion : ModNPC
 	{
 		public bool HasBeenChatWithForTheFirstTime = false;

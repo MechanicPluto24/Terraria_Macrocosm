@@ -1,9 +1,9 @@
-﻿using SubworldLibrary;
+﻿using Macrocosm.Content.Items.Global;
+using Macrocosm.Content.Rarities;
+using SubworldLibrary;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Content.Rarities;
-using Macrocosm.Content.Items.Global;
 
 namespace Macrocosm.Content.Items.Dev
 {

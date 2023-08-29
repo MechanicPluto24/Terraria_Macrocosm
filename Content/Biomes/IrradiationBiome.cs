@@ -1,8 +1,4 @@
-﻿using Macrocosm.Common.Utils;
-using Macrocosm.Content.Backgrounds.Moon;
-using Macrocosm.Content.Systems;
-using Microsoft.Xna.Framework;
-using SubworldLibrary;
+﻿using Macrocosm.Content.Systems;
 using Terraria;
 using Terraria.ModLoader;
 

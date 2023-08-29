@@ -5,7 +5,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Placeable.Blocks
 {
-    internal class SpaceshipCore : ModItem
+	internal class SpaceshipCore : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

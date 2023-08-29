@@ -1,5 +1,4 @@
 using SubworldLibrary;
-using Terraria;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles.Global

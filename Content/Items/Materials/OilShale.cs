@@ -1,12 +1,11 @@
-﻿using Macrocosm.Content.Rarities;
-using Terraria;
+﻿using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Materials
 {
-    internal class OilShale : ModItem
+	internal class OilShale : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

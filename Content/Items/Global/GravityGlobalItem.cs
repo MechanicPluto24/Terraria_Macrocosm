@@ -1,8 +1,8 @@
-﻿using SubworldLibrary;
+﻿using Macrocosm.Common.Subworlds;
+using Macrocosm.Content.Subworlds;
+using SubworldLibrary;
 using Terraria;
 using Terraria.ModLoader;
-using Macrocosm.Content.Subworlds;
-using Macrocosm.Common.Subworlds;
 
 namespace Macrocosm.Content.Items.Global
 {

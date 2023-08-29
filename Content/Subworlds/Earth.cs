@@ -1,14 +1,13 @@
-﻿using Terraria;
+﻿using Macrocosm.Content.Rockets.Navigation.Checklist;
 using Macrocosm.Content.UI.LoadingScreens;
-using Macrocosm.Content.Rockets.Navigation.Checklist;
-using Macrocosm.Common.Subworlds;
+using Terraria;
 
 namespace Macrocosm.Content.Subworlds
 {
-    /// <summary>
-    /// Not really a subworld but could be used for consistency purposes
-    /// </summary>
-    internal static class Earth
+	/// <summary>
+	/// Not really a subworld but could be used for consistency purposes
+	/// </summary>
+	internal static class Earth
     {
 		public const double TimeRate = 1.0;
 
