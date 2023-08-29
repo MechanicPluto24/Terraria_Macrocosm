@@ -35,8 +35,8 @@ namespace Macrocosm.Content.Particles
             var state = spriteBatch.SaveState();
 
             spriteBatch.End();
-            spriteBatch.Begin(BlendState.Additive, state);
-			spriteBatch.Draw(Texture, Position - screenPosition, null, new Color(112, 69, 214).NewAlpha(1f), Rotation, Texture.Size() / 2f, ScaleV, SpriteEffects.None, 0f);
+            spriteBatch.Begin(BlendState.AlphaBlend, state);
+			spriteBatch.Draw(Texture, Position - screenPosition, null, new Color(180, 112, 226).NewAlpha(0.45f), Rotation, Texture.Size() / 2f, ScaleV, SpriteEffects.None, 0f);
 			spriteBatch.End();
 			spriteBatch.Begin(state);
 		}

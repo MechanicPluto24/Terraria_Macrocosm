@@ -51,7 +51,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		public override void Kill(int timeLeft)
 		{
 			for(int i = 0; i < Main.rand.Next(20, 30); i++)
-				Particle.CreateParticle<SeleniteSpark>(Projectile.Center + Projectile.oldVelocity * 0.4f, Projectile.oldVelocity.RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(0.1f, 0.2f), scale: 1.7f);
+				Dust.NewDustPerfect(Projectile.Center + Projectile.oldVelocity * 0.5f, ModContent.DustType<SeleniteBits>(), Projectile.oldVelocity.RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(0.1f, 0.2f), Scale: 2f);
 		}
 
 		public override bool PreDraw(ref Color lightColor)
