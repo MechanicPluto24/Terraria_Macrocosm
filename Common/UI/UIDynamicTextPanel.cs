@@ -1,11 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
-using Terraria.UI;
-using Terraria.Localization;
 using Terraria.GameContent.UI.Elements;
+using Terraria.Localization;
+using Terraria.UI;
 
 namespace Macrocosm.Common.UI
 {
-    internal class UIDynamicTextPanel : UIPanel
+	internal class UIDynamicTextPanel : UIPanel
     {
 		private UIText uIText;
 

@@ -1,7 +1,4 @@
-﻿using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Items.Materials;
-using Macrocosm.Content.Rarities;
-using Microsoft.Xna.Framework;
+﻿using Macrocosm.Content.Items.Materials;
 using Terraria;
 using Terraria.GameContent.Creative;
 using Terraria.ID;

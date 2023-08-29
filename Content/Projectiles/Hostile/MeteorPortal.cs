@@ -10,8 +10,8 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Hostile
 {
-    //Had to salvage it from an extracted DLL, so no comments.  Oops.  -- absoluteAquarian
-    internal class MeteorPortal : ModProjectile
+	//Had to salvage it from an extracted DLL, so no comments.  Oops.  -- absoluteAquarian
+	internal class MeteorPortal : ModProjectile
 	{
 		public ref float AITimer => ref Projectile.ai[0];
 

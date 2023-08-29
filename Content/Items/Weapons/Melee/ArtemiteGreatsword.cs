@@ -1,10 +1,8 @@
 using Macrocosm.Common.Bases;
 using Macrocosm.Content.Items.Materials;
-using Macrocosm.Content.Projectiles.Friendly.Melee;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;

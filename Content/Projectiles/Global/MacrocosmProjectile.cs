@@ -1,11 +1,8 @@
 using Macrocosm.Common.Drawing.Trails;
 using Macrocosm.Common.Netcode;
 using Microsoft.Xna.Framework;
-using System;
 using System.IO;
-using System.Reflection;
 using Terraria;
-using Terraria.Chat;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 

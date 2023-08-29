@@ -1,7 +1,6 @@
 ﻿using Macrocosm.Common.Drawing.Trails;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
-using System;
 using Terraria;
 using Terraria.Graphics.Shaders;
 

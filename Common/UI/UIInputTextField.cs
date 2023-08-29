@@ -1,10 +1,8 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
-using Terraria.Initializers;
-using Terraria.UI;
 using Terraria;
-using Microsoft.Xna.Framework;
+using Terraria.UI;
 
 namespace Macrocosm.Common.UI
 {

@@ -1,14 +1,14 @@
-﻿using System;
+﻿using Macrocosm.Common.Utils;
+using Macrocosm.Content.Projectiles.Global;
 using Microsoft.Xna.Framework;
+using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Projectiles.Global;
 
 namespace Macrocosm.Common.Bases
 {
-    internal abstract class BaseMeteor : ModProjectile, IExplosive
+	internal abstract class BaseMeteor : ModProjectile, IExplosive
     {
         public int Width;
         public int Height;

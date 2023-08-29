@@ -1,16 +1,15 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
+﻿using Macrocosm.Common.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Terraria.ModLoader;
-using Macrocosm.Common.UI;
-using Newtonsoft.Json;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-    internal partial class Pattern : IUnlockable
+	internal partial class Pattern : IUnlockable
     {
 		public string Name { get; }
 

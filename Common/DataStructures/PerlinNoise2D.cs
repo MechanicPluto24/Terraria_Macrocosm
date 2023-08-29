@@ -1,14 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Macrocosm.Common.DataStructures
 {
-    internal class PerlinNoise2D
+	internal class PerlinNoise2D
     {
         public Seed Seed { get; set; }
         public InterpolationType InterpolationType { get; set; }

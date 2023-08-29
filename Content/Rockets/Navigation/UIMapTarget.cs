@@ -1,15 +1,15 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.Utils;
+using Macrocosm.Content.Rockets.Navigation.Checklist;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
-using Terraria.UI;
 using Terraria.ModLoader;
-using Macrocosm.Common.Utils;
-using Macrocosm.Common.Subworlds;
-using Macrocosm.Content.Rockets.Navigation.Checklist;
+using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
-    internal class UIMapTarget : UIElement
+	internal class UIMapTarget : UIElement
     {
         /// <summary> The panel instance this target belongs to </summary>
         public UINavigationPanel OwnerPanel { get; set; }

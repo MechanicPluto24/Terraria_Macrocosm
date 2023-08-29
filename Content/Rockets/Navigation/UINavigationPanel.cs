@@ -1,19 +1,17 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Common.UI;
+using Macrocosm.Content.Subworlds;
+using Macrocosm.Content.Systems;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using Terraria.UI;
-using Terraria.ModLoader;
 using Terraria.GameContent.UI.Elements;
-using Macrocosm.Content.Subworlds;
-using Macrocosm.Common.UI;
 using Terraria.Localization;
-using Macrocosm.Content.Systems;
-using System.ComponentModel;
-using System.IO;
+using Terraria.ModLoader;
+using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
-    internal class UINavigationPanel : UIPanel
+	internal class UINavigationPanel : UIPanel
     {
         public UINavigationMap CurrentMap;
 

@@ -3,11 +3,10 @@ using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
-using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Tiles.Ores
 {
-    internal class ArtemiteOre : ModTile
+	internal class ArtemiteOre : ModTile
     {
         public override void SetStaticDefaults()
         {

@@ -1,15 +1,12 @@
 ﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Items.Placeable.Blocks;
-using Macrocosm.Content.Tiles.Blocks;
-using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Environment.Sands
 {
-    internal class SilicaCrimsandProjectile : ModProjectile
+	internal class SilicaCrimsandProjectile : ModProjectile
     {
         protected bool falling = true;
         protected int tileType;

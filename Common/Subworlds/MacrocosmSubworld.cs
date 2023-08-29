@@ -1,20 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using Macrocosm.Common.UI;
+using Macrocosm.Content.Rockets;
+using Macrocosm.Content.Rockets.Customization;
+using Macrocosm.Content.Rockets.LaunchPads;
+using Macrocosm.Content.Rockets.Navigation.Checklist;
+using Macrocosm.Content.Subworlds;
+using Macrocosm.Content.Systems;
 using Microsoft.Xna.Framework;
+using SubworldLibrary;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader.IO;
-using SubworldLibrary;
-using Macrocosm.Common.UI;
-using Macrocosm.Content.Systems;
-using Macrocosm.Content.Rockets;
-using Macrocosm.Content.Subworlds;
-using Macrocosm.Content.Rockets.LaunchPads;
-using Macrocosm.Content.Rockets.Customization;
-using Macrocosm.Content.Rockets.Navigation.Checklist;
 
 namespace Macrocosm.Common.Subworlds
 {
-    internal abstract partial class MacrocosmSubworld : Subworld 
+	internal abstract partial class MacrocosmSubworld : Subworld 
 	{
 		/// <summary> Time rate of this subworld, compared to Earth's (1.0) </summary>
  		public virtual double TimeRate { get; set; } = Earth.TimeRate;

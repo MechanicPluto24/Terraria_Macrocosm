@@ -1,17 +1,16 @@
-using Macrocosm.Content.NPCs.Global;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
+using Macrocosm.Content.NPCs.Global;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
-using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-    internal class RadioactiveSlime : ModNPC, IMoonEnemy
+	internal class RadioactiveSlime : ModNPC, IMoonEnemy
 	{
 		public override void SetStaticDefaults()
 		{

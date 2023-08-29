@@ -1,13 +1,11 @@
 ﻿
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Rockets.Modules;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Macrocosm.Content.Rockets
 {
-    internal partial class Rocket 
+	internal partial class Rocket 
 	{
 		public static readonly List<string> DefaultModuleNames = new()
 		{

@@ -5,15 +5,13 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
 using Terraria.GameContent;
-using Terraria.Graphics;
-using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Hostile
 {
-    //Had to salvage it from an extracted DLL, so no comments.  Oops.  -- absoluteAquarian
-    internal class FlamingMeteor : ModProjectile
+	//Had to salvage it from an extracted DLL, so no comments.  Oops.  -- absoluteAquarian
+	internal class FlamingMeteor : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{

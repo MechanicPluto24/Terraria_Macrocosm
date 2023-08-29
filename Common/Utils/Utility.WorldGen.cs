@@ -1,21 +1,16 @@
-﻿using Macrocosm.Content.Tiles;
-using Terraria;
-using Terraria.IO;
-using Terraria.ID;
-using Terraria.ModLoader;
-using Terraria.WorldBuilding;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Content.WorldGeneration.Base;
 using Microsoft.Xna.Framework;
 using System;
-using Terraria.ObjectData;
-using Terraria.Localization;
-using Macrocosm.Content.WorldGeneration.Base;
-using Macrocosm.Common.Bases;
 using System.Collections.Generic;
-using Macrocosm.Common.DataStructures;
+using Terraria;
+using Terraria.ID;
+using Terraria.Localization;
+using Terraria.ObjectData;
 
 namespace Macrocosm.Common.Utils
 {
-    internal static partial class Utility
+	internal static partial class Utility
     {
         public static bool CoordinatesOutOfBounds(int i, int j) => i >= Main.maxTilesX || j >= Main.maxTilesY || i < 0 || j < 0;
 

@@ -1,14 +1,13 @@
-﻿using Macrocosm.Content.Players;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;
-using Terraria.DataStructures;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Utils
 {
-    internal static partial class Utility
+	internal static partial class Utility
 	{
 		public static (int x, int y) SpawnTile => (Main.spawnTileX, Main.spawnTileY);
 		public static Point SpawnTilePoint => new(Main.spawnTileX, Main.spawnTileY);

@@ -1,25 +1,14 @@
-﻿using Macrocosm.Common.Netcode;
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Projectiles.Friendly.Melee;
-using Macrocosm.Content.Rarities;
-using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using Microsoft.Xna.Framework;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Common.Bases
 {
-    internal abstract class HeldProjectileItem<T> : ModItem where T: HeldProjectile
+	internal abstract class HeldProjectileItem<T> : ModItem where T: HeldProjectile
     {
         public virtual void SetDefaultsHeldProjectile() { }
         public virtual bool CanUseItemHeldProjectile(Player player) => true;

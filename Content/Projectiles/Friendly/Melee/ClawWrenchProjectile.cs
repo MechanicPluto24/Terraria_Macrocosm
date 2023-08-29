@@ -1,18 +1,15 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Common.Utils;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Terraria.GameContent;
-using Terraria;
-using Terraria.Audio;
-using Terraria.ID;
-using Terraria.ModLoader;
-using Macrocosm.Common.Utils;
 using System;
+using Terraria;
 using Terraria.DataStructures;
-using Macrocosm.Content.Players;
+using Terraria.GameContent;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
-    internal class ClawWrenchProjectile : ModProjectile
+	internal class ClawWrenchProjectile : ModProjectile
     {
         public override bool ShouldUpdatePosition() => false;
 

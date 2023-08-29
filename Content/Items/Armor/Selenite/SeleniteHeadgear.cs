@@ -1,15 +1,14 @@
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Items.Materials;
-using Macrocosm.Content.Rarities;
 using Macrocosm.Content.Players;
+using Macrocosm.Content.Rarities;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Armor.Selenite
 {
-    [AutoloadEquip(EquipType.Head)]
+	[AutoloadEquip(EquipType.Head)]
     internal class SeleniteHeadgear : ModItem
     {
         public override void SetStaticDefaults()

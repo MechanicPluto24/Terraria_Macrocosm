@@ -1,17 +1,15 @@
-using Macrocosm.Content.NPCs.Global;
-using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.NPCs.Global;
 using Terraria;
-using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-    internal class RegolithSlime : ModNPC, IMoonEnemy
+	internal class RegolithSlime : ModNPC, IMoonEnemy
 	{
 		public override void SetStaticDefaults()
 		{

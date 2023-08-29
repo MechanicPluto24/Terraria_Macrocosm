@@ -1,17 +1,16 @@
+using Macrocosm.Common.Bases;
+using Macrocosm.Content.Projectiles.Friendly.Ranged;
+using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
+using System;
 using Terraria;
+using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.GameContent.Creative;
-using Macrocosm.Content.Items.Materials;
-using Macrocosm.Content.Rarities;
-using Macrocosm.Content.Projectiles.Friendly.Ranged;
-using System;
-using Macrocosm.Common.Bases;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
-    internal class TychoDesertEagle : GunHeldProjectileItem
+	internal class TychoDesertEagle : GunHeldProjectileItem
 	{
 		public override GunHeldProjectileData GunHeldProjectileData => new()
 		{

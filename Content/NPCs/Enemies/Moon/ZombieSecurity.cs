@@ -1,24 +1,23 @@
-using System;
-using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-using Terraria.DataStructures;
-using Terraria.GameContent.Bestiary;
+using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
-using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Content.Particles;
-using System.IO;
-using Macrocosm.Content.Projectiles.Hostile;
-using Macrocosm.Common.DataStructures;
-using Macrocosm.Content.NPCs.Global;
-using Terraria.GameContent.ItemDropRules;
 using Macrocosm.Content.Items.Weapons.Ranged;
+using Macrocosm.Content.NPCs.Global;
+using Macrocosm.Content.Particles;
+using Macrocosm.Content.Projectiles.Hostile;
+using Microsoft.Xna.Framework;
+using System;
+using System.IO;
+using Terraria;
+using Terraria.DataStructures;
+using Terraria.GameContent.ItemDropRules;
+using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-    internal class ZombieSecurity : ModNPC, IMoonEnemy
+	internal class ZombieSecurity : ModNPC, IMoonEnemy
 	{
 		public enum ActionState 
 		{ 

@@ -1,5 +1,4 @@
 using Macrocosm.Content.Biomes;
-using Macrocosm.Content.Projectiles.Global;
 using System.Linq;
 using Terraria;
 using Terraria.ModLoader;

@@ -1,15 +1,15 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria.ModLoader;
+﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.Customization;
-using Terraria;
-using Macrocosm.Common.Utils;
-using Terraria.ModLoader.IO;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using Terraria;
+using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Rockets.Modules
 {
-    internal class EngineModule : AnimatedRocketModule
+	internal class EngineModule : AnimatedRocketModule
     {
 		public override int DrawPriority => 0;
 		public bool RearLandingLegRaised { get; set; } = false;

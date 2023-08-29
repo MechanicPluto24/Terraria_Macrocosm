@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 using Terraria.Utilities;
 
 namespace Macrocosm.Common.DataStructures
 {
-    internal class CellularAutomaton
+	internal class CellularAutomaton
     {
         public Cell[][] Map { get; }
         public CellularAutomaton(int width, int height, Seed seed, float fill = 0.5f, int smoothing = 4)

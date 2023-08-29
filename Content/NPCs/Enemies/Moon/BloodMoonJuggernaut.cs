@@ -1,3 +1,6 @@
+using Macrocosm.Content.Biomes;
+using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.NPCs.Global;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -5,14 +8,10 @@ using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Items.Materials;
-using Macrocosm.Content.NPCs.Global;
-using Macrocosm.Content.Biomes;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-    internal class BloodMoonJuggernaut : ModNPC, IMoonEnemy
+	internal class BloodMoonJuggernaut : ModNPC, IMoonEnemy
 	{
 		public enum ActionState
 		{

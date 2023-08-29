@@ -1,8 +1,8 @@
-﻿using Terraria;
+﻿using Macrocosm.Content.Items.Global;
+using Macrocosm.Content.Rockets;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Content.Rockets;
-using Macrocosm.Content.Items.Global;
 
 namespace Macrocosm.Content.Items.Dev
 {

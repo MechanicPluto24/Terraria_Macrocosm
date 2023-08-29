@@ -1,18 +1,17 @@
-﻿using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.ID;
-using Terraria.GameContent.Creative;
-using Terraria.ModLoader;
+﻿using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Utils;
-using Microsoft.Xna.Framework.Graphics;
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Players;
-using Macrocosm.Content.Systems;
-using Macrocosm.Common.Drawing;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Terraria;
+using Terraria.GameContent.Creative;
+using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Accessories.CelestialBulwark
 {
-    [AutoloadEquip(EquipType.Shield)]
+	[AutoloadEquip(EquipType.Shield)]
 	internal class CelestialBulwark : ModItem
 	{
 		public override void SetStaticDefaults()

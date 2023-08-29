@@ -1,8 +1,5 @@
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Rarities;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Vanity.BossMasks

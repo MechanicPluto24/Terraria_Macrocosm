@@ -2,11 +2,10 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Tiles.Blocks
 {
-    internal class IrradiatedBrick : ModTile
+	internal class IrradiatedBrick : ModTile
     {
         public override void SetStaticDefaults()
         {

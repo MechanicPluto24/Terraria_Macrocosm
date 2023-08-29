@@ -1,19 +1,17 @@
-﻿using Macrocosm.Common.Drawing;
-using Macrocosm.Common.Drawing.Sky;
+﻿using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.UI.Menus
 {
-    internal class MacrocosmMenu : ModMenu
+	internal class MacrocosmMenu : ModMenu
     {
         private const string AssetPath = "Macrocosm/Content/UI/Menus/";
 		private const AssetRequestMode Mode = AssetRequestMode.ImmediateLoad;

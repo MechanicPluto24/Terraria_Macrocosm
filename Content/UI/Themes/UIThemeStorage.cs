@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
 
 namespace Macrocosm.Content.UI.Themes
 {
-    internal class UIThemeStorage : ILoadable
+	internal class UIThemeStorage : ILoadable
     {
         private static Dictionary<string, UITheme> themeStorage;
 

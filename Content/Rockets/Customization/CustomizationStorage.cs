@@ -1,18 +1,15 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.UI;
-using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
+﻿using Macrocosm.Common.Drawing;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
-using Macrocosm.Common.Drawing;
-using Hjson;
-using Terraria.IO;
+using Microsoft.Xna.Framework;
 using Newtonsoft.Json.Linq;
-using System.IO;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Terraria;
+using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
+using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Customization
 {

@@ -1,6 +1,5 @@
 ﻿using Macrocosm.Common.Drawing.Particles;
 using Microsoft.Xna.Framework;
-using System;
 using Terraria;
 using Terraria.Graphics;
 using Terraria.Graphics.Shaders;

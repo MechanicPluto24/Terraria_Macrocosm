@@ -1,7 +1,6 @@
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
-using Macrocosm.Content.Trails;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -12,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
-    internal class ImbriumJewelProjectile : ModProjectile
+	internal class ImbriumJewelProjectile : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{

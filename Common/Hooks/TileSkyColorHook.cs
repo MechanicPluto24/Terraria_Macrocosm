@@ -1,6 +1,4 @@
 using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
 using Terraria;
@@ -8,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Hooks
 {
-    internal class TileSkyColorHook : ILoadable
+	internal class TileSkyColorHook : ILoadable
 	{
 		public void Load(Mod mod)
 		{

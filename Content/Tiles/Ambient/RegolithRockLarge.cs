@@ -1,11 +1,11 @@
 using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Items.Placeable.Blocks;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
-using Terraria.GameContent;
-using Macrocosm.Content.Items.Placeable.Blocks;
 
 namespace Macrocosm.Content.Tiles.Ambient
 {

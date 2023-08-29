@@ -1,11 +1,8 @@
-using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Hostile
 {
-    internal class PhantasmalImpLarge : PhantasmalImpSmall
+	internal class PhantasmalImpLarge : PhantasmalImpSmall
 	{
 		public override void SetDefaults()
 		{

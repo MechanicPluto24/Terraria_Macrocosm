@@ -1,18 +1,18 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Macrocosm.Common.Utils;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using ReLogic.OS;
+using System;
+using Terraria;
+using Terraria.Audio;
 using Terraria.GameContent.UI.Elements;
 using Terraria.GameInput;
+using Terraria.ID;
 using Terraria.Initializers;
 using Terraria.Localization;
-using Terraria.UI;
-using Terraria;
-using Microsoft.Xna.Framework;
-using ReLogic.OS;
-using Terraria.Audio;
-using Terraria.ID;
-using Macrocosm.Common.Utils;
 using Terraria.ModLoader;
-using System;
-using Microsoft.Xna.Framework.Input;
+using Terraria.UI;
 
 namespace Macrocosm.Common.UI
 {

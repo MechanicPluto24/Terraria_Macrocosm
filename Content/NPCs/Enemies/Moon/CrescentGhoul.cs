@@ -1,8 +1,8 @@
-﻿using Macrocosm.Content.NPCs.Global;
-using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.NPCs.Global;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -15,7 +15,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-    internal class CrescentGhoul : ModNPC, IMoonEnemy
+	internal class CrescentGhoul : ModNPC, IMoonEnemy
 	{
 		public enum ActionState
 		{

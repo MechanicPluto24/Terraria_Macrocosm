@@ -1,18 +1,13 @@
 ﻿using Macrocosm.Common.Bases;
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Gores;
 using Macrocosm.Content.Items.MeteorChunks;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Environment.Meteors
 {
-    internal class NebulaMeteor : BaseMeteor
+	internal class NebulaMeteor : BaseMeteor
     {
         public NebulaMeteor()
         {

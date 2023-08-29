@@ -1,13 +1,11 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Common.Subworlds;
+using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
-using Terraria.Enums;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
-using Terraria.Localization;
-using Terraria.DataStructures;
-using Macrocosm.Common.Utils;
-using Macrocosm.Common.Subworlds;
 
 namespace Macrocosm.Content.Rockets.LaunchPads
 {

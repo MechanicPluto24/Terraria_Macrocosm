@@ -1,15 +1,15 @@
-﻿using Macrocosm.Content.NPCs.Global;
+﻿using Macrocosm.Content.Items.Global;
+using Macrocosm.Content.NPCs.Global;
 using Macrocosm.Content.Players;
-using Macrocosm.Content.Rockets;
-using Terraria;
 using Macrocosm.Content.Projectiles.Global;
-using Macrocosm.Content.Items.Global;
+using Macrocosm.Content.Rockets;
 using System;
+using Terraria;
 using Terraria.Utilities;
 
 namespace Macrocosm.Common.Utils
 {
-    internal static class Extension
+	internal static class Extension
     {
         public static MacrocosmProjectile Macrocosm(this Projectile projectile)
             => projectile.GetGlobalProjectile<MacrocosmProjectile>();

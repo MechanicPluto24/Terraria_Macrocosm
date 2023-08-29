@@ -1,16 +1,13 @@
-﻿using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-using Macrocosm.Content.Dusts;
+﻿using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
-using Macrocosm.Common.Drawing.Particles;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Macrocosm.Common.Netcode;
+using Terraria;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Particles
 {
-    internal class PlasmaBall : Particle
+	internal class PlasmaBall : Particle
 	{
 		public override int SpawnTimeLeft => 95;
 		public override int TrailCacheLenght => 7;

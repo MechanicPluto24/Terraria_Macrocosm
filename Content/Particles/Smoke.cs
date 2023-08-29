@@ -1,14 +1,10 @@
 ﻿using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Common.Netcode;
-using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Graphics.PackedVector;
-using Terraria;
 
 namespace Macrocosm.Content.Particles
 {
-    internal class Smoke : Particle
+	internal class Smoke : Particle
     {
         public override int FrameNumber => 3;
         public override bool SetRandomFrameOnSpawn => true;

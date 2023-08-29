@@ -1,9 +1,9 @@
-using System;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using Terraria;
 using Terraria.ModLoader;
-using Macrocosm.Common.Utils;
 
 namespace Macrocosm.Content.Dusts
 {
