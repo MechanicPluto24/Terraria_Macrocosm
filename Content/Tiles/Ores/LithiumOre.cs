@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles.Ores
 {
-	internal class LithiumOre : ModTile
+	public class LithiumOre : ModTile
     {
         public override void SetStaticDefaults()
         {

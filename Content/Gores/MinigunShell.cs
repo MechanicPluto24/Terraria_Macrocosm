@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Gores
 {
-	internal class MinigunShell : ModGore
+	public class MinigunShell : ModGore
 	{
 		public override void OnSpawn(Gore gore, IEntitySource source)
 		{

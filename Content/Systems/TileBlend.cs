@@ -8,7 +8,7 @@ using Terraria.ID;
 namespace Macrocosm.Common.Systems
 {
 	/// <summary> This is broken, don't use yet </summary>
-	internal static class TileBlend
+	public static class TileBlend
 	{
 		public static bool BlendLikeDirt(int i, int j, int typeToBlendWith, bool asDirt = false)
 			=> BlendLikeDirt(i, j, new int[] {typeToBlendWith},asDirt);

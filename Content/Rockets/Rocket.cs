@@ -18,7 +18,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets
 {
-	internal partial class Rocket 
+	public partial class Rocket 
 	{
 		/// <summary> The rocket's identifier </summary>
 		public int WhoAmI = -1;

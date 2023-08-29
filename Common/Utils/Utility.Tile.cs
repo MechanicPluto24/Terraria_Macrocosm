@@ -10,7 +10,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Common.Utils
 {
-	internal static partial class Utility
+	public static partial class Utility
 	{
 		/// <summary>
 		/// Gets the top-left tile of a multitile

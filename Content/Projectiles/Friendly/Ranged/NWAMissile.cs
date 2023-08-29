@@ -12,7 +12,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-	internal class NWAMissile : ModProjectile, IExplosive
+	public class NWAMissile : ModProjectile, IExplosive
 	{
 		public ref float AI_HomingTimer => ref Projectile.ai[0];
 		public ref float AI_AccelerationTimer => ref Projectile.ai[1];

@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets
 {
-	internal partial class Rocket 
+	public partial class Rocket 
 	{
 		/// <summary>
 		/// Syncs the rocket fields with <see cref="NetSyncAttribute"/> across all clients and the server.

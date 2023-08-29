@@ -3,7 +3,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles.Global
 {
-	internal class SubworldGlobalTile : GlobalTile
+	public class SubworldGlobalTile : GlobalTile
 	{
 
 		/// <summary>

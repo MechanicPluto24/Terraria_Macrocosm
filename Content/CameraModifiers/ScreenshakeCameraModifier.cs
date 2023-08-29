@@ -4,7 +4,7 @@ using Terraria.Graphics.CameraModifiers;
 
 namespace Macrocosm.Content.CameraModifiers
 {
-	internal class ScreenshakeCameraModifier : ICameraModifier
+	public class ScreenshakeCameraModifier : ICameraModifier
 	{
 		public string UniqueIdentity { get; private set; }
 		public bool Finished { get; private set; }

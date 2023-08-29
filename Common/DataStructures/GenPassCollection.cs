@@ -9,7 +9,7 @@ using Terraria.WorldBuilding;
 
 namespace Macrocosm.Common.DataStructures
 {
-	internal abstract class GenPassCollection
+	public abstract class GenPassCollection
     {
         private PassLegacy CreateGenPass(MethodInfo methodInfo)
         {
@@ -188,7 +188,7 @@ namespace Macrocosm.Common.DataStructures
 
 
 	[AttributeUsage(AttributeTargets.Method)]
-    internal class GenPassAttribute : Attribute
+    public class GenPassAttribute : Attribute
     {
         public string InsertName { get; }
         public InsertMode InsertMode { get; }
@@ -204,7 +204,7 @@ namespace Macrocosm.Common.DataStructures
         public GenPassAttribute(InsertMode insertMode, double loadWeight = 0.0) : this(null, insertMode, loadWeight) { }
     }
 
-    internal enum InsertMode
+    public enum InsertMode
     {
         Before,
         After,

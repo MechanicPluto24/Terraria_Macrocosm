@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
-	internal class ArchersLine : GunHeldProjectileItem
+	public class ArchersLine : GunHeldProjectileItem
 	{
 		public override void SetStaticDefaults()
 		{

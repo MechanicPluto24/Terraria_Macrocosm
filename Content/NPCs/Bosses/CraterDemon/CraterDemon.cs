@@ -28,7 +28,7 @@ using Terraria.ModLoader;
 namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 {
 	[AutoloadBossHead]
-	internal class CraterDemon : ModNPC, IMoonEnemy
+	public class CraterDemon : ModNPC, IMoonEnemy
 	{
 		private struct AttackInfo
 		{
@@ -1515,7 +1515,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 				SpawnDustsInner(pos, jaw.Width, jaw.Height, type);
 		}
 
-		internal static void SpawnDustsInner(Vector2 pos, int width, int height, int type)
+		public static void SpawnDustsInner(Vector2 pos, int width, int height, int type)
 		{
 			Dust dust = Dust.NewDustDirect(pos, width, height, type, Scale: Main.rand.NextFloat(0.85f, 1.2f));
 			dust.velocity = new Vector2(0, Main.rand.NextFloat(1.4f, 2.8f));

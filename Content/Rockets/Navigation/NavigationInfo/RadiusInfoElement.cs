@@ -4,7 +4,7 @@ using Terraria.Localization;
 
 namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
 {
-	internal class RadiusInfoElement : ValueUnitSpecialInfoElement
+	public class RadiusInfoElement : ValueUnitSpecialInfoElement
 	{
 		public RadiusInfoElement(string specialValueKey) : base(specialValueKey) { }
 

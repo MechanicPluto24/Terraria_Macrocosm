@@ -16,7 +16,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Common.UI
 {
-	internal class UIColorMenuHSL : UIPanel
+	public class UIColorMenuHSL : UIPanel
 	{
 		public enum HSLSliderId
 		{

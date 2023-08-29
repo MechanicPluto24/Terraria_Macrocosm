@@ -21,7 +21,7 @@ namespace Macrocosm.Content.NPCs
 	/// <summary>
 	/// The base ExampleMod class for non-separating Worm enemies.
 	/// </summary>
-	internal abstract class Worm : ModNPC
+	public abstract class Worm : ModNPC
 	{
 		/*  ai[] usage:
 		 *  
@@ -127,9 +127,9 @@ namespace Macrocosm.Content.NPCs
  		}
 
 		// Not visible to public API, but is used to indicate what AI to run
-		internal virtual void HeadAI() { }
+		public virtual void HeadAI() { }
 
-		internal virtual void BodyTailAI() { }
+		public virtual void BodyTailAI() { }
 
 		public abstract void Init();
 	}
@@ -137,7 +137,7 @@ namespace Macrocosm.Content.NPCs
 	/// <summary>
 	/// The base class for head segment NPCs of Worm enemies
 	/// </summary>
-	internal abstract class WormHead : Worm
+	public abstract class WormHead : Worm
 	{
 		public sealed override WormSegmentType SegmentType => WormSegmentType.Head;
 
@@ -211,7 +211,7 @@ namespace Macrocosm.Content.NPCs
 			return latestNPC;
 		}
 
-		internal sealed override void HeadAI() 
+		public sealed override void HeadAI() 
 		{
 			HeadAI_SpawnSegments();
 
@@ -574,7 +574,7 @@ namespace Macrocosm.Content.NPCs
 		}
 	}
 
-	internal abstract class WormBody : Worm
+	public abstract class WormBody : Worm
 	{
 		public sealed override WormSegmentType SegmentType => WormSegmentType.Body;
 
@@ -584,13 +584,13 @@ namespace Macrocosm.Content.NPCs
 			NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
 		}
 
-		internal override void BodyTailAI() 
+		public override void BodyTailAI() 
 		{
 			CommonAI_BodyTail(this);
 			FlipBodyTail(this);
 		}
 
-		internal static void CommonAI_BodyTail(Worm worm) 
+		public static void CommonAI_BodyTail(Worm worm) 
 		{
 			if (!worm.NPC.HasValidTarget)
 				worm.NPC.TargetClosest(true);
@@ -639,7 +639,7 @@ namespace Macrocosm.Content.NPCs
 	}
 
 	// Since the body and tail segments share the same AI
-	internal abstract class WormTail : Worm
+	public abstract class WormTail : Worm
 	{
 		public sealed override WormSegmentType SegmentType => WormSegmentType.Tail;
 
@@ -649,7 +649,7 @@ namespace Macrocosm.Content.NPCs
 			NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
 		}
 
-		internal override void BodyTailAI() 
+		public override void BodyTailAI() 
 		{
 			WormBody.CommonAI_BodyTail(this);
 			FlipBodyTail(this);

@@ -5,7 +5,7 @@ using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Rockets
 {
-	internal partial class Rocket : TagSerializable
+	public partial class Rocket : TagSerializable
 	{
 		public static readonly Func<TagCompound, Rocket> DESERIALIZER = DeserializeData;
 

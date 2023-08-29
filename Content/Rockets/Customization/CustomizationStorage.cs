@@ -13,7 +13,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-	internal class CustomizationStorage : ModSystem
+	public class CustomizationStorage : ModSystem
 	{
 		public static bool Initialized { get; private set; }
 

@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 namespace Macrocosm.Content.Items.Armor.Chandrium
 {
 	[AutoloadEquip(EquipType.Head)]
-    internal class ChandriumHelm : ModItem
+    public class ChandriumHelm : ModItem
     {
         public override void SetStaticDefaults()
         {

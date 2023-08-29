@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Trails
 {
-	internal class MoonSwordTrail : VertexTrail
+	public class MoonSwordTrail : VertexTrail
 	{
 		private static MiscShaderData shader = new MiscShaderData(Main.VertexPixelShaderRef, "MagicMissile")
 						.UseProjectionMatrix(doUse: true)

@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Bases
 {
-	internal abstract class ChargedGunHeldProjectile : ModProjectile
+	public abstract class ChargedGunHeldProjectile : ModProjectile
     {
         public virtual void SetProjectileStaticDefaults() { }
 

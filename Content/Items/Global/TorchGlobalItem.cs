@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Global
 {
-	internal class TorchGlobalItem : GlobalItem
+	public class TorchGlobalItem : GlobalItem
 	{
 		/// <summary> Returns whether the provided item type is a torch </summary>
 		public static bool IsTorch(int itemId) => ItemID.Sets.Torches[itemId];

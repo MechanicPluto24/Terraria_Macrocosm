@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
 {
-	internal class WorldInfo : ILoadable
+	public class WorldInfo : ILoadable
 	{
         private static Dictionary<string, List<InfoElement>> worldInfoStorage;
 

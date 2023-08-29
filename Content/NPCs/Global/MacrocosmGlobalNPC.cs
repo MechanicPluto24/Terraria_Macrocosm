@@ -15,7 +15,7 @@ using Terraria.ModLoader;
 namespace Macrocosm.Content.NPCs.Global
 {
 	/// <summary> Global NPC for general NPC modifications (loot, spawn pools) </summary>
-	internal class MacrocosmGlobalNPC : GlobalNPC
+	public class MacrocosmGlobalNPC : GlobalNPC
 	{
 		public override void SetStaticDefaults()
 		{

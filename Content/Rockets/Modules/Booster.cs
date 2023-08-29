@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Modules
 {
-	internal abstract class Booster : AnimatedRocketModule
+	public abstract class Booster : AnimatedRocketModule
     {
 		public override int DrawPriority => 1;
 

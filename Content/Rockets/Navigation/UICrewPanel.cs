@@ -6,7 +6,7 @@ using Terraria.UI;
 namespace Macrocosm.Content.Rockets.Navigation
 {
 	// TODO: make an abstract scrollable panel class
-	internal class UICrewPanel : UIPanel
+	public class UICrewPanel : UIPanel
     {
         private LocalizedText title;
 

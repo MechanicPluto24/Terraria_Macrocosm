@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Macrocosm.Content.Particles
 {
-	internal class Smoke : Particle
+	public class Smoke : Particle
     {
         public override int FrameNumber => 3;
         public override bool SetRandomFrameOnSpawn => true;

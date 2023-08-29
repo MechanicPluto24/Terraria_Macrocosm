@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Players
 {
-	internal class DashPlayer : ModPlayer
+	public class DashPlayer : ModPlayer
 	{
 
 		public bool AccDashHorizontal = false;

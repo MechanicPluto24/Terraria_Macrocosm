@@ -3,7 +3,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Buffs.Debuffs
 {
-	internal class Fear : ModBuff
+	public class Fear : ModBuff
 	{
 		public override void SetStaticDefaults()
 		{

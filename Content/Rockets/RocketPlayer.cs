@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets
 {
-	internal class RocketPlayer : ModPlayer
+	public class RocketPlayer : ModPlayer
 	{
 		public bool InRocket { get; set; } = false;
 		public bool AsCommander { get; set; } = false;

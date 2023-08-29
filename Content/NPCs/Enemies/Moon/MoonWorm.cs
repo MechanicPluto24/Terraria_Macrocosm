@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
 	// These three class showcase usage of the WormHead, WormBody and WormTail ExampleMod classes from Worm.cs
-	internal class MoonWormHead : WormHead, IMoonEnemy
+	public class MoonWormHead : WormHead, IMoonEnemy
 	{
 		public override int BodyType => ModContent.NPCType<MoonWormBody>();
 		public override int TailType => ModContent.NPCType<MoonWormTail>();
@@ -59,7 +59,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			CommonWormInit(this);
 		}
 
-		internal static void CommonWormInit(Worm worm) 
+		public static void CommonWormInit(Worm worm) 
 		{
 			// These two properties handle the movement of the worm
 			worm.MoveSpeed = 15.5f;
@@ -94,7 +94,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		}
 	}
 
-	internal class MoonWormBody : WormBody
+	public class MoonWormBody : WormBody
 	{
 		public override void SetStaticDefaults() 
 		{
@@ -130,7 +130,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
  		}
 	}
 
-	internal class MoonWormTail : WormTail
+	public class MoonWormTail : WormTail
 	{
 		public override void SetStaticDefaults() 
 		{

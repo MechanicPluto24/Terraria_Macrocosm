@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
-	internal class SteelRifle : GunHeldProjectileItem
+	public class SteelRifle : GunHeldProjectileItem
 	{
 		public override void SetStaticDefaults()
 		{

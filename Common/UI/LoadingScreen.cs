@@ -8,7 +8,7 @@ using Terraria.WorldBuilding;
 namespace Macrocosm.Common.UI
 {
 	/// <summary> Loading screen, displayed when traveling to/from subworlds. </summary>
-	internal abstract class LoadingScreen
+	public abstract class LoadingScreen
     {
         /// <summary> Whether there is any type of LoadingScreen active right now. </summary>
         public static bool CurrentlyActive { get; set; }

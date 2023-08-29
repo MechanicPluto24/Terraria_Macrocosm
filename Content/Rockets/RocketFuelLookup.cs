@@ -3,7 +3,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets
 {
-	internal class RocketFuelLookup : ILoadable
+	public class RocketFuelLookup : ILoadable
     {
         private static Dictionary<string, float> fuelLookup;
 

@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
-	internal class AluminumBow : ModItem
+	public class AluminumBow : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

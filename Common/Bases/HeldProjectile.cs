@@ -8,7 +8,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Common.Bases
 {
-	internal abstract class HeldProjectileItem<T> : ModItem where T: HeldProjectile
+	public abstract class HeldProjectileItem<T> : ModItem where T: HeldProjectile
     {
         public virtual void SetDefaultsHeldProjectile() { }
         public virtual bool CanUseItemHeldProjectile(Player player) => true;
@@ -60,7 +60,7 @@ namespace Macrocosm.Common.Bases
         ) is null && CanUseItemHeldProjectile(player);
     }
 
-    internal abstract class HeldProjectile : ModProjectile
+    public abstract class HeldProjectile : ModProjectile
     {
         public enum HeldProjectileKillMode
         {

@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 namespace Macrocosm.Content.Items.Armor.Artemite
 {
 	[AutoloadEquip(EquipType.Head)]
-    internal class ArtemiteHelmet : ModItem
+    public class ArtemiteHelmet : ModItem
     {
         public override void SetStaticDefaults()
         {

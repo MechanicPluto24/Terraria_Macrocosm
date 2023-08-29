@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rarities
 {
-	internal class MoonRarityT1 : ModRarity
+	public class MoonRarityT1 : ModRarity
 	{
 		public override Color RarityColor => new(203, 227, 21); // acid color 
 

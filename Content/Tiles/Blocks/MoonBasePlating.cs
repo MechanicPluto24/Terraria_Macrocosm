@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles.Blocks
 {
-	internal class MoonBasePlating : ModTile
+	public class MoonBasePlating : ModTile
     {
         public override void SetStaticDefaults()
         {

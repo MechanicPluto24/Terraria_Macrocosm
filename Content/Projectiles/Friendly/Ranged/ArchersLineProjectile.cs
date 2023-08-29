@@ -6,7 +6,7 @@ using Terraria.ID;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-	internal class ArchersLineProjectile : RicochetBullet
+	public class ArchersLineProjectile : RicochetBullet
 	{
 		public override int RicochetCount => 10;
 

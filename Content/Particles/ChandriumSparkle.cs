@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Particles
 {
-	internal class ChandriumSparkle : Particle
+	public class ChandriumSparkle : Particle
 	{
 		public override string TexturePath => Macrocosm.EmptyTexPath;
 

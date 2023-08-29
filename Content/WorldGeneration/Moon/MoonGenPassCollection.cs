@@ -14,7 +14,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.WorldGeneration.Moon
 {
-	internal class MoonGenPassCollection : GenPassCollection
+	public class MoonGenPassCollection : GenPassCollection
     {
         public int RegolithLayerHeight { get; } = 200;
         public float SurfaceWidthFrequency { get; } = 0.003f;

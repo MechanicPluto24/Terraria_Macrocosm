@@ -6,7 +6,7 @@ using Terraria.UI.Chat;
 
 namespace Macrocosm.Content.Rockets
 {
-	internal partial class Rocket
+	public partial class Rocket
 	{
 		public void DrawDebugBounds()
 		{

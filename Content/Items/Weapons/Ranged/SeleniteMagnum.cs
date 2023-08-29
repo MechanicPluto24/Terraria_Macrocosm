@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
-	internal class SeleniteMagnum : GunHeldProjectileItem
+	public class SeleniteMagnum : GunHeldProjectileItem
 	{
 		public override GunHeldProjectileData GunHeldProjectileData => new()
 		{

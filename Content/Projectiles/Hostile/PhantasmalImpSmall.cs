@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Hostile
 {
-	internal class PhantasmalImpSmall : ModProjectile
+	public class PhantasmalImpSmall : ModProjectile
 	{
 		public Player TargetPlayer => Main.player[(int)Projectile.ai[2]];
 

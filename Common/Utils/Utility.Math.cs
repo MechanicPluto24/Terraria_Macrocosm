@@ -4,7 +4,7 @@ using Terraria;
 
 namespace Macrocosm.Common.Utils
 {
-	internal static partial class Utility
+	public static partial class Utility
 	{
 		#region Interpolation
 

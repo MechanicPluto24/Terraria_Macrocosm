@@ -3,7 +3,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Navigation.Checklist
 {
-	internal class ChecklistCondition
+	public class ChecklistCondition
 	{
 		public string LangKey { get; private set; }
 

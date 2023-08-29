@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles.Ores
 {
-	internal class AluminumOre : ModTile
+	public class AluminumOre : ModTile
     {
         public override void SetStaticDefaults()
         {

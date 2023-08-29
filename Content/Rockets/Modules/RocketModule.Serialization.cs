@@ -7,7 +7,7 @@ using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Rockets.Modules
 {
-	internal abstract partial class RocketModule : TagSerializable
+	public abstract partial class RocketModule : TagSerializable
 	{
 		protected virtual JObject SerializeCustomizationData() { return new JObject(); }
 		protected virtual void DeserializeCustomizationData(string json) { }

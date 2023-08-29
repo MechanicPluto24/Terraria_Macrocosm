@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Commands
 {
-	internal class ClearDataCommand : ModCommand
+	public class ClearDataCommand : ModCommand
     {
         public override string Command => "clrd";
 

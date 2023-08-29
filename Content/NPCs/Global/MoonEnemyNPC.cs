@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Global
 {
-	internal class MoonEnemyNPC : GlobalNPC
+	public class MoonEnemyNPC : GlobalNPC
 	{
 		public override bool InstancePerEntity => true;
 		public override bool AppliesToEntity(NPC entity, bool lateInstantiation) => entity.ModNPC is IMoonEnemy;

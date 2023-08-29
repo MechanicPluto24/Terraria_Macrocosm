@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 namespace Macrocosm.Content.Items.Armor.Chandrium
 {
 	[AutoloadEquip(EquipType.Legs)]
-    internal class ChandriumLeggings : ModItem
+    public class ChandriumLeggings : ModItem
     {
         public override void SetStaticDefaults()
         {

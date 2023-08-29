@@ -6,7 +6,7 @@ using Terraria;
 namespace Macrocosm.Content.UI.Themes
 {
 	// Not yet sure on how we'll do the implementation
-	internal class UITheme
+	public class UITheme
     {
 		public Color PanelBackgroundColor { get; set; }
         public Color PanelBorderColor { get; set; }

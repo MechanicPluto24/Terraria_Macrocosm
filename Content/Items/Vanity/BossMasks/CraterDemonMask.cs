@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 namespace Macrocosm.Content.Items.Vanity.BossMasks
 {
 	[AutoloadEquip(EquipType.Head)]
-	internal class CraterDemonMask : ModItem
+	public class CraterDemonMask : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

@@ -7,7 +7,7 @@ using Terraria.GameContent.UI.Elements;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
-	internal class UIRocketPreviewLarge : UIPanel, IRocketDataConsumer
+	public class UIRocketPreviewLarge : UIPanel, IRocketDataConsumer
 	{
         public Rocket Rocket { get; set; }  
         public Rocket RocketDummy { get; set; }

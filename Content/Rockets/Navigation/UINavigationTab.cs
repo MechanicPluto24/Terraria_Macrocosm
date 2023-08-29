@@ -11,7 +11,7 @@ using Terraria.Localization;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
-	internal class UINavigationTab : UIPanel, ITabUIElement, IRocketDataConsumer
+	public class UINavigationTab : UIPanel, ITabUIElement, IRocketDataConsumer
     {
 		public Rocket Rocket { get; set; } 
 

@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Tools.Chandrium
 {
-	internal class ChandriumAxe : ModItem
+	public class ChandriumAxe : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

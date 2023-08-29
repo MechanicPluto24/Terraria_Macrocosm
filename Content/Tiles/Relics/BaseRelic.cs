@@ -13,7 +13,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Relics
 {
-	internal abstract class BaseRelic : ModTile
+	public abstract class BaseRelic : ModTile
 	{
 		public virtual string RelicTextureName { get; set; }
 		public virtual bool RightPlaceStyle => true;

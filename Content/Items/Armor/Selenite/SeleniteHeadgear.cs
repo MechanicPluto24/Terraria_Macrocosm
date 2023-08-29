@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 namespace Macrocosm.Content.Items.Armor.Selenite
 {
 	[AutoloadEquip(EquipType.Head)]
-    internal class SeleniteHeadgear : ModItem
+    public class SeleniteHeadgear : ModItem
     {
         public override void SetStaticDefaults()
         {

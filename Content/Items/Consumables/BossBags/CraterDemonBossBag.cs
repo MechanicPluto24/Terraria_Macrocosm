@@ -15,7 +15,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Consumables.BossBags
 {
-	internal class CraterDemonBossBag : ModItem
+	public class CraterDemonBossBag : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

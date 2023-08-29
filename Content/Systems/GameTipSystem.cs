@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 namespace Macrocosm.Common.Systems
 {
 
-	internal class GameTipSystem : ModSystem
+	public class GameTipSystem : ModSystem
 	{
 		public const string LoadingScreenTipsLocalizationPath = "Mods.Macrocosm.UI.LoadingScreenTips.";
 

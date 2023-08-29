@@ -7,7 +7,7 @@ using Terraria.WorldBuilding;
 
 namespace Macrocosm.Content.WorldGeneration.Moon
 {
-	internal class RegolithPass : GenPass
+	public class RegolithPass : GenPass
 	{
 		public RegolithPass(string name, float loadWeight) : base(name, loadWeight) { }
 

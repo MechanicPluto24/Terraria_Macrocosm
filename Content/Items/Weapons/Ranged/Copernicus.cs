@@ -12,7 +12,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
-	internal class Copernicus : GunHeldProjectileItem
+	public class Copernicus : GunHeldProjectileItem
 	{
 		public override void SetStaticDefaults()
 		{
