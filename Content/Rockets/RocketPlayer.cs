@@ -1,20 +1,15 @@
 ﻿using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.CameraModifiers;
-using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Rockets.Navigation;
 using Microsoft.Xna.Framework;
-using System;
 using System.IO;
 using Terraria;
-using Terraria.DataStructures;
-using Terraria.Graphics.CameraModifiers;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets
 {
-    internal class RocketPlayer : ModPlayer
+	internal class RocketPlayer : ModPlayer
 	{
 		public bool InRocket { get; set; } = false;
 		public bool AsCommander { get; set; } = false;

@@ -1,5 +1,4 @@
 using Macrocosm.Content.Projectiles.Friendly.Magic;
-using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Terraria;

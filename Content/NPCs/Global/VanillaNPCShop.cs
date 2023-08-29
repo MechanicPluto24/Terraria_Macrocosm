@@ -1,7 +1,7 @@
-﻿using Terraria;
+﻿using Macrocosm.Content.Items.Placeable.Paintings;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Content.Items.Placeable.Paintings;
 
 namespace Macrocosm.Content.NPCs.Global
 {

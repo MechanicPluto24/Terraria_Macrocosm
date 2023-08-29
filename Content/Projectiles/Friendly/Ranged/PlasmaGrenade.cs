@@ -2,7 +2,6 @@ using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
-using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using System.IO;
 using Terraria;

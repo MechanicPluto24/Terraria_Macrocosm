@@ -1,17 +1,14 @@
+using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Utils;
+using Macrocosm.Content.Particles;
+using Macrocosm.Content.Trails;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Common.Utils;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria.GameContent;
-using System;
-using Macrocosm.Content.Trails;
-using Terraria.DataStructures;
-using static tModPorter.ProgressUpdate;
-using static Terraria.ModLoader.PlayerDrawLayer;
-using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Content.Particles;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {

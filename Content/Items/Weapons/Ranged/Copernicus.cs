@@ -6,14 +6,13 @@ using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
-using Terraria.DataStructures;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
-    internal class Copernicus : GunHeldProjectileItem
+	internal class Copernicus : GunHeldProjectileItem
 	{
 		public override void SetStaticDefaults()
 		{

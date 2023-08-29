@@ -1,12 +1,12 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using Terraria.ModLoader;
-using Terraria.Localization;
-using Macrocosm.Common.UI;
+﻿using Macrocosm.Common.UI;
+using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using Terraria.Localization;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Navigation.Checklist
 {
-    internal class ChecklistInfoElement : InfoElement
+	internal class ChecklistInfoElement : InfoElement
     {
         public enum ExtraIconType
         {

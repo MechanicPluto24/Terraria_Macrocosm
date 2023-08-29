@@ -1,17 +1,14 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Common.Utils;
+using Macrocosm.Content.Rockets.Customization;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
 using Terraria.ModLoader;
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Rockets.Customization;
-using Terraria.ModLoader.IO;
-using System;
-using Terraria.Graphics;
 
 namespace Macrocosm.Content.Rockets.Modules
 {
-    internal abstract partial class RocketModule 
+	internal abstract partial class RocketModule 
 	{
 		public string Name => GetType().Name;
 

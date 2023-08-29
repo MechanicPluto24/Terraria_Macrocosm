@@ -1,6 +1,6 @@
 ﻿namespace Macrocosm.Content.Rockets.Modules
 {
-    internal abstract class AnimatedRocketModule : RocketModule
+	internal abstract class AnimatedRocketModule : RocketModule
 	{
 		/// <summary> The current animation frame </summary>
 		public int CurrentFrame { get; set; } = 9;

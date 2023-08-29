@@ -1,15 +1,14 @@
-﻿using System;
+﻿using Macrocosm.Common.Netcode;
+using System;
 using System.IO;
-
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Common.Netcode;
 
 namespace Macrocosm.Common.Drawing.Particles
 {
-    /// <summary> Particle.Netcode by sucss, Nurby & Feldy @ PellucidMod (RIP) </summary>
-    internal partial class Particle 
+	/// <summary> Particle.Netcode by sucss, Nurby & Feldy @ PellucidMod (RIP) </summary>
+	internal partial class Particle 
 	{
 		public const int MaxParticles = ushort.MaxValue;
 		public const int MaxParticleTypes = ushort.MaxValue;

@@ -1,18 +1,17 @@
-﻿using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.UI;
-using Terraria.GameContent.UI.Elements;
-using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Config;
 using Macrocosm.Common.Subworlds;
-using Macrocosm.Content.Rockets.Navigation.NavigationInfo;
-using Macrocosm.Content.Rockets.Navigation.Checklist;
 using Macrocosm.Common.UI;
+using Macrocosm.Common.Utils;
+using Macrocosm.Content.Rockets.Navigation.Checklist;
+using Macrocosm.Content.Rockets.Navigation.NavigationInfo;
+using Microsoft.Xna.Framework;
+using Terraria;
+using Terraria.GameContent.UI.Elements;
 using Terraria.Localization;
-using Macrocosm.Common.Config;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
-    internal class UINavigationTab : UIPanel, ITabUIElement, IRocketDataConsumer
+	internal class UINavigationTab : UIPanel, ITabUIElement, IRocketDataConsumer
     {
 		public Rocket Rocket { get; set; } 
 

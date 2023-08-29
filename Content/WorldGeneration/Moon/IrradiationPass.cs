@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Tiles.Blocks;
 using Macrocosm.Content.Tiles.Walls;
 using Microsoft.Xna.Framework;
@@ -12,7 +10,7 @@ using Terraria.WorldBuilding;
 
 namespace Macrocosm.Content.WorldGeneration.Moon
 {
-    internal class IrradiationPass : GenPass
+	internal class IrradiationPass : GenPass
 	{
 		public int CenterX;
 

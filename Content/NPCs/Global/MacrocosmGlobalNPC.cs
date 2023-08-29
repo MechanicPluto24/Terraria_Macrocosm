@@ -1,6 +1,5 @@
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Items.Currency;
 using Macrocosm.Content.Subworlds;
 using SubworldLibrary;
@@ -15,8 +14,8 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Global
 {
-    /// <summary> Global NPC for general NPC modifications (loot, spawn pools) </summary>
-    internal class MacrocosmGlobalNPC : GlobalNPC
+	/// <summary> Global NPC for general NPC modifications (loot, spawn pools) </summary>
+	internal class MacrocosmGlobalNPC : GlobalNPC
 	{
 		public override void SetStaticDefaults()
 		{

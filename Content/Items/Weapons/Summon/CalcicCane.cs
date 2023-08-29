@@ -1,5 +1,4 @@
-﻿using Macrocosm.Content.Buffs.GoodBuffs;
-using Macrocosm.Content.Buffs.GoodBuffs.MinionBuffs;
+﻿using Macrocosm.Content.Buffs.GoodBuffs.MinionBuffs;
 using Macrocosm.Content.Projectiles.Friendly.Summon;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;

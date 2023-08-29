@@ -1,19 +1,14 @@
 ﻿using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Steamworks;
-using System;
-using System.IO;
 using Terraria;
-using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
-using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
-    internal class UICustomizationPreview : UIPanel, IRocketDataConsumer
+	internal class UICustomizationPreview : UIPanel, IRocketDataConsumer
     {
         public Rocket Rocket { get; set; } 
 

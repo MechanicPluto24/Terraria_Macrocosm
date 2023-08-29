@@ -1,9 +1,9 @@
-﻿using System;
-using System.Linq;
-using Terraria.ID;
-using Terraria;
+﻿using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
-using Macrocosm.Common.Utils;
+using System;
+using System.Linq;
+using Terraria;
+using Terraria.ID;
 
 namespace Macrocosm.Common.Systems
 {

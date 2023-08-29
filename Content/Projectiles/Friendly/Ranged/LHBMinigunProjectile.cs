@@ -12,7 +12,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-    internal class LHBMinigunProjectile : ChargedGunHeldProjectile
+	internal class LHBMinigunProjectile : ChargedGunHeldProjectile
 	{
 		private const int windupFrames = 4; // number of windup animaton frames
 		private const int shootFrames = 6;  // number of shooting animaton frames

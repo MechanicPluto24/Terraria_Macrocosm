@@ -1,12 +1,11 @@
 using Macrocosm.Content.Items.Materials;
-using Macrocosm.Content.Rarities;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Armor.Aluminum
 {
-    [AutoloadEquip(EquipType.Body)]
+	[AutoloadEquip(EquipType.Body)]
     internal class AluminumBreastplate : ModItem
     {
         public override void SetStaticDefaults()

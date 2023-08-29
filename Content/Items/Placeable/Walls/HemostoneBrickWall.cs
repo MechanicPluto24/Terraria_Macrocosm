@@ -1,13 +1,12 @@
+using Macrocosm.Content.Items.Placeable.Blocks;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Content;
-using Macrocosm.Content.Items.Placeable.Blocks;
 using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Placeable.Walls
 {
-    internal class HemostoneBrickWall : ModItem
+	internal class HemostoneBrickWall : ModItem
     {
         public override void SetStaticDefaults()
         {

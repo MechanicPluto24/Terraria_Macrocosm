@@ -1,15 +1,15 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Common.UI;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Terraria;
-using Terraria.UI;
-using Terraria.GameContent.UI.Elements;
-using Macrocosm.Common.UI;
-using Terraria.Localization;
 using ReLogic.Content;
+using Terraria;
+using Terraria.GameContent.UI.Elements;
+using Terraria.Localization;
+using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
-    internal class UIInfoElement : UIPanel
+	internal class UIInfoElement : UIPanel
     {
         private readonly Asset<Texture2D> icon;
         private readonly Asset<Texture2D> extraIcon;

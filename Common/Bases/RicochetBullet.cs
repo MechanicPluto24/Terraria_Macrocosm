@@ -1,19 +1,19 @@
-using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.ID;
-using Terraria.Audio;
-using Terraria.ModLoader;
-using Macrocosm.Content.Sounds;
 using Macrocosm.Content.Projectiles.Global;
+using Macrocosm.Content.Sounds;
+using Microsoft.Xna.Framework;
 using System.IO;
+using Terraria;
+using Terraria.Audio;
+using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Bases
 {
-    /// <summary>
-    /// Base class for a bullet projectile that bounces from enemy to enemy. 
-    /// Call base if overrding SetDefaults, OnHitNPC, PostAI or Send/ReceiveExtraAI
-    /// </summary>
-    internal abstract class RicochetBullet : ModProjectile, IBullet
+	/// <summary>
+	/// Base class for a bullet projectile that bounces from enemy to enemy. 
+	/// Call base if overrding SetDefaults, OnHitNPC, PostAI or Send/ReceiveExtraAI
+	/// </summary>
+	internal abstract class RicochetBullet : ModProjectile, IBullet
     {
         /// <summary> The number of ricochets </summary>
         public virtual int RicochetCount { get; set; } = 2;

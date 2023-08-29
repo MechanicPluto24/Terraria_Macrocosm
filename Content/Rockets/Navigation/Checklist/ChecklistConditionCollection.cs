@@ -1,11 +1,10 @@
-﻿using Terraria.UI;
-using Terraria.Localization;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Collections;
+using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Navigation.Checklist
 {
-    internal class ChecklistConditionCollection : IEnumerable<ChecklistCondition>
+	internal class ChecklistConditionCollection : IEnumerable<ChecklistCondition>
     {
 		private List<ChecklistCondition> conditions = new();
 

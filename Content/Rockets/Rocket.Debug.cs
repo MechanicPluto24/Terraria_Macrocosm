@@ -1,15 +1,12 @@
-﻿
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Rockets.Modules;
+﻿using Macrocosm.Content.Rockets.Modules;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.UI.Chat;
 
 namespace Macrocosm.Content.Rockets
 {
-    internal partial class Rocket
+	internal partial class Rocket
 	{
 		public void DrawDebugBounds()
 		{

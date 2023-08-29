@@ -1,22 +1,21 @@
-﻿using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-using Terraria.GameContent.Creative;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria.GameContent;
-using Terraria.GameContent.ItemDropRules;
+﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Currency;
-using Macrocosm.Content.Items.Weapons.Summon;
-using Macrocosm.Content.Items.Weapons.Ranged;
 using Macrocosm.Content.Items.Materials;
-using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Vanity.BossMasks;
 using Macrocosm.Content.Items.Weapons.Magic;
+using Macrocosm.Content.Items.Weapons.Ranged;
+using Macrocosm.Content.Items.Weapons.Summon;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Terraria;
+using Terraria.GameContent.Creative;
+using Terraria.GameContent.ItemDropRules;
+using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Consumables.BossBags
 {
- 	internal class CraterDemonBossBag : ModItem
+	internal class CraterDemonBossBag : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

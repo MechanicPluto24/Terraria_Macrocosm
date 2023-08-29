@@ -1,14 +1,11 @@
-using System;
-using System.Collections.Generic;
-using Macrocosm.Common.Drawing.Particles;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria;
+using System;
 using System.Globalization;
+using Terraria;
 
 namespace Macrocosm.Common.Utils
 {
-    internal static partial class Utility
+	internal static partial class Utility
     {
 		public static string GetHexText(this Color color) => "#" + color.Hex3().ToUpper();
 

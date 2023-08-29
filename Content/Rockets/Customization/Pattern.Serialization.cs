@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
 using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-    internal partial class Pattern : TagSerializable
+	internal partial class Pattern : TagSerializable
 	{ 
 		public string ToJSON(bool includeUnlocked = false, bool includeNonModifiableColors = false, bool includeColorFunctions = false) => ToJObject().ToString(Formatting.Indented);
 

@@ -1,11 +1,10 @@
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
-using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Tiles.Walls
 {
-    internal class SpaceshipPlateWall : ModWall
+	internal class SpaceshipPlateWall : ModWall
     {
         public override void SetStaticDefaults()
         {

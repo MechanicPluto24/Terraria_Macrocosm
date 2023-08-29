@@ -1,15 +1,13 @@
-﻿using System;
-using Terraria.ModLoader.IO;
+﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.Customization;
-using Macrocosm.Common.Utils;
-using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
+using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Rockets.Modules
 {
-    internal abstract partial class RocketModule : TagSerializable
+	internal abstract partial class RocketModule : TagSerializable
 	{
 		protected virtual JObject SerializeCustomizationData() { return new JObject(); }
 		protected virtual void DeserializeCustomizationData(string json) { }

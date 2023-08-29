@@ -1,10 +1,10 @@
-using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-using Terraria.GameContent.Creative;
 using Macrocosm.Common.Bases;
 using Macrocosm.Content.Items.Materials;
+using Microsoft.Xna.Framework;
+using Terraria;
+using Terraria.GameContent.Creative;
+using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Melee
 {

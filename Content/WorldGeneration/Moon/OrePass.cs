@@ -1,15 +1,15 @@
-﻿using Terraria;
-using Terraria.IO;
+﻿using Macrocosm.Common.Utils;
+using Macrocosm.Content.Tiles.Ores;
+using Terraria;
 using Terraria.ID;
+using Terraria.IO;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Tiles.Ores;
-using Terraria.Localization;
 
 namespace Macrocosm.Content.WorldGeneration.Moon
 {
-    internal class OrePass : GenPass
+	internal class OrePass : GenPass
 	{
 		public OrePass(string name, float loadWeight) : base(name, loadWeight) { }
 		

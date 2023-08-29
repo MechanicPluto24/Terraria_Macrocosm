@@ -1,26 +1,26 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria.ModLoader;
-using Terraria.GameContent.UI.Elements;
+﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.Customization;
-using Macrocosm.Common.DataStructures;
-using Terraria.Localization;
-using Terraria.UI;
-using System;
-using System.Linq;
-using Terraria;
-using System.Collections.Generic;
 using Macrocosm.Content.Rockets.Modules;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using ReLogic.OS;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Terraria;
 using Terraria.Audio;
+using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
+using Terraria.Localization;
+using Terraria.ModLoader;
+using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
-    internal class UICustomizationTab : UIPanel, ITabUIElement, IRocketDataConsumer
+	internal class UICustomizationTab : UIPanel, ITabUIElement, IRocketDataConsumer
     {
 		private Rocket rocket = new();
 		public Rocket Rocket {

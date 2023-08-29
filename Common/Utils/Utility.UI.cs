@@ -1,15 +1,10 @@
-﻿using Terraria.ID;
-using Terraria.Localization;
-using Terraria;
-using Terraria.UI;
-using Macrocosm.Common.UI;
+﻿using Microsoft.Xna.Framework.Input;
 using System;
-using System.Xml.Linq;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework.Input;
-using Terraria.ModLoader.UI;
-using System.Linq;
-using Microsoft.Xna.Framework;
+using Terraria;
+using Terraria.ID;
+using Terraria.Localization;
+using Terraria.UI;
 
 namespace Macrocosm.Common.Utils
 {

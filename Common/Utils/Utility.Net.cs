@@ -1,8 +1,8 @@
-using System.IO;
 using Microsoft.Xna.Framework;
+using System.IO;
 using Terraria;
-using Terraria.ModLoader;
 using Terraria.Localization;
+using Terraria.ModLoader;
 
 
 namespace Macrocosm.Common.Utils

@@ -1,7 +1,6 @@
 using Macrocosm.Content.Rarities;
 using Terraria;
 using Terraria.GameContent.Creative;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Placeable.Trophies

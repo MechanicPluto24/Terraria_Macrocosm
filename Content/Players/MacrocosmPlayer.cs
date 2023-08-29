@@ -1,18 +1,16 @@
-﻿using System;
-using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.ModLoader;
-using static Terraria.ModLoader.ModContent;
-using Terraria.Graphics.Effects;
-using SubworldLibrary;
+﻿using Macrocosm.Common.Utils;
+using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Buffs.Debuffs;
+using Macrocosm.Content.CameraModifiers;
 using Macrocosm.Content.Subworlds;
 using Macrocosm.Content.Systems;
-using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.Utils;
+using Microsoft.Xna.Framework;
+using SubworldLibrary;
+using Terraria;
+using Terraria.Graphics.Effects;
 using Terraria.Localization;
-using Macrocosm.Content.Biomes;
-using Macrocosm.Content.CameraModifiers;
+using Terraria.ModLoader;
+using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Players
 {

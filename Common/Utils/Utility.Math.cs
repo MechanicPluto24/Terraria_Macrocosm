@@ -1,6 +1,5 @@
 using Microsoft.Xna.Framework;
 using System;
-using System.Drawing.Drawing2D;
 using Terraria;
 
 namespace Macrocosm.Common.Utils

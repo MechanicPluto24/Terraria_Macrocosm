@@ -1,18 +1,18 @@
-﻿using System;
+﻿using Macrocosm.Common.Drawing.Trails;
+using Macrocosm.Common.Netcode;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System;
 using Terraria;
 using Terraria.ModLoader;
-using Macrocosm.Common.Utils;
-using Macrocosm.Common.Netcode;
-using Macrocosm.Common.Drawing.Trails;
 
 
 namespace Macrocosm.Common.Drawing.Particles
 {
-    /// <summary> Particle system by sucss, Nurby & Feldy @ PellucidMod (RIP) </summary>
-    internal abstract partial class Particle : ModType
+	/// <summary> Particle system by sucss, Nurby & Feldy @ PellucidMod (RIP) </summary>
+	internal abstract partial class Particle : ModType
 	{
 		/// <summary> Cached particle type as integer index, used for netcode purposes </summary>
 		public int Type => type == -1 ? (type = ParticleManager.Types.IndexOf(this.GetType())) : type;

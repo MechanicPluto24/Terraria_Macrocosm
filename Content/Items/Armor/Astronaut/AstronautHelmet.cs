@@ -1,5 +1,4 @@
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Players;
 using Terraria;
 using Terraria.ID;
@@ -7,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Armor.Astronaut
 {
-    [AutoloadEquip(EquipType.Head)]
+	[AutoloadEquip(EquipType.Head)]
     internal class AstronautHelmet : ModItem
     {
         public override void SetStaticDefaults()

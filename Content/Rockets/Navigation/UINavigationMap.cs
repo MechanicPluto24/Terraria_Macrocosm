@@ -1,14 +1,12 @@
-﻿using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Terraria.UI;
-using Macrocosm.Common.Utils;
-using Terraria;
+using System.Collections.Generic;
 using System.Linq;
+using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
-    internal class UINavigationMap : UIElement
+	internal class UINavigationMap : UIElement
 	{
 		/// <summary> The next navigation map, switched on zoom in </summary>
 		public UINavigationMap Next = null;

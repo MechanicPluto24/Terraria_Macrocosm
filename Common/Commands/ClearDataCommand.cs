@@ -1,18 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Security.Permissions;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 using Terraria.ModLoader;
-using Terraria.ModLoader.Config;
 
 namespace Macrocosm.Common.Commands
 {
-    internal class ClearDataCommand : ModCommand
+	internal class ClearDataCommand : ModCommand
     {
         public override string Command => "clrd";
 

@@ -1,4 +1,3 @@
-using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Localization;
@@ -7,7 +6,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Bars
 {
-    internal class AluminumBar : ModTile
+	internal class AluminumBar : ModTile
     {
         public override void SetStaticDefaults()
         {

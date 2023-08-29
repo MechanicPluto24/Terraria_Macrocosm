@@ -4,7 +4,6 @@ using ReLogic.Graphics;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.Localization;
-using Terraria.UI;
 using Terraria.UI.Chat;
 
 namespace Macrocosm.Common.UI
