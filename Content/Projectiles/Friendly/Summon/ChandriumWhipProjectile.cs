@@ -109,7 +109,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 					Vector2 velocity = Main.rand.NextVector2Circular(2.5f, 2.5f);
 					Dust dust;
 					if (i % 20 == 0)
- 						Particle.CreateParticle<ChandriumCrescentMoon>(target.position, velocity, scale: Main.rand.NextFloat(0.8f, 1.2f));
+ 						Particle.CreateParticle<ChandriumCrescentMoon>(target.position, velocity, scale: Main.rand.NextFloat(0.5f, 0.9f));
 
  					// chandrium dust 
 					
@@ -166,7 +166,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 						ChandriumEmpowerment.KillParticle();
 					}
 
-					// add buff 
 					if (HitStacks == 2)
 					{
 						sparkle = Particle.CreateParticle<ChandriumSparkle>(particle =>
@@ -175,6 +174,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
 							particle.Position = WhipTipPosition;
 							particle.Owner = (byte)Projectile.owner;
+							particle.Scale = 0.7f;
 						}, shouldSync: true);
 					}
 
@@ -212,10 +212,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
 		public override bool PreDraw(ref Color lightColor)
 		{
-			List<Vector2> list = new List<Vector2>();
+			List<Vector2> list = new();
 			Projectile.FillWhipControlPoints(Projectile, list);
 
-			DrawLine(list);
+			Utility.DrawWhipLine(list, new Color(60, 27, 120));
 
 			SpriteEffects flip = Projectile.spriteDirection < 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
@@ -223,6 +223,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 			Texture2D texture = TextureAssets.Projectile[Type].Value;
 
 			Vector2 pos = list[0];
+
+			float tipRotation = 0f;
+			float tipScale = 1f;
 
 			for (int i = 0; i < list.Count - 1; i++)
 			{
@@ -241,27 +244,16 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 				if (tip)
 				{
 					frame.Y = 4 * frameHeight;
+					tipRotation = rotation;
 
 					// For a more impactful look, this scales the tip of the whip up when fully extended, and down when curled up.
 					Projectile.GetWhipSettings(Projectile, out float timeToFlyOut, out int _, out float _);
 					float t = Timer / timeToFlyOut;
 					scale = MathHelper.Lerp(0.4f, 1.3f, Utils.GetLerpValue(0.1f, 0.7f, t, true) * Utils.GetLerpValue(0.9f, 0.7f, t, true));
+					tipScale = scale * 0.8f;
 
 					WhipTipPosition = pos;
 
-					/*#region Shine whip tip
-					if (Main.player[Projectile.owner].HasBuff(ModContent.BuffType<ChandriumEmpowerment>()))
-					{
-						if (Projectile.localAI[0] < 1f)
-							Projectile.localAI[0] += 0.2f;
-
-						Main.EntitySpriteDraw(TextureAssets.Extra[89].Value, pos - Main.screenPosition, null, new Color(177, 107, 219, 255), 0f + rotation, TextureAssets.Extra[89].Size() / 2f, Projectile.localAI[0], flip, 0);
-						Main.EntitySpriteDraw(TextureAssets.Extra[89].Value, pos - Main.screenPosition, null, new Color(177, 107, 219, 255), MathHelper.PiOver2 + rotation, TextureAssets.Extra[89].Size() / 2f, Projectile.localAI[0], flip, 0);
-						Lighting.AddLight(pos, new Vector3(0.607f, 0.258f, 0.847f));
-					}
-					#endregion*/
-
-					#region Dusts
 					// Depends on whip extenstion
 					float dustChance = Utils.GetLerpValue(0.1f, 0.7f, t, clamped: true) * Utils.GetLerpValue(0.9f, 0.7f, t, clamped: true);
 
@@ -275,7 +267,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 						dust.velocity *= Main.rand.NextFloat() * 0.8f;
 						dust.velocity += outwardsVector * 0.8f;
 					}
-					#endregion
 				}
 				else if (i >= 19)
  					frame.Y = 3 * frameHeight; 
@@ -290,6 +281,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
 				pos += diff;
 			}
+
+			// Shine whip tip
+			if (Main.player[Projectile.owner].HasBuff(ModContent.BuffType<ChandriumEmpowerment>()))
+			{
+				Main.EntitySpriteDraw(TextureAssets.Extra[89].Value, Vector2.Lerp(list[^1], list[^2], 0.5f) - Main.screenPosition, null, new Color(177, 107, 219, 80), 0f + tipRotation, TextureAssets.Extra[89].Size() / 2f, tipScale, flip, 0);
+				Main.EntitySpriteDraw(TextureAssets.Extra[89].Value, Vector2.Lerp(list[^1], list[^2], 0.5f) - Main.screenPosition, null, new Color(177, 107, 219, 80), MathHelper.PiOver2 + tipRotation, TextureAssets.Extra[89].Size() / 2f, tipScale, flip, 0);
+				Lighting.AddLight(pos, new Vector3(0.607f, 0.258f, 0.847f));
+			}
+
 			return false;
 		}
 	}

@@ -1,8 +1,10 @@
 using Macrocosm.Common.Bases;
 using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
@@ -31,13 +33,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		public override void OnRicochetEffect()
 		{
 			for (int i = 0; i < Main.rand.Next(10, 20); i++)
-				Particle.CreateParticle<SeleniteSpark>(Projectile.position, Projectile.oldVelocity.RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(0.1f, 0.2f), scale: 2.4f);
+				Dust.NewDustPerfect(Projectile.position, ModContent.DustType<SeleniteBits>(), Projectile.oldVelocity.RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(0.1f, 0.2f), Scale: 2.4f);
 		}
 
 		public override bool OnTileCollide(Vector2 oldVelocity)
 		{
 			for(int i = 0; i < Main.rand.Next(10, 20); i++)
-				Particle.CreateParticle<SeleniteSpark>(Projectile.position + Projectile.oldVelocity * 1.2f, Projectile.oldVelocity.RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(0.1f, 0.2f), scale: 2.4f);
+				Dust.NewDustPerfect(Projectile.position + Projectile.oldVelocity * 1.2f, ModContent.DustType<SeleniteBits>(), Projectile.oldVelocity.RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(0.1f, 0.2f), Scale: 2.4f);
 
 			return true;
 		}

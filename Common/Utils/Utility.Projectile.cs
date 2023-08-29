@@ -3,6 +3,7 @@ using Macrocosm.Content.Projectiles.Global;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Terraria;
 using Terraria.GameContent;
@@ -104,6 +105,29 @@ namespace Macrocosm.Common.Utils
 		/// </summary>
 		public static void DrawAnimatedExtra(this Projectile proj, Texture2D glowmask, Color lightColor, SpriteEffects effect, Vector2 drawOffset = default, Rectangle? frame = null)
 			=> proj.DrawAnimated(lightColor, effect, drawOffset + new Vector2(0, -2), glowmask, frame);
+
+
+		public static void DrawWhipLine(List<Vector2> list, Color color)
+		{
+			Texture2D texture = TextureAssets.FishingLine.Value;
+			Rectangle frame = texture.Frame();
+			Vector2 origin = new(frame.Width / 2, 2);
+
+			Vector2 pos = list[0];
+			for (int i = 0; i < list.Count - 1; i++)
+			{
+				Vector2 element = list[i];
+				Vector2 diff = list[i + 1] - element;
+
+				float rotation = diff.ToRotation() - MathHelper.PiOver2;
+				Color lightColor = Lighting.GetColor(element.ToTileCoordinates(), color);
+				Vector2 scale = new(1, (diff.Length() + 2) / frame.Height);
+
+				Main.EntitySpriteDraw(texture, pos - Main.screenPosition, frame, lightColor, rotation, origin, scale, SpriteEffects.None, 0);
+
+				pos += diff;
+			}
+		}
 
 
 		public static void AIFallingBlock(Projectile projectile, bool falling)

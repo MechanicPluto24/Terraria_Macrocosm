@@ -15,7 +15,7 @@ namespace Macrocosm.Content.Particles
 	{
 		public override string TexturePath => Macrocosm.EmptyTexPath;
 
-		public override int TrailCacheLenght => 8;
+		public override int TrailCacheLenght => 3;
 
 		public override ParticleDrawLayer DrawLayer => ParticleDrawLayer.AfterProjectiles;
 
@@ -51,20 +51,6 @@ namespace Macrocosm.Content.Particles
 
 				spriteBatch.Draw(tex, Vector2.Lerp(OldPositions[i - 1], OldPositions[i], factor) - screenPosition, null, new Color(177, 107, 219, (int)(127 * factor)), 0f + OldRotations[i], TextureAssets.Extra[89].Size() / 2f, ScaleV * factor, SpriteEffects.None, 0f);
 				spriteBatch.Draw(tex, Vector2.Lerp(OldPositions[i - 1], OldPositions[i], factor) - screenPosition, null, new Color(177, 107, 219, (int)(127 * factor)), MathHelper.PiOver2 + OldRotations[i], TextureAssets.Extra[89].Size() / 2f, ScaleV * factor, SpriteEffects.None, 0f);
-
-				if (whipActive)
-				{
-					//for (float s = 0.333f; s < 1f; s += 0.333f)
-					//{	
-					//	// Calculate the eased position using Lerp
-					//	Vector2 easedPosition = Vector2.Lerp(OldPositions[i - 1], OldPositions[i], s);
-					//
-					//	// Draw the sprite with eased position
-					//	spriteBatch.Draw(tex, easedPosition - screenPosition, null, new Color(177, 107, 219, 64), 0f + Rotation, TextureAssets.Extra[89].Size() / 2f, ScaleV * factor, SpriteEffects.None, 0f);
-					//	spriteBatch.Draw(tex, easedPosition - screenPosition, null, new Color(177, 107, 219, 64), MathHelper.PiOver2 + Rotation, TextureAssets.Extra[89].Size() / 2f, ScaleV * factor, SpriteEffects.None, 0f);
-					//}
-					//Lighting.AddLight(Position, new Vector3(0.607f, 0.258f, 0.847f) * factor);
-				}
 			}
 
 			spriteBatch.End();
@@ -100,21 +86,15 @@ namespace Macrocosm.Content.Particles
 
 			if (whipActive)
 			{
-				Vector2 targetPosition = (Main.projectile[whipIdx].ModProjectile as ChandriumWhipProjectile).WhipTipPosition;
- 
-				if (targetPosition != Vector2.Zero)
-				{
-					Vector2 currentPosition = OldPosition;
-
-					currentPosition = Vector2.Lerp(currentPosition, targetPosition, 0.8f);
-
-					Position = currentPosition;
-					Scale = 0.6f;
-				}
+				// TODO: some smooth acceleration towards the whip tip
+				Position = (Main.projectile[whipIdx].ModProjectile as ChandriumWhipProjectile).WhipTipPosition;
+				Scale *= 0.91f;
 			}
 			else
 			{
-				Scale = 0.7f;
+				if (Scale < 0.7f)
+					Scale += 0.1f;
+
 				Vector2 vectorToIdlePosition = OwnerPlayer.Center - Center;
 				float distanceToIdlePosition = vectorToIdlePosition.Length();
 

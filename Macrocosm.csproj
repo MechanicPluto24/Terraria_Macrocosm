@@ -37,6 +37,7 @@
     <None Remove="Assets\Textures\UI\LargePanel.png" />
     <None Remove="Assets\Textures\UI\LargePanelBorder.png" />
     <None Remove="Assets\Textures\UI\LargePanelHoverBorder.png" />
+    <None Remove="Content\Dusts\SeleniteBits.png" />
     <None Remove="Content\Items\Materials\SteelBar.png" />
     <None Remove="Content\Items\Tools\Steel\SteelHamaxe.png" />
     <None Remove="Content\Items\Tools\Steel\SteelPickaxe.png" />
