@@ -84,10 +84,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
             if(Main.rand.NextFloat() > Projectile.alpha / 255f || Projectile.alpha < 120)
             {
-				var star = Particle.CreateParticle<ImbriumStar>(new Vector2(Projectile.position.X, Projectile.position.Y) + Main.rand.NextVector2FromRectangle(new Rectangle(0, 0, (int)Projectile.Size.X, (int)Projectile.Size.Y)), Vector2.Zero, scale: 0.07f);
+				var star = Particle.CreateParticle<ImbriumStar>(new Vector2(Projectile.position.X, Projectile.position.Y) + Main.rand.NextVector2FromRectangle(new Rectangle(0, 0, (int)Projectile.Size.X, (int)Projectile.Size.Y)), Vector2.Zero, Main.rand.NextFloat(0.06f, 0.08f));
 				star.Alpha = 1f - Projectile.alpha / 255f;
-				//int dust = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, DustID.GreenFairy, Projectile.velocity.X, Projectile.velocity.Y, 100, default(Color), 1.7f);
-				//Main.dust[dust].noGravity = true;
 			}
 		}
 

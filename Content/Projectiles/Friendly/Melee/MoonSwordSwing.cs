@@ -133,7 +133,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
 			float fade = Utils.GetLerpValue(fadeInStart, fadeInEnd, flareCounter, clamped: true) * Utils.GetLerpValue(fadeOutEnd, fadeOutStart, flareCounter, clamped: true);
 
-			Color color = (shineColor * opacity * 0.5f).NewAlpha(0f) * fade;
+			Color color = (shineColor * opacity * 0.5f).WithOpacity(0f) * fade;
 			Color color2 = drawColor * 0.5f * fade;
 
 			Vector2 scaleX = new Vector2(fatness.X * 0.5f, scale.X) * fade;

@@ -51,7 +51,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(state);
 
-			Main.EntitySpriteDraw(texture, Projectile.position - Main.screenPosition, frame, Color.White.NewAlpha(1f), Projectile.rotation, frame.Size() / 2f, Projectile.scale, effects);
+			Main.EntitySpriteDraw(texture, Projectile.position - Main.screenPosition, frame, Color.White.WithOpacity(1f), Projectile.rotation, frame.Size() / 2f, Projectile.scale, effects);
 
 			return false;
 		}

@@ -20,7 +20,7 @@ namespace Macrocosm.Content.Trails
 		public override Color TrailColors(float progressOnStrip)
 		{
 			if (progressOnStrip < 0.1f)
-				return Color.Black.NewAlpha(0);
+				return Color.Black.WithAlpha(0);
 
 			Color baseColor = Color.Lerp(new Color(224, 115, 20, 255), new Color(0, 217, 102, 255), (0.5f + MathF.Sin(Main.GlobalTimeWrappedHourly % 1)) / 2);
 			float lerpValue = Utils.GetLerpValue(0f, 0.4f, progressOnStrip, clamped: true);

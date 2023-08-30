@@ -94,15 +94,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			float progress = SwingRotation / TargetSwingRotation;
 			float progressScale = Utils.Remap(progress, 0f, 0.6f, 0f, 1f) * Utils.Remap(progress, 0.6f, 1f, 1f, 0f);
 
-			Color color = new Color(130, 220, 199).NewAlpha(1f - progress);// * lightColor.GetLuminance();
+			Color color = new Color(130, 220, 199).WithOpacity(1f - progress);// * lightColor.GetLuminance();
 	
 			Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 0), color * progressScale, Projectile.rotation + Projectile.ai[0] * ((float)Math.PI / 4f) * -1f * (1f - progress), origin, Projectile.scale * 0.95f, effects, 0f);
 			Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 1), color * 0.15f, Projectile.rotation, origin, Projectile.scale, effects, 0f);
 			Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 2), color * 0.7f * progressScale * 0.3f, Projectile.rotation, origin, Projectile.scale, effects, 0f);
 		    Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 2), color * 0.8f * progressScale * 0.5f, Projectile.rotation, origin, Projectile.scale * 0.975f, effects, 0f);
-		    Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), (Color.White * (0.2f - 0.2f * progressScale)).NewAlpha(0.4f - 0.4f * progressScale), Projectile.rotation, origin, Projectile.scale * 0.95f, effects, 0f);
-		    Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), (color * progressScale).NewAlpha(0.2f - 0.2f * progressScale), Projectile.rotation, origin, Projectile.scale * 0.75f, effects, 0f);
-		    Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), (color * progressScale).NewAlpha(0.1f - 0.05f *progressScale), Projectile.rotation, origin, Projectile.scale * 0.55f, effects, 0f);
+		    Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), (Color.White * (0.2f - 0.2f * progressScale)).WithOpacity(0.4f - 0.4f * progressScale), Projectile.rotation, origin, Projectile.scale * 0.95f, effects, 0f);
+		    Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), (color * progressScale).WithOpacity(0.2f - 0.2f * progressScale), Projectile.rotation, origin, Projectile.scale * 0.75f, effects, 0f);
+		    Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), (color * progressScale).WithOpacity(0.1f - 0.05f *progressScale), Projectile.rotation, origin, Projectile.scale * 0.55f, effects, 0f);
 
 
 			var state = Main.spriteBatch.SaveState();
@@ -114,7 +114,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 				{
 					float scale = Projectile.scale * (0.02f - 0.003f * i);
 					float angle = Projectile.rotation + (i * (MathHelper.PiOver4 / 2f));
-					Main.EntitySpriteDraw(star, position + Utility.PolarVector(76 * Projectile.scale, angle), null, (new Color(168, 255, 255) * (1f + color.A/255f)).NewAlpha(1f), Projectile.rotation + MathHelper.PiOver4, star.Size() / 2f, scale, SpriteEffects.None);
+					Main.EntitySpriteDraw(star, position + Utility.PolarVector(76 * Projectile.scale, angle), null, (new Color(168, 255, 255) * (1f + color.A/255f)).WithOpacity(1f), Projectile.rotation + MathHelper.PiOver4, star.Size() / 2f, scale, SpriteEffects.None);
 				}
 
 			Main.spriteBatch.End();

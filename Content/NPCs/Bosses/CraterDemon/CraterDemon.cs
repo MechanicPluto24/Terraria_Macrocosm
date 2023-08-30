@@ -551,7 +551,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			spriteBatch.End();
 			spriteBatch.Begin(BlendState.Additive, state);
 
-			spriteBatch.Draw(texture, info.center - Main.screenPosition, null, Color.White.NewAlpha(0.6f), info.rotation * 4f, texture.Size() / 2f, info.scale * 0.85f, SpriteEffects.None, 0);
+			spriteBatch.Draw(texture, info.center - Main.screenPosition, null, Color.White.WithOpacity(0.6f), info.rotation * 4f, texture.Size() / 2f, info.scale * 0.85f, SpriteEffects.None, 0);
 		
 			spriteBatch.End();
 			spriteBatch.Begin(state);
