@@ -259,7 +259,7 @@ namespace Macrocosm.Common.Drawing.Sky
             if (!ShouldDraw())
                 return;
 
-		    state ??= spriteBatch.SaveState();
+		    state = spriteBatch.SaveState();
             spriteBatch.EndIfBeginCalled();
 
             Effect shader = null;

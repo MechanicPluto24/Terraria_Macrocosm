@@ -43,7 +43,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
 
 			// draw circular glow
 			Texture2D glow = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "SimpleGlow").Value;
-			state ??= Main.spriteBatch.SaveState();
+			state = Main.spriteBatch.SaveState();
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.Additive, state);
 			Main.EntitySpriteDraw(glow, Projectile.Center - Main.screenPosition, null, new Color(89, 151, 193) * lightColor.GetLuminance(), 0f, glow.Size() / 2, 0.0375f, SpriteEffects.None);

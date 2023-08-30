@@ -59,7 +59,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 		public override void OnSpawn(IEntitySource source)
 		{
-			PlasmaBallCount = 1;
+			PlasmaBallCount = 450;
 		}
 
 		public override void AI()

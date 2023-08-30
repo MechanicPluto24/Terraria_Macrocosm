@@ -8,10 +8,9 @@ namespace Macrocosm.Common.Utils
 { 
 	public static partial class Utility
     {
-		/// <summary> Saves the SpriteBatch parameters. Try to store the state and call this only once per object instance. </summary>
+		/// <summary> Saves the SpriteBatch parameters. </summary>
 		public static SpriteBatchState SaveState(this SpriteBatch spriteBatch)
         {
-            Main.NewText("Saving state");
             if (spriteBatch.BeginCalled())
             {
                 var type = spriteBatch.GetType();
@@ -20,7 +19,7 @@ namespace Macrocosm.Common.Utils
 				   (SpriteSortMode)type.GetField("sortMode", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch),
 				   (BlendState)type.GetField("blendState", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch),
 				   (SamplerState)type.GetField("samplerState", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch),
-				   (DepthStencilState)type.GetField("depthStencilState", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch),
+				   default,
 				   (RasterizerState)spriteBatch.GetType().GetField("rasterizerState", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch),
 				   (Effect)type.GetField("customEffect", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch),
 				   (Matrix)type.GetField("transformMatrix", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch)

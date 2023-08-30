@@ -160,7 +160,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 			Matrix matrix = Matrix.CreateScale(Main.UIScale / zoom, Main.UIScale / zoom, 1f);
 
-            state ??= spriteBatch.SaveState();
+            state = spriteBatch.SaveState();
             spriteBatch.End();
             spriteBatch.Begin(state.SpriteSortMode, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, state.DepthStencilState, overflowHiddenRasterizerState, state.Effect, matrix);
 

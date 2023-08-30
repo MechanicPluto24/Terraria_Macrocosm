@@ -113,7 +113,7 @@ namespace Macrocosm.Common.Drawing.Particles
 			{
 				foreach (var particle in additiveOnlyPostDrawers)
 				{
-					particle.Draw(Main.spriteBatch, Main.screenPosition, Lighting.GetColor(particle.Position.ToTileCoordinates()));
+					particle.PostDrawAdditive(Main.spriteBatch, Main.screenPosition, Lighting.GetColor(particle.Position.ToTileCoordinates()));
 				}
 			}
 		}
@@ -123,9 +123,9 @@ namespace Macrocosm.Common.Drawing.Particles
 		private void DrawParticles_NPCs(On_Main.orig_DrawNPCs orig, Main self, bool behindTiles)
 		{
 			SpriteBatch spriteBatch = Main.spriteBatch;
-			state1 ??= spriteBatch.SaveState();
+			state1 = spriteBatch.SaveState();
 			spriteBatch.End();
-			spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, state1);
+			spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, default, default, default, default, Main.GameViewMatrix.ZoomMatrix);
 
 			DrawParticles(ParticleDrawLayer.BeforeNPCs);
 
@@ -134,9 +134,9 @@ namespace Macrocosm.Common.Drawing.Particles
 				
 			orig(self, behindTiles);
 			
-			state2 ??= spriteBatch.SaveState();
+			state2 = spriteBatch.SaveState();
 			spriteBatch.End();
-			spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, state2);
+			spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, default, default, default, default, Main.GameViewMatrix.ZoomMatrix);
 
 			DrawParticles(ParticleDrawLayer.AfterNPCs);
 
@@ -166,9 +166,9 @@ namespace Macrocosm.Common.Drawing.Particles
 		{
 			SpriteBatch spriteBatch = Main.spriteBatch;
 
-			state3 ??= spriteBatch.SaveState();
+			state3 = spriteBatch.SaveState();
 			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, state3);
+			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, default, default, default, default, Main.GameViewMatrix.ZoomMatrix);
 
 			DrawParticles(ParticleDrawLayer.BeforeTiles);
 

@@ -85,22 +85,17 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
             if(Main.rand.NextFloat() > Projectile.alpha / 255f || Projectile.alpha < 120)
             {
-				var star = Particle.CreateParticle<ImbriumStar>(new Vector2(Projectile.position.X, Projectile.position.Y) + Main.rand.NextVector2FromRectangle(new Rectangle(0, 0, (int)Projectile.Size.X, (int)Projectile.Size.Y)), Vector2.Zero, scale: 0.07f);
+				var star = Particle.CreateParticle<ImbriumStar>(new Vector2(Projectile.position.X, Projectile.position.Y) + Main.rand.NextVector2FromRectangle(new Rectangle(0, 0, (int)Projectile.Size.X, (int)Projectile.Size.Y)), Vector2.Zero, scale: Main.rand.NextFloat(0.06f, 0.08f));
 				star.Alpha = 1f - Projectile.alpha / 255f;
-				//int dust = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, DustID.GreenFairy, Projectile.velocity.X, Projectile.velocity.Y, 100, default(Color), 1.7f);
-				//Main.dust[dust].noGravity = true;
 			}
 		}
 
 		private SpriteBatchState state;
 		public override bool PreDraw(ref Color lightColor)
         {
-			//Redraw the projectile with the color not influenced by light
-			//Texture2D texture = (Texture2D)ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Magic/TheJewelOfShowersProj");
-
 			Vector2 drawOrigin = new(TextureAssets.Projectile[Type].Value.Width * 0.5f, Projectile.height * 0.5f);
 
-            state ??= Main.spriteBatch.SaveState();
+            state = Main.spriteBatch.SaveState();
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);

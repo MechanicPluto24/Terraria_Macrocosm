@@ -42,7 +42,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			Rectangle frame = texture.Frame(1, 6, frameY: Projectile.frame);
 			SpriteEffects effects = Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
-			state ??= Main.spriteBatch.SaveState();
+			state = Main.spriteBatch.SaveState();
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.Additive, state);

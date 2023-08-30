@@ -35,7 +35,7 @@ namespace Macrocosm.Content.Particles
 		private SpriteBatchState state;
 		public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
 		{
-			state ??= spriteBatch.SaveState();
+			state = spriteBatch.SaveState();
 
 			Texture2D tex = TextureAssets.Extra[89].Value;
 
