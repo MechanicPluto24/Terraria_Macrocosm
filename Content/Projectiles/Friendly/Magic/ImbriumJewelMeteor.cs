@@ -1,3 +1,4 @@
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
@@ -57,7 +58,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 Projectile.alpha += 10;
         }
 
-        public override bool PreDraw(ref Color lightColor)
+        private SpriteBatchState state;
+
+		public override bool PreDraw(ref Color lightColor)
         {
             Texture2D tex = TextureAssets.Projectile[Type].Value;
 
@@ -65,7 +68,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
             Vector2 origin = Projectile.Size / 2f + new Vector2(0, 16);
 
-            SpriteBatchState state = Main.spriteBatch.SaveState();
+			state ??= Main.spriteBatch.SaveState();
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
 

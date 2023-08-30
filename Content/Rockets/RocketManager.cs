@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Linq;
@@ -149,10 +150,11 @@ namespace Macrocosm.Content.Rockets
 			}
 		}
 
+		private static SpriteBatchState state1, state2;
 		private void DrawRocket_NPCs(On_Main.orig_DrawNPCs orig, Main self, bool behindTiles)
         {
             SpriteBatch spriteBatch = Main.spriteBatch;
-            var state1 = spriteBatch.SaveState();
+            state1 ??= spriteBatch.SaveState();
             spriteBatch.End();
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, default, default, Main.GameViewMatrix.ZoomMatrix);
             
@@ -163,7 +165,7 @@ namespace Macrocosm.Content.Rockets
 
             orig(self, behindTiles);
 
-			var state2 = spriteBatch.SaveState();
+			state2 ??= spriteBatch.SaveState();
             spriteBatch.End();
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, default, default, Main.GameViewMatrix.ZoomMatrix);
             

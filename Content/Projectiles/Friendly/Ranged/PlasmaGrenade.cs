@@ -59,7 +59,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 		public override void OnSpawn(IEntitySource source)
 		{
-			PlasmaBallCount = 300;
+			PlasmaBallCount = 1;
 		}
 
 		public override void AI()
@@ -88,10 +88,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			Projectile.rotation += Projectile.velocity.X * 0.05f;
 
 			if (Main.rand.NextBool(2))
-			{
-				Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<Dusts.PlasmaBallDust>(), Scale: Main.rand.NextFloat(0.8f, 1.2f));
-			}
-
+ 				Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<Dusts.PlasmaBallDust>(), Scale: Main.rand.NextFloat(0.8f, 1.2f));
+ 
 			//ShootToKill();
 
 			if (Projectile.timeLeft < 5)

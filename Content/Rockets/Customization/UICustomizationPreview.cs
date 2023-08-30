@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -55,6 +56,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 			}
 		}
 
+		private SpriteBatchState state;
 		public override void Draw(SpriteBatch spriteBatch)
 		{
             base.Draw(spriteBatch);
@@ -69,7 +71,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 			var originalRenderTargets = spriteBatch.GraphicsDevice.GetRenderTargets();
 			RenderTarget2D renderTarget = new(spriteBatch.GraphicsDevice, (int)(Rocket.Bounds.Width * Main.UIScale) , (int)(Rocket.Bounds.Height * Main.UIScale));
 
-            var state = spriteBatch.SaveState();
+            state ??= spriteBatch.SaveState();
 			spriteBatch.End();
 
 			spriteBatch.GraphicsDevice.SetRenderTarget(renderTarget);

@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Drawing.Trails;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing.Trails;
 using Macrocosm.Content.Projectiles.Global;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -83,9 +84,10 @@ namespace Macrocosm.Common.Utils
 
 			Vector2 origin = new Vector2(texture.Width / 2, texture.Height / numFrames / 2) - new Vector2(drawOffset.X, drawOffset.Y * proj.spriteDirection);
 
-			SpriteBatchState state = Main.spriteBatch.SaveState();
+			SpriteBatchState state = null;
 			if (shader is not null)
 			{
+				state = Main.spriteBatch.SaveState();
 				Main.spriteBatch.End();
 				Main.spriteBatch.Begin(shader, state);
 			}

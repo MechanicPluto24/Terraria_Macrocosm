@@ -1,4 +1,5 @@
 using Macrocosm.Common.Bases;
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
@@ -144,12 +145,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			}
 		}
 
+		private SpriteBatchState state1, state2;
+
 		public override bool PreDraw(ref Color lightColor)
 		{
-			var state = Main.spriteBatch.SaveState();
+			state1 ??= Main.spriteBatch.SaveState();
 
 			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, state);
+			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, state1);
 
 			float a = 0.1f + 0.9f * Utility.BounceEaseIn(AI_Windup >= windupTime ? 1f : MathHelper.SmoothStep(0.1f, 1f, AI_Windup / windupTime));
 			float b = Utility.QuadraticEaseOut(MathHelper.Clamp(-0.4f + 0.6f * (AI_Windup / windupTime), 0, 1));
@@ -185,7 +188,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			strip.DrawTrail();
 
 			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(state);
+			Main.spriteBatch.Begin(state1);
 
 			Effect effect = ModContent.Request<Effect>(Macrocosm.EffectAssetsPath + "ColorGradient", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
 			Rectangle sourceRect = TextureAssets.Projectile[Type].Frame(1, Main.projFrames[Type], frameY: Projectile.frame);
@@ -215,21 +218,21 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
 			float alpha = 0.1f + 0.1f * Utility.QuadraticEaseIn(AI_Windup >= windupTime ? 0.9f : MathHelper.SmoothStep(0.1f, 0.9f, AI_Windup / windupTime));
 
-			var state = Main.spriteBatch.SaveState();
+			state2 ??= Main.spriteBatch.SaveState();
 			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(BlendState.AlphaBlend, state);
+			Main.spriteBatch.Begin(BlendState.AlphaBlend, state2);
 
 			Projectile.DrawAnimatedExtra(glowmask, Color.Lerp(Color.White, new Color(245, 80, 20), AI_Overheat).NewAlpha(0.9f - 0.9f * AI_Overheat), effects, new Vector2(5, 14));
 			Projectile.DrawAnimatedExtra(flame, (Color.Lerp(Color.White, new Color(245, 120, 40), AI_Overheat) * (alpha + 0.9f *  AI_Overheat)).NewAlpha(0f), effects, new Vector2(5, 14));
 
 
 			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(BlendState.Additive, state);
+			Main.spriteBatch.Begin(BlendState.Additive, state2);
 
 			Projectile.DrawAnimatedExtra(warning, Color.White, effects, new Vector2(5, 14), frame: sourceRect);
 
 			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(state);
+			Main.spriteBatch.Begin(state2);
 		}
 
 		private SlotId playingSoundId_1 = default;
