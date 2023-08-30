@@ -154,18 +154,18 @@ namespace Macrocosm.Content.Rockets
 		private void DrawRocket_NPCs(On_Main.orig_DrawNPCs orig, Main self, bool behindTiles)
         {
             SpriteBatch spriteBatch = Main.spriteBatch;
-            state1 ??= spriteBatch.SaveState();
+            var state = spriteBatch.SaveState();
             spriteBatch.End();
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, default, default, Main.GameViewMatrix.ZoomMatrix);
             
             DrawRockets(RocketDrawLayer.BeforeNPCs);
 
             spriteBatch.End();
-            spriteBatch.Begin(state1);
+            spriteBatch.Begin(state);
 
             orig(self, behindTiles);
 
-			state2 ??= spriteBatch.SaveState();
+			var state2 = spriteBatch.SaveState();
             spriteBatch.End();
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, default, default, Main.GameViewMatrix.ZoomMatrix);
             

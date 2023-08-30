@@ -87,7 +87,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			Color color4 = Color.White * progressScale * 0.5f;
 			Color color5 = color4 * brightness * 0.5f;
 
-			state ??= Main.spriteBatch.SaveState();
+			state = Main.spriteBatch.SaveState();
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, state);
 

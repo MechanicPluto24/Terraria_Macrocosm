@@ -33,7 +33,7 @@ namespace Macrocosm.Content.Particles
         private SpriteBatchState state;
 		public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
 		{
-            state ??= spriteBatch.SaveState();
+            state = spriteBatch.SaveState();
 			spriteBatch.Draw(Texture, Position - screenPosition, null, new Color(180, 112, 226).NewAlpha(0.45f), Rotation, Texture.Size() / 2f, ScaleV, SpriteEffects.None, 0f);
 		}
 	}

@@ -104,7 +104,7 @@ namespace Macrocosm.Content.UI.Menus
         {
             Rectangle screen = new(0, 0, Main.screenWidth + 1, Main.screenHeight + 1);
             spriteBatch.Draw(TextureAssets.BlackTile.Value, screen, Color.Black);
-			state1 ??= spriteBatch.SaveState();
+			state1 = spriteBatch.SaveState();
             spriteBatch.End();
 			spriteBatch.Begin(BlendState.Additive, state1);
 
@@ -201,7 +201,7 @@ namespace Macrocosm.Content.UI.Menus
 
             SpriteBatch spriteBatch = Main.spriteBatch;
 
-			state2 ??= spriteBatch.SaveState();
+			state2 = spriteBatch.SaveState();
             spriteBatch.End();
             spriteBatch.Begin(BlendState.NonPremultiplied, state2);
 

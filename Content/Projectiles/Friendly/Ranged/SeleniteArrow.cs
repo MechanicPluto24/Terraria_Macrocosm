@@ -63,7 +63,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			if (count > 40f)
 				count = 40f;
 
-			state ??= Main.spriteBatch.SaveState();
+			state = Main.spriteBatch.SaveState();
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.Additive, state);

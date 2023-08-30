@@ -19,7 +19,7 @@ namespace Macrocosm.Content.Rockets.Modules
 			// Draw the booster module with the base logic
 			base.Draw(spriteBatch, screenPos, ambientColor);
 
-			state ??= spriteBatch.SaveState();
+			state = spriteBatch.SaveState();
 			spriteBatch.End();
 			spriteBatch.Begin(SamplerState.PointClamp, state);
 

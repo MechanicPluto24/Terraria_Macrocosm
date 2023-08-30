@@ -85,7 +85,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
 			Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
 			Color color = Color.White;
 
-			state ??= Main.spriteBatch.SaveState();
+			state = Main.spriteBatch.SaveState();
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.AlphaBlend, state);
 

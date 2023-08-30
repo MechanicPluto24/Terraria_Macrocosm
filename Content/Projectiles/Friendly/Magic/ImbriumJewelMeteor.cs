@@ -68,7 +68,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
             Vector2 origin = Projectile.Size / 2f + new Vector2(0, 16);
 
-			state ??= Main.spriteBatch.SaveState();
+			state = Main.spriteBatch.SaveState();
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
 

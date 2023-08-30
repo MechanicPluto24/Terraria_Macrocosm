@@ -50,7 +50,7 @@ namespace Macrocosm.Content.UI.LoadingScreens
 
 			Color bodyColor = (Color.White * (float)(AnimationTimer / 5) * 1f).NewAlpha(1f);
 
-			state ??= spriteBatch.SaveState();
+			state = spriteBatch.SaveState();
 			spriteBatch.End();
 
 			spriteBatch.Begin(BlendState.AlphaBlend, state);
