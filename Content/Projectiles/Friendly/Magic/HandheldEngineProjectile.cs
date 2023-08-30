@@ -219,8 +219,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.AlphaBlend, state);
 
-			Projectile.DrawAnimatedExtra(glowmask, Color.Lerp(Color.White, new Color(245, 80, 20), AI_Overheat).NewAlpha(0.9f - 0.9f * AI_Overheat), effects, new Vector2(5, 14));
-			Projectile.DrawAnimatedExtra(flame, (Color.Lerp(Color.White, new Color(245, 120, 40), AI_Overheat) * (alpha + 0.9f *  AI_Overheat)).NewAlpha(0f), effects, new Vector2(5, 14));
+			Projectile.DrawAnimatedExtra(glowmask, Color.Lerp(Color.White, new Color(245, 80, 20), AI_Overheat).WithOpacity(0.9f - 0.9f * AI_Overheat), effects, new Vector2(5, 14));
+			Projectile.DrawAnimatedExtra(flame, (Color.Lerp(Color.White, new Color(245, 120, 40), AI_Overheat) * (alpha + 0.9f *  AI_Overheat)).WithOpacity(0f), effects, new Vector2(5, 14));
 
 
 			Main.spriteBatch.End();

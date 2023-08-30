@@ -194,14 +194,42 @@ namespace Macrocosm.Common.Drawing.Particles
 
 		#region Logic
 
-		/// <summary> Used for drawing the particle. Substract <see cref="Main.screenPosition"> screenPosition </see> from the <see cref="Particle.Position">Position</see> position before drawing </summary>
+		/// <summary>
+		/// Used for drawing things before the particle, with additive blending. Modify the spritebatch only when absolutely necessary.
+		/// Substract <see cref="Main.screenPosition"> screenPosition </see> from the <see cref="Particle.Position">Position</see> position before drawing.
+		/// Return false to stop the default, alpha blended, drawing logic. Returns true by default.
+		/// </summary>
 		/// <param name="spriteBatch"> The spritebatch </param>
 		/// <param name="screenPosition"> The top-left screen position in the world coordinates </param>
 		/// <param name="lightColor"> The light color at the particle's position </param>
-		public virtual void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor) 
+		public virtual bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
+		{
+			Trail?.Draw();
+			return true;
+		}
+
+		/// <summary> 
+		/// Used for drawing the particle with alpha blending. Modify the spritebatch only when absolutely necessary.
+		/// Substract <see cref="Main.screenPosition"> screenPosition </see> from the <see cref="Particle.Position">Position</see> position before drawing.
+		/// Only called if <see cref="PreDrawAdditive(SpriteBatch, Vector2, Color)"/> returns true.
+		/// </summary>
+		/// <param name="spriteBatch"> The spritebatch </param>
+		/// <param name="screenPosition"> The top-left screen position in the world coordinates </param>
+		/// <param name="lightColor"> The light color at the particle's position </param>
+		public virtual void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
 		{
 			spriteBatch.Draw(Texture, Position - screenPosition, GetFrame(), lightColor, Rotation, Size * 0.5f, ScaleV, SpriteEffects.None, 0f);
-			Trail?.Draw();
+		}
+
+		/// <summary> 
+		/// Used for drawing things after the particle, with additive blending. Modify the spritebatch only when absolutely necessary.
+		/// Substract <see cref="Main.screenPosition"> screenPosition </see> from the <see cref="Particle.Position">Position</see> position before drawing 
+		/// </summary>
+		/// <param name="spriteBatch"></param>
+		/// <param name="screenPosition"></param>
+		/// <param name="lightColor"></param>
+		public virtual void PostDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
+		{
 		}
 
 		public void Update()
@@ -228,6 +256,7 @@ namespace Macrocosm.Common.Drawing.Particles
 
 		#endregion
 
+		// TODO: This could use some touching up, maybe make trails a component or something
 		#region Trails
 
 		public void DrawMagicPixelTrail(Vector2 rotatableOffsetFromCenter, float startWidth, float endWidth, Color startColor, Color? endColor = null)

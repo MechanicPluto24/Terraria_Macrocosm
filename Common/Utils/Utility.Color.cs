@@ -109,24 +109,19 @@ namespace Macrocosm.Common.Utils
         public static float GetLuminance(this Color rgbColor)
             => 0.299f * rgbColor.R / 255 + 0.587f * rgbColor.G / 255 + 0.114f * rgbColor.B / 255;
 
-
-        /// <summary> Gets the perceived luminance of a color using the NTSC standard as a byte </summary>
-        public static byte GetLuminance_Byte(this Color rgbColor) => (byte)(rgbColor.GetLuminance() * 255);
-
-
         /// <summary> Returns the RGB grayscale of a color using the NTSC standard </summary>
         public static Color ToGrayscale(this Color rgbColor)
         {
             Color result = new();
-            result.R = result.G = result.B = rgbColor.GetLuminance_Byte();
+            result.R = result.G = result.B = (byte)(rgbColor.GetLuminance() * 255);
             result.A = rgbColor.A;
             return result;
         }
 
-        public static Color NewAlpha(this Color color, float alpha)
-            => new(color.R, color.G, color.B, (byte)(alpha * 255));
+        public static Color WithOpacity(this Color color, float opacity)
+            => new(color.R, color.G, color.B, (byte)(opacity * 255));
 
-        public static Color NewAlpha(this Color color, byte alpha)
+        public static Color WithAlpha(this Color color, byte alpha)
             => new(color.R, color.G, color.B, alpha);
         
 	}

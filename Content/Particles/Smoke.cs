@@ -13,7 +13,7 @@ namespace Macrocosm.Content.Particles
 		public override void AI()
         {
 			Velocity *= 0.98f;
-			Scale -= 0.007f;
+			Scale -= 0.005f;
 
             if (Alpha > 0)
                 Alpha -= 4;

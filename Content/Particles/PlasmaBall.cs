@@ -12,24 +12,18 @@ namespace Macrocosm.Content.Particles
 		public override int SpawnTimeLeft => 95;
 		public override int TrailCacheLenght => 7;
 
+		public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
+		{
+			Texture2D glow = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "SimpleGlow").Value;
+			spriteBatch.Draw(glow, Center - screenPosition, null, new Color(89, 151, 193), 0f, glow.Size() / 2, 0.0375f * ScaleV, SpriteEffects.None, 0f);
+			return true;
+		}
+
 		public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
 		{
 			DrawMagicPixelTrail(Vector2.Zero, 4f, 1f, new Color(104, 255, 255), new Color(104, 255, 255, 0));
-
-			// draw circular glow
-			Texture2D glow = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "SimpleGlow").Value;
-
-			var state = spriteBatch.SaveState();
-			spriteBatch.End();
-			spriteBatch.Begin(BlendState.Additive, state);
-
-			spriteBatch.Draw(glow, Center - screenPosition, null, new Color(89, 151, 193), 0f, glow.Size() / 2, 0.0375f * ScaleV, SpriteEffects.None, 0f);
-
-			spriteBatch.End();
-			spriteBatch.Begin(state);
-			
 			spriteBatch.Draw(Texture, Center - screenPosition, null, Color.White, Rotation, Size / 2, ScaleV, SpriteEffects.None, 0f);
- 		}
+		}
 
 		public override void AI()
 		{

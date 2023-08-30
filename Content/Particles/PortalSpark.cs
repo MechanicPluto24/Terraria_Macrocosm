@@ -14,18 +14,12 @@ namespace Macrocosm.Content.Particles
 		public override string TexturePath => Macrocosm.EmptyTexPath;
 		public override ParticleDrawLayer DrawLayer => ParticleDrawLayer.AfterProjectiles;
 
-		public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
+		public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
 		{
 			Texture2D glow = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "CurvedGlow").Value;
-			var state = spriteBatch.SaveState();
-			spriteBatch.End();
-			spriteBatch.Begin(BlendState.Additive, state);
 			spriteBatch.Draw(glow, Center - screenPosition, null, new Color(89, 151, 193), Rotation, glow.Size() / 2, 0.0375f * ScaleV, SpriteEffects.None, 0f);
-			spriteBatch.End();
-			spriteBatch.Begin(state);
-
-			//spriteBatch.Draw(glow, Center - screenPosition, null, Color.White, Rotation, Size / 2, ScaleV, SpriteEffects.None, 0f);
- 		}
+			return false;
+		}
 
 		bool spawned = false;
 		float origScale = 0f;

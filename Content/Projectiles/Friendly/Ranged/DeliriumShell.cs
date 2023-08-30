@@ -94,13 +94,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			spriteBatch.End();
 			spriteBatch.Begin(BlendState.Additive, state);
 
-			Main.EntitySpriteDraw(tex, Projectile.Center - new Vector2(0, 38).RotatedBy(Projectile.rotation - MathHelper.Pi) - Main.screenPosition, null, Color.White.NewAlpha(0.3f * auraAlpha), Projectile.rotation - MathHelper.Pi, tex.Size() / 2, 0.8f, SpriteEffects.FlipHorizontally, 0);
-			Main.EntitySpriteDraw(tex, Projectile.Center - new Vector2(0, 58).RotatedBy(Projectile.rotation - MathHelper.Pi) - Main.screenPosition, null, Color.White.NewAlpha(0.1f * auraAlpha), Projectile.rotation - MathHelper.Pi, tex.Size() / 2, 0.8f, SpriteEffects.None, 0);
+			Main.EntitySpriteDraw(tex, Projectile.Center - new Vector2(0, 38).RotatedBy(Projectile.rotation - MathHelper.Pi) - Main.screenPosition, null, Color.White.WithOpacity(0.3f * auraAlpha), Projectile.rotation - MathHelper.Pi, tex.Size() / 2, 0.8f, SpriteEffects.FlipHorizontally, 0);
+			Main.EntitySpriteDraw(tex, Projectile.Center - new Vector2(0, 58).RotatedBy(Projectile.rotation - MathHelper.Pi) - Main.screenPosition, null, Color.White.WithOpacity(0.1f * auraAlpha), Projectile.rotation - MathHelper.Pi, tex.Size() / 2, 0.8f, SpriteEffects.None, 0);
 
 			spriteBatch.End();
 			spriteBatch.Begin(BlendState.AlphaBlend, state);
 
-			Main.EntitySpriteDraw(tex, Projectile.Center - new Vector2(0, 18).RotatedBy(Projectile.rotation - MathHelper.Pi) - Main.screenPosition, null, Color.White.NewAlpha(0.6f), Projectile.rotation - MathHelper.Pi, tex.Size() / 2, 0.8f, SpriteEffects.None, 0);
+			Main.EntitySpriteDraw(tex, Projectile.Center - new Vector2(0, 18).RotatedBy(Projectile.rotation - MathHelper.Pi) - Main.screenPosition, null, Color.White.WithOpacity(0.6f), Projectile.rotation - MathHelper.Pi, tex.Size() / 2, 0.8f, SpriteEffects.None, 0);
 			
 			spriteBatch.End();
 			spriteBatch.Begin(state);

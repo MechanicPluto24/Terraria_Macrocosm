@@ -107,8 +107,8 @@ namespace Macrocosm.Content.UI.Menus
 			spriteBatch.Begin(BlendState.Additive, state);
 
 			Stars.Draw(spriteBatch);
-            spriteBatch.Draw(ModContent.Request<Texture2D>(AssetPath + "MilkyWay").Value, screen, Color.White.NewAlpha(0.3f)); 
-            spriteBatch.Draw(ModContent.Request<Texture2D>(AssetPath + "Nebula").Value, screen, Color.White.NewAlpha(0.75f));
+            spriteBatch.Draw(ModContent.Request<Texture2D>(AssetPath + "MilkyWay").Value, screen, Color.White.WithOpacity(0.3f)); 
+            spriteBatch.Draw(ModContent.Request<Texture2D>(AssetPath + "Nebula").Value, screen, Color.White.WithOpacity(0.75f));
 
 			spriteBatch.End();
 			spriteBatch.Begin(state);
@@ -203,11 +203,11 @@ namespace Macrocosm.Content.UI.Menus
             spriteBatch.End();
             spriteBatch.Begin(BlendState.NonPremultiplied, state);
 
-			spriteBatch.Draw(SunCorona1, Sun.Position, null, (Color.White * (0.4f + 0.8f * Utility.PositiveSineWave(800, 0f          ))).NewAlpha(0.6f + 0.2f * Utility.PositiveSineWave(800, 0f          )), 0, SunCorona1.Size() / 2, 0.85f         + (0.04f * Utility.SineWave(800, 0f        )), SpriteEffects.None, 0f);
-            spriteBatch.Draw(SunCorona2, Sun.Position, null, (Color.White * (0.6f + 0.4f * Utility.PositiveSineWave(600, MathF.PI / 8))).NewAlpha(0.6f + 0.4f * Utility.PositiveSineWave(600, MathF.PI / 8)), 0, SunCorona1.Size() / 2, 0.85f         + (0.03f * Utility.SineWave(600, MathF.PI/8)), SpriteEffects.None, 0f);
-            spriteBatch.Draw(SunCorona3, Sun.Position, null, (Color.White * (0.8f + 0.2f * Utility.PositiveSineWave(500, MathF.PI / 4))).NewAlpha(0.8f + 0.2f * Utility.PositiveSineWave(500, MathF.PI / 4)), 0, SunCorona1.Size() / 2, 0.85f         + (0.03f * Utility.SineWave(500, MathF.PI/3)), SpriteEffects.None, 0f);
-            spriteBatch.Draw(SunCorona4, Sun.Position, null, (Color.White * (0.7f + 0.3f * Utility.PositiveSineWave(500, MathF.PI / 2))).NewAlpha(0.8f + 0.2f * Utility.PositiveSineWave(500, MathF.PI / 2)), 0, SunCorona1.Size() / 2, 0.85f         + (0.02f * Utility.SineWave(500, MathF.PI/2)), SpriteEffects.None, 0f);
-            spriteBatch.Draw(SunCorona5, Sun.Position, null, (Color.White * (0.6f + 0.4f * Utility.PositiveSineWave(300, MathF.PI / 2))).NewAlpha(0.9f + 0.1f * Utility.PositiveSineWave(300, MathF.PI / 2)), 0, SunCorona1.Size() / 2, 0.85f * 0.95f + (0.02f * Utility.SineWave(300, MathF.PI/2)), SpriteEffects.None, 0f);
+			spriteBatch.Draw(SunCorona1, Sun.Position, null, (Color.White * (0.4f + 0.8f * Utility.PositiveSineWave(800, 0f          ))).WithOpacity(0.6f + 0.2f * Utility.PositiveSineWave(800, 0f          )), 0, SunCorona1.Size() / 2, 0.85f         + (0.04f * Utility.SineWave(800, 0f        )), SpriteEffects.None, 0f);
+            spriteBatch.Draw(SunCorona2, Sun.Position, null, (Color.White * (0.6f + 0.4f * Utility.PositiveSineWave(600, MathF.PI / 8))).WithOpacity(0.6f + 0.4f * Utility.PositiveSineWave(600, MathF.PI / 8)), 0, SunCorona1.Size() / 2, 0.85f         + (0.03f * Utility.SineWave(600, MathF.PI/8)), SpriteEffects.None, 0f);
+            spriteBatch.Draw(SunCorona3, Sun.Position, null, (Color.White * (0.8f + 0.2f * Utility.PositiveSineWave(500, MathF.PI / 4))).WithOpacity(0.8f + 0.2f * Utility.PositiveSineWave(500, MathF.PI / 4)), 0, SunCorona1.Size() / 2, 0.85f         + (0.03f * Utility.SineWave(500, MathF.PI/3)), SpriteEffects.None, 0f);
+            spriteBatch.Draw(SunCorona4, Sun.Position, null, (Color.White * (0.7f + 0.3f * Utility.PositiveSineWave(500, MathF.PI / 2))).WithOpacity(0.8f + 0.2f * Utility.PositiveSineWave(500, MathF.PI / 2)), 0, SunCorona1.Size() / 2, 0.85f         + (0.02f * Utility.SineWave(500, MathF.PI/2)), SpriteEffects.None, 0f);
+            spriteBatch.Draw(SunCorona5, Sun.Position, null, (Color.White * (0.6f + 0.4f * Utility.PositiveSineWave(300, MathF.PI / 2))).WithOpacity(0.9f + 0.1f * Utility.PositiveSineWave(300, MathF.PI / 2)), 0, SunCorona1.Size() / 2, 0.85f * 0.95f + (0.02f * Utility.SineWave(300, MathF.PI/2)), SpriteEffects.None, 0f);
        
             spriteBatch.End();
             spriteBatch.Begin(state);
