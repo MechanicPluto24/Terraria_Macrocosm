@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -12,12 +13,13 @@ namespace Macrocosm.Content.Rockets.Modules
 
 		protected abstract Vector2 LandingLegDrawOffset { get; }
 
+		private SpriteBatchState state;
 		public override void Draw(SpriteBatch spriteBatch, Vector2 screenPos, Color ambientColor)
 		{
 			// Draw the booster module with the base logic
 			base.Draw(spriteBatch, screenPos, ambientColor);
 
-			var state = spriteBatch.SaveState();
+			state ??= spriteBatch.SaveState();
 			spriteBatch.End();
 			spriteBatch.Begin(SamplerState.PointClamp, state);
 

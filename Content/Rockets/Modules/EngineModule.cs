@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.Customization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -18,9 +19,10 @@ namespace Macrocosm.Content.Rockets.Modules
 		public override int Width => 120;
 		public override int Height => 302 + (RearLandingLegRaised ? 18 : 26);
 
+		private SpriteBatchState state;
 		public override void Draw(SpriteBatch spriteBatch, Vector2 screenPos, Color ambientColor)
         {
-            var state = spriteBatch.SaveState();
+            state ??= spriteBatch.SaveState();
             spriteBatch.End();
             spriteBatch.Begin(SamplerState.PointClamp, state);
 

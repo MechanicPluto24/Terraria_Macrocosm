@@ -1,3 +1,4 @@
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
@@ -239,6 +240,8 @@ namespace Macrocosm.Common.Drawing.Sky
             orbitChildren.Clear();
         }
 
+        private SpriteBatchState state;
+
         /// <summary>
         /// Draw this CelestialBody
         /// </summary>
@@ -256,7 +259,7 @@ namespace Macrocosm.Common.Drawing.Sky
             if (!ShouldDraw())
                 return;
 
-			SpriteBatchState state = spriteBatch.SaveState();
+		    state ??= spriteBatch.SaveState();
             spriteBatch.EndIfBeginCalled();
 
             Effect shader = null;

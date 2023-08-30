@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Drawing.Particles;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -26,15 +27,8 @@ namespace Macrocosm.Content.Particles
 			rotateClockwise = Main.rand.NextBool();
   		}
 
-		public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
+		public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
 		{
-
-			spriteBatch.Draw(Texture, Position - screenPosition, GetFrame(), DrawColor, Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
-
-			var state = spriteBatch.SaveState();
-			spriteBatch.End();
-			spriteBatch.Begin(BlendState.Additive, state);
-
 			for (int i = 1; i < NumberOfInnerReplicas; i++)
 			{
 				float progress = (float)i / NumberOfInnerReplicas;
@@ -44,14 +38,18 @@ namespace Macrocosm.Content.Particles
 				spriteBatch.Draw(Texture, Position - screenPosition, GetFrame(), color, Rotation, Size * 0.5f, scale, SpriteEffects.None, 0f);
 			}
 
-			Lighting.AddLight(Center, DrawColor.ToVector3());
+			return true;
+		}
 
-			spriteBatch.End();
-			spriteBatch.Begin(state);
+		public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
+		{
+			spriteBatch.Draw(Texture, Position - screenPosition, GetFrame(), DrawColor, Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
 		}
 
 		public override void AI()
 		{
+			Lighting.AddLight(Center, DrawColor.ToVector3());
+
 			if (rotateClockwise)
 				Rotation += 0.005f;
 			else

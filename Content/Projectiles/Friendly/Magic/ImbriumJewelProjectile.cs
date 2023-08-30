@@ -1,3 +1,4 @@
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
@@ -91,14 +92,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			}
 		}
 
-        public override bool PreDraw(ref Color lightColor)
+		private SpriteBatchState state;
+		public override bool PreDraw(ref Color lightColor)
         {
 			//Redraw the projectile with the color not influenced by light
 			//Texture2D texture = (Texture2D)ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Magic/TheJewelOfShowersProj");
 
-			Vector2 drawOrigin = new Vector2(TextureAssets.Projectile[Type].Value.Width * 0.5f, Projectile.height * 0.5f);
+			Vector2 drawOrigin = new(TextureAssets.Projectile[Type].Value.Width * 0.5f, Projectile.height * 0.5f);
 
-            var state = Main.spriteBatch.SaveState();
+            state ??= Main.spriteBatch.SaveState();
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);

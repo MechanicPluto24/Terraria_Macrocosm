@@ -1,3 +1,4 @@
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
@@ -24,6 +25,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			Projectile.height = 16;
 		}
 
+		private SpriteBatchState state;
 		public override bool PreDraw(ref Color lightColor)
 		{
 			ProjectileID.Sets.TrailCacheLength[Type] = 10;
@@ -32,7 +34,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			if (count > 25f)
 				count = 25f;
 
-			var state = Main.spriteBatch.SaveState();
+			state ??= Main.spriteBatch.SaveState();
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.Additive, state);

@@ -1,3 +1,4 @@
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
@@ -42,14 +43,14 @@ namespace Macrocosm.Content.UI.LoadingScreens
 			starsDrawing.SpawnStars(200, 250, twinkleFactor: 0.1f);
 		}
 
+		private SpriteBatchState state;
 		public override void PreDraw(SpriteBatch spriteBatch)
 		{
 			earth.SetPosition(Main.screenWidth * 0.265f, Main.screenHeight * 0.185f);
 
 			Color bodyColor = (Color.White * (float)(AnimationTimer / 5) * 1f).NewAlpha(1f);
 
-			var state = spriteBatch.SaveState();
-
+			state ??= spriteBatch.SaveState();
 			spriteBatch.End();
 
 			spriteBatch.Begin(BlendState.AlphaBlend, state);
