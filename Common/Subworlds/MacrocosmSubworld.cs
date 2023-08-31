@@ -7,6 +7,7 @@ using Macrocosm.Content.Subworlds;
 using Macrocosm.Content.Systems;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
+using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
@@ -17,7 +18,7 @@ namespace Macrocosm.Common.Subworlds
 	public abstract partial class MacrocosmSubworld : Subworld 
 	{
 		/// <summary> Time rate of this subworld, compared to Earth's (1.0) </summary>
- 		public virtual double TimeRate { get; set; } = Earth.TimeRate;
+		public virtual double TimeRate { get; set; } = Earth.TimeRate;
 		
 		/// <summary> Day lenght of this subworld in ticks </summary>
  		public virtual double DayLenght { get; set; } = Earth.DayLenght;
@@ -52,18 +53,19 @@ namespace Macrocosm.Common.Subworlds
 		public virtual Dictionary<MapColorType, Color> MapColors { get; } = null;
 
 		/// <summary> The loading screen. Assign new instance in the constructor. </summary>
-		protected LoadingScreen LoadingScreen;
+		public LoadingScreen LoadingScreen { get; init; }
+
 		public override void OnEnter()
 		{
 			SubworldSystem.noReturn = true;
-			LoadingScreen?.Setup();
+			LoadingScreen?.Setup1();
 			OnEnterWorld();
 		}
 
 		public override void OnExit()
 		{
 			SubworldSystem.noReturn = false;
-			Earth.LoadingScreen.Setup();
+			Earth.LoadingScreen.Setup1();
 			OnExitWorld();
 		}
 
@@ -71,13 +73,15 @@ namespace Macrocosm.Common.Subworlds
 		{
 			if (SubworldSystem.AnyActive<Macrocosm>())
 			{
-				if(LoadingScreen is not null)
+				if (LoadingScreen is not null)
 					LoadingScreen.Draw(Main.spriteBatch);
-				else 
+				else
 					base.DrawMenu(gameTime);
 			}
 			else
+			{
 				Earth.LoadingScreen.Draw(Main.spriteBatch);
+			}
 		}
 
 		public override float GetGravity(Entity entity)

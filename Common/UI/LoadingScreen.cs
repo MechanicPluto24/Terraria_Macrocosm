@@ -1,17 +1,31 @@
+using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing.Sky;
+using Macrocosm.Common.Utils;
+using Macrocosm.Content.Rockets;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.GameContent;
+using Terraria.ModLoader;
 using Terraria.UI.Chat;
 using Terraria.WorldBuilding;
 
 namespace Macrocosm.Common.UI
 {
 	/// <summary> Loading screen, displayed when traveling to/from subworlds. </summary>
-	public abstract class LoadingScreen
+	public abstract class LoadingScreen : ILoadable
     {
-        /// <summary> Whether there is any type of LoadingScreen active right now. </summary>
-        public static bool CurrentlyActive { get; set; }
+		public void Load(Mod mod)
+		{
+		}
+
+		public void Unload()
+		{
+            Rocket = null;
+		}
+
+		/// <summary> Whether there is any type of LoadingScreen active right now. </summary>
+		public static bool CurrentlyActive { get; set; }
 
         /// <summary> The title parameters </summary>
         public virtual LocalizedColorScaleText Title { get; set; } 
@@ -21,11 +35,24 @@ namespace Macrocosm.Common.UI
         /// <summary> The current animation timer. Updated automatically, override <see cref="UpdateAnimation"/> for custom behavior </summary>
         protected double AnimationTimer = 0;
 
-        /// <summary> The WorldGen progress bar, create instance with the desired parameters in the <see cref="LoadingScreen"/> constructor. </summary>
-        protected UIWorldGenProgressBar ProgressBar { get; set; }
+		private StarsDrawing starDrawing = new();
+
+		/// <summary> The WorldGen progress bar, create instance with the desired parameters in the <see cref="LoadingScreen"/> constructor. </summary>
+		protected UIWorldGenProgressBar ProgressBar { get; set; }
 
         /// <summary> Reset the animation timer. Useful when there's a persistent instance of a <see cref="LoadingScreen"/>. Call in the <see cref="Setup()"/> method. </summary>
-        public void ResetAnimation() => AnimationTimer = 0;
+        public void ResetAnimation() 
+        {
+            AnimationTimer = 0;
+            fadeout = 0;
+        }
+
+        public void Setup1()
+        {
+            starDrawing = new();
+			starDrawing.SpawnStars(600, 700);
+            Setup();
+		}
 
         /// <summary> Setup tasks, called once before the <see cref="LoadingScreen"/> will be drawn. Useful when there's a persistent instance. </summary>
         public virtual void Setup() { }
@@ -38,6 +65,8 @@ namespace Macrocosm.Common.UI
 
         /// <summary> Draw elements after title, status messages, progress bar, etc. are drawn, but before the cursor is drawn and the spriteBatch is reset </summary>
         public virtual void PostDraw(SpriteBatch spriteBatch) { }
+
+        public static Rocket Rocket { get; set; }
 
         private void InternalUpdate()
         {
@@ -59,14 +88,21 @@ namespace Macrocosm.Common.UI
                 AnimationTimer += 0.125;
         }
 
+
         /// <summary> Draws the loading screen. </summary>
         public void Draw(SpriteBatch spriteBatch)
         {
             InternalUpdate();
 
-            PreDraw(spriteBatch);
+            starDrawing.GlobalOffset = new(0f, 7f);
+            starDrawing.Draw(spriteBatch);
 
-            if (WorldGenerator.CurrentGenerationProgress is not null)
+			PreDraw(spriteBatch);
+
+            if (Rocket is not null)
+                DrawRocket(spriteBatch);
+
+			if (WorldGenerator.CurrentGenerationProgress is not null)
             {
 				statusText = WorldGenerator.CurrentGenerationProgress.Message;
 
@@ -88,6 +124,44 @@ namespace Macrocosm.Common.UI
 			ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, statusText, new Vector2(Main.screenWidth, Main.screenHeight - 100f) / 2f - FontAssets.DeathText.Value.MeasureString(statusText) / 2f, Color.White, 0f, Vector2.Zero, Vector2.One);
 			Main.gameTips.Draw();
 			PostDraw(spriteBatch);
+
+            DrawFadeout(spriteBatch);
 		}
-    }
+
+        private float fadeout;
+        private void DrawFadeout(SpriteBatch spriteBatch)
+        {
+            if (fadeout < 0.98f)
+                fadeout += 0.5f;
+            else
+                fadeout = 1f;
+
+			spriteBatch.Draw(TextureAssets.BlackTile.Value, new Rectangle(0, 0, Main.graphics.GraphicsDevice.Viewport.Width, Main.graphics.GraphicsDevice.Viewport.Height), Color.Black.WithOpacity(1f - fadeout));
+		}
+
+		private SpriteBatchState state;
+		private void DrawRocket(SpriteBatch spriteBatch)
+		{
+			float scale = 1.4f;
+			Vector2 center = Utility.ScreenCenter;
+			Vector2 spriteSize = Rocket.Bounds.Size();
+			Vector2 randomOffset = Main.rand.NextVector2Circular(1f, 5f);
+
+			// Use the position directly without scaling offset
+			Vector2 position = center - spriteSize * 0.5f + randomOffset;
+
+			Matrix transform =
+				Matrix.CreateTranslation(-center.X, -center.Y, 0) *
+				Matrix.CreateScale(scale, scale, 1f) *
+				Matrix.CreateTranslation(center.X, center.Y, 0);
+
+			state.SaveState(spriteBatch);
+			spriteBatch.End();
+			spriteBatch.Begin(state, transform);
+			Rocket.DrawDummy(spriteBatch, position, Color.White);
+			spriteBatch.End();
+
+			spriteBatch.Begin(state);
+		}
+	}
 }

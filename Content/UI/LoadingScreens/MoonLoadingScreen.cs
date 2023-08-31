@@ -46,6 +46,7 @@ namespace Macrocosm.Content.UI.LoadingScreens
 		private SpriteBatchState state;
 		public override void PreDraw(SpriteBatch spriteBatch)
 		{
+			/*
 			earth.SetPosition(Main.screenWidth * 0.265f, Main.screenHeight * 0.185f);
 
 			Color bodyColor = (Color.White * (float)(AnimationTimer / 5) * 1f).WithOpacity(1f);
@@ -72,6 +73,7 @@ namespace Macrocosm.Content.UI.LoadingScreens
 
 			spriteBatch.End();
 			spriteBatch.Begin(state);
+			*/
 		}
 	}
 }
