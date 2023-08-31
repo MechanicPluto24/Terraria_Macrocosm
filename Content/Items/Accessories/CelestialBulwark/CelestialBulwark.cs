@@ -86,8 +86,8 @@ namespace Macrocosm.Content.Items.Accessories.CelestialBulwark
 		{
 			Texture2D currentTex = celestialTextures[(int)GlobalVFX.CelestialStyle];
 			Texture2D nextTex = celestialTextures[(int)GlobalVFX.NextCelestialStyle];
-			Color currentColor = Color.White.NewAlpha(GlobalVFX.CelestialStyleProgress);
-			Color nextColor = Color.White.NewAlpha(1f - GlobalVFX.CelestialStyleProgress);
+			Color currentColor = Color.White.WithOpacity(GlobalVFX.CelestialStyleProgress);
+			Color nextColor = Color.White.WithOpacity(1f - GlobalVFX.CelestialStyleProgress);
 
 			state.SaveState(spriteBatch);
 			spriteBatch.EndIfBeginCalled();

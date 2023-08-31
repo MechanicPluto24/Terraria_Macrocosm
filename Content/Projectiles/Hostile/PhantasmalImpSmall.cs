@@ -66,9 +66,10 @@ namespace Macrocosm.Content.Projectiles.Hostile
 				Projectile.active = false;
 		}
 
-		public override Color? GetAlpha(Color lightColor) => Color.White.NewAlpha(1f);
+		public override Color? GetAlpha(Color lightColor) => Color.White.WithOpacity(1f);
 
 		private SpriteBatchState state;
+
 		public override bool PreDraw(ref Color lightColor)
 		{
 			int length = Projectile.oldPos.Length;
@@ -89,7 +90,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.NonPremultiplied, state);
 
-			Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, Color.White.NewAlpha(0.7f * (1f - Projectile.alpha/255f)), Projectile.rotation, Projectile.Size / 2f, Projectile.scale, Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+			Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, Color.White.WithOpacity(0.7f * (1f - Projectile.alpha/255f)), Projectile.rotation, Projectile.Size / 2f, Projectile.scale, Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(state);

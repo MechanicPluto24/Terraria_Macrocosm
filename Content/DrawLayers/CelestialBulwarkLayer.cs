@@ -25,7 +25,7 @@ namespace Macrocosm.Content.DrawLayers
 			Color drawColor = GlobalVFX.CelestialColor;
 
 			if (drawInfo.shadow > 0f)
-				drawColor = (drawColor * (drawInfo.shadow / 4f)).NewAlpha(0.5f);
+				drawColor = (drawColor * (drawInfo.shadow / 4f)).WithOpacity(0.5f);
 
 			Rectangle bodyFrame = drawInfo.drawPlayer.bodyFrame;
 			Vector2 bodyVect = drawInfo.bodyVect;

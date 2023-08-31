@@ -95,7 +95,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
 			Main.spriteBatch.Begin(state);
 
 			Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition,
-				sourceRect, Color.White.NewAlpha(0f), Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
+				sourceRect, Color.White.WithOpacity(0f), Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
 			
 			return false;
 		}

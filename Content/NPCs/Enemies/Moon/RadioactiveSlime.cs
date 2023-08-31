@@ -67,7 +67,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		}
 
 		public override Color? GetAlpha(Color drawColor)
-			=> (Color.White.NewAlpha((0.3f + Main.DiscoColor.GetLuminance() * 0.7f)));
+			=> (Color.White.WithOpacity((0.3f + Main.DiscoColor.GetLuminance() * 0.7f)));
 
 
 		private SpriteBatchState state;

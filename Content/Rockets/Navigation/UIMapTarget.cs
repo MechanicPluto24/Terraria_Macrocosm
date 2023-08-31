@@ -196,7 +196,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 				spriteBatch.Begin(BlendState.NonPremultiplied, SamplerState.AnisotropicClamp, state);
 
 				float scale = 0.918f + (0.98f - 0.918f) * Utility.NormalizedUIScale;
-				spriteBatch.Draw(selectionOutline, rect.Center(), null, drawColor.NewAlpha(targetOpacity), rotation, origin, scale, SpriteEffects.None, 0f);
+				spriteBatch.Draw(selectionOutline, rect.Center(), null, drawColor.WithOpacity(targetOpacity), rotation, origin, scale, SpriteEffects.None, 0f);
 
 				spriteBatch.End();
 				spriteBatch.Begin(state);

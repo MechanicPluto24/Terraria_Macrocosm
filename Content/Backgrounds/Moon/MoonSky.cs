@@ -152,7 +152,7 @@ namespace Macrocosm.Content.Backgrounds.Moon
 				_ => ModContent.Request<Texture2D>(AssetPath + "NebulaNormal").Value,
 			};
 			
-			Color nebulaColor = (Color.White * brightness).NewAlpha(0f);			
+			Color nebulaColor = (Color.White * brightness).WithOpacity(0f);			
 			
 			Main.spriteBatch.Draw(nebula, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), nebulaColor);
 		}
