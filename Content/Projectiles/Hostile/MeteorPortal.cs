@@ -89,8 +89,8 @@ namespace Macrocosm.Content.Projectiles.Hostile
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.AlphaBlend, state);
 
-			Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, (color * 1f).NewAlpha(0.5f - 0.5f * Projectile.alpha/255f), (0f - Projectile.rotation) * 0.65f, texture.Size() / 2f, Projectile.scale * 1.4f, SpriteEffects.FlipHorizontally, 0);
-			Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, (color * 0.84f).NewAlpha(0.5f - 0.5f * Projectile.alpha / 255f), Projectile.rotation, texture.Size() / 2f, Projectile.scale * 1.2f, SpriteEffects.None, 0);
+			Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, (color * 1f).WithOpacity(0.5f - 0.5f * Projectile.alpha/255f), (0f - Projectile.rotation) * 0.65f, texture.Size() / 2f, Projectile.scale * 1.4f, SpriteEffects.FlipHorizontally, 0);
+			Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, (color * 0.84f).WithOpacity(0.5f - 0.5f * Projectile.alpha / 255f), Projectile.rotation, texture.Size() / 2f, Projectile.scale * 1.2f, SpriteEffects.None, 0);
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.Additive, state);

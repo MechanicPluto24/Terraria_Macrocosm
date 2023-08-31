@@ -80,17 +80,14 @@ namespace Macrocosm.Common.Drawing.Particles
 		private static void DrawParticles(ParticleDrawLayer layer)
 		{
 			List<Particle> alphaBlendDrawers = new();
-			List<Particle> additiveOnlyPostDrawers = new();
 
 			foreach (Particle particle in Particles)
 			{
 				if (particle.DrawLayer == layer)
 				{
 					if (particle.PreDrawAdditive(Main.spriteBatch, Main.screenPosition, Lighting.GetColor(particle.Position.ToTileCoordinates())))
- 						alphaBlendDrawers.Add(particle);
- 					else
- 						additiveOnlyPostDrawers.Add(particle);
- 				}
+						alphaBlendDrawers.Add(particle);
+				}
 			}
 
 			if (alphaBlendDrawers.Any())
@@ -100,19 +97,18 @@ namespace Macrocosm.Common.Drawing.Particles
 
 				foreach (var particle in alphaBlendDrawers)
 				{
-					particle.Draw(Main.spriteBatch, Main.screenPosition, Lighting.GetColor(particle.Position.ToTileCoordinates()));
+					if (particle.DrawLayer == layer)
+						particle.Draw(Main.spriteBatch, Main.screenPosition, Lighting.GetColor(particle.Position.ToTileCoordinates()));
 				}
 
 				Main.spriteBatch.End();
 				Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, default, default, default, default, Main.GameViewMatrix.ZoomMatrix);
 			}
 
-			if (additiveOnlyPostDrawers.Any())
+			foreach (Particle particle in Particles)
 			{
-				foreach (var particle in additiveOnlyPostDrawers)
-				{
+				if (particle.DrawLayer == layer)
 					particle.PostDrawAdditive(Main.spriteBatch, Main.screenPosition, Lighting.GetColor(particle.Position.ToTileCoordinates()));
-				}
 			}
 		}
 

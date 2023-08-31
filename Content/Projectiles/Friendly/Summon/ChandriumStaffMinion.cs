@@ -356,7 +356,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
 			if (Projectile.alpha > 0)
 			{
-				Main.EntitySpriteDraw(tex, pos, tex.Frame(1, Main.projFrames[Type], frameY: Projectile.frame), (new Color(117, 74, 220) * (Projectile.alpha / 255f)).NewAlpha(0), Projectile.rotation, Projectile.Size / 2, Projectile.scale, effects, 0f);
+				Main.EntitySpriteDraw(tex, pos, tex.Frame(1, Main.projFrames[Type], frameY: Projectile.frame), (new Color(117, 74, 220) * (Projectile.alpha / 255f)).WithAlpha(0), Projectile.rotation, Projectile.Size / 2, Projectile.scale, effects, 0f);
 			}
 
 			if (HasTarget)

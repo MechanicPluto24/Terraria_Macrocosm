@@ -50,7 +50,7 @@ namespace Macrocosm.Content.UI.LoadingScreens
 		private SpriteBatchState state;
 		public override void PreDraw(SpriteBatch spriteBatch)
 		{
-			Color bodyColor = (Color.White * (float)(AnimationTimer / 5) * 1f).NewAlpha(1f);
+			Color bodyColor = (Color.White * (float)(AnimationTimer / 5) * 1f).WithOpacity(1f);
 
 			state.SaveState(spriteBatch);
 

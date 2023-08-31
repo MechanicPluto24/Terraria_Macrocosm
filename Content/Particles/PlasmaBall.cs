@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Particles
 		{
 			DrawMagicPixelTrail(Vector2.Zero, 4f, 1f, new Color(104, 255, 255), new Color(104, 255, 255, 0));
 			spriteBatch.Draw(Texture, Center - screenPosition, null, Color.White, Rotation, Size / 2, ScaleV, SpriteEffects.None, 0f);
- 		}
+		}
 
 		public override void AI()
 		{

@@ -21,8 +21,7 @@ namespace Macrocosm.Content.Particles
 		public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
 		{
 			Texture2D glow = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "SimpleGlow").Value;
-			spriteBatch.Draw(glow, Center - screenPosition, null, Color.NewAlpha(0.8f), Rotation, glow.Size() / 2, 0.0375f * ScaleV, SpriteEffects.None, 0f);
-
+			spriteBatch.Draw(glow, Center - screenPosition, null, Color.WithOpacity(0.8f), Rotation, glow.Size() / 2, 0.0375f * ScaleV, SpriteEffects.None, 0f);
 			return false;
 		}
 

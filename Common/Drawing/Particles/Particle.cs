@@ -199,7 +199,6 @@ namespace Macrocosm.Common.Drawing.Particles
 		/// Substract <see cref="Main.screenPosition"> screenPosition </see> from the <see cref="Particle.Position">Position</see> position before drawing.
 		/// Return false to stop the default, alpha blended, drawing logic. Returns true by default.
 		/// </summary>
-		/// Return
 		/// <param name="spriteBatch"> The spritebatch </param>
 		/// <param name="screenPosition"> The top-left screen position in the world coordinates </param>
 		/// <param name="lightColor"> The light color at the particle's position </param>
@@ -217,7 +216,7 @@ namespace Macrocosm.Common.Drawing.Particles
 		/// <param name="spriteBatch"> The spritebatch </param>
 		/// <param name="screenPosition"> The top-left screen position in the world coordinates </param>
 		/// <param name="lightColor"> The light color at the particle's position </param>
-		public virtual void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor) 
+		public virtual void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
 		{
 			spriteBatch.Draw(Texture, Position - screenPosition, GetFrame(), lightColor, Rotation, Size * 0.5f, ScaleV, SpriteEffects.None, 0f);
 		}
@@ -257,7 +256,7 @@ namespace Macrocosm.Common.Drawing.Particles
 
 		#endregion
 
-		// TODO: This could use some touching up, maybe make trails a component or something 
+		// TODO: This could use some touching up, maybe make trails a component or something
 		#region Trails
 		public void DrawMagicPixelTrail(Vector2 rotatableOffsetFromCenter, float startWidth, float endWidth, Color startColor, Color? endColor = null)
 				=> Utility.DrawMagicPixelTrail(Size / 2f, OldPositions, OldRotations, rotatableOffsetFromCenter, startWidth, endWidth, startColor, endColor);

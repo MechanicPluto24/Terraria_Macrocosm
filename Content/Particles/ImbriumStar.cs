@@ -7,31 +7,30 @@ using Terraria;
 
 namespace Macrocosm.Content.Particles
 {
-	public class ImbriumStar : Particle
+    public class ImbriumStar : Particle
     {
         public override string TexturePath => Macrocosm.TextureAssetsPath + "Star2";
 
-		public float Alpha = 0.8f;
+        public float Alpha = 0.8f;
         Color color = Color.White;
-        
-		public override void OnSpawn()
+
+        public override void OnSpawn()
         {
             color = Color.Lerp(Color.White, new Color(0, 217, 102, 255), 0.1f + 0.7f * Main.rand.NextFloat());
-			Rotation = Utility.RandomRotation();
-		}
+			      Rotation = Utility.RandomRotation();
+	  	  }
 
         public override void AI()
         { 
-			Scale -= 0.0035f;
-
+			      Scale -= 0.0035f;
             if (Scale < 0.0002f)
                 Kill();
         }
 
-		public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
-		{
-			spriteBatch.Draw(Texture, Position - screenPosition, null, color.NewAlpha(Alpha), Rotation, Texture.Size() / 2f, ScaleV, SpriteEffects.None, 0f);
-			return false;
-		}
-	}
+        public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
+        {
+            spriteBatch.Draw(Texture, Position - screenPosition, null, color.WithOpacity(Alpha), Rotation, Texture.Size() / 2f, ScaleV, SpriteEffects.None, 0f);
+            return false;
+        }
+    }
 }

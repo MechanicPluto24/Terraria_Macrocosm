@@ -24,9 +24,9 @@ namespace Macrocosm.Content.Particles
 		{
 			Texture2D glow = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "SimpleGlow").Value;
 			Color color = Color.Lerp(ColorOnSpawn, ColorOnDespawn, (float)TimeLeft / SpawnTimeLeft);
-			spriteBatch.Draw(glow, Center - screenPosition, null, color.NewAlpha(Opacity), Rotation, glow.Size() / 2, 0.0375f * ScaleV, SpriteEffects.None, 0f);
+			spriteBatch.Draw(glow, Center - screenPosition, null, color.WithOpacity(Opacity), Rotation, glow.Size() / 2, 0.0375f * ScaleV, SpriteEffects.None, 0f);
 			return false;
-		}
+ 		}
 
 		bool spawned = false;
 		float origScale = 0f;

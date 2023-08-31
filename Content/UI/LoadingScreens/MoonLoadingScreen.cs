@@ -48,7 +48,7 @@ namespace Macrocosm.Content.UI.LoadingScreens
 		{
 			earth.SetPosition(Main.screenWidth * 0.265f, Main.screenHeight * 0.185f);
 
-			Color bodyColor = (Color.White * (float)(AnimationTimer / 5) * 1f).NewAlpha(1f);
+			Color bodyColor = (Color.White * (float)(AnimationTimer / 5) * 1f).WithOpacity(1f);
 
 			state.SaveState(spriteBatch);
 			spriteBatch.End();
