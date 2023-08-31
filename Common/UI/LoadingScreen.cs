@@ -31,7 +31,7 @@ namespace Macrocosm.Common.UI
         public virtual void Setup() { }
 
         /// <summary> Used for miscellaneous update tasks </summary>
-        public virtual void OnUpdate() { }
+        public virtual void Update() { }
 
         /// <summary> Draw elements before the title, status messages, progress bar, etc. are drawn. </summary>
         public virtual void PreDraw(SpriteBatch spriteBatch) { }
@@ -49,7 +49,7 @@ namespace Macrocosm.Common.UI
             Main.gameTips.Update();
 
             UpdateAnimation();
-            OnUpdate();
+            Update();
         }
 
         /// <summary> Update the animation counter. Override for non-default behaviour. </summary>
