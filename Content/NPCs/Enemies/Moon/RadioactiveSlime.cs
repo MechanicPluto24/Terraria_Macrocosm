@@ -73,7 +73,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		private SpriteBatchState state;
 		public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
-			state = spriteBatch.SaveState();
+			state.SaveState(spriteBatch);
 			spriteBatch.End();
 			spriteBatch.Begin(BlendState.Additive, state);
 

@@ -248,7 +248,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			Texture2D glow = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "SimpleGlow").Value;
 			Vector2 origin = Projectile.Size / 2f;
 ;
-			state = Main.spriteBatch.SaveState();
+			state.SaveState(Main.spriteBatch);
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.Additive, state);
 

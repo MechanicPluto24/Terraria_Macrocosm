@@ -56,7 +56,7 @@ namespace Macrocosm.Content.Rockets.Modules
 		public virtual void Draw(SpriteBatch spriteBatch, Vector2 screenPos, Color ambientColor)
 		{
 			// Load current pattern and apply shader 
-			state = spriteBatch.SaveState();
+			state.SaveState(spriteBatch);
 			SamplerState samplerState1 = Main.graphics.GraphicsDevice.SamplerStates[1]; 
 			SamplerState samplerState2 = Main.graphics.GraphicsDevice.SamplerStates[2]; 
 			if (SpecialDraw)

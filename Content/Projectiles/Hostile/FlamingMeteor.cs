@@ -85,7 +85,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
 			Rectangle sourceRect = tex.Frame(1, Main.projFrames[Type], frameY: Projectile.frame);
  			Vector2 origin = Projectile.Size / 2f + new Vector2(6, 32);
 
-			state = Main.spriteBatch.SaveState();
+			state.SaveState(Main.spriteBatch);
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.AlphaBlend, state);
 

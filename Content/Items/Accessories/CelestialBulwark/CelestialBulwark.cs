@@ -89,7 +89,7 @@ namespace Macrocosm.Content.Items.Accessories.CelestialBulwark
 			Color currentColor = Color.White.NewAlpha(GlobalVFX.CelestialStyleProgress);
 			Color nextColor = Color.White.NewAlpha(1f - GlobalVFX.CelestialStyleProgress);
 
-			state = spriteBatch.SaveState();
+			state.SaveState(spriteBatch);
 			spriteBatch.EndIfBeginCalled();
 
 			spriteBatch.Begin(BlendState.NonPremultiplied, state);

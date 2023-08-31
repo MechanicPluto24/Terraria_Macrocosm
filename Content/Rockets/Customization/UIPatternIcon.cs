@@ -57,7 +57,7 @@ namespace Macrocosm.Common.UI
 				effect.Parameters["uColor" + i.ToString()].SetValue(Pattern.GetColor(i).ToVector4());
 			}
 
-			state = spriteBatch.SaveState();
+			state.SaveState(spriteBatch);
 			spriteBatch.End();
 			spriteBatch.Begin(state.SpriteSortMode, state.BlendState, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, effect, state.Matrix);
 

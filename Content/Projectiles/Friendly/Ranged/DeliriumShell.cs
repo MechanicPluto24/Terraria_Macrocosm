@@ -91,7 +91,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			Texture2D tex = ModContent.Request<Texture2D>(Texture + "Aura").Value;
 
 			var spriteBatch = Main.spriteBatch;
-			state = Main.spriteBatch.SaveState();
+			state.SaveState(Main.spriteBatch);
 
 			spriteBatch.End();
 			spriteBatch.Begin(BlendState.Additive, state);

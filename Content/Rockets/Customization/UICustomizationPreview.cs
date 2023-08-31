@@ -71,7 +71,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 			var originalRenderTargets = spriteBatch.GraphicsDevice.GetRenderTargets();
 			RenderTarget2D renderTarget = new(spriteBatch.GraphicsDevice, (int)(Rocket.Bounds.Width * Main.UIScale) , (int)(Rocket.Bounds.Height * Main.UIScale));
 
-            state = spriteBatch.SaveState();
+            state.SaveState(spriteBatch);
 			spriteBatch.End();
 
 			spriteBatch.GraphicsDevice.SetRenderTarget(renderTarget);

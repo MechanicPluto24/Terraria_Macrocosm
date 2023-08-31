@@ -95,10 +95,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         {
 			Vector2 drawOrigin = new(TextureAssets.Projectile[Type].Value.Width * 0.5f, Projectile.height * 0.5f);
 
-            state = Main.spriteBatch.SaveState();
+            state.SaveState(Main.spriteBatch);
 
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(BlendState.Additive, state);
+            Main.spriteBatch.Begin(BlendState.Additive, state); 
 
             for (int k = 0; k < Projectile.oldPos.Length; k++)
             {

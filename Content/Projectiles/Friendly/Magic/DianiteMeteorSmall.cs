@@ -34,7 +34,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			if (count > 25f)
 				count = 25f;
 
-			state = Main.spriteBatch.SaveState();
+			state.SaveState(Main.spriteBatch);
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.Additive, state);

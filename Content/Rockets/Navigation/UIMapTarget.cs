@@ -191,7 +191,7 @@ namespace Macrocosm.Content.Rockets.Navigation
             {
 				Vector2 origin = new(selectionOutline.Width / 2f, selectionOutline.Height / 2f);
 
-				state = spriteBatch.SaveState();
+				state.SaveState(spriteBatch);
 				spriteBatch.End();
 				spriteBatch.Begin(BlendState.NonPremultiplied, SamplerState.AnisotropicClamp, state);
 

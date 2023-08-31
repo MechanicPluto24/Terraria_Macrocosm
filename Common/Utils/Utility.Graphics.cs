@@ -8,7 +8,7 @@ namespace Macrocosm.Common.Utils
 { 
 	public static partial class Utility
     {
-		/// <summary> Saves the SpriteBatch parameters. </summary>
+		/// <summary> Saves the SpriteBatch parameters. Prefer to use <see cref="SpriteBatchState.SaveState(SpriteBatch)"/> instead</summary>
 		public static SpriteBatchState SaveState(this SpriteBatch spriteBatch)
         {
             if (spriteBatch.BeginCalled())

@@ -22,7 +22,7 @@ namespace Macrocosm.Content.Rockets.Modules
 		private SpriteBatchState state;
 		public override void Draw(SpriteBatch spriteBatch, Vector2 screenPos, Color ambientColor)
         {
-            state ??= spriteBatch.SaveState();
+            state.SaveState(spriteBatch);
             spriteBatch.End();
             spriteBatch.Begin(SamplerState.PointClamp, state);
 
