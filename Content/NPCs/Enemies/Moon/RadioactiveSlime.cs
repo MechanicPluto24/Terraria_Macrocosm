@@ -1,3 +1,4 @@
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
@@ -72,7 +73,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		private SpriteBatchState state;
 		public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
-			state = spriteBatch.SaveState();
+			state.SaveState(spriteBatch);
 			spriteBatch.End();
 			spriteBatch.Begin(BlendState.Additive, state);
 

@@ -258,10 +258,8 @@ namespace Macrocosm.Common.Drawing.Particles
 
 		// TODO: This could use some touching up, maybe make trails a component or something
 		#region Trails
-
 		public void DrawMagicPixelTrail(Vector2 rotatableOffsetFromCenter, float startWidth, float endWidth, Color startColor, Color? endColor = null)
 				=> Utility.DrawMagicPixelTrail(Size / 2f, OldPositions, OldRotations, rotatableOffsetFromCenter, startWidth, endWidth, startColor, endColor);
-
 
 		/// <summary> The <see cref="Trails.VertexTrail"> VertexTrail </see> object bound to this <c>Particle</c> </summary>
 		public VertexTrail Trail { get; private set; }

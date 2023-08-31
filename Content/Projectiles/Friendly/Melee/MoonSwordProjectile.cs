@@ -1,3 +1,4 @@
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
@@ -34,14 +35,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			Projectile.SetTrail<MoonSwordTrail>();
 		}
 
-		// PreDraw
+		private SpriteBatchState state;
 		public override bool PreDraw(ref Color lightColor)
 		{
 			Texture2D texture = TextureAssets.Projectile[Type].Value;
 			Rectangle frame = texture.Frame(1, 6, frameY: Projectile.frame);
 			SpriteEffects effects = Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
-			var state = Main.spriteBatch.SaveState();
+			state.SaveState(Main.spriteBatch);
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.Additive, state);

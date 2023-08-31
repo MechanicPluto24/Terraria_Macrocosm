@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Drawing.Particles;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -16,13 +17,13 @@ namespace Macrocosm.Content.Particles
         public override void OnSpawn()
         {
             color = Color.Lerp(Color.White, new Color(0, 217, 102, 255), 0.1f + 0.7f * Main.rand.NextFloat());
-        }
+			      Rotation = Utility.RandomRotation();
+	  	  }
 
         public override void AI()
-        {
-            Scale -= 0.003f;
-
-            if (Scale < 0.0001f)
+        { 
+			      Scale -= 0.0035f;
+            if (Scale < 0.0002f)
                 Kill();
         }
 

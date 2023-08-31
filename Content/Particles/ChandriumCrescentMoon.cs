@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Drawing.Particles;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -29,16 +30,9 @@ namespace Macrocosm.Content.Particles
             Lighting.AddLight(Position, new Vector3(0.607f, 0.258f, 0.847f) * Scale);
         }
 
-
 		public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
 		{
-            var state = spriteBatch.SaveState();
-
-            spriteBatch.End();
-            spriteBatch.Begin(BlendState.AlphaBlend, state);
-			spriteBatch.Draw(Texture, Position - screenPosition, null, new Color(180, 112, 226).WithOpacity(0.45f), Rotation, Texture.Size() / 2f, ScaleV, SpriteEffects.None, 0f);
-			spriteBatch.End();
-			spriteBatch.Begin(state);
+			  spriteBatch.Draw(Texture, Position - screenPosition, null, new Color(180, 112, 226).WithOpacity(0.45f), Rotation, Texture.Size() / 2f, ScaleV, SpriteEffects.None, 0f);
 		}
 	}
 }

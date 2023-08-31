@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Drawing.Particles;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
@@ -31,19 +32,16 @@ namespace Macrocosm.Content.Particles
 		{
 		}
 
+		private SpriteBatchState state;
 		public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
 		{
-			var state = spriteBatch.SaveState();
-
-			spriteBatch.End();
-			spriteBatch.Begin(BlendState.AlphaBlend, state);
+			state.SaveState(spriteBatch);
 
 			Texture2D tex = TextureAssets.Extra[89].Value;
 
 			spriteBatch.Draw(tex, Position - screenPosition, null, new Color(177, 107, 219, 127), 0f + Rotation, TextureAssets.Extra[89].Size() / 2f, ScaleV, SpriteEffects.None, 0f);
 			spriteBatch.Draw(tex, Position - screenPosition, null, new Color(177, 107, 219, 127), MathHelper.PiOver2 + Rotation, TextureAssets.Extra[89].Size() / 2f, ScaleV, SpriteEffects.None, 0f);
 			Lighting.AddLight(Position, new Vector3(0.607f, 0.258f, 0.847f));
-
 
 			for (int i = 1; i < TrailCacheLenght; i++)
 			{
@@ -52,9 +50,6 @@ namespace Macrocosm.Content.Particles
 				spriteBatch.Draw(tex, Vector2.Lerp(OldPositions[i - 1], OldPositions[i], factor) - screenPosition, null, new Color(177, 107, 219, (int)(127 * factor)), 0f + OldRotations[i], TextureAssets.Extra[89].Size() / 2f, ScaleV * factor, SpriteEffects.None, 0f);
 				spriteBatch.Draw(tex, Vector2.Lerp(OldPositions[i - 1], OldPositions[i], factor) - screenPosition, null, new Color(177, 107, 219, (int)(127 * factor)), MathHelper.PiOver2 + OldRotations[i], TextureAssets.Extra[89].Size() / 2f, ScaleV * factor, SpriteEffects.None, 0f);
 			}
-
-			spriteBatch.End();
-			spriteBatch.Begin(state);
 		}
 
 		public override void AI()
