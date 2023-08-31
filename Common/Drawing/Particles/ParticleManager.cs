@@ -44,8 +44,6 @@ namespace Macrocosm.Common.Drawing.Particles
 			Particles = null;
 			Textures = null;
 
-			state1 = state2 = state3 = null;
-
 			On_Main.DrawBlack -= DrawParticles_Tiles;
 			On_Main.DrawProjectiles -= DrawParticles_Projectiles;
 			On_Main.DrawNPCs -= DrawParticles_NPCs;
@@ -123,7 +121,7 @@ namespace Macrocosm.Common.Drawing.Particles
 		private void DrawParticles_NPCs(On_Main.orig_DrawNPCs orig, Main self, bool behindTiles)
 		{
 			SpriteBatch spriteBatch = Main.spriteBatch;
-			state1 = spriteBatch.SaveState();
+			state1.SaveState(spriteBatch);
 			spriteBatch.End();
 			spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, default, default, default, default, Main.GameViewMatrix.ZoomMatrix);
 
@@ -134,7 +132,7 @@ namespace Macrocosm.Common.Drawing.Particles
 				
 			orig(self, behindTiles);
 			
-			state2 = spriteBatch.SaveState();
+			state2.SaveState(spriteBatch);
 			spriteBatch.End();
 			spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, default, default, default, default, Main.GameViewMatrix.ZoomMatrix);
 
@@ -166,7 +164,7 @@ namespace Macrocosm.Common.Drawing.Particles
 		{
 			SpriteBatch spriteBatch = Main.spriteBatch;
 
-			state3 = spriteBatch.SaveState();
+			state3.SaveState(spriteBatch);
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, default, default, default, default, Main.GameViewMatrix.ZoomMatrix);
 

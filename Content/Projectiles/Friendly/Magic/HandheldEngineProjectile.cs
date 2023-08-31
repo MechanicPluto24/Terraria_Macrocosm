@@ -149,7 +149,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
 		public override bool PreDraw(ref Color lightColor)
 		{
-			state1 = Main.spriteBatch.SaveState();
+			state1.SaveState(Main.spriteBatch);
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, state1);
@@ -218,7 +218,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
 			float alpha = 0.1f + 0.1f * Utility.QuadraticEaseIn(AI_Windup >= windupTime ? 0.9f : MathHelper.SmoothStep(0.1f, 0.9f, AI_Windup / windupTime));
 
-			state2 = Main.spriteBatch.SaveState();
+			state2.SaveState(Main.spriteBatch);
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.AlphaBlend, state2);
 

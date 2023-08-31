@@ -84,10 +84,10 @@ namespace Macrocosm.Common.Utils
 
 			Vector2 origin = new Vector2(texture.Width / 2, texture.Height / numFrames / 2) - new Vector2(drawOffset.X, drawOffset.Y * proj.spriteDirection);
 
-			SpriteBatchState state = null;
+			SpriteBatchState state = default;
 			if (shader is not null)
 			{
-				state = Main.spriteBatch.SaveState();
+				state.SaveState(Main.spriteBatch);
 				Main.spriteBatch.End();
 				Main.spriteBatch.Begin(shader, state);
 			}

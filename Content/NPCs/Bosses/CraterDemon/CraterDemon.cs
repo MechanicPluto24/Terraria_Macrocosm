@@ -516,7 +516,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 				float starScale = NPC.scale * 0.3f * (progress < 0.5f ? progress : 1f - progress);
 				float rotation = NPC.rotation + progress * 0.4f;
 
-				state1 = spriteBatch.SaveState();
+				state1.SaveState(spriteBatch);
 				
 				spriteBatch.End();
 				spriteBatch.Begin(BlendState.Additive, state1);
@@ -549,7 +549,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			spriteBatch.Draw(texture, info.center - Main.screenPosition, null, Color.White * info.alpha * 0.4f, (-info.rotation) * 0.65f, texture.Size() / 2f, info.scale * 1.2f, SpriteEffects.FlipHorizontally, 0);
 			spriteBatch.Draw(texture, info.center - Main.screenPosition, null, Color.White * info.alpha * 0.8f, info.rotation, texture.Size() / 2f, info.scale, SpriteEffects.None, 0);
 
-			state2 = spriteBatch.SaveState();
+			state2.SaveState(spriteBatch);
 			spriteBatch.End();
 			spriteBatch.Begin(BlendState.Additive, state2);
 

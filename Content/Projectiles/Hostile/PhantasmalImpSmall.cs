@@ -73,7 +73,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
 		{
 			int length = Projectile.oldPos.Length;
 
-			state = Main.spriteBatch.SaveState();
+			state.SaveState(Main.spriteBatch);
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.Additive, state);
