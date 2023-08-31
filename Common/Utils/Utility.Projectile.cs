@@ -73,9 +73,7 @@ namespace Macrocosm.Common.Utils
 		/// <param name="texture"> Leave null to draw as entity with the loaded texture </param>
 		public static void DrawAnimated(this Projectile proj, Color lightColor, SpriteEffects effect, Vector2 drawOffset = default, Texture2D texture = null, Rectangle? frame = null, Effect shader = null)
 		{
-
-			if (texture is null)
- 				texture = TextureAssets.Projectile[proj.type].Value;
+			texture ??= TextureAssets.Projectile[proj.type].Value;
 
 			Vector2 position = proj.Center - Main.screenPosition;
 
