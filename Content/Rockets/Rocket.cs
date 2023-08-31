@@ -1,10 +1,13 @@
 using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Dev;
 using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.LaunchPads;
 using Macrocosm.Content.Rockets.Modules;
+using Macrocosm.Content.Subworlds;
+using Macrocosm.Content.UI.LoadingScreens;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SubworldLibrary;
@@ -193,7 +196,7 @@ namespace Macrocosm.Content.Rockets
 				LookForCommander();
 			}
 
-            if (InFlight && Position.Y < WorldExitPositionY)
+            if (InFlight && Position.Y < 60 * 16f)
 			{
 				ResetAnimation();
 				InFlight = false;
@@ -577,14 +580,29 @@ namespace Macrocosm.Content.Rockets
 				else
 					TargetLandingPosition = default;
 
+				SetLoadingScreenClone();
+
 				if (commander.TargetSubworldID == "Earth")
+				{
 					SubworldSystem.Exit();
+				}
 				else if (commander.TargetSubworldID != null && commander.TargetSubworldID != "")
 				{
 					if (!SubworldSystem.Enter(Macrocosm.Instance.Name + "/" + commander.TargetSubworldID))
+					{
 						HandleWorldTravelFailure("Error: Failed entering target subworld: " + commander.TargetSubworldID + ", staying on " + MacrocosmSubworld.CurrentWorld);
+					}
  				}
 			}
+		}
+
+		private void SetLoadingScreenClone()
+		{
+			var visualClone = Clone();
+			visualClone.Landing = true;
+			visualClone.ResetAnimation();
+
+			LoadingScreen.Rocket = visualClone;
 		}
 
 		// Called if travel to the target subworld fails

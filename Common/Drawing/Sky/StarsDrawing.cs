@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using Terraria;
@@ -7,6 +8,8 @@ namespace Macrocosm.Common.Drawing.Sky
 	public class StarsDrawing
     {
         private readonly List<MacrocosmStar> stars = new();
+
+        public Vector2 GlobalOffset { get; set; }   
 
         public int Count => stars.Count;
         public bool None => Count == 0;
@@ -37,6 +40,7 @@ namespace Macrocosm.Common.Drawing.Sky
             foreach (MacrocosmStar star in stars)
             {
                 star.Brightness = brightness;
+                star.position += GlobalOffset;
                 star.Update();
                 star.Draw(spriteBatch);
             }

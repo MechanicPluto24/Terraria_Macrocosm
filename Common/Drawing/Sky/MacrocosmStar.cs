@@ -16,12 +16,14 @@ namespace Macrocosm.Common.Drawing.Sky
         private Color newColor;
         private bool colorOverridden = false;
 
-        /// <summary>
-        /// Adapted from Star.SpawnStars
-        /// </summary>
-        /// <param name="baseScale"> The average scaling of the stars relative to vanilla </param>
-        /// <param name="twinkleFactor"> How much a star will twinkle, keep between (0f, 1f); 0.4f for vanilla effect</param>
-        public MacrocosmStar(float baseScale = 1f, float twinkleFactor = 0.4f)
+		private Vector2 previousScreenSize;
+
+		/// <summary>
+		/// Adapted from Star.SpawnStars
+		/// </summary>
+		/// <param name="baseScale"> The average scaling of the stars relative to vanilla </param>
+		/// <param name="twinkleFactor"> How much a star will twinkle, keep between (0f, 1f); 0.4f for vanilla effect</param>
+		public MacrocosmStar(float baseScale = 1f, float twinkleFactor = 0.4f)
         {
             FastRandom fastRandom = FastRandom.CreateWithRandomSeed();
 
@@ -61,7 +63,7 @@ namespace Macrocosm.Common.Drawing.Sky
             texture = tex;
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, Vector2 offset = default)
         {
             spriteBatch.Draw(texture, position, null, color, rotation, texture.Size() / 2, scale * twinkle, default, 0f);
         }
@@ -69,8 +71,50 @@ namespace Macrocosm.Common.Drawing.Sky
         public new void Update()
         {
             base.Update();
-            TwinkleColor();
+            AdjustPositionOnScreenResize();
+			WrapOnScreen();
+			TwinkleColor();
         }
+
+		private void AdjustPositionOnScreenResize()
+		{
+			if (previousScreenSize != new Vector2(Main.screenWidth, Main.screenHeight))
+			{
+				if (previousScreenSize != Vector2.Zero) 
+				{
+					float xRatio = Main.screenWidth / previousScreenSize.X;
+					float yRatio = Main.screenHeight / previousScreenSize.Y;
+
+					position.X *= xRatio;
+					position.Y *= yRatio;
+				}
+
+				previousScreenSize = new Vector2(Main.screenWidth, Main.screenHeight);
+			}
+		}
+
+		private void WrapOnScreen()
+        {
+			// Check and wrap horizontally
+			if (position.X > Main.screenWidth)
+			{
+				position.X = 0;
+			}
+			else if (position.X < 0)
+			{
+				position.X = Main.screenWidth;
+			}
+
+			// Check and wrap vertically
+			if (position.Y > Main.screenHeight)
+			{
+				position.Y = 0;
+			}
+			else if (position.Y < 0)
+			{
+				position.Y = Main.screenHeight;
+			}
+		}
 
         public void OverrideColor(float r, float g, float b) => OverrideColor(new Color(r, g, b));
         public void OverrideColor(Color color)

@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.Items.Global;
+﻿using Macrocosm.Common.UI;
+using Macrocosm.Content.Items.Global;
 using Macrocosm.Content.Rarities;
 using SubworldLibrary;
 using Terraria;
@@ -32,6 +33,8 @@ namespace Macrocosm.Content.Items.Dev
 					SubworldSystem.Enter("Macrocosm/Moon");
 				else
 					SubworldSystem.Exit();
+
+				LoadingScreen.Rocket = null;
 			}
 			
  			return true;
