@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Drawing.Sky;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -98,20 +99,21 @@ namespace Macrocosm.Content.UI.Menus
             Sun.ClearOrbitChildren();
         }
 
+        private SpriteBatchState state1, state2;
         public override bool PreDrawLogo(SpriteBatch spriteBatch, ref Vector2 logoDrawCenter, ref float logoRotation, ref float logoScale, ref Color drawColor)
         {
             Rectangle screen = new(0, 0, Main.screenWidth + 1, Main.screenHeight + 1);
             spriteBatch.Draw(TextureAssets.BlackTile.Value, screen, Color.Black);
-			SpriteBatchState state = spriteBatch.SaveState();
+			state1.SaveState(spriteBatch);
             spriteBatch.End();
-			spriteBatch.Begin(BlendState.Additive, state);
+			spriteBatch.Begin(BlendState.Additive, state1);
 
 			Stars.Draw(spriteBatch);
             spriteBatch.Draw(ModContent.Request<Texture2D>(AssetPath + "MilkyWay").Value, screen, Color.White.WithOpacity(0.3f)); 
             spriteBatch.Draw(ModContent.Request<Texture2D>(AssetPath + "Nebula").Value, screen, Color.White.WithOpacity(0.75f));
 
 			spriteBatch.End();
-			spriteBatch.Begin(state);
+			spriteBatch.Begin(state1);
 
             Sun.SetPosition(Main.screenWidth / 2, Main.screenHeight / 2);
 
@@ -199,9 +201,9 @@ namespace Macrocosm.Content.UI.Menus
 
             SpriteBatch spriteBatch = Main.spriteBatch;
 
-			var state = spriteBatch.SaveState();
+			state2.SaveState(spriteBatch);
             spriteBatch.End();
-            spriteBatch.Begin(BlendState.NonPremultiplied, state);
+            spriteBatch.Begin(BlendState.NonPremultiplied, state2);
 
 			spriteBatch.Draw(SunCorona1, Sun.Position, null, (Color.White * (0.4f + 0.8f * Utility.PositiveSineWave(800, 0f          ))).WithOpacity(0.6f + 0.2f * Utility.PositiveSineWave(800, 0f          )), 0, SunCorona1.Size() / 2, 0.85f         + (0.04f * Utility.SineWave(800, 0f        )), SpriteEffects.None, 0f);
             spriteBatch.Draw(SunCorona2, Sun.Position, null, (Color.White * (0.6f + 0.4f * Utility.PositiveSineWave(600, MathF.PI / 8))).WithOpacity(0.6f + 0.4f * Utility.PositiveSineWave(600, MathF.PI / 8)), 0, SunCorona1.Size() / 2, 0.85f         + (0.03f * Utility.SineWave(600, MathF.PI/8)), SpriteEffects.None, 0f);
@@ -210,7 +212,7 @@ namespace Macrocosm.Content.UI.Menus
             spriteBatch.Draw(SunCorona5, Sun.Position, null, (Color.White * (0.6f + 0.4f * Utility.PositiveSineWave(300, MathF.PI / 2))).WithOpacity(0.9f + 0.1f * Utility.PositiveSineWave(300, MathF.PI / 2)), 0, SunCorona1.Size() / 2, 0.85f * 0.95f + (0.02f * Utility.SineWave(300, MathF.PI/2)), SpriteEffects.None, 0f);
        
             spriteBatch.End();
-            spriteBatch.Begin(state);
+            spriteBatch.Begin(state2);
         }
     }
 }

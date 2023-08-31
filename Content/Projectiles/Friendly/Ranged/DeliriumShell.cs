@@ -1,3 +1,4 @@
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
@@ -81,6 +82,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			});
 		}
 
+		private SpriteBatchState state;
 		public override bool PreDraw(ref Color lightColor)
 		{
 			if (Projectile.timeLeft < 3)
@@ -89,7 +91,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			Texture2D tex = ModContent.Request<Texture2D>(Texture + "Aura").Value;
 
 			var spriteBatch = Main.spriteBatch;
-			var state = Main.spriteBatch.SaveState();
+			state.SaveState(Main.spriteBatch);
 
 			spriteBatch.End();
 			spriteBatch.Begin(BlendState.Additive, state);

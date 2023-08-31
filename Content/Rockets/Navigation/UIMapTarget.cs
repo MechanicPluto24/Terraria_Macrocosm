@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Subworlds;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.Navigation.Checklist;
 using Microsoft.Xna.Framework;
@@ -177,6 +178,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 			return false;
 		}
 
+		private SpriteBatchState state;
 		protected override void DrawSelf(SpriteBatch spriteBatch)
         {
 			Rectangle rect = GetDimensions().ToRectangle();
@@ -189,7 +191,7 @@ namespace Macrocosm.Content.Rockets.Navigation
             {
 				Vector2 origin = new(selectionOutline.Width / 2f, selectionOutline.Height / 2f);
 
-				var state = spriteBatch.SaveState();
+				state.SaveState(spriteBatch);
 				spriteBatch.End();
 				spriteBatch.Begin(BlendState.NonPremultiplied, SamplerState.AnisotropicClamp, state);
 

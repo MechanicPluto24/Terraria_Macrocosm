@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.Customization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -51,10 +52,11 @@ namespace Macrocosm.Content.Rockets.Modules
 			Pattern = CustomizationStorage.GetDefaultPattern(GetType().Name);
 		}
 
+		private SpriteBatchState state;
 		public virtual void Draw(SpriteBatch spriteBatch, Vector2 screenPos, Color ambientColor)
 		{
 			// Load current pattern and apply shader 
-			SpriteBatchState state = spriteBatch.SaveState();
+			state.SaveState(spriteBatch);
 			SamplerState samplerState1 = Main.graphics.GraphicsDevice.SamplerStates[1]; 
 			SamplerState samplerState2 = Main.graphics.GraphicsDevice.SamplerStates[2]; 
 			if (SpecialDraw)

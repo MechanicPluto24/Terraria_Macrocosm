@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Consumables.BossBags;
@@ -499,6 +500,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			return true;
 		}
 
+		private SpriteBatchState state1, state2;
 		public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
 			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Bosses/CraterDemon/CraterDemon_Glow").Value;
@@ -514,15 +516,15 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 				float starScale = NPC.scale * 0.3f * (progress < 0.5f ? progress : 1f - progress);
 				float rotation = NPC.rotation + progress * 0.4f;
 
-				var state = spriteBatch.SaveState();
+				state1.SaveState(spriteBatch);
 				
 				spriteBatch.End();
-				spriteBatch.Begin(BlendState.Additive, state);
+				spriteBatch.Begin(BlendState.Additive, state1);
 				
 				spriteBatch.Draw(star, NPC.Center - screenPos + new Vector2(30, -8), null, new Color(157, 255, 156), rotation, star.Size()/2, starScale, SpriteEffects.None, 0f);
 				
 				spriteBatch.End();
-				spriteBatch.Begin(state);
+				spriteBatch.Begin(state1);
 			}
 
 			if (phase2)
@@ -547,14 +549,14 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			spriteBatch.Draw(texture, info.center - Main.screenPosition, null, Color.White * info.alpha * 0.4f, (-info.rotation) * 0.65f, texture.Size() / 2f, info.scale * 1.2f, SpriteEffects.FlipHorizontally, 0);
 			spriteBatch.Draw(texture, info.center - Main.screenPosition, null, Color.White * info.alpha * 0.8f, info.rotation, texture.Size() / 2f, info.scale, SpriteEffects.None, 0);
 
-			var state = spriteBatch.SaveState();
+			state2.SaveState(spriteBatch);
 			spriteBatch.End();
-			spriteBatch.Begin(BlendState.Additive, state);
+			spriteBatch.Begin(BlendState.Additive, state2);
 
 			spriteBatch.Draw(texture, info.center - Main.screenPosition, null, Color.White.WithOpacity(0.6f), info.rotation * 4f, texture.Size() / 2f, info.scale * 0.85f, SpriteEffects.None, 0);
 		
 			spriteBatch.End();
-			spriteBatch.Begin(state);
+			spriteBatch.Begin(state2);
 
 			if (info.scale > 0.9f && Vector2.Distance(info.center, NPC.Center) > 60f)
 				SpawnPortalDusts(info);

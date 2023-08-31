@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Drawing;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Players;
@@ -79,6 +80,8 @@ namespace Macrocosm.Content.Items.Accessories.CelestialBulwark
 				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark/CelestialBulwark_Mask_Solar").Value
 			};
 
+
+		private SpriteBatchState state;
 		private void DrawMask(SpriteBatch spriteBatch, Vector2 position, Vector2 origin, float scale = 1f, float rotation = 0f)
 		{
 			Texture2D currentTex = celestialTextures[(int)GlobalVFX.CelestialStyle];
@@ -86,7 +89,7 @@ namespace Macrocosm.Content.Items.Accessories.CelestialBulwark
 			Color currentColor = Color.White.WithOpacity(GlobalVFX.CelestialStyleProgress);
 			Color nextColor = Color.White.WithOpacity(1f - GlobalVFX.CelestialStyleProgress);
 
-			SpriteBatchState state = spriteBatch.SaveState();
+			state.SaveState(spriteBatch);
 			spriteBatch.EndIfBeginCalled();
 
 			spriteBatch.Begin(BlendState.NonPremultiplied, state);

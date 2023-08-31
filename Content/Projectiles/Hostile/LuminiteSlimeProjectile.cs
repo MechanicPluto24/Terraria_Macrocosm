@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -35,13 +36,14 @@ namespace Macrocosm.Content.Projectiles.Hostile
 			Projectile.penetrate = -1;
 		}
 
+		private SpriteBatchState state;
 		public override bool PreDraw(ref Color lightColor)
 		{
 			Projectile.DrawMagicPixelTrail(Vector2.Zero, 4f, 1f, new Color(98, 211, 168, 255) * lightColor.GetLuminance(), new Color(98, 211, 168, 1));
 
 			// draw circular glow
 			Texture2D glow = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "SimpleGlow").Value;
-			var state = Main.spriteBatch.SaveState();
+			state.SaveState(Main.spriteBatch);
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.Additive, state);
 			Main.EntitySpriteDraw(glow, Projectile.Center - Main.screenPosition, null, new Color(89, 151, 193) * lightColor.GetLuminance(), 0f, glow.Size() / 2, 0.0375f, SpriteEffects.None);
