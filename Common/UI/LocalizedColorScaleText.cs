@@ -40,10 +40,10 @@ namespace Macrocosm.Common.UI
 		}
 
 		/// <summary> Draws the text directly to the screen </summary>
-		public void DrawDirect(SpriteBatch spriteBatch, Vector2 centerPosition)
+		public void DrawDirect(SpriteBatch spriteBatch, Vector2 centerPosition, Color? overrideColor = null)
 		{
 			DynamicSpriteFont font = LargeText ? FontAssets.DeathText.Value : FontAssets.MouseText.Value;
-			ChatManager.DrawColorCodedStringWithShadow(spriteBatch, font, LocalizedText.Value, centerPosition - (font.MeasureString(LocalizedText.Value) * Scale / 2f), Color, 0f, Vector2.Zero, new Vector2(Scale));
+			ChatManager.DrawColorCodedStringWithShadow(spriteBatch, font, LocalizedText.Value, centerPosition - (font.MeasureString(LocalizedText.Value) * Scale / 2f), overrideColor is not null ? Color : overrideColor.Value, 0f, Vector2.Zero, new Vector2(Scale));
 		}
 	}
 }

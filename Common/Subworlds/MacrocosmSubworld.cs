@@ -52,9 +52,6 @@ namespace Macrocosm.Common.Subworlds
 		/// <summary> The map background color for each depth layer (Surface, Underground, Cavern, Underworld) </summary>
 		public virtual Dictionary<MapColorType, Color> MapColors { get; } = null;
 
-		/// <summary> The loading screen.</summary>
-		public static LoadingScreen LoadingScreen { get; set; }
-
 		public override void OnEnter()
 		{
 			SubworldSystem.noReturn = true;
@@ -72,7 +69,7 @@ namespace Macrocosm.Common.Subworlds
 		public override void DrawMenu(GameTime gameTime)
 		{
 			if (LoadingScreen is not null)
-				LoadingScreen.Draw(Main.spriteBatch);
+				LoadingScreen.Draw(gameTime, Main.spriteBatch);
 			else
 				base.DrawMenu(gameTime);
 		}
@@ -82,7 +79,7 @@ namespace Macrocosm.Common.Subworlds
 			if(entity is Player)
 				return Player.defaultGravity * CurrentGravityMultiplier;
 
-			// This is set using the new NPC.GravityMultiplier property in MacrocosmGlobalNPC instead
+			// This is set using the new NPC.GravityMultiplier tML property in MacrocosmGlobalNPC instead
 			if(entity is NPC)
 				return base.GetGravity(entity);
 
@@ -106,7 +103,7 @@ namespace Macrocosm.Common.Subworlds
 		public override void ReadCopiedMainWorldData()
 		{
 			// The data is sent to a MP subserver as packets, as it doesn't exist in its memory otherwise
-			// For some reason, this returns wrong data in single player, possibly even in MP, using the local tag in memory
+			// For some reason, this returns wrong data in single player, possibly even in MP, using the local tag in memory instead
 			if(Main.netMode != NetmodeID.SinglePlayer)
 				dataCopyTag = SubworldSystem.ReadCopiedWorldData<TagCompound>("Macrocosm:copiedData");
 

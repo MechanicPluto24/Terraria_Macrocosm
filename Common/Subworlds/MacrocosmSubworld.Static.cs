@@ -1,11 +1,10 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.UI;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets;
 using Macrocosm.Content.Subworlds;
 using Macrocosm.Content.UI.LoadingScreens;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
-using System.ComponentModel.Design;
-using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Subworlds
 {
@@ -57,6 +56,9 @@ namespace Macrocosm.Common.Subworlds
 		public static double CurrentNightLenght => SubworldSystem.AnyActive<Macrocosm>() ? Current.NightLenght : Earth.NightLenght;
 		public static float CurrentGravityMultiplier => SubworldSystem.AnyActive<Macrocosm>() ? Current.GravityMultiplier : Earth.GravityMultiplier;
 
+		/// <summary> The loading screen. </summary>
+		public static LoadingScreen LoadingScreen { get; set; }
+
 		public static bool Travel(string targetWorld, Rocket rocket = null)
 		{
 			if (!SubworldSystem.AnyActive<Macrocosm>())
@@ -68,12 +70,14 @@ namespace Macrocosm.Common.Subworlds
 				case "Moon": LoadingScreen = new MoonLoadingScreen(); break;
 			}
 
-			LoadingScreen.Rocket = rocket;
+			if(rocket is not null)
+				LoadingScreen.SetRocket(rocket);
 
 			if(targetWorld == "Earth")
 			{
 				SubworldSystem.Exit();
 				LoadingScreen.SetTargetWorld("Earth");
+				LoadingTitleSequence.SetTargetWorld("Earth");
 				return true;
 			}
 
@@ -82,6 +86,7 @@ namespace Macrocosm.Common.Subworlds
 			if (entered)
 			{
 				LoadingScreen.SetTargetWorld(targetWorld);
+				LoadingTitleSequence.SetTargetWorld(targetWorld);
 			}
 			else
 			{

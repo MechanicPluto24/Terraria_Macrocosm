@@ -21,7 +21,7 @@ namespace Macrocosm.Content.Dusts
 			dust.scale -= 0.02f;
 			dust.rotation += (dust.velocity.Y - dust.velocity.X) / 5;
 
-   			dust.color = GlobalVFX.CelestialColor.WithOpacity(0.8f);
+   			dust.color = CelestialDisco.CelestialColor.WithOpacity(0.8f);
  
 			Lighting.AddLight(dust.position, dust.color.ToVector3() * 0.6f);
 

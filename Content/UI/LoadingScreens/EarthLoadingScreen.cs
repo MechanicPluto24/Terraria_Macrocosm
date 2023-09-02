@@ -33,20 +33,20 @@ namespace Macrocosm.Content.UI.LoadingScreens
 		}
 
 		private readonly float animationDuration = 1000f;
-		public override void UpdateAnimation()
+		protected override void UpdateAnimation()
 		{
 			if (animationTimer < animationDuration)
 				animationTimer += 1f;
 		}
 
-		public override void Reset()
+		protected override void Reset()
 		{
 			ResetAnimation();
 			earthBackground = earthBackgrounds.GetRandom();
 		}
 
 		private SpriteBatchState state;
-		public override void PreDraw(SpriteBatch spriteBatch)
+		protected override void PreDraw(SpriteBatch spriteBatch)
 		{
 			Color bodyColor = (Color.White * (float)(animationTimer / 5) * 1f).WithOpacity(1f);
 
