@@ -309,7 +309,7 @@ namespace Macrocosm.Content.Rockets.Customization
 		private static void LoadFunctions()
 		{
 			AddFunction("Disco", (colors) => Main.DiscoColor);
-			AddFunction("Celestial", (colors) => GlobalVFX.CelestialColor);
+			AddFunction("Celestial", (colors) => CelestialDisco.CelestialColor);
 		}
 
 		private static void LoadPatterns()

@@ -395,6 +395,23 @@ namespace Macrocosm.Content.Rockets
 			}
 		}
 
+		public void ResetAnimation()
+		{
+			foreach (RocketModule module in Modules.Values)
+			{
+				if (module is AnimatedRocketModule animatedModule)
+				{
+					if (Landing)
+						animatedModule.CurrentFrame = 0;
+					else
+						animatedModule.CurrentFrame = animatedModule.NumberOfFrames - 1;
+
+					animatedModule.ShouldAnimate = true;
+				}
+			}
+		}
+
+
 		private Vector2 GetCollisionVelocity()
 		{
 			Vector2 minCollisionVelocity = new(float.MaxValue, float.MaxValue);
@@ -506,22 +523,6 @@ namespace Macrocosm.Content.Rockets
 			}
 		}
 
-		private void ResetAnimation()
-		{
-			foreach (RocketModule module in Modules.Values)
-			{
-				if (module is AnimatedRocketModule animatedModule)
-				{
-					if(Landing)
-						animatedModule.CurrentFrame = 0;
-					else
-						animatedModule.CurrentFrame = animatedModule.NumberOfFrames - 1;
-
-					animatedModule.ShouldAnimate = true;
-				}
-			}	
-		}
-
 		// Sets the screenshake during flight 
 		private void SetScreenshake()
 		{
@@ -585,21 +586,10 @@ namespace Macrocosm.Content.Rockets
 
 				if (commander.TargetSubworldID != null && commander.TargetSubworldID != "")
 				{
-					if (!MacrocosmSubworld.Travel(commander.TargetSubworldID, GetLoadingScreenClone()))
+					if (!MacrocosmSubworld.Travel(commander.TargetSubworldID, this))
 						CurrentWorld = MacrocosmSubworld.CurrentWorld;
  				}
 			}
 		}
-
-		private Rocket GetLoadingScreenClone()
-		{
-			var visualClone = Clone();
-			visualClone.Landing = true;
-			visualClone.ResetAnimation();
-
-			return visualClone;
-		}
-
-	
 	}
 }

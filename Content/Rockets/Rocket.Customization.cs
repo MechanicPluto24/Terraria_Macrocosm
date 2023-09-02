@@ -1,10 +1,12 @@
-﻿using Macrocosm.Content.Rockets.Customization;
+﻿using Macrocosm.Common.UI;
+using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.Modules;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Linq;
+using Terraria;
 
 namespace Macrocosm.Content.Rockets
 {

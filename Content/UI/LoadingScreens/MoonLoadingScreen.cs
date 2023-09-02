@@ -27,7 +27,7 @@ namespace Macrocosm.Content.UI.LoadingScreens
 			earth = new CelestialBody(earthSmallBackground, earthSmallAtmoBackground, 0.7f);
 		}
 
-		public override void Reset()
+		protected override void Reset()
 		{
 			ResetAnimation();
 
@@ -36,7 +36,7 @@ namespace Macrocosm.Content.UI.LoadingScreens
 		}
 
 		private SpriteBatchState state;
-		public override void PreDraw(SpriteBatch spriteBatch)
+		protected override void PreDraw(SpriteBatch spriteBatch)
 		{
 			/*
 			earth.SetPosition(Main.screenWidth * 0.265f, Main.screenHeight * 0.185f);
