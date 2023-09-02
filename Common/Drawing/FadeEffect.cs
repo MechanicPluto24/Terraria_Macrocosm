@@ -16,7 +16,7 @@ namespace Macrocosm.Common.Drawing
 		private static float fadeSpeed;
 		private static bool isFading;
 		private static bool isFadingIn;
-		private static bool selfDraw;
+		private static bool interfaceSelfDraw;
 
 		public static void Draw()
 		{
@@ -28,7 +28,13 @@ namespace Macrocosm.Common.Drawing
 
 		public override void PostDrawInterface(SpriteBatch spriteBatch)
 		{
-			base.PostDrawInterface(spriteBatch);
+			if (interfaceSelfDraw && Main.hasFocus)
+			{
+				if (isFading)
+					Draw();
+				else
+					interfaceSelfDraw = false;
+			}
 		}
 
 		public static void DrawBlack(float opacity)
@@ -38,6 +44,7 @@ namespace Macrocosm.Common.Drawing
 
 		public static void StartFadeIn(float speed = 0.098f, bool selfDraw = false)
 		{
+			interfaceSelfDraw = selfDraw;
 			fadeAlpha = 0;
 			fadeSpeed = speed;
 			isFadingIn = true;
@@ -46,6 +53,7 @@ namespace Macrocosm.Common.Drawing
 
 		public static void StartFadeOut(float speed = 0.098f, bool selfDraw = false)
 		{
+			interfaceSelfDraw = selfDraw;
 			fadeAlpha = 255;
 			fadeSpeed = speed;
 			isFadingIn = false;

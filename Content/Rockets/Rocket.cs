@@ -455,6 +455,9 @@ namespace Macrocosm.Content.Rockets
 				if (FlightProgress > 0.1f)
 					SetModuleAnimation(landing: false);
 
+				if (FlightProgress > 0.8f && !FadeEffect.IsFading && CheckPlayerInRocket(Main.myPlayer))
+					FadeEffect.StartFadeOut(0.01f, selfDraw: true);
+
 				FlightTime++;
 			}
 			else
