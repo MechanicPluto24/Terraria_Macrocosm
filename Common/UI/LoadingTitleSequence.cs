@@ -47,11 +47,10 @@ namespace Macrocosm.Common.UI
 		{
 			if (currentState != TitleState.Inactive)
 			{
-				var gameTime = Main.gameTimeCache;
 				if (Main.hasFocus)
-					Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+					Update();
 
-				Draw(gameTime, spriteBatch);
+				Draw(spriteBatch);
 			}
 		}
 
@@ -77,7 +76,7 @@ namespace Macrocosm.Common.UI
 			currentState = TitleState.FadingToBlack;
 		}
 
-		public static void Update(float elapsedSeconds)
+		public static void Update()
 		{
 			switch (currentState)
 			{
@@ -93,8 +92,8 @@ namespace Macrocosm.Common.UI
 					break;
 
 				case TitleState.Black:
-					timer += elapsedSeconds;
-					if (timer >= 0.5f)
+					timer++;
+					if (timer >= 30) // 0.5 seconds
 					{
 						if(Title is null)
 						{
@@ -120,8 +119,8 @@ namespace Macrocosm.Common.UI
 					break;
 
 				case TitleState.TitleShown:
-					timer += elapsedSeconds;
-					if (timer >= 1.5f)
+					timer++;
+					if (timer >= 90) // 1.5 seconds
 					{
 						currentState = TitleState.FadingOut;
 						FadeEffect.StartFadeIn(0.01f);
@@ -142,7 +141,7 @@ namespace Macrocosm.Common.UI
 			}
 		}
 
-		public static void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+		public static void Draw(SpriteBatch spriteBatch)
 		{
 			switch (currentState)
 			{
