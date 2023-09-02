@@ -1,11 +1,14 @@
 using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria;
 using Terraria.GameContent;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.UI.Chat;
 using Terraria.WorldBuilding;
@@ -13,49 +16,57 @@ using Terraria.WorldBuilding;
 namespace Macrocosm.Common.UI
 {
 	/// <summary> Loading screen, displayed when traveling to/from subworlds. </summary>
-	public abstract class LoadingScreen : ILoadable
+	public abstract class LoadingScreen 
     {
-		public void Load(Mod mod)
-		{
-		}
-
-		public void Unload()
-		{
-            Rocket = null;
-		}
-
 		/// <summary> Whether there is any type of LoadingScreen active right now. </summary>
 		public static bool CurrentlyActive { get; set; }
 
-        /// <summary> The title parameters </summary>
-        public virtual LocalizedColorScaleText Title { get; set; } 
+		public Rocket Rocket { get; set; }
+
+		/// <summary> The current animation timer. Updated automatically, override <see cref="UpdateAnimation"/> for custom behavior </summary>
+		protected float animationTimer = 0;
 
         protected string statusText;
+		protected Stars stars = new();
 
-        /// <summary> The current animation timer. Updated automatically, override <see cref="UpdateAnimation"/> for custom behavior </summary>
-        protected double AnimationTimer = 0;
+        private UIWorldGenProgressBar progressBar;
+        private LocalizedColorScaleText title;
 
-		private StarsDrawing starDrawing = new();
-
-		/// <summary> The WorldGen progress bar, create instance with the desired parameters in the <see cref="LoadingScreen"/> constructor. </summary>
-		protected UIWorldGenProgressBar ProgressBar { get; set; }
-
-        /// <summary> Reset the animation timer. Useful when there's a persistent instance of a <see cref="LoadingScreen"/>. Call in the <see cref="Setup()"/> method. </summary>
+        /// <summary> Reset the animation timer. Useful when there's a persistent instance of a <see cref="LoadingScreen"/>. Call in the <see cref="Reset()"/> method. </summary>
         public void ResetAnimation() 
         {
-            AnimationTimer = 0;
-            fadeout = 0;
-        }
-
-        public void Setup1()
-        {
-            starDrawing = new();
-			starDrawing.SpawnStars(600, 700);
-            Setup();
+            animationTimer = 0;
+            GlobalVFX.StartFadeIn(0.012f);
 		}
 
-        /// <summary> Setup tasks, called once before the <see cref="LoadingScreen"/> will be drawn. Useful when there's a persistent instance. </summary>
-        public virtual void Setup() { }
+        public void Setup()
+        {
+            stars = new();
+			stars.SpawnStars(600, 700);
+            Reset();
+		}
+
+        public void SetTargetWorld(string targetWorld)
+        {
+			switch (targetWorld)
+			{
+				case "Moon":
+                    title = new(Language.GetText("Mods.Macrocosm.Subworlds.Moon.DisplayName"), Color.White, 1.2f, largeText: true);
+					progressBar = new(
+						ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/WorldGen/ProgressBarMoon", AssetRequestMode.ImmediateLoad).Value,
+						ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/WorldGen/ProgressBarMoon_Lower", AssetRequestMode.ImmediateLoad).Value,
+						new Color(56, 10, 28), new Color(155, 38, 74), new Color(6, 53, 27), new Color(93, 228, 162)
+					);
+                    break;
+
+                case "Earth":
+                    title = new(Language.GetText("Mods.Macrocosm.Subworlds.Earth.DisplayName"), new Color(94, 150, 255), 1.2f, largeText: true);
+					break;
+			}
+		}
+
+        /// <summary> Reset the loading screen specific variables. Called once before the <see cref="LoadingScreen"/> will be drawn. Useful when there's a persistent instance. </summary>
+        public virtual void Reset() { }
 
         /// <summary> Used for miscellaneous update tasks </summary>
         public virtual void Update() { }
@@ -66,14 +77,12 @@ namespace Macrocosm.Common.UI
         /// <summary> Draw elements after title, status messages, progress bar, etc. are drawn, but before the cursor is drawn and the spriteBatch is reset </summary>
         public virtual void PostDraw(SpriteBatch spriteBatch) { }
 
-        public static Rocket Rocket { get; set; }
-
         private void InternalUpdate()
         {
             CurrentlyActive = true;
 
-            if (ProgressBar is not null && WorldGenerator.CurrentGenerationProgress is not null)
-                ProgressBar.SetProgress((float)WorldGenerator.CurrentGenerationProgress.TotalProgress, (float)WorldGenerator.CurrentGenerationProgress.Value);
+            if (progressBar is not null && WorldGenerator.CurrentGenerationProgress is not null)
+                progressBar.SetProgress((float)WorldGenerator.CurrentGenerationProgress.TotalProgress, (float)WorldGenerator.CurrentGenerationProgress.Value);
 
             Main.gameTips.Update();
 
@@ -84,8 +93,8 @@ namespace Macrocosm.Common.UI
         /// <summary> Update the animation counter. Override for non-default behaviour. </summary>
         public virtual void UpdateAnimation()
         {
-            if (AnimationTimer <= 5)
-                AnimationTimer += 0.125;
+            if (animationTimer <= 5)
+                animationTimer += 0.125f;
         }
 
 
@@ -94,8 +103,8 @@ namespace Macrocosm.Common.UI
         {
             InternalUpdate();
 
-            starDrawing.GlobalOffset = new(0f, 7f);
-            starDrawing.Draw(spriteBatch);
+            stars.MovementVector = new(0f, 0.5f);
+            stars.Draw(spriteBatch);
 
 			PreDraw(spriteBatch);
 
@@ -106,13 +115,13 @@ namespace Macrocosm.Common.UI
             {
 				statusText = WorldGenerator.CurrentGenerationProgress.Message;
 
-                if (ProgressBar is not null)
+                if (progressBar is not null)
                 {
-                    ProgressBar.SetPosition(
-                        (int)((Main.screenWidth - ProgressBar.Width.Pixels) / 2f),
-                        (int)((Main.screenHeight - ProgressBar.Height.Pixels) / 2f)
+                    progressBar.SetPosition(
+                        (int)((Main.screenWidth - progressBar.Width.Pixels) / 2f),
+                        (int)((Main.screenHeight - progressBar.Height.Pixels) / 2f)
                     );
-                    ProgressBar.Draw(spriteBatch);
+                    progressBar.Draw(spriteBatch);
                 }
             }
             else
@@ -120,24 +129,14 @@ namespace Macrocosm.Common.UI
 				statusText = Main.statusText;
             }
 
-            Title.DrawDirect(spriteBatch, new Vector2(Main.screenWidth / 2f, Main.screenHeight * 0.1f));
+            title?.DrawDirect(spriteBatch, new Vector2(Main.screenWidth / 2f, Main.screenHeight * 0.1f));
 			ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, statusText, new Vector2(Main.screenWidth, Main.screenHeight - 100f) / 2f - FontAssets.DeathText.Value.MeasureString(statusText) / 2f, Color.White, 0f, Vector2.Zero, Vector2.One);
 			Main.gameTips.Draw();
 			PostDraw(spriteBatch);
 
-            DrawFadeout(spriteBatch);
+            GlobalVFX.DrawFade();
 		}
 
-        private float fadeout;
-        private void DrawFadeout(SpriteBatch spriteBatch)
-        {
-            if (fadeout < 0.98f)
-                fadeout += 0.5f;
-            else
-                fadeout = 1f;
-
-			spriteBatch.Draw(TextureAssets.BlackTile.Value, new Rectangle(0, 0, Main.graphics.GraphicsDevice.Viewport.Width, Main.graphics.GraphicsDevice.Viewport.Height), Color.Black.WithOpacity(1f - fadeout));
-		}
 
 		private SpriteBatchState state;
 		private void DrawRocket(SpriteBatch spriteBatch)

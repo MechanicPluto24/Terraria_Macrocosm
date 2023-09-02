@@ -5,11 +5,11 @@ using Terraria;
 
 namespace Macrocosm.Common.Drawing.Sky
 {
-	public class StarsDrawing
+	public class Stars
     {
         private readonly List<MacrocosmStar> stars = new();
 
-        public Vector2 GlobalOffset { get; set; }   
+        public Vector2 MovementVector { get; set; }   
 
         public int Count => stars.Count;
         public bool None => Count == 0;
@@ -18,6 +18,7 @@ namespace Macrocosm.Common.Drawing.Sky
         public MacrocosmStar this[int index] => stars[index];
         public MacrocosmStar StarAt(int index) => this[index];
         public MacrocosmStar RandStar() => this[Main.rand.Next(Count - 1)];
+
 
         private bool spawningDone = false;
         public void SpawnStars(int minStars, int maxStars, float baseScale = 1f, float twinkleFactor = 0.4f)
@@ -40,7 +41,7 @@ namespace Macrocosm.Common.Drawing.Sky
             foreach (MacrocosmStar star in stars)
             {
                 star.Brightness = brightness;
-                star.position += GlobalOffset;
+                star.UpdatePosition(MovementVector);
                 star.Update();
                 star.Draw(spriteBatch);
             }

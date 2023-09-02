@@ -52,36 +52,29 @@ namespace Macrocosm.Common.Subworlds
 		/// <summary> The map background color for each depth layer (Surface, Underground, Cavern, Underworld) </summary>
 		public virtual Dictionary<MapColorType, Color> MapColors { get; } = null;
 
-		/// <summary> The loading screen. Assign new instance in the constructor. </summary>
-		public LoadingScreen LoadingScreen { get; init; }
+		/// <summary> The loading screen.</summary>
+		public static LoadingScreen LoadingScreen { get; set; }
 
 		public override void OnEnter()
 		{
 			SubworldSystem.noReturn = true;
-			LoadingScreen?.Setup1();
 			OnEnterWorld();
+			LoadingScreen?.Setup();
 		}
 
 		public override void OnExit()
 		{
 			SubworldSystem.noReturn = false;
-			Earth.LoadingScreen.Setup1();
 			OnExitWorld();
+			LoadingScreen?.Setup();
 		}
 
 		public override void DrawMenu(GameTime gameTime)
 		{
-			if (SubworldSystem.AnyActive<Macrocosm>())
-			{
-				if (LoadingScreen is not null)
-					LoadingScreen.Draw(Main.spriteBatch);
-				else
-					base.DrawMenu(gameTime);
-			}
+			if (LoadingScreen is not null)
+				LoadingScreen.Draw(Main.spriteBatch);
 			else
-			{
-				Earth.LoadingScreen.Draw(Main.spriteBatch);
-			}
+				base.DrawMenu(gameTime);
 		}
 
 		public override float GetGravity(Entity entity)

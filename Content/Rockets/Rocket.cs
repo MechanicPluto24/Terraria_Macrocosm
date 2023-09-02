@@ -1,3 +1,4 @@
+using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.UI;
@@ -359,7 +360,7 @@ namespace Macrocosm.Content.Rockets
 
 			return true;
 		}
-
+		
 		public bool CheckTileCollision()
 		{
 			foreach (RocketModule module in Modules.Values)
@@ -374,6 +375,7 @@ namespace Macrocosm.Content.Rockets
 		{
 			if (Main.netMode == NetmodeID.Server)
 				return;
+
 
 			if (MouseCanInteract() && Bounds.InPlayerInteractionRange() && !InFlight && !GetRocketPlayer(Main.myPlayer).InRocket)
 			{
@@ -565,7 +567,7 @@ namespace Macrocosm.Content.Rockets
 
 				if(commander is null)
 				{
-					HandleWorldTravelFailure("Error: Could not find the commander of Rocket " + WhoAmI);
+					MacrocosmSubworld.WorldTravelFailure("Error: Could not find the commander of Rocket " + WhoAmI);
 					return;
 				}
 
@@ -573,44 +575,31 @@ namespace Macrocosm.Content.Rockets
 				//NetSync();
 
 				//LaunchPad launchPad = commander.SelectedLaunchPad;
-				LaunchPad launchPad = null; 
+				LaunchPad launchPad = null;
+
 
 				if(launchPad is not null) 
 					TargetLandingPosition = launchPad.Position;
 				else
 					TargetLandingPosition = default;
 
-				SetLoadingScreenClone();
-
-				if (commander.TargetSubworldID == "Earth")
+				if (commander.TargetSubworldID != null && commander.TargetSubworldID != "")
 				{
-					SubworldSystem.Exit();
-				}
-				else if (commander.TargetSubworldID != null && commander.TargetSubworldID != "")
-				{
-					if (!SubworldSystem.Enter(Macrocosm.Instance.Name + "/" + commander.TargetSubworldID))
-					{
-						HandleWorldTravelFailure("Error: Failed entering target subworld: " + commander.TargetSubworldID + ", staying on " + MacrocosmSubworld.CurrentWorld);
-					}
+					if (!MacrocosmSubworld.Travel(commander.TargetSubworldID, GetLoadingScreenClone()))
+						CurrentWorld = MacrocosmSubworld.CurrentWorld;
  				}
 			}
 		}
 
-		private void SetLoadingScreenClone()
+		private Rocket GetLoadingScreenClone()
 		{
 			var visualClone = Clone();
 			visualClone.Landing = true;
 			visualClone.ResetAnimation();
 
-			LoadingScreen.Rocket = visualClone;
+			return visualClone;
 		}
 
-		// Called if travel to the target subworld fails
-		private void HandleWorldTravelFailure(string message)
-		{
-			CurrentWorld = MacrocosmSubworld.CurrentWorld;
-			Utility.Chat(message, Color.Red);
-			Macrocosm.Instance.Logger.Error(message);
-		}
+	
 	}
 }

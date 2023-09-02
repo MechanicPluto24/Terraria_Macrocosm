@@ -1,5 +1,11 @@
-﻿using Macrocosm.Content.Subworlds;
+﻿using Macrocosm.Common.Utils;
+using Macrocosm.Content.Rockets;
+using Macrocosm.Content.Subworlds;
+using Macrocosm.Content.UI.LoadingScreens;
+using Microsoft.Xna.Framework;
 using SubworldLibrary;
+using System.ComponentModel.Design;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Subworlds
 {
@@ -17,7 +23,7 @@ namespace Macrocosm.Common.Subworlds
 	public partial class MacrocosmSubworld 
 	{
 		/// <summary> Get the current <c>MacrocosmSubworld</c> active instance. 
-		/// Earth returns null! You should check for <see cref="AnyActive"/> before accessing this. </summary>
+		/// Earth returns null! You should check for <see cref="SubworldSystem.AnyActive"/> before accessing this. </summary>
 		public static MacrocosmSubworld Current => SubworldSystem.AnyActive<Macrocosm>() ? SubworldSystem.Current as MacrocosmSubworld : null;
 
 		/// <summary> 
@@ -50,5 +56,46 @@ namespace Macrocosm.Common.Subworlds
 		public static double CurrentDayLenght => SubworldSystem.AnyActive<Macrocosm>() ? Current.DayLenght : Earth.DayLenght;
 		public static double CurrentNightLenght => SubworldSystem.AnyActive<Macrocosm>() ? Current.NightLenght : Earth.NightLenght;
 		public static float CurrentGravityMultiplier => SubworldSystem.AnyActive<Macrocosm>() ? Current.GravityMultiplier : Earth.GravityMultiplier;
+
+		public static bool Travel(string targetWorld, Rocket rocket = null)
+		{
+			if (!SubworldSystem.AnyActive<Macrocosm>())
+			{
+				LoadingScreen = new EarthLoadingScreen();
+			}
+			else switch (Current.Name)
+			{
+				case "Moon": LoadingScreen = new MoonLoadingScreen(); break;
+			}
+
+			LoadingScreen.Rocket = rocket;
+
+			if(targetWorld == "Earth")
+			{
+				SubworldSystem.Exit();
+				LoadingScreen.SetTargetWorld("Earth");
+				return true;
+			}
+
+			bool entered = SubworldSystem.Enter(Macrocosm.Instance.Name + "/" + targetWorld);
+
+			if (entered)
+			{
+				LoadingScreen.SetTargetWorld(targetWorld);
+			}
+			else
+			{
+				WorldTravelFailure("Error: Failed entering target subworld: " + targetWorld + ", staying on " + CurrentWorld);
+			}
+
+			return entered;
+		}
+
+		// Called if travel to the target subworld fails
+		public static void WorldTravelFailure(string message)
+		{
+			Utility.Chat(message, Color.Red);
+			Macrocosm.Instance.Logger.Error(message);
+		}
 	}
 }

@@ -20,9 +20,6 @@ namespace Macrocosm.Content.Subworlds
 		public const float ItemGravity = 0.1f;
 		public const float ItemMaxFallSpeed = 7;
 
-        private static EarthLoadingScreen loadingScreen;
-		public static EarthLoadingScreen LoadingScreen { get { loadingScreen ??= new(); return loadingScreen ;} }
-
         public static ChecklistConditionCollection LaunchConditions = new()
         {
         };

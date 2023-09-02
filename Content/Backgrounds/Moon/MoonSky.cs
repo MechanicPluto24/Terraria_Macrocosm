@@ -3,6 +3,7 @@ using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using SubworldLibrary;
 using System;
 using Terraria;
 using Terraria.GameContent;
@@ -17,8 +18,8 @@ namespace Macrocosm.Content.Backgrounds.Moon
 		public bool Active;
 		public float Intensity;
 
-		private StarsDrawing starsDay;
-		private StarsDrawing starsNight;
+		private Stars starsDay;
+		private Stars starsNight;
 
 		private CelestialBody earth;
 		private CelestialBody sun;
@@ -54,8 +55,8 @@ namespace Macrocosm.Content.Backgrounds.Moon
 			earthBodyShadow = ModContent.Request<Texture2D>(AssetPath + "EarthShadowMask", mode).Value;
 			earthAtmoShadow = ModContent.Request<Texture2D>(AssetPath + "EarthAtmoShadowMask", mode).Value;
 
-			starsDay = new StarsDrawing();
-			starsNight = new StarsDrawing();
+			starsDay = new Stars();
+			starsNight = new Stars();
 
 			sun = new CelestialBody(sunTexture);
 			earth = new CelestialBody(earthBody, earthAtmo, 0.9f);
@@ -88,9 +89,7 @@ namespace Macrocosm.Content.Backgrounds.Moon
 			if (Main.dedServ)
 				return;
 
-			MoonSky moonSky = new();
-			Filters.Scene["Macrocosm:MoonSky"] = new Filter(new ScreenShaderData("FilterMiniTower").UseColor(0f, 0f, 0f).UseOpacity(0f), EffectPriority.High);
-			SkyManager.Instance["Macrocosm:MoonSky"] = moonSky;
+			SkyManager.Instance["Macrocosm:MoonSky"] = new MoonSky();
 		}
 
 		public void Unload() { }
@@ -102,7 +101,7 @@ namespace Macrocosm.Content.Backgrounds.Moon
 
 			MacrocosmStar mars = starsDay.RandStar(); // :) 
 			mars.OverrideColor(new Color(224, 137, 8, 220));
-			mars.scale *= 1.4f;
+			mars.Scale *= 1.4f;
 
 			Intensity = 0.002f;
 			Active = true;
@@ -117,7 +116,7 @@ namespace Macrocosm.Content.Backgrounds.Moon
 
 		public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth)
 		{
-			if (maxDepth >= float.MaxValue && minDepth < float.MaxValue)
+			if (SubworldSystem.IsActive<Subworlds.Moon>() && maxDepth >= float.MaxValue && minDepth < float.MaxValue)
 			{
 				spriteBatch.Draw(TextureAssets.BlackTile.Value, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.Black * Intensity);
 
