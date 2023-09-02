@@ -14,7 +14,7 @@ namespace Macrocosm.Content.UI.LoadingScreens
 	public class MoonLoadingScreen : LoadingScreen
 	{
 		private Texture2D lunaBackground;
-		private StarsDrawing starsDrawing;
+		private Stars starsDrawing;
 		private CelestialBody earth;
 
 		public MoonLoadingScreen()
@@ -25,17 +25,9 @@ namespace Macrocosm.Content.UI.LoadingScreens
 			Texture2D earthSmallBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/Earth", AssetRequestMode.ImmediateLoad).Value;
 			Texture2D earthSmallAtmoBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/EarthAtmo", AssetRequestMode.ImmediateLoad).Value;
 			earth = new CelestialBody(earthSmallBackground, earthSmallAtmoBackground, 0.7f);
-
-			ProgressBar = new(
-			   ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/WorldGen/ProgressBarMoon", AssetRequestMode.ImmediateLoad).Value,
-			   ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/WorldGen/ProgressBarMoon_Lower", AssetRequestMode.ImmediateLoad).Value,
-			   new Color(56, 10, 28), new Color(155, 38, 74), new Color(6, 53, 27), new Color(93, 228, 162)
-		   );
 		}
 
-		public override LocalizedColorScaleText Title => new(Language.GetText("Mods.Macrocosm.Subworlds.Moon.DisplayName"), Color.White, 1.2f, largeText: true);
-
-		public override void Setup()
+		public override void Reset()
 		{
 			ResetAnimation();
 

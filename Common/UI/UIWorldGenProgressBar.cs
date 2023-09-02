@@ -68,7 +68,6 @@ namespace Macrocosm.Common.UI
             base.Recalculate();
         }
 
-
         public new void SetProgress(float overallProgress, float currentProgress)
         {
             this.overallProgress = overallProgress;

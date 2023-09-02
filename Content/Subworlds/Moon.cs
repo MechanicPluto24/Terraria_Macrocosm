@@ -39,19 +39,7 @@ namespace Macrocosm.Content.Subworlds
         public override bool ShouldSave => false;
         public override bool NoPlayerSaving => false;
 
-		private GroundPass genGroundPass;
 		public override List<GenPass> Tasks => /*new()*/ new MoonGenPassCollection().Tasks;
-        /*{
-            genGroundPass,
-            new CraterPass("CraterPass", 1f),
-            new RegolithPass("RegolithPass", 5f),
-            new OrePass("OrePass", 0.75f),
-            new CavePass("CavePass", 1f, genGroundPass.RockLayerHigh, genGroundPass.RockLayerHigh),
-            new IrradiationPass("IrradiationPass", 3f),
-            new ScuffedSmoothPass("ScuffedSmoothPass", 1f),
-            new AmbientPass("AmbientPass", 0.2f),
-            new FinishPass("FinishPass", 0.1f, Name)
-        };*/
 
 		public override ChecklistConditionCollection LaunchConditions => new()
 		{
@@ -71,9 +59,6 @@ namespace Macrocosm.Content.Subworlds
 
         public Moon()
         {
-            LoadingScreen = new MoonLoadingScreen();
-
-            genGroundPass = new GroundPass("GroundPass", 8f, Width, Height);
         }
 
 		public override void OnEnterWorld()
@@ -83,7 +68,7 @@ namespace Macrocosm.Content.Subworlds
 
         public override void OnExitWorld()
         {
-            SkyManager.Instance.Deactivate("Macrocosm:MoonSky");
+			SkyManager.Instance.Deactivate("Macrocosm:MoonSky");
         }
 
 		public override bool GetLight(Tile tile, int x, int y, ref FastRandom rand, ref Vector3 color)

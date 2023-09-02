@@ -19,7 +19,7 @@ namespace Macrocosm.Content.UI.Menus
 
         private readonly List<CelestialBody> celestialBodies = new();
 
-        public readonly StarsDrawing Stars = new();
+        public readonly Stars Stars = new();
 
         public readonly CelestialBody Sun = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Sun", Mode).Value);
 

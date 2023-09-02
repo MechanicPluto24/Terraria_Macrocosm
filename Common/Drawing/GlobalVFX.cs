@@ -1,4 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
+using Terraria;
+using Terraria.GameContent;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Drawing
@@ -25,6 +29,13 @@ namespace Macrocosm.Common.Drawing
 		private static readonly Color[] celestialColors = { NebulaColor, StardustColor, VortexColor, SolarColor };
 		#endregion
 
+		#region Fade Effect
+		private static int fadeAlpha;
+		private static float fadeSpeed;
+		private static bool isFading;
+		private static bool isFadingIn;
+		#endregion
+
 		public override void PostUpdateEverything()
 		{
 			UpdateCelestialStyle();
@@ -42,6 +53,53 @@ namespace Macrocosm.Common.Drawing
 			CelestialStyleProgress = celesialCounter / cyclePeriod;
 
 			CelestialColor = Color.Lerp(celestialColors[(int)CelestialStyle], celestialColors[(int)NextCelestialStyle], CelestialStyleProgress);
+		}
+
+		private static void UpdateFadeEffect()
+		{
+			if (!isFading)
+				return;
+
+			if (isFadingIn)
+			{
+				fadeAlpha += (int)(fadeSpeed * 255); 
+				if (fadeAlpha >= 255)
+				{
+					fadeAlpha = 255;
+					isFading = false;
+				}
+			}
+			else
+			{
+				fadeAlpha -= (int)(fadeSpeed * 255);
+				if (fadeAlpha <= 0)
+				{
+					fadeAlpha = 0;
+					isFading = false;
+				}
+			}
+		}
+
+		public static void DrawFade()
+		{
+			UpdateFadeEffect();
+			Main.spriteBatch.Draw(TextureAssets.BlackTile.Value, new Rectangle(0, 0, Main.graphics.GraphicsDevice.Viewport.Width, Main.graphics.GraphicsDevice.Viewport.Height), Color.Black * (1f - fadeAlpha / 255f));
+		}
+
+		public static void StartFadeIn(float speed = 0.098f)
+		{
+			fadeAlpha = 0;
+			fadeSpeed = speed;
+			isFadingIn = true;
+			isFading = true;
+		}
+
+		public static void StartFadeOut(float speed = 0.098f)
+		{
+			fadeAlpha = 255;
+			fadeSpeed = speed;
+			isFadingIn = false;
+			isFading = true;
 		}
 	}
 }
