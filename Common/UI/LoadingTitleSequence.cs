@@ -2,17 +2,17 @@
 using Macrocosm.Common.Subworlds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Common.UI
 {
-	public static class LoadingTitleSequence
-	{
+	public class LoadingTitleSequence : ModSystem
+	{ 
 		enum TitleState
 		{
+			Inactive,
 			FadingToBlack,
 			Black,
 			FadingTitleIn,
@@ -22,10 +22,38 @@ namespace Macrocosm.Common.UI
 
 		public static LocalizedColorScaleText Title { get; set; }
 
-		private static TitleState currentState = TitleState.FadingToBlack;
+		private static TitleState currentState = TitleState.Inactive;
 		private static float timer = 0;
 		private static float titleFadeValue = 0f;   
 		private static float titleFadeRate = 0.01f;
+
+		public override void Load()
+		{
+			Player.Hooks.OnEnterWorld += OnEnterWorld;
+		}
+
+		public override void Unload()
+		{
+			Player.Hooks.OnEnterWorld -= OnEnterWorld;
+			Title = null;
+		}
+
+		private void OnEnterWorld(Player player)
+		{
+			StartSequence();
+		}
+
+		public override void PostDrawInterface(SpriteBatch spriteBatch)
+		{
+			if (currentState != TitleState.Inactive)
+			{
+				var gameTime = Main.gameTimeCache;
+				if (Main.hasFocus)
+					Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+
+				Draw(gameTime, spriteBatch);
+			}
+		}
 
 		public static void SetTargetWorld(string targetWorld)
 		{
@@ -36,28 +64,27 @@ namespace Macrocosm.Common.UI
 					break;
 
 				case "Earth":
-					Title = new(Language.GetText("Mods.Macrocosm.Subworlds.Earth.DisplayName"), new Color(94, 150, 255), 1.2f, largeText: true);
+					Title = null;
 					break;
 			}
 		}
 
 		public static void StartSequence()
 		{
-			currentState = TitleState.FadingToBlack;
 			timer = 0;
 			titleFadeValue = 0f;
+			//FadeEffect.StartFadeIn(0.01f);
+			currentState = TitleState.FadingToBlack;
 		}
 
 		public static void Update(float elapsedSeconds)
 		{
 			switch (currentState)
 			{
-				case TitleState.FadingToBlack:
-					if (!FadeEffect.IsFading && !Main.gameMenu)
-					{
-						FadeEffect.StartFadeOut(0.01f);
-					}
+				case TitleState.Inactive:
+					break;
 
+				case TitleState.FadingToBlack:
 					if (!FadeEffect.IsFading)
 					{
 						currentState = TitleState.Black;
@@ -67,9 +94,18 @@ namespace Macrocosm.Common.UI
 
 				case TitleState.Black:
 					timer += elapsedSeconds;
-					if (timer >= 1.5f)
+					if (timer >= 0.5f)
 					{
-						currentState = TitleState.FadingTitleIn;
+						if(Title is null)
+						{
+							FadeEffect.StartFadeIn(0.01f);
+							currentState = TitleState.FadingOut;
+						}
+						else
+						{
+							currentState = TitleState.FadingTitleIn;
+						}
+
 					}
 					break;
 
@@ -100,34 +136,31 @@ namespace Macrocosm.Common.UI
 					}
 					if (!FadeEffect.IsFading && titleFadeValue == 0f)
 					{
-						currentState = TitleState.FadingToBlack;   
+						currentState = TitleState.Inactive;   
 					}
 					break;
 			}
-
-
 		}
 
 		public static void Draw(GameTime gameTime, SpriteBatch spriteBatch)
 		{
-			if (Main.hasFocus)
-				Update((float)gameTime.ElapsedGameTime.TotalSeconds);
-
 			switch (currentState)
 			{
 				case TitleState.FadingToBlack:
-					MacrocosmSubworld.LoadingScreen.Draw(gameTime, spriteBatch);
+					//MacrocosmSubworld.LoadingScreen?.Draw(gameTime, spriteBatch);
+					//FadeEffect.Draw();
 					break;
 
 				case TitleState.Black:
+				case TitleState.FadingTitleIn:
 				case TitleState.TitleShown:
 					FadeEffect.DrawBlack(1f);
+					Title?.DrawDirect(spriteBatch, new Vector2(Main.screenWidth / 2f, Main.screenHeight * 0.2f), Title.Color * titleFadeValue);
 					break;
 
-				case TitleState.FadingTitleIn:
 				case TitleState.FadingOut:
-					FadeEffect.DrawBlack(FadeEffect.CurrentFade);
-					Title?.DrawDirect(spriteBatch, new Vector2(Main.screenWidth / 2f, Main.screenHeight / 2f), Title.Color * titleFadeValue);
+					FadeEffect.Draw();
+					Title?.DrawDirect(spriteBatch, new Vector2(Main.screenWidth / 2f, Main.screenHeight * 0.2f), Title.Color * titleFadeValue);
 					break;
 			}
 		}

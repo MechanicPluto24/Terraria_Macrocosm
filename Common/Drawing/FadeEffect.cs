@@ -1,10 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Terraria.GameContent;
 using Terraria;
+using Terraria.ModLoader;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Macrocosm.Common.Drawing
 {
-	public static class FadeEffect
+	public class FadeEffect : ModSystem
 	{
 		public static bool IsFading => isFading;
 
@@ -14,21 +16,27 @@ namespace Macrocosm.Common.Drawing
 		private static float fadeSpeed;
 		private static bool isFading;
 		private static bool isFadingIn;
+		private static bool selfDraw;
 
 		public static void Draw()
 		{
 			if(Main.hasFocus)
 				UpdateFadeEffect();
 
-			DrawBlack(fadeAlpha / 255f);
+			DrawBlack(1f - fadeAlpha / 255f);
+		}
+
+		public override void PostDrawInterface(SpriteBatch spriteBatch)
+		{
+			base.PostDrawInterface(spriteBatch);
 		}
 
 		public static void DrawBlack(float opacity)
 		{
-			Main.spriteBatch.Draw(TextureAssets.BlackTile.Value, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.Black * (1f - opacity));
+			Main.spriteBatch.Draw(TextureAssets.BlackTile.Value, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.Black * opacity);
 		}
 
-		public static void StartFadeIn(float speed = 0.098f)
+		public static void StartFadeIn(float speed = 0.098f, bool selfDraw = false)
 		{
 			fadeAlpha = 0;
 			fadeSpeed = speed;
@@ -36,7 +44,7 @@ namespace Macrocosm.Common.Drawing
 			isFading = true;
 		}
 
-		public static void StartFadeOut(float speed = 0.098f)
+		public static void StartFadeOut(float speed = 0.098f, bool selfDraw = false)
 		{
 			fadeAlpha = 255;
 			fadeSpeed = speed;

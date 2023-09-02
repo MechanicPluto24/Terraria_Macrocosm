@@ -70,8 +70,10 @@ namespace Macrocosm.Common.Subworlds
 				case "Moon": LoadingScreen = new MoonLoadingScreen(); break;
 			}
 
-			if(rocket is not null)
-				LoadingScreen.SetRocket(rocket);
+			if (rocket is null)
+				rocket = new();
+
+			LoadingScreen.SetRocket(rocket);
 
 			if(targetWorld == "Earth")
 			{

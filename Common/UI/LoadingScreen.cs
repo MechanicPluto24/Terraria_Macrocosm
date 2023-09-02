@@ -107,11 +107,11 @@ namespace Macrocosm.Common.UI
 
 
 		/// <summary> Draws the loading screen. </summary>
-		public void Draw(GameTime gametime, SpriteBatch spriteBatch)
+		public void Draw(GameTime gametime, SpriteBatch spriteBatch, bool drawStatusText = true)
         {
             InternalUpdate();
 
-            stars.MovementVector = new(0f, 0.5f);
+            stars.MovementVector = new(0f, 0.25f);
             stars.Draw(spriteBatch);
 
 			PreDraw(spriteBatch);
@@ -137,8 +137,12 @@ namespace Macrocosm.Common.UI
 				statusText = Main.statusText;
             }
 
-			ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, statusText, new Vector2(Main.screenWidth, Main.screenHeight - 100f) / 2f - FontAssets.DeathText.Value.MeasureString(statusText) / 2f, Color.White, 0f, Vector2.Zero, Vector2.One);
-			Main.gameTips.Draw();
+			if (drawStatusText)
+			{
+				ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, statusText, new Vector2(Main.screenWidth, Main.screenHeight - 100f) / 2f - FontAssets.DeathText.Value.MeasureString(statusText) / 2f, Color.White, 0f, Vector2.Zero, Vector2.One);
+				Main.gameTips.Draw();
+			}
+			
 			PostDraw(spriteBatch);
 
             FadeEffect.Draw();
