@@ -36,7 +36,7 @@ namespace Macrocosm.Content.Subworlds
         public override bool NormalUpdates => false;
         public override int Width => 4200;
         public override int Height => 1200;
-        public override bool ShouldSave => false;
+        public override bool ShouldSave => true;
         public override bool NoPlayerSaving => false;
 
 		public override List<GenPass> Tasks => /*new()*/ new MoonGenPassCollection().Tasks;

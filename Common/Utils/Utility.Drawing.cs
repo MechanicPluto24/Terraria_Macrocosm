@@ -1,6 +1,7 @@
 using Macrocosm.Common.DataStructures;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Graphics;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -9,6 +10,7 @@ using Terraria.GameContent;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ObjectData;
+using Terraria.UI.Chat;
 
 namespace Macrocosm.Common.Utils
 {
@@ -83,6 +85,14 @@ namespace Macrocosm.Common.Utils
 		public static void AddLight(Vector2 position, float colorR, float colorG, float colorB, float brightnessDivider = 1f)
 		{
 			Lighting.AddLight((int)(position.X / 16f), (int)(position.Y / 16f), colorR / brightnessDivider, colorG / brightnessDivider, colorB / brightnessDivider);
+		}
+
+		public static Vector2 DrawString(SpriteBatch spriteBatch, DynamicSpriteFont font, string text, Vector2 position, Color baseColor, float rotation, Vector2 origin, Vector2 baseScale, float maxWidth = -1f, float spread = 2f)
+		{
+			TextSnippet[] snippets = ChatManager.ParseMessage(text, baseColor).ToArray();
+			ChatManager.ConvertNormalSnippets(snippets);
+			ChatManager.DrawColorCodedStringShadow(spriteBatch, font, snippets, position, Color.Black.WithAlpha(baseColor.A), rotation, origin, baseScale, maxWidth, spread);
+			return ChatManager.DrawColorCodedString(spriteBatch, font, snippets, position, Color.White.WithAlpha(baseColor.A), rotation, origin, baseScale, out _, maxWidth);
 		}
 
 

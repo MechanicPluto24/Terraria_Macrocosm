@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Common.Utils;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
 using Terraria.GameContent;
@@ -43,7 +44,7 @@ namespace Macrocosm.Common.UI
 		public void DrawDirect(SpriteBatch spriteBatch, Vector2 centerPosition, Color? overrideColor = null)
 		{
 			DynamicSpriteFont font = LargeText ? FontAssets.DeathText.Value : FontAssets.MouseText.Value;
-			ChatManager.DrawColorCodedStringWithShadow(spriteBatch, font, LocalizedText.Value, centerPosition - (font.MeasureString(LocalizedText.Value) * Scale / 2f), overrideColor is not null ? Color : overrideColor.Value, 0f, Vector2.Zero, new Vector2(Scale));
+			Utility.DrawString(spriteBatch, font, LocalizedText.Value, centerPosition - (font.MeasureString(LocalizedText.Value) * Scale / 2f), overrideColor is null ? Color : overrideColor.Value, 0f, Vector2.Zero, new Vector2(Scale));
 		}
 	}
 }
