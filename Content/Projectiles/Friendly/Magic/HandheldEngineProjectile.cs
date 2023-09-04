@@ -154,22 +154,19 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, state1);
 
-			float a = 0.1f + 0.9f * Utility.BounceEaseIn(AI_Windup >= windupTime ? 1f : MathHelper.SmoothStep(0.1f, 1f, AI_Windup / windupTime));
-			float b = Utility.QuadraticEaseOut(MathHelper.Clamp(-0.4f + 0.6f * (AI_Windup / windupTime), 0, 1));
+			float windupFactor = 0.1f + 0.9f * Utility.BounceEaseIn(AI_Windup >= windupTime ? 1f : MathHelper.SmoothStep(0.1f, 1f, AI_Windup / windupTime));
+			float windupFactor2 = Utility.QuadraticEaseOut(MathHelper.Clamp(-0.4f + 0.6f * (AI_Windup / windupTime), 0, 1));
 
 			VertexStrip strip = new();
-			int num = 36;
-			Vector2[] positions = new Vector2[num];
-			float[] rotations = new float[num];
+			int stripDataCount = 36;
+			Vector2[] positions = new Vector2[stripDataCount];
+			float[] rotations = new float[stripDataCount];
 			Array.Fill(positions, Projectile.Center + (new Vector2(0, 12).RotatedBy(Projectile.rotation) * Projectile.direction) - Main.screenPosition);
 			Array.Fill(rotations, Projectile.rotation + MathHelper.Pi);
 
-			for (int i = 0; i < num; i++)
-			{
-				positions[i] += Utility.PolarVector(4f * i, Projectile.rotation);
-				//Main.spriteBatch.Draw(TextureAssets.InfoIcon[1].Value, positions[i], Color.White);
-			}
-
+			for (int i = 0; i < stripDataCount; i++)
+ 				positions[i] += Utility.PolarVector(4f * i, Projectile.rotation);
+ 
 			var shader = new MiscShaderData(Main.VertexPixelShaderRef, "MagicMissile")
 							.UseProjectionMatrix(doUse: true)
 							.UseSaturation(-2.4f)
@@ -180,11 +177,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			shader.Apply();
 
 			strip.PrepareStrip(positions, rotations, 
-				(float p) => Color.Lerp(
-								Color.Lerp(new Color(98, 204, 255, 0), new Color(255, 177, 65, 0), AI_Overheat) * a,
-								Color.Lerp(new Color(255, 177, 65), new Color(255, 24, 24), AI_Overheat) * b,
-								Utility.CubicEaseIn(p) * 0.85f + 0.15f * Utility.PositiveSineWave(40)) * (0.05f + 0.95f * a), 
-							(float p) => MathHelper.Lerp(25, 55 + 30 * Utility.PositiveSineWave(70), p));
+				(float progress) => Color.Lerp(
+								Color.Lerp(new Color(98, 204, 255, 0), new Color(255, 177, 65, 0), AI_Overheat) * windupFactor,
+								Color.Lerp(new Color(255, 177, 65), new Color(255, 24, 24), AI_Overheat) * windupFactor2,
+								Utility.CubicEaseIn(progress) * 0.85f + 0.15f * Utility.PositiveSineWave(40)) * (0.05f + 0.95f * windupFactor), 
+				(float progress) => MathHelper.Lerp(25, 55 + 30 * Utility.PositiveSineWave(70), progress));
 			strip.DrawTrail();
 
 			Main.spriteBatch.End();
@@ -199,7 +196,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			effect.Parameters["uColorIntensity"].SetValue(new Vector4(AI_Overheat * 0.8f, 0f, 0f, 1f));
 			effect.Parameters["uOffset"].SetValue(new Vector2(0.35f,0.5f));
 			effect.Parameters["uSize"].SetValue(0.5f * AI_Overheat);
-			effect.Parameters["uSDF"].SetValue(1);
+			effect.Parameters["uSDF"].SetValue(1); // square-shaped distance function
 
 			Projectile.DrawAnimated(lightColor, Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None, new Vector2(5, 12), shader: effect);
 

@@ -11,20 +11,29 @@ namespace Macrocosm.Common.Drawing.Sky
     /// <summary> Represents a sky star. Adapted from Terraria.Star </summary>
 	public class MacrocosmStar 
     {
+		public enum WrapMode
+		{
+			None,
+			Exact,
+			Random
+		}
+
 		public float Scale { get; set; }
 		public float Brightness { get; set; }
 
-		private Vector2 position;
-		private float rotation;
-        private float rotationSpeed;
+		protected Vector2 position;
+		protected float rotation;
+		protected float rotationSpeed;
 
-		private float twinkle;
-        private float twinkleSpeed;
+		protected float twinkle;
+		protected float twinkleSpeed;
 
-		private readonly Asset<Texture2D> texture;
-        private Color color;
-        private Color newColor;
-        private bool colorOverridden = false;
+		protected readonly Asset<Texture2D> texture;
+		protected Color color;
+		protected Color newColor;
+		protected bool colorOverridden = false;
+
+		protected WrapMode wrapMode = WrapMode.Random;
 
 		private Vector2 previousScreenSize;
 
@@ -33,7 +42,7 @@ namespace Macrocosm.Common.Drawing.Sky
 		/// </summary>
 		/// <param name="baseScale"> The average scaling of the stars relative to vanilla </param>
 		/// <param name="twinkleFactor"> How much a star will twinkle, keep between (0f, 1f); 0.4f for vanilla effect</param>
-		public MacrocosmStar(float baseScale = 1f, float twinkleFactor = 0.4f)
+		public MacrocosmStar(float baseScale = 1f, float twinkleFactor = 0.4f, WrapMode wrapMode = WrapMode.None)
         {
             FastRandom fastRandom = FastRandom.CreateWithRandomSeed();
 
@@ -60,14 +69,16 @@ namespace Macrocosm.Common.Drawing.Sky
                 twinkleSpeed /= 2f;
                 rotationSpeed /= 2f;
             }
+
+			this.wrapMode = wrapMode;
         }
 
-        public MacrocosmStar(Vector2 position, float baseScale = 1f, float twinkleFactor = 0.4f) : this(baseScale, twinkleFactor)
+        public MacrocosmStar(Vector2 position, float baseScale = 1f, float twinkleFactor = 0.4f, WrapMode wrapMode = WrapMode.None) : this(baseScale, twinkleFactor, wrapMode)
         {
             this.position = position;
         }
 
-        public MacrocosmStar(Vector2 position, Asset<Texture2D> texture, float baseScale = 1f, float twinkleFactor = 0.4f) : this(position, twinkleFactor, baseScale)
+        public MacrocosmStar(Vector2 position, Asset<Texture2D> texture, float baseScale = 1f, float twinkleFactor = 0.4f, WrapMode wrapMode = WrapMode.None) : this(position, twinkleFactor, baseScale, wrapMode)
         {
             this.texture = texture;
         }
@@ -80,32 +91,52 @@ namespace Macrocosm.Common.Drawing.Sky
 			colorOverridden = true;
 		}
 
-		public void Draw(SpriteBatch spriteBatch)
+		public virtual void Draw(SpriteBatch spriteBatch)
 		{
 			spriteBatch.Draw(texture.Value, position, null, color, rotation, texture.Size() / 2, Scale * twinkle, default, 0f);
 		}
 
-		public void Update()
+		public virtual void Update()
         {
 			OnScreenResizeReposition();
 			Twinkle();
         }
 
-        public void UpdatePosition(Vector2 delta, bool wrapOnScreen = true)
+        public void UpdatePosition(Vector2 delta)
         {
             position += delta;
 
-            if (wrapOnScreen && delta != Vector2.Zero)
+            if ((wrapMode is WrapMode.Exact or WrapMode.Random) && delta != Vector2.Zero)
             {
 				if (position.X > Main.screenWidth)
+				{
 					position.X = 0;
+
+					if (wrapMode is WrapMode.Random)
+						position.Y = Main.rand.Next(Main.screenHeight + 1);
+ 				}
 				else if (position.X < 0)
+				{
 					position.X = Main.screenWidth;
 
+					if (wrapMode is WrapMode.Random)
+						position.Y = Main.rand.Next(Main.screenHeight + 1);
+				}
+
 				if (position.Y > Main.screenHeight)
+				{
 					position.Y = 0;
+
+					if (wrapMode is WrapMode.Random)
+						position.X = Main.rand.Next(Main.screenWidth + 1);
+				}
 				else if (position.Y < 0)
+				{
 					position.Y = Main.screenHeight;
+
+					if (wrapMode is WrapMode.Random)
+						position.X = Main.rand.Next(Main.screenWidth + 1);
+				}
 			}
 		}
 

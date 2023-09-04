@@ -137,10 +137,10 @@ namespace Macrocosm.Content.Rockets
 					bool escapePressed = Player.controlInv && RocketUISystem.Active;
 
 					// Escape or 'R' will disembark this player, but not during flight
-					if ((escapePressed || Player.controlMount) && !(rocket.InFlight))
+					if ((escapePressed || Player.controlMount) && !(rocket.Launched))
 						DisembarkFromRocket();
 
-					if (rocket.InFlight || rocket.Landing)
+					if (rocket.Launched || rocket.Landing)
 						RocketUISystem.Hide();
 					else if (!RocketUISystem.Active)
 						RocketUISystem.Show(rocket);

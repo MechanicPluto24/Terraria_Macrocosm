@@ -14,6 +14,11 @@ namespace Macrocosm.Content.Rockets.Modules
 		protected abstract Vector2 LandingLegDrawOffset { get; }
 
 		private SpriteBatchState state;
+
+		protected Booster(Rocket rocket) : base(rocket)
+		{
+		}
+
 		public override void Draw(SpriteBatch spriteBatch, Vector2 screenPos, Color ambientColor)
 		{
 			// Draw the booster module with the base logic

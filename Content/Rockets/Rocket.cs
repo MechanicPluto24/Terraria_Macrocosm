@@ -40,7 +40,7 @@ namespace Macrocosm.Content.Rockets
 		[NetSync] public int FlightTime;
 
 		/// <summary> Whether the rocket has been launched </summary>
-		[NetSync] public bool InFlight;
+		[NetSync] public bool Launched;
 
 		/// <summary> Whether the rocket is landing </summary>
 		[NetSync] public bool Landing;
@@ -50,9 +50,6 @@ namespace Macrocosm.Content.Rockets
 
 		/// <summary> The target landing position </summary>
 		[NetSync] public Vector2 TargetLandingPosition;
-
-		/// <summary> The world Y coordinate for entering the target subworld </summary>
-		public const float WorldExitPositionY = 20 * 16f;
 
 		/// <summary> The amount of fuel currently stored in the rocket, as an absolute value </summary>
 		[NetSync] public float Fuel;
@@ -65,6 +62,12 @@ namespace Macrocosm.Content.Rockets
 
 		/// <summary> Whether the rocket is active in the current world and should be updated and visible </summary>
 		public bool ActiveInCurrentWorld => Active && CurrentWorld == MacrocosmSubworld.CurrentWorld;
+
+		/// <summary> Whether this rocket is currently in flight </summary>
+		public bool InFlight => Launched && FlightTime >= LiftoffTime;
+
+		/// <summary> The world Y coordinate for entering the target subworld </summary>
+		private const float WorldExitPositionY = 60 * 16f;
 
 		/// <summary> The rocket's bounds width </summary>
 		public const int Width = 276;
@@ -101,19 +104,11 @@ namespace Macrocosm.Content.Rockets
 		/// <summary> The Rocket's name, set by the user </summary>
 		public string AssignedName => EngineModule.Nameplate.Text;
 
+		/// <summary> Dictionary of all the rocket's modules by name, in their order found in ModuleNames </summary>
+		public Dictionary<string, RocketModule> Modules = new();
+
 		/// <summary> List of the module names, in the customization access order </summary>
 		public List<string> ModuleNames => Modules.Keys.ToList();
-
-		/// <summary> Dictionary of all the rocket's modules by name, in their order found in ModuleNames </summary>
-		public Dictionary<string, RocketModule> Modules = new()
-		{
-			{ "CommandPod", new CommandPod() },
-			{ "ServiceModule", new ServiceModule() },
-			{ "ReactorModule", new ReactorModule() },
-			{ "EngineModule", new EngineModule() },
-			{ "BoosterLeft", new BoosterLeft() },
-			{ "BoosterRight", new BoosterRight() }
-		};
 
 		/// <summary> The Rocket's command pod </summary>
 		public CommandPod CommandPod => (CommandPod)Modules["CommandPod"];
@@ -134,18 +129,67 @@ namespace Macrocosm.Content.Rockets
 		public BoosterRight BoosterRight => (BoosterRight)Modules["BoosterRight"];
 
 		// Number of ticks of the launch countdown (seconds * 60 ticks/sec)
-		private int liftoffTime = 180;
-		private float maxFlightSpeed = 25f;
+		private const int LiftoffTime = 180;
+		private const float MaxFlightSpeed = 25f;
 
-		public float FlightProgress => 1f - ((Center.Y - WorldExitPositionY) / (StartPositionY - WorldExitPositionY));
+		/// <summary> The flight sequence progress </summary>
+		public float FlightProgress => 1f - ((Position.Y - WorldExitPositionY) / (StartPositionY - WorldExitPositionY));
 
-		// TODO: assign a value to TargetLandingPosition
+		/// <summary> The landing sequence progress </summary>
 		public float LandingProgress => Center.Y / TargetLandingPosition.Y;
 
+		private bool forcedStationaryAppearance;
+		private bool forcedFlightAppearance;
+
+		/// <summary> Whether this rocket is forced in a stationary (i.e. landed) state, visually </summary>
+		public bool ForcedStationaryAppearance
+		{
+			get => forcedStationaryAppearance;
+			set
+			{
+				forcedStationaryAppearance = value;
+
+				if(value) 
+					forcedFlightAppearance = false;
+
+				ResetAnimation();
+			}
+		}
+
+		/// <summary> Whether this rocket is forced in a full flight state, visually </summary>
+		public bool ForcedFlightAppearance
+		{
+			get => forcedFlightAppearance;
+			set
+			{
+				forcedFlightAppearance = value;
+
+				if(value) 
+					forcedStationaryAppearance = false;
+
+				ResetAnimation();
+			}
+		}
 
 		/// <summary> Instatiates a rocket. Use <see cref="Create(Vector2)"/> for spawning in world and proper syncing. </summary>
 		public Rocket()
 		{
+			foreach(string moduleName in DefaultModuleNames)
+				Modules[moduleName] = CreateModule(moduleName);
+		}
+
+		private RocketModule CreateModule(string moduleName)
+		{
+			return moduleName switch
+			{
+				"CommandPod" => new CommandPod(this),
+				"ServiceModule" => new ServiceModule(this),
+				"ReactorModule" => new ReactorModule(this),
+				"EngineModule" => new EngineModule(this),
+				"BoosterLeft" => new BoosterLeft(this),
+				"BoosterRight" => new BoosterRight(this),
+				_ => throw new ArgumentException($"Unknown module name: {moduleName}")
+			};
 		}
 
 		public void OnCreation()
@@ -197,10 +241,10 @@ namespace Macrocosm.Content.Rockets
 				LookForCommander();
 			}
 
-            if (InFlight && Position.Y < 60 * 16f)
+            if (Launched && Position.Y < WorldExitPositionY)
 			{
 				ResetAnimation();
-				InFlight = false;
+				Launched = false;
 				Landing = true;
 				EnterDestinationSubworld();
 			}
@@ -340,7 +384,7 @@ namespace Macrocosm.Content.Rockets
 		/// <summary> Launches the rocket, with syncing </summary>
 		public void Launch()
 		{
-			InFlight = true;
+			Launched = true;
 			StartPositionY = Position.Y;
 			NetSync();
 		}
@@ -377,7 +421,7 @@ namespace Macrocosm.Content.Rockets
 				return;
 
 
-			if (MouseCanInteract() && Bounds.InPlayerInteractionRange() && !InFlight && !GetRocketPlayer(Main.myPlayer).InRocket)
+			if (MouseCanInteract() && Bounds.InPlayerInteractionRange() && !Launched && !GetRocketPlayer(Main.myPlayer).InRocket)
 			{
 				if (Main.mouseRight)
 				{
@@ -401,12 +445,23 @@ namespace Macrocosm.Content.Rockets
 			{
 				if (module is AnimatedRocketModule animatedModule)
 				{
-					if (Landing)
-						animatedModule.CurrentFrame = 0;
-					else
+					if(forcedStationaryAppearance) 
+					{
 						animatedModule.CurrentFrame = animatedModule.NumberOfFrames - 1;
+					}
+					else if (forcedFlightAppearance)
+					{
+						animatedModule.CurrentFrame = 0;
+					}
+					else
+                    {
+						if (Landing)
+							animatedModule.CurrentFrame = 0;
+						else
+							animatedModule.CurrentFrame = animatedModule.NumberOfFrames - 1;
 
-					animatedModule.ShouldAnimate = true;
+						animatedModule.ShouldAnimate = true;
+					}
 				}
 			}
 		}
@@ -448,7 +503,7 @@ namespace Macrocosm.Content.Rockets
 		// Handles the rocket's movement during flight
 		private void Movement()
 		{
-			if (InFlight)
+			if (Launched)
 			{
 				UpdateModuleAnimation();
 
@@ -459,6 +514,30 @@ namespace Macrocosm.Content.Rockets
 					FadeEffect.StartFadeOut(0.01f, selfDraw: true);
 
 				FlightTime++;
+
+				if (InFlight)
+				{
+					/*
+					float flightAcceleration = 0.1f;   // mid-flight
+					float liftoffAcceleration = 0.05f; // during liftoff
+					float startAcceleration = 0.01f;   // initial 
+
+					if (Velocity.Y < MaxFlightSpeed)
+						if (FlightTime >= LiftoffTime + 60)
+							Velocity.Y -= flightAcceleration;
+						else if (FlightTime >= LiftoffTime + 40)
+							Velocity.Y -= liftoffAcceleration;
+						else
+							Velocity.Y -= startAcceleration;
+
+					*/
+
+					Velocity.Y -= 0.005f;
+
+
+					//SetScreenshake();
+					//VisualEffects();
+				}
 			}
 			else
 			{
@@ -478,29 +557,13 @@ namespace Macrocosm.Content.Rockets
 
 				if (Stationary && LandingProgress > 0.9f)
 				{
-					RocketUISystem.Show(this);
+					if(GetRocketPlayer(Main.myPlayer).InRocket)
+						RocketUISystem.Show(this);
+
 					Landing = false;
 					ResetAnimation();
 				}
 			}
-
-			if (FlightTime >= liftoffTime)
-			{
-				float flightAcceleration = 0.1f;   // mid-flight
-				float liftoffAcceleration = 0.05f; // during liftoff
-				float startAcceleration = 0.01f;   // initial 
-
-				if (Velocity.Y < maxFlightSpeed)
-					if (FlightTime >= liftoffTime + 60)
-						Velocity.Y -= flightAcceleration;
-					else if (FlightTime >= liftoffTime + 40)
-						Velocity.Y -= liftoffAcceleration;
-					else
-						Velocity.Y -= startAcceleration;
-
-				SetScreenshake();
-				//VisualEffects();
-			}	
 		}
 
 		private void UpdateModuleAnimation()
@@ -531,7 +594,7 @@ namespace Macrocosm.Content.Rockets
 		{
 			float intenstity;
 
-			if (FlightTime >= liftoffTime && FlightProgress < 0.05f)
+			if (FlightTime >= LiftoffTime && FlightProgress < 0.05f)
 				intenstity = 30f;
 			else
 				intenstity = 15f * (1f - Utility.QuadraticEaseOut(FlightProgress));
@@ -542,7 +605,7 @@ namespace Macrocosm.Content.Rockets
 		// Handle visuals (dusts, particles)
 		private void VisualEffects()
 		{
-			int dustCnt = FlightTime > liftoffTime + 40 ? 10 : 4;
+			int dustCnt = FlightTime > LiftoffTime + 40 ? 10 : 4;
  			for (int i = 0; i < dustCnt; i++)
 			{
 				Dust dust = Dust.NewDustDirect(Position + new Vector2(-10, Height - 15 - 50 * FlightProgress), (int)((float)Width + 20), 1, DustID.Flare, Main.rand.NextFloat(-4f, 4f), Main.rand.NextFloat(20f, 200f) * FlightProgress, Scale: Main.rand.NextFloat(1.5f, 3f));
@@ -564,6 +627,9 @@ namespace Macrocosm.Content.Rockets
 		{
 			if (Main.netMode == NetmodeID.Server)
 				return;
+
+			Velocity = Vector2.Zero;
+			Landing = true;
 
 			if (CheckPlayerInRocket(Main.myPlayer))
 			{

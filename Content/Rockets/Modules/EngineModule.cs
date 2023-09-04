@@ -4,7 +4,10 @@ using Macrocosm.Content.Rockets.Customization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System;
 using Terraria;
+using Terraria.Graphics.Shaders;
+using Terraria.Graphics;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
@@ -18,6 +21,10 @@ namespace Macrocosm.Content.Rockets.Modules
 
 		public override int Width => 120;
 		public override int Height => 302 + (RearLandingLegRaised ? 18 : 26);
+
+		public EngineModule(Rocket rocket) : base(rocket)
+		{
+		}
 
 		private SpriteBatchState state;
 		public override void Draw(SpriteBatch spriteBatch, Vector2 screenPos, Color ambientColor)
@@ -34,6 +41,12 @@ namespace Macrocosm.Content.Rockets.Modules
 			Texture2D boosterRear = ModContent.Request<Texture2D>(TexturePath + "_BoosterRear", AssetRequestMode.ImmediateLoad).Value;
 			spriteBatch.Draw(boosterRear, Position + new Vector2(Texture.Width/2f - boosterRear.Width/2f, 293.5f) - screenPos, null, ambientColor, 0f, Origin, 1f, SpriteEffects.None, 0f);
 
+			if (rocket.InFlight || rocket.ForcedFlightAppearance)
+			{
+				spriteBatch.End();
+				spriteBatch.Begin(BlendState.Additive, state);
+				DrawTrail(spriteBatch);
+			}
 
 			spriteBatch.End();
 			spriteBatch.Begin(state);
@@ -51,7 +64,41 @@ namespace Macrocosm.Content.Rockets.Modules
 			spriteBatch.Begin(state);
 		}
 
-		protected override TagCompound SerializeModuleData()
+		private void DrawTrail(SpriteBatch spriteBatch)
+		{
+			VertexStrip strip = new();
+			int stripDataCount = 55 + (int)(40 * Utility.CubicEaseInOut(Math.Abs(rocket.FlightProgress)));
+			Vector2[] positions = new Vector2[stripDataCount];
+			float[] rotations = new float[stripDataCount];
+			Array.Fill(positions, new Vector2(Center.X, Position.Y + Height - 28) - Main.screenPosition);
+			Array.Fill(rotations, MathHelper.Pi + MathHelper.PiOver2);
+
+			for (int i = 0; i < stripDataCount; i++)
+				positions[i] += new Vector2(0f, 4f * i);
+
+			var shader = new MiscShaderData(Main.VertexPixelShaderRef, "MagicMissile")
+							.UseProjectionMatrix(doUse: true)
+							.UseSaturation(-2.2f)
+							.UseImage0(ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "FadeOutMask"))
+							.UseImage1(ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "FadeOutTrail"))
+							.UseImage2(ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "FlamingTrailReverse"));
+
+			shader.Apply();
+
+			strip.PrepareStrip(
+				positions, 
+				rotations,
+				(float progress) => Color.Lerp(new Color(255, 217, 120, 0), new Color(255, 24, 24, 0), Utility.QuadraticEaseIn(progress)),
+				(float progress) => MathHelper.Lerp(35, 75, progress)
+			);
+
+			strip.DrawTrail();
+
+			for (int i = 0; i < stripDataCount; i++)
+				Lighting.AddLight(positions[i] + Main.screenPosition, new Color(255, 177, 65).ToVector3() * 2f);
+		}
+
+		protected override TagCompound SerializeModuleSpecificData()
 		{
 			return new()
 			{
@@ -59,7 +106,7 @@ namespace Macrocosm.Content.Rockets.Modules
 			};
 		}
 
-		protected override void DeserializeModuleData(TagCompound tag)
+		protected override void DeserializeModuleSpecificData(TagCompound tag, Rocket ownerRocket)
 		{
 			if (tag.ContainsKey(nameof(Nameplate)))
 				Nameplate = tag.Get<Nameplate>(nameof(Nameplate));

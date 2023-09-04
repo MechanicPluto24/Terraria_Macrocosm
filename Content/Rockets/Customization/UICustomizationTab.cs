@@ -166,6 +166,7 @@ namespace Macrocosm.Content.Rockets.Navigation
         {
             base.Update(gameTime);
 
+			CustomizationDummy.ForcedStationaryAppearance = true;
 			rocketPreview.RocketDummy = CustomizationDummy;
 			UpdateCurrentModule();
 

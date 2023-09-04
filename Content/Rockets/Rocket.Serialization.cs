@@ -25,7 +25,7 @@ namespace Macrocosm.Content.Rockets
 
 			};
 
-			if (InFlight) tag[nameof(InFlight)] = true;
+			if (Launched) tag[nameof(Launched)] = true;
 			if (Landing) tag[nameof(Landing)] = true;
 
 			if (TargetLandingPosition != Vector2.Zero) tag[nameof(TargetLandingPosition)] = TargetLandingPosition;
@@ -55,7 +55,7 @@ namespace Macrocosm.Content.Rockets
 				FuelCapacity = tag.GetFloat(nameof(FuelCapacity))
 			};
 
-			rocket.InFlight = tag.ContainsKey(nameof(InFlight));
+			rocket.Launched = tag.ContainsKey(nameof(Launched));
 			rocket.Landing = tag.ContainsKey(nameof(Landing));
 
 			if (tag.ContainsKey(nameof(TargetLandingPosition)))
@@ -68,7 +68,7 @@ namespace Macrocosm.Content.Rockets
 					Type moduleType = Type.GetType(tag.GetString(moduleName + "_Type"));
 					if (moduleType != null && moduleType.IsSubclassOf(typeof(RocketModule)))
 					{
-						var module = RocketModule.DeserializeData(tag.GetCompound(moduleName));
+						var module = RocketModule.DeserializeData(tag.GetCompound(moduleName), rocket);
 						rocket.Modules[moduleName] = module;
 					}
 				}

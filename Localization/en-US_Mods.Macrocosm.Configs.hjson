@@ -3,6 +3,17 @@
 MacrocosmConfig: {
 	DisplayName: General Configuration
 	UnitSystemHeader: Unit System
+	GameplayHeader: Gameplay
+
+	AlwaysDisplayTitleScreens: {
+		Label: Always display title screens
+		Tooltip: Whether to display the introdcutory title screen even if you've visited this celestial body before.
+	}
+
+	FancyGunEffects: {
+		Label: Fancy gun effects
+		Tooltip: Whether guns have fancy use effects, such as recoil. Requires mod reload.
+	}
 
 	UnitSystem: {
 		Label: Unit system
