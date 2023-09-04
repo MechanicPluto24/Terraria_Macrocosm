@@ -1,13 +1,51 @@
-﻿using Macrocosm.Common.Drawing;
+﻿using Macrocosm.Common.Config;
+using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SubworldLibrary;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Common.UI
 {
+	public class TitleScreenPlayer : ModPlayer
+	{
+		public Dictionary<string, bool> visitedWorlds = new();
+
+		public override void OnEnterWorld()
+		{
+			if (SubworldSystem.AnyActive<Macrocosm>())
+			{
+				visitedWorlds[MacrocosmSubworld.Current.Name] = true;
+				LoadingTitleSequence.StartSequence(noTitle: visitedWorlds[MacrocosmSubworld.Current.Name] && !MacrocosmConfig.Instance.AlwaysDisplayTitleScreens);
+			}
+
+			// Travelling to Earth from another planet
+			if (Player.RocketPlayer().InRocket && !SubworldSystem.AnyActive<Macrocosm>())
+ 				LoadingTitleSequence.StartSequence(noTitle: !MacrocosmConfig.Instance.AlwaysDisplayTitleScreens);
+ 		}
+
+		public override void SaveData(TagCompound tag)
+		{
+			foreach(var kvp in visitedWorlds)
+				if(kvp.Value)
+					tag[kvp.Key] = true;
+		}
+
+		public override void LoadData(TagCompound tag)
+		{
+			visitedWorlds = new Dictionary<string, bool>();
+
+			foreach (var entry in tag)
+ 				visitedWorlds[entry.Key] = true;
+ 		}
+	}
+
 	public class LoadingTitleSequence : ModSystem
 	{ 
 		enum TitleState
@@ -20,34 +58,26 @@ namespace Macrocosm.Common.UI
 			FadingOut
 		}
 
-		public static LocalizedColorScaleText Title { get; set; }
-
+		private static LocalizedColorScaleText title;
 		private static TitleState currentState = TitleState.Inactive;
 		private static float timer = 0;
 		private static float titleFadeValue = 0f;   
-		private static float titleFadeRate = 0.01f;
+		private const float titleFadeRate = 0.01f;
 
 		public override void Load()
 		{
-			Player.Hooks.OnEnterWorld += OnEnterWorld;
 		}
 
 		public override void Unload()
 		{
-			Player.Hooks.OnEnterWorld -= OnEnterWorld;
-			Title = null;
-		}
-
-		private void OnEnterWorld(Player player)
-		{
-			StartSequence();
+			title = null;
 		}
 
 		public override void PostDrawInterface(SpriteBatch spriteBatch)
 		{
 			if (currentState != TitleState.Inactive)
 			{
-				if (Main.hasFocus)
+				if (Main.hasFocus && currentState != TitleState.Inactive)
 					Update();
 
 				Draw(spriteBatch);
@@ -56,24 +86,23 @@ namespace Macrocosm.Common.UI
 
 		public static void SetTargetWorld(string targetWorld)
 		{
-			switch (targetWorld)
+			title = targetWorld switch
 			{
-				case "Moon":
-					Title = new(Language.GetText("Mods.Macrocosm.Subworlds.Moon.DisplayName"), Color.White, 1.2f, largeText: true);
-					break;
-
-				case "Earth":
-					Title = null;
-					break;
-			}
+				"Moon" => new(Language.GetText("Mods.Macrocosm.Subworlds.Moon.DisplayName"), Color.White, 1.2f, largeText: true),
+				"Earth" => new(Language.GetText("Mods.Macrocosm.Subworlds.Earth.DisplayName"), new Color(94, 150, 255), 1.2f, largeText: true),
+				_ => null,
+			};
 		}
 
-		public static void StartSequence()
+		public static void StartSequence(bool noTitle)
 		{
 			timer = 0;
 			titleFadeValue = 0f;
 			//FadeEffect.StartFadeIn(0.01f);
-			currentState = TitleState.FadingToBlack;
+			currentState = TitleState.Black;
+
+			if (noTitle)
+				title = null;
 		}
 
 		public static void Update()
@@ -84,18 +113,13 @@ namespace Macrocosm.Common.UI
 					break;
 
 				case TitleState.FadingToBlack:
-					if (!FadeEffect.IsFading)
-					{
-						currentState = TitleState.Black;
-						timer = 0;
-					}
 					break;
 
 				case TitleState.Black:
 					timer++;
 					if (timer >= 30) // 0.5 seconds
 					{
-						if(Title is null)
+						if(title is null)
 						{
 							FadeEffect.StartFadeIn(0.01f);
 							currentState = TitleState.FadingOut;
@@ -154,12 +178,12 @@ namespace Macrocosm.Common.UI
 				case TitleState.FadingTitleIn:
 				case TitleState.TitleShown:
 					FadeEffect.DrawBlack(1f);
-					Title?.DrawDirect(spriteBatch, new Vector2(Main.screenWidth / 2f, Main.screenHeight * 0.2f), Title.Color * titleFadeValue);
+					title?.DrawDirect(spriteBatch, new Vector2(Main.screenWidth / 2f, Main.screenHeight * 0.2f), title.Color * titleFadeValue);
 					break;
 
 				case TitleState.FadingOut:
 					FadeEffect.Draw();
-					Title?.DrawDirect(spriteBatch, new Vector2(Main.screenWidth / 2f, Main.screenHeight * 0.2f), Title.Color * titleFadeValue);
+					title?.DrawDirect(spriteBatch, new Vector2(Main.screenWidth / 2f, Main.screenHeight * 0.2f), title.Color * titleFadeValue);
 					break;
 			}
 		}

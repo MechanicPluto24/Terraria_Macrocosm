@@ -11,6 +11,16 @@ namespace Macrocosm.Content.Rockets.Modules
 {
 	public abstract partial class RocketModule 
 	{
+		public enum Types
+		{
+			CommandPod,
+			ServiceModule,
+			ReactorModule,
+			EngineModule,
+			BoosterLeft,
+			BoosterRight
+		}
+
 		public string Name => GetType().Name;
 
 		public string FullName => GetType().Namespace + "." + Name;
@@ -46,10 +56,12 @@ namespace Macrocosm.Content.Rockets.Modules
 		public virtual string TexturePath => (GetType().Namespace + "." + GetType().Name).Replace('.', '/');
 		public Texture2D Texture => ModContent.Request<Texture2D>(TexturePath, AssetRequestMode.ImmediateLoad).Value;
 
-		
-		public RocketModule()
+		protected Rocket rocket;
+
+		public RocketModule(Rocket rocket)
 		{
 			Pattern = CustomizationStorage.GetDefaultPattern(GetType().Name);
+			this.rocket = rocket;
 		}
 
 		private SpriteBatchState state;
@@ -67,7 +79,9 @@ namespace Macrocosm.Content.Rockets.Modules
 				if (HasPattern)
 				{
 					// Pass the pattern to the shader via the S1 register
+					Main.graphics.GraphicsDevice.Textures[0] = Texture;
 					Main.graphics.GraphicsDevice.Textures[1] = Pattern.Texture;
+					Main.graphics.GraphicsDevice.Textures[2] = null;
 
 					// Change sampler state for proper alignment at all zoom levels 
 					Main.graphics.GraphicsDevice.SamplerStates[1] = SamplerState.PointClamp;

@@ -6,6 +6,7 @@ using Macrocosm.Content.Rockets;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System.Linq;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.Localization;
@@ -25,6 +26,7 @@ namespace Macrocosm.Common.UI
 		protected float animationTimer = 0;
 
 		protected Stars stars = new();
+		protected Stars fallingStars = new();
 
 		private Rocket rocket;
 
@@ -41,9 +43,12 @@ namespace Macrocosm.Common.UI
 
         public void Setup()
         {
-            stars = new();
-			stars.SpawnStars(600, 700);
-            Reset();
+            stars = new(600, 700, wrapMode: MacrocosmStar.WrapMode.Random);
+			fallingStars = new(15, 20, celledSpawn: true, wrapMode: MacrocosmStar.WrapMode.Random, falling: true, baseScale: 0.5f);
+
+			fallingStars.Cast<FallingStar>().ToList().ForEach(star => star.Fall(deviationX: 0.1f, minSpeedY: 30f, maxSpeedY: 45f));
+
+			Reset();
 		}
 
         public void SetTargetWorld(string targetWorld)
@@ -66,9 +71,7 @@ namespace Macrocosm.Common.UI
 		public void SetRocket(Rocket rocket)
 		{
 			var visualClone = rocket.Clone();
-			visualClone.Landing = true;
-			visualClone.ResetAnimation();
-
+			visualClone.ForcedFlightAppearance = true;
 			this.rocket = visualClone;
 		}
 
@@ -118,6 +121,8 @@ namespace Macrocosm.Common.UI
 
             if (rocket is not null)
                 DrawRocket(spriteBatch);
+
+			fallingStars.Draw(spriteBatch);
 
 			if (WorldGenerator.CurrentGenerationProgress is not null)
             {

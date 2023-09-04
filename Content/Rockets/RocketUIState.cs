@@ -175,7 +175,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 			Player player = Main.LocalPlayer;
 	
-			if (!Rocket.Active || !Rocket.Bounds.InPlayerInteractionRange() || Rocket.InFlight || player.controlMount || player.UICloseConditions())
+			if (!Rocket.Active || !Rocket.Bounds.InPlayerInteractionRange() || Rocket.Launched || player.controlMount || player.UICloseConditions())
 			{
 				RocketUISystem.Hide();
 				return;

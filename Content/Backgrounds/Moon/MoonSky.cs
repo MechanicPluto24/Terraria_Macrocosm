@@ -55,8 +55,8 @@ namespace Macrocosm.Content.Backgrounds.Moon
 			earthBodyShadow = ModContent.Request<Texture2D>(AssetPath + "EarthShadowMask", mode).Value;
 			earthAtmoShadow = ModContent.Request<Texture2D>(AssetPath + "EarthAtmoShadowMask", mode).Value;
 
-			starsDay = new Stars();
-			starsNight = new Stars();
+			starsDay = new();
+			starsNight = new();
 
 			sun = new CelestialBody(sunTexture);
 			earth = new CelestialBody(earthBody, earthAtmo, 0.9f);
@@ -96,8 +96,8 @@ namespace Macrocosm.Content.Backgrounds.Moon
 
 		public override void Activate(Vector2 position, params object[] args)
 		{
-			starsDay.SpawnStars(100, 130, 1.4f, 0.05f);
-			starsNight.SpawnStars(600, 700, 0.8f, 0.05f);
+			starsDay.SpawnStars(100, 130, baseScale: 1.4f, twinkleFactor: 0.05f);
+			starsNight.SpawnStars(600, 700, baseScale: 0.8f, twinkleFactor: 0.05f);
 
 			MacrocosmStar mars = starsDay.RandStar(); // :) 
 			mars.OverrideColor(new Color(224, 137, 8, 220));

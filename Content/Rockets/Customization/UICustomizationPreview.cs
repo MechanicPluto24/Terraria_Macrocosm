@@ -79,7 +79,9 @@ namespace Macrocosm.Content.Rockets.Navigation
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, state.Effect, Main.UIScaleMatrix);
 
-            Rocket.DrawDummy(spriteBatch, new Vector2(0, 0), Color.White);
+			var visualClone = Rocket.Clone();
+			visualClone.ForcedStationaryAppearance = true;
+			visualClone.DrawDummy(spriteBatch, new Vector2(0, 0), Color.White);
 
 			spriteBatch.End();
 

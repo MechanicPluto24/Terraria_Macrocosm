@@ -89,7 +89,7 @@ namespace Macrocosm.Content.UI.Menus
 
         public override void OnSelected()
         {
-            Stars.SpawnStars(350, 500, 0.8f);
+            Stars.SpawnStars(350, 500, baseScale: 0.8f);
             SetupCelestialBodies();
         }
 

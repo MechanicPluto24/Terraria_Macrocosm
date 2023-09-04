@@ -46,15 +46,14 @@ namespace Macrocosm.Content.Rockets.Modules
 			ApplyCustomizationDataFromJObject(JObject.Parse(json));
 		}
 
-		protected virtual TagCompound SerializeModuleData() { return new TagCompound(); }
-		protected virtual void DeserializeModuleData(TagCompound tag) { }  
-
+		protected virtual TagCompound SerializeModuleSpecificData() { return new TagCompound(); }
+		protected virtual void DeserializeModuleSpecificData(TagCompound tag, Rocket ownerRocket) { }  
 
 		public static readonly Func<TagCompound, RocketModule> DESERIALIZER = DeserializeData;
 
 		public TagCompound SerializeData()
 		{
-			TagCompound tag = SerializeModuleData();
+			TagCompound tag = SerializeModuleSpecificData();
 
 			tag["Type"] = FullName;
 			tag["Name"] = Name;
@@ -68,13 +67,19 @@ namespace Macrocosm.Content.Rockets.Modules
 			return tag;
 		}
 
+		/// <summary> UNUSED! Deserialization is customly done using the <see cref="DeserializeData(TagCompound, Rocket)"/> method instead. </summary>
 		public static RocketModule DeserializeData(TagCompound tag)
+		{
+			return DeserializeData(tag, null);
+		}
+
+		public static RocketModule DeserializeData(TagCompound tag, Rocket ownerRocket)
 		{
 			string type = tag.GetString("Type");
 			string name = tag.GetString("Name");
 
-			RocketModule module = Activator.CreateInstance(Type.GetType(type)) as RocketModule;
-			module.DeserializeModuleData(tag);
+			RocketModule module = Activator.CreateInstance(Type.GetType(type), ownerRocket) as RocketModule;
+			module.DeserializeModuleSpecificData(tag, ownerRocket);
 
 			if (tag.ContainsKey("DetailName"))
 				module.Detail = CustomizationStorage.GetDetail(name, tag.GetString("DetailName"));

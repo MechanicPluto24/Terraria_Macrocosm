@@ -31,9 +31,14 @@ namespace Macrocosm.Common.Drawing
 			if (interfaceSelfDraw && Main.hasFocus)
 			{
 				if (isFading)
+				{
 					Draw();
+				}
 				else
+				{
 					interfaceSelfDraw = false;
+					isFading = false;
+				}
 			}
 		}
 

@@ -22,7 +22,7 @@ namespace Macrocosm.Common.Subworlds
 	public partial class MacrocosmSubworld 
 	{
 		/// <summary> Get the current <c>MacrocosmSubworld</c> active instance. 
-		/// Earth returns null! You should check for <see cref="SubworldSystem.AnyActive"/> before accessing this. </summary>
+		/// Earth returns null! You should check for <see cref="SubworldSystem.AnyActive"/> for <b>Macrocosm</b> before accessing this. </summary>
 		public static MacrocosmSubworld Current => SubworldSystem.AnyActive<Macrocosm>() ? SubworldSystem.Current as MacrocosmSubworld : null;
 
 		/// <summary> 
@@ -70,10 +70,8 @@ namespace Macrocosm.Common.Subworlds
 				case "Moon": LoadingScreen = new MoonLoadingScreen(); break;
 			}
 
-			if (rocket is null)
-				rocket = new();
-
-			LoadingScreen.SetRocket(rocket);
+			if(rocket is not null)
+				LoadingScreen.SetRocket(rocket);
 
 			if(targetWorld == "Earth")
 			{
