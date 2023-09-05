@@ -1,4 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Utils;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Terraria;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Modules
 {
@@ -14,5 +19,16 @@ namespace Macrocosm.Content.Rockets.Modules
 		public override int Height => 80;
 
 		public override Rectangle Hitbox => base.Hitbox with { Y = base.Hitbox.Y + 4 };
+
+		SpriteBatchState state;
+		public override void Draw(SpriteBatch spriteBatch, Vector2 screenPos, Color ambientColor)
+		{
+			base.Draw(spriteBatch, screenPos, ambientColor);
+
+			// Reactor glowmask
+			spriteBatch.Draw(ModContent.Request<Texture2D>(TexturePath + "Glow").Value, Position - screenPos, null, Color.White, 0f, Origin, 1f, SpriteEffects.None, 0f);
+
+			//Lighting.AddLight(Center, new Color(176, 255, 216).ToVector3() * 0.2f);
+		}
 	}
 }

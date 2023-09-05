@@ -1,3 +1,4 @@
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Subworlds;
@@ -64,7 +65,7 @@ namespace Macrocosm.Content.Rockets
 		public bool ActiveInCurrentWorld => Active && CurrentWorld == MacrocosmSubworld.CurrentWorld;
 
 		/// <summary> Whether this rocket is currently in flight </summary>
-		public bool InFlight => Launched && FlightTime >= LiftoffTime;
+		public bool InFlight => /*Launched && */FlightTime >= LiftoffTime;
 
 		/// <summary> The world Y coordinate for entering the target subworld </summary>
 		private const float WorldExitPositionY = 60 * 16f;
@@ -278,6 +279,7 @@ namespace Macrocosm.Content.Rockets
 			NetSync();
 		}
 
+		SpriteBatchState state;
 		/// <summary> Draw the rocket </summary>
 		public void Draw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
@@ -289,9 +291,50 @@ namespace Macrocosm.Content.Rockets
 				module.Draw(spriteBatch, screenPos, drawColor);
 			}
 
+			PostDrawInFlight(spriteBatch);
+
 			//DrawDebugBounds();
 			//DrawDebugModuleHitbox();
 			//DisplayWhoAmI();
+		}
+
+		private void PostDrawInFlight(SpriteBatch spriteBatch)
+		{
+			if (InFlight || forcedFlightAppearance)
+			{
+				state.SaveState(spriteBatch);
+				spriteBatch.End();
+				spriteBatch.Begin(BlendState.Additive, state);
+
+				var flare = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "LensFlare2").Value;
+				spriteBatch.Draw(flare, new Vector2(Center.X, Position.Y + Height) - Main.screenPosition, null, new Color(255, 69, 0), 0f, flare.Size() / 2f, 1.2f * Main.rand.NextFloat(0.85f, 1f), SpriteEffects.None, 0f);
+
+				//Lighting.AddLight(new Vector2(Center.X, Position.Y + Height + 25), new Color(215, 69, 0).ToVector3() * 15f);
+				//Lighting.AddLight(new Vector2(Center.X, Position.Y + Height + 75), new Color(215, 69, 0).ToVector3() * 15f);
+				//Lighting.AddLight(new Vector2(Center.X, Position.Y + Height + 150), new Color(215, 69, 0).ToVector3() * 15f);
+				
+				if(Stationary || FlightTime < LiftoffTime + 5)
+				{
+					Lighting.AddLight(new Vector2(Center.X + 50, Position.Y + Height + 25), new Color(215, 69, 0).ToVector3() * 5f);
+					Lighting.AddLight(new Vector2(Center.X, Position.Y + Height + 25), new Color(215, 69, 0).ToVector3() * 15f);
+					Lighting.AddLight(new Vector2(Center.X - 50, Position.Y + Height + 25), new Color(215, 69, 0).ToVector3() * 5f);
+
+					Lighting.AddLight(new Vector2(Center.X + 50, Position.Y + Height + 75), new Color(215, 69, 0).ToVector3() * 5f);
+					Lighting.AddLight(new Vector2(Center.X, Position.Y + Height + 75), new Color(215, 69, 0).ToVector3() * 15f);
+					Lighting.AddLight(new Vector2(Center.X - 50, Position.Y + Height + 75), new Color(215, 69, 0).ToVector3() * 5f);
+
+					Lighting.AddLight(new Vector2(Center.X + 50, Position.Y + Height + 150), new Color(215, 69, 0).ToVector3() * 5f);
+					Lighting.AddLight(new Vector2(Center.X, Position.Y + Height + 125), new Color(215, 69, 0).ToVector3() * 15f);
+					Lighting.AddLight(new Vector2(Center.X - 50, Position.Y + Height + 150), new Color(215, 69, 0).ToVector3() * 5f);
+				}
+				else
+				{
+					Lighting.AddLight(new Vector2(Center.X, Position.Y + Height + 75), new Color(215, 69, 0).ToVector3() * 10f);
+				}
+
+				spriteBatch.End();
+				spriteBatch.Begin(state);
+			}
 		}
 
 		// Set the rocket's modules positions in the world
@@ -517,7 +560,14 @@ namespace Macrocosm.Content.Rockets
 
 				if (InFlight)
 				{
-					/*
+
+					if(FlightProgress > 0.6f)
+					{
+						Velocity.Y = 0;
+						Launched = false;
+						return;
+					}
+
 					float flightAcceleration = 0.1f;   // mid-flight
 					float liftoffAcceleration = 0.05f; // during liftoff
 					float startAcceleration = 0.01f;   // initial 
@@ -530,10 +580,8 @@ namespace Macrocosm.Content.Rockets
 						else
 							Velocity.Y -= startAcceleration;
 
-					*/
 
-					Velocity.Y -= 0.005f;
-
+					//Velocity.Y -= 0.005f;
 
 					//SetScreenshake();
 					//VisualEffects();
