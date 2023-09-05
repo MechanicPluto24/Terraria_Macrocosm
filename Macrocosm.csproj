@@ -90,6 +90,7 @@
     <None Remove="Content\Rockets\Customization\Patterns\ServiceModule\Helix.png" />
     <None Remove="Content\Rockets\Customization\Patterns\ServiceModule\Redstone.png" />
     <None Remove="Content\Rockets\Customization\Patterns\ServiceModule\Saturn.png" />
+    <None Remove="Content\Rockets\Modules\ReactorModuleGlow.png" />
     <None Remove="Content\Rockets\Textures\Buttons\AlignBottom.png" />
     <None Remove="Content\Rockets\Textures\Buttons\AlignCenterHorizontal.png" />
     <None Remove="Content\Rockets\Textures\Buttons\AlignCenterVertical.png" />

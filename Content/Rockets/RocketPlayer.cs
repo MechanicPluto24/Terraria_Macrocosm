@@ -127,8 +127,12 @@ namespace Macrocosm.Content.Rockets
 
 				Player.sitting.isSitting = true;
 
-				Player.velocity = rocket.Velocity;
-				Player.Center = new Vector2(rocket.Center.X, rocket.Position.Y + 110) - (AsCommander ? new Vector2(0, 50) : Vector2.Zero);
+				if(rocket.InFlight)
+					Player.velocity = rocket.Velocity;
+				else 
+					Player.velocity = Vector2.Zero;
+
+				Player.Center = new Vector2(rocket.Center.X + Player.direction * 5, rocket.Position.Y + 110) - (AsCommander ? new Vector2(0, 50) : Vector2.Zero);
 
 				if (Player.whoAmI == Main.myPlayer)
 				{

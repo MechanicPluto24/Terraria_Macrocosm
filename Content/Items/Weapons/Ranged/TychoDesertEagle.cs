@@ -17,8 +17,8 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			GunBarrelPosition = new(22, 6),
             CenterYOffset = 9,
             MuzzleOffset = 30,
-            Recoil = (9, 1.8f),
-			RecoilStartFrame = 3,
+            Recoil = (8, 0.75f),
+			RecoilStartFrame = 4,
 			UseBackArm = false
         };
 
