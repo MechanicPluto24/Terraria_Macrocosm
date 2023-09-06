@@ -47,6 +47,14 @@ namespace Macrocosm.Common.Drawing
 			Main.spriteBatch.Draw(TextureAssets.BlackTile.Value, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.Black * opacity);
 		}
 
+		public static void ResetFade()
+		{
+			fadeAlpha = 0;
+			isFading = false;
+			isFadingIn = false;
+			interfaceSelfDraw = false;
+		}
+
 		public static void StartFadeIn(float speed = 0.098f, bool selfDraw = false)
 		{
 			interfaceSelfDraw = selfDraw;

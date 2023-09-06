@@ -234,7 +234,8 @@ namespace Macrocosm.Content.Rockets.Navigation
 					}
 					else
 					{
-						currentModule.Pattern.SetColor(colorIndex, hslMenu.PendingColor);
+						if(hslMenu.PreviousColor != hslMenu.PendingColor)
+							currentModule.Pattern.SetColor(colorIndex, hslMenu.PendingColor);
 					}
 				}
 
@@ -378,6 +379,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 		private void OnPreviewZoomOut()
 		{
+			hslMenu.CaptureCurrentColor();
 			rocketPreviewZoomButton.SetImage(ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Buttons/ZoomInButton"));
 		}
 

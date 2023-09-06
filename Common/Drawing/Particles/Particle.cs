@@ -50,7 +50,7 @@ namespace Macrocosm.Common.Drawing.Particles
 			if (SetRandomFrameOnSpawn)
 				currentFrame = Main.rand.Next(FrameNumber);
  
-			OnSpawn();
+			//OnSpawn();
 		}
 
 		/// <summary> The <c>Particle</c>'s texture, autoloaded </summary>

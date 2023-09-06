@@ -72,6 +72,7 @@
     <None Remove="Assets\Textures\Smoke7.png" />
     <None Remove="Assets\Textures\Smoke8.png" />
     <None Remove="Assets\Textures\Smoke9.png" />
+    <None Remove="Assets\Textures\SmokeTrail1.png" />
     <None Remove="Assets\Textures\Spark1.png" />
     <None Remove="Assets\Textures\Spark2.png" />
     <None Remove="Assets\Textures\Spark3.png" />

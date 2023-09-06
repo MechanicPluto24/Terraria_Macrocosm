@@ -85,7 +85,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
             if(Main.rand.NextFloat() > Projectile.alpha / 255f || Projectile.alpha < 120)
             {
-				var star = Particle.CreateParticle<ImbriumStar>(new Vector2(Projectile.position.X, Projectile.position.Y) + Main.rand.NextVector2FromRectangle(new Rectangle(0, 0, (int)Projectile.Size.X, (int)Projectile.Size.Y)), Vector2.Zero, scale: Main.rand.NextFloat(0.06f, 0.08f));
+				var star = Particle.CreateParticle<ImbriumStar>(new Vector2(Projectile.position.X, Projectile.position.Y) + Main.rand.NextVector2FromRectangle(new Rectangle(0, 0, (int)Projectile.Size.X, (int)Projectile.Size.Y)), Vector2.Zero, scale: Main.rand.NextFloat(0.6f, 0.8f));
 				star.Alpha = 1f - Projectile.alpha / 255f;
 			}
 		}

@@ -46,7 +46,7 @@ namespace Macrocosm.Content.Rockets.Modules
 			{
 				spriteBatch.End();
 				spriteBatch.Begin(BlendState.Additive, state);
-				DrawSmokeTrail(spriteBatch, -1.2f);
+				//DrawSmokeTrail(spriteBatch, -1.2f);
 				DrawTrail(spriteBatch);
 			}
 
@@ -106,14 +106,14 @@ namespace Macrocosm.Content.Rockets.Modules
 		private void DrawSmokeTrail(SpriteBatch spriteBatch, float offset = -28)
 		{
 			VertexStrip strip = new();
-			int stripDataCount = 5000; /*+ (int)(20 * Utility.CubicEaseInOut(Math.Abs(rocket.FlightProgress)));*/
+			int stripDataCount = 100; /*+ (int)(20 * Utility.CubicEaseInOut(Math.Abs(rocket.FlightProgress)));*/
 			Vector2[] positions = new Vector2[stripDataCount];
 			float[] rotations = new float[stripDataCount];
 
 			Vector2 basePosition = new Vector2(Center.X, Position.Y + Height - 28) - Main.screenPosition;
 			for (int i = 0; i < stripDataCount; i++)
 			{
-				positions[i] = basePosition + new Vector2(0f, 0.1f * i);
+				positions[i] = basePosition + new Vector2(0f, 4f * i);
 				rotations[i] = MathHelper.Pi + MathHelper.PiOver2;
 			}
 

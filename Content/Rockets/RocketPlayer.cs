@@ -127,7 +127,7 @@ namespace Macrocosm.Content.Rockets
 
 				Player.sitting.isSitting = true;
 
-				if(rocket.InFlight)
+				if(rocket.InFlight || rocket.Landing)
 					Player.velocity = rocket.Velocity;
 				else 
 					Player.velocity = Vector2.Zero;
