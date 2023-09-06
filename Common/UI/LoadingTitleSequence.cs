@@ -121,6 +121,7 @@ namespace Macrocosm.Common.UI
 					{
 						if(title is null)
 						{
+							FadeEffect.ResetFade();
 							FadeEffect.StartFadeIn(0.01f);
 							currentState = TitleState.FadingOut;
 						}
@@ -147,6 +148,7 @@ namespace Macrocosm.Common.UI
 					if (timer >= 90) // 1.5 seconds
 					{
 						currentState = TitleState.FadingOut;
+						FadeEffect.ResetFade();
 						FadeEffect.StartFadeIn(0.01f);
 					}
 					break;

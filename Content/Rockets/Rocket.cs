@@ -1,10 +1,12 @@
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Dev;
+using Macrocosm.Content.Particles;
 using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.LaunchPads;
 using Macrocosm.Content.Rockets.Modules;
@@ -93,7 +95,7 @@ namespace Macrocosm.Content.Rockets
 		public bool Stationary => Velocity.LengthSquared() < 0.1f;
 
 		/// <summary> The layer this rocket is drawn in </summary>
-		public RocketDrawLayer DrawLayer = RocketDrawLayer.BeforeNPCs;
+		public RocketDrawLayer DrawLayer = RocketDrawLayer.AfterNPCs;
 
 		/// <summary> This rocket's engine module nameplate </summary>
 		public Nameplate Nameplate => EngineModule.Nameplate;
@@ -137,10 +139,12 @@ namespace Macrocosm.Content.Rockets
 		public float FlightProgress => 1f - ((Position.Y - WorldExitPositionY) / (StartPositionY - WorldExitPositionY));
 
 		/// <summary> The landing sequence progress </summary>
-		public float LandingProgress => Center.Y / TargetLandingPosition.Y;
+		public float LandingProgress => Position.Y / (TargetLandingPosition.Y - Height + 16);
 
 		private bool forcedStationaryAppearance;
 		private bool forcedFlightAppearance;
+
+		private float worldExitSpeed;
 
 		/// <summary> Whether this rocket is forced in a stationary (i.e. landed) state, visually </summary>
 		public bool ForcedStationaryAppearance
@@ -244,6 +248,7 @@ namespace Macrocosm.Content.Rockets
 
             if (Launched && Position.Y < WorldExitPositionY)
 			{
+				worldExitSpeed = Velocity.Y;
 				ResetAnimation();
 				Launched = false;
 				Landing = true;
@@ -546,6 +551,8 @@ namespace Macrocosm.Content.Rockets
 		// Handles the rocket's movement during flight
 		private void Movement()
 		{
+			float gravityForce = 0.1f * MacrocosmSubworld.CurrentGravityMultiplier;
+
 			if (Launched)
 			{
 				UpdateModuleAnimation();
@@ -553,20 +560,24 @@ namespace Macrocosm.Content.Rockets
 				if (FlightProgress > 0.1f)
 					SetModuleAnimation(landing: false);
 
-				if (FlightProgress > 0.8f && !FadeEffect.IsFading && CheckPlayerInRocket(Main.myPlayer))
-					FadeEffect.StartFadeOut(0.01f, selfDraw: true);
+				if (FlightProgress > 0.6f && !FadeEffect.IsFading && CheckPlayerInRocket(Main.myPlayer))
+				{
+					FadeEffect.ResetFade();
+					FadeEffect.StartFadeOut(0.02f, selfDraw: true);
+				}
 
 				FlightTime++;
 
 				if (InFlight)
 				{
-
+					/*
 					if(FlightProgress > 0.6f)
 					{
 						Velocity.Y = 0;
 						Launched = false;
 						return;
 					}
+					*/
 
 					float flightAcceleration = 0.1f;   // mid-flight
 					float liftoffAcceleration = 0.05f; // during liftoff
@@ -580,22 +591,27 @@ namespace Macrocosm.Content.Rockets
 						else
 							Velocity.Y -= startAcceleration;
 
-
-					//Velocity.Y -= 0.005f;
-
-					//SetScreenshake();
-					//VisualEffects();
+					VisualEffects();
+					SetScreenshake();
 				}
 			}
-			else
+			else if (Landing)
 			{
- 				Velocity.Y += 0.1f * MacrocosmSubworld.CurrentGravityMultiplier;
-			}
- 
-			if (Landing)
-			{
-				// TODO: Add smooth deceleration
+				/*
+				if (LandingProgress < 0.5f)
+				{
+					Velocity.Y += gravityForce;
+				}
+				else
+				{
+					Velocity.Y *= 0.99f;
+					Velocity.Y = MathHelper.Clamp(Velocity.Y, 0f, gravityForce);
+				}
+				*/
 
+				Main.NewText(LandingProgress);
+				Velocity.Y = MathHelper.Lerp(-worldExitSpeed, 2f, Utility.QuadraticEaseIn(LandingProgress));
+ 
 				UpdateModuleAnimation();
 
 				if (LandingProgress > 0.7f)
@@ -603,7 +619,7 @@ namespace Macrocosm.Content.Rockets
 					SetModuleAnimation(landing: true);
 				}
 
-				if (Stationary && LandingProgress > 0.9f)
+				if (LandingProgress >= 1f)
 				{
 					if(GetRocketPlayer(Main.myPlayer).InRocket)
 						RocketUISystem.Show(this);
@@ -611,6 +627,10 @@ namespace Macrocosm.Content.Rockets
 					Landing = false;
 					ResetAnimation();
 				}
+			}
+			else
+			{
+				Velocity.Y += gravityForce;
 			}
 		}
 
@@ -653,20 +673,24 @@ namespace Macrocosm.Content.Rockets
 		// Handle visuals (dusts, particles)
 		private void VisualEffects()
 		{
-			int dustCnt = FlightTime > LiftoffTime + 40 ? 10 : 4;
- 			for (int i = 0; i < dustCnt; i++)
+			for (int i = 0; i < 5; i++)
 			{
-				Dust dust = Dust.NewDustDirect(Position + new Vector2(-10, Height - 15 - 50 * FlightProgress), (int)((float)Width + 20), 1, DustID.Flare, Main.rand.NextFloat(-4f, 4f), Main.rand.NextFloat(20f, 200f) * FlightProgress, Scale: Main.rand.NextFloat(1.5f, 3f));
-				dust.noGravity = false;
-			}
- 			
-			for (int g = 0; g < 3; g++)
-			{
-				if (Main.rand.NextBool(2))
+				var smoke = Particle.CreateParticle<Smoke>(p =>
 				{
-					int type = Main.rand.NextFromList<int>(GoreID.Smoke1, GoreID.Smoke2, GoreID.Smoke3);
-					Gore.NewGore(null, Position + new Vector2(Main.rand.Next(-25, Width), Height - 15 - 30 * FlightProgress), new Vector2(Main.rand.NextFloat(-4f, 4f), Main.rand.NextFloat(0, 8f)), type);
-				}
+					p.Position = new Vector2(Center.X, Position.Y + Height - 28);
+					p.Velocity = new Vector2(Main.rand.NextFloat(-0.6f, 0.6f), Main.rand.NextFloat(2, 10));
+					p.Scale = Main.rand.NextFloat(1.2f, 1.6f);
+					p.Rotation = 0f;
+					p.FadeIn = true;
+					p.FadeOut = true;
+					p.FadeInSpeed = 2;
+					p.FadeOutSpeed = 15;
+					p.TargetAlpha = 128;
+					p.ScaleDownSpeed = 0.001f;
+					p.Deceleration = 0.995f;
+					p.DrawColor = Color.White.WithAlpha(150);
+					p.Collide1 = true;
+				}, shouldSync: false);
 			}
 		}
 

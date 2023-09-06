@@ -38,6 +38,7 @@ namespace Macrocosm.Common.UI
         public void ResetAnimation() 
         {
             animationTimer = 0;
+			FadeEffect.ResetFade();
             FadeEffect.StartFadeIn(0.012f);
 		}
 
