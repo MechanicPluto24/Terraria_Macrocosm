@@ -172,7 +172,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 							.UseSaturation(-2.4f)
 							.UseImage0(ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "FadeOutMask"))
 							.UseImage1(ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "FadeOutTrail"))
-							.UseImage2(ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "FlamingTrail"));
+							.UseImage2(ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "FlamingTrail1"));
 
 			shader.Apply();
 
