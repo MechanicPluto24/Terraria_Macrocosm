@@ -306,7 +306,7 @@ namespace Macrocosm.Content.Rockets
 				spriteBatch.End();
 				spriteBatch.Begin(BlendState.Additive, state);
 
-				var flare = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "LensFlare2").Value;
+				var flare = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Flare2").Value;
 				spriteBatch.Draw(flare, new Vector2(Center.X, Position.Y + Height) - Main.screenPosition, null, new Color(255, 69, 0), 0f, flare.Size() / 2f, 1.2f * Main.rand.NextFloat(0.85f, 1f), SpriteEffects.None, 0f);
 
 				//Lighting.AddLight(new Vector2(Center.X, Position.Y + Height + 25), new Color(215, 69, 0).ToVector3() * 15f);

@@ -46,7 +46,7 @@ namespace Macrocosm.Content.Rockets.Modules
 			{
 				spriteBatch.End();
 				spriteBatch.Begin(BlendState.Additive, state);
-				DrawTrail2(spriteBatch);
+				DrawSmokeTrail(spriteBatch, -1.2f);
 				DrawTrail(spriteBatch);
 			}
 
@@ -96,53 +96,48 @@ namespace Macrocosm.Content.Rockets.Modules
 
 			strip.DrawTrail();
 
-			//var glow = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "SimpleGlow").Value;
+			//var glow = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Circle6").Value;
 			//spriteBatch.Draw(glow, new Vector2(Center.X, Position.Y + Height - 28) - Main.screenPosition, null, new Color(255, 69, 0).WithOpacity(0.35f), MathHelper.PiOver2, glow.Size() / 2f, 0.28f, SpriteEffects.None, 0f);
 
 			//for (int i = 0; i < stripDataCount; i++)
 			//	Lighting.AddLight(positions[i] + Main.screenPosition, new Color(255, 177, 65).ToVector3() * 2f);
 		}
 
-		private void DrawTrail2(SpriteBatch spriteBatch)
+		private void DrawSmokeTrail(SpriteBatch spriteBatch, float offset = -28)
 		{
 			VertexStrip strip = new();
-			int stripDataCount = 180; /*+ (int)(20 * Utility.CubicEaseInOut(Math.Abs(rocket.FlightProgress)));*/
+			int stripDataCount = 5000; /*+ (int)(20 * Utility.CubicEaseInOut(Math.Abs(rocket.FlightProgress)));*/
 			Vector2[] positions = new Vector2[stripDataCount];
 			float[] rotations = new float[stripDataCount];
-			Array.Fill(positions, new Vector2(Center.X, Position.Y + Height - 28) - Main.screenPosition);
-			Array.Fill(rotations, MathHelper.Pi + MathHelper.PiOver2);
 
+			Vector2 basePosition = new Vector2(Center.X, Position.Y + Height - 28) - Main.screenPosition;
 			for (int i = 0; i < stripDataCount; i++)
-				positions[i] += new Vector2(0f, 4f * i);
+			{
+				positions[i] = basePosition + new Vector2(0f, 0.1f * i);
+				rotations[i] = MathHelper.Pi + MathHelper.PiOver2;
+			}
 
 			var shader = new MiscShaderData(Main.VertexPixelShaderRef, "MagicMissile")
+							.UseOpacity(0.9f + 0.1f * Utility.SineWave(300))
 							.UseProjectionMatrix(doUse: true)
-							.UseSaturation(-1f)
+							.UseSaturation(offset)
 							.UseImage0(ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "FadeOutMask"))
-							.UseImage1(ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "FadeOutMask"))
-							.UseImage2(ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "RocketExhaustTrail1"));
+							.UseImage1(ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "SmokeTrail1"))
+							.UseImage2(ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "SmokeTrail1"));
 
 			shader.Apply();
 			strip.PrepareStrip(
 				positions,
 				rotations,
-				(float progress) => progress < 0.4f ? 
-								Color.Lerp(
-									Color.Gray.WithOpacity(0.5f), 
-									Color.DarkGray.WithOpacity(0.4f), 
-									progress
-								) : 
-								Color.Lerp(
-									Color.DarkGray.WithOpacity(0.3f),
-									Color.Transparent, 
-									Utility.ExpoEaseOut(Utils.Remap(progress - 0.385f, 0f, 0.4f, 0f, 1f))
-								),
-				(float progress) => MathHelper.Lerp(40, 125, progress)
+				//(float progress) => (Color.White * (0.8f - 1.2f * Utility.QuintEaseInOut(progress))).WithOpacity(1f - Utility.QuartEaseOut(progress)),
+				(float progress) => Color.White,
+					 
+				(float progress) => MathHelper.Lerp(35, 180, progress)
 			);
 
 			strip.DrawTrail();
 
-			//var glow = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "SimpleGlow").Value;
+			//var glow = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Circle6").Value;
 			//spriteBatch.Draw(glow, new Vector2(Center.X, Position.Y + Height - 28) - Main.screenPosition, null, new Color(255, 69, 0).WithOpacity(0.35f), MathHelper.PiOver2, glow.Size() / 2f, 0.28f, SpriteEffects.None, 0f);
 
 			//for (int i = 0; i < stripDataCount; i++)
