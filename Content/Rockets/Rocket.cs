@@ -135,6 +135,9 @@ namespace Macrocosm.Content.Rockets
 		private const int LiftoffTime = 180;
 		private const float MaxFlightSpeed = 25f;
 
+		public bool StaticFire => FlightTime > LiftoffTime - 120 && FlightTime < LiftoffTime;
+		public float StaticFireProgress => MathHelper.Clamp((FlightTime - 120)/(LiftoffTime - 120), 0f, 1f);
+
 		/// <summary> The flight sequence progress </summary>
 		public float FlightProgress => 1f - ((Position.Y - WorldExitPositionY) / (StartPositionY - WorldExitPositionY));
 
@@ -285,7 +288,7 @@ namespace Macrocosm.Content.Rockets
 		}
 
 		SpriteBatchState state;
-		/// <summary> Draw the rocket </summary>
+		/// <summary> Draw the rocket in the configured draw layer </summary>
 		public void Draw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
 			// Positions (also) set here, in the update method only they lag behind 
@@ -296,14 +299,12 @@ namespace Macrocosm.Content.Rockets
 				module.Draw(spriteBatch, screenPos, drawColor);
 			}
 
-			PostDrawInFlight(spriteBatch);
-
 			//DrawDebugBounds();
 			//DrawDebugModuleHitbox();
 			//DisplayWhoAmI();
 		}
 
-		private void PostDrawInFlight(SpriteBatch spriteBatch)
+		public void PostDrawInWorld(SpriteBatch spriteBatch)
 		{
 			if (InFlight || forcedFlightAppearance)
 			{
@@ -570,15 +571,7 @@ namespace Macrocosm.Content.Rockets
 
 				if (InFlight)
 				{
-					/*
-					if(FlightProgress > 0.6f)
-					{
-						Velocity.Y = 0;
-						Launched = false;
-						return;
-					}
-					*/
-
+					
 					float flightAcceleration = 0.1f;   // mid-flight
 					float liftoffAcceleration = 0.05f; // during liftoff
 					float startAcceleration = 0.01f;   // initial 
@@ -591,26 +584,13 @@ namespace Macrocosm.Content.Rockets
 						else
 							Velocity.Y -= startAcceleration;
 
-					VisualEffects();
-					SetScreenshake();
+					SpawnSmoke(countPerTick: 5);
+					//SetScreenshake();
 				}
 			}
 			else if (Landing)
 			{
-				/*
-				if (LandingProgress < 0.5f)
-				{
-					Velocity.Y += gravityForce;
-				}
-				else
-				{
-					Velocity.Y *= 0.99f;
-					Velocity.Y = MathHelper.Clamp(Velocity.Y, 0f, gravityForce);
-				}
-				*/
-
-				Main.NewText(LandingProgress);
-				Velocity.Y = MathHelper.Lerp(-worldExitSpeed, 2f, Utility.QuadraticEaseIn(LandingProgress));
+				Velocity.Y = MathHelper.Lerp(-worldExitSpeed * 0.8f, 1.5f, Utility.QuadraticEaseIn(LandingProgress));
  
 				UpdateModuleAnimation();
 
@@ -627,6 +607,10 @@ namespace Macrocosm.Content.Rockets
 					Landing = false;
 					ResetAnimation();
 				}
+			}
+			else if (StaticFire)
+			{
+				SpawnSmoke(2);
 			}
 			else
 			{
@@ -671,9 +655,9 @@ namespace Macrocosm.Content.Rockets
 		}
 
 		// Handle visuals (dusts, particles)
-		private void VisualEffects()
+		private void SpawnSmoke(int countPerTick)
 		{
-			for (int i = 0; i < 5; i++)
+			for (int i = 0; i < countPerTick; i++)
 			{
 				var smoke = Particle.CreateParticle<Smoke>(p =>
 				{
