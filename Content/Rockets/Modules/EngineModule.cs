@@ -42,12 +42,17 @@ namespace Macrocosm.Content.Rockets.Modules
 			Texture2D boosterRear = ModContent.Request<Texture2D>(TexturePath + "_BoosterRear", AssetRequestMode.ImmediateLoad).Value;
 			spriteBatch.Draw(boosterRear, Position + new Vector2(Texture.Width/2f - boosterRear.Width/2f, 293.5f) - screenPos, null, ambientColor, 0f, Origin, 1f, SpriteEffects.None, 0f);
 
-			if (rocket.InFlight || rocket.ForcedFlightAppearance)
+			if (rocket.StaticFire || rocket.InFlight || rocket.ForcedFlightAppearance)
 			{
 				spriteBatch.End();
 				spriteBatch.Begin(BlendState.Additive, state);
 				//DrawSmokeTrail(spriteBatch, -1.2f);
-				DrawTrail(spriteBatch);
+
+				if(rocket.StaticFire)
+					DrawTrail(spriteBatch, 0.5f * rocket.StaticFireProgress);
+
+				if (rocket.InFlight)
+					DrawTrail(spriteBatch, 1f);
 			}
 
 			spriteBatch.End();
@@ -66,17 +71,17 @@ namespace Macrocosm.Content.Rockets.Modules
 			spriteBatch.Begin(state);
 		}
 
-		private void DrawTrail(SpriteBatch spriteBatch)
+		private void DrawTrail(SpriteBatch spriteBatch, float intensity = 1f)
 		{
 			VertexStrip strip = new();
-			int stripDataCount = 58; /*+ (int)(20 * Utility.CubicEaseInOut(Math.Abs(rocket.FlightProgress)));*/
+			int stripDataCount = (int)(58 * intensity);
 			Vector2[] positions = new Vector2[stripDataCount];
 			float[] rotations = new float[stripDataCount];
 			Array.Fill(positions, new Vector2(Center.X, Position.Y + Height - 28) - Main.screenPosition);
 			Array.Fill(rotations, MathHelper.Pi + MathHelper.PiOver2);
 
 			for (int i = 0; i < stripDataCount; i++)
-				positions[i] += new Vector2(0f, 4f * i);
+				positions[i] += new Vector2(0f, 4f * i * intensity);
 
 			var shader = new MiscShaderData(Main.VertexPixelShaderRef, "MagicMissile")
 							.UseProjectionMatrix(doUse: true)
@@ -90,8 +95,8 @@ namespace Macrocosm.Content.Rockets.Modules
 			strip.PrepareStrip(
 				positions, 
 				rotations,
-				(float progress) => Color.Lerp(new Color(255, 217, 120, 0), new Color(255, 0, 0, 0), Utility.QuadraticEaseIn(progress)),
-				(float progress) => MathHelper.Lerp(40, 75, progress)
+				(float progress) => Color.Lerp(new Color(255, 217, 120, (byte)(127 * (1 - intensity))), new Color(255, 0, 0, 0), Utility.QuadraticEaseIn(progress)),
+				(float progress) => MathHelper.Lerp(40, 75, progress) * intensity
 			);
 
 			strip.DrawTrail();
