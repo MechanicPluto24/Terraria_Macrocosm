@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Modules
 {
-	public abstract partial class RocketModule 
+	public abstract partial class RocketModule
 	{
 		public enum Types
 		{
@@ -36,7 +36,8 @@ namespace Macrocosm.Content.Rockets.Modules
 		private bool SpecialDraw => HasPattern || HasDetail;
 
 		public Vector2 Position { get; set; }
-		public Vector2 Center {
+		public Vector2 Center
+		{
 			get => Position + Size / 2f;
 			set => Position = value - Size / 2f;
 		}
@@ -64,18 +65,23 @@ namespace Macrocosm.Content.Rockets.Modules
 			this.rocket = rocket;
 		}
 
+		public virtual void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+		{
+
+		}
+
 		private SpriteBatchState state;
 		public virtual void Draw(SpriteBatch spriteBatch, Vector2 screenPos, Color ambientColor)
 		{
 			// Load current pattern and apply shader 
 			state.SaveState(spriteBatch);
-			SamplerState samplerState1 = Main.graphics.GraphicsDevice.SamplerStates[1]; 
-			SamplerState samplerState2 = Main.graphics.GraphicsDevice.SamplerStates[2]; 
+			SamplerState samplerState1 = Main.graphics.GraphicsDevice.SamplerStates[1];
+			SamplerState samplerState2 = Main.graphics.GraphicsDevice.SamplerStates[2];
 			if (SpecialDraw)
 			{
 				// Load the coloring shader
 				Effect effect = ModContent.Request<Effect>(Macrocosm.EffectAssetsPath + "ColorMaskShading", AssetRequestMode.ImmediateLoad).Value;
-			
+
 				if (HasPattern)
 				{
 					// Pass the pattern to the shader via the S1 register
@@ -88,7 +94,7 @@ namespace Macrocosm.Content.Rockets.Modules
 
 					//Pass the color mask keys as Vector3s and configured colors as Vector4s
 					//Note: parameters are scalars intentionally, I manually unrolled the loop in the shader to reduce number of branch instructions -- Feldy
-					for(int i = 0; i < Pattern.MaxColorCount; i++)
+					for (int i = 0; i < Pattern.MaxColorCount; i++)
 					{
 						effect.Parameters["uColorKey" + i.ToString()].SetValue(Pattern.ColorKeys[i]);
 						effect.Parameters["uColor" + i.ToString()].SetValue(Pattern.GetColor(i).ToVector4());
@@ -128,6 +134,11 @@ namespace Macrocosm.Content.Rockets.Modules
 				Main.graphics.GraphicsDevice.SamplerStates[1] = samplerState1;
 				Main.graphics.GraphicsDevice.SamplerStates[2] = samplerState2;
 			}
+		}
+
+		public virtual void DrawOverlay(SpriteBatch spriteBatch, Vector2 screenPos)
+		{
+
 		}
 	}
 }

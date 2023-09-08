@@ -9,6 +9,7 @@ using ReLogic.Content;
 using System.Linq;
 using Terraria;
 using Terraria.GameContent;
+using Terraria.GameInput;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.UI.Chat;
@@ -157,7 +158,7 @@ namespace Macrocosm.Common.UI
 		private SpriteBatchState state;
 		private void DrawRocket(SpriteBatch spriteBatch)
 		{
-			float scale = 1.4f;
+			float scale = 1f * (Main.screenWidth/1920);
 			Vector2 center = Utility.ScreenCenter;
 			Vector2 spriteSize = rocket.Bounds.Size();
 			Vector2 randomOffset = Main.rand.NextVector2Circular(1f, 5f);
@@ -169,6 +170,7 @@ namespace Macrocosm.Common.UI
 				Matrix.CreateTranslation(-center.X, -center.Y, 0) *
 				Matrix.CreateScale(scale, scale, 1f) *
 				Matrix.CreateTranslation(center.X, center.Y, 0);
+
 
 			state.SaveState(spriteBatch);
 			spriteBatch.End();

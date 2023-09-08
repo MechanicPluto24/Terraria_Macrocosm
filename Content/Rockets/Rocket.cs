@@ -66,6 +66,11 @@ namespace Macrocosm.Content.Rockets
 		/// <summary> Whether the rocket is active in the current world and should be updated and visible </summary>
 		public bool ActiveInCurrentWorld => Active && CurrentWorld == MacrocosmSubworld.CurrentWorld;
 
+		/// <summary> Number of ticks of the launch countdown (seconds * 60 ticks/sec) </summary>
+		public int LiftoffTime = 180;
+
+		public float MaxFlightSpeed = 25f;
+
 		/// <summary> Whether this rocket is currently in flight </summary>
 		public bool InFlight => /*Launched && */FlightTime >= LiftoffTime;
 
@@ -131,12 +136,9 @@ namespace Macrocosm.Content.Rockets
 		/// <summary> The rocket's right booster </summary>
 		public BoosterRight BoosterRight => (BoosterRight)Modules["BoosterRight"];
 
-		// Number of ticks of the launch countdown (seconds * 60 ticks/sec)
-		private const int LiftoffTime = 180;
-		private const float MaxFlightSpeed = 25f;
-
-		public bool StaticFire => FlightTime > LiftoffTime - 120 && FlightTime < LiftoffTime;
-		public float StaticFireProgress => MathHelper.Clamp((FlightTime - 120)/(LiftoffTime - 120), 0f, 1f);
+		public int StaticFireBeginTime = 60;
+		public bool StaticFire => StaticFireProgress > 0f;
+		public float StaticFireProgress => Utility.InverseLerp(LiftoffTime - StaticFireBeginTime, LiftoffTime, FlightTime, clamped: true);
 
 		/// <summary> The flight sequence progress </summary>
 		public float FlightProgress => 1f - ((Position.Y - WorldExitPositionY) / (StartPositionY - WorldExitPositionY));
@@ -287,7 +289,14 @@ namespace Macrocosm.Content.Rockets
 			NetSync();
 		}
 
-		SpriteBatchState state;
+		public void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+		{
+			foreach (RocketModule module in Modules.Values.OrderBy(module => module.DrawPriority))
+			{
+				module.PreDrawBeforeTiles(spriteBatch, screenPos, drawColor);
+			}	
+		}
+
 		/// <summary> Draw the rocket in the configured draw layer </summary>
 		public void Draw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
@@ -304,42 +313,20 @@ namespace Macrocosm.Content.Rockets
 			//DisplayWhoAmI();
 		}
 
-		public void PostDrawInWorld(SpriteBatch spriteBatch)
+		/// <summary> Draw the rocket as a dummy </summary>
+		public void DrawDummy(SpriteBatch spriteBatch, Vector2 offset, Color drawColor)
 		{
-			if (InFlight || forcedFlightAppearance)
+			// Passing Rocket world position as "screenPosition" cancels it out  
+			PreDrawBeforeTiles(spriteBatch, Position - offset, drawColor);
+			Draw(spriteBatch, Position - offset, drawColor);
+ 			DrawOverlay(spriteBatch, Position - offset);
+ 		}
+
+		public void DrawOverlay(SpriteBatch spriteBatch, Vector2 screenPos)
+		{
+			foreach (RocketModule module in Modules.Values.OrderBy(module => module.DrawPriority))
 			{
-				state.SaveState(spriteBatch);
-				spriteBatch.End();
-				spriteBatch.Begin(BlendState.Additive, state);
-
-				var flare = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Flare2").Value;
-				spriteBatch.Draw(flare, new Vector2(Center.X, Position.Y + Height) - Main.screenPosition, null, new Color(255, 69, 0), 0f, flare.Size() / 2f, 1.2f * Main.rand.NextFloat(0.85f, 1f), SpriteEffects.None, 0f);
-
-				//Lighting.AddLight(new Vector2(Center.X, Position.Y + Height + 25), new Color(215, 69, 0).ToVector3() * 15f);
-				//Lighting.AddLight(new Vector2(Center.X, Position.Y + Height + 75), new Color(215, 69, 0).ToVector3() * 15f);
-				//Lighting.AddLight(new Vector2(Center.X, Position.Y + Height + 150), new Color(215, 69, 0).ToVector3() * 15f);
-				
-				if(Stationary || FlightTime < LiftoffTime + 5)
-				{
-					Lighting.AddLight(new Vector2(Center.X + 50, Position.Y + Height + 25), new Color(215, 69, 0).ToVector3() * 5f);
-					Lighting.AddLight(new Vector2(Center.X, Position.Y + Height + 25), new Color(215, 69, 0).ToVector3() * 15f);
-					Lighting.AddLight(new Vector2(Center.X - 50, Position.Y + Height + 25), new Color(215, 69, 0).ToVector3() * 5f);
-
-					Lighting.AddLight(new Vector2(Center.X + 50, Position.Y + Height + 75), new Color(215, 69, 0).ToVector3() * 5f);
-					Lighting.AddLight(new Vector2(Center.X, Position.Y + Height + 75), new Color(215, 69, 0).ToVector3() * 15f);
-					Lighting.AddLight(new Vector2(Center.X - 50, Position.Y + Height + 75), new Color(215, 69, 0).ToVector3() * 5f);
-
-					Lighting.AddLight(new Vector2(Center.X + 50, Position.Y + Height + 150), new Color(215, 69, 0).ToVector3() * 5f);
-					Lighting.AddLight(new Vector2(Center.X, Position.Y + Height + 125), new Color(215, 69, 0).ToVector3() * 15f);
-					Lighting.AddLight(new Vector2(Center.X - 50, Position.Y + Height + 150), new Color(215, 69, 0).ToVector3() * 5f);
-				}
-				else
-				{
-					Lighting.AddLight(new Vector2(Center.X, Position.Y + Height + 75), new Color(215, 69, 0).ToVector3() * 10f);
-				}
-
-				spriteBatch.End();
-				spriteBatch.Begin(state);
+				module.DrawOverlay(spriteBatch, screenPos);
 			}
 		}
 
@@ -469,7 +456,6 @@ namespace Macrocosm.Content.Rockets
 			if (Main.netMode == NetmodeID.Server)
 				return;
 
-
 			if (MouseCanInteract() && Bounds.InPlayerInteractionRange() && !Launched && !GetRocketPlayer(Main.myPlayer).InRocket)
 			{
 				if (Main.mouseRight)
@@ -515,7 +501,6 @@ namespace Macrocosm.Content.Rockets
 			}
 		}
 
-
 		private Vector2 GetCollisionVelocity()
 		{
 			Vector2 minCollisionVelocity = new(float.MaxValue, float.MaxValue);
@@ -528,7 +513,6 @@ namespace Macrocosm.Content.Rockets
  			}
 			return minCollisionVelocity;
 		}
-
 
 		private bool MouseCanInteract()
 		{
@@ -587,10 +571,16 @@ namespace Macrocosm.Content.Rockets
 					SpawnSmoke(countPerTick: 5);
 					//SetScreenshake();
 				}
+				else if(StaticFire)
+				{
+					SpawnSmoke(10, 1.2f);
+				}
+
+				Light();
 			}
 			else if (Landing)
 			{
-				Velocity.Y = MathHelper.Lerp(-worldExitSpeed * 0.8f, 1.5f, Utility.QuadraticEaseIn(LandingProgress));
+				Velocity.Y = MathHelper.Lerp(-worldExitSpeed * 0.8f, 1.5f, Utility.QuadraticEaseOut(LandingProgress));
  
 				UpdateModuleAnimation();
 
@@ -599,7 +589,7 @@ namespace Macrocosm.Content.Rockets
 					SetModuleAnimation(landing: true);
 				}
 
-				if (LandingProgress >= 1f)
+				if (LandingProgress >= 0.99f)
 				{
 					if(GetRocketPlayer(Main.myPlayer).InRocket)
 						RocketUISystem.Show(this);
@@ -608,13 +598,32 @@ namespace Macrocosm.Content.Rockets
 					ResetAnimation();
 				}
 			}
-			else if (StaticFire)
-			{
-				SpawnSmoke(2);
-			}
 			else
 			{
 				Velocity.Y += gravityForce;
+			}
+		}
+
+		// TODO: fix this
+		private void Light()
+		{
+			if (FlightTime < LiftoffTime + 5)
+			{
+				Lighting.AddLight(new Vector2(Center.X + 50, Position.Y + Height + 25), new Color(215, 69, 0).ToVector3() * 5f);
+				Lighting.AddLight(new Vector2(Center.X, Position.Y + Height + 25), new Color(215, 69, 0).ToVector3() * 15f);
+				Lighting.AddLight(new Vector2(Center.X - 50, Position.Y + Height + 25), new Color(215, 69, 0).ToVector3() * 5f);
+
+				Lighting.AddLight(new Vector2(Center.X + 50, Position.Y + Height + 75), new Color(215, 69, 0).ToVector3() * 5f);
+				Lighting.AddLight(new Vector2(Center.X, Position.Y + Height + 75), new Color(215, 69, 0).ToVector3() * 15f);
+				Lighting.AddLight(new Vector2(Center.X - 50, Position.Y + Height + 75), new Color(215, 69, 0).ToVector3() * 5f);
+
+				Lighting.AddLight(new Vector2(Center.X + 50, Position.Y + Height + 150), new Color(215, 69, 0).ToVector3() * 5f);
+				Lighting.AddLight(new Vector2(Center.X, Position.Y + Height + 125), new Color(215, 69, 0).ToVector3() * 15f);
+				Lighting.AddLight(new Vector2(Center.X - 50, Position.Y + Height + 150), new Color(215, 69, 0).ToVector3() * 5f);
+			}
+			else
+			{
+				Lighting.AddLight(new Vector2(Center.X, Position.Y + Height + 75), new Color(215, 69, 0).ToVector3() * 10f);
 			}
 		}
 
@@ -655,14 +664,14 @@ namespace Macrocosm.Content.Rockets
 		}
 
 		// Handle visuals (dusts, particles)
-		private void SpawnSmoke(int countPerTick)
+		private void SpawnSmoke(int countPerTick, float speedScale = 1f)
 		{
 			for (int i = 0; i < countPerTick; i++)
 			{
-				var smoke = Particle.CreateParticle<Smoke>(p =>
+				var smoke = Particle.CreateParticle<RocketExhaustSmoke>(p =>
 				{
 					p.Position = new Vector2(Center.X, Position.Y + Height - 28);
-					p.Velocity = new Vector2(Main.rand.NextFloat(-0.6f, 0.6f), Main.rand.NextFloat(2, 10));
+					p.Velocity = new Vector2(Main.rand.NextFloat(-0.6f, 0.6f), Main.rand.NextFloat(2, 10)) * speedScale;
 					p.Scale = Main.rand.NextFloat(1.2f, 1.6f);
 					p.Rotation = 0f;
 					p.FadeIn = true;
@@ -673,7 +682,7 @@ namespace Macrocosm.Content.Rockets
 					p.ScaleDownSpeed = 0.001f;
 					p.Deceleration = 0.995f;
 					p.DrawColor = Color.White.WithAlpha(150);
-					p.Collide1 = true;
+					p.Collide = true;
 				}, shouldSync: false);
 			}
 		}
