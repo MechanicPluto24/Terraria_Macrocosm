@@ -13,14 +13,7 @@ namespace Macrocosm.Content.Rockets
 	public partial class Rocket 
 	{
 		public Rocket Clone() => DeserializeData(SerializeData());
-
-		/// <summary> Draw the rocket as a dummy </summary>
-		public void DrawDummy(SpriteBatch spriteBatch, Vector2 offset, Color drawColor)
-		{
-			// Passing Rocket world position as "screenPosition" cancels it out  
-			Draw(spriteBatch, Position - offset, drawColor);
-		}
-
+	
 		public void ApplyCustomizationChanges(Rocket dummy)
 		{
 			Nameplate.Text = dummy.Nameplate.Text;

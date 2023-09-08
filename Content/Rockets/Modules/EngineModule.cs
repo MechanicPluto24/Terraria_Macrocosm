@@ -27,48 +27,70 @@ namespace Macrocosm.Content.Rockets.Modules
 		{
 		}
 
-		private SpriteBatchState state;
-		public override void Draw(SpriteBatch spriteBatch, Vector2 screenPos, Color ambientColor)
-        {
-            state.SaveState(spriteBatch);
-            spriteBatch.End();
-            spriteBatch.Begin(SamplerState.PointClamp, state);
+		private SpriteBatchState state1, state2, state3;
+		public override void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+		{
+			state1.SaveState(spriteBatch, true);
+			spriteBatch.End();
+			spriteBatch.Begin(BlendState.AlphaBlend, SamplerState.PointClamp, state1);
 
 			// Draw the rear landing behind the rear booster 
 			Texture2D rearLandingLeg = ModContent.Request<Texture2D>(TexturePath + "_LandingLeg", AssetRequestMode.ImmediateLoad).Value;
-			spriteBatch.Draw(rearLandingLeg, Position + new Vector2(Texture.Width / 2f - rearLandingLeg.Width/2f, 314f) - screenPos, rearLandingLeg.Frame(1, NumberOfFrames, frameY: CurrentFrame), ambientColor);
+			spriteBatch.Draw(rearLandingLeg, Position + new Vector2(Texture.Width / 2f - rearLandingLeg.Width / 2f, 314f) - screenPos, rearLandingLeg.Frame(1, NumberOfFrames, frameY: CurrentFrame), drawColor);
 
 			// Draw the rear booster behind the engine module 
 			Texture2D boosterRear = ModContent.Request<Texture2D>(TexturePath + "_BoosterRear", AssetRequestMode.ImmediateLoad).Value;
-			spriteBatch.Draw(boosterRear, Position + new Vector2(Texture.Width/2f - boosterRear.Width/2f, 293.5f) - screenPos, null, ambientColor, 0f, Origin, 1f, SpriteEffects.None, 0f);
-
+			spriteBatch.Draw(boosterRear, Position + new Vector2(Texture.Width / 2f - boosterRear.Width / 2f, 294f) - screenPos, null, drawColor, 0f, Origin, 1f, SpriteEffects.None, 0f);
+			
 			if (rocket.StaticFire || rocket.InFlight || rocket.ForcedFlightAppearance)
 			{
 				spriteBatch.End();
-				spriteBatch.Begin(BlendState.Additive, state);
-				//DrawSmokeTrail(spriteBatch, -1.2f);
+				spriteBatch.Begin(BlendState.Additive, state1);
 
-				if(rocket.StaticFire)
-					DrawTrail(spriteBatch, 0.5f * rocket.StaticFireProgress);
+				if (rocket.StaticFire)
+					DrawTrail(spriteBatch, 0.5f + 0.3f * Utility.QuadraticEaseIn(rocket.StaticFireProgress));
 
-				if (rocket.InFlight)
-					DrawTrail(spriteBatch, 1f);
+				if (rocket.InFlight || rocket.ForcedFlightAppearance)
+					DrawTrail(spriteBatch, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(rocket.FlightProgress, 0f, 0.1f) * 10f));
 			}
 
 			spriteBatch.End();
-			spriteBatch.Begin(state);
+			spriteBatch.Begin(state1);
+		}
+
+		public override void Draw(SpriteBatch spriteBatch, Vector2 screenPos, Color ambientColor)
+        {
+			state2.SaveState(spriteBatch, true);
+			spriteBatch.End();
+			spriteBatch.Begin(state2);
 
 			// Draw the engine module with the base logic
 			base.Draw(spriteBatch, screenPos, ambientColor);
 
 			spriteBatch.End();
-			spriteBatch.Begin(SamplerState.PointClamp, state);
+			spriteBatch.Begin(SamplerState.PointClamp, state2);
 
 			// Draw the nameplate
 			Nameplate.Draw(spriteBatch, new Vector2(Center.X, Position.Y) - screenPos, ambientColor);
 
 			spriteBatch.End();
-			spriteBatch.Begin(state);
+			spriteBatch.Begin(state2);
+		}
+
+		public override void DrawOverlay(SpriteBatch spriteBatch, Vector2 screenPos)
+		{
+			if (rocket.InFlight || rocket.ForcedFlightAppearance)
+			{
+				state3.SaveState(spriteBatch, true);
+				spriteBatch.End();
+				spriteBatch.Begin(BlendState.Additive, state3);
+
+				var flare = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Flare2").Value;
+				spriteBatch.Draw(flare, new Vector2(rocket.Center.X, rocket.Position.Y + rocket.Bounds.Height) - Main.screenPosition, null, new Color(255, 69, 0), 0f, flare.Size() / 2f, 1.2f * Main.rand.NextFloat(0.85f, 1f), SpriteEffects.None, 0f);
+
+				spriteBatch.End();
+				spriteBatch.Begin(state3);
+			}
 		}
 
 		private void DrawTrail(SpriteBatch spriteBatch, float intensity = 1f)
@@ -81,10 +103,10 @@ namespace Macrocosm.Content.Rockets.Modules
 			Array.Fill(rotations, MathHelper.Pi + MathHelper.PiOver2);
 
 			for (int i = 0; i < stripDataCount; i++)
-				positions[i] += new Vector2(0f, 4f * i * intensity);
+				positions[i] += new Vector2(0f, 4f * i);
 
 			var shader = new MiscShaderData(Main.VertexPixelShaderRef, "MagicMissile")
-							.UseProjectionMatrix(doUse: true)
+							.UseProjectionMatrix(doUse: false)
 							.UseSaturation(-2.2f)
 							.UseImage0(ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "FadeOutMask"))
 							.UseImage1(ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "RocketExhaustTrail2"))
@@ -96,57 +118,10 @@ namespace Macrocosm.Content.Rockets.Modules
 				positions, 
 				rotations,
 				(float progress) => Color.Lerp(new Color(255, 217, 120, (byte)(127 * (1 - intensity))), new Color(255, 0, 0, 0), Utility.QuadraticEaseIn(progress)),
-				(float progress) => MathHelper.Lerp(40, 75, progress) * intensity
+				(float progress) => MathHelper.Lerp(40, 75, progress) * intensity/intensity
 			);
 
 			strip.DrawTrail();
-
-			//var glow = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Circle6").Value;
-			//spriteBatch.Draw(glow, new Vector2(Center.X, Position.Y + Height - 28) - Main.screenPosition, null, new Color(255, 69, 0).WithOpacity(0.35f), MathHelper.PiOver2, glow.Size() / 2f, 0.28f, SpriteEffects.None, 0f);
-
-			//for (int i = 0; i < stripDataCount; i++)
-			//	Lighting.AddLight(positions[i] + Main.screenPosition, new Color(255, 177, 65).ToVector3() * 2f);
-		}
-
-		private void DrawSmokeTrail(SpriteBatch spriteBatch, float offset = -28)
-		{
-			VertexStrip strip = new();
-			int stripDataCount = 100; /*+ (int)(20 * Utility.CubicEaseInOut(Math.Abs(rocket.FlightProgress)));*/
-			Vector2[] positions = new Vector2[stripDataCount];
-			float[] rotations = new float[stripDataCount];
-
-			Vector2 basePosition = new Vector2(Center.X, Position.Y + Height - 28) - Main.screenPosition;
-			for (int i = 0; i < stripDataCount; i++)
-			{
-				positions[i] = basePosition + new Vector2(0f, 4f * i);
-				rotations[i] = MathHelper.Pi + MathHelper.PiOver2;
-			}
-
-			var shader = new MiscShaderData(Main.VertexPixelShaderRef, "MagicMissile")
-							.UseOpacity(0.9f + 0.1f * Utility.SineWave(300))
-							.UseProjectionMatrix(doUse: true)
-							.UseSaturation(offset)
-							.UseImage0(ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "FadeOutMask"))
-							.UseImage1(ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "SmokeTrail1"))
-							.UseImage2(ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "SmokeTrail1"));
-
-			shader.Apply();
-			strip.PrepareStrip(
-				positions,
-				rotations,
-				//(float progress) => (Color.White * (0.8f - 1.2f * Utility.QuintEaseInOut(progress))).WithOpacity(1f - Utility.QuartEaseOut(progress)),
-				(float progress) => Color.White,
-					 
-				(float progress) => MathHelper.Lerp(35, 180, progress)
-			);
-
-			strip.DrawTrail();
-
-			//var glow = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Circle6").Value;
-			//spriteBatch.Draw(glow, new Vector2(Center.X, Position.Y + Height - 28) - Main.screenPosition, null, new Color(255, 69, 0).WithOpacity(0.35f), MathHelper.PiOver2, glow.Size() / 2f, 0.28f, SpriteEffects.None, 0f);
-
-			//for (int i = 0; i < stripDataCount; i++)
-			//	Lighting.AddLight(positions[i] + Main.screenPosition, new Color(255, 177, 65).ToVector3() * 2f);
 		}
 
 		protected override TagCompound SerializeModuleSpecificData()

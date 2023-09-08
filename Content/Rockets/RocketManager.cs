@@ -1,9 +1,12 @@
-﻿using Macrocosm.Common.DataStructures;
+﻿using log4net.Util;
+using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Linq;
 using Terraria;
+using Terraria.GameContent.Drawing;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
@@ -27,17 +30,23 @@ namespace Macrocosm.Content.Rockets
         {
             Rockets = new Rocket[MaxRockets];
 
-            On_Main.DrawProjectiles += DrawRocket_Projectiles;
-            On_Main.DrawNPCs += DrawRocket_NPCs;
+			//On_Main.DrawTiles += On_Main_DrawTiles;
+			On_Main.DoDraw_DrawNPCsBehindTiles += On_Main_DoDraw_DrawNPCsBehindTiles;
+            On_Main.DrawProjectiles += DrawRockets_Projectiles;
+            On_Main.DrawNPCs += DrawRockets_NPCs;
+			On_Main.DrawDust += DrawRockets_OverlaysAfterDusts;
         }
 
-        public override void Unload()
+		public override void Unload()
         {
 			Rockets = null;
 
-            On_Main.DrawProjectiles -= DrawRocket_Projectiles;
-            On_Main.DrawNPCs -= DrawRocket_NPCs;
-        }
+			//On_Main.DrawTiles -= On_Main_DrawTiles;
+			On_Main.DoDraw_DrawNPCsBehindTiles -= On_Main_DoDraw_DrawNPCsBehindTiles;
+			On_Main.DrawProjectiles -= DrawRockets_Projectiles;
+            On_Main.DrawNPCs -= DrawRockets_NPCs;
+			On_Main.DrawDust -= DrawRockets_OverlaysAfterDusts;
+		}
 
 		public static int ActiveRocketCount => Rockets.Count(rocket => rocket.Active);
 		public static int RocketsInCurrentSubworld => Rockets.Count(rocket => rocket.ActiveInCurrentWorld);
@@ -83,6 +92,21 @@ namespace Macrocosm.Content.Rockets
 			}
 		}
 
+
+		private static void PreDrawBeforeTiles()
+		{
+			for (int i = 0; i < MaxRockets; i++)
+			{
+				Rocket rocket = Rockets[i];
+
+				if (!rocket.ActiveInCurrentWorld)
+					continue;
+
+				Color lightColor = Lighting.GetColor((int)(rocket.Center.X / 16), (int)(rocket.Center.Y / 16));
+				rocket.PreDrawBeforeTiles(Main.spriteBatch, Main.screenPosition, lightColor);
+			}
+		}
+
 		private static void DrawRockets(RocketDrawLayer layer)
         {
 			for (int i = 0; i < MaxRockets; i++)
@@ -92,13 +116,26 @@ namespace Macrocosm.Content.Rockets
                 if (!rocket.ActiveInCurrentWorld)
                     continue;
 
-				if (rocket.DrawLayer == layer)
-                {
-                    Color lightColor = Lighting.GetColor((int)(rocket.Center.X / 16), (int)(rocket.Center.Y / 16));
-                    rocket.Draw(Main.spriteBatch, Main.screenPosition, lightColor);
-                }
+				if (rocket.DrawLayer != layer)
+					continue;
+
+                Color lightColor = Lighting.GetColor((int)(rocket.Center.X / 16), (int)(rocket.Center.Y / 16));
+                rocket.Draw(Main.spriteBatch, Main.screenPosition, lightColor);
             }
         }
+
+        private static void DrawRocketOverlays()
+        {
+			for (int i = 0; i < MaxRockets; i++)
+			{
+				Rocket rocket = Rockets[i];
+
+				if (!rocket.ActiveInCurrentWorld)
+					continue;
+
+				rocket.DrawOverlay(Main.spriteBatch, Main.screenPosition);
+			}
+		}
 
 		public override void ClearWorld()
 		{
@@ -150,8 +187,18 @@ namespace Macrocosm.Content.Rockets
 			}
 		}
 
-		private static SpriteBatchState state1, state2;
-		private void DrawRocket_NPCs(On_Main.orig_DrawNPCs orig, Main self, bool behindTiles)
+		private static SpriteBatchState state1, state2, state3, state4;
+
+		private void On_Main_DoDraw_DrawNPCsBehindTiles(On_Main.orig_DoDraw_DrawNPCsBehindTiles orig, Main self)
+		{
+			orig(self);
+
+			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, SamplerState.PointClamp, default, default, default, Main.GameViewMatrix.ZoomMatrix);
+			PreDrawBeforeTiles();
+			Main.spriteBatch.End();
+		}
+
+		private void DrawRockets_NPCs(On_Main.orig_DrawNPCs orig, Main self, bool behindTiles)
         {
             SpriteBatch spriteBatch = Main.spriteBatch;
             state1.SaveState(spriteBatch);
@@ -175,7 +222,7 @@ namespace Macrocosm.Content.Rockets
             spriteBatch.Begin(state2);
         }
 
-        private void DrawRocket_Projectiles(On_Main.orig_DrawProjectiles orig, Main self)
+        private void DrawRockets_Projectiles(On_Main.orig_DrawProjectiles orig, Main self)
         {
             SpriteBatch spriteBatch = Main.spriteBatch;
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, default, default, Main.GameViewMatrix.ZoomMatrix);
@@ -193,5 +240,13 @@ namespace Macrocosm.Content.Rockets
             spriteBatch.End();
         }
 
-    }
+		private void DrawRockets_OverlaysAfterDusts(On_Main.orig_DrawDust orig, Main self)
+		{
+			orig(self);
+
+			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, SamplerState.PointClamp, default, default, default, Main.GameViewMatrix.ZoomMatrix);
+			DrawRocketOverlays();
+			Main.spriteBatch.End();
+		}
+	}
 }
