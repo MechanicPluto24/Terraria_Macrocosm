@@ -11,16 +11,6 @@ namespace Macrocosm.Content.Rockets.Modules
 {
 	public abstract partial class RocketModule
 	{
-		public enum Types
-		{
-			CommandPod,
-			ServiceModule,
-			ReactorModule,
-			EngineModule,
-			BoosterLeft,
-			BoosterRight
-		}
-
 		public string Name => GetType().Name;
 
 		public string FullName => GetType().Namespace + "." + Name;
