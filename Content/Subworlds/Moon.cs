@@ -90,7 +90,7 @@ namespace Macrocosm.Content.Subworlds
 
 		public override void ModifyColorOfTheSkies(ref Color colorOfTheSkies)
 		{
-			colorOfTheSkies = colorOfTheSkies.ToGrayscale();
+			colorOfTheSkies = colorOfTheSkies.ToGrayscaleNTSC();
 		}
 
 		#region Moon events

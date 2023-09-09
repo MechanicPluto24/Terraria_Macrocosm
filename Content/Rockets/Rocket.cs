@@ -607,6 +607,8 @@ namespace Macrocosm.Content.Rockets
 		// TODO: fix this
 		private void Light()
 		{
+			return;
+
 			if (FlightTime < LiftoffTime + 5)
 			{
 				Lighting.AddLight(new Vector2(Center.X + 50, Position.Y + Height + 25), new Color(215, 69, 0).ToVector3() * 5f);

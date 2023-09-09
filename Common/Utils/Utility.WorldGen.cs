@@ -369,9 +369,8 @@ namespace Macrocosm.Common.Utils
 			return Main.maxTilesX - 10;
 		}
 
-		/*
-			* returns the first Y position below the possible spawning height of floating islands.
-			*/
+		///<summary>
+		/// returns the first Y position below the possible spawning height of floating islands.		///</summary>
 		public static int GetBelowFloatingIslandY()
 		{
 			int size = GetWorldSize();
