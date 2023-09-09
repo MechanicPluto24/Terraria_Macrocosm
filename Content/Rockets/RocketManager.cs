@@ -30,7 +30,6 @@ namespace Macrocosm.Content.Rockets
         {
             Rockets = new Rocket[MaxRockets];
 
-			//On_Main.DrawTiles += On_Main_DrawTiles;
 			On_Main.DoDraw_DrawNPCsBehindTiles += On_Main_DoDraw_DrawNPCsBehindTiles;
             On_Main.DrawProjectiles += DrawRockets_Projectiles;
             On_Main.DrawNPCs += DrawRockets_NPCs;
@@ -41,7 +40,6 @@ namespace Macrocosm.Content.Rockets
         {
 			Rockets = null;
 
-			//On_Main.DrawTiles -= On_Main_DrawTiles;
 			On_Main.DoDraw_DrawNPCsBehindTiles -= On_Main_DoDraw_DrawNPCsBehindTiles;
 			On_Main.DrawProjectiles -= DrawRockets_Projectiles;
             On_Main.DrawNPCs -= DrawRockets_NPCs;
@@ -49,7 +47,7 @@ namespace Macrocosm.Content.Rockets
 		}
 
 		public static int ActiveRocketCount => Rockets.Count(rocket => rocket.Active);
-		public static int RocketsInCurrentSubworld => Rockets.Count(rocket => rocket.ActiveInCurrentWorld);
+		public static int RocketInCurrentSubworldCount => Rockets.Count(rocket => rocket.ActiveInCurrentWorld);
 
 		public static void AddRocket(Rocket rocket)
 		{
@@ -187,7 +185,7 @@ namespace Macrocosm.Content.Rockets
 			}
 		}
 
-		private static SpriteBatchState state1, state2, state3, state4;
+		private static SpriteBatchState state1, state2;
 
 		private void On_Main_DoDraw_DrawNPCsBehindTiles(On_Main.orig_DoDraw_DrawNPCsBehindTiles orig, Main self)
 		{
