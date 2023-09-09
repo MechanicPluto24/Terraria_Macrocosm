@@ -12,14 +12,27 @@ namespace Macrocosm.Common.Subworlds
     public partial class MacrocosmSubworld
     {
         [AttributeUsage(AttributeTargets.Method)]
-        protected class TaskAttribute : Attribute { }
+        protected class TaskAttribute : Attribute 
+        {
+            public double Weight { get; }
+            public TaskAttribute(double weight = 1d) 
+            {
+                Weight = weight;
+            }
+        }
         public sealed override List<GenPass> Tasks
         {
             get
             {
                 List<GenPass> tasks = new();
-                foreach (MethodInfo methodInfo in GetType().GetRuntimeMethods().Where(methodInfo => methodInfo.GetCustomAttribute<TaskAttribute>() is not null))
+                foreach (MethodInfo methodInfo in GetType().GetRuntimeMethods())
                 {
+                    TaskAttribute taskAttribute = methodInfo.GetCustomAttribute<TaskAttribute>();
+                    if (taskAttribute is null)
+                    {
+                        continue;
+                    }
+
                     tasks.Add(new PassLegacy(
                         methodInfo.Name,
                         (progress, configuration) => {
@@ -61,7 +74,8 @@ namespace Macrocosm.Common.Subworlds
                                     Macrocosm.Instance.Logger.Error("TaskAttribute method too many parameters.");
                                     break;
                             }
-                        }
+                        },
+                        taskAttribute.Weight
                      ));
                 }
 

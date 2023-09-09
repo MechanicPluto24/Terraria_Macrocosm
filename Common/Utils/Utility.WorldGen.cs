@@ -241,7 +241,7 @@ namespace Macrocosm.Common.Utils
                         }
                         else if (wallCount < 4)
                         {
-                            FastRemoveTile(i, j);
+                            FastRemoveWall(i, j);
                         }
                     }
                 );
@@ -257,34 +257,40 @@ namespace Macrocosm.Common.Utils
 			}
 
 			Tile tile = Main.tile[i, j];
-			var info = new TileNeighbourInfo(i, j).Solid;
+			var info = new TileNeighbourInfo(i, j).HasTile;
 
-			if (info.Top && info.Right && info.Bottom && info.Left)
+			if (
+				(info.Top && info.Right && info.Bottom) || 
+				(info.Right && info.Bottom && info.Left) ||
+                (info.Bottom && info.Left && info.Top) ||
+                (info.Right && info.Left) ||
+				(info.Top && info.Bottom)
+                )
 			{
 				return;
 			}
 
 			if (info.Top && info.Right)
 			{
-				tile.BlockType = BlockType.SlopeDownLeft;
+				tile.BlockType = BlockType.SlopeUpRight;
 				return;
 			}
 
 			if (info.Right && info.Bottom)
 			{
-                tile.BlockType = BlockType.SlopeUpLeft;
+                tile.BlockType = BlockType.SlopeDownRight;
 				return;
             }
 
 			if (info.Bottom && info.Left)
 			{
-				tile.BlockType = BlockType.SlopeDownRight;
+				tile.BlockType = BlockType.SlopeDownLeft;
                 return;
             }
 
             if (info.Left && info.Top)
             {
-                tile.BlockType = BlockType.SlopeDownRight;
+                tile.BlockType = BlockType.SlopeUpLeft;
                 return;
             }
         }
