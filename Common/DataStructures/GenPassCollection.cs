@@ -9,6 +9,7 @@ using Terraria.WorldBuilding;
 
 namespace Macrocosm.Common.DataStructures
 {
+    [Obsolete("Use the TaskAttribute in a MacrocosmSubworld sub-class.", false)]
 	public abstract class GenPassCollection
     {
         private PassLegacy CreateGenPass(MethodInfo methodInfo)

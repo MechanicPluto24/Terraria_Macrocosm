@@ -249,6 +249,46 @@ namespace Macrocosm.Common.Utils
             }
         }
 
+		public static void SlopeTile(int i, int j)
+		{
+			if (CoordinatesOutOfBounds(i, j))
+			{
+				return;
+			}
+
+			Tile tile = Main.tile[i, j];
+			var info = new TileNeighbourInfo(i, j).Solid;
+
+			if (info.Top && info.Right && info.Bottom && info.Left)
+			{
+				return;
+			}
+
+			if (info.Top && info.Right)
+			{
+				tile.BlockType = BlockType.SlopeDownLeft;
+				return;
+			}
+
+			if (info.Right && info.Bottom)
+			{
+                tile.BlockType = BlockType.SlopeUpLeft;
+				return;
+            }
+
+			if (info.Bottom && info.Left)
+			{
+				tile.BlockType = BlockType.SlopeDownRight;
+                return;
+            }
+
+            if (info.Left && info.Top)
+            {
+                tile.BlockType = BlockType.SlopeDownRight;
+                return;
+            }
+        }
+
         public static void GenerateOre(int tileType, double percent, int strength, int steps, int replaceTileType = -1)
         {
             for (int k = 0; k < (int)(Main.maxTilesX * Main.maxTilesY * percent); k++)

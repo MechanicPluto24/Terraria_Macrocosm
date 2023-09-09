@@ -22,7 +22,7 @@ namespace Macrocosm.Content.Subworlds
 	/// Why isn't anyone else working on this
 	/// I have saved the day - Ryan
 	/// </summary>
-	public class Moon : MacrocosmSubworld
+	public partial class Moon : MacrocosmSubworld
     {
         private static Moon instance;
         public static Moon Instance { get { instance ??= new(); return instance; } }
@@ -40,7 +40,7 @@ namespace Macrocosm.Content.Subworlds
         public override bool NoPlayerSaving => false;
 
 		private GroundPass genGroundPass;
-		public override List<GenPass> Tasks => /*new()*/ new MoonGenPassCollection().Tasks;
+		//public override List<GenPass> Tasks => /*new()*/ new MoonGenPassCollection().Tasks;
         /*{
             genGroundPass,
             new CraterPass("CraterPass", 1f),
