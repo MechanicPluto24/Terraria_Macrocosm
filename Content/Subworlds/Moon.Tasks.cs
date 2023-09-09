@@ -235,13 +235,16 @@ namespace Macrocosm.Content.Subworlds
 
             for (int x = 0; x < repeats; x++)
             {
-                for (int i = 0; i < Main.maxTilesX; i++)
-                {
-                    for (int j = 0; j < Main.maxTilesY; j++)
+                ForEachInRectangle(
+                    0,
+                    0,
+                    Main.maxTilesX,
+                    Main.maxTilesY,
+                    (i, j) =>
                     {
                         progress.Set(
-                            (float)(j + i * Main.maxTilesY + x * Main.maxTilesX * Main.maxTilesY) / (Main.maxTilesX * Main.maxTilesY * repeats)
-                        );
+                                (float)(j + i * Main.maxTilesY + x * Main.maxTilesX * Main.maxTilesY) / (Main.maxTilesX * Main.maxTilesY * repeats)
+                            );
 
                         TileNeighbourInfo neighbourInfo = new(i, j);
                         if (neighbourInfo.Solid.Count > 4)
@@ -257,8 +260,22 @@ namespace Macrocosm.Content.Subworlds
                             FastRemoveTile(i, j);
                         }
                     }
-                }
+                );
             }
+
+            ForEachInRectangle(
+                0,
+                0,
+                Main.maxTilesX,
+                Main.maxTilesY,
+                (i, j) =>
+                {
+                    if (WorldGen.genRand.NextBool(3))
+                    {
+                        SlopeTile(i, j);
+                    }
+                }
+            );
         }
 
         [Task]
@@ -313,18 +330,6 @@ namespace Macrocosm.Content.Subworlds
                     FastPlaceTile(i, j, regolithType);
                 }
             }
-        }
-
-        [Task]
-        private void SlopeTask()
-        {
-            /*ForEachInRectangle(
-                0,
-                0,
-                Main.maxTilesX,
-                Main.maxTilesY,
-                SlopeTile
-            );*/
         }
 
         /*[GenPass(nameof(WallPass), InsertMode.After)]
@@ -404,7 +409,7 @@ namespace Macrocosm.Content.Subworlds
         {
             progress.Message = "Shi";
 
-            int protolithType = TileType<Protolith>();
+            ushort protolithType = (ushort)TileType<Protolith>();
 
             void SpreadOre(ushort oreType, float chance, Range repeatCount, Range sprayRadius, Range blobSize)
             {
@@ -412,7 +417,11 @@ namespace Macrocosm.Content.Subworlds
                 {
                     for (int j = (int)Main.rockLayer; j < Main.maxTilesY; j++)
                     {
-                        if (Main.tile[i, j].HasTile && Main.tile[i, j].TileType == protolithType && WorldGen.genRand.NextFloat() < chance)
+                        if (
+                            Main.tile[i, j].HasTile && Main.tile[i, j].TileType == protolithType 
+                            && WorldGen.genRand.NextFloat() < chance &&
+                            new TileNeighbourInfo(i, j).TypedSolid(protolithType).Count > 2
+                            )
                         {
                             BlobTileRunner(i, j, oreType, repeatCount, sprayRadius, blobSize);
                         }
@@ -479,8 +488,9 @@ namespace Macrocosm.Content.Subworlds
         private void AmbientTask(GenerationProgress progress)
         {
             progress.Message = "Sprinkles";
-            float smallRockSpawnChance = 0.05f;
-            float mediumRockSpawnChance = 0.025f;
+            float smallRockSpawnChance = 0.1f;
+            float mediumRockSpawnChance = 0.05f;
+            ushort regolithType = (ushort)TileType<Regolith>();
 
             for (int i = 0; i < Main.maxTilesX - 1; i++)
             {
@@ -488,7 +498,7 @@ namespace Macrocosm.Content.Subworlds
                 for (int j = 1; j < Main.maxTilesY; j++)
                 {
                     TileNeighbourInfo neighbourInfo = new(i, j);
-                    if (Main.tile[i, j].HasTile)
+                    if (Main.tile[i, j].HasTile && Main.tile[i, j].TileType == regolithType)
                     {
                         if (WorldGen.genRand.NextFloat() < smallRockSpawnChance)
                         {

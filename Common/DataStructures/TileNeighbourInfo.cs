@@ -1,4 +1,5 @@
-﻿using Terraria;
+﻿using System;
+using Terraria;
 using Terraria.ID;
 
 namespace Macrocosm.Common.DataStructures
@@ -45,28 +46,25 @@ namespace Macrocosm.Common.DataStructures
                             + (Left ? 1 : 0);
         }
 
-        public record SolidInfo(int I, int J) : CountableNeighbourInfo(I, J)
+        public record PredicateNeighbourInfo(int I, int J, Func<Tile, bool> Predicate) : CountableNeighbourInfo(I, J)
         {
-            protected override bool ShouldCount(Tile tile) => tile.HasTile && tile.BlockType == BlockType.Solid;
+            protected override bool ShouldCount(Tile tile) => Predicate.Invoke(tile);
         }
 
-        public record WallInfo(int I, int J) : CountableNeighbourInfo(I, J)
-        {
-            protected override bool ShouldCount(Tile tile) => tile.WallType != WallID.None;
-        }
+        private PredicateNeighbourInfo hasTile;
+        public PredicateNeighbourInfo HasTile => hasTile ??= new(I, J, tile => tile.HasTile);
 
-        public record TypedInfo(int I, int J, ushort Type) : CountableNeighbourInfo(I, J)
-        {
-            protected override bool ShouldCount(Tile tile) => tile.HasTile && tile.TileType == Type;
-        }
+        private PredicateNeighbourInfo solid;
+        public PredicateNeighbourInfo Solid => solid ??= new(I, J, tile => tile.HasTile && tile.BlockType == BlockType.Solid);
 
-        private SolidInfo solid;
-        public SolidInfo Solid => solid ??= new SolidInfo(I, J);
+        private PredicateNeighbourInfo sloped;
+        public PredicateNeighbourInfo Sloped => sloped ??= new(I, J, tile => tile.HasTile && tile.BlockType != BlockType.Solid);
 
-        private WallInfo wall;
-        public WallInfo Wall => wall ??= new WallInfo(I, J);
+        private PredicateNeighbourInfo wall;
+        public PredicateNeighbourInfo Wall => wall ??= new(I, J, tile => tile.WallType != WallID.None);
 
-        private TypedInfo typedSolid;
-        public TypedInfo TypedSolid(ushort type) => typedSolid is null || typedSolid.Type != type ? (typedSolid = new TypedInfo(I, J, type)) : typedSolid;
+        public PredicateNeighbourInfo TypedSolid(ushort type) => new(I, J, tile => tile.HasTile && tile.TileType == type);
+
+        public PredicateNeighbourInfo GetPredicateNeighbourInfo(Func<Tile, bool> predicate) => new(I, J, predicate);
     }
 }
