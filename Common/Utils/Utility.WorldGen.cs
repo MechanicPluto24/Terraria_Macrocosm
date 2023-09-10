@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Content.WorldGeneration.Base;
 using Microsoft.Xna.Framework;
+using MonoMod.Logs;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -14,20 +15,20 @@ namespace Macrocosm.Common.Utils
     {
         public static bool CoordinatesOutOfBounds(int i, int j) => i >= Main.maxTilesX || j >= Main.maxTilesY || i < 0 || j < 0;
 
-        public static void ForEachInRectangle(Rectangle rectangle, Action<int, int> action)
+        public static void ForEachInRectangle(Rectangle rectangle, Action<int, int> action, int addI = 1, int addJ = 1)
         {
-            for (int i = rectangle.X; i < rectangle.X + rectangle.Width; i++)
+            for (int i = rectangle.X; i < rectangle.X + rectangle.Width; i += addI)
             {
-                for (int j = rectangle.Y; j < rectangle.Y + rectangle.Height; j++)
+                for (int j = rectangle.Y; j < rectangle.Y + rectangle.Height; j += addJ)
                 {
                     action(i, j);
                 }
             }
         }
 
-        public static void ForEachInRectangle(int i, int j, int width, int height, Action<int, int> action)
+        public static void ForEachInRectangle(int i, int j, int width, int height, Action<int, int> action, int addI = 1, int addJ = 1)
         {
-            ForEachInRectangle(new Rectangle(i, j, width, height), action);
+            ForEachInRectangle(new Rectangle(i, j, width, height), action, addI, addJ);
         }
 
         public static void FastPlaceTile(int i, int j, ushort tileType)
@@ -249,7 +250,29 @@ namespace Macrocosm.Common.Utils
             }
         }
 
-		public static void SlopeTile(int i, int j)
+		public static void SafePoundTile(int i, int j)
+		{
+            if (CoordinatesOutOfBounds(i, j))
+            {
+                return;
+            }
+
+            Tile tile = Main.tile[i, j];
+            var info = new TileNeighbourInfo(i, j).HasTile;
+
+            if (
+                !info.Bottom ||
+				info.Top ||
+				(info.Right && info.Left)
+                )
+            {
+                return;
+            }
+
+			tile.BlockType = BlockType.HalfBlock;
+        }
+
+		public static void SafeSlopeTile(int i, int j)
 		{
 			if (CoordinatesOutOfBounds(i, j))
 			{
@@ -306,6 +329,49 @@ namespace Macrocosm.Common.Utils
                     WorldGen.TileRunner(x, y, strength, steps, tileType);
                 }
             }
+        }
+
+		/// <summary>
+		/// Use with caution as it may break through the recursion limit if the maxCount is set too high.
+		/// </summary>
+		/// <param name="i"></param>
+		/// <param name="j"></param>
+		/// <param name="predicate"></param>
+		/// <param name="maxCount"></param>
+		/// <returns>true if maxCount is lower than the count of coordinates</returns>
+        public static bool ConnectedTiles(int i, int j, Func<Tile, bool> predicate, out List<(int, int)> coordinates, int maxCount = 255)
+        {
+            coordinates = new() { (i, j) };
+            ConnectedTilesRecursive(i, j, predicate, coordinates, maxCount);
+			return coordinates.Count != maxCount;
+        }
+
+		private static void ConnectedTilesRecursive(int i, int j, Func<Tile, bool> predicate, List<(int, int)> coordinates, int maxCount)
+		{
+            void CheckCoordinate(int i, int j)
+            {
+                if (coordinates.Count == maxCount)
+                {
+                    return;
+                }
+
+                if (!CoordinatesOutOfBounds(i, j) && !coordinates.Contains((i, j)) && predicate.Invoke(Main.tile[i, j]))
+                {
+                    coordinates.Add((i, j));
+                    ConnectedTilesRecursive(i, j, predicate, coordinates, maxCount);
+                }
+            }
+
+            CheckCoordinate(i, j - 1);
+            CheckCoordinate(i + 1, j);
+            CheckCoordinate(i, j + 1);
+            CheckCoordinate(i - 1, j);
+        }
+
+        public static int ConnectedTilesCount(int i, int j, Func<Tile, bool> predicate, int maxCount = 255)
+        {
+			ConnectedTiles(i, j, predicate, out List<(int, int)> coordinates, maxCount);
+            return coordinates.Count;
         }
 
         public static bool CheckTile6WayBelow(int tileX, int tileY)
