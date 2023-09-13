@@ -85,8 +85,12 @@ namespace Macrocosm.Content.Rockets.Modules
 				spriteBatch.End();
 				spriteBatch.Begin(BlendState.Additive, state3);
 
+				float scale = 1.2f * Main.rand.NextFloat(0.85f, 1f);
+				if(rocket.FlightProgress < 0.1f)
+					scale *= Utility.QuadraticEaseOut(rocket.FlightProgress * 10f);
+
 				var flare = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Flare2").Value;
-				spriteBatch.Draw(flare, new Vector2(rocket.Center.X, rocket.Position.Y + rocket.Bounds.Height) - Main.screenPosition, null, new Color(255, 69, 0), 0f, flare.Size() / 2f, 1.2f * Main.rand.NextFloat(0.85f, 1f), SpriteEffects.None, 0f);
+				spriteBatch.Draw(flare, new Vector2(rocket.Center.X, rocket.Position.Y + rocket.Bounds.Height) - Main.screenPosition, null, new Color(255, 69, 0), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
 
 				spriteBatch.End();
 				spriteBatch.Begin(state3);
@@ -118,7 +122,7 @@ namespace Macrocosm.Content.Rockets.Modules
 				positions, 
 				rotations,
 				(float progress) => Color.Lerp(new Color(255, 217, 120, (byte)(127 * (1 - intensity))), new Color(255, 0, 0, 0), Utility.QuadraticEaseIn(progress)),
-				(float progress) => MathHelper.Lerp(40, 75, progress) * intensity/intensity
+				(float progress) => MathHelper.Lerp(40, 75, progress) 
 			);
 
 			strip.DrawTrail();
