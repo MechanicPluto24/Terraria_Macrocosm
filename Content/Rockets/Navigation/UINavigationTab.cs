@@ -2,6 +2,7 @@
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Items.Dev;
 using Macrocosm.Content.Rockets.Navigation.Checklist;
 using Macrocosm.Content.Rockets.Navigation.NavigationInfo;
 using Microsoft.Xna.Framework;
@@ -163,11 +164,13 @@ namespace Macrocosm.Content.Rockets.Navigation
                 launchButton.ButtonState = UILaunchButton.StateType.AlreadyHere;
             else if (!CheckLaunchConditions())
                 launchButton.ButtonState = UILaunchButton.StateType.CantReach;
-            else
+            else if(Main.LocalPlayer.GetModPlayer<RocketPlayer>().AsCommander)
                 launchButton.ButtonState = UILaunchButton.StateType.Launch;
-        }
+            else
+				launchButton.ButtonState = UILaunchButton.StateType.LaunchInactive;
+		}
 
-        private void LaunchRocket()
+		private void LaunchRocket()
         {
             Rocket.Fuel -= GetFuelCost();
 			Rocket.Launch(); 

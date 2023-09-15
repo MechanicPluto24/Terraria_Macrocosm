@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 
@@ -182,9 +183,14 @@ namespace Macrocosm.Common.Drawing.Particles
 		/// </summary>
 		public virtual Rectangle? GetFrame()
 		{ 
+
+			if (Main.netMode == NetmodeID.Server)
+				return null;
+
 			// if not animated or frame is not picked randomly on spawn, draw the entire texture
  			if (FrameNumber <= 1 && !SetRandomFrameOnSpawn)
 				return null;
+
 
 			int frameHeight = Texture.Height / FrameNumber;
 			return new Rectangle(0, frameHeight * currentFrame, Texture.Width, frameHeight);

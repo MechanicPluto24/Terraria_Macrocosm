@@ -98,7 +98,6 @@ namespace Macrocosm.Common.Systems
 			}
 		}
 
-
 		// This is called only when not in a loading screen.
 		public override void UpdateUI(GameTime gameTime)
 		{

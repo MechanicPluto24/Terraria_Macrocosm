@@ -1,10 +1,13 @@
 ﻿using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Items.Dev;
 using Macrocosm.Content.Rockets;
 using Macrocosm.Content.Subworlds;
 using Macrocosm.Content.UI.LoadingScreens;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
+using Terraria;
+using Terraria.ID;
 
 namespace Macrocosm.Common.Subworlds
 {
@@ -61,32 +64,61 @@ namespace Macrocosm.Common.Subworlds
 
 		public static bool Travel(string targetWorld, Rocket rocket = null)
 		{
-			if (!SubworldSystem.AnyActive<Macrocosm>())
+			if(Main.netMode != NetmodeID.Server)
 			{
-				LoadingScreen = new EarthLoadingScreen();
-			}
-			else switch (Current.Name)
-			{
-				case "Moon": LoadingScreen = new MoonLoadingScreen(); break;
+				if (!SubworldSystem.AnyActive<Macrocosm>())
+				{
+					LoadingScreen = new EarthLoadingScreen();
+				}
+				else switch (Current.Name)
+				{
+					case "Moon": LoadingScreen = new MoonLoadingScreen(); break;
+				}
+
+				if (rocket is not null)
+					LoadingScreen.SetRocket(rocket);
+
+				if (targetWorld == "Earth")
+				{
+					SubworldSystem.Exit();
+					LoadingScreen.SetTargetWorld("Earth");
+					LoadingTitleSequence.SetTargetWorld("Earth");
+					return true;
+				}
 			}
 
-			if(rocket is not null)
-				LoadingScreen.SetRocket(rocket);
-
-			if(targetWorld == "Earth")
+			string subworldId = Macrocosm.Instance.Name + "/" + targetWorld;
+			bool entered = true;
+			if(Main.netMode == NetmodeID.SinglePlayer)
 			{
-				SubworldSystem.Exit();
-				LoadingScreen.SetTargetWorld("Earth");
-				LoadingTitleSequence.SetTargetWorld("Earth");
-				return true;
-			}
+				entered = SubworldSystem.Enter(subworldId);
+			} 
+			else if(Main.netMode == NetmodeID.Server)
+			{
+				SubworldSystem.StartSubserver(SubworldSystem.GetIndex(subworldId));
 
-			bool entered = SubworldSystem.Enter(Macrocosm.Instance.Name + "/" + targetWorld);
+				for (int i = 0; i < Main.maxPlayers; i++)
+				{
+					var player = Main.player[i];
+
+					if (!player.active)
+						continue;
+
+					if(player.TryGetModPlayer(out RocketPlayer rocketPlayer))
+					{
+						if (rocketPlayer.InRocket && rocketPlayer.RocketID == rocket.WhoAmI)
+							SubworldSystem.MovePlayerToSubworld(subworldId, i);
+					}
+				}
+			}
 
 			if (entered)
 			{
-				LoadingScreen.SetTargetWorld(targetWorld);
-				LoadingTitleSequence.SetTargetWorld(targetWorld);
+				if(Main.netMode != NetmodeID.Server)
+				{
+					LoadingScreen.SetTargetWorld(targetWorld);
+					LoadingTitleSequence.SetTargetWorld(targetWorld);
+				}		
 			}
 			else
 			{

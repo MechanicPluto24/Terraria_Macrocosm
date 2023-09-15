@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using SubworldLibrary;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -77,7 +78,7 @@ namespace Macrocosm.Common.UI
 		{
 			if (currentState != TitleState.Inactive)
 			{
-				if (Main.hasFocus && currentState != TitleState.Inactive)
+				if ((Main.hasFocus || Main.netMode == NetmodeID.MultiplayerClient) && currentState != TitleState.Inactive)
 					Update();
 
 				Draw(spriteBatch);

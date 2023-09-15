@@ -52,6 +52,7 @@ Rocket: {
 		AlreadyHere: CURRENT LOCATION
 		ZoomIn: ZOOM IN
 		Launch: LAUNCH
+		LaunchInactive: LAUNCH
 	}
 
 	Gravity: {

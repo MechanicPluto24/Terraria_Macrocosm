@@ -3,6 +3,7 @@ using Terraria.GameContent;
 using Terraria;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework.Graphics;
+using Terraria.ID;
 
 namespace Macrocosm.Common.Drawing
 {
@@ -28,7 +29,7 @@ namespace Macrocosm.Common.Drawing
 
 		public override void PostDrawInterface(SpriteBatch spriteBatch)
 		{
-			if (interfaceSelfDraw && Main.hasFocus)
+			if (interfaceSelfDraw && (Main.hasFocus || Main.netMode == NetmodeID.MultiplayerClient))
 			{
 				if (isFading)
 				{
@@ -44,7 +45,7 @@ namespace Macrocosm.Common.Drawing
 
 		public static void DrawBlack(float opacity)
 		{
-			Main.spriteBatch.Draw(TextureAssets.BlackTile.Value, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.Black * opacity);
+			Main.spriteBatch.Draw(TextureAssets.BlackTile.Value, new Rectangle(0, 0, Main.screenWidth+1, Main.screenHeight+1), Color.Black * opacity);
 		}
 
 		public static void ResetFade()
