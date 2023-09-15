@@ -568,12 +568,12 @@ namespace Macrocosm.Content.Rockets
 						else
 							Velocity.Y -= startAcceleration;
 
-					SpawnSmoke(countPerTick: 5);
-					//SetScreenshake();
+					SpawnSmoke(countPerTick: 5, secondaryBoosterSmoke: true);
+					SetScreenshake();
 				}
 				else if(StaticFire)
 				{
-					SpawnSmoke(10, 1.2f);
+					SpawnSmoke(countPerTick: 10, secondaryBoosterSmoke: false, speedScale: 1.2f);
 				}
 
 				Light();
@@ -666,7 +666,7 @@ namespace Macrocosm.Content.Rockets
 		}
 
 		// Handle visuals (dusts, particles)
-		private void SpawnSmoke(int countPerTick, float speedScale = 1f)
+		private void SpawnSmoke(int countPerTick, bool secondaryBoosterSmoke = false, float speedScale = 1f)
 		{
 			for (int i = 0; i < countPerTick; i++)
 			{
@@ -687,45 +687,70 @@ namespace Macrocosm.Content.Rockets
 					p.Collide = true;
 				}, shouldSync: false);
 			}
+
+			if (secondaryBoosterSmoke)
+			{
+				int smallSmokeCount = (int)(countPerTick * 1.5f);
+
+				for (int i = 0; i < smallSmokeCount; i++)
+				{
+					Vector2 position = i % 2 == 0 ?
+									new Vector2(BoosterLeft.Position.X + BoosterLeft.ExhaustOffsetX, Position.Y + Height - 28):
+									new Vector2(BoosterRight.Position.X + BoosterRight.ExhaustOffsetX, Position.Y + Height - 28);
+
+					var smoke = Particle.CreateParticle<RocketExhaustSmoke>(p =>
+					{
+						p.Position = position;
+						p.Velocity = new Vector2(Main.rand.NextFloat(-0.4f, 0.4f), Main.rand.NextFloat(2, 4)) * speedScale;
+						p.Scale = Main.rand.NextFloat(0.6f, 0.9f);
+						p.Rotation = 0f;
+						p.FadeIn = true;
+						p.FadeOut = true;
+						p.FadeInSpeed = 2;
+						p.FadeOutSpeed = 12;
+						p.TargetAlpha = 128;
+						p.ScaleDownSpeed = 0.0015f;
+						p.Deceleration = 0.993f;
+						p.DrawColor = Color.White.WithAlpha(150);
+						p.Collide = true;
+					}, shouldSync: false);
+				}
+			}
 		}
 
 		// Handles the subworld transfer on each client, locally
 		private void EnterDestinationSubworld()
 		{
-			if (Main.netMode == NetmodeID.Server)
-				return;
-
 			Velocity = Vector2.Zero;
 			Landing = true;
+			RocketPlayer commander = GetCommander();
 
-			if (CheckPlayerInRocket(Main.myPlayer))
+			if(commander is null)
 			{
-				RocketPlayer commander = GetCommander();
+				MacrocosmSubworld.WorldTravelFailure("Error: Could not find the commander of Rocket " + WhoAmI);
+				return;
+			}
 
-				if(commander is null)
-				{
-					MacrocosmSubworld.WorldTravelFailure("Error: Could not find the commander of Rocket " + WhoAmI);
-					return;
-				}
-
-				CurrentWorld = commander.TargetSubworldID;
-				//NetSync();
-
+			if(Main.netMode != NetmodeID.MultiplayerClient)
+			{
 				//LaunchPad launchPad = commander.SelectedLaunchPad;
 				LaunchPad launchPad = null;
 
-
-				if(launchPad is not null) 
+				if (launchPad is not null)
 					TargetLandingPosition = launchPad.Position;
 				else
 					TargetLandingPosition = default;
 
-				if (commander.TargetSubworldID != null && commander.TargetSubworldID != "")
-				{
-					if (!MacrocosmSubworld.Travel(commander.TargetSubworldID, this))
-						CurrentWorld = MacrocosmSubworld.CurrentWorld;
- 				}
+				CurrentWorld = commander.TargetSubworldID;
+				NetSync();
 			}
+		
+			if (commander.TargetSubworldID != null && commander.TargetSubworldID != "")
+			{
+				if (!MacrocosmSubworld.Travel(commander.TargetSubworldID, this))
+					CurrentWorld = MacrocosmSubworld.CurrentWorld;
+ 			}
+			
 		}
 	}
 }

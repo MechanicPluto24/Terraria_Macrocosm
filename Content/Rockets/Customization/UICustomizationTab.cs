@@ -603,10 +603,25 @@ namespace Macrocosm.Content.Rockets.Navigation
 			ColorPickersLoseFocus();
 
 			var defaultPattern = CustomizationStorage.GetPattern(currentModuleName, currentModule.Pattern.Name);
-			currentModule.Pattern = defaultPattern.Clone();
-			currentPatternIcon.Pattern = defaultPattern.Clone();
 
-			if(GetFocusedColorPicker(out var item) && item.colorIndex >= 0)
+			if (rocketPreview.ZoomedOut)
+			{
+				foreach (var module in CustomizationDummy.Modules)
+				{
+					var currentModulePattern = CustomizationDummy.Modules[module.Key].Pattern;
+
+					if (currentModulePattern.Name == currentPatternIcon.Pattern.Name)
+						CustomizationDummy.Modules[module.Key].Pattern = CustomizationStorage.GetPattern(module.Key, currentModulePattern.Name);
+				}
+			}
+			else
+			{
+				currentModule.Pattern = defaultPattern.Clone();
+				currentPatternIcon.Pattern = defaultPattern.Clone();
+			}
+
+			// Hmm does this even do anything?
+			if (GetFocusedColorPicker(out var item) && item.colorIndex >= 0)
 			{
 				item.picker.BackPanelColor = defaultPattern.GetColor(item.colorIndex);
 			}
@@ -864,16 +879,16 @@ namespace Macrocosm.Content.Rockets.Navigation
 			rocketApplyButton.OnLeftClick += (_, _) => ApplyCustomizationChanges();
 			rocketCustomizationControlPanel.Append(rocketApplyButton);
 
-
+			// TODO...
 			/*
 			randomizeButton = new(Main.Assets.Request<Texture2D>("Images/UI/CharCreation/Randomize"))
 			{
 				VAlign = 0.93f,
 				Left = new(0f, 0.77f),
-				HoverText = Language.GetText("Mods.Macrocosm.UI.Common.RandomizeColor")
+				HoverText = Language.GetText("Mods.Macrocosm.UI.Common.RandomizeCustomization")
 			};
 
-			randomizeButton.OnLeftMouseDown += (_, _) => RandomizeColor();
+			randomizeButton.OnLeftMouseDown += (_, _) => RandomizeCustomization();
 			rocketCustomizationControlPanel.Append(randomizeButton);
 			*/
 

@@ -42,6 +42,7 @@ namespace Macrocosm.Content.Rockets.Modules
 			Texture2D boosterRear = ModContent.Request<Texture2D>(TexturePath + "_BoosterRear", AssetRequestMode.ImmediateLoad).Value;
 			spriteBatch.Draw(boosterRear, Position + new Vector2(Texture.Width / 2f - boosterRear.Width / 2f, 294f) - screenPos, null, drawColor, 0f, Origin, 1f, SpriteEffects.None, 0f);
 			
+			// Draw the exhaust trail 
 			if (rocket.StaticFire || rocket.InFlight || rocket.ForcedFlightAppearance)
 			{
 				spriteBatch.End();
@@ -79,6 +80,7 @@ namespace Macrocosm.Content.Rockets.Modules
 
 		public override void DrawOverlay(SpriteBatch spriteBatch, Vector2 screenPos)
 		{
+			// Draw the rocket flight lens flare
 			if (rocket.InFlight || rocket.ForcedFlightAppearance)
 			{
 				state3.SaveState(spriteBatch, true);

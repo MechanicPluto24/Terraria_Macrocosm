@@ -2,22 +2,19 @@
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using System;
 using Terraria;
 using Terraria.Graphics.Shaders;
 using Terraria.Graphics;
 using Terraria.ModLoader;
-using System.Runtime.InteropServices;
 
 namespace Macrocosm.Content.Rockets.Modules
 {
 	public abstract class Booster : AnimatedRocketModule
     {
 		public override int DrawPriority => 1;
-
+		public abstract float ExhaustOffsetX { get; }
 		protected abstract Vector2 LandingLegDrawOffset { get; }
-		protected abstract float ExhaustOffset { get; }
 
 		private SpriteBatchState state1, state2;
 
@@ -67,7 +64,7 @@ namespace Macrocosm.Content.Rockets.Modules
 			int stripDataCount = (int)(38 * intensity);
 			Vector2[] positions = new Vector2[stripDataCount];
 			float[] rotations = new float[stripDataCount];
-			Array.Fill(positions, new Vector2(Position.X + ExhaustOffset, Position.Y + Height) - Main.screenPosition);
+			Array.Fill(positions, new Vector2(Position.X + ExhaustOffsetX, Position.Y + Height) - Main.screenPosition);
 			Array.Fill(rotations, MathHelper.Pi + MathHelper.PiOver2);
 
 			for (int i = 0; i < stripDataCount; i++)

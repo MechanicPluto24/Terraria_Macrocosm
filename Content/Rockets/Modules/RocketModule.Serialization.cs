@@ -38,6 +38,7 @@ namespace Macrocosm.Content.Rockets.Modules
 				Utility.Chat(ex.Message);
 				Macrocosm.Instance.Logger.Warn(ex.Message);
 			}
+
 			//DeserializeCustomizationData(json);
 		}
 
@@ -67,10 +68,15 @@ namespace Macrocosm.Content.Rockets.Modules
 			return tag;
 		}
 
-		/// <summary> UNUSED! Deserialization is customly done using the <see cref="DeserializeData(TagCompound, Rocket)"/> method instead. </summary>
+		/// <summary>
+		/// UNUSED! 
+		/// Deserialization is customly done using the <see cref="DeserializeData(TagCompound, Rocket)"/> method instead.
+		/// Care should be taken since calling tag.Get<RocketModule>() will call this method.
+		/// </summary>
 		public static RocketModule DeserializeData(TagCompound tag)
 		{
-			return DeserializeData(tag, null);
+			// There must be a way to clean this all up... - Feldy
+			throw new NotSupportedException("You should deserialize the module data with DeserializeData(TagCompound, Rocket) instead, by calling it directly");
 		}
 
 		public static RocketModule DeserializeData(TagCompound tag, Rocket ownerRocket)

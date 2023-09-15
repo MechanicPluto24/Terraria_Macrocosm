@@ -23,7 +23,8 @@ namespace Macrocosm.Content.Rockets.Navigation
             CantReach,
             AlreadyHere,
             ZoomIn,
-            Launch
+            Launch,
+            LaunchInactive
         }
         public StateType ButtonState;
 
@@ -95,7 +96,13 @@ namespace Macrocosm.Content.Rockets.Navigation
                     OnLeftClick += UILaunchButton_OnClick_Launch;
                     break;
 
-                default:
+				case StateType.LaunchInactive:
+					textColor = new Color(0, 200, 0);
+					textScale = 1.1f;
+					CanClick = false;
+					break;
+
+				default:
                     CanClick = false;
                     break;
             }
