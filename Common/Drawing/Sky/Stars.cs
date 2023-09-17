@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing.Drawing2D;
 using Terraria;
+using Terraria.GameInput;
 
 namespace Macrocosm.Common.Drawing.Sky
 {
@@ -19,7 +20,6 @@ namespace Macrocosm.Common.Drawing.Sky
         public void Clear() => stars.Clear();
 
         public MacrocosmStar this[int index] => stars[index];
-        public MacrocosmStar StarAt(int index) => this[index];
         public MacrocosmStar RandStar() => this[Main.rand.Next(Count - 1)];
 
         public Stars()
@@ -71,7 +71,7 @@ namespace Macrocosm.Common.Drawing.Sky
 			spawningDone = true;
 		}
 
-        public void Draw(SpriteBatch spriteBatch, float brightness = 1f)
+		public void Draw(SpriteBatch spriteBatch, float brightness = 1f)
         {
             if (None || !spawningDone)
                 return;
