@@ -35,8 +35,6 @@ namespace Macrocosm.Common.Drawing.Sky
 
 		protected WrapMode wrapMode = WrapMode.Random;
 
-		private Vector2 previousScreenSize;
-
 		/// <summary>
 		/// Adapted from Star.SpawnStars
 		/// </summary>
@@ -98,7 +96,6 @@ namespace Macrocosm.Common.Drawing.Sky
 
 		public virtual void Update()
         {
-			OnScreenResizeReposition();
 			Twinkle();
         }
 
@@ -137,17 +134,6 @@ namespace Macrocosm.Common.Drawing.Sky
 					if (wrapMode is WrapMode.Random)
 						position.X = Main.rand.Next(Main.screenWidth + 1);
 				}
-			}
-		}
-
-		private void OnScreenResizeReposition()
-		{
-			if (previousScreenSize != new Vector2(Main.screenWidth, Main.screenHeight))
-			{
-				if (previousScreenSize != Vector2.Zero)
-					position = new(Main.rand.Next(Main.screenWidth + 1), Main.rand.Next(Main.screenHeight + 1));
-
-				previousScreenSize = new Vector2(Main.screenWidth, Main.screenHeight);
 			}
 		}
 
