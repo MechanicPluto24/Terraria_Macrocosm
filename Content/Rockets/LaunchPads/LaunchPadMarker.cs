@@ -1,5 +1,7 @@
 ﻿using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System.IO;
 using Terraria;
 using Terraria.DataStructures;
@@ -24,6 +26,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
         {
             Main.tileFrameImportant[Type] = true;
             Main.tileSolid[Type] = false;
+			Main.tileLighted[Type] = true;
 
             DustType = -1;
             HitSound = SoundID.Mech;
@@ -40,11 +43,53 @@ namespace Macrocosm.Content.Rockets.LaunchPads
             AddMapEntry(new Color(200, 200, 200), name);
         }
 
-        public override bool CanPlace(int i, int j) => true; //TODO: not allow it between valid markers
+		public override bool CanPlace(int i, int j) 
+		{
+			Main.NewText("CanPlace called");
+			return LaunchPadManager.TryGetLaunchPadAtTileCoordinates(MacrocosmSubworld.CurrentWorld, new(i, j), out _);
+		} 
 
 		public override void KillTile(int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem)
 		{
 			ModContent.GetInstance<LaunchPadMarkerTE>().Kill(i, j);
+		}
+
+		public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
+		{
+			Utility.DrawTileGlowmask(i, j, spriteBatch, ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/LaunchPads/LaunchPadMarker_Glow").Value, Color.White);
+		}
+
+		public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
+		{
+			Tile tile = Main.tile[i, j];
+			if (tile.TileFrameX <= (int)MarkerState.Inactive * 18)
+			{
+				switch (tile.TileFrameX / 18)
+				{
+					case ((int)MarkerState.Invalid):
+						r = 255f / 255f;
+						g = 25f / 255f;
+						b = 25f / 255f;
+						break;
+
+					case ((int)MarkerState.Occupied):
+						r = 249f / 255f;
+						g = 181f / 255f;
+						b = 19f / 255f;
+						break;
+
+					case ((int)MarkerState.Vacant):
+						r = 124f / 255f;
+						g = 249f / 255f;
+						b = 10f / 255f;
+						break;
+				}
+			}
+
+			//float mult = 0.8f;
+			//r *= mult;
+			//g *= mult;
+			//b *= mult;
 		}
 	}
 
@@ -88,7 +133,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
 					MarkerState = MarkerState.Vacant;
 
-					LaunchPad = LaunchPadManager.GetLaunchPadAtTileCoordinates(MacrocosmSubworld.CurrentWorld, new(x, y));
+					LaunchPad = LaunchPadManager.GetLaunchPadAtStartTile(MacrocosmSubworld.CurrentWorld, new(x, y));
 					LaunchPad ??= LaunchPad.Create(MacrocosmSubworld.CurrentWorld, x, y);
  
 					Pair.LaunchPad = LaunchPad;
@@ -99,6 +144,11 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 				}
 				else
 				{
+					if(HasPair && !TileEntity.ByPosition.TryGetValue(Pair.Position, out _))
+					{
+						MarkerState = MarkerState.Inactive;
+						Pair.MarkerState = MarkerState.Inactive;
+					}
 				}
 
 				if (HasPair)
@@ -120,28 +170,6 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 		{
 			int originalX = x;
 
-			// Start checking to the left
-			/*
-			while (x >= originalX - CheckDistance)
-			{
-				x--;
-
-				Tile tile = Main.tile[x, y];
-				if (tile.HasTile && tile.TileType == ModContent.TileType<LaunchPadMarker>())
-				{
-					bool result = Utility.TryGetTileEntityAs(x, y, out LaunchPadMarkerTE foundPair);
-					pair = foundPair;
- 					return result;
- 				}
-				else
-				{
-					MarkerState = MarkerState.Invalid;
-					break;
-				}
-			}
-			*/
-
-			// Start checking to the right
 			x = originalX; 
 			while (x < originalX + CheckDistance)
 			{
@@ -187,28 +215,16 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 				Main.tile[Pair.Position.ToPoint()].TileFrameX = GetFrame();
 		}
 
-		private short GetFrame()
-		{
-			short frameNumber = MarkerState switch
-			{
-				MarkerState.Invalid => 0,
-				MarkerState.Occupied => 1,
-				MarkerState.Vacant => 2,
-				MarkerState.Inactive => 3,
-				_ => 3,
-			};
-
-			return (short)(frameNumber * 18);
-		}
+		private short GetFrame() => (short)((int)MarkerState * 18);
 
 		public override void NetSend(BinaryWriter writer)
 		{
-			base.NetSend(writer);
+			writer.Write((byte)MarkerState);
 		}
 
 		public override void NetReceive(BinaryReader reader)
 		{
-			base.NetReceive(reader);
+			MarkerState = (MarkerState)reader.ReadByte();
 		}
 
 		public override bool IsTileValidForEntity(int x, int y)

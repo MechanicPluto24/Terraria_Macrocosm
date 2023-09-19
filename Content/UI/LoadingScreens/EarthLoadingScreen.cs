@@ -48,15 +48,15 @@ namespace Macrocosm.Content.UI.LoadingScreens
 		private SpriteBatchState state;
 		protected override void PreDraw(SpriteBatch spriteBatch)
 		{
+			state.SaveState(spriteBatch);
+			spriteBatch.End();
+			spriteBatch.Begin(BlendState.NonPremultiplied, state);
+
 			Color bodyColor = (Color.White * (float)(animationTimer / 5) * 1f).WithOpacity(1f);
 
 			float progress = MathHelper.Clamp(animationTimer / animationDuration, 0f, 1f);
 			progress = (float)Math.Pow(progress, 0.6);   
 			int movement = 500 + (int)(Utility.QuadraticEaseIn(progress) * 500f);
-
-			state.SaveState(spriteBatch);
-			spriteBatch.End();
-			spriteBatch.Begin(BlendState.NonPremultiplied, state);
 
 			spriteBatch.Draw
 			(

@@ -5,6 +5,7 @@ using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System;
 using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -27,6 +28,13 @@ namespace Macrocosm.Content.UI.LoadingScreens
 			earth = new CelestialBody(earthSmallBackground, earthSmallAtmoBackground, 0.7f);
 		}
 
+		private readonly float animationDuration = 1000f;
+		protected override void UpdateAnimation()
+		{
+			if (animationTimer < animationDuration)
+				animationTimer += 1f;
+		}
+
 		protected override void Reset()
 		{
 			ResetAnimation();
@@ -35,37 +43,40 @@ namespace Macrocosm.Content.UI.LoadingScreens
 			starsDrawing.SpawnStars(200, 250, twinkleFactor: 0.1f);
 		}
 
+
+
 		private SpriteBatchState state;
 		protected override void PreDraw(SpriteBatch spriteBatch)
 		{
-			/*
-			earth.SetPosition(Main.screenWidth * 0.265f, Main.screenHeight * 0.185f);
-
-			Color bodyColor = (Color.White * (float)(AnimationTimer / 5) * 1f).WithOpacity(1f);
-
 			state.SaveState(spriteBatch);
 			spriteBatch.End();
+			spriteBatch.Begin(BlendState.NonPremultiplied, state);
 
-			spriteBatch.Begin(BlendState.AlphaBlend, state);
-			starsDrawing.Draw(spriteBatch);
-			spriteBatch.End();
-
+			Color bodyColor = (Color.White * (float)(animationTimer / 5) * 1f).WithOpacity(1f);
 			float scale = Main.UIScale;
 
-			spriteBatch.Begin(BlendState.NonPremultiplied, state);
+			float progress = MathHelper.Clamp(animationTimer / animationDuration, 0f, 1f);
+			progress = (float)Math.Pow(progress, 0.6);
+			int movement = 500 + (int)(Utility.QuadraticEaseIn(progress) * 500f);
+
 			spriteBatch.Draw(
 					lunaBackground,
-					new Rectangle((int)(Main.screenWidth - lunaBackground.Width * scale),(int)(Main.screenHeight - lunaBackground.Height * scale + 50 - (int)(AnimationTimer * 10)), (int)(lunaBackground.Width * scale), (int)(lunaBackground.Height * scale)),
+					new Rectangle((int)(Main.screenWidth - lunaBackground.Width * scale),(int)(Main.screenHeight - lunaBackground.Height * scale + movement), (int)(lunaBackground.Width * scale), (int)(lunaBackground.Height * scale)),
 					null,
 					bodyColor
 			);
 
+			progress = MathHelper.Clamp(animationTimer / animationDuration, 0f, 1f);
+			progress = (float)Math.Pow(progress, 0.2);
+			movement = (int)(Utility.QuadraticEaseIn(progress) * 100f);
+
+			earth.Color = bodyColor;
 			earth.Scale = scale;
+			earth.SetPosition(Main.screenWidth * 0.265f, Main.screenHeight * 0.185f + movement);
 			earth.Draw(spriteBatch);
 
 			spriteBatch.End();
 			spriteBatch.Begin(state);
-			*/
 		}
 	}
 }

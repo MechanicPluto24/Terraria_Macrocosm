@@ -11,9 +11,10 @@ Mods: {
 
 Bestiary_FlavorText: {
 	npc_MoonLordCore: The Vortex Titan, and ruler of the Moon. His strength and abilities are matched only by his obsession with conquering Earth.
+	npc_CultistBoss: A fanatical leader brainwashed into bringing forth the apocalypse, and preparing the world for the arrival of the Moon Lord.
 	npc_LunarTowerStardust: Infused with the celestial ashes of long dead stars, this tower brings forth the servants of Moon Lord to conquer the Earth.
 	npc_LunarTowerNebula: Infused with the swirling gases of a stellar nebula, this tower brings forth the servants of Moon Lord to conquer the Earth.
 	npc_LunarTowerSolar: Infused with the incandescent fury of a star, this tower brings forth the servants of Moon Lord to conquer the Earth.
 	npc_LunarTowerVortex: Infused with the ceaseless storms of a cosmic vortex, this tower brings forth the servants of Moon Lord to conquer the Earth.
-	npc_CultistBoss: A fanatical leader brainwashed into bringing forth the apocalypse, and preparing the world for the arrival of the Moon Lord.
+	npc_WallofFlesh: The unholy remains of humanity, a visceral mass of flesh and powerful magic imprisoned by the denizens of the Underworld.
 }

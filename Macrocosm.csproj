@@ -34,6 +34,9 @@
     <AdditionalFiles Remove="Localization\en-US_Mods.Macrocosm.WorldGen.hjson" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Content\Rockets\LaunchPads\LaunchPadMarker_glow.png" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="tModLoader.CodeAssist" Version="0.1.*" />
   </ItemGroup>
   <ItemGroup>
