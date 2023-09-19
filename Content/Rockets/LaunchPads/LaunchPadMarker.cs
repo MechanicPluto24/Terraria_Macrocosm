@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.Subworlds;
 using Microsoft.Xna.Framework;
+using System.IO;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -79,7 +80,6 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
 				int x = Position.X;
 				int y = Position.Y;
-                Tile tile = Main.tile[x, y];
 
 				if (CheckAdjacentMarkers(x, y, out LaunchPadMarkerTE pair))
 				{
@@ -89,8 +89,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 					MarkerState = MarkerState.Vacant;
 
 					LaunchPad = LaunchPadManager.GetLaunchPadAtTileCoordinates(MacrocosmSubworld.CurrentWorld, new(x, y));
-					if (LaunchPad is null)
- 						LaunchPad = LaunchPad.Create(MacrocosmSubworld.CurrentWorld, x, y);
+					LaunchPad ??= LaunchPad.Create(MacrocosmSubworld.CurrentWorld, x, y);
  
 					Pair.LaunchPad = LaunchPad;
 					LaunchPad.EndTile = Pair.Position;
@@ -153,7 +152,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 				{
 					if (tile.TileType == ModContent.TileType<LaunchPadMarker>())
 					{
-						bool result = ByPosition.TryGetValue(new(x, y), out TileEntity foundPair);
+						bool result = TileEntity.ByPosition.TryGetValue(new(x, y), out TileEntity foundPair);
 						pair = foundPair as LaunchPadMarkerTE;
 						return result;
 					}
@@ -179,7 +178,6 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 				{
 					LaunchPadManager.Remove(MacrocosmSubworld.CurrentWorld, LaunchPad);
 					LaunchPad = null;
-					//TODO: NetSync ?
 				}
 			}
 
@@ -201,6 +199,16 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			};
 
 			return (short)(frameNumber * 18);
+		}
+
+		public override void NetSend(BinaryWriter writer)
+		{
+			base.NetSend(writer);
+		}
+
+		public override void NetReceive(BinaryReader reader)
+		{
+			base.NetReceive(reader);
 		}
 
 		public override bool IsTileValidForEntity(int x, int y)
