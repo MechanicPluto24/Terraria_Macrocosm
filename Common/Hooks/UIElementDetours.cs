@@ -60,10 +60,10 @@ namespace Macrocosm.Common.Hooks
 						focusable.OnFocusGain();
 					}
 				}
-				// In the case where this element does not have focus...
+				// In the case where this element should not have focus...
 				else if (focusedElementsByContext.TryGetValue(focusable.FocusContext, out current))
 				{
-					// ... but just had focus in this context:
+					// ... but still has focus in this context:
 					if (current == focusable)
 					{
 						// Lose focus for this one

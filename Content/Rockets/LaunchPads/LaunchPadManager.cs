@@ -24,6 +24,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			launchPadStorage = null;
 		}
 
+		// TODO: add optional netsync
 		public static void Add(string subworldId, LaunchPad launchPad)
 		{
 			if (launchPadStorage.ContainsKey(subworldId))
@@ -37,6 +38,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			}
 		}
 
+		// TODO: add optional netsync
 		public static void Remove(string subworldId, LaunchPad launchPad)
 		{
 			if (launchPadStorage.ContainsKey(subworldId))
