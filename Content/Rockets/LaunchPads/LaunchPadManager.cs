@@ -1,5 +1,8 @@
 ﻿using Macrocosm.Common.Subworlds;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SubworldLibrary;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
@@ -24,8 +27,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			launchPadStorage = null;
 		}
 
-		// TODO: add optional netsync
-		public static void Add(string subworldId, LaunchPad launchPad)
+		public static void Add(string subworldId, LaunchPad launchPad, bool shouldSync = true)
 		{
 			if (launchPadStorage.ContainsKey(subworldId))
 			{
@@ -33,16 +35,29 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			}
 			else
 			{
-				List<LaunchPad> launchPadsList = new() { launchPad };
-				launchPadStorage.Add(subworldId, launchPadsList);
+				launchPadStorage.Add(subworldId, new() { launchPad });
 			}
+
+			launchPad.Active = true;
+
+			if(shouldSync)
+				launchPad.NetSync(subworldId);
 		}
 
-		// TODO: add optional netsync
-		public static void Remove(string subworldId, LaunchPad launchPad)
+		public static void Remove(string subworldId, LaunchPad launchPad, bool shouldSync = true)
 		{
 			if (launchPadStorage.ContainsKey(subworldId))
- 				launchPadStorage[subworldId].Remove(launchPad);
+			{
+				var toRemove = GetLaunchPadAtStartTile(subworldId, launchPad.StartTile);
+
+ 				if (toRemove is not null)
+				{
+					toRemove.Active = false;
+
+					if (shouldSync)
+						toRemove.NetSync(subworldId);
+				}
+			}
  		}
 
 		public static bool Any(string subworldId) => GetLaunchPads(subworldId).Any();
@@ -57,14 +72,31 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			return new List<LaunchPad>();
 		}
 
+		public static LaunchPad GetLaunchPadAtTileCoordinates(string subworldId, Point16 tile)
+		{
+			return GetLaunchPads(subworldId).FirstOrDefault(lp =>
+			{
+				Rectangle coordinates = new(lp.StartTile.X, lp.StartTile.Y, lp.EndTile.X - lp.StartTile.X + 1, lp.EndTile.Y - lp.StartTile.Y + 1);
+				return coordinates.Contains(tile.X, tile.Y);
+			});
+		}
 
-		public static LaunchPad GetLaunchPadAtTileCoordinates(string subworldId, int startTileX, int startTileY)
-			=> GetLaunchPadAtTileCoordinates(subworldId,new(startTileX, startTileY));
-		public static LaunchPad GetLaunchPadAtTileCoordinates(string subworldId, Point16 startTile)
+		public static bool TryGetLaunchPadAtTileCoordinates(string subworldId, Point16 tile, out LaunchPad launchPad)
+		{
+			launchPad = GetLaunchPadAtTileCoordinates(subworldId, tile);
+			return launchPad != null;
+		}
+
+		public static LaunchPad GetLaunchPadAtStartTile(string subworldId, Point16 startTile)
 			=> GetLaunchPads(subworldId).FirstOrDefault(lp => lp.StartTile == startTile);
 
-		private int checkTimer;
+		public static bool TryGetLaunchPadAtStartTile(string subworldId, Point16 startTile, out LaunchPad launchPad)
+		{
+			launchPad = GetLaunchPadAtStartTile(subworldId, startTile);
+			return launchPad != null;
+		}
 
+		private int checkTimer;
 		public override void PostUpdateNPCs()
 		{
 			checkTimer++;
@@ -74,8 +106,22 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 				checkTimer = 0;
 
 				if (launchPadStorage.ContainsKey(MacrocosmSubworld.CurrentWorld))
-					foreach (LaunchPad launchPad in launchPadStorage[MacrocosmSubworld.CurrentWorld])
-						launchPad.Update();
+				{
+					for(int i = 0; i < launchPadStorage[MacrocosmSubworld.CurrentWorld].Count; i++)
+					{
+						var launchPad = launchPadStorage[MacrocosmSubworld.CurrentWorld][i];
+
+						if (!launchPad.Active)
+						{
+							launchPadStorage[MacrocosmSubworld.CurrentWorld].RemoveAt(i);
+							i--;
+						}
+						else
+						{
+							launchPad.Update();
+						}
+					}
+				}		
 			}
 		}
 

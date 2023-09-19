@@ -16,9 +16,11 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 {
 	public class LaunchPad : TagSerializable
 	{
+		[NetSync] public bool Active;
 		[NetSync] public Point16 StartTile;
 		[NetSync] public Point16 EndTile;
 		[NetSync] public bool HasRocket;
+		[NetSync] public int RocketID;
 
 		public int Width => EndTile.X + 1 - StartTile.X;
 		public Rectangle Hitbox => new((int)(StartTile.X * 16f), (int)(StartTile.Y * 16f), Width * 16, 16);
@@ -47,9 +49,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 		public static LaunchPad Create(string subworldId, int startTileX, int startTileY, int endTileX, int endTileY)
 		{
 			LaunchPad launchPad = new(startTileX, startTileY, endTileX, endTileY);
-
 			LaunchPadManager.Add(subworldId, launchPad);
-			launchPad.NetSync(subworldId);
 			return launchPad;
 		}
 
@@ -59,14 +59,20 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
 		public void Update()
 		{
-			for(int i = 0; i < RocketManager.MaxRockets; i++)
+			HasRocket = false;
+			RocketID = -1;
+
+			for (int i = 0; i < RocketManager.MaxRockets; i++)
 			{
 				Rocket rocket = RocketManager.Rockets[i];
 
 				if (rocket.ActiveInCurrentWorld)
 				{
 					if (Hitbox.Intersects(rocket.Bounds))
+					{
 						HasRocket = true;
+						RocketID = i;
+					}
 				}
 			}
 
@@ -123,13 +129,12 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			LaunchPad launchPad = new();
 			launchPad.NetReadFields(reader);
 
-			LaunchPad existingLaunchPad = LaunchPadManager.GetLaunchPadAtTileCoordinates(subworldId, launchPad.StartTile);
+			LaunchPad existingLaunchPad = LaunchPadManager.GetLaunchPadAtStartTile(subworldId, launchPad.StartTile);
 			if (existingLaunchPad is null)
- 				LaunchPadManager.Add(subworldId, launchPad);
+ 				LaunchPadManager.Add(subworldId, launchPad, shouldSync: false);
  
 			if (Main.netMode == NetmodeID.Server)
 			{
-				// Bounce to all other clients, minus the sender
 				launchPad.NetSync(subworldId, ignoreClient: clientWhoAmI);
 
 				ModPacket packet = Macrocosm.Instance.GetPacket();

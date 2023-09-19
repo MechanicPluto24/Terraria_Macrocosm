@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -120,6 +121,24 @@ namespace Macrocosm.Common.Utils
 				return false;
 			}
 			return true;
+		}
+
+		public static void DrawTileGlowmask(int i, int j, SpriteBatch spriteBatch, Texture2D glowmask, Color color)
+		{
+			Tile tile = Main.tile[i, j];
+
+			if (tile.BlockType != BlockType.Solid)
+				return;
+
+			Vector2 zero = Main.drawToScreen ? Vector2.Zero : new Vector2(Main.offScreenRange);
+
+			spriteBatch.Draw
+			(
+				glowmask,
+				new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero,
+				new Rectangle(tile.TileFrameX, tile.TileFrameY, 16, 16),
+				color, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f
+			);
 		}
 
 		#region BaseMod Utility

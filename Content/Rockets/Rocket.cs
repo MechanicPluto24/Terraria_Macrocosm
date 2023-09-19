@@ -254,6 +254,7 @@ namespace Macrocosm.Content.Rockets
             if (Launched && Position.Y < WorldExitPositionY)
 			{
 				worldExitSpeed = Velocity.Y;
+				Velocity = Vector2.Zero;
 				ResetAnimation();
 				Launched = false;
 				Landing = true;
@@ -350,7 +351,10 @@ namespace Macrocosm.Content.Rockets
 		{
 			if (Main.netMode == NetmodeID.SinglePlayer)
 			{
-				return GetRocketPlayer(Main.myPlayer);
+				if (GetRocketPlayer(Main.myPlayer).InRocket)
+					return GetRocketPlayer(Main.myPlayer);
+				else 
+					return null;
 			}
 			else
 			{
@@ -604,30 +608,27 @@ namespace Macrocosm.Content.Rockets
 			}
 		}
 
-		// TODO: fix this
 		private void Light()
 		{
-			return;
-
-			if (FlightTime < LiftoffTime + 5)
+			// Hack to force render tiles below the rocket to avoid seeing the trail behind full black tiles
+			if (Launched && FlightProgress < 0.01f)
 			{
-				Lighting.AddLight(new Vector2(Center.X + 50, Position.Y + Height + 25), new Color(215, 69, 0).ToVector3() * 5f);
-				Lighting.AddLight(new Vector2(Center.X, Position.Y + Height + 25), new Color(215, 69, 0).ToVector3() * 15f);
-				Lighting.AddLight(new Vector2(Center.X - 50, Position.Y + Height + 25), new Color(215, 69, 0).ToVector3() * 5f);
+				for (int i = (int)(Position.X / 16f); i < (int)(Position.X / 16f) + Width / 16; i++)
+				{
+					for (int j = (int)(Position.Y / 16f) + Height / 16 - 5; j < (int)(Position.Y / 16f) + Height / 16 + 10; j++)
+					{
+						Lighting.AddLight(new Vector2(i * 16, j * 16), new Vector3(0.01f));
+					}
 
-				Lighting.AddLight(new Vector2(Center.X + 50, Position.Y + Height + 75), new Color(215, 69, 0).ToVector3() * 5f);
-				Lighting.AddLight(new Vector2(Center.X, Position.Y + Height + 75), new Color(215, 69, 0).ToVector3() * 15f);
-				Lighting.AddLight(new Vector2(Center.X - 50, Position.Y + Height + 75), new Color(215, 69, 0).ToVector3() * 5f);
+				}
+			}
 
-				Lighting.AddLight(new Vector2(Center.X + 50, Position.Y + Height + 150), new Color(215, 69, 0).ToVector3() * 5f);
-				Lighting.AddLight(new Vector2(Center.X, Position.Y + Height + 125), new Color(215, 69, 0).ToVector3() * 15f);
-				Lighting.AddLight(new Vector2(Center.X - 50, Position.Y + Height + 150), new Color(215, 69, 0).ToVector3() * 5f);
-			}
-			else
-			{
-				Lighting.AddLight(new Vector2(Center.X, Position.Y + Height + 75), new Color(215, 69, 0).ToVector3() * 10f);
-			}
-		}
+			if (StaticFire)
+				Lighting.AddLight(new Vector2(Center.X, Position.Y + Height + 15), new Color(215, 69, 0).ToVector3() * 10f * StaticFireProgress);
+
+			if (FlightTime >= LiftoffTime)
+ 				Lighting.AddLight(new Vector2(Center.X, Position.Y + Height + 15), new Color(215, 69, 0).ToVector3() * 10f);
+ 		}
 
 		private void UpdateModuleAnimation()
 		{
@@ -722,15 +723,20 @@ namespace Macrocosm.Content.Rockets
 		private void EnterDestinationSubworld()
 		{
 			Velocity = Vector2.Zero;
+			Launched = false;
+			FlightTime = 0;
 			Landing = true;
+
 			RocketPlayer commander = GetCommander();
 
-			if(commander is null)
+			// This failsafe logic could be extended to hiding the rocket for an amount of time, while remotely launching satellites
+			// (no commander inside but wire triggered). Would mean also keeping the launchpad as occupied to avoid collisions on return
+			if(commander is null || string.IsNullOrEmpty(commander.TargetSubworldID))
 			{
-				MacrocosmSubworld.WorldTravelFailure("Error: Could not find the commander of Rocket " + WhoAmI);
-				return;
+				TargetLandingPosition = new(Center.X, StartPositionY + Height);
+			 	return;
 			}
-
+			  
 			if(Main.netMode != NetmodeID.MultiplayerClient)
 			{
 				//LaunchPad launchPad = commander.SelectedLaunchPad;

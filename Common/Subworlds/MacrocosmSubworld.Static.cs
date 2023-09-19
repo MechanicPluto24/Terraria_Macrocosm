@@ -89,6 +89,7 @@ namespace Macrocosm.Common.Subworlds
 
 			string subworldId = Macrocosm.Instance.Name + "/" + targetWorld;
 			bool entered = true;
+
 			if(Main.netMode == NetmodeID.SinglePlayer)
 			{
 				entered = SubworldSystem.Enter(subworldId);
