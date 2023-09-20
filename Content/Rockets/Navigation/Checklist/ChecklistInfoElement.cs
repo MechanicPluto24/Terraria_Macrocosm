@@ -25,13 +25,13 @@ namespace Macrocosm.Content.Rockets.Navigation.Checklist
         {
         }
 
-        protected override Asset<Texture2D> GetExtraIcon()
-        {
-            if (State)
-                return ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Symbols/" + MetIcon.ToString());
-            else
-                return ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Symbols/" + NotMetIcon.ToString());
-        }
+		protected override Asset<Texture2D> GetIcon()
+		{
+			if (State)
+				return ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Symbols/" + MetIcon.ToString());
+			else
+				return ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Symbols/" + NotMetIcon.ToString());
+		}
 
         private string KeySelector => specialValueKey + "." + (State ? "True" : "False") + ".";
 

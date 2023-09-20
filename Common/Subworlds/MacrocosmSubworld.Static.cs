@@ -53,6 +53,8 @@ namespace Macrocosm.Common.Subworlds
 			} 
 		}
 
+		public static bool IsValidWorldName(string name) => SubworldSystem.GetIndex(Macrocosm.Instance.Name + "/" + name) >= 0 || name is "Earth";
+
 		// TODO: We could protect the original properties get them only via statics?
 		public static double CurrentTimeRate => SubworldSystem.AnyActive<Macrocosm>() ? Current.TimeRate : Earth.TimeRate;
 		public static double CurrentDayLenght => SubworldSystem.AnyActive<Macrocosm>() ? Current.DayLenght : Earth.DayLenght;

@@ -19,7 +19,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
  						Wiring.SkipWire(tileX, tileY);
 
 				if (launchPad.HasRocket)
- 					RocketManager.Rockets[launchPad.RocketID].Launch();
+ 					RocketManager.Rockets[launchPad.RocketID].Launch(targetWorld: "None.. for now");
  			}
 		}
 	}

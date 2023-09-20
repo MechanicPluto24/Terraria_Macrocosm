@@ -51,8 +51,12 @@ namespace Macrocosm.Content.Rockets
 		/// <summary> The initial vertical position </summary>
 		[NetSync] public float StartPositionY;
 
+		/// <summary> The target world to fly towards </summary>
+		[NetSync] public string TargetWorld;
+
 		/// <summary> The target landing position </summary>
 		[NetSync] public Vector2 TargetLandingPosition;
+		private LaunchPad targetLaunchPad;
 
 		/// <summary> The amount of fuel currently stored in the rocket, as an absolute value </summary>
 		[NetSync] public float Fuel;
@@ -422,12 +426,19 @@ namespace Macrocosm.Content.Rockets
 		}
 
 		/// <summary> Launches the rocket, with syncing </summary>
-		public void Launch()
+		public void Launch(string targetWorld, LaunchPad targetLaunchPad = null)
 		{
 			Launched = true;
 			StartPositionY = Position.Y;
+			TargetWorld = targetWorld;
+			this.targetLaunchPad = targetLaunchPad;
+
+			Fuel -= GetFuelCost(targetWorld);
+
 			NetSync();
 		}
+
+		public float GetFuelCost(string targetWorld) => RocketFuelLookup.GetFuelCost(MacrocosmSubworld.CurrentPlanet, targetWorld);
 
 		/// <summary> Checks whether the flight path is obstructed by solid blocks </summary>
 		// TODO: CHECK THIS AT A LOWER FREQUENCY - maybe once every second, and return a cached result otherwise
@@ -728,10 +739,11 @@ namespace Macrocosm.Content.Rockets
 			Landing = true;
 
 			RocketPlayer commander = GetCommander();
+			var player = commander.Player;
 
 			// This failsafe logic could be extended to hiding the rocket for an amount of time, while remotely launching satellites
 			// (no commander inside but wire triggered). Would mean also keeping the launchpad as occupied to avoid collisions on return
-			if(commander is null || string.IsNullOrEmpty(commander.TargetSubworldID))
+			if(!MacrocosmSubworld.IsValidWorldName(TargetWorld) || player.dead || !player.active)
 			{
 				TargetLandingPosition = new(Center.X, StartPositionY + Height);
 			 	return;
@@ -739,24 +751,18 @@ namespace Macrocosm.Content.Rockets
 			  
 			if(Main.netMode != NetmodeID.MultiplayerClient)
 			{
-				//LaunchPad launchPad = commander.SelectedLaunchPad;
-				LaunchPad launchPad = null;
-
-				if (launchPad is not null)
-					TargetLandingPosition = launchPad.Position;
+				if (targetLaunchPad is not null)
+					TargetLandingPosition = targetLaunchPad.Position;
 				else
 					TargetLandingPosition = default;
 
-				CurrentWorld = commander.TargetSubworldID;
+				CurrentWorld = TargetWorld;
 				NetSync();
 			}
 		
-			if (commander.TargetSubworldID != null && commander.TargetSubworldID != "")
-			{
-				if (!MacrocosmSubworld.Travel(commander.TargetSubworldID, this))
-					CurrentWorld = MacrocosmSubworld.CurrentWorld;
- 			}
-			
+			if (!MacrocosmSubworld.Travel(TargetWorld, this))
+				CurrentWorld = MacrocosmSubworld.CurrentWorld;
+ 			
 		}
 	}
 }

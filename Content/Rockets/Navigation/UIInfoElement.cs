@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.Localization;
@@ -11,16 +12,16 @@ namespace Macrocosm.Content.Rockets.Navigation
 {
 	public class UIInfoElement : UIPanel
     {
-        private readonly Asset<Texture2D> icon;
-        private readonly Asset<Texture2D> extraIcon;
+		public Action<Vector2> ExtraDraw { get; set; }
 
-        private readonly LocalizedColorScaleText displayText;
+        private readonly Asset<Texture2D> icon;
+
+		private readonly LocalizedColorScaleText displayText;
         private readonly LocalizedText hoverText;
 
-        public UIInfoElement(LocalizedColorScaleText displayText, Asset<Texture2D> icon = null, Asset<Texture2D> extraIcon = null, LocalizedText hoverText = null)
+        public UIInfoElement(LocalizedColorScaleText displayText, Asset<Texture2D> icon = null, LocalizedText hoverText = null)
         {
             this.icon = icon ?? Macrocosm.EmptyTexAsset; 
-            this.extraIcon = extraIcon ?? Macrocosm.EmptyTexAsset;
             this.displayText = displayText;
 
             if (hoverText is null)
@@ -29,7 +30,15 @@ namespace Macrocosm.Content.Rockets.Navigation
                 this.hoverText = hoverText;
         }
 
-        public override void OnInitialize()
+        public UIInfoElement(LocalizedText displayText, Asset<Texture2D> icon = null, LocalizedText hoverText = null) : this(new LocalizedColorScaleText(displayText), icon, hoverText)
+        {
+        }
+
+		public UIInfoElement(string displayText, Asset<Texture2D> icon = null, LocalizedText hoverText = null) : this(Language.GetText(displayText), icon, hoverText)
+		{
+		}
+
+		public override void OnInitialize()
         {
             Width.Set(0f, 1f);
             Height.Set(40f, 0f);
@@ -52,14 +61,18 @@ namespace Macrocosm.Content.Rockets.Navigation
                 Main.instance.MouseText(hoverText.Value);
         }
 
+
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
             base.DrawSelf(spriteBatch);
 
             Recalculate();
             CalculatedStyle dimensions = GetDimensions();
-            spriteBatch.Draw(icon.Value, dimensions.Position() + new Vector2(dimensions.Width * 0.1f, dimensions.Height / 2f), null, Color.White, 0f, new Vector2(icon.Width() * 0.5f, icon.Height() * 0.5f), 1f, SpriteEffects.None, 0);
-            spriteBatch.Draw(extraIcon.Value, dimensions.Position() + new Vector2(dimensions.Width * 0.1f, dimensions.Height / 2f), null, Color.White, 0f, new Vector2(extraIcon.Width() * 0.5f, extraIcon.Height() * 0.5f), 1f, SpriteEffects.None, 0);
+            Vector2 iconPosition = dimensions.Position() + new Vector2(dimensions.Width * 0.1f, dimensions.Height / 2f);
+			spriteBatch.Draw(icon.Value, iconPosition, null, Color.White, 0f, new Vector2(icon.Width() * 0.5f, icon.Height() * 0.5f), 1f, SpriteEffects.None, 0);
+
+            if (ExtraDraw is not null)
+                ExtraDraw(iconPosition);
         }
 	}
 }
