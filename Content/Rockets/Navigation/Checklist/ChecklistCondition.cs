@@ -6,23 +6,38 @@ namespace Macrocosm.Content.Rockets.Navigation.Checklist
 	public class ChecklistCondition
 	{
 		public string LangKey { get; private set; }
+		public bool HideIfMet = true;
 
 		private readonly Func<bool> predicate = () => false;
-
-		public bool HideIfMet = true;
+		private bool cachedMet;
+		private int checkCounter;
+		private int checkPeriod;
 
 		private readonly ChecklistInfoElement checklistInfoElement;
 
-		public ChecklistCondition(string langKey, Func<bool> canLaunch, bool hideIfMet = false)
+		public ChecklistCondition(string langKey, Func<bool> canLaunch, int checkPeriod = 1,  bool hideIfMet = false)
 		{
 			LangKey = langKey;
 			predicate = canLaunch;
+			this.checkPeriod = checkPeriod;
 			HideIfMet = hideIfMet;
 
 			checklistInfoElement = new(langKey);
 		}
 
-		public virtual bool IsMet() => predicate();
+		public virtual bool IsMet()
+		{
+			checkCounter++;
+
+			if (checkCounter >= checkPeriod)
+			{
+				checkCounter = 0;
+				cachedMet = predicate();
+				return cachedMet;
+			}
+
+			return cachedMet;
+		}
 
 		public virtual UIElement ProvideUI()
 		{

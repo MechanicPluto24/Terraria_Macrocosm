@@ -1,81 +1,65 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Common.UI;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
+using System.Linq;
+using Terraria;
+using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
+using Terraria.ID;
 using Terraria.Localization;
-using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
-	// TODO: make an abstract scrollable panel class
-	public class UICrewPanel : UIPanel
+	public sealed class UICrewPanel : UIListScrollablePanel, IRocketDataConsumer
     {
-        private LocalizedText title;
+		public Rocket Rocket { get; set; }
 
-        private UIText uIDisplayName;
-        private UIList uIInfoElements;
-
-        public UICrewPanel(LocalizedText title)
+		public UICrewPanel() : base(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Crew"))
         {
-            this.title = title;
-            Initialize();
-        }
+		}
 
-        public override void OnInitialize()
+		public override void Update(GameTime gameTime)
+		{
+			base.Update(gameTime);
+
+			Deactivate();
+            ClearList();
+
+            //if(Main.netMode == NetmodeID.MultiplayerClient)
+            {
+				for (int i = 0; i < Main.maxPlayers; i++)
+				{
+					var player = Main.player[i];
+
+					if (!player.active)
+						continue;
+
+					var rocketPlayer = player.GetModPlayer<RocketPlayer>();
+
+					if (rocketPlayer.InRocket && rocketPlayer.RocketID == Rocket.WhoAmI)
+					{
+						Add(new UIInfoElement(new LocalizedColorScaleText(Language.GetText(player.name)))
+						{
+							Width = new(0f, 1f),
+							ExtraDraw = (Vector2 iconPosition) => Main.PlayerRenderer.DrawPlayerHead(Main.Camera, player, iconPosition)
+						});
+					}
+				}
+			}
+
+			Activate();
+		}
+
+		public override void OnInitialize()
         {
-            Width.Set(245, 0);
-            Height.Set(400, 0);
-            Left.Set(10, 0f);
-            Top.Set(249, 0f);
+            Width.Set(0, 0.34f);
+            Height.Set(0f, 0.4f);
+			HAlign = 0.5f;
+            Top.Set(0f, 0.365f);
             SetPadding(0f);
             BorderColor = new Color(89, 116, 213, 255);
 			BackgroundColor = new Color(53, 72, 135);
-
-			UIList uIList = new()
-            {
-                Width = StyleDimension.FromPixelsAndPercent(0f, 1f),
-                Height = StyleDimension.FromPixelsAndPercent(0f, 1f)
-            };
-
-            uIList.SetPadding(2f);
-            uIList.PaddingBottom = 4f;
-            uIList.PaddingTop = 50f;
-            uIList.PaddingLeft = 6f;
-            Append(uIList);
-            uIInfoElements = uIList;
-
-            uIList.ListPadding = 4f;
-            uIList.ManualSortMethod = (_) => { };
-
-            UIScrollbar uIScrollbar = new UIScrollbar();
-            uIScrollbar.SetView(150f, 1000f);
-            uIScrollbar.Height.Set(0f, 0.95f);
-            uIScrollbar.HAlign = 0.99f;
-            uIScrollbar.VAlign = 0.5f;
-            uIInfoElements.SetScrollbar(uIScrollbar);
-
-            Append(uIScrollbar);
-            uIInfoElements.Width.Set(-20f, 1f);
-
-            uIDisplayName = new(title, 1.5f, false)
-            {
-                HAlign = 0.43f,
-                Top = new StyleDimension(15, 0f),
-                TextColor = Color.White
-            };
-            Append(uIDisplayName);
         }
-
-        public override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
-            uIDisplayName.SetText(title);
-        }
-
-        public void Add(UIElement element)
-        {
-            uIInfoElements.Add(element);
-        }
-
-        public void ClearInfo() => uIInfoElements.Clear();
-
     }
 }

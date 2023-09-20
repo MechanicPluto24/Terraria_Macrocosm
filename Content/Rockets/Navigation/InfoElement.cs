@@ -26,7 +26,6 @@ namespace Macrocosm.Content.Rockets.Navigation
         }
 
         protected virtual Asset<Texture2D> GetIcon() => null;
-        protected virtual Asset<Texture2D> GetExtraIcon() => null;
         protected virtual LocalizedColorScaleText GetText() => new(Language.GetText(specialValueKey));
         protected virtual LocalizedText GetHoverText() => LocalizedText.Empty;
 
@@ -35,7 +34,7 @@ namespace Macrocosm.Content.Rockets.Navigation
             if (!HasValue && !HasSpecial)
                 return null;
 
-            return new UIInfoElement(GetText(), GetIcon(), GetExtraIcon(), GetHoverText());
+            return new UIInfoElement(GetText(), GetIcon(), GetHoverText());
 		}
 	}
 }

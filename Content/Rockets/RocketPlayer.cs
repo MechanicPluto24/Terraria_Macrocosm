@@ -14,7 +14,6 @@ namespace Macrocosm.Content.Rockets
 		public bool InRocket { get; set; } = false;
 		public bool AsCommander { get; set; } = false;
 		public int RocketID { get; set; } = -1;
-		public string TargetSubworldID { get; set; } = "";
 
 		private PanCameraModifier cameraModifier;
 
@@ -25,7 +24,6 @@ namespace Macrocosm.Content.Rockets
 			cloneRocketPlayer.InRocket = InRocket;
 			cloneRocketPlayer.AsCommander = AsCommander;
 			cloneRocketPlayer.RocketID = RocketID;
-			cloneRocketPlayer.TargetSubworldID = TargetSubworldID;
 		}
 
 		public override void SendClientChanges(ModPlayer clientPlayer)
@@ -34,8 +32,7 @@ namespace Macrocosm.Content.Rockets
 
 			if (clientRocketPlayer.InRocket != InRocket ||
 				clientRocketPlayer.AsCommander != AsCommander ||
-				clientRocketPlayer.RocketID != RocketID ||
-				clientRocketPlayer.TargetSubworldID != TargetSubworldID)
+				clientRocketPlayer.RocketID != RocketID)
 			{
 				SyncPlayer(-1, -1, false);
 			}
@@ -48,7 +45,6 @@ namespace Macrocosm.Content.Rockets
 			packet.Write((byte)Player.whoAmI);
 			packet.Write(new BitsByte(InRocket, AsCommander));
 			packet.Write((byte)RocketID);
-			packet.Write(TargetSubworldID);
 			packet.Send(toWho, fromWho);
 		}
 
@@ -60,7 +56,6 @@ namespace Macrocosm.Content.Rockets
 			rocketPlayer.InRocket = bb[0];
 			rocketPlayer.AsCommander = bb[1];
 			rocketPlayer.RocketID = reader.ReadByte();
-			rocketPlayer.TargetSubworldID = reader.ReadString();
 
 			if (Main.netMode == NetmodeID.Server)
 				rocketPlayer.SyncPlayer(-1, whoAmI, false);
