@@ -50,11 +50,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		{
 			#region Acceleration
 
-			float timeToReachTopSpeed = 100;
+			float timeToReachTopSpeed = 10;
 			if(AI_AccelerationTimer < timeToReachTopSpeed)
  				AI_AccelerationTimer++;
 
-			float timerForInitialDeceleration = 20;
+			float timerForInitialDeceleration = 5;
 			if (AI_InitialDecelerationTimer < timerForInitialDeceleration)
 				AI_InitialDecelerationTimer++;
 
