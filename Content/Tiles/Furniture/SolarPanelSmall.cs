@@ -9,7 +9,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture
 {
-	public class SolarPanelLarge : ModTile
+	public class SolarPanelSmall : ModTile
     {
         public override void SetStaticDefaults()
         {
@@ -17,11 +17,11 @@ namespace Macrocosm.Content.Tiles.Furniture
             Main.tileNoAttach[Type] = true;
             Main.tileLavaDeath[Type] = true;
 
-            TileObjectData.newTile.CopyFrom(TileObjectData.Style6x3);
-			TileObjectData.newTile.Width = 6;
-            TileObjectData.newTile.Height = 4;
+            TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
+			TileObjectData.newTile.Width = 3;
+            TileObjectData.newTile.Height = 2;
             TileObjectData.newTile.CoordinateWidth = 16;
-            TileObjectData.newTile.CoordinateHeights = new int[]{16, 16, 16, 16};
+            TileObjectData.newTile.CoordinateHeights = new int[]{16, 16};
             TileObjectData.newTile.CoordinatePadding = 2;
             TileObjectData.newTile.Direction = TileObjectDirection.PlaceRight;
 			TileObjectData.newTile.StyleHorizontal = false;
