@@ -274,7 +274,7 @@ namespace Macrocosm.Content.Rockets
 				if (CheckPlayerInRocket(Main.myPlayer))
 				{
 					GetRocketPlayer(Main.myPlayer).InRocket = false;
-					GetRocketPlayer(Main.myPlayer).AsCommander = false;
+					GetRocketPlayer(Main.myPlayer).IsCommander = false;
 				}
 			}
  			else
@@ -284,7 +284,7 @@ namespace Macrocosm.Content.Rockets
 					if (CheckPlayerInRocket(i))
 					{
 						GetRocketPlayer(i).InRocket = false;
-						GetRocketPlayer(i).AsCommander = false;
+						GetRocketPlayer(i).IsCommander = false;
 					}
 				}
 			}
@@ -377,7 +377,7 @@ namespace Macrocosm.Content.Rockets
 
 		/// <summary> Checks whether the provided player ID is a commander on this rocket </summary>
 		/// <param name="playerID"> The player ID </param>
-		public bool CheckPlayerCommander(int playerID) => Main.player[playerID].active && GetRocketPlayer(playerID).AsCommander && GetRocketPlayer(playerID).RocketID == WhoAmI;
+		public bool CheckPlayerCommander(int playerID) => Main.player[playerID].active && GetRocketPlayer(playerID).IsCommander && GetRocketPlayer(playerID).RocketID == WhoAmI;
 
 		/// <summary> Checks whether this rocket has a commander </summary>
 		/// <param name="playerID"> The commander player ID </param>
@@ -389,7 +389,7 @@ namespace Macrocosm.Content.Rockets
 					continue;
 
 				RocketPlayer rocketPlayer = GetRocketPlayer(i);
-				if (CheckPlayerInRocket(i) && rocketPlayer.AsCommander)
+				if (CheckPlayerInRocket(i) && rocketPlayer.IsCommander)
 				{
 					playerID = i;
 					return true;
@@ -545,7 +545,7 @@ namespace Macrocosm.Content.Rockets
 				return;
 
 			if (AnyEmbarkedPlayers(out int id) && !TryFindingCommander(out _))
-				GetRocketPlayer(id).AsCommander = true;
+				GetRocketPlayer(id).IsCommander = true;
 		}
 
 		// Handles the rocket's movement during flight

@@ -34,6 +34,10 @@
     <AdditionalFiles Remove="Localization\en-US_Mods.Macrocosm.WorldGen.hjson" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Assets\Textures\Icons\Default.png" />
+    <None Remove="Assets\Textures\Icons\Mars.png" />
+    <None Remove="Assets\Textures\Icons\Moon.png" />
+    <None Remove="Assets\Textures\MapBackgrounds\Default.png" />
     <None Remove="Content\Rockets\LaunchPads\LaunchPadMarker_glow.png" />
   </ItemGroup>
   <ItemGroup>

@@ -12,8 +12,9 @@ namespace Macrocosm.Content.Rockets
 	public class RocketPlayer : ModPlayer
 	{
 		public bool InRocket { get; set; } = false;
-		public bool AsCommander { get; set; } = false;
+		public bool IsCommander { get; set; } = false;
 		public int RocketID { get; set; } = -1;
+		public string TargetSubworldID { get; set; } = "";
 
 		private PanCameraModifier cameraModifier;
 
@@ -22,8 +23,9 @@ namespace Macrocosm.Content.Rockets
 			RocketPlayer cloneRocketPlayer = targetCopy as RocketPlayer;
 
 			cloneRocketPlayer.InRocket = InRocket;
-			cloneRocketPlayer.AsCommander = AsCommander;
+			cloneRocketPlayer.IsCommander = IsCommander;
 			cloneRocketPlayer.RocketID = RocketID;
+			cloneRocketPlayer.TargetSubworldID = TargetSubworldID;
 		}
 
 		public override void SendClientChanges(ModPlayer clientPlayer)
@@ -31,8 +33,9 @@ namespace Macrocosm.Content.Rockets
 			RocketPlayer clientRocketPlayer = clientPlayer as RocketPlayer;
 
 			if (clientRocketPlayer.InRocket != InRocket ||
-				clientRocketPlayer.AsCommander != AsCommander ||
-				clientRocketPlayer.RocketID != RocketID)
+				clientRocketPlayer.IsCommander != IsCommander ||
+				clientRocketPlayer.RocketID != RocketID ||
+				clientRocketPlayer.TargetSubworldID != TargetSubworldID)
 			{
 				SyncPlayer(-1, -1, false);
 			}
@@ -43,8 +46,9 @@ namespace Macrocosm.Content.Rockets
 			ModPacket packet = Mod.GetPacket();
 			packet.Write((byte)MessageType.SyncPlayerRocketStatus);
 			packet.Write((byte)Player.whoAmI);
-			packet.Write(new BitsByte(InRocket, AsCommander));
+			packet.Write(new BitsByte(InRocket, IsCommander));
 			packet.Write((byte)RocketID);
+			packet.Write(TargetSubworldID);
 			packet.Send(toWho, fromWho);
 		}
 
@@ -54,8 +58,9 @@ namespace Macrocosm.Content.Rockets
 			RocketPlayer rocketPlayer = Main.player[rocketPlayerID].RocketPlayer();
 			BitsByte bb = reader.ReadByte();
 			rocketPlayer.InRocket = bb[0];
-			rocketPlayer.AsCommander = bb[1];
+			rocketPlayer.IsCommander = bb[1];
 			rocketPlayer.RocketID = reader.ReadByte();
+			rocketPlayer.TargetSubworldID = reader.ReadString();
 
 			if (Main.netMode == NetmodeID.Server)
 				rocketPlayer.SyncPlayer(-1, whoAmI, false);
@@ -70,7 +75,7 @@ namespace Macrocosm.Content.Rockets
 
 			if (!InRocket) 
 			{
- 				AsCommander = false;
+ 				IsCommander = false;
 				RocketID = -1;
 				Player.mouseInterface = false;
 				Player.noItems = false;
@@ -80,7 +85,7 @@ namespace Macrocosm.Content.Rockets
 		public void EmbarkPlayerInRocket(int rocketId, bool asCommander = false)
 		{
 			RocketID = rocketId;
-			AsCommander = asCommander;
+			IsCommander = asCommander;
 
 			if(Player.whoAmI == Main.myPlayer)
 			{
@@ -105,7 +110,7 @@ namespace Macrocosm.Content.Rockets
 		public void DisembarkFromRocket()
 		{
 			InRocket = false;
-			AsCommander = false;
+			IsCommander = false;
 
 			if (Player.whoAmI == Main.myPlayer)
 			{
@@ -127,7 +132,8 @@ namespace Macrocosm.Content.Rockets
 				else 
 					Player.velocity = Vector2.Zero;
 
-				Player.Center = new Vector2(rocket.Center.X + Player.direction * 5, rocket.Position.Y + 110) - (AsCommander ? new Vector2(0, 50) : Vector2.Zero);
+				Player.direction = 1;
+				Player.Center = new Vector2(rocket.Center.X + Player.direction * 5, rocket.Position.Y + 110) - (IsCommander ? new Vector2(0, 50) : Vector2.Zero);
 
 				if (Player.whoAmI == Main.myPlayer)
 				{

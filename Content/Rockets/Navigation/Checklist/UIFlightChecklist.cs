@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.UI;
+using Macrocosm.Content.Rockets.Navigation.NavigationPanel;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
@@ -8,23 +10,28 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Navigation.Checklist
 {
-	public class ChecklistInfoProvider : IRocketDataConsumer
+    public class UIFlightChecklist : UIListScrollablePanel, IRocketDataConsumer
 	{
 		public Rocket Rocket { get; set; }
 		public UIMapTarget MapTarget { get; set; }
-
-		private UIListScrollablePanel panel;
 
 		private ChecklistConditionCollection commonLaunchConditions = new();
 		private ChecklistCondition selectedLaunchCondition;
 		private ChecklistCondition hereLaunchCondition;
 
-		public ChecklistInfoProvider()
+		public UIFlightChecklist() : base(new LocalizedColorScaleText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Checklist"), scale: 1.2f))
 		{
 			selectedLaunchCondition = new ChecklistCondition("Selected", () => MapTarget is not null);
 			hereLaunchCondition = new ChecklistCondition("NotHere", () => MapTarget is not null && !MapTarget.AlreadyHere);
 			commonLaunchConditions.Add(new ChecklistCondition("Fuel", () => Rocket.Fuel >= Rocket.GetFuelCost(MapTarget.Name)));
 			commonLaunchConditions.Add(new ChecklistCondition("Obstruction", () => Rocket.CheckFlightPathObstruction()));
+		}
+
+		public override void OnInitialize()
+		{
+			base.OnInitialize();
+			BackgroundColor = new(53, 72, 135);
+			BorderColor = new(89, 116, 213, 255);
 		}
 
 		public bool CheckLaunchConditions()
@@ -40,26 +47,14 @@ namespace Macrocosm.Content.Rockets.Navigation.Checklist
 			return met;
 		}
 
-		public void Update()
+		public override void Update(GameTime gameTime)
 		{
-			panel.Deactivate();
-			panel.ClearList();
-			panel.AddRange(GetUpdatedChecklist());
-			panel.Activate();
-		}
+			base.Update(gameTime);
 
-		public UIListScrollablePanel ProvideUI()
-		{
-			panel = new(new LocalizedColorScaleText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Checklist"), scale: 1.2f))
-			{
-				Width = new(0, 0.31f),
-				BackgroundColor = new(53, 72, 135),
-				BorderColor = new(89, 116, 213, 255)
-			};
-
- 
-			panel.AddRange(GetUpdatedChecklist());
-			return panel;
+			Deactivate();
+			ClearList();
+			AddRange(GetUpdatedChecklist());
+			Activate();
 		}
 
 		private List<UIElement> GetUpdatedChecklist()
