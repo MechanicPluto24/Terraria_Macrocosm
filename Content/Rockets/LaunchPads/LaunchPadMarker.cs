@@ -33,7 +33,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style1x1);
 			TileObjectData.newTile.StyleHorizontal = true;
-			TileObjectData.newTile.UsesCustomCanPlace = true;
+			//TileObjectData.newTile.UsesCustomCanPlace = true;
 			TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(ModContent.GetInstance<LaunchPadMarkerTE>().Hook_AfterPlacement, -1, 0, false);
 
 			TileObjectData.addTile(Type);
@@ -45,7 +45,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
 		public override bool CanPlace(int i, int j) 
 		{
-			Main.NewText("CanPlace called");
+			Main.NewText("Called");
 			return LaunchPadManager.TryGetLaunchPadAtTileCoordinates(MacrocosmSubworld.CurrentWorld, new(i, j), out _);
 		} 
 

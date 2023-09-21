@@ -12,18 +12,12 @@ namespace Macrocosm.Content.Items.Placeable.Furniture
 
 		public override void SetDefaults()
         {
+			Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.IndustrialLoom>());
+            Item.placeStyle = 1;
+
             Item.width = 50;
             Item.height = 24;
-            Item.maxStack = Item.CommonMaxStack;
-            Item.useTurn = true;
-            Item.autoReuse = true;
-            Item.useAnimation = 15;
-            Item.rare = ItemRarityID.White;
-            Item.useTime = 10;
-            Item.useStyle = ItemUseStyleID.Swing;
-            Item.consumable = true;
-            Item.createTile = ModContent.TileType<Tiles.Furniture.IndustrialLoom>();
-            Item.placeStyle = 1;
+            Item.value = 500;
         }
     }
 }

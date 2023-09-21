@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Content.Dusts;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
@@ -7,9 +8,9 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
-namespace Macrocosm.Content.Tiles.Furniture
+namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 {
-	public class SolarPanelLarge : ModTile
+    public class MoonBaseTerminal : ModTile
     {
         public override void SetStaticDefaults()
         {
@@ -17,28 +18,25 @@ namespace Macrocosm.Content.Tiles.Furniture
             Main.tileNoAttach[Type] = true;
             Main.tileLavaDeath[Type] = true;
 
-            TileObjectData.newTile.CopyFrom(TileObjectData.Style6x3);
-			TileObjectData.newTile.Width = 6;
-            TileObjectData.newTile.Height = 4;
-            TileObjectData.newTile.CoordinateWidth = 16;
-            TileObjectData.newTile.CoordinateHeights = new int[]{16, 16, 16, 16};
-            TileObjectData.newTile.CoordinatePadding = 2;
+            TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
             TileObjectData.newTile.Direction = TileObjectDirection.PlaceRight;
-			TileObjectData.newTile.StyleHorizontal = false;
+            TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
             TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceLeft;
             TileObjectData.addAlternate(1);
             TileObjectData.addTile(Type);
 
             HitSound = SoundID.Dig;
-            DustType = -1;
+
+			DustType = ModContent.DustType<MoonBasePlatingDust>();
 
 			LocalizedText name = CreateMapEntryName();
-			AddMapEntry(new Color(0, 52, 154), name);
+			AddMapEntry(new Color(180, 180, 180), name);
         }
 
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
+            Item.NewItem(new EntitySource_TileBreak(i, j), i * 16, j * 16, 32, 32, ModContent.ItemType<Items.Placeable.Furniture.MoonBase.MoonBaseTerminal>());
         }
 
     }
