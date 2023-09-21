@@ -1,12 +1,12 @@
-﻿using Macrocosm.Common.UI;
+﻿using Macrocosm.Content.Rockets.Navigation;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria.Localization;
 using Terraria.UI;
 
-namespace Macrocosm.Content.Rockets.Navigation
+namespace Macrocosm.Common.UI
 {
-	public class InfoElement 
+    public class InfoElement
     {
         protected float value = float.MinValue;
         protected string specialValueKey = "default";
@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Rockets.Navigation
         public bool HasValue => value != float.MinValue;
         public bool HasSpecial => specialValueKey != "default";
 
-		public InfoElement(string specialValueKey)
+        public InfoElement(string specialValueKey)
         {
             this.specialValueKey = specialValueKey;
         }
@@ -35,6 +35,6 @@ namespace Macrocosm.Content.Rockets.Navigation
                 return null;
 
             return new UIInfoElement(GetText(), GetIcon(), GetHoverText());
-		}
-	}
+        }
+    }
 }

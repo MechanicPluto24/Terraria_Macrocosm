@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Navigation.Checklist
 {
-	public class ChecklistInfoElement : InfoElement
+    public class ChecklistInfoElement : InfoElement
     {
         public enum ExtraIconType
         {
@@ -35,7 +35,7 @@ namespace Macrocosm.Content.Rockets.Navigation.Checklist
 
         private string KeySelector => specialValueKey + "." + (State ? "True" : "False") + ".";
 
-        protected override LocalizedColorScaleText GetText() => new(Language.GetText("Mods.Macrocosm.UI.Rocket.Checklist." + KeySelector + "Display"), scale: 1.2f);
+        protected override LocalizedColorScaleText GetText() => new(Language.GetText("Mods.Macrocosm.UI.Rocket.Checklist." + KeySelector + "Display"), scale: 1f);
 
 		protected override LocalizedText GetHoverText()
         {
