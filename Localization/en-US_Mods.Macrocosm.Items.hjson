@@ -880,3 +880,8 @@ SolarPanelSmall: {
 	DisplayName: Solar Panel Small
 	Tooltip: ""
 }
+
+MoonBaseBed: {
+	DisplayName: Moon Base Bed
+	Tooltip: ""
+}

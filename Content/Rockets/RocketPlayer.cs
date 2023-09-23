@@ -2,6 +2,7 @@
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.CameraModifiers;
 using Microsoft.Xna.Framework;
+using SubworldLibrary;
 using System.IO;
 using Terraria;
 using Terraria.ID;

@@ -77,6 +77,11 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			}
 
 			isMouseOver = Hitbox.Contains(Main.MouseWorld.ToPoint()) && Hitbox.InPlayerInteractionRange();
+
+			if (isMouseOver)
+			{
+				Main.LocalPlayer.noThrow = 2;
+			}
 		}
 
 		public void Draw(SpriteBatch spriteBatch, Vector2 screenPosition)

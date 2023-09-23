@@ -10,6 +10,7 @@ using Macrocosm.Content.Rockets.Navigation.NavigationPanel;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
+using Terraria.ID;
 using Terraria.Localization;
 
 namespace Macrocosm.Content.Rockets.Navigation
@@ -137,25 +138,36 @@ namespace Macrocosm.Content.Rockets.Navigation
                 Top = new(0, 0.365f),
                 Width = new(0f, 0.31f),
                 Left = new(0, 0.68f),
-                Height = new(0, 0.41f)
+                Height = new(0, 0.45f)
             };
             flightChecklist.SetPadding(2f);
 
-            return flightChecklist;
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+            {
+                flightChecklist.Height.Percent = 0.28f;
+            }
+
+			return flightChecklist;
         }
 
         private UICrewPanel CreateCrewPanel()
         {
             crewPanel = new UICrewPanel
             {
-                Top = new(0f, 0.785f),
+                Top = new(0f, 0.835f),
                 Width = new(0f, 0.31f),
                 Left = new(0, 0.68f),
-                Height = new(0f, 0.2f),
+                Height = new(0f, 0.15f),
             };
             crewPanel.SetPadding(2f);
 
-            return crewPanel;
+			if (Main.netMode == NetmodeID.MultiplayerClient)
+            {
+				crewPanel.Height.Percent = 0.322f;
+				crewPanel.Top.Percent = 0.66f;
+            }
+
+			return crewPanel;
         }
     }
 }

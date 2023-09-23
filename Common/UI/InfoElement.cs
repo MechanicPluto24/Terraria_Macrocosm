@@ -26,15 +26,16 @@ namespace Macrocosm.Common.UI
         }
 
         protected virtual Asset<Texture2D> GetIcon() => null;
+        protected virtual Asset<Texture2D> GetIconSymbol() => null;
         protected virtual LocalizedColorScaleText GetText() => new(Language.GetText(specialValueKey));
         protected virtual LocalizedText GetHoverText() => LocalizedText.Empty;
 
-        public virtual UIElement ProvideUI()
+        public virtual UIInfoElement ProvideUIInfoElement()
         {
             if (!HasValue && !HasSpecial)
                 return null;
 
-            return new UIInfoElement(GetText(), GetIcon(), GetHoverText());
+            return new UIInfoElement(GetText(), GetIcon(), GetIconSymbol(), GetHoverText());
         }
     }
 }

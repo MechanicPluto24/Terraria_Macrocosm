@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Macrocosm.Common.UI;
+using System;
 using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Navigation.Checklist
@@ -39,19 +40,21 @@ namespace Macrocosm.Content.Rockets.Navigation.Checklist
 			return cachedMet;
 		}
 
-		public virtual UIElement ProvideUI()
+		public virtual UIInfoElement ProvideUIInfoElement()
 		{
 			checklistInfoElement.State = IsMet();
-			UIElement uIElement = checklistInfoElement.ProvideUI();
-			uIElement.Height = new(46f, 0f);
-			return uIElement;
+			UIInfoElement infoElement = checklistInfoElement.ProvideUIInfoElement();
+			infoElement.Activate();
+			infoElement.SetTextLeft(55, 0);
+			infoElement.Height = new(57f, 0f);
+			return infoElement;
 		}
 
-		public virtual UIElement ProvideUI(ChecklistInfoElement.ExtraIconType notMetIcon = ChecklistInfoElement.ExtraIconType.CrossmarkRed, ChecklistInfoElement.ExtraIconType metIcon = ChecklistInfoElement.ExtraIconType.CheckmarkGreen)
+		public virtual UIElement ProvideUIInfoElement(ChecklistInfoElement.ExtraIconType notMetIcon = ChecklistInfoElement.ExtraIconType.CrossmarkRed, ChecklistInfoElement.ExtraIconType metIcon = ChecklistInfoElement.ExtraIconType.CheckmarkGreen)
 		{
 			checklistInfoElement.NotMetIcon = notMetIcon;
 			checklistInfoElement.MetIcon = metIcon;
-			return ProvideUI();
+			return ProvideUIInfoElement();
 		}
 	}
 }
