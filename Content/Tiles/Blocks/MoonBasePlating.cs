@@ -17,6 +17,7 @@ namespace Macrocosm.Content.Tiles.Blocks
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = true;
             Main.tileMergeDirt[Type] = false;
+            Main.tileBrick[Type] = true;
 
 			DustType = ModContent.DustType<MoonBasePlatingDust>();
 

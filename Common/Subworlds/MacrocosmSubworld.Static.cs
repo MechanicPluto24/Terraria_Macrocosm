@@ -66,7 +66,7 @@ namespace Macrocosm.Common.Subworlds
 
 		public static bool Travel(string targetWorld, Rocket rocket = null)
 		{
-			if(Main.netMode != NetmodeID.Server)
+			if (Main.netMode != NetmodeID.Server)
 			{
 				if (!SubworldSystem.AnyActive<Macrocosm>())
 				{
@@ -87,48 +87,26 @@ namespace Macrocosm.Common.Subworlds
 					LoadingTitleSequence.SetTargetWorld("Earth");
 					return true;
 				}
-			}
 
-			string subworldId = Macrocosm.Instance.Name + "/" + targetWorld;
-			bool entered = true;
+				string subworldId = Macrocosm.Instance.Name + "/" + targetWorld;
+				bool entered = SubworldSystem.Enter(subworldId);
 
-			if(Main.netMode == NetmodeID.SinglePlayer)
-			{
-				entered = SubworldSystem.Enter(subworldId);
-			} 
-			else if(Main.netMode == NetmodeID.Server)
-			{
-				SubworldSystem.StartSubserver(SubworldSystem.GetIndex(subworldId));
-
-				for (int i = 0; i < Main.maxPlayers; i++)
-				{
-					var player = Main.player[i];
-
-					if (!player.active)
-						continue;
-
-					if(player.TryGetModPlayer(out RocketPlayer rocketPlayer))
-					{
-						if (rocketPlayer.InRocket && rocketPlayer.RocketID == rocket.WhoAmI)
-							SubworldSystem.MovePlayerToSubworld(subworldId, i);
-					}
-				}
-			}
-
-			if (entered)
-			{
-				if(Main.netMode != NetmodeID.Server)
+				if (entered)
 				{
 					LoadingScreen.SetTargetWorld(targetWorld);
 					LoadingTitleSequence.SetTargetWorld(targetWorld);
-				}		
+				}
+				else
+				{
+					WorldTravelFailure("Error: Failed entering target subworld: " + targetWorld + ", staying on " + CurrentWorld);
+				}
+
+				return entered;
 			}
 			else
 			{
-				WorldTravelFailure("Error: Failed entering target subworld: " + targetWorld + ", staying on " + CurrentWorld);
+				return true;
 			}
-
-			return entered;
 		}
 
 		// Called if travel to the target subworld fails

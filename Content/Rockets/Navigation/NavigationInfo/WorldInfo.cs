@@ -67,7 +67,7 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
 						foundHazards = true;
 					}
 
-					listPanel.Add(element.ProvideUI());
+					listPanel.Add(element.ProvideUIInfoElement());
 				}
 			}
 

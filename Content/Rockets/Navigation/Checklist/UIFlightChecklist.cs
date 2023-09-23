@@ -25,6 +25,7 @@ namespace Macrocosm.Content.Rockets.Navigation.Checklist
 			hereLaunchCondition = new ChecklistCondition("NotHere", () => MapTarget is not null && !MapTarget.AlreadyHere);
 			commonLaunchConditions.Add(new ChecklistCondition("Fuel", () => Rocket.Fuel >= Rocket.GetFuelCost(MapTarget.Name)));
 			commonLaunchConditions.Add(new ChecklistCondition("Obstruction", () => Rocket.CheckFlightPathObstruction()));
+			commonLaunchConditions.Add(new ChecklistCondition("Obstruction", () => Rocket.CheckFlightPathObstruction()));
 		}
 
 		public override void OnInitialize()
@@ -63,11 +64,11 @@ namespace Macrocosm.Content.Rockets.Navigation.Checklist
 
 			if (!selectedLaunchCondition.IsMet())
 			{
-				checklist.Add(selectedLaunchCondition.ProvideUI(ChecklistInfoElement.ExtraIconType.QuestionMarkGold));
+				checklist.Add(selectedLaunchCondition.ProvideUIInfoElement(ChecklistInfoElement.ExtraIconType.QuestionMarkGold));
 			}
 			else if (!hereLaunchCondition.IsMet())
 			{
-				checklist.Add(hereLaunchCondition.ProvideUI(ChecklistInfoElement.ExtraIconType.CrossmarkGray));
+				checklist.Add(hereLaunchCondition.ProvideUIInfoElement(ChecklistInfoElement.ExtraIconType.CrossmarkGray));
 			}
 			else
 			{

@@ -52,7 +52,7 @@ namespace Macrocosm.Content.Rockets
 		[NetSync] public float StartPositionY;
 
 		/// <summary> The target world to fly towards </summary>
-		[NetSync] public string TargetWorld;
+		[NetSync] public string TargetWorld = "";
 
 		/// <summary> The target landing position </summary>
 		[NetSync] public Vector2 TargetLandingPosition;
@@ -65,7 +65,7 @@ namespace Macrocosm.Content.Rockets
 		[NetSync] public float FuelCapacity = 1000f;
 
 		/// <summary> The rocket's current world, "Earth" if active and not in a subworld. Other mod's subworlds have the mod name prepended </summary>
-		[NetSync] public string CurrentWorld;
+		[NetSync] public string CurrentWorld = "";
 
 		/// <summary> Whether the rocket is active in the current world and should be updated and visible </summary>
 		public bool ActiveInCurrentWorld => Active && CurrentWorld == MacrocosmSubworld.CurrentWorld;
@@ -104,7 +104,7 @@ namespace Macrocosm.Content.Rockets
 		public bool Stationary => Velocity.LengthSquared() < 0.1f;
 
 		/// <summary> The layer this rocket is drawn in </summary>
-		public RocketDrawLayer DrawLayer = RocketDrawLayer.AfterNPCs;
+		public RocketDrawLayer DrawLayer = RocketDrawLayer.BeforeNPCs;
 
 		/// <summary> This rocket's engine module nameplate </summary>
 		public Nameplate Nameplate => EngineModule.Nameplate;
@@ -482,6 +482,7 @@ namespace Macrocosm.Content.Rockets
 				{
 					if(!RocketUISystem.Active)
 					{
+						Main.LocalPlayer.noThrow = 2;
 						Main.LocalPlayer.cursorItemIconEnabled = true;
 						Main.LocalPlayer.cursorItemIconID = ModContent.ItemType<RocketPlacer>();
 					}
@@ -730,7 +731,7 @@ namespace Macrocosm.Content.Rockets
 			}
 		}
 
-		// Handles the subworld transfer on each client, locally
+		// Handles the subworld travel0
 		private void EnterDestinationSubworld()
 		{
 			Velocity = Vector2.Zero;
@@ -739,30 +740,34 @@ namespace Macrocosm.Content.Rockets
 			Landing = true;
 
 			RocketPlayer commander = GetCommander();
-			var player = commander.Player;
 
 			// This failsafe logic could be extended to hiding the rocket for an amount of time, while remotely launching satellites
 			// (no commander inside but wire triggered). Would mean also keeping the launchpad as occupied to avoid collisions on return
-			if(!MacrocosmSubworld.IsValidWorldName(TargetWorld) || player.dead || !player.active)
+			if (!MacrocosmSubworld.IsValidWorldName(TargetWorld) || commander is null || commander.Player.dead || !commander.Player.active)
 			{
 				TargetLandingPosition = new(Center.X, StartPositionY + Height);
 			 	return;
 			}
 			  
-			if(Main.netMode != NetmodeID.MultiplayerClient)
-			{
-				if (targetLaunchPad is not null)
-					TargetLandingPosition = targetLaunchPad.Position;
-				else
-					TargetLandingPosition = default;
+			if (targetLaunchPad is not null)
+				TargetLandingPosition = targetLaunchPad.Position;
+			else
+				TargetLandingPosition = default;
 
-				CurrentWorld = TargetWorld;
-				NetSync();
-			}
-		
-			if (!MacrocosmSubworld.Travel(TargetWorld, this))
-				CurrentWorld = MacrocosmSubworld.CurrentWorld;
- 			
+			CurrentWorld = TargetWorld;
+
+			if (Main.netMode == NetmodeID.Server)
+				return;
+
+			RocketPlayer myRocketPlayer = GetRocketPlayer(Main.myPlayer);
+			if (myRocketPlayer.InRocket && myRocketPlayer.RocketID == WhoAmI)
+			{
+				if (!MacrocosmSubworld.Travel(TargetWorld, this))
+				{
+					CurrentWorld = MacrocosmSubworld.CurrentWorld;
+					NetSync();
+				}
+			}	
 		}
 	}
 }
