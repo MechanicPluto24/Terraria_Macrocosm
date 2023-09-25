@@ -26,7 +26,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
 		public int Width => EndTile.X + 1 - StartTile.X;
 		public Rectangle Hitbox => new((int)(StartTile.X * 16f), (int)(StartTile.Y * 16f), Width * 16, 16);
-		public Vector2 Position => new(((StartTile.X + (EndTile.X - StartTile.X) / 2f) * 16f), StartTile.Y);
+		public Vector2 Position => new(((StartTile.X + (EndTile.X - StartTile.X) / 2f) * 16f), StartTile.Y * 16f);
 
 		private bool isMouseOver;
 
