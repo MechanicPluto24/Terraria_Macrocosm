@@ -760,6 +760,7 @@ namespace Macrocosm.Content.Rockets
 			if(samePlanet)
 			{
 				Center = new(TargetLandingPosition.X, Center.Y);
+				FadeEffect.StartFadeIn(0.02f, selfDraw: true);
 			}
 			else
 			{

@@ -33,7 +33,7 @@ namespace Macrocosm.Content.Rockets.Navigation
         private UIFlightChecklist flightChecklist;
         private UICrewPanel crewPanel;
         private UIListScrollablePanel worldInfoPanel;
-        private UIListScrollablePanel launchLocationPanel;
+        private UIListScrollablePanel launchLocationsList;
 
         private UIMapTarget lastTarget;
         private UIMapTarget target;
@@ -77,9 +77,9 @@ namespace Macrocosm.Content.Rockets.Navigation
             Append(worldInfoPanel);
             worldInfoPanel.Activate();
 
-            launchLocationPanel = CreateLaunchLocationPanel(MacrocosmSubworld.CurrentPlanet);
-            Append(launchLocationPanel);
-            launchLocationPanel.Activate();
+            launchLocationsList = CreateLaunchLocationPanel(MacrocosmSubworld.CurrentPlanet);
+            Append(launchLocationsList);
+            launchLocationsList.Activate();
 
 			launchButton = new();
             launchButton.ZoomIn = navigationPanel.ZoomIn;
@@ -100,26 +100,42 @@ namespace Macrocosm.Content.Rockets.Navigation
         {
             lastTarget = target;
             target = navigationPanel.CurrentMap.GetSelectedTarget();
-
 			Main.LocalPlayer.RocketPlayer().TargetSubworldID = target is null ? "" : target.Name;
 
 			base.Update(gameTime);
 
-			if (target is not null && target != lastTarget)
-            {
-				CreateWorldInfoPanel(target.Name);
-                launchLocationPanel.ClearList();
-			}
-
-			if (target is not null)
-            {
-			    CreateLaunchLocationPanel(target.Name);
-                launchLocationPanel.UpdateOrder();
-			}
-
+            UpdateWorldInfoPanel();
+            UpdateLaunchLocationsList();
 			UpdateChecklist();
             UpdateLaunchButton();
         }
+
+        private void UpdateWorldInfoPanel()
+        {
+			if (target is not null && target != lastTarget)
+			{
+				CreateWorldInfoPanel(target.Name);
+				launchLocationsList.ClearList();
+			}
+		}
+
+        private void UpdateLaunchLocationsList()
+        {
+			if (target is not null)
+			{
+				CreateLaunchLocationPanel(target.Name);
+				launchLocationsList.UpdateOrder();
+
+				foreach (var lpInfo in launchLocationsList.OfType<UILaunchPadInfoElement>())
+                {
+                    if (lpInfo.HasFocus && lpInfo.LaunchPad is not null)
+                    {
+                        targetLaunchPad = lpInfo.LaunchPad;
+                        break;
+                    }
+                }
+			}
+		}
 
 		private void UpdateChecklist()
         {
@@ -139,8 +155,6 @@ namespace Macrocosm.Content.Rockets.Navigation
             else
                 launchButton.ButtonState = UILaunchButton.StateType.LaunchInactive;
         }
-
-        private bool RocketIsAtCurrentLaunchPad => targetLaunchPad is not null && targetLaunchPad.RocketID == Rocket.WhoAmI;
 
 		private UIFlightChecklist CreateFlightChecklist()
         {
@@ -233,9 +247,9 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 		private UIListScrollablePanel CreateLaunchLocationPanel(string subworldId)
 		{
-            if(launchLocationPanel is null)
+            if(launchLocationsList is null)
             {
-				launchLocationPanel = new(new LocalizedColorScaleText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.LaunchLocations"), scale: 1.2f))
+				launchLocationsList = new(new LocalizedColorScaleText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.LaunchLocations"), scale: 1.2f))
 				{
 					Top = new(0, 0.365f),
 					Width = new(0f, 0.34f),
@@ -244,21 +258,46 @@ namespace Macrocosm.Content.Rockets.Navigation
 					BorderColor = new Color(89, 116, 213, 255),
 					BackgroundColor = new Color(53, 72, 135)
 				};
-				launchLocationPanel.SetPadding(0f);
+				launchLocationsList.SetPadding(0f);
 
-                launchLocationPanel.ManualSortMethod = (list) =>
+                // Sort by vacant > current > occupied
+                launchLocationsList.ManualSortMethod = (list) =>
                 {
-                    var selected = list.Where(element => element is UILaunchPadInfoElement infoElement && !infoElement.IsDefault && infoElement.LaunchPad.HasRocket);
-                    list = list.Except(selected).ToList();
-                    list.AddRange(selected);
+                    list.Sort((a, b) =>
+                    {
+                        bool HasRocket(object element) => element is UILaunchPadInfoElement infoElement && !infoElement.IsSpawnPointDefault && infoElement.LaunchPad.HasRocket;
+						bool IsCurrent(object element) => element is UILaunchPadInfoElement infoElement && infoElement.IsCurrent;
+
+						bool aHasRocket = HasRocket(a);
+						bool bHasRocket = HasRocket(b);
+
+						bool aIsCurrent = IsCurrent(a);
+						bool bIsCurrent = IsCurrent(b);
+
+						if (!aHasRocket && !bHasRocket) return 0;  
+						if (!aHasRocket) return -1;                
+						if (!bHasRocket) return 1;                 
+                                                                   
+						if (aIsCurrent && bIsCurrent) return 0;    
+						if (aIsCurrent) return -1;                 
+						if (bIsCurrent) return 1;                  
+                                                                   
+						if (aHasRocket && bHasRocket) return 0;    
+                                                                   
+						return 0;                                  
+					});
 				};
 			}
 
+            // Add the launchpads
 			foreach (var launchPad in LaunchPadManager.GetLaunchPads(subworldId))
             {
-                var storedInfoElement = launchLocationPanel.OfType<UILaunchPadInfoElement>().FirstOrDefault(lpInfo => lpInfo.LaunchPad == launchPad);
+                var storedInfoElement = launchLocationsList.OfType<UILaunchPadInfoElement>()
+                                                           .FirstOrDefault(e => e.LaunchPad == launchPad);
+
                 bool notFound = storedInfoElement is null;
 
+                // Add any newly created launchpads
 				if (notFound)
                 {
 					UILaunchPadInfoElement infoElement = new(launchPad)
@@ -267,49 +306,83 @@ namespace Macrocosm.Content.Rockets.Navigation
 					};
 					infoElement.OnLeftClick += InfoElement_OnLeftClick;
 
-                    launchLocationPanel.Add(infoElement);
+                    launchLocationsList.Add(infoElement);
   				}
                 else
                 {
 					storedInfoElement.IsCurrent = false;
 
+                    // Mark the current launchpad of this rocket 
 					if (Rocket is not null && launchPad.RocketID == Rocket.WhoAmI)
 						storedInfoElement.IsCurrent = true;
 				}
 			}
 
-           launchLocationPanel.OfType<UILaunchPadInfoElement>().Where(infoElement => !infoElement.IsDefault && !infoElement.LaunchPad.Active).ToList().ForEach(RemoveChild);
+			// Remove inactive launchpads
+			launchLocationsList.OfType<UILaunchPadInfoElement>()
+                               .Where(e => !e.IsSpawnPointDefault && !e.LaunchPad.Active)
+                               .ToList()
+                               .ForEach(launchLocationsList.RemoveFromList);
 
-            if (!launchLocationPanel.Any())
-            {
+
+			// Add the "Spawn Point" launch location if no vacant launchpads were found
+			if (!launchLocationsList.OfType<UILaunchPadInfoElement>().Any(e => e.IsSpawnPointDefault || (!e.IsSpawnPointDefault && !e.LaunchPad.HasRocket)))
+			{
 				UILaunchPadInfoElement spawnInfoElement = new()
 				{
 					FocusContext = "LaunchLocations",
 				};
 				spawnInfoElement.OnLeftClick += InfoElement_OnLeftClick;
-				launchLocationPanel.Add(spawnInfoElement);
+				launchLocationsList.Add(spawnInfoElement);
 			}
 
-            launchLocationPanel.Activate();
-			return launchLocationPanel;
+            launchLocationsList.Activate();
+			return launchLocationsList;
 		}
+
 
 		private void InfoElement_OnLeftClick(UIMouseEvent evt, UIElement listeningElement)
 		{
             if(listeningElement is UILaunchPadInfoElement infoElement)
-            {
-                if (!infoElement.IsDefault)
-                {
-					if (!infoElement.LaunchPad.HasRocket)
-                    {
-						targetLaunchPad = infoElement.LaunchPad;
-                        infoElement.HasFocus = true;
-                    }
-                }
-                else
-                {
-					infoElement.HasFocus = true;
-				}
+                 if (infoElement.IsSpawnPointDefault || !infoElement.LaunchPad.HasRocket)
+ 					infoElement.HasFocus = true;
+		}
+
+        private void HandleSeparators()
+        {
+			//Remove all separators 
+			launchLocationsList.OfType<UIHorizontalSeparator>()
+							   .ToList()
+							   .ForEach(launchLocationsList.RemoveFromList);
+
+			// Insert separator after vacant list
+			var lastVacantElement = launchLocationsList.OfType<UILaunchPadInfoElement>()
+													   .LastOrDefault(e => e.IsSpawnPointDefault || (!e.IsSpawnPointDefault && !e.LaunchPad.HasRocket));
+
+			if (lastVacantElement != null)
+			{
+				int lastVacantIndex = launchLocationsList.ToList().IndexOf(lastVacantElement);
+				bool hasCurrentOrOccupiedAfterLastVacant = launchLocationsList.OfType<UILaunchPadInfoElement>()
+																			  .Any(e => e.IsCurrent || (!e.IsSpawnPointDefault && e.LaunchPad.HasRocket));
+
+
+				if (hasCurrentOrOccupiedAfterLastVacant)
+					launchLocationsList.InsertHorizontalSeparator(lastVacantIndex + 1);
+			}
+
+
+			// Insert separator after the current launchpad
+			var currentElement = launchLocationsList.OfType<UILaunchPadInfoElement>()
+													.FirstOrDefault(e => e.IsCurrent);
+
+			if (currentElement != null)
+			{
+				int currentIndex = launchLocationsList.ToList().IndexOf(currentElement);
+				bool hasOtherOccupiedLaunchPads = launchLocationsList.OfType<UILaunchPadInfoElement>()
+																	 .Any(e => !e.IsCurrent && !e.IsSpawnPointDefault && e.LaunchPad.HasRocket);
+
+				if (hasOtherOccupiedLaunchPads)
+					launchLocationsList.InsertHorizontalSeparator(currentIndex + 1);
 			}
 		}
 	}

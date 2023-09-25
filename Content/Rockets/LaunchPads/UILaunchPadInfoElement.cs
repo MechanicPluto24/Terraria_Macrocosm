@@ -18,13 +18,16 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 		public Action OnFocusGain { get; set; }
 		public Action OnFocusLost { get; set; }
 
-		public bool IsDefault => LaunchPad is null;
+		public bool IsSpawnPointDefault => LaunchPad is null;
 
 		public bool IsCurrent { get; set; }
+
+		// TODO: localize this!!! ------------------V
 		public UILaunchPadInfoElement() : base("World Spawn", ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Icons/SpawnPoint"), null, null)
 		{ 
 		}
 
+		// TODO: adjust this to target world not the current one ---------------------V 
 		public UILaunchPadInfoElement(LaunchPad launchPad) : base(Utility.GetCompassCoordinates(launchPad.Position), null, null, null)
 		{
 			LaunchPad = launchPad;
@@ -38,9 +41,9 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			BorderColor = BackgroundColor * 2f;
 			uIDisplayText.TextColor = Color.White;
 
-			if (IsDefault || !LaunchPad.HasRocket)
+			if (IsSpawnPointDefault || !LaunchPad.HasRocket)
 			{
-				if (HasFocus)
+				if (HasFocus || IsMouseHovering)
 					BorderColor = Color.Gold;
 			} 
 			else
@@ -50,7 +53,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			}
 
 			if (IsCurrent)
-				BorderColor = Color.Green;
+				BorderColor = new Color(0,255,0);
 		}
 
 	}

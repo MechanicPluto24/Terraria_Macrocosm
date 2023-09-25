@@ -172,14 +172,20 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			
 		public static void SaveLaunchPads(TagCompound tag)
 		{
+			TagCompound launchPads = new();
+
 			foreach (var lpKvp in launchPadStorage)
-				tag[lpKvp.Key] = lpKvp.Value;
+				launchPads[lpKvp.Key] = lpKvp.Value;
+
+			tag["LaunchPads"] = launchPads;
 		}
 
 		public static void LoadLaunchPads(TagCompound tag)
 		{
-			foreach (var lpKvp in tag)
-				launchPadStorage[lpKvp.Key] = (List<LaunchPad>)tag.GetList<LaunchPad>(lpKvp.Key);
+			TagCompound launchPads = tag.GetCompound("LaunchPads");
+
+			foreach (var lpKvp in launchPads)
+ 				launchPadStorage[lpKvp.Key] = (List<LaunchPad>)launchPads.GetList<LaunchPad>(lpKvp.Key);
  		}
 	}
 }
