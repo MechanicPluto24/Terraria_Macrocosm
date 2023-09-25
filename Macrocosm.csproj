@@ -44,6 +44,7 @@
     <None Remove="Content\Items\Placeable\Furniture\MoonBase\MoonBaseLantern.png" />
     <None Remove="Content\Items\Placeable\Furniture\MoonBase\MoonBaseNeonTube.png" />
     <None Remove="Content\Rockets\LaunchPads\LaunchPadMarker_glow.png" />
+    <None Remove="Content\Rockets\Textures\Icons\SpawnPoint.png" />
     <None Remove="Content\Tiles\Furniture\MoonBase\MoonBaseBed.png" />
     <None Remove="Content\Tiles\Furniture\MoonBase\MoonBaseBed_Highlight.png" />
     <None Remove="Content\Tiles\Furniture\MoonBase\MoonBaseCandle.png" />

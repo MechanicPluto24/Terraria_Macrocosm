@@ -81,8 +81,11 @@ namespace Macrocosm.Content.Rockets
             }
         }
 
-        public static void DespawnAllRockets()
+        public static void DespawnAllRockets(bool announce = true)
         {
+			if(announce)
+				Utility.Chat("Despawned all rockets!", Color.Green);
+
 			for (int i = 0; i < MaxRockets; i++)
             {
                 Rockets[i].Despawn();

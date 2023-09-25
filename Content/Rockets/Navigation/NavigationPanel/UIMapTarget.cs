@@ -82,7 +82,7 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationPanel
         /// <param name="position"> The map target's position relative to the top corner of the NavigationMap </param>
         /// <param name="width"> Interactible area width in pixels </param>
         /// <param name="height"> Interactible area height in pixels </param>
-        /// <param name="targetId"> The special ID of the target, handled in <see cref="Rocket.EnterDestinationSubworld"/> </param>
+        /// <param name="targetId"> The special ID of the target, handled in <see cref="Rocket.Travel"/> </param>
         /// <param name="canLaunch"> Function that determines whether the target is selectable, defaults to false </param>
         public UIMapTarget(UINavigationPanel owner, Vector2 position, float width, float height, string targetId, ChecklistConditionCollection launchConditions = null, Texture2D outline = null) : this(owner, position, width, height)
         {

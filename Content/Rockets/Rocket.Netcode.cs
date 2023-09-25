@@ -55,6 +55,7 @@ namespace Macrocosm.Content.Rockets
 				// Bounce to all other clients, minus the sender
 				rocket.NetSync(ignoreClient: clientWhoAmI);
 
+				/*
 				ModPacket packet = Macrocosm.Instance.GetPacket();
 				rocket.WriteToPacket(packet);
  
@@ -62,7 +63,8 @@ namespace Macrocosm.Content.Rockets
  					SubworldSystem.SendToMainServer(Macrocosm.Instance, packet.GetBuffer());
 				else 
 					SubworldSystem.SendToAllSubservers(Macrocosm.Instance, packet.GetBuffer());
+				*/
 			}
 		}
 	}
-}
+}  

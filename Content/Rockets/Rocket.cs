@@ -241,6 +241,7 @@ namespace Macrocosm.Content.Rockets
 		/// <summary> Update the rocket </summary>
 		public void Update()
 		{
+			SetModuleRelativePositions();
 			Velocity = GetCollisionVelocity();
 			Position += Velocity;
 
@@ -262,7 +263,7 @@ namespace Macrocosm.Content.Rockets
 				ResetAnimation();
 				Launched = false;
 				Landing = true;
-				EnterDestinationSubworld();
+				Travel();
 			}
 		}
 
@@ -342,8 +343,8 @@ namespace Macrocosm.Content.Rockets
 			ServiceModule.Position = CommandPod.Position + new Vector2(-6, CommandPod.Hitbox.Height - 2.1f);
 			ReactorModule.Position = ServiceModule.Position + new Vector2(-2, ServiceModule.Hitbox.Height - 2);
 			EngineModule.Position = ReactorModule.Position + new Vector2(-18, ReactorModule.Hitbox.Height);
-			BoosterLeft.Position = new Vector2(EngineModule.Center.X, EngineModule.Position.Y) - new Vector2(BoosterLeft.Texture.Width/2, 0) + new Vector2(-37, 16);
-			BoosterRight.Position = new Vector2(EngineModule.Center.X, EngineModule.Position.Y)  -new Vector2(BoosterLeft.Texture.Width / 2, 0) + new Vector2(37, 16);
+			BoosterLeft.Position = new Vector2(EngineModule.Center.X, EngineModule.Position.Y) - new Vector2(BoosterLeft.Hitbox.Width/2, 0) + new Vector2(2, 16);
+			BoosterRight.Position = new Vector2(EngineModule.Center.X, EngineModule.Position.Y) + new Vector2(14, 16);
 		}
 
 		/// <summary> Gets the RocketPlayer bound to the provided player ID </summary>
@@ -441,8 +442,6 @@ namespace Macrocosm.Content.Rockets
 		public float GetFuelCost(string targetWorld) => RocketFuelLookup.GetFuelCost(MacrocosmSubworld.CurrentPlanet, targetWorld);
 
 		/// <summary> Checks whether the flight path is obstructed by solid blocks </summary>
-		// TODO: CHECK THIS AT A LOWER FREQUENCY - maybe once every second, and return a cached result otherwise
-		// Will implement it in the Checklist provider rework
 		public bool CheckFlightPathObstruction()
 		{
 			int startY = (int)((Center.Y - Height / 2) / 16);
@@ -731,13 +730,16 @@ namespace Macrocosm.Content.Rockets
 			}
 		}
 
-		// Handles the subworld travel0
-		private void EnterDestinationSubworld()
+		// Handles the subworld travel
+		private void Travel()
 		{
 			Velocity = Vector2.Zero;
 			Launched = false;
 			FlightTime = 0;
 			Landing = true;
+
+			bool samePlanet = CurrentWorld == TargetWorld; 
+			CurrentWorld = TargetWorld;
 
 			RocketPlayer commander = GetCommander();
 
@@ -746,7 +748,8 @@ namespace Macrocosm.Content.Rockets
 			if (!MacrocosmSubworld.IsValidWorldName(TargetWorld) || commander is null || commander.Player.dead || !commander.Player.active)
 			{
 				TargetLandingPosition = new(Center.X, StartPositionY + Height);
-			 	return;
+				CurrentWorld = MacrocosmSubworld.CurrentWorld;
+				return;
 			}
 			  
 			if (targetLaunchPad is not null)
@@ -754,20 +757,25 @@ namespace Macrocosm.Content.Rockets
 			else
 				TargetLandingPosition = default;
 
-			CurrentWorld = TargetWorld;
-
-			if (Main.netMode == NetmodeID.Server)
-				return;
-
-			RocketPlayer myRocketPlayer = GetRocketPlayer(Main.myPlayer);
-			if (myRocketPlayer.InRocket && myRocketPlayer.RocketID == WhoAmI)
+			if(samePlanet)
 			{
-				if (!MacrocosmSubworld.Travel(TargetWorld, this))
+				Center = new(TargetLandingPosition.X, Center.Y);
+			}
+			else
+			{
+				if (Main.netMode == NetmodeID.Server)
+					return;
+
+				RocketPlayer myRocketPlayer = GetRocketPlayer(Main.myPlayer);
+				if (myRocketPlayer.InRocket && myRocketPlayer.RocketID == WhoAmI)
 				{
-					CurrentWorld = MacrocosmSubworld.CurrentWorld;
-					NetSync();
+					if (!MacrocosmSubworld.Travel(TargetWorld, this))
+					{
+						CurrentWorld = MacrocosmSubworld.CurrentWorld;
+						NetSync();
+					}
 				}
-			}	
+			}
 		}
 	}
 }

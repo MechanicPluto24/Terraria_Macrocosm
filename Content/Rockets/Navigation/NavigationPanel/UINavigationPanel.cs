@@ -1,9 +1,11 @@
-﻿using Macrocosm.Common.UI;
+﻿using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.UI;
 using Macrocosm.Content.Subworlds;
 using Macrocosm.Content.Systems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System.Linq;
 using Terraria.GameContent.UI.Elements;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -53,6 +55,10 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationPanel
 
             CurrentMap = GetInitialNavigationMap();
 
+            var initialTarget = CurrentMap.Targets.FirstOrDefault(target => target.Name == MacrocosmSubworld.CurrentPlanet);
+            if (initialTarget is not null)
+                initialTarget.Selected = true;
+ 
             Append(zoomInButton);
             Append(zoomOutButton);
             Append(CurrentMap);
