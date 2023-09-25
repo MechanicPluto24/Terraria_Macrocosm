@@ -30,7 +30,7 @@ namespace Macrocosm.Common.UI
         protected virtual LocalizedColorScaleText GetText() => new(Language.GetText(specialValueKey));
         protected virtual LocalizedText GetHoverText() => LocalizedText.Empty;
 
-        public virtual UIInfoElement ProvideUIInfoElement()
+        public virtual UIInfoElement ProvideUI()
         {
             if (!HasValue && !HasSpecial)
                 return null;

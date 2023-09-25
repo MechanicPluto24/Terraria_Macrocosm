@@ -19,6 +19,7 @@ Rocket: {
 		Close: Close
 		Navigation: Navigation
 		Checklist: Pre-flight checklist
+		LaunchLocations: Launch Locations
 		Crew: Crew
 		Payload: Payload
 		Fuel: Fuel

@@ -19,8 +19,9 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 		[NetSync] public bool Active;
 		[NetSync] public Point16 StartTile;
 		[NetSync] public Point16 EndTile;
-		[NetSync] public bool HasRocket;
-		[NetSync] public int RocketID;
+		[NetSync] public int RocketID = -1;
+
+		public bool HasRocket => RocketID >= 0;
 
 		public int Width => EndTile.X + 1 - StartTile.X;
 		public Rectangle Hitbox => new((int)(StartTile.X * 16f), (int)(StartTile.Y * 16f), Width * 16, 16);
@@ -59,22 +60,15 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
 		public void Update()
 		{
-			HasRocket = false;
 			RocketID = -1;
 
 			for (int i = 0; i < RocketManager.MaxRockets; i++)
 			{
 				Rocket rocket = RocketManager.Rockets[i];
 
-				if (rocket.ActiveInCurrentWorld)
-				{
-					if (Hitbox.Intersects(rocket.Bounds))
-					{
-						HasRocket = true;
-						RocketID = i;
-					}
-				}
-			}
+				if (rocket.ActiveInCurrentWorld && Hitbox.Intersects(rocket.Bounds))
+ 					RocketID = i;
+ 			}
 
 			isMouseOver = Hitbox.Contains(Main.MouseWorld.ToPoint()) && Hitbox.InPlayerInteractionRange();
 
@@ -160,9 +154,10 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 		{
 			TagCompound tag = new()
 			{
+				[nameof(Active)] = Active,
 				[nameof(StartTile)] = StartTile,
 				[nameof(EndTile)] = EndTile,
-				[nameof(HasRocket)] = HasRocket,
+				[nameof(RocketID)] = RocketID,
 			};
 
 			return tag;
@@ -170,10 +165,12 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
 		public static LaunchPad DeserializeData(TagCompound tag)
 		{
-			LaunchPad launchPad = new()
-			{
-				HasRocket = tag.ContainsKey(nameof(HasRocket)),
-			};
+			LaunchPad launchPad = new();
+
+			launchPad.Active = tag.ContainsKey(nameof(Active));
+
+			if (tag.ContainsKey(nameof(RocketID)))
+				launchPad.RocketID = tag.GetInt(nameof(RocketID));
 
 			if (tag.ContainsKey(nameof(StartTile)))
 				launchPad.StartTile = tag.Get<Point16>(nameof(StartTile));

@@ -1,4 +1,6 @@
 ﻿using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.UI;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SubworldLibrary;
@@ -9,6 +11,7 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.LaunchPads
 {
@@ -99,6 +102,11 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 		private int checkTimer;
 		public override void PostUpdateNPCs()
 		{
+			UpdateLaunchPads();
+		}
+
+		private void UpdateLaunchPads()
+		{
 			checkTimer++;
 
 			if (checkTimer >= 10)
@@ -107,7 +115,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
 				if (launchPadStorage.ContainsKey(MacrocosmSubworld.CurrentWorld))
 				{
-					for(int i = 0; i < launchPadStorage[MacrocosmSubworld.CurrentWorld].Count; i++)
+					for (int i = 0; i < launchPadStorage[MacrocosmSubworld.CurrentWorld].Count; i++)
 					{
 						var launchPad = launchPadStorage[MacrocosmSubworld.CurrentWorld][i];
 
@@ -121,7 +129,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 							launchPad.Update();
 						}
 					}
-				}		
+				}
 			}
 		}
 
@@ -153,9 +161,8 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
 		public static void LoadLaunchPads(TagCompound tag)
 		{
-			foreach (var lpKvp in launchPadStorage)
-				if (tag.ContainsKey(lpKvp.Key))
-					launchPadStorage[lpKvp.Key] = (List<LaunchPad>)tag.GetList<LaunchPad>(lpKvp.Key);
+			foreach (var lpKvp in tag)
+				launchPadStorage[lpKvp.Key] = (List<LaunchPad>)tag.GetList<LaunchPad>(lpKvp.Key);
  		}
 	}
 }
