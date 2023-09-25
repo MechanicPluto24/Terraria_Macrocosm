@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.Localization;
@@ -131,8 +132,6 @@ namespace Macrocosm.Content.Rockets.Navigation
                 launchButton.ButtonState = UILaunchButton.StateType.NoTarget;
             else if (navigationPanel.CurrentMap.HasNext)
                 launchButton.ButtonState = UILaunchButton.StateType.ZoomIn;
-            else if (target.AlreadyHere)
-                launchButton.ButtonState = UILaunchButton.StateType.AlreadyHere;
             else if (!flightChecklist.CheckLaunchConditions())
                 launchButton.ButtonState = UILaunchButton.StateType.CantReach;
             else if (Main.LocalPlayer.GetModPlayer<RocketPlayer>().IsCommander)
@@ -141,7 +140,9 @@ namespace Macrocosm.Content.Rockets.Navigation
                 launchButton.ButtonState = UILaunchButton.StateType.LaunchInactive;
         }
 
-        private UIFlightChecklist CreateFlightChecklist()
+        private bool RocketIsAtCurrentLaunchPad => targetLaunchPad is not null && targetLaunchPad.RocketID == Rocket.WhoAmI;
+
+		private UIFlightChecklist CreateFlightChecklist()
         {
             flightChecklist = new UIFlightChecklist
             {
@@ -206,7 +207,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 			if (flavorText != LocalizedText.Empty && flavorText.Value != "default")
 			{
 				worldInfoPanel.Add(new UIDynamicTextPanel(new LocalizedColorScaleText(flavorText, Color.White, scale: 0.85f)));
-				worldInfoPanel.AddSeparator();
+				worldInfoPanel.AddHorizontalSeparator();
 			}
 
 			List<InfoElement> elements = WorldInfo.GetInfoElements(subworldId);
@@ -218,7 +219,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 				{
 					if (!foundHazards && element is HazardInfoElement)
 					{
-						worldInfoPanel.AddSeparator();
+						worldInfoPanel.AddHorizontalSeparator();
 						foundHazards = true;
 					}
 
@@ -247,7 +248,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 
                 launchLocationPanel.ManualSortMethod = (list) =>
                 {
-                    var selected = list.Where(element => element is UILaunchPadInfoElement infoElement && infoElement.LaunchPad.HasRocket);
+                    var selected = list.Where(element => element is UILaunchPadInfoElement infoElement && !infoElement.IsDefault && infoElement.LaunchPad.HasRocket);
                     list = list.Except(selected).ToList();
                     list.AddRange(selected);
 				};
@@ -266,14 +267,28 @@ namespace Macrocosm.Content.Rockets.Navigation
 					};
 					infoElement.OnLeftClick += InfoElement_OnLeftClick;
 
-                    if (Rocket is not null && launchPad.RocketID == Rocket.WhoAmI)
-                        infoElement.IsCurrent = true;
-
                     launchLocationPanel.Add(infoElement);
   				}
+                else
+                {
+					storedInfoElement.IsCurrent = false;
+
+					if (Rocket is not null && launchPad.RocketID == Rocket.WhoAmI)
+						storedInfoElement.IsCurrent = true;
+				}
 			}
 
-            //launchLocationPanel.OfType<UILaunchPadInfoElement>().Where(infoElement => !infoElement.LaunchPad.Active).ToList().ForEach(RemoveChild);
+           launchLocationPanel.OfType<UILaunchPadInfoElement>().Where(infoElement => !infoElement.IsDefault && !infoElement.LaunchPad.Active).ToList().ForEach(RemoveChild);
+
+            if (!launchLocationPanel.Any())
+            {
+				UILaunchPadInfoElement spawnInfoElement = new()
+				{
+					FocusContext = "LaunchLocations",
+				};
+				spawnInfoElement.OnLeftClick += InfoElement_OnLeftClick;
+				launchLocationPanel.Add(spawnInfoElement);
+			}
 
             launchLocationPanel.Activate();
 			return launchLocationPanel;
@@ -283,11 +298,18 @@ namespace Macrocosm.Content.Rockets.Navigation
 		{
             if(listeningElement is UILaunchPadInfoElement infoElement)
             {
-                if (infoElement.LaunchPad.HasRocket)
-                    return;
-
-				infoElement.HasFocus = true;
-				targetLaunchPad = infoElement.LaunchPad;
+                if (!infoElement.IsDefault)
+                {
+					if (!infoElement.LaunchPad.HasRocket)
+                    {
+						targetLaunchPad = infoElement.LaunchPad;
+                        infoElement.HasFocus = true;
+                    }
+                }
+                else
+                {
+					infoElement.HasFocus = true;
+				}
 			}
 		}
 	}

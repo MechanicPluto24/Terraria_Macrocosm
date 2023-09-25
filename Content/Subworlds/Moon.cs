@@ -78,7 +78,10 @@ namespace Macrocosm.Content.Subworlds
 
 		public override void PreUpdateWorld()
         {
-            UpdateBloodMoon();
+			if(!SkyManager.Instance["Macrocosm:MoonSky"].IsActive())
+				SkyManager.Instance.Activate("Macrocosm:MoonSky");
+
+			UpdateBloodMoon();
             UpdateMeteorStorm();
             UpdateSolarStorm();
 		}

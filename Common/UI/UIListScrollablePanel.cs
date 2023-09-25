@@ -140,7 +140,7 @@ namespace Macrocosm.Common.UI
 			return result;
 		}
 
-		public void AddSeparator()
+		public void AddHorizontalSeparator()
 		{
 			Add(new UIHorizontalSeparator()
 			{

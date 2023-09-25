@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Netcode;
+using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -60,7 +61,15 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
 		public void Update()
 		{
+			int prevRocketId = RocketID;
 			RocketID = -1;
+
+			if (Main.tile[StartTile.ToPoint()].TileType != ModContent.TileType<LaunchPadMarker>() || (Main.tile[EndTile.ToPoint()].TileType != ModContent.TileType<LaunchPadMarker>()))
+			{
+				Active = false;
+				NetSync(MacrocosmSubworld.CurrentPlanet);
+				return;
+			}
 
 			for (int i = 0; i < RocketManager.MaxRockets; i++)
 			{
@@ -69,6 +78,9 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 				if (rocket.ActiveInCurrentWorld && Hitbox.Intersects(rocket.Bounds))
  					RocketID = i;
  			}
+
+			if (RocketID != prevRocketId)
+				NetSync(MacrocosmSubworld.CurrentPlanet);
 
 			isMouseOver = Hitbox.Contains(Main.MouseWorld.ToPoint()) && Hitbox.InPlayerInteractionRange();
 
@@ -136,6 +148,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			{
 				launchPad.NetSync(subworldId, ignoreClient: clientWhoAmI);
 
+				/*
 				ModPacket packet = Macrocosm.Instance.GetPacket();
 				launchPad.WriteToPacket(packet, subworldId);
 
@@ -143,6 +156,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 					SubworldSystem.SendToMainServer(Macrocosm.Instance, packet.GetBuffer());
 				else
 					SubworldSystem.SendToAllSubservers(Macrocosm.Instance, packet.GetBuffer());
+				*/
 			}
 		}
 

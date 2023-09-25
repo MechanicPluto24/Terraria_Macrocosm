@@ -63,6 +63,23 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			}
  		}
 
+		public static void ClearAllLaunchPads(bool announce = true, bool shouldSync = true)
+		{
+			if (announce)
+				Utility.Chat("Cleared all launch pads!", Color.Green);
+
+			foreach(var lpKvp in launchPadStorage)
+			{
+				foreach (var lp in lpKvp.Value)
+				{
+					lp.Active = false;
+
+					if (shouldSync)
+						lp.NetSync(lpKvp.Key);
+				}
+			}
+		}
+
 		public static bool Any(string subworldId) => GetLaunchPads(subworldId).Any();
 		public static bool None(string subworldId) => !Any(subworldId);
 
@@ -79,7 +96,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 		{
 			return GetLaunchPads(subworldId).FirstOrDefault(lp =>
 			{
-				Rectangle coordinates = new(lp.StartTile.X, lp.StartTile.Y, lp.EndTile.X - lp.StartTile.X + 1, lp.EndTile.Y - lp.StartTile.Y + 1);
+				Rectangle coordinates = new(lp.StartTile.X, lp.StartTile.Y, lp.EndTile.X - lp.StartTile.X + 2, lp.EndTile.Y - lp.StartTile.Y + 2);
 				return coordinates.Contains(tile.X, tile.Y);
 			});
 		}

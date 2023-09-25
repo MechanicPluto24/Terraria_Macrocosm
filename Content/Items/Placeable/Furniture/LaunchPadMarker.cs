@@ -1,4 +1,5 @@
-﻿using Terraria;
+﻿using Macrocosm.Content.Rockets.LaunchPads;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -14,6 +15,11 @@ namespace Macrocosm.Content.Items.Placeable.Furniture
 			Item.width = 16;
 			Item.height = 16;
 			Item.value = 500;
+		}
+
+		public override bool? UseItem(Player player)
+		{
+			return null;
 		}
 	}
 }

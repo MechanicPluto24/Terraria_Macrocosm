@@ -1,7 +1,11 @@
 ﻿using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
+using Terraria;
+using Terraria.ModLoader;
+using Terraria.ModLoader.Config;
 
 namespace Macrocosm.Content.Rockets.LaunchPads
 {
@@ -9,7 +13,17 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 	{
 		public LaunchPad LaunchPad { get; init; }
 
+		public bool HasFocus { get; set; }
+		public string FocusContext { get; set; }
+		public Action OnFocusGain { get; set; }
+		public Action OnFocusLost { get; set; }
+
+		public bool IsDefault => LaunchPad is null;
+
 		public bool IsCurrent { get; set; }
+		public UILaunchPadInfoElement() : base("World Spawn", ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Icons/SpawnPoint"), null, null)
+		{ 
+		}
 
 		public UILaunchPadInfoElement(LaunchPad launchPad) : base(Utility.GetCompassCoordinates(launchPad.Position), null, null, null)
 		{
@@ -20,29 +34,24 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 		{
 			base.Update(gameTime);
 
-			IsCurrent = false;
 			BackgroundColor = new Color(43, 56, 101);
 			BorderColor = BackgroundColor * 2f;
 			uIDisplayText.TextColor = Color.White;
 
-			if (!LaunchPad.HasRocket)
+			if (IsDefault || !LaunchPad.HasRocket)
 			{
 				if (HasFocus)
 					BorderColor = Color.Gold;
 			} 
 			else
 			{
-				if(IsCurrent)
-					BorderColor = Color.Green;
-
 				BackgroundColor = (BackgroundColor * 0.85f).WithOpacity(1f);
 				uIDisplayText.TextColor = Color.LightGray;
 			}
+
+			if (IsCurrent)
+				BorderColor = Color.Green;
 		}
 
-		public bool HasFocus { get; set; }
-		public string FocusContext { get; set; }
-		public Action OnFocusGain { get; set; }
-		public Action OnFocusLost { get; set; }
 	}
 }
