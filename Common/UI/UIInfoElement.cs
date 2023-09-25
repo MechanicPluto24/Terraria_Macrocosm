@@ -17,7 +17,7 @@ namespace Macrocosm.Common.UI
 		protected readonly LocalizedColorScaleText displayText;
 		protected readonly LocalizedText hoverText;
 
-        private UIText uIDisplayText;
+		protected UIText uIDisplayText;
 
 
 		public UIInfoElement(LocalizedColorScaleText displayText, Asset<Texture2D> icon = null, Asset<Texture2D> iconSymbol = null, LocalizedText hoverText = null)

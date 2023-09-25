@@ -9,6 +9,7 @@ using Terraria.Audio;
 using Terraria.Chat;
 using Terraria.ID;
 using Terraria.Localization;
+using Terraria.Map;
 using Terraria.ModLoader;
 using Terraria.Utilities;
 
@@ -17,8 +18,30 @@ namespace Macrocosm.Common.Utils
 {
 	public static partial class Utility
     {
+		public static T GetRandom<T>(this IList<T> list)
+			=> list[Main.rand.Next(list.Count)];
+
+		public static bool IsAprilFools()
+			=> DateTime.Now.Month == 4 && DateTime.Now.Day == 1;
+
+		public static string GetCompassCoordinates(Player player)
+			=> GetCompassCoordinates(player.Center); 
+
+		public static string GetCompassCoordinates(Vector2 position) 
+			=> GetCompassCoordinates((int)(position.X / 16f));
+
+		public static string GetCompassCoordinates(int tileX)
+		{
+			int posX = tileX * 2 - Main.maxTilesX;
+			string text = ( posX >  0) ? Language.GetTextValue("GameUI.CompassEast", posX)  : 
+						  ((posX >= 0) ? Language.GetTextValue("GameUI.CompassCenter")      : 
+										 Language.GetTextValue("GameUI.CompassWest", -posX));
+
+			return text;
+		}
+
 		//------------------------------------------------------//
-		//------------------BASE UTILITY CLASS------------------//
+		//--------------------- BASE UTILITY -------------------//
 		//------------------------------------------------------//
 		// Contains utility methods a mod might want to use.    //
 		//------------------------------------------------------//
@@ -505,11 +528,5 @@ namespace Macrocosm.Common.Utils
 			}
 			return points.ToArray();
 		}
-
-		public static T GetRandom<T>(this IList<T> list)
-			=> list[Main.rand.Next(list.Count)];
-
-		public static bool IsAprilFools() 
-			=> DateTime.Now.Month == 4 && DateTime.Now.Day == 1;
     }
 }

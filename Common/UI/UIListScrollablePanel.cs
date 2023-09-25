@@ -91,6 +91,23 @@ namespace Macrocosm.Common.UI
             Append(list);
         }
 
+		public void UpdateOrder() => list.UpdateOrder();
+		public Action<List<UIElement>> ManualSortMethod 
+		{
+			get => list.ManualSortMethod;
+			set => list.ManualSortMethod = value;
+		}
+
+		public void SetTitle(string titleKey) => SetTitle(Language.GetText(titleKey));
+		public void SetTitle(LocalizedText title) => SetTitle(new LocalizedColorScaleText(title));
+
+		public void SetTitle(LocalizedColorScaleText title)
+		{
+			RemoveChild(this.title);
+			this.title = title.ProvideUI();
+			Initialize();
+		}
+
 		public bool EntireListVisible()
 		{
 			list.Recalculate();
@@ -136,7 +153,7 @@ namespace Macrocosm.Common.UI
         {
             base.Update(gameTime);
 
-            // Method is only called if dynamic scrollbar hiding is active
+			// Method is only called if dynamic scrollbar hiding is active
 			if (!HideScrollbarIfNotScrollable || !EntireListVisible())
             {
                 if (scrollbar is null)

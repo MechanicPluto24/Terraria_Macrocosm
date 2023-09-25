@@ -32,48 +32,6 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
         public static bool TryGetValue(string key, out List<InfoElement> info) 
             => worldInfoStorage.TryGetValue(key, out info);
 
-		public static UIListScrollablePanel ProvideUI(string subworldName)
-		{
-			string localizationPath = "Mods.Macrocosm.Subworlds.";
-
-		    UIListScrollablePanel listPanel = new(new LocalizedColorScaleText(Language.GetText(localizationPath + subworldName + ".DisplayName"), scale: 1.2f))
-			{
-				Width = new(0, 0.31f),
-				Height = new(0, 0.62f),
-				Left = new(0, 0.01f),
-				Top = new(0, 0.365f),
-				BackgroundColor = new Color(53, 72, 135),
-				BorderColor = new Color(89, 116, 213, 255)
-			};
-			listPanel.SetPadding(0f);
-
-			LocalizedText flavorText = Utility.GetLocalizedTextOrEmpty(localizationPath + subworldName + ".FlavorText");
-			if (flavorText != LocalizedText.Empty && flavorText.Value != "default")
-			{
-				listPanel.Add(new UIDynamicTextPanel(new LocalizedColorScaleText(flavorText, Color.White, scale: 0.85f)));
-				listPanel.AddSeparator();
-			}
-
-			List<InfoElement> elements = worldInfoStorage[subworldName];
-
-			if (elements is not null)
-			{
-				bool foundHazards = false;
-				foreach (InfoElement element in elements)
-				{
-					if (!foundHazards && element is HazardInfoElement)
-					{
-						listPanel.AddSeparator();
-						foundHazards = true;
-					}
-
-					listPanel.Add(element.ProvideUIInfoElement());
-				}
-			}
-
-			return listPanel;
-		}
-
 		/// <summary>
 		/// Populates the World Info data.
 		/// <br> <br>

@@ -43,7 +43,7 @@ namespace Macrocosm.Content.Rockets.Navigation.Checklist
 		public virtual UIInfoElement ProvideUIInfoElement()
 		{
 			checklistInfoElement.State = IsMet();
-			UIInfoElement infoElement = checklistInfoElement.ProvideUIInfoElement();
+			UIInfoElement infoElement = checklistInfoElement.ProvideUI();
 			infoElement.Activate();
 			infoElement.SetTextLeft(55, 0);
 			infoElement.Height = new(57f, 0f);
