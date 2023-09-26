@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 
@@ -22,13 +23,14 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
 		public bool IsCurrent { get; set; }
 
-		// TODO: localize this!!! ------------------V
-		public UILaunchPadInfoElement() : base("World Spawn", ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Icons/SpawnPoint"), null, null)
-		{ 
-		}
+		public UILaunchPadInfoElement() : base(
+			Language.GetText("Mods.Macrocosm.UI.Rocket.Common.WorldSpawn"), 
+			ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Icons/SpawnPoint"), 
+			null,
+			null
+		){ }
 
-		// TODO: adjust this to target world not the current one ---------------------V 
-		public UILaunchPadInfoElement(LaunchPad launchPad) : base(Utility.GetCompassCoordinates(launchPad.Position), null, null, null)
+		public UILaunchPadInfoElement(LaunchPad launchPad) : base(launchPad.CompassCoordinates, null, null, null)
 		{
 			LaunchPad = launchPad;
 		}

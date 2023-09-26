@@ -620,12 +620,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 				currentPatternIcon.Pattern = defaultPattern.Clone();
 			}
 
-			// Hmm does this even do anything?
-			if (GetFocusedColorPicker(out var item) && item.colorIndex >= 0)
-			{
-				item.picker.BackPanelColor = defaultPattern.GetColor(item.colorIndex);
-			}
-
+			RefreshPatternColorPickers();
 		}
 		#endregion
 

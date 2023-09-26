@@ -34,7 +34,7 @@ namespace Macrocosm
 		{
 			LoadModCalls();
 			LoadEffects();
-			ApplyResprites();
+			ApplyResprites(); 
 		}
 
 		private static void LoadEffects()

@@ -46,12 +46,12 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
 		public override bool CanPlace(int i, int j) 
 		{
-			return LaunchPadManager.TryGetLaunchPadAtTileCoordinates(MacrocosmSubworld.CurrentWorld, new(i, j), out _);
+			return LaunchPadManager.TryGetLaunchPadAtTileCoordinates(MacrocosmSubworld.CurrentID, new(i, j), out _);
 		} 
 
 		public override void KillTile(int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem)
 		{
-			if(LaunchPadManager.TryGetLaunchPadAtTileCoordinates(MacrocosmSubworld.CurrentWorld, new(i, j), out LaunchPad launchPad))
+			if(LaunchPadManager.TryGetLaunchPadAtTileCoordinates(MacrocosmSubworld.CurrentID, new(i, j), out LaunchPad launchPad))
 			{
 				if (launchPad.HasRocket)
 				{
@@ -142,8 +142,8 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 					Pair = pair;
 					Pair.IsPair = true;
 
-					LaunchPad = LaunchPadManager.GetLaunchPadAtStartTile(MacrocosmSubworld.CurrentWorld, new(x, y));
-					LaunchPad ??= LaunchPad.Create(MacrocosmSubworld.CurrentWorld, x, y, Pair.Position.X, Pair.Position.Y);
+					LaunchPad = LaunchPadManager.GetLaunchPadAtStartTile(MacrocosmSubworld.CurrentID, new(x, y));
+					LaunchPad ??= LaunchPad.Create(x, y, Pair.Position.X, Pair.Position.Y);
 					Pair.LaunchPad = LaunchPad;
 					
 					if (LaunchPad.HasRocket)
@@ -209,7 +209,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			{
 				if (HasLaunchPad)
 				{
-					LaunchPadManager.Remove(MacrocosmSubworld.CurrentWorld, LaunchPad);
+					LaunchPadManager.Remove(MacrocosmSubworld.CurrentID, LaunchPad);
 					LaunchPad = null;
 				}
 			}
@@ -257,7 +257,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			bool hasLaunchPad = reader.ReadBoolean();
 			if (hasLaunchPad)
 			{
-				LaunchPad = LaunchPadManager.GetLaunchPadAtStartTile(MacrocosmSubworld.CurrentWorld, reader.ReadPoint16());
+				LaunchPad = LaunchPadManager.GetLaunchPadAtStartTile(MacrocosmSubworld.CurrentID, reader.ReadPoint16());
 			}
 
 

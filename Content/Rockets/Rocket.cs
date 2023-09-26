@@ -68,7 +68,7 @@ namespace Macrocosm.Content.Rockets
 		[NetSync] public string CurrentWorld = "";
 
 		/// <summary> Whether the rocket is active in the current world and should be updated and visible </summary>
-		public bool ActiveInCurrentWorld => Active && CurrentWorld == MacrocosmSubworld.CurrentWorld;
+		public bool ActiveInCurrentWorld => Active && CurrentWorld == MacrocosmSubworld.CurrentID;
 
 		/// <summary> Number of ticks of the launch countdown (seconds * 60 ticks/sec) </summary>
 		public int LiftoffTime = 180;
@@ -208,7 +208,7 @@ namespace Macrocosm.Content.Rockets
 
 		public void OnCreation()
 		{
-			CurrentWorld = MacrocosmSubworld.CurrentWorld;
+			CurrentWorld = MacrocosmSubworld.CurrentID;
 		}
 
 		/// <summary> Called when spawning into a new world </summary>
@@ -439,7 +439,7 @@ namespace Macrocosm.Content.Rockets
 			NetSync();
 		}
 
-		public float GetFuelCost(string targetWorld) => RocketFuelLookup.GetFuelCost(MacrocosmSubworld.CurrentPlanet, targetWorld);
+		public float GetFuelCost(string targetWorld) => RocketFuelLookup.GetFuelCost(MacrocosmSubworld.CurrentMacrocosmID, targetWorld);
 
 		/// <summary> Checks whether the flight path is obstructed by solid blocks </summary>
 		public bool CheckFlightPathObstruction()
@@ -563,7 +563,7 @@ namespace Macrocosm.Content.Rockets
 				if (FlightProgress > 0.6f && !FadeEffect.IsFading && CheckPlayerInRocket(Main.myPlayer))
 				{
 					FadeEffect.ResetFade();
-					FadeEffect.StartFadeOut(0.02f, selfDraw: true);
+					FadeEffect.StartFadeOut(0.02f, selfDraw: true, keepActive: true);
 				}
 
 				FlightTime++;
@@ -748,17 +748,24 @@ namespace Macrocosm.Content.Rockets
 			if (!MacrocosmSubworld.IsValidWorldName(TargetWorld) || commander is null || commander.Player.dead || !commander.Player.active)
 			{
 				TargetLandingPosition = new(Center.X, StartPositionY + Height);
-				CurrentWorld = MacrocosmSubworld.CurrentWorld;
+				CurrentWorld = MacrocosmSubworld.CurrentID;
 				return;
 			}
 			  
+			// Determine the landing location.
+			// Set as default if no launchpad has been selected (i.e. the World Spawn option) 
+			// For different world travel, the correct value is assigned when spawning in that world
 			if (targetLaunchPad is not null)
 				TargetLandingPosition = targetLaunchPad.Position;
 			else
-				TargetLandingPosition = default;
+				TargetLandingPosition = default; 
 
 			if(samePlanet)
 			{
+				// For same world travel assign the correct position here
+				if(TargetLandingPosition == default)
+ 					TargetLandingPosition = Utility.SpawnWorldPosition;
+
 				Center = new(TargetLandingPosition.X, Center.Y);
 				FadeEffect.StartFadeIn(0.02f, selfDraw: true);
 			}
@@ -772,7 +779,7 @@ namespace Macrocosm.Content.Rockets
 				{
 					if (!MacrocosmSubworld.Travel(TargetWorld, this))
 					{
-						CurrentWorld = MacrocosmSubworld.CurrentWorld;
+						CurrentWorld = MacrocosmSubworld.CurrentID;
 						NetSync();
 					}
 				}
