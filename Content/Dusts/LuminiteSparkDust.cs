@@ -38,7 +38,7 @@ namespace Macrocosm.Content.Dusts
 		public override bool MidUpdate(Dust dust) => false;
 
 		public override Color? GetAlpha(Dust dust, Color lightColor)
-				=> Color.White.NewAlpha(0.5f);
+				=> Color.White.WithOpacity(0.5f);
 
 		public override bool PreDraw(Dust dust)
 		{

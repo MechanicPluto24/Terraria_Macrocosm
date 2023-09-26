@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.Rockets.Navigation.Checklist;
+﻿using Macrocosm.Common.Subworlds;
+using Macrocosm.Content.Rockets.Navigation.Checklist;
 using Macrocosm.Content.UI.LoadingScreens;
 using Terraria;
 
@@ -20,11 +21,11 @@ namespace Macrocosm.Content.Subworlds
 		public const float ItemGravity = 0.1f;
 		public const float ItemMaxFallSpeed = 7;
 
-        private static EarthLoadingScreen loadingScreen;
-		public static EarthLoadingScreen LoadingScreen { get { loadingScreen ??= new(); return loadingScreen ;} }
+		private static WorldSize worldSize = WorldSize.Medium;
+		public static WorldSize WorldSize { get => worldSize; set => worldSize = value; }
 
-        public static ChecklistConditionCollection LaunchConditions = new()
+		public static ChecklistConditionCollection LaunchConditions = new()
         {
         };
-    }
+	}
 }

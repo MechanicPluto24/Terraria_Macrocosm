@@ -1,8 +1,10 @@
-﻿using Macrocosm.Common.Drawing.Trails;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing.Trails;
 using Macrocosm.Content.Projectiles.Global;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Terraria;
 using Terraria.GameContent;
@@ -71,9 +73,7 @@ namespace Macrocosm.Common.Utils
 		/// <param name="texture"> Leave null to draw as entity with the loaded texture </param>
 		public static void DrawAnimated(this Projectile proj, Color lightColor, SpriteEffects effect, Vector2 drawOffset = default, Texture2D texture = null, Rectangle? frame = null, Effect shader = null)
 		{
-
-			if (texture is null)
- 				texture = TextureAssets.Projectile[proj.type].Value;
+			texture ??= TextureAssets.Projectile[proj.type].Value;
 
 			Vector2 position = proj.Center - Main.screenPosition;
 
@@ -82,9 +82,10 @@ namespace Macrocosm.Common.Utils
 
 			Vector2 origin = new Vector2(texture.Width / 2, texture.Height / numFrames / 2) - new Vector2(drawOffset.X, drawOffset.Y * proj.spriteDirection);
 
-			SpriteBatchState state = Main.spriteBatch.SaveState();
+			SpriteBatchState state = default;
 			if (shader is not null)
 			{
+				state.SaveState(Main.spriteBatch);
 				Main.spriteBatch.End();
 				Main.spriteBatch.Begin(shader, state);
 			}
@@ -104,6 +105,29 @@ namespace Macrocosm.Common.Utils
 		/// </summary>
 		public static void DrawAnimatedExtra(this Projectile proj, Texture2D glowmask, Color lightColor, SpriteEffects effect, Vector2 drawOffset = default, Rectangle? frame = null)
 			=> proj.DrawAnimated(lightColor, effect, drawOffset + new Vector2(0, -2), glowmask, frame);
+
+
+		public static void DrawWhipLine(List<Vector2> list, Color color)
+		{
+			Texture2D texture = TextureAssets.FishingLine.Value;
+			Rectangle frame = texture.Frame();
+			Vector2 origin = new(frame.Width / 2, 2);
+
+			Vector2 pos = list[0];
+			for (int i = 0; i < list.Count - 1; i++)
+			{
+				Vector2 element = list[i];
+				Vector2 diff = list[i + 1] - element;
+
+				float rotation = diff.ToRotation() - MathHelper.PiOver2;
+				Color lightColor = Lighting.GetColor(element.ToTileCoordinates(), color);
+				Vector2 scale = new(1, (diff.Length() + 2) / frame.Height);
+
+				Main.EntitySpriteDraw(texture, pos - Main.screenPosition, frame, lightColor, rotation, origin, scale, SpriteEffects.None, 0);
+
+				pos += diff;
+			}
+		}
 
 
 		public static void AIFallingBlock(Projectile projectile, bool falling)

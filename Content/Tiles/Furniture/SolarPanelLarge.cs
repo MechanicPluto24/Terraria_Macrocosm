@@ -33,12 +33,12 @@ namespace Macrocosm.Content.Tiles.Furniture
             HitSound = SoundID.Dig;
             DustType = -1;
 
-            AddMapEntry(new Color(0, 52, 154), Language.GetText("Solar Panel"));
+			LocalizedText name = CreateMapEntryName();
+			AddMapEntry(new Color(0, 52, 154), name);
         }
 
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
-            Item.NewItem(new EntitySource_TileBreak(i, j), i * 16, j * 16, 32, 32, ModContent.ItemType<Items.Placeable.Furniture.SolarPanelLarge>());
         }
 
     }

@@ -50,7 +50,7 @@ namespace Macrocosm.Common.Netcode
 					break;
 
 				default:
-					Macrocosm.Instance.Logger.WarnFormat("Macrocosm: Unknown Message type: {messageType}", messageType);
+					Macrocosm.Instance.Logger.WarnFormat("Macrocosm: Unknown Message type: {0}", messageType);
  					break;
 			}
 		}

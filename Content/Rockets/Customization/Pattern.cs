@@ -86,9 +86,14 @@ namespace Macrocosm.Content.Rockets.Customization
 			if (index >= 0 && index < MaxColorCount)
 			{
 				if (ColorData[index].HasColorFunction)
-					return ColorData[index].ColorFunction.Invoke(ColorData.Select((c, i) => i == index ? Color.Transparent : GetColor(i)).ToArray());
- 				else 
+				{
+					Color[] otherColors = ColorData.Select((c, i) => (i == index || c.HasColorFunction) ? Color.Transparent : GetColor(i)).ToArray();
+					return ColorData[index].ColorFunction.Invoke(otherColors);
+				}
+ 				else
+				{
 					return ColorData[index].Color;
+				}
 			}
 			return Color.Transparent;
 		}

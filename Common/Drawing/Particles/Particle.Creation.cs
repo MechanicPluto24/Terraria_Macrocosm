@@ -64,6 +64,8 @@ namespace Macrocosm.Common.Drawing.Particles
 
 			particleAction.Invoke(particle);
 
+			particle.OnSpawn();
+
 			if(shouldSync)
 				particle.NetSync();
 

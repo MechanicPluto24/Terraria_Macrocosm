@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -146,6 +147,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 			}
 		}
 
+		private SpriteBatchState state;
 		public override void Draw(SpriteBatch spriteBatch)
 		{
             base.Draw(spriteBatch);
@@ -158,7 +160,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 			Matrix matrix = Matrix.CreateScale(Main.UIScale / zoom, Main.UIScale / zoom, 1f);
 
-            var state = spriteBatch.SaveState();
+            state.SaveState(spriteBatch);
             spriteBatch.End();
             spriteBatch.Begin(state.SpriteSortMode, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, state.DepthStencilState, overflowHiddenRasterizerState, state.Effect, matrix);
 

@@ -12,9 +12,9 @@ namespace Macrocosm.Content.Rockets.Customization
 {
 	public partial class Pattern : TagSerializable
 	{ 
-		public string ToJSON(bool includeUnlocked = false, bool includeNonModifiableColors = false, bool includeColorFunctions = false) => ToJObject().ToString(Formatting.Indented);
+		public string ToJSON(bool includeColorFunctions = false, bool includeUnlocked = false, bool includeNonModifiableColors = false) => ToJObject(includeColorFunctions, includeUnlocked, includeNonModifiableColors).ToString(Formatting.Indented);
 
-		public JObject ToJObject(bool includeUnlocked = false, bool includeNonModifiableColors = false, bool includeColorFunctions = false)
+		public JObject ToJObject(bool includeColorFunctions = true, bool includeUnlocked = false, bool includeNonModifiableColors = false)
 		{
 			JObject jsonObject = new()
 			{
@@ -38,7 +38,7 @@ namespace Macrocosm.Content.Rockets.Customization
 					if (includeColorFunctions)
 					{
 						colorDataObject["colorFunction"] = colorData.ColorFunction.Name;
-						//colorDataObject["params"] = new JArray(colorData.ColorFunction.Parameters);
+						colorDataObject["params"] = new JArray(colorData.ColorFunction.Parameters);
 					}
 					else
 					{
@@ -105,11 +105,7 @@ namespace Macrocosm.Content.Rockets.Customization
 				if (!string.IsNullOrEmpty(colorFunction))
 				{
 					JArray parameters = colorDataObject.Value<JArray>("params");
-
-					if (parameters is not null)
-						colorDatas.Add(new(ColorFunction.CreateFunctionByName(colorFunction, parameters.ToObjectRecursive<object>())));
-					else
-						throw new SerializationException("$Error: Color function parameters not specified.");
+					colorDatas.Add(new(ColorFunction.CreateFunctionByName(colorFunction, parameters?.ToObjectRecursive<object>())));
 				}
 				else if (!string.IsNullOrEmpty(colorHex))
 				{

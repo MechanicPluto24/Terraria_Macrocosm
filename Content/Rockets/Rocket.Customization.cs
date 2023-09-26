@@ -1,24 +1,19 @@
-﻿using Macrocosm.Content.Rockets.Customization;
+﻿using Macrocosm.Common.UI;
+using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.Modules;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Linq;
+using Terraria;
 
 namespace Macrocosm.Content.Rockets
 {
 	public partial class Rocket 
 	{
 		public Rocket Clone() => DeserializeData(SerializeData());
-
-		/// <summary> Draw the rocket as a dummy </summary>
-		public void DrawDummy(SpriteBatch spriteBatch, Vector2 offset, Color drawColor)
-		{
-			// Passing Rocket world position as "screenPosition" cancels it out  
-			Draw(spriteBatch, Position - offset, drawColor);
-		}
-
+	
 		public void ApplyCustomizationChanges(Rocket dummy)
 		{
 			Nameplate.Text = dummy.Nameplate.Text;
