@@ -6,10 +6,10 @@ namespace Macrocosm.Common.DataStructures
 {
 	public class PerlinNoise2D
     {
-        public Seed Seed { get; set; }
+        public int Seed { get; set; }
         public InterpolationType InterpolationType { get; set; }
 
-        public PerlinNoise2D(Seed seed, InterpolationType interpolationType = InterpolationType.Linear)
+        public PerlinNoise2D(int seed, InterpolationType interpolationType = InterpolationType.Linear)
         {
             Seed = seed;
             InterpolationType = interpolationType;
@@ -35,7 +35,7 @@ namespace Macrocosm.Common.DataStructures
 
         private (float, float) RandomGradient(int x, int y)
         {
-            float random = x * y * Seed.Value * 2f * MathHelper.Pi;
+            float random = x * y * Seed * 2f * MathHelper.Pi;
             return (MathF.Cos(random), MathF.Sin(random));
         }
 
