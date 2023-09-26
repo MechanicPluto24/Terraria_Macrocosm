@@ -2,7 +2,6 @@
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Projectiles.Environment.Meteors;
 using Macrocosm.Content.Rockets.Navigation.Checklist;
-using Macrocosm.Content.Systems;
 using Macrocosm.Content.UI.LoadingScreens;
 using Macrocosm.Content.WorldGeneration.Moon;
 using Microsoft.Xna.Framework;
@@ -17,12 +16,12 @@ using Terraria.WorldBuilding;
 
 namespace Macrocosm.Content.Subworlds
 {
-	/// <summary>
-	/// Moon terrain and crater generation by 4mbr0s3 2
-	/// Why isn't anyone else working on this
-	/// I have saved the day - Ryan
-	/// </summary>
-	public class Moon : MacrocosmSubworld
+    /// <summary>
+    /// Moon terrain and crater generation by 4mbr0s3 2
+    /// Why isn't anyone else working on this
+    /// I have saved the day - Ryan
+    /// </summary>
+    public class Moon : MacrocosmSubworld
     {
         private static Moon instance;
         public static Moon Instance { get { instance ??= new(); return instance; } }
@@ -34,8 +33,7 @@ namespace Macrocosm.Content.Subworlds
 		public override float GravityMultiplier => 0.166f;
 
         public override bool NormalUpdates => false;
-        public override int Width => 4200;
-        public override int Height => 1200;
+
         public override bool ShouldSave => true;
         public override bool NoPlayerSaving => false;
 
@@ -78,7 +76,7 @@ namespace Macrocosm.Content.Subworlds
 
 		public override void PreUpdateWorld()
         {
-			if(!SkyManager.Instance["Macrocosm:MoonSky"].IsActive())
+			if(SkyManager.Instance["Macrocosm:MoonSky"] is not null && !SkyManager.Instance["Macrocosm:MoonSky"].IsActive())
 				SkyManager.Instance.Activate("Macrocosm:MoonSky");
 
 			UpdateBloodMoon();

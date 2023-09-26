@@ -18,6 +18,7 @@ namespace Macrocosm.Common.Drawing
 		private static bool isFading;
 		private static bool isFadingIn;
 		private static bool interfaceSelfDraw;
+		private static bool keepActiveUntilReset;
 
 		public static void Draw()
 		{
@@ -37,8 +38,11 @@ namespace Macrocosm.Common.Drawing
 				}
 				else
 				{
-					interfaceSelfDraw = false;
-					isFading = false;
+					if (!keepActiveUntilReset)
+					{
+						interfaceSelfDraw = false;
+						isFading = false;
+					}	
 				}
 			}
 		}
@@ -54,20 +58,23 @@ namespace Macrocosm.Common.Drawing
 			isFading = false;
 			isFadingIn = false;
 			interfaceSelfDraw = false;
+			keepActiveUntilReset = false;
 		}
 
-		public static void StartFadeIn(float speed = 0.098f, bool selfDraw = false)
+		public static void StartFadeIn(float speed = 0.098f, bool selfDraw = false, bool keepActive = false)
 		{
 			interfaceSelfDraw = selfDraw;
+			keepActiveUntilReset = keepActive;
 			fadeAlpha = 0;
 			fadeSpeed = speed;
 			isFadingIn = true;
 			isFading = true;
 		}
 
-		public static void StartFadeOut(float speed = 0.098f, bool selfDraw = false)
+		public static void StartFadeOut(float speed = 0.098f, bool selfDraw = false, bool keepActive = false)
 		{
 			interfaceSelfDraw = selfDraw;
+			keepActiveUntilReset = keepActive;
 			fadeAlpha = 255;
 			fadeSpeed = speed;
 			isFadingIn = false;
@@ -85,7 +92,9 @@ namespace Macrocosm.Common.Drawing
 				if (fadeAlpha >= 255)
 				{
 					fadeAlpha = 255;
-					isFading = false;
+
+					if(!keepActiveUntilReset)
+						isFading = false;
 				}
 			}
 			else
@@ -94,7 +103,9 @@ namespace Macrocosm.Common.Drawing
 				if (fadeAlpha <= 0)
 				{
 					fadeAlpha = 0;
-					isFading = false;
+
+					if (!keepActiveUntilReset)
+						isFading = false;
 				}
 			}
 		}

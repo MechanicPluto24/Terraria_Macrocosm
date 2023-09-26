@@ -144,15 +144,15 @@ namespace Macrocosm.Content.Rockets
  				Rockets[i] = new Rocket();
  		}
 
-		public override void SaveWorldData(TagCompound tag) => SaveRocketData(tag); 
-        public override void LoadWorldData(TagCompound tag) => ReadSavedRocketData(tag);
+		public override void SaveWorldData(TagCompound tag) => SaveData(tag); 
+        public override void LoadWorldData(TagCompound tag) => LoadData(tag);
 
-        public static void SaveRocketData(TagCompound dataCopyTag) 
+        public static void SaveData(TagCompound dataCopyTag) 
         {
 			dataCopyTag[nameof(Rockets)] = Rockets;
 		}
 
-        public static void ReadSavedRocketData(TagCompound dataCopyTag) 
+        public static void LoadData(TagCompound dataCopyTag) 
         {
 			if (dataCopyTag.ContainsKey(nameof(Rockets)))
 				Rockets = dataCopyTag.Get<Rocket[]>(nameof(Rockets));

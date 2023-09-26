@@ -73,11 +73,11 @@ namespace Macrocosm.Content.Rockets.Navigation
             Append(crewPanel);
             crewPanel.Activate();
 
-            worldInfoPanel = CreateWorldInfoPanel(MacrocosmSubworld.CurrentPlanet);
+            worldInfoPanel = CreateWorldInfoPanel(MacrocosmSubworld.CurrentMacrocosmID);
             Append(worldInfoPanel);
             worldInfoPanel.Activate();
 
-            launchLocationsList = CreateLaunchLocationPanel(MacrocosmSubworld.CurrentPlanet);
+            launchLocationsList = CreateLaunchLocationPanel(MacrocosmSubworld.CurrentMacrocosmID);
             Append(launchLocationsList);
             launchLocationsList.Activate();
 
@@ -128,10 +128,14 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 				foreach (var lpInfo in launchLocationsList.OfType<UILaunchPadInfoElement>())
                 {
-                    if (lpInfo.HasFocus && lpInfo.LaunchPad is not null)
+                    if (lpInfo.HasFocus)
                     {
-                        targetLaunchPad = lpInfo.LaunchPad;
-                        break;
+                        if (lpInfo.LaunchPad is not null)
+                            targetLaunchPad = lpInfo.LaunchPad;
+                        else
+                            targetLaunchPad = null;
+
+						break;
                     }
                 }
 			}
@@ -348,6 +352,7 @@ namespace Macrocosm.Content.Rockets.Navigation
  					infoElement.HasFocus = true;
 		}
 
+        // Doesn't work 
         private void HandleSeparators()
         {
 			//Remove all separators 

@@ -1,10 +1,10 @@
-﻿using Macrocosm.Content.Systems;
+﻿using Macrocosm.Common.Systems;
 using Terraria;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Biomes
 {
-	public class IrradiationBiome : MoonBiome
+    public class IrradiationBiome : MoonBiome
 	{
 		public override SceneEffectPriority Priority => SceneEffectPriority.Environment;
 

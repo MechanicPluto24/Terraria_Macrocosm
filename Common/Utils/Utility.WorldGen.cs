@@ -7,6 +7,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ObjectData;
+using static Macrocosm.Common.Utils.Utility;
 
 namespace Macrocosm.Common.Utils
 {
@@ -271,7 +272,6 @@ namespace Macrocosm.Common.Utils
                Main.tile[tileX + 1, tileY + 1].HasTile &&  // Bottom-right tile is active						 
                Main.tile[tileX, tileY - 2].HasTile; // Top tile is active (will help to make the walls slightly lower than the terrain)
 
-
 		#region BaseMod BaseWorldGen
 
 		//------------------------------------------------------//
@@ -367,28 +367,6 @@ namespace Macrocosm.Common.Utils
 				if (tile is { HasTile: true } && (!solid || Main.tileSolid[tile.TileType])) { return x; }
 			}
 			return Main.maxTilesX - 10;
-		}
-
-		///<summary>
-		/// returns the first Y position below the possible spawning height of floating islands.		///</summary>
-		public static int GetBelowFloatingIslandY()
-		{
-			int size = GetWorldSize();
-			return (size == 1 ? 1200 : size == 2 ? 1600 : size == 3 ? 2000 : 1200) + 1;
-		}
-
-		/**
-			* Returns the current world size.
-			* 1 == small, 2 == medium, 3 == large.
-			*/
-		public static int GetWorldSize()
-		{
-			if (Main.maxTilesX == 4200) { return 1; }
-
-			if (Main.maxTilesX == 6400) { return 2; }
-
-			if (Main.maxTilesX == 8400) { return 3; }
-			return 1; //unknown size, assume small
 		}
 
 		/**

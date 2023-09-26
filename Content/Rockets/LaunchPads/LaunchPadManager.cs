@@ -40,11 +40,6 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			{
 				launchPadStorage.Add(subworldId, new() { launchPad });
 			}
-
-			launchPad.Active = true;
-
-			if(shouldSync)
-				launchPad.NetSync(subworldId);
 		}
 
 		public static void Remove(string subworldId, LaunchPad launchPad, bool shouldSync = true)
@@ -130,15 +125,15 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			{
 				checkTimer = 0;
 
-				if (launchPadStorage.ContainsKey(MacrocosmSubworld.CurrentWorld))
+				if (launchPadStorage.ContainsKey(MacrocosmSubworld.CurrentID))
 				{
-					for (int i = 0; i < launchPadStorage[MacrocosmSubworld.CurrentWorld].Count; i++)
+					for (int i = 0; i < launchPadStorage[MacrocosmSubworld.CurrentID].Count; i++)
 					{
-						var launchPad = launchPadStorage[MacrocosmSubworld.CurrentWorld][i];
+						var launchPad = launchPadStorage[MacrocosmSubworld.CurrentID][i];
 
 						if (!launchPad.Active)
 						{
-							launchPadStorage[MacrocosmSubworld.CurrentWorld].RemoveAt(i);
+							launchPadStorage[MacrocosmSubworld.CurrentID].RemoveAt(i);
 							i--;
 						}
 						else
@@ -154,8 +149,8 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 		{
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, null, null, null, Main.GameViewMatrix.ZoomMatrix);
 
-			if (launchPadStorage.ContainsKey(MacrocosmSubworld.CurrentWorld))
- 				foreach (LaunchPad launchPad in launchPadStorage[MacrocosmSubworld.CurrentWorld])
+			if (launchPadStorage.ContainsKey(MacrocosmSubworld.CurrentID))
+ 				foreach (LaunchPad launchPad in launchPadStorage[MacrocosmSubworld.CurrentID])
  					launchPad.Draw(Main.spriteBatch, Main.screenPosition);
  
 			Main.spriteBatch.End();
@@ -166,11 +161,11 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			launchPadStorage.Clear();
 		}
 
-		public override void SaveWorldData(TagCompound tag) => SaveLaunchPads(tag);
+		public override void SaveWorldData(TagCompound tag) => SaveData(tag);
 
-		public override void LoadWorldData(TagCompound tag) => LoadLaunchPads(tag);
+		public override void LoadWorldData(TagCompound tag) => LoadData(tag);
 			
-		public static void SaveLaunchPads(TagCompound tag)
+		public static void SaveData(TagCompound tag)
 		{
 			TagCompound launchPads = new();
 
@@ -180,7 +175,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			tag["LaunchPads"] = launchPads;
 		}
 
-		public static void LoadLaunchPads(TagCompound tag)
+		public static void LoadData(TagCompound tag)
 		{
 			TagCompound launchPads = tag.GetCompound("LaunchPads");
 

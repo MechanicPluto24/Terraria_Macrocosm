@@ -20,6 +20,7 @@ Rocket: {
 		Navigation: Navigation
 		Checklist: Pre-flight checklist
 		LaunchLocations: Launch Locations
+		WorldSpawn: World Spawn
 		Crew: Crew
 		Payload: Payload
 		Fuel: Fuel

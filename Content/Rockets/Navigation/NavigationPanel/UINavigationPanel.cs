@@ -1,7 +1,7 @@
 ﻿using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.Systems;
 using Macrocosm.Common.UI;
 using Macrocosm.Content.Subworlds;
-using Macrocosm.Content.Systems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -55,7 +55,7 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationPanel
 
             CurrentMap = GetInitialNavigationMap();
 
-            var initialTarget = CurrentMap.Targets.FirstOrDefault(target => target.Name == MacrocosmSubworld.CurrentPlanet);
+            var initialTarget = CurrentMap.Targets.FirstOrDefault(target => target.Name == MacrocosmSubworld.CurrentMacrocosmID);
             if (initialTarget is not null)
                 initialTarget.Selected = true;
  

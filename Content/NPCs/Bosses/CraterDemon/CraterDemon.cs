@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Systems;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Dusts;
@@ -13,7 +14,6 @@ using Macrocosm.Content.Items.Weapons.Summon;
 using Macrocosm.Content.NPCs.Friendly.TownNPCs;
 using Macrocosm.Content.NPCs.Global;
 using Macrocosm.Content.Projectiles.Hostile;
-using Macrocosm.Content.Systems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -28,7 +28,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 {
-	[AutoloadBossHead]
+    [AutoloadBossHead]
 	public class CraterDemon : ModNPC, IMoonEnemy
 	{
 		private struct AttackInfo

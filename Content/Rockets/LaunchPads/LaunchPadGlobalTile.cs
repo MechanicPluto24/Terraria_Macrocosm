@@ -9,10 +9,10 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 	{
 		public override void HitWire(int i, int j, int type)
 		{
-			if (LaunchPadManager.None(MacrocosmSubworld.CurrentWorld))
+			if (LaunchPadManager.None(MacrocosmSubworld.CurrentID))
 				return;
 
-			if(LaunchPadManager.TryGetLaunchPadAtTileCoordinates(MacrocosmSubworld.CurrentWorld, new(i, j), out LaunchPad launchPad))
+			if(LaunchPadManager.TryGetLaunchPadAtTileCoordinates(MacrocosmSubworld.CurrentID, new(i, j), out LaunchPad launchPad))
 			{
 				for(int tileX = launchPad.StartTile.X; tileX < launchPad.EndTile.X; tileX++) 
  					for (int tileY = launchPad.StartTile.Y; tileY < launchPad.EndTile.Y; tileY++)
