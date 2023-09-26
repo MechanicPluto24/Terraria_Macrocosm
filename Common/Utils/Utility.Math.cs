@@ -145,6 +145,10 @@ namespace Macrocosm.Common.Utils
 			return MathF.Sin(angle);
 		}
 
+		public static float PositiveTriangleWave(float period, float phase = 0)
+			=> (TriangleWave(period, phase) + 1f) * 0.5f;
+
+
 		/// <summary> Generates a positive-only sine wave based on the given period and phase. Use exclusively for visual effects.</summary>
 		/// <param name="period">The duration of one complete cycle of the wave.</param>
 		/// <param name="phase">The starting phase offset of the wave (optional).</param>

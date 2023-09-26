@@ -1,11 +1,17 @@
 ﻿using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.UI;
+using Macrocosm.Common.Utils;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SubworldLibrary;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.LaunchPads
 {
@@ -24,7 +30,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			launchPadStorage = null;
 		}
 
-		public static void Add(string subworldId, LaunchPad launchPad)
+		public static void Add(string subworldId, LaunchPad launchPad, bool shouldSync = true)
 		{
 			if (launchPadStorage.ContainsKey(subworldId))
 			{
@@ -32,16 +38,42 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			}
 			else
 			{
-				List<LaunchPad> launchPadsList = new() { launchPad };
-				launchPadStorage.Add(subworldId, launchPadsList);
+				launchPadStorage.Add(subworldId, new() { launchPad });
 			}
 		}
 
-		public static void Remove(string subworldId, LaunchPad launchPad)
+		public static void Remove(string subworldId, LaunchPad launchPad, bool shouldSync = true)
 		{
 			if (launchPadStorage.ContainsKey(subworldId))
- 				launchPadStorage[subworldId].Remove(launchPad);
+			{
+				var toRemove = GetLaunchPadAtStartTile(subworldId, launchPad.StartTile);
+
+ 				if (toRemove is not null)
+				{
+					toRemove.Active = false;
+
+					if (shouldSync)
+						toRemove.NetSync(subworldId);
+				}
+			}
  		}
+
+		public static void ClearAllLaunchPads(bool announce = true, bool shouldSync = true)
+		{
+			if (announce)
+				Utility.Chat("Cleared all launch pads!", Color.Green);
+
+			foreach(var lpKvp in launchPadStorage)
+			{
+				foreach (var lp in lpKvp.Value)
+				{
+					lp.Active = false;
+
+					if (shouldSync)
+						lp.NetSync(lpKvp.Key);
+				}
+			}
+		}
 
 		public static bool Any(string subworldId) => GetLaunchPads(subworldId).Any();
 		public static bool None(string subworldId) => !Any(subworldId);
@@ -55,15 +87,37 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			return new List<LaunchPad>();
 		}
 
+		public static LaunchPad GetLaunchPadAtTileCoordinates(string subworldId, Point16 tile)
+		{
+			return GetLaunchPads(subworldId).FirstOrDefault(lp =>
+			{
+				Rectangle coordinates = new(lp.StartTile.X, lp.StartTile.Y, lp.EndTile.X - lp.StartTile.X + 2, lp.EndTile.Y - lp.StartTile.Y + 2);
+				return coordinates.Contains(tile.X, tile.Y);
+			});
+		}
 
-		public static LaunchPad GetLaunchPadAtTileCoordinates(string subworldId, int startTileX, int startTileY)
-			=> GetLaunchPadAtTileCoordinates(subworldId,new(startTileX, startTileY));
-		public static LaunchPad GetLaunchPadAtTileCoordinates(string subworldId, Point16 startTile)
+		public static bool TryGetLaunchPadAtTileCoordinates(string subworldId, Point16 tile, out LaunchPad launchPad)
+		{
+			launchPad = GetLaunchPadAtTileCoordinates(subworldId, tile);
+			return launchPad != null;
+		}
+
+		public static LaunchPad GetLaunchPadAtStartTile(string subworldId, Point16 startTile)
 			=> GetLaunchPads(subworldId).FirstOrDefault(lp => lp.StartTile == startTile);
 
-		private int checkTimer;
+		public static bool TryGetLaunchPadAtStartTile(string subworldId, Point16 startTile, out LaunchPad launchPad)
+		{
+			launchPad = GetLaunchPadAtStartTile(subworldId, startTile);
+			return launchPad != null;
+		}
 
+		private int checkTimer;
 		public override void PostUpdateNPCs()
+		{
+			UpdateLaunchPads();
+		}
+
+		private void UpdateLaunchPads()
 		{
 			checkTimer++;
 
@@ -71,9 +125,23 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			{
 				checkTimer = 0;
 
-				if (launchPadStorage.ContainsKey(MacrocosmSubworld.CurrentWorld))
-					foreach (LaunchPad launchPad in launchPadStorage[MacrocosmSubworld.CurrentWorld])
-						launchPad.Update();
+				if (launchPadStorage.ContainsKey(MacrocosmSubworld.CurrentID))
+				{
+					for (int i = 0; i < launchPadStorage[MacrocosmSubworld.CurrentID].Count; i++)
+					{
+						var launchPad = launchPadStorage[MacrocosmSubworld.CurrentID][i];
+
+						if (!launchPad.Active)
+						{
+							launchPadStorage[MacrocosmSubworld.CurrentID].RemoveAt(i);
+							i--;
+						}
+						else
+						{
+							launchPad.Update();
+						}
+					}
+				}
 			}
 		}
 
@@ -81,8 +149,8 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 		{
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, null, null, null, Main.GameViewMatrix.ZoomMatrix);
 
-			if (launchPadStorage.ContainsKey(MacrocosmSubworld.CurrentWorld))
- 				foreach (LaunchPad launchPad in launchPadStorage[MacrocosmSubworld.CurrentWorld])
+			if (launchPadStorage.ContainsKey(MacrocosmSubworld.CurrentID))
+ 				foreach (LaunchPad launchPad in launchPadStorage[MacrocosmSubworld.CurrentID])
  					launchPad.Draw(Main.spriteBatch, Main.screenPosition);
  
 			Main.spriteBatch.End();
@@ -93,21 +161,26 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			launchPadStorage.Clear();
 		}
 
-		public override void SaveWorldData(TagCompound tag) => SaveLaunchPads(tag);
+		public override void SaveWorldData(TagCompound tag) => SaveData(tag);
 
-		public override void LoadWorldData(TagCompound tag) => LoadLaunchPads(tag);
+		public override void LoadWorldData(TagCompound tag) => LoadData(tag);
 			
-		public static void SaveLaunchPads(TagCompound tag)
+		public static void SaveData(TagCompound tag)
 		{
+			TagCompound launchPads = new();
+
 			foreach (var lpKvp in launchPadStorage)
-				tag[lpKvp.Key] = lpKvp.Value;
+				launchPads[lpKvp.Key] = lpKvp.Value;
+
+			tag["LaunchPads"] = launchPads;
 		}
 
-		public static void LoadLaunchPads(TagCompound tag)
+		public static void LoadData(TagCompound tag)
 		{
-			foreach (var lpKvp in launchPadStorage)
-				if (tag.ContainsKey(lpKvp.Key))
-					launchPadStorage[lpKvp.Key] = (List<LaunchPad>)tag.GetList<LaunchPad>(lpKvp.Key);
+			TagCompound launchPads = tag.GetCompound("LaunchPads");
+
+			foreach (var lpKvp in launchPads)
+ 				launchPadStorage[lpKvp.Key] = (List<LaunchPad>)launchPads.GetList<LaunchPad>(lpKvp.Key);
  		}
 	}
 }

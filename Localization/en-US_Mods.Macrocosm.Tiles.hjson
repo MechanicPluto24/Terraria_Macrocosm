@@ -14,3 +14,8 @@ LaunchPadMarker.MapEntry: Launchpad Marker
 AluminumBar.MapEntry: Aluminum Bar
 SeleniteBar.MapEntry: Selenite Bar
 SteelBar.MapEntry: Steel Bar
+MoonBaseNeonTube.MapEntry: Moon Base Neon Tube
+MoonBaseTerminal.MapEntry: Moon Base Terminal
+SolarPanelLarge.MapEntry: Solar Panel
+SolarPanelSmall.MapEntry: Solar Panel
+OilRefinery.MapEntry: Oil Refinery

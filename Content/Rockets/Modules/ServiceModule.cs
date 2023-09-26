@@ -4,6 +4,10 @@ namespace Macrocosm.Content.Rockets.Modules
 {
 	public class ServiceModule : RocketModule
     {
+		public ServiceModule(Rocket rocket) : base(rocket)
+		{
+		}
+
 		public override int DrawPriority => 3;
 
 		public override int Width => 80;

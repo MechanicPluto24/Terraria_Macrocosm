@@ -1,8 +1,12 @@
-﻿using Macrocosm.Common.Utils;
+﻿using log4net.Util;
+using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Linq;
 using Terraria;
+using Terraria.GameContent.Drawing;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
@@ -26,20 +30,24 @@ namespace Macrocosm.Content.Rockets
         {
             Rockets = new Rocket[MaxRockets];
 
-            On_Main.DrawProjectiles += DrawRocket_Projectiles;
-            On_Main.DrawNPCs += DrawRocket_NPCs;
+			On_Main.DoDraw_DrawNPCsBehindTiles += On_Main_DoDraw_DrawNPCsBehindTiles;
+            On_Main.DrawProjectiles += DrawRockets_Projectiles;
+            On_Main.DrawNPCs += DrawRockets_NPCs;
+			On_Main.DrawDust += DrawRockets_OverlaysAfterDusts;
         }
 
-        public override void Unload()
+		public override void Unload()
         {
 			Rockets = null;
 
-            On_Main.DrawProjectiles -= DrawRocket_Projectiles;
-            On_Main.DrawNPCs -= DrawRocket_NPCs;
-        }
+			On_Main.DoDraw_DrawNPCsBehindTiles -= On_Main_DoDraw_DrawNPCsBehindTiles;
+			On_Main.DrawProjectiles -= DrawRockets_Projectiles;
+            On_Main.DrawNPCs -= DrawRockets_NPCs;
+			On_Main.DrawDust -= DrawRockets_OverlaysAfterDusts;
+		}
 
 		public static int ActiveRocketCount => Rockets.Count(rocket => rocket.Active);
-		public static int RocketsInCurrentSubworld => Rockets.Count(rocket => rocket.ActiveInCurrentWorld);
+		public static int RocketInCurrentSubworldCount => Rockets.Count(rocket => rocket.ActiveInCurrentWorld);
 
 		public static void AddRocket(Rocket rocket)
 		{
@@ -73,12 +81,30 @@ namespace Macrocosm.Content.Rockets
             }
         }
 
-        public static void DespawnAllRockets()
+        public static void DespawnAllRockets(bool announce = true)
         {
+			if(announce)
+				Utility.Chat("Despawned all rockets!", Color.Green);
+
 			for (int i = 0; i < MaxRockets; i++)
             {
                 Rockets[i].Despawn();
 				Rockets[i] = new Rocket();
+			}
+		}
+
+
+		private static void PreDrawBeforeTiles()
+		{
+			for (int i = 0; i < MaxRockets; i++)
+			{
+				Rocket rocket = Rockets[i];
+
+				if (!rocket.ActiveInCurrentWorld)
+					continue;
+
+				Color lightColor = Lighting.GetColor((int)(rocket.Center.X / 16), (int)(rocket.Center.Y / 16));
+				rocket.PreDrawBeforeTiles(Main.spriteBatch, Main.screenPosition, lightColor);
 			}
 		}
 
@@ -91,13 +117,26 @@ namespace Macrocosm.Content.Rockets
                 if (!rocket.ActiveInCurrentWorld)
                     continue;
 
-				if (rocket.DrawLayer == layer)
-                {
-                    Color lightColor = Lighting.GetColor((int)(rocket.Center.X / 16), (int)(rocket.Center.Y / 16));
-                    rocket.Draw(Main.spriteBatch, Main.screenPosition, lightColor);
-                }
+				if (rocket.DrawLayer != layer)
+					continue;
+
+                Color lightColor = Lighting.GetColor((int)(rocket.Center.X / 16), (int)(rocket.Center.Y / 16));
+                rocket.Draw(Main.spriteBatch, Main.screenPosition, lightColor);
             }
         }
+
+        private static void DrawRocketOverlays()
+        {
+			for (int i = 0; i < MaxRockets; i++)
+			{
+				Rocket rocket = Rockets[i];
+
+				if (!rocket.ActiveInCurrentWorld)
+					continue;
+
+				rocket.DrawOverlay(Main.spriteBatch, Main.screenPosition);
+			}
+		}
 
 		public override void ClearWorld()
 		{
@@ -105,15 +144,15 @@ namespace Macrocosm.Content.Rockets
  				Rockets[i] = new Rocket();
  		}
 
-		public override void SaveWorldData(TagCompound tag) => SaveRocketData(tag); 
-        public override void LoadWorldData(TagCompound tag) => ReadSavedRocketData(tag);
+		public override void SaveWorldData(TagCompound tag) => SaveData(tag); 
+        public override void LoadWorldData(TagCompound tag) => LoadData(tag);
 
-        public static void SaveRocketData(TagCompound dataCopyTag) 
+        public static void SaveData(TagCompound dataCopyTag) 
         {
 			dataCopyTag[nameof(Rockets)] = Rockets;
 		}
 
-        public static void ReadSavedRocketData(TagCompound dataCopyTag) 
+        public static void LoadData(TagCompound dataCopyTag) 
         {
 			if (dataCopyTag.ContainsKey(nameof(Rockets)))
 				Rockets = dataCopyTag.Get<Rocket[]>(nameof(Rockets));
@@ -149,10 +188,21 @@ namespace Macrocosm.Content.Rockets
 			}
 		}
 
-		private void DrawRocket_NPCs(On_Main.orig_DrawNPCs orig, Main self, bool behindTiles)
+		private static SpriteBatchState state1, state2;
+
+		private void On_Main_DoDraw_DrawNPCsBehindTiles(On_Main.orig_DoDraw_DrawNPCsBehindTiles orig, Main self)
+		{
+			orig(self);
+
+			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, SamplerState.PointClamp, default, default, default, Main.GameViewMatrix.ZoomMatrix);
+			PreDrawBeforeTiles();
+			Main.spriteBatch.End();
+		}
+
+		private void DrawRockets_NPCs(On_Main.orig_DrawNPCs orig, Main self, bool behindTiles)
         {
             SpriteBatch spriteBatch = Main.spriteBatch;
-            var state1 = spriteBatch.SaveState();
+            state1.SaveState(spriteBatch);
             spriteBatch.End();
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, default, default, Main.GameViewMatrix.ZoomMatrix);
             
@@ -163,7 +213,7 @@ namespace Macrocosm.Content.Rockets
 
             orig(self, behindTiles);
 
-			var state2 = spriteBatch.SaveState();
+			state2.SaveState(spriteBatch);
             spriteBatch.End();
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, default, default, Main.GameViewMatrix.ZoomMatrix);
             
@@ -173,7 +223,7 @@ namespace Macrocosm.Content.Rockets
             spriteBatch.Begin(state2);
         }
 
-        private void DrawRocket_Projectiles(On_Main.orig_DrawProjectiles orig, Main self)
+        private void DrawRockets_Projectiles(On_Main.orig_DrawProjectiles orig, Main self)
         {
             SpriteBatch spriteBatch = Main.spriteBatch;
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, default, default, Main.GameViewMatrix.ZoomMatrix);
@@ -191,5 +241,13 @@ namespace Macrocosm.Content.Rockets
             spriteBatch.End();
         }
 
-    }
+		private void DrawRockets_OverlaysAfterDusts(On_Main.orig_DrawDust orig, Main self)
+		{
+			orig(self);
+
+			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, SamplerState.PointClamp, default, default, default, Main.GameViewMatrix.ZoomMatrix);
+			DrawRocketOverlays();
+			Main.spriteBatch.End();
+		}
+	}
 }

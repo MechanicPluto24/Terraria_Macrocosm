@@ -22,10 +22,10 @@ namespace Macrocosm.Content.DrawLayers
 				return;
 
 			Texture2D texture = ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark/CelestialBulwark_Shield_Mask").Value;
-			Color drawColor = GlobalVFX.CelestialColor;
+			Color drawColor = CelestialDisco.CelestialColor;
 
 			if (drawInfo.shadow > 0f)
-				drawColor = (drawColor * (drawInfo.shadow / 4f)).NewAlpha(0.5f);
+				drawColor = (drawColor * (drawInfo.shadow / 4f)).WithOpacity(0.5f);
 
 			Rectangle bodyFrame = drawInfo.drawPlayer.bodyFrame;
 			Vector2 bodyVect = drawInfo.bodyVect;

@@ -1,51 +1,31 @@
+using Macrocosm.Common.DataStructures;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Reflection;
 using Terraria;
 
-
 namespace Macrocosm.Common.Utils
-{
-	public readonly struct SpriteBatchState
+{ 
+	public static partial class Utility
     {
-        public readonly bool BeginCalled;
-        public readonly SpriteSortMode SpriteSortMode;
-        public readonly BlendState BlendState;
-        public readonly SamplerState SamplerState;
-        public readonly DepthStencilState DepthStencilState;
-        public readonly RasterizerState RasterizerState;
-        public readonly Effect Effect;
-        public readonly Matrix Matrix;
-
-		public SpriteBatchState(bool beginCalled, SpriteSortMode spriteSortMode, BlendState blendState, SamplerState samplerState, DepthStencilState depthStencilState, RasterizerState rasterizerState, Effect effect, Matrix matrix)
-		{
-			BeginCalled = beginCalled;
-			SpriteSortMode = spriteSortMode;
-			BlendState = blendState;
-			SamplerState = samplerState;
-			DepthStencilState = depthStencilState;
-			RasterizerState = rasterizerState;
-			Effect = effect;
-			Matrix = matrix;
-		}
-	}
-
-    public static partial class Utility
-    {
-        /// <summary> Saves the SpriteBatch parameters in a struct </summary>
-        public static SpriteBatchState SaveState(this SpriteBatch spriteBatch)
+		/// <summary> Saves the SpriteBatch parameters. Prefer to use <see cref="SpriteBatchState.SaveState(SpriteBatch)"/> instead</summary>
+		public static SpriteBatchState SaveState(this SpriteBatch spriteBatch)
         {
             if (spriteBatch.BeginCalled())
-                return new SpriteBatchState(
-                    true,
-                    (SpriteSortMode)spriteBatch.GetType().GetField("sortMode", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch),
-                    (BlendState)spriteBatch.GetType().GetField("blendState", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch),
-                    (SamplerState)spriteBatch.GetType().GetField("samplerState", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch),
-                    (DepthStencilState)spriteBatch.GetType().GetField("depthStencilState", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch),
-                    (RasterizerState)spriteBatch.GetType().GetField("rasterizerState", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch),
-                    (Effect)spriteBatch.GetType().GetField("customEffect", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch),
-                    (Matrix)spriteBatch.GetType().GetField("transformMatrix", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch)
-                );
+            {
+                var type = spriteBatch.GetType();
+				return new SpriteBatchState(
+				   true,
+				   (SpriteSortMode)type.GetField("sortMode", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch),
+				   (BlendState)type.GetField("blendState", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch),
+				   (SamplerState)type.GetField("samplerState", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch),
+				   default,
+				   (RasterizerState)spriteBatch.GetType().GetField("rasterizerState", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch),
+				   (Effect)type.GetField("customEffect", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch),
+				   (Matrix)type.GetField("transformMatrix", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch)
+			   );
+			}
+               
             else
                 return new SpriteBatchState(
                     false,
@@ -80,8 +60,11 @@ namespace Macrocosm.Common.Utils
         public static void Begin(this SpriteBatch spriteBatch, Effect effect, SpriteBatchState state)
             => spriteBatch.Begin(state.SpriteSortMode, state.BlendState, state.SamplerState, state.DepthStencilState, state.RasterizerState, effect, state.Matrix);
 
-        /// <summary> Begins the SpriteBatch with the parameters stored in a SpriteBatchState </summary>
-        public static void Begin(this SpriteBatch spriteBatch, SpriteBatchState state)
+		public static void Begin(this SpriteBatch spriteBatch, SpriteBatchState state, Matrix matrix)
+			   => spriteBatch.Begin(state.SpriteSortMode, state.BlendState, state.SamplerState, state.DepthStencilState, state.RasterizerState, state.Effect, matrix);
+
+		/// <summary> Begins the SpriteBatch with the parameters stored in a SpriteBatchState </summary>
+		public static void Begin(this SpriteBatch spriteBatch, SpriteBatchState state)
                 => spriteBatch.Begin(state.SpriteSortMode, state.BlendState, state.SamplerState, state.DepthStencilState, state.RasterizerState, state.Effect, state.Matrix);
 
         public static void EndIfBeginCalled(this SpriteBatch spriteBatch)

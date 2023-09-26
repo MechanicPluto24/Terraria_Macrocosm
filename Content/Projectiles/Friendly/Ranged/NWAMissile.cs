@@ -50,11 +50,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		{
 			#region Acceleration
 
-			float timeToReachTopSpeed = 100;
+			float timeToReachTopSpeed = 10;
 			if(AI_AccelerationTimer < timeToReachTopSpeed)
  				AI_AccelerationTimer++;
 
-			float timerForInitialDeceleration = 20;
+			float timerForInitialDeceleration = 5;
 			if (AI_InitialDecelerationTimer < timerForInitialDeceleration)
 				AI_InitialDecelerationTimer++;
 
@@ -216,17 +216,17 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			//Spawn flare dusts
 			for (int i = 0; i < 20; i++)
 			{
-				Dust dust = Dust.NewDustDirect(Projectile.Center + Projectile.oldVelocity, 1, 1, DustID.Flare, Main.rand.NextFloat(), Main.rand.NextFloat(), 100, default, 3.5f);
+				Dust dust = Dust.NewDustDirect(Projectile.Center + Projectile.oldVelocity, 1, 1, DustID.Flare, Main.rand.NextFloat(), Main.rand.NextFloat(), 100, default, 1.1f);
 				dust.noGravity = true;
 				dust.velocity *= 7f;
 
-				dust = Dust.NewDustDirect(Projectile.Center + Projectile.oldVelocity, 1, 1, DustID.Flare, Main.rand.NextFloat(), Main.rand.NextFloat(), 100, default, 1.5f);
+				dust = Dust.NewDustDirect(Projectile.Center + Projectile.oldVelocity, 1, 1, DustID.Flare, Main.rand.NextFloat(), Main.rand.NextFloat(), 100, default, 0.8f);
 				dust.velocity *= 3f;
 				dust.noGravity = true;
 			}
 
 			//Spawn trail dust
-			for (int i = 2; i < Projectile.oldPos.Length; i++)
+			for (int i = 3; i < Projectile.oldPos.Length; i++)
 			{
 				for (int j = 0; j < 3; j++)
 				{
@@ -239,7 +239,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			var explosion = Particle.CreateParticle<TintableExplosion>(p =>
 			{
 				p.Position = Projectile.Center;
-				p.DrawColor = (new Color(195, 115, 62)).NewAlpha(0.6f);
+				p.DrawColor = (new Color(195, 115, 62)).WithOpacity(0.6f);
 				p.Scale = 1.2f;
 				p.NumberOfInnerReplicas = 9;
 				p.ReplicaScalingFactor = 0.5f;
@@ -249,7 +249,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			for (int i = 0; i < 2; i++)
 			{
 				Vector2 velocity = Main.rand.NextVector2CircularEdge(3, 3) * (i == 1 ? 0.8f : 0.4f);
-				Particle.CreateParticle<Smoke>(Projectile.Center, velocity);
+				Particle.CreateParticle<Smoke>(Projectile.Center, velocity, scale: 1.2f);
 			}
 		 
 		}

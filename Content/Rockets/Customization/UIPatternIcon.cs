@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.Customization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -31,6 +32,7 @@ namespace Macrocosm.Common.UI
 			OnLeftClick += (_, _) => { HasFocus = true; };
 		}
 
+		private SpriteBatchState state;
 		protected override void DrawSelf(SpriteBatch spriteBatch)
 		{
 			base.DrawSelf(spriteBatch);
@@ -55,7 +57,7 @@ namespace Macrocosm.Common.UI
 				effect.Parameters["uColor" + i.ToString()].SetValue(Pattern.GetColor(i).ToVector4());
 			}
 
-			var state = spriteBatch.SaveState();
+			state.SaveState(spriteBatch);
 			spriteBatch.End();
 			spriteBatch.Begin(state.SpriteSortMode, state.BlendState, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, effect, state.Matrix);
 

@@ -1,3 +1,4 @@
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
@@ -66,13 +67,13 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		}
 
 		public override Color? GetAlpha(Color drawColor)
-			=> (Color.White.NewAlpha((0.3f + Main.DiscoColor.GetLuminance() * 0.7f)));
+			=> (Color.White.WithOpacity((0.3f + Main.DiscoColor.GetLuminanceNTSC() * 0.7f)));
 
 
 		private SpriteBatchState state;
 		public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
-			state = spriteBatch.SaveState();
+			state.SaveState(spriteBatch);
 			spriteBatch.End();
 			spriteBatch.Begin(BlendState.Additive, state);
 

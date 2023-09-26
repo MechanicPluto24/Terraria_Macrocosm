@@ -1,9 +1,11 @@
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.Localization;
@@ -15,8 +17,6 @@ namespace Macrocosm.Content.UI.LoadingScreens
 	{
 		private List<Texture2D> earthBackgrounds;
 		private Texture2D earthBackground;
-
-		private StarsDrawing starsDrawing;
 
 		public EarthLoadingScreen()
 		{
@@ -30,41 +30,38 @@ namespace Macrocosm.Content.UI.LoadingScreens
 				ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/Backgrounds/Earth_NorthAmerica", mode).Value,
 				ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/Backgrounds/Earth_SouthAmerica", mode).Value
 			};
-
-			starsDrawing = new();
 		}
 
-		public override LocalizedColorScaleText Title => new(Language.GetText("Mods.Macrocosm.Subworlds.Earth.DisplayName"), new Color(94, 150, 255), 1.2f, largeText: true);
+		private readonly float animationDuration = 1000f;
+		protected override void UpdateAnimation()
+		{
+			if (animationTimer < animationDuration)
+				animationTimer += 1f;
+		}
 
-		public override void Setup()
+		protected override void Reset()
 		{
 			ResetAnimation();
-
 			earthBackground = earthBackgrounds.GetRandom();
-
-			starsDrawing.Clear();
- 			starsDrawing.SpawnStars(150, 200);
 		}
 
-		public override void PreDraw(SpriteBatch spriteBatch)
+		private SpriteBatchState state;
+		protected override void PreDraw(SpriteBatch spriteBatch)
 		{
-			Color bodyColor = (Color.White * (float)(AnimationTimer / 5) * 1f).NewAlpha(1f);
-
-			var state = spriteBatch.SaveState();
-
+			state.SaveState(spriteBatch);
 			spriteBatch.End();
-
-			spriteBatch.Begin(BlendState.AlphaBlend, state);
-			starsDrawing.Draw(spriteBatch);
-			spriteBatch.End();
-
-
 			spriteBatch.Begin(BlendState.NonPremultiplied, state);
+
+			Color bodyColor = (Color.White * (float)(animationTimer / 5) * 1f).WithOpacity(1f);
+
+			float progress = MathHelper.Clamp(animationTimer / animationDuration, 0f, 1f);
+			progress = (float)Math.Pow(progress, 0.6);   
+			int movement = 500 + (int)(Utility.QuadraticEaseIn(progress) * 500f);
+
 			spriteBatch.Draw
 			(
 				earthBackground,
-				//new Rectangle((int)(Main.screenWidth - earthBackground.Width * scale),(int)(Main.screenHeight - earthBackground.Height * scale + 50 - (int)(AnimationTimer * 10)), (int)(earthBackground.Width * scale), (int)(earthBackground.Height * scale)),
-				new Rectangle(0, 50 - (int)(AnimationTimer * 10), Main.screenWidth, Main.screenHeight),
+				new Rectangle(0, movement, Main.screenWidth, Main.screenHeight),
 				null,
 				bodyColor
 			);
