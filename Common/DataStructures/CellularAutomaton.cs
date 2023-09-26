@@ -7,9 +7,9 @@ namespace Macrocosm.Common.DataStructures
 	public class CellularAutomaton
     {
         public Cell[][] Map { get; }
-        public CellularAutomaton(int width, int height, Seed seed, float fill = 0.5f, int smoothing = 4)
+        public CellularAutomaton(int width, int height, int seed, float fill = 0.5f, int smoothing = 4)
         {
-            UnifiedRandom random = new(seed.Value);
+            UnifiedRandom random = new(seed);
 
             Map = new Cell[width][];
             for (int i = 0; i < width; i++)

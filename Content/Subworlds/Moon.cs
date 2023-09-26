@@ -16,12 +16,12 @@ using Terraria.WorldBuilding;
 
 namespace Macrocosm.Content.Subworlds
 {
-    /// <summary>
-    /// Moon terrain and crater generation by 4mbr0s3 2
-    /// Why isn't anyone else working on this
-    /// I have saved the day - Ryan
-    /// </summary>
-    public class Moon : MacrocosmSubworld
+	/// <summary>
+	/// Moon terrain and crater generation by 4mbr0s3 2
+	/// Why isn't anyone else working on this
+	/// I have saved the day - Ryan
+	/// </summary>
+	public partial class Moon : MacrocosmSubworld
     {
         private static Moon instance;
         public static Moon Instance { get { instance ??= new(); return instance; } }
@@ -37,7 +37,7 @@ namespace Macrocosm.Content.Subworlds
         public override bool ShouldSave => true;
         public override bool NoPlayerSaving => false;
 
-		public override List<GenPass> Tasks => /*new()*/ new MoonGenPassCollection().Tasks;
+		public override List<GenPass> Tasks => new MoonGenPassCollection().Tasks;
 
 		public override ChecklistConditionCollection LaunchConditions => new()
 		{
