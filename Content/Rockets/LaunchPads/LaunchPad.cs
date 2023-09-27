@@ -59,7 +59,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			if (shouldSync)
 				launchPad.NetSync(MacrocosmSubworld.CurrentID);
 
-			LaunchPadManager.Add(MacrocosmSubworld.CurrentID, launchPad, shouldSync);
+			LaunchPadManager.Add(MacrocosmSubworld.CurrentID, launchPad);
 
 			return launchPad;
 		}
@@ -151,7 +151,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
 			LaunchPad existingLaunchPad = LaunchPadManager.GetLaunchPadAtStartTile(subworldId, launchPad.StartTile);
 			if (existingLaunchPad is null)
- 				LaunchPadManager.Add(subworldId, launchPad, shouldSync: false);
+ 				LaunchPadManager.Add(subworldId, launchPad);
  
 			if (Main.netMode == NetmodeID.Server)
 			{

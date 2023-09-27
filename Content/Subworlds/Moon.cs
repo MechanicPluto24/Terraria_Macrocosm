@@ -2,8 +2,6 @@
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Projectiles.Environment.Meteors;
 using Macrocosm.Content.Rockets.Navigation.Checklist;
-using Macrocosm.Content.UI.LoadingScreens;
-using Macrocosm.Content.WorldGeneration.Moon;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -12,7 +10,6 @@ using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Utilities;
-using Terraria.WorldBuilding;
 
 namespace Macrocosm.Content.Subworlds
 {
@@ -36,8 +33,6 @@ namespace Macrocosm.Content.Subworlds
 
         public override bool ShouldSave => true;
         public override bool NoPlayerSaving => false;
-
-		public override List<GenPass> Tasks => new MoonGenPassCollection().Tasks;
 
 		public override ChecklistConditionCollection LaunchConditions => new()
 		{
@@ -115,7 +110,7 @@ namespace Macrocosm.Content.Subworlds
 
 		#region Meteor logic
 
-		public static float MeteorBoost = 1f;
+		public static float MeteorBoost { get; set; } = 1f;
 		private double timePass = 0.0;
 		private void UpdateMeteors()
 		{

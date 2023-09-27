@@ -113,11 +113,6 @@ namespace Macrocosm.Common.Utils
 			);
 		}
 
-		/// <summary> Generates a random rotation value within the range of -pi to pi. </summary>
-		/// <returns> A random rotation value in radians. </returns>
-		public static float RandomRotation()
-			=> Main.rand.NextFloat(-MathHelper.Pi, MathHelper.Pi);
-
 		#endregion
 
 		#region Signals

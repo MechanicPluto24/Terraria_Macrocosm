@@ -17,7 +17,6 @@ namespace Macrocosm.Content.Rockets.Navigation.Checklist
 
 		private ChecklistConditionCollection commonLaunchConditions = new();
 		private ChecklistCondition selectedLaunchCondition;
-		private ChecklistCondition hereLaunchCondition;
 
 		public UIFlightChecklist() : base(new LocalizedColorScaleText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Checklist"), scale: 1.2f))
 		{
