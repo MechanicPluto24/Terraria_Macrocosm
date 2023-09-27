@@ -54,7 +54,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 				writer.Write(alpha);
 				writer.Write(rotation);
 
-				BitsByte bb = new BitsByte(visible, fast);
+				BitsByte bb = new(visible, fast);
 				writer.Write(bb);
 			}
 
@@ -372,7 +372,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			//npcLoot.Add(ItemDropRule.MasterModeDropOnAllPlayers(ModContent.ItemType<CraterDemonMMPet>(), 4));
 
 			// BELOW: for normal mode, same as boss bag (excluding Broken Hero Shield)
-			LeadingConditionRule notExpertRule = new LeadingConditionRule(new Conditions.NotExpert());
+			LeadingConditionRule notExpertRule = new(new Conditions.NotExpert());
 			notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<CraterDemonMask>(), 7));
 
 			notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<Moonstone>(), 1, 30, 60));
@@ -419,7 +419,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		public override void SendExtraAI(BinaryWriter writer)
 		{
 			bool hasCustomTarget = movementTarget != null;
-			BitsByte bb = new BitsByte(phase2, spawned, ignoreRetargetPlayer, hadNoPlayerTargetForLongEnough, hasCustomTarget);
+			BitsByte bb = new(phase2, spawned, ignoreRetargetPlayer, hadNoPlayerTargetForLongEnough, hasCustomTarget);
 			writer.Write(bb);
 
 			writer.Write(targetAlpha);
@@ -504,7 +504,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
 			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Bosses/CraterDemon/CraterDemon_Glow").Value;
-			Texture2D glowmaskPhase2 = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Bosses/CraterDemon/CraterDemon_Glow_Phase2").Value;
 			Texture2D star = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Star1").Value;
 
 			spriteBatch.Draw(glowmask, NPC.position - screenPos + new Vector2(0, 4), NPC.frame, (Color)GetAlpha(Color.White), NPC.rotation, Vector2.Zero, NPC.scale, SpriteEffects.None, 0f);

@@ -30,7 +30,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			launchPadStorage = null;
 		}
 
-		public static void Add(string subworldId, LaunchPad launchPad, bool shouldSync = true)
+		public static void Add(string subworldId, LaunchPad launchPad)
 		{
 			if (launchPadStorage.ContainsKey(subworldId))
 			{
