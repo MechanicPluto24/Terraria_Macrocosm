@@ -46,6 +46,10 @@ namespace Macrocosm.Content.Tiles.Blocks
             return false;
 		}
 
+		// This code replaces some sloped frames with special frames 
+		// TODO: This requires an IL edit in TileDrawing.DrawBasicTile, and DrawSingleTile (glowmask logic)
+		//		 This is to ensure that the regular slope code is not run on the targeted frames, but is run on all the other frames 
+		//	     Maybe a tML PR world work instead...
         private void ReplaceSlopeFrames(int i, int j)
         {
 			Tile tile = Main.tile[i, j];
