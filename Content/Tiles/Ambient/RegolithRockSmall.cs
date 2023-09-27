@@ -1,3 +1,4 @@
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Placeable.Blocks;
 using Microsoft.Xna.Framework;
@@ -42,8 +43,8 @@ namespace Macrocosm.Content.Tiles.Ambient
 			// Call to base SetStaticDefaults. Must inherit static defaults from base type 
 			base.SetStaticDefaults();
 
-			// Add rubble variant, all existing styles, to Rubblemaker, allowing to place this tile by consuming ExampleBlock
-			FlexibleTileWand.RubblePlacementLarge.AddVariations(ModContent.ItemType<Regolith>(), Type, 0, 1, 2, 3, 4, 5);
+			// Add rubble variant, all existing styles, to Rubblemaker, allowing to place this tile by consuming Regolith
+			FlexibleTileWand.RubblePlacementSmall.AddVariations(ModContent.ItemType<Regolith>(), Type, 0..9);
 
 			// Tiles placed by Rubblemaker drop the item used to place them.
 			RegisterItemDrop(ModContent.ItemType<Regolith>());

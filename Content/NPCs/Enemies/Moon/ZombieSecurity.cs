@@ -41,11 +41,11 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		public Player TargetPlayer => Main.player[NPC.target];
 
 		#region Privates 
-		private readonly IntRange shootFramesCommon = new(0, 5);
-		private readonly IntRange shootFramesHorizontal = new(6, 10);
-		private readonly IntRange shootFramesUpwards = new(11, 15);
-		private readonly IntRange shootFramesDownward = new(16, 20);
-		private readonly IntRange walkFrames = new(21, 30);
+		private readonly Range shootFramesCommon = 0..5;
+		private readonly Range shootFramesHorizontal = 6..10;
+		private readonly Range shootFramesUpwards = 11..15;
+		private readonly Range shootFramesDownward = 16..20;
+		private readonly Range walkFrames = 21..30;
 		private const int fallingFrame = 31;
 
 		private static int maxCooldown = 240;
@@ -90,7 +90,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		public override void OnSpawn(IEntitySource source)
 		{
-			NPC.frame.Y = NPC.GetFrameHeight() * walkFrames.Start;
+			NPC.frame.Y = NPC.GetFrameHeight() * walkFrames.Start.Value;
 
 			if(Main.netMode != NetmodeID.MultiplayerClient)
 			{
@@ -149,7 +149,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 				ShotsCounter = 1;
 
 				if (AI_State == ActionState.Shoot)
-					NPC.frame.Y = NPC.GetFrameHeight() * shootFramesCommon.Start;
+					NPC.frame.Y = NPC.GetFrameHeight() * shootFramesCommon.Start.Value;
 
 				AI_State = ActionState.Walk;
 			}
@@ -203,7 +203,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 				}
 
 				// Set up the first weapon draw frame (did not find a way to do it right in FindFrame)
-				NPC.frame.Y = NPC.GetFrameHeight() * shootFramesCommon.Start;
+				NPC.frame.Y = NPC.GetFrameHeight() * shootFramesCommon.Start.Value;
 
 				AI_State = ActionState.Shoot;
 			}
@@ -265,8 +265,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
  				else if(AimAngle == AimType.Downwards)
  					particleAim = aimVelocity.RotatedBy(-0.2f * Math.Sign(aimVelocity.X));
 
-				Projectile bullet = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), aimPosition, aimVelocity, projType, projDamage, 0f, Main.myPlayer);
-				var flash = Particle.CreateParticle<GunFireRing>(NPC.Center + particleAim * 0.24f, aimVelocity * 0.05f, 1f, aimVelocity.ToRotation(), true);
+				Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), aimPosition, aimVelocity, projType, projDamage, 0f, Main.myPlayer);
+				Particle.CreateParticle<GunFireRing>(NPC.Center + particleAim * 0.24f, aimVelocity * 0.05f, 1f, aimVelocity.ToRotation(), true);
 			}
 
 		}
@@ -326,7 +326,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 				{
 					// Reset walking 
 					if(!walkFrames.Contains(frameIndex))
-						NPC.frame.Y = frameHeight * walkFrames.Start;
+						NPC.frame.Y = frameHeight * walkFrames.Start.Value;
 
 					// Walking animation frame counter, accounting for walk speed
 					NPC.frameCounter += Math.Abs(NPC.velocity.X) * 2f;
@@ -338,8 +338,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 						NPC.frameCounter = 0.0;
 					}
 
-					if (frameIndex >= walkFrames.End)
- 						NPC.frame.Y = frameHeight * walkFrames.Start;
+					if (frameIndex >= walkFrames.End.Value)
+ 						NPC.frame.Y = frameHeight * walkFrames.Start.Value;
  				}
 				// Shooting animation
 				else if(AI_State == ActionState.Shoot)
@@ -359,15 +359,15 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 							switch (AimAngle)
 							{
 								case AimType.Horizontal:
-									NPC.frame.Y = frameHeight * shootFramesHorizontal.Start;
+									NPC.frame.Y = frameHeight * shootFramesHorizontal.Start.Value;
 									break;
 
 								case AimType.Upwards:
-									NPC.frame.Y = frameHeight * shootFramesUpwards.Start;
+									NPC.frame.Y = frameHeight * shootFramesUpwards.Start.Value;
 									break;
 
 								case AimType.Downwards:
-									NPC.frame.Y = frameHeight * shootFramesDownward.Start;
+									NPC.frame.Y = frameHeight * shootFramesDownward.Start.Value;
 									break;
 							}
 						}

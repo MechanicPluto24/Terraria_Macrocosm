@@ -196,7 +196,6 @@ namespace Macrocosm.Content.Rockets.Customization
 			details.Add((moduleName, detailName), detail);
 		}
 
-		private const string localizationPath = "Mods.Macrocosm.Subworlds.";
 		public static UIListScrollablePanel ProvidePatternUI(string moduleName)
 		{
 			UIListScrollablePanel listPanel = new()
