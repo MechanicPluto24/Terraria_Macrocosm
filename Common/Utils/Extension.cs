@@ -5,44 +5,91 @@ using Macrocosm.Content.Projectiles.Global;
 using Macrocosm.Content.Rockets;
 using System;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.Utilities;
 
 namespace Macrocosm.Common.Utils
 {
 	public static class Extension
     {
-        public static MacrocosmProjectile Macrocosm(this Projectile projectile)
-            => projectile.GetGlobalProjectile<MacrocosmProjectile>();
+		public static MacrocosmProjectile Macrocosm(this Projectile projectile)
+		{
+			return projectile.GetGlobalProjectile<MacrocosmProjectile>();
+		}
 
-        public static MacrocosmPlayer Macrocosm(this Player player)
-            => player.GetModPlayer<MacrocosmPlayer>();
+		public static MacrocosmPlayer Macrocosm(this Player player)
+		{
+			return player.GetModPlayer<MacrocosmPlayer>();
+		}
 
-		public static void AddScreenshake(this Player player, float value, string context) 
-            => player.Macrocosm().AddScreenshake(value, context);
-        
-        public static DashPlayer DashPlayer(this Player player)
-            => player.GetModPlayer<DashPlayer>();
+		public static void AddScreenshake(this Player player, float value, string context)
+		{
+			player.Macrocosm().AddScreenshake(value, context);
+		}
 
-        public static StaminaPlayer StaminaPlayer(this Player player)
-            => player.GetModPlayer<StaminaPlayer>();
+		public static DashPlayer DashPlayer(this Player player)
+		{
+			return player.GetModPlayer<DashPlayer>();
+		}
 
-        public static RocketPlayer RocketPlayer(this Player player)
-            => player.GetModPlayer<RocketPlayer>();
+		public static StaminaPlayer StaminaPlayer(this Player player)
+		{
+			return player.GetModPlayer<StaminaPlayer>();
+		}
+
+		public static RocketPlayer RocketPlayer(this Player player)
+		{
+			return player.GetModPlayer<RocketPlayer>();
+		}
 
 		public static MacrocosmNPC Macrocosm(this NPC npc)
-            => npc.GetGlobalNPC<MacrocosmNPC>();
+		{
+			return npc.GetGlobalNPC<MacrocosmNPC>();
+		}
 
-        public static GlowmaskGlobalItem Glowmask(this Item item)
-            => item.GetGlobalItem<GlowmaskGlobalItem>();
+		public static GlowmaskGlobalItem Glowmask(this Item item)
+		{
+			return item.GetGlobalItem<GlowmaskGlobalItem>();
+		}
 
-        public static int Next(this UnifiedRandom random, Range range)
-        {
-            return random.Next(range.Start.Value, range.End.Value);
-        }
+		public static bool IsSloped(this Tile tile)
+		{
+			return (int)tile.BlockType > 1;
+		}
 
-        public static int NextDirection(this UnifiedRandom random, Range range)
-        {
-            return random.Next(range) * (random.NextBool() ? 1 : -1);
-        }
-    }
+		public static int[] ToIntArray(this Range range, int length = int.MaxValue)
+		{
+			int start = range.Start.GetOffset(length);
+			int end = range.End.GetOffset(length);
+
+			int[] indices = new int[end + 1 - start];
+			for (int i = start; i <= end; i++)
+ 				indices[i - start] = i;
+ 
+			return indices;
+		}
+
+		public static bool Contains(this Range range, int index, int length = int.MaxValue)
+		{
+			int start = range.Start.GetOffset(length);
+			int end = range.End.GetOffset(length);
+
+			return index >= start && index < end;
+		}
+
+		public static bool Contains(this Range range, Index index, int length = int.MaxValue)
+		{
+			int start = range.Start.GetOffset(length);
+			int end = range.End.GetOffset(length);
+
+			int actualIndex = index.GetOffset(length);
+
+			return actualIndex >= start && actualIndex < end;
+		}
+
+		public static void AddVariations(this FlexibleTileWand rubbleMaker, int itemType, int tileIdToPlace, Range styles)
+		{
+			rubbleMaker.AddVariations(itemType, tileIdToPlace, styles.ToIntArray());
+		}
+	}
 }
