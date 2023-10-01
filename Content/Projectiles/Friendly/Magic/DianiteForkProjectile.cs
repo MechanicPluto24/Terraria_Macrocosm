@@ -227,7 +227,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 		}
 
 
-		public override void Kill(int timeLeft)
+		public override void OnKill(int timeLeft)
 		{
             if(AI_State is ActionState.Orbit && Parent is not null && Parent.ModProjectile is DianiteForkCoreProjectile)
                 (Parent.ModProjectile as DianiteForkCoreProjectile).BrokenApartEarly = true;
@@ -319,7 +319,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             }
         }
 
-		public override void Kill(int timeLeft)
+		public override void OnKill(int timeLeft)
 		{
             if (BrokenApartEarly)
                 return;

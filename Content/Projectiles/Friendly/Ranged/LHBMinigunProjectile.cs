@@ -163,7 +163,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			}
 		}
 
-		public override void Kill(int timeLeft)
+		public override void OnKill(int timeLeft)
 		{
 			if (SoundEngine.TryGetActiveSound(playingSoundId, out ActiveSound playingSound))
 				playingSound.Stop();

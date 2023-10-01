@@ -262,7 +262,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			}
 		}
 
-		public override void Kill(int timeLeft)
+		public override void OnKill(int timeLeft)
 		{
 			if (SoundEngine.TryGetActiveSound(playingSoundId_1, out ActiveSound playingSound1))
 				playingSound1.Stop();

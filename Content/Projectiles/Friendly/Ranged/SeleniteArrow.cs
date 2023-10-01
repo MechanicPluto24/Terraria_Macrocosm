@@ -49,7 +49,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			return true;
 		}
 
-		public override void Kill(int timeLeft)
+		public override void OnKill(int timeLeft)
 		{
 			for(int i = 0; i < Main.rand.Next(20, 30); i++)
 				Dust.NewDustPerfect(Projectile.Center + Projectile.oldVelocity * 0.5f, ModContent.DustType<SeleniteBits>(), Projectile.oldVelocity.RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(0.1f, 0.2f), Scale: 2f);
