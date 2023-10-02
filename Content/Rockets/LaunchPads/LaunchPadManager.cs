@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.UI;
@@ -159,6 +161,19 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 		public override void ClearWorld()
 		{
 			launchPadStorage.Clear();
+		}
+
+		public override bool HijackSendData(int whoAmI, int msgType, int remoteClient, int ignoreClient, NetworkText text, int number, float number2, float number3, float number4, int number5, int number6, int number7)
+		{
+			if (Main.netMode == NetmodeID.Server && msgType == MessageID.FinishedConnectingToServer && remoteClient >= 0 && remoteClient < 255)
+			{
+				foreach(var launchPad in launchPadStorage[MacrocosmSubworld.CurrentID])
+				{
+					launchPad.NetSync(MacrocosmSubworld.CurrentID, toClient: remoteClient);
+				}
+			}
+
+			return false;
 		}
 
 		public override void SaveWorldData(TagCompound tag) => SaveData(tag);

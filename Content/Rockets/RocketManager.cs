@@ -7,6 +7,8 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Linq;
 using Terraria;
 using Terraria.GameContent.Drawing;
+using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
@@ -143,6 +145,20 @@ namespace Macrocosm.Content.Rockets
 			for (int i = 0; i < MaxRockets; i++)
  				Rockets[i] = new Rocket();
  		}
+
+		public override bool HijackSendData(int whoAmI, int msgType, int remoteClient, int ignoreClient, NetworkText text, int number, float number2, float number3, float number4, int number5, int number6, int number7)
+		{
+			if (Main.netMode == NetmodeID.Server && msgType == MessageID.FinishedConnectingToServer && remoteClient >= 0 && remoteClient < 255)
+			{
+				for (int i = 0; i < MaxRockets; i++)
+				{
+					Rockets[i].NetSync(toClient: remoteClient);
+					Rockets[i].SendCustomizationData(toClient: remoteClient);
+				}
+			}
+
+			return false;
+		}
 
 		public override void SaveWorldData(TagCompound tag) => SaveData(tag); 
         public override void LoadWorldData(TagCompound tag) => LoadData(tag);

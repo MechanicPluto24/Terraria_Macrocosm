@@ -6,14 +6,15 @@ using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.GameContent.Drawing;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles.Blocks
 {
-	public class MoonBasePlating : ModTile
+	public class MoonBasePlating : ModTile, IHasConditionalSlopeFrames
     {
-        public override void SetStaticDefaults()
+		public override void SetStaticDefaults()
         {
             Main.tileSolid[Type] = true;
             Main.tileBlockLight[Type] = true;
@@ -35,30 +36,18 @@ namespace Macrocosm.Content.Tiles.Blocks
 
 		public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
 		{
-            if(TileFraming.PlatingStyle(i, j))
-            {
-                TileFraming.BasicFraming(i, j);
-
-				//if (Main.tile[i, j].IsSloped())
-				//	ReplaceSlopeFrames(i, j);
-			}
-
-            return false;
+			return TileFraming.PlatingStyle(i, j);
 		}
 
-		// This code replaces some sloped frames with special frames 
-		// TODO: This requires an IL edit in TileDrawing.DrawBasicTile, and DrawSingleTile (glowmask logic)
-		//		 This is to ensure that the regular slope code is not run on the targeted frames, but is run on all the other frames 
-		//	     Maybe a tML PR world work instead...
-        private void ReplaceSlopeFrames(int i, int j)
-        {
+		public void ApplySlopeFrames(int i, int j)
+		{
 			Tile tile = Main.tile[i, j];
-            var frame = (tile.TileFrameX, tile.TileFrameY);
+			var frame = (tile.TileFrameX, tile.TileFrameY);
 
-			if(frame is (0,54) or (36, 54) or (72, 54))
-            {
-                Main.tile[i, j].TileFrameX = 324;
-                Main.tile[i, j].TileFrameY = 0;
+			if (frame is (0, 54) or (36, 54) or (72, 54))
+			{
+				Main.tile[i, j].TileFrameX = 324;
+				Main.tile[i, j].TileFrameY = 0;
 			}
 
 			if (frame is (0, 72) or (36, 72) or (72, 72))
@@ -78,7 +67,12 @@ namespace Macrocosm.Content.Tiles.Blocks
 				Main.tile[i, j].TileFrameX = 342;
 				Main.tile[i, j].TileFrameY = 18;
 			}
+		}
 
+		public bool ShouldDrawAsSloped(TileDrawInfo drawInfo)
+		{
+			var frame = (drawInfo.tileFrameX, drawInfo.tileFrameY);
+			return frame is (324, 0) or (324, 18) or (342, 0) or (342, 18);
 		}
 	}
 }

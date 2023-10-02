@@ -416,7 +416,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 		private void CopyRocketData()
 		{
 			SoundEngine.PlaySound(SoundID.MenuTick);
-			string json = CustomizationDummy.GetCustomizationDataJSON();
+			string json = CustomizationDummy.GetCustomizationDataToJSON();
 			Platform.Get<IClipboard>().Value = json;
 		}
 
@@ -434,30 +434,6 @@ namespace Macrocosm.Content.Rockets.Navigation
 			{
 				Utility.Chat(ex.Message);
 			}
-		}
-
-		private void CopyModuleData()
-		{
-			SoundEngine.PlaySound(SoundID.MenuTick);
-			string json = currentModule.GetCustomizationDataJSON();
-			Platform.Get<IClipboard>().Value = json;
-		}
-
-		private void PasteModuleData()
-		{
-			SoundEngine.PlaySound(SoundID.MenuTick);
-			string json = Platform.Get<IClipboard>().Value;
-
-			try
-			{
-				currentModule.ApplyCustomizationDataFromJSON(json);
-				RefreshPatternColorPickers();
-			}
-			catch (Exception ex)
-			{
-				Utility.Chat(ex.Message);
-			}
-
 		}
 
 		private void OnHSLMenuCancel()

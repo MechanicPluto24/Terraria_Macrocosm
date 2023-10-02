@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using Terraria.GameContent.UI.Chat;
 using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Rockets.Customization
@@ -129,6 +130,7 @@ namespace Macrocosm.Content.Rockets.Customization
 
 		public static readonly Func<TagCompound, Pattern> DESERIALIZER = DeserializeData;
 
+		// TODO: a way to also save and load custom functions just like the JSON does
 		public TagCompound SerializeData()
 		{
 			TagCompound tag = new()
@@ -140,8 +142,8 @@ namespace Macrocosm.Content.Rockets.Customization
 			// Save the user-changed colors
 			for (int i = 0; i < MaxColorCount; i++)
  				if (ColorData[i].IsUserModifiable)
-					tag[$"Color{i}"] = ColorData[i].Color;  
- 
+					tag[$"Color{i}"] = ColorData[i].Color;
+
 			return tag;
 		}
 
@@ -160,5 +162,30 @@ namespace Macrocosm.Content.Rockets.Customization
 
 			return pattern;
 		}
+
+		/*
+		// This is terribly inneficient 
+		public TagCompound SerializeData()
+		{
+			TagCompound tag = new()
+			{
+				{ "Pattern", ToJSON(includeColorFunctions: true, includeUnlocked: false, includeNonModifiableColors: true) }
+			};
+			return tag;
+		}
+
+		public static Pattern DeserializeData(TagCompound tag)
+		{
+			if (tag.ContainsKey("Pattern"))
+			{
+				string json = tag.GetString("Pattern");
+				Pattern pattern = FromJSON(json);
+				return pattern;
+			}
+
+			return new Pattern("", "", false);
+		}
+		*/
+
 	}
 }

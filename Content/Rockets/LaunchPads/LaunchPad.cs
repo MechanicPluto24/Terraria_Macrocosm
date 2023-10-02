@@ -113,7 +113,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 		/// <summary>
 		/// Syncs the launchpad fields with <see cref="NetSyncAttribute"/> across all clients and the server.
 		/// </summary>
-		public void NetSync(string subworldId, int ignoreClient = -1)
+		public void NetSync(string subworldId, int toClient = -1, int ignoreClient = -1)
 		{
 			if (Main.netMode == NetmodeID.SinglePlayer)
 				return;
@@ -121,7 +121,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			ModPacket packet = Macrocosm.Instance.GetPacket();
 
 			if (WriteToPacket(packet, subworldId))
-				packet.Send(-1, ignoreClient);
+				packet.Send(toClient, ignoreClient);
 
 			packet.Dispose();
 		}
