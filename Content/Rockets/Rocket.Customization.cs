@@ -1,10 +1,12 @@
 ﻿using Macrocosm.Common.UI;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.Modules;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Linq;
 using Terraria;
 
@@ -48,12 +50,20 @@ namespace Macrocosm.Content.Rockets
 			Modules[moduleName].Pattern = CustomizationStorage.GetDefaultPattern(moduleName);
 		}
 
-		public string GetCustomizationDataJSON()
+		public string GetCustomizationDataToJSON()
 		{
 			JArray jArray = new();
 
 			foreach (var moduleKvp in Modules)
- 				jArray.Add(moduleKvp.Value.GetCustomizationDataToJObject());
+			{
+				var module = moduleKvp.Value;
+
+				jArray.Add(new JObject()
+				{
+					["moduleName"] = module.Name,
+					["pattern"] = module.Pattern.ToJObject()
+				});
+			}
  
 			return jArray.ToString(Formatting.Indented);
 		}
@@ -62,9 +72,19 @@ namespace Macrocosm.Content.Rockets
 		{
 			foreach (var moduleKvp in Modules)
 			{
+				var module = moduleKvp.Value;
 				var jArray = JArray.Parse(json);
 				JObject jObject = jArray.Cast<JObject>().FirstOrDefault(obj => obj["moduleName"].Value<string>() == moduleKvp.Key);
-				moduleKvp.Value.ApplyCustomizationDataFromJObject(jObject);
+
+				try
+				{
+					module.Pattern = Pattern.FromJObject(jObject["pattern"].Value<JObject>());
+				}
+				catch (Exception ex)
+				{
+					Utility.Chat(ex.Message);
+					Macrocosm.Instance.Logger.Warn(ex.Message);
+				}
 			}
 		}
 	}

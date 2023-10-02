@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -6,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
+using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Drawing.Particles
@@ -75,6 +78,19 @@ namespace Macrocosm.Common.Drawing.Particles
 			{
 				Particles[i].Kill();
 			}
+		}
+
+		public override bool HijackSendData(int whoAmI, int msgType, int remoteClient, int ignoreClient, NetworkText text, int number, float number2, float number3, float number4, int number5, int number6, int number7)
+		{
+			if (Main.netMode == NetmodeID.Server && msgType == MessageID.FinishedConnectingToServer && remoteClient >= 0 && remoteClient < 255)
+			{
+				foreach (var particle in Particles)
+				{
+					particle.NetSync(toClient: remoteClient);
+				}
+			}
+
+			return false;
 		}
 
 		private static void DrawParticles(ParticleDrawLayer layer)

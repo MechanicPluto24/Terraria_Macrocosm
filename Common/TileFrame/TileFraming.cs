@@ -6,11 +6,14 @@ using System;
 using Terraria;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
+using Terraria.ModLoader;
+using Macrocosm.Content.Tiles.Blocks;
 
 namespace Macrocosm.Common.TileFrame
 {
-	public class TileFraming
+	public class TileFraming 
 	{
+		#region Framing methods
 		// Framing legend:
 		// ---------------
 		//  The tile   | T	
@@ -19,6 +22,7 @@ namespace Macrocosm.Common.TileFrame
 		//  Don't care |  
 		// ---------------
 
+		/// <summary> Style currently used for plating blocks with special frames (e.g. Moon Base Plating) </summary>
 		public static bool PlatingStyle(int i, int j)
 		{
 			Tile tile = Main.tile[i, j];
@@ -80,7 +84,6 @@ namespace Macrocosm.Common.TileFrame
 			// _ # _
 			if (info.Left && info.Right && info.Bottom && !info.Top && !info.BottomRight && !info.BottomLeft)
 				SetFrame(252, 0);
-
 
 			//   # _
 			// _ T #
@@ -221,9 +224,14 @@ namespace Macrocosm.Common.TileFrame
 					}
 			}
 
-			return shouldRunBaseFraming;
+			if (shouldRunBaseFraming)
+				BasicFraming(i, j);
+
+			return false;
+			//return shouldRunBaseFraming;
 		}
 
+		/// <summary> Copy of the common framing all blocks in Terraria use </summary>
 		public static void BasicFraming(int i, int j)
 		{
 			Tile tile = Main.tile[i, j];
@@ -247,7 +255,7 @@ namespace Macrocosm.Common.TileFrame
 			int left = tileLeft.HasTile ? tileLeft.TileType : -1;
 			int upLeft = tileUpLeft.HasTile ? tileUpLeft.TileType : -1;
 
-			Point frame = new(-1,-1);
+			Point frame = new(-1, -1);
 
 			int variation = WorldGen.genRand.Next(3);
 
@@ -641,9 +649,17 @@ namespace Macrocosm.Common.TileFrame
 			Main.tile[i, j].TileFrameY = (short)frame.Y;
 		}
 
+		/// <summary>
+		/// Appears to be broken, do not use 
+		/// Adaption of the vanilla tile blend code using dedicated frames
+		/// </summary>
 		public static void BlendLikeDirt(int i, int j, int typeToBlendWith, bool asDirt = false)
 			=> BlendLikeDirt(i, j, new int[] { typeToBlendWith }, asDirt);
 
+		/// <summary>
+		/// Appears to be broken, do not use 
+		/// Adaption of the vanilla tile blend code using dedicated frames
+		/// </summary>
 		public static void BlendLikeDirt(int i, int j, int[] typesToBlendWith, bool asDirt = false)
 		{
 			Tile tile = Main.tile[i, j];
@@ -1718,11 +1734,13 @@ namespace Macrocosm.Common.TileFrame
 			}
 			#endregion
 
-			BasicFraming(i, j);
+			//BasicFraming(i, j);
 
 			Main.tile[i, j].TileFrameX = (short)frame.X;
 			Main.tile[i, j].TileFrameY = (short)frame.Y;
 		}
+
+		#endregion
 
 		// TODO
 		/*

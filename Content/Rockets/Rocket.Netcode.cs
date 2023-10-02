@@ -13,7 +13,7 @@ namespace Macrocosm.Content.Rockets
 		/// <summary>
 		/// Syncs the rocket fields with <see cref="NetSyncAttribute"/> across all clients and the server.
 		/// </summary>
-		public void NetSync(int ignoreClient = -1)
+		public void NetSync(int toClient = -1, int ignoreClient = -1)
 		{
 			if (Main.netMode == NetmodeID.SinglePlayer || WhoAmI < 0 || WhoAmI > RocketManager.MaxRockets)
 				return;
@@ -21,7 +21,7 @@ namespace Macrocosm.Content.Rockets
 			ModPacket packet = Macrocosm.Instance.GetPacket();
 
 			if (WriteToPacket(packet))  
-				 packet.Send(-1, ignoreClient);
+				 packet.Send(toClient, ignoreClient);
 
 			packet.Dispose();
 		}
@@ -65,6 +65,16 @@ namespace Macrocosm.Content.Rockets
 					SubworldSystem.SendToAllSubservers(Macrocosm.Instance, packet.GetBuffer());
 				*/
 			}
+		}
+
+		public void SendCustomizationData(int toClient = -1, int ignoreClient = -1)
+		{
+
+		}
+
+		public static void SyncCustomizationData(BinaryReader reader, int clientWhoAmI)
+		{
+
 		}
 	}
 }  
