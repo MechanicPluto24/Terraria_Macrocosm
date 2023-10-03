@@ -333,7 +333,7 @@ namespace Macrocosm.Common.UI
 
 		private void UpdateHexText(Color pendingColor)
 		{
-			hslText.SetText(pendingColor.GetHexText());
+			hslText.SetText(pendingColor.GetHex());
 		}
 	}
 }

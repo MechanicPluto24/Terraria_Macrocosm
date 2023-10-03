@@ -69,12 +69,33 @@ namespace Macrocosm.Content.Rockets
 
 		public void SendCustomizationData(int toClient = -1, int ignoreClient = -1)
 		{
+			if (Main.netMode == NetmodeID.SinglePlayer || WhoAmI < 0 || WhoAmI > RocketManager.MaxRockets)
+				return;
 
+			ModPacket packet = Macrocosm.Instance.GetPacket();
+
+			packet.Write((byte)MessageType.SyncRocketCustomizationData);
+			packet.Write((byte)WhoAmI);
+
+			packet.Write(GetCustomizationDataToJSON()); // Cringe
+			packet.Send(toClient, ignoreClient);
 		}
 
-		public static void SyncCustomizationData(BinaryReader reader, int clientWhoAmI)
+		public static void SyncRocketCustomizationData(BinaryReader reader, int clientWhoAmI)
 		{
+			// the rocket WhoAmI
+			int rocketIndex = reader.ReadByte();
 
+			Rocket rocket = RocketManager.Rockets[rocketIndex];
+			rocket.WhoAmI = rocketIndex;
+
+			rocket.ApplyRocketCustomizationFromJSON(reader.ReadString());
+
+			if (Main.netMode == NetmodeID.Server)
+			{
+				// Bounce to all other clients, minus the sender
+				rocket.SendCustomizationData(ignoreClient: clientWhoAmI);
+			}
 		}
 	}
 }  

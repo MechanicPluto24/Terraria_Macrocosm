@@ -20,39 +20,37 @@ namespace Macrocosm.Content.Rockets
 		{
 			Nameplate.Text = dummy.Nameplate.Text;
 			Nameplate.TextColor = dummy.Nameplate.TextColor;
-			Nameplate.HorizontalAlignment = dummy.Nameplate.HorizontalAlignment;
-			Nameplate.VerticalAlignment = dummy.Nameplate.VerticalAlignment;
+			Nameplate.HAlign = dummy.Nameplate.HAlign;
+			Nameplate.VAlign = dummy.Nameplate.VAlign;
 
 			foreach(var moduleName in ModuleNames)
 			{
-				Modules[moduleName].Detail = dummy.Modules[moduleName].Detail;
-				Modules[moduleName].Pattern = dummy.Modules[moduleName].Pattern.Clone();
+				//Modules[moduleName].Detail = dummy.Modules[moduleName].Detail ;
+				Modules[moduleName].Pattern = dummy.Modules[moduleName].Pattern;
 			}
+
+			SendCustomizationData();
 		}
 
 		public void ResetCustomizationToDefault()
 		{
-			EngineModule.Nameplate = new();
+			Nameplate = new();
 
 			foreach(var moduleKvp in Modules)
 			{
 				moduleKvp.Value.Detail = null;
 				moduleKvp.Value.Pattern = CustomizationStorage.GetDefaultPattern(moduleKvp.Key);
 			}
-		}
 
-		public void ResetModuleCustomizationToDefault(string moduleName)
-		{
-			if(moduleName is "EngineModule")
- 				EngineModule.Nameplate = new();
-
-			Modules[moduleName].Detail = null;
-			Modules[moduleName].Pattern = CustomizationStorage.GetDefaultPattern(moduleName);
+			SendCustomizationData();
 		}
 
 		public string GetCustomizationDataToJSON()
 		{
-			JArray jArray = new();
+			JArray jArray = new()
+			{
+				//Nameplate.ToJObject()
+			};
 
 			foreach (var moduleKvp in Modules)
 			{
@@ -60,11 +58,12 @@ namespace Macrocosm.Content.Rockets
 
 				jArray.Add(new JObject()
 				{
+					// TODO: add detail 
 					["moduleName"] = module.Name,
 					["pattern"] = module.Pattern.ToJObject()
 				});
 			}
- 
+
 			return jArray.ToString(Formatting.Indented);
 		}
 
@@ -78,6 +77,7 @@ namespace Macrocosm.Content.Rockets
 
 				try
 				{
+					// TODO: read detail 
 					module.Pattern = Pattern.FromJObject(jObject["pattern"].Value<JObject>());
 				}
 				catch (Exception ex)
@@ -85,6 +85,8 @@ namespace Macrocosm.Content.Rockets
 					Utility.Chat(ex.Message);
 					Macrocosm.Instance.Logger.Warn(ex.Message);
 				}
+
+				// TODO: read nameplate 
 			}
 		}
 	}

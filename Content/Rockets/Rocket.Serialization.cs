@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.Rockets.Modules;
+﻿using Macrocosm.Content.Rockets.Customization;
+using Macrocosm.Content.Rockets.Modules;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria.ModLoader.IO;
@@ -28,6 +29,8 @@ namespace Macrocosm.Content.Rockets
 				if (Landing) tag[nameof(Landing)] = true;
 
 				if (TargetLandingPosition != Vector2.Zero) tag[nameof(TargetLandingPosition)] = TargetLandingPosition;
+
+				tag[nameof(Nameplate)] = Nameplate;
 
 				foreach (string moduleName in ModuleNames)
 				{
@@ -69,8 +72,12 @@ namespace Macrocosm.Content.Rockets
 				if (tag.ContainsKey(nameof(TargetLandingPosition)))
 					rocket.TargetLandingPosition = tag.Get<Vector2>(nameof(TargetLandingPosition));
 
+				if (tag.ContainsKey(nameof(Nameplate)))
+					rocket.Nameplate = tag.Get<Nameplate>(nameof(Nameplate));
+
 				foreach (string moduleName in rocket.ModuleNames)
 				{
+					// This mess is just so each module can save their own data
 					if (tag.ContainsKey(moduleName + "_Type"))
 					{
 						Type moduleType = Type.GetType(tag.GetString(moduleName + "_Type"));
