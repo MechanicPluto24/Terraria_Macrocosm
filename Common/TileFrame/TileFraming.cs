@@ -8,6 +8,7 @@ using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Terraria.ModLoader;
 using Macrocosm.Content.Tiles.Blocks;
+using Humanizer;
 
 namespace Macrocosm.Common.TileFrame
 {
@@ -22,12 +23,60 @@ namespace Macrocosm.Common.TileFrame
 		//  Don't care |  
 		// ---------------
 
-		/// <summary> Style currently used for plating blocks with special frames (e.g. Moon Base Plating) </summary>
+		/// <summary> 
+		/// Style currently used for plating blocks with special frames (e.g. Moon Base Plating) 
+		/// Adapted from the Gemspark blend style 
+		/// </summary>
 		public static bool PlatingStyle(int i, int j)
 		{
 			Tile tile = Main.tile[i, j];
-			var info = new TileNeighbourInfo(i, j).TypedSolid(tile.TileType);
+			//var info = new TileNeighbourInfo(i, j).TypedSolid(tile.TileType);
 			bool shouldRunBaseFraming = true;
+
+			// TODO: integrate this slope check logic to a TileNeightbourInfo delegate (if possible)
+
+			Tile tileTop = Main.tile[i, j - 1];
+			Tile tileBottom = Main.tile[i, j + 1];
+			Tile tileLeft = Main.tile[i - 1, j];
+			Tile tileRight = Main.tile[i + 1, j];
+			Tile tileTopLeft = Main.tile[i - 1, j - 1];
+			Tile tileBottomLeft = Main.tile[i - 1, j + 1];
+			Tile tileTopRight = Main.tile[i + 1, j - 1];
+			Tile tileBottomRight = Main.tile[i + 1, j + 1];
+
+			bool top = tileTop.HasTile && tileTop.TileType == tile.TileType;
+			if (tileTop.IsSloped() && !tileTop.TopSlope)
+				top = false;
+
+			bool bottom = tileBottom.HasTile && tileBottom.TileType == tile.TileType && !tileBottom.IsHalfBlock;
+			if (tileBottom.IsSloped() && !tileBottom.BottomSlope)
+				bottom = false;
+
+			bool left = tileLeft.HasTile && tileLeft.TileType == tile.TileType && !tileLeft.IsHalfBlock;
+			if (tileLeft.IsSloped() && !tileLeft.LeftSlope)
+				left = false;
+
+			bool right = tileRight.HasTile && tileRight.TileType == tile.TileType && !tileRight.IsHalfBlock;
+			if (tileRight.IsSloped() && !tileRight.RightSlope)
+				right = false;
+
+			bool topLeft = tileTopLeft.HasTile && tileTopLeft.TileType == tile.TileType && !tileTopLeft.IsHalfBlock;
+			if (tileTopLeft.IsSloped() && (tileTopLeft.BottomSlope || tileTopLeft.RightSlope))
+				topLeft = false;
+
+			bool topRight = tileTopRight.HasTile && tileTopRight.TileType == tile.TileType && !tileTopRight.IsHalfBlock;
+			if (tileTopRight.IsSloped() && (tileTopRight.BottomSlope || tileTopRight.LeftSlope))
+				topRight = false;
+
+			bool bottomLeft = tileBottomLeft.HasTile && tileBottomLeft.TileType == tile.TileType && !tileBottomLeft.IsHalfBlock;
+			if (tileBottomLeft.IsSloped() && (tileBottomLeft.TopSlope || tileBottomLeft.RightSlope))
+				bottomLeft = false;
+
+			bool bottomRight = tileBottomRight.HasTile && tileBottomRight.TileType == tile.TileType && !tileBottomRight.IsHalfBlock;
+			if (tileBottomRight.IsSloped() && (tileBottomRight.TopSlope || tileBottomRight.LeftSlope))
+				bottomRight = false;
+
+			int count = new[] { top, topRight, topLeft, bottom, bottomRight, bottomLeft, right, left }.Count(b => b);
 
 			void SetFrame(int x, int y)
 			{
@@ -39,110 +88,109 @@ namespace Macrocosm.Common.TileFrame
 			//   _  
 			// _ T #
 			//   # _
-			if (info.Right && info.Bottom && !info.Top && !info.Left && !info.BottomRight)
+			if (right && bottom && !top && !left && !bottomRight)
 				SetFrame(234, 0);
 
 			// _ #  
 			// _ T #
 			//   _  
-			if (info.Top && info.Right && !info.Bottom && !info.Left && !info.TopRight)
+			if (top && right && !bottom && !left && !topRight)
 				SetFrame(234, 36);
 
 			//   _  
 			// # T _
 			// _ #  
-			if (info.Left && info.Bottom && !info.Top && !info.Right && !info.BottomLeft)
+			if (left && bottom && !top && !right && !bottomLeft)
 				SetFrame(270, 0);
 
 			// _ #  
 			// # T _
 			//   _  
-			if (info.Top && info.Left && !info.Bottom && !info.Right && !info.TopLeft)
+			if (top && left && !bottom && !right && !topLeft)
 				SetFrame(270, 36);
 
 
 			//   # _
 			// _ T #
 			//   # _
-			if (info.Top && info.Bottom & info.Right && !info.Left && !info.TopRight && !info.BottomRight)
+			if (top && bottom & right && !left && !topRight && !bottomRight)
 				SetFrame(234, 18);
 
 			// _ #  
 			// # T _
 			// _ #  
-			if (info.Top && info.Bottom & info.Left && !info.Right && !info.TopLeft && !info.BottomLeft)
+			if (top && bottom & left && !right && !topLeft && !bottomLeft)
 				SetFrame(270, 18);
 
 			// _ # _
 			// # T #
 			//   _  
-			if (info.Left && info.Right && info.Top && !info.Bottom && !info.TopLeft && !info.TopRight)
+			if (left && right && top && !bottom && !topLeft && !topRight)
 				SetFrame(252, 36);
 
 			//   _  
 			// # T #
 			// _ # _
-			if (info.Left && info.Right && info.Bottom && !info.Top && !info.BottomRight && !info.BottomLeft)
+			if (left && right && bottom && !top && !bottomRight && !bottomLeft)
 				SetFrame(252, 0);
 
 			//   # _
 			// _ T #
 			//   # #
-			if (info.Bottom && info.BottomRight && info.Right && !info.TopRight && info.Top && !info.Left)
+			if (bottom && bottomRight && right && !topRight && top && !left)
 				SetFrame(288, 0);
 
 			//   # #
 			// _ T #
 			//   # _
-			if (info.Top && info.TopRight && info.Right && !info.BottomRight && info.Bottom && !info.Left)
+			if (top && topRight && right && !bottomRight && bottom && !left)
 				SetFrame(288, 18);
 
 			// _ #  
 			// # T _
 			// # #  
-			if (info.Bottom && info.BottomLeft && info.Left && !info.TopLeft && info.Top && !info.Right)
+			if (bottom && bottomLeft && left && !topLeft && top && !right)
 				SetFrame(306, 0);
 
 			// # #  
 			// # T _
 			// _ #  
-			if (info.Top && info.TopLeft && info.Left && !info.BottomLeft && info.Bottom && !info.Right)
+			if (top && topLeft && left && !bottomLeft && bottom && !right)
 				SetFrame(306, 18);
 
 			//   _   
 			// # T # 
 			// _ # # 
-			if (info.Right && info.BottomRight && info.Bottom && !info.BottomLeft && info.Left && !info.Top)
+			if (right && bottomRight && bottom && !bottomLeft && left && !top)
 				SetFrame(288, 36);
 
 			//   _   
 			// # T # 
 			// # # _ 
-			if (info.Left && info.BottomLeft && info.Bottom && !info.BottomRight && info.Right && !info.Top)
+			if (left && bottomLeft && bottom && !bottomRight && right && !top)
 				SetFrame(306, 36);
 
 			// _ # # 
 			// # T #
 			//   _   
-			if (info.Right && info.TopRight && info.Top && !info.TopLeft && info.Left && !info.Bottom)
+			if (right && topRight && top && !topLeft && left && !bottom)
 				SetFrame(288, 54);
 
 			// # # _ 
 			// # T # 
 			// _ _   
-			if (info.Left && info.TopLeft && info.Top && !info.TopRight && info.Right && !info.Bottom)
+			if (left && topLeft && top && !topRight && right && !bottom)
 				SetFrame(306, 54);
 
 			// Neighbour count dependent frames
-
-			switch (info.Count)
+			switch (count)
 			{
 				case 4:
 					{
 						// _ # _
 						// # T #
 						// _ # _
-						if (info.Top && info.Right && info.Bottom && info.Left)
+						if (top && right && bottom && left)
 							SetFrame(252, 18);
 
 						break;
@@ -153,25 +201,25 @@ namespace Macrocosm.Common.TileFrame
 						// _ # _
 						// # T #
 						// _ # #
-						if (!info.TopLeft && !info.TopRight && !info.BottomLeft)
+						if (!topLeft && !topRight && !bottomLeft)
 							SetFrame(216, 54);
 
 						// _ # _
 						// # T #
 						// # # _
-						if (!info.TopLeft && !info.TopRight && !info.BottomRight)
+						if (!topLeft && !topRight && !bottomRight)
 							SetFrame(234, 54);
 
 						// _ # #
 						// # T #
 						// _ # _
-						if (!info.BottomLeft && !info.BottomRight && !info.TopLeft)
+						if (!bottomLeft && !bottomRight && !topLeft)
 							SetFrame(216, 72);
 
 						// # # _
 						// # T #
 						// _ # _
-						if (!info.BottomLeft && !info.BottomRight && !info.TopRight)
+						if (!bottomLeft && !bottomRight && !topRight)
 							SetFrame(234, 72);
 
 						break;
@@ -182,13 +230,13 @@ namespace Macrocosm.Common.TileFrame
 						// _ # #
 						// # T #
 						// # # _
-						if (!info.TopLeft && !info.BottomRight)
+						if (!topLeft && !bottomRight)
 							SetFrame(306, 72);
 
 						// # # _
 						// # T #
 						// _ # #
-						if (!info.TopRight && !info.BottomLeft)
+						if (!topRight && !bottomLeft)
 							SetFrame(288, 72);
 
 						break;
@@ -199,25 +247,25 @@ namespace Macrocosm.Common.TileFrame
 						// # # _
 						// # T #
 						// # # #
-						if (!info.TopRight)
+						if (!topRight)
 							SetFrame(270, 54);
 
 						// _ # #
 						// # T #
 						// # # #
-						if (!info.TopLeft)
+						if (!topLeft)
 							SetFrame(252, 54);
 
 						// # # #
 						// # T #
 						// # # _
-						if (!info.BottomRight)
+						if (!bottomRight)
 							SetFrame(270, 72);
 
 						// # # #
 						// # T #
 						// _ # #
-						if (!info.BottomLeft)
+						if (!bottomLeft)
 							SetFrame(252, 72);
 
 						break;
@@ -225,18 +273,18 @@ namespace Macrocosm.Common.TileFrame
 			}
 
 			if (shouldRunBaseFraming)
-				BasicFraming(i, j);
+				BasicFraming(i, j, false);
 
 			return false;
-			//return shouldRunBaseFraming;
 		}
 
 		/// <summary> Copy of the common framing all blocks in Terraria use </summary>
-		public static void BasicFraming(int i, int j)
+		public static void BasicFraming(int i, int j, bool countHalfBlocks = false)
 		{
 			Tile tile = Main.tile[i, j];
 			int type = tile.TileType;
 
+			// Neighbour references 
 			Tile tileUp = Main.tile[i, j - 1];
 			Tile tileUpRight = Main.tile[i + 1, j - 1];
 			Tile tileRight = Main.tile[i + 1, j];
@@ -254,6 +302,94 @@ namespace Macrocosm.Common.TileFrame
 			int downLeft = tileDownLeft.HasTile ? tileDownLeft.TileType : -1;
 			int left = tileLeft.HasTile ? tileLeft.TileType : -1;
 			int upLeft = tileUpLeft.HasTile ? tileUpLeft.TileType : -1;
+
+			// Ignore unconnected neighbour slopes
+			if (tileUp.BottomSlope)
+				up = -1;
+
+			if (tileRight.LeftSlope)
+				right = -1;
+
+			if (tileDown.TopSlope)
+				down = -1;
+
+			if (tileLeft.RightSlope)
+				left = -1;
+
+			// If sloped, don't blend with unconnected neighbours
+			if (tile.Slope is SlopeType.SlopeDownLeft)
+			{
+				up = -1;
+				right = -1;
+			}
+
+			if (tile.Slope is SlopeType.SlopeDownRight)
+			{
+				up = -1;
+				left = -1;
+			}
+
+			if (tile.Slope is SlopeType.SlopeUpLeft)
+			{
+				down = -1;
+				right = -1;
+			}
+
+			if (tile.Slope is SlopeType.SlopeUpRight)
+			{
+				down = -1;
+				left = -1;
+			}
+
+			// Check halfblock neighbours for connection
+
+			if (left > -1 && tileLeft.IsHalfBlock)
+			{
+				if (tile.IsHalfBlock)
+					left = type;
+				else if (tileLeft.TileType != type || !countHalfBlocks)
+					left = -1;
+			}
+
+			if (right > -1 && tileRight.IsHalfBlock)
+			{
+				if (tile.IsHalfBlock)
+					right = type;	
+				else if (tileRight.TileType != type || !countHalfBlocks)
+					right = -1;
+			}
+
+			if (downLeft > -1 && tileDownLeft.IsHalfBlock)
+			{
+				if (tile.IsHalfBlock)
+					downLeft = type;
+				else if (tileDownLeft.TileType != type || !countHalfBlocks)
+					downLeft = -1;
+			}
+
+			if (downRight > -1 && tileDownRight.IsHalfBlock)
+			{
+				if (tile.IsHalfBlock)
+					downRight = type;
+				else if (tileDownRight.TileType != type || !countHalfBlocks)
+					downRight = -1;
+			}
+
+			// If this is a halfblock, don't blend with unconnected halfblocks
+			if (tile.IsHalfBlock)
+			{
+				if (left != type)
+					left = -1;
+
+				if (right != type)
+					right = -1;
+
+				up = -1;
+			}
+
+			// Ignore halfblocks below
+			if (tileDown.IsHalfBlock)
+				down = -1;
 
 			Point frame = new(-1, -1);
 
@@ -734,17 +870,41 @@ namespace Macrocosm.Common.TileFrame
 
 			#region Ignore unconnected slopes
 
-			if (tileUp.Slope == SlopeType.SlopeUpLeft || tileUp.Slope == SlopeType.SlopeUpRight)
+			if (tileUp.BottomSlope)
 				up = -1;
 
-			if (tileRight.Slope == SlopeType.SlopeDownRight || tileRight.Slope == SlopeType.SlopeUpRight)
+			if (tileRight.LeftSlope)
 				right = -1;
 
-			if (tileDown.Slope == SlopeType.SlopeDownLeft || tileDown.Slope == SlopeType.SlopeDownRight)
+			if (tileDown.TopSlope)
 				down = -1;
 
-			if (tileLeft.Slope == SlopeType.SlopeDownLeft || tileLeft.Slope == SlopeType.SlopeUpLeft)
+			if (tileLeft.RightSlope)
 				left = -1;
+
+			if (tile.Slope is SlopeType.SlopeDownLeft)
+			{
+				up = -1;
+				right = -1;
+			}
+
+			if (tile.Slope is SlopeType.SlopeDownRight)
+			{
+				up = -1;
+				left = -1;
+			}
+
+			if (tile.Slope is SlopeType.SlopeUpLeft)
+			{
+				down = -1;
+				right = -1;
+			}
+
+			if (tile.Slope is SlopeType.SlopeUpRight)
+			{
+				down = -1;
+				left = -1;
+			}
 
 			#endregion
 

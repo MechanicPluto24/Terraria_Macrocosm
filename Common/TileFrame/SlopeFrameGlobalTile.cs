@@ -81,14 +81,14 @@ namespace Macrocosm.Common.TileFrame
 
 			// Match the "drawData.tileCache.slope() > 0" check
 			if (!c.TryGotoNext(
-				i => i.MatchLdarg(5),
+				i => i.MatchLdarg(5), // TileDrawInfo drawdata method parameter
 				i => i.MatchLdflda(typeof(TileDrawInfo), "tileCache"),
 				i => i.MatchCall<Tile>("slope"),
 				i => i.MatchLdcI4(0),
 				i => i.MatchBle(out skipSlopeDrawing) // get the branch label that skips the slope drawcode if the check is false
 			))
 			{
-				Macrocosm.Instance.Logger.Error("Failed to inject ILHook: ConditionalSlopeFrameTile");
+				Macrocosm.Instance.Logger.Error("Failed to inject ILHook: SlopeFrame");
 				ilSuccess = false;
 				return;
 			}
@@ -96,7 +96,7 @@ namespace Macrocosm.Common.TileFrame
 			c.Index += 5;
 
 			// Bypass the code when the special slope frames have been applied 
-			c.EmitLdarg(5);
+			c.EmitLdarg(5); // TileDrawInfo drawdata method parameter
 			c.EmitDelegate(HideVisualSlope);
 			c.EmitBrtrue(skipSlopeDrawing);
 
