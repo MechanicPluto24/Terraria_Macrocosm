@@ -18,7 +18,7 @@
       { "color": "#FFFFFF" },
       {
         "colorFunction": "Lerp",
-        "params": [ 1, 2, 0.5 ]
+        "parameters": [ 1, 2, 0.5 ]
       }
     ]
   },
@@ -115,7 +115,7 @@
       { "color": "#FFFFFF" },
       {
         "colorFunction": "Lerp",
-        "params": [ 1, 2 , 0.5 ]
+        "apramete": [ 1, 2 , 0.5 ]
       }
     ]
   },
@@ -206,7 +206,7 @@
       { "color": "#FFFFFF" },
       {
         "colorFunction": "Lerp",
-        "params": [ 1, 2 , 0.5 ]
+        "parameters": [ 1, 2 , 0.5 ]
       }
     ]
   },
@@ -230,7 +230,7 @@
       { "color": "#282828" },
       {
         "colorFunction": "Lerp",
-        "params": [ 1, 2 , 0.5 ]
+        "parameters": [ 1, 2 , 0.5 ]
       }
     ]
   },
@@ -301,7 +301,7 @@
       { "color": "#FFFFFF" },
       {
         "colorFunction": "Lerp",
-        "params": [ 1, 2 , 0.5 ]
+        "parameters": [ 1, 2 , 0.5 ]
       }
     ]
   },
@@ -389,7 +389,7 @@
       { "color": "#FFFFFF" },
       {
         "colorFunction": "Lerp",
-        "params": [ 1, 2 , 0.5 ]
+        "parameters": [ 1, 2 , 0.5 ]
       }
     ]
   },
@@ -477,7 +477,7 @@
       { "color": "#FFFFFF" },
       {
         "colorFunction": "Lerp",
-        "params": [ 1, 2 , 0.5 ]
+        "parameters": [ 1, 2 , 0.5 ]
       }
     ]
   },

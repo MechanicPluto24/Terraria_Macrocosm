@@ -1,13 +1,13 @@
 ﻿namespace Macrocosm.Common.DataStructures
 {
-	public enum TextAlignmentHorizontal
+	public enum TextHorizontalAlign
 	{
 		Left,
 		Center, 
 		Right 
 	};
 
-	public enum TextAlignmentVertical 
+	public enum TextVerticalAlign 
 	{ 
 		Top,
 		Center, 

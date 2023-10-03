@@ -207,7 +207,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 				if (currentPatternIcon is not null)
 				{
-					currentPatternIcon.Pattern.SetColorData(currentDummyPattern.ColorData);
+					currentPatternIcon.Pattern = currentDummyPattern;
 					currentPatternIcon.HasFocus = true;
 
 					if (patternColorPickers is null)
@@ -229,13 +229,13 @@ namespace Macrocosm.Content.Rockets.Navigation
 							var modulePattern = CustomizationDummy.Modules[module.Key].Pattern;
 
 							if (modulePattern.Name == currentPatternIcon.Pattern.Name && hslMenu.PreviousColor != hslMenu.PendingColor)
- 								modulePattern.SetColor(colorIndex, hslMenu.PendingColor);
+								CustomizationDummy.Modules[module.Key].Pattern = modulePattern.WithColor(colorIndex, hslMenu.PendingColor);
  						}
 					}
 					else
 					{
 						if(hslMenu.PreviousColor != hslMenu.PendingColor)
-							currentModule.Pattern.SetColor(colorIndex, hslMenu.PendingColor);
+							currentModule.Pattern = currentModule.Pattern.WithColor(colorIndex, hslMenu.PendingColor);
 					}
 				}
 
@@ -248,7 +248,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 			if (nameplateTextBox.HasFocus)
 				CustomizationDummy.Nameplate.Text = nameplateTextBox.Text;
 			else
-				nameplateTextBox.Text = CustomizationDummy.AssignedName;
+				nameplateTextBox.Text = CustomizationDummy.Nameplate.Text;
 		}
 
 		private void UpdateNameplateColorPicker()
@@ -268,18 +268,18 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 		private void UpdateNameplateAlignButtons()
 		{
-			switch (CustomizationDummy.Nameplate.HorizontalAlignment)
+			switch (CustomizationDummy.Nameplate.HAlign)
 			{
-				case TextAlignmentHorizontal.Left: alignLeft.HasFocus = true; break;
-				case TextAlignmentHorizontal.Right: alignRight.HasFocus = true; break;
-				case TextAlignmentHorizontal.Center: alignCenterHorizontal.HasFocus = true; break;
+				case TextHorizontalAlign.Left: alignLeft.HasFocus = true; break;
+				case TextHorizontalAlign.Right: alignRight.HasFocus = true; break;
+				case TextHorizontalAlign.Center: alignCenterHorizontal.HasFocus = true; break;
 			}
 
-			switch (CustomizationDummy.Nameplate.VerticalAlignment)
+			switch (CustomizationDummy.Nameplate.VAlign)
 			{
-				case TextAlignmentVertical.Top: alignTop.HasFocus = true; break;
-				case TextAlignmentVertical.Bottom: alignBottom.HasFocus = true; break;
-				case TextAlignmentVertical.Center: alignCenterVertical.HasFocus = true; break;
+				case TextVerticalAlign.Top: alignTop.HasFocus = true; break;
+				case TextVerticalAlign.Bottom: alignBottom.HasFocus = true; break;
+				case TextVerticalAlign.Center: alignCenterVertical.HasFocus = true; break;
 			}
 		}
 
@@ -399,7 +399,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 			CustomizationDummy = Rocket.Clone();
 
 			UpdatePatternConfig();
-			currentPatternIcon.Pattern = CustomizationDummy.Modules[currentModuleName].Pattern.Clone();
+			currentPatternIcon.Pattern = CustomizationDummy.Modules[currentModuleName].Pattern;
 
 			RefreshPatternColorPickers();
 		}
@@ -451,12 +451,12 @@ namespace Macrocosm.Content.Rockets.Navigation
 							var modulePattern = CustomizationDummy.Modules[module.Key].Pattern;
 
 							if (modulePattern.Name == currentPatternIcon.Pattern.Name)
-								modulePattern.SetColor(item.colorIndex, hslMenu.PendingColor, evenIfNotUserModifiable: true);
+								CustomizationDummy.Modules[module.Key].Pattern = modulePattern.WithColor(item.colorIndex, hslMenu.PendingColor, evenIfNotUserModifiable: true);
 						}
 					}
 					else
 					{
-						currentModule.Pattern.SetColor(item.colorIndex, hslMenu.PreviousColor);
+						currentModule.Pattern = currentModule.Pattern.WithColor(item.colorIndex, hslMenu.PreviousColor);
 					}	
 				}
 				else if (item.colorIndex == -1)
@@ -481,24 +481,14 @@ namespace Macrocosm.Content.Rockets.Navigation
 				{
 					if(CustomizationStorage.TryGetPattern(module.Key, icon.Pattern.Name, out Pattern defaultPattern))
 					{
-						var currentPattern = defaultPattern.Clone();
-
-						for(int i = 0; i < Pattern.MaxColorCount; i++)
-						{
-							if (defaultPattern.ColorData[i].HasColorFunction && icon.Pattern.ColorData[i].HasColorFunction)
-								currentPattern.SetColorFunction(i, icon.Pattern.ColorData[i].ColorFunction);
-							else if (currentPattern.ColorData[i].IsUserModifiable && icon.Pattern.ColorData[i].IsUserModifiable)
-								currentPattern.SetColor(i, icon.Pattern.ColorData[i].Color);
-						}
-
+						var currentPattern = defaultPattern.WithColorData(icon.Pattern.ColorData);
 						CustomizationDummy.Modules[module.Key].Pattern = currentPattern;
 					}
 				}
 			}
 			else
 			{
-				//currentModule.Pattern = CustomizationStorage.GetPattern(icon.Pattern.ModuleName, icon.Pattern.Name);
-				currentModule.Pattern = icon.Pattern.Clone();
+				currentModule.Pattern = CustomizationStorage.GetPattern(icon.Pattern.ModuleName, icon.Pattern.Name);
 			}
 
 			RefreshPatternColorPickers();
@@ -578,8 +568,6 @@ namespace Macrocosm.Content.Rockets.Navigation
 			//UpdatePatternConfig();
 			ColorPickersLoseFocus();
 
-			var defaultPattern = CustomizationStorage.GetPattern(currentModuleName, currentModule.Pattern.Name);
-
 			if (rocketPreview.ZoomedOut)
 			{
 				foreach (var module in CustomizationDummy.Modules)
@@ -587,13 +575,19 @@ namespace Macrocosm.Content.Rockets.Navigation
 					var currentModulePattern = CustomizationDummy.Modules[module.Key].Pattern;
 
 					if (currentModulePattern.Name == currentPatternIcon.Pattern.Name)
-						CustomizationDummy.Modules[module.Key].Pattern = CustomizationStorage.GetPattern(module.Key, currentModulePattern.Name);
+					{
+						var defaultPattern = CustomizationStorage.GetPattern(module.Key, currentModulePattern.Name);
+						CustomizationDummy.Modules[module.Key].Pattern = defaultPattern;
+						dummyPatternEdits[(Rocket, module.Key)].FirstOrDefault(icon => icon.Pattern.Name == currentModulePattern.Name);
+					}
 				}
 			}
 			else
 			{
-				currentModule.Pattern = defaultPattern.Clone();
-				currentPatternIcon.Pattern = defaultPattern.Clone();
+				var defaultPattern = CustomizationStorage.GetPattern(currentModuleName, currentModule.Pattern.Name);
+				currentModule.Pattern = defaultPattern;
+				currentPatternIcon.Pattern = defaultPattern;
+				dummyPatternEdits[(Rocket, currentModuleName)].FirstOrDefault(icon => icon.Pattern.Name == currentModule.Pattern.Name);
 			}
 
 			RefreshPatternColorPickers();
@@ -922,7 +916,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 				OnFocusGain = () =>
 				{
 					JumpToModule("EngineModule");
-					CustomizationDummy.Nameplate.HorizontalAlignment = TextAlignmentHorizontal.Left;
+					CustomizationDummy.Nameplate.HAlign = TextHorizontalAlign.Left;
 				}
 			};
 			alignLeft.OnLeftClick += (_, _) => alignLeft.HasFocus = true;
@@ -938,7 +932,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 				OnFocusGain = () =>
 				{
 					JumpToModule("EngineModule");
-					CustomizationDummy.Nameplate.HorizontalAlignment = TextAlignmentHorizontal.Center;
+					CustomizationDummy.Nameplate.HAlign = TextHorizontalAlign.Center;
 				}
 			};
 			alignCenterHorizontal.OnLeftClick += (_, _) => alignCenterHorizontal.HasFocus = true;
@@ -953,7 +947,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 				OnFocusGain = () =>
 				{
 					JumpToModule("EngineModule");
-					CustomizationDummy.Nameplate.HorizontalAlignment = TextAlignmentHorizontal.Right;
+					CustomizationDummy.Nameplate.HAlign = TextHorizontalAlign.Right;
 				}
 			};
 			alignRight.OnLeftClick += (_, _) => alignRight.HasFocus = true;
@@ -968,7 +962,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 				OnFocusGain = () =>
 				{
 					JumpToModule("EngineModule");
-					CustomizationDummy.Nameplate.VerticalAlignment = TextAlignmentVertical.Top;
+					CustomizationDummy.Nameplate.VAlign = TextVerticalAlign.Top;
 				}
 			};
 			alignTop.OnLeftClick += (_, _) => alignTop.HasFocus = true;
@@ -983,7 +977,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 				OnFocusGain = () =>
 				{
 					JumpToModule("EngineModule");
-					CustomizationDummy.Nameplate.VerticalAlignment = TextAlignmentVertical.Center;
+					CustomizationDummy.Nameplate.VAlign = TextVerticalAlign.Center;
 				}
 			};
 			alignCenterVertical.OnLeftClick += (_, _) => alignCenterVertical.HasFocus = true;
@@ -998,7 +992,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 				OnFocusGain = () =>
 				{
 					JumpToModule("EngineModule");
-					CustomizationDummy.Nameplate.VerticalAlignment = TextAlignmentVertical.Bottom;
+					CustomizationDummy.Nameplate.VAlign = TextVerticalAlign.Bottom;
 				}
 			};
 			alignBottom.OnLeftClick += (_, _) => alignBottom.HasFocus = true;

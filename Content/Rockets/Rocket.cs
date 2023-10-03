@@ -106,15 +106,12 @@ namespace Macrocosm.Content.Rockets
 		/// <summary> The layer this rocket is drawn in </summary>
 		public RocketDrawLayer DrawLayer = RocketDrawLayer.BeforeNPCs;
 
-		/// <summary> This rocket's engine module nameplate </summary>
-		public Nameplate Nameplate => EngineModule.Nameplate;
+		/// <summary> This rocket's nameplate </summary>
+		public Nameplate Nameplate { get; set; } = new();
 
 		/// <summary> The Rocket's name, if not set by the user, defaults to a localized "Rocket" name </summary>
 		public string DisplayName
-			=> Nameplate.IsValid() ? AssignedName : Language.GetTextValue("Mods.Macrocosm.Common.Rocket");
-
-		/// <summary> The Rocket's name, set by the user </summary>
-		public string AssignedName => EngineModule.Nameplate.Text;
+			=> Nameplate.IsValid() ? Nameplate.Text : Language.GetTextValue("Mods.Macrocosm.Common.Rocket");
 
 		/// <summary> Dictionary of all the rocket's modules by name, in their order found in ModuleNames </summary>
 		public Dictionary<string, RocketModule> Modules = new();
@@ -150,11 +147,9 @@ namespace Macrocosm.Content.Rockets
 		/// <summary> The landing sequence progress </summary>
 		public float LandingProgress => Position.Y / (TargetLandingPosition.Y - Height + 16);
 
-		private bool forcedStationaryAppearance;
-		private bool forcedFlightAppearance;
-
 		private float worldExitSpeed;
 
+		private bool forcedStationaryAppearance;
 		/// <summary> Whether this rocket is forced in a stationary (i.e. landed) state, visually </summary>
 		public bool ForcedStationaryAppearance
 		{
@@ -170,6 +165,7 @@ namespace Macrocosm.Content.Rockets
 			}
 		}
 
+		private bool forcedFlightAppearance;
 		/// <summary> Whether this rocket is forced in a full flight state, visually </summary>
 		public bool ForcedFlightAppearance
 		{
@@ -236,6 +232,10 @@ namespace Macrocosm.Content.Rockets
 				Center = new(TargetLandingPosition.X, Center.Y);
 			}
 		}
+
+		/// <summary> Gets the RocketPlayer bound to the provided player ID </summary>
+		/// <param name="playerID"> The player ID </param>
+		private RocketPlayer GetRocketPlayer(int playerID) => Main.player[playerID].RocketPlayer();
 
 
 		/// <summary> Update the rocket </summary>
@@ -319,21 +319,21 @@ namespace Macrocosm.Content.Rockets
 			//DisplayWhoAmI();
 		}
 
-		/// <summary> Draw the rocket as a dummy </summary>
-		public void DrawDummy(SpriteBatch spriteBatch, Vector2 offset, Color drawColor)
-		{
-			// Passing Rocket world position as "screenPosition" cancels it out  
-			PreDrawBeforeTiles(spriteBatch, Position - offset, drawColor);
-			Draw(spriteBatch, Position - offset, drawColor);
- 			DrawOverlay(spriteBatch, Position - offset);
- 		}
-
 		public void DrawOverlay(SpriteBatch spriteBatch, Vector2 screenPos)
 		{
 			foreach (RocketModule module in Modules.Values.OrderBy(module => module.DrawPriority))
 			{
 				module.DrawOverlay(spriteBatch, screenPos);
 			}
+		}
+
+		/// <summary> Draw the rocket as a dummy </summary>
+		public void DrawDummy(SpriteBatch spriteBatch, Vector2 offset, Color drawColor)
+		{
+			// Passing Rocket world position as "screenPosition" cancels it out  
+			PreDrawBeforeTiles(spriteBatch, Position - offset, drawColor);
+			Draw(spriteBatch, Position - offset, drawColor);
+			DrawOverlay(spriteBatch, Position - offset);
 		}
 
 		// Set the rocket's modules positions in the world
@@ -346,10 +346,6 @@ namespace Macrocosm.Content.Rockets
 			BoosterLeft.Position = new Vector2(EngineModule.Center.X, EngineModule.Position.Y) - new Vector2(BoosterLeft.Hitbox.Width/2, 0) + new Vector2(2, 16);
 			BoosterRight.Position = new Vector2(EngineModule.Center.X, EngineModule.Position.Y) + new Vector2(14, 16);
 		}
-
-		/// <summary> Gets the RocketPlayer bound to the provided player ID </summary>
-		/// <param name="playerID"> The player ID </param>
-		public RocketPlayer GetRocketPlayer(int playerID) => Main.player[playerID].RocketPlayer();
 
 		/// <summary> Gets the commander of this rocket </summary>
 		public RocketPlayer GetCommander()

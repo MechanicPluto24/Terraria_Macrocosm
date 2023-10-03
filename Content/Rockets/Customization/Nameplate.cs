@@ -5,11 +5,10 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Linq;
 using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-	public class Nameplate : TagSerializable
+	public partial class Nameplate 
     {
 		// the text
 		private string text = "";
@@ -25,10 +24,10 @@ namespace Macrocosm.Content.Rockets.Customization
 		public Color TextColor { get; set; } = Color.White;
 
 		/// <summary> The nameplate's horizontal text alignment on the rocket </summary>
-		public TextAlignmentHorizontal HorizontalAlignment { get; set; } = TextAlignmentHorizontal.Right;
+		public TextHorizontalAlign HAlign { get; set; } = TextHorizontalAlign.Right;
 
 		/// <summary> The nameplate's vertical text alignment on the rocket </summary>
-		public TextAlignmentVertical VerticalAlignment { get; set; } = TextAlignmentVertical.Top;
+		public TextVerticalAlign VAlign { get; set; } = TextVerticalAlign.Top;
 
 		/// <summary> Max number of characters supported on the nameplate </summary>
         public const int MaxChars = 13;
@@ -61,28 +60,28 @@ namespace Macrocosm.Content.Rockets.Customization
             float offsetY = 61;
 			int totalTextHeight = numChars * characterHeight;
 
-            switch (HorizontalAlignment)
+            switch (HAlign)
             {
-                case TextAlignmentHorizontal.Left: 
+                case TextHorizontalAlign.Left: 
 					offsetX = -15;
 					break;
-                case TextAlignmentHorizontal.Center: 
+                case TextHorizontalAlign.Center: 
 					offsetX = -4;
 					break;
-                case TextAlignmentHorizontal.Right:
+                case TextHorizontalAlign.Right:
 					offsetX = 7f;
 					break;
             }
 
-			switch (VerticalAlignment)
+			switch (VAlign)
 			{
-				case TextAlignmentVertical.Top:
+				case TextVerticalAlign.Top:
 					offsetY = 61; 
 					break;
-				case TextAlignmentVertical.Center:
+				case TextVerticalAlign.Center:
 					offsetY = 126 - (totalTextHeight / 2); 
 					break;
-				case TextAlignmentVertical.Bottom:
+				case TextVerticalAlign.Bottom:
 					offsetY = 191 - totalTextHeight; 
 					break;
 			}
@@ -125,39 +124,6 @@ namespace Macrocosm.Content.Rockets.Customization
 			int y = row * characterHeight + 1;
 
 			return new Rectangle(x, y, characterWidth, characterHeight);
-		}
-
-		public static readonly Func<TagCompound, Nameplate> DESERIALIZER = DeserializeData;
-
-		public TagCompound SerializeData()
-		{
-			return new()
-			{
-				[nameof(text)] = text,
-				[nameof(TextColor)] = TextColor,
-				[nameof(HorizontalAlignment)] = (int)HorizontalAlignment,
-				[nameof(VerticalAlignment)] = (int)VerticalAlignment,
-
-			};
-		}
-
-        public static Nameplate DeserializeData(TagCompound tag)
-        {
-            Nameplate nameplate = new();
-
-			if (tag.ContainsKey(nameof(text)))
-				nameplate.text = tag.GetString(nameof(text));
-
-			if (tag.ContainsKey(nameof(TextColor)))
-				nameplate.TextColor = tag.Get<Color>(nameof(TextColor));
-
-			if (tag.ContainsKey(nameof(HorizontalAlignment)))
-				nameplate.HorizontalAlignment = (TextAlignmentHorizontal)tag.GetInt(nameof(HorizontalAlignment));
-
-			if (tag.ContainsKey(nameof(VerticalAlignment)))
-				nameplate.VerticalAlignment = (TextAlignmentVertical)tag.GetInt(nameof(VerticalAlignment));
-
-            return nameplate;
 		}
 	}
 }

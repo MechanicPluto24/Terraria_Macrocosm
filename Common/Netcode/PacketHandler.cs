@@ -11,6 +11,7 @@ namespace Macrocosm.Common.Netcode
 	{
 		SyncParticle,
         SyncRocketData,
+        SyncRocketCustomizationData,
 		SyncLaunchPadData,
         SyncPlayerRocketStatus,
 		SyncPlayerDashDirection,
@@ -32,6 +33,10 @@ namespace Macrocosm.Common.Netcode
                 case MessageType.SyncRocketData:
                     Rocket.SyncRocketData(reader, whoAmI);
                     break;
+
+				case MessageType.SyncRocketCustomizationData:
+					Rocket.SyncRocketCustomizationData(reader, whoAmI);
+					break;
 
 				case MessageType.SyncLaunchPadData:
 					LaunchPad.SyncLaunchPadData(reader, whoAmI);

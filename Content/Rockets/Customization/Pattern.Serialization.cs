@@ -11,23 +11,17 @@ using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-	public partial class Pattern : TagSerializable
+	public readonly partial struct Pattern : TagSerializable
 	{ 
-		public string ToJSON(bool includeColorFunctions = false, bool includeUnlocked = false, bool includeNonModifiableColors = false) => ToJObject(includeColorFunctions, includeUnlocked, includeNonModifiableColors).ToString(Formatting.Indented);
+		public string ToJSON(bool includeColorFunctions = false, bool includeNonModifiableColors = false) => ToJObject(includeColorFunctions, includeNonModifiableColors).ToString(Formatting.Indented);
 
-		public JObject ToJObject(bool includeColorFunctions = true, bool includeUnlocked = false, bool includeNonModifiableColors = false)
+		public JObject ToJObject(bool includeColorFunctions = true, bool includeNonModifiableColors = false)
 		{
-			JObject jsonObject = new()
+			JObject jObject = new()
 			{
 				["patternName"] = Name,
 				["moduleName"] = ModuleName
 			};
-
-			if (includeUnlocked)
-			{
-				jsonObject["unlocked"] = Unlocked;
-				jsonObject["unlockedByDefault"] = UnlockedByDefault;
-			}
 
 			JArray colorDataArray = new();
 			foreach (var colorData in ColorData)
@@ -39,7 +33,7 @@ namespace Macrocosm.Content.Rockets.Customization
 					if (includeColorFunctions)
 					{
 						colorDataObject["colorFunction"] = colorData.ColorFunction.Name;
-						colorDataObject["params"] = new JArray(colorData.ColorFunction.Parameters);
+						colorDataObject["parameters"] = new JArray(colorData.ColorFunction.Parameters);
 					}
 					else
 					{
@@ -50,7 +44,7 @@ namespace Macrocosm.Content.Rockets.Customization
 				{
 					if (includeNonModifiableColors || colorData.IsUserModifiable)
 					{
-						colorDataObject["color"] = colorData.Color.GetHexText();
+						colorDataObject["color"] = colorData.Color.GetHex();
 
 						if(!colorData.IsUserModifiable)
 							colorDataObject["userModifiable"] = false;
@@ -73,29 +67,26 @@ namespace Macrocosm.Content.Rockets.Customization
 					break;
 			}
  
+			jObject["colorData"] = colorDataArray;
 
-			jsonObject["colorData"] = colorDataArray;
-
-			return jsonObject; 
+			return jObject; 
 		}
 
 		public static Pattern FromJSON(string json) => FromJObject(JObject.Parse(json));
 
-		public static Pattern FromJObject(JObject patternObject)
+		public static Pattern FromJObject(JObject jObject)
 		{
-			string moduleName = patternObject.Value<string>("moduleName");
+			string moduleName = jObject.Value<string>("moduleName");
 
 			if (!Rocket.DefaultModuleNames.Contains(moduleName))
 				throw new SerializationException("Error: Invalid module name.");
 
-			string patternName = patternObject.Value<string>("patternName");
+			string patternName = jObject.Value<string>("patternName");
 
 			if (CustomizationStorage.Initialized && !CustomizationStorage.TryGetPattern(moduleName, patternName, out _) )
 				throw new SerializationException("Error: Invalid pattern name.");
 
-			bool unlockedByDefault = patternObject.Value<bool>("unlockedByDefault");
-
-			JArray colorDataArray = patternObject.Value<JArray>("colorData");
+			JArray colorDataArray = jObject.Value<JArray>("colorData");
 			List<PatternColorData> colorDatas = new();
 
 			foreach (JObject colorDataObject in colorDataArray.Cast<JObject>())
@@ -105,8 +96,8 @@ namespace Macrocosm.Content.Rockets.Customization
 
 				if (!string.IsNullOrEmpty(colorFunction))
 				{
-					JArray parameters = colorDataObject.Value<JArray>("params");
-					colorDatas.Add(new(ColorFunction.CreateFunctionByName(colorFunction, parameters?.ToObjectRecursive<object>())));
+					JArray parameters = colorDataObject.Value<JArray>("parameters");
+					colorDatas.Add(new(new ColorFunction(colorFunction, parameters?.ToObjectRecursive<object>())));
 				}
 				else if (!string.IsNullOrEmpty(colorHex))
 				{
@@ -123,10 +114,9 @@ namespace Macrocosm.Content.Rockets.Customization
 				}
 			}
 
-			return new Pattern(moduleName, patternName, unlockedByDefault, colorDatas.ToArray());
+			return new Pattern(moduleName, patternName, colorDatas.ToArray());
 		}
 
-		public Pattern Clone() => DeserializeData(SerializeData());
 
 		public static readonly Func<TagCompound, Pattern> DESERIALIZER = DeserializeData;
 
@@ -135,32 +125,42 @@ namespace Macrocosm.Content.Rockets.Customization
 		{
 			TagCompound tag = new()
 			{
-				["Name"] = Name,
-				["ModuleName"] = ModuleName
+				[nameof(Name)] = Name,
+				[nameof(ModuleName)] = ModuleName,
+				[nameof(ColorData)] = ColorData.ToList()
 			};
-
-			// Save the user-changed colors
-			for (int i = 0; i < MaxColorCount; i++)
- 				if (ColorData[i].IsUserModifiable)
-					tag[$"Color{i}"] = ColorData[i].Color;
 
 			return tag;
 		}
 
 		public static Pattern DeserializeData(TagCompound tag)
 		{
-			string name = tag.GetString("Name");
-			string moduleName = tag.GetString("ModuleName");
+			string name = "";
+			string moduleName = "";
+			Pattern pattern;
 
-			Pattern originalPatternData = CustomizationStorage.GetPatternReference(moduleName, name);
-			Pattern pattern = new(moduleName, name, originalPatternData.UnlockedByDefault, originalPatternData.ColorData);
+			try
+			{
+				if (tag.ContainsKey(nameof(Name)))
+					name = tag.GetString(nameof(Name));
 
-			// Load the user-changed colors
-			for (int i = 0; i < MaxColorCount; i++)
-				if (tag.ContainsKey($"Color{i}") && pattern.ColorData[i].IsUserModifiable)
-					pattern.ColorData[i] = pattern.ColorData[i].WithUserColor(tag.Get<Color>($"Color{i}"));
+				if (tag.ContainsKey(nameof(ModuleName)))
+					moduleName = tag.GetString(nameof(ModuleName));
 
-			return pattern;
+				pattern = CustomizationStorage.GetPattern(moduleName, name);
+
+				if (tag.ContainsKey(nameof(ColorData)))
+					pattern = pattern.WithColorData(tag.GetList<PatternColorData>(nameof(ColorData)).ToArray());
+
+				return pattern;
+			}
+			catch
+			{
+				string message = "Failed to deserialize pattern:\n";
+				message += "\tName: " + (string.IsNullOrEmpty(name) ? "Unknown" : name) + ", ";
+				message += "\tModule: " + (string.IsNullOrEmpty(moduleName) ? "Unknown" : moduleName);
+				throw new SerializationException(message);
+			}	
 		}
 
 		/*

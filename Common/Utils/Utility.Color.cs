@@ -16,7 +16,7 @@ namespace Macrocosm.Common.Utils
 		#endregion
 
 		#region Hex format conversion
-		public static string GetHexText(this Color color) => "#" + color.Hex3().ToUpper();
+		public static string GetHex(this Color color) => "#" + color.Hex3().ToUpper();
 		public static bool TryGetColorFromHex(string hexString, out Color color)
 		{
 			if (hexString.StartsWith("#"))
