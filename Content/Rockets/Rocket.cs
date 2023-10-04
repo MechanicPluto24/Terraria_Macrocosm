@@ -67,6 +67,33 @@ namespace Macrocosm.Content.Rockets
 		/// <summary> The rocket's current world, "Earth" if active and not in a subworld. Other mod's subworlds have the mod name prepended </summary>
 		[NetSync] public string CurrentWorld = "";
 
+		public const int DefaultInventorySize = 56;
+		private int inventorySize = DefaultInventorySize;
+		public int InventorySize
+		{
+			get => inventorySize;
+			set
+			{
+				if (value < 0)
+					return;
+
+				int oldSize = inventorySize;
+				inventorySize = value;
+
+				if (oldSize > inventorySize)
+					inventory.Take(inventorySize..oldSize).ToList().ForEach(item => Main.LocalPlayer.DropItem(null, Center, ref item));
+
+				if (oldSize != inventorySize) 
+					Array.Resize(ref inventory, inventorySize);
+
+				if (oldSize < inventorySize)
+					Array.Fill(inventory, new Item(), oldSize, inventorySize - oldSize); 
+			}
+		}
+
+		private Item[] inventory = new Item[DefaultInventorySize];
+		public Item[] Inventory => inventory;
+
 		/// <summary> Whether the rocket is active in the current world and should be updated and visible </summary>
 		public bool ActiveInCurrentWorld => Active && CurrentWorld == MacrocosmSubworld.CurrentID;
 
@@ -190,6 +217,9 @@ namespace Macrocosm.Content.Rockets
 		{
 			foreach(string moduleName in DefaultModuleNames)
 				Modules[moduleName] = CreateModule(moduleName);
+
+			for (int i = 0; i < inventory.Length; i++)
+				inventory[i] = new Item();
 		}
 
 		private RocketModule CreateModule(string moduleName)
