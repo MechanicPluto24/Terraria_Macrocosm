@@ -1,3 +1,5 @@
+using Macrocosm.Common.Systems;
+using Macrocosm.Common.TileFrame;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
@@ -16,15 +18,17 @@ namespace Macrocosm.Content.Tiles.Blocks
             Main.tileLighted[Type] = true;
             Main.tileMerge[Type][ModContent.TileType<Protolith>()] = true;
             Main.tileMerge[Type][ModContent.TileType<IrradiatedRock>()] = true;
-            MinPick = 225;
+			MinPick = 225;
             MineResist = 3f;
             AddMapEntry(new Color(220, 220, 220));
             HitSound = SoundID.Dig;
         }
+
         public override bool HasWalkDust()
         {
             return true;
         }
+
         public override bool CreateDust(int i, int j, ref int type)
         {
             type = Dust.NewDust(new Vector2(i, j).ToWorldCoordinates(), 16, 16, ModContent.DustType<RegolithDust>());
@@ -33,8 +37,7 @@ namespace Macrocosm.Content.Tiles.Blocks
 
         public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
         {
-            //return TileBlend.BlendLikeDirt(i, j, new int[] { ModContent.TileType<Protolith>(), ModContent.TileType<IrradiatedRock>() }, asDirt: true);
-            return true;
+			return true;
         }
     }
 }

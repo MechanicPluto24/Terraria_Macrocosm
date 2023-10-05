@@ -41,7 +41,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			}
 		}
 
-		public override void Kill(int timeLeft)
+		public override void OnKill(int timeLeft)
 		{
 			if (!Main.dedServ)
 			{

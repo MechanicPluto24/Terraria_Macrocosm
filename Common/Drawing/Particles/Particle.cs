@@ -100,7 +100,7 @@ namespace Macrocosm.Common.Drawing.Particles
 		public Vector2 Center => Position + Size / 2;
 
 		/// <summary> Path to the <c>Particle</c>'s texture, override for custom loading (non-autoload) </summary>
-		public virtual string TexturePath => (this.GetType().Namespace + "." + this.GetType().Name).Replace('.', '/');
+		public virtual string TexturePath => Utility.GetPath(this);
 
 		/// <summary> The  <c>Particle</c>'s total lifetime. If <see cref="DespawnOnAnimationComplete"/> is true, this defaults to the animation duration. </summary>
 		public virtual int SpawnTimeLeft => DespawnOnAnimationComplete ? FrameNumber * FrameSpeed - 1 : 300;

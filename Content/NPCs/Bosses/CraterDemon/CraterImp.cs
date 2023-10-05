@@ -42,20 +42,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			NPCID.Sets.TrailCacheLength[NPC.type] = 5;
 			NPCID.Sets.TrailingMode[NPC.type] = 0;
 
-			NPCDebuffImmunityData debuffData = new NPCDebuffImmunityData
-			{
-				SpecificallyImmuneTo = new int[] {
-					BuffID.OnFire,
-					BuffID.OnFire3,
-					BuffID.CursedInferno,
-					BuffID.Confused,
-					BuffID.Poisoned,
-					BuffID.Venom
-				}
-			};
-			NPCID.Sets.DebuffImmunitySets.Add(Type, debuffData);
+			NPCID.Sets.ImmuneToRegularBuffs[NPC.type] = true;
 
-			NPCID.Sets.NPCBestiaryDrawModifiers bestiaryData = new(0)
+			NPCID.Sets.NPCBestiaryDrawModifiers bestiaryData = new()
 			{
 				Position = new Vector2(0f, 4f),
 				Velocity = 1f
