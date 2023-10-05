@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.TileFrame;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -17,7 +18,7 @@ namespace Macrocosm.Content.Tiles.Blocks
             Main.tileMergeDirt[Type] = true;
             Main.tileMerge[Type][ModContent.TileType<Regolith>()] = true;
             Main.tileMerge[Type][ModContent.TileType<IrradiatedRock>()] = true;
-            MinPick = 225;
+			MinPick = 225;
             MineResist = 3f;
             AddMapEntry(new Color(65, 65, 65));
             HitSound = SoundID.Tink;
@@ -30,8 +31,8 @@ namespace Macrocosm.Content.Tiles.Blocks
         }
 
         public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
-            //=> TileBlend.BlendLikeDirt(i, j, ModContent.TileType<Regolith>()); 
-            => true;
-
+        {
+            return true;
+        }
     }
 }

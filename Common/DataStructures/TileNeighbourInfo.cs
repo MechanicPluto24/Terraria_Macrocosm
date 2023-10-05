@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Terraria;
 using Terraria.ID;
 
@@ -64,6 +65,7 @@ namespace Macrocosm.Common.DataStructures
         public PredicateNeighbourInfo Wall => wall ??= new(I, J, tile => tile.WallType != WallID.None);
 
         public PredicateNeighbourInfo TypedSolid(ushort type) => new(I, J, tile => tile.HasTile && tile.TileType == type);
+        public PredicateNeighbourInfo TypedSolid(params ushort[] types) => new(I, J, tile => tile.HasTile && types.Contains(tile.TileType));
 
         public PredicateNeighbourInfo GetPredicateNeighbourInfo(Func<Tile, bool> predicate) => new(I, J, predicate);
     }

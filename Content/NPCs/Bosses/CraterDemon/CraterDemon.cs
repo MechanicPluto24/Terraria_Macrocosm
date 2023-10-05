@@ -294,22 +294,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			NPCID.Sets.MPAllowedEnemies[Type] = true;
 			NPCID.Sets.BossBestiaryPriority.Add(Type);
 
-			NPCDebuffImmunityData debuffData = new()
-			{
-				SpecificallyImmuneTo = new int[] {
-					BuffID.OnFire,
-					BuffID.OnFire3,
-					BuffID.CursedInferno,
-					BuffID.Confused,
-					BuffID.Poisoned,
-					BuffID.Venom
-				}
-			};
+			NPCID.Sets.ImmuneToRegularBuffs[Type] = true;
 
-			NPCID.Sets.DebuffImmunitySets.Add(Type, debuffData);
-
-
-			NPCID.Sets.NPCBestiaryDrawModifiers bestiaryData = new(0)
+			NPCID.Sets.NPCBestiaryDrawModifiers bestiaryData = new()
 			{
 				Frame = 1,
 				Position = new Vector2(0f, 8f)

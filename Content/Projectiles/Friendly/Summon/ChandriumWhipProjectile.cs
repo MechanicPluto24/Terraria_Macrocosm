@@ -153,7 +153,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
 		Particle sparkle;
 
-		public override void Kill(int timeLeft)
+		public override void OnKill(int timeLeft)
 		{
 			if (Projectile.owner == Main.myPlayer && HitNPC)
 			{

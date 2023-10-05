@@ -61,7 +61,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			return true;
 		}
 
-		public override void Kill(int timeLeft)
+		public override void OnKill(int timeLeft)
 		{
 			//spawn dust explosion on kill
 			for (int i = 0; i < 40; i++)

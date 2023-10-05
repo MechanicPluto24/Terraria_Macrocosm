@@ -86,7 +86,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         {
         }
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
             SoundEngine.PlaySound(SoundID.Item89, Projectile.position);
             for (int i = 0; i < 10; i++)
