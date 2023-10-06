@@ -21,6 +21,8 @@ namespace Macrocosm.Content.Rockets.Storage
 
 			foreach (var item in items)
 				ItemIO.Send(item, packet, writeStack: true, writeFavorite: false);
+
+			packet.Send(toClient, ignoreClient);
 		}
 
 		public static void ReceiveSyncInventory(BinaryReader reader, int sender)
@@ -54,11 +56,14 @@ namespace Macrocosm.Content.Rockets.Storage
 			packet.Write((ushort)index);
 
 			ItemIO.Send(items[index], packet, writeStack: true, writeFavorite: false);
+
+			packet.Send(toClient, ignoreClient);
 		}
 
 		public static void ReceiveSyncItemInInventory(BinaryReader reader, int sender)
 		{
 			int rocketId = reader.ReadByte();
+
 			Rocket owner = RocketManager.Rockets[rocketId];
 			Inventory inventory = owner.Inventory;
 

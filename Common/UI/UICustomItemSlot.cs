@@ -22,6 +22,8 @@ namespace Macrocosm.Common.UI
 		protected int itemSlotContext;
 		protected float scale;
 
+		private bool shouldNetsync = false;
+
 		protected Vector2 DrawOffset { get; set; } = new Vector2(52f, 52f) * -0.5f;
 
 		public UICustomItemSlot(Inventory inventory, int itemIndex, int itemSlotContext, float scale = default)
@@ -43,6 +45,12 @@ namespace Macrocosm.Common.UI
 				HandleRightClick(ref inv);
 				HandleHover(ref inv);
 				inventory[itemIndex] = inv;
+			}
+
+			if (shouldNetsync)
+			{
+				inventory.SyncItem(itemIndex);
+				shouldNetsync = false;
 			}
 
 			Main.LocalPlayer.mouseInterface = IsMouseHovering;
@@ -114,7 +122,7 @@ namespace Macrocosm.Common.UI
 				item = Main.player[Main.myPlayer].GetItem(Main.myPlayer, item, GetItemSettings.InventoryEntityToPlayerInventorySettings);
 
 				if (Main.netMode == NetmodeID.MultiplayerClient)
-					inventory.SyncItem(itemIndex);
+					shouldNetsync = true;
 
 				return;
 			}
@@ -123,9 +131,9 @@ namespace Macrocosm.Common.UI
 				Terraria.Utils.Swap(ref item, ref Main.mouseItem);
 
 			if (item.stack > 0)
-				AnnounceTransfer(new ItemTransferInfo(item, 21, itemSlotContext, item.stack));
+				AnnounceTransfer(new ItemTransferInfo(item, Context.MouseItem, itemSlotContext, item.stack));
 			else
-				AnnounceTransfer(new ItemTransferInfo(Main.mouseItem, itemSlotContext, 21, Main.mouseItem.stack));
+				AnnounceTransfer(new ItemTransferInfo(Main.mouseItem, itemSlotContext, Context.MouseItem, Main.mouseItem.stack));
 
 			if (item.stack > 0)
  				AchievementsHelper.NotifyItemPickup(player, item);
@@ -135,11 +143,10 @@ namespace Macrocosm.Common.UI
 
 			if (Main.mouseItem.type == item.type)
 			{
-
 				if (item.stack != item.maxStack && Main.mouseItem.stack != Main.mouseItem.maxStack)
 				{
 					if (ItemLoader.TryStackItems(item, Main.mouseItem, out int numTransfered))
-						AnnounceTransfer(new ItemTransferInfo(item, 21, itemSlotContext, numTransfered));
+						AnnounceTransfer(new ItemTransferInfo(item, Context.MouseItem, itemSlotContext, numTransfered));
 				}
 			}
 
@@ -153,7 +160,7 @@ namespace Macrocosm.Common.UI
 			}
 
 			if (Main.netMode == NetmodeID.MultiplayerClient)
-				inventory.SyncItem(itemIndex);
+				shouldNetsync = true;
 		}
 
 		private void HandleRightClick(ref Item item)
@@ -187,7 +194,7 @@ namespace Macrocosm.Common.UI
 					if (Main.mouseItem.type == ItemID.None)
 					{
 						Main.mouseItem = ItemLoader.TransferWithLimit(item, 1);
-						AnnounceTransfer(new ItemTransferInfo(item, itemSlotContext, 21));
+						AnnounceTransfer(new ItemTransferInfo(item, itemSlotContext, Context.MouseItem));
 					}
 					else
 					{
@@ -200,7 +207,7 @@ namespace Macrocosm.Common.UI
 					Recipe.FindRecipes();
 
 					if (Main.netMode == NetmodeID.MultiplayerClient)
-						inventory.SyncItem(itemIndex);
+						shouldNetsync = true;
 
 					SoundEngine.PlaySound(SoundID.MenuTick);
 					RefreshStackSplitCooldown();
@@ -219,7 +226,6 @@ namespace Macrocosm.Common.UI
 
 				Main.HoverItem = item.Clone();
 				Main.HoverItem.tooltipContext = itemSlotContext;
-
 			}
 		}
 

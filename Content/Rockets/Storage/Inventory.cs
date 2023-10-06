@@ -65,9 +65,8 @@ namespace Macrocosm.Content.Rockets.Storage
 			if (index < 0 || index >= Size)
 				return;
 
-			Item item = items[index];
+			Item.NewItem(items[index].GetSource_Misc("Rocket"), Owner.Center, items[index]);
 			items[index] = new();
-			Item.NewItem(item.GetSource_Misc("Rocket"), Owner.Center, item);
 		}
 
 		private void Resize(int newSize)
