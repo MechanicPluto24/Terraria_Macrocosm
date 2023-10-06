@@ -2,6 +2,7 @@
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Linq;
 using Terraria;
 using Terraria.ID;
@@ -23,7 +24,7 @@ namespace Macrocosm.Content.Rockets
     {
         public static Rocket[] Rockets { get; private set; }
 
-		public const int MaxRockets = byte.MaxValue;
+		public const int MaxRockets = 256;
 
 		public override void Load()
         {
@@ -168,7 +169,11 @@ namespace Macrocosm.Content.Rockets
         public static void LoadData(TagCompound dataCopyTag) 
         {
 			if (dataCopyTag.ContainsKey(nameof(Rockets)))
-				Rockets = dataCopyTag.Get<Rocket[]>(nameof(Rockets));
+			{
+				// This is for future-proofing regarding array size
+				var rockets = dataCopyTag.Get<Rocket[]>(nameof(Rockets));
+				Array.Copy(rockets, Rockets, rockets.Length);
+			}
 
             OnWorldSpawn();
 		}

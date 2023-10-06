@@ -19,18 +19,14 @@ namespace Macrocosm.Content.Rockets.UI
             set
             {
                 cacheSize = rocket.Inventory.Size;
-                bool newSize = cacheSize != value.Inventory.Size;
                 rocket = value;
-
-                if (newSize)
-                    this.ReplaceChildWith(inventoryPanel, inventoryPanel = CreateInventory());
             }
         }
         private int cacheSize = Rocket.DefaultInventorySize;
 
 
         private UIListScrollablePanel inventoryPanel;
-
+        private UICrewPanel crewPanel;
         private UIPanel fuelPanel;
 
 
@@ -38,7 +34,12 @@ namespace Macrocosm.Content.Rockets.UI
         {
         }
 
-        public override void OnInitialize()
+        public void OnTabOpen()
+        {
+			this.ReplaceChildWith(inventoryPanel, inventoryPanel = CreateInventory());
+		}
+
+		public override void OnInitialize()
         {
             Width.Set(0, 1f);
             Height.Set(0, 1f);
@@ -51,9 +52,13 @@ namespace Macrocosm.Content.Rockets.UI
             BorderColor = new Color(15, 15, 15, 255);
 
             inventoryPanel = CreateInventory();
-            Append(inventoryPanel);
+			inventoryPanel.Activate();
+			Append(inventoryPanel);
 
-            fuelPanel = new()
+			crewPanel = CreateCrewPanel();
+            Append(crewPanel);
+
+			fuelPanel = new()
             {
                 Width = new(0, 0.4f),
                 Height = new(0, 1f),
@@ -68,13 +73,20 @@ namespace Macrocosm.Content.Rockets.UI
 
         public override void Update(GameTime gameTime)
         {
+            // Just for testing
             if (Main.LocalPlayer.controlQuickHeal)
+            {
                 rocket.Inventory.Size += 1;
+                rocket.Inventory.SyncAllItems();
+			}
 
             if (Main.LocalPlayer.controlQuickMana)
+            {
                 rocket.Inventory.Size -= 1;
+				rocket.Inventory.SyncAllItems();
+			}
 
-            if (cacheSize != rocket.Inventory.Size)
+			if (cacheSize != rocket.Inventory.Size)
             {
                 this.ReplaceChildWith(inventoryPanel, inventoryPanel = CreateInventory());
                 cacheSize = rocket.Inventory.Size;
@@ -151,5 +163,17 @@ namespace Macrocosm.Content.Rockets.UI
             return inventoryPanel;
         }
 
+        private UICrewPanel CreateCrewPanel()
+        {
+            crewPanel = new()
+            {
+                Top = new(0f, 0.405f),
+				Left = new(0, 0.405f),
+				Height = new(0, 0.595f),
+				Width = new(0, 0.596f),
+			};
+
+            return crewPanel;
+		}
     }
 }
