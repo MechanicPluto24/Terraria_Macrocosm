@@ -10,11 +10,11 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Navigation.CrewPanel
 {
-	internal class UIPlayerInfoElement : UIInfoElement
+	internal class UIPlayerHeadInfoElement : UIInfoElement
 	{
 		private Player player;
 
-		public UIPlayerInfoElement(Player player) : base(player.name)
+		public UIPlayerHeadInfoElement(Player player) : base(player.name)
 		{
 			this.player = player;
 		}

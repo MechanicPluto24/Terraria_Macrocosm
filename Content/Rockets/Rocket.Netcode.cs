@@ -41,7 +41,7 @@ namespace Macrocosm.Content.Rockets
 		/// Syncs a rocket with data from the <see cref="BinaryReader"/>. Don't use this method outside <see cref="PacketHandler.HandlePacket(BinaryReader, int)"/>
 		/// </summary>
 		/// <param name="reader"></param>
-		public static void SyncRocketData(BinaryReader reader, int clientWhoAmI)
+		public static void ReceiveSyncRocketData(BinaryReader reader, int sender)
 		{
 			// the rocket WhoAmI
 			int rocketIndex = reader.ReadByte(); 
@@ -53,7 +53,7 @@ namespace Macrocosm.Content.Rockets
 			if (Main.netMode == NetmodeID.Server)
 			{
 				// Bounce to all other clients, minus the sender
-				rocket.NetSync(ignoreClient: clientWhoAmI);
+				rocket.NetSync(ignoreClient: sender);
 
 				/*
 				ModPacket packet = Macrocosm.Instance.GetPacket();

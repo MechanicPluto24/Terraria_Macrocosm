@@ -8,9 +8,9 @@ using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace Macrocosm.Content.Rockets.Navigation.NavigationPanel
+namespace Macrocosm.Content.Rockets.UI
 {
-    public class UIMapTarget : UIElement
+    public class UINavigationTarget : UIElement
     {
         /// <summary> The panel instance this target belongs to </summary>
         public UINavigationPanel OwnerPanel { get; set; }
@@ -69,7 +69,7 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationPanel
         /// <param name="width"> Interactible area width in pixels </param>
         /// <param name="height"> Interactible area height in pixels </param>
         /// <param name="targetSubworld"> The subworld (instance) associated with the map target </param>
-        public UIMapTarget(UINavigationPanel owner, Vector2 position, float width, float height, MacrocosmSubworld targetSubworld, Texture2D outline = null) : this(owner, position, width, height)
+        public UINavigationTarget(UINavigationPanel owner, Vector2 position, float width, float height, MacrocosmSubworld targetSubworld, Texture2D outline = null) : this(owner, position, width, height)
         {
             LaunchConditions = targetSubworld.LaunchConditions;
             Name = targetSubworld.Name;
@@ -84,7 +84,7 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationPanel
         /// <param name="height"> Interactible area height in pixels </param>
         /// <param name="targetId"> The special ID of the target, handled in <see cref="Rocket.Travel"/> </param>
         /// <param name="canLaunch"> Function that determines whether the target is selectable, defaults to false </param>
-        public UIMapTarget(UINavigationPanel owner, Vector2 position, float width, float height, string targetId, ChecklistConditionCollection launchConditions = null, Texture2D outline = null) : this(owner, position, width, height)
+        public UINavigationTarget(UINavigationPanel owner, Vector2 position, float width, float height, string targetId, ChecklistConditionCollection launchConditions = null, Texture2D outline = null) : this(owner, position, width, height)
         {
             LaunchConditions = launchConditions;
             Name = targetId;
@@ -97,7 +97,7 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationPanel
         /// <param name="position"> The map target's position relative to the top corner of the NavigationMap </param>
         /// <param name="width"> Interactible area width in pixels </param>
         /// <param name="height"> Interactible area height in pixels </param>
-        private UIMapTarget(UINavigationPanel owner, Vector2 position, float width, float height)
+        private UINavigationTarget(UINavigationPanel owner, Vector2 position, float width, float height)
         {
             OwnerPanel = owner;
             Width.Set(width, 0);

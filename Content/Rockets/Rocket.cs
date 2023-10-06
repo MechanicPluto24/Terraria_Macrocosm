@@ -10,6 +10,8 @@ using Macrocosm.Content.Particles;
 using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.LaunchPads;
 using Macrocosm.Content.Rockets.Modules;
+using Macrocosm.Content.Rockets.Storage;
+using Macrocosm.Content.Rockets.UI;
 using Macrocosm.Content.Subworlds;
 using Macrocosm.Content.UI.LoadingScreens;
 using Microsoft.Xna.Framework;
@@ -18,14 +20,16 @@ using SubworldLibrary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using static Terraria.WorldGen;
 
 namespace Macrocosm.Content.Rockets
 {
-	public partial class Rocket 
+    public partial class Rocket 
 	{
 		/// <summary> The rocket's identifier </summary>
 		public int WhoAmI = -1;
@@ -67,32 +71,9 @@ namespace Macrocosm.Content.Rockets
 		/// <summary> The rocket's current world, "Earth" if active and not in a subworld. Other mod's subworlds have the mod name prepended </summary>
 		[NetSync] public string CurrentWorld = "";
 
-		public const int DefaultInventorySize = 56;
-		private int inventorySize = DefaultInventorySize;
-		public int InventorySize
-		{
-			get => inventorySize;
-			set
-			{
-				if (value < 0)
-					return;
+		public Inventory Inventory { get; }
 
-				int oldSize = inventorySize;
-				inventorySize = value;
-
-				if (oldSize > inventorySize)
-					inventory.Take(inventorySize..oldSize).ToList().ForEach(item => Main.LocalPlayer.DropItem(null, Center, ref item));
-
-				if (oldSize != inventorySize) 
-					Array.Resize(ref inventory, inventorySize);
-
-				if (oldSize < inventorySize)
-					Array.Fill(inventory, new Item(), oldSize, inventorySize - oldSize); 
-			}
-		}
-
-		private Item[] inventory = new Item[DefaultInventorySize];
-		public Item[] Inventory => inventory;
+		public const int DefaultInventorySize = 50;
 
 		/// <summary> Whether the rocket is active in the current world and should be updated and visible </summary>
 		public bool ActiveInCurrentWorld => Active && CurrentWorld == MacrocosmSubworld.CurrentID;
@@ -218,8 +199,7 @@ namespace Macrocosm.Content.Rockets
 			foreach(string moduleName in DefaultModuleNames)
 				Modules[moduleName] = CreateModule(moduleName);
 
-			for (int i = 0; i < inventory.Length; i++)
-				inventory[i] = new Item();
+			Inventory = new(DefaultInventorySize, this);
 		}
 
 		private RocketModule CreateModule(string moduleName)
@@ -484,7 +464,8 @@ namespace Macrocosm.Content.Rockets
 
 			return true;
 		}
-		
+
+
 		public bool CheckTileCollision()
 		{
 			foreach (RocketModule module in Modules.Values)

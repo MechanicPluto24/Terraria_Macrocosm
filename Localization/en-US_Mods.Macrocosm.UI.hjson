@@ -22,7 +22,10 @@ Rocket: {
 		LaunchLocations: Launch Locations
 		WorldSpawn: World Spawn
 		Crew: Crew
+		Commander: Commander
+		Cargo: Cargo
 		Payload: Payload
+		Inventory: Inventory
 		Fuel: Fuel
 		Customization: Customization
 	}

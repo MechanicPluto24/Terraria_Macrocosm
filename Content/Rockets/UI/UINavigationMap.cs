@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Terraria.UI;
 
-namespace Macrocosm.Content.Rockets.Navigation.NavigationPanel
+namespace Macrocosm.Content.Rockets.UI
 {
     public class UINavigationMap : UIElement
     {
@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationPanel
         public bool AnimationActive => showAnimationActive;
 
         /// <summary> All active targets found on this map </summary>
-        public List<UIMapTarget> Targets => Children.OfType<UIMapTarget>().ToList();
+        public List<UINavigationTarget> Targets => Children.OfType<UINavigationTarget>().ToList();
 
         /// <summary> Whether this map has a next navigation map </summary>
 		public bool HasNext => Next != null;
@@ -36,7 +36,7 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationPanel
         public bool HasDefaultNext => DefaultNext != null;
 
         // Each target of this map can link to another map on zoom in  
-        private Dictionary<UIMapTarget, UINavigationMap> nextTargetMap = new();
+        private Dictionary<UINavigationTarget, UINavigationMap> nextTargetMap = new();
 
         private Texture2D animationPrevTexture;
         private bool showAnimationActive = false;
@@ -68,7 +68,7 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationPanel
 
             if (nextTargetMap.Count > 0)
             {
-                UIMapTarget target = GetSelectedTarget();
+                UINavigationTarget target = GetSelectedTarget();
 
                 if (target != null && nextTargetMap.TryGetValue(target, out UINavigationMap navMap))
                     Next = navMap;
@@ -93,10 +93,10 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationPanel
         /// </summary>
         /// <param name="target"> The target instance </param>
         /// <param name="nextMap"> The optionally linked map correspondent to the passed target, user can switch to it on ZoomIn </param>
-        public void AddTarget(UIMapTarget target, UINavigationMap nextMap = null)
+        public void AddTarget(UINavigationTarget target, UINavigationMap nextMap = null)
         {
             // Avoid having duplicate target names
-            foreach (UIMapTarget existingTarget in Targets)
+            foreach (UINavigationTarget existingTarget in Targets)
                 if (existingTarget.Name == target.Name)
                     return;
 
@@ -112,7 +112,7 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationPanel
         /// <param name="targetName"></param>
         public void RemoveTargetByName(string targetName)
         {
-            if (TryFindTargetByName(targetName, out UIMapTarget target))
+            if (TryFindTargetByName(targetName, out UINavigationTarget target))
                 RemoveChild(target);
         }
 
@@ -122,7 +122,7 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationPanel
         /// <param name="name"> The string name ID </param>
         /// <param name="target"> The output target, null if not found </param>
         /// <returns> True if said target has been found, false otherwise </returns>
-        public bool TryFindTargetByName(string name, out UIMapTarget target)
+        public bool TryFindTargetByName(string name, out UINavigationTarget target)
         {
             target = FindTargetByName(name);
             if (target is not null)
@@ -136,9 +136,9 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationPanel
         /// </summary>
         /// <param name="name"> The string name ID </param>
         /// <returns> The target instance, null if not found </returns>
-        public UIMapTarget FindTargetByName(string name)
+        public UINavigationTarget FindTargetByName(string name)
         {
-            foreach (UIMapTarget target in Targets)
+            foreach (UINavigationTarget target in Targets)
                 if (target.Name == name)
                     return target;
 
@@ -149,12 +149,12 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationPanel
         /// Find the selected target in the current map, returns null if not found
         /// </summary>
         /// <returns> The selected target, null if not found </returns>
-        public UIMapTarget GetSelectedTarget()
+        public UINavigationTarget GetSelectedTarget()
         {
             //if (showAnimationActive)
             //    return null;
 
-            foreach (UIMapTarget target in Targets)
+            foreach (UINavigationTarget target in Targets)
                 if (target.Selected)
                     return target;
 
@@ -164,14 +164,14 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationPanel
         /// <summary> Clears the "selected" state from all the existing targets </summary>
         public void DeselectAllTargets()
         {
-            foreach (UIMapTarget target in Targets)
+            foreach (UINavigationTarget target in Targets)
                 target.Selected = false;
         }
 
         /// <summary> Resets all targets to their initial state </summary>
         public void ResetAllTargets()
         {
-            foreach (UIMapTarget target in Targets)
+            foreach (UINavigationTarget target in Targets)
             {
                 target.Selected = false;
                 target.ResetAnimation();

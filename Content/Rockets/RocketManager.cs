@@ -1,12 +1,9 @@
-﻿using log4net.Util;
-using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Drawing.Particles;
+﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Linq;
 using Terraria;
-using Terraria.GameContent.Drawing;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -49,7 +46,7 @@ namespace Macrocosm.Content.Rockets
 		}
 
 		public static int ActiveRocketCount => Rockets.Count(rocket => rocket.Active);
-		public static int RocketInCurrentSubworldCount => Rockets.Count(rocket => rocket.ActiveInCurrentWorld);
+		public static int InCurrentSubworldRocketCount => Rockets.Count(rocket => rocket.ActiveInCurrentWorld);
 
 		public static void AddRocket(Rocket rocket)
 		{

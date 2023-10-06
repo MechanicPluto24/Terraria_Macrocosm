@@ -3,9 +3,9 @@ using Terraria.GameContent.UI.Elements;
 using Terraria.Localization;
 using Terraria.UI;
 
-namespace Macrocosm.Content.Rockets.Navigation
+namespace Macrocosm.Content.Rockets.UI
 {
-	public class UILaunchButton : UIPanel
+    public class UILaunchButton : UIPanel
     {
         public delegate void OnClick_ZoomIn(bool useDefault);
         public OnClick_ZoomIn ZoomIn = (useDefault) => { };
@@ -34,9 +34,9 @@ namespace Macrocosm.Content.Rockets.Navigation
             Height.Set(0, 0.1f);
             HAlign = 0.5f;
             Top.Set(0, 0.885f);
-			BackgroundColor = new Color(53, 72, 135);
-			BorderColor = new Color(89, 116, 213, 255);
-			Recalculate();
+            BackgroundColor = new Color(53, 72, 135);
+            BorderColor = new Color(89, 116, 213, 255);
+            Recalculate();
 
             buttonText = new(LocalizedText.Empty, 0.9f, true)
             {
@@ -65,7 +65,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 
             text = Language.GetText("Mods.Macrocosm.UI.Rocket.LaunchButton." + ButtonState.ToString());
 
-			switch (ButtonState)
+            switch (ButtonState)
             {
                 case StateType.NoTarget:
                     textColor = Color.Gold;
@@ -96,13 +96,13 @@ namespace Macrocosm.Content.Rockets.Navigation
                     OnLeftClick += UILaunchButton_OnClick_Launch;
                     break;
 
-				case StateType.LaunchInactive:
-					textColor = new Color(0, 200, 0);
-					textScale = 1.1f;
-					CanClick = false;
-					break;
+                case StateType.LaunchInactive:
+                    textColor = new Color(0, 200, 0);
+                    textScale = 1.1f;
+                    CanClick = false;
+                    break;
 
-				default:
+                default:
                     CanClick = false;
                     break;
             }

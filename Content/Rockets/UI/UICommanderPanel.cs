@@ -1,22 +1,16 @@
 ﻿using Macrocosm.Common.UI;
-using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
-using System.Linq;
 using Terraria;
-using Terraria.GameContent;
-using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.Localization;
 
-namespace Macrocosm.Content.Rockets.Navigation.CrewPanel
+namespace Macrocosm.Content.Rockets.UI
 {
-    public sealed class UICrewPanel : UIListScrollablePanel, IRocketDataConsumer
+    public class UICommanderPanel : UIListScrollablePanel, IRocketUIDataConsumer
     {
         public Rocket Rocket { get; set; }
 
-        public UICrewPanel() : base(new LocalizedColorScaleText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Crew"), scale: 1.2f))
+        public UICommanderPanel() : base(new LocalizedColorScaleText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Commander"), scale: 1.2f))
         {
         }
 
@@ -27,7 +21,7 @@ namespace Macrocosm.Content.Rockets.Navigation.CrewPanel
             BackgroundColor = new Color(53, 72, 135);
 
             if (Main.netMode == NetmodeID.SinglePlayer)
-                Add(new UIPlayerInfoElement(Main.LocalPlayer));
+                Add(new UIPlayerHeadInfoElement(Main.LocalPlayer));
         }
 
         public override void Update(GameTime gameTime)
@@ -48,12 +42,11 @@ namespace Macrocosm.Content.Rockets.Navigation.CrewPanel
 
                     var rocketPlayer = player.GetModPlayer<RocketPlayer>();
 
-                    if (rocketPlayer.InRocket && rocketPlayer.RocketID == Rocket.WhoAmI)
-                         Add(new UIPlayerInfoElement(player));
+                    if (rocketPlayer.InRocket && rocketPlayer.IsCommander && rocketPlayer.RocketID == Rocket.WhoAmI)
+                        Add(new UIPlayerHeadInfoElement(player));
                 }
 
                 Activate();
-
             }
         }
     }
