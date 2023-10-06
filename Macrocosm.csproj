@@ -38,6 +38,9 @@
     <None Remove="Assets\Textures\Icons\Mars.png" />
     <None Remove="Assets\Textures\Icons\Moon.png" />
     <None Remove="Assets\Textures\MapBackgrounds\Default.png" />
+    <None Remove="Content\Gores\CraterCrawlerBodyGore.png" />
+    <None Remove="Content\Gores\CraterCrawlerHeadGore.png" />
+    <None Remove="Content\Gores\CraterCrawlerTailGore.png" />
     <None Remove="Content\Items\Placeable\Furniture\MoonBase\MoonBaseBed.png" />
     <None Remove="Content\Items\Placeable\Furniture\MoonBase\MoonBaseCandle.png" />
     <None Remove="Content\Items\Placeable\Furniture\MoonBase\MoonBaseLamp.png" />
