@@ -11,7 +11,7 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace Macrocosm.Content.Rockets.Navigation.NavigationPanel
+namespace Macrocosm.Content.Rockets.UI
 {
     public class UINavigationPanel : UIPanel
     {
@@ -28,7 +28,7 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationPanel
 
         public UINavigationPanel()
         {
-            WorldDataSystem.Instance.PropertyChanged += (sender, args) => UpdateMapVisibility(args.PropertyName);
+            WorldDataSystem.Instance.PropertyChanged += (sender, args) => UpdateMapVisibility(context: args.PropertyName);
         }
 
         public override void OnInitialize()
@@ -58,7 +58,7 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationPanel
             var initialTarget = CurrentMap.Targets.FirstOrDefault(target => target.Name == MacrocosmSubworld.CurrentMacrocosmID);
             if (initialTarget is not null)
                 initialTarget.Selected = true;
- 
+
             Append(zoomInButton);
             Append(zoomOutButton);
             Append(CurrentMap);
@@ -98,13 +98,13 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationPanel
                 return;
 
             UINavigationMap prevMap = CurrentMap;
-            UIMapTarget prevTarget = prevMap.GetSelectedTarget();
+            UINavigationTarget prevTarget = prevMap.GetSelectedTarget();
             CurrentMap.ResetAllTargets();
             RemoveChild(CurrentMap);
 
             CurrentMap = newMap;
             CurrentMap.ResetAllTargets();
-            if (prevTarget is not null && CurrentMap.TryFindTargetByName(prevTarget.Name, out UIMapTarget target))
+            if (prevTarget is not null && CurrentMap.TryFindTargetByName(prevTarget.Name, out UINavigationTarget target))
                 target.Selected = true;
 
             CurrentMap.ShowAnimation(prevMap);
@@ -137,7 +137,7 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationPanel
             {
                 if (WorldDataSystem.Instance.FoundVulcan)
                 {
-                    solarSystemInner.AddTarget(new UIMapTarget(this, new Vector2(226, 88), 12, 12, "Vulcan"));
+                    solarSystemInner.AddTarget(new UINavigationTarget(this, new Vector2(226, 88), 12, 12, "Vulcan"));
                     solarSystemInner.Texture = ModContent.Request<Texture2D>(navigationMapsPath + "SolarSystemInnerVulcan", AssetRequestMode.ImmediateLoad).Value;
                 }
                 else
@@ -152,53 +152,53 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationPanel
         {
             AssetRequestMode mode = AssetRequestMode.ImmediateLoad;
 
-            Asset<Texture2D> zoomInButton = ModContent.Request<Texture2D>(buttonsPath + "ZoomInButton", mode);
-            Asset<Texture2D> zoomOutButton = ModContent.Request<Texture2D>(buttonsPath + "ZoomOutButton", mode);
+            Asset<Texture2D> zoomInTexture = ModContent.Request<Texture2D>(buttonsPath + "ZoomInButton", mode);
+            Asset<Texture2D> zoomOutTexture = ModContent.Request<Texture2D>(buttonsPath + "ZoomOutButton", mode);
             Asset<Texture2D> zoomButtonBorder = ModContent.Request<Texture2D>(buttonsPath + "ZoomButtonBorder", mode);
 
             Texture2D outlineSmall = ModContent.Request<Texture2D>(buttonsPath + "SelectionOutlineSmall", mode).Value;
             Texture2D outlineMedium = ModContent.Request<Texture2D>(buttonsPath + "SelectionOutlineMedium", mode).Value;
             Texture2D outlineLarge = ModContent.Request<Texture2D>(buttonsPath + "SelectionOutlineLarge", mode).Value;
 
-            this.zoomInButton = new(zoomInButton, zoomButtonBorder, Language.GetText("Mods.Macrocosm.UI.Common.ZoomIn"))
+            zoomInButton = new(zoomInTexture, zoomButtonBorder, Language.GetText("Mods.Macrocosm.UI.Common.ZoomIn"))
             {
-                Top = StyleDimension.FromPercent(0.37f),
-                Left = StyleDimension.FromPercent(0.011f),
+                Top = new(0, 0.37f),
+                Left = new(0, 0.011f),
             };
-            this.zoomInButton.OnLeftClick += (_, _) => ZoomIn();
-            this.zoomInButton.CheckInteractible = () => CurrentMap.HasNext || CurrentMap.HasDefaultNext;
+            zoomInButton.OnLeftClick += (_, _) => ZoomIn();
+            zoomInButton.CheckInteractible = () => CurrentMap.HasNext || CurrentMap.HasDefaultNext;
 
-            this.zoomOutButton = new(zoomOutButton, zoomButtonBorder, Language.GetText("Mods.Macrocosm.UI.Common.ZoomOut"))
+            zoomOutButton = new(zoomOutTexture, zoomButtonBorder, Language.GetText("Mods.Macrocosm.UI.Common.ZoomOut"))
             {
-                Top = StyleDimension.FromPercent(0.52f),
-                Left = StyleDimension.FromPercent(0.011f),
+                Top = new(0, 0.52f),
+                Left = new(0, 0.011f),
             };
-            this.zoomOutButton.OnLeftClick += (_, _) => ZoomOut();
-            this.zoomOutButton.CheckInteractible = () => CurrentMap.HasPrev;
+            zoomOutButton.OnLeftClick += (_, _) => ZoomOut();
+            zoomOutButton.CheckInteractible = () => CurrentMap.HasPrev;
 
             earthSystem = new(ModContent.Request<Texture2D>(navigationMapsPath + "EarthSystem", mode).Value);
             solarSystemInner = new(ModContent.Request<Texture2D>(navigationMapsPath + "SolarSystemInner", mode).Value, defaultNext: GetInitialNavigationMap());
             solarSystemOuter = new(ModContent.Request<Texture2D>(navigationMapsPath + "SolarSystemOuter", mode).Value, defaultNext: solarSystemInner);
 
-            earthSystem.AddTarget(new UIMapTarget(this, new Vector2(64, 24), 160, 160, "Earth", Earth.LaunchConditions, outline: outlineLarge));
-            earthSystem.AddTarget(new UIMapTarget(this, new Vector2(424, 32), 48, 48, Moon.Instance, outline: outlineMedium));
+            earthSystem.AddTarget(new UINavigationTarget(this, new Vector2(64, 24), 160, 160, "Earth", Earth.LaunchConditions, outline: outlineLarge));
+            earthSystem.AddTarget(new UINavigationTarget(this, new Vector2(424, 32), 48, 48, Moon.Instance, outline: outlineMedium));
             earthSystem.Prev = solarSystemInner;
 
-            solarSystemInner.AddTarget(new UIMapTarget(this, new Vector2(245, 85), 32, 32, "Sun", outline: outlineMedium));
-            solarSystemInner.AddTarget(new UIMapTarget(this, new Vector2(297, 123), 12, 12, "Mercury"));
-            solarSystemInner.AddTarget(new UIMapTarget(this, new Vector2(160, 72), 12, 12, "Venus"));
-            solarSystemInner.AddTarget(new UIMapTarget(this, new Vector2(361, 54), 12, 12, "Earth", Earth.LaunchConditions), earthSystem);
-            solarSystemInner.AddTarget(new UIMapTarget(this, new Vector2(67, 117), 12, 12, "Mars"));
+            solarSystemInner.AddTarget(new UINavigationTarget(this, new Vector2(245, 85), 32, 32, "Sun", outline: outlineMedium));
+            solarSystemInner.AddTarget(new UINavigationTarget(this, new Vector2(297, 123), 12, 12, "Mercury"));
+            solarSystemInner.AddTarget(new UINavigationTarget(this, new Vector2(160, 72), 12, 12, "Venus"));
+            solarSystemInner.AddTarget(new UINavigationTarget(this, new Vector2(361, 54), 12, 12, "Earth", Earth.LaunchConditions), earthSystem);
+            solarSystemInner.AddTarget(new UINavigationTarget(this, new Vector2(67, 117), 12, 12, "Mars"));
 
             solarSystemInner.Prev = solarSystemOuter;
 
-            solarSystemOuter.AddTarget(new UIMapTarget(this, new Vector2(255, 95), 12, 12, "Sun", outline: outlineMedium), solarSystemInner);
-            solarSystemOuter.AddTarget(new UIMapTarget(this, new Vector2(277, 102), 12, 12, "Jupiter"));
-            solarSystemOuter.AddTarget(new UIMapTarget(this, new Vector2(216, 111), 12, 12, "Saturn"));
-            solarSystemOuter.AddTarget(new UIMapTarget(this, new Vector2(329, 68), 12, 12, "Ouranos"));
-            solarSystemOuter.AddTarget(new UIMapTarget(this, new Vector2(178, 38), 12, 12, "Neptune"));
-            solarSystemOuter.AddTarget(new UIMapTarget(this, new Vector2(405, 151), 12, 12, "Pluto"));
-            solarSystemOuter.AddTarget(new UIMapTarget(this, new Vector2(41, 17), 12, 12, "Eris"));
+            solarSystemOuter.AddTarget(new UINavigationTarget(this, new Vector2(255, 95), 12, 12, "Sun", outline: outlineMedium), solarSystemInner);
+            solarSystemOuter.AddTarget(new UINavigationTarget(this, new Vector2(277, 102), 12, 12, "Jupiter"));
+            solarSystemOuter.AddTarget(new UINavigationTarget(this, new Vector2(216, 111), 12, 12, "Saturn"));
+            solarSystemOuter.AddTarget(new UINavigationTarget(this, new Vector2(329, 68), 12, 12, "Ouranos"));
+            solarSystemOuter.AddTarget(new UINavigationTarget(this, new Vector2(178, 38), 12, 12, "Neptune"));
+            solarSystemOuter.AddTarget(new UINavigationTarget(this, new Vector2(405, 151), 12, 12, "Pluto"));
+            solarSystemOuter.AddTarget(new UINavigationTarget(this, new Vector2(41, 17), 12, 12, "Eris"));
 
             solarSystemOuter.Next = solarSystemInner;
 

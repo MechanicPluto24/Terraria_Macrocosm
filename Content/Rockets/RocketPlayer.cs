@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.CameraModifiers;
+using Macrocosm.Content.Rockets.UI;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
 using System.IO;
@@ -10,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets
 {
-	public class RocketPlayer : ModPlayer
+    public class RocketPlayer : ModPlayer
 	{
 		public bool InRocket { get; set; } = false;
 		public bool IsCommander { get; set; } = false;
