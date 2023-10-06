@@ -57,12 +57,12 @@ namespace Macrocosm.Common.Utils
         {
             DrawDatas = new();
             DebugCrossTexture = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/DebugCross").Value;
-            On_Main.Draw += Draw;
+            //On_Main.Draw += Draw;
         }
 
         public void Unload()
         {
-            On_Main.Draw -= Draw;
+            //On_Main.Draw -= Draw;
             DrawDatas = null;
         }
 
