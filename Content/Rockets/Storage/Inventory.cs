@@ -83,18 +83,6 @@ namespace Macrocosm.Content.Rockets.Storage
 
 		}
 
-		public void DropItems(Range indexRange)
-		{
-			if (Main.netMode == NetmodeID.MultiplayerClient)
-				return;
-
-			(int offset, int length) = indexRange.GetOffsetAndLength(Size);
-			if (offset < 0 || length >= Size)
-				return;
-
-			Enumerable.Range(offset, length).ToList().ForEach(DropItem);
-		}
-
 		public void DropItem(int index)
 		{
 			if (Main.netMode == NetmodeID.MultiplayerClient)
@@ -110,8 +98,9 @@ namespace Macrocosm.Content.Rockets.Storage
 		public void OnResize(int oldSize, int newSize)
 		{
 			if (oldSize > newSize)
-				DropItems(size..(oldSize-1));
-
+				for(int i = oldSize - 1; i >= newSize; i--)
+					DropItem(i);
+ 
 			if (oldSize != newSize)
 				Array.Resize(ref items, newSize);
 

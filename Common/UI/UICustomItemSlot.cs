@@ -231,12 +231,20 @@ namespace Macrocosm.Common.UI
 
 		protected sealed override void DrawSelf(SpriteBatch spriteBatch)
 		{
-			scale = 0.85f;
+			if (itemIndex >= inventory.Size)
+  				return;
+ 
+			float prevScale = Main.inventoryScale;
+			Main.inventoryScale = 0.85f;
+
 			HandleItemSlotLogic();
 			Item inv = inventory[itemIndex];
-			Vector2 position = GetDimensions().Center() + DrawOffset * scale;
+			Vector2 position = GetDimensions().Center() + DrawOffset * Main.inventoryScale;
 			DrawItemSlot(spriteBatch, ref inv, position);
 			DrawItem(spriteBatch, ref inv, position);
+
+			Main.inventoryScale = prevScale;
+
 		}
 
 		protected virtual void DrawItemSlot(SpriteBatch spriteBatch, ref Item item, Vector2 position)
@@ -250,7 +258,7 @@ namespace Macrocosm.Common.UI
 			if(item.favorited)
 				texture = TextureAssets.InventoryBack10.Value;
 
-			spriteBatch.Draw(texture, position, null, color, 0f, default, scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(texture, position, null, color, 0f, default, Main.inventoryScale, SpriteEffects.None, 0f);
 		}
 
 		protected virtual void DrawItem(SpriteBatch spriteBatch, ref Item item, Vector2 position)
@@ -258,15 +266,15 @@ namespace Macrocosm.Common.UI
 			Color color = Color.White;
 			Texture2D value = TextureAssets.InventoryBack.Value;
 
-			Vector2 vector = value.Size() * scale;
+			Vector2 vector = value.Size() * Main.inventoryScale;
 			if (item.type > ItemID.None && item.stack > 0)
 			{
-				float _ = ItemSlot.DrawItemIcon(item, itemSlotContext, spriteBatch, position + vector / 2f, scale, 32f, color);
+				float _ = ItemSlot.DrawItemIcon(item, itemSlotContext, spriteBatch, position + vector / 2f, Main.inventoryScale, 32f, color);
 
 				DrawExtras(spriteBatch, ref item, position);
 
 				if (item.stack > 1)
-					ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.ItemStack.Value, item.stack.ToString(), position + new Vector2(10f, 26f) * scale, color, 0f, Vector2.Zero, new Vector2(scale), -1f, scale);
+					ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.ItemStack.Value, item.stack.ToString(), position + new Vector2(10f, 26f) * Main.inventoryScale, color, 0f, Vector2.Zero, new Vector2(Main.inventoryScale), -1f, Main.inventoryScale);
 			}
 		}
 
@@ -275,20 +283,20 @@ namespace Macrocosm.Common.UI
 			Color color = Color.White;
 
 			if (ItemID.Sets.TrapSigned[item.type])
-				spriteBatch.Draw(TextureAssets.Wire.Value, position + new Vector2(40f, 40f) * scale, new Rectangle(4, 58, 8, 8), color, 0f, new Vector2(4f), 1f, SpriteEffects.None, 0f);
+				spriteBatch.Draw(TextureAssets.Wire.Value, position + new Vector2(40f, 40f) * Main.inventoryScale, new Rectangle(4, 58, 8, 8), color, 0f, new Vector2(4f), 1f, SpriteEffects.None, 0f);
 
 			if (ItemID.Sets.DrawUnsafeIndicator[item.type])
 			{
-				Vector2 offset = new Vector2(-4f, -4f) * scale;
+				Vector2 offset = new Vector2(-4f, -4f) * Main.inventoryScale;
 				Texture2D texture = TextureAssets.Extra[ExtrasID.UnsafeIndicator].Value;
 				Rectangle rectangle = texture.Frame();
-				spriteBatch.Draw(texture, position + offset + new Vector2(40f, 40f) * scale, rectangle, color, 0f, rectangle.Size() / 2f, 1f, SpriteEffects.None, 0f);
+				spriteBatch.Draw(texture, position + offset + new Vector2(40f, 40f) * Main.inventoryScale, rectangle, color, 0f, rectangle.Size() / 2f, 1f, SpriteEffects.None, 0f);
 			}
 
 			if (Utility.IsRubblemaker(item.type))
 			{
 				Texture2D texture = TextureAssets.Extra[ExtrasID.RubbleMakerIndicator].Value;
-				Vector2 offset = new Vector2(2f, -6f) * scale;
+				Vector2 offset = new Vector2(2f, -6f) * Main.inventoryScale;
 				Rectangle rectangle = new();
 
 				switch (item.type)
@@ -306,7 +314,7 @@ namespace Macrocosm.Common.UI
 							break;
 				}
 
-				spriteBatch.Draw(texture, position + offset + new Vector2(40f, 40f) * scale, rectangle, color, 0f, rectangle.Size() / 2f, 1f, SpriteEffects.None, 0f);
+				spriteBatch.Draw(texture, position + offset + new Vector2(40f, 40f) * Main.inventoryScale, rectangle, color, 0f, rectangle.Size() / 2f, 1f, SpriteEffects.None, 0f);
 			}
 		}
 	}
