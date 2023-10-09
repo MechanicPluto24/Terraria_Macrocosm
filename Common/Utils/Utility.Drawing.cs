@@ -20,6 +20,8 @@ namespace Macrocosm.Common.Utils
 
 		public static Vector2 ScreenCenterInWorld => Main.screenPosition + ScreenCenter;
 
+		public static Rectangle ScreenRectangle => new(0, 0, Main.screenWidth, Main.screenHeight);
+
 
 		/// <summary>
 		/// Draw a MagicPixel trail behind a projectile, with length based on the trail cache length  

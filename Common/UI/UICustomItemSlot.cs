@@ -22,7 +22,7 @@ namespace Macrocosm.Common.UI
 		protected int itemSlotContext;
 		protected float scale;
 
-		private bool shouldNetsync = false;
+		protected bool shouldNetsync = false;
 
 		protected Vector2 DrawOffset { get; set; } = new Vector2(52f, 52f) * -0.5f;
 
@@ -34,10 +34,10 @@ namespace Macrocosm.Common.UI
 			Width = new StyleDimension(48f, 0f);
 			Height = new StyleDimension(48f, 0f);
 		}
-
+		 
 		protected virtual void HandleItemSlotLogic()
 		{
-			if (IsMouseHovering)
+			if (IsMouseHovering && inventory.CanInteract)
 			{
 				Item inv = inventory[itemIndex];
 				HandleCursor(ref inv);
@@ -243,6 +243,12 @@ namespace Macrocosm.Common.UI
 		{
 			Texture2D texture = TextureAssets.InventoryBack.Value;
 			Color color = Main.inventoryBack;
+
+			if (!inventory.CanInteract)
+				color = new Color(50,50,50).WithOpacity(0.5f);
+
+			if(item.favorited)
+				texture = TextureAssets.InventoryBack10.Value;
 
 			spriteBatch.Draw(texture, position, null, color, 0f, default, scale, SpriteEffects.None, 0f);
 		}

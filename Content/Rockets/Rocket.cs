@@ -556,7 +556,10 @@ namespace Macrocosm.Content.Rockets
 				return;
 
 			if (AnyEmbarkedPlayers(out int id) && !TryFindingCommander(out _))
+			{
 				GetRocketPlayer(id).IsCommander = true;
+				Inventory.InteractingPlayer = id;
+			}
 		}
 
 		// Handles the rocket's movement during flight

@@ -81,6 +81,25 @@ namespace Macrocosm.Common.Utils
 			return hitbox;
 		}
 
+		public static Player PrepareDummy(this Player player, Vector2 targetPosition)
+		{
+			Player clonePlayer = new();
+			clonePlayer.CopyVisuals(player);
+			clonePlayer.ResetEffects();
+			clonePlayer.ResetVisibleAccessories();
+			clonePlayer.UpdateDyes();
+			clonePlayer.DisplayDollUpdate();
+			clonePlayer.UpdateSocialShadow();
+			clonePlayer.velocity.Y = 0f;
+			clonePlayer.wingFrame = 3;
+			clonePlayer.PlayerFrame();
+			clonePlayer.socialIgnoreLight = true;
+			clonePlayer.position.X = targetPosition.X + Main.screenPosition.X;
+			clonePlayer.position.Y = targetPosition.Y + Main.screenPosition.Y;
+
+			return clonePlayer;
+		}
+
 
 		#region BaseMod BasePlayer methods
 

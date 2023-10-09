@@ -3,6 +3,7 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.Customization;
 using Microsoft.Xna.Framework;
 using System;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
@@ -12,18 +13,9 @@ namespace Macrocosm.Content.Rockets.UI
 {
     public class UICargoTab : UIPanel, ITabUIElement, IRocketUIDataConsumer
     {
-        private Rocket rocket = new();
-        public Rocket Rocket
-        {
-            get => rocket;
-            set
-            {
-                cacheSize = rocket.Inventory.Size;
-                rocket = value;
-            }
-        }
-        private int cacheSize = Rocket.DefaultInventorySize;
+        public Rocket Rocket { get; set; } = new();
 
+        private int cacheSize = Rocket.DefaultInventorySize;
 
         private UIListScrollablePanel inventoryPanel;
         private UICrewPanel crewPanel;
@@ -34,8 +26,15 @@ namespace Macrocosm.Content.Rockets.UI
         {
         }
 
+        public void OnRocketChanged()
+        {
+			cacheSize = Rocket.Inventory.Size;
+			this.ReplaceChildWith(inventoryPanel, inventoryPanel = CreateInventory());
+		}
+
         public void OnTabOpen()
         {
+			cacheSize = Rocket.Inventory.Size;
 			this.ReplaceChildWith(inventoryPanel, inventoryPanel = CreateInventory());
 		}
 
@@ -73,26 +72,26 @@ namespace Macrocosm.Content.Rockets.UI
 
         public override void Update(GameTime gameTime)
         {
-            // Just for testing
-            if (Main.LocalPlayer.controlQuickHeal)
+			base.Update(gameTime);
+
+			// Just for testing
+			if (Main.LocalPlayer.controlQuickHeal)
             {
-                rocket.Inventory.Size += 1;
-                rocket.Inventory.SyncAllItems();
+                Rocket.Inventory.Size += 1;
+                Rocket.Inventory.SyncAllItems();
 			}
 
             if (Main.LocalPlayer.controlQuickMana)
             {
-                rocket.Inventory.Size -= 1;
-				rocket.Inventory.SyncAllItems();
+                Rocket.Inventory.Size -= 1;
+				Rocket.Inventory.SyncAllItems();
 			}
 
-			if (cacheSize != rocket.Inventory.Size)
+			if (cacheSize != Rocket.Inventory.Size)
             {
+                cacheSize = Rocket.Inventory.Size;
                 this.ReplaceChildWith(inventoryPanel, inventoryPanel = CreateInventory());
-                cacheSize = rocket.Inventory.Size;
             }
-
-            base.Update(gameTime);
         }
 
         private UIListScrollablePanel CreateInventory()
@@ -116,7 +115,7 @@ namespace Macrocosm.Content.Rockets.UI
             inventoryPanel.SetPadding(0f);
             inventoryPanel.Deactivate();
 
-            int count = rocket.Inventory.Size;
+            int count = Rocket.Inventory.Size;
 
             int iconsPerRow = 10;
             int rowsWithoutScrollbar = 5;
@@ -148,7 +147,7 @@ namespace Macrocosm.Content.Rockets.UI
 
             for (int i = 0; i < count; i++)
             {
-                UICustomItemSlot uiItemSlot = new(rocket.Inventory, i, ItemSlot.Context.ChestItem)
+                UICustomItemSlot uiItemSlot = new(Rocket.Inventory, i, ItemSlot.Context.ChestItem)
                 {
                     Left = new(i % iconsPerRow * iconSize + iconOffsetLeft, 0f),
                     Top = new(i / iconsPerRow * iconSize + iconOffsetTop, 0f)

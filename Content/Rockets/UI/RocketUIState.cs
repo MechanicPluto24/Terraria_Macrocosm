@@ -94,12 +94,24 @@ namespace Macrocosm.Content.Rockets.UI
             window.Append(tabRightButton);
         }
 
+        public void OnRocketChanged()
+        {
+			window.ExecuteRecursively((uIElement) =>
+			{
+				if (uIElement is IRocketUIDataConsumer rocketDataConsumer)
+					rocketDataConsumer.Rocket = Rocket;
+			});
+		}
+
         public void OnShow()
         {
             window.ExecuteRecursively((uIElement) =>
             {
                 if (uIElement is IRocketUIDataConsumer rocketDataConsumer)
+                {
                     rocketDataConsumer.Rocket = Rocket;
+                    rocketDataConsumer.OnRocketChanged();
+				}
 
                 if (uIElement is ITabUIElement tab)
                     tab.OnTabOpen();
@@ -127,8 +139,11 @@ namespace Macrocosm.Content.Rockets.UI
             window.ExecuteRecursively((uIElement) =>
             {
                 if (uIElement is IRocketUIDataConsumer rocketDataConsumer)
+                {
                     rocketDataConsumer.Rocket = Rocket;
-            });
+					rocketDataConsumer.OnRocketChanged();
+				}
+			});
         }
 
 
@@ -136,35 +151,40 @@ namespace Macrocosm.Content.Rockets.UI
         // The tabbing logic with interface could use some linked list behavior (?) 
         private void SetTab_Customization(UIMouseEvent evt, UIElement listeningElement)
         {
-            SwitchTab(customization);
-            title.SetText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Customization"));
-
             tabRightButton.OnLeftClick -= SetTab_Payload;
             tabRightButton.OnLeftClick += SetTab_Navigation;
+
+			SwitchTab(customization);
+
+			title.SetText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Customization"));
             tabRightButton.HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Navigation");
-        }
+		}
 
         private void SetTab_Payload(UIMouseEvent evt, UIElement listeningElement)
         {
-            SwitchTab(payload);
-            title.SetText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Cargo"));
-
             tabLeftButton.OnLeftClick -= SetTab_Customization;
             tabLeftButton.OnLeftClick += SetTab_Navigation;
+
+			SwitchTab(payload);
+
+			title.SetText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Cargo"));
             tabLeftButton.HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Navigation");
-        }
+		}
 
         private void SetTab_Navigation(UIMouseEvent evt, UIElement listeningElement)
         {
-            SwitchTab(navigation);
-            title.SetText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Navigation"));
 
             tabLeftButton.OnLeftClick -= SetTab_Navigation;
             tabLeftButton.OnLeftClick += SetTab_Customization;
-            tabLeftButton.HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Customization");
 
             tabRightButton.OnLeftClick -= SetTab_Navigation;
             tabRightButton.OnLeftClick += SetTab_Payload;
+
+            SwitchTab(navigation);
+
+            title.SetText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Navigation"));
+
+            tabLeftButton.HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Customization");
             tabRightButton.HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Cargo");
         }
 
