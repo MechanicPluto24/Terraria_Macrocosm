@@ -3,10 +3,14 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.Customization;
 using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
+using Terraria.ID;
+using Terraria.Localization;
 using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.UI
@@ -18,11 +22,15 @@ namespace Macrocosm.Content.Rockets.UI
         private int cacheSize = Rocket.DefaultInventorySize;
 
         private UIListScrollablePanel inventoryPanel;
-        private UICrewPanel crewPanel;
+        private UIListScrollablePanel crewPanel;
         private UIPanel fuelPanel;
 
+		private Player commander = Main.LocalPlayer;
+		private Player prevCommander = Main.LocalPlayer;
+		private List<Player> crew = new();
+		private List<Player> prevCrew = new();
 
-        public UICargoTab()
+		public UICargoTab()
         {
         }
 
@@ -74,32 +82,84 @@ namespace Macrocosm.Content.Rockets.UI
         {
 			base.Update(gameTime);
 
+            UpdateCrewPanel();
+			UpdateInventory();
+		}
+
+        private void UpdateCrewPanel()
+		{
+			//if (Main.netMode != NetmodeID.MultiplayerClient)
+ 			//	return;
+ 
+			crew.Clear();
+
+			for (int i = 0; i < Main.maxPlayers; i++)
+			{
+				var player = Main.player[i];
+
+				if (!player.active)
+					continue;
+
+				var rocketPlayer = player.GetModPlayer<RocketPlayer>();
+
+				if (rocketPlayer.InRocket && rocketPlayer.RocketID == Rocket.WhoAmI)
+				{
+					if (rocketPlayer.IsCommander)
+						commander = player;
+					else
+						crew.Add(player);
+				}
+			}
+
+            // Testing
+            /*
+			crew.Add(new());
+			crew.Add(new());
+			crew.Add(new());
+			crew.Add(new());
+            crew.Add(new());
+            */
+
+			if (!commander.Equals(prevCommander) || !crew.SequenceEqual(prevCrew))
+			{
+				crewPanel.Deactivate();
+				crewPanel.ClearList();
+
+				crewPanel.Add(new UIPlayerInfoElement(commander));
+                crew.ForEach(player => crewPanel.Add(new UIPlayerInfoElement(player)));
+ 
+				if (crew.Any())
+					crewPanel.OfType<UIPlayerInfoElement>().LastOrDefault().LastInList = true;
+
+				prevCommander = commander;
+				prevCrew = crew;
+
+				Activate();
+			}
+		}
+
+		private void UpdateInventory()
+        {
 			// Just for testing
 			if (Main.LocalPlayer.controlQuickHeal)
-            {
-                Rocket.Inventory.Size += 1;
-                Rocket.Inventory.SyncAllItems();
-			}
-
-            if (Main.LocalPlayer.controlQuickMana)
-            {
-                Rocket.Inventory.Size -= 1;
-				Rocket.Inventory.SyncAllItems();
-			}
-
+ 				Rocket.Inventory.Size += 1;
+ 
+			if (Main.LocalPlayer.controlQuickMana)
+ 				Rocket.Inventory.Size -= 1;
+ 
 			if (cacheSize != Rocket.Inventory.Size)
-            {
-                cacheSize = Rocket.Inventory.Size;
-                this.ReplaceChildWith(inventoryPanel, inventoryPanel = CreateInventory());
-            }
-        }
+			{
+				cacheSize = Rocket.Inventory.Size;
+				this.ReplaceChildWith(inventoryPanel, inventoryPanel = CreateInventory());
+			}
+		}
 
         private UIListScrollablePanel CreateInventory()
         {
-            inventoryPanel = new()
+            inventoryPanel = new(new LocalizedColorScaleText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Inventory"), scale: 1.2f), titleSeparator: true)
             {
                 Width = new(0, 0.596f),
-                Height = new(0, 0.4f),
+                Height = new(0, 0.465f),
                 Left = new(0, 0.405f),
                 Top = new(0, 0),
                 HAlign = 0f,
@@ -110,12 +170,13 @@ namespace Macrocosm.Content.Rockets.UI
                 ScrollbarHeight = new(0f, 0.95f),
                 ScrollbarHAlign = 0.995f,
                 ListWidthWithScrollbar = new(0, 1f),
-                ListWidthWithoutScrollbar = new(0, 1f)
-            };
+                ListWidthWithoutScrollbar = new(0, 1f),
+				ShiftTitleIfHasScrollbar = false
+			};
             inventoryPanel.SetPadding(0f);
             inventoryPanel.Deactivate();
 
-            int count = Rocket.Inventory.Size;
+			int count = Rocket.Inventory.Size;
 
             int iconsPerRow = 10;
             int rowsWithoutScrollbar = 5;
@@ -162,17 +223,30 @@ namespace Macrocosm.Content.Rockets.UI
             return inventoryPanel;
         }
 
-        private UICrewPanel CreateCrewPanel()
-        {
-            crewPanel = new()
-            {
-                Top = new(0f, 0.405f),
+		private UIListScrollablePanel CreateCrewPanel()
+		{
+			crewPanel = new(new LocalizedColorScaleText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Crew"), scale: 1.2f))
+			{
+				Top = new(0f, 0.47f),
 				Left = new(0, 0.405f),
-				Height = new(0, 0.595f),
+				Height = new(0, 0.53f),
 				Width = new(0, 0.596f),
-			};
+				BorderColor = new Color(89, 116, 213, 255),
+			    BackgroundColor = new Color(53, 72, 135),
+			    ScrollbarHAlign = 1.015f,
+			    ListWidthWithScrollbar = new StyleDimension(0, 1f),
+                ShiftTitleIfHasScrollbar = false,
+				PaddingLeft = 12f,
+			    PaddingRight = 12f,
+			    ListOuterPadding = 12f,
+                PaddingTop = 0f,
+                PaddingBottom = 0f
+		    };
 
-            return crewPanel;
+			if (Main.netMode == NetmodeID.SinglePlayer)
+ 				crewPanel.Add(new UIPlayerInfoElement(Main.LocalPlayer));
+ 
+			return crewPanel;
 		}
-    }
+	}
 }

@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Serialization;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
@@ -32,8 +33,12 @@ namespace Macrocosm.Content.Rockets.UI
             base.OnInitialize();
             BorderColor = new Color(89, 116, 213, 255);
             BackgroundColor = new Color(53, 72, 135);
+			ScrollbarHAlign = 1.015f;
+			ListWidthWithScrollbar = new StyleDimension(0,1f);
+			SetPadding(0f);
+			PaddingLeft = PaddingRight = ListOuterPadding = 12f;
 
-            if (Main.netMode == NetmodeID.SinglePlayer)
+			if (Main.netMode == NetmodeID.SinglePlayer)
             {
                 Add(new UIPlayerInfoElement(Main.LocalPlayer));
             } 
@@ -71,10 +76,6 @@ namespace Macrocosm.Content.Rockets.UI
                     }
                 }
 
-				crew.Add(new());
-				crew.Add(new());
-				crew.Add(new());
-
 				if (!commander.Equals(prevCommander) || !crew.SequenceEqual(prevCrew))
 				{
 					Deactivate();
@@ -89,6 +90,9 @@ namespace Macrocosm.Content.Rockets.UI
                     {
                          Add(new UIPlayerInfoElement(player));
                     }
+
+					if(crew.Any())
+						OfType<UIPlayerInfoElement>().LastOrDefault().LastInList = true;
 
 					prevCommander = commander;
 					prevCrew = crew;
@@ -106,13 +110,6 @@ namespace Macrocosm.Content.Rockets.UI
 			{
 				this.count = count;
 			}
-
-			/*
-			public override void OnInitialize()
-			{
-				base.OnInitialize();
-			}
-			*/
 
 			public override void Draw(SpriteBatch spriteBatch)
 			{

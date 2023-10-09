@@ -816,7 +816,7 @@ namespace Macrocosm.Content.Rockets.UI
             };
             rocketCustomizationControlPanel.Append(separator1);
 
-            rocketResetButton = new(ModContent.Request<Texture2D>(symbolsPath + "ResetGray"))
+            rocketResetButton = new(ModContent.Request<Texture2D>(symbolsPath + "ResetWhite"))
             {
                 VAlign = 0.9f,
                 Left = new(0f, 0.448f),
