@@ -35,9 +35,17 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Assets\Textures\Icons\Default.png" />
+    <None Remove="Assets\Textures\Icons\Large\Earth.png" />
+    <None Remove="Assets\Textures\Icons\Large\Moon.png" />
     <None Remove="Assets\Textures\Icons\Mars.png" />
     <None Remove="Assets\Textures\Icons\Moon.png" />
     <None Remove="Assets\Textures\MapBackgrounds\Default.png" />
+    <None Remove="Assets\Textures\UI\Connector.png" />
+    <None Remove="Assets\Textures\UI\ConnectorBorder.png" />
+    <None Remove="Assets\Textures\UI\ConnectorL.png" />
+    <None Remove="Assets\Textures\UI\ConnectorLBorder.png" />
+    <None Remove="Assets\Textures\UI\ConnectorT.png" />
+    <None Remove="Assets\Textures\UI\ConnectorTBorder.png" />
     <None Remove="Content\Items\Placeable\Furniture\MoonBase\MoonBaseBed.png" />
     <None Remove="Content\Items\Placeable\Furniture\MoonBase\MoonBaseCandle.png" />
     <None Remove="Content\Items\Placeable\Furniture\MoonBase\MoonBaseLamp.png" />

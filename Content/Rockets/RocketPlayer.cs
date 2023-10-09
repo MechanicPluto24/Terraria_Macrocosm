@@ -156,7 +156,7 @@ namespace Macrocosm.Content.Rockets
 			else if (Player.whoAmI == Main.myPlayer)
 			{
 				RocketUISystem.Hide();
-				Player.sitting.isSitting = false;
+				Player.sitting.SitUp(Player);
 
 				if(cameraModifier is not null)
 					cameraModifier.ReturnToNormalPosition = true;

@@ -72,8 +72,10 @@ namespace Macrocosm.Content.Rockets.UI
                 return;
 
             Main.playerInventory = true;
+
             UIRocketState.Rocket = rocket;
             UIRocketState.OnShow();
+
             Interface.SetState(UIRocketState);
         }
 
@@ -95,8 +97,8 @@ namespace Macrocosm.Content.Rockets.UI
             {
                 Rocket rocket = UIRocketState.Rocket;
                 UIRocketState = new RocketUIState();
-                UIRocketState.Activate();
                 Utility.Chat("Reset rocket UI", Color.Lime);
+                UIRocketState.Activate();
                 CustomizationStorage.Reset();
                 HideUI();
                 ShowUI(rocket);

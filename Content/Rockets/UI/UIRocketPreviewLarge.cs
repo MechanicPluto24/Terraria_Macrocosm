@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Graphics;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -153,17 +154,11 @@ namespace Macrocosm.Content.Rockets.UI
         {
             base.Draw(spriteBatch);
 
-            var overflowHiddenRasterizerState = new RasterizerState
-            {
-                CullMode = CullMode.None,
-                ScissorTestEnable = true
-            };
-
             Matrix matrix = Matrix.CreateScale(Main.UIScale / zoom, Main.UIScale / zoom, 1f);
 
             state.SaveState(spriteBatch);
             spriteBatch.End();
-            spriteBatch.Begin(state.SpriteSortMode, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, state.DepthStencilState, overflowHiddenRasterizerState, state.Effect, matrix);
+            spriteBatch.Begin(state.SpriteSortMode, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, state.DepthStencilState, CustomRasterizerStates.ScissorTest, state.Effect, matrix);
 
             RocketDummy.DrawDummy(spriteBatch, (GetDimensions().Position() + new Vector2(moduleOffsetX, moduleOffsetY)) * zoom, Color.White);
 

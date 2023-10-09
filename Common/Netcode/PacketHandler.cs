@@ -14,7 +14,6 @@ namespace Macrocosm.Common.Netcode
         SyncRocketData,
 		SyncLaunchPadData,
         SyncInventory,
-        SyncItemInInventory,
         SyncPlayerRocketStatus,
 		SyncPlayerDashDirection,
         SyncModProjectile
@@ -37,11 +36,7 @@ namespace Macrocosm.Common.Netcode
                     break;
 
 				case MessageType.SyncInventory:
-					Inventory.ReceiveSyncInventory(reader, whoAmI);
-					break;
-
-				case MessageType.SyncItemInInventory:
-					Inventory.ReceiveSyncItemInInventory(reader, whoAmI);
+					Inventory.HandlePacket(reader, whoAmI);
 					break;
 
 				case MessageType.SyncLaunchPadData:

@@ -3,5 +3,7 @@
     public interface IRocketUIDataConsumer
     {
         public Rocket Rocket { get; set; }
+
+        public void OnRocketChanged() { }
     }
 }

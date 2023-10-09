@@ -28,11 +28,43 @@ namespace Macrocosm.Content.Rockets.Storage
 		public int Size
 		{
 			get => size;
-			set => Resize(value);
+			set
+			{
+				value = (int)MathHelper.Clamp(value, 0, MaxInventorySize);
+
+				if(size != value)
+				{
+					OnResize(size, value);
+
+					if (Main.netMode != NetmodeID.SinglePlayer)
+						SyncSize();
+				}
+
+				size = value;		
+			}
+		}
+
+		public bool CanInteract => interactingPlayer == Main.myPlayer;
+
+		private int interactingPlayer;
+		public int InteractingPlayer
+		{
+			get => interactingPlayer;
+
+			set
+			{
+				if (value < 0 || value > Main.maxPlayers)
+					return;
+
+				if (interactingPlayer != value && Main.netMode == NetmodeID.SinglePlayer)
+					SyncInteraction();
+
+				interactingPlayer = value;
+			}
 		}
 
 		// TODO: entity or spacecraft abstraction (?)
-		public Rocket Owner { get; }
+		public Rocket Owner { get; init; }
 
 		public Inventory(int size, Rocket owner)
 		{
@@ -43,6 +75,12 @@ namespace Macrocosm.Content.Rockets.Storage
 				items[i] = new Item();
 
 			Owner = owner;
+
+			if (Main.netMode == NetmodeID.SinglePlayer)
+				interactingPlayer = Main.myPlayer;
+			else
+				interactingPlayer = Main.maxPlayers;
+
 		}
 
 		public void DropItems(Range indexRange)
@@ -69,21 +107,16 @@ namespace Macrocosm.Content.Rockets.Storage
 			items[index] = new();
 		}
 
-		private void Resize(int newSize)
+		public void OnResize(int oldSize, int newSize)
 		{
-			newSize = (int)MathHelper.Clamp(newSize, 0, MaxInventorySize);
-
-			int oldSize = size;
-			size = newSize;
-
-			if (oldSize > size)
+			if (oldSize > newSize)
 				DropItems(size..(oldSize-1));
 
-			if (oldSize != size)
-				Array.Resize(ref items, size);
+			if (oldSize != newSize)
+				Array.Resize(ref items, newSize);
 
-			if (oldSize < size)
-				Array.Fill(items, new Item(), oldSize, size - oldSize);
+			if (oldSize < newSize)
+				Array.Fill(items, new Item(), oldSize, newSize - oldSize);
 		}
 	}
 }
