@@ -91,7 +91,15 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 				}
 			}
 		}
-	}
+
+        public override void HitEffect(NPC.HitInfo hit)
+        {
+            if (NPC.life <= 0)
+            {
+                Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("CraterCrawlerHeadGore").Type);
+            }
+        }
+    }
 
 	public class CraterCrawlerBody : WormBody
 	{
@@ -124,7 +132,15 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		public override void FindFrame(int frameHeight)
 		{
   		}
-	}
+
+        public override void HitEffect(NPC.HitInfo hit)
+        {
+            if (NPC.life <= 0)
+			{
+                Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("CraterCrawlerBodyGore").Type);
+            }
+        }
+    }
 
 	public class CraterCrawlerTail : WormTail
 	{
@@ -152,5 +168,13 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			FlipSprite = false;
 			CraterCrawlerHead.CommonWormInit(this);
 		}
-	}
+
+        public override void HitEffect(NPC.HitInfo hit)
+        {
+            if (NPC.life <= 0)
+			{
+                Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("CraterCrawlerTailGore").Type);
+            }
+        }
+    }
 }
