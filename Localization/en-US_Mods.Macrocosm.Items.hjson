@@ -885,3 +885,18 @@ MoonBaseBed: {
 	DisplayName: Moon Base Bed
 	Tooltip: ""
 }
+
+MoonBaseChair: {
+	DisplayName: Moon Base Chair
+	Tooltip: ""
+}
+
+MoonBaseDeskLamp: {
+	DisplayName: Moon Base Desk Lamp
+	Tooltip: ""
+}
+
+MoonBaseSofa: {
+	DisplayName: Moon Base Sofa
+	Tooltip: ""
+}
