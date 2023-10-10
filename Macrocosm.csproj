@@ -33,29 +33,7 @@
     <AdditionalFiles Remove="Localization\en-US_Mods.Macrocosm.UI.hjson" />
     <AdditionalFiles Remove="Localization\en-US_Mods.Macrocosm.WorldGen.hjson" />
   </ItemGroup>
-  <ItemGroup>
-    <None Remove="Assets\Textures\Icons\Default.png" />
-    <None Remove="Assets\Textures\Icons\Mars.png" />
-    <None Remove="Assets\Textures\Icons\Moon.png" />
-    <None Remove="Assets\Textures\MapBackgrounds\Default.png" />
-    <None Remove="Content\Gores\CraterCrawlerBodyGore.png" />
-    <None Remove="Content\Gores\CraterCrawlerHeadGore.png" />
-    <None Remove="Content\Gores\CraterCrawlerTailGore.png" />
-    <None Remove="Content\Items\Placeable\Furniture\MoonBase\MoonBaseBed.png" />
-    <None Remove="Content\Items\Placeable\Furniture\MoonBase\MoonBaseCandle.png" />
-    <None Remove="Content\Items\Placeable\Furniture\MoonBase\MoonBaseLamp.png" />
-    <None Remove="Content\Items\Placeable\Furniture\MoonBase\MoonBaseLantern.png" />
-    <None Remove="Content\Items\Placeable\Furniture\MoonBase\MoonBaseNeonTube.png" />
-    <None Remove="Content\Rockets\LaunchPads\LaunchPadMarker_glow.png" />
-    <None Remove="Content\Rockets\Textures\Icons\SpawnPoint.png" />
-    <None Remove="Content\Tiles\Blocks\MoonBasePlating_Sloped.png" />
-    <None Remove="Content\Tiles\Furniture\MoonBase\MoonBaseBed.png" />
-    <None Remove="Content\Tiles\Furniture\MoonBase\MoonBaseBed_Highlight.png" />
-    <None Remove="Content\Tiles\Furniture\MoonBase\MoonBaseCandle.png" />
-    <None Remove="Content\Tiles\Furniture\MoonBase\MoonBaseLamp.png" />
-    <None Remove="Content\Tiles\Furniture\MoonBase\MoonBaseLantern.png" />
-    <None Remove="Content\Tiles\Furniture\MoonBase\MoonBaseNeonTube.png" />
-  </ItemGroup>
+ 
   <ItemGroup>
     <PackageReference Include="tModLoader.CodeAssist" Version="0.1.*" />
   </ItemGroup>
