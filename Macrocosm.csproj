@@ -33,7 +33,6 @@
     <AdditionalFiles Remove="Localization\en-US_Mods.Macrocosm.UI.hjson" />
     <AdditionalFiles Remove="Localization\en-US_Mods.Macrocosm.WorldGen.hjson" />
   </ItemGroup>
- 
   <ItemGroup>
     <PackageReference Include="tModLoader.CodeAssist" Version="0.1.*" />
   </ItemGroup>

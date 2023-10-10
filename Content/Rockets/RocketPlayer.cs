@@ -112,6 +112,7 @@ namespace Macrocosm.Content.Rockets
 		{
 			InRocket = false;
 			IsCommander = false;
+			Player.sitting.isSitting = false;
 
 			if (Player.whoAmI == Main.myPlayer)
 			{
@@ -155,7 +156,6 @@ namespace Macrocosm.Content.Rockets
 			else if (Player.whoAmI == Main.myPlayer)
 			{
 				RocketUISystem.Hide();
-				Player.sitting.isSitting = false;
 
 				if(cameraModifier is not null)
 					cameraModifier.ReturnToNormalPosition = true;
