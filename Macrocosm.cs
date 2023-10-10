@@ -32,9 +32,27 @@ namespace Macrocosm
 
 		public override void Load()
 		{
-			LoadModCalls();
+			LoadResprites(); 
 			LoadEffects();
-			ApplyResprites(); 
+
+			LoadTimeModCalls();
+		}
+
+		public override void Unload()
+		{
+			UnloadResprites();
+			UnloadEffects();
+		}
+
+		private static void LoadResprites()
+		{
+			string respritePath = Macrocosm.TextureAssetsPath + "Resprites/";
+			TextureAssets.Moon[0] = ModContent.Request<Texture2D>(respritePath + "Moon_0");
+		}
+
+		private static void UnloadResprites()
+		{
+			TextureAssets.Moon[0] = Main.Assets.Request<Texture2D>("Images/Moon_0", AssetRequestMode.ImmediateLoad);
 		}
 
 		private static void LoadEffects()
@@ -45,7 +63,12 @@ namespace Macrocosm
 			Filters.Scene["Macrocosm:RadiationNoise"].Load();
 		}
 
-		private void LoadModCalls()
+		private static void UnloadEffects()
+		{
+			// What goes here?
+		}
+
+		private void LoadTimeModCalls()
 		{
 			#region Ryan's mods calls
 
@@ -60,12 +83,6 @@ namespace Macrocosm
 				taAPI.Call("Ambience", this, "MoonAmbience", "Assets/Sounds/Ambient/Moon", 1f, 0.0075f, new Func<bool>(SubworldSystem.IsActive<Moon>));
 
 			#endregion
-		}
-
-		private void ApplyResprites()
-		{
-			string respritePath = Macrocosm.TextureAssetsPath + "Resprites/";
-			TextureAssets.Moon[0] = ModContent.Request<Texture2D>(respritePath + "Moon_0");
 		}
 
 		public override void HandlePacket(BinaryReader reader, int whoAmI)
