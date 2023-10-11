@@ -102,6 +102,8 @@ namespace Macrocosm.Content.Rockets
 			if (Player.mount.Active)
 				Player.mount.Dismount(Player);
 
+			Player.sitting.isSitting = true;
+
 			Utility.UICloseOthers();
 
 			if (Player.whoAmI == Main.myPlayer)
@@ -126,8 +128,6 @@ namespace Macrocosm.Content.Rockets
 			if (InRocket)
 			{
 				Rocket rocket = RocketManager.Rockets[RocketID];
-
-				Player.sitting.isSitting = true;
 
 				if(rocket.InFlight || rocket.Landing)
 					Player.velocity = rocket.Velocity;
