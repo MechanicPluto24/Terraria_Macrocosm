@@ -1,14 +1,8 @@
 ﻿
-using Macrocosm.Common.Netcode;
-using Macrocosm.Content.Rockets;
 using Microsoft.Xna.Framework;
 using System;
-using System.IO;
-using System.Linq;
 using Terraria;
 using Terraria.ID;
-using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Rockets.Storage
 {
@@ -65,6 +59,8 @@ namespace Macrocosm.Content.Rockets.Storage
 
 		// TODO: entity or spacecraft abstraction (?)
 		public Rocket Owner { get; init; }
+		public int WhoAmI => Owner.WhoAmI;
+		public Vector2 WorldPosition => Owner.Center;
 
 		public Inventory(int size, Rocket owner)
 		{
@@ -80,7 +76,6 @@ namespace Macrocosm.Content.Rockets.Storage
 				interactingPlayer = Main.myPlayer;
 			else
 				interactingPlayer = Main.maxPlayers;
-
 		}
 
 		public void DropItem(int index)
@@ -91,7 +86,7 @@ namespace Macrocosm.Content.Rockets.Storage
 			if (index < 0 || index >= Size)
 				return;
 
-			Item.NewItem(items[index].GetSource_Misc("Rocket"), Owner.Center, items[index]);
+			Item.NewItem(items[index].GetSource_Misc(Owner.GetType().Name), WorldPosition, items[index]);
 			items[index] = new();
 		}
 

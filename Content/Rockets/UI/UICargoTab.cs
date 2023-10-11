@@ -4,9 +4,7 @@ using Macrocosm.Content.Rockets.Customization;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
@@ -17,8 +15,9 @@ namespace Macrocosm.Content.Rockets.UI
 {
     public class UICargoTab : UIPanel, ITabUIElement, IRocketUIDataConsumer
     {
-        public Rocket Rocket { get; set; } = new();
+        public Rocket Rocket { get; set; }
 
+        private int InventorySize => (Rocket is not null && Rocket.HasInventory) ? Rocket.Inventory.Size : cacheSize;
         private int cacheSize = Rocket.DefaultInventorySize;
 
         private UIListScrollablePanel inventoryPanel;
@@ -36,13 +35,13 @@ namespace Macrocosm.Content.Rockets.UI
 
         public void OnRocketChanged()
         {
-			cacheSize = Rocket.Inventory.Size;
+            cacheSize = InventorySize;
 			this.ReplaceChildWith(inventoryPanel, inventoryPanel = CreateInventory());
 		}
 
         public void OnTabOpen()
         {
-			cacheSize = Rocket.Inventory.Size;
+            cacheSize = InventorySize;
 			this.ReplaceChildWith(inventoryPanel, inventoryPanel = CreateInventory());
 		}
 
@@ -88,8 +87,8 @@ namespace Macrocosm.Content.Rockets.UI
 
         private void UpdateCrewPanel()
 		{
-			//if (Main.netMode != NetmodeID.MultiplayerClient)
- 			//	return;
+			if (Main.netMode != NetmodeID.MultiplayerClient)
+ 				return;
  
 			crew.Clear();
 
@@ -111,15 +110,7 @@ namespace Macrocosm.Content.Rockets.UI
 				}
 			}
 
-            // Testing
-            /*
-			crew.Add(new());
-			crew.Add(new());
-			crew.Add(new());
-			crew.Add(new());
-            crew.Add(new());
-            */
-
+            // FIXME: check why this doesn't get updated when a remote client leaves the rocket 
 			if (!commander.Equals(prevCommander) || !crew.SequenceEqual(prevCrew))
 			{
 				crewPanel.Deactivate();
@@ -147,16 +138,16 @@ namespace Macrocosm.Content.Rockets.UI
 			if (Main.LocalPlayer.controlQuickMana)
  				Rocket.Inventory.Size -= 1;
  
-			if (cacheSize != Rocket.Inventory.Size)
+			if (cacheSize != InventorySize)
 			{
-				cacheSize = Rocket.Inventory.Size;
+				cacheSize = InventorySize;
 				this.ReplaceChildWith(inventoryPanel, inventoryPanel = CreateInventory());
 			}
 		}
 
         private UIListScrollablePanel CreateInventory()
         {
-            inventoryPanel = new(new LocalizedColorScaleText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Inventory"), scale: 1.2f), titleSeparator: true)
+            inventoryPanel = new(new LocalizedColorScaleText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Inventory"), scale: 1.2f))
             {
                 Width = new(0, 0.596f),
                 Height = new(0, 0.465f),
@@ -176,7 +167,10 @@ namespace Macrocosm.Content.Rockets.UI
             inventoryPanel.SetPadding(0f);
             inventoryPanel.Deactivate();
 
-			int count = Rocket.Inventory.Size;
+            if (Rocket is null || !Rocket.HasInventory)
+                return inventoryPanel;
+
+			int count = InventorySize;
 
             int iconsPerRow = 10;
             int rowsWithoutScrollbar = 5;

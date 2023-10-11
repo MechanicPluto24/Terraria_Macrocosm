@@ -71,7 +71,8 @@ namespace Macrocosm.Content.Rockets
 		/// <summary> The rocket's current world, "Earth" if active and not in a subworld. Other mod's subworlds have the mod name prepended </summary>
 		[NetSync] public string CurrentWorld = "";
 
-		public Inventory Inventory { get; }
+		public bool HasInventory => Inventory is not null;
+		public Inventory Inventory { get; set; }
 
 		public const int DefaultInventorySize = 50;
 
@@ -198,8 +199,6 @@ namespace Macrocosm.Content.Rockets
 		{
 			foreach(string moduleName in DefaultModuleNames)
 				Modules[moduleName] = CreateModule(moduleName);
-
-			Inventory = new(DefaultInventorySize, this);
 		}
 
 		private RocketModule CreateModule(string moduleName)
@@ -219,6 +218,13 @@ namespace Macrocosm.Content.Rockets
 		public void OnCreation()
 		{
 			CurrentWorld = MacrocosmSubworld.CurrentID;
+			Inventory = new(DefaultInventorySize, this);
+
+			if(Main.netMode != NetmodeID.SinglePlayer)
+			{
+				NetSync();
+				Inventory.SyncEverything();
+			}
 		}
 
 		/// <summary> Called when spawning into a new world </summary>
@@ -558,7 +564,9 @@ namespace Macrocosm.Content.Rockets
 			if (AnyEmbarkedPlayers(out int id) && !TryFindingCommander(out _))
 			{
 				GetRocketPlayer(id).IsCommander = true;
-				Inventory.InteractingPlayer = id;
+
+				if(HasInventory)
+					 Inventory.InteractingPlayer = id;
 			}
 		}
 

@@ -34,7 +34,6 @@ namespace Macrocosm.Content.Rockets
 
 			RocketManager.AddRocket(rocket);
 			rocket.OnCreation();
-			rocket.NetSync();
 			return rocket;
 		}
 	}

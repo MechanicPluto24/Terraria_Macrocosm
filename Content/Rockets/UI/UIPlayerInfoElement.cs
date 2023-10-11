@@ -33,7 +33,7 @@ namespace Macrocosm.Content.Rockets.UI
 		{
 			Height.Set(74, 0f);
 
-			if (RocketPlayer.IsCommander)
+			if (Main.netMode == NetmodeID.SinglePlayer || RocketPlayer.IsCommander)
 			{
 				Width.Set(0f, 0.98f);
 				Left.Set(0f, 0f);

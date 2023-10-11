@@ -150,8 +150,12 @@ namespace Macrocosm.Content.Rockets
 			{
 				for (int i = 0; i < MaxRockets; i++)
 				{
-					Rockets[i].NetSync(toClient: remoteClient);
-					Rockets[i].SendCustomizationData(toClient: remoteClient);
+					var rocket = Rockets[i];
+					rocket.NetSync(toClient: remoteClient);
+					rocket.SendCustomizationData(toClient: remoteClient);
+
+					if (rocket.HasInventory)
+						rocket.Inventory.SyncEverything(toClient: remoteClient);
 				}
 			}
 
