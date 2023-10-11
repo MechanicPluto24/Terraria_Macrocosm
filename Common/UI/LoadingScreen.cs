@@ -78,7 +78,7 @@ namespace Macrocosm.Common.UI
 
 		public void SetRocket(Rocket rocket)
 		{
-			var visualClone = rocket.Clone();
+			var visualClone = rocket.VisualClone();
 			visualClone.ForcedFlightAppearance = true;
 			this.rocket = visualClone;
 		}

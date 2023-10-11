@@ -43,7 +43,7 @@ namespace Macrocosm.Content.Rockets.UI
             get
             {
                 if (!rocketDummyPairs.ContainsKey(Rocket))
-                    rocketDummyPairs[Rocket] = Rocket.Clone();
+                    rocketDummyPairs[Rocket] = Rocket.VisualClone();
 
                 return rocketDummyPairs[Rocket];
             }
@@ -398,7 +398,7 @@ namespace Macrocosm.Content.Rockets.UI
         {
             AllLoseFocus();
 
-            CustomizationDummy = Rocket.Clone();
+            CustomizationDummy = Rocket.VisualClone();
 
             UpdatePatternConfig();
             currentPatternIcon.Pattern = CustomizationDummy.Modules[currentModuleName].Pattern.Clone();

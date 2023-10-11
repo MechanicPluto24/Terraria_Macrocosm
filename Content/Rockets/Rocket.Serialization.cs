@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Content.Rockets.Modules;
+using Macrocosm.Content.Rockets.Storage;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria.ModLoader.IO;
@@ -7,6 +8,8 @@ namespace Macrocosm.Content.Rockets
 {
 	public partial class Rocket : TagSerializable
 	{
+		public Rocket Clone() => DeserializeData(SerializeData());
+
 		public static readonly Func<TagCompound, Rocket> DESERIALIZER = DeserializeData;
 
 		public TagCompound SerializeData()
@@ -23,6 +26,9 @@ namespace Macrocosm.Content.Rockets
 				tag[nameof(worldExitSpeed)] = worldExitSpeed;
 				tag[nameof(Fuel)] = Fuel;
 				tag[nameof(FuelCapacity)] = FuelCapacity;
+
+				if(HasInventory)	
+					tag[nameof(Inventory)] = Inventory;
 
 				if (Launched) tag[nameof(Launched)] = true;
 				if (Landing) tag[nameof(Landing)] = true;
@@ -62,6 +68,9 @@ namespace Macrocosm.Content.Rockets
 
 				if (tag.ContainsKey(nameof(FuelCapacity)))
 					rocket.FuelCapacity = tag.GetFloat(nameof(FuelCapacity));
+
+				if (tag.ContainsKey(nameof(Inventory)))
+					rocket.Inventory = tag.Get<Inventory>(nameof(Inventory));
 
 				rocket.Launched = tag.ContainsKey(nameof(Launched));
 				rocket.Landing = tag.ContainsKey(nameof(Landing));

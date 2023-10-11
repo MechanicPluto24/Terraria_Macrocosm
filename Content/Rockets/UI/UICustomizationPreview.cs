@@ -79,7 +79,7 @@ namespace Macrocosm.Content.Rockets.UI
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, state.Effect, Main.UIScaleMatrix);
 
-            var visualClone = Rocket.Clone();
+            var visualClone = Rocket.VisualClone();
             visualClone.ForcedStationaryAppearance = true;
             visualClone.DrawDummy(spriteBatch, new Vector2(0, 0), Color.White);
 
