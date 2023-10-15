@@ -21,7 +21,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Subworlds
 {
-    public partial class Moon
+	public partial class Moon
     {
         public int RegolithLayerHeight { get; } = 200;
         private float SurfaceWidthFrequency { get; } = 0.003f;
@@ -33,7 +33,7 @@ namespace Macrocosm.Content.Subworlds
         private int SurfaceHeight(int i) => (int)(FunnySurfaceEquation(i * SurfaceWidthFrequency + StartYOffset) * SurfaceHeightFrequency) + GroundY;
 
         [Task]
-        private void TerrainTask(GenerationProgress progress)
+		private void TerrainTask(GenerationProgress progress)
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.TerrainPass");
 
@@ -97,7 +97,7 @@ namespace Macrocosm.Content.Subworlds
         }
 
         [Task]
-        private void CraterTask(GenerationProgress progress)
+		private void CraterTask(GenerationProgress progress)
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.CraterPass");
 
@@ -571,6 +571,7 @@ namespace Macrocosm.Content.Subworlds
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.AmbientPass");
             float smallRockSpawnChance = 0.1f;
             float mediumRockSpawnChance = 0.05f;
+            float largeRockSpawnChance = 0.01f;
             ushort regolithType = (ushort)TileType<Regolith>();
 
             for (int i = 0; i < Main.maxTilesX - 1; i++)
@@ -579,6 +580,7 @@ namespace Macrocosm.Content.Subworlds
                 for (int j = 1; j < Main.maxTilesY; j++)
                 {
                     TileNeighbourInfo neighbourInfo = new(i, j);
+                    TileNeighbourInfo aboveNeighbourInfo = new(i, j - 1);
                     if (Main.tile[i, j].HasTile && Main.tile[i, j].TileType == regolithType)
                     {
                         if (WorldGen.genRand.NextFloat() < smallRockSpawnChance)
@@ -586,15 +588,29 @@ namespace Macrocosm.Content.Subworlds
                             WorldGen.PlaceTile(i, j - 1, TileType<RegolithRockSmallNatural>(), style: WorldGen.genRand.Next(10), mute: true);
                         }
                         else if (
-                            neighbourInfo.Solid.Right
-                            && !neighbourInfo.Solid.Top
-                            && !neighbourInfo.Solid.TopRight
+                                neighbourInfo.Solid.Right
+                            && !neighbourInfo.HasTile.Top
+                            && !neighbourInfo.HasTile.TopRight
                             && WorldGen.genRand.NextFloat() < mediumRockSpawnChance
                             )
                         {
                             WorldGen.PlaceTile(i, j - 1, TileType<RegolithRockMediumNatural>(), style: WorldGen.genRand.Next(6), mute: true);
                         }
-                    }
+						else if (
+							    neighbourInfo.Solid.Right
+							&&  neighbourInfo.Solid.Left
+							&& !neighbourInfo.HasTile.Top
+							&& !neighbourInfo.HasTile.TopRight
+							&& !neighbourInfo.HasTile.TopLeft
+							&& !aboveNeighbourInfo.HasTile.Top
+							&& !aboveNeighbourInfo.HasTile.TopRight
+							&& !aboveNeighbourInfo.HasTile.TopLeft
+							&& WorldGen.genRand.NextFloat() < largeRockSpawnChance
+							)
+						{
+							WorldGen.PlaceTile(i, j - 1, TileType<RegolithRockLargeNatural>(), style: WorldGen.genRand.Next(2), mute: true);
+						}
+					}
                 }
             }
         }

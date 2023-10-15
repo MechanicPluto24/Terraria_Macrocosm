@@ -7,14 +7,14 @@ namespace Macrocosm.Common.Netcode
 	/// <see cref="Drawing.Particles.Particle"> Particle </see>, 
 	/// <see cref="Content.Rockets.Rocket"> Rocket </see>,
 	/// <see cref="Content.Rockets.LaunchPads.LaunchPad"> LaunchPad </see>
-	/// and <b>(TO FIX!!!, currently not working)</b> ModNPC and ModProjectile 
+	/// and <b>(TODO)</b> ModNPC and ModProjectile 
 	/// <b>fields</b> (not auto-properties) marked with this attribute.
 	/// For ModNPC and ModProjectile, this should be used only after filling up the entirety of the already existing <c>ai[]</c> array.
 	/// The fields are synced whenever:  <list type="bullet">
-	///		<item> <c><see cref="Drawing.Particles.Particle.NetSync(int)"> Particle.NetSync() </see></c> is called </item>
-	///		<item> <c><see cref="Content.Rockets.Rocket.NetSync(int)"> Rocket.NetSync() </see></c> is called </item>
-	///		<item> <c><see cref="Content.Rockets.LaunchPads.LaunchPad.NetSync(int)"> LaunchPad.NetSync() </see></c> is called </item>
-	///		<item> <c>NPC.netUpdate</c> or <c>Projectile.netUpdate</c> are set to true, or the corresponding NetMessage is sent </item>
+	///		<item> <c><see cref="Drawing.Particles.Particle.NetSync(int)"> Particle.NetSync(int) </see></c> is called </item>
+	///		<item> <c><see cref="Content.Rockets.Rocket.NetSync(int)"> Rocket.NetSync(int) </see></c> is called </item>
+	///		<item> <c><see cref="Content.Rockets.LaunchPads.LaunchPad.NetSync(string, int)"> LaunchPad.NetSync(string, int) </see></c> is called </item>
+	///		<item> <c>NPC.netUpdate</c> or <c>Projectile.netUpdate</c> are set to true, or the corresponding NetMessage is sent <b>(TODO)</b></item>
 	/// </list> </summary>
 	[AttributeUsage(AttributeTargets.Field)]
 	public class NetSyncAttribute : Attribute { }

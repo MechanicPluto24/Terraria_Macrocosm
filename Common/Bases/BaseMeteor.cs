@@ -52,7 +52,7 @@ namespace Macrocosm.Common.Bases
             Projectile.damage = Damage;
         }
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
             // handled by clients 
             if (Main.netMode != NetmodeID.Server)

@@ -20,17 +20,13 @@ namespace Macrocosm.Content.Rockets.Customization
 		private static Dictionary<(string moduleName, string patternName), Pattern> patterns;
 		private static Dictionary<(string moduleName, string detailName), Detail> details;
 
-		private static Dictionary<string, ColorFunction> functions;
-
-		private static IEnumerable<IUnlockable> Unlockables => Utility.Concatenate<IUnlockable>(patterns.Values, details.Values, functions.Values);
+		private static IEnumerable<IUnlockable> Unlockables => Utility.Concatenate<IUnlockable>(patterns.Values, details.Values);
 			
 		public override void Load()
 		{
 			patterns = new Dictionary<(string,string), Pattern>();
 			details = new Dictionary<(string, string), Detail>();
- 			functions = new Dictionary<string, ColorFunction>();
 
-			LoadFunctions(); // Load functions first, as they are used in the pattern loading
 			LoadPatterns();
 			LoadDetails();
 
@@ -41,10 +37,8 @@ namespace Macrocosm.Content.Rockets.Customization
 		{
 			patterns.Clear();
 			details.Clear();
-			functions.Clear();
 			patterns = null;
 			details = null;
-			functions = null;
 
 			Initialized = false;
 		}
@@ -147,40 +141,25 @@ namespace Macrocosm.Content.Rockets.Customization
 		public static void SetDetailUnlockedStatus(string moduleName, string detailName, bool unlockedState = true)
 			 => details[(moduleName, detailName)].Unlocked = unlockedState;
 
-
-		public static ColorFunction GetFunction(string functionName)
-			=> functions[functionName];
-
-		public static bool TryGetFunction(string functionName, out ColorFunction function)
-			=> functions.TryGetValue(functionName, out function);
-
-		/// <summary>
-		/// Sets the unlocked status on a dynamic color. This affects all players, in all subworlds.
-		/// </summary>
-		/// <param name="functionName"> The function name </param>
-		/// <param name="unlockedState"> The unlocked state to set </param>
-		public static void SetFunctionUnlockedStatus(string functionName, bool unlockedState = true)
-			 => functions[functionName].Unlocked = unlockedState;
-
 		public override void ClearWorld()
 		{
 			foreach (var unlockable in Unlockables)
  				unlockable.Unlocked = unlockable.UnlockedByDefault;
  		}
 
-		public override void SaveWorldData(TagCompound tag) => SaveUnlockedStatus(tag);
+		public override void SaveWorldData(TagCompound tag) => SaveData(tag);
 
-		public override void LoadWorldData(TagCompound tag) => LoadUnlockedStatus(tag);	
+		public override void LoadWorldData(TagCompound tag) => LoadData(tag);	
 
 
-		public static void SaveUnlockedStatus(TagCompound tag)
+		public static void SaveData(TagCompound tag)
 		{
 			foreach (var unlockable in Unlockables)
  				if (unlockable.Unlocked && !unlockable.UnlockedByDefault)
  					tag[unlockable.GetKey() + "_Unlocked"] = true;
  		}
 
-		public static void LoadUnlockedStatus(TagCompound tag)
+		public static void LoadData(TagCompound tag)
 		{
 			foreach (var unlockable in Unlockables)
  				if (tag.ContainsKey(unlockable.GetKey() + "_Unlocked"))
@@ -217,31 +196,6 @@ namespace Macrocosm.Content.Rockets.Customization
 			details.Add((moduleName, detailName), detail);
 		}
 
-		/// <summary>
-		/// Adds a dynamic color function expression to the function storage
-		/// The function has an array of 8 <see cref="Color"/>s as parameter, representing the current pattern colors:
-		/// <code> (colors) => expressionHere </code> 
-		/// </summary>
-		/// <param name="functionName"> The function identifier name </param>
-		/// <param name="function"> The function expression </param>
-		/// <param name="unlockedbyDefault"> Whether  </param>
-		private static void AddFunction(string functionName, Func<Color[], Color> function, bool unlockedbyDefault = false)
-		{
-			ColorFunction func = new(function, functionName, unlockedbyDefault);
-			functions.Add(func.GetKey(), func);
-		}
-
-		/// <summary>
-		/// Adds a dynamic color function to the function storage
-		/// The function has an array of 8 <see cref="Color"/>s as parameter, representing the current pattern colors.
-		/// </summary>
-		/// <param name="function"> The function object </param>
-		private static void AddFunction(ColorFunction function)
-		{
-			functions.Add(function.GetKey(), function);
-		}
-
-		private const string localizationPath = "Mods.Macrocosm.Subworlds.";
 		public static UIListScrollablePanel ProvidePatternUI(string moduleName)
 		{
 			UIListScrollablePanel listPanel = new()
@@ -304,12 +258,6 @@ namespace Macrocosm.Content.Rockets.Customization
 			}
 
 			return listPanel;
-		}
-
-		private static void LoadFunctions()
-		{
-			AddFunction("Disco", (colors) => Main.DiscoColor);
-			AddFunction("Celestial", (colors) => GlobalVFX.CelestialColor);
 		}
 
 		private static void LoadPatterns()

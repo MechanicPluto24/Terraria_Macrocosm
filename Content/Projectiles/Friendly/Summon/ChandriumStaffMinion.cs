@@ -100,7 +100,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 				Vector2 velocity = Main.rand.NextVector2Circular(0.5f, 0.5f) * 3f;
 
 				if (i % 10 == 0)
- 					Particle.CreateParticle<ChandriumCrescentMoon>(Projectile.Center, velocity, scale: Main.rand.NextFloat(0.6f, 0.7f));
+ 					Particle.CreateParticle<ChandriumCrescentMoon>(Projectile.Center, velocity, scale: Main.rand.NextFloat(0.5f, 0.9f));
  
 				Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<ChandriumBrightDust>(), velocity.X, velocity.Y, Scale: Main.rand.NextFloat(0.8f, 1.2f));
 				dust.noGravity = true;
@@ -356,7 +356,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
 			if (Projectile.alpha > 0)
 			{
-				Main.EntitySpriteDraw(tex, pos, tex.Frame(1, Main.projFrames[Type], frameY: Projectile.frame), (new Color(117, 74, 220) * (Projectile.alpha / 255f)).NewAlpha(0), Projectile.rotation, Projectile.Size / 2, Projectile.scale, effects, 0f);
+				Main.EntitySpriteDraw(tex, pos, tex.Frame(1, Main.projFrames[Type], frameY: Projectile.frame), (new Color(117, 74, 220) * (Projectile.alpha / 255f)).WithAlpha(0), Projectile.rotation, Projectile.Size / 2, Projectile.scale, effects, 0f);
 			}
 
 			if (HasTarget)

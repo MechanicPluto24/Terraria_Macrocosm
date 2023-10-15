@@ -1,5 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Content.Rockets;
+using Microsoft.Xna.Framework;
 using System;
+using Terraria;
 using Terraria.Graphics.CameraModifiers;
 
 namespace Macrocosm.Content.CameraModifiers
@@ -48,6 +50,10 @@ namespace Macrocosm.Content.CameraModifiers
 
 		public void Update(ref CameraInfo cameraPosition)
 		{
+
+			if (!Main.LocalPlayer.GetModPlayer<RocketPlayer>().InRocket && !ReturnToNormalPosition)
+				ReturnToNormalPosition = true;
+
 			// Finished when the pan towards the regular position is done
 			if (ReturnToNormalPosition && panProgress < 0f)
 			{

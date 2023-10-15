@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -55,6 +56,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 			}
 		}
 
+		private SpriteBatchState state;
 		public override void Draw(SpriteBatch spriteBatch)
 		{
             base.Draw(spriteBatch);
@@ -69,7 +71,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 			var originalRenderTargets = spriteBatch.GraphicsDevice.GetRenderTargets();
 			RenderTarget2D renderTarget = new(spriteBatch.GraphicsDevice, (int)(Rocket.Bounds.Width * Main.UIScale) , (int)(Rocket.Bounds.Height * Main.UIScale));
 
-            var state = spriteBatch.SaveState();
+            state.SaveState(spriteBatch);
 			spriteBatch.End();
 
 			spriteBatch.GraphicsDevice.SetRenderTarget(renderTarget);
@@ -77,7 +79,9 @@ namespace Macrocosm.Content.Rockets.Navigation
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, state.Effect, Main.UIScaleMatrix);
 
-            Rocket.DrawDummy(spriteBatch, new Vector2(0, 0), Color.White);
+			var visualClone = Rocket.Clone();
+			visualClone.ForcedStationaryAppearance = true;
+			visualClone.DrawDummy(spriteBatch, new Vector2(0, 0), Color.White);
 
 			spriteBatch.End();
 

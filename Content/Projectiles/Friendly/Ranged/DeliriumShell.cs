@@ -1,3 +1,4 @@
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
@@ -60,7 +61,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			return true;
 		}
 
-		public override void Kill(int timeLeft)
+		public override void OnKill(int timeLeft)
 		{
 			//spawn dust explosion on kill
 			for (int i = 0; i < 40; i++)
@@ -81,6 +82,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			});
 		}
 
+		private SpriteBatchState state;
 		public override bool PreDraw(ref Color lightColor)
 		{
 			if (Projectile.timeLeft < 3)
@@ -89,18 +91,18 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			Texture2D tex = ModContent.Request<Texture2D>(Texture + "Aura").Value;
 
 			var spriteBatch = Main.spriteBatch;
-			var state = Main.spriteBatch.SaveState();
+			state.SaveState(Main.spriteBatch);
 
 			spriteBatch.End();
 			spriteBatch.Begin(BlendState.Additive, state);
 
-			Main.EntitySpriteDraw(tex, Projectile.Center - new Vector2(0, 38).RotatedBy(Projectile.rotation - MathHelper.Pi) - Main.screenPosition, null, Color.White.NewAlpha(0.3f * auraAlpha), Projectile.rotation - MathHelper.Pi, tex.Size() / 2, 0.8f, SpriteEffects.FlipHorizontally, 0);
-			Main.EntitySpriteDraw(tex, Projectile.Center - new Vector2(0, 58).RotatedBy(Projectile.rotation - MathHelper.Pi) - Main.screenPosition, null, Color.White.NewAlpha(0.1f * auraAlpha), Projectile.rotation - MathHelper.Pi, tex.Size() / 2, 0.8f, SpriteEffects.None, 0);
+			Main.EntitySpriteDraw(tex, Projectile.Center - new Vector2(0, 38).RotatedBy(Projectile.rotation - MathHelper.Pi) - Main.screenPosition, null, Color.White.WithOpacity(0.3f * auraAlpha), Projectile.rotation - MathHelper.Pi, tex.Size() / 2, 0.8f, SpriteEffects.FlipHorizontally, 0);
+			Main.EntitySpriteDraw(tex, Projectile.Center - new Vector2(0, 58).RotatedBy(Projectile.rotation - MathHelper.Pi) - Main.screenPosition, null, Color.White.WithOpacity(0.1f * auraAlpha), Projectile.rotation - MathHelper.Pi, tex.Size() / 2, 0.8f, SpriteEffects.None, 0);
 
 			spriteBatch.End();
 			spriteBatch.Begin(BlendState.AlphaBlend, state);
 
-			Main.EntitySpriteDraw(tex, Projectile.Center - new Vector2(0, 18).RotatedBy(Projectile.rotation - MathHelper.Pi) - Main.screenPosition, null, Color.White.NewAlpha(0.6f), Projectile.rotation - MathHelper.Pi, tex.Size() / 2, 0.8f, SpriteEffects.None, 0);
+			Main.EntitySpriteDraw(tex, Projectile.Center - new Vector2(0, 18).RotatedBy(Projectile.rotation - MathHelper.Pi) - Main.screenPosition, null, Color.White.WithOpacity(0.6f), Projectile.rotation - MathHelper.Pi, tex.Size() / 2, 0.8f, SpriteEffects.None, 0);
 			
 			spriteBatch.End();
 			spriteBatch.Begin(state);

@@ -16,7 +16,7 @@ namespace Macrocosm.Common.Drawing.Particles
 		/// <summary>
 		/// Syncs the particle and particle fields with <see cref="NetSyncAttribute"/> across all clients and the server.
 		/// </summary>
-		public void NetSync(int ignoreClient = -1)
+		public void NetSync(int toClient = -1, int ignoreClient = -1)
 		{
 			if (Main.netMode == NetmodeID.SinglePlayer || WhoAmI < 0)
 				return;
@@ -28,7 +28,7 @@ namespace Macrocosm.Common.Drawing.Particles
 			packet.Write((ushort)Type);
 
 			if (this.NetWriteFields(packet)) // Check if the writer was able to write all the fields.
-				 packet.Send(-1, ignoreClient);
+				 packet.Send(toClient, ignoreClient);
 
 			packet.Dispose();
 		}

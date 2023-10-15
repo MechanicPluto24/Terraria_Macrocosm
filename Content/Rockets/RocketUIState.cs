@@ -13,7 +13,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
-	public class RocketUIState : UIState, IRocketDataConsumer
+    public class RocketUIState : UIState, IRocketDataConsumer
     {
         public Rocket Rocket { get; set; } 
 
@@ -175,11 +175,8 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 			Player player = Main.LocalPlayer;
 	
-			if (!Rocket.Active || !Rocket.Bounds.InPlayerInteractionRange() || Rocket.InFlight || player.controlMount || player.UICloseConditions())
-			{
-				RocketUISystem.Hide();
-				return;
-			}
-		}
+			if (Rocket is not null && !Rocket.Active || !Rocket.Bounds.InPlayerInteractionRange() || Rocket.Launched || player.controlMount || player.UICloseConditions())
+ 				RocketUISystem.Hide();
+ 		}
 	}
 }

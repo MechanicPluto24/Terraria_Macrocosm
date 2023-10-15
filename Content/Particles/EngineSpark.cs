@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Drawing.Particles;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -19,19 +20,12 @@ namespace Macrocosm.Content.Particles
 
 		private float Opacity;
 
-		public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
+		public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
 		{
-			Texture2D glow = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "SimpleGlow").Value;
-
-			var state = spriteBatch.SaveState();
-			spriteBatch.End();
-			spriteBatch.Begin(BlendState.Additive, state);
-
+			Texture2D glow = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Circle6").Value;
 			Color color = Color.Lerp(ColorOnSpawn, ColorOnDespawn, (float)TimeLeft / SpawnTimeLeft);
-			spriteBatch.Draw(glow, Center - screenPosition, null, color.NewAlpha(Opacity), Rotation, glow.Size() / 2, 0.0375f * ScaleV, SpriteEffects.None, 0f);
-			
-			spriteBatch.End();
-			spriteBatch.Begin(state);
+			spriteBatch.Draw(glow, Center - screenPosition, null, color.WithOpacity(Opacity), Rotation, glow.Size() / 2, 0.0375f * ScaleV, SpriteEffects.None, 0f);
+			return false;
  		}
 
 		bool spawned = false;
