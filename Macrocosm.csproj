@@ -20,19 +20,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
     <Optimize>True</Optimize>
   </PropertyGroup>
-  <ItemGroup>
-    <AdditionalFiles Remove="Localization\en-US.hjson" />
-    <AdditionalFiles Remove="Localization\en-US_Mods.Macrocosm.Biomes.hjson" />
-    <AdditionalFiles Remove="Localization\en-US_Mods.Macrocosm.Buffs.hjson" />
-    <AdditionalFiles Remove="Localization\en-US_Mods.Macrocosm.Configs.hjson" />
-    <AdditionalFiles Remove="Localization\en-US_Mods.Macrocosm.Items.hjson" />
-    <AdditionalFiles Remove="Localization\en-US_Mods.Macrocosm.NPCs.hjson" />
-    <AdditionalFiles Remove="Localization\en-US_Mods.Macrocosm.Projectiles.hjson" />
-    <AdditionalFiles Remove="Localization\en-US_Mods.Macrocosm.Subworlds.hjson" />
-    <AdditionalFiles Remove="Localization\en-US_Mods.Macrocosm.Tiles.hjson" />
-    <AdditionalFiles Remove="Localization\en-US_Mods.Macrocosm.UI.hjson" />
-    <AdditionalFiles Remove="Localization\en-US_Mods.Macrocosm.WorldGen.hjson" />
-  </ItemGroup>
+  <PropertyGroup>
+	<NoWarn>$(NoWarn);IDE0051</NoWarn> <!-- Macrocosm uses reflection in some places, unused private methods are expected -->
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="tModLoader.CodeAssist" Version="0.1.*" />
   </ItemGroup>
