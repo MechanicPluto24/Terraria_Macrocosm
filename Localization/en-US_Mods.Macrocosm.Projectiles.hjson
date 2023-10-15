@@ -1,4 +1,4 @@
-﻿MoonMeteorLarge.DisplayName: Large Meteor
+MoonMeteorLarge.DisplayName: Large Meteor
 MoonMeteorMedium.DisplayName: Medium Meteor
 MoonMeteorSmall.DisplayName: Small Meteor
 NebulaMeteor.DisplayName: Nebula Meteor
@@ -54,3 +54,5 @@ SilicaPearlsandProjectile.DisplayName: Silica Pearlsand
 SilicaSandProjectile.DisplayName: Silica Sand
 GreatswordHeldProjectile.DisplayName: Greatsword Held Projectile
 GunHeldProjectile.DisplayName: Gun Held Projectile
+HalberdHeldProjectile.DisplayName: Halberd Held Projectile
+Procellarum_HalberdProjectile.DisplayName: Procellarum_ Halberd Projectile
