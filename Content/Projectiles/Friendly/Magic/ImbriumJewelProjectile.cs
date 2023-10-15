@@ -1,3 +1,4 @@
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
@@ -84,24 +85,20 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
             if(Main.rand.NextFloat() > Projectile.alpha / 255f || Projectile.alpha < 120)
             {
-				var star = Particle.CreateParticle<ImbriumStar>(new Vector2(Projectile.position.X, Projectile.position.Y) + Main.rand.NextVector2FromRectangle(new Rectangle(0, 0, (int)Projectile.Size.X, (int)Projectile.Size.Y)), Vector2.Zero, scale: 0.07f);
+				var star = Particle.CreateParticle<ImbriumStar>(new Vector2(Projectile.position.X, Projectile.position.Y) + Main.rand.NextVector2FromRectangle(new Rectangle(0, 0, (int)Projectile.Size.X, (int)Projectile.Size.Y)), Vector2.Zero, scale: Main.rand.NextFloat(0.6f, 0.8f));
 				star.Alpha = 1f - Projectile.alpha / 255f;
-				//int dust = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, DustID.GreenFairy, Projectile.velocity.X, Projectile.velocity.Y, 100, default(Color), 1.7f);
-				//Main.dust[dust].noGravity = true;
 			}
 		}
 
-        public override bool PreDraw(ref Color lightColor)
+		private SpriteBatchState state;
+		public override bool PreDraw(ref Color lightColor)
         {
-			//Redraw the projectile with the color not influenced by light
-			//Texture2D texture = (Texture2D)ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Magic/TheJewelOfShowersProj");
+			Vector2 drawOrigin = new(TextureAssets.Projectile[Type].Value.Width * 0.5f, Projectile.height * 0.5f);
 
-			Vector2 drawOrigin = new Vector2(TextureAssets.Projectile[Type].Value.Width * 0.5f, Projectile.height * 0.5f);
-
-            var state = Main.spriteBatch.SaveState();
+            state.SaveState(Main.spriteBatch);
 
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(BlendState.Additive, state);
+            Main.spriteBatch.Begin(BlendState.Additive, state); 
 
             for (int k = 0; k < Projectile.oldPos.Length; k++)
             {

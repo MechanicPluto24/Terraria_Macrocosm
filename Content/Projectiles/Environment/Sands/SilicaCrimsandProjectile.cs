@@ -46,7 +46,7 @@ namespace Macrocosm.Content.Projectiles.Environment.Sands
             Utility.AIFallingBlock(Projectile, falling);
         }
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
             => Utility.FallingBlockCreateTile(Projectile, tileType, itemType);
 
         public override bool? CanDamage() => Projectile.localAI[1] != -1f;

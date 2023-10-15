@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Netcode;
+using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -16,13 +17,17 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 {
 	public class LaunchPad : TagSerializable
 	{
+		[NetSync] public bool Active;
 		[NetSync] public Point16 StartTile;
 		[NetSync] public Point16 EndTile;
-		[NetSync] public bool HasRocket;
+		[NetSync] public int RocketID = -1;
+		[NetSync] public string CompassCoordinates = "";
+
+		public bool HasRocket => RocketID >= 0;
 
 		public int Width => EndTile.X + 1 - StartTile.X;
 		public Rectangle Hitbox => new((int)(StartTile.X * 16f), (int)(StartTile.Y * 16f), Width * 16, 16);
-		public Vector2 Position => new(((StartTile.X + (EndTile.X - StartTile.X) / 2f) * 16f), StartTile.Y);
+		public Vector2 Position => new(((StartTile.X + (EndTile.X - StartTile.X) / 2f) * 16f), StartTile.Y * 16f);
 
 		private bool isMouseOver;
 
@@ -44,33 +49,54 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
 		public LaunchPad(Point16 startTile, Point16 endTile) : this(startTile.X, startTile.Y, endTile.X, endTile.Y) { }
 
-		public static LaunchPad Create(string subworldId, int startTileX, int startTileY, int endTileX, int endTileY)
+		public static LaunchPad Create(int startTileX, int startTileY, int endTileX, int endTileY, bool shouldSync = true)
 		{
 			LaunchPad launchPad = new(startTileX, startTileY, endTileX, endTileY);
 
-			LaunchPadManager.Add(subworldId, launchPad);
-			launchPad.NetSync(subworldId);
+			launchPad.CompassCoordinates = Utility.GetCompassCoordinates(launchPad.Position);
+			launchPad.Active = true;
+
+			if (shouldSync)
+				launchPad.NetSync(MacrocosmSubworld.CurrentID);
+
+			LaunchPadManager.Add(MacrocosmSubworld.CurrentID, launchPad);
+
 			return launchPad;
 		}
 
-		public static LaunchPad Create(string subworldId, int startTileX, int startTileY) => Create(subworldId, startTileX, startTileY, startTileX, startTileY);
-		public static LaunchPad Create(string subworldId, Point16 startTile) => Create(subworldId, startTile.X, startTile.Y);
-		public static LaunchPad Create(string subworldId, Point16 startTile, Point16 endTile) => Create(subworldId, startTile.X, startTile.Y, endTile.X, endTile.Y);
+		public static LaunchPad Create(int startTileX, int startTileY, bool shouldSync = true) => Create(startTileX, startTileY, startTileX, startTileY, shouldSync);
+		public static LaunchPad Create(Point16 startTile, bool shouldSync = true) => Create( startTile.X, startTile.Y, shouldSync);
+		public static LaunchPad Create(Point16 startTile, Point16 endTile, bool shouldSync = true) => Create(startTile.X, startTile.Y, endTile.X, endTile.Y, shouldSync);
 
 		public void Update()
 		{
-			for(int i = 0; i < RocketManager.MaxRockets; i++)
+			int prevRocketId = RocketID;
+			RocketID = -1;
+
+			if (Main.tile[StartTile.ToPoint()].TileType != ModContent.TileType<LaunchPadMarker>() || (Main.tile[EndTile.ToPoint()].TileType != ModContent.TileType<LaunchPadMarker>()))
+			{
+				Active = false;
+				NetSync(MacrocosmSubworld.CurrentID);
+				return;
+			}
+
+			for (int i = 0; i < RocketManager.MaxRockets; i++)
 			{
 				Rocket rocket = RocketManager.Rockets[i];
 
-				if (rocket.ActiveInCurrentWorld)
-				{
-					if (Hitbox.Intersects(rocket.Bounds))
-						HasRocket = true;
-				}
-			}
+				if (rocket.ActiveInCurrentWorld && Hitbox.Intersects(rocket.Bounds))
+ 					RocketID = i;
+ 			}
+
+			if (RocketID != prevRocketId)
+				NetSync(MacrocosmSubworld.CurrentID);
 
 			isMouseOver = Hitbox.Contains(Main.MouseWorld.ToPoint()) && Hitbox.InPlayerInteractionRange();
+
+			if (isMouseOver)
+			{
+				Main.LocalPlayer.noThrow = 2;
+			}
 		}
 
 		public void Draw(SpriteBatch spriteBatch, Vector2 screenPosition)
@@ -87,7 +113,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 		/// <summary>
 		/// Syncs the launchpad fields with <see cref="NetSyncAttribute"/> across all clients and the server.
 		/// </summary>
-		public void NetSync(string subworldId, int ignoreClient = -1)
+		public void NetSync(string subworldId, int toClient = -1, int ignoreClient = -1)
 		{
 			if (Main.netMode == NetmodeID.SinglePlayer)
 				return;
@@ -95,7 +121,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			ModPacket packet = Macrocosm.Instance.GetPacket();
 
 			if (WriteToPacket(packet, subworldId))
-				packet.Send(-1, ignoreClient);
+				packet.Send(toClient, ignoreClient);
 
 			packet.Dispose();
 		}
@@ -123,15 +149,15 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			LaunchPad launchPad = new();
 			launchPad.NetReadFields(reader);
 
-			LaunchPad existingLaunchPad = LaunchPadManager.GetLaunchPadAtTileCoordinates(subworldId, launchPad.StartTile);
+			LaunchPad existingLaunchPad = LaunchPadManager.GetLaunchPadAtStartTile(subworldId, launchPad.StartTile);
 			if (existingLaunchPad is null)
  				LaunchPadManager.Add(subworldId, launchPad);
  
 			if (Main.netMode == NetmodeID.Server)
 			{
-				// Bounce to all other clients, minus the sender
 				launchPad.NetSync(subworldId, ignoreClient: clientWhoAmI);
 
+				/*
 				ModPacket packet = Macrocosm.Instance.GetPacket();
 				launchPad.WriteToPacket(packet, subworldId);
 
@@ -139,6 +165,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 					SubworldSystem.SendToMainServer(Macrocosm.Instance, packet.GetBuffer());
 				else
 					SubworldSystem.SendToAllSubservers(Macrocosm.Instance, packet.GetBuffer());
+				*/
 			}
 		}
 
@@ -150,9 +177,11 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 		{
 			TagCompound tag = new()
 			{
+				[nameof(Active)] = Active,
 				[nameof(StartTile)] = StartTile,
 				[nameof(EndTile)] = EndTile,
-				[nameof(HasRocket)] = HasRocket,
+				[nameof(RocketID)] = RocketID,
+				[nameof(CompassCoordinates)] = CompassCoordinates,
 			};
 
 			return tag;
@@ -160,16 +189,21 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
 		public static LaunchPad DeserializeData(TagCompound tag)
 		{
-			LaunchPad launchPad = new()
-			{
-				HasRocket = tag.ContainsKey(nameof(HasRocket)),
-			};
+			LaunchPad launchPad = new();
+
+			launchPad.Active = tag.ContainsKey(nameof(Active));
+
+			if (tag.ContainsKey(nameof(RocketID)))
+				launchPad.RocketID = tag.GetInt(nameof(RocketID));
 
 			if (tag.ContainsKey(nameof(StartTile)))
 				launchPad.StartTile = tag.Get<Point16>(nameof(StartTile));
 
 			if (tag.ContainsKey(nameof(EndTile)))
 				launchPad.EndTile = tag.Get<Point16>(nameof(EndTile));
+
+			if (tag.ContainsKey(nameof(CompassCoordinates)))
+				launchPad.CompassCoordinates = tag.GetString(nameof(CompassCoordinates));
 
 			return launchPad;
 		}

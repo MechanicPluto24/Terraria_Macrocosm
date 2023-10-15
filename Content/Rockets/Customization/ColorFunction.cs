@@ -1,15 +1,16 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Common.Utils;
+using Microsoft.Xna.Framework;
 using System;
 using System.Linq;
+using System.Reflection;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-	public class ColorFunction : IUnlockable
+	public class ColorFunction 
 	{
 		public string Name { get; } = "";
 
-		public bool Unlocked { get; set; }
-		public bool UnlockedByDefault { get; private set; }
+		public object[] Parameters { get; private set; }
 
 		private readonly Func<Color[], Color> function;
 
@@ -26,10 +27,8 @@ namespace Macrocosm.Content.Rockets.Customization
 		/// <param name="function"> The function </param>
 		/// <param name="name"> The dynamic color name </param>
 		/// <param name="unlockedByDefault"> Whether this dynamic color is unlocked by default </param>
-		public ColorFunction(Func<Color[], Color> function, string name, bool unlockedByDefault = true)
+		public ColorFunction(Func<Color[], Color> function, string name)
 		{
-			Unlocked = unlockedByDefault;
-			UnlockedByDefault = unlockedByDefault;
 			this.function = function;
 			Name = name;
 		}
@@ -53,35 +52,42 @@ namespace Macrocosm.Content.Rockets.Customization
 			}
 			catch (ArgumentException ex)
 			{
-				Macrocosm.Instance.Logger.Error(ex.Message);
+				LogImportError(ex.Message);
 				return CreateMapFunction(0);
 			}
 			catch (Exception ex) when (ex is NullReferenceException)
 			{
-				string errorMessage = $"Error creating function '{name}', parameters not provided.";
-				Macrocosm.Instance.Logger.Error(errorMessage + "\n" + ex.Message);
+				LogImportError($"Error creating function '{name}', expected parameters not provided.");
 				return CreateMapFunction(0);
 			}
 			catch (Exception ex) when (ex is IndexOutOfRangeException or InvalidCastException)
 			{
 				string parameterString = string.Join(", ", parameters.Select(p => p.ToString()));
-				string errorMessage = $"Error creating function '{name}' with parameters: {parameterString}";
-				Macrocosm.Instance.Logger.Error(errorMessage + "\n" + ex.Message);
+				LogImportError($"Error creating function '{name}' with parameters: {parameterString}");
 				return CreateMapFunction(0);
 			}
-			
+		}
+
+		private static void LogImportError(string message)
+		{
+			Utility.Chat(message, Color.Orange);
+			Macrocosm.Instance.Logger.Error(message);
 		}
 
 		public static ColorFunction CreateMapFunction(int index)
 		{
+			if (index < 0 || index >= 8) throw new ArgumentException($"Index out of bounds: {index}");
 			Color map(Color[] colors) => colors[index];
-			return new(map, "Map");
+			return new(map, "Map") { Parameters = new object[] { index } };
 		}
 
 		public static ColorFunction CreateLerpFunction(int index1, int index2, float amount)
 		{
+			if (index1 < 0 || index1 >= 8) throw new ArgumentException($"Index out of bounds: {index1}");
+			if (index2 < 0 || index2 >= 8) throw new ArgumentException($"Index out of bounds: {index2}");
+
 			Color lerp(Color[] colors) => Color.Lerp(colors[index1], colors[index2], amount);
-			return new(lerp, "Lerp");
+			return new(lerp, "Lerp") { Parameters = new object[] { index1, index2, amount } };
 		}
 	}
 

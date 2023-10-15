@@ -18,7 +18,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Thrown
 			Projectile.penetrate = 1;
 		}
 
-		public override void Kill(int timeLeft)
+		public override void OnKill(int timeLeft)
 		{
 			SoundEngine.PlaySound(SoundID.Item107, Projectile.position);
 

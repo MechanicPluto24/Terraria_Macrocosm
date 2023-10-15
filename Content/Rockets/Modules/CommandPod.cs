@@ -2,6 +2,10 @@
 {
 	public class CommandPod : RocketModule
     {
+		public CommandPod(Rocket rocket) : base(rocket)
+		{
+		}
+
 		public override int DrawPriority => 4;
 
 		public override int Width => 68;

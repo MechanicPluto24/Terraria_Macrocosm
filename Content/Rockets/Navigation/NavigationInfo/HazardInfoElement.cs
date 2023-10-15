@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
 {
-	public class HazardInfoElement : InfoElement
+    public class HazardInfoElement : InfoElement
     {
         public HazardInfoElement(string hazardKey) : base(hazardKey) { }
 

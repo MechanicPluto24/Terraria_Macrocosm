@@ -1,5 +1,9 @@
-﻿using Macrocosm.Content.Items.Global;
+﻿using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.UI;
+using Macrocosm.Content.Items.Global;
 using Macrocosm.Content.Rarities;
+using Macrocosm.Content.Subworlds;
+using Macrocosm.Content.UI.LoadingScreens;
 using SubworldLibrary;
 using Terraria;
 using Terraria.ID;
@@ -29,9 +33,9 @@ namespace Macrocosm.Content.Items.Dev
 			if(player.whoAmI == Main.myPlayer)
 			{
 				if (!SubworldSystem.AnyActive<Macrocosm>())
-					SubworldSystem.Enter("Macrocosm/Moon");
-				else
-					SubworldSystem.Exit();
+ 					MacrocosmSubworld.Travel("Moon");
+ 				else
+					MacrocosmSubworld.Travel("Earth");
 			}
 			
  			return true;

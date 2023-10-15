@@ -22,8 +22,8 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 			Item.DamageType = DamageClass.Melee;
 			Item.width = 40;
 			Item.height = 40;
-			Item.useTime = 10;
-			Item.useAnimation = 10;
+			Item.useTime = 15;
+			Item.useAnimation = 15;
 			Item.useStyle = ItemUseStyleID.Swing;
 			Item.knockBack = 5;
 			Item.value = 10000;

@@ -1,9 +1,9 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Systems;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.CameraModifiers;
 using Macrocosm.Content.Subworlds;
-using Macrocosm.Content.Systems;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
 using Terraria;
@@ -14,7 +14,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Players
 {
-	public enum SpaceProtection
+    public enum SpaceProtection
 	{
 		None,
 		Tier1,

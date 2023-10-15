@@ -45,11 +45,11 @@ namespace Macrocosm.Common.Hooks
 						{
 							// Lose focus for that other element
 							current.HasFocus = false;
-							current.OnFocusLost();
+							current.OnFocusLost?.Invoke();
 
 							// Gain focus for this one
 							focusedElementsByContext[focusable.FocusContext] = focusable;
-							focusable.OnFocusGain();
+							focusable.OnFocusGain?.Invoke();
 						}
 					}
 					// In the case where there are no focused elements in this context:
@@ -57,18 +57,18 @@ namespace Macrocosm.Common.Hooks
 					{
 						// Gain focus for this one
 						focusedElementsByContext[focusable.FocusContext] = focusable;
-						focusable.OnFocusGain();
+						focusable.OnFocusGain?.Invoke();
 					}
 				}
-				// In the case where this element does not have focus...
+				// In the case where this element should not have focus...
 				else if (focusedElementsByContext.TryGetValue(focusable.FocusContext, out current))
 				{
-					// ... but just had focus in this context:
+					// ... but still has focus in this context:
 					if (current == focusable)
 					{
 						// Lose focus for this one
 						focusedElementsByContext.Remove(focusable.FocusContext);
-						focusable.OnFocusLost();
+						focusable.OnFocusLost?.Invoke();
 					}
 				}
 			}

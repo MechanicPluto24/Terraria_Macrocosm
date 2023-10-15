@@ -1,3 +1,4 @@
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Trails;
@@ -226,7 +227,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 		}
 
 
-		public override void Kill(int timeLeft)
+		public override void OnKill(int timeLeft)
 		{
             if(AI_State is ActionState.Orbit && Parent is not null && Parent.ModProjectile is DianiteForkCoreProjectile)
                 (Parent.ModProjectile as DianiteForkCoreProjectile).BrokenApartEarly = true;
@@ -240,13 +241,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             }
 		}
 
+		private SpriteBatchState state;
 		public override bool PreDraw(ref Color lightColor)
         {
             Texture2D tex = TextureAssets.Projectile[Type].Value;
-			Texture2D glow = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "SimpleGlow").Value;
+			Texture2D glow = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Circle6").Value;
 			Vector2 origin = Projectile.Size / 2f;
 ;
-			var state = Main.spriteBatch.SaveState();
+			state.SaveState(Main.spriteBatch);
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.Additive, state);
 
@@ -317,7 +319,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             }
         }
 
-		public override void Kill(int timeLeft)
+		public override void OnKill(int timeLeft)
 		{
             if (BrokenApartEarly)
                 return;
