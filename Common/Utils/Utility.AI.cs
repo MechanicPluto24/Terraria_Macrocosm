@@ -2187,9 +2187,8 @@ namespace Macrocosm.Common.Utils
             p.rotation = (float)Math.Atan2(pointY, pointX) - p.velocity.X * 0.1f;
         }
 
-        /*
-         * A cleaned up (and edited) copy of tile collison for Flails.
-         */
+        ///<summary>
+		/// A cleaned up (and edited) copy of tile collison for Flails.		///</summary>
         public static void TileCollideFlail(Projectile p, ref Vector2 velocity, bool playSound = true)
         {
             if (velocity != p.velocity)
@@ -4905,9 +4904,8 @@ namespace Macrocosm.Common.Utils
             WalkupHalfBricks(npc, ref npc.gfxOffY, ref npc.stepSpeed);
         }
 
-        /*
-		 *  Code based on vanilla halfbrick walkup code, checks for and attempts to walk over half tiles.
-		 */
+        ///<summary>
+		///  Code based on vanilla halfbrick walkup code, checks for and attempts to walk over half tiles.		///</summary>
         public static void WalkupHalfBricks(Entity codable, ref float gfxOffY, ref float stepSpeed)
         {
             if (codable == null)
@@ -5121,9 +5119,8 @@ namespace Macrocosm.Common.Utils
         #endregion
 
 
-        /*
-         * Checks if a space is completely devoid of solid tiles.
-         */
+        ///<summary>
+		/// Checks if a space is completely devoid of solid tiles.		///</summary>
         public static bool EmptyTiles(Rectangle rect)
         {
             int topX = rect.X / 16, topY = rect.Y / 16;
@@ -5217,9 +5214,8 @@ namespace Macrocosm.Common.Utils
             return false;
         }
 
-        /*
-         * Convenience method that handles killing an NPC without loot.
-         */
+        ///<summary>
+		/// Convenience method that handles killing an NPC without loot.		///</summary>
         public static void KillNPC(NPC npc)
         {
             if (Main.netMode == NetmodeID.MultiplayerClient) return;
@@ -5563,9 +5559,8 @@ namespace Macrocosm.Common.Utils
             return allPlayers.ToArray();
         }
 
-        /*
-         * Returns true if the player can target the given codable.
-         */
+        ///<summary>
+		/// Returns true if the player can target the given codable.		///</summary>
         public static bool CanTarget(Player player, Entity codable)
         {
             if (codable is NPC npc)
@@ -5580,9 +5575,8 @@ namespace Macrocosm.Common.Utils
             return false;
         }
 
-        /*
-         * Sets the npc's target to the given target and adjusts the according variables.
-         */
+        ///<summary>
+		/// Sets the npc's target to the given target and adjusts the according variables.		///</summary>
         public static void SetTarget(NPC npc, int target)
         {
             npc.target = target;

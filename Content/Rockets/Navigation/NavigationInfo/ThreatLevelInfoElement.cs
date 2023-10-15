@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
 {
-	public enum ThreatLevel
+    public enum ThreatLevel
     {
         None,
         Harmless,

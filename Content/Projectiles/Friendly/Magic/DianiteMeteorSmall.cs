@@ -1,3 +1,4 @@
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
@@ -24,6 +25,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			Projectile.height = 16;
 		}
 
+		private SpriteBatchState state;
 		public override bool PreDraw(ref Color lightColor)
 		{
 			ProjectileID.Sets.TrailCacheLength[Type] = 10;
@@ -32,7 +34,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			if (count > 25f)
 				count = 25f;
 
-			var state = Main.spriteBatch.SaveState();
+			state.SaveState(Main.spriteBatch);
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.Additive, state);
@@ -51,7 +53,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			return true;
 		}
 
-		public override void Kill(int timeLeft)
+		public override void OnKill(int timeLeft)
 		{
 			for (int i = 0; i < 30; i++)
 			{
@@ -68,7 +70,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			var explosion = Particle.CreateParticle<TintableExplosion>(p =>
 			{
 				p.Position = Projectile.Center + Projectile.oldVelocity + Main.rand.NextVector2Circular(10f, 10f);
-				p.DrawColor = (new Color(195, 115, 62)).NewAlpha(0.6f);
+				p.DrawColor = (new Color(195, 115, 62)).WithOpacity(0.6f);
 				p.Scale = 0.6f;
 				p.NumberOfInnerReplicas = 4;
 				p.ReplicaScalingFactor = 0.3f;

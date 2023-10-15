@@ -15,8 +15,9 @@ namespace Macrocosm.Content.Biomes
 		public override ModUndergroundBackgroundStyle UndergroundBackgroundStyle => ModContent.GetInstance<MoonUgBgStyle>();
  		public override int Music => Main.dayTime ? MusicLoader.GetMusicSlot(Mod, "Assets/Music/Deadworld") : MusicLoader.GetMusicSlot(Mod, "Assets/Music/Requiem");
 
+		public override string BestiaryIcon => Macrocosm.TextureAssetsPath + "Icons/Moon";
+		public override string BackgroundPath => Macrocosm.TextureAssetsPath + "MapBackgrounds/Moon";
 		public override string MapBackground => BackgroundPath;
-
 
 		public override void SetStaticDefaults()
 		{

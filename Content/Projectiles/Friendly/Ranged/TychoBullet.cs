@@ -49,7 +49,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 		public override bool PreDraw(ref Color lightColor)
 		{
-			Projectile.DrawMagicPixelTrail(Vector2.Zero, 2.8f, 0.5f, new Color(255, 162, 141) * lightColor.GetLuminance(), new Color(184, 58, 24, 0) * lightColor.GetLuminance());
+			Projectile.DrawMagicPixelTrail(Vector2.Zero, 2.8f, 0.5f, new Color(255, 162, 141) * lightColor.GetLuminanceNTSC(), new Color(184, 58, 24, 0) * lightColor.GetLuminanceNTSC());
 			return true;
 		}
 	}

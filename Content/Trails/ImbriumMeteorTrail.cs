@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Trails
 		{
 			Color baseColor = new(0, 217, 102, 255);
 			float lerpValue = Utils.GetLerpValue(0f, 0.5f, progressOnStrip, clamped: true);
-			Color result = (new Color(0, 217, 102) * (2f * (progressOnStrip))).NewAlpha(0f);
+			Color result = (new Color(0, 217, 102) * (2f * (progressOnStrip))).WithOpacity(0f);
 			return result;
 		}
 

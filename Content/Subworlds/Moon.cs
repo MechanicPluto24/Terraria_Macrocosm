@@ -2,9 +2,6 @@
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Projectiles.Environment.Meteors;
 using Macrocosm.Content.Rockets.Navigation.Checklist;
-using Macrocosm.Content.Systems;
-using Macrocosm.Content.UI.LoadingScreens;
-using Macrocosm.Content.WorldGeneration.Moon;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -13,7 +10,6 @@ using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Utilities;
-using Terraria.WorldBuilding;
 
 namespace Macrocosm.Content.Subworlds
 {
@@ -34,24 +30,9 @@ namespace Macrocosm.Content.Subworlds
 		public override float GravityMultiplier => 0.166f;
 
         public override bool NormalUpdates => false;
-        public override int Width => 4200;
-        public override int Height => 1200;
-        public override bool ShouldSave => false;
-        public override bool NoPlayerSaving => false;
 
-		private GroundPass genGroundPass;
-		//public override List<GenPass> Tasks => /*new()*/ new MoonGenPassCollection().Tasks;
-        /*{
-            genGroundPass,
-            new CraterPass("CraterPass", 1f),
-            new RegolithPass("RegolithPass", 5f),
-            new OrePass("OrePass", 0.75f),
-            new CavePass("CavePass", 1f, genGroundPass.RockLayerHigh, genGroundPass.RockLayerHigh),
-            new IrradiationPass("IrradiationPass", 3f),
-            new ScuffedSmoothPass("ScuffedSmoothPass", 1f),
-            new AmbientPass("AmbientPass", 0.2f),
-            new FinishPass("FinishPass", 0.1f, Name)
-        };*/
+        public override bool ShouldSave => true;
+        public override bool NoPlayerSaving => false;
 
 		public override ChecklistConditionCollection LaunchConditions => new()
 		{
@@ -71,9 +52,6 @@ namespace Macrocosm.Content.Subworlds
 
         public Moon()
         {
-            LoadingScreen = new MoonLoadingScreen();
-
-            genGroundPass = new GroundPass("GroundPass", 8f, Width, Height);
         }
 
 		public override void OnEnterWorld()
@@ -83,7 +61,7 @@ namespace Macrocosm.Content.Subworlds
 
         public override void OnExitWorld()
         {
-            SkyManager.Instance.Deactivate("Macrocosm:MoonSky");
+			SkyManager.Instance.Deactivate("Macrocosm:MoonSky");
         }
 
 		public override bool GetLight(Tile tile, int x, int y, ref FastRandom rand, ref Vector3 color)
@@ -93,7 +71,10 @@ namespace Macrocosm.Content.Subworlds
 
 		public override void PreUpdateWorld()
         {
-            UpdateBloodMoon();
+			if(SkyManager.Instance["Macrocosm:MoonSky"] is not null && !SkyManager.Instance["Macrocosm:MoonSky"].IsActive())
+				SkyManager.Instance.Activate("Macrocosm:MoonSky");
+
+			UpdateBloodMoon();
             UpdateMeteorStorm();
             UpdateSolarStorm();
 		}
@@ -105,7 +86,7 @@ namespace Macrocosm.Content.Subworlds
 
 		public override void ModifyColorOfTheSkies(ref Color colorOfTheSkies)
 		{
-			colorOfTheSkies = colorOfTheSkies.ToGrayscale();
+			colorOfTheSkies = colorOfTheSkies.ToGrayscaleNTSC();
 		}
 
 		#region Moon events
@@ -129,7 +110,7 @@ namespace Macrocosm.Content.Subworlds
 
 		#region Meteor logic
 
-		public static float MeteorBoost = 1f;
+		public static float MeteorBoost { get; set; } = 1f;
 		private double timePass = 0.0;
 		private void UpdateMeteors()
 		{

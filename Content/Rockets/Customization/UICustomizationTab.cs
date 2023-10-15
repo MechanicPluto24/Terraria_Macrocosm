@@ -166,6 +166,7 @@ namespace Macrocosm.Content.Rockets.Navigation
         {
             base.Update(gameTime);
 
+			CustomizationDummy.ForcedStationaryAppearance = true;
 			rocketPreview.RocketDummy = CustomizationDummy;
 			UpdateCurrentModule();
 
@@ -233,7 +234,8 @@ namespace Macrocosm.Content.Rockets.Navigation
 					}
 					else
 					{
-						currentModule.Pattern.SetColor(colorIndex, hslMenu.PendingColor);
+						if(hslMenu.PreviousColor != hslMenu.PendingColor)
+							currentModule.Pattern.SetColor(colorIndex, hslMenu.PendingColor);
 					}
 				}
 
@@ -377,6 +379,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 
 		private void OnPreviewZoomOut()
 		{
+			hslMenu.CaptureCurrentColor();
 			rocketPreviewZoomButton.SetImage(ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Buttons/ZoomInButton"));
 		}
 
@@ -413,7 +416,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 		private void CopyRocketData()
 		{
 			SoundEngine.PlaySound(SoundID.MenuTick);
-			string json = CustomizationDummy.GetCustomizationDataJSON();
+			string json = CustomizationDummy.GetCustomizationDataToJSON();
 			Platform.Get<IClipboard>().Value = json;
 		}
 
@@ -431,30 +434,6 @@ namespace Macrocosm.Content.Rockets.Navigation
 			{
 				Utility.Chat(ex.Message);
 			}
-		}
-
-		private void CopyModuleData()
-		{
-			SoundEngine.PlaySound(SoundID.MenuTick);
-			string json = currentModule.GetCustomizationDataJSON();
-			Platform.Get<IClipboard>().Value = json;
-		}
-
-		private void PasteModuleData()
-		{
-			SoundEngine.PlaySound(SoundID.MenuTick);
-			string json = Platform.Get<IClipboard>().Value;
-
-			try
-			{
-				currentModule.ApplyCustomizationDataFromJSON(json);
-				RefreshPatternColorPickers();
-			}
-			catch (Exception ex)
-			{
-				Utility.Chat(ex.Message);
-			}
-
 		}
 
 		private void OnHSLMenuCancel()
@@ -600,14 +579,24 @@ namespace Macrocosm.Content.Rockets.Navigation
 			ColorPickersLoseFocus();
 
 			var defaultPattern = CustomizationStorage.GetPattern(currentModuleName, currentModule.Pattern.Name);
-			currentModule.Pattern = defaultPattern.Clone();
-			currentPatternIcon.Pattern = defaultPattern.Clone();
 
-			if(GetFocusedColorPicker(out var item) && item.colorIndex >= 0)
+			if (rocketPreview.ZoomedOut)
 			{
-				item.picker.BackPanelColor = defaultPattern.GetColor(item.colorIndex);
+				foreach (var module in CustomizationDummy.Modules)
+				{
+					var currentModulePattern = CustomizationDummy.Modules[module.Key].Pattern;
+
+					if (currentModulePattern.Name == currentPatternIcon.Pattern.Name)
+						CustomizationDummy.Modules[module.Key].Pattern = CustomizationStorage.GetPattern(module.Key, currentModulePattern.Name);
+				}
+			}
+			else
+			{
+				currentModule.Pattern = defaultPattern.Clone();
+				currentPatternIcon.Pattern = defaultPattern.Clone();
 			}
 
+			RefreshPatternColorPickers();
 		}
 		#endregion
 
@@ -861,16 +850,16 @@ namespace Macrocosm.Content.Rockets.Navigation
 			rocketApplyButton.OnLeftClick += (_, _) => ApplyCustomizationChanges();
 			rocketCustomizationControlPanel.Append(rocketApplyButton);
 
-
+			// TODO...
 			/*
 			randomizeButton = new(Main.Assets.Request<Texture2D>("Images/UI/CharCreation/Randomize"))
 			{
 				VAlign = 0.93f,
 				Left = new(0f, 0.77f),
-				HoverText = Language.GetText("Mods.Macrocosm.UI.Common.RandomizeColor")
+				HoverText = Language.GetText("Mods.Macrocosm.UI.Common.RandomizeCustomization")
 			};
 
-			randomizeButton.OnLeftMouseDown += (_, _) => RandomizeColor();
+			randomizeButton.OnLeftMouseDown += (_, _) => RandomizeCustomization();
 			rocketCustomizationControlPanel.Append(randomizeButton);
 			*/
 

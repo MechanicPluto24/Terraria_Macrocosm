@@ -850,3 +850,53 @@ SteelRifle: {
 	DisplayName: Steel Rifle
 	Tooltip: ""
 }
+
+MoonBaseCandle: {
+	DisplayName: Moon Base Candle
+	Tooltip: ""
+}
+
+MoonBaseLamp: {
+	DisplayName: Moon Base Lamp
+	Tooltip: ""
+}
+
+MoonBaseLantern: {
+	DisplayName: Moon Base Lantern
+	Tooltip: ""
+}
+
+MoonBaseNeonTube: {
+	DisplayName: Moon Base Neon Tube
+	Tooltip: ""
+}
+
+OilRefinery: {
+	DisplayName: Oil Refinery
+	Tooltip: ""
+}
+
+SolarPanelSmall: {
+	DisplayName: Solar Panel Small
+	Tooltip: ""
+}
+
+MoonBaseBed: {
+	DisplayName: Moon Base Bed
+	Tooltip: ""
+}
+
+MoonBaseChair: {
+	DisplayName: Moon Base Chair
+	Tooltip: ""
+}
+
+MoonBaseDeskLamp: {
+	DisplayName: Moon Base Desk Lamp
+	Tooltip: ""
+}
+
+MoonBaseSofa: {
+	DisplayName: Moon Base Sofa
+	Tooltip: ""
+}

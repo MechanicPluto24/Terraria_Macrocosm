@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Trails;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -76,6 +77,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
 			}
 		}
 
+		private SpriteBatchState state;
 		public override bool PreDraw(ref Color lightColor)
 		{
 			Texture2D tex = TextureAssets.Projectile[Type].Value;
@@ -83,21 +85,17 @@ namespace Macrocosm.Content.Projectiles.Hostile
 			Rectangle sourceRect = tex.Frame(1, Main.projFrames[Type], frameY: Projectile.frame);
  			Vector2 origin = Projectile.Size / 2f + new Vector2(6, 32);
 
-			
-
-			SpriteBatchState state = Main.spriteBatch.SaveState();
-
+			state.SaveState(Main.spriteBatch);
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.AlphaBlend, state);
 
 			Projectile.GetTrail().Draw(Projectile.Size / 2f);
 
-
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(state);
 
 			Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition,
-				sourceRect, Color.White.NewAlpha(0f), Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
+				sourceRect, Color.White.WithOpacity(0f), Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
 			
 			return false;
 		}

@@ -6,7 +6,7 @@ namespace Macrocosm.Content.Rarities
 {
 	public class DevRarity : ModRarity
 	{
-		public override Color RarityColor => GlobalVFX.CelestialColor;
+		public override Color RarityColor => CelestialDisco.CelestialColor;
 
 		public override int GetPrefixedRarity(int offset, float valueMult)
 		{

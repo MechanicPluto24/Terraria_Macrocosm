@@ -1,3 +1,4 @@
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -60,6 +61,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
  				Projectile.Kill();
  		}
 
+		private SpriteBatchState state;
 		public override bool PreDraw(ref Color lightColor)
 		{
 			Asset<Texture2D> val = TextureAssets.Projectile[Type];
@@ -74,9 +76,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			float progress = Projectile.localAI[0] / Projectile.ai[1];
 			float progressScale = Utils.Remap(progress, 0f, 0.6f, 0f, 1f) * Utils.Remap(progress, 0.6f, 1f, 1f, 0f);
 
-			Color color = new Color(81, 180, 114);
-			Color color2 = new Color(157, 255, 201);
-			Color color3 = new Color(33, 109, 85);
+			Color color = new(81, 180, 114);
+			Color color2 = new(157, 255, 201);
+			Color color3 = new(33, 109, 85);
 
 			float brightness = Lighting.GetColor(Projectile.Center.ToTileCoordinates()).ToVector3().Length() / (float)Math.Sqrt(3.0);
 			brightness = 0.5f + brightness * 0.5f;
@@ -85,7 +87,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			Color color4 = Color.White * progressScale * 0.5f;
 			Color color5 = color4 * brightness * 0.5f;
 
-			SpriteBatchState state = Main.spriteBatch.SaveState();
+			state.SaveState(Main.spriteBatch);
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, state);
 
@@ -133,7 +135,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
 			float fade = Utils.GetLerpValue(fadeInStart, fadeInEnd, flareCounter, clamped: true) * Utils.GetLerpValue(fadeOutEnd, fadeOutStart, flareCounter, clamped: true);
 
-			Color color = (shineColor * opacity * 0.5f).NewAlpha(0f) * fade;
+			Color color = (shineColor * opacity * 0.5f).WithOpacity(0f) * fade;
 			Color color2 = drawColor * 0.5f * fade;
 
 			Vector2 scaleX = new Vector2(fatness.X * 0.5f, scale.X) * fade;

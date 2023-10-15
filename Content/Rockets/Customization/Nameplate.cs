@@ -89,7 +89,7 @@ namespace Macrocosm.Content.Rockets.Customization
 
 			for (int i = 0; i < numChars; i++)
 			{
-				spriteBatch.Draw(texture, new Vector2(position.X + offsetX, position.Y + offsetY + (i * characterHeight)), GetCharacterRectangle(text[i]), TextColor * ambientColor.GetLuminance(), 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+				spriteBatch.Draw(texture, new Vector2(position.X + offsetX, position.Y + offsetY + (i * characterHeight)), GetCharacterRectangle(text[i]), TextColor * ambientColor.GetLuminanceNTSC(), 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
 			}
 		}
 

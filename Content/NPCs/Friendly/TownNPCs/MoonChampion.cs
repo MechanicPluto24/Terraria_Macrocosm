@@ -1,8 +1,8 @@
+using Macrocosm.Common.Systems;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Items.Armor.Astronaut;
 using Macrocosm.Content.Items.Currency;
 using Macrocosm.Content.Subworlds;
-using Macrocosm.Content.Systems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SubworldLibrary;
@@ -17,7 +17,7 @@ using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
 {
-	[AutoloadHead]
+    [AutoloadHead]
 	public class MoonChampion : ModNPC
 	{
 		public bool HasBeenChatWithForTheFirstTime = false;
@@ -35,7 +35,7 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
 
 			//NPCID.Sets.ShimmerTownTransform[NPC.type] = true; // TODO
 
-			NPCID.Sets.NPCBestiaryDrawModifiers drawModifiers = new(0)
+			NPCID.Sets.NPCBestiaryDrawModifiers drawModifiers = new()
 			{
 				Velocity = 1f // Draws the NPC in the bestiary as if its walking +1 tiles in the x direction
 			};
