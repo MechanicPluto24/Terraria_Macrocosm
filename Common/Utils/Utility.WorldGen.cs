@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Common.DataStructures;
-using Macrocosm.Content.WorldGeneration.Base;
 using Microsoft.Xna.Framework;
 using MonoMod.Logs;
 using System;
@@ -11,7 +10,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Common.Utils
 {
-	public static partial class Utility
+    public static partial class Utility
     {
         public static bool CoordinatesOutOfBounds(int i, int j) => i >= Main.maxTilesX || j >= Main.maxTilesY || i < 0 || j < 0;
 
@@ -252,12 +251,11 @@ namespace Macrocosm.Common.Utils
 
 		public static void SafePoundTile(int i, int j)
 		{
-            if (CoordinatesOutOfBounds(i, j))
-            {
-                return;
-            }
-
             Tile tile = Main.tile[i, j];
+
+            if (CoordinatesOutOfBounds(i, j) || !tile.HasTile)
+                 return;
+ 
             var info = new TileNeighbourInfo(i, j).HasTile;
 
             if (
@@ -274,12 +272,11 @@ namespace Macrocosm.Common.Utils
 
 		public static void SafeSlopeTile(int i, int j)
 		{
-			if (CoordinatesOutOfBounds(i, j))
-			{
-				return;
-			}
-
 			Tile tile = Main.tile[i, j];
+
+			if (CoordinatesOutOfBounds(i, j) || !tile.HasTile)
+ 				return;
+ 
 			var info = new TileNeighbourInfo(i, j).HasTile;
 
 			if (
@@ -383,7 +380,6 @@ namespace Macrocosm.Common.Utils
                Main.tile[tileX + 1, tileY + 1].HasTile &&  // Bottom-right tile is active						 
                Main.tile[tileX, tileY - 2].HasTile; // Top tile is active (will help to make the walls slightly lower than the terrain)
 
-
 		#region BaseMod BaseWorldGen
 
 		//------------------------------------------------------//
@@ -479,29 +475,6 @@ namespace Macrocosm.Common.Utils
 				if (tile is { HasTile: true } && (!solid || Main.tileSolid[tile.TileType])) { return x; }
 			}
 			return Main.maxTilesX - 10;
-		}
-
-		/*
-			* returns the first Y position below the possible spawning height of floating islands.
-			*/
-		public static int GetBelowFloatingIslandY()
-		{
-			int size = GetWorldSize();
-			return (size == 1 ? 1200 : size == 2 ? 1600 : size == 3 ? 2000 : 1200) + 1;
-		}
-
-		/**
-			* Returns the current world size.
-			* 1 == small, 2 == medium, 3 == large.
-			*/
-		public static int GetWorldSize()
-		{
-			if (Main.maxTilesX == 4200) { return 1; }
-
-			if (Main.maxTilesX == 6400) { return 2; }
-
-			if (Main.maxTilesX == 8400) { return 3; }
-			return 1; //unknown size, assume small
 		}
 
 		/**
@@ -772,172 +745,6 @@ namespace Macrocosm.Common.Utils
 				Utility.LogFancy("TILEGEN ERROR:", e);
 			}
 		}
-
-		#region worldgen
-
-		/**
-			*  Generates a line of tiles/walls from one point to another point.
-			*  
-			*  thickness: How thick to make the walls of the line.
-			*  sync : If true, will sync the client and server.
-			*/
-		public static void GenerateLine(GenConditions gen, int x, int y, int endX, int endY, int thickness, bool sync = true)
-		{
-			if (gen == null) throw new Exception("GenConditions cannot be null!");
-			if (endX < x) { int temp = x; x = endX; endX = temp; }
-			bool negativeY = endY < y; if (negativeY) x += Math.Abs(endX - x); //move it back since this essentially flips it on the X axis
-			if (x == endX && y == endY) //it's just one tile...lol
-			{
-				int tileID = gen.GetTile(0), wallID = gen.GetWall(0);
-				if (tileID > -1 && gen.CanPlace != null && !gen.CanPlace(x, y, tileID, wallID) || wallID > -1 && gen.CanPlaceWall != null && !gen.CanPlaceWall(x, y, tileID, wallID)) return;
-				GenerateTile(x, y, tileID, wallID, 0, tileID != -1, true, 0, false, sync);
-				if (gen.slope) SmoothTiles(x, y, x, y);
-			}
-			else
-			if (x == endX || y == endY) //check to see if it's a straight line. If it is, use the less expensive method of genning.
-			{
-				if (endY < y) { int temp = y; y = endY; endY = temp; }
-				bool vertical = x == endX;
-				int tileIndex = -1, wallIndex = -1;
-				for (int m = 0; m < (vertical ? endY - y : endX - x); m++)
-				{
-					for (int n = 0; n < thickness; n++)
-					{
-						tileIndex = gen.tiles == null ? -1 : gen.orderTiles ? tileIndex + 1 : WorldGen.genRand.Next(gen.tiles.Length);
-						wallIndex = gen.walls == null ? -1 : gen.orderWalls ? wallIndex + 1 : WorldGen.genRand.Next(gen.walls.Length);
-						if (tileIndex != -1 && tileIndex >= gen.tiles.Length) tileIndex = 0;
-						if (wallIndex != -1 && wallIndex >= gen.walls.Length) wallIndex = 0;
-						int addonX = vertical ? n : m, addonY = vertical ? m : n;
-						int x2 = x + addonX, y2 = y + addonY;
-
-						bool tileValid = tileIndex == -1 || gen.CanPlace == null || gen.CanPlace(x2, y2, gen.GetTile(tileIndex), gen.GetWall(wallIndex));
-						bool wallValid = wallIndex == -1 || gen.CanPlaceWall == null || gen.CanPlaceWall(x2, y2, gen.GetTile(tileIndex), gen.GetWall(wallIndex));
-						if (tileValid && wallValid)
-						{
-							GenerateTile(x2, y2, gen.GetTile(tileIndex), gen.GetWall(wallIndex), 0, gen.GetTile(tileIndex) != -1, true, 0, false, false);
-						}
-					}
-				}
-				if (gen.slope)
-				{
-					//SmoothTiles(x, y, x + (vertical ? thickness : Math.Abs(endX - x)), y + (vertical ? Math.Abs(endY - y) : thickness));
-				}
-				if (sync && Main.netMode != NetmodeID.SinglePlayer)
-				{
-					int size = endY - y > endX - x ? endY - y : endX - x;
-					if (thickness > size) size = thickness;
-					NetMessage.SendData(MessageID.TileSquare, -1, -1, NetworkText.FromLiteral(""), size, x, y);
-				}
-			}
-			else //genning a line that isn't straight
-			{
-				Vector2 start = new(x, y), end = new(endX, endY), dir = new Vector2(endX, endY) - new Vector2(x, y);
-				dir.Normalize();
-				float length = Vector2.Distance(start, end);
-				float way = 0f;
-
-				float rot = Utility.RotationTo(start, end); if (rot < 0f) rot = (float)(Math.PI * 2f) - Math.Abs(rot);
-				float rotPercent = MathHelper.Lerp(0f, 1f, rot / (float)(Math.PI * 2f));
-				bool horizontal = rotPercent is < 0.125f or > 0.375f and < 0.625f or > 0.825f;
-				int tileIndex = -1, wallIndex = -1;
-				int lastX = x, lastY = y;
-				while (way < length)
-				{
-					Vector2 v = start + dir * way;
-					Point point = new((int)v.X, (int)v.Y);
-					for (int n = 0; n < thickness; n++)
-					{
-						tileIndex = gen.tiles == null ? -1 : gen.orderTiles ? tileIndex + 1 : WorldGen.genRand.Next(gen.tiles.Length);
-						wallIndex = gen.walls == null ? -1 : gen.orderWalls ? wallIndex + 1 : WorldGen.genRand.Next(gen.walls.Length);
-						if (tileIndex != -1 && tileIndex >= gen.tiles.Length) tileIndex = 0;
-						if (wallIndex != -1 && wallIndex >= gen.walls.Length) wallIndex = 0;
-
-						int addonX = horizontal ? 0 : n, addonY = horizontal ? n : 0;
-						int x2 = point.X + addonX, y2 = negativeY ? point.Y - addonY : point.Y + addonY;
-
-						bool tileValid = tileIndex == -1 || gen.CanPlace == null || gen.CanPlace(x2, y2, gen.GetTile(tileIndex), gen.GetWall(wallIndex));
-						bool wallValid = wallIndex == -1 || gen.CanPlaceWall == null || gen.CanPlaceWall(x2, y2, gen.GetTile(tileIndex), gen.GetWall(wallIndex));
-						if (tileValid && wallValid)
-						{
-							GenerateTile(x2, y2, gen.GetTile(tileIndex), gen.GetWall(wallIndex), 0, gen.GetTile(tileIndex) != -1, true, 0, false, false);
-							//if (gen.slope) SmoothTiles(x2, y2, x2 + 1, y2 + 1);
-						}
-					}
-					if (sync && Main.netMode != NetmodeID.SinglePlayer && (!horizontal && Math.Abs(lastY - point.Y) >= 5 || horizontal && Math.Abs(lastY - point.Y) >= 5 || way + 1 > length))
-					{
-						int size = Math.Max(5, thickness);
-						NetMessage.SendData(MessageID.TileSection, -1, -1, NetworkText.FromLiteral(""), lastX, lastY, size, size);
-						lastX = point.X; lastY = point.Y;
-					}
-					way += 1;
-				}
-			}
-		}
-
-		/**
-			*  Generates a hollow hallway with (x, y) as the top left. 
-			*  Note that (endX, endY) is NOT the actual end of the hallway, but the end of the inner wall.
-			*  
-			*  thickness: How thick to make the walls of the hallway.
-			*  height: The height of the hallway. (width if it's going up/down)
-			*  sync : If true, will sync the client and server.
-			*/
-		public static void GenerateHall(GenConditions gen, int x, int y, int endX, int endY, int thickness, int height, bool sync = true)
-		{
-			if (gen == null) throw new Exception("GenConditions cannot be null!");
-			if (endX < x) { int temp = x; x = endX; endX = temp; }
-			//if (endY < y) { int temp = y; y = endY; endY = temp; }
-			bool negativeX = endX < x, negativeY = endY < y;
-			int nx = negativeX ? -1 : 1, ny = negativeY ? -1 : 1;
-			Vector2 start = new(x, y), end = new(endX, endY);
-			float rotPercent = MathHelper.Lerp(0f, 1f, Utility.RotationTo(start, end) / (float)(Math.PI * 2f));
-			bool horizontal = rotPercent is < 0.125f or > 0.375f and < 0.625f or > 0.825f;
-			Vector2 topEnd = new(endX, endY);
-			int[] clearInt = { -2 };
-			Vector2 wallStart = new(horizontal ? x : x + 2 * nx, horizontal ? y + 2 * ny : y), wallEnd = new(horizontal ? endX : endX + 2 * nx, horizontal ? endY + 2 * ny : endY);
-			Vector2 bottomStart = new(horizontal ? x : x + (thickness * 2 + height) * nx, horizontal ? y + (thickness * 2 + height) * ny : y), bottomEnd = new(horizontal ? endX : endX + (thickness * 2 + height) * nx, horizontal ? endY + (thickness * 2 + height) * ny : endY);
-			int[] tiles = gen.tiles, walls = gen.walls;
-			gen.tiles = null;
-			GenerateLine(gen, (int)wallStart.X, (int)wallStart.Y, (int)wallEnd.X, (int)wallEnd.Y, thickness * 3 + height - 2, false);
-			gen.tiles = tiles;
-			gen.walls = null;
-			GenerateLine(gen, x, y, (int)topEnd.X, (int)topEnd.Y, thickness, false);
-			GenerateLine(gen, (int)bottomStart.X, (int)bottomStart.Y, (int)bottomEnd.X, (int)bottomEnd.Y, thickness, false);
-			gen.walls = walls;
-		}
-
-		/**
-			*  Generates a hollow trapezoid with (x, y) as the top left. 
-			*  Note that (endX, endY) is NOT the actual end of the room, but the end of the inner wall.
-			*  
-			*  thickness: How thick to make the walls of the trapezoid.
-			*  height: The height of the trapezoid.
-			*  sync : If true, will sync the client and server.
-			*/
-		public static void GenerateTrapezoid(GenConditions gen, int x, int y, int endX, int endY, int thickness, int height, bool sync = true)
-		{
-			if (gen == null) throw new Exception("GenConditions cannot be null!");
-			if (endX < x) { int temp = x; x = endX; endX = temp; }
-			//if (endY < y) { int temp = y; y = endY; endY = temp; }
-			Vector2 start = new(x, y), end = new(endX, endY);
-			float rotPercent = MathHelper.Lerp(0f, 1f, Utility.RotationTo(start, end) / (float)(Math.PI * 2f));
-			bool horizontal = rotPercent is < 0.125f or > 0.375f and < 0.625f or > 0.825f;
-			Vector2 topEnd = new(endX, endY);
-			Vector2 wallStart = new(x + thickness, y + thickness), wallEnd = new(horizontal ? endX : endX + thickness, horizontal ? endY + thickness : endY);
-			Vector2 bottomStart = new(horizontal ? x : x + thickness * 2 + height, horizontal ? y + thickness * 2 + height : y), bottomEnd = new(horizontal ? endX : endX + thickness * 2 + height, horizontal ? endY + thickness * 2 + height : endY);
-			int[] tiles = gen.tiles, walls = gen.walls;
-			gen.tiles = null;
-			GenerateLine(gen, (int)wallStart.X, (int)wallStart.Y, (int)wallEnd.X, (int)wallEnd.Y, thickness + height, false);
-			gen.tiles = tiles;
-			gen.walls = null;
-			GenerateLine(gen, x, y, (int)topEnd.X, (int)topEnd.Y, thickness, false);
-			GenerateLine(gen, (int)bottomStart.X, (int)bottomStart.Y, (int)bottomEnd.X, (int)bottomEnd.Y, thickness, false);
-			GenerateLine(gen, x, y, (int)bottomStart.X, (int)bottomStart.Y, thickness, false);
-			GenerateLine(gen, (int)topEnd.X, (int)topEnd.Y, horizontal ? (int)bottomEnd.X : (int)bottomEnd.X + thickness, horizontal ? (int)bottomEnd.Y + thickness : (int)bottomEnd.Y, thickness, false);
-			gen.walls = walls;
-		}
-
-		#endregion
 
 		/**
 			*  Generates a width by height hollow room with x, y being the top-left corner of the room, using wall as the walls in the space in the middle.
@@ -1222,9 +1029,6 @@ namespace Macrocosm.Common.Utils
                 val2.X = speedX;
                 val2.Y = speedY;
             }
-
-            bool flag = tileType == 368;
-            bool flag2 = tileType == 367;
 
             while (num > 0.0 && num2 > 0.0)
             {

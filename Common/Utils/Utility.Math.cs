@@ -113,11 +113,6 @@ namespace Macrocosm.Common.Utils
 			);
 		}
 
-		/// <summary> Generates a random rotation value within the range of -pi to pi. </summary>
-		/// <returns> A random rotation value in radians. </returns>
-		public static float RandomRotation()
-			=> Main.rand.NextFloat(-MathHelper.Pi, MathHelper.Pi);
-
 		#endregion
 
 		#region Signals
@@ -144,6 +139,10 @@ namespace Macrocosm.Common.Utils
 			float angle = (2 * MathF.PI * (1 / period) * time) + phase;
 			return MathF.Sin(angle);
 		}
+
+		public static float PositiveTriangleWave(float period, float phase = 0)
+			=> (TriangleWave(period, phase) + 1f) * 0.5f;
+
 
 		/// <summary> Generates a positive-only sine wave based on the given period and phase. Use exclusively for visual effects.</summary>
 		/// <param name="period">The duration of one complete cycle of the wave.</param>

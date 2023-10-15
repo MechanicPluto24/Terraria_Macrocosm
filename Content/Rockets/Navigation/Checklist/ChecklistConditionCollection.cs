@@ -50,7 +50,7 @@ namespace Macrocosm.Content.Rockets.Navigation.Checklist
             {
                 // If true, add only if not hidden while true
                 if(!condition.HideIfMet || !condition.IsMet())
-                    list.Add(condition.ProvideUI());
+                    list.Add(condition.ProvideUIInfoElement());
             }
 
             return list;
@@ -62,7 +62,7 @@ namespace Macrocosm.Content.Rockets.Navigation.Checklist
             {
 				// If true, add only if not hidden while true
 				if (!condition.HideIfMet || !condition.IsMet())
-					element.Append(condition.ProvideUI());
+					element.Append(condition.ProvideUIInfoElement());
             }
         }
 

@@ -21,12 +21,13 @@ float4 ColorGradient(float2 texCoord : TEXCOORD) : COLOR
     
     float dist = distance(frameCoord, uOffset);
     
+    // square
     if (uSDF == 1)
     {
         float2 distXY = abs(frameCoord - uOffset);
         dist = saturate(max(distXY.x, distXY.y) - uSize);
     }
-    else 
+    else // disc
     {
         dist = saturate(dist - uSize);
     }

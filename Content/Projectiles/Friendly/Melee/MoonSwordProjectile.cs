@@ -1,3 +1,4 @@
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
@@ -34,14 +35,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			Projectile.SetTrail<MoonSwordTrail>();
 		}
 
-		// PreDraw
+		private SpriteBatchState state;
 		public override bool PreDraw(ref Color lightColor)
 		{
 			Texture2D texture = TextureAssets.Projectile[Type].Value;
 			Rectangle frame = texture.Frame(1, 6, frameY: Projectile.frame);
 			SpriteEffects effects = Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
-			var state = Main.spriteBatch.SaveState();
+			state.SaveState(Main.spriteBatch);
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.Additive, state);
@@ -51,7 +52,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(state);
 
-			Main.EntitySpriteDraw(texture, Projectile.position - Main.screenPosition, frame, Color.White.NewAlpha(1f), Projectile.rotation, frame.Size() / 2f, Projectile.scale, effects);
+			Main.EntitySpriteDraw(texture, Projectile.position - Main.screenPosition, frame, Color.White.WithOpacity(1f), Projectile.rotation, frame.Size() / 2f, Projectile.scale, effects);
 
 			return false;
 		}
@@ -68,7 +69,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			Projectile.spriteDirection = Projectile.direction;
 
 			for(int i = 0; i < 5; i++)
-			Particle.CreateParticle<ImbriumStar>(Projectile.position + Main.rand.NextVector2Circular(20, 55), -Projectile.velocity * 0.02f, 0.05f);
+			Particle.CreateParticle<ImbriumStar>(Projectile.position + Main.rand.NextVector2Circular(20, 55), -Projectile.velocity * 0.02f, 0.5f);
 			
  			int frameSpeed =3;
 			if (Projectile.frameCounter++ >= frameSpeed)

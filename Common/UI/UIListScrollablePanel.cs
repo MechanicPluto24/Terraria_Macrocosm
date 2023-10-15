@@ -91,6 +91,23 @@ namespace Macrocosm.Common.UI
             Append(list);
         }
 
+		public void UpdateOrder() => list.UpdateOrder();
+		public Action<List<UIElement>> ManualSortMethod 
+		{
+			get => list.ManualSortMethod;
+			set => list.ManualSortMethod = value;
+		}
+
+		public void SetTitle(string titleKey) => SetTitle(Language.GetText(titleKey));
+		public void SetTitle(LocalizedText title) => SetTitle(new LocalizedColorScaleText(title));
+
+		public void SetTitle(LocalizedColorScaleText title)
+		{
+			RemoveChild(this.title);
+			this.title = title.ProvideUI();
+			Initialize();
+		}
+
 		public bool EntireListVisible()
 		{
 			list.Recalculate();
@@ -102,8 +119,9 @@ namespace Macrocosm.Common.UI
 		}
 
 		public void Add(UIElement element) => list.Add(element);
-		public void ClearList() => list.Clear();
 		public void AddRange(List<UIElement> elements) => list.AddRange(elements);
+		public void RemoveFromList(UIElement element) => list.Remove(element);
+		public void ClearList() => list.Clear();
 
 		public IEnumerable<T> OfType<T>(bool recursive = true) where T : UIElement
 		{
@@ -123,20 +141,37 @@ namespace Macrocosm.Common.UI
 			return result;
 		}
 
-		public void AddSeparator()
+		public UIHorizontalSeparator AddHorizontalSeparator()
 		{
-			Add(new UIHorizontalSeparator()
+			var separator = new UIHorizontalSeparator()
 			{
 				Width = StyleDimension.FromPercent(0.98f),
 				Color = new Color(89, 116, 213, 255) * 0.9f
-			});
+			};
+
+			Add(separator);
+			return separator;
+		}
+
+		public UIHorizontalSeparator InsertHorizontalSeparator(int index)
+		{
+			var separator = new UIHorizontalSeparator()
+			{
+				Width = StyleDimension.FromPercent(0.98f),
+				Color = new Color(89, 116, 213, 255) * 0.9f
+			};
+
+			// Insert the separator at the specified index
+			list.ToList().Insert(index, separator);
+
+			return separator;
 		}
 
 		public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
-            // Method is only called if dynamic scrollbar hiding is active
+			// Method is only called if dynamic scrollbar hiding is active
 			if (!HideScrollbarIfNotScrollable || !EntireListVisible())
             {
                 if (scrollbar is null)

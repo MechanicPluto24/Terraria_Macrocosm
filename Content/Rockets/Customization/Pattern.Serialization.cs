@@ -6,15 +6,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using Terraria.GameContent.UI.Chat;
 using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
 	public partial class Pattern : TagSerializable
 	{ 
-		public string ToJSON(bool includeUnlocked = false, bool includeNonModifiableColors = false, bool includeColorFunctions = false) => ToJObject().ToString(Formatting.Indented);
+		public string ToJSON(bool includeColorFunctions = false, bool includeUnlocked = false, bool includeNonModifiableColors = false) => ToJObject(includeColorFunctions, includeUnlocked, includeNonModifiableColors).ToString(Formatting.Indented);
 
-		public JObject ToJObject(bool includeUnlocked = false, bool includeNonModifiableColors = false, bool includeColorFunctions = false)
+		public JObject ToJObject(bool includeColorFunctions = true, bool includeUnlocked = false, bool includeNonModifiableColors = false)
 		{
 			JObject jsonObject = new()
 			{
@@ -38,7 +39,7 @@ namespace Macrocosm.Content.Rockets.Customization
 					if (includeColorFunctions)
 					{
 						colorDataObject["colorFunction"] = colorData.ColorFunction.Name;
-						//colorDataObject["params"] = new JArray(colorData.ColorFunction.Parameters);
+						colorDataObject["params"] = new JArray(colorData.ColorFunction.Parameters);
 					}
 					else
 					{
@@ -105,11 +106,7 @@ namespace Macrocosm.Content.Rockets.Customization
 				if (!string.IsNullOrEmpty(colorFunction))
 				{
 					JArray parameters = colorDataObject.Value<JArray>("params");
-
-					if (parameters is not null)
-						colorDatas.Add(new(ColorFunction.CreateFunctionByName(colorFunction, parameters.ToObjectRecursive<object>())));
-					else
-						throw new SerializationException("$Error: Color function parameters not specified.");
+					colorDatas.Add(new(ColorFunction.CreateFunctionByName(colorFunction, parameters?.ToObjectRecursive<object>())));
 				}
 				else if (!string.IsNullOrEmpty(colorHex))
 				{
@@ -133,6 +130,7 @@ namespace Macrocosm.Content.Rockets.Customization
 
 		public static readonly Func<TagCompound, Pattern> DESERIALIZER = DeserializeData;
 
+		// TODO: a way to also save and load custom functions just like the JSON does
 		public TagCompound SerializeData()
 		{
 			TagCompound tag = new()
@@ -144,8 +142,8 @@ namespace Macrocosm.Content.Rockets.Customization
 			// Save the user-changed colors
 			for (int i = 0; i < MaxColorCount; i++)
  				if (ColorData[i].IsUserModifiable)
-					tag[$"Color{i}"] = ColorData[i].Color;  
- 
+					tag[$"Color{i}"] = ColorData[i].Color;
+
 			return tag;
 		}
 
@@ -164,5 +162,30 @@ namespace Macrocosm.Content.Rockets.Customization
 
 			return pattern;
 		}
+
+		/*
+		// This is terribly inneficient 
+		public TagCompound SerializeData()
+		{
+			TagCompound tag = new()
+			{
+				{ "Pattern", ToJSON(includeColorFunctions: true, includeUnlocked: false, includeNonModifiableColors: true) }
+			};
+			return tag;
+		}
+
+		public static Pattern DeserializeData(TagCompound tag)
+		{
+			if (tag.ContainsKey("Pattern"))
+			{
+				string json = tag.GetString("Pattern");
+				Pattern pattern = FromJSON(json);
+				return pattern;
+			}
+
+			return new Pattern("", "", false);
+		}
+		*/
+
 	}
 }

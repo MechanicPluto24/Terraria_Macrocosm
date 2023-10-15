@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 
@@ -50,7 +51,7 @@ namespace Macrocosm.Common.Drawing.Particles
 			if (SetRandomFrameOnSpawn)
 				currentFrame = Main.rand.Next(FrameNumber);
  
-			OnSpawn();
+			//OnSpawn();
 		}
 
 		/// <summary> The <c>Particle</c>'s texture, autoloaded </summary>
@@ -99,7 +100,7 @@ namespace Macrocosm.Common.Drawing.Particles
 		public Vector2 Center => Position + Size / 2;
 
 		/// <summary> Path to the <c>Particle</c>'s texture, override for custom loading (non-autoload) </summary>
-		public virtual string TexturePath => (this.GetType().Namespace + "." + this.GetType().Name).Replace('.', '/');
+		public virtual string TexturePath => Utility.GetPath(this);
 
 		/// <summary> The  <c>Particle</c>'s total lifetime. If <see cref="DespawnOnAnimationComplete"/> is true, this defaults to the animation duration. </summary>
 		public virtual int SpawnTimeLeft => DespawnOnAnimationComplete ? FrameNumber * FrameSpeed - 1 : 300;
@@ -182,9 +183,14 @@ namespace Macrocosm.Common.Drawing.Particles
 		/// </summary>
 		public virtual Rectangle? GetFrame()
 		{ 
+
+			if (Main.netMode == NetmodeID.Server)
+				return null;
+
 			// if not animated or frame is not picked randomly on spawn, draw the entire texture
  			if (FrameNumber <= 1 && !SetRandomFrameOnSpawn)
 				return null;
+
 
 			int frameHeight = Texture.Height / FrameNumber;
 			return new Rectangle(0, frameHeight * currentFrame, Texture.Width, frameHeight);
@@ -194,14 +200,42 @@ namespace Macrocosm.Common.Drawing.Particles
 
 		#region Logic
 
-		/// <summary> Used for drawing the particle. Substract <see cref="Main.screenPosition"> screenPosition </see> from the <see cref="Particle.Position">Position</see> position before drawing </summary>
+		/// <summary>
+		/// Used for drawing things before the particle, with additive blending. Modify the spritebatch only when absolutely necessary.
+		/// Substract <see cref="Main.screenPosition"> screenPosition </see> from the <see cref="Particle.Position">Position</see> position before drawing.
+		/// Return false to stop the default, alpha blended, drawing logic. Returns true by default.
+		/// </summary>
 		/// <param name="spriteBatch"> The spritebatch </param>
 		/// <param name="screenPosition"> The top-left screen position in the world coordinates </param>
 		/// <param name="lightColor"> The light color at the particle's position </param>
-		public virtual void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor) 
+		public virtual bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
+		{
+			Trail?.Draw();
+			return true;
+		}
+
+		/// <summary> 
+		/// Used for drawing the particle with alpha blending. Modify the spritebatch only when absolutely necessary.
+		/// Substract <see cref="Main.screenPosition"> screenPosition </see> from the <see cref="Particle.Position">Position</see> position before drawing.
+		/// Only called if <see cref="PreDrawAdditive(SpriteBatch, Vector2, Color)"/> returns true.
+		/// </summary>
+		/// <param name="spriteBatch"> The spritebatch </param>
+		/// <param name="screenPosition"> The top-left screen position in the world coordinates </param>
+		/// <param name="lightColor"> The light color at the particle's position </param>
+		public virtual void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
 		{
 			spriteBatch.Draw(Texture, Position - screenPosition, GetFrame(), lightColor, Rotation, Size * 0.5f, ScaleV, SpriteEffects.None, 0f);
-			Trail?.Draw();
+		}
+
+		/// <summary> 
+		/// Used for drawing things after the particle, with additive blending. Modify the spritebatch only when absolutely necessary.
+		/// Substract <see cref="Main.screenPosition"> screenPosition </see> from the <see cref="Particle.Position">Position</see> position before drawing 
+		/// </summary>
+		/// <param name="spriteBatch"></param>
+		/// <param name="screenPosition"></param>
+		/// <param name="lightColor"></param>
+		public virtual void PostDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
+		{
 		}
 
 		public void Update()
@@ -228,11 +262,10 @@ namespace Macrocosm.Common.Drawing.Particles
 
 		#endregion
 
+		// TODO: This could use some touching up, maybe make trails a component or something
 		#region Trails
-
 		public void DrawMagicPixelTrail(Vector2 rotatableOffsetFromCenter, float startWidth, float endWidth, Color startColor, Color? endColor = null)
 				=> Utility.DrawMagicPixelTrail(Size / 2f, OldPositions, OldRotations, rotatableOffsetFromCenter, startWidth, endWidth, startColor, endColor);
-
 
 		/// <summary> The <see cref="Trails.VertexTrail"> VertexTrail </see> object bound to this <c>Particle</c> </summary>
 		public VertexTrail Trail { get; private set; }

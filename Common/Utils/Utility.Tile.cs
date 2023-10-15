@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -120,6 +121,24 @@ namespace Macrocosm.Common.Utils
 				return false;
 			}
 			return true;
+		}
+
+		public static void DrawTileGlowmask(int i, int j, SpriteBatch spriteBatch, Texture2D glowmask, Color color)
+		{
+			Tile tile = Main.tile[i, j];
+
+			if (tile.BlockType != BlockType.Solid)
+				return;
+
+			Vector2 zero = Main.drawToScreen ? Vector2.Zero : new Vector2(Main.offScreenRange);
+
+			spriteBatch.Draw
+			(
+				glowmask,
+				new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero,
+				new Rectangle(tile.TileFrameX, tile.TileFrameY, 16, 16),
+				color, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f
+			);
 		}
 
 		#region BaseMod Utility
@@ -267,9 +286,9 @@ namespace Macrocosm.Common.Utils
 			return tilePos.ToArray();
 		}
 
-		/*
-         * Returns the total count of the given liquid within the distance provided.
-         */
+		///<summary>
+		/// Returns the total count of the given liquid within the distance provided.
+		///</summary>
 		public static int LiquidCount(int x, int y, int distance = 25, int liquidType = 0)
 		{
 			int liquidAmt = 0;
@@ -291,9 +310,9 @@ namespace Macrocosm.Common.Utils
 			return liquidAmt;
 		}
 
-		/*
-         * Returns true if the tile type acts similarly to a platform.
-         */
+		///<summary>
+		/// Returns true if the tile type acts similarly to a platform.
+		///</summary>
 		public static bool IsPlatform(int type)
 		{
 			return Main.tileSolid[type] && Main.tileSolidTop[type];
@@ -301,9 +320,9 @@ namespace Macrocosm.Common.Utils
 
 		public static bool AlchemyFlower(int type) { return type is 82 or 83 or 84; }
 
-		/*
-         * Goes through a square area given by the x, y and width, height params, and returns true if they are all of the type given.
-         */
+		///<summary>
+		/// Goes through a square area given by the x, y and width, height params, and returns true if they are all of the type given.
+		///</summary>
 		public static bool IsType(int x, int y, int width, int height, int type)
 		{
 			for (int x1 = x; x1 < x + width; x1++)
