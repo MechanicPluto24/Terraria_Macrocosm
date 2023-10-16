@@ -1,13 +1,15 @@
 ﻿using Terraria;
+using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Materials
 {
-	public class SiliconOre : ModItem
+	public class Silicon : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
+			Item.ResearchUnlockCount = 100;
 		}
 
 		public override void SetDefaults()
@@ -22,17 +24,9 @@ namespace Macrocosm.Content.Items.Materials
 			Item.useTime = 10;
 			Item.autoReuse = true;
 			Item.consumable = true;
-			//Item.createTile = TileType<Tiles.SiliconOre>();
 			Item.placeStyle = 0;
 			Item.rare = ItemRarityID.White;
 			Item.material = true;
-
-			// Set other Item.X values here
-		}
-
-		public override void AddRecipes()
-		{
-
 		}
 	}
 }

@@ -41,6 +41,7 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 
 		// If on rightmost frame and there's no neighbor sofa to the right, draw extra texture to the right
 		// This is to ensure the sofa is symmetrical while also connecting neatly to other sofas 
+		// TODO: apply paints and include into tile preview
 		public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
 		{
 			Tile tile = Main.tile[i, j];

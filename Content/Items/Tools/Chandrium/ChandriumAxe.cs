@@ -12,7 +12,7 @@ namespace Macrocosm.Content.Items.Tools.Chandrium
 	{
 		public override void SetStaticDefaults()
 		{
-			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
+			
 		}
 
 		public override void SetDefaults()

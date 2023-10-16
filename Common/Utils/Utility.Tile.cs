@@ -65,7 +65,6 @@ namespace Macrocosm.Common.Utils
 
 		public static bool SandTileFrame(int i, int j, int projectileType)
 		{
-
 			if (WorldGen.noTileActions)
 				return true;
 

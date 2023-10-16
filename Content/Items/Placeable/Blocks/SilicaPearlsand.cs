@@ -1,4 +1,5 @@
-﻿using Terraria.ID;
+﻿using Terraria.GameContent.Creative;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Placeable.Blocks
@@ -7,7 +8,8 @@ namespace Macrocosm.Content.Items.Placeable.Blocks
 	{
 		public override void SetStaticDefaults() 
 		{
-
+			Item.ResearchUnlockCount = 200;
+			ItemID.Sets.ExtractinatorMode[Type] = ModContent.ItemType<SilicaSand>();
 		}
 
 		public override void SetDefaults()
