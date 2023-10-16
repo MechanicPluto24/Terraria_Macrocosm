@@ -8,7 +8,7 @@ namespace Macrocosm.Content.Items.Placeable.Blocks
 	{
 		public override void SetStaticDefaults()
 		{
-
+			Item.ResearchUnlockCount = 400;
 		}
 
 		public override void SetDefaults()

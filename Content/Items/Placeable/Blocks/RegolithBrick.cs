@@ -1,4 +1,5 @@
 using Terraria;
+using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
@@ -9,7 +10,7 @@ namespace Macrocosm.Content.Items.Placeable.Blocks
 	{
 		public override void SetStaticDefaults()
 		{
-
+			Item.ResearchUnlockCount = 100;
 		}
 
 		public override void SetDefaults()

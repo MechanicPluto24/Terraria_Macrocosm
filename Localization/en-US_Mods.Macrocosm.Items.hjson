@@ -271,6 +271,11 @@ SiliconOre: {
 	Tooltip: ""
 }
 
+Silicon: {
+	DisplayName: Silicon
+	Tooltip: ""
+}
+
 MeteoricChunk: {
 	DisplayName: Meteoric Chunk
 	Tooltip:
@@ -898,5 +903,15 @@ MoonBaseDeskLamp: {
 
 MoonBaseSofa: {
 	DisplayName: Moon Base Sofa
+	Tooltip: ""
+}
+
+MoonBaseChest: {
+	DisplayName: Moon Base Chest
+	Tooltip: ""
+}
+
+MoonBaseChestKey: {
+	DisplayName: Moon Base Chest Key
 	Tooltip: ""
 }

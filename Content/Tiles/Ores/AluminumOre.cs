@@ -11,23 +11,23 @@ namespace Macrocosm.Content.Tiles.Ores
         public override void SetStaticDefaults()
         {
             TileID.Sets.Ore[Type] = true;
-            Main.tileSpelunker[Type] = true; // The tile will be affected by spelunker highlighting
-            Main.tileOreFinderPriority[Type] = 320; // Metal Detector value, see https://terraria.gamepedia.com/Metal_Detector
-            Main.tileShine2[Type] = true; // Modifies the draw color slightly.
-            Main.tileShine[Type] = 975; // How often tiny dust appear off this tile. Larger is less frequently
+            Main.tileSpelunker[Type] = true;  
+            Main.tileOreFinderPriority[Type] = 320; 
+            Main.tileShine2[Type] = true;  
+            Main.tileShine[Type] = 975;  
             Main.tileMergeDirt[Type] = true;
             Main.tileSolid[Type] = true;
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = true;
-            MinPick = 40;
-            MineResist = 5f;
 
             LocalizedText name = CreateMapEntryName();
-
             AddMapEntry(new Color(225, 217, 228), name);
 
             DustType = 84;
             HitSound = SoundID.Tink;
-        }
-    }
+
+			MinPick = 40;
+			MineResist = 5f;
+		}
+	}
 }

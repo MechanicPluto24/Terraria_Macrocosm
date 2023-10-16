@@ -219,7 +219,9 @@ namespace Macrocosm.Content.Subworlds
         [Task]
         private void SmoothTask(GenerationProgress progress)
         {
-            progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.SmoothPass");
+			Stopwatch stopwatch = Stopwatch.StartNew();
+
+			progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.SmoothPass");
 
             ushort protolithType = (ushort)TileType<Protolith>();
             int repeats = 5;
@@ -272,8 +274,11 @@ namespace Macrocosm.Content.Subworlds
                 }
             );
 
-            Stopwatch stopwatch = new();
-            stopwatch.Start();
+            stopwatch.Stop();
+			Macrocosm.Instance.Logger.Info($"Smoothing time: {stopwatch.Elapsed}");
+
+			stopwatch.Start();
+
             ForEachInRectangle(
                 0,
                 GroundY + RegolithLayerHeight,
@@ -315,7 +320,7 @@ namespace Macrocosm.Content.Subworlds
             );
 
             stopwatch.Stop();
-            Macrocosm.Instance.Logger.Info($"time: {stopwatch.Elapsed}");
+            Macrocosm.Instance.Logger.Info($"Smoothing cleanup time: {stopwatch.Elapsed}");
         }
 
         [Task]

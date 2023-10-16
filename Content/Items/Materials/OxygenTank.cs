@@ -9,7 +9,7 @@ namespace Macrocosm.Content.Items.Materials
 	{
 		public override void SetStaticDefaults()
 		{
-			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 10;
+			Item.ResearchUnlockCount = 10;
 		}
 
 		public override void SetDefaults()

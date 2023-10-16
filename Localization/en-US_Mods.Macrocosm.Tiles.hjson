@@ -20,3 +20,12 @@ MoonBaseTerminal.MapEntry: Moon Base Terminal
 SolarPanelLarge.MapEntry: Solar Panel
 SolarPanelSmall.MapEntry: Solar Panel
 OilRefinery.MapEntry: Oil Refinery
+SilicaCrimsand.MapEntry: Silica Crimsand
+SilicaEbonsand.MapEntry: Silica Ebonsand
+SilicaPearlsand.MapEntry: Silica Pearlsand
+SilicaSand.MapEntry: Silica Sand
+
+MoonBaseChest: {
+	MapEntry0: Mods.Macrocosm.Tiles.MoonBaseChest.MapEntry0
+	MapEntry1: Mods.Macrocosm.Tiles.MoonBaseChest.MapEntry1
+}

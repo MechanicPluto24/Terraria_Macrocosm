@@ -23,7 +23,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
         public override void SetStaticDefaults()
 		{
-			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
+			
             ItemID.Sets.ItemsThatAllowRepeatedRightClick[Type] = true;
         }
 

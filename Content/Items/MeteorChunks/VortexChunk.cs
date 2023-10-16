@@ -11,7 +11,7 @@ namespace Macrocosm.Content.Items.MeteorChunks
 	{
 		public override void SetStaticDefaults()
 		{
-			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 50;
+			Item.ResearchUnlockCount = 50;
 		}
 
 		override public void SetDefaults()
