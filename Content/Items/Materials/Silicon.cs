@@ -18,15 +18,17 @@ namespace Macrocosm.Content.Items.Materials
 			Item.height = 20;
 			Item.maxStack = Item.CommonMaxStack;
 			Item.value = 750;
-			Item.useStyle = ItemUseStyleID.Swing;
-			Item.useTurn = true;
-			Item.useAnimation = 15;
-			Item.useTime = 10;
-			Item.autoReuse = true;
-			Item.consumable = true;
-			Item.placeStyle = 0;
 			Item.rare = ItemRarityID.White;
 			Item.material = true;
+
+			// TODO: if ever added as a block
+			//Item.useStyle = ItemUseStyleID.Swing;
+			//Item.useTurn = true;
+			//Item.useAnimation = 15;
+			//Item.useTime = 10;
+			//Item.autoReuse = true;
+			//Item.consumable = true;
+			//Item.placeStyle = 0;
 		}
 	}
 }

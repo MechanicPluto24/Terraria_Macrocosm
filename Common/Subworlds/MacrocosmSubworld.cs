@@ -45,13 +45,6 @@ namespace Macrocosm.Common.Subworlds
 		/// <summary> The height is determined in ReadCopiedMainWorldData using GetWorldSize </summary>
 		public sealed override int Height => GetWorldSize(Earth.WorldSize).Height;
 
-		public virtual void SetDefaults() { }
-
-		/// <summary> Pre Update logic for this subworld. Not called on multiplayer clients </summary>
-		public virtual void PreUpdateWorld() { }
-
-		/// <summary> Post Update logic for this subworld. Not called on multiplayer clients </summary>
-		public virtual void PostUpdateWorld() { }
 
 		/// <summary> Modifiy color of the skies (applied to background, tiles, etc.) </summary>
 		public virtual void ModifyColorOfTheSkies(ref Color colorOfTheSkies) { }
@@ -173,5 +166,74 @@ namespace Macrocosm.Common.Subworlds
 				Main.maxTilesY = subworldSize.Height;
 			}
 		}
+
+		/// <summary> 
+		/// Use this if you want to do something before anything in the World gets updated.
+		/// Called after UI updates, but before anything in the World (Players, NPCs, Projectiles,
+		/// Tiles) gets updated.
+		/// When Terraria.Main.autoPause is true or Terraria.Main.FrameSkipMode is 0 or 2,
+		/// the game may do a partial update. This means that it only updates menus and some
+		/// animations, but not the World or Entities. This hook - and every hook after it
+		/// - only gets called on frames with a full update.
+		/// </summary>
+		public virtual void PreUpdateEntities() { }
+
+		/// <summary> Called before Players get updated . </summary>
+		public virtual void PreUpdatePlayers() { }
+
+		/// <summary> Called after Players get updated . </summary>
+		public virtual void PostUpdatePlayers() { }
+
+		/// <summary> Called before NPCs get updated. </summary>
+		public virtual void PreUpdateNPCs() { }
+
+		/// <summary> Called after NPCs get updated. </summary>
+		public virtual void PostUpdateNPCs() { }
+
+		/// <summary> Called before Gores get updated. </summary>
+		public virtual void PreUpdateGores() { }
+
+		/// <summary> Called after Gores get updated. </summary>
+		public virtual void PostUpdateGores() { }
+
+		/// <summary> Called before Projectiles get updated. </summary>
+		public virtual void PreUpdateProjectiles() { }
+
+		/// <summary> Called after Projectiles get updated. </summary>
+		public virtual void PostUpdateProjectiles() { }
+
+		/// <summary> Called before Items get updated. </summary>
+		public virtual void PreUpdateItems() { }
+
+		/// <summary> Called after Items get updated. </summary>
+		public virtual void PostUpdateItems() { }
+
+		/// <summary> Called before Dusts get updated. </summary>
+		public virtual void PreUpdateDusts() { }
+
+		/// <summary> Called after Dusts get updated. </summary>
+		public virtual void PostUpdateDusts() { }
+
+		/// <summary> Called before Time gets updated. </summary>
+		public virtual void PreUpdateTime() { }
+
+		/// <summary> Called after Time gets updated. </summary>
+		public virtual void PostUpdateTime() { }
+
+		/// <summary> Called before the subworld is updated. Not called on multiplayer clients </summary>
+		public virtual void PreUpdateWorld() { }
+
+		/// <summary> Called after the subworld is updated. Not called on multiplayer clients </summary>
+		public virtual void PostUpdateWorld() { }
+
+		/// <summary> Called before Invasions get updated. Not called for multiplayer clients. </summary>
+		public virtual void PreUpdateInvasions() { }
+
+		/// <summary> Called after Invasions get updated. Not called for multiplayer clients. </summary>
+		public virtual void PostUpdateInvasions() { }
+
+		/// <summary> Called after the Network got updated, this is the last hook that happens in a subworld update.
+		/// </summary>
+		public virtual void PostUpdateEverything() { }
 	}
 }

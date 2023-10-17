@@ -10,20 +10,48 @@ using Terraria.ModLoader;
 using Terraria.ObjectData;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Common.Systems;
-using Macrocosm.Content.Items.Placeable.Furniture.MoonBase;
 using Microsoft.Xna.Framework.Graphics;
+using System;
+using Macrocosm.Content.Items.Tools;
+using Macrocosm.Common.Utils;
+using Macrocosm.Content.Items.CursorIcons;
 
 namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 {
-	// SPRITING: Locked chest variant is placeholder
-	public class MoonBaseChest : ModTile
+    public class MoonBaseChest : ModTile
 	{
+		public enum State
+		{
+			/// <summary> Default style (not lockable or unlockable) </summary>
+			Normal,     
+			/// <summary> Unlocked chest, lockable </summary>
+			Unlocked, 
+			/// <summary> Locked chest, unlockable </summary>
+			Locked,
+			/// <summary> Unknown, when evaluating any other tile or other unexpected things happen </summary>
+			Unknown = -1
+		}
+
+		/// <summary> Returns the chest state based on its tile style </summary>
+		public static State GetState(int i, int j)
+		{
+			if (Main.tile[i, j].TileType != ModContent.TileType<MoonBaseChest>())
+				return State.Unknown;
+
+			int style = TileObjectData.GetTileStyle(Main.tile[i, j]);
+
+			if(!Enum.IsDefined(typeof(State), style))
+				return State.Unknown;
+
+			return (State)style;
+		}
+
 		public override void SetStaticDefaults() 
 		{
 			Main.tileSpelunker[Type] = true;
 			Main.tileContainer[Type] = true;
 			Main.tileShine2[Type] = true;
-			Main.tileShine[Type] = 1200;
+			Main.tileShine[Type] = 1000;
 			Main.tileFrameImportant[Type] = true;
 			Main.tileNoAttach[Type] = true;
 			TileID.Sets.HasOutlines[Type] = true;
@@ -39,8 +67,9 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 			DustType = ModContent.DustType<MoonBasePlatingDust>();
 			AdjTiles = new int[] { TileID.Containers };
 
-			AddMapEntry(new Color(200, 200, 200), this.GetLocalization("MapEntry0"), MapChestName);
-			AddMapEntry(new Color(0, 141, 63), this.GetLocalization("MapEntry1"), MapChestName);
+			AddMapEntry(new Color(200, 200, 200), this.GetLocalization("MapEntryNormal"), MapChestName);
+			AddMapEntry(new Color(200, 200, 200), this.GetLocalization("MapEntryUnlocked"), MapChestName);
+			AddMapEntry(new Color(200, 200, 200), this.GetLocalization("MapEntryLocked"), MapChestName);
 
 			// Style 1 is the chest when locked. We want that tile style to drop the chest item as well. Use the Chest Lock item to lock this chest.
 			// No item places chest in the locked style, so the automatically determined item drop is unknown, this is why RegisterItemDrop is necessary in this situation. 
@@ -79,8 +108,7 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 
 		public override LocalizedText DefaultContainerName(int frameX, int frameY) 
 		{
-			int option = frameX / 36;
-			return this.GetLocalization("MapEntry" + option);
+			return this.GetLocalization("MapEntry" + ((State)(frameX/36)).ToString());
 		}
 
 		public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings) 
@@ -88,15 +116,15 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 			return true;
 		}
 
-		public override bool IsLockedChest(int i, int j) 
+		public override bool IsLockedChest(int i, int j)
 		{
-			return Main.tile[i, j].TileFrameX / 36 == 1;
+			return GetState(i, j) is State.Locked;
 		}
 
 		public override bool UnlockChest(int i, int j, ref short frameXAdjustment, ref int dustType, ref bool manual)
 		{
-			//if (!ConditionHere) 
- 			//	return false;
+			if (GetState(i,j) is not State.Locked) 
+ 				return false;
  
 			dustType = DustType;
 			return true;
@@ -104,12 +132,7 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 
 		public override bool LockChest(int i, int j, ref short frameXAdjustment, ref bool manual) 
 		{
-			int style = TileObjectData.GetTileStyle(Main.tile[i, j]);
-
-			if (style == 0)  
-				return true;
-
- 			return false;
+ 			return GetState(i, j) is State.Unlocked;
 		}
 
 		public static string MapChestName(string name, int i, int j)
@@ -172,7 +195,7 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 				player.editedChestName = false;
 			}
 
-			bool isLocked = Chest.IsLocked(left, top);
+			bool isLocked = GetState(left, top) is State.Locked;
 			if (Main.netMode == NetmodeID.MultiplayerClient && !isLocked) 
 			{
 				if (left == player.chestX && top == player.chestY && player.chest != -1) 
@@ -191,7 +214,7 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 			{
 				if (isLocked) 
 				{
-					int key = ModContent.ItemType<MoonBaseChestKey>();
+					int key = ModContent.ItemType<ZombieFinger>();
 					if (Chest.Unlock(left, top) && player.ConsumeItem(key, includeVoidBag: true))
 					{
 						if (Main.netMode == NetmodeID.MultiplayerClient)  
@@ -251,9 +274,14 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 				{
 					player.cursorItemIconID = ModContent.ItemType<Items.Placeable.Furniture.MoonBase.MoonBaseChest>();
 					
-					if (Main.tile[left, top].TileFrameX / 36 == 1) 
- 						player.cursorItemIconID = ModContent.ItemType<MoonBaseChestKey>();
- 
+					if (GetState(left, top) is State.Locked)
+					{
+						if (player.Macrocosm().KnowsToUseZombieFinger)
+							player.cursorItemIconID = ModContent.ItemType<ZombieFinger>();
+						else
+							player.cursorItemIconID = CursorIcon.GetType<QuestionMark>();
+					}
+
 					player.cursorItemIconText = "";
 				}
 			}
@@ -276,6 +304,9 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 
 		public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
 		{
+			if (GetState(i, j) is not State.Unlocked or State.Locked)
+				return;
+
 			Tile tile = Main.tile[i, j];
 			Texture2D glow = ModContent.Request<Texture2D>("Macrocosm/Content/Tiles/Furniture/MoonBase/MoonBaseChest_Glow").Value;
 			Vector2 zero = Main.drawToScreen ? Vector2.Zero : new Vector2(Main.offScreenRange);

@@ -13,7 +13,7 @@ Depressurized: {
 	Description: Your blood is boiling!
 }
 
-ChandriumEmpowerment: {
+ChandriumWhipBuff: {
 	DisplayName: Chandrium Empowerment
 	Description: Your next hit with your Chandrium Whip will deal increased damage!
 }

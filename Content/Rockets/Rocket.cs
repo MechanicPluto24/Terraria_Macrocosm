@@ -6,6 +6,7 @@ using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Dev;
+using Macrocosm.Content.Items.CursorIcons;
 using Macrocosm.Content.Particles;
 using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.LaunchPads;
@@ -313,10 +314,6 @@ namespace Macrocosm.Content.Rockets
 			{
 				module.Draw(spriteBatch, screenPos, drawColor);
 			}
-
-			//DrawDebugBounds();
-			//DrawDebugModuleHitbox();
-			//DisplayWhoAmI();
 		}
 
 		/// <summary> Draw the rocket as a dummy </summary>
@@ -483,7 +480,7 @@ namespace Macrocosm.Content.Rockets
 					{
 						Main.LocalPlayer.noThrow = 2;
 						Main.LocalPlayer.cursorItemIconEnabled = true;
-						Main.LocalPlayer.cursorItemIconID = ModContent.ItemType<RocketPlacer>();
+						Main.LocalPlayer.cursorItemIconID = CursorIcon.GetType<Items.CursorIcons.Rocket>();
 					}
 				}
 			}

@@ -5,6 +5,7 @@ using Macrocosm.Content.Rockets.Navigation.Checklist;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ModLoader;
 using Terraria.UI;
 
@@ -35,6 +36,8 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationPanel
 
         /// <summary> Whether the target is currently selected </summary>
         public bool Selected;
+
+        public static bool DebugModeActive { get; set; } = false;
 
         public void ResetAnimation()
         {
@@ -183,11 +186,11 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationPanel
         {
             Rectangle rect = GetDimensions().ToRectangle();
 
-            // debug "hitbox"
-            //spriteBatch.Draw(TextureAssets.MagicPixel.Value, rect, Color.Green.NewAlpha(0.1f));
+			if (DebugModeActive)
+				spriteBatch.Draw(TextureAssets.MagicPixel.Value, rect, Color.Green.WithOpacity(0.1f));
 
-            // Should draw the outline if not fully transparent
-            if (targetOpacity > 0f)
+			// Should draw the outline if not fully transparent
+			if (targetOpacity > 0f)
             {
                 Vector2 origin = new(selectionOutline.Width / 2f, selectionOutline.Height / 2f);
 

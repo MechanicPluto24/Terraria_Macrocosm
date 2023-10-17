@@ -1,23 +1,24 @@
-using Macrocosm.Content.Items.Placeable.Blocks;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Macrocosm.Content.Items.Placeable.Blocks;
 
 namespace Macrocosm.Content.Items.Placeable.Furniture.MoonBase
 {
 	public class MoonBaseChest : ModItem
 	{
-		public override void SetDefaults() {
+		public override void SetDefaults() 
+		{
 			Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.MoonBase.MoonBaseChest>());
 			Item.width = 32;
 			Item.height = 28;
 			Item.value = 500;
 
-			// Use this to place the chest in its locked style
-			// Item.placeStyle = 1; 
+			Item.placeStyle = (int)Tiles.Furniture.MoonBase.MoonBaseChest.State.Normal;
 		}
 
-		public override void AddRecipes() {
+		public override void AddRecipes() 
+		{
 			CreateRecipe()
 				.AddIngredient<MoonBasePlating>(8)
 				.AddIngredient(ItemID.IronOre)

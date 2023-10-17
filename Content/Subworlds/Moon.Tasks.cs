@@ -3,8 +3,6 @@ using Macrocosm.Content.Tiles.Ambient;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Terraria.ID;
 using Terraria.WorldBuilding;
@@ -17,7 +15,6 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Tiles.Ores;
 using System.Diagnostics;
 using Terraria.Localization;
-using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Subworlds
 {
@@ -571,6 +568,13 @@ namespace Macrocosm.Content.Subworlds
         }*/
 
         [Task]
+		private void OutpostsTask(GenerationProgress progress)
+		{
+			progress.Message = Language.GetTextValue("Outposts");
+		}
+
+
+		[Task]
         private void AmbientTask(GenerationProgress progress)
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.AmbientPass");
