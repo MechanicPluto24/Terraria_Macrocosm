@@ -6,11 +6,13 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Linq;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.GameContent.Drawing;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using Terraria.UI.Chat;
 
 namespace Macrocosm.Content.Rockets
 {
@@ -27,6 +29,8 @@ namespace Macrocosm.Content.Rockets
         public static Rocket[] Rockets { get; private set; }
 
 		public const int MaxRockets = byte.MaxValue;
+
+		public static bool DebugModeActive = false;
 
 		public override void Load()
         {
@@ -124,7 +128,14 @@ namespace Macrocosm.Content.Rockets
 
                 Color lightColor = Lighting.GetColor((int)(rocket.Center.X / 16), (int)(rocket.Center.Y / 16));
                 rocket.Draw(Main.spriteBatch, Main.screenPosition, lightColor);
-            }
+
+				if (DebugModeActive)
+				{
+					//rocket.DrawDebugBounds();
+					rocket.DrawDebugModuleHitbox();
+					rocket.DisplayWhoAmI();
+				}
+			}
         }
 
         private static void DrawRocketOverlays()
@@ -138,6 +149,13 @@ namespace Macrocosm.Content.Rockets
 
 				rocket.DrawOverlay(Main.spriteBatch, Main.screenPosition);
 			}
+
+			if (DebugModeActive)
+			{
+				string text = $"Rockets active: {Rockets.Where(r => r.Active).Count()}\nHere: {Rockets.Where(r => r.ActiveInCurrentWorld).Count()}";
+				ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, FontAssets.DeathText.Value, text, new Vector2(Main.screenWidth * 0.5f, 40f), Color.White, 0f, Vector2.Zero, Vector2.One * 0.5f);
+			}
+
 		}
 
 		public override void ClearWorld()

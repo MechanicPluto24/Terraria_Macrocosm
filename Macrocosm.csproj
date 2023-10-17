@@ -24,11 +24,10 @@
 	<NoWarn>$(NoWarn);IDE0051</NoWarn> <!-- Macrocosm uses reflection in some places, unused private methods are expected -->
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="Content\Items\Placeable\Furniture\MoonBase\MoonBaseChest.png" />
-    <None Remove="Content\Items\Placeable\Furniture\MoonBase\MoonBaseChestKey.png" />
-    <None Remove="Content\Tiles\Furniture\MoonBase\MoonBaseChest.png" />
-    <None Remove="Content\Tiles\Furniture\MoonBase\MoonBaseChest_Glow.png" />
-    <None Remove="Content\Tiles\Furniture\MoonBase\MoonBaseChest_Highlight.png" />
+    <None Remove="Content\Items\CursorIcons\QuestionMark.png" />
+    <None Remove="Content\Items\CursorIcons\Rocket.png" />
+    <None Remove="Content\Items\Placeable\Furniture\MoonBase\MoonBaseChestElectronic.png" />
+    <None Remove="Content\Items\Placeable\Furniture\XFLR6.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="tModLoader.CodeAssist" Version="0.1.*" />

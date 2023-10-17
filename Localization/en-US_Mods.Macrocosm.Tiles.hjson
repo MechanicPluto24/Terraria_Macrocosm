@@ -10,13 +10,10 @@ OilShale.MapEntry: Oil Shale
 ArtemiteBar.MapEntry: Artemite Bar
 ChandriumBar.MapEntry: Chandrium Bar
 DianiteBar.MapEntry: Dianite Bar
-LaunchPadMarker.MapEntry: Launchpad Marker
+LaunchPadMarker.MapEntry: Launch Pad Marker
 AluminumBar.MapEntry: Aluminum Bar
 SeleniteBar.MapEntry: Selenite Bar
 SteelBar.MapEntry: Steel Bar
-MoonBaseNeonTube.MapEntry: Moon Base Neon Tube
-MoonBaseSofa.MapEntry: Moon Base Sofa
-MoonBaseTerminal.MapEntry: Moon Base Terminal
 SolarPanelLarge.MapEntry: Solar Panel
 SolarPanelSmall.MapEntry: Solar Panel
 OilRefinery.MapEntry: Oil Refinery
@@ -24,8 +21,14 @@ SilicaCrimsand.MapEntry: Silica Crimsand
 SilicaEbonsand.MapEntry: Silica Ebonsand
 SilicaPearlsand.MapEntry: Silica Pearlsand
 SilicaSand.MapEntry: Silica Sand
+MoonBaseNeonTube.MapEntry: Neon Tube
+MoonBaseConsole.MapEntry: Console
+MoonBaseDeskLamp.MapEntry: DeskLamp
+LexanGlass.MapEntry: Lexan Glass
+XFLR6.MapEntry: XFLR-6
 
 MoonBaseChest: {
-	MapEntry0: Mods.Macrocosm.Tiles.MoonBaseChest.MapEntry0
-	MapEntry1: Mods.Macrocosm.Tiles.MoonBaseChest.MapEntry1
+	MapEntryNormal: ERA Storage Unit
+	MapEntryUnlocked: ERA Electronic Storage Unit
+	MapEntryLocked: ERA Electronic Storage Unit (Locked)
 }

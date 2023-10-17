@@ -71,9 +71,6 @@ namespace Macrocosm.Content.Subworlds
 
 		public override void PreUpdateWorld()
         {
-			if(SkyManager.Instance["Macrocosm:MoonSky"] is not null && !SkyManager.Instance["Macrocosm:MoonSky"].IsActive())
-				SkyManager.Instance.Activate("Macrocosm:MoonSky");
-
 			UpdateBloodMoon();
             UpdateMeteorStorm();
             UpdateSolarStorm();
@@ -84,31 +81,34 @@ namespace Macrocosm.Content.Subworlds
 			UpdateMeteors();
 		}
 
+		public override void PreUpdateEntities()
+		{
+			if (SkyManager.Instance["Macrocosm:MoonSky"] is not null && !SkyManager.Instance["Macrocosm:MoonSky"].IsActive())
+				SkyManager.Instance.Activate("Macrocosm:MoonSky");
+		}
+
 		public override void ModifyColorOfTheSkies(ref Color colorOfTheSkies)
 		{
 			colorOfTheSkies = colorOfTheSkies.ToGrayscaleNTSC();
 		}
 
-		#region Moon events
-
-		public void UpdateBloodMoon()
+		//TODO: NetSync and add actual content
+		private static void UpdateBloodMoon()
         {
-			if (MacrocosmWorld.IsDusk && Main.rand.NextBool(9))
-				Main.bloodMoon = true;
-
+			/*
+			if (MacrocosmWorld.IsDusk && Main.rand.NextBool(9)) 
+ 				Main.bloodMoon = true;
+ 
 			if (MacrocosmWorld.IsDawn && Main.bloodMoon)
 				Main.bloodMoon = false;
+			*/
 		}
 
-        /// <summary> TODO </summary>
-        public void UpdateMeteorStorm() { }
+		//TODO 
+		private static void UpdateMeteorStorm() { }
 
-		/// <summary> TODO </summary>
-		public void UpdateSolarStorm() { }
-
-		#endregion
-
-		#region Meteor logic
+		//TODO 
+		private static void UpdateSolarStorm() { }
 
 		public static float MeteorBoost { get; set; } = 1f;
 		private double timePass = 0.0;
@@ -160,7 +160,7 @@ namespace Macrocosm.Content.Subworlds
 					choice.Add(ModContent.ProjectileType<StardustMeteor>(), 2.0);
 					choice.Add(ModContent.ProjectileType<VortexMeteor>(), 2.0);
 
-					var source = Main.player[closestPlayer].GetSource_Misc("FallingStar");
+					var source = Main.player[closestPlayer].GetSource_Misc("Meteor");
 
 					int type = choice;
 					int damage;
@@ -180,8 +180,5 @@ namespace Macrocosm.Content.Subworlds
 
 			timePass %= 1.0;
 		}
-
-		#endregion
-
 	}
 }

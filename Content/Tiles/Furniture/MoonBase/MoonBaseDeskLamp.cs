@@ -45,7 +45,7 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 
 			DustType = ModContent.DustType<MoonBasePlatingDust>();
 
-			AddMapEntry(new Color(253, 221, 3), Language.GetText("MapObject.Candelabra"));
+			AddMapEntry(new Color(253, 221, 3), CreateMapEntryName());
 		}
 
 		public override void HitWire(int i, int j)

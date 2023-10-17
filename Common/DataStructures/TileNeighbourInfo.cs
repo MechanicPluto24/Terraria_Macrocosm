@@ -45,7 +45,13 @@ namespace Macrocosm.Common.DataStructures
                             + (BottomLeft ? 1 : 0)
                             + (Right ? 1 : 0)
                             + (Left ? 1 : 0);
-        }
+
+			private int? count4Way;
+			public int Count4Way => count4Way ??= (Top ? 1 : 0)
+							            + (Bottom ? 1 : 0)
+							            + (Right ? 1 : 0)
+							            + (Left ? 1 : 0);
+		}
 
         public record PredicateNeighbourInfo(int I, int J, Func<Tile, bool> Predicate) : CountableNeighbourInfo(I, J)
         {

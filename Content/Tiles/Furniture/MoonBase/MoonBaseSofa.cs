@@ -31,8 +31,7 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 			TileObjectData.newTile.Origin = new Point16(1, 1);
 			TileObjectData.addTile(Type);
 
-			var name = CreateMapEntryName();
-			AddMapEntry(new Color(253, 221, 3), name);
+			AddMapEntry(new Color(253, 221, 3), Language.GetText("ItemName.Sofa"));
 
 			AddToArray(ref TileID.Sets.RoomNeeds.CountsAsChair);
 			AdjTiles = new int[] { TileID.Benches };

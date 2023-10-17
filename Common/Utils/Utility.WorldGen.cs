@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using MonoMod.Logs;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
@@ -108,7 +109,7 @@ namespace Macrocosm.Common.Utils
 		/// <param name="blobSize"></param>
 		/// <param name="density"></param>
 		/// <param name="smoothing"></param>
-        public static void BlobTileRunner(int i, int j, int tileType, Range repeatCount, Range sprayRadius, Range blobSize, float density = 0.5f, int smoothing = 4)
+		public static void BlobTileRunner(int i, int j, int tileType, Range repeatCount, Range sprayRadius, Range blobSize, float density = 0.5f, int smoothing = 4, Func<int, int, bool> perTileCheck = null)
         {
             int sprayRandom = WorldGen.genRand.Next(repeatCount);
 
@@ -135,19 +136,22 @@ namespace Macrocosm.Common.Utils
                             return;
                         }
 
-						if (Main.tile[i, j].HasTile && !replacedTypes.ContainsKey((i, j)))
+						if (perTileCheck is null || perTileCheck(i, j))
 						{
-                            replacedTypes.Add((i, j), Main.tile[i, j].TileType);
-                        }
+							if (Main.tile[i, j].HasTile && !replacedTypes.ContainsKey((i, j)))
+							{
+								replacedTypes.Add((i, j), Main.tile[i, j].TileType);
+							}
 
-						if (tileType < 0)
-						{
-							FastRemoveTile(i, j);
+							if (tileType < 0)
+							{
+								FastRemoveTile(i, j);
+							}
+							else
+							{
+								FastPlaceTile(i, j, (ushort)tileType);
+							}
 						}
-						else
-						{
-                            FastPlaceTile(i, j, (ushort)tileType);
-                        }
                     }
                 );
 

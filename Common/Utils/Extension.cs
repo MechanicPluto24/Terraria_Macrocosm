@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.Items.Global;
+﻿using Macrocosm.Content.CameraModifiers;
+using Macrocosm.Content.Items.Global;
 using Macrocosm.Content.NPCs.Global;
 using Macrocosm.Content.Players;
 using Macrocosm.Content.Projectiles.Global;
@@ -22,9 +23,10 @@ namespace Macrocosm.Common.Utils
 			return player.GetModPlayer<MacrocosmPlayer>();
 		}
 
-		public static void AddScreenshake(this Player player, float value, string context)
+		// TODO: some sort of netsync where the server or other clients can shake a player's screen
+		public static void AddScreenshake(this Player player, float intensity, string context)
 		{
-			player.Macrocosm().AddScreenshake(value, context);
+			Main.instance.CameraModifiers.Add(new ScreenshakeCameraModifier(intensity, context));
 		}
 
 		public static DashPlayer DashPlayer(this Player player)
@@ -50,11 +52,6 @@ namespace Macrocosm.Common.Utils
 		public static GlowmaskGlobalItem Glowmask(this Item item)
 		{
 			return item.GetGlobalItem<GlowmaskGlobalItem>();
-		}
-
-		public static bool IsSloped(this Tile tile)
-		{
-			return (int)tile.BlockType > 1;
 		}
 
 		public static int[] ToIntArray(this Range range, int length = int.MaxValue)

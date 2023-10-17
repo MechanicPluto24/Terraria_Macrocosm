@@ -161,6 +161,11 @@ RocketPlacer: {
 	Tooltip: Places a rocket. <right> to despawn all rockets in the Solar System
 }
 
+Rocket: {
+	DisplayName: Rocket
+	Tooltip: ""
+}
+
 Teleporter: {
 	DisplayName: Teleporter
 	Tooltip: Teleports the user to and from the Moon
@@ -326,26 +331,6 @@ SpaceShuttle: {
 	Tooltip: In memory of STS-51-L and STS-107.
 }
 
-Hemostone: {
-	DisplayName: Hemostone
-	Tooltip: ""
-}
-
-HemostoneBrick: {
-	DisplayName: Hemostone Brick
-	Tooltip: ""
-}
-
-HemostoneBrickWall: {
-	DisplayName: Hemostone Brick Wall
-	Tooltip: ""
-}
-
-HemostoneWall: {
-	DisplayName: Hemostone Wall
-	Tooltip: ""
-}
-
 IrradiatedBrick: {
 	DisplayName: Irradiated Brick
 	Tooltip: ""
@@ -367,7 +352,7 @@ IrradiatedRockWall: {
 }
 
 MoonBasePlating: {
-	DisplayName: Lunar Plating
+	DisplayName: ERA Plating
 	Tooltip: ""
 }
 
@@ -378,16 +363,6 @@ Protolith: {
 
 ProtolithWall: {
 	DisplayName: Protolith Wall
-	Tooltip: ""
-}
-
-PyramidPlate: {
-	DisplayName: Pyramid Plate
-	Tooltip: ""
-}
-
-PyramidPlateWall: {
-	DisplayName: Pyramid Plate Wall
 	Tooltip: ""
 }
 
@@ -411,63 +386,18 @@ RegolithWall: {
 	Tooltip: ""
 }
 
-SpaceshipCore: {
-	DisplayName: Spaceship Core
-	Tooltip: ""
-}
-
-SpaceshipFlooring: {
-	DisplayName: Spaceship Flooring
-	Tooltip: ""
-}
-
-SpaceshipPlate: {
-	DisplayName: Spaceship Plate
-	Tooltip: ""
-}
-
-SpaceshipPlateWall: {
-	DisplayName: Spaceship Plate Wall
-	Tooltip: ""
-}
-
-SpaceshipWindow: {
-	DisplayName: Spaceship Window
-	Tooltip: ""
-}
-
-SpaceshipWindowWall: {
-	DisplayName: Spaceship Window Wall
-	Tooltip: ""
-}
-
-SuperResistantGlass: {
-	DisplayName: Super Resistant Glass
-	Tooltip: ""
-}
-
-Tendril: {
-	DisplayName: Tendril
-	Tooltip: ""
-}
-
 AdamantiteLoom: {
 	DisplayName: Adamantite Loom
 	Tooltip: ""
 }
 
-MoonBaseTerminal: {
-	DisplayName: Moon Base Terminal
+TitaniumLoom: {
+	DisplayName: Titanium Loom
 	Tooltip: ""
 }
 
 SolarPanelLarge: {
 	DisplayName: Large Solar Panel
-	Tooltip: ""
-}
-
-TitaniumLoom: {
-	DisplayName: Titanium Loom
 	Tooltip: ""
 }
 
@@ -857,22 +787,22 @@ SteelRifle: {
 }
 
 MoonBaseCandle: {
-	DisplayName: Moon Base Candle
+	DisplayName: ERA Candle
 	Tooltip: ""
 }
 
 MoonBaseLamp: {
-	DisplayName: Moon Base Lamp
+	DisplayName: ERA Lamp
 	Tooltip: ""
 }
 
 MoonBaseLantern: {
-	DisplayName: Moon Base Lantern
+	DisplayName: ERA Lantern
 	Tooltip: ""
 }
 
 MoonBaseNeonTube: {
-	DisplayName: Moon Base Neon Tube
+	DisplayName: ERA Neon Tube
 	Tooltip: ""
 }
 
@@ -882,36 +812,61 @@ OilRefinery: {
 }
 
 SolarPanelSmall: {
-	DisplayName: Solar Panel Small
+	DisplayName: Small Solar Panel
 	Tooltip: ""
 }
 
 MoonBaseBed: {
-	DisplayName: Moon Base Bed
+	DisplayName: ERA Bed
 	Tooltip: ""
 }
 
 MoonBaseChair: {
-	DisplayName: Moon Base Chair
+	DisplayName: ERA Chair
 	Tooltip: ""
 }
 
 MoonBaseDeskLamp: {
-	DisplayName: Moon Base Desk Lamp
+	DisplayName: ERA Desk Lamp
 	Tooltip: ""
 }
 
 MoonBaseSofa: {
-	DisplayName: Moon Base Sofa
+	DisplayName: ERA Sofa
 	Tooltip: ""
 }
 
 MoonBaseChest: {
-	DisplayName: Moon Base Chest
+	DisplayName: ERA Storage Unit
 	Tooltip: ""
 }
 
-MoonBaseChestKey: {
-	DisplayName: Moon Base Chest Key
+LexanGlass: {
+	DisplayName: Lexan Glass
 	Tooltip: ""
+}
+
+MoonBaseConsole: {
+	DisplayName: ERA Console
+	Tooltip: ""
+}
+
+QuestionMark: {
+	DisplayName: Question Mark
+	Tooltip: ""
+}
+
+MoonBaseChestElectronic: {
+	DisplayName: ERA Electronic Storage Unit
+	Tooltip: ""
+}
+
+ZombieFinger: {
+	DisplayName: Zombie Finger
+	Tooltip: ""
+}
+
+XFLR6: {
+	DisplayName: XFLR-6
+	Tooltip: Well, what do you think of that? Look what the goat created.
 }
