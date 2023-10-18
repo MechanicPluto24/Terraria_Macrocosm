@@ -20,11 +20,16 @@ namespace Macrocosm.Common.Subworlds
                 Weight = weight;
             }
         }
+
+        /// <summary> The structure map of this subworld. Does not save, use only in <see cref="TaskAttribute"> Task</see>s </summary>
+        public StructureMap StructureMap { get; private set; } = new();
+
+        /// <summary> The subworld generation tasks. To create a task, use the <see cref="TaskAttribute"/> </summary>
         public sealed override List<GenPass> Tasks
         {
             get
             {
-                List<GenPass> tasks = new();
+				List<GenPass> tasks = new();
                 foreach (MethodInfo methodInfo in GetType().GetRuntimeMethods())
                 {
                     TaskAttribute taskAttribute = methodInfo.GetCustomAttribute<TaskAttribute>();
@@ -79,7 +84,10 @@ namespace Macrocosm.Common.Subworlds
                      ));
                 }
 
-                return tasks;
+                // (Re)construct structure map of this subworld when SubLib fetches worldgen tasks (i.e. subworld generation commences)
+				StructureMap = new();
+
+				return tasks;
             }
         }
     }

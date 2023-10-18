@@ -21,16 +21,19 @@ namespace Macrocosm.Common.Subworlds
     public abstract partial class MacrocosmSubworld : Subworld 
 	{
 		/// <summary> Time rate of this subworld, compared to Earth's (1.0) </summary>
-		public virtual double TimeRate { get; set; } = Earth.TimeRate;
+		public virtual double TimeRate { get; } = Earth.TimeRate;
 		
 		/// <summary> Day lenght of this subworld in ticks </summary>
- 		public virtual double DayLenght { get; set; } = Earth.DayLenght;
+ 		public virtual double DayLenght { get; } = Earth.DayLenght;
 		
 		/// <summary> Night lenght of this subworld in ticks </summary>
- 		public virtual double NightLenght { get; set; } = Earth.NightLenght;
+ 		public virtual double NightLenght { get; } = Earth.NightLenght;
 
 		/// <summary> The gravity multiplier, measured in G (Earth has 1G) </summary>
- 		public virtual float GravityMultiplier { get; set; } = Earth.GravityMultiplier;
+ 		public virtual float GravityMultiplier { get; } = Earth.GravityMultiplier;
+
+		/// <summary> Whether wiring should function in this subworld </summary>
+		public bool ShouldUpdateWiring { get; set; } = true;
 
 		/// <summary> Determine the size of this subworld </summary>
 		/// <param name="earthWorldSize"> The Earth's world size </param>

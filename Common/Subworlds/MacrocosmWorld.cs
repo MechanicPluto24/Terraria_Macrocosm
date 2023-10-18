@@ -17,6 +17,9 @@ namespace Macrocosm.Common.Subworlds
 		/// <summary> Whether the dawn time boundary happened in this update tick </summary>
         public static bool IsDawn { get; set; } = false;
 
+		public static int Seed => Main.ActiveWorldFileData.Seed;
+		public static string SeedText => Main.ActiveWorldFileData.SeedText;
+
 		public override void OnWorldLoad()
 		{
 			if (!SubworldSystem.AnyActive())
@@ -98,7 +101,8 @@ namespace Macrocosm.Common.Subworlds
 		// Updates wiring, TEs and liquids 
 		private static void GameMechanicsUpdates()
 		{
-			Wiring.UpdateMech();
+			if(MacrocosmSubworld.Current.ShouldUpdateWiring)
+				Wiring.UpdateMech();
 
 			TileEntity.UpdateStart();
 			foreach (TileEntity te in TileEntity.ByID.Values)
@@ -250,5 +254,5 @@ namespace Macrocosm.Common.Subworlds
 			if (SubworldSystem.AnyActive<Macrocosm>())
 				MacrocosmSubworld.Current.PostUpdateEverything();
 		}
-    }
+	}
 }

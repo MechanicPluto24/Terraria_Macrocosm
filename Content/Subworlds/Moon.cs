@@ -23,8 +23,11 @@ namespace Macrocosm.Content.Subworlds
         private static Moon instance;
         public static Moon Instance { get { instance ??= new(); return instance; } }
 
-        /// <summary> 8 times slower than on Earth (a Terrarian lunar month lasts for 8 in-game days) </summary>
-        public override double TimeRate => 0.125;
+		public float MeteorBoost { get; set; } = 1f;
+
+
+		/// <summary> 8 times slower than on Earth (a Terrarian lunar month lasts for 8 in-game days) </summary>
+		public override double TimeRate => 0.125;
 
 		/// <summary> About 6 times lower than default (1, as on Earth) </summary>
 		public override float GravityMultiplier => 0.166f;
@@ -93,7 +96,7 @@ namespace Macrocosm.Content.Subworlds
 		}
 
 		//TODO: NetSync and add actual content
-		private static void UpdateBloodMoon()
+		private void UpdateBloodMoon()
         {
 			/*
 			if (MacrocosmWorld.IsDusk && Main.rand.NextBool(9)) 
@@ -105,12 +108,11 @@ namespace Macrocosm.Content.Subworlds
 		}
 
 		//TODO 
-		private static void UpdateMeteorStorm() { }
+		private void UpdateMeteorStorm() { }
 
 		//TODO 
-		private static void UpdateSolarStorm() { }
+		private void UpdateSolarStorm() { }
 
-		public static float MeteorBoost { get; set; } = 1f;
 		private double timePass = 0.0;
 		private void UpdateMeteors()
 		{
@@ -124,7 +126,7 @@ namespace Macrocosm.Content.Subworlds
 
 			for (int l = 1; l <= (int)timePass; l++)
 			{
-				float frequency = 2f * MeteorBoost;
+				float frequency = 2f * Instance.MeteorBoost;
 
 				if (Main.rand.Next(8000) >= frequency)
 					continue;
