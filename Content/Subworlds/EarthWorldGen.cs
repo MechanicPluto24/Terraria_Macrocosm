@@ -65,7 +65,8 @@ namespace Macrocosm.Content.Subworlds
 				// Scale the chance by depth
 				int chance = (int)(topDenominator + depthProgress * bottomDenominator);
 
-				// Chances to place oil shale increases the lower you go
+				// Chance to place oil shale increases the lower you go
+				// TODO: check why this doesn't look right in practice
 				if (!Main.rand.NextBool(chance))
 				{
 					int type = Main.tile[tileX, tileY].TileType;

@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using MonoMod.Cil;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Terraria;
 using Terraria.Audio;
@@ -18,7 +19,6 @@ namespace Macrocosm.Common.Utils
 {
 	public static partial class Utility
     {
-
 		public static string GetNamespacePath(object obj) => (obj.GetType().Namespace + "." + obj.GetType().Name).Replace('.', '/');
 
 		public static bool IsAprilFools()
@@ -38,6 +38,34 @@ namespace Macrocosm.Common.Utils
 										 Language.GetTextValue("GameUI.CompassWest", -posX));
 
 			return text;
+		}
+
+		public enum MessageSeverity { Info, Warn, Error, Fatal }
+		public static void LogChatMessage(string message, MessageSeverity severity = MessageSeverity.Info)
+		{
+			switch (severity)
+			{
+				case MessageSeverity.Info:
+					Chat(message, Color.White, sync: false);
+					Macrocosm.Instance.Logger.Info(message);
+					break;
+
+				case MessageSeverity.Warn:
+					Chat(message, Color.Gold, sync: false);
+					Macrocosm.Instance.Logger.Warn(message);
+					break;
+
+				case MessageSeverity.Error:
+					Chat(message, Color.Red, sync: false);
+					Macrocosm.Instance.Logger.Error(message);
+					break;
+
+				case MessageSeverity.Fatal:
+					Chat(message, Color.Purple, sync: false);
+					Macrocosm.Instance.Logger.Fatal(message);
+					break;
+			}
+
 		}
 
 		//------------------------------------------------------//
