@@ -2,10 +2,12 @@
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.CameraModifiers;
 using Microsoft.Xna.Framework;
-using SubworldLibrary;
+using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using Terraria;
 using Terraria.ID;
+using Terraria.Map;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets
@@ -18,6 +20,16 @@ namespace Macrocosm.Content.Rockets
 		public string TargetSubworldID { get; set; } = "";
 
 		private PanCameraModifier cameraModifier;
+
+		public override void Load()
+		{
+			On_Main.RefreshPlayerDrawOrder += On_Main_RefreshPlayerDrawOrder;
+		}
+
+		public override void Unload()
+		{
+			On_Main.RefreshPlayerDrawOrder -= On_Main_RefreshPlayerDrawOrder;
+		}
 
 		public override void CopyClientState(ModPlayer targetCopy)
 		{
@@ -102,8 +114,6 @@ namespace Macrocosm.Content.Rockets
 			if (Player.mount.Active)
 				Player.mount.Dismount(Player);
 
-			Player.sitting.isSitting = true;
-
 			Utility.UICloseOthers();
 
 			if (Player.whoAmI == Main.myPlayer)
@@ -114,7 +124,6 @@ namespace Macrocosm.Content.Rockets
 		{
 			InRocket = false;
 			IsCommander = false;
-			Player.sitting.isSitting = false;
 
 			if (Player.whoAmI == Main.myPlayer)
 			{
@@ -170,6 +179,41 @@ namespace Macrocosm.Content.Rockets
 				Player.releaseMount = true;
 			}
  		}
+
+		private void On_Main_RefreshPlayerDrawOrder(On_Main.orig_RefreshPlayerDrawOrder orig, Main self)
+		{
+			orig(self);
+
+			List<Player> playersThatDrawBehindNPCs = Utility.GetFieldValue<List<Player>>(typeof(Main), "_playersThatDrawBehindNPCs", self, BindingFlags.NonPublic | BindingFlags.Instance);
+			List<Player> playersThatDrawAfterProjectiles = Utility.GetFieldValue<List<Player>>(typeof(Main), "_playersThatDrawAfterProjectiles", self, BindingFlags.NonPublic | BindingFlags.Instance);
+
+			Player player;
+			RocketPlayer rocketPlayer;
+
+			for (int i = 0; i < Main.maxPlayers; i++)
+			{
+				player = Main.player[i];
+				if (i != Main.myPlayer && 
+					player.active && 
+					!player.outOfRange && 
+					playersThatDrawAfterProjectiles.Contains(player) && 
+					player.TryGetModPlayer(out rocketPlayer) && 
+					rocketPlayer.InRocket)
+				{
+					playersThatDrawAfterProjectiles.Remove(player);
+					playersThatDrawBehindNPCs.Add(player);
+				}
+			}
+
+			player = Main.LocalPlayer;
+			if (playersThatDrawAfterProjectiles.Contains(player) && 
+				player.TryGetModPlayer(out rocketPlayer) && 
+				rocketPlayer.InRocket)
+			{
+				playersThatDrawAfterProjectiles.Remove(player);
+				playersThatDrawBehindNPCs.Add(player);
+			}
+		}
 	}
 }
 

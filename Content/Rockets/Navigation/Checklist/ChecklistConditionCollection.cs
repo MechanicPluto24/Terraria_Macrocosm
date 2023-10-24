@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Navigation.Checklist
@@ -12,6 +13,12 @@ namespace Macrocosm.Content.Rockets.Navigation.Checklist
 
 		public void Add(ChecklistCondition condition) 
             => conditions.Add(condition); 
+
+        public void AddRange(List<ChecklistCondition> conditions)
+            => this.conditions.AddRange(conditions);
+
+		public void AddRange(ChecklistConditionCollection conditions)
+			=> this.conditions.AddRange(conditions.ToList());
 
 		public void Remove(ChecklistCondition condition)
 			 => conditions.Remove(condition);

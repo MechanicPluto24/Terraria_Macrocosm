@@ -252,7 +252,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.Additive, state);
 
-			Projectile.GetTrail().Draw(tex.Size()/2);
+			Projectile.GetTrail().Draw(Projectile.Size / 2f);
 			Main.EntitySpriteDraw(glow, Projectile.Center - Main.screenPosition, null, new Color(215, 101, 0), 0f, glow.Size() / 2, 0.05f * Projectile.scale, SpriteEffects.None, 0f);
 
 			Main.spriteBatch.End();
