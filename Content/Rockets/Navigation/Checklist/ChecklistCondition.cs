@@ -16,7 +16,7 @@ namespace Macrocosm.Content.Rockets.Navigation.Checklist
 
 		private readonly ChecklistInfoElement checklistInfoElement;
 
-		public ChecklistCondition(string langKey, Func<bool> canLaunch, int checkPeriod = 1,  bool hideIfMet = false)
+		public ChecklistCondition(string langKey, Func<bool> canLaunch, int checkPeriod = 1, bool hideIfMet = false)
 		{
 			LangKey = langKey;
 			predicate = canLaunch;
@@ -24,6 +24,26 @@ namespace Macrocosm.Content.Rockets.Navigation.Checklist
 			HideIfMet = hideIfMet;
 
 			checklistInfoElement = new(langKey);
+		}
+
+		public ChecklistCondition(string langKey, string iconMet, string iconNotMet, Func<bool> canLaunch, int checkPeriod = 1,  bool hideIfMet = false)
+		{
+			LangKey = langKey;
+			predicate = canLaunch;
+			this.checkPeriod = checkPeriod;
+			HideIfMet = hideIfMet;
+
+			checklistInfoElement = new(langKey, iconMet, iconNotMet);
+		}
+
+		public ChecklistCondition(string langKey, string uniqueIcon, Func<bool> canLaunch, int checkPeriod = 1, bool hideIfMet = false)
+		{
+			LangKey = langKey;
+			predicate = canLaunch;
+			this.checkPeriod = checkPeriod;
+			HideIfMet = hideIfMet;
+
+			checklistInfoElement = new(langKey, uniqueIcon);
 		}
 
 		public virtual bool IsMet()
@@ -42,19 +62,13 @@ namespace Macrocosm.Content.Rockets.Navigation.Checklist
 
 		public virtual UIInfoElement ProvideUIInfoElement()
 		{
-			checklistInfoElement.State = IsMet();
+			checklistInfoElement.MetState = IsMet();
 			UIInfoElement infoElement = checklistInfoElement.ProvideUI();
 			infoElement.Activate();
-			infoElement.SetTextLeft(55, 0);
-			infoElement.Height = new(57f, 0f);
+			infoElement.SetTextLeft(50, 0);
+			infoElement.Height = new(52f, 0f);
+			infoElement.IconHAlign = 0.12f;
 			return infoElement;
-		}
-
-		public virtual UIElement ProvideUIInfoElement(ChecklistInfoElement.ExtraIconType notMetIcon = ChecklistInfoElement.ExtraIconType.CrossmarkRed, ChecklistInfoElement.ExtraIconType metIcon = ChecklistInfoElement.ExtraIconType.CheckmarkGreen)
-		{
-			checklistInfoElement.NotMetIcon = notMetIcon;
-			checklistInfoElement.MetIcon = metIcon;
-			return ProvideUIInfoElement();
 		}
 	}
 }
