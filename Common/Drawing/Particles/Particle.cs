@@ -70,9 +70,9 @@ namespace Macrocosm.Common.Drawing.Particles
 				return GetFrame().Value.Size();
 			}
 		}
-					
+
 		/// <summary> Whether the current particle instance is active </summary>
-		public bool Active { get; protected set; }
+		[NetSync] public bool Active;
 
 		/// <summary> Time left before despawining, in ticks </summary>
 		[NetSync] public int TimeLeft;
@@ -163,7 +163,7 @@ namespace Macrocosm.Common.Drawing.Particles
 			if (FrameNumber <= 1 || SetRandomFrameOnSpawn)
 				return;
 
-			if (Main.hasFocus)
+			if (Main.hasFocus || Main.netMode == NetmodeID.MultiplayerClient)
 			{
 				frameCnt++;
 				if (frameCnt == FrameSpeed)
@@ -251,13 +251,16 @@ namespace Macrocosm.Common.Drawing.Particles
   				Kill();
   		}
 
-		public void Kill()
+		public void Kill(bool shouldSync = false)
 		{
 			if (!Active)
 				return;
 
 			OnKill();
 			Active = false;
+
+			if(shouldSync)
+				NetSync();
 		}
 
 		#endregion

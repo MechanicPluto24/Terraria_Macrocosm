@@ -145,6 +145,18 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			}
 		}
 
+		public override bool? CanHitNPC(NPC target)
+		{
+			return base.CanHitNPC(target);
+		}
+
+		public override bool CanHitPlayer(Player target)
+		{
+			return base.CanHitPlayer(target);
+		}
+
+
+
 		private SpriteBatchState state1, state2;
 
 		public override bool PreDraw(ref Color lightColor)
@@ -171,8 +183,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 							.UseProjectionMatrix(doUse: true)
 							.UseSaturation(-2.4f)
 							.UseImage0(ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "FadeOutMask"))
-							.UseImage1(ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "FadeOutTrail"))
-							.UseImage2(ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "FlamingTrail1"));
+							.UseImage1(ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "RocketExhaustTrail1"))
+							.UseImage2(ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "RocketExhaustTrail2"));
 
 			shader.Apply();
 
@@ -272,6 +284,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 		}
 	}
 
+	// TODO: replace this with CanHit 
 	public class HandheldEngineHitbox : ModProjectile
 	{
 		public override string Texture => Macrocosm.EmptyTexPath;

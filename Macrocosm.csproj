@@ -28,6 +28,7 @@
     <None Remove="Content\Rockets\Textures\Checklist\BloodMoon_NotMet.png" />
     <None Remove="Content\Rockets\Textures\Checklist\Boss_NotMet.png" />
     <None Remove="Content\Rockets\Textures\Checklist\Invasion_NotMet.png" />
+    <None Remove="Content\Rockets\Textures\Checklist\Selected_NotMet.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="tModLoader.CodeAssist" Version="0.1.*" />

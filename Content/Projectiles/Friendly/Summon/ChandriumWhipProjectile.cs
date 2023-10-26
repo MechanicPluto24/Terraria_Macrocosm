@@ -179,7 +179,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 					}
 
 					if (HitStacks == 0 && HitNPC && sparkle is not null)
-						sparkle.Kill();
+					{
+						sparkle.Kill(shouldSync: true);
+					}
 				}
 			}
  		}

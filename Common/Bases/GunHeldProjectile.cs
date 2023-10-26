@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Bases
 {
-	public struct GunHeldProjectileData
+	public readonly struct GunHeldProjectileData
     {
         public GunHeldProjectileData() { }
 
@@ -58,12 +58,15 @@ namespace Macrocosm.Common.Bases
         {
             get
             {
-                return new Vector2(Projectile.ai[1], Projectile.ai[2]);
+                return new(
+                    Projectile.ai[0], 
+                    Projectile.ai[1]
+                );
             }
             set
             {
-                Projectile.ai[1] = value.X;
-                Projectile.ai[2] = value.Y;
+                Projectile.ai[0] = value.X;
+                Projectile.ai[1] = value.Y;
             }
         }
 
@@ -72,17 +75,20 @@ namespace Macrocosm.Common.Bases
 
         private void UpdateCenterAndDirection()
         {
-            Projectile.Center = Player.RotatedRelativePoint(Player.MountedCenter) + new Vector2(-4 * Player.direction, -2);
-            DirectionToMouse = Projectile.Center.DirectionTo(Main.MouseWorld);
-            Projectile.Center += DirectionToMouse.RotatedBy(-MathHelper.PiOver2 * Player.direction) * GunHeldProjectileData.CenterYOffset;
-            DirectionToMouse = (Projectile.Center - DirectionToMouse * 50).DirectionTo(Main.MouseWorld);
+			if (Main.myPlayer == Projectile.owner)
+            {
+				Projectile.Center = Player.RotatedRelativePoint(Player.MountedCenter) + new Vector2(-4 * Player.direction, -2);
+				DirectionToMouse = Projectile.Center.DirectionTo(Main.MouseWorld);
+				Projectile.Center += DirectionToMouse.RotatedBy(-MathHelper.PiOver2 * Player.direction) * GunHeldProjectileData.CenterYOffset;
+				DirectionToMouse = (Projectile.Center - DirectionToMouse * 50).DirectionTo(Main.MouseWorld);
 
-            Projectile.netUpdate = true;
-        }
+				Projectile.netUpdate = true;
+			}
+		}
 
         protected override void OnSpawn()
         {
-            if (Item.ModItem is not GunHeldProjectileItem gunHeldProjectileItem)
+			if (item.ModItem is not GunHeldProjectileItem gunHeldProjectileItem)
             {
                 UnAlive();
                 return;
@@ -91,12 +97,7 @@ namespace Macrocosm.Common.Bases
             GunTexture = gunHeldProjectileItem.HeldProjectileTexture;
             GunHeldProjectileData = gunHeldProjectileItem.GunHeldProjectileData;
 
-            if (Main.myPlayer != Projectile.owner)
-            {
-                return;
-            }
-
-            UpdateCenterAndDirection();
+			UpdateCenterAndDirection();
 
             Vector2 shootPosition = Projectile.Center;
             Vector2 extendedPosition = Projectile.Center + DirectionToMouse * GunHeldProjectileData.MuzzleOffset;
@@ -108,20 +109,21 @@ namespace Macrocosm.Common.Bases
             Vector2 velocity = DirectionToMouse * Projectile.velocity.Length();
 
             if (
-                gunHeldProjectileItem.Shoot(
+				Main.myPlayer == Projectile.owner &&
+				gunHeldProjectileItem.Shoot(
                     Player,
-                    Source,
+                    new EntitySource_ItemUse_WithAmmo(Player, item, item.useAmmo),
                     shootPosition,
                     velocity,
                     ShootProjectileType,
                     Projectile.damage,
                     Projectile.knockBack
-                )
+                    )
                 )
             {
                 Projectile.NewProjectile(
-                    Source, 
-                    shootPosition, 
+					new EntitySource_ItemUse_WithAmmo(Player, item, item.useAmmo),
+					shootPosition, 
                     velocity, 
                     ShootProjectileType, 
                     Projectile.damage, 
@@ -134,12 +136,9 @@ namespace Macrocosm.Common.Bases
 
         public override void AI()
         {
-            UpdateCenterAndDirection();
+			UpdateCenterAndDirection();
 
-            if (Projectile.owner != Main.myPlayer)
-                return;
-
-            float mouseDirectionRotation = DirectionToMouse.ToRotation();
+			float mouseDirectionRotation = DirectionToMouse.ToRotation();
             int newPlayerDirection = MathF.Abs(mouseDirectionRotation) <= MathHelper.PiOver2 ? 1 : -1;
             if (newPlayerDirection != Player.direction)
             {
@@ -155,18 +154,16 @@ namespace Macrocosm.Common.Bases
             {
                 Player.SetCompositeArmBack(true, Player.CompositeArmStretchAmount.ThreeQuarters, Projectile.rotation - MathHelper.PiOver2);
             }
+ 
+			if (frame++ == Projectile.extraUpdates * GunHeldProjectileData.RecoilStartFrame)
+			{
+				currentRecoil = new Vector2(GunHeldProjectileData.Recoil.horizontal, GunHeldProjectileData.Recoil.rotation);
+			}
 
-            if (frame++ == Projectile.extraUpdates * GunHeldProjectileData.RecoilStartFrame)
-            {
-                currentRecoil = new Vector2(GunHeldProjectileData.Recoil.horizontal, GunHeldProjectileData.Recoil.rotation);
-            }
+			currentRecoil *= GunHeldProjectileData.RecoilDiminish;
+ 		}
 
-            currentRecoil *= GunHeldProjectileData.RecoilDiminish;
-
-            Projectile.netUpdate = true;
-        }
-
-        public override void Draw(Color lightColor)
+		public override void Draw(Color lightColor)
         {
             // 19 here is for the arm length.
             Vector2 normOrigin = GunHeldProjectileData.GunBarrelPosition + Vector2.UnitX * (currentRecoil.X - 19);

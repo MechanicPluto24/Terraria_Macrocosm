@@ -33,7 +33,9 @@ namespace Macrocosm.Content.Buffs.GoodBuffs
 			foreach (Particle particle in ParticleManager.Particles)
 			{
 				if (particle is ChandriumSparkle chandriumSparkle && chandriumSparkle.Owner == Main.myPlayer)
-					particle.Kill();
+				{
+					particle.Kill(shouldSync: true);
+				}
 			}
 		}
 	}

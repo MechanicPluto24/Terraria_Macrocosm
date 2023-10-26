@@ -1,15 +1,22 @@
 ﻿using Macrocosm.Common.UI;
 using System;
+using Terraria.Graphics;
 using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Navigation.Checklist
 {
 	public class ChecklistCondition
 	{
+		public bool HideIfMet { get; set; } = true;
 		public string LangKey { get; private set; }
-		public bool HideIfMet = true;
+
+		public bool HasChanged => hasChanged;
+		public bool IsMet => cachedMet;
 
 		private readonly Func<bool> predicate = () => false;
+
+		private bool lastMet; 
+		private bool hasChanged; 
 		private bool cachedMet;
 		private int checkCounter;
 		private int checkPeriod;
@@ -26,35 +33,36 @@ namespace Macrocosm.Content.Rockets.Navigation.Checklist
 			checklistInfoElement = new(langKey);
 		}
 
-		public ChecklistCondition(string langKey, string iconMet, string iconNotMet, Func<bool> canLaunch, int checkPeriod = 1,  bool hideIfMet = false)
+		public ChecklistCondition(string langKey, string customIconMet, string customIconNotMet, Func<bool> canLaunch, int checkPeriod = 1,  bool hideIfMet = false)
 		{
 			LangKey = langKey;
 			predicate = canLaunch;
 			this.checkPeriod = checkPeriod;
 			HideIfMet = hideIfMet;
 
-			checklistInfoElement = new(langKey, iconMet, iconNotMet);
+			checklistInfoElement = new(langKey, customIconMet, customIconNotMet);
 		}
 
-		public ChecklistCondition(string langKey, string uniqueIcon, Func<bool> canLaunch, int checkPeriod = 1, bool hideIfMet = false)
-		{
-			LangKey = langKey;
-			predicate = canLaunch;
-			this.checkPeriod = checkPeriod;
-			HideIfMet = hideIfMet;
-
-			checklistInfoElement = new(langKey, uniqueIcon);
-		}
-
-		public virtual bool IsMet()
+		public bool Check()
 		{
 			checkCounter++;
 
 			if (checkCounter >= checkPeriod)
 			{
 				checkCounter = 0;
-				cachedMet = predicate();
-				return cachedMet;
+
+				bool currentMet = predicate();
+				if (currentMet != lastMet)
+				{
+					hasChanged = true;
+					cachedMet = currentMet;
+				}
+				else
+				{
+					hasChanged = false;  
+				}
+
+				lastMet = currentMet;  
 			}
 
 			return cachedMet;
@@ -62,7 +70,7 @@ namespace Macrocosm.Content.Rockets.Navigation.Checklist
 
 		public virtual UIInfoElement ProvideUIInfoElement()
 		{
-			checklistInfoElement.MetState = IsMet();
+			checklistInfoElement.MetState = cachedMet;
 			UIInfoElement infoElement = checklistInfoElement.ProvideUI();
 			infoElement.Activate();
 			infoElement.SetTextLeft(50, 0);

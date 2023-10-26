@@ -11,7 +11,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 {
 	public class ArtemiteGreatsword : GreatswordHeldProjectileItem
 	{
-		public override Vector2 SpriteHandlePosition => new(23, 59);
+		public override Vector2 SpriteHandlePosition => new(23, 68);
 
         public override void SetStaticDefaults()
 		{

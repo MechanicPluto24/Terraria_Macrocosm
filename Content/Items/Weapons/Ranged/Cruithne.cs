@@ -88,6 +88,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 		{
 			if (player.altFunctionUse == 2)
 			{
+				damage = (int)(damage * 1.5f);
 				velocity *= 0.5f;
 				position.Y -= 4;
 			}                                                                                                                                                                                            

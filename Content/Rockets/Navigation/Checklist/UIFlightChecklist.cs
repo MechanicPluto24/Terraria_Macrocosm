@@ -17,12 +17,14 @@ namespace Macrocosm.Content.Rockets.Navigation.Checklist
 		public Rocket Rocket { get; set; }
 		public UIMapTarget MapTarget { get; set; }
 
+		public bool AllMet { get; set; }
+
 		private ChecklistConditionCollection commonLaunchConditions = new();
 		private ChecklistCondition selectedLaunchCondition;
 
 		public UIFlightChecklist() : base(new LocalizedColorScaleText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Checklist"), scale: 1.2f))
 		{
-			selectedLaunchCondition = new ChecklistCondition("Selected", "Symbols/QuestionMarkGold", () => MapTarget is not null);
+			selectedLaunchCondition = new ChecklistCondition("Selected", () => MapTarget is not null);
 
 			commonLaunchConditions.Add(new ChecklistCondition("Fuel", () => Rocket.Fuel >= Rocket.GetFuelCost(MapTarget.Name)));
 
@@ -43,27 +45,46 @@ namespace Macrocosm.Content.Rockets.Navigation.Checklist
 			BorderColor = new(89, 116, 213, 255);
 		}
 
-		public bool CheckLaunchConditions()
-		{
-			bool met = selectedLaunchCondition.IsMet() && commonLaunchConditions.MetAll();
-
-			if (MapTarget is not null)
-			{
-				met &= MapTarget.CheckLaunchConditions();
-				MapTarget.IsReachable = met;
-			}
-
-			return met;
-		}
-
 		public override void Update(GameTime gameTime)
 		{
 			base.Update(gameTime);
 
-			Deactivate();
-			ClearList();
-			AddRange(GetUpdatedChecklist());
-			Activate();
+			bool anyConditionChanged = false;
+			bool allConditionsMet = true;
+
+			bool ProcessCondition(ChecklistCondition condition)
+			{
+				bool wasMet = condition.Check();  
+				anyConditionChanged |= condition.HasChanged;  
+				allConditionsMet &= wasMet; 
+				return wasMet;
+			}
+
+			if (ProcessCondition(selectedLaunchCondition))
+			{
+				foreach (var condition in commonLaunchConditions)
+					ProcessCondition(condition);
+
+				if (MapTarget != null)
+				{
+					allConditionsMet &= MapTarget.CheckLaunchConditions();
+					if (MapTarget.LaunchConditions != null)
+						foreach (var condition in MapTarget.LaunchConditions)
+							ProcessCondition(condition);
+
+					MapTarget.IsReachable = allConditionsMet;
+				}
+			}
+
+			if (anyConditionChanged)
+			{
+				Deactivate();
+				ClearList();
+				AddRange(GetUpdatedChecklist());
+				Activate();
+			}
+
+			AllMet = allConditionsMet;
 		}
 
 		private List<UIElement> GetUpdatedChecklist()
@@ -71,7 +92,7 @@ namespace Macrocosm.Content.Rockets.Navigation.Checklist
 			List<UIElement> uIChecklist = new();
 			ChecklistConditionCollection checklistConditions = new();
 
-			if (!selectedLaunchCondition.IsMet())
+			if (!selectedLaunchCondition.IsMet)
 			{
 				checklistConditions.Add(selectedLaunchCondition);
 			}
@@ -84,8 +105,8 @@ namespace Macrocosm.Content.Rockets.Navigation.Checklist
 			}
 
 			var sortedConditions = checklistConditions
-				.Where(condition => !(condition.IsMet() && condition.HideIfMet))
-				.OrderBy(condition => condition.IsMet()).ToList();
+				.Where(condition => !(condition.IsMet && condition.HideIfMet))
+				.OrderBy(condition => condition.IsMet).ToList();
 
 			foreach (var condition in sortedConditions)
 				uIChecklist.Add(condition.ProvideUIInfoElement());
