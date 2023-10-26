@@ -20,6 +20,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 		public float BlastRadius => 120;
 
+		public int OriginalWidth => 16;
+		public int OriginalHeight => 16;
+
 		public override void SetStaticDefaults()
 		{
 			ProjectileID.Sets.TrailCacheLength[Type] = 30;
@@ -28,8 +31,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 		public override void SetDefaults()
 		{
-			Projectile.width = 16;
-			Projectile.height = 16;
+			Projectile.width = OriginalWidth;
+			Projectile.height = OriginalHeight;
 			Projectile.aiStyle = -1;
 			Projectile.penetrate = -1;
 			Projectile.friendly = true;
@@ -203,6 +206,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		{
 			if (Main.dedServ)
 				return;
+
+			Projectile.Resize(OriginalWidth, OriginalHeight);
  
 			SoundEngine.PlaySound(SoundID.Item14, Projectile.position);
 

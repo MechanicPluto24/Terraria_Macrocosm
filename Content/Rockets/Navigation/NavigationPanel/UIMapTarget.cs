@@ -176,9 +176,9 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationPanel
         public bool CheckLaunchConditions()
         {
             if (LaunchConditions is not null)
-                return LaunchConditions.MetAll();
+                return LaunchConditions.AllMet();
 
-            return false;
+            return true;
         }
 
         private SpriteBatchState state;

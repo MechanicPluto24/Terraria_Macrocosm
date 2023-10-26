@@ -152,7 +152,7 @@ namespace Macrocosm.Content.Rockets.Navigation
                 launchButton.ButtonState = UILaunchButton.StateType.NoTarget;
             else if (navigationPanel.CurrentMap.HasNext)
                 launchButton.ButtonState = UILaunchButton.StateType.ZoomIn;
-            else if (!flightChecklist.CheckLaunchConditions())
+            else if (!flightChecklist.AllMet)
                 launchButton.ButtonState = UILaunchButton.StateType.CantReach;
             else if (Main.LocalPlayer.GetModPlayer<RocketPlayer>().IsCommander)
                 launchButton.ButtonState = UILaunchButton.StateType.Launch;

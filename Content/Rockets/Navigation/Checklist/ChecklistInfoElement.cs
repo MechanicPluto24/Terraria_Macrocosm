@@ -20,16 +20,10 @@ namespace Macrocosm.Content.Rockets.Navigation.Checklist
 			this.iconNotMet = "Checklist/" + langKey + "_NotMet";
 		}
 
-		public ChecklistInfoElement(string langKey, string iconMet, string iconNotMet) : base(langKey)
+		public ChecklistInfoElement(string langKey, string customIconMet, string customIconNotMet) : base(langKey)
         {
-            this.iconMet = iconMet;
-			this.iconNotMet = iconNotMet;
-		}
-
-		public ChecklistInfoElement(string langKey, string uniqueIcon) : base(langKey)
-		{
-			this.iconMet = uniqueIcon;
-			this.iconNotMet = uniqueIcon;
+            this.iconMet = customIconMet;
+			this.iconNotMet = customIconNotMet;
 		}
 
 		protected override Asset<Texture2D> GetIcon() => ModContent.RequestIfExists<Texture2D>("Macrocosm/Content/Rockets/Textures/" + (MetState ? iconMet : iconNotMet), out var texture) ? texture : null;

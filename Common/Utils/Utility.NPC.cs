@@ -39,21 +39,24 @@ namespace Macrocosm.Common.Utils
 		{
 			moveTo += offset; // Gets the point that the NPC will be moving to.
 			Vector2 move = moveTo - npc.Center;
-			float magnitude = Magnitude(move);
+			float magnitude = move.Length();
+
 			if (magnitude > speed)
 			{
 				move *= speed / magnitude;
 			}
+
 			move = (npc.velocity * turnResistance + move) / (turnResistance + 1f);
-			magnitude = Magnitude(move);
+
+			magnitude = move.Length();
+
 			if (magnitude > speed)
 			{
 				move *= speed / magnitude;
 			}
+
 			npc.velocity = move;
 		}
-
-		private static float Magnitude(Vector2 mag) => (float)Math.Sqrt(mag.X * mag.X + mag.Y * mag.Y);
 
 		public static void UpdateScaleAndHitbox(this NPC npc, int baseWidth, int baseHeight, float newScale)
 		{
