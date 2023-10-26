@@ -28,7 +28,7 @@ namespace Macrocosm.Content.Items.Armor.Astronaut
 
         public override void UpdateArmorSet(Player player)
         {
-            player.Macrocosm().SpaceProtection = SpaceProtection.Tier1;
+            player.GetModPlayer<MacrocosmPlayer>().SpaceProtection = SpaceProtection.Tier1;
         }
 
         public override void AddRecipes()

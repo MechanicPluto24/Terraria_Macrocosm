@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
+using Macrocosm.Content.Players;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -16,7 +17,7 @@ namespace Macrocosm.Content.Buffs.GoodBuffs
 		{
 			if (player.buffTime[buffIndex] <= 1)
 			{
-				player.Macrocosm().ChandriumWhipStacks = 0;
+				player.GetModPlayer<MacrocosmPlayer>().ChandriumWhipStacks = 0;
 				KillParticle();
 			}
 

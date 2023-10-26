@@ -87,7 +87,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 				}
 
 				if (id > -1 && id < Main.maxNPCs)
- 					Main.npc[id].Macrocosm().TargetedByHomingProjectile = true;
+ 					Main.npc[id].GetGlobalNPC<MacrocosmNPC>().TargetedByHomingProjectile = true;
  
 				return false;
 			}

@@ -1,3 +1,4 @@
+using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Projectiles.Friendly.Magic;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
@@ -37,7 +38,9 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 			Item.mana = 5;
 		}
 
-		public override bool CanUseItem(Player player) => player.ownedProjectileCounts[Item.shoot] <= 0;
+		public override bool CanUseItem(Player player) => 
+			player.ownedProjectileCounts[Item.shoot] <= 0 && 
+			!player.HasBuff<WeaponOverheat>(); // TODO: should this be checked for each weapon instance/type..?
 
 		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{

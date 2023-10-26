@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Players;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;

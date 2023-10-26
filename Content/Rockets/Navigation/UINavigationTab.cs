@@ -3,6 +3,7 @@ using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Dev;
+using Macrocosm.Content.Players;
 using Macrocosm.Content.Rockets.LaunchPads;
 using Macrocosm.Content.Rockets.Navigation.Checklist;
 using Macrocosm.Content.Rockets.Navigation.CrewPanel;
@@ -100,7 +101,7 @@ namespace Macrocosm.Content.Rockets.Navigation
         {
             lastTarget = target;
             target = navigationPanel.CurrentMap.GetSelectedTarget();
-			Main.LocalPlayer.RocketPlayer().TargetSubworldID = target is null ? "" : target.Name;
+			Main.LocalPlayer.GetModPlayer<RocketPlayer>().TargetSubworldID = target is null ? "" : target.Name;
 
 			base.Update(gameTime);
 

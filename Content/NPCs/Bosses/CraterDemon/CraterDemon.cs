@@ -1538,12 +1538,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 		public override bool? CanBeHitByProjectile(Projectile projectile)
 		{
-			if (ProjectileID.Sets.IsAWhip[projectile.type])
- 				foreach(Vector2 v in projectile.WhipPointsForCollision)
- 					if (CanBeHitByThing(new Rectangle((int)v.X, (int)v.Y, 10, 10)) is null)
-						return null;
- 
-			return CanBeHitByThing(projectile.GetDamageHitbox());
+			GetHitboxRects(out Rectangle head, out Rectangle jaw);
+			return projectile.Colliding(projectile.Hitbox, head) || projectile.Colliding(projectile.Hitbox, jaw);
 		}
 
 		private bool? CanBeHitByThing(Rectangle hitbox)

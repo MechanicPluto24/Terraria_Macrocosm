@@ -7,7 +7,7 @@ using Terraria;
 
 namespace Macrocosm.Common.Netcode
 {
-	public enum MessageType : byte
+    public enum MessageType : byte
 	{
 		SyncParticle,
         SyncRocketData,

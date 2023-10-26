@@ -15,6 +15,7 @@ using System;
 using Macrocosm.Content.Items.Tools;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.CursorIcons;
+using Macrocosm.Content.Players;
 
 namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 {
@@ -276,7 +277,7 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 					
 					if (GetState(left, top) is State.Locked)
 					{
-						if (player.Macrocosm().KnowsToUseZombieFinger)
+						if (player.GetModPlayer<MacrocosmPlayer>().KnowsToUseZombieFinger)
 							player.cursorItemIconID = ModContent.ItemType<ZombieFinger>();
 						else
 							player.cursorItemIconID = CursorIcon.GetType<QuestionMark>();

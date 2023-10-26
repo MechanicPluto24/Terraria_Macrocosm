@@ -43,7 +43,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			if (!spawned)
 			{
                SwingTime /= OwnerPlayer.GetAttackSpeed(DamageClass.Melee);
-               SwingTime += SwingTime * (1f - OwnerPlayer.StaminaPlayer().MeleeStamina);
                Projectile.timeLeft = (int)SwingTime;
                spawned = true;
             }
@@ -73,8 +72,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
 		public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
 		{
-            OwnerPlayer.StaminaPlayer().MeleeStamina -= 0.15f;
-            OwnerPlayer.StaminaPlayer().ResetStaminaCooldown(90);
         }
 
 		public override void ModifyDamageHitbox(ref Rectangle hitbox)
