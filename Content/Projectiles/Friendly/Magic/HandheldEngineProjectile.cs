@@ -2,6 +2,7 @@ using Macrocosm.Common.Bases;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Particles;
 using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
@@ -13,6 +14,7 @@ using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.Graphics;
 using Terraria.Graphics.Shaders;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
@@ -46,9 +48,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 		private bool CanShoot => true;
 		public override void ProjectileAI()
 		{
-
-			Main.projFrames[Type] = windupFrames + shootFrames;
-
 			Animate();
 			Shoot();
 			ComputeOverheat();
@@ -76,6 +75,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
 		private bool OwnerHasMana => OwnerPlayer.CheckMana(ManaUseAmount);
 
+
+		private Rectangle[] hitboxes = new Rectangle[3];
 		private void Shoot()
 		{
 			if (CanShoot)
@@ -87,14 +88,47 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 				if (StillInUse && AI_UseCounter % ManaUseRate == 0)
 					OwnerPlayer.CheckMana(item, ManaUseAmount, true);
 
-				Vector2 rotPoint1 = Utility.RotatingPoint(Projectile.Center, new Vector2(42, 12 * Projectile.spriteDirection), Projectile.rotation);
-				Vector2 rotPoint2 = Utility.RotatingPoint(Projectile.Center, new Vector2(72, 12 * Projectile.spriteDirection), Projectile.rotation);
-				Vector2 rotPoint3 = Utility.RotatingPoint(Projectile.Center, new Vector2(102, 12 * Projectile.spriteDirection), Projectile.rotation);
+				Vector2 rotPoint1 = Utility.RotatingPoint(Projectile.Center, new Vector2(62, 12 * Projectile.spriteDirection), Projectile.rotation);
+				Vector2 rotPoint2 = Utility.RotatingPoint(Projectile.Center, new Vector2(92, 12 * Projectile.spriteDirection), Projectile.rotation);
+				Vector2 rotPoint3 = Utility.RotatingPoint(Projectile.Center, new Vector2(122, 12 * Projectile.spriteDirection), Projectile.rotation);
+				int dimension = 30;
 
-				Projectile.NewProjectile(Projectile.GetSource_FromAI(), rotPoint1, Vector2.Zero, ModContent.ProjectileType<HandheldEngineHitbox>(), damage, knockback, OwnerPlayer.whoAmI, Projectile.whoAmI);
-				Projectile.NewProjectile(Projectile.GetSource_FromAI(), rotPoint2, Vector2.Zero, ModContent.ProjectileType<HandheldEngineHitbox>(), damage, knockback, OwnerPlayer.whoAmI, Projectile.whoAmI);
-				Projectile.NewProjectile(Projectile.GetSource_FromAI(), rotPoint3, Vector2.Zero, ModContent.ProjectileType<HandheldEngineHitbox>(), damage, knockback, OwnerPlayer.whoAmI, Projectile.whoAmI);
+				// Scale damage by windup
+				Projectile.damage = (int)(Projectile.originalDamage * (float)(AI_Windup >= windupTime ? 1f : 0.5f + 0.5f * AI_Windup / (float)windupTime));
 
+				if (AI_Overheat > 0f)
+					Projectile.damage += (int)(Projectile.originalDamage * AI_Overheat);
+
+				if(AI_Overheat >= 1f)
+				{
+					Projectile.Kill();
+					SoundEngine.PlaySound(SoundID.LiquidsWaterLava, Projectile.position);
+
+					// TODO: should this be added for each weapon instance/type..?
+					OwnerPlayer.AddBuff(ModContent.BuffType<WeaponOverheat>(), 60 * 3);
+
+					for(int i = 0; i < 25; i++)
+					{
+						Vector2 pos = i % 3 == 0 ? rotPoint1 : i % 3 == 1 ? rotPoint2 : rotPoint3;
+						Dust.NewDust(pos, 1, 1, DustID.Smoke, newColor: Color.DarkGray);
+
+						if (i % 5 == 0)
+							Particle.CreateParticle<RocketExhaustSmoke>(p => {
+								p.Position = Projectile.position;
+								p.Velocity = Vector2.UnitX.RotatedByRandom(MathHelper.TwoPi);
+								p.DrawColor = Color.DarkGray;
+							});
+					}
+				}
+
+				hitboxes[0] = new Rectangle((int)(rotPoint1.X - dimension / 2), (int)(rotPoint1.Y - dimension / 2), dimension, dimension);
+				hitboxes[1] = new Rectangle((int)(rotPoint2.X - dimension / 2), (int)(rotPoint2.Y - dimension / 2), dimension, dimension);
+
+				if (AI_Windup >= windupTime - 10)
+					hitboxes[2] = new Rectangle((int)(rotPoint3.X - dimension / 2), (int)(rotPoint3.Y - dimension / 2), dimension, dimension);
+				else
+					hitboxes[2] = default;
+				
 				Vector2 rotPoint4 = Utility.RotatingPoint(Projectile.Center, new Vector2(130, 12 * Projectile.spriteDirection), Projectile.rotation);
 				Vector2 rotPoint5 = Utility.RotatingPoint(Projectile.Center, new Vector2(145, 12 * Projectile.spriteDirection), Projectile.rotation);
 
@@ -103,7 +137,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 				Lighting.AddLight(rotPoint4, Color.Lerp(Color.Lerp(new Color(98, 204, 255, 0), new Color(255, 177, 65, 0), AI_Overheat), Color.Lerp(new Color(255, 177, 65), new Color(255, 24, 24), AI_Overheat), 0.60f).ToVector3() * (0.8f - (0.4f * Utility.PositiveSineWave(10, 2))));
 				Lighting.AddLight(rotPoint5, Color.Lerp(Color.Lerp(new Color(98, 204, 255, 0), new Color(255, 177, 65, 0), AI_Overheat), Color.Lerp(new Color(255, 177, 65), new Color(255, 24, 24), AI_Overheat), 0.75f).ToVector3() * (0.5f - (0.25f * Utility.PositiveSineWave(10, 3))));
 
-				for (int i = 0; i < (int)(10f * MathHelper.Clamp((AI_Windup / windupTime), 0,1)); i++)
+				for (int i = 0; i < (int)(10f * MathHelper.Clamp((AI_Windup / windupTime), 0, 1)); i++)
 				{
 					float amp = Main.rand.NextFloat(0, 1f);
 					Vector2 position = rotPoint1 + Main.rand.NextVector2Circular(12, 20);
@@ -145,17 +179,16 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			}
 		}
 
-		public override bool? CanHitNPC(NPC target)
+		public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
 		{
-			return base.CanHitNPC(target);
+			foreach(var hitbox in hitboxes)
+			{
+				if(targetHitbox.Intersects(hitbox))
+					return true;
+			}
+
+			return false;
 		}
-
-		public override bool CanHitPlayer(Player target)
-		{
-			return base.CanHitPlayer(target);
-		}
-
-
 
 		private SpriteBatchState state1, state2;
 
@@ -229,18 +262,18 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
 			state2.SaveState(Main.spriteBatch);
 			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(BlendState.AlphaBlend, state2);
-
-			Projectile.DrawAnimatedExtra(glowmask, Color.Lerp(Color.White, new Color(245, 80, 20), AI_Overheat).WithOpacity(0.9f - 0.9f * AI_Overheat), effects, new Vector2(5, 14));
-			Projectile.DrawAnimatedExtra(flame, (Color.Lerp(Color.White, new Color(245, 120, 40), AI_Overheat) * (alpha + 0.9f *  AI_Overheat)).WithOpacity(0f), effects, new Vector2(5, 14));
-
-
-			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.Additive, state2);
 
 			Projectile.DrawAnimatedExtra(warning, Color.White, effects, new Vector2(5, 14), frame: sourceRect);
 
 			Main.spriteBatch.End();
+			Main.spriteBatch.Begin(BlendState.AlphaBlend, state2);
+
+			Projectile.DrawAnimatedExtra(glowmask, Color.Lerp(Color.White, new Color(245, 80, 20), AI_Overheat).WithOpacity(0.9f - 0.9f * AI_Overheat), effects, new Vector2(5, 14));
+			Projectile.DrawAnimatedExtra(flame, (Color.Lerp(Color.White, new Color(245, 120, 40), AI_Overheat) * (alpha + 0.9f *  AI_Overheat)).WithOpacity(0f), effects, new Vector2(5, 14));
+
+			Main.spriteBatch.End();
+		
 			Main.spriteBatch.Begin(state2);
 		}
 
@@ -282,51 +315,5 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			if (SoundEngine.TryGetActiveSound(playingSoundId_2, out ActiveSound playingSound2))
 				playingSound2.Stop();
 		}
-	}
-
-	// TODO: replace this with CanHit 
-	public class HandheldEngineHitbox : ModProjectile
-	{
-		public override string Texture => Macrocosm.EmptyTexPath;
-
-		private Projectile Owner => Main.projectile[(int)Projectile.ai[0]];
-
-		public override void SetDefaults()
-		{
-			Projectile.width = 30;
-			Projectile.height = 30;
-			Projectile.aiStyle = -1;
-			Projectile.penetrate = 1;
-			Projectile.friendly = true;
-			Projectile.timeLeft = 2;
-			Projectile.tileCollide = false;
-		}
-
-		/*
-		public bool OrientationVertical
-		{
-			get => Projectile.ai[1] != 0f;
-			set => Projectile.ai[1] = value == true ? 1f : 0f;
-		}
-
-		public override void ModifyDamageHitbox(ref Rectangle hitbox)
-		{
-			float rotation = Math.Abs(Owner.rotation);
-
-			OrientationVertical = (rotation < 0 && rotation <= MathHelper.PiOver4 && rotation >= MathHelper.PiOver4 * 3 || rotation >= 0 && rotation > MathHelper.PiOver4 && rotation <= MathHelper.PiOver4 * 3);
-
-			if (OrientationVertical)
-				hitbox = new Rectangle((int)Projectile.position.X, (int)Projectile.position.Y, Projectile.height, Projectile.width);
-			else
-				hitbox = new Rectangle((int)Projectile.position.X, (int)Projectile.position.Y, Projectile.width, Projectile.height);
-		}
-
-		public override void AI()
-		{
-			if (OrientationVertical)
-				Projectile.Center += Utility.PolarVector(1000, Math.Abs(Owner.rotation));
-		}
-		*/
-	}
-	
+	}	
 }

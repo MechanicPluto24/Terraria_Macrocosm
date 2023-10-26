@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Items.Armor.Selenite
         }
         public override void UpdateEquip(Player player)
         {
-            var modPlayer = player.Macrocosm();
+            var modPlayer = player.GetModPlayer<MacrocosmPlayer>();
             player.GetDamage<RangedDamageClass>() += 0.1f;
             modPlayer.ChanceToNotConsumeAmmo += 0.15f;
         }
@@ -36,7 +36,7 @@ namespace Macrocosm.Content.Items.Armor.Selenite
 
         public override void UpdateArmorSet(Player player)
         {
-            player.Macrocosm().SpaceProtection = SpaceProtection.Tier1;
+            player.GetModPlayer<MacrocosmPlayer>().SpaceProtection = SpaceProtection.Tier1;
         }
 
         public override void AddRecipes()

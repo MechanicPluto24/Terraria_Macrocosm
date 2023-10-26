@@ -10,6 +10,11 @@ namespace Macrocosm.Common.Utils
 {
 	public static partial class Utility
 	{
+		public static GlowmaskGlobalItem Glowmask(this Item item)
+		{
+			return item.GetGlobalItem<GlowmaskGlobalItem>();
+		}
+
 		/// <summary> Returns whether this item instance is a torch </summary>
 		public static bool IsTorch(this Item item) => TorchGlobalItem.IsTorch(item);
 

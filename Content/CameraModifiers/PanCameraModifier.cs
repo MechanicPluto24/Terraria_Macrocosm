@@ -1,4 +1,4 @@
-﻿using Macrocosm.Content.Rockets;
+﻿using Macrocosm.Content.Players;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -6,7 +6,7 @@ using Terraria.Graphics.CameraModifiers;
 
 namespace Macrocosm.Content.CameraModifiers
 {
-	public class PanCameraModifier : ICameraModifier
+    public class PanCameraModifier : ICameraModifier
 	{
 		/// <summary> The unique ID of this </summary>
 		public string UniqueIdentity { get; private set; }

@@ -3,6 +3,7 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Buffs.GoodBuffs;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
+using Macrocosm.Content.Players;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -47,7 +48,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
 		public Vector2 WhipTipPosition;
 
-		private ref int HitStacks => ref Main.player[Projectile.owner].Macrocosm().ChandriumWhipStacks;
+		private ref int HitStacks => ref Main.player[Projectile.owner].GetModPlayer<MacrocosmPlayer>().ChandriumWhipStacks;
 
 		// Extra AI data used for the on-hit effects 
 		private bool onHitEffect = false;

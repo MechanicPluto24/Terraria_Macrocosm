@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Players;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -10,7 +11,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Navigation.CrewPanel
 {
-	internal class UIPlayerInfoElement : UIInfoElement
+    internal class UIPlayerInfoElement : UIInfoElement
 	{
 		private Player player;
 

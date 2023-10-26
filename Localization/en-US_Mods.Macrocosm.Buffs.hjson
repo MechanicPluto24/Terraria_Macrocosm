@@ -32,3 +32,8 @@ SpaceShuttle: {
 	DisplayName: Space Shuttle
 	Description: In memory of STS-51-L and STS-107.
 }
+
+WeaponOverheat: {
+	DisplayName: Weapon Overheat
+	Description: Mods.Macrocosm.Buffs.WeaponOverheat.Description
+}

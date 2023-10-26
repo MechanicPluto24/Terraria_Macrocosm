@@ -6,6 +6,7 @@ using Macrocosm.Content.CameraModifiers;
 using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.Graphics.Effects;
 using Terraria.Localization;
@@ -23,33 +24,49 @@ namespace Macrocosm.Content.Players
 		Tier3
 	}
 
-    public class MacrocosmPlayer : ModPlayer
+	/// <summary>
+	/// The default class for storing custom player data. 
+	/// If your custom player data has more members than one field or field+property, 
+	/// or some other complex update logic, use a separate ModPlayer class.
+	/// </summary>
+	public class MacrocosmPlayer : ModPlayer
 	{
-		/// <summary> The player's space protection level </summary>
+		/// <summary> 
+		/// The player's space protection level.
+		/// Handled locally.
+		/// </summary>
 		public SpaceProtection SpaceProtection { get; set; } = SpaceProtection.None;
 
-		/// <summary> The radiation effect intensity for this player </summary>
+		/// <summary> 
+		/// The radiation effect intensity for this player. 
+		/// Handled locally. 
+		/// </summary>
 		public float RadNoiseIntensity = 0f;
 
-		/// <summary> Chandrium whip hit stacks </summary>
+		/// <summary> 
+		/// Chandrium whip hit stacks. Handled locally.
+		/// </summary>
 		public int ChandriumWhipStacks = 0;
 
 		/// <summary> 
-		/// Whether this player is aware that they can use zombie fingers to unlock chests 
-		/// Currently it is only relevant locally, doesn't need syncing
+		/// Whether this player is aware that they can use zombie fingers to unlock chests.
+		/// Handled locally.
 		/// </summary>
 		public bool KnowsToUseZombieFinger = false;
 
-		/// <summary> Chance to not consume ammo from equipment and weapons, stacks additively with the vanilla chance </summary>
+		/// <summary> 
+		/// Chance to not consume ammo from equipment and weapons, stacks additively with the vanilla chance 
+		/// Handled locally.
+		/// </summary>
 		public float ChanceToNotConsumeAmmo 
 		{ 
 			get => chanceToNotConsumeAmmo; 
 			set => chanceToNotConsumeAmmo = MathHelper.Clamp(value, 0f, 1f);
 		}
-        private float chanceToNotConsumeAmmo = 0f;
 
+		private float chanceToNotConsumeAmmo = 0f;
 
-        public override void ResetEffects()
+		public override void ResetEffects()
 		{
 			SpaceProtection = SpaceProtection.None;
 			RadNoiseIntensity = 0f;
@@ -77,7 +94,7 @@ namespace Macrocosm.Content.Players
 
 		public void UpdateSpaceEnvironmentalDebuffs()
         {
-			if (!Player.RocketPlayer().InRocket)
+			if (!Player.GetModPlayer<RocketPlayer>().InRocket)
 			{
 				if (SubworldSystem.IsActive<Moon>())
 				{
@@ -99,7 +116,7 @@ namespace Macrocosm.Content.Players
 		public override void PostUpdateEquips()
 		{
 			UpdateSpaceArmourImmunities();
-			if (Player.Macrocosm().SpaceProtection > SpaceProtection.None)
+			if (Player.GetModPlayer<MacrocosmPlayer>().SpaceProtection > SpaceProtection.None)
 				Player.setBonus = Language.GetTextValue("Mods.Macrocosm.Items.SetBonuses.SpaceProtection_" + SpaceProtection.ToString());
 		}
 

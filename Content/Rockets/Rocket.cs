@@ -23,10 +23,11 @@ using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using Macrocosm.Content.Players;
 
 namespace Macrocosm.Content.Rockets
 {
-	public partial class Rocket 
+    public partial class Rocket 
 	{
 		/// <summary> The rocket's identifier </summary>
 		public int WhoAmI = -1;
@@ -346,7 +347,7 @@ namespace Macrocosm.Content.Rockets
 
 		/// <summary> Gets the RocketPlayer bound to the provided player ID </summary>
 		/// <param name="playerID"> The player ID </param>
-		public RocketPlayer GetRocketPlayer(int playerID) => Main.player[playerID].RocketPlayer();
+		public RocketPlayer GetRocketPlayer(int playerID) => Main.player[playerID].GetModPlayer<RocketPlayer>();
 
 		/// <summary> Gets the commander of this rocket </summary>
 		public RocketPlayer GetCommander()
