@@ -2,6 +2,7 @@
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.CameraModifiers;
 using Macrocosm.Content.Rockets;
+using Macrocosm.Content.Rockets.UI;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.IO;

@@ -1,10 +1,7 @@
 ﻿using Macrocosm.Content.Rockets;
-using Macrocosm.Content.Rockets.Navigation.NavigationPanel;
-using Microsoft.Xna.Framework;
-using System.IO;
+using Macrocosm.Content.Rockets.UI;
 using Terraria;
 using Terraria.ModLoader;
-using Terraria.WorldBuilding;
 
 namespace Macrocosm.Common.Commands
 {
@@ -32,7 +29,7 @@ namespace Macrocosm.Common.Commands
 						break;
 
 					case "navigation":
-						UIMapTarget.DebugModeActive = !UIMapTarget.DebugModeActive;
+						UINavigationTarget.DebugModeActive = !UINavigationTarget.DebugModeActive;
 						break;
 
 					// TODO: particles, launchpads, etc.

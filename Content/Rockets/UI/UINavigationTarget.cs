@@ -66,7 +66,7 @@ namespace Macrocosm.Content.Rockets.UI
         // The draw color and target color blending factor
         private float targetColorLerp = 0f;
 
-        /// <summary> Creates a new UIMapTarget based on a target Macrocosm Subworld </summary>
+        /// <summary> Creates a new UINavigationTarget based on a target Macrocosm Subworld </summary>
         /// <param name="owner"> The owner navigation panel </param>
         /// <param name="position"> The map target's position relative to the top corner of the NavigationMap </param>
         /// <param name="width"> Interactible area width in pixels </param>
@@ -80,7 +80,7 @@ namespace Macrocosm.Content.Rockets.UI
             selectionOutline = outline ?? selectionOutline;
         }
 
-        /// <summary>  Creates a new UIMapTarget with the given custom data. Used for special navigation, like towards Earth  </summary>
+        /// <summary>  Creates a new UINavigationTarget with the given custom data. Used for special navigation, like towards Earth  </summary>
         /// <param name="owner"> The owner navigation panel </param>
         /// <param name="position"> The map target's position relative to the top corner of the NavigationMap </param>
         /// <param name="width"> Interactible area width in pixels </param>
@@ -95,7 +95,7 @@ namespace Macrocosm.Content.Rockets.UI
             selectionOutline = outline ?? selectionOutline;
         }
 
-        /// <summary> Creates a new UIMapTarget </summary>
+        /// <summary> Creates a new UINavigationTarget </summary>
         /// <param name="owner"> The owner navigation panel </param>
         /// <param name="position"> The map target's position relative to the top corner of the NavigationMap </param>
         /// <param name="width"> Interactible area width in pixels </param>
