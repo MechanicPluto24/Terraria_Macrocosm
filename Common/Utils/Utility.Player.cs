@@ -88,6 +88,47 @@ namespace Macrocosm.Common.Utils
 			return hitbox;
 		}
 
+		public static Player PrepareDummy(this Player player, Vector2 targetPosition)
+		{
+			Player clonePlayer = new();
+			clonePlayer.CopyVisuals(player);
+			clonePlayer.ResetEffects();
+			clonePlayer.ResetVisibleAccessories();
+			clonePlayer.UpdateDyes();
+			clonePlayer.DisplayDollUpdate();
+			clonePlayer.UpdateSocialShadow();
+			clonePlayer.velocity.Y = 0f;
+			clonePlayer.wingFrame = 3;
+			clonePlayer.PlayerFrame();
+			clonePlayer.socialIgnoreLight = true;
+			clonePlayer.position.X = targetPosition.X + Main.screenPosition.X;
+			clonePlayer.position.Y = targetPosition.Y + Main.screenPosition.Y;
+
+			return clonePlayer;
+		}
+
+		public static void DrawPetDummy(this Player player, Vector2 targetPosition, bool animated)
+		{
+			if (!player.hideMisc[0])
+			{
+				Item item = player.miscEquips[0];
+				if (!item.IsAir && item.buffType > 0 && Main.vanityPet[item.buffType] && !Main.lightPet[item.buffType])
+				{
+					Projectile projectile = new();
+					projectile.SetDefaults(item.shoot);
+					projectile.isAPreviewDummy = true;
+					Vector2 vector = targetPosition + new Vector2(0f, player.height) + new Vector2(20f, 0f) + new Vector2(0f, -projectile.height);
+					projectile.position = vector + Main.screenPosition;
+					projectile.velocity = new Vector2(0.1f, 0f);
+					projectile.direction = 1;
+					projectile.owner = player.whoAmI;
+					ProjectileID.Sets.CharacterPreviewAnimations[projectile.type].ApplyTo(projectile, animated);
+					Main.instance.DrawProjDirect(projectile);
+				}
+			}
+		}
+
+
 		#region BaseMod BasePlayer methods
 
 		//------------------------------------------------------//

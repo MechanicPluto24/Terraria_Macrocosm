@@ -2,6 +2,7 @@
 using Macrocosm.Content.Players;
 using Macrocosm.Content.Rockets;
 using Macrocosm.Content.Rockets.LaunchPads;
+using Macrocosm.Content.Rockets.Storage;
 using System.IO;
 using Terraria;
 
@@ -12,6 +13,7 @@ namespace Macrocosm.Common.Netcode
 		SyncParticle,
         SyncRocketData,
 		SyncLaunchPadData,
+        SyncInventory,
         SyncPlayerRocketStatus,
 		SyncPlayerDashDirection,
         SyncModProjectile
@@ -26,15 +28,19 @@ namespace Macrocosm.Common.Netcode
 			switch (messageType)
 			{
 				case MessageType.SyncParticle:
-					Particle.SyncParticle(reader, whoAmI);
+					Particle.ReceiveSyncParticle(reader, whoAmI);
 					break;
 
                 case MessageType.SyncRocketData:
-                    Rocket.SyncRocketData(reader, whoAmI);
+                    Rocket.ReceiveSyncRocketData(reader, whoAmI);
                     break;
 
+				case MessageType.SyncInventory:
+					Inventory.HandlePacket(reader, whoAmI);
+					break;
+
 				case MessageType.SyncLaunchPadData:
-					LaunchPad.SyncLaunchPadData(reader, whoAmI);
+					LaunchPad.ReceiveSyncLaunchPadData(reader, whoAmI);
 					break;
 
                 case MessageType.SyncPlayerRocketStatus:

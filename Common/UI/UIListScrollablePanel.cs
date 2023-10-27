@@ -12,17 +12,10 @@ namespace Macrocosm.Common.UI
 	public class UIListScrollablePanel : UIPanel, IEnumerable<UIElement>
 	{
         public bool HideScrollbarIfNotScrollable { get; set; } = true;
-
         public float ListPadding { get; set; } = 3f;
-
-        private UIText title;
-        private UIList list;
-        private UIScrollbar scrollbar;
-
 		public float ListOuterPadding { get; set; } = 6f;
 		public StyleDimension ListWidthWithScrollbar { get; set; } = new(0f, 0.915f);
 		public StyleDimension ListWidthWithoutScrollbar { get; set; } = new(0f, 1f);
-
 		public StyleDimension ScrollbarWidth { get; set; } = new(0f, 1f);
 		public StyleDimension ScrollbarHeight { get; set; } = new(0f, 0.94f);
 		public StyleDimension ScrollbarTop { get; set; } = default;
@@ -30,11 +23,16 @@ namespace Macrocosm.Common.UI
 
 		public float ScrollbarHAlign { get; set; } = 0.98f;
 		public float ScrollbarVAlign { get; set; } = 0.5f;
+		public float TitleHAlign { get; set; } = 0.5f;
 
 		public bool HasScrollbar => scrollbar is not null;
+		public bool ShiftTitleIfHasScrollbar { get; set; } = true;
 		public bool HasTitle => title is not null;
 
-        private bool hasTitle = false;
+		private UIText title;
+		private UIList list;
+		private UIScrollbar scrollbar;
+		private bool hasTitle = false;
 
 		public UIListScrollablePanel()
 		{
@@ -79,12 +77,11 @@ namespace Macrocosm.Common.UI
             if (title is not null)
             {
 				title.Top = new(15, 0);
-                title.HAlign = 0.5f;
+                title.HAlign = TitleHAlign;
           
                 Append(title);
                 title.Recalculate();
-                list.PaddingTop = title.GetDimensions().Height * 2.5f;
-
+				list.PaddingTop = title.GetDimensions().Height * 2.5f;
                 hasTitle = true;
             }
 
@@ -141,11 +138,12 @@ namespace Macrocosm.Common.UI
 			return result;
 		}
 
-		public UIHorizontalSeparator AddHorizontalSeparator()
+		public UIHorizontalSeparator AddHorizontalSeparator(float percent = 0.98f, float hAlign = 0.5f)
 		{
 			var separator = new UIHorizontalSeparator()
 			{
-				Width = StyleDimension.FromPercent(0.98f),
+				Width = StyleDimension.FromPercent(percent),
+				HAlign = hAlign,
 				Color = new Color(89, 116, 213, 255) * 0.9f
 			};
 
@@ -190,7 +188,7 @@ namespace Macrocosm.Common.UI
 
 					list.Width = ListWidthWithScrollbar;
 
-                    if(hasTitle)
+                    if(hasTitle && ShiftTitleIfHasScrollbar)
                         title.Left = new(0, -0.05f);
                 }
             }
@@ -203,7 +201,10 @@ namespace Macrocosm.Common.UI
 
 				scrollbar = null;
             }
-        }
+
+			if (hasTitle && title.HAlign != TitleHAlign)
+				title.HAlign = TitleHAlign;
+		}
 
 		public IEnumerator<UIElement> GetEnumerator()
 		{

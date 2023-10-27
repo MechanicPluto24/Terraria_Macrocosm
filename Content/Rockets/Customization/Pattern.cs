@@ -1,4 +1,4 @@
-﻿using Macrocosm.Common.UI;
+﻿using Macrocosm.Content.Rockets.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-	public partial class Pattern : IUnlockable
+    public partial class Pattern : IUnlockable
     {
 		public string Name { get; }
 
