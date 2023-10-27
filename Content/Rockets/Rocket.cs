@@ -336,6 +336,8 @@ namespace Macrocosm.Content.Rockets
 		/// <summary> Draw the rocket as a dummy </summary>
 		public void DrawDummy(SpriteBatch spriteBatch, Vector2 offset, Color drawColor)
 		{
+			SetModuleRelativePositions();
+
 			// Passing Rocket world position as "screenPosition" cancels it out  
 			PreDrawBeforeTiles(spriteBatch, Position - offset, drawColor);
 			Draw(spriteBatch, Position - offset, drawColor);

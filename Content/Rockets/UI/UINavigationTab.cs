@@ -2,15 +2,14 @@
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Items.Dev;
+using Macrocosm.Content.Players;
 using Macrocosm.Content.Rockets.LaunchPads;
+using Macrocosm.Content.Rockets.Navigation.Checklist;
 using Macrocosm.Content.Rockets.Navigation.NavigationInfo;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 using Terraria;
-using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.Localization;
@@ -66,9 +65,9 @@ namespace Macrocosm.Content.Rockets.UI
             Append(flightChecklist);
             flightChecklist.Activate();
 
-            commanderPanel = CreateCommanderPanel();
+			commanderPanel = CreateCommanderPanel();
             Append(commanderPanel);
-            commanderPanel.Activate();
+			commanderPanel.Activate();
 
             worldInfoPanel = CreateWorldInfoPanel(MacrocosmSubworld.CurrentMacrocosmID);
             Append(worldInfoPanel);
@@ -97,7 +96,7 @@ namespace Macrocosm.Content.Rockets.UI
         {
             lastTarget = target;
             target = navigationPanel.CurrentMap.GetSelectedTarget();
-            Main.LocalPlayer.RocketPlayer().TargetSubworldID = target is null ? "" : target.Name;
+            Main.LocalPlayer.GetModPlayer<RocketPlayer>().TargetSubworldID = target is null ? "" : target.Name;
 
             base.Update(gameTime);
 
@@ -149,7 +148,7 @@ namespace Macrocosm.Content.Rockets.UI
                 launchButton.ButtonState = UILaunchButton.StateType.NoTarget;
             else if (navigationPanel.CurrentMap.HasNext)
                 launchButton.ButtonState = UILaunchButton.StateType.ZoomIn;
-            else if (!flightChecklist.CheckLaunchConditions())
+            else if (!flightChecklist.AllMet)
                 launchButton.ButtonState = UILaunchButton.StateType.CantReach;
             else if (Main.LocalPlayer.GetModPlayer<RocketPlayer>().IsCommander)
                 launchButton.ButtonState = UILaunchButton.StateType.Launch;
@@ -173,14 +172,14 @@ namespace Macrocosm.Content.Rockets.UI
 
         private UICommanderPanel CreateCommanderPanel()
         {
-            commanderPanel = new()
+            commanderPanel = new UICommanderPanel
             {
                 Top = new(0f, 0.835f),
                 Width = new(0f, 0.31f),
                 Left = new(0, 0.68f),
                 Height = new(0f, 0.15f),
             };
-            commanderPanel.SetPadding(2f);
+			commanderPanel.SetPadding(2f);
 
             return commanderPanel;
         }

@@ -3,7 +3,7 @@ using System.Linq;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Rockets.Navigation.NavigationPanel;
+using Macrocosm.Content.Rockets.UI;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -12,10 +12,10 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Navigation.Checklist
 {
-    public class UIFlightChecklist : UIListScrollablePanel, IRocketDataConsumer
+    public class UIFlightChecklist : UIListScrollablePanel, IRocketUIDataConsumer
 	{
 		public Rocket Rocket { get; set; }
-		public UIMapTarget MapTarget { get; set; }
+		public UINavigationTarget MapTarget { get; set; }
 
 		public bool AllMet { get; set; }
 
