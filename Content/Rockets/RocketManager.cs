@@ -1,9 +1,8 @@
-﻿using log4net.Util;
-using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Drawing.Particles;
+﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Linq;
 using Terraria;
 using Terraria.GameContent;
@@ -28,7 +27,7 @@ namespace Macrocosm.Content.Rockets
     {
         public static Rocket[] Rockets { get; private set; }
 
-		public const int MaxRockets = byte.MaxValue;
+		public const int MaxRockets = 256;
 
 		public static bool DebugModeActive = false;
 
@@ -53,7 +52,7 @@ namespace Macrocosm.Content.Rockets
 		}
 
 		public static int ActiveRocketCount => Rockets.Count(rocket => rocket.Active);
-		public static int RocketInCurrentSubworldCount => Rockets.Count(rocket => rocket.ActiveInCurrentWorld);
+		public static int InCurrentSubworldRocketCount => Rockets.Count(rocket => rocket.ActiveInCurrentWorld);
 
 		public static void AddRocket(Rocket rocket)
 		{
@@ -170,8 +169,12 @@ namespace Macrocosm.Content.Rockets
 			{
 				for (int i = 0; i < MaxRockets; i++)
 				{
-					Rockets[i].NetSync(toClient: remoteClient);
-					Rockets[i].SendCustomizationData(toClient: remoteClient);
+					var rocket = Rockets[i];
+					rocket.NetSync(toClient: remoteClient);
+					rocket.SendCustomizationData(toClient: remoteClient);
+
+					if (rocket.HasInventory)
+						rocket.Inventory.SyncEverything(toClient: remoteClient);
 				}
 			}
 
@@ -189,7 +192,11 @@ namespace Macrocosm.Content.Rockets
         public static void LoadData(TagCompound dataCopyTag) 
         {
 			if (dataCopyTag.ContainsKey(nameof(Rockets)))
-				Rockets = dataCopyTag.Get<Rocket[]>(nameof(Rockets));
+			{
+				// This is for future-proofing regarding array size
+				var rockets = dataCopyTag.Get<Rocket[]>(nameof(Rockets));
+				Array.Copy(rockets, Rockets, rockets.Length);
+			}
 
             OnWorldSpawn();
 		}

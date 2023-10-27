@@ -172,7 +172,7 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
                 });
             }
 
-            // for testing, subject to change - Feldy
+            // TODO: for testing, subject to change - Feldy
             AddNewSlot(ItemID.SuperHealingPotion, 3);
             AddNewSlot(ModContent.ItemType<AstronautHelmet>(), 20);
             AddNewSlot(ModContent.ItemType<AstronautSuit>(), 20);

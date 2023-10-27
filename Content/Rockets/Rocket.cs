@@ -11,6 +11,8 @@ using Macrocosm.Content.Particles;
 using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.LaunchPads;
 using Macrocosm.Content.Rockets.Modules;
+using Macrocosm.Content.Rockets.Storage;
+using Macrocosm.Content.Rockets.UI;
 using Macrocosm.Content.Subworlds;
 using Macrocosm.Content.UI.LoadingScreens;
 using Microsoft.Xna.Framework;
@@ -19,10 +21,12 @@ using SubworldLibrary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using static Terraria.WorldGen;
 using Macrocosm.Content.Players;
 
 namespace Macrocosm.Content.Rockets
@@ -68,6 +72,11 @@ namespace Macrocosm.Content.Rockets
 
 		/// <summary> The rocket's current world, "Earth" if active and not in a subworld. Other mod's subworlds have the mod name prepended </summary>
 		[NetSync] public string CurrentWorld = "";
+
+		public bool HasInventory => Inventory is not null;
+		public Inventory Inventory { get; set; }
+
+		public const int DefaultInventorySize = 50;
 
 		/// <summary> Whether the rocket is active in the current world and should be updated and visible </summary>
 		public bool ActiveInCurrentWorld => Active && CurrentWorld == MacrocosmSubworld.CurrentID;
@@ -211,6 +220,13 @@ namespace Macrocosm.Content.Rockets
 		public void OnCreation()
 		{
 			CurrentWorld = MacrocosmSubworld.CurrentID;
+			Inventory = new(DefaultInventorySize, this);
+
+			if(Main.netMode != NetmodeID.SinglePlayer)
+			{
+				NetSync();
+				Inventory.SyncEverything();
+			}
 		}
 
 		/// <summary> Called when spawning into a new world </summary>
@@ -452,7 +468,8 @@ namespace Macrocosm.Content.Rockets
 
 			return true;
 		}
-		
+
+
 		public bool CheckTileCollision()
 		{
 			foreach (RocketModule module in Modules.Values)
@@ -543,7 +560,12 @@ namespace Macrocosm.Content.Rockets
 				return;
 
 			if (AnyEmbarkedPlayers(out int id) && !TryFindingCommander(out _))
+			{
 				GetRocketPlayer(id).IsCommander = true;
+
+				if(HasInventory)
+					 Inventory.InteractingPlayer = id;
+			}
 		}
 
 		// Handles the rocket's movement during flight
