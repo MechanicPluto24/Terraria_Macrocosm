@@ -4,6 +4,7 @@ using ReLogic.Content;
 using System;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Bases
@@ -94,7 +95,9 @@ namespace Macrocosm.Common.Bases
                 return;
             }
 
-            GunTexture = gunHeldProjectileItem.HeldProjectileTexture;
+			if (Main.netMode != NetmodeID.Server)
+				GunTexture = gunHeldProjectileItem.HeldProjectileTexture;
+
             GunHeldProjectileData = gunHeldProjectileItem.GunHeldProjectileData;
 
 			UpdateCenterAndDirection();

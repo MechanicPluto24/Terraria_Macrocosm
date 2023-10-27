@@ -74,7 +74,9 @@ namespace Macrocosm.Common.Bases
 
             if (item.ModItem is GreatswordHeldProjectileItem greatswordHeldProjectileItem) 
             {
-                GreatswordTexture = greatswordHeldProjectileItem.HeldProjectileTexture;
+                if(Main.netMode != NetmodeID.Server)
+                    GreatswordTexture = greatswordHeldProjectileItem.HeldProjectileTexture;
+
                 SwingStyle = greatswordHeldProjectileItem.SwingStyle;
                 SwordLenght = greatswordHeldProjectileItem.SwordLenght ?? 0.8f * MathF.Sqrt(
                     MathF.Pow(greatswordHeldProjectileItem.HeldProjectileTexture.Width, 2)
