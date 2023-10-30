@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Buffs.Debuffs
 {
-	public class WeaponOverheat : ModBuff
+	public class HandheldEngineOverheat : ModBuff
 	{
 		public override void SetStaticDefaults()
 		{
@@ -22,10 +22,6 @@ namespace Macrocosm.Content.Buffs.Debuffs
 
 		public override void Update(Player player, ref int buffIndex)
 		{
-			int timeLeft = player.buffTime[buffIndex];
-
-			if(timeLeft < 1)
-				player.GetModPlayer<OverheatPlayer>().RemoveWeaponOverheats();
 		}
 	}
 }

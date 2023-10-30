@@ -37,3 +37,8 @@ WeaponOverheat: {
 	DisplayName: Weapon Overheat
 	Description: Mods.Macrocosm.Buffs.WeaponOverheat.Description
 }
+
+HandheldEngineOverheat: {
+	DisplayName: Handheld Engine Overheat
+	Description: Mods.Macrocosm.Buffs.HandheldEngineOverheat.Description
+}

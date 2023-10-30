@@ -4,6 +4,7 @@ using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Particles;
+using Macrocosm.Content.Players;
 using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -104,8 +105,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 					Projectile.Kill();
 					SoundEngine.PlaySound(SoundID.LiquidsWaterLava, Projectile.position);
 
-					// TODO: should this be added for each weapon instance/type..?
-					OwnerPlayer.AddBuff(ModContent.BuffType<WeaponOverheat>(), 60 * 3);
+					OwnerPlayer.AddBuff(ModContent.BuffType<HandheldEngineOverheat>(), 60 * 3);
 
 					for(int i = 0; i < 25; i++)
 					{

@@ -30,7 +30,7 @@ namespace Macrocosm.Common.Utils
 			return trail is not null;
 		}
 
-		public static void Explode(this Projectile projectile, float blastRadius, int timeLeft = 2)
+		public static void Explode(this Projectile projectile, float blastRadius, int timeLeft = 1)
 		{
 			projectile.tileCollide = false;
 			projectile.timeLeft = timeLeft; 
