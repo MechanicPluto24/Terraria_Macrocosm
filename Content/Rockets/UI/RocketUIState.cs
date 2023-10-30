@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Linq;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.GameContent.UI.Elements;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -16,14 +17,15 @@ namespace Macrocosm.Content.Rockets.UI
     {
         public Rocket Rocket { get; set; }
 
+        private UINavigationTab navigation;
+		private UICustomizationTab customization;
+		private UICargoTab cargo;
+
         private UIText title;
         private UIDragablePanel window;
         private UIHoverImageButton tabLeftButton;
         private UIHoverImageButton tabRightButton;
 
-        private UINavigationTab navigation;
-        private UICustomizationTab customization;
-        private UICargoTab payload;
 
         public RocketUIState()
         {
@@ -61,11 +63,11 @@ namespace Macrocosm.Content.Rockets.UI
 
             navigation = new();
             customization = new();
-            payload = new();
+            cargo = new();
 
             navigation.Activate();
             customization.Activate();
-            payload.Activate();
+            cargo.Activate();
 
             window.Append(navigation);
             navigation.CustomizationPreview.OnLeftClick += SetTab_Customization;
@@ -87,7 +89,7 @@ namespace Macrocosm.Content.Rockets.UI
                 Top = new(-38, 0f),
                 Left = new(0, 0.955f),
 
-                CheckInteractible = () => !window.Children.Contains(payload)
+                CheckInteractible = () => !window.Children.Contains(cargo)
             };
             tabRightButton.SetVisibility(1f, 0f, 1f);
             tabRightButton.OnLeftClick += SetTab_Payload;
@@ -165,7 +167,7 @@ namespace Macrocosm.Content.Rockets.UI
             tabLeftButton.OnLeftClick -= SetTab_Customization;
             tabLeftButton.OnLeftClick += SetTab_Navigation;
 
-			SwitchTab(payload);
+			SwitchTab(cargo);
 
 			title.SetText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Cargo"));
             tabLeftButton.HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Navigation");
@@ -194,7 +196,7 @@ namespace Macrocosm.Content.Rockets.UI
 
             Player player = Main.LocalPlayer;
 
-            if (Rocket is not null && !Rocket.Active || !Rocket.Bounds.InPlayerInteractionRange() || Rocket.Launched || player.controlMount || player.UICloseConditions())
+            if (Rocket is not null && !Rocket.Active || !Rocket.Bounds.InPlayerInteractionRange(TileReachCheckSettings.Simple) || Rocket.Launched || player.controlMount || player.UICloseConditions())
                 RocketUISystem.Hide();
         }
     }

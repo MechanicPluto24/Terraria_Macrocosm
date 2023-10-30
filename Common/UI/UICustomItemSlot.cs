@@ -22,6 +22,9 @@ namespace Macrocosm.Common.UI
 		protected int itemSlotContext;
 		protected float scale;
 
+		private float glowTime;
+		private float glowHue;
+
 		protected bool shouldNetsync = false;
 
 		public bool CanTrash { get; set; } = false;
@@ -35,7 +38,16 @@ namespace Macrocosm.Common.UI
 			Width = new StyleDimension(48f, 0f);
 			Height = new StyleDimension(48f, 0f);
 		}
-		 
+
+		public void SetGlow(float time, float hue)
+		{
+			glowTime = time;
+			glowHue = hue;
+		}
+
+		public void ClearGlow() => glowTime = 0;
+
+
 		protected virtual void HandleItemSlotLogic()
 		{
 			if (IsMouseHovering && inventory.CanInteract)
@@ -259,8 +271,28 @@ namespace Macrocosm.Common.UI
 			if(item.favorited)
 				texture = TextureAssets.InventoryBack10.Value;
 
+			color = GetSlotGlow(item, color);
+
 			spriteBatch.Draw(texture, position, null, color, 0f, default, Main.inventoryScale, SpriteEffects.None, 0f);
 		}
+
+		protected virtual Color GetSlotGlow(Item item, Color baseColor)
+		{
+			Color resultColor = baseColor;
+
+			if (glowTime > 0 && !item.favorited && !item.IsAir)
+			{
+				Color huedColor = Main.hslToRgb(glowHue, 1f, 0.6f);
+				float multiplier = glowTime / 300f;
+				resultColor = Color.Lerp(baseColor, huedColor, multiplier);
+
+				glowTime--;
+				if (glowTime <= 0)
+					glowHue = 0f;
+			}
+
+			return resultColor;
+		}  
 
 		protected virtual void DrawItem(SpriteBatch spriteBatch, ref Item item, Vector2 position)
 		{
@@ -271,7 +303,6 @@ namespace Macrocosm.Common.UI
 			if (item.type > ItemID.None && item.stack > 0)
 			{
 				float _ = ItemSlot.DrawItemIcon(item, itemSlotContext, spriteBatch, position + vector / 2f, Main.inventoryScale, 32f, color);
-
 				DrawExtras(spriteBatch, ref item, position);
 
 				if (item.stack > 1)

@@ -1,4 +1,6 @@
 ﻿
+using Macrocosm.Common.UI;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -65,7 +67,6 @@ namespace Macrocosm.Content.Rockets.Storage
 		// TODO: entity or spacecraft abstraction (?)
 		public Rocket Owner { get; init; }
 		public int WhoAmI => Owner.WhoAmI;
-		public Vector2 WorldPosition => Owner.Center;
 
 		public Inventory(int size, Rocket owner)
 		{
@@ -83,7 +84,20 @@ namespace Macrocosm.Content.Rockets.Storage
 				interactingPlayer = Main.maxPlayers;
 		}
 
-		public void DropItem(int index)
+		private Dictionary<int, UICustomItemSlot> slots = new();
+		public UICustomItemSlot CreateItemSlot(int index, int itemSlotContext, float scale = default)
+		{
+			UICustomItemSlot slot = new(this, index, itemSlotContext, scale);
+			slots[index] = slot;
+			return slot;
+		}
+
+		public void SetGlow(int index, float time, float hue) => slots[index].SetGlow(time, hue);
+
+		/// <summary> Drops an item in the world </summary>
+		/// <param name="index"> The item slot index </param>
+		/// <param name="worldPosition"> The world position to drop this item </param>
+		public void DropItem(int index, Vector2 worldPosition)
 		{
 			if (Main.netMode == NetmodeID.MultiplayerClient)
 				return;
@@ -91,15 +105,15 @@ namespace Macrocosm.Content.Rockets.Storage
 			if (index < 0 || index >= Size)
 				return;
 
-			Item.NewItem(items[index].GetSource_Misc(Owner.GetType().Name), WorldPosition, items[index]);
+			Item.NewItem(items[index].GetSource_Misc(Owner.GetType().Name), worldPosition, items[index]);
 			items[index] = new();
 		}
 
-		public void OnResize(int oldSize, int newSize)
+		private void OnResize(int oldSize, int newSize)
 		{
 			if (oldSize > newSize)
 				for(int i = oldSize - 1; i >= newSize; i--)
-					DropItem(i);
+					DropItem(i, Owner.Center);
  
 			if (oldSize != newSize)
 				Array.Resize(ref items, newSize);
@@ -108,6 +122,89 @@ namespace Macrocosm.Content.Rockets.Storage
 				Array.Fill(items, new Item(), oldSize, newSize - oldSize);
 		}
 
+		public bool TryPlacingItem(Item item, bool justCheck = false)
+		{
+			if (ChestUI.IsBlockedFromTransferIntoChest(item, items))
+				return false;
+
+			Player player = Main.LocalPlayer;
+			bool result = false;
+			if (item.maxStack > 1)
+			{
+				for (int i = 0; i < Size; i++)
+				{
+					if (items[i].stack >= items[i].maxStack || item.type != items[i].type)
+						continue;
+
+					if (!ItemLoader.CanStack(items[i], item))
+						continue;
+
+					int stackDifference = item.stack;
+					if (item.stack + items[i].stack > items[i].maxStack)
+						stackDifference = items[i].maxStack - items[i].stack;
+
+					if (justCheck)
+					{
+						result = result || stackDifference > 0;
+						break;
+					}
+
+					ItemLoader.StackItems(items[i], item, out _);
+
+					SoundEngine.PlaySound(SoundID.Grab);
+					if (item.stack <= 0)
+					{
+						item.SetDefaults();
+						slots[i].ClearGlow();
+
+						if (Main.netMode == NetmodeID.MultiplayerClient)
+							SyncItem(i);
+
+						break;
+					}
+
+					if (items[i].type == ItemID.None)
+					{
+						items[i] = item.Clone();
+						item.SetDefaults();
+						slots[i].ClearGlow();
+					}
+
+					if (Main.netMode == NetmodeID.MultiplayerClient)
+						SyncItem(i);
+				}
+			}
+
+			if (item.stack > 0)
+			{
+				for (int j = 0; j < Size; j++)
+				{
+					if (items[j].stack != 0)
+						continue;
+
+					if (justCheck)
+					{
+						result = true;
+						break;
+					}
+
+					SoundEngine.PlaySound(SoundID.Grab);
+					items[j] = item.Clone();
+					item.SetDefaults();
+					slots[j].ClearGlow();
+					ItemSlot.AnnounceTransfer(new ItemSlot.ItemTransferInfo(items[j], 0, 3));
+
+					if (Main.netMode == NetmodeID.MultiplayerClient)
+						SyncItem(j);
+
+					break;
+				}
+			}
+
+			return result;
+		}
+
+		/// <summary> Loot all items from this inventory, to the player's </summary>
 		public void LootAll()
 		{
 			Player player = Main.LocalPlayer;
@@ -117,13 +214,16 @@ namespace Macrocosm.Content.Rockets.Storage
 				{
 					items[i].position = player.Center;
 					items[i] = player.GetItem(Main.myPlayer, items[i], GetItemSettings.LootAllSettingsRegularChest);
+					slots[i].ClearGlow();
 
-					if(Main.netMode == NetmodeID.MultiplayerClient)
+					if (Main.netMode == NetmodeID.MultiplayerClient)
 						SyncItem(i);
 				}
 			}
 		}
 
+		/// <summary> Deposit all items from the player's inventory to this inventory </summary>
+		/// <param name="context"> The transfer context, used for visual transfers </param>
 		public void DepositAll(ContainerTransferContext context)
 		{
 			Player player = Main.LocalPlayer;
@@ -322,7 +422,8 @@ namespace Macrocosm.Content.Rockets.Storage
 			zeroStackList.Clear();
 		}
 
-		//FIXME: this behaves a weird, for some reason
+		//FIXME: this behaves weird, for some reason
+		/// <summary> Restock items from the inventory to the player's inventory </summary>
 		public void Restock()
 		{
 			Player player = Main.LocalPlayer;
@@ -416,21 +517,57 @@ namespace Macrocosm.Content.Rockets.Storage
 				SoundEngine.PlaySound(SoundID.Grab);
 		}
 
-
-		public void DepositCoinsFromPlayerInventory(bool moveEvenIfNoCoinsAreThereAlready = false)
+		/// <summary> Sort the inventory's items </summary>
+		public void Sort()
 		{
-			MoveCoins(Main.LocalPlayer.inventory, items, moveEvenIfNoCoinsAreThereAlready);
+			(int type, int stack, int prefix)[] preSort = new (int, int, int)[Size];
+			(int type, int stack, int prefix)[] postSort = new (int, int, int)[Size];
+
+			for (int i = 0; i < Size; i++)
+			{
+				preSort[i] = (items[i].netID, items[i].stack, items[i].prefix);
+			}
+
+			SortItems(items);
+
+			for (int i = 0; i < Size; i++)
+			{
+				postSort[i] = (items[i].netID, items[i].stack, items[i].prefix);
+			}
+
+			if (Main.netMode != NetmodeID.MultiplayerClient)
+				return;
+
+			for (int k = 0; k < Size; k++)
+			{
+				if (postSort[k] != preSort[k])
+					SyncItem(k);
+			}
 		}
+
+		// This uses reflection to avoid copying a large chunk of code that does exactly what we need already.
+		// However, this needed a detour on Inventory.Hooks.On_ItemSlot_SetGlow in order to set the inventory slot colors accordingly
+		/// <summary> Sort items in an inventory using the vanilla logic </summary>
+		public static void SortItems(Item[] items, params int[] ignoreSlots) 
+			=> Utility.InvokeMethod(typeof(ItemSorting), "Sort", items, ignoreSlots);
 
 		// Adapted from Terraria.UI.ChestUI.MoveCoins, but to support dynamic inventory size,
 		// and the option of moving coins even though there are no coins already in the container.
 		// Didn't really understand the purpose of some parts of the code, hence the non-descriptive variable names -- Feldy
-		private long MoveCoins(Item[] source, Item[] destination, bool moveEvenIfNoCoinsAreThereAlready = false)
+		/// <summary> Transfers coins from an inventory to another </summary>
+		/// <param name="source"> The source inventory </param>
+		/// <param name="destination"> The destination inventory </param>
+		/// <param name="moveEvenIfNoCoinsAreThereAlready">
+		/// Run the logic even if there are no coins in the destination already, 
+		/// in contrast to vanilla "Deposit all" behaviour 
+		/// </param>
+		/// <returns> The coin count in copper value </returns>
+		public long MoveCoins(Item[] source, Item[] destination, bool moveEvenIfNoCoinsAreThereAlready = false)
 		{
 			bool success = false;
 			bool foundCoinsInDestination = false;
 
-			int[] coinsPerType = new int[4];
+			int[] coinsByType = new int[4];
 
 			int[] tempArray = new int[destination.Length];
 			List<int> tempList = new();
@@ -467,7 +604,7 @@ namespace Macrocosm.Content.Rockets.Storage
 					tempArray[i] = coinId - 1;
 					if (coinId > 0)
 					{
-						coinsPerType[coinId - 1] += destination[i].stack;
+						coinsByType[coinId - 1] += destination[i].stack;
 						tempList2.Add(i);
 						destination[i] = new Item();
 						foundCoinsInDestination = true;
@@ -498,7 +635,7 @@ namespace Macrocosm.Content.Rockets.Storage
 					if (coinId > 0)
 					{
 						success = true;
-						coinsPerType[coinId - 1] += source[j].stack;
+						coinsByType[coinId - 1] += source[j].stack;
 						tempList.Add(j);
 						source[j] = new Item();
 					}
@@ -507,10 +644,10 @@ namespace Macrocosm.Content.Rockets.Storage
 
 			for (int k = 0; k < 3; k++)
 			{
-				while (coinsPerType[k] >= 100)
+				while (coinsByType[k] >= 100)
 				{
-					coinsPerType[k] -= 100;
-					coinsPerType[k + 1]++;
+					coinsByType[k] -= 100;
+					coinsByType[k + 1]++;
 				}
 			}
 
@@ -521,14 +658,14 @@ namespace Macrocosm.Content.Rockets.Storage
 
 				int idx = l;
 				coinId = tempArray[l];
-				if (coinsPerType[coinId] > 0)
+				if (coinsByType[coinId] > 0)
 				{
 					destination[idx].SetDefaults(ItemID.CopperCoin + coinId);
-					destination[idx].stack = coinsPerType[coinId];
+					destination[idx].stack = coinsByType[coinId];
 					if (destination[idx].stack > destination[idx].maxStack)
 						destination[idx].stack = destination[idx].maxStack;
 
-					coinsPerType[coinId] -= destination[idx].stack;
+					coinsByType[coinId] -= destination[idx].stack;
 					tempArray[l] = -1;
 				}
 
@@ -547,19 +684,19 @@ namespace Macrocosm.Content.Rockets.Storage
 				coinId = 3;
 				while (coinId >= 0)
 				{
-					if (coinsPerType[coinId] > 0)
+					if (coinsByType[coinId] > 0)
 					{
 						destination[idx].SetDefaults(ItemID.CopperCoin + coinId);
-						destination[idx].stack = coinsPerType[coinId];
+						destination[idx].stack = coinsByType[coinId];
 						if (destination[idx].stack > destination[idx].maxStack)
 							destination[idx].stack = destination[idx].maxStack;
 
-						coinsPerType[coinId] -= destination[idx].stack;
+						coinsByType[coinId] -= destination[idx].stack;
 						tempArray[m] = -1;
 						break;
 					}
 
-					if (coinsPerType[coinId] == 0)
+					if (coinsByType[coinId] == 0)
 						coinId--;
 				}
 
@@ -575,18 +712,18 @@ namespace Macrocosm.Content.Rockets.Storage
 				coinId = 3;
 				while (coinId >= 0)
 				{
-					if (coinsPerType[coinId] > 0)
+					if (coinsByType[coinId] > 0)
 					{
 						destination[idx].SetDefaults(ItemID.CopperCoin + coinId);
-						destination[idx].stack = coinsPerType[coinId];
+						destination[idx].stack = coinsByType[coinId];
 						if (destination[idx].stack > destination[idx].maxStack)
 							destination[idx].stack = destination[idx].maxStack;
 
-						coinsPerType[coinId] -= destination[idx].stack;
+						coinsByType[coinId] -= destination[idx].stack;
 						break;
 					}
 
-					if (coinsPerType[coinId] == 0)
+					if (coinsByType[coinId] == 0)
 						coinId--;
 				}
 
@@ -600,19 +737,19 @@ namespace Macrocosm.Content.Rockets.Storage
 			while (coinId >= 0 && tempList.Count > 0)
 			{
 				int idx = tempList[0];
-				if (coinsPerType[coinId] > 0)
+				if (coinsByType[coinId] > 0)
 				{
 					source[idx].SetDefaults(ItemID.CopperCoin + coinId);
-					source[idx].stack = coinsPerType[coinId];
+					source[idx].stack = coinsByType[coinId];
 					if (source[idx].stack > source[idx].maxStack)
 						source[idx].stack = source[idx].maxStack;
 
-					coinsPerType[coinId] -= source[idx].stack;
+					coinsByType[coinId] -= source[idx].stack;
 					success = false;
 					tempList.RemoveAt(0);
 				}
 
-				if (coinsPerType[coinId] == 0)
+				if (coinsByType[coinId] == 0)
 					coinId--;
 			}
 

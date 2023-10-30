@@ -91,7 +91,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			if (RocketID != prevRocketId)
 				NetSync(MacrocosmSubworld.CurrentID);
 
-			isMouseOver = Hitbox.Contains(Main.MouseWorld.ToPoint()) && Hitbox.InPlayerInteractionRange();
+			isMouseOver = Hitbox.Contains(Main.MouseWorld.ToPoint()) && Hitbox.InPlayerInteractionRange(TileReachCheckSettings.Simple);
 
 			if (isMouseOver)
 			{
