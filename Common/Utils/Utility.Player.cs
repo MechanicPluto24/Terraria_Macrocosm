@@ -15,10 +15,10 @@ namespace Macrocosm.Common.Utils
 		public static Point16 SpawnTilePoint16 => new(Main.spawnTileX, Main.spawnTileY);
 		public static Vector2 SpawnWorldPosition => new(Main.spawnTileX * 16f, Main.spawnTileY * 16f);
 
-		public static bool InPlayerInteractionRange(this Rectangle rectangle)
+		public static bool InPlayerInteractionRange(this Rectangle rectangle, TileReachCheckSettings settings)
 		{
 			Point location = rectangle.ClosestPointInRect(Main.LocalPlayer.Center).ToTileCoordinates();
-			return Main.LocalPlayer.IsInTileInteractionRange(location.X, location.Y, TileReachCheckSettings.Simple);
+			return Main.LocalPlayer.IsInTileInteractionRange(location.X, location.Y, settings);
 		}
 
 		// TODO: some sort of netsync where the server or other clients can shake a player's screen

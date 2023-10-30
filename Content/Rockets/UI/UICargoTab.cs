@@ -196,6 +196,7 @@ namespace Macrocosm.Content.Rockets.UI
 				{
 					Top = new(0, 0.85f),
 					Left = new(0, 0.25f),
+					BackPanelColor = new Color(106, 138, 255),
 					HoverText = Lang.inter[29]
 				};
 				lootAllButton.OnLeftClick += (_, _) => Rocket.Inventory.LootAll();
@@ -214,7 +215,7 @@ namespace Macrocosm.Content.Rockets.UI
 					HoverText = Lang.inter[30]
 
 				};
-				depositAllButton.OnLeftClick += (_, _) => Rocket.Inventory.DepositAll(new ContainerTransferContext(Rocket.Center));
+				depositAllButton.OnLeftClick += (_, _) => Rocket.Inventory.DepositAll(ContainerTransferContext.FromUnknown(Main.LocalPlayer));
 				inventoryPanel.Append(depositAllButton);
 
 				quickStackButton = new
@@ -229,7 +230,7 @@ namespace Macrocosm.Content.Rockets.UI
 					Left = new(0, 0.45f),
 					HoverText = Lang.inter[31]
 				};
-				quickStackButton.OnLeftClick += (_, _) => Rocket.Inventory.QuickStack(new ContainerTransferContext(Rocket.Center));
+				quickStackButton.OnLeftClick += (_, _) => Rocket.Inventory.QuickStack(ContainerTransferContext.FromUnknown(Main.LocalPlayer));
 				inventoryPanel.Append(quickStackButton);
 
 				restockInventoryButton = new
@@ -259,6 +260,7 @@ namespace Macrocosm.Content.Rockets.UI
 					Left = new(0, 0.65f),
 					HoverText = Lang.inter[122]
 				};
+				sortInventoryButton.OnLeftClick += (_,_) => Rocket.Inventory.Sort();
 				inventoryPanel.Append(sortInventoryButton);
 
 
@@ -273,7 +275,8 @@ namespace Macrocosm.Content.Rockets.UI
 						)
 					{
 						Top = new(0, 0.85f),
-						Left = new(0, 0.15f)
+						Left = new(0, 0.15f),
+						BackPanelColor = new Color(106, 138, 255)
 					};
 					requestAccessButton.OnLeftClick += (_, _) => Rocket.Inventory.InteractingPlayer = Main.myPlayer;
 					requestAccessButton.CheckInteractible = () => Rocket.Inventory.InteractingPlayer != Main.myPlayer;
@@ -292,7 +295,7 @@ namespace Macrocosm.Content.Rockets.UI
 
         private UIListScrollablePanel CreateInventorySlotsList() 
         {
-            inventorySlots = new(new LocalizedColorScaleText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Inventory"), scale: 1.2f))
+			inventorySlots = new(new LocalizedColorScaleText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Inventory"), scale: 1.2f))
             {
                 Width = new(0, 1f),
                 Height = new(0, 0.9f),
@@ -337,16 +340,14 @@ namespace Macrocosm.Content.Rockets.UI
 
             for (int i = 0; i < count; i++)
             {
-                UICustomItemSlot uiItemSlot = new(Rocket.Inventory, i, ItemSlot.Context.ChestItem)
-                {
-                    Left = new(i % iconsPerRow * iconSize + iconOffsetLeft, 0f),
-                    Top = new(i / iconsPerRow * iconSize + iconOffsetTop, 0f)
-                };
+				UICustomItemSlot uiItemSlot = Rocket.Inventory.CreateItemSlot(i, ItemSlot.Context.ChestItem);
+				uiItemSlot.Left = new(i % iconsPerRow * iconSize + iconOffsetLeft, 0f);
+				uiItemSlot.Top = new(i / iconsPerRow * iconSize + iconOffsetTop, 0f);
                 uiItemSlot.SetPadding(0f);
 
                 uiItemSlot.Activate();
                 itemSlotContainer.Append(uiItemSlot);
-            }
+			}
 
             inventorySlots.Activate();
             return inventorySlots;

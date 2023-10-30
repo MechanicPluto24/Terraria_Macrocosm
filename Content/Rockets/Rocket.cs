@@ -28,6 +28,7 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using static Terraria.WorldGen;
 using Macrocosm.Content.Players;
+using Terraria.DataStructures;
 
 namespace Macrocosm.Content.Rockets
 {
@@ -487,7 +488,7 @@ namespace Macrocosm.Content.Rockets
 			if (Main.netMode == NetmodeID.Server)
 				return;
 
-			if (MouseCanInteract() && Bounds.InPlayerInteractionRange() && !Launched && !GetRocketPlayer(Main.myPlayer).InRocket)
+			if (MouseCanInteract() && Bounds.InPlayerInteractionRange(TileReachCheckSettings.Simple) && !Launched && !GetRocketPlayer(Main.myPlayer).InRocket)
 			{
 				if (Main.mouseRight)
 				{
@@ -564,9 +565,6 @@ namespace Macrocosm.Content.Rockets
 			if (AnyEmbarkedPlayers(out int id) && !TryFindingCommander(out _))
 			{
 				GetRocketPlayer(id).IsCommander = true;
-
-				if(HasInventory)
-					 Inventory.InteractingPlayer = id;
 			}
 		}
 
