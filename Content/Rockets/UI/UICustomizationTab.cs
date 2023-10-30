@@ -77,13 +77,13 @@ namespace Macrocosm.Content.Rockets.UI
 
         private UIPanel nameplateConfigPanel;
         private UIInputTextBox nameplateTextBox;
-        private UIFocusIconButton nameplateColorPicker;
-        private UIFocusIconButton alignLeft;
-        private UIFocusIconButton alignCenterHorizontal;
-        private UIFocusIconButton alignRight;
-        private UIFocusIconButton alignTop;
-        private UIFocusIconButton alignCenterVertical;
-        private UIFocusIconButton alignBottom;
+        private UIPanelIconButton nameplateColorPicker;
+        private UIPanelIconButton alignLeft;
+        private UIPanelIconButton alignCenterHorizontal;
+        private UIPanelIconButton alignRight;
+        private UIPanelIconButton alignTop;
+        private UIPanelIconButton alignCenterVertical;
+        private UIPanelIconButton alignBottom;
 
         private UIPanel detailConfigPanel;
 
@@ -93,7 +93,7 @@ namespace Macrocosm.Content.Rockets.UI
 
         private UIPanelIconButton resetPatternButton;
         private UIVerticalSeparator colorPickerSeparator;
-        private List<(UIFocusIconButton picker, int colorIndex)> patternColorPickers;
+        private List<(UIPanelIconButton picker, int colorIndex)> patternColorPickers;
 
         private UIColorMenuHSL hslMenu;
         private float luminanceSliderFactor = 0.85f;
@@ -524,7 +524,7 @@ namespace Macrocosm.Content.Rockets.UI
             resetPatternButton?.Remove();
         }
 
-        private List<(UIFocusIconButton, int)> CreatePatternColorPickers()
+        private List<(UIPanelIconButton, int)> CreatePatternColorPickers()
         {
             patternColorPickers = new();
 
@@ -535,7 +535,7 @@ namespace Macrocosm.Content.Rockets.UI
 
             for (int i = 0; i < indexes.Count; i++)
             {
-                UIFocusIconButton colorPicker = new()
+                UIPanelIconButton colorPicker = new()
                 {
                     HAlign = 0f,
                     Top = new(0f, 0.04f),
@@ -609,7 +609,7 @@ namespace Macrocosm.Content.Rockets.UI
             ColorPickersLoseFocus();
         }
 
-        private bool GetFocusedColorPicker(out (UIFocusIconButton picker, int colorIndex) focused)
+        private bool GetFocusedColorPicker(out (UIPanelIconButton picker, int colorIndex) focused)
         {
             if (patternColorPickers is not null)
             {

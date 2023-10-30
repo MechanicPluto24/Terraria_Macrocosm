@@ -24,6 +24,7 @@ namespace Macrocosm.Common.UI
 
 		protected bool shouldNetsync = false;
 
+		public bool CanTrash { get; set; } = false;
 		protected Vector2 DrawOffset { get; set; } = new Vector2(52f, 52f) * -0.5f;
 
 		public UICustomItemSlot(Inventory inventory, int itemIndex, int itemSlotContext, float scale = default)
@@ -61,10 +62,10 @@ namespace Macrocosm.Common.UI
 			if (PlayerLoader.HoverSlot(Main.player[Main.myPlayer], inventory.Items, itemSlotContext, itemIndex))
  				return;
 
-			if (item.type <= ItemID.None && item.stack > 0)
+			if (item.type <= ItemID.None)
 				return;
 
-			if (Options.DisableLeftShiftTrashCan && !ShiftForcedOn)
+			if (Options.DisableLeftShiftTrashCan && !ShiftForcedOn && CanTrash)
 			{
 				if (ControlInUse && !Options.DisableQuickTrash)
 				{

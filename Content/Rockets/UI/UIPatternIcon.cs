@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.UI
 {
-    public class UIPatternIcon : UIFocusIconButton, IFocusable
+    public class UIPatternIcon : UIPanelIconButton, IFocusable
     {
         public Pattern Pattern { get; set; }
 
