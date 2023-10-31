@@ -28,7 +28,7 @@ LexanGlass.MapEntry: Lexan Glass
 XFLR6.MapEntry: XFLR-6
 
 MoonBaseChest: {
-	MapEntryNormal: ERA Storage Unit
-	MapEntryUnlocked: ERA Electronic Storage Unit
-	MapEntryLocked: ERA Electronic Storage Unit (Locked)
+	MapEntryNormal: Moon Base Storage Unit
+	MapEntryUnlocked: Moon Base Electronic Storage Unit
+	MapEntryLocked: Moon Base Electronic Storage Unit (Locked)
 }

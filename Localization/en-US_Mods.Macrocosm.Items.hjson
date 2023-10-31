@@ -352,7 +352,7 @@ IrradiatedRockWall: {
 }
 
 MoonBasePlating: {
-	DisplayName: ERA Plating
+	DisplayName: Moon Base Plating
 	Tooltip: ""
 }
 
@@ -787,22 +787,22 @@ SteelRifle: {
 }
 
 MoonBaseCandle: {
-	DisplayName: ERA Candle
+	DisplayName: Moon Base Candle
 	Tooltip: ""
 }
 
 MoonBaseLamp: {
-	DisplayName: ERA Lamp
+	DisplayName: Moon Base Lamp
 	Tooltip: ""
 }
 
 MoonBaseLantern: {
-	DisplayName: ERA Lantern
+	DisplayName: Moon Base Lantern
 	Tooltip: ""
 }
 
 MoonBaseNeonTube: {
-	DisplayName: ERA Neon Tube
+	DisplayName: Moon Base Neon Tube
 	Tooltip: ""
 }
 
@@ -817,27 +817,27 @@ SolarPanelSmall: {
 }
 
 MoonBaseBed: {
-	DisplayName: ERA Bed
+	DisplayName: Moon Base Bed
 	Tooltip: ""
 }
 
 MoonBaseChair: {
-	DisplayName: ERA Chair
+	DisplayName: Moon Base Chair
 	Tooltip: ""
 }
 
 MoonBaseDeskLamp: {
-	DisplayName: ERA Desk Lamp
+	DisplayName: Moon Base Desk Lamp
 	Tooltip: ""
 }
 
 MoonBaseSofa: {
-	DisplayName: ERA Sofa
+	DisplayName: Moon Base Sofa
 	Tooltip: ""
 }
 
 MoonBaseChest: {
-	DisplayName: ERA Storage Unit
+	DisplayName: Moon Base Storage Unit
 	Tooltip: ""
 }
 
@@ -847,7 +847,7 @@ LexanGlass: {
 }
 
 MoonBaseConsole: {
-	DisplayName: ERA Console
+	DisplayName: Moon Base Console
 	Tooltip: ""
 }
 
@@ -857,7 +857,7 @@ QuestionMark: {
 }
 
 MoonBaseChestElectronic: {
-	DisplayName: ERA Electronic Storage Unit
+	DisplayName: Moon Base Electronic Storage Unit
 	Tooltip: ""
 }
 
@@ -868,7 +868,7 @@ ZombieFinger: {
 
 XFLR6: {
 	DisplayName: XFLR-6
-	Tooltip: Well, what do you think of that? Look what the goat created.
+	Tooltip: 'Well, what do you think of that? Look what the goat created.'
 }
 
 InvarArrow: {
