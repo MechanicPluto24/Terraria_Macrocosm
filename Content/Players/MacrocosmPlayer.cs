@@ -44,7 +44,8 @@ namespace Macrocosm.Content.Players
 		public float RadNoiseIntensity = 0f;
 
 		/// <summary> 
-		/// Chandrium whip hit stacks. Handled locally.
+		/// Chandrium whip hit stacks. 
+		/// Handled locally.
 		/// </summary>
 		public int ChandriumWhipStacks = 0;
 

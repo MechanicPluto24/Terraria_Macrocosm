@@ -32,6 +32,8 @@
     <None Remove="Assets\Textures\UI\WidePanelBorder.png" />
     <None Remove="Assets\Textures\UI\WidePanelHoverBorder.png" />
     <None Remove="Content\Buffs\Debuffs\HandheldEngineOverheat.png" />
+    <None Remove="Content\Items\Ammo\InvarArrow.png" />
+    <None Remove="Content\Items\Ammo\InvarBullet.png" />
     <None Remove="Content\Rockets\Textures\Checklist\BloodMoon_NotMet.png" />
     <None Remove="Content\Rockets\Textures\Checklist\Boss_NotMet.png" />
     <None Remove="Content\Rockets\Textures\Checklist\Invasion_NotMet.png" />

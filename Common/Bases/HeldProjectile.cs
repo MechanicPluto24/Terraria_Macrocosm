@@ -146,12 +146,16 @@ namespace Macrocosm.Common.Bases
                 Projectile.timeLeft = Projectile.extraUpdates;
             }
 
-            if (Projectile.owner == Main.myPlayer && ((Player.HeldItem.type != item.type && Player.HeldItem.type != Main.mouseItem.type) || (Player.ItemAnimationEndingOrEnded && KillMode == HeldProjectileKillMode.OnAnimationEnd)))
-            {
+            if (Projectile.owner == Main.myPlayer && 
+                ((Player.HeldItem.type != item.type && Player.HeldItem.type != Main.mouseItem.type) || 
+                (Player.ItemAnimationEndingOrEnded && KillMode == HeldProjectileKillMode.OnAnimationEnd)) ||
+                (Player.itemTime <= 1 && KillMode == HeldProjectileKillMode.OnAnimationEnd))
+			{
                 shouldDie = true;
             }
 
 			Player.heldProj = Projectile.whoAmI;
+
 
             return true;
         }

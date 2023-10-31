@@ -31,7 +31,7 @@ namespace Macrocosm.Content.Items.Dev
 		{
 			if(player.whoAmI == Main.myPlayer)
 			{
-				if(player.altFunctionUse == 2)
+				if(player.AltFunction())
 				{
 					RocketManager.DespawnAllRockets();
 				}

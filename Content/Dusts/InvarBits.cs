@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Dusts
 {
-	public class SeleniteBits : ModDust
+	public class InvarBits : ModDust
 	{
 		public override bool Update(Dust dust)
 		{
@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Dusts
 			return false;
 		}
 
-		public override bool MidUpdate(Dust dust) => false;
+		public override bool MidUpdate(Dust dust) => true;
 
 		public override Color? GetAlpha(Dust dust, Color lightColor)
 			=> Color.White.WithAlpha(200);

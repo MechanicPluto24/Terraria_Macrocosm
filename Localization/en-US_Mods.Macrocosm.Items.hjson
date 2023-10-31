@@ -870,3 +870,13 @@ XFLR6: {
 	DisplayName: XFLR-6
 	Tooltip: Well, what do you think of that? Look what the goat created.
 }
+
+InvarArrow: {
+	DisplayName: Invar Arrow
+	Tooltip: ""
+}
+
+InvarBullet: {
+	DisplayName: Invar Bullet
+	Tooltip: ""
+}

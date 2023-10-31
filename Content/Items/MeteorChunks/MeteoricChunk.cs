@@ -19,7 +19,7 @@ namespace Macrocosm.Content.Items.MeteorChunks
 
 		public override void SetStaticDefaults()
 		{
-			Item.ResearchUnlockCount = 50;
+			Item.ResearchUnlockCount = 25;
 		}
 
 		override public void SetDefaults()

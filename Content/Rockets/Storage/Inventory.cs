@@ -54,10 +54,11 @@ namespace Macrocosm.Content.Rockets.Storage
 				if (value < 0 || value > Main.maxPlayers)
 					return;
 
-				if (interactingPlayer != value && Main.netMode != NetmodeID.SinglePlayer)
-					SyncInteraction();
-
+				int last = interactingPlayer;
 				interactingPlayer = value;
+
+				if (last != value && Main.netMode != NetmodeID.SinglePlayer)
+					SyncInteraction();
 			}
 		}
 

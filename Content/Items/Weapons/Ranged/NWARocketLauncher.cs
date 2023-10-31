@@ -63,12 +63,12 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
 		public override void ModifyItemScale(Player player, ref float scale)
 		{
-			scale = player.altFunctionUse == 2 ? 1f : 1f;
+			scale = player.AltFunction() ? 1f : 1f;
 		}
 
 		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
-			if (player.altFunctionUse == 2)
+			if (player.AltFunction())
 			{
 				int id = -1;
 				bool found = false;
