@@ -27,6 +27,8 @@ namespace Macrocosm.Common.Utils
 			Main.instance.CameraModifiers.Add(new ScreenshakeCameraModifier(intensity, context));
 		}
 
+		public static bool AltFunction(this Player player) => player.altFunctionUse == 2;
+
 		public static Rectangle GetSwungItemHitbox(this Player player)
 		{
 			//Found in Player.cs

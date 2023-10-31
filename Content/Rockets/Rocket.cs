@@ -309,6 +309,14 @@ namespace Macrocosm.Content.Rockets
 				}
 			}
 
+			if (Active && HasInventory)
+			{
+				Inventory.Size = 0;
+				Inventory.SyncSize();
+
+				Inventory = null;
+			}
+		
 			Active = false;
 			CurrentWorld = "";
 			NetSync();

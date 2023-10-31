@@ -54,3 +54,5 @@ SilicaPearlsandProjectile.DisplayName: Silica Pearlsand
 SilicaSandProjectile.DisplayName: Silica Sand
 GreatswordHeldProjectile.DisplayName: Greatsword Held Projectile
 GunHeldProjectile.DisplayName: Gun Held Projectile
+InvarArrow.DisplayName: Invar Arrow
+InvarBullet.DisplayName: Invar Bullet

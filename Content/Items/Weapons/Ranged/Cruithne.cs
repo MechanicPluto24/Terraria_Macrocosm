@@ -1,4 +1,5 @@
 using Macrocosm.Common.Bases;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
@@ -51,7 +52,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
  
 		public override bool CanUseItemHeldProjectile(Player player)
 		{
-			if (player.altFunctionUse == 2)
+			if (player.AltFunction())
 			{
 				Item.useTime = 30;
 				Item.useAnimation = 30;
@@ -70,8 +71,8 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
 		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockBack)
 		{
-			int numberProjectiles = player.altFunctionUse == 2 ? 1 : 6;
-			int degree = player.altFunctionUse == 2 ? 0 : 12;
+			int numberProjectiles = player.AltFunction() ? 1 : 6;
+			int degree = player.AltFunction() ? 0 : 12;
  
 			for (int i = 0; i < numberProjectiles; i++)
 			{
@@ -86,7 +87,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
 		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
 		{
-			if (player.altFunctionUse == 2)
+			if (player.AltFunction())
 			{
 				damage = (int)(damage * 1.5f);
 				velocity *= 0.5f;

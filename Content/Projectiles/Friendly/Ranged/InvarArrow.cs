@@ -14,18 +14,24 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-	public class SeleniteArrow : ModProjectile, IBullet
+	public class InvarArrow : ModProjectile, IBullet
 	{
 		public override void SetDefaults()
 		{
-			AIType = ProjectileID.Bullet;
 			Projectile.width = 14;
 			Projectile.height = 14;
  			Projectile.timeLeft = 270;
 			Projectile.light = 0f;
 			Projectile.friendly = true;
+
+			Projectile.penetrate = 3;
+			Projectile.usesLocalNPCImmunity = true;
+			Projectile.localNPCHitCooldown = 15;
+
+			Projectile.extraUpdates = 4;
 		}
-		public override bool PreAI()
+
+		public override void AI()
 		{
 			if (Projectile.velocity.X < 0f)
 			{
@@ -38,40 +44,45 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 				Projectile.rotation = (float)Math.Atan2(Projectile.velocity.Y, Projectile.velocity.X) + 1.57f;
 			}
 
-			for(int i = 0; i < 2; i++)
-			{
-				Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<SeleniteBrightDust>(), Scale: Main.rand.NextFloat(0.8f, 1f));
-				dust.noGravity = true;
-			}
+			//for(int i = 0; i < 2; i++)
+			//{
+			//	Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<SeleniteBrightDust>(), 0, 0, Scale: Main.rand.NextFloat(0.8f, 1f));
+			//	dust.noGravity = true;
+			//}
 			
 			Lighting.AddLight(Projectile.Center, new Color(255, 255, 255).ToVector3() * 0.6f);
+		}
 
-			return true;
+		public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+		{
+			Projectile.damage = (int)(Projectile.damage * 0.65f);
+		}
+
+		public override void OnHitPlayer(Player target, Player.HurtInfo info)
+		{
+			Projectile.damage = (int)(Projectile.damage * 0.65f);
 		}
 
 		public override void OnKill(int timeLeft)
 		{
-			for(int i = 0; i < Main.rand.Next(20, 30); i++)
-				Dust.NewDustPerfect(Projectile.Center + Projectile.oldVelocity * 0.5f, ModContent.DustType<SeleniteBits>(), Projectile.oldVelocity.RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(0.1f, 0.2f), Scale: 2f);
+			for(int i = 0; i < 40; i++)
+				Dust.NewDustPerfect(Projectile.Center + Projectile.oldVelocity * 0.5f, ModContent.DustType<InvarBits>(), Projectile.oldVelocity.RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(0.1f, 0.4f), Scale: 3f);
 		}
 
 		private SpriteBatchState state;
 		public override bool PreDraw(ref Color lightColor)
 		{
-			float count = (Math.Abs(Projectile.velocity.X) + Math.Abs(Projectile.velocity.Y)) * 10f;
-
-			if (count > 40f)
-				count = 40f;
-
 			state = Main.spriteBatch.SaveState();
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.Additive, state);
 
-			for (int n = 4; n < count; n++)
+			int trailCount = 80;
+			float distanceMult = 0.25f;
+			for (int n = 1; n < trailCount; n++)
 			{
-				Vector2 trailPosition = Projectile.Center - Projectile.oldVelocity * n * 0.2f;
-				Main.spriteBatch.Draw(TextureAssets.Projectile[Type].Value, trailPosition - Main.screenPosition, null, Color.White * (0.6f - (float)n/count), Projectile.rotation, TextureAssets.Projectile[Type].Value.Size()/2f, Projectile.scale, SpriteEffects.None, 0f);
+				Vector2 trailPosition = Projectile.Center - Projectile.oldVelocity * n * distanceMult;
+				Main.spriteBatch.Draw(TextureAssets.Projectile[Type].Value, trailPosition - Main.screenPosition, null, Color.White * (0.55f - (float)n/trailCount), Projectile.rotation, TextureAssets.Projectile[Type].Value.Size()/2f, Projectile.scale, SpriteEffects.None, 0f);
 			}
 
 			Main.spriteBatch.End();

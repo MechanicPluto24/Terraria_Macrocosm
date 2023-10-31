@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Players;
+using Macrocosm.Content.Rockets.Storage;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -145,10 +146,10 @@ namespace Macrocosm.Content.Rockets.UI
 		private void UpdateInventory()
         {
 			// Just for testing
-			if (Main.LocalPlayer.controlQuickHeal)
+			if (Main.LocalPlayer.controlQuickHeal && Rocket.Inventory.Size < Inventory.MaxInventorySize)
  				Rocket.Inventory.Size += 1;
  
-			if (Main.LocalPlayer.controlQuickMana)
+			if (Main.LocalPlayer.controlQuickMana && Rocket.Inventory.Size > 1)
  				Rocket.Inventory.Size -= 1;
  
 			if (cacheSize != InventorySize)
@@ -185,7 +186,7 @@ namespace Macrocosm.Content.Rockets.UI
 					Color = new Color(89, 116, 213, 255)
 				});
 
-				Func<bool> interactible = () => Rocket.HasInventory && Rocket.Inventory.InteractingPlayer == Main.myPlayer;
+				Func<bool> interactible = () => Rocket.HasInventory && Rocket.Inventory.CanInteract;
 
 				lootAllButton = new
 				(

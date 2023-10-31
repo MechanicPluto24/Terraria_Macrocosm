@@ -9,7 +9,6 @@ using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Rockets.Storage
 {
-	// FIXME: I broke something in the netcode in this commit. Some stuff is no longer synced.
 	public partial class Inventory
 	{
 		public enum InventoryMessageType
@@ -103,13 +102,16 @@ namespace Macrocosm.Content.Rockets.Storage
 		{
 			int rocketId = reader.ReadByte();
 			Rocket owner = RocketManager.Rockets[rocketId];
-			Inventory inventory = owner.Inventory;
+			  Inventory inventory = owner.Inventory;
 
 			int oldSize = inventory.Size;
 			int newSize = reader.ReadUInt16();
 
 			if (oldSize != newSize)
 				inventory.OnResize(oldSize, newSize);
+
+			if (newSize <= 0)
+				owner.Inventory = null;
 
 			if (Main.netMode == NetmodeID.Server)
 			{

@@ -9,7 +9,7 @@ namespace Macrocosm.Content.Items.Materials
 	{
 		public override void SetStaticDefaults()
 		{
-			Item.ResearchUnlockCount = 10;
+			Item.ResearchUnlockCount = 5;
 		}
 
 		public override void SetDefaults()

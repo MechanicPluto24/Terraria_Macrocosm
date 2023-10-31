@@ -16,6 +16,7 @@ namespace Macrocosm.Content.Items.Consumables.BossSummons
 		public override void SetStaticDefaults()
 		{
 			ItemID.Sets.SortingPriorityBossSpawns[Item.type] = 13;
+			Item.ResearchUnlockCount = 3;
 		}
 
 		public override void SetDefaults()

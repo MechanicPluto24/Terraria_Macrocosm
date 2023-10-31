@@ -20,7 +20,6 @@ namespace Macrocosm.Content.Items.Consumables.BossBags
 		public override void SetStaticDefaults()
 		{
 			ItemID.Sets.BossBag[Type] = true; // This set is one that every boss bag should have, it, for example, lets our boss bag drop dev armor..
- 
 			Item.ResearchUnlockCount = 3;
 		}
 
@@ -63,8 +62,8 @@ namespace Macrocosm.Content.Items.Consumables.BossBags
 
 		public override bool PreDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
 		{
-			Color colorFront = new Color(31, 255, 106, 15);
-			Color colorBack = new Color(158, 255, 157, 20);
+			Color colorFront = new(31, 255, 106, 15);
+			Color colorBack = new(158, 255, 157, 20);
 
 			Item.DrawBossBagEffect(spriteBatch, colorFront, colorBack, rotation, scale);
 
