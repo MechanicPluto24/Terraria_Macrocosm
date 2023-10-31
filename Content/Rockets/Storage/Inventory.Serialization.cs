@@ -11,12 +11,11 @@ namespace Macrocosm.Content.Rockets.Storage
 		{
 			TagCompound tag = new()
 			{
-				[nameof(Size)] = size,
+				[nameof(Size)] = Size,
 				[nameof(WhoAmI)] = WhoAmI,
-				[nameof(InteractingPlayer)] = interactingPlayer  
 			};
 
-			for (int i = 0; i < size; i++)
+			for (int i = 0; i < Size; i++)
  				tag.Add($"Item{i}", ItemIO.Save(items[i]));
 
 			return tag;
@@ -26,7 +25,6 @@ namespace Macrocosm.Content.Rockets.Storage
 		{
 			int whoAmI = -1;
 			int size = Rocket.DefaultInventorySize;
-			int interactingPlayer = Main.maxPlayers;
 
 			if (tag.ContainsKey(nameof(Size)))
 				size = tag.GetInt(nameof(Size));
@@ -34,12 +32,8 @@ namespace Macrocosm.Content.Rockets.Storage
 			if (tag.ContainsKey(nameof(WhoAmI)))
 				whoAmI = tag.GetInt(nameof(WhoAmI));
 
-			if (tag.ContainsKey(nameof(InteractingPlayer)))
-				interactingPlayer = tag.GetInt(nameof(InteractingPlayer));
-
 			Rocket owner = (whoAmI >= 0 && whoAmI < RocketManager.MaxRockets) ? RocketManager.Rockets[whoAmI] : new();
 			Inventory inventory = new(size, owner);
-			inventory.InteractingPlayer = interactingPlayer;
 
 			for (int i = 0; i < size; i++)
 				inventory.Items[i] = ItemIO.Load(tag.GetCompound($"Item{i}"));

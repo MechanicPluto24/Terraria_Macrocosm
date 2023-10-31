@@ -2,6 +2,7 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.Storage;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
@@ -22,12 +23,24 @@ namespace Macrocosm.Common.UI
 		protected int itemSlotContext;
 		protected float scale;
 
+		private float glowDuration;
 		private float glowTime;
 		private float glowHue;
 
 		protected bool shouldNetsync = false;
 
+		private Asset<Texture2D> slotTexture;
+		private Asset<Texture2D> slotBorderTexture;
+		private Color slotColor;
+		private Color slotBorderColor;
+		private float notInteractibleMultiplier;
+
+		private Asset<Texture2D> slotFavoritedTexture;
+		private Color slotFavoritedColor;
+
+
 		public bool CanTrash { get; set; } = false;
+		public bool CanFavorite { get; set; } = false; 
 		protected Vector2 DrawOffset { get; set; } = new Vector2(52f, 52f) * -0.5f;
 
 		public UICustomItemSlot(Inventory inventory, int itemIndex, int itemSlotContext, float scale = default)
@@ -37,10 +50,42 @@ namespace Macrocosm.Common.UI
 			this.itemSlotContext = itemSlotContext;
 			Width = new StyleDimension(48f, 0f);
 			Height = new StyleDimension(48f, 0f);
+
+			SetAppearance
+			(
+				ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/InventorySlot"),
+				ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/InventorySlotBorder"),
+				new Color(45, 62, 115),
+				new Color(89, 116, 213, 255)
+			);
+
+			SetFavoritedAppearance
+			(
+				ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/InventorySlotFavorited"),
+				new Color(89, 116, 213, 255) * 0.9f
+			);
 		}
+
+		public void SetAppearance(Asset<Texture2D> slotTexture, Asset<Texture2D> slotBorderTexture, Color slotColor, Color slotBorderColor, float notInteractibleMultiplier = 1f) // 0.8f
+		{
+			this.slotTexture = slotTexture;
+			this.slotBorderTexture = slotBorderTexture;
+			this.slotColor = slotColor;
+			this.slotBorderColor = slotBorderColor;
+			this.notInteractibleMultiplier = notInteractibleMultiplier;
+			this.notInteractibleMultiplier = 0.8f;
+		}
+
+		public void SetFavoritedAppearance(Asset<Texture2D> slotFavoritedTexture, Color slotFavoritedColor)
+		{
+			this.slotFavoritedTexture = slotFavoritedTexture;
+			this.slotFavoritedColor = slotFavoritedColor;
+		}
+
 
 		public void SetGlow(float time, float hue)
 		{
+			glowDuration = time;
 			glowTime = time;
 			glowHue = hue;
 		}
@@ -100,7 +145,7 @@ namespace Macrocosm.Common.UI
 			{
 				if (Main.drawingPlayerChat)
 					Main.cursorOverride = CursorOverrideID.Magnifiers;
-				else 
+				else if(CanFavorite)
  					Main.cursorOverride = CursorOverrideID.FavoriteStar;
 			}
 		}
@@ -262,30 +307,38 @@ namespace Macrocosm.Common.UI
 
 		protected virtual void DrawItemSlot(SpriteBatch spriteBatch, ref Item item, Vector2 position)
 		{
-			Texture2D texture = TextureAssets.InventoryBack.Value;
-			Color color = Main.inventoryBack;
+			Color slotColor = this.slotColor;
+			Color slotBorderColor = this.slotBorderColor;
+
+			slotColor = GetSlotGlow(item, slotColor, 0.85f);
+			slotBorderColor = GetSlotGlow(item, slotBorderColor, 1.25f);
 
 			if (!inventory.CanInteract)
-				color = new Color(50,50,50).WithOpacity(0.5f);
+			{
+				var hsl = slotColor.ToHSL();
+				slotColor = slotColor.WithSaturation(hsl.Y * 0.85f);
+				hsl = slotBorderColor.ToHSL();
+				slotBorderColor = slotColor.WithLuminance(hsl.Z * 0.85f);
+			}
 
-			if(item.favorited)
-				texture = TextureAssets.InventoryBack10.Value;
+			spriteBatch.Draw(slotTexture.Value, position, null, slotColor, 0f, default, Main.inventoryScale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(slotBorderTexture.Value, position, null, slotBorderColor, 0f, default, Main.inventoryScale, SpriteEffects.None, 0f);
 
-			color = GetSlotGlow(item, color);
+			if (item.favorited)
+				spriteBatch.Draw(slotFavoritedTexture.Value, position, null, slotFavoritedColor, 0f, default, Main.inventoryScale, SpriteEffects.None, 0f);
 
-			spriteBatch.Draw(texture, position, null, color, 0f, default, Main.inventoryScale, SpriteEffects.None, 0f);
 		}
 
-		protected virtual Color GetSlotGlow(Item item, Color baseColor)
+		protected virtual Color GetSlotGlow(Item item, Color baseColor, float multiplier = 1f)
 		{
 			Color resultColor = baseColor;
 
 			if (glowTime > 0 && !item.favorited && !item.IsAir)
 			{
-				Color huedColor = Main.hslToRgb(glowHue, 1f, 0.6f);
-				float multiplier = glowTime / 300f;
-				resultColor = Color.Lerp(baseColor, huedColor, multiplier);
-
+				Color huedColor = Main.hslToRgb(glowHue, 1f, 0.3f);
+				float progress = glowTime / glowDuration;
+				resultColor = Color.Lerp(baseColor, huedColor, progress) * MathHelper.Lerp(multiplier, 1f, 1f-progress);
+				
 				glowTime--;
 				if (glowTime <= 0)
 					glowHue = 0f;
@@ -297,9 +350,8 @@ namespace Macrocosm.Common.UI
 		protected virtual void DrawItem(SpriteBatch spriteBatch, ref Item item, Vector2 position)
 		{
 			Color color = Color.White;
-			Texture2D value = TextureAssets.InventoryBack.Value;
 
-			Vector2 vector = value.Size() * Main.inventoryScale;
+			Vector2 vector = slotTexture.Size() * Main.inventoryScale;
 			if (item.type > ItemID.None && item.stack > 0)
 			{
 				float _ = ItemSlot.DrawItemIcon(item, itemSlotContext, spriteBatch, position + vector / 2f, Main.inventoryScale, 32f, color);

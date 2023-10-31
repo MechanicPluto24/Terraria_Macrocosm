@@ -31,7 +31,7 @@ namespace Macrocosm.Content.Rockets.UI
         {
         }
 
-        private const string buttonsPath = "Macrocosm/Content/Rockets/Textures/Buttons/";
+        private const string buttonsPath = "Macrocosm/Assets/Textures/UI/Buttons/";
 
 
         public override void OnInitialize()

@@ -177,7 +177,6 @@ namespace Macrocosm.Content.Rockets.UI
 
             if (Rocket.HasInventory)
             {
-
 				inventoryPanel.Append(new UIHorizontalSeparator()
 				{
 					Top = new(0, 0.83f),
@@ -186,9 +185,11 @@ namespace Macrocosm.Content.Rockets.UI
 					Color = new Color(89, 116, 213, 255)
 				});
 
+				Func<bool> interactible = () => Rocket.HasInventory && Rocket.Inventory.InteractingPlayer == Main.myPlayer;
+
 				lootAllButton = new
 				(
-					Macrocosm.EmptyTexAsset,
+					ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Inventory/LootAll", AssetRequestMode.ImmediateLoad),
 					ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanel", AssetRequestMode.ImmediateLoad),
 					ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanelBorder", AssetRequestMode.ImmediateLoad),
 					ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanelHoverBorder", AssetRequestMode.ImmediateLoad)
@@ -196,15 +197,17 @@ namespace Macrocosm.Content.Rockets.UI
 				{
 					Top = new(0, 0.85f),
 					Left = new(0, 0.25f),
-					BackPanelColor = new Color(106, 138, 255),
-					HoverText = Lang.inter[29]
+					BackPanelColor = new Color(45, 62, 115),
+					HoverText = Lang.inter[29],
+					CheckInteractible = interactible,
+					GrayscaleIconIfNotInteractible = true
 				};
 				lootAllButton.OnLeftClick += (_, _) => Rocket.Inventory.LootAll();
 				inventoryPanel.Append(lootAllButton);
 
 				depositAllButton = new
 				(
-					Macrocosm.EmptyTexAsset,
+					ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Inventory/DepositAll", AssetRequestMode.ImmediateLoad),
 					ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanel", AssetRequestMode.ImmediateLoad),
 					ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanelBorder", AssetRequestMode.ImmediateLoad),
 					ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanelHoverBorder", AssetRequestMode.ImmediateLoad)
@@ -212,15 +215,17 @@ namespace Macrocosm.Content.Rockets.UI
 				{
 					Top = new(0, 0.85f),
 					Left = new(0, 0.35f),
-					HoverText = Lang.inter[30]
-
+					BackPanelColor = new Color(45, 62, 115),
+					HoverText = Lang.inter[30],
+					CheckInteractible = interactible,
+					GrayscaleIconIfNotInteractible = true
 				};
 				depositAllButton.OnLeftClick += (_, _) => Rocket.Inventory.DepositAll(ContainerTransferContext.FromUnknown(Main.LocalPlayer));
 				inventoryPanel.Append(depositAllButton);
 
 				quickStackButton = new
 				(
-					Main.Assets.Request<Texture2D>("Images/ChestStack_0"),
+					ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Inventory/QuickStack", AssetRequestMode.ImmediateLoad),
 					ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanel", AssetRequestMode.ImmediateLoad),
 					ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanelBorder", AssetRequestMode.ImmediateLoad),
 					ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanelHoverBorder", AssetRequestMode.ImmediateLoad)
@@ -228,14 +233,17 @@ namespace Macrocosm.Content.Rockets.UI
 				{
 					Top = new(0, 0.85f),
 					Left = new(0, 0.45f),
-					HoverText = Lang.inter[31]
+					BackPanelColor = new Color(45, 62, 115),
+					HoverText = Lang.inter[31],
+					CheckInteractible = interactible,
+					GrayscaleIconIfNotInteractible = true
 				};
 				quickStackButton.OnLeftClick += (_, _) => Rocket.Inventory.QuickStack(ContainerTransferContext.FromUnknown(Main.LocalPlayer));
 				inventoryPanel.Append(quickStackButton);
 
 				restockInventoryButton = new
 				(
-					Macrocosm.EmptyTexAsset,
+					ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Inventory/Restock", AssetRequestMode.ImmediateLoad),
 					ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanel", AssetRequestMode.ImmediateLoad),
 					ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanelBorder", AssetRequestMode.ImmediateLoad),
 					ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanelHoverBorder", AssetRequestMode.ImmediateLoad)
@@ -243,14 +251,17 @@ namespace Macrocosm.Content.Rockets.UI
 				{
 					Top = new(0, 0.85f),
 					Left = new(0, 0.55f),
-					HoverText = Lang.inter[82]
+					BackPanelColor = new Color(45, 62, 115),
+					HoverText = Lang.inter[82],
+					CheckInteractible = interactible,
+					GrayscaleIconIfNotInteractible = true
 				};
 				restockInventoryButton.OnLeftClick += (_, _) => Rocket.Inventory.Restock(); 	
 				inventoryPanel.Append(restockInventoryButton);
 
 				sortInventoryButton = new
 				(
-					Main.Assets.Request<Texture2D>("Images/UI/Sort_0"),
+					ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Inventory/SortContainer", AssetRequestMode.ImmediateLoad),
 					ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanel", AssetRequestMode.ImmediateLoad),
 					ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanelBorder", AssetRequestMode.ImmediateLoad),
 					ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanelHoverBorder", AssetRequestMode.ImmediateLoad)
@@ -258,13 +269,15 @@ namespace Macrocosm.Content.Rockets.UI
 				{
 					Top = new(0, 0.85f),
 					Left = new(0, 0.65f),
-					HoverText = Lang.inter[122]
+					BackPanelColor = new Color(45, 62, 115),
+					HoverText = Lang.inter[122],
+					CheckInteractible = interactible,
+					GrayscaleIconIfNotInteractible = true
 				};
 				sortInventoryButton.OnLeftClick += (_,_) => Rocket.Inventory.Sort();
 				inventoryPanel.Append(sortInventoryButton);
 
-
-				if (Main.netMode == NetmodeID.MultiplayerClient || true)
+				if (Main.netMode == NetmodeID.MultiplayerClient)
 				{
 					requestAccessButton = new
                         (
@@ -276,7 +289,7 @@ namespace Macrocosm.Content.Rockets.UI
 					{
 						Top = new(0, 0.85f),
 						Left = new(0, 0.15f),
-						BackPanelColor = new Color(106, 138, 255)
+						BackPanelColor = new Color(45, 62, 115),
 					};
 					requestAccessButton.OnLeftClick += (_, _) => Rocket.Inventory.InteractingPlayer = Main.myPlayer;
 					requestAccessButton.CheckInteractible = () => Rocket.Inventory.InteractingPlayer != Main.myPlayer;

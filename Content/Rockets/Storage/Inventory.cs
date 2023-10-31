@@ -24,24 +24,21 @@ namespace Macrocosm.Content.Rockets.Storage
 			set => items[index] = value;
 		}
 
-		private int size;
 		public const int MaxInventorySize = ushort.MaxValue;
 		public int Size
 		{
-			get => size;
+			get => items.Length;
 			set
 			{
 				value = (int)MathHelper.Clamp(value, 0, MaxInventorySize);
 
-				if(size != value)
+				if(items.Length != value)
 				{
-					OnResize(size, value);
+					OnResize(items.Length, value);
 
 					if (Main.netMode != NetmodeID.SinglePlayer)
 						SyncSize();
 				}
-
-				size = value;		
 			}
 		}
 
@@ -70,9 +67,9 @@ namespace Macrocosm.Content.Rockets.Storage
 
 		public Inventory(int size, Rocket owner)
 		{
-			this.size = (int)MathHelper.Clamp(size, 0, MaxInventorySize);
+			int clampedSize = (int)MathHelper.Clamp(size, 0, MaxInventorySize);
 
-			items = new Item[size];
+			items = new Item[clampedSize];
 			for (int i = 0; i < items.Length; i++)
 				items[i] = new Item();
 
@@ -422,98 +419,103 @@ namespace Macrocosm.Content.Rockets.Storage
 			zeroStackList.Clear();
 		}
 
-		//FIXME: this behaves weird, for some reason
 		/// <summary> Restock items from the inventory to the player's inventory </summary>
 		public void Restock()
 		{
 			Player player = Main.LocalPlayer;
 			Item[] playerInventory = player.inventory;
 
-			HashSet<int> hashSet = new();
-			List<int> restockableIndexes = new();
-			List<int> emptySlotIndexes = new();
+			HashSet<int> foundItemIds = new();
+			List<int> playerSlotsToRestock = new();
+			List<int> emptyItemSlots = new();
 			for (int slot = 57; slot >= 0; slot--)
 			{
 				if ((slot < 50 || slot >= 54) && (playerInventory[slot].type < ItemID.CopperCoin || playerInventory[slot].type > ItemID.PlatinumCoin))
 				{
 					if (playerInventory[slot].stack > 0 && playerInventory[slot].maxStack > 1)
 					{ 
-						hashSet.Add(playerInventory[slot].netID);
+						foundItemIds.Add(playerInventory[slot].netID);
 						if (playerInventory[slot].stack < playerInventory[slot].maxStack)
-							restockableIndexes.Add(slot);
+							playerSlotsToRestock.Add(slot);
 					}
 					else if (playerInventory[slot].stack == 0 || playerInventory[slot].netID == 0 || playerInventory[slot].type == ItemID.None)
 					{
-						emptySlotIndexes.Add(slot);
+						emptyItemSlots.Add(slot);
 					}
 				}
 			}
 
-			bool success = false;
-			for (int i = 0; i < items.Length; i++)
+			bool successfulTransfer = false;
+			for (int i = 0; i < Size; i++)
 			{
-				if (items[i].stack < 1 || !hashSet.Contains(items[i].netID)) 
+				if (items[i].stack < 1 || !foundItemIds.Contains(items[i].netID)) 
 					continue;
 
-				bool restocked = false;
-				for (int j = 0; j < restockableIndexes.Count; j++)
+				bool startNewStack = false;
+				for (int j = 0; j < playerSlotsToRestock.Count; j++)
 				{
-					int idx = restockableIndexes[j];
-					int context = idx >= 50 ? 2 : 0;
+					int slot = playerSlotsToRestock[j];
+					int context = ItemSlot.Context.InventoryItem;
 
-					if (playerInventory[idx].netID != items[j].netID)
+					if (slot >= 50)
+						context = ItemSlot.Context.InventoryAmmo;
+
+					if (playerInventory[slot].netID != items[i].netID)
 						continue;
 
-					if (ItemSlot.PickItemMovementAction(playerInventory, context, idx, items[j]) == -1)
+					if (ItemSlot.PickItemMovementAction(playerInventory, context, slot, items[i]) == -1)
 						continue;
 
-					if (!ItemLoader.TryStackItems(playerInventory[idx], items[j], out _)) 
+					if (!ItemLoader.TryStackItems(playerInventory[slot], items[i], out _)) 
 						continue;
 
-					success = true;
-					if (playerInventory[idx].stack == playerInventory[idx].maxStack)
+					successfulTransfer = true;
+					if (playerInventory[slot].stack == playerInventory[slot].maxStack)
 					{
 						if (Main.netMode == NetmodeID.MultiplayerClient)
-							SyncItem(j);
+							SyncItem(i);
 
-						restockableIndexes.RemoveAt(j);
+						playerSlotsToRestock.RemoveAt(j);
 						j--;
 					}
 
-					if (items[j].stack == 0)
+					if (items[i].stack == 0)
 					{
-						items[j] = new Item();
-						restocked = true;
-
+						items[i] = new Item();
+						startNewStack = true;
 						if (Main.netMode == NetmodeID.MultiplayerClient)
-							SyncItem(j);
+							SyncItem(i);
 
 						break;
 					}
 				}
 
-				if (restocked || emptySlotIndexes.Count <= 0 || items[i].ammo == 0)
+				if (startNewStack || emptyItemSlots.Count <= 0 || items[i].ammo == 0)
 					continue;
 
-				for (int k = 0; k < emptySlotIndexes.Count; k++)
+				for (int k = 0; k < emptyItemSlots.Count; k++)
 				{
-					int context = emptySlotIndexes[k] >= 50 ? 2 : 0;
+					int context = ItemSlot.Context.InventoryItem;
 
-					if (ItemSlot.PickItemMovementAction(playerInventory, context, emptySlotIndexes[k], items[k]) != -1)
+					if (emptyItemSlots[k] >= 50)
+						context = ItemSlot.Context.InventoryAmmo;
+
+					if (ItemSlot.PickItemMovementAction(playerInventory, context, emptyItemSlots[k], items[i]) != -1)
 					{
-						Utils.Swap(ref playerInventory[emptySlotIndexes[k]], ref items[k]);
-						if (Main.netMode == NetmodeID.MultiplayerClient)
-							SyncItem(k);
+						Utils.Swap(ref playerInventory[emptyItemSlots[k]], ref items[i]);
 
-						restockableIndexes.Add(emptySlotIndexes[k]);
-						emptySlotIndexes.RemoveAt(k);
-						success = true;
+						if (Main.netMode == NetmodeID.MultiplayerClient)
+							SyncItem(i);
+
+						playerSlotsToRestock.Add(emptyItemSlots[k]);
+						emptyItemSlots.RemoveAt(k);
+						successfulTransfer = true;
 						break;
 					}
 				}
 			}
 
-			if (success)
+			if (successfulTransfer)
 				SoundEngine.PlaySound(SoundID.Grab);
 		}
 
