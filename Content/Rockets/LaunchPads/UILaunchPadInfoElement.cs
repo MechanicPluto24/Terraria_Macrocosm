@@ -25,7 +25,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
 		public UILaunchPadInfoElement() : base(
 			Language.GetText("Mods.Macrocosm.UI.Rocket.Common.WorldSpawn"), 
-			ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Icons/SpawnPoint"), 
+			ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/WorldInfo/SpawnPoint"), 
 			null,
 			null
 		){ }

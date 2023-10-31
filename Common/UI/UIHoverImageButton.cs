@@ -21,7 +21,6 @@ namespace Macrocosm.Common.UI
 		/// <summary> Whether to display hover text even if the button is not interactible </summary>
 		public bool HoverTextOnButonNotInteractible { get; set; } = false;
 
-
 		public bool DrawBorderIfInFocus { get; set; } = true;
 
 		public bool HasFocus { get; set; }
@@ -105,17 +104,18 @@ namespace Macrocosm.Common.UI
  				spriteBatch.Draw(borderTexture.Value, dimensions.Position(), Color.White);
 		}
 
+		public override void LeftClick(UIMouseEvent evt)
+		{
+			if(CheckInteractible())
+				base.LeftClick(evt);
+		}
+
 		public override void MouseOver(UIMouseEvent evt)
 		{
 			base.MouseOver(evt);
 
 			if(CheckInteractible())
 				SoundEngine.PlaySound(SoundID.MenuTick);
-		}
-
-		public override void MouseOut(UIMouseEvent evt)
-		{
-			base.MouseOut(evt);
 		}
 	}
 }

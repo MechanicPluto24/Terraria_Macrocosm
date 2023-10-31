@@ -49,7 +49,7 @@ namespace Macrocosm.Content.Rockets.UI
         }
 
         // selection outline texture, has default
-        private readonly Texture2D selectionOutline = ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Buttons/SelectionOutlineSmall", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+        private readonly Texture2D selectionOutline = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Buttons/SelectionOutlineSmall", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
 
         // Selection outline rotation
         private float rotation = 0f;

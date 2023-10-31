@@ -9,6 +9,7 @@ using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Rockets.Storage
 {
+	// FIXME: I broke something in the netcode in this commit. Some stuff is no longer synced.
 	public partial class Inventory
 	{
 		public enum InventoryMessageType
@@ -50,7 +51,7 @@ namespace Macrocosm.Content.Rockets.Storage
 			packet.Write((byte)MessageType.SyncInventory);
 			packet.Write((byte)InventoryMessageType.SyncEverything);
 			packet.Write((byte)Owner.WhoAmI);
-			packet.Write((ushort)size);
+			packet.Write((ushort)Size);
 			packet.Write((byte)interactingPlayer);
 
 			foreach (var item in items)
@@ -72,14 +73,12 @@ namespace Macrocosm.Content.Rockets.Storage
  			else
  				owner.Inventory = inventory = new(newSize, owner);
    
-			if (inventory.size != newSize)
-				inventory.OnResize(inventory.size, newSize);
-
-			inventory.size = newSize;
+			if (inventory.Size != newSize)
+				inventory.OnResize(inventory.Size, newSize);
 
 			inventory.interactingPlayer = reader.ReadByte();
 
-			for (int i = 0; i < inventory.size; i++)
+			for (int i = 0; i < inventory.Size; i++)
 				inventory[i] = ItemIO.Receive(reader, readStack: true, readFavorite: true);
 
 			if (Main.netMode == NetmodeID.Server)
@@ -95,7 +94,7 @@ namespace Macrocosm.Content.Rockets.Storage
 			packet.Write((byte)MessageType.SyncInventory);
 			packet.Write((byte)InventoryMessageType.SyncSize);
 			packet.Write((byte)Owner.WhoAmI);
-			packet.Write((ushort)size);
+			packet.Write((ushort)Size);
 
 			packet.Send(toClient, ignoreClient);
 		}
@@ -106,13 +105,11 @@ namespace Macrocosm.Content.Rockets.Storage
 			Rocket owner = RocketManager.Rockets[rocketId];
 			Inventory inventory = owner.Inventory;
 
-			int oldSize = inventory.size;
+			int oldSize = inventory.Size;
 			int newSize = reader.ReadUInt16();
 
 			if (oldSize != newSize)
 				inventory.OnResize(oldSize, newSize);
-
-			inventory.size = newSize;
 
 			if (Main.netMode == NetmodeID.Server)
 			{

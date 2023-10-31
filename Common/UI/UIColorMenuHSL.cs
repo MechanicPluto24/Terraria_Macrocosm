@@ -125,7 +125,7 @@ namespace Macrocosm.Common.UI
 			pasteButton.Left = new(0f, 0.51f);
 			randomizeButton.Left = new(0f, 0.632f);
 
-			applyButton = new(ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Symbols/CheckmarkWhite"))
+			applyButton = new(ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Symbols/CheckmarkWhite"))
 			{
 				VAlign = 0.93f,
 				Left = new(0f, 0.88f),
@@ -136,7 +136,7 @@ namespace Macrocosm.Common.UI
 			this.onApplyButtonClicked = onApplyButtonClicked;
 			Append(applyButton);
 
-			cancelButton = new(ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Symbols/CrossmarkWhite"))
+			cancelButton = new(ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Symbols/CrossmarkWhite"))
 			{
 				VAlign = 0.93f,
 				Left = new(0f, 0.76f),

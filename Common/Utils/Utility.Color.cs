@@ -8,12 +8,16 @@ namespace Macrocosm.Common.Utils
 	public static partial class Utility
     {
 		#region Alpha manipulation
+
 		public static Color WithOpacity(this Color color, float opacity)
 			=> new(color.R, color.G, color.B, (byte)(opacity * 255));
 
 		public static Color WithAlpha(this Color color, byte alpha)
 			=> new(color.R, color.G, color.B, alpha);
+
 		#endregion
+
+
 
 		#region Hex format conversion
 		public static string GetHexText(this Color color) => "#" + color.Hex3().ToUpper();
@@ -50,6 +54,11 @@ namespace Macrocosm.Common.Utils
 		#endregion
 
 		#region HSL conversion
+
+		public static Color WithHue(this Color color, float hue) => HSLToRGB(ToHSL(color) with { X = hue });
+		public static Color WithSaturation(this Color color, float saturation) => HSLToRGB(ToHSL(color) with { Y = saturation });
+		public static Color WithLuminance(this Color color, float luminance) => HSLToRGB(ToHSL(color) with { Z = luminance });
+
 		public static Vector3 RGBToHSL(Color color) => color.ToHSL();
 		public static Vector3 ToHSL(this Color color) => Main.rgbToHsl(color);
 

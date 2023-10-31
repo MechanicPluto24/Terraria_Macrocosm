@@ -127,9 +127,8 @@ namespace Macrocosm.Content.Rockets.UI
             // ...
         }
 
-        private const string rocketPath = "Macrocosm/Content/Rockets/";
-        private const string navigationMapsPath = rocketPath + "Textures/NavigationMaps/";
-        private const string buttonsPath = rocketPath + "Textures/Buttons/";
+        private const string navigationMapsPath = "Macrocosm/Content/Rockets/Textures/NavigationMaps/";
+        private const string buttonsPath = "Macrocosm/Assets/Textures/UI/Buttons/";
 
         private void UpdateMapVisibility(string context)
         {

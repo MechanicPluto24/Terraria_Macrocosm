@@ -376,13 +376,13 @@ namespace Macrocosm.Content.Rockets.UI
 
         private void OnPreviewZoomIn()
         {
-            rocketPreviewZoomButton.SetImage(ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Buttons/ZoomOutButton"));
+            rocketPreviewZoomButton.SetImage(ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Buttons/ZoomOutButton"));
         }
 
         private void OnPreviewZoomOut()
         {
             hslMenu.CaptureCurrentColor();
-            rocketPreviewZoomButton.SetImage(ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Buttons/ZoomInButton"));
+            rocketPreviewZoomButton.SetImage(ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Buttons/ZoomInButton"));
         }
 
         private void ApplyCustomizationChanges()
@@ -675,8 +675,8 @@ namespace Macrocosm.Content.Rockets.UI
         #endregion
 
         #region UI creation methods
-        private const string buttonsPath = "Macrocosm/Content/Rockets/Textures/Buttons/";
-        private const string symbolsPath = "Macrocosm/Content/Rockets/Textures/Symbols/";
+        private const string buttonsPath = "Macrocosm/Assets/Textures/UI/Buttons/";
+        private const string symbolsPath = "Macrocosm/Assets/Textures/UI/Symbols/";
 
 
         private UIPanel CreateRocketPreview()
@@ -703,7 +703,7 @@ namespace Macrocosm.Content.Rockets.UI
             };
             rocketPreviewBackground.Append(rocketPreview);
 
-            rocketPreviewZoomButton = new(ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Buttons/ZoomOutButton"), ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Buttons/ZoomButtonBorder"))
+            rocketPreviewZoomButton = new(ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Buttons/ZoomOutButton"), ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Buttons/ZoomButtonBorder"))
             {
                 Left = new(10, 0),
                 Top = new(10, 0),
@@ -756,7 +756,6 @@ namespace Macrocosm.Content.Rockets.UI
                 Left = new StyleDimension(0f, 0f),
             };
             leftButton.SetVisibility(1f, 1f, 1f);
-            leftButton.CheckInteractible = () => !rocketPreview.AnimationActive;
             leftButton.OnLeftClick += (_, _) => PickPreviousModule();
 
             modulePicker.Append(leftButton);
@@ -767,7 +766,6 @@ namespace Macrocosm.Content.Rockets.UI
                 Left = new StyleDimension(0, 0.79f),
             };
             rightButton.SetVisibility(1f, 1f, 1f);
-            rightButton.CheckInteractible = () => !rocketPreview.AnimationActive;
             rightButton.OnLeftClick += (_, _) => PickNextModule();
 
             modulePicker.Append(rightButton);
