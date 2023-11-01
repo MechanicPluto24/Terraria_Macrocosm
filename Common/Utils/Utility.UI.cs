@@ -1,7 +1,9 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿using Macrocosm.Content.UI;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.UI;

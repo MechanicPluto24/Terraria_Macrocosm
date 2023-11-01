@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -46,9 +47,11 @@ namespace Macrocosm.Content.Rockets.UI
             window.SetPadding(6f);
             window.PaddingTop = 40f;
 
-            window.BackgroundColor = new Color(89, 116, 213);
+            window.BackgroundColor = UITheme.Current.WindowStyle.BackgroundColor;
+			window.BorderColor = UITheme.Current.WindowStyle.BorderColor;
 
-            Append(window);
+
+			Append(window);
 
             title = new(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Navigation"), 0.6f, true)
             {

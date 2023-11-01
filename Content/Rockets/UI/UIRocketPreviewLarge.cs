@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Graphics;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -77,7 +78,7 @@ namespace Macrocosm.Content.Rockets.UI
         {
             Width.Set(0, 1f);
             Height.Set(0, 1f);
-            BackgroundColor = new Color(53, 72, 135);
+            BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor;
             BorderColor = Color.Transparent;
         }
 

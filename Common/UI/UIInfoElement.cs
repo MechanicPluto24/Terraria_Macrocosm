@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Content.UI;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
@@ -46,10 +47,10 @@ namespace Macrocosm.Common.UI
             Width.Set(0f, 1f);
             Height.Set(40f, 0f);
 
-            BackgroundColor = new Color(43, 56, 101);
-            BorderColor = BackgroundColor * 2f;
+            BackgroundColor = UITheme.Current.InfoElementStyle.BackgroundColor;
+            BorderColor = UITheme.Current.InfoElementStyle.BorderColor;
 
-            uIDisplayText = displayText.ProvideUI();
+			uIDisplayText = displayText.ProvideUI();
             uIDisplayText.Left = new StyleDimension(40, 0);
             uIDisplayText.VAlign = 0.5f;
 

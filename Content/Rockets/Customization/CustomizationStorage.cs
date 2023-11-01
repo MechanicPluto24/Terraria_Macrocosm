@@ -2,6 +2,7 @@
 using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.UI;
+using Macrocosm.Content.UI;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json.Linq;
 using System;
@@ -205,8 +206,8 @@ namespace Macrocosm.Content.Rockets.Customization
 				Height = new(0, 0.8f),
 				HAlign = 0.5f,
 				Top = new(0f, 0.2f),
-				BackgroundColor = new Color(53, 72, 135),
-				BorderColor = new Color(89, 116, 213, 255),
+				BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+				BorderColor = UITheme.Current.PanelStyle.BorderColor,
 				ListPadding = 0f,
 				ListOuterPadding = 2f,
 				ScrollbarHeight = new(0f, 0.9f),

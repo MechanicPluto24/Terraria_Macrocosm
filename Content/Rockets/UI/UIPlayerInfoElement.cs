@@ -3,6 +3,7 @@ using Macrocosm.Common.Graphics;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Players;
+using Macrocosm.Content.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -34,6 +35,9 @@ namespace Macrocosm.Content.Rockets.UI
 		{
 			Height.Set(74, 0f);
 
+			BackgroundColor = UITheme.Current.InfoElementStyle.BackgroundColor;
+			BorderColor = UITheme.Current.InfoElementStyle.BorderColor;
+
 			if (Main.netMode == NetmodeID.SinglePlayer || RocketPlayer.IsCommander)
 			{
 				Width.Set(0f, 0.98f);
@@ -44,9 +48,6 @@ namespace Macrocosm.Content.Rockets.UI
 				Width.Set(0f, 0.78f);
 				Left.Set(0f, 0.20f);
 			}
-
-			BackgroundColor = new Color(43, 56, 101);
-			BorderColor = BackgroundColor * 2f;
 
 			uIPlayerName = new(player.name)
 			{

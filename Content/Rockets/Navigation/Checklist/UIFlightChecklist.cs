@@ -4,6 +4,7 @@ using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.UI;
+using Macrocosm.Content.UI;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -41,8 +42,8 @@ namespace Macrocosm.Content.Rockets.Navigation.Checklist
 		public override void OnInitialize()
 		{
 			base.OnInitialize();
-			BackgroundColor = new(53, 72, 135);
-			BorderColor = new(89, 116, 213, 255);
+			BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor;
+			BorderColor = UITheme.Current.PanelStyle.BorderColor;
 		}
 
 		public override void Update(GameTime gameTime)

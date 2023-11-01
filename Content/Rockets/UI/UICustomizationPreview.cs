@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -26,8 +27,8 @@ namespace Macrocosm.Content.Rockets.UI
             HAlign = 0f;
             Top.Set(0, 0.01f);
             Left.Set(0, 0.01f);
-            BackgroundColor = new Color(53, 72, 135);
-            BorderColor = new Color(89, 116, 213, 255);
+            BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor;
+            BorderColor = UITheme.Current.PanelStyle.BorderColor;
 
             uITitle = new(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Customization"), 0.8f, false)
             {
@@ -46,13 +47,13 @@ namespace Macrocosm.Content.Rockets.UI
 
             if (IsMouseHovering)
             {
-                BorderColor = Color.Gold;
-                BackgroundColor = new Color(53, 72, 135) * 0.9f;
+                BorderColor = UITheme.Current.ButtonHighlightStyle.BorderColor;
+				BackgroundColor = UITheme.Current.ButtonHighlightStyle.BackgroundColor;
             }
             else
             {
-                BorderColor = new Color(89, 116, 213, 255);
-                BackgroundColor = new Color(53, 72, 135);
+                BorderColor = UITheme.Current.PanelStyle.BorderColor;
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor;
             }
         }
 

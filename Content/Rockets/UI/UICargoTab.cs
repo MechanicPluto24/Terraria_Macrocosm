@@ -2,6 +2,7 @@
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Players;
 using Macrocosm.Content.Rockets.Storage;
+using Macrocosm.Content.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -68,8 +69,8 @@ namespace Macrocosm.Content.Rockets.UI
 
             SetPadding(6f);
 
-            BackgroundColor = new Color(13, 23, 59, 127);
-            BorderColor = new Color(15, 15, 15, 255);
+            BackgroundColor = UITheme.Current.TabStyle.BackgroundColor;
+            BorderColor = UITheme.Current.TabStyle.BorderColor;
 
             inventoryPanel = CreateInventoryPanel();
             inventoryPanel.Activate();
@@ -83,8 +84,8 @@ namespace Macrocosm.Content.Rockets.UI
                 Width = new(0, 0.4f),
                 Height = new(0, 1f),
                 HAlign = 0f,
-                BackgroundColor = new Color(53, 72, 135),
-                BorderColor = new Color(89, 116, 213, 255)
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor
             };
             fuelPanel.SetPadding(2f);
             fuelPanel.Activate();
@@ -145,13 +146,16 @@ namespace Macrocosm.Content.Rockets.UI
 
 		private void UpdateInventory()
         {
-			// Just for testing
-			if (Main.LocalPlayer.controlQuickHeal && Rocket.Inventory.Size < Inventory.MaxInventorySize)
- 				Rocket.Inventory.Size += 1;
- 
-			if (Main.LocalPlayer.controlQuickMana && Rocket.Inventory.Size > 1)
- 				Rocket.Inventory.Size -= 1;
- 
+			// Use H and J to increase/decrease inventory size, for testing
+			if (RocketUISystem.DebugModeActive)
+			{
+				if (Main.LocalPlayer.controlQuickHeal && Rocket.Inventory.Size < Inventory.MaxInventorySize)
+					Rocket.Inventory.Size += 1;
+
+				if (Main.LocalPlayer.controlQuickMana && Rocket.Inventory.Size > 1)
+					Rocket.Inventory.Size -= 1;
+			}
+		
 			if (cacheSize != InventorySize)
 			{
 				cacheSize = InventorySize;
@@ -168,8 +172,8 @@ namespace Macrocosm.Content.Rockets.UI
                 Left = new(0, 0.405f),
                 Top = new(0, 0),
                 HAlign = 0f,
-                BackgroundColor = new Color(53, 72, 135),
-                BorderColor = new Color(89, 116, 213, 255),
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor,
             };
             inventoryPanel.SetPadding(0f);
 
@@ -183,10 +187,10 @@ namespace Macrocosm.Content.Rockets.UI
 					Top = new(0, 0.83f),
 					Width = new(0, 0.99f),
 					Left = new(0,0.003f),
-					Color = new Color(89, 116, 213, 255)
+					Color = UITheme.Current.SeparatorColor
 				});
 
-				Func<bool> interactible = () => Rocket.HasInventory && Rocket.Inventory.CanInteract;
+				bool interactible() => Rocket.HasInventory && Rocket.Inventory.CanInteract;
 
 				lootAllButton = new
 				(
@@ -375,8 +379,8 @@ namespace Macrocosm.Content.Rockets.UI
 				Left = new(0, 0.405f),
 				Height = new(0, 0.46f),
 				Width = new(0, 0.596f),
-				BorderColor = new Color(89, 116, 213, 255),
-			    BackgroundColor = new Color(53, 72, 135),
+				BorderColor = UITheme.Current.PanelStyle.BorderColor,
+			    BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
 			    ScrollbarHAlign = 1.015f,
 			    ListWidthWithScrollbar = new StyleDimension(0, 1f),
                 ShiftTitleIfHasScrollbar = false,

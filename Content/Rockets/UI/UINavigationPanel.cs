@@ -2,6 +2,7 @@
 using Macrocosm.Common.Systems;
 using Macrocosm.Common.UI;
 using Macrocosm.Content.Subworlds;
+using Macrocosm.Content.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -38,8 +39,8 @@ namespace Macrocosm.Content.Rockets.UI
             Top.Set(0, 0.01f);
             HAlign = 0.5f;
             SetPadding(0f);
-            BackgroundColor = new Color(53, 72, 135);
-            BorderColor = new Color(89, 116, 213, 255);
+            BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor;
+            BorderColor = UITheme.Current.PanelStyle.BorderColor;
 
             mapBorder = new();
             mapBorder.Width.Set(0, 0.88f);

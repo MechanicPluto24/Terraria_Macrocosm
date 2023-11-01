@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Utils;
+using Macrocosm.Content.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -54,8 +55,8 @@ namespace Macrocosm.Common.UI
 			
 			Width = new(0f, 0.62f);
 			Height = new(0, 0.25f);
-			BackgroundColor = new Color(53, 72, 135);
-			BorderColor = new Color(89, 116, 213, 255);
+			BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor;
+			BorderColor = UITheme.Current.PanelStyle.BorderColor;
  
 			SetPadding(6f);
 
@@ -73,8 +74,8 @@ namespace Macrocosm.Common.UI
 				Width = new(0f, 0.36f),
 				Height = new(0f, 0.22f),
 				Left = new(0f, 0.03f),
-				BackgroundColor = new Color(53, 72, 135),
-				BorderColor = new Color(89, 116, 213, 255)
+				BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+				BorderColor = UITheme.Current.PanelStyle.BorderColor
 			};
 			hslTextPanel.SetPadding(2f);
 

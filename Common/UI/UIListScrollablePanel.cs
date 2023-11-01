@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Content.UI;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -144,7 +145,7 @@ namespace Macrocosm.Common.UI
 			{
 				Width = StyleDimension.FromPercent(percent),
 				HAlign = hAlign,
-				Color = new Color(89, 116, 213, 255) * 0.9f
+				Color = UITheme.Current.SeparatorColor
 			};
 
 			Add(separator);
@@ -156,7 +157,7 @@ namespace Macrocosm.Common.UI
 			var separator = new UIHorizontalSeparator()
 			{
 				Width = StyleDimension.FromPercent(0.98f),
-				Color = new Color(89, 116, 213, 255) * 0.9f
+				Color = UITheme.Current.SeparatorColor
 			};
 
 			// Insert the separator at the specified index
