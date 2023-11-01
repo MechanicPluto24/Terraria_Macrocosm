@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -13,13 +14,14 @@ namespace Macrocosm.Common.UI
 	{
 		public Color IconColor { get; set; } = Color.White;
 		public bool GrayscaleIconIfNotInteractible { get; set; } = false;
+		public bool OverrideBackgroundColor { get; set; } = false;
 
-		public Color BackPanelColor { get; set; } = new(53, 72, 135);
-		public Color FocusedBackPanelColor { get; set; } = new Color(37, 52, 96);
-		public Color NotInteractibleBackPanelColor { get; set; } = new Color(37, 52, 96) * 0.5f;
+		public Color BackPanelColor { get; set; } = UITheme.Current.ButtonStyle.BackgroundColor;
+		public Color FocusedBackPanelColor { get; set; } = UITheme.Current.ButtonHighlightStyle.BackgroundColor;
+		public Color NotInteractibleBackPanelColor { get; set; } = UITheme.Current.ButtonStyle.BackgroundColor.WithSaturation(0.5f);
 
-		public Color BackPanelBorderColor { get; set; } = new(89, 116, 213);
-		public Color BackPanelHoverBorderColor { get; set; } = Color.Gold;
+		public Color BackPanelBorderColor { get; set; } = UITheme.Current.ButtonStyle.BorderColor;
+		public Color BackPanelHoverBorderColor { get; set; } = UITheme.Current.ButtonHighlightStyle.BorderColor;
 
 		private Asset<Texture2D> backPanelTexture;
 		private Asset<Texture2D> backPanelBorderTexture;
@@ -50,7 +52,6 @@ namespace Macrocosm.Common.UI
 		SpriteBatchState state;
 		protected override void DrawSelf(SpriteBatch spriteBatch)
 		{
-
 			bool interactible = CheckInteractible();
 
 			CalculatedStyle dimensions = GetDimensions();
@@ -61,12 +62,13 @@ namespace Macrocosm.Common.UI
 
 			if (!interactible)
 				backPanelColor = BackPanelColor.WithSaturation(0.5f);
-			else if (HasFocus)
+			else if ((HasFocus || IsMouseHovering) && !OverrideBackgroundColor)
 				backPanelColor = FocusedBackPanelColor;
 			else
 				backPanelColor = BackPanelColor;
 
-			backPanelColor *= IsMouseHovering && interactible ? visibilityHover : visibilityInteractible;
+			if(!OverrideBackgroundColor)
+				backPanelColor *= IsMouseHovering && interactible ? visibilityHover : visibilityInteractible;
 
 			spriteBatch.Draw(backPanelTexture.Value, position, null, backPanelColor, 0f, backPanelTexture.Size() / 2f, 1f, SpriteEffects.None, 0f);
 			spriteBatch.Draw(backPanelBorderTexture.Value, position, null, backPanelBorderColor, 0f, backPanelBorderTexture.Size() / 2f, 1f, SpriteEffects.None, 0f);

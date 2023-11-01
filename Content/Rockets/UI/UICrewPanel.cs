@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.UI;
 using Macrocosm.Content.Players;
+using Macrocosm.Content.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -32,8 +33,8 @@ namespace Macrocosm.Content.Rockets.UI
         public override void OnInitialize()
         {
             base.OnInitialize();
-            BorderColor = new Color(89, 116, 213, 255);
-            BackgroundColor = new Color(53, 72, 135);
+            BorderColor = UITheme.Current.PanelStyle.BorderColor;
+            BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor;
 			ScrollbarHAlign = 1.015f;
 			ListWidthWithScrollbar = new StyleDimension(0,1f);
 			SetPadding(0f);

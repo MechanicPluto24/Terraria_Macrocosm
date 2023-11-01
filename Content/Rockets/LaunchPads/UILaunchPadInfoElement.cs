@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -39,23 +40,29 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 		{
 			base.Update(gameTime);
 
-			BackgroundColor = new Color(43, 56, 101);
-			BorderColor = BackgroundColor * 2f;
-			uIDisplayText.TextColor = Color.White;
+			BackgroundColor = UITheme.Current.ButtonStyle.BackgroundColor;
+			BorderColor = UITheme.Current.ButtonStyle.BorderColor;
+			uIDisplayText.TextColor = UITheme.Current.CommonTextColor;
 
 			if (IsSpawnPointDefault || !LaunchPad.HasRocket)
 			{
 				if (HasFocus || IsMouseHovering)
-					BorderColor = Color.Gold;
+				{
+					BackgroundColor = UITheme.Current.ButtonHighlightStyle.BackgroundColor;
+					BorderColor = UITheme.Current.ButtonHighlightStyle.BorderColor; 
+				}
 			} 
 			else
 			{
-				BackgroundColor = (BackgroundColor * 0.85f).WithOpacity(1f);
+				BackgroundColor = (UITheme.Current.ButtonStyle.BackgroundColor * 0.85f).WithOpacity(1f);
 				uIDisplayText.TextColor = Color.LightGray;
 			}
 
 			if (IsCurrent)
-				BorderColor = new Color(0,255,0);
+			{
+				BackgroundColor = UITheme.Current.ButtonHighlightStyle.BackgroundColor * 1.2f;
+				BorderColor = UITheme.Current.ButtonHighlightStyle.BorderColor;
+			}
 		}
 
 	}

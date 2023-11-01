@@ -37,8 +37,6 @@ namespace Macrocosm.Content.Rockets.UI
         /// <summary> Whether the target is currently selected </summary>
         public bool Selected;
 
-        public static bool DebugModeActive { get; set; } = false;
-
         public void ResetAnimation()
         {
             rotation = 0f;
@@ -186,7 +184,7 @@ namespace Macrocosm.Content.Rockets.UI
         {
             Rectangle rect = GetDimensions().ToRectangle();
 
-			if (DebugModeActive)
+			if (RocketUISystem.DebugModeActive)
 				spriteBatch.Draw(TextureAssets.MagicPixel.Value, rect, Color.Green.WithOpacity(0.1f));
 
 			// Should draw the outline if not fully transparent

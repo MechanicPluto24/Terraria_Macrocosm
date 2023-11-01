@@ -3,6 +3,7 @@ using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.Modules;
+using Macrocosm.Content.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -111,8 +112,8 @@ namespace Macrocosm.Content.Rockets.UI
 
             SetPadding(6f);
 
-            BackgroundColor = new Color(13, 23, 59, 127);
-            BorderColor = new Color(15, 15, 15, 255);
+            BackgroundColor = UITheme.Current.TabStyle.BackgroundColor;
+            BorderColor = UITheme.Current.TabStyle.BorderColor;
 
             rocketPreviewBackground = CreateRocketPreview();
             Append(rocketPreviewBackground);
@@ -122,8 +123,8 @@ namespace Macrocosm.Content.Rockets.UI
                 Width = new(0, 0.6f),
                 Height = new(0, 1f),
                 HAlign = 0f,
-                BackgroundColor = new Color(53, 72, 135),
-                BorderColor = new Color(89, 116, 213, 255)
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor
             };
             customizationPanelBackground.SetPadding(6f);
             Append(customizationPanelBackground);
@@ -540,7 +541,8 @@ namespace Macrocosm.Content.Rockets.UI
                     HAlign = 0f,
                     Top = new(0f, 0.04f),
                     Left = new(iconSize * i + iconLeftOffset, 0f),
-                    FocusContext = "RocketCustomizationColorPicker"
+					OverrideBackgroundColor = true,
+					FocusContext = "RocketCustomizationColorPicker"
                 };
 
                 colorPicker.OnLeftClick += (_, _) => { colorPicker.HasFocus = true; };
@@ -558,7 +560,7 @@ namespace Macrocosm.Content.Rockets.UI
                 Height = new(32f, 0f),
                 Top = new(0f, 0.04f),
                 Left = new(iconSize * indexes.Count + iconLeftOffset - 1f, 0f),
-                Color = new Color(89, 116, 213, 255) * 1.1f
+                Color = UITheme.Current.SeparatorColor
             };
             patternConfigPanel.Append(colorPickerSeparator);
 
@@ -687,8 +689,8 @@ namespace Macrocosm.Content.Rockets.UI
                 Height = new(0, 1f),
                 Left = new(0, 0.605f),
                 HAlign = 0f,
-                BackgroundColor = new Color(53, 72, 135),
-                BorderColor = new Color(89, 116, 213, 255)
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor
             };
             rocketPreviewBackground.SetPadding(2f);
             rocketPreviewBackground.OverflowHidden = true;
@@ -725,8 +727,8 @@ namespace Macrocosm.Content.Rockets.UI
                 Height = new(0, 0.25f),
                 HAlign = 0.007f,
                 Top = new(0f, 0.092f),
-                BackgroundColor = new Color(53, 72, 135),
-                BorderColor = new Color(89, 116, 213, 255),
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor,
             };
             modulePicker.SetPadding(0f);
 
@@ -745,8 +747,8 @@ namespace Macrocosm.Content.Rockets.UI
                 Height = new(0f, 0.7f),
                 HAlign = 0.5f,
                 VAlign = 0.6f,
-                BackgroundColor = new Color(53, 72, 135),
-                BorderColor = new Color(89, 116, 213, 255)
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor
             };
             modulePicker.Append(moduleIconPreviewPanel);
 
@@ -781,8 +783,8 @@ namespace Macrocosm.Content.Rockets.UI
                 Height = new(0, 0.25f),
                 HAlign = 0.98f,
                 Top = new(0f, 0.092f),
-                BackgroundColor = new Color(53, 72, 135),
-                BorderColor = new Color(89, 116, 213, 255)
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor
             };
             rocketCustomizationControlPanel.SetPadding(2f);
             customizationPanelBackground.Append(rocketCustomizationControlPanel);
@@ -810,7 +812,7 @@ namespace Macrocosm.Content.Rockets.UI
                 Height = new(32f, 0f),
                 VAlign = 0.9f,
                 Left = new(0f, 0.425f),
-                Color = new Color(89, 116, 213, 255) * 1.1f
+                Color = UITheme.Current.SeparatorColor 
             };
             rocketCustomizationControlPanel.Append(separator1);
 
@@ -828,8 +830,8 @@ namespace Macrocosm.Content.Rockets.UI
                 Height = new(32f, 0f),
                 VAlign = 0.9f,
                 Left = new(0f, 0.571f),
-                Color = new Color(89, 116, 213, 255) * 1.1f
-            };
+				Color = UITheme.Current.SeparatorColor
+			};
             rocketCustomizationControlPanel.Append(separator2);
 
             rocketCancelButton = new(ModContent.Request<Texture2D>(symbolsPath + "CrossmarkRed"))
@@ -873,8 +875,8 @@ namespace Macrocosm.Content.Rockets.UI
                 Width = new StyleDimension(0, 0.99f),
                 Height = new StyleDimension(0, 0.08f),
                 HAlign = 0.5f,
-                BackgroundColor = new Color(53, 72, 135),
-                BorderColor = new Color(89, 116, 213, 255),
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor,
             };
             nameplateConfigPanel.SetPadding(0f);
 
@@ -884,9 +886,9 @@ namespace Macrocosm.Content.Rockets.UI
                 Height = new(0f, 0.74f),
                 HAlign = 0.02f,
                 VAlign = 0.55f,
-                BackgroundColor = new Color(53, 72, 135),
-                BorderColor = new Color(89, 116, 213, 255),
-                HoverBorderColor = Color.Gold,
+                BackgroundColor = UITheme.Current.ButtonStyle.BackgroundColor,
+                BorderColor = UITheme.Current.ButtonStyle.BorderColor,
+                HoverBorderColor = UITheme.Current.ButtonHighlightStyle.BorderColor,
                 TextMaxLenght = Nameplate.MaxChars,
                 TextScale = 1f,
                 FormatText = Nameplate.FormatText,
@@ -901,6 +903,7 @@ namespace Macrocosm.Content.Rockets.UI
                 VAlign = 0.5f,
                 HAlign = 0f,
                 Left = new(0f, 0.482f),
+                OverrideBackgroundColor = true,
                 FocusContext = "RocketCustomizationColorPicker"
             };
 
@@ -1015,8 +1018,8 @@ namespace Macrocosm.Content.Rockets.UI
                 Height = new(0, 0.22f),
                 HAlign = 0.5f,
                 Top = new(0f, 0.36f),
-                BackgroundColor = new Color(53, 72, 135),
-                BorderColor = new Color(89, 116, 213, 255)
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor
             };
             detailConfigPanel.SetPadding(0f);
             return detailConfigPanel;
@@ -1030,8 +1033,8 @@ namespace Macrocosm.Content.Rockets.UI
                 Height = new(0, 0.4f),
                 HAlign = 0.5f,
                 Top = new(0f, 0.595f),
-                BackgroundColor = new Color(53, 72, 135),
-                BorderColor = new Color(89, 116, 213, 255),
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor,
             };
             patternConfigPanel.SetPadding(6f);
             patternConfigPanel.PaddingTop = 0f;

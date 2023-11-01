@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Content.UI;
+using Microsoft.Xna.Framework;
 using Terraria.GameContent.UI.Elements;
 using Terraria.Localization;
 using Terraria.UI;
@@ -34,8 +35,8 @@ namespace Macrocosm.Content.Rockets.UI
             Height.Set(0, 0.1f);
             HAlign = 0.5f;
             Top.Set(0, 0.885f);
-            BackgroundColor = new Color(53, 72, 135);
-            BorderColor = new Color(89, 116, 213, 255);
+            BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor;
+            BorderColor = UITheme.Current.PanelStyle.BorderColor;
             Recalculate();
 
             buttonText = new(LocalizedText.Empty, 0.9f, true)
@@ -113,19 +114,19 @@ namespace Macrocosm.Content.Rockets.UI
 
             if (!CanClick)
             {
-                BorderColor = new Color(89, 116, 213, 255);
-                BackgroundColor = new Color(53, 72, 135) * 0.75f;
-            }
+                BackgroundColor = UITheme.Current.ButtonStyle.BackgroundColor * 0.75f;
+                BorderColor = UITheme.Current.ButtonStyle.BorderColor;
+			}
             else if (IsMouseHovering)
             {
-                BorderColor = Color.Gold;
-                BackgroundColor = new Color(53, 72, 135) * 0.9f;
-            }
+				BackgroundColor = UITheme.Current.ButtonHighlightStyle.BackgroundColor;
+				BorderColor = UITheme.Current.ButtonHighlightStyle.BorderColor;
+			}
             else
             {
-                BorderColor = new Color(89, 116, 213, 255);
-                BackgroundColor = new Color(53, 72, 135);
-            }
+                BackgroundColor = UITheme.Current.ButtonStyle.BackgroundColor;
+				BorderColor = UITheme.Current.ButtonStyle.BorderColor;
+			}
 
             BackgroundColor.A = 255;
         }

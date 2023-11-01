@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Players;
+using Macrocosm.Content.UI;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -19,8 +20,8 @@ namespace Macrocosm.Content.Rockets.UI
         public override void OnInitialize()
         {
             base.OnInitialize();
-            BorderColor = new Color(89, 116, 213, 255);
-            BackgroundColor = new Color(53, 72, 135);
+            BorderColor = UITheme.Current.PanelStyle.BorderColor;
+            BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor;
 
             if (Main.netMode == NetmodeID.SinglePlayer)
                 Add(new UIPlayerHeadInfoElement(Main.LocalPlayer));

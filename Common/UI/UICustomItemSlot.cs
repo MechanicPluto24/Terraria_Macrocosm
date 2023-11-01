@@ -1,5 +1,6 @@
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.Storage;
+using Macrocosm.Content.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -51,37 +52,40 @@ namespace Macrocosm.Common.UI
 			Width = new StyleDimension(48f, 0f);
 			Height = new StyleDimension(48f, 0f);
 
+			// Temporary thing, until we add texture support to tha PanelStyle
+			bool terrariaDefault = UITheme.Current.Name is "Terraria";
+
 			SetAppearance
 			(
-				ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/InventorySlot"),
-				ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/InventorySlotBorder"),
-				new Color(45, 62, 115),
-				new Color(89, 116, 213, 255)
+				terrariaDefault ? TextureAssets.InventoryBack : ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/InventorySlot"),
+				terrariaDefault ? Macrocosm.EmptyTexAsset : ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/InventorySlotBorder"),
+				UITheme.Current.InventorySlotStyle.BackgroundColor,
+				UITheme.Current.InventorySlotStyle.BorderColor,
+				terrariaDefault ? 0.2f : 0.8f
 			);
 
 			SetFavoritedAppearance
 			(
-				ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/InventorySlotFavorited"),
-				new Color(89, 116, 213, 255) * 0.9f
+				terrariaDefault ? TextureAssets.InventoryBack : ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/InventorySlotFavorited"),
+				terrariaDefault ? default : UITheme.Current.PanelStyle.BorderColor * 0.9f
 			);
 		}
 
-		public void SetAppearance(Asset<Texture2D> slotTexture, Asset<Texture2D> slotBorderTexture, Color slotColor, Color slotBorderColor, float notInteractibleMultiplier = 1f) // 0.8f
+		public void SetAppearance(Asset<Texture2D> slotTexture, Asset<Texture2D> slotBorderTexture, Color slotColor, Color slotBorderColor, float notInteractibleMultiplier = 0.8f) 
 		{
 			this.slotTexture = slotTexture;
 			this.slotBorderTexture = slotBorderTexture;
 			this.slotColor = slotColor;
 			this.slotBorderColor = slotBorderColor;
 			this.notInteractibleMultiplier = notInteractibleMultiplier;
-			this.notInteractibleMultiplier = 0.8f;
 		}
 
 		public void SetFavoritedAppearance(Asset<Texture2D> slotFavoritedTexture, Color slotFavoritedColor)
 		{
+
 			this.slotFavoritedTexture = slotFavoritedTexture;
 			this.slotFavoritedColor = slotFavoritedColor;
 		}
-
 
 		public void SetGlow(float time, float hue)
 		{

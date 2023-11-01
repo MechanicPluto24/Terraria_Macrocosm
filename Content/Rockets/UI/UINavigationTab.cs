@@ -6,6 +6,7 @@ using Macrocosm.Content.Players;
 using Macrocosm.Content.Rockets.LaunchPads;
 using Macrocosm.Content.Rockets.Navigation.Checklist;
 using Macrocosm.Content.Rockets.Navigation.NavigationInfo;
+using Macrocosm.Content.UI;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,11 +39,6 @@ namespace Macrocosm.Content.Rockets.UI
 
         public UINavigationTab()
         {
-            MacrocosmConfig.Instance.OnConfigChanged += (_, _) =>
-            {
-                if (target is not null)
-                    CreateWorldInfoPanel(target.Name);
-            };
         }
 
         public override void OnInitialize()
@@ -54,8 +50,8 @@ namespace Macrocosm.Content.Rockets.UI
 
             SetPadding(3f);
 
-            BackgroundColor = new Color(13, 23, 59, 127);
-            BorderColor = new Color(15, 15, 15, 255);
+            BackgroundColor = UITheme.Current.TabStyle.BackgroundColor;
+            BorderColor = UITheme.Current.TabStyle.BorderColor;
 
             navigationPanel = new();
             Append(navigationPanel);
@@ -194,8 +190,8 @@ namespace Macrocosm.Content.Rockets.UI
                     Height = new(0, 0.62f),
                     Left = new(0, 0.01f),
                     Top = new(0, 0.365f),
-                    BackgroundColor = new Color(53, 72, 135),
-                    BorderColor = new Color(89, 116, 213, 255)
+                    BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+                    BorderColor = UITheme.Current.PanelStyle.BorderColor
                 };
                 worldInfoPanel.SetPadding(0f);
             }
@@ -244,9 +240,9 @@ namespace Macrocosm.Content.Rockets.UI
                     Width = new(0f, 0.34f),
                     HAlign = 0.5f,
                     Height = new(0, 0.505f),
-                    BorderColor = new Color(89, 116, 213, 255),
-                    BackgroundColor = new Color(53, 72, 135)
-                };
+                    BorderColor = UITheme.Current.PanelStyle.BorderColor,
+                    BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor
+				};
                 launchLocationsList.SetPadding(0f);
 
                 // Sort by vacant > current > occupied
