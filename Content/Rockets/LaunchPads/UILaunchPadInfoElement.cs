@@ -40,8 +40,8 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 		{
 			base.Update(gameTime);
 
-			BackgroundColor = UITheme.Current.ButtonStyle.BackgroundColor;
-			BorderColor = UITheme.Current.ButtonStyle.BorderColor;
+			BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor;
+			BorderColor = UITheme.Current.PanelStyle.BorderColor;
 			uIDisplayText.TextColor = UITheme.Current.CommonTextColor;
 
 			if (IsSpawnPointDefault || !LaunchPad.HasRocket)
@@ -54,7 +54,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			} 
 			else
 			{
-				BackgroundColor = (UITheme.Current.ButtonStyle.BackgroundColor * 0.85f).WithOpacity(1f);
+				BackgroundColor = (UITheme.Current.PanelStyle.BackgroundColor * 0.85f).WithOpacity(1f);
 				uIDisplayText.TextColor = Color.LightGray;
 			}
 

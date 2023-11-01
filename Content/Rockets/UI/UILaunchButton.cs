@@ -114,8 +114,8 @@ namespace Macrocosm.Content.Rockets.UI
 
             if (!CanClick)
             {
-                BackgroundColor = UITheme.Current.ButtonStyle.BackgroundColor * 0.75f;
-                BorderColor = UITheme.Current.ButtonStyle.BorderColor;
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor * 0.75f;
+                BorderColor = UITheme.Current.PanelStyle.BorderColor;
 			}
             else if (IsMouseHovering)
             {
@@ -124,8 +124,8 @@ namespace Macrocosm.Content.Rockets.UI
 			}
             else
             {
-                BackgroundColor = UITheme.Current.ButtonStyle.BackgroundColor;
-				BorderColor = UITheme.Current.ButtonStyle.BorderColor;
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor;
+				BorderColor = UITheme.Current.PanelStyle.BorderColor;
 			}
 
             BackgroundColor.A = 255;
