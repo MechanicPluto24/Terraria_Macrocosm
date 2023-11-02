@@ -12,7 +12,8 @@ namespace Macrocosm.Common.Bases
     {
         public int Width;
         public int Height;
-        public int Damage;
+
+		public int Damage;
 
         public float ScreenshakeMaxDist;
         public float ScreenshakeIntensity;
@@ -33,9 +34,12 @@ namespace Macrocosm.Common.Bases
         public int DebrisCount;
         public Vector2 DebrisVelocity;
 
-        public float BlastRadius => Width * BlastRadiusMultiplier;
+		public int OriginalWidth => Width;
+		public int OriginalHeight => Height;
 
-        public override void SetStaticDefaults()
+		public float BlastRadius => Width * BlastRadiusMultiplier;
+
+		public override void SetStaticDefaults()
         {
         }
 

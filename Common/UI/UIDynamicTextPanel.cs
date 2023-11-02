@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Common.UI.Themes;
+using Microsoft.Xna.Framework;
 using Terraria.GameContent.UI.Elements;
 using Terraria.Localization;
 using Terraria.UI;
@@ -31,8 +32,8 @@ namespace Macrocosm.Common.UI
         {
             Width.Set(0f, 1f);
             Height.Set(1f, 0f);
-            BackgroundColor = new Color(43, 56, 101);
-            BorderColor = BackgroundColor * 2f;
+            BackgroundColor = UITheme.Current.InfoElementStyle.BackgroundColor;
+			BorderColor = UITheme.Current.InfoElementStyle.BorderColor;
             PaddingLeft = 4f;
             PaddingRight = 4f;
 

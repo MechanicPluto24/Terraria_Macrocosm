@@ -244,6 +244,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		// Frames 30 - 32 : kick
 		public override void FindFrame(int frameHeight)
 		{
+			if (NPC.IsABestiaryIconDummy)
+				return;
 
 			bool threeTilesAboveGround = !Main.tile[(int)(NPC.Center.X / 16), (int)((NPC.Center.Y + NPC.height / 2) / 16)].HasTile &&
 										 !Main.tile[(int)(NPC.Center.X / 16), (int)((NPC.Center.Y + NPC.height / 2) / 16) + 1].HasTile &&

@@ -22,7 +22,7 @@ namespace Macrocosm.Common.Drawing
 
 		public static void Draw()
 		{
-			if(Main.hasFocus)
+			if(Main.hasFocus || Main.netMode == NetmodeID.MultiplayerClient)
 				UpdateFadeEffect();
 
 			DrawBlack(1f - fadeAlpha / 255f);
@@ -49,7 +49,7 @@ namespace Macrocosm.Common.Drawing
 
 		public static void DrawBlack(float opacity)
 		{
-			Main.spriteBatch.Draw(TextureAssets.BlackTile.Value, new Rectangle(0, 0, Main.screenWidth+1, Main.screenHeight+1), Color.Black * opacity);
+			Main.spriteBatch.Draw(TextureAssets.BlackTile.Value, new Rectangle(0, 0, Main.screenWidth + 1, Main.screenHeight + 1), Color.Black * opacity);
 		}
 
 		public static void ResetFade()

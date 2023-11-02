@@ -28,14 +28,7 @@ namespace Macrocosm.Content.Items.Global
 			// if extractinating desert fossils 
 			if(extractType == ItemID.DesertFossil)
 			{
-				// about 14% chance to override result with 1 silicon
-				if (Main.rand.NextBool(7))
-				{
-					resultType = ModContent.ItemType<SiliconOre>();
-					resultStack = 1;
-				}
-
-				// 4% chance to override result (including silicon) with (1-5) Oil Shales 
+				// 4% chance to override result  with (1-5) Oil Shales 
 				if (Main.rand.NextBool(25))
 				{
 					resultType = ModContent.ItemType<OilShale>();
@@ -50,7 +43,7 @@ namespace Macrocosm.Content.Items.Global
 			int aluminumBarType = ModContent.ItemType<AluminumBar>();
 			int lithiumType = ModContent.ItemType<LithiumOre>();
 			int oilShaleType = ModContent.ItemType<OilShale>();
-			int siliconType = ModContent.ItemType<SiliconOre>();
+			int siliconType = ModContent.ItemType<Silicon>();
 
 			// chances are based off vanilla loot, denominators multiplied by the number of ore/bar types already in the pool for each crate
 			// keep in mind that they are independent from vanilla loot pools i.e. you can get both gold & aluminum bars

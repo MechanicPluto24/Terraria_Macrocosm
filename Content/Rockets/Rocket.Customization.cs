@@ -13,20 +13,26 @@ using Terraria;
 namespace Macrocosm.Content.Rockets
 {
 	public partial class Rocket 
-	{
-		public Rocket Clone() => DeserializeData(SerializeData());
-	
-		public void ApplyCustomizationChanges(Rocket dummy)
+	{	
+
+		public Rocket VisualClone()
 		{
-			Nameplate.Text = dummy.Nameplate.Text;
-			Nameplate.TextColor = dummy.Nameplate.TextColor;
-			Nameplate.HorizontalAlignment = dummy.Nameplate.HorizontalAlignment;
-			Nameplate.VerticalAlignment = dummy.Nameplate.VerticalAlignment;
+			Rocket visualClone = new();
+			visualClone.ApplyCustomizationChanges(this);
+			return visualClone;
+		}
+
+		public void ApplyCustomizationChanges(Rocket source)
+		{
+			Nameplate.Text = source.Nameplate.Text;
+			Nameplate.TextColor = source.Nameplate.TextColor;
+			Nameplate.HorizontalAlignment = source.Nameplate.HorizontalAlignment;
+			Nameplate.VerticalAlignment = source.Nameplate.VerticalAlignment;
 
 			foreach(var moduleName in ModuleNames)
 			{
-				Modules[moduleName].Detail = dummy.Modules[moduleName].Detail;
-				Modules[moduleName].Pattern = dummy.Modules[moduleName].Pattern.Clone();
+				Modules[moduleName].Detail = source.Modules[moduleName].Detail;
+				Modules[moduleName].Pattern = source.Modules[moduleName].Pattern.Clone();
 			}
 		}
 

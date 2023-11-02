@@ -91,7 +91,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			if (RocketID != prevRocketId)
 				NetSync(MacrocosmSubworld.CurrentID);
 
-			isMouseOver = Hitbox.Contains(Main.MouseWorld.ToPoint()) && Hitbox.InPlayerInteractionRange();
+			isMouseOver = Hitbox.Contains(Main.MouseWorld.ToPoint()) && Hitbox.InPlayerInteractionRange(TileReachCheckSettings.Simple);
 
 			if (isMouseOver)
 			{
@@ -142,7 +142,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 		/// Syncs a rocket with data from the <see cref="BinaryReader"/>. Don't use this method outside <see cref="PacketHandler.HandlePacket(BinaryReader, int)"/>
 		/// </summary>
 		/// <param name="reader"></param>
-		public static void SyncLaunchPadData(BinaryReader reader, int clientWhoAmI)
+		public static void ReceiveSyncLaunchPadData(BinaryReader reader, int sender)
 		{
 			string subworldId = reader.ReadString();
 
@@ -155,7 +155,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
  
 			if (Main.netMode == NetmodeID.Server)
 			{
-				launchPad.NetSync(subworldId, ignoreClient: clientWhoAmI);
+				launchPad.NetSync(subworldId, ignoreClient: sender);
 
 				/*
 				ModPacket packet = Macrocosm.Instance.GetPacket();

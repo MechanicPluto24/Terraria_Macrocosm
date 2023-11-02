@@ -1,7 +1,9 @@
 using Macrocosm.Common.Bases;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
@@ -30,14 +32,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			Lighting.AddLight(Projectile.position, new Color(255, 0, 0).ToVector3() * 0.6f);
 		}
 
-		public override void OnRicochet()
+		public override void OnHitNPC(bool didRicochet, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			Projectile.damage -= 10;
 		}
 
-		public override void OnRicochetEffect()
+		public override void OnHitNPCEffect(bool didRicochet, NPC target, NPC.HitInfo hit, int damageDone)
 		{
-
+			if (didRicochet)
+				SoundEngine.PlaySound(SFX.Ricochet with { Volume = 0.3f }, Projectile.position);
 		}
 
 		public override bool PreDraw(ref Color lightColor)

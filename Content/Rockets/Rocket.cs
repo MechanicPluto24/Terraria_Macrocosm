@@ -1,31 +1,29 @@
-using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Items.Dev;
+using Macrocosm.Content.Items.CursorIcons;
 using Macrocosm.Content.Particles;
 using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.LaunchPads;
 using Macrocosm.Content.Rockets.Modules;
-using Macrocosm.Content.Subworlds;
-using Macrocosm.Content.UI.LoadingScreens;
+using Macrocosm.Content.Rockets.Storage;
+using Macrocosm.Content.Rockets.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SubworldLibrary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
-using Terraria.ModLoader;
+using Macrocosm.Content.Players;
+using Terraria.DataStructures;
 
 namespace Macrocosm.Content.Rockets
 {
-	public partial class Rocket 
+    public partial class Rocket 
 	{
 		/// <summary> The rocket's identifier </summary>
 		public int WhoAmI = -1;
@@ -66,6 +64,11 @@ namespace Macrocosm.Content.Rockets
 
 		/// <summary> The rocket's current world, "Earth" if active and not in a subworld. Other mod's subworlds have the mod name prepended </summary>
 		[NetSync] public string CurrentWorld = "";
+
+		public bool HasInventory => Inventory is not null;
+		public Inventory Inventory { get; set; }
+
+		public const int DefaultInventorySize = 50;
 
 		/// <summary> Whether the rocket is active in the current world and should be updated and visible </summary>
 		public bool ActiveInCurrentWorld => Active && CurrentWorld == MacrocosmSubworld.CurrentID;
@@ -209,6 +212,13 @@ namespace Macrocosm.Content.Rockets
 		public void OnCreation()
 		{
 			CurrentWorld = MacrocosmSubworld.CurrentID;
+			Inventory = new(DefaultInventorySize, this);
+
+			if(Main.netMode != NetmodeID.SinglePlayer)
+			{
+				NetSync();
+				Inventory.SyncEverything();
+			}
 		}
 
 		/// <summary> Called when spawning into a new world </summary>
@@ -290,6 +300,14 @@ namespace Macrocosm.Content.Rockets
 				}
 			}
 
+			if (Active && HasInventory)
+			{
+				Inventory.Size = 0;
+				Inventory.SyncSize();
+
+				Inventory = null;
+			}
+		
 			Active = false;
 			CurrentWorld = "";
 			NetSync();
@@ -313,15 +331,13 @@ namespace Macrocosm.Content.Rockets
 			{
 				module.Draw(spriteBatch, screenPos, drawColor);
 			}
-
-			//DrawDebugBounds();
-			//DrawDebugModuleHitbox();
-			//DisplayWhoAmI();
 		}
 
 		/// <summary> Draw the rocket as a dummy </summary>
 		public void DrawDummy(SpriteBatch spriteBatch, Vector2 offset, Color drawColor)
 		{
+			SetModuleRelativePositions();
+
 			// Passing Rocket world position as "screenPosition" cancels it out  
 			PreDrawBeforeTiles(spriteBatch, Position - offset, drawColor);
 			Draw(spriteBatch, Position - offset, drawColor);
@@ -349,7 +365,7 @@ namespace Macrocosm.Content.Rockets
 
 		/// <summary> Gets the RocketPlayer bound to the provided player ID </summary>
 		/// <param name="playerID"> The player ID </param>
-		public RocketPlayer GetRocketPlayer(int playerID) => Main.player[playerID].RocketPlayer();
+		public RocketPlayer GetRocketPlayer(int playerID) => Main.player[playerID].GetModPlayer<RocketPlayer>();
 
 		/// <summary> Gets the commander of this rocket </summary>
 		public RocketPlayer GetCommander()
@@ -454,7 +470,8 @@ namespace Macrocosm.Content.Rockets
 
 			return true;
 		}
-		
+
+
 		public bool CheckTileCollision()
 		{
 			foreach (RocketModule module in Modules.Values)
@@ -470,7 +487,7 @@ namespace Macrocosm.Content.Rockets
 			if (Main.netMode == NetmodeID.Server)
 				return;
 
-			if (MouseCanInteract() && Bounds.InPlayerInteractionRange() && !Launched && !GetRocketPlayer(Main.myPlayer).InRocket)
+			if (MouseCanInteract() && Bounds.InPlayerInteractionRange(TileReachCheckSettings.Simple) && !Launched && !GetRocketPlayer(Main.myPlayer).InRocket)
 			{
 				if (Main.mouseRight)
 				{
@@ -483,7 +500,7 @@ namespace Macrocosm.Content.Rockets
 					{
 						Main.LocalPlayer.noThrow = 2;
 						Main.LocalPlayer.cursorItemIconEnabled = true;
-						Main.LocalPlayer.cursorItemIconID = ModContent.ItemType<RocketPlacer>();
+						Main.LocalPlayer.cursorItemIconID = CursorIcon.GetType<Items.CursorIcons.Rocket>();
 					}
 				}
 			}
@@ -545,7 +562,9 @@ namespace Macrocosm.Content.Rockets
 				return;
 
 			if (AnyEmbarkedPlayers(out int id) && !TryFindingCommander(out _))
+			{
 				GetRocketPlayer(id).IsCommander = true;
+			}
 		}
 
 		// Handles the rocket's movement during flight

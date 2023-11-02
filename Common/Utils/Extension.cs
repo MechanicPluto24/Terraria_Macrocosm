@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.Items.Global;
+﻿using Macrocosm.Content.CameraModifiers;
+using Macrocosm.Content.Items.Global;
 using Macrocosm.Content.NPCs.Global;
 using Macrocosm.Content.Players;
 using Macrocosm.Content.Projectiles.Global;
@@ -12,51 +13,6 @@ namespace Macrocosm.Common.Utils
 {
 	public static class Extension
     {
-		public static MacrocosmProjectile Macrocosm(this Projectile projectile)
-		{
-			return projectile.GetGlobalProjectile<MacrocosmProjectile>();
-		}
-
-		public static MacrocosmPlayer Macrocosm(this Player player)
-		{
-			return player.GetModPlayer<MacrocosmPlayer>();
-		}
-
-		public static void AddScreenshake(this Player player, float value, string context)
-		{
-			player.Macrocosm().AddScreenshake(value, context);
-		}
-
-		public static DashPlayer DashPlayer(this Player player)
-		{
-			return player.GetModPlayer<DashPlayer>();
-		}
-
-		public static StaminaPlayer StaminaPlayer(this Player player)
-		{
-			return player.GetModPlayer<StaminaPlayer>();
-		}
-
-		public static RocketPlayer RocketPlayer(this Player player)
-		{
-			return player.GetModPlayer<RocketPlayer>();
-		}
-
-		public static MacrocosmNPC Macrocosm(this NPC npc)
-		{
-			return npc.GetGlobalNPC<MacrocosmNPC>();
-		}
-
-		public static GlowmaskGlobalItem Glowmask(this Item item)
-		{
-			return item.GetGlobalItem<GlowmaskGlobalItem>();
-		}
-
-		public static bool IsSloped(this Tile tile)
-		{
-			return (int)tile.BlockType > 1;
-		}
-
 		public static int[] ToIntArray(this Range range, int length = int.MaxValue)
 		{
 			int start = range.Start.GetOffset(length);

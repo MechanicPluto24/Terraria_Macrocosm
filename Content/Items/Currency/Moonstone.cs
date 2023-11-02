@@ -11,6 +11,7 @@ namespace Macrocosm.Content.Items.Currency
 	{
 		public override void SetStaticDefaults()
 		{
+			Item.ResearchUnlockCount = 100;
 		}
 
 		public override void SetDefaults()

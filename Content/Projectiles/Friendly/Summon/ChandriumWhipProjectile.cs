@@ -3,6 +3,7 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Buffs.GoodBuffs;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
+using Macrocosm.Content.Players;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -47,7 +48,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
 		public Vector2 WhipTipPosition;
 
-		private ref int HitStacks => ref Main.player[Projectile.owner].Macrocosm().ChandriumEmpowermentStacks;
+		private ref int HitStacks => ref Main.player[Projectile.owner].GetModPlayer<MacrocosmPlayer>().ChandriumWhipStacks;
 
 		// Extra AI data used for the on-hit effects 
 		private bool onHitEffect = false;
@@ -73,7 +74,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 				modifiers.FinalDamage *= 1.4f;
 
 				// clear buff on successful hit 
-				Main.player[Projectile.owner].ClearBuff(ModContent.BuffType<ChandriumEmpowerment>());
+				Main.player[Projectile.owner].ClearBuff(ModContent.BuffType<ChandriumWhipBuff>());
 
 				empoweredHit = true;
 			}
@@ -163,14 +164,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 					if (HitStacks >= 3)
 					{
 						HitStacks = 0;
-						ChandriumEmpowerment.KillParticle();
+						ChandriumWhipBuff.KillParticle();
 					}
 
 					if (HitStacks == 2)
 					{
 						sparkle = Particle.CreateParticle<ChandriumSparkle>(particle =>
 						{
-							Main.player[Projectile.owner].AddBuff(ModContent.BuffType<ChandriumEmpowerment>(), 60 * 5);
+							Main.player[Projectile.owner].AddBuff(ModContent.BuffType<ChandriumWhipBuff>(), 60 * 5);
 
 							particle.Position = WhipTipPosition;
 							particle.Owner = (byte)Projectile.owner;
@@ -179,7 +180,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 					}
 
 					if (HitStacks == 0 && HitNPC && sparkle is not null)
-						sparkle.Kill();
+					{
+						sparkle.Kill(shouldSync: true);
+					}
 				}
 			}
  		}
@@ -283,7 +286,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 			}
 
 			// Shine whip tip
-			if (Main.player[Projectile.owner].HasBuff(ModContent.BuffType<ChandriumEmpowerment>()))
+			if (Main.player[Projectile.owner].HasBuff(ModContent.BuffType<ChandriumWhipBuff>()))
 			{
 				Main.EntitySpriteDraw(TextureAssets.Extra[89].Value, Vector2.Lerp(list[^1], list[^2], 0.5f) - Main.screenPosition, null, new Color(177, 107, 219, 80), 0f + tipRotation, TextureAssets.Extra[89].Size() / 2f, tipScale, flip, 0);
 				Main.EntitySpriteDraw(TextureAssets.Extra[89].Value, Vector2.Lerp(list[^1], list[^2], 0.5f) - Main.screenPosition, null, new Color(177, 107, 219, 80), MathHelper.PiOver2 + tipRotation, TextureAssets.Extra[89].Size() / 2f, tipScale, flip, 0);

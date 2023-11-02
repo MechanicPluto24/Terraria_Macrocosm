@@ -45,7 +45,7 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 
 			DustType = ModContent.DustType<MoonBasePlatingDust>();
 
-			AddMapEntry(new Color(253, 221, 3), Language.GetText("MapObject.Candelabra"));
+			AddMapEntry(new Color(253, 221, 3), CreateMapEntryName());
 		}
 
 		public override void HitWire(int i, int j)
@@ -57,9 +57,9 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 			{
 				for (int y = topY; y < topY + 2; y++)
 				{
-					// There must be a better way to determine this lol
-					// No, I am not doing bitwise boolean algebra tho  -- Feldy
-					if (Main.tile[x, y].TileFrameX / 18 is 2 or 3 or 6 or 7 )
+					// Turn light on and off based on frame.
+					// Each style has 2 "on" and 2 "off" frames per row. 
+					if (Main.tile[x, y].TileFrameX / 18 % 4 is 2 or 3)
 						Main.tile[x, y].TileFrameX -= 36;
 					else
 						Main.tile[x, y].TileFrameX += 36;
@@ -74,13 +74,13 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 			}
 
 			if (Main.netMode != NetmodeID.SinglePlayer)
-			NetMessage.SendTileSquare(-1, leftX, topY + 1, 2);
+				NetMessage.SendTileSquare(-1, leftX, topY + 1, 2);
  		}
 
 		public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
 		{
 			Tile tile = Main.tile[i, j];
-			if (tile.TileFrameX == 0)
+			if (tile.TileFrameX / 18 % 4 is 0)
 			{
 				r = 1f;
 				g = 1f;

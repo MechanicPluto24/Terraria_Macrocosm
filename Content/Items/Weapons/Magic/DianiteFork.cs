@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 	{
 		public override void SetStaticDefaults()
 		{
-			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
+			
 			Item.staff[Type] = true;
 		}
 
@@ -34,7 +34,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 			Item.rare = ModContent.RarityType<MoonRarityT1>();
 			Item.UseSound = SoundID.Item20;
 			Item.autoReuse = true;
-			Item.shoot = ModContent.ProjectileType<DianiteForkCoreProjectile>();
+			Item.shoot = ModContent.ProjectileType<DianiteForkProjectile>();
 			Item.shootSpeed = 10f;
 			Item.tileBoost = 50;
 		}
@@ -53,7 +53,15 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 
 		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockBack)
 		{
-			return true;
+			int projCount = 2;
+
+			for (int i = 0; i < projCount; i++)
+			{
+				float angle = 360f / projCount * i;
+				Projectile.NewProjectileDirect(source, position, velocity, ModContent.ProjectileType<DianiteForkProjectile>(), damage, knockBack, player.whoAmI, ai1: angle);
+			}
+
+			return false;
 		}
 
 		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)

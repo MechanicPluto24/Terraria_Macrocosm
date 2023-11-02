@@ -17,7 +17,7 @@ namespace Macrocosm.Content.Items.Accessories.CelestialBulwark
 	{
 		public override void SetStaticDefaults()
 		{
-			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
+			
 		}
 		public override void SetDefaults()
 		{
@@ -40,7 +40,7 @@ namespace Macrocosm.Content.Items.Accessories.CelestialBulwark
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
-			DashPlayer dashPlayer = player.DashPlayer();
+			DashPlayer dashPlayer = player.GetModPlayer<DashPlayer>();
 			dashPlayer.AccDashHorizontal = true;
 			dashPlayer.AccDashVelocity = 14f;
 			dashPlayer.AccDashDamage = Item.damage;

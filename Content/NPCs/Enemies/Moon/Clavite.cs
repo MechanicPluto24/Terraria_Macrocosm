@@ -115,19 +115,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             }
         }
 
-		/*public override void AI()
-		{
-			Player player = Main.player[NPC.target];
-			if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active)
-			{
-				NPC.TargetClosest(true);
-			}
-
-			NPC.Move(player.Center, Vector2.Zero);
-			bool playerActive = player != null && player.active && !player.dead;
-			Utility.LookAt(playerActive ? player.Center : NPC.Center + NPC.velocity, NPC, 0);
-		}*/
-
 		public override void FindFrame(int frameHeight)
 		{
 			if (State == AIState.Dash)
@@ -152,14 +139,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			}
 		}
 
-		public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
-		{
-			//if (player.Macrocosm().AccMoonArmor)
-			//{
-			//	// Now only suit breaches players with said suit 
-			//	player.AddBuff(ModContent.BuffType<SuitBreach>(), 600, true);
-			//}
-		}
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
 		{
 			return spawnInfo.Player.InModBiome<MoonBiome>() && Main.dayTime && spawnInfo.SpawnTileY <= Main.worldSurface + 100 ? .1f : 0f;
@@ -167,11 +146,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		public override void ModifyNPCLoot(NPCLoot loot)
 		{
-			loot.Add(ItemDropRule.Common(ModContent.ItemType<SpaceDust>()));             // Always drop 1 cosmic dust
-			loot.Add(ItemDropRule.Common(ModContent.ItemType<ArtemiteOre>(), 16, 1, 6));  // 1/16 chance to drop 1-6 Artemite Ore
-			loot.Add(ItemDropRule.Common(ModContent.ItemType<ChandriumOre>(), 16, 1, 6)); // 1/16 chance to drop 1-6 Chandrium Ore
-			loot.Add(ItemDropRule.Common(ModContent.ItemType<SeleniteOre>(), 16, 1, 6));  // 1/16 chance to drop 1-6 Selenite Ore
-			loot.Add(ItemDropRule.Common(ModContent.ItemType<DianiteOre>(), 16, 1, 6));   // 1/16 chance to drop 1-6 DianiteOre Ore
+			loot.Add(ItemDropRule.Common(ModContent.ItemType<SpaceDust>())); 
 		}
 
 		public override void HitEffect(NPC.HitInfo hit)
@@ -203,7 +178,10 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            SpriteBatchState state = spriteBatch.SaveState();
+			if (NPC.IsABestiaryIconDummy)
+				NPC.rotation = MathHelper.Pi;
+
+			SpriteBatchState state = spriteBatch.SaveState();
             spriteBatch.End();
             spriteBatch.Begin(BlendState.Additive, state);
 

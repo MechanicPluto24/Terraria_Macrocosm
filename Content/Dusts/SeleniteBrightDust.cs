@@ -15,7 +15,7 @@ namespace Macrocosm.Content.Dusts
 			if (!dust.noGravity)
 				dust.velocity.Y += 0.9f;
 			else
-				dust.velocity *= 0.84f;
+				dust.velocity *= 0.92f;
 
 			dust.scale -= 0.05f;
 
@@ -27,7 +27,7 @@ namespace Macrocosm.Content.Dusts
 			return false;
 		}
 
-		public override bool MidUpdate(Dust dust) => false;
+		public override bool MidUpdate(Dust dust) => true;
 
 		public override Color? GetAlpha(Dust dust, Color lightColor)
 			=> Color.White.WithAlpha(127);

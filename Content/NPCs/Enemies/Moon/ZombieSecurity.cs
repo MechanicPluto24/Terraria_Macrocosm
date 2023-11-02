@@ -48,11 +48,11 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		private readonly Range walkFrames = 21..30;
 		private const int fallingFrame = 31;
 
-		private static int maxCooldown = 240;
-		private static int maxShootSequence = 84;
-		private static int sequenceShoot = 72;
-		private static int visualShoot = 64;
-		private static int visualGunDrawEnd = 24;
+		private const int maxCooldown = 240;
+		private const int maxShootSequence = 84;
+		private const int sequenceShoot = 72;
+		private const int visualShoot = 64;
+		private const int visualGunDrawEnd = 24;
 		#endregion
 
 		public override void SetStaticDefaults()
@@ -147,10 +147,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 				ShootCooldown = maxCooldown / 4;
 				ShootSequence = 0;
 				ShotsCounter = 1;
-
-				if (AI_State == ActionState.Shoot)
-					NPC.frame.Y = NPC.GetFrameHeight() * shootFramesCommon.Start.Value;
-
 				AI_State = ActionState.Walk;
 			}
  
@@ -256,7 +252,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			// Set the aim angle 
 			SetAimMode(aimVelocity);
 
-			// Shoot (TODO: align projectile and particle by angle)
 			if (Main.netMode != NetmodeID.MultiplayerClient && ShootSequence == sequenceShoot)
 			{
 				Vector2 particleAim = aimVelocity;
@@ -268,7 +263,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 				Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), aimPosition, aimVelocity, projType, projDamage, 0f, Main.myPlayer);
 				Particle.CreateParticle<GunFireRing>(NPC.Center + particleAim * 0.24f, aimVelocity * 0.05f, 1f, aimVelocity.ToRotation(), true);
 			}
-
 		}
 
 		private Vector2 GetAimPosition(float projSpeed)
@@ -316,6 +310,12 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		// Animation. 
 		public override void FindFrame(int frameHeight)
 		{
+			if (NPC.justHit && AI_State == ActionState.Shoot)
+			{
+				NPC.frame.Y = frameHeight * shootFramesCommon.Start.Value;
+				return;
+			}
+
 			int frameIndex = NPC.frame.Y / frameHeight;
 
 			// If not airborne
@@ -405,11 +405,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 				}
 			}
 
-			// Don't spawn gores on dedicated server
-			if (Main.dedServ)
- 				return; 
- 
-			if (NPC.life <= 0)
+			if (!Main.dedServ && NPC.life <= 0)
 			{
 				var entitySource = NPC.GetSource_Death();
 

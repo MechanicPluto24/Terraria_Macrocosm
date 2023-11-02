@@ -10,7 +10,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Common.UI
 {
-	public class UIHoverImageButton : UIElement
+	public class UIHoverImageButton : UIElement, IFocusable
 	{
 		/// <summary> Tooltip text, shown on hover </summary>
 		public LocalizedText HoverText { get; set; }
@@ -20,6 +20,14 @@ namespace Macrocosm.Common.UI
 
 		/// <summary> Whether to display hover text even if the button is not interactible </summary>
 		public bool HoverTextOnButonNotInteractible { get; set; } = false;
+
+		public bool DrawBorderIfInFocus { get; set; } = true;
+
+		public bool HasFocus { get; set; }
+		public string FocusContext { get; set; }
+
+		public Action OnFocusGain { get; set; } = () => { };
+		public Action OnFocusLost { get; set; } = () => { };
 
 
 		protected Asset<Texture2D> texture;
@@ -92,8 +100,14 @@ namespace Macrocosm.Common.UI
 			float visibility = CheckInteractible() ? (IsMouseHovering ? visibilityHover : visibilityInteractible ) : visibilityNotInteractible;
 			spriteBatch.Draw(texture.Value, dimensions.Position(), Color.White * visibility);
 			
-			if (borderTexture != null && (IsMouseHovering && CheckInteractible()) || remoteInteractionFeedbackTicks > 0)
+			if (borderTexture != null && (IsMouseHovering && CheckInteractible()) || remoteInteractionFeedbackTicks > 0 || HasFocus && DrawBorderIfInFocus)
  				spriteBatch.Draw(borderTexture.Value, dimensions.Position(), Color.White);
+		}
+
+		public override void LeftClick(UIMouseEvent evt)
+		{
+			if(CheckInteractible())
+				base.LeftClick(evt);
 		}
 
 		public override void MouseOver(UIMouseEvent evt)
@@ -102,11 +116,6 @@ namespace Macrocosm.Common.UI
 
 			if(CheckInteractible())
 				SoundEngine.PlaySound(SoundID.MenuTick);
-		}
-
-		public override void MouseOut(UIMouseEvent evt)
-		{
-			base.MouseOut(evt);
 		}
 	}
 }

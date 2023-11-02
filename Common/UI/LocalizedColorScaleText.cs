@@ -9,7 +9,7 @@ using Terraria.UI.Chat;
 
 namespace Macrocosm.Common.UI
 {
-	/// <summary> Contains data about drawn text, including its LocalizedText reference and appearance data </summary>
+	/// <summary> Contains data about drawn text, including its LocalizedText reference and appearance </summary>
 	public class LocalizedColorScaleText
 	{
 		public LocalizedText LocalizedText;

@@ -1,16 +1,17 @@
-﻿using log4net.Util;
-using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Drawing.Particles;
+﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Linq;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.GameContent.Drawing;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using Terraria.UI.Chat;
 
 namespace Macrocosm.Content.Rockets
 {
@@ -26,7 +27,9 @@ namespace Macrocosm.Content.Rockets
     {
         public static Rocket[] Rockets { get; private set; }
 
-		public const int MaxRockets = byte.MaxValue;
+		public const int MaxRockets = 256;
+
+		public static bool DebugModeActive = false;
 
 		public override void Load()
         {
@@ -49,7 +52,7 @@ namespace Macrocosm.Content.Rockets
 		}
 
 		public static int ActiveRocketCount => Rockets.Count(rocket => rocket.Active);
-		public static int RocketInCurrentSubworldCount => Rockets.Count(rocket => rocket.ActiveInCurrentWorld);
+		public static int InCurrentSubworldRocketCount => Rockets.Count(rocket => rocket.ActiveInCurrentWorld);
 
 		public static void AddRocket(Rocket rocket)
 		{
@@ -124,7 +127,14 @@ namespace Macrocosm.Content.Rockets
 
                 Color lightColor = Lighting.GetColor((int)(rocket.Center.X / 16), (int)(rocket.Center.Y / 16));
                 rocket.Draw(Main.spriteBatch, Main.screenPosition, lightColor);
-            }
+
+				if (DebugModeActive)
+				{
+					//rocket.DrawDebugBounds();
+					rocket.DrawDebugModuleHitbox();
+					rocket.DisplayWhoAmI();
+				}
+			}
         }
 
         private static void DrawRocketOverlays()
@@ -138,6 +148,13 @@ namespace Macrocosm.Content.Rockets
 
 				rocket.DrawOverlay(Main.spriteBatch, Main.screenPosition);
 			}
+
+			if (DebugModeActive)
+			{
+				string text = $"Rockets active: {Rockets.Where(r => r.Active).Count()}\nHere: {Rockets.Where(r => r.ActiveInCurrentWorld).Count()}";
+				ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, FontAssets.DeathText.Value, text, new Vector2(Main.screenWidth * 0.5f, 40f), Color.White, 0f, Vector2.Zero, Vector2.One * 0.5f);
+			}
+
 		}
 
 		public override void ClearWorld()
@@ -152,8 +169,12 @@ namespace Macrocosm.Content.Rockets
 			{
 				for (int i = 0; i < MaxRockets; i++)
 				{
-					Rockets[i].NetSync(toClient: remoteClient);
-					Rockets[i].SendCustomizationData(toClient: remoteClient);
+					var rocket = Rockets[i];
+					rocket.NetSync(toClient: remoteClient);
+					rocket.SendCustomizationData(toClient: remoteClient);
+
+					if (rocket.HasInventory)
+						rocket.Inventory.SyncEverything(toClient: remoteClient);
 				}
 			}
 
@@ -171,7 +192,11 @@ namespace Macrocosm.Content.Rockets
         public static void LoadData(TagCompound dataCopyTag) 
         {
 			if (dataCopyTag.ContainsKey(nameof(Rockets)))
-				Rockets = dataCopyTag.Get<Rocket[]>(nameof(Rockets));
+			{
+				// This is for future-proofing regarding array size
+				var rockets = dataCopyTag.Get<Rocket[]>(nameof(Rockets));
+				Array.Copy(rockets, Rockets, rockets.Length);
+			}
 
             OnWorldSpawn();
 		}
