@@ -26,8 +26,8 @@ MacrocosmConfig: {
 	}
 
 	SelectedUITheme: {
-		Label: Selected U I Theme
-		Tooltip: ""
+		Label: UI Theme
+		Tooltip: The display UI theme
 	}
 }
 

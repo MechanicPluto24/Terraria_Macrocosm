@@ -30,6 +30,8 @@ Rocket: {
 		Customization: Customization
 	}
 
+	Inventory.OpenInventory: Open Inventory
+
 	Customization: {
 		Apply: Apply rocket appearance changes
 		Cancel: Discard rocket appearance changes
@@ -140,7 +142,7 @@ Rocket: {
 		BloodMoon: {
 			NotMet: {
 				Display: Blood Moon ongoing
-				Hover: The vacuum of space is not a safe when there's a Blood Moon
+				Hover: The vacuum of space is not safe when there's a Blood Moon
 			}
 		}
 

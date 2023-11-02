@@ -28,7 +28,7 @@ namespace Macrocosm.Common.UI
 
 		public UIPanelIconButton() : this(Macrocosm.EmptyTexAsset) { }
 
-		public UIPanelIconButton(Asset<Texture2D> texture) : 
+		public UIPanelIconButton(Asset<Texture2D> texture) :
 			this(texture,
 				 ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/SmallPanel", AssetRequestMode.ImmediateLoad),
 				 ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/SmallPanelBorder", AssetRequestMode.ImmediateLoad),
@@ -49,6 +49,16 @@ namespace Macrocosm.Common.UI
 			Height.Set(backPanelTexture.Height(), 0f);
 		}
 
+		public void SetIcon(Asset<Texture2D> texture) 
+		{
+			var width = Width;
+			var height = Height;
+			SetImage(texture);
+			Width = width; 
+			Height = height;
+		}
+
+
 		SpriteBatchState state;
 		protected override void DrawSelf(SpriteBatch spriteBatch)
 		{
@@ -61,7 +71,7 @@ namespace Macrocosm.Common.UI
 			Color backPanelColor;
 
 			if (!interactible)
-				backPanelColor = BackPanelColor.WithSaturation(0.5f);
+				backPanelColor = BackPanelColor.WithSaturation(0.25f);
 			else if ((HasFocus || IsMouseHovering) && !OverrideBackgroundColor)
 				backPanelColor = FocusedBackPanelColor;
 			else

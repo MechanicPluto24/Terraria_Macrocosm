@@ -161,6 +161,14 @@ namespace Macrocosm.Content.Rockets.UI
 				cacheSize = InventorySize;
 				this.ReplaceChildWith(inventoryPanel, inventoryPanel = CreateInventoryPanel());
 			}
+
+			if(Rocket is not null && Rocket.HasInventory && Main.netMode == NetmodeID.MultiplayerClient)
+			{
+				if (Rocket.Inventory.CanInteract)
+					requestAccessButton.SetIcon(ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Inventory/InventoryOpen"));
+				else
+					requestAccessButton.SetIcon(ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Inventory/InventoryClosed"));
+			}
 		}
 
         private UIPanel CreateInventoryPanel()
@@ -285,26 +293,35 @@ namespace Macrocosm.Content.Rockets.UI
 				if (Main.netMode == NetmodeID.MultiplayerClient)
 				{
 					requestAccessButton = new
-                        (
-                            Macrocosm.EmptyTexAsset,
-							ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/WidePanel", AssetRequestMode.ImmediateLoad),
-							ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/WidePanelBorder", AssetRequestMode.ImmediateLoad),
-							ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/WidePanelHoverBorder", AssetRequestMode.ImmediateLoad)
-						)
+                    (
+						ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Inventory/SortContainer", AssetRequestMode.ImmediateLoad),
+						ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanel", AssetRequestMode.ImmediateLoad),
+						ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanelBorder", AssetRequestMode.ImmediateLoad),
+						ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanelHoverBorder", AssetRequestMode.ImmediateLoad)
+					)
 					{
 						Top = new(0, 0.85f),
-						Left = new(0, 0.15f),
+						Left = new(0, 0.195f),
 						BackPanelColor = new Color(45, 62, 115),
+						HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Inventory.OpenInventory")
 					};
 					requestAccessButton.OnLeftClick += (_, _) => Rocket.Inventory.InteractingPlayer = Main.myPlayer;
 					requestAccessButton.CheckInteractible = () => Rocket.Inventory.InteractingPlayer != Main.myPlayer;
 					inventoryPanel.Append(requestAccessButton);
 
-					lootAllButton.Left.Percent = 0.34f;
-					depositAllButton.Left.Percent = 0.44f;
-					quickStackButton.Left.Percent = 0.54f;
-					restockInventoryButton.Left.Percent = 0.64f;
-					sortInventoryButton.Left.Percent = 0.74f;
+					inventoryPanel.Append(new UIVerticalSeparator()
+					{
+						Top = new(0, 0.85f),
+						Left = new(0, 0.2981f),
+						Height = new(0, 0.13f),
+						Color = UITheme.Current.SeparatorColor,
+					});
+
+					lootAllButton.Left.Percent = 0.32f;
+					depositAllButton.Left.Percent = 0.42f;
+					quickStackButton.Left.Percent = 0.52f;
+					restockInventoryButton.Left.Percent = 0.62f;
+					sortInventoryButton.Left.Percent = 0.72f;
 				}
 			}
 
