@@ -6,7 +6,7 @@ using Terraria.Utilities;
 
 namespace Macrocosm.Common.Utils
 {
-	public partial class Utility
+	public static partial class Utility
 	{
 		/// <summary> Generates a random rotation value within the range of -pi to pi. </summary>
 		/// <returns> A random rotation value in radians. </returns>

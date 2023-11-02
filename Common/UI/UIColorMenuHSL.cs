@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.UI.Themes;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -54,8 +55,8 @@ namespace Macrocosm.Common.UI
 			
 			Width = new(0f, 0.62f);
 			Height = new(0, 0.25f);
-			BackgroundColor = new Color(53, 72, 135);
-			BorderColor = new Color(89, 116, 213, 255);
+			BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor;
+			BorderColor = UITheme.Current.PanelStyle.BorderColor;
  
 			SetPadding(6f);
 
@@ -73,8 +74,8 @@ namespace Macrocosm.Common.UI
 				Width = new(0f, 0.36f),
 				Height = new(0f, 0.22f),
 				Left = new(0f, 0.03f),
-				BackgroundColor = new Color(53, 72, 135),
-				BorderColor = new Color(89, 116, 213, 255)
+				BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+				BorderColor = UITheme.Current.PanelStyle.BorderColor
 			};
 			hslTextPanel.SetPadding(2f);
 
@@ -125,7 +126,7 @@ namespace Macrocosm.Common.UI
 			pasteButton.Left = new(0f, 0.51f);
 			randomizeButton.Left = new(0f, 0.632f);
 
-			applyButton = new(ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Symbols/CheckmarkWhite"))
+			applyButton = new(ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Symbols/CheckmarkWhite"))
 			{
 				VAlign = 0.93f,
 				Left = new(0f, 0.88f),
@@ -136,7 +137,7 @@ namespace Macrocosm.Common.UI
 			this.onApplyButtonClicked = onApplyButtonClicked;
 			Append(applyButton);
 
-			cancelButton = new(ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Symbols/CrossmarkWhite"))
+			cancelButton = new(ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Symbols/CrossmarkWhite"))
 			{
 				VAlign = 0.93f,
 				Left = new(0f, 0.76f),

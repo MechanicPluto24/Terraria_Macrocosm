@@ -28,6 +28,7 @@ namespace Macrocosm.Content.Tiles.Ambient
 			TileObjectData.newTile.CopyFrom(TileObjectData.Style3x2);
 
 			TileObjectData.newTile.StyleHorizontal = true;
+			TileObjectData.newTile.DrawYOffset = 2;
 			TileObjectData.addTile(Type);
 
 			TileID.Sets.DisableSmartCursor[Type] = true;

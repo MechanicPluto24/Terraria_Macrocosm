@@ -44,7 +44,7 @@ namespace Macrocosm.Content.Rockets.Modules
 		/// <summary> The module's draw origin </summary>
 		protected virtual Vector2 Origin => new(0, 0);
 
-		public virtual string TexturePath => Utility.GetPath(this);
+		public virtual string TexturePath => Utility.GetNamespacePath(this);
 		public Texture2D Texture => ModContent.Request<Texture2D>(TexturePath, AssetRequestMode.ImmediateLoad).Value;
 
 		protected Rocket rocket;

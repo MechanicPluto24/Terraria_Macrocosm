@@ -12,6 +12,7 @@ namespace Macrocosm.Content.Buffs.Debuffs
 			Main.buffNoTimeDisplay[Type] = false;
 			Main.pvpBuff[Type] = true;
 		}
+
 		public override void Update(Player player, ref int buffIndex)
 		{
 			player.lifeRegen -= (int)(0.05f * player.statLifeMax2);

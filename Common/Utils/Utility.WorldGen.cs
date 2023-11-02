@@ -3,10 +3,12 @@ using Microsoft.Xna.Framework;
 using MonoMod.Logs;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ObjectData;
+using Terraria.WorldBuilding;
 
 namespace Macrocosm.Common.Utils
 {
@@ -107,7 +109,7 @@ namespace Macrocosm.Common.Utils
 		/// <param name="blobSize"></param>
 		/// <param name="density"></param>
 		/// <param name="smoothing"></param>
-        public static void BlobTileRunner(int i, int j, int tileType, Range repeatCount, Range sprayRadius, Range blobSize, float density = 0.5f, int smoothing = 4)
+		public static void BlobTileRunner(int i, int j, int tileType, Range repeatCount, Range sprayRadius, Range blobSize, float density = 0.5f, int smoothing = 4, Func<int, int, bool> perTileCheck = null)
         {
             int sprayRandom = WorldGen.genRand.Next(repeatCount);
 
@@ -134,19 +136,22 @@ namespace Macrocosm.Common.Utils
                             return;
                         }
 
-						if (Main.tile[i, j].HasTile && !replacedTypes.ContainsKey((i, j)))
+						if (perTileCheck is null || perTileCheck(i, j))
 						{
-                            replacedTypes.Add((i, j), Main.tile[i, j].TileType);
-                        }
+							if (Main.tile[i, j].HasTile && !replacedTypes.ContainsKey((i, j)))
+							{
+								replacedTypes.Add((i, j), Main.tile[i, j].TileType);
+							}
 
-						if (tileType < 0)
-						{
-							FastRemoveTile(i, j);
+							if (tileType < 0)
+							{
+								FastRemoveTile(i, j);
+							}
+							else
+							{
+								FastPlaceTile(i, j, (ushort)tileType);
+							}
 						}
-						else
-						{
-                            FastPlaceTile(i, j, (ushort)tileType);
-                        }
                     }
                 );
 
@@ -336,7 +341,7 @@ namespace Macrocosm.Common.Utils
 		/// <param name="predicate"></param>
 		/// <param name="maxCount"></param>
 		/// <returns>true if maxCount is lower than the count of coordinates</returns>
-        public static bool ConnectedTiles(int i, int j, Func<Tile, bool> predicate, out List<(int, int)> coordinates, int maxCount = 255)
+		public static bool ConnectedTiles(int i, int j, Func<Tile, bool> predicate, out List<(int, int)> coordinates, int maxCount = 255)
         {
             coordinates = new() { (i, j) };
             ConnectedTilesRecursive(i, j, predicate, coordinates, maxCount);
@@ -371,14 +376,19 @@ namespace Macrocosm.Common.Utils
             return coordinates.Count;
         }
 
-        public static bool CheckTile6WayBelow(int tileX, int tileY)
-            => Main.tile[tileX, tileY].HasTile &&  // Current tile is active
-               Main.tile[tileX - 1, tileY].HasTile &&  // Left tile is active
-               Main.tile[tileX + 1, tileY].HasTile &&  // Right tile is active
-               Main.tile[tileX, tileY + 1].HasTile &&  // Bottom tile is active
-               Main.tile[tileX - 1, tileY + 1].HasTile &&  // Bottom-left tile is active
-               Main.tile[tileX + 1, tileY + 1].HasTile &&  // Bottom-right tile is active						 
-               Main.tile[tileX, tileY - 2].HasTile; // Top tile is active (will help to make the walls slightly lower than the terrain)
+		public static bool TileInOuterThird(int tileX)
+			=> Math.Abs(tileX - Main.spawnTileX) > Main.maxTilesX / 3;
+
+		public static bool TileInInnerThird(int tileX)
+			=> Math.Abs(tileX - Main.spawnTileX) > Main.maxTilesX / 3;
+
+		public static bool TileAtOceanPosition(int tileX, int tileY)
+			=> WorldGen.oceanDepths(tileX, tileY);
+
+		public static bool TileInDesertHive(int tileX, int tileY)
+			=> tileX >= GenVars.desertHiveLeft && tileX <= GenVars.desertHiveRight &&
+			   tileY >= GenVars.desertHiveHigh && tileY <= GenVars.desertHiveLow;
+
 
 		#region BaseMod BaseWorldGen
 

@@ -3,8 +3,6 @@ using Macrocosm.Content.Tiles.Ambient;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Terraria.ID;
 using Terraria.WorldBuilding;
@@ -17,7 +15,8 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Tiles.Ores;
 using System.Diagnostics;
 using Terraria.Localization;
-using Terraria.ModLoader;
+using Macrocosm.Common.WorldGeneration;
+using Macrocosm.Common.Subworlds;
 
 namespace Macrocosm.Content.Subworlds
 {
@@ -43,8 +42,8 @@ namespace Macrocosm.Content.Subworlds
             Main.worldSurface = GroundY + SurfaceHeightFrequency * 2;
             Main.rockLayer = GroundY + RegolithLayerHeight;
 
-            PerlinNoise2D noise = new(WorldGen.genRand.Next());
-            StartYOffset = Main.rand.NextFloat() * 2.3f;
+            PerlinNoise2D noise = new(MacrocosmWorld.Seed);
+            StartYOffset = WorldGen.genRand.NextFloat() * 2.3f;
 
             for (int i = 0; i < Main.maxTilesX; i++)
             {
@@ -55,7 +54,7 @@ namespace Macrocosm.Content.Subworlds
                     if (
                         WorldGen.genRand.NextFloat() < 1f - 0.01f * (
                             hallownest.Start.Value + (hallownest.End.Value - hallownest.Start.Value) * MathF.Sin((float)(j - startJ) / (Main.maxTilesY - startJ) * MathHelper.Pi))
-                        || noise.GetValue(i * 0.05f, j * 0.05f) > 0f
+                        || noise.GetValue(i * 0.048f, j * 0.048f) > 0f
                         )
                     {
                         FastPlaceTile(i, j, protolithType);
@@ -196,8 +195,8 @@ namespace Macrocosm.Content.Subworlds
 
                         if (WorldGen.genRand.NextFloat() < 0.1f)
                         {
-                            Vector2 randomDirection = Main.rand.NextVector2Unit();
-                            float offset = 17f * Main.rand.NextFloat(0.7f, 1f);
+                            Vector2 randomDirection = WorldGen.genRand.NextVector2Unit();
+                            float offset = 17f * WorldGen.genRand.NextFloat(0.7f, 1f);
                             ForEachInCircle(
                                 iPos + (int)(randomDirection.X * offset),
                                 jPos + (int)(randomDirection.Y * offset),
@@ -219,7 +218,9 @@ namespace Macrocosm.Content.Subworlds
         [Task]
         private void SmoothTask(GenerationProgress progress)
         {
-            progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.SmoothPass");
+			Stopwatch stopwatch = Stopwatch.StartNew();
+
+			progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.SmoothPass");
 
             ushort protolithType = (ushort)TileType<Protolith>();
             int repeats = 5;
@@ -272,8 +273,12 @@ namespace Macrocosm.Content.Subworlds
                 }
             );
 
-            Stopwatch stopwatch = new();
-            stopwatch.Start();
+            stopwatch.Stop();
+			Macrocosm.Instance.Logger.Info($"Smoothing time: {stopwatch.Elapsed}");
+
+			stopwatch.Start();
+
+            /*
             ForEachInRectangle(
                 0,
                 GroundY + RegolithLayerHeight,
@@ -293,6 +298,7 @@ namespace Macrocosm.Content.Subworlds
                 2,
                 2
             );
+            */
 
             ForEachInRectangle(
                 0,
@@ -315,7 +321,7 @@ namespace Macrocosm.Content.Subworlds
             );
 
             stopwatch.Stop();
-            Macrocosm.Instance.Logger.Info($"time: {stopwatch.Elapsed}");
+            Macrocosm.Instance.Logger.Info($"Smoothing cleanup time: {stopwatch.Elapsed}");
         }
 
         [Task]
@@ -404,7 +410,7 @@ namespace Macrocosm.Content.Subworlds
             }
         }
 
-        /*[GenPass(nameof(WallPass), InsertMode.After)]
+        //[Task]
         private void IrradiationPass(GenerationProgress progress)
         {
             progress.Message = "Piss";
@@ -474,7 +480,7 @@ namespace Macrocosm.Content.Subworlds
                     }
                 );
             }
-        }*/
+        }
 
         [Task]
         private void OreTask(GenerationProgress progress)
@@ -517,7 +523,7 @@ namespace Macrocosm.Content.Subworlds
 
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.OrePass");
 
-            int protolithType = TileType<Tiles.Blocks.Protolith>();
+            int protolithType = TileType<Protolith>();
             GenerateOre(TileType<ArtemiteOre>(), 0.0001, WorldGen.genRand.Next(5, 9), WorldGen.genRand.Next(5, 9), protolithType);
             GenerateOre(TileType<ChandriumOre>(), 0.0001, WorldGen.genRand.Next(5, 9), WorldGen.genRand.Next(5, 9), protolithType);
             GenerateOre(TileType<DianiteOre>(), 0.0001, WorldGen.genRand.Next(5, 9), WorldGen.genRand.Next(5, 9), protolithType);
@@ -557,7 +563,7 @@ namespace Macrocosm.Content.Subworlds
                 progress.Set((float)i / Main.maxTilesX);
                 for (int j = (int)Main.rockLayer; j < Main.maxTilesY; j++)
                 {
-                    if (Main.tile[i, j].TileType == protolithType && Main.rand.NextFloat() < chestSpawnChance)
+                    if (Main.tile[i, j].TileType == protolithType && WorldGen.genRand.NextFloat() < chestSpawnChance)
                     {
                         TryPlaceChest(i, j - 1);
                     }
@@ -565,7 +571,101 @@ namespace Macrocosm.Content.Subworlds
             }
         }*/
 
-        [Task]
+       // [Task]
+		private void OutpostsTask(GenerationProgress progress)
+		{
+			progress.Message = Language.GetTextValue("Rooms");
+
+            int retryCount = 0;
+            int failCount = 0;
+            const int maxRetry = 50;
+
+            int maxSteps = (int)(500 * WorldSize.Current.GetSizeRatio(WorldSize.Small));
+
+			for (int step = 0; step < maxSteps;)
+            {
+                progress.Set(step / (double)maxSteps);
+
+				int structurePadding = 10;
+				int tileX = WorldGen.genRand.Next(structurePadding, Main.maxTilesX - structurePadding);
+                int tileY = WorldGen.genRand.Next((int)Main.worldSurface, Main.maxTilesY - structurePadding);
+
+                Rectangle area = new(tileX, tileY, WorldGen.genRand.Next(15, 26), WorldGen.genRand.Next(14, 20));
+                Point origin = new(tileX, tileY);
+
+
+                bool canPlace = StructureMap.CanPlace(area, structurePadding) &&
+                    WorldUtils.Find(new(origin.X, origin.Y + area.Height), Searches.Chain(
+                        new Searches.Up(10), 
+                        new Conditions.IsSolid().AreaAnd(area.Width/2, 1).Not(),
+						new Conditions.IsTile((ushort)TileType<Protolith>()).AreaOr(area.Width, area.Height)),
+						out _
+                    );
+
+				if (!canPlace && retryCount < maxRetry)
+                {
+                    retryCount++;
+					continue; 
+                }
+
+                if (retryCount >= maxRetry)
+                    failCount++;
+
+                retryCount = 0;
+
+				int wallThickness = 1;
+				Point hollowPos = new(tileX + wallThickness, tileY + wallThickness);
+				var hollow = new Shapes.Rectangle(area.Width - wallThickness * 2, area.Height - wallThickness * 2);
+
+				bool isRuined = !WorldGen.genRand.NextBool(4);
+
+                if (isRuined)
+                {
+					WorldUtils.Gen(origin, new Shapes.Rectangle(area.Width, area.Height),
+					Actions.Chain(
+						new Modifiers.IsSolid(),
+						new Actions.SetTileKeepWall((ushort)TileType<RegolithBrick>()),
+						new Actions.Smooth(),
+						new Actions.SetFrames(frameNeighbors: false)
+					    )
+				    );
+
+					WorldUtils.Gen(hollowPos, hollow,
+						Actions.Chain(
+							new Modifiers.IsSolid(),
+							new Actions.PlaceWall((ushort)WallType<RegolithBrickWall>())
+						)
+					);
+
+					WorldUtils.Gen(hollowPos, hollow, new Actions.ClearTile());
+				}
+                else
+                {
+					WorldUtils.Gen(origin, new Shapes.Rectangle(area.Width, area.Height),
+					Actions.Chain(
+						new Actions.SetTileKeepWall((ushort)TileType<RegolithBrick>()),
+						new Actions.SetFrames(frameNeighbors: false)
+						)
+					);
+
+                    WorldUtils.Gen(hollowPos, hollow,
+                    Actions.Chain(
+						new Actions.ClearTile(),
+						new Actions.PlaceWall((ushort)WallType<RegolithBrickWall>())
+                        )
+                    );
+				}
+
+				StructureMap.AddProtectedStructure(area, structurePadding);
+                step++;
+            }
+
+            if(failCount > 0) 
+                LogChatMessage($"Failed to place {failCount} Moon Base outposts.");
+		}
+
+
+		[Task]
         private void AmbientTask(GenerationProgress progress)
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.AmbientPass");

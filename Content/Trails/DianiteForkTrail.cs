@@ -2,6 +2,7 @@
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using Terraria;
 using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
@@ -19,7 +20,7 @@ namespace Macrocosm.Content.Trails
 		public override MiscShaderData TrailShader => shader;
 
  		public override float Saturation => 0f;
-
+		
 		public override Color TrailColors(float progressOnStrip)
 		{
 			Color result = Color.Lerp(new Color(255, 101, 0) , new Color(255, 255, 0) * progressOnStrip, progressOnStrip).WithAlpha(127);

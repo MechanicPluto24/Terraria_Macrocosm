@@ -37,7 +37,7 @@ namespace Macrocosm.Common.Drawing.Particles
 		/// Syncs a particle with data from the <see cref="BinaryReader"/>. Don't use this method outside <see cref="PacketHandler.HandlePacket(BinaryReader, int)"/>
 		/// </summary>
 		/// <param name="reader"></param>
-		public static void SyncParticle(BinaryReader reader, int clientWhoAmI)
+		public static void ReceiveSyncParticle(BinaryReader reader, int sender)
 		{
 			int particleIndex = reader.ReadUInt16(); // the Particle WhoAmI
 			int particleType = reader.ReadUInt16();  // the Type int index
@@ -56,7 +56,7 @@ namespace Macrocosm.Common.Drawing.Particles
 			particle.NetReadFields(reader);
 			
 			if (Main.netMode == NetmodeID.Server)
-				particle.NetSync(ignoreClient: clientWhoAmI);
+				particle.NetSync(ignoreClient: sender);
 		}
 	}
 }

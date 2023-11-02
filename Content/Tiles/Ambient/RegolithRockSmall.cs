@@ -28,8 +28,8 @@ namespace Macrocosm.Content.Tiles.Ambient
 			TileObjectData.newTile.CopyFrom(TileObjectData.Style1x1);
 
 			TileObjectData.newTile.StyleHorizontal = true;
+			TileObjectData.newTile.DrawYOffset = 2;
 			TileObjectData.addTile(Type);
-
 
 			TileID.Sets.DisableSmartCursor[Type] = true;
 			AddMapEntry(new Color(220, 220, 220));

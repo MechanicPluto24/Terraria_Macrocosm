@@ -11,7 +11,7 @@ namespace Macrocosm.Content.Items.Tools.Artemite
 	{
 		public override void SetStaticDefaults()
 		{
-			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
+			
 		}
 
 		public override void SetDefaults()

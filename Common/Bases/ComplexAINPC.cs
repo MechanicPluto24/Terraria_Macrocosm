@@ -99,7 +99,6 @@ namespace Macrocosm.Common.Bases
             NPC.noGravity = true;
             NPC.aiStyle = -1;
             NPC.scale = 1f;
-            NPC.boss = true;
             NPC.knockBackResist = 0f;
 
             stateMethodMap = GetStateMethodMap();

@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.UI;
+using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -25,7 +26,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
 		public UILaunchPadInfoElement() : base(
 			Language.GetText("Mods.Macrocosm.UI.Rocket.Common.WorldSpawn"), 
-			ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Icons/SpawnPoint"), 
+			ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/WorldInfo/SpawnPoint"), 
 			null,
 			null
 		){ }
@@ -39,23 +40,29 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 		{
 			base.Update(gameTime);
 
-			BackgroundColor = new Color(43, 56, 101);
-			BorderColor = BackgroundColor * 2f;
-			uIDisplayText.TextColor = Color.White;
+			BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor;
+			BorderColor = UITheme.Current.PanelStyle.BorderColor;
+			uIDisplayText.TextColor = UITheme.Current.CommonTextColor;
 
 			if (IsSpawnPointDefault || !LaunchPad.HasRocket)
 			{
 				if (HasFocus || IsMouseHovering)
-					BorderColor = Color.Gold;
+				{
+					BackgroundColor = UITheme.Current.ButtonHighlightStyle.BackgroundColor;
+					BorderColor = UITheme.Current.ButtonHighlightStyle.BorderColor; 
+				}
 			} 
 			else
 			{
-				BackgroundColor = (BackgroundColor * 0.85f).WithOpacity(1f);
+				BackgroundColor = (UITheme.Current.PanelStyle.BackgroundColor * 0.85f).WithOpacity(1f);
 				uIDisplayText.TextColor = Color.LightGray;
 			}
 
 			if (IsCurrent)
-				BorderColor = new Color(0,255,0);
+			{
+				BackgroundColor = UITheme.Current.ButtonHighlightStyle.BackgroundColor * 1.2f;
+				BorderColor = UITheme.Current.ButtonHighlightStyle.BorderColor;
+			}
 		}
 
 	}

@@ -22,20 +22,25 @@ namespace Macrocosm.Common.Config
 		public bool AlwaysDisplayTitleScreens { get; set; }
 
 		[DefaultValue(true)]
+		[ReloadRequired]
 		public bool FancyGunEffects { get; set; }
+
+		[Header("$Mods.Macrocosm.Configs.MacrocosmConfig.UIHeader")]
+		[DrawTicks]  
+		[DefaultValue("Macrocosm")]
+		[OptionStrings(new string[] { "Macrocosm", "Terraria" })]
+		public string SelectedUITheme { get; set; }
 
 		/// <summary> Supported unit systems in Macrocosm </summary>
 		public enum UnitSystemType { Metric, Imperial };
 
 		/// <summary> The unit system used for displays throughout the mod </summary>
-		[Header("$Mods.Macrocosm.Configs.MacrocosmConfig.UnitSystemHeader")]
 		[DefaultValue(UnitSystemType.Metric)]
 		public UnitSystemType UnitSystem { get; set; }
 
 		/// <summary> Whether to display gravity in Gs or as gravtiational acceleration </summary>
 		[DefaultValue(true)]
 		public bool DisplayGravityInGs { get; set; }
-
 
 		public override void OnChanged()
 		{

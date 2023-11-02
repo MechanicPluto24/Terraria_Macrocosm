@@ -30,7 +30,7 @@ namespace Macrocosm.Common.Utils
 			return trail is not null;
 		}
 
-		public static void Explode(this Projectile projectile, float blastRadius, int timeLeft = 2)
+		public static void Explode(this Projectile projectile, float blastRadius, int timeLeft = 1)
 		{
 			projectile.tileCollide = false;
 			projectile.timeLeft = timeLeft; 
@@ -38,14 +38,7 @@ namespace Macrocosm.Common.Utils
 			projectile.alpha = 255;
 
 			projectile.velocity = Vector2.Zero;
-			
-			projectile.position.X += projectile.width / 2;
-			projectile.position.Y += projectile.height / 2;
-			projectile.width = (int)blastRadius;
-			projectile.height = (int)blastRadius;
-			projectile.position.X -= projectile.width / 2;
-			projectile.position.Y -= projectile.height / 2;
-
+			projectile.Resize((int)blastRadius, (int)blastRadius);
 			projectile.netUpdate = true;
 		}
 

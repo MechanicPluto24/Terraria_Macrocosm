@@ -68,7 +68,7 @@ namespace Macrocosm.Content.Players
 		public static void ReceiveSyncPlayer(BinaryReader reader, int whoAmI)
 		{
 			int dashPlayerID = reader.ReadByte();
-			DashPlayer dashPlayer = Main.player[dashPlayerID].DashPlayer();
+			DashPlayer dashPlayer = Main.player[dashPlayerID].GetModPlayer<DashPlayer>();
 
 			int newDir = reader.ReadByte();
 			dashPlayer.DashDirection = (DashPlayer.DashDir)newDir;
