@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.UI
+namespace Macrocosm.Common.UI.Themes
 {
-    public readonly partial struct UITheme : ILoadable
+	public readonly partial struct UITheme : ILoadable
 	{
 		private static Dictionary<string, UITheme> themeStorage;
 

@@ -178,7 +178,10 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            SpriteBatchState state = spriteBatch.SaveState();
+			if (NPC.IsABestiaryIconDummy)
+				NPC.rotation = MathHelper.Pi;
+
+			SpriteBatchState state = spriteBatch.SaveState();
             spriteBatch.End();
             spriteBatch.Begin(BlendState.Additive, state);
 

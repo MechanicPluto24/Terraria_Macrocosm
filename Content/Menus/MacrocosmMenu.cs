@@ -10,12 +10,12 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.UI.Menus
+namespace Macrocosm.Content.Menus
 {
-	public class MacrocosmMenu : ModMenu
+    public class MacrocosmMenu : ModMenu
     {
-        private const string AssetPath = "Macrocosm/Content/UI/Menus/";
-		private const AssetRequestMode Mode = AssetRequestMode.ImmediateLoad;
+        private const string AssetPath = "Macrocosm/Content/Menus/";
+        private const AssetRequestMode Mode = AssetRequestMode.ImmediateLoad;
 
         private readonly List<CelestialBody> celestialBodies = new();
 
@@ -36,10 +36,10 @@ namespace Macrocosm.Content.UI.Menus
         public readonly CelestialBody Io = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Io", Mode).Value);
         public readonly CelestialBody Europa = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Europa", Mode).Value);
         public readonly CelestialBody Saturn = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Saturn", Mode).Value,
-													ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SaturnRings", Mode).Value);
-		public readonly CelestialBody Titan = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Titan", Mode).Value);
+                                                    ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SaturnRings", Mode).Value);
+        public readonly CelestialBody Titan = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Titan", Mode).Value);
         public readonly CelestialBody Ouranos = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Ouranos", Mode).Value,
-													ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/OuranosRings", Mode).Value);
+                                                    ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/OuranosRings", Mode).Value);
         public readonly CelestialBody Miranda = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Miranda", Mode).Value);
         public readonly CelestialBody Neptune = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Neptune", Mode).Value);
         public readonly CelestialBody Triton = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Triton", Mode).Value);
@@ -104,36 +104,37 @@ namespace Macrocosm.Content.UI.Menus
         {
             Rectangle screen = new(0, 0, Main.screenWidth + 1, Main.screenHeight + 1);
             spriteBatch.Draw(TextureAssets.BlackTile.Value, screen, Color.Black);
-			state1.SaveState(spriteBatch);
+            state1.SaveState(spriteBatch);
             spriteBatch.End();
-			spriteBatch.Begin(BlendState.Additive, state1);
+            spriteBatch.Begin(BlendState.Additive, state1);
 
-			Stars.Draw(spriteBatch);
-            spriteBatch.Draw(ModContent.Request<Texture2D>(AssetPath + "MilkyWay").Value, screen, Color.White.WithOpacity(0.3f)); 
+            Stars.Draw(spriteBatch);
+            spriteBatch.Draw(ModContent.Request<Texture2D>(AssetPath + "MilkyWay").Value, screen, Color.White.WithOpacity(0.3f));
             spriteBatch.Draw(ModContent.Request<Texture2D>(AssetPath + "Nebula").Value, screen, Color.White.WithOpacity(0.75f));
 
-			spriteBatch.End();
-			spriteBatch.Begin(state1);
+            spriteBatch.End();
+            spriteBatch.Begin(state1);
 
             Sun.SetPosition(Main.screenWidth / 2, Main.screenHeight / 2);
 
             DrawSunCorona();
 
-			Sun.OverrideShader = () => {
-				Effect effect = ModContent.Request<Effect>(Macrocosm.EffectAssetsPath + "RadialSaturation", AssetRequestMode.ImmediateLoad).Value;
-				effect.Parameters["uCenter"].SetValue(Vector2.One * 0.5f);
-				effect.Parameters["uRadius"].SetValue(0.1f + 0.2f * Utility.PositiveSineWave(500, MathF.PI / 2));
-				effect.Parameters["uIntensity"].SetValue(0.2f * Utility.PositiveSineWave(500, MathF.PI / 2));
-				return effect;
-			};
+            Sun.OverrideShader = () =>
+            {
+                Effect effect = ModContent.Request<Effect>(Macrocosm.EffectAssetsPath + "RadialSaturation", AssetRequestMode.ImmediateLoad).Value;
+                effect.Parameters["uCenter"].SetValue(Vector2.One * 0.5f);
+                effect.Parameters["uRadius"].SetValue(0.1f + 0.2f * Utility.PositiveSineWave(500, MathF.PI / 2));
+                effect.Parameters["uIntensity"].SetValue(0.2f * Utility.PositiveSineWave(500, MathF.PI / 2));
+                return effect;
+            };
 
-			logoScale *= 0.65f;
+            logoScale *= 0.65f;
             drawColor = Color.White;
 
-			Sun.Scale = 0.85f + 0.01f * Utility.SineWave(500, MathF.PI / 2);
+            Sun.Scale = 0.85f + 0.01f * Utility.SineWave(500, MathF.PI / 2);
 
-			// includes all orbiting descendants in the tree 
-			Sun.Draw(spriteBatch, withChildren: true);
+            // includes all orbiting descendants in the tree 
+            Sun.Draw(spriteBatch, withChildren: true);
 
             return true;
         }
@@ -153,7 +154,7 @@ namespace Macrocosm.Content.UI.Menus
             }
 
             Sun.Position = Utility.ScreenCenter;
-         
+
             Vulcan.SetOrbitParent(Sun, 174, Rand(), 0.0022f);
             Mercury.SetOrbitParent(Sun, 204, Rand(), 0.0018f);
             Venus.SetOrbitParent(Sun, 238, Rand(), 0.0014f);
@@ -189,11 +190,11 @@ namespace Macrocosm.Content.UI.Menus
         }
 
 
-		private static float Rand() => Utility.RandomRotation();
+        private static float Rand() => Utility.RandomRotation();
 
         private void DrawSunCorona()
         {
-			Texture2D SunCorona1 = ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SunCorona1", Mode).Value;
+            Texture2D SunCorona1 = ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SunCorona1", Mode).Value;
             Texture2D SunCorona2 = ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SunCorona2", Mode).Value;
             Texture2D SunCorona3 = ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SunCorona3", Mode).Value;
             Texture2D SunCorona4 = ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SunCorona4", Mode).Value;
@@ -201,16 +202,16 @@ namespace Macrocosm.Content.UI.Menus
 
             SpriteBatch spriteBatch = Main.spriteBatch;
 
-			state2.SaveState(spriteBatch);
+            state2.SaveState(spriteBatch);
             spriteBatch.End();
             spriteBatch.Begin(BlendState.NonPremultiplied, state2);
 
-			spriteBatch.Draw(SunCorona1, Sun.Position, null, (Color.White * (0.4f + 0.8f * Utility.PositiveSineWave(800, 0f          ))).WithOpacity(0.6f + 0.2f * Utility.PositiveSineWave(800, 0f          )), 0, SunCorona1.Size() / 2, 0.85f         + (0.04f * Utility.SineWave(800, 0f        )), SpriteEffects.None, 0f);
-            spriteBatch.Draw(SunCorona2, Sun.Position, null, (Color.White * (0.6f + 0.4f * Utility.PositiveSineWave(600, MathF.PI / 8))).WithOpacity(0.6f + 0.4f * Utility.PositiveSineWave(600, MathF.PI / 8)), 0, SunCorona1.Size() / 2, 0.85f         + (0.03f * Utility.SineWave(600, MathF.PI/8)), SpriteEffects.None, 0f);
-            spriteBatch.Draw(SunCorona3, Sun.Position, null, (Color.White * (0.8f + 0.2f * Utility.PositiveSineWave(500, MathF.PI / 4))).WithOpacity(0.8f + 0.2f * Utility.PositiveSineWave(500, MathF.PI / 4)), 0, SunCorona1.Size() / 2, 0.85f         + (0.03f * Utility.SineWave(500, MathF.PI/3)), SpriteEffects.None, 0f);
-            spriteBatch.Draw(SunCorona4, Sun.Position, null, (Color.White * (0.7f + 0.3f * Utility.PositiveSineWave(500, MathF.PI / 2))).WithOpacity(0.8f + 0.2f * Utility.PositiveSineWave(500, MathF.PI / 2)), 0, SunCorona1.Size() / 2, 0.85f         + (0.02f * Utility.SineWave(500, MathF.PI/2)), SpriteEffects.None, 0f);
-            spriteBatch.Draw(SunCorona5, Sun.Position, null, (Color.White * (0.6f + 0.4f * Utility.PositiveSineWave(300, MathF.PI / 2))).WithOpacity(0.9f + 0.1f * Utility.PositiveSineWave(300, MathF.PI / 2)), 0, SunCorona1.Size() / 2, 0.85f * 0.95f + (0.02f * Utility.SineWave(300, MathF.PI/2)), SpriteEffects.None, 0f);
-       
+            spriteBatch.Draw(SunCorona1, Sun.Position, null, (Color.White * (0.4f + 0.8f * Utility.PositiveSineWave(800, 0f))).WithOpacity(0.6f + 0.2f * Utility.PositiveSineWave(800, 0f)), 0, SunCorona1.Size() / 2, 0.85f + 0.04f * Utility.SineWave(800, 0f), SpriteEffects.None, 0f);
+            spriteBatch.Draw(SunCorona2, Sun.Position, null, (Color.White * (0.6f + 0.4f * Utility.PositiveSineWave(600, MathF.PI / 8))).WithOpacity(0.6f + 0.4f * Utility.PositiveSineWave(600, MathF.PI / 8)), 0, SunCorona1.Size() / 2, 0.85f + 0.03f * Utility.SineWave(600, MathF.PI / 8), SpriteEffects.None, 0f);
+            spriteBatch.Draw(SunCorona3, Sun.Position, null, (Color.White * (0.8f + 0.2f * Utility.PositiveSineWave(500, MathF.PI / 4))).WithOpacity(0.8f + 0.2f * Utility.PositiveSineWave(500, MathF.PI / 4)), 0, SunCorona1.Size() / 2, 0.85f + 0.03f * Utility.SineWave(500, MathF.PI / 3), SpriteEffects.None, 0f);
+            spriteBatch.Draw(SunCorona4, Sun.Position, null, (Color.White * (0.7f + 0.3f * Utility.PositiveSineWave(500, MathF.PI / 2))).WithOpacity(0.8f + 0.2f * Utility.PositiveSineWave(500, MathF.PI / 2)), 0, SunCorona1.Size() / 2, 0.85f + 0.02f * Utility.SineWave(500, MathF.PI / 2), SpriteEffects.None, 0f);
+            spriteBatch.Draw(SunCorona5, Sun.Position, null, (Color.White * (0.6f + 0.4f * Utility.PositiveSineWave(300, MathF.PI / 2))).WithOpacity(0.9f + 0.1f * Utility.PositiveSineWave(300, MathF.PI / 2)), 0, SunCorona1.Size() / 2, 0.85f * 0.95f + 0.02f * Utility.SineWave(300, MathF.PI / 2), SpriteEffects.None, 0f);
+
             spriteBatch.End();
             spriteBatch.Begin(state2);
         }

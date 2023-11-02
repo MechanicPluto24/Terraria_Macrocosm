@@ -1,5 +1,5 @@
-﻿using Macrocosm.Common.Utils;
-using Macrocosm.Content.UI;
+﻿using Macrocosm.Common.UI.Themes;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;

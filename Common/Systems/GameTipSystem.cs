@@ -1,5 +1,5 @@
 ﻿using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.UI;
+using Macrocosm.Content.LoadingScreens;
 using Microsoft.Xna.Framework;
 using MonoMod.Cil;
 using SubworldLibrary;
@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 namespace Macrocosm.Common.Systems
 {
 
-	public class GameTipSystem : ModSystem
+    public class GameTipSystem : ModSystem
 	{
 		public const string LoadingScreenTipsLocalizationPath = "Mods.Macrocosm.UI.LoadingScreenTips.";
 

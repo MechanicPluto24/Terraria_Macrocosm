@@ -7,9 +7,9 @@ using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.UI
+namespace Macrocosm.Content.LoadingScreens.WorldGen
 {
-	public class UIWorldGenProgressBar : UIGenProgressBar
+    public class UIWorldGenProgressBar : UIGenProgressBar
     {
         private readonly Texture2D texUpper;
         private readonly Texture2D texLower;
@@ -34,8 +34,8 @@ namespace Macrocosm.Common.UI
             {
                 this.texUpper = texUpper;
                 this.texLower = texLower;
-                fillLarge = ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/WorldGen/DefaultLargeFill", AssetRequestMode.ImmediateLoad).Value;
-                fillSmall = ModContent.Request<Texture2D>("Macrocosm/Content/UI/LoadingScreens/WorldGen/DefaultSmallFill", AssetRequestMode.ImmediateLoad).Value;
+                fillLarge = ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/WorldGen/DefaultLargeFill", AssetRequestMode.ImmediateLoad).Value;
+                fillSmall = ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/WorldGen/DefaultSmallFill", AssetRequestMode.ImmediateLoad).Value;
             }
             base.Recalculate();
         }

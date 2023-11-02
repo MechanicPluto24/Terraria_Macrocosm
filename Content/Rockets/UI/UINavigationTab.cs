@@ -1,12 +1,12 @@
 ﻿using Macrocosm.Common.Config;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.UI;
+using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Players;
 using Macrocosm.Content.Rockets.LaunchPads;
 using Macrocosm.Content.Rockets.Navigation.Checklist;
 using Macrocosm.Content.Rockets.Navigation.NavigationInfo;
-using Macrocosm.Content.UI;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +18,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.UI
 {
-    public class UINavigationTab : UIPanel, ITabUIElement, IRocketUIDataConsumer
+	public class UINavigationTab : UIPanel, ITabUIElement, IRocketUIDataConsumer
     {
         public Rocket Rocket { get; set; }
 
