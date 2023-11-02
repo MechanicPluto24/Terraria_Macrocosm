@@ -1,8 +1,8 @@
 ﻿using Macrocosm.Common.UI;
+using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Players;
 using Macrocosm.Content.Rockets.Storage;
-using Macrocosm.Content.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -20,7 +20,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.UI
 {
-    public class UICargoTab : UIPanel, ITabUIElement, IRocketUIDataConsumer
+	public class UICargoTab : UIPanel, ITabUIElement, IRocketUIDataConsumer
     {
         public Rocket Rocket { get; set; } = new();
 
@@ -211,7 +211,7 @@ namespace Macrocosm.Content.Rockets.UI
 					Top = new(0, 0.85f),
 					Left = new(0, 0.25f),
 					BackPanelColor = new Color(45, 62, 115),
-					HoverText = Lang.inter[29],
+					HoverText = Language.GetText("LegacyInterface.29"),
 					CheckInteractible = interactible,
 					GrayscaleIconIfNotInteractible = true
 				};
@@ -229,7 +229,7 @@ namespace Macrocosm.Content.Rockets.UI
 					Top = new(0, 0.85f),
 					Left = new(0, 0.35f),
 					BackPanelColor = new Color(45, 62, 115),
-					HoverText = Lang.inter[30],
+					HoverText = Language.GetText("LegacyInterface.30"),
 					CheckInteractible = interactible,
 					GrayscaleIconIfNotInteractible = true
 				};
@@ -247,7 +247,7 @@ namespace Macrocosm.Content.Rockets.UI
 					Top = new(0, 0.85f),
 					Left = new(0, 0.45f),
 					BackPanelColor = new Color(45, 62, 115),
-					HoverText = Lang.inter[31],
+					HoverText = Language.GetText("LegacyInterface.31"),
 					CheckInteractible = interactible,
 					GrayscaleIconIfNotInteractible = true
 				};
@@ -265,7 +265,7 @@ namespace Macrocosm.Content.Rockets.UI
 					Top = new(0, 0.85f),
 					Left = new(0, 0.55f),
 					BackPanelColor = new Color(45, 62, 115),
-					HoverText = Lang.inter[82],
+					HoverText = Language.GetText("LegacyInterface.82"),
 					CheckInteractible = interactible,
 					GrayscaleIconIfNotInteractible = true
 				};
@@ -283,7 +283,7 @@ namespace Macrocosm.Content.Rockets.UI
 					Top = new(0, 0.85f),
 					Left = new(0, 0.65f),
 					BackPanelColor = new Color(45, 62, 115),
-					HoverText = Lang.inter[122],
+					HoverText = Language.GetText("LegacyInterface.122"),
 					CheckInteractible = interactible,
 					GrayscaleIconIfNotInteractible = true
 				};

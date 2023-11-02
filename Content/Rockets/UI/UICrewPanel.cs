@@ -1,6 +1,6 @@
 ﻿using Macrocosm.Common.UI;
+using Macrocosm.Common.UI.Themes;
 using Macrocosm.Content.Players;
-using Macrocosm.Content.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.UI
 {
-    public class UICrewPanel : UIListScrollablePanel, IRocketUIDataConsumer
+	public class UICrewPanel : UIListScrollablePanel, IRocketUIDataConsumer
     {
         public Rocket Rocket { get; set; }
 

@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
@@ -7,6 +8,7 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
+using static Macrocosm.Content.Tiles.Furniture.MoonBase.MoonBaseChest;
 
 namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 {
@@ -33,11 +35,21 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 			AddMapEntry(new Color(180, 180, 180), CreateMapEntryName());
         }
 
-        public override void KillMultiTile(int i, int j, int frameX, int frameY)
-        {
-            Item.NewItem(new EntitySource_TileBreak(i, j), i * 16, j * 16, 32, 32, ModContent.ItemType<Items.Placeable.Furniture.MoonBase.MoonBaseConsole>());
-        }
+		public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
+		{
+			Tile tile = Main.tile[i, j];
+			Texture2D glow = ModContent.Request<Texture2D>("Macrocosm/Content/Tiles/Furniture/MoonBase/MoonBaseConsole_Glow").Value;
+			Vector2 zero = Main.drawToScreen ? Vector2.Zero : new Vector2(Main.offScreenRange);
 
-    }
+			int height = TileObjectData.GetTileData(tile).CoordinateHeights[tile.TileFrameY / 18 % 2];
+
+			spriteBatch.Draw(
+				glow,
+				new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero,
+				new Rectangle(tile.TileFrameX, tile.TileFrameY, 16, height),
+				Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+		}
+
+	}
 
 }

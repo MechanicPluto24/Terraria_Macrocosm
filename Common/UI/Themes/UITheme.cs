@@ -3,11 +3,11 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
 
-namespace Macrocosm.Content.UI
+namespace Macrocosm.Common.UI.Themes
 {
 	/// <summary> The theme used by this mod's UI. Defauls to the default Macrocosm style </summary>
-    public readonly partial struct UITheme
-    {
+	public readonly partial struct UITheme
+	{
 		public readonly struct UIPanelStyle
 		{
 			/// <summary> The background color </summary>
@@ -31,13 +31,13 @@ namespace Macrocosm.Content.UI
 			}
 		}
 
-        public string Name { get; init; }
+		public string Name { get; init; }
 
 		// TODO
 		/// <summary> Currently only partially used </summary>
 		public Color CommonTextColor { get; init; } = Color.White;
 
-		public Color SeparatorColor { get; init; } = new(89, 116, 213); 
+		public Color SeparatorColor { get; init; } = new(89, 116, 213);
 
 		public UIPanelStyle PanelStyle { get; init; } = new(new(53, 72, 135), new(89, 116, 213));
 		public UIPanelStyle TabStyle { get; init; } = new(new(58, 81, 166), new(15, 15, 15));

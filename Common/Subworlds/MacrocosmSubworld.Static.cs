@@ -1,9 +1,7 @@
-﻿using Macrocosm.Common.UI;
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Items.Dev;
+﻿using Macrocosm.Common.Utils;
+using Macrocosm.Content.LoadingScreens;
 using Macrocosm.Content.Rockets;
 using Macrocosm.Content.Subworlds;
-using Macrocosm.Content.UI.LoadingScreens;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
 using Terraria;
@@ -11,7 +9,7 @@ using Terraria.ID;
 
 namespace Macrocosm.Common.Subworlds
 {
-	public enum MapColorType
+    public enum MapColorType
 	{
 		SkyUpper,
 		SkyLower,

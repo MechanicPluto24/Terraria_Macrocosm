@@ -1,8 +1,8 @@
 ﻿using Macrocosm.Common.Drawing;
 using Macrocosm.Common.UI;
+using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.UI;
-using Macrocosm.Content.UI;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json.Linq;
 using System;
@@ -15,7 +15,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-    public class CustomizationStorage : ModSystem
+	public class CustomizationStorage : ModSystem
 	{
 		public static bool Initialized { get; private set; }
 

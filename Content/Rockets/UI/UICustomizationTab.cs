@@ -1,9 +1,9 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.UI;
+using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.Modules;
-using Macrocosm.Content.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -21,7 +21,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.UI
 {
-    public class UICustomizationTab : UIPanel, ITabUIElement, IRocketUIDataConsumer
+	public class UICustomizationTab : UIPanel, ITabUIElement, IRocketUIDataConsumer
     {
         private Rocket rocket = new();
         public Rocket Rocket

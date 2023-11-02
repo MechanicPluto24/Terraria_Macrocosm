@@ -1,4 +1,4 @@
-﻿using Macrocosm.Content.UI;
+﻿using Macrocosm.Common.UI.Themes;
 using Microsoft.Xna.Framework;
 using Terraria.GameContent.UI.Elements;
 using Terraria.Localization;
@@ -6,7 +6,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.UI
 {
-    public class UILaunchButton : UIPanel
+	public class UILaunchButton : UIPanel
     {
         public delegate void OnClick_ZoomIn(bool useDefault);
         public OnClick_ZoomIn ZoomIn = (useDefault) => { };

@@ -44,7 +44,7 @@ namespace Macrocosm.Content.NPCs.Global
 
 		private void DrawCrosshair(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
-			Texture2D crosshair = ModContent.Request<Texture2D>("Macrocosm/Content/UI/Crosshair").Value;
+			Texture2D crosshair = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/Crosshair").Value;
 			Color color = new(255, 255, 255, 64);
 			Vector2 position = npc.Center - screenPos;
 			float rotation = (float)(Main.timeForVisualEffects / 20);

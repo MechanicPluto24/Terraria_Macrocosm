@@ -1,4 +1,4 @@
-﻿using Macrocosm.Content.UI;
+﻿using Macrocosm.Common.UI.Themes;
 using Microsoft.Xna.Framework;
 using Terraria.GameContent.UI.Elements;
 using Terraria.Localization;

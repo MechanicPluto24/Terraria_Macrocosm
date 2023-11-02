@@ -1,9 +1,6 @@
 ﻿using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.UI;
 using Macrocosm.Content.Items.Global;
 using Macrocosm.Content.Rarities;
-using Macrocosm.Content.Subworlds;
-using Macrocosm.Content.UI.LoadingScreens;
 using SubworldLibrary;
 using Terraria;
 using Terraria.ID;
