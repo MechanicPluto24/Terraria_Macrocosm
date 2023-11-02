@@ -880,3 +880,13 @@ InvarBullet: {
 	DisplayName: Invar Bullet
 	Tooltip: ""
 }
+
+SpaceTeddy: {
+	DisplayName: Space Teddy
+	Tooltip: ""
+}
+
+TeddyBear: {
+	DisplayName: Teddy Bear
+	Tooltip: ""
+}

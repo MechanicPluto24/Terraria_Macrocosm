@@ -32,3 +32,5 @@ MoonBaseChest: {
 	MapEntryUnlocked: Moon Base Electronic Storage Unit
 	MapEntryLocked: Moon Base Electronic Storage Unit (Locked)
 }
+
+TeddyBear.MapEntry: Teddy Bear

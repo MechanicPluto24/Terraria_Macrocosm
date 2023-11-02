@@ -378,15 +378,18 @@ namespace Macrocosm.Content.Rockets.UI
         private void OnPreviewZoomIn()
         {
             rocketPreviewZoomButton.SetImage(ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Buttons/ZoomOutButton"));
-        }
+            rocketPreviewZoomButton.HoverText = Language.GetText("Mods.Macrocosm.UI.Common.ZoomOut");
+
+		}
 
         private void OnPreviewZoomOut()
         {
             hslMenu.CaptureCurrentColor();
             rocketPreviewZoomButton.SetImage(ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Buttons/ZoomInButton"));
-        }
+			rocketPreviewZoomButton.HoverText = Language.GetText("Mods.Macrocosm.UI.Common.ZoomIn");
+		}
 
-        private void ApplyCustomizationChanges()
+		private void ApplyCustomizationChanges()
         {
             AllLoseFocus();
 

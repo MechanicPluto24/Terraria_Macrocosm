@@ -30,8 +30,7 @@ namespace Macrocosm.Content.Tiles.Furniture
             HitSound = SoundID.Dig;
             DustType = -1;
 
-            LocalizedText name = CreateMapEntryName();
-            AddMapEntry(new Color(121, 107, 91), name);
+            AddMapEntry(new Color(121, 107, 91), CreateMapEntryName());
         }
 
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
