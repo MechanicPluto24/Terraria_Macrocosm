@@ -900,3 +900,8 @@ MoonBaseSofa: {
 	DisplayName: Moon Base Sofa
 	Tooltip: ""
 }
+
+Procellarum: {
+	DisplayName: Procellarum
+	Tooltip: ""
+}
