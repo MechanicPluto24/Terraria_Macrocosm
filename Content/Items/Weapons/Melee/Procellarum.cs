@@ -26,12 +26,12 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.knockBack = 5;
             Item.value = 10000;
             Item.rare = ModContent.RarityType<MoonRarityT3>();
-            Item.useTime = 30;
+            Item.useTime = 60;
             Item.noUseGraphic = true;
             Item.shoot = ModContent.ProjectileType<Procellarum_HalberdProjectile>();
             Item.autoReuse = true;
             Item.useStyle = ItemUseStyleID.Shoot;
-            Item.useAnimation = 40;
+            Item.useAnimation = 60;
             Item.shootSpeed = 1f;
             Item.channel = true;
         }
