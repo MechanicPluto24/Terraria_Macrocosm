@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using Steamworks;
 using System;
 using Terraria;
 
@@ -113,15 +114,33 @@ namespace Macrocosm.Common.Utils
 			);
 		}
 
-		#endregion
+		public static float SquareDiagonal(float sideLength)
+		{
+			return MathF.Sqrt(2 * MathF.Pow(sideLength, 2));
+		}
+		public static int SquareDiagonal(int sideLength)
+		{
+            return (int)MathF.Sqrt(2 * MathF.Pow(sideLength, 2));
+        }
 
-		#region Signals
+        public static float GeneralPythagoras(float width, float height)
+		{
+			return MathF.Sqrt(MathF.Pow(width, 2) + MathF.Pow(height, 2));
+		}
+        public static int GeneralPythagoras(int width, int height)
+        {
+            return (int)MathF.Sqrt(MathF.Pow(width, 2) + MathF.Pow(height, 2));
+        }
 
-		/// <summary> Generates a triangle wave based on the given period and phase. Use exclusively for visual effects. </summary>
-		/// <param name="period">The duration of one complete cycle of the wave.</param>
-		/// <param name="phase">The starting phase offset of the wave (optional).</param>
-		/// <returns>The value of the triangle wave ranging from -1 to 1.</returns>
-		public static float TriangleWave(float period, float phase = 0)
+        #endregion
+
+        #region Signals
+
+        /// <summary> Generates a triangle wave based on the given period and phase. Use exclusively for visual effects. </summary>
+        /// <param name="period">The duration of one complete cycle of the wave.</param>
+        /// <param name="phase">The starting phase offset of the wave (optional).</param>
+        /// <returns>The value of the triangle wave ranging from -1 to 1.</returns>
+        public static float TriangleWave(float period, float phase = 0)
 		{
 			float time = ((float)Main.timeForVisualEffects + phase) % period;
 			float position = time / period;
