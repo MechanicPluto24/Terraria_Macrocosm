@@ -13,12 +13,11 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 {
     public class Procellarum : ModItem
     {
-        //public override Vector2 SpriteHandlePosition => new(68, 108);
-        //public override float HalberdWidth => 14.1f;
-//        public override void SetStaticDefaults()
-//        {
-//            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
-//        }
+
+        public override void SetStaticDefaults()
+        {
+            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
+        }
         public override void SetDefaults()
         {
             Item.damage = 450;
@@ -38,7 +37,6 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 
         public override bool CanUseItem(Player player)
         {
-            // Ensures no more than one spear can be thrown out, use this when using autoReuse
             return player.ownedProjectileCounts[ModContent.ProjectileType<Procellarum_HalberdProjectile>()] < 1;
         }
     }
