@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Terraria.ModLoader;
 
@@ -17,7 +18,7 @@ namespace Macrocosm.Content.Rockets.Customization
 
 		public bool IsDefault => Name == "Basic";
 
-		public readonly PatternColorData[] ColorData { get; init; }
+		public readonly ImmutableArray<PatternColorData> ColorData { get; init; }
 		public readonly List<int> UserModifiableIndexes { get; init; } = new();
 
 		public int UserModifiableColorCount => UserModifiableIndexes.Count;
@@ -48,31 +49,35 @@ namespace Macrocosm.Content.Rockets.Customization
 			}
 		}
 
-		public Pattern(string moduleName, string patternName, params PatternColorData[] defaultColorData)
-		{
-			ModuleName = moduleName;
-			Name = patternName;
+        public Pattern(string moduleName, string patternName, params PatternColorData[] defaultColorData)
+        {
+            ModuleName = moduleName;
+            Name = patternName;
 
-			ColorData = new PatternColorData[MaxColorCount];
-			Array.Fill(ColorData, new PatternColorData());
+            var colorData = new PatternColorData[MaxColorCount];
+            Array.Fill(colorData, new PatternColorData());
 
-			for (int i = 0; i < defaultColorData.Length; i++)
-			{
-				if (defaultColorData[i].HasColorFunction)
-				{
-					ColorData[i] = new(defaultColorData[i].ColorFunction);
-				}
-				else
-				{
-					ColorData[i] = new(defaultColorData[i].Color, defaultColorData[i].IsUserModifiable);
+            for (int i = 0; i < defaultColorData.Length; i++)
+            {
+                if (defaultColorData[i].HasColorFunction)
+                {
+                    colorData[i] = new PatternColorData(defaultColorData[i].ColorFunction);
+                }
+                else
+                {
+                    colorData[i] = new PatternColorData(defaultColorData[i].Color, defaultColorData[i].IsUserModifiable);
 
-					if(defaultColorData[i].IsUserModifiable)
-						UserModifiableIndexes.Add(i);
-				}
- 			}
-		}
+                    if (defaultColorData[i].IsUserModifiable)
+                    {
+                        UserModifiableIndexes.Add(i);
+                    }
+                }
+            }
 
-		public string GetKey() => ModuleName + "_" + Name;
+            ColorData = ImmutableArray.Create(colorData);
+        }
+
+        public string GetKey() => ModuleName + "_" + Name;
 
 		public Color GetColor(int index)
 		{
@@ -92,41 +97,42 @@ namespace Macrocosm.Content.Rockets.Customization
 			return Color.Transparent;
 		}
 
-		public Pattern WithColor(int index, Color color, bool evenIfNotUserModifiable = false)
-		{
-			if (index < 0 || index >= MaxColorCount || (!evenIfNotUserModifiable && !ColorData[index].IsUserModifiable))
-				return this;
+        public Pattern WithColor(int index, Color color, bool evenIfNotUserModifiable = false)
+        {
+            if (index < 0 || index >= MaxColorCount || (!evenIfNotUserModifiable && !ColorData[index].IsUserModifiable))
+                return this;
 
-			var updatedColorData = ColorData;
-			updatedColorData[index] = updatedColorData[index].WithUserColor(color);
-			return this with { ColorData = updatedColorData };
-		}
+            var updatedColorData = ColorData.ToArray();  
+            updatedColorData[index] = updatedColorData[index].WithUserColor(color);
+            return this with { ColorData = ImmutableArray.Create(updatedColorData) };  
+        }
 
-		public Pattern WithColorFunction(int index, ColorFunction colorFunction)
-		{
-			if (index < 0 || index >= MaxColorCount || !ColorData[index].IsUserModifiable)
-				return this;
+        public Pattern WithColorFunction(int index, ColorFunction colorFunction)
+        {
+            if (index < 0 || index >= MaxColorCount || !ColorData[index].IsUserModifiable)
+                return this;
 
-			var updatedColorData = ColorData;
-			updatedColorData[index] = updatedColorData[index].WithColorFunction(colorFunction);
-			return this with { ColorData = updatedColorData };
-		}
+            var updatedColorData = ColorData.ToArray(); 
+            updatedColorData[index] = updatedColorData[index].WithColorFunction(colorFunction);
+            return this with { ColorData = ImmutableArray.Create(updatedColorData) }; 
+        }
 
-		public Pattern WithColorData(params PatternColorData[] colorData)
-		{
-			var updatedColorData = ColorData;
-			for (int i = 0; i < colorData.Length; i++)
-			{
-				if (colorData[i].HasColorFunction)
-					updatedColorData[i] = ColorData[i].WithColorFunction(colorData[i].ColorFunction);
-				else
-					updatedColorData[i] = ColorData[i].WithUserColor(colorData[i].Color);
-			}
+        public Pattern WithColorData(params PatternColorData[] colorData)
+        {
+            var updatedColorData = ColorData.ToArray();  
 
-			return this with { ColorData = updatedColorData };
-		}
+            for (int i = 0; i < colorData.Length; i++)
+            {
+                if (colorData[i].HasColorFunction)
+                    updatedColorData[i] = ColorData[i].WithColorFunction(colorData[i].ColorFunction);
+                else
+                    updatedColorData[i] = ColorData[i].WithUserColor(colorData[i].Color);
+            }
 
-		public UIPatternIcon ProvideUI()
+            return this with { ColorData = ImmutableArray.Create(updatedColorData) };  
+        }
+
+        public UIPatternIcon ProvideUI()
 		{
 			UIPatternIcon icon = new(this);
 			return icon;
@@ -137,10 +143,10 @@ namespace Macrocosm.Content.Rockets.Customization
 			return obj is Pattern pattern &&
 				   Name == pattern.Name &&
 				   ModuleName == pattern.ModuleName &&
-				   EqualityComparer<PatternColorData[]>.Default.Equals(ColorData, pattern.ColorData);
-		}
+				   ColorData.SequenceEqual(pattern.ColorData);
+        }
 
-		public static bool operator ==(Pattern left, Pattern right)
+        public static bool operator ==(Pattern left, Pattern right)
 		{
 			return left.Equals(right);
 		}
@@ -167,7 +173,5 @@ namespace Macrocosm.Content.Rockets.Customization
 			new Vector3(1f,.5f, 0f),     // Orange
 			new Vector3(0f,.5f, 1f)      // Azure
 		};
-
-
 	}
 }

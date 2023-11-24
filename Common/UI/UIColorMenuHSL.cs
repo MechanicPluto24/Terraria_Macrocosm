@@ -25,7 +25,9 @@ namespace Macrocosm.Common.UI
 			Luminance
 		}
 
-		public Color PendingColor { get; private set; } = Color.White;
+		public bool Edited => PendingColor != PreviousColor;
+
+        public Color PendingColor { get; private set; } = Color.White;
 		public Color PreviousColor { get; private set; } = Color.White;
 
 		public float LuminanceSliderFactor { get; init; } = 0.85f;
