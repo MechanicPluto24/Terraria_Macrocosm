@@ -201,9 +201,9 @@ namespace Macrocosm.Content.Rockets.Navigation
 			if (patternSelector.Any())
 			{
 				if(dummyPatternEdits.ContainsKey((Rocket, currentModuleName)))
-					currentPatternIcon = dummyPatternEdits[(Rocket, currentModuleName)]
+                    currentPatternIcon.Pattern = currentPatternIcon.Pattern.WithColorData(dummyPatternEdits[(Rocket, currentModuleName)]
 						.Where((icon) => icon.Pattern.Name == currentDummyPattern.Name)
-						.FirstOrDefault();
+						.FirstOrDefault().Pattern.ColorData.ToArray());
 
 				if (currentPatternIcon is not null)
 				{
@@ -228,20 +228,23 @@ namespace Macrocosm.Content.Rockets.Navigation
 						{
 							var modulePattern = CustomizationDummy.Modules[module.Key].Pattern;
 
-							if (modulePattern.Name == currentPatternIcon.Pattern.Name && hslMenu.PreviousColor != hslMenu.PendingColor)
+							if (modulePattern.Name == currentPatternIcon.Pattern.Name && hslMenu.Edited)
 								CustomizationDummy.Modules[module.Key].Pattern = modulePattern.WithColor(colorIndex, hslMenu.PendingColor);
  						}
 					}
 					else
 					{
-						if(hslMenu.PreviousColor != hslMenu.PendingColor)
+                        if(hslMenu.Edited)
 							currentModule.Pattern = currentModule.Pattern.WithColor(colorIndex, hslMenu.PendingColor);
 					}
 				}
 
+
 				picker.BackPanelColor = currentModule.Pattern.GetColor(colorIndex);
-			}
-		}
+                dummyPatternEdits[(Rocket, currentModuleName)].FirstOrDefault(icon => icon.Pattern.Name == currentModule.Pattern.Name).Pattern =
+					dummyPatternEdits[(Rocket, currentModuleName)].FirstOrDefault(icon => icon.Pattern.Name == currentModule.Pattern.Name).Pattern.WithColor(colorIndex, hslMenu.PendingColor);
+            }
+        }
 
 		private void UpdateNamplateTextBox()
 		{
@@ -481,7 +484,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 				{
 					if(CustomizationStorage.TryGetPattern(module.Key, icon.Pattern.Name, out Pattern defaultPattern))
 					{
-						var currentPattern = defaultPattern.WithColorData(icon.Pattern.ColorData);
+						var currentPattern = defaultPattern.WithColorData(icon.Pattern.ColorData.ToArray());
 						CustomizationDummy.Modules[module.Key].Pattern = currentPattern;
 					}
 				}
@@ -578,7 +581,7 @@ namespace Macrocosm.Content.Rockets.Navigation
 					{
 						var defaultPattern = CustomizationStorage.GetPattern(module.Key, currentModulePattern.Name);
 						CustomizationDummy.Modules[module.Key].Pattern = defaultPattern;
-						dummyPatternEdits[(Rocket, module.Key)].FirstOrDefault(icon => icon.Pattern.Name == currentModulePattern.Name);
+						dummyPatternEdits[(Rocket, module.Key)].FirstOrDefault(icon => icon.Pattern.Name == currentModulePattern.Name).Pattern = defaultPattern;
 					}
 				}
 			}
@@ -587,8 +590,8 @@ namespace Macrocosm.Content.Rockets.Navigation
 				var defaultPattern = CustomizationStorage.GetPattern(currentModuleName, currentModule.Pattern.Name);
 				currentModule.Pattern = defaultPattern;
 				currentPatternIcon.Pattern = defaultPattern;
-				dummyPatternEdits[(Rocket, currentModuleName)].FirstOrDefault(icon => icon.Pattern.Name == currentModule.Pattern.Name);
-			}
+				dummyPatternEdits[(Rocket, currentModuleName)].FirstOrDefault(icon => icon.Pattern.Name == currentModule.Pattern.Name).Pattern = defaultPattern;
+            }
 
 			RefreshPatternColorPickers();
 		}

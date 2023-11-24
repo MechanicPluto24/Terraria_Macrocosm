@@ -94,5 +94,4 @@ namespace Macrocosm.Content.Rockets.Customization
 			return new(lerp, "Lerp") { Parameters = new object[] { index1, index2, amount } };
 		}
 	}
-
 }
