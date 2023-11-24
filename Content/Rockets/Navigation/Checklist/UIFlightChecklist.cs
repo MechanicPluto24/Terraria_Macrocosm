@@ -12,7 +12,7 @@ namespace Macrocosm.Content.Rockets.Navigation.Checklist
 {
     public class UIFlightChecklist : UIListScrollablePanel, IRocketDataConsumer
 	{
-		public Rocket Rocket { get; set; }
+		public Rocket Rocket { get; set; } = new();
 		public UIMapTarget MapTarget { get; set; }
 
 		private ChecklistConditionCollection commonLaunchConditions = new();

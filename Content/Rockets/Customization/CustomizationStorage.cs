@@ -79,7 +79,7 @@ namespace Macrocosm.Content.Rockets.Customization
 			});
 		}
 
-		public static List<Pattern> GetPatternsWhere(string moduleName, Func<Pattern, bool> match)
+        public static List<Pattern> GetPatternsWhere(string moduleName, Func<Pattern, bool> match)
 		{
 			var patternsForModule = patterns
 				.Select(kvp => kvp.Value)
@@ -224,6 +224,7 @@ namespace Macrocosm.Content.Rockets.Customization
 			var patterns = GetUnlockedPatterns(moduleName);
 			int count = patterns.Count;
 
+			// TODO: fix positioning just like in inventory panel
 			int iconsPerRow = 9;
 			float iconSize;
 			float iconOffsetLeft;
