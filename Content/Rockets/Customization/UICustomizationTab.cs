@@ -20,835 +20,846 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Navigation
 {
-	public class UICustomizationTab : UIPanel, ITabUIElement, IRocketDataConsumer
+    public class UICustomizationTab : UIPanel, ITabUIElement, IRocketDataConsumer
     {
-		private Rocket rocket = new();
-		public Rocket Rocket {
-			get => rocket;
-			set
-			{
-				bool changed = rocket != value;
-				rocket = value;
-
-				if (changed)
-					OnRocketChanged();
-			}
-		} 
-
-
-		private readonly Dictionary<Rocket, Rocket> rocketDummyPairs = new();
-		public Rocket CustomizationDummy { 
-			get 
-			{
-				if(!rocketDummyPairs.ContainsKey(Rocket))
-					rocketDummyPairs[Rocket] = Rocket.Clone();
-
-				return rocketDummyPairs[Rocket];
-			}
-			set 
-			{
-				rocketDummyPairs[Rocket] = value;
-			} 
-		}
-
-		private readonly Dictionary<(Rocket rocket, string moduleName), List<UIPatternIcon>> dummyPatternEdits = new();
-
-		private UIPanel rocketPreviewBackground;
-		private UIHoverImageButton rocketPreviewZoomButton;
-		private UIRocketPreviewLarge rocketPreview;
-
-		private UIPanel customizationPanelBackground;
-
-		private UIPanel modulePicker;
-		private UIText modulePickerTitle;
-		private UIHoverImageButton leftButton;
-		private UIHoverImageButton rightButton;
-		private string currentModuleName = "CommandPod";
-		private RocketModule currentModule;
-
-		private UIPanel rocketCustomizationControlPanel;
-		private UIPanelIconButton rocketApplyButton;
-		private UIPanelIconButton rocketCancelButton;
-		private UIPanelIconButton rocketResetButton;
-		private UIPanelIconButton rocketCopyButton;
-		private UIPanelIconButton rocketPasteButton;
-
-		private UIPanel nameplateConfigPanel;
-		private UIInputTextBox nameplateTextBox;
-		private UIFocusIconButton nameplateColorPicker;
-		private UIFocusIconButton alignLeft;
-		private UIFocusIconButton alignCenterHorizontal;
-		private UIFocusIconButton alignRight;
-		private UIFocusIconButton alignTop;
-		private UIFocusIconButton alignCenterVertical;
-		private UIFocusIconButton alignBottom;
-
-		private UIPanel detailConfigPanel;
-
-		private UIPanel patternConfigPanel;
-		private UIListScrollablePanel patternSelector;
-		private UIPatternIcon currentPatternIcon;
-
-		private UIPanelIconButton resetPatternButton;
-		private UIVerticalSeparator colorPickerSeparator;
-		private List<(UIFocusIconButton picker, int colorIndex)> patternColorPickers;
-		
-		private UIColorMenuHSL hslMenu;
-		private float luminanceSliderFactor = 0.85f;
-
-		public UICustomizationTab()
-		{
-		}
-
-		public override void OnInitialize()
+        private Rocket rocket = new();
+        public Rocket Rocket
         {
-			Width.Set(0, 1f);
-			Height.Set(0, 1f);
-			HAlign = 0.5f;
-			VAlign = 0.5f;
+            get => rocket;
+            set
+            {
+                bool changed = rocket != value;
+                rocket = value;
 
-			SetPadding(6f);
-
-			BackgroundColor = new Color(13, 23, 59, 127);
-			BorderColor = new Color(15, 15, 15, 255);
-
-			rocketPreviewBackground = CreateRocketPreview();
-			Append(rocketPreviewBackground);
-
-			customizationPanelBackground = new()
-			{
-				Width = new(0, 0.6f),
-				Height = new(0, 1f),
-				HAlign = 0f,
-				BackgroundColor = new Color(53, 72, 135),
-				BorderColor = new Color(89, 116, 213, 255)
-			};
-			customizationPanelBackground.SetPadding(6f);
-			Append(customizationPanelBackground);
-
-			modulePicker = CreateModulePicker();
-			customizationPanelBackground.Append(modulePicker);
-
-			nameplateConfigPanel = CreateNameplateConfigPanel();
-			customizationPanelBackground.Append(nameplateConfigPanel);
-
-			detailConfigPanel = CreateDetailConfigPanel();
-			customizationPanelBackground.Append(detailConfigPanel);
-
-			patternConfigPanel = CreatePatternConfigPanel();
-			customizationPanelBackground.Append(patternConfigPanel);
-			 
-			rocketCustomizationControlPanel = CreateRocketControlPanel();
-			customizationPanelBackground.Append(rocketCustomizationControlPanel);
-
-			hslMenu = new(luminanceSliderFactor)
-			{
-				HAlign = 0.98f,
-				Top = new(0f, 0.092f)
-			};
-			hslMenu.SetupApplyAndCancelButtons(ColorPickersLoseFocus, OnHSLMenuCancel);
-
-			customizationPanelBackground.Activate();
-		}
-
-		public void OnTabOpen()
-		{
-			RefreshPatternColorPickers();
-		}
-
-		public void OnTabClose()
-		{
-			Main.blockInput = false;
-			AllLoseFocus();
-		}
-
-		public override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
-
-			CustomizationDummy.ForcedStationaryAppearance = true;
-			rocketPreview.RocketDummy = CustomizationDummy;
-			UpdateCurrentModule();
-
-			UpdatePatternConfig();
-			UpdatePatternColorPickers();
-
-			UpdateNamplateTextBox();
-			UpdateNameplateColorPicker();
-			UpdateNameplateAlignButtons();
-
-			UpdateHSLMenuVisibility();
-
-			UpdateKeyboardCapture();
-		}
-
-		private void OnRocketChanged()
-		{
-			RefreshPatternConfigPanel();
-		}
-
-		#region Update methods
-		private void UpdateCurrentModule()
-		{
-			currentModule = CustomizationDummy.Modules[currentModuleName];
-			modulePickerTitle.SetText(Language.GetText("Mods.Macrocosm.UI.Rocket.Modules." + currentModuleName));
-		}
-
-		private void UpdatePatternConfig()
-		{
-			Pattern currentDummyPattern = CustomizationDummy.Modules[currentModuleName].Pattern;
-
-			if (patternSelector.Any())
-			{
-				if(dummyPatternEdits.ContainsKey((Rocket, currentModuleName)))
-                    currentPatternIcon.Pattern = currentPatternIcon.Pattern.WithColorData(dummyPatternEdits[(Rocket, currentModuleName)]
-						.Where((icon) => icon.Pattern.Name == currentDummyPattern.Name)
-						.FirstOrDefault().Pattern.ColorData.ToArray());
-
-				if (currentPatternIcon is not null)
-				{
-					currentPatternIcon.Pattern = currentDummyPattern;
-					currentPatternIcon.HasFocus = true;
-
-					if (patternColorPickers is null)
-						CreatePatternColorPickers();
-				}
-			}
-		}
-
-		private void UpdatePatternColorPickers()
-		{
-			foreach (var (picker, colorIndex) in patternColorPickers)
-			{
-				if (picker.HasFocus)
-				{
-					if (rocketPreview.ZoomedOut)
-					{
-						foreach (var module in CustomizationDummy.Modules)
-						{
-							var modulePattern = CustomizationDummy.Modules[module.Key].Pattern;
-
-							if (modulePattern.Name == currentPatternIcon.Pattern.Name && hslMenu.Edited)
-								CustomizationDummy.Modules[module.Key].Pattern = modulePattern.WithColor(colorIndex, hslMenu.PendingColor);
- 						}
-					}
-					else
-					{
-                        if(hslMenu.Edited)
-							currentModule.Pattern = currentModule.Pattern.WithColor(colorIndex, hslMenu.PendingColor);
-					}
-				}
-
-
-				picker.BackPanelColor = currentModule.Pattern.GetColor(colorIndex);
-                dummyPatternEdits[(Rocket, currentModuleName)].FirstOrDefault(icon => icon.Pattern.Name == currentModule.Pattern.Name).Pattern =
-					dummyPatternEdits[(Rocket, currentModuleName)].FirstOrDefault(icon => icon.Pattern.Name == currentModule.Pattern.Name).Pattern.WithColor(colorIndex, hslMenu.PendingColor);
+                if (changed)
+                    OnRocketChanged();
             }
         }
 
-		private void UpdateNamplateTextBox()
-		{
-			if (nameplateTextBox.HasFocus)
-				CustomizationDummy.Nameplate.Text = nameplateTextBox.Text;
-			else
-				nameplateTextBox.Text = CustomizationDummy.Nameplate.Text;
-		}
 
-		private void UpdateNameplateColorPicker()
-		{
-			if (nameplateColorPicker.HasFocus)
-			{
-				CustomizationDummy.Nameplate.TextColor = hslMenu.PendingColor;
-				nameplateColorPicker.BackPanelColor = hslMenu.PendingColor;
-				//nameplateTextBox.TextColor = hslMenu.PendingColor; // I don't think we want colored text in the text box lol -- Feldy
-			}
-			else
-			{
-				nameplateColorPicker.BackPanelColor = CustomizationDummy.Nameplate.TextColor;
-				//nameplateTextBox.TextColor = Rocket.CustomizationDummy.Nameplate.TextColor;
-			}
-		}
+        private readonly Dictionary<Rocket, Rocket> rocketDummyPairs = new();
+        public Rocket CustomizationDummy
+        {
+            get
+            {
+                if (!rocketDummyPairs.ContainsKey(Rocket))
+                    rocketDummyPairs[Rocket] = Rocket.Clone();
 
-		private void UpdateNameplateAlignButtons()
-		{
-			switch (CustomizationDummy.Nameplate.HAlign)
-			{
-				case TextHorizontalAlign.Left: alignLeft.HasFocus = true; break;
-				case TextHorizontalAlign.Right: alignRight.HasFocus = true; break;
-				case TextHorizontalAlign.Center: alignCenterHorizontal.HasFocus = true; break;
-			}
+                return rocketDummyPairs[Rocket];
+            }
+            set
+            {
+                rocketDummyPairs[Rocket] = value;
+            }
+        }
 
-			switch (CustomizationDummy.Nameplate.VAlign)
-			{
-				case TextVerticalAlign.Top: alignTop.HasFocus = true; break;
-				case TextVerticalAlign.Bottom: alignBottom.HasFocus = true; break;
-				case TextVerticalAlign.Center: alignCenterVertical.HasFocus = true; break;
-			}
-		}
+        private readonly Dictionary<(Rocket rocket, string moduleName), List<UIPatternIcon>> dummyPatternEdits = new();
+        private UIPatternIcon GetCurrentDummyEdit(string name)
+             => dummyPatternEdits[(Rocket, currentModule.Name)].FirstOrDefault(icon => icon.Pattern.Name == name);
 
-		private void UpdateHSLMenuVisibility()
-		{
-			if (GetFocusedColorPicker(out _))
-			{
-				hslMenu.UpdateKeyboardCapture();
+        private UIPanel rocketPreviewBackground;
+        private UIHoverImageButton rocketPreviewZoomButton;
+        private UIRocketPreviewLarge rocketPreview;
 
-				if (customizationPanelBackground.HasChild(rocketCustomizationControlPanel))
-					customizationPanelBackground.ReplaceChildWith(rocketCustomizationControlPanel, hslMenu);
-			}
-			else
-			{
-				if (customizationPanelBackground.HasChild(hslMenu))
-					customizationPanelBackground.ReplaceChildWith(hslMenu, rocketCustomizationControlPanel);
-			}
-		}
+        private UIPanel customizationPanelBackground;
 
-		private void UpdateKeyboardCapture()
-		{
-			Main.blockInput = !Main.keyState.KeyPressed(Keys.Escape) && !Main.keyState.KeyPressed(Keys.R);
+        private UIPanel modulePicker;
+        private UIText modulePickerTitle;
+        private UIHoverImageButton leftButton;
+        private UIHoverImageButton rightButton;
+        private string currentModuleName = "CommandPod";
+        private RocketModule currentModule;
+        private RocketModule lastModule;
 
-			bool colorPickerSelected = GetFocusedColorPicker(out var colorPicker);
-			int indexInList = patternColorPickers.IndexOf(colorPicker);
+        private UIPanel rocketCustomizationControlPanel;
+        private UIPanelIconButton rocketApplyButton;
+        private UIPanelIconButton rocketCancelButton;
+        private UIPanelIconButton rocketResetButton;
+        private UIPanelIconButton rocketCopyButton;
+        private UIPanelIconButton rocketPasteButton;
 
-			if (Main.keyState.KeyPressed(Keys.Left))
-			{
-				if(colorPicker.colorIndex >= 0)
-				{
-					if (indexInList - 1 >= 0)
-						patternColorPickers[indexInList - 1].picker.HasFocus = true;
-				} 
-				else
-				{
-					leftButton.TriggerRemoteInteraction();
-					PickPreviousModule();
-				}
-			}
-			else if(Main.keyState.KeyPressed(Keys.Right))
-			{
-				if (colorPicker.colorIndex >= 0)
-				{
-					if (indexInList + 1 < patternColorPickers.Count)
-						patternColorPickers[indexInList + 1].picker.HasFocus = true;
-				}
-				else
-				{
-					rightButton.TriggerRemoteInteraction();
-					PickNextModule();
-				}
-			}
+        private UIPanel nameplateConfigPanel;
+        private UIInputTextBox nameplateTextBox;
+        private UIFocusIconButton nameplateColorPicker;
+        private UIFocusIconButton alignLeft;
+        private UIFocusIconButton alignCenterHorizontal;
+        private UIFocusIconButton alignRight;
+        private UIFocusIconButton alignTop;
+        private UIFocusIconButton alignCenterVertical;
+        private UIFocusIconButton alignBottom;
 
-			if (colorPickerSelected)
- 				hslMenu.UpdateKeyboardCapture();
-		}
-		#endregion
+        private UIPanel detailConfigPanel;
 
-		#region Control actions
-		private void PickPreviousModule()
-		{
-			rocketPreview.PreviousModule();
-			RefreshPatternColorPickers();
-			AllLoseFocus();
-		}
+        private UIPanel patternConfigPanel;
+        private UIListScrollablePanel patternSelector;
+        private UIPatternIcon currentPatternIcon;
 
-		private void PickNextModule()
-		{
-			rocketPreview.NextModule();
-			RefreshPatternColorPickers();
-			AllLoseFocus();
-		}
+        private UIPanelIconButton resetPatternButton;
+        private UIVerticalSeparator colorPickerSeparator;
+        private List<(UIFocusIconButton picker, int colorIndex)> patternColorPickers;
 
-		private void JumpToModule(string moduleName)
-		{
-			rocketPreview.SetModule(moduleName);
-			RefreshPatternColorPickers();
-		}
+        private UIColorMenuHSL hslMenu;
+        private float luminanceSliderFactor = 0.85f;
 
-		private void OnCurrentModuleChange(string moduleName, int moduleIndex)
-		{
-			currentModuleName = moduleName;
-			UpdateCurrentModule();
-			RefreshPatternConfigPanel();
-		}
+        public UICustomizationTab()
+        {
+        }
 
-		private void RefreshPatternConfigPanel()
-		{
-			customizationPanelBackground.ReplaceChildWith(patternConfigPanel, CreatePatternConfigPanel());
-			RefreshPatternColorPickers();
-		}
+        public override void OnInitialize()
+        {
+            Width.Set(0, 1f);
+            Height.Set(0, 1f);
+            HAlign = 0.5f;
+            VAlign = 0.5f;
 
-		private void OnPreviewZoomIn()
-		{
-			rocketPreviewZoomButton.SetImage(ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Buttons/ZoomOutButton"));
-		}
+            SetPadding(6f);
 
-		private void OnPreviewZoomOut()
-		{
-			hslMenu.CaptureCurrentColor();
-			rocketPreviewZoomButton.SetImage(ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Buttons/ZoomInButton"));
-		}
+            BackgroundColor = new Color(13, 23, 59, 127);
+            BorderColor = new Color(15, 15, 15, 255);
 
-		private void ApplyCustomizationChanges()
-		{
-			AllLoseFocus();
+            rocketPreviewBackground = CreateRocketPreview();
+            Append(rocketPreviewBackground);
 
-			Rocket.ApplyCustomizationChanges(CustomizationDummy);
+            customizationPanelBackground = new()
+            {
+                Width = new(0, 0.6f),
+                Height = new(0, 1f),
+                HAlign = 0f,
+                BackgroundColor = new Color(53, 72, 135),
+                BorderColor = new Color(89, 116, 213, 255)
+            };
+            customizationPanelBackground.SetPadding(6f);
+            Append(customizationPanelBackground);
 
-			RefreshPatternColorPickers();
-		}
+            modulePicker = CreateModulePicker();
+            customizationPanelBackground.Append(modulePicker);
 
-		private void DiscardCustomizationChanges()
-		{
-			AllLoseFocus();
+            nameplateConfigPanel = CreateNameplateConfigPanel();
+            customizationPanelBackground.Append(nameplateConfigPanel);
 
-			CustomizationDummy = Rocket.Clone();
+            detailConfigPanel = CreateDetailConfigPanel();
+            customizationPanelBackground.Append(detailConfigPanel);
 
-			UpdatePatternConfig();
-			currentPatternIcon.Pattern = CustomizationDummy.Modules[currentModuleName].Pattern;
+            patternConfigPanel = CreatePatternConfigPanel();
+            customizationPanelBackground.Append(patternConfigPanel);
 
-			RefreshPatternColorPickers();
-		}
+            rocketCustomizationControlPanel = CreateRocketControlPanel();
+            customizationPanelBackground.Append(rocketCustomizationControlPanel);
 
-		private void ResetRocketToDefaults()
-		{
-			AllLoseFocus();
+            hslMenu = new(luminanceSliderFactor)
+            {
+                HAlign = 0.98f,
+                Top = new(0f, 0.092f)
+            };
+            hslMenu.SetupApplyAndCancelButtons(ColorPickersLoseFocus, OnHSLMenuCancel);
 
-			CustomizationDummy.ResetCustomizationToDefault();
+            customizationPanelBackground.Activate();
+        }
 
-			RefreshPatternColorPickers();
-		}
+        public void OnTabOpen()
+        {
+            RefreshPatternColorPickers();
+        }
 
-		private void CopyRocketData()
-		{
-			SoundEngine.PlaySound(SoundID.MenuTick);
-			string json = CustomizationDummy.GetCustomizationDataToJSON();
-			Platform.Get<IClipboard>().Value = json;
-		}
+        public void OnTabClose()
+        {
+            Main.blockInput = false;
+            AllLoseFocus();
 
-		private void PasteRocketData()
-		{
-			SoundEngine.PlaySound(SoundID.MenuTick);
-			string json = Platform.Get<IClipboard>().Value;
+        }
 
-			try
-			{
-				CustomizationDummy.ApplyRocketCustomizationFromJSON(json);
-				RefreshPatternColorPickers();
-			}
-			catch (Exception ex)
-			{
-				Utility.Chat(ex.Message);
-			}
-		}
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
 
-		private void OnHSLMenuCancel()
-		{
-			if (GetFocusedColorPicker(out var item))
-			{
-				if (item.colorIndex >= 0)
-				{
-					item.picker.BackPanelColor = hslMenu.PreviousColor;
+            CustomizationDummy.ForcedStationaryAppearance = true;
+            rocketPreview.RocketDummy = CustomizationDummy;
+            currentModule ??= CustomizationDummy.Modules["CommandPod"];
+            lastModule ??= currentModule;
 
-					if (rocketPreview.ZoomedOut)
-					{
-						foreach (var module in CustomizationDummy.Modules)
-						{
-							var modulePattern = CustomizationDummy.Modules[module.Key].Pattern;
+            UpdatePatternConfig();
+            UpdatePatternColorPickers();
 
-							if (modulePattern.Name == currentPatternIcon.Pattern.Name)
-								CustomizationDummy.Modules[module.Key].Pattern = modulePattern.WithColor(item.colorIndex, hslMenu.PendingColor, evenIfNotUserModifiable: true);
-						}
-					}
-					else
-					{
-						currentModule.Pattern = currentModule.Pattern.WithColor(item.colorIndex, hslMenu.PreviousColor);
-					}	
-				}
-				else if (item.colorIndex == -1)
-				{
-					CustomizationDummy.Nameplate.TextColor = hslMenu.PreviousColor;
-				}
-			}
+            UpdateNamplateTextBox();
+            UpdateNameplateColorPicker();
+            UpdateNameplateAlignButtons();
 
-			ColorPickersLoseFocus();
+            UpdateHSLMenuVisibility();
+            UpdateModulePicker();
+            UpdateKeyboardCapture();
+        }
 
-		}
-		#endregion
+        private void OnRocketChanged()
+        {
+            RefreshPatternConfigPanel();
+        }
 
-		#region Pattern selection methods
-		public void SelectPattern(UIPatternIcon icon)
-		{
-			currentPatternIcon = dummyPatternEdits[(Rocket, currentModuleName)].FirstOrDefault(stored => stored.Pattern.Name == icon.Pattern.Name);
+        #region Update methods
+        private void UpdateCurrentModule()
+        {
 
-			if (rocketPreview.ZoomedOut)
-			{
-				foreach(var module in CustomizationDummy.Modules)
-				{
-					if(CustomizationStorage.TryGetPattern(module.Key, icon.Pattern.Name, out Pattern defaultPattern))
-					{
-						var currentPattern = defaultPattern.WithColorData(icon.Pattern.ColorData.ToArray());
-						CustomizationDummy.Modules[module.Key].Pattern = currentPattern;
-					}
-				}
-			}
-			else
-			{
-				currentModule.Pattern = CustomizationStorage.GetPattern(icon.Pattern.ModuleName, icon.Pattern.Name);
-			}
+        }
 
-			RefreshPatternColorPickers();
-		}
+        private void UpdatePatternConfig()
+        {
+            Pattern currentDummyPattern = CustomizationDummy.Modules[currentModule.Name].Pattern;
 
-		private void RefreshPatternColorPickers()
-		{
-			UpdateCurrentModule();
-			UpdatePatternConfig();
-			ClearPatternColorPickers();
-			CreatePatternColorPickers();
-		}
+            if (patternSelector.OfType<UIPatternIcon>().Any())
+            {
+                currentPatternIcon = patternSelector.OfType<UIPatternIcon>().FirstOrDefault(icon => icon.Pattern.Name == currentDummyPattern.Name);
+                currentPatternIcon.Pattern = currentDummyPattern;
+                currentPatternIcon.HasFocus = true;
 
-		private void ClearPatternColorPickers()
-		{
-			if (patternColorPickers is not null)
-				foreach (var (picker, _) in patternColorPickers)
-					picker.Remove();
+                if (patternColorPickers is null)
+                    CreatePatternColorPickers();
+            }
+        }
 
-			colorPickerSeparator?.Remove();
-			resetPatternButton?.Remove();
-		}
+        private void UpdatePatternColorPickers()
+        {
+            foreach (var (picker, colorIndex) in patternColorPickers)
+            {
+                if (picker.HasFocus)
+                {
+                    if (rocketPreview.ZoomedOut)
+                    {
+                        foreach (var module in CustomizationDummy.Modules)
+                        {
+                            var modulePattern = CustomizationDummy.Modules[module.Key].Pattern;
 
-		private List<(UIFocusIconButton, int)> CreatePatternColorPickers()
-		{
-			patternColorPickers = new();
+                            if (modulePattern.Name == currentPatternIcon.Pattern.Name && hslMenu.PendingChange)
+                                CustomizationDummy.Modules[module.Key].Pattern = modulePattern.WithColor(colorIndex, hslMenu.PendingColor);
+                        }
+                    }
+                    else
+                    {
+                        if (hslMenu.PendingChange)
+                        {
+                            currentModule.Pattern = currentModule.Pattern.WithColor(colorIndex, hslMenu.PendingColor);
+                            currentPatternIcon.Pattern = currentModule.Pattern.WithColor(colorIndex, hslMenu.PendingColor);
+                        }
+                    }
+                }
 
-			var indexes = currentModule.Pattern.UserModifiableIndexes;
+                picker.BackPanelColor = currentModule.Pattern.GetColor(colorIndex);
+            }
+        }
 
-			float iconSize = 32f + 8f;
-			float iconLeftOffset = 3f;
+        private void UpdateNamplateTextBox()
+        {
+            if (nameplateTextBox.HasFocus)
+                CustomizationDummy.Nameplate.Text = nameplateTextBox.Text;
+            else
+                nameplateTextBox.Text = CustomizationDummy.Nameplate.Text;
+        }
 
-			for (int i = 0; i < indexes.Count; i++)
-			{
-				UIFocusIconButton colorPicker = new()
-				{
-					HAlign = 0f,
-					Top = new(0f, 0.04f),
-					Left = new(iconSize * i + iconLeftOffset, 0f),
-					FocusContext = "RocketCustomizationColorPicker"
-				};
+        private void UpdateNameplateColorPicker()
+        {
+            if (nameplateColorPicker.HasFocus)
+            {
+                CustomizationDummy.Nameplate.TextColor = hslMenu.PendingColor;
+                nameplateColorPicker.BackPanelColor = hslMenu.PendingColor;
+            }
+            else
+            {
+                nameplateColorPicker.BackPanelColor = CustomizationDummy.Nameplate.TextColor;
+            }
+        }
 
-				colorPicker.OnLeftClick += (_, _) => { colorPicker.HasFocus = true; };
-				colorPicker.OnFocusGain = PatternColorPickerOnFocusGain;
-
-				colorPicker.OnRightClick += (_, _) => { colorPicker.HasFocus = false; };
-				colorPicker.OnFocusLost += PatternColorPickerOnFocusLost;
-
-				patternConfigPanel.Append(colorPicker);
-				patternColorPickers.Add((colorPicker, indexes[i]));
-			}
-
-			colorPickerSeparator = new()
-			{
-				Height = new(32f, 0f),
-				Top = new(0f, 0.04f),
-				Left = new(iconSize * indexes.Count + iconLeftOffset - 1f, 0f),
-				Color = new Color(89, 116, 213, 255) * 1.1f
-			};
-			patternConfigPanel.Append(colorPickerSeparator);
-
-			resetPatternButton = new(ModContent.Request<Texture2D>(symbolsPath + "ResetWhite"))
-			{
-				HAlign = 0f,
-				Top = new(0f, 0.04f),
-				Left = new(iconSize * indexes.Count + iconLeftOffset + 7f, 0f),
-				HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Customization.ResetPattern")
-			};
-			resetPatternButton.OnLeftClick += (_, _) => ResetCurrentPatternToDefaults();
-			patternConfigPanel.Append(resetPatternButton);
-
-			return patternColorPickers;
-		}
-
-		private void ResetCurrentPatternToDefaults()
-		{
-			//UpdatePatternConfig();
-			ColorPickersLoseFocus();
-
-			if (rocketPreview.ZoomedOut)
-			{
-				foreach (var module in CustomizationDummy.Modules)
-				{
-					var currentModulePattern = CustomizationDummy.Modules[module.Key].Pattern;
-
-					if (currentModulePattern.Name == currentPatternIcon.Pattern.Name)
-					{
-						var defaultPattern = CustomizationStorage.GetPattern(module.Key, currentModulePattern.Name);
-						CustomizationDummy.Modules[module.Key].Pattern = defaultPattern;
-						dummyPatternEdits[(Rocket, module.Key)].FirstOrDefault(icon => icon.Pattern.Name == currentModulePattern.Name).Pattern = defaultPattern;
-					}
-				}
-			}
-			else
-			{
-				var defaultPattern = CustomizationStorage.GetPattern(currentModuleName, currentModule.Pattern.Name);
-				currentModule.Pattern = defaultPattern;
-				currentPatternIcon.Pattern = defaultPattern;
-				dummyPatternEdits[(Rocket, currentModuleName)].FirstOrDefault(icon => icon.Pattern.Name == currentModule.Pattern.Name).Pattern = defaultPattern;
+        private void UpdateNameplateAlignButtons()
+        {
+            switch (CustomizationDummy.Nameplate.HAlign)
+            {
+                case TextHorizontalAlign.Left: alignLeft.HasFocus = true; break;
+                case TextHorizontalAlign.Right: alignRight.HasFocus = true; break;
+                case TextHorizontalAlign.Center: alignCenterHorizontal.HasFocus = true; break;
             }
 
-			RefreshPatternColorPickers();
-		}
-		#endregion
+            switch (CustomizationDummy.Nameplate.VAlign)
+            {
+                case TextVerticalAlign.Top: alignTop.HasFocus = true; break;
+                case TextVerticalAlign.Bottom: alignBottom.HasFocus = true; break;
+                case TextVerticalAlign.Center: alignCenterVertical.HasFocus = true; break;
+            }
+        }
 
-		#region Focus handlers
-		private void AllLoseFocus()
-		{
-			nameplateTextBox.HasFocus = false;
-			ColorPickersLoseFocus();
-		}
+        private void UpdateHSLMenuVisibility()
+        {
+            if (GetFocusedColorPicker(out _))
+            {
+                hslMenu.UpdateKeyboardCapture();
 
-		private bool GetFocusedColorPicker(out (UIFocusIconButton picker, int colorIndex) focused)
-		{
-			if (patternColorPickers is not null)
-			{
-				foreach (var (picker, colorIndex) in patternColorPickers)
-				{
-					if (picker.HasFocus)
-					{
-						focused = (picker, colorIndex);
-						return true;
-					}
-				}
-			}
-			
-			if (nameplateColorPicker.HasFocus)
-			{
-				focused = (nameplateColorPicker, -1);
-				return true;
-			}
+                if (customizationPanelBackground.HasChild(rocketCustomizationControlPanel))
+                    customizationPanelBackground.ReplaceChildWith(rocketCustomizationControlPanel, hslMenu);
+            }
+            else
+            {
+                if (customizationPanelBackground.HasChild(hslMenu))
+                    customizationPanelBackground.ReplaceChildWith(hslMenu, rocketCustomizationControlPanel);
+            }
+        }
 
-			focused = (null, int.MinValue);
-			return false;
-		}
+        private void UpdateModulePicker()
+        {
+        }
 
-		private void ColorPickersLoseFocus()
-		{
-			if (GetFocusedColorPicker(out var item))
-				item.picker.HasFocus = false;
-		}
+        private void UpdateKeyboardCapture()
+        {
+            Main.blockInput = !Main.keyState.KeyPressed(Keys.Escape) && !Main.keyState.KeyPressed(Keys.R);
 
-		private void NameplateTextOnFocusGain()
-		{
-			JumpToModule("EngineModule");
-		}
+            bool colorPickerSelected = GetFocusedColorPicker(out var colorPicker);
+            int indexInList = patternColorPickers.IndexOf(colorPicker);
 
-		private void NameplateTextOnFocusLost()
-		{
-		}
+            if (Main.keyState.KeyPressed(Keys.Left))
+            {
+                if (colorPicker.colorIndex >= 0)
+                {
+                    if (indexInList - 1 >= 0)
+                        patternColorPickers[indexInList - 1].picker.HasFocus = true;
+                }
+                else
+                {
+                    leftButton.TriggerRemoteInteraction();
+                    PickPreviousModule();
+                }
+            }
+            else if (Main.keyState.KeyPressed(Keys.Right))
+            {
+                if (colorPicker.colorIndex >= 0)
+                {
+                    if (indexInList + 1 < patternColorPickers.Count)
+                        patternColorPickers[indexInList + 1].picker.HasFocus = true;
+                }
+                else
+                {
+                    rightButton.TriggerRemoteInteraction();
+                    PickNextModule();
+                }
+            }
 
-		private void NameplateColorPickerOnFocusGain()
-		{
-			JumpToModule("EngineModule");
+            if (colorPickerSelected)
+                hslMenu.UpdateKeyboardCapture();
+        }
+        #endregion
 
-			hslMenu.SetColorHSL(CustomizationDummy.Nameplate.TextColor.ToScaledHSL(luminanceSliderFactor));
-			hslMenu.CaptureCurrentColor();
-		}
+        #region Control actions
+        private void PickPreviousModule()
+        {
+            if (rocketPreview.ZoomedOut)
+                return;
 
-		private void NameplateColorPickerOnFocusLost()
-		{
-		}
+            rocketPreview.PreviousModule();
+            RefreshPatternColorPickers();
+            AllLoseFocus();
+        }
 
-		private void PatternColorPickerOnFocusGain()
-		{
-			if(GetFocusedColorPicker(out var item) && item.colorIndex >= 0)
-			{
-				hslMenu.SetColorHSL(currentModule.Pattern.GetColor(item.colorIndex).ToScaledHSL(luminanceSliderFactor));
-				hslMenu.CaptureCurrentColor();
-			}
-		}
+        private void PickNextModule()
+        {
+            if (rocketPreview.ZoomedOut)
+                return;
 
-		private void PatternColorPickerOnFocusLost()
-		{
-		}
-		#endregion
+            rocketPreview.NextModule();
+            RefreshPatternColorPickers();
+            AllLoseFocus();
+        }
 
-		#region UI creation methods
-		private const string buttonsPath = "Macrocosm/Content/Rockets/Textures/Buttons/";
-		private const string symbolsPath = "Macrocosm/Content/Rockets/Textures/Symbols/";
+        private void JumpToModule(string moduleName)
+        {
+            rocketPreview.SetModule(moduleName);
+            RefreshPatternColorPickers();
+        }
+
+        private void OnCurrentModuleChange(string moduleName, int moduleIndex)
+        {
+            currentModule = CustomizationDummy.Modules[moduleName];
+            modulePickerTitle.SetText(Language.GetText("Mods.Macrocosm.UI.Rocket.Modules." + moduleName));
+            RefreshPatternConfigPanel();
+        }
+
+        private void RefreshPatternConfigPanel()
+        {
+            customizationPanelBackground.ReplaceChildWith(patternConfigPanel, CreatePatternConfigPanel());
+            RefreshPatternColorPickers();
+        }
+
+        private void OnPreviewZoomIn()
+        {
+            rocketPreviewZoomButton.SetImage(ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Buttons/ZoomOutButton"));
+
+            currentModule = lastModule;
+            modulePickerTitle.SetText(Language.GetText("Mods.Macrocosm.UI.Rocket.Modules." + currentModule.Name));
+            RefreshPatternConfigPanel();
+        }
+
+        private void OnPreviewZoomOut()
+        {
+            rocketPreviewZoomButton.SetImage(ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Buttons/ZoomInButton"));
+
+            hslMenu.CaptureCurrentColor();
+
+            lastModule = currentModule;
+            currentModule = CustomizationDummy.Modules["BoosterRight"];
+            modulePickerTitle.SetText("");
+            RefreshPatternConfigPanel();
+        }
+
+        private void ApplyCustomizationChanges()
+        {
+            AllLoseFocus();
+
+            Rocket.ApplyCustomizationChanges(CustomizationDummy);
+
+            RefreshPatternColorPickers();
+        }
+
+        private void DiscardCustomizationChanges()
+        {
+            AllLoseFocus();
+
+            CustomizationDummy = Rocket.Clone();
+
+            UpdatePatternConfig();
+            currentPatternIcon.Pattern = CustomizationDummy.Modules[currentModule.Name].Pattern;
+
+            RefreshPatternColorPickers();
+        }
+
+        private void ResetRocketToDefaults()
+        {
+            AllLoseFocus();
+            CustomizationDummy.ResetCustomizationToDefault();
+            RefreshPatternColorPickers();
+        }
+
+        private void CopyRocketData()
+        {
+            SoundEngine.PlaySound(SoundID.MenuTick);
+            string json = CustomizationDummy.GetCustomizationDataToJSON();
+            Platform.Get<IClipboard>().Value = json;
+        }
+
+        private void PasteRocketData()
+        {
+            SoundEngine.PlaySound(SoundID.MenuTick);
+            string json = Platform.Get<IClipboard>().Value;
+
+            try
+            {
+                CustomizationDummy.ApplyRocketCustomizationFromJSON(json);
+                RefreshPatternColorPickers();
+            }
+            catch (Exception ex)
+            {
+                Utility.Chat(ex.Message);
+            }
+        }
+
+        private void OnHSLMenuCancel()
+        {
+            if (GetFocusedColorPicker(out var item))
+            {
+                if (item.colorIndex >= 0)
+                {
+                    item.picker.BackPanelColor = hslMenu.PreviousColor;
+
+                    if (rocketPreview.ZoomedOut)
+                    {
+                        foreach (var module in CustomizationDummy.Modules)
+                        {
+                            var modulePattern = CustomizationDummy.Modules[module.Key].Pattern;
+
+                            if (modulePattern.Name == currentPatternIcon.Pattern.Name)
+                                CustomizationDummy.Modules[module.Key].Pattern = modulePattern.WithColor(item.colorIndex, hslMenu.PendingColor, evenIfNotUserModifiable: true);
+                        }
+                    }
+                    else
+                    {
+                        currentModule.Pattern = currentModule.Pattern.WithColor(item.colorIndex, hslMenu.PreviousColor);
+                    }
+                }
+                else if (item.colorIndex == -1)
+                {
+                    CustomizationDummy.Nameplate.TextColor = hslMenu.PreviousColor;
+                }
+            }
+            ColorPickersLoseFocus();
+        }
+        #endregion
+
+        #region Pattern selection methods
+        public void SelectPattern(UIPatternIcon icon)
+        {
+            currentPatternIcon = icon;
+
+            if (rocketPreview.ZoomedOut)
+            {
+                foreach (var module in CustomizationDummy.Modules)
+                {
+                    if (CustomizationStorage.TryGetPattern(module.Key, icon.Pattern.Name, out Pattern defaultPattern))
+                    {
+                        var currentPattern = defaultPattern.WithColorData(icon.Pattern.ColorData);
+                        CustomizationDummy.Modules[module.Key].Pattern = currentPattern;
+                    }
+                }
+            }
+            else
+            {
+                currentModule.Pattern = CustomizationStorage.GetPattern(icon.Pattern.ModuleName, icon.Pattern.Name).WithColorData(icon.Pattern.ColorData); 
+            }
+
+            RefreshPatternColorPickers();
+        }
+
+        private void RefreshPatternColorPickers()
+        {
+            UpdatePatternConfig();
+            ClearPatternColorPickers();
+            CreatePatternColorPickers();
+        }
+
+        private void ClearPatternColorPickers()
+        {
+            if (patternColorPickers is not null)
+                foreach (var (picker, _) in patternColorPickers)
+                    picker.Remove();
+
+            colorPickerSeparator?.Remove();
+            resetPatternButton?.Remove();
+        }
+
+        private List<(UIFocusIconButton, int)> CreatePatternColorPickers()
+        {
+            patternColorPickers = new();
+
+            var indexes = currentModule.Pattern.UserModifiableIndexes;
+
+            float iconSize = 32f + 8f;
+            float iconLeftOffset = 3f;
+
+            for (int i = 0; i < indexes.Count; i++)
+            {
+                UIFocusIconButton colorPicker = new()
+                {
+                    HAlign = 0f,
+                    Top = new(0f, 0.04f),
+                    Left = new(iconSize * i + iconLeftOffset, 0f),
+                    FocusContext = "RocketCustomizationColorPicker"
+                };
+
+                colorPicker.OnLeftClick += (_, _) => { colorPicker.HasFocus = true; };
+                colorPicker.OnFocusGain = PatternColorPickerOnFocusGain;
+
+                colorPicker.OnRightClick += (_, _) => { colorPicker.HasFocus = false; };
+                colorPicker.OnFocusLost += PatternColorPickerOnFocusLost;
+
+                patternConfigPanel.Append(colorPicker);
+                patternColorPickers.Add((colorPicker, indexes[i]));
+            }
+
+            colorPickerSeparator = new()
+            {
+                Height = new(32f, 0f),
+                Top = new(0f, 0.04f),
+                Left = new(iconSize * indexes.Count + iconLeftOffset - 1f, 0f),
+                Color = new Color(89, 116, 213, 255) * 1.1f
+            };
+            patternConfigPanel.Append(colorPickerSeparator);
+
+            resetPatternButton = new(ModContent.Request<Texture2D>(symbolsPath + "ResetWhite"))
+            {
+                HAlign = 0f,
+                Top = new(0f, 0.04f),
+                Left = new(iconSize * indexes.Count + iconLeftOffset + 7f, 0f),
+                HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Customization.ResetPattern")
+            };
+            resetPatternButton.OnLeftClick += (_, _) => ResetCurrentPatternToDefaults();
+            patternConfigPanel.Append(resetPatternButton);
+
+            return patternColorPickers;
+        }
+
+        private void ResetCurrentPatternToDefaults()
+        {
+            //UpdatePatternConfig();
+            ColorPickersLoseFocus();
+
+            if (rocketPreview.ZoomedOut)
+            {
+                foreach (var module in CustomizationDummy.Modules)
+                {
+                    var currentModulePattern = CustomizationDummy.Modules[module.Key].Pattern;
+
+                    if (currentModulePattern.Name == currentPatternIcon.Pattern.Name)
+                    {
+                        var defaultPattern = CustomizationStorage.GetPattern(module.Key, currentModulePattern.Name);
+                        CustomizationDummy.Modules[module.Key].Pattern = defaultPattern;
+                        currentPatternIcon.Pattern = defaultPattern;
+                    }
+                }
+            }
+            else
+            {
+                var defaultPattern = CustomizationStorage.GetPattern(currentModule.Name, currentModule.Pattern.Name);
+                currentModule.Pattern = defaultPattern;
+                currentPatternIcon.Pattern = defaultPattern;
+            }
+
+            RefreshPatternColorPickers();
+        }
+        #endregion
+
+        #region Focus handlers
+        private void AllLoseFocus()
+        {
+            nameplateTextBox.HasFocus = false;
+            ColorPickersLoseFocus();
+        }
+
+        private bool GetFocusedColorPicker(out (UIFocusIconButton picker, int colorIndex) focused)
+        {
+            if (patternColorPickers is not null)
+            {
+                foreach (var (picker, colorIndex) in patternColorPickers)
+                {
+                    if (picker.HasFocus)
+                    {
+                        focused = (picker, colorIndex);
+                        return true;
+                    }
+                }
+            }
+
+            if (nameplateColorPicker.HasFocus)
+            {
+                focused = (nameplateColorPicker, -1);
+                return true;
+            }
+
+            focused = (null, int.MinValue);
+            return false;
+        }
+
+        private void ColorPickersLoseFocus()
+        {
+            if (GetFocusedColorPicker(out var item))
+                item.picker.HasFocus = false;
+        }
+
+        private void NameplateTextOnFocusGain()
+        {
+            JumpToModule("EngineModule");
+        }
+
+        private void NameplateTextOnFocusLost()
+        {
+        }
+
+        private void NameplateColorPickerOnFocusGain()
+        {
+            JumpToModule("EngineModule");
+
+            hslMenu.SetColorHSL(CustomizationDummy.Nameplate.TextColor.ToScaledHSL(luminanceSliderFactor));
+            hslMenu.CaptureCurrentColor();
+        }
+
+        private void NameplateColorPickerOnFocusLost()
+        {
+        }
+
+        private void PatternColorPickerOnFocusGain()
+        {
+            if (GetFocusedColorPicker(out var item) && item.colorIndex >= 0)
+            {
+                hslMenu.SetColorHSL(currentModule.Pattern.GetColor(item.colorIndex).ToScaledHSL(luminanceSliderFactor));
+                hslMenu.CaptureCurrentColor();
+            }
+        }
+
+        private void PatternColorPickerOnFocusLost()
+        {
+        }
+        #endregion
+
+        #region UI creation methods
+        private const string buttonsPath = "Macrocosm/Content/Rockets/Textures/Buttons/";
+        private const string symbolsPath = "Macrocosm/Content/Rockets/Textures/Symbols/";
 
 
-		private UIPanel CreateRocketPreview()
-		{
-			rocketPreviewBackground = new()
-			{
-				Width = new(0, 0.4f),
-				Height = new(0, 1f),
-				Left = new(0, 0.605f),
-				HAlign = 0f,
-				BackgroundColor = new Color(53, 72, 135),
-				BorderColor = new Color(89, 116, 213, 255)
-			};
-			rocketPreviewBackground.SetPadding(2f);
-			rocketPreviewBackground.OverflowHidden = true;
-			rocketPreviewBackground.Activate();
-			Append(rocketPreviewBackground);
+        private UIPanel CreateRocketPreview()
+        {
+            rocketPreviewBackground = new()
+            {
+                Width = new(0, 0.4f),
+                Height = new(0, 1f),
+                Left = new(0, 0.605f),
+                HAlign = 0f,
+                BackgroundColor = new Color(53, 72, 135),
+                BorderColor = new Color(89, 116, 213, 255)
+            };
+            rocketPreviewBackground.SetPadding(2f);
+            rocketPreviewBackground.OverflowHidden = true;
+            rocketPreviewBackground.Activate();
+            Append(rocketPreviewBackground);
 
-			rocketPreview = new()
-			{
-				OnZoomedIn = OnPreviewZoomIn,
-				OnZoomedOut = OnPreviewZoomOut,
-				OnModuleChange = OnCurrentModuleChange,
-			};
-			rocketPreviewBackground.Append(rocketPreview);
+            rocketPreview = new()
+            {
+                OnZoomedIn = OnPreviewZoomIn,
+                OnZoomedOut = OnPreviewZoomOut,
+                OnModuleChange = OnCurrentModuleChange,
+            };
+            rocketPreviewBackground.Append(rocketPreview);
 
-			rocketPreviewZoomButton = new(ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Buttons/ZoomOutButton"), ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Buttons/ZoomButtonBorder"))
-			{
-				Left = new(10, 0),
-				Top = new(10, 0),
-				HoverText = Language.GetText("Mods.Macrocosm.UI.Common.ZoomOut")
-			};
-			rocketPreviewZoomButton.OnLeftClick += (_, _) => rocketPreview.ZoomedOut = !rocketPreview.ZoomedOut;
-			rocketPreviewBackground.Append(rocketPreviewZoomButton);
+            rocketPreviewZoomButton = new(ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Buttons/ZoomOutButton"), ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Buttons/ZoomButtonBorder"))
+            {
+                Left = new(10, 0),
+                Top = new(10, 0),
+                HoverText = Language.GetText("Mods.Macrocosm.UI.Common.ZoomOut")
+            };
+            rocketPreviewZoomButton.OnLeftClick += (_, _) => rocketPreview.ZoomedOut = !rocketPreview.ZoomedOut;
+            rocketPreviewBackground.Append(rocketPreviewZoomButton);
 
-			return rocketPreviewBackground;
-		}
+            return rocketPreviewBackground;
+        }
 
-		private UIPanel CreateModulePicker()
-		{
-			var mode = ReLogic.Content.AssetRequestMode.ImmediateLoad;
+        private UIPanel CreateModulePicker()
+        {
+            currentModule ??= CustomizationDummy.Modules["CommandPod"];
+            lastModule ??= CustomizationDummy.Modules["CommandPod"];
 
-			modulePicker = new()
-			{
-				Width = new(0, 0.36f),
-				Height = new(0, 0.25f),
-				HAlign = 0.007f,
-				Top = new(0f, 0.092f),
-				BackgroundColor = new Color(53, 72, 135),
-				BorderColor = new Color(89, 116, 213, 255),
-			};
-			modulePicker.SetPadding(0f);
+            var mode = ReLogic.Content.AssetRequestMode.ImmediateLoad;
 
-			modulePickerTitle = new(Language.GetText("Mods.Macrocosm.UI.Rocket.Modules." + currentModuleName), 0.9f, false)
-			{
-				IsWrapped = false,
-				HAlign = 0.5f,
-				VAlign = 0.05f,
-				TextColor = Color.White
-			};
-			modulePicker.Append(modulePickerTitle);
+            modulePicker = new()
+            {
+                Width = new(0, 0.36f),
+                Height = new(0, 0.25f),
+                HAlign = 0.007f,
+                Top = new(0f, 0.092f),
+                BackgroundColor = new Color(53, 72, 135),
+                BorderColor = new Color(89, 116, 213, 255),
+            };
+            modulePicker.SetPadding(0f);
 
-			UIPanel moduleIconPreviewPanel = new()
-			{ 
-				Width = new(0f, 0.6f),
-				Height = new(0f, 0.7f),
-				HAlign = 0.5f,
-				VAlign = 0.6f,
-				BackgroundColor = new Color(53, 72, 135),
-				BorderColor = new Color(89, 116, 213, 255)
-			};
-			modulePicker.Append(moduleIconPreviewPanel);
+            modulePickerTitle = new(Language.GetText("Mods.Macrocosm.UI.Rocket.Modules.CommandPod"), 0.9f, false)
+            {
+                IsWrapped = false,
+                HAlign = 0.5f,
+                VAlign = 0.05f,
+                TextColor = Color.White
+            };
+            modulePicker.Append(modulePickerTitle);
 
-			leftButton = new(ModContent.Request<Texture2D>(buttonsPath + "BackArrow", mode), ModContent.Request<Texture2D>(buttonsPath + "BackArrowBorder", mode))
-			{
-				VAlign = 0.5f,
-				Left = new StyleDimension(0f, 0f),
-			};
-			leftButton.SetVisibility(1f, 1f, 1f);
-			leftButton.CheckInteractible = () => !rocketPreview.AnimationActive;
-			leftButton.OnLeftClick += (_, _) => PickPreviousModule();
-			
-			modulePicker.Append(leftButton);
+            UIPanel moduleIconPreviewPanel = new()
+            {
+                Width = new(0f, 0.6f),
+                Height = new(0f, 0.7f),
+                HAlign = 0.5f,
+                VAlign = 0.6f,
+                BackgroundColor = new Color(53, 72, 135),
+                BorderColor = new Color(89, 116, 213, 255)
+            };
+            modulePicker.Append(moduleIconPreviewPanel);
 
-			rightButton = new(ModContent.Request<Texture2D>(buttonsPath + "ForwardArrow", mode), ModContent.Request<Texture2D>(buttonsPath + "ForwardArrowBorder", mode))
-			{
-				VAlign = 0.5f,
-				Left = new StyleDimension(0, 0.79f),
-			};
-			rightButton.SetVisibility(1f, 1f, 1f);
-			rightButton.CheckInteractible = () => !rocketPreview.AnimationActive;
-			rightButton.OnLeftClick += (_, _) => PickNextModule();
-	
-			modulePicker.Append(rightButton);
+            leftButton = new(ModContent.Request<Texture2D>(buttonsPath + "BackArrow", mode), ModContent.Request<Texture2D>(buttonsPath + "BackArrowBorder", mode))
+            {
+                VAlign = 0.5f,
+                Left = new StyleDimension(0f, 0f),
+                CheckInteractible = () => !rocketPreview.ZoomedOut
+            };
+            leftButton.OnLeftClick += (_, _) => PickPreviousModule();
 
-			return modulePicker;
-		}
+            modulePicker.Append(leftButton);
 
-		private UIPanel CreateRocketControlPanel()
-		{
-			rocketCustomizationControlPanel = new()
-			{
-				Width = new(0f, 0.62f),
-				Height = new(0, 0.25f),
-				HAlign = 0.98f,
-				Top = new(0f, 0.092f),
-				BackgroundColor = new Color(53, 72, 135),
-				BorderColor = new Color(89, 116, 213, 255)
-			};
-			rocketCustomizationControlPanel.SetPadding(2f);
-			customizationPanelBackground.Append(rocketCustomizationControlPanel);
+            rightButton = new(ModContent.Request<Texture2D>(buttonsPath + "ForwardArrow", mode), ModContent.Request<Texture2D>(buttonsPath + "ForwardArrowBorder", mode))
+            {
+                VAlign = 0.5f,
+                Left = new StyleDimension(0, 0.79f),
+                CheckInteractible = () => !rocketPreview.ZoomedOut
+            };
+            rightButton.OnLeftClick += (_, _) => PickNextModule();
 
-			rocketCopyButton = new(Main.Assets.Request<Texture2D>("Images/UI/CharCreation/Copy"))
-			{
-				VAlign = 0.9f,
-				Left = new(0f, 0.18f),   
-				HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Customization.CopyRocket")
-			};
-			rocketCopyButton.OnLeftMouseDown += (_, _) => CopyRocketData();
-			rocketCustomizationControlPanel.Append(rocketCopyButton);
+            modulePicker.Append(rightButton);
+            return modulePicker;
+        }
 
-			rocketPasteButton = new(Main.Assets.Request<Texture2D>("Images/UI/CharCreation/Paste"))
-			{
-				VAlign = 0.9f,
-				Left = new(0f, 0.295f),   
-				HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Customization.PasteRocket")
-			};
-			rocketPasteButton.OnLeftMouseDown += (_, _) => PasteRocketData();
-			rocketCustomizationControlPanel.Append(rocketPasteButton);
+        private UIPanel CreateRocketControlPanel()
+        {
+            rocketCustomizationControlPanel = new()
+            {
+                Width = new(0f, 0.62f),
+                Height = new(0, 0.25f),
+                HAlign = 0.98f,
+                Top = new(0f, 0.092f),
+                BackgroundColor = new Color(53, 72, 135),
+                BorderColor = new Color(89, 116, 213, 255)
+            };
+            rocketCustomizationControlPanel.SetPadding(2f);
+            customizationPanelBackground.Append(rocketCustomizationControlPanel);
 
-			UIVerticalSeparator separator1 = new()
-			{
-				Height = new(32f, 0f),
-				VAlign = 0.9f,
-				Left = new(0f, 0.425f),   
-				Color = new Color(89, 116, 213, 255) * 1.1f
-			};
-			rocketCustomizationControlPanel.Append(separator1);
+            rocketCopyButton = new(Main.Assets.Request<Texture2D>("Images/UI/CharCreation/Copy"))
+            {
+                VAlign = 0.9f,
+                Left = new(0f, 0.18f),
+                HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Customization.CopyRocket")
+            };
+            rocketCopyButton.OnLeftMouseDown += (_, _) => CopyRocketData();
+            rocketCustomizationControlPanel.Append(rocketCopyButton);
 
-			rocketResetButton = new(ModContent.Request<Texture2D>(symbolsPath + "ResetGray"))
-			{
-				VAlign = 0.9f,
-				Left = new(0f, 0.448f),  
-				HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Customization.ResetRocket")
-			};
-			rocketResetButton.OnLeftClick += (_, _) => ResetRocketToDefaults();
-			rocketCustomizationControlPanel.Append(rocketResetButton);
+            rocketPasteButton = new(Main.Assets.Request<Texture2D>("Images/UI/CharCreation/Paste"))
+            {
+                VAlign = 0.9f,
+                Left = new(0f, 0.295f),
+                HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Customization.PasteRocket")
+            };
+            rocketPasteButton.OnLeftMouseDown += (_, _) => PasteRocketData();
+            rocketCustomizationControlPanel.Append(rocketPasteButton);
 
-			UIVerticalSeparator separator2 = new()
-			{
-				Height = new(32f, 0f),
-				VAlign = 0.9f,
-				Left = new(0f, 0.571f),   
-				Color = new Color(89, 116, 213, 255) * 1.1f
-			};
-			rocketCustomizationControlPanel.Append(separator2);
+            UIVerticalSeparator separator1 = new()
+            {
+                Height = new(32f, 0f),
+                VAlign = 0.9f,
+                Left = new(0f, 0.425f),
+                Color = new Color(89, 116, 213, 255) * 1.1f
+            };
+            rocketCustomizationControlPanel.Append(separator1);
 
-			rocketCancelButton = new(ModContent.Request<Texture2D>(symbolsPath + "CrossmarkRed"))
-			{
-				VAlign = 0.9f,
-				Left = new(0f, 0.6f), 
-				HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Customization.Cancel")
-			};
-			rocketCancelButton.OnLeftClick += (_, _) => DiscardCustomizationChanges();
-			rocketCustomizationControlPanel.Append(rocketCancelButton);
+            rocketResetButton = new(ModContent.Request<Texture2D>(symbolsPath + "ResetGray"))
+            {
+                VAlign = 0.9f,
+                Left = new(0f, 0.448f),
+                HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Customization.ResetRocket")
+            };
+            rocketResetButton.OnLeftClick += (_, _) => ResetRocketToDefaults();
+            rocketCustomizationControlPanel.Append(rocketResetButton);
 
-			rocketApplyButton = new(ModContent.Request<Texture2D>(symbolsPath + "CheckmarkGreen"))
-			{
-				VAlign = 0.9f,
-				Left = new(0f, 0.715f),   
-				HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Customization.Apply")
-			};
-			rocketApplyButton.OnLeftClick += (_, _) => ApplyCustomizationChanges();
-			rocketCustomizationControlPanel.Append(rocketApplyButton);
+            UIVerticalSeparator separator2 = new()
+            {
+                Height = new(32f, 0f),
+                VAlign = 0.9f,
+                Left = new(0f, 0.571f),
+                Color = new Color(89, 116, 213, 255) * 1.1f
+            };
+            rocketCustomizationControlPanel.Append(separator2);
 
-			// TODO...
-			/*
+            rocketCancelButton = new(ModContent.Request<Texture2D>(symbolsPath + "CrossmarkRed"))
+            {
+                VAlign = 0.9f,
+                Left = new(0f, 0.6f),
+                HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Customization.Cancel")
+            };
+            rocketCancelButton.OnLeftClick += (_, _) => DiscardCustomizationChanges();
+            rocketCustomizationControlPanel.Append(rocketCancelButton);
+
+            rocketApplyButton = new(ModContent.Request<Texture2D>(symbolsPath + "CheckmarkGreen"))
+            {
+                VAlign = 0.9f,
+                Left = new(0f, 0.715f),
+                HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Customization.Apply")
+            };
+            rocketApplyButton.OnLeftClick += (_, _) => ApplyCustomizationChanges();
+            rocketCustomizationControlPanel.Append(rocketApplyButton);
+
+            // TODO...
+            /*
 			randomizeButton = new(Main.Assets.Request<Texture2D>("Images/UI/CharCreation/Randomize"))
 			{
 				VAlign = 0.93f,
@@ -860,200 +871,193 @@ namespace Macrocosm.Content.Rockets.Navigation
 			rocketCustomizationControlPanel.Append(randomizeButton);
 			*/
 
-			return rocketCustomizationControlPanel;
-		}
+            return rocketCustomizationControlPanel;
+        }
 
-		private UIPanel CreateNameplateConfigPanel()
-		{
-			nameplateConfigPanel = new()
-			{
-				Width = new StyleDimension(0, 0.99f),
-				Height = new StyleDimension(0, 0.08f),
-				HAlign = 0.5f,
-				BackgroundColor = new Color(53, 72, 135),
-				BorderColor = new Color(89, 116, 213, 255),
-			};
-			nameplateConfigPanel.SetPadding(0f);
+        private UIPanel CreateNameplateConfigPanel()
+        {
+            nameplateConfigPanel = new()
+            {
+                Width = new StyleDimension(0, 0.99f),
+                Height = new StyleDimension(0, 0.08f),
+                HAlign = 0.5f,
+                BackgroundColor = new Color(53, 72, 135),
+                BorderColor = new Color(89, 116, 213, 255),
+            };
+            nameplateConfigPanel.SetPadding(0f);
 
-			nameplateTextBox = new(Language.GetText("Mods.Macrocosm.Common.Rocket").Value)
-			{
-				Width = new(0f, 0.46f),
-				Height = new(0f, 0.74f),
-				HAlign = 0.02f,
-				VAlign = 0.55f,
-				BackgroundColor = new Color(53, 72, 135),
-				BorderColor = new Color(89, 116, 213, 255),
-				HoverBorderColor = Color.Gold,
-				TextMaxLenght = Nameplate.MaxChars,
-				TextScale = 1f,
-				FormatText = Nameplate.FormatText,
-				FocusContext = "TextBox",
-				OnFocusGain = NameplateTextOnFocusGain,
-				OnFocusLost = NameplateTextOnFocusLost
-			};
-			nameplateConfigPanel.Append(nameplateTextBox);
+            nameplateTextBox = new(Language.GetText("Mods.Macrocosm.Common.Rocket").Value)
+            {
+                Width = new(0f, 0.46f),
+                Height = new(0f, 0.74f),
+                HAlign = 0.02f,
+                VAlign = 0.55f,
+                BackgroundColor = new Color(53, 72, 135),
+                BorderColor = new Color(89, 116, 213, 255),
+                HoverBorderColor = Color.Gold,
+                TextMaxLenght = Nameplate.MaxChars,
+                TextScale = 1f,
+                FormatText = Nameplate.FormatText,
+                FocusContext = "TextBox",
+                OnFocusGain = NameplateTextOnFocusGain,
+                OnFocusLost = NameplateTextOnFocusLost
+            };
+            nameplateConfigPanel.Append(nameplateTextBox);
 
-			nameplateColorPicker = new()
-			{
-				VAlign = 0.5f,
-				HAlign = 0f,
-				Left = new(0f, 0.482f),
-				FocusContext = "RocketCustomizationColorPicker"
-			};
+            nameplateColorPicker = new()
+            {
+                VAlign = 0.5f,
+                HAlign = 0f,
+                Left = new(0f, 0.482f),
+                FocusContext = "RocketCustomizationColorPicker"
+            };
 
-			nameplateColorPicker.OnLeftClick += (_, _) => { nameplateColorPicker.HasFocus = true; };
-			nameplateColorPicker.OnFocusGain = NameplateColorPickerOnFocusGain;
+            nameplateColorPicker.OnLeftClick += (_, _) => { nameplateColorPicker.HasFocus = true; };
+            nameplateColorPicker.OnFocusGain = NameplateColorPickerOnFocusGain;
 
-			nameplateColorPicker.OnRightClick += (_, _) => { nameplateColorPicker.HasFocus = false; };
-			nameplateColorPicker.OnFocusLost += NameplateColorPickerOnFocusLost;
-	
-			nameplateConfigPanel.Append(nameplateColorPicker);
+            nameplateColorPicker.OnRightClick += (_, _) => { nameplateColorPicker.HasFocus = false; };
+            nameplateColorPicker.OnFocusLost += NameplateColorPickerOnFocusLost;
 
-			alignLeft = new(ModContent.Request<Texture2D>(symbolsPath + "AlignLeft"))
-			{
-				VAlign = 0.5f,
-				HAlign = 0f,
-				Left = new(0f, 0.56f),
-				HoverText = Language.GetText("Mods.Macrocosm.UI.Common.AlignLeft"),
-				FocusContext = "HorizontalAlignment",
-				OnFocusGain = () =>
-				{
-					JumpToModule("EngineModule");
-					CustomizationDummy.Nameplate.HAlign = TextHorizontalAlign.Left;
-				}
-			};
-			alignLeft.OnLeftClick += (_, _) => alignLeft.HasFocus = true;
-			 
-			nameplateConfigPanel.Append(alignLeft);
+            nameplateConfigPanel.Append(nameplateColorPicker);
 
-			alignCenterHorizontal = new(ModContent.Request<Texture2D>(symbolsPath + "AlignCenterHorizontal"))
-			{
-				VAlign = 0.5f,
-				Left = new(0f, 0.628f),
-				HoverText = Language.GetText("Mods.Macrocosm.UI.Common.AlignCenterHorizontal"),
-				FocusContext = "HorizontalAlignment",
-				OnFocusGain = () =>
-				{
-					JumpToModule("EngineModule");
-					CustomizationDummy.Nameplate.HAlign = TextHorizontalAlign.Center;
-				}
-			};
-			alignCenterHorizontal.OnLeftClick += (_, _) => alignCenterHorizontal.HasFocus = true;
-			nameplateConfigPanel.Append(alignCenterHorizontal);
+            alignLeft = new(ModContent.Request<Texture2D>(symbolsPath + "AlignLeft"))
+            {
+                VAlign = 0.5f,
+                HAlign = 0f,
+                Left = new(0f, 0.56f),
+                HoverText = Language.GetText("Mods.Macrocosm.UI.Common.AlignLeft"),
+                FocusContext = "HorizontalAlignment",
+                OnFocusGain = () =>
+                {
+                    JumpToModule("EngineModule");
+                    CustomizationDummy.Nameplate.HAlign = TextHorizontalAlign.Left;
+                }
+            };
+            alignLeft.OnLeftClick += (_, _) => alignLeft.HasFocus = true;
 
-			alignRight = new(ModContent.Request<Texture2D>(symbolsPath + "AlignRight"))
-			{
-				VAlign = 0.5f,
-				Left = new(0f, 0.696f),
-				HoverText = Language.GetText("Mods.Macrocosm.UI.Common.AlignRight"),
-				FocusContext = "HorizontalAlignment",
-				OnFocusGain = () =>
-				{
-					JumpToModule("EngineModule");
-					CustomizationDummy.Nameplate.HAlign = TextHorizontalAlign.Right;
-				}
-			};
-			alignRight.OnLeftClick += (_, _) => alignRight.HasFocus = true;
-			nameplateConfigPanel.Append(alignRight);
+            nameplateConfigPanel.Append(alignLeft);
 
-			alignTop = new(ModContent.Request<Texture2D>(symbolsPath + "AlignTop"))
-			{
-				VAlign = 0.5f,
-				Left = new(0f, 0.78f),
-				HoverText = Language.GetText("Mods.Macrocosm.UI.Common.AlignTop"),
-				FocusContext = "VerticalAlignment",
-				OnFocusGain = () =>
-				{
-					JumpToModule("EngineModule");
-					CustomizationDummy.Nameplate.VAlign = TextVerticalAlign.Top;
-				}
-			};
-			alignTop.OnLeftClick += (_, _) => alignTop.HasFocus = true;
-			nameplateConfigPanel.Append(alignTop);
+            alignCenterHorizontal = new(ModContent.Request<Texture2D>(symbolsPath + "AlignCenterHorizontal"))
+            {
+                VAlign = 0.5f,
+                Left = new(0f, 0.628f),
+                HoverText = Language.GetText("Mods.Macrocosm.UI.Common.AlignCenterHorizontal"),
+                FocusContext = "HorizontalAlignment",
+                OnFocusGain = () =>
+                {
+                    JumpToModule("EngineModule");
+                    CustomizationDummy.Nameplate.HAlign = TextHorizontalAlign.Center;
+                }
+            };
+            alignCenterHorizontal.OnLeftClick += (_, _) => alignCenterHorizontal.HasFocus = true;
+            nameplateConfigPanel.Append(alignCenterHorizontal);
 
-			alignCenterVertical = new(ModContent.Request<Texture2D>(symbolsPath + "AlignCenterVertical"))
-			{
-				VAlign = 0.5f,
-				Left = new(0f, 0.848f),
-				HoverText = Language.GetText("Mods.Macrocosm.UI.Common.AlignCenterVertical"),
-				FocusContext = "VerticalAlignment",
-				OnFocusGain = () =>
-				{
-					JumpToModule("EngineModule");
-					CustomizationDummy.Nameplate.VAlign = TextVerticalAlign.Center;
-				}
-			};
-			alignCenterVertical.OnLeftClick += (_, _) => alignCenterVertical.HasFocus = true;
-			nameplateConfigPanel.Append(alignCenterVertical);
+            alignRight = new(ModContent.Request<Texture2D>(symbolsPath + "AlignRight"))
+            {
+                VAlign = 0.5f,
+                Left = new(0f, 0.696f),
+                HoverText = Language.GetText("Mods.Macrocosm.UI.Common.AlignRight"),
+                FocusContext = "HorizontalAlignment",
+                OnFocusGain = () =>
+                {
+                    JumpToModule("EngineModule");
+                    CustomizationDummy.Nameplate.HAlign = TextHorizontalAlign.Right;
+                }
+            };
+            alignRight.OnLeftClick += (_, _) => alignRight.HasFocus = true;
+            nameplateConfigPanel.Append(alignRight);
 
-			alignBottom = new(ModContent.Request<Texture2D>(symbolsPath + "AlignBottom"))
-			{
-				VAlign = 0.5f,
-				Left = new(0f, 0.917f),
-				HoverText = Language.GetText("Mods.Macrocosm.UI.Common.AlignBottom"),
-				FocusContext = "VerticalAlignment",
-				OnFocusGain = () =>
-				{
-					JumpToModule("EngineModule");
-					CustomizationDummy.Nameplate.VAlign = TextVerticalAlign.Bottom;
-				}
-			};
-			alignBottom.OnLeftClick += (_, _) => alignBottom.HasFocus = true;
-			nameplateConfigPanel.Append(alignBottom);
+            alignTop = new(ModContent.Request<Texture2D>(symbolsPath + "AlignTop"))
+            {
+                VAlign = 0.5f,
+                Left = new(0f, 0.78f),
+                HoverText = Language.GetText("Mods.Macrocosm.UI.Common.AlignTop"),
+                FocusContext = "VerticalAlignment",
+                OnFocusGain = () =>
+                {
+                    JumpToModule("EngineModule");
+                    CustomizationDummy.Nameplate.VAlign = TextVerticalAlign.Top;
+                }
+            };
+            alignTop.OnLeftClick += (_, _) => alignTop.HasFocus = true;
+            nameplateConfigPanel.Append(alignTop);
 
-			return nameplateConfigPanel;
-		}
+            alignCenterVertical = new(ModContent.Request<Texture2D>(symbolsPath + "AlignCenterVertical"))
+            {
+                VAlign = 0.5f,
+                Left = new(0f, 0.848f),
+                HoverText = Language.GetText("Mods.Macrocosm.UI.Common.AlignCenterVertical"),
+                FocusContext = "VerticalAlignment",
+                OnFocusGain = () =>
+                {
+                    JumpToModule("EngineModule");
+                    CustomizationDummy.Nameplate.VAlign = TextVerticalAlign.Center;
+                }
+            };
+            alignCenterVertical.OnLeftClick += (_, _) => alignCenterVertical.HasFocus = true;
+            nameplateConfigPanel.Append(alignCenterVertical);
 
-		private UIPanel CreateDetailConfigPanel()
-		{
-			detailConfigPanel = new()
-			{
-				Width = new(0, 0.99f),
-				Height = new(0, 0.22f),
-				HAlign = 0.5f,
-				Top = new(0f, 0.36f),
-				BackgroundColor = new Color(53, 72, 135),
-				BorderColor = new Color(89, 116, 213, 255)
-			};
-			detailConfigPanel.SetPadding(0f);
-			return detailConfigPanel;
-		}
+            alignBottom = new(ModContent.Request<Texture2D>(symbolsPath + "AlignBottom"))
+            {
+                VAlign = 0.5f,
+                Left = new(0f, 0.917f),
+                HoverText = Language.GetText("Mods.Macrocosm.UI.Common.AlignBottom"),
+                FocusContext = "VerticalAlignment",
+                OnFocusGain = () =>
+                {
+                    JumpToModule("EngineModule");
+                    CustomizationDummy.Nameplate.VAlign = TextVerticalAlign.Bottom;
+                }
+            };
+            alignBottom.OnLeftClick += (_, _) => alignBottom.HasFocus = true;
+            nameplateConfigPanel.Append(alignBottom);
 
-		private UIPanel CreatePatternConfigPanel()
-		{
-			patternConfigPanel = new()
-			{
-				Width = new(0, 0.99f),
-				Height = new(0, 0.4f),
-				HAlign = 0.5f,
-				Top = new(0f, 0.595f),
-				BackgroundColor = new Color(53, 72, 135),
-				BorderColor = new Color(89, 116, 213, 255),
-			};
-			patternConfigPanel.SetPadding(6f);
-			patternConfigPanel.PaddingTop = 0f;
+            return nameplateConfigPanel;
+        }
 
-			foreach (var module in Rocket.Modules.Keys)
-			{
-				var icons = CustomizationStorage.ProvidePatternUI(module);
+        private UIPanel CreateDetailConfigPanel()
+        {
+            detailConfigPanel = new()
+            {
+                Width = new(0, 0.99f),
+                Height = new(0, 0.22f),
+                HAlign = 0.5f,
+                Top = new(0f, 0.36f),
+                BackgroundColor = new Color(53, 72, 135),
+                BorderColor = new Color(89, 116, 213, 255)
+            };
+            detailConfigPanel.SetPadding(0f);
+            return detailConfigPanel;
+        }
 
-				var key = (Rocket, module);
-				if (!dummyPatternEdits.ContainsKey(key))
-					dummyPatternEdits[key] = icons.OfType<UIPatternIcon>().ToList();
+        private UIPanel CreatePatternConfigPanel()
+        {
+            patternConfigPanel = new()
+            {
+                Width = new(0, 0.99f),
+                Height = new(0, 0.4f),
+                HAlign = 0.5f,
+                Top = new(0f, 0.595f),
+                BackgroundColor = new Color(53, 72, 135),
+                BorderColor = new Color(89, 116, 213, 255),
+            };
+            patternConfigPanel.SetPadding(6f);
+            patternConfigPanel.PaddingTop = 0f;
 
-				if (module == currentModuleName)
-				{
-					patternSelector = icons;
+            foreach (var module in Rocket.Modules.Keys)
+            {
+                if (module == currentModule.Name)
+                {
+                    patternSelector = CustomizationStorage.ProvidePatternUI(module);
+                    foreach (var icon in patternSelector.OfType<UIPatternIcon>().ToList())
+                        icon.OnLeftClick += (_, icon) => SelectPattern(icon as UIPatternIcon);
+                }
+            }
 
-					foreach (var icon in patternSelector.OfType<UIPatternIcon>().ToList())
-						icon.OnLeftClick += (_, icon) => SelectPattern(icon as UIPatternIcon);
-				}
- 			}
+            patternConfigPanel.Append(patternSelector);
 
-			patternConfigPanel.Append(patternSelector);
-
-			return patternConfigPanel;
-		}
-		#endregion 
-	}
+            return patternConfigPanel;
+        }
+        #endregion
+    }
 }

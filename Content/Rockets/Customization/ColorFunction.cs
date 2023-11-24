@@ -34,7 +34,19 @@ namespace Macrocosm.Content.Rockets.Customization
 			Name = name;
 		}
 
-		public ColorFunction(string name, params object[] parameters) 
+        /// <summary>
+        /// Creates a new pattern dynamic color. Use this for unlockable dynamic colors.
+        /// </summary>
+        /// <param name="function"> The function </param>
+        /// <param name="name"> The dynamic color name </param>
+        /// <param name="unlockedByDefault"> Whether this dynamic color is unlocked by default </param>
+        public ColorFunction(Func<Color[], Color> function, string name, params object[] parameters)
+        {
+            this.function = function;
+            Name = name;
+        }
+
+        public ColorFunction(string name, params object[] parameters) 
 			=> CreateFunctionByName(name, parameters);
 
 		/// <summary> Invokes the color function on an input array. </summary>
@@ -82,7 +94,7 @@ namespace Macrocosm.Content.Rockets.Customization
 		{
 			if (index < 0 || index >= 8) throw new ArgumentException($"Index out of bounds: {index}");
 			Color map(Color[] colors) => colors[index];
-			return new(map, "Map") { Parameters = new object[] { index } };
+			return new(map, "Map", new object[] { index });
 		}
 
 		private static ColorFunction CreateLerpFunction(int index1, int index2, float amount)
@@ -91,7 +103,7 @@ namespace Macrocosm.Content.Rockets.Customization
 			if (index2 < 0 || index2 >= 8) throw new ArgumentException($"Index out of bounds: {index2}");
 
 			Color lerp(Color[] colors) => Color.Lerp(colors[index1], colors[index2], amount);
-			return new(lerp, "Lerp") { Parameters = new object[] { index1, index2, amount } };
+			return new(lerp, "Lerp", new object[] { index1, index2, amount });
 		}
 	}
 }

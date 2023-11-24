@@ -25,7 +25,7 @@ namespace Macrocosm.Common.UI
 			Luminance
 		}
 
-		public bool Edited => PendingColor != PreviousColor;
+		public bool PendingChange => PendingColor != PreviousColor;
 
         public Color PendingColor { get; private set; } = Color.White;
 		public Color PreviousColor { get; private set; } = Color.White;

@@ -38,15 +38,16 @@ namespace Macrocosm.Content.Rockets.Navigation
 			get => zoomedOut;
 			set
 			{
-				if (zoomedOut && !value)
-					OnZoomedIn();
-				
-				if(!zoomedOut && value)
-					OnZoomedOut();
-
+				bool prevValue = zoomedOut;
 				zoomedOut = value;
 				AnimationActive = true;
-			}
+
+                if (prevValue && !value)
+                    OnZoomedIn();
+
+                if (!prevValue && value)
+                    OnZoomedOut();
+            }
 		}
 
 		public Action<string, int> OnModuleChange { get; set; } = (_, _) => { };

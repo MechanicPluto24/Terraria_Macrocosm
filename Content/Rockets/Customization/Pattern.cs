@@ -117,6 +117,11 @@ namespace Macrocosm.Content.Rockets.Customization
             return this with { ColorData = ImmutableArray.Create(updatedColorData) }; 
         }
 
+        public Pattern WithColorData(ImmutableArray<PatternColorData> colorData)
+        {
+            return this with { ColorData = colorData };
+        }
+
         public Pattern WithColorData(params PatternColorData[] colorData)
         {
             var updatedColorData = ColorData.ToArray();  
