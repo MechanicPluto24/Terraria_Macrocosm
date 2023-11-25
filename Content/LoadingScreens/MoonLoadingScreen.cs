@@ -29,6 +29,9 @@ namespace Macrocosm.Content.LoadingScreens
         private readonly float animationDuration = 1000f;
         protected override void UpdateAnimation()
         {
+            if (!Moving && animationTimer > 5)
+                return;
+
             if (animationTimer < animationDuration)
                 animationTimer += 1f;
         }

@@ -3,8 +3,10 @@ using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SubworldLibrary;
 using System;
 using System.IO;
+using System.Net.Sockets;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
@@ -118,23 +120,13 @@ namespace Macrocosm.Content.Rockets.LaunchPads
                 return;
 
             ModPacket packet = Macrocosm.Instance.GetPacket();
+            packet.Write((byte)MessageType.SyncLaunchPadData);
+            packet.Write(subworldId);
 
-            if (WriteToPacket(packet, subworldId))
+            if (this.NetWriteFields(packet))
                 packet.Send(toClient, ignoreClient);
 
             packet.Dispose();
-        }
-
-        public bool WriteToPacket(ModPacket packet, string subworldId)
-        {
-            packet.Write((byte)MessageType.SyncLaunchPadData);
-
-            packet.Write(subworldId);
-
-            if (this.NetWriteFields(packet)) // Check if the writer was able to write all the fields.
-                return true;
-
-            return false;
         }
 
         /// <summary>
@@ -156,15 +148,18 @@ namespace Macrocosm.Content.Rockets.LaunchPads
             {
                 launchPad.NetSync(subworldId, ignoreClient: sender);
 
-                /*
-				ModPacket packet = Macrocosm.Instance.GetPacket();
-				launchPad.WriteToPacket(packet, subworldId);
+                var packet = new BinaryWriter(new MemoryStream(256));
+                packet.Write((byte)MessageType.SyncLaunchPadData);
+                packet.Write(subworldId);
+                launchPad.NetWriteFields(packet);
 
-				if (SubworldSystem.AnyActive())
-					SubworldSystem.SendToMainServer(Macrocosm.Instance, packet.GetBuffer());
-				else
-					SubworldSystem.SendToAllSubservers(Macrocosm.Instance, packet.GetBuffer());
-				*/
+                if(subworldId == MacrocosmSubworld.CurrentID)
+                {
+                    if (SubworldSystem.AnyActive())
+                        SubworldSystem.SendToMainServer(Macrocosm.Instance, (packet.BaseStream as MemoryStream).GetBuffer());
+                    else
+                        SubworldSystem.SendToAllSubservers(Macrocosm.Instance, (packet.BaseStream as MemoryStream).GetBuffer());
+                }
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.Rockets;
+﻿using Macrocosm.Common.Netcode;
+using Macrocosm.Content.Rockets;
 using Macrocosm.Content.Rockets.UI;
 using Terraria;
 using Terraria.ModLoader;
@@ -9,7 +10,7 @@ namespace Macrocosm.Common.Commands
     {
         public override string Command => "debug";
 
-        public override CommandType Type => CommandType.Chat;
+        public override CommandType Type => CommandType.Chat | CommandType.Console;
 
         public override void Action(CommandCaller caller, string input, string[] args)
         {
@@ -31,6 +32,10 @@ namespace Macrocosm.Common.Commands
 
                     case "ui" or "rocketui":
                         RocketUISystem.DebugModeActive = !RocketUISystem.DebugModeActive;
+                        break;
+
+                    case "packets" or "packet" or "packethandler":
+                        PacketHandler.DebugModeActive = !PacketHandler.DebugModeActive;
                         break;
 
                     default:

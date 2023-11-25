@@ -4,15 +4,10 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-    public class Detail : IUnlockable
+	public record Detail
     {
         public string Name { get; set; }
         public string ModuleName { get; set; }
-
-        public string GetKey() => ModuleName + "_" + Name;
-
-        public bool Unlocked { get; set; }
-        public bool UnlockedByDefault { get; private set; }
 
         public string TexturePath => GetType().Namespace.Replace('.', '/') + "/Details/" + ModuleName + "/" + Name;
         public Texture2D Texture
@@ -29,14 +24,10 @@ namespace Macrocosm.Content.Rockets.Customization
         //public Texture2D IconTexture { get; set; }
         //public int ItemType{ get; set; }
 
-        public Detail(string moduleName, string patternName, bool unlockedByDefault)
+		public Detail(string moduleName, string patternName)
         {
             ModuleName = moduleName;
             Name = patternName;
-
-            UnlockedByDefault = unlockedByDefault;
-            Unlocked = unlockedByDefault;
-        }
-
-    }
+		}
+	}
 }

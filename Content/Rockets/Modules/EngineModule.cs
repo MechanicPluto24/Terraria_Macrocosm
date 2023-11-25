@@ -1,6 +1,5 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Rockets.Customization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -9,15 +8,13 @@ using Terraria;
 using Terraria.Graphics;
 using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Rockets.Modules
 {
     public class EngineModule : AnimatedRocketModule
     {
-        public override int DrawPriority => 0;
-        public bool RearLandingLegRaised { get; set; } = false;
-        public Nameplate Nameplate { get; set; } = new();
+		public override int DrawPriority => 0;
+		public bool RearLandingLegRaised { get; set; } = false;
 
         public override int Width => 120;
         public override int Height => 302 + (RearLandingLegRaised ? 18 : 26);
@@ -70,8 +67,8 @@ namespace Macrocosm.Content.Rockets.Modules
             spriteBatch.End();
             spriteBatch.Begin(SamplerState.PointClamp, state2);
 
-            // Draw the nameplate
-            Nameplate.Draw(spriteBatch, new Vector2(Center.X, Position.Y) - screenPos, ambientColor);
+			// Draw the nameplate
+			rocket.Nameplate.Draw(spriteBatch, new Vector2(Center.X, Position.Y) - screenPos, ambientColor);
 
             spriteBatch.End();
             spriteBatch.Begin(state2);
@@ -126,21 +123,7 @@ namespace Macrocosm.Content.Rockets.Modules
                 (float progress) => MathHelper.Lerp(40, 75, progress)
             );
 
-            strip.DrawTrail();
-        }
-
-        protected override TagCompound SerializeModuleSpecificData()
-        {
-            return new()
-            {
-                [nameof(Nameplate)] = Nameplate,
-            };
-        }
-
-        protected override void DeserializeModuleSpecificData(TagCompound tag, Rocket ownerRocket)
-        {
-            if (tag.ContainsKey(nameof(Nameplate)))
-                Nameplate = tag.Get<Nameplate>(nameof(Nameplate));
-        }
-    }
+			strip.DrawTrail();
+		}
+	}
 }

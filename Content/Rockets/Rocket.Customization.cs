@@ -22,70 +22,80 @@ namespace Macrocosm.Content.Rockets
         {
             Nameplate.Text = source.Nameplate.Text;
             Nameplate.TextColor = source.Nameplate.TextColor;
-            Nameplate.HorizontalAlignment = source.Nameplate.HorizontalAlignment;
-            Nameplate.VerticalAlignment = source.Nameplate.VerticalAlignment;
+            Nameplate.HAlign = source.Nameplate.HAlign;
+            Nameplate.VAlign = source.Nameplate.VAlign;
 
             foreach (var moduleName in ModuleNames)
             {
-                Modules[moduleName].Detail = source.Modules[moduleName].Detail;
-                Modules[moduleName].Pattern = source.Modules[moduleName].Pattern.Clone();
+                //Modules[moduleName].Detail = dummy.Modules[moduleName].Detail ;
+                Modules[moduleName].Pattern = source.Modules[moduleName].Pattern;
             }
+
+            SendCustomizationData();
         }
 
         public void ResetCustomizationToDefault()
         {
-            EngineModule.Nameplate = new();
+            Nameplate = new();
 
             foreach (var moduleKvp in Modules)
             {
                 moduleKvp.Value.Detail = null;
                 moduleKvp.Value.Pattern = CustomizationStorage.GetDefaultPattern(moduleKvp.Key);
             }
-        }
 
-        public void ResetModuleCustomizationToDefault(string moduleName)
-        {
-            if (moduleName is "EngineModule")
-                EngineModule.Nameplate = new();
-
-            Modules[moduleName].Detail = null;
-            Modules[moduleName].Pattern = CustomizationStorage.GetDefaultPattern(moduleName);
+            SendCustomizationData();
         }
 
         public string GetCustomizationDataToJSON()
         {
-            JArray jArray = new();
+            var jObject = new JObject
+            {
+                ["nameplate"] = Nameplate.ToJObject()
+            };
 
+            var modulesArray = new JArray();
             foreach (var moduleKvp in Modules)
             {
                 var module = moduleKvp.Value;
-
-                jArray.Add(new JObject()
+                modulesArray.Add(new JObject
                 {
                     ["moduleName"] = module.Name,
                     ["pattern"] = module.Pattern.ToJObject()
                 });
             }
 
-            return jArray.ToString(Formatting.Indented);
+            jObject["modules"] = modulesArray;
+
+            return jObject.ToString(Formatting.Indented);
         }
 
         public void ApplyRocketCustomizationFromJSON(string json)
         {
-            foreach (var moduleKvp in Modules)
-            {
-                var module = moduleKvp.Value;
-                var jArray = JArray.Parse(json);
-                JObject jObject = jArray.Cast<JObject>().FirstOrDefault(obj => obj["moduleName"].Value<string>() == moduleKvp.Key);
+            var jObject = JObject.Parse(json);
 
-                try
+            if (jObject["nameplate"] is JObject nameplateJObject)
+            {
+                Nameplate = Nameplate.FromJObject(nameplateJObject);
+            }
+
+            if (jObject["modules"] is JArray modulesArray)
+            {
+                foreach (var moduleJObject in modulesArray.Children<JObject>())
                 {
-                    module.Pattern = Pattern.FromJObject(jObject["pattern"].Value<JObject>());
-                }
-                catch (Exception ex)
-                {
-                    Utility.Chat(ex.Message);
-                    Macrocosm.Instance.Logger.Warn(ex.Message);
+                    string moduleName = moduleJObject["moduleName"].Value<string>();
+                    if (Modules.TryGetValue(moduleName, out var module))
+                    {
+                        try
+                        {
+                            module.Pattern = Pattern.FromJObject(moduleJObject["pattern"].Value<JObject>());
+                        }
+                        catch (Exception ex)
+                        {
+                            Utility.Chat(ex.Message);
+                            Macrocosm.Instance.Logger.Warn(ex.Message);
+                        }
+                    }
                 }
             }
         }

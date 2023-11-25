@@ -8,9 +8,9 @@ namespace Macrocosm.Common.Config
     public class MacrocosmConfig : ModConfig
     {
         /// <summary> This config's instance, assigned by tML before Macrocosm content loads! </summary>
-#pragma warning disable CA2211 // Non-constant fields should not be visible
+        #pragma warning disable CA2211 // Non-constant fields should not be visible
         public static MacrocosmConfig Instance;
-#pragma warning restore CA2211
+        #pragma warning restore CA2211
 
         /// <summary> Things can subscribe to this event for notification when the configuration has been changed </summary>
         public event EventHandler OnConfigChanged;

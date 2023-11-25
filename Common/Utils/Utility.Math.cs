@@ -9,13 +9,12 @@ namespace Macrocosm.Common.Utils
         #region Interpolation
 
         /// <summary>
-        /// Calculates the inverse lerp value representing the relative position of the input value between the specified range.
+        /// Calculates the inverse lerp value representing the relative position of the input value in the specified range.
         /// </summary>
         /// <param name="from">The starting value.</param>
         /// <param name="to">The ending value.</param>
         /// <param name="t">The input value to calculate the inverse lerp for.</param>
         /// <param name="clamped">Specifies whether the result should be clamped between 0 and 1.</param>
-        /// <returns>Specifies whether the result should be clamped between 0 and 1.</returns>
         public static float InverseLerp(float from, float to, float value, bool clamped = false)
             => Terraria.Utils.GetLerpValue(from, to, value, clamped);
 

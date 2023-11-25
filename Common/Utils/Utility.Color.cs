@@ -17,14 +17,12 @@ namespace Macrocosm.Common.Utils
 
         #endregion
 
-
-
-        #region Hex format conversion
-        public static string GetHexText(this Color color) => "#" + color.Hex3().ToUpper();
-        public static bool TryGetColorFromHex(string hexString, out Color color)
-        {
-            if (hexString.StartsWith("#"))
-                hexString = hexString[1..];
+		#region Hex format conversion
+		public static string GetHex(this Color color) => "#" + color.Hex3().ToUpper();
+		public static bool TryGetColorFromHex(string hexString, out Color color)
+		{
+			if (hexString.StartsWith("#"))
+				hexString = hexString[1..];
 
             if (hexString.Length <= 6 && uint.TryParse(hexString, NumberStyles.HexNumber, CultureInfo.CurrentCulture, out var result))
             {
@@ -118,7 +116,7 @@ namespace Macrocosm.Common.Utils
             => 0.299f * rgbColor.R / 255 + 0.587f * rgbColor.G / 255 + 0.114f * rgbColor.B / 255;
 
         /// <summary> Returns the RGB grayscale of a color using the NTSC standard </summary>
-        public static Color ToGrayscaleNTSC(this Color rgbColor)
+        public static Color ToGrayscale(this Color rgbColor)
         {
             Color result = new();
             result.R = result.G = result.B = (byte)(rgbColor.GetLuminanceNTSC() * 255);

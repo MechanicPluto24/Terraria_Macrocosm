@@ -54,7 +54,7 @@ namespace Macrocosm.Content.Rockets.UI
             if (Main.netMode == NetmodeID.Server)
                 return;
 
-            UIRocketState.Deactivate();
+            UIRocketState?.Deactivate();
             UIRocketState = null;
         }
 
@@ -67,8 +67,12 @@ namespace Macrocosm.Content.Rockets.UI
 
             UIRocketState = new RocketUIState();
             UIRocketState.Activate();
+
+            if(Interface?.CurrentState != null)
+            {
             HideUI();
             ShowUI(rocket);
+        }
         }
 
         private void OnConfigChanged(object sender, System.EventArgs e)
@@ -82,7 +86,7 @@ namespace Macrocosm.Content.Rockets.UI
 
         public void ShowUI(Rocket rocket)
         {
-            if (Main.netMode == NetmodeID.Server && Interface.CurrentState is not null)
+            if (Main.netMode == NetmodeID.Server || Interface.CurrentState is not null)
                 return;
 
             Main.playerInventory = true;
@@ -95,7 +99,7 @@ namespace Macrocosm.Content.Rockets.UI
 
         public void HideUI()
         {
-            UIRocketState.OnHide();
+            UIRocketState?.OnHide();
 
             if (Main.netMode != NetmodeID.Server)
                 Interface?.SetState(null);

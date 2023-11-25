@@ -10,26 +10,26 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Systems
 {
-
     public class GameTipSystem : ModSystem
     {
         public const string LoadingScreenTipsLocalizationPath = "Mods.Macrocosm.UI.LoadingScreenTips.";
 
         public override void Load()
         {
-            IL_GameTipsDisplay.AddNewTip += GameTipsDisplay_AddNewTip;
+            IL_GameTipsDisplay.AddNewTip += IL_GameTipsDisplay_AddNewTip;
             On_GameTipsDisplay.GameTip.IsExpiring += GameTip_IsExpiring;
         }
 
 
         public override void Unload()
         {
-            IL_GameTipsDisplay.AddNewTip -= GameTipsDisplay_AddNewTip;
+            IL_GameTipsDisplay.AddNewTip -= IL_GameTipsDisplay_AddNewTip;
+            On_GameTipsDisplay.GameTip.IsExpiring -= GameTip_IsExpiring;
         }
 
 
         /// <summary> IL Hook for manipulating game tips. </summary>
-        private void GameTipsDisplay_AddNewTip(ILContext il)
+        private void IL_GameTipsDisplay_AddNewTip(ILContext il)
         {
             var c = new ILCursor(il);
 

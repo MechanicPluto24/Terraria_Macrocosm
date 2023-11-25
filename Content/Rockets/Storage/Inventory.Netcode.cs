@@ -45,6 +45,9 @@ namespace Macrocosm.Content.Rockets.Storage
 
         public void SyncEverything(int toClient = -1, int ignoreClient = -1)
         {
+            if (Main.netMode == NetmodeID.SinglePlayer)
+                return;
+
             ModPacket packet = Macrocosm.Instance.GetPacket();
 
             packet.Write((byte)MessageType.SyncInventory);
@@ -88,6 +91,9 @@ namespace Macrocosm.Content.Rockets.Storage
 
         public void SyncSize(int toClient = -1, int ignoreClient = -1)
         {
+            if (Main.netMode == NetmodeID.SinglePlayer)
+                return;
+
             ModPacket packet = Macrocosm.Instance.GetPacket();
 
             packet.Write((byte)MessageType.SyncInventory);
@@ -104,18 +110,23 @@ namespace Macrocosm.Content.Rockets.Storage
             Rocket owner = RocketManager.Rockets[rocketId];
             Inventory inventory = owner.Inventory;
 
-            int oldSize = inventory.Size;
+            // FIXME: inventory is sometimes already null ?!?!
             int newSize = reader.ReadUInt16();
 
-            if (oldSize != newSize)
-                inventory.OnResize(oldSize, newSize);
-
-            if (newSize <= 0)
-                owner.Inventory = null;
-
-            if (Main.netMode == NetmodeID.Server)
+            if (owner.HasInventory)
             {
-                inventory.SyncSize(ignoreClient: sender);
+                int oldSize = inventory.Size;
+
+                if (oldSize != newSize)
+                    inventory.OnResize(oldSize, newSize);
+
+                if (newSize <= 0)
+                    owner.Inventory = null;
+
+                if (Main.netMode == NetmodeID.Server)
+                {
+                    inventory.SyncSize(ignoreClient: sender);
+                }
             }
         }
 
@@ -123,6 +134,9 @@ namespace Macrocosm.Content.Rockets.Storage
 
         public void SyncItem(int index, int toClient = -1, int ignoreClient = -1)
         {
+            if (Main.netMode == NetmodeID.SinglePlayer)
+                return;
+
             if (index < 0 || index > MaxInventorySize)
                 return;
 
@@ -140,6 +154,9 @@ namespace Macrocosm.Content.Rockets.Storage
 
         public void SyncInteraction(int toClient = -1, int ignoreClient = -1)
         {
+            if (Main.netMode == NetmodeID.SinglePlayer)
+                return;
+
             ModPacket packet = Macrocosm.Instance.GetPacket();
 
             packet.Write((byte)MessageType.SyncInventory);
