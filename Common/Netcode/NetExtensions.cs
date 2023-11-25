@@ -133,23 +133,5 @@ namespace Macrocosm.Common.Netcode
             short y = reader.ReadInt16();
             return new Point16(x, y);
         }
-
-        public static void NetSyncFields(this ModProjectile modProjectile)
-        {
-            if (Main.netMode == NetmodeID.SinglePlayer)
-            {
-                return;
-            }
-
-            ModPacket modPacket = Macrocosm.Instance.GetPacket();
-            modPacket.Write((byte)MessageType.SyncModProjectile);
-            modPacket.Write((ushort)modProjectile.Projectile.whoAmI);
-            if (modProjectile.NetWriteFields(modPacket))
-            {
-                modPacket.Send();
-            }
-
-            modPacket.Dispose();
-        }
     }
 }

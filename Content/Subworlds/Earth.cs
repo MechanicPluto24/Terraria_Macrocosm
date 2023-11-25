@@ -5,15 +5,13 @@ using Terraria;
 namespace Macrocosm.Content.Subworlds
 {
     /// <summary>
-    /// Not really a subworld but could be used for consistency purposes
+    /// Not really a subworld but could be used for code consistency purposes
     /// </summary>
     public static class Earth
     {
         public const double TimeRate = 1.0;
-
-        public static double DayLenght => Main.dayLength;
-        public static double NightLenght => Main.nightLength;
-
+        public const double DayLenght = Main.dayLength;
+        public const double NightLenght = Main.nightLength;
         public const float GoreGravity = 0.2f;
         public const float NPCGravity = 0.3f;
         public const float GravityMultiplier = 1f;

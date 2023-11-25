@@ -16,10 +16,9 @@ namespace Macrocosm.Common.Utils
 
         public static byte[] GetBuffer(this ModPacket packet)
         {
-            var len = (ushort)packet.BaseStream.Position;
-            packet.Seek(0, SeekOrigin.Begin);
-            packet.Write(len);
-            packet.Close();
+            //var len = (ushort)packet.BaseStream.Position;
+            //packet.Seek(0, SeekOrigin.Begin);
+            //packet.Write(len);
             return ((MemoryStream)packet.BaseStream).GetBuffer();
         }
 

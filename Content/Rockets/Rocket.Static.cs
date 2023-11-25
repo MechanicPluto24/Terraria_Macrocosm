@@ -2,6 +2,8 @@
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using Terraria.ID;
+using Terraria;
 
 namespace Macrocosm.Content.Rockets
 {
@@ -34,6 +36,9 @@ namespace Macrocosm.Content.Rockets
 
             RocketManager.AddRocket(rocket);
             rocket.OnCreation();
+            rocket.NetSync();
+            rocket.Inventory.SyncEverything();
+ 
             return rocket;
         }
     }

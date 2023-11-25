@@ -26,8 +26,10 @@ namespace Macrocosm.Common.UI
             Luminance
         }
 
+		public bool PendingChange => PendingColor != PreviousColor;
+
         public Color PendingColor { get; private set; } = Color.White;
-        public Color PreviousColor { get; private set; } = Color.White;
+		public Color PreviousColor { get; private set; } = Color.White;
 
         public float LuminanceSliderFactor { get; init; } = 0.85f;
 
@@ -332,9 +334,9 @@ namespace Macrocosm.Common.UI
             UpdateHexText(Utility.ScaledHSLToRGB(hsl, LuminanceSliderFactor));
         }
 
-        private void UpdateHexText(Color pendingColor)
-        {
-            hslText.SetText(pendingColor.GetHexText());
-        }
-    }
+		private void UpdateHexText(Color pendingColor)
+		{
+			hslText.SetText(pendingColor.GetHex());
+		}
+	}
 }

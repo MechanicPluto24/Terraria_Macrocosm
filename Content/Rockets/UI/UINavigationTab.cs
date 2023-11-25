@@ -273,7 +273,7 @@ namespace Macrocosm.Content.Rockets.UI
             }
 
             // Add the launchpads
-            foreach (var launchPad in LaunchPadManager.GetLaunchPads(subworldId))
+            foreach (var launchPad in LaunchPadManager.GetLaunchPads(Macrocosm.Instance.Name + "/" + subworldId))
             {
                 var storedInfoElement = launchLocationsList.OfType<UILaunchPadInfoElement>()
                                                            .FirstOrDefault(e => e.LaunchPad == launchPad);

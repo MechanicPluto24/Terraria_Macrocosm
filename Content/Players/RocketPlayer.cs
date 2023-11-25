@@ -32,53 +32,6 @@ namespace Macrocosm.Content.Players
             On_Main.RefreshPlayerDrawOrder -= On_Main_RefreshPlayerDrawOrder;
         }
 
-        public override void CopyClientState(ModPlayer targetCopy)
-        {
-            RocketPlayer cloneRocketPlayer = targetCopy as RocketPlayer;
-
-            cloneRocketPlayer.InRocket = InRocket;
-            cloneRocketPlayer.IsCommander = IsCommander;
-            cloneRocketPlayer.RocketID = RocketID;
-            cloneRocketPlayer.TargetSubworldID = TargetSubworldID;
-        }
-
-        public override void SendClientChanges(ModPlayer clientPlayer)
-        {
-            RocketPlayer clientRocketPlayer = clientPlayer as RocketPlayer;
-
-            if (clientRocketPlayer.InRocket != InRocket ||
-                clientRocketPlayer.IsCommander != IsCommander ||
-                clientRocketPlayer.RocketID != RocketID ||
-                clientRocketPlayer.TargetSubworldID != TargetSubworldID)
-            {
-                SyncPlayer(-1, -1, false);
-            }
-        }
-
-        public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)
-        {
-            ModPacket packet = Mod.GetPacket();
-            packet.Write((byte)MessageType.SyncPlayerRocketStatus);
-            packet.Write((byte)Player.whoAmI);
-            packet.Write(new BitsByte(InRocket, IsCommander));
-            packet.Write((byte)RocketID);
-            packet.Write(TargetSubworldID);
-            packet.Send(toWho, fromWho);
-        }
-
-        public static void ReceiveSyncPlayer(BinaryReader reader, int whoAmI)
-        {
-            int rocketPlayerID = reader.ReadByte();
-            RocketPlayer rocketPlayer = Main.player[rocketPlayerID].GetModPlayer<RocketPlayer>();
-            BitsByte bb = reader.ReadByte();
-            rocketPlayer.InRocket = bb[0];
-            rocketPlayer.IsCommander = bb[1];
-            rocketPlayer.RocketID = reader.ReadByte();
-            rocketPlayer.TargetSubworldID = reader.ReadString();
-
-            if (Main.netMode == NetmodeID.Server)
-                rocketPlayer.SyncPlayer(-1, whoAmI, false);
-        }
 
         public override void ResetEffects()
         {
@@ -154,7 +107,7 @@ namespace Macrocosm.Content.Players
                     bool escapePressed = Player.controlInv && RocketUISystem.Active;
 
                     // Escape or 'R' will disembark this player, but not during flight
-                    if ((escapePressed || Player.controlMount) && !rocket.Launched)
+                    if (((escapePressed || Player.controlMount) && !rocket.Launched) || !rocket.ActiveInCurrentWorld)
                         DisembarkFromRocket();
 
                     if (rocket.Launched || rocket.Landing)
@@ -179,6 +132,54 @@ namespace Macrocosm.Content.Players
                 Player.noItems = true;
                 Player.releaseMount = true;
             }
+        }
+
+        public override void CopyClientState(ModPlayer targetCopy)
+        {
+            RocketPlayer cloneRocketPlayer = targetCopy as RocketPlayer;
+
+            cloneRocketPlayer.InRocket = InRocket;
+            cloneRocketPlayer.IsCommander = IsCommander;
+            cloneRocketPlayer.RocketID = RocketID;
+            cloneRocketPlayer.TargetSubworldID = TargetSubworldID;
+        }
+
+        public override void SendClientChanges(ModPlayer clientPlayer)
+        {
+            RocketPlayer clientRocketPlayer = clientPlayer as RocketPlayer;
+
+            if (clientRocketPlayer.InRocket != InRocket ||
+                clientRocketPlayer.IsCommander != IsCommander ||
+                clientRocketPlayer.RocketID != RocketID ||
+                clientRocketPlayer.TargetSubworldID != TargetSubworldID)
+            {
+                SyncPlayer(-1, -1, false);
+            }
+        }
+
+        public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)
+        {
+            ModPacket packet = Mod.GetPacket();
+            packet.Write((byte)MessageType.SyncRocketPlayer);
+            packet.Write((byte)Player.whoAmI);
+            packet.Write(new BitsByte(InRocket, IsCommander));
+            packet.Write((byte)RocketID);
+            packet.Write(TargetSubworldID);
+            packet.Send(toWho, fromWho);
+        }
+
+        public static void ReceiveSyncPlayer(BinaryReader reader, int whoAmI)
+        {
+            int playerWhoAmI = reader.ReadByte();
+            RocketPlayer rocketPlayer = Main.player[playerWhoAmI].GetModPlayer<RocketPlayer>();
+            BitsByte bb = reader.ReadByte();
+            rocketPlayer.InRocket = bb[0];
+            rocketPlayer.IsCommander = bb[1];
+            rocketPlayer.RocketID = reader.ReadByte();
+            rocketPlayer.TargetSubworldID = reader.ReadString();
+
+            if (Main.netMode == NetmodeID.Server)
+                rocketPlayer.SyncPlayer(-1, whoAmI, false);
         }
 
         private void On_Main_RefreshPlayerDrawOrder(On_Main.orig_RefreshPlayerDrawOrder orig, Main self)

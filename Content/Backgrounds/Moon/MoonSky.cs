@@ -95,6 +95,8 @@ namespace Macrocosm.Content.Backgrounds.Moon
 
         public override void Activate(Vector2 position, params object[] args)
         {
+            SkyManager.Instance["Macrocosm:MoonSky"] = new MoonSky();
+
             starsDay.SpawnStars(100, 130, baseScale: 1.4f, twinkleFactor: 0.05f);
             starsNight.SpawnStars(600, 700, baseScale: 0.8f, twinkleFactor: 0.05f);
 
@@ -117,10 +119,10 @@ namespace Macrocosm.Content.Backgrounds.Moon
         {
             if (SubworldSystem.IsActive<Subworlds.Moon>() && maxDepth >= float.MaxValue && minDepth < float.MaxValue)
             {
-                spriteBatch.Draw(TextureAssets.BlackTile.Value, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.Black * Intensity);
+                Main.graphics.GraphicsDevice.Clear(Color.Black);
 
                 spriteBatch.Draw(skyTexture, new Rectangle(0, Math.Max(0, (int)((Main.worldSurface * 16.0 - Main.screenPosition.Y - 2400.0) * 0.10000000149011612)),
-                    Main.screenWidth, Main.screenHeight), Color.White * Math.Min(1f, (Main.screenPosition.Y - 800f) / 1000f * Intensity));
+                    Main.screenWidth, Main.screenHeight), Color.White * Math.Min(1f, (Main.screenPosition.Y - 800f) / 1000f) * Intensity);
 
                 float nebulaBrightness = ComputeBrightness(fadeOutTimeDawn, fadeInTimeDusk, 0.17f, 0.45f);
                 float nightStarBrightness = ComputeBrightness(fadeOutTimeDawn, fadeInTimeDusk, 0.1f, 0.8f);
@@ -153,6 +155,12 @@ namespace Macrocosm.Content.Backgrounds.Moon
             Color nebulaColor = (Color.White * brightness).WithOpacity(0f);
 
             Main.spriteBatch.Draw(nebula, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), nebulaColor);
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            Intensity = Active ? Math.Min(1f, 0.01f + Intensity) : Math.Max(0f, Intensity - 0.01f);
+            SetEarthTextures();
         }
 
         private void SetEarthTextures()
@@ -196,22 +204,14 @@ namespace Macrocosm.Content.Backgrounds.Moon
             return brightness;
         }
 
-        public override void Update(GameTime gameTime)
-        {
-            Intensity = Active ? Math.Min(1f, 0.01f + Intensity) : Math.Max(0f, Intensity - 0.01f);
-            SetEarthTextures();
-        }
 
         public override Color OnTileColor(Color inColor)
         {
-            Vector4 value = inColor.ToVector4();
-            return new Color(Vector4.Lerp(value, Vector4.One, Intensity * 0.5f));
+            Color color = inColor.ToGrayscale();
+            return Color.Lerp(color, Color.Black, 0.2f + Intensity * 0.1f);
         }
 
-        public override float GetCloudAlpha()
-        {
-            return 1f - Intensity;
-        }
+        public override float GetCloudAlpha() => 0f;
 
         public override void Reset()
         {

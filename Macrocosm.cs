@@ -32,9 +32,12 @@ namespace Macrocosm
 
         public override void Load()
         {
-            LoadResprites();
-            LoadEffects();
-
+            if (!Main.dedServ)
+            {
+                LoadResprites();
+                LoadEffects();
+            }
+           
             LoadTimeModCalls();
         }
 

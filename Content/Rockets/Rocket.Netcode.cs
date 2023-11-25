@@ -1,4 +1,8 @@
 ﻿using Macrocosm.Common.Netcode;
+using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.Utils;
+using Macrocosm.Content.Subworlds;
+using SubworldLibrary;
 using System.IO;
 using Terraria;
 using Terraria.ID;
@@ -17,22 +21,13 @@ namespace Macrocosm.Content.Rockets
                 return;
 
             ModPacket packet = Macrocosm.Instance.GetPacket();
-
-            if (WriteToPacket(packet))
-                packet.Send(toClient, ignoreClient);
-
-            packet.Dispose();
-        }
-
-        public bool WriteToPacket(ModPacket packet)
-        {
             packet.Write((byte)MessageType.SyncRocketData);
             packet.Write((byte)WhoAmI);
 
-            if (this.NetWriteFields(packet)) // Check if the writer was able to write all the fields.
-                return true;
+            if (this.NetWriteFields(packet))
+                packet.Send(toClient, ignoreClient);
 
-            return false;
+            packet.Dispose();
         }
 
         /// <summary>
@@ -41,9 +36,7 @@ namespace Macrocosm.Content.Rockets
         /// <param name="reader"></param>
         public static void ReceiveSyncRocketData(BinaryReader reader, int sender)
         {
-            // the rocket WhoAmI
             int rocketIndex = reader.ReadByte();
-
             Rocket rocket = RocketManager.Rockets[rocketIndex];
             rocket.WhoAmI = rocketIndex;
             rocket.NetReadFields(reader);
@@ -52,27 +45,53 @@ namespace Macrocosm.Content.Rockets
             {
                 // Bounce to all other clients, minus the sender
                 rocket.NetSync(ignoreClient: sender);
+              
+                var packet = new BinaryWriter(new MemoryStream(256));
+                packet.Write((byte)MessageType.SyncRocketData);
+                packet.Write((byte)rocket.WhoAmI);
+                rocket.NetWriteFields(packet);
 
-                /*
-				ModPacket packet = Macrocosm.Instance.GetPacket();
-				rocket.WriteToPacket(packet);
- 
-				if (SubworldSystem.AnyActive())
- 					SubworldSystem.SendToMainServer(Macrocosm.Instance, packet.GetBuffer());
-				else 
-					SubworldSystem.SendToAllSubservers(Macrocosm.Instance, packet.GetBuffer());
-				*/
+                if (rocket.ActiveInCurrentWorld)
+                {
+                    if (SubworldSystem.AnyActive())
+                        SubworldSystem.SendToMainServer(Macrocosm.Instance, (packet.BaseStream as MemoryStream).GetBuffer());
+                    else
+                        SubworldSystem.SendToSubserver(SubworldSystem.GetIndex<Moon>(), Macrocosm.Instance, (packet.BaseStream as MemoryStream).GetBuffer());
+                }
+
+                packet.Dispose();
             }
         }
 
-        public void SendCustomizationData(int toClient = -1, int ignoreClient = -1)
-        {
+		public void SendCustomizationData(int toClient = -1, int ignoreClient = -1)
+		{
+			if (Main.netMode == NetmodeID.SinglePlayer || WhoAmI < 0 || WhoAmI > RocketManager.MaxRockets)
+				return;
 
-        }
+			ModPacket packet = Macrocosm.Instance.GetPacket();
 
-        public static void SyncCustomizationData(BinaryReader reader, int clientWhoAmI)
-        {
+			packet.Write((byte)MessageType.SyncRocketCustomizationData);
+			packet.Write((byte)WhoAmI);
 
-        }
-    }
-}
+			packet.Write(GetCustomizationDataToJSON()); // Cringe
+			packet.Send(toClient, ignoreClient);
+		}
+
+		public static void SyncRocketCustomizationData(BinaryReader reader, int clientWhoAmI)
+		{
+			// the rocket WhoAmI
+			int rocketIndex = reader.ReadByte();
+
+			Rocket rocket = RocketManager.Rockets[rocketIndex];
+			rocket.WhoAmI = rocketIndex;
+
+			rocket.ApplyRocketCustomizationFromJSON(reader.ReadString());
+
+			if (Main.netMode == NetmodeID.Server)
+			{
+				// Bounce to all other clients, minus the sender
+				rocket.SendCustomizationData(ignoreClient: clientWhoAmI);
+			}
+		}
+	}
+}  

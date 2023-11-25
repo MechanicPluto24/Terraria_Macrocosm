@@ -351,7 +351,7 @@ namespace Macrocosm.Common.Drawing.Sky
 
         private void Rotate()
         {
-            double duration = Main.dayTime ? MacrocosmSubworld.CurrentDayLenght : MacrocosmSubworld.CurrentNightLenght;
+            double duration = Main.dayTime ? MacrocosmSubworld.CurrentDayLength : MacrocosmSubworld.CurrentNightLength;
 
             double bgTop = -(Main.LocalPlayer.Center.Y - Main.screenHeight / 2) / (Main.worldSurface * 16.0 - 600.0) * 200.0;
 

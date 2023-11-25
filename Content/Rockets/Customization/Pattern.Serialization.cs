@@ -10,46 +10,40 @@ using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-    public partial class Pattern : TagSerializable
-    {
-        public string ToJSON(bool includeColorFunctions = false, bool includeUnlocked = false, bool includeNonModifiableColors = false) => ToJObject(includeColorFunctions, includeUnlocked, includeNonModifiableColors).ToString(Formatting.Indented);
+	public readonly partial struct Pattern : TagSerializable
+	{ 
+		public string ToJSON(bool includeColorFunctions = false, bool includeNonModifiableColors = false) => ToJObject(includeColorFunctions, includeNonModifiableColors).ToString(Formatting.Indented);
 
-        public JObject ToJObject(bool includeColorFunctions = true, bool includeUnlocked = false, bool includeNonModifiableColors = false)
-        {
-            JObject jsonObject = new()
-            {
-                ["patternName"] = Name,
-                ["moduleName"] = ModuleName
-            };
+		public JObject ToJObject(bool includeColorFunctions = true, bool includeNonModifiableColors = false)
+		{
+			JObject jObject = new()
+			{
+				["patternName"] = Name,
+				["moduleName"] = ModuleName
+			};
 
-            if (includeUnlocked)
-            {
-                jsonObject["unlocked"] = Unlocked;
-                jsonObject["unlockedByDefault"] = UnlockedByDefault;
-            }
+			JArray colorDataArray = new();
+			foreach (var colorData in ColorData)
+			{
+				JObject colorDataObject = new();
 
-            JArray colorDataArray = new();
-            foreach (var colorData in ColorData)
-            {
-                JObject colorDataObject = new();
-
-                if (colorData.HasColorFunction)
-                {
-                    if (includeColorFunctions)
-                    {
-                        colorDataObject["colorFunction"] = colorData.ColorFunction.Name;
-                        colorDataObject["params"] = new JArray(colorData.ColorFunction.Parameters);
-                    }
-                    else
-                    {
-                        colorDataObject = new JObject();
-                    }
-                }
-                else
-                {
-                    if (includeNonModifiableColors || colorData.IsUserModifiable)
-                    {
-                        colorDataObject["color"] = colorData.Color.GetHexText();
+				if (colorData.HasColorFunction)
+				{
+					if (includeColorFunctions)
+					{
+						colorDataObject["colorFunction"] = colorData.ColorFunction.Name;
+						colorDataObject["parameters"] = new JArray(colorData.ColorFunction.Parameters);
+					}
+					else
+					{
+						colorDataObject = new JObject();
+					}
+				}
+				else
+				{
+					if (includeNonModifiableColors || colorData.IsUserModifiable)
+					{
+						colorDataObject["color"] = colorData.Color.GetHex();
 
                         if (!colorData.IsUserModifiable)
                             colorDataObject["userModifiable"] = false;
@@ -63,53 +57,50 @@ namespace Macrocosm.Content.Rockets.Customization
                 colorDataArray.Add(colorDataObject);
             }
 
-            // Remove trailing empty JObjects
-            for (int i = colorDataArray.Count - 1; i >= 0; i--)
-            {
-                if (colorDataArray[i].Type == JTokenType.Object && !colorDataArray[i].HasValues)
-                    colorDataArray.RemoveAt(i);
-                else
-                    break;
-            }
+			// Remove trailing empty JObjects
+			for (int i = colorDataArray.Count - 1; i >= 0; i--)
+			{
+				if (colorDataArray[i].Type == JTokenType.Object && !colorDataArray[i].HasValues)
+					colorDataArray.RemoveAt(i);
+				else
+					break;
+			}
+ 
+			jObject["colorData"] = colorDataArray;
 
-
-            jsonObject["colorData"] = colorDataArray;
-
-            return jsonObject;
-        }
+			return jObject; 
+		}
 
         public static Pattern FromJSON(string json) => FromJObject(JObject.Parse(json));
 
-        public static Pattern FromJObject(JObject patternObject)
-        {
-            string moduleName = patternObject.Value<string>("moduleName");
+		public static Pattern FromJObject(JObject jObject)
+		{
+			string moduleName = jObject.Value<string>("moduleName");
 
             if (!Rocket.DefaultModuleNames.Contains(moduleName))
                 throw new SerializationException("Error: Invalid module name.");
 
-            string patternName = patternObject.Value<string>("patternName");
+			string patternName = jObject.Value<string>("patternName");
 
             if (CustomizationStorage.Initialized && !CustomizationStorage.TryGetPattern(moduleName, patternName, out _))
                 throw new SerializationException("Error: Invalid pattern name.");
 
-            bool unlockedByDefault = patternObject.Value<bool>("unlockedByDefault");
-
-            JArray colorDataArray = patternObject.Value<JArray>("colorData");
-            List<PatternColorData> colorDatas = new();
+			JArray colorDataArray = jObject.Value<JArray>("colorData");
+			List<PatternColorData> colorDatas = new();
 
             foreach (JObject colorDataObject in colorDataArray.Cast<JObject>())
             {
                 string colorHex = colorDataObject.Value<string>("color");
                 string colorFunction = colorDataObject.Value<string>("colorFunction");
 
-                if (!string.IsNullOrEmpty(colorFunction))
-                {
-                    JArray parameters = colorDataObject.Value<JArray>("params");
-                    colorDatas.Add(new(ColorFunction.CreateFunctionByName(colorFunction, parameters?.ToObjectRecursive<object>())));
-                }
-                else if (!string.IsNullOrEmpty(colorHex))
-                {
-                    bool userModifiable = colorDataObject.Value<bool?>("userModifiable") ?? true;
+				if (!string.IsNullOrEmpty(colorFunction))
+				{
+					JArray parameters = colorDataObject.Value<JArray>("parameters");
+                    colorDatas.Add(new PatternColorData(ColorFunction.CreateByName(colorFunction, parameters?.ToObjectRecursive<object>())));
+				}
+				else if (!string.IsNullOrEmpty(colorHex))
+				{
+					bool userModifiable = colorDataObject.Value<bool?>("userModifiable") ?? true;
 
                     if (Utility.TryGetColorFromHex(colorHex, out Color color))
                         colorDatas.Add(new(color, userModifiable));
@@ -122,69 +113,53 @@ namespace Macrocosm.Content.Rockets.Customization
                 }
             }
 
-            return new Pattern(moduleName, patternName, unlockedByDefault, colorDatas.ToArray());
-        }
+			return new Pattern(moduleName, patternName, colorDatas.ToArray());
+		}
 
-        public Pattern Clone() => DeserializeData(SerializeData());
 
         public static readonly Func<TagCompound, Pattern> DESERIALIZER = DeserializeData;
 
-        // TODO: a way to also save and load custom functions just like the JSON does
-        public TagCompound SerializeData()
-        {
-            TagCompound tag = new()
-            {
-                ["Name"] = Name,
-                ["ModuleName"] = ModuleName
-            };
-
-            // Save the user-changed colors
-            for (int i = 0; i < MaxColorCount; i++)
-                if (ColorData[i].IsUserModifiable)
-                    tag[$"Color{i}"] = ColorData[i].Color;
-
-            return tag;
-        }
-
-        public static Pattern DeserializeData(TagCompound tag)
-        {
-            string name = tag.GetString("Name");
-            string moduleName = tag.GetString("ModuleName");
-
-            Pattern originalPatternData = CustomizationStorage.GetPatternReference(moduleName, name);
-            Pattern pattern = new(moduleName, name, originalPatternData.UnlockedByDefault, originalPatternData.ColorData);
-
-            // Load the user-changed colors
-            for (int i = 0; i < MaxColorCount; i++)
-                if (tag.ContainsKey($"Color{i}") && pattern.ColorData[i].IsUserModifiable)
-                    pattern.ColorData[i] = pattern.ColorData[i].WithUserColor(tag.Get<Color>($"Color{i}"));
-
-            return pattern;
-        }
-
-        /*
-		// This is terribly inneficient 
 		public TagCompound SerializeData()
 		{
 			TagCompound tag = new()
 			{
-				{ "Pattern", ToJSON(includeColorFunctions: true, includeUnlocked: false, includeNonModifiableColors: true) }
+				[nameof(Name)] = Name,
+				[nameof(ModuleName)] = ModuleName,
+				[nameof(ColorData)] = ColorData.ToList()
 			};
+
 			return tag;
 		}
 
 		public static Pattern DeserializeData(TagCompound tag)
 		{
-			if (tag.ContainsKey("Pattern"))
+			string name = "";
+			string moduleName = "";
+			Pattern pattern;
+
+			try
 			{
-				string json = tag.GetString("Pattern");
-				Pattern pattern = FromJSON(json);
+				if (tag.ContainsKey(nameof(Name)))
+					name = tag.GetString(nameof(Name));
+
+				if (tag.ContainsKey(nameof(ModuleName)))
+					moduleName = tag.GetString(nameof(ModuleName));
+
+				pattern = CustomizationStorage.GetPattern(moduleName, name);
+
+				if (tag.ContainsKey(nameof(ColorData)))
+					pattern = pattern.WithColorData(tag.GetList<PatternColorData>(nameof(ColorData)).ToArray());
+
 				return pattern;
 			}
-
-			return new Pattern("", "", false);
+			catch
+			{
+				string message = "Failed to deserialize pattern:\n";
+				message += "\tName: " + (string.IsNullOrEmpty(name) ? "Unknown" : name) + ", ";
+				message += "\tModule: " + (string.IsNullOrEmpty(moduleName) ? "Unknown" : moduleName);
+				throw new SerializationException(message);
+			}	
 		}
-		*/
 
     }
 }

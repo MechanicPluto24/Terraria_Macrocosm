@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Backgrounds.Moon;
 using Macrocosm.Content.Projectiles.Environment.Meteors;
 using Macrocosm.Content.Rockets.Navigation.Checklist;
 using Microsoft.Xna.Framework;
@@ -86,13 +87,6 @@ namespace Macrocosm.Content.Subworlds
 
         public override void PreUpdateEntities()
         {
-            if (SkyManager.Instance["Macrocosm:MoonSky"] is not null && !SkyManager.Instance["Macrocosm:MoonSky"].IsActive())
-                SkyManager.Instance.Activate("Macrocosm:MoonSky");
-        }
-
-        public override void ModifyColorOfTheSkies(ref Color colorOfTheSkies)
-        {
-            colorOfTheSkies = colorOfTheSkies.ToGrayscaleNTSC();
         }
 
         //TODO: NetSync and add actual content

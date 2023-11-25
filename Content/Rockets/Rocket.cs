@@ -109,15 +109,12 @@ namespace Macrocosm.Content.Rockets
         /// <summary> The layer this rocket is drawn in </summary>
         public RocketDrawLayer DrawLayer = RocketDrawLayer.BeforeNPCs;
 
-        /// <summary> This rocket's engine module nameplate </summary>
-        public Nameplate Nameplate => EngineModule.Nameplate;
+		/// <summary> This rocket's nameplate </summary>
+		public Nameplate Nameplate { get; set; } = new();
 
-        /// <summary> The Rocket's name, if not set by the user, defaults to a localized "Rocket" name </summary>
-        public string DisplayName
-            => Nameplate.IsValid() ? AssignedName : Language.GetTextValue("Mods.Macrocosm.Common.Rocket");
-
-        /// <summary> The Rocket's name, set by the user </summary>
-        public string AssignedName => EngineModule.Nameplate.Text;
+		/// <summary> The Rocket's name, if not set by the user, defaults to a localized "Rocket" name </summary>
+		public string DisplayName
+			=> Nameplate.IsValid() ? Nameplate.Text : Language.GetTextValue("Mods.Macrocosm.Common.Rocket");
 
         /// <summary> Dictionary of all the rocket's modules by name, in their order found in ModuleNames </summary>
         public Dictionary<string, RocketModule> Modules = new();
@@ -153,18 +150,16 @@ namespace Macrocosm.Content.Rockets
         /// <summary> The landing sequence progress </summary>
         public float LandingProgress => Position.Y / (TargetLandingPosition.Y - Height + 16);
 
-        private bool forcedStationaryAppearance;
-        private bool forcedFlightAppearance;
+		private float worldExitSpeed;
 
-        private float worldExitSpeed;
-
-        /// <summary> Whether this rocket is forced in a stationary (i.e. landed) state, visually </summary>
-        public bool ForcedStationaryAppearance
-        {
-            get => forcedStationaryAppearance;
-            set
-            {
-                forcedStationaryAppearance = value;
+		private bool forcedStationaryAppearance;
+		/// <summary> Whether this rocket is forced in a stationary (i.e. landed) state, visually </summary>
+		public bool ForcedStationaryAppearance
+		{
+			get => forcedStationaryAppearance;
+			set
+			{
+				forcedStationaryAppearance = value;
 
                 if (value)
                     forcedFlightAppearance = false;
@@ -173,13 +168,14 @@ namespace Macrocosm.Content.Rockets
             }
         }
 
-        /// <summary> Whether this rocket is forced in a full flight state, visually </summary>
-        public bool ForcedFlightAppearance
-        {
-            get => forcedFlightAppearance;
-            set
-            {
-                forcedFlightAppearance = value;
+		private bool forcedFlightAppearance;
+		/// <summary> Whether this rocket is forced in a full flight state, visually </summary>
+		public bool ForcedFlightAppearance
+		{
+			get => forcedFlightAppearance;
+			set
+			{
+				forcedFlightAppearance = value;
 
                 if (value)
                     forcedStationaryAppearance = false;
@@ -213,12 +209,6 @@ namespace Macrocosm.Content.Rockets
         {
             CurrentWorld = MacrocosmSubworld.CurrentID;
             Inventory = new(DefaultInventorySize, this);
-
-            if (Main.netMode != NetmodeID.SinglePlayer)
-            {
-                NetSync();
-                Inventory.SyncEverything();
-            }
         }
 
         /// <summary> Called when spawning into a new world </summary>
@@ -247,13 +237,12 @@ namespace Macrocosm.Content.Rockets
             }
         }
 
-
-        /// <summary> Update the rocket </summary>
-        public void Update()
-        {
-            SetModuleRelativePositions();
-            Velocity = GetCollisionVelocity();
-            Position += Velocity;
+		/// <summary> Update the rocket </summary>
+		public void Update()
+		{
+			SetModuleRelativePositions();
+			Velocity = GetCollisionVelocity();
+			Position += Velocity;
 
             // Testing
             Fuel = 1000f;
@@ -272,7 +261,7 @@ namespace Macrocosm.Content.Rockets
                 Velocity = Vector2.Zero;
                 ResetAnimation();
                 Launched = false;
-                Landing = true;
+                Landing = true;             
                 Travel();
             }
         }
@@ -564,6 +553,7 @@ namespace Macrocosm.Content.Rockets
             if (AnyEmbarkedPlayers(out int id) && !TryFindingCommander(out _))
             {
                 GetRocketPlayer(id).IsCommander = true;
+                NetMessage.SendData(MessageID.SyncPlayer, number: id);
             }
         }
 
@@ -764,7 +754,7 @@ namespace Macrocosm.Content.Rockets
 
             // This failsafe logic could be extended to hiding the rocket for an amount of time, while remotely launching satellites
             // (no commander inside but wire triggered). Would mean also keeping the launchpad as occupied to avoid collisions on return
-            if (!MacrocosmSubworld.IsValidWorldName(TargetWorld) || commander is null || commander.Player.dead || !commander.Player.active)
+            if (!MacrocosmSubworld.IsValidMacrocosmID(TargetWorld) || commander is null || commander.Player.dead || !commander.Player.active)
             {
                 TargetLandingPosition = new(Center.X, StartPositionY + Height);
                 CurrentWorld = MacrocosmSubworld.CurrentID;
@@ -793,8 +783,7 @@ namespace Macrocosm.Content.Rockets
                 if (Main.netMode == NetmodeID.Server)
                     return;
 
-                RocketPlayer myRocketPlayer = GetRocketPlayer(Main.myPlayer);
-                if (myRocketPlayer.InRocket && myRocketPlayer.RocketID == WhoAmI)
+                if (CheckPlayerInRocket(Main.myPlayer))
                 {
                     if (!MacrocosmSubworld.Travel(TargetWorld, this))
                     {

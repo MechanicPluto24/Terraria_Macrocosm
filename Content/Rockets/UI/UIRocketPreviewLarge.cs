@@ -41,10 +41,14 @@ namespace Macrocosm.Content.Rockets.UI
             get => zoomedOut;
             set
             {
-                if (zoomedOut && !value)
+                bool prevValue = zoomedOut;
+                zoomedOut = value;
+                AnimationActive = true;
+
+                if (prevValue && !value)
                     OnZoomedIn();
 
-                if (!zoomedOut && value)
+                if (!prevValue && value)
                     OnZoomedOut();
 
                 zoomedOut = value;

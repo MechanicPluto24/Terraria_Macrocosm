@@ -11,7 +11,7 @@ namespace Macrocosm.Content.Biomes
     {
         public override SceneEffectPriority Priority => SceneEffectPriority.Environment;
         public override Color? BackgroundColor => base.BackgroundColor;
-        public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.GetInstance<MoonSurfaceBgStyle>();
+        public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.GetInstance<MoonSurfaceBackgroundStyle>();
         public override ModUndergroundBackgroundStyle UndergroundBackgroundStyle => ModContent.GetInstance<MoonUgBgStyle>();
         public override int Music => MusicLoader.GetMusicSlot(Mod, "Assets/Music/Stygia");
 

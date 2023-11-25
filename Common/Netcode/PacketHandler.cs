@@ -3,8 +3,11 @@ using Macrocosm.Content.Players;
 using Macrocosm.Content.Rockets;
 using Macrocosm.Content.Rockets.LaunchPads;
 using Macrocosm.Content.Rockets.Storage;
+using System;
 using System.IO;
 using Terraria;
+using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Netcode
 {
@@ -12,11 +15,14 @@ namespace Macrocosm.Common.Netcode
     {
         SyncParticle,
         SyncRocketData,
+        SyncRocketCustomizationData,
         SyncLaunchPadData,
         SyncInventory,
-        SyncPlayerRocketStatus,
-        SyncPlayerDashDirection,
-        SyncModProjectile
+        SyncRocketPlayer,
+        SyncDashPlayer,
+        SyncMacrocosmPlayer,
+        RequestLastSubworld,
+        LastSubworldCheck
     }
 
     public class PacketHandler
@@ -24,6 +30,8 @@ namespace Macrocosm.Common.Netcode
         public static void HandlePacket(BinaryReader reader, int whoAmI)
         {
             MessageType messageType = (MessageType)reader.ReadByte();
+
+                DebugPackets(messageType, reader.BaseStream.Length, whoAmI);
 
             switch (messageType)
             {
@@ -43,16 +51,20 @@ namespace Macrocosm.Common.Netcode
                     LaunchPad.ReceiveSyncLaunchPadData(reader, whoAmI);
                     break;
 
-                case MessageType.SyncPlayerRocketStatus:
+                case MessageType.SyncRocketPlayer:
                     RocketPlayer.ReceiveSyncPlayer(reader, whoAmI);
                     break;
 
-                case MessageType.SyncPlayerDashDirection:
+                case MessageType.SyncDashPlayer:
                     DashPlayer.ReceiveSyncPlayer(reader, whoAmI);
                     break;
 
-                case MessageType.SyncModProjectile:
-                    SyncModProjectile(reader);
+                case MessageType.SyncMacrocosmPlayer:
+                    MacrocosmPlayer.ReceiveSyncPlayer(reader, whoAmI);
+                    break;
+
+                case MessageType.LastSubworldCheck:
+                    MacrocosmPlayer.LastSubworldCheck(reader, whoAmI);
                     break;
 
                 default:
@@ -61,17 +73,22 @@ namespace Macrocosm.Common.Netcode
             }
         }
 
-        public static void SyncModProjectile(BinaryReader reader)
+        public static bool DebugModeActive { get; set; }
+
+        static private void DebugPackets(MessageType messageType, long length, int sender)
         {
-            ushort whoAmI = reader.ReadUInt16();
-            Projectile projectile;
-            if (
-                Main.projectile.Length < whoAmI
-                && (projectile = Main.projectile[whoAmI]) is not null
-                && projectile.ModProjectile is not null
-                )
+            string message = $"Received message of type {messageType} of length {length} from {sender}";
+
+            if (Main.netMode == NetmodeID.MultiplayerClient)
             {
-                projectile.ModProjectile.NetReadFields(reader);
+                Main.NewText(message);
+                Macrocosm.Instance.Logger.Info(message);
+            }
+
+            if (Main.netMode == NetmodeID.Server)
+            {
+                if(Main.dedServ) Console.WriteLine(message);
+                Macrocosm.Instance.Logger.Info(message);
             }
         }
     }

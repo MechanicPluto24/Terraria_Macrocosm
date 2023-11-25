@@ -20,25 +20,36 @@ namespace Macrocosm.Content.Rockets.Customization
         private static Dictionary<(string moduleName, string patternName), Pattern> patterns;
         private static Dictionary<(string moduleName, string detailName), Detail> details;
 
-        private static IEnumerable<IUnlockable> Unlockables => Utility.Concatenate<IUnlockable>(patterns.Values, details.Values);
+		private static Dictionary<(string moduleName, string patternName), bool> patternUnlockStatus;
+		private static Dictionary<(string moduleName, string detailName), bool> detailUnlockStatus;
 
-        public override void Load()
-        {
-            patterns = new Dictionary<(string, string), Pattern>();
-            details = new Dictionary<(string, string), Detail>();
 
-            LoadPatterns();
-            LoadDetails();
+		public override void Load()
+		{
+			patterns = new();
+			details = new();
+
+			patternUnlockStatus = new();
+			detailUnlockStatus = new();
+
+			LoadPatterns();
+			LoadDetails();
 
             Initialized = true;
         }
 
-        public override void Unload()
-        {
-            patterns.Clear();
-            details.Clear();
-            patterns = null;
-            details = null;
+		public override void Unload()
+		{
+			patterns.Clear();
+			details.Clear();
+			patternUnlockStatus.Clear();
+			detailUnlockStatus.Clear();
+
+			patterns = null;
+			details = null;
+			patternUnlockStatus = null;
+			detailUnlockStatus = null;
+
 
             Initialized = false;
         }
@@ -49,69 +60,64 @@ namespace Macrocosm.Content.Rockets.Customization
             ModContent.GetInstance<CustomizationStorage>().Load();
         }
 
-        /// <summary>
-        /// Gets a pattern <b> reference </b> from the pattern storage. Don't use this if you're modifying pattern data.
-        /// </summary>
-        /// <param name="moduleName"> The rocket module this pattern belongs to </param>
-        /// <param name="patternName"> The pattern name </param>
-        public static Pattern GetPatternReference(string moduleName, string patternName)
-            => patterns[(moduleName, patternName)];
+		/// <summary>
+		/// Gets a pattern from the pattern storage.
+		/// </summary>
+		/// <param name="moduleName"> The rocket module this pattern belongs to </param>
+		/// <param name="patternName"> The pattern name </param>
+		public static Pattern GetPattern(string moduleName, string patternName)
+			=> patterns[(moduleName, patternName)];
 
-        /// <summary>
-        /// Gets a pattern <b> clone </b> from the pattern storage. As it is a clone, it can be modified freely.
-        /// </summary>
-        /// <param name="moduleName"> The rocket module this pattern belongs to </param>
-        /// <param name="patternName"> The pattern name </param>
-        public static Pattern GetPattern(string moduleName, string patternName)
-            => patterns[(moduleName, patternName)].Clone();
+		public static Pattern GetDefaultPattern(string moduleName)
+			=> patterns[(moduleName, "Basic")];
 
-        public static Pattern GetDefaultPattern(string moduleName)
-            => patterns[(moduleName, "Basic")].Clone();
+		public static List<Pattern> GetUnlockedPatterns(string moduleName)
+		{
+			return GetPatternsWhere(moduleName, pattern => {
+				var key = (moduleName, pattern.Name); 
+				return patternUnlockStatus.ContainsKey(key) && patternUnlockStatus[key];
+			});
+		}
 
-        public static List<Pattern> GetUnlockedPatterns(string moduleName, bool asClones = true) => GetPatternsWhere(moduleName, (pattern) => pattern.Unlocked, asClones);
+        public static List<Pattern> GetPatternsWhere(string moduleName, Func<Pattern, bool> match)
+		{
+			var patternsForModule = patterns
+				.Select(kvp => kvp.Value)
+				.Where(pattern => pattern.ModuleName == moduleName && match(pattern))
+				.ToList();
 
-        public static List<Pattern> GetPatternsWhere(string moduleName, Func<Pattern, bool> match, bool asClones = true)
-        {
-            var patternsForModule = patterns
-                .Select(kvp => kvp.Value)
-                .Where(pattern => pattern.ModuleName == moduleName && match(pattern))
-                .ToList();
+			return patternsForModule;
+		}
 
-            if (asClones)
-                patternsForModule.ForEach((pattern) => pattern.Clone());
+		/// <summary>
+		/// Attempts to get a pattern from the pattern storage.
+		/// </summary>
+		/// <param name="moduleName"> The rocket module this pattern belongs to </param>
+		/// <param name="patternName"> The pattern name </param>
+		/// <param name="pattern"> The pattern null if not found </param>
+		/// <returns> Whether the specified pattern has been found </returns>
+		public static bool TryGetPattern(string moduleName, string patternName, out Pattern pattern)
+		{
+			if (patterns.TryGetValue((moduleName, patternName), out Pattern defaultPattern))
+			{
+				pattern = defaultPattern;
+				return true;
+			}
+			else
+			{
+ 				pattern = default;
+				return false;
+			}
+		}
 
-            return patternsForModule;
-        }
-
-        /// <summary>
-        /// Attempts to get a pattern <b> clone </b> from the pattern storage. As it is a clone, it can be modified freely.
-        /// </summary>
-        /// <param name="moduleName"> The rocket module this pattern belongs to </param>
-        /// <param name="patternName"> The pattern name </param>
-        /// <param name="pattern"> The pattern clone, null if not found </param>
-        /// <returns> Whether the specified pattern has been found </returns>
-        public static bool TryGetPattern(string moduleName, string patternName, out Pattern pattern)
-        {
-            if (patterns.TryGetValue((moduleName, patternName), out Pattern defaultPattern))
-            {
-                pattern = defaultPattern.Clone();
-                return true;
-            }
-            else
-            {
-                pattern = null;
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Sets the unlocked status on a pattern. This affects all players, in all subworlds.
-        /// </summary>
-        /// <param name="moduleName"> The rocket module this pattern belongs to </param>
-        /// <param name="patternName"> The pattern name </param>
-        /// <param name="unlockedState"> The unlocked state to set </param>
-        public static void SetPatternUnlockedStatus(string moduleName, string patternName, bool unlockedState = true)
-             => patterns[(moduleName, patternName)].Unlocked = unlockedState;
+		/// <summary>
+		/// Sets the unlocked status on a pattern. This affects all players, in all subworlds.
+		/// </summary>
+		/// <param name="moduleName"> The rocket module this pattern belongs to </param>
+		/// <param name="patternName"> The pattern name </param>
+		/// <param name="unlockedState"> The unlocked state to set </param>
+		public static void SetPatternUnlockedStatus(string moduleName, string patternName, bool unlockedState = true)
+			 => patternUnlockStatus[(moduleName, patternName)] = unlockedState;
 
         /// <summary>
         /// Gets the detail reference from the detail storage.
@@ -131,70 +137,70 @@ namespace Macrocosm.Content.Rockets.Customization
         public static bool TryGetDetail(string moduleName, string detailName, out Detail detail)
             => details.TryGetValue((moduleName, detailName), out detail);
 
-
-        /// <summary>
-        /// Sets the unlocked status on a detail. This affects all players, in all subworlds.
-        /// </summary>
-        /// <param name="moduleName"> The rocket module this detail belongs to </param>
-        /// <param name="detailName"> The detail name </param>
-        /// <param name="unlockedState"> The unlocked state to set </param>
-        public static void SetDetailUnlockedStatus(string moduleName, string detailName, bool unlockedState = true)
-             => details[(moduleName, detailName)].Unlocked = unlockedState;
-
-        public override void ClearWorld()
-        {
-            foreach (var unlockable in Unlockables)
-                unlockable.Unlocked = unlockable.UnlockedByDefault;
-        }
+		public override void ClearWorld()
+		{
+			Reset();
+		}
 
         public override void SaveWorldData(TagCompound tag) => SaveData(tag);
 
         public override void LoadWorldData(TagCompound tag) => LoadData(tag);
 
 
-        public static void SaveData(TagCompound tag)
-        {
-            foreach (var unlockable in Unlockables)
-                if (unlockable.Unlocked && !unlockable.UnlockedByDefault)
-                    tag[unlockable.GetKey() + "_Unlocked"] = true;
-        }
+		public static void SaveData(TagCompound tag)
+		{
+			foreach (var kvp in patternUnlockStatus)
+				if (kvp.Value)
+ 					tag["Pattern_" + kvp.Key + "_Unlocked"] = true;
 
-        public static void LoadData(TagCompound tag)
-        {
-            foreach (var unlockable in Unlockables)
-                if (tag.ContainsKey(unlockable.GetKey() + "_Unlocked"))
-                    unlockable.Unlocked = true;
-        }
+			foreach (var kvp in detailUnlockStatus)
+				if (kvp.Value)
+					tag["Detail_" + kvp.Key + "_Unlocked"] = true;
+		}
 
-        /// <summary>
-        /// Adds a rocket module pattern to the pattern storage
-        /// </summary>
-        /// <param name="moduleName"> The rocket module this pattern belongs to </param>
-        /// <param name="patternName"> The pattern name </param>
-        /// <param name="unlockedByDefault"> Whether this pattern is unlocked by default
-        /// <param name="colorData"> The color data (default colors, whether they are user changeable, dynamic color function) </param>
-        private static void AddPattern(string moduleName, string patternName, bool unlockedByDefault, params PatternColorData[] colorData)
-        {
-            Pattern pattern = new(moduleName, patternName, unlockedByDefault, colorData);
-            patterns.Add((moduleName, patternName), pattern);
-        }
+		public static void LoadData(TagCompound tag)
+		{
+			foreach (var kvp in patternUnlockStatus)
+				if (tag.ContainsKey("Pattern_" + kvp.Key + "_Unlocked"))
+					patternUnlockStatus[kvp.Key] = true;
 
-        private static void AddPattern(Pattern pattern)
-        {
-            patterns.Add((pattern.ModuleName, pattern.Name), pattern);
-        }
+			foreach (var kvp in detailUnlockStatus)
+				if (tag.ContainsKey("Detail_" + kvp.Key + "_Unlocked"))
+					detailUnlockStatus[kvp.Key] = true;
+		}
 
-        /// <summary>
-        /// Adds a detail to the detail storage
-        /// </summary>
-        /// <param name="moduleName"> The rocket module this detail belongs to </param>
-        /// <param name="detailName"> The detail name </param>
-        /// <param name="unlockedByDefault"> Whether this detail is unlocked by default </param>
-        private static void AddDetail(string moduleName, string detailName, bool unlockedByDefault = false)
-        {
-            Detail detail = new(moduleName, detailName, unlockedByDefault);
-            details.Add((moduleName, detailName), detail);
-        }
+		/// <summary>
+		/// Adds a rocket module pattern to the pattern storage
+		/// </summary>
+		/// <param name="moduleName"> The rocket module this pattern belongs to </param>
+		/// <param name="patternName"> The pattern name </param>
+		/// <param name="unlockedByDefault"> Whether this pattern is unlocked by default
+		/// <param name="colorData"> The color data (default colors, whether they are user changeable, dynamic color function) </param>
+		private static void AddPattern(string moduleName, string patternName, bool unlockedByDefault = false, params PatternColorData[] colorData)
+		{
+			Pattern pattern = new(moduleName, patternName, colorData);
+			patterns.Add((moduleName, patternName), pattern);
+			patternUnlockStatus.Add((moduleName, patternName), unlockedByDefault);
+		}
+
+		private static void AddPattern(Pattern pattern, bool unlockedByDefault = false)
+		{
+			patterns.Add((pattern.ModuleName, pattern.Name), pattern);
+			patternUnlockStatus.Add((pattern.ModuleName, pattern.Name), unlockedByDefault);
+		}
+
+		/// <summary>
+		/// Adds a detail to the detail storage
+		/// </summary>
+		/// <param name="moduleName"> The rocket module this detail belongs to </param>
+		/// <param name="detailName"> The detail name </param>
+		/// <param name="unlockedByDefault"> Whether this detail is unlocked by default </param>
+		private static void AddDetail(string moduleName, string detailName, bool unlockedByDefault = false)
+		{
+			Detail detail = new(moduleName, detailName);
+			details.Add((moduleName, detailName), detail);
+			detailUnlockStatus.Add((moduleName,detailName), unlockedByDefault);
+		}
 
         public static UIListScrollablePanel ProvidePatternUI(string moduleName)
         {
@@ -218,10 +224,11 @@ namespace Macrocosm.Content.Rockets.Customization
             var patterns = GetUnlockedPatterns(moduleName);
             int count = patterns.Count;
 
-            int iconsPerRow = 9;
-            float iconSize;
-            float iconOffsetLeft;
-            float iconOffsetTop;
+			// TODO: fix positioning just like in inventory panel
+			int iconsPerRow = 9;
+			float iconSize;
+			float iconOffsetLeft;
+			float iconOffsetTop;
 
             if (count <= iconsPerRow)
             {
@@ -245,10 +252,10 @@ namespace Macrocosm.Content.Rockets.Customization
             listPanel.Add(patternIconContainer);
             patternIconContainer.SetPadding(0f);
 
-            for (int i = 0; i < count; i++)
-            {
-                Pattern pattern = patterns[i].Clone();
-                UIPatternIcon icon = pattern.ProvideUI();
+			for (int i = 0; i < count; i++)
+			{
+				Pattern pattern = patterns[i];
+				UIPatternIcon icon = pattern.ProvideUI();
 
                 icon.Left = new((i % iconsPerRow) * iconSize + iconOffsetLeft, 0f);
                 icon.Top = new((i / iconsPerRow) * iconSize + iconOffsetTop, 0f);
@@ -266,13 +273,20 @@ namespace Macrocosm.Content.Rockets.Customization
             {
                 JArray patternsArray = Utility.ParseJSONFromFile("Content/Rockets/Customization/Patterns/patterns.json");
 
-                foreach (JObject patternObject in patternsArray.Cast<JObject>())
-                    AddPattern(Pattern.FromJSON(patternObject.ToString()));
-            }
-            catch (Exception ex)
-            {
-                Macrocosm.Instance.Logger.Error(ex.Message);
-            }
+				foreach (JObject patternObject in patternsArray.Cast<JObject>())
+				{
+					bool unlockedByDefault = false;
+
+					if (patternObject.ContainsKey("unlockedByDefault"))
+						unlockedByDefault = patternObject.Value<bool>("unlockedByDefault");
+
+ 					AddPattern(Pattern.FromJObject(patternObject), unlockedByDefault);
+				}
+ 			}
+			catch (Exception ex)
+			{
+				Macrocosm.Instance.Logger.Error(ex.Message);
+			}
 
             // Just for testing the scrollbar
             for (int i = 1; i <= 7; i++)
