@@ -70,9 +70,9 @@ namespace Macrocosm.Content.Rockets.UI
 
             if(Interface?.CurrentState != null)
             {
-                HideUI();
-                ShowUI(rocket);
-            }        
+            HideUI();
+            ShowUI(rocket);
+        }
         }
 
         private void OnConfigChanged(object sender, System.EventArgs e)

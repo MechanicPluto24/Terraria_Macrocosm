@@ -139,7 +139,7 @@ namespace Macrocosm.Content.LoadingScreens
 
             if (Moving)
             {
-                stars.MovementVector = new(0f, 0.25f);
+            stars.MovementVector = new(0f, 0.25f);
             }
 
             stars.Draw(spriteBatch);
@@ -149,7 +149,8 @@ namespace Macrocosm.Content.LoadingScreens
             if (Moving)
             {
                 DrawRocket(spriteBatch);
-                fallingStars.Draw(spriteBatch);
+
+            fallingStars.Draw(spriteBatch);
             }
 
             if (WorldGenerator.CurrentGenerationProgress is not null)

@@ -68,6 +68,7 @@ namespace Macrocosm.Content.Rockets.UI
         private UIText modulePickerTitle;
         private UIHoverImageButton leftButton;
         private UIHoverImageButton rightButton;
+        private string currentModuleName = "CommandPod";
         private RocketModule currentModule;
         private RocketModule lastModule;
 
@@ -207,10 +208,11 @@ namespace Macrocosm.Content.Rockets.UI
             {
                 currentPatternIcon = patternSelector.OfType<UIPatternIcon>().FirstOrDefault(icon => icon.Pattern.Name == currentDummyPattern.Name);
                 currentPatternIcon.Pattern = currentDummyPattern;
-                currentPatternIcon.HasFocus = true;
+                    currentPatternIcon.HasFocus = true;
 
-                if (patternColorPickers is null)
-                    CreatePatternColorPickers();
+                    if (patternColorPickers is null)
+                        CreatePatternColorPickers();
+                }
             }
         }
 
@@ -237,8 +239,8 @@ namespace Macrocosm.Content.Rockets.UI
                         {
                             currentModule.Pattern = currentModule.Pattern.WithColor(colorIndex, hslMenu.PendingColor);
                             currentPatternIcon.Pattern = currentModule.Pattern.WithColor(colorIndex, hslMenu.PendingColor);
-                        }
                     }
+                }
                 }
 
                 picker.BackPanelColor = currentModule.Pattern.GetColor(colorIndex);
@@ -259,10 +261,12 @@ namespace Macrocosm.Content.Rockets.UI
             {
                 CustomizationDummy.Nameplate.TextColor = hslMenu.PendingColor;
                 nameplateColorPicker.BackPanelColor = hslMenu.PendingColor;
+                //nameplateTextBox.TextColor = hslMenu.PendingColor; // I don't think we want colored text in the text box lol -- Feldy
             }
             else
             {
                 nameplateColorPicker.BackPanelColor = CustomizationDummy.Nameplate.TextColor;
+                //nameplateTextBox.TextColor = Rocket.CustomizationDummy.Nameplate.TextColor;
             }
         }
 
@@ -394,6 +398,7 @@ namespace Macrocosm.Content.Rockets.UI
 
         private void OnPreviewZoomOut()
         {
+            hslMenu.CaptureCurrentColor();
             rocketPreviewZoomButton.SetImage(ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Buttons/ZoomInButton"));
             rocketPreviewZoomButton.HoverText = Language.GetText("Mods.Macrocosm.UI.Common.ZoomIn");
 
@@ -429,7 +434,9 @@ namespace Macrocosm.Content.Rockets.UI
         private void ResetRocketToDefaults()
         {
             AllLoseFocus();
+
             CustomizationDummy.ResetCustomizationToDefault();
+
             RefreshPatternColorPickers();
         }
 
@@ -484,7 +491,9 @@ namespace Macrocosm.Content.Rockets.UI
                     CustomizationDummy.Nameplate.TextColor = hslMenu.PreviousColor;
                 }
             }
+
             ColorPickersLoseFocus();
+
         }
         #endregion
 
@@ -520,6 +529,7 @@ namespace Macrocosm.Content.Rockets.UI
 
         private void RefreshPatternColorPickers()
         {
+            UpdateCurrentModule();
             UpdatePatternConfig();
             ClearPatternColorPickers();
             CreatePatternColorPickers();
@@ -591,6 +601,8 @@ namespace Macrocosm.Content.Rockets.UI
         {
             //UpdatePatternConfig();
             ColorPickersLoseFocus();
+
+            var defaultPattern = CustomizationStorage.GetPattern(currentModuleName, currentModule.Pattern.Name);
 
             if (rocketPreview.ZoomedOut)
             {
@@ -774,6 +786,7 @@ namespace Macrocosm.Content.Rockets.UI
                 Left = new StyleDimension(0f, 0f),
                 CheckInteractible = () => !rocketPreview.ZoomedOut
             };
+            leftButton.SetVisibility(1f, 1f, 1f);
             leftButton.OnLeftClick += (_, _) => PickPreviousModule();
 
             modulePicker.Append(leftButton);
@@ -784,9 +797,11 @@ namespace Macrocosm.Content.Rockets.UI
                 Left = new StyleDimension(0, 0.79f),
                 CheckInteractible = () => !rocketPreview.ZoomedOut
             };
+            rightButton.SetVisibility(1f, 1f, 1f);
             rightButton.OnLeftClick += (_, _) => PickNextModule();
 
             modulePicker.Append(rightButton);
+
             return modulePicker;
         }
 
@@ -918,6 +933,7 @@ namespace Macrocosm.Content.Rockets.UI
                 VAlign = 0.5f,
                 HAlign = 0f,
                 Left = new(0f, 0.482f),
+                OverrideBackgroundColor = true,
                 FocusContext = "RocketCustomizationColorPicker"
             };
 
