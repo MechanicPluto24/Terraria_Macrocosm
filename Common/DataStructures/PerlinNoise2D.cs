@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace Macrocosm.Common.DataStructures
 {
-	public class PerlinNoise2D
+    public class PerlinNoise2D
     {
         public int Seed { get; set; }
         public InterpolationType InterpolationType { get; set; }

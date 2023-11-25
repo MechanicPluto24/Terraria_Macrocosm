@@ -11,58 +11,58 @@ namespace Macrocosm.Common.Debugging
     // The draw methods are no longer extensions, use DebugDrawing.DrawCross(...)
     public class DebugDrawing : ILoadable
     {
-		private struct DebugDrawData
-		{
-			public DebugDrawData(Vector2 position, int drawTime)
-			{
-				this.position = position;
-				DrawTime = drawTime;
-				InitialDrawTime = drawTime;
-			}
+        private struct DebugDrawData
+        {
+            public DebugDrawData(Vector2 position, int drawTime)
+            {
+                this.position = position;
+                DrawTime = drawTime;
+                InitialDrawTime = drawTime;
+            }
 
-			public DebugDrawData(Func<Vector2> positionFunction, int drawTime, int initialDrawTime) : this()
-			{
-				this.position = positionFunction();
-				this.positionFunction = positionFunction;
-				DrawTime = drawTime;
-				InitialDrawTime = initialDrawTime;
-			}
+            public DebugDrawData(Func<Vector2> positionFunction, int drawTime, int initialDrawTime) : this()
+            {
+                this.position = positionFunction();
+                this.positionFunction = positionFunction;
+                DrawTime = drawTime;
+                InitialDrawTime = initialDrawTime;
+            }
 
-			public Vector2 Position
-			{
-				get
-				{
-					if (positionFunction is null)
-					{
-						return position;
-					}
-					else
-					{
-						position = positionFunction.Invoke();
-						return position;
-					}
-				}
-			}
-			
-			public int DrawTime { get; private set; }
-			public int InitialDrawTime { get; }
+            public Vector2 Position
+            {
+                get
+                {
+                    if (positionFunction is null)
+                    {
+                        return position;
+                    }
+                    else
+                    {
+                        position = positionFunction.Invoke();
+                        return position;
+                    }
+                }
+            }
+
+            public int DrawTime { get; private set; }
+            public int InitialDrawTime { get; }
 
             private Func<Vector2> positionFunction;
-			private Vector2 position;
+            private Vector2 position;
 
-			public bool Tick()
-			{
-				DrawTime--;
-				if (DrawTime <= 0)
-				{
-					return false;
-				}
+            public bool Tick()
+            {
+                DrawTime--;
+                if (DrawTime <= 0)
+                {
+                    return false;
+                }
 
-				return true;
-			}
-		}
+                return true;
+            }
+        }
 
-		private static List<DebugDrawData> DrawDatas { get; set; }
+        private static List<DebugDrawData> DrawDatas { get; set; }
         private static Texture2D DebugCrossTexture { get; set; }
 
         public void Load(Mod mod)
@@ -78,21 +78,21 @@ namespace Macrocosm.Common.Debugging
             DrawDatas = null;
         }
 
-		public static void DrawCross(Vector2 position, int drawTime)
-		{
-			DrawDatas.Add(
-				new(position, drawTime)
-			);
-		}
+        public static void DrawCross(Vector2 position, int drawTime)
+        {
+            DrawDatas.Add(
+                new(position, drawTime)
+            );
+        }
 
-		public static void DrawCrossInWorld(Vector2 position, int drawTime)
-		{
-			DrawDatas.Add(
-				new(position - Main.screenPosition, drawTime)
-			);
-		}
+        public static void DrawCrossInWorld(Vector2 position, int drawTime)
+        {
+            DrawDatas.Add(
+                new(position - Main.screenPosition, drawTime)
+            );
+        }
 
-		private void Draw(On_Main.orig_Draw orig, Main self, GameTime gameTime)
+        private void Draw(On_Main.orig_Draw orig, Main self, GameTime gameTime)
         {
             orig(self, gameTime);
 

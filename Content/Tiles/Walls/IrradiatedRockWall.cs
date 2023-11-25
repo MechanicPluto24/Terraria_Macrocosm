@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles.Walls
 {
-	public class IrradiatedRockWall : ModWall
+    public class IrradiatedRockWall : ModWall
     {
         public override void SetStaticDefaults()
         {

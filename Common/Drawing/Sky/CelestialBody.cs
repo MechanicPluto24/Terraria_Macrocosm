@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Drawing.Sky
 {
-	public enum SkyRotationMode
+    public enum SkyRotationMode
     {
         None,
         Day,
@@ -60,19 +60,19 @@ namespace Macrocosm.Common.Drawing.Sky
         /// <summary> Enable and configure the parameters of the default CelestialBody shading effect. Also needs a valid light source </summary>
         public FuncConfigureShader ConfigureShader = null;
 
-		public delegate Effect FuncOverrideShader();
+        public delegate Effect FuncOverrideShader();
         /// <summary> Override and configure a CelestialBody's custom shader, return the desired Effect </summary>
 		public FuncOverrideShader OverrideShader = null;
 
         public delegate void FuncOverrideDraw();
         /// <summary> Override the way this CelestialBody's atmosphere (or any other pre-body texture) is drawn. You must begin and end the SpriteBatch </summary>
         public FuncOverrideDraw OverrideAtmoDraw = null;
-		/// <summary> Override the way this CelestialBody is drawn. You must begin and end the SpriteBatch </summary>
-		public FuncOverrideDraw OverrideBodyDraw = null;
+        /// <summary> Override the way this CelestialBody is drawn. You must begin and end the SpriteBatch </summary>
+        public FuncOverrideDraw OverrideBodyDraw = null;
 
-		#region Private vars 
+        #region Private vars 
 
-		private Texture2D bodyTexture;
+        private Texture2D bodyTexture;
         private Texture2D atmoTexture;
 
         private Vector2 averageOffset = default;
@@ -98,9 +98,9 @@ namespace Macrocosm.Common.Drawing.Sky
         private float orbitRotation = 0f;
         private float orbitSpeed = 0f;
 
-		#endregion
+        #endregion
 
-		public CelestialBody(Texture2D bodyTexture = null, Texture2D atmoTexture = null, float scale = 1f, float rotation = 0f)
+        public CelestialBody(Texture2D bodyTexture = null, Texture2D atmoTexture = null, float scale = 1f, float rotation = 0f)
         {
             this.bodyTexture = bodyTexture;
             Scale = scale;
@@ -160,13 +160,13 @@ namespace Macrocosm.Common.Drawing.Sky
         /// </param>
         public void SetupSkyRotation(SkyRotationMode mode) => rotationMode = mode;
 
-		/// <summary>
-		/// Configures drawing extra textures over the object
-		/// </summary>
-		/// <param name="lightSource"> The object the overlay will rotate away from (leave null for stationary) </param>
-		/// <param name="bodyOverlayTexture"> The texture that draws over the object's body (null for none) </param>
-		/// <param name="atmoOverlayTexture"> The texture that draws over the object's atmosphere (null for none) </param>
-		public void SetupOverlays(Texture2D bodyOverlayTexture = null, Texture2D atmoOverlayTexture = null)
+        /// <summary>
+        /// Configures drawing extra textures over the object
+        /// </summary>
+        /// <param name="lightSource"> The object the overlay will rotate away from (leave null for stationary) </param>
+        /// <param name="bodyOverlayTexture"> The texture that draws over the object's body (null for none) </param>
+        /// <param name="atmoOverlayTexture"> The texture that draws over the object's atmosphere (null for none) </param>
+        public void SetupOverlays(Texture2D bodyOverlayTexture = null, Texture2D atmoOverlayTexture = null)
         {
             HasOverlay = true;
             this.bodyOverlayTexture = bodyOverlayTexture;
@@ -259,51 +259,51 @@ namespace Macrocosm.Common.Drawing.Sky
             if (!ShouldDraw())
                 return;
 
-		    state.SaveState(spriteBatch);
+            state.SaveState(spriteBatch);
             spriteBatch.EndIfBeginCalled();
 
             Effect shader = null;
-            if(OverrideShader is not null)
+            if (OverrideShader is not null)
             {
                 shader = OverrideShader();
             }
-			else if (lightSource is not null && ConfigureShader is not null)
+            else if (lightSource is not null && ConfigureShader is not null)
             {
-				shader = ModContent.Request<Effect>(Macrocosm.EffectAssetsPath + "CelestialBodyShading", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+                shader = ModContent.Request<Effect>(Macrocosm.EffectAssetsPath + "CelestialBodyShading", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
 
-				float rotation = (Position - lightSource.Position).ToRotation();
-				ConfigureShader(rotation, out float intensity, out Vector2 offset);
+                float rotation = (Position - lightSource.Position).ToRotation();
+                ConfigureShader(rotation, out float intensity, out Vector2 offset);
                 shader.Parameters["uOffset"].SetValue(offset);
                 shader.Parameters["uIntensity"].SetValue(intensity);
-  			}
+            }
 
-			DrawChildren(spriteBatch, state, inFront: false);
+            DrawChildren(spriteBatch, state, inFront: false);
 
             // Draw atmosphere 
             if (OverrideAtmoDraw is null)
-			{
+            {
                 if (atmoTexture is not null)
                 {
-					spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, shader, state);
-					spriteBatch.Draw(atmoTexture, Position, null, Color, Rotation, atmoTexture.Size() / 2, Scale, default, 0f);
-					spriteBatch.End();
-				}
+                    spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, shader, state);
+                    spriteBatch.Draw(atmoTexture, Position, null, Color, Rotation, atmoTexture.Size() / 2, Scale, default, 0f);
+                    spriteBatch.End();
+                }
             }
-			else OverrideAtmoDraw();
+            else OverrideAtmoDraw();
 
-			// Draw main body 
-			if (OverrideBodyDraw is null)
+            // Draw main body 
+            if (OverrideBodyDraw is null)
             {
                 if (bodyTexture is not null)
                 {
-					spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, shader, state);
-					spriteBatch.Draw(bodyTexture, Position, null, Color, Rotation, bodyTexture.Size() / 2, Scale, default, 0f);
-					spriteBatch.End();
-				}
+                    spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, shader, state);
+                    spriteBatch.Draw(bodyTexture, Position, null, Color, Rotation, bodyTexture.Size() / 2, Scale, default, 0f);
+                    spriteBatch.End();
+                }
             }
             else OverrideBodyDraw();
 
-			DrawChildren(spriteBatch, state, inFront: true);
+            DrawChildren(spriteBatch, state, inFront: true);
 
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, shader, state);
 
@@ -312,13 +312,13 @@ namespace Macrocosm.Common.Drawing.Sky
             {
                 if (atmoOverlayTexture is not null && HasAtmo)
                     spriteBatch.Draw(atmoOverlayTexture, Position, null, Color, overlayRotation, atmoTexture.Size() / 2, Scale, default, 0f);
-            
+
                 if (bodyOverlayTexture is not null)
                     spriteBatch.Draw(bodyOverlayTexture, Position, null, Color, overlayRotation, atmoTexture.Size() / 2, Scale, default, 0f);
             }
-			#endregion
+            #endregion
 
-			spriteBatch.End();
+            spriteBatch.End();
             spriteBatch.Begin(state);
         }
 

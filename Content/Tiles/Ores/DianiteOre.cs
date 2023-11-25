@@ -7,15 +7,15 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles.Ores
 {
-	public class DianiteOre : ModTile
+    public class DianiteOre : ModTile
     {
         public override void SetStaticDefaults()
         {
             TileID.Sets.Ore[Type] = true;
-            Main.tileSpelunker[Type] = true;  
-            Main.tileOreFinderPriority[Type] = 1000;  
-            Main.tileShine2[Type] = true;  
-            Main.tileShine[Type] = 975; 
+            Main.tileSpelunker[Type] = true;
+            Main.tileOreFinderPriority[Type] = 1000;
+            Main.tileShine2[Type] = true;
+            Main.tileShine[Type] = 975;
             Main.tileMergeDirt[Type] = true;
             Main.tileSolid[Type] = true;
             Main.tileBlockLight[Type] = true;
@@ -26,9 +26,9 @@ namespace Macrocosm.Content.Tiles.Ores
             DustType = 84;
             HitSound = SoundID.Tink;
 
-			MinPick = 225;
-			MineResist = 5f;
-		}
+            MinPick = 225;
+            MineResist = 5f;
+        }
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
             r = 0.8f;

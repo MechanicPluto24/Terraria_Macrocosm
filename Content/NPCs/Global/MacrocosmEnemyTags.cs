@@ -1,7 +1,7 @@
 ﻿namespace Macrocosm.Content.NPCs.Global
 {
-	public interface IMacrocosmEnemy { }
+    public interface IMacrocosmEnemy { }
 
-	public interface IMoonEnemy : IMacrocosmEnemy { }
+    public interface IMoonEnemy : IMacrocosmEnemy { }
 
 }

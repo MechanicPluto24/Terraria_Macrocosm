@@ -10,7 +10,7 @@ using Terraria.WorldBuilding;
 namespace Macrocosm.Common.DataStructures
 {
     [Obsolete("Use the TaskAttribute in a MacrocosmSubworld sub-class.", false)]
-	public abstract class GenPassCollection
+    public abstract class GenPassCollection
     {
         private PassLegacy CreateGenPass(MethodInfo methodInfo)
         {
@@ -78,7 +78,7 @@ namespace Macrocosm.Common.DataStructures
                 {
                     tasks.Add(pass);
                 }
-                
+
                 return true;
             }
 
@@ -93,13 +93,13 @@ namespace Macrocosm.Common.DataStructures
                 genPassAttribute.InsertMode switch { InsertMode.Before => index, _ => index + 1 },
                 pass
             );
-            
+
 
             return true;
         }
 
-        public List<GenPass> Tasks 
-        { 
+        public List<GenPass> Tasks
+        {
             get
             {
                 (GenPassAttribute, MethodInfo)? firstGenPassAttribute = null;
@@ -134,7 +134,7 @@ namespace Macrocosm.Common.DataStructures
                         lastGenPassAttribute = (genPassAttribute, methodInfo);
                         continue;
                     }
-                    else if(genPassAttribute.InsertMode == InsertMode.PostGen)
+                    else if (genPassAttribute.InsertMode == InsertMode.PostGen)
                     {
                         postGenPassAttribute = (genPassAttribute, methodInfo);
                     }
@@ -143,11 +143,11 @@ namespace Macrocosm.Common.DataStructures
                 }
 
                 List<GenPass> tasks = new();
-                if (firstGenPassAttribute.HasValue) 
+                if (firstGenPassAttribute.HasValue)
                 {
                     tasks.Add(CreateGenPass(firstGenPassAttribute.Value.Item2));
                 }
-                
+
                 bool staysSame = false;
                 while (!staysSame)
                 {
@@ -167,9 +167,9 @@ namespace Macrocosm.Common.DataStructures
                 }
 
                 if (postGenPassAttribute.HasValue)
-                { 
+                {
                     tasks.Add(CreateGenPass(postGenPassAttribute.Value.Item2));
-				}
+                }
 
                 if (tasks.Count < genPassAttributes.Count)
                 {
@@ -180,15 +180,15 @@ namespace Macrocosm.Common.DataStructures
             }
         }
 
-		[GenPass(InsertMode.PostGen)]
-		public void CommonPostSubworldGenHooks(GenerationProgress progress)
-		{
+        [GenPass(InsertMode.PostGen)]
+        public void CommonPostSubworldGenHooks(GenerationProgress progress)
+        {
             RocketManager.OnWorldGenerated();
-		}
-	}
+        }
+    }
 
 
-	[AttributeUsage(AttributeTargets.Method)]
+    [AttributeUsage(AttributeTargets.Method)]
     public class GenPassAttribute : Attribute
     {
         public string InsertName { get; }

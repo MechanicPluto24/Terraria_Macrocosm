@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Environment.Meteors
 {
-	public class MoonMeteorMedium : BaseMeteor
+    public class MoonMeteorMedium : BaseMeteor
     {
         public MoonMeteorMedium()
         {

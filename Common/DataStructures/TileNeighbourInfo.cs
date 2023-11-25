@@ -5,7 +5,7 @@ using Terraria.ID;
 
 namespace Macrocosm.Common.DataStructures
 {
-	public record TileNeighbourInfo(int I, int J)
+    public record TileNeighbourInfo(int I, int J)
     {
         private static bool CoordinatesOutOfBounds(int i, int j) => i >= Main.maxTilesX || j >= Main.maxTilesY || i < 0 || j < 0;
         public abstract record CountableNeighbourInfo(int I, int J)
@@ -46,12 +46,12 @@ namespace Macrocosm.Common.DataStructures
                             + (Right ? 1 : 0)
                             + (Left ? 1 : 0);
 
-			private int? count4Way;
-			public int Count4Way => count4Way ??= (Top ? 1 : 0)
-							            + (Bottom ? 1 : 0)
-							            + (Right ? 1 : 0)
-							            + (Left ? 1 : 0);
-		}
+            private int? count4Way;
+            public int Count4Way => count4Way ??= (Top ? 1 : 0)
+                                        + (Bottom ? 1 : 0)
+                                        + (Right ? 1 : 0)
+                                        + (Left ? 1 : 0);
+        }
 
         public record PredicateNeighbourInfo(int I, int J, Func<Tile, bool> Predicate) : CountableNeighbourInfo(I, J)
         {

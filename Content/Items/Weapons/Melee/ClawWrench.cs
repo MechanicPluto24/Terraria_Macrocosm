@@ -3,17 +3,16 @@ using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Melee
 {
-	public class ClawWrench : ModItem
+    public class ClawWrench : ModItem
     {
         public override void SetStaticDefaults()
         {
-             
+
         }
 
         public override void SetDefaults()
@@ -36,7 +35,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 
         public override void AddRecipes()
         {
-           
+
         }
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)

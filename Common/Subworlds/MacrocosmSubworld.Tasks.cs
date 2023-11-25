@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria.GameContent.Generation;
 using Terraria.WorldBuilding;
 
@@ -12,10 +9,10 @@ namespace Macrocosm.Common.Subworlds
     public partial class MacrocosmSubworld
     {
         [AttributeUsage(AttributeTargets.Method)]
-        protected class TaskAttribute : Attribute 
+        protected class TaskAttribute : Attribute
         {
             public double Weight { get; }
-            public TaskAttribute(double weight = 1d) 
+            public TaskAttribute(double weight = 1d)
             {
                 Weight = weight;
             }
@@ -29,7 +26,7 @@ namespace Macrocosm.Common.Subworlds
         {
             get
             {
-				List<GenPass> tasks = new();
+                List<GenPass> tasks = new();
                 foreach (MethodInfo methodInfo in GetType().GetRuntimeMethods())
                 {
                     TaskAttribute taskAttribute = methodInfo.GetCustomAttribute<TaskAttribute>();
@@ -40,7 +37,8 @@ namespace Macrocosm.Common.Subworlds
 
                     tasks.Add(new PassLegacy(
                         methodInfo.Name,
-                        (progress, configuration) => {
+                        (progress, configuration) =>
+                        {
                             ParameterInfo[] parameterInfos = methodInfo.GetParameters();
                             switch (parameterInfos.Length)
                             {
@@ -85,9 +83,9 @@ namespace Macrocosm.Common.Subworlds
                 }
 
                 // (Re)construct structure map of this subworld when SubLib fetches worldgen tasks (i.e. subworld generation commences)
-				StructureMap = new();
+                StructureMap = new();
 
-				return tasks;
+                return tasks;
             }
         }
     }

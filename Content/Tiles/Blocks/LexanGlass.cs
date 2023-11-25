@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles.Blocks
 {
-	public class LexanGlass : ModTile
+    public class LexanGlass : ModTile
     {
         public override void SetStaticDefaults()
         {

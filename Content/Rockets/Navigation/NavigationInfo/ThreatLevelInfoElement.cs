@@ -25,15 +25,15 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
     public class ThreatLevelInfoElement : InfoElement
     {
 
-		private LocalizedText formattedLocalizedText;
+        private LocalizedText formattedLocalizedText;
 
         private Color textColor;
 
-		public ThreatLevelInfoElement(ThreatLevel level, Color textColor) : base((float)level) 
+        public ThreatLevelInfoElement(ThreatLevel level, Color textColor) : base((float)level)
         {
-			formattedLocalizedText = Language.GetText("Mods.Macrocosm.UI.Rocket.ThreatLevel.Threat" + (int)value).WithFormatArgs((int)value);
-            this.textColor = textColor; 
-		}
+            formattedLocalizedText = Language.GetText("Mods.Macrocosm.UI.Rocket.ThreatLevel.Threat" + (int)value).WithFormatArgs((int)value);
+            this.textColor = textColor;
+        }
 
         protected override LocalizedColorScaleText GetText() => new(formattedLocalizedText, textColor, scale: 0.9f);
 
@@ -41,5 +41,5 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
 
         protected override Asset<Texture2D> GetIcon() => ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/WorldInfo/ThreatLevel");
 
-	}
+    }
 }

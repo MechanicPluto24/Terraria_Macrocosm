@@ -5,62 +5,60 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Serialization;
 using Terraria;
 using Terraria.GameContent;
-using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.UI
 {
-	public class UICrewPanel : UIListScrollablePanel, IRocketUIDataConsumer
+    public class UICrewPanel : UIListScrollablePanel, IRocketUIDataConsumer
     {
         public Rocket Rocket { get; set; }
 
         private Connector connector;
-		private Player commander;
-		private Player prevCommander = Main.LocalPlayer;
-		private List<Player> crew = new();
-		private List<Player> prevCrew = new();
+        private Player commander;
+        private Player prevCommander = Main.LocalPlayer;
+        private List<Player> crew = new();
+        private List<Player> prevCrew = new();
 
-		public UICrewPanel() : base(new LocalizedColorScaleText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Crew"), scale: 1.2f))
+        public UICrewPanel() : base(new LocalizedColorScaleText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Crew"), scale: 1.2f))
         {
-			connector = new(0);
-		}
+            connector = new(0);
+        }
 
         public override void OnInitialize()
         {
             base.OnInitialize();
             BorderColor = UITheme.Current.PanelStyle.BorderColor;
             BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor;
-			ScrollbarHAlign = 1.015f;
-			ListWidthWithScrollbar = new StyleDimension(0,1f);
-			SetPadding(0f);
-			PaddingLeft = PaddingRight = ListOuterPadding = 12f;
+            ScrollbarHAlign = 1.015f;
+            ListWidthWithScrollbar = new StyleDimension(0, 1f);
+            SetPadding(0f);
+            PaddingLeft = PaddingRight = ListOuterPadding = 12f;
 
-			if (Main.netMode == NetmodeID.SinglePlayer)
+            if (Main.netMode == NetmodeID.SinglePlayer)
             {
                 Add(new UIPlayerInfoElement(Main.LocalPlayer));
-            } 
+            }
         }
 
 
-		protected override void DrawChildren(SpriteBatch spriteBatch)
-		{
-			base.DrawChildren(spriteBatch);
-		}
+        protected override void DrawChildren(SpriteBatch spriteBatch)
+        {
+            base.DrawChildren(spriteBatch);
+        }
 
-		public override void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
             if (Main.netMode == NetmodeID.MultiplayerClient || true)
             {
-				crew.Clear();
+                crew.Clear();
 
-				for (int i = 0; i < Main.maxPlayers; i++)
+                for (int i = 0; i < Main.maxPlayers; i++)
                 {
                     var player = Main.player[i];
 
@@ -74,59 +72,59 @@ namespace Macrocosm.Content.Rockets.UI
                         if (rocketPlayer.IsCommander)
                             commander = player;
                         else
-                             crew.Add(player);
+                            crew.Add(player);
                     }
                 }
 
-				if (!commander.Equals(prevCommander) || !crew.SequenceEqual(prevCrew))
-				{
-					Deactivate();
-					ClearList();
+                if (!commander.Equals(prevCommander) || !crew.SequenceEqual(prevCrew))
+                {
+                    Deactivate();
+                    ClearList();
 
-					connector = new(crew.Count) { };
-					Add(connector);
+                    connector = new(crew.Count) { };
+                    Add(connector);
 
-					Add(new UIPlayerInfoElement(commander));
+                    Add(new UIPlayerInfoElement(commander));
 
-					foreach(var player in crew)
+                    foreach (var player in crew)
                     {
-                         Add(new UIPlayerInfoElement(player));
+                        Add(new UIPlayerInfoElement(player));
                     }
 
-					if(crew.Any())
-						OfType<UIPlayerInfoElement>().LastOrDefault().LastInList = true;
+                    if (crew.Any())
+                        OfType<UIPlayerInfoElement>().LastOrDefault().LastInList = true;
 
-					prevCommander = commander;
-					prevCrew = crew;
+                    prevCommander = commander;
+                    prevCrew = crew;
 
-					Activate();
-				}
-			}
+                    Activate();
+                }
+            }
         }
 
         private class Connector : UIElement
         {
-			private int count;
+            private int count;
 
-			public Connector(int count)
-			{
-				this.count = count;
-			}
+            public Connector(int count)
+            {
+                this.count = count;
+            }
 
-			public override void Draw(SpriteBatch spriteBatch)
-			{
-				base.Draw(spriteBatch);
+            public override void Draw(SpriteBatch spriteBatch)
+            {
+                base.Draw(spriteBatch);
 
-				var dimensions = Parent.GetDimensions();
-				Rectangle rect = new((int)(dimensions.X + dimensions.Width * 0.1f), (int)(dimensions.Y + dimensions.Height * 0.35f), 20, 14 + 48 * count);
-				spriteBatch.Draw(TextureAssets.BlackTile.Value, rect, Color.White);
+                var dimensions = Parent.GetDimensions();
+                Rectangle rect = new((int)(dimensions.X + dimensions.Width * 0.1f), (int)(dimensions.Y + dimensions.Height * 0.35f), 20, 14 + 48 * count);
+                spriteBatch.Draw(TextureAssets.BlackTile.Value, rect, Color.White);
 
-				for (int i = 0; i < count; i++)
-				{
-					rect = new((int)(dimensions.X + dimensions.Width * 0.1f), (int)(dimensions.Y + dimensions.Height * 0.438f + 64 * i), 68, 20);
-					spriteBatch.Draw(TextureAssets.BlackTile.Value, rect, Color.White);
-				}
-			}
-		}
+                for (int i = 0; i < count; i++)
+                {
+                    rect = new((int)(dimensions.X + dimensions.Width * 0.1f), (int)(dimensions.Y + dimensions.Height * 0.438f + 64 * i), 68, 20);
+                    spriteBatch.Draw(TextureAssets.BlackTile.Value, rect, Color.White);
+                }
+            }
+        }
     }
 }

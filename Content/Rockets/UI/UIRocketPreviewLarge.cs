@@ -10,7 +10,7 @@ using Terraria.GameContent.UI.Elements;
 
 namespace Macrocosm.Content.Rockets.UI
 {
-	public class UIRocketPreviewLarge : UIPanel, IRocketUIDataConsumer
+    public class UIRocketPreviewLarge : UIPanel, IRocketUIDataConsumer
     {
         public Rocket Rocket { get; set; }
         public Rocket RocketDummy { get; set; }

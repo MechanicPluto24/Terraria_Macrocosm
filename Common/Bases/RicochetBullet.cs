@@ -1,18 +1,16 @@
 using Macrocosm.Content.Projectiles.Global;
-using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using System.IO;
 using Terraria;
-using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Bases
 {
-	/// <summary>
-	/// Base class for a bullet projectile that bounces from enemy to enemy. 
-	/// </summary>
-	public abstract class RicochetBullet : ModProjectile, IBullet
+    /// <summary>
+    /// Base class for a bullet projectile that bounces from enemy to enemy. 
+    /// </summary>
+    public abstract class RicochetBullet : ModProjectile, IBullet
     {
         /// <summary> The number of ricochets </summary>
         public virtual int RicochetCount { get; set; } = 2;
@@ -30,8 +28,8 @@ namespace Macrocosm.Common.Bases
         /// <summary> Called on ricochet on all clients, for visual effects </summary>
         public virtual void OnHitNPCEffect(bool ricochet, NPC target, NPC.HitInfo hit, int damageDone) { }
 
-		/// <summary> Set projectile defaults here </summary>
-		public virtual void SetProjectileDefaults() { }
+        /// <summary> Set projectile defaults here </summary>
+        public virtual void SetProjectileDefaults() { }
 
         /// <summary> Used to keep track of every NPC hit </summary>
         protected readonly bool[] hitList = new bool[Main.maxNPCs];
@@ -63,28 +61,28 @@ namespace Macrocosm.Common.Bases
 
             bool didRicochet = HasNewTarget && CanRicochet();
 
-			OnHitNPC(didRicochet, target, hit, damageDone);
+            OnHitNPC(didRicochet, target, hit, damageDone);
 
-			if (didRicochet)
+            if (didRicochet)
             {
                 Vector2 shootVel = Main.npc[newTarget].Center - Projectile.Center;
                 shootVel.Normalize();
                 shootVel *= RicochetSpeed;
                 Projectile.velocity = shootVel;
-                Projectile.rotation = Main.npc[newTarget].Center.ToRotation(); 
- 
+                Projectile.rotation = Main.npc[newTarget].Center.ToRotation();
+
                 if (Main.netMode == NetmodeID.MultiplayerClient)
                 {
                     scheduleOnHitEffect = true;
-					Projectile.netUpdate = true;
-				}
-			}
+                    Projectile.netUpdate = true;
+                }
+            }
 
-			if (scheduleOnHitEffect || (Main.netMode == NetmodeID.SinglePlayer))
-			{
-				OnHitNPCEffect(didRicochet, target, hit, damageDone);
-				scheduleOnHitEffect = false;
-			}
+            if (scheduleOnHitEffect || (Main.netMode == NetmodeID.SinglePlayer))
+            {
+                OnHitNPCEffect(didRicochet, target, hit, damageDone);
+                scheduleOnHitEffect = false;
+            }
         }
 
         private int GetTarget(float maxRange, Vector2 shootingSpot) //Function to find a NPC to target
@@ -107,7 +105,7 @@ namespace Macrocosm.Common.Bases
             return first;
         }
 
-		public override void SendExtraAI(BinaryWriter writer)
+        public override void SendExtraAI(BinaryWriter writer)
         {
             writer.Write(scheduleOnHitEffect);
         }

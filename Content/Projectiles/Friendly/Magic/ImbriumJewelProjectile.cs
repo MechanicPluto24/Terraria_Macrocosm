@@ -12,26 +12,26 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
-	public class ImbriumJewelProjectile : ModProjectile
-	{
-		public override void SetStaticDefaults()
-		{
+    public class ImbriumJewelProjectile : ModProjectile
+    {
+        public override void SetStaticDefaults()
+        {
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 12;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
         }
 
-		public override void SetDefaults()
-		{
-			Projectile.width = 100;
-			Projectile.height = 100;
-			Projectile.friendly = true;
-			Projectile.DamageType = DamageClass.Magic;
-			Projectile.ignoreWater = true;
-			Projectile.light = 1f;
+        public override void SetDefaults()
+        {
+            Projectile.width = 100;
+            Projectile.height = 100;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Magic;
+            Projectile.ignoreWater = true;
+            Projectile.light = 1f;
             Projectile.penetrate = -1;
-		}
+        }
 
-		public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough, ref Vector2 hitboxCenterFrac)
+        public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough, ref Vector2 hitboxCenterFrac)
         {
             width = 24;
             height = 24;
@@ -42,12 +42,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         {
             bool collide = WorldGen.SolidTile(Projectile.Center.ToTileCoordinates());
 
-			Projectile.alpha += 2;
+            Projectile.alpha += 2;
 
-			if (collide)
-				Projectile.alpha += 8;
-                    
-			if (Projectile.alpha >= 255)
+            if (collide)
+                Projectile.alpha += 8;
+
+            if (Projectile.alpha >= 255)
             {
                 Projectile.Kill();
                 return;
@@ -64,7 +64,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 if (Projectile.owner == Main.myPlayer)
                 {
                     Vector2 shootVel = new Vector2(6, 6).RotatedByRandom(MathHelper.ToRadians(360));
-                    Vector2 vector = new (Projectile.position.X + (float)Projectile.width * 0.5f, Projectile.position.Y + (float)Projectile.height * 0.5f);
+                    Vector2 vector = new(Projectile.position.X + (float)Projectile.width * 0.5f, Projectile.position.Y + (float)Projectile.height * 0.5f);
                     Projectile.NewProjectile(Projectile.InheritSource(Projectile), vector, shootVel, ModContent.ProjectileType<ImbriumJewelMeteor>(), (int)(Projectile.damage), Projectile.knockBack, Main.player[Projectile.owner].whoAmI);
                 }
             }
@@ -83,22 +83,22 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Lighting.AddLight(Projectile.Center, 0f, 1f, 0f);
             Projectile.rotation = (float)Math.Atan2((double)Projectile.velocity.Y, (double)Projectile.velocity.X);
 
-            if(Main.rand.NextFloat() > Projectile.alpha / 255f || Projectile.alpha < 120)
+            if (Main.rand.NextFloat() > Projectile.alpha / 255f || Projectile.alpha < 120)
             {
-				var star = Particle.CreateParticle<ImbriumStar>(new Vector2(Projectile.position.X, Projectile.position.Y) + Main.rand.NextVector2FromRectangle(new Rectangle(0, 0, (int)Projectile.Size.X, (int)Projectile.Size.Y)), Vector2.Zero, scale: Main.rand.NextFloat(0.6f, 0.8f));
-				star.Alpha = 1f - Projectile.alpha / 255f;
-			}
-		}
+                var star = Particle.CreateParticle<ImbriumStar>(new Vector2(Projectile.position.X, Projectile.position.Y) + Main.rand.NextVector2FromRectangle(new Rectangle(0, 0, (int)Projectile.Size.X, (int)Projectile.Size.Y)), Vector2.Zero, scale: Main.rand.NextFloat(0.6f, 0.8f));
+                star.Alpha = 1f - Projectile.alpha / 255f;
+            }
+        }
 
-		private SpriteBatchState state;
-		public override bool PreDraw(ref Color lightColor)
+        private SpriteBatchState state;
+        public override bool PreDraw(ref Color lightColor)
         {
-			Vector2 drawOrigin = new(TextureAssets.Projectile[Type].Value.Width * 0.5f, Projectile.height * 0.5f);
+            Vector2 drawOrigin = new(TextureAssets.Projectile[Type].Value.Width * 0.5f, Projectile.height * 0.5f);
 
             state.SaveState(Main.spriteBatch);
 
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(BlendState.Additive, state); 
+            Main.spriteBatch.Begin(BlendState.Additive, state);
 
             for (int k = 0; k < Projectile.oldPos.Length; k++)
             {
@@ -107,10 +107,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 Main.spriteBatch.Draw(TextureAssets.Projectile[Type].Value, drawPos, null, color, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0f);
             }
 
-			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(state);
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(state);
 
-			return true;
+            return true;
         }
     }
 }

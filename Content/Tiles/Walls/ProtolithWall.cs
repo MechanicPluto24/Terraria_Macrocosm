@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles.Walls
 {
-	public class ProtolithWall : ModWall
+    public class ProtolithWall : ModWall
     {
         public override void SetStaticDefaults()
         {

@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Utils;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
@@ -10,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Bases
 {
-	public abstract class GreatswordHeldProjectileItem : HeldProjectileItem<GreatswordHeldProjectile>
+    public abstract class GreatswordHeldProjectileItem : HeldProjectileItem<GreatswordHeldProjectile>
     {
         public abstract Vector2 SpriteHandlePosition { get; }
 
@@ -45,13 +44,13 @@ namespace Macrocosm.Common.Bases
             set => Projectile.ai[0] = (float)value;
         }
 
-		private int ChargeEndPlayerDirection
-		{
-			get => (int)Projectile.ai[1] > 0 ? 1 : -1;
-			set => Projectile.ai[1] = value > 0 ? 1 : -1;
-		}
+        private int ChargeEndPlayerDirection
+        {
+            get => (int)Projectile.ai[1] > 0 ? 1 : -1;
+            set => Projectile.ai[1] = value > 0 ? 1 : -1;
+        }
 
-		private int MaxCharge { get; set; }
+        private int MaxCharge { get; set; }
         private int chargeTimer = 0;
         /// <summary>
         /// Charge ranging from 0 to 1.
@@ -72,9 +71,9 @@ namespace Macrocosm.Common.Bases
         {
             ChargeEndPlayerDirection = 1;
 
-            if (item.ModItem is GreatswordHeldProjectileItem greatswordHeldProjectileItem) 
+            if (item.ModItem is GreatswordHeldProjectileItem greatswordHeldProjectileItem)
             {
-                if(Main.netMode != NetmodeID.Server)
+                if (Main.netMode != NetmodeID.Server)
                     GreatswordTexture = greatswordHeldProjectileItem.HeldProjectileTexture;
 
                 SwingStyle = greatswordHeldProjectileItem.SwingStyle;
@@ -112,7 +111,7 @@ namespace Macrocosm.Common.Bases
                     if (Projectile.owner == Main.myPlayer && !Player.channel)
                     {
                         SoundEngine.PlaySound(SoundID.DD2_MonkStaffSwing, Projectile.Center);
-						ChargeEndPlayerDirection = Player.direction;
+                        ChargeEndPlayerDirection = Player.direction;
                         Player.velocity.X += Player.direction * MathHelper.Lerp(
                             ChargeBasedDashAmount.min,
                             ChargeBasedDashAmount.max,
@@ -120,12 +119,12 @@ namespace Macrocosm.Common.Bases
                         );
                         State = GreatswordState.Swing;
 
-                        if(Main.netMode == NetmodeID.MultiplayerClient)
+                        if (Main.netMode == NetmodeID.MultiplayerClient)
                         {
-							Projectile.netUpdate = true;
+                            Projectile.netUpdate = true;
                             NetMessage.SendData(MessageID.PlayerControls, number: Main.myPlayer);
-						}
-					}
+                        }
+                    }
 
                     break;
 
@@ -139,7 +138,7 @@ namespace Macrocosm.Common.Bases
             }
 
             float localArmRot = Player.direction * armRotation;
-            Vector2 armDirection = (localArmRot + MathHelper.PiOver2).ToRotationVector2(); 
+            Vector2 armDirection = (localArmRot + MathHelper.PiOver2).ToRotationVector2();
 
             Projectile.Center = Player.RotatedRelativePoint(Player.MountedCenter) + armDirection * 18;
             Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, localArmRot);
@@ -179,12 +178,12 @@ namespace Macrocosm.Common.Bases
 
         public override bool? CanHitNPC(NPC target) => State == GreatswordState.Swing ? null : false;
 
-		public override bool CanHitPvp(Player target)
-		{
-			return base.CanHitPvp(target);
-		}
+        public override bool CanHitPvp(Player target)
+        {
+            return base.CanHitPvp(target);
+        }
 
-		public override void Draw(Color lightColor)
+        public override void Draw(Color lightColor)
         {
             SwingStyle.PreDrawSword(this, lightColor);
 
@@ -209,7 +208,7 @@ namespace Macrocosm.Common.Bases
         }
     }
 
-    public class GreatswordGlobalNPC : GlobalNPC 
+    public class GreatswordGlobalNPC : GlobalNPC
     {
         public override bool InstancePerEntity => true;
         public bool HasMark { get; private set; }

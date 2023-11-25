@@ -14,13 +14,13 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.UI
 {
-	public class RocketUIState : UIState, IRocketUIDataConsumer
+    public class RocketUIState : UIState, IRocketUIDataConsumer
     {
         public Rocket Rocket { get; set; }
 
         private UINavigationTab navigation;
-		private UICustomizationTab customization;
-		private UICargoTab cargo;
+        private UICustomizationTab customization;
+        private UICargoTab cargo;
 
         private UIText title;
         private UIDragablePanel window;
@@ -48,10 +48,10 @@ namespace Macrocosm.Content.Rockets.UI
             window.PaddingTop = 40f;
 
             window.BackgroundColor = UITheme.Current.WindowStyle.BackgroundColor;
-			window.BorderColor = UITheme.Current.WindowStyle.BorderColor;
+            window.BorderColor = UITheme.Current.WindowStyle.BorderColor;
 
 
-			Append(window);
+            Append(window);
 
             title = new(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Navigation"), 0.6f, true)
             {
@@ -101,12 +101,12 @@ namespace Macrocosm.Content.Rockets.UI
 
         public void OnRocketChanged()
         {
-			window.ExecuteRecursively((uIElement) =>
-			{
-				if (uIElement is IRocketUIDataConsumer rocketDataConsumer)
-					rocketDataConsumer.Rocket = Rocket;
-			});
-		}
+            window.ExecuteRecursively((uIElement) =>
+            {
+                if (uIElement is IRocketUIDataConsumer rocketDataConsumer)
+                    rocketDataConsumer.Rocket = Rocket;
+            });
+        }
 
         public void OnShow()
         {
@@ -116,7 +116,7 @@ namespace Macrocosm.Content.Rockets.UI
                 {
                     rocketDataConsumer.Rocket = Rocket;
                     rocketDataConsumer.OnRocketChanged();
-				}
+                }
 
                 if (uIElement is ITabUIElement tab)
                     tab.OnTabOpen();
@@ -146,9 +146,9 @@ namespace Macrocosm.Content.Rockets.UI
                 if (uIElement is IRocketUIDataConsumer rocketDataConsumer)
                 {
                     rocketDataConsumer.Rocket = Rocket;
-					rocketDataConsumer.OnRocketChanged();
-				}
-			});
+                    rocketDataConsumer.OnRocketChanged();
+                }
+            });
         }
 
 
@@ -159,22 +159,22 @@ namespace Macrocosm.Content.Rockets.UI
             tabRightButton.OnLeftClick -= SetTab_Payload;
             tabRightButton.OnLeftClick += SetTab_Navigation;
 
-			SwitchTab(customization);
+            SwitchTab(customization);
 
-			title.SetText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Customization"));
+            title.SetText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Customization"));
             tabRightButton.HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Navigation");
-		}
+        }
 
         private void SetTab_Payload(UIMouseEvent evt, UIElement listeningElement)
         {
             tabLeftButton.OnLeftClick -= SetTab_Customization;
             tabLeftButton.OnLeftClick += SetTab_Navigation;
 
-			SwitchTab(cargo);
+            SwitchTab(cargo);
 
-			title.SetText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Cargo"));
+            title.SetText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Cargo"));
             tabLeftButton.HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Navigation");
-		}
+        }
 
         private void SetTab_Navigation(UIMouseEvent evt, UIElement listeningElement)
         {

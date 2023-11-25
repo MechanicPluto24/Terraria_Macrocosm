@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
 using System.IO;
 using System.Linq;
 using Terraria;
@@ -7,12 +6,11 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using static Humanizer.In;
 using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Common.Bases
 {
-	public abstract class HeldProjectileItem<T> : ModItem where T: HeldProjectile
+    public abstract class HeldProjectileItem<T> : ModItem where T : HeldProjectile
     {
         public virtual void SetDefaultsHeldProjectile() { }
         public virtual bool CanUseItemHeldProjectile(Player player) => true;
@@ -45,24 +43,24 @@ namespace Macrocosm.Common.Bases
             }
 
             SetDefaultsHeldProjectile();
-		}
+        }
 
         public sealed override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-			Projectile projectile = Projectile.NewProjectileDirect(source, position, velocity, ProjectileType<T>(), damage, knockback, player.whoAmI);
+            Projectile projectile = Projectile.NewProjectileDirect(source, position, velocity, ProjectileType<T>(), damage, knockback, player.whoAmI);
             projectile.scale = ProjectileScale ?? Item.scale;
 
-            if(projectile.ModProjectile is HeldProjectile heldProjectile)
+            if (projectile.ModProjectile is HeldProjectile heldProjectile)
             {
                 heldProjectile.ShootProjectileType = type;
-			}
+            }
 
-			// This needs to be called once more, in order to properly sync the ExtraAI,
+            // This needs to be called once more, in order to properly sync the ExtraAI,
             // without using the ai[] array, including the item used which can only be synced there.
-			if (Main.netMode != NetmodeID.SinglePlayer && player.whoAmI == Main.myPlayer)
-				NetMessage.SendData(MessageID.SyncProjectile, -1, -1, null, projectile.whoAmI);
+            if (Main.netMode != NetmodeID.SinglePlayer && player.whoAmI == Main.myPlayer)
+                NetMessage.SendData(MessageID.SyncProjectile, -1, -1, null, projectile.whoAmI);
 
-			return false;
+            return false;
         }
 
         /// <summary>
@@ -124,7 +122,7 @@ namespace Macrocosm.Common.Bases
                 source is EntitySource_ItemUse_WithAmmo itemSource
                 )
             {
-				item = itemSource.Item;
+                item = itemSource.Item;
                 Projectile.netUpdate = true;
             }
             else
@@ -139,22 +137,22 @@ namespace Macrocosm.Common.Bases
             {
                 OnSpawn();
                 shouldRunOnSpawn = false;
-			}
+            }
 
-			if (!shouldDie)
+            if (!shouldDie)
             {
                 Projectile.timeLeft = Projectile.extraUpdates;
             }
 
-            if (Projectile.owner == Main.myPlayer && 
-                ((Player.HeldItem.type != item.type && Player.HeldItem.type != Main.mouseItem.type) || 
+            if (Projectile.owner == Main.myPlayer &&
+                ((Player.HeldItem.type != item.type && Player.HeldItem.type != Main.mouseItem.type) ||
                 (Player.ItemAnimationEndingOrEnded && KillMode == HeldProjectileKillMode.OnAnimationEnd)) ||
                 (Player.itemTime <= 1 && KillMode == HeldProjectileKillMode.OnAnimationEnd))
-			{
+            {
                 shouldDie = true;
             }
 
-			Player.heldProj = Projectile.whoAmI;
+            Player.heldProj = Projectile.whoAmI;
 
 
             return true;
@@ -187,23 +185,23 @@ namespace Macrocosm.Common.Bases
 
         public virtual void NetReceive(BinaryReader reader) { }
 
-		public sealed override void SendExtraAI(BinaryWriter writer)
-		{
+        public sealed override void SendExtraAI(BinaryWriter writer)
+        {
             // TODO: this could be a job for the NetSyncAttribute
             writer.Write((short)ShootProjectileType);
             writer.Write(Projectile.scale);
-            ItemIO.Send(item, writer); 
+            ItemIO.Send(item, writer);
 
             NetSend(writer);
-		}
+        }
 
-		public sealed override void ReceiveExtraAI(BinaryReader reader)
-		{
+        public sealed override void ReceiveExtraAI(BinaryReader reader)
+        {
             ShootProjectileType = reader.ReadInt16();
-			Projectile.scale = reader.ReadSingle();
-			ItemIO.Receive(item, reader);
+            Projectile.scale = reader.ReadSingle();
+            ItemIO.Receive(item, reader);
 
-			NetReceive(reader);
-		}
-	}
+            NetReceive(reader);
+        }
+    }
 }

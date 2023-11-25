@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Config;
-using Macrocosm.Common.Subworlds;
+﻿using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
@@ -12,13 +11,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
-using Terraria.ID;
 using Terraria.Localization;
 using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.UI
 {
-	public class UINavigationTab : UIPanel, ITabUIElement, IRocketUIDataConsumer
+    public class UINavigationTab : UIPanel, ITabUIElement, IRocketUIDataConsumer
     {
         public Rocket Rocket { get; set; }
 
@@ -61,9 +59,9 @@ namespace Macrocosm.Content.Rockets.UI
             Append(flightChecklist);
             flightChecklist.Activate();
 
-			commanderPanel = CreateCommanderPanel();
+            commanderPanel = CreateCommanderPanel();
             Append(commanderPanel);
-			commanderPanel.Activate();
+            commanderPanel.Activate();
 
             worldInfoPanel = CreateWorldInfoPanel(MacrocosmSubworld.CurrentMacrocosmID);
             Append(worldInfoPanel);
@@ -175,7 +173,7 @@ namespace Macrocosm.Content.Rockets.UI
                 Left = new(0, 0.68f),
                 Height = new(0f, 0.15f),
             };
-			commanderPanel.SetPadding(2f);
+            commanderPanel.SetPadding(2f);
 
             return commanderPanel;
         }
@@ -242,7 +240,7 @@ namespace Macrocosm.Content.Rockets.UI
                     Height = new(0, 0.505f),
                     BorderColor = UITheme.Current.PanelStyle.BorderColor,
                     BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor
-				};
+                };
                 launchLocationsList.SetPadding(0f);
 
                 // Sort by vacant > current > occupied

@@ -184,11 +184,11 @@ namespace Macrocosm.Content.Rockets.UI
         {
             Rectangle rect = GetDimensions().ToRectangle();
 
-			if (RocketUISystem.DebugModeActive)
-				spriteBatch.Draw(TextureAssets.MagicPixel.Value, rect, Color.Green.WithOpacity(0.1f));
+            if (RocketUISystem.DebugModeActive)
+                spriteBatch.Draw(TextureAssets.MagicPixel.Value, rect, Color.Green.WithOpacity(0.1f));
 
-			// Should draw the outline if not fully transparent
-			if (targetOpacity > 0f)
+            // Should draw the outline if not fully transparent
+            if (targetOpacity > 0f)
             {
                 Vector2 origin = new(selectionOutline.Width / 2f, selectionOutline.Height / 2f);
 

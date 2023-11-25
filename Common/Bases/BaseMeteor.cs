@@ -8,12 +8,12 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Bases
 {
-	public abstract class BaseMeteor : ModProjectile, IExplosive
+    public abstract class BaseMeteor : ModProjectile, IExplosive
     {
         public int Width;
         public int Height;
 
-		public int Damage;
+        public int Damage;
 
         public float ScreenshakeMaxDist;
         public float ScreenshakeIntensity;
@@ -34,12 +34,12 @@ namespace Macrocosm.Common.Bases
         public int DebrisCount;
         public Vector2 DebrisVelocity;
 
-		public int OriginalWidth => Width;
-		public int OriginalHeight => Height;
+        public int OriginalWidth => Width;
+        public int OriginalHeight => Height;
 
-		public float BlastRadius => Width * BlastRadiusMultiplier;
+        public float BlastRadius => Width * BlastRadiusMultiplier;
 
-		public override void SetStaticDefaults()
+        public override void SetStaticDefaults()
         {
         }
 

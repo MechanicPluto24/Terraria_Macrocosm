@@ -19,13 +19,13 @@ namespace Macrocosm.Content.Items.Placeable.Furniture.MoonBase
             Item.value = 500;
         }
 
-		public override void AddRecipes()
-		{
-			CreateRecipe()
-			.AddIngredient<MoonBasePlating>(5)
-			.AddIngredient(ItemID.Silk, 2)
-			.AddTile(TileID.WorkBenches)
-			.Register();
-		}
-	}
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+            .AddIngredient<MoonBasePlating>(5)
+            .AddIngredient(ItemID.Silk, 2)
+            .AddTile(TileID.WorkBenches)
+            .Register();
+        }
+    }
 }

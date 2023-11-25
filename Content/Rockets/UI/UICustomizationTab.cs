@@ -21,7 +21,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.UI
 {
-	public class UICustomizationTab : UIPanel, ITabUIElement, IRocketUIDataConsumer
+    public class UICustomizationTab : UIPanel, ITabUIElement, IRocketUIDataConsumer
     {
         private Rocket rocket = new();
         public Rocket Rocket
@@ -380,16 +380,16 @@ namespace Macrocosm.Content.Rockets.UI
             rocketPreviewZoomButton.SetImage(ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Buttons/ZoomOutButton"));
             rocketPreviewZoomButton.HoverText = Language.GetText("Mods.Macrocosm.UI.Common.ZoomOut");
 
-		}
+        }
 
         private void OnPreviewZoomOut()
         {
             hslMenu.CaptureCurrentColor();
             rocketPreviewZoomButton.SetImage(ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Buttons/ZoomInButton"));
-			rocketPreviewZoomButton.HoverText = Language.GetText("Mods.Macrocosm.UI.Common.ZoomIn");
-		}
+            rocketPreviewZoomButton.HoverText = Language.GetText("Mods.Macrocosm.UI.Common.ZoomIn");
+        }
 
-		private void ApplyCustomizationChanges()
+        private void ApplyCustomizationChanges()
         {
             AllLoseFocus();
 
@@ -544,8 +544,8 @@ namespace Macrocosm.Content.Rockets.UI
                     HAlign = 0f,
                     Top = new(0f, 0.04f),
                     Left = new(iconSize * i + iconLeftOffset, 0f),
-					OverrideBackgroundColor = true,
-					FocusContext = "RocketCustomizationColorPicker"
+                    OverrideBackgroundColor = true,
+                    FocusContext = "RocketCustomizationColorPicker"
                 };
 
                 colorPicker.OnLeftClick += (_, _) => { colorPicker.HasFocus = true; };
@@ -815,7 +815,7 @@ namespace Macrocosm.Content.Rockets.UI
                 Height = new(32f, 0f),
                 VAlign = 0.9f,
                 Left = new(0f, 0.425f),
-                Color = UITheme.Current.SeparatorColor 
+                Color = UITheme.Current.SeparatorColor
             };
             rocketCustomizationControlPanel.Append(separator1);
 
@@ -833,8 +833,8 @@ namespace Macrocosm.Content.Rockets.UI
                 Height = new(32f, 0f),
                 VAlign = 0.9f,
                 Left = new(0f, 0.571f),
-				Color = UITheme.Current.SeparatorColor
-			};
+                Color = UITheme.Current.SeparatorColor
+            };
             rocketCustomizationControlPanel.Append(separator2);
 
             rocketCancelButton = new(ModContent.Request<Texture2D>(symbolsPath + "CrossmarkRed"))

@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
-	public class ClawWrenchProjectile : ModProjectile
+    public class ClawWrenchProjectile : ModProjectile
     {
         public override bool ShouldUpdatePosition() => false;
 
@@ -29,8 +29,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         public ref float SwingTime => ref Projectile.ai[0];
 
-		public override void OnSpawn(IEntitySource source)
-		{
+        public override void OnSpawn(IEntitySource source)
+        {
             spawned = false;
         }
         bool spawned = false;
@@ -38,13 +38,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         public override void AI()
         {
             if (!OwnerPlayer.active || OwnerPlayer.dead || OwnerPlayer.CCed || OwnerPlayer.noItems)
-                 return;
+                return;
 
-			if (!spawned)
-			{
-               SwingTime /= OwnerPlayer.GetAttackSpeed(DamageClass.Melee);
-               Projectile.timeLeft = (int)SwingTime;
-               spawned = true;
+            if (!spawned)
+            {
+                SwingTime /= OwnerPlayer.GetAttackSpeed(DamageClass.Melee);
+                Projectile.timeLeft = (int)SwingTime;
+                spawned = true;
             }
 
             float holdOffset = 2f;
@@ -56,8 +56,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             float end = Projectile.velocity.ToRotation() + MathHelper.PiOver2 * Projectile.spriteDirection;
             float rotation = MathHelper.Lerp(start, end, swingProgress);
 
-            if(OwnerPlayer.whoAmI == Main.myPlayer)
-			{
+            if (OwnerPlayer.whoAmI == Main.myPlayer)
+            {
                 Projectile.Center = OwnerPlayer.GetFrontHandPosition(Player.CompositeArmStretchAmount.Full, rotation - MathHelper.PiOver2) + rotation.ToRotationVector2() * holdOffset;
                 Projectile.netUpdate = true;
             }
@@ -70,18 +70,18 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             OwnerPlayer.itemAnimation = 2;
         }
 
-		public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
-		{
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
         }
 
-		public override void ModifyDamageHitbox(ref Rectangle hitbox)
-		{
+        public override void ModifyDamageHitbox(ref Rectangle hitbox)
+        {
             Vector2 polar = Utility.PolarVector(35, Projectile.rotation + (Projectile.spriteDirection == -1 ? MathHelper.PiOver4 : MathHelper.PiOver2 + MathHelper.PiOver4));
             hitbox.X -= (int)polar.X;
             hitbox.Y -= (int)polar.Y;
- 		}
+        }
 
-		public override bool PreDraw(ref Color lightColor)
+        public override bool PreDraw(ref Color lightColor)
         {
             SpriteEffects effect = Projectile.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
             Texture2D texture = TextureAssets.Projectile[Type].Value;

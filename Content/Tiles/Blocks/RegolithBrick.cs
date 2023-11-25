@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles.Blocks
 {
-	public class RegolithBrick : ModTile
+    public class RegolithBrick : ModTile
     {
         public override void SetStaticDefaults()
         {

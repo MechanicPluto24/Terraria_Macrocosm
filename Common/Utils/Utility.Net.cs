@@ -7,21 +7,21 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Utils
 {
-	public static partial class Utility
-	{
-		public static void SendData(int dataType, int dataA, int dataB, string text, int playerID, float dataC, float dataD, float dataE, int clientType)
-		{
-			NetMessage.SendData(dataType, dataA, dataB, NetworkText.FromLiteral(text), playerID, dataC, dataD, dataE, clientType);
-		}
+    public static partial class Utility
+    {
+        public static void SendData(int dataType, int dataA, int dataB, string text, int playerID, float dataC, float dataD, float dataE, int clientType)
+        {
+            NetMessage.SendData(dataType, dataA, dataB, NetworkText.FromLiteral(text), playerID, dataC, dataD, dataE, clientType);
+        }
 
         public static byte[] GetBuffer(this ModPacket packet)
         {
-			var len = (ushort)packet.BaseStream.Position;
-			packet.Seek(0, SeekOrigin.Begin);
-			packet.Write(len);
-			packet.Close();
-			return ((MemoryStream)packet.BaseStream).GetBuffer();
-		}
+            var len = (ushort)packet.BaseStream.Position;
+            packet.Seek(0, SeekOrigin.Begin);
+            packet.Write(len);
+            packet.Close();
+            return ((MemoryStream)packet.BaseStream).GetBuffer();
+        }
 
         public static ModPacket WriteToPacket(ModPacket packet, byte msg, params object[] param)
         {
@@ -30,22 +30,27 @@ namespace Macrocosm.Common.Utils
             {
                 object obj = param[m];
 
-				if(obj is byte[])
-				{
-					byte[] array = (byte[])obj;
-					foreach(byte b in array) packet.Write((byte)b); 
-				}else
-                if (obj is bool) packet.Write((bool)obj); else
-                if (obj is byte) packet.Write((byte)obj); else
-                if (obj is short) packet.Write((short)obj); else
-                if (obj is int) packet.Write((int)obj); else
+                if (obj is byte[])
+                {
+                    byte[] array = (byte[])obj;
+                    foreach (byte b in array) packet.Write((byte)b);
+                }
+                else
+                if (obj is bool) packet.Write((bool)obj);
+                else
+                if (obj is byte) packet.Write((byte)obj);
+                else
+                if (obj is short) packet.Write((short)obj);
+                else
+                if (obj is int) packet.Write((int)obj);
+                else
                 if (obj is float) packet.Write((float)obj);
             }
             return packet;
-        }		
+        }
 
         ///<summary>
-		/// Writes a vector2 array to an obj[] array that can be sent via netmessaging.		///</summary>
+        /// Writes a vector2 array to an obj[] array that can be sent via netmessaging.        ///</summary>
         public static object[] WriteVector2Array(Vector2[] array)
         {
             System.Collections.Generic.List<object> list = new System.Collections.Generic.List<object>();
