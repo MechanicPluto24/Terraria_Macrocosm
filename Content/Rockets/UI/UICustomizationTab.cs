@@ -68,7 +68,6 @@ namespace Macrocosm.Content.Rockets.UI
         private UIText modulePickerTitle;
         private UIHoverImageButton leftButton;
         private UIHoverImageButton rightButton;
-        private string currentModuleName = "CommandPod";
         private RocketModule currentModule;
         private RocketModule lastModule;
 
@@ -208,11 +207,10 @@ namespace Macrocosm.Content.Rockets.UI
             {
                 currentPatternIcon = patternSelector.OfType<UIPatternIcon>().FirstOrDefault(icon => icon.Pattern.Name == currentDummyPattern.Name);
                 currentPatternIcon.Pattern = currentDummyPattern;
-                    currentPatternIcon.HasFocus = true;
+                currentPatternIcon.HasFocus = true;
 
-                    if (patternColorPickers is null)
-                        CreatePatternColorPickers();
-                }
+                if (patternColorPickers is null)
+                    CreatePatternColorPickers();
             }
         }
 
@@ -601,8 +599,6 @@ namespace Macrocosm.Content.Rockets.UI
         {
             //UpdatePatternConfig();
             ColorPickersLoseFocus();
-
-            var defaultPattern = CustomizationStorage.GetPattern(currentModuleName, currentModule.Pattern.Name);
 
             if (rocketPreview.ZoomedOut)
             {
