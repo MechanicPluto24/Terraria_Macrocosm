@@ -8,29 +8,29 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles.Blocks
 {
-	public class SilicaSand : ModTile
-	{
-		public override void SetStaticDefaults()
-		{
-			Main.tileSolid[Type] = true;
-			Main.tileBrick[Type] = true;
-			Main.tileMergeDirt[Type] = false;
-			Main.tileBlockLight[Type] = true;
-			Main.tileSand[Type] = false;
+    public class SilicaSand : ModTile
+    {
+        public override void SetStaticDefaults()
+        {
+            Main.tileSolid[Type] = true;
+            Main.tileBrick[Type] = true;
+            Main.tileMergeDirt[Type] = false;
+            Main.tileBlockLight[Type] = true;
+            Main.tileSand[Type] = false;
 
-			//TileID.Sets.TouchDamageSands[Type] = 15;
+            //TileID.Sets.TouchDamageSands[Type] = 15;
 
-			TileID.Sets.Conversion.Sand[Type] = true; // Allows Clentaminator solutions to convert this tile to their respective Sand tiles.
-			TileID.Sets.ForAdvancedCollision.ForSandshark[Type] = true; // Allows Sandshark enemies to "swim" in this sand.
-			TileID.Sets.Falling[Type] = true;
-			AddMapEntry(new Color(199, 197, 171), CreateMapEntryName());
+            TileID.Sets.Conversion.Sand[Type] = true; // Allows Clentaminator solutions to convert this tile to their respective Sand tiles.
+            TileID.Sets.ForAdvancedCollision.ForSandshark[Type] = true; // Allows Sandshark enemies to "swim" in this sand.
+            TileID.Sets.Falling[Type] = true;
+            AddMapEntry(new Color(199, 197, 171), CreateMapEntryName());
 
-			DustType = ModContent.DustType<SilicaSandDust>();
-		}
+            DustType = ModContent.DustType<SilicaSandDust>();
+        }
 
-		public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
- 			=> Utility.SandTileFrame(i, j, ModContent.ProjectileType<SilicaSandProjectile>());
- 
-		public override void NumDust(int i, int j, bool fail, ref int num) => num = fail ? 1 : 3;
-	}
+        public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
+             => Utility.SandTileFrame(i, j, ModContent.ProjectileType<SilicaSandProjectile>());
+
+        public override void NumDust(int i, int j, bool fail, ref int num) => num = fail ? 1 : 3;
+    }
 }

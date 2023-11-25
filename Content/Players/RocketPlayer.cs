@@ -9,7 +9,6 @@ using System.IO;
 using System.Reflection;
 using Terraria;
 using Terraria.ID;
-using Terraria.Map;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Players

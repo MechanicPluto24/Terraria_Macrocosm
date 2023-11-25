@@ -1,5 +1,4 @@
 using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -7,7 +6,6 @@ using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using Terraria;
-using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.LoadingScreens

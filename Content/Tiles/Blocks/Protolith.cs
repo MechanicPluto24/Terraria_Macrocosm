@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.TileFrame;
-using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -8,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles.Blocks
 {
-	public class Protolith : ModTile
+    public class Protolith : ModTile
     {
         public override void SetStaticDefaults()
         {
@@ -18,7 +17,7 @@ namespace Macrocosm.Content.Tiles.Blocks
             Main.tileMergeDirt[Type] = true;
             Main.tileMerge[Type][ModContent.TileType<Regolith>()] = true;
             Main.tileMerge[Type][ModContent.TileType<IrradiatedRock>()] = true;
-			MinPick = 225;
+            MinPick = 225;
             MineResist = 3f;
             AddMapEntry(new Color(65, 65, 65));
             HitSound = SoundID.Tink;

@@ -2,7 +2,6 @@
 using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.UI;
-using Macrocosm.Common.Utils;
 using Macrocosm.Content.Players;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -29,10 +28,10 @@ namespace Macrocosm.Content.LoadingScreens
             }
             else
             {
-				// Travelling to Earth from another planet
-				if (Player.GetModPlayer<RocketPlayer>().InRocket)
-					LoadingTitleSequence.StartSequence(noTitle: !MacrocosmConfig.Instance.AlwaysDisplayTitleScreens);
-			}
+                // Travelling to Earth from another planet
+                if (Player.GetModPlayer<RocketPlayer>().InRocket)
+                    LoadingTitleSequence.StartSequence(noTitle: !MacrocosmConfig.Instance.AlwaysDisplayTitleScreens);
+            }
         }
 
         public override void SaveData(TagCompound tag)

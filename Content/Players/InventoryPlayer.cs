@@ -1,7 +1,5 @@
-﻿using Humanizer;
-using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets;
-using Macrocosm.Content.Rockets.LaunchPads;
 using Macrocosm.Content.Rockets.Storage;
 using Macrocosm.Content.Rockets.UI;
 using System;
@@ -27,20 +25,20 @@ namespace Macrocosm.Content.Players
 
         public override void Load()
         {
-			On_Player.QuickStackAllChests += On_Player_QuickStackAllChests;
+            On_Player.QuickStackAllChests += On_Player_QuickStackAllChests;
             On_ItemSlot.SetGlow += On_ItemSlot_SetGlow;
             On_ItemSorting.Sort += On_ItemSorting_Sort;
         }
 
-		public override void Unload()
+        public override void Unload()
         {
-			On_Player.QuickStackAllChests -= On_Player_QuickStackAllChests;
-			On_ItemSlot.SetGlow -= On_ItemSlot_SetGlow;
+            On_Player.QuickStackAllChests -= On_Player_QuickStackAllChests;
+            On_ItemSlot.SetGlow -= On_ItemSlot_SetGlow;
             On_ItemSorting.Sort -= On_ItemSorting_Sort;
         }
 
-		// Quick store hover icon to custom inventory 
-		public override bool HoverSlot(Item[] inventory, int context, int slot)
+        // Quick store hover icon to custom inventory 
+        public override bool HoverSlot(Item[] inventory, int context, int slot)
         {
             if (CustomInventoryActive && ItemSlot.ShiftInUse && context == ItemSlot.Context.InventoryItem)
             {
@@ -68,32 +66,32 @@ namespace Macrocosm.Content.Players
             return false;
         }
 
-		private void On_Player_QuickStackAllChests(On_Player.orig_QuickStackAllChests orig, Player player)
-		{
+        private void On_Player_QuickStackAllChests(On_Player.orig_QuickStackAllChests orig, Player player)
+        {
             orig(player);
 
             if (player.whoAmI == Main.myPlayer && !player.HasLockedInventory())
             {
-                for(int i = 0; i < RocketManager.MaxRockets; i++)
+                for (int i = 0; i < RocketManager.MaxRockets; i++)
                 {
                     Rocket rocket = RocketManager.Rockets[i];
 
-					if(rocket.ActiveInCurrentWorld && 
-                        rocket.Bounds.InPlayerInteractionRange(TileReachCheckSettings.QuickStackToNearbyChests) && 
-                        !rocket.Launched && 
+                    if (rocket.ActiveInCurrentWorld &&
+                        rocket.Bounds.InPlayerInteractionRange(TileReachCheckSettings.QuickStackToNearbyChests) &&
+                        !rocket.Launched &&
                         !player.GetModPlayer<RocketPlayer>().InRocket
                     )
                     {
                         ContainerTransferContext transferContext = new(rocket.Center);
                         rocket.Inventory.QuickStack(transferContext);
                     }
-				}
+                }
             }
-		}
+        }
 
 
-		// Avoid sorting player's inventory if a custom inventory is displaying
-		private void On_ItemSorting_Sort(On_ItemSorting.orig_Sort orig, Item[] inv, int[] ignoreSlots)
+        // Avoid sorting player's inventory if a custom inventory is displaying
+        private void On_ItemSorting_Sort(On_ItemSorting.orig_Sort orig, Item[] inv, int[] ignoreSlots)
         {
             // Detect whether the sorting has been run on the player's inventory (which ignores the hotbar, indexes 0-9)
             bool sortRanOnPlayerInventory = ignoreSlots.Distinct().OrderBy(n => n).Take(10).SequenceEqual(Enumerable.Range(0, 10));

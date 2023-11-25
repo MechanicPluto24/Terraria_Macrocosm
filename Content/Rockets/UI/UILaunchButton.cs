@@ -6,7 +6,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.UI
 {
-	public class UILaunchButton : UIPanel
+    public class UILaunchButton : UIPanel
     {
         public delegate void OnClick_ZoomIn(bool useDefault);
         public OnClick_ZoomIn ZoomIn = (useDefault) => { };
@@ -116,17 +116,17 @@ namespace Macrocosm.Content.Rockets.UI
             {
                 BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor * 0.75f;
                 BorderColor = UITheme.Current.PanelStyle.BorderColor;
-			}
+            }
             else if (IsMouseHovering)
             {
-				BackgroundColor = UITheme.Current.ButtonHighlightStyle.BackgroundColor;
-				BorderColor = UITheme.Current.ButtonHighlightStyle.BorderColor;
-			}
+                BackgroundColor = UITheme.Current.ButtonHighlightStyle.BackgroundColor;
+                BorderColor = UITheme.Current.ButtonHighlightStyle.BorderColor;
+            }
             else
             {
                 BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor;
-				BorderColor = UITheme.Current.PanelStyle.BorderColor;
-			}
+                BorderColor = UITheme.Current.PanelStyle.BorderColor;
+            }
 
             BackgroundColor.A = 255;
         }

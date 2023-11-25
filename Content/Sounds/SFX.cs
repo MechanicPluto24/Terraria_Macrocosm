@@ -2,7 +2,7 @@
 
 namespace Macrocosm.Content.Sounds
 {
-	public static class SFX
+    public static class SFX
     {
         public const string SFXPath = Macrocosm.SFXAssetsPath;
 
@@ -13,8 +13,8 @@ namespace Macrocosm.Content.Sounds
         public static readonly SoundStyle MinigunWinddown = new(SFXPath + "MinigunWinddown");
         public static readonly SoundStyle Ricochet = new(SFXPath + "Ricochet_", 6);
         public static readonly SoundStyle HandheldThrusterFlame = new(SFXPath + "HandheldThrusterFlame");
-        public static readonly SoundStyle HandheldThrusterOverheat= new(SFXPath + "HandheldThrusterOverheat");
+        public static readonly SoundStyle HandheldThrusterOverheat = new(SFXPath + "HandheldThrusterOverheat");
         public static readonly SoundStyle DesertEagleShoot = new(SFXPath + "DesertEagleShoot");
-        
+
     }
 }

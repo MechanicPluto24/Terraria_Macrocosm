@@ -9,30 +9,30 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Tiles.Paintings
 {
-	public class Overlord : ModTile
-	{
-		public override void SetStaticDefaults()
-		{
-			Main.tileSolid[Type] = false;
-			Main.tileSolidTop[Type] = false;
-			Main.tileFrameImportant[Type] = true;
-			Main.tileNoAttach[Type] = true;
-			Main.tileTable[Type] = false;
-			Main.tileLavaDeath[Type] = true;
+    public class Overlord : ModTile
+    {
+        public override void SetStaticDefaults()
+        {
+            Main.tileSolid[Type] = false;
+            Main.tileSolidTop[Type] = false;
+            Main.tileFrameImportant[Type] = true;
+            Main.tileNoAttach[Type] = true;
+            Main.tileTable[Type] = false;
+            Main.tileLavaDeath[Type] = true;
 
-			TileObjectData.newTile.CopyFrom(TileObjectData.Style3x3Wall);
-			TileObjectData.newTile.Width = 6;
-			TileObjectData.newTile.Height = 6;
-			TileObjectData.newTile.Origin = new Point16(3, 3);
-			TileObjectData.newTile.CoordinateHeights = new int[] { 16, 16, 16, 16, 16, 16 };
-			TileObjectData.addTile(Type);
+            TileObjectData.newTile.CopyFrom(TileObjectData.Style3x3Wall);
+            TileObjectData.newTile.Width = 6;
+            TileObjectData.newTile.Height = 6;
+            TileObjectData.newTile.Origin = new Point16(3, 3);
+            TileObjectData.newTile.CoordinateHeights = new int[] { 16, 16, 16, 16, 16, 16 };
+            TileObjectData.addTile(Type);
 
-			TileID.Sets.DisableSmartCursor[Type] = true;
-			AddMapEntry(new Color(99, 50, 30), Language.GetText("Painting"));
-		}
-		public override void KillMultiTile(int i, int j, int frameX, int frameY)
-		{
-			Item.NewItem(new EntitySource_TileBreak(i, j), i * 16, j * 16, 16, 32, ItemType<Items.Placeable.Paintings.Overlord>());
-		}
-	}
+            TileID.Sets.DisableSmartCursor[Type] = true;
+            AddMapEntry(new Color(99, 50, 30), Language.GetText("Painting"));
+        }
+        public override void KillMultiTile(int i, int j, int frameX, int frameY)
+        {
+            Item.NewItem(new EntitySource_TileBreak(i, j), i * 16, j * 16, 16, 32, ItemType<Items.Placeable.Paintings.Overlord>());
+        }
+    }
 }

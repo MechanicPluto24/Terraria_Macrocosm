@@ -10,11 +10,10 @@ using System.Linq;
 using Terraria.GameContent.UI.Elements;
 using Terraria.Localization;
 using Terraria.ModLoader;
-using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.UI
 {
-	public class UINavigationPanel : UIPanel
+    public class UINavigationPanel : UIPanel
     {
         public UINavigationMap CurrentMap;
 

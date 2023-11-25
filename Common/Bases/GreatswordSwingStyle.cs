@@ -2,7 +2,7 @@
 
 namespace Macrocosm.Common.Bases
 {
-	public abstract class GreatswordSwingStyle
+    public abstract class GreatswordSwingStyle
     {
         /// <summary>
         /// Defines how a <see cref="GreatswordHeldProjectile"/> should act after having been charged.

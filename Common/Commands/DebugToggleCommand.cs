@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Commands
 {
-	public class DebugToggleCommand : ModCommand
+    public class DebugToggleCommand : ModCommand
     {
         public override string Command => "debug";
 
@@ -13,30 +13,30 @@ namespace Macrocosm.Common.Commands
 
         public override void Action(CommandCaller caller, string input, string[] args)
         {
-            #if !DEBUG
+#if !DEBUG
                 Main.NewText("You must be in debug mode to use this!");
 				return;
-            #endif
+#endif
 
-			if (args.Length <= 0)
+            if (args.Length <= 0)
             {
                 Main.NewText("Unknown argument");
-				return;
+                return;
             }
-            else switch(args[0].ToLower())
-            {
+            else switch (args[0].ToLower())
+                {
                     case "rockets":
                         RocketManager.DebugModeActive = !RocketManager.DebugModeActive;
-						break;
+                        break;
 
-					case "ui" or "rocketui":
-						RocketUISystem.DebugModeActive = !RocketUISystem.DebugModeActive;
-						break;
+                    case "ui" or "rocketui":
+                        RocketUISystem.DebugModeActive = !RocketUISystem.DebugModeActive;
+                        break;
 
-					default:
+                    default:
                         Main.NewText("Unknown argument " + args[0]);
                         break;
-            }
+                }
         }
     }
 }

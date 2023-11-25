@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.UI
 {
-	public class UICustomizationPreview : UIPanel, IRocketUIDataConsumer
+    public class UICustomizationPreview : UIPanel, IRocketUIDataConsumer
     {
         public Rocket Rocket { get; set; }
 
@@ -48,7 +48,7 @@ namespace Macrocosm.Content.Rockets.UI
             if (IsMouseHovering)
             {
                 BorderColor = UITheme.Current.ButtonHighlightStyle.BorderColor;
-				BackgroundColor = UITheme.Current.ButtonHighlightStyle.BackgroundColor;
+                BackgroundColor = UITheme.Current.ButtonHighlightStyle.BackgroundColor;
             }
             else
             {
