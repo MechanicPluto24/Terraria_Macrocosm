@@ -50,6 +50,9 @@ namespace Macrocosm.Content.Rockets.UI
 
                 if (!prevValue && value)
                     OnZoomedOut();
+
+                zoomedOut = value;
+                AnimationActive = true;
             }
         }
 
