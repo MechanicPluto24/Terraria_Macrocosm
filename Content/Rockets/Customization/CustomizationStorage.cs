@@ -51,8 +51,8 @@ namespace Macrocosm.Content.Rockets.Customization
 			detailUnlockStatus = null;
 
 
-			Initialized = false;
-		}
+            Initialized = false;
+        }
 
         public static void Reset()
         {

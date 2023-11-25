@@ -15,6 +15,41 @@ using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.LoadingScreens
 {
+    public class TitleScreenPlayer : ModPlayer
+    {
+        public Dictionary<string, bool> visitedWorlds = new();
+
+        public override void OnEnterWorld()
+        {
+            if (SubworldSystem.AnyActive<Macrocosm>())
+            {
+                visitedWorlds[MacrocosmSubworld.Current.Name] = true;
+                LoadingTitleSequence.StartSequence(noTitle: visitedWorlds[MacrocosmSubworld.Current.Name] && !MacrocosmConfig.Instance.AlwaysDisplayTitleScreens);
+            }
+            else
+            {
+                // Travelling to Earth from another planet
+                if (Player.GetModPlayer<RocketPlayer>().InRocket)
+                    LoadingTitleSequence.StartSequence(noTitle: !MacrocosmConfig.Instance.AlwaysDisplayTitleScreens);
+            }
+        }
+
+        public override void SaveData(TagCompound tag)
+        {
+            foreach (var kvp in visitedWorlds)
+                if (kvp.Value)
+                    tag[kvp.Key] = true;
+        }
+
+        public override void LoadData(TagCompound tag)
+        {
+            visitedWorlds = new Dictionary<string, bool>();
+
+            foreach (var entry in tag)
+                visitedWorlds[entry.Key] = true;
+        }
+    }
+
     public class LoadingTitleSequence : ModSystem
     {
         enum TitleState

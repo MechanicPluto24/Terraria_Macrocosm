@@ -13,10 +13,10 @@ namespace Macrocosm.Common.Commands
 
         public override void Action(CommandCaller caller, string input, string[] args)
         {
-            #if !DEBUG
+#if !DEBUG
                 Main.NewText("You must be in debug mode to use this!");
-                return;
-            #endif
+				return;
+#endif
 
             if (args.Length == 0)
             {
