@@ -10,23 +10,23 @@ namespace Macrocosm.Content.Rockets.Customization
         public string ModuleName { get; set; }
 
         public string TexturePath => GetType().Namespace.Replace('.', '/') + "/Details/" + ModuleName + "/" + Name;
-		public Texture2D Texture
-		{
-			get
-			{
-				if (ModContent.RequestIfExists(TexturePath, out Asset<Texture2D> paintMask))
-					return paintMask.Value;
-				else
-					return Macrocosm.EmptyTex;
-			}
-		}
+        public Texture2D Texture
+        {
+            get
+            {
+                if (ModContent.RequestIfExists(TexturePath, out Asset<Texture2D> paintMask))
+                    return paintMask.Value;
+                else
+                    return Macrocosm.EmptyTex;
+            }
+        }
 
-		//public Texture2D IconTexture { get; set; }
-		//public int ItemType{ get; set; }
+        //public Texture2D IconTexture { get; set; }
+        //public int ItemType{ get; set; }
 
 		public Detail(string moduleName, string patternName)
         {
-			ModuleName = moduleName;
+            ModuleName = moduleName;
             Name = patternName;
 		}
 	}

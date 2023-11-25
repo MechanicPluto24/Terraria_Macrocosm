@@ -5,11 +5,11 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Placeable.Walls
 {
-	public class HazardWall : ModItem
+    public class HazardWall : ModItem
     {
         public override void SetStaticDefaults()
         {
-
+            Item.ResearchUnlockCount = 400;
         }
 
         public override void SetDefaults()

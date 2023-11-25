@@ -1,76 +1,20 @@
-Moon Lord was barely the beginning. Your journey has only just started...
-Welcome to the Macrocosm.
+Macrocosm is a mod for Terraria aimed at allowing players to take to the stars upon the defeat of Moon Lord, enabling exploration of the entire solar system.
+Each world offering valuable resources, unique challenges, dangerous bosses, and deep lore.
+Using the Subworld Library, players can explore far and wide, from the acidic sulfur plains of Venus, to the rusting ruins of Mars, to the methane mire of Titan, to the frozen wastelands of Pluto and beyond.
 
-Dig, build, explore, and fight your way across the solar system, where each world is a challenge waiting to be conquered!
-
-This mod contains:
-
-The Sun - A golden incandescent star, and the center of the solar system.
-
-Vulcan - An infernal hellhole covered in volcanoes, and scorched by the Sun's relentless radiation.
-
-Mercury - A small, dense ball of rock and iron, and the remains of a gas giant vaporized by the Sun.
-
-Venus - A sulfuric nightmare shrouded in toxic clouds, and burning in temperatures hot enough to melt lead.
-
-The Moon - Earth's sole natural satellite, an irradiated rock with a sinister bloody hell at its core.
-
-Mars - A rusting fossil overrun by sandstorms, plagued by an alien nanovirus, and scarred by war.
-
-Phobos - Mars's largest moon, a small asteroid swarmed by demons and other hellspawn.
-
-Deimos - Mars's smallest moon, a tiny asteroid rotting and decaying from the inside out.
-
-Asteroid Belt - A field of rocks and metals, the largest being Ceres, a massive planetoid.
-
-Jupiter - The behemoth of the solar system, a colossal ball of hydrogen and helium gas.
-
-Io - Jupiter's innermost moon, a world covered in sulfur and volcanoes, and bathed in radiation.
-
-Europa - Another Jovian moon, blanketed in a thick layer of ice covering a deep global ocean.
-
-Saturn - An enormous yet lightweight gas giant, known for its vast and breathtaking ring system.
-
-Titan - Saturn's largest moon, wrapped in thick clouds and covered in grimy tar and methane.
-
-Ouranos - A large ice giant rich in methane, knocked on its side by an ancient cosmic collision.
-
-Miranda - A tiny frozen moon broken apart and reassembled many times, appearing grotesque and amalgamated.
-
-Neptune - Another large methane-rich ice giant, known for its extreme wind speeds and furious storms.
-
-Triton - Neptune's largest moon, covered in frozen methane and fields of geysers and cryovolcanoes.
-
-Pluto - A dreary, dark dwarf planet far from the Sun, infested with arachnids and bugs of all sizes.
-
-Charon - Pluto's largest moon, a tiny sphere of ice harboring spirits of the dead.
-
-Eris - A ghostly white dwarf planet, scarred and distorted by beings of violence and destruction.
-
-Yano-Moore - A dark, mysterious comet located at the very edge of the solar system.
-
-The Warp - A dimension of raw chaos and discord, and home to ancient Lovecraftian nightmares and horrors.
-
-
+Currently the Moon is the only celestial body that can be visited.
+Other celestial bodies will be added as development on the mod continues.
+After the Moon is complete, the next celestial body to be visited will be Mars. 
 
 Developers:
+MechanicPluto24 - Creator and Lead Developer
+RighteousRyan - Admin and Lead Coder
+ClockworkCorvus, Toxin - Moderator
+Lincolnennis, Universe - Composer
+absoluteAquarian, 4mbr0s3 2, Feldy, Hallam, sucss, Thanatos, and LadyLone - Programmers
+Daniel, Dovahkick, Juice, OmegA-Vinier, and William - Spriters/Artists
+dontkickmychick - Lorewriter
+Zetry - Soundsmith
 
-Pluto (MP-XXIV) - Mod Creator, Peer Reviewer
-Ryan (RighteousRyan) - Programmer, Peer Reviewer
-Universe - Composer
-absoluteAquarian - Programmer
-4mbr0s3 2 - Programmer
-William - Spriter / Artist
-Kirito - Spriter
-Dovahkick - Spriter
-Delly - Spriter
-Azazzel - Artist
-Zetry - Sound Artist
-VentralRaptor24 - Messenger
-Brayden - Lore-ist
-dontkickmychick - Lore-ist
-Almarduk - Lore-ist
-
-Honorable Mentions / Dedications:
-
-Kiraa - Ex-Spriter responsible for War Machine and Moon Beast sprites
+Special thanks:
+ADVERSE KC, Almarduk, Crowlarghost, Delly, Dracos_V2, Draedon_Gaming, DrakonVörðr, Kiraa, Kirito, Master-Bit, Snowfall-The-Cat

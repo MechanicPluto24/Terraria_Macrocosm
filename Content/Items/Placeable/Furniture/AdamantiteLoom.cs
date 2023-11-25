@@ -1,18 +1,17 @@
 ﻿using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Placeable.Furniture
 {
-	public class AdamantiteLoom : ModItem
+    public class AdamantiteLoom : ModItem
     {
-		public override void SetStaticDefaults()
-		{
-		}
-
-		public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
-			Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.IndustrialLoom>());
+        }
+
+        public override void SetDefaults()
+        {
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.IndustrialLoom>());
             Item.placeStyle = 1;
 
             Item.width = 50;

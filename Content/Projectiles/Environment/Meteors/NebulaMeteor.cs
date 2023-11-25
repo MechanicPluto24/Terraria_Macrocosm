@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Environment.Meteors
 {
-	public class NebulaMeteor : BaseMeteor
+    public class NebulaMeteor : BaseMeteor
     {
         public NebulaMeteor()
         {

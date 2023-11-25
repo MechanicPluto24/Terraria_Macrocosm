@@ -4,12 +4,12 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles.Walls
 {
-	public class RegolithBrickWall : ModWall
+    public class RegolithBrickWall : ModWall
     {
         public override void SetStaticDefaults()
         {
             Main.wallHouse[Type] = false;
-            AddMapEntry(new Color(65, 65, 65));
+            AddMapEntry(new Color(145, 145, 145));
         }
     }
 }

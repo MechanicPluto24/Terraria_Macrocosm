@@ -2,25 +2,24 @@
 using Microsoft.Xna.Framework;
 using System;
 using System.Linq;
-using System.Reflection;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-	public class ColorFunction 
-	{
-		public string Name { get; } = "";
+    public class ColorFunction
+    {
+        public string Name { get; } = "";
 
 		public bool HasParameters => Parameters is not null && Parameters.Length > 0;
 		public object[] Parameters { get; private set; }
 
-		private readonly Func<Color[], Color> function;
+        private readonly Func<Color[], Color> function;
 
-		/// <summary> Creates a new pattern dynamic color. Use this for unnamed color functions, not unlockable. </summary>
-		/// <param name="function"> The function </param>
-		public ColorFunction(Func<Color[], Color> function)
-		{
-			this.function = function;
-		}
+        /// <summary> Creates a new pattern dynamic color. Use this for unnamed color functions, not unlockable. </summary>
+        /// <param name="function"> The function </param>
+        public ColorFunction(Func<Color[], Color> function)
+        {
+            this.function = function;
+        }
 
 		/// <summary>
 		/// Creates a new pattern dynamic color. Use this for unlockable dynamic colors.
@@ -33,8 +32,8 @@ namespace Macrocosm.Content.Rockets.Customization
 			Name = name;
 		}
 
-		/// <summary> Invokes the color function on an input array. </summary>
-		public Color Invoke(Color[] inputColors) => function(inputColors);
+        /// <summary> Invokes the color function on an input array. </summary>
+        public Color Invoke(Color[] inputColors) => function(inputColors);
 
 		public static ColorFunction CreateByName(string name, params object[] parameters) 
 		{
@@ -65,11 +64,11 @@ namespace Macrocosm.Content.Rockets.Customization
 			}
 		}
 
-		private static void LogImportError(string message)
-		{
-			Utility.Chat(message, Color.Orange);
-			Macrocosm.Instance.Logger.Error(message);
-		}
+        private static void LogImportError(string message)
+        {
+            Utility.Chat(message, Color.Orange);
+            Macrocosm.Instance.Logger.Error(message);
+        }
 
 		private static ColorFunction CreateMapFunction(int index)
 		{

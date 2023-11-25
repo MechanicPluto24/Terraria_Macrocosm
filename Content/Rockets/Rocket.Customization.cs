@@ -1,32 +1,34 @@
-﻿using Macrocosm.Common.UI;
-using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.Modules;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
-using Terraria;
 
 namespace Macrocosm.Content.Rockets
 {
     public partial class Rocket
     {
-        public Rocket Clone() => DeserializeData(SerializeData());
 
-        public void ApplyCustomizationChanges(Rocket dummy)
+        public Rocket VisualClone()
         {
-            Nameplate.Text = dummy.Nameplate.Text;
-            Nameplate.TextColor = dummy.Nameplate.TextColor;
-            Nameplate.HAlign = dummy.Nameplate.HAlign;
-            Nameplate.VAlign = dummy.Nameplate.VAlign;
+            Rocket visualClone = new();
+            visualClone.ApplyCustomizationChanges(this);
+            return visualClone;
+        }
+
+        public void ApplyCustomizationChanges(Rocket source)
+        {
+            Nameplate.Text = source.Nameplate.Text;
+            Nameplate.TextColor = source.Nameplate.TextColor;
+            Nameplate.HAlign = source.Nameplate.HAlign;
+            Nameplate.VAlign = source.Nameplate.VAlign;
 
             foreach (var moduleName in ModuleNames)
             {
                 //Modules[moduleName].Detail = dummy.Modules[moduleName].Detail ;
-                Modules[moduleName].Pattern = dummy.Modules[moduleName].Pattern;
+                Modules[moduleName].Pattern = source.Modules[moduleName].Pattern;
             }
 
             SendCustomizationData();

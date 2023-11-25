@@ -1,4 +1,3 @@
-using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Players;
 using Macrocosm.Content.Rarities;
@@ -8,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Armor.Selenite
 {
-	[AutoloadEquip(EquipType.Head)]
+    [AutoloadEquip(EquipType.Head)]
     public class SeleniteHeadgear : ModItem
     {
         public override void SetStaticDefaults()
@@ -24,7 +23,7 @@ namespace Macrocosm.Content.Items.Armor.Selenite
         }
         public override void UpdateEquip(Player player)
         {
-            var modPlayer = player.Macrocosm();
+            var modPlayer = player.GetModPlayer<MacrocosmPlayer>();
             player.GetDamage<RangedDamageClass>() += 0.1f;
             modPlayer.ChanceToNotConsumeAmmo += 0.15f;
         }
@@ -36,7 +35,7 @@ namespace Macrocosm.Content.Items.Armor.Selenite
 
         public override void UpdateArmorSet(Player player)
         {
-            player.Macrocosm().SpaceProtection = SpaceProtection.Tier1;
+            player.GetModPlayer<MacrocosmPlayer>().SpaceProtection = SpaceProtection.Tier1;
         }
 
         public override void AddRecipes()

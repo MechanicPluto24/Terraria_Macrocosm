@@ -15,5 +15,5 @@ IrradiationBiome: {
 
 UndergroundMoonBiome: {
 	DisplayName: Underground Moon
-	TownNPCDialogueName: The Underground Moon Biome
+	TownNPCDialogueName: The Underground Moon
 }

@@ -1,20 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Navigation.Checklist
 {
-	public class ChecklistConditionCollection : IEnumerable<ChecklistCondition>
+    public class ChecklistConditionCollection : IEnumerable<ChecklistCondition>
     {
-		private List<ChecklistCondition> conditions = new();
+        private List<ChecklistCondition> conditions = new();
 
         public ChecklistCondition this[int index] => conditions[index];
 
-		public void Add(ChecklistCondition condition) 
-            => conditions.Add(condition); 
+        public void Add(ChecklistCondition condition)
+            => conditions.Add(condition);
 
-		public void Remove(ChecklistCondition condition)
-			 => conditions.Remove(condition);
+        public void AddRange(List<ChecklistCondition> conditions)
+            => this.conditions.AddRange(conditions);
+
+        public void AddRange(ChecklistConditionCollection conditions)
+            => this.conditions.AddRange(conditions.ToList());
+
+        public void Remove(ChecklistCondition condition)
+             => conditions.Remove(condition);
 
         public void Remove(string key)
              => Remove(conditions.Find(x => x.LangKey == key));
@@ -31,11 +38,11 @@ namespace Macrocosm.Content.Rockets.Navigation.Checklist
             return output;
         }
 
-        public bool MetAll()
+        public bool AllMet()
         {
-            foreach (var condition in conditions) 
+            foreach (var condition in conditions)
             {
-                if(!condition.IsMet())
+                if (!condition.Check())
                     return false;
             }
 
@@ -46,10 +53,10 @@ namespace Macrocosm.Content.Rockets.Navigation.Checklist
         {
             var list = new List<UIElement>();
 
-            foreach(var condition in conditions)
+            foreach (var condition in conditions)
             {
                 // If true, add only if not hidden while true
-                if(!condition.HideIfMet || !condition.IsMet())
+                if (!condition.HideIfMet || !condition.Check())
                     list.Add(condition.ProvideUIInfoElement());
             }
 
@@ -58,18 +65,18 @@ namespace Macrocosm.Content.Rockets.Navigation.Checklist
 
         public void AddToUI(UIElement element)
         {
-            foreach (var condition in conditions) 
+            foreach (var condition in conditions)
             {
-				// If true, add only if not hidden while true
-				if (!condition.HideIfMet || !condition.IsMet())
-					element.Append(condition.ProvideUIInfoElement());
+                // If true, add only if not hidden while true
+                if (!condition.HideIfMet || !condition.Check())
+                    element.Append(condition.ProvideUIInfoElement());
             }
         }
 
-		public IEnumerator<ChecklistCondition> GetEnumerator()
-		    => conditions.GetEnumerator();
+        public IEnumerator<ChecklistCondition> GetEnumerator()
+            => conditions.GetEnumerator();
 
-		IEnumerator IEnumerable.GetEnumerator()
-		    => conditions.GetEnumerator();
-	}
+        IEnumerator IEnumerable.GetEnumerator()
+            => conditions.GetEnumerator();
+    }
 }

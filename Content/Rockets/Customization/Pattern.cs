@@ -1,4 +1,4 @@
-﻿using Macrocosm.Common.UI;
+﻿using Macrocosm.Content.Rockets.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -23,31 +23,31 @@ namespace Macrocosm.Content.Rockets.Customization
 
 		public int UserModifiableColorCount => UserModifiableIndexes.Count;
 
-		public const int MaxColorCount = 8;
+        public const int MaxColorCount = 8;
 
-		public string TexturePath => GetType().Namespace.Replace('.', '/') + "/Patterns/" + ModuleName + "/" + Name;
-		public Texture2D Texture
-		{
-			get
-			{
-				if (ModContent.RequestIfExists(TexturePath, out Asset<Texture2D> paintMask))
-					return paintMask.Value;
-				else
-					return Macrocosm.EmptyTex;
-			}
-		}
+        public string TexturePath => GetType().Namespace.Replace('.', '/') + "/Patterns/" + ModuleName + "/" + Name;
+        public Texture2D Texture
+        {
+            get
+            {
+                if (ModContent.RequestIfExists(TexturePath, out Asset<Texture2D> paintMask))
+                    return paintMask.Value;
+                else
+                    return Macrocosm.EmptyTex;
+            }
+        }
 
-		public string IconTexturePath => GetType().Namespace.Replace('.', '/') + "/Patterns/Icons/" + Name;
-		public Texture2D IconTexture
-		{
-			get
-			{
-				if (ModContent.RequestIfExists(IconTexturePath, out Asset<Texture2D> paintMask))
-					return paintMask.Value;
-				else
-					return Macrocosm.EmptyTex;
-			}
-		}
+        public string IconTexturePath => GetType().Namespace.Replace('.', '/') + "/Patterns/Icons/" + Name;
+        public Texture2D IconTexture
+        {
+            get
+            {
+                if (ModContent.RequestIfExists(IconTexturePath, out Asset<Texture2D> paintMask))
+                    return paintMask.Value;
+                else
+                    return Macrocosm.EmptyTex;
+            }
+        }
 
         public Pattern(string moduleName, string patternName, params PatternColorData[] defaultColorData)
         {
@@ -77,7 +77,6 @@ namespace Macrocosm.Content.Rockets.Customization
             ColorData = ImmutableArray.Create(colorData);
         }
 
-        public string GetKey() => ModuleName + "_" + Name;
 
 		public Color GetColor(int index)
 		{
@@ -178,5 +177,5 @@ namespace Macrocosm.Content.Rockets.Customization
 			new Vector3(1f,.5f, 0f),     // Orange
 			new Vector3(0f,.5f, 1f)      // Azure
 		};
-	}
+    }
 }

@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using Terraria.GameContent.UI.Chat;
 using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Rockets.Customization
@@ -46,17 +45,17 @@ namespace Macrocosm.Content.Rockets.Customization
 					{
 						colorDataObject["color"] = colorData.Color.GetHex();
 
-						if(!colorData.IsUserModifiable)
-							colorDataObject["userModifiable"] = false;
-					}
-					else
-					{
-						colorDataObject = new JObject();
-					}
-				}
+                        if (!colorData.IsUserModifiable)
+                            colorDataObject["userModifiable"] = false;
+                    }
+                    else
+                    {
+                        colorDataObject = new JObject();
+                    }
+                }
 
-				colorDataArray.Add(colorDataObject);
-			}
+                colorDataArray.Add(colorDataObject);
+            }
 
 			// Remove trailing empty JObjects
 			for (int i = colorDataArray.Count - 1; i >= 0; i--)
@@ -72,27 +71,27 @@ namespace Macrocosm.Content.Rockets.Customization
 			return jObject; 
 		}
 
-		public static Pattern FromJSON(string json) => FromJObject(JObject.Parse(json));
+        public static Pattern FromJSON(string json) => FromJObject(JObject.Parse(json));
 
 		public static Pattern FromJObject(JObject jObject)
 		{
 			string moduleName = jObject.Value<string>("moduleName");
 
-			if (!Rocket.DefaultModuleNames.Contains(moduleName))
-				throw new SerializationException("Error: Invalid module name.");
+            if (!Rocket.DefaultModuleNames.Contains(moduleName))
+                throw new SerializationException("Error: Invalid module name.");
 
 			string patternName = jObject.Value<string>("patternName");
 
-			if (CustomizationStorage.Initialized && !CustomizationStorage.TryGetPattern(moduleName, patternName, out _) )
-				throw new SerializationException("Error: Invalid pattern name.");
+            if (CustomizationStorage.Initialized && !CustomizationStorage.TryGetPattern(moduleName, patternName, out _))
+                throw new SerializationException("Error: Invalid pattern name.");
 
 			JArray colorDataArray = jObject.Value<JArray>("colorData");
 			List<PatternColorData> colorDatas = new();
 
-			foreach (JObject colorDataObject in colorDataArray.Cast<JObject>())
-			{
-				string colorHex = colorDataObject.Value<string>("color");
-				string colorFunction = colorDataObject.Value<string>("colorFunction");
+            foreach (JObject colorDataObject in colorDataArray.Cast<JObject>())
+            {
+                string colorHex = colorDataObject.Value<string>("color");
+                string colorFunction = colorDataObject.Value<string>("colorFunction");
 
 				if (!string.IsNullOrEmpty(colorFunction))
 				{
@@ -103,24 +102,23 @@ namespace Macrocosm.Content.Rockets.Customization
 				{
 					bool userModifiable = colorDataObject.Value<bool?>("userModifiable") ?? true;
 
-					if (Utility.TryGetColorFromHex(colorHex, out Color color))
-						colorDatas.Add(new(color, userModifiable));
-					else
-						throw new SerializationException($"Error: Invalid color code: {colorHex}.");
-				}
-				else
-				{
-					colorDatas.Add(new());
-				}
-			}
+                    if (Utility.TryGetColorFromHex(colorHex, out Color color))
+                        colorDatas.Add(new(color, userModifiable));
+                    else
+                        throw new SerializationException($"Error: Invalid color code: {colorHex}.");
+                }
+                else
+                {
+                    colorDatas.Add(new());
+                }
+            }
 
 			return new Pattern(moduleName, patternName, colorDatas.ToArray());
 		}
 
 
-		public static readonly Func<TagCompound, Pattern> DESERIALIZER = DeserializeData;
+        public static readonly Func<TagCompound, Pattern> DESERIALIZER = DeserializeData;
 
-		// TODO: a way to also save and load custom functions just like the JSON does
 		public TagCompound SerializeData()
 		{
 			TagCompound tag = new()
@@ -163,29 +161,5 @@ namespace Macrocosm.Content.Rockets.Customization
 			}	
 		}
 
-		/*
-		// This is terribly inneficient 
-		public TagCompound SerializeData()
-		{
-			TagCompound tag = new()
-			{
-				{ "Pattern", ToJSON(includeColorFunctions: true, includeUnlocked: false, includeNonModifiableColors: true) }
-			};
-			return tag;
-		}
-
-		public static Pattern DeserializeData(TagCompound tag)
-		{
-			if (tag.ContainsKey("Pattern"))
-			{
-				string json = tag.GetString("Pattern");
-				Pattern pattern = FromJSON(json);
-				return pattern;
-			}
-
-			return new Pattern("", "", false);
-		}
-		*/
-
-	}
+    }
 }

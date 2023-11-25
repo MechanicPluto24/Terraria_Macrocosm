@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Environment.Sands
 {
-	public class SilicaCrimsandProjectile : ModProjectile
+    public class SilicaCrimsandProjectile : ModProjectile
     {
         protected bool falling = true;
         protected int tileType;
@@ -29,11 +29,11 @@ namespace Macrocosm.Content.Projectiles.Environment.Sands
 
             //Projectile.aiStyle = ProjAIStyleID.FallingTile;
 
-			//Set the tile type to ExampleSand
-			tileType = ModContent.TileType<Tiles.Blocks.SilicaCrimsand>();
+            //Set the tile type to ExampleSand
+            tileType = ModContent.TileType<Tiles.Blocks.SilicaCrimsand>();
             dustType = ModContent.DustType<SilicaCrimsandDust>();
             itemType = ModContent.ItemType<Items.Placeable.Blocks.SilicaCrimsand>();
-		}
+        }
 
         public override void AI()
         {

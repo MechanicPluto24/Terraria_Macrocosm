@@ -10,92 +10,92 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Hostile
 {
-	public class PhantasmalImpSmall : ModProjectile
-	{
-		public Player TargetPlayer => Main.player[(int)Projectile.ai[2]];
+    public class PhantasmalImpSmall : ModProjectile
+    {
+        public Player TargetPlayer => Main.player[(int)Projectile.ai[2]];
 
-		public override void SetStaticDefaults()
-		{
-			ProjectileID.Sets.TrailCacheLength[Type] = 10;
-			ProjectileID.Sets.TrailingMode[Type] = 2;
-		}
+        public override void SetStaticDefaults()
+        {
+            ProjectileID.Sets.TrailCacheLength[Type] = 10;
+            ProjectileID.Sets.TrailingMode[Type] = 2;
+        }
 
-		private static int spawnTimeLeft = 3 * 60;
-		public override void SetDefaults()
-		{
-			Projectile.width = 42;
-			Projectile.height = 54;
-			Projectile.hostile = true;
-			Projectile.timeLeft = spawnTimeLeft;
-			Projectile.alpha = 0;
-		}
+        private static int spawnTimeLeft = 3 * 60;
+        public override void SetDefaults()
+        {
+            Projectile.width = 42;
+            Projectile.height = 54;
+            Projectile.hostile = true;
+            Projectile.timeLeft = spawnTimeLeft;
+            Projectile.alpha = 0;
+        }
 
-		public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough, ref Vector2 hitboxCenterFrac)
-			=> false;
-		 
-		//bool spawned = false;
-		public override void AI()
-		{
-			ProjectileID.Sets.TrailCacheLength[Type] = 10;
-			ProjectileID.Sets.TrailingMode[Type] = 3;
+        public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough, ref Vector2 hitboxCenterFrac)
+            => false;
 
-			if (!TargetPlayer.active)
-				Projectile.Kill();			
+        //bool spawned = false;
+        public override void AI()
+        {
+            ProjectileID.Sets.TrailCacheLength[Type] = 10;
+            ProjectileID.Sets.TrailingMode[Type] = 3;
 
-			Vector2 direction = TargetPlayer.Center - Projectile.Center;
-			direction.Normalize();
+            if (!TargetPlayer.active)
+                Projectile.Kill();
 
-			// Apply a slight random deviation to the direction
-			float deviation = Main.rand.NextFloat(-0.1f, 0.1f);
-			direction = direction.RotatedBy(deviation);
+            Vector2 direction = TargetPlayer.Center - Projectile.Center;
+            direction.Normalize();
 
-			// Apply a slight random deviation to the direction
-			Vector2 adjustedDirection = Vector2.Lerp(Projectile.velocity, direction, 0.2f);
-			adjustedDirection.Normalize();
+            // Apply a slight random deviation to the direction
+            float deviation = Main.rand.NextFloat(-0.1f, 0.1f);
+            direction = direction.RotatedBy(deviation);
 
-			Projectile.velocity = adjustedDirection * Projectile.velocity.Length();
+            // Apply a slight random deviation to the direction
+            Vector2 adjustedDirection = Vector2.Lerp(Projectile.velocity, direction, 0.2f);
+            adjustedDirection.Normalize();
 
-			Projectile.direction = Math.Sign(Projectile.velocity.X);
-			Projectile.spriteDirection = Projectile.direction;
-			Projectile.rotation = Projectile.velocity.X < 0 ? MathHelper.Pi + Projectile.velocity.ToRotation() : Projectile.velocity.ToRotation();
+            Projectile.velocity = adjustedDirection * Projectile.velocity.Length();
 
-			if (Projectile.timeLeft < (int)(0.33f * spawnTimeLeft) && Projectile.alpha < 255)
-				Projectile.alpha += 6;
+            Projectile.direction = Math.Sign(Projectile.velocity.X);
+            Projectile.spriteDirection = Projectile.direction;
+            Projectile.rotation = Projectile.velocity.X < 0 ? MathHelper.Pi + Projectile.velocity.ToRotation() : Projectile.velocity.ToRotation();
 
-			if (Projectile.alpha >= 255)
-				Projectile.active = false;
-		}
+            if (Projectile.timeLeft < (int)(0.33f * spawnTimeLeft) && Projectile.alpha < 255)
+                Projectile.alpha += 6;
 
-		public override Color? GetAlpha(Color lightColor) => Color.White.WithOpacity(1f);
+            if (Projectile.alpha >= 255)
+                Projectile.active = false;
+        }
 
-		private SpriteBatchState state;
+        public override Color? GetAlpha(Color lightColor) => Color.White.WithOpacity(1f);
 
-		public override bool PreDraw(ref Color lightColor)
-		{
-			int length = Projectile.oldPos.Length;
+        private SpriteBatchState state;
 
-			state.SaveState(Main.spriteBatch);
+        public override bool PreDraw(ref Color lightColor)
+        {
+            int length = Projectile.oldPos.Length;
 
-			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(BlendState.Additive, state);
-			
-			for (int i = 1; i < length; i++)
-			{
-				Vector2 drawPos = Projectile.oldPos[i] - Main.screenPosition + Projectile.Size / 2f;
-			
-				Color trailColor = Color.White * (((float)Projectile.oldPos.Length - i) / Projectile.oldPos.Length) * 0.45f * (1f - Projectile.alpha / 255f);
-				Main.spriteBatch.Draw(TextureAssets.Projectile[Type].Value, drawPos, null, trailColor, Projectile.velocity.X < 0 ? MathHelper.Pi + Projectile.oldRot[i] : Projectile.oldRot[i], Projectile.Size / 2f, Projectile.scale, Projectile.oldSpriteDirection[i] == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
-			}
+            state.SaveState(Main.spriteBatch);
 
-			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(BlendState.NonPremultiplied, state);
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(BlendState.Additive, state);
 
-			Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, Color.White.WithOpacity(0.7f * (1f - Projectile.alpha/255f)), Projectile.rotation, Projectile.Size / 2f, Projectile.scale, Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+            for (int i = 1; i < length; i++)
+            {
+                Vector2 drawPos = Projectile.oldPos[i] - Main.screenPosition + Projectile.Size / 2f;
 
-			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(state);
+                Color trailColor = Color.White * (((float)Projectile.oldPos.Length - i) / Projectile.oldPos.Length) * 0.45f * (1f - Projectile.alpha / 255f);
+                Main.spriteBatch.Draw(TextureAssets.Projectile[Type].Value, drawPos, null, trailColor, Projectile.velocity.X < 0 ? MathHelper.Pi + Projectile.oldRot[i] : Projectile.oldRot[i], Projectile.Size / 2f, Projectile.scale, Projectile.oldSpriteDirection[i] == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+            }
 
-			return false;
-		}
-	}
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(BlendState.NonPremultiplied, state);
+
+            Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, Color.White.WithOpacity(0.7f * (1f - Projectile.alpha / 255f)), Projectile.rotation, Projectile.Size / 2f, Projectile.scale, Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(state);
+
+            return false;
+        }
+    }
 }

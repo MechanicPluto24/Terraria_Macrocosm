@@ -1,4 +1,3 @@
-using Macrocosm.Common.Utils;
 using Macrocosm.Content.Players;
 using Terraria;
 using Terraria.ID;
@@ -6,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Armor.Astronaut
 {
-	[AutoloadEquip(EquipType.Head)]
+    [AutoloadEquip(EquipType.Head)]
     public class AstronautHelmet : ModItem
     {
         public override void SetStaticDefaults()
@@ -28,7 +27,7 @@ namespace Macrocosm.Content.Items.Armor.Astronaut
 
         public override void UpdateArmorSet(Player player)
         {
-            player.Macrocosm().SpaceProtection = SpaceProtection.Tier1;
+            player.GetModPlayer<MacrocosmPlayer>().SpaceProtection = SpaceProtection.Tier1;
         }
 
         public override void AddRecipes()

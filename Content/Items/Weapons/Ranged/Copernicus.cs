@@ -1,100 +1,67 @@
 using Macrocosm.Common.Bases;
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Content.Rarities;
 using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
-using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
-	public class Copernicus : GunHeldProjectileItem
-	{
-		public override void SetStaticDefaults()
-		{
-			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
-			ItemID.Sets.ItemsThatAllowRepeatedRightClick[Type] = true;
-		}
-		public override void SetDefaultsHeldProjectile()
-		{
-			Item.damage = 150;
-			Item.DamageType = DamageClass.Ranged;
-			Item.width = 70;
-			Item.height = 26;
-			Item.useTime = 8;
-			Item.useAnimation = 8;
-			Item.useStyle = ItemUseStyleID.Shoot;
-			Item.noMelee = true;
-			Item.channel = true;
-			Item.knockBack = 8f;
-			Item.value = 10000;
-			Item.rare = ModContent.RarityType<MoonRarityT2>();
-			Item.shoot = ProjectileID.PurificationPowder; // For some reason, all the guns in the vanilla source have this.
-			Item.autoReuse = true;
-			Item.shootSpeed = 20f;
-			Item.useAmmo = AmmoID.Bullet;
-		}
+    public class Copernicus : GunHeldProjectileItem
+    {
+        public override void SetStaticDefaults()
+        {
 
-		private int altUseCooldown = 30;
-		private int altUseCounter = 30;
+        }
+
+        public override void SetDefaultsHeldProjectile()
+        {
+            Item.damage = 150;
+            Item.DamageType = DamageClass.Ranged;
+            Item.width = 70;
+            Item.height = 26;
+            Item.useTime = 8;
+            Item.useAnimation = 8;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.channel = true;
+            Item.knockBack = 8f;
+            Item.value = 10000;
+            Item.rare = ModContent.RarityType<MoonRarityT2>();
+            Item.shoot = ProjectileID.PurificationPowder; // For some reason, all the guns in the vanilla source have this.
+            Item.autoReuse = true;
+            Item.shootSpeed = 20f;
+            Item.useAmmo = AmmoID.Bullet;
+        }
 
         public override GunHeldProjectileData GunHeldProjectileData => new()
-		{
-			GunBarrelPosition = new Vector2(26f, 7f),
-			CenterYOffset = 9f,
-			MuzzleOffset = 45f,
+        {
+            GunBarrelPosition = new Vector2(26f, 7f),
+            CenterYOffset = 9f,
+            MuzzleOffset = 45f,
             RecoilDiminish = 0.9f
         };
 
         public override Vector2? HoldoutOffset() => new Vector2(-10, 0);
 
-		public override bool AltFunctionUse(Player player) => altUseCounter == altUseCooldown && Utility.GetRocketAmmoProjectileID(player, ItemID.GrenadeLauncher) != 0;
+        public override bool? UseItem(Player player)
+        {
+            if (!Main.dedServ)
+                SoundEngine.PlaySound(SFX.AssaultRifle with { Volume = 0.7f }, player.position);
 
-		public override bool? UseItem(Player player)
-		{
-			if (player.altFunctionUse == 2)
-			{
-				if(!Main.dedServ)
- 					SoundEngine.PlaySound(SFX.GrenadeLauncherThunk with { Volume = 0.7f }, player.position);
-			}
-			else
-			{
-				if (!Main.dedServ)
-					SoundEngine.PlaySound(SFX.AssaultRifle with { Volume = 0.7f }, player.position);
-			}
- 
-			return true;
-		}
+            return true;
+        }
 
-		public override void UpdateInventory(Player player)
-		{
-			if (player.altFunctionUse == 2 || altUseCounter < altUseCooldown)
-				altUseCounter--;
+        public override void UpdateInventory(Player player)
+        {
 
-			if (altUseCounter == 0)
-				altUseCounter = altUseCooldown;
-		}
+        }
 
-		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
-		{
-
-			int defaulType = type;
-
-			if (player.altFunctionUse == 2)
-			{
-				type = ModContent.ProjectileType<PlasmaGrenade>();
-				position.Y += 2;
-				velocity /= 3f;
-			}
-			else
-			{
-				type = defaulType;
-				position -= new Vector2(4 * player.direction, 2); // so bullets line up with the muzzle
-			}
-		}
-	}
+        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
+        {
+            position -= new Vector2(4 * player.direction, 2); // so bullets line up with the muzzle
+        }
+    }
 }
