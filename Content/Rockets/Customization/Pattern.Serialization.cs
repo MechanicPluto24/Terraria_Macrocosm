@@ -97,7 +97,7 @@ namespace Macrocosm.Content.Rockets.Customization
 				if (!string.IsNullOrEmpty(colorFunction))
 				{
 					JArray parameters = colorDataObject.Value<JArray>("parameters");
-                    colorDatas.Add(new(new ColorFunction(colorFunction, parameters?.ToObjectRecursive<object>())));
+                    colorDatas.Add(new PatternColorData(ColorFunction.CreateByName(colorFunction, parameters?.ToObjectRecursive<object>())));
 				}
 				else if (!string.IsNullOrEmpty(colorHex))
 				{

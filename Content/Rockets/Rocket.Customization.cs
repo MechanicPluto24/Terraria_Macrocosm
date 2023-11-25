@@ -12,82 +12,90 @@ using Terraria;
 
 namespace Macrocosm.Content.Rockets
 {
-	public partial class Rocket 
-	{
-		public Rocket Clone() => DeserializeData(SerializeData());
-	
-		public void ApplyCustomizationChanges(Rocket dummy)
-		{
-			Nameplate.Text = dummy.Nameplate.Text;
-			Nameplate.TextColor = dummy.Nameplate.TextColor;
-			Nameplate.HAlign = dummy.Nameplate.HAlign;
-			Nameplate.VAlign = dummy.Nameplate.VAlign;
+    public partial class Rocket
+    {
+        public Rocket Clone() => DeserializeData(SerializeData());
 
-			foreach(var moduleName in ModuleNames)
-			{
-				//Modules[moduleName].Detail = dummy.Modules[moduleName].Detail ;
-				Modules[moduleName].Pattern = dummy.Modules[moduleName].Pattern;
-			}
+        public void ApplyCustomizationChanges(Rocket dummy)
+        {
+            Nameplate.Text = dummy.Nameplate.Text;
+            Nameplate.TextColor = dummy.Nameplate.TextColor;
+            Nameplate.HAlign = dummy.Nameplate.HAlign;
+            Nameplate.VAlign = dummy.Nameplate.VAlign;
 
-			SendCustomizationData();
-		}
+            foreach (var moduleName in ModuleNames)
+            {
+                //Modules[moduleName].Detail = dummy.Modules[moduleName].Detail ;
+                Modules[moduleName].Pattern = dummy.Modules[moduleName].Pattern;
+            }
 
-		public void ResetCustomizationToDefault()
-		{
-			Nameplate = new();
+            SendCustomizationData();
+        }
 
-			foreach(var moduleKvp in Modules)
-			{
-				moduleKvp.Value.Detail = null;
-				moduleKvp.Value.Pattern = CustomizationStorage.GetDefaultPattern(moduleKvp.Key);
-			}
+        public void ResetCustomizationToDefault()
+        {
+            Nameplate = new();
 
-			SendCustomizationData();
-		}
+            foreach (var moduleKvp in Modules)
+            {
+                moduleKvp.Value.Detail = null;
+                moduleKvp.Value.Pattern = CustomizationStorage.GetDefaultPattern(moduleKvp.Key);
+            }
 
-		public string GetCustomizationDataToJSON()
-		{
-			JArray jArray = new()
-			{
-				//Nameplate.ToJObject()
-			};
+            SendCustomizationData();
+        }
 
-			foreach (var moduleKvp in Modules)
-			{
-				var module = moduleKvp.Value;
+        public string GetCustomizationDataToJSON()
+        {
+            var jObject = new JObject
+            {
+                ["nameplate"] = Nameplate.ToJObject()
+            };
 
-				jArray.Add(new JObject()
-				{
-					// TODO: add detail 
-					["moduleName"] = module.Name,
-					["pattern"] = module.Pattern.ToJObject()
-				});
-			}
+            var modulesArray = new JArray();
+            foreach (var moduleKvp in Modules)
+            {
+                var module = moduleKvp.Value;
+                modulesArray.Add(new JObject
+                {
+                    ["moduleName"] = module.Name,
+                    ["pattern"] = module.Pattern.ToJObject()
+                });
+            }
 
-			return jArray.ToString(Formatting.Indented);
-		}
+            jObject["modules"] = modulesArray;
 
-		public void ApplyRocketCustomizationFromJSON(string json)
-		{
-			foreach (var moduleKvp in Modules)
-			{
-				var module = moduleKvp.Value;
-				var jArray = JArray.Parse(json);
-				JObject jObject = jArray.Cast<JObject>().FirstOrDefault(obj => obj["moduleName"].Value<string>() == moduleKvp.Key);
+            return jObject.ToString(Formatting.Indented);
+        }
 
-				try
-				{
-					// TODO: read detail 
-					module.Pattern = Pattern.FromJObject(jObject["pattern"].Value<JObject>());
-				}
-				catch (Exception ex)
-				{
-					Utility.Chat(ex.Message);
-					Macrocosm.Instance.Logger.Warn(ex.Message);
-				}
+        public void ApplyRocketCustomizationFromJSON(string json)
+        {
+            var jObject = JObject.Parse(json);
 
-				// TODO: read nameplate 
-			}
-		}
-	}
+            if (jObject["nameplate"] is JObject nameplateJObject)
+            {
+                Nameplate = Nameplate.FromJObject(nameplateJObject);
+            }
+
+            if (jObject["modules"] is JArray modulesArray)
+            {
+                foreach (var moduleJObject in modulesArray.Children<JObject>())
+                {
+                    string moduleName = moduleJObject["moduleName"].Value<string>();
+                    if (Modules.TryGetValue(moduleName, out var module))
+                    {
+                        try
+                        {
+                            module.Pattern = Pattern.FromJObject(moduleJObject["pattern"].Value<JObject>());
+                        }
+                        catch (Exception ex)
+                        {
+                            Utility.Chat(ex.Message);
+                            Macrocosm.Instance.Logger.Warn(ex.Message);
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

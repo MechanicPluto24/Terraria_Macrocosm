@@ -27,35 +27,16 @@ namespace Macrocosm.Content.Rockets.Customization
 		/// </summary>
 		/// <param name="function"> The function </param>
 		/// <param name="name"> The dynamic color name </param>
-		/// <param name="unlockedByDefault"> Whether this dynamic color is unlocked by default </param>
 		public ColorFunction(Func<Color[], Color> function, string name)
 		{
 			this.function = function;
 			Name = name;
 		}
 
-        /// <summary>
-        /// Creates a new pattern dynamic color. Use this for unlockable dynamic colors.
-        /// </summary>
-        /// <param name="function"> The function </param>
-        /// <param name="name"> The dynamic color name </param>
-        /// <param name="unlockedByDefault"> Whether this dynamic color is unlocked by default </param>
-        public ColorFunction(Func<Color[], Color> function, string name, params object[] parameters)
-        {
-            this.function = function;
-            Name = name;
-        }
-
-        public ColorFunction(string name, params object[] parameters) 
-			=> CreateFunctionByName(name, parameters);
-
 		/// <summary> Invokes the color function on an input array. </summary>
 		public Color Invoke(Color[] inputColors) => function(inputColors);
 
-		/// <summary> The storage key of this unlockable dynamic color </summary>
-		public string GetKey() => Name;
-
-		private static ColorFunction CreateFunctionByName(string name, params object[] parameters) 
+		public static ColorFunction CreateByName(string name, params object[] parameters) 
 		{
 			try
 			{
@@ -93,17 +74,21 @@ namespace Macrocosm.Content.Rockets.Customization
 		private static ColorFunction CreateMapFunction(int index)
 		{
 			if (index < 0 || index >= 8) throw new ArgumentException($"Index out of bounds: {index}");
-			Color map(Color[] colors) => colors[index];
-			return new(map, "Map", new object[] { index });
+			return new((colors) => colors[index], "Map") 
+			{
+				Parameters = new object[] { index } 
+			};
 		}
 
 		private static ColorFunction CreateLerpFunction(int index1, int index2, float amount)
 		{
 			if (index1 < 0 || index1 >= 8) throw new ArgumentException($"Index out of bounds: {index1}");
 			if (index2 < 0 || index2 >= 8) throw new ArgumentException($"Index out of bounds: {index2}");
-
-			Color lerp(Color[] colors) => Color.Lerp(colors[index1], colors[index2], amount);
-			return new(lerp, "Lerp", new object[] { index1, index2, amount });
-		}
+			var colorFunc = new ColorFunction((colors) => Color.Lerp(colors[index1], colors[index2], amount), "Lerp") 
+			{
+				Parameters = new object[] { index1, index2, amount } 
+			};
+			return colorFunc;
+        }
 	}
 }
