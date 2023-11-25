@@ -31,14 +31,6 @@ namespace Macrocosm.Content.Rockets.Customization
 			ColorFunction = colorFunction;
 		}
 
-		// Delet
-		public PatternColorData(string colorFunctionName, params object[] parameters)
-		{
-			IsUserModifiable = false;
-			Color = Color.Transparent;
-			ColorFunction = new(colorFunctionName, parameters);
-		}
-
 		public PatternColorData WithUserColor(Color newUserColor)
 		{
 			if (!IsUserModifiable || HasColorFunction)

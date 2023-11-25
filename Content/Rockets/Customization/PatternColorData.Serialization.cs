@@ -40,7 +40,7 @@ namespace Macrocosm.Content.Rockets.Customization
 				if (tag.ContainsKey("parameters"))
 					parameters = tag.GetList<object>("parameters").ToArray();
 
-				return new(new ColorFunction(functionName, parameters));
+				return new(ColorFunction.CreateByName(functionName, parameters));
  			}
 
 			if (tag.ContainsKey(nameof(Color)))
