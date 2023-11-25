@@ -1,8 +1,6 @@
-﻿using Macrocosm.Content.Rockets.Navigation;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria.Localization;
-using Terraria.UI;
 
 namespace Macrocosm.Common.UI
 {
@@ -13,6 +11,7 @@ namespace Macrocosm.Common.UI
 
         public bool HasValue => value != float.MinValue;
         public bool HasSpecial => specialValueKey != "default";
+
 
         public InfoElement(string specialValueKey)
         {

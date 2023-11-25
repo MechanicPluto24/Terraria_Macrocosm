@@ -13,7 +13,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Environment.Debris
 {
-	public class RegolithDebris : ModProjectile
+    public class RegolithDebris : ModProjectile
     {
         private const int TimeToLive = 60;
 
@@ -50,34 +50,34 @@ namespace Macrocosm.Content.Projectiles.Environment.Debris
         {
             float gravity = 0.15f * MacrocosmSubworld.CurrentGravityMultiplier; ;
             Projectile.velocity.Y += gravity;
-			Projectile.rotation += Projectile.velocity.X * 0.05f;
+            Projectile.rotation += Projectile.velocity.X * 0.05f;
 
             // If colliding, stop and roll on the ground
-			Projectile.velocity = Collision.TileCollision(Projectile.position, Projectile.velocity, Projectile.width, Projectile.height);
+            Projectile.velocity = Collision.TileCollision(Projectile.position, Projectile.velocity, Projectile.width, Projectile.height);
 
             // Roll up slopes
-			Vector4 slopeCollision = Collision.SlopeCollision(Projectile.position, Projectile.velocity, Projectile.width, Projectile.height, gravity, fall: true);
+            Vector4 slopeCollision = Collision.SlopeCollision(Projectile.position, Projectile.velocity, Projectile.width, Projectile.height, gravity, fall: true);
             Projectile.position = slopeCollision.XY();
             Projectile.velocity = slopeCollision.ZW();
 
             // Decelerate while on the ground
-			if (Projectile.velocity.Y == 0f)
+            if (Projectile.velocity.Y == 0f)
             {
                 Projectile.velocity.X *= 0.97f;
 
                 if (Projectile.velocity.X > -0.01 && Projectile.velocity.X < 0.01)
-					Projectile.velocity.X = 0f;
-			}
+                    Projectile.velocity.X = 0f;
+            }
 
-			// Keep time left as it is until the debris stops
-			if (Projectile.velocity != Vector2.Zero)
-                 Projectile.timeLeft++;
+            // Keep time left as it is until the debris stops
+            if (Projectile.velocity != Vector2.Zero)
+                Projectile.timeLeft++;
 
             // Fade out as timeLeft decreases
             Projectile.Opacity = (float)Projectile.timeLeft / TimeToLive;
- 
+
             // Once stopped...
-			if (Projectile.velocity == Vector2.Zero && Main.netMode != NetmodeID.MultiplayerClient)
+            if (Projectile.velocity == Vector2.Zero && Main.netMode != NetmodeID.MultiplayerClient)
             {
                 int tileX = (int)(Projectile.Center.X / 16);
                 int tileY = (int)(Projectile.Center.Y / 16);
@@ -113,7 +113,7 @@ namespace Macrocosm.Content.Projectiles.Environment.Debris
             {
                 ScheduleAmbientTileSpawnEffect = false;
 
-                SoundEngine.PlaySound(SoundID.Dig with { Volume = 0.2f }, Projectile.Center) ;
+                SoundEngine.PlaySound(SoundID.Dig with { Volume = 0.2f }, Projectile.Center);
 
                 for (int i = 0; i < Main.rand.Next(5, 10); i++)
                 {
@@ -123,24 +123,24 @@ namespace Macrocosm.Content.Projectiles.Environment.Debris
                         new Vector2(Main.rand.NextFloat(-1.2f, 1.2f), Main.rand.NextFloat(0f, -1.8f)),
                         Scale: Main.rand.NextFloat(0.2f, 1.1f)
                     );
-                
+
                     dust.noGravity = false;
                 }
             }
         }
 
-		public override Color? GetAlpha(Color lightColor)
-		{
-			return base.GetAlpha(lightColor);
-		}
+        public override Color? GetAlpha(Color lightColor)
+        {
+            return base.GetAlpha(lightColor);
+        }
 
-		public override bool PreDraw(ref Color lightColor)
-		{
+        public override bool PreDraw(ref Color lightColor)
+        {
             Texture2D texture = TextureAssets.Projectile[Type].Value;
             Rectangle frame = texture.Frame(1, 6, frameY: Projectile.frame);
-			Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, frame, Projectile.GetAlpha(lightColor), Projectile.rotation, frame.Size() / 2f, Projectile.scale, SpriteEffects.None); ;
+            Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, frame, Projectile.GetAlpha(lightColor), Projectile.rotation, frame.Size() / 2f, Projectile.scale, SpriteEffects.None); ;
 
             return false;
         }
-	}
+    }
 }

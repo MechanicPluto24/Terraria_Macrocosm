@@ -2,7 +2,7 @@
 
 namespace Macrocosm.Content.Projectiles.Global
 {
-	public interface IBullet
-	{
-	}
+    public interface IBullet
+    {
+    }
 }

@@ -22,10 +22,15 @@ Rocket: {
 		LaunchLocations: Launch Locations
 		WorldSpawn: World Spawn
 		Crew: Crew
+		Commander: Commander
+		Cargo: Cargo
 		Payload: Payload
+		Inventory: Inventory
 		Fuel: Fuel
 		Customization: Customization
 	}
+
+	Inventory.OpenInventory: Open Inventory
 
 	Customization: {
 		Apply: Apply rocket appearance changes
@@ -103,60 +108,53 @@ Rocket: {
 
 	Checklist: {
 		Fuel: {
-			True: {
-				Display: Enough fuel
-				Hover: default
-			}
+			Met.Display: Enough fuel
 
-			False: {
+			NotMet: {
 				Display: Not enough fuel
 				Hover: You need more fuel to launch the rocket
 			}
 		}
 
-		Destination: {
-			True: {
-				Display: Destination selected
-				Hover: default
-			}
-
-			False: {
-				Display: No destination selected
-				Hover: You need to select a destination for the rocket
-			}
-		}
-
 		Obstruction: {
-			True: {
-				Display: Path unobstructed
-				Hover: default
-			}
+			Met.Display: Path unobstructed
 
-			False: {
+			NotMet: {
 				Display: Path obstructed
 				Hover: There is an obstruction in the rocket's flight path
 			}
 		}
 
-		Selected: {
-			True: {
-				Display: default
-				Hover: default
+		Boss: {
+			NotMet: {
+				Display: Boss alive
+				Hover: You must defeat the boss before being able to fly safely
 			}
+		}
 
-			False: {
+		Invasion: {
+			NotMet: {
+				Display: Invasion ongoing
+				Hover: You must defeat the ongoing invasion before being able to fly safely
+			}
+		}
+
+		BloodMoon: {
+			NotMet: {
+				Display: Blood Moon ongoing
+				Hover: The vacuum of space is not safe when there's a Blood Moon
+			}
+		}
+
+		Selected: {
+			NotMet: {
 				Display: Select a destination
 				Hover: default
 			}
 		}
 
 		NotHere: {
-			True: {
-				Display: default
-				Hover: default
-			}
-
-			False: {
+			NotMet: {
 				Display: You are already here
 				Hover: default
 			}

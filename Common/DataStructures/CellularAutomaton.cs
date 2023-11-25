@@ -4,7 +4,7 @@ using Terraria.Utilities;
 
 namespace Macrocosm.Common.DataStructures
 {
-	public class CellularAutomaton
+    public class CellularAutomaton
     {
         public Cell[][] Map { get; }
         public CellularAutomaton(int width, int height, int seed, float fill = 0.5f, int smoothing = 4)

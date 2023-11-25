@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using SubworldLibrary;
+﻿using SubworldLibrary;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

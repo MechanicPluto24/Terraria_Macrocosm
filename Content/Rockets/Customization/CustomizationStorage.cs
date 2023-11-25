@@ -1,24 +1,24 @@
-﻿using Macrocosm.Common.Drawing;
-using Macrocosm.Common.UI;
+﻿using Macrocosm.Common.UI;
+using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Rockets.UI;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-	public class CustomizationStorage : ModSystem
-	{
-		public static bool Initialized { get; private set; }
+    public class CustomizationStorage : ModSystem
+    {
+        public static bool Initialized { get; private set; }
 
-		private static Dictionary<(string moduleName, string patternName), Pattern> patterns;
-		private static Dictionary<(string moduleName, string detailName), Detail> details;
+        private static Dictionary<(string moduleName, string patternName), Pattern> patterns;
+        private static Dictionary<(string moduleName, string detailName), Detail> details;
 
 		private static Dictionary<(string moduleName, string patternName), bool> patternUnlockStatus;
 		private static Dictionary<(string moduleName, string detailName), bool> detailUnlockStatus;
@@ -35,8 +35,8 @@ namespace Macrocosm.Content.Rockets.Customization
 			LoadPatterns();
 			LoadDetails();
 
-			Initialized = true;
-		}
+            Initialized = true;
+        }
 
 		public override void Unload()
 		{
@@ -54,11 +54,11 @@ namespace Macrocosm.Content.Rockets.Customization
 			Initialized = false;
 		}
 
-		public static void Reset()
-		{
-			ModContent.GetInstance<CustomizationStorage>().Unload();
-			ModContent.GetInstance<CustomizationStorage>().Load();
-		}
+        public static void Reset()
+        {
+            ModContent.GetInstance<CustomizationStorage>().Unload();
+            ModContent.GetInstance<CustomizationStorage>().Load();
+        }
 
 		/// <summary>
 		/// Gets a pattern from the pattern storage.
@@ -119,32 +119,32 @@ namespace Macrocosm.Content.Rockets.Customization
 		public static void SetPatternUnlockedStatus(string moduleName, string patternName, bool unlockedState = true)
 			 => patternUnlockStatus[(moduleName, patternName)] = unlockedState;
 
-		/// <summary>
-		/// Gets the detail reference from the detail storage.
-		/// </summary>
-		/// <param name="moduleName"> The rocket module this detail belongs to </param>
-		/// <param name="detailName"> The detail name </param>
-		public static Detail GetDetail(string moduleName, string detailName)
-			=> details[(moduleName, detailName)];
+        /// <summary>
+        /// Gets the detail reference from the detail storage.
+        /// </summary>
+        /// <param name="moduleName"> The rocket module this detail belongs to </param>
+        /// <param name="detailName"> The detail name </param>
+        public static Detail GetDetail(string moduleName, string detailName)
+            => details[(moduleName, detailName)];
 
-		/// <summary>
-		/// Attempts to get a detail reference from the detail storage.
-		/// </summary>
-		/// <param name="moduleName"> The rocket module this detail belongs to </param>
-		/// <param name="detailName"> The detail name </param>
-		/// <param name="detail"> The detail, null if not found </param>
-		/// <returns> Whether the specified detail has been found </returns>
-		public static bool TryGetDetail(string moduleName, string detailName, out Detail detail)
-			=> details.TryGetValue((moduleName, detailName), out detail);
+        /// <summary>
+        /// Attempts to get a detail reference from the detail storage.
+        /// </summary>
+        /// <param name="moduleName"> The rocket module this detail belongs to </param>
+        /// <param name="detailName"> The detail name </param>
+        /// <param name="detail"> The detail, null if not found </param>
+        /// <returns> Whether the specified detail has been found </returns>
+        public static bool TryGetDetail(string moduleName, string detailName, out Detail detail)
+            => details.TryGetValue((moduleName, detailName), out detail);
 
 		public override void ClearWorld()
 		{
 			Reset();
 		}
 
-		public override void SaveWorldData(TagCompound tag) => SaveData(tag);
+        public override void SaveWorldData(TagCompound tag) => SaveData(tag);
 
-		public override void LoadWorldData(TagCompound tag) => LoadData(tag);	
+        public override void LoadWorldData(TagCompound tag) => LoadData(tag);
 
 
 		public static void SaveData(TagCompound tag)
@@ -202,27 +202,27 @@ namespace Macrocosm.Content.Rockets.Customization
 			detailUnlockStatus.Add((moduleName,detailName), unlockedByDefault);
 		}
 
-		public static UIListScrollablePanel ProvidePatternUI(string moduleName)
-		{
-			UIListScrollablePanel listPanel = new()
-			{
-				Width = new(0, 0.99f),
-				Height = new(0, 0.8f),
-				HAlign = 0.5f,
-				Top = new(0f, 0.2f),
-				BackgroundColor = new Color(53, 72, 135),
-				BorderColor = new Color(89, 116, 213, 255),
-				ListPadding = 0f,
-				ListOuterPadding = 2f,
-				ScrollbarHeight = new(0f, 0.9f),
-				ScrollbarHAlign = 0.99f,
-				ListWidthWithScrollbar = new(0, 1f),
-				ListWidthWithoutScrollbar = new(0, 1f)
-			};
-			listPanel.SetPadding(0f);
+        public static UIListScrollablePanel ProvidePatternUI(string moduleName)
+        {
+            UIListScrollablePanel listPanel = new()
+            {
+                Width = new(0, 0.99f),
+                Height = new(0, 0.8f),
+                HAlign = 0.5f,
+                Top = new(0f, 0.2f),
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor,
+                ListPadding = 0f,
+                ListOuterPadding = 2f,
+                ScrollbarHeight = new(0f, 0.9f),
+                ScrollbarHAlign = 0.99f,
+                ListWidthWithScrollbar = new(0, 1f),
+                ListWidthWithoutScrollbar = new(0, 1f)
+            };
+            listPanel.SetPadding(0f);
 
-			var patterns = GetUnlockedPatterns(moduleName);
-			int count = patterns.Count;
+            var patterns = GetUnlockedPatterns(moduleName);
+            int count = patterns.Count;
 
 			// TODO: fix positioning just like in inventory panel
 			int iconsPerRow = 9;
@@ -230,48 +230,48 @@ namespace Macrocosm.Content.Rockets.Customization
 			float iconOffsetLeft;
 			float iconOffsetTop;
 
-			if (count <= iconsPerRow)
-			{
-				iconSize = 44f + 7f;
-				iconOffsetLeft = 8f;
-				iconOffsetTop = 7f;
-			} 
-			else
-			{
-				iconSize = 44f + 5f;
-				iconOffsetLeft = 7f;
-				iconOffsetTop = 7f;
-			}
+            if (count <= iconsPerRow)
+            {
+                iconSize = 44f + 7f;
+                iconOffsetLeft = 8f;
+                iconOffsetTop = 7f;
+            }
+            else
+            {
+                iconSize = 44f + 5f;
+                iconOffsetLeft = 7f;
+                iconOffsetTop = 7f;
+            }
 
-			UIElement patternIconContainer = new()
-			{
-				Width = new(0f, 1f),
-				Height = new(iconSize * (count / iconsPerRow + ((count % iconsPerRow != 0) ? 1 : 0)), 0f),
-			};
+            UIElement patternIconContainer = new()
+            {
+                Width = new(0f, 1f),
+                Height = new(iconSize * (count / iconsPerRow + ((count % iconsPerRow != 0) ? 1 : 0)), 0f),
+            };
 
-			listPanel.Add(patternIconContainer);
-			patternIconContainer.SetPadding(0f);
+            listPanel.Add(patternIconContainer);
+            patternIconContainer.SetPadding(0f);
 
 			for (int i = 0; i < count; i++)
 			{
 				Pattern pattern = patterns[i];
 				UIPatternIcon icon = pattern.ProvideUI();
 
-				icon.Left = new((i % iconsPerRow) * iconSize + iconOffsetLeft, 0f);
-				icon.Top = new((i / iconsPerRow) * iconSize + iconOffsetTop, 0f);
+                icon.Left = new((i % iconsPerRow) * iconSize + iconOffsetLeft, 0f);
+                icon.Top = new((i / iconsPerRow) * iconSize + iconOffsetTop, 0f);
 
-				icon.Activate();
-				patternIconContainer.Append(icon);
-			}
+                icon.Activate();
+                patternIconContainer.Append(icon);
+            }
 
-			return listPanel;
-		}
+            return listPanel;
+        }
 
-		private static void LoadPatterns()
-		{
-			try
-			{
-				JArray patternsArray = Utility.ParseJSONFromFile("Content/Rockets/Customization/Patterns/patterns.json");
+        private static void LoadPatterns()
+        {
+            try
+            {
+                JArray patternsArray = Utility.ParseJSONFromFile("Content/Rockets/Customization/Patterns/patterns.json");
 
 				foreach (JObject patternObject in patternsArray.Cast<JObject>())
 				{
@@ -288,21 +288,21 @@ namespace Macrocosm.Content.Rockets.Customization
 				Macrocosm.Instance.Logger.Error(ex.Message);
 			}
 
-			// Just for testing the scrollbar
-			for (int i = 1; i <= 7; i++)
- 				AddPattern("ServiceModule", "Test" + i, true, new(Color.Transparent), new(Color.White));
- 			
-			for (int i = 1; i <= 8; i++)
- 				AddPattern("ReactorModule", "Test" + i, true, new(Color.Transparent), new(Color.White));
-			
-			for (int i = 1; i <= 74; i++)
- 				AddPattern("EngineModule", "Test" + i, true, new(Color.White), new(Color.White));
- 		}
+            // Just for testing the scrollbar
+            for (int i = 1; i <= 7; i++)
+                AddPattern("ServiceModule", "Test" + i, true, new(Color.Transparent), new(Color.White));
 
-		private static void LoadDetails()
-		{
-			foreach (var country in Utility.CountryCodesAlpha3)
-				AddDetail("EngineModule", "Flag_" + country, true);
-		}
-	}
+            for (int i = 1; i <= 8; i++)
+                AddPattern("ReactorModule", "Test" + i, true, new(Color.Transparent), new(Color.White));
+
+            for (int i = 1; i <= 74; i++)
+                AddPattern("EngineModule", "Test" + i, true, new(Color.White), new(Color.White));
+        }
+
+        private static void LoadDetails()
+        {
+            foreach (var country in Utility.CountryCodesAlpha3)
+                AddDetail("EngineModule", "Flag_" + country, true);
+        }
+    }
 }

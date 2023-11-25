@@ -7,7 +7,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Map
 {
-	public class RocketMapLayer : ModMapLayer
+    public class RocketMapLayer : ModMapLayer
     {
         public override void Draw(ref MapOverlayDrawContext context, ref string text)
         {
@@ -15,10 +15,10 @@ namespace Macrocosm.Content.Rockets.Map
 
             foreach (Rocket rocket in RocketManager.Rockets)
             {
-                if(!rocket.ActiveInCurrentWorld)
+                if (!rocket.ActiveInCurrentWorld)
                     continue;
 
-                if (context.Draw(texture, (rocket.Center + new Vector2(0, rocket.Bounds.Height/2f)) / 16f, Color.White, new SpriteFrame(1, 1, 0, 0), 0.95f, 0.95f, Alignment.Bottom).IsMouseOver)
+                if (context.Draw(texture, (rocket.Center + new Vector2(0, rocket.Bounds.Height / 2f)) / 16f, Color.White, new SpriteFrame(1, 1, 0, 0), 0.95f, 0.95f, Alignment.Bottom).IsMouseOver)
                     text = rocket.DisplayName;
             }
         }

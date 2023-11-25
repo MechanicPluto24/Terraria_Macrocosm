@@ -1,7 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Common.UI.Themes;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using System;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.Localization;
@@ -14,13 +14,14 @@ namespace Macrocosm.Common.UI
         protected readonly Asset<Texture2D> icon;
         protected readonly Asset<Texture2D> iconSymbol;
 
-		protected readonly LocalizedColorScaleText displayText;
-		protected readonly LocalizedText hoverText;
+        protected readonly LocalizedColorScaleText displayText;
+        protected readonly LocalizedText hoverText;
 
-		protected UIText uIDisplayText;
+        protected UIText uIDisplayText;
 
+        public float IconHAlign { get; set; } = 0.1f;
 
-		public UIInfoElement(LocalizedColorScaleText displayText, Asset<Texture2D> icon = null, Asset<Texture2D> iconSymbol = null, LocalizedText hoverText = null)
+        public UIInfoElement(LocalizedColorScaleText displayText, Asset<Texture2D> icon = null, Asset<Texture2D> iconSymbol = null, LocalizedText hoverText = null)
         {
             this.icon = icon ?? Macrocosm.EmptyTexAsset;
             this.iconSymbol = iconSymbol ?? Macrocosm.EmptyTexAsset;
@@ -45,8 +46,8 @@ namespace Macrocosm.Common.UI
             Width.Set(0f, 1f);
             Height.Set(40f, 0f);
 
-            BackgroundColor = new Color(43, 56, 101);
-            BorderColor = BackgroundColor * 2f;
+            BackgroundColor = UITheme.Current.InfoElementStyle.BackgroundColor;
+            BorderColor = UITheme.Current.InfoElementStyle.BorderColor;
 
             uIDisplayText = displayText.ProvideUI();
             uIDisplayText.Left = new StyleDimension(40, 0);
@@ -57,10 +58,10 @@ namespace Macrocosm.Common.UI
 
         public void SetTextLeft(float pixels, float percent)
         {
-			uIDisplayText.Left = new StyleDimension(pixels, percent);
-		}
+            uIDisplayText.Left = new StyleDimension(pixels, percent);
+        }
 
-		public override void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
@@ -68,15 +69,15 @@ namespace Macrocosm.Common.UI
                 Main.instance.MouseText(hoverText.Value);
         }
 
-		public override void Draw(SpriteBatch spriteBatch)
-		{
-			base.Draw(spriteBatch);
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            base.Draw(spriteBatch);
 
-			Recalculate();
-			CalculatedStyle dimensions = GetDimensions();
-			Vector2 iconPosition = dimensions.Position() + new Vector2(dimensions.Width * 0.1f, dimensions.Height / 2f);
-			spriteBatch.Draw(icon.Value, iconPosition, null, Color.White, 0f, new Vector2(icon.Width() * 0.5f, icon.Height() * 0.5f), 1f, SpriteEffects.None, 0);
-			spriteBatch.Draw(iconSymbol.Value, iconPosition + new Vector2(6f, 0f), null, Color.White, 0f, new Vector2(icon.Width() * 0.5f, icon.Height() * 0.5f), 1f, SpriteEffects.None, 0);
-		}
-	}
+            Recalculate();
+            CalculatedStyle dimensions = GetDimensions();
+            Vector2 iconPosition = dimensions.Position() + new Vector2(dimensions.Width * IconHAlign, dimensions.Height / 2f);
+            spriteBatch.Draw(icon.Value, iconPosition, null, Color.White, 0f, new Vector2(icon.Width() * 0.5f, icon.Height() * 0.5f), 1f, SpriteEffects.None, 0);
+            spriteBatch.Draw(iconSymbol.Value, iconPosition + new Vector2(6f, 0f), null, Color.White, 0f, new Vector2(icon.Width() * 0.5f, icon.Height() * 0.5f), 1f, SpriteEffects.None, 0);
+        }
+    }
 }

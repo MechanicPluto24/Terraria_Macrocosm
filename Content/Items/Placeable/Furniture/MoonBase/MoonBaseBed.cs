@@ -1,4 +1,5 @@
-﻿using Terraria;
+﻿using Macrocosm.Content.Items.Placeable.Blocks;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -16,6 +17,15 @@ namespace Macrocosm.Content.Items.Placeable.Furniture.MoonBase
             Item.width = 34;
             Item.height = 24;
             Item.value = 500;
+        }
+
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+            .AddIngredient<MoonBasePlating>(15)
+            .AddIngredient(ItemID.Silk, 5)
+            .AddTile(TileID.WorkBenches)
+            .Register();
         }
     }
 }

@@ -13,7 +13,7 @@ Depressurized: {
 	Description: Your blood is boiling!
 }
 
-ChandriumEmpowerment: {
+ChandriumWhipBuff: {
 	DisplayName: Chandrium Empowerment
 	Description: Your next hit with your Chandrium Whip will deal increased damage!
 }
@@ -31,4 +31,9 @@ ChandriumStaffMinionBuff: {
 SpaceShuttle: {
 	DisplayName: Space Shuttle
 	Description: In memory of STS-51-L and STS-107.
+}
+
+HandheldEngineOverheat: {
+	DisplayName: Handheld Engine Overheat
+	Description: Your weapon has overheated!
 }

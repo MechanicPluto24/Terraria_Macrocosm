@@ -1,3 +1,5 @@
+GreatswordHeldProjectile.DisplayName: Greatsword Held Projectile
+GunHeldProjectile.DisplayName: Gun Held Projectile
 MoonMeteorLarge.DisplayName: Large Meteor
 MoonMeteorMedium.DisplayName: Medium Meteor
 MoonMeteorSmall.DisplayName: Small Meteor
@@ -14,14 +16,13 @@ ArtemiteSpearProjectileShoot.DisplayName: Artemite Spear
 ArtemiteSwordProjectile.DisplayName: Artemite Straightsword
 ClawWrenchProjectile.DisplayName: Claw Wrench
 MoonSwordProjectile.DisplayName: Moon Sword
-MoonSwordSwing.DisplayName: Moonlight Greatsword
+MoonSwordSwing.DisplayName: Moon Sword
 ArchersLineProjectile.DisplayName: Archer's Line
 CruithneGreenSlug.DisplayName: Cruithne Green Slug
 DeliriumShell.DisplayName: Delirium Shell
 LHBMinigunProjectile.DisplayName: L.H.B.- 805
 NWAMissile.DisplayName: N.W.A.- 12691
 PlasmaGrenade.DisplayName: Plasma Grenade
-SeleniteArrow.DisplayName: Selenite Arrow
 CalcicCaneMinion.DisplayName: Crater Imp
 ChandriumStaffMinion.DisplayName: Crescent Ghoul
 ChandriumWhipProjectile.DisplayName: Chandrium Whip
@@ -52,5 +53,5 @@ SilicaCrimsandProjectile.DisplayName: Silica Crimsand
 SilicaEbonsandProjectile.DisplayName: Silica Ebonsand
 SilicaPearlsandProjectile.DisplayName: Silica Pearlsand
 SilicaSandProjectile.DisplayName: Silica Sand
-GreatswordHeldProjectile.DisplayName: Greatsword Held Projectile
-GunHeldProjectile.DisplayName: Gun Held Projectile
+InvarArrow.DisplayName: Invar Arrow
+InvarBullet.DisplayName: Invar Bullet

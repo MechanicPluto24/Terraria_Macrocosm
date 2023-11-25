@@ -6,15 +6,15 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Environment.Sands
 {
-	public class SilicaPearlsandProjectile : ModProjectile
+    public class SilicaPearlsandProjectile : ModProjectile
     {
         protected bool falling = true;
         protected int tileType;
         protected int dustType;
-		protected int itemType;
+        protected int itemType;
 
 
-		public override void SetStaticDefaults()
+        public override void SetStaticDefaults()
         {
             ProjectileID.Sets.ForcePlateDetection[Type] = true;
         }
@@ -30,11 +30,11 @@ namespace Macrocosm.Content.Projectiles.Environment.Sands
 
             //Projectile.aiStyle = ProjAIStyleID.FallingTile;
 
-			//Set the tile type to ExampleSand
-			tileType = ModContent.TileType<Tiles.Blocks.SilicaPearlsand>();
+            //Set the tile type to ExampleSand
+            tileType = ModContent.TileType<Tiles.Blocks.SilicaPearlsand>();
             dustType = ModContent.DustType<SilicaPearlsandDust>();
-			itemType = ModContent.ItemType<Items.Placeable.Blocks.SilicaPearlsand>();
-		}
+            itemType = ModContent.ItemType<Items.Placeable.Blocks.SilicaPearlsand>();
+        }
 
         public override void AI()
         {
@@ -48,8 +48,8 @@ namespace Macrocosm.Content.Projectiles.Environment.Sands
         }
 
         public override void OnKill(int timeLeft)
-		   => Utility.FallingBlockCreateTile(Projectile, tileType, itemType);
+           => Utility.FallingBlockCreateTile(Projectile, tileType, itemType);
 
-		public override bool? CanDamage() => Projectile.localAI[1] != -1f;
+        public override bool? CanDamage() => Projectile.localAI[1] != -1f;
     }
 }

@@ -1,4 +1,3 @@
-using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Players;
 using Macrocosm.Content.Rarities;
@@ -8,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Armor.Artemite
 {
-	[AutoloadEquip(EquipType.Head)]
+    [AutoloadEquip(EquipType.Head)]
     public class ArtemiteHelmet : ModItem
     {
         public override void SetStaticDefaults()
@@ -39,7 +38,7 @@ namespace Macrocosm.Content.Items.Armor.Artemite
 
         public override void UpdateArmorSet(Player player)
         {
-            player.Macrocosm().SpaceProtection = SpaceProtection.Tier1;
+            player.GetModPlayer<MacrocosmPlayer>().SpaceProtection = SpaceProtection.Tier1;
         }
 
         public override void AddRecipes()

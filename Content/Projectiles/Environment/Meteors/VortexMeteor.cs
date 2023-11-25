@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Environment.Meteors
 {
-	public class VortexMeteor : BaseMeteor
+    public class VortexMeteor : BaseMeteor
     {
         public VortexMeteor()
         {

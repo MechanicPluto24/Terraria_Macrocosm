@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Bases
 {
-	public abstract class GreatswordHeldProjectileItem : HeldProjectileItem<GreatswordHeldProjectile>
+    public abstract class GreatswordHeldProjectileItem : HeldProjectileItem<GreatswordHeldProjectile>
     {
         public abstract Vector2 SpriteHandlePosition { get; }
 
@@ -38,7 +38,17 @@ namespace Macrocosm.Common.Bases
             Swing
         }
 
-        private GreatswordState state;
+        private GreatswordState State
+        {
+            get => (GreatswordState)Projectile.ai[0];
+            set => Projectile.ai[0] = (float)value;
+        }
+
+        private int ChargeEndPlayerDirection
+        {
+            get => (int)Projectile.ai[1] > 0 ? 1 : -1;
+            set => Projectile.ai[1] = value > 0 ? 1 : -1;
+        }
 
         private int MaxCharge { get; set; }
         private int chargeTimer = 0;
@@ -56,13 +66,16 @@ namespace Macrocosm.Common.Bases
         private Vector2 SpriteHandlePosition { get; set; }
 
         private float armRotation = 0f;
-        private int chargeEndPlayerDirection = 1;
         private float hitTimer = 0f;
         protected override void OnSpawn()
         {
-            if (Item.ModItem is GreatswordHeldProjectileItem greatswordHeldProjectileItem) 
+            ChargeEndPlayerDirection = 1;
+
+            if (item.ModItem is GreatswordHeldProjectileItem greatswordHeldProjectileItem)
             {
-                GreatswordTexture = greatswordHeldProjectileItem.HeldProjectileTexture;
+                if (Main.netMode != NetmodeID.Server)
+                    GreatswordTexture = greatswordHeldProjectileItem.HeldProjectileTexture;
+
                 SwingStyle = greatswordHeldProjectileItem.SwingStyle;
                 SwordLenght = greatswordHeldProjectileItem.SwordLenght ?? 0.8f * MathF.Sqrt(
                     MathF.Pow(greatswordHeldProjectileItem.HeldProjectileTexture.Width, 2)
@@ -82,7 +95,7 @@ namespace Macrocosm.Common.Bases
 
         public override void AI()
         {
-            switch (state)
+            switch (State)
             {
                 case GreatswordState.Charge:
                     armRotation = MathHelper.Pi * 0.75f - Charge * MathHelper.PiOver4 * 0.25f;
@@ -93,24 +106,30 @@ namespace Macrocosm.Common.Bases
                         chargeTimer++;
                     }
 
-                    Player.velocity *= 0.96f;
+                    Player.velocity.X *= 0.96f;
 
-                    if (!Player.channel)
+                    if (Projectile.owner == Main.myPlayer && !Player.channel)
                     {
                         SoundEngine.PlaySound(SoundID.DD2_MonkStaffSwing, Projectile.Center);
-                        chargeEndPlayerDirection = Player.direction;
+                        ChargeEndPlayerDirection = Player.direction;
                         Player.velocity.X += Player.direction * MathHelper.Lerp(
                             ChargeBasedDashAmount.min,
                             ChargeBasedDashAmount.max,
                             Charge
                         );
-                        state = GreatswordState.Swing;
+                        State = GreatswordState.Swing;
+
+                        if (Main.netMode == NetmodeID.MultiplayerClient)
+                        {
+                            Projectile.netUpdate = true;
+                            NetMessage.SendData(MessageID.PlayerControls, number: Main.myPlayer);
+                        }
                     }
 
                     break;
 
                 case GreatswordState.Swing:
-                    Player.direction = chargeEndPlayerDirection;
+                    Player.direction = ChargeEndPlayerDirection;
                     if (!SwingStyle.Update(ref armRotation, ref Projectile.rotation, Charge))
                     {
                         UnAlive();
@@ -119,7 +138,7 @@ namespace Macrocosm.Common.Bases
             }
 
             float localArmRot = Player.direction * armRotation;
-            Vector2 armDirection = (localArmRot + MathHelper.PiOver2).ToRotationVector2(); 
+            Vector2 armDirection = (localArmRot + MathHelper.PiOver2).ToRotationVector2();
 
             Projectile.Center = Player.RotatedRelativePoint(Player.MountedCenter) + armDirection * 18;
             Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, localArmRot);
@@ -157,7 +176,12 @@ namespace Macrocosm.Common.Bases
             hitTimer = 1f;
         }
 
-        public override bool? CanHitNPC(NPC target) => state == GreatswordState.Swing ? null : false;
+        public override bool? CanHitNPC(NPC target) => State == GreatswordState.Swing ? null : false;
+
+        public override bool CanHitPvp(Player target)
+        {
+            return base.CanHitPvp(target);
+        }
 
         public override void Draw(Color lightColor)
         {
@@ -175,7 +199,7 @@ namespace Macrocosm.Common.Bases
                 0f
             );
 
-            if (state == GreatswordState.Charge)
+            if (State == GreatswordState.Charge)
             {
                 // TODO: Some charge up effect.
             }
@@ -184,7 +208,7 @@ namespace Macrocosm.Common.Bases
         }
     }
 
-    public class GreatswordGlobalNPC : GlobalNPC 
+    public class GreatswordGlobalNPC : GlobalNPC
     {
         public override bool InstancePerEntity => true;
         public bool HasMark { get; private set; }

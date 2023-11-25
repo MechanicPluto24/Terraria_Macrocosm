@@ -10,12 +10,12 @@ namespace Macrocosm.Content.Rockets.Customization
 
 		public bool HasColorFunction => ColorFunction != null && !string.IsNullOrEmpty(ColorFunction.Name);
 
-		public PatternColorData()
-		{
-			IsUserModifiable = false;
-			Color = Color.Transparent;
-			ColorFunction = null;
-		}
+        public PatternColorData()
+        {
+            IsUserModifiable = false;
+            Color = Color.Transparent;
+            ColorFunction = null;
+        }
 
 		public PatternColorData(Color color, bool isUserModifiable = true)
 		{
@@ -24,12 +24,12 @@ namespace Macrocosm.Content.Rockets.Customization
 			ColorFunction = null;
 		}
 
-		public PatternColorData(ColorFunction colorFunction)
-		{
-			IsUserModifiable = false;
-			Color = Color.Transparent;
-			ColorFunction = colorFunction;
-		}
+        public PatternColorData(ColorFunction colorFunction)
+        {
+            IsUserModifiable = false;
+            Color = Color.Transparent;
+            ColorFunction = colorFunction;
+        }
 
 		public PatternColorData WithUserColor(Color newUserColor)
 		{
@@ -39,9 +39,9 @@ namespace Macrocosm.Content.Rockets.Customization
 			return new PatternColorData(newUserColor);
 		}
 
-		public PatternColorData WithColorFunction(ColorFunction function)
-		{
-			return new PatternColorData(function);
-		}
-	}
+        public PatternColorData WithColorFunction(ColorFunction function)
+        {
+            return new PatternColorData(function);
+        }
+    }
 }
