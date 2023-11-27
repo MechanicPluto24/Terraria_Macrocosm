@@ -1,6 +1,6 @@
 using Terraria;
 
-namespace Macrocosm.Content.Projectiles.Hostile
+namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 {
     public class PhantasmalImpLarge : PhantasmalImpSmall
     {
