@@ -204,67 +204,7 @@ namespace Macrocosm.Content.Rockets.Customization
 
         public static UIListScrollablePanel ProvidePatternUI(string moduleName)
         {
-            UIListScrollablePanel listPanel = new()
-            {
-                Width = new(0, 0.99f),
-                Height = new(0, 0.8f),
-                HAlign = 0.5f,
-                Top = new(0f, 0.2f),
-                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
-                BorderColor = UITheme.Current.PanelStyle.BorderColor,
-                ListPadding = 0f,
-                ListOuterPadding = 2f,
-                ScrollbarHeight = new(0f, 0.9f),
-                ScrollbarHAlign = 0.99f,
-                ListWidthWithScrollbar = new(0, 1f),
-                ListWidthWithoutScrollbar = new(0, 1f)
-            };
-            listPanel.SetPadding(0f);
-
-            var patterns = GetUnlockedPatterns(moduleName);
-            int count = patterns.Count;
-
-			// TODO: fix positioning just like in inventory panel
-			int iconsPerRow = 9;
-			float iconSize;
-			float iconOffsetLeft;
-			float iconOffsetTop;
-
-            if (count <= iconsPerRow)
-            {
-                iconSize = 44f + 7f;
-                iconOffsetLeft = 8f;
-                iconOffsetTop = 7f;
-            }
-            else
-            {
-                iconSize = 44f + 5f;
-                iconOffsetLeft = 7f;
-                iconOffsetTop = 7f;
-            }
-
-            UIElement patternIconContainer = new()
-            {
-                Width = new(0f, 1f),
-                Height = new(iconSize * (count / iconsPerRow + ((count % iconsPerRow != 0) ? 1 : 0)), 0f),
-            };
-
-            listPanel.Add(patternIconContainer);
-            patternIconContainer.SetPadding(0f);
-
-			for (int i = 0; i < count; i++)
-			{
-				Pattern pattern = patterns[i];
-				UIPatternIcon icon = pattern.ProvideUI();
-
-                icon.Left = new((i % iconsPerRow) * iconSize + iconOffsetLeft, 0f);
-                icon.Top = new((i / iconsPerRow) * iconSize + iconOffsetTop, 0f);
-
-                icon.Activate();
-                patternIconContainer.Append(icon);
-            }
-
-            return listPanel;
+			throw new NotImplementedException();
         }
 
         private static void LoadPatterns()

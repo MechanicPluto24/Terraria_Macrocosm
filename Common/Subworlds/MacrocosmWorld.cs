@@ -164,13 +164,13 @@ namespace Macrocosm.Common.Subworlds
             orig(uIItem, spriteBatch);
 
             var player = Main.LocalPlayer.GetModPlayer<MacrocosmPlayer>();
-            string subworldId = "Earth";
+            string subworld = "Earth";
             Texture2D texture = Macrocosm.EmptyTex;
 
             if (player.TryGetReturnSubworld(uIItem.Data.UniqueId, out string id))
-                subworldId = id;
- 
-            if (ModContent.RequestIfExists<Texture2D>(Macrocosm.TextureAssetsPath + "Icons/" + subworldId, out var asset))
+                subworld = MacrocosmSubworld.SanitizeID(id);
+
+            if (ModContent.RequestIfExists<Texture2D>(Macrocosm.TextureAssetsPath + "Icons/" + subworld, out var asset))
                 texture = asset.Value;
 
             var dims = uIItem.GetOuterDimensions();
@@ -180,7 +180,7 @@ namespace Macrocosm.Common.Subworlds
             spriteBatch.Draw(texture, pos, null, Color.White, 0f, Vector2.Zero, 0.8f, SpriteEffects.None, 0f);
 
             if (bounds.Contains(Main.mouseX, Main.mouseY))
-                Main.instance.MouseText(Language.GetTextValue("Mods.Macrocosm.Subworlds." + subworldId + ".DisplayName"));
+                Main.instance.MouseText(Language.GetTextValue("Mods.Macrocosm.Subworlds." + subworld + ".DisplayName"));
         }
 
         public override bool HijackSendData(int whoAmI, int msgType, int remoteClient, int ignoreClient, NetworkText text, int number, float number2, float number3, float number4, int number5, int number6, int number7)

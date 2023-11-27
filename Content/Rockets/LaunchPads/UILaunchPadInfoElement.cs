@@ -43,7 +43,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
             BorderColor = UITheme.Current.PanelStyle.BorderColor;
             uIDisplayText.TextColor = UITheme.Current.CommonTextColor;
 
-            if (IsSpawnPointDefault || !LaunchPad.HasRocket)
+            if ((IsSpawnPointDefault || !LaunchPad.HasRocket) && !IsCurrent)
             {
                 if (HasFocus || IsMouseHovering)
                 {
@@ -59,8 +59,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
             if (IsCurrent)
             {
-                BackgroundColor = UITheme.Current.ButtonHighlightStyle.BackgroundColor * 1.2f;
-                BorderColor = UITheme.Current.ButtonHighlightStyle.BorderColor;
+                BorderColor = Color.LimeGreen;
             }
         }
 
