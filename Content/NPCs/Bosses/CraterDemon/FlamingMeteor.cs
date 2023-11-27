@@ -16,7 +16,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
     {
         public override void SetStaticDefaults()
         {
-            ProjectileID.Sets.TrailCacheLength[Type] = 60;
+            ProjectileID.Sets.TrailCacheLength[Type] = 35;
             ProjectileID.Sets.TrailingMode[Type] = 3;
 
             Main.projFrames[Type] = 6;
@@ -43,32 +43,19 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
         public override void AI()
         {
-            Projectile.velocity.Y += 0.068f;
-            if (Projectile.velocity.Y > 16f)
-                Projectile.velocity.Y = 16f;
+            Projectile.velocity.Y += 0.2f;
+            if (Projectile.velocity.Y > 24f)
+                Projectile.velocity.Y = 24f;
 
             if (Projectile.velocity != Vector2.Zero)
                 Projectile.rotation = Projectile.velocity.ToRotation() - MathHelper.PiOver2;
 
-
-            float dustTrailCount = MathHelper.Lerp(0f, 2f, Utils.GetLerpValue(0f, 16f, Math.Abs(Projectile.velocity.Y))) +
-                                  MathHelper.Lerp(0f, 1f, Utils.GetLerpValue(0f, 9.25f, Math.Abs(Projectile.velocity.X)));
-
-            for (int i = 0; i < dustTrailCount; i++)
+            for (int i = 0; i < 4; i++)
             {
-                if (Math.Abs(Projectile.velocity.Y) < 0.5f && Math.Abs(Projectile.velocity.X) < 0.5f)
-                    break;
-
-                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.Torch, Projectile.velocity.X * 0.4f, Projectile.velocity.Y * 0.4f, 128, default, 3f);
+                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.Torch, -Projectile.velocity.X * 0.4f, -Projectile.velocity.Y * 0.4f, 127, new Color(255, 255, 255), Main.rand.NextFloat(1.2f, 1.8f));
                 dust.noGravity = true;
-                dust.velocity.X *= 2f;
-                dust.velocity.Y *= 1.5f;
-                dust.scale = MathHelper.Lerp(0.5f, 2.5f, Utils.GetLerpValue(28, 0, Vector2.Distance(dust.position, Projectile.Center)));
-
-                if (dust.dustIndex % 2 == 0)
-                    dust.color = new Color(0, 255, 100);
+                dust.noLight = true;
             }
-
 
             if (++Projectile.frameCounter >= 4)
             {
@@ -95,7 +82,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             Main.spriteBatch.Begin(state);
 
             Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition,
-                sourceRect, Color.White.WithOpacity(0f), Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
+                sourceRect, Color.White.WithOpacity(0.1f), Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
 
             return false;
         }

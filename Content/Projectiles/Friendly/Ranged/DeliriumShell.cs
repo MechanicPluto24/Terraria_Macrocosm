@@ -43,7 +43,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 // spawn some dusts as "muzzle flash"
                 for (int i = 0; i < 20; i++)
                 {
-                    Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<PortalLightGreenDust>(), Scale: 2.2f);
+                    Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<XaocGreenDust>(), Scale: 2.2f);
                     dust.velocity = (Projectile.velocity.SafeNormalize(Vector2.UnitX) * Main.rand.NextFloat(4f, 8f)).RotatedByRandom(MathHelper.PiOver4 * 0.6f) + Main.player[Projectile.owner].velocity;
                     dust.noLight = false;
                     dust.alpha = 200;
@@ -55,7 +55,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             // spawn dust trail 
             if (Main.rand.NextBool(1))
             {
-                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<PortalLightGreenDust>(), Scale: 1.3f);
+                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<XaocGreenDust>(), Scale: 1.3f);
                 dust.noLight = false;
                 dust.alpha = 255;
                 dust.noGravity = true;
@@ -69,7 +69,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             //spawn dust explosion on kill
             for (int i = 0; i < 40; i++)
             {
-                Dust dust = Dust.NewDustDirect(Projectile.Center, 1, 1, ModContent.DustType<PortalLightGreenDust>(), Scale: 1.6f);
+                Dust dust = Dust.NewDustDirect(Projectile.Center, 1, 1, ModContent.DustType<XaocGreenDust>(), Scale: 1.6f);
                 dust.velocity = (Vector2.UnitX * Main.rand.NextFloat(1f, 5f)).RotatedByRandom(MathHelper.TwoPi);
                 dust.noLight = false;
                 dust.noGravity = true;

@@ -43,8 +43,10 @@ SeleniteMagnumProjectile.DisplayName: Selenite Magnum
 TychoBullet.DisplayName: Tycho .50
 DianiteMeteor.DisplayName: Dianite Meteor
 DianiteMeteorSmall.DisplayName: Dianite Meteor
-PhantasmalImpLarge.DisplayName: Phantasmal Imp
+PhantasmalImp.DisplayName: Phantasmal Imp
 PhantasmalImpSmall.DisplayName: Phantasmal Imp
+PhantasmalPortal.DisplayName: Phantasmal Portal
+PhantasmalPortalSmall.DisplayName: Phantasmal Portal Small
 MoonPhaseGlobeProjectile.DisplayName: Moon Phase Globe
 DianiteForkCoreProjectile.DisplayName: Dianite Fork
 DianiteForkProjectile.DisplayName: Dianite Fork
@@ -55,5 +57,3 @@ SilicaPearlsandProjectile.DisplayName: Silica Pearlsand
 SilicaSandProjectile.DisplayName: Silica Sand
 InvarArrow.DisplayName: Invar Arrow
 InvarBullet.DisplayName: Invar Bullet
-PhantasmalPortal.DisplayName: Phantasmal Portal
-PhantasmalPortalSmall.DisplayName: Phantasmal Portal Small
