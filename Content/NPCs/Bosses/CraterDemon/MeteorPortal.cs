@@ -1,12 +1,15 @@
 ﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Utilities.Terraria.Utilities;
 
 namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 {
@@ -62,7 +65,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 {
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, (-Vector2.UnitY).RotatedByRandom(20) * Main.rand.NextFloat(6f, 9.25f), ModContent.ProjectileType<FlamingMeteor>(),
+                        Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, (-Vector2.UnitY).RotatedByRandom(MathHelper.PiOver2) * Main.rand.NextFloat(12f, 16f), ModContent.ProjectileType<FlamingMeteor>(),
                             (int)(Projectile.damage * 0.4f), Projectile.knockBack, Projectile.owner);
                     }
 
@@ -70,7 +73,18 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 }
             }
 
-            SpawnDusts();
+            for (int i = 0; i < 20; i++)
+            {
+                float progress = (1f - AITimer / 255f); 
+                Particle.CreateParticle<PortalSwirl>(p =>
+                {
+                    p.Position = Projectile.Center + Main.rand.NextVector2Circular(Projectile.width, Projectile.height) * 2.2f * progress;
+                    p.Velocity = Vector2.One * 8;
+                    p.Scale = (0.1f + Main.rand.NextFloat(0.1f)) * progress;
+                    p.Color = Main.rand.NextBool() ? new Color(92, 206, 130) : new Color(182, 79, 21);
+                    p.TargetCenter = Projectile.Center;
+                });
+            }
 
             Projectile.alpha = (int)MathHelper.Clamp((int)AITimer, 0f, 255f);
 
@@ -106,45 +120,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             Main.spriteBatch.Begin(BlendState.AlphaBlend, state);
 
             return false;
-        }
-
-        /// <summary> Adapted from Lunar Portal Staff </summary>
-        private void SpawnDusts()
-        {
-
-            for (int i = 0; i < (int)(5 * (1f - AITimer / 255f)); i++)
-            {
-                int type = ModContent.DustType<PortalLightGreenDust>();
-
-                if (Main.rand.NextBool())
-                	type = ModContent.DustType<PortalLightOrangeDust>();
-
-                Vector2 rotVector1 = Vector2.UnitY.RotatedByRandom(MathHelper.TwoPi) * 1.6f * (1f - AITimer / 255f);
-                Dust lightDust = Main.dust[Dust.NewDust(Projectile.Center - rotVector1 * 30f, 0, 0, type)];
-                lightDust.noGravity = true;
-                lightDust.position = Projectile.Center - rotVector1 * Main.rand.Next(17, 19);
-                lightDust.velocity = rotVector1.RotatedBy(MathHelper.PiOver2) * 2.4f;
-                lightDust.scale = (0.8f + Main.rand.NextFloat()) * (1f - AITimer / 255f);
-                lightDust.fadeIn = 0.5f;
-                lightDust.customData = Projectile.Center;
-            }
-
-            if (Main.rand.NextBool())
-            {
-                int type = ModContent.DustType<PortalDarkGreenDust>();
-
-                if (Main.rand.NextBool())
-                	type = ModContent.DustType<PortalDarkOrangeDust>();
-
-                Vector2 rotVector1 = Vector2.UnitY.RotatedByRandom(MathHelper.TwoPi) * 1.6f * (1f - AITimer / 255f);
-                Dust lightDust = Main.dust[Dust.NewDust(Projectile.Center - rotVector1 * 30f, 0, 0, type)];
-                lightDust.noGravity = true;
-                lightDust.position = Projectile.Center - rotVector1 * Main.rand.Next(30, 40);
-                lightDust.velocity = rotVector1.RotatedBy(MathHelper.PiOver2) * 2f;
-                lightDust.scale = (0.8f + Main.rand.NextFloat()) * (1f - AITimer / 255f);
-                lightDust.fadeIn = 0.5f;
-                lightDust.customData = Projectile.Center;
-            }
         }
     }
 }
