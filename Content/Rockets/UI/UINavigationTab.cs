@@ -18,7 +18,7 @@ namespace Macrocosm.Content.Rockets.UI
 {
     public class UINavigationTab : UIPanel, ITabUIElement, IRocketUIDataConsumer
     {
-        public Rocket Rocket { get; set; }
+        public Rocket Rocket { get; set; } = new();
 
         public UICustomizationPreview CustomizationPreview { get; set; }
 
@@ -63,17 +63,17 @@ namespace Macrocosm.Content.Rockets.UI
             Append(commanderPanel);
             commanderPanel.Activate();
 
-            worldInfoPanel = CreateWorldInfoPanel(MacrocosmSubworld.CurrentMacrocosmID);
+            worldInfoPanel = CreateWorldInfoPanel(MacrocosmSubworld.CurrentID);
             Append(worldInfoPanel);
             worldInfoPanel.Activate();
 
-            launchLocationsList = CreateLaunchLocationPanel(MacrocosmSubworld.CurrentMacrocosmID);
+            launchLocationsList = CreateLaunchLocationPanel(MacrocosmSubworld.CurrentID);
             Append(launchLocationsList);
             launchLocationsList.Activate();
 
             launchButton = new();
             launchButton.ZoomIn = navigationPanel.ZoomIn;
-            launchButton.Launch = () => Rocket.Launch(target.Name, targetLaunchPad);
+            launchButton.Launch = () => Rocket.Launch(target.WorldID, targetLaunchPad);
             Append(launchButton);
             launchButton.Activate();
 
@@ -90,7 +90,7 @@ namespace Macrocosm.Content.Rockets.UI
         {
             lastTarget = target;
             target = navigationPanel.CurrentMap.GetSelectedTarget();
-            Main.LocalPlayer.GetModPlayer<RocketPlayer>().TargetSubworldID = target is null ? "" : target.Name;
+            Main.LocalPlayer.GetModPlayer<RocketPlayer>().TargetWorld = target is null ? "" : target.WorldID;
 
             base.Update(gameTime);
 
@@ -113,7 +113,7 @@ namespace Macrocosm.Content.Rockets.UI
         {
             if (target is not null)
             {
-                CreateLaunchLocationPanel(target.Name);
+                CreateLaunchLocationPanel(target.WorldID);
                 launchLocationsList.UpdateOrder();
 
                 foreach (var lpInfo in launchLocationsList.OfType<UILaunchPadInfoElement>())
@@ -134,14 +134,17 @@ namespace Macrocosm.Content.Rockets.UI
         private void UpdateChecklist()
         {
             flightChecklist.MapTarget = target;
+            flightChecklist.TargetLaunchpad = targetLaunchPad;
         }
 
         private void UpdateLaunchButton()
         {
-            if (target is null)
+            if (!flightChecklist.SelectedLaunchCondition.IsMet)
                 launchButton.ButtonState = UILaunchButton.StateType.NoTarget;
             else if (navigationPanel.CurrentMap.HasNext)
                 launchButton.ButtonState = UILaunchButton.StateType.ZoomIn;
+            else if (!flightChecklist.DifferentTargetLaunchCondition.IsMet)
+                launchButton.ButtonState = UILaunchButton.StateType.DifferentTarget;
             else if (!flightChecklist.AllMet)
                 launchButton.ButtonState = UILaunchButton.StateType.CantReach;
             else if (Main.LocalPlayer.GetModPlayer<RocketPlayer>().IsCommander)
@@ -180,6 +183,8 @@ namespace Macrocosm.Content.Rockets.UI
 
         private UIListScrollablePanel CreateWorldInfoPanel(string subworldId)
         {
+            subworldId = MacrocosmSubworld.SanitizeID(subworldId);
+
             if (worldInfoPanel is null)
             {
                 worldInfoPanel = new(new LocalizedColorScaleText(Language.GetText("Mods.Macrocosm.Subworlds." + subworldId + ".DisplayName"), scale: 1.2f))
@@ -273,7 +278,7 @@ namespace Macrocosm.Content.Rockets.UI
             }
 
             // Add the launchpads
-            foreach (var launchPad in LaunchPadManager.GetLaunchPads(Macrocosm.Instance.Name + "/" + subworldId))
+            foreach (var launchPad in LaunchPadManager.GetLaunchPads(subworldId))
             {
                 var storedInfoElement = launchLocationsList.OfType<UILaunchPadInfoElement>()
                                                            .FirstOrDefault(e => e.LaunchPad == launchPad);
@@ -316,6 +321,10 @@ namespace Macrocosm.Content.Rockets.UI
                     FocusContext = "LaunchLocations",
                 };
                 spawnInfoElement.OnLeftClick += InfoElement_OnLeftClick;
+
+                if (Rocket.AtPosition(Utility.SpawnWorldPosition))
+                    spawnInfoElement.IsCurrent = true;
+
                 launchLocationsList.Add(spawnInfoElement);
             }
 
@@ -327,7 +336,7 @@ namespace Macrocosm.Content.Rockets.UI
         private void InfoElement_OnLeftClick(UIMouseEvent evt, UIElement listeningElement)
         {
             if (listeningElement is UILaunchPadInfoElement infoElement)
-                if (infoElement.IsSpawnPointDefault || !infoElement.LaunchPad.HasRocket)
+                if ((infoElement.IsSpawnPointDefault || !infoElement.LaunchPad.HasRocket) && !infoElement.IsCurrent)
                     infoElement.HasFocus = true;
         }
 

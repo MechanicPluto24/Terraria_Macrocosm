@@ -4,6 +4,7 @@ using Macrocosm.Content.Rockets.Customization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -83,12 +84,13 @@ namespace Macrocosm.Content.Rockets.Modules
                     Main.graphics.GraphicsDevice.SamplerStates[1] = SamplerState.PointClamp;
 
                     //Pass the color mask keys as Vector3s and configured colors as Vector4s
-                    //Note: parameters are scalars intentionally, I manually unrolled the loop in the shader to reduce number of branch instructions -- Feldy
+                    List<Vector4> colors = new();
                     for (int i = 0; i < Pattern.MaxColorCount; i++)
-                    {
-                        effect.Parameters["uColorKey" + i.ToString()].SetValue(Pattern.ColorKeys[i]);
-                        effect.Parameters["uColor" + i.ToString()].SetValue(Pattern.GetColor(i).ToVector4());
-                    }
+                         colors.Add(Pattern.GetColor(i).ToVector4());
+
+                    effect.Parameters["uColorCount"].SetValue(Pattern.MaxColorCount);
+                    effect.Parameters["uColorKey"].SetValue(Pattern.ColorKeys);
+                    effect.Parameters["uColor"].SetValue(colors.ToArray());
 
                     // Get a blend between the general ambient color at the rocket center, and the local color on this module's center
                     Color localColor = Color.Lerp(Lighting.GetColor((int)(Center.X) / 16, (int)(Center.Y) / 16), ambientColor, 0.8f);

@@ -22,7 +22,7 @@ namespace Macrocosm.Content.Rockets.UI
         {
             NoTarget,
             CantReach,
-            AlreadyHere,
+            DifferentTarget,
             ZoomIn,
             Launch,
             LaunchInactive
@@ -79,7 +79,7 @@ namespace Macrocosm.Content.Rockets.UI
                     CanClick = false;
                     break;
 
-                case StateType.AlreadyHere:
+                case StateType.DifferentTarget:
                     textColor = Color.Gray * 1.3f;
                     textScale = 0.58f;
                     CanClick = false;

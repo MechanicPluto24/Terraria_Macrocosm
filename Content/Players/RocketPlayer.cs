@@ -18,7 +18,7 @@ namespace Macrocosm.Content.Players
         public bool InRocket { get; set; } = false;
         public bool IsCommander { get; set; } = false;
         public int RocketID { get; set; } = -1;
-        public string TargetSubworldID { get; set; } = "";
+        public string TargetWorld { get; set; } = "";
 
         private PanCameraModifier cameraModifier;
 
@@ -141,7 +141,7 @@ namespace Macrocosm.Content.Players
             cloneRocketPlayer.InRocket = InRocket;
             cloneRocketPlayer.IsCommander = IsCommander;
             cloneRocketPlayer.RocketID = RocketID;
-            cloneRocketPlayer.TargetSubworldID = TargetSubworldID;
+            cloneRocketPlayer.TargetWorld = TargetWorld;
         }
 
         public override void SendClientChanges(ModPlayer clientPlayer)
@@ -151,7 +151,7 @@ namespace Macrocosm.Content.Players
             if (clientRocketPlayer.InRocket != InRocket ||
                 clientRocketPlayer.IsCommander != IsCommander ||
                 clientRocketPlayer.RocketID != RocketID ||
-                clientRocketPlayer.TargetSubworldID != TargetSubworldID)
+                clientRocketPlayer.TargetWorld != TargetWorld)
             {
                 SyncPlayer(-1, -1, false);
             }
@@ -164,7 +164,7 @@ namespace Macrocosm.Content.Players
             packet.Write((byte)Player.whoAmI);
             packet.Write(new BitsByte(InRocket, IsCommander));
             packet.Write((byte)RocketID);
-            packet.Write(TargetSubworldID);
+            packet.Write(TargetWorld);
             packet.Send(toWho, fromWho);
         }
 
@@ -176,7 +176,7 @@ namespace Macrocosm.Content.Players
             rocketPlayer.InRocket = bb[0];
             rocketPlayer.IsCommander = bb[1];
             rocketPlayer.RocketID = reader.ReadByte();
-            rocketPlayer.TargetSubworldID = reader.ReadString();
+            rocketPlayer.TargetWorld = reader.ReadString();
 
             if (Main.netMode == NetmodeID.Server)
                 rocketPlayer.SyncPlayer(-1, whoAmI, false);

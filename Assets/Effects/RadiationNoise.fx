@@ -1,6 +1,6 @@
 sampler uImage0 : register(s0);
-sampler uImage1 : register(s1);  
-sampler uImage2 : register(s2);  
+sampler uImage1 : register(s1);
+sampler uImage2 : register(s2);
 sampler uImage3 : register(s3);
 float3 uColor;
 float3 uSecondaryColor;
@@ -39,6 +39,6 @@ technique Technique1
 {
     pass RadiationNoise
     {
-        PixelShader = compile ps_2_0 RadiationNoise();
+        PixelShader = compile ps_3_0 RadiationNoise();
     }
 }
