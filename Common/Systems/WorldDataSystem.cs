@@ -2,6 +2,7 @@
 using System.IO;
 using System.Runtime.CompilerServices;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
@@ -20,6 +21,21 @@ namespace Macrocosm.Common.Systems
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string name = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
+        public override void Load()
+        {
+            PropertyChanged += WorldDataSystem_PropertyChanged;
+        }
+
+        public override void Unload()
+        {
+            PropertyChanged -= WorldDataSystem_PropertyChanged;
+        }
+
+        private void WorldDataSystem_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (Main.netMode == NetmodeID.Server)
+                NetMessage.SendData(MessageID.WorldData);
+        }
 
         #region Flags
 

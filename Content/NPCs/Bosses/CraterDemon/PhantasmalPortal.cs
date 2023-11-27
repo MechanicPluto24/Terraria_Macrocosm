@@ -1,32 +1,45 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.NPCs.Bosses.CraterDemon;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.GameContent;
+using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Projectiles.Hostile
+namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 {
-    //Had to salvage it from an extracted DLL, so no comments.  Oops.  -- absoluteAquarian
-    public class MeteorPortal : ModProjectile
+    public class PhantasmalPortal : ModProjectile
     {
         public ref float AITimer => ref Projectile.ai[0];
 
-        private int defWidth;
-        private int defHeight;
+        public bool Phase2
+        {
+            get => Projectile.ai[1] > 0f;
+            set => Projectile.ai[1] = value ? 1f : 0f;
+        }
 
-        private bool spawned;
+        public int TargetPlayer
+        {
+            get => (int)Projectile.ai[2];
+            set => Projectile.ai[2] = value;
+        }
+
+        public int SpawnPeriod => 28;
+
+        protected int defWidth;
+        protected int defHeight;
+
+        protected bool spawned;
 
         public override void SetStaticDefaults()
         {
         }
         public override void SetDefaults()
         {
-            defWidth = defHeight = Projectile.width = Projectile.height = 40;
+            defWidth = defHeight = Projectile.width = Projectile.height = 52;
             Projectile.hostile = true;
             Projectile.friendly = false;
             Projectile.tileCollide = false;
@@ -52,13 +65,13 @@ namespace Macrocosm.Content.Projectiles.Hostile
             else
             {
                 AITimer = 0f;
-                if (Projectile.timeLeft % 14 == 0)
+                if (Projectile.timeLeft % SpawnPeriod == 0)
                 {
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        int meteorID = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, (-Vector2.UnitY).RotatedByRandom(20) * Main.rand.NextFloat(6f, 9.25f), ModContent.ProjectileType<FlamingMeteor>(),
+                        Vector2 velocity = (Projectile.Center - Main.player[TargetPlayer].Center).RotatedByRandom(20) * Main.rand.NextFloat(6f, 9.25f);
+                        Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, velocity, ModContent.ProjectileType<PhantasmalImpLarge>(),
                             (int)(Projectile.damage * 0.4f), Projectile.knockBack, Projectile.owner, 0f, 0f);
-                        Main.projectile[meteorID].netUpdate = true;
                     }
 
                     Terraria.Audio.SoundEngine.PlaySound(SoundID.Item20, Projectile.Center);
@@ -111,9 +124,6 @@ namespace Macrocosm.Content.Projectiles.Hostile
             {
                 int type = ModContent.DustType<PortalLightGreenDust>();
 
-                //if (Main.rand.NextBool())
-                //	type = ModContent.DustType<PortalLightOrangeDust>();
-
                 Vector2 rotVector1 = Vector2.UnitY.RotatedByRandom(MathHelper.TwoPi) * 1.6f * (1f - AITimer / 255f);
                 Dust lightDust = Main.dust[Dust.NewDust(Projectile.Center - rotVector1 * 30f, 0, 0, type)];
                 lightDust.noGravity = true;
@@ -127,9 +137,6 @@ namespace Macrocosm.Content.Projectiles.Hostile
             if (Main.rand.NextBool())
             {
                 int type = ModContent.DustType<PortalDarkGreenDust>();
-
-                //if (Main.rand.NextBool())
-                //	type = ModContent.DustType<PortalDarkOrangeDust>();
 
                 Vector2 rotVector1 = Vector2.UnitY.RotatedByRandom(MathHelper.TwoPi) * 1.6f * (1f - AITimer / 255f);
                 Dust lightDust = Main.dust[Dust.NewDust(Projectile.Center - rotVector1 * 30f, 0, 0, type)];

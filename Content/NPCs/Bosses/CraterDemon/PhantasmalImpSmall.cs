@@ -8,7 +8,7 @@ using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Projectiles.Hostile
+namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 {
     public class PhantasmalImpSmall : ModProjectile
     {
