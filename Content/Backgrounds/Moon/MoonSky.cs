@@ -110,6 +110,7 @@ namespace Macrocosm.Content.Backgrounds.Moon
 
         public override void Deactivate(params object[] args)
         {
+            Intensity = 0f;
             starsDay.Clear();
             starsNight.Clear();
             Active = false;
@@ -159,7 +160,10 @@ namespace Macrocosm.Content.Backgrounds.Moon
 
         public override void Update(GameTime gameTime)
         {
-            Intensity = Active ? Math.Min(1f, 0.01f + Intensity) : Math.Max(0f, Intensity - 0.01f);
+            if (!SubworldSystem.IsActive<Subworlds.Moon>())
+                Active = false;
+
+            Intensity = Active ? Math.Min(1f, Intensity + 0.01f) : Math.Max(0f, Intensity - 0.01f);
             SetEarthTextures();
         }
 
@@ -222,7 +226,7 @@ namespace Macrocosm.Content.Backgrounds.Moon
 
         public override bool IsActive()
         {
-            return Active || Intensity > 0.001f;
+            return Active && Intensity > 0.001f;
         }
     }
 }

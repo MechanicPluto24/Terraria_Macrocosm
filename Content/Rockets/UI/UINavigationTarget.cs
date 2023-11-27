@@ -20,10 +20,17 @@ namespace Macrocosm.Content.Rockets.UI
         public UINavigationMap OwnerMap => OwnerPanel.CurrentMap;
 
         /// <summary> 
-        /// The identification of this target, used in conjuction with Subworld IDs.
-        /// Must be unique within the same <c>UINavigationMap</c>, but can have same ID-linked targets in other navigation maps
+        /// The identification of this target, respective to this world's <see cref="MacrocosmSubworld.CurrentMacrocosmID"/>.
+        /// Must be unique within the same <c>UINavigationMap</c>, but can have same ID-linked targets in other navigation maps.
+        /// For travel purposes, use <see cref="WorldID"/>!
         /// </summary>
         public readonly string Name = "default";
+
+        /// <summary>
+        /// The mod-indepentent world ID, respective to the <see cref="MacrocosmSubworld.CurrentID"/>
+        /// </summary>
+        public string WorldID => Macrocosm.Instance.Name + "/" + Name;
+
 
         /// <summary> Collection to determine whether the subworld is accesible </summary>
         public ChecklistConditionCollection LaunchConditions { get; set; } = null;
@@ -32,7 +39,7 @@ namespace Macrocosm.Content.Rockets.UI
         public bool IsReachable = false;
 
         /// <summary> Whether this target's ID is equal to the current subworld </summary>
-        public bool AlreadyHere => Name == MacrocosmSubworld.CurrentMacrocosmID;
+        public bool AlreadyHere => WorldID == MacrocosmSubworld.CurrentID;
 
         /// <summary> Whether the target is currently selected </summary>
         public bool Selected;

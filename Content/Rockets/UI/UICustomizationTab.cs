@@ -206,8 +206,12 @@ namespace Macrocosm.Content.Rockets.UI
             if (patternSelector.OfType<UIPatternIcon>().Any())
             {
                 currentPatternIcon = patternSelector.OfType<UIPatternIcon>().FirstOrDefault(icon => icon.Pattern.Name == currentDummyPattern.Name);
-                currentPatternIcon.Pattern = currentDummyPattern;
-                currentPatternIcon.HasFocus = true;
+
+                if(currentPatternIcon is not null)
+                {
+                    currentPatternIcon.Pattern = currentDummyPattern;
+                    currentPatternIcon.HasFocus = true;
+                }
 
                 if (patternColorPickers is null)
                     CreatePatternColorPickers();
@@ -782,7 +786,6 @@ namespace Macrocosm.Content.Rockets.UI
                 Left = new StyleDimension(0f, 0f),
                 CheckInteractible = () => !rocketPreview.ZoomedOut
             };
-            leftButton.SetVisibility(1f, 1f, 1f);
             leftButton.OnLeftClick += (_, _) => PickPreviousModule();
 
             modulePicker.Append(leftButton);
@@ -793,7 +796,6 @@ namespace Macrocosm.Content.Rockets.UI
                 Left = new StyleDimension(0, 0.79f),
                 CheckInteractible = () => !rocketPreview.ZoomedOut
             };
-            rightButton.SetVisibility(1f, 1f, 1f);
             rightButton.OnLeftClick += (_, _) => PickNextModule();
 
             modulePicker.Append(rightButton);
@@ -1069,7 +1071,7 @@ namespace Macrocosm.Content.Rockets.UI
             {
                 if (module == currentModule.Name)
                 {
-                    patternSelector = CustomizationStorage.ProvidePatternUI(module);
+                    patternSelector = CreatePatternSelector(module);
                     foreach (var icon in patternSelector.OfType<UIPatternIcon>().ToList())
                         icon.OnLeftClick += (_, icon) => SelectPattern(icon as UIPatternIcon);
                 }
@@ -1078,6 +1080,64 @@ namespace Macrocosm.Content.Rockets.UI
             patternConfigPanel.Append(patternSelector);
 
             return patternConfigPanel;
+        }
+
+        public static UIListScrollablePanel CreatePatternSelector(string moduleName)
+        {
+            UIListScrollablePanel listPanel = new()
+            {
+                Width = new(0, 0.99f),
+                Height = new(0, 0.8f),
+                HAlign = 0.5f,
+                Top = new(0f, 0.2f),
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor,
+                ListPadding = 0f,
+                ListOuterPadding = 2f,
+                ScrollbarHeight = new(0f, 0.9f),
+                ScrollbarHAlign = 0.99f,
+                ListWidthWithScrollbar = new(0, 1f),
+                ListWidthWithoutScrollbar = new(0, 1f)
+            };
+            listPanel.SetPadding(0f);
+
+            var patterns = CustomizationStorage.GetUnlockedPatterns(moduleName);
+            int count = patterns.Count;
+
+            int iconsPerRow = 9;
+            int rowsWithoutScrollbar = 4;
+            float iconSize = 51f;
+            float iconOffsetTop = 8f;
+            float iconOffsetLeft = 9f;
+
+            if (count > iconsPerRow * rowsWithoutScrollbar)
+            {
+                iconSize -= 2f;
+                iconOffsetLeft -= 1f;
+            }
+
+            UIElement patternIconContainer = new()
+            {
+                Width = new(0f, 1f),
+                Height = new(iconSize * (count / iconsPerRow + ((count % iconsPerRow != 0) ? 1 : 0)), 0f),
+            };
+
+            listPanel.Add(patternIconContainer);
+            patternIconContainer.SetPadding(0f);
+
+            for (int i = 0; i < count; i++)
+            {
+                Pattern pattern = patterns[i];
+                UIPatternIcon icon = pattern.ProvideUI();
+
+                icon.Left = new((i % iconsPerRow) * iconSize + iconOffsetLeft, 0f);
+                icon.Top = new((i / iconsPerRow) * iconSize + iconOffsetTop, 0f);
+
+                icon.Activate();
+                patternIconContainer.Append(icon);
+            }
+
+            return listPanel;
         }
         #endregion
     }

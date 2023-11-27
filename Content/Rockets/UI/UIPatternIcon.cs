@@ -5,6 +5,7 @@ using Macrocosm.Content.Rockets.Customization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -41,7 +42,7 @@ namespace Macrocosm.Content.Rockets.UI
             var dimensions = GetOuterDimensions();
 
             // Load the coloring shader
-            Effect effect = ModContent.Request<Effect>(Macrocosm.EffectAssetsPath + "SimpleColorMaskShading", AssetRequestMode.ImmediateLoad).Value;
+            Effect effect = ModContent.Request<Effect>(Macrocosm.EffectAssetsPath + "ColorMaskShading", AssetRequestMode.ImmediateLoad).Value;
 
             // Pass the pattern icon to the shader via the S1 register
             Main.graphics.GraphicsDevice.Textures[1] = Pattern.IconTexture;
@@ -51,18 +52,21 @@ namespace Macrocosm.Content.Rockets.UI
             Main.graphics.GraphicsDevice.SamplerStates[1] = SamplerState.PointClamp;
 
             //Pass the color mask keys as Vector3s and configured colors as Vector4s
-            //Note: parameters are scalars intentionally, I manually unrolled the loop in the shader to reduce number of branch instructions -- Feldy
+            List<Vector4> colors = new();
             for (int i = 0; i < Pattern.MaxColorCount; i++)
-            {
-                effect.Parameters["uColorKey" + i.ToString()].SetValue(Pattern.ColorKeys[i]);
-                effect.Parameters["uColor" + i.ToString()].SetValue(Pattern.GetColor(i).ToVector4());
-            }
+                colors.Add(Pattern.GetColor(i).ToVector4());
+
+            effect.Parameters["uColorCount"].SetValue(Pattern.MaxColorCount);
+            effect.Parameters["uColorKey"].SetValue(Pattern.ColorKeys);
+            effect.Parameters["uColor"].SetValue(colors.ToArray());
+            //effect.Parameters["uAmbientColor"].SetValue(new Vector3(1f));
 
             state.SaveState(spriteBatch);
             spriteBatch.End();
             spriteBatch.Begin(state.SpriteSortMode, state.BlendState, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, effect, state.Matrix);
 
-            spriteBatch.Draw(Pattern.IconTexture, dimensions.Position(), null, Color.White, 0f, Vector2.Zero, 0.995f, SpriteEffects.None, 0f);
+            Texture2D texture = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanel").Value;
+            spriteBatch.Draw(texture, dimensions.Position(), null, Color.White, 0f, Vector2.Zero, 0.995f, SpriteEffects.None, 0f);
 
             spriteBatch.End();
             spriteBatch.Begin(state);
