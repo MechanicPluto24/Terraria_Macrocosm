@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Rockets.LaunchPads;
 using Macrocosm.Content.Rockets.UI;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
@@ -14,26 +15,31 @@ namespace Macrocosm.Content.Rockets.Navigation.Checklist
     {
         public Rocket Rocket { get; set; }
         public UINavigationTarget MapTarget { get; set; }
+        public LaunchPad TargetLaunchpad { get; set; }
 
         public bool AllMet { get; set; }
 
-        private ChecklistConditionCollection commonLaunchConditions = new();
-        private ChecklistCondition selectedLaunchCondition;
+        public ChecklistCondition SelectedLaunchCondition;
+        public ChecklistCondition DifferentTargetLaunchCondition;
+
+        public ChecklistConditionCollection CommonLaunchConditions = new();
 
         public UIFlightChecklist() : base(new LocalizedColorScaleText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Checklist"), scale: 1.2f))
         {
-            selectedLaunchCondition = new ChecklistCondition("Selected", () => MapTarget is not null);
+            SelectedLaunchCondition = new ChecklistCondition("Selected", () => MapTarget is not null);
 
-            commonLaunchConditions.Add(new ChecklistCondition("Fuel", () => Rocket.Fuel >= Rocket.GetFuelCost(MapTarget.Name)));
+            DifferentTargetLaunchCondition = new ChecklistCondition("DifferentTarget", () => !Rocket.AtCurrentLaunchpad(TargetLaunchpad));
+
+            CommonLaunchConditions.Add(new ChecklistCondition("Fuel", () => Rocket.Fuel >= Rocket.GetFuelCost(MapTarget.WorldID)));
 
             // NOTE: This must be kept as an explicit lambda expression!
-#pragma warning disable IDE0200
-            commonLaunchConditions.Add(new ChecklistCondition("Obstruction", () => Rocket.CheckFlightPathObstruction(), checkPeriod: 10));
-#pragma warning restore IDE0200
+            #pragma warning disable IDE0200
+            CommonLaunchConditions.Add(new ChecklistCondition("Obstruction", () => Rocket.CheckFlightPathObstruction(), checkPeriod: 10));
+            #pragma warning restore IDE0200
 
-            commonLaunchConditions.Add(new ChecklistCondition("Boss", () => !Utility.BossActive && !Utility.MoonLordIncoming, hideIfMet: true));
-            commonLaunchConditions.Add(new ChecklistCondition("Invasion", () => !Utility.InvastionActive && !Utility.PillarsActive, hideIfMet: true));
-            commonLaunchConditions.Add(new ChecklistCondition("BloodMoon", () => !Utility.BloodMoonActive, hideIfMet: true));
+            CommonLaunchConditions.Add(new ChecklistCondition("Boss", () => !Utility.BossActive && !Utility.MoonLordIncoming, hideIfMet: true));
+            CommonLaunchConditions.Add(new ChecklistCondition("Invasion", () => !Utility.InvastionActive && !Utility.PillarsActive, hideIfMet: true));
+            CommonLaunchConditions.Add(new ChecklistCondition("BloodMoon", () => !Utility.BloodMoonActive, hideIfMet: true));
         }
 
         public override void OnInitialize()
@@ -58,9 +64,9 @@ namespace Macrocosm.Content.Rockets.Navigation.Checklist
                 return wasMet;
             }
 
-            if (ProcessCondition(selectedLaunchCondition))
+            if (ProcessCondition(SelectedLaunchCondition) && ProcessCondition(DifferentTargetLaunchCondition))
             {
-                foreach (var condition in commonLaunchConditions)
+                foreach (var condition in CommonLaunchConditions)
                     ProcessCondition(condition);
 
                 if (MapTarget != null)
@@ -90,16 +96,20 @@ namespace Macrocosm.Content.Rockets.Navigation.Checklist
             List<UIElement> uIChecklist = new();
             ChecklistConditionCollection checklistConditions = new();
 
-            if (!selectedLaunchCondition.IsMet)
+            if (!SelectedLaunchCondition.IsMet)
             {
-                checklistConditions.Add(selectedLaunchCondition);
+                checklistConditions.Add(SelectedLaunchCondition);
+            }
+            else if (!DifferentTargetLaunchCondition.IsMet)
+            {
+                checklistConditions.Add(DifferentTargetLaunchCondition);
             }
             else
             {
                 if (MapTarget.LaunchConditions is not null)
                     checklistConditions.AddRange(MapTarget.LaunchConditions);
 
-                checklistConditions.AddRange(commonLaunchConditions);
+                checklistConditions.AddRange(CommonLaunchConditions);
             }
 
             var sortedConditions = checklistConditions

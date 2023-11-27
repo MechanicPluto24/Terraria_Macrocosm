@@ -87,7 +87,7 @@ namespace Macrocosm.Content.Rockets.UI
             Vector2 worldIconPosition = dimensions.Position() + new Vector2(dimensions.Width * 0.85f, dimensions.Height * 0.5f);
             Vector2 playerPosition = dimensions.Position() + new Vector2(dimensions.Width * 0.08f, dimensions.Height * 0.2f);
 
-            if (RocketPlayer.IsCommander && ModContent.RequestIfExists(Macrocosm.TextureAssetsPath + "Icons/" + RocketPlayer.TargetSubworldID, out Asset<Texture2D> iconTexture))
+            if (RocketPlayer.IsCommander && ModContent.RequestIfExists(Macrocosm.TextureAssetsPath + "Icons/" + RocketPlayer.TargetWorld, out Asset<Texture2D> iconTexture))
                 spriteBatch.Draw(iconTexture.Value, worldIconPosition, null, Color.White, 0f, iconTexture.Size() / 2f, 1f, SpriteEffects.None, 0);
 
 

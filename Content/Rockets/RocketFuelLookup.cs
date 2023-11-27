@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Macrocosm.Common.Subworlds;
+using System.Collections.Generic;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets
@@ -20,6 +21,9 @@ namespace Macrocosm.Content.Rockets
 
         public static float GetFuelCost(string location, string destination)
         {
+            location = MacrocosmSubworld.SanitizeID(location);
+            destination = MacrocosmSubworld.SanitizeID(destination);
+
             string key = location + "_" + destination;
 
             if (fuelLookup.TryGetValue(key, out float value))

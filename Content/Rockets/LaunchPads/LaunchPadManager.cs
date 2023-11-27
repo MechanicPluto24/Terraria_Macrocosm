@@ -76,6 +76,13 @@ namespace Macrocosm.Content.Rockets.LaunchPads
         public static bool Any(string subworldId) => GetLaunchPads(subworldId).Any();
         public static bool None(string subworldId) => !Any(subworldId);
 
+        public static bool InCurrentWorld(LaunchPad launchPad)
+        {
+            if(launchPadStorage.TryGetValue(MacrocosmSubworld.CurrentID, out var launchPads))
+                 return launchPads.Contains(launchPad); 
+ 
+            return false;
+        }
 
         public static List<LaunchPad> GetLaunchPads(string subworldId)
         {

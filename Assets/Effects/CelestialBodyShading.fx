@@ -26,7 +26,7 @@ technique Technique1
 {
     pass CelestialBodyShading 
     {
-        PixelShader = compile ps_2_0 CelestialBodyShading();
+        PixelShader = compile ps_3_0 CelestialBodyShading();
     }
 }
 

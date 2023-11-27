@@ -87,6 +87,8 @@ namespace Macrocosm.Common.UI
             }
 
             Append(list);
+
+            CheckScrollbar();
         }
 
         public void UpdateOrder() => list.UpdateOrder();
@@ -170,7 +172,14 @@ namespace Macrocosm.Common.UI
         {
             base.Update(gameTime);
 
-            // Method is only called if dynamic scrollbar hiding is active
+            CheckScrollbar();
+
+            if (hasTitle && title.HAlign != TitleHAlign)
+                title.HAlign = TitleHAlign;
+        }
+
+        private void CheckScrollbar()
+        {
             if (!HideScrollbarIfNotScrollable || !EntireListVisible())
             {
                 if (scrollbar is null)
@@ -202,9 +211,6 @@ namespace Macrocosm.Common.UI
 
                 scrollbar = null;
             }
-
-            if (hasTitle && title.HAlign != TitleHAlign)
-                title.HAlign = TitleHAlign;
         }
 
         public IEnumerator<UIElement> GetEnumerator()

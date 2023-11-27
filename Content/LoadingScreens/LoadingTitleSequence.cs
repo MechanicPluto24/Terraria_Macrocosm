@@ -55,6 +55,8 @@ namespace Macrocosm.Content.LoadingScreens
 
         public static void SetTargetWorld(string targetWorld)
         {
+            targetWorld = MacrocosmSubworld.SanitizeID(targetWorld);
+
             title = targetWorld switch
             {
                 "Moon" => new(Language.GetText("Mods.Macrocosm.Subworlds.Moon.DisplayName"), Color.White, 1.2f, largeText: true),

@@ -232,7 +232,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state1);
 
-            Effect effect = ModContent.Request<Effect>(Macrocosm.EffectAssetsPath + "ColorGradient", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+            Effect effect = ModContent.Request<Effect>(Macrocosm.EffectAssetsPath + "ColorGradientSquare", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
             Rectangle sourceRect = TextureAssets.Projectile[Type].Frame(1, Main.projFrames[Type], frameY: Projectile.frame);
 
             effect.Parameters["uSourceRect"].SetValue(new Vector4((float)sourceRect.X, (float)sourceRect.Y, (float)sourceRect.Width, (float)sourceRect.Height));
@@ -241,7 +241,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             effect.Parameters["uColorIntensity"].SetValue(new Vector4(AI_Overheat * 0.8f, 0f, 0f, 1f));
             effect.Parameters["uOffset"].SetValue(new Vector2(0.35f, 0.5f));
             effect.Parameters["uSize"].SetValue(0.5f * AI_Overheat);
-            effect.Parameters["uSDF"].SetValue(1); // square-shaped distance function
 
             Projectile.DrawAnimated(lightColor, Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None, new Vector2(5, 12), shader: effect);
 
