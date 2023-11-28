@@ -367,7 +367,7 @@ namespace Macrocosm.Common.Drawing.Sky
             color = new Color((byte)(255f * clouldAlphaMult), (byte)(Color.White.G * clouldAlphaMult), (byte)(Color.White.B * clouldAlphaMult), (byte)(255f * clouldAlphaMult));
             int angle = (int)(bgTop + timeY * 250.0 + 180.0);
 
-            Position = new Vector2(timeX, angle + Main.sunModY); // TODO: add configurable vertical parallax 
+            Position = new Vector2(timeX, angle); // TODO: add configurable vertical parallax 
         }
 
         private void Orbit()

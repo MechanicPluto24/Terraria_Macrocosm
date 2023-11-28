@@ -77,13 +77,13 @@ namespace Macrocosm.Content.Backgrounds.Moon
                     offsetRadius = MathHelper.Lerp(0.56f, 0.01f, 1 - distance);
                     rotation += MathHelper.Pi;
                 }
-
-                float proximityThreshold = 0.1f;  
-                float maxAdditionalOffset = 0.8f;  
-                if (distance < proximityThreshold)
+                else
                 {
-                    float proximityFactor = 1 - (distance / proximityThreshold);
-                    offsetRadius += maxAdditionalOffset * proximityFactor;
+                    if (distance < 0.1f)
+                    {
+                        float proximityFactor = 1 - (distance / 0.1f);
+                        offsetRadius += 0.8f * proximityFactor;
+                    }
                 }
 
                 offset = Utility.PolarVector(offsetRadius, rotation) * 0.65f;
@@ -226,8 +226,8 @@ namespace Macrocosm.Content.Backgrounds.Moon
             if (!Main.dayTime)
             {
                 float timeFactor = (float)(Math.Abs(MacrocosmSubworld.CurrentNightLength - Main.time * 2) / MacrocosmSubworld.CurrentNightLength);
-                float lerpFactor = 0.35f - timeFactor; // This will peak in the middle of the night
-                darkColor = Color.Lerp(Color.Black, Color.DeepSkyBlue, lerpFactor);
+                float lerpFactor = 1f - timeFactor; 
+                darkColor = Color.Lerp(Color.Black, new Color(39, 87, 155), lerpFactor);
             }
 
             return Color.Lerp(color, darkColor, 0.2f + Intensity * 0.1f);
