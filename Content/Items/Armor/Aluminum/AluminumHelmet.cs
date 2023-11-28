@@ -29,7 +29,7 @@ namespace Macrocosm.Content.Items.Armor.Aluminum
         public override void UpdateArmorSet(Player player)
         {
             player.statDefense += 2;
-            player.setBonus = "2 defense";
+            player.setBonus = "2 defense"; // TODO: localize
         }
 
         public override void AddRecipes()
