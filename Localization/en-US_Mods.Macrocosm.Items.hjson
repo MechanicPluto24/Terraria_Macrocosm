@@ -890,3 +890,23 @@ TeddyBear: {
 	DisplayName: Teddy Bear
 	Tooltip: ""
 }
+
+SteelChestplate: {
+	DisplayName: Steel Chestplate
+	Tooltip: ""
+}
+
+SteelHelmet: {
+	DisplayName: Steel Helmet
+	Tooltip: ""
+}
+
+SteelLeggings: {
+	DisplayName: Steel Leggings
+	Tooltip: ""
+}
+
+RapaciousBrand: {
+	DisplayName: Rapacious Brand
+	Tooltip: ""
+}
