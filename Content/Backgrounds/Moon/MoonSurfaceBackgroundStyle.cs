@@ -47,7 +47,7 @@ namespace Macrocosm.Content.Backgrounds.Moon
 
                
 
-                Color backColor = typeof(Main).GetFieldValue<Color>("ColorOfSurfaceBackgroundsBase", Main.instance).ToGrayscale();
+                Color backColor = SkyManager.Instance.ProcessTileColor(typeof(Main).GetFieldValue<Color>("ColorOfSurfaceBackgroundsBase", Main.instance).ToGrayscale());
                 int bgLoops = Main.screenWidth / bgW + 2;
 
                 if (Main.screenPosition.Y < Main.worldSurface * 16.0 + 16.0)

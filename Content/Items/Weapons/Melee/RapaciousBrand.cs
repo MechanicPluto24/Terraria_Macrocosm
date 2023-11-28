@@ -19,8 +19,8 @@ namespace Macrocosm.Content.Items.Weapons.Melee
         {
             Item.damage = 225;
             Item.DamageType = DamageClass.Melee;
-            Item.width = 40;
-            Item.height = 40;
+            Item.width = 70;
+            Item.height = 70;
             Item.useTime = 15;
             Item.useAnimation = 15;
             Item.useStyle = ItemUseStyleID.Swing;
@@ -36,8 +36,13 @@ namespace Macrocosm.Content.Items.Weapons.Melee
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.MountedCenter, new Vector2(player.direction, 0f), ModContent.ProjectileType<RapaciousBrandSwing>(), damage, knockback, player.whoAmI, (float)player.direction * player.gravDir, 24); //, player.GetAdjustedItemScale(Item));
-            Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.MountedCenter, velocity, ModContent.ProjectileType<RapaciousBrandProjectile>(), (int)(damage * 0.75f), knockback, player.whoAmI); //, player.GetAdjustedItemScale(Item));
+            Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.MountedCenter, velocity, ModContent.ProjectileType<RapaciousBrandProjectile>(), (int)(damage * 0.75f), knockback, player.whoAmI);  
             return false;
+        }
+
+        public override void HoldStyle(Player player, Rectangle heldItemFrame)
+        {
+            base.HoldStyle(player, heldItemFrame);
         }
 
         public override void AddRecipes()
