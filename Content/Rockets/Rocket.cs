@@ -431,7 +431,10 @@ namespace Macrocosm.Content.Rockets
             return false;
         }
 
-        /// <summary> Launches the rocket, with syncing </summary>
+        /// <summary> 
+        /// Launches the rocket, with syncing. 
+        /// For <paramref name="targetWorld"/>, use the ID format respective to <see cref="MacrocosmSubworld.CurrentID"/> (mod name prepended) 
+        /// </summary>
         public void Launch(string targetWorld, LaunchPad targetLaunchPad = null)
         {
             Launched = true;
@@ -444,7 +447,7 @@ namespace Macrocosm.Content.Rockets
             NetSync();
         }
 
-        public float GetFuelCost(string targetWorld) => RocketFuelLookup.GetFuelCost(MacrocosmSubworld.CurrentMacrocosmID, targetWorld);
+        public float GetFuelCost(string targetWorld) => RocketFuelLookup.GetFuelCost(MacrocosmSubworld.CurrentID, targetWorld);
 
         /// <summary> Checks whether the flight path is obstructed by solid blocks </summary>
         public bool CheckFlightPathObstruction()
@@ -460,6 +463,18 @@ namespace Macrocosm.Content.Rockets
             return true;
         }
 
+        public bool AtPosition(Vector2 position) => Vector2.Distance(Center, position) < Height * 2f;
+
+        public bool AtCurrentLaunchpad(LaunchPad launchPad)
+        {
+            if (launchPad == null)
+                 return AtPosition(Utility.SpawnWorldPosition);
+
+            if (!LaunchPadManager.InCurrentWorld(launchPad))
+                return false;
+
+            return launchPad.RocketID == WhoAmI;
+        }
 
         public bool CheckTileCollision()
         {
@@ -752,15 +767,6 @@ namespace Macrocosm.Content.Rockets
 
             RocketPlayer commander = GetCommander();
 
-            // This failsafe logic could be extended to hiding the rocket for an amount of time, while remotely launching satellites
-            // (no commander inside but wire triggered). Would mean also keeping the launchpad as occupied to avoid collisions on return
-            if (!MacrocosmSubworld.IsValidMacrocosmID(TargetWorld) || commander is null || commander.Player.dead || !commander.Player.active)
-            {
-                TargetLandingPosition = new(Center.X, StartPositionY + Height);
-                CurrentWorld = MacrocosmSubworld.CurrentID;
-                return;
-            }
-
             // Determine the landing location.
             // Set as default if no launchpad has been selected (i.e. the World Spawn option) 
             // For different world travel, the correct value is assigned when spawning in that world
@@ -771,12 +777,23 @@ namespace Macrocosm.Content.Rockets
 
             if (samePlanet)
             {
+                // This failsafe logic could be extended to hiding the rocket for an amount of time, while remotely launching satellites
+                // (no commander inside but wire triggered). Would mean also keeping the launchpad as occupied to avoid collisions on return
+                if (!MacrocosmSubworld.IsValidID(TargetWorld) || commander is null || commander.Player.dead || !commander.Player.active)
+                {
+                    TargetLandingPosition = new(Center.X, StartPositionY + Height);
+                    CurrentWorld = MacrocosmSubworld.CurrentID;
+                }
+
                 // For same world travel assign the correct position here
                 if (TargetLandingPosition == default)
                     TargetLandingPosition = Utility.SpawnWorldPosition;
 
                 Center = new(TargetLandingPosition.X, Center.Y);
-                FadeEffect.StartFadeIn(0.02f, selfDraw: true);
+
+                FadeEffect.ResetFade();
+                if(!FadeEffect.IsFading)
+                    FadeEffect.StartFadeIn(0.02f, selfDraw: true);
             }
             else
             {

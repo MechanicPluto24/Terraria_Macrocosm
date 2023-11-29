@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 namespace Macrocosm.Common.Bases
 {
     // TODO: Extend from HeldProjectile
-    public abstract class ChargedGunHeldProjectile : ModProjectile
+    public abstract class ChargedHeldProjectile : ModProjectile
     {
         public virtual void SetProjectileStaticDefaults() { }
 
@@ -28,7 +28,7 @@ namespace Macrocosm.Common.Bases
         }
 
         protected Player OwnerPlayer => Main.player[Projectile.owner];
-        protected bool StillInUse => OwnerPlayer.channel && !OwnerPlayer.noItems && !OwnerPlayer.CCed;
+        protected virtual bool StillInUse => OwnerPlayer.channel && !OwnerPlayer.noItems && !OwnerPlayer.CCed;
 
         public virtual float CircularHoldoutOffset { get; set; } = 1f;
         public virtual void ProjectileAI() { }

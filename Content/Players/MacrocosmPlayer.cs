@@ -104,8 +104,7 @@ namespace Macrocosm.Content.Players
             ChanceToNotConsumeAmmo = 0f;
             Player.buffImmune[BuffType<Depressurized>()] = false;
 
-            if (Main.ingameOptionsWindow)
-                TriggeredSubworldTravel = false;
+            TriggeredSubworldTravel = false;
         }
 
         public override bool CanConsumeAmmo(Item weapon, Item ammo)
@@ -211,8 +210,8 @@ namespace Macrocosm.Content.Players
             {
                 if (SubworldSystem.AnyActive<Macrocosm>())
                 {
-                    LoadingTitleSequence.Start(noTitle: HasVisitedSubworld(MacrocosmSubworld.CurrentMacrocosmID) && !MacrocosmConfig.Instance.AlwaysDisplayTitleScreens);
-                    visitedSubworlds.Add(MacrocosmSubworld.CurrentMacrocosmID);
+                    LoadingTitleSequence.Start(noTitle: HasVisitedSubworld(MacrocosmSubworld.CurrentID) && !MacrocosmConfig.Instance.AlwaysDisplayTitleScreens);
+                    visitedSubworlds.Add(MacrocosmSubworld.CurrentID);
                 }
                 else
                 {
@@ -231,7 +230,7 @@ namespace Macrocosm.Content.Players
         {
             if (!SubworldSystem.AnyActive<Macrocosm>() && !TriggeredSubworldTravel && lastSubworldIdByWorldUniqueId.TryGetValue(mainWorldUniqueId, out string lastSubworldId))
             {
-                if (lastSubworldId is not "Earth")
+                if (lastSubworldId is not "Macrocosm/Earth")
                     MacrocosmSubworld.Travel(lastSubworldId, trigger: false);
             }
         }

@@ -21,6 +21,6 @@ technique Technique1
 {
     pass Pixelate
     {
-        PixelShader = compile ps_2_0 Pixelate();
+        PixelShader = compile ps_3_0 Pixelate();
     }
 }

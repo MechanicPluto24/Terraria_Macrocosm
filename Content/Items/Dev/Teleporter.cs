@@ -31,9 +31,9 @@ namespace Macrocosm.Content.Items.Dev
             if (player.whoAmI == Main.myPlayer)
             {
                 if (!SubworldSystem.AnyActive<Macrocosm>())
-                    MacrocosmSubworld.Travel("Moon");
+                    MacrocosmSubworld.Travel("Macrocosm/Moon");
                 else
-                    MacrocosmSubworld.Travel("Earth");
+                    MacrocosmSubworld.Travel("Macrocosm/Earth");
             }
 
             return true;
