@@ -203,15 +203,12 @@ namespace Macrocosm.Content.Rockets.UI
         {
             Pattern currentDummyPattern = CustomizationDummy.Modules[currentModule.Name].Pattern;
 
+            var list = patternSelector.OfType<UIPatternIcon>();
             if (patternSelector.OfType<UIPatternIcon>().Any())
             {
                 currentPatternIcon = patternSelector.OfType<UIPatternIcon>().FirstOrDefault(icon => icon.Pattern.Name == currentDummyPattern.Name);
-
-                if(currentPatternIcon is not null)
-                {
-                    currentPatternIcon.Pattern = currentDummyPattern;
-                    currentPatternIcon.HasFocus = true;
-                }
+                currentPatternIcon.Pattern = currentDummyPattern;
+                currentPatternIcon.HasFocus = true;
 
                 if (patternColorPickers is null)
                     CreatePatternColorPickers();

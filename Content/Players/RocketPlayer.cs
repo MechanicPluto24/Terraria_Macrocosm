@@ -99,6 +99,7 @@ namespace Macrocosm.Content.Players
 
                 Player.direction = 1;
                 Player.Center = new Vector2(rocket.Center.X + Player.direction * 5, rocket.Position.Y + 110) - (IsCommander ? new Vector2(0, 50) : Vector2.Zero);
+                Player.noFallDmg = true;
 
                 if (Player.whoAmI == Main.myPlayer)
                 {
