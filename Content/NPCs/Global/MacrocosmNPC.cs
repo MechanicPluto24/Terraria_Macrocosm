@@ -22,9 +22,6 @@ namespace Macrocosm.Content.NPCs.Global
             if (npc.ModNPC is null)
                 return;
 
-            //if (!npc.ModNPC.NetWriteFields(binaryWriter, bitWriter))
-            //	binaryWriter.Dispose();
-
             npc.ModNPC.NetWriteFields(binaryWriter, bitWriter);
         }
 

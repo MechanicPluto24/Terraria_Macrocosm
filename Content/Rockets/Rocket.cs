@@ -297,48 +297,10 @@ namespace Macrocosm.Content.Rockets
                 Inventory = null;
             }
 
-            Active = false;
             CurrentWorld = "";
+            Active = false;
+            ResetRenderTarget();
             NetSync();
-        }
-
-        public void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
-        {
-            foreach (RocketModule module in Modules.Values.OrderBy(module => module.DrawPriority))
-            {
-                module.PreDrawBeforeTiles(spriteBatch, screenPos, drawColor);
-            }
-        }
-
-        /// <summary> Draw the rocket in the configured draw layer </summary>
-        public void Draw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
-        {
-            // Positions (also) set here, in the update method only they lag behind 
-            SetModuleRelativePositions();
-
-            foreach (RocketModule module in Modules.Values.OrderBy(module => module.DrawPriority))
-            {
-                module.Draw(spriteBatch, screenPos, drawColor);
-            }
-        }
-
-        /// <summary> Draw the rocket as a dummy </summary>
-        public void DrawDummy(SpriteBatch spriteBatch, Vector2 offset, Color drawColor)
-        {
-            SetModuleRelativePositions();
-
-            // Passing Rocket world position as "screenPosition" cancels it out  
-            PreDrawBeforeTiles(spriteBatch, Position - offset, drawColor);
-            Draw(spriteBatch, Position - offset, drawColor);
-            DrawOverlay(spriteBatch, Position - offset);
-        }
-
-        public void DrawOverlay(SpriteBatch spriteBatch, Vector2 screenPos)
-        {
-            foreach (RocketModule module in Modules.Values.OrderBy(module => module.DrawPriority))
-            {
-                module.DrawOverlay(spriteBatch, screenPos);
-            }
         }
 
         // Set the rocket's modules positions in the world
@@ -667,9 +629,18 @@ namespace Macrocosm.Content.Rockets
 
         private void UpdateModuleAnimation()
         {
+            bool animationActive = false;
             foreach (RocketModule module in Modules.Values)
+            {
                 if (module is AnimatedRocketModule animatedModule)
+                {
                     animatedModule.UpdateAnimation();
+                    animationActive |= animatedModule.IsAnimationActive;
+                }
+            }
+
+            if (animationActive)
+                ResetRenderTarget();
         }
 
         private void SetModuleAnimation(bool landing = false)

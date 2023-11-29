@@ -10,7 +10,6 @@ namespace Macrocosm.Content.Rockets
 {
     public partial class Rocket
     {
-
         public Rocket VisualClone()
         {
             Rocket visualClone = new();
@@ -32,6 +31,7 @@ namespace Macrocosm.Content.Rockets
             }
 
             SendCustomizationData();
+            ResetRenderTarget();
         }
 
         public void ResetCustomizationToDefault()
