@@ -56,7 +56,7 @@ Rocket: {
 	LaunchButton: {
 		NoTarget: NO TARGET
 		CantReach: INACCESSIBLE
-		AlreadyHere: CURRENT LOCATION
+		DifferentTarget: CURRENT LOCATION
 		ZoomIn: ZOOM IN
 		Launch: LAUNCH
 		LaunchInactive: LAUNCH

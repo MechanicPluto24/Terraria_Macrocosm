@@ -84,6 +84,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             int runFrameInitial = 17;
             int runFrameCount = 7;
 
+            if(!NPC.IsABestiaryIconDummy) 
             if (NPC.velocity.Y < -0.1f ||
                      !Main.tile[(int)(NPC.Center.X / 16), (int)((NPC.Center.Y + NPC.height / 2) / 16)].HasTile &&
                      !Main.tile[(int)(NPC.Center.X / 16), (int)((NPC.Center.Y + NPC.height / 2) / 16) + 1].HasTile &&

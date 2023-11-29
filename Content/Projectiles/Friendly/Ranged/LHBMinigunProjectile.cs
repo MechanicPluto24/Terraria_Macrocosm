@@ -12,7 +12,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-    public class LHBMinigunProjectile : ChargedGunHeldProjectile
+    public class LHBMinigunProjectile : ChargedHeldProjectile
     {
         private const int windupFrames = 4; // number of windup animaton frames
         private const int shootFrames = 6;  // number of shooting animaton frames
@@ -89,9 +89,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 int projToShoot = ProjectileID.Bullet;
                 float knockback = OwnerPlayer.inventory[OwnerPlayer.selectedItem].knockBack;
 
-                if (StillInUse)
+                if (StillInUse && Main.myPlayer == Projectile.owner)
                 {
-                    if (!OwnerPlayer.PickAmmo(OwnerPlayer.inventory[OwnerPlayer.selectedItem], out projToShoot, out float speed, out damage, out knockback, out var usedAmmoItemId)) //uses ammunition from inventory
+                    if (!OwnerPlayer.PickAmmo(OwnerPlayer.inventory[OwnerPlayer.selectedItem], out projToShoot, out float speed, out damage, out knockback, out var usedAmmoItemId))
                         Projectile.Kill();
                 }
 

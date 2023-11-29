@@ -55,7 +55,7 @@ namespace Macrocosm.Content.Rockets.UI
 
             CurrentMap = GetInitialNavigationMap();
 
-            var initialTarget = CurrentMap.Targets.FirstOrDefault(target => target.Name == MacrocosmSubworld.CurrentMacrocosmID);
+            var initialTarget = CurrentMap.Targets.FirstOrDefault(target => target.WorldID == MacrocosmSubworld.CurrentID);
             if (initialTarget is not null)
                 initialTarget.Selected = true;
 

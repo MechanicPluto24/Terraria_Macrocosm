@@ -24,6 +24,6 @@ technique Technique1
 {
     pass RadialSaturation
     {
-        PixelShader = compile ps_2_0 RadialSaturation();
+        PixelShader = compile ps_3_0 RadialSaturation();
     }
 }
