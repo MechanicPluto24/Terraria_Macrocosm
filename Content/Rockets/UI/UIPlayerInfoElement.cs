@@ -58,6 +58,9 @@ namespace Macrocosm.Content.Rockets.UI
         {
             base.Draw(spriteBatch);
 
+            if (!player.active)
+                return;
+
             Recalculate();
             CalculatedStyle dimensions = GetDimensions();
 
@@ -78,10 +81,6 @@ namespace Macrocosm.Content.Rockets.UI
                 }
             }
 
-            // TODO: move above 
-            if (!player.active)
-                return;
-
             state.SaveState(spriteBatch, true);
 
             Vector2 worldIconPosition = dimensions.Position() + new Vector2(dimensions.Width * 0.85f, dimensions.Height * 0.5f);
@@ -92,7 +91,7 @@ namespace Macrocosm.Content.Rockets.UI
 
 
             spriteBatch.End();
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, state);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, state);
 
             player.DrawPetDummy(playerPosition, true);
             var clonePlayer = player.PrepareDummy(playerPosition);

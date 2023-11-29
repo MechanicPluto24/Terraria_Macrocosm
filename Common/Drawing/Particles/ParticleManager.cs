@@ -84,6 +84,7 @@ namespace Macrocosm.Common.Drawing.Particles
             {
                 foreach (var particle in Particles)
                 {
+                    // TODO: add a NetImportant field?
                     particle.NetSync(toClient: remoteClient);
                 }
             }

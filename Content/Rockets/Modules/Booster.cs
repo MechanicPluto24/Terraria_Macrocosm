@@ -45,7 +45,7 @@ namespace Macrocosm.Content.Rockets.Modules
             if (rocket.StaticFire || rocket.InFlight || rocket.ForcedFlightAppearance)
             {
                 spriteBatch.End();
-                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, state2);
+                spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, state2);
 
                 if (rocket.StaticFire)
                     DrawTrail(spriteBatch, 0.5f + 0.3f * Utility.QuadraticEaseIn(rocket.StaticFireProgress));
