@@ -16,7 +16,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
 
         public override void SetStaticDefaults()
         {
-            ProjectileID.Sets.TrailCacheLength[Type] = 12;
+            ProjectileID.Sets.TrailCacheLength[Type] = 6;
             ProjectileID.Sets.TrailingMode[Type] = 0;
         }
 
@@ -72,7 +72,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
             float baseShootSpeed = 12f;
             float shootDeviation = 0.5f;
 
-            if (Main.netMode != NetmodeID.MultiplayerClient && TargetPlayer > 0 && TargetPlayer < 255)
+            if (Main.netMode != NetmodeID.MultiplayerClient && TargetPlayer >= 0 && TargetPlayer < 255)
             {
                 AI_Timer++;
 

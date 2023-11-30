@@ -4868,7 +4868,10 @@ namespace Macrocosm.Common.Utils
                     npc.velocity.X = 0f; 
 
                 if (getNewTarget) 
-                    ai[0] += 1f; 
+                {
+                    ai[0] += 1f;
+                    npc.TargetClosest();
+                }
 
                 ai[0] += 1f;
 

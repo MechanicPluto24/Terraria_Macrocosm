@@ -65,15 +65,15 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         public override bool PreAI()
         {
             Utility.AISlime(NPC, ref NPC.ai, false, false, 175, 3, -8, 4, -10);
+
+            if (NPC.velocity.Y < 0f)
+                NPC.velocity.Y += 0.2f;
+
             return true;
         }
 
         public override void AI()
         {
-
-            if (NPC.velocity.Y < 0f)
-                NPC.velocity.Y += 0.1f;
-
             if (Main.rand.NextBool(25))
                 SpawnDusts();
 
