@@ -87,7 +87,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         {
             Texture2D texture = TextureAssets.Projectile[Type].Value;
             //Texture2D star = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Star1").Value;
-            Texture2D star = TextureAssets.Extra[ExtrasID.ThePerfectGlow].Value;
             Player player = Main.player[Projectile.owner];
 
             Rectangle frame = texture.Frame(1, 4, frameY: 3);
@@ -109,17 +108,18 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), (color * progressScale).WithOpacity(0.2f - 0.2f * progressScale), Projectile.rotation, origin, Projectile.scale * 0.75f, effects, 0f);
             Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), (color * progressScale).WithOpacity(0.1f - 0.05f * progressScale), Projectile.rotation, origin, Projectile.scale * 0.55f, effects, 0f);
 
-
+            /*
             state.SaveState(Main.spriteBatch);
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
             float rotation = Projectile.rotation + (MathHelper.PiOver4 / 2f * player.direction);
-            Main.EntitySpriteDraw(star, player.Center + Utility.PolarVector(100, rotation) - Main.screenPosition, null, new Color(168, 215, 215) * Projectile.scale * (0.4f + 0.6f * progress) * 0.6f, Projectile.rotation + MathHelper.PiOver4, star.Size() / 2f, 1.2f, SpriteEffects.None);
-            Main.EntitySpriteDraw(star, player.Center + Utility.PolarVector(100, rotation) - Main.screenPosition, null, new Color(168, 215, 215) * Projectile.scale * (0.4f + 0.6f * progress) * 0.6f, Projectile.rotation - MathHelper.PiOver4, star.Size() / 2f, 1.2f, SpriteEffects.None);
+
+            Main.spriteBatch.DrawStar(player.Center + Utility.PolarVector(100, rotation) - Main.screenPosition, 2, new Color(168, 215, 215) * Projectile.scale * (0.4f + 0.6f * progress) * 0.6f, 1.2f, Projectile.rotation - MathHelper.PiOver4, entity: true);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);
+            */
             return false;
         }
     }
