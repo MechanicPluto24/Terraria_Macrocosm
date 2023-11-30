@@ -23,6 +23,7 @@ namespace Macrocosm.Common.Bases
             Projectile.friendly = true;
             Projectile.width = 1;
             Projectile.height = 1;
+            Projectile.tileCollide = false;
 
             SetProjectileDefaults();
         }
