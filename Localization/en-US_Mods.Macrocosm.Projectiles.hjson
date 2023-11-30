@@ -33,6 +33,7 @@ DianiteDrillProjectile.DisplayName: Dianite Drill
 SeleniteDrillProjectile.DisplayName: Selenite Drill
 FlamingMeteor.DisplayName: Flaming Meteor
 LuminiteSlimeProjectile.DisplayName: Luminite Slime
+LuminiteSlimeVolatileProjectile.DisplayName: Volatile Luminite Slime
 MeteorPortal.DisplayName: Meteor Portal
 ImbriumJewelProjectile.DisplayName: Imbrium Jewel
 ImbriumJewelMeteor.DisplayName: Imbrium Jewel
@@ -58,6 +59,8 @@ InvarArrow.DisplayName: Invar Arrow
 InvarBullet.DisplayName: Invar Bullet
 RapaciousBrandProjectile.DisplayName: Rapacious Brand
 RapaciousBrandSwing.DisplayName: Rapacious Brand
-SeleniteBowProjectile.DisplayName: Selenite Bow Projectile
 SeleniteBeam.DisplayName: Selenite Beam
-SeleniteBowHeld.DisplayName: Selenite Bow Held
+SeleniteBowHeld.DisplayName: Selenite Bow
+LuminiteExplosion.DisplayName: Luminite Explosion
+LuminiteShard.DisplayName: Luminite Shard
+LuminiteStar.DisplayName: Luminite Star
