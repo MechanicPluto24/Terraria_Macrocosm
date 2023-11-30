@@ -4812,7 +4812,7 @@ namespace Macrocosm.Common.Utils
          * ai : A float array that stores AI data. (Note projectile array should be synced!)
          * jumpTime : the amount of cooldown after the slime has jumped.
          */
-        public static void AISlime(NPC npc, ref float[] ai, bool fleeWhenDay = false, int jumpTime = 200, float jumpVelX = 2f, float jumpVelY = -6f, float jumpVelHighX = 3f, float jumpVelHighY = -8f)
+        public static void AISlime(NPC npc, ref float[] ai, bool passive = true, bool fleeWhenDay = false, int jumpTime = 200, float jumpVelX = 2f, float jumpVelY = -6f, float jumpVelHighX = 3f, float jumpVelHighY = -8f)
         {
             //ai[0] is a timer that iterates after the npc has jumped. If it is >= 0, the npc will attempt to jump again.
             //ai[1] is used to determine what jump type to do. (if 2, large jump, else smaller jump.)
@@ -4820,15 +4820,19 @@ namespace Macrocosm.Common.Utils
             //ai[3] is used to house the landing position of the npc for bigger jumps. This is used to make it turn around when it hits
             //      an impassible wall.
 
-            //if (jumpTime < 100) { jumpTime = 100; }
-            bool getNewTarget = false; //getNewTarget is used to iterate the 'boredom' scale. If it's night, the npc is hurt, or it's
+            //getNewTarget is used to iterate the 'boredom' scale. If it's night, the npc is hurt, or it's
             //below a certain depth, it will attempt to find the nearest target to it.
-            if (fleeWhenDay && !Main.dayTime || npc.life != npc.lifeMax || npc.position.Y > Main.worldSurface * 16.0)
+            bool getNewTarget = false;         
+            if (fleeWhenDay && !Main.dayTime || npc.life != npc.lifeMax || npc.position.Y > Main.worldSurface * 16.0 || !passive)
             {
                 getNewTarget = true;
             }
-            if (ai[2] > 1f) { ai[2] -= 1f; }
-            if (npc.wet)//if the npc is wet...
+
+            if (ai[2] > 1f)  
+                ai[2] -= 1f; 
+
+            //if the npc is wet...
+            if (npc.wet)
             {
                 //handles the npc's 'bobbing' in water.
                 if (npc.collideY) { npc.velocity.Y = -2f; }
@@ -4840,7 +4844,9 @@ namespace Macrocosm.Common.Utils
                 //if ai[2] is 1f, and we should get a target, target nearby players.
                 if (ai[2] == 1f && getNewTarget) { npc.TargetClosest(); }
             }
+
             npc.aiAction = 0;
+
             //if ai[2] is 0f (just spawned)
             if (ai[2] == 0f)
             {
@@ -4848,19 +4854,30 @@ namespace Macrocosm.Common.Utils
                 ai[2] = 1f;
                 npc.TargetClosest();
             }
+
             //if npc is not jumping or falling
             if (npc.velocity.Y == 0f)
             {
-                if (ai[3] == npc.position.X) { npc.direction *= -1; ai[2] = 200f; }
+                if (ai[3] == npc.position.X) 
+                    npc.direction *= -1; ai[2] = 200f; 
+
                 ai[3] = 0f;
                 npc.velocity.X *= 0.8f;
-                if (npc.velocity.X is > -0.1f and < 0.1f) { npc.velocity.X = 0f; }
-                if (getNewTarget) { ai[0] += 1f; }
+
+                if (npc.velocity.X is > -0.1f and < 0.1f) 
+                    npc.velocity.X = 0f; 
+
+                if (getNewTarget) 
+                    ai[0] += 1f; 
+
                 ai[0] += 1f;
+
                 if (ai[0] >= 0f)
                 {
                     npc.netUpdate = true;
-                    if (ai[2] == 1f && getNewTarget) { npc.TargetClosest(); }
+                    if (ai[2] == 1f && getNewTarget)
+                        npc.TargetClosest();
+
                     if (ai[1] == 2f) //larger jump
                     {
                         npc.velocity.Y = jumpVelHighY;
@@ -4877,14 +4894,13 @@ namespace Macrocosm.Common.Utils
                         ai[1] += 1f;
                     }
                 }
-                else
-                if (ai[0] >= -30f)
+                else if (ai[0] >= -30f)
                 {
                     npc.aiAction = 1;
                 }
             }
-            else //handle moving the npc while in air.
-            if (npc.target < 255 && (npc.direction == 1 && npc.velocity.X < 3f || npc.direction == -1 && npc.velocity.X > -3f))
+            //handle moving the npc while in air.
+            else if (npc.target < 255 && (npc.direction == 1 && npc.velocity.X < 3f || npc.direction == -1 && npc.velocity.X > -3f))
             {
                 if (npc.direction == -1 && npc.velocity.X < 0.1 || npc.direction == 1 && npc.velocity.X > -0.1)
                 {
