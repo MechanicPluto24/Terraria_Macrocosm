@@ -288,8 +288,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             // Shine whip tip
             if (Main.player[Projectile.owner].HasBuff(ModContent.BuffType<ChandriumWhipBuff>()))
             {
-                Main.EntitySpriteDraw(TextureAssets.Extra[89].Value, Vector2.Lerp(list[^1], list[^2], 0.5f) - Main.screenPosition, null, new Color(177, 107, 219, 80), 0f + tipRotation, TextureAssets.Extra[89].Size() / 2f, tipScale, flip, 0);
-                Main.EntitySpriteDraw(TextureAssets.Extra[89].Value, Vector2.Lerp(list[^1], list[^2], 0.5f) - Main.screenPosition, null, new Color(177, 107, 219, 80), MathHelper.PiOver2 + tipRotation, TextureAssets.Extra[89].Size() / 2f, tipScale, flip, 0);
+                Main.spriteBatch.DrawStar(Vector2.Lerp(list[^1], list[^2], 0.5f) - Main.screenPosition, 2, new Color(177, 107, 219, 80), tipScale, tipRotation, flip, entity: true);
                 Lighting.AddLight(pos, new Vector3(0.607f, 0.258f, 0.847f));
             }
 
