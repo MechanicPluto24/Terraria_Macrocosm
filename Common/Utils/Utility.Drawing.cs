@@ -70,7 +70,7 @@ namespace Macrocosm.Common.Utils
             }
         }
 
-		public static void DrawStar(this SpriteBatch spriteBatch, Vector2 position, int points, Color color, float scale, float rotation = 0f, SpriteEffects spriteEffects = SpriteEffects.None, bool entity = false)
+		public static void DrawStar(this SpriteBatch spriteBatch, Vector2 position, int points, Color color, float scale = 1f, float rotation = 0f, SpriteEffects spriteEffects = SpriteEffects.None, bool entity = false)
 		{
 			Texture2D tex = TextureAssets.Extra[89].Value;
 			float rotationStep = MathHelper.Pi / points;
@@ -86,7 +86,7 @@ namespace Macrocosm.Common.Utils
 			}
 		}
 
-		public static void DrawStar(this SpriteBatch spriteBatch, Vector2 position, List<float> rotations, Color color, float scale, SpriteEffects spriteEffects = SpriteEffects.None, bool entity = false)
+		public static void DrawStar(this SpriteBatch spriteBatch, Vector2 position, List<float> rotations, Color color, float scale = 1f, SpriteEffects spriteEffects = SpriteEffects.None, bool entity = false)
 		{
 			Texture2D tex = TextureAssets.Extra[89].Value;
 

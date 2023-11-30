@@ -59,3 +59,5 @@ InvarBullet.DisplayName: Invar Bullet
 RapaciousBrandProjectile.DisplayName: Rapacious Brand
 RapaciousBrandSwing.DisplayName: Rapacious Brand
 SeleniteBowProjectile.DisplayName: Selenite Bow Projectile
+SeleniteBeam.DisplayName: Selenite Beam
+SeleniteBowHeld.DisplayName: Selenite Bow Held

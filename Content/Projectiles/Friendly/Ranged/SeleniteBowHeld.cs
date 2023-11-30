@@ -8,13 +8,14 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-    public class SeleniteBowProjectile : ChargedHeldProjectile
+    public class SeleniteBowHeld : ChargedHeldProjectile
     {
         public override string Texture => "Macrocosm/Content/Items/Weapons/Ranged/SeleniteBow";
 
@@ -41,6 +42,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             {
                 int damage = OwnerPlayer.GetWeaponDamage(OwnerPlayer.inventory[OwnerPlayer.selectedItem]);
                 float knockback = OwnerPlayer.inventory[OwnerPlayer.selectedItem].knockBack;
+                float speed;
+                int usedAmmoItemId;
 
                 Item usedItem = Main.mouseItem.type == ItemID.None ? OwnerPlayer.inventory[OwnerPlayer.selectedItem] : Main.mouseItem;
                 if (usedItem.type != ModContent.ItemType<SeleniteBow>())
@@ -60,17 +63,20 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 }            
                 else
                 {
-                    if (AI_Charge >= MinCharge && OwnerPlayer.PickAmmo(usedItem, out _, out float speed, out damage, out knockback, out var usedAmmoItemId))
+                    if (AI_Charge >= MinCharge)
                     {
-                        Projectile.NewProjectile(Terraria.Entity.InheritSource(Projectile), Projectile.Center, Vector2.Normalize(Projectile.velocity) * speed, ProjectileID.LaserMachinegunLaser, damage, knockback, Projectile.owner, default, Projectile.GetByUUID(Projectile.owner, Projectile.whoAmI));
-                        AI_Charge = 0;
+                        if(OwnerPlayer.PickAmmo(usedItem, out _, out speed, out damage, out knockback, out usedAmmoItemId))
+                        {
+                            Projectile.NewProjectile(new EntitySource_ItemUse_WithAmmo(OwnerPlayer, usedItem, usedAmmoItemId), Projectile.Center, Vector2.Normalize(Projectile.velocity) * speed * 0.466f, ModContent.ProjectileType<SeleniteBeam>(), damage, knockback, Projectile.owner, default, Projectile.GetByUUID(Projectile.owner, Projectile.whoAmI));
+                            AI_Charge = 0;
+                        }
                     } 
                     else if (AI_Timer % usedItem.useTime == 0)
                     {
                         if (OwnerPlayer.PickAmmo(usedItem, out int projToShoot, out speed, out damage, out knockback, out usedAmmoItemId))
                         {
                             SoundEngine.PlaySound(SoundID.Item5, Projectile.position);
-                            Projectile.NewProjectile(Terraria.Entity.InheritSource(Projectile), Projectile.Center, Vector2.Normalize(Projectile.velocity) * speed, projToShoot, damage, knockback, Projectile.owner, default, Projectile.GetByUUID(Projectile.owner, Projectile.whoAmI));
+                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Normalize(Projectile.velocity) * speed, projToShoot, damage, knockback, Projectile.owner, default, Projectile.GetByUUID(Projectile.owner, Projectile.whoAmI));
                             AI_Timer = 0;
                         }
                         else
@@ -98,42 +104,40 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         public override void PostDraw(Color lightColor)
         {
             var spriteBatch = Main.spriteBatch;
-            Texture2D star = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Star4").Value;
 
             if(AI_Charge > 0)
             {
                 state.SaveState(spriteBatch);
                 spriteBatch.End();
-                spriteBatch.Begin(BlendState.Additive, state);
+                spriteBatch.Begin(BlendState.AlphaBlend, state);
 
                 float rotation = Projectile.rotation + Projectile.localAI[0];
-                float progress = AI_Charge / MinCharge;
-                float scale = 0.04f * Projectile.scale * progress;
-                byte alpha = (byte)(MathHelper.Clamp(64 + Projectile.localAI[1], 0, 255));
+                float progress = MathHelper.Clamp(AI_Charge / MinCharge, 0f, 1f);
+                float scale = 0.5f * Projectile.scale * progress;
+                byte alpha = (byte)(255 - MathHelper.Clamp(64 + Projectile.localAI[1], 0, 255));
                 Vector2 offset = default;
 
                 if (AI_Charge < MinCharge)
                 {
-                    scale += 0.06f * Utility.QuadraticEaseOut(progress);
+                    scale += 0.3f * Utility.QuadraticEaseOut(progress);
                     rotation += 0.5f * Utility.CubicEaseInOut(progress);
-                    Projectile.localAI[1] += 0.2f;
+                    Projectile.localAI[1] += 1f;
                 }
 
                 if (AI_Charge >= MinCharge)
                 {
-                    scale += 0.06f;
+                    scale += 0.3f;
                     rotation += 0.5f;
                     offset = Main.rand.NextVector2Circular(1, 1);
                     Projectile.localAI[0] += 0.001f;
-                    Projectile.localAI[1] += 2.5f;
+                    Projectile.localAI[1] += 3f;
                 }
 
                 Vector2 rotPoint = Utility.RotatingPoint(Projectile.Center, new Vector2(23, 0), Projectile.rotation) + offset;
-                spriteBatch.Draw(star, rotPoint - Main.screenPosition, null, new Color(131, 168, 171, alpha), rotation, star.Size() / 2f, scale, SpriteEffects.None, 0f);
-                spriteBatch.Draw(star, rotPoint - Main.screenPosition, null, new Color(47, 73, 120, alpha), rotation + MathHelper.PiOver4, star.Size() / 2f, scale * 0.96f, SpriteEffects.None, 0f); 
+                spriteBatch.DrawStar(rotPoint - Main.screenPosition, 2, new Color(131, 168, 171, alpha), scale, rotation);
 
                 spriteBatch.End();
-                spriteBatch.Begin(state);
+                spriteBatch.Begin(BlendState.AlphaBlend, state);
             }
         }
     }

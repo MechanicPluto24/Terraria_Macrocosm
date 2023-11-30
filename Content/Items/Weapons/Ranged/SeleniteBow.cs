@@ -35,15 +35,20 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             Item.UseSound = null;
 
             Item.noUseGraphic = true;
+            Item.ammo = AmmoID.Arrow;
+            Item.shoot = ModContent.ProjectileType<SeleniteBowHeld>();
         }
 
+        public override bool CanUseItem(Player player) => player.ownedProjectileCounts[Item.shoot] < 1;
+
+        public override bool CanConsumeAmmo(Item ammo, Player player) => player.ownedProjectileCounts[Item.shoot] == 1 || (player.itemTime == 0 && !player.AltFunction());
         public override bool AltFunctionUse(Player player) => true;
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             float minCharge = 90f * player.GetAttackSpeed(DamageClass.Ranged);
             Vector2 aim = velocity;
-            Projectile.NewProjectileDirect(source, position, aim, ModContent.ProjectileType<SeleniteBowProjectile>(), damage, knockback, player.whoAmI, minCharge);
+            Projectile.NewProjectileDirect(source, position, aim, ModContent.ProjectileType<SeleniteBowHeld>(), damage, knockback, player.whoAmI, minCharge);
             return false;
         }
 
