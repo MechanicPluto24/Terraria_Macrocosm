@@ -36,7 +36,11 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override bool PreAI()
         {
-            Utility.AISlime(NPC, ref NPC.ai, false, false, 140, 5, -12, 6, -16);
+            Utility.AISlime(NPC, ref NPC.ai, false, false, 140, 5, -8, 6, -12);
+
+            if (NPC.velocity.Y < 0f)
+                NPC.velocity.Y += 0.35f;
+
             return true;
         }
 
