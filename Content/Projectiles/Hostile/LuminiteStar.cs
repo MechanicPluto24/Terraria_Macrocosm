@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
+using Macrocosm.Content.NPCs.Enemies.Moon;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -51,13 +52,13 @@ namespace Macrocosm.Content.Projectiles.Hostile
         private SpriteBatchState state;
         public override bool PreDraw(ref Color lightColor)
         {
-            Projectile.DrawMagicPixelTrail(Vector2.Zero, 5f, 1f, new Color(98, 211, 168, 255), new Color(98, 211, 168, 0));
+            Projectile.DrawMagicPixelTrail(Vector2.Zero, 5f, 1f, LuminiteSlime.EffectColor, LuminiteSlime.EffectColor.WithOpacity(0f));
 
             state.SaveState(Main.spriteBatch);
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
-            Main.spriteBatch.DrawStar(Projectile.Center - Main.screenPosition, 2, new Color(89, 151, 193), 0.4f, Projectile.rotation, entity: true);
+            Main.spriteBatch.DrawStar(Projectile.Center - Main.screenPosition, 2, LuminiteSlime.EffectColor, 0.4f, Projectile.rotation, entity: true);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);

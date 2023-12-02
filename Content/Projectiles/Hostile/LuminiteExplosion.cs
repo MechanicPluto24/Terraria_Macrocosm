@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
+using Macrocosm.Content.NPCs.Enemies.Moon;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -49,7 +50,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
-            Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, new Color(89, 151, 193).WithOpacity(1f), 0f, texture.Size() / 2f, progress, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, LuminiteSlime.EffectColor, 0f, texture.Size() / 2f, progress, SpriteEffects.None, 0f);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);

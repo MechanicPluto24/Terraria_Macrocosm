@@ -6,6 +6,7 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Weapons.Ranged;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Utilities;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
@@ -19,7 +20,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
     {
         public override string Texture => "Macrocosm/Content/Items/Weapons/Ranged/SeleniteBow";
 
-        public ref float MinCharge => ref Projectile.ai[0];
+        public float MinCharge => MaxCharge * 0.2f; 
+        public ref float MaxCharge => ref Projectile.ai[0]; 
         public ref float AI_Timer => ref Projectile.ai[1];
         public ref float AI_Charge => ref Projectile.ai[2];
 
@@ -36,16 +38,17 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
         }
 
+        SlotId playingSound = SlotId.Invalid;
         public override void ProjectileAI()
         {
-            if(OwnerPlayer.whoAmI == Main.myPlayer)
+            if(Player.whoAmI == Main.myPlayer)
             {
-                int damage = OwnerPlayer.GetWeaponDamage(OwnerPlayer.inventory[OwnerPlayer.selectedItem]);
-                float knockback = OwnerPlayer.inventory[OwnerPlayer.selectedItem].knockBack;
+                int damage = Player.GetWeaponDamage(Player.inventory[Player.selectedItem]);
+                float knockback = Player.inventory[Player.selectedItem].knockBack;
                 float speed;
                 int usedAmmoItemId;
 
-                Item usedItem = Main.mouseItem.type == ItemID.None ? OwnerPlayer.inventory[OwnerPlayer.selectedItem] : Main.mouseItem;
+                Item usedItem = Player.UsedItem();
                 if (usedItem.type != ModContent.ItemType<SeleniteBow>())
                     Projectile.Kill();
 
@@ -53,30 +56,43 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 {
                     AI_Charge++;
 
-                    if (AI_Charge == MinCharge)
-                        SoundEngine.PlaySound(SoundID.Item29 with { Pitch = -0.5f});
-
-                    if(AI_Charge > MinCharge)
+                    if (AI_Charge == MaxCharge)
                     {
-                        Projectile.Center += Main.rand.NextVector2Circular(0.35f, 0.35f);
+                        SoundEngine.PlaySound(SoundID.Item29 with { Pitch = 0.2f, Volume = 0.35f }, Projectile.position);
                     }
+
+                    if (AI_Charge > MinCharge && AI_Charge < MaxCharge && AI_Charge % 5 == 0)
+                    {
+                        SoundEngine.PlaySound(SoundID.Item29 with 
+                        { 
+                            Pitch = 0.2f + 0.5f * (AI_Charge/MaxCharge), 
+                            Volume = 0.15f * (AI_Charge / MaxCharge),
+                            SoundLimitBehavior = SoundLimitBehavior.ReplaceOldest
+                        }, Projectile.position);
+                    }
+
+                    //if(AI_Charge > MaxCharge)
+                    //Projectile.Center += Main.rand.NextVector2Circular(0.35f, 0.35f);
                 }            
                 else
                 {
                     if (AI_Charge >= MinCharge)
                     {
-                        if(OwnerPlayer.PickAmmo(usedItem, out _, out speed, out damage, out knockback, out usedAmmoItemId))
+                        if(Player.PickAmmo(usedItem, out _, out speed, out damage, out knockback, out usedAmmoItemId))
                         {
-                            Projectile.NewProjectile(new EntitySource_ItemUse_WithAmmo(OwnerPlayer, usedItem, usedAmmoItemId), Projectile.Center, Vector2.Normalize(Projectile.velocity) * speed * 0.466f, ModContent.ProjectileType<SeleniteBeam>(), damage, knockback, Projectile.owner, default, Projectile.GetByUUID(Projectile.owner, Projectile.whoAmI));
+                            float strenght = MathHelper.Clamp(AI_Charge / MaxCharge, 0f, 1f);
+                            damage = (int)(damage * 2 * strenght);
+                            Projectile.NewProjectile(new EntitySource_ItemUse_WithAmmo(Player, usedItem, usedAmmoItemId), Projectile.Center, Vector2.Normalize(Projectile.velocity) * speed * 0.466f, ModContent.ProjectileType<SeleniteBeam>(), damage, knockback, Projectile.owner, ai0: strenght);
+                            SoundEngine.PlaySound(SoundID.Item72 with { Pitch = -0.5f, Volume = 0.4f });
                             AI_Charge = 0;
                         }
                     } 
                     else if (AI_Timer % usedItem.useTime == 0)
                     {
-                        if (OwnerPlayer.PickAmmo(usedItem, out int projToShoot, out speed, out damage, out knockback, out usedAmmoItemId))
+                        if (Player.PickAmmo(usedItem, out int projToShoot, out speed, out damage, out knockback, out usedAmmoItemId))
                         {
                             SoundEngine.PlaySound(SoundID.Item5, Projectile.position);
-                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Normalize(Projectile.velocity) * speed, projToShoot, damage, knockback, Projectile.owner, default, Projectile.GetByUUID(Projectile.owner, Projectile.whoAmI));
+                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Normalize(Projectile.velocity) * speed, projToShoot, damage, knockback, Projectile.owner);
                             AI_Timer = 0;
                         }
                         else
@@ -100,6 +116,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             return false;
         }
 
+        private ref float EffectTimer => ref Projectile.localAI[0];
+        private ref float Opacity => ref Projectile.localAI[1];
+
         SpriteBatchState state;
         public override void PostDraw(Color lightColor)
         {
@@ -111,29 +130,30 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 spriteBatch.End();
                 spriteBatch.Begin(BlendState.AlphaBlend, state);
 
-                float rotation = Projectile.rotation + Projectile.localAI[0];
-                float progress = MathHelper.Clamp(AI_Charge / MinCharge, 0f, 1f);
+                float rotation = Projectile.rotation + EffectTimer;
+                float progress = MathHelper.Clamp(AI_Charge / MaxCharge, 0f, 1f);
                 float scale = 0.5f * Projectile.scale * progress;
-                byte alpha = (byte)(255 - MathHelper.Clamp(64 + Projectile.localAI[1], 0, 255));
+                byte alpha = (byte)(255 - MathHelper.Clamp(64 + Opacity, 0, 255));
                 Vector2 offset = default;
 
-                if (AI_Charge < MinCharge)
+                if (AI_Charge < MaxCharge)
                 {
                     scale += 0.3f * Utility.QuadraticEaseOut(progress);
                     rotation += 0.5f * Utility.CubicEaseInOut(progress);
-                    Projectile.localAI[1] += 1f;
+                    Opacity += 1f;
+                    offset = Main.rand.NextVector2Circular(1, 1) * progress;
                 }
 
-                if (AI_Charge >= MinCharge)
+                if (AI_Charge >= MaxCharge)
                 {
                     scale += 0.3f;
                     rotation += 0.5f;
                     offset = Main.rand.NextVector2Circular(1, 1);
-                    Projectile.localAI[0] += 0.001f;
-                    Projectile.localAI[1] += 3f;
+                    EffectTimer += 0.001f;
+                    Opacity += 3f;
                 }
 
-                Vector2 rotPoint = Utility.RotatingPoint(Projectile.Center, new Vector2(23, 0), Projectile.rotation) + offset;
+                Vector2 rotPoint = Utility.RotatingPoint(Projectile.Center, new Vector2(20, 0), Projectile.rotation) + offset;
                 spriteBatch.DrawStar(rotPoint - Main.screenPosition, 2, new Color(131, 168, 171, alpha), scale, rotation);
 
                 spriteBatch.End();

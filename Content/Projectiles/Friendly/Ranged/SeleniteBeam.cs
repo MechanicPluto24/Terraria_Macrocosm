@@ -17,6 +17,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
     {
         public override string Texture => Macrocosm.EmptyTexPath;
 
+        public float Strenght
+        {
+            get => MathHelper.Clamp(Projectile.ai[0], 0f, 1f);
+            set => Projectile.ai[0] = MathHelper.Clamp(value, 0f, 1f);
+        }
+
         float trailMultiplier = 0f;
 
         public override void SetDefaults()
@@ -38,7 +44,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
 
             if (trailMultiplier < 1f)
-                trailMultiplier += 0.01f;
+                trailMultiplier += 0.015f * (0.1f + Strenght * 0.9f);
 
             Lighting.AddLight(Projectile.Center, new Color(177, 230, 204).ToVector3() * 0.6f);
         }
@@ -51,6 +57,17 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             {
                 Dust dust = Dust.NewDustPerfect(Projectile.Center + Projectile.oldVelocity, ModContent.DustType<SeleniteBrightDust>(), Main.rand.NextVector2CircularEdge(10, 10) * Main.rand.NextFloat(1f), Scale: Main.rand.NextFloat(1f, 2f));
                 dust.noGravity = true;
+            }
+
+            float count = Projectile.oldVelocity.LengthSquared() * trailMultiplier;
+            for (int i = 1; i < count; i++)
+            {
+                Vector2 trailPosition = Projectile.Center - Projectile.oldVelocity * i * 0.4f;
+                for (int j = 0; j < 2; j++)
+                {
+                    Dust dust = Dust.NewDustDirect(trailPosition, 1, 1, ModContent.DustType<SeleniteBrightDust>(), 0, 0, Scale: Main.rand.NextFloat(1f, 2f) * (1f - i/count));
+                    dust.noGravity = true;
+                }
             }
         }
 

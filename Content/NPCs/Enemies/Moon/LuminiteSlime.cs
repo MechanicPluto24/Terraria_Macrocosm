@@ -16,6 +16,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
     public class LuminiteSlime : ModNPC, IMoonEnemy
     {
+        public static Color EffectColor => new Color(92, 228, 162);
         public override void SetStaticDefaults()
         {
             Main.npcFrameCount[NPC.type] = Main.npcFrameCount[NPCID.BlueSlime];
@@ -67,7 +68,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             Utility.AISlime(NPC, ref NPC.ai, false, false, 175, 3, -8, 4, -10);
 
             if (NPC.velocity.Y < 0f)
-                NPC.velocity.Y += 0.2f;
+                NPC.velocity.Y += 0.15f;
 
             return true;
         }
