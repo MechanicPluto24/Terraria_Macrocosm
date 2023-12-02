@@ -3,10 +3,10 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Armor.Aluminum
+namespace Macrocosm.Content.Items.Armor.Steel
 {
     [AutoloadEquip(EquipType.Head)]
-    public class AluminumHelmet : ModItem
+    public class SteelHelmet : ModItem
     {
         public override void SetStaticDefaults()
         {
@@ -14,28 +14,28 @@ namespace Macrocosm.Content.Items.Armor.Aluminum
 
         public override void SetDefaults()
         {
-            Item.width = 26;
+            Item.width = 22;
             Item.height = 20;
-            Item.value = Item.sellPrice(silver: 5);
-            Item.rare = ItemRarityID.White;
-            Item.defense = 2;
+            Item.value = Item.sellPrice(silver: 80);
+            Item.rare = ItemRarityID.Orange;
+            Item.defense = 8;
         }
 
         public override bool IsArmorSet(Item head, Item body, Item legs)
         {
-            return head.type == ModContent.ItemType<AluminumHelmet>() && body.type == ModContent.ItemType<AluminumBreastplate>() && legs.type == ModContent.ItemType<AluminumBoots>();
+            return head.type == ModContent.ItemType<SteelHelmet>() && body.type == ModContent.ItemType<SteelChestplate>() && legs.type == ModContent.ItemType<SteelLeggings>();
         }
 
         public override void UpdateArmorSet(Player player)
         {
-            player.statDefense += 2;
-            player.setBonus = "2 defense"; // TODO: localize
+            player.endurance += 0.1f;
+            player.setBonus = "10% damage reduction"; // TODO: localize
         }
 
         public override void AddRecipes()
         {
             Recipe recipe = Recipe.Create(Type);
-            recipe.AddIngredient(ModContent.ItemType<AluminumBar>(), 16);
+            recipe.AddIngredient(ModContent.ItemType<SteelBar>(), 10);
             recipe.AddTile(TileID.Anvils);
             recipe.Register();
         }

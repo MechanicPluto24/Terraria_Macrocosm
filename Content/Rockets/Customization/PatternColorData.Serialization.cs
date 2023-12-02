@@ -18,8 +18,8 @@ namespace Macrocosm.Content.Rockets.Customization
 				tag[nameof(ColorFunction)] = ColorFunction.Name;
 
 				if(ColorFunction.HasParameters)
-					tag["parameters"] = ColorFunction.Parameters.ToList();
-			}
+					tag["parameters"] = string.Join(", ", ColorFunction.Parameters.Select(p => p.ToString()));
+            }
 			else if(IsUserModifiable)
 			{
 				tag[nameof(Color)] = Color;
@@ -36,11 +36,11 @@ namespace Macrocosm.Content.Rockets.Customization
 			{
 				string functionName = tag.GetString(nameof(ColorFunction));
 
-				object[] parameters = Array.Empty<object>();
+				string[] parameters = Array.Empty<string>();
 				if (tag.ContainsKey("parameters"))
-					parameters = tag.GetList<object>("parameters").ToArray();
+					parameters = tag.GetString("parameters").Split(new[] { ", " }, StringSplitOptions.None);
 
-				return new(ColorFunction.CreateByName(functionName, parameters));
+                return new(ColorFunction.CreateByName(functionName, parameters));
  			}
 
 			if (tag.ContainsKey(nameof(Color)))

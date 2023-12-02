@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Drawing.Sky;
+using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -75,6 +76,14 @@ namespace Macrocosm.Content.Backgrounds.Moon
                 {
                     offsetRadius = MathHelper.Lerp(0.56f, 0.01f, 1 - distance);
                     rotation += MathHelper.Pi;
+                }
+                else
+                {
+                    if (distance < 0.1f)
+                    {
+                        float proximityFactor = 1 - (distance / 0.1f);
+                        offsetRadius += 0.8f * proximityFactor;
+                    }
                 }
 
                 offset = Utility.PolarVector(offsetRadius, rotation) * 0.65f;
@@ -212,7 +221,16 @@ namespace Macrocosm.Content.Backgrounds.Moon
         public override Color OnTileColor(Color inColor)
         {
             Color color = inColor.ToGrayscale();
-            return Color.Lerp(color, Color.Black, 0.2f + Intensity * 0.1f);
+
+            Color darkColor = Color.Black;
+            if (!Main.dayTime)
+            {
+                float timeFactor = (float)(Math.Abs(MacrocosmSubworld.CurrentNightLength - Main.time * 2) / MacrocosmSubworld.CurrentNightLength);
+                float lerpFactor = 1f - timeFactor; 
+                darkColor = Color.Lerp(Color.Black, new Color(39, 87, 155), lerpFactor);
+            }
+
+            return Color.Lerp(color, darkColor, 0.2f + Intensity * 0.1f);
         }
 
         public override float GetCloudAlpha() => 0f;

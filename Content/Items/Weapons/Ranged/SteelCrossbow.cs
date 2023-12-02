@@ -26,10 +26,11 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             Item.knockBack = 4.5f;
             Item.value = Item.sellPrice(silver: 50);
             Item.rare = ItemRarityID.Orange;
-            Item.shoot = ProjectileID.PurificationPowder; // For some reason, all the guns in the vanilla source have this.
+            Item.shoot = ProjectileID.PurificationPowder; 
             Item.autoReuse = true;
             Item.shootSpeed = 20f;
             Item.useAmmo = AmmoID.Arrow;
+            Item.UseSound = SoundID.Item5;
         }
 
         public override GunHeldProjectileData GunHeldProjectileData => new()

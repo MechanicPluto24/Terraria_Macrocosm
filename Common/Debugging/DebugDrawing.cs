@@ -16,6 +16,7 @@ namespace Macrocosm.Common.Debugging
             public DebugDrawData(Vector2 position, int drawTime)
             {
                 this.position = position;
+                this.positionFunction = null;
                 DrawTime = drawTime;
                 InitialDrawTime = drawTime;
             }
