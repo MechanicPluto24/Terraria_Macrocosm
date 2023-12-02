@@ -17,9 +17,9 @@ namespace Macrocosm.Content.Rockets.Customization
 				// TODO: TagSerializable for ColorFunction (?)
 				tag[nameof(ColorFunction)] = ColorFunction.Name;
 
-				//if(ColorFunction.HasParameters)
-				//	tag["parameters"] = ColorFunction.Parameters.ToList().ToString();
-			}
+				if(ColorFunction.HasParameters)
+					tag["parameters"] = string.Join(", ", ColorFunction.Parameters.Select(p => p.ToString()));
+            }
 			else if(IsUserModifiable)
 			{
 				tag[nameof(Color)] = Color;
@@ -36,11 +36,11 @@ namespace Macrocosm.Content.Rockets.Customization
 			{
 				string functionName = tag.GetString(nameof(ColorFunction));
 
-				object[] parameters = Array.Empty<object>();
-				//if (tag.ContainsKey("parameters"))
-				//	parameters = tag.GetList<object>("parameters").ToList();
+				string[] parameters = Array.Empty<string>();
+				if (tag.ContainsKey("parameters"))
+					parameters = tag.GetString("parameters").Split(new[] { ", " }, StringSplitOptions.None);
 
-				return new(ColorFunction.CreateByName(functionName, parameters));
+                return new(ColorFunction.CreateByName(functionName, parameters));
  			}
 
 			if (tag.ContainsKey(nameof(Color)))

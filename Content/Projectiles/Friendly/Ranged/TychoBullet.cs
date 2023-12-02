@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-    public class TychoBullet : ModProjectile, IBullet
+    public class TychoBullet : ModProjectile, IRangedProjectile
     {
         public override void SetStaticDefaults()
         {

@@ -10,7 +10,7 @@ namespace Macrocosm.Common.Bases
     /// <summary>
     /// Base class for a bullet projectile that bounces from enemy to enemy. 
     /// </summary>
-    public abstract class RicochetBullet : ModProjectile, IBullet
+    public abstract class RicochetBullet : ModProjectile, IRangedProjectile
     {
         /// <summary> The number of ricochets </summary>
         public virtual int RicochetCount { get; set; } = 2;
