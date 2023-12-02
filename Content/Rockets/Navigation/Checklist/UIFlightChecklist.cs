@@ -28,7 +28,7 @@ namespace Macrocosm.Content.Rockets.Navigation.Checklist
         {
             SelectedLaunchCondition = new ChecklistCondition("Selected", () => MapTarget is not null);
 
-            DifferentTargetLaunchCondition = new ChecklistCondition("DifferentTarget", () => !Rocket.AtCurrentLaunchpad(TargetLaunchpad));
+            DifferentTargetLaunchCondition = new ChecklistCondition("DifferentTarget", () => !Rocket.AtCurrentLaunchpad(TargetLaunchpad, MapTarget.WorldID));
 
             CommonLaunchConditions.Add(new ChecklistCondition("Fuel", () => Rocket.Fuel >= Rocket.GetFuelCost(MapTarget.WorldID)));
 

@@ -427,12 +427,12 @@ namespace Macrocosm.Content.Rockets
 
         public bool AtPosition(Vector2 position) => Vector2.Distance(Center, position) < Height * 2f;
 
-        public bool AtCurrentLaunchpad(LaunchPad launchPad)
+        public bool AtCurrentLaunchpad(LaunchPad launchPad, string worldId)
         {
-            if (launchPad == null)
+            if (launchPad == null && worldId == MacrocosmSubworld.CurrentID)
                  return AtPosition(Utility.SpawnWorldPosition);
 
-            if (!LaunchPadManager.InCurrentWorld(launchPad))
+            if (LaunchPadManager.InCurrentWorld(launchPad))
                 return false;
 
             return launchPad.RocketID == WhoAmI;

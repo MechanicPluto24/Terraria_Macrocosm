@@ -26,10 +26,11 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             Item.knockBack = 4.5f;
             Item.value = Item.sellPrice(silver: 50);
             Item.rare = ItemRarityID.Orange;
-            Item.shoot = ProjectileID.PurificationPowder; // For some reason, all the guns in the vanilla source have this.
+            Item.shoot = ProjectileID.PurificationPowder; 
             Item.autoReuse = true;
             Item.shootSpeed = 20f;
             Item.useAmmo = AmmoID.Bullet;
+            Item.UseSound = SoundID.Item11;
         }
 
         public override GunHeldProjectileData GunHeldProjectileData => new()
@@ -51,7 +52,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
-            position -= new Vector2(4 * player.direction, 2); // so bullets line up with the muzzle
+            position -= new Vector2(4 * player.direction, 2);  
         }
     }
 }
