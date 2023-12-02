@@ -19,7 +19,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
-    public class HandheldEngineProjectile : ChargedGunHeldProjectile
+    public class HandheldEngineProjectile : ChargedHeldProjectile
     {
         public ref float AI_Overheat => ref Projectile.ai[0];
         public ref float AI_UseCounter => ref Projectile.ai[1];
@@ -73,7 +73,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             }
         }
 
-        private bool OwnerHasMana => OwnerPlayer.CheckMana(ManaUseAmount);
+        private bool OwnerHasMana => Player.CheckMana(ManaUseAmount);
 
 
         private Rectangle[] hitboxes = new Rectangle[3];
@@ -81,12 +81,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         {
             if (CanShoot)
             {
-                Item item = OwnerPlayer.inventory[OwnerPlayer.selectedItem];
-                int damage = OwnerPlayer.GetWeaponDamage(item);
+                Item item = Player.inventory[Player.selectedItem];
+                int damage = Player.GetWeaponDamage(item);
                 float knockback = item.knockBack;
 
                 if (StillInUse && AI_UseCounter % ManaUseRate == 0)
-                    OwnerPlayer.CheckMana(item, ManaUseAmount, true);
+                    Player.CheckMana(item, ManaUseAmount, true);
 
                 Vector2 rotPoint1 = Utility.RotatingPoint(Projectile.Center, new Vector2(62, 12 * Projectile.spriteDirection), Projectile.rotation);
                 Vector2 rotPoint2 = Utility.RotatingPoint(Projectile.Center, new Vector2(92, 12 * Projectile.spriteDirection), Projectile.rotation);
@@ -104,7 +104,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                     Projectile.Kill();
                     SoundEngine.PlaySound(SoundID.LiquidsWaterLava, Projectile.position);
 
-                    OwnerPlayer.AddBuff(ModContent.BuffType<HandheldEngineOverheat>(), 60 * 3);
+                    Player.AddBuff(ModContent.BuffType<HandheldEngineOverheat>(), 60 * 3);
 
                     for (int i = 0; i < 25; i++)
                     {
@@ -141,7 +141,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 {
                     float amp = Main.rand.NextFloat(0, 1f);
                     Vector2 position = rotPoint1 + Main.rand.NextVector2Circular(12, 20);
-                    Vector2 velocity = (Utility.PolarVector(36 * (1 - amp), MathHelper.WrapAngle(Projectile.rotation)) - Projectile.velocity.SafeNormalize(Vector2.UnitX)).RotatedByRandom(MathHelper.PiOver4 * 0.15f) + OwnerPlayer.velocity;
+                    Vector2 velocity = (Utility.PolarVector(36 * (1 - amp), MathHelper.WrapAngle(Projectile.rotation)) - Projectile.velocity.SafeNormalize(Vector2.UnitX)).RotatedByRandom(MathHelper.PiOver4 * 0.15f) + Player.velocity;
 
                     Particle.CreateParticle<EngineSpark>(p =>
                     {
@@ -276,14 +276,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Main.spriteBatch.Begin(state2);
         }
 
-        private SlotId playingSoundId_1 = default;
-        private SlotId playingSoundId_2 = default;
+        private SlotId playingSoundId_1 = SlotId.Invalid;
+        private SlotId playingSoundId_2 = SlotId.Invalid;
         private void PlaySounds()
         {
             if (!StillInUse)
                 return;
 
-            if (!playingSoundId_1.IsValid || playingSoundId_1 == default)
+            if (!playingSoundId_1.IsValid)
             {
                 playingSoundId_1 = SoundEngine.PlaySound(SFX.HandheldThrusterFlame with
                 {
@@ -294,7 +294,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 Projectile.position);
             }
 
-            if (!OwnerHasMana && (!playingSoundId_2.IsValid || playingSoundId_2 == default))
+            if (!OwnerHasMana && !playingSoundId_2.IsValid)
             {
                 playingSoundId_2 = SoundEngine.PlaySound(SFX.HandheldThrusterOverheat with
                 {

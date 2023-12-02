@@ -29,11 +29,9 @@ namespace Macrocosm.Content.Particles
         }
 
         public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
-        {
-            //spriteBatch.Draw(Texture, Position - screenPosition, null, color.WithOpacity(Alpha), Rotation, Texture.Size() / 2f, ScaleV, SpriteEffects.None, 0f);
-            spriteBatch.Draw(TextureAssets.Extra[89].Value, Position - screenPosition, null, color.WithOpacity(Alpha), Rotation, TextureAssets.Extra[89].Size() / 2f, ScaleV, SpriteEffects.None, 0f);
-            spriteBatch.Draw(TextureAssets.Extra[89].Value, Position - screenPosition, null, color.WithOpacity(Alpha), Rotation + MathHelper.PiOver2, TextureAssets.Extra[89].Size() / 2f, ScaleV, SpriteEffects.None, 0f);
-            return false;
+        {  
+            spriteBatch.DrawStar(Position - screenPosition, 2, color.WithOpacity(Alpha), ScaleV);
+			return false;
         }
     }
 }

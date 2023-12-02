@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 namespace Macrocosm.Common.Bases
 {
     // TODO: Extend from HeldProjectile
-    public abstract class ChargedGunHeldProjectile : ModProjectile
+    public abstract class ChargedHeldProjectile : ModProjectile
     {
         public virtual void SetProjectileStaticDefaults() { }
 
@@ -23,12 +23,13 @@ namespace Macrocosm.Common.Bases
             Projectile.friendly = true;
             Projectile.width = 1;
             Projectile.height = 1;
+            Projectile.tileCollide = false;
 
             SetProjectileDefaults();
         }
 
-        protected Player OwnerPlayer => Main.player[Projectile.owner];
-        protected bool StillInUse => OwnerPlayer.channel && !OwnerPlayer.noItems && !OwnerPlayer.CCed;
+        protected Player Player => Main.player[Projectile.owner];
+        protected virtual bool StillInUse => Player.channel && !Player.noItems && !Player.CCed;
 
         public virtual float CircularHoldoutOffset { get; set; } = 1f;
         public virtual void ProjectileAI() { }
@@ -48,26 +49,26 @@ namespace Macrocosm.Common.Bases
         {
             Projectile.rotation = Projectile.velocity.ToRotation();
 
-            if (OwnerPlayer.whoAmI != Main.myPlayer)
+            if (Player.whoAmI != Main.myPlayer)
                 return;
 
-            Projectile.Center = OwnerPlayer.MountedCenter + new Vector2(0, OwnerPlayer.gfxOffY);
+            Projectile.Center = Player.MountedCenter + new Vector2(0, Player.gfxOffY);
 
             Projectile.spriteDirection = Projectile.direction;
 
-            OwnerPlayer.ChangeDir(Projectile.direction);
-            OwnerPlayer.heldProj = Projectile.whoAmI;
+            Player.ChangeDir(Projectile.direction);
+            Player.heldProj = Projectile.whoAmI;
             //OwnerPlayer.itemTime = 2;
             //OwnerPlayer.itemAnimation = 3;
 
-            OwnerPlayer.itemRotation = (Projectile.velocity * Projectile.direction).ToRotation();
+            Player.itemRotation = (Projectile.velocity * Projectile.direction).ToRotation();
 
             Projectile.netUpdate = true;
         }
 
         protected virtual void Aim()
         {
-            if (!StillInUse || OwnerPlayer.whoAmI != Main.myPlayer)
+            if (!StillInUse || Player.whoAmI != Main.myPlayer)
                 return;
 
             // Get the player's current aiming direction as a normalized vector.

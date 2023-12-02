@@ -32,7 +32,6 @@ ChandriumDrillProjectile.DisplayName: Chandrium Drill
 DianiteDrillProjectile.DisplayName: Dianite Drill
 SeleniteDrillProjectile.DisplayName: Selenite Drill
 FlamingMeteor.DisplayName: Flaming Meteor
-LuminiteSlimeProjectile.DisplayName: Luminite Slime
 MeteorPortal.DisplayName: Meteor Portal
 ImbriumJewelProjectile.DisplayName: Imbrium Jewel
 ImbriumJewelMeteor.DisplayName: Imbrium Jewel
@@ -46,7 +45,6 @@ DianiteMeteorSmall.DisplayName: Dianite Meteor
 PhantasmalImp.DisplayName: Phantasmal Imp
 PhantasmalImpSmall.DisplayName: Phantasmal Imp
 PhantasmalPortal.DisplayName: Phantasmal Portal
-PhantasmalPortalSmall.DisplayName: Phantasmal Portal Small
 MoonPhaseGlobeProjectile.DisplayName: Moon Phase Globe
 DianiteForkCoreProjectile.DisplayName: Dianite Fork
 DianiteForkProjectile.DisplayName: Dianite Fork
@@ -57,3 +55,10 @@ SilicaPearlsandProjectile.DisplayName: Silica Pearlsand
 SilicaSandProjectile.DisplayName: Silica Sand
 InvarArrow.DisplayName: Invar Arrow
 InvarBullet.DisplayName: Invar Bullet
+RapaciousBrandProjectile.DisplayName: Rapacious Brand
+RapaciousBrandSwing.DisplayName: Rapacious Brand
+SeleniteBeam.DisplayName: Selenite Beam
+SeleniteBowHeld.DisplayName: Selenite Bow
+LuminiteExplosion.DisplayName: Luminite Explosion
+LuminiteShard.DisplayName: Luminite Shard
+LuminiteStar.DisplayName: Luminite Star

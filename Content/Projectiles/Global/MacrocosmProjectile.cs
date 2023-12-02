@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Projectiles.Global
 
         public override bool OnTileCollide(Projectile projectile, Vector2 oldVelocity)
         {
-            if (projectile.ModProjectile is IBullet)
+            if (projectile.ModProjectile is IRangedProjectile)
                 Collision.HitTiles(projectile.position, oldVelocity, projectile.width, projectile.height);
 
             if (projectile.ModProjectile is IExplosive explosive)
