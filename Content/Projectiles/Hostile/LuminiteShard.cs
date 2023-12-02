@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
+using Macrocosm.Content.NPCs.Enemies.Moon;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -16,7 +17,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
 
         public override void SetStaticDefaults()
         {
-            ProjectileID.Sets.TrailCacheLength[Type] = 6;
+            ProjectileID.Sets.TrailCacheLength[Type] = 10;
             ProjectileID.Sets.TrailingMode[Type] = 0;
         }
 
@@ -50,13 +51,13 @@ namespace Macrocosm.Content.Projectiles.Hostile
         private SpriteBatchState state;
         public override bool PreDraw(ref Color lightColor)
         {
-            Projectile.DrawMagicPixelTrail(Vector2.Zero, 5f, 1f, new Color(98, 211, 168, 255), new Color(98, 211, 168, 0));
+            Projectile.DrawMagicPixelTrail(Vector2.Zero, 5f, 1f, LuminiteSlime.EffectColor, LuminiteSlime.EffectColor.WithOpacity(0f));
 
             state.SaveState(Main.spriteBatch);
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
-            Main.spriteBatch.DrawStar(Projectile.Center - Main.screenPosition, 1, new Color(89, 151, 193), 0.6f, Projectile.rotation + MathHelper.PiOver2, entity: true);
+            Main.spriteBatch.DrawStar(Projectile.Center - Main.screenPosition, 1, LuminiteSlime.EffectColor, 0.6f, Projectile.rotation + MathHelper.PiOver2, entity: true);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);
@@ -68,11 +69,12 @@ namespace Macrocosm.Content.Projectiles.Hostile
         {
             Projectile.rotation = Projectile.velocity.ToRotation();
 
+            bool hasTarget = TargetPlayer >= 0 && TargetPlayer < 255;
             float timeToShoot = 40;
             float baseShootSpeed = 12f;
             float shootDeviation = 0.5f;
 
-            if (Main.netMode != NetmodeID.MultiplayerClient && TargetPlayer >= 0 && TargetPlayer < 255)
+            if (Main.netMode != NetmodeID.MultiplayerClient && hasTarget)
             {
                 AI_Timer++;
 
@@ -94,7 +96,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
             if (Fall)
             {
                 Projectile.tileCollide = !WorldGen.SolidTile(Projectile.Center.ToTileCoordinates());
-                Projectile.velocity.Y += 0.1f;
+                Projectile.velocity.Y += hasTarget ? 0.1f : 0.3f;
             }
         }
 

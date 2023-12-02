@@ -4,6 +4,7 @@ using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -36,7 +37,15 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             Item.UseSound = SoundID.Item38;
         }
 
-        public override bool AltFunctionUse(Player player) => true;
+        private int altUseCooldown;
+
+        public override void UpdateInventory(Player player)
+        {
+            if (altUseCooldown > 0)
+                altUseCooldown--;
+        }
+
+        public override bool AltFunctionUse(Player player) => altUseCooldown <= 0;
 
         public override bool CanUseItemHeldProjectile(Player player)
         {
@@ -44,13 +53,12 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             {
                 Item.useTime = 6;
                 Item.useAnimation = 36;
-                Item.reuseDelay = 30;
+                altUseCooldown = 55;
             }
             else
             {
                 Item.useTime = 20;
                 Item.useAnimation = 20;
-                Item.reuseDelay = 0;
             }
 
             return true;
@@ -68,6 +76,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             {
                 float radians = MathHelper.ToRadians(5);
                 velocity = velocity.RotatedBy(Main.rand.NextFloat(-radians, radians));
+                SoundEngine.PlaySound(SoundID.Item38 with { PitchRange = (0f, 0.5f)}, position);
             }
 
             position += Vector2.Normalize(velocity) * 30;

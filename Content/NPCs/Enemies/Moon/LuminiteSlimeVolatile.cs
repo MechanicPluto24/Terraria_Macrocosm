@@ -39,7 +39,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             Utility.AISlime(NPC, ref NPC.ai, false, false, 140, 5, -8, 6, -12);
 
             if (NPC.velocity.Y < 0f)
-                NPC.velocity.Y += 0.35f;
+                NPC.velocity.Y += 0.25f;
 
             return true;
         }
