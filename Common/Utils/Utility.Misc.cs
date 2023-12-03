@@ -17,7 +17,7 @@ namespace Macrocosm.Common.Utils
 {
     public static partial class Utility
     {
-        public static string GetNamespacePath(object obj) => (obj.GetType().Namespace + "." + obj.GetType().Name).Replace('.', '/');
+        public static string GetNamespacePath(this object obj) => (obj.GetType().Namespace + "." + obj.GetType().Name).Replace('.', '/');
 
         public static bool IsAprilFools()
             => DateTime.Now.Month == 4 && DateTime.Now.Day == 1;

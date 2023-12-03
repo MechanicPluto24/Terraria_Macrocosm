@@ -50,7 +50,7 @@ namespace Macrocosm.Content.Rockets
                 spriteBatch.GraphicsDevice.Clear(Color.Transparent);
                 spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, state.Effect, Matrix.CreateScale(1f));
 
-                foreach (RocketModule module in Modules.Values.OrderBy(module => module.DrawPriority))
+                foreach (RocketModule module in ModulesByDrawPriority)
                 {
                     // Cancel out world position
                     module.Draw(spriteBatch, screenPos: Position, drawColor);
@@ -77,7 +77,7 @@ namespace Macrocosm.Content.Rockets
             // Module relative positions (also) set here, in the update method only they lag behind 
             SetModuleRelativePositions();
 
-            foreach (RocketModule module in Modules.Values.OrderBy(module => module.DrawPriority))
+            foreach (RocketModule module in ModulesByDrawPriority)
             {
                 module.Draw(spriteBatch, screenPos, drawColor);
             }
@@ -97,7 +97,7 @@ namespace Macrocosm.Content.Rockets
 
         public void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            foreach (RocketModule module in Modules.Values.OrderBy(module => module.DrawPriority))
+            foreach (RocketModule module in ModulesByDrawPriority)
             {
                 module.PreDrawBeforeTiles(spriteBatch, screenPos, drawColor);
             }
@@ -105,9 +105,25 @@ namespace Macrocosm.Content.Rockets
 
         public void DrawOverlay(SpriteBatch spriteBatch, Vector2 screenPos)
         {
-            foreach (RocketModule module in Modules.Values.OrderBy(module => module.DrawPriority))
+            foreach (RocketModule module in ModulesByDrawPriority)
             {
                 module.DrawOverlay(spriteBatch, screenPos);
+            }
+        }
+
+        public void DrawBlueprint(SpriteBatch spriteBatch, Vector2 offset, Color outlineColor, Color fillColor, Color darkColor, Color lightColor)
+        {
+
+            CommandPod.Position = Position + new Vector2(Width / 2f - CommandPod.Hitbox.Width / 2f, 0);
+            ServiceModule.Position = CommandPod.Position + new Vector2(-6, CommandPod.Hitbox.Height - 2.1f);
+            ReactorModule.Position = ServiceModule.Position + new Vector2(-2, ServiceModule.Hitbox.Height - 2);
+            EngineModule.Position = ReactorModule.Position + new Vector2(-18, ReactorModule.Hitbox.Height - 10);
+            BoosterLeft.Position = new Vector2(EngineModule.Center.X, EngineModule.Position.Y) - new Vector2(BoosterLeft.Hitbox.Width, 0) + new Vector2(-14, 16);
+            BoosterRight.Position = new Vector2(EngineModule.Center.X, EngineModule.Position.Y) + new Vector2(14, 16);
+
+            foreach (RocketModule module in ModulesByDrawPriority)
+            {
+                module.DrawBlueprint(spriteBatch, offset, outlineColor, fillColor, darkColor, lightColor);
             }
         }
     }
