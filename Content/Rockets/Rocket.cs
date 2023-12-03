@@ -119,6 +119,8 @@ namespace Macrocosm.Content.Rockets
         /// <summary> Dictionary of all the rocket's modules by name, in their order found in ModuleNames </summary>
         public Dictionary<string, RocketModule> Modules = new();
 
+        public List<RocketModule> ModulesByDrawPriority = new();
+
         /// <summary> List of the module names, in the customization access order </summary>
         public List<string> ModuleNames => Modules.Keys.ToList();
 
@@ -189,6 +191,8 @@ namespace Macrocosm.Content.Rockets
         {
             foreach (string moduleName in DefaultModuleNames)
                 Modules[moduleName] = CreateModule(moduleName);
+
+            ModulesByDrawPriority = Modules.Values.OrderBy(module => module.DrawPriority).ToList();
         }
 
         private RocketModule CreateModule(string moduleName)
@@ -309,7 +313,7 @@ namespace Macrocosm.Content.Rockets
             CommandPod.Position = Position + new Vector2(Width / 2f - CommandPod.Hitbox.Width / 2f, 0);
             ServiceModule.Position = CommandPod.Position + new Vector2(-6, CommandPod.Hitbox.Height - 2.1f);
             ReactorModule.Position = ServiceModule.Position + new Vector2(-2, ServiceModule.Hitbox.Height - 2);
-            EngineModule.Position = ReactorModule.Position + new Vector2(-18, ReactorModule.Hitbox.Height);
+            EngineModule.Position = ReactorModule.Position + new Vector2(-18, ReactorModule.Hitbox.Height - 10);
             BoosterLeft.Position = new Vector2(EngineModule.Center.X, EngineModule.Position.Y) - new Vector2(BoosterLeft.Hitbox.Width / 2, 0) + new Vector2(2, 16);
             BoosterRight.Position = new Vector2(EngineModule.Center.X, EngineModule.Position.Y) + new Vector2(14, 16);
         }
@@ -462,7 +466,7 @@ namespace Macrocosm.Content.Rockets
                 }
                 else
                 {
-                    if (!RocketUISystem.Active)
+                    if (!RocketUISystem.RocketUIActive)
                     {
                         Main.LocalPlayer.noThrow = 2;
                         Main.LocalPlayer.cursorItemIconEnabled = true;
@@ -593,7 +597,7 @@ namespace Macrocosm.Content.Rockets
                 if (LandingProgress >= 0.99f)
                 {
                     if (GetRocketPlayer(Main.myPlayer).InRocket)
-                        RocketUISystem.Show(this);
+                        RocketUISystem.ShowRocketUI(this);
 
                     Landing = false;
                     ResetAnimation();
