@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Rockets.Storage;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -87,12 +88,16 @@ namespace Macrocosm.Content.Rockets.UI
 
             Rectangle rect = GetDimensions().ToRectangle();
             rect.X += 10;
-            rect.Y += 27;
+            rect.Y += 26;
             rect.Width -= 20;
-            rect.Height -= 34;
+            rect.Height -= 36;
+
+            float aspectRatio = (float)renderTarget.Width / renderTarget.Height;
+            int targetPixelsX = 48;
+            int targetPixelsY = (int)(targetPixelsX / aspectRatio);
 
             Effect effect = ModContent.Request<Effect>(Macrocosm.EffectAssetsPath + "Pixelate", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-            effect.Parameters["uPixelCount"].SetValue(new Vector2(visualClone.Bounds.Width, visualClone.Bounds.Height));
+            effect.Parameters["uPixelCount"].SetValue(new Vector2(targetPixelsX, targetPixelsY));
 
             state.SaveState(spriteBatch);
             spriteBatch.EndIfBeginCalled();
