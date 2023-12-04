@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-    public class InvarArrow : ModProjectile, IBullet
+    public class InvarArrow : ModProjectile, IRangedProjectile
     {
         public override void SetDefaults()
         {

@@ -130,21 +130,16 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         private static void DrawParticles(float opacity, SpriteEffects dir, Vector2 drawpos, Microsoft.Xna.Framework.Color drawColor, Microsoft.Xna.Framework.Color shineColor, float flareCounter, float fadeInStart, float fadeInEnd, float fadeOutStart, float fadeOutEnd, float rotation, Vector2 scale, Vector2 fatness)
         {
-            Texture2D texture = TextureAssets.Extra[89].Value;
-            Vector2 origin = texture.Size() / 2f;
-
             float fade = Utils.GetLerpValue(fadeInStart, fadeInEnd, flareCounter, clamped: true) * Utils.GetLerpValue(fadeOutEnd, fadeOutStart, flareCounter, clamped: true);
 
             Color color = (shineColor * opacity * 0.5f).WithOpacity(0f) * fade;
             Color color2 = drawColor * 0.5f * fade;
 
             Vector2 scaleX = new Vector2(fatness.X * 0.5f, scale.X) * fade;
-            Vector2 scaleY = new Vector2(fatness.Y * 0.5f, scale.Y) * fade;
+            //Vector2 scaleY = new Vector2(fatness.Y * 0.5f, scale.Y) * fade;
 
-            Main.EntitySpriteDraw(texture, drawpos, null, color, (float)Math.PI / 2f + rotation, origin, scaleX, dir, 1);
-            Main.EntitySpriteDraw(texture, drawpos, null, color, 0f + rotation, origin, scaleY, dir, 1);
-            Main.EntitySpriteDraw(texture, drawpos, null, color2, (float)Math.PI / 2f + rotation, origin, scaleX * 0.6f, dir, 1);
-            Main.EntitySpriteDraw(texture, drawpos, null, color2, 0f + rotation, origin, scaleY * 0.6f, dir, 1);
+            Main.spriteBatch.DrawStar(drawpos, 2, color, scaleX, spriteEffects: dir, entity: true);
+            Main.spriteBatch.DrawStar(drawpos, 2, color2, scaleX * 0.6f, spriteEffects: dir, entity: true);
         }
     }
 }
