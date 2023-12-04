@@ -52,7 +52,7 @@ namespace Macrocosm.Content.Rockets.UI
             base.Draw(spriteBatch);
 
             var dims = GetDimensions();
-            Rocket.DrawBlueprint(spriteBatch, dims.Center() - Rocket.Bounds.Size() / 2f, UITheme.Current.PanelStyle.BorderColor, UITheme.Current.PanelStyle.BackgroundColor, UITheme.Current.WindowStyle.BackgroundColor * 1.25f, UITheme.Current.ButtonStyle.BackgroundColor);
+            Rocket.Draw(Rocket.DrawMode.Blueprint, spriteBatch, dims.Center() - Rocket.Bounds.Size() / 2f);
         }
     }
 }
