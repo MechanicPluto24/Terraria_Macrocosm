@@ -1,7 +1,9 @@
 ﻿using Macrocosm.Common.Config;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Items.CursorIcons;
 using Macrocosm.Content.Rockets.Customization;
+using Macrocosm.Content.Rockets.LaunchPads;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
@@ -15,29 +17,33 @@ namespace Macrocosm.Content.Rockets.UI
     public class RocketUISystem : ModSystem
     {
         public static RocketUISystem Instance => ModContent.GetInstance<RocketUISystem>();
-        public UserInterface Interface { get; set; }
+        public UserInterface UserInterface { get; set; }
         public RocketUIState UIRocketState { get; set; }
+        public AssemblyUIState UIAssemblyState { get; set; }
 
         private GameTime lastGameTime;
 
         public static bool DebugModeActive { get; set; } = false;
 
-        public static void Show(Rocket rocket) => Instance.ShowUI(rocket);
+        public static void ShowRocketUI(Rocket rocket) => Instance.ShowRocketUI_Internal(rocket);
+        public static void ShowAssemblyUI(LaunchPad launchPad) => Instance.ShowAssemblyUI_Internal(launchPad);
         public static void Hide() => Instance.HideUI();
-        public static bool Active => Instance.Interface?.CurrentState is not null;
+        public static bool Active => Instance.UserInterface?.CurrentState is not null;
+        public static bool RocketUIActive => Instance.UserInterface?.CurrentState is RocketUIState;
+        public static bool AssemblyUIActive => Instance.UserInterface?.CurrentState is AssemblyUIState;
 
         public override void Load()
         {
             if (Main.dedServ)
                 return;
 
-            Interface = new UserInterface();
+            UserInterface = new UserInterface();
             MacrocosmConfig.Instance.OnConfigChanged += OnConfigChanged;
         }
 
         public override void Unload()
         {
-            Interface = null;
+            UserInterface = null;
         }
 
         public override void OnWorldLoad()
@@ -47,6 +53,9 @@ namespace Macrocosm.Content.Rockets.UI
 
             UIRocketState = new RocketUIState();
             UIRocketState.Activate();
+
+            UIAssemblyState = new AssemblyUIState();
+            UIAssemblyState.Activate();
         }
 
         public override void OnWorldUnload()
@@ -56,23 +65,44 @@ namespace Macrocosm.Content.Rockets.UI
 
             UIRocketState?.Deactivate();
             UIRocketState = null;
+
+            UIAssemblyState?.Deactivate();
+            UIAssemblyState = null;
         }
 
         public void ResetUI()
         {
-            Rocket rocket = new();
-
-            if (UIRocketState is not null && UIRocketState.Rocket is not null)
-                rocket = UIRocketState.Rocket;
-
-            UIRocketState = new RocketUIState();
-            UIRocketState.Activate();
-
-            if(Interface?.CurrentState != null)
+            if (UIRocketState is not null)
             {
-            HideUI();
-            ShowUI(rocket);
-        }
+                Rocket rocket = new();
+                if (UIRocketState.Rocket is not null)
+                    rocket = UIRocketState.Rocket;
+
+                UIRocketState = new RocketUIState();
+                UIRocketState.Activate();
+
+                if (UserInterface?.CurrentState != null)
+                {
+                    HideUI();
+                    ShowRocketUI_Internal(rocket);
+                }
+            }
+
+            if (UIAssemblyState is not null)
+            {
+                LaunchPad launchPad = new();
+                if (UIAssemblyState.LaunchPad is not null)
+                    launchPad = UIAssemblyState.LaunchPad;
+
+                UIAssemblyState = new AssemblyUIState();
+                UIAssemblyState.Activate();
+
+                if (UserInterface?.CurrentState != null)
+                {
+                    HideUI();
+                    ShowAssemblyUI_Internal(launchPad);
+                }
+            }
         }
 
         private void OnConfigChanged(object sender, System.EventArgs e)
@@ -84,9 +114,9 @@ namespace Macrocosm.Content.Rockets.UI
         {
         }
 
-        public void ShowUI(Rocket rocket)
+        private void ShowRocketUI_Internal(Rocket rocket)
         {
-            if (Main.netMode == NetmodeID.Server || Interface.CurrentState is not null)
+            if (Main.netMode == NetmodeID.Server || UserInterface.CurrentState is not null)
                 return;
 
             Main.playerInventory = true;
@@ -94,21 +124,35 @@ namespace Macrocosm.Content.Rockets.UI
             UIRocketState.Rocket = rocket;
             UIRocketState.OnShow();
 
-            Interface.SetState(UIRocketState);
+            UserInterface.SetState(UIRocketState);
+        }
+
+        private void ShowAssemblyUI_Internal(LaunchPad launchPad)
+        {
+            if (Main.netMode == NetmodeID.Server || UserInterface.CurrentState is not null)
+                return;
+
+            Main.playerInventory = true;
+
+            UIAssemblyState.LaunchPad = launchPad;
+            UIAssemblyState.OnShow();
+
+            UserInterface.SetState(UIAssemblyState);
         }
 
         public void HideUI()
         {
             UIRocketState?.OnHide();
+            UIAssemblyState?.OnHide();
 
             if (Main.netMode != NetmodeID.Server)
-                Interface?.SetState(null);
+                UserInterface?.SetState(null);
         }
 
         public override void UpdateUI(GameTime gameTime)
         {
             // press Ctrl + Shift + E to reset UI
-            if (Interface.CurrentState is not null &&
+            if (UserInterface.CurrentState is not null &&
                 Main.keyState.IsKeyDown(Keys.LeftControl) &&
                 Main.keyState.IsKeyDown(Keys.LeftShift) &&
                 Main.keyState.IsKeyDown(Keys.E) && !Main.oldKeyState.IsKeyDown(Keys.E))
@@ -119,17 +163,17 @@ namespace Macrocosm.Content.Rockets.UI
                 // }
 
                 ResetUI();
-                Utility.Chat("Reset rocket UI", Color.Lime);
+                Utility.Chat("Reset UI", Color.Lime);
             }
 
             lastGameTime = gameTime;
 
-            if (Interface?.CurrentState != null)
+            if (UserInterface?.CurrentState != null)
             {
                 Main.LocalPlayer.mouseInterface = true;
                 Main.mouseRightRelease = false;
 
-                Interface.Update(gameTime);
+                UserInterface.Update(gameTime);
             }
         }
 
@@ -142,8 +186,8 @@ namespace Macrocosm.Content.Rockets.UI
                     "Macrocosm:RocketUI",
                     () =>
                     {
-                        if (lastGameTime != null && Interface?.CurrentState != null)
-                            Interface.Draw(Main.spriteBatch, lastGameTime);
+                        if (lastGameTime != null && UserInterface?.CurrentState != null)
+                            UserInterface.Draw(Main.spriteBatch, lastGameTime);
                         return true;
                     },
                     InterfaceScaleType.UI));

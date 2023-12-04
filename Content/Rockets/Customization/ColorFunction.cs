@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Macrocosm.Content.Rockets.Customization
@@ -35,7 +36,8 @@ namespace Macrocosm.Content.Rockets.Customization
         /// <summary> Invokes the color function on an input array. </summary>
         public Color Invoke(Color[] inputColors) => function(inputColors);
 
-		public static ColorFunction CreateByName(string name, params object[] parameters) 
+        public static ColorFunction CreateByName(string name) => CreateByName(name, Array.Empty<object>());
+        public static ColorFunction CreateByName(string name, object[] parameters) 
 		{
 			try
 			{
@@ -63,6 +65,21 @@ namespace Macrocosm.Content.Rockets.Customization
 				return CreateMapFunction(0);
 			}
 		}
+        public static ColorFunction CreateByName(string name, string[] parameters)
+        {
+            List<object> objects = new();
+            foreach (var parameter in parameters)
+            {
+				if (int.TryParse(parameter, out int intValue))
+					objects.Add(intValue);
+                else if (float.TryParse(parameter, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out float floatValue))
+                    objects.Add(floatValue);
+                else if (double.TryParse(parameter, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double doubleValue))
+                    objects.Add(doubleValue);
+            }
+
+			return CreateByName(name, objects.ToArray());
+        }
 
         private static void LogImportError(string message)
         {

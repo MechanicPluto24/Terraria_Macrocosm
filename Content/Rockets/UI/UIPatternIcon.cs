@@ -59,7 +59,7 @@ namespace Macrocosm.Content.Rockets.UI
             effect.Parameters["uColorCount"].SetValue(Pattern.MaxColorCount);
             effect.Parameters["uColorKey"].SetValue(Pattern.ColorKeys);
             effect.Parameters["uColor"].SetValue(colors.ToArray());
-            //effect.Parameters["uAmbientColor"].SetValue(new Vector3(1f));
+            effect.Parameters["uSampleBrightness"].SetValue(false);
 
             state.SaveState(spriteBatch);
             spriteBatch.End();

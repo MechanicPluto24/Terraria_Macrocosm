@@ -23,8 +23,8 @@ namespace Macrocosm.Content.Rockets.Modules
         {
         }
 
-        private SpriteBatchState state1, state2, state3;
-        public override void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+        private SpriteBatchState state1, state2;
+        public override void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 position)
         {
             state1.SaveState(spriteBatch, true);
             spriteBatch.End();
@@ -32,11 +32,11 @@ namespace Macrocosm.Content.Rockets.Modules
 
             // Draw the rear landing behind the rear booster 
             Texture2D rearLandingLeg = ModContent.Request<Texture2D>(TexturePath + "_LandingLeg", AssetRequestMode.ImmediateLoad).Value;
-            spriteBatch.Draw(rearLandingLeg, Position + new Vector2(Texture.Width / 2f - rearLandingLeg.Width / 2f, 314f) - screenPos, rearLandingLeg.Frame(1, NumberOfFrames, frameY: CurrentFrame), drawColor);
+            spriteBatch.Draw(rearLandingLeg, position + new Vector2(Texture.Width / 2f - rearLandingLeg.Width / 2f, 314f), rearLandingLeg.Frame(1, NumberOfFrames, frameY: CurrentFrame), Color.White);
 
             // Draw the rear booster behind the engine module 
             Texture2D boosterRear = ModContent.Request<Texture2D>(TexturePath + "_BoosterRear", AssetRequestMode.ImmediateLoad).Value;
-            spriteBatch.Draw(boosterRear, Position + new Vector2(Texture.Width / 2f - boosterRear.Width / 2f, 294f) - screenPos, null, drawColor, 0f, Origin, 1f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(boosterRear, position + new Vector2(Texture.Width / 2f - boosterRear.Width / 2f, 294f), null, Color.White, 0f, Origin, 1f, SpriteEffects.None, 0f);
 
             // Draw the exhaust trail 
             if (rocket.StaticFire || rocket.InFlight || rocket.ForcedFlightAppearance)
@@ -45,63 +45,42 @@ namespace Macrocosm.Content.Rockets.Modules
                 spriteBatch.Begin(BlendState.Additive, state1);
 
                 if (rocket.StaticFire)
-                    DrawTrail(spriteBatch, 0.5f + 0.3f * Utility.QuadraticEaseIn(rocket.StaticFireProgress));
+                    DrawTrail(position, 0.5f + 0.3f * Utility.QuadraticEaseIn(rocket.StaticFireProgress));
 
                 if (rocket.InFlight || rocket.ForcedFlightAppearance)
-                    DrawTrail(spriteBatch, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(rocket.FlightProgress, 0f, 0.1f) * 10f));
+                    DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(rocket.FlightProgress, 0f, 0.1f) * 10f));
             }
 
             spriteBatch.End();
             spriteBatch.Begin(state1);
         }
 
-        public override void Draw(SpriteBatch spriteBatch, Vector2 screenPos, Color ambientColor)
+        public override void Draw(SpriteBatch spriteBatch, Vector2 position)
         {
             state2.SaveState(spriteBatch, true);
             spriteBatch.End();
             spriteBatch.Begin(state2);
 
             // Draw the engine module with the base logic
-            base.Draw(spriteBatch, screenPos, ambientColor);
+            base.Draw(spriteBatch, position);
 
             spriteBatch.End();
             spriteBatch.Begin(SamplerState.PointClamp, state2);
 
 			// Draw the nameplate
-			rocket.Nameplate.Draw(spriteBatch, new Vector2(Center.X, Position.Y) - screenPos, ambientColor);
+			rocket.Nameplate.Draw(spriteBatch, position + new Vector2(Width/2, 0));
 
             spriteBatch.End();
             spriteBatch.Begin(state2);
         }
 
-        public override void DrawOverlay(SpriteBatch spriteBatch, Vector2 screenPos)
-        {
-            // Draw the rocket flight lens flare
-            if (rocket.InFlight || rocket.ForcedFlightAppearance)
-            {
-                state3.SaveState(spriteBatch, true);
-                spriteBatch.End();
-                spriteBatch.Begin(BlendState.Additive, state3);
-
-                float scale = 1.2f * Main.rand.NextFloat(0.85f, 1f);
-                if (rocket.FlightProgress < 0.1f)
-                    scale *= Utility.QuadraticEaseOut(rocket.FlightProgress * 10f);
-
-                var flare = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Flare2").Value;
-                spriteBatch.Draw(flare, new Vector2(rocket.Center.X, rocket.Position.Y + rocket.Bounds.Height) - Main.screenPosition, null, new Color(255, 69, 0), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
-
-                spriteBatch.End();
-                spriteBatch.Begin(state3);
-            }
-        }
-
-        private void DrawTrail(SpriteBatch spriteBatch, float intensity = 1f)
+        private void DrawTrail(Vector2 position, float intensity = 1f)
         {
             VertexStrip strip = new();
             int stripDataCount = (int)(58 * intensity);
             Vector2[] positions = new Vector2[stripDataCount];
             float[] rotations = new float[stripDataCount];
-            Array.Fill(positions, new Vector2(Center.X, Position.Y + Height - 28) - Main.screenPosition);
+            Array.Fill(positions, new Vector2(position.X + Width/2f, position.Y + Height - 28));
             Array.Fill(rotations, MathHelper.Pi + MathHelper.PiOver2);
 
             for (int i = 0; i < stripDataCount; i++)
