@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Hostile
 {
-    public class ZombieSecurityBullet : ModProjectile, IBullet
+    public class ZombieSecurityBullet : ModProjectile, IRangedProjectile
     {
         public override void SetStaticDefaults()
         {

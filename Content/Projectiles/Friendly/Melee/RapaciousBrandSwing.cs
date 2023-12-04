@@ -84,7 +84,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 Projectile.Kill();
         }
 
-        private SpriteBatchState state;
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D texture = TextureAssets.Projectile[Type].Value;
