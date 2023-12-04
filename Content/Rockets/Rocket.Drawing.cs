@@ -24,6 +24,7 @@ using Terraria.ID;
 using Terraria.Localization;
 using static Macrocosm.Content.Tiles.Furniture.MoonBase.MoonBaseChest;
 using Terraria.ModLoader;
+using Macrocosm.Common.Graphics;
 
 namespace Macrocosm.Content.Rockets
 {
@@ -83,7 +84,10 @@ namespace Macrocosm.Content.Rockets
 
             if (renderTarget is null || renderTarget.IsDisposed)
             {
+                var scissorRectangle = graphicsDevice.ScissorRectangle;
+                var rasterizerState = graphicsDevice.RasterizerState;
                 RenderTargetBinding[] originalRenderTargets = spriteBatch.GraphicsDevice.GetRenderTargets();
+   
                 foreach (var binding in originalRenderTargets)
                     typeof(RenderTarget2D).SetPropertyValue("RenderTargetUsage", RenderTargetUsage.PreserveContents, binding.RenderTarget);
 
@@ -111,7 +115,13 @@ namespace Macrocosm.Content.Rockets
 
                 spriteBatch.End();
 
-                graphicsDevice.SetRenderTargets(originalRenderTargets);
+                if (originalRenderTargets.Length > 0)
+                    graphicsDevice.SetRenderTargets(originalRenderTargets);
+                else
+                    graphicsDevice.SetRenderTarget(null);
+
+                graphicsDevice.ScissorRectangle = scissorRectangle;
+                graphicsDevice.RasterizerState = rasterizerState;
             }
 
             return renderTarget;
