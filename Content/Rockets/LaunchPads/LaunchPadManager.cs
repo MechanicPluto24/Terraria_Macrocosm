@@ -126,29 +126,33 @@ namespace Macrocosm.Content.Rockets.LaunchPads
         {
             checkTimer++;
 
-            if (checkTimer >= 10)
+            if (launchPadStorage.ContainsKey(MacrocosmSubworld.CurrentID))
             {
-                checkTimer = 0;
-
-                if (launchPadStorage.ContainsKey(MacrocosmSubworld.CurrentID))
+                for (int i = 0; i < launchPadStorage[MacrocosmSubworld.CurrentID].Count; i++)
                 {
-                    for (int i = 0; i < launchPadStorage[MacrocosmSubworld.CurrentID].Count; i++)
-                    {
-                        var launchPad = launchPadStorage[MacrocosmSubworld.CurrentID][i];
+                    var launchPad = launchPadStorage[MacrocosmSubworld.CurrentID][i];
 
-                        if (!launchPad.Active)
+                    if (!launchPad.Active)
+                    {
+                        launchPadStorage[MacrocosmSubworld.CurrentID].RemoveAt(i);
+                        i--;
+                    }
+                    else
+                    {
+                        if (checkTimer >= 10)
                         {
-                            launchPadStorage[MacrocosmSubworld.CurrentID].RemoveAt(i);
-                            i--;
+                            launchPad.TileCheck();
+                            checkTimer = 0;
                         }
-                        else
-                        {
-                            launchPad.Update();
-                        }
+
+                        launchPad.Update();
                     }
                 }
             }
-        }
+
+            if (checkTimer >= 10)
+                 checkTimer = 0;      
+         }
 
         public override void PostDrawTiles()
         {

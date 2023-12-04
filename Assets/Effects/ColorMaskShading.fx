@@ -15,10 +15,10 @@ float3 uColorKey[64];
 float4 uColor[64];
 
 // Whether this detail displays on non-customizable areas of the rocket
-bool uDetailUseMask = false;
+bool uSampleBrightness = true;
 
-// The ambience light color 
-float3 uAmbientColor = float3(1, 1, 1);
+// Whether this detail displays on non-customizable areas of the rocket
+bool uDetailUseMask = false;
 
 // Returns the grayscale of a RGB color, using the NTSC formula
 float3 RGBToLuminance(float3 color)
@@ -41,7 +41,7 @@ float4 ColorMaskShading(float2 texCoord : TEXCOORD) : COLOR0
     float4 detail = tex2D(uDetailTexture, texCoord);  
     
     // Get the brightness of the local pixel
-    float3 texelBrightness = RGBToLuminance(color.rgb);
+    float3 texelBrightness = uSampleBrightness ? RGBToLuminance(color.rgb) : float3(1,1,1);
     
     float4 newColor = color;
     
@@ -49,12 +49,12 @@ float4 ColorMaskShading(float2 texCoord : TEXCOORD) : COLOR0
     { 
         float tranparency = uDetailUseMask ? mask.a : detail.a;
         newColor = float4(detail.rgb * texelBrightness.rgb, 1.0f);
-        return float4(newColor.rgb * uAmbientColor, tranparency);
+        return float4(newColor.rgb, tranparency);
     }
     
     // Ignore pixel if mask is transparent!
     if (mask.a < 1.0f)
-        return float4(color.rgb * uAmbientColor, color.a);
+        return color;
     
     for (int i = 0; i < uColorCount; i++)
     {
@@ -68,7 +68,7 @@ float4 ColorMaskShading(float2 texCoord : TEXCOORD) : COLOR0
     // Blend the original color with the new found, accounting for the ambient brightness 
     // (will return the original if found unrecognized key in the mask) 
     color.rgb = lerp(color.rgb, newColor.rgb * texelBrightness, newColor.a);
-    return float4(color.rgb * uAmbientColor, color.a);
+    return float4(color.rgb, color.a);
 }
 
 technique Technique1 

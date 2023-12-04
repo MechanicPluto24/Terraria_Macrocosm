@@ -172,6 +172,7 @@ namespace Macrocosm.Content.Rockets.UI
             base.Update(gameTime);
 
             CustomizationDummy.ForcedStationaryAppearance = true;
+
             rocketPreview.RocketDummy = CustomizationDummy;
             currentModule ??= CustomizationDummy.Modules["CommandPod"];
             lastModule ??= currentModule;
@@ -228,7 +229,7 @@ namespace Macrocosm.Content.Rockets.UI
                             var modulePattern = CustomizationDummy.Modules[module.Key].Pattern;
 
                             //TODO: check per color indexes instead
-                            if (modulePattern.Name == currentPatternIcon.Pattern.Name && hslMenu.PendingChange)
+                            if (modulePattern.Name == currentPatternIcon.Pattern.Name && hslMenu.PendingChange) 
                                 CustomizationDummy.Modules[module.Key].Pattern = modulePattern.WithColor(colorIndex, hslMenu.PendingColor);
                         }
                     }
@@ -238,8 +239,8 @@ namespace Macrocosm.Content.Rockets.UI
                         {
                             currentModule.Pattern = currentModule.Pattern.WithColor(colorIndex, hslMenu.PendingColor);
                             currentPatternIcon.Pattern = currentModule.Pattern.WithColor(colorIndex, hslMenu.PendingColor);
+                        }
                     }
-                }
                 }
 
                 picker.BackPanelColor = currentModule.Pattern.GetColor(colorIndex);
@@ -492,7 +493,6 @@ namespace Macrocosm.Content.Rockets.UI
             }
 
             ColorPickersLoseFocus();
-
         }
         #endregion
 

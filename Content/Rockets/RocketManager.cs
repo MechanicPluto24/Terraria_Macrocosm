@@ -107,8 +107,7 @@ namespace Macrocosm.Content.Rockets
                 if (!rocket.ActiveInCurrentWorld)
                     continue;
 
-                Color lightColor = Lighting.GetColor((int)(rocket.Center.X / 16), (int)(rocket.Center.Y / 16));
-                rocket.PreDrawBeforeTiles(Main.spriteBatch, Main.screenPosition, lightColor);
+                rocket.PreDrawBeforeTiles(Main.spriteBatch, rocket.Position - Main.screenPosition);
             }
         }
 
@@ -124,19 +123,23 @@ namespace Macrocosm.Content.Rockets
                 if (rocket.DrawLayer != layer)
                     continue;
 
-                Color lightColor = Lighting.GetColor((int)(rocket.Center.X / 16), (int)(rocket.Center.Y / 16));
-                rocket.Draw(Main.spriteBatch, Main.screenPosition, lightColor);
+                rocket.Draw(Rocket.DrawMode.World, Main.spriteBatch, rocket.Position - Main.screenPosition);
 
                 if (DebugModeActive)
                 {
-                    //rocket.DrawDebugBounds();
-                    rocket.DrawDebugModuleHitbox();
                     rocket.DisplayWhoAmI();
+                    rocket.DrawDebugModuleHitbox();
                 }
+            }
+
+            if (DebugModeActive)
+            {
+                string text = $"Rockets active: {Rockets.Where(r => r.Active).Count()}\nHere: {Rockets.Where(r => r.ActiveInCurrentWorld).Count()}";
+                ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, FontAssets.DeathText.Value, text, new Vector2(Main.screenWidth * 0.5f, 40f), Color.White, 0f, Vector2.Zero, Vector2.One * 0.5f);
             }
         }
 
-        private static void DrawRocketOverlays()
+        private static void DrawOverlays()
         {
             for (int i = 0; i < MaxRockets; i++)
             {
@@ -145,15 +148,9 @@ namespace Macrocosm.Content.Rockets
                 if (!rocket.ActiveInCurrentWorld)
                     continue;
 
-                rocket.DrawOverlay(Main.spriteBatch, Main.screenPosition);
-            }
+                rocket.DrawOverlay(Main.spriteBatch, rocket.Position - Main.screenPosition);
 
-            if (DebugModeActive)
-            {
-                string text = $"Rockets active: {Rockets.Where(r => r.Active).Count()}\nHere: {Rockets.Where(r => r.ActiveInCurrentWorld).Count()}";
-                ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, FontAssets.DeathText.Value, text, new Vector2(Main.screenWidth * 0.5f, 40f), Color.White, 0f, Vector2.Zero, Vector2.One * 0.5f);
             }
-
         }
 
         public override void ClearWorld()
@@ -286,7 +283,7 @@ namespace Macrocosm.Content.Rockets
             orig(self);
 
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, SamplerState.PointClamp, default, default, default, Main.GameViewMatrix.ZoomMatrix);
-            DrawRocketOverlays();
+            DrawOverlays();
             Main.spriteBatch.End();
         }
     }

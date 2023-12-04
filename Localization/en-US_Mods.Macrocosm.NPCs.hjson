@@ -41,6 +41,11 @@ LuminiteSlime: {
 	BestiaryFlavorText: Some slimes beneath the Moon's surface develop an attraction to luminite, consuming so much that it becomes part of their makeup.
 }
 
+LuminiteSlimeVolatile: {
+	DisplayName: Volatile Luminite Slime
+	BestiaryFlavorText: Some slimes beneath the Moon's surface develop an attraction to luminite, consuming so much that it becomes part of their makeup.
+}
+
 MoonWormHead: {
 	DisplayName: Moon Worm
 	BestiaryFlavorText: The head of the mysterious moon worm, featuring sensory appendages that help it navigate underground.
