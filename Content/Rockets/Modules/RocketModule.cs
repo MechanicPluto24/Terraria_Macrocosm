@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.Customization;
 using Microsoft.Xna.Framework;
@@ -64,13 +65,13 @@ namespace Macrocosm.Content.Rockets.Modules
             this.rocket = rocket;
         }
 
-        public virtual void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+        public virtual void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 position)
         {
 
         }
 
         private SpriteBatchState state;
-        public virtual void Draw(SpriteBatch spriteBatch, Vector2 screenPos, Color ambientColor)
+        public virtual void Draw(SpriteBatch spriteBatch, Vector2 position)
         {
             // Load current pattern and apply shader 
             state.SaveState(spriteBatch);
@@ -113,7 +114,7 @@ namespace Macrocosm.Content.Rockets.Modules
                 spriteBatch.Begin(state.SpriteSortMode, state.BlendState, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, effect, state.Matrix);
             }
 
-            spriteBatch.Draw(Texture, Position - screenPos, null, ambientColor, 0f, Origin, 1f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(Texture, position, null, Color.White, 0f, Origin, 1f, SpriteEffects.None, 0f);
 
             if (SpecialDraw)
             {
@@ -130,64 +131,35 @@ namespace Macrocosm.Content.Rockets.Modules
             }
         }
 
-        public virtual void DrawOverlay(SpriteBatch spriteBatch, Vector2 screenPos)
+        public virtual void DrawBlueprint(SpriteBatch spriteBatch, Vector2 position)
         {
-        }
-
-
-        private readonly Vector3[] blueprintKeys = new Vector3[] { 
-            new Vector3(0.47f, 0.47f, 0.47f), 
-            new Vector3(0.74f, 0.74f, 0.74f),
-            new Vector3(0f, 0f, 0f), 
-            new Vector3(1f, 1f, 1f) 
-        };
-
-        public virtual void DrawBlueprint(SpriteBatch spriteBatch, Vector2 offset, Color outlineColor, Color fillColor, Color darkColor, Color lightColor)
-        {
-            // Load current pattern and apply shader 
             state.SaveState(spriteBatch);
-            SamplerState samplerState1 = Main.graphics.GraphicsDevice.SamplerStates[1];
-            SamplerState samplerState2 = Main.graphics.GraphicsDevice.SamplerStates[2];
+            SamplerState samplerState = Main.graphics.GraphicsDevice.SamplerStates[1];
          
-            // Load the coloring shader
             Effect effect = ModContent.Request<Effect>(Macrocosm.EffectAssetsPath + "ColorMaskShading", AssetRequestMode.ImmediateLoad).Value;
-    
-            // Pass the pattern to the shader via the S1 register
             Main.graphics.GraphicsDevice.Textures[1] = Blueprint;
-
-            // Change sampler state for proper alignment at all zoom levels 
             Main.graphics.GraphicsDevice.SamplerStates[1] = SamplerState.PointClamp;
 
-            Vector3[] blueprintKeys = new Vector3[] {
-                new Vector3(0.47f, 0.47f, 0.47f),
-                new Vector3(0.74f, 0.74f, 0.74f),
-                new Vector3(0f, 0f, 0f),
-                new Vector3(1f, 1f, 1f)
-            };
-
-            //Pass the color mask keys as Vector3s and configured colors as Vector4s
-            effect.Parameters["uColorCount"].SetValue(4);
+            effect.Parameters["uColorCount"].SetValue(2);
             effect.Parameters["uColorKey"].SetValue(blueprintKeys);
-            effect.Parameters["uColor"].SetValue((new Color[] { outlineColor, fillColor, darkColor, lightColor }).ToVector4Array());
-
-            //Pass the ambient lighting on the rocket 
+            effect.Parameters["uColor"].SetValue((new Color[] { UITheme.Current.PanelStyle.BorderColor, UITheme.Current.PanelStyle.BackgroundColor }).ToVector4Array());
             effect.Parameters["uSampleBrightness"].SetValue(false);
- 
+
             spriteBatch.End();
             spriteBatch.Begin(state.SpriteSortMode, state.BlendState, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, effect, state.Matrix);
  
-            spriteBatch.Draw(Blueprint, Position + offset, null, Color.White, 0f, Origin, 1f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(Blueprint, Position + position, null, Color.White, 0f, Origin, 1f, SpriteEffects.None, 0f);
 
             spriteBatch.End();
             spriteBatch.Begin(state);
 
-            // Clear the tex registers  
             Main.graphics.GraphicsDevice.Textures[1] = null;
-            Main.graphics.GraphicsDevice.Textures[2] = null;
-
-            // Restore the sampler states
-            Main.graphics.GraphicsDevice.SamplerStates[1] = samplerState1;
-            Main.graphics.GraphicsDevice.SamplerStates[2] = samplerState2;
+            Main.graphics.GraphicsDevice.SamplerStates[1] = samplerState;
         }
+
+        protected readonly Vector3[] blueprintKeys = new Vector3[] {
+            new Vector3(0.47f, 0.47f, 0.47f),
+            new Vector3(0.74f, 0.74f, 0.74f)
+        };
     }
 }

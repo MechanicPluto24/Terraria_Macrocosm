@@ -15,6 +15,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
@@ -124,24 +125,6 @@ namespace Macrocosm.Content.Rockets
         /// <summary> List of the module names, in the customization access order </summary>
         public List<string> ModuleNames => Modules.Keys.ToList();
 
-        /// <summary> The Rocket's command pod </summary>
-        public CommandPod CommandPod => (CommandPod)Modules["CommandPod"];
-
-        /// <summary> The Rocket's service module </summary>
-        public ServiceModule ServiceModule => (ServiceModule)Modules["ServiceModule"];
-
-        /// <summary> The rocket's reactor module </summary>
-        public ReactorModule ReactorModule => (ReactorModule)Modules["ReactorModule"];
-
-        /// <summary> The Rocket's engine module </summary>
-        public EngineModule EngineModule => (EngineModule)Modules["EngineModule"];
-
-        /// <summary> The rocket's left booster </summary>
-        public BoosterLeft BoosterLeft => (BoosterLeft)Modules["BoosterLeft"];
-
-        /// <summary> The rocket's right booster </summary>
-        public BoosterRight BoosterRight => (BoosterRight)Modules["BoosterRight"];
-
         public int StaticFireBeginTime = 60;
         public bool StaticFire => StaticFireProgress > 0f;
         public float StaticFireProgress => Utility.InverseLerp(LiftoffTime - StaticFireBeginTime, LiftoffTime, FlightTime, clamped: true);
@@ -244,7 +227,7 @@ namespace Macrocosm.Content.Rockets
 		/// <summary> Update the rocket </summary>
 		public void Update()
 		{
-			SetModuleRelativePositions();
+			SetModuleWorldPositions();
 			Velocity = GetCollisionVelocity();
 			Position += Velocity;
 
@@ -307,15 +290,32 @@ namespace Macrocosm.Content.Rockets
             NetSync();
         }
 
-        // Set the rocket's modules positions in the world
-        private void SetModuleRelativePositions()
+        private Vector2 GetModuleRelativePosition(RocketModule module, Vector2 origin)
         {
-            CommandPod.Position = Position + new Vector2(Width / 2f - CommandPod.Hitbox.Width / 2f, 0);
-            ServiceModule.Position = CommandPod.Position + new Vector2(-6, CommandPod.Hitbox.Height - 2.1f);
-            ReactorModule.Position = ServiceModule.Position + new Vector2(-2, ServiceModule.Hitbox.Height - 2);
-            EngineModule.Position = ReactorModule.Position + new Vector2(-18, ReactorModule.Hitbox.Height - 10);
-            BoosterLeft.Position = new Vector2(EngineModule.Center.X, EngineModule.Position.Y) - new Vector2(BoosterLeft.Hitbox.Width / 2, 0) + new Vector2(2, 16);
-            BoosterRight.Position = new Vector2(EngineModule.Center.X, EngineModule.Position.Y) + new Vector2(14, 16);
+            var commandPod = Modules["CommandPod"];
+            var serviceModule = Modules["ServiceModule"];
+            var reactorModule = Modules["ReactorModule"];
+            var engineModule = Modules["EngineModule"];
+
+            return module switch
+            {
+                CommandPod => origin + new Vector2(Width / 2f - commandPod.Width / 2f, 0),
+                ServiceModule => origin + new Vector2(Width / 2f - serviceModule.Width / 2f, commandPod.Height),
+                ReactorModule => origin + new Vector2(Width / 2f - reactorModule.Width / 2f, commandPod.Height + serviceModule.Height - 2),
+                EngineModule => origin + new Vector2(Width / 2f - engineModule.Width / 2f, commandPod.Height + serviceModule.Height + reactorModule.Height - 10),
+                BoosterLeft => origin + new Vector2(78, commandPod.Height + serviceModule.Height + reactorModule.Height + 6),
+                BoosterRight => origin + new Vector2(152, commandPod.Height + serviceModule.Height + reactorModule.Height + 6),
+                _ => default,
+            };
+        }
+
+        // Set the rocket's modules positions in the world
+        private void SetModuleWorldPositions()
+        {
+            foreach(RocketModule module in Modules.Values) 
+            {
+                module.Position = GetModuleRelativePosition(module, Position);
+            }
         }
 
         /// <summary> Gets the RocketPlayer bound to the provided player ID </summary>
@@ -433,9 +433,14 @@ namespace Macrocosm.Content.Rockets
 
         public bool AtCurrentLaunchpad(LaunchPad launchPad, string worldId)
         {
-            if (launchPad == null && worldId == MacrocosmSubworld.CurrentID)
-                 return AtPosition(Utility.SpawnWorldPosition);
-
+            if (launchPad == null)
+            {
+                if (worldId == MacrocosmSubworld.CurrentID)
+                    return AtPosition(Utility.SpawnWorldPosition);
+                else
+                    return false;  
+            }
+                
             if (LaunchPadManager.InCurrentWorld(launchPad))
                 return false;
 
@@ -445,7 +450,7 @@ namespace Macrocosm.Content.Rockets
         public bool CheckTileCollision()
         {
             foreach (RocketModule module in Modules.Values)
-                if (Math.Abs(Collision.TileCollision(module.Position, Velocity, module.Hitbox.Width, module.Hitbox.Height).Y) > 0.1f)
+                if (Math.Abs(Collision.TileCollision(module.Position, Velocity, module.Width, module.Height).Y) > 0.1f)
                     return true;
 
             return false;
@@ -459,7 +464,7 @@ namespace Macrocosm.Content.Rockets
 
             if (MouseCanInteract() && Bounds.InPlayerInteractionRange(TileReachCheckSettings.Simple) && !Launched && !GetRocketPlayer(Main.myPlayer).InRocket)
             {
-                if (Main.mouseRight)
+                if (Main.mouseRight && Main.mouseRightRelease)
                 {
                     bool noCommanderInRocket = (Main.netMode == NetmodeID.SinglePlayer) || !TryFindingCommander(out _);
                     GetRocketPlayer(Main.myPlayer).EmbarkPlayerInRocket(WhoAmI, noCommanderInRocket);
@@ -509,7 +514,7 @@ namespace Macrocosm.Content.Rockets
 
             foreach (RocketModule module in Modules.Values)
             {
-                Vector2 collisionVelocity = Collision.TileCollision(module.Position, Velocity, module.Hitbox.Width, module.Hitbox.Height);
+                Vector2 collisionVelocity = Collision.TileCollision(module.Position, Velocity, module.Width, module.Height);
                 if (collisionVelocity.LengthSquared() < minCollisionVelocity.LengthSquared())
                     minCollisionVelocity = collisionVelocity;
             }
@@ -703,11 +708,14 @@ namespace Macrocosm.Content.Rockets
             {
                 int smallSmokeCount = (int)(countPerTick * 1.5f);
 
+                var boosterLeft = Modules["BoosterLeft"] as Booster;
+                var boosterRight = Modules["BoosterRight"] as Booster;
+
                 for (int i = 0; i < smallSmokeCount; i++)
                 {
                     Vector2 position = i % 2 == 0 ?
-                                    new Vector2(BoosterLeft.Position.X + BoosterLeft.ExhaustOffsetX, Position.Y + Height - 28) :
-                                    new Vector2(BoosterRight.Position.X + BoosterRight.ExhaustOffsetX, Position.Y + Height - 28);
+                                    new Vector2(boosterLeft.Position.X + boosterLeft.ExhaustOffsetX, Position.Y + Height - 28) :
+                                    new Vector2(boosterRight.Position.X + boosterRight.ExhaustOffsetX, Position.Y + Height - 28);
 
                     var smoke = Particle.CreateParticle<RocketExhaustSmoke>(p =>
                     {

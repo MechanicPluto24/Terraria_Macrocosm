@@ -30,8 +30,8 @@ namespace Macrocosm.Content.Rockets
                 Modules[moduleName].Pattern = source.Modules[moduleName].Pattern;
             }
 
-            SendCustomizationData();
             ResetRenderTarget();
+            SendCustomizationData();
         }
 
         public void ResetCustomizationToDefault()
@@ -44,6 +44,7 @@ namespace Macrocosm.Content.Rockets
                 moduleKvp.Value.Pattern = CustomizationStorage.GetDefaultPattern(moduleKvp.Key);
             }
 
+            ResetRenderTarget();
             SendCustomizationData();
         }
 
@@ -98,6 +99,9 @@ namespace Macrocosm.Content.Rockets
                     }
                 }
             }
+
+            ResetRenderTarget();
+
         }
     }
 }

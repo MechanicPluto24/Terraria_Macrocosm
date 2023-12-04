@@ -86,7 +86,6 @@ namespace Macrocosm.Content.Rockets.LaunchPads
             for (int i = 0; i < RocketManager.MaxRockets; i++)
             {
                 Rocket rocket = RocketManager.Rockets[i];
-
                 if (rocket.ActiveInCurrentWorld && Hitbox.Intersects(rocket.Bounds))
                     RocketID = i;
             }
@@ -97,7 +96,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
             isMouseOver = Hitbox.Contains(Main.MouseWorld.ToPoint()) && Hitbox.InPlayerInteractionRange(TileReachCheckSettings.Simple);
             if (isMouseOver)
             {
-                if (Main.mouseRight)
+                if (Main.mouseRight && Main.mouseRightRelease)
                 {
                     RocketUISystem.ShowAssemblyUI(this);
                 }
@@ -111,6 +110,11 @@ namespace Macrocosm.Content.Rockets.LaunchPads
                     }
                 }
             }
+        }
+
+
+        public void TileCheck()
+        {            
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 screenPosition)
