@@ -15,7 +15,7 @@ namespace Macrocosm.Content.Particles
     {
         public override string TexturePath => Macrocosm.EmptyTexPath;
         public override int SpawnTimeLeft => 150;
-        public override ParticleDrawLayer DrawLayer => ParticleDrawLayer.BeforeNPCs;
+        public override ParticleDrawLayer DrawLayer => ParticleDrawLayer.AfterProjectiles;
 
         public Color Color { get; set; } = Color.White;
 
