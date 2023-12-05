@@ -44,25 +44,44 @@ namespace Macrocosm.Content.Rockets
 		private SpriteBatchState state;
 		private DynamicVertexBuffer vertexBuffer;
 		private DynamicIndexBuffer indexBuffer;
+		private VertexPositionColorTexture[] vertices;
+		private short[] indices;
 
-		public void ResetRenderTarget() => renderTarget?.Dispose();
+		public void ResetRenderTarget()
+		{
+			renderTarget?.Dispose();
+		}
 
 		/// <summary> Draw the rocket to a RenderTarget and then in the world </summary>
 		public void Draw(DrawMode drawMode, SpriteBatch spriteBatch, Vector2 position)
 		{
-			state.SaveState(spriteBatch);
-			renderTarget = GetOrPrepareRenderTarget(drawMode);
+			// Prepare our RenderTarget
+			GetRenderTarget(drawMode);
 
+			// Save our SpriteBatch state
+			state.SaveState(spriteBatch);
 			spriteBatch.EndIfBeginCalled();
 
-			Main.NewText(drawMode.ToString());
-			if (drawMode is DrawMode.Dummy)
+			switch (drawMode)
 			{
-				spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, state.Effect, state.Matrix);
-				spriteBatch.Draw(renderTarget, position, Color.White);
-				spriteBatch.End();
+				// Only DrawMode.World consumes the buffers
+				case DrawMode.World:
+					PrepareEffect(drawMode);
+					PrepareLightingBuffers(Width, Height, out int numVertices, out int primitiveCount);
+					PresentLightingBuffers(numVertices, primitiveCount);
+					break;
+
+				// All other cases draw the RenderTarget directly
+				default:
+
+					spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, state.Effect, state.Matrix);
+					spriteBatch.Draw(renderTarget, position, Color.White);
+					spriteBatch.End();
+
+					break;
 			}
 
+			// Reset our SpriteBatch to its previous state
 			spriteBatch.Begin(state);
 		}
 
@@ -94,21 +113,15 @@ namespace Macrocosm.Content.Rockets
 			}
 		}
 
-		public RenderTarget2D GetOrPrepareRenderTarget(DrawMode drawMode)
+		public RenderTarget2D GetRenderTarget(DrawMode drawMode)
 		{
-			SpriteBatch spriteBatch = Main.spriteBatch;
-
-			PrepareEffect(drawMode);
-			FillRenderTarget(spriteBatch, drawMode);
-
-			// DrawMode.Dummy does not consume the vertex mesh
-			if (drawMode is DrawMode.Dummy)
+			// We only need to prepare our RenderTarget if it's not ready to use
+			if (renderTarget is null || renderTarget.IsDisposed)
 			{
-				return renderTarget;
+				// Initialize our RenderTarget
+				renderTarget = new(Main.spriteBatch.GraphicsDevice, Bounds.Width, Bounds.Height, mipMap: false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
+				FillRenderTarget(Main.spriteBatch, drawMode);
 			}
-
-			PrepareLightingBuffers(Width, Height, out int numVertices, out int primitiveCount);
-			PresentBuffers(numVertices, primitiveCount);
 
 			return renderTarget;
 		}
@@ -173,13 +186,6 @@ namespace Macrocosm.Content.Rockets
 			RenderTargetBinding[] originalRenderTargets = spriteBatch.GraphicsDevice.GetRenderTargets();
 			foreach (var binding in originalRenderTargets)
 				typeof(RenderTarget2D).SetPropertyValue("RenderTargetUsage", RenderTargetUsage.PreserveContents, binding.RenderTarget);
-
-			// We only need to prepare our RenderTarget if it's not ready to use
-			if (renderTarget is null || renderTarget.IsDisposed)
-			{
-				// Initialize our RenderTarget
-				renderTarget = new(spriteBatch.GraphicsDevice, Bounds.Width, Bounds.Height, mipMap: false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
-			}
 
 			// Draw our modules
 			state = spriteBatch.SaveState();
@@ -250,7 +256,7 @@ namespace Macrocosm.Content.Rockets
 			indexBuffer ??= new(Main.graphics.GraphicsDevice, IndexElementSize.SixteenBits, indexCount, BufferUsage.WriteOnly);
 
 			// Create our vertices
-			VertexPositionColorTexture[] vertices = new VertexPositionColorTexture[vertexCount];
+			vertices ??= new VertexPositionColorTexture[vertexCount];
 
 			for (int y = 0; y < h; y++)
 			{
@@ -270,34 +276,61 @@ namespace Macrocosm.Content.Rockets
 			}
 
 			// Vertex debug
-			Main.spriteBatch.EndIfBeginCalled();
-			Main.spriteBatch.Begin();
+			//Main.spriteBatch.EndIfBeginCalled();
+			//Main.spriteBatch.Begin();
 
-			var tex = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Circle5", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+			//var tex = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Circle5", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
 
-			foreach (VertexPositionColorTexture vertex in vertices)
-			{
-				Main.spriteBatch.Draw(tex, new Vector2(vertex.Position.X, vertex.Position.Y), tex.Bounds, new Color(1f, 1f, 1f, 0f), 0f, Vector2.Zero, 0.01f, SpriteEffects.None, 0f);
-			}
+			//foreach (VertexPositionColorTexture vertex in vertices)
+			//{
+			//	Main.spriteBatch.Draw(tex, new Vector2(vertex.Position.X, vertex.Position.Y), tex.Bounds, new Color(1f, 1f, 1f, 0f), 0f, Vector2.Zero, 0.01f, SpriteEffects.None, 0f);
+			//}
 
-			Main.spriteBatch.End();
+			//Main.spriteBatch.End();
 
-			short[] indices = new short[indexCount];
+			// Create our indices
+			indices ??= new short[indexCount];
 			int index = 0;
 
 			for (int y = 0; y < h - 1; y++)
 			{
 				for (int x = 0; x < w - 1; x++)
 				{
+					// I know the math here is very weird, but essentially we're iterating
+					// over each quad and following the primitive pattern below
+
+					// Our vertices are a one dimensional array
+					// Each row is consecutive starting from the top left
+
+					// Example, starting at quad 0, top left corner
+					// The first vertex is at index 0, the second at index 1
+					// The third will be in the next row, which is `1 + width`, where width in our case is 3, so 4
+					// The fourth will be 0
+					// The fifth will be `1 + width`, or `1 + 3` = 4 for us
+					// THe sixth will be at `width`, or `3` for us
+
+					// 0 --- 1
+					// |  \  |
+					// 3 --- 4
+
+					// A --- B
+					// |  \  |
+					// D --- C
+
+					// 0 > 1 > 4
 					// A > B > C
 					indices[index++] = (short)(y * w + x);
 					indices[index++] = (short)(y * w + x + 1);
 					indices[index++] = (short)((y + 1) * w + x + 1);
 
+					// 0 > 4 > 3
 					// A > C > D
 					indices[index++] = (short)(y * w + x);
 					indices[index++] = (short)((y + 1) * w + x + 1);
 					indices[index++] = (short)((y + 1) * w + x);
+
+					// These numbers will change depending on the state of the loop
+					// We repeat this process with all quads
 				}
 			}
 
@@ -305,7 +338,7 @@ namespace Macrocosm.Content.Rockets
 			indexBuffer.SetData(indices);
 		}
 
-		private void PresentBuffers(int numVertices, int primitiveCount)
+		private void PresentLightingBuffers(int numVertices, int primitiveCount)
 		{
 			// Store previous settings
 			var scissorRectangle = PrimitivesSystem.GraphicsDevice.ScissorRectangle;
