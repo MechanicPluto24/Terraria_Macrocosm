@@ -54,10 +54,6 @@ namespace Macrocosm.Content.Rockets.UI
             }
         }
 
-        private readonly Dictionary<(Rocket rocket, string moduleName), List<UIPatternIcon>> dummyPatternEdits = new();
-        private UIPatternIcon GetCurrentDummyEdit(string name)
-             => dummyPatternEdits[(Rocket, currentModule.Name)].FirstOrDefault(icon => icon.Pattern.Name == name);
-
         private UIPanel rocketPreviewBackground;
         private UIHoverImageButton rocketPreviewZoomButton;
         private UIRocketPreviewLarge rocketPreview;
@@ -68,8 +64,10 @@ namespace Macrocosm.Content.Rockets.UI
         private UIText modulePickerTitle;
         private UIHoverImageButton leftButton;
         private UIHoverImageButton rightButton;
-        private RocketModule currentModule;
-        private RocketModule lastModule;
+
+        private string currentModuleName = "CommandPod";
+        private string lastModuleName = "CommandPod";
+        private RocketModule CurrentModule => CustomizationDummy.Modules[currentModuleName];
 
         private UIPanel rocketCustomizationControlPanel;
         private UIPanelIconButton rocketApplyButton;
@@ -172,9 +170,8 @@ namespace Macrocosm.Content.Rockets.UI
             base.Update(gameTime);
 
             CustomizationDummy.ForcedStationaryAppearance = true;
+
             rocketPreview.RocketDummy = CustomizationDummy;
-            currentModule ??= CustomizationDummy.Modules["CommandPod"];
-            lastModule ??= currentModule;
 
             UpdatePatternConfig();
             UpdatePatternColorPickers();
@@ -201,17 +198,14 @@ namespace Macrocosm.Content.Rockets.UI
 
         private void UpdatePatternConfig()
         {
-            Pattern currentDummyPattern = CustomizationDummy.Modules[currentModule.Name].Pattern;
+            Pattern currentDummyPattern = CurrentModule.Pattern;
 
+            var list = patternSelector.OfType<UIPatternIcon>();
             if (patternSelector.OfType<UIPatternIcon>().Any())
             {
                 currentPatternIcon = patternSelector.OfType<UIPatternIcon>().FirstOrDefault(icon => icon.Pattern.Name == currentDummyPattern.Name);
-
-                if(currentPatternIcon is not null)
-                {
-                    currentPatternIcon.Pattern = currentDummyPattern;
-                    currentPatternIcon.HasFocus = true;
-                }
+                currentPatternIcon.Pattern = currentDummyPattern;
+                currentPatternIcon.HasFocus = true;
 
                 if (patternColorPickers is null)
                     CreatePatternColorPickers();
@@ -231,7 +225,7 @@ namespace Macrocosm.Content.Rockets.UI
                             var modulePattern = CustomizationDummy.Modules[module.Key].Pattern;
 
                             //TODO: check per color indexes instead
-                            if (modulePattern.Name == currentPatternIcon.Pattern.Name && hslMenu.PendingChange)
+                            if (modulePattern.Name == currentPatternIcon.Pattern.Name && hslMenu.PendingChange) 
                                 CustomizationDummy.Modules[module.Key].Pattern = modulePattern.WithColor(colorIndex, hslMenu.PendingColor);
                         }
                     }
@@ -239,13 +233,13 @@ namespace Macrocosm.Content.Rockets.UI
                     {
                         if (hslMenu.PendingChange)
                         {
-                            currentModule.Pattern = currentModule.Pattern.WithColor(colorIndex, hslMenu.PendingColor);
-                            currentPatternIcon.Pattern = currentModule.Pattern.WithColor(colorIndex, hslMenu.PendingColor);
+                            CurrentModule.Pattern = CurrentModule.Pattern.WithColor(colorIndex, hslMenu.PendingColor);
+                            currentPatternIcon.Pattern = CurrentModule.Pattern.WithColor(colorIndex, hslMenu.PendingColor);
+                        }
                     }
                 }
-                }
 
-                picker.BackPanelColor = currentModule.Pattern.GetColor(colorIndex);
+                picker.BackPanelColor = CurrentModule.Pattern.GetColor(colorIndex);
             }
         }
 
@@ -377,7 +371,7 @@ namespace Macrocosm.Content.Rockets.UI
 
         private void OnCurrentModuleChange(string moduleName, int moduleIndex)
         {
-            currentModule = CustomizationDummy.Modules[moduleName];
+            currentModuleName = moduleName;
             modulePickerTitle.SetText(Language.GetText("Mods.Macrocosm.UI.Rocket.Modules." + moduleName));
             RefreshPatternConfigPanel();
         }
@@ -393,8 +387,8 @@ namespace Macrocosm.Content.Rockets.UI
             rocketPreviewZoomButton.SetImage(ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Buttons/ZoomOutButton"));
             rocketPreviewZoomButton.HoverText = Language.GetText("Mods.Macrocosm.UI.Common.ZoomOut");
 
-            currentModule = lastModule;
-            modulePickerTitle.SetText(Language.GetText("Mods.Macrocosm.UI.Rocket.Modules." + currentModule.Name));
+            currentModuleName = lastModuleName;
+            modulePickerTitle.SetText(Language.GetText("Mods.Macrocosm.UI.Rocket.Modules." + CurrentModule.Name));
             RefreshPatternConfigPanel();
         }
 
@@ -406,8 +400,11 @@ namespace Macrocosm.Content.Rockets.UI
 
             hslMenu.CaptureCurrentColor();
 
-            lastModule = currentModule;
-            currentModule = CustomizationDummy.Modules["BoosterRight"];
+            lastModuleName = currentModuleName;
+
+            //TODO: add a way to fetch common patterns for all modules and never reference a specific module if zoomed out
+            currentModuleName = "BoosterRight";
+
             modulePickerTitle.SetText("");
             RefreshPatternConfigPanel();
         }
@@ -428,7 +425,7 @@ namespace Macrocosm.Content.Rockets.UI
             CustomizationDummy = Rocket.Clone();
 
             UpdatePatternConfig();
-            currentPatternIcon.Pattern = CustomizationDummy.Modules[currentModule.Name].Pattern;
+            currentPatternIcon.Pattern = CustomizationDummy.Modules[CurrentModule.Name].Pattern;
 
             RefreshPatternColorPickers();
         }
@@ -485,7 +482,7 @@ namespace Macrocosm.Content.Rockets.UI
                     }
                     else
                     {
-                        currentModule.Pattern = currentModule.Pattern.WithColor(item.colorIndex, hslMenu.PreviousColor);
+                        CurrentModule.Pattern = CurrentModule.Pattern.WithColor(item.colorIndex, hslMenu.PreviousColor);
                     }
                 }
                 else if (item.colorIndex == -1)
@@ -495,7 +492,6 @@ namespace Macrocosm.Content.Rockets.UI
             }
 
             ColorPickersLoseFocus();
-
         }
         #endregion
 
@@ -518,11 +514,11 @@ namespace Macrocosm.Content.Rockets.UI
             }
             else
             {
-                if (CustomizationStorage.TryGetPattern(currentModule.Name, icon.Pattern.Name, out Pattern defaultPattern))
+                if (CustomizationStorage.TryGetPattern(CurrentModule.Name, icon.Pattern.Name, out Pattern defaultPattern))
                 {
-                    var colorData = defaultPattern.ColorData[0].WithUserColor(currentModule.Pattern.ColorData[0].Color);
+                    var colorData = defaultPattern.ColorData[0].WithUserColor(CurrentModule.Pattern.ColorData[0].Color);
                     var newPattern = defaultPattern.WithColorData(colorData);
-                    currentModule.Pattern = newPattern;
+                    CurrentModule.Pattern = newPattern;
                 }
             }
 
@@ -551,7 +547,7 @@ namespace Macrocosm.Content.Rockets.UI
         {
             patternColorPickers = new();
 
-            var indexes = currentModule.Pattern.UserModifiableIndexes;
+            var indexes = CurrentModule.Pattern.UserModifiableIndexes;
 
             float iconSize = 32f + 8f;
             float iconLeftOffset = 3f;
@@ -620,8 +616,8 @@ namespace Macrocosm.Content.Rockets.UI
             }
             else
             {
-                var defaultPattern = CustomizationStorage.GetPattern(currentModule.Name, currentModule.Pattern.Name);
-                currentModule.Pattern = defaultPattern;
+                var defaultPattern = CustomizationStorage.GetPattern(CurrentModule.Name, CurrentModule.Pattern.Name);
+                CurrentModule.Pattern = defaultPattern;
                 currentPatternIcon.Pattern = defaultPattern;
             }
 
@@ -691,7 +687,7 @@ namespace Macrocosm.Content.Rockets.UI
         {
             if (GetFocusedColorPicker(out var item) && item.colorIndex >= 0)
             {
-                hslMenu.SetColorHSL(currentModule.Pattern.GetColor(item.colorIndex).ToScaledHSL(luminanceSliderFactor));
+                hslMenu.SetColorHSL(CurrentModule.Pattern.GetColor(item.colorIndex).ToScaledHSL(luminanceSliderFactor));
                 hslMenu.CaptureCurrentColor();
             }
         }
@@ -744,9 +740,6 @@ namespace Macrocosm.Content.Rockets.UI
 
         private UIPanel CreateModulePicker()
         {
-            currentModule ??= CustomizationDummy.Modules["CommandPod"];
-            lastModule ??= CustomizationDummy.Modules["CommandPod"];
-
             var mode = ReLogic.Content.AssetRequestMode.ImmediateLoad;
 
             modulePicker = new()
@@ -1069,7 +1062,7 @@ namespace Macrocosm.Content.Rockets.UI
 
             foreach (var module in Rocket.Modules.Keys)
             {
-                if (module == currentModule.Name)
+                if (module == CurrentModule.Name)
                 {
                     patternSelector = CreatePatternSelector(module);
                     foreach (var icon in patternSelector.OfType<UIPatternIcon>().ToList())

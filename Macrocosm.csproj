@@ -32,8 +32,7 @@
       <HintPath>References\SubworldLibrary.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ProjectExtensions><VisualStudio><UserProperties localization_4en-us_3mods_1macrocosm_1npcs_1hjson__JsonSchema="hjson" /></VisualStudio></ProjectExtensions>
-    <!-- <Target BeforeTargets="Build" Name="BuildEffects" Inputs="Assets/Effects/*.fx" Outputs="Assets/Effects/*.fxc"> -->
-        <!-- <Exec Command="EasyXnb.exe" WorkingDirectory="Tools/EasyXnb" /> -->
-    <!-- </Target> -->
+  <!-- <Target BeforeTargets="Build" Name="BuildEffects" Inputs="Assets/Effects/*.fx" Outputs="Assets/Effects/*.fxc"> -->
+      <!-- <Exec Command="EasyXnb.exe" WorkingDirectory="Tools/EasyXnb" /> -->
+  <!-- </Target> -->
 </Project>

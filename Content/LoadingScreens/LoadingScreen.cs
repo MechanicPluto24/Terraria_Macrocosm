@@ -195,9 +195,9 @@ namespace Macrocosm.Content.LoadingScreens
 
             state.SaveState(spriteBatch);
             spriteBatch.End();
-            spriteBatch.Begin(state, Main.GameViewMatrix.ZoomMatrix);
+            spriteBatch.Begin(state, Main.UIScaleMatrix);
 
-            rocket.DrawDummy(spriteBatch, position, Color.White);
+            rocket.Draw(Rocket.DrawMode.Dummy, spriteBatch, position, useRenderTarget: false);
 
             spriteBatch.End();
             spriteBatch.Begin(state);

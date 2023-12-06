@@ -63,7 +63,7 @@ namespace Macrocosm.Common.Drawing.Particles
         {
             get
             {
-                // BANDAID: Returns (1,1) on servers... now I really have to do that ^
+                // BANDAID: Returns (1,1) on servers because I'm dumb -- Feldy
                 if (GetFrame() is null)
                     return Texture is null ? new Vector2(1, 1) : Texture.Size();
 
