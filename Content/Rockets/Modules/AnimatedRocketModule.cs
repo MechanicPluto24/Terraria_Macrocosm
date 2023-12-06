@@ -11,6 +11,7 @@
         public int FrameSpeed { get; set; } = 4;
 
         public bool ShouldAnimate { get; set; } = true;
+        public bool IsAnimationActive => isAnimating;
 
         private int frameCounter;
         private bool isAnimating = false;

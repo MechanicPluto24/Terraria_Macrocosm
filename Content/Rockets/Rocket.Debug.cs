@@ -25,7 +25,7 @@ namespace Macrocosm.Content.Rockets
 
         public void DisplayWhoAmI()
         {
-            ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, FontAssets.DeathText.Value, WhoAmI.ToString(), CommandPod.Center - new Vector2(0, 100) - Main.screenPosition, Color.White, 0f, Vector2.Zero, Vector2.One);
+            ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, FontAssets.DeathText.Value, WhoAmI.ToString(), Bounds.Center.ToVector2() - new Vector2(0, 400) - Main.screenPosition, Color.White, 0f, Vector2.Zero, Vector2.One);
         }
 
         public override string ToString()
