@@ -67,7 +67,10 @@ namespace Macrocosm.Content.Rockets.Modules
 
         public virtual void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 position)
         {
+        }
 
+        public virtual void PostDraw(SpriteBatch spriteBatch, Vector2 position)
+        {
         }
 
         private SpriteBatchState state;

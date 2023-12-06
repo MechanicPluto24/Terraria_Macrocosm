@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Utils;
+using Macrocosm.Content.Items.CursorIcons;
 using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.Modules;
 using Newtonsoft.Json;
@@ -13,11 +14,11 @@ namespace Macrocosm.Content.Rockets
         public Rocket VisualClone()
         {
             Rocket visualClone = new();
-            visualClone.ApplyCustomizationChanges(this);
+            visualClone.ApplyCustomizationChanges(this, sync: false, reset: true);
             return visualClone;
         }
 
-        public void ApplyCustomizationChanges(Rocket source)
+        public void ApplyCustomizationChanges(Rocket source, bool sync = true, bool reset = true)
         {
             Nameplate.Text = source.Nameplate.Text;
             Nameplate.TextColor = source.Nameplate.TextColor;
@@ -30,8 +31,11 @@ namespace Macrocosm.Content.Rockets
                 Modules[moduleName].Pattern = source.Modules[moduleName].Pattern;
             }
 
-            ResetRenderTarget();
-            SendCustomizationData();
+            if(sync)
+                SendCustomizationData();
+
+            if(reset)
+                ResetRenderTarget();
         }
 
         public void ResetCustomizationToDefault()
@@ -44,7 +48,6 @@ namespace Macrocosm.Content.Rockets
                 moduleKvp.Value.Pattern = CustomizationStorage.GetDefaultPattern(moduleKvp.Key);
             }
 
-            ResetRenderTarget();
             SendCustomizationData();
         }
 
@@ -101,7 +104,6 @@ namespace Macrocosm.Content.Rockets
             }
 
             ResetRenderTarget();
-
         }
     }
 }

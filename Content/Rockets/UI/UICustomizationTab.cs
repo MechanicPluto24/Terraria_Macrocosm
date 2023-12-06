@@ -172,7 +172,6 @@ namespace Macrocosm.Content.Rockets.UI
             base.Update(gameTime);
 
             CustomizationDummy.ForcedStationaryAppearance = true;
-            CustomizationDummy.ResetRenderTarget();
 
             rocketPreview.RocketDummy = CustomizationDummy;
             currentModule ??= CustomizationDummy.Modules["CommandPod"];
