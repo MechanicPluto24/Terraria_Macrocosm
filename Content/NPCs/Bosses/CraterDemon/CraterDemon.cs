@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Debugging;
 using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Systems;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Buffs.Debuffs;
@@ -51,7 +52,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             public float alpha;
             public bool visible;
             public float rotation;
-            public bool fast;
+            public float rotationsPerSecond;
 
             public void Write(BinaryWriter writer)
             {
@@ -59,8 +60,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 writer.Write(scale);
                 writer.Write(alpha);
                 writer.Write(rotation);
+                writer.Write(rotationsPerSecond);
 
-                BitsByte bb = new(visible, fast);
+                BitsByte bb = new(visible);
                 writer.Write(bb);
             }
 
@@ -70,9 +72,10 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 scale = reader.ReadSingle();
                 alpha = reader.ReadSingle();
                 rotation = reader.ReadSingle();
+                rotationsPerSecond = reader.ReadSingle();
 
                 BitsByte bb = reader.ReadByte();
-                bb.Retrieve(ref visible, ref fast);
+                bb.Retrieve(ref visible);
             }
 
             public void Update()
@@ -80,7 +83,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 if (!visible)
                     return;
 
-                float rotationsPerSecond = fast ? 1.5f : 0.9f;
                 rotation -= MathHelper.ToRadians(rotationsPerSecond * 6f);
 
                 Lighting.AddLight(center, new Vector3(30, 255, 105) / 255 * scale * 3f);
@@ -124,6 +126,21 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             }
         }
 
+        public enum AttackState
+        {
+            FadeIn = -3,
+            FadeAway = -2,
+            Phase2Transition = -1,
+            DoNothing = 0,
+            SummonMeteors = 1,
+            SummonCraterImps = 2,
+            SummonPhantasmals = 3,
+            SummonPhantasmalPortals = 4,
+            Charge = 5,
+            PortalCharge = 6,
+            PostCharge = 7
+        }
+
         public AttackState AI_Attack
         {
             get => (AttackState)NPC.ai[0];
@@ -145,26 +162,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             set => NPC.ai[3] = value;
         }
 
-        public enum AttackState
-        {
-           FadeIn = -3,
-           FadeAway = -2,
-           Phase2Transition = -1,
-           DoNothing = 0,
-           SummonMeteors = 1,
-           SummonCraterImps = 2,
-           SummonPhantasmals = 3,
-           Charge = 4,
-           PortalCharge = 5,
-           PostCharge = 6
-        }
-
-        private const int AIAttack_Charge_RepeatStart = 1;
-        private const int AIAttack_Charge_RepeatSubphaseCount = 3;
-
-        private const int AIAttack_PortalCharge_RepeatStart = 2;
-        private const int AIAttack_PortalCharge_RepeatSubphaseCount = 5;
-
         private readonly AttackInfo[] attacks = new AttackInfo[]{
 			// AttackState.DoNothing
 			new AttackInfo(){
@@ -175,7 +172,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			// AttackState.SummonMeteors
 			new AttackInfo(){
                 initialProgress = null,
-                initialTimer = (CD) => (int)(PortalTimerMax * CD.GetDifficultyScaling(DifficultyScale.MeteorPortalIdleTime)),
+                initialTimer = (CD) => (int)(5 * 60 * CD.GetDifficultyScaling(DifficultyScale.AttackDurationScaling)),
                 resetAnimationCounter = true
             },
 			// AttackState.SummonCraterImps
@@ -186,7 +183,12 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			// AttackState.SummonPhantasmals
 			new AttackInfo(){
                 initialProgress = null,
-                initialTimer = (CD) => (int)(PortalTimerMax * CD.GetDifficultyScaling(DifficultyScale.PhantasmalPortalIdleTime)),
+                initialTimer = (CD) => (int)(8 * 60 * CD.GetDifficultyScaling(DifficultyScale.AttackDurationScaling))
+            },
+            // AttackState.SummonPhantasmalPortals
+			new AttackInfo(){
+                initialProgress = null,
+                initialTimer = (CD) => (int)(5 * 60 * CD.GetDifficultyScaling(DifficultyScale.AttackDurationScaling)),
                 resetAnimationCounter = true
             },
             // AttackState.Charge
@@ -208,15 +210,12 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
         private enum DifficultyScale
         {
-            AttackDurationScaling,     // The initial AI timer scaling, based on AttackInfo, when switching attacks
-
-            MeteorPortalIdleTime,      // The idle time scaling on meteor portal attack
-            PhantasmalPortalIdleTime,  // The idle time scaling on phantasmal portal attack
-
-            ChargeVelocity,            // Regular charge attack velocity value 
-            PortalChargeVelocity,      // Portal charge attack velocity value 
-            FloatTowardsTargetVelocity // Velocity towards target when not doing a special attack
-        }
+            AttackDurationScaling,      // The initial AI timer scaling, based on AttackInfo, when switching attacks                                        
+            ChargeSpeed,                // Regular charge attack speed
+            PortalChargeSpeed,          // Portal charge attack speed
+            FloatTowardsTargetSpeed,    // Speed towards target when not doing a special attack
+            CirclePlayerSpeed            // Orbit player speed
+        } 
 
         private enum DifficultyInfo
         {
@@ -225,7 +224,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             SuitBreachTime,               // Suit breach debuff time 
                                                                   
             MeteorPortalCount,            // Number of meteor portals 
-            MeteorPortalDefenseBoost,     // Extra defense during meteor portal attack
                                           
             CraterImpMaxCount,            // Max number of Crater Imp minions that can exist
 
@@ -239,19 +237,19 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             PortalChargeAttackCountMin,   // Min number of consecutive portal charge attacks 
             PortalChargeAttackCountMax,   // Max number of consecutive portal charge attacks 
 
+            PhantasmalImpMaxCount,        // Max number of phantasmal skulls spawned in a sequence
+
             PhantasmalPortalCount,        // Number of phantasmal portals 
-            PhantasmalPortalDefenseBoost, // Extra defense during phantasmal portal attack
         }
 
         private readonly float[,] scaleInfo = new float[,]
         {	
 			 // Scaled element on :             NM1,  NM2,  EM1,   EM2,   MM1,   MM2,   FTW1,  FTW2
 			 /*AttackDurationScaling      */ { 1.25f, 1.1f, 1f,    0.8f,  0.75f, 0.65f, 0.6f,  0.55f }, 
-			 /*MeteorPortalIdleTime       */ { 1f,    0.9f, 0.75f, 0.65f, 0.5f,  0.45f, 0.4f,  0.3f  }, 
-			 /*PhantasmalPortalIdleTime   */ { 1f,    1f,   0.9f,  0.85f, 0.65f, 0.55f, 0.45f, 0.35f }, 
-			 /*ChargeVelocity             */ { 20f,   22f , 27f,   29f,   33f,   35f,   39f,   43f   },
-			 /*PortalChargeVelocity       */ { 17f,   19f , 24f,   26f,   30f,   32f,   36f,   40f   },
-			 /*FloatTowardsTargetVelocity */ { 8f,    8.5f, 9f,    9.5f,  10f,   10.5f, 11f,   11.5f }
+			 /*ChargeSpeed                */ { 20f,   22f , 27f,   29f,   33f,   35f,   39f,   43f   },
+			 /*PortalChargeSpeed          */ { 17f,   19f , 24f,   26f,   30f,   32f,   36f,   40f   },
+			 /*FloatTowardsTargetSpeed    */ { 8f,    8.5f, 9f,    9.5f,  10f,   10.5f, 11f,   11.5f },
+			 /*CirclePlayerSpeed          */ { 12f,   13f,  14f,   15f,   16f,   17f,   18f,   19f   }
         };
 
         private readonly int[,] difficultyInfo = new int[,]
@@ -261,8 +259,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 			 /*SuitBreachTime              */ { 120, 120, 240, 240, 260, 260, 300, 300 },  
                   
-			 /*MeteorPortalCount           */ { 2, 2, 3, 3, 4, 4, 5, 5 },                           
-			 /*MeteorPortalDefenseBoost    */ { 40, 40, 50, 50, 50, 50, 60, 60 },
+			 /*MeteorPortalCount           */ { 3, 3, 4, 4, 6, 6, 7, 8 },                           
                                            
 			 /*CraterImpMaxCount           */ { 3, 3, 4, 4, 4, 4, 5, 5 },      
 
@@ -276,8 +273,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			 /*PortalChargeAttackCountMin  */ { 2, 3, 4, 5, 4, 5, 6, 7 },                         
 			 /*PortalChargeAttackCountMax  */ { 4, 5, 8, 9, 8, 9, 10, 11 },
 
+			 /*PhantasmalImpMaxCount       */ { 5, 5, 6, 6, 8, 8, 9, 9 },
+
 			 /*PhantasmalPortalCount       */ { 1, 1, 1, 1, 1, 1, 1, 1 },
-			 /*PhantasmalPortalDefenseBoost*/ { 20, 20, 30, 30, 30, 30, 40, 40 },
         };
 
         /// <summary> Return the difficulty index (gamemode, phase): NM1, NM2, EM1, EM2, MM1, MM2, FTW1, FTW2  </summary>
@@ -306,7 +304,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
             AI_AttackProgress = info.initialProgress?.Invoke(this) ?? 0;
 
-            AI_Timer = info.initialTimer.Invoke(this);
+            AI_Timer = GetInitialTimer(attack);
 
             if (info.resetAnimationCounter)
                 AI_AnimationCounter = -1;
@@ -318,9 +316,16 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             }
         }
 
+        private int GetInitialTimer(AttackState attack)
+        {
+            AttackInfo info = attacks[(int)attack];
+            return info.initialTimer.Invoke(this);
+        }
+
         private bool phase2 = false;
 
         private bool spawned = false;
+        private int noMovementCounter;
         private float targetAlpha = 255f;
         private bool ignoreRetargetPlayer = false;
         private float targetZAxisRotation = 0f;
@@ -332,21 +337,38 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
         private const float DefaultInertia = 20f;
         private float inertia = DefaultInertia;
         private AttackState oldAttack = AttackState.SummonMeteors;
-
         private Vector2? movementTarget;
-
         private int chargeAttackCount;
-
         private BigPortalInfo bigPortal;
         private BigPortalInfo bigPortal2;
-
         private Vector2 portalTarget;
         private Vector2 portalOffset;
         private int portalAttackCount;
         private int phantasmalRepeatCount;
 
+        public const float ZAxisRotationThreshold = 25f;
+
+        public int OnSpawn_InitialTimer = 320;
+        public int OnSpawn_FadeInTime = 280;
+        public int OnSpawn_LaughTime = 80;
+        public int OnSpawn_LaughTimeEnd = 0;
+
         public const int PortalTimerMax = (int)(4f * 60 + 1.5f * 60 + 24);  //Portal spawning leadup + time portals are active before they shrink
         public const int Phase2TimerMax = 150;
+
+        public const int Animation_LookLeft_JawClosed = 0;
+        public const int Animation_LookLeft_JawOpen = 1;
+        public const int Animation_LookFront_JawClosed = 2;
+        public const int Animation_LookFront_JawOpen = 3;
+        public const int Animation_LookRight_JawClosed = 4;
+        public const int Animation_LookRight_JawOpen = 5;
+
+
+        private const int AIAttack_Charge_RepeatStart = 1;
+        private const int AIAttack_Charge_RepeatSubphaseCount = 3;
+
+        private const int AIAttack_PortalCharge_RepeatStart = 2;
+        private const int AIAttack_PortalCharge_RepeatSubphaseCount = 5;
 
         public override void SetStaticDefaults()
         {
@@ -395,7 +417,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 Music = MusicLoader.GetMusicSlot(Mod, "Assets/Music/SpaceInvader");
         }
 
-
         public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)/* tModPorter Note: bossLifeScale -> balance (bossAdjustment is different, see the docs for details) */
         {
             //For comparison, Moon Lord's scale factor is 0.7f
@@ -440,12 +461,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
         public override void OnKill()
         {
             if (!WorldDataSystem.Instance.DownedCraterDemon)
-                NPC.NewNPC(NPC.GetSource_NaturalSpawn(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<MoonChampion>());
+                NPC.NewNPC(NPC.GetSource_Death(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<MoonChampion>());
 
-            // This is only used currently for lantern night, which we don't want in our subworlds
-            //NPC.SetEventFlagCleared(ref DownedBossSystem.downedCraterDemon, -1);
-
-            // Similar events can still happen with our event listener system
             WorldDataSystem.Instance.DownedCraterDemon = true;
         }
 
@@ -463,7 +480,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             NPC.UpdateScaleAndHitbox(baseWidth, baseHeight, newScale);
         }
 
-        const float ZAxisRotationThreshold = 25f;
 
         public override void SendExtraAI(BinaryWriter writer)
         {
@@ -566,24 +582,60 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
         public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Bosses/CraterDemon/CraterDemon_Glow").Value;
-            Texture2D star = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Star2").Value;
-
             spriteBatch.Draw(glowmask, NPC.position - screenPos + new Vector2(0, 4), NPC.frame, (Color)GetAlpha(Color.White), NPC.rotation, Vector2.Zero, NPC.scale, SpriteEffects.None, 0f);
 
+            DrawLensFlares(spriteBatch, screenPos);
+        }
+
+        private void DrawLensFlares(SpriteBatch spriteBatch, Vector2 screenPos)
+        {
             state2.SaveState(spriteBatch);
             spriteBatch.End();
             spriteBatch.Begin(BlendState.Additive, state2);
 
+            Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Flare2").Value;
+
             if (AI_Attack == AttackState.Phase2Transition && AI_AttackProgress >= 1)
             {
-                float progress = (1f * (1f - ((float)AI_Timer / Phase2TimerMax)));
-                float starScale = NPC.scale * 0.3f * (progress < 0.5f ? progress : 1f - progress);
-                float rotation = NPC.rotation + progress * 0.4f;
-                spriteBatch.Draw(star, NPC.Center - screenPos + new Vector2(30, -8), null, new Color(157, 255, 156), rotation, star.Size() / 2, starScale, SpriteEffects.None, 0f);
+                float progress = (1f - ((float)AI_Timer / Phase2TimerMax));
+                float scale = NPC.scale * 0.3f * (progress < 0.5f ? progress : 1f - progress);
+                spriteBatch.Draw(flare, NPC.Center - screenPos + GetEyeOffset(), null, new Color(157, 255, 156), NPC.rotation, flare.Size() / 2, scale, SpriteEffects.None, 0f);
             }
- 
+
+            if (AI_Attack == AttackState.SummonMeteors)
+            {
+                int maxTimer = GetInitialTimer(AttackState.SummonMeteors);
+                float progress = MathHelper.Clamp((float)(AI_Timer - 320) / (maxTimer - 320), 0f, 1f);
+                float scale = NPC.scale * 0.5f * (progress < 0.5f ? progress : 1f - progress);
+                spriteBatch.Draw(flare, NPC.Center - screenPos + GetEyeOffset(), null, new Color(255, 141, 36), NPC.rotation, flare.Size() / 2, scale, SpriteEffects.None, 0f);
+            }
+
+            if (AI_Attack == AttackState.FadeIn)
+            {
+                float progress = MathHelper.Clamp((float)(AI_Timer - OnSpawn_FadeInTime) / (OnSpawn_LaughTime - OnSpawn_FadeInTime), 0f, 1f);
+
+                if (AI_Timer < OnSpawn_LaughTime)
+                    progress *= (float)AI_Timer / OnSpawn_LaughTime;
+
+                spriteBatch.Draw(flare, NPC.Center - screenPos + GetEyeOffset(), null, new Color(157, 255, 156), NPC.rotation, flare.Size() / 2, 1.1f * Utility.QuadraticEaseIn(progress) * Main.rand.NextFloat(0.8f, 1f), SpriteEffects.None, 0f);
+            }
+
             spriteBatch.End();
             spriteBatch.Begin(state2);
+        }
+
+        private Vector2 GetEyeOffset()
+        {
+            return GetAnimationSetFrame() switch
+            {
+                Animation_LookLeft_JawClosed => new Vector2(-4, -16),
+                Animation_LookLeft_JawOpen => new Vector2(-4, -16),
+                Animation_LookFront_JawClosed => new Vector2(30, -8),
+                Animation_LookFront_JawOpen => new Vector2(30, -8),
+                Animation_LookRight_JawClosed => new Vector2(60, -16),
+                Animation_LookRight_JawOpen => new Vector2(60, -16),
+                _ => new Vector2(30, -8)
+            };
         }
 
         private int GetAnimationSetFrame()
@@ -601,7 +653,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             switch (AI_Attack)
             {
                 case AttackState.FadeIn:
-                    if (AI_Timer > 0 && AI_Timer <= 100 && AI_AnimationCounter % 16 < 8)
+                    if (AI_Timer > OnSpawn_LaughTimeEnd && AI_Timer <= OnSpawn_LaughTime && AI_AnimationCounter % 16 < 8)
                         set++;
                     break;
 
@@ -614,14 +666,11 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
                 case AttackState.DoNothing:
                 case AttackState.SummonCraterImps:
+                case AttackState.SummonPhantasmals:
+                case AttackState.SummonMeteors:
+                case AttackState.SummonPhantasmalPortals:
                     if (AI_AnimationCounter % 26 < 13)
                         set++;
-                    break;
-
-                case AttackState.SummonMeteors:
-                case AttackState.SummonPhantasmals:
-                    //Open mouth
-                    set++;
                     break;
 
                 case AttackState.Charge:
@@ -665,13 +714,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             return set;
         }
 
-        public const int Animation_LookLeft_JawClosed = 0;
-        public const int Animation_LookLeft_JawOpen = 1;
-        public const int Animation_LookFront_JawClosed = 2;
-        public const int Animation_LookFront_JawOpen = 3;
-        public const int Animation_LookRight_JawClosed = 4;
-        public const int Animation_LookRight_JawOpen = 5;
-
         public override void FindFrame(int frameHeight)
         {
             int set = GetAnimationSetFrame();
@@ -690,22 +732,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
         {
             NPC.defense = NPC.defDefense;
 
-            int phase2LifeMax = (int)(NPC.lifeMax * (Main.getGoodWorld ? 0.75f :
-                                                       Main.masterMode ? 0.6f  :
-                                                       Main.expertMode ? 0.5f  :
-                                                                         0.4f));
-
-            if (!phase2 && AI_Attack != AttackState.Phase2Transition && NPC.life < phase2LifeMax)
-            {
-                AI_Attack = AttackState.Phase2Transition;
-                AI_Timer = Phase2TimerMax;
-                AI_AttackProgress = 0;
-                targetZAxisRotation = 0f;
-            }
-
             if (!spawned)
             {
-                //Laugh after a second
                 if (AI_Timer == 0)
                 {
                     targetZAxisRotation = 0f;
@@ -714,20 +742,12 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
                     ignoreRetargetPlayer = true;
 
-                    AI_Timer = 60 + 100;
+                    UpdateScale(0.01f);
+                    AI_Timer = OnSpawn_InitialTimer;
                     AI_Attack = AttackState.FadeIn;
                     NPC.TargetClosest();
 
-                    NPC.netUpdate = true;
-                }
-                else if (AI_Timer <= 100)
-                {
                     spawned = true;
-                    targetAlpha = 0f;
-
-                    //Cultist laugh sound
-                    SoundEngine.PlaySound(SoundID.Zombie105 with { Pitch = -0.2f }, NPC.Center);
-
                     NPC.netUpdate = true;
                 }
                 else
@@ -798,6 +818,10 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                     AI_SummonPhantasmals(player);
                     break;
 
+                case AttackState.SummonPhantasmalPortals:
+                    AI_SummonPhantasmalPortals(player);
+                    break;
+
                 case AttackState.Charge:
                     AI_Charge(player);
                     break;
@@ -833,6 +857,14 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             else
                 zAxisRotation = MathHelper.Lerp(zAxisRotation, targetZAxisRotation, zAxisLerpStrength / 60f);
 
+            if (NPC.velocity == NPC.oldVelocity && AI_Attack is AttackState.SummonMeteors or AttackState.SummonPhantasmalPortals)
+                noMovementCounter++;
+            else
+                noMovementCounter = 0;
+
+            if (noMovementCounter >= 240)
+                SetAttack(AttackState.DoNothing);
+
             //We don't want sprite flipping
             NPC.spriteDirection = -1;
 
@@ -845,24 +877,48 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
         private void AI_FadeIn()
         {
-            //Do the laughing animation
-            if (AI_Timer > 0 && AI_Timer <= 100)
+            if (AI_Timer == OnSpawn_InitialTimer)
             {
-                NPC.velocity *= 1f - 3f / 60f;
+                bigPortal = new BigPortalInfo();
+                SpawnBigPortal(NPC.Center, ref bigPortal, 0.9f);
+            }
+            else if (AI_Timer > OnSpawn_FadeInTime && AI_Timer < OnSpawn_InitialTimer - 1)
+            {
+                NPC.Center = bigPortal.center;
+
+                float targetScale = 1.3f;
+                if (bigPortal.scale > targetScale - 0.02f)
+                {
+                    bigPortal.scale = targetScale;
+                    bigPortal.alpha = 1f;
+                }
+                else
+                {
+                    bigPortal.scale = Utility.ScaleLogarithmic(bigPortal.scale, targetScale, 4.6f, 1f / 60f);
+                    bigPortal.alpha = bigPortal.scale;
+                }
+            }
+            else if (AI_Timer > 0 && AI_Timer <= OnSpawn_FadeInTime)
+            {
+                UpdateScale(Utility.ScaleLogarithmic(NPC.scale, 1f, 2.3851f, 1f / 60f));
+
+                if(AI_Timer == OnSpawn_LaughTime)
+                    SoundEngine.PlaySound(SoundID.Zombie105 with { Pitch = -0.2f }, NPC.Center);
+
+                if (AI_Timer < 20)
+                {
+                    bigPortal.scale = Utility.ScaleLogarithmic(bigPortal.scale, 0f, 4f, 1f / 60f);
+                    bigPortal.alpha = bigPortal.scale;
+                }        
             }
             else if (AI_Timer <= 0)
             {
-                //Transition to the next subphase
+                //Transition to the next phase
                 SetAttack(AttackState.DoNothing);
-
+                targetAlpha = 0f;
+                bigPortal.visible = false;
                 NPC.dontTakeDamage = false;
                 ignoreRetargetPlayer = false;
-            }
-            else
-            {
-                NPC.velocity = new Vector2(0, 1.5f);
-
-                SpawnDusts();
             }
         }
         private void AI_FadeAway()
@@ -947,71 +1003,70 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
             FloatTowardsTarget(player);
 
+
+            int phase2LifeMax = (int)(NPC.lifeMax * (Main.getGoodWorld ? 0.75f :
+                                                       Main.masterMode ? 0.6f :
+                                                       Main.expertMode ? 0.5f :
+                                                                         0.4f));
+
+            if (!phase2 && AI_Attack != AttackState.Phase2Transition && NPC.life < phase2LifeMax)
+            {
+                AI_Attack = AttackState.Phase2Transition;
+                AI_Timer = Phase2TimerMax;
+                AI_AttackProgress = 0;
+                targetZAxisRotation = 0f;
+            }
+
             if (AI_Timer <= 0 && Main.netMode != NetmodeID.MultiplayerClient)
             {
-                List<AttackState> list = new();
+                if (NPC.DistanceSQ(player.Center) > (120 * 16f) * (120 * 16f)) 
+                { 
+                    SetAttack(AttackState.PortalCharge);
+                }
+                else 
+                {
+                    List<AttackState> list = new();
 
-                if (phase2 || Main.expertMode)
+                    if (phase2 || Main.expertMode)
+                        list.Add(AttackState.SummonPhantasmalPortals);
+
+                    list.Add(AttackState.SummonMeteors);
+                    list.Add(AttackState.SummonCraterImps);
                     list.Add(AttackState.SummonPhantasmals);
 
-                list.Add(AttackState.SummonMeteors);
-                list.Add(AttackState.SummonCraterImps);
+                    float portalAttackChance = Main.getGoodWorld ? 0.1f :
+                                                Main.masterMode ? 0.25f :
+                                                Main.expertMode ? 0.35f :
+                                                                  0.50f;
 
-                float portalAttackChance = Main.getGoodWorld ? 0.1f :
-                                            Main.masterMode ? 0.25f :
-                                            Main.expertMode ? 0.35f :
-                                                              0.50f ;
+                    if (CountAliveCraterImps() > 0)
+                        portalAttackChance *= 2f;
 
-                if (CountAliveCraterImps() > 0)
-                    portalAttackChance *= 2f;
+                    if (Main.rand.NextFloat() < portalAttackChance)
+                        list.Add(AttackState.PortalCharge);
+                    else
+                        list.Add(AttackState.Charge);
 
-                if (Main.rand.NextFloat() < portalAttackChance)
-                    list.Add(AttackState.PortalCharge);
-                else
-                    list.Add(AttackState.Charge);
+                    list.Remove(oldAttack);
 
-                list.Remove(oldAttack);
+                    SetAttack(list.GetRandom());
+                }
+               
 
-                SetAttack(list.GetRandom());
                 NPC.netUpdate = true;
             }
         }
         private void AI_SummonMeteors(Player player)
         {
-            NPC.defense = NPC.defDefense + GetDifficultyInfo(DifficultyInfo.MeteorPortalDefenseBoost);
+            int maxTimer = GetInitialTimer(AttackState.SummonMeteors);
 
-            //Face forwards
-            targetZAxisRotation = 0f;
-
-            NPC.velocity *= 1f - 4.67f / 60f;
-
-            if (Math.Abs(NPC.velocity.X) < 0.02f)
-                NPC.velocity.X = 0f;
-            if (Math.Abs(NPC.velocity.Y) < 0.02f)
-                NPC.velocity.Y = 0f;
-
-            int maxMeteorTime = (int)(PortalTimerMax * GetDifficultyScaling(DifficultyScale.MeteorPortalIdleTime));
-
-            if (AI_Timer == maxMeteorTime - 1)
+            if (AI_Timer == maxTimer - 1)
             {
                 SoundEngine.PlaySound(SoundID.Zombie99, NPC.Center);
             }
-            else if (AI_Timer == maxMeteorTime - 24)
+            else if (AI_Timer == maxTimer - 24)
             {
-                //Wait until the animation frame changes to the one facing forwards
-                if (GetAnimationSetFrame() == Animation_LookFront_JawOpen)
-                {
-                    SoundEngine.PlaySound(SoundID.Zombie93, NPC.Center);
-                    AI_AttackProgress++;
-                }
-                else
-                    AI_Timer++;
-            }
-
-            if (AI_AttackProgress == 1)
-            {
-                //Spawn portals near and above the player
-                Vector2 orig = player.Center;
+                Vector2 orig = player.Center + player.velocity;
 
                 int count = GetDifficultyInfo(DifficultyInfo.MeteorPortalCount);
 
@@ -1019,15 +1074,23 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 {
                     for (int i = 0; i < count; i++)
                     {
-                        Vector2 spawn = orig + new Vector2(Main.rand.NextFloat(-1, 1) * 40 * 16, Main.rand.NextFloat(-1.5f, -0.5f) * 40 * 16);
+                        Vector2 spawn = orig + new Vector2(Main.rand.NextFloat(player.direction * 0.5f, player.direction * 1.5f) * 60 * 16, Main.rand.NextFloat(-1.5f, -0.5f) * 60 * 16);
                         Projectile.NewProjectile(NPC.GetSource_FromAI(), spawn, Vector2.Zero, ModContent.ProjectileType<MeteorPortal>(), Utility.TrueDamage(Main.expertMode ? 140 : 90), 0f, Main.myPlayer, 0f, phase2 ? 1f : 0f);
                     }
                 }
 
+                SoundEngine.PlaySound(SoundID.Zombie93, NPC.Center);
+
                 AI_AttackProgress++;
             }
-            else if (AI_AttackProgress == 2 && AI_Timer <= 0)
-                SetAttack(AttackState.DoNothing);
+
+            if (AI_AttackProgress == 1)
+            {
+                FloatTowardsTarget(player);
+
+                if (AI_Timer <= 0)
+                    SetAttack(AttackState.DoNothing);
+            }
         }
         private void AI_SummonCraterImps(Player player)
         {
@@ -1062,56 +1125,79 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
         }
         private void AI_SummonPhantasmals(Player player)
         {
-            NPC.defense = NPC.defDefense + GetDifficultyInfo(DifficultyInfo.PhantasmalPortalDefenseBoost);
+            FloatTowardsTarget(player);
 
-            //Face forwards
-            targetZAxisRotation = 0f;
+            if (AI_AttackProgress < GetDifficultyInfo(DifficultyInfo.PhantasmalImpMaxCount))
+            {
+                if (AI_Timer % (int)(25 * GetDifficultyScaling(DifficultyScale.AttackDurationScaling)) == 0)
+                {
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        int type = ModContent.ProjectileType<PhantasmalImpSmall>();
+                        int damage = Utility.TrueDamage(Main.masterMode ? 72 : Main.expertMode ? 56 : 36);
+                        Vector2 spawn = NPC.Center + new Vector2(Main.rand.NextFloat(0, 1) * -NPC.direction * 22 * 16, Main.rand.NextFloat(-1, 1) * 10 * 16);
+                        Vector2 velocity = (player.Center - NPC.Center).SafeNormalize(Vector2.One).RotatedByRandom(MathHelper.PiOver4) * Main.rand.NextFloat(16, 22);
 
-            NPC.velocity *= 1f - 4.67f / 60f;
+                        if (Main.rand.NextBool(3))
+                        {
+                            type = ModContent.ProjectileType<PhantasmalImp>();
+                            velocity *= 0.8f;
+                            damage = (int)(damage * 1.4f);
+                        }
 
-            if (Math.Abs(NPC.velocity.X) < 0.02f)
-                NPC.velocity.X = 0f;
-            if (Math.Abs(NPC.velocity.Y) < 0.02f)
-                NPC.velocity.Y = 0f;
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), spawn, velocity, type, damage, 1f, Main.myPlayer, ai0: player.whoAmI);
+                    }
 
-            int maxPhantasmalTime = (int)(PortalTimerMax * GetDifficultyScaling(DifficultyScale.PhantasmalPortalIdleTime));
+                    SoundEngine.PlaySound(SoundID.Zombie93, NPC.Center);
 
-            if (AI_Timer == maxPhantasmalTime - 1)
+                    AI_AttackProgress++;
+                }
+            }
+            else if (AI_Timer <= 0)
+            {
+                //Go to next attack immediately
+                SetAttack(AttackState.DoNothing);
+            }
+        }
+
+        private void AI_SummonPhantasmalPortals(Player player)
+        {
+            int maxTimer = GetInitialTimer(AttackState.SummonPhantasmalPortals);
+
+            if (AI_Timer == maxTimer - 1)
             {
                 SoundEngine.PlaySound(SoundID.Zombie99, NPC.Center);
             }
-            else if (AI_Timer == maxPhantasmalTime - 24)
-            {
-                //Wait until the animation frame changes to the one facing forwards
-                if (GetAnimationSetFrame() == Animation_LookFront_JawOpen)
-                {
-                    SoundEngine.PlaySound(SoundID.Zombie93, NPC.Center);
-                    AI_AttackProgress++;
-                }
-                else
-                    AI_Timer++;
-            }
-
-            if (AI_AttackProgress == 1)
+            else if (AI_Timer == maxTimer - 24)
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     //Spawn portals near and above the player
                     Vector2 orig = player.Center - new Vector2(0, 15 * 16);
                     int count = GetDifficultyInfo(DifficultyInfo.PhantasmalPortalCount);
+                    int damage = Utility.TrueDamage(Main.masterMode ? 72 : Main.expertMode ? 56 : 36);
 
                     for (int i = 0; i < count; i++)
                     {
                         Vector2 spawn = orig + new Vector2(Main.rand.NextFloat(-1, 1) * 40 * 16, Main.rand.NextFloat(-1, 1) * 40 * 16);
-                        Projectile.NewProjectile(NPC.GetSource_FromAI(), spawn, Vector2.Zero, ModContent.ProjectileType<PhantasmalPortal>(), Utility.TrueDamage(Main.masterMode ? 180 : Main.expertMode ? 140 : 90), 0f, Main.myPlayer, ai1: phase2 ? 1f : 0f, ai2: NPC.target);
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), spawn, Vector2.Zero, ModContent.ProjectileType<PhantasmalPortal>(), damage, 0f, Main.myPlayer, ai1: phase2 ? 1f : 0f, ai2: NPC.target);
                     }
                 }
 
+                SoundEngine.PlaySound(SoundID.Zombie93, NPC.Center);
+
                 AI_AttackProgress++;
             }
-            else if (AI_AttackProgress == 2 && AI_Timer <= 0)
-                SetAttack(AttackState.DoNothing);
+
+            if (AI_AttackProgress == 1)
+            {
+                FloatTowardsTarget(player);
+
+                if (AI_Timer <= 0)
+                    SetAttack(AttackState.DoNothing);
+            }
         }
+
         private void AI_Charge(Player player)
         {
             inertia = DefaultInertia * 0.1f;
@@ -1123,7 +1209,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                               ? (AI_AttackProgress - AIAttack_Charge_RepeatStart) / AIAttack_Charge_RepeatSubphaseCount
                               : 0;
 
-            float chargeVelocity = GetDifficultyScaling(DifficultyScale.ChargeVelocity);
+            float chargeVelocity = GetDifficultyScaling(DifficultyScale.ChargeSpeed);
 
             if (AI_AttackProgress == 0)
             {
@@ -1141,6 +1227,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 }
                 else
                 {
+                    //CircleAroundTarget(player, 80 * 16, 0.1f);
                     FloatTowardsTarget(player);
                 }
             }
@@ -1194,7 +1281,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
             inertia = DefaultInertia * 0.1f;
 
-            float chargeVelocity = GetDifficultyScaling(DifficultyScale.PortalChargeVelocity);
+            float chargeVelocity = GetDifficultyScaling(DifficultyScale.PortalChargeSpeed);
 
             int repeatRelative = AI_AttackProgress >= AIAttack_PortalCharge_RepeatStart
                 ? (AI_AttackProgress - AIAttack_PortalCharge_RepeatStart) % AIAttack_PortalCharge_RepeatSubphaseCount
@@ -1352,8 +1439,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 if (AI_Timer <= 0)
                 {
                     //Second portal is where the boss will end up
-                    SpawnBigPortal(player.Center + portalOffset, ref bigPortal, fast: true);
-                    SpawnBigPortal(player.Center - portalOffset, ref bigPortal2, fast: true);
+                    SpawnBigPortal(player.Center + portalOffset, ref bigPortal, 1.6f);
+                    SpawnBigPortal(player.Center - portalOffset, ref bigPortal2, 1.6f);
                     bigPortal2.visible = false;
 
                     NPC.Center = bigPortal.center;
@@ -1555,7 +1642,11 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             //Look at the player and float around
             SetTargetZAxisRotation(player, out Vector2 targetCenter);
 
-            float speedX = GetDifficultyScaling(DifficultyScale.FloatTowardsTargetVelocity);
+            float speedX = GetDifficultyScaling(DifficultyScale.FloatTowardsTargetSpeed);
+
+            float speedup = Utility.InverseLerp((30 * 16f) * (30 * 16f), (60 * 16f) * (60 * 16f), NPC.DistanceSQ(targetCenter), true);
+            speedX += speedX * speedup;
+
             float speedY = speedX * 0.4f;
 
             if (NPC.DistanceSQ(targetCenter) >= minimumDistanceThreshold * minimumDistanceThreshold)
@@ -1616,14 +1707,14 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             dust.velocity = new Vector2(0, Main.rand.NextFloat(1.4f, 2.8f));
         }
 
-        private void SpawnBigPortal(Vector2 center, ref BigPortalInfo info, bool fast = false)
+        private void SpawnBigPortal(Vector2 center, ref BigPortalInfo info, float rotationsPerSecond = 0.9f)
         {
             info.center = center;
             info.visible = true;
             info.scale = 8f / 240f;  //Initial size of 8 pxiels
             info.alpha = info.scale;
             info.rotation = 0f;
-            info.fast = fast;
+            info.rotationsPerSecond = rotationsPerSecond;
 
             SoundStyle sound = SoundID.Item84 with { Volume = 0.9f };
             SoundEngine.PlaySound(sound, info.center);
@@ -1634,13 +1725,10 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             if (NPC.IsABestiaryIconDummy)
                 return NPC.GetBestiaryEntryColor(); // This is required because initially we have NPC.alpha = 255, in the bestiary it would look transparent
 
-            if (Main.getGoodWorld)
+            if (AI_Attack == AttackState.FadeIn)
             {
-                if (AI_Attack == AttackState.Phase2Transition)
-                     return Color.Lerp(drawColor, new Color(157, 255, 156).WithOpacity(0.1f), 1f - (float)AI_Timer / Phase2TimerMax) * (1f - targetAlpha / 255f); ;
- 
-                if (phase2)
-                     return new Color(157, 255, 156).WithOpacity(0.1f) * (1f - targetAlpha / 255f);
+                float progress = MathHelper.Clamp((float)(AI_Timer - OnSpawn_FadeInTime) / (OnSpawn_LaughTime - OnSpawn_FadeInTime), 0f, 1f);
+                return Color.Lerp(drawColor, new Color(157, 255, 156).WithOpacity(0.1f), 1f - progress) * progress; 
             }
             
             return drawColor * (1f - targetAlpha / 255f);
