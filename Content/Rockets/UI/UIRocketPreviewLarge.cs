@@ -165,7 +165,7 @@ namespace Macrocosm.Content.Rockets.UI
 			spriteBatch.End();
 			spriteBatch.Begin(state.SpriteSortMode, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, state.DepthStencilState, CustomRasterizerStates.ScissorTest, state.Effect, matrix);
 
-      RocketDummy.Draw(Rocket.DrawMode.Dummy, spriteBatch, (GetDimensions().Position() + new Vector2(moduleOffsetX, moduleOffsetY)) * zoom, useRenderTarget: false);
+			RocketDummy.Draw(Rocket.DrawMode.Dummy, spriteBatch, (GetDimensions().Position() + new Vector2(moduleOffsetX, moduleOffsetY)) * zoom, useRenderTarget: false);
 
 			spriteBatch.End();
 			spriteBatch.Begin(state);
