@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.Navigation.Checklist;
 using Microsoft.Xna.Framework;
@@ -11,7 +12,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.UI
 {
-    public class UINavigationTarget : UIElement
+    public class UINavigationTarget : UIElement, IConsistentUpdateable
     {
         /// <summary> The panel instance this target belongs to </summary>
         public UINavigationPanel OwnerPanel { get; set; }
@@ -130,51 +131,54 @@ namespace Macrocosm.Content.Rockets.UI
             OnLeftDoubleClick += (_, _) => OwnerPanel.ZoomIn(useDefault: false);
         }
 
+        public void Update()
+        {
+			rotation += 0.006f;
+
+			// Compute target opacity of the selection outline
+			if (Selected || IsMouseHovering)
+				targetOpacity += 0.1f;
+			else
+				targetOpacity -= 0.1f;
+
+			targetOpacity = MathHelper.Clamp(targetOpacity, 0, 1);
+
+			if (targetOpacity > 0f)
+			{
+				// Get the target color
+				if (Selected)
+				{
+					if (AlreadyHere)
+						targetColor = Color.Gray;
+					else if (IsReachable)
+						targetColor = new Color(0, 255, 0);
+					else
+						targetColor = new Color(255, 0, 0);
+				}
+				else if (IsMouseHovering)
+				{
+					targetColor = Color.Gold;
+				}
+
+				if (drawColor != targetColor)
+					targetColorLerp = 0f;
+
+				targetColorLerp += 0.1f;
+				targetColorLerp = MathHelper.Clamp(targetColorLerp, 0, 1);
+
+				drawColor = Color.Lerp(drawColor, targetColor, targetColorLerp);
+			}
+			else
+			{
+				drawColor = new Color(0, 0, 0, 0);
+				targetColor = new Color(0, 0, 0, 0);
+				targetColorLerp = 0f;
+			}
+		}
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-
-            rotation += 0.006f;
-
-            // Compute target opacity of the selection outline
-            if (Selected || IsMouseHovering)
-                targetOpacity += 0.1f;
-            else
-                targetOpacity -= 0.1f;
-
-            targetOpacity = MathHelper.Clamp(targetOpacity, 0, 1);
-
-            if (targetOpacity > 0f)
-            {
-                // Get the target color
-                if (Selected)
-                {
-                    if (AlreadyHere)
-                        targetColor = Color.Gray;
-                    else if (IsReachable)
-                        targetColor = new Color(0, 255, 0);
-                    else
-                        targetColor = new Color(255, 0, 0);
-                }
-                else if (IsMouseHovering)
-                {
-                    targetColor = Color.Gold;
-                }
-
-                if (drawColor != targetColor)
-                    targetColorLerp = 0f;
-
-                targetColorLerp += 0.1f;
-                targetColorLerp = MathHelper.Clamp(targetColorLerp, 0, 1);
-
-                drawColor = Color.Lerp(drawColor, targetColor, targetColorLerp);
-            }
-            else
-            {
-                drawColor = new Color(0, 0, 0, 0);
-                targetColor = new Color(0, 0, 0, 0);
-                targetColorLerp = 0f;
-            }
         }
 
         /// <summary> Check whether all the launch conditions specific to this target have been met </summary>

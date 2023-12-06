@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Common.UI;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +7,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.UI
 {
-    public class UINavigationMap : UIElement
+    public class UINavigationMap : UIElement, IConsistentUpdateable
     {
         /// <summary> The next navigation map, switched on zoom in </summary>
         public UINavigationMap Next = null;
@@ -62,6 +63,21 @@ namespace Macrocosm.Content.Rockets.UI
             SetPadding(0f);
         }
 
+        // Use for animation
+        public void Update()
+        {
+			if (showAnimationActive)
+			{
+				opacity += transitionSpeed;
+
+				if (opacity >= 1f)
+				{
+					showAnimationActive = false;
+					opacity = 1f;
+				}
+			}
+		}
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
@@ -74,17 +90,6 @@ namespace Macrocosm.Content.Rockets.UI
                     Next = navMap;
                 else
                     Next = null;
-            }
-
-            if (showAnimationActive)
-            {
-                opacity += transitionSpeed;
-
-                if (opacity >= 1f)
-                {
-                    showAnimationActive = false;
-                    opacity = 1f;
-                }
             }
         }
 
