@@ -8,9 +8,7 @@ using Macrocosm.Content.Rockets;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using SubworldLibrary;
 using System.Linq;
-using System.Reflection;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
@@ -19,188 +17,188 @@ using Terraria.WorldBuilding;
 
 namespace Macrocosm.Content.LoadingScreens
 {
-    // TODO:
-    // Zoom reset causes:
-    //		- some stars to align on the edge due to their movement vector and wrapping mechanic,
-    //		- offset the rocket trail.
-    // What's weird is that it only happens sometimes. 
-    // Disabling SubLib's Zoom reset on Subworld.DrawSetup seems to NOT fix it.
-    // Pls help :sadcat: -- Feldy
+	// TODO:
+	// Zoom reset causes:
+	//		- some stars to align on the edge due to their movement vector and wrapping mechanic,
+	//		- offset the rocket trail.
+	// What's weird is that it only happens sometimes. 
+	// Disabling SubLib's Zoom reset on Subworld.DrawSetup seems to NOT fix it.
+	// Pls help :sadcat: -- Feldy
 
-    /// <summary> Loading screen, displayed when traveling to/from subworlds. </summary>
-    public abstract class LoadingScreen
-    {
-        /// <summary> Whether there is any type of LoadingScreen active right now. </summary>
-        public static bool CurrentlyActive { get; set; }
+	/// <summary> Loading screen, displayed when traveling to/from subworlds. </summary>
+	public abstract class LoadingScreen
+	{
+		/// <summary> Whether there is any type of LoadingScreen active right now. </summary>
+		public static bool CurrentlyActive { get; set; }
 
-        /// <summary> The current animation timer. Updated automatically, override <see cref="UpdateAnimation"/> for custom behavior </summary>
-        protected float animationTimer = 0;
+		/// <summary> The current animation timer. Updated automatically, override <see cref="UpdateAnimation"/> for custom behavior </summary>
+		protected float animationTimer = 0;
 
-        protected Stars stars = new();
-        protected Stars fallingStars = new();
+		protected Stars stars = new();
+		protected Stars fallingStars = new();
 
-        protected bool Moving => rocket is not null;
-        protected Rocket rocket;
+		protected bool Moving => rocket is not null;
+		protected Rocket rocket;
 
-        private UIWorldGenProgressBar progressBar;
+		private UIWorldGenProgressBar progressBar;
 
-        private string statusText;
+		private string statusText;
 
-        /// <summary> Reset the animation timer. Useful when there's a persistent instance of a <see cref="LoadingScreen"/>. Call in the <see cref="Reset()"/> method. </summary>
-        public void ResetAnimation()
-        {
-            animationTimer = 0;
-            FadeEffect.ResetFade();
-            FadeEffect.StartFadeIn(0.012f);
-        }
+		/// <summary> Reset the animation timer. Useful when there's a persistent instance of a <see cref="LoadingScreen"/>. Call in the <see cref="Reset()"/> method. </summary>
+		public void ResetAnimation()
+		{
+			animationTimer = 0;
+			FadeEffect.ResetFade();
+			FadeEffect.StartFadeIn(0.012f);
+		}
 
-        public void Setup()
-        {
-            stars = new(600, 700, wrapMode: MacrocosmStar.WrapMode.Random);
-            fallingStars = new(15, 20, celledSpawn: true, wrapMode: MacrocosmStar.WrapMode.Random, falling: true, baseScale: 0.5f);
+		public void Setup()
+		{
+			stars = new(600, 700, wrapMode: MacrocosmStar.WrapMode.Random);
+			fallingStars = new(15, 20, celledSpawn: true, wrapMode: MacrocosmStar.WrapMode.Random, falling: true, baseScale: 0.5f);
 
-            fallingStars.Cast<FallingStar>().ToList().ForEach(star => star.Fall(deviationX: 0.1f, minSpeedY: 30f, maxSpeedY: 45f));
+			fallingStars.Cast<FallingStar>().ToList().ForEach(star => star.Fall(deviationX: 0.1f, minSpeedY: 30f, maxSpeedY: 45f));
 
-            Reset();
-        }
+			Reset();
+		}
 
-        public void SetTargetWorld(string targetWorld)
-        {
-            targetWorld = MacrocosmSubworld.SanitizeID(targetWorld);
+		public void SetTargetWorld(string targetWorld)
+		{
+			targetWorld = MacrocosmSubworld.SanitizeID(targetWorld);
 
-            switch (targetWorld)
-            {
-                case "Moon":
-                    progressBar = new(
-                        ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/WorldGen/ProgressBarMoon", AssetRequestMode.ImmediateLoad).Value,
-                        ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/WorldGen/ProgressBarMoon_Lower", AssetRequestMode.ImmediateLoad).Value,
-                        new Color(56, 10, 28), new Color(155, 38, 74), new Color(6, 53, 27), new Color(93, 228, 162)
-                    );
-                    break;
+			switch (targetWorld)
+			{
+				case "Moon":
+					progressBar = new(
+						ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/WorldGen/ProgressBarMoon", AssetRequestMode.ImmediateLoad).Value,
+						ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/WorldGen/ProgressBarMoon_Lower", AssetRequestMode.ImmediateLoad).Value,
+						new Color(56, 10, 28), new Color(155, 38, 74), new Color(6, 53, 27), new Color(93, 228, 162)
+					);
+					break;
 
-                case "Earth":
-                    break;
-            }
-        }
+				case "Earth":
+					break;
+			}
+		}
 
-        public void SetRocket(Rocket rocket)
-        {
-            var visualClone = rocket.VisualClone();
-            visualClone.ForcedFlightAppearance = true;
-            this.rocket = visualClone;
-        }
+		public void SetRocket(Rocket rocket)
+		{
+			var visualClone = rocket.VisualClone();
+			visualClone.ForcedFlightAppearance = true;
+			this.rocket = visualClone;
+		}
 
-        public void ClearRocket() => rocket = null;
+		public void ClearRocket() => rocket = null;
 
-        /// <summary> Reset the loading screen specific variables. Called once before the <see cref="LoadingScreen"/> will be drawn. Useful when there's a persistent instance. </summary>
-        protected virtual void Reset() { }
+		/// <summary> Reset the loading screen specific variables. Called once before the <see cref="LoadingScreen"/> will be drawn. Useful when there's a persistent instance. </summary>
+		protected virtual void Reset() { }
 
-        /// <summary> Used for miscellaneous update tasks </summary>
-        protected virtual void Update() { }
+		/// <summary> Used for miscellaneous update tasks </summary>
+		protected virtual void Update() { }
 
-        private void InternalUpdate()
-        {
-            CurrentlyActive = true;
+		private void InternalUpdate()
+		{
+			CurrentlyActive = true;
 
-            if (progressBar is not null && WorldGenerator.CurrentGenerationProgress is not null)
-                progressBar.SetProgress((float)WorldGenerator.CurrentGenerationProgress.TotalProgress, (float)WorldGenerator.CurrentGenerationProgress.Value);
+			if (progressBar is not null && WorldGenerator.CurrentGenerationProgress is not null)
+				progressBar.SetProgress((float)WorldGenerator.CurrentGenerationProgress.TotalProgress, (float)WorldGenerator.CurrentGenerationProgress.Value);
 
-            Main.gameTips.Update();
+			Main.gameTips.Update();
 
-            UpdateAnimation();
-            Update();
+			UpdateAnimation();
+			Update();
 
-            // Make SubworldSystem.cache null if on game menu. 
-            // Remove once https://github.com/jjohnsnaill/SubworldLibrary/pull/35 is merged.
-            if (Main.gameMenu && Main.menuMode == 0)
-                 MacrocosmSubworld.Hacks.SubworldSystem_NullCache();
-        }
+			// Make SubworldSystem.cache null if on game menu. 
+			// Remove once https://github.com/jjohnsnaill/SubworldLibrary/pull/35 is merged.
+			if (Main.gameMenu && Main.menuMode == 0)
+				MacrocosmSubworld.Hacks.SubworldSystem_NullCache();
+		}
 
-        /// <summary> Update the animation counter. Override for non-default behaviour </summary>
-        protected virtual void UpdateAnimation()
-        {
-            if (!Moving && animationTimer > 5)
-                return;
+		/// <summary> Update the animation counter. Override for non-default behaviour </summary>
+		protected virtual void UpdateAnimation()
+		{
+			if (!Moving && animationTimer > 5)
+				return;
 
-            if (animationTimer <= 5)
-                animationTimer += 0.125f;
-        }
-
-
-        /// <summary> Draw elements before the title, status messages, progress bar, etc. are drawn, but after the common background elements are drawn </summary>
-        protected virtual void PreDraw(SpriteBatch spriteBatch) { }
-
-        /// <summary> Draw elements after title, status messages, progress bar, etc. are drawn, but before the cursor is drawn and the spriteBatch is reset </summary>
-        protected virtual void PostDraw(SpriteBatch spriteBatch) { }
+			if (animationTimer <= 5)
+				animationTimer += 0.125f;
+		}
 
 
-        /// <summary> Draws the loading screen. </summary>
-        public void Draw(GameTime gametime, SpriteBatch spriteBatch, bool drawStatusText = true)
-        {
-            InternalUpdate();
+		/// <summary> Draw elements before the title, status messages, progress bar, etc. are drawn, but after the common background elements are drawn </summary>
+		protected virtual void PreDraw(SpriteBatch spriteBatch) { }
 
-            if (Moving)
-            {
-            stars.MovementVector = new(0f, 0.25f);
-            }
+		/// <summary> Draw elements after title, status messages, progress bar, etc. are drawn, but before the cursor is drawn and the spriteBatch is reset </summary>
+		protected virtual void PostDraw(SpriteBatch spriteBatch) { }
 
-            stars.Draw(spriteBatch);
 
-            PreDraw(spriteBatch);
+		/// <summary> Draws the loading screen. </summary>
+		public void Draw(GameTime gametime, SpriteBatch spriteBatch, bool drawStatusText = true)
+		{
+			InternalUpdate();
 
-            if (Moving)
-            {
-                DrawRocket(spriteBatch);
+			if (Moving)
+			{
+				stars.MovementVector = new(0f, 0.25f);
+			}
 
-            fallingStars.Draw(spriteBatch);
-            }
+			stars.Draw(spriteBatch);
 
-            if (WorldGenerator.CurrentGenerationProgress is not null)
-            {
-                statusText = WorldGenerator.CurrentGenerationProgress.Message;
+			PreDraw(spriteBatch);
 
-                if (progressBar is not null)
-                {
-                    progressBar.SetPosition(
-                        (int)((Main.screenWidth - progressBar.Width.Pixels) / 2f),
-                        (int)((Main.screenHeight - progressBar.Height.Pixels) / 2f)
-                    );
-                    progressBar.Draw(spriteBatch);
-                }
-            }
-            else
-            {
-                statusText = Main.statusText;
-            }
+			if (Moving)
+			{
+				DrawRocket(spriteBatch);
 
-            if (drawStatusText)
-            {
-                ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, statusText, new Vector2(Main.screenWidth, Main.screenHeight - 100f) / 2f - FontAssets.DeathText.Value.MeasureString(statusText) / 2f, Color.White, 0f, Vector2.Zero, Vector2.One);
-                Main.gameTips.Draw();
-            }
+				fallingStars.Draw(spriteBatch);
+			}
 
-            PostDraw(spriteBatch);
+			if (WorldGenerator.CurrentGenerationProgress is not null)
+			{
+				statusText = WorldGenerator.CurrentGenerationProgress.Message;
 
-            FadeEffect.Draw();
-        }
+				if (progressBar is not null)
+				{
+					progressBar.SetPosition(
+						(int)((Main.screenWidth - progressBar.Width.Pixels) / 2f),
+						(int)((Main.screenHeight - progressBar.Height.Pixels) / 2f)
+					);
+					progressBar.Draw(spriteBatch);
+				}
+			}
+			else
+			{
+				statusText = Main.statusText;
+			}
 
-        private SpriteBatchState state;
-        private void DrawRocket(SpriteBatch spriteBatch)
-        {
-            Vector2 center = Utility.ScreenCenter;
-            Vector2 spriteSize = rocket.Bounds.Size();
-            Vector2 randomOffset = Main.rand.NextVector2Circular(1f, 5f);
+			if (drawStatusText)
+			{
+				ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, statusText, new Vector2(Main.screenWidth, Main.screenHeight - 100f) / 2f - FontAssets.DeathText.Value.MeasureString(statusText) / 2f, Color.White, 0f, Vector2.Zero, Vector2.One);
+				Main.gameTips.Draw();
+			}
 
-            Vector2 position = center - spriteSize * 0.5f + randomOffset;
+			PostDraw(spriteBatch);
 
-            state.SaveState(spriteBatch);
-            spriteBatch.End();
-            spriteBatch.Begin(state, Main.UIScaleMatrix);
+			FadeEffect.Draw();
+		}
 
-            rocket.Draw(Rocket.DrawMode.Dummy, spriteBatch, position, useRenderTarget: false);
+		private SpriteBatchState state;
+		private void DrawRocket(SpriteBatch spriteBatch)
+		{
+			Vector2 center = Utility.ScreenCenter;
+			Vector2 spriteSize = rocket.Bounds.Size();
+			Vector2 randomOffset = Main.rand.NextVector2Circular(1f, 5f);
 
-            spriteBatch.End();
-            spriteBatch.Begin(state);
-        }
-    }
+			Vector2 position = center - spriteSize * 0.5f + randomOffset;
+
+			state.SaveState(spriteBatch);
+			spriteBatch.End();
+			spriteBatch.Begin(state, Main.UIScaleMatrix);
+
+			rocket.Draw(Rocket.DrawMode.Dummy, spriteBatch, position, useRenderTarget: false);
+
+			spriteBatch.End();
+			spriteBatch.Begin(state);
+		}
+	}
 }

@@ -4,14 +4,12 @@ using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
 using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
 	public partial class Nameplate : TagSerializable
-    {
+	{
 		public string ToJSON() => ToJObject().ToString(Formatting.Indented);
 
 		public JObject ToJObject()
@@ -35,8 +33,8 @@ namespace Macrocosm.Content.Rockets.Customization
 				nameplate.Text = jObject.Value<string>("text");
 
 			if (jObject.ContainsKey("textColor") && Utility.TryGetColorFromHex(jObject.Value<string>("textColor"), out Color textColor))
- 				nameplate.TextColor = textColor;
- 
+				nameplate.TextColor = textColor;
+
 			if (jObject.ContainsKey("horizontalAlignment") && Enum.TryParse(jObject.Value<string>("horizontalAlignment"), ignoreCase: true, out TextHorizontalAlign hAlign))
 				nameplate.HAlign = hAlign;
 
@@ -59,9 +57,9 @@ namespace Macrocosm.Content.Rockets.Customization
 			};
 		}
 
-        public static Nameplate DeserializeData(TagCompound tag)
-        {
-            Nameplate nameplate = new();
+		public static Nameplate DeserializeData(TagCompound tag)
+		{
+			Nameplate nameplate = new();
 
 			if (tag.ContainsKey(nameof(text)))
 				nameplate.text = tag.GetString(nameof(text));
@@ -75,7 +73,7 @@ namespace Macrocosm.Content.Rockets.Customization
 			if (tag.ContainsKey(nameof(VAlign)))
 				nameplate.VAlign = (TextVerticalAlign)tag.GetInt(nameof(VAlign));
 
-            return nameplate;
+			return nameplate;
 		}
 	}
 }
