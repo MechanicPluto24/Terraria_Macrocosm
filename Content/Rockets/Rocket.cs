@@ -120,7 +120,7 @@ namespace Macrocosm.Content.Rockets
         /// <summary> Dictionary of all the rocket's modules by name, in their order found in ModuleNames </summary>
         public Dictionary<string, RocketModule> Modules = new();
 
-        public List<RocketModule> ModulesByDrawPriority = new();
+        public List<RocketModule> ModulesByDrawPriority => Modules.Values.OrderBy(module => module.DrawPriority).ToList();
 
         /// <summary> List of the module names, in the customization access order </summary>
         public List<string> ModuleNames => Modules.Keys.ToList();
@@ -175,7 +175,7 @@ namespace Macrocosm.Content.Rockets
             foreach (string moduleName in DefaultModuleNames)
                 Modules[moduleName] = CreateModule(moduleName);
 
-            ModulesByDrawPriority = Modules.Values.OrderBy(module => module.DrawPriority).ToList();
+            ResetRenderTarget();
         }
 
         private RocketModule CreateModule(string moduleName)
@@ -202,6 +202,7 @@ namespace Macrocosm.Content.Rockets
         public void OnWorldSpawn()
         {
             ResetAnimation();
+            ResetRenderTarget();
 
             if (Landing && ActiveInCurrentWorld)
             {
@@ -286,7 +287,6 @@ namespace Macrocosm.Content.Rockets
 
             CurrentWorld = "";
             Active = false;
-            ResetRenderTarget();
             NetSync();
         }
 

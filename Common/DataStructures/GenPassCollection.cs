@@ -183,7 +183,7 @@ namespace Macrocosm.Common.DataStructures
         [GenPass(InsertMode.PostGen)]
         public void CommonPostSubworldGenHooks(GenerationProgress progress)
         {
-            RocketManager.OnWorldGenerated();
+            //RocketManager.OnWorldGenerated();
         }
     }
 
