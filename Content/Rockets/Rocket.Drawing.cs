@@ -1,31 +1,11 @@
 using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Drawing;
-using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Graphics;
-using Macrocosm.Common.Netcode;
-using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Items.CursorIcons;
-using Macrocosm.Content.Particles;
-using Macrocosm.Content.Players;
-using Macrocosm.Content.Rockets.Customization;
-using Macrocosm.Content.Rockets.LaunchPads;
 using Macrocosm.Content.Rockets.Modules;
-using Macrocosm.Content.Rockets.Storage;
-using Macrocosm.Content.Rockets.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Terraria;
-using Terraria.DataStructures;
-using Terraria.ID;
-using Terraria.Localization;
-using static Macrocosm.Content.Tiles.Furniture.MoonBase.MoonBaseChest;
 using Terraria.ModLoader;
-using Macrocosm.Common.Graphics;
 
 namespace Macrocosm.Content.Rockets
 {
@@ -41,7 +21,7 @@ namespace Macrocosm.Content.Rockets
 		private Effect meshEffect;
 		private EffectParameter meshTransform;
 		private RenderTarget2D renderTarget;
-		private SpriteBatchState state;
+		private SpriteBatchState state, state2;
 		private DynamicVertexBuffer vertexBuffer;
 		private DynamicIndexBuffer indexBuffer;
 		private VertexPositionColorTexture[] vertices;
@@ -52,38 +32,71 @@ namespace Macrocosm.Content.Rockets
 			renderTarget?.Dispose();
 		}
 
-		/// <summary> Draw the rocket to a RenderTarget and then in the world </summary>
-		public void Draw(DrawMode drawMode, SpriteBatch spriteBatch, Vector2 position)
+        /// <summary> Draw the rocket </summary>
+        /// <param name="drawMode"> 
+		/// The drawing mode: <list type="bullet">
+		/// <item> <see cref="DrawMode.World"/>: Draws the rocket in world </item>
+		/// <item> <see cref="DrawMode.Dummy"/>: Draws the rocket as a dummy, for use in UI </item>
+		/// <item> <see cref="DrawMode.Blueprint"/>:  Draws the rocket as a blueprint, for use in the assembly UI </item>
+		///</list> </param>
+        /// <param name="spriteBatch"> The spritebatch </param>
+        /// <param name="position"> The draw position </param>
+        /// <param name="useRenderTarget"> 
+		/// Whether to use a render target or draw the rocket directly.
+		/// For performance considerations, prefer to use a render target for drawing, except where visual changes happen very often.
+		/// NOTE: In world, you must use a render target in order for the lighting to work.
+		/// </param>
+        public void Draw(DrawMode drawMode, SpriteBatch spriteBatch, Vector2 position, bool useRenderTarget = true)
 		{
-			// Prepare our RenderTarget
-			GetRenderTarget(drawMode);
-
-			// Save our SpriteBatch state
-			state.SaveState(spriteBatch);
-			spriteBatch.EndIfBeginCalled();
-
-			switch (drawMode)
+			if (useRenderTarget)
 			{
-				// Only DrawMode.World consumes the buffers
-				case DrawMode.World:
-					PrepareEffect(drawMode);
-					PrepareLightingBuffers(Width, Height, out int numVertices, out int primitiveCount);
-					PresentLightingBuffers(numVertices, primitiveCount);
-					break;
+                // Prepare our RenderTarget
+                GetRenderTarget(drawMode);
 
-				// All other cases draw the RenderTarget directly
-				default:
+                // Save our SpriteBatch state
+                state.SaveState(spriteBatch);
+                spriteBatch.EndIfBeginCalled();
 
-					spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, state.Effect, state.Matrix);
-					spriteBatch.Draw(renderTarget, position, Color.White);
-					spriteBatch.End();
+                switch (drawMode)
+                {
+                    // Only DrawMode.World consumes the buffers
+                    case DrawMode.World:
+                        PrepareEffect(drawMode);
+                        PrepareLightingBuffers(Width, Height, out int numVertices, out int primitiveCount);
+                        PresentLightingBuffers(numVertices, primitiveCount);
+                        break;
 
-					break;
-			}
+                    // All other cases draw the RenderTarget directly
+                    default:
 
-			// Reset our SpriteBatch to its previous state
-			spriteBatch.Begin(state);
-		}
+                        spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, state.Effect, state.Matrix);
+                        spriteBatch.Draw(renderTarget, position, Color.White);
+                        spriteBatch.End();
+
+                        break;
+                }
+
+                // Reset our SpriteBatch to its previous state
+                spriteBatch.Begin(state);
+            }
+			else
+			{
+                switch (drawMode)
+                {
+                    case DrawMode.World:
+                        DrawWorld(spriteBatch, position);
+                        break;
+
+                    case DrawMode.Dummy:
+                        DrawDummy(spriteBatch, position);
+                        break;
+
+                    case DrawMode.Blueprint:
+                        DrawBlueprint(spriteBatch, position);
+                        break;
+                }
+            }
+        }
 
 		public void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 position)
 		{
@@ -93,25 +106,26 @@ namespace Macrocosm.Content.Rockets
 			}
 		}
 
+		public void PostDraw(SpriteBatch spriteBatch, Vector2 position)
+		{
+            foreach (RocketModule module in ModulesByDrawPriority)
+            {
+                module.PostDraw(spriteBatch, GetModuleRelativePosition(module, position));
+            }
+        }
+
 		public void DrawOverlay(SpriteBatch spriteBatch, Vector2 position)
 		{
-			if (InFlight || ForcedFlightAppearance)
-			{
-				float scale = 1.2f * Main.rand.NextFloat(0.85f, 1f);
-				if (FlightProgress < 0.1f)
-					scale *= Utility.QuadraticEaseOut(FlightProgress * 10f);
+            if (InFlight || ForcedFlightAppearance)
+            {
+                float scale = 1.2f * Main.rand.NextFloat(0.85f, 1f);
+                if (FlightProgress < 0.1f && !ForcedFlightAppearance)
+                    scale *= Utility.QuadraticEaseOut(FlightProgress * 10f);
 
-				if (renderTarget is null || renderTarget.IsDisposed)
-				{
-					var scissorRectangle = PrimitivesSystem.GraphicsDevice.ScissorRectangle;
-					var rasterizerState = PrimitivesSystem.GraphicsDevice.RasterizerState;
-					RenderTargetBinding[] originalRenderTargets = spriteBatch.GraphicsDevice.GetRenderTargets();
-
-					foreach (var binding in originalRenderTargets)
-						typeof(RenderTarget2D).SetPropertyValue("RenderTargetUsage", RenderTargetUsage.PreserveContents, binding.RenderTarget);
-				}
-			}
-		}
+                var flare = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Flare2").Value;
+                spriteBatch.Draw(flare, position + new Vector2(Bounds.Width / 2, Bounds.Height), null, new Color(255, 69, 0), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
+            }
+        }
 
 		public RenderTarget2D GetRenderTarget(DrawMode drawMode)
 		{
@@ -127,7 +141,7 @@ namespace Macrocosm.Content.Rockets
 		}
 
 		// Draw types
-		private void DrawDirect(SpriteBatch spriteBatch, Vector2 position)
+		private void DrawWorld(SpriteBatch spriteBatch, Vector2 position)
 		{
 			foreach (RocketModule module in ModulesByDrawPriority)
 			{
@@ -135,14 +149,21 @@ namespace Macrocosm.Content.Rockets
 			}
 		}
 
-		private void DrawDummy(SpriteBatch spriteBatch, Vector2 position)
+        private void DrawDummy(SpriteBatch spriteBatch, Vector2 position)
 		{
 			PreDrawBeforeTiles(spriteBatch, position);
-			DrawDirect(spriteBatch, position);
-			DrawOverlay(spriteBatch, position);
-		}
+			DrawWorld(spriteBatch, position);
+			PostDraw(spriteBatch, position);
 
-		private void DrawBlueprint(SpriteBatch spriteBatch, Vector2 position)
+			state2.SaveState(spriteBatch);
+			spriteBatch.End();
+			spriteBatch.Begin(BlendState.Additive, state);
+			DrawOverlay(spriteBatch, position);
+            spriteBatch.End();
+            spriteBatch.Begin(state);
+        }
+
+        private void DrawBlueprint(SpriteBatch spriteBatch, Vector2 position)
 		{
 			foreach (RocketModule module in ModulesByDrawPriority)
 			{
@@ -183,7 +204,8 @@ namespace Macrocosm.Content.Rockets
 			var rasterizerState = PrimitivesSystem.GraphicsDevice.RasterizerState;
 
 			// Capture original RenderTargets and preserve their contents
-			RenderTargetBinding[] originalRenderTargets = spriteBatch.GraphicsDevice.GetRenderTargets();
+			PrimitivesSystem.GraphicsDevice.PresentationParameters.RenderTargetUsage = RenderTargetUsage.PreserveContents;
+            RenderTargetBinding[] originalRenderTargets = spriteBatch.GraphicsDevice.GetRenderTargets();
 			foreach (var binding in originalRenderTargets)
 				typeof(RenderTarget2D).SetPropertyValue("RenderTargetUsage", RenderTargetUsage.PreserveContents, binding.RenderTarget);
 
@@ -199,7 +221,7 @@ namespace Macrocosm.Content.Rockets
 			switch (drawMode)
 			{
 				case DrawMode.World:
-					DrawDirect(spriteBatch, default);
+					DrawWorld(spriteBatch, default);
 					break;
 
 				case DrawMode.Dummy:
@@ -223,7 +245,7 @@ namespace Macrocosm.Content.Rockets
 				PrimitivesSystem.GraphicsDevice.SetRenderTarget(null);
 			}
 
-			// Reset our settings back to the previosu ones
+			// Reset our settings back to the previous ones
 			PrimitivesSystem.GraphicsDevice.ScissorRectangle = scissorRectangle;
 			PrimitivesSystem.GraphicsDevice.RasterizerState = rasterizerState;
 		}

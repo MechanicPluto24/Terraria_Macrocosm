@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
+using System.Linq;
 using Terraria;
 using Terraria.Graphics;
 using Terraria.Graphics.Shaders;
@@ -30,13 +31,20 @@ namespace Macrocosm.Content.Rockets.Modules
             spriteBatch.End();
             spriteBatch.Begin(BlendState.AlphaBlend, SamplerState.PointClamp, state1);
 
+            Color lightColor = Color.White;
+
             // Draw the rear landing behind the rear booster 
             Texture2D rearLandingLeg = ModContent.Request<Texture2D>(TexturePath + "_LandingLeg", AssetRequestMode.ImmediateLoad).Value;
-            spriteBatch.Draw(rearLandingLeg, position + new Vector2(Texture.Width / 2f - rearLandingLeg.Width / 2f, 314f), rearLandingLeg.Frame(1, NumberOfFrames, frameY: CurrentFrame), Color.White);
+            Vector2 drawPos = position + new Vector2(Texture.Width / 2f - rearLandingLeg.Width / 2f, 314f);
+
+            if(RocketManager.Rockets.Contains(rocket))
+                lightColor = Lighting.GetColor((drawPos + Main.screenPosition).ToTileCoordinates());
+
+            spriteBatch.Draw(rearLandingLeg, drawPos, rearLandingLeg.Frame(1, base.NumberOfFrames, frameY: CurrentFrame), lightColor);
 
             // Draw the rear booster behind the engine module 
             Texture2D boosterRear = ModContent.Request<Texture2D>(TexturePath + "_BoosterRear", AssetRequestMode.ImmediateLoad).Value;
-            spriteBatch.Draw(boosterRear, position + new Vector2(Texture.Width / 2f - boosterRear.Width / 2f, 294f), null, Color.White, 0f, Origin, 1f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(boosterRear, position + new Vector2(Texture.Width / 2f - boosterRear.Width / 2f, 294f), null, lightColor, 0f, Origin, 1f, SpriteEffects.None, 0f);
 
             // Draw the exhaust trail 
             if (rocket.StaticFire || rocket.InFlight || rocket.ForcedFlightAppearance)
