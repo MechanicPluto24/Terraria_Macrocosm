@@ -1,6 +1,6 @@
 
 <center>
-<img title="Macrocosm" alt="Macrocosm" src="Content\UI\Menus\Logo.png">
+<img title="Macrocosm" alt="Macrocosm" src="Content\Menus\Logo.png">
 </center>
 
 ### Summary

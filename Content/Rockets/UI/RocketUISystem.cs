@@ -72,6 +72,15 @@ namespace Macrocosm.Content.Rockets.UI
             UIAssemblyState = null;
         }
 
+        public override void PostUpdateEverything()
+        {
+            if (UserInterface.CurrentState is not null && UIRocketState is not null && UIRocketState.Rocket is not null)
+                UIRocketState.ExecuteRecursively(RecursiveUpdate);
+
+            if (UserInterface.CurrentState is not null && UIAssemblyState is not null && UIAssemblyState.LaunchPad is not null)
+                UIAssemblyState.ExecuteRecursively(RecursiveUpdate);
+        }
+
         public void ResetUI()
         {
             if (UIRocketState is not null)
@@ -198,11 +207,11 @@ namespace Macrocosm.Content.Rockets.UI
 
         private void RecursiveUpdate(UIElement element)
         {
-          if (element is null)
-            return;
+            if (element is null)
+                return;
 
-          if (element is IConsistentUpdateable updateable)
-            updateable.Update();
+            if (element is IConsistentUpdateable updateable)
+                updateable.Update();
         }
-	  }
+	}
 }
