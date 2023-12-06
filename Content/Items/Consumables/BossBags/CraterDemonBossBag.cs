@@ -3,6 +3,7 @@ using Macrocosm.Content.Items.Currency;
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Items.Vanity.BossMasks;
 using Macrocosm.Content.Items.Weapons.Magic;
+using Macrocosm.Content.Items.Weapons.Melee;
 using Macrocosm.Content.Items.Weapons.Ranged;
 using Macrocosm.Content.Items.Weapons.Summon;
 using Microsoft.Xna.Framework;
@@ -45,8 +46,8 @@ namespace Macrocosm.Content.Items.Consumables.BossBags
             itemLoot.Add(ItemDropRule.OneFromOptions(1,
                 ModContent.ItemType<CalcicCane>(),
                 ModContent.ItemType<Cruithne>(),
-                ModContent.ItemType<ImbriumJewel>()
-                /*, ModContent.ItemType<ChampionBlade>() */
+                ModContent.ItemType<ImbriumJewel>(),
+                ModContent.ItemType<ChampionsBladeBroken>() 
                 ));
         }
 

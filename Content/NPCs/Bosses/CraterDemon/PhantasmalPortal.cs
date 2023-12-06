@@ -1,32 +1,47 @@
 ﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.NPCs.Bosses.CraterDemon;
+using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.GameContent;
+using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Projectiles.Hostile
+namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 {
-    //Had to salvage it from an extracted DLL, so no comments.  Oops.  -- absoluteAquarian
-    public class MeteorPortal : ModProjectile
+    public class PhantasmalPortal : ModProjectile
     {
         public ref float AITimer => ref Projectile.ai[0];
 
-        private int defWidth;
-        private int defHeight;
+        public bool Phase2
+        {
+            get => Projectile.ai[1] > 0f;
+            set => Projectile.ai[1] = value ? 1f : 0f;
+        }
 
-        private bool spawned;
+        public int TargetPlayer
+        {
+            get => (int)Projectile.ai[2];
+            set => Projectile.ai[2] = value;
+        }
+
+        public int SpawnPeriod => 60;
+
+        protected int defWidth;
+        protected int defHeight;
+
+        protected bool spawned;
 
         public override void SetStaticDefaults()
         {
         }
         public override void SetDefaults()
         {
-            defWidth = defHeight = Projectile.width = Projectile.height = 40;
+            defWidth = defHeight = Projectile.width = Projectile.height = 52;
             Projectile.hostile = true;
             Projectile.friendly = false;
             Projectile.tileCollide = false;
@@ -52,20 +67,44 @@ namespace Macrocosm.Content.Projectiles.Hostile
             else
             {
                 AITimer = 0f;
-                if (Projectile.timeLeft % 14 == 0)
+                if (Projectile.timeLeft % SpawnPeriod == 0)
                 {
+                    
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        int meteorID = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, (-Vector2.UnitY).RotatedByRandom(20) * Main.rand.NextFloat(6f, 9.25f), ModContent.ProjectileType<FlamingMeteor>(),
-                            (int)(Projectile.damage * 0.4f), Projectile.knockBack, Projectile.owner, 0f, 0f);
-                        Main.projectile[meteorID].netUpdate = true;
+                        for (int i = 0; i < 5; i++)
+                        {
+                            Vector2 velocity = (Main.player[TargetPlayer].Center - Projectile.Center).SafeNormalize(Vector2.One).RotatedByRandom(MathHelper.PiOver4) * Main.rand.NextFloat(12, 20);
+                            int type = ModContent.ProjectileType<PhantasmalImpSmall>();
+                            int damage = Projectile.damage;
+
+                            if (Main.rand.NextBool(3))
+                            {
+                                type = ModContent.ProjectileType<PhantasmalImp>();
+                                velocity *= 0.8f;
+                                damage = (int)(damage * 1.4f);
+                            }
+
+                            Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, velocity, type, damage, Projectile.knockBack, Projectile.owner, TargetPlayer);
+                            Terraria.Audio.SoundEngine.PlaySound(SoundID.AbigailAttack, Projectile.Center);
+                        }
                     }
 
-                    Terraria.Audio.SoundEngine.PlaySound(SoundID.Item20, Projectile.Center);
                 }
             }
 
-            SpawnDusts();
+            for (int i = 0; i < 20; i++)
+            {
+                float progress = (1f - AITimer / 255f);
+                Particle.CreateParticle<PortalSwirl>(p =>
+                {
+                    p.Position = Projectile.Center + Main.rand.NextVector2Circular(Projectile.width, Projectile.height) * 2.2f * progress;
+                    p.Velocity = Vector2.One * 8;
+                    p.Scale = (0.1f + Main.rand.NextFloat(0.1f)) * progress;
+                    p.Color = new Color(92, 206, 130);
+                    p.TargetCenter = Projectile.Center;
+                });
+            }
 
             Projectile.alpha = (int)MathHelper.Clamp((int)AITimer, 0f, 255f);
 
@@ -97,49 +136,14 @@ namespace Macrocosm.Content.Projectiles.Hostile
 
             Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, color * 1f, (0f - Projectile.rotation) * 0.65f, texture.Size() / 2f, Projectile.scale * 0.8f, SpriteEffects.None, 0);
 
+            Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Flare3").Value;
+            float scale = Projectile.scale * Main.rand.NextFloat(0.9f, 1.1f);
+            Main.spriteBatch.Draw(flare, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(30, 255, 105).WithOpacity(0.75f), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
+
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.AlphaBlend, state);
 
             return false;
-        }
-
-        /// <summary> Adapted from Lunar Portal Staff </summary>
-        private void SpawnDusts()
-        {
-
-            for (int i = 0; i < (int)(5 * (1f - AITimer / 255f)); i++)
-            {
-                int type = ModContent.DustType<PortalLightGreenDust>();
-
-                //if (Main.rand.NextBool())
-                //	type = ModContent.DustType<PortalLightOrangeDust>();
-
-                Vector2 rotVector1 = Vector2.UnitY.RotatedByRandom(MathHelper.TwoPi) * 1.6f * (1f - AITimer / 255f);
-                Dust lightDust = Main.dust[Dust.NewDust(Projectile.Center - rotVector1 * 30f, 0, 0, type)];
-                lightDust.noGravity = true;
-                lightDust.position = Projectile.Center - rotVector1 * Main.rand.Next(17, 19);
-                lightDust.velocity = rotVector1.RotatedBy(MathHelper.PiOver2) * 2.4f;
-                lightDust.scale = (0.8f + Main.rand.NextFloat()) * (1f - AITimer / 255f);
-                lightDust.fadeIn = 0.5f;
-                lightDust.customData = Projectile.Center;
-            }
-
-            if (Main.rand.NextBool())
-            {
-                int type = ModContent.DustType<PortalDarkGreenDust>();
-
-                //if (Main.rand.NextBool())
-                //	type = ModContent.DustType<PortalDarkOrangeDust>();
-
-                Vector2 rotVector1 = Vector2.UnitY.RotatedByRandom(MathHelper.TwoPi) * 1.6f * (1f - AITimer / 255f);
-                Dust lightDust = Main.dust[Dust.NewDust(Projectile.Center - rotVector1 * 30f, 0, 0, type)];
-                lightDust.noGravity = true;
-                lightDust.position = Projectile.Center - rotVector1 * Main.rand.Next(30, 40);
-                lightDust.velocity = rotVector1.RotatedBy(MathHelper.PiOver2) * 2f;
-                lightDust.scale = (0.8f + Main.rand.NextFloat()) * (1f - AITimer / 255f);
-                lightDust.fadeIn = 0.5f;
-                lightDust.customData = Projectile.Center;
-            }
         }
     }
 }
