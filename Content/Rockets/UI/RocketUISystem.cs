@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Config;
+using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.CursorIcons;
@@ -10,6 +11,7 @@ using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Config.UI;
 using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.UI
@@ -193,5 +195,14 @@ namespace Macrocosm.Content.Rockets.UI
                     InterfaceScaleType.UI));
             }
         }
-    }
+
+        private void RecursiveUpdate(UIElement element)
+        {
+          if (element is null)
+            return;
+
+          if (element is IConsistentUpdateable updateable)
+            updateable.Update();
+        }
+	  }
 }
