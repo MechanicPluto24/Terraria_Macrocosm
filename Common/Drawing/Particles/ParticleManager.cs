@@ -78,6 +78,12 @@ namespace Macrocosm.Common.Drawing.Particles
             }
         }
 
+        public static List<Particle> GetParticlesDrawnBy(object customDrawer)
+        {
+            var list = Particles.Where(p => p.CustomDrawer == customDrawer).ToList();
+            return list;
+        }
+
         public override bool HijackSendData(int whoAmI, int msgType, int remoteClient, int ignoreClient, NetworkText text, int number, float number2, float number3, float number4, int number5, int number6, int number7)
         {
             if (Main.netMode == NetmodeID.Server && msgType == MessageID.FinishedConnectingToServer && remoteClient >= 0 && remoteClient < 255)
@@ -97,7 +103,7 @@ namespace Macrocosm.Common.Drawing.Particles
 
             foreach (Particle particle in Particles)
             {
-                if (particle.DrawLayer == layer)
+                if (particle.DrawLayer == layer && !particle.HasCustomDrawer)
                 {
                     if (particle.PreDrawAdditive(Main.spriteBatch, Main.screenPosition, Lighting.GetColor(particle.Position.ToTileCoordinates())))
                         alphaBlendDrawers.Add(particle);
@@ -111,7 +117,7 @@ namespace Macrocosm.Common.Drawing.Particles
 
                 foreach (var particle in alphaBlendDrawers)
                 {
-                    if (particle.DrawLayer == layer)
+                    if (particle.DrawLayer == layer && !particle.HasCustomDrawer)
                         particle.Draw(Main.spriteBatch, Main.screenPosition, Lighting.GetColor(particle.Position.ToTileCoordinates()));
                 }
 
@@ -121,7 +127,7 @@ namespace Macrocosm.Common.Drawing.Particles
 
             foreach (Particle particle in Particles)
             {
-                if (particle.DrawLayer == layer)
+                if (particle.DrawLayer == layer && !particle.HasCustomDrawer)
                     particle.PostDrawAdditive(Main.spriteBatch, Main.screenPosition, Lighting.GetColor(particle.Position.ToTileCoordinates()));
             }
         }

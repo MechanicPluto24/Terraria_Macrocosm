@@ -43,11 +43,21 @@ namespace Macrocosm.Common.Utils
         }
 
         /// <summary>
-        /// Hostile projectiles deal 2x the <paramref name="damage"/> in Normal Mode and 4x the <paramref name="damage"/> in Expert Mode.
-        /// This helper method remedies that. TODO: check how it behaves in Journey & Master Modes
+        /// Hostile projectiles deal: <list>
+        /// <item> - 2x the <paramref name="damage"/> in Normal Mode </item>
+        /// <item> - 4x the <paramref name="damage"/> in Expert Mode </item>
+        /// <item> - 6x the <paramref name="damage"/> in Master Mode </item>
+        /// </list>
+        /// This helper method remedies that. 
         /// </summary>
         public static int TrueDamage(int damage)
-            => damage / (Main.expertMode ? 4 : 2);
+        {
+            damage /= 2;
+            if (Main.expertMode)
+                damage /= Main.masterMode ? 3 : 2;
+
+            return damage;
+        }
 
         public static Rectangle GetDamageHitbox(this Projectile proj)
         {

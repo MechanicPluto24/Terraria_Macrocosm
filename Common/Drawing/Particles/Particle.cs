@@ -115,6 +115,9 @@ namespace Macrocosm.Common.Drawing.Particles
 
         #region Hooks
 
+        public bool HasCustomDrawer => CustomDrawer is not null;
+        public object CustomDrawer = null;
+
         /// <summary> Used for loading tasks, called on Mod load </summary>
         public virtual void OnLoad() { }
 
