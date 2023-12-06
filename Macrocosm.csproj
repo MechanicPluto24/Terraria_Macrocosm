@@ -25,6 +25,7 @@
 	<NoWarn>$(NoWarn);CA1822</NoWarn> <!-- Private methods that don't deal with instance data should sometimes be left instanced, not static, due to tML's nature -->
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="assets\effects\Mesh.fx" />
     <None Remove="Content\Rockets\Modules\Icons\BoosterLeft.png" />
     <None Remove="Content\Rockets\Modules\Icons\BoosterRight.png" />
     <None Remove="Content\Rockets\Modules\Icons\CommandPod.png" />
