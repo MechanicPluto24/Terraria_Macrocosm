@@ -25,10 +25,10 @@ namespace Macrocosm.Content.Rockets
             Nameplate.HAlign = source.Nameplate.HAlign;
             Nameplate.VAlign = source.Nameplate.VAlign;
 
-            foreach (var moduleName in ModuleNames)
+            foreach (var module in Modules.Values)
             {
                 //Modules[moduleName].Detail = dummy.Modules[moduleName].Detail ;
-                Modules[moduleName].Pattern = source.Modules[moduleName].Pattern;
+                module.Pattern = source.Modules[module.Name].Pattern;
             }
 
             if(sync)
