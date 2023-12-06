@@ -29,7 +29,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             set => Projectile.ai[2] = value;
         }
 
-        public int SpawnPeriod => 28;
+        public int SpawnPeriod => 60;
 
         protected int defWidth;
         protected int defHeight;
@@ -69,22 +69,27 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 AITimer = 0f;
                 if (Projectile.timeLeft % SpawnPeriod == 0)
                 {
+                    
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        Vector2 velocity = (Projectile.Center - Main.player[TargetPlayer].Center).SafeNormalize(Vector2.One).RotatedByRandom(5) * Main.rand.NextFloat(8, 12);
-                        int type = ModContent.ProjectileType<PhantasmalImpSmall>();
-
-                        if (Main.rand.NextBool(3))
+                        for (int i = 0; i < 5; i++)
                         {
-                            type = ModContent.ProjectileType<PhantasmalImp>();
-                            velocity *= 0.8f;
-                        }
+                            Vector2 velocity = (Main.player[TargetPlayer].Center - Projectile.Center).SafeNormalize(Vector2.One).RotatedByRandom(MathHelper.PiOver4) * Main.rand.NextFloat(12, 20);
+                            int type = ModContent.ProjectileType<PhantasmalImpSmall>();
+                            int damage = Projectile.damage;
 
-                        Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, velocity, type,
-                            (int)(Projectile.damage * 0.4f), Projectile.knockBack, Projectile.owner, TargetPlayer);
+                            if (Main.rand.NextBool(3))
+                            {
+                                type = ModContent.ProjectileType<PhantasmalImp>();
+                                velocity *= 0.8f;
+                                damage = (int)(damage * 1.4f);
+                            }
+
+                            Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, velocity, type, damage, Projectile.knockBack, Projectile.owner, TargetPlayer);
+                            Terraria.Audio.SoundEngine.PlaySound(SoundID.AbigailAttack, Projectile.Center);
+                        }
                     }
 
-                    Terraria.Audio.SoundEngine.PlaySound(SoundID.AbigailAttack, Projectile.Center);
                 }
             }
 
@@ -130,6 +135,10 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
             Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, color * 1f, (0f - Projectile.rotation) * 0.65f, texture.Size() / 2f, Projectile.scale * 0.8f, SpriteEffects.None, 0);
+
+            Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Flare3").Value;
+            float scale = Projectile.scale * Main.rand.NextFloat(0.9f, 1.1f);
+            Main.spriteBatch.Draw(flare, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(30, 255, 105).WithOpacity(0.75f), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.AlphaBlend, state);

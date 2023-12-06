@@ -14,6 +14,13 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
     {
         public Player TargetPlayer => Main.player[(int)Projectile.ai[0]];
 
+        public bool SpawnedFromPortal 
+        {
+            get => Projectile.ai[1] > 0f;
+            set => Projectile.ai[1] = value ? 1f : 0f;
+        }
+
+
         public override void SetStaticDefaults()
         {
             ProjectileID.Sets.TrailCacheLength[Type] = 15;
@@ -30,6 +37,11 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             Projectile.alpha = 0;
         }
 
+        private bool spawned;
+        private Vector2 spawnPosition;
+        private float flashTimer;
+        private float maxFlashTimer = 10;
+
         public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough, ref Vector2 hitboxCenterFrac)
             => false;
 
@@ -38,6 +50,12 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
         {
             if (!TargetPlayer.active)
                 Projectile.Kill();
+
+            if (!spawned)
+            {
+                spawnPosition = Projectile.position;
+                spawned = true;
+            }
 
             Vector2 direction = TargetPlayer.Center - Projectile.Center;
             direction.Normalize();
@@ -48,7 +66,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             Vector2 adjustedDirection = Vector2.Lerp(Projectile.velocity, direction, 0.2f);
             adjustedDirection.Normalize();
 
-            Projectile.velocity = adjustedDirection * Projectile.velocity.Length() * (Projectile.velocity.Length() > 15f ? 1.1f : 1f);
+            Projectile.velocity = adjustedDirection * Projectile.velocity.Length();
 
             Projectile.direction = Math.Sign(Projectile.velocity.X);
             Projectile.spriteDirection = Projectile.direction;
@@ -59,6 +77,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
             if (Projectile.alpha >= 255)
                 Projectile.active = false;
+
+            flashTimer++;
         }
 
         public override Color? GetAlpha(Color lightColor) => Color.White.WithOpacity(1f);
@@ -89,6 +109,21 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(BlendState.Additive, state);
+
+            if (flashTimer < maxFlashTimer)
+            {
+                Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Flare3").Value;
+                float progress = flashTimer / maxFlashTimer;
+                float scale = Projectile.scale * progress * (SpawnedFromPortal ? 0.4f : 0.8f);
+                Vector2 position = SpawnedFromPortal ? spawnPosition : Projectile.position;
+                Main.spriteBatch.Draw(flare, position - Main.screenPosition + Projectile.Size / 2f, null, new Color(92, 206, 130), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
+            }
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(BlendState.NonPremultiplied, state);
 
             return false;
         }

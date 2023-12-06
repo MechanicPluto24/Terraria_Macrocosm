@@ -30,6 +30,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
         private bool spawned;
 
+        private float flashTimer;
+        private float maxFlashTimer = 10;
+
         public override void SetStaticDefaults()
         {
         }
@@ -55,7 +58,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             Projectile.rotation -= MathHelper.ToRadians(7.4f);
 
             if (Projectile.timeLeft >= CraterDemon.PortalTimerMax - 90)
-                AITimer -= 2.83333325f;
+                AITimer -= 4f;
             else if (Projectile.timeLeft <= 90)
                 AITimer += 2.83333325f;
             else
@@ -115,6 +118,10 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
             Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, color * 1f, (0f - Projectile.rotation) * 0.65f, texture.Size() / 2f, Projectile.scale * 0.8f, SpriteEffects.None, 0);
+
+            Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Flare3").Value;
+            float scale = Projectile.scale * Main.rand.NextFloat(0.9f, 1.1f);
+            Main.spriteBatch.Draw(flare, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(182, 79, 21), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.AlphaBlend, state);
