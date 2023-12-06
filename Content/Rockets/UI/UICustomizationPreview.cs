@@ -84,7 +84,7 @@ namespace Macrocosm.Content.Rockets.UI
             if (visualClone is null)
                 GetClone();
 
-            RenderTarget2D renderTarget = visualClone.GetOrPrepareRenderTarget(Rocket.DrawMode.Dummy);
+            RenderTarget2D renderTarget = visualClone.GetRenderTarget(Rocket.DrawMode.Dummy);
 
             Rectangle rect = GetDimensions().ToRectangle();
             rect.X += 10;
