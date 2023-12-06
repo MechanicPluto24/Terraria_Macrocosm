@@ -86,6 +86,11 @@ namespace Macrocosm.Content.Rockets.UI
         {
         }
 
+        public void OnTabOpen() 
+        {
+            CustomizationPreview.OnTabOpen();
+        }
+
         public override void Update(GameTime gameTime)
         {
             lastTarget = target;

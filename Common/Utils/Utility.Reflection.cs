@@ -12,11 +12,39 @@ namespace Macrocosm.Common.Utils
             return field.GetValue(obj);
         }
 
+        public static void SetFieldValue(this Type type, string fieldName, object value, object obj = null, BindingFlags? flags = null)
+        {
+            flags ??= BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public;
+            FieldInfo field = type.GetField(fieldName, flags.Value);
+            field?.SetValue(obj, value);
+        }
+
         public static T GetFieldValue<T>(this Type type, string fieldName, object obj = null, BindingFlags? flags = null)
         {
             flags ??= BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public;
             FieldInfo field = type.GetField(fieldName, flags.Value);
             return (T)field.GetValue(obj);
+        }
+
+        public static object GetPropertyValue(this Type type, string fieldName, object obj = null, BindingFlags? flags = null)
+        {
+            flags ??= BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public;
+            PropertyInfo property = type.GetProperty(fieldName, flags.Value);
+            return property.GetValue(obj);
+        }
+
+        public static void SetPropertyValue(this Type type, string fieldName, object value, object obj = null, BindingFlags? flags = null)
+        {
+            flags ??= BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public;
+            PropertyInfo property = type.GetProperty(fieldName, flags.Value);
+            property?.SetValue(obj, value);
+        }
+
+        public static T GetPropertyValue<T>(this Type type, string fieldName, object obj = null, BindingFlags? flags = null)
+        {
+            flags ??= BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public;
+            PropertyInfo property = type.GetProperty(fieldName, flags.Value);
+            return (T)property.GetValue(obj);
         }
 
         /// <summary> Invokes a private method on a given object. </summary>

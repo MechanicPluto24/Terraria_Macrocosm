@@ -51,7 +51,7 @@ namespace Macrocosm.Content.Rockets.Customization
         /// <summary> Whether the rocket's name supports this character </summary>
         public static bool SupportsChar(char c) => SupportedCharacters.IndexOf(c) != -1;
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 position, Color ambientColor)
+        public void Draw(SpriteBatch spriteBatch, Vector2 position)
         {
             Texture2D texture = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Fonts/RocketLettersSmall").Value;
             int numChars = (int)MathHelper.Clamp(text.Length, 0, MaxChars);
@@ -88,7 +88,7 @@ namespace Macrocosm.Content.Rockets.Customization
 
             for (int i = 0; i < numChars; i++)
             {
-                spriteBatch.Draw(texture, new Vector2(position.X + offsetX, position.Y + offsetY + (i * characterHeight)), GetCharacterRectangle(text[i]), TextColor * ambientColor.GetLuminanceNTSC(), 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                spriteBatch.Draw(texture, new Vector2(position.X + offsetX, position.Y + offsetY + (i * characterHeight)), GetCharacterRectangle(text[i]), TextColor, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
             }
         }
 
