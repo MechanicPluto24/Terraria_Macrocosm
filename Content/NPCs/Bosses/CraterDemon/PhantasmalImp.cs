@@ -1,34 +1,46 @@
 using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Utils;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 using System;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Macrocosm.Common.Utils;
 
-namespace Macrocosm.Content.Projectiles.Hostile
+namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 {
-    public class PhantasmalImpSmall : ModProjectile
+    public class PhantasmalImp : ModProjectile
     {
-        public Player TargetPlayer => Main.player[(int)Projectile.ai[2]];
+        public Player TargetPlayer => Main.player[(int)Projectile.ai[0]];
+
+        public bool SpawnedFromPortal 
+        {
+            get => Projectile.ai[1] > 0f;
+            set => Projectile.ai[1] = value ? 1f : 0f;
+        }
+
 
         public override void SetStaticDefaults()
         {
-            ProjectileID.Sets.TrailCacheLength[Type] = 10;
-            ProjectileID.Sets.TrailingMode[Type] = 2;
+            ProjectileID.Sets.TrailCacheLength[Type] = 15;
+            ProjectileID.Sets.TrailingMode[Type] = 3;
         }
 
         private static int spawnTimeLeft = 3 * 60;
         public override void SetDefaults()
         {
-            Projectile.width = 42;
-            Projectile.height = 54;
+            Projectile.width = 66;
+            Projectile.height = 74;
             Projectile.hostile = true;
             Projectile.timeLeft = spawnTimeLeft;
             Projectile.alpha = 0;
         }
+
+        private bool spawned;
+        private Vector2 spawnPosition;
+        private float flashTimer;
+        private float maxFlashTimer = 10;
 
         public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough, ref Vector2 hitboxCenterFrac)
             => false;
@@ -36,20 +48,21 @@ namespace Macrocosm.Content.Projectiles.Hostile
         //bool spawned = false;
         public override void AI()
         {
-            ProjectileID.Sets.TrailCacheLength[Type] = 10;
-            ProjectileID.Sets.TrailingMode[Type] = 3;
-
             if (!TargetPlayer.active)
                 Projectile.Kill();
+
+            if (!spawned)
+            {
+                spawnPosition = Projectile.position;
+                spawned = true;
+            }
 
             Vector2 direction = TargetPlayer.Center - Projectile.Center;
             direction.Normalize();
 
-            // Apply a slight random deviation to the direction
             float deviation = Main.rand.NextFloat(-0.1f, 0.1f);
             direction = direction.RotatedBy(deviation);
 
-            // Apply a slight random deviation to the direction
             Vector2 adjustedDirection = Vector2.Lerp(Projectile.velocity, direction, 0.2f);
             adjustedDirection.Normalize();
 
@@ -64,6 +77,8 @@ namespace Macrocosm.Content.Projectiles.Hostile
 
             if (Projectile.alpha >= 255)
                 Projectile.active = false;
+
+            flashTimer++;
         }
 
         public override Color? GetAlpha(Color lightColor) => Color.White.WithOpacity(1f);
@@ -94,6 +109,21 @@ namespace Macrocosm.Content.Projectiles.Hostile
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(BlendState.Additive, state);
+
+            if (flashTimer < maxFlashTimer)
+            {
+                Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Flare3").Value;
+                float progress = flashTimer / maxFlashTimer;
+                float scale = Projectile.scale * progress * (SpawnedFromPortal ? 0.4f : 0.8f);
+                Vector2 position = SpawnedFromPortal ? spawnPosition : Projectile.position;
+                Main.spriteBatch.Draw(flare, position - Main.screenPosition + Projectile.Size / 2f, null, new Color(92, 206, 130), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
+            }
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(BlendState.NonPremultiplied, state);
 
             return false;
         }

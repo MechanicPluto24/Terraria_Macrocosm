@@ -28,6 +28,8 @@ namespace Macrocosm.Common.Bases
             SetProjectileDefaults();
         }
 
+        public override bool? CanDamage() => false;
+
         protected Player Player => Main.player[Projectile.owner];
         protected virtual bool StillInUse => Player.channel && !Player.noItems && !Player.CCed;
 

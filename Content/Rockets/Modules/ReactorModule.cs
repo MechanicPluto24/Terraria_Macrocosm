@@ -17,12 +17,10 @@ namespace Macrocosm.Content.Rockets.Modules
 
         public override Rectangle Hitbox => base.Hitbox with { Y = base.Hitbox.Y + 4 };
 
-        public override void Draw(SpriteBatch spriteBatch, Vector2 screenPos, Color ambientColor)
+        // Reactor glowmask
+        public override void PostDraw(SpriteBatch spriteBatch, Vector2 position)
         {
-            base.Draw(spriteBatch, screenPos, ambientColor);
-
-            // Reactor glowmask
-            spriteBatch.Draw(ModContent.Request<Texture2D>(TexturePath + "Glow").Value, Position - screenPos, null, Color.White, 0f, Origin, 1f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(ModContent.Request<Texture2D>(TexturePath + "Glow").Value, position, null, Color.White, 0f, Origin, 1f, SpriteEffects.None, 0f);
         }
     }
 }

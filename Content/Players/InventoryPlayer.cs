@@ -19,7 +19,7 @@ namespace Macrocosm.Content.Players
         public static Inventory ActiveInventory => RocketUISystem.Instance.UIRocketState.Rocket.Inventory;
 
         /// <summary> Whether there is a custom inventory currently being displayed </summary>
-        public static bool CustomInventoryActive => RocketUISystem.Active &&
+        public static bool CustomInventoryActive => RocketUISystem.RocketUIActive &&
             RocketUISystem.Instance.UIRocketState.Rocket is not null &&
             ActiveInventory is not null;
 

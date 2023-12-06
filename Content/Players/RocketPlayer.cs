@@ -71,7 +71,7 @@ namespace Macrocosm.Content.Players
             Utility.UICloseOthers();
 
             if (Player.whoAmI == Main.myPlayer)
-                RocketUISystem.Show(RocketManager.Rockets[RocketID]);
+                RocketUISystem.ShowRocketUI(RocketManager.Rockets[RocketID]);
         }
 
         public void DisembarkFromRocket()
@@ -99,12 +99,13 @@ namespace Macrocosm.Content.Players
 
                 Player.direction = 1;
                 Player.Center = new Vector2(rocket.Center.X + Player.direction * 5, rocket.Position.Y + 110) - (IsCommander ? new Vector2(0, 50) : Vector2.Zero);
+                Player.noFallDmg = true;
 
                 if (Player.whoAmI == Main.myPlayer)
                 {
                     cameraModifier.TargetPosition = RocketManager.Rockets[RocketID].Center - new Vector2(Main.screenWidth, Main.screenHeight) / 2f;
 
-                    bool escapePressed = Player.controlInv && RocketUISystem.Active;
+                    bool escapePressed = Player.controlInv && RocketUISystem.RocketUIActive;
 
                     // Escape or 'R' will disembark this player, but not during flight
                     if (((escapePressed || Player.controlMount) && !rocket.Launched) || !rocket.ActiveInCurrentWorld)
@@ -112,13 +113,14 @@ namespace Macrocosm.Content.Players
 
                     if (rocket.Launched || rocket.Landing)
                         RocketUISystem.Hide();
-                    else if (!RocketUISystem.Active)
-                        RocketUISystem.Show(rocket);
+                    else if (!RocketUISystem.RocketUIActive)
+                        RocketUISystem.ShowRocketUI(rocket);
                 }
             }
             else if (Player.whoAmI == Main.myPlayer)
             {
-                RocketUISystem.Hide();
+                if(RocketUISystem.RocketUIActive)
+                    RocketUISystem.Hide();
 
                 if (cameraModifier is not null)
                     cameraModifier.ReturnToNormalPosition = true;

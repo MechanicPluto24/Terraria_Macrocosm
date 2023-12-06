@@ -1,18 +1,22 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Rockets.Storage;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using static Terraria.GameContent.TextureAssets;
 
 namespace Macrocosm.Content.Rockets.UI
 {
     public class UICustomizationPreview : UIPanel, IRocketUIDataConsumer
     {
         public Rocket Rocket { get; set; }
+
+        private Rocket visualClone;
 
         private UIText uITitle;
 
@@ -41,6 +45,18 @@ namespace Macrocosm.Content.Rockets.UI
             Append(uITitle);
         }
 
+        public void OnTabOpen()
+        {
+            if (Rocket is not null)
+                GetClone();
+        }
+
+        private void GetClone()
+        {
+            visualClone = Rocket.VisualClone();
+            visualClone.ForcedStationaryAppearance = true;
+        }
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
@@ -62,49 +78,35 @@ namespace Macrocosm.Content.Rockets.UI
         {
             base.Draw(spriteBatch);
 
-            // Why is it null when resetting?
             if (Rocket is null)
                 return;
 
+            if (visualClone is null)
+                GetClone();
+
+            RenderTarget2D renderTarget = visualClone.GetRenderTarget(Rocket.DrawMode.Dummy);
+
             Rectangle rect = GetDimensions().ToRectangle();
+            rect.X += 10;
+            rect.Y += 26;
+            rect.Width -= 20;
+            rect.Height -= 36;
 
-            spriteBatch.GraphicsDevice.PresentationParameters.RenderTargetUsage = RenderTargetUsage.PreserveContents;
-            var originalRenderTargets = spriteBatch.GraphicsDevice.GetRenderTargets();
-            RenderTarget2D renderTarget = new(spriteBatch.GraphicsDevice, (int)(Rocket.Bounds.Width * Main.UIScale), (int)(Rocket.Bounds.Height * Main.UIScale));
-
-            state.SaveState(spriteBatch);
-            spriteBatch.End();
-
-            spriteBatch.GraphicsDevice.SetRenderTarget(renderTarget);
-            spriteBatch.GraphicsDevice.Clear(Color.Transparent);
-
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, state.Effect, Main.UIScaleMatrix);
-
-            var visualClone = Rocket.VisualClone();
-            visualClone.ForcedStationaryAppearance = true;
-            visualClone.DrawDummy(spriteBatch, new Vector2(0, 0), Color.White);
-
-            spriteBatch.End();
-
-            spriteBatch.GraphicsDevice.SetRenderTargets(originalRenderTargets);
-            spriteBatch.GraphicsDevice.PresentationParameters.RenderTargetUsage = RenderTargetUsage.DiscardContents;
+            float aspectRatio = (float)renderTarget.Width / renderTarget.Height;
+            int targetPixelsX = 48;
+            int targetPixelsY = (int)(targetPixelsX / aspectRatio);
 
             Effect effect = ModContent.Request<Effect>(Macrocosm.EffectAssetsPath + "Pixelate", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-            effect.Parameters["uPixelCount"].SetValue(new Vector2(renderTarget.Width, renderTarget.Height) / (6f * Main.UIScale));
+            effect.Parameters["uPixelCount"].SetValue(new Vector2(targetPixelsX, targetPixelsY));
 
-            spriteBatch.Begin(state.SpriteSortMode, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, state.DepthStencilState, state.RasterizerState, effect, state.Matrix);
+            state.SaveState(spriteBatch);
+            spriteBatch.EndIfBeginCalled();
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, state.RasterizerState, effect, Main.UIScaleMatrix);
 
-            Rectangle dest = rect;
-            dest.X += 10;
-            dest.Y += 27;
-            dest.Width -= 20;
-            dest.Height -= 34;
-            spriteBatch.Draw(renderTarget, dest, Color.White);
+            spriteBatch.Draw(renderTarget, rect, Color.White);
 
             spriteBatch.End();
             spriteBatch.Begin(state);
-
-            renderTarget.Dispose();
         }
     }
 }
