@@ -2,7 +2,6 @@
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Items.CursorIcons;
 using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.LaunchPads;
 using Microsoft.Xna.Framework;
@@ -11,207 +10,206 @@ using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.ModLoader.Config.UI;
 using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.UI
 {
-    public class RocketUISystem : ModSystem
-    {
-        public static RocketUISystem Instance => ModContent.GetInstance<RocketUISystem>();
-        public UserInterface UserInterface { get; set; }
-        public RocketUIState UIRocketState { get; set; }
-        public AssemblyUIState UIAssemblyState { get; set; }
+	public class RocketUISystem : ModSystem
+	{
+		public static RocketUISystem Instance => ModContent.GetInstance<RocketUISystem>();
+		public UserInterface UserInterface { get; set; }
+		public RocketUIState UIRocketState { get; set; }
+		public AssemblyUIState UIAssemblyState { get; set; }
 
-        private GameTime lastGameTime;
+		private GameTime lastGameTime;
 
-        public static bool DebugModeActive { get; set; } = false;
+		public static bool DebugModeActive { get; set; } = false;
 
-        public static void ShowRocketUI(Rocket rocket) => Instance.ShowRocketUI_Internal(rocket);
-        public static void ShowAssemblyUI(LaunchPad launchPad) => Instance.ShowAssemblyUI_Internal(launchPad);
-        public static void Hide() => Instance.HideUI();
-        public static bool Active => Instance.UserInterface?.CurrentState is not null;
-        public static bool RocketUIActive => Instance.UserInterface?.CurrentState is RocketUIState;
-        public static bool AssemblyUIActive => Instance.UserInterface?.CurrentState is AssemblyUIState;
+		public static void ShowRocketUI(Rocket rocket) => Instance.ShowRocketUI_Internal(rocket);
+		public static void ShowAssemblyUI(LaunchPad launchPad) => Instance.ShowAssemblyUI_Internal(launchPad);
+		public static void Hide() => Instance.HideUI();
+		public static bool Active => Instance.UserInterface?.CurrentState is not null;
+		public static bool RocketUIActive => Instance.UserInterface?.CurrentState is RocketUIState;
+		public static bool AssemblyUIActive => Instance.UserInterface?.CurrentState is AssemblyUIState;
 
-        public override void Load()
-        {
-            if (Main.dedServ)
-                return;
+		public override void Load()
+		{
+			if (Main.dedServ)
+				return;
 
-            UserInterface = new UserInterface();
-            MacrocosmConfig.Instance.OnConfigChanged += OnConfigChanged;
-        }
+			UserInterface = new UserInterface();
+			MacrocosmConfig.Instance.OnConfigChanged += OnConfigChanged;
+		}
 
-        public override void Unload()
-        {
-            UserInterface = null;
-        }
+		public override void Unload()
+		{
+			UserInterface = null;
+		}
 
-        public override void OnWorldLoad()
-        {
-            if (Main.netMode == NetmodeID.Server)
-                return;
+		public override void OnWorldLoad()
+		{
+			if (Main.netMode == NetmodeID.Server)
+				return;
 
-            UIRocketState = new RocketUIState();
-            UIRocketState.Activate();
+			UIRocketState = new RocketUIState();
+			UIRocketState.Activate();
 
-            UIAssemblyState = new AssemblyUIState();
-            UIAssemblyState.Activate();
-        }
+			UIAssemblyState = new AssemblyUIState();
+			UIAssemblyState.Activate();
+		}
 
-        public override void OnWorldUnload()
-        {
-            if (Main.netMode == NetmodeID.Server)
-                return;
+		public override void OnWorldUnload()
+		{
+			if (Main.netMode == NetmodeID.Server)
+				return;
 
-            UIRocketState?.Deactivate();
-            UIRocketState = null;
+			UIRocketState?.Deactivate();
+			UIRocketState = null;
 
-            UIAssemblyState?.Deactivate();
-            UIAssemblyState = null;
-        }
+			UIAssemblyState?.Deactivate();
+			UIAssemblyState = null;
+		}
 
-        public override void PostUpdateEverything()
-        {
-            if (UserInterface.CurrentState is not null && UIRocketState is not null && UIRocketState.Rocket is not null)
-                UIRocketState.ExecuteRecursively(RecursiveUpdate);
+		public override void PostUpdateEverything()
+		{
+			if (UserInterface.CurrentState is not null && UIRocketState is not null && UIRocketState.Rocket is not null)
+				UIRocketState.ExecuteRecursively(RecursiveUpdate);
 
-            if (UserInterface.CurrentState is not null && UIAssemblyState is not null && UIAssemblyState.LaunchPad is not null)
-                UIAssemblyState.ExecuteRecursively(RecursiveUpdate);
-        }
+			if (UserInterface.CurrentState is not null && UIAssemblyState is not null && UIAssemblyState.LaunchPad is not null)
+				UIAssemblyState.ExecuteRecursively(RecursiveUpdate);
+		}
 
-        public void ResetUI()
-        {
-            if (UIRocketState is not null)
-            {
-                Rocket rocket = new();
-                if (UIRocketState.Rocket is not null)
-                    rocket = UIRocketState.Rocket;
+		public void ResetUI()
+		{
+			if (UIRocketState is not null)
+			{
+				Rocket rocket = new();
+				if (UIRocketState.Rocket is not null)
+					rocket = UIRocketState.Rocket;
 
-                UIRocketState = new RocketUIState();
-                UIRocketState.Activate();
+				UIRocketState = new RocketUIState();
+				UIRocketState.Activate();
 
-                if (UserInterface?.CurrentState != null)
-                {
-                    HideUI();
-                    ShowRocketUI_Internal(rocket);
-                }
-            }
+				if (UserInterface?.CurrentState != null)
+				{
+					HideUI();
+					ShowRocketUI_Internal(rocket);
+				}
+			}
 
-            if (UIAssemblyState is not null)
-            {
-                LaunchPad launchPad = new();
-                if (UIAssemblyState.LaunchPad is not null)
-                    launchPad = UIAssemblyState.LaunchPad;
+			if (UIAssemblyState is not null)
+			{
+				LaunchPad launchPad = new();
+				if (UIAssemblyState.LaunchPad is not null)
+					launchPad = UIAssemblyState.LaunchPad;
 
-                UIAssemblyState = new AssemblyUIState();
-                UIAssemblyState.Activate();
+				UIAssemblyState = new AssemblyUIState();
+				UIAssemblyState.Activate();
 
-                if (UserInterface?.CurrentState != null)
-                {
-                    HideUI();
-                    ShowAssemblyUI_Internal(launchPad);
-                }
-            }
-        }
+				if (UserInterface?.CurrentState != null)
+				{
+					HideUI();
+					ShowAssemblyUI_Internal(launchPad);
+				}
+			}
+		}
 
-        private void OnConfigChanged(object sender, System.EventArgs e)
-        {
-            ResetUI();
-        }
+		private void OnConfigChanged(object sender, System.EventArgs e)
+		{
+			ResetUI();
+		}
 
-        public override void OnLocalizationsLoaded()
-        {
-        }
+		public override void OnLocalizationsLoaded()
+		{
+		}
 
-        private void ShowRocketUI_Internal(Rocket rocket)
-        {
-            if (Main.netMode == NetmodeID.Server || UserInterface.CurrentState is not null)
-                return;
+		private void ShowRocketUI_Internal(Rocket rocket)
+		{
+			if (Main.netMode == NetmodeID.Server || UserInterface.CurrentState is not null)
+				return;
 
-            Main.playerInventory = true;
+			Main.playerInventory = true;
 
-            UIRocketState.Rocket = rocket;
-            UIRocketState.OnShow();
+			UIRocketState.Rocket = rocket;
+			UIRocketState.OnShow();
 
-            UserInterface.SetState(UIRocketState);
-        }
+			UserInterface.SetState(UIRocketState);
+		}
 
-        private void ShowAssemblyUI_Internal(LaunchPad launchPad)
-        {
-            if (Main.netMode == NetmodeID.Server || UserInterface.CurrentState is not null)
-                return;
+		private void ShowAssemblyUI_Internal(LaunchPad launchPad)
+		{
+			if (Main.netMode == NetmodeID.Server || UserInterface.CurrentState is not null)
+				return;
 
-            Main.playerInventory = true;
+			Main.playerInventory = true;
 
-            UIAssemblyState.LaunchPad = launchPad;
-            UIAssemblyState.OnShow();
+			UIAssemblyState.LaunchPad = launchPad;
+			UIAssemblyState.OnShow();
 
-            UserInterface.SetState(UIAssemblyState);
-        }
+			UserInterface.SetState(UIAssemblyState);
+		}
 
-        public void HideUI()
-        {
-            UIRocketState?.OnHide();
-            UIAssemblyState?.OnHide();
+		public void HideUI()
+		{
+			UIRocketState?.OnHide();
+			UIAssemblyState?.OnHide();
 
-            if (Main.netMode != NetmodeID.Server)
-                UserInterface?.SetState(null);
-        }
+			if (Main.netMode != NetmodeID.Server)
+				UserInterface?.SetState(null);
+		}
 
-        public override void UpdateUI(GameTime gameTime)
-        {
-            // press Ctrl + Shift + E to reset UI
-            if (UserInterface.CurrentState is not null &&
-                Main.keyState.IsKeyDown(Keys.LeftControl) &&
-                Main.keyState.IsKeyDown(Keys.LeftShift) &&
-                Main.keyState.IsKeyDown(Keys.E) && !Main.oldKeyState.IsKeyDown(Keys.E))
-            {
-                //if(DebugModeActive) {
-                UITheme.Reload();
-                CustomizationStorage.Reset();
-                // }
+		public override void UpdateUI(GameTime gameTime)
+		{
+			// press Ctrl + Shift + E to reset UI
+			if (UserInterface.CurrentState is not null &&
+				Main.keyState.IsKeyDown(Keys.LeftControl) &&
+				Main.keyState.IsKeyDown(Keys.LeftShift) &&
+				Main.keyState.IsKeyDown(Keys.E) && !Main.oldKeyState.IsKeyDown(Keys.E))
+			{
+				//if(DebugModeActive) {
+				UITheme.Reload();
+				CustomizationStorage.Reset();
+				// }
 
-                ResetUI();
-                Utility.Chat("Reset UI", Color.Lime);
-            }
+				ResetUI();
+				Utility.Chat("Reset UI", Color.Lime);
+			}
 
-            lastGameTime = gameTime;
+			lastGameTime = gameTime;
 
-            if (UserInterface?.CurrentState != null)
-            {
-                Main.LocalPlayer.mouseInterface = true;
-                Main.mouseRightRelease = false;
+			if (UserInterface?.CurrentState != null)
+			{
+				Main.LocalPlayer.mouseInterface = true;
+				Main.mouseRightRelease = false;
 
-                UserInterface.Update(gameTime);
-            }
-        }
+				UserInterface.Update(gameTime);
+			}
+		}
 
-        public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
-        {
-            int mouseTextIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Mouse Text"));
-            if (mouseTextIndex != -1)
-            {
-                layers.Insert(mouseTextIndex, new LegacyGameInterfaceLayer(
-                    "Macrocosm:RocketUI",
-                    () =>
-                    {
-                        if (lastGameTime != null && UserInterface?.CurrentState != null)
-                            UserInterface.Draw(Main.spriteBatch, lastGameTime);
-                        return true;
-                    },
-                    InterfaceScaleType.UI));
-            }
-        }
+		public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
+		{
+			int mouseTextIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Mouse Text"));
+			if (mouseTextIndex != -1)
+			{
+				layers.Insert(mouseTextIndex, new LegacyGameInterfaceLayer(
+					"Macrocosm:RocketUI",
+					() =>
+					{
+						if (lastGameTime != null && UserInterface?.CurrentState != null)
+							UserInterface.Draw(Main.spriteBatch, lastGameTime);
+						return true;
+					},
+					InterfaceScaleType.UI));
+			}
+		}
 
-        private void RecursiveUpdate(UIElement element)
-        {
-            if (element is null)
-                return;
+		private void RecursiveUpdate(UIElement element)
+		{
+			if (element is null)
+				return;
 
-            if (element is IConsistentUpdateable updateable)
-                updateable.Update();
-        }
+			if (element is IConsistentUpdateable updateable)
+				updateable.Update();
+		}
 	}
 }

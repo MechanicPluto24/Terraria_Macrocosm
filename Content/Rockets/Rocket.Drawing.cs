@@ -32,71 +32,71 @@ namespace Macrocosm.Content.Rockets
 			renderTarget?.Dispose();
 		}
 
-        /// <summary> Draw the rocket </summary>
-        /// <param name="drawMode"> 
+		/// <summary> Draw the rocket </summary>
+		/// <param name="drawMode"> 
 		/// The drawing mode: <list type="bullet">
 		/// <item> <see cref="DrawMode.World"/>: Draws the rocket in world </item>
 		/// <item> <see cref="DrawMode.Dummy"/>: Draws the rocket as a dummy, for use in UI </item>
 		/// <item> <see cref="DrawMode.Blueprint"/>:  Draws the rocket as a blueprint, for use in the assembly UI </item>
 		///</list> </param>
-        /// <param name="spriteBatch"> The spritebatch </param>
-        /// <param name="position"> The draw position </param>
-        /// <param name="useRenderTarget"> 
+		/// <param name="spriteBatch"> The spritebatch </param>
+		/// <param name="position"> The draw position </param>
+		/// <param name="useRenderTarget"> 
 		/// Whether to use a render target or draw the rocket directly.
 		/// For performance considerations, prefer to use a render target for drawing, except where visual changes happen very often.
 		/// NOTE: In world, you must use a render target in order for the lighting to work.
 		/// </param>
-        public void Draw(DrawMode drawMode, SpriteBatch spriteBatch, Vector2 position, bool useRenderTarget = true)
+		public void Draw(DrawMode drawMode, SpriteBatch spriteBatch, Vector2 position, bool useRenderTarget = true)
 		{
 			if (useRenderTarget)
 			{
-                // Prepare our RenderTarget
-                GetRenderTarget(drawMode);
+				// Prepare our RenderTarget
+				GetRenderTarget(drawMode);
 
-                // Save our SpriteBatch state
-                state.SaveState(spriteBatch);
-                spriteBatch.EndIfBeginCalled();
+				// Save our SpriteBatch state
+				state.SaveState(spriteBatch);
+				spriteBatch.EndIfBeginCalled();
 
-                switch (drawMode)
-                {
-                    // Only DrawMode.World consumes the buffers
-                    case DrawMode.World:
-                        PrepareEffect(drawMode);
-                        PrepareLightingBuffers(Width, Height, out int numVertices, out int primitiveCount);
-                        PresentLightingBuffers(numVertices, primitiveCount);
-                        break;
+				switch (drawMode)
+				{
+					// Only DrawMode.World consumes the buffers
+					case DrawMode.World:
+						PrepareEffect(drawMode);
+						PrepareLightingBuffers(Width, Height, out int numVertices, out int primitiveCount);
+						PresentLightingBuffers(numVertices, primitiveCount);
+						break;
 
-                    // All other cases draw the RenderTarget directly
-                    default:
+					// All other cases draw the RenderTarget directly
+					default:
 
-                        spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, state.Effect, state.Matrix);
-                        spriteBatch.Draw(renderTarget, position, Color.White);
-                        spriteBatch.End();
+						spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, state.Effect, state.Matrix);
+						spriteBatch.Draw(renderTarget, position, Color.White);
+						spriteBatch.End();
 
-                        break;
-                }
+						break;
+				}
 
-                // Reset our SpriteBatch to its previous state
-                spriteBatch.Begin(state);
-            }
+				// Reset our SpriteBatch to its previous state
+				spriteBatch.Begin(state);
+			}
 			else
 			{
-                switch (drawMode)
-                {
-                    case DrawMode.World:
-                        DrawWorld(spriteBatch, position);
-                        break;
+				switch (drawMode)
+				{
+					case DrawMode.World:
+						DrawWorld(spriteBatch, position);
+						break;
 
-                    case DrawMode.Dummy:
-                        DrawDummy(spriteBatch, position);
-                        break;
+					case DrawMode.Dummy:
+						DrawDummy(spriteBatch, position);
+						break;
 
-                    case DrawMode.Blueprint:
-                        DrawBlueprint(spriteBatch, position);
-                        break;
-                }
-            }
-        }
+					case DrawMode.Blueprint:
+						DrawBlueprint(spriteBatch, position);
+						break;
+				}
+			}
+		}
 
 		public void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 position)
 		{
@@ -108,24 +108,24 @@ namespace Macrocosm.Content.Rockets
 
 		public void PostDraw(SpriteBatch spriteBatch, Vector2 position)
 		{
-            foreach (RocketModule module in ModulesByDrawPriority)
-            {
-                module.PostDraw(spriteBatch, GetModuleRelativePosition(module, position));
-            }
-        }
+			foreach (RocketModule module in ModulesByDrawPriority)
+			{
+				module.PostDraw(spriteBatch, GetModuleRelativePosition(module, position));
+			}
+		}
 
 		public void DrawOverlay(SpriteBatch spriteBatch, Vector2 position)
 		{
-            if (InFlight || ForcedFlightAppearance)
-            {
-                float scale = 1.2f * Main.rand.NextFloat(0.85f, 1f);
-                if (FlightProgress < 0.1f && !ForcedFlightAppearance)
-                    scale *= Utility.QuadraticEaseOut(FlightProgress * 10f);
+			if (InFlight || ForcedFlightAppearance)
+			{
+				float scale = 1.2f * Main.rand.NextFloat(0.85f, 1f);
+				if (FlightProgress < 0.1f && !ForcedFlightAppearance)
+					scale *= Utility.QuadraticEaseOut(FlightProgress * 10f);
 
-                var flare = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Flare2").Value;
-                spriteBatch.Draw(flare, position + new Vector2(Bounds.Width / 2, Bounds.Height), null, new Color(255, 69, 0), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
-            }
-        }
+				var flare = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Flare2").Value;
+				spriteBatch.Draw(flare, position + new Vector2(Bounds.Width / 2, Bounds.Height), null, new Color(255, 69, 0), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
+			}
+		}
 
 		public RenderTarget2D GetRenderTarget(DrawMode drawMode)
 		{
@@ -149,7 +149,7 @@ namespace Macrocosm.Content.Rockets
 			}
 		}
 
-        private void DrawDummy(SpriteBatch spriteBatch, Vector2 position)
+		private void DrawDummy(SpriteBatch spriteBatch, Vector2 position)
 		{
 			PreDrawBeforeTiles(spriteBatch, position);
 			DrawWorld(spriteBatch, position);
@@ -159,11 +159,11 @@ namespace Macrocosm.Content.Rockets
 			spriteBatch.End();
 			spriteBatch.Begin(BlendState.Additive, state);
 			DrawOverlay(spriteBatch, position);
-            spriteBatch.End();
-            spriteBatch.Begin(state);
-        }
+			spriteBatch.End();
+			spriteBatch.Begin(state);
+		}
 
-        private void DrawBlueprint(SpriteBatch spriteBatch, Vector2 position)
+		private void DrawBlueprint(SpriteBatch spriteBatch, Vector2 position)
 		{
 			foreach (RocketModule module in ModulesByDrawPriority)
 			{
@@ -205,7 +205,7 @@ namespace Macrocosm.Content.Rockets
 
 			// Capture original RenderTargets and preserve their contents
 			PrimitivesSystem.GraphicsDevice.PresentationParameters.RenderTargetUsage = RenderTargetUsage.PreserveContents;
-            RenderTargetBinding[] originalRenderTargets = spriteBatch.GraphicsDevice.GetRenderTargets();
+			RenderTargetBinding[] originalRenderTargets = spriteBatch.GraphicsDevice.GetRenderTargets();
 			foreach (var binding in originalRenderTargets)
 				typeof(RenderTarget2D).SetPropertyValue("RenderTargetUsage", RenderTargetUsage.PreserveContents, binding.RenderTarget);
 

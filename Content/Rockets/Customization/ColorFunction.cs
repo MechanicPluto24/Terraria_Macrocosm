@@ -6,21 +6,21 @@ using System.Linq;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-    public class ColorFunction
-    {
-        public string Name { get; } = "";
+	public class ColorFunction
+	{
+		public string Name { get; } = "";
 
 		public bool HasParameters => Parameters is not null && Parameters.Length > 0;
 		public object[] Parameters { get; private set; }
 
-        private readonly Func<Color[], Color> function;
+		private readonly Func<Color[], Color> function;
 
-        /// <summary> Creates a new pattern dynamic color. Use this for unnamed color functions, not unlockable. </summary>
-        /// <param name="function"> The function </param>
-        public ColorFunction(Func<Color[], Color> function)
-        {
-            this.function = function;
-        }
+		/// <summary> Creates a new pattern dynamic color. Use this for unnamed color functions, not unlockable. </summary>
+		/// <param name="function"> The function </param>
+		public ColorFunction(Func<Color[], Color> function)
+		{
+			this.function = function;
+		}
 
 		/// <summary>
 		/// Creates a new pattern dynamic color. Use this for unlockable dynamic colors.
@@ -33,11 +33,11 @@ namespace Macrocosm.Content.Rockets.Customization
 			Name = name;
 		}
 
-        /// <summary> Invokes the color function on an input array. </summary>
-        public Color Invoke(Color[] inputColors) => function(inputColors);
+		/// <summary> Invokes the color function on an input array. </summary>
+		public Color Invoke(Color[] inputColors) => function(inputColors);
 
-        public static ColorFunction CreateByName(string name) => CreateByName(name, Array.Empty<object>());
-        public static ColorFunction CreateByName(string name, object[] parameters) 
+		public static ColorFunction CreateByName(string name) => CreateByName(name, Array.Empty<object>());
+		public static ColorFunction CreateByName(string name, object[] parameters)
 		{
 			try
 			{
@@ -46,7 +46,7 @@ namespace Macrocosm.Content.Rockets.Customization
 					"Lerp" or "lerp" => CreateLerpFunction(Convert.ToInt32(parameters[0]), Convert.ToInt32(parameters[1]), Convert.ToSingle(parameters[2])),
 					"Map" or "map" => CreateMapFunction(Convert.ToInt32(parameters[0])),
 					_ => throw new ArgumentException($"Unknown function name: {name}")
-				}; 
+				};
 			}
 			catch (ArgumentException ex)
 			{
@@ -65,34 +65,34 @@ namespace Macrocosm.Content.Rockets.Customization
 				return CreateMapFunction(0);
 			}
 		}
-        public static ColorFunction CreateByName(string name, string[] parameters)
-        {
-            List<object> objects = new();
-            foreach (var parameter in parameters)
-            {
+		public static ColorFunction CreateByName(string name, string[] parameters)
+		{
+			List<object> objects = new();
+			foreach (var parameter in parameters)
+			{
 				if (int.TryParse(parameter, out int intValue))
 					objects.Add(intValue);
-                else if (float.TryParse(parameter, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out float floatValue))
-                    objects.Add(floatValue);
-                else if (double.TryParse(parameter, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double doubleValue))
-                    objects.Add(doubleValue);
-            }
+				else if (float.TryParse(parameter, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out float floatValue))
+					objects.Add(floatValue);
+				else if (double.TryParse(parameter, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double doubleValue))
+					objects.Add(doubleValue);
+			}
 
 			return CreateByName(name, objects.ToArray());
-        }
+		}
 
-        private static void LogImportError(string message)
-        {
-            Utility.Chat(message, Color.Orange);
-            Macrocosm.Instance.Logger.Error(message);
-        }
+		private static void LogImportError(string message)
+		{
+			Utility.Chat(message, Color.Orange);
+			Macrocosm.Instance.Logger.Error(message);
+		}
 
 		private static ColorFunction CreateMapFunction(int index)
 		{
 			if (index < 0 || index >= 8) throw new ArgumentException($"Index out of bounds: {index}");
-			return new((colors) => colors[index], "Map") 
+			return new((colors) => colors[index], "Map")
 			{
-				Parameters = new object[] { index } 
+				Parameters = new object[] { index }
 			};
 		}
 
@@ -100,11 +100,11 @@ namespace Macrocosm.Content.Rockets.Customization
 		{
 			if (index1 < 0 || index1 >= 8) throw new ArgumentException($"Index out of bounds: {index1}");
 			if (index2 < 0 || index2 >= 8) throw new ArgumentException($"Index out of bounds: {index2}");
-			var colorFunc = new ColorFunction((colors) => Color.Lerp(colors[index1], colors[index2], amount), "Lerp") 
+			var colorFunc = new ColorFunction((colors) => Color.Lerp(colors[index1], colors[index2], amount), "Lerp")
 			{
-				Parameters = new object[] { index1, index2, amount } 
+				Parameters = new object[] { index1, index2, amount }
 			};
 			return colorFunc;
-        }
+		}
 	}
 }

@@ -2,7 +2,7 @@
 
 namespace Macrocosm.Content.Projectiles.Global
 {
-    public interface IRangedProjectile
-    {
-    }
+	public interface IRangedProjectile
+	{
+	}
 }

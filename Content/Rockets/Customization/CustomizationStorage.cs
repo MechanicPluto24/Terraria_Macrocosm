@@ -1,7 +1,5 @@
 ﻿using Macrocosm.Common.UI;
-using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Rockets.UI;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json.Linq;
 using System;
@@ -9,16 +7,15 @@ using System.Collections.Generic;
 using System.Linq;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-    public class CustomizationStorage : ModSystem
-    {
-        public static bool Initialized { get; private set; }
+	public class CustomizationStorage : ModSystem
+	{
+		public static bool Initialized { get; private set; }
 
-        private static Dictionary<(string moduleName, string patternName), Pattern> patterns;
-        private static Dictionary<(string moduleName, string detailName), Detail> details;
+		private static Dictionary<(string moduleName, string patternName), Pattern> patterns;
+		private static Dictionary<(string moduleName, string detailName), Detail> details;
 
 		private static Dictionary<(string moduleName, string patternName), bool> patternUnlockStatus;
 		private static Dictionary<(string moduleName, string detailName), bool> detailUnlockStatus;
@@ -35,8 +32,8 @@ namespace Macrocosm.Content.Rockets.Customization
 			LoadPatterns();
 			LoadDetails();
 
-            Initialized = true;
-        }
+			Initialized = true;
+		}
 
 		public override void Unload()
 		{
@@ -51,14 +48,14 @@ namespace Macrocosm.Content.Rockets.Customization
 			detailUnlockStatus = null;
 
 
-            Initialized = false;
-        }
+			Initialized = false;
+		}
 
-        public static void Reset()
-        {
-            ModContent.GetInstance<CustomizationStorage>().Unload();
-            ModContent.GetInstance<CustomizationStorage>().Load();
-        }
+		public static void Reset()
+		{
+			ModContent.GetInstance<CustomizationStorage>().Unload();
+			ModContent.GetInstance<CustomizationStorage>().Load();
+		}
 
 		/// <summary>
 		/// Gets a pattern from the pattern storage.
@@ -73,13 +70,14 @@ namespace Macrocosm.Content.Rockets.Customization
 
 		public static List<Pattern> GetUnlockedPatterns(string moduleName)
 		{
-			return GetPatternsWhere(moduleName, pattern => {
-				var key = (moduleName, pattern.Name); 
+			return GetPatternsWhere(moduleName, pattern =>
+			{
+				var key = (moduleName, pattern.Name);
 				return patternUnlockStatus.ContainsKey(key) && patternUnlockStatus[key];
 			});
 		}
 
-        public static List<Pattern> GetPatternsWhere(string moduleName, Func<Pattern, bool> match)
+		public static List<Pattern> GetPatternsWhere(string moduleName, Func<Pattern, bool> match)
 		{
 			var patternsForModule = patterns
 				.Select(kvp => kvp.Value)
@@ -105,7 +103,7 @@ namespace Macrocosm.Content.Rockets.Customization
 			}
 			else
 			{
- 				pattern = default;
+				pattern = default;
 				return false;
 			}
 		}
@@ -119,39 +117,39 @@ namespace Macrocosm.Content.Rockets.Customization
 		public static void SetPatternUnlockedStatus(string moduleName, string patternName, bool unlockedState = true)
 			 => patternUnlockStatus[(moduleName, patternName)] = unlockedState;
 
-        /// <summary>
-        /// Gets the detail reference from the detail storage.
-        /// </summary>
-        /// <param name="moduleName"> The rocket module this detail belongs to </param>
-        /// <param name="detailName"> The detail name </param>
-        public static Detail GetDetail(string moduleName, string detailName)
-            => details[(moduleName, detailName)];
+		/// <summary>
+		/// Gets the detail reference from the detail storage.
+		/// </summary>
+		/// <param name="moduleName"> The rocket module this detail belongs to </param>
+		/// <param name="detailName"> The detail name </param>
+		public static Detail GetDetail(string moduleName, string detailName)
+			=> details[(moduleName, detailName)];
 
-        /// <summary>
-        /// Attempts to get a detail reference from the detail storage.
-        /// </summary>
-        /// <param name="moduleName"> The rocket module this detail belongs to </param>
-        /// <param name="detailName"> The detail name </param>
-        /// <param name="detail"> The detail, null if not found </param>
-        /// <returns> Whether the specified detail has been found </returns>
-        public static bool TryGetDetail(string moduleName, string detailName, out Detail detail)
-            => details.TryGetValue((moduleName, detailName), out detail);
+		/// <summary>
+		/// Attempts to get a detail reference from the detail storage.
+		/// </summary>
+		/// <param name="moduleName"> The rocket module this detail belongs to </param>
+		/// <param name="detailName"> The detail name </param>
+		/// <param name="detail"> The detail, null if not found </param>
+		/// <returns> Whether the specified detail has been found </returns>
+		public static bool TryGetDetail(string moduleName, string detailName, out Detail detail)
+			=> details.TryGetValue((moduleName, detailName), out detail);
 
 		public override void ClearWorld()
 		{
 			Reset();
 		}
 
-        public override void SaveWorldData(TagCompound tag) => SaveData(tag);
+		public override void SaveWorldData(TagCompound tag) => SaveData(tag);
 
-        public override void LoadWorldData(TagCompound tag) => LoadData(tag);
+		public override void LoadWorldData(TagCompound tag) => LoadData(tag);
 
 
 		public static void SaveData(TagCompound tag)
 		{
 			foreach (var kvp in patternUnlockStatus)
 				if (kvp.Value)
- 					tag["Pattern_" + kvp.Key + "_Unlocked"] = true;
+					tag["Pattern_" + kvp.Key + "_Unlocked"] = true;
 
 			foreach (var kvp in detailUnlockStatus)
 				if (kvp.Value)
@@ -199,19 +197,19 @@ namespace Macrocosm.Content.Rockets.Customization
 		{
 			Detail detail = new(moduleName, detailName);
 			details.Add((moduleName, detailName), detail);
-			detailUnlockStatus.Add((moduleName,detailName), unlockedByDefault);
+			detailUnlockStatus.Add((moduleName, detailName), unlockedByDefault);
 		}
 
-        public static UIListScrollablePanel ProvidePatternUI(string moduleName)
-        {
+		public static UIListScrollablePanel ProvidePatternUI(string moduleName)
+		{
 			throw new NotImplementedException();
-        }
+		}
 
-        private static void LoadPatterns()
-        {
-            try
-            {
-                JArray patternsArray = Utility.ParseJSONFromFile("Content/Rockets/Customization/Patterns/patterns.json");
+		private static void LoadPatterns()
+		{
+			try
+			{
+				JArray patternsArray = Utility.ParseJSONFromFile("Content/Rockets/Customization/Patterns/patterns.json");
 
 				foreach (JObject patternObject in patternsArray.Cast<JObject>())
 				{
@@ -220,29 +218,29 @@ namespace Macrocosm.Content.Rockets.Customization
 					if (patternObject.ContainsKey("unlockedByDefault"))
 						unlockedByDefault = patternObject.Value<bool>("unlockedByDefault");
 
- 					AddPattern(Pattern.FromJObject(patternObject), unlockedByDefault);
+					AddPattern(Pattern.FromJObject(patternObject), unlockedByDefault);
 				}
- 			}
+			}
 			catch (Exception ex)
 			{
 				Macrocosm.Instance.Logger.Error(ex.Message);
 			}
 
-            // Just for testing the scrollbar
-            for (int i = 1; i <= 7; i++)
-                AddPattern("ServiceModule", "Test" + i, true, new(Color.Transparent), new(Color.White));
+			// Just for testing the scrollbar
+			for (int i = 1; i <= 7; i++)
+				AddPattern("ServiceModule", "Test" + i, true, new(Color.Transparent), new(Color.White));
 
-            for (int i = 1; i <= 8; i++)
-                AddPattern("ReactorModule", "Test" + i, true, new(Color.Transparent), new(Color.White));
+			for (int i = 1; i <= 8; i++)
+				AddPattern("ReactorModule", "Test" + i, true, new(Color.Transparent), new(Color.White));
 
-            for (int i = 1; i <= 74; i++)
-                AddPattern("EngineModule", "Test" + i, true, new(Color.White), new(Color.White));
-        }
+			for (int i = 1; i <= 74; i++)
+				AddPattern("EngineModule", "Test" + i, true, new(Color.White), new(Color.White));
+		}
 
-        private static void LoadDetails()
-        {
-            foreach (var country in Utility.CountryCodesAlpha3)
-                AddDetail("EngineModule", "Flag_" + country, true);
-        }
-    }
+		private static void LoadDetails()
+		{
+			foreach (var country in Utility.CountryCodesAlpha3)
+				AddDetail("EngineModule", "Flag_" + country, true);
+		}
+	}
 }

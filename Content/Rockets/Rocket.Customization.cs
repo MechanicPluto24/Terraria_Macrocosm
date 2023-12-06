@@ -1,109 +1,106 @@
 ﻿using Macrocosm.Common.Utils;
-using Macrocosm.Content.Items.CursorIcons;
 using Macrocosm.Content.Rockets.Customization;
-using Macrocosm.Content.Rockets.Modules;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Linq;
 
 namespace Macrocosm.Content.Rockets
 {
-    public partial class Rocket
-    {
-        public Rocket VisualClone()
-        {
-            Rocket visualClone = new();
-            visualClone.ApplyCustomizationChanges(this, sync: false, reset: true);
-            return visualClone;
-        }
+	public partial class Rocket
+	{
+		public Rocket VisualClone()
+		{
+			Rocket visualClone = new();
+			visualClone.ApplyCustomizationChanges(this, sync: false, reset: true);
+			return visualClone;
+		}
 
-        public void ApplyCustomizationChanges(Rocket source, bool sync = true, bool reset = true)
-        {
-            Nameplate.Text = source.Nameplate.Text;
-            Nameplate.TextColor = source.Nameplate.TextColor;
-            Nameplate.HAlign = source.Nameplate.HAlign;
-            Nameplate.VAlign = source.Nameplate.VAlign;
+		public void ApplyCustomizationChanges(Rocket source, bool sync = true, bool reset = true)
+		{
+			Nameplate.Text = source.Nameplate.Text;
+			Nameplate.TextColor = source.Nameplate.TextColor;
+			Nameplate.HAlign = source.Nameplate.HAlign;
+			Nameplate.VAlign = source.Nameplate.VAlign;
 
-            foreach (var module in Modules.Values)
-            {
-                //Modules[moduleName].Detail = dummy.Modules[moduleName].Detail ;
-                module.Pattern = source.Modules[module.Name].Pattern;
-            }
+			foreach (var module in Modules.Values)
+			{
+				//Modules[moduleName].Detail = dummy.Modules[moduleName].Detail ;
+				module.Pattern = source.Modules[module.Name].Pattern;
+			}
 
-            if(sync)
-                SendCustomizationData();
+			if (sync)
+				SendCustomizationData();
 
-            if(reset)
-                ResetRenderTarget();
-        }
+			if (reset)
+				ResetRenderTarget();
+		}
 
-        public void ResetCustomizationToDefault()
-        {
-            Nameplate = new();
+		public void ResetCustomizationToDefault()
+		{
+			Nameplate = new();
 
-            foreach (var moduleKvp in Modules)
-            {
-                moduleKvp.Value.Detail = null;
-                moduleKvp.Value.Pattern = CustomizationStorage.GetDefaultPattern(moduleKvp.Key);
-            }
+			foreach (var moduleKvp in Modules)
+			{
+				moduleKvp.Value.Detail = null;
+				moduleKvp.Value.Pattern = CustomizationStorage.GetDefaultPattern(moduleKvp.Key);
+			}
 
-            SendCustomizationData();
-        }
+			SendCustomizationData();
+		}
 
-        public string GetCustomizationDataToJSON()
-        {
-            var jObject = new JObject
-            {
-                ["nameplate"] = Nameplate.ToJObject()
-            };
+		public string GetCustomizationDataToJSON()
+		{
+			var jObject = new JObject
+			{
+				["nameplate"] = Nameplate.ToJObject()
+			};
 
-            var modulesArray = new JArray();
-            foreach (var moduleKvp in Modules)
-            {
-                var module = moduleKvp.Value;
-                modulesArray.Add(new JObject
-                {
-                    ["moduleName"] = module.Name,
-                    ["pattern"] = module.Pattern.ToJObject()
-                });
-            }
+			var modulesArray = new JArray();
+			foreach (var moduleKvp in Modules)
+			{
+				var module = moduleKvp.Value;
+				modulesArray.Add(new JObject
+				{
+					["moduleName"] = module.Name,
+					["pattern"] = module.Pattern.ToJObject()
+				});
+			}
 
-            jObject["modules"] = modulesArray;
+			jObject["modules"] = modulesArray;
 
-            return jObject.ToString(Formatting.Indented);
-        }
+			return jObject.ToString(Formatting.Indented);
+		}
 
-        public void ApplyRocketCustomizationFromJSON(string json)
-        {
-            var jObject = JObject.Parse(json);
+		public void ApplyRocketCustomizationFromJSON(string json)
+		{
+			var jObject = JObject.Parse(json);
 
-            if (jObject["nameplate"] is JObject nameplateJObject)
-            {
-                Nameplate = Nameplate.FromJObject(nameplateJObject);
-            }
+			if (jObject["nameplate"] is JObject nameplateJObject)
+			{
+				Nameplate = Nameplate.FromJObject(nameplateJObject);
+			}
 
-            if (jObject["modules"] is JArray modulesArray)
-            {
-                foreach (var moduleJObject in modulesArray.Children<JObject>())
-                {
-                    string moduleName = moduleJObject["moduleName"].Value<string>();
-                    if (Modules.TryGetValue(moduleName, out var module))
-                    {
-                        try
-                        {
-                            module.Pattern = Pattern.FromJObject(moduleJObject["pattern"].Value<JObject>());
-                        }
-                        catch (Exception ex)
-                        {
-                            Utility.Chat(ex.Message);
-                            Macrocosm.Instance.Logger.Warn(ex.Message);
-                        }
-                    }
-                }
-            }
+			if (jObject["modules"] is JArray modulesArray)
+			{
+				foreach (var moduleJObject in modulesArray.Children<JObject>())
+				{
+					string moduleName = moduleJObject["moduleName"].Value<string>();
+					if (Modules.TryGetValue(moduleName, out var module))
+					{
+						try
+						{
+							module.Pattern = Pattern.FromJObject(moduleJObject["pattern"].Value<JObject>());
+						}
+						catch (Exception ex)
+						{
+							Utility.Chat(ex.Message);
+							Macrocosm.Instance.Logger.Warn(ex.Message);
+						}
+					}
+				}
+			}
 
-            ResetRenderTarget();
-        }
-    }
+			ResetRenderTarget();
+		}
+	}
 }

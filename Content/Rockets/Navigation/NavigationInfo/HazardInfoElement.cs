@@ -6,14 +6,14 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
 {
-    public class HazardInfoElement : InfoElement
-    {
-        public HazardInfoElement(string hazardKey) : base(hazardKey) { }
+	public class HazardInfoElement : InfoElement
+	{
+		public HazardInfoElement(string hazardKey) : base(hazardKey) { }
 
-        protected override Asset<Texture2D> GetIcon() => ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/WorldInfo/" + specialValueKey);
+		protected override Asset<Texture2D> GetIcon() => ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/WorldInfo/" + specialValueKey);
 
-        protected override LocalizedColorScaleText GetText() => new(Language.GetText("Mods.Macrocosm.UI.Rocket.Hazard." + specialValueKey), scale: 0.9f);
+		protected override LocalizedColorScaleText GetText() => new(Language.GetText("Mods.Macrocosm.UI.Rocket.Hazard." + specialValueKey), scale: 0.9f);
 
-        protected override LocalizedText GetHoverText() => Language.GetText("Mods.Macrocosm.UI.Rocket.Hazard.Name");
-    }
+		protected override LocalizedText GetHoverText() => Language.GetText("Mods.Macrocosm.UI.Rocket.Hazard.Name");
+	}
 }
