@@ -467,8 +467,13 @@ namespace Macrocosm.Content.Rockets
 
         public bool AtCurrentLaunchpad(LaunchPad launchPad, string worldId)
         {
-            if (launchPad == null && worldId == MacrocosmSubworld.CurrentID)
-                 return AtPosition(Utility.SpawnWorldPosition);
+            if (launchPad == null)
+            {
+                if (worldId == MacrocosmSubworld.CurrentID)
+                    return AtPosition(Utility.SpawnWorldPosition);
+                else
+                    return false;
+            }
 
             if (LaunchPadManager.InCurrentWorld(launchPad))
                 return false;
