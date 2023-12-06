@@ -124,6 +124,7 @@ namespace Macrocosm.Content.Rockets
                     continue;
 
                 rocket.Draw(Rocket.DrawMode.World, Main.spriteBatch, rocket.Position - Main.screenPosition);
+                rocket.PostDraw(Main.spriteBatch, rocket.Position - Main.screenPosition);
 
                 if (DebugModeActive)
                 {
@@ -149,7 +150,6 @@ namespace Macrocosm.Content.Rockets
                     continue;
 
                 rocket.DrawOverlay(Main.spriteBatch, rocket.Position - Main.screenPosition);
-
             }
         }
 

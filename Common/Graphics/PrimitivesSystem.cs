@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Terraria.ID;
 using Terraria;
 using Terraria.ModLoader;
+using static Basic.Reference.Assemblies.Net60;
 
 namespace Macrocosm.Common.Graphics
 {
@@ -22,6 +23,8 @@ namespace Macrocosm.Common.Graphics
 		public static BasicEffect InterfaceEffect { get; private set; }
 
 		public static event Action<Matrix> OnResolutionChanged;
+
+		private static Matrix oldZoomMatrix;
 
 		public override void Load()
 		{
@@ -48,13 +51,25 @@ namespace Macrocosm.Common.Graphics
 			});
 		}
 
-		private void ResolutionChanged(Vector2 size)
+        public override void PreUpdateEntities()
+        {
+			if (Main.netMode == NetmodeID.Server)
+				return;
+
+			if (oldZoomMatrix != Main.GameViewMatrix.ZoomMatrix)
+			{
+				oldZoomMatrix = Main.GameViewMatrix.ZoomMatrix;
+                ResolutionChanged(Vector2.Zero);
+            }
+        }
+
+        private void ResolutionChanged(Vector2 size)
 		{
 			int width = Main.graphics.GraphicsDevice.Viewport.Width;
 			int height = Main.graphics.GraphicsDevice.Viewport.Height;
 			Vector2 zoom = Main.GameViewMatrix.Zoom;
 
-			Matrix view = Matrix.CreateLookAt(Vector3.Zero, Vector3.UnitZ, Vector3.Up) *
+            Matrix view = Matrix.CreateLookAt(Vector3.Zero, Vector3.UnitZ, Vector3.Up) *
 				Matrix.CreateTranslation(width / 2, height / -2, 0) *
 				Matrix.CreateRotationZ(MathHelper.Pi) *
 				Matrix.CreateScale(zoom.X, zoom.Y, 1f);

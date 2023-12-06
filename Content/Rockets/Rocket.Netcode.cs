@@ -86,7 +86,6 @@ namespace Macrocosm.Content.Rockets
 			rocket.WhoAmI = rocketIndex;
 
 			rocket.ApplyRocketCustomizationFromJSON(reader.ReadString());
-            rocket.ResetRenderTarget();
 
 			if (Main.netMode == NetmodeID.Server)
 			{
