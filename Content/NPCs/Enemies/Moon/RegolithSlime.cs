@@ -38,7 +38,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
 		{
-			target.AddBuff(ModContent.BuffType<SuitBreach>(), 600, true);
 		}
 
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
