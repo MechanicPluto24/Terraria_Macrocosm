@@ -14,9 +14,8 @@ namespace Macrocosm.Common.Systems
 		public static WorldDataSystem Instance => ModContent.GetInstance<WorldDataSystem>();
 
 		/// <summary> 
-		/// Objects can subscribe to this to get notified about world flags change.
-		/// Should be used only for singleton or low instance count things, such 
-		///   as UIs or ModSystems, not entities, as they are kept from being GC 
+		/// You can subscribe to this to get notified about world flags change.
+		/// You should only subscribe singletons such as ModSystems
 		/// </summary>
 		public event PropertyChangedEventHandler PropertyChanged;
 		private void OnPropertyChanged([CallerMemberName] string name = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));

@@ -101,21 +101,28 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			}
 
 			SpriteBatchState state;
-			public void Draw(SpriteBatch spriteBatch, Vector2 screenPos)
+			public void Draw(SpriteBatch spriteBatch, Vector2 screenPos, bool lensFlare = false)
 			{
 				if (!visible)
 					return;
 
 				Texture2D portal = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Bosses/CraterDemon/BigPortal").Value;
+                Texture2D circle = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Circle7").Value;
+                Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Flare3").Value;
 
-				spriteBatch.Draw(portal, center - screenPos, null, Color.White * alpha * 0.4f, (-rotation) * 0.65f, portal.Size() / 2f, scale * 1.2f, SpriteEffects.FlipHorizontally, 0);
+                spriteBatch.Draw(portal, center - screenPos, null, Color.White * alpha * 0.4f, (-rotation) * 0.65f, portal.Size() / 2f, scale * 1.2f, SpriteEffects.FlipHorizontally, 0);
 				spriteBatch.Draw(portal, center - screenPos, null, Color.White * alpha * 0.8f, rotation, portal.Size() / 2f, scale, SpriteEffects.None, 0);
 
 				state.SaveState(spriteBatch);
 				spriteBatch.End();
 				spriteBatch.Begin(BlendState.Additive, state);
 
-				spriteBatch.Draw(portal, center - screenPos, null, Color.White.WithOpacity(0.6f), rotation * 4f, portal.Size() / 2f, scale * 0.85f, SpriteEffects.None, 0);
+				if(lensFlare)
+                    spriteBatch.Draw(flare, center - screenPos, null, new Color(30, 255, 105).WithOpacity(0.55f), 0f, flare.Size() / 2f, scale * 1.5f * Main.rand.NextFloat(0.9f, 1.1f), SpriteEffects.None, 0f);
+                else  
+					spriteBatch.Draw(circle, center - screenPos, null, new Color(30, 255, 105).WithOpacity(0.55f), 0f, flare.Size() / 2f, scale * 1.5f * Main.rand.NextFloat(0.9f, 1.1f), SpriteEffects.None, 0f);
+
+                spriteBatch.Draw(portal, center - screenPos, null, Color.White.WithOpacity(0.6f), rotation * 4f, portal.Size() / 2f, scale * 0.85f, SpriteEffects.None, 0);
 
 				spriteBatch.End();
 				spriteBatch.Begin(state);
@@ -217,10 +224,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		{
 			Phase2AnimDefenseBoost,       // Extra defense during phase2 animation sequence
 
-			SuitBreachTime,               // Suit breach debuff time 
-
 			MeteorPortalCount,            // Number of meteor portals 
-
 			CraterImpMaxCount,            // Max number of Crater Imp minions that can exist
 
 			ChargeAttackCountMin,         // Min number of consecutive charge attacks 
@@ -252,8 +256,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		{
 		     // Difficulty value on :           NM1, NM2, EM1, EM2, MM1, MM2, FTW1, FTW2
 			 /*Phase2AnimDefenseBoost      */ { 40, 40, 50, 50, 50, 50, 60, 60 },
-
-			 /*SuitBreachTime              */ { 120, 120, 240, 240, 260, 260, 300, 300 },  
                   
 			 /*MeteorPortalCount           */ { 3, 3, 4, 4, 6, 6, 7, 8 },                           
                                            
@@ -413,12 +415,29 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 				Music = MusicLoader.GetMusicSlot(Mod, "Assets/Music/SpaceInvader");
 		}
 
-		public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)/* tModPorter Note: bossLifeScale -> balance (bossAdjustment is different, see the docs for details) */
+		public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment) 
 		{
 			//For comparison, Moon Lord's scale factor is 0.7f
 			NPC.ScaleHealthBy(0.35f, balance, bossAdjustment);
 			NPC.damage = (int)(NPC.damage * 0.75f * bossAdjustment);
 		}
+
+		private void ScaleDamage()
+		{
+            NPC.damage = NPC.defDamage;
+
+            if (AI_Attack is AttackState.Charge or AttackState.PortalCharge)
+			{
+                if (phase2)
+                    NPC.damage = (int)(NPC.defDamage * 1.55f);
+				else
+                    NPC.damage = (int)(NPC.defDamage * 1.25f);
+            }
+            else if (phase2)
+			{
+                NPC.damage = (int)(NPC.defDamage * 1.25f);
+            }
+        }
 
 		public override void BossLoot(ref string name, ref int potionType)
 		{
@@ -464,8 +483,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 		public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
 		{
-			int breachTime = GetDifficultyInfo(DifficultyInfo.SuitBreachTime);
-			target.AddBuff(ModContent.BuffType<SuitBreach>(), breachTime);
 		}
 
 		private void UpdateScale(float newScale)
@@ -539,8 +556,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		private SpriteBatchState state1, state2;
 		public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
-			bigPortal.Draw(Main.spriteBatch, Main.screenPosition);
-			bigPortal2.Draw(Main.spriteBatch, Main.screenPosition);
+			bool lensFlare = NPC.Distance(bigPortal.center) > 90f || NPC.scale < 0.5f;
+            bigPortal.Draw(Main.spriteBatch, Main.screenPosition, lensFlare);
+			bigPortal2.Draw(Main.spriteBatch, Main.screenPosition, lensFlare);
 
 			state1.SaveState(spriteBatch);
 			spriteBatch.End();
@@ -782,7 +800,22 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 				}
 			}
 
-			NPC.defense = NPC.defDefense;
+
+            int phase2Life = (int)(NPC.lifeMax * (Main.getGoodWorld ? 0.75f :
+													Main.masterMode ? 0.6f  :
+													Main.expertMode ? 0.5f  :
+																	  0.4f));
+
+            if (!phase2 && AI_Attack != AttackState.Phase2Transition && NPC.scale >= 1f && NPC.life < phase2Life)
+            {
+                AI_Attack = AttackState.Phase2Transition;
+                AI_Timer = Phase2TimerMax;
+                AI_AttackProgress = 0;
+                targetZAxisRotation = 0f;
+            }
+
+            NPC.defense = NPC.defDefense;
+			ScaleDamage();
 
 			switch (AI_Attack)
 			{
@@ -864,7 +897,26 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			//We don't want sprite flipping
 			NPC.spriteDirection = -1;
 
-			bigPortal.Update();
+            // scale up and close down any existing portals if no longer used
+			if(AI_Attack != AttackState.FadeIn && AI_Attack != AttackState.PortalCharge)
+			{
+                if (NPC.scale < 0.99f)
+                    UpdateScale(Utility.ScaleLogarithmic(NPC.scale, 1, 9.2153f, 1f / 60f));
+                else
+                    UpdateScale(1f);
+
+                if (bigPortal.visible)
+                    bigPortal.scale = Utility.ScaleLogarithmic(bigPortal.scale, 0f, 9.2153f, 1f / 60f);
+                else
+                    bigPortal = new BigPortalInfo();
+
+                if (bigPortal2.visible)
+                    bigPortal2.scale = Utility.ScaleLogarithmic(bigPortal2.scale, 0f, 9.2153f, 1f / 60f);
+                else
+                    bigPortal = new BigPortalInfo();
+            }
+            
+            bigPortal.Update();
 			bigPortal2.Update();
 
 			bigPortal.SpawnParticles(bigPortal, NPC);
@@ -932,7 +984,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 				{
 					NPC other = Main.npc[i];
 					if (other.active && other.ModNPC is CraterImp mini && mini.ParentBoss == NPC.whoAmI)
-						mini.AI_Attack = CraterImp.Despawning;
+						mini.AI_Attack = CraterImp.AttackType.Despawning;
 				}
 
 				NPC.active = false;
@@ -948,17 +1000,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 			if (Math.Abs(NPC.velocity.X) < 0.05f && Math.Abs(NPC.velocity.Y) <= 0.05f)
 				NPC.velocity = Vector2.Zero;
-
-			// close down any existing portals
-			if (bigPortal.visible)
-				bigPortal.scale = Utility.ScaleLogarithmic(bigPortal.scale, 0f, 9.2153f, 1f / 60f);
-			else
-				bigPortal = new BigPortalInfo();
-
-			if (bigPortal2.visible)
-				bigPortal2.scale = Utility.ScaleLogarithmic(bigPortal2.scale, 0f, 9.2153f, 1f / 60f);
-			else
-				bigPortal = new BigPortalInfo();
 
 			// Wait to face forward, mouth open
 			if (AI_AttackProgress == 0)
@@ -998,20 +1039,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			zAxisLerpStrength = DefaultZAxisLerpStrength;
 
 			FloatTowardsTarget(player);
-
-
-			int phase2LifeMax = (int)(NPC.lifeMax * (Main.getGoodWorld ? 0.75f :
-													   Main.masterMode ? 0.6f :
-													   Main.expertMode ? 0.5f :
-																		 0.4f));
-
-			if (!phase2 && AI_Attack != AttackState.Phase2Transition && NPC.life < phase2LifeMax)
-			{
-				AI_Attack = AttackState.Phase2Transition;
-				AI_Timer = Phase2TimerMax;
-				AI_AttackProgress = 0;
-				targetZAxisRotation = 0f;
-			}
 
 			if (AI_Timer <= 0 && Main.netMode != NetmodeID.MultiplayerClient)
 			{
@@ -1070,8 +1097,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 				{
 					for (int i = 0; i < count; i++)
 					{
-						Vector2 spawn = orig + new Vector2(Main.rand.NextFloat(player.direction * 0.5f, player.direction * 1.5f) * 60 * 16, Main.rand.NextFloat(-1.5f, -0.5f) * 60 * 16);
-						Projectile.NewProjectile(NPC.GetSource_FromAI(), spawn, Vector2.Zero, ModContent.ProjectileType<MeteorPortal>(), Utility.TrueDamage(Main.expertMode ? 140 : 90), 0f, Main.myPlayer, 0f, phase2 ? 1f : 0f);
+						Vector2 spawn = orig + new Vector2(Main.rand.NextFloat(player.direction * 0.5f, player.direction * 1.5f) * 60 * 16, Main.rand.NextFloat(-3f, -1f) * 60 * 16);
+						int damage = Utility.TrueDamage(Main.masterMode ? 240 : Main.expertMode ? 120: 60);
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), spawn, Vector2.Zero, ModContent.ProjectileType<MeteorPortal>(), damage, 0f, Main.myPlayer, 0f, phase2 ? 1f : 0f);
 					}
 				}
 
@@ -1130,15 +1158,15 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 					if (Main.netMode != NetmodeID.MultiplayerClient)
 					{
 						int type = ModContent.ProjectileType<PhantasmalImpSmall>();
-						int damage = Utility.TrueDamage(Main.masterMode ? 72 : Main.expertMode ? 56 : 36);
-						Vector2 spawn = NPC.Center + new Vector2(Main.rand.NextFloat(0, 1) * -NPC.direction * 22 * 16, Main.rand.NextFloat(-1, 1) * 10 * 16);
+                        int damage = Utility.TrueDamage(Main.masterMode ? 165 : Main.expertMode ? 110 : 55);
+                        Vector2 spawn = NPC.Center + new Vector2(Main.rand.NextFloat(0, 1) * -NPC.direction * 22 * 16, Main.rand.NextFloat(-1, 1) * 10 * 16);
 						Vector2 velocity = (player.Center - NPC.Center).SafeNormalize(Vector2.One).RotatedByRandom(MathHelper.PiOver4) * Main.rand.NextFloat(16, 22);
 
 						if (Main.rand.NextBool(3))
 						{
 							type = ModContent.ProjectileType<PhantasmalImp>();
 							velocity *= 0.8f;
-							damage = (int)(damage * 1.4f);
+							damage = (int)(damage * 1.2f);
 						}
 
 						Projectile.NewProjectile(NPC.GetSource_FromAI(), spawn, velocity, type, damage, 1f, Main.myPlayer, ai0: player.whoAmI);
@@ -1171,16 +1199,14 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 					//Spawn portals near and above the player
 					Vector2 orig = player.Center - new Vector2(0, 15 * 16);
 					int count = GetDifficultyInfo(DifficultyInfo.PhantasmalPortalCount);
-					int damage = Utility.TrueDamage(Main.masterMode ? 72 : Main.expertMode ? 56 : 36);
+                    int damage = Utility.TrueDamage(Main.masterMode ? 165 : Main.expertMode ? 110 : 55);
 
-					for (int i = 0; i < count; i++)
+                    for (int i = 0; i < count; i++)
 					{
 						Vector2 spawn = orig + new Vector2(Main.rand.NextFloat(-1, 1) * 40 * 16, Main.rand.NextFloat(-1, 1) * 40 * 16);
 						Projectile.NewProjectile(NPC.GetSource_FromAI(), spawn, Vector2.Zero, ModContent.ProjectileType<PhantasmalPortal>(), damage, 0f, Main.myPlayer, ai1: phase2 ? 1f : 0f, ai2: NPC.target);
 					}
 				}
-
-				SoundEngine.PlaySound(SoundID.Zombie93, NPC.Center);
 
 				AI_AttackProgress++;
 			}

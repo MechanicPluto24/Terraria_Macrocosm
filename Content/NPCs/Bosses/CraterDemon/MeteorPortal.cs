@@ -44,7 +44,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			Projectile.penetrate = -1;
 			Projectile.alpha = 255;
 		}
-		public override void AI()
+        public override bool? CanDamage() => false;
+
+        public override void AI()
 		{
 			if (!spawned)
 			{
@@ -55,7 +57,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 			Projectile.rotation -= MathHelper.ToRadians(7.4f);
 
-			if (Projectile.timeLeft >= CraterDemon.PortalTimerMax - 90)
+            Lighting.AddLight(Projectile.Center, new Color(182, 79, 21).ToVector3() * 1.4f * (1f - Projectile.alpha / 255f));
+
+            if (Projectile.timeLeft >= CraterDemon.PortalTimerMax - 90)
 				AITimer -= 4f;
 			else if (Projectile.timeLeft <= 90)
 				AITimer += 2.83333325f;
@@ -67,7 +71,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 					if (Main.netMode != NetmodeID.MultiplayerClient)
 					{
 						Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, (-Vector2.UnitY).RotatedByRandom(MathHelper.PiOver2) * Main.rand.NextFloat(12f, 16f), ModContent.ProjectileType<FlamingMeteor>(),
-							(int)(Projectile.damage * 0.4f), Projectile.knockBack, Projectile.owner);
+							Projectile.damage, Projectile.knockBack, Projectile.owner);
 					}
 
 					Terraria.Audio.SoundEngine.PlaySound(SoundID.Item20, Projectile.Center);

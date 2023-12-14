@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
+using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -20,7 +21,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			set => Projectile.ai[1] = value ? 1f : 0f;
 		}
 
-
 		public override void SetStaticDefaults()
 		{
 			ProjectileID.Sets.TrailCacheLength[Type] = 15;
@@ -35,9 +35,10 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			Projectile.hostile = true;
 			Projectile.timeLeft = spawnTimeLeft;
 			Projectile.alpha = 0;
-		}
+            CooldownSlot = 1;
+        }
 
-		private bool spawned;
+        private bool spawned;
 		private Vector2 spawnPosition;
 		private float flashTimer;
 		private float maxFlashTimer = 10;
@@ -53,7 +54,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 			if (!spawned)
 			{
-				spawnPosition = Projectile.position;
+                SoundEngine.PlaySound(SoundID.NPCDeath6 with { PitchRange = (-0.5f, 0.5f) }, Projectile.Center);
+                spawnPosition = Projectile.Center;
 				spawned = true;
 			}
 
@@ -117,9 +119,10 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			{
 				Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Flare3").Value;
 				float progress = flashTimer / maxFlashTimer;
-				float scale = Projectile.scale * progress * (SpawnedFromPortal ? 0.4f : 0.8f);
-				Vector2 position = SpawnedFromPortal ? spawnPosition : Projectile.position;
-				Main.spriteBatch.Draw(flare, position - Main.screenPosition + Projectile.Size / 2f, null, new Color(92, 206, 130), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
+				float scale = Projectile.scale * progress * (SpawnedFromPortal ? 1.1f : 0.8f);
+				Vector2 position = SpawnedFromPortal ? spawnPosition : Projectile.position + Projectile.Size / 2f;
+				float opacity = SpawnedFromPortal ? 0.4f : 1f;
+				Main.spriteBatch.Draw(flare, position - Main.screenPosition, null, new Color(92, 206, 130).WithOpacity(opacity), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
 			}
 
 			Main.spriteBatch.End();
