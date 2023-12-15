@@ -20,25 +20,6 @@ namespace Macrocosm.Content.NPCs.Global
 			SetImmunities();
 		}
 
-		/// <summary> For common drops </summary>
-		public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
-		{
-			if (npc.ModNPC is IMoonEnemy)
-			{
-				npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Moonstone>(), 10));
-			}
-		}
-
-		/// <summary> For subworld specific spawn pools </summary>
-		public override void EditSpawnPool(IDictionary<int, float> pool, NPCSpawnInfo spawnInfo)
-		{
-			for (int id = 0; id < NPCLoader.NPCCount; id++)
-			{
-				if (SubworldSystem.IsActive<Moon>() && ContentSamples.NpcsByNetId[id].ModNPC is not IMoonEnemy)
-					pool.Remove(id);
-			}
-		}
-
 		public override void AI(NPC npc)
 		{
 			if (SubworldSystem.AnyActive<Macrocosm>())
