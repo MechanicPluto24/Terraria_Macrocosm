@@ -43,6 +43,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 		public const int WaitTime = 4 * 60;
 
+		bool IMoonEnemy.DropMoonstone => false;
+
 		public override void SetStaticDefaults()
 		{
 			Main.npcFrameCount[NPC.type] = 4;

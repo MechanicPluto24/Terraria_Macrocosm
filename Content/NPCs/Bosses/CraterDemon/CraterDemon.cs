@@ -101,7 +101,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			}
 
 			SpriteBatchState state;
-			public void Draw(SpriteBatch spriteBatch, Vector2 screenPos, bool lensFlare = false)
+			public void Draw(SpriteBatch spriteBatch, Vector2 screenPos, float lensFlareIntensity)
 			{
 				if (!visible)
 					return;
@@ -115,12 +115,10 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 				state.SaveState(spriteBatch);
 				spriteBatch.End();
-				spriteBatch.Begin(BlendState.Additive, state);
+				spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, state);
 
-				if(lensFlare)
-                    spriteBatch.Draw(flare, center - screenPos, null, new Color(30, 255, 105).WithOpacity(0.55f), 0f, flare.Size() / 2f, scale * 1.5f * Main.rand.NextFloat(0.9f, 1.1f), SpriteEffects.None, 0f);
-                else  
-					spriteBatch.Draw(circle, center - screenPos, null, new Color(30, 255, 105).WithOpacity(0.55f), 0f, flare.Size() / 2f, scale * 1.5f * Main.rand.NextFloat(0.9f, 1.1f), SpriteEffects.None, 0f);
+				spriteBatch.Draw(circle, center - screenPos, null, new Color(30, 255, 105).WithOpacity(0.5f * (1f-lensFlareIntensity)), 0f, flare.Size() / 2f, scale * 1.8f * Main.rand.NextFloat(0.9f, 1.1f) * (1f - lensFlareIntensity), SpriteEffects.None, 0f);
+                spriteBatch.Draw(flare, center - screenPos, null, new Color(30, 255, 105).WithOpacity(0.5f * lensFlareIntensity), 0f, flare.Size() / 2f, scale * 1.8f * Main.rand.NextFloat(0.9f, 1.1f) * lensFlareIntensity, SpriteEffects.None, 0f);
 
                 spriteBatch.Draw(portal, center - screenPos, null, Color.White.WithOpacity(0.6f), rotation * 4f, portal.Size() / 2f, scale * 0.85f, SpriteEffects.None, 0);
 
@@ -346,12 +344,16 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 		public const float ZAxisRotationThreshold = 25f;
 
-		public int OnSpawn_InitialTimer = 320;
-		public int OnSpawn_FadeInTime = 280;
-		public int OnSpawn_LaughTime = 80;
-		public int OnSpawn_LaughTimeEnd = 0;
+		public int FadeIn_InitialTimer = 320;
 
-		public const int PortalTimerMax = (int)(4f * 60 + 1.5f * 60 + 24);  //Portal spawning leadup + time portals are active before they shrink
+		public int FadeIn_FadeInTime = 280;
+		public int FadeIn_LaughTime = 80;
+		public int FadeIn_LaughTimeEnd = 0;
+
+        public int FadeAway_InitialTimer = 160;
+        public int FadeAway_FadeOutTime = 120;
+
+        public const int PortalTimerMax = (int)(4f * 60 + 1.5f * 60 + 24);  //Portal spawning leadup + time portals are active before they shrink
 		public const int Phase2TimerMax = 150;
 
 		public const int Animation_LookLeft_JawClosed = 0;
@@ -368,7 +370,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		private const int AIAttack_PortalCharge_RepeatStart = 2;
 		private const int AIAttack_PortalCharge_RepeatSubphaseCount = 5;
 
-		public override void SetStaticDefaults()
+        bool IMoonEnemy.DropMoonstone => false;
+
+        public override void SetStaticDefaults()
 		{
 			Main.npcFrameCount[NPC.type] = 6;
 			NPCID.Sets.TrailCacheLength[NPC.type] = 5;
@@ -387,7 +391,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, bestiaryData);
 		}
 
-		private int baseWidth, baseHeight;
+        private int baseWidth, baseHeight;
 
 		public override void SetDefaults()
 		{
@@ -556,9 +560,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		private SpriteBatchState state1, state2;
 		public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
-			bool lensFlare = NPC.Distance(bigPortal.center) > 90f || NPC.scale < 0.5f;
-            bigPortal.Draw(Main.spriteBatch, Main.screenPosition, lensFlare);
-			bigPortal2.Draw(Main.spriteBatch, Main.screenPosition, lensFlare);
+			float lensFlareIntensity = NPC.DistanceSQ(bigPortal.center) <= 90f * 90f ? (Math.Max(1f - NPC.scale, 1f - NPC.Opacity)) : Utility.InverseLerp(0f, 90f * 90f, NPC.DistanceSQ(bigPortal.center), true);
+            bigPortal.Draw(Main.spriteBatch, Main.screenPosition, lensFlareIntensity);
+			bigPortal2.Draw(Main.spriteBatch, Main.screenPosition, lensFlareIntensity);
 
 			state1.SaveState(spriteBatch);
 			spriteBatch.End();
@@ -626,10 +630,10 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 			if (AI_Attack == AttackState.FadeIn)
 			{
-				float progress = MathHelper.Clamp((float)(AI_Timer - OnSpawn_FadeInTime) / (OnSpawn_LaughTime - OnSpawn_FadeInTime), 0f, 1f);
+				float progress = MathHelper.Clamp((float)(AI_Timer - FadeIn_FadeInTime) / (FadeIn_LaughTime - FadeIn_FadeInTime), 0f, 1f);
 
-				if (AI_Timer < OnSpawn_LaughTime)
-					progress *= (float)AI_Timer / OnSpawn_LaughTime;
+				if (AI_Timer < FadeIn_LaughTime)
+					progress *= (float)AI_Timer / FadeIn_LaughTime;
 
 				spriteBatch.Draw(flare, NPC.Center - screenPos + GetEyeOffset(), null, new Color(157, 255, 156), NPC.rotation, flare.Size() / 2, 1.1f * Utility.QuadraticEaseIn(progress) * Main.rand.NextFloat(0.8f, 1f), SpriteEffects.None, 0f);
 			}
@@ -667,7 +671,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			switch (AI_Attack)
 			{
 				case AttackState.FadeIn:
-					if (AI_Timer > OnSpawn_LaughTimeEnd && AI_Timer <= OnSpawn_LaughTime && AI_AnimationCounter % 16 < 8)
+					if (AI_Timer > FadeIn_LaughTimeEnd && AI_Timer <= FadeIn_LaughTime && AI_AnimationCounter % 16 < 8)
 						set++;
 					break;
 
@@ -757,15 +761,13 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 					ignoreRetargetPlayer = true;
 
 					UpdateScale(0.01f);
-					AI_Timer = OnSpawn_InitialTimer;
+					AI_Timer = FadeIn_InitialTimer;
 					AI_Attack = AttackState.FadeIn;
 					NPC.TargetClosest();
 
 					spawned = true;
 					NPC.netUpdate = true;
 				}
-				else
-					targetAlpha -= 255f / 60f;
 			}
 
 			//Player is dead/not connected?  Target a new one
@@ -780,9 +782,11 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 				if (NPC.target < 0 || NPC.target >= Main.maxPlayers || player.dead || !player.active)
 				{
-					//Go away
-					AI_Attack = AttackState.FadeAway;
-					AI_Timer = -1;
+					if(AI_Attack != AttackState.FadeAway)
+                        AI_Timer = FadeAway_InitialTimer;
+
+                    //Go away
+                    AI_Attack = AttackState.FadeAway;
 					AI_AttackProgress = -1;
 
 					hadNoPlayerTargetForLongEnough = true;
@@ -800,11 +804,10 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 				}
 			}
 
-
-            int phase2Life = (int)(NPC.lifeMax * (Main.getGoodWorld ? 0.75f :
-													Main.masterMode ? 0.6f  :
-													Main.expertMode ? 0.5f  :
-																	  0.4f));
+            int phase2Life = (int)(NPC.lifeMax * (Main.getGoodWorld ? 0.75f  :
+													Main.masterMode ? 0.6f   :
+													Main.expertMode ? 0.5f   :
+																	  0.4f)) ;
 
             if (!phase2 && AI_Attack != AttackState.Phase2Transition && NPC.scale >= 1f && NPC.life < phase2Life)
             {
@@ -871,7 +874,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			AI_Timer--;
 			AI_AnimationCounter++;
 
-			if (AI_Attack != AttackState.FadeAway && targetAlpha > 0)
+			if (AI_Attack != AttackState.FadeIn && AI_Attack != AttackState.FadeAway && targetAlpha > 0)
 			{
 				targetAlpha -= 255f / 60f;
 
@@ -879,7 +882,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 					targetAlpha = 0;
 			}
 
-			NPC.alpha = (int)targetAlpha;
+			NPC.alpha = NPC.scale > 0.01f ? (int)targetAlpha : 255;
 
 			if (Math.Abs(zAxisRotation - targetZAxisRotation) < 0.02f)
 				zAxisRotation = targetZAxisRotation;
@@ -898,7 +901,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			NPC.spriteDirection = -1;
 
             // scale up and close down any existing portals if no longer used
-			if(AI_Attack != AttackState.FadeIn && AI_Attack != AttackState.PortalCharge)
+			if(AI_Attack != AttackState.FadeIn && AI_Attack != AttackState.PortalCharge && AI_Attack != AttackState.FadeAway)
 			{
                 if (NPC.scale < 0.99f)
                     UpdateScale(Utility.ScaleLogarithmic(NPC.scale, 1, 9.2153f, 1f / 60f));
@@ -925,12 +928,12 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 		private void AI_FadeIn()
 		{
-			if (AI_Timer == OnSpawn_InitialTimer)
+			if (AI_Timer == FadeIn_InitialTimer)
 			{
 				bigPortal = new BigPortalInfo();
 				SpawnBigPortal(NPC.Center, ref bigPortal, 0.9f);
 			}
-			else if (AI_Timer > OnSpawn_FadeInTime && AI_Timer < OnSpawn_InitialTimer - 1)
+			else if (AI_Timer > FadeIn_FadeInTime && AI_Timer < FadeIn_InitialTimer - 1)
 			{
 				NPC.Center = bigPortal.center;
 
@@ -946,18 +949,14 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 					bigPortal.alpha = bigPortal.scale;
 				}
 			}
-			else if (AI_Timer > 0 && AI_Timer <= OnSpawn_FadeInTime)
+			else if (AI_Timer > 0 && AI_Timer <= FadeIn_FadeInTime)
 			{
 				UpdateScale(Utility.ScaleLogarithmic(NPC.scale, 1f, 2.3851f, 1f / 60f));
 
-				if (AI_Timer == OnSpawn_LaughTime)
-					SoundEngine.PlaySound(SoundID.Zombie105 with { Pitch = -0.2f }, NPC.Center);
+				targetAlpha -= 255f / FadeIn_FadeInTime;
 
-				if (AI_Timer < 20)
-				{
-					bigPortal.scale = Utility.ScaleLogarithmic(bigPortal.scale, 0f, 4f, 1f / 60f);
-					bigPortal.alpha = bigPortal.scale;
-				}
+                if (AI_Timer == FadeIn_LaughTime)
+					SoundEngine.PlaySound(SoundID.Zombie105 with { Pitch = -0.2f }, NPC.Center);
 			}
 			else if (AI_Timer <= 0)
 			{
@@ -969,27 +968,77 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 				ignoreRetargetPlayer = false;
 			}
 		}
+
 		private void AI_FadeAway()
 		{
-			NPC.velocity *= 1f - 3f / 60f;
-
-			//Spawn dusts as the boss fades away, then despawn it once fully invisible
-			SpawnDusts();
-
-			targetAlpha += 255f / 180f;
-
-			if (targetAlpha >= 255)
-			{
-				for (int i = 0; i < Main.maxNPCs; i++)
+            if (AI_Timer == FadeAway_InitialTimer)
+            {
+				if (!bigPortal.visible)
 				{
-					NPC other = Main.npc[i];
-					if (other.active && other.ModNPC is CraterImp mini && mini.ParentBoss == NPC.whoAmI)
-						mini.AI_Attack = CraterImp.AttackType.Despawning;
+                    bigPortal = new BigPortalInfo();
+                    movementTarget = NPC.Center;
+
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        Vector2 position = NPC.Center + Main.rand.NextVector2Unit() * 10 * 16;
+                        movementTarget = position;
+                        SpawnBigPortal(position, ref bigPortal, 0.9f);
+                        NPC.netUpdate = true;
+                    }
+                }
+                else
+				{
+					movementTarget = bigPortal.center; 
+                }
+            }
+            else if (AI_Timer > FadeAway_FadeOutTime && AI_Timer < FadeAway_InitialTimer - 1)
+            {
+				if (NPC.DistanceSQ(movementTarget.Value) > 10f * 10f)
+				{
+					AI_Timer++;
+				}
+				else
+				{
+					inertia = 30f;
+					NPC.velocity *= 1f - 10f / 60f;
 				}
 
-				NPC.active = false;
-				return;
-			}
+                float targetScale = 1.3f;
+                if (bigPortal.scale > targetScale - 0.02f)
+                {
+                    bigPortal.scale = targetScale;
+                    bigPortal.alpha = 1f;
+                    FloatTowardsTarget(null, 10);
+                }
+                else
+                {
+                    bigPortal.scale = Utility.ScaleLogarithmic(bigPortal.scale, targetScale, 4.6f, 1f / 60f);
+                    bigPortal.alpha = bigPortal.scale;
+                }
+            }
+            else if (AI_Timer > 0 && AI_Timer <= FadeAway_FadeOutTime)
+            {
+                UpdateScale(Utility.ScaleLogarithmic(NPC.scale, 0f, 0.15f, 1f / 60f));
+                targetAlpha += 255f / 80f;
+
+                if (AI_Timer < 40)
+                {
+                    bigPortal.scale = Utility.ScaleLogarithmic(bigPortal.scale, 0f, 4f, 1f / 60f);
+                    bigPortal.alpha = bigPortal.scale;
+                }
+
+                for (int i = 0; i < Main.maxNPCs; i++)
+                {
+                    NPC other = Main.npc[i];
+                    if (other.active && other.ModNPC is CraterImp mini && mini.ParentBoss == NPC.whoAmI)
+                        mini.AI_Attack = CraterImp.AttackType.Despawning;
+                }
+            }
+            else if (AI_Timer <= 0)
+            {              
+                NPC.active = false;
+                return;
+            }
 		}
 		private void AI_Phase2Transition()
 		{
@@ -1749,11 +1798,17 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 			if (AI_Attack == AttackState.FadeIn)
 			{
-				float progress = MathHelper.Clamp((float)(AI_Timer - OnSpawn_FadeInTime) / (OnSpawn_LaughTime - OnSpawn_FadeInTime), 0f, 1f);
-				return Color.Lerp(drawColor, new Color(157, 255, 156).WithOpacity(0.1f), 1f - progress) * progress;
-			}
+				float progress = MathHelper.Clamp((float)(AI_Timer - FadeIn_FadeInTime) / (FadeIn_LaughTime - FadeIn_FadeInTime), 0f, 1f);
+				return Color.Lerp(drawColor, new Color(157, 255, 156).WithOpacity(0.1f), 1f - progress) * (1f - targetAlpha / 255f);
+            }
 
-			return drawColor * (1f - targetAlpha / 255f);
+            if (AI_Attack == AttackState.FadeAway)
+            {
+                float progress = MathHelper.Clamp((float)AI_Timer / FadeAway_FadeOutTime, 0f, 1f);
+                return Color.Lerp(drawColor, new Color(157, 255, 156).WithOpacity(0.1f), 1f - progress) * (1f - targetAlpha / 255f);
+            }
+
+            return drawColor * (1f - targetAlpha / 255f);
 		}
 
 		public override bool? CanBeHitByItem(Player player, Item item)
