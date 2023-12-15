@@ -89,7 +89,12 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 				CycleAnimation();
 		}
 
-		public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
+        public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
+        {
+			NPC.damage = (int)(NPC.damage * 0.75f * bossAdjustment);
+        }
+
+        public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
 		{
 		}
 
@@ -257,14 +262,13 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
                         if (AI_Timer % shootPeriod == 0 && Main.netMode != NetmodeID.MultiplayerClient)
 						{
-
                             float shootSpeed = Main.getGoodWorld ? 9f :
 												 Main.masterMode ? 8f :
 												 Main.expertMode ? 7f :
                                                                    5f ;
 
 							Vector2 shootVelocity = (player.Center - NPC.Center).SafeNormalize(default) * shootSpeed;
-                            Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, shootVelocity, ModContent.ProjectileType<PhantasmalBolt>(), (int)(NPC.damage * 1.15f), 1f, Main.myPlayer);
+							Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, shootVelocity, ModContent.ProjectileType<PhantasmalBolt>(), Utility.TrueDamage(Main.masterMode ? 195 : Main.expertMode ? 130 : 65), 1f, Main.myPlayer); 
 						}
 					}
 
