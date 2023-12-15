@@ -273,16 +273,16 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 			 /*PhantasmalImpMaxCount       */ { 5, 5, 6, 6, 8, 8, 9, 9 },
 
-			 /*PhantasmalPortalCount       */ { 1, 1, 1, 1, 1, 1, 1, 1 },
+			 /*PhantasmalPortalCount       */ { 1, 2, 1, 2, 2, 3, 2, 3 },
 		};
 
 		/// <summary> Return the difficulty index (gamemode, phase): NM1, NM2, EM1, EM2, MM1, MM2, FTW1, FTW2  </summary>
 		private int GetDifficultyIndex()
 		{
 			int difficultyIndex = Main.getGoodWorld ? 6 : // FTW
-								  Main.masterMode ? 4 :   // MM
-								  Main.expertMode ? 2 :   // EM
-													  0;  // NM
+									Main.masterMode ? 4 : // MM
+									Main.expertMode ? 2 : // EM
+													  0 ; // NM
 			if (phase2)
 				difficultyIndex += 1;
 

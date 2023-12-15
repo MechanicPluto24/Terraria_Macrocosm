@@ -60,7 +60,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			}
 
 			Vector2 direction = TargetPlayer.Center - Projectile.Center;
-			direction.Normalize();
+            float distance = direction.Length();
+            direction.Normalize();
 
 			float deviation = Main.rand.NextFloat(-0.1f, 0.1f);
 			direction = direction.RotatedBy(deviation);
@@ -68,9 +69,11 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			Vector2 adjustedDirection = Vector2.Lerp(Projectile.velocity, direction, 0.2f);
 			adjustedDirection.Normalize();
 
-			Projectile.velocity = adjustedDirection * Projectile.velocity.Length();
+			float accelerateDistance = 30f * 16;
+			float speed = Projectile.velocity.Length() + (distance > accelerateDistance ? distance / accelerateDistance * 0.1f : 0f);
+            Projectile.velocity = adjustedDirection * speed;
 
-			Projectile.direction = Math.Sign(Projectile.velocity.X);
+            Projectile.direction = Math.Sign(Projectile.velocity.X);
 			Projectile.spriteDirection = Projectile.direction;
 			Projectile.rotation = Projectile.velocity.X < 0 ? MathHelper.Pi + Projectile.velocity.ToRotation() : Projectile.velocity.ToRotation();
 
