@@ -34,3 +34,5 @@ MoonBaseChest: {
 }
 
 TeddyBear.MapEntry: Teddy Bear
+Motor.MapEntry: Motor
+PrintedCircuitBoard.MapEntry: Printed Circuit Board
