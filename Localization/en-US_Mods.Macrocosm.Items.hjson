@@ -910,3 +910,8 @@ RapaciousBrand: {
 	DisplayName: Rapacious Brand
 	Tooltip: ""
 }
+
+Motor: {
+	DisplayName: Motor
+	Tooltip: ""
+}

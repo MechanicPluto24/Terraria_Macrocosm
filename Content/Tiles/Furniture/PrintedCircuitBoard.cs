@@ -7,7 +7,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture
 {
-	public class Motor : ModTile
+	public class PrintedCircuitBoard : ModTile
 	{
 		public override void SetStaticDefaults()
 		{
@@ -19,18 +19,13 @@ namespace Macrocosm.Content.Tiles.Furniture
 			TileObjectData.newTile.CoordinateWidth = 16;
 			TileObjectData.newTile.CoordinateHeights = new int[] { 18 };
 			TileObjectData.newTile.CoordinatePadding = 2;
-			TileObjectData.newTile.Direction = TileObjectDirection.PlaceRight;
-			TileObjectData.newTile.StyleHorizontal = true;
-			//TileObjectData.newTile.DrawYOffset = 2;
-			TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
-			TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceLeft;
-			TileObjectData.addAlternate(1);
+            //TileObjectData.newTile.DrawYOffset = 2;
 			TileObjectData.addTile(Type);
 
 			HitSound = SoundID.Dig;
 			DustType = -1;
 
-			AddMapEntry(new Color(128, 128, 128), CreateMapEntryName());
+			AddMapEntry(new Color(0, 97, 45), CreateMapEntryName());
 		}
 	}
 }

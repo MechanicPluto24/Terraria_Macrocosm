@@ -13,7 +13,7 @@ namespace Macrocosm.Content.Items.Materials
 
 		public override void SetDefaults()
 		{
-			Item.DefaultToPlaceableTile(-1, -1);
+			Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Motor>());
 			Item.width = 20;
 			Item.height = 20;
 			Item.maxStack = Item.CommonMaxStack;
