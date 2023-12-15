@@ -14,7 +14,7 @@ namespace Macrocosm.Content.NPCs.Global
 {
 	public class MoonEnemyNPC : GlobalNPC
 	{
-		public override bool InstancePerEntity => false;
+		public override bool InstancePerEntity => true;
 
 		public override void SetDefaults(NPC entity)
 		{
