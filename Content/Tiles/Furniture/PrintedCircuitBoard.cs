@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.Enums;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -15,12 +16,12 @@ namespace Macrocosm.Content.Tiles.Furniture
 			Main.tileNoAttach[Type] = true;
 			Main.tileLavaDeath[Type] = true;
 
-			TileObjectData.newTile.CopyFrom(TileObjectData.Style1x1);
+			TileObjectData.newTile.CopyFrom(TileObjectData.Style2x1);
 			TileObjectData.newTile.CoordinateWidth = 16;
 			TileObjectData.newTile.CoordinateHeights = new int[] { 18 };
 			TileObjectData.newTile.CoordinatePadding = 2;
-            //TileObjectData.newTile.DrawYOffset = 2;
-			TileObjectData.addTile(Type);
+            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.Table, 2, 0);
+            TileObjectData.addTile(Type);
 
 			HitSound = SoundID.Dig;
 			DustType = -1;
