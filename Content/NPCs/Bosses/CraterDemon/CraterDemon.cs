@@ -137,9 +137,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			SummonCraterImps = 2,
 			SummonPhantasmals = 3,
 			SummonPhantasmalPortals = 4,
-			Charge = 5,
-			PortalCharge = 6,
-			PostCharge = 7
+			Charge = 5
 		}
 
 		public AttackState AI_Attack
@@ -195,17 +193,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             // AttackState.Charge
 			new AttackInfo(){
 				initialProgress = null,
-				initialTimer = (CD) => (int)(35 * CD.GetDifficultyScaling(DifficultyScale.AttackDurationScaling))
-			},
-            // AttackState.PortalCharge
-			new AttackInfo(){
-				initialProgress = null,
-				initialTimer = (CD) => (int)(70 * CD.GetDifficultyScaling(DifficultyScale.AttackDurationScaling))  //Wait before spawning first portal
-			},
-			// AttackState.PostCharge
-			new AttackInfo(){
-				initialProgress = null,
-				initialTimer = (CD) => (int)(45 * CD.GetDifficultyScaling(DifficultyScale.AttackDurationScaling))
+				initialTimer = (CD) => (int)(50 * CD.GetDifficultyScaling(DifficultyScale.AttackDurationScaling))
 			}
 		};
 
@@ -231,7 +219,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 			PortalWaitTimeMin,            // Min wait time between portal attacks 
 			PortalWaitTimeMax,            // Max wait time between portal attacks 
-			PortalSecondTime,             // Time to spawn the second portal 
+			PortalIdleTime,               // Time to spawn the second portal 
 			PortalChargeAttackCountMin,   // Min number of consecutive portal charge attacks 
 			PortalChargeAttackCountMax,   // Max number of consecutive portal charge attacks 
 
@@ -259,15 +247,15 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                                            
 			 /*CraterImpMaxCount           */ { 3, 3, 4, 4, 4, 4, 5, 5 },      
 
-             /*PortalChargeAttackCountMin  */ { 2, 3, 4, 5, 4, 5, 6, 7 },                         
-			 /*PortalChargeAttackCountMax  */ { 4, 5, 8, 9, 8, 9, 10, 11 },
+             /*PortalChargeAttackCountMin  */ { 2, 3, 3, 4, 4, 5, 5, 6 },                         
+			 /*PortalChargeAttackCountMax  */ { 3, 4, 4, 5, 5, 6, 6, 7 },
              /*ChargeAttackRepeatTime      */ { 50, 40, 40, 30, 30, 10, 20, 5 },                 
                        
 			 /*PortalWaitTimeMin           */ { 80, 70, 40, 30, 20, 10, 5, 0 },                   
 			 /*PortalWaitTimeMax           */ { 160, 150, 80, 70, 40, 30, 10, 5 },                
-			 /*PortalSecondTime            */ { 60, 55, 35, 30, 25, 20, 15, 10 },                 
-			 /*PortalChargeAttackCountMin  */ { 2, 3, 4, 5, 4, 5, 6, 7 },                         
-			 /*PortalChargeAttackCountMax  */ { 4, 5, 8, 9, 8, 9, 10, 11 },
+			 /*PortalIdleTime              */ { 60, 55, 35, 30, 25, 20, 15, 10 },                 
+			 /*PortalChargeAttackCountMin  */ { 3, 2, 3, 2, 3, 2, 2, 1 },                       
+			 /*PortalChargeAttackCountMax  */ { 4, 3, 4, 3, 4, 3, 3, 2 },
 
 			 /*PhantasmalImpMaxCount       */ { 5, 5, 6, 6, 8, 8, 9, 9 },
 
@@ -334,12 +322,17 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		private float inertia = DefaultInertia;
 		private AttackState oldAttack = AttackState.SummonMeteors;
 		private Vector2? movementTarget;
-		private int chargeAttackCount;
+
+		bool portalCharge;
+        private int chargeAttackCount;
+        private int portalAttackCount;
+        private int maxChargeAttackCount;
+		private int maxPortalAttackCount;
 		private BigPortalInfo bigPortal;
 		private BigPortalInfo bigPortal2;
 		private Vector2 portalTarget;
 		private Vector2 portalOffset;
-		private int portalAttackCount;
+
 		private int phantasmalRepeatCount;
 
 		public const float ZAxisRotationThreshold = 25f;
@@ -351,7 +344,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		public int FadeIn_LaughTimeEnd = 0;
 
         public int FadeAway_InitialTimer = 160;
-        public int FadeAway_FadeOutTime = 120;
+        public int FadeAway_FadeOutTime = 130;
 
         public const int PortalTimerMax = (int)(4f * 60 + 1.5f * 60 + 24);  //Portal spawning leadup + time portals are active before they shrink
 		public const int Phase2TimerMax = 150;
@@ -363,12 +356,24 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		public const int Animation_LookRight_JawClosed = 4;
 		public const int Animation_LookRight_JawOpen = 5;
 
+		private const int AIAttack_RegularCharge_RepeatStart = 1;
+		private const int AIAttack_RegularCharge_RepeatSubphaseCount = 3;
 
-		private const int AIAttack_Charge_RepeatStart = 1;
-		private const int AIAttack_Charge_RepeatSubphaseCount = 3;
+        private const int AIAttack_RegularCharge_RepeatSubphase_BeginCharge = 0;
+        private const int AIAttack_RegularCharge_RepeatSubphase_SlowDown = 1;
+        private const int AIAttack_RegularCharge_RepeatSubphase_ChasePlayer = 2;
 
-		private const int AIAttack_PortalCharge_RepeatStart = 2;
+        private const int AIAttack_PortalCharge_RepeatStart = 2;
 		private const int AIAttack_PortalCharge_RepeatSubphaseCount = 5;
+
+        private const int AIAttack_PortalCharge_RepeatSubphase_ShrinkSelfAndPortal = 0;
+        private const int AIAttack_PortalCharge_RepeatSubphase_SetupPortalPositions = 1;
+        private const int AIAttack_PortalCharge_RepeatSubphase_GrowSourcePortal = 2;
+        private const int AIAttack_PortalCharge_RepeatSubphase_AppearFromSourcePortalAndCharge = 3;
+        private const int AIAttack_PortalCharge_RepeatSubphase_ShrinkSourcePortalAndGrowTargetPortal = 4;
+        private const int AIAttack_PortalCharge_RepeatSubphase_BeginCharge = 5;
+        private const int AIAttack_PortalCharge_RepeatSubphase_SlowDown = 6;
+        private const int AIAttack_PortalCharge_RepeatSubphase_ChasePlayer = 7;
 
         bool IMoonEnemy.DropMoonstone => false;
 
@@ -430,7 +435,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		{
             NPC.damage = NPC.defDamage;
 
-            if (AI_Attack is AttackState.Charge or AttackState.PortalCharge)
+            if (AI_Attack is AttackState.Charge or AttackState.Charge)
 			{
                 if (phase2)
                     NPC.damage = (int)(NPC.defDamage * 1.55f);
@@ -497,11 +502,10 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			NPC.UpdateScaleAndHitbox(baseWidth, baseHeight, newScale);
 		}
 
-
 		public override void SendExtraAI(BinaryWriter writer)
 		{
 			bool hasCustomTarget = movementTarget != null;
-			BitsByte bb = new(phase2, spawned, ignoreRetargetPlayer, hadNoPlayerTargetForLongEnough, hasCustomTarget, NPC.dontTakeDamage);
+			BitsByte bb = new(phase2, spawned, ignoreRetargetPlayer, hadNoPlayerTargetForLongEnough, hasCustomTarget, NPC.dontTakeDamage, portalCharge);
 			writer.Write(bb);
 
 			writer.Write(targetAlpha);
@@ -514,13 +518,15 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			if (hasCustomTarget)
 				writer.WriteVector2(movementTarget.Value);
 
-			writer.Write((byte)chargeAttackCount);
-
 			writer.Write((byte)oldAttack);
+
+            writer.Write((byte)chargeAttackCount);
+            writer.Write((byte)portalAttackCount);
+            writer.Write((byte)maxChargeAttackCount);
+			writer.Write((byte)maxPortalAttackCount);
+
 			writer.WriteVector2(portalTarget);
 			writer.WriteVector2(portalOffset);
-
-			writer.Write((byte)portalAttackCount);
 
 			writer.Write((byte)phantasmalRepeatCount);
 		}
@@ -529,7 +535,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		{
 			bool hasCustomTarget = false;
 			BitsByte bb = reader.ReadByte();
-			bb.Retrieve(ref phase2, ref spawned, ref ignoreRetargetPlayer, ref hadNoPlayerTargetForLongEnough, ref hasCustomTarget, ref NPC.dontTakeDamage);
+			bb.Retrieve(ref phase2, ref spawned, ref ignoreRetargetPlayer, ref hadNoPlayerTargetForLongEnough, ref hasCustomTarget, ref NPC.dontTakeDamage, ref portalCharge);
 
 			targetAlpha = reader.ReadSingle();
 			targetZAxisRotation = reader.ReadSingle();
@@ -540,13 +546,15 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 			movementTarget = hasCustomTarget ? (Vector2?)reader.ReadVector2() : null;
 
-			chargeAttackCount = reader.ReadByte();
-
 			oldAttack = (AttackState)reader.ReadByte();
+
+            chargeAttackCount = reader.ReadByte();
+            portalAttackCount = reader.ReadByte();
+            maxChargeAttackCount = reader.ReadByte();
+            maxPortalAttackCount = reader.ReadByte();
+
 			portalTarget = reader.ReadVector2();
 			portalOffset = reader.ReadVector2();
-
-			portalAttackCount = reader.ReadByte();
 
 			phantasmalRepeatCount = reader.ReadByte();
 		}
@@ -579,7 +587,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			if (AI_Attack == AttackState.SummonMeteors && Math.Abs(NPC.velocity.X) < 0.1f && Math.Abs(NPC.velocity.Y) < 0.1f)
 				return true;
 
-			if (AI_Attack == AttackState.PortalCharge && AI_AttackProgress > 2 && NPC.alpha >= 160)
+			if (AI_Attack == AttackState.Charge && AI_AttackProgress > 2 && NPC.alpha >= 160)
 				return true;
 
 			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Bosses/CraterDemon/CraterDemon_Glow").Value;
@@ -693,46 +701,44 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 				case AttackState.Charge:
 
-					int repeat = (AI_AttackProgress - AIAttack_Charge_RepeatStart) % AIAttack_Charge_RepeatSubphaseCount;
+                    ChargeSubphase subphase = (ChargeSubphase)AI_AttackProgress;
+                    switch (subphase)
+                    {
+                        case ChargeSubphase.Initial:
+                        case ChargeSubphase.SlowDownAfterCharge:
+                            if (NPC.velocity != Vector2.Zero)
+                                set++;
+                            break;
 
-					if (AI_AttackProgress > AIAttack_Charge_RepeatStart && repeat == 1)
-					{
-						set++;
-					}
-					else if (AI_AnimationCounter % 26 < 13)
-						set++;
-					break;
+                        case ChargeSubphase.BeginRegularCharge:
+                            set++;
+                            break;
 
-				case AttackState.PortalCharge:
-					if (AI_AttackProgress > AIAttack_PortalCharge_RepeatStart)
-					{
-						int repeatRelative = (AI_AttackProgress - AIAttack_PortalCharge_RepeatStart) % AIAttack_PortalCharge_RepeatSubphaseCount;
-						int repeatCount = (AI_AttackProgress - AIAttack_PortalCharge_RepeatStart) / AIAttack_PortalCharge_RepeatSubphaseCount;
+                        case ChargeSubphase.ShrinkSelfAndPortal:
+							if (portalAttackCount == 0 && AI_AnimationCounter % 26 < 13)
+                                set++;
+                            break;
 
-						const float portalTargetDist = 4 * 16;
-
-						if (repeatCount == 0 && repeatRelative == 0)
-						{
-							if (AI_AnimationCounter % 26 < 13)
+                        case ChargeSubphase.ShrinkSourcePortalAndGrowTargetPortal:
+                            const float portalTargetDist = 4 * 16;
+							if (NPC.DistanceSQ(bigPortal2.center) >= portalTargetDist * portalTargetDist)
 								set++;
-						}
-						else if (repeatRelative == 4 && NPC.DistanceSQ(bigPortal2.center) >= portalTargetDist * portalTargetDist)
-							set++;
-					}
-					else if (AI_AnimationCounter % 26 < 13)
-						set++;
+                            break;
+
+                        case ChargeSubphase.FindInitialPortalPosition:
+                        case ChargeSubphase.SpawnInitialPortal:
+                        case ChargeSubphase.FindChargePortalsPositions:
+                        case ChargeSubphase.GrowSourcePortal:
+                        case ChargeSubphase.AppearFromSourcePortalAndBeginCharge:
+                            break;
+                    }
 					break;
+            }
 
-				case AttackState.PostCharge:
-					if (NPC.velocity != Vector2.Zero)
-						set++;
-					break;
-			}
+            return set;
+        }
 
-			return set;
-		}
-
-		public override void FindFrame(int frameHeight)
+        public override void FindFrame(int frameHeight)
 		{
 			int set = GetAnimationSetFrame();
 
@@ -857,15 +863,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 				case AttackState.Charge:
 					AI_Charge(player);
 					break;
-
-				case AttackState.PortalCharge:
-					AI_PortalCharge(player);
-					break;
-
-				case AttackState.PostCharge:
-					AI_PostCharge();
-					break;
-
 			}
 
 			if (AI_Attack != AttackState.DoNothing)
@@ -901,7 +898,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			NPC.spriteDirection = -1;
 
             // scale up and close down any existing portals if no longer used
-			if(AI_Attack != AttackState.FadeIn && AI_Attack != AttackState.PortalCharge && AI_Attack != AttackState.FadeAway)
+			if(AI_Attack != AttackState.FadeIn && AI_Attack != AttackState.Charge && AI_Attack != AttackState.FadeAway)
 			{
                 if (NPC.scale < 0.99f)
                     UpdateScale(Utility.ScaleLogarithmic(NPC.scale, 1, 9.2153f, 1f / 60f));
@@ -1008,7 +1005,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 {
                     bigPortal.scale = targetScale;
                     bigPortal.alpha = 1f;
-                    FloatTowardsTarget(null, 10);
+                    FloatTowardsTarget(null, 0);
                 }
                 else
                 {
@@ -1020,10 +1017,11 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             {
                 UpdateScale(Utility.ScaleLogarithmic(NPC.scale, 0f, 0.15f, 1f / 60f));
                 targetAlpha += 255f / 80f;
+				NPC.velocity = Vector2.Zero;
 
                 if (AI_Timer < 40)
                 {
-                    bigPortal.scale = Utility.ScaleLogarithmic(bigPortal.scale, 0f, 4f, 1f / 60f);
+                    bigPortal.scale = Utility.ScaleLogarithmic(bigPortal.scale, 0f, 5f, 1f / 60f);
                     bigPortal.alpha = bigPortal.scale;
                 }
 
@@ -1093,7 +1091,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			{
 				if (NPC.DistanceSQ(player.Center) > (120 * 16f) * (120 * 16f))
 				{
-					SetAttack(AttackState.PortalCharge);
+					SetAttack(AttackState.Charge);
+					portalCharge = true;
 				}
 				else
 				{
@@ -1105,8 +1104,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 					list.Add(AttackState.SummonMeteors);
 					list.Add(AttackState.SummonCraterImps);
 					list.Add(AttackState.SummonPhantasmals);
+                    list.Add(AttackState.Charge);
 
-					float portalAttackChance = Main.getGoodWorld ? 0.1f :
+                    float portalAttackChance = Main.getGoodWorld ? 0.1f :
 												Main.masterMode ? 0.25f :
 												Main.expertMode ? 0.35f :
 																  0.50f;
@@ -1115,15 +1115,12 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 						portalAttackChance *= 2f;
 
 					if (Main.rand.NextFloat() < portalAttackChance)
-						list.Add(AttackState.PortalCharge);
-					else
-						list.Add(AttackState.Charge);
+						portalCharge = true;
 
 					list.Remove(oldAttack);
 
 					SetAttack(list.GetRandom());
 				}
-
 
 				NPC.netUpdate = true;
 			}
@@ -1269,413 +1266,415 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			}
 		}
 
-		private void AI_Charge(Player player)
-		{
-			inertia = DefaultInertia * 0.1f;
+        public enum ChargeSubphase
+        {
+            Initial,
+			BeginRegularCharge,
+			SlowDownAfterCharge,
+			FindInitialPortalPosition,
+            SpawnInitialPortal,
+			ShrinkSelfAndPortal,
+			FindChargePortalsPositions,
+			GrowSourcePortal,
+            AppearFromSourcePortalAndBeginCharge,
+            ShrinkSourcePortalAndGrowTargetPortal
+        }
 
-			int repeatRelative = AI_AttackProgress >= AIAttack_Charge_RepeatStart
-								? (AI_AttackProgress - AIAttack_Charge_RepeatStart) % AIAttack_Charge_RepeatSubphaseCount
-								: -1;
-			int repeatCount = AI_AttackProgress >= AIAttack_Charge_RepeatStart
-							  ? (AI_AttackProgress - AIAttack_Charge_RepeatStart) / AIAttack_Charge_RepeatSubphaseCount
-							  : 0;
-
-			float chargeVelocity = GetDifficultyScaling(DifficultyScale.ChargeSpeed);
-
-			if (AI_AttackProgress == 0)
-			{
-				//Wait until initial wait is done
-				if (AI_Timer <= 0)
-				{
-					if (Main.netMode != NetmodeID.MultiplayerClient)
-					{
-						chargeAttackCount = Main.rand.Next(GetDifficultyInfo(DifficultyInfo.ChargeAttackCountMin), GetDifficultyInfo(DifficultyInfo.ChargeAttackCountMax) + 1);
-						NPC.netUpdate = true;
-					}
-
-					AI_AttackProgress++;
-					AI_Timer = GetDifficultyInfo(DifficultyInfo.ChargeAttackRepeatTime);
-				}
-				else
-				{
-					//CircleAroundTarget(player, 80 * 16, 0.1f);
-					FloatTowardsTarget(player);
-				}
-			}
-			else if (repeatRelative == 0)
-			{
-				if (AI_Timer <= 0)
-				{
-					AI_AttackProgress++;
-					AI_Timer = GetDifficultyInfo(DifficultyInfo.ChargeAttackRepeatTime);
-
-					NPC.velocity = NPC.DirectionTo(player.Center + player.velocity) * chargeVelocity;
-
-					SoundEngine.PlaySound(SoundID.ForceRoar with { Pitch = -0.2f }, NPC.position);
-
-					if (repeatCount >= portalAttackCount)
-					{
-						SetAttack(AttackState.PostCharge);
-					}
-				}
-				else
-				{
-					FloatTowardsTarget(player);
-				}
-			}
-			else if (repeatRelative == 1)
-			{
-				if (AI_Timer <= 0)
-				{
-					NPC.velocity *= 1f - 2f / 60f;
-
-					if (NPC.velocity.LengthSquared() < 4f * 4f)
-						AI_AttackProgress++;
-				}
-			}
-			else if (repeatRelative == 2)
-			{
-				FloatTowardsTarget(player);
-				AI_Timer = GetDifficultyInfo(DifficultyInfo.ChargeAttackRepeatTime);
-				AI_AttackProgress++;
-			}
-
-			if (repeatRelative != 1)
-			{
-				zAxisLerpStrength = DefaultZAxisLerpStrength * 6f;
-				SetTargetZAxisRotation(player, out _);
-			}
-		}
-		private void AI_PortalCharge(Player player)
+        private void AI_Charge(Player player)
 		{
 			NPC.netOffset *= 0f;
-
 			inertia = DefaultInertia * 0.1f;
 
-			float chargeVelocity = GetDifficultyScaling(DifficultyScale.PortalChargeSpeed);
+			ChargeSubphase subphase = (ChargeSubphase)AI_AttackProgress;
+            switch (subphase)
+            {
+                case ChargeSubphase.Initial:
 
-			int repeatRelative = AI_AttackProgress >= AIAttack_PortalCharge_RepeatStart
-				? (AI_AttackProgress - AIAttack_PortalCharge_RepeatStart) % AIAttack_PortalCharge_RepeatSubphaseCount
-				: -1;
-			int repeatCount = AI_AttackProgress >= AIAttack_PortalCharge_RepeatStart
-				? (AI_AttackProgress - AIAttack_PortalCharge_RepeatStart) / AIAttack_PortalCharge_RepeatSubphaseCount
-				: 0;
+                    if (AI_Timer <= 0)
+                    {
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
+                        {
+                            maxChargeAttackCount = Main.rand.Next(GetDifficultyInfo(DifficultyInfo.ChargeAttackCountMin), GetDifficultyInfo(DifficultyInfo.ChargeAttackCountMax) + 1);
+                            maxPortalAttackCount = Main.rand.Next(GetDifficultyInfo(DifficultyInfo.PortalChargeAttackCountMin), GetDifficultyInfo(DifficultyInfo.PortalChargeAttackCountMax) + 1);
+                            NPC.netUpdate = true;
+                        }
 
-			if (AI_AttackProgress == 0)
-			{
-				if (bigPortal.visible)
-					bigPortal = new BigPortalInfo();
-				if (bigPortal2.visible)
-					bigPortal2 = new BigPortalInfo();
+                        AI_AttackProgress = portalCharge ? (int)ChargeSubphase.FindInitialPortalPosition : (int)ChargeSubphase.BeginRegularCharge;
+                        AI_Timer = GetDifficultyInfo(DifficultyInfo.ChargeAttackRepeatTime);
+                    }
+                    else
+                    {
+                        FloatTowardsTarget(player);
+                    }
+                    break;
 
-				//Wait until initial wait is done
-				if (AI_Timer <= 0)
-				{
-					AI_AttackProgress++;
+                case ChargeSubphase.BeginRegularCharge:
 
-					if (Main.netMode != NetmodeID.MultiplayerClient)
+                    if (AI_Timer <= 0)
+                    {
+                        NPC.velocity = NPC.DirectionTo(player.Center + player.velocity) * GetDifficultyScaling(DifficultyScale.ChargeSpeed); 
+
+                        SoundEngine.PlaySound(SoundID.ForceRoar with { Pitch = -0.2f }, NPC.position);
+
+                        AI_AttackProgress = (int)ChargeSubphase.SlowDownAfterCharge;
+                        AI_Timer = GetDifficultyInfo(DifficultyInfo.ChargeAttackRepeatTime);
+                    }
+                    else
+                    {
+                        FloatTowardsTarget(player);
+                    }
+
+                    zAxisLerpStrength = DefaultZAxisLerpStrength * 6f;
+                    SetTargetZAxisRotation(player, out _);
+
+                    break;
+
+                case ChargeSubphase.SlowDownAfterCharge:
+
+					chargeAttackCount++;
+					portalAttackCount++;
+					
+					bool endOfPortalCharge = portalCharge && portalAttackCount >= maxPortalAttackCount;
+
+					if(endOfPortalCharge)
 					{
-						//Spawn portal -- must be close to boss and player
-						Vector2 spawn;
-						const float playerDistMax = 40 * 16;
-						int tries = 0;
-						bool success = false;
-						do
+                        if (NPC.velocity == Vector2.Zero && !bigPortal.visible)
 						{
-							spawn = NPC.Center + Main.rand.NextVector2Unit() * 40 * 16;
-							tries++;
-						} while (tries < 1000 && (success = player.DistanceSQ(spawn) >= playerDistMax * playerDistMax));
-
-						if (!success && tries == 1000)
-						{
-							//Failsafe: put the portal directly on the target player
-							spawn = player.Center;
+                            SetAttack(AttackState.DoNothing);
+							portalCharge = false;
 						}
+                        else if (AI_Timer <= 0)
+                        {
+                            //Charge has ended. Make the portal fade away and slow the boss down
+                            NPC.velocity *= 1f - 8.5f / 60f;
 
-						portalTarget = spawn;
-						NPC.netUpdate = true;
-					}
+                            if (Math.Abs(NPC.velocity.X) < 0.05f && Math.Abs(NPC.velocity.Y) <= 0.05f)
+                                NPC.velocity = Vector2.Zero;
 
-					SpawnBigPortal(portalTarget, ref bigPortal);
-				}
-			}
-			else if (AI_AttackProgress == 1)
-			{
-				float dist = NPC.DistanceSQ(bigPortal.center);
-				const float portalDist = 5;
-				bool tooFar = dist > portalDist * portalDist;
+                            if (bigPortal.visible)
+                            {
+                                //5.9192 ~= 45 ticks to reach 0.01 scale
+                                bigPortal.scale = Utility.ScaleLogarithmic(bigPortal.scale, 0f, 5.9192f, 1f / 60f);
 
-				//Update the portal
-				if (bigPortal.scale > 0.98f)
-				{
-					bigPortal.scale = 1f;
-					bigPortal.alpha = 1f;
-				}
-				else
-				{
-					bigPortal.scale = Utility.ScaleLogarithmic(bigPortal.scale, 1f, 2.7219f, 1f / 60f);
-					bigPortal.alpha = bigPortal.scale;
-				}
-
-				if (tooFar)
-				{
-					//Float toward first portal
-					movementTarget = bigPortal.center;
-
-					FloatTowardsTarget(player, minimumDistanceThreshold: 0);
-				}
-				else
-				{
-					NPC.Center = bigPortal.center;
-					NPC.velocity = Vector2.Zero;
-					movementTarget = null;
-
-					//If the portal hasn't gotten to the full size yet, wait for it to do so
-					if (bigPortal.scale >= 1f)
+                                if (bigPortal.scale <= 0.01f)
+                                    bigPortal = new BigPortalInfo();
+                            }
+                        }
+                    }
+					else 
 					{
-						AI_AttackProgress++;
+                        if (AI_Timer <= 0)
+                        {
+                            NPC.velocity *= 1f - 2f / 60f;
 
-						UpdateScale(1f);
+                            if (NPC.velocity.LengthSquared() < 4f * 4f)
+                            {
+                                AI_Timer = GetDifficultyInfo(DifficultyInfo.ChargeAttackRepeatTime);
 
-						AI_Timer = 45;
-					}
-				}
-			}
-			else if (repeatRelative == 0)
-			{
-				//Shrink (factor of 4.3851 makes it reach 0.01 in around 60 ticks, 12.2753 ~= 20 ticks)
-				const float epsilon = 0.01f;
-				if (NPC.scale > epsilon)
-					UpdateScale(Utility.ScaleLogarithmic(NPC.scale, 0f, repeatCount == 0 ? 4.3851f : 12.2753f, 1f / 60f));
+                                AI_AttackProgress = chargeAttackCount >= maxChargeAttackCount
+								   ? (int)ChargeSubphase.FindInitialPortalPosition
+								   : (int)ChargeSubphase.BeginRegularCharge;
 
-				targetAlpha = 255f * (1f - NPC.scale);
+                                FloatTowardsTarget(player);
+                            }
+                        }
+                    }
 
-				if (AI_Timer <= 0)
-				{
-					//Shrink the portal, but a bit slower
-					bigPortal.scale = Utility.ScaleLogarithmic(bigPortal.scale, 0f, repeatCount == 0 ? 2.7219f : 9.2153f, 1f / 60f);
-					bigPortal.alpha = bigPortal.scale;
-				}
+                    break;
+                case ChargeSubphase.FindInitialPortalPosition:
 
-				if (NPC.scale < 0.4f)
-				{
-					hideMapIcon = true;
-					NPC.dontTakeDamage = true;
-				}
+                    if (bigPortal.visible)
+                        bigPortal = new BigPortalInfo();
+                    if (bigPortal2.visible)
+                        bigPortal2 = new BigPortalInfo();
 
-				if (NPC.scale < epsilon)
-				{
-					UpdateScale(epsilon);
+                    //Wait until initial wait is done
+                    if (AI_Timer <= 0)
+                    {
+                        AI_AttackProgress++;
 
-					targetAlpha = 255f;
+                        if (portalCharge)
+                        {
+                            if (Main.netMode != NetmodeID.MultiplayerClient)
+                            {
+                                //Spawn portal -- must be close to boss and player
+                                Vector2 spawn;
+                                const float playerDistMax = 40 * 16;
+                                int tries = 0;
+                                bool success = false;
+                                do
+                                {
+                                    spawn = NPC.Center + Main.rand.NextVector2Unit() * 40 * 16;
+                                    tries++;
+                                } while (tries < 1000 && (success = player.DistanceSQ(spawn) >= playerDistMax * playerDistMax));
 
-					//Sanity check
-					targetZAxisRotation = 0;
-					zAxisRotation = 0;
-				}
+                                if (!success && tries == 1000)
+                                {
+                                    //Failsafe: put the portal directly on the target player
+                                    spawn = player.Center;
+                                }
 
-				if (bigPortal.scale < epsilon)
-				{
-					bigPortal.scale = 0f;
-					bigPortal.visible = false;
+                                portalTarget = spawn;
+                                NPC.netUpdate = true;
+                            }
 
-					AI_AttackProgress++;
+                            SpawnBigPortal(portalTarget, ref bigPortal);
+                        }
+                    }
+                    break;
+                case ChargeSubphase.SpawnInitialPortal:
 
-					if (repeatCount == 0)
-						SoundEngine.PlaySound(SoundID.Zombie105 with { Pitch = -0.2f }, NPC.Center); //Cultist laugh sound
+                    float dist = NPC.DistanceSQ(bigPortal.center);
+                    const float portalDist = 5;
+                    bool tooFar = dist > portalDist * portalDist;
 
-					//Wait for a random amount of time
-					if (Main.netMode != NetmodeID.MultiplayerClient)
-					{
-						AI_Timer = Main.rand.Next(GetDifficultyInfo(DifficultyInfo.PortalWaitTimeMin), GetDifficultyInfo(DifficultyInfo.PortalWaitTimeMax) + 1);
-						NPC.netUpdate = true;
-					}
+                    //Update the portal
+                    if (bigPortal.scale > 0.98f)
+                    {
+                        bigPortal.scale = 1f;
+                        bigPortal.alpha = 1f;
+                    }
+                    else
+                    {
+                        bigPortal.scale = Utility.ScaleLogarithmic(bigPortal.scale, 1f, 2.7219f, 1f / 60f);
+                        bigPortal.alpha = bigPortal.scale;
+                    }
 
-					movementTarget = null;
-				}
-			}
-			else if (repeatRelative == 1)
-			{
-				// pick a random position a tick before spawning portal (to allow for netsync)
-				if (AI_Timer > 1 * GetDifficultyScaling(DifficultyScale.AttackDurationScaling) && AI_Timer <= 2 * GetDifficultyScaling(DifficultyScale.AttackDurationScaling))
-				{
-					if (Main.netMode != NetmodeID.MultiplayerClient)
-					{
-						portalOffset = Main.rand.NextVector2Unit() * 30 * 16;
-						NPC.netUpdate = true;
-					}
-				}
+                    if (tooFar)
+                    {
+                        //Float toward first portal
+                        movementTarget = bigPortal.center;
+                        FloatTowardsTarget(player, minimumDistanceThreshold: 0);
+                    }
+                    else
+                    {
+                        NPC.Center = bigPortal.center;
+                        NPC.velocity = Vector2.Zero;
+                        movementTarget = null;
 
-				//Wait, then spawn a portal
-				if (AI_Timer <= 0)
-				{
-					//Second portal is where the boss will end up
-					SpawnBigPortal(player.Center + portalOffset, ref bigPortal, 1.6f);
-					SpawnBigPortal(player.Center - portalOffset, ref bigPortal2, 1.6f);
-					bigPortal2.visible = false;
+                        //If the portal hasn't gotten to the full size yet, wait for it to do so
+                        if (bigPortal.scale >= 1f)
+                        {
+                            AI_AttackProgress++;
 
-					NPC.Center = bigPortal.center;
-					NPC.velocity = Vector2.Zero;
+                            UpdateScale(1f);
 
-					AI_AttackProgress++;
-				}
-			}
-			else if (repeatRelative == 2)
-			{
-				//Make the portal grow FAST (9.9583 results in around 26 ticks)
-				bigPortal.scale = Utility.ScaleLogarithmic(bigPortal.scale, 1f, 9.9583f, 1f / 60f);
-				bigPortal.alpha = bigPortal.scale;
+                            AI_Timer = 45;
+                        }
+                    }
 
-				if (bigPortal.scale >= 0.99f)
-				{
-					bigPortal.scale = 1f;
+                    break;
+                case ChargeSubphase.ShrinkSelfAndPortal:
 
-					AI_AttackProgress++;
-					AI_Timer = 40;
-				}
+                    //Shrink (factor of 4.3851 makes it reach 0.01 in around 60 ticks, 12.2753 ~= 20 ticks)
+                    const float epsilon = 0.01f;
+                    if (NPC.scale > epsilon)
+                        UpdateScale(Utility.ScaleLogarithmic(NPC.scale, 0f, portalAttackCount == 0 ? 4.3851f : 12.2753f, 1f / 60f));
 
-				bigPortal.alpha = bigPortal.scale;
-			}
-			else if (repeatRelative == 3)
-			{
-				//Make the boss charge at the player after fading in
-				zAxisLerpStrength = DefaultZAxisLerpStrength * 2.7f;
+                    targetAlpha = 255f * (1f - NPC.scale);
 
-				if (NPC.scale < 0.99f)
-					UpdateScale(Utility.ScaleLogarithmic(NPC.scale, 1, 9.2153f, 1f / 60f));
-				else
-					UpdateScale(1f);
+                    if (AI_Timer <= 0)
+                    {
+                        //Shrink the portal, but a bit slower
+                        bigPortal.scale = Utility.ScaleLogarithmic(bigPortal.scale, 0f, portalAttackCount == 0 ? 2.7219f : 9.2153f, 1f / 60f);
+                        bigPortal.alpha = bigPortal.scale;
+                    }
 
-				if (NPC.scale > 0.4f)
-				{
-					NPC.dontTakeDamage = false;
-					hideMapIcon = false;
-				}
+                    if (NPC.scale < 0.4f)
+                    {
+                        hideMapIcon = true;
+                        NPC.dontTakeDamage = true;
+                    }
 
-				targetAlpha = 255f * (1f - NPC.scale);
+                    if (NPC.scale < epsilon)
+                    {
+                        UpdateScale(epsilon);
 
-				SetTargetZAxisRotation(player, out _);
+                        targetAlpha = 255f;
 
-				if (AI_Timer == 1 && Main.netMode != NetmodeID.MultiplayerClient)
-				{
-					portalAttackCount = Main.rand.Next(GetDifficultyInfo(DifficultyInfo.PortalChargeAttackCountMin), GetDifficultyInfo(DifficultyInfo.PortalChargeAttackCountMax) + 1);
-					NPC.netUpdate = true;
-				}
+                        //Sanity check
+                        targetZAxisRotation = 0;
+                        zAxisRotation = 0;
+                    }
 
-				if (AI_Timer <= 0 && NPC.scale == 1f)
-				{
-					AI_AttackProgress++;
-					AI_Timer = GetDifficultyInfo(DifficultyInfo.PortalSecondTime);
+                    if (bigPortal.scale < epsilon)
+                    {
+                        bigPortal.scale = 0f;
+                        bigPortal.visible = false;
 
-					NPC.Center = bigPortal.center;
-					NPC.velocity = NPC.DirectionTo(player.Center) * chargeVelocity;
+                        AI_AttackProgress++;
 
-					SoundEngine.PlaySound(SoundID.ForceRoar with { Pitch = -0.2f }, NPC.position);
+                        if (portalAttackCount == 0)
+                            SoundEngine.PlaySound(SoundID.Zombie105 with { Pitch = -0.2f }, NPC.Center); //Cultist laugh sound
 
-					if (repeatCount >= portalAttackCount)
-					{
-						//Stop the repetition
-						bigPortal2.visible = false;
-						bigPortal2.scale = 8f / 240f;
+                        //Wait for a random amount of time
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
+                        {
+                            AI_Timer = Main.rand.Next(GetDifficultyInfo(DifficultyInfo.PortalWaitTimeMin), GetDifficultyInfo(DifficultyInfo.PortalWaitTimeMax) + 1);
+                            NPC.netUpdate = true;
+                        }
 
-						SetAttack(AttackState.PostCharge);
-					}
-				}
-			}
-			else if (repeatRelative == 4)
-			{
-				//Second portal appears once the boss is within 22 update ticks of its center
-				float activeDist = chargeVelocity * 22;
-				if (AI_Timer < 0 && NPC.DistanceSQ(bigPortal2.center) <= activeDist * activeDist)
-					bigPortal2.visible = true;
+                        movementTarget = null;
+                    }
 
-				//First portal disappears once the boss leaves within 22 update ticks of its center
-				if (NPC.DistanceSQ(bigPortal.center) > activeDist * activeDist)
-				{
-					bigPortal.scale = Utility.ScaleLogarithmic(bigPortal.scale, 0f, 9.2153f, 1f / 60f);
-					bigPortal.alpha = bigPortal.scale;
+                    break;
 
-					if (bigPortal.scale <= 0.01f)
-					{
-						bigPortal.scale = 0f;
-						bigPortal.alpha = 0f;
-						bigPortal.visible = false;
-					}
-				}
+                case ChargeSubphase.FindChargePortalsPositions:
 
-				if (bigPortal2.visible)
-				{
-					bigPortal2.scale = Utility.ScaleLogarithmic(bigPortal2.scale, 1f, 9.2153f, 1f / 60f);
-					bigPortal2.alpha = bigPortal2.scale;
+                    if (AI_Timer == 1 && Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        portalOffset = Main.rand.NextVector2Unit() * 30 * 16;
+                        NPC.netUpdate = true;
+                    }
 
-					if (bigPortal2.scale >= 0.99f)
-					{
-						bigPortal2.scale = 1f;
-						bigPortal2.alpha = 1f;
-					}
-				}
+                    //Wait, then spawn a portal
+                    if (AI_Timer <= 0)
+                    {
+                        //Second portal is where the boss will end up
+                        SpawnBigPortal(player.Center + portalOffset, ref bigPortal, 1.6f);
+                        SpawnBigPortal(player.Center - portalOffset, ref bigPortal2, 1.6f);
+                        bigPortal2.visible = false;
 
-				const float portalEnterDist = 5, portalTargetDist = 4 * 16;
+                        NPC.Center = bigPortal.center;
+                        NPC.velocity = Vector2.Zero;
 
-				if (AI_Timer >= 0)
-				{
-					if (AI_Timer == 0)
-						bigPortal2.center = NPC.Center + Vector2.Normalize(NPC.velocity) * (activeDist + 3 * 16);
-				}
-				else
-				{
-					//Make sure the boss snaps to the center of the portal before repeating the logic
-					float dist = NPC.DistanceSQ(bigPortal2.center);
-					if (dist < portalEnterDist * portalEnterDist)
-					{
-						UpdateScale(1f);
+                        AI_AttackProgress++;
+                    }
 
-						NPC.Center = bigPortal2.center;
-						NPC.velocity = Vector2.Zero;
+                    break;
 
-						targetAlpha = 0;
+                case ChargeSubphase.GrowSourcePortal:
 
-						movementTarget = null;
+                    //Make the portal grow FAST (9.9583 results in around 26 ticks)
+                    bigPortal.scale = Utility.ScaleLogarithmic(bigPortal.scale, 1f, 9.9583f, 1f / 60f);
+                    bigPortal.alpha = bigPortal.scale;
 
-						if (bigPortal2.scale >= 1f)
-						{
-							AI_AttackProgress++;
+                    if (bigPortal.scale >= 0.99f)
+                    {
+                        bigPortal.scale = 1f;
 
-							Utils.Swap(ref bigPortal, ref bigPortal2);
-						}
-					}
-					else if (dist < portalTargetDist * portalTargetDist)
-					{
-						//Float to the center
-						movementTarget = bigPortal2.center;
-						inertia = DefaultInertia * 0.1f;
+                        AI_AttackProgress++;
+                        AI_Timer = 40;
+                    }
 
-						float oldZ = targetZAxisRotation;
-						FloatTowardsTarget(player, minimumDistanceThreshold: 0);
-						targetZAxisRotation = oldZ;
-					}
-				}
-			}
-		}
-		private void AI_PostCharge()
-		{
-			if (NPC.velocity == Vector2.Zero && !bigPortal.visible)
-				SetAttack(AttackState.DoNothing);
-			else if (AI_Timer <= 0)
-			{
-				//Charge has ended.  Make the portal fade away and slow the boss down
-				NPC.velocity *= 1f - 8.5f / 60f;
+                    bigPortal.alpha = bigPortal.scale;
 
-				//5.9192 ~= 45 ticks to reach 0.01 scale
-				bigPortal.scale = Utility.ScaleLogarithmic(bigPortal.scale, 0f, 5.9192f, 1f / 60f);
+                    break;
+                case ChargeSubphase.AppearFromSourcePortalAndBeginCharge:
+                    //Make the boss charge at the player after fading in
+                    zAxisLerpStrength = DefaultZAxisLerpStrength * 2.7f;
 
-				if (Math.Abs(NPC.velocity.X) < 0.05f && Math.Abs(NPC.velocity.Y) <= 0.05f)
-					NPC.velocity = Vector2.Zero;
+                    if (NPC.scale < 0.99f)
+                        UpdateScale(Utility.ScaleLogarithmic(NPC.scale, 1, 9.2153f, 1f / 60f));
+                    else
+                        UpdateScale(1f);
 
-				if (bigPortal.scale <= 0.01f)
-					bigPortal = new BigPortalInfo();
-			}
-		}
+                    if (NPC.scale > 0.4f)
+                    {
+                        NPC.dontTakeDamage = false;
+                        hideMapIcon = false;
+                    }
+
+                    targetAlpha = 255f * (1f - NPC.scale);
+
+                    SetTargetZAxisRotation(player, out _);
+
+                    if (AI_Timer <= 0 && NPC.scale == 1f)
+                    {
+                        AI_AttackProgress++;
+                        AI_Timer = GetDifficultyInfo(DifficultyInfo.PortalIdleTime);
+
+                        NPC.Center = bigPortal.center;
+                        NPC.velocity = NPC.DirectionTo(player.Center) * GetDifficultyScaling(DifficultyScale.PortalChargeSpeed);
+
+                        SoundEngine.PlaySound(SoundID.ForceRoar with { Pitch = -0.2f }, NPC.position);
+
+                        //if (portalAttackCount >= maxPortalAttackCount)
+                        {
+                            bigPortal2.visible = false;
+                            bigPortal2.scale = 8f / 240f;
+
+                            AI_AttackProgress = (int)ChargeSubphase.SlowDownAfterCharge;
+                        }				
+                    }
+
+                    break;
+                case ChargeSubphase.ShrinkSourcePortalAndGrowTargetPortal:
+
+                    //Second portal appears once the boss is within 22 update ticks of its center
+                    float activeDist = GetDifficultyScaling(DifficultyScale.PortalChargeSpeed) * 22;
+                    if (AI_Timer < 0 && NPC.DistanceSQ(bigPortal2.center) <= activeDist * activeDist)
+                        bigPortal2.visible = true;
+
+                    //First portal disappears once the boss leaves within 22 update ticks of its center
+                    if (NPC.DistanceSQ(bigPortal.center) > activeDist * activeDist)
+                    {
+                        bigPortal.scale = Utility.ScaleLogarithmic(bigPortal.scale, 0f, 9.2153f, 1f / 60f);
+                        bigPortal.alpha = bigPortal.scale;
+
+                        if (bigPortal.scale <= 0.01f)
+                        {
+                            bigPortal.scale = 0f;
+                            bigPortal.alpha = 0f;
+                            bigPortal.visible = false;
+                        }
+                    }
+
+                    if (bigPortal2.visible)
+                    {
+                        bigPortal2.scale = Utility.ScaleLogarithmic(bigPortal2.scale, 1f, 9.2153f, 1f / 60f);
+                        bigPortal2.alpha = bigPortal2.scale;
+
+                        if (bigPortal2.scale >= 0.99f)
+                        {
+                            bigPortal2.scale = 1f;
+                            bigPortal2.alpha = 1f;
+                        }
+                    }
+
+                    const float portalEnterDist = 5, portalTargetDist = 4 * 16;
+
+                    if (AI_Timer >= 0)
+                    {
+                        if (AI_Timer == 0)
+                            bigPortal2.center = NPC.Center + Vector2.Normalize(NPC.velocity) * (activeDist + 3 * 16);
+                    }
+                    else
+                    {
+                        //Make sure the boss snaps to the center of the portal before repeating the logic
+                        float distance = NPC.DistanceSQ(bigPortal2.center);
+                        if (distance < portalEnterDist * portalEnterDist)
+                        {
+                            UpdateScale(1f);
+
+                            NPC.Center = bigPortal2.center;
+                            NPC.velocity = Vector2.Zero;
+
+                            targetAlpha = 0;
+
+                            movementTarget = null;
+
+                            if (bigPortal2.scale >= 1f)
+                            {
+								AI_AttackProgress = (int)ChargeSubphase.ShrinkSelfAndPortal;
+                                Utils.Swap(ref bigPortal, ref bigPortal2);
+                            }
+                        }
+                        else if (distance < portalTargetDist * portalTargetDist)
+                        {
+                            //Float to the center
+                            movementTarget = bigPortal2.center;
+                            inertia = DefaultInertia * 0.1f;
+
+                            float oldZ = targetZAxisRotation;
+                            FloatTowardsTarget(player, minimumDistanceThreshold: 0);
+                            targetZAxisRotation = oldZ;
+                        }
+                    }
+
+                    break;
+            }
+        }
 
 		public override void HitEffect(NPC.HitInfo hit)
 		{
@@ -1799,13 +1798,13 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			if (AI_Attack == AttackState.FadeIn)
 			{
 				float progress = MathHelper.Clamp((float)(AI_Timer - FadeIn_FadeInTime) / (FadeIn_LaughTime - FadeIn_FadeInTime), 0f, 1f);
-				return Color.Lerp(drawColor, new Color(157, 255, 156).WithOpacity(0.1f), 1f - progress) * (1f - targetAlpha / 255f);
+				return Color.Lerp(drawColor, new Color(157, 255, 156).WithOpacity(progress), 1f - progress) * (1f - targetAlpha / 255f);
             }
 
             if (AI_Attack == AttackState.FadeAway)
             {
                 float progress = MathHelper.Clamp((float)AI_Timer / FadeAway_FadeOutTime, 0f, 1f);
-                return Color.Lerp(drawColor, new Color(157, 255, 156).WithOpacity(0.1f), 1f - progress) * (1f - targetAlpha / 255f);
+                return Color.Lerp(drawColor, new Color(157, 255, 156).WithOpacity(progress), 1f - progress) * (1f - targetAlpha / 255f);
             }
 
             return drawColor * (1f - targetAlpha / 255f);
@@ -1887,5 +1886,5 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			jaw.Width = (int)(jaw.Width * NPC.scale);
 			jaw.Height = (int)(jaw.Height * NPC.scale);
 		}
-	}
+    }
 }

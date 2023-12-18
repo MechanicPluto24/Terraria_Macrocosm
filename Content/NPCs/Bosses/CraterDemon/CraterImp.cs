@@ -49,7 +49,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		{
 			Main.npcFrameCount[NPC.type] = 4;
 			NPCID.Sets.TrailCacheLength[NPC.type] = 5;
-			NPCID.Sets.TrailingMode[NPC.type] = 0;
+			NPCID.Sets.TrailingMode[NPC.type] = 3;
 
 			NPCID.Sets.ImmuneToRegularBuffs[NPC.type] = true;
 
@@ -114,27 +114,29 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		{
 			Texture2D texture = TextureAssets.Npc[NPC.type].Value;
 			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Bosses/CraterDemon/CraterImp_Glow").Value;
+            NPCID.Sets.TrailCacheLength[NPC.type] = 5;
+            NPCID.Sets.TrailingMode[NPC.type] = 3;
 
-			Color color = GetAlpha(drawColor) ?? Color.White;
+            Color color = GetAlpha(drawColor) ?? Color.White;
 
 			SpriteEffects effect = (NPC.rotation > MathHelper.PiOver2 && NPC.rotation < 3 * MathHelper.PiOver2) || (NPC.rotation < -MathHelper.PiOver2 && NPC.rotation > -3 * MathHelper.PiOver2)
 				? SpriteEffects.FlipVertically
 				: SpriteEffects.None;
 
-			if (AI_Attack == AttackType.ChargeAtPlayer && chargeTicks > 0)
+			int length = NPC.oldPos.Length;
+            if (AI_Attack == AttackType.ChargeAtPlayer && chargeTicks > 0)
+                length = Math.Min(chargeTicks, NPC.oldPos.Length);
+
+			for (int i = 0; i < length; i++)
 			{
-				int length = Math.Min(chargeTicks, NPC.oldPos.Length);
-				for (int i = 0; i < length; i++)
-				{
-					Vector2 drawPos = NPC.oldPos[i] - Main.screenPosition + NPC.Size / 2f;
+				Vector2 drawPos = NPC.oldPos[i] - Main.screenPosition + NPC.Size / 2f;
 
-					Color trailColor = color * (((float)NPC.oldPos.Length - i) / NPC.oldPos.Length);
-					spriteBatch.Draw(texture, drawPos, NPC.frame, trailColor * 0.6f, NPC.rotation, NPC.Size / 2f, NPC.scale, effect, 0f);
+				Color trailColor = color * (((float)NPC.oldPos.Length - i) / NPC.oldPos.Length);
+				spriteBatch.Draw(texture, drawPos, NPC.frame, trailColor * 0.4f, NPC.rotation, NPC.Size / 2f, NPC.scale, effect, 0f);
 
-					// trailing glowmask (behind the trail and the npc)
-					Color glowColor = (Color)(GetAlpha(Color.White) * (((float)NPC.oldPos.Length - i) / NPC.oldPos.Length));
-					spriteBatch.Draw(glowmask, drawPos, NPC.frame, glowColor * 0.6f, NPC.rotation, NPC.Size / 2f, NPC.scale, effect, 0f);
-				}
+				// trailing glowmask (behind the trail and the npc)
+				Color glowColor = (Color)(GetAlpha(Color.White) * (((float)NPC.oldPos.Length - i) / NPC.oldPos.Length));
+				spriteBatch.Draw(glowmask, drawPos, NPC.frame, glowColor * 0.4f, NPC.rotation, NPC.Size / 2f, NPC.scale, effect, 0f);
 			}
 
 			spriteBatch.Draw(texture, NPC.Center - Main.screenPosition, NPC.frame, color, NPC.rotation, NPC.Size / 2f, NPC.scale, effect, 0);
@@ -163,7 +165,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		{
 			NPC.damage = NPC.defDamage;
 
-			if (AI_Attack != AttackType.Despawning && !Main.npc[ParentBoss].active || Main.npc[ParentBoss].type != ModContent.NPCType<CraterDemon>())
+			if (AI_Attack != AttackType.Despawning && (!Main.npc[ParentBoss].active || Main.npc[ParentBoss].type != ModContent.NPCType<CraterDemon>()))
 			{
 				NPC.life = 0;
 				NPC.HitEffect();

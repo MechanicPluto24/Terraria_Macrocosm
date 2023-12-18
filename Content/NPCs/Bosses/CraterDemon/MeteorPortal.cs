@@ -28,9 +28,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 		private bool spawned;
 
-		private float flashTimer;
-		private float maxFlashTimer = 10;
-
 		public override void SetStaticDefaults()
 		{
 		}
