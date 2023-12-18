@@ -161,7 +161,21 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			set => NPC.ai[3] = value;
 		}
 
-		private readonly AttackInfo[] attacks = new AttackInfo[]{
+        public enum ChargeSubphase
+        {
+            Initial,
+            BeginRegularCharge,
+            SlowDownAfterCharge,
+            FindInitialPortalPosition,
+            SpawnInitialPortal,
+            ShrinkSelfAndPortal,
+            FindPortalPositions,
+            GrowSourcePortal,
+            DashFromPortal,
+            DashIntoPortal
+        }
+
+        private readonly AttackInfo[] attacks = new AttackInfo[]{
 			// AttackState.DoNothing
 			new AttackInfo(){
 				initialProgress = null,
@@ -355,25 +369,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		public const int Animation_LookFront_JawOpen = 3;
 		public const int Animation_LookRight_JawClosed = 4;
 		public const int Animation_LookRight_JawOpen = 5;
-
-		private const int AIAttack_RegularCharge_RepeatStart = 1;
-		private const int AIAttack_RegularCharge_RepeatSubphaseCount = 3;
-
-        private const int AIAttack_RegularCharge_RepeatSubphase_BeginCharge = 0;
-        private const int AIAttack_RegularCharge_RepeatSubphase_SlowDown = 1;
-        private const int AIAttack_RegularCharge_RepeatSubphase_ChasePlayer = 2;
-
-        private const int AIAttack_PortalCharge_RepeatStart = 2;
-		private const int AIAttack_PortalCharge_RepeatSubphaseCount = 5;
-
-        private const int AIAttack_PortalCharge_RepeatSubphase_ShrinkSelfAndPortal = 0;
-        private const int AIAttack_PortalCharge_RepeatSubphase_SetupPortalPositions = 1;
-        private const int AIAttack_PortalCharge_RepeatSubphase_GrowSourcePortal = 2;
-        private const int AIAttack_PortalCharge_RepeatSubphase_AppearFromSourcePortalAndCharge = 3;
-        private const int AIAttack_PortalCharge_RepeatSubphase_ShrinkSourcePortalAndGrowTargetPortal = 4;
-        private const int AIAttack_PortalCharge_RepeatSubphase_BeginCharge = 5;
-        private const int AIAttack_PortalCharge_RepeatSubphase_SlowDown = 6;
-        private const int AIAttack_PortalCharge_RepeatSubphase_ChasePlayer = 7;
 
         bool IMoonEnemy.DropMoonstone => false;
 
@@ -719,7 +714,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                                 set++;
                             break;
 
-                        case ChargeSubphase.ShrinkSourcePortalAndGrowTargetPortal:
+                        case ChargeSubphase.DashIntoPortal:
                             const float portalTargetDist = 4 * 16;
 							if (NPC.DistanceSQ(bigPortal2.center) >= portalTargetDist * portalTargetDist)
 								set++;
@@ -727,9 +722,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
                         case ChargeSubphase.FindInitialPortalPosition:
                         case ChargeSubphase.SpawnInitialPortal:
-                        case ChargeSubphase.FindChargePortalsPositions:
+                        case ChargeSubphase.FindPortalPositions:
                         case ChargeSubphase.GrowSourcePortal:
-                        case ChargeSubphase.AppearFromSourcePortalAndBeginCharge:
+                        case ChargeSubphase.DashFromPortal:
                             break;
                     }
 					break;
@@ -1266,19 +1261,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			}
 		}
 
-        public enum ChargeSubphase
-        {
-            Initial,
-			BeginRegularCharge,
-			SlowDownAfterCharge,
-			FindInitialPortalPosition,
-            SpawnInitialPortal,
-			ShrinkSelfAndPortal,
-			FindChargePortalsPositions,
-			GrowSourcePortal,
-            AppearFromSourcePortalAndBeginCharge,
-            ShrinkSourcePortalAndGrowTargetPortal
-        }
 
         private void AI_Charge(Player player)
 		{
@@ -1307,7 +1289,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                         FloatTowardsTarget(player);
                     }
                     break;
-
                 case ChargeSubphase.BeginRegularCharge:
 
                     if (AI_Timer <= 0)
@@ -1318,6 +1299,10 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
                         AI_AttackProgress = (int)ChargeSubphase.SlowDownAfterCharge;
                         AI_Timer = GetDifficultyInfo(DifficultyInfo.ChargeAttackRepeatTime);
+
+                        AI_AttackProgress = chargeAttackCount >= maxChargeAttackCount
+                                  ? (int)ChargeSubphase.DashIntoPortal
+                                  : (int)ChargeSubphase.BeginRegularCharge;
                     }
                     else
                     {
@@ -1328,7 +1313,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                     SetTargetZAxisRotation(player, out _);
 
                     break;
-
                 case ChargeSubphase.SlowDownAfterCharge:
 
 					chargeAttackCount++;
@@ -1371,10 +1355,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                             {
                                 AI_Timer = GetDifficultyInfo(DifficultyInfo.ChargeAttackRepeatTime);
 
-                                AI_AttackProgress = chargeAttackCount >= maxChargeAttackCount
-								   ? (int)ChargeSubphase.FindInitialPortalPosition
-								   : (int)ChargeSubphase.BeginRegularCharge;
-
+                                AI_AttackProgress = (int)ChargeSubphase.BeginRegularCharge;
                                 FloatTowardsTarget(player);
                             }
                         }
@@ -1518,8 +1499,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                     }
 
                     break;
-
-                case ChargeSubphase.FindChargePortalsPositions:
+                case ChargeSubphase.FindPortalPositions:
 
                     if (AI_Timer == 1 && Main.netMode != NetmodeID.MultiplayerClient)
                     {
@@ -1542,7 +1522,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                     }
 
                     break;
-
                 case ChargeSubphase.GrowSourcePortal:
 
                     //Make the portal grow FAST (9.9583 results in around 26 ticks)
@@ -1560,7 +1539,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                     bigPortal.alpha = bigPortal.scale;
 
                     break;
-                case ChargeSubphase.AppearFromSourcePortalAndBeginCharge:
+                case ChargeSubphase.DashFromPortal:
                     //Make the boss charge at the player after fading in
                     zAxisLerpStrength = DefaultZAxisLerpStrength * 2.7f;
 
@@ -1599,7 +1578,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                     }
 
                     break;
-                case ChargeSubphase.ShrinkSourcePortalAndGrowTargetPortal:
+                case ChargeSubphase.DashIntoPortal:
 
                     //Second portal appears once the boss is within 22 update ticks of its center
                     float activeDist = GetDifficultyScaling(DifficultyScale.PortalChargeSpeed) * 22;
