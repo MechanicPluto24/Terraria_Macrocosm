@@ -14,7 +14,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 	//Had to salvage it from an extracted DLL, so no comments.  Oops.  -- absoluteAquarian
 	public class MeteorPortal : ModProjectile
 	{
-		public ref float AITimer => ref Projectile.ai[0];
+
+        public ref float AITimer => ref Projectile.ai[0];
 		public bool Phase2
 		{
 			get => Projectile.ai[1] > 0f;
@@ -23,13 +24,13 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 		public int SpawnPeriod => 14;
 
-		private int defWidth;
+        //Portal spawning leadup + time portals are active before they shrink
+        public const int PortalTimerMax = (int)(4f * 60 + 1.5f * 60 + 24);
+
+        private int defWidth;
 		private int defHeight;
 
 		private bool spawned;
-
-		private float flashTimer;
-		private float maxFlashTimer = 10;
 
 		public override void SetStaticDefaults()
 		{
@@ -40,11 +41,13 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			Projectile.hostile = true;
 			Projectile.friendly = false;
 			Projectile.tileCollide = false;
-			Projectile.timeLeft = CraterDemon.PortalTimerMax;
+			Projectile.timeLeft = PortalTimerMax;
 			Projectile.penetrate = -1;
 			Projectile.alpha = 255;
 		}
-		public override void AI()
+        public override bool? CanDamage() => false;
+
+        public override void AI()
 		{
 			if (!spawned)
 			{
@@ -55,7 +58,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 			Projectile.rotation -= MathHelper.ToRadians(7.4f);
 
-			if (Projectile.timeLeft >= CraterDemon.PortalTimerMax - 90)
+            Lighting.AddLight(Projectile.Center, new Color(182, 79, 21).ToVector3() * 1.4f * (1f - Projectile.alpha / 255f));
+
+            if (Projectile.timeLeft >= PortalTimerMax - 90)
 				AITimer -= 4f;
 			else if (Projectile.timeLeft <= 90)
 				AITimer += 2.83333325f;
@@ -67,7 +72,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 					if (Main.netMode != NetmodeID.MultiplayerClient)
 					{
 						Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, (-Vector2.UnitY).RotatedByRandom(MathHelper.PiOver2) * Main.rand.NextFloat(12f, 16f), ModContent.ProjectileType<FlamingMeteor>(),
-							(int)(Projectile.damage * 0.4f), Projectile.knockBack, Projectile.owner);
+							Projectile.damage, Projectile.knockBack, Projectile.owner);
 					}
 
 					Terraria.Audio.SoundEngine.PlaySound(SoundID.Item20, Projectile.Center);

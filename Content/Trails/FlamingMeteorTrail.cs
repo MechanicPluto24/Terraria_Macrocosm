@@ -27,7 +27,7 @@ namespace Macrocosm.Content.Trails
 							.UseImage1(ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "FlamingTrail1"))
 							.UseImage2(ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "FlamingTrail2"));
 
-			return Color.Lerp(new Color(229, 128, 36, 255), new Color(255, 196, 27, 127), progressOnStrip * progressOnStrip);
+			return Color.Lerp(new Color(229, 228, 136, 255), new Color(255, 196, 27, 127), progressOnStrip * progressOnStrip);
 		}
 
 		public override float TrailWidths(float progressOnStrip)
