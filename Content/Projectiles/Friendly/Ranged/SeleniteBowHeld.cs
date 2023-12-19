@@ -68,13 +68,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 							SoundLimitBehavior = SoundLimitBehavior.ReplaceOldest
 						}, Projectile.position);
 					}
-
-					//if(AI_Charge > MaxCharge)
-					//Projectile.Center += Main.rand.NextVector2Circular(0.35f, 0.35f);
 				}
 				else
 				{
-					if (AI_Charge >= MinCharge)
+					if (AI_Charge > MinCharge)
 					{
 						if (Player.PickAmmo(usedItem, out _, out speed, out damage, out knockback, out usedAmmoItemId))
 						{
@@ -89,16 +86,16 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 					{
 						if (Player.PickAmmo(usedItem, out int projToShoot, out speed, out damage, out knockback, out usedAmmoItemId))
 						{
-							SoundEngine.PlaySound(SoundID.Item5, Projectile.position);
+                            SoundEngine.PlaySound(SoundID.Item5, Projectile.position);
 							Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Normalize(Projectile.velocity) * speed, projToShoot, damage, knockback, Projectile.owner);
 							AI_Timer = 0;
 						}
-						else
-						{
-							Projectile.Kill();
-						}
-					}
-				}
+                        else
+                        {
+                            Projectile.Kill();
+                        }
+                    }               
+                }
 
 				AI_Timer++;
 			}
