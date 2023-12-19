@@ -915,3 +915,13 @@ Motor: {
 	DisplayName: Motor
 	Tooltip: ""
 }
+
+MoonBaseLocker: {
+	DisplayName: Moon Base Locker
+	Tooltip: ""
+}
+
+Apollo115: {
+	DisplayName: Apollo115
+	Tooltip: ""
+}

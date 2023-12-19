@@ -45,7 +45,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 		{
 		}
 
-		private bool CanShoot => true;
+		public override bool? CanDamage() => true;
+
+        private bool CanShoot => true;
 		public override void ProjectileAI()
 		{
 			Animate();
