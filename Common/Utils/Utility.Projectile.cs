@@ -42,15 +42,14 @@ namespace Macrocosm.Common.Utils
 			projectile.netUpdate = true;
 		}
 
-		/// <summary>
-		/// Hostile projectiles deal: <list>
-		/// <item> - 2x the <paramref name="damage"/> in Normal Mode </item>
-		/// <item> - 4x the <paramref name="damage"/> in Expert Mode </item>
-		/// <item> - 6x the <paramref name="damage"/> in Master Mode </item>
-		/// </list>
-		/// This helper method remedies that. 
-		/// </summary>
-		public static int TrueDamage(int damage)
+        /// <summary>
+        /// Hostile projectiles deal:  
+        /// <br> - 2x the <paramref name="damage"/> in Normal Mode </br>
+        /// <br> - 4x the <paramref name="damage"/> in Expert Mode </br>
+        /// <br> - 6x the <paramref name="damage"/> in Master Mode </br>
+        /// <br> This helper method lets you use the actual damage desired, and apply your own difficulty scaling. </br>
+        /// </summary>
+        public static int TrueDamage(int damage)
 		{
 			damage /= 2;
 			if (Main.expertMode)
