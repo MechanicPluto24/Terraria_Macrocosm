@@ -33,13 +33,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			if (Projectile.velocity.X < 0f)
 			{
 				Projectile.spriteDirection = -1;
-				Projectile.rotation = (float)Math.Atan2(0f - Projectile.velocity.Y, 0f - Projectile.velocity.X) - 1.57f;
+				Projectile.rotation = (float)Math.Atan2(0f - Projectile.velocity.Y, 0f - Projectile.velocity.X) - MathHelper.PiOver2;
 			}
 			else
 			{
 				Projectile.spriteDirection = 1;
-				Projectile.rotation = (float)Math.Atan2(Projectile.velocity.Y, Projectile.velocity.X) + 1.57f;
-			}
+				Projectile.rotation = (float)Math.Atan2(Projectile.velocity.Y, Projectile.velocity.X) + MathHelper.PiOver2;
+            }
 
 			//for(int i = 0; i < 2; i++)
 			//{
