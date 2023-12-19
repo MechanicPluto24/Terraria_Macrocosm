@@ -30,7 +30,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 		public int SpawnPeriod => 60;
 
-		protected int defWidth;
+        public const int PortalTimerMax = (int)(4f * 60 + 1.5f * 60 + 24);
+
+        protected int defWidth;
 		protected int defHeight;
 
 		protected bool spawned;
@@ -44,7 +46,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			Projectile.hostile = true;
 			Projectile.friendly = false;
 			Projectile.tileCollide = false;
-			Projectile.timeLeft = CraterDemon.PortalTimerMax;
+			Projectile.timeLeft = PortalTimerMax;
 			Projectile.penetrate = -1;
 			Projectile.alpha = 255;
 		}
@@ -63,7 +65,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 			Projectile.rotation -= MathHelper.ToRadians(7.4f);
 
-			if (Projectile.timeLeft >= CraterDemon.PortalTimerMax - 90)
+			if (Projectile.timeLeft >= PortalTimerMax - 90)
 				AITimer -= 2.83333325f;
 			else if (Projectile.timeLeft <= 90)
 				AITimer += 2.83333325f;

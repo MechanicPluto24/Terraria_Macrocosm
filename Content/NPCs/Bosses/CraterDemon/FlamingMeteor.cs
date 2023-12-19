@@ -34,7 +34,10 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			Projectile.SetTrail<FlamingMeteorTrail>();
 		}
 
-		public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        private float flashTimer;
+        private float maxFlashTimer = 10;
+
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
 		{
 			target.AddBuff(BuffID.OnFire, 360, true);
 			target.AddBuff(BuffID.Burning, 90, true);
@@ -61,9 +64,11 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 				Projectile.frameCounter = 0;
 				Projectile.frame = ++Projectile.frame % Main.projFrames[Type]; // 6 frames @ 4 ticks/frame
 			}
-		}
 
-		private SpriteBatchState state;
+            flashTimer++;
+        }
+
+        private SpriteBatchState state;
 		public override bool PreDraw(ref Color lightColor)
 		{
 			Texture2D tex = TextureAssets.Projectile[Type].Value;
@@ -73,17 +78,27 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 			state.SaveState(Main.spriteBatch);
 			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(BlendState.AlphaBlend, state);
+			Main.spriteBatch.Begin(BlendState.Additive, state);
 
 			Projectile.GetTrail().Draw(Projectile.Size / 2f);
 
-			Main.spriteBatch.End();
+            if (flashTimer < maxFlashTimer)
+            {
+                Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Flare3").Value;
+                float progress = flashTimer / maxFlashTimer;
+                float scale = Projectile.scale * progress * 0.8f;
+                Vector2 position = Projectile.position + Projectile.Size / 2f;
+                float opacity = 1f;
+                Main.spriteBatch.Draw(flare, position - Main.screenPosition, null, new Color(236, 166, 56).WithOpacity(opacity), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
+            }
+
+            Main.spriteBatch.End();
 			Main.spriteBatch.Begin(state);
 
-			Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition,
+            Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition,
 				sourceRect, Color.White.WithOpacity(0.1f), Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
 
-			return false;
+            return false;
 		}
 
 		public override void ModifyDamageHitbox(ref Rectangle hitbox)

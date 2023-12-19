@@ -72,6 +72,9 @@ namespace Macrocosm.Content.Rockets.UI
 
 		public override void PostUpdateEverything()
 		{
+			if (Main.netMode == NetmodeID.Server)
+				return;
+
 			if (UserInterface.CurrentState is not null && UIRocketState is not null && UIRocketState.Rocket is not null)
 				UIRocketState.ExecuteRecursively(RecursiveUpdate);
 
