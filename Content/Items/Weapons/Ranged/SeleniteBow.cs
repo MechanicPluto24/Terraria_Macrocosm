@@ -35,10 +35,11 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
 			Item.noUseGraphic = true;
 			Item.ammo = AmmoID.Arrow;
-			Item.shoot = ModContent.ProjectileType<SeleniteBowHeld>();
+			Item.shoot = 10;
 		}
 
-		public override bool CanUseItem(Player player) => player.ownedProjectileCounts[Item.shoot] < 1;
+		public override bool CanUseItem(Player player) => player.ownedProjectileCounts[Item.shoot] < 1 && 
+			player.PickAmmo(Item, out _, out _, out _, out _, out int usedAmmoItemId, dontConsume: true) && Item.type != usedAmmoItemId;
 
 		public override bool CanConsumeAmmo(Item ammo, Player player) => player.ownedProjectileCounts[Item.shoot] == 1 || (player.itemTime == 0 && !player.AltFunction());
 		public override bool AltFunctionUse(Player player) => true;
