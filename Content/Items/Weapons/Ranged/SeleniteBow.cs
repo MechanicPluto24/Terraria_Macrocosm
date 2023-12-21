@@ -21,7 +21,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 		{
 			Item.DefaultToBow(18, 20, true);
 
-			Item.damage = 320;
+			Item.damage = 240;
 			Item.knockBack = 4;
 
 			Item.width = 32;
@@ -34,12 +34,11 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			Item.UseSound = null;
 
 			Item.noUseGraphic = true;
-			Item.ammo = AmmoID.Arrow;
-			Item.shoot = 10;
+			Item.useAmmo = AmmoID.Arrow;
+			Item.shoot = Macrocosm.ItemShoot_UsesAmmo;
 		}
 
-		public override bool CanUseItem(Player player) => player.ownedProjectileCounts[Item.shoot] < 1 && 
-			player.PickAmmo(Item, out _, out _, out _, out _, out int usedAmmoItemId, dontConsume: true) && Item.type != usedAmmoItemId;
+		public override bool CanUseItem(Player player) => player.ownedProjectileCounts[Item.shoot] < 1;
 
 		public override bool CanConsumeAmmo(Item ammo, Player player) => player.ownedProjectileCounts[Item.shoot] == 1 || (player.itemTime == 0 && !player.AltFunction());
 		public override bool AltFunctionUse(Player player) => true;

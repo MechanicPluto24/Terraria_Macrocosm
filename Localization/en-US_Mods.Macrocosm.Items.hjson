@@ -685,7 +685,7 @@ ChandriumWhip: {
 
 HandheldEngine: {
 	DisplayName: Handheld Engine
-	Tooltip: ""
+	Tooltip: Uses mana as coolant
 }
 
 HazardWall: {

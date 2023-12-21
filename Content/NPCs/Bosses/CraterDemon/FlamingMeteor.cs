@@ -30,12 +30,13 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			Projectile.tileCollide = false;
 			Projectile.timeLeft = 600;
 			Projectile.penetrate = -1;
+			Projectile.alpha = 255;
 
 			Projectile.SetTrail<FlamingMeteorTrail>();
 		}
 
         private float flashTimer;
-        private float maxFlashTimer = 10;
+        private float maxFlashTimer = 5;
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
 		{
@@ -43,8 +44,16 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			target.AddBuff(BuffID.Burning, 90, true);
 		}
 
+		private bool spawned;
+		private Vector2 spawnPosition;
 		public override void AI()
 		{
+			if (!spawned)
+			{
+				spawnPosition = Projectile.position;
+				spawned = true;
+            }
+
 			Projectile.velocity.Y += 0.2f;
 			if (Projectile.velocity.Y > 24f)
 				Projectile.velocity.Y = 24f;
@@ -52,9 +61,11 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			if (Projectile.velocity != Vector2.Zero)
 				Projectile.rotation = Projectile.velocity.ToRotation() - MathHelper.PiOver2;
 
-			for (int i = 0; i < 4; i++)
+			Lighting.AddLight(Projectile.Center, new Color(242, 142, 35).ToVector3());
+
+			for (int i = 0; i < 2; i++)
 			{
-				Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.Torch, -Projectile.velocity.X * 0.4f, -Projectile.velocity.Y * 0.4f, 127, new Color(255, 255, 255), Main.rand.NextFloat(1.2f, 1.8f));
+				Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.Torch, -Projectile.velocity.X * 0.2f, -Projectile.velocity.Y * 0.2f, 127, new Color(255, 255, 255), Main.rand.NextFloat(1.4f, 2.2f));
 				dust.noGravity = true;
 				dust.noLight = true;
 			}
@@ -65,6 +76,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 				Projectile.frame = ++Projectile.frame % Main.projFrames[Type]; // 6 frames @ 4 ticks/frame
 			}
 
+			Projectile.alpha -= 15;
             flashTimer++;
         }
 
@@ -80,23 +92,34 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.Additive, state);
 
-			Projectile.GetTrail().Draw(Projectile.Size / 2f);
 
             if (flashTimer < maxFlashTimer)
             {
-                Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Flare3").Value;
+                Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Flare2").Value;
                 float progress = flashTimer / maxFlashTimer;
-                float scale = Projectile.scale * progress * 0.8f;
-                Vector2 position = Projectile.position + Projectile.Size / 2f;
+                float scale = Projectile.scale * progress * 0.85f;
+                Vector2 position = spawnPosition + Projectile.Size / 2f;
                 float opacity = 1f;
-                Main.spriteBatch.Draw(flare, position - Main.screenPosition, null, new Color(236, 166, 56).WithOpacity(opacity), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(flare, position - Main.screenPosition, null, new Color(242, 142, 35).WithOpacity(opacity), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
+            }
+			else
+			{
+                Projectile.GetTrail().Draw(Projectile.Size / 2f);
             }
 
             Main.spriteBatch.End();
-			Main.spriteBatch.Begin(state);
+			Main.spriteBatch.Begin(BlendState.AlphaBlend, state);
 
-            Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition,
-				sourceRect, Color.White.WithOpacity(0.1f), Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
+			Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition, sourceRect, Color.White.WithOpacity(0.2f) * (1f - Projectile.alpha/255f), Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(BlendState.Additive, state);
+
+            Texture2D glow = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Circle7").Value;
+            Main.spriteBatch.Draw(glow, Projectile.position + Projectile.Size / 2f - Main.screenPosition, null, new Color(252, 152, 45).WithOpacity(1f), 0f, glow.Size() / 2f, 0.42f + Main.rand.NextFloat(-0.05f, 0.05f), SpriteEffects.None, 0f);
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(state);
 
             return false;
 		}

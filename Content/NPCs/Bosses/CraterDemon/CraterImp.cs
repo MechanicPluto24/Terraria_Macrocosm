@@ -64,9 +64,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		public override void SetDefaults()
 		{
 			NPC.width = NPC.height = 56;
-			NPC.lifeMax = 6000;
+			NPC.lifeMax = 3000;
 			NPC.defense = 60;
-			NPC.damage = 55;
+			NPC.damage = 40;
 			NPC.knockBackResist = 0f;
 			NPC.noGravity = true;
 			NPC.noTileCollide = true;
@@ -272,7 +272,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                                                                    5f ;
 
 							Vector2 shootVelocity = (player.Center - NPC.Center).SafeNormalize(default) * shootSpeed;
-							Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, shootVelocity, ModContent.ProjectileType<PhantasmalBolt>(), Utility.TrueDamage(Main.masterMode ? 195 : Main.expertMode ? 130 : 65), 1f, Main.myPlayer); 
+							Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, shootVelocity, ModContent.ProjectileType<PhantasmalBolt>(), Utility.TrueDamage(Main.masterMode ? 135 : Main.expertMode ? 90 : 45), 1f, Main.myPlayer); 
 						}
 					}
 
@@ -280,7 +280,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 				case AttackType.ChargeAtPlayer:
 
-					NPC.damage = 70;
+					NPC.damage = 50;
 
                     //Wait until mouth is open
                     if (AI_AttackProgress == 0)

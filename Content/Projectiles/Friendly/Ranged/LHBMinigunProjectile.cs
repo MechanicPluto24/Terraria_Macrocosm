@@ -91,14 +91,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 				if (Main.myPlayer == Projectile.owner)
 				{
-					Item usedItem = Player.UsedItem();
-					if (usedItem.type != ModContent.ItemType<LHBMinigun>())
+					Item currentItem = Player.CurrentItem();
+					if (currentItem.type != ModContent.ItemType<LHBMinigun>())
 						Projectile.Kill();
 
 					if (StillInUse && AI_Windup % fireFreq == 0)
 					{
 						Vector2 rotPoint = Utility.RotatingPoint(Projectile.Center, new Vector2(40, 8 * Projectile.spriteDirection), Projectile.rotation);
-						if (Player.PickAmmo(usedItem, out int projToShoot, out float speed, out int damage, out float knockback, out _))
+						if (Player.PickAmmo(currentItem, out int projToShoot, out float speed, out int damage, out float knockback, out _))
 							Projectile.NewProjectile(Projectile.GetSource_FromAI(), rotPoint, Vector2.Normalize(Projectile.velocity).RotatedByRandom(MathHelper.ToRadians(14)) * speed, projToShoot, damage, knockback, Projectile.owner);
 						else
 							Projectile.Kill();

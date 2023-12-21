@@ -26,8 +26,8 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			Item.knockBack = 4.5f;
 			Item.value = Item.sellPrice(silver: 50);
 			Item.rare = ItemRarityID.Orange;
-			Item.shoot = ProjectileID.PurificationPowder;
-			Item.autoReuse = true;
+            Item.shoot = Macrocosm.ItemShoot_UsesAmmo;
+            Item.autoReuse = true;
 			Item.shootSpeed = 20f;
 			Item.useAmmo = AmmoID.Arrow;
 			Item.UseSound = SoundID.Item5;

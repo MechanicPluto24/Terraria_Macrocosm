@@ -26,7 +26,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 		public override void SetDefaultsHeldProjectile()
 		{
 			Item.DefaultToRangedWeapon(10, AmmoID.Bullet, 20, 20, true);
-			Item.damage = 150;
+			Item.damage = 280;
 
 			Item.width = 34;
 			Item.height = 20;
@@ -51,13 +51,15 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 		{
 			if (player.AltFunction())
 			{
-				Item.useTime = 6;
+				Item.damage = 240;
+                Item.useTime = 6;
 				Item.useAnimation = 36;
 				altUseCooldown = 55;
 			}
 			else
 			{
-				Item.useTime = 20;
+                Item.damage = 280;
+                Item.useTime = 20;
 				Item.useAnimation = 20;
 			}
 

@@ -27,7 +27,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			Item.rare = ItemRarityID.White;
 			Item.UseSound = SoundID.Item5;
 			Item.autoReuse = true;
-			Item.shoot = ProjectileID.PurificationPowder;
+			Item.shoot = Macrocosm.ItemShoot_UsesAmmo;
 			Item.shootSpeed = 6.6f;
 			Item.useAmmo = AmmoID.Arrow;
 		}
