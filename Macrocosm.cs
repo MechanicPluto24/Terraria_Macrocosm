@@ -25,6 +25,9 @@ namespace Macrocosm
 		public const string SFXAssetsPath = "Macrocosm/Assets/Sounds/SFX/";
 
 		public const string EmptyTexPath = TextureAssetsPath + "Empty";
+
+		public const int ItemShoot_UsesAmmo = 10;
+
 		public static Asset<Texture2D> EmptyTexAsset => ModContent.Request<Texture2D>(EmptyTexPath);
 		public static Texture2D EmptyTex => EmptyTexAsset.Value;
 

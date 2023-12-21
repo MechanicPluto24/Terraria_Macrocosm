@@ -186,7 +186,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			// AttackState.SummonMeteors
 			new AttackInfo(){
 				initialProgress = null,
-                initialTimer = (CD) => (int)(CD.GetDifficultyInfo(DifficultyInfo.MeteorShootCount) * AIAttack_SummonMeteors_ShootPeriod * CD.GetDifficultyScaling(DifficultyScale.AttackDurationScaling))
+                initialTimer = (CD) => (int)(CD.GetDifficultyInfo(DifficultyInfo.MeteorShootCount) * CD.GetDifficultyInfo(DifficultyInfo.MeteorShootPeriod) * CD.GetDifficultyScaling(DifficultyScale.AttackDurationScaling))
 			},
 			// AttackState.SummonCraterImps
 			new AttackInfo(){
@@ -196,7 +196,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			// AttackState.SummonPhantasmals
 			new AttackInfo(){
 				initialProgress = null,
-				initialTimer = (CD) => (int)(CD.GetDifficultyInfo(DifficultyInfo.PhantasmalImpMaxCount) * AIAttack_SummonPhantasmals_ShootPeriod * CD.GetDifficultyScaling(DifficultyScale.AttackDurationScaling))
+				initialTimer = (CD) => (int)(CD.GetDifficultyInfo(DifficultyInfo.PhantasmalImpMaxCount) * CD.GetDifficultyInfo(DifficultyInfo.PhantasmalImpShootPeriod) * CD.GetDifficultyScaling(DifficultyScale.AttackDurationScaling))
             },
             // AttackState.SummonPhantasmalPortals
 			new AttackInfo(){
@@ -223,10 +223,16 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		{
 			Phase2AnimDefenseBoost,       // Extra defense during phase2 animation sequence
 
-			MeteorShootCount,             // Number of meteors to spawn at the same time 
-			CraterImpMaxCount,            // Max number of Crater Imp minions that can exist
-			PhantasmalImpMaxCount,        // Max number of phantasmal skulls spawned in a sequence
-			PhantasmalPortalCount,        // Number of phantasmal portals 
+			MeteorShootCount,             // Number of flaming meteors to spawn at the same time 
+			MeteorShootPeriod,            // How frequently flaming meteors are being shot
+
+            CraterImpMaxCount,            // Max number of Crater Imp minions that can exist
+			CraterImpSpawnPeriod,         // How often crater imps are spawned
+
+            PhantasmalImpMaxCount,        // Max number of phantasmal skulls spawned in a sequence
+            PhantasmalImpShootPeriod,     // How frequently phantasmal skulls are being shot 
+
+            PhantasmalPortalCount,        // Number of phantasmal portals spawned 
 
 			ChargeAttackCountMin,         // Min number of consecutive charge attacks 
 			ChargeAttackCountMax,         // Max number of consecutive charge attacks 
@@ -252,8 +258,14 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			 /*Phase2AnimDefenseBoost      */ { 40, 40, 50, 50, 50, 50, 60, 60 },
                   
 			 /*MeteorShootCount            */ { 5, 5, 5, 5, 5, 5, 5, 5 },                           
-			 /*CraterImpMaxCount           */ { 3, 3, 4, 4, 4, 4, 5, 5 },      
+			 /*MeteorShootPeriod           */ { 25, 25, 25, 25, 25, 25, 25, 25 },  
+			 
+			 /*CraterImpMaxCount           */ { 3, 3, 4, 4, 4, 4, 5, 5 },   
+			 /*CraterImpSpawnPeriod        */ { 75, 75, 75, 75, 75, 75, 75, 75 },   
+			 
 			 /*PhantasmalImpMaxCount       */ { 5, 5, 6, 6, 8, 8, 9, 9 },
+			 /*PhantasmalImpShootPeriod    */ { 25, 25, 25, 25, 25, 25, 25, 25 },
+
 			 /*PhantasmalPortalCount       */ { 1, 2, 1, 2, 2, 3, 2, 3 },
 
              /*PortalChargeAttackCountMin  */ { 3, 3, 3, 3, 3, 3, 3, 3 },                         
@@ -326,7 +338,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		private AttackState oldAttack;
 		private Vector2? movementTarget;
 
-		bool portalCharge;
+        private bool portalCharge;
         private int chargeAttackCount;
         private int portalAttackCount;
         private int maxChargeAttackCount;
@@ -338,31 +350,27 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 		private int phantasmalRepeatCount;
 
-		public const float ZAxisRotationThreshold = 25f;
+		private const int FadeIn_InitialTimer = 320;
+		private const int FadeIn_FadeInTime = 280;
+		private const int FadeIn_LaughTime = 80;
+		private const int FadeIn_LaughTimeEnd = 0;
 
-		public int FadeIn_InitialTimer = 320;
-		public int FadeIn_FadeInTime = 280;
-		public int FadeIn_LaughTime = 80;
-		public int FadeIn_LaughTimeEnd = 0;
+        private const int FadeAway_InitialTimer = 160;
+        private const int FadeAway_FadeOutTime = 130;
 
-        public int FadeAway_InitialTimer = 160;
-        public int FadeAway_FadeOutTime = 130;
+        private readonly float AIAttack_Charge_EndSpeed = 4.5f;
+        private readonly int AIAttack_Charge_CooldownTime = 60;
 
-		public const int Phase2Transition_InitialTimer = 150;
+        private const float ZAxisRotationThreshold = 25f;
 
-        private const int AIAttack_SummonMeteors_ShootPeriod = 14;
-        private const int AIAttack_SummonCraterImps_SpawnPeriod = 75;
-        private const int AIAttack_SummonPhantasmals_ShootPeriod = 25;
+        private const int Phase2Transition_InitialTimer = 150;
 
-        private const float AIAttack_Charge_EndSpeed = 3f;
-        private const int AIAttack_Charge_CooldownTime = 60;
-
-        public const int Animation_LookLeft_JawClosed = 0;
-		public const int Animation_LookLeft_JawOpen = 1;
-		public const int Animation_LookFront_JawClosed = 2;
-		public const int Animation_LookFront_JawOpen = 3;
-		public const int Animation_LookRight_JawClosed = 4;
-		public const int Animation_LookRight_JawOpen = 5;
+        private const int Animation_LookLeft_JawClosed = 0;
+		private const int Animation_LookLeft_JawOpen = 1;
+		private const int Animation_LookFront_JawClosed = 2;
+		private const int Animation_LookFront_JawOpen = 3;
+		private const int Animation_LookRight_JawClosed = 4;
+        private const int Animation_LookRight_JawOpen = 5;
 
         public override void SetStaticDefaults()
 		{
@@ -617,23 +625,23 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			if (AI_Attack == AttackState.SummonMeteors)
 			{
 				int maxTimer = GetInitialTimer(AttackState.SummonMeteors);
-				float progress = MathHelper.Clamp((float)(AI_Timer - 320) / (maxTimer - 320), 0f, 1f);
-				float scale = NPC.scale * 0.5f * (progress < 0.5f ? progress : 1f - progress);
+                float progress = MathHelper.Clamp((float)(AI_Timer - maxTimer * 0.5f) / (maxTimer - maxTimer * 0.5f), 0f, 1f);
+                float scale = NPC.scale * 0.5f * (progress < 0.5f ? progress : 1f - progress);
 				spriteBatch.Draw(flare, NPC.Center - screenPos + GetEyeOffset(), null, new Color(255, 141, 36), NPC.rotation, flare.Size() / 2, scale, SpriteEffects.None, 0f);
 			}
 
             if (AI_Attack == AttackState.SummonPhantasmals)
             {
                 int maxTimer = GetInitialTimer(AttackState.SummonPhantasmals);
-                float progress = MathHelper.Clamp((float)(AI_Timer - 320) / (maxTimer - 320), 0f, 1f);
+                float progress = MathHelper.Clamp((float)(AI_Timer - maxTimer * 0.9f) / (maxTimer - maxTimer * 0.9f), 0f, 1f);
                 float scale = NPC.scale * 0.5f * (progress < 0.5f ? progress : 1f - progress);
                 spriteBatch.Draw(flare, NPC.Center - screenPos + GetEyeOffset(), null, new Color(157, 255, 156), NPC.rotation, flare.Size() / 2, scale, SpriteEffects.None, 0f);
             }
 
             if (AI_Attack == AttackState.SummonPhantasmalPortals)
             {
-                int maxTimer = GetInitialTimer(AttackState.SummonPhantasmals);
-                float progress = MathHelper.Clamp((float)(AI_Timer - 320) / (maxTimer - 320), 0f, 1f);
+                int maxTimer = GetInitialTimer(AttackState.SummonPhantasmalPortals);
+                float progress = MathHelper.Clamp((float)(AI_Timer - maxTimer * 0.7f) / (maxTimer - maxTimer * 0.7f), 0f, 1f);
                 float scale = NPC.scale * 0.5f * (progress < 0.5f ? progress : 1f - progress);
                 spriteBatch.Draw(flare, NPC.Center - screenPos + GetEyeOffset(), null, new Color(157, 255, 156), NPC.rotation, flare.Size() / 2, scale, SpriteEffects.None, 0f);
             }
@@ -791,7 +799,20 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			//That player is also dead/not connected?  Begin the "fade away" animation and despawn
 			Player player = NPC.target >= 0 && NPC.target < Main.maxPlayers ? Main.player[NPC.target] : null;
 
-			if (!ignoreRetargetPlayer && (NPC.target < 0 || NPC.target >= Main.maxPlayers || player.dead || !player.active))
+            int phase2Life = (int)(NPC.lifeMax * (Main.getGoodWorld ? 0.75f :
+                                                Main.masterMode ? 0.6f :
+                                                Main.expertMode ? 0.5f :
+                                                                  0.4f));
+
+            if (!phase2 && AI_Attack != AttackState.Phase2Transition && NPC.scale >= 1f && NPC.life < phase2Life)
+            {
+                AI_Attack = AttackState.Phase2Transition;
+                AI_Timer = Phase2Transition_InitialTimer;
+                AI_AttackProgress = 0;
+                targetZAxisRotation = 0f;
+            }
+
+            if (!ignoreRetargetPlayer && (NPC.target < 0 || NPC.target >= Main.maxPlayers || player.dead || !player.active))
 			{
 				NPC.TargetClosest();
 
@@ -820,19 +841,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 					NPC.netUpdate = true;
 				}
 			}
-
-            int phase2Life = (int)(NPC.lifeMax * (Main.getGoodWorld ? 0.75f  :
-													Main.masterMode ? 0.6f   :
-													Main.expertMode ? 0.5f   :
-																	  0.4f)) ;
-
-            if (!phase2 && AI_Attack != AttackState.Phase2Transition && NPC.scale >= 1f && NPC.life < phase2Life)
-            {
-                AI_Attack = AttackState.Phase2Transition;
-                AI_Timer = Phase2Transition_InitialTimer;
-                AI_AttackProgress = 0;
-                targetZAxisRotation = 0f;
-            }
 
             NPC.defense = NPC.defDefense;
 			ScaleDamage();
@@ -1144,7 +1152,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		{
             FloatTowardsTarget(player);
 
-            if (AI_Timer % (int)(AIAttack_SummonMeteors_ShootPeriod * GetDifficultyScaling(DifficultyScale.AttackDurationScaling)) == 0)
+            if (AI_Timer % (int)(GetDifficultyInfo(DifficultyInfo.MeteorShootPeriod) * GetDifficultyScaling(DifficultyScale.AttackDurationScaling)) == 0)
 			{ 
                 Vector2 orig = player.Center + player.velocity;
 
@@ -1154,9 +1162,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 				{
 					for (int i = 0; i < count; i++)
 					{
-						Vector2 spawn = orig + new Vector2(Main.rand.NextFloat(player.direction * 0.5f, player.direction * 1.5f) * 60 * 16, Main.rand.NextFloat(-3f, -1f) * 60 * 16);
+						Vector2 spawn = orig + new Vector2(Main.rand.NextFloat(player.direction * 0.5f, player.direction * 1.5f) * 80 * 16, Main.rand.NextFloat(-3f, -1f) * 60 * 16);
 						int damage = Utility.TrueDamage(Main.masterMode ? 240 : Main.expertMode ? 120 : 60);
-                        Projectile.NewProjectile(NPC.GetSource_FromAI(), spawn, Vector2.UnitY.RotatedByRandom(MathHelper.PiOver2) * Main.rand.NextFloat(4f, 8f), ModContent.ProjectileType<FlamingMeteor>(), damage, 0f, Main.myPlayer);
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), spawn, Vector2.UnitY.RotatedByRandom(MathHelper.PiOver2) * Main.rand.NextFloat(6f, 10f), ModContent.ProjectileType<FlamingMeteor>(), damage, 0f, Main.myPlayer);
 					}
 				}
 
@@ -1176,7 +1184,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 			if (AI_AttackProgress < GetDifficultyInfo(DifficultyInfo.CraterImpMaxCount))
 			{
-				if (AI_Timer % (int)(AIAttack_SummonCraterImps_SpawnPeriod * GetDifficultyScaling(DifficultyScale.AttackDurationScaling)) == 0)
+				if (AI_Timer % (int)(GetDifficultyInfo(DifficultyInfo.CraterImpSpawnPeriod) * GetDifficultyScaling(DifficultyScale.AttackDurationScaling)) == 0)
 				{
 					if (Main.netMode != NetmodeID.MultiplayerClient)
 					{
@@ -1207,7 +1215,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
             if (AI_AttackProgress < GetDifficultyInfo(DifficultyInfo.PhantasmalImpMaxCount))
 			{
-				if (AI_Timer % (int)(AIAttack_SummonPhantasmals_ShootPeriod * GetDifficultyScaling(DifficultyScale.AttackDurationScaling)) == 0)
+				if (AI_Timer % (int)(GetDifficultyInfo(DifficultyInfo.PhantasmalImpShootPeriod) * GetDifficultyScaling(DifficultyScale.AttackDurationScaling)) == 0)
 				{
 					if (Main.netMode != NetmodeID.MultiplayerClient)
 					{

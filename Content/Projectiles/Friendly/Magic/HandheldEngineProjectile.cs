@@ -43,6 +43,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
 		public override void SetProjectileDefaults()
 		{
+			Projectile.usesLocalNPCImmunity = true;
+			Projectile.localNPCHitCooldown = 10;
 		}
 
 		public override bool? CanDamage() => true;

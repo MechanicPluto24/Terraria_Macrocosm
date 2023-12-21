@@ -31,7 +31,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			Projectile.alpha = 0;
 
 			Projectile.SetTrail<ImbriumMeteorTrail>();
-		}
+        }
 
 		public override void AI()
 		{

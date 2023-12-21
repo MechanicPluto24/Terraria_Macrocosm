@@ -3,9 +3,11 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Graphics.PackedVector;
 using System;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -20,8 +22,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
         public override void SetDefaults()
         {
-            Projectile.width = 8;
-            Projectile.height = 8;
+            Projectile.width = 16;
+            Projectile.height = 16;
             Projectile.hostile = true;
             Projectile.alpha = 255;
             Projectile.extraUpdates = 3;
@@ -32,6 +34,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             CooldownSlot = 1;
         }
 
+        int defDamage;
         int spawnTimeLeft = 480;
         bool spawned = false;
         public override void AI()
@@ -40,6 +43,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             {
                 // TODO: sound
                 spawned = true;
+                defDamage = Projectile.damage;
             }
 
             if (Projectile.velocity.X < 0f)
@@ -55,9 +59,14 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 
             if (Projectile.timeLeft > spawnTimeLeft * 0.2f)
+            {
                 Projectile.alpha -= (byte)(Projectile.velocity.Length() * 0.7f);
+            }
             else
+            {
                 Projectile.alpha += (byte)(Projectile.velocity.Length() * 0.5f);
+                Projectile.damage -= (int)(defDamage * 0.1f);
+            }
 
             Projectile.alpha = (byte)MathHelper.Clamp(Projectile.alpha, 0, 255);
 
@@ -67,13 +76,24 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 if (++Projectile.frame >= 5)
                     Projectile.frame = 0; 
             }
+            return;        
+        }
 
-            if(Main.rand.NextFloat(0.1f, 1f) > Projectile.alpha / 255f)
+        public override bool PreDraw(ref Color lightColor)
+        {
+            float count = 18 * (1f - Projectile.alpha / 255f); 
+            for (int n = 0; n < count; n++)
             {
-                Dust dust = Dust.NewDustPerfect(Projectile.Center - new Vector2(25,0).RotatedBy(Projectile.velocity.ToRotation()), ModContent.DustType<XaocGreenDust>(), Projectile.velocity , Alpha: 100, Scale: 0.7f);
-                dust.noLight = true;
-                dust.noGravity = true;
-            }         
+                float factor = (1f - Projectile.alpha / 255f);
+                Color color = Color.White * (0.7f - n / count) * factor;
+                Texture2D texture = TextureAssets.Projectile[Type].Value;
+                int frameY = (Projectile.frame + n) % 5;
+                Rectangle frame = texture.Frame(verticalFrames: Main.projFrames[Type], frameY: frameY);
+                Vector2 trailPosition = Projectile.position + frame.Size()/2f - Projectile.velocity.SafeNormalize(default) * n * 5f;
+                Main.spriteBatch.Draw(texture, trailPosition - Main.screenPosition, frame, color, Projectile.rotation, frame.Size()/2f, Projectile.scale, SpriteEffects.None, 0);
+            }
+
+            return false;
         }
 
         public override Color? GetAlpha(Color lightColor) => Color.White.WithOpacity(0.5f) * (1f - Projectile.alpha / 255f);

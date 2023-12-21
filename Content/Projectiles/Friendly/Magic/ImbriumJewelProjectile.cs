@@ -29,7 +29,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			Projectile.ignoreWater = true;
 			Projectile.light = 1f;
 			Projectile.penetrate = -1;
-		}
+
+            Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = 15;
+        }
 
 		public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough, ref Vector2 hitboxCenterFrac)
 		{

@@ -29,7 +29,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
 		public override void SetDefaultsHeldProjectile()
 		{
-			Item.damage = 80;
+			Item.damage = 110;
 			Item.DamageType = DamageClass.Ranged;
 			Item.width = 52;
 			Item.height = 16;
@@ -42,8 +42,8 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			Item.rare = ModContent.RarityType<MoonRarityT2>();
 			Item.UseSound = SoundID.Item38;
 			Item.autoReuse = true;
-			Item.shoot = ProjectileID.PurificationPowder;
-			Item.shootSpeed = 20f;
+            Item.shoot = Macrocosm.ItemShoot_UsesAmmo;
+            Item.shootSpeed = 20f;
 			Item.useAmmo = AmmoID.Bullet;
 		}
 
@@ -88,7 +88,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 		{
 			if (player.AltFunction())
 			{
-				damage = (int)(damage * 1.5f);
+				damage = (int)(damage * 2f);
 				velocity *= 0.5f;
 				position.Y -= 4;
 			}

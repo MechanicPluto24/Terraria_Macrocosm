@@ -36,23 +36,26 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 		}
 
-		SlotId playingSound = SlotId.Invalid;
 		public override void ProjectileAI()
 		{
 			if (Player.whoAmI == Main.myPlayer)
 			{
-				int damage = Player.GetWeaponDamage(Player.inventory[Player.selectedItem]);
-				float knockback = Player.inventory[Player.selectedItem].knockBack;
+                Item currentItem = Player.CurrentItem();
+
+				if (currentItem.type != ModContent.ItemType<SeleniteBow>())
+				{
+					Projectile.Kill();
+					return;
+				}
+
+                int damage = Player.GetWeaponDamage(currentItem);
+				float knockback = currentItem.knockBack;
 				float speed;
 				int usedAmmoItemId;
 
-				Item usedItem = Player.UsedItem();
-				if (usedItem.type != ModContent.ItemType<SeleniteBow>())
-					Projectile.Kill();
-
 				if (Main.mouseRight)
 				{
-					AI_Charge++;
+					AI_Charge += 1f * Player.GetAttackSpeed(DamageClass.Ranged); 
 
 					if (AI_Charge == MaxCharge)
 					{
@@ -73,22 +76,25 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 				{
 					if (AI_Charge > MinCharge)
 					{
-						if (Player.PickAmmo(usedItem, out _, out speed, out damage, out knockback, out usedAmmoItemId))
+						if (Player.PickAmmo(currentItem, out _, out speed, out damage, out knockback, out usedAmmoItemId))
 						{
 							float strenght = MathHelper.Clamp(AI_Charge / MaxCharge, 0f, 1f);
-							damage = (int)(damage * 2 * strenght);
-							Projectile.NewProjectile(new EntitySource_ItemUse_WithAmmo(Player, usedItem, usedAmmoItemId), Projectile.Center, Vector2.Normalize(Projectile.velocity) * speed * 0.466f, ModContent.ProjectileType<SeleniteBeam>(), damage, knockback, Projectile.owner, ai0: strenght);
+							damage += (int)(damage * 1.4f * strenght);
+							speed *= 0.466f;
+                            knockback *= 2f;
+
+                            Projectile.NewProjectile(new EntitySource_ItemUse_WithAmmo(Player, currentItem, usedAmmoItemId), Projectile.Center, Vector2.Normalize(Projectile.velocity) * speed, ModContent.ProjectileType<SeleniteBeam>(), damage, knockback, Projectile.owner, ai0: strenght);
 							SoundEngine.PlaySound(SoundID.Item72 with { Pitch = -0.5f, Volume = 0.4f });
 							AI_Charge = 0;
 						}
 					}
-					else if (AI_Timer % usedItem.useTime == 0)
+					else if (AI_Timer % currentItem.useTime == 0)
 					{
-						if (Player.PickAmmo(usedItem, out int projToShoot, out speed, out damage, out knockback, out usedAmmoItemId))
+						if (Player.PickAmmo(currentItem, out int projToShoot, out speed, out damage, out knockback, out usedAmmoItemId))
 						{
-                            SoundEngine.PlaySound(SoundID.Item5, Projectile.position);
-							Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Normalize(Projectile.velocity) * speed, projToShoot, damage, knockback, Projectile.owner);
-							AI_Timer = 0;
+                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Normalize(Projectile.velocity) * speed, projToShoot, damage, knockback, Projectile.owner);
+							AI_Timer = 0;                        
+							SoundEngine.PlaySound(SoundID.Item5, Projectile.position);
 						}
                         else
                         {
@@ -96,7 +102,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                         }
                     }               
                 }
-
 				AI_Timer++;
 			}
 		}
