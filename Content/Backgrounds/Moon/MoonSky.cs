@@ -219,18 +219,28 @@ namespace Macrocosm.Content.Backgrounds.Moon
 
 		public override Color OnTileColor(Color inColor)
 		{
-			Color color = inColor.ToGrayscale();
+            Color darkColor = new Color(35, 35, 35);
+            Color earthshineBlue = Color.Lerp(new Color(39, 87, 155), darkColor, 0.6f);
 
-			Color darkColor = Color.Black;
-			if (!Main.dayTime)
-			{
-				float timeFactor = (float)(Math.Abs(MacrocosmSubworld.CurrentNightLength - Main.time * 2) / MacrocosmSubworld.CurrentNightLength);
-				float lerpFactor = 1f - timeFactor;
-				darkColor = Color.Lerp(Color.Black, new Color(39, 87, 155), lerpFactor);
-			}
-
-			return Color.Lerp(color, darkColor, 0.2f + Intensity * 0.1f);
-		}
+            if (Main.dayTime)
+            {
+				if (Main.time < MacrocosmSubworld.CurrentDayLength * 0.1)
+					return Color.Lerp(darkColor, Color.White, (float)(Main.time / (MacrocosmSubworld.CurrentDayLength * 0.1)));
+				else if (Main.time > MacrocosmSubworld.CurrentDayLength * 0.9)
+					return Color.Lerp(darkColor, Color.White, (float)((MacrocosmSubworld.CurrentDayLength - Main.time) / (MacrocosmSubworld.CurrentDayLength - MacrocosmSubworld.CurrentDayLength * 0.9)));
+				else
+					return Color.White;
+            }
+            else
+            {
+                if (Main.time < MacrocosmSubworld.CurrentNightLength * 0.2)
+                    return Color.Lerp(darkColor, earthshineBlue, (float)(Main.time / (MacrocosmSubworld.CurrentNightLength * 0.2)));
+                else if (Main.time > MacrocosmSubworld.CurrentNightLength * 0.8)
+                    return Color.Lerp(darkColor, earthshineBlue, (float)((MacrocosmSubworld.CurrentNightLength - Main.time) / (MacrocosmSubworld.CurrentNightLength - MacrocosmSubworld.CurrentNightLength * 0.8)));
+                else
+                    return earthshineBlue;
+            }
+        }
 
 		public override float GetCloudAlpha() => 0f;
 

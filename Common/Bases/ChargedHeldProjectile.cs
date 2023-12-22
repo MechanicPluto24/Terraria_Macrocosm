@@ -1,3 +1,5 @@
+using Macrocosm.Common.Utils;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -28,16 +30,25 @@ namespace Macrocosm.Common.Bases
 			SetProjectileDefaults();
 		}
 
-		public override bool? CanDamage() => false;
+        protected bool spawned;
+        protected int itemUseTime;
 
 		protected Player Player => Main.player[Projectile.owner];
 		protected virtual bool StillInUse => Player.channel && !Player.noItems && !Player.CCed;
 
 		public virtual float CircularHoldoutOffset { get; set; } = 1f;
-		public virtual void ProjectileAI() { }
 
-		public override void AI()
+		public virtual bool ShouldUpdateAimRotation => true;
+		public virtual Player.CompositeArmStretchAmount? CompositeArmStretchAmount => null;
+
+        public override bool? CanDamage() => false;
+        public virtual void ProjectileAI() { }
+		public virtual void ProjectileOnSpawn() { }
+
+        public override void AI()
 		{
+			AI_OnSpawn();
+			UpdateItemTime();
 			Aim();
 			PlayerVisuals();
 
@@ -46,6 +57,22 @@ namespace Macrocosm.Common.Bases
 			if (!StillInUse)
 				Projectile.Kill();
 		}
+
+		private void AI_OnSpawn()
+		{
+            if (!spawned)
+            {
+				ProjectileOnSpawn();
+                itemUseTime = Player.CurrentItem().useTime;
+                spawned = true;
+            }
+        }
+
+		private void UpdateItemTime()
+		{
+            if (itemUseTime > 0)
+                itemUseTime--;
+        }
 
 		protected virtual void PlayerVisuals()
 		{
@@ -63,9 +90,14 @@ namespace Macrocosm.Common.Bases
 			//OwnerPlayer.itemTime = 2;
 			//OwnerPlayer.itemAnimation = 3;
 
-			Player.itemRotation = (Projectile.velocity * Projectile.direction).ToRotation();
+			float armRotation = (Projectile.velocity * Projectile.direction).ToRotation();
 
-			Projectile.netUpdate = true;
+			if (CompositeArmStretchAmount.HasValue)
+				Player.SetCompositeArmFront(true, CompositeArmStretchAmount.Value, armRotation);
+			else
+				Player.itemRotation = armRotation;
+
+            Projectile.netUpdate = true;
 		}
 
 		protected virtual void Aim()
@@ -83,7 +115,7 @@ namespace Macrocosm.Common.Bases
 			if ((aim != Projectile.velocity || Projectile.velocity != Projectile.oldVelocity) && Main.netMode != NetmodeID.MultiplayerClient)
 				Projectile.netUpdate = true;
 
-			if (StillInUse)
+			if (StillInUse && ShouldUpdateAimRotation)
 				Projectile.velocity = aim;
 		}
 	}

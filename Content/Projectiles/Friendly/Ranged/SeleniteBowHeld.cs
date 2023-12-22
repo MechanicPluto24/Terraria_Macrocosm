@@ -25,9 +25,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 		public override float CircularHoldoutOffset => 8f;
 
-		protected override bool StillInUse => base.StillInUse || Main.mouseRight;
+		protected override bool StillInUse => base.StillInUse || Main.mouseRight || itemUseTime > 0;
 
-		public override void SetProjectileStaticDefaults()
+		public override bool ShouldUpdateAimRotation => true;
+
+        public override void SetProjectileStaticDefaults()
 		{
 		}
 
@@ -41,12 +43,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			if (Player.whoAmI == Main.myPlayer)
 			{
                 Item currentItem = Player.CurrentItem();
-
-				if (currentItem.type != ModContent.ItemType<SeleniteBow>())
-				{
-					Projectile.Kill();
-					return;
-				}
 
                 int damage = Player.GetWeaponDamage(currentItem);
 				float knockback = currentItem.knockBack;
@@ -96,7 +92,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 							AI_Timer = 0;                        
 							SoundEngine.PlaySound(SoundID.Item5, Projectile.position);
 						}
-                        else
+                        else if (itemUseTime <= 0)
                         {
                             Projectile.Kill();
                         }

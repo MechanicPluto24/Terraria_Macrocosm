@@ -64,8 +64,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		public override void SetDefaults()
 		{
 			NPC.width = NPC.height = 56;
-			NPC.lifeMax = 3000;
-			NPC.defense = 60;
+			NPC.lifeMax = 2500;
+			NPC.defense = 45;
 			NPC.damage = 40;
 			NPC.knockBackResist = 0f;
 			NPC.noGravity = true;
@@ -93,7 +93,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
         public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
         {
-			NPC.damage = (int)(NPC.damage * 0.75f * bossAdjustment);
+			NPC.damage = (int)(NPC.damage * 0.6f * bossAdjustment);
         }
 
         public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
@@ -299,7 +299,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 						}
 						else
 						{
-							Terraria.Audio.SoundEngine.PlaySound(SoundID.ForceRoar with { Pitch = 1.1f, Volume = 0.5f }, NPC.Center);
+							//Terraria.Audio.SoundEngine.PlaySound(SoundID.ForceRoar with { Pitch = 1.1f, Volume = 0.5f }, NPC.Center);
 
 							Vector2 dir = NPC.DirectionTo(player.Center);
 							NPC.rotation = dir.ToRotation();
