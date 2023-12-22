@@ -108,18 +108,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             }
 
             Main.spriteBatch.End();
-			Main.spriteBatch.Begin(BlendState.AlphaBlend, state);
-
-			Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition, sourceRect, Color.White.WithOpacity(0.2f) * (1f - Projectile.alpha/255f), Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
-
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(BlendState.Additive, state);
-
-            Texture2D glow = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Circle7").Value;
-            Main.spriteBatch.Draw(glow, Projectile.position + Projectile.Size / 2f - Main.screenPosition, null, new Color(252, 152, 45).WithOpacity(1f), 0f, glow.Size() / 2f, 0.42f + Main.rand.NextFloat(-0.05f, 0.05f), SpriteEffects.None, 0f);
-
-            Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);
+
+            Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition, sourceRect, Color.White.WithOpacity(0.2f) * (1f - Projectile.alpha / 255f), Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
 
             return false;
 		}

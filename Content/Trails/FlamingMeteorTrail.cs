@@ -10,7 +10,7 @@ namespace Macrocosm.Content.Trails
 {
 	public class FlamingMeteorTrail : VertexTrail
 	{
-		private static MiscShaderData shader = new MiscShaderData(Main.VertexPixelShaderRef, "MagicMissile")
+		private static readonly MiscShaderData shader = new MiscShaderData(Main.VertexPixelShaderRef, "MagicMissile")
                             .UseProjectionMatrix(doUse: true)
                             .UseImage0(ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "FadeOutTrail"))
                             .UseImage1(ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "RocketExhaustTrail1"))

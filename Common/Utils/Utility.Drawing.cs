@@ -146,7 +146,27 @@ namespace Macrocosm.Common.Utils
 			Lighting.AddLight((int)(position.X / 16f), (int)(position.Y / 16f), colorR / brightnessDivider, colorG / brightnessDivider, colorB / brightnessDivider);
 		}
 
-		public static Vector2 DrawString(SpriteBatch spriteBatch, DynamicSpriteFont font, string text, Vector2 position, Color baseColor, float rotation, Vector2 origin, Vector2 baseScale, float maxWidth = -1f, float spread = 2f)
+        // TODO: - Add variation based on current subworld's day/night lenghts 
+        //		 - Remove magic numbers lol 
+        /// <summary> Used for linear brightness scaling along an entire day/night cycle  </summary>
+        public static float GetProgressNoonToMidnight(float minBrightness, float maxBrightness)
+        {
+            float brightness;
+            double totalTime = Main.dayTime ? Main.time : Main.dayLength + Main.time;
+
+            float diff = maxBrightness - minBrightness;
+
+            if (totalTime <= 27000)
+                brightness = minBrightness + maxBrightness * (diff * 0.4f + diff * 0.6f * ((float)totalTime / 27000));
+            else if (totalTime >= 70200)
+                brightness = diff * 0.4f * ((float)(totalTime - 70200) / 16200);
+            else
+                brightness = maxBrightness - (float)(totalTime - 27000) / 43200;
+
+            return brightness;
+        }
+
+        public static Vector2 DrawString(SpriteBatch spriteBatch, DynamicSpriteFont font, string text, Vector2 position, Color baseColor, float rotation, Vector2 origin, Vector2 baseScale, float maxWidth = -1f, float spread = 2f)
 		{
 			TextSnippet[] snippets = ChatManager.ParseMessage(text, baseColor).ToArray();
 			ChatManager.ConvertNormalSnippets(snippets);

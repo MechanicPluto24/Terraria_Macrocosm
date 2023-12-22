@@ -11,12 +11,11 @@ namespace Macrocosm.Common.Utils
 		public static int GetFrameHeight(this NPC npc) => TextureAssets.Npc[npc.type].Height() / Main.npcFrameCount[npc.type];
 
 
-		/// <summary>  Scales this <paramref name="npc"/>'s health by the scale <paramref name="factor"/> provided. </summary>
+		/// <summary> Scales this <paramref name="npc"/>'s health by the scale <paramref name="factor"/> provided. </summary>
 		public static void ScaleHealthBy(this NPC npc, float factor, float balance, float bossAdjustment)
 		{
 			npc.lifeMax = (int)Math.Ceiling(npc.lifeMax * factor * balance * bossAdjustment);
 		}
-
 
 		public static bool SummonBossDirectlyWithMessage(Vector2 targetPosition, int type)
 		{
