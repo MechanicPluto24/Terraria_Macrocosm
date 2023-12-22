@@ -64,8 +64,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		public override void SetDefaults()
 		{
 			NPC.width = NPC.height = 56;
-			NPC.lifeMax = 2500;
-			NPC.defense = 45;
+			NPC.lifeMax = 1500;
+			NPC.defense = 25;
 			NPC.damage = 40;
 			NPC.knockBackResist = 0f;
 			NPC.noGravity = true;
@@ -93,7 +93,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
         public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
         {
-			NPC.damage = (int)(NPC.damage * 0.6f * bossAdjustment);
+			NPC.damage = (int)(NPC.damage * 0.55f * bossAdjustment);
         }
 
         public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
