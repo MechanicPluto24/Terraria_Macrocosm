@@ -19,7 +19,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			set => Projectile.ai[0] = MathHelper.Clamp(value, 0f, 1f);
 		}
 
-		float trailMultiplier = 0f;
+        public float CritChance
+        {
+			get => (int)Projectile.ai[1];
+			set => Projectile.ai[1] = value;
+        }
+
+        float trailMultiplier = 0f;
 
 		public override void SetDefaults()
 		{
@@ -40,7 +46,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 		public override void AI()
 		{
-			Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
+            Projectile.CritChance = CritChance;
+
+            Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
 
 			if (trailMultiplier < 1f)
 				trailMultiplier += 0.015f * (0.1f + Strenght * 0.9f);

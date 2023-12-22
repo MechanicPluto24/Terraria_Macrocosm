@@ -75,11 +75,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 						if (Player.PickAmmo(currentItem, out _, out speed, out damage, out knockback, out usedAmmoItemId))
 						{
 							float strenght = MathHelper.Clamp(AI_Charge / MaxCharge, 0f, 1f);
-							damage += (int)(damage * 1.4f * strenght);
+							damage += (int)(damage * 1.75f * strenght);
 							speed *= 0.466f;
                             knockback *= 2f;
+							int crit = currentItem.crit + 12;
 
-                            Projectile.NewProjectile(new EntitySource_ItemUse_WithAmmo(Player, currentItem, usedAmmoItemId), Projectile.Center, Vector2.Normalize(Projectile.velocity) * speed, ModContent.ProjectileType<SeleniteBeam>(), damage, knockback, Projectile.owner, ai0: strenght);
+                            Projectile.NewProjectile(new EntitySource_ItemUse_WithAmmo(Player, currentItem, usedAmmoItemId), Projectile.Center, Vector2.Normalize(Projectile.velocity) * speed, ModContent.ProjectileType<SeleniteBeam>(), damage, knockback, Projectile.owner, ai0: strenght, ai1: crit);
 							SoundEngine.PlaySound(SoundID.Item72 with { Pitch = -0.5f, Volume = 0.4f });
 							AI_Charge = 0;
 						}
