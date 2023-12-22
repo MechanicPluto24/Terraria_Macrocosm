@@ -19,7 +19,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			set => Projectile.ai[0] = MathHelper.Clamp(value, 0f, 1f);
 		}
 
-        public float CritChance
+        public int CritChance
         {
 			get => (int)Projectile.ai[1];
 			set => Projectile.ai[1] = value;
