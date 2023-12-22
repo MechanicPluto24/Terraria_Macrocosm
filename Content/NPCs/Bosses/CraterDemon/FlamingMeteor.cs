@@ -38,12 +38,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
         private float flashTimer;
         private float maxFlashTimer = 5;
 
-        public override void OnHitPlayer(Player target, Player.HurtInfo info)
-		{
-			target.AddBuff(BuffID.OnFire, 360, true);
-			target.AddBuff(BuffID.Burning, 90, true);
-		}
-
 		private bool spawned;
 		private Vector2 spawnPosition;
 		public override void AI()
