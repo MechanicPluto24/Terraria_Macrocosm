@@ -78,9 +78,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 							damage += (int)(damage * 1.75f * strenght);
 							speed *= 0.466f;
                             knockback *= 2f;
-							int crit = currentItem.crit + 12;
 
-                            Projectile.NewProjectile(new EntitySource_ItemUse_WithAmmo(Player, currentItem, usedAmmoItemId), Projectile.Center, Vector2.Normalize(Projectile.velocity) * speed, ModContent.ProjectileType<SeleniteBeam>(), damage, knockback, Projectile.owner, ai0: strenght, ai1: crit);
+                            Projectile.NewProjectile(new EntitySource_ItemUse_WithAmmo(Player, currentItem, usedAmmoItemId), Projectile.Center, Vector2.Normalize(Projectile.velocity) * speed, ModContent.ProjectileType<SeleniteBeam>(), damage, knockback, Projectile.owner, ai0: strenght);
 							SoundEngine.PlaySound(SoundID.Item72 with { Pitch = -0.5f, Volume = 0.4f });
 							AI_Charge = 0;
 						}

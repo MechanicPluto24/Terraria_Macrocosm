@@ -1,6 +1,6 @@
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Buffs.GoodBuffs.MinionBuffs;
+using Macrocosm.Content.Buffs.Minions;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
@@ -14,7 +14,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Summon
 {
-	public class ChandriumStaffMinion : ModProjectile
+    public class ChandriumStaffMinion : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{

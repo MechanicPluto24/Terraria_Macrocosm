@@ -59,7 +59,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 			for (int i = 0; i < 2; i++)
 			{
-				Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.Torch, -Projectile.velocity.X * 0.2f, -Projectile.velocity.Y * 0.2f, 127, new Color(255, 255, 255), Main.rand.NextFloat(1.4f, 2.2f));
+				Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.Torch, -Projectile.velocity.X * 0.2f, -Projectile.velocity.Y * 0.2f, 127, new Color(255, 255, 255), Main.rand.NextFloat(1.1f, 1.4f));
 				dust.noGravity = true;
 				dust.noLight = true;
 			}
@@ -77,7 +77,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
         private SpriteBatchState state;
 		public override bool PreDraw(ref Color lightColor)
 		{
-			Texture2D tex = TextureAssets.Projectile[Type].Value;
+            ProjectileID.Sets.TrailCacheLength[Type] = 15;
+            Texture2D tex = TextureAssets.Projectile[Type].Value;
 
 			Rectangle sourceRect = tex.Frame(1, Main.projFrames[Type], frameY: Projectile.frame);
 			Vector2 origin = Projectile.Size / 2f + new Vector2(6, 32);
@@ -104,7 +105,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);
 
-            Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition, sourceRect, Color.White.WithOpacity(0.2f) * (1f - Projectile.alpha / 255f), Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
+            Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition, sourceRect, (Color.White * (1f - Projectile.alpha / 255f)).WithAlpha(65), Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
 
             return false;
 		}

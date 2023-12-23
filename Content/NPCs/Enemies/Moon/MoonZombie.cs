@@ -1,4 +1,5 @@
 using Macrocosm.Content.Biomes;
+using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.NPCs.Global;
 using Terraria;
@@ -69,11 +70,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		public override void ModifyNPCLoot(NPCLoot loot)
 		{
-			loot.Add(ItemDropRule.Common(ModContent.ItemType<SpaceDust>()));             // Always drop 1 cosmic dust
-			loot.Add(ItemDropRule.Common(ModContent.ItemType<ArtemiteOre>(), 16, 1, 6));  // 1/16 chance to drop 1-6 Artemite Ore
-			loot.Add(ItemDropRule.Common(ModContent.ItemType<ChandriumOre>(), 16, 1, 6)); // 1/16 chance to drop 1-6 Chandrium Ore
-			loot.Add(ItemDropRule.Common(ModContent.ItemType<SeleniteOre>(), 16, 1, 6));  // 1/16 chance to drop 1-6 Selenite Ore
-			loot.Add(ItemDropRule.Common(ModContent.ItemType<DianiteOre>(), 16, 1, 6));   // 1/16 chance to drop 1-6 DianiteOre Ore
 		}
 
 		public override void HitEffect(NPC.HitInfo hit)
@@ -82,7 +78,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			{
 				for (int i = 0; i < 30; i++)
 				{
-					int dustType = Utils.SelectRandom<int>(Main.rand, DustID.TintableDust, DustID.Blood);
+					int dustType = Utils.SelectRandom<int>(Main.rand, ModContent.DustType<RegolithDust>(), DustID.Blood);
 
 					Dust dust = Dust.NewDustDirect(NPC.position, NPC.width, NPC.height, dustType);
 					dust.velocity.X *= (dust.velocity.X + +Main.rand.Next(0, 100) * 0.015f) * hit.HitDirection;

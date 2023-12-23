@@ -37,3 +37,8 @@ HandheldEngineOverheat: {
 	DisplayName: Handheld Engine Overheat
 	Description: Your weapon has overheated!
 }
+
+CraterDemonPet: {
+	DisplayName: Mini Crater Demon
+	Description: It's small! (Replace this lol)
+}

@@ -4,7 +4,7 @@ using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
-using Macrocosm.Content.Buffs.Debuffs;
+using Macrocosm.Content.Debuffs;
 using Macrocosm.Content.LoadingScreens;
 using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
@@ -23,7 +23,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Players
 {
-	public enum SpaceProtection
+    public enum SpaceProtection
 	{
 		None,
 		Tier1,

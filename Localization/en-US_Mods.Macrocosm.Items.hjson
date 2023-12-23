@@ -718,6 +718,11 @@ ChampionsBladeRepaired: {
 	Tooltip: ""
 }
 
+ChampionsBlade: {
+	DisplayName: Champions Blade
+	Tooltip: ""
+}
+
 SilicaCrimsand: {
 	DisplayName: Silica Crimsand
 	Tooltip: ""
@@ -924,4 +929,9 @@ MoonBaseLocker: {
 Apollo115: {
 	DisplayName: Apollo115
 	Tooltip: ""
+}
+
+CraterDemonPet: {
+	DisplayName: Toy Rocket
+	Tooltip: "Summons a Mini Crater Demon"
 }

@@ -32,6 +32,10 @@
       <HintPath>References\SubworldLibrary.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Content\Items\Drugs\" />
+    <Folder Include="Content\Items\Potions\" />
+  </ItemGroup>
   <!-- <Target BeforeTargets="Build" Name="BuildEffects" Inputs="Assets/Effects/*.fx" Outputs="Assets/Effects/*.fxc"> -->
       <!-- <Exec Command="EasyXnb.exe" WorkingDirectory="Tools/EasyXnb" /> -->
   <!-- </Target> -->

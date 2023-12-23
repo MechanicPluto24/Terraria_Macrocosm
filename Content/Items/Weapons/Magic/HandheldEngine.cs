@@ -1,4 +1,4 @@
-using Macrocosm.Content.Buffs.Debuffs;
+using Macrocosm.Content.Debuffs;
 using Macrocosm.Content.Projectiles.Friendly.Magic;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Magic
 {
-	public class HandheldEngine : ModItem
+    public class HandheldEngine : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
