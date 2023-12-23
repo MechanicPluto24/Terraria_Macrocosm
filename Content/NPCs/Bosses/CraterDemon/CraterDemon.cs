@@ -2,11 +2,11 @@
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Systems;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Consumables.BossBags;
 using Macrocosm.Content.Items.Currency;
 using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.Items.Pets;
 using Macrocosm.Content.Items.Placeable.Relics;
 using Macrocosm.Content.Items.Placeable.Trophies;
 using Macrocosm.Content.Items.Vanity.BossMasks;
@@ -447,7 +447,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
         {
             NPC.damage = NPC.defDamage;
 
-            if (AI_Attack is AttackState.Charge or AttackState.Charge)
+            if (AI_Attack is AttackState.Charge)
             {
                 if (phase2)
                     NPC.damage = (int)(NPC.defDamage * 1.55f);
@@ -477,7 +477,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
             // MM drops
             npcLoot.Add(ItemDropRule.MasterModeCommonDrop(ModContent.ItemType<CraterDemonRelic>()));
-            //npcLoot.Add(ItemDropRule.MasterModeDropOnAllPlayers(ModContent.ItemType<CraterDemonMMPet>(), 4));
+            npcLoot.Add(ItemDropRule.MasterModeDropOnAllPlayers(ModContent.ItemType<CraterDemonPet>(), 4));
 
             // BELOW: for normal mode, same as boss bag (excluding Broken Hero Shield)
             LeadingConditionRule notExpertRule = new(new Conditions.NotExpert());
@@ -490,7 +490,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 ModContent.ItemType<CalcicCane>(),
                 ModContent.ItemType<Cruithne>(),
                 ModContent.ItemType<ImbriumJewel>(),
-                ModContent.ItemType<ChampionsBladeBroken>()
+                ModContent.ItemType<ChampionsBlade>()
                 ));
 
             npcLoot.Add(notExpertRule);
@@ -1165,6 +1165,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                     }
 
                     SetAttack(setAttack);
+                    SetAttack(AttackState.SummonMeteors);
                 }
 
                 NPC.netUpdate = true;
@@ -1184,9 +1185,11 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 {
                     for (int i = 0; i < count; i++)
                     {
-                        Vector2 spawn = orig + new Vector2(Main.rand.NextFloat(player.direction * 0.5f, player.direction * 1.5f) * 80 * 16, Main.rand.NextFloat(-3f, -1f) * 60 * 16);
+                        float posX = Main.rand.NormalFloat(orig.X, 300);
+                        float posY = orig.Y + Main.rand.NextFloat(-3f, -1f) * 30 * 16;
+                        Vector2 velocity = new Vector2(MathF.Abs((new Vector2(posX, posY) - player.Center).ToRotation()) > MathHelper.PiOver2 ? 1 : -1, 1).RotatedByRandom(MathHelper.ToRadians(30)) * Main.rand.NextFloat(8f, 16f);
                         int damage = Utility.TrueDamage(Main.masterMode ? 240 : Main.expertMode ? 120 : 60);
-                        Projectile.NewProjectile(NPC.GetSource_FromAI(), spawn, Vector2.UnitY.RotatedByRandom(MathHelper.PiOver2) * Main.rand.NextFloat(6f, 10f), ModContent.ProjectileType<FlamingMeteor>(), damage, 0f, Main.myPlayer);
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), new Vector2(posX, posY), velocity, ModContent.ProjectileType<FlamingMeteor>(), damage, 0f, Main.myPlayer);
                     }
                 }
 

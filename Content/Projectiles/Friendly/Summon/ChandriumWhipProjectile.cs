@@ -1,6 +1,6 @@
 ﻿using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Buffs.GoodBuffs;
+using Macrocosm.Content.Buffs.Weapons;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
 using Macrocosm.Content.Players;
@@ -16,7 +16,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Summon
 {
-	public class ChandriumWhipProjectile : ModProjectile
+    public class ChandriumWhipProjectile : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{

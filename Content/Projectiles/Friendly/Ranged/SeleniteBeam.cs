@@ -5,6 +5,8 @@ using Macrocosm.Content.Projectiles.Global;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Audio;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
@@ -18,12 +20,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			get => MathHelper.Clamp(Projectile.ai[0], 0f, 1f);
 			set => Projectile.ai[0] = MathHelper.Clamp(value, 0f, 1f);
 		}
-
-        public int CritChance
-        {
-			get => (int)Projectile.ai[1];
-			set => Projectile.ai[1] = value;
-        }
 
         float trailMultiplier = 0f;
 
@@ -40,14 +36,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			Projectile.timeLeft = 360;
 			Projectile.extraUpdates = 3;
 
+			Projectile.CritChance = 16;
+
 			Projectile.usesLocalNPCImmunity = true;
-			Projectile.localNPCHitCooldown = 15;
+			Projectile.localNPCHitCooldown = 20;
 		}
 
 		public override void AI()
 		{
-            Projectile.CritChance = CritChance;
-
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
 
 			if (trailMultiplier < 1f)
@@ -58,7 +54,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 		public override void OnKill(int timeLeft)
 		{
-			// TODO: sound
+			SoundEngine.PlaySound(SoundID.Item10);
 
 			for (int i = 0; i < 35; i++)
 			{

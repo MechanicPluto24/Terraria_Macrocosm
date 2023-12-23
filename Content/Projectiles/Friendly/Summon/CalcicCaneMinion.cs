@@ -1,5 +1,5 @@
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Buffs.GoodBuffs.MinionBuffs;
+using Macrocosm.Content.Buffs.Minions;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -12,10 +12,10 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Summon
 {
-	/// <summary>
-	/// This is based off ExampleMod for now 
-	/// </summary>
-	public class CalcicCaneMinion : ModProjectile
+    /// <summary>
+    /// This is based off ExampleMod for now 
+    /// </summary>
+    public class CalcicCaneMinion : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{

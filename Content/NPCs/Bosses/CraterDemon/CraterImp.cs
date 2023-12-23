@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Common.Utils;
-using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.NPCs.Global;
 using Microsoft.Xna.Framework;

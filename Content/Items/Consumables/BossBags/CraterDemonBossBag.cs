@@ -6,8 +6,10 @@ using Macrocosm.Content.Items.Weapons.Magic;
 using Macrocosm.Content.Items.Weapons.Melee;
 using Macrocosm.Content.Items.Weapons.Ranged;
 using Macrocosm.Content.Items.Weapons.Summon;
+using Macrocosm.Content.NPCs.Bosses.CraterDemon;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
@@ -37,7 +39,7 @@ namespace Macrocosm.Content.Items.Consumables.BossBags
 
 		public override void ModifyItemLoot(ItemLoot itemLoot)
 		{
-			itemLoot.Add(ItemDropRule.NotScalingWithLuck(ModContent.ItemType<CraterDemonMask>(), 7));
+            itemLoot.Add(ItemDropRule.NotScalingWithLuck(ModContent.ItemType<CraterDemonMask>(), 7));
 			itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<Moonstone>(), 1, 30, 60));
 			itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<DeliriumPlating>(), 1, 30, 90));
 
@@ -47,7 +49,7 @@ namespace Macrocosm.Content.Items.Consumables.BossBags
 				ModContent.ItemType<CalcicCane>(),
 				ModContent.ItemType<Cruithne>(),
 				ModContent.ItemType<ImbriumJewel>(),
-				ModContent.ItemType<ChampionsBladeBroken>()
+				ModContent.ItemType<ChampionsBlade>()
 				));
 		}
 

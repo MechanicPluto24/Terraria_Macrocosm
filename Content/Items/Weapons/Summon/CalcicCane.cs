@@ -1,4 +1,4 @@
-﻿using Macrocosm.Content.Buffs.GoodBuffs.MinionBuffs;
+﻿using Macrocosm.Content.Buffs.Minions;
 using Macrocosm.Content.Projectiles.Friendly.Summon;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Summon
 {
-	public class CalcicCane : ModItem
+    public class CalcicCane : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
