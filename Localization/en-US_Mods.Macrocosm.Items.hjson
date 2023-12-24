@@ -933,5 +933,5 @@ Apollo115: {
 
 CraterDemonPet: {
 	DisplayName: Toy Rocket
-	Tooltip: "Summons a Mini Crater Demon"
+	Tooltip: Summons a Mini Crater Demon
 }

@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
+using Macrocosm.Common.WorldGeneration.Structures;
 using Macrocosm.Content.Tiles.Ambient;
 using Macrocosm.Content.Tiles.Blocks;
 using Macrocosm.Content.Tiles.Ores;
@@ -10,6 +11,7 @@ using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Terraria;
+using Terraria.GameContent.Biomes;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.WorldBuilding;
@@ -569,98 +571,30 @@ namespace Macrocosm.Content.Subworlds
             }
         }*/
 
-		// [Task]
-		private void OutpostsTask(GenerationProgress progress)
+		[Task]
+		private void RoomsTasks(GenerationProgress progress)
 		{
 			progress.Message = Language.GetTextValue("Rooms");
 
-			int retryCount = 0;
-			int failCount = 0;
-			const int maxRetry = 50;
+			int tries = 10000;
+			int count = WorldGen.genRand.Next(20, 80);
+            for (int i = 0; i < WorldGen.genRand.Next(20,80); i++)
+            {
+                if (tries <= 0)
+                    break;
 
-			int maxSteps = (int)(500 * WorldSize.Current.GetSizeRatio(WorldSize.Small));
+                progress.Set((double)i / count);
+                int tileX = WorldGen.genRand.Next(80, Main.maxTilesX - 80);
+                int tileY = WorldGen.genRand.Next((int)(SurfaceHeight(tileX) + 20.0), Main.maxTilesY - 230);
 
-			for (int step = 0; step < maxSteps;)
-			{
-				progress.Set(step / (double)maxSteps);
-
-				int structurePadding = 10;
-				int tileX = WorldGen.genRand.Next(structurePadding, Main.maxTilesX - structurePadding);
-				int tileY = WorldGen.genRand.Next((int)Main.worldSurface, Main.maxTilesY - structurePadding);
-
-				Rectangle area = new(tileX, tileY, WorldGen.genRand.Next(15, 26), WorldGen.genRand.Next(14, 20));
-				Point origin = new(tileX, tileY);
-
-
-				bool canPlace = StructureMap.CanPlace(area, structurePadding) &&
-					WorldUtils.Find(new(origin.X, origin.Y + area.Height), Searches.Chain(
-						new Searches.Up(10),
-						new Conditions.IsSolid().AreaAnd(area.Width / 2, 1).Not(),
-						new Conditions.IsTile((ushort)TileType<Protolith>()).AreaOr(area.Width, area.Height)),
-						out _
-					);
-
-				if (!canPlace && retryCount < maxRetry)
-				{
-					retryCount++;
-					continue;
-				}
-
-				if (retryCount >= maxRetry)
-					failCount++;
-
-				retryCount = 0;
-
-				int wallThickness = 1;
-				Point hollowPos = new(tileX + wallThickness, tileY + wallThickness);
-				var hollow = new Shapes.Rectangle(area.Width - wallThickness * 2, area.Height - wallThickness * 2);
-
-				bool isRuined = !WorldGen.genRand.NextBool(4);
-
-				if (isRuined)
-				{
-					WorldUtils.Gen(origin, new Shapes.Rectangle(area.Width, area.Height),
-					Actions.Chain(
-						new Modifiers.IsSolid(),
-						new Actions.SetTileKeepWall((ushort)TileType<RegolithBrick>()),
-						new Actions.Smooth(),
-						new Actions.SetFrames(frameNeighbors: false)
-						)
-					);
-
-					WorldUtils.Gen(hollowPos, hollow,
-						Actions.Chain(
-							new Modifiers.IsSolid(),
-							new Actions.PlaceWall((ushort)WallType<RegolithBrickWall>())
-						)
-					);
-
-					WorldUtils.Gen(hollowPos, hollow, new Actions.ClearTile());
-				}
-				else
-				{
-					WorldUtils.Gen(origin, new Shapes.Rectangle(area.Width, area.Height),
-					Actions.Chain(
-						new Actions.SetTileKeepWall((ushort)TileType<RegolithBrick>()),
-						new Actions.SetFrames(frameNeighbors: false)
-						)
-					);
-
-					WorldUtils.Gen(hollowPos, hollow,
-					Actions.Chain(
-						new Actions.ClearTile(),
-						new Actions.PlaceWall((ushort)WallType<RegolithBrickWall>())
-						)
-					);
-				}
-
-				StructureMap.AddProtectedStructure(area, structurePadding);
-				step++;
-			}
-
-			if (failCount > 0)
-				LogChatMessage($"Failed to place {failCount} Moon Base outposts.");
-		}
+				var builder = new VortexHouseBuilder(new(tileX, tileY), StructureMap);
+                if (!builder.Place())
+                {
+                    tries--;
+                    i--;
+                }
+            }
+        }
 
 
 		[Task]
