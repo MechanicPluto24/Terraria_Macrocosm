@@ -14,6 +14,7 @@ using Terraria;
 using Terraria.GameContent.Biomes;
 using Terraria.ID;
 using Terraria.Localization;
+using Terraria.ModLoader;
 using Terraria.WorldBuilding;
 using static Macrocosm.Common.Utils.Utility;
 using static Terraria.ModLoader.ModContent;
@@ -578,7 +579,7 @@ namespace Macrocosm.Content.Subworlds
 
 			int tries = 10000;
 			int count = WorldGen.genRand.Next(20, 80);
-            for (int i = 0; i < WorldGen.genRand.Next(20,80); i++)
+            for (int i = 0; i < count; i++)
             {
                 if (tries <= 0)
                     break;
@@ -587,17 +588,77 @@ namespace Macrocosm.Content.Subworlds
                 int tileX = WorldGen.genRand.Next(80, Main.maxTilesX - 80);
                 int tileY = WorldGen.genRand.Next((int)(SurfaceHeight(tileX) + 20.0), Main.maxTilesY - 230);
 
-				var builder = new VortexHouseBuilder(new(tileX, tileY), StructureMap);
+				var builder = new LunarianHouseBuilder(new(tileX, tileY), StructureMap);
                 if (!builder.Place())
                 {
                     tries--;
                     i--;
                 }
             }
+
+			/*
+
+            count = WorldGen.genRand.Next(200, 300);
+            tries = 10000;
+
+            for (int i = 0; i < count; i++)
+			{
+                if (tries <= 0)
+                    break;
+
+                int tileX = WorldGen.genRand.Next(80, Main.maxTilesX - 80);
+                int tileY = WorldGen.genRand.Next((int)(SurfaceHeight(tileX) + 20.0), Main.maxTilesY - 230);
+				Point origin = new(tileX, tileY);
+
+                Point result;
+                bool flag = WorldUtils.Find(origin, Searches.Chain(new Searches.Left(25), new Conditions.IsSolid()), out result);
+                Point result2;
+                bool num = WorldUtils.Find(origin, Searches.Chain(new Searches.Right(25), new Conditions.IsSolid()), out result2);
+                if (!flag)
+                    result = new Point(origin.X - 25, origin.Y);
+
+                if (!num)
+                    result2 = new Point(origin.X + 25, origin.Y);
+
+                Rectangle result3 = new Rectangle(origin.X, origin.Y, 0, 0);
+                if (origin.X - result.X > result2.X - origin.X)
+                {
+                    result3.X = result.X;
+                    result3.Width = Terraria.Utils.Clamp(result2.X - result.X, 15, 30);
+                }
+                else
+                {
+                    result3.Width = Terraria.Utils.Clamp(result2.X - result.X, 15, 30);
+                    result3.X = result2.X - result3.Width;
+                }
+
+                Point result4;
+                bool flag2 = WorldUtils.Find(result, Searches.Chain(new Searches.Up(10), new Conditions.IsSolid()), out result4);
+                Point result5;
+                bool num2 = WorldUtils.Find(result2, Searches.Chain(new Searches.Up(10), new Conditions.IsSolid()), out result5);
+                if (!flag2)
+                    result4 = new Point(origin.X, origin.Y - 10);
+
+                if (!num2)
+                    result5 = new Point(origin.X, origin.Y - 10);
+
+                result3.Height = Terraria.Utils.Clamp(Math.Max(origin.Y - result4.Y, origin.Y - result5.Y), 8, 12);
+                result3.Y -= result3.Height;
+
+                Rectangle room = new(result3.X, result3.Y, 9, 9);
+
+
+                WorldUtils.Gen(new Point(room.X, room.Y), new Shapes.Rectangle(room.Width, room.Height), Actions.Chain(new Actions.SetTileKeepWall((ushort)TileType<MoonBasePlating>()), new Actions.SetFrames(frameNeighbors: true)));
+                WorldUtils.Gen(new(room.X + 1, room.Height - 2 - 3), new Shapes.Rectangle(1, 3), new Actions.ClearTile(frameNeighbors: true));
+                WorldUtils.Gen(new(room.X + room.Width - 2, room.Height - 2 - 3), new Shapes.Rectangle(1, 3), new Actions.ClearTile(frameNeighbors: true));
+                WorldUtils.Gen(new Point(room.X + 1, room.Y + 1), new Shapes.Rectangle(room.Width - 2, room.Height - 2), Actions.Chain(new Actions.ClearTile(frameNeighbors: true), new Actions.PlaceWall(WallID.HeavenforgeBrickWall)));
+            
+			}
+			*/
         }
 
 
-		[Task]
+        [Task]
 		private void AmbientTask(GenerationProgress progress)
 		{
 			progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.AmbientPass");
