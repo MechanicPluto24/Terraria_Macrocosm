@@ -230,8 +230,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
         {
             Phase2AnimDefenseBoost,       // Extra defense during phase2 animation sequence
 
-            MeteorShootCount,             // Number of flaming meteors to spawn at the same time 
+            MeteorShootBurst,             // Number of flaming meteors to spawn at the same time 
             MeteorShootPeriod,            // How frequently flaming meteors are being shot
+            MeteorShootCount,             // Number of sequential flaming meteor attack
 
             CraterImpMaxCount,            // Max number of Crater Imp minions that can exist
             CraterImpSpawnPeriod,         // How often crater imps are spawned
@@ -275,8 +276,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 		     // Difficulty value on :           NM1, NM2, EM1, EM2, MM1, MM2, FTW1, FTW2
 			 /*Phase2AnimDefenseBoost      */ { 40, 40, 50, 50, 50, 50, 60, 60 },
                   
-			 /*MeteorShootCount            */ { 5, 5, 5, 5, 5, 5, 5, 5 },                           
-			 /*MeteorShootPeriod           */ { 25, 25, 25, 25, 25, 25, 25, 25 },  
+			 /*MeteorShootBurst            */ { 8, 8, 8, 8, 8, 8, 8, 8 },                           
+			 /*MeteorShootPeriod           */ { 60, 60, 60, 60, 60, 60, 60, 60 },  
+			 /*MeteorShootCount            */ { 5, 5, 5, 5, 5, 5, 5, 5 },  
 			 
 			 /*CraterImpMaxCount           */ { 3, 3, 4, 4, 4, 4, 5, 5 },   
 			 /*CraterImpSpawnPeriod        */ { 75, 75, 75, 75, 75, 75, 75, 75 },   
@@ -286,8 +288,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 			 /*PhantasmalPortalCount       */ { 0, 1, 1, 2, 1, 2, 2, 3 },
 
-             /*ChargeAttackCountMin        */ { 2, 3, 2, 3, 2, 3, 2, 3 },                       
-			 /*ChargeAttackCountMax        */ { 3, 4, 3, 4, 3, 4, 3, 4 },
+             /*ChargeAttackCountMin        */ { 2, 3, 2, 4, 2, 4, 2, 4 },                       
+			 /*ChargeAttackCountMax        */ { 3, 4, 3, 5, 3, 5, 3, 5 },
 			 /*ChargeWaitTime              */ { 60, 20, 50, 15, 45, 10, 45, 10 },    
 			 /*ChargeSlowdownDelay         */ { 30, 16, 26, 14, 45, 22, 12, 18 },    
 			 
@@ -416,7 +418,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             baseHeight = NPC.height = 196;
             NPC.knockBackResist = 0f;
 
-            NPC.defense = 100;
+            NPC.defense = 150;
             NPC.damage = 80;
             NPC.lifeMax = 45000;  
 
@@ -780,7 +782,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
         public override void AI()
         {
-
+            /*
             Main.NewText("AttackState: " + AI_Attack.ToString());
             Main.NewText("AttackProgress: " + (AI_Attack == AttackState.Charge ? ((ChargeSubphase)AI_AttackProgress).ToString() : AI_AttackProgress.ToString()));
             Main.NewText("AI_Timer: " + AI_Timer);
@@ -795,6 +797,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             {
                 Main.NewText("\n\n\n");
             }
+            */
 
             NPC.defense = NPC.defDefense;
 
@@ -1165,7 +1168,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                     }
 
                     SetAttack(setAttack);
-                    SetAttack(AttackState.SummonMeteors);
                 }
 
                 NPC.netUpdate = true;
@@ -1179,7 +1181,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             {
                 Vector2 orig = player.Center + player.velocity;
 
-                int count = GetDifficultyInfo(DifficultyInfo.MeteorShootCount);
+                int count = GetDifficultyInfo(DifficultyInfo.MeteorShootBurst);
 
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
@@ -1319,7 +1321,13 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                         if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             maxChargeAttackCount = Main.rand.Next(GetDifficultyInfo(DifficultyInfo.ChargeAttackCountMin), GetDifficultyInfo(DifficultyInfo.ChargeAttackCountMax) + 1);
-                            maxPortalAttackCount = Main.rand.Next(GetDifficultyInfo(DifficultyInfo.PortalChargeAttackCountMin), GetDifficultyInfo(DifficultyInfo.PortalChargeAttackCountMax) + 1);
+
+                            if (portalCharge)
+                            {
+                                maxChargeAttackCount -= 2;
+                                maxPortalAttackCount = Main.rand.Next(GetDifficultyInfo(DifficultyInfo.PortalChargeAttackCountMin), GetDifficultyInfo(DifficultyInfo.PortalChargeAttackCountMax) + 1);
+                            }
+
                             NPC.netUpdate = true;
                         }
 
@@ -1530,6 +1538,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                     if (AI_Timer <= 0 && NPC.scale == 1f)
                     {
                         AI_AttackProgress++;
+
                         float chargeSpeed = GetDifficultyScaling(DifficultyScale.PortalChargeSpeed);
                         AI_Timer = GetDifficultyInfo(DifficultyInfo.PortalChargeSlowdownDelay);
 
@@ -1563,6 +1572,12 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                             chargeAttackCount = 0;
                             portalAttackCount++;
                             AI_AttackProgress = (int)ChargeSubphase.DashIntoPortal;
+
+                            if(Main.netMode != NetmodeID.MultiplayerClient)
+                            {
+                                maxChargeAttackCount = Main.rand.Next(GetDifficultyInfo(DifficultyInfo.ChargeAttackCountMin), GetDifficultyInfo(DifficultyInfo.ChargeAttackCountMax) + 1) - 2;
+                                NPC.netUpdate = true;
+                            }
                         }
                         else
                         {
@@ -1578,11 +1593,14 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
                         zAxisLerpStrength = DefaultZAxisLerpStrength * 2.8f;
                         float speed = GetDifficultyScaling(DifficultyScale.ChargeTargetSpeed) + (1f - AI_Timer / (float)GetDifficultyInfo(DifficultyInfo.ChargeWaitTime)) * GetDifficultyScaling(DifficultyScale.FloatTowardsTargetSpeed);
-                        FloatTowardsTarget(player, targetSpeed: speed);
+
+                        if (chargeAttackCount == 0)
+                            FloatTowardsTarget(player);
+                        else
+                            FloatTowardsTarget(player, targetSpeed: speed);
                     }
 
                     break;
-
                 case ChargeSubphase.SlowDownAfterCharge:
 
                     if (AI_Timer <= 0)
@@ -1609,7 +1627,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
                             if (Math.Abs(NPC.velocity.X) < GetDifficultyScaling(DifficultyScale.ChargeTargetSpeed) && Math.Abs(NPC.velocity.Y) < GetDifficultyScaling(DifficultyScale.ChargeTargetSpeed))
                             {
-                                if (chargeAttackCount >= maxChargeAttackCount)
+                                if (chargeAttackCount >= maxChargeAttackCount && !portalCharge)
                                 {
                                     chargeAttackCount = 0;
                                     SetAttack(AttackState.DoNothing);
