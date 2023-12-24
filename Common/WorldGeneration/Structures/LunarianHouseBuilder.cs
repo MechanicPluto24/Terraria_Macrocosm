@@ -9,7 +9,11 @@ using Terraria.WorldBuilding;
 
 namespace Macrocosm.Common.WorldGeneration.Structures
 {
-    public class LunarianHouseBuilder : MacrocosmHouseBuilder
+    public abstract class LunarianHouseBuilder : MacrocosmHouseBuilder
     {
+        // TODO: some common configuration
+        protected LunarianHouseBuilder(Point origin, StructureMap structures) : base(origin, structures)
+        {
+        }
     }
 }
