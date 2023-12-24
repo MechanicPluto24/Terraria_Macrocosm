@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Macrocosm.Common.TileFrame;
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.GameContent.Biomes.CaveHouse;
+using Terraria.ID;
 using Terraria.Utilities;
 using Terraria.WorldBuilding;
 
@@ -15,25 +16,26 @@ namespace Macrocosm.Common.WorldGeneration
     // TODO: more abstraction, width & height configuration
     public abstract class MacrocosmHouseBuilder
     {
-
         public readonly bool IsValid;
 
-        protected virtual ushort TileType { get; set; }
-        protected virtual ushort WallType { get; set; }
-        protected virtual ushort BeamType { get; set; } = ushort.MaxValue;
-        protected virtual TileEntry PlatformEntry { get; set; }
-        protected virtual TileEntry DoorEntry { get; set; }
+        protected abstract ushort TileType { get; }
+        protected abstract ushort WallType { get; }
+        protected virtual ushort BeamType { get; } = ushort.MaxValue;
+        protected virtual TileTypeStylePair PlatformEntry { get; }
+        protected virtual TileTypeStylePair DoorEntry { get; }
 
-        protected virtual TileEntry ChandelierEntry { get; }
-        protected virtual List<TileEntry> PaintingPool { get; } = new();
-        protected virtual List<TileEntry> ExtraFurniturePool { get; } = new();
+        protected virtual TileTypeStylePair ChandelierEntry { get; }
+        protected virtual List<TileTypeStylePair> PaintingPool { get; } = new();
+        protected virtual List<TileTypeStylePair> ExtraFurniturePool { get; } = new();
 
-        protected virtual double ChestChance { get; set; }
-        protected virtual TileEntry ChestEntry { get; }
+        protected virtual (TileTypeStylePair data, double chance) ChestEntry { get; }
 
-        protected virtual TileEntry SmallPileEntry { get; }
-        protected virtual TileEntry MediumPileEntry { get; }
+        protected virtual TileTypeStylePair SmallPileEntry { get; }
+        protected virtual TileTypeStylePair MediumPileEntry { get; }
         //protected virtual TileEntry LargePileEntry { get; }
+
+        protected virtual bool StylizeRoomOuterCorners { get; }
+        protected virtual bool StylizeRoomInnerCorners { get; }
 
         public ReadOnlyCollection<Rectangle> Rooms { get; }
 
@@ -84,6 +86,7 @@ namespace Macrocosm.Common.WorldGeneration
                 structures.AddProtectedStructure(room, 8);
 
             PlaceStairs();
+            StylizeRoomCorners();
             PlaceDoors();
             PlacePlatforms();
             PlaceSupportBeams();
@@ -193,6 +196,68 @@ namespace Macrocosm.Common.WorldGeneration
             }
         }
 
+        private void StylizeRoomCorners()
+        {
+            foreach (Rectangle room in Rooms)
+            {
+                var tileTopLeft = Main.tile[room.X, room.Y];
+                var tileTopRight = Main.tile[room.X + room.Width - 1, room.Y];
+                var tileBottomLeft = Main.tile[room.X, room.Y + room.Height - 1];
+                var tileBottomRight = Main.tile[room.X + room.Width - 1, room.Y + room.Height - 1];
+
+                TileNeighbourInfo infoTopLeft = new(room.X, room.Y);
+                TileNeighbourInfo infoTopRight = new(room.X + room.Width - 1, room.Y);
+                TileNeighbourInfo infoBottomLeft = new(room.X, room.Y + room.Height - 1);
+                TileNeighbourInfo infoBottomRight = new(room.X + room.Width - 1, room.Y + room.Height - 1);
+
+                if (StylizeRoomOuterCorners)
+                {
+                    if (infoTopLeft.Solid.Count == 2)
+                        tileTopLeft.Slope = SlopeType.SlopeDownRight;
+
+                    if (infoTopRight.Solid.Count == 2)
+                        tileTopRight.Slope = SlopeType.SlopeDownLeft;
+
+                    if (infoBottomLeft.Solid.Count == 2)
+                        tileBottomLeft.Slope = SlopeType.SlopeUpRight;
+
+                    if (infoBottomRight.Solid.Count == 2)
+                        tileBottomRight.Slope = SlopeType.SlopeUpLeft;
+                }
+
+                if (StylizeRoomInnerCorners)
+                {
+                    Tile tile = Main.tile[room.X + 1, room.Y + 1];
+                    if (!tile.HasTile)
+                    {
+                        WorldGen.PlaceTile(room.X + 1, room.Y + 1, TileType, true);
+                        tile.Slope = SlopeType.SlopeUpLeft;
+                    }
+                   
+                    tile = Main.tile[room.X + room.Width - 2, room.Y + 1];
+                    if (!tile.HasTile)
+                    {
+                        WorldGen.PlaceTile(room.X + room.Width - 2, room.Y + 1, TileType, true);
+                        tile.Slope = SlopeType.SlopeUpRight;
+                    }
+
+                    tile = Main.tile[room.X, room.Y + room.Height - 2];
+                    if (!tile.HasTile)
+                    {
+                        WorldGen.PlaceTile(room.X, room.Y + room.Height - 2, TileType, true);
+                        tile.Slope = SlopeType.SlopeDownLeft;
+                    }
+
+                    tile = Main.tile[room.X + room.Width - 2, room.Y + room.Height - 2];
+                    if (!tile.HasTile)
+                    {
+                        WorldGen.PlaceTile(room.X + room.Width - 2, room.Y + room.Height - 2, TileType, true);
+                        tile.Slope = SlopeType.SlopeDownRight;
+                    }
+                }
+            }
+        }
+
         private void FillRooms()
         {
             foreach (Rectangle room in Rooms)
@@ -254,7 +319,7 @@ namespace Macrocosm.Common.WorldGeneration
                         case 2:
                             if (ExtraFurniturePool.Any())
                             {
-                                TileEntry entry = ExtraFurniturePool.GetRandom(Random);
+                                TileTypeStylePair entry = ExtraFurniturePool.GetRandom(Random);
                                 WorldGen.PlaceTile(tileX, tileY, entry.Type, mute: true, forced: false, -1, entry.GetStyle());
                             }
                             break;
@@ -309,6 +374,9 @@ namespace Macrocosm.Common.WorldGeneration
 
             foreach (Point item in CreateDoorList())
             {
+                Tile tileBelow = Main.tile[item.X, item.Y + 3];
+                tileBelow.Slope = SlopeType.Solid;
+
                 WorldUtils.Gen(item, new Shapes.Rectangle(1, 3), new Actions.ClearTile(frameNeighbors: true));
                 WorldGen.PlaceTile(item.X, item.Y, DoorEntry.Type, mute: true, forced: true, -1, DoorEntry.GetStyle());
             }
@@ -432,7 +500,7 @@ namespace Macrocosm.Common.WorldGeneration
 
         private void PlaceChests()
         {
-            if (!ChestEntry.IsValid || Random.NextDouble() > ChestChance)
+            if (!ChestEntry.data.IsValid || Random.NextDouble() > ChestEntry.chance)
                 return;
 
             bool flag = false;
@@ -443,7 +511,7 @@ namespace Macrocosm.Common.WorldGeneration
 
                 for (int i = 0; i < 10; i++)
                 {
-                    if (flag = WorldGen.AddBuriedChest(Random.Next(2, room.Width - 2) + room.X, num, 0, notNearOtherChests: false, ChestEntry.GetStyle(), trySlope: false, ChestEntry.Type))
+                    if (flag = WorldGen.AddBuriedChest(Random.Next(2, room.Width - 2) + room.X, num, 0, notNearOtherChests: false, ChestEntry.data.GetStyle(), trySlope: false, ChestEntry.data.Type))
                         break;
                 }
 
@@ -452,7 +520,7 @@ namespace Macrocosm.Common.WorldGeneration
 
                 for (int j = room.X + 2; j <= room.X + room.Width - 2; j++)
                 {
-                    if (flag = WorldGen.AddBuriedChest(j, num, 0, notNearOtherChests: false, ChestEntry.GetStyle(), trySlope: false, ChestEntry.Type))
+                    if (flag = WorldGen.AddBuriedChest(j, num, 0, notNearOtherChests: false, ChestEntry.data.GetStyle(), trySlope: false, ChestEntry.data.Type))
                         break;
                 }
 
@@ -469,7 +537,7 @@ namespace Macrocosm.Common.WorldGeneration
 
                     for (int k = 0; k < 10; k++)
                     {
-                        if (flag = WorldGen.AddBuriedChest(Random.Next(2, room2.Width - 2) + room2.X, num3, 0, notNearOtherChests: false, ChestEntry.GetStyle(), trySlope: false, ChestEntry.Type))
+                        if (flag = WorldGen.AddBuriedChest(Random.Next(2, room2.Width - 2) + room2.X, num3, 0, notNearOtherChests: false, ChestEntry.data.GetStyle(), trySlope: false, ChestEntry.data.Type))
                             break;
                     }
 
@@ -478,7 +546,7 @@ namespace Macrocosm.Common.WorldGeneration
 
                     for (int l = room2.X + 2; l <= room2.X + room2.Width - 2; l++)
                     {
-                        if (flag = WorldGen.AddBuriedChest(l, num3, 0, notNearOtherChests: false, ChestEntry.GetStyle(), trySlope: false, ChestEntry.Type))
+                        if (flag = WorldGen.AddBuriedChest(l, num3, 0, notNearOtherChests: false, ChestEntry.data.GetStyle(), trySlope: false, ChestEntry.data.Type))
                             break;
                     }
 
@@ -494,7 +562,7 @@ namespace Macrocosm.Common.WorldGeneration
             {
                 int i2 = Random.Next(Rooms[0].X - 30, Rooms[0].X + 30);
                 int num5 = Random.Next(Rooms[0].Y - 30, Rooms[0].Y + 30);
-                if (WorldGen.AddBuriedChest(i2, num5, 0, notNearOtherChests: false, ChestEntry.GetStyle(), trySlope: false, ChestEntry.Type))
+                if (WorldGen.AddBuriedChest(i2, num5, 0, notNearOtherChests: false, ChestEntry.data.GetStyle(), trySlope: false, ChestEntry.data.Type))
                     break;
             }
         }
