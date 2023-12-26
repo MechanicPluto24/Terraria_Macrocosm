@@ -14,9 +14,9 @@ using Terraria.WorldBuilding;
 namespace Macrocosm.Common.WorldGeneration
 {
     // TODO: more abstraction, width & height configuration
-    public abstract class MacrocosmHouseBuilder
+    public abstract class MacrocosmHouseBuilder : MicroBiome
     {
-        public readonly bool IsValid;
+        public bool IsValid;
 
         protected abstract ushort TileType { get; }
         protected abstract ushort WallType { get; }
@@ -37,7 +37,7 @@ namespace Macrocosm.Common.WorldGeneration
         protected virtual bool StylizeRoomOuterCorners { get; }
         protected virtual bool StylizeRoomInnerCorners { get; }
 
-        public ReadOnlyCollection<Rectangle> Rooms { get; }
+        public List<Rectangle> Rooms { get; set; }
 
         public Rectangle TopRoom => Rooms.First();
 
@@ -47,39 +47,20 @@ namespace Macrocosm.Common.WorldGeneration
 
         private Tilemap Tiles => Main.tile;
 
-        private StructureMap structures;
-
         protected MacrocosmHouseBuilder()
         {
-            IsValid = false;
-        }
-
-        protected MacrocosmHouseBuilder(Point origin, StructureMap structures)
-        {
-            if (!WorldGen.InWorld(origin.X, origin.Y, 10))
-                return;
-
-            this.structures = structures;
-            List<Rectangle> rooms = CreateRooms(origin);
-
-            if (rooms.Count == 0 || !AreRoomLocationsValid(rooms))
-                return;
-
-            rooms.Sort((Rectangle lhs, Rectangle rhs) => lhs.Top.CompareTo(rhs.Top));
-            Rooms = rooms.AsReadOnly();
-
-            IsValid = true;
         }
 
         protected virtual void AgeRoom(Rectangle room)
         {
         }
 
-        public virtual bool Place()
+        public override bool Place(Point origin, StructureMap structures)
         {
-            if(!IsValid) 
+            if(!(IsValid = Initialize(origin, structures, out List<Rectangle> rooms)))
                 return false;
 
+            Rooms = rooms;
             PlaceEmptyRooms();
 
             foreach (Rectangle room in Rooms)
@@ -98,6 +79,26 @@ namespace Macrocosm.Common.WorldGeneration
 
             PlaceChests();
 
+            return true;
+        }
+
+        private bool Initialize(Point origin, StructureMap structures, out List<Rectangle> rooms)
+        {
+            if (!WorldGen.InWorld(origin.X, origin.Y, 10))
+            {
+                rooms = new();
+                return false;
+            }
+
+            rooms = CreateRooms(origin);
+
+            if (rooms.Count == 0 || !AreRoomLocationsValid(rooms, structures))
+            {
+                rooms = new();
+                return false;
+            }
+
+            rooms.Sort((Rectangle lhs, Rectangle rhs) => lhs.Top.CompareTo(rhs.Top));
             return true;
         }
 
@@ -173,7 +174,7 @@ namespace Macrocosm.Common.WorldGeneration
             return (double)@ref.Value / num;
         }
 
-        private bool AreRoomLocationsValid(List<Rectangle> rooms)
+        private bool AreRoomLocationsValid(List<Rectangle> rooms, StructureMap structures)
         {
             foreach (Rectangle room in rooms)
             {

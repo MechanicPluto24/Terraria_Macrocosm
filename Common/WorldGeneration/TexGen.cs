@@ -1,12 +1,58 @@
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using Terraria;
 using Terraria.ID;
+using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
+using Terraria.WorldBuilding;
 
 namespace Macrocosm.Common.WorldGeneration
 {
+    /// <summary> Data structure that stores texture data, for usage alongside <see cref="TexGen"/> </summary>
+    public class TexGenData
+    {
+        public readonly Color[] Data;
+        public readonly int Width;
+        public readonly int Height;
+
+        public Color this[int index] => Data[index];
+
+        public int Length => Data.Length;
+
+        public TexGenData(Color[] data, int width, int height)
+        {
+            Data = data;
+            Width = width;
+            Height = height;
+        }
+
+        public static TexGenData FromStream(Stream stream)
+        {
+            byte[] colorBytes = ImageIO.ReadRaw(stream, out int width, out int height);
+            Color[] colors = new Color[width * height];
+
+            for (int i = 0; i < width * height * 4; i += 4)
+            {
+                colors[i / 4].PackedValue = (uint)(colorBytes[i + 3] << 24 | colorBytes[i + 2] << 16 | colorBytes[i + 1] << 8 | colorBytes[i]);
+            }
+
+            return new(colors, width, height);
+        }
+
+        public static TexGenData FromTexture2D(Texture2D texture)
+        {
+            Color[] data = new Color[texture.Width * texture.Height];
+            Utility.InvokeOnMainThread(() => texture.GetData(0, texture.Bounds, data, 0, texture.Width * texture.Height));
+            return new(data, texture.Width, texture.Height);
+        }
+    }
+
+    // Code by GroxTheGreat, made functional on servers by Feldy
     public class TexGen
     {
         private class TileInfo
@@ -21,20 +67,129 @@ namespace Macrocosm.Common.WorldGeneration
             }
         }
 
-        private static Dictionary<Color, int> colorToLiquid;
-        private static Dictionary<Color, int> colorToSlope;
+        public static Dictionary<Color, int> colorToLiquid;
+        public static Dictionary<Color, int> colorToSlope;
 
-        private readonly int width, height;
-        private readonly TileInfo[,] tileGen;
-        private readonly int torchStyle = 0, platformStyle = 0;
+        private int width, height;
+        private TileInfo[,] tileGen;
+        private int torchStyle = 0, platformStyle = 0;
 
-        private TexGen(int w, int h)
+        public TexGen(int w, int h)
         {
             width = w; height = h;
             tileGen = new TileInfo[width, height];
         }
 
-        //NOTE: all textures MUST be the same size or horrible things happen!
+        /// <summary>
+        /// Generate the TexGen. (x,y) are top left coordinates of the generation. 
+        /// </summary>
+        /// <param name="silent"> Play sound on tile place </param>
+        /// <param name="sync"> Sync placement </param>
+        public void Generate(int x, int y, bool silent, bool sync, GenerationProgress progress = null, bool soullessSecret = false)
+        {
+            for (int x1 = 0; x1 < width; x1++)
+            {
+                progress?.Set(x1 / (float)width);
+                for (int y1 = 0; y1 < height; y1++)
+                {
+                    int x2 = x + x1;
+                    int y2 = y + y1;
+                    TileInfo info = tileGen[x1, y1];
+                    if (info.tileID == -1 && info.wallID == -1 && info.liquidType == -1 && info.wire == -1)
+                        continue;
+
+                    if (info.tileID != -1 || info.wallID > -1 || info.wire > -1)
+                    {
+                        Utility.GenerateTile(x2, y2, info.tileID, info.wallID, info.tileStyle != 0 ? info.tileStyle : info.tileID == TileID.Torches ? torchStyle : info.tileID == TileID.Platforms ? platformStyle : 0, info.tileID > -1, info.liquidAmt == 0, info.slope, silent: silent, sync: sync);
+                    }
+                    if (info.liquidType != -1)
+                    {
+                        Utility.GenerateLiquid(x2, y2, info.liquidType, false, info.liquidAmt, sync);
+                    }
+                    if (info.objectID != 0)
+                    {
+                        WorldGen.PlaceObject(x2, y2, info.objectID);
+                        NetMessage.SendObjectPlacement(-1, x2, y2, info.objectID, 0, 0, -1, -1);
+                    }
+                }
+            }
+        }
+
+        /// <summary> Reads texture data for world generation. Works on dedicated servers. </summary>
+        /// <param name="path"> Path to the texture. </param>
+        /// <param name="useAsset"> Whether to load the Texture2D data from the asset repository, or directly from IO. Always false on dedicated servers. </param>
+        /// <returns></returns>
+        public static TexGenData GetTextureForGen(string path, bool useAsset = false)
+        {
+            if (Main.dedServ)
+                useAsset = false;
+
+            if (useAsset)
+            {
+                var texture = ModContent.Request<Texture2D>(path, AssetRequestMode.ImmediateLoad).Value;
+                return TexGenData.FromTexture2D(texture);
+            }
+            else
+            {
+                path = path.Replace(nameof(Macrocosm) + "/", "") + ".rawimg";
+                return TexGenData.FromStream(Macrocosm.Instance.GetFileStream(path));
+            }
+        }
+
+        /// <summary> 
+        /// Creates a <see cref="TexGen"/> from <see cref="TexGenData"/>s. 
+        /// NOTE: all textures MUST be the same size or horrible things happen! 
+        /// </summary>
+        public static TexGen GetTexGenerator(TexGenData tileData, Dictionary<Color, int> colorToTile, TexGenData wallData = null, Dictionary<Color, int> colorToWall = null, TexGenData liquidData = null, TexGenData slopeData = null, TexGenData objectData = null, Dictionary<Color, int> colorToObject = null)
+        {
+            if (colorToLiquid == null)
+            {
+                colorToLiquid = new Dictionary<Color, int>
+                {
+                    [new Color(0, 0, 255)] = LiquidID.Water,
+                    [new Color(255, 0, 0)] = LiquidID.Lava,
+                    [new Color(255, 255, 0)] = LiquidID.Honey,
+                    [new Color(255, 0, 255)] = LiquidID.Shimmer
+                };
+
+                colorToSlope = new Dictionary<Color, int>
+                {
+                    [new Color(255, 0, 0)] = 1,   // |\    Red
+                    [new Color(0, 255, 0)] = 2,   // /|    Green
+                    [new Color(0, 0, 255)] = 3,   // |/    Blue
+                    [new Color(255, 255, 0)] = 4, // \|    Yellow
+                    [new Color(255, 255, 255)] = -1, // HALFBRICK // White
+                    [new Color(0, 0, 0)] = -2 // FULLBLOCK //
+                };
+            }
+
+            int x = 0, y = 0;
+            TexGen gen = new(tileData.Width, tileData.Height);
+            for (int m = 0; m < tileData.Length; m++)
+            {
+                Color tileColor = tileData[m];
+                Color wallColor = wallData != null ? wallData[m] : Color.Black;
+                Color liquidColor = liquidData != null ? liquidData[m] : Color.Black;
+                Color slopeColor = slopeData != null ? slopeData[m] : Color.Black;
+                Color objectColor = objectData != null ? objectData[m] : Color.Black;
+                int tileID = colorToTile.ContainsKey(tileColor) ? colorToTile[tileColor] : -1; //if no key assume no action
+                int wallID = colorToWall != null && colorToWall.ContainsKey(wallColor) ? colorToWall[wallColor] : -1;
+                int liquidID = colorToLiquid != null && colorToLiquid.ContainsKey(liquidColor) ? colorToLiquid[liquidColor] : -1;
+                int slopeID = colorToSlope != null && colorToSlope.ContainsKey(slopeColor) ? colorToSlope[slopeColor] : -1;
+                int objectID = colorToObject != null && colorToObject.ContainsKey(objectColor) ? colorToObject[objectColor] : 0;
+                gen.tileGen[x, y] = new TileInfo(tileID, 0, wallID, liquidID, liquidID == -1 ? 0 : 255, slopeID, objectID);
+                x++;
+                if (x >= tileData.Width) { x = 0; y++; }
+                if (y >= tileData.Height) break; //you've somehow reached the end of the texture! (this shouldn't happen!)
+            }
+            return gen;
+        }
+
+        /// <summary> 
+        /// Creates a <see cref="TexGen"/> directly from <see cref="Texture2D"/>s. 
+        /// Old implementation, does not work on dedicated servers, prefer to use <see cref="GetTexGenerator(TexGenData, Dictionary{Color, int}, TexGenData?, Dictionary{Color, int}, TexGenData?, TexGenData?, TexGenData?, Dictionary{Color, int})"> GetTexGenerator(TexGenData...) </see> instead 
+        /// NOTE: all textures MUST be the same size or horrible things happen! 
+        /// </summary>
         public static TexGen GetTexGenerator(Texture2D tileTex, Dictionary<Color, int> colorToTile, Texture2D wallTex = null, Dictionary<Color, int> colorToWall = null, Texture2D liquidTex = null, Texture2D slopeTex = null, Texture2D objectTex = null, Dictionary<Color, int> colorToObject = null)
         {
             if (colorToLiquid == null)
@@ -43,7 +198,8 @@ namespace Macrocosm.Common.WorldGeneration
                 {
                     [new Color(0, 0, 255)] = LiquidID.Water,
                     [new Color(255, 0, 0)] = LiquidID.Lava,
-                    [new Color(255, 255, 0)] = LiquidID.Honey
+                    [new Color(255, 255, 0)] = LiquidID.Honey,
+                    [new Color(255, 0, 255)] = LiquidID.Shimmer
                 };
 
                 colorToSlope = new Dictionary<Color, int>
@@ -93,29 +249,6 @@ namespace Macrocosm.Common.WorldGeneration
             return gen;
         }
 
-        //where x, y is the top-left hand corner of the gen
-        public void Generate(int x, int y, bool silent, bool sync)
-        {
-            for (int x1 = 0; x1 < width; x1++)
-            {
-                for (int y1 = 0; y1 < height; y1++)
-                {
-                    int x2 = x + x1, y2 = y + y1;
-                    TileInfo info = tileGen[x1, y1];
-                    if (info.tileID == -1 && info.wallID == -1 && info.liquidType == -1 && info.wire == -1) continue;
-                    if (info.tileID != -1 || info.wallID > -1 || info.wire > -1) Utility.GenerateTile(x2, y2, info.tileID, info.wallID, info.tileStyle != 0 ? info.tileStyle : info.tileID == TileID.Torches ? torchStyle : info.tileID == TileID.Platforms ? platformStyle : 0, info.tileID > -1, info.liquidAmt == 0, info.slope, false, sync);
-                    if (info.liquidType != -1)
-                    {
-                        Utility.GenerateLiquid(x2, y2, info.liquidType, false, info.liquidAmt, sync);
-                    }
-                    if (info.objectID != 0)
-                    {
-                        WorldGen.PlaceObject(x2, y2, info.objectID);
-                        NetMessage.SendObjectPlacement(-1, x2, y2, info.objectID, 0, 0, -1, -1);
-                    }
-                }
-            }
-        }
     }
 
 
