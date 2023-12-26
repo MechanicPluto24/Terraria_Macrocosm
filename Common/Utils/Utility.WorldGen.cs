@@ -730,7 +730,7 @@ namespace Macrocosm.Common.Utils
 					}
 					else
 					{
-						Mtile.HasTile = false;
+						Mtile.ClearTile();
 					}
 				}
 				if (wall != -1)

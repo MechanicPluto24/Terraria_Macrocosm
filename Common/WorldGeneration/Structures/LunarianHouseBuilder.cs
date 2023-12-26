@@ -15,7 +15,7 @@ namespace Macrocosm.Common.WorldGeneration.Structures
 {
     public class LunarianHouseBuilder : MacrocosmHouseBuilder
     {
-        public LunarianHouseBuilder(Point origin, StructureMap structures) : base(origin, structures)
+        public LunarianHouseBuilder() : base()
         {
 
         }
