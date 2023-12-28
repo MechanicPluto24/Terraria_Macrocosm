@@ -32,3 +32,8 @@ SpaceShuttle: {
 	DisplayName: Space Shuttle
 	Description: In memory of STS-51-L and STS-107.
 }
+
+Procellarum_LightningMarkDebuff: {
+	DisplayName: Procellarum_ Lightning Mark Debuff
+	Description: Mods.Macrocosm.Buffs.Procellarum_LightningMarkDebuff.Description
+}
