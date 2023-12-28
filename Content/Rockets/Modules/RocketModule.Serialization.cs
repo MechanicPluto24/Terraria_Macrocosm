@@ -18,7 +18,7 @@ namespace Macrocosm.Content.Rockets.Modules
 			tag["Type"] = FullName;
 			tag["Name"] = Name;
 
-			if (Detail is not null)
+			if (Detail != default)
 				tag["DetailName"] = Detail.Name;
 
 			if (Pattern != default)

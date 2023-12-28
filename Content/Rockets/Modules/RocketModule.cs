@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Rockets.Modules
 		public Pattern Pattern { get; set; }
 
 		public bool HasPattern => Pattern != default;
-		public bool HasDetail => Detail is not null;
+		public bool HasDetail => Detail != default;
 		private bool SpecialDraw => HasPattern || HasDetail;
 
 		public Vector2 Position { get; set; }

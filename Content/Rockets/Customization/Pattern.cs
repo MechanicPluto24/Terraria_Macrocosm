@@ -16,14 +16,41 @@ namespace Macrocosm.Content.Rockets.Customization
 
 		public readonly string ModuleName { get; }
 
-		public bool IsDefault => Name == "Basic";
-
 		public readonly ImmutableArray<PatternColorData> ColorData { get; init; }
-		public readonly List<int> UserModifiableIndexes { get; init; } = new();
 
-		public int UserModifiableColorCount => UserModifiableIndexes.Count;
+        public readonly List<int> UserModifiableIndexes { get; init; } = new();
 
-		public const int MaxColorCount = 8;
+        public int UserModifiableColorCount => UserModifiableIndexes.Count;
+
+        public const int MaxColorCount = 8;
+
+        public Pattern(string moduleName, string patternName, params PatternColorData[] defaultColorData)
+        {
+            ModuleName = moduleName;
+            Name = patternName;
+
+            var colorData = new PatternColorData[MaxColorCount];
+            Array.Fill(colorData, new PatternColorData());
+
+            for (int i = 0; i < defaultColorData.Length; i++)
+            {
+                if (defaultColorData[i].HasColorFunction)
+                {
+                    colorData[i] = new PatternColorData(defaultColorData[i].ColorFunction);
+                }
+                else
+                {
+                    colorData[i] = new PatternColorData(defaultColorData[i].Color, defaultColorData[i].IsUserModifiable);
+
+                    if (defaultColorData[i].IsUserModifiable)
+                    {
+                        UserModifiableIndexes.Add(i);
+                    }
+                }
+            }
+
+            ColorData = ImmutableArray.Create(colorData);
+        }
 
 		public string TexturePath => GetType().Namespace.Replace('.', '/') + "/Patterns/" + ModuleName + "/" + Name;
 		public Texture2D Texture
@@ -48,35 +75,6 @@ namespace Macrocosm.Content.Rockets.Customization
 					return Macrocosm.EmptyTex;
 			}
 		}
-
-		public Pattern(string moduleName, string patternName, params PatternColorData[] defaultColorData)
-		{
-			ModuleName = moduleName;
-			Name = patternName;
-
-			var colorData = new PatternColorData[MaxColorCount];
-			Array.Fill(colorData, new PatternColorData());
-
-			for (int i = 0; i < defaultColorData.Length; i++)
-			{
-				if (defaultColorData[i].HasColorFunction)
-				{
-					colorData[i] = new PatternColorData(defaultColorData[i].ColorFunction);
-				}
-				else
-				{
-					colorData[i] = new PatternColorData(defaultColorData[i].Color, defaultColorData[i].IsUserModifiable);
-
-					if (defaultColorData[i].IsUserModifiable)
-					{
-						UserModifiableIndexes.Add(i);
-					}
-				}
-			}
-
-			ColorData = ImmutableArray.Create(colorData);
-		}
-
 
 		public Color GetColor(int index)
 		{
@@ -134,12 +132,6 @@ namespace Macrocosm.Content.Rockets.Customization
 			}
 
 			return this with { ColorData = ImmutableArray.Create(updatedColorData) };
-		}
-
-		public UIPatternIcon ProvideUI()
-		{
-			UIPatternIcon icon = new(this);
-			return icon;
 		}
 
 		public override bool Equals(object obj)

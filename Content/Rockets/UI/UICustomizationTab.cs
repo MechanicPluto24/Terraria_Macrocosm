@@ -88,8 +88,10 @@ namespace Macrocosm.Content.Rockets.UI
 		private UIPanelIconButton alignBottom;
 
 		private UIPanel detailConfigPanel;
+        private UIListScrollablePanel detailSelector;
+        private UIDetailIcon currentDetailIcon;
 
-		private UIPanel patternConfigPanel;
+        private UIPanel patternConfigPanel;
 		private UIListScrollablePanel patternSelector;
 		private UIPatternIcon currentPatternIcon;
 
@@ -189,10 +191,11 @@ namespace Macrocosm.Content.Rockets.UI
 		private void OnRocketChanged()
 		{
 			RefreshPatternConfigPanel();
-		}
+            RefreshDetailConfigPanel();
+        }
 
-		#region Update methods
-		private void UpdateCurrentModule()
+        #region Update methods
+        private void UpdateCurrentModule()
 		{
 
 		}
@@ -376,9 +379,15 @@ namespace Macrocosm.Content.Rockets.UI
 			modulePickerTitle.SetText(Language.GetText("Mods.Macrocosm.UI.Rocket.Modules." + moduleName));
 			modulePickerIconPanel.SetModule(moduleName);
 			RefreshPatternConfigPanel();
-		}
+			RefreshDetailConfigPanel();
+        }
 
-		private void RefreshPatternConfigPanel()
+        private void RefreshDetailConfigPanel()
+        {
+            customizationPanelBackground.ReplaceChildWith(detailConfigPanel, CreateDetailConfigPanel());
+        }
+
+        private void RefreshPatternConfigPanel()
 		{
 			customizationPanelBackground.ReplaceChildWith(patternConfigPanel, CreatePatternConfigPanel());
 			RefreshPatternColorPickers();
@@ -393,9 +402,10 @@ namespace Macrocosm.Content.Rockets.UI
 			modulePickerTitle.SetText(Language.GetText("Mods.Macrocosm.UI.Rocket.Modules." + CurrentModule.Name));
             modulePickerIconPanel.SetModule(CurrentModule.Name);
             RefreshPatternConfigPanel();
-		}
+            RefreshDetailConfigPanel();
+        }
 
-		private void OnPreviewZoomOut()
+        private void OnPreviewZoomOut()
 		{
 			hslMenu.CaptureCurrentColor();
 			rocketPreviewZoomButton.SetImage(ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Buttons/ZoomInButton"));
@@ -412,9 +422,10 @@ namespace Macrocosm.Content.Rockets.UI
 			modulePickerTitle.SetText("");
 			modulePickerIconPanel.ClearModule();
 			RefreshPatternConfigPanel();
-		}
+            RefreshDetailConfigPanel();
+        }
 
-		private void ApplyCustomizationChanges()
+        private void ApplyCustomizationChanges()
 		{
 			AllLoseFocus();
 
@@ -498,10 +509,25 @@ namespace Macrocosm.Content.Rockets.UI
 
 			ColorPickersLoseFocus();
 		}
-		#endregion
+        #endregion
 
-		#region Pattern selection methods
-		public void SelectPattern(UIPatternIcon icon)
+        public void SelectDetail(UIDetailIcon icon)
+        {
+            currentDetailIcon = icon;
+
+            if (rocketPreview.ZoomedOut)
+            {
+                // Apply common details
+            }
+            else
+            {
+                if (CustomizationStorage.TryGetDetail(icon.Detail.ModuleName, icon.Detail.Name, out Detail detail))
+                     CurrentModule.Detail = detail;
+            }
+        }
+
+        #region Pattern selection methods
+        public void SelectPattern(UIPatternIcon icon)
 		{
 			currentPatternIcon = icon;
 
@@ -1048,10 +1074,76 @@ namespace Macrocosm.Content.Rockets.UI
 				BorderColor = UITheme.Current.PanelStyle.BorderColor
 			};
 			detailConfigPanel.SetPadding(0f);
-			return detailConfigPanel;
+
+			detailSelector = CreateDetailSelector(currentModuleName);
+			foreach (var icon in detailSelector.OfType<UIDetailIcon>().ToList())
+				icon.OnLeftClick += (_, icon) => SelectDetail(icon as UIDetailIcon);
+     
+            detailConfigPanel.Append(detailSelector);
+
+            return detailConfigPanel;
 		}
 
-		private UIPanel CreatePatternConfigPanel()
+        public static UIListScrollablePanel CreateDetailSelector(string moduleName)
+        {
+            UIListScrollablePanel listPanel = new()
+            {
+                Width = new(0, 0.99f),
+                Height = new(0, 0.8f),
+                HAlign = 0.5f,
+                Top = new(0f, 0.2f),
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor,
+                ListPadding = 0f,
+                ListOuterPadding = 2f,
+                ScrollbarHeight = new(0f, 0.9f),
+                ScrollbarHAlign = 0.99f,
+                ListWidthWithScrollbar = new(0, 1f),
+                ListWidthWithoutScrollbar = new(0, 1f)
+            };
+            listPanel.SetPadding(0f);
+
+            var details = CustomizationStorage.GetUnlockedDetails(moduleName);
+            int count = details.Count;
+
+            int iconsPerRow = 9;
+            int rowsWithoutScrollbar = 4;
+            float iconSize = 51f;
+            float iconOffsetTop = 8f;
+            float iconOffsetLeft = 9f;
+
+            if (count > iconsPerRow * rowsWithoutScrollbar)
+            {
+                iconSize -= 2f;
+                iconOffsetLeft -= 1f;
+            }
+
+            UIElement detailIconContainer = new()
+            {
+                Width = new(0f, 1f),
+                Height = new(iconSize * (count / iconsPerRow + ((count % iconsPerRow != 0) ? 1 : 0)), 0f),
+            };
+
+            listPanel.Add(detailIconContainer);
+            detailIconContainer.SetPadding(0f);
+
+            for (int i = 0; i < count; i++)
+            {
+                Detail detail = details[i];
+                UIDetailIcon icon = new(detail)
+                {
+                    Left = new((i % iconsPerRow) * iconSize + iconOffsetLeft, 0f),
+                    Top = new((i / iconsPerRow) * iconSize + iconOffsetTop, 0f)
+                };
+
+                icon.Activate();
+                detailIconContainer.Append(icon);
+            }
+
+            return listPanel;
+        }
+
+        private UIPanel CreatePatternConfigPanel()
 		{
 			patternConfigPanel = new()
 			{
@@ -1065,16 +1157,10 @@ namespace Macrocosm.Content.Rockets.UI
 			patternConfigPanel.SetPadding(6f);
 			patternConfigPanel.PaddingTop = 0f;
 
-			foreach (var module in Rocket.Modules.Keys)
-			{
-				if (module == CurrentModule.Name)
-				{
-					patternSelector = CreatePatternSelector(module);
-					foreach (var icon in patternSelector.OfType<UIPatternIcon>().ToList())
-						icon.OnLeftClick += (_, icon) => SelectPattern(icon as UIPatternIcon);
-				}
-			}
-
+			patternSelector = CreatePatternSelector(currentModuleName);
+			foreach (var icon in patternSelector.OfType<UIPatternIcon>().ToList())
+				icon.OnLeftClick += (_, icon) => SelectPattern(icon as UIPatternIcon);
+		
 			patternConfigPanel.Append(patternSelector);
 
 			return patternConfigPanel;
@@ -1126,12 +1212,13 @@ namespace Macrocosm.Content.Rockets.UI
 			for (int i = 0; i < count; i++)
 			{
 				Pattern pattern = patterns[i];
-				UIPatternIcon icon = pattern.ProvideUI();
+                UIPatternIcon icon = new(pattern)
+                {
+                    Left = new((i % iconsPerRow) * iconSize + iconOffsetLeft, 0f),
+                    Top = new((i / iconsPerRow) * iconSize + iconOffsetTop, 0f)
+                };
 
-				icon.Left = new((i % iconsPerRow) * iconSize + iconOffsetLeft, 0f);
-				icon.Top = new((i / iconsPerRow) * iconSize + iconOffsetTop, 0f);
-
-				icon.Activate();
+                icon.Activate();
 				patternIconContainer.Append(icon);
 			}
 
