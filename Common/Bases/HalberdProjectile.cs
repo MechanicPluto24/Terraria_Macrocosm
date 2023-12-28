@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.GameContent;
+using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -36,7 +38,7 @@ namespace Macrocosm.Common.Bases
         private const float ARC_ANGLE_DEG = 30f;
 
         //private float armRotation = 0f;
-        private float[] stateDmgMulti = new float[6] { 1f, 0.5f, 2f, 0.5f, 3f, 0.5f };
+        private float[] stateDmgMulti = new float[6] { 3f, 2f, 8f, 1f, 10f, 1f };
         private List<NPC> NPCsHit = new List<NPC>();
         private Rectangle angleHitbox;
 
@@ -44,15 +46,14 @@ namespace Macrocosm.Common.Bases
         public abstract int rotPointToBlade { get; }
         public abstract int rotationOffset { get; }
         public abstract int startOffset { get; }
-        private int midOffset;
-        public abstract int farOffset { get; }
-        private int RotDiag;
-
+        public int midOffset;
+        public int farOffset;
+        public int RotDiag;
         public override void SetDefaults()
         {
-            baseMaxProgress = new int[6] { baseSpeed, baseSpeed / 2, baseSpeed / 3, baseSpeed / 2, baseSpeed / 4, baseSpeed / 2 };
-
-            midOffset = (int)Terraria.Utils.Lerp(startOffset, farOffset, 0.75);
+            baseMaxProgress = new int[6] { baseSpeed, baseSpeed / 3, baseSpeed / 3, (int)(baseSpeed * 2f / 3), baseSpeed / 4, baseSpeed / 2 };
+            farOffset = halberdSize - rotationOffset;
+            midOffset = (int)MathHelper.Lerp(startOffset, farOffset, 0.67f);
             RotDiag = Utility.SquareDiagonal(rotationOffset);
             Projectile.Size = new Vector2(2 * RotDiag);
 
@@ -60,6 +61,7 @@ namespace Macrocosm.Common.Bases
             Projectile.tileCollide = false;
             Projectile.penetrate = -1;
             Projectile.friendly = true;
+            Projectile.hostile = false;
 
             Projectile.DamageType = DamageClass.Melee;
         }
@@ -76,10 +78,15 @@ namespace Macrocosm.Common.Bases
         {
             Projectile.timeLeft += 1;
             Player.heldProj = Projectile.whoAmI;
-
+            //Main.NewText(Player.altFunctionUse);
             int[] finalMaxProgress = new int[6];
             for (int i = 0; i < finalMaxProgress.Length; i++)
+            {
                 finalMaxProgress[i] = (int)(baseMaxProgress[i] * (1 / useTimeMulti));
+            }
+
+            //Main.NewText(state);
+            //Main.NewText($"{currentAnimProgress}/{finalMaxProgress[(int)state]}");
 
             Projectile.Center = Player.MountedCenter - new Vector2(0, 6);
 
@@ -88,11 +95,11 @@ namespace Macrocosm.Common.Bases
 
             float angleOffset = MathHelper.Pi * 3/4;
             Projectile.rotation = angleOffset;
-            float CursorRotation = (Main.MouseWorld - Player.MountedCenter - new Vector2(0, 6)).ToRotation();
+            float CursorRotation = (Main.MouseWorld - Player.MountedCenter).ToRotation();
 
             if (CursorRotation >= -MathHelper.PiOver2 && CursorRotation < MathHelper.PiOver2)
             {
-                Player.direction = 1;
+                
                 Player.direction = 1;
                 DrawOriginOffsetX = -(halberdSize / 2) + rotationOffset;
                 DrawOriginOffsetY = RotDiag - rotationOffset;
@@ -124,30 +131,29 @@ namespace Macrocosm.Common.Bases
 
                 case HalberdState.TransOne:
                     
-                    attackOffset = (float)Terraria.Utils.Lerp(startOffset, midOffset, 0.5f * FloatAnimProgress);
+                    attackOffset = (float)MathHelper.Lerp(startOffset, midOffset, 0.5f * FloatAnimProgress);
                     attackAngle = CursorRotation - (Player.direction * MathHelper.PiOver2 * MathF.Sin(MathHelper.TwoPi * 0.25f * FloatAnimProgress));
 
                     break;
                 case HalberdState.AttackTwo:
-                    attackOffset = (float)Terraria.Utils.Lerp(startOffset, midOffset, 0.5f + 0.5f * MathF.Sin(MathHelper.TwoPi * 0.25f * FloatAnimProgress));
+                    attackOffset = (float)MathHelper.Lerp(startOffset, midOffset, 0.5f + 0.5f * MathF.Sin(MathHelper.TwoPi * 0.25f * FloatAnimProgress));
                     attackAngle = CursorRotation - Player.direction * MathHelper.PiOver2;
                     attackAngle += Player.direction * (MathHelper.TwoPi / 3) * (1 - MathF.Cos(MathHelper.TwoPi * 0.25f * FloatAnimProgress));
 
                     break;
                 case HalberdState.TransTwo:
-                    attackOffset = (float)Terraria.Utils.Lerp(midOffset, startOffset, FloatAnimProgress);
-                    attackAngle = (float)Terraria.Utils.Lerp(CursorRotation + Player.direction * (MathHelper.Pi / 6), CursorRotation, FloatAnimProgress);
+                    attackOffset = (float)MathHelper.Lerp(midOffset, startOffset, 1 - MathF.Cos(MathHelper.TwoPi * 0.25f * FloatAnimProgress));
+                    attackAngle = (float)MathHelper.Lerp(CursorRotation + Player.direction * (MathHelper.Pi / 6), CursorRotation, FloatAnimProgress);
 
                     break;
                 case HalberdState.AttackThree:
-                    attackOffset = (int)Terraria.Utils.Lerp(startOffset, farOffset, FloatAnimProgress);
+                    attackOffset = (int)MathHelper.Lerp(startOffset, farOffset, FloatAnimProgress);
                     attackAngle = CursorRotation;
-                    /*
+
                     if (Player.velocity.X / Player.direction > 0 && currentAnimProgress == 0)
                     {
-                        Player.velocity += 25f * new Vector2(MathF.Sin(CursorRotation), MathF.Cos(CursorRotation));
+                        Player.velocity.X += Player.direction * useTimeMulti * MathHelper.Lerp(5, 0, FloatAnimProgress);
                     }
-                    */
                     break;
                 case HalberdState.TransThree:
                     attackOffset = (int)Terraria.Utils.Lerp(farOffset, startOffset, FloatAnimProgress);
@@ -156,9 +162,9 @@ namespace Macrocosm.Common.Bases
                     break;
             }
 
-            Projectile.position.X += (MathF.Cos(attackAngle) * (startOffset + attackOffset));
-            Projectile.position.Y += (MathF.Sin(attackAngle) * (startOffset + attackOffset));
-            Projectile.rotation += (Projectile.Center - Player.Center).ToRotation();
+            Projectile.position.X += MathF.Cos(attackAngle) * (startOffset + attackOffset);
+            Projectile.position.Y += MathF.Sin(attackAngle) * (startOffset + attackOffset);
+            Projectile.rotation += (Projectile.Center - Player.MountedCenter).ToRotation();
 
             if (Player.direction == 1)
                 Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, attackAngle - MathHelper.ToRadians(70));
@@ -181,6 +187,7 @@ namespace Macrocosm.Common.Bases
             angleHitbox.Y = (int)(Projectile.Center.Y - 0.5f * new Vector2(angleHitbox.Width, angleHitbox.Height).Y);
 
             currentAnimProgress += 1;
+            //Main.NewText($"{currentAnimProgress}/{finalMaxProgress[(int)state]}");
             if (currentAnimProgress >= finalMaxProgress[(int)state])
             {
                 if (Player.channel)
@@ -213,7 +220,9 @@ namespace Macrocosm.Common.Bases
         }
         public override bool? CanHitNPC(NPC target)
         {
-            if (NPCsHit.Contains(target))
+            //TODO code for hitting npcs that can be killed with a voodoo doll equipped.
+            //if (NPCsHit.Contains(target) | (!(target.type == NPCID.Guide && Player.killGuide) | !(target.type == NPCID.Clothier && Player.killClothier)) && target.friendly)
+            if (NPCsHit.Contains(target) | target.friendly)
                 return false;
             else
                 return true;
@@ -224,5 +233,7 @@ namespace Macrocosm.Common.Bases
             Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(angleHitbox.X - (int)Main.screenPosition.X, angleHitbox.Y - (int)Main.screenPosition.Y, angleHitbox.Width, angleHitbox.Height), Color.Red);
         }
         */
+        public override Color? GetAlpha(Color lightColor) => Lighting.GetColor(Main.player[Projectile.owner].Center.ToTileCoordinates());
+
     }
 }
