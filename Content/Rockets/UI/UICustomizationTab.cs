@@ -62,6 +62,7 @@ namespace Macrocosm.Content.Rockets.UI
 
 		private UIPanel modulePicker;
 		private UIText modulePickerTitle;
+		private UICustomizationModuleIcon modulePickerIconPanel;
 		private UIHoverImageButton leftButton;
 		private UIHoverImageButton rightButton;
 
@@ -373,6 +374,7 @@ namespace Macrocosm.Content.Rockets.UI
 		{
 			currentModuleName = moduleName;
 			modulePickerTitle.SetText(Language.GetText("Mods.Macrocosm.UI.Rocket.Modules." + moduleName));
+			modulePickerIconPanel.SetModule(moduleName);
 			RefreshPatternConfigPanel();
 		}
 
@@ -389,7 +391,8 @@ namespace Macrocosm.Content.Rockets.UI
 
 			currentModuleName = lastModuleName;
 			modulePickerTitle.SetText(Language.GetText("Mods.Macrocosm.UI.Rocket.Modules." + CurrentModule.Name));
-			RefreshPatternConfigPanel();
+            modulePickerIconPanel.SetModule(CurrentModule.Name);
+            RefreshPatternConfigPanel();
 		}
 
 		private void OnPreviewZoomOut()
@@ -402,10 +405,12 @@ namespace Macrocosm.Content.Rockets.UI
 
 			lastModuleName = currentModuleName;
 
-			//TODO: add a way to fetch common patterns for all modules and never reference a specific module if zoomed out
+			// This a hacky way to see all available color slots for the entire rocket. Still, it can lead to weird behavior
+			//TODO: Add a way to fetch common patterns for all modules and never reference a specific module if zoomed out
 			currentModuleName = "BoosterRight";
 
 			modulePickerTitle.SetText("");
+			modulePickerIconPanel.ClearModule();
 			RefreshPatternConfigPanel();
 		}
 
@@ -762,7 +767,7 @@ namespace Macrocosm.Content.Rockets.UI
 			};
 			modulePicker.Append(modulePickerTitle);
 
-			UIPanel moduleIconPreviewPanel = new()
+			modulePickerIconPanel = new()
 			{
 				Width = new(0f, 0.6f),
 				Height = new(0f, 0.7f),
@@ -771,7 +776,7 @@ namespace Macrocosm.Content.Rockets.UI
 				BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
 				BorderColor = UITheme.Current.PanelStyle.BorderColor
 			};
-			modulePicker.Append(moduleIconPreviewPanel);
+			modulePicker.Append(modulePickerIconPanel);
 
 			leftButton = new(ModContent.Request<Texture2D>(buttonsPath + "BackArrow", mode), ModContent.Request<Texture2D>(buttonsPath + "BackArrowBorder", mode))
 			{
