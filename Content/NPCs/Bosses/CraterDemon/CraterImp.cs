@@ -150,7 +150,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			return false;
 		}
 
-		SpriteBatchState state;
 		public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
 			if (NPC.IsABestiaryIconDummy)

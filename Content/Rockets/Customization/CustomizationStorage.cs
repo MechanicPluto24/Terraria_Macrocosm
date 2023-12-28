@@ -125,17 +125,36 @@ namespace Macrocosm.Content.Rockets.Customization
 		public static Detail GetDetail(string moduleName, string detailName)
 			=> details[(moduleName, detailName)];
 
-		/// <summary>
-		/// Attempts to get a detail reference from the detail storage.
-		/// </summary>
-		/// <param name="moduleName"> The rocket module this detail belongs to </param>
-		/// <param name="detailName"> The detail name </param>
-		/// <param name="detail"> The detail, null if not found </param>
-		/// <returns> Whether the specified detail has been found </returns>
+        public static List<Detail> GetUnlockedDetails(string moduleName)
+        {
+            return GetDetailsWhere(moduleName, detail =>
+            {
+                var key = (moduleName, detail.Name);
+                return detailUnlockStatus.ContainsKey(key) && detailUnlockStatus[key];
+            });
+        }
+
+        public static List<Detail> GetDetailsWhere(string moduleName, Func<Detail, bool> match)
+        {
+            var detailsForModule = details
+                .Select(kvp => kvp.Value)
+                .Where(detail => detail.ModuleName == moduleName && match(detail))
+                .ToList();
+
+            return detailsForModule;
+        }
+
+        /// <summary>
+        /// Attempts to get a detail reference from the detail storage.
+        /// </summary>
+        /// <param name="moduleName"> The rocket module this detail belongs to </param>
+        /// <param name="detailName"> The detail name </param>
+        /// <param name="detail"> The detail, null if not found </param>
+        /// <returns> Whether the specified detail has been found </returns>
 		public static bool TryGetDetail(string moduleName, string detailName, out Detail detail)
 			=> details.TryGetValue((moduleName, detailName), out detail);
 
-		public override void ClearWorld()
+        public override void ClearWorld()
 		{
 			Reset();
 		}
@@ -200,11 +219,6 @@ namespace Macrocosm.Content.Rockets.Customization
 			detailUnlockStatus.Add((moduleName, detailName), unlockedByDefault);
 		}
 
-		public static UIListScrollablePanel ProvidePatternUI(string moduleName)
-		{
-			throw new NotImplementedException();
-		}
-
 		private static void LoadPatterns()
 		{
 			try
@@ -226,21 +240,57 @@ namespace Macrocosm.Content.Rockets.Customization
 				Macrocosm.Instance.Logger.Error(ex.Message);
 			}
 
-			// Just for testing the scrollbar
-			for (int i = 1; i <= 7; i++)
-				AddPattern("ServiceModule", "Test" + i, true, new(Color.Transparent), new(Color.White));
+            string logstring = "Loaded " + patterns.Count.ToString() + " pattern" + (patterns.Count == 1 ? "" : "s") + ":\n";
 
-			for (int i = 1; i <= 8; i++)
-				AddPattern("ReactorModule", "Test" + i, true, new(Color.Transparent), new(Color.White));
+            foreach (string moduleName in Rocket.DefaultModuleNames)
+			{
+				logstring += $" - Module: {moduleName}\n\t";
+                foreach (var kvp in patterns)
+				{
+					(string patternModuleName, string patternName) = kvp.Key;
+                    if(patternModuleName == moduleName)
+                        logstring += $"{patternName} ";
+                }
+                logstring += "\n\n";
+            }
+            Macrocosm.Instance.Logger.Info(logstring);
+        }
 
-			for (int i = 1; i <= 74; i++)
-				AddPattern("EngineModule", "Test" + i, true, new(Color.White), new(Color.White));
-		}
-
-		private static void LoadDetails()
+        private static void LoadDetails()
 		{
-			foreach (var country in Utility.CountryCodesAlpha3)
-				AddDetail("EngineModule", "Flag_" + country, true);
-		}
+			// Find all existing patters for this module
+			string lookupString = "Content/Rockets/Customization/Details/";
+            var detailPathsWithIcons = Macrocosm.Instance.RootContentSource.GetAllAssetsStartingWith(lookupString).ToList();
+			var detailPaths = detailPathsWithIcons.Where(x => !x.Contains("/Icons")).ToList();
+
+            // Log the pattern list
+
+            foreach (var detailWithModule in detailPaths)
+			{
+				string[] split = detailWithModule.Replace(lookupString, "").Split('/');
+
+				if(split.Length == 2) 
+				{
+					string module = split[0];
+					string detail = split[1].Replace(".rawimg", "");
+
+					AddDetail(module, detail, true);
+                }
+            }
+
+            string logstring = "Loaded " + details.Count.ToString() + " detail" + (detailPaths.Count == 1 ? "" : "s") + ":\n";
+            foreach (string moduleName in Rocket.DefaultModuleNames)
+            {
+                logstring += $" - Module: {moduleName}\n\t";
+                foreach (var kvp in details)
+                {
+                    (string DetailModuleName, string detailName) = kvp.Key;
+                    if (DetailModuleName == moduleName)
+                        logstring += $"{detailName} ";
+                }
+                logstring += "\n\n";
+            }
+            Macrocosm.Instance.Logger.Info(logstring);
+        }
 	}
 }
