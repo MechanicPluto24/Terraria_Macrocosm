@@ -20,7 +20,7 @@ namespace Macrocosm.Content.Rockets.UI
 		public UIDetailIcon(Detail detail)
 		: base
 		(
-            ModContent.RequestIfExists<Texture2D>(detail.TexturePath + "_Icon", out Asset<Texture2D> icon) ? icon : Macrocosm.EmptyTexAsset,
+            ModContent.RequestIfExists(detail.IconTexturePath, out Asset<Texture2D> icon) ? icon : Macrocosm.EmptyTexAsset,
 			ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanel", AssetRequestMode.ImmediateLoad),
 			ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanelBorder", AssetRequestMode.ImmediateLoad),
 			ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanelHoverBorder", AssetRequestMode.ImmediateLoad)

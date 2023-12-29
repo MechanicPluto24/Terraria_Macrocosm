@@ -61,7 +61,8 @@ namespace Macrocosm.Content.Rockets.Modules
 
 		public RocketModule(Rocket rocket)
 		{
-			Pattern = CustomizationStorage.GetDefaultPattern(GetType().Name);
+			Detail = CustomizationStorage.GetDefaultDetail(Name);
+			Pattern = CustomizationStorage.GetDefaultPattern(Name);
 			this.rocket = rocket;
 		}
 
