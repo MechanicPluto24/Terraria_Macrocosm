@@ -33,6 +33,11 @@ SpaceShuttle: {
 	Description: In memory of STS-51-L and STS-107.
 }
 
+Procellarum_LightningMarkDebuff: {
+	DisplayName: Procellarum Lightning Mark
+	Description: You take double damage from Procellarum's light bolts.
+}
+
 HandheldEngineOverheat: {
 	DisplayName: Handheld Engine Overheat
 	Description: Your weapon has overheated!
