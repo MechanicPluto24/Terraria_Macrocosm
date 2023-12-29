@@ -87,8 +87,7 @@ namespace Macrocosm.Content.Rockets.UI
 		private UIPanelIconButton alignCenterVertical;
 		private UIPanelIconButton alignBottom;
 
-		private UIPanel detailConfigPanel;
-        private UIListScrollablePanel detailSelector;
+		private UIListScrollablePanel detailConfigPanel;
         private UIDetailIcon currentDetailIcon;
 
         private UIPanel patternConfigPanel;
@@ -176,7 +175,8 @@ namespace Macrocosm.Content.Rockets.UI
 
 			rocketPreview.RocketDummy = CustomizationDummy;
 
-			UpdatePatternConfig();
+			UpdateDetailConfig();
+            UpdatePatternConfig();
 			UpdatePatternColorPickers();
 
 			UpdateNamplateTextBox();
@@ -200,9 +200,28 @@ namespace Macrocosm.Content.Rockets.UI
 
 		}
 
+		private void UpdateDetailConfig()
+		{
+			if (!CurrentModule.HasDetail)
+				return;
+
+			Detail currentDummyDetail = CurrentModule.Detail;
+
+            var list = detailConfigPanel.OfType<UIDetailIcon>();
+            if (detailConfigPanel.OfType<UIDetailIcon>().Any())
+            {
+                currentDetailIcon = detailConfigPanel.OfType<UIDetailIcon>().FirstOrDefault(icon => icon.Detail.Name == currentDummyDetail.Name);
+                currentDetailIcon.Detail = currentDummyDetail;
+                currentDetailIcon.HasFocus = true;
+            }
+        }
+
 		private void UpdatePatternConfig()
 		{
-			Pattern currentDummyPattern = CurrentModule.Pattern;
+            if (!CurrentModule.HasPattern)
+                return;
+
+            Pattern currentDummyPattern = CurrentModule.Pattern;
 
 			var list = patternSelector.OfType<UIPatternIcon>();
 			if (patternSelector.OfType<UIPatternIcon>().Any())
@@ -440,7 +459,8 @@ namespace Macrocosm.Content.Rockets.UI
 
 			CustomizationDummy = Rocket.Clone();
 
-			UpdatePatternConfig();
+			UpdateDetailConfig();
+            UpdatePatternConfig();
 			currentPatternIcon.Pattern = CustomizationDummy.Modules[CurrentModule.Name].Pattern;
 
 			RefreshPatternColorPickers();
@@ -581,7 +601,7 @@ namespace Macrocosm.Content.Rockets.UI
 			var indexes = CurrentModule.Pattern.UserModifiableIndexes;
 
 			float iconSize = 32f + 8f;
-			float iconLeftOffset = 3f;
+			float iconLeftOffset = 10f;
 
 			for (int i = 0; i < indexes.Count; i++)
 			{
@@ -1062,38 +1082,16 @@ namespace Macrocosm.Content.Rockets.UI
 			return nameplateConfigPanel;
 		}
 
-		private UIPanel CreateDetailConfigPanel()
+		private UIListScrollablePanel CreateDetailConfigPanel()
 		{
 			detailConfigPanel = new()
 			{
 				Width = new(0, 0.99f),
-				Height = new(0, 0.22f),
+				Height = new(0, 0.245f),
 				HAlign = 0.5f,
 				Top = new(0f, 0.36f),
 				BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
-				BorderColor = UITheme.Current.PanelStyle.BorderColor
-			};
-			detailConfigPanel.SetPadding(0f);
-
-			detailSelector = CreateDetailSelector(currentModuleName);
-			foreach (var icon in detailSelector.OfType<UIDetailIcon>().ToList())
-				icon.OnLeftClick += (_, icon) => SelectDetail(icon as UIDetailIcon);
-     
-            detailConfigPanel.Append(detailSelector);
-
-            return detailConfigPanel;
-		}
-
-        public static UIListScrollablePanel CreateDetailSelector(string moduleName)
-        {
-            UIListScrollablePanel listPanel = new()
-            {
-                Width = new(0, 0.99f),
-                Height = new(0, 0.8f),
-                HAlign = 0.5f,
-                Top = new(0f, 0.2f),
-                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
-                BorderColor = UITheme.Current.PanelStyle.BorderColor,
+				BorderColor = UITheme.Current.PanelStyle.BorderColor,
                 ListPadding = 0f,
                 ListOuterPadding = 2f,
                 ScrollbarHeight = new(0f, 0.9f),
@@ -1101,9 +1099,9 @@ namespace Macrocosm.Content.Rockets.UI
                 ListWidthWithScrollbar = new(0, 1f),
                 ListWidthWithoutScrollbar = new(0, 1f)
             };
-            listPanel.SetPadding(0f);
+			detailConfigPanel.SetPadding(0f);
 
-            var details = CustomizationStorage.GetUnlockedDetails(moduleName);
+            var details = CustomizationStorage.GetUnlockedDetails(currentModuleName);
             int count = details.Count;
 
             int iconsPerRow = 9;
@@ -1124,7 +1122,7 @@ namespace Macrocosm.Content.Rockets.UI
                 Height = new(iconSize * (count / iconsPerRow + ((count % iconsPerRow != 0) ? 1 : 0)), 0f),
             };
 
-            listPanel.Add(detailIconContainer);
+            detailConfigPanel.Add(detailIconContainer);
             detailIconContainer.SetPadding(0f);
 
             for (int i = 0; i < count; i++)
@@ -1140,22 +1138,24 @@ namespace Macrocosm.Content.Rockets.UI
                 detailIconContainer.Append(icon);
             }
 
-            return listPanel;
-        }
+			foreach (var icon in detailConfigPanel.OfType<UIDetailIcon>().ToList())
+				icon.OnLeftClick += (_, icon) => SelectDetail(icon as UIDetailIcon);
+     
+            return detailConfigPanel;
+		}
 
         private UIPanel CreatePatternConfigPanel()
 		{
 			patternConfigPanel = new()
 			{
 				Width = new(0, 0.99f),
-				Height = new(0, 0.4f),
+				Height = new(0, 0.375f),
 				HAlign = 0.5f,
-				Top = new(0f, 0.595f),
+				Top = new(0f, 0.62f),
 				BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
 				BorderColor = UITheme.Current.PanelStyle.BorderColor,
 			};
-			patternConfigPanel.SetPadding(6f);
-			patternConfigPanel.PaddingTop = 0f;
+			patternConfigPanel.SetPadding(0f);
 
 			patternSelector = CreatePatternSelector(currentModuleName);
 			foreach (var icon in patternSelector.OfType<UIPatternIcon>().ToList())
@@ -1170,7 +1170,7 @@ namespace Macrocosm.Content.Rockets.UI
 		{
 			UIListScrollablePanel listPanel = new()
 			{
-				Width = new(0, 0.99f),
+				Width = new(0, 1f),
 				Height = new(0, 0.8f),
 				HAlign = 0.5f,
 				Top = new(0f, 0.2f),
@@ -1190,7 +1190,7 @@ namespace Macrocosm.Content.Rockets.UI
 
 			int iconsPerRow = 9;
 			int rowsWithoutScrollbar = 4;
-			float iconSize = 51f;
+			float iconSize = 52f;
 			float iconOffsetTop = 8f;
 			float iconOffsetLeft = 9f;
 

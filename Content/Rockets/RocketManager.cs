@@ -32,13 +32,15 @@ namespace Macrocosm.Content.Rockets
 
 		public override void Load()
 		{
-			Rockets = new Rocket[MaxRockets];
-
-			On_Main.DoDraw_DrawNPCsBehindTiles += On_Main_DoDraw_DrawNPCsBehindTiles;
+            On_Main.DoDraw_DrawNPCsBehindTiles += On_Main_DoDraw_DrawNPCsBehindTiles;
 			On_Main.DrawProjectiles += DrawRockets_Projectiles;
 			On_Main.DrawNPCs += DrawRockets_NPCs;
 			On_Main.DrawDust += DrawRockets_OverlaysAfterDusts;
-		}
+
+            Rockets = new Rocket[MaxRockets];
+            for (int i = 0; i < MaxRockets; i++)
+                Rockets[i] = new Rocket();
+        }
 
 		public override void Unload()
 		{

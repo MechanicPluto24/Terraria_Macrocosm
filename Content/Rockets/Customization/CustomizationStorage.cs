@@ -13,6 +13,7 @@ namespace Macrocosm.Content.Rockets.Customization
 	public class CustomizationStorage : ModSystem
 	{
 		public static bool Initialized { get; private set; }
+		private static bool initialLoad;
 
 		private static Dictionary<(string moduleName, string patternName), Pattern> patterns;
 		private static Dictionary<(string moduleName, string detailName), Detail> details;
@@ -20,12 +21,12 @@ namespace Macrocosm.Content.Rockets.Customization
 		private static Dictionary<(string moduleName, string patternName), bool> patternUnlockStatus;
 		private static Dictionary<(string moduleName, string detailName), bool> detailUnlockStatus;
 
-
 		public override void Load()
 		{
+            initialLoad = true;
+
 			patterns = new();
 			details = new();
-
 			patternUnlockStatus = new();
 			detailUnlockStatus = new();
 
@@ -33,29 +34,34 @@ namespace Macrocosm.Content.Rockets.Customization
 			LoadDetails();
 
 			Initialized = true;
-		}
+        }
 
 		public override void Unload()
 		{
-			patterns.Clear();
-			details.Clear();
-			patternUnlockStatus.Clear();
-			detailUnlockStatus.Clear();
+            initialLoad = false;
 
 			patterns = null;
 			details = null;
 			patternUnlockStatus = null;
 			detailUnlockStatus = null;
 
+            Initialized = false;
+        }
 
-			Initialized = false;
-		}
-
-		public static void Reset()
+        public static void Reset()
 		{
-			ModContent.GetInstance<CustomizationStorage>().Unload();
-			ModContent.GetInstance<CustomizationStorage>().Load();
-		}
+            Initialized = false;
+
+            patterns = new();
+            details = new();
+            patternUnlockStatus = new();
+            detailUnlockStatus = new();
+
+            LoadPatterns();
+            LoadDetails();
+
+			Initialized = true;
+        }
 
 		/// <summary>
 		/// Gets a pattern from the pattern storage.
@@ -125,6 +131,9 @@ namespace Macrocosm.Content.Rockets.Customization
 		public static Detail GetDetail(string moduleName, string detailName)
 			=> details[(moduleName, detailName)];
 
+        public static Detail GetDefaultDetail(string moduleName)
+			=> details[(moduleName, "None")];
+
         public static List<Detail> GetUnlockedDetails(string moduleName)
         {
             return GetDetailsWhere(moduleName, detail =>
@@ -154,10 +163,7 @@ namespace Macrocosm.Content.Rockets.Customization
 		public static bool TryGetDetail(string moduleName, string detailName, out Detail detail)
 			=> details.TryGetValue((moduleName, detailName), out detail);
 
-        public override void ClearWorld()
-		{
-			Reset();
-		}
+        public override void ClearWorld() => Reset();
 
 		public override void SaveWorldData(TagCompound tag) => SaveData(tag);
 
@@ -240,6 +246,11 @@ namespace Macrocosm.Content.Rockets.Customization
 				Macrocosm.Instance.Logger.Error(ex.Message);
 			}
 
+			for(int i = 0; i < 60; i++)
+			{
+				AddPattern("EngineModule", $"Test{i}", true);
+			}
+
             string logstring = "Loaded " + patterns.Count.ToString() + " pattern" + (patterns.Count == 1 ? "" : "s") + ":\n";
 
             foreach (string moduleName in Rocket.DefaultModuleNames)
@@ -253,13 +264,18 @@ namespace Macrocosm.Content.Rockets.Customization
                 }
                 logstring += "\n\n";
             }
-            Macrocosm.Instance.Logger.Info(logstring);
+
+			if(initialLoad)
+				Macrocosm.Instance.Logger.Info(logstring);
         }
 
         private static void LoadDetails()
 		{
-			// Find all existing patters for this module
-			string lookupString = "Content/Rockets/Customization/Details/";
+            foreach (string moduleName in Rocket.DefaultModuleNames)
+                 AddDetail(moduleName, "None", true);
+ 
+            // Find all existing patters for this module
+            string lookupString = "Content/Rockets/Customization/Details/";
             var detailPathsWithIcons = Macrocosm.Instance.RootContentSource.GetAllAssetsStartingWith(lookupString).ToList();
 			var detailPaths = detailPathsWithIcons.Where(x => !x.Contains("/Icons")).ToList();
 
@@ -290,7 +306,9 @@ namespace Macrocosm.Content.Rockets.Customization
                 }
                 logstring += "\n\n";
             }
-            Macrocosm.Instance.Logger.Info(logstring);
+
+            if (initialLoad)
+                Macrocosm.Instance.Logger.Info(logstring);
         }
 	}
 }
