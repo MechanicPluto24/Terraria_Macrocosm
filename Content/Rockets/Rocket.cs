@@ -253,6 +253,7 @@ namespace Macrocosm.Content.Rockets
 				Travel();
 			}
 
+			// reset render target after first update to fix reload issue
 			if (!ranFirstUpdate)
 			{
 				ResetRenderTarget();
