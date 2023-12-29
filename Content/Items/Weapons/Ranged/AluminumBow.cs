@@ -1,7 +1,6 @@
 using Macrocosm.Content.Items.Materials;
 using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -11,7 +10,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 	{
 		public override void SetStaticDefaults()
 		{
-			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
+
 		}
 		public override void SetDefaults()
 		{
@@ -28,7 +27,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			Item.rare = ItemRarityID.White;
 			Item.UseSound = SoundID.Item5;
 			Item.autoReuse = true;
-			Item.shoot = ProjectileID.PurificationPowder;
+			Item.shoot = Macrocosm.ItemShoot_UsesAmmo;
 			Item.shootSpeed = 6.6f;
 			Item.useAmmo = AmmoID.Arrow;
 		}
@@ -44,6 +43,6 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			recipe.AddIngredient(ModContent.ItemType<AluminumBar>(), 7);
 			recipe.AddTile(TileID.Anvils);
 			recipe.Register();
- 		}
+		}
 	}
 }

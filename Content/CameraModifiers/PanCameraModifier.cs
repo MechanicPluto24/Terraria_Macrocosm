@@ -1,4 +1,4 @@
-﻿using Macrocosm.Content.Rockets;
+﻿using Macrocosm.Content.Players;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -59,7 +59,7 @@ namespace Macrocosm.Content.CameraModifiers
 			{
 				Finished = true;
 			}
-			else if(Vector2.DistanceSquared(cameraPosition.OriginalCameraPosition, TargetPosition) > 0f)
+			else if (Vector2.DistanceSquared(cameraPosition.OriginalCameraPosition, TargetPosition) > 0f)
 			{
 				// On return, use the regular camera position (e.g. centered on player)
 				Vector2 originalPosition = cameraPosition.OriginalCameraPosition;
@@ -68,7 +68,7 @@ namespace Macrocosm.Content.CameraModifiers
 				{
 					panProgress -= panSpeed * 0.9f;
 				}
-				else if(panProgress < 1f)
+				else if (panProgress < 1f)
 				{
 					// Use the provided screen position as a starting point, not the regular screen position
 					originalPosition = startScreenPosition;
@@ -80,7 +80,7 @@ namespace Macrocosm.Content.CameraModifiers
 					localProgress = easingFunction(panProgress);
 
 				cameraPosition.CameraPosition = Vector2.Lerp(originalPosition, TargetPosition, localProgress);
- 			}
+			}
 		}
 	}
 }

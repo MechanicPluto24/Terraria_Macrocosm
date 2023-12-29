@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.Utils;
 using Macrocosm.Content.Projectiles.Environment.Meteors;
 using Macrocosm.Content.Rockets.Navigation.Checklist;
 using Microsoft.Xna.Framework;
@@ -19,50 +18,53 @@ namespace Macrocosm.Content.Subworlds
 	/// I have saved the day - Ryan
 	/// </summary>
 	public partial class Moon : MacrocosmSubworld
-    {
-        private static Moon instance;
-        public static Moon Instance { get { instance ??= new(); return instance; } }
+	{
+		private static Moon instance;
+		public static Moon Instance { get { instance ??= new(); return instance; } }
 
-        /// <summary> 8 times slower than on Earth (a Terrarian lunar month lasts for 8 in-game days) </summary>
-        public override double TimeRate => 0.125;
+		public float MeteorBoost { get; set; } = 1f;
+
+
+		/// <summary> 8 times slower than on Earth (a Terrarian lunar month lasts for 8 in-game days) </summary>
+		public override double TimeRate => 0.125;
 
 		/// <summary> About 6 times lower than default (1, as on Earth) </summary>
 		public override float GravityMultiplier => 0.166f;
 
-        public override bool NormalUpdates => false;
+		public override bool NormalUpdates => false;
 
-        public override bool ShouldSave => true;
-        public override bool NoPlayerSaving => false;
+		public override bool ShouldSave => true;
+		public override bool NoPlayerSaving => false;
 
 		public override ChecklistConditionCollection LaunchConditions => new()
 		{
 			//new ChecklistCondition("MoonLord", () => NPC.downedMoonlord, hideIfMet: true) // placeholder for now
 		};
 
-        public override Dictionary<MapColorType, Color> MapColors => new()
-        {
-            {MapColorType.SkyUpper, new Color(10, 10, 10)},
-            {MapColorType.SkyLower, new Color(40, 40, 40)},
-            {MapColorType.UndergroundUpper, new Color(40, 40, 40)},
-            {MapColorType.UndergroundLower, new Color(30, 30, 30)},
-            {MapColorType.CavernUpper, new Color(30, 30, 30)},
-            {MapColorType.CavernLower, new Color(30, 30, 30)},
-            {MapColorType.Underworld,  new Color(30, 30, 30)}
-        };
+		public override Dictionary<MapColorType, Color> MapColors => new()
+		{
+			{MapColorType.SkyUpper, new Color(10, 10, 10)},
+			{MapColorType.SkyLower, new Color(40, 40, 40)},
+			{MapColorType.UndergroundUpper, new Color(40, 40, 40)},
+			{MapColorType.UndergroundLower, new Color(30, 30, 30)},
+			{MapColorType.CavernUpper, new Color(30, 30, 30)},
+			{MapColorType.CavernLower, new Color(30, 30, 30)},
+			{MapColorType.Underworld,  new Color(30, 30, 30)}
+		};
 
-        public Moon()
-        {
-        }
+		public Moon()
+		{
+		}
 
 		public override void OnEnterWorld()
-        {
-            SkyManager.Instance.Activate("Macrocosm:MoonSky");
-        }
+		{
+			SkyManager.Instance.Activate("Macrocosm:MoonSky");
+		}
 
-        public override void OnExitWorld()
-        {
+		public override void OnExitWorld()
+		{
 			SkyManager.Instance.Deactivate("Macrocosm:MoonSky");
-        }
+		}
 
 		public override bool GetLight(Tile tile, int x, int y, ref FastRandom rand, ref Vector3 color)
 		{
@@ -70,13 +72,10 @@ namespace Macrocosm.Content.Subworlds
 		}
 
 		public override void PreUpdateWorld()
-        {
-			if(SkyManager.Instance["Macrocosm:MoonSky"] is not null && !SkyManager.Instance["Macrocosm:MoonSky"].IsActive())
-				SkyManager.Instance.Activate("Macrocosm:MoonSky");
-
+		{
 			UpdateBloodMoon();
-            UpdateMeteorStorm();
-            UpdateSolarStorm();
+			UpdateMeteorStorm();
+			UpdateSolarStorm();
 		}
 
 		public override void PostUpdateWorld()
@@ -84,33 +83,28 @@ namespace Macrocosm.Content.Subworlds
 			UpdateMeteors();
 		}
 
-		public override void ModifyColorOfTheSkies(ref Color colorOfTheSkies)
+		public override void PreUpdateEntities()
 		{
-			colorOfTheSkies = colorOfTheSkies.ToGrayscaleNTSC();
 		}
 
-		#region Moon events
-
-		public void UpdateBloodMoon()
-        {
-			if (MacrocosmWorld.IsDusk && Main.rand.NextBool(9))
-				Main.bloodMoon = true;
-
+		//TODO: NetSync and add actual content
+		private void UpdateBloodMoon()
+		{
+			/*
+			if (MacrocosmWorld.IsDusk && Main.rand.NextBool(9)) 
+ 				Main.bloodMoon = true;
+ 
 			if (MacrocosmWorld.IsDawn && Main.bloodMoon)
 				Main.bloodMoon = false;
+			*/
 		}
 
-        /// <summary> TODO </summary>
-        public void UpdateMeteorStorm() { }
+		//TODO 
+		private void UpdateMeteorStorm() { }
 
-		/// <summary> TODO </summary>
-		public void UpdateSolarStorm() { }
+		//TODO 
+		private void UpdateSolarStorm() { }
 
-		#endregion
-
-		#region Meteor logic
-
-		public static float MeteorBoost { get; set; } = 1f;
 		private double timePass = 0.0;
 		private void UpdateMeteors()
 		{
@@ -124,7 +118,7 @@ namespace Macrocosm.Content.Subworlds
 
 			for (int l = 1; l <= (int)timePass; l++)
 			{
-				float frequency = 2f * MeteorBoost;
+				float frequency = 2f * Instance.MeteorBoost;
 
 				if (Main.rand.Next(8000) >= frequency)
 					continue;
@@ -160,7 +154,7 @@ namespace Macrocosm.Content.Subworlds
 					choice.Add(ModContent.ProjectileType<StardustMeteor>(), 2.0);
 					choice.Add(ModContent.ProjectileType<VortexMeteor>(), 2.0);
 
-					var source = Main.player[closestPlayer].GetSource_Misc("FallingStar");
+					var source = Main.player[closestPlayer].GetSource_Misc("Meteor");
 
 					int type = choice;
 					int damage;
@@ -180,8 +174,5 @@ namespace Macrocosm.Content.Subworlds
 
 			timePass %= 1.0;
 		}
-
-		#endregion
-
 	}
 }

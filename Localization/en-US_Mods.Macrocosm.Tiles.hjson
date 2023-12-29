@@ -10,12 +10,30 @@ OilShale.MapEntry: Oil Shale
 ArtemiteBar.MapEntry: Artemite Bar
 ChandriumBar.MapEntry: Chandrium Bar
 DianiteBar.MapEntry: Dianite Bar
-LaunchPadMarker.MapEntry: Launchpad Marker
+LaunchPadMarker.MapEntry: Launch Pad Marker
 AluminumBar.MapEntry: Aluminum Bar
 SeleniteBar.MapEntry: Selenite Bar
 SteelBar.MapEntry: Steel Bar
-MoonBaseNeonTube.MapEntry: Moon Base Neon Tube
-MoonBaseTerminal.MapEntry: Moon Base Terminal
 SolarPanelLarge.MapEntry: Solar Panel
 SolarPanelSmall.MapEntry: Solar Panel
 OilRefinery.MapEntry: Oil Refinery
+SilicaCrimsand.MapEntry: Silica Crimsand
+SilicaEbonsand.MapEntry: Silica Ebonsand
+SilicaPearlsand.MapEntry: Silica Pearlsand
+SilicaSand.MapEntry: Silica Sand
+MoonBaseNeonTube.MapEntry: Neon Tube
+MoonBaseConsole.MapEntry: Console
+MoonBaseDeskLamp.MapEntry: DeskLamp
+LexanGlass.MapEntry: Lexan Glass
+XFLR6.MapEntry: XFLR-6
+
+MoonBaseChest: {
+	MapEntryNormal: Moon Base Storage Unit
+	MapEntryUnlocked: Moon Base Electronic Storage Unit
+	MapEntryLocked: Moon Base Electronic Storage Unit (Locked)
+}
+
+TeddyBear.MapEntry: Teddy Bear
+Motor.MapEntry: Motor
+PrintedCircuitBoard.MapEntry: Printed Circuit Board
+MoonBaseLocker.MapEntry: Moon Base Locker

@@ -3,7 +3,6 @@ using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -13,7 +12,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 	{
 		public override void SetStaticDefaults()
 		{
-			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
+
 		}
 
 		public override void SetDefaultsHeldProjectile()
@@ -29,8 +28,8 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			Item.knockBack = 4f;
 			Item.value = 10000;
 			Item.rare = ModContent.RarityType<MoonRarityT2>();
-			Item.shoot = ProjectileID.PurificationPowder; // For some reason, all the guns in the vanilla source have this.
-			Item.autoReuse = true;
+            Item.shoot = Macrocosm.ItemShoot_UsesAmmo;
+            Item.autoReuse = true;
 			Item.shootSpeed = 20f;
 			Item.useAmmo = AmmoID.Bullet;
 			Item.UseSound = SoundID.Item38;

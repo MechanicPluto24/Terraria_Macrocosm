@@ -1,6 +1,4 @@
-﻿using Macrocosm.Content.Rockets.LaunchPads;
-using Terraria;
-using Terraria.ID;
+﻿using Terraria;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Placeable.Furniture

@@ -11,7 +11,7 @@ namespace Macrocosm.Common.Hooks
 			Terraria.UI.On_ItemSlot.PickItemMovementAction += MoonCoin_AllowCoinSlotPlacement;
 		}
 
-		public void Unload() 
+		public void Unload()
 		{
 			Terraria.UI.On_ItemSlot.PickItemMovementAction -= MoonCoin_AllowCoinSlotPlacement;
 		}
@@ -19,9 +19,9 @@ namespace Macrocosm.Common.Hooks
 		private int MoonCoin_AllowCoinSlotPlacement(Terraria.UI.On_ItemSlot.orig_PickItemMovementAction orig, Item[] inv, int context, int slot, Item checkItem)
 		{
 			if (context == 1 && checkItem.type == ModContent.ItemType<Moonstone>())
- 				return 0;
- 			else
- 				return orig(inv, context, slot, checkItem);
- 		}
+				return 0;
+			else
+				return orig(inv, context, slot, checkItem);
+		}
 	}
 }

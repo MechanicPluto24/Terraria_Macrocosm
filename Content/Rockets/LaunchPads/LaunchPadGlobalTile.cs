@@ -12,15 +12,15 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			if (LaunchPadManager.None(MacrocosmSubworld.CurrentID))
 				return;
 
-			if(LaunchPadManager.TryGetLaunchPadAtTileCoordinates(MacrocosmSubworld.CurrentID, new(i, j), out LaunchPad launchPad))
+			if (LaunchPadManager.TryGetLaunchPadAtTileCoordinates(MacrocosmSubworld.CurrentID, new(i, j), out LaunchPad launchPad))
 			{
-				for(int tileX = launchPad.StartTile.X; tileX < launchPad.EndTile.X; tileX++) 
- 					for (int tileY = launchPad.StartTile.Y; tileY < launchPad.EndTile.Y; tileY++)
- 						Wiring.SkipWire(tileX, tileY);
+				for (int tileX = launchPad.StartTile.X; tileX < launchPad.EndTile.X; tileX++)
+					for (int tileY = launchPad.StartTile.Y; tileY < launchPad.EndTile.Y; tileY++)
+						Wiring.SkipWire(tileX, tileY);
 
 				if (launchPad.HasRocket)
- 					RocketManager.Rockets[launchPad.RocketID].Launch(targetWorld: "None.. for now");
- 			}
+					RocketManager.Rockets[launchPad.RocketID].Launch(targetWorld: "None.. for now");
+			}
 		}
 	}
 }

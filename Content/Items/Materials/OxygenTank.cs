@@ -1,5 +1,4 @@
 using Terraria;
-using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -9,7 +8,7 @@ namespace Macrocosm.Content.Items.Materials
 	{
 		public override void SetStaticDefaults()
 		{
-			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 10;
+			Item.ResearchUnlockCount = 5;
 		}
 
 		public override void SetDefaults()
@@ -25,6 +24,6 @@ namespace Macrocosm.Content.Items.Materials
 
 		public override void AddRecipes()
 		{
- 		}
+		}
 	}
 }

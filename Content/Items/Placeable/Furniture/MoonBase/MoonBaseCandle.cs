@@ -1,7 +1,7 @@
-﻿using Terraria.ModLoader;
+﻿using Macrocosm.Content.Items.Placeable.Blocks;
 using Terraria;
 using Terraria.ID;
-using Macrocosm.Content.Items.Placeable.Blocks;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Placeable.Furniture.MoonBase
 {

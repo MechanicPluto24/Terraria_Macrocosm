@@ -30,10 +30,10 @@ namespace Macrocosm.Content.DrawLayers
 		protected override void Draw(ref PlayerDrawSet drawInfo)
 		{
 			if (drawInfo.drawPlayer.JustDroppedAnItem)
- 				return;
+				return;
 
 			if (drawInfo.drawPlayer.heldProj >= 0 && drawInfo.shadow == 0f && !drawInfo.heldProjOverHand)
- 				drawInfo.projectileDrawPosition = drawInfo.DrawDataCache.Count;
+				drawInfo.projectileDrawPosition = drawInfo.DrawDataCache.Count;
 
 			Item heldItem = drawInfo.heldItem;
 			int itemID = heldItem.type;

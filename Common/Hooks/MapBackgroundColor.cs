@@ -1,6 +1,5 @@
 ﻿using Macrocosm.Common.Subworlds;
 using Microsoft.Xna.Framework;
-using SubworldLibrary;
 using System.Reflection;
 using Terraria.Map;
 using Terraria.ModLoader;
@@ -14,17 +13,17 @@ namespace Macrocosm.Common.Hooks
 		private static ushort rockPosition;
 		private static ushort hellPosition;
 
-		private static FieldInfo fieldSkyPosition;  
-		private static FieldInfo fieldDirtPosition; 
-		private static FieldInfo fieldRockPosition; 
-		private static FieldInfo fieldHellPosition; 
+		private static FieldInfo fieldSkyPosition;
+		private static FieldInfo fieldDirtPosition;
+		private static FieldInfo fieldRockPosition;
+		private static FieldInfo fieldHellPosition;
 
 		public void Load(Mod mod)
 		{
 			On_MapHelper.GetMapTileXnaColor += MapHelper_GetMapTileXnaColor;
 			GetLookupPositions();
 		}
-		public void Unload() 
+		public void Unload()
 		{
 			On_MapHelper.GetMapTileXnaColor -= MapHelper_GetMapTileXnaColor;
 		}
@@ -34,7 +33,7 @@ namespace Macrocosm.Common.Hooks
 			if (MacrocosmSubworld.Current is null || MacrocosmSubworld.Current.MapColors is null)
 				return orig(ref tile);
 
-			if (tile.Type >= skyPosition && tile.Type <= skyPosition + 255) 
+			if (tile.Type >= skyPosition && tile.Type <= skyPosition + 255)
 				return MapColorLerp(MacrocosmSubworld.Current.MapColors[MapColorType.SkyUpper], MacrocosmSubworld.Current.MapColors[MapColorType.SkyLower], (tile.Type - skyPosition) / 255f);
 
 			if (tile.Type >= dirtPosition && tile.Type <= dirtPosition + 255)
@@ -64,6 +63,6 @@ namespace Macrocosm.Common.Hooks
 		/// <summary> Adapted from vanilla code </summary>
 		private static Color MapColorLerp(Color from, Color to, float value)
 			=> new Color((byte)((float)(int)from.R * (1f - value) + (float)(int)to.R * value), (byte)((float)(int)from.G * (1f - value) + (float)(int)to.G * value), (byte)((float)(int)from.B * (1f - value) + (float)(int)to.B * value));
-		 
+
 	}
 }

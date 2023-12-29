@@ -17,7 +17,7 @@ using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
 {
-    [AutoloadHead]
+	[AutoloadHead]
 	public class MoonChampion : ModNPC
 	{
 		public bool HasBeenChatWithForTheFirstTime = false;
@@ -56,10 +56,10 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
 			NPC.DeathSound = SoundID.NPCDeath3;
 			NPC.knockBackResist = 0.2f;
 			AnimationType = NPCID.Guide;
-			SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBiome>().Type };  
+			SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBiome>().Type };
 		}
 
-		public override bool CanTownNPCSpawn(int numTownNPCs) 
+		public override bool CanTownNPCSpawn(int numTownNPCs)
 			=> WorldDataSystem.Instance.DownedCraterDemon;
 
 		public override List<string> SetNPCNameList()
@@ -86,14 +86,14 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
 		public override string GetChat()
 		{
 			Player player = Main.player[Main.myPlayer];
-			
-            if (!HasBeenChatWithForTheFirstTime)
-            {
+
+			if (!HasBeenChatWithForTheFirstTime)
+			{
 				HasBeenChatWithForTheFirstTime = true;
 				NPC.netUpdate = true;
-                return Language.GetTextValue(chatPath + "FirstTime");
-            }
-            
+				return Language.GetTextValue(chatPath + "FirstTime");
+			}
+
 			List<string> chatBag = new();
 			if (Main.dayTime)
 			{
@@ -101,8 +101,8 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
 				chatBag.Add(Language.GetTextValue(chatPath + "Day2"));
 				chatBag.Add(Language.GetTextValue(chatPath + "Day3"));
 				if (Main.rand.NextFloat() < 0.2f)
-					chatBag.Add(Language.GetTextValue(chatPath + "DayRare")); 
- 			}
+					chatBag.Add(Language.GetTextValue(chatPath + "DayRare"));
+			}
 			else
 			{
 				chatBag.Add(Language.GetTextValue(chatPath + "Night1"));
@@ -112,11 +112,11 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
 
 			int coinCount = player.CountItem(ModContent.ItemType<Moonstone>());
 			if (coinCount > 0)
- 				chatBag.Add(Language.GetText(chatPath + "Moonstones").Format(coinCount));
- 			else
- 				chatBag.Add(Language.GetTextValue(chatPath + "NoMoonstones"));
+				chatBag.Add(Language.GetText(chatPath + "Moonstones").Format(coinCount));
+			else
+				chatBag.Add(Language.GetTextValue(chatPath + "NoMoonstones"));
 
- 			chatBag.Add(Language.GetTextValue(chatPath + "Standard1"));
+			chatBag.Add(Language.GetTextValue(chatPath + "Standard1"));
 			chatBag.Add(Language.GetTextValue(chatPath + "Standard2"));
 			chatBag.Add(Language.GetTextValue(chatPath + "Standard3"));
 			chatBag.Add(Language.GetTextValue(chatPath + "Standard4"));
@@ -140,7 +140,7 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
 		{
 			if (firstButton)
 			{
-				shopName = Language.GetTextValue(chatPath + "ShopName"); 
+				shopName = Language.GetTextValue(chatPath + "ShopName");
 			}
 			else
 			{
@@ -163,22 +163,22 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
 		{
 			var shop = new NPCShop(Type);
 
-            void AddNewSlot(int type, int price)
-            {
-				shop.Add(new Item(type) 
-				{ 
+			void AddNewSlot(int type, int price)
+			{
+				shop.Add(new Item(type)
+				{
 					shopCustomPrice = price,
 					shopSpecialCurrency = CurrencyManager.MoonStone
-                });
-            }
+				});
+			}
 
-            // for testing, subject to change - Feldy
-            AddNewSlot(ItemID.SuperHealingPotion, 3);
-            AddNewSlot(ModContent.ItemType<AstronautHelmet>(), 20);
-            AddNewSlot(ModContent.ItemType<AstronautSuit>(), 20);
-            AddNewSlot(ModContent.ItemType<AstronautLeggings>(), 20);
+			// TODO: for testing, subject to change - Feldy
+			AddNewSlot(ItemID.SuperHealingPotion, 3);
+			AddNewSlot(ModContent.ItemType<AstronautHelmet>(), 20);
+			AddNewSlot(ModContent.ItemType<AstronautSuit>(), 20);
+			AddNewSlot(ModContent.ItemType<AstronautLeggings>(), 20);
 
-			shop.Register(); 
+			shop.Register();
 		}
 
 		public override bool CanGoToStatue(bool toKingStatue) => toKingStatue;

@@ -1,14 +1,11 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
-using Terraria.DataStructures;
+﻿using Macrocosm.Content.Dusts;
+using Microsoft.Xna.Framework;
+using Terraria;
 using Terraria.Enums;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
-using Terraria;
-using Microsoft.Xna.Framework;
-using Macrocosm.Content.Dusts;
 
 namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 {
@@ -32,7 +29,7 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 			AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTorch);
 			DustType = ModContent.DustType<MoonBasePlatingDust>();
 
-			AddMapEntry(new Color(253, 221, 3), Language.GetText("MapObject.CeilingLamp"));
+			AddMapEntry(new Color(253, 221, 3), Language.GetText("ItemName.Lantern"));
 		}
 
 		public override void HitWire(int i, int j)
@@ -48,8 +45,8 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 			Wiring.SkipWire(i, topY + 1);
 
 			if (Main.netMode != NetmodeID.SinglePlayer)
- 				NetMessage.SendTileSquare(-1, i, topY + 1, 2, TileChangeType.None);
- 		}
+				NetMessage.SendTileSquare(-1, i, topY + 1, 2, TileChangeType.None);
+		}
 
 		public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
 		{

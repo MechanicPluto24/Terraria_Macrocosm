@@ -1,14 +1,11 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
-using Terraria.DataStructures;
+﻿using Macrocosm.Content.Dusts;
+using Microsoft.Xna.Framework;
+using Terraria;
 using Terraria.Enums;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
-using Terraria;
-using Microsoft.Xna.Framework;
-using Macrocosm.Content.Dusts;
 
 namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 {

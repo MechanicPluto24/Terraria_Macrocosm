@@ -1,6 +1,5 @@
 ﻿using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Netcode;
-using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using System.IO;
@@ -27,7 +26,7 @@ namespace Macrocosm.Content.Players
 		public int AccDashDuration = 35;
 
 		public enum DashDir { Down, Up, Right, Left, None = -1 }
-		
+
 		public DashDir DashDirection = DashDir.None;
 		private int dashDelay = 0;
 		private int dashTimer = 0;
@@ -41,40 +40,6 @@ namespace Macrocosm.Content.Players
 
 			if (celestialBulwarkVisible)
 				Lighting.AddLight(Player.Center, CelestialDisco.CelestialColor.ToVector3() * 0.4f);
-		}
-
-		public override void CopyClientState(ModPlayer clientClone)/* tModPorter Suggestion: Replace Item.Clone usages with Item.CopyNetStateTo */
-		{
-			(clientClone as DashPlayer).DashDirection = DashDirection;
-		}
-
-		public override void SendClientChanges(ModPlayer clientPlayer)
-		{
-			if ((clientPlayer as DashPlayer).DashDirection != DashDirection)
-			{
-				SyncPlayer(-1, Main.myPlayer, false);
-			}
-		}
-
-		public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)
-		{
-			ModPacket packet = Mod.GetPacket();
-			packet.Write((byte)MessageType.SyncPlayerDashDirection);
-			packet.Write((byte)Player.whoAmI);
-			packet.Write((byte)DashDirection);
-			packet.Send(toWho, fromWho);
-		}
-
-		public static void ReceiveSyncPlayer(BinaryReader reader, int whoAmI)
-		{
-			int dashPlayerID = reader.ReadByte();
-			DashPlayer dashPlayer = Main.player[dashPlayerID].DashPlayer();
-
-			int newDir = reader.ReadByte();
-			dashPlayer.DashDirection = (DashPlayer.DashDir)newDir;
-
-			if (Main.netMode == NetmodeID.Server)
-				dashPlayer.SyncPlayer(-1, whoAmI, false);
 		}
 
 		public override void ResetEffects()
@@ -95,7 +60,7 @@ namespace Macrocosm.Content.Players
 			// When a directional key is pressed and released, vanilla starts a 15 tick (1/4 second) timer during which a second press activates a dash
 			// If the timers are set to 15, then this is the first press just processed by the vanilla logic.  Otherwise, it's a double-tap
 
-			if(Player.whoAmI == Main.myPlayer)
+			if (Player.whoAmI == Main.myPlayer)
 			{
 				if (Player.controlDown && Player.releaseDown && Player.doubleTapCardinalTimer[(int)DashDir.Down] < 15)
 					DashDirection = DashDir.Down;
@@ -237,14 +202,14 @@ namespace Macrocosm.Content.Players
 						Player.velocity.X *= 0.95f;
 					}
 
- 					NetMessage.SendData(MessageID.PlayerControls, number: Player.whoAmI);
+					NetMessage.SendData(MessageID.PlayerControls, number: Player.whoAmI);
 				}
 
 
 				#endregion
 			}
 		}
-		
+
 		public void StartDashVisuals()
 		{
 			if (celestialBulwarkVisible)
@@ -276,6 +241,40 @@ namespace Macrocosm.Content.Players
 					Main.dust[dustIdx].scale *= 1f + (float)Main.rand.Next(20) * 0.01f;
 				}
 			}
+		}
+
+		public override void CopyClientState(ModPlayer clientClone)/* tModPorter Suggestion: Replace Item.Clone usages with Item.CopyNetStateTo */
+		{
+			(clientClone as DashPlayer).DashDirection = DashDirection;
+		}
+
+		public override void SendClientChanges(ModPlayer clientPlayer)
+		{
+			if ((clientPlayer as DashPlayer).DashDirection != DashDirection)
+			{
+				SyncPlayer(-1, Main.myPlayer, false);
+			}
+		}
+
+		public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)
+		{
+			ModPacket packet = Mod.GetPacket();
+			packet.Write((byte)MessageType.SyncDashPlayer);
+			packet.Write((byte)Player.whoAmI);
+			packet.Write((byte)DashDirection);
+			packet.Send(toWho, fromWho);
+		}
+
+		public static void ReceiveSyncPlayer(BinaryReader reader, int whoAmI)
+		{
+			int playerWhoAmI = reader.ReadByte();
+			DashPlayer dashPlayer = Main.player[playerWhoAmI].GetModPlayer<DashPlayer>();
+
+			int newDir = reader.ReadByte();
+			dashPlayer.DashDirection = (DashDir)newDir;
+
+			if (Main.netMode == NetmodeID.Server)
+				dashPlayer.SyncPlayer(-1, whoAmI, false);
 		}
 	}
 }

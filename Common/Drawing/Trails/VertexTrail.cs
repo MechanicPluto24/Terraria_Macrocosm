@@ -37,8 +37,8 @@ namespace Macrocosm.Common.Drawing.Trails
 		}
 
 		public virtual void Draw(Vector2 offset = default)
-		{ 
-			if(Owner is Projectile projectile)
+		{
+			if (Owner is Projectile projectile)
 				Draw(projectile.oldPos, projectile.oldRot, offset);
 			else if (Owner is Particle particle)
 				Draw(particle.OldPositions, particle.OldRotations, particle.Size / 2 + offset);

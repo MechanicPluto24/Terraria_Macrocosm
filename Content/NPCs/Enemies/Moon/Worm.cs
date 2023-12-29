@@ -53,7 +53,7 @@ namespace Macrocosm.Content.NPCs
 		/// <summary> The NPC instance of the segment that is following this segment (ai[0]). For tail segment, this property always returns <see langword="null"/>. </summary>
 		public NPC FollowerNPC => SegmentType == WormSegmentType.Tail ? null : Main.npc[(int)NPC.ai[0]];
 
-		public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position) 
+		public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)
 			=> SegmentType == WormSegmentType.Head ? null : false;
 
 		public NPC GetFollowingSegment()
@@ -61,30 +61,30 @@ namespace Macrocosm.Content.NPCs
 
 		private bool startDespawning;
 
-		public sealed override bool PreAI() 
+		public sealed override bool PreAI()
 		{
-			if (NPC.localAI[1] == 0) 
+			if (NPC.localAI[1] == 0)
 			{
 				NPC.localAI[1] = 1f;
 				Init();
 			}
 
-			if (SegmentType == WormSegmentType.Head) 
+			if (SegmentType == WormSegmentType.Head)
 			{
 				HeadAI();
 
-				if (!NPC.HasValidTarget) 
+				if (!NPC.HasValidTarget)
 				{
 					NPC.TargetClosest(true);
 
 					// If the NPC is a boss and it has no target, force it to fall to the underworld quickly
-					if (!NPC.HasValidTarget && NPC.boss) 
+					if (!NPC.HasValidTarget && NPC.boss)
 					{
 						NPC.velocity.Y += 8f;
 
 						MoveSpeed = 1000f;
 
-						if (!startDespawning) 
+						if (!startDespawning)
 						{
 							startDespawning = true;
 
@@ -93,13 +93,14 @@ namespace Macrocosm.Content.NPCs
 						}
 					}
 				}
-			} else
+			}
+			else
 				BodyTailAI();
 
 			return true;
 		}
 
-		public virtual void FlipHead(bool collision = false) 
+		public virtual void FlipHead(bool collision = false)
 		{
 			if (!FlipSprite && !collision)
 				return;
@@ -110,7 +111,7 @@ namespace Macrocosm.Content.NPCs
 				NPC.spriteDirection = 1;
 		}
 
-		public virtual void FlipBodyTail(Worm worm) 
+		public virtual void FlipBodyTail(Worm worm)
 		{
 			NPC following = worm.GetFollowingSegment();
 
@@ -118,13 +119,13 @@ namespace Macrocosm.Content.NPCs
 				worm.NPC.spriteDirection = following.spriteDirection;
 		}
 
-		private bool BehindTile() 
+		private bool BehindTile()
 		{
 			int x = (int)(NPC.Center.X / 16f);
 			int y = (int)(NPC.Center.Y / 16f);
 
 			return WorldGen.SolidTile(x, y);
- 		}
+		}
 
 		// Not visible to public API, but is used to indicate what AI to run
 		public virtual void HeadAI() { }
@@ -180,7 +181,7 @@ namespace Macrocosm.Content.NPCs
 		/// </summary>
 		/// <param name="segmentCount">How many body segements are expected to be spawned</param>
 		/// <returns>The whoAmI of the most-recently spawned NPC, which is the result of calling <see cref="NPC.NewNPC(Terraria.DataStructures.IEntitySource, int, int, int, int, float, float, float, float, int)"/></returns>
-		public virtual int SpawnBodySegments(int segmentCount) 
+		public virtual int SpawnBodySegments(int segmentCount)
 		{
 			// Defaults to just returning this NPC's whoAmI, since the tail segment uses the return value as its "following" NPC index
 			return NPC.whoAmI;
@@ -193,7 +194,7 @@ namespace Macrocosm.Content.NPCs
 		/// <param name="type">The ID of the segment NPC to spawn</param>
 		/// <param name="latestNPC">The whoAmI of the most-recently spawned segment NPC in the worm, including the head</param>
 		/// <returns></returns>
-		protected int SpawnSegment(IEntitySource source, int type, int latestNPC) 
+		protected int SpawnSegment(IEntitySource source, int type, int latestNPC)
 		{
 			// We spawn a new NPC, setting latestNPC to the newer NPC, whilst also using that same variable
 			// to set the parent of this new NPC. The parent of the new NPC (may it be a tail or body part)
@@ -211,7 +212,7 @@ namespace Macrocosm.Content.NPCs
 			return latestNPC;
 		}
 
-		public sealed override void HeadAI() 
+		public sealed override void HeadAI()
 		{
 			HeadAI_SpawnSegments();
 
@@ -224,13 +225,14 @@ namespace Macrocosm.Content.NPCs
 
 		private void HeadAI_SpawnSegments()
 		{
-			if (Main.netMode != NetmodeID.MultiplayerClient) 
+			if (Main.netMode != NetmodeID.MultiplayerClient)
 			{
 				// So, we start the AI off by checking if NPC.ai[0] (the following NPC's whoAmI) is 0.
 				// This is practically ALWAYS the case with a freshly spawned NPC, so this means this is the first update.
 				// Since this is the first update, we can safely assume we need to spawn the rest of the worm (bodies + tail).
 				bool hasFollower = NPC.ai[0] > 0;
-				if (!hasFollower) {
+				if (!hasFollower)
+				{
 					// So, here we assign the NPC.realLife value.
 					// The NPC.realLife value is mainly used to determine which NPC loses life when we hit this NPC.
 					// We don't want every single piece of the worm to have its own HP pool, so this is a neat way to fix that.
@@ -249,11 +251,11 @@ namespace Macrocosm.Content.NPCs
 					{
 						// Call the method that'll handle spawning the body segments
 						latestNPC = SpawnBodySegments(distance);
-					} 
-					else 
+					}
+					else
 					{
 						// Spawn the body segments like usual
-						while (distance > 0) 
+						while (distance > 0)
 						{
 							latestNPC = SpawnSegment(source, BodyType, latestNPC);
 							distance--;
@@ -267,7 +269,7 @@ namespace Macrocosm.Content.NPCs
 
 					// Ensure that all of the segments could spawn.  If they could not, despawn the worm entirely
 					int count = 0;
-					for (int i = 0; i < Main.maxNPCs; i++) 
+					for (int i = 0; i < Main.maxNPCs; i++)
 					{
 						NPC n = Main.npc[i];
 
@@ -275,13 +277,14 @@ namespace Macrocosm.Content.NPCs
 							count++;
 					}
 
-					if (count != randomWormLength) 
+					if (count != randomWormLength)
 					{
 						// Unable to spawn all of the segments... kill the worm
-						for (int i = 0; i < Main.maxNPCs; i++) {
+						for (int i = 0; i < Main.maxNPCs; i++)
+						{
 							NPC n = Main.npc[i];
 
-							if (n.active && (n.type == Type || n.type == BodyType || n.type == TailType) && n.realLife == NPC.whoAmI) 
+							if (n.active && (n.type == Type || n.type == BodyType || n.type == TailType) && n.realLife == NPC.whoAmI)
 							{
 								n.active = false;
 								n.netUpdate = true;
@@ -311,22 +314,22 @@ namespace Macrocosm.Content.NPCs
 				minTilePosY = 0;
 			if (maxTilePosY > Main.maxTilesY)
 				maxTilePosY = Main.maxTilesY;
- 
+
 			bool collision = false;
 
 			// This is the initial check for collision with tiles.
-			for (int i = minTilePosX; i < maxTilePosX; ++i) 
+			for (int i = minTilePosX; i < maxTilePosX; ++i)
 			{
-				for (int j = minTilePosY; j < maxTilePosY; ++j) 
+				for (int j = minTilePosY; j < maxTilePosY; ++j)
 				{
 					Tile tile = Main.tile[i, j];
 
 					// If the tile is solid or is considered a platform, then there's valid collision
-					if (tile.HasUnactuatedTile && (Main.tileSolid[tile.TileType] || Main.tileSolidTop[tile.TileType] && tile.TileFrameY == 0) || tile.LiquidAmount > 64) 
+					if (tile.HasUnactuatedTile && (Main.tileSolid[tile.TileType] || Main.tileSolidTop[tile.TileType] && tile.TileFrameY == 0) || tile.LiquidAmount > 64)
 					{
 						Vector2 tileWorld = new Point16(i, j).ToWorldCoordinates(0, 0);
 
-						if (NPC.Right.X > tileWorld.X && NPC.Left.X < tileWorld.X + 16 && NPC.Bottom.Y > tileWorld.Y && NPC.Top.Y < tileWorld.Y + 16) 
+						if (NPC.Right.X > tileWorld.X && NPC.Left.X < tileWorld.X + 16 && NPC.Bottom.Y > tileWorld.Y && NPC.Top.Y < tileWorld.Y + 16)
 						{
 							// Collision found
 							collision = true;
@@ -341,17 +344,18 @@ namespace Macrocosm.Content.NPCs
 			return collision;
 		}
 
-		private void HeadAI_CheckTargetDistance(ref bool collision) 
+		private void HeadAI_CheckTargetDistance(ref bool collision)
 		{
 			// If there is no collision with tiles, we check if the distance between this NPC and its target is too large, so that we can still trigger "collision".
-			if (!collision) {
+			if (!collision)
+			{
 				Rectangle hitbox = NPC.Hitbox;
 
 				int maxDistance = MaxDistanceForUsingTileCollision;
 
 				bool tooFar = true;
 
-				for (int i = 0; i < Main.maxPlayers; i++) 
+				for (int i = 0; i < Main.maxPlayers; i++)
 				{
 					Rectangle areaCheck;
 
@@ -364,7 +368,7 @@ namespace Macrocosm.Content.NPCs
 					else
 						continue;  // Not a valid player
 
-					if (hitbox.Intersects(areaCheck)) 
+					if (hitbox.Intersects(areaCheck))
 					{
 						tooFar = false;
 						break;
@@ -376,7 +380,7 @@ namespace Macrocosm.Content.NPCs
 			}
 		}
 
-		private void HeadAI_Movement(bool collision) 
+		private void HeadAI_Movement(bool collision)
 		{
 			// MoveSpeed determines the max speed at which this NPC can move.
 			// Higher value = faster speed.
@@ -407,7 +411,7 @@ namespace Macrocosm.Content.NPCs
 			// If we do not have any type of collision, we want the NPC to fall down and de-accelerate along the X axis.
 			if (!collision && !CanFly)
 				HeadAI_Movement_HandleFallingFromNoCollision(dirX, speed, acceleration);
-			else 
+			else
 			{
 				// Else we want to play some audio (soundDelay) and move towards our target.
 				HeadAI_Movement_PlayDigSounds(length);
@@ -419,7 +423,8 @@ namespace Macrocosm.Content.NPCs
 			FlipHead(collision);
 		}
 
-		private void HeadAI_Movement_HandleFallingFromNoCollision(float dirX, float speed, float acceleration) {
+		private void HeadAI_Movement_HandleFallingFromNoCollision(float dirX, float speed, float acceleration)
+		{
 			// Keep searching for a new target
 			NPC.TargetClosest(true);
 
@@ -431,23 +436,23 @@ namespace Macrocosm.Content.NPCs
 				NPC.velocity.Y = speed;
 
 			// The following behaviour mimicks vanilla worm movement
-			if (Math.Abs(NPC.velocity.X) + Math.Abs(NPC.velocity.Y) < speed * 0.4f) 
+			if (Math.Abs(NPC.velocity.X) + Math.Abs(NPC.velocity.Y) < speed * 0.4f)
 			{
 				// Velocity is sufficiently fast, but not too fast
 				if (NPC.velocity.X < 0.0f)
 					NPC.velocity.X -= acceleration * 1.1f;
 				else
 					NPC.velocity.X += acceleration * 1.1f;
-			} 
-			else if (NPC.velocity.Y == speed) 
+			}
+			else if (NPC.velocity.Y == speed)
 			{
 				// NPC has reached terminal velocity
 				if (NPC.velocity.X < dirX)
 					NPC.velocity.X += acceleration;
 				else if (NPC.velocity.X > dirX)
 					NPC.velocity.X -= acceleration;
-			} 
-			else if (NPC.velocity.Y > 4) 
+			}
+			else if (NPC.velocity.Y > 4)
 			{
 				if (NPC.velocity.X < 0)
 					NPC.velocity.X += acceleration * 0.9f;
@@ -456,7 +461,7 @@ namespace Macrocosm.Content.NPCs
 			}
 		}
 
-		private void HeadAI_Movement_PlayDigSounds(float length) 
+		private void HeadAI_Movement_PlayDigSounds(float length)
 		{
 			if (NPC.soundDelay == 0)
 			{
@@ -475,7 +480,7 @@ namespace Macrocosm.Content.NPCs
 			}
 		}
 
-		private void HeadAI_Movement_HandleMovement(float dirX, float dirY, float length, float speed, float acceleration) 
+		private void HeadAI_Movement_HandleMovement(float dirX, float dirY, float length, float speed, float acceleration)
 		{
 			float absDirX = Math.Abs(dirX);
 			float absDirY = Math.Abs(dirY);
@@ -483,7 +488,7 @@ namespace Macrocosm.Content.NPCs
 			dirX *= newSpeed;
 			dirY *= newSpeed;
 
-			if ((NPC.velocity.X > 0 && dirX > 0) || (NPC.velocity.X < 0 && dirX < 0 )|| (NPC.velocity.Y > 0 && dirY > 0) || (NPC.velocity.Y < 0 && dirY < 0)) 
+			if ((NPC.velocity.X > 0 && dirX > 0) || (NPC.velocity.X < 0 && dirX < 0) || (NPC.velocity.Y > 0 && dirY > 0) || (NPC.velocity.Y < 0 && dirY < 0))
 			{
 				// The NPC is moving towards the target location
 				if (NPC.velocity.X < dirX)
@@ -497,7 +502,7 @@ namespace Macrocosm.Content.NPCs
 					NPC.velocity.Y -= acceleration;
 
 				// The intended Y-velocity is small AND the NPC is moving to the left and the target is to the right of the NPC or vice versa
-				if (Math.Abs(dirY) < speed * 0.2 && ((NPC.velocity.X > 0 && dirX < 0) || (NPC.velocity.X < 0 && dirX > 0))) 
+				if (Math.Abs(dirY) < speed * 0.2 && ((NPC.velocity.X > 0 && dirX < 0) || (NPC.velocity.X < 0 && dirX > 0)))
 				{
 					if (NPC.velocity.Y > 0)
 						NPC.velocity.Y += acceleration * 2f;
@@ -513,7 +518,8 @@ namespace Macrocosm.Content.NPCs
 					else
 						NPC.velocity.X = NPC.velocity.X - acceleration * 2f;
 				}
-			} else if (absDirX > absDirY)
+			}
+			else if (absDirX > absDirY)
 			{
 				// The X distance is larger than the Y distance.  Force movement along the X-axis to be stronger
 				if (NPC.velocity.X < dirX)
@@ -528,8 +534,8 @@ namespace Macrocosm.Content.NPCs
 					else
 						NPC.velocity.Y -= acceleration;
 				}
-			} 
-			else 
+			}
+			else
 			{
 				// The X distance is larger than the Y distance.  Force movement along the X-axis to be stronger
 				if (NPC.velocity.Y < dirY)
@@ -537,7 +543,7 @@ namespace Macrocosm.Content.NPCs
 				else if (NPC.velocity.Y > dirY)
 					NPC.velocity.Y -= acceleration * 1.1f;
 
-				if (Math.Abs(NPC.velocity.X) + Math.Abs(NPC.velocity.Y) < speed * 0.5) 
+				if (Math.Abs(NPC.velocity.X) + Math.Abs(NPC.velocity.Y) < speed * 0.5)
 				{
 					if (NPC.velocity.X > 0)
 						NPC.velocity.X += acceleration;
@@ -547,22 +553,23 @@ namespace Macrocosm.Content.NPCs
 			}
 		}
 
-		private void HeadAI_Movement_SetRotation(bool collision) {
+		private void HeadAI_Movement_SetRotation(bool collision)
+		{
 			// Set the correct rotation for this NPC.
 			// Assumes the sprite for the NPC points upward.  You might have to modify this line to properly account for your NPC's orientation
 			NPC.rotation = NPC.velocity.ToRotation() + MathHelper.PiOver2;
-		   
+
 			// Some netupdate stuff (multiplayer compatibility).
-			if (collision) 
+			if (collision)
 			{
-				if(NPC.localAI[0] != 1)
+				if (NPC.localAI[0] != 1)
 					NPC.netUpdate = true;
 
 				NPC.localAI[0] = 1f;
-			} 
-			else 
+			}
+			else
 			{
-				if(NPC.localAI[0] != 0)
+				if (NPC.localAI[0] != 0)
 					NPC.netUpdate = true;
 
 				NPC.localAI[0] = 0f;
@@ -584,13 +591,13 @@ namespace Macrocosm.Content.NPCs
 			NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
 		}
 
-		public override void BodyTailAI() 
+		public override void BodyTailAI()
 		{
 			CommonAI_BodyTail(this);
 			FlipBodyTail(this);
 		}
 
-		public static void CommonAI_BodyTail(Worm worm) 
+		public static void CommonAI_BodyTail(Worm worm)
 		{
 			if (!worm.NPC.HasValidTarget)
 				worm.NPC.TargetClosest(true);
@@ -601,11 +608,11 @@ namespace Macrocosm.Content.NPCs
 			worm.NPC.color = worm.FollowerNPC is null ? worm.NPC.color : worm.FollowerNPC.color;
 
 			NPC following = worm.GetFollowingSegment();
-			if (Main.netMode != NetmodeID.MultiplayerClient) 
+			if (Main.netMode != NetmodeID.MultiplayerClient)
 			{
 				// Some of these conditions are possble if the body/tail segment was spawned individually
 				// Kill the segment if the segment NPC it's following is no longer valid
-				if (following is null || !following.active || following.friendly || following.townNPC || following.lifeMax <= 5) 
+				if (following is null || !following.active || following.friendly || following.townNPC || following.lifeMax <= 5)
 				{
 					worm.NPC.life = 0;
 					worm.NPC.HitEffect(0, 10);
@@ -613,7 +620,7 @@ namespace Macrocosm.Content.NPCs
 				}
 			}
 
-			if (following is not null) 
+			if (following is not null)
 			{
 				// Follow behind the segment "in front" of this NPC
 				// Use the current NPC.Center to calculate the direction towards the "parent NPC" of this NPC.
@@ -628,7 +635,7 @@ namespace Macrocosm.Content.NPCs
 				float dist = (length - worm.NPC.width) / length;
 				float posX = dirX * dist;
 				float posY = dirY * dist;
- 
+
 				// Reset the velocity of this NPC, because we don't want it to move on its own
 				worm.NPC.velocity = Vector2.Zero;
 				// And set this NPCs position accordingly to that of this NPCs parent NPC.
@@ -649,7 +656,7 @@ namespace Macrocosm.Content.NPCs
 			NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
 		}
 
-		public override void BodyTailAI() 
+		public override void BodyTailAI()
 		{
 			WormBody.CommonAI_BodyTail(this);
 			FlipBodyTail(this);

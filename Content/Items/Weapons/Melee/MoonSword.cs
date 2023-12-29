@@ -3,48 +3,47 @@ using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Melee
 {
 	public class MoonSword : ModItem
-    {
-        public override void SetStaticDefaults()
-        {
-            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
-        }
+	{
+		public override void SetStaticDefaults()
+		{
 
-        public override void SetDefaults()
-        {
-            Item.damage = 250;
-            Item.width = 60;
-            Item.height = 60;
-            Item.useTime = 15;
-            Item.useAnimation = 15;
-            Item.crit = 4;
-            Item.useStyle = ItemUseStyleID.Swing;
-            Item.DamageType = DamageClass.Melee;
-            Item.knockBack = 1;
-            Item.autoReuse = true;
-            Item.value = Item.sellPrice(0, 0, 90, 0);
-            Item.rare = ModContent.RarityType<MoonRarityT3>();
-            Item.shoot = ModContent.ProjectileType<MoonSwordProjectile>();
-            Item.shootSpeed = 20;
-        }
+		}
 
- 
+		public override void SetDefaults()
+		{
+			Item.damage = 250;
+			Item.width = 60;
+			Item.height = 60;
+			Item.useTime = 15;
+			Item.useAnimation = 15;
+			Item.crit = 4;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.DamageType = DamageClass.Melee;
+			Item.knockBack = 1;
+			Item.autoReuse = true;
+			Item.value = Item.sellPrice(0, 0, 90, 0);
+			Item.rare = ModContent.RarityType<MoonRarityT3>();
+			Item.shoot = ModContent.ProjectileType<MoonSwordProjectile>();
+			Item.shootSpeed = 20;
+		}
+
+
 		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
-            Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.MountedCenter, new Vector2(player.direction, 0f), ModContent.ProjectileType<MoonSwordSwing>(), damage, knockback, player.whoAmI, (float)player.direction * player.gravDir, 15); //, player.GetAdjustedItemScale(Item));
-            return true;
+			Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.MountedCenter, new Vector2(player.direction, 0f), ModContent.ProjectileType<MoonSwordSwing>(), damage, knockback, player.whoAmI, (float)player.direction * player.gravDir, 15); //, player.GetAdjustedItemScale(Item));
+			return true;
 		}
 
 	}
 
-   
-    /*
+
+	/*
     public class ChampionsBladeProjectile : ModProjectile
     {
         protected virtual float HoldoutRangeMin => 25;

@@ -21,7 +21,7 @@ namespace Macrocosm.Content.Dusts
 
 
 			if (dust.scale < 0f)
- 				dust.active = false;
+				dust.active = false;
 
 			return false;
 		}

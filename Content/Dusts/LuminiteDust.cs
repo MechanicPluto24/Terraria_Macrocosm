@@ -24,17 +24,17 @@ namespace Macrocosm.Content.Dusts
 				dust.velocity *= 0.88f;
 
 			if (dust.scale < 0f)
- 				dust.active = false;
+				dust.active = false;
 
 			Lighting.AddLight(dust.position, new Color(51, 185, 131).ToVector3() * 0.6f);
 
- 			return false;
+			return false;
 		}
 
 		public override bool MidUpdate(Dust dust) => true;
 
 		public override Color? GetAlpha(Dust dust, Color lightColor)
 			=> Color.White;
- 
+
 	}
 }

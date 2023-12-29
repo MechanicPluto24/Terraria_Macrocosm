@@ -41,7 +41,7 @@ namespace Macrocosm.Common.Drawing.Particles
 		}
 
 		#endregion
-		
+
 		#region Fields & Properties
 		protected Particle()
 		{
@@ -50,7 +50,7 @@ namespace Macrocosm.Common.Drawing.Particles
 
 			if (SetRandomFrameOnSpawn)
 				currentFrame = Main.rand.Next(FrameNumber);
- 
+
 			//OnSpawn();
 		}
 
@@ -63,16 +63,16 @@ namespace Macrocosm.Common.Drawing.Particles
 		{
 			get
 			{
-				// BANDAID: Returns (1,1) on servers... now I really have to do that ^
-				if(GetFrame() is null)
+				// BANDAID: Returns (1,1) on servers because I'm dumb -- Feldy
+				if (GetFrame() is null)
 					return Texture is null ? new Vector2(1, 1) : Texture.Size();
 
 				return GetFrame().Value.Size();
 			}
 		}
-					
+
 		/// <summary> Whether the current particle instance is active </summary>
-		public bool Active { get; protected set; }
+		[NetSync] public bool Active;
 
 		/// <summary> Time left before despawining, in ticks </summary>
 		[NetSync] public int TimeLeft;
@@ -100,7 +100,7 @@ namespace Macrocosm.Common.Drawing.Particles
 		public Vector2 Center => Position + Size / 2;
 
 		/// <summary> Path to the <c>Particle</c>'s texture, override for custom loading (non-autoload) </summary>
-		public virtual string TexturePath => Utility.GetPath(this);
+		public virtual string TexturePath => Utility.GetNamespacePath(this);
 
 		/// <summary> The  <c>Particle</c>'s total lifetime. If <see cref="DespawnOnAnimationComplete"/> is true, this defaults to the animation duration. </summary>
 		public virtual int SpawnTimeLeft => DespawnOnAnimationComplete ? FrameNumber * FrameSpeed - 1 : 300;
@@ -114,6 +114,9 @@ namespace Macrocosm.Common.Drawing.Particles
 		#endregion
 
 		#region Hooks
+
+		public bool HasCustomDrawer => CustomDrawer is not null;
+		public object CustomDrawer = null;
 
 		/// <summary> Used for loading tasks, called on Mod load </summary>
 		public virtual void OnLoad() { }
@@ -163,7 +166,7 @@ namespace Macrocosm.Common.Drawing.Particles
 			if (FrameNumber <= 1 || SetRandomFrameOnSpawn)
 				return;
 
-			if (Main.hasFocus)
+			if (Main.hasFocus || Main.netMode == NetmodeID.MultiplayerClient)
 			{
 				frameCnt++;
 				if (frameCnt == FrameSpeed)
@@ -182,19 +185,19 @@ namespace Macrocosm.Common.Drawing.Particles
 		/// If null, draws the entire texture.
 		/// </summary>
 		public virtual Rectangle? GetFrame()
-		{ 
+		{
 
 			if (Main.netMode == NetmodeID.Server)
 				return null;
 
 			// if not animated or frame is not picked randomly on spawn, draw the entire texture
- 			if (FrameNumber <= 1 && !SetRandomFrameOnSpawn)
+			if (FrameNumber <= 1 && !SetRandomFrameOnSpawn)
 				return null;
 
 
 			int frameHeight = Texture.Height / FrameNumber;
 			return new Rectangle(0, frameHeight * currentFrame, Texture.Width, frameHeight);
- 		}
+		}
 
 		#endregion
 
@@ -241,23 +244,26 @@ namespace Macrocosm.Common.Drawing.Particles
 		public void Update()
 		{
 			if (ShouldUpdatePosition)
- 				Position += Velocity;
+				Position += Velocity;
 
 			PopulateTrailData();
 			AI();
 			UpdateFrame();
 
 			if (TimeLeft-- <= 0)
-  				Kill();
-  		}
+				Kill();
+		}
 
-		public void Kill()
+		public void Kill(bool shouldSync = false)
 		{
 			if (!Active)
 				return;
 
 			OnKill();
 			Active = false;
+
+			if (shouldSync)
+				NetSync();
 		}
 
 		#endregion

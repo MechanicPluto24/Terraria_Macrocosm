@@ -3,7 +3,7 @@
 namespace Macrocosm.Content.Rockets.Modules
 {
 	public class ServiceModule : RocketModule
-    {
+	{
 		public ServiceModule(Rocket rocket) : base(rocket)
 		{
 		}

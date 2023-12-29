@@ -11,9 +11,9 @@ namespace Macrocosm.Content.Biomes
 	{
 		public override SceneEffectPriority Priority => SceneEffectPriority.Environment;
 		public override Color? BackgroundColor => base.BackgroundColor;
-		public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.GetInstance<MoonSurfaceBgStyle>();
+		public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.GetInstance<MoonSurfaceBackgroundStyle>();
 		public override ModUndergroundBackgroundStyle UndergroundBackgroundStyle => ModContent.GetInstance<MoonUgBgStyle>();
- 		public override int Music => Main.dayTime ? MusicLoader.GetMusicSlot(Mod, "Assets/Music/Deadworld") : MusicLoader.GetMusicSlot(Mod, "Assets/Music/Requiem");
+		public override int Music => Main.dayTime ? MusicLoader.GetMusicSlot(Mod, "Assets/Music/Deadworld") : MusicLoader.GetMusicSlot(Mod, "Assets/Music/Requiem");
 
 		public override string BestiaryIcon => Macrocosm.TextureAssetsPath + "Icons/Moon";
 		public override string BackgroundPath => Macrocosm.TextureAssetsPath + "MapBackgrounds/Moon";
@@ -31,7 +31,7 @@ namespace Macrocosm.Content.Biomes
 		{
 		}
 
-		public override bool IsBiomeActive(Player player) 
+		public override bool IsBiomeActive(Player player)
 			=> SubworldSystem.IsActive<Moon>();
 
 	}

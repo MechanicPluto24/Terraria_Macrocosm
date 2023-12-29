@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
-using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -19,7 +18,7 @@ namespace Macrocosm.Content.Items.MeteorChunks
 
 		public override void SetStaticDefaults()
 		{
-			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 50;
+			Item.ResearchUnlockCount = 25;
 		}
 
 		override public void SetDefaults()
@@ -70,7 +69,7 @@ namespace Macrocosm.Content.Items.MeteorChunks
 		/// <summary> Draw with the default appearance in the inventory </summary>
 		public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
 		{
-			Draw(spriteBatch, 0, false, position + new Vector2(0, TextureAssets.Item[Type].Height()/3f), drawColor, 0f, origin, scale * 4);
+			Draw(spriteBatch, 0, false, position + new Vector2(0, TextureAssets.Item[Type].Height() / 3f), drawColor, 0f, origin, scale * 4);
 			return false;
 		}
 

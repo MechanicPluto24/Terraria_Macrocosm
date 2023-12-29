@@ -28,7 +28,7 @@ namespace Macrocosm.Content.Dusts
 				hasOwner = true;
 				ownerActive = (owner as Projectile).active;
 			}
-			else if(dust.customData is Particle)
+			else if (dust.customData is Particle)
 			{
 				owner = dust.customData as Particle;
 				hasOwner = true;
@@ -43,7 +43,7 @@ namespace Macrocosm.Content.Dusts
 				dust.scale -= vanishSpeed * 0.7f;
 
 			if (dust.scale < 0.2f)
- 				dust.active = false;
+				dust.active = false;
 
 			Lighting.AddLight(dust.position, new Vector3(0.407f, 1f, 1f) * dust.scale * 0.2f);
 
@@ -56,5 +56,5 @@ namespace Macrocosm.Content.Dusts
 
 		public override Color? GetAlpha(Dust dust, Color lightColor)
 			=> Color.White;
- 	}
+	}
 }

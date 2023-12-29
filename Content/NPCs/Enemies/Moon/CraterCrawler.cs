@@ -15,10 +15,10 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		public override int BodyType => ModContent.NPCType<CraterCrawlerBody>();
 		public override int TailType => ModContent.NPCType<CraterCrawlerTail>();
 
-		public override void SetStaticDefaults() 
+		public override void SetStaticDefaults()
 		{
 			var drawModifier = new NPCID.Sets.NPCBestiaryDrawModifiers()    // Influences how the NPC looks in the Bestiary
-			{   
+			{
 				CustomTexturePath = "Macrocosm/Content/NPCs/Enemies/Moon/CraterCrawler_Bestiary", // If the NPC is multiple parts like a worm, a custom texture for the Bestiary is encouraged.
 				Position = new Vector2(40f, 24f),
 				PortraitPositionXOverride = 0f,
@@ -27,7 +27,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, drawModifier);
 		}
 
-		public override void SetDefaults() 
+		public override void SetDefaults()
 		{
 			NPC.CloneDefaults(NPCID.DiggerHead);
 			NPC.damage = 100;
@@ -37,27 +37,27 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			NPC.aiStyle = -1;
 		}
 
-		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry) 
+		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
 		{
 			// We can use AddRange instead of calling Add multiple times in order to add multiple items at once
-			bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[] 
+			bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[]
 			{
 				// Sets the spawning conditions of this NPC that is listed in the bestiary.
 				//BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Times.NightTime,
 			});
 		}
 
-		public override void Init() 
+		public override void Init()
 		{
 			// Set the segment variance
 			// If you want the segment length to be constant, set these two properties to the same value
 			MinSegmentLength = 16;
 			MaxSegmentLength = 24;
- 
+
 			CommonWormInit(this);
 		}
 
-		public static void CommonWormInit(Worm worm) 
+		public static void CommonWormInit(Worm worm)
 		{
 			// These two properties handle the movement of the worm
 			worm.MoveSpeed = 15.5f;
@@ -65,24 +65,24 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		}
 
 		private int attackCounter;
-		public override void SendExtraAI(BinaryWriter writer) 
+		public override void SendExtraAI(BinaryWriter writer)
 		{
 			writer.Write(attackCounter);
 		}
 
-		public override void ReceiveExtraAI(BinaryReader reader) 
+		public override void ReceiveExtraAI(BinaryReader reader)
 		{
 			attackCounter = reader.ReadInt32();
 		}
 
-		public override void AI() 
+		public override void AI()
 		{
-			if (Main.netMode != NetmodeID.MultiplayerClient) 
+			if (Main.netMode != NetmodeID.MultiplayerClient)
 			{
 				// tick down the attack counter.
-				if (attackCounter > 0) 
- 					attackCounter--; 
- 
+				if (attackCounter > 0)
+					attackCounter--;
+
 				Player target = Main.player[NPC.target];
 				// If the attack counter is 0, this NPC is less than 12.5 tiles away from its target, and has a path to the target unobstructed by blocks, summon a projectile.
 				if (attackCounter <= 0 && Vector2.Distance(NPC.Center, target.Center) < 200 && Collision.CanHit(NPC.Center, 1, 1, target.Center, 1, 1))
@@ -92,24 +92,24 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			}
 		}
 
-        public override void HitEffect(NPC.HitInfo hit)
-        {
-            if (NPC.life <= 0)
-            {
-                Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("CraterCrawlerHeadGore").Type);
-            }
-        }
-    }
+		public override void HitEffect(NPC.HitInfo hit)
+		{
+			if (NPC.life <= 0)
+			{
+				Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("CraterCrawlerHeadGore").Type);
+			}
+		}
+	}
 
 	public class CraterCrawlerBody : WormBody
 	{
-		public override void SetStaticDefaults() 
+		public override void SetStaticDefaults()
 		{
 			NPCID.Sets.NPCBestiaryDrawModifiers value = new NPCID.Sets.NPCBestiaryDrawModifiers() { Hide = true }; // Hides this NPC from the Bestiary, useful for multi-part NPCs whom you only want one entry.
 			NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
 		}
 
-		public override void SetDefaults() 
+		public override void SetDefaults()
 		{
 			NPC.CloneDefaults(NPCID.DiggerBody);
 			NPC.damage = 80;
@@ -120,40 +120,40 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			Main.npcFrameCount[Type] = 1;
 		}
 
-		public override void Init() 
+		public override void Init()
 		{
- 			CraterCrawlerHead.CommonWormInit(this);
+			CraterCrawlerHead.CommonWormInit(this);
 		}
 
 		public override void OnSpawn(IEntitySource source)
 		{
- 		}
+		}
 
 		public override void FindFrame(int frameHeight)
 		{
-  		}
+		}
 
-        public override void HitEffect(NPC.HitInfo hit)
-        {
-            if (NPC.life <= 0)
+		public override void HitEffect(NPC.HitInfo hit)
+		{
+			if (NPC.life <= 0)
 			{
-                Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("CraterCrawlerBodyGore").Type);
-            }
-        }
-    }
+				Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("CraterCrawlerBodyGore").Type);
+			}
+		}
+	}
 
 	public class CraterCrawlerTail : WormTail
 	{
-		public override void SetStaticDefaults() 
+		public override void SetStaticDefaults()
 		{
-			NPCID.Sets.NPCBestiaryDrawModifiers value = new() 
+			NPCID.Sets.NPCBestiaryDrawModifiers value = new()
 			{
 				Hide = true // Hides this NPC from the Bestiary, useful for multi-part NPCs whom you only want one entry.
 			};
 			NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
 		}
 
-		public override void SetDefaults() 
+		public override void SetDefaults()
 		{
 			NPC.CloneDefaults(NPCID.DiggerTail);
 			NPC.damage = 84;
@@ -163,18 +163,18 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			NPC.aiStyle = -1;
 		}
 
-		public override void Init() 
+		public override void Init()
 		{
 			FlipSprite = false;
 			CraterCrawlerHead.CommonWormInit(this);
 		}
 
-        public override void HitEffect(NPC.HitInfo hit)
-        {
-            if (NPC.life <= 0)
+		public override void HitEffect(NPC.HitInfo hit)
+		{
+			if (NPC.life <= 0)
 			{
-                Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("CraterCrawlerTailGore").Type);
-            }
-        }
-    }
+				Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("CraterCrawlerTailGore").Type);
+			}
+		}
+	}
 }

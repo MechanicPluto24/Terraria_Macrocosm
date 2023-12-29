@@ -9,7 +9,7 @@ namespace Macrocosm.Content.Items.Vanity.BossMasks
 	{
 		public override void SetStaticDefaults()
 		{
- 		}
+		}
 
 		public override void SetDefaults()
 		{

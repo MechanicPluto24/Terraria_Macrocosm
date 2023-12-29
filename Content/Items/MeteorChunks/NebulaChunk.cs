@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using Terraria;
-using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -11,7 +10,7 @@ namespace Macrocosm.Content.Items.MeteorChunks
 	{
 		public override void SetStaticDefaults()
 		{
-			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 50;
+			Item.ResearchUnlockCount = 25;
 		}
 
 		override public void SetDefaults()
@@ -29,7 +28,7 @@ namespace Macrocosm.Content.Items.MeteorChunks
 		{
 			int itemType = ItemID.FragmentNebula;
 			player.QuickSpawnItem(player.GetSource_OpenItem(Type), itemType, Main.rand.Next(20, 50));
-			
+
 		}
 
 		public override void Update(ref float gravity, ref float maxFallSpeed)

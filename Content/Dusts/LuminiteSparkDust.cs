@@ -20,7 +20,7 @@ namespace Macrocosm.Content.Dusts
 
 			float clampedScale = dust.scale;
 			if (clampedScale > 1f)
- 				clampedScale = 1f;
+				clampedScale = 1f;
 
 			if (!dust.noLight)
 				Lighting.AddLight((int)(dust.position.X / 16f), (int)(dust.position.Y / 16f), clampedScale * 0.2f, clampedScale * 0.725f, clampedScale * 0.51f);

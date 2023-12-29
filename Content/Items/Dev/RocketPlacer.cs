@@ -1,7 +1,6 @@
 ﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Global;
 using Macrocosm.Content.Rockets;
-using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -29,9 +28,9 @@ namespace Macrocosm.Content.Items.Dev
 
 		public override bool? UseItem(Player player)
 		{
-			if(player.whoAmI == Main.myPlayer)
+			if (player.whoAmI == Main.myPlayer)
 			{
-				if(player.altFunctionUse == 2)
+				if (player.AltFunction())
 				{
 					RocketManager.DespawnAllRockets();
 				}

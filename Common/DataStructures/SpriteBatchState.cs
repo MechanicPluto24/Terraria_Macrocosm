@@ -63,7 +63,7 @@ namespace Macrocosm.Common.DataStructures
 
 				initialized = true;
 			}
-			
+
 			Matrix = (Matrix)type.GetField("transformMatrix", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch);
 		}
 	}

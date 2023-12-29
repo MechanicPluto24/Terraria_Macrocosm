@@ -1,20 +1,19 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Content.Dusts;
+using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.Enums;
+using Terraria.GameContent;
+using Terraria.GameContent.ObjectInteractions;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
-using Terraria.DataStructures;
-using Terraria.GameContent.ObjectInteractions;
-using Terraria.GameContent;
-using Macrocosm.Content.Dusts;
 
 namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 {
 	public class MoonBaseChair : ModTile
 	{
-		public const int NextStyleHeight = 40;  
 		public override void SetStaticDefaults()
 		{
 			Main.tileFrameImportant[Type] = true;
@@ -34,7 +33,6 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 
 			TileObjectData.newTile.CopyFrom(TileObjectData.Style1x2);
 			TileObjectData.newTile.CoordinateHeights = new[] { 16, 18 };
-			TileObjectData.newTile.CoordinatePaddingFix = new Point16(0, 2);
 			TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;
 			TileObjectData.newTile.StyleWrapLimit = 2;
 			TileObjectData.newTile.StyleMultiplier = 2;
@@ -54,16 +52,17 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 		{
 			Tile tile = Framing.GetTileSafely(i, j);
 
-			info.TargetDirection = -1;
-			if (tile.TileFrameX != 0)
- 				info.TargetDirection = 1; 
- 
-			info.AnchorTilePosition.X = i; 
-			info.AnchorTilePosition.Y = j;
+			info.VisualOffset.Y -= 1f;
 
-			if (tile.TileFrameY % NextStyleHeight == 0)
- 				info.AnchorTilePosition.Y++; 
- 		}
+			info.TargetDirection = -1;
+			if (tile.TileFrameX / 18 % 2 == 1)
+				info.TargetDirection = 1;
+
+			info.AnchorTilePosition = new(i, j);
+
+			if (tile.TileFrameY == 0)
+				info.AnchorTilePosition.Y += 1;
+		}
 
 		public override bool RightClick(int i, int j)
 		{
@@ -82,14 +81,14 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 		{
 			Player player = Main.LocalPlayer;
 			if (!player.IsWithinSnappngRangeToTile(i, j, PlayerSittingHelper.ChairSittingMaxDistance))
- 				return;
- 
+				return;
+
 			player.noThrow = 2;
 			player.cursorItemIconEnabled = true;
 			player.cursorItemIconID = ModContent.ItemType<Items.Placeable.Furniture.MoonBase.MoonBaseChair>();
 
 			if (Main.tile[i, j].TileFrameX / 18 < 1)
- 				player.cursorItemIconReversed = true;
- 		}
+				player.cursorItemIconReversed = true;
+		}
 	}
 }

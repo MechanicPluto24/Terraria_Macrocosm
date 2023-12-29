@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using Terraria;
-using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -11,7 +10,7 @@ namespace Macrocosm.Content.Items.MeteorChunks
 	{
 		public override void SetStaticDefaults()
 		{
-			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 50;
+			Item.ResearchUnlockCount = 25;
 		}
 
 		override public void SetDefaults()
@@ -43,7 +42,7 @@ namespace Macrocosm.Content.Items.MeteorChunks
 				lightDust.position = Item.Center - rotVector1 * Main.rand.Next(10, 21);
 				lightDust.velocity = rotVector1.RotatedBy(MathHelper.PiOver2) * 7f;
 				lightDust.scale = 1.2f;
- 				lightDust.customData = Item.Center;
+				lightDust.customData = Item.Center;
 			}
 		}
 	}

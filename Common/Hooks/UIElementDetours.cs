@@ -26,7 +26,7 @@ namespace Macrocosm.Common.Hooks
 			orig(self, gameTime);
 			HandleFocus(self);
 		}
-		
+
 		private void HandleFocus(UIElement element)
 		{
 			// TODO: call OnFocusGain/Lost even if the element does not have a focus context 

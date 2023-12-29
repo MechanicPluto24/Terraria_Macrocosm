@@ -1,7 +1,6 @@
 using Macrocosm.Common.Bases;
 using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -11,7 +10,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 	{
 		public override void SetStaticDefaults()
 		{
-			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
+
 		}
 
 		public override void SetDefaultsHeldProjectile()
@@ -27,19 +26,20 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			Item.knockBack = 4.5f;
 			Item.value = Item.sellPrice(silver: 50);
 			Item.rare = ItemRarityID.Orange;
-			Item.shoot = ProjectileID.PurificationPowder; // For some reason, all the guns in the vanilla source have this.
-			Item.autoReuse = true;
+            Item.shoot = Macrocosm.ItemShoot_UsesAmmo;
+            Item.autoReuse = true;
 			Item.shootSpeed = 20f;
 			Item.useAmmo = AmmoID.Bullet;
+			Item.UseSound = SoundID.Item11;
 		}
 
-        public override GunHeldProjectileData GunHeldProjectileData => new()
+		public override GunHeldProjectileData GunHeldProjectileData => new()
 		{
 			GunBarrelPosition = new Vector2(24f, 0f),
 			CenterYOffset = 9f,
 			MuzzleOffset = 45f,
-            RecoilDiminish = 0.9f
-        };
+			RecoilDiminish = 0.9f
+		};
 
 		public override bool? UseItem(Player player)
 		{
@@ -52,7 +52,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
 		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
 		{
-			position -= new Vector2(4 * player.direction, 2); // so bullets line up with the muzzle
+			position -= new Vector2(4 * player.direction, 2);
 		}
 	}
 }

@@ -9,177 +9,181 @@ using Terraria.ModLoader;
 namespace Macrocosm.Common.Bases
 {
 	public abstract class BaseMeteor : ModProjectile, IExplosive
-    {
-        public int Width;
-        public int Height;
-        public int Damage;
+	{
+		public int Width;
+		public int Height;
 
-        public float ScreenshakeMaxDist;
-        public float ScreenshakeIntensity;
+		public int Damage;
 
-        public float RotationMultiplier;
-        public float BlastRadiusMultiplier = 1f;
+		public float ScreenshakeMaxDist;
+		public float ScreenshakeIntensity;
 
-        public int DustType = -1;
-        public int ImpactDustCount;
-        public Vector2 ImpactDustSpeed;
+		public float RotationMultiplier;
+		public float BlastRadiusMultiplier = 1f;
 
-        public float DustScaleMin;
-        public float DustScaleMax;
+		public int DustType = -1;
+		public int ImpactDustCount;
+		public Vector2 ImpactDustSpeed;
 
-        public int AI_DustChanceDenominator;
+		public float DustScaleMin;
+		public float DustScaleMax;
 
-        public int DebrisType = -1;
-        public int DebrisCount;
-        public Vector2 DebrisVelocity;
+		public int AI_DustChanceDenominator;
 
-        public float BlastRadius => Width * BlastRadiusMultiplier;
+		public int DebrisType = -1;
+		public int DebrisCount;
+		public Vector2 DebrisVelocity;
 
-        public override void SetStaticDefaults()
-        {
-        }
+		public int OriginalWidth => Width;
+		public int OriginalHeight => Height;
 
-        public override void SetDefaults()
-        {
-            Projectile.aiStyle = -1;
-            Projectile.friendly = true;
-            Projectile.hostile = true;
-            Projectile.penetrate = -1;
-            Projectile.tileCollide = true;
+		public float BlastRadius => Width * BlastRadiusMultiplier;
 
-            Projectile.width = Width;
-            Projectile.height = Height;
-            Projectile.damage = Damage;
-        }
+		public override void SetStaticDefaults()
+		{
+		}
 
-        public override void OnKill(int timeLeft)
-        {
-            // handled by clients 
-            if (Main.netMode != NetmodeID.Server)
-            {
-                SpawnImpactDusts();
-                SpawnDebris();
-                ImpactSounds();
-            }
+		public override void SetDefaults()
+		{
+			Projectile.aiStyle = -1;
+			Projectile.friendly = true;
+			Projectile.hostile = true;
+			Projectile.penetrate = -1;
+			Projectile.tileCollide = true;
 
-            // handled by server 
-            if (Main.netMode != NetmodeID.MultiplayerClient)
-            {
-                SpawnItems();
-                ImpactScreenshake();
-            }
-        }
+			Projectile.width = Width;
+			Projectile.height = Height;
+			Projectile.damage = Damage;
+		}
 
-        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
-        {
-        }
+		public override void OnKill(int timeLeft)
+		{
+			// handled by clients 
+			if (Main.netMode != NetmodeID.Server)
+			{
+				SpawnImpactDusts();
+				SpawnDebris();
+				ImpactSounds();
+			}
 
-        public override bool OnTileCollide(Vector2 oldVelocity)
-        {
-            return false;
-        }
+			// handled by server 
+			if (Main.netMode != NetmodeID.MultiplayerClient)
+			{
+				SpawnItems();
+				ImpactScreenshake();
+			}
+		}
 
-        override public void AI()
-        {
-            AI_Rotation();
-            AI_SpawnDusts();
-            ExtraAI();
-        }
+		public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+		{
+		}
 
-        public virtual void SpawnImpactDusts()
-        {
-            if (DustType < 0)
-                return;
+		public override bool OnTileCollide(Vector2 oldVelocity)
+		{
+			return false;
+		}
 
-            SpawnImpactDusts(DustType);
-        }
+		override public void AI()
+		{
+			AI_Rotation();
+			AI_SpawnDusts();
+			ExtraAI();
+		}
 
-        public void SpawnImpactDusts(int dustType, bool noGravity = false)
-        {
-            for (int i = 0; i < ImpactDustCount; i++)
-            {
-                Dust dust = Dust.NewDustDirect(
-                    new Vector2(Projectile.Center.X, Projectile.Center.Y + 0.25f * Projectile.height),
-                    Width,
-                    Height,
-                    dustType,
-                    Main.rand.NextFloat(-ImpactDustSpeed.X, ImpactDustSpeed.X),
-                    Main.rand.NextFloat(0f, -ImpactDustSpeed.Y),
-                    Scale: Main.rand.NextFloat(DustScaleMin, DustScaleMax)
-                );
+		public virtual void SpawnImpactDusts()
+		{
+			if (DustType < 0)
+				return;
 
-                dust.noGravity = noGravity;
-            }
-        }
+			SpawnImpactDusts(DustType);
+		}
 
-        public virtual void SpawnDebris()
-        {
-            if (DebrisType < 0)
-                return;
+		public void SpawnImpactDusts(int dustType, bool noGravity = false)
+		{
+			for (int i = 0; i < ImpactDustCount; i++)
+			{
+				Dust dust = Dust.NewDustDirect(
+					new Vector2(Projectile.Center.X, Projectile.Center.Y + 0.25f * Projectile.height),
+					Width,
+					Height,
+					dustType,
+					Main.rand.NextFloat(-ImpactDustSpeed.X, ImpactDustSpeed.X),
+					Main.rand.NextFloat(0f, -ImpactDustSpeed.Y),
+					Scale: Main.rand.NextFloat(DustScaleMin, DustScaleMax)
+				);
 
-            for (int i = 0; i < DebrisCount; i++)
-            {
-                Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center,
-                new Vector2(DebrisVelocity.X * Main.rand.NextFloat(-6f, 6f), DebrisVelocity.Y * Main.rand.NextFloat(-4f, -1f)),
-                DebrisType, 0, 0f, 255);
-            }
-        }
+				dust.noGravity = noGravity;
+			}
+		}
 
-        public virtual void ImpactSounds() { }
-        public virtual void SpawnItems() { }
+		public virtual void SpawnDebris()
+		{
+			if (DebrisType < 0)
+				return;
 
-        public virtual void ImpactScreenshake()
-        {
-            for (int i = 0; i < 255; i++)
-            {
-                Player player = Main.player[i];
-                if (player.active)
-                {
-                    float distance = Vector2.Distance(player.Center, Projectile.Center);
-                    if (distance < ScreenshakeMaxDist)
-                    {
-                        player.AddScreenshake(ScreenshakeIntensity - distance / ScreenshakeMaxDist * ScreenshakeIntensity, context: FullName + Projectile.whoAmI.ToString());
-                    }
-                }
-            }
-        }
+			for (int i = 0; i < DebrisCount; i++)
+			{
+				Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center,
+				new Vector2(DebrisVelocity.X * Main.rand.NextFloat(-6f, 6f), DebrisVelocity.Y * Main.rand.NextFloat(-4f, -1f)),
+				DebrisType, 0, 0f, 255);
+			}
+		}
 
-        public virtual void AI_Rotation()
-        {
-            Projectile.rotation += (Math.Abs(Projectile.velocity.X) + Math.Abs(Projectile.velocity.Y)) * RotationMultiplier * Projectile.direction;
+		public virtual void ImpactSounds() { }
+		public virtual void SpawnItems() { }
 
-        }
+		public virtual void ImpactScreenshake()
+		{
+			for (int i = 0; i < 255; i++)
+			{
+				Player player = Main.player[i];
+				if (player.active)
+				{
+					float distance = Vector2.Distance(player.Center, Projectile.Center);
+					if (distance < ScreenshakeMaxDist)
+					{
+						player.AddScreenshake(ScreenshakeIntensity - distance / ScreenshakeMaxDist * ScreenshakeIntensity, context: FullName + Projectile.whoAmI.ToString());
+					}
+				}
+			}
+		}
 
-        /// <summary> Override for custom dusts spawning </summary>
-        public virtual void AI_SpawnDusts()
-        {
-            if (DustType == -1)
-                return;
+		public virtual void AI_Rotation()
+		{
+			Projectile.rotation += (Math.Abs(Projectile.velocity.X) + Math.Abs(Projectile.velocity.Y)) * RotationMultiplier * Projectile.direction;
 
-            AI_SpawnDusts(DustType);
-        }
+		}
 
-        /// <summary> Call for custom dust types, different from the DustType property </summary>
-        public void AI_SpawnDusts(int dustType)
-        {
-            if (Main.rand.NextBool(AI_DustChanceDenominator))
-            {
-                Dust dust = Dust.NewDustDirect(
-                        new Vector2(Projectile.position.X, Projectile.position.Y),
-                        Projectile.width,
-                        Projectile.height,
-                        dustType,
-                        0f,
-                        0f,
-                        Scale: Main.rand.NextFloat(DustScaleMin, DustScaleMax)
-                    );
+		/// <summary> Override for custom dusts spawning </summary>
+		public virtual void AI_SpawnDusts()
+		{
+			if (DustType == -1)
+				return;
 
-                dust.noGravity = true;
-            }
-        }
+			AI_SpawnDusts(DustType);
+		}
 
-        /// <summary> Use for special AI </summary>
-        public virtual void ExtraAI() { }
+		/// <summary> Call for custom dust types, different from the DustType property </summary>
+		public void AI_SpawnDusts(int dustType)
+		{
+			if (Main.rand.NextBool(AI_DustChanceDenominator))
+			{
+				Dust dust = Dust.NewDustDirect(
+						new Vector2(Projectile.position.X, Projectile.position.Y),
+						Projectile.width,
+						Projectile.height,
+						dustType,
+						0f,
+						0f,
+						Scale: Main.rand.NextFloat(DustScaleMin, DustScaleMax)
+					);
 
-    }
+				dust.noGravity = true;
+			}
+		}
+
+		/// <summary> Use for special AI </summary>
+		public virtual void ExtraAI() { }
+
+	}
 }

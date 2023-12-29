@@ -14,7 +14,7 @@ namespace Macrocosm.Common.Hooks
 			Terraria.IL_Gore.Update += Gore_Update;
 		}
 
-		public void Unload() 
+		public void Unload()
 		{
 			Terraria.IL_Gore.Update -= Gore_Update;
 		}
@@ -36,13 +36,13 @@ namespace Macrocosm.Common.Hooks
 			if (!c.TryGotoNext(i => i.MatchLdcR4(0.2f))) return;
 
 			c.Remove();
-			c.EmitDelegate(GetGoreGravity); 
+			c.EmitDelegate(GetGoreGravity);
 		}
 
 		// replace gravity increment with desired value 
 		private static float GetGoreGravity()
 		{
-			if(SubworldSystem.AnyActive<Macrocosm>())
+			if (SubworldSystem.AnyActive<Macrocosm>())
 				return Earth.GoreGravity * MacrocosmSubworld.Current.GravityMultiplier;
 
 			return Earth.GoreGravity;

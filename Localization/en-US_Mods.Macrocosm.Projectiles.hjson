@@ -1,3 +1,5 @@
+GreatswordHeldProjectile.DisplayName: Greatsword Held Projectile
+GunHeldProjectile.DisplayName: Gun Held Projectile
 MoonMeteorLarge.DisplayName: Large Meteor
 MoonMeteorMedium.DisplayName: Medium Meteor
 MoonMeteorSmall.DisplayName: Small Meteor
@@ -14,14 +16,13 @@ ArtemiteSpearProjectileShoot.DisplayName: Artemite Spear
 ArtemiteSwordProjectile.DisplayName: Artemite Straightsword
 ClawWrenchProjectile.DisplayName: Claw Wrench
 MoonSwordProjectile.DisplayName: Moon Sword
-MoonSwordSwing.DisplayName: Moonlight Greatsword
+MoonSwordSwing.DisplayName: Moon Sword
 ArchersLineProjectile.DisplayName: Archer's Line
 CruithneGreenSlug.DisplayName: Cruithne Green Slug
 DeliriumShell.DisplayName: Delirium Shell
 LHBMinigunProjectile.DisplayName: L.H.B.- 805
 NWAMissile.DisplayName: N.W.A.- 12691
 PlasmaGrenade.DisplayName: Plasma Grenade
-SeleniteArrow.DisplayName: Selenite Arrow
 CalcicCaneMinion.DisplayName: Crater Imp
 ChandriumStaffMinion.DisplayName: Crescent Ghoul
 ChandriumWhipProjectile.DisplayName: Chandrium Whip
@@ -31,7 +32,6 @@ ChandriumDrillProjectile.DisplayName: Chandrium Drill
 DianiteDrillProjectile.DisplayName: Dianite Drill
 SeleniteDrillProjectile.DisplayName: Selenite Drill
 FlamingMeteor.DisplayName: Flaming Meteor
-LuminiteSlimeProjectile.DisplayName: Luminite Slime
 MeteorPortal.DisplayName: Meteor Portal
 ImbriumJewelProjectile.DisplayName: Imbrium Jewel
 ImbriumJewelMeteor.DisplayName: Imbrium Jewel
@@ -42,8 +42,9 @@ SeleniteMagnumProjectile.DisplayName: Selenite Magnum
 TychoBullet.DisplayName: Tycho .50
 DianiteMeteor.DisplayName: Dianite Meteor
 DianiteMeteorSmall.DisplayName: Dianite Meteor
-PhantasmalImpLarge.DisplayName: Phantasmal Imp
+PhantasmalImp.DisplayName: Phantasmal Imp
 PhantasmalImpSmall.DisplayName: Phantasmal Imp
+PhantasmalPortal.DisplayName: Phantasmal Portal
 MoonPhaseGlobeProjectile.DisplayName: Moon Phase Globe
 DianiteForkCoreProjectile.DisplayName: Dianite Fork
 DianiteForkProjectile.DisplayName: Dianite Fork
@@ -52,8 +53,17 @@ SilicaCrimsandProjectile.DisplayName: Silica Crimsand
 SilicaEbonsandProjectile.DisplayName: Silica Ebonsand
 SilicaPearlsandProjectile.DisplayName: Silica Pearlsand
 SilicaSandProjectile.DisplayName: Silica Sand
-GreatswordHeldProjectile.DisplayName: Greatsword Held Projectile
-GunHeldProjectile.DisplayName: Gun Held Projectile
 HalberdHeldProjectile.DisplayName: Halberd Held Projectile
 Procellarum_HalberdProjectile.DisplayName: Procellarum_ Halberd Projectile
 Procellarum_LightBolt.DisplayName: Procellarum_ Light Bolt
+InvarArrow.DisplayName: Invar Arrow
+InvarBullet.DisplayName: Invar Bullet
+RapaciousBrandProjectile.DisplayName: Rapacious Brand
+RapaciousBrandSwing.DisplayName: Rapacious Brand
+SeleniteBeam.DisplayName: Selenite Beam
+SeleniteBowHeld.DisplayName: Selenite Bow
+LuminiteExplosion.DisplayName: Luminite Explosion
+LuminiteShard.DisplayName: Luminite Shard
+LuminiteStar.DisplayName: Luminite Star
+PhantasmalBolt.DisplayName: Phantasmal Bolt
+CraterDemonPet.DisplayName: Mini Crater Demon

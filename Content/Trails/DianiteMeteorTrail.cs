@@ -22,11 +22,11 @@ namespace Macrocosm.Content.Trails
 
 		public override float TrailWidths(float progressOnStrip)
 		{
-			if(Owner is Projectile projectile)
+			if (Owner is Projectile projectile)
 			{
 				float lerpValue = Utils.GetLerpValue(0f, 0.06f + 1.115f * 0.01f, progressOnStrip, clamped: true);
 				lerpValue = 1f - (1f - lerpValue) * (1f - lerpValue);
-				return MathHelper.Lerp(projectile.width * 1f, projectile.width * 0.2f , progressOnStrip) * lerpValue;
+				return MathHelper.Lerp(projectile.width * 1f, projectile.width * 0.2f, progressOnStrip) * lerpValue;
 			}
 
 			return 1f;

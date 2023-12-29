@@ -21,7 +21,7 @@ namespace Macrocosm.Content.Tiles.Relics
 		public const int FrameWidth = 18 * 3;
 		public const int FrameHeight = 18 * 4;
 		public const int HorizontalFrames = 1;
-		public const int VerticalFrames = 1;  
+		public const int VerticalFrames = 1;
 
 		public Asset<Texture2D> RelicTexture;
 
@@ -43,21 +43,21 @@ namespace Macrocosm.Content.Tiles.Relics
 
 		public override void SetStaticDefaults()
 		{
-			Main.tileShine[Type] = 400;  
-			Main.tileFrameImportant[Type] = true;  
-			TileID.Sets.InteractibleByNPCs[Type] = true;  
+			Main.tileShine[Type] = 400;
+			Main.tileFrameImportant[Type] = true;
+			TileID.Sets.InteractibleByNPCs[Type] = true;
 
-			TileObjectData.newTile.CopyFrom(TileObjectData.Style3x4);  
-			TileObjectData.newTile.LavaDeath = false;  
-			TileObjectData.newTile.DrawYOffset = 2;  
-			TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;  
+			TileObjectData.newTile.CopyFrom(TileObjectData.Style3x4);
+			TileObjectData.newTile.LavaDeath = false;
+			TileObjectData.newTile.DrawYOffset = 2;
+			TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;
 			TileObjectData.newTile.StyleHorizontal = false;
 
 			TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
 			TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceRight;
 			TileObjectData.addAlternate(1);
-	
- 			TileObjectData.addTile(Type);
+
+			TileObjectData.addTile(Type);
 
 			AddMapEntry(new Color(233, 207, 94), Language.GetText("MapObject.Relic"));
 		}
@@ -67,24 +67,24 @@ namespace Macrocosm.Content.Tiles.Relics
 		public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref TileDrawInfo drawData)
 		{
 			if (drawData.tileFrameX % FrameWidth == 0 && drawData.tileFrameY % FrameHeight == 0)
- 				Main.instance.TilesRenderer.AddSpecialLegacyPoint(i, j);
- 		}
+				Main.instance.TilesRenderer.AddSpecialLegacyPoint(i, j);
+		}
 
 		public override void SpecialDraw(int i, int j, SpriteBatch spriteBatch)
 		{
 			// This is lighting-mode specific, always include this if you draw tiles manually
 			Vector2 offScreen = new Vector2(Main.offScreenRange);
 			if (Main.drawToScreen)
- 				offScreen = Vector2.Zero;
+				offScreen = Vector2.Zero;
 
- 			Point p = new Point(i, j);
+			Point p = new Point(i, j);
 			Tile tile = Main.tile[p.X, p.Y];
 			if (tile == null || !tile.HasTile)
- 				return;
- 
- 			Texture2D texture = RelicTexture.Value;
+				return;
 
-			int frameY = tile.TileFrameX / FrameWidth;  
+			Texture2D texture = RelicTexture.Value;
+
+			int frameY = tile.TileFrameX / FrameWidth;
 			Rectangle frame = texture.Frame(HorizontalFrames, VerticalFrames, 0, frameY);
 
 			Vector2 origin = frame.Size() / 2f;
@@ -92,7 +92,7 @@ namespace Macrocosm.Content.Tiles.Relics
 
 			Color color = Lighting.GetColor(p.X, p.Y);
 
-			bool direction = tile.TileFrameY / FrameHeight != 0; 
+			bool direction = tile.TileFrameY / FrameHeight != 0;
 			SpriteEffects effects = direction && RightPlaceStyle ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
 
 			float offset = (float)Math.Sin(Main.GlobalTimeWrappedHourly * MathHelper.TwoPi / 5f);
@@ -101,11 +101,11 @@ namespace Macrocosm.Content.Tiles.Relics
 			spriteBatch.Draw(texture, drawPos, frame, color, 0f, origin, 1f, effects, 0f);
 
 			float scale = (float)Math.Sin(Main.GlobalTimeWrappedHourly * MathHelper.TwoPi / 2f) * 0.3f + 0.7f;
- 
+
 			Color effectColor = (color * 0.1f * scale).WithOpacity(0f);
 
 			for (float num5 = 0f; num5 < 1f; num5 += 355f / (678f * (float)Math.PI))
- 				spriteBatch.Draw(texture, drawPos + (MathHelper.TwoPi * num5).ToRotationVector2() * (6f + offset * 2f), frame, effectColor, 0f, origin, 1f, effects, 0f);
- 		}
+				spriteBatch.Draw(texture, drawPos + (MathHelper.TwoPi * num5).ToRotationVector2() * (6f + offset * 2f), frame, effectColor, 0f, origin, 1f, effects, 0f);
+		}
 	}
 }

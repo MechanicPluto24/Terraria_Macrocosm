@@ -5,9 +5,10 @@ namespace Macrocosm.Content.Items.Placeable.Blocks
 {
 	public class SilicaPearlsand : ModItem
 	{
-		public override void SetStaticDefaults() 
+		public override void SetStaticDefaults()
 		{
-
+			Item.ResearchUnlockCount = 200;
+			ItemID.Sets.ExtractinatorMode[Type] = ModContent.ItemType<SilicaSand>();
 		}
 
 		public override void SetDefaults()

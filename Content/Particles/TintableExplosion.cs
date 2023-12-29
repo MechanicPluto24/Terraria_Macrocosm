@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Drawing.Particles;
+﻿using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -25,7 +24,7 @@ namespace Macrocosm.Content.Particles
 		public override void OnSpawn()
 		{
 			rotateClockwise = Main.rand.NextBool();
-  		}
+		}
 
 		public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
 		{
@@ -39,7 +38,7 @@ namespace Macrocosm.Content.Particles
 				float explosionProgress = (float)currentFrame / FrameNumber;
 				float replicaDecrease = 1f - (float)i / NumberOfInnerReplicas;
 				float scale = Scale * MathHelper.Lerp(ReplicaScalingFactor + (1f - ReplicaScalingFactor) * replicaDecrease, 1.06f, explosionProgress);
-				
+
 				Color color = DrawColor.WithOpacity(((float)TimeLeft / SpawnTimeLeft) * 0.7f);
 				spriteBatch.Draw(Texture, Position - screenPosition, GetFrame(), color, Rotation, Size * 0.5f, scale, SpriteEffects.None, 0f);
 			}
@@ -53,8 +52,8 @@ namespace Macrocosm.Content.Particles
 				Rotation += 0.005f;
 			else
 				Rotation -= 0.005f;
- 		}
-		
+		}
+
 		public override void OnKill()
 		{
 		}

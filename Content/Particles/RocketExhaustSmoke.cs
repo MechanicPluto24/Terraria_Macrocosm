@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -18,7 +17,7 @@ namespace Macrocosm.Content.Particles
 
 		public Color DrawColor = Color.White;
 
-		public int TargetAlpha = 255; 
+		public int TargetAlpha = 255;
 
 		public float Deceleration = 0.98f;
 
@@ -33,11 +32,11 @@ namespace Macrocosm.Content.Particles
 		private bool fadedIn = false;
 		private bool collided = false;
 
-		public override ParticleDrawLayer DrawLayer => collided ? ParticleDrawLayer.AfterProjectiles: ParticleDrawLayer.BeforeNPCs;
+		public override ParticleDrawLayer DrawLayer => collided ? ParticleDrawLayer.AfterProjectiles : ParticleDrawLayer.BeforeNPCs;
 
 		public override void OnSpawn()
 		{
-			if(FadeOut)
+			if (FadeOut)
 				alpha = 255;
 
 			if (FadeIn)
@@ -45,32 +44,32 @@ namespace Macrocosm.Content.Particles
 		}
 
 		public override void AI()
-        {
+		{
 			Velocity *= Deceleration;
 			Scale -= ScaleDownSpeed;
 
-			if(FadeIn && FadeOut)
+			if (FadeIn && FadeOut)
 			{
 				if (!fadedIn)
-				{	
-					if(alpha < TargetAlpha)
+				{
+					if (alpha < TargetAlpha)
 						alpha += FadeInSpeed;
-					else 
+					else
 						fadedIn = true;
 				}
-				else if(alpha > 0)
+				else if (alpha > 0)
 				{
 					alpha -= FadeOutSpeed;
 				}
 			}
-            else
-            {
+			else
+			{
 				if (FadeIn && alpha < TargetAlpha)
- 					alpha += FadeInSpeed;
+					alpha += FadeInSpeed;
 
- 				if (FadeOut && alpha > 0)
- 					alpha -= FadeOutSpeed;
- 			}
+				if (FadeOut && alpha > 0)
+					alpha -= FadeOutSpeed;
+			}
 
 			if (Collide)
 			{
@@ -78,7 +77,7 @@ namespace Macrocosm.Content.Particles
 
 				var collisionVelocity = Collision.TileCollision(Position, Velocity, 1, 1);
 
-				if(originalVelocity != collisionVelocity && !collided) 
+				if (originalVelocity != collisionVelocity && !collided)
 				{
 					collided = true;
 					Velocity = collisionVelocity;
@@ -95,13 +94,13 @@ namespace Macrocosm.Content.Particles
 
 			alpha = (int)MathHelper.Clamp(alpha, 0, 255);
 
-            if (Scale < 0.1 || (fadedIn && alpha <= 0))
- 				Kill();
-        }
+			if (Scale < 0.1 || (fadedIn && alpha <= 0))
+				Kill();
+		}
 
 		public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
 		{
-			spriteBatch.Draw(Texture, Position - screenPosition, GetFrame(), Color.Lerp(DrawColor, lightColor, 0.5f).WithAlpha(DrawColor.A) * ((float)alpha/255f), Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(Texture, Position - screenPosition, GetFrame(), Color.Lerp(DrawColor, lightColor, 0.5f).WithAlpha(DrawColor.A) * ((float)alpha / 255f), Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
 		}
 
 	}

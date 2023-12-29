@@ -1,6 +1,6 @@
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Buffs.GoodBuffs.MinionBuffs;
+using Macrocosm.Content.Buffs.Minions;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
@@ -14,7 +14,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Summon
 {
-	public class ChandriumStaffMinion : ModProjectile
+    public class ChandriumStaffMinion : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{
@@ -65,7 +65,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 		public override void PostDraw(Color lightColor)
 		{
 			Texture2D glow = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Summon/ChandriumStaffMinion_Glow").Value;
-			Projectile.DrawAnimatedExtra(glow, Color.White, Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, Projectile.spriteDirection == 1 ? new Vector2(0,6) : new Vector2(0,-2));
+			Projectile.DrawAnimatedExtra(glow, Color.White, Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, Projectile.spriteDirection == 1 ? new Vector2(0, 6) : new Vector2(0, -2));
 		}
 
 		public override void AI()
@@ -73,14 +73,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 			Player owner = Main.player[Projectile.owner];
 
 			if (!CheckActive(owner))
- 				return;
+				return;
 
 			if (!spawned)
 			{
 				SpawnDusts();
 				spawned = true;
 			}
- 
+
 			GeneralBehavior(owner, out Vector2 vectorToIdlePosition, out float distanceToIdlePosition);
 			SearchForTargets(owner, out bool foundTarget, out float distanceFromTarget, out Vector2 targetCenter);
 			Movement(foundTarget, distanceFromTarget, targetCenter, distanceToIdlePosition, vectorToIdlePosition);
@@ -100,8 +100,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 				Vector2 velocity = Main.rand.NextVector2Circular(0.5f, 0.5f) * 3f;
 
 				if (i % 10 == 0)
- 					Particle.CreateParticle<ChandriumCrescentMoon>(Projectile.Center, velocity, scale: Main.rand.NextFloat(0.5f, 0.9f));
- 
+					Particle.CreateParticle<ChandriumCrescentMoon>(Projectile.Center, velocity, scale: Main.rand.NextFloat(0.5f, 0.9f));
+
 				Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<ChandriumBrightDust>(), velocity.X, velocity.Y, Scale: Main.rand.NextFloat(0.8f, 1.2f));
 				dust.noGravity = true;
 			}
@@ -372,7 +372,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 				}
 			}
 
-			Main.EntitySpriteDraw(tex, pos, tex.Frame(1, Main.projFrames[Type], frameY: Projectile.frame), lightColor * (1f - Projectile.alpha/255f), Projectile.rotation, Projectile.Size / 2, Projectile.scale, effects, 0f);
+			Main.EntitySpriteDraw(tex, pos, tex.Frame(1, Main.projFrames[Type], frameY: Projectile.frame), lightColor * (1f - Projectile.alpha / 255f), Projectile.rotation, Projectile.Size / 2, Projectile.scale, effects, 0f);
 
 			return false;
 		}

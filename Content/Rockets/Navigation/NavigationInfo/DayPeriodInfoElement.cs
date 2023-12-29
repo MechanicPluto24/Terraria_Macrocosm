@@ -4,7 +4,7 @@ using Terraria.Localization;
 namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
 {
 	public class DayPeriodInfoElement : ValueUnitSpecialInfoElement
-    {
+	{
 		public DayPeriodInfoElement(string specialValueKey) : base(specialValueKey) { }
 
 		public DayPeriodInfoElement(float value, string specialValueKey = "") : base(value, specialValueKey) { }

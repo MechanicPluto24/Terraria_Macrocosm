@@ -2,7 +2,7 @@
 
 MacrocosmConfig: {
 	DisplayName: General Configuration
-	UnitSystemHeader: Unit System
+	UIHeader: User Interface
 	GameplayHeader: Gameplay
 
 	AlwaysDisplayTitleScreens: {
@@ -23,6 +23,11 @@ MacrocosmConfig: {
 	DisplayGravityInGs: {
 		Label: Display gravity values in Gs
 		Tooltip: Whether to display the gravity in Gs or gravitational acceleration measured in the current unit system
+	}
+
+	SelectedUITheme: {
+		Label: UI Theme
+		Tooltip: The display UI theme
 	}
 }
 

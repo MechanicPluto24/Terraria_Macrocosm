@@ -68,18 +68,18 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
 			Projectile.spriteDirection = Projectile.direction;
 
-			for(int i = 0; i < 5; i++)
-			Particle.CreateParticle<ImbriumStar>(Projectile.position + Main.rand.NextVector2Circular(20, 55), -Projectile.velocity * 0.02f, 0.5f);
-			
- 			int frameSpeed =3;
+			for (int i = 0; i < 5; i++)
+				Particle.CreateParticle<ImbriumStar>(Projectile.position + Main.rand.NextVector2Circular(20, 55), -Projectile.velocity * 0.02f, 0.5f);
+
+			int frameSpeed = 3;
 			if (Projectile.frameCounter++ >= frameSpeed)
 			{
 				Projectile.frameCounter = 0;
 				Projectile.frame++;
 
 				if (Projectile.frame >= Main.projFrames[Type])
- 					Projectile.frame = 0;
- 			}
+					Projectile.frame = 0;
+			}
 		}
 	}
 }

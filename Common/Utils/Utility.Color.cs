@@ -6,17 +6,19 @@ using Terraria;
 namespace Macrocosm.Common.Utils
 {
 	public static partial class Utility
-    {
+	{
 		#region Alpha manipulation
+
 		public static Color WithOpacity(this Color color, float opacity)
 			=> new(color.R, color.G, color.B, (byte)(opacity * 255));
 
 		public static Color WithAlpha(this Color color, byte alpha)
 			=> new(color.R, color.G, color.B, alpha);
+
 		#endregion
 
 		#region Hex format conversion
-		public static string GetHexText(this Color color) => "#" + color.Hex3().ToUpper();
+		public static string GetHex(this Color color) => "#" + color.Hex3().ToUpper();
 		public static bool TryGetColorFromHex(string hexString, out Color color)
 		{
 			if (hexString.StartsWith("#"))
@@ -50,6 +52,11 @@ namespace Macrocosm.Common.Utils
 		#endregion
 
 		#region HSL conversion
+
+		public static Color WithHue(this Color color, float hue) => HSLToRGB(ToHSL(color) with { X = hue });
+		public static Color WithSaturation(this Color color, float saturation) => HSLToRGB(ToHSL(color) with { Y = saturation });
+		public static Color WithLuminance(this Color color, float luminance) => HSLToRGB(ToHSL(color) with { Z = luminance });
+
 		public static Vector3 RGBToHSL(Color color) => color.ToHSL();
 		public static Vector3 ToHSL(this Color color) => Main.rgbToHsl(color);
 
@@ -82,17 +89,17 @@ namespace Macrocosm.Common.Utils
 		#endregion
 
 		public static void ManipulateColor(ref Color color, byte amount)
-        {
-            color.R += amount;
-            color.G += amount;
-            color.B += amount;
-        }
-        public static void ManipulateColor(ref Color color, float amount)
-        {
-            color.R *= (byte)Math.Round(color.R * amount);
-            color.G += (byte)Math.Round(color.G * amount);
-            color.B += (byte)Math.Round(color.B * amount);
-        }
+		{
+			color.R += amount;
+			color.G += amount;
+			color.B += amount;
+		}
+		public static void ManipulateColor(ref Color color, float amount)
+		{
+			color.R *= (byte)Math.Round(color.R * amount);
+			color.G += (byte)Math.Round(color.G * amount);
+			color.B += (byte)Math.Round(color.B * amount);
+		}
 
 		/// <summary>
 		///	 Returns a monochrome version of the given color.		///	</summary>
@@ -109,7 +116,7 @@ namespace Macrocosm.Common.Utils
 			=> 0.299f * rgbColor.R / 255 + 0.587f * rgbColor.G / 255 + 0.114f * rgbColor.B / 255;
 
 		/// <summary> Returns the RGB grayscale of a color using the NTSC standard </summary>
-		public static Color ToGrayscaleNTSC(this Color rgbColor)
+		public static Color ToGrayscale(this Color rgbColor)
 		{
 			Color result = new();
 			result.R = result.G = result.B = (byte)(rgbColor.GetLuminanceNTSC() * 255);
@@ -222,21 +229,21 @@ namespace Macrocosm.Common.Utils
 		}
 
 		public static Vector3[] ToVector3Array(this Color[] colors)
-        {
-            Vector3[] vectors = new Vector3[colors.Length];
+		{
+			Vector3[] vectors = new Vector3[colors.Length];
 
-            for (int i = 0; i < colors.Length; i++) 
- 				vectors[i] = colors[i].ToVector3();    
+			for (int i = 0; i < colors.Length; i++)
+				vectors[i] = colors[i].ToVector3();
 
-             return vectors;
-        }
+			return vectors;
+		}
 
 		public static Vector4[] ToVector4Array(this Color[] colors)
 		{
 			Vector4[] vectors = new Vector4[colors.Length];
 
 			for (int i = 0; i < colors.Length; i++)
- 				vectors[i] = colors[i].ToVector4();
+				vectors[i] = colors[i].ToVector4();
 
 			return vectors;
 		}

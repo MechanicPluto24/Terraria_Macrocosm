@@ -226,9 +226,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 				NPC.velocity.X = NPC.direction * 3f; // cap horiz velocity?? 
 			}
 
-			if(Math.Abs(NPC.Center.X - Main.player[NPC.target].Center.X) > 30f && tileBelow)
-			{ 
-				NPC.velocity.X = NPC.direction * 4f;	
+			if (Math.Abs(NPC.Center.X - Main.player[NPC.target].Center.X) > 30f && tileBelow)
+			{
+				NPC.velocity.X = NPC.direction * 4f;
 			}
 
 		}
@@ -244,6 +244,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		// Frames 30 - 32 : kick
 		public override void FindFrame(int frameHeight)
 		{
+			if (NPC.IsABestiaryIconDummy)
+				return;
 
 			bool threeTilesAboveGround = !Main.tile[(int)(NPC.Center.X / 16), (int)((NPC.Center.Y + NPC.height / 2) / 16)].HasTile &&
 										 !Main.tile[(int)(NPC.Center.X / 16), (int)((NPC.Center.Y + NPC.height / 2) / 16) + 1].HasTile &&
@@ -351,11 +353,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		public override void ModifyNPCLoot(NPCLoot loot)
 		{
-			loot.Add(ItemDropRule.Common(ModContent.ItemType<SpaceDust>()));             // Always drop 1 cosmic dust
-			loot.Add(ItemDropRule.Common(ModContent.ItemType<ArtemiteOre>(), 16, 1, 6));  // 1/16 chance to drop 1-6 Artemite Ore
-			loot.Add(ItemDropRule.Common(ModContent.ItemType<ChandriumOre>(), 16, 1, 6)); // 1/16 chance to drop 1-6 Chandrium Ore
-			loot.Add(ItemDropRule.Common(ModContent.ItemType<SeleniteOre>(), 16, 1, 6));  // 1/16 chance to drop 1-6 Selenite Ore
-			loot.Add(ItemDropRule.Common(ModContent.ItemType<DianiteOre>(), 16, 1, 6));   // 1/16 chance to drop 1-6 DianiteOre Ore
 		}
 
 		public override void HitEffect(NPC.HitInfo hit)
@@ -373,8 +370,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			}
 
 			if (Main.dedServ)
- 				return; // don't run on the server
- 
+				return; // don't run on the server
+
 			var entitySource = NPC.GetSource_Death();
 
 			if (NPC.life <= NPC.lifeMax / 2 && AI_State != (float)ActionState.Sprint)

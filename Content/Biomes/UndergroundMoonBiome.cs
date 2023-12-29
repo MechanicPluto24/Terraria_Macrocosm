@@ -9,9 +9,9 @@ namespace Macrocosm.Content.Biomes
 {
 	public class UndergroundMoonBiome : MoonBiome
 	{
-		public override SceneEffectPriority Priority => SceneEffectPriority.Environment;
+		public override SceneEffectPriority Priority => SceneEffectPriority.BossLow;
 		public override Color? BackgroundColor => base.BackgroundColor;
-		public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.GetInstance<MoonSurfaceBgStyle>();
+		public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.GetInstance<MoonSurfaceBackgroundStyle>();
 		public override ModUndergroundBackgroundStyle UndergroundBackgroundStyle => ModContent.GetInstance<MoonUgBgStyle>();
 		public override int Music => MusicLoader.GetMusicSlot(Mod, "Assets/Music/Stygia");
 
@@ -28,14 +28,14 @@ namespace Macrocosm.Content.Biomes
 		public override void OnInBiome(Player player)
 		{
 			base.OnInBiome(player);
- 		}
+		}
 
 		public override void OnLeave(Player player)
 		{
 			base.OnLeave(player);
- 		}
+		}
 
-		public override bool IsBiomeActive(Player player) 
+		public override bool IsBiomeActive(Player player)
 			=> SubworldSystem.IsActive<Moon>() && (player.position.Y / 16 > Main.rockLayer);
 
 	}

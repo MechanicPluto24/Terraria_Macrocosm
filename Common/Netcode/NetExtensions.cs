@@ -6,8 +6,6 @@ using System.Reflection;
 using Terraria;
 using Terraria.Chat;
 using Terraria.DataStructures;
-using Terraria.ID;
-using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Common.Netcode
@@ -35,7 +33,7 @@ namespace Macrocosm.Common.Netcode
 				return false;
 			}
 
-            foreach (FieldInfo fieldInfo in netSyncFields)
+			foreach (FieldInfo fieldInfo in netSyncFields)
 			{
 				string fieldType = fieldInfo.FieldType.Name;
 
@@ -43,7 +41,7 @@ namespace Macrocosm.Common.Netcode
 				{
 					binaryWriter.WriteVector2((Vector2)fieldInfo.GetValue(obj));
 				}
-				else if(fieldType == "Point")
+				else if (fieldType == "Point")
 				{
 					binaryWriter.WritePoint((Point)fieldInfo.GetValue(obj));
 				}
@@ -70,7 +68,7 @@ namespace Macrocosm.Common.Netcode
 					}
 				}
 			}
-			
+
 			return true;
 		}
 
@@ -87,9 +85,9 @@ namespace Macrocosm.Common.Netcode
 
 				if (fieldType == "Vector2")
 				{
- 					fieldInfo.SetValue(obj, binaryReader.ReadVector2());
+					fieldInfo.SetValue(obj, binaryReader.ReadVector2());
 				}
-				else if(fieldType == "Point")
+				else if (fieldType == "Point")
 				{
 					fieldInfo.SetValue(obj, binaryReader.ReadPoint());
 				}
@@ -99,11 +97,11 @@ namespace Macrocosm.Common.Netcode
 				}
 				else if (fieldType == "bool" && bitReader is not null)
 				{
- 					fieldInfo.SetValue(obj, bitReader.ReadBit());	
+					fieldInfo.SetValue(obj, bitReader.ReadBit());
 				}
 				else
 				{
- 					fieldInfo.SetValue(obj, typeof(BinaryReader).GetMethod($"Read{fieldInfo.FieldType.Name}").Invoke(binaryReader, null)); 	
+					fieldInfo.SetValue(obj, typeof(BinaryReader).GetMethod($"Read{fieldInfo.FieldType.Name}").Invoke(binaryReader, null));
 				}
 			}
 		}
@@ -132,24 +130,6 @@ namespace Macrocosm.Common.Netcode
 			short x = reader.ReadInt16();
 			short y = reader.ReadInt16();
 			return new Point16(x, y);
-		}
-
-		public static void NetSyncFields(this ModProjectile modProjectile)
-		{
-            if (Main.netMode == NetmodeID.SinglePlayer)
-			{
-                return;
-            }
-
-            ModPacket modPacket = Macrocosm.Instance.GetPacket();
-            modPacket.Write((byte)MessageType.SyncModProjectile);
-            modPacket.Write((ushort)modProjectile.Projectile.whoAmI);
-            if (modProjectile.NetWriteFields(modPacket))
-			{
-                modPacket.Send();
-			}
-			
-            modPacket.Dispose();
 		}
 	}
 }

@@ -1,7 +1,4 @@
-﻿using Macrocosm.Common.Utils;
-using Macrocosm.Content.Rockets.Customization;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Macrocosm.Content.Rockets.Customization;
 using System;
 using Terraria.ModLoader.IO;
 
@@ -10,7 +7,7 @@ namespace Macrocosm.Content.Rockets.Modules
 	public abstract partial class RocketModule : TagSerializable
 	{
 		protected virtual TagCompound SerializeModuleSpecificData() { return new TagCompound(); }
-		protected virtual void DeserializeModuleSpecificData(TagCompound tag, Rocket ownerRocket) { }  
+		protected virtual void DeserializeModuleSpecificData(TagCompound tag, Rocket ownerRocket) { }
 
 		public static readonly Func<TagCompound, RocketModule> DESERIALIZER = DeserializeData;
 
@@ -21,10 +18,10 @@ namespace Macrocosm.Content.Rockets.Modules
 			tag["Type"] = FullName;
 			tag["Name"] = Name;
 
-			if(Detail is not null)
+			if (Detail != default)
 				tag["DetailName"] = Detail.Name;
 
-			if(Pattern is not null)
+			if (Pattern != default)
 				tag["Pattern"] = Pattern;
 
 			return tag;

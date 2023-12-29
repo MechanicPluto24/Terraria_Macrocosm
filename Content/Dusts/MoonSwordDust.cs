@@ -11,11 +11,11 @@ namespace Macrocosm.Content.Dusts
 		{
 
 			dust.position += dust.velocity;
-			dust.rotation += dust.dustIndex % 2 == 0 ? 0.5f : -0.5f; 
+			dust.rotation += dust.dustIndex % 2 == 0 ? 0.5f : -0.5f;
 
 			float clampedScale = dust.scale;
 			if (clampedScale > 1f)
- 				clampedScale = 1f;
+				clampedScale = 1f;
 
 			if (!dust.noLight)
 				Lighting.AddLight((int)(dust.position.X / 16f), (int)(dust.position.Y / 16f), clampedScale * 0.2f, clampedScale * 0.725f, clampedScale * 0.51f);

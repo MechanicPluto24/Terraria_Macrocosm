@@ -1,6 +1,4 @@
-﻿using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Drawing.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -33,8 +31,8 @@ namespace Macrocosm.Content.Particles
 			float decelerationFactor = ((float)SpawnTimeLeft - TimeLeft) / SpawnTimeLeft;
 			Velocity *= MathHelper.Lerp(0.9f, 0.85f, decelerationFactor);
 
-			if(Scale >= 0)
+			if (Scale >= 0)
 				Scale -= 0.008f;
- 		}
+		}
 	}
 }

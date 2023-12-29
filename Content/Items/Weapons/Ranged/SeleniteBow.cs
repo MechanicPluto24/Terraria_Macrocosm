@@ -1,10 +1,10 @@
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -14,42 +14,50 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 	{
 		public override void SetStaticDefaults()
 		{
-  			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
+
 
 		}
 		public override void SetDefaults()
 		{
-			Item.damage = 320;
-			Item.DamageType = DamageClass.Ranged;
-			Item.width = 40;
-			Item.height = 20;
-			Item.useTime = 18;
-			Item.useAnimation = 18;
-			Item.useStyle = ItemUseStyleID.Shoot;
-			Item.noMelee = true;
+			Item.DefaultToBow(18, 20, true);
+
+			Item.damage = 240;
 			Item.knockBack = 4;
+
+			Item.width = 32;
+			Item.height = 54;
+
 			Item.value = 10000;
 			Item.rare = ModContent.RarityType<MoonRarityT1>();
-			Item.UseSound = SoundID.Item5;
-			Item.autoReuse = true;
-			Item.shoot = ProjectileID.PurificationPowder;
-			Item.shootSpeed = 20f;
+
+			Item.channel = true;
+			Item.UseSound = null;
+
+			Item.noUseGraphic = true;
 			Item.useAmmo = AmmoID.Arrow;
+			Item.shoot = Macrocosm.ItemShoot_UsesAmmo;
+		}
+
+		public override bool CanUseItem(Player player) => player.ownedProjectileCounts[Item.shoot] < 1;
+
+		public override bool CanConsumeAmmo(Item ammo, Player player) => player.ownedProjectileCounts[Item.shoot] == 1 || (player.itemTime == 0 && !player.AltFunction());
+		public override bool AltFunctionUse(Player player) => true;
+
+		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+		{
+			float minCharge = 90f * player.GetAttackSpeed(DamageClass.Ranged);
+			Vector2 aim = velocity;
+			Projectile.NewProjectileDirect(source, position, aim, ModContent.ProjectileType<SeleniteBowHeld>(), damage, knockback, player.whoAmI, minCharge);
+			return false;
+		}
+
+		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
+		{
 		}
 
 		public override Vector2? HoldoutOffset()
 		{
 			return new Vector2(6, 0);
-		}
-
-		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
-		{
-			return true;
-		}
-
-		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
-		{
-			type = ModContent.ProjectileType<SeleniteArrow>();
 		}
 
 		public override void AddRecipes()
@@ -58,6 +66,6 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			recipe.AddIngredient(ModContent.ItemType<SeleniteBar>(), 12);
 			recipe.AddTile(TileID.WorkBenches);
 			recipe.Register();
- 		}
+		}
 	}
 }

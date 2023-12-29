@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Hostile
 {
-	public class ZombieSecurityBullet : ModProjectile, IBullet
+	public class ZombieSecurityBullet : ModProjectile, IRangedProjectile
 	{
 		public override void SetStaticDefaults()
 		{
@@ -31,7 +31,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
 		{
 			if (!spawned)
 			{
-				if(!Main.dedServ)
+				if (!Main.dedServ)
 					SoundEngine.PlaySound(SFX.DesertEagleShoot with { Volume = 0.3f }, Projectile.position);
 
 				spawned = true;

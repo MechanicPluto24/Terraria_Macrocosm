@@ -8,7 +8,7 @@ namespace Macrocosm.Content.Items.Placeable.Tombstones
 	{
 		public override void SetStaticDefaults()
 		{
-		
+			Item.ResearchUnlockCount = 2;
 		}
 
 		public override void SetDefaults()

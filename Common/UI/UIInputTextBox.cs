@@ -10,7 +10,7 @@ namespace Macrocosm.Common.UI
 	{
 		private UIInputTextField textField;
 
-		public string Text 
+		public string Text
 		{
 			get => textField.Text;
 			set => textField.Text = value;
@@ -19,7 +19,7 @@ namespace Macrocosm.Common.UI
 		public Color TextColor
 		{
 			get => textField.TextColor;
-			set => textField.TextColor = value;	
+			set => textField.TextColor = value;
 		}
 
 		public float TextScale { get; set; } = 1f;
@@ -36,7 +36,7 @@ namespace Macrocosm.Common.UI
 
 		public Func<string, string> FormatText { get; set; } = (text) => text;
 
- 		public Color? HoverBorderColor { get; set; }
+		public Color? HoverBorderColor { get; set; }
 		private Color normalBorderColor;
 
 		public UIInputTextBox(string defaultText)

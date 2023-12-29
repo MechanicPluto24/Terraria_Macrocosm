@@ -1,15 +1,16 @@
 ﻿using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-	public class ColorFunction 
+	public class ColorFunction
 	{
 		public string Name { get; } = "";
 
+		public bool HasParameters => Parameters is not null && Parameters.Length > 0;
 		public object[] Parameters { get; private set; }
 
 		private readonly Func<Color[], Color> function;
@@ -26,7 +27,6 @@ namespace Macrocosm.Content.Rockets.Customization
 		/// </summary>
 		/// <param name="function"> The function </param>
 		/// <param name="name"> The dynamic color name </param>
-		/// <param name="unlockedByDefault"> Whether this dynamic color is unlocked by default </param>
 		public ColorFunction(Func<Color[], Color> function, string name)
 		{
 			this.function = function;
@@ -36,10 +36,8 @@ namespace Macrocosm.Content.Rockets.Customization
 		/// <summary> Invokes the color function on an input array. </summary>
 		public Color Invoke(Color[] inputColors) => function(inputColors);
 
-		/// <summary> The storage key of this unlockable dynamic color </summary>
-		public string GetKey() => Name;
-
-		public static ColorFunction CreateFunctionByName(string name, params object[] parameters) 
+		public static ColorFunction CreateByName(string name) => CreateByName(name, Array.Empty<object>());
+		public static ColorFunction CreateByName(string name, object[] parameters)
 		{
 			try
 			{
@@ -48,7 +46,7 @@ namespace Macrocosm.Content.Rockets.Customization
 					"Lerp" or "lerp" => CreateLerpFunction(Convert.ToInt32(parameters[0]), Convert.ToInt32(parameters[1]), Convert.ToSingle(parameters[2])),
 					"Map" or "map" => CreateMapFunction(Convert.ToInt32(parameters[0])),
 					_ => throw new ArgumentException($"Unknown function name: {name}")
-				}; 
+				};
 			}
 			catch (ArgumentException ex)
 			{
@@ -67,6 +65,21 @@ namespace Macrocosm.Content.Rockets.Customization
 				return CreateMapFunction(0);
 			}
 		}
+		public static ColorFunction CreateByName(string name, string[] parameters)
+		{
+			List<object> objects = new();
+			foreach (var parameter in parameters)
+			{
+				if (int.TryParse(parameter, out int intValue))
+					objects.Add(intValue);
+				else if (float.TryParse(parameter, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out float floatValue))
+					objects.Add(floatValue);
+				else if (double.TryParse(parameter, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double doubleValue))
+					objects.Add(doubleValue);
+			}
+
+			return CreateByName(name, objects.ToArray());
+		}
 
 		private static void LogImportError(string message)
 		{
@@ -74,21 +87,24 @@ namespace Macrocosm.Content.Rockets.Customization
 			Macrocosm.Instance.Logger.Error(message);
 		}
 
-		public static ColorFunction CreateMapFunction(int index)
+		private static ColorFunction CreateMapFunction(int index)
 		{
 			if (index < 0 || index >= 8) throw new ArgumentException($"Index out of bounds: {index}");
-			Color map(Color[] colors) => colors[index];
-			return new(map, "Map") { Parameters = new object[] { index } };
+			return new((colors) => colors[index], "Map")
+			{
+				Parameters = new object[] { index }
+			};
 		}
 
-		public static ColorFunction CreateLerpFunction(int index1, int index2, float amount)
+		private static ColorFunction CreateLerpFunction(int index1, int index2, float amount)
 		{
 			if (index1 < 0 || index1 >= 8) throw new ArgumentException($"Index out of bounds: {index1}");
 			if (index2 < 0 || index2 >= 8) throw new ArgumentException($"Index out of bounds: {index2}");
-
-			Color lerp(Color[] colors) => Color.Lerp(colors[index1], colors[index2], amount);
-			return new(lerp, "Lerp") { Parameters = new object[] { index1, index2, amount } };
+			var colorFunc = new ColorFunction((colors) => Color.Lerp(colors[index1], colors[index2], amount), "Lerp")
+			{
+				Parameters = new object[] { index1, index2, amount }
+			};
+			return colorFunc;
 		}
 	}
-
 }

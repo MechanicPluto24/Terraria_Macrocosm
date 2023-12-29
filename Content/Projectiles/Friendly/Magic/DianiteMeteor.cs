@@ -56,7 +56,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 				Dust dust = Dust.NewDustDirect(Projectile.position, (int)(Projectile.width), 1, DustID.Flare, velocity.X, velocity.Y, Scale: 1f);
 				dust.noGravity = true;
 			}
-		
+
 			if (rotationClockwise)
 				Projectile.rotation += 0.2f;
 			else
@@ -65,7 +65,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
 		public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough, ref Vector2 hitboxCenterFrac)
 		{
-			if(InitialTargetPositionY > Projectile.position.Y)
+			if (InitialTargetPositionY > Projectile.position.Y)
 				return false;
 
 			return true;
@@ -88,7 +88,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			for (int n = 2; n < count; n++)
 			{
 				Vector2 trailPosition = Projectile.Center - Projectile.velocity * n * 0.15f;
-				Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, trailPosition - Main.screenPosition, null, Color.OrangeRed * (0.75f - (float)n / count), Projectile.rotation + ((float)n/count), TextureAssets.Projectile[Type].Value.Size() / 2f, Projectile.scale * (1f - (float)n / count), SpriteEffects.None, 0f);
+				Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, trailPosition - Main.screenPosition, null, Color.OrangeRed * (0.75f - (float)n / count), Projectile.rotation + ((float)n / count), TextureAssets.Projectile[Type].Value.Size() / 2f, Projectile.scale * (1f - (float)n / count), SpriteEffects.None, 0f);
 			}
 
 

@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Utils;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
@@ -52,7 +51,7 @@ namespace Macrocosm.Common.Drawing.Sky
 			{
 				fallTime += (float)Main.desiredWorldEventsUpdateRate;
 				UpdatePosition(fallSpeed * (float)(Main.desiredWorldEventsUpdateRate + 99.0) / 100f);
- 			}
+			}
 
 			Twinkle();
 		}

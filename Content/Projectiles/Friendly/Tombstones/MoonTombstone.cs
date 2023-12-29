@@ -17,7 +17,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Tombstones
 		public override void SetStaticDefaults()
 		{
 			Main.projFrames[Type] = normalCount + goldenCount;
-		} 
+		}
 
 		public override void SetDefaults()
 		{
@@ -37,7 +37,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Tombstones
 				Projectile.frame = Main.rand.Next(normalCount);
 			else
 				Projectile.frame = normalCount + Main.rand.Next(goldenCount);
- 		}
+		}
 
 		public override bool PreAI()
 		{
@@ -56,11 +56,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Tombstones
 
 			bool placeTile = false;
 
-			bool onRegolith = Main.tile[tileX, tileY + 1].TileType == ModContent.TileType<Regolith>() && Main.tile[tileX+1, tileY + 1].TileType == ModContent.TileType<Regolith>();
+			bool onRegolith = Main.tile[tileX, tileY + 1].TileType == ModContent.TileType<Regolith>() && Main.tile[tileX + 1, tileY + 1].TileType == ModContent.TileType<Regolith>();
 			int style = GetTombstoneStyle(onRegolith);
 			if (TileObject.CanPlace(tileX, tileY, ModContent.TileType<Tiles.Tombstones.MoonTombstone>(), style, Projectile.direction, out TileObject objectData))
 				placeTile = TileObject.Place(objectData);
- 
+
 			if (placeTile)
 			{
 				NetMessage.SendObjectPlacement(-1, tileX, tileY, objectData.type, objectData.style, objectData.alternate, objectData.random, Projectile.direction);
@@ -73,19 +73,19 @@ namespace Macrocosm.Content.Projectiles.Friendly.Tombstones
 				}
 
 				if (onRegolith)
-					ImpactEffect();   
+					ImpactEffect();
 
-				Projectile.Kill(); 
+				Projectile.Kill();
 			}
 
 			return false;
 		}
 
 		private int GetTombstoneStyle(bool onRegolith) => Projectile.frame * 2 + (onRegolith ? 0 : 1);
-		
-		private void ImpactEffect() 
+
+		private void ImpactEffect()
 		{
-			for (int i = 0; i < Main.rand.Next(30,45); i++)
+			for (int i = 0; i < Main.rand.Next(30, 45); i++)
 			{
 				Dust dust = Dust.NewDustDirect(
 					new Vector2(Projectile.Center.X, Projectile.Center.Y),
@@ -99,6 +99,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Tombstones
 
 				dust.noGravity = false;
 			}
- 		}
+		}
 	}
 }

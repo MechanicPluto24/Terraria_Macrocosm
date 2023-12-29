@@ -1,4 +1,3 @@
-using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
@@ -19,10 +18,10 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
 	public class ZombieSecurity : ModNPC, IMoonEnemy
 	{
-		public enum ActionState 
-		{ 
+		public enum ActionState
+		{
 			Walk,
-			Shoot 
+			Shoot
 		}
 
 		public ActionState AI_State = ActionState.Walk;
@@ -48,11 +47,11 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		private readonly Range walkFrames = 21..30;
 		private const int fallingFrame = 31;
 
-		private static int maxCooldown = 240;
-		private static int maxShootSequence = 84;
-		private static int sequenceShoot = 72;
-		private static int visualShoot = 64;
-		private static int visualGunDrawEnd = 24;
+		private const int maxCooldown = 240;
+		private const int maxShootSequence = 84;
+		private const int sequenceShoot = 72;
+		private const int visualShoot = 64;
+		private const int visualGunDrawEnd = 24;
 		#endregion
 
 		public override void SetStaticDefaults()
@@ -71,7 +70,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			NPC.DeathSound = SoundID.NPCDeath2;
 			NPC.knockBackResist = 0.5f;
 			NPC.aiStyle = -1;
- 			Banner = Item.NPCtoBanner(NPCID.Zombie);
+			Banner = Item.NPCtoBanner(NPCID.Zombie);
 			BannerItem = Item.BannerToItem(Banner);
 
 			//SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBaseBiome>() }
@@ -85,14 +84,14 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		public override void ModifyNPCLoot(NPCLoot loot)
 		{
 			// drop gun, 1/12 normal mode, twice in expert
-			loot.Add(ItemDropRule.ExpertGetsRerolls(ModContent.ItemType<TychoDesertEagle>(), 12, 1)); 
+			loot.Add(ItemDropRule.ExpertGetsRerolls(ModContent.ItemType<TychoDesertEagle>(), 12, 1));
 		}
 
 		public override void OnSpawn(IEntitySource source)
 		{
 			NPC.frame.Y = NPC.GetFrameHeight() * walkFrames.Start.Value;
 
-			if(Main.netMode != NetmodeID.MultiplayerClient)
+			if (Main.netMode != NetmodeID.MultiplayerClient)
 			{
 				MaxConsecutiveShots = Main.rand.Next(2, 5);
 				NPC.netUpdate = true;
@@ -147,13 +146,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 				ShootCooldown = maxCooldown / 4;
 				ShootSequence = 0;
 				ShotsCounter = 1;
-
-				if (AI_State == ActionState.Shoot)
-					NPC.frame.Y = NPC.GetFrameHeight() * shootFramesCommon.Start.Value;
-
 				AI_State = ActionState.Walk;
 			}
- 
+
 			if (AI_State == ActionState.Walk)
 				AI_Walk();
 			else
@@ -188,15 +183,15 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			}
 			else
 				NPC.rotation = 0f;
- 			
+
 			// Enter shoot state if cooldown passed, clear line of sight, enemy is stationary (vertically?)
 			if (ShootCooldown <= 0 && CanHit && NPC.velocity.Y == 0f)
 			{
 				// Reset cooldown
-				ShootCooldown = maxCooldown; 
+				ShootCooldown = maxCooldown;
 
 				// Randomize shoot count
-				if(Main.netMode != NetmodeID.MultiplayerClient)
+				if (Main.netMode != NetmodeID.MultiplayerClient)
 				{
 					MaxConsecutiveShots = Main.rand.Next(2, 5);
 					NPC.netUpdate = true;
@@ -256,19 +251,17 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			// Set the aim angle 
 			SetAimMode(aimVelocity);
 
-			// Shoot (TODO: align projectile and particle by angle)
 			if (Main.netMode != NetmodeID.MultiplayerClient && ShootSequence == sequenceShoot)
 			{
 				Vector2 particleAim = aimVelocity;
-				if(AimAngle == AimType.Upwards)
- 					particleAim = aimVelocity.RotatedBy(-0.4f * Math.Sign(aimVelocity.X));
- 				else if(AimAngle == AimType.Downwards)
- 					particleAim = aimVelocity.RotatedBy(-0.2f * Math.Sign(aimVelocity.X));
+				if (AimAngle == AimType.Upwards)
+					particleAim = aimVelocity.RotatedBy(-0.4f * Math.Sign(aimVelocity.X));
+				else if (AimAngle == AimType.Downwards)
+					particleAim = aimVelocity.RotatedBy(-0.2f * Math.Sign(aimVelocity.X));
 
 				Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), aimPosition, aimVelocity, projType, projDamage, 0f, Main.myPlayer);
 				Particle.CreateParticle<GunFireRing>(NPC.Center + particleAim * 0.24f, aimVelocity * 0.05f, 1f, aimVelocity.ToRotation(), true);
 			}
-
 		}
 
 		private Vector2 GetAimPosition(float projSpeed)
@@ -316,16 +309,22 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		// Animation. 
 		public override void FindFrame(int frameHeight)
 		{
+			if (NPC.justHit && AI_State == ActionState.Shoot)
+			{
+				NPC.frame.Y = frameHeight * shootFramesCommon.Start.Value;
+				return;
+			}
+
 			int frameIndex = NPC.frame.Y / frameHeight;
 
 			// If not airborne
 			if (NPC.velocity.Y == 0f)
 			{
 				// Walking animation 
-				if(AI_State == ActionState.Walk)
+				if (AI_State == ActionState.Walk)
 				{
 					// Reset walking 
-					if(!walkFrames.Contains(frameIndex))
+					if (!walkFrames.Contains(frameIndex))
 						NPC.frame.Y = frameHeight * walkFrames.Start.Value;
 
 					// Walking animation frame counter, accounting for walk speed
@@ -339,15 +338,15 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 					}
 
 					if (frameIndex >= walkFrames.End.Value)
- 						NPC.frame.Y = frameHeight * walkFrames.Start.Value;
- 				}
+						NPC.frame.Y = frameHeight * walkFrames.Start.Value;
+				}
 				// Shooting animation
-				else if(AI_State == ActionState.Shoot)
+				else if (AI_State == ActionState.Shoot)
 				{
 					NPC.frameCounter += 1f;
 
 					// Speed up animation for recoil animation  
-					if(ShootSequence > visualShoot)
+					if (ShootSequence > visualShoot)
 						NPC.frameCounter += 0.2f;
 
 					// Update frame 
@@ -378,10 +377,10 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 						NPC.frameCounter = 0.0;
 					}
- 				}
- 			}
+				}
+			}
 			// Air-borne frame
-			else if(MathF.Abs(NPC.velocity.Y) > 1f)
+			else if (MathF.Abs(NPC.velocity.Y) > 1f)
 			{
 				NPC.frameCounter = 0.0;
 				NPC.frame.Y = frameHeight * fallingFrame;
@@ -397,19 +396,15 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 				{
 					int dustType = Utils.SelectRandom<int>(Main.rand, DustID.TintableDust, DustID.Blood);
 
- 					Dust dust = Dust.NewDustDirect(NPC.position, NPC.width, NPC.height, dustType);
-					dust.velocity.X *= (dust.velocity.X + + Main.rand.Next(0, 100) * 0.015f) * hit.HitDirection;
-					dust.velocity.Y =  3f + Main.rand.Next(-50, 51) * 0.01f  ;
+					Dust dust = Dust.NewDustDirect(NPC.position, NPC.width, NPC.height, dustType);
+					dust.velocity.X *= (dust.velocity.X + +Main.rand.Next(0, 100) * 0.015f) * hit.HitDirection;
+					dust.velocity.Y = 3f + Main.rand.Next(-50, 51) * 0.01f;
 					dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
 					dust.noGravity = true;
 				}
 			}
 
-			// Don't spawn gores on dedicated server
-			if (Main.dedServ)
- 				return; 
- 
-			if (NPC.life <= 0)
+			if (!Main.dedServ && NPC.life <= 0)
 			{
 				var entitySource = NPC.GetSource_Death();
 

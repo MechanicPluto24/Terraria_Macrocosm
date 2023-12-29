@@ -26,10 +26,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		}
 
 		public const int BlastRadius = 200;
-		
+
 		// TODO: use NetSync attribute when i found out why it's not working 
 		private bool scheduleParticleSpawn;
-		
+
 		public override void SetStaticDefaults()
 		{
 			ProjectileID.Sets.TrailCacheLength[Type] = 40;
@@ -50,7 +50,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 			Projectile.friendly = true;
 			Projectile.hostile = false;
- 			Projectile.penetrate = -1;
+			Projectile.penetrate = -1;
 			Projectile.localNPCHitCooldown = -1;
 			Projectile.usesLocalNPCImmunity = true;
 
@@ -67,11 +67,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			Lighting.AddLight(Projectile.Center, 0.407f, 1f, 1f);
 
 			if (scheduleParticleSpawn)
- 				SpawnParticles();
+				SpawnParticles();
 
 			if (Exploded)
 				return;
- 
+
 			float gravity = 0.2f * MacrocosmSubworld.CurrentGravityMultiplier;
 
 			if (Projectile.velocity.Y == 0f && Projectile.velocity.X != 0f)
@@ -88,8 +88,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			Projectile.rotation += Projectile.velocity.X * 0.05f;
 
 			if (Main.rand.NextBool(2))
- 				Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<Dusts.PlasmaBallDust>(), Scale: Main.rand.NextFloat(0.8f, 1.2f));
- 
+				Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<Dusts.PlasmaBallDust>(), Scale: Main.rand.NextFloat(0.8f, 1.2f));
+
 			//ShootToKill();
 
 			if (Projectile.timeLeft < 5)
@@ -101,7 +101,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		// for testing
 		private void ShootToKill()
 		{
-			for(int i = 0; i < Main.maxProjectiles; i++)
+			for (int i = 0; i < Main.maxProjectiles; i++)
 			{
 				Projectile other = Main.projectile[i];
 
@@ -116,10 +116,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		public override bool OnTileCollide(Vector2 oldVelocity)
 		{
 			if (Projectile.velocity.X != oldVelocity.X)
- 				Projectile.velocity.X = oldVelocity.X * -0.4f;
-			 
+				Projectile.velocity.X = oldVelocity.X * -0.4f;
+
 			if (Projectile.velocity.Y != oldVelocity.Y && oldVelocity.Y > 0.7f)
- 				Projectile.velocity.Y = oldVelocity.Y * -0.4f;
+				Projectile.velocity.Y = oldVelocity.Y * -0.4f;
 
 			return false;
 		}
@@ -143,11 +143,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 		public override void OnHitPlayer(Player target, Player.HurtInfo info)
 		{
-            Explode();
+			Explode();
 
-            if (Exploded)
-                target.AddBuff(BuffID.Slow, 95);
-        }
+			if (Exploded)
+				target.AddBuff(BuffID.Slow, 95);
+		}
 
 		public void Explode()
 		{
@@ -167,7 +167,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 		public void SpawnParticles()
 		{
-			Vector2 netOffset = Projectile.owner != Main.myPlayer ? new Vector2(BlastRadius/2) : Vector2.Zero;
+			Vector2 netOffset = Projectile.owner != Main.myPlayer ? new Vector2(BlastRadius / 2) : Vector2.Zero;
 
 			for (float i = 0; i < MathHelper.TwoPi; i += MathHelper.TwoPi / PlasmaBallCount)
 			{

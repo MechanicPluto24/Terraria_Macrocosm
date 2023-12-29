@@ -1,13 +1,10 @@
-﻿using Terraria.DataStructures;
-using Terraria.GameContent.Drawing;
-using Terraria.ID;
-using Terraria;
-using Terraria.ModLoader;
+﻿using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
-using Macrocosm.Common.Utils;
-using rail;
 using MonoMod.Cil;
-using Mono.Cecil.Cil;
+using Terraria;
+using Terraria.DataStructures;
+using Terraria.GameContent.Drawing;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Common.TileFrame
 {
@@ -67,7 +64,7 @@ namespace Macrocosm.Common.TileFrame
 		public override bool TileFrame(int i, int j, int type, ref bool resetFrame, ref bool noBreak)
 		{
 			ModTile modTile = TileLoader.GetTile(type);
-			if (ilSuccess && modTile is not null && Main.tile[i,j].IsSloped() && modTile is IHasConditionalSlopeFrames tileWithSlopeFrames)
+			if (ilSuccess && modTile is not null && Main.tile[i, j].IsSloped() && modTile is IHasConditionalSlopeFrames tileWithSlopeFrames)
 				tileWithSlopeFrames.ApplySlopeFrames(i, j);
 
 			return base.TileFrame(i, j, type, ref resetFrame, ref noBreak);

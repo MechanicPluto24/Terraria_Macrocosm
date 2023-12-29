@@ -1,6 +1,6 @@
 
 <center>
-<img title="Macrocosm" alt="Macrocosm" src="Content\UI\Menus\Logo.png">
+<img title="Macrocosm" alt="Macrocosm" src="Content\Menus\Logo.png">
 </center>
 
 ### Summary
@@ -19,12 +19,13 @@ MechanicPluto24 - Creator and Lead Developer\
 RighteousRyan - Admin and Lead Coder\
 ClockworkCorvus, Toxin - Moderator\
 Lincolnennis, Universe - Composer\
-absoluteAquarian, 4mbr0s3 2, Feldy, Hallam, sucss, Thanatos, and TheLoneGamer - Programmers\
-Daniel, Dovahkick, Juice, OmegA, and William - Spriters/Artists\
-dontkickmychick - Lorewriter
+absoluteAquarian, 4mbr0s3 2, Feldy, Hallam, sucss, Thanatos, and LadyLone - Programmers\
+Daniel, Dovahkick, Juice, OmegA-Vinier, and William - Spriters/Artists\
+dontkickmychick - Lorewriter\
+Zetry - Soundsmith
 
 ### Special thanks
-ADVERSE KC, Almarduk, Crowlarghost, Delly, Dracos_V2, Draedon_Gaming, DrakonVörðr, Kiraa, Kirito, Master-Bit, Snowfall-The-Cat, Zetry
+ADVERSE KC, Almarduk, Crowlarghost, Delly, Dracos_V2, Draedon_Gaming, DrakonVörðr, Kiraa, Kirito, Master-Bit, Snowfall-The-Cat
 
 </center>
 

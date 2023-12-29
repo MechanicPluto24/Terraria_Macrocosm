@@ -8,7 +8,7 @@ namespace Macrocosm.Content.Items.Currency
 	public class MoonstoneData : CustomCurrencySingleCoin
 	{
 		public MoonstoneData(int coinItemID, long currencyCap) : base(coinItemID, currencyCap) { }
-	
+
 		public override void GetPriceText(string[] lines, ref int currentLine, long price)
 		{
 			Color color = Color.DarkGray * ((float)Main.mouseTextColor / 255f);
@@ -19,8 +19,8 @@ namespace Macrocosm.Content.Items.Currency
 					color.B,
 					Lang.tip[50],
 					price,
-					Language.GetTextValue("Mods.Macrocosm.Items.Moonstone.DisplayName")  
-                });
+					Language.GetTextValue("Mods.Macrocosm.Items.Moonstone.DisplayName")
+				});
 		}
 	}
 }
