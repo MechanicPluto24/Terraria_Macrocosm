@@ -841,6 +841,11 @@ MoonBaseSofa: {
 	Tooltip: ""
 }
 
+Procellarum: {
+	DisplayName: Procellarum
+	Tooltip: ""
+}
+
 MoonBaseChest: {
 	DisplayName: Moon Base Storage Unit
 	Tooltip: ""
