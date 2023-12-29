@@ -21,12 +21,12 @@ namespace Macrocosm.Content.Dusts
 			dust.scale -= 0.02f;
 			dust.rotation += (dust.velocity.Y - dust.velocity.X) / 5;
 
-   			dust.color = CelestialDisco.CelestialColor.WithOpacity(0.8f);
- 
+			dust.color = CelestialDisco.CelestialColor.WithOpacity(0.8f);
+
 			Lighting.AddLight(dust.position, dust.color.ToVector3() * 0.6f);
 
 			if (dust.scale < 0f)
- 				dust.active = false;
+				dust.active = false;
 
 			return false;
 		}
@@ -36,5 +36,5 @@ namespace Macrocosm.Content.Dusts
 
 		public override Color? GetAlpha(Dust dust, Color lightColor)
 			=> new Color(lightColor.R, lightColor.G, lightColor.B, 255);
- 	}
+	}
 }

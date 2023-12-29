@@ -4,7 +4,6 @@ using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
-using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -15,18 +14,18 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 		public override GunHeldProjectileData GunHeldProjectileData => new()
 		{
 			GunBarrelPosition = new(22, 6),
-            CenterYOffset = 9,
-            MuzzleOffset = 30,
-            Recoil = (8, 0.75f),
+			CenterYOffset = 9,
+			MuzzleOffset = 30,
+			Recoil = (8, 0.75f),
 			RecoilStartFrame = 4,
 			UseBackArm = false
-        };
+		};
 
-        public override float? ProjectileScale => 0.75f;
+		public override float? ProjectileScale => 0.75f;
 
-        public override void SetStaticDefaults()
+		public override void SetStaticDefaults()
 		{
-			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
+
 		}
 
 		public override void SetDefaultsHeldProjectile()
@@ -54,7 +53,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 		{
 			position += new Vector2(44, -4 * Math.Sign(velocity.X)).RotatedBy(velocity.ToRotation());
 			type = ModContent.ProjectileType<TychoBullet>();
- 		}
+		}
 
 
 		public override Vector2? HoldoutOffset() => new Vector2(4, 0);

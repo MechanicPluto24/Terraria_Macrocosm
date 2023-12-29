@@ -1,10 +1,7 @@
 ﻿using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SubworldLibrary;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
@@ -13,7 +10,6 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.LaunchPads
 {
@@ -50,7 +46,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			{
 				var toRemove = GetLaunchPadAtStartTile(subworldId, launchPad.StartTile);
 
- 				if (toRemove is not null)
+				if (toRemove is not null)
 				{
 					toRemove.Active = false;
 
@@ -58,14 +54,14 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 						toRemove.NetSync(subworldId);
 				}
 			}
- 		}
+		}
 
 		public static void ClearAllLaunchPads(bool announce = true, bool shouldSync = true)
 		{
 			if (announce)
 				Utility.Chat("Cleared all launch pads!", Color.Green);
 
-			foreach(var lpKvp in launchPadStorage)
+			foreach (var lpKvp in launchPadStorage)
 			{
 				foreach (var lp in lpKvp.Value)
 				{
@@ -80,6 +76,13 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 		public static bool Any(string subworldId) => GetLaunchPads(subworldId).Any();
 		public static bool None(string subworldId) => !Any(subworldId);
 
+		public static bool InCurrentWorld(LaunchPad launchPad)
+		{
+			if (launchPadStorage.TryGetValue(MacrocosmSubworld.CurrentID, out var launchPads))
+				return launchPads.Contains(launchPad);
+
+			return false;
+		}
 
 		public static List<LaunchPad> GetLaunchPads(string subworldId)
 		{
@@ -123,28 +126,32 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 		{
 			checkTimer++;
 
-			if (checkTimer >= 10)
+			if (launchPadStorage.ContainsKey(MacrocosmSubworld.CurrentID))
 			{
-				checkTimer = 0;
-
-				if (launchPadStorage.ContainsKey(MacrocosmSubworld.CurrentID))
+				for (int i = 0; i < launchPadStorage[MacrocosmSubworld.CurrentID].Count; i++)
 				{
-					for (int i = 0; i < launchPadStorage[MacrocosmSubworld.CurrentID].Count; i++)
-					{
-						var launchPad = launchPadStorage[MacrocosmSubworld.CurrentID][i];
+					var launchPad = launchPadStorage[MacrocosmSubworld.CurrentID][i];
 
-						if (!launchPad.Active)
+					if (!launchPad.Active)
+					{
+						launchPadStorage[MacrocosmSubworld.CurrentID].RemoveAt(i);
+						i--;
+					}
+					else
+					{
+						if (checkTimer >= 10)
 						{
-							launchPadStorage[MacrocosmSubworld.CurrentID].RemoveAt(i);
-							i--;
+							launchPad.TileCheck();
+							checkTimer = 0;
 						}
-						else
-						{
-							launchPad.Update();
-						}
+
+						launchPad.Update();
 					}
 				}
 			}
+
+			if (checkTimer >= 10)
+				checkTimer = 0;
 		}
 
 		public override void PostDrawTiles()
@@ -152,9 +159,9 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, null, null, null, Main.GameViewMatrix.ZoomMatrix);
 
 			if (launchPadStorage.ContainsKey(MacrocosmSubworld.CurrentID))
- 				foreach (LaunchPad launchPad in launchPadStorage[MacrocosmSubworld.CurrentID])
- 					launchPad.Draw(Main.spriteBatch, Main.screenPosition);
- 
+				foreach (LaunchPad launchPad in launchPadStorage[MacrocosmSubworld.CurrentID])
+					launchPad.Draw(Main.spriteBatch, Main.screenPosition);
+
 			Main.spriteBatch.End();
 		}
 
@@ -182,23 +189,26 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 		public override void SaveWorldData(TagCompound tag) => SaveData(tag);
 
 		public override void LoadWorldData(TagCompound tag) => LoadData(tag);
-			
+
 		public static void SaveData(TagCompound tag)
 		{
 			TagCompound launchPads = new();
 
-			foreach (var lpKvp in launchPadStorage)
-				launchPads[lpKvp.Key] = lpKvp.Value;
+			foreach (var kvp in launchPadStorage)
+				launchPads[kvp.Key] = kvp.Value;
 
-			tag["LaunchPads"] = launchPads;
+			tag[nameof(launchPadStorage)] = launchPads;
 		}
 
 		public static void LoadData(TagCompound tag)
 		{
-			TagCompound launchPads = tag.GetCompound("LaunchPads");
+			if (tag.ContainsKey(nameof(launchPadStorage)))
+			{
+				TagCompound launchPads = tag.GetCompound(nameof(launchPadStorage));
 
-			foreach (var lpKvp in launchPads)
- 				launchPadStorage[lpKvp.Key] = (List<LaunchPad>)launchPads.GetList<LaunchPad>(lpKvp.Key);
- 		}
+				foreach (var kvp in launchPads)
+					launchPadStorage[kvp.Key] = (List<LaunchPad>)launchPads.GetList<LaunchPad>(kvp.Key);
+			}
+		}
 	}
 }

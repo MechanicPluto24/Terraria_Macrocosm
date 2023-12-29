@@ -13,7 +13,7 @@ Depressurized: {
 	Description: Your blood is boiling!
 }
 
-ChandriumEmpowerment: {
+ChandriumWhipBuff: {
 	DisplayName: Chandrium Empowerment
 	Description: Your next hit with your Chandrium Whip will deal increased damage!
 }
@@ -34,6 +34,16 @@ SpaceShuttle: {
 }
 
 Procellarum_LightningMarkDebuff: {
-	DisplayName: Procellarum_ Lightning Mark Debuff
-	Description: Mods.Macrocosm.Buffs.Procellarum_LightningMarkDebuff.Description
+	DisplayName: Procellarum Lightning Mark
+	Description: You take double damage from Procellarum's light bolts.
+}
+
+HandheldEngineOverheat: {
+	DisplayName: Handheld Engine Overheat
+	Description: Your weapon has overheated!
+}
+
+CraterDemonPet: {
+	DisplayName: Mini Crater Demon
+	Description: It's small! (Replace this lol)
 }

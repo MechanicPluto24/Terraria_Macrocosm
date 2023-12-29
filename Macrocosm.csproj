@@ -20,20 +20,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
     <Optimize>True</Optimize>
   </PropertyGroup>
-  <ItemGroup>
-    <AdditionalFiles Remove="Localization\en-US.hjson" />
-    <AdditionalFiles Remove="Localization\en-US_Mods.Macrocosm.Biomes.hjson" />
-    <AdditionalFiles Remove="Localization\en-US_Mods.Macrocosm.Buffs.hjson" />
-    <AdditionalFiles Remove="Localization\en-US_Mods.Macrocosm.Configs.hjson" />
-    <AdditionalFiles Remove="Localization\en-US_Mods.Macrocosm.Items.hjson" />
-    <AdditionalFiles Remove="Localization\en-US_Mods.Macrocosm.NPCs.hjson" />
-    <AdditionalFiles Remove="Localization\en-US_Mods.Macrocosm.Projectiles.hjson" />
-    <AdditionalFiles Remove="Localization\en-US_Mods.Macrocosm.Subworlds.hjson" />
-    <AdditionalFiles Remove="Localization\en-US_Mods.Macrocosm.Tiles.hjson" />
-    <AdditionalFiles Remove="Localization\en-US_Mods.Macrocosm.UI.hjson" />
-    <AdditionalFiles Remove="Localization\en-US_Mods.Macrocosm.WorldGen.hjson" />
-  </ItemGroup>
- 
+  <PropertyGroup>
+	<NoWarn>$(NoWarn);IDE0051</NoWarn> <!-- Macrocosm uses reflection in some places, unused private methods are expected -->
+	<NoWarn>$(NoWarn);CA1822</NoWarn> <!-- Private methods that don't deal with instance data should sometimes be left instanced, not static, due to tML's nature -->
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="tModLoader.CodeAssist" Version="0.1.*" />
   </ItemGroup>
@@ -42,8 +32,11 @@
       <HintPath>References\SubworldLibrary.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ProjectExtensions><VisualStudio><UserProperties localization_4en-us_3mods_1macrocosm_1npcs_1hjson__JsonSchema="hjson" /></VisualStudio></ProjectExtensions>
-    <!-- <Target BeforeTargets="Build" Name="BuildEffects" Inputs="Assets/Effects/*.fx" Outputs="Assets/Effects/*.xnb"> -->
-        <!-- <Exec Command="fxcompiler.exe" WorkingDirectory="Assets/Effects" /> -->
-    <!-- </Target> -->
+  <ItemGroup>
+    <Folder Include="Content\Items\Drugs\" />
+    <Folder Include="Content\Items\Potions\" />
+  </ItemGroup>
+  <!-- <Target BeforeTargets="Build" Name="BuildEffects" Inputs="Assets/Effects/*.fx" Outputs="Assets/Effects/*.fxc"> -->
+      <!-- <Exec Command="EasyXnb.exe" WorkingDirectory="Tools/EasyXnb" /> -->
+  <!-- </Target> -->
 </Project>

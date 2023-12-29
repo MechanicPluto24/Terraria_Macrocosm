@@ -5,15 +5,15 @@ using System.Collections.Generic;
 
 namespace Macrocosm.Content.Rockets
 {
-	public partial class Rocket 
+	public partial class Rocket
 	{
 		public static readonly List<string> DefaultModuleNames = new()
 		{
-			"CommandPod", 
-			"ServiceModule", 
-			"ReactorModule", 
-			"EngineModule", 
-			"BoosterLeft", 
+			"CommandPod",
+			"ServiceModule",
+			"ReactorModule",
+			"EngineModule",
+			"BoosterLeft",
 			"BoosterRight"
 		};
 
@@ -23,9 +23,9 @@ namespace Macrocosm.Content.Rockets
 			if (RocketManager.ActiveRocketCount > RocketManager.MaxRockets)
 			{
 				Utility.Chat("Max rockets reached. Should not ever reach this point during normal gameplay.", Color.Red);
- 				throw new System.Exception("Max rockets reached. Should not ever reach this point during normal gameplay.");
+				throw new System.Exception("Max rockets reached. Should not ever reach this point during normal gameplay.");
 			}
- 
+
 			Rocket rocket = new()
 			{
 				Position = position,
@@ -35,6 +35,8 @@ namespace Macrocosm.Content.Rockets
 			RocketManager.AddRocket(rocket);
 			rocket.OnCreation();
 			rocket.NetSync();
+			rocket.Inventory.SyncEverything();
+
 			return rocket;
 		}
 	}

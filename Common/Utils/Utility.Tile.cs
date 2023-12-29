@@ -56,16 +56,40 @@ namespace Macrocosm.Common.Utils
 
 		public static Vector2 ToWorldCoordinates(this Point point)
 			=> new(point.X * 16f, point.Y * 16f);
-		
+
 		public static Vector2 ToWorldCoordinates(this Point16 point)
 			=> new(point.X * 16f, point.Y * 16f);
+
+		public static bool IsSloped(this Tile tile)
+		{
+			return (int)tile.BlockType > 1;
+		}
+
+		public static bool AnyConnectedSlope(int i, int j)
+		{
+			Tile tileTop = Main.tile[i, j - 1];
+			Tile tileBottom = Main.tile[i, j + 1];
+			Tile tileLeft = Main.tile[i - 1, j];
+			Tile tileRight = Main.tile[i + 1, j];
+
+			bool top = tileTop.IsSloped() && tileTop.BottomSlope;
+			bool bottom = tileBottom.IsSloped() && tileBottom.TopSlope;
+			bool left = tileLeft.IsSloped() && tileLeft.RightSlope;
+			bool right = tileRight.IsSloped() && tileRight.LeftSlope;
+
+			return top || bottom || left || right;
+		}
+
+		public static bool AnyConnectedSlopeOrHalfBlock(int i, int j)
+		{
+			return AnyConnectedSlope(i, j) || Main.tile[i, j + 1].IsHalfBlock;
+		}
 
 		public static bool HasBlendingFrame(int i, int j) => Main.tile[i, j].TileFrameX >= 234 || Main.tile[i, j].TileFrameY >= 90;
 		public static bool HasBlendingFrame(this Tile tile) => tile.TileFrameX >= 234 || tile.TileFrameY >= 90;
 
 		public static bool SandTileFrame(int i, int j, int projectileType)
 		{
-
 			if (WorldGen.noTileActions)
 				return true;
 

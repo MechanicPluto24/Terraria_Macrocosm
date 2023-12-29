@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-	public class CruithneGreenSlug : ModProjectile, IBullet
+	public class CruithneGreenSlug : ModProjectile, IRangedProjectile
 	{
 		public override void SetDefaults()
 		{

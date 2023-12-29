@@ -8,7 +8,7 @@ namespace Macrocosm.Content.Dusts
 		public override bool Update(Dust dust)
 		{
 			dust.rotation += 0.3f * (dust.dustIndex % 2 == 0 ? -1 : 1);
- 			dust.scale -= 0.02f;
+			dust.scale -= 0.02f;
 
 			if (!dust.noGravity)
 				dust.velocity.Y += 0.1f;
@@ -16,10 +16,10 @@ namespace Macrocosm.Content.Dusts
 				dust.velocity *= 0.96f;
 
 			if (dust.scale <= 0f)
- 				dust.active = false;
+				dust.active = false;
 
 			dust.position += dust.velocity;
- 
+
 			return false;
 		}
 	}

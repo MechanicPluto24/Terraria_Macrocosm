@@ -4,11 +4,11 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Mounts
 {
-	public class SpaceShuttleMount : ModMount
+    public class SpaceShuttleMount : ModMount
 	{
 		public override void SetStaticDefaults()
 		{
-			MountData.buff = ModContent.BuffType<Buffs.GoodBuffs.MountBuffs.SpaceShuttle>();
+			MountData.buff = ModContent.BuffType<Buffs.Mounts.SpaceShuttle>();
 			MountData.heightBoost = 20;          //how high is the mount from the ground
 			MountData.fallDamage = 0f;
 			MountData.runSpeed = 10f;

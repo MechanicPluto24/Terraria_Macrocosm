@@ -21,7 +21,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			Projectile.ignoreWater = true;
 		}
 
- 
+
 		public override void AI()
 		{
 			Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;

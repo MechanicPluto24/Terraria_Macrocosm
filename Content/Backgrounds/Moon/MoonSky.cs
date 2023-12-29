@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Drawing.Sky;
+using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -6,9 +7,7 @@ using ReLogic.Content;
 using SubworldLibrary;
 using System;
 using Terraria;
-using Terraria.GameContent;
 using Terraria.Graphics.Effects;
-using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Backgrounds.Moon
@@ -26,15 +25,15 @@ namespace Macrocosm.Content.Backgrounds.Moon
 
 		private Texture2D skyTexture;
 
-		private Texture2D sunTexture;  
+		private Texture2D sunTexture;
 
-		private Texture2D earthBody;  
-		private Texture2D earthBodyDrunk;  
-		private Texture2D earthBodyFlat;  
+		private Texture2D earthBody;
+		private Texture2D earthBodyDrunk;
+		private Texture2D earthBodyFlat;
 
-		private Texture2D earthAtmo; 
-		private Texture2D earthBodyShadow; 
-		private Texture2D earthAtmoShadow;  
+		private Texture2D earthAtmo;
+		private Texture2D earthBodyShadow;
+		private Texture2D earthAtmoShadow;
 
 		const float fadeOutTimeDawn = 7200f; //  4:30 -  6:30: nebula and night stars dim
 		const float fadeInTimeDusk = 46800f; // 17:30 - 19:30: nebula and night stars brighten
@@ -50,7 +49,7 @@ namespace Macrocosm.Content.Backgrounds.Moon
 			earthBody = ModContent.Request<Texture2D>(AssetPath + "Earth", mode).Value;
 			earthBodyDrunk = ModContent.Request<Texture2D>(AssetPath + "EarthDrunk", mode).Value;
 			earthBodyFlat = ModContent.Request<Texture2D>(AssetPath + "EarthFlat", mode).Value;
-			
+
 			earthAtmo = ModContent.Request<Texture2D>(AssetPath + "EarthAtmo", mode).Value;
 			earthBodyShadow = ModContent.Request<Texture2D>(AssetPath + "EarthShadowMask", mode).Value;
 			earthAtmoShadow = ModContent.Request<Texture2D>(AssetPath + "EarthAtmoShadowMask", mode).Value;
@@ -64,24 +63,32 @@ namespace Macrocosm.Content.Backgrounds.Moon
 			sun.SetupSkyRotation(SkyRotationMode.Day);
 
 			earth.SetParallax(0.01f, 0.12f, new Vector2(0f, -200f));
- 
+
 			earth.SetLightSource(sun);
 			earth.ConfigureShader = (float rotation, out float intensity, out Vector2 offset) =>
 			{
 				Vector2 screenSize = Main.ScreenSize.ToVector2();
 				float distance = Vector2.Distance(earth.Position / screenSize, earth.LightSource.Position / screenSize);
 				float offsetRadius = MathHelper.Lerp(0.12f, 0.56f, 1 - distance);
- 
+
 				if (!Main.dayTime)
 				{
- 					offsetRadius = MathHelper.Lerp(0.56f, 0.01f, 1 - distance);
+					offsetRadius = MathHelper.Lerp(0.56f, 0.01f, 1 - distance);
 					rotation += MathHelper.Pi;
+				}
+				else
+				{
+					if (distance < 0.1f)
+					{
+						float proximityFactor = 1 - (distance / 0.1f);
+						offsetRadius += 0.8f * proximityFactor;
+					}
 				}
 
 				offset = Utility.PolarVector(offsetRadius, rotation) * 0.65f;
 
 				intensity = 0.96f;
-			}; 
+			};
 		}
 
 		public void Load(Mod mod)
@@ -96,6 +103,8 @@ namespace Macrocosm.Content.Backgrounds.Moon
 
 		public override void Activate(Vector2 position, params object[] args)
 		{
+			SkyManager.Instance["Macrocosm:MoonSky"] = new MoonSky();
+
 			starsDay.SpawnStars(100, 130, baseScale: 1.4f, twinkleFactor: 0.05f);
 			starsNight.SpawnStars(600, 700, baseScale: 0.8f, twinkleFactor: 0.05f);
 
@@ -109,6 +118,7 @@ namespace Macrocosm.Content.Backgrounds.Moon
 
 		public override void Deactivate(params object[] args)
 		{
+			Intensity = 0f;
 			starsDay.Clear();
 			starsNight.Clear();
 			Active = false;
@@ -118,10 +128,10 @@ namespace Macrocosm.Content.Backgrounds.Moon
 		{
 			if (SubworldSystem.IsActive<Subworlds.Moon>() && maxDepth >= float.MaxValue && minDepth < float.MaxValue)
 			{
-				spriteBatch.Draw(TextureAssets.BlackTile.Value, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.Black * Intensity);
+				Main.graphics.GraphicsDevice.Clear(Color.Black);
 
 				spriteBatch.Draw(skyTexture, new Rectangle(0, Math.Max(0, (int)((Main.worldSurface * 16.0 - Main.screenPosition.Y - 2400.0) * 0.10000000149011612)),
-					Main.screenWidth, Main.screenHeight), Color.White * Math.Min(1f, (Main.screenPosition.Y - 800f) / 1000f * Intensity));
+					Main.screenWidth, Main.screenHeight), Color.White * Math.Min(1f, (Main.screenPosition.Y - 800f) / 1000f) * Intensity);
 
 				float nebulaBrightness = ComputeBrightness(fadeOutTimeDawn, fadeInTimeDusk, 0.17f, 0.45f);
 				float nightStarBrightness = ComputeBrightness(fadeOutTimeDawn, fadeInTimeDusk, 0.1f, 0.8f);
@@ -130,7 +140,7 @@ namespace Macrocosm.Content.Backgrounds.Moon
 
 				starsDay.Draw(spriteBatch);
 				starsNight.Draw(spriteBatch, nightStarBrightness);
-				
+
 				sun.Draw(spriteBatch);
 				earth.Draw(spriteBatch);
 			}
@@ -150,10 +160,19 @@ namespace Macrocosm.Content.Backgrounds.Moon
 				8 => ModContent.Request<Texture2D>(AssetPath + "NebulaPurple").Value,
 				_ => ModContent.Request<Texture2D>(AssetPath + "NebulaNormal").Value,
 			};
-			
-			Color nebulaColor = (Color.White * brightness).WithOpacity(0f);			
-			
+
+			Color nebulaColor = (Color.White * brightness).WithOpacity(0f);
+
 			Main.spriteBatch.Draw(nebula, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), nebulaColor);
+		}
+
+		public override void Update(GameTime gameTime)
+		{
+			if (!SubworldSystem.IsActive<Subworlds.Moon>())
+				Active = false;
+
+			Intensity = Active ? Math.Min(1f, Intensity + 0.01f) : Math.Max(0f, Intensity - 0.01f);
+			SetEarthTextures();
 		}
 
 		private void SetEarthTextures()
@@ -162,16 +181,16 @@ namespace Macrocosm.Content.Backgrounds.Moon
 			{
 				earth.SetLightSource(null);
 				earth.SetTextures(earthBodyFlat);
-            } 
+			}
 			else
 			{
 				earth.SetLightSource(sun);
 
-                if (Main.drunkWorld)
-                    earth.SetTextures(earthBodyDrunk, earthAtmo, earthBodyShadow, earthAtmoShadow);
-                else
-                    earth.SetTextures(earthBody, earthAtmo, earthBodyShadow, earthAtmoShadow);
-            }
+				if (Main.drunkWorld)
+					earth.SetTextures(earthBodyDrunk, earthAtmo, earthBodyShadow, earthAtmoShadow);
+				else
+					earth.SetTextures(earthBody, earthAtmo, earthBodyShadow, earthAtmoShadow);
+			}
 		}
 
 		private static float ComputeBrightness(double fadeOutTimeDawn, double fadeInTimeDusk, float maxBrightnessDay, float maxBrightnessNigt)
@@ -183,36 +202,47 @@ namespace Macrocosm.Content.Backgrounds.Moon
 			if (Main.dayTime)
 			{
 				if (Main.time <= fadeOutTimeDawn)
- 					brightness = (maxBrightnessDay + ((1f - (float)(Main.time / fadeOutTimeDawn)) * fadeFactor));
- 				else if (Main.time >= fadeInTimeDusk)
- 					brightness = (maxBrightnessDay + (float)((Main.time - fadeInTimeDusk) / fadeOutTimeDawn) * fadeFactor);
- 				else
- 					brightness = maxBrightnessDay;
- 			}
+					brightness = (maxBrightnessDay + ((1f - (float)(Main.time / fadeOutTimeDawn)) * fadeFactor));
+				else if (Main.time >= fadeInTimeDusk)
+					brightness = (maxBrightnessDay + (float)((Main.time - fadeInTimeDusk) / fadeOutTimeDawn) * fadeFactor);
+				else
+					brightness = maxBrightnessDay;
+			}
 			else
 			{
- 				brightness = maxBrightnessNigt;
+				brightness = maxBrightnessNigt;
 			}
- 
+
 			return brightness;
 		}
 
-		public override void Update(GameTime gameTime)
-		{
-			Intensity = Active ? Math.Min(1f, 0.01f + Intensity) : Math.Max(0f, Intensity - 0.01f);
-			SetEarthTextures();
-		}
 
 		public override Color OnTileColor(Color inColor)
 		{
-			Vector4 value = inColor.ToVector4();
-			return new Color(Vector4.Lerp(value, Vector4.One, Intensity * 0.5f));
-		}
+            Color darkColor = new Color(35, 35, 35);
+            Color earthshineBlue = Color.Lerp(new Color(39, 87, 155), darkColor, 0.6f);
 
-		public override float GetCloudAlpha()
-		{
-			return 1f - Intensity;
-		}
+            if (Main.dayTime)
+            {
+				if (Main.time < MacrocosmSubworld.CurrentDayLength * 0.1)
+					return Color.Lerp(darkColor, Color.White, (float)(Main.time / (MacrocosmSubworld.CurrentDayLength * 0.1)));
+				else if (Main.time > MacrocosmSubworld.CurrentDayLength * 0.9)
+					return Color.Lerp(darkColor, Color.White, (float)((MacrocosmSubworld.CurrentDayLength - Main.time) / (MacrocosmSubworld.CurrentDayLength - MacrocosmSubworld.CurrentDayLength * 0.9)));
+				else
+					return Color.White;
+            }
+            else
+            {
+                if (Main.time < MacrocosmSubworld.CurrentNightLength * 0.2)
+                    return Color.Lerp(darkColor, earthshineBlue, (float)(Main.time / (MacrocosmSubworld.CurrentNightLength * 0.2)));
+                else if (Main.time > MacrocosmSubworld.CurrentNightLength * 0.8)
+                    return Color.Lerp(darkColor, earthshineBlue, (float)((MacrocosmSubworld.CurrentNightLength - Main.time) / (MacrocosmSubworld.CurrentNightLength - MacrocosmSubworld.CurrentNightLength * 0.8)));
+                else
+                    return earthshineBlue;
+            }
+        }
+
+		public override float GetCloudAlpha() => 0f;
 
 		public override void Reset()
 		{
@@ -223,7 +253,7 @@ namespace Macrocosm.Content.Backgrounds.Moon
 
 		public override bool IsActive()
 		{
-			return Active || Intensity > 0.001f;
+			return Active && Intensity > 0.001f;
 		}
 	}
 }

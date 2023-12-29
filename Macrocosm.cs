@@ -25,6 +25,9 @@ namespace Macrocosm
 		public const string SFXAssetsPath = "Macrocosm/Assets/Sounds/SFX/";
 
 		public const string EmptyTexPath = TextureAssetsPath + "Empty";
+
+		public const int ItemShoot_UsesAmmo = 10;
+
 		public static Asset<Texture2D> EmptyTexAsset => ModContent.Request<Texture2D>(EmptyTexPath);
 		public static Texture2D EmptyTex => EmptyTexAsset.Value;
 
@@ -32,20 +35,46 @@ namespace Macrocosm
 
 		public override void Load()
 		{
-			LoadModCalls();
-			LoadEffects();
-			ApplyResprites(); 
+			if (!Main.dedServ)
+			{
+				LoadResprites();
+				LoadEffects();
+			}
+
+			LoadTimeModCalls();
+		}
+
+		public override void Unload()
+		{
+			UnloadResprites();
+			UnloadEffects();
+		}
+
+		private static void LoadResprites()
+		{
+			string respritePath = Macrocosm.TextureAssetsPath + "Resprites/";
+			TextureAssets.Moon[0] = ModContent.Request<Texture2D>(respritePath + "Moon_0");
+		}
+
+		private static void UnloadResprites()
+		{
+			TextureAssets.Moon[0] = Main.Assets.Request<Texture2D>("Images/Moon_0", AssetRequestMode.ImmediateLoad);
 		}
 
 		private static void LoadEffects()
 		{
 			AssetRequestMode mode = AssetRequestMode.ImmediateLoad;
-			
+
 			Filters.Scene["Macrocosm:RadiationNoise"] = new Filter(new ScreenShaderData(new Ref<Effect>(ModContent.Request<Effect>(EffectAssetsPath + "RadiationNoise", mode).Value), "RadiationNoise"));
 			Filters.Scene["Macrocosm:RadiationNoise"].Load();
 		}
 
-		private void LoadModCalls()
+		private static void UnloadEffects()
+		{
+			// What goes here?
+		}
+
+		private void LoadTimeModCalls()
 		{
 			#region Ryan's mods calls
 
@@ -60,12 +89,6 @@ namespace Macrocosm
 				taAPI.Call("Ambience", this, "MoonAmbience", "Assets/Sounds/Ambient/Moon", 1f, 0.0075f, new Func<bool>(SubworldSystem.IsActive<Moon>));
 
 			#endregion
-		}
-
-		private void ApplyResprites()
-		{
-			string respritePath = Macrocosm.TextureAssetsPath + "Resprites/";
-			TextureAssets.Moon[0] = ModContent.Request<Texture2D>(respritePath + "Moon_0");
 		}
 
 		public override void HandlePacket(BinaryReader reader, int whoAmI)

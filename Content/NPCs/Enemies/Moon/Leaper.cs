@@ -18,7 +18,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		public override void SetStaticDefaults()
 		{
 			base.SetStaticDefaults();
- 			Main.npcFrameCount[Type] = 24;
+			Main.npcFrameCount[Type] = 24;
 		}
 		public override void SetDefaults()
 		{
@@ -61,7 +61,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 			if (NPC.velocity.Y < 0f)
 				NPC.velocity.Y += 0.1f;
- 		}
+		}
 
 		// frames 0 - 9: idle 
 		// frames 10 - 15: start leap
@@ -84,31 +84,32 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			int runFrameInitial = 17;
 			int runFrameCount = 7;
 
-			if (NPC.velocity.Y < -0.1f ||
-					 !Main.tile[(int)(NPC.Center.X / 16), (int)((NPC.Center.Y + NPC.height / 2) / 16)].HasTile &&
-					 !Main.tile[(int)(NPC.Center.X / 16), (int)((NPC.Center.Y + NPC.height / 2) / 16) + 1].HasTile &&
-					 !Main.tile[(int)(NPC.Center.X / 16), (int)((NPC.Center.Y + NPC.height / 2) / 16) + 2].HasTile)
-			{
-				NPC.frame.Y = midAirFrame * frameHeight;
- 			}
+			if (!NPC.IsABestiaryIconDummy)
+				if (NPC.velocity.Y < -0.1f ||
+						 !Main.tile[(int)(NPC.Center.X / 16), (int)((NPC.Center.Y + NPC.height / 2) / 16)].HasTile &&
+						 !Main.tile[(int)(NPC.Center.X / 16), (int)((NPC.Center.Y + NPC.height / 2) / 16) + 1].HasTile &&
+						 !Main.tile[(int)(NPC.Center.X / 16), (int)((NPC.Center.Y + NPC.height / 2) / 16) + 2].HasTile)
+				{
+					NPC.frame.Y = midAirFrame * frameHeight;
+				}
 
 			NPC.frameCounter++;
 			NPC.spriteDirection = NPC.direction;
 
 			if (NPC.velocity == Vector2.Zero)
 			{
- 				if (NPC.frameCounter >= ticksPerFrame)
+				if (NPC.frameCounter >= ticksPerFrame)
 				{
 					NPC.frameCounter = 0;
 					NPC.frame.Y += frameHeight;
 
 					if (NPC.frame.Y >= idleFrameCount * frameHeight - 1)
- 						NPC.frame.Y = idleFrameInitial * frameHeight;
- 				}
+						NPC.frame.Y = idleFrameInitial * frameHeight;
+				}
 			}
 			else
 			{
-				NPC.frame.Y = (int)(NPC.frameCounter/ ticksPerFrame + runFrameInitial) * frameHeight ;
+				NPC.frame.Y = (int)(NPC.frameCounter / ticksPerFrame + runFrameInitial) * frameHeight;
 
 				if (NPC.frameCounter >= ticksPerFrame * runFrameCount)
 				{
@@ -120,11 +121,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		public override void ModifyNPCLoot(NPCLoot loot)
 		{
-			loot.Add(ItemDropRule.Common(ModContent.ItemType<SpaceDust>()));             // Always drop 1 cosmic dust
-			loot.Add(ItemDropRule.Common(ModContent.ItemType<ArtemiteOre>(), 16, 1, 6));  // 1/16 chance to drop 1-6 Artemite Ore
-			loot.Add(ItemDropRule.Common(ModContent.ItemType<ChandriumOre>(), 16, 1, 6)); // 1/16 chance to drop 1-6 Chandrium Ore
-			loot.Add(ItemDropRule.Common(ModContent.ItemType<SeleniteOre>(), 16, 1, 6));  // 1/16 chance to drop 1-6 Selenite Ore
-			loot.Add(ItemDropRule.Common(ModContent.ItemType<DianiteOre>(), 16, 1, 6));   // 1/16 chance to drop 1-6 DianiteOre Ore
 		}
 
 		public override void HitEffect(NPC.HitInfo hit)
@@ -143,8 +139,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			}
 
 			if (Main.netMode == NetmodeID.Server)
- 				return; // don't run on the server
- 
+				return; // don't run on the server
+
 			if (NPC.life <= 0)
 			{
 				var entitySource = NPC.GetSource_Death();

@@ -15,15 +15,12 @@ namespace Macrocosm.Content.NPCs.Global
 		protected override bool CloneNewInstances => false;
 
 		/// <summary> If this is only set on a local client, the logic accessing this needs to be synced </summary>
-		public bool TargetedByHomingProjectile; 
+		public bool TargetedByHomingProjectile;
 
 		public override void SendExtraAI(NPC npc, BitWriter bitWriter, BinaryWriter binaryWriter)
 		{
 			if (npc.ModNPC is null)
 				return;
-
-			//if (!npc.ModNPC.NetWriteFields(binaryWriter, bitWriter))
-			//	binaryWriter.Dispose();
 
 			npc.ModNPC.NetWriteFields(binaryWriter, bitWriter);
 		}
@@ -44,7 +41,7 @@ namespace Macrocosm.Content.NPCs.Global
 
 		private void DrawCrosshair(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
-			Texture2D crosshair = ModContent.Request<Texture2D>("Macrocosm/Content/UI/Crosshair").Value;
+			Texture2D crosshair = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/Crosshair").Value;
 			Color color = new(255, 255, 255, 64);
 			Vector2 position = npc.Center - screenPos;
 			float rotation = (float)(Main.timeForVisualEffects / 20);

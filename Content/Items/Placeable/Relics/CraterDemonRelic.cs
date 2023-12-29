@@ -1,5 +1,4 @@
 ﻿using Terraria;
-using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -9,7 +8,7 @@ namespace Macrocosm.Content.Items.Placeable.Relics
 	{
 		public override void SetStaticDefaults()
 		{
-			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
+
 		}
 
 		public override void SetDefaults()
@@ -20,7 +19,7 @@ namespace Macrocosm.Content.Items.Placeable.Relics
 			Item.height = 40;
 			Item.maxStack = Item.CommonMaxStack;
 			Item.rare = ItemRarityID.Master;
-			Item.master = true; 
+			Item.master = true;
 			Item.value = Item.buyPrice(0, 5);
 		}
 	}

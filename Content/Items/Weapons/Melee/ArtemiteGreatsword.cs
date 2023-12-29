@@ -3,7 +3,6 @@ using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -11,11 +10,11 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 {
 	public class ArtemiteGreatsword : GreatswordHeldProjectileItem
 	{
-		public override Vector2 SpriteHandlePosition => new(23, 59);
+		public override Vector2 SpriteHandlePosition => new(23, 68);
 
-        public override void SetStaticDefaults()
+		public override void SetStaticDefaults()
 		{
-			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
+
 		}
 		public override void SetDefaultsHeldProjectile()
 		{
@@ -24,7 +23,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 			Item.knockBack = 5;
 			Item.value = 10000;
 			Item.rare = ModContent.RarityType<MoonRarityT1>();
- 		}
+		}
 
 		public override void AddRecipes()
 		{

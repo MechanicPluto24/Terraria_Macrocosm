@@ -31,6 +31,17 @@ namespace Macrocosm.Common.Subworlds
 			return new((int)(size.Width / value), (int)(size.Height / value));
 		}
 
+		public float GetSizeRatio(WorldSize other)
+		{
+			if (other.Width == 0 || other.Height == 0)
+				return 0f;
+
+			int thisArea = Width * Height;
+			int otherArea = other.Width * other.Height;
+
+			return (float)thisArea / otherArea;
+		}
+
 		public override bool Equals(object obj)
 		{
 			return obj is WorldSize size &&
@@ -70,7 +81,7 @@ namespace Macrocosm.Common.Subworlds
 			int width = Small.Width;
 			int height = Small.Height;
 
-			if(tag.ContainsKey(nameof(Width)))
+			if (tag.ContainsKey(nameof(Width)))
 				width = tag.GetInt(nameof(Width));
 
 			if (tag.ContainsKey(nameof(Height)))

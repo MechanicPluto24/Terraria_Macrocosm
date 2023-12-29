@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.Config;
 using Macrocosm.Common.UI;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
@@ -8,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
 {
-    public abstract class ValueUnitSpecialInfoElement : InfoElement
+	public abstract class ValueUnitSpecialInfoElement : InfoElement
 	{
 		protected LocalizedText formattedLocalizedText;
 
@@ -42,12 +43,12 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
 
 			// Parantheses are passed as format parameters into the localization
 			// when the special value is existent alongside the numeric value  
-			string extra1 = hasSpecial ? "(" : ""; 
-			string extra2 = hasSpecial ? ")" : ""; 
+			string extra1 = hasSpecial ? "(" : "";
+			string extra2 = hasSpecial ? ")" : "";
 
 			// Get the extra info and display it between parantheses if a special value key is provided alongside the numeric value
-			LocalizedText extraInfo = hasSpecial ? Language.GetText(specialValuesPath + base.specialValueKey) : LocalizedText.Empty;
-			
+			LocalizedText extraInfo = hasSpecial ? Language.GetOrRegister(specialValuesPath + base.specialValueKey, () => Utility.SanitizeCodeCase(base.specialValueKey)) : LocalizedText.Empty;
+
 			// Each InfoElement gets the localized text associated with the value based on the current configuration, and may update the value as well
 			formattedLocalizedText = GetLocalizedValueUnitText(ref value).WithFormatArgs(value, extra1, extraInfo, extra2);
 		}
@@ -62,7 +63,7 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
 
 		protected override LocalizedText GetHoverText() => Language.GetText("Mods.Macrocosm.UI.Rocket." + infoElementKey + ".Name");
 
-		protected override Asset<Texture2D> GetIcon() => ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/Icons/" + infoElementKey);
+		protected override Asset<Texture2D> GetIcon() => ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/WorldInfo/" + infoElementKey);
 
 	}
 }

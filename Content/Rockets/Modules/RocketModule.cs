@@ -1,9 +1,11 @@
 ﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.Customization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -21,8 +23,8 @@ namespace Macrocosm.Content.Rockets.Modules
 		public Detail Detail { get; set; }
 		public Pattern Pattern { get; set; }
 
-		public bool HasPattern => Pattern is not null;
-		public bool HasDetail => Detail is not null;
+		public bool HasPattern => Pattern != default;
+		public bool HasDetail => Detail != default;
 		private bool SpecialDraw => HasPattern || HasDetail;
 
 		public Vector2 Position { get; set; }
@@ -44,8 +46,16 @@ namespace Macrocosm.Content.Rockets.Modules
 		/// <summary> The module's draw origin </summary>
 		protected virtual Vector2 Origin => new(0, 0);
 
-		public virtual string TexturePath => Utility.GetPath(this);
+
+		public virtual string TexturePath => Utility.GetNamespacePath(this);
 		public Texture2D Texture => ModContent.Request<Texture2D>(TexturePath, AssetRequestMode.ImmediateLoad).Value;
+
+		public virtual string IconPath => (GetType().Namespace + "/Icons/" + Name).Replace(".", "/");
+		public Texture2D Icon => ModContent.Request<Texture2D>(IconPath, AssetRequestMode.ImmediateLoad).Value;
+
+		public virtual string BlueprintPath => (GetType().Namespace + "/Blueprints/" + Name).Replace(".", "/");
+		public Texture2D Blueprint => ModContent.Request<Texture2D>(BlueprintPath, AssetRequestMode.ImmediateLoad).Value;
+
 
 		protected Rocket rocket;
 
@@ -55,13 +65,16 @@ namespace Macrocosm.Content.Rockets.Modules
 			this.rocket = rocket;
 		}
 
-		public virtual void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+		public virtual void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 position)
 		{
+		}
 
+		public virtual void PostDraw(SpriteBatch spriteBatch, Vector2 position)
+		{
 		}
 
 		private SpriteBatchState state;
-		public virtual void Draw(SpriteBatch spriteBatch, Vector2 screenPos, Color ambientColor)
+		public virtual void Draw(SpriteBatch spriteBatch, Vector2 position)
 		{
 			// Load current pattern and apply shader 
 			state.SaveState(spriteBatch);
@@ -75,7 +88,6 @@ namespace Macrocosm.Content.Rockets.Modules
 				if (HasPattern)
 				{
 					// Pass the pattern to the shader via the S1 register
-					Main.graphics.GraphicsDevice.Textures[0] = Texture;
 					Main.graphics.GraphicsDevice.Textures[1] = Pattern.Texture;
 					Main.graphics.GraphicsDevice.Textures[2] = null;
 
@@ -83,18 +95,14 @@ namespace Macrocosm.Content.Rockets.Modules
 					Main.graphics.GraphicsDevice.SamplerStates[1] = SamplerState.PointClamp;
 
 					//Pass the color mask keys as Vector3s and configured colors as Vector4s
-					//Note: parameters are scalars intentionally, I manually unrolled the loop in the shader to reduce number of branch instructions -- Feldy
+					List<Vector4> colors = new();
 					for (int i = 0; i < Pattern.MaxColorCount; i++)
-					{
-						effect.Parameters["uColorKey" + i.ToString()].SetValue(Pattern.ColorKeys[i]);
-						effect.Parameters["uColor" + i.ToString()].SetValue(Pattern.GetColor(i).ToVector4());
-					}
+						colors.Add(Pattern.GetColor(i).ToVector4());
 
-					// Get a blend between the general ambient color at the rocket center, and the local color on this module's center
-					Color localColor = Color.Lerp(Lighting.GetColor((int)(Center.X) / 16, (int)(Center.Y) / 16), ambientColor, 0.8f);
-
-					//Pass the ambient lighting on the rocket 
-					effect.Parameters["uAmbientColor"].SetValue(localColor.ToVector3());
+					effect.Parameters["uColorCount"].SetValue(Pattern.MaxColorCount);
+					effect.Parameters["uColorKey"].SetValue(Pattern.ColorKeys);
+					effect.Parameters["uColor"].SetValue(colors.ToArray());
+					effect.Parameters["uSampleBrightness"].SetValue(true);
 				}
 
 				if (HasDetail)
@@ -109,7 +117,7 @@ namespace Macrocosm.Content.Rockets.Modules
 				spriteBatch.Begin(state.SpriteSortMode, state.BlendState, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, effect, state.Matrix);
 			}
 
-			spriteBatch.Draw(Texture, Position - screenPos, null, ambientColor, 0f, Origin, 1f, SpriteEffects.None, 0f);
+			spriteBatch.Draw(Texture, position, null, Color.White, 0f, Origin, 1f, SpriteEffects.None, 0f);
 
 			if (SpecialDraw)
 			{
@@ -126,9 +134,35 @@ namespace Macrocosm.Content.Rockets.Modules
 			}
 		}
 
-		public virtual void DrawOverlay(SpriteBatch spriteBatch, Vector2 screenPos)
+		public virtual void DrawBlueprint(SpriteBatch spriteBatch, Vector2 position)
 		{
+			state.SaveState(spriteBatch);
+			SamplerState samplerState = Main.graphics.GraphicsDevice.SamplerStates[1];
 
+			Effect effect = ModContent.Request<Effect>(Macrocosm.EffectAssetsPath + "ColorMaskShading", AssetRequestMode.ImmediateLoad).Value;
+			Main.graphics.GraphicsDevice.Textures[1] = Blueprint;
+			Main.graphics.GraphicsDevice.SamplerStates[1] = SamplerState.PointClamp;
+
+			effect.Parameters["uColorCount"].SetValue(2);
+			effect.Parameters["uColorKey"].SetValue(blueprintKeys);
+			effect.Parameters["uColor"].SetValue((new Color[] { UITheme.Current.PanelStyle.BorderColor, UITheme.Current.PanelStyle.BackgroundColor }).ToVector4Array());
+			effect.Parameters["uSampleBrightness"].SetValue(false);
+
+			spriteBatch.End();
+			spriteBatch.Begin(state.SpriteSortMode, state.BlendState, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, effect, state.Matrix);
+
+			spriteBatch.Draw(Blueprint, Position + position, null, Color.White, 0f, Origin, 1f, SpriteEffects.None, 0f);
+
+			spriteBatch.End();
+			spriteBatch.Begin(state);
+
+			Main.graphics.GraphicsDevice.Textures[1] = null;
+			Main.graphics.GraphicsDevice.SamplerStates[1] = samplerState;
 		}
+
+		protected readonly Vector3[] blueprintKeys = new Vector3[] {
+			new Vector3(0.47f, 0.47f, 0.47f),
+			new Vector3(0.74f, 0.74f, 0.74f)
+		};
 	}
 }

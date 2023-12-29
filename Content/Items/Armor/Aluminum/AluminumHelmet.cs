@@ -6,20 +6,20 @@ using Terraria.ModLoader;
 namespace Macrocosm.Content.Items.Armor.Aluminum
 {
 	[AutoloadEquip(EquipType.Head)]
-    public class AluminumHelmet : ModItem
-    {
-        public override void SetStaticDefaults()
-        {
-        }
+	public class AluminumHelmet : ModItem
+	{
+		public override void SetStaticDefaults()
+		{
+		}
 
-        public override void SetDefaults()
-        {
-            Item.width = 26;
-            Item.height = 20;
-            Item.value = Item.sellPrice(silver: 5);
-            Item.rare = ItemRarityID.White;
-            Item.defense = 2;
-        }
+		public override void SetDefaults()
+		{
+			Item.width = 26;
+			Item.height = 20;
+			Item.value = Item.sellPrice(silver: 5);
+			Item.rare = ItemRarityID.White;
+			Item.defense = 2;
+		}
 
 		public override bool IsArmorSet(Item head, Item body, Item legs)
 		{
@@ -28,16 +28,16 @@ namespace Macrocosm.Content.Items.Armor.Aluminum
 
 		public override void UpdateArmorSet(Player player)
 		{
-            player.statDefense += 2;
-			player.setBonus = "2 defense";
- 		}
+			player.statDefense += 2;
+			player.setBonus = "2 defense"; // TODO: localize
+		}
 
 		public override void AddRecipes()
-        {
-            Recipe recipe = Recipe.Create(Type);
-            recipe.AddIngredient(ModContent.ItemType<AluminumBar>(), 16);
-            recipe.AddTile(TileID.Anvils);
-            recipe.Register();
-        }
-    }
+		{
+			Recipe recipe = Recipe.Create(Type);
+			recipe.AddIngredient(ModContent.ItemType<AluminumBar>(), 16);
+			recipe.AddTile(TileID.Anvils);
+			recipe.Register();
+		}
+	}
 }

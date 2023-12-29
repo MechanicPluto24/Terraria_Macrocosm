@@ -55,14 +55,14 @@ namespace Macrocosm.Common.UI
 				Main.instance.HandleIME();
 				newString = Main.GetInputText(currentText);
 			}
-           
+
 			if (newString != currentText)
 			{
 				currentText = newString;
 				OnTextChange?.Invoke(this, EventArgs.Empty);
 			}
 
-			if(currentText.Length > TextMaxLenght)
+			if (currentText.Length > TextMaxLenght)
 				currentText = currentText[..TextMaxLenght];
 
 			currentText = FormatText(currentText);
@@ -73,13 +73,13 @@ namespace Macrocosm.Common.UI
 				if (++textBlinkerCounter / 20 % 2 == 0)
 					displayString += "|";
 			}
-			
+
 			CalculatedStyle space = GetDimensions();
 
 			if (currentText.Length == 0 && !ForceHideHintText)
- 				Terraria.Utils.DrawBorderString(spriteBatch, hintText, new Vector2(space.X, space.Y), HintColor, TextScale, anchory: 0.12f);
+				Terraria.Utils.DrawBorderString(spriteBatch, hintText, new Vector2(space.X, space.Y), HintColor, TextScale, anchory: 0.12f);
 			else
- 				Terraria.Utils.DrawBorderString(spriteBatch, displayString, new Vector2(space.X, space.Y), TextColor, TextScale, anchory: 0.12f);
- 		}
+				Terraria.Utils.DrawBorderString(spriteBatch, displayString, new Vector2(space.X, space.Y), TextColor, TextScale, anchory: 0.12f);
+		}
 	}
 }

@@ -16,6 +16,7 @@ namespace Macrocosm.Content.Items.Consumables.BossSummons
 		public override void SetStaticDefaults()
 		{
 			ItemID.Sets.SortingPriorityBossSpawns[Item.type] = 13;
+			Item.ResearchUnlockCount = 3;
 		}
 
 		public override void SetDefaults()
@@ -23,7 +24,7 @@ namespace Macrocosm.Content.Items.Consumables.BossSummons
 			Item.width = 20;
 			Item.height = 18;
 			Item.scale = 1f;
-			Item.maxStack =  Item.CommonMaxStack;
+			Item.maxStack = Item.CommonMaxStack;
 			Item.rare = ModContent.RarityType<MoonRarityT1>();
 			Item.useAnimation = 45;
 			Item.useTime = 45;
@@ -32,7 +33,7 @@ namespace Macrocosm.Content.Items.Consumables.BossSummons
 		}
 
 		public override bool CanUseItem(Player player)
-			=> player.InModBiome<MoonBiome>() && NPC.downedMoonlord && !NPC.AnyNPCs(ModContent.NPCType<CraterDemon>());
+			=> player.InModBiome<MoonBiome>() && !NPC.AnyNPCs(ModContent.NPCType<CraterDemon>());
 
 		public override bool? UseItem(Player player)
 		{

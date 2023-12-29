@@ -22,36 +22,36 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 	};
 
 	public class LaunchPadMarker : ModTile
-    {
-        public override void SetStaticDefaults()
-        {
-            Main.tileFrameImportant[Type] = true;
-            Main.tileSolid[Type] = false;
+	{
+		public override void SetStaticDefaults()
+		{
+			Main.tileFrameImportant[Type] = true;
+			Main.tileSolid[Type] = false;
 			Main.tileLighted[Type] = true;
 
-            DustType = -1;
-            HitSound = SoundID.Mech;
+			DustType = -1;
+			HitSound = SoundID.Mech;
 
-            TileObjectData.newTile.CopyFrom(TileObjectData.Style1x1);
+			TileObjectData.newTile.CopyFrom(TileObjectData.Style1x1);
 			TileObjectData.newTile.StyleHorizontal = true;
 			TileObjectData.newTile.UsesCustomCanPlace = true;
 			TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(ModContent.GetInstance<LaunchPadMarkerTE>().Hook_AfterPlacement, -1, 0, false);
 
 			TileObjectData.addTile(Type);
 
-            LocalizedText name = CreateMapEntryName();
+			LocalizedText name = CreateMapEntryName();
 
-            AddMapEntry(new Color(200, 200, 200), name);
-        }
+			AddMapEntry(new Color(200, 200, 200), name);
+		}
 
-		public override bool CanPlace(int i, int j) 
+		public override bool CanPlace(int i, int j)
 		{
 			return LaunchPadManager.TryGetLaunchPadAtTileCoordinates(MacrocosmSubworld.CurrentID, new(i, j), out _);
-		} 
+		}
 
 		public override void KillTile(int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem)
 		{
-			if(LaunchPadManager.TryGetLaunchPadAtTileCoordinates(MacrocosmSubworld.CurrentID, new(i, j), out LaunchPad launchPad))
+			if (LaunchPadManager.TryGetLaunchPadAtTileCoordinates(MacrocosmSubworld.CurrentID, new(i, j), out LaunchPad launchPad))
 			{
 				if (launchPad.HasRocket)
 				{
@@ -102,9 +102,9 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 		}
 	}
 
-    public class LaunchPadMarkerTE : ModTileEntity
-    {
-		public int CheckInterval { get; set; } = 30; 
+	public class LaunchPadMarkerTE : ModTileEntity
+	{
+		public int CheckInterval { get; set; } = 30;
 		public int MinCheckDistance { get; set; } = 20;
 		public int CheckDistance { get; set; } = 40;
 
@@ -116,7 +116,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 		public bool HasPair => Pair != null;
 		public bool IsPair { get; set; }
 
-        public MarkerState MarkerState { get; set; } = MarkerState.Inactive;
+		public MarkerState MarkerState { get; set; } = MarkerState.Inactive;
 		private MarkerState lastMarkerState = MarkerState.Inactive;
 
 		private int checkTimer;
@@ -145,7 +145,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 					LaunchPad = LaunchPadManager.GetLaunchPadAtStartTile(MacrocosmSubworld.CurrentID, new(x, y));
 					LaunchPad ??= LaunchPad.Create(x, y, Pair.Position.X, Pair.Position.Y);
 					Pair.LaunchPad = LaunchPad;
-					
+
 					if (LaunchPad.HasRocket)
 						MarkerState = MarkerState.Occupied;
 					else
@@ -155,7 +155,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 				if (HasPair)
 					Pair.MarkerState = MarkerState;
 
-				if(MarkerState != lastMarkerState)
+				if (MarkerState != lastMarkerState)
 					OnStateChanged();
 
 				lastMarkerState = MarkerState;
@@ -171,7 +171,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 		{
 			int startCheck = x;
 
-			x = startCheck; 
+			x = startCheck;
 			while (x < startCheck + CheckDistance)
 			{
 				x++;
@@ -185,7 +185,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 						pair = foundPair as LaunchPadMarkerTE;
 						return result;
 					}
-					else if(HasPair && WorldGen.SolidOrSlopedTile(tile))
+					else if (HasPair && WorldGen.SolidOrSlopedTile(tile))
 					{
 						MarkerState = MarkerState.Invalid;
 						pair = Pair;
@@ -298,8 +298,8 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			NetMessage.SendData(MessageID.TileEntitySharing, -1, -1, null, ID, Position.X, Position.Y);
 		}
 
-        public override void OnKill()
-        {
+		public override void OnKill()
+		{
 			if (HasPair)
 			{
 				Pair.MarkerState = MarkerState.Inactive;
@@ -308,5 +308,5 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 				NetMessage.SendData(MessageID.TileEntitySharing, -1, -1, null, Pair.ID, Pair.Position.X, Pair.Position.Y);
 			}
 		}
-    }
+	}
 }

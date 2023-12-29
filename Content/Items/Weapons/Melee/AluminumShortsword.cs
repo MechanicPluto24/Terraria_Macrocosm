@@ -1,7 +1,6 @@
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Projectiles.Friendly.Melee;
 using Terraria;
-using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -11,7 +10,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 	{
 		public override void SetStaticDefaults()
 		{
-			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
+
 		}
 
 		public override void SetDefaults()
@@ -27,10 +26,10 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 			Item.value = Item.sellPrice(silver: 2, copper: 20);
 			Item.rare = ItemRarityID.White;
 			Item.UseSound = SoundID.Item1;
-			Item.autoReuse = false;  
-			Item.noUseGraphic = true;  
+			Item.autoReuse = false;
+			Item.noUseGraphic = true;
 			Item.noMelee = true;
-			Item.shoot = ModContent.ProjectileType<AluminumShortswordProjectile>();  
+			Item.shoot = ModContent.ProjectileType<AluminumShortswordProjectile>();
 			Item.shootSpeed = 2.1f;
 		}
 
@@ -38,7 +37,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 		{
 			Recipe recipe = Recipe.Create(Type);
 			recipe.AddIngredient(ModContent.ItemType<AluminumBar>(), 6);
- 			recipe.AddTile(TileID.Anvils);
+			recipe.AddTile(TileID.Anvils);
 			recipe.Register();
 		}
 	}

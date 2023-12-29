@@ -20,12 +20,12 @@ namespace Macrocosm.Content.Items.Global
 		public override void Load()
 		{
 			// add all vanilla items that have a flame to the list
-			for (int type = 0; type < ItemID.Count; type++) 
+			for (int type = 0; type < ItemID.Count; type++)
 			{
 				Item item = new(type); // this calls SetDefaults
 
 				// this excludes non-torch items like the NightGlow
-				if (item.flame && IsTorch(item)) 
+				if (item.flame && IsTorch(item))
 					flameItems.Add(type);
 			}
 		}
@@ -34,7 +34,7 @@ namespace Macrocosm.Content.Items.Global
 		{
 			// whenever holding an item that initially had a flame,
 			// disable it if a subworld, otherwise set it back 
-			if (HasFlame(item) && IsTorch(item))  
+			if (HasFlame(item) && IsTorch(item))
 				item.flame = !SubworldSystem.AnyActive<Macrocosm>();
 		}
 	}

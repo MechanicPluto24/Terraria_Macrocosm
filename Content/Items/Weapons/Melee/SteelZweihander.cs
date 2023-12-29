@@ -2,7 +2,6 @@ using Macrocosm.Common.Bases;
 using Macrocosm.Content.Items.Materials;
 using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -12,9 +11,9 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 	{
 		public override Vector2 SpriteHandlePosition => new(12, 52);
 
-        public override void SetStaticDefaults()
+		public override void SetStaticDefaults()
 		{
-			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
+
 		}
 
 		public override void SetDefaultsHeldProjectile()
@@ -24,7 +23,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 			Item.knockBack = 5;
 			Item.value = 10000;
 			Item.rare = ItemRarityID.Orange;
- 		}
+		}
 
 		public override void AddRecipes()
 		{

@@ -21,7 +21,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			Projectile.width = 36;
 			Projectile.height = 36;
 			Projectile.scale = 0.95f;
- 		}
+		}
 
 		public override bool PreAI()
 		{

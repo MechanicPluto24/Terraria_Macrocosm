@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 namespace Macrocosm.Common.Drawing.Particles
 {
 	/// <summary> Particle.Netcode by sucss, Nurby & Feldy @ PellucidMod (RIP) </summary>
-	public partial class Particle 
+	public partial class Particle
 	{
 		public const int MaxParticles = ushort.MaxValue;
 		public const int MaxParticleTypes = ushort.MaxValue;
@@ -20,7 +20,7 @@ namespace Macrocosm.Common.Drawing.Particles
 		{
 			if (Main.netMode == NetmodeID.SinglePlayer || WhoAmI < 0)
 				return;
-			
+
 			ModPacket packet = Macrocosm.Instance.GetPacket();
 
 			packet.Write((byte)MessageType.SyncParticle);
@@ -28,7 +28,7 @@ namespace Macrocosm.Common.Drawing.Particles
 			packet.Write((ushort)Type);
 
 			if (this.NetWriteFields(packet)) // Check if the writer was able to write all the fields.
-				 packet.Send(toClient, ignoreClient);
+				packet.Send(toClient, ignoreClient);
 
 			packet.Dispose();
 		}
@@ -37,7 +37,7 @@ namespace Macrocosm.Common.Drawing.Particles
 		/// Syncs a particle with data from the <see cref="BinaryReader"/>. Don't use this method outside <see cref="PacketHandler.HandlePacket(BinaryReader, int)"/>
 		/// </summary>
 		/// <param name="reader"></param>
-		public static void SyncParticle(BinaryReader reader, int clientWhoAmI)
+		public static void ReceiveSyncParticle(BinaryReader reader, int sender)
 		{
 			int particleIndex = reader.ReadUInt16(); // the Particle WhoAmI
 			int particleType = reader.ReadUInt16();  // the Type int index
@@ -54,9 +54,9 @@ namespace Macrocosm.Common.Drawing.Particles
 			}
 
 			particle.NetReadFields(reader);
-			
+
 			if (Main.netMode == NetmodeID.Server)
-				particle.NetSync(ignoreClient: clientWhoAmI);
+				particle.NetSync(ignoreClient: sender);
 		}
 	}
 }

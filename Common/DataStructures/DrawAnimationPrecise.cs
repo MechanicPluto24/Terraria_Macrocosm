@@ -35,8 +35,8 @@ namespace Macrocosm.Common.DataStructures
 				num = Frame + 1;
 				Frame = num;
 				if (num >= FrameCount)
- 					Frame = 0;
- 			}
+					Frame = 0;
+			}
 		}
 
 		public override Rectangle GetFrame(Texture2D texture, int frameCounterOverride = -1)

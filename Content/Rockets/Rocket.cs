@@ -1,31 +1,28 @@
-using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Items.Dev;
+using Macrocosm.Content.Items.CursorIcons;
 using Macrocosm.Content.Particles;
+using Macrocosm.Content.Players;
 using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.LaunchPads;
 using Macrocosm.Content.Rockets.Modules;
-using Macrocosm.Content.Subworlds;
-using Macrocosm.Content.UI.LoadingScreens;
+using Macrocosm.Content.Rockets.Storage;
+using Macrocosm.Content.Rockets.UI;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using SubworldLibrary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.Localization;
-using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets
 {
-	public partial class Rocket 
+	public partial class Rocket
 	{
 		/// <summary> The rocket's identifier </summary>
 		public int WhoAmI = -1;
@@ -67,6 +64,11 @@ namespace Macrocosm.Content.Rockets
 		/// <summary> The rocket's current world, "Earth" if active and not in a subworld. Other mod's subworlds have the mod name prepended </summary>
 		[NetSync] public string CurrentWorld = "";
 
+		public bool HasInventory => Inventory is not null;
+		public Inventory Inventory { get; set; }
+
+		public const int DefaultInventorySize = 50;
+
 		/// <summary> Whether the rocket is active in the current world and should be updated and visible </summary>
 		public bool ActiveInCurrentWorld => Active && CurrentWorld == MacrocosmSubworld.CurrentID;
 
@@ -96,8 +98,8 @@ namespace Macrocosm.Content.Rockets
 		/// <summary> The rocket's center in world coordinates </summary>
 		public Vector2 Center
 		{
-			get => Position + Size/2f;
-			set => Position = value - Size/2f;
+			get => Position + Size / 2f;
+			set => Position = value - Size / 2f;
 		}
 
 		/// <summary> Whether the rocket is currently stationary </summary>
@@ -106,39 +108,20 @@ namespace Macrocosm.Content.Rockets
 		/// <summary> The layer this rocket is drawn in </summary>
 		public RocketDrawLayer DrawLayer = RocketDrawLayer.BeforeNPCs;
 
-		/// <summary> This rocket's engine module nameplate </summary>
-		public Nameplate Nameplate => EngineModule.Nameplate;
+		/// <summary> This rocket's nameplate </summary>
+		public Nameplate Nameplate { get; set; } = new();
 
 		/// <summary> The Rocket's name, if not set by the user, defaults to a localized "Rocket" name </summary>
 		public string DisplayName
-			=> Nameplate.IsValid() ? AssignedName : Language.GetTextValue("Mods.Macrocosm.Common.Rocket");
-
-		/// <summary> The Rocket's name, set by the user </summary>
-		public string AssignedName => EngineModule.Nameplate.Text;
+			=> Nameplate.IsValid() ? Nameplate.Text : Language.GetTextValue("Mods.Macrocosm.Common.Rocket");
 
 		/// <summary> Dictionary of all the rocket's modules by name, in their order found in ModuleNames </summary>
 		public Dictionary<string, RocketModule> Modules = new();
 
+		public List<RocketModule> ModulesByDrawPriority => Modules.Values.OrderBy(module => module.DrawPriority).ToList();
+
 		/// <summary> List of the module names, in the customization access order </summary>
 		public List<string> ModuleNames => Modules.Keys.ToList();
-
-		/// <summary> The Rocket's command pod </summary>
-		public CommandPod CommandPod => (CommandPod)Modules["CommandPod"];
-
-		/// <summary> The Rocket's service module </summary>
-		public ServiceModule ServiceModule => (ServiceModule)Modules["ServiceModule"];
-
-		/// <summary> The rocket's reactor module </summary>
-		public ReactorModule ReactorModule => (ReactorModule)Modules["ReactorModule"];
-
-		/// <summary> The Rocket's engine module </summary>
-		public EngineModule EngineModule => (EngineModule)Modules["EngineModule"];
-
-		/// <summary> The rocket's left booster </summary>
-		public BoosterLeft BoosterLeft => (BoosterLeft)Modules["BoosterLeft"];
-
-		/// <summary> The rocket's right booster </summary>
-		public BoosterRight BoosterRight => (BoosterRight)Modules["BoosterRight"];
 
 		public int StaticFireBeginTime = 60;
 		public bool StaticFire => StaticFireProgress > 0f;
@@ -150,11 +133,9 @@ namespace Macrocosm.Content.Rockets
 		/// <summary> The landing sequence progress </summary>
 		public float LandingProgress => Position.Y / (TargetLandingPosition.Y - Height + 16);
 
-		private bool forcedStationaryAppearance;
-		private bool forcedFlightAppearance;
-
 		private float worldExitSpeed;
 
+		private bool forcedStationaryAppearance;
 		/// <summary> Whether this rocket is forced in a stationary (i.e. landed) state, visually </summary>
 		public bool ForcedStationaryAppearance
 		{
@@ -163,13 +144,14 @@ namespace Macrocosm.Content.Rockets
 			{
 				forcedStationaryAppearance = value;
 
-				if(value) 
+				if (value)
 					forcedFlightAppearance = false;
 
 				ResetAnimation();
 			}
 		}
 
+		private bool forcedFlightAppearance;
 		/// <summary> Whether this rocket is forced in a full flight state, visually </summary>
 		public bool ForcedFlightAppearance
 		{
@@ -178,7 +160,7 @@ namespace Macrocosm.Content.Rockets
 			{
 				forcedFlightAppearance = value;
 
-				if(value) 
+				if (value)
 					forcedStationaryAppearance = false;
 
 				ResetAnimation();
@@ -188,8 +170,10 @@ namespace Macrocosm.Content.Rockets
 		/// <summary> Instatiates a rocket. Use <see cref="Create(Vector2)"/> for spawning in world and proper syncing. </summary>
 		public Rocket()
 		{
-			foreach(string moduleName in DefaultModuleNames)
+			foreach (string moduleName in DefaultModuleNames)
 				Modules[moduleName] = CreateModule(moduleName);
+
+			ResetRenderTarget();
 		}
 
 		private RocketModule CreateModule(string moduleName)
@@ -209,25 +193,27 @@ namespace Macrocosm.Content.Rockets
 		public void OnCreation()
 		{
 			CurrentWorld = MacrocosmSubworld.CurrentID;
+			Inventory = new(DefaultInventorySize, this);
 		}
 
 		/// <summary> Called when spawning into a new world </summary>
 		public void OnWorldSpawn()
 		{
 			ResetAnimation();
+			ResetRenderTarget();
 
 			if (Landing && ActiveInCurrentWorld)
 			{
 				// Travel to spawn point if a specific launchpad has not been set
 				if (TargetLandingPosition == default)
- 					TargetLandingPosition = Utility.SpawnWorldPosition;
- 
+					TargetLandingPosition = Utility.SpawnWorldPosition;
+
 				Center = new(TargetLandingPosition.X, Center.Y);
-			}	
+			}
 		}
 
 		/// <summary> Called when a subworld is generated </summary>
-		public void OnSubworldGenerated() 
+		public void OnSubworldGenerated()
 		{
 			if (Landing && ActiveInCurrentWorld)
 			{
@@ -237,11 +223,10 @@ namespace Macrocosm.Content.Rockets
 			}
 		}
 
-
 		/// <summary> Update the rocket </summary>
 		public void Update()
 		{
-			SetModuleRelativePositions();
+			SetModuleWorldPositions();
 			Velocity = GetCollisionVelocity();
 			Position += Velocity;
 
@@ -256,7 +241,7 @@ namespace Macrocosm.Content.Rockets
 				LookForCommander();
 			}
 
-            if (Launched && Position.Y < WorldExitPositionY)
+			if (Launched && Position.Y < WorldExitPositionY)
 			{
 				worldExitSpeed = Velocity.Y;
 				Velocity = Vector2.Zero;
@@ -270,7 +255,7 @@ namespace Macrocosm.Content.Rockets
 		/// <summary> Safely despawn the rocket </summary>
 		public void Despawn()
 		{
-			if(Main.netMode == NetmodeID.SinglePlayer)
+			if (Main.netMode == NetmodeID.SinglePlayer)
 			{
 				if (CheckPlayerInRocket(Main.myPlayer))
 				{
@@ -278,7 +263,7 @@ namespace Macrocosm.Content.Rockets
 					GetRocketPlayer(Main.myPlayer).IsCommander = false;
 				}
 			}
- 			else
+			else
 			{
 				for (int i = 0; i < Main.maxPlayers; i++)
 				{
@@ -290,66 +275,50 @@ namespace Macrocosm.Content.Rockets
 				}
 			}
 
-			Active = false;
+			if (Active && HasInventory)
+			{
+				Inventory.Size = 0;
+				Inventory.SyncSize();
+
+				Inventory = null;
+			}
+
 			CurrentWorld = "";
+			Active = false;
 			NetSync();
 		}
 
-		public void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+		private Vector2 GetModuleRelativePosition(RocketModule module, Vector2 origin)
 		{
-			foreach (RocketModule module in Modules.Values.OrderBy(module => module.DrawPriority))
+			var commandPod = Modules["CommandPod"];
+			var serviceModule = Modules["ServiceModule"];
+			var reactorModule = Modules["ReactorModule"];
+			var engineModule = Modules["EngineModule"];
+
+			return module switch
 			{
-				module.PreDrawBeforeTiles(spriteBatch, screenPos, drawColor);
-			}	
-		}
-
-		/// <summary> Draw the rocket in the configured draw layer </summary>
-		public void Draw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
-		{
-			// Positions (also) set here, in the update method only they lag behind 
-			SetModuleRelativePositions();
-
-			foreach (RocketModule module in Modules.Values.OrderBy(module => module.DrawPriority))
-			{
-				module.Draw(spriteBatch, screenPos, drawColor);
-			}
-
-			//DrawDebugBounds();
-			//DrawDebugModuleHitbox();
-			//DisplayWhoAmI();
-		}
-
-		/// <summary> Draw the rocket as a dummy </summary>
-		public void DrawDummy(SpriteBatch spriteBatch, Vector2 offset, Color drawColor)
-		{
-			// Passing Rocket world position as "screenPosition" cancels it out  
-			PreDrawBeforeTiles(spriteBatch, Position - offset, drawColor);
-			Draw(spriteBatch, Position - offset, drawColor);
- 			DrawOverlay(spriteBatch, Position - offset);
- 		}
-
-		public void DrawOverlay(SpriteBatch spriteBatch, Vector2 screenPos)
-		{
-			foreach (RocketModule module in Modules.Values.OrderBy(module => module.DrawPriority))
-			{
-				module.DrawOverlay(spriteBatch, screenPos);
-			}
+				CommandPod => origin + new Vector2(Width / 2f - commandPod.Width / 2f, 0),
+				ServiceModule => origin + new Vector2(Width / 2f - serviceModule.Width / 2f, commandPod.Height),
+				ReactorModule => origin + new Vector2(Width / 2f - reactorModule.Width / 2f, commandPod.Height + serviceModule.Height - 2),
+				EngineModule => origin + new Vector2(Width / 2f - engineModule.Width / 2f, commandPod.Height + serviceModule.Height + reactorModule.Height - 10),
+				BoosterLeft => origin + new Vector2(78, commandPod.Height + serviceModule.Height + reactorModule.Height + 6),
+				BoosterRight => origin + new Vector2(152, commandPod.Height + serviceModule.Height + reactorModule.Height + 6),
+				_ => default,
+			};
 		}
 
 		// Set the rocket's modules positions in the world
-		private void SetModuleRelativePositions()
+		private void SetModuleWorldPositions()
 		{
-			CommandPod.Position = Position + new Vector2(Width/2f - CommandPod.Hitbox.Width/2f, 0);
-			ServiceModule.Position = CommandPod.Position + new Vector2(-6, CommandPod.Hitbox.Height - 2.1f);
-			ReactorModule.Position = ServiceModule.Position + new Vector2(-2, ServiceModule.Hitbox.Height - 2);
-			EngineModule.Position = ReactorModule.Position + new Vector2(-18, ReactorModule.Hitbox.Height);
-			BoosterLeft.Position = new Vector2(EngineModule.Center.X, EngineModule.Position.Y) - new Vector2(BoosterLeft.Hitbox.Width/2, 0) + new Vector2(2, 16);
-			BoosterRight.Position = new Vector2(EngineModule.Center.X, EngineModule.Position.Y) + new Vector2(14, 16);
+			foreach (RocketModule module in Modules.Values)
+			{
+				module.Position = GetModuleRelativePosition(module, Position);
+			}
 		}
 
 		/// <summary> Gets the RocketPlayer bound to the provided player ID </summary>
 		/// <param name="playerID"> The player ID </param>
-		public RocketPlayer GetRocketPlayer(int playerID) => Main.player[playerID].RocketPlayer();
+		public RocketPlayer GetRocketPlayer(int playerID) => Main.player[playerID].GetModPlayer<RocketPlayer>();
 
 		/// <summary> Gets the commander of this rocket </summary>
 		public RocketPlayer GetCommander()
@@ -358,7 +327,7 @@ namespace Macrocosm.Content.Rockets
 			{
 				if (GetRocketPlayer(Main.myPlayer).InRocket)
 					return GetRocketPlayer(Main.myPlayer);
-				else 
+				else
 					return null;
 			}
 			else
@@ -426,7 +395,10 @@ namespace Macrocosm.Content.Rockets
 			return false;
 		}
 
-		/// <summary> Launches the rocket, with syncing </summary>
+		/// <summary> 
+		/// Launches the rocket, with syncing. 
+		/// For <paramref name="targetWorld"/>, use the ID format respective to <see cref="MacrocosmSubworld.CurrentID"/> (mod name prepended) 
+		/// </summary>
 		public void Launch(string targetWorld, LaunchPad targetLaunchPad = null)
 		{
 			Launched = true;
@@ -439,7 +411,7 @@ namespace Macrocosm.Content.Rockets
 			NetSync();
 		}
 
-		public float GetFuelCost(string targetWorld) => RocketFuelLookup.GetFuelCost(MacrocosmSubworld.CurrentMacrocosmID, targetWorld);
+		public float GetFuelCost(string targetWorld) => RocketFuelLookup.GetFuelCost(MacrocosmSubworld.CurrentID, targetWorld);
 
 		/// <summary> Checks whether the flight path is obstructed by solid blocks </summary>
 		public bool CheckFlightPathObstruction()
@@ -454,11 +426,29 @@ namespace Macrocosm.Content.Rockets
 
 			return true;
 		}
-		
+
+		public bool AtPosition(Vector2 position) => Vector2.Distance(Center, position) < Height * 2f;
+
+		public bool AtCurrentLaunchpad(LaunchPad launchPad, string worldId)
+		{
+			if (launchPad == null)
+			{
+				if (worldId == MacrocosmSubworld.CurrentID)
+					return AtPosition(Utility.SpawnWorldPosition);
+				else
+					return false;
+			}
+
+			if (LaunchPadManager.InCurrentWorld(launchPad))
+				return false;
+
+			return launchPad.RocketID == WhoAmI;
+		}
+
 		public bool CheckTileCollision()
 		{
 			foreach (RocketModule module in Modules.Values)
-				if (Math.Abs(Collision.TileCollision(module.Position, Velocity, module.Hitbox.Width, module.Hitbox.Height).Y) > 0.1f)
+				if (Math.Abs(Collision.TileCollision(module.Position, Velocity, module.Width, module.Height).Y) > 0.1f)
 					return true;
 
 			return false;
@@ -470,20 +460,20 @@ namespace Macrocosm.Content.Rockets
 			if (Main.netMode == NetmodeID.Server)
 				return;
 
-			if (MouseCanInteract() && Bounds.InPlayerInteractionRange() && !Launched && !GetRocketPlayer(Main.myPlayer).InRocket)
+			if (MouseCanInteract() && Bounds.InPlayerInteractionRange(TileReachCheckSettings.Simple) && !Launched && !GetRocketPlayer(Main.myPlayer).InRocket)
 			{
-				if (Main.mouseRight)
+				if (Main.mouseRight && Main.mouseRightRelease)
 				{
 					bool noCommanderInRocket = (Main.netMode == NetmodeID.SinglePlayer) || !TryFindingCommander(out _);
 					GetRocketPlayer(Main.myPlayer).EmbarkPlayerInRocket(WhoAmI, noCommanderInRocket);
 				}
 				else
 				{
-					if(!RocketUISystem.Active)
+					if (!RocketUISystem.RocketUIActive)
 					{
 						Main.LocalPlayer.noThrow = 2;
 						Main.LocalPlayer.cursorItemIconEnabled = true;
-						Main.LocalPlayer.cursorItemIconID = ModContent.ItemType<RocketPlacer>();
+						Main.LocalPlayer.cursorItemIconID = CursorIcon.GetType<Items.CursorIcons.Rocket>();
 					}
 				}
 			}
@@ -495,7 +485,7 @@ namespace Macrocosm.Content.Rockets
 			{
 				if (module is AnimatedRocketModule animatedModule)
 				{
-					if(forcedStationaryAppearance) 
+					if (forcedStationaryAppearance)
 					{
 						animatedModule.CurrentFrame = animatedModule.NumberOfFrames - 1;
 					}
@@ -504,7 +494,7 @@ namespace Macrocosm.Content.Rockets
 						animatedModule.CurrentFrame = 0;
 					}
 					else
-                    {
+					{
 						if (Landing)
 							animatedModule.CurrentFrame = 0;
 						else
@@ -522,10 +512,10 @@ namespace Macrocosm.Content.Rockets
 
 			foreach (RocketModule module in Modules.Values)
 			{
-				Vector2 collisionVelocity = Collision.TileCollision(module.Position, Velocity, module.Hitbox.Width, module.Hitbox.Height);
+				Vector2 collisionVelocity = Collision.TileCollision(module.Position, Velocity, module.Width, module.Height);
 				if (collisionVelocity.LengthSquared() < minCollisionVelocity.LengthSquared())
 					minCollisionVelocity = collisionVelocity;
- 			}
+			}
 			return minCollisionVelocity;
 		}
 
@@ -536,7 +526,7 @@ namespace Macrocosm.Content.Rockets
 					return true;
 
 			return false;
- 		}
+		}
 
 		// Updates the commander player in real time, in multiplayer scenarios
 		private void LookForCommander()
@@ -545,7 +535,10 @@ namespace Macrocosm.Content.Rockets
 				return;
 
 			if (AnyEmbarkedPlayers(out int id) && !TryFindingCommander(out _))
+			{
 				GetRocketPlayer(id).IsCommander = true;
+				NetMessage.SendData(MessageID.SyncPlayer, number: id);
+			}
 		}
 
 		// Handles the rocket's movement during flight
@@ -570,7 +563,7 @@ namespace Macrocosm.Content.Rockets
 
 				if (InFlight)
 				{
-					
+
 					float flightAcceleration = 0.1f;   // mid-flight
 					float liftoffAcceleration = 0.05f; // during liftoff
 					float startAcceleration = 0.01f;   // initial 
@@ -586,7 +579,7 @@ namespace Macrocosm.Content.Rockets
 					SpawnSmoke(countPerTick: 5, secondaryBoosterSmoke: true);
 					SetScreenshake();
 				}
-				else if(StaticFire)
+				else if (StaticFire)
 				{
 					SpawnSmoke(countPerTick: 10, secondaryBoosterSmoke: false, speedScale: 1.2f);
 				}
@@ -596,7 +589,7 @@ namespace Macrocosm.Content.Rockets
 			else if (Landing)
 			{
 				Velocity.Y = MathHelper.Lerp(-worldExitSpeed * 0.8f, 1.5f, Utility.QuadraticEaseOut(LandingProgress));
- 
+
 				UpdateModuleAnimation();
 
 				if (LandingProgress > 0.7f)
@@ -606,8 +599,8 @@ namespace Macrocosm.Content.Rockets
 
 				if (LandingProgress >= 0.99f)
 				{
-					if(GetRocketPlayer(Main.myPlayer).InRocket)
-						RocketUISystem.Show(this);
+					if (GetRocketPlayer(Main.myPlayer).InRocket)
+						RocketUISystem.ShowRocketUI(this);
 
 					Landing = false;
 					ResetAnimation();
@@ -638,15 +631,24 @@ namespace Macrocosm.Content.Rockets
 				Lighting.AddLight(new Vector2(Center.X, Position.Y + Height + 15), new Color(215, 69, 0).ToVector3() * 10f * StaticFireProgress);
 
 			if (FlightTime >= LiftoffTime)
- 				Lighting.AddLight(new Vector2(Center.X, Position.Y + Height + 15), new Color(215, 69, 0).ToVector3() * 10f);
- 		}
+				Lighting.AddLight(new Vector2(Center.X, Position.Y + Height + 15), new Color(215, 69, 0).ToVector3() * 10f);
+		}
 
 		private void UpdateModuleAnimation()
 		{
+			bool animationActive = false;
 			foreach (RocketModule module in Modules.Values)
+			{
 				if (module is AnimatedRocketModule animatedModule)
+				{
 					animatedModule.UpdateAnimation();
- 		}
+					animationActive |= animatedModule.IsAnimationActive;
+				}
+			}
+
+			if (animationActive)
+				ResetRenderTarget();
+		}
 
 		private void SetModuleAnimation(bool landing = false)
 		{
@@ -656,7 +658,7 @@ namespace Macrocosm.Content.Rockets
 				{
 					if (landing)
 						animatedModule.StartAnimation();
-					else 
+					else
 						animatedModule.StartReverseAnimation();
 
 					animatedModule.ShouldAnimate = false;
@@ -704,11 +706,14 @@ namespace Macrocosm.Content.Rockets
 			{
 				int smallSmokeCount = (int)(countPerTick * 1.5f);
 
+				var boosterLeft = Modules["BoosterLeft"] as Booster;
+				var boosterRight = Modules["BoosterRight"] as Booster;
+
 				for (int i = 0; i < smallSmokeCount; i++)
 				{
 					Vector2 position = i % 2 == 0 ?
-									new Vector2(BoosterLeft.Position.X + BoosterLeft.ExhaustOffsetX, Position.Y + Height - 28):
-									new Vector2(BoosterRight.Position.X + BoosterRight.ExhaustOffsetX, Position.Y + Height - 28);
+									new Vector2(boosterLeft.Position.X + boosterLeft.ExhaustOffsetX, Position.Y + Height - 28) :
+									new Vector2(boosterRight.Position.X + boosterRight.ExhaustOffsetX, Position.Y + Height - 28);
 
 					var smoke = Particle.CreateParticle<RocketExhaustSmoke>(p =>
 					{
@@ -738,44 +743,45 @@ namespace Macrocosm.Content.Rockets
 			FlightTime = 0;
 			Landing = true;
 
-			bool samePlanet = CurrentWorld == TargetWorld; 
+			bool samePlanet = CurrentWorld == TargetWorld;
 			CurrentWorld = TargetWorld;
 
 			RocketPlayer commander = GetCommander();
 
-			// This failsafe logic could be extended to hiding the rocket for an amount of time, while remotely launching satellites
-			// (no commander inside but wire triggered). Would mean also keeping the launchpad as occupied to avoid collisions on return
-			if (!MacrocosmSubworld.IsValidWorldName(TargetWorld) || commander is null || commander.Player.dead || !commander.Player.active)
-			{
-				TargetLandingPosition = new(Center.X, StartPositionY + Height);
-				CurrentWorld = MacrocosmSubworld.CurrentID;
-				return;
-			}
-			  
 			// Determine the landing location.
 			// Set as default if no launchpad has been selected (i.e. the World Spawn option) 
 			// For different world travel, the correct value is assigned when spawning in that world
 			if (targetLaunchPad is not null)
 				TargetLandingPosition = targetLaunchPad.Position;
 			else
-				TargetLandingPosition = default; 
+				TargetLandingPosition = default;
 
-			if(samePlanet)
+			if (samePlanet)
 			{
+				// This failsafe logic could be extended to hiding the rocket for an amount of time, while remotely launching satellites
+				// (no commander inside but wire triggered). Would mean also keeping the launchpad as occupied to avoid collisions on return
+				if (!MacrocosmSubworld.IsValidID(TargetWorld) || commander is null || commander.Player.dead || !commander.Player.active)
+				{
+					TargetLandingPosition = new(Center.X, StartPositionY + Height);
+					CurrentWorld = MacrocosmSubworld.CurrentID;
+				}
+
 				// For same world travel assign the correct position here
-				if(TargetLandingPosition == default)
- 					TargetLandingPosition = Utility.SpawnWorldPosition;
+				if (TargetLandingPosition == default)
+					TargetLandingPosition = Utility.SpawnWorldPosition;
 
 				Center = new(TargetLandingPosition.X, Center.Y);
-				FadeEffect.StartFadeIn(0.02f, selfDraw: true);
+
+				FadeEffect.ResetFade();
+				if (!FadeEffect.IsFading)
+					FadeEffect.StartFadeIn(0.02f, selfDraw: true);
 			}
 			else
 			{
 				if (Main.netMode == NetmodeID.Server)
 					return;
 
-				RocketPlayer myRocketPlayer = GetRocketPlayer(Main.myPlayer);
-				if (myRocketPlayer.InRocket && myRocketPlayer.RocketID == WhoAmI)
+				if (CheckPlayerInRocket(Main.myPlayer))
 				{
 					if (!MacrocosmSubworld.Travel(TargetWorld, this))
 					{

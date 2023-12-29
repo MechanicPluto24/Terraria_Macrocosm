@@ -3,7 +3,7 @@
 namespace Macrocosm.Content.Rockets.Modules
 {
 	public class BoosterRight : Booster
-    {
+	{
 		public BoosterRight(Rocket rocket) : base(rocket)
 		{
 		}

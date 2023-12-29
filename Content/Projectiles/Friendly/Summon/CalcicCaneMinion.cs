@@ -1,5 +1,5 @@
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Buffs.GoodBuffs.MinionBuffs;
+using Macrocosm.Content.Buffs.Minions;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -12,10 +12,10 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Summon
 {
-	/// <summary>
-	/// This is based off ExampleMod for now 
-	/// </summary>
-	public class CalcicCaneMinion : ModProjectile
+    /// <summary>
+    /// This is based off ExampleMod for now 
+    /// </summary>
+    public class CalcicCaneMinion : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{
@@ -110,8 +110,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 			}
 
 			if (!CheckActive(owner))
- 				return;
- 
+				return;
+
 			GeneralBehavior(owner, out Vector2 vectorToIdlePosition, out float distanceToIdlePosition);
 			SearchForTargets(owner, out bool foundTarget, out float distanceFromTarget, out Vector2 targetCenter);
 			Movement(foundTarget, distanceFromTarget, targetCenter, distanceToIdlePosition, vectorToIdlePosition);
@@ -122,7 +122,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
 		private void SpawnDusts()
 		{
-			for (int i = 0; i < (int)(5 * (Projectile.alpha/255f)); i++)
+			for (int i = 0; i < (int)(5 * (Projectile.alpha / 255f)); i++)
 			{
 				Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<RegolithDust>(), Scale: Main.rand.NextFloat(0.4f, 0.6f));
 				dust.velocity = new Vector2(0, Main.rand.NextFloat(1.2f, 2.2f));
@@ -385,6 +385,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 				}
 			}
 		}
-		
+
 	}
 }

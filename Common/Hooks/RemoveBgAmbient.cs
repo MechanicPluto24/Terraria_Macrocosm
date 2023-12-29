@@ -1,5 +1,4 @@
 using SubworldLibrary;
-using Terraria.GameContent.Ambience;
 using Terraria.GameContent.Skies;
 using Terraria.ModLoader;
 

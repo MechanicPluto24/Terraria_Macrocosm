@@ -16,7 +16,7 @@ namespace Macrocosm.Common.Hooks
 		}
 
 
-		public void Unload() 
+		public void Unload()
 		{
 			Terraria.On_Player.DropTombstone -= Player_DropTombstone;
 		}
@@ -28,7 +28,7 @@ namespace Macrocosm.Common.Hooks
 				if (Main.netMode != NetmodeID.MultiplayerClient)
 				{
 					// here could be a switch statement based on the subworld
-					int tombstoneType = ModContent.ProjectileType<MoonTombstone>(); 
+					int tombstoneType = ModContent.ProjectileType<MoonTombstone>();
 
 					// whether to drop a normal or golden tombstone 
 					float golden = 0f;
@@ -40,8 +40,8 @@ namespace Macrocosm.Common.Hooks
 
 					int proj = Projectile.NewProjectile(self.GetSource_Misc("PlayerDeath_TombStone"),
 						self.position.X + (float)(self.width / 2),
-						self.position.Y + (float)(self.height / 2), 
-						(float)Main.rand.Next(10, 30) * 0.1f * (float)hitDirection + speed, 
+						self.position.Y + (float)(self.height / 2),
+						(float)Main.rand.Next(10, 30) * 0.1f * (float)hitDirection + speed,
 						(float)Main.rand.Next(-40, -20) * 0.1f,
 						tombstoneType, 0, 0f, Main.myPlayer, ai0: golden);
 
@@ -59,7 +59,7 @@ namespace Macrocosm.Common.Hooks
 			{
 				orig(self, coinsOwned, deathText, hitDirection);
 			}
- 		}
+		}
 
 	}
 }

@@ -1,5 +1,5 @@
 ﻿using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.UI;
+using Macrocosm.Content.LoadingScreens;
 using Microsoft.Xna.Framework;
 using MonoMod.Cil;
 using SubworldLibrary;
@@ -10,26 +10,26 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Systems
 {
-
 	public class GameTipSystem : ModSystem
 	{
 		public const string LoadingScreenTipsLocalizationPath = "Mods.Macrocosm.UI.LoadingScreenTips.";
 
 		public override void Load()
 		{
-			IL_GameTipsDisplay.AddNewTip += GameTipsDisplay_AddNewTip;
+			IL_GameTipsDisplay.AddNewTip += IL_GameTipsDisplay_AddNewTip;
 			On_GameTipsDisplay.GameTip.IsExpiring += GameTip_IsExpiring;
 		}
 
-	
+
 		public override void Unload()
 		{
-			IL_GameTipsDisplay.AddNewTip -= GameTipsDisplay_AddNewTip;
+			IL_GameTipsDisplay.AddNewTip -= IL_GameTipsDisplay_AddNewTip;
+			On_GameTipsDisplay.GameTip.IsExpiring -= GameTip_IsExpiring;
 		}
 
 
 		/// <summary> IL Hook for manipulating game tips. </summary>
-		private void GameTipsDisplay_AddNewTip(ILContext il)
+		private void IL_GameTipsDisplay_AddNewTip(ILContext il)
 		{
 			var c = new ILCursor(il);
 
@@ -69,8 +69,8 @@ namespace Macrocosm.Common.Systems
 
 				// .. and return a random message from that list
 				if (messages.Length > 0)
- 					return messages[Main.rand.Next(messages.Length)].Key;
- 			}
+					return messages[Main.rand.Next(messages.Length)].Key;
+			}
 
 			// Otherwise, pass the original key and let the logic run unaffected
 			return textKey;
@@ -83,11 +83,11 @@ namespace Macrocosm.Common.Systems
 			if (LoadingScreen.CurrentlyActive)
 			{
 				var field = self.GetType().GetField("_textKey");
-				if(field is null)
+				if (field is null)
 					return orig(self, currentTime);
 
 				LocalizedText text = field.GetValue(self) as LocalizedText;
-				if(text is null)
+				if (text is null)
 					return orig(self, currentTime);
 
 				return !text.Key.Contains(LoadingScreenTipsLocalizationPath);

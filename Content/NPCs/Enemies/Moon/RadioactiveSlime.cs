@@ -36,7 +36,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			AnimationType = NPCID.BlueSlime;
 			Banner = Item.NPCtoBanner(NPCID.BlueSlime);
 			BannerItem = Item.BannerToItem(Banner);
-			SpawnModBiomes = new int[1] { ModContent.GetInstance<IrradiationBiome>().Type };  
+			SpawnModBiomes = new int[1] { ModContent.GetInstance<IrradiationBiome>().Type };
 		}
 
 		public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
@@ -51,7 +51,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		public override void ModifyNPCLoot(NPCLoot loot)
 		{
-			
+
 		}
 
 		public override void HitEffect(NPC.HitInfo hit)

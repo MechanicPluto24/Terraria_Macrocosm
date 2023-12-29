@@ -1,9 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
-using Terraria.GameContent;
-using Terraria;
-using Terraria.ModLoader;
 using Microsoft.Xna.Framework.Graphics;
+using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Drawing
 {
@@ -22,7 +22,7 @@ namespace Macrocosm.Common.Drawing
 
 		public static void Draw()
 		{
-			if(Main.hasFocus)
+			if (Main.hasFocus || Main.netMode == NetmodeID.MultiplayerClient)
 				UpdateFadeEffect();
 
 			DrawBlack(1f - fadeAlpha / 255f);
@@ -42,14 +42,14 @@ namespace Macrocosm.Common.Drawing
 					{
 						interfaceSelfDraw = false;
 						isFading = false;
-					}	
+					}
 				}
 			}
 		}
 
 		public static void DrawBlack(float opacity)
 		{
-			Main.spriteBatch.Draw(TextureAssets.BlackTile.Value, new Rectangle(0, 0, Main.screenWidth+1, Main.screenHeight+1), Color.Black * opacity);
+			Main.spriteBatch.Draw(TextureAssets.BlackTile.Value, new Rectangle(0, 0, Main.screenWidth + 1, Main.screenHeight + 1), Color.Black * opacity);
 		}
 
 		public static void ResetFade()
@@ -93,7 +93,7 @@ namespace Macrocosm.Common.Drawing
 				{
 					fadeAlpha = 255;
 
-					if(!keepActiveUntilReset)
+					if (!keepActiveUntilReset)
 						isFading = false;
 				}
 			}

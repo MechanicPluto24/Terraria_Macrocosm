@@ -20,7 +20,7 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
 			if (!inGs)
 			{
 				// approximate value of Earth's gravitational acceleration
-				value *= 9.8f; 
+				value *= 9.8f;
 
 				// convert to feet/s^2
 				if (type == MacrocosmConfig.UnitSystemType.Imperial)

@@ -1,6 +1,7 @@
 using Macrocosm.Common.Bases;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Gores;
+using Macrocosm.Content.Items.Weapons.Ranged;
 using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -12,7 +13,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-	public class LHBMinigunProjectile : ChargedGunHeldProjectile
+	public class LHBMinigunProjectile : ChargedHeldProjectile
 	{
 		private const int windupFrames = 4; // number of windup animaton frames
 		private const int shootFrames = 6;  // number of shooting animaton frames
@@ -36,7 +37,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		}
 
 		public override void SetProjectileDefaults()
-		{ 
+		{
 
 		}
 
@@ -47,7 +48,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			Shoot();
 			Visuals();
 
-			if(!Main.dedServ)
+			if (!Main.dedServ)
 				PlaySounds();
 
 			AI_Windup++;
@@ -85,40 +86,39 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		{
 			if (CanShoot)
 			{
-				int damage = OwnerPlayer.GetWeaponDamage(OwnerPlayer.inventory[OwnerPlayer.selectedItem]); //makes the damage your weapon damage + the ammunition used.
-				int projToShoot = ProjectileID.Bullet;
-				float knockback = OwnerPlayer.inventory[OwnerPlayer.selectedItem].knockBack;
-
-				if (StillInUse)
-				{
-					if (!OwnerPlayer.PickAmmo(OwnerPlayer.inventory[OwnerPlayer.selectedItem], out projToShoot, out float speed, out damage, out knockback, out var usedAmmoItemId)) //uses ammunition from inventory
-						  Projectile.Kill();
-				}
-
-				Vector2 rotPoint = Utility.RotatingPoint(Projectile.Center, new Vector2(40, 8 * Projectile.spriteDirection), Projectile.rotation);
-
 				// gradually increase fire rate
-				int fireFreq = (int)(MathHelper.Clamp(MathHelper.Lerp(fireRateStart, fireRateCap, ((AI_Windup - windupTime) / (fullFireRateTime - windupTime)) * OwnerPlayer.GetAttackSpeed(DamageClass.Ranged)), fireRateCap, fireRateStart));// Main.rand.NextBool()
+				int fireFreq = (int)(MathHelper.Clamp(MathHelper.Lerp(fireRateStart, fireRateCap, ((AI_Windup - windupTime) / (fullFireRateTime - windupTime)) * Player.GetAttackSpeed(DamageClass.Ranged)), fireRateCap, fireRateStart));
 
-				if (AI_Windup % fireFreq == 0 && Main.myPlayer == Projectile.owner)
-					Projectile.NewProjectile(Terraria.Entity.InheritSource(Projectile), rotPoint, Vector2.Normalize(Projectile.velocity).RotatedByRandom(MathHelper.ToRadians(14)) * 10f, projToShoot, damage, knockback, Projectile.owner, default, Projectile.GetByUUID(Projectile.owner, Projectile.whoAmI));
+				if (Main.myPlayer == Projectile.owner)
+				{
+					Item currentItem = Player.CurrentItem();
+					if (currentItem.type != ModContent.ItemType<LHBMinigun>())
+						Projectile.Kill();
+
+					if (StillInUse && AI_Windup % fireFreq == 0)
+					{
+						Vector2 rotPoint = Utility.RotatingPoint(Projectile.Center, new Vector2(40, 8 * Projectile.spriteDirection), Projectile.rotation);
+						if (Player.PickAmmo(currentItem, out int projToShoot, out float speed, out int damage, out float knockback, out _))
+							Projectile.NewProjectile(Projectile.GetSource_FromAI(), rotPoint, Vector2.Normalize(Projectile.velocity).RotatedByRandom(MathHelper.ToRadians(14)) * speed, projToShoot, damage, knockback, Projectile.owner);
+						else
+							Projectile.Kill();
+					}
+				}
 
 				Projectile.position += (new Vector2(Main.rand.NextFloat(2.4f), Main.rand.NextFloat(0.4f))).RotatedBy(Projectile.rotation) * WindupProgress;
 
-				#region Spawn bullet shells as gore
 				if (!Main.dedServ && AI_Windup % (fireFreq * 1.5) == 0)
 				{
 					Vector2 position = Projectile.Center - new Vector2(-20, 0) * Projectile.spriteDirection;
 					Vector2 velocity = new(1.2f * Projectile.spriteDirection, 4f);
 					Gore.NewGore(Projectile.GetSource_FromThis(), position, velocity, ModContent.GoreType<MinigunShell>());
 				}
-				#endregion
 			}
 		}
 
 		public void Visuals()
 		{
-			if(CanShoot)
+			if (CanShoot)
 				Lighting.AddLight(Projectile.position + Utility.PolarVector(80f, Projectile.rotation), TorchID.Torch);
 		}
 
@@ -134,39 +134,52 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			Projectile.DrawAnimatedExtra(glowmask, Color.White, Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None, new Vector2(5, 10));
 		}
 
-		private SlotId playingSoundId;
+		private SlotId playingSoundId_1 = SlotId.Invalid;
+		private SlotId playingSoundId_2 = SlotId.Invalid;
 		private void PlaySounds()
 		{
-			if (AI_Windup == 0f)
+			if (!StillInUse)
+				return;
+
+			if (!playingSoundId_1.IsValid && AI_Windup < windupTime)
 			{
-				playingSoundId = SoundEngine.PlaySound(SFX.MinigunWindup with
+				playingSoundId_1 = SoundEngine.PlaySound(SFX.MinigunWindup with
 				{
-					Volume = 0.3f,
-					SoundLimitBehavior = SoundLimitBehavior.IgnoreNew
-				}, 
-				Projectile.position);
-			}
-			else if (AI_Windup == windupTime)
-			{
-				playingSoundId = SoundEngine.PlaySound(SFX.MinigunFire with
-				{
-					Volume = 0.3f,
+					Volume = 0.15f,
 					IsLooped = true,
 					SoundLimitBehavior = SoundLimitBehavior.IgnoreNew
 				},
 				Projectile.position);
 			}
 
-			if (SoundEngine.TryGetActiveSound(playingSoundId, out ActiveSound playingSound))
+			if (!playingSoundId_2.IsValid && AI_Windup >= windupTime)
 			{
-				playingSound.Position = Projectile.position;
+				playingSoundId_2 = SoundEngine.PlaySound(SFX.MinigunFire with
+				{
+					Volume = 0.15f,
+					IsLooped = true,
+					SoundLimitBehavior = SoundLimitBehavior.IgnoreNew
+				},
+				Projectile.position);
+
+				if (SoundEngine.TryGetActiveSound(playingSoundId_1, out ActiveSound sound))
+					sound.Stop();
 			}
+
+			if (SoundEngine.TryGetActiveSound(playingSoundId_1, out ActiveSound playingSound1))
+				playingSound1.Position = Projectile.position;
+
+			if (SoundEngine.TryGetActiveSound(playingSoundId_2, out ActiveSound playingSound2))
+				playingSound2.Position = Projectile.position;
 		}
 
 		public override void OnKill(int timeLeft)
 		{
-			if (SoundEngine.TryGetActiveSound(playingSoundId, out ActiveSound playingSound))
-				playingSound.Stop();
+			if (SoundEngine.TryGetActiveSound(playingSoundId_1, out ActiveSound playingSound1))
+				playingSound1.Stop();
+
+			if (SoundEngine.TryGetActiveSound(playingSoundId_2, out ActiveSound playingSound2))
+				playingSound2.Stop();
 		}
 	}
 }

@@ -1,100 +1,99 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Microsoft.Xna.Framework;
-using MonoMod.Logs;
 using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
-using Terraria.Localization;
 using Terraria.ObjectData;
+using Terraria.WorldBuilding;
 
 namespace Macrocosm.Common.Utils
 {
-    public static partial class Utility
-    {
-        public static bool CoordinatesOutOfBounds(int i, int j) => i >= Main.maxTilesX || j >= Main.maxTilesY || i < 0 || j < 0;
+	public static partial class Utility
+	{
+		public static bool CoordinatesOutOfBounds(int i, int j) => i >= Main.maxTilesX || j >= Main.maxTilesY || i < 0 || j < 0;
 
-        public static void ForEachInRectangle(Rectangle rectangle, Action<int, int> action, int addI = 1, int addJ = 1)
-        {
-            for (int i = rectangle.X; i < rectangle.X + rectangle.Width; i += addI)
-            {
-                for (int j = rectangle.Y; j < rectangle.Y + rectangle.Height; j += addJ)
-                {
-                    action(i, j);
-                }
-            }
-        }
+		public static void ForEachInRectangle(Rectangle rectangle, Action<int, int> action, int addI = 1, int addJ = 1)
+		{
+			for (int i = rectangle.X; i < rectangle.X + rectangle.Width; i += addI)
+			{
+				for (int j = rectangle.Y; j < rectangle.Y + rectangle.Height; j += addJ)
+				{
+					action(i, j);
+				}
+			}
+		}
 
-        public static void ForEachInRectangle(int i, int j, int width, int height, Action<int, int> action, int addI = 1, int addJ = 1)
-        {
-            ForEachInRectangle(new Rectangle(i, j, width, height), action, addI, addJ);
-        }
+		public static void ForEachInRectangle(int i, int j, int width, int height, Action<int, int> action, int addI = 1, int addJ = 1)
+		{
+			ForEachInRectangle(new Rectangle(i, j, width, height), action, addI, addJ);
+		}
 
-        public static void FastPlaceTile(int i, int j, ushort tileType)
-        {
-            if (CoordinatesOutOfBounds(i, j))
-            {
-                return;
-            }
+		public static void FastPlaceTile(int i, int j, ushort tileType)
+		{
+			if (CoordinatesOutOfBounds(i, j))
+			{
+				return;
+			}
 
-            Tile tile = Main.tile[i, j];
-            tile.TileType = tileType;
-            tile.Get<TileWallWireStateData>().HasTile = true;
-        }
+			Tile tile = Main.tile[i, j];
+			tile.TileType = tileType;
+			tile.Get<TileWallWireStateData>().HasTile = true;
+		}
 
-        public static void FastRemoveTile(int i, int j)
-        {
-            if (CoordinatesOutOfBounds(i, j))
-            {
-                return;
-            }
+		public static void FastRemoveTile(int i, int j)
+		{
+			if (CoordinatesOutOfBounds(i, j))
+			{
+				return;
+			}
 
-            Main.tile[i, j].Get<TileWallWireStateData>().HasTile = false;
-        }
+			Main.tile[i, j].Get<TileWallWireStateData>().HasTile = false;
+		}
 
-        public static void FastRemoveWall(int i, int j)
-        {
-            if (CoordinatesOutOfBounds(i, j))
-            {
-                return;
-            }
+		public static void FastRemoveWall(int i, int j)
+		{
+			if (CoordinatesOutOfBounds(i, j))
+			{
+				return;
+			}
 
-            Main.tile[i, j].WallType = WallID.None;
-        }
+			Main.tile[i, j].WallType = WallID.None;
+		}
 
-        public static void FastPlaceWall(int i, int j, int wallType)
-        {
-            if (CoordinatesOutOfBounds(i, j))
-            {
-                return;
-            }
+		public static void FastPlaceWall(int i, int j, int wallType)
+		{
+			if (CoordinatesOutOfBounds(i, j))
+			{
+				return;
+			}
 
-            Main.tile[i, j].WallType =  (ushort)wallType;
-        }
+			Main.tile[i, j].WallType = (ushort)wallType;
+		}
 
-        public static void ForEachInCircle(int i, int j, int width, int height, Action<int, int> action)
-        {
-            ForEachInRectangle(
-                i - (int)width / 2,
-                j - (int)height / 2,
-                width,
-                height,
-                (iLocal, jLocal) =>
-                {
-                    if (MathF.Pow((iLocal - i) / (width * 0.5f), 2) + MathF.Pow((jLocal - j) / (height * 0.5f), 2) - 1 >= 0)
-                    {
-                        return;
-                    }
+		public static void ForEachInCircle(int i, int j, int width, int height, Action<int, int> action)
+		{
+			ForEachInRectangle(
+				i - (int)width / 2,
+				j - (int)height / 2,
+				width,
+				height,
+				(iLocal, jLocal) =>
+				{
+					if (MathF.Pow((iLocal - i) / (width * 0.5f), 2) + MathF.Pow((jLocal - j) / (height * 0.5f), 2) - 1 >= 0)
+					{
+						return;
+					}
 
-                    action(iLocal, jLocal);
-                }
-            );
-        }
+					action(iLocal, jLocal);
+				}
+			);
+		}
 
-        public static void ForEachInCircle(int i, int j, int radius, Action<int, int> action)
-        {
-            ForEachInCircle(i, j, radius * 2, radius * 2, action);
-        }
+		public static void ForEachInCircle(int i, int j, int radius, Action<int, int> action)
+		{
+			ForEachInCircle(i, j, radius * 2, radius * 2, action);
+		}
 
 		/// <summary>
 		/// 
@@ -107,52 +106,55 @@ namespace Macrocosm.Common.Utils
 		/// <param name="blobSize"></param>
 		/// <param name="density"></param>
 		/// <param name="smoothing"></param>
-        public static void BlobTileRunner(int i, int j, int tileType, Range repeatCount, Range sprayRadius, Range blobSize, float density = 0.5f, int smoothing = 4)
-        {
-            int sprayRandom = WorldGen.genRand.Next(repeatCount);
+		public static void BlobTileRunner(int i, int j, int tileType, Range repeatCount, Range sprayRadius, Range blobSize, float density = 0.5f, int smoothing = 4, Func<int, int, bool> perTileCheck = null)
+		{
+			int sprayRandom = WorldGen.genRand.Next(repeatCount);
 
 			Dictionary<(int, int), ushort> replacedTypes = new();
 
-            int posI = i;
-            int posJ = j;
-            for (int x = 0; x < sprayRandom; x++)
-            {
-                posI += WorldGen.genRand.NextDirection(sprayRadius);
-                posJ += WorldGen.genRand.NextDirection(sprayRadius);
+			int posI = i;
+			int posJ = j;
+			for (int x = 0; x < sprayRandom; x++)
+			{
+				posI += WorldGen.genRand.NextDirection(sprayRadius);
+				posJ += WorldGen.genRand.NextDirection(sprayRadius);
 
-                int radius = WorldGen.genRand.Next(blobSize);
-                float densityClamped = Math.Clamp(density, 0f, 1f);
-                ForEachInCircle(
-                    posI,
-                    posJ,
-                    radius,
-                    radius,
-                    (i, j) =>
-                    {
-                        if (CoordinatesOutOfBounds(i, j) || WorldGen.genRand.NextFloat() > densityClamped)
-                        {
-                            return;
-                        }
-
-						if (Main.tile[i, j].HasTile && !replacedTypes.ContainsKey((i, j)))
+				int radius = WorldGen.genRand.Next(blobSize);
+				float densityClamped = Math.Clamp(density, 0f, 1f);
+				ForEachInCircle(
+					posI,
+					posJ,
+					radius,
+					radius,
+					(i, j) =>
+					{
+						if (CoordinatesOutOfBounds(i, j) || WorldGen.genRand.NextFloat() > densityClamped)
 						{
-                            replacedTypes.Add((i, j), Main.tile[i, j].TileType);
-                        }
-
-						if (tileType < 0)
-						{
-							FastRemoveTile(i, j);
+							return;
 						}
-						else
-						{
-                            FastPlaceTile(i, j, (ushort)tileType);
-                        }
-                    }
-                );
 
-                for (int y = 0; y < smoothing; y++)
-                {
-                    ForEachInCircle(
+						if (perTileCheck is null || perTileCheck(i, j))
+						{
+							if (Main.tile[i, j].HasTile && !replacedTypes.ContainsKey((i, j)))
+							{
+								replacedTypes.Add((i, j), Main.tile[i, j].TileType);
+							}
+
+							if (tileType < 0)
+							{
+								FastRemoveTile(i, j);
+							}
+							else
+							{
+								FastPlaceTile(i, j, (ushort)tileType);
+							}
+						}
+					}
+				);
+
+				for (int y = 0; y < smoothing; y++)
+				{
+					ForEachInCircle(
 						posI,
 						posJ,
 						radius,
@@ -164,14 +166,14 @@ namespace Macrocosm.Common.Utils
 								int solidCountRemover = new TileNeighbourInfo(i, j).Solid.Count;
 								if (solidCountRemover > 4 && replacedTypes.TryGetValue((i, j), out ushort replacedType))
 								{
-                                    FastPlaceTile(i, j, replacedType);
-                                }
-                                else if (solidCountRemover < 4)
+									FastPlaceTile(i, j, replacedType);
+								}
+								else if (solidCountRemover < 4)
 								{
-                                    FastRemoveTile(i, j);
-                                }
+									FastRemoveTile(i, j);
+								}
 
-                                return;
+								return;
 							}
 
 							int solidCount = new TileNeighbourInfo(i, j).TypedSolid((ushort)tileType).Count;
@@ -192,100 +194,100 @@ namespace Macrocosm.Common.Utils
 							}
 						}
 					);
-                }
-            }
-        }
+				}
+			}
+		}
 
-        public static void BlobWallRunner(int i, int j, ushort wallType, Range repeatCount, Range sprayRadius, Range blobSize, float density = 0.5f, int smoothing = 4)
-        {
-            int sprayRandom = WorldGen.genRand.Next(repeatCount);
+		public static void BlobWallRunner(int i, int j, ushort wallType, Range repeatCount, Range sprayRadius, Range blobSize, float density = 0.5f, int smoothing = 4)
+		{
+			int sprayRandom = WorldGen.genRand.Next(repeatCount);
 
-            int posI = i;
-            int posJ = j;
-            for (int x = 0; x < sprayRandom; x++)
-            {
-                posI += WorldGen.genRand.NextDirection(sprayRadius);
-                posJ += WorldGen.genRand.NextDirection(sprayRadius);
+			int posI = i;
+			int posJ = j;
+			for (int x = 0; x < sprayRandom; x++)
+			{
+				posI += WorldGen.genRand.NextDirection(sprayRadius);
+				posJ += WorldGen.genRand.NextDirection(sprayRadius);
 
-                int radius = WorldGen.genRand.Next(blobSize);
-                float densityClamped = Math.Clamp(density, 0f, 1f);
-                ForEachInCircle(
-                    posI,
-                    posJ,
-                    radius,
-                    radius,
-                    (i, j) =>
-                    {
-                        if (WorldGen.genRand.NextFloat() > densityClamped)
-                        {
-                            return;
-                        }
+				int radius = WorldGen.genRand.Next(blobSize);
+				float densityClamped = Math.Clamp(density, 0f, 1f);
+				ForEachInCircle(
+					posI,
+					posJ,
+					radius,
+					radius,
+					(i, j) =>
+					{
+						if (WorldGen.genRand.NextFloat() > densityClamped)
+						{
+							return;
+						}
 
-                        FastPlaceWall(i, j, wallType);
-                    }
-                );
+						FastPlaceWall(i, j, wallType);
+					}
+				);
 
-                for (int y = 0; y < smoothing; y++)
-                {
-                    ForEachInCircle(
-                    posI,
-                    posJ,
-                    radius,
-                    radius,
-                    (i, j) =>
-                    {
-                        int wallCount = new TileNeighbourInfo(i, j).Wall.Count;
-                        if (wallCount > 4)
-                        {
-                            FastPlaceWall(i, j, wallType);
-                        }
-                        else if (wallCount < 4)
-                        {
-                            FastRemoveWall(i, j);
-                        }
-                    }
-                );
-                }
-            }
-        }
+				for (int y = 0; y < smoothing; y++)
+				{
+					ForEachInCircle(
+					posI,
+					posJ,
+					radius,
+					radius,
+					(i, j) =>
+					{
+						int wallCount = new TileNeighbourInfo(i, j).Wall.Count;
+						if (wallCount > 4)
+						{
+							FastPlaceWall(i, j, wallType);
+						}
+						else if (wallCount < 4)
+						{
+							FastRemoveWall(i, j);
+						}
+					}
+				);
+				}
+			}
+		}
 
 		public static void SafePoundTile(int i, int j)
 		{
-            Tile tile = Main.tile[i, j];
+			Tile tile = Main.tile[i, j];
 
-            if (CoordinatesOutOfBounds(i, j) || !tile.HasTile)
-                 return;
- 
-            var info = new TileNeighbourInfo(i, j).HasTile;
+			if (CoordinatesOutOfBounds(i, j) || !tile.HasTile)
+				return;
 
-            if (
-                !info.Bottom ||
+			var info = new TileNeighbourInfo(i, j).HasTile;
+
+			if (
+				!info.Bottom ||
 				info.Top ||
 				(info.Right && info.Left)
-                )
-            {
-                return;
-            }
+				)
+			{
+				return;
+			}
 
 			tile.BlockType = BlockType.HalfBlock;
-        }
+		}
 
 		public static void SafeSlopeTile(int i, int j)
 		{
 			Tile tile = Main.tile[i, j];
 
 			if (CoordinatesOutOfBounds(i, j) || !tile.HasTile)
- 				return;
- 
+				return;
+
 			var info = new TileNeighbourInfo(i, j).HasTile;
 
 			if (
-				(info.Top && info.Right && info.Bottom) || 
+				(info.Top && info.Right && info.Bottom) ||
 				(info.Right && info.Bottom && info.Left) ||
-                (info.Bottom && info.Left && info.Top) ||
-                (info.Right && info.Left) ||
+				(info.Bottom && info.Left && info.Top) ||
+				(info.Right && info.Left) ||
 				(info.Top && info.Bottom)
-                )
+				)
 			{
 				return;
 			}
@@ -298,35 +300,35 @@ namespace Macrocosm.Common.Utils
 
 			if (info.Right && info.Bottom)
 			{
-                tile.BlockType = BlockType.SlopeDownRight;
+				tile.BlockType = BlockType.SlopeDownRight;
 				return;
-            }
+			}
 
 			if (info.Bottom && info.Left)
 			{
 				tile.BlockType = BlockType.SlopeDownLeft;
-                return;
-            }
+				return;
+			}
 
-            if (info.Left && info.Top)
-            {
-                tile.BlockType = BlockType.SlopeUpLeft;
-                return;
-            }
-        }
+			if (info.Left && info.Top)
+			{
+				tile.BlockType = BlockType.SlopeUpLeft;
+				return;
+			}
+		}
 
-        public static void GenerateOre(int tileType, double percent, int strength, int steps, int replaceTileType = -1)
-        {
-            for (int k = 0; k < (int)(Main.maxTilesX * Main.maxTilesY * percent); k++)
-            {
-                int x = WorldGen.genRand.Next(0, Main.maxTilesX);
-                int y = WorldGen.genRand.Next(0, Main.maxTilesY);
-                if (Main.tile[x, y].HasTile && Main.tile[x, y].TileType == replaceTileType || replaceTileType == -1)
-                {
-                    WorldGen.TileRunner(x, y, strength, steps, tileType);
-                }
-            }
-        }
+		public static void GenerateOre(int tileType, double percent, int strength, int steps, int replaceTileType = -1)
+		{
+			for (int k = 0; k < (int)(Main.maxTilesX * Main.maxTilesY * percent); k++)
+			{
+				int x = WorldGen.genRand.Next(0, Main.maxTilesX);
+				int y = WorldGen.genRand.Next(0, Main.maxTilesY);
+				if (Main.tile[x, y].HasTile && Main.tile[x, y].TileType == replaceTileType || replaceTileType == -1)
+				{
+					WorldGen.TileRunner(x, y, strength, steps, tileType);
+				}
+			}
+		}
 
 		/// <summary>
 		/// Use with caution as it may break through the recursion limit if the maxCount is set too high.
@@ -336,49 +338,54 @@ namespace Macrocosm.Common.Utils
 		/// <param name="predicate"></param>
 		/// <param name="maxCount"></param>
 		/// <returns>true if maxCount is lower than the count of coordinates</returns>
-        public static bool ConnectedTiles(int i, int j, Func<Tile, bool> predicate, out List<(int, int)> coordinates, int maxCount = 255)
-        {
-            coordinates = new() { (i, j) };
-            ConnectedTilesRecursive(i, j, predicate, coordinates, maxCount);
+		public static bool ConnectedTiles(int i, int j, Func<Tile, bool> predicate, out List<(int, int)> coordinates, int maxCount = 255)
+		{
+			coordinates = new() { (i, j) };
+			ConnectedTilesRecursive(i, j, predicate, coordinates, maxCount);
 			return coordinates.Count != maxCount;
-        }
+		}
 
 		private static void ConnectedTilesRecursive(int i, int j, Func<Tile, bool> predicate, List<(int, int)> coordinates, int maxCount)
 		{
-            void CheckCoordinate(int i, int j)
-            {
-                if (coordinates.Count == maxCount)
-                {
-                    return;
-                }
+			void CheckCoordinate(int i, int j)
+			{
+				if (coordinates.Count == maxCount)
+				{
+					return;
+				}
 
-                if (!CoordinatesOutOfBounds(i, j) && !coordinates.Contains((i, j)) && predicate.Invoke(Main.tile[i, j]))
-                {
-                    coordinates.Add((i, j));
-                    ConnectedTilesRecursive(i, j, predicate, coordinates, maxCount);
-                }
-            }
+				if (!CoordinatesOutOfBounds(i, j) && !coordinates.Contains((i, j)) && predicate.Invoke(Main.tile[i, j]))
+				{
+					coordinates.Add((i, j));
+					ConnectedTilesRecursive(i, j, predicate, coordinates, maxCount);
+				}
+			}
 
-            CheckCoordinate(i, j - 1);
-            CheckCoordinate(i + 1, j);
-            CheckCoordinate(i, j + 1);
-            CheckCoordinate(i - 1, j);
-        }
+			CheckCoordinate(i, j - 1);
+			CheckCoordinate(i + 1, j);
+			CheckCoordinate(i, j + 1);
+			CheckCoordinate(i - 1, j);
+		}
 
-        public static int ConnectedTilesCount(int i, int j, Func<Tile, bool> predicate, int maxCount = 255)
-        {
+		public static int ConnectedTilesCount(int i, int j, Func<Tile, bool> predicate, int maxCount = 255)
+		{
 			ConnectedTiles(i, j, predicate, out List<(int, int)> coordinates, maxCount);
-            return coordinates.Count;
-        }
+			return coordinates.Count;
+		}
 
-        public static bool CheckTile6WayBelow(int tileX, int tileY)
-            => Main.tile[tileX, tileY].HasTile &&  // Current tile is active
-               Main.tile[tileX - 1, tileY].HasTile &&  // Left tile is active
-               Main.tile[tileX + 1, tileY].HasTile &&  // Right tile is active
-               Main.tile[tileX, tileY + 1].HasTile &&  // Bottom tile is active
-               Main.tile[tileX - 1, tileY + 1].HasTile &&  // Bottom-left tile is active
-               Main.tile[tileX + 1, tileY + 1].HasTile &&  // Bottom-right tile is active						 
-               Main.tile[tileX, tileY - 2].HasTile; // Top tile is active (will help to make the walls slightly lower than the terrain)
+		public static bool TileInOuterThird(int tileX)
+			=> Math.Abs(tileX - Main.spawnTileX) > Main.maxTilesX / 3;
+
+		public static bool TileInInnerThird(int tileX)
+			=> Math.Abs(tileX - Main.spawnTileX) > Main.maxTilesX / 3;
+
+		public static bool TileAtOceanPosition(int tileX, int tileY)
+			=> WorldGen.oceanDepths(tileX, tileY);
+
+		public static bool TileInDesertHive(int tileX, int tileY)
+			=> tileX >= GenVars.desertHiveLeft && tileX <= GenVars.desertHiveRight &&
+			   tileY >= GenVars.desertHiveHigh && tileY <= GenVars.desertHiveLow;
+
 
 		#region BaseMod BaseWorldGen
 
@@ -1010,211 +1017,211 @@ namespace Macrocosm.Common.Utils
 		#region Custom TileRunners
 		/// <summary> Used to spread walls alongside tiles. FIXME: Y change is too high </summary>
 		public static void TileWallRunner(int i, int j, double strength, int steps, int tileType, bool addTile = false, int wallType = 0, bool addWall = false, float speedX = 0.0f, float speedY = 0.0f, bool noYChange = false, int ignoreTileType = -1)
-        {
+		{
 
-            double num = strength;
-            double num2 = steps;
+			double num = strength;
+			double num2 = steps;
 
-            Vector2 val = default;
-            Vector2 val2 = default;
+			Vector2 val = default;
+			Vector2 val2 = default;
 
-            val.X = i;
-            val.Y = j;
+			val.X = i;
+			val.Y = j;
 
-            val2.X = WorldGen.genRand.Next(-10, 11) * 0.1f;
-            val2.Y = WorldGen.genRand.Next(-10, 11) * 0.1f;
+			val2.X = WorldGen.genRand.Next(-10, 11) * 0.1f;
+			val2.Y = WorldGen.genRand.Next(-10, 11) * 0.1f;
 
-            if (speedX != 0.0 || speedY != 0.0)
-            {
-                val2.X = speedX;
-                val2.Y = speedY;
-            }
+			if (speedX != 0.0 || speedY != 0.0)
+			{
+				val2.X = speedX;
+				val2.Y = speedY;
+			}
 
-            while (num > 0.0 && num2 > 0.0)
-            {
-                if (WorldGen.drunkWorldGen && WorldGen.genRand.NextBool(30))
-                    val.X += WorldGen.genRand.Next(-100, 101) * 0.05f;
-                val.Y += WorldGen.genRand.Next(-100, 101) * 0.05f;
+			while (num > 0.0 && num2 > 0.0)
+			{
+				if (WorldGen.drunkWorldGen && WorldGen.genRand.NextBool(30))
+					val.X += WorldGen.genRand.Next(-100, 101) * 0.05f;
+				val.Y += WorldGen.genRand.Next(-100, 101) * 0.05f;
 
-                if (val.Y < 0.0 && num2 > 0.0 && tileType == 59)
-                    num2 = 0.0;
+				if (val.Y < 0.0 && num2 > 0.0 && tileType == 59)
+					num2 = 0.0;
 
-                num = strength * (num2 / steps);
-                num2 -= 1.0;
-                int num3 = (int)(val.X - num * 0.5);
-                int num4 = (int)(val.X + num * 0.5);
-                int num5 = (int)(val.Y - num * 0.5);
-                int num6 = (int)(val.Y + num * 0.5);
+				num = strength * (num2 / steps);
+				num2 -= 1.0;
+				int num3 = (int)(val.X - num * 0.5);
+				int num4 = (int)(val.X + num * 0.5);
+				int num5 = (int)(val.Y - num * 0.5);
+				int num6 = (int)(val.Y + num * 0.5);
 
-                if (num3 < 1)
-                    num3 = 1;
+				if (num3 < 1)
+					num3 = 1;
 
-                if (num4 > Main.maxTilesX - 1)
-                    num4 = Main.maxTilesX - 1;
+				if (num4 > Main.maxTilesX - 1)
+					num4 = Main.maxTilesX - 1;
 
-                if (num5 < 1)
-                    num5 = 1;
+				if (num5 < 1)
+					num5 = 1;
 
-                if (num6 > Main.maxTilesY - 1)
-                    num6 = Main.maxTilesY - 1;
+				if (num6 > Main.maxTilesY - 1)
+					num6 = Main.maxTilesY - 1;
 
-                for (int k = num3; k < num4; k++)
-                {
-                    for (int l = num5; l < num6; l++)
-                    {
-                        if (ignoreTileType >= 0 && Main.tile[k, l].HasTile && Main.tile[k, l].TileType == ignoreTileType || !(Math.Abs((double)k - val.X) + Math.Abs((double)l - val.Y) < strength * 0.5 * (1.0 + WorldGen.genRand.Next(-10, 11) * 0.015)))
-                            continue;
+				for (int k = num3; k < num4; k++)
+				{
+					for (int l = num5; l < num6; l++)
+					{
+						if (ignoreTileType >= 0 && Main.tile[k, l].HasTile && Main.tile[k, l].TileType == ignoreTileType || !(Math.Abs((double)k - val.X) + Math.Abs((double)l - val.Y) < strength * 0.5 * (1.0 + WorldGen.genRand.Next(-10, 11) * 0.015)))
+							continue;
 
-                        if (tileType < 0)
-                            Main.tile[k, l].ClearTile();
-                        else if (addTile || Main.tile[k, l].HasTile)
-                            WorldGen.PlaceTile(k, l, tileType, true, true);
+						if (tileType < 0)
+							Main.tile[k, l].ClearTile();
+						else if (addTile || Main.tile[k, l].HasTile)
+							WorldGen.PlaceTile(k, l, tileType, true, true);
 
-                        if (wallType == -1)
-                        {
-                            Main.tile[k, l].Clear(Terraria.DataStructures.TileDataType.Wall);
-                        }
-                        else if (wallType > 0)
-                        {
-                            if (addWall || !addWall && Main.tile[k, l].WallType != 0)
-                            {
-                                if (Main.tile[k, l].WallType != 0)
-                                    Main.tile[k, l].Clear(Terraria.DataStructures.TileDataType.Wall);
+						if (wallType == -1)
+						{
+							Main.tile[k, l].Clear(Terraria.DataStructures.TileDataType.Wall);
+						}
+						else if (wallType > 0)
+						{
+							if (addWall || !addWall && Main.tile[k, l].WallType != 0)
+							{
+								if (Main.tile[k, l].WallType != 0)
+									Main.tile[k, l].Clear(Terraria.DataStructures.TileDataType.Wall);
 
-                                WorldGen.PlaceWall(k, l, wallType, mute: true);
-                            }
-                        }
-                    }
-                }
+								WorldGen.PlaceWall(k, l, wallType, mute: true);
+							}
+						}
+					}
+				}
 
-                val += val2;
+				val += val2;
 
-                if (!WorldGen.genRand.NextBool(3) && num > 50.0)
-                {
-                    val += val2;
-                    num2 -= 1.0;
-                    val2.Y += WorldGen.genRand.Next(-10, 11) * 0.05f;
-                    val2.X += WorldGen.genRand.Next(-10, 11) * 0.05f;
-                    if (num > 100.0)
-                    {
-                        val += val2;
-                        num2 -= 1.0;
-                        val2.Y += WorldGen.genRand.Next(-10, 11) * 0.05f;
-                        val2.X += WorldGen.genRand.Next(-10, 11) * 0.05f;
-                        if (num > 150.0)
-                        {
-                            val += val2;
-                            num2 -= 1.0;
-                            val2.Y += WorldGen.genRand.Next(-10, 11) * 0.05f;
-                            val2.X += WorldGen.genRand.Next(-10, 11) * 0.05f;
-                            if (num > 200.0)
-                            {
-                                val += val2;
-                                num2 -= 1.0;
-                                val2.Y += WorldGen.genRand.Next(-10, 11) * 0.05f;
-                                val2.X += WorldGen.genRand.Next(-10, 11) * 0.05f;
-                                if (num > 250.0)
-                                {
-                                    val += val2;
-                                    num2 -= 1.0;
-                                    val2.Y += WorldGen.genRand.Next(-10, 11) * 0.05f;
-                                    val2.X += WorldGen.genRand.Next(-10, 11) * 0.05f;
-                                    if (num > 300.0)
-                                    {
-                                        val += val2;
-                                        num2 -= 1.0;
-                                        val2.Y += WorldGen.genRand.Next(-10, 11) * 0.05f;
-                                        val2.X += WorldGen.genRand.Next(-10, 11) * 0.05f;
-                                        if (num > 400.0)
-                                        {
-                                            val += val2;
-                                            num2 -= 1.0;
-                                            val2.Y += WorldGen.genRand.Next(-10, 11) * 0.05f;
-                                            val2.X += WorldGen.genRand.Next(-10, 11) * 0.05f;
-                                            if (num > 500.0)
-                                            {
-                                                val += val2;
-                                                num2 -= 1.0;
-                                                val2.Y += WorldGen.genRand.Next(-10, 11) * 0.05f;
-                                                val2.X += WorldGen.genRand.Next(-10, 11) * 0.05f;
-                                                if (num > 600.0)
-                                                {
-                                                    val += val2;
-                                                    num2 -= 1.0;
-                                                    val2.Y += WorldGen.genRand.Next(-10, 11) * 0.05f;
-                                                    val2.X += WorldGen.genRand.Next(-10, 11) * 0.05f;
-                                                    if (num > 700.0)
-                                                    {
-                                                        val += val2;
-                                                        num2 -= 1.0;
-                                                        val2.Y += WorldGen.genRand.Next(-10, 11) * 0.05f;
-                                                        val2.X += WorldGen.genRand.Next(-10, 11) * 0.05f;
-                                                        if (num > 800.0)
-                                                        {
-                                                            val += val2;
-                                                            num2 -= 1.0;
-                                                            val2.Y += WorldGen.genRand.Next(-10, 11) * 0.05f;
-                                                            val2.X += WorldGen.genRand.Next(-10, 11) * 0.05f;
-                                                            if (num > 900.0)
-                                                            {
-                                                                val += val2;
-                                                                num2 -= 1.0;
-                                                                val2.Y += WorldGen.genRand.Next(-10, 11) * 0.05f;
-                                                                val2.X += WorldGen.genRand.Next(-10, 11) * 0.05f;
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                val2.X += WorldGen.genRand.Next(-10, 11) * 0.05f;
+				if (!WorldGen.genRand.NextBool(3) && num > 50.0)
+				{
+					val += val2;
+					num2 -= 1.0;
+					val2.Y += WorldGen.genRand.Next(-10, 11) * 0.05f;
+					val2.X += WorldGen.genRand.Next(-10, 11) * 0.05f;
+					if (num > 100.0)
+					{
+						val += val2;
+						num2 -= 1.0;
+						val2.Y += WorldGen.genRand.Next(-10, 11) * 0.05f;
+						val2.X += WorldGen.genRand.Next(-10, 11) * 0.05f;
+						if (num > 150.0)
+						{
+							val += val2;
+							num2 -= 1.0;
+							val2.Y += WorldGen.genRand.Next(-10, 11) * 0.05f;
+							val2.X += WorldGen.genRand.Next(-10, 11) * 0.05f;
+							if (num > 200.0)
+							{
+								val += val2;
+								num2 -= 1.0;
+								val2.Y += WorldGen.genRand.Next(-10, 11) * 0.05f;
+								val2.X += WorldGen.genRand.Next(-10, 11) * 0.05f;
+								if (num > 250.0)
+								{
+									val += val2;
+									num2 -= 1.0;
+									val2.Y += WorldGen.genRand.Next(-10, 11) * 0.05f;
+									val2.X += WorldGen.genRand.Next(-10, 11) * 0.05f;
+									if (num > 300.0)
+									{
+										val += val2;
+										num2 -= 1.0;
+										val2.Y += WorldGen.genRand.Next(-10, 11) * 0.05f;
+										val2.X += WorldGen.genRand.Next(-10, 11) * 0.05f;
+										if (num > 400.0)
+										{
+											val += val2;
+											num2 -= 1.0;
+											val2.Y += WorldGen.genRand.Next(-10, 11) * 0.05f;
+											val2.X += WorldGen.genRand.Next(-10, 11) * 0.05f;
+											if (num > 500.0)
+											{
+												val += val2;
+												num2 -= 1.0;
+												val2.Y += WorldGen.genRand.Next(-10, 11) * 0.05f;
+												val2.X += WorldGen.genRand.Next(-10, 11) * 0.05f;
+												if (num > 600.0)
+												{
+													val += val2;
+													num2 -= 1.0;
+													val2.Y += WorldGen.genRand.Next(-10, 11) * 0.05f;
+													val2.X += WorldGen.genRand.Next(-10, 11) * 0.05f;
+													if (num > 700.0)
+													{
+														val += val2;
+														num2 -= 1.0;
+														val2.Y += WorldGen.genRand.Next(-10, 11) * 0.05f;
+														val2.X += WorldGen.genRand.Next(-10, 11) * 0.05f;
+														if (num > 800.0)
+														{
+															val += val2;
+															num2 -= 1.0;
+															val2.Y += WorldGen.genRand.Next(-10, 11) * 0.05f;
+															val2.X += WorldGen.genRand.Next(-10, 11) * 0.05f;
+															if (num > 900.0)
+															{
+																val += val2;
+																num2 -= 1.0;
+																val2.Y += WorldGen.genRand.Next(-10, 11) * 0.05f;
+																val2.X += WorldGen.genRand.Next(-10, 11) * 0.05f;
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				val2.X += WorldGen.genRand.Next(-10, 11) * 0.05f;
 
-                if (val2.X > 1.0)
-                    val2.X = 1.0f;
+				if (val2.X > 1.0)
+					val2.X = 1.0f;
 
-                if (val2.X < -1.0)
-                    val2.X = -1.0f;
+				if (val2.X < -1.0)
+					val2.X = -1.0f;
 
-                if (!noYChange)
-                {
-                    val2.Y += WorldGen.genRand.Next(-10, 11) * 0.05f;
-                    if (val2.Y > 1.0)
-                        val2.Y = 1.0f;
+				if (!noYChange)
+				{
+					val2.Y += WorldGen.genRand.Next(-10, 11) * 0.05f;
+					if (val2.Y > 1.0)
+						val2.Y = 1.0f;
 
-                    if (val2.Y < -1.0)
-                        val2.Y = -1.0f;
+					if (val2.Y < -1.0)
+						val2.Y = -1.0f;
 
-                }
-                else if (num < 3.0)
-                {
-                    if (val2.Y > 1.0)
-                        val2.Y = 1.0f;
+				}
+				else if (num < 3.0)
+				{
+					if (val2.Y > 1.0)
+						val2.Y = 1.0f;
 
-                    if (val2.Y < -1.0)
-                        val2.Y = -1.0f;
-                }
-                if (!noYChange)
-                {
-                    if (val2.Y > 0.5)
-                        val2.Y = 0.5f;
+					if (val2.Y < -1.0)
+						val2.Y = -1.0f;
+				}
+				if (!noYChange)
+				{
+					if (val2.Y > 0.5)
+						val2.Y = 0.5f;
 
-                    if (val2.Y < -0.5)
-                        val2.Y = -0.5f;
+					if (val2.Y < -0.5)
+						val2.Y = -0.5f;
 
-                    if (val.Y < Main.rockLayer + 100.0)
-                        val2.Y = 1.0f;
+					if (val.Y < Main.rockLayer + 100.0)
+						val2.Y = 1.0f;
 
-                    if (val.Y > (double)(Main.maxTilesY - 300))
-                        val2.Y = -1.0f;
-                }
-            }
-        }
-        #endregion
-    }
+					if (val.Y > (double)(Main.maxTilesY - 300))
+						val2.Y = -1.0f;
+				}
+			}
+		}
+		#endregion
+	}
 }

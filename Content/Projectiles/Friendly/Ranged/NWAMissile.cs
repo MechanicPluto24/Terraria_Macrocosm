@@ -1,5 +1,6 @@
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.NPCs.Global;
 using Macrocosm.Content.Particles;
 using Macrocosm.Content.Projectiles.Global;
 using Macrocosm.Content.Trails;
@@ -20,6 +21,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 		public float BlastRadius => 120;
 
+		public int OriginalWidth => 16;
+		public int OriginalHeight => 16;
+
 		public override void SetStaticDefaults()
 		{
 			ProjectileID.Sets.TrailCacheLength[Type] = 30;
@@ -28,8 +32,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 		public override void SetDefaults()
 		{
-			Projectile.width = 16;
-			Projectile.height = 16;
+			Projectile.width = OriginalWidth;
+			Projectile.height = OriginalHeight;
 			Projectile.aiStyle = -1;
 			Projectile.penetrate = -1;
 			Projectile.friendly = true;
@@ -51,8 +55,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			#region Acceleration
 
 			float timeToReachTopSpeed = 10;
-			if(AI_AccelerationTimer < timeToReachTopSpeed)
- 				AI_AccelerationTimer++;
+			if (AI_AccelerationTimer < timeToReachTopSpeed)
+				AI_AccelerationTimer++;
 
 			float timerForInitialDeceleration = 5;
 			if (AI_InitialDecelerationTimer < timerForInitialDeceleration)
@@ -64,8 +68,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			float x = Projectile.position.X;
 			float y = Projectile.position.Y;
 
-			float maxDistance = 800f;  
-			float minHomingTime = 35f; 
+			float maxDistance = 800f;
+			float minHomingTime = 35f;
 
 			bool hasTarget = false;
 			AI_HomingTimer++;
@@ -76,7 +80,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 				for (int i = 0; i < Main.maxNPCs; i++)
 				{
 					// only run locally
-					if (Projectile.owner == Main.myPlayer && Main.npc[i].CanBeChasedBy(this) && Main.npc[i].Macrocosm().TargetedByHomingProjectile)
+					if (Projectile.owner == Main.myPlayer && Main.npc[i].CanBeChasedBy(this) && Main.npc[i].GetGlobalNPC<MacrocosmNPC>().TargetedByHomingProjectile)
 					{
 						float targetCenterX = Main.npc[i].position.X + Main.npc[i].width / 2;
 						float targetCenterY = Main.npc[i].position.Y + Main.npc[i].height / 2;
@@ -101,7 +105,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			else
 			{
 				// targeting was done locally, sync
-				Projectile.netUpdate = true; 
+				Projectile.netUpdate = true;
 			}
 
 			Vector2 maxVelocity = (new Vector2(x, y) - Projectile.Center).SafeNormalize(-Vector2.UnitY) * (10f + 6f * (AI_AccelerationTimer / timeToReachTopSpeed));
@@ -141,7 +145,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 					Projectile.alpha = 255;
 			}
 
-			if(Projectile.localAI[1] < 1.2f)
+			if (Projectile.localAI[1] < 1.2f)
 			{
 				// spawn some dusts as barrel flash
 				for (int i = 0; i < 30; i++)
@@ -153,7 +157,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 					dust.noGravity = true;
 				}
 			}
-			
+
 
 			// spawn dust trail
 			for (int i = 0; i < 2; i++)
@@ -203,7 +207,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		{
 			if (Main.dedServ)
 				return;
- 
+
+			Projectile.Resize(OriginalWidth, OriginalHeight);
+
 			SoundEngine.PlaySound(SoundID.Item14, Projectile.position);
 
 			// Spawn smoke dusts
@@ -251,7 +257,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 				Vector2 velocity = Main.rand.NextVector2CircularEdge(3, 3) * (i == 1 ? 0.8f : 0.4f);
 				Particle.CreateParticle<Smoke>(Projectile.Center, velocity, scale: 1.2f);
 			}
-		 
+
 		}
 
 		public override bool PreDraw(ref Color lightColor)

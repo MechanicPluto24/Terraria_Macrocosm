@@ -5,7 +5,7 @@ namespace Macrocosm.Content.Biomes
 {
 	public class BasaltBiome : MoonBiome
 	{
-		public override SceneEffectPriority Priority => SceneEffectPriority.Environment;
+		public override SceneEffectPriority Priority => SceneEffectPriority.BossLow;
 
 		public override string BestiaryIcon => "Macrocosm/Content/Biomes/MoonBiome_Icon";
 		public override string BackgroundPath => "Macrocosm/Content/Biomes/MoonBiome_Background";
@@ -32,7 +32,7 @@ namespace Macrocosm.Content.Biomes
 
 		public override bool IsBiomeActive(Player player)
 			=> false; // TileCounts.Instance.BasaltCount > 40;
-	
+
 	}
 }
 

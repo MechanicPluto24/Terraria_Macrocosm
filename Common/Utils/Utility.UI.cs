@@ -10,23 +10,23 @@ namespace Macrocosm.Common.Utils
 {
 	public static partial class Utility
 	{
-        /// <summary> Normalized UI scale, ranges from 0.0f to 1.0f </summary>
+		/// <summary> Normalized UI scale, ranges from 0.0f to 1.0f </summary>
 		public static float NormalizedUIScale => (Main.UIScale - 0.5f) / (2.0f - 0.5f);
 
 		/// <summary>  Removes all chidren of this element that match a predicate </summary>
 		/// <param name="element"> The element being processed </param>
 		/// <param name="match"> The predicate to filter the elements </param>
-		public static void RemoveAllChildrenWhere(this UIElement element, Func<UIElement, bool> match) 
-        {
+		public static void RemoveAllChildrenWhere(this UIElement element, Func<UIElement, bool> match)
+		{
 			List<UIElement> childrenToRemove = new();
 
 			foreach (UIElement child in element.Children)
-                 if (match(child))
+				if (match(child))
 					childrenToRemove.Add(child);
 
 			foreach (UIElement childToRemove in childrenToRemove)
- 				element.RemoveChild(childToRemove);
- 		}
+				element.RemoveChild(childToRemove);
+		}
 
 		/// <summary> Gets a list of all the children of this element that match a predicate </summary>
 		/// <param name="element"> The element being processed </param>
@@ -36,9 +36,9 @@ namespace Macrocosm.Common.Utils
 			List<UIElement> matchedChildren = new();
 
 			foreach (UIElement child in element.Children)
- 				if (match(child))
- 					matchedChildren.Add(child);
- 
+				if (match(child))
+					matchedChildren.Add(child);
+
 			return matchedChildren;
 		}
 
@@ -53,8 +53,8 @@ namespace Macrocosm.Common.Utils
 			element.ExecuteRecursively(child =>
 			{
 				if (match(child))
- 					matchedChildren.Add(child);
- 			});
+					matchedChildren.Add(child);
+			});
 
 			return matchedChildren;
 		}
@@ -76,12 +76,12 @@ namespace Macrocosm.Common.Utils
 
 			// This handler is called before the actual updating takes place
 			replaceHandler = new UIElement.ElementEvent((element) =>
-            {
+			{
 				//int childrenCount = element.Children.Count();
 
-				if (element.HasChild(toRemove)) 
- 					element.RemoveChild(toRemove);
- 	
+				if (element.HasChild(toRemove))
+					element.RemoveChild(toRemove);
+
 				element.Append(newElement);
 				newElement.Activate();
 
@@ -90,13 +90,13 @@ namespace Macrocosm.Common.Utils
 				//	Chat("Failed to replace child properly. Make sure you also update the reference of newElement if replacing the same element with an updated version.", Color.Yellow);
 				//	Macrocosm.Instance.Logger.Warn("Failed to replace child properly. Make sure you also update the reference of newElement if replacing the same element with an updated version.");
 				//}
-					
+
 				// Detach this handler once complete, we don't want it to run every tick from now on
 				element.OnUpdate -= replaceHandler;
-		    });
+			});
 
-            // If method called during or after the Update method, this schedules the replacement in the next tick
-            parent.OnUpdate += replaceHandler;
+			// If method called during or after the Update method, this schedules the replacement in the next tick
+			parent.OnUpdate += replaceHandler;
 		}
 
 		/// <summary> Whether the <paramref name="key"/> has just been pressed for this <paramref name="keyState"/> </summary>
@@ -110,41 +110,41 @@ namespace Macrocosm.Common.Utils
 
 		/// <summary> Whether the <paramref name="key"/> has just been released in the <see cref="Main.keyState"/> context </summary>
 		public static bool KeyReleased(Keys key) => Main.keyState.KeyReleased(key);
-   
-        /// <summary> Common player conditions that usually trigger the closing of UIs on screen </summary>
+
+		/// <summary> Common player conditions that usually trigger the closing of UIs on screen </summary>
 		public static bool UICloseConditions(this Player player) =>
-            player.dead || !player.active || Main.editChest || Main.editSign || player.talkNPC >= 0 || !Main.playerInventory;
+			player.dead || !player.active || Main.editChest || Main.editSign || player.talkNPC >= 0 || !Main.playerInventory;
 
-        /// <summary> Closes common vanilla UIs, used when bringing up another UI </summary>
-        public static void UICloseOthers()
-        {
-            Player player = Main.LocalPlayer;
+		/// <summary> Closes common vanilla UIs, used when bringing up another UI </summary>
+		public static void UICloseOthers()
+		{
+			Player player = Main.LocalPlayer;
 
-            if (player.sign > -1)
-            {
-                player.sign = -1;
-                Main.editSign = false;
-                Main.npcChatText = string.Empty;
-            }
+			if (player.sign > -1)
+			{
+				player.sign = -1;
+				Main.editSign = false;
+				Main.npcChatText = string.Empty;
+			}
 
-            if (Main.editChest)
-            {
-                Main.editChest = false;
-                Main.npcChatText = string.Empty;
-            }
+			if (Main.editChest)
+			{
+				Main.editChest = false;
+				Main.npcChatText = string.Empty;
+			}
 
-            if (player.editedChestName)
-            {
-                NetMessage.SendData(MessageID.SyncPlayerChest, -1, -1, NetworkText.FromLiteral(Main.chest[player.chest].name), player.chest, 1f, 0f, 0f, 0, 0, 0);
-                player.editedChestName = false;
-            }
+			if (player.editedChestName)
+			{
+				NetMessage.SendData(MessageID.SyncPlayerChest, -1, -1, NetworkText.FromLiteral(Main.chest[player.chest].name), player.chest, 1f, 0f, 0f, 0, 0, 0);
+				player.editedChestName = false;
+			}
 
-            if (player.talkNPC > -1)
-            {
-                player.SetTalkNPC(-1);
-                Main.npcChatCornerItem = 0;
-                Main.npcChatText = string.Empty;
-            }
-        }
-    }
+			if (player.talkNPC > -1)
+			{
+				player.SetTalkNPC(-1);
+				Main.npcChatCornerItem = 0;
+				Main.npcChatText = string.Empty;
+			}
+		}
+	}
 }

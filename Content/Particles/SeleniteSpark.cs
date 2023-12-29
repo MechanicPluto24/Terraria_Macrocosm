@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Drawing.Particles;
+﻿using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -35,10 +34,10 @@ namespace Macrocosm.Content.Particles
 				spawned = true;
 
 				Color = (new List<Color>() {
-					new Color(177, 230, 207), 
-					new Color(83, 129, 167), 
+					new Color(177, 230, 207),
+					new Color(83, 129, 167),
 					new Color(157, 136, 169),
-					new Color(130, 179, 185) 
+					new Color(130, 179, 185)
 				}).GetRandom();
 
 
@@ -47,13 +46,13 @@ namespace Macrocosm.Content.Particles
 			Rotation = Velocity.ToRotation();
 			ScaleV = new Vector2(Math.Clamp(speed, 0, 15), Math.Clamp(speed, 0, 1)) * 0.09f * origScale;
 
-			 Velocity *= 0.91f;
+			Velocity *= 0.91f;
 
 			Lighting.AddLight(Center, new Vector3(1f, 1f, 1f) * Scale * 0.02f);
 
 			//if (ScaleV.Y < 0.1f)
 			//	Kill();
 
- 		}
+		}
 	}
 }

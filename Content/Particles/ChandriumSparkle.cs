@@ -6,8 +6,8 @@ using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Projectiles.Friendly.Summon;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 using Terraria;
-using Terraria.GameContent;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Particles
@@ -37,34 +37,29 @@ namespace Macrocosm.Content.Particles
 		{
 			state.SaveState(spriteBatch);
 
-			Texture2D tex = TextureAssets.Extra[89].Value;
-
-			spriteBatch.Draw(tex, Position - screenPosition, null, new Color(177, 107, 219, 127), 0f + Rotation, TextureAssets.Extra[89].Size() / 2f, ScaleV, SpriteEffects.None, 0f);
-			spriteBatch.Draw(tex, Position - screenPosition, null, new Color(177, 107, 219, 127), MathHelper.PiOver2 + Rotation, TextureAssets.Extra[89].Size() / 2f, ScaleV, SpriteEffects.None, 0f);
+			spriteBatch.DrawStar(Position - screenPosition, 2, new Color(177, 107, 219, 127), ScaleV);
 			Lighting.AddLight(Position, new Vector3(0.607f, 0.258f, 0.847f));
 
 			for (int i = 1; i < TrailCacheLenght; i++)
 			{
 				float factor = 1f - (i / (float)TrailCacheLenght);
-
-				spriteBatch.Draw(tex, Vector2.Lerp(OldPositions[i - 1], OldPositions[i], factor) - screenPosition, null, new Color(177, 107, 219, (int)(127 * factor)), 0f + OldRotations[i], TextureAssets.Extra[89].Size() / 2f, ScaleV * factor, SpriteEffects.None, 0f);
-				spriteBatch.Draw(tex, Vector2.Lerp(OldPositions[i - 1], OldPositions[i], factor) - screenPosition, null, new Color(177, 107, 219, (int)(127 * factor)), MathHelper.PiOver2 + OldRotations[i], TextureAssets.Extra[89].Size() / 2f, ScaleV * factor, SpriteEffects.None, 0f);
+				spriteBatch.DrawStar(Vector2.Lerp(OldPositions[i - 1], OldPositions[i], factor) - screenPosition, new List<float> { OldRotations[i] }, new Color(177, 107, 219, (int)(127 * factor)), ScaleV * factor);
 			}
 		}
 
 		public override void AI()
-		{	
+		{
 			float speed;
 			float inertia;
 			int whipIdx = -1;
 
 			Rotation += Velocity.X * 0.02f;
- 
+
 			int chandriumWhipType = ModContent.ProjectileType<ChandriumWhipProjectile>();
-			for(int i = 0; i < Main.maxProjectiles; i++)
+			for (int i = 0; i < Main.maxProjectiles; i++)
 			{
 				Projectile proj = Main.projectile[i];
-				if(proj.active && proj.type == chandriumWhipType && proj.owner == OwnerPlayer.whoAmI)
+				if (proj.active && proj.type == chandriumWhipType && proj.owner == OwnerPlayer.whoAmI)
 				{
 					whipIdx = i;
 					break;

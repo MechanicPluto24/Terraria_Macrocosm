@@ -4,9 +4,9 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Biomes
 {
-    public class IrradiationBiome : MoonBiome
+	public class IrradiationBiome : MoonBiome
 	{
-		public override SceneEffectPriority Priority => SceneEffectPriority.Environment;
+		public override SceneEffectPriority Priority => SceneEffectPriority.BossLow;
 
 		public override string BestiaryIcon => "Macrocosm/Content/Biomes/MoonBiome_Icon";
 		public override string BackgroundPath => "Macrocosm/Content/Biomes/MoonBiome_Background";

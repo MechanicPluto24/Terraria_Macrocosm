@@ -27,7 +27,7 @@ namespace Macrocosm.Content.Trails
 						.UseImage2("Images/Extra_193");
 
 			float lerp = Utility.InverseLerp(0, 0.01f, progressOnStrip);
-			Color result = Color.Lerp(Color.Lerp(Color.Black.WithAlpha(0), new Color(50, 255, 200, 0) ,lerp), new Color(91, 248, 158, 255), progressOnStrip);
+			Color result = Color.Lerp(Color.Lerp(Color.Black.WithAlpha(0), new Color(50, 255, 200, 0), lerp), new Color(91, 248, 158, 255), progressOnStrip);
 			return result;
 		}
 

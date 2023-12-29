@@ -24,14 +24,14 @@ namespace Macrocosm.Content.Projectiles.Global
 
 		public override bool OnTileCollide(Projectile projectile, Vector2 oldVelocity)
 		{
-			if(projectile.ModProjectile is IBullet)  
+			if (projectile.ModProjectile is IRangedProjectile)
 				Collision.HitTiles(projectile.position, oldVelocity, projectile.width, projectile.height);
 
 			if (projectile.ModProjectile is IExplosive explosive)
 			{
 				// Explosion logic (hitbox, timeleft, penetrate, etc.)
-				explosive.OnCollide(projectile);
-				
+				explosive.OnHit(projectile);
+
 				// Hit tiles visually, in a smaller area than the blast radius
 				Collision.HitTiles(projectile.position, oldVelocity, (int)(projectile.width * 0.6f), (int)(projectile.height * 0.6f));
 
@@ -42,18 +42,15 @@ namespace Macrocosm.Content.Projectiles.Global
 		}
 
 		public override void OnHitNPC(Projectile projectile, NPC target, NPC.HitInfo hit, int damageDone)
-		{ 
-			if(projectile.ModProjectile is IExplosive explosive)
-			{
-				explosive.OnCollide(projectile);
-				//projectile.Kill();  
-			}
+		{
+			if (projectile.ModProjectile is IExplosive explosive)
+				explosive.OnHit(projectile);
 		}
 
 		public override void OnHitPlayer(Projectile projectile, Player target, Player.HurtInfo info)
 		{
 			if (projectile.ModProjectile is IExplosive explosive)
-				explosive.OnCollide(projectile);
+				explosive.OnHit(projectile);
 		}
 
 		public override void SendExtraAI(Projectile projectile, BitWriter bitWriter, BinaryWriter binaryWriter)

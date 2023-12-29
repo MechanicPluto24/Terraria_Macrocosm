@@ -15,7 +15,8 @@ namespace Macrocosm.Content.Tiles.Ambient
 		// We want both tiles to use the same texture
 		public override string Texture => "Macrocosm/Content/Tiles/Ambient/RegolithRockLarge";
 
-		public override void SetStaticDefaults() {
+		public override void SetStaticDefaults()
+		{
 			Main.tileSolid[Type] = false;
 			Main.tileSolidTop[Type] = false;
 			Main.tileTable[Type] = false;
@@ -28,6 +29,7 @@ namespace Macrocosm.Content.Tiles.Ambient
 			TileObjectData.newTile.CopyFrom(TileObjectData.Style3x2);
 
 			TileObjectData.newTile.StyleHorizontal = true;
+			TileObjectData.newTile.DrawYOffset = 2;
 			TileObjectData.addTile(Type);
 
 			TileID.Sets.DisableSmartCursor[Type] = true;
@@ -38,7 +40,8 @@ namespace Macrocosm.Content.Tiles.Ambient
 	// This is the fake tile that will be placed by the Rubblemaker.
 	public class RegolithRockLargeFake : RegolithRockLargeBase
 	{
-		public override void SetStaticDefaults() {
+		public override void SetStaticDefaults()
+		{
 			// Call to base SetStaticDefaults. Must inherit static defaults from base type 
 			base.SetStaticDefaults();
 
@@ -53,7 +56,8 @@ namespace Macrocosm.Content.Tiles.Ambient
 	// This is the natural tile, this version is placed during world generation 
 	public class RegolithRockLargeNatural : RegolithRockLargeBase
 	{
-		public override void SetStaticDefaults() {
+		public override void SetStaticDefaults()
+		{
 			base.SetStaticDefaults();
 		}
 	}

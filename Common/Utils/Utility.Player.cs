@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Content.CameraModifiers;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
@@ -14,11 +15,21 @@ namespace Macrocosm.Common.Utils
 		public static Point16 SpawnTilePoint16 => new(Main.spawnTileX, Main.spawnTileY);
 		public static Vector2 SpawnWorldPosition => new(Main.spawnTileX * 16f, Main.spawnTileY * 16f);
 
-		public static bool InPlayerInteractionRange(this Rectangle rectangle)
+		public static bool InPlayerInteractionRange(this Rectangle rectangle, TileReachCheckSettings settings)
 		{
 			Point location = rectangle.ClosestPointInRect(Main.LocalPlayer.Center).ToTileCoordinates();
-			return Main.LocalPlayer.IsInTileInteractionRange(location.X, location.Y, TileReachCheckSettings.Simple);
+			return Main.LocalPlayer.IsInTileInteractionRange(location.X, location.Y, settings);
 		}
+
+		// TODO: some sort of netsync where the server or other clients can shake a player's screen
+		public static void AddScreenshake(this Player player, float intensity, string context)
+		{
+			Main.instance.CameraModifiers.Add(new ScreenshakeCameraModifier(intensity, context));
+		}
+
+		public static Item CurrentItem(this Player player) => Main.mouseItem.type == ItemID.None ? player.inventory[player.selectedItem] : Main.mouseItem;
+
+		public static bool AltFunction(this Player player) => player.altFunctionUse == 2;
 
 		public static Rectangle GetSwungItemHitbox(this Player player)
 		{
@@ -79,6 +90,46 @@ namespace Macrocosm.Common.Utils
 			ItemLoader.UseItemHitbox(item, player, ref hitbox, ref flag21);
 
 			return hitbox;
+		}
+
+		public static Player PrepareDummy(this Player player, Vector2 targetPosition)
+		{
+			Player clonePlayer = new();
+			clonePlayer.CopyVisuals(player);
+			clonePlayer.ResetEffects();
+			clonePlayer.ResetVisibleAccessories();
+			clonePlayer.UpdateDyes();
+			clonePlayer.DisplayDollUpdate();
+			clonePlayer.UpdateSocialShadow();
+			clonePlayer.velocity.Y = 0f;
+			clonePlayer.wingFrame = 3;
+			clonePlayer.PlayerFrame();
+			clonePlayer.socialIgnoreLight = true;
+			clonePlayer.position.X = targetPosition.X + Main.screenPosition.X;
+			clonePlayer.position.Y = targetPosition.Y + Main.screenPosition.Y;
+
+			return clonePlayer;
+		}
+
+		public static void DrawPetDummy(this Player player, Vector2 targetPosition, bool animated)
+		{
+			if (!player.hideMisc[0])
+			{
+				Item item = player.miscEquips[0];
+				if (!item.IsAir && item.buffType > 0 && Main.vanityPet[item.buffType] && !Main.lightPet[item.buffType])
+				{
+					Projectile projectile = new();
+					projectile.SetDefaults(item.shoot);
+					projectile.isAPreviewDummy = true;
+					Vector2 vector = targetPosition + new Vector2(0f, player.height) + new Vector2(20f, 0f) + new Vector2(0f, -projectile.height);
+					projectile.position = vector + Main.screenPosition;
+					projectile.velocity = new Vector2(0.1f, 0f);
+					projectile.direction = 1;
+					projectile.owner = player.whoAmI;
+					ProjectileID.Sets.CharacterPreviewAnimations[projectile.type].ApplyTo(projectile, animated);
+					Main.instance.DrawProjDirect(projectile);
+				}
+			}
 		}
 
 

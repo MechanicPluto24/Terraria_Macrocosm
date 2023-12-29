@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-	public class TychoBullet : ModProjectile, IBullet
+	public class TychoBullet : ModProjectile, IRangedProjectile
 	{
 		public override void SetStaticDefaults()
 		{
@@ -33,13 +33,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		{
 			if (!spawned)
 			{
-				if(!Main.dedServ)
+				if (!Main.dedServ)
 					SoundEngine.PlaySound(SFX.DesertEagleShoot with { Volume = 0.3f }, Projectile.position);
 
 				spawned = true;
 			}
 
-			if(flashTimer++ == 1)
+			if (flashTimer++ == 1)
 				Particle.CreateParticle<GunFireRing>(Projectile.position, Projectile.velocity * 0.8f, 1f, Projectile.velocity.ToRotation(), false);
 
 			Lighting.AddLight(Projectile.position, new Color(255, 202, 141).ToVector3() * 0.6f);

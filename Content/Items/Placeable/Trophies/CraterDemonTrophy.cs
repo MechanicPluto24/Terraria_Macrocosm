@@ -1,6 +1,5 @@
 using Macrocosm.Content.Rarities;
 using Terraria;
-using Terraria.GameContent.Creative;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Placeable.Trophies
@@ -9,10 +8,10 @@ namespace Macrocosm.Content.Items.Placeable.Trophies
 	{
 		public override void SetStaticDefaults()
 		{
-			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
+
 		}
 
-		public override void SetDefaults() 
+		public override void SetDefaults()
 		{
 			Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Trophies.CraterDemonTrophy>());
 

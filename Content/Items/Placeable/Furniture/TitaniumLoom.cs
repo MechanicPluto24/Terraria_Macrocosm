@@ -1,14 +1,13 @@
 ﻿using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Placeable.Furniture
 {
 	public class TitaniumLoom : ModItem
-    {
+	{
 		public override void SetStaticDefaults()
 		{
- 		}
+		}
 
 		public override void SetDefaults()
 		{

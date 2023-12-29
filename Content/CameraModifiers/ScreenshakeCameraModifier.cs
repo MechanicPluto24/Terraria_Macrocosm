@@ -22,7 +22,7 @@ namespace Macrocosm.Content.CameraModifiers
 			cameraPosition.CameraPosition += new Vector2(Main.rand.NextFloat(screenShakeIntensity), Main.rand.NextFloat(screenShakeIntensity));
 			screenShakeIntensity *= 0.9f;
 
-			if(screenShakeIntensity < 0.1f)
+			if (screenShakeIntensity < 0.1f)
 			{
 				screenShakeIntensity = 0f;
 				Finished = true;

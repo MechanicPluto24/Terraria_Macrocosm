@@ -1,7 +1,5 @@
 ﻿using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -66,7 +64,7 @@ namespace Macrocosm.Common.Drawing.Particles
 
 				if (!particle.Active)
 				{
- 					Particles.RemoveAt(i);
+					Particles.RemoveAt(i);
 					i--;
 				}
 			}
@@ -80,12 +78,19 @@ namespace Macrocosm.Common.Drawing.Particles
 			}
 		}
 
+		public static List<Particle> GetParticlesDrawnBy(object customDrawer)
+		{
+			var list = Particles.Where(p => p.CustomDrawer == customDrawer).ToList();
+			return list;
+		}
+
 		public override bool HijackSendData(int whoAmI, int msgType, int remoteClient, int ignoreClient, NetworkText text, int number, float number2, float number3, float number4, int number5, int number6, int number7)
 		{
 			if (Main.netMode == NetmodeID.Server && msgType == MessageID.FinishedConnectingToServer && remoteClient >= 0 && remoteClient < 255)
 			{
 				foreach (var particle in Particles)
 				{
+					// TODO: add a NetImportant field?
 					particle.NetSync(toClient: remoteClient);
 				}
 			}
@@ -99,7 +104,7 @@ namespace Macrocosm.Common.Drawing.Particles
 
 			foreach (Particle particle in Particles)
 			{
-				if (particle.DrawLayer == layer)
+				if (particle.DrawLayer == layer && !particle.HasCustomDrawer)
 				{
 					if (particle.PreDrawAdditive(Main.spriteBatch, Main.screenPosition, Lighting.GetColor(particle.Position.ToTileCoordinates())))
 						alphaBlendDrawers.Add(particle);
@@ -113,7 +118,7 @@ namespace Macrocosm.Common.Drawing.Particles
 
 				foreach (var particle in alphaBlendDrawers)
 				{
-					if (particle.DrawLayer == layer)
+					if (particle.DrawLayer == layer && !particle.HasCustomDrawer)
 						particle.Draw(Main.spriteBatch, Main.screenPosition, Lighting.GetColor(particle.Position.ToTileCoordinates()));
 				}
 
@@ -123,7 +128,7 @@ namespace Macrocosm.Common.Drawing.Particles
 
 			foreach (Particle particle in Particles)
 			{
-				if (particle.DrawLayer == layer)
+				if (particle.DrawLayer == layer && !particle.HasCustomDrawer)
 					particle.PostDrawAdditive(Main.spriteBatch, Main.screenPosition, Lighting.GetColor(particle.Position.ToTileCoordinates()));
 			}
 		}
@@ -141,9 +146,9 @@ namespace Macrocosm.Common.Drawing.Particles
 
 			spriteBatch.End();
 			spriteBatch.Begin(state1);
-				
+
 			orig(self, behindTiles);
-			
+
 			state2.SaveState(spriteBatch);
 			spriteBatch.End();
 			spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, default, default, default, default, Main.GameViewMatrix.ZoomMatrix);
@@ -153,7 +158,7 @@ namespace Macrocosm.Common.Drawing.Particles
 			spriteBatch.End();
 			spriteBatch.Begin(state2);
 		}
-		
+
 		private void DrawParticles_Projectiles(On_Main.orig_DrawProjectiles orig, Main self)
 		{
 			SpriteBatch spriteBatch = Main.spriteBatch;
@@ -162,9 +167,9 @@ namespace Macrocosm.Common.Drawing.Particles
 			DrawParticles(ParticleDrawLayer.BeforeProjectiles);
 
 			spriteBatch.End();
-			
+
 			orig(self);
-			
+
 			spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, default, default, default, default, Main.GameViewMatrix.ZoomMatrix);
 
 			DrawParticles(ParticleDrawLayer.AfterProjectiles);
@@ -184,7 +189,7 @@ namespace Macrocosm.Common.Drawing.Particles
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(state3);
-			
+
 			orig(self, force);
 		}
 	}

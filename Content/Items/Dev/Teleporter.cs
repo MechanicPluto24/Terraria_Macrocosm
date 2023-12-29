@@ -1,9 +1,6 @@
 ﻿using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.UI;
 using Macrocosm.Content.Items.Global;
 using Macrocosm.Content.Rarities;
-using Macrocosm.Content.Subworlds;
-using Macrocosm.Content.UI.LoadingScreens;
 using SubworldLibrary;
 using Terraria;
 using Terraria.ID;
@@ -30,15 +27,15 @@ namespace Macrocosm.Content.Items.Dev
 		}
 		public override bool? UseItem(Player player)
 		{
-			if(player.whoAmI == Main.myPlayer)
+			if (player.whoAmI == Main.myPlayer)
 			{
 				if (!SubworldSystem.AnyActive<Macrocosm>())
- 					MacrocosmSubworld.Travel("Moon");
- 				else
-					MacrocosmSubworld.Travel("Earth");
+					MacrocosmSubworld.Travel("Macrocosm/Moon");
+				else
+					MacrocosmSubworld.Travel("Macrocosm/Earth");
 			}
-			
- 			return true;
+
+			return true;
 		}
 	}
 }

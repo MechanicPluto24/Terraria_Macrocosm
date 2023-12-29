@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
-using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -11,7 +10,7 @@ namespace Macrocosm.Content.Items.MeteorChunks
 	{
 		public override void SetStaticDefaults()
 		{
-			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 50;
+			Item.ResearchUnlockCount = 25;
 		}
 
 		override public void SetDefaults()
@@ -40,7 +39,7 @@ namespace Macrocosm.Content.Items.MeteorChunks
 				dust.velocity.X = Main.rand.NextFloat(-0.2f, 0.2f);
 				dust.velocity.Y = -0.8f;
 				dust.scale = 1.1f;
- 				dust.noGravity = true;
+				dust.noGravity = true;
 			}
 
 			//if (Main.rand.NextBool(16))
@@ -54,8 +53,8 @@ namespace Macrocosm.Content.Items.MeteorChunks
 
 		public override void PostDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
 		{
-			
- 		}
+
+		}
 	}
 }
 

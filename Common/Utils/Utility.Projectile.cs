@@ -16,12 +16,12 @@ namespace Macrocosm.Common.Utils
 	{
 		public static void SetTrail<T>(this Projectile projectile) where T : VertexTrail
 		{
-			if(projectile.TryGetGlobalProjectile(out MacrocosmProjectile globalProj))
+			if (projectile.TryGetGlobalProjectile(out MacrocosmProjectile globalProj))
 			{
- 				globalProj.Trail = Activator.CreateInstance<T>();
+				globalProj.Trail = Activator.CreateInstance<T>();
 				globalProj.Trail.Owner = projectile;
 			}
- 		}
+		}
 
 		public static VertexTrail GetTrail(this Projectile projectile) => projectile.GetGlobalProjectile<MacrocosmProjectile>().Trail;
 		public static bool TryGetTrail(this Projectile projectile, out VertexTrail trail)
@@ -30,31 +30,33 @@ namespace Macrocosm.Common.Utils
 			return trail is not null;
 		}
 
-		public static void Explode(this Projectile projectile, float blastRadius, int timeLeft = 2)
+		public static void Explode(this Projectile projectile, float blastRadius, int timeLeft = 1)
 		{
 			projectile.tileCollide = false;
-			projectile.timeLeft = timeLeft; 
+			projectile.timeLeft = timeLeft;
 			projectile.penetrate = -1;
 			projectile.alpha = 255;
 
 			projectile.velocity = Vector2.Zero;
-			
-			projectile.position.X += projectile.width / 2;
-			projectile.position.Y += projectile.height / 2;
-			projectile.width = (int)blastRadius;
-			projectile.height = (int)blastRadius;
-			projectile.position.X -= projectile.width / 2;
-			projectile.position.Y -= projectile.height / 2;
-
+			projectile.Resize((int)blastRadius, (int)blastRadius);
 			projectile.netUpdate = true;
 		}
 
-		/// <summary>
-		/// Hostile projectiles deal 2x the <paramref name="damage"/> in Normal Mode and 4x the <paramref name="damage"/> in Expert Mode.
-		/// This helper method remedies that. TODO: check how it behaves in Journey & Master Modes
-		/// </summary>
-		public static int TrueDamage(int damage)
-			=> damage / (Main.expertMode ? 4 : 2);
+        /// <summary>
+        /// Hostile projectiles deal:  
+        /// <br> - 2x the <paramref name="damage"/> in Normal Mode </br>
+        /// <br> - 4x the <paramref name="damage"/> in Expert Mode </br>
+        /// <br> - 6x the <paramref name="damage"/> in Master Mode </br>
+        /// <br> This helper method lets you use the actual damage desired, and apply your own difficulty scaling. </br>
+        /// </summary>
+        public static int TrueDamage(int damage)
+		{
+			damage /= 2;
+			if (Main.expertMode)
+				damage /= Main.masterMode ? 3 : 2;
+
+			return damage;
+		}
 
 		public static Rectangle GetDamageHitbox(this Projectile proj)
 		{
@@ -62,7 +64,7 @@ namespace Macrocosm.Common.Utils
 				BindingFlags.NonPublic | BindingFlags.Instance);
 			return (Rectangle)dynMethod.Invoke(proj, null);
 		}
-		
+
 		/// <summary>
 		/// Draws an animated projectile, leave texture null to draw as entity with the loaded texture
 		/// (Only tested for held projectiles)  
@@ -209,7 +211,7 @@ namespace Macrocosm.Common.Utils
 						item = Item.NewItem(projectile.GetSource_DropAsItem(), (int)projectile.position.X, (int)projectile.position.Y, projectile.width, projectile.height, createItemType);
 					}
 				}
-				else  
+				else
 				{
 					item = Item.NewItem(projectile.GetSource_DropAsItem(), (int)projectile.position.X, (int)projectile.position.Y, projectile.width, projectile.height, createItemType);
 				}

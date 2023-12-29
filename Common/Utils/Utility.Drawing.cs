@@ -15,10 +15,12 @@ using Terraria.UI.Chat;
 namespace Macrocosm.Common.Utils
 {
 	public static partial class Utility
-    {
-        public static Vector2 ScreenCenter => new(Main.screenWidth / 2f, Main.screenHeight / 2f);
+	{
+		public static Vector2 ScreenCenter => new(Main.screenWidth / 2f, Main.screenHeight / 2f);
 
 		public static Vector2 ScreenCenterInWorld => Main.screenPosition + ScreenCenter;
+
+		public static Rectangle ScreenRectangle => new(0, 0, Main.screenWidth, Main.screenHeight);
 
 
 		/// <summary>
@@ -30,44 +32,101 @@ namespace Macrocosm.Common.Utils
 		/// <param name="startColor"> The trail color near the projectile  </param>
 		/// <param name="endColor"> The trail color at its end </param>
 		public static void DrawMagicPixelTrail(this Projectile proj, Vector2 rotatableOffsetFromCenter, float startWidth, float endWidth, Color startColor, Color? endColor = null)
-            => DrawMagicPixelTrail(proj.Size / 2f, proj.oldPos, proj.oldRot, rotatableOffsetFromCenter, startWidth, endWidth, startColor, endColor);
+			=> DrawMagicPixelTrail(proj.Size / 2f, proj.oldPos, proj.oldRot, rotatableOffsetFromCenter, startWidth, endWidth, startColor, endColor);
 
-        /// <summary>
-        /// Draw a MagicPixel trail behind a NPC, with length based on the trail cache length  
-        /// </summary>
-        /// <param name="rotatableOffsetFromCenter"> offset from NPC center when rotation is 0 </param>
-        /// <param name="startWidth"> The trail width near the NPC </param>
-        /// <param name="endWidth"> The trail width at its end </param>
-        /// <param name="startColor"> The trail color near the NPC </param>
-        /// <param name="endColor"> The trail color at its end </param>
-        public static void DrawSimpleTrail(this NPC npc, Vector2 rotatableOffsetFromCenter, float startWidth, float endWidth, Color startColor, Color? endColor = null)
-            => DrawMagicPixelTrail(npc.Size / 2f, npc.oldPos, npc.oldRot, rotatableOffsetFromCenter, startWidth, endWidth, startColor, endColor);
+		/// <summary>
+		/// Draw a MagicPixel trail behind a NPC, with length based on the trail cache length  
+		/// </summary>
+		/// <param name="rotatableOffsetFromCenter"> offset from NPC center when rotation is 0 </param>
+		/// <param name="startWidth"> The trail width near the NPC </param>
+		/// <param name="endWidth"> The trail width at its end </param>
+		/// <param name="startColor"> The trail color near the NPC </param>
+		/// <param name="endColor"> The trail color at its end </param>
+		public static void DrawSimpleTrail(this NPC npc, Vector2 rotatableOffsetFromCenter, float startWidth, float endWidth, Color startColor, Color? endColor = null)
+			=> DrawMagicPixelTrail(npc.Size / 2f, npc.oldPos, npc.oldRot, rotatableOffsetFromCenter, startWidth, endWidth, startColor, endColor);
 
 		/// <summary> Adapted from Terraria.Main.DrawTrail </summary>
 		public static void DrawMagicPixelTrail(Vector2 origin, Vector2[] oldPos, float[] oldRot, Vector2 rotatableOffsetFromCenter, float startWidth, float endWidth, Color startColor, Color? endColor = null)
-        {
-            Rectangle rect = new(0, 0, 1, 1);
-            for (int k = oldPos.Length - 1; k > 0; k--)
-            {
-                if (!(oldPos[k] == Vector2.Zero))
-                {
-                    Vector2 v1 = oldPos[k] + origin + rotatableOffsetFromCenter.RotatedBy(oldRot[k]);
-                    Vector2 v2 = oldPos[k - 1] + origin + rotatableOffsetFromCenter.RotatedBy(oldRot[k - 1]) - v1;
-                    float brightness = Terraria.Utils.Remap(k, 0f, oldPos.Length, 1f, 0f);
-                    Color color = endColor is null ? startColor * brightness : Color.Lerp((Color)endColor, startColor, brightness);
+		{
+			Rectangle rect = new(0, 0, 1, 1);
+			for (int k = oldPos.Length - 1; k > 0; k--)
+			{
+				if (!(oldPos[k] == Vector2.Zero))
+				{
+					Vector2 v1 = oldPos[k] + origin + rotatableOffsetFromCenter.RotatedBy(oldRot[k]);
+					Vector2 v2 = oldPos[k - 1] + origin + rotatableOffsetFromCenter.RotatedBy(oldRot[k - 1]) - v1;
+					float brightness = Terraria.Utils.Remap(k, 0f, oldPos.Length, 1f, 0f);
+					Color color = endColor is null ? startColor * brightness : Color.Lerp((Color)endColor, startColor, brightness);
 
-                    SpriteBatch spriteBatch = Main.spriteBatch;
-                    SpriteBatchState state = spriteBatch.SaveState();
-                    spriteBatch.EndIfBeginCalled();
-                    spriteBatch.Begin(SpriteSortMode.Deferred, blendState: BlendState.NonPremultiplied, state);
-                    Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, v1 - Main.screenPosition, rect, color, v2.ToRotation() + (float)Math.PI / 2f, new Vector2(rect.Width / 2f, rect.Height), new Vector2(MathHelper.Lerp(startWidth, endWidth, (float)k / oldPos.Length), v2.Length()), SpriteEffects.None, 1);
-                    spriteBatch.End();
-                    spriteBatch.Begin(state);
-                }
-            }
-        }
+					SpriteBatch spriteBatch = Main.spriteBatch;
+					SpriteBatchState state = spriteBatch.SaveState();
+					spriteBatch.EndIfBeginCalled();
+					spriteBatch.Begin(SpriteSortMode.Deferred, blendState: BlendState.NonPremultiplied, state);
+					Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, v1 - Main.screenPosition, rect, color, v2.ToRotation() + (float)Math.PI / 2f, new Vector2(rect.Width / 2f, rect.Height), new Vector2(MathHelper.Lerp(startWidth, endWidth, (float)k / oldPos.Length), v2.Length()), SpriteEffects.None, 1);
+					spriteBatch.End();
+					spriteBatch.Begin(state);
+				}
+			}
+		}
 
-    
+		public static void DrawStar(this SpriteBatch spriteBatch, Vector2 position, int points, Color color, float scale = 1f, float rotation = 0f, SpriteEffects spriteEffects = SpriteEffects.None, bool entity = false)
+		{
+			Texture2D tex = TextureAssets.Extra[89].Value;
+			float rotationStep = MathHelper.Pi / points;
+
+			for (int i = 0; i < points; i++)
+			{
+				float angle = rotationStep * i;
+
+				if (entity)
+					Main.EntitySpriteDraw(tex, position, null, color, angle + rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
+				else
+					spriteBatch.Draw(tex, position, null, color, angle + rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
+			}
+		}
+
+		public static void DrawStar(this SpriteBatch spriteBatch, Vector2 position, List<float> rotations, Color color, float scale = 1f, SpriteEffects spriteEffects = SpriteEffects.None, bool entity = false)
+		{
+			Texture2D tex = TextureAssets.Extra[89].Value;
+
+			foreach (var rotation in rotations)
+			{
+				if (entity)
+					Main.EntitySpriteDraw(tex, position, null, color, rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
+				else
+					spriteBatch.Draw(tex, position, null, color, rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
+			}
+		}
+
+		public static void DrawStar(this SpriteBatch spriteBatch, Vector2 position, int points, Color color, Vector2 scale, float rotation = 0f, SpriteEffects spriteEffects = SpriteEffects.None, bool entity = false)
+		{
+			Texture2D tex = TextureAssets.Extra[89].Value;
+			float rotationStep = MathHelper.Pi / points;
+
+			for (int i = 0; i < points; i++)
+			{
+				float angle = rotationStep * i;
+
+				if (entity)
+					Main.EntitySpriteDraw(tex, position, null, color, angle + rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
+				else
+					spriteBatch.Draw(tex, position, null, color, angle + rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
+			}
+		}
+
+		public static void DrawStar(this SpriteBatch spriteBatch, Vector2 position, List<float> rotations, Color color, Vector2 scale, SpriteEffects spriteEffects = SpriteEffects.None, bool entity = false)
+		{
+			Texture2D tex = TextureAssets.Extra[89].Value;
+
+			foreach (var rotation in rotations)
+			{
+				if (entity)
+					Main.EntitySpriteDraw(tex, position, null, color, rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
+				else
+					spriteBatch.Draw(tex, position, null, color, rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
+			}
+		}
+
 		/// <summary> Convenience method for getting lighting color using an npc or projectile position.</summary>
 		public static Color GetLightColor(Vector2 position)
 		{
@@ -87,7 +146,27 @@ namespace Macrocosm.Common.Utils
 			Lighting.AddLight((int)(position.X / 16f), (int)(position.Y / 16f), colorR / brightnessDivider, colorG / brightnessDivider, colorB / brightnessDivider);
 		}
 
-		public static Vector2 DrawString(SpriteBatch spriteBatch, DynamicSpriteFont font, string text, Vector2 position, Color baseColor, float rotation, Vector2 origin, Vector2 baseScale, float maxWidth = -1f, float spread = 2f)
+        // TODO: - Add variation based on current subworld's day/night lenghts 
+        //		 - Remove magic numbers lol 
+        /// <summary> Used for linear brightness scaling along an entire day/night cycle  </summary>
+        public static float GetProgressNoonToMidnight(float minBrightness, float maxBrightness)
+        {
+            float brightness;
+            double totalTime = Main.dayTime ? Main.time : Main.dayLength + Main.time;
+
+            float diff = maxBrightness - minBrightness;
+
+            if (totalTime <= 27000)
+                brightness = minBrightness + maxBrightness * (diff * 0.4f + diff * 0.6f * ((float)totalTime / 27000));
+            else if (totalTime >= 70200)
+                brightness = diff * 0.4f * ((float)(totalTime - 70200) / 16200);
+            else
+                brightness = maxBrightness - (float)(totalTime - 27000) / 43200;
+
+            return brightness;
+        }
+
+        public static Vector2 DrawString(SpriteBatch spriteBatch, DynamicSpriteFont font, string text, Vector2 position, Color baseColor, float rotation, Vector2 origin, Vector2 baseScale, float maxWidth = -1f, float spread = 2f)
 		{
 			TextSnippet[] snippets = ChatManager.ParseMessage(text, baseColor).ToArray();
 			ChatManager.ConvertNormalSnippets(snippets);
@@ -253,7 +332,8 @@ namespace Macrocosm.Common.Utils
 
 
 		///<summary>
-		/// Returns a color roughly associated with the given dye. (special dyes return null)		///</summary>
+		/// Returns a color roughly associated with the given dye. (special dyes return null)
+		///</summary>
 		public static Color? GetDyeColor(int dye)
 		{
 			Color? returnColor = null;
@@ -286,7 +366,8 @@ namespace Macrocosm.Common.Utils
 		}
 
 		///<summary>
-		/// Returns a color associated with the given vanilla gem type.		///</summary>
+		/// Returns a color associated with the given vanilla gem type.
+		///</summary>
 		public static Color GetGemColor(int type)
 		{
 			if (type == 181) { return Color.MediumOrchid; }
@@ -306,7 +387,8 @@ namespace Macrocosm.Common.Utils
 		}
 
 		///<summary>
-		/// Returns true if the requirements for drawing the player's held item are satisfied.		///</summary>
+		/// Returns true if the requirements for drawing the player's held item are satisfied.
+		///</summary>
 		public static bool ShouldDrawHeldItem(Player drawPlayer)
 		{
 			return ShouldDrawHeldItem(drawPlayer.inventory[drawPlayer.selectedItem], drawPlayer.itemAnimation, drawPlayer.wet, drawPlayer.dead);
@@ -499,7 +581,8 @@ namespace Macrocosm.Common.Utils
 		}
 
 		///<summary>
-		/// Draws the given texture in a spear-like fashion (texture is oriented at the upper-right corner) using the projectile provided.		///</summary>
+		/// Draws the given texture in a spear-like fashion (texture is oriented at the upper-right corner) using the projectile provided.
+		///</summary>
 		public static void DrawProjectileSpear(object sb, Texture2D texture, int shader, Projectile p, Color? overrideColor = null, float offsetX = 0f, float offsetY = 0f)
 		{
 			offsetX += (-texture.Width * 0.5f);
@@ -655,7 +738,8 @@ namespace Macrocosm.Common.Utils
 		}
 
 		///<summary>
-		/// Draws a fishing line from the given projectile bobber to the player owning it.		///</summary>
+		/// Draws a fishing line from the given projectile bobber to the player owning it.
+		///</summary>
 		public static void DrawFishingLine(SpriteBatch sb, Projectile projectile, Vector2 rodLoc, Vector2 bobberLoc, Texture2D overrideTex = null, Color? overrideColor = null)
 		{
 			Player player = Main.player[projectile.owner];
@@ -1087,7 +1171,8 @@ namespace Macrocosm.Common.Utils
 		}
 
 		///<summary>
-		/// Draws the given texture using lighting nearby, or the overriden color given.		///</summary>
+		/// Draws the given texture using lighting nearby, or the overriden color given.
+		///</summary>
 		public static void DrawTexture(object sb, Texture2D texture, int shader, Vector2 position, int width, int height, float scale, float rotation, int direction, int framecount, int framecountX, Rectangle frame, Color? overrideColor = null, bool drawCentered = false, Vector2 overrideOrigin = default(Vector2))
 		{
 			Vector2 origin = overrideOrigin != default(Vector2) ? overrideOrigin : new Vector2((float)(frame.Width / framecountX / 2), (float)(texture.Height / framecount / 2));
@@ -1117,7 +1202,8 @@ namespace Macrocosm.Common.Utils
 		}
 
 		///<summary>
-		/// Debug draw method, draws a hitbox with absolutes, not taking into account anything else.		///</summary>
+		/// Debug draw method, draws a hitbox with absolutes, not taking into account anything else.
+		///</summary>
 		public static void DrawHitbox(SpriteBatch sb, Rectangle hitbox, Color? overrideColor = null)
 		{
 			Vector2 origin = default(Vector2);
@@ -1127,21 +1213,24 @@ namespace Macrocosm.Common.Utils
 		}
 
 		///<summary>
-		/// Returns the draw position of a texture for tiles.		///</summary>
+		/// Returns the draw position of a texture for tiles.
+		///</summary>
 		public static Vector2 GetTileDrawPosition(int x, int y, int width, int height, Vector2 drawOffset)
 		{
 			return new Vector2((x * 16 - (int)Main.screenPosition.X) - (width - 16f) / 2f, (float)(y * 16 - (int)Main.screenPosition.Y)) + drawOffset;
 		}
 
 		///<summary>
-		/// Returns the draw position of a texture for npcs and projectiles.		///</summary>
+		/// Returns the draw position of a texture for npcs and projectiles.
+		///</summary>
 		public static Vector2 GetDrawPosition(Vector2 position, Vector2 origin, int width, int height, int texWidth, int texHeight, Rectangle frame, int framecount, float scale, bool drawCentered = false)
 		{
 			return GetDrawPosition(position, origin, width, height, texWidth, texHeight, frame, framecount, 1, scale, drawCentered);
 		}
 
 		///<summary>
-		/// Returns the draw position of a texture for npcs and projectiles.		///</summary>
+		/// Returns the draw position of a texture for npcs and projectiles.
+		///</summary>
 		public static Vector2 GetDrawPosition(Vector2 position, Vector2 origin, int width, int height, int texWidth, int texHeight, Rectangle frame, int framecount, int framecountX, float scale, bool drawCentered = false)
 		{
 			Vector2 screenPos = new Vector2((int)Main.screenPosition.X, (int)Main.screenPosition.Y);

@@ -12,25 +12,25 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 {
-    public class MoonBaseBed : ModTile
-    {
+	public class MoonBaseBed : ModTile
+	{
 		public override void SetStaticDefaults()
 		{
 			Main.tileFrameImportant[Type] = true;
 			Main.tileLavaDeath[Type] = true;
 			TileID.Sets.HasOutlines[Type] = true;
 			TileID.Sets.CanBeSleptIn[Type] = true; // Facilitates calling ModifySleepingTargetInfo
-			TileID.Sets.InteractibleByNPCs[Type] = true;  
+			TileID.Sets.InteractibleByNPCs[Type] = true;
 			TileID.Sets.IsValidSpawnPoint[Type] = true;
 			TileID.Sets.DisableSmartCursor[Type] = true;
 
-			AddToArray(ref TileID.Sets.RoomNeeds.CountsAsChair);  
+			AddToArray(ref TileID.Sets.RoomNeeds.CountsAsChair);
 
 			DustType = ModContent.DustType<MoonBasePlatingDust>();
 			AdjTiles = new int[] { TileID.Beds };
 
 			// Placement
-			TileObjectData.newTile.CopyFrom(TileObjectData.Style3x3Wall);  
+			TileObjectData.newTile.CopyFrom(TileObjectData.Style3x3Wall);
 			TileObjectData.newTile.Width = 4;
 			TileObjectData.newTile.Height = 3;
 			TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;
@@ -55,14 +55,15 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 		public override void ModifySmartInteractCoords(ref int width, ref int height, ref int frameWidth, ref int frameHeight, ref int extraY)
 		{
 			// Because beds have special smart interaction, this splits up the left and right side into 2x3 sections
-			width = 2;  
-			height = 3;  
+			width = 2;
+			height = 3;
 			//extraY = 0; // Depends on how you set up frameHeight and CoordinateHeights and CoordinatePaddingFix.Y
 		}
 
 		public override void ModifySleepingTargetInfo(int i, int j, ref TileRestingInfo info)
 		{
-			info.VisualOffset.Y -= 3f; 
+			info.VisualOffset.Y -= 3f;
+			info.AnchorTilePosition.Y += 1;
 		}
 
 		public override void NumDust(int i, int j, bool fail, ref int num)
@@ -74,12 +75,15 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 		{
 			Player player = Main.LocalPlayer;
 			Tile tile = Main.tile[i, j];
-			int spawnX = (i - (tile.TileFrameX / 18)) + (tile.TileFrameX >= 72 ? 5 : 2);
+			int frameX = tile.TileFrameX / 18;
+
+			// Adjust spawn point based on bed orientation
+			int spawnX = (i - frameX) + (frameX >= 4 ? 5 : 2);
 			int spawnY = j;
- 
+
 			// Check if clicking on the pillow side of the bed
-			if (tile.TileFrameX > 36 && tile.TileFrameX <= 106)
-			{  
+			if (frameX >= 2 && frameX <= 5)
+			{
 				if (player.IsWithinSnappngRangeToTile(i, j, PlayerSleepingHelper.BedSleepingMaxDistance))
 				{
 					player.GamepadEnableGrappleCooldown();
@@ -112,7 +116,7 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 			if (!Player.IsHoveringOverABottomSideOfABed(i, j))
 			{
 				if (player.IsWithinSnappngRangeToTile(i, j, PlayerSleepingHelper.BedSleepingMaxDistance))
-				{ // Match condition in RightClick. Interaction should only show if clicking it does something
+				{
 					player.noThrow = 2;
 					player.cursorItemIconEnabled = true;
 					player.cursorItemIconID = ItemID.SleepingIcon;
@@ -125,7 +129,5 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 				player.cursorItemIconID = ModContent.ItemType<Items.Placeable.Furniture.MoonBase.MoonBaseBed>();
 			}
 		}
-
 	}
-
 }

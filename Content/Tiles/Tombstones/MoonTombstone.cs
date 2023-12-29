@@ -45,9 +45,9 @@ namespace Macrocosm.Content.Tiles.Tombstones
 		// since values are unique here, this is acceptable 
 		public static int ItemToStyle(int item)
 		{
-			foreach(var pair in styleToItem)
+			foreach (var pair in styleToItem)
 			{
-				if(pair.Value == item)
+				if (pair.Value == item)
 					return pair.Key * 2 + 1;
 			}
 
@@ -60,5 +60,5 @@ namespace Macrocosm.Content.Tiles.Tombstones
 			{ 1, ModContent.ItemType<Items.Placeable.Tombstones.MoonGoldTombstone>() }
 		};
 
- 	}
+	}
 }

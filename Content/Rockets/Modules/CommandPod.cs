@@ -1,7 +1,7 @@
 ﻿namespace Macrocosm.Content.Rockets.Modules
 {
 	public class CommandPod : RocketModule
-    {
+	{
 		public CommandPod(Rocket rocket) : base(rocket)
 		{
 		}

@@ -6,7 +6,6 @@ using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -14,21 +13,21 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 {
 	public class NWARocketLauncher : GunHeldProjectileItem
 	{
-        public override GunHeldProjectileData GunHeldProjectileData => new()
+		public override GunHeldProjectileData GunHeldProjectileData => new()
 		{
-            GunBarrelPosition = new Vector2(40, 13),
-            CenterYOffset = 8,
-            MuzzleOffset = 33,
-            Recoil = (14, 0.1f),
-            RecoilDiminish = 0.985f
-        };
+			GunBarrelPosition = new Vector2(40, 13),
+			CenterYOffset = 8,
+			MuzzleOffset = 33,
+			Recoil = (14, 0.1f),
+			RecoilDiminish = 0.985f
+		};
 
-        public int HeldProjectileType => throw new System.NotImplementedException();
+		public int HeldProjectileType => throw new System.NotImplementedException();
 
-        public override void SetStaticDefaults()
+		public override void SetStaticDefaults()
 		{
 			ItemID.Sets.SkipsInitialUseSound[Item.type] = true;
-			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
+
 		}
 
 		public override void SetDefaultsHeldProjectile()
@@ -46,8 +45,8 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			Item.value = 10000;
 			Item.rare = ModContent.RarityType<MoonRarityT2>();
 			Item.UseSound = SoundID.Item11;
-			Item.shoot = ProjectileID.PurificationPowder; // For some reason, all the guns in the vanilla source have this.
-			Item.autoReuse = true;
+            Item.shoot = Macrocosm.ItemShoot_UsesAmmo;
+            Item.autoReuse = true;
 			Item.shootSpeed = 4f;
 			Item.useAmmo = AmmoID.Rocket;
 		}
@@ -63,12 +62,12 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
 		public override void ModifyItemScale(Player player, ref float scale)
 		{
-			scale = player.altFunctionUse == 2 ? 1f : 1f;
+			scale = player.AltFunction() ? 1f : 1f;
 		}
 
 		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
-			if (player.altFunctionUse == 2)
+			if (player.AltFunction())
 			{
 				int id = -1;
 				bool found = false;
@@ -77,7 +76,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 				{
 					NPC npc = Main.npc[i];
 					if (npc.TryGetGlobalNPC(out MacrocosmNPC macNpc))
- 						macNpc.TargetedByHomingProjectile = false;
+						macNpc.TargetedByHomingProjectile = false;
 
 					if (!found && npc.CanBeChasedBy() && Main.npc[i].getRect().Intersects(new Rectangle((int)(Main.MouseWorld.X - 10f), (int)(Main.MouseWorld.Y - 10f), 20, 20)))
 					{
@@ -87,8 +86,8 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 				}
 
 				if (id > -1 && id < Main.maxNPCs)
- 					Main.npc[id].Macrocosm().TargetedByHomingProjectile = true;
- 
+					Main.npc[id].GetGlobalNPC<MacrocosmNPC>().TargetedByHomingProjectile = true;
+
 				return false;
 			}
 
@@ -97,7 +96,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
 		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
 		{
-			position += new Vector2(0,-10) + Utility.PolarVector(25f, velocity.ToRotation());
+			position += new Vector2(0, -10) + Utility.PolarVector(25f, velocity.ToRotation());
 			type = ModContent.ProjectileType<NWAMissile>();
 		}
 	}

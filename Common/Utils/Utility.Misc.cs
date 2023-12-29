@@ -9,7 +9,6 @@ using Terraria.Audio;
 using Terraria.Chat;
 using Terraria.ID;
 using Terraria.Localization;
-using Terraria.Map;
 using Terraria.ModLoader;
 using Terraria.Utilities;
 
@@ -17,27 +16,54 @@ using Terraria.Utilities;
 namespace Macrocosm.Common.Utils
 {
 	public static partial class Utility
-    {
-
-		public static string GetPath(object obj) => (obj.GetType().Namespace + "." + obj.GetType().Name).Replace('.', '/');
+	{
+		public static string GetNamespacePath(this object obj) => (obj.GetType().Namespace + "." + obj.GetType().Name).Replace('.', '/');
 
 		public static bool IsAprilFools()
 			=> DateTime.Now.Month == 4 && DateTime.Now.Day == 1;
 
 		public static string GetCompassCoordinates(Player player)
-			=> GetCompassCoordinates(player.Center); 
+			=> GetCompassCoordinates(player.Center);
 
-		public static string GetCompassCoordinates(Vector2 position) 
+		public static string GetCompassCoordinates(Vector2 position)
 			=> GetCompassCoordinates((int)(position.X / 16f));
 
 		public static string GetCompassCoordinates(int tileX)
 		{
 			int posX = tileX * 2 - Main.maxTilesX;
-			string text = ( posX >  0) ? Language.GetTextValue("GameUI.CompassEast", posX)  : 
-						  ((posX >= 0) ? Language.GetTextValue("GameUI.CompassCenter")      : 
+			string text = (posX > 0) ? Language.GetTextValue("GameUI.CompassEast", posX) :
+						  ((posX >= 0) ? Language.GetTextValue("GameUI.CompassCenter") :
 										 Language.GetTextValue("GameUI.CompassWest", -posX));
 
 			return text;
+		}
+
+		public enum MessageSeverity { Info, Warn, Error, Fatal }
+		public static void LogChatMessage(string message, MessageSeverity severity = MessageSeverity.Info)
+		{
+			switch (severity)
+			{
+				case MessageSeverity.Info:
+					Chat(message, Color.White, sync: false);
+					Macrocosm.Instance.Logger.Info(message);
+					break;
+
+				case MessageSeverity.Warn:
+					Chat(message, Color.Gold, sync: false);
+					Macrocosm.Instance.Logger.Warn(message);
+					break;
+
+				case MessageSeverity.Error:
+					Chat(message, Color.Red, sync: false);
+					Macrocosm.Instance.Logger.Error(message);
+					break;
+
+				case MessageSeverity.Fatal:
+					Chat(message, Color.Purple, sync: false);
+					Macrocosm.Instance.Logger.Fatal(message);
+					break;
+			}
+
 		}
 
 		//------------------------------------------------------//
@@ -206,13 +232,13 @@ namespace Macrocosm.Common.Utils
 		public static bool CanHit(Rectangle rect, Rectangle rect2)
 			=> Collision.CanHit(new Vector2(rect.X, rect.Y), rect.Width, rect.Height, new Vector2(rect2.X, rect2.Y), rect2.Width, rect2.Height);
 
-		public static Vector2 TileToPos(Vector2 tile) => tile * new Vector2(16, 16); 
-		public static Vector2 PosToTile(Vector2 pos) => pos / new Vector2(16, 16); 
+		public static Vector2 TileToPos(Vector2 tile) => tile * new Vector2(16, 16);
+		public static Vector2 PosToTile(Vector2 pos) => pos / new Vector2(16, 16);
 
 		///<summary>
 		/// These two methods convert from game ticks to seconds and vise versa.
 		///</summary>
-		public static int TicksToSeconds(int ticks) => ticks / 60; 
+		public static int TicksToSeconds(int ticks) => ticks / 60;
 		public static int SecondsToTicks(int seconds) => seconds * 60;
 
 		public static int TicksToMinutes(int ticks) => TicksToSeconds(ticks) / 60;
@@ -528,5 +554,5 @@ namespace Macrocosm.Common.Utils
 			}
 			return points.ToArray();
 		}
-    }
+	}
 }

@@ -12,16 +12,19 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-	public class DeliriumShell : ModProjectile, IBullet, IExplosive
+	public class DeliriumShell : ModProjectile, IRangedProjectile, IExplosive
 	{
 		public float BlastRadius => 100;
+
+		public int OriginalWidth => 14;
+		public int OriginalHeight => 14;
 
 		public override void SetDefaults()
 		{
 			Projectile.CloneDefaults(14);
 			AIType = ProjectileID.Bullet;
-			Projectile.width = 14;
-			Projectile.height = 14;
+			Projectile.width = OriginalWidth;
+			Projectile.height = OriginalHeight;
 			Projectile.timeLeft = 270;
 			Projectile.light = 0f;
 		}
@@ -32,7 +35,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		{
 			Lighting.AddLight(Projectile.Center, new Color(101, 242, 139).ToVector3());
 
-			if(auraAlpha < 1f)
+			if (auraAlpha < 1f)
 				auraAlpha += 0.06f;
 
 			if (!spawned && auraAlpha > 0.1f)
@@ -40,7 +43,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 				// spawn some dusts as "muzzle flash"
 				for (int i = 0; i < 20; i++)
 				{
-					Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<PortalLightGreenDust>(), Scale: 2.2f);
+					Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<XaocGreenDust>(), Scale: 2.2f);
 					dust.velocity = (Projectile.velocity.SafeNormalize(Vector2.UnitX) * Main.rand.NextFloat(4f, 8f)).RotatedByRandom(MathHelper.PiOver4 * 0.6f) + Main.player[Projectile.owner].velocity;
 					dust.noLight = false;
 					dust.alpha = 200;
@@ -52,7 +55,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			// spawn dust trail 
 			if (Main.rand.NextBool(1))
 			{
-				Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<PortalLightGreenDust>(), Scale: 1.3f);
+				Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<XaocGreenDust>(), Scale: 1.3f);
 				dust.noLight = false;
 				dust.alpha = 255;
 				dust.noGravity = true;
@@ -66,7 +69,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			//spawn dust explosion on kill
 			for (int i = 0; i < 40; i++)
 			{
-				Dust dust = Dust.NewDustDirect(Projectile.Center, 1, 1, ModContent.DustType<PortalLightGreenDust>(), Scale: 1.6f);
+				Dust dust = Dust.NewDustDirect(Projectile.Center, 1, 1, ModContent.DustType<XaocGreenDust>(), Scale: 1.6f);
 				dust.velocity = (Vector2.UnitX * Main.rand.NextFloat(1f, 5f)).RotatedByRandom(MathHelper.TwoPi);
 				dust.noLight = false;
 				dust.noGravity = true;
@@ -103,7 +106,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			spriteBatch.Begin(BlendState.AlphaBlend, state);
 
 			Main.EntitySpriteDraw(tex, Projectile.Center - new Vector2(0, 18).RotatedBy(Projectile.rotation - MathHelper.Pi) - Main.screenPosition, null, Color.White.WithOpacity(0.6f), Projectile.rotation - MathHelper.Pi, tex.Size() / 2, 0.8f, SpriteEffects.None, 0);
-			
+
 			spriteBatch.End();
 			spriteBatch.Begin(state);
 			return true;

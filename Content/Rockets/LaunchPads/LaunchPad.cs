@@ -1,21 +1,18 @@
 ﻿using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Items.CursorIcons;
+using Macrocosm.Content.Rockets.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SubworldLibrary;
-using System;
-using System.IO;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
-using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Rockets.LaunchPads
 {
-	public class LaunchPad : TagSerializable
+	public partial class LaunchPad
 	{
 		[NetSync] public bool Active;
 		[NetSync] public Point16 StartTile;
@@ -65,7 +62,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 		}
 
 		public static LaunchPad Create(int startTileX, int startTileY, bool shouldSync = true) => Create(startTileX, startTileY, startTileX, startTileY, shouldSync);
-		public static LaunchPad Create(Point16 startTile, bool shouldSync = true) => Create( startTile.X, startTile.Y, shouldSync);
+		public static LaunchPad Create(Point16 startTile, bool shouldSync = true) => Create(startTile.X, startTile.Y, shouldSync);
 		public static LaunchPad Create(Point16 startTile, Point16 endTile, bool shouldSync = true) => Create(startTile.X, startTile.Y, endTile.X, endTile.Y, shouldSync);
 
 		public void Update()
@@ -83,129 +80,45 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			for (int i = 0; i < RocketManager.MaxRockets; i++)
 			{
 				Rocket rocket = RocketManager.Rockets[i];
-
 				if (rocket.ActiveInCurrentWorld && Hitbox.Intersects(rocket.Bounds))
- 					RocketID = i;
- 			}
+					RocketID = i;
+			}
 
 			if (RocketID != prevRocketId)
 				NetSync(MacrocosmSubworld.CurrentID);
 
-			isMouseOver = Hitbox.Contains(Main.MouseWorld.ToPoint()) && Hitbox.InPlayerInteractionRange();
-
+			isMouseOver = Hitbox.Contains(Main.MouseWorld.ToPoint()) && Hitbox.InPlayerInteractionRange(TileReachCheckSettings.Simple);
 			if (isMouseOver)
 			{
-				Main.LocalPlayer.noThrow = 2;
+				if (Main.mouseRight && Main.mouseRightRelease)
+				{
+					RocketUISystem.ShowAssemblyUI(this);
+				}
+				else
+				{
+					if (!RocketUISystem.AssemblyUIActive)
+					{
+						Main.LocalPlayer.noThrow = 2;
+						Main.LocalPlayer.cursorItemIconEnabled = true;
+						Main.LocalPlayer.cursorItemIconID = CursorIcon.GetType<Items.CursorIcons.QuestionMark>();
+					}
+				}
 			}
+		}
+
+
+		public void TileCheck()
+		{
 		}
 
 		public void Draw(SpriteBatch spriteBatch, Vector2 screenPosition)
 		{
 			Rectangle rect = Hitbox;
-			rect.X -= (int)screenPosition.X; 
+			rect.X -= (int)screenPosition.X;
 			rect.Y -= (int)screenPosition.Y;
 
 			if (isMouseOver)
 				spriteBatch.Draw(TextureAssets.MagicPixel.Value, rect, Color.Gold * 0.25f);
-		}
-
-
-		/// <summary>
-		/// Syncs the launchpad fields with <see cref="NetSyncAttribute"/> across all clients and the server.
-		/// </summary>
-		public void NetSync(string subworldId, int toClient = -1, int ignoreClient = -1)
-		{
-			if (Main.netMode == NetmodeID.SinglePlayer)
-				return;
-
-			ModPacket packet = Macrocosm.Instance.GetPacket();
-
-			if (WriteToPacket(packet, subworldId))
-				packet.Send(toClient, ignoreClient);
-
-			packet.Dispose();
-		}
-
-		public bool WriteToPacket(ModPacket packet, string subworldId)
-		{
-			packet.Write((byte)MessageType.SyncLaunchPadData);
-
-			packet.Write(subworldId);
-
-			if (this.NetWriteFields(packet)) // Check if the writer was able to write all the fields.
-				return true;
-
-			return false;
-		}
-
-		/// <summary>
-		/// Syncs a rocket with data from the <see cref="BinaryReader"/>. Don't use this method outside <see cref="PacketHandler.HandlePacket(BinaryReader, int)"/>
-		/// </summary>
-		/// <param name="reader"></param>
-		public static void SyncLaunchPadData(BinaryReader reader, int clientWhoAmI)
-		{
-			string subworldId = reader.ReadString();
-
-			LaunchPad launchPad = new();
-			launchPad.NetReadFields(reader);
-
-			LaunchPad existingLaunchPad = LaunchPadManager.GetLaunchPadAtStartTile(subworldId, launchPad.StartTile);
-			if (existingLaunchPad is null)
- 				LaunchPadManager.Add(subworldId, launchPad);
- 
-			if (Main.netMode == NetmodeID.Server)
-			{
-				launchPad.NetSync(subworldId, ignoreClient: clientWhoAmI);
-
-				/*
-				ModPacket packet = Macrocosm.Instance.GetPacket();
-				launchPad.WriteToPacket(packet, subworldId);
-
-				if (SubworldSystem.AnyActive())
-					SubworldSystem.SendToMainServer(Macrocosm.Instance, packet.GetBuffer());
-				else
-					SubworldSystem.SendToAllSubservers(Macrocosm.Instance, packet.GetBuffer());
-				*/
-			}
-		}
-
-		public LaunchPad Clone() => DeserializeData(SerializeData());
-
-		public static readonly Func<TagCompound, LaunchPad> DESERIALIZER = DeserializeData;
-
-		public TagCompound SerializeData()
-		{
-			TagCompound tag = new()
-			{
-				[nameof(Active)] = Active,
-				[nameof(StartTile)] = StartTile,
-				[nameof(EndTile)] = EndTile,
-				[nameof(RocketID)] = RocketID,
-				[nameof(CompassCoordinates)] = CompassCoordinates,
-			};
-
-			return tag;
-		}
-
-		public static LaunchPad DeserializeData(TagCompound tag)
-		{
-			LaunchPad launchPad = new();
-
-			launchPad.Active = tag.ContainsKey(nameof(Active));
-
-			if (tag.ContainsKey(nameof(RocketID)))
-				launchPad.RocketID = tag.GetInt(nameof(RocketID));
-
-			if (tag.ContainsKey(nameof(StartTile)))
-				launchPad.StartTile = tag.Get<Point16>(nameof(StartTile));
-
-			if (tag.ContainsKey(nameof(EndTile)))
-				launchPad.EndTile = tag.Get<Point16>(nameof(EndTile));
-
-			if (tag.ContainsKey(nameof(CompassCoordinates)))
-				launchPad.CompassCoordinates = tag.GetString(nameof(CompassCoordinates));
-
-			return launchPad;
 		}
 	}
 }

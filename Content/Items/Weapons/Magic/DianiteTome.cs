@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework;
 using System;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -15,7 +14,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 	{
 		public override void SetStaticDefaults()
 		{
-			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
+
 		}
 
 		public override void SetDefaults()
@@ -71,7 +70,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 				float posX = Main.mouseX + Main.screenPosition.X - playerOffset.X;
 				float posY = Main.mouseY + Main.screenPosition.Y - playerOffset.Y;
 
-				if ((double)posY < 0.0) 
+				if ((double)posY < 0.0)
 					posY *= -1f;
 
 				if ((double)posY < 20.0)

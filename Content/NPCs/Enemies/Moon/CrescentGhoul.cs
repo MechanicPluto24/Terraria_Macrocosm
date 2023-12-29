@@ -81,14 +81,14 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			float chaseUpwardsMult = 8f;
 
 			// the radius where the ghoul will slow down and start rising above the player 
-			float chaseRadius = 60f; 
+			float chaseRadius = 60f;
 
 			float startSpinDeceleration = 0.8f;
 			float startSpinDuration = 5f;
 
 			float maxDashDistance = 400f;
 			float dashAngleDiv = 8f;
-			float dashSpeed = 10f; 
+			float dashSpeed = 10f;
 
 			int dashAngleVariation = 0; // some angle variation for the dash (?)
 
@@ -106,14 +106,14 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			if (Main.expertMode)
 				kbResist *= Main.GameModeInfo.KnockbackToEnemiesMultiplier;
 
-			if(AI_State != ActionState.Spin)
+			if (AI_State != ActionState.Spin)
 				Utility.LookAt(playerActive ? Main.player[NPC.target].Center : NPC.Center + NPC.velocity, NPC, 0);
 
 			if (AI_State == ActionState.Chase)
 			{
 				NPC.knockBackResist = kbResist;
 
-				Vector2 positionDiff = Main.player[NPC.target].Center - NPC.Center ;
+				Vector2 positionDiff = Main.player[NPC.target].Center - NPC.Center;
 				Vector2 upwards = positionDiff - Vector2.UnitY * 300f;
 				float distanceToTarget = positionDiff.Length();
 				positionDiff = Vector2.Normalize(positionDiff) * chaseUpwardsMult;
@@ -124,7 +124,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 					canDash = true;
 
 				canDash = (canDash && positionDiff.ToRotation() > (float)Math.PI / dashAngleDiv && positionDiff.ToRotation() < (float)Math.PI - (float)Math.PI / dashAngleDiv);
-				
+
 				if (distanceToTarget > maxDashDistance || !canDash)
 				{
 					NPC.velocity.X = (NPC.velocity.X * (chaseRadius - 1f) + upwards.X) / chaseRadius;
@@ -169,7 +169,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 				NPC.rotation += 0.48f;
 				NPC.knockBackResist = 0f;
- 				AI_Timer++;
+				AI_Timer++;
 
 				//bool playerClose = Vector2.Distance(NPC.Center, Main.player[NPC.target].Center) > dashStopDistance; /* corites also check for player below : && NPC.Center.Y > Main.player[NPC.target].Center.Y;*/
 				//if ((AI_Timer >= dashChaseDuration && playerClose) || NPC.velocity.Length() < dashStopSpeed)
@@ -215,11 +215,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		public override void ModifyNPCLoot(NPCLoot loot)
 		{
-			loot.Add(ItemDropRule.Common(ModContent.ItemType<SpaceDust>()));             // Always drop 1 cosmic dust
-			loot.Add(ItemDropRule.Common(ModContent.ItemType<ArtemiteOre>(), 16, 1, 6));  // 1/16 chance to drop 1-6 Artemite Ore
-			loot.Add(ItemDropRule.Common(ModContent.ItemType<ChandriumOre>(), 16, 1, 6)); // 1/16 chance to drop 1-6 Chandrium Ore
-			loot.Add(ItemDropRule.Common(ModContent.ItemType<SeleniteOre>(), 16, 1, 6));  // 1/16 chance to drop 1-6 Selenite Ore
-			loot.Add(ItemDropRule.Common(ModContent.ItemType<DianiteOre>(), 16, 1, 6));   // 1/16 chance to drop 1-6 DianiteOre Ore
 		}
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
@@ -242,7 +237,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		{
 			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Enemies/Moon/CrescentGhoul_Glow").Value;
 			SpriteEffects effect = NPC.spriteDirection == -1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
- 			int frameHeight = TextureAssets.Npc[Type].Height() / Main.npcFrameCount[Type];
+			int frameHeight = TextureAssets.Npc[Type].Height() / Main.npcFrameCount[Type];
 			spriteBatch.Draw(glowmask, NPC.Center - Main.screenPosition, NPC.frame, Color.White, NPC.rotation, new Vector2(TextureAssets.Npc[Type].Width() / 2f, frameHeight / 2f), NPC.scale, effect, 0f);
 		}
 

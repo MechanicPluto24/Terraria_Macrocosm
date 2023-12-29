@@ -16,7 +16,7 @@ namespace Macrocosm.Common.Hooks
 			On_WorldGen.KillTile_MakeTileDust += RemoveTorchDust;       // removes particles if tile torch is disabled  
 		}
 
-		public void Unload() 
+		public void Unload()
 		{
 			On_Item.UpdateItem_VisualEffects -= RemoveDroppedItemLight;
 			On_Player.CanVisuallyHoldItem -= DisableTorchHolding;

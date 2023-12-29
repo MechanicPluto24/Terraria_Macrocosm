@@ -1,11 +1,9 @@
 using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Currency;
 using Macrocosm.Content.Subworlds;
 using SubworldLibrary;
 using System.Collections.Generic;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
@@ -20,25 +18,6 @@ namespace Macrocosm.Content.NPCs.Global
 		public override void SetStaticDefaults()
 		{
 			SetImmunities();
-		}
-
-		/// <summary> For common drops </summary>
-		public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
-		{
-			if (npc.ModNPC is IMoonEnemy)
-			{
-				npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Moonstone>(), 10));
-			}
-		}
-
-		/// <summary> For subworld specific spawn pools </summary>
-		public override void EditSpawnPool(IDictionary<int, float> pool, NPCSpawnInfo spawnInfo)
-		{
-			for (int id = 0; id < NPCLoader.NPCCount; id++)
-			{
-				if (SubworldSystem.IsActive<Moon>() && ContentSamples.NpcsByNetId[id].ModNPC is not IMoonEnemy)
- 					pool.Remove(id);
- 			}
 		}
 
 		public override void AI(NPC npc)
@@ -67,7 +46,7 @@ namespace Macrocosm.Content.NPCs.Global
 				bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[] {
 					new FlavorTextBestiaryInfoElement(flavorText.Key)
 				});
-			} 
+			}
 		}
 
 		private static void SetImmunities()

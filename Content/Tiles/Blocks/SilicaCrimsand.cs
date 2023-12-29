@@ -23,14 +23,14 @@ namespace Macrocosm.Content.Tiles.Blocks
 			TileID.Sets.Conversion.Sand[Type] = true; // Allows Clentaminator solutions to convert this tile to their respective Sand tiles.
 			TileID.Sets.ForAdvancedCollision.ForSandshark[Type] = true; // Allows Sandshark enemies to "swim" in this sand.
 			TileID.Sets.Falling[Type] = true;
-			AddMapEntry(new Color(200, 200, 200));
+			AddMapEntry(new Color(155, 156, 134), CreateMapEntryName());
 
 			DustType = ModContent.DustType<SilicaCrimsandDust>();
 		}
 
 		public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
- 			=> Utility.SandTileFrame(i, j, ModContent.ProjectileType<SilicaCrimsandProjectile>());
- 
+			 => Utility.SandTileFrame(i, j, ModContent.ProjectileType<SilicaCrimsandProjectile>());
+
 		public override void NumDust(int i, int j, bool fail, ref int num) => num = fail ? 1 : 3;
 	}
 }

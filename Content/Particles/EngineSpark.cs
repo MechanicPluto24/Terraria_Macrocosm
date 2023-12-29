@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Drawing.Particles;
+﻿using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -26,7 +25,7 @@ namespace Macrocosm.Content.Particles
 			Color color = Color.Lerp(ColorOnSpawn, ColorOnDespawn, (float)TimeLeft / SpawnTimeLeft);
 			spriteBatch.Draw(glow, Center - screenPosition, null, color.WithOpacity(Opacity), Rotation, glow.Size() / 2, 0.0375f * ScaleV, SpriteEffects.None, 0f);
 			return false;
- 		}
+		}
 
 		bool spawned = false;
 		float origScale = 0f;
@@ -41,7 +40,7 @@ namespace Macrocosm.Content.Particles
 			Rotation = Velocity.ToRotation();
 			ScaleV = new Vector2(Math.Clamp(speed, 0, 5), Math.Clamp(speed, 0, 1)) * 0.11f * origScale;
 
- 			Opacity = 1f - Utility.InverseLerp(1f, 0f, (float)TimeLeft / SpawnTimeLeft, clamped: true);
+			Opacity = 1f - Utility.InverseLerp(1f, 0f, (float)TimeLeft / SpawnTimeLeft, clamped: true);
 
 			Velocity *= 0.71f;
 
@@ -50,6 +49,6 @@ namespace Macrocosm.Content.Particles
 			if (ScaleV.Y < 0.1f)
 				Kill();
 
- 		}
+		}
 	}
 }

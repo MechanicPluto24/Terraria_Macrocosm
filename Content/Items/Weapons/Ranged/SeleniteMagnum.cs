@@ -1,10 +1,11 @@
 using Macrocosm.Common.Bases;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Materials;
-using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.GameContent.Creative;
+using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -17,40 +18,74 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			GunBarrelPosition = new(18, 7),
 			CenterYOffset = 4,
 			MuzzleOffset = 20,
-			Recoil = (7, 1.1f),
-			UseBackArm = false
+			Recoil = (7, 0.4f),
+			UseBackArm = false,
+			RecoilStartFrame = 5
 		};
-
-        public override void SetStaticDefaults()
-		{
-			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
-		}
 
 		public override void SetDefaultsHeldProjectile()
 		{
-			Item.damage = 150;
-			Item.DamageType = DamageClass.Ranged;
+			Item.DefaultToRangedWeapon(10, AmmoID.Bullet, 20, 20, true);
+			Item.damage = 280;
+
 			Item.width = 34;
 			Item.height = 20;
-			Item.useTime = 20;
-			Item.useAnimation = 20;
-			Item.useStyle = ItemUseStyleID.Shoot;
-			Item.noMelee = true;
+
 			Item.knockBack = 4f;
 			Item.value = 10000;
 			Item.rare = ModContent.RarityType<MoonRarityT1>();
-			Item.shoot = ProjectileID.PurificationPowder;  
-			Item.autoReuse = true;
-			Item.shootSpeed = 20f;
-			Item.useAmmo = AmmoID.Bullet;
 			Item.UseSound = SoundID.Item38;
 		}
 
+		private int altUseCooldown;
+
+		public override void UpdateInventory(Player player)
+		{
+			if (altUseCooldown > 0)
+				altUseCooldown--;
+		}
+
+		public override bool AltFunctionUse(Player player) => altUseCooldown <= 0;
+
+		public override bool CanUseItemHeldProjectile(Player player)
+		{
+			if (player.AltFunction())
+			{
+				Item.damage = 240;
+                Item.useTime = 6;
+				Item.useAnimation = 36;
+				altUseCooldown = 55;
+			}
+			else
+			{
+                Item.damage = 280;
+                Item.useTime = 20;
+				Item.useAnimation = 20;
+			}
+
+			return true;
+		}
+
+
 		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
 		{
+
+		}
+
+		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+		{
+			if (player.AltFunction())
+			{
+				float radians = MathHelper.ToRadians(5);
+				velocity = velocity.RotatedBy(Main.rand.NextFloat(-radians, radians));
+				SoundEngine.PlaySound(SoundID.Item38 with { PitchRange = (0f, 0.5f) }, position);
+			}
+
 			position += Vector2.Normalize(velocity) * 30;
-			type = ModContent.ProjectileType<SeleniteMagnumProjectile>();
- 		}
+			Projectile.NewProjectileDirect(source, position, velocity, type, damage, knockback, player.whoAmI);
+
+			return false;
+		}
 
 		public override Vector2? HoldoutOffset() => new Vector2(4, 0);
 
