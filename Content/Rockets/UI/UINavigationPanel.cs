@@ -66,7 +66,6 @@ namespace Macrocosm.Content.Rockets.UI
 
 		public override void Update(GameTime gameTime)
 		{
-			WorldDataSystem.Instance.FoundVulcan = false;
 			base.Update(gameTime);
 		}
 
