@@ -115,9 +115,9 @@ namespace Macrocosm.Content.Rockets.UI
 		/// Removes a target with the specified name ID from the map, if found
 		/// </summary>
 		/// <param name="targetName"></param>
-		public void RemoveTargetByName(string targetName)
+		public void RemoveTarget(string targetName)
 		{
-			if (TryFindTargetByName(targetName, out UINavigationTarget target))
+			if (TryFindTarget(targetName, out UINavigationTarget target))
 				RemoveChild(target);
 		}
 
@@ -127,9 +127,9 @@ namespace Macrocosm.Content.Rockets.UI
 		/// <param name="name"> The string name ID </param>
 		/// <param name="target"> The output target, null if not found </param>
 		/// <returns> True if said target has been found, false otherwise </returns>
-		public bool TryFindTargetByName(string name, out UINavigationTarget target)
+		public bool TryFindTarget(string name, out UINavigationTarget target)
 		{
-			target = FindTargetByName(name);
+			target = FindTarget(name);
 			if (target is not null)
 				return true;
 
@@ -141,7 +141,7 @@ namespace Macrocosm.Content.Rockets.UI
 		/// </summary>
 		/// <param name="name"> The string name ID </param>
 		/// <returns> The target instance, null if not found </returns>
-		public UINavigationTarget FindTargetByName(string name)
+		public UINavigationTarget FindTarget(string name)
 		{
 			foreach (UINavigationTarget target in Targets)
 				if (target.Name == name)

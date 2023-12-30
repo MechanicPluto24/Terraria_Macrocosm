@@ -37,7 +37,7 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
 		{
             if (subworldId == "Phobos" && WorldDataSystem.Instance.DeimosReturn)
                  return Utility.GetLocalizedTextOrEmpty("Mods.Macrocosm.Subworlds." + subworldId + ".FlavorText_DeimosReturn");
- 
+
             return Utility.GetLocalizedTextOrEmpty("Mods.Macrocosm.Subworlds." + subworldId + ".FlavorText");
         }
 
@@ -106,7 +106,7 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
             );
 
 			Add("Phobos",
-				 new GravityInfoElement("Unstable"),
+				new GravityInfoElement("Unstable"),
                 new ThreatLevelInfoElement(ThreatLevel.Challenging, Color.Yellow)
             );
 
