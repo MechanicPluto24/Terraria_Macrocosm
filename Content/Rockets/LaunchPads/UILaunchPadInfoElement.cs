@@ -21,8 +21,11 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 		public bool IsSpawnPointDefault => LaunchPad is null;
 
 		public bool IsCurrent { get; set; }
+		public bool IsReachable { get; set; }
 
-		public UILaunchPadInfoElement() : base(
+		public bool CanInteract => !IsCurrent && IsReachable && (IsSpawnPointDefault || !LaunchPad.HasRocket);
+
+        public UILaunchPadInfoElement() : base(
 			Language.GetText("Mods.Macrocosm.UI.Rocket.Common.WorldSpawn"),
 			ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/WorldInfo/SpawnPoint"),
 			null,
@@ -43,7 +46,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			BorderColor = UITheme.Current.PanelStyle.BorderColor;
 			uIDisplayText.TextColor = UITheme.Current.CommonTextColor;
 
-			if ((IsSpawnPointDefault || !LaunchPad.HasRocket) && !IsCurrent)
+			if (CanInteract)
 			{
 				if (HasFocus || IsMouseHovering)
 				{
@@ -53,7 +56,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			}
 			else
 			{
-				BackgroundColor = (UITheme.Current.PanelStyle.BackgroundColor * 0.85f).WithOpacity(1f);
+				BackgroundColor = Color.Lerp(UITheme.Current.PanelStyle.BackgroundColor, Color.DarkGray, 0.1f);
 				uIDisplayText.TextColor = Color.LightGray;
 			}
 

@@ -210,7 +210,7 @@ namespace Macrocosm.Content.Rockets.UI
 				worldInfoPanel.SetTitle(new LocalizedColorScaleText(Language.GetText("Mods.Macrocosm.Subworlds." + subworldId + ".DisplayName"), scale: 1.2f));
 			}
 
-			LocalizedText flavorText = Utility.GetLocalizedTextOrEmpty("Mods.Macrocosm.Subworlds." + subworldId + ".FlavorText");
+			LocalizedText flavorText = WorldInfo.GetFlavorText(subworldId);
 			if (flavorText != LocalizedText.Empty && flavorText.Value != "default")
 			{
 				worldInfoPanel.Add(new UIDynamicTextPanel(new LocalizedColorScaleText(flavorText, Color.White, scale: 0.85f)));
@@ -309,14 +309,15 @@ namespace Macrocosm.Content.Rockets.UI
 					if (Rocket is not null && launchPad.RocketID == Rocket.WhoAmI)
 						storedInfoElement.IsCurrent = true;
 				}
-			}
 
-			// Remove inactive launchpads
-			launchLocationsList.OfType<UILaunchPadInfoElement>()
+                storedInfoElement.IsReachable = target is not null && target.IsReachable;
+            }
+
+            // Remove inactive launchpads
+            launchLocationsList.OfType<UILaunchPadInfoElement>()
 							   .Where(e => !e.IsSpawnPointDefault && !e.LaunchPad.Active)
 							   .ToList()
 							   .ForEach(launchLocationsList.RemoveFromList);
-
 
 			// Add the "Spawn Point" launch location if no vacant launchpads were found
 			if (!launchLocationsList.OfType<UILaunchPadInfoElement>().Any(e => e.IsSpawnPointDefault || !e.IsSpawnPointDefault && !e.LaunchPad.HasRocket))
@@ -327,10 +328,12 @@ namespace Macrocosm.Content.Rockets.UI
 				};
 				spawnInfoElement.OnLeftClick += InfoElement_OnLeftClick;
 
-				if (Rocket.AtPosition(Utility.SpawnWorldPosition))
+                if (Rocket.AtPosition(Utility.SpawnWorldPosition) && subworldId == MacrocosmSubworld.CurrentID)
 					spawnInfoElement.IsCurrent = true;
 
-				launchLocationsList.Add(spawnInfoElement);
+                spawnInfoElement.IsReachable = target is not null && target.IsReachable;
+
+                launchLocationsList.Add(spawnInfoElement);
 			}
 
 			launchLocationsList.Activate();
@@ -340,9 +343,8 @@ namespace Macrocosm.Content.Rockets.UI
 
 		private void InfoElement_OnLeftClick(UIMouseEvent evt, UIElement listeningElement)
 		{
-			if (listeningElement is UILaunchPadInfoElement infoElement)
-				if ((infoElement.IsSpawnPointDefault || !infoElement.LaunchPad.HasRocket) && !infoElement.IsCurrent)
-					infoElement.HasFocus = true;
+			if (listeningElement is UILaunchPadInfoElement infoElement && infoElement.CanInteract)
+				infoElement.HasFocus = true;
 		}
 
 		// Doesn't work 
