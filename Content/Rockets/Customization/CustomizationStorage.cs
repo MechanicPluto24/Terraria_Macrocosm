@@ -120,7 +120,7 @@ namespace Macrocosm.Content.Rockets.Customization
 		/// <param name="moduleName"> The rocket module this pattern belongs to </param>
 		/// <param name="patternName"> The pattern name </param>
 		/// <param name="unlockedState"> The unlocked state to set </param>
-		public static void SetPatternUnlockedStatus(string moduleName, string patternName, bool unlockedState = true)
+		public static void SetPatternUnlockedStatus(string moduleName, string patternName, bool unlockedState)
 			 => patternUnlockStatus[(moduleName, patternName)] = unlockedState;
 
 		/// <summary>

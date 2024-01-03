@@ -1,7 +1,9 @@
 ﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Storage;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Items.Consumables.Unlockables;
 using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.Modules;
 using Microsoft.Xna.Framework;
@@ -21,7 +23,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.UI
 {
-	public class UICustomizationTab : UIPanel, ITabUIElement, IRocketUIDataConsumer
+	public class UICustomizationTab : UIPanel, ITabUIElement, IRocketUIDataConsumer, IInventoryOwner
 	{
 		private Rocket rocket = new();
 		public Rocket Rocket
@@ -36,7 +38,6 @@ namespace Macrocosm.Content.Rockets.UI
 					OnRocketChanged();
 			}
 		}
-
 
 		private readonly Dictionary<Rocket, Rocket> rocketDummyPairs = new();
 		public Rocket CustomizationDummy
@@ -70,16 +71,19 @@ namespace Macrocosm.Content.Rockets.UI
 		private string lastModuleName = "CommandPod";
 		private RocketModule CurrentModule => CustomizationDummy.Modules[currentModuleName];
 
-		private UIPanel rocketCustomizationControlPanel;
+        private UIPanel rocketCustomizationControlPanel;
 		private UIPanelIconButton rocketApplyButton;
 		private UIPanelIconButton rocketCancelButton;
 		private UIPanelIconButton rocketResetButton;
 		private UIPanelIconButton rocketCopyButton;
 		private UIPanelIconButton rocketPasteButton;
+        public Inventory Inventory { get; set; }
+        private UICustomItemSlot unlockableItemSlot;
+        private UIPanelIconButton unlockableApplyButton;
 
-		private UIPanel nameplateConfigPanel;
+        private UIPanel nameplateConfigPanel;
 		private UIInputTextBox nameplateTextBox;
-		private UIPanelIconButton nameplateAcceptButton;
+		private UIPanelIconButton nameplateAcceptResetButton;
 		private UIPanelIconButton nameplateColorPicker;
 		private UIPanelIconButton alignLeft;
 		private UIPanelIconButton alignCenterHorizontal;
@@ -474,7 +478,19 @@ namespace Macrocosm.Content.Rockets.UI
 			RefreshPatternColorPickers();
 		}
 
-		private void CopyRocketData()
+		private void ApplyUnlockableItem()
+		{
+            if(Inventory[0].ModItem is PatternDesign patternDesign)
+			{
+                SoundEngine.PlaySound(SoundID.MenuTick);
+				foreach(var (moduleName, patternName) in patternDesign.Patterns)
+ 					CustomizationStorage.SetPatternUnlockedStatus(moduleName, patternName, unlockedState: true);
+				Inventory[0].TurnToAir();
+                RefreshPatternConfigPanel();
+            }
+        }
+
+        private void CopyRocketData()
 		{
 			SoundEngine.PlaySound(SoundID.MenuTick);
 			string json = CustomizationDummy.GetCustomizationDataToJSON();
@@ -716,7 +732,7 @@ namespace Macrocosm.Content.Rockets.UI
 		{
 			JumpToModule("EngineModule");
 
-            nameplateAcceptButton.SetPanelTextures(
+            nameplateAcceptResetButton.SetPanelTextures(
                 ModContent.Request<Texture2D>(symbolsPath + "CheckmarkWhite"),
                 ModContent.Request<Texture2D>(symbolsPath + "CheckmarkBorderHighlight"),
                 ModContent.Request<Texture2D>(symbolsPath + "CheckmarkBorderHighlight")
@@ -725,7 +741,7 @@ namespace Macrocosm.Content.Rockets.UI
 
 		private void NameplateTextOnFocusLost()
 		{
-            nameplateAcceptButton.SetPanelTextures(
+            nameplateAcceptResetButton.SetPanelTextures(
                 ModContent.Request<Texture2D>(symbolsPath + "ResetWhite"),
                 ModContent.Request<Texture2D>(symbolsPath + "ResetBorderHighlight"),
                 ModContent.Request<Texture2D>(symbolsPath + "ResetBorderHighlight")
@@ -884,7 +900,25 @@ namespace Macrocosm.Content.Rockets.UI
 			rocketCustomizationControlPanel.SetPadding(2f);
 			customizationPanelBackground.Append(rocketCustomizationControlPanel);
 
-			rocketCopyButton = new(Main.Assets.Request<Texture2D>("Images/UI/CharCreation/Copy"))
+			Inventory = new(1, this);
+			unlockableItemSlot = new(Inventory, 0) 
+			{
+				HAlign = 0.5f,
+				VAlign = 0.5f
+			};
+			rocketCustomizationControlPanel.Append(unlockableItemSlot);
+
+            unlockableApplyButton = new(ModContent.Request<Texture2D>(symbolsPath + "Hammer"))
+            {
+                VAlign = 0.5f,
+                Left = new(0f, 0.6f),
+				GrayscaleIconIfNotInteractible = true,
+                CheckInteractible = () => Inventory[0].ModItem is PatternDesign
+            };
+            unlockableApplyButton.OnLeftClick += (_, _) => ApplyUnlockableItem();
+            rocketCustomizationControlPanel.Append(unlockableApplyButton);
+
+            rocketCopyButton = new(Main.Assets.Request<Texture2D>("Images/UI/CharCreation/Copy"))
 			{
 				VAlign = 0.9f,
 				Left = new(0f, 0.18f),
@@ -993,7 +1027,7 @@ namespace Macrocosm.Content.Rockets.UI
 			};
 			nameplateConfigPanel.Append(nameplateTextBox);
 
-            nameplateAcceptButton = new
+            nameplateAcceptResetButton = new
 			(
 				Macrocosm.EmptyTexAsset,
                 ModContent.Request<Texture2D>(symbolsPath + "ResetWhite"),
@@ -1010,8 +1044,8 @@ namespace Macrocosm.Content.Rockets.UI
 				BackPanelBorderColor = Color.Transparent,
 				BackPanelHoverBorderColor = Color.White
             };
-			nameplateAcceptButton.OnLeftClick += (_, _) => NameplateAcceptResetButtonOnClick();
-            nameplateConfigPanel.Append(nameplateAcceptButton);
+			nameplateAcceptResetButton.OnLeftClick += (_, _) => NameplateAcceptResetButtonOnClick();
+            nameplateConfigPanel.Append(nameplateAcceptResetButton);
 
             nameplateColorPicker = new()
 			{

@@ -940,3 +940,8 @@ CraterDemonPet: {
 	DisplayName: Toy Rocket
 	Tooltip: Summons a Mini Crater Demon
 }
+
+HelixPatternDesign: {
+	DisplayName: Helix Pattern Design
+	Tooltip: ""
+}
