@@ -55,7 +55,7 @@
   {
     "patternName": "Helix",
     "moduleName": "CommandPod",
-    "unlockedByDefault": true,
+    "unlockedByDefault": false,
     "colorData": [
         { "color": "#F27777" },
         { "color": "#FF0000" },
@@ -152,7 +152,7 @@
   {
     "patternName": "Helix",
     "moduleName": "ServiceModule",
-    "unlockedByDefault": true,
+    "unlockedByDefault": false,
     "colorData": [
       {},
       { "color": "#FF0000" },
@@ -244,24 +244,24 @@
       { "color": "#B0A800" }
     ]
   },
-  {
-    "patternName": "Helix",
-    "moduleName": "ReactorModule",
-    "unlockedByDefault": true,
-    "colorData": [
-      {},
-      { "color": "#FF0000" },
-      { "color": "#FFA500" },
-      { "color": "#FFFF00" },
-      {
-        "color": "#008000",
-        "userModifiable": false
-      },
-      { "color": "#0000FF" },
-      { "color": "#4B0082" },
-      { "color": "#EE82EE" }
-    ]
-  },
+    {
+        "patternName": "Helix",
+        "moduleName": "ReactorModule",
+        "unlockedByDefault": false,
+        "colorData": [
+            {},
+            { "color": "#FF0000" },
+            { "color": "#FFA500" },
+            { "color": "#FFFF00" },
+            {
+                "color": "#008000",
+                "userModifiable": false
+            },
+            { "color": "#0000FF" },
+            { "color": "#4B0082" },
+            { "color": "#EE82EE" }
+        ]
+    },
   {
     "patternName": "Redstone",
     "moduleName": "ReactorModule",
@@ -338,7 +338,7 @@
   {
     "patternName": "Helix",
     "moduleName": "EngineModule",
-    "unlockedByDefault": true,
+    "unlockedByDefault": false,
     "colorData": [
       {},
       { "color": "#FF0000" },
@@ -426,7 +426,7 @@
   {
     "patternName": "Helix",
     "moduleName": "BoosterLeft",
-    "unlockedByDefault": true,
+    "unlockedByDefault": false,
     "colorData": [
         { "color": "#F27777" },
         { "color": "#FF0000" },
@@ -514,7 +514,7 @@
   {
     "patternName": "Helix",
     "moduleName": "BoosterRight",
-    "unlockedByDefault": true,
+    "unlockedByDefault": false,
     "colorData": [
         { "color": "#F27777" },
         { "color": "#FF0000" },

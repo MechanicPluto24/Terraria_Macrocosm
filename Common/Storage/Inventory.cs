@@ -83,7 +83,7 @@ namespace Macrocosm.Common.Storage
 		}
 
 		private Dictionary<int, UICustomItemSlot> slots = new();
-		public UICustomItemSlot CreateItemSlot(int index, int itemSlotContext, float scale = default)
+		public UICustomItemSlot CreateItemSlot(int index, int itemSlotContext = ItemSlot.Context.ChestItem, float scale = default)
 		{
 			UICustomItemSlot slot = new(this, index, itemSlotContext, scale);
 			slots[index] = slot;

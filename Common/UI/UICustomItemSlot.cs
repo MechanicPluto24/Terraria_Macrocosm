@@ -44,7 +44,7 @@ namespace Macrocosm.Common.UI
 		public bool CanFavorite { get; set; } = false;
 		protected Vector2 DrawOffset { get; set; } = new Vector2(52f, 52f) * -0.5f;
 
-		public UICustomItemSlot(Inventory inventory, int itemIndex, int itemSlotContext, float scale = default)
+		public UICustomItemSlot(Inventory inventory, int itemIndex, int itemSlotContext = Context.ChestItem, float scale = default)
 		{
 			this.inventory = inventory;
 			this.itemIndex = itemIndex;
