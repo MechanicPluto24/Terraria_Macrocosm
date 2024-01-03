@@ -1,6 +1,7 @@
 using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Netcode;
+using Macrocosm.Common.Storage;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.CursorIcons;
@@ -9,7 +10,6 @@ using Macrocosm.Content.Players;
 using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.LaunchPads;
 using Macrocosm.Content.Rockets.Modules;
-using Macrocosm.Content.Rockets.Storage;
 using Macrocosm.Content.Rockets.UI;
 using Microsoft.Xna.Framework;
 using System;
@@ -22,7 +22,7 @@ using Terraria.Localization;
 
 namespace Macrocosm.Content.Rockets
 {
-	public partial class Rocket
+	public partial class Rocket : IInventoryOwner
 	{
 		/// <summary> The rocket's identifier </summary>
 		public int WhoAmI = -1;
@@ -64,13 +64,8 @@ namespace Macrocosm.Content.Rockets
 		/// <summary> The rocket's current world, "Earth" if active and not in a subworld. Other mod's subworlds have the mod name prepended </summary>
 		[NetSync] public string CurrentWorld = "";
 
-		public bool HasInventory => Inventory is not null;
-		public Inventory Inventory { get; set; }
-
-		public const int DefaultInventorySize = 50;
-
-		/// <summary> Whether the rocket is active in the current world and should be updated and visible </summary>
-		public bool ActiveInCurrentWorld => Active && CurrentWorld == MacrocosmSubworld.CurrentID;
+        /// <summary> Whether the rocket is active in the current world and should be updated and visible </summary>
+        public bool ActiveInCurrentWorld => Active && CurrentWorld == MacrocosmSubworld.CurrentID;
 
 		/// <summary> Number of ticks of the launch countdown (seconds * 60 ticks/sec) </summary>
 		public int LiftoffTime = 180;
@@ -134,8 +129,10 @@ namespace Macrocosm.Content.Rockets
 		public float LandingProgress => Position.Y / (TargetLandingPosition.Y - Height + 16);
 
 		private float worldExitSpeed;
+        private bool ranFirstUpdate;
 
-		private bool forcedStationaryAppearance;
+        private bool forcedStationaryAppearance;
+
 		/// <summary> Whether this rocket is forced in a stationary (i.e. landed) state, visually </summary>
 		public bool ForcedStationaryAppearance
 		{
@@ -167,10 +164,16 @@ namespace Macrocosm.Content.Rockets
 			}
 		}
 
-		private bool ranFirstUpdate;
+        public bool HasInventory => Inventory is not null;
+        public Inventory Inventory { get; set; }
 
-		/// <summary> Instatiates a rocket. Use <see cref="Create(Vector2)"/> for spawning in world and proper syncing. </summary>
-		public Rocket()
+        public const int DefaultInventorySize = 50;
+
+        public Vector2 InventoryItemDropLocation => Center;
+        public int InventorySerializationIndex => WhoAmI;
+
+        /// <summary> Instatiates a rocket. Use <see cref="Create(Vector2)"/> for spawning in world and proper syncing. </summary>
+        public Rocket()
 		{
 			foreach (string moduleName in DefaultModuleNames)
 				Modules[moduleName] = CreateModule(moduleName);
@@ -800,5 +803,5 @@ namespace Macrocosm.Content.Rockets
 				}
 			}
 		}
-	}
+    }
 }
