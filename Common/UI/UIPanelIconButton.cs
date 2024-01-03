@@ -43,22 +43,29 @@ namespace Macrocosm.Common.UI
 			Asset<Texture2D> backPanelHoverBorderTexture)
 			: base(texture, backPanelHoverBorderTexture)
 		{
-			this.backPanelTexture = backPanelTexture;
-			this.backPanelBorderTexture = backPanelBorderTexture;
+			SetPanelTextures(backPanelTexture, backPanelBorderTexture);
+        }
 
-			Width.Set(backPanelTexture.Width(), 0f);
-			Height.Set(backPanelTexture.Height(), 0f);
-		}
+		public void SetPanelTextures(Asset<Texture2D> backPanelTexture, Asset<Texture2D> backPanelBorderTexture, Asset<Texture2D> backPanelHoverBorderTexture = null)
+        {
+            this.backPanelTexture = backPanelTexture;
+            this.backPanelBorderTexture = backPanelBorderTexture;
 
-		public void SetIcon(Asset<Texture2D> texture)
+            Width.Set(backPanelTexture.Width(), 0f);
+            Height.Set(backPanelTexture.Height(), 0f);
+
+			if (backPanelHoverBorderTexture is not null)
+				SetBorderTexture(backPanelHoverBorderTexture);
+        }
+
+        public new void SetImage(Asset<Texture2D> texture)
 		{
 			var width = Width;
 			var height = Height;
-			SetImage(texture);
+			base.SetImage(texture);
 			Width = width;
 			Height = height;
 		}
-
 
 		SpriteBatchState state;
 		protected override void DrawSelf(SpriteBatch spriteBatch)
@@ -68,7 +75,7 @@ namespace Macrocosm.Common.UI
 			CalculatedStyle dimensions = GetDimensions();
 			Vector2 position = dimensions.Position() + new Vector2(dimensions.Width, dimensions.Height) / 2f;
 
-			Color backPanelBorderColor = BackPanelBorderColor * (IsMouseHovering && CheckInteractible() ? visibilityHover : visibilityInteractible);
+            Color backPanelBorderColor = BackPanelBorderColor * (IsMouseHovering && CheckInteractible() ? visibilityHover : visibilityInteractible);
 			Color backPanelColor;
 
 			if (!interactible)
@@ -81,27 +88,32 @@ namespace Macrocosm.Common.UI
 			if (!OverrideBackgroundColor)
 				backPanelColor *= IsMouseHovering && interactible ? visibilityHover : visibilityInteractible;
 
-			spriteBatch.Draw(backPanelTexture.Value, position, null, backPanelColor, 0f, backPanelTexture.Size() / 2f, 1f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(backPanelTexture.Value, position, null, backPanelColor, 0f, backPanelTexture.Size() / 2f, 1f, SpriteEffects.None, 0f);
 			spriteBatch.Draw(backPanelBorderTexture.Value, position, null, backPanelBorderColor, 0f, backPanelBorderTexture.Size() / 2f, 1f, SpriteEffects.None, 0f);
 
 			if ((IsMouseHovering || (HasFocus && DrawBorderIfInFocus) || remoteInteractionFeedbackTicks > 0) && interactible)
-				spriteBatch.Draw(borderTexture.Value, position, null, BackPanelHoverBorderColor, 0f, borderTexture.Size() / 2f, 1f, SpriteEffects.None, 0f);
+				spriteBatch.Draw(borderTexture .Value, position, null, BackPanelHoverBorderColor, 0f, borderTexture.Size() / 2f, 1f, SpriteEffects.None, 0f);
 
-			if (GrayscaleIconIfNotInteractible && !interactible)
-			{
-				Effect grayscaleEffect = ModContent.Request<Effect>("Macrocosm/Assets/Effects/Grayscale").Value;
-				state.SaveState(spriteBatch);
-				spriteBatch.End();
-				spriteBatch.Begin(grayscaleEffect, state);
-			}
-
-			spriteBatch.Draw(texture.Value, position, null, IconColor, 0f, texture.Size() / 2f, 1f, SpriteEffects.None, 0f);
-
-			if (GrayscaleIconIfNotInteractible && !interactible)
-			{
-				spriteBatch.End();
-				spriteBatch.Begin(state);
-			}
+			DrawIcon(spriteBatch, position, interactible);
 		}
+
+		private void DrawIcon(SpriteBatch spriteBatch, Vector2 position, bool interactible)
+		{
+            if (GrayscaleIconIfNotInteractible && !interactible)
+            {
+                Effect grayscaleEffect = ModContent.Request<Effect>("Macrocosm/Assets/Effects/Grayscale").Value;
+                state.SaveState(spriteBatch);
+                spriteBatch.End();
+                spriteBatch.Begin(grayscaleEffect, state);
+            }
+
+            spriteBatch.Draw(texture.Value, position, null, IconColor, 0f, texture.Size() / 2f, 1f, SpriteEffects.None, 0f);
+
+            if (GrayscaleIconIfNotInteractible && !interactible)
+            {
+                spriteBatch.End();
+                spriteBatch.Begin(state);
+            }
+        }
 	}
 }
