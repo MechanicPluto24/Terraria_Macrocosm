@@ -1,6 +1,6 @@
-﻿using Macrocosm.Content.Rockets.Customization;
+﻿using Macrocosm.Common.Storage;
+using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.Modules;
-using Macrocosm.Content.Rockets.Storage;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria.ModLoader.IO;

@@ -1,6 +1,7 @@
 ﻿
 using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Rockets;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace Macrocosm.Content.Rockets.Storage
+namespace Macrocosm.Common.Storage
 {
 	public partial class Inventory
 	{
@@ -63,10 +64,9 @@ namespace Macrocosm.Content.Rockets.Storage
 		}
 
 		// TODO: entity or spacecraft abstraction (?)
-		public Rocket Owner { get; init; }
-		public int WhoAmI => Owner.WhoAmI;
+		public IInventoryOwner Owner { get; init; }
 
-		public Inventory(int size, Rocket owner)
+		public Inventory(int size, IInventoryOwner owner)
 		{
 			int clampedSize = (int)MathHelper.Clamp(size, 0, MaxInventorySize);
 
@@ -103,15 +103,18 @@ namespace Macrocosm.Content.Rockets.Storage
 			if (index < 0 || index >= Size)
 				return;
 
-			Item.NewItem(items[index].GetSource_Misc(Owner.GetType().Name), worldPosition, items[index]);
+			Item.NewItem(items[index].GetSource_Misc("Macrocosm:Inventory"), worldPosition, items[index]);
 			items[index] = new();
 		}
 
 		private void OnResize(int oldSize, int newSize)
 		{
 			if (oldSize > newSize)
-				for (int i = oldSize - 1; i >= newSize; i--)
-					DropItem(i, Owner.Center);
+			{
+				Vector2 dropLocation = Owner is not null ? Owner.InventoryItemDropLocation : Main.LocalPlayer.Center;
+                for (int i = oldSize - 1; i >= newSize; i--)
+					DropItem(i, dropLocation);
+			}
 
 			if (oldSize != newSize)
 				Array.Resize(ref items, newSize);
@@ -503,7 +506,7 @@ namespace Macrocosm.Content.Rockets.Storage
 
 					if (ItemSlot.PickItemMovementAction(playerInventory, context, emptyItemSlots[k], items[i]) != -1)
 					{
-						Utils.Swap(ref playerInventory[emptyItemSlots[k]], ref items[i]);
+						Terraria.Utils.Swap(ref playerInventory[emptyItemSlots[k]], ref items[i]);
 
 						if (Main.netMode == NetmodeID.MultiplayerClient)
 							SyncItem(i);
@@ -576,7 +579,7 @@ namespace Macrocosm.Content.Rockets.Storage
 			List<int> tempList = new();
 			List<int> tempList2 = new();
 
-			long coinCount = Utils.CoinsCount(out bool overflowing, source);
+			long coinCount = Terraria.Utils.CoinsCount(out bool overflowing, source);
 
 			int coinId;
 
@@ -759,7 +762,7 @@ namespace Macrocosm.Content.Rockets.Storage
 			if (success)
 				SoundEngine.PlaySound(SoundID.Grab);
 
-			long coinsCountPostMove = Utils.CoinsCount(out bool overflowPostMove, source);
+			long coinsCountPostMove = Terraria.Utils.CoinsCount(out bool overflowPostMove, source);
 			if (overflowing || overflowPostMove)
 				return 0L;
 
