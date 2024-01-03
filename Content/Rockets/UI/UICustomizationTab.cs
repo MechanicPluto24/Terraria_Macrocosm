@@ -79,6 +79,7 @@ namespace Macrocosm.Content.Rockets.UI
 
 		private UIPanel nameplateConfigPanel;
 		private UIInputTextBox nameplateTextBox;
+		private UIPanelIconButton nameplateAcceptButton;
 		private UIPanelIconButton nameplateColorPicker;
 		private UIPanelIconButton alignLeft;
 		private UIPanelIconButton alignCenterHorizontal;
@@ -280,12 +281,10 @@ namespace Macrocosm.Content.Rockets.UI
 			{
 				CustomizationDummy.Nameplate.TextColor = hslMenu.PendingColor;
 				nameplateColorPicker.BackPanelColor = hslMenu.PendingColor;
-				//nameplateTextBox.TextColor = hslMenu.PendingColor; // I don't think we want colored text in the text box lol -- Feldy
 			}
 			else
 			{
 				nameplateColorPicker.BackPanelColor = CustomizationDummy.Nameplate.TextColor;
-				//nameplateTextBox.TextColor = Rocket.CustomizationDummy.Nameplate.TextColor;
 			}
 		}
 
@@ -716,13 +715,37 @@ namespace Macrocosm.Content.Rockets.UI
 		private void NameplateTextOnFocusGain()
 		{
 			JumpToModule("EngineModule");
-		}
+
+            nameplateAcceptButton.SetPanelTextures(
+                ModContent.Request<Texture2D>(symbolsPath + "CheckmarkWhite"),
+                ModContent.Request<Texture2D>(symbolsPath + "CheckmarkBorderHighlight"),
+                ModContent.Request<Texture2D>(symbolsPath + "CheckmarkBorderHighlight")
+			);
+        }
 
 		private void NameplateTextOnFocusLost()
 		{
+            nameplateAcceptButton.SetPanelTextures(
+                ModContent.Request<Texture2D>(symbolsPath + "ResetWhite"),
+                ModContent.Request<Texture2D>(symbolsPath + "ResetBorderHighlight"),
+                ModContent.Request<Texture2D>(symbolsPath + "ResetBorderHighlight")
+            );
+        }
+
+		private void NameplateAcceptResetButtonOnClick()
+		{
+			if (nameplateTextBox.HasFocus)
+			{
+                nameplateTextBox.HasFocus = false;
+            }
+			else
+			{
+				CustomizationDummy.Nameplate.Text = "";
+				nameplateTextBox.Text = Language.GetTextValue("Mods.Macrocosm.Common.Rocket");
+            }
 		}
 
-		private void NameplateColorPickerOnFocusGain()
+        private void NameplateColorPickerOnFocusGain()
 		{
 			JumpToModule("EngineModule");
 
@@ -970,7 +993,27 @@ namespace Macrocosm.Content.Rockets.UI
 			};
 			nameplateConfigPanel.Append(nameplateTextBox);
 
-			nameplateColorPicker = new()
+            nameplateAcceptButton = new
+			(
+				Macrocosm.EmptyTexAsset,
+                ModContent.Request<Texture2D>(symbolsPath + "ResetWhite"),
+                ModContent.Request<Texture2D>(symbolsPath + "ResetBorderHighlight"),
+                ModContent.Request<Texture2D>(symbolsPath + "ResetBorderHighlight")
+            )
+			{
+				Width = new(20, 0),
+				Height = new(20, 0),
+				VAlign = 0.5f,
+				Left = new(0, 0.42f),
+				BackPanelColor = Color.White,
+				FocusedBackPanelColor = Color.White,
+				BackPanelBorderColor = Color.Transparent,
+				BackPanelHoverBorderColor = Color.White
+            };
+			nameplateAcceptButton.OnLeftClick += (_, _) => NameplateAcceptResetButtonOnClick();
+            nameplateConfigPanel.Append(nameplateAcceptButton);
+
+            nameplateColorPicker = new()
 			{
 				VAlign = 0.5f,
 				HAlign = 0f,
