@@ -170,6 +170,7 @@ namespace Macrocosm.Content.Rockets.UI
 		{
 			Main.blockInput = false;
 			AllLoseFocus();
+			Inventory.DropItem(0, Rocket.Center, sync: false, fromClient: true);
 		}
 
 		public override void Update(GameTime gameTime)

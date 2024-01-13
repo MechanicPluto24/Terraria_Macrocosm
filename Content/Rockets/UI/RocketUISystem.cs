@@ -63,7 +63,10 @@ namespace Macrocosm.Content.Rockets.UI
 			if (Main.netMode == NetmodeID.Server)
 				return;
 
-			UIRocketState?.Deactivate();
+			// Required for calling OnTabClose
+			HideUI();
+
+            UIRocketState?.Deactivate();
 			UIRocketState = null;
 
 			UIAssemblyState?.Deactivate();
