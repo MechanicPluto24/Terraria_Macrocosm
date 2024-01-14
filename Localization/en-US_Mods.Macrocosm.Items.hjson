@@ -940,3 +940,13 @@ CraterDemonPet: {
 	DisplayName: Toy Rocket
 	Tooltip: Summons a Mini Crater Demon
 }
+
+ShoresOfOblivion: {
+	DisplayName: Shores Of Oblivion
+	Tooltip: ""
+}
+
+MoonBasePlatingWall: {
+	DisplayName: Moon Base Plating Wall
+	Tooltip: ""
+}
