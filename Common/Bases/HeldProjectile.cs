@@ -60,7 +60,7 @@ namespace Macrocosm.Common.Bases
 			if (Main.netMode != NetmodeID.SinglePlayer && player.whoAmI == Main.myPlayer)
 				NetMessage.SendData(MessageID.SyncProjectile, -1, -1, null, projectile.whoAmI);
 
-			return false;
+            return false;
 		}
 
 		/// <summary>
@@ -85,7 +85,7 @@ namespace Macrocosm.Common.Bases
 		public Player Player => Main.player[Projectile.owner];
 		protected int Damage => Projectile.damage;
 
-		/// <summary> The projectile type the item would have shot based on ammo. </summary>
+		/// <summary> The projectile type the item would have shot (when swung, based on ammo, etc.). </summary>
 		public int ShootProjectileType { get; set; }
 
 		protected Item item = new();
