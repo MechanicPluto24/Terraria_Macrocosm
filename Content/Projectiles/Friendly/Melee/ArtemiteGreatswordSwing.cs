@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
-	public class ArtemiteSwordSwing : ModProjectile
+	public class ArtemiteGreatswordSwing : ModProjectile
 	{
 		public override string Texture => Macrocosm.TextureAssetsPath + "Swing";
 
@@ -44,41 +44,37 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
 		public override void AI()
 		{
-			float scaleFactor = 1.5f;
-			float baseScale = 1f;
 			float progress = SwingRotation / TargetSwingRotation;
 			Player player = Main.player[Projectile.owner];
 			Item item = player.HeldItem;
-			float speed = player.GetTotalAttackSpeed(DamageClass.Melee);
 
-			SwingRotation += 1.75f * speed;
+			float speed = 0.48f * player.GetTotalAttackSpeed(DamageClass.Melee);
+			SwingRotation += speed;
 
 			Projectile.rotation = (float)Math.PI * SwingDirection * progress + Projectile.velocity.ToRotation() + SwingDirection * (float)Math.PI + player.fullRotation;
 			Projectile.Center = player.RotatedRelativePoint(player.MountedCenter) + PositionAdjustment;
 
-			Projectile.scale = baseScale + MathHelper.SmoothStep(0, 1, progress) * scaleFactor;
-			Projectile.scale *= player.GetAdjustedItemScale(item);
+			Projectile.scale = 2f * player.GetAdjustedItemScale(item);
 
-			Vector2 hitboxPos = Projectile.Center - PositionAdjustment + Utility.PolarVector(200, Projectile.rotation);
+			Vector2 hitboxPos = Projectile.Center - PositionAdjustment + Utility.PolarVector(125, Projectile.rotation);
 
-			for (int i = 0; i < 2; i++)
-			{
-				if (progress < 0.15f)
-					break;
+            for (int i = 0; i < 2; i++)
+            {
+                if (progress < 0.15f)
+                    break;
 
-				Vector2 dustVelocity = new Vector2(Main.rand.NextFloat(1, 20 * speed * progress), 0).RotatedBy(Projectile.rotation + MathHelper.PiOver2 * Projectile.direction) + Main.player[Projectile.owner].velocity;
-				Dust dust = Dust.NewDustDirect(Vector2.Lerp(hitboxPos, player.Center, Main.rand.NextFloat()), 1, 1, ModContent.DustType<ArtemiteBrightDust>(), dustVelocity.X, dustVelocity.Y, Scale: Main.rand.NextFloat(1.2f, 2f));
-				dust.noGravity = true;
+                Vector2 dustVelocity = new Vector2(Main.rand.NextFloat(1, 20 * speed * progress), 0).RotatedBy(Projectile.rotation + MathHelper.PiOver2 * Projectile.direction) + Main.player[Projectile.owner].velocity;
+                Dust dust = Dust.NewDustDirect(Vector2.Lerp(hitboxPos, player.Center, Main.rand.NextFloat()), 1, 1, ModContent.DustType<ArtemiteBrightDust>(), dustVelocity.X, dustVelocity.Y, Scale: Main.rand.NextFloat(1.2f, 2f));
+                dust.noGravity = true;
 
-				if (Main.rand.NextBool(4))
-				{
-					dustVelocity = new Vector2(Main.rand.NextFloat(4, 6), 0).RotatedBy(Projectile.rotation - MathHelper.PiOver2 * Projectile.direction) + Main.player[Projectile.owner].velocity;
-					dust = Dust.NewDustDirect(Vector2.Lerp(Projectile.position, player.Center, 0.5f), Projectile.width / 2, Projectile.height / 2, ModContent.DustType<ArtemiteDust>(), dustVelocity.X, dustVelocity.Y, Scale: Main.rand.NextFloat(0.6f, 1f)); ;
-					dust.noGravity = true;
-				}
-			}
-
-			if (SwingRotation >= TargetSwingRotation + 1)
+                if (Main.rand.NextBool(4))
+                {
+                    dustVelocity = new Vector2(Main.rand.NextFloat(4, 6), 0).RotatedBy(Projectile.rotation - MathHelper.PiOver2 * Projectile.direction) + Main.player[Projectile.owner].velocity;
+                    dust = Dust.NewDustDirect(Vector2.Lerp(Projectile.position, player.Center, 0.5f), Projectile.width / 2, Projectile.height / 2, ModContent.DustType<ArtemiteDust>(), dustVelocity.X, dustVelocity.Y, Scale: Main.rand.NextFloat(0.6f, 1f)); ;
+                    dust.noGravity = true;
+                }
+            }
+            if (SwingRotation >= TargetSwingRotation + 1)
 				Projectile.Kill();
 		}
 
