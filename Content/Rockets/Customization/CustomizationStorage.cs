@@ -274,13 +274,12 @@ namespace Macrocosm.Content.Rockets.Customization
             foreach (string moduleName in Rocket.DefaultModuleNames)
                  AddDetail(moduleName, "None", true);
  
-            // Find all existing patters for this module
+            // Find all existing details
             string lookupString = "Content/Rockets/Customization/Details/";
             var detailPathsWithIcons = Macrocosm.Instance.RootContentSource.GetAllAssetsStartingWith(lookupString).ToList();
 			var detailPaths = detailPathsWithIcons.Where(x => !x.Contains("/Icons")).ToList();
 
-            // Log the pattern list
-
+            // Log the detail list
             foreach (var detailWithModule in detailPaths)
 			{
 				string[] split = detailWithModule.Replace(lookupString, "").Split('/');

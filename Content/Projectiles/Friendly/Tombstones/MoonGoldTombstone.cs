@@ -4,15 +4,14 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Tombstones
 {
-    public class MoonTombstone : MacrocosmTombstone
+    public class MoonGoldTombstone : MacrocosmTombstone
     {
-        public override int TileType => ModContent.TileType<Tiles.Tombstones.MoonTombstone>();
+        public override int TileType => ModContent.TileType<Tiles.Tombstones.MoonGoldTombstone>();
 
         public override int TargetRockTileType => ModContent.TileType<Regolith>();
 
         public override int ImpactDustType => ModContent.DustType<RegolithDust>();
 
-        public override int StyleCount => 2;
-
+        public override int StyleCount => 3;
     }
 }

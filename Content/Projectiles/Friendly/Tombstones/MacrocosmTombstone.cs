@@ -1,0 +1,113 @@
+﻿using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Tiles.Blocks;
+using Microsoft.Xna.Framework;
+using System;
+using Terraria;
+using Terraria.Audio;
+using Terraria.DataStructures;
+using Terraria.ID;
+using Terraria.ModLoader;
+
+namespace Macrocosm.Content.Projectiles.Friendly.Tombstones
+{
+	public abstract class MacrocosmTombstone : ModProjectile
+	{
+		public abstract int TileType { get; }
+		public virtual int TargetRockTileType => -1;
+		public virtual int ImpactDustType => -1;
+
+		public abstract int StyleCount { get; }
+
+		public virtual int Width => 32;
+		public virtual int Height => 34;
+
+		public override void SetStaticDefaults()
+		{
+			Main.projFrames[Type] = StyleCount;
+		}
+
+		public override void SetDefaults()
+		{
+			Projectile.knockBack = 12f;
+			Projectile.width = Width;
+			Projectile.height = Height;
+			Projectile.aiStyle = ProjAIStyleID.GraveMarker; // needed for bounce 
+			Projectile.penetrate = -1;
+			DrawOffsetX = -5;
+			DrawOriginOffsetX = 0;
+			DrawOriginOffsetY = -5;
+		}
+
+		private int Style
+		{
+			get => (int)Projectile.ai[0];
+			set => Projectile.ai[0] = value;
+        }
+
+		private bool spawned;
+
+		public override bool PreAI()
+		{
+			if (!spawned)
+			{
+				Projectile.frame = Math.Abs(Style) % StyleCount;
+				spawned = true;
+			}
+
+			if (Projectile.velocity.Y == 0f)
+				Projectile.velocity.X *= 0.98f;
+
+			Projectile.rotation += Projectile.velocity.X * 0.1f;
+			Projectile.velocity.Y += 0.2f;
+
+			if (Projectile.owner != Main.myPlayer)
+				return false;
+
+			int tileX = (int)((Projectile.position.X + Projectile.width / 2) / 16f);
+			int tileY = (int)((Projectile.position.Y + Projectile.height - 4f) / 16f);
+
+			bool placeTile = false;
+			bool onTargetRock = TargetRockTileType > 0 && Main.tile[tileX, tileY + 1].TileType == TargetRockTileType && Main.tile[tileX + 1, tileY + 1].TileType == TargetRockTileType;
+
+			if (TileObject.CanPlace(tileX, tileY,TileType, Style, Projectile.direction, out TileObject objectData))
+				placeTile = TileObject.Place(objectData);
+
+			if (placeTile)
+			{
+				NetMessage.SendObjectPlacement(-1, tileX, tileY, objectData.type, objectData.style, objectData.alternate, objectData.random, Projectile.direction);
+				SoundEngine.PlaySound(SoundID.Dig, new Vector2(tileX * 16, tileY * 16));
+				int signId = Sign.ReadSign(tileX, tileY);
+				if (signId >= 0)
+				{
+					Sign.TextSign(signId, Projectile.miscText);
+					NetMessage.SendData(MessageID.ReadSign, -1, -1, null, signId, 0f, (int)(byte)new BitsByte(b1: true));
+				}
+
+				if (onTargetRock && ImpactDustType > 0)
+					ImpactEffect();
+
+				Projectile.Kill();
+			}
+
+			return false;
+		}
+
+		private void ImpactEffect()
+		{
+			for (int i = 0; i < Main.rand.Next(30, 45); i++)
+			{
+				Dust dust = Dust.NewDustDirect(
+					new Vector2(Projectile.Center.X, Projectile.Center.Y),
+					Projectile.width,
+					Projectile.height,
+					ImpactDustType,
+					Main.rand.NextFloat(-0.8f, 0.8f),
+					Main.rand.NextFloat(0f, -4f),
+					Scale: Main.rand.NextFloat(1f, 1.3f)
+				);
+
+				dust.noGravity = false;
+			}
+		}
+	}
+}

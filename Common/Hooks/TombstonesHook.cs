@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Content.Projectiles.Friendly.Tombstones;
+using Microsoft.Xna.Framework;
 using SubworldLibrary;
 using System;
 using Terraria;
@@ -12,38 +13,43 @@ namespace Macrocosm.Common.Hooks
 	{
 		public void Load(Mod mod)
 		{
-			Terraria.On_Player.DropTombstone += Player_DropTombstone;
+			On_Player.DropTombstone += Player_DropTombstone;
 		}
 
 
 		public void Unload()
 		{
-			Terraria.On_Player.DropTombstone -= Player_DropTombstone;
+			On_Player.DropTombstone -= Player_DropTombstone;
 		}
 
-		private void Player_DropTombstone(Terraria.On_Player.orig_DropTombstone orig, Player self, long coinsOwned, NetworkText deathText, int hitDirection)
+		private void Player_DropTombstone(On_Player.orig_DropTombstone orig, Player player, long coinsOwned, NetworkText deathText, int hitDirection)
 		{
 			if (SubworldSystem.AnyActive<Macrocosm>())
 			{
-				if (Main.netMode != NetmodeID.MultiplayerClient)
+				if (player.whoAmI == Main.myPlayer)
 				{
-					// here could be a switch statement based on the subworld
-					int tombstoneType = ModContent.ProjectileType<MoonTombstone>();
+					bool golden = coinsOwned > 100000;
 
-					// whether to drop a normal or golden tombstone 
-					float golden = 0f;
-					if (coinsOwned > 100000)
-						golden = 1f;
+					// TODO: Here could be either:
+					// - a switch statement based on the subworld
+					// - a pair of proj types, members of MacrocosmSubworld.Current
+					int tombstoneType = golden ? ModContent.ProjectileType<MoonGoldTombstone>() : ModContent.ProjectileType<MoonTombstone>();
 
 					float speed;
-					for (speed = (float)Main.rand.Next(-35, 36) * 0.1f; speed < 2f && speed > -2f; speed += (float)Main.rand.Next(-30, 31) * 0.1f) { }
+					for (speed = Main.rand.Next(-35, 36) * 0.1f; speed < 2f && speed > -2f; speed += Main.rand.Next(-30, 31) * 0.1f) { }
 
-					int proj = Projectile.NewProjectile(self.GetSource_Misc("PlayerDeath_TombStone"),
-						self.position.X + (float)(self.width / 2),
-						self.position.Y + (float)(self.height / 2),
-						(float)Main.rand.Next(10, 30) * 0.1f * (float)hitDirection + speed,
-						(float)Main.rand.Next(-40, -20) * 0.1f,
-						tombstoneType, 0, 0f, Main.myPlayer, ai0: golden);
+					Projectile tombstone = Projectile.NewProjectileDirect(player.GetSource_Misc("PlayerDeath_TombStone"),
+						new Vector2
+						(
+							player.position.X + player.width / 2,
+							player.position.Y + player.height / 2
+                        ),
+						new Vector2
+						(
+                            Main.rand.Next(10, 30) * 0.1f * (float)hitDirection + speed,
+                            Main.rand.Next(-40, -20) * 0.1f
+						),
+						tombstoneType, 0, 0f, Main.myPlayer, Main.rand.Next());
 
 					DateTime now = DateTime.Now;
 					string str = now.ToString("D");
@@ -52,12 +58,13 @@ namespace Macrocosm.Common.Hooks
 						str = now.ToString("MMMM d, yyy");
 
 					string miscText = deathText.ToString() + "\n" + str;
-					Main.projectile[proj].miscText = miscText;
+                    tombstone.miscText = miscText;
+                    tombstone.netUpdate = true;
 				}
 			}
 			else
 			{
-				orig(self, coinsOwned, deathText, hitDirection);
+				orig(player, coinsOwned, deathText, hitDirection);
 			}
 		}
 

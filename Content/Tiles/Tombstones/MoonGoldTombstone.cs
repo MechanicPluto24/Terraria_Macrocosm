@@ -9,7 +9,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Tombstones
 {
-	public class MoonTombstone : ModTile
+	public class MoonGoldTombstone : ModTile
 	{
 		public override void SetStaticDefaults()
 		{
@@ -29,7 +29,7 @@ namespace Macrocosm.Content.Tiles.Tombstones
 			HitSound = SoundID.Dig;
 			DustType = ModContent.DustType<RegolithDust>();
 
-			AddMapEntry(new Color(180, 180, 180));
+			AddMapEntry(new Color(148, 124, 22));
 		}
 	}
 }
