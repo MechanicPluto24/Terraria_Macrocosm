@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Placeable.Tombstones
 {
-	public class MoonGoldTombstone : ModItem
+	public class MoonGoldCrescent : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
@@ -13,8 +13,8 @@ namespace Macrocosm.Content.Items.Placeable.Tombstones
 
 		public override void SetDefaults()
 		{
-			Item.width = 26;
-			Item.height = 30;
+			Item.width = 28;
+			Item.height = 32;
 			Item.useTurn = true;
 			Item.useStyle = ItemUseStyleID.Swing;
 			Item.useAnimation = 15;
@@ -22,7 +22,7 @@ namespace Macrocosm.Content.Items.Placeable.Tombstones
 			Item.maxStack = Item.CommonMaxStack;
 			Item.consumable = true;
 			Item.createTile = ModContent.TileType<Tiles.Tombstones.MoonGoldTombstone>();
-			Item.placeStyle = 0;
+			Item.placeStyle = 1;
 			Item.rare = ItemRarityID.Purple;
 		}
 	}

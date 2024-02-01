@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Placeable.Tombstones
 {
-	public class MoonGoldTombstone : ModItem
+	public class MoonHeadstone : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
@@ -21,8 +21,8 @@ namespace Macrocosm.Content.Items.Placeable.Tombstones
 			Item.useTime = 10;
 			Item.maxStack = Item.CommonMaxStack;
 			Item.consumable = true;
-			Item.createTile = ModContent.TileType<Tiles.Tombstones.MoonGoldTombstone>();
-			Item.placeStyle = 0;
+			Item.createTile = ModContent.TileType<Tiles.Tombstones.MoonTombstone>();
+			Item.placeStyle = 1;
 			Item.rare = ItemRarityID.Purple;
 		}
 	}

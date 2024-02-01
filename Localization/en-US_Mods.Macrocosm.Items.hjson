@@ -950,3 +950,18 @@ MoonBasePlatingWall: {
 	DisplayName: Moon Base Plating Wall
 	Tooltip: ""
 }
+
+MoonGoldCrescent: {
+	DisplayName: Moon Gold Crescent
+	Tooltip: ""
+}
+
+MoonGoldLunarCross: {
+	DisplayName: Moon Gold Lunar Cross
+	Tooltip: ""
+}
+
+MoonHeadstone: {
+	DisplayName: Moon Headstone
+	Tooltip: ""
+}
