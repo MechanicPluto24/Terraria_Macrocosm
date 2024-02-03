@@ -62,11 +62,18 @@ namespace Macrocosm.Content.Projectiles.Friendly.Tombstones
 		{
 			if (!spawned)
 			{
-				Projectile.frame = Math.Abs(Style) % StyleCount;
+				if(Projectile.owner == Main.myPlayer) 
+				{
+					Style = Main.rand.Next(StyleCount);
+					Projectile.netUpdate = true;
+				}
 				spawned = true;
 			}
 
-			if (Projectile.velocity.Y == 0f)
+			Projectile.frame = Style;
+
+
+            if (Projectile.velocity.Y == 0f)
 				Projectile.velocity.X *= 0.98f;
 
 			Projectile.rotation += Projectile.velocity.X * 0.1f;
