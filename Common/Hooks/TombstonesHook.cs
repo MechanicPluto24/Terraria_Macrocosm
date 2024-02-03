@@ -49,7 +49,7 @@ namespace Macrocosm.Common.Hooks
                             Main.rand.Next(10, 30) * 0.1f * (float)hitDirection + speed,
                             Main.rand.Next(-40, -20) * 0.1f
 						),
-						tombstoneType, 0, 0f, Main.myPlayer, Main.rand.Next());
+						tombstoneType, 0, 0f, Main.myPlayer);
 
 					DateTime now = DateTime.Now;
 					string str = now.ToString("D");
