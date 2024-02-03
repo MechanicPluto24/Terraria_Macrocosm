@@ -89,7 +89,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Tombstones
 			bool onTargetRock = TargetRockTileType > 0 && Main.tile[tileX, tileY + 1].TileType == TargetRockTileType && Main.tile[tileX + 1, tileY + 1].TileType == TargetRockTileType;
 			int tileStyle = Style * 2 + (onTargetRock ? 1 : 0);
 
-            if (TileObject.CanPlace(tileX, tileY,TileType, Style * 2, Projectile.direction, out TileObject objectData))
+            if (TileObject.CanPlace(tileX, tileY,TileType, tileStyle, Projectile.direction, out TileObject objectData))
 				placeTile = TileObject.Place(objectData);
 
 			if (placeTile)
