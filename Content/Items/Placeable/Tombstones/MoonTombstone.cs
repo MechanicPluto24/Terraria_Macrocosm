@@ -1,4 +1,5 @@
 ﻿using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -9,9 +10,10 @@ namespace Macrocosm.Content.Items.Placeable.Tombstones
 		public override void SetStaticDefaults()
 		{
 			Item.ResearchUnlockCount = 2;
-		}
+            FlexibleTileWand.RubblePlacementLarge.AddVariation(Type, ModContent.TileType<Tiles.Tombstones.MoonTombstone>(), 1);
+        }
 
-		public override void SetDefaults()
+        public override void SetDefaults()
 		{
 			Item.width = 26;
 			Item.height = 30;
