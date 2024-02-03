@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Content.Dusts;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
@@ -6,25 +7,21 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles.Ores
 {
-	public class AluminumOre : ModTile
+	public class Coal : ModTile
 	{
 		public override void SetStaticDefaults()
 		{
 			TileID.Sets.Ore[Type] = true;
 			Main.tileSpelunker[Type] = true;
-			Main.tileOreFinderPriority[Type] = 215;
-			Main.tileShine2[Type] = true;
-			Main.tileShine[Type] = 975;
+			Main.tileOreFinderPriority[Type] = 190;
 			Main.tileMergeDirt[Type] = true;
 			Main.tileSolid[Type] = true;
 			Main.tileBlockLight[Type] = true;
-			Main.tileLighted[Type] = true;
 
-			LocalizedText name = CreateMapEntryName();
-			AddMapEntry(new Color(225, 217, 228), name);
+			AddMapEntry(new Color(32, 31, 33), CreateMapEntryName());
 
-			DustType = 84;
-			HitSound = SoundID.Tink;
+			DustType = ModContent.DustType<CoalDust>();
+			HitSound = SoundID.Dig;
 
 			MinPick = 40;
 			MineResist = 5f;

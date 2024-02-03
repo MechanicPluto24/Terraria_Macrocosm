@@ -965,3 +965,8 @@ MoonHeadstone: {
 	DisplayName: Moon Headstone
 	Tooltip: ""
 }
+
+Coal: {
+	DisplayName: Coal
+	Tooltip: ""
+}
