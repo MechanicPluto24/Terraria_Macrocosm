@@ -12,16 +12,34 @@ namespace Macrocosm.Content.Projectiles.Friendly.Tombstones
 {
 	public abstract class MacrocosmTombstone : ModProjectile
 	{
+		/// <summary> The tile to place on successful landing </summary>
 		public abstract int TileType { get; }
+
+		/// <summary> The target rock type for the "rubble" (embedded in rock) tile style </summary>
 		public virtual int TargetRockTileType => -1;
+
+		/// <summary> Dust created when impacting the <see cref="TargetRockTileType"/> </summary>
 		public virtual int ImpactDustType => -1;
 
+		/// <summary> The number of styles this tombstone has. </summary>
 		public abstract int StyleCount { get; }
 
+		/// <summary> Width of the projectile, used for framing </summary>
 		public virtual int Width => 32;
-		public virtual int Height => 34;
 
-		public override void SetStaticDefaults()
+        /// <summary> Height of the projectile, used for framing </summary>
+        public virtual int Height => 34;
+
+        /// <summary>
+        /// The style of this tombstone. Used for picking the frame, wrapped by StyleCount, and it's multiplied by 2 to get the placed tile style.
+        /// </summary>
+        private int Style
+        {
+            get => (int)Projectile.ai[0];
+            set => Projectile.ai[0] = value;
+        }
+
+        public override void SetStaticDefaults()
 		{
 			Main.projFrames[Type] = StyleCount;
 		}
@@ -37,12 +55,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Tombstones
 			DrawOriginOffsetX = 0;
 			DrawOriginOffsetY = -5;
 		}
-
-		private int Style
-		{
-			get => (int)Projectile.ai[0];
-			set => Projectile.ai[0] = value;
-        }
 
 		private bool spawned;
 
@@ -68,8 +80,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Tombstones
 
 			bool placeTile = false;
 			bool onTargetRock = TargetRockTileType > 0 && Main.tile[tileX, tileY + 1].TileType == TargetRockTileType && Main.tile[tileX + 1, tileY + 1].TileType == TargetRockTileType;
+			int tileStyle = Style * 2 + (onTargetRock ? 1 : 0);
 
-			if (TileObject.CanPlace(tileX, tileY,TileType, Style, Projectile.direction, out TileObject objectData))
+            if (TileObject.CanPlace(tileX, tileY,TileType, Style * 2, Projectile.direction, out TileObject objectData))
 				placeTile = TileObject.Place(objectData);
 
 			if (placeTile)
