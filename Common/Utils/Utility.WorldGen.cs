@@ -13,20 +13,21 @@ namespace Macrocosm.Common.Utils
 	{
 		public static bool CoordinatesOutOfBounds(int i, int j) => i >= Main.maxTilesX || j >= Main.maxTilesY || i < 0 || j < 0;
 
-		public static void ForEachInRectangle(Rectangle rectangle, Action<int, int> action, int addI = 1, int addJ = 1)
-		{
+		public static void ForEachInRectangle(Rectangle rectangle, Action<int, int> action, int addI = 1, int addJ = 1, bool boundsCheck = true)
+        {
 			for (int i = rectangle.X; i < rectangle.X + rectangle.Width; i += addI)
 			{
 				for (int j = rectangle.Y; j < rectangle.Y + rectangle.Height; j += addJ)
 				{
-					action(i, j);
+                    if (!(boundsCheck && CoordinatesOutOfBounds(i, j)))
+                        action(i, j);
 				}
 			}
 		}
 
-		public static void ForEachInRectangle(int i, int j, int width, int height, Action<int, int> action, int addI = 1, int addJ = 1)
+		public static void ForEachInRectangle(int i, int j, int width, int height, Action<int, int> action, int addI = 1, int addJ = 1, bool boundsCheck = true)
 		{
-			ForEachInRectangle(new Rectangle(i, j, width, height), action, addI, addJ);
+			ForEachInRectangle(new Rectangle(i, j, width, height), action, addI, addJ, boundsCheck);
 		}
 
 		public static void FastPlaceTile(int i, int j, ushort tileType)

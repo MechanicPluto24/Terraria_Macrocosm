@@ -46,7 +46,7 @@ namespace Macrocosm.Content.Tiles.Ambient
 			base.SetStaticDefaults();
 
 			// Add rubble variant, all existing styles, to Rubblemaker, allowing to place this tile by consuming Regolith
-			FlexibleTileWand.RubblePlacementLarge.AddVariations(ModContent.ItemType<Regolith>(), Type, 0..1);
+			FlexibleTileWand.RubblePlacementLarge.AddVariations(ModContent.ItemType<Regolith>(), Type, 0..2);
 
 			// Tiles placed by Rubblemaker drop the item used to place them.
 			RegisterItemDrop(ModContent.ItemType<Regolith>());

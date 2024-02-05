@@ -12,7 +12,7 @@ namespace Macrocosm.Content.Tiles.Ores
 		{
 			TileID.Sets.Ore[Type] = true;
 			Main.tileSpelunker[Type] = true;
-			Main.tileOreFinderPriority[Type] = 320;
+			Main.tileOreFinderPriority[Type] = 215;
 			Main.tileShine2[Type] = true;
 			Main.tileShine[Type] = 975;
 			Main.tileMergeDirt[Type] = true;

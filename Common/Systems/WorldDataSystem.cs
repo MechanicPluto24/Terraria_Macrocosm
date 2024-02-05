@@ -73,10 +73,17 @@ namespace Macrocosm.Common.Systems
 			set { if (value != foundVulcan) { foundVulcan = value; OnPropertyChanged(); } }
 		}
 
-		#endregion
+        private bool deimosReturn = false;
+        public bool DeimosReturn
+        {
+            get => deimosReturn;
+            set { if (value != deimosReturn) { deimosReturn = value; OnPropertyChanged(); } }
+        }
+
+        #endregion
 
 
-		public void ResetFlags()
+        public void ResetFlags()
 		{
 			// Moon flags
 			downedCraterDemon = false;

@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Netcode;
+﻿using Macrocosm.Common.Debugging;
+using Macrocosm.Common.Netcode;
 using Macrocosm.Content.Rockets;
 using Macrocosm.Content.Rockets.UI;
 using Terraria;
@@ -38,7 +39,15 @@ namespace Macrocosm.Common.Commands
 						PacketHandler.DebugModeActive = !PacketHandler.DebugModeActive;
 						break;
 
-					default:
+					case "tilecoords":
+						DebugDrawing.DrawCursorTileCoords = !DebugDrawing.DrawCursorTileCoords;
+						break;
+
+                    case "worldcoords":
+                        DebugDrawing.DrawCursorWorldCoords = !DebugDrawing.DrawCursorWorldCoords;
+                        break;
+
+                    default:
 						Main.NewText("Unknown argument " + args[0]);
 						break;
 				}

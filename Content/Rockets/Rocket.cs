@@ -167,13 +167,13 @@ namespace Macrocosm.Content.Rockets
 			}
 		}
 
+		private bool ranFirstUpdate;
+
 		/// <summary> Instatiates a rocket. Use <see cref="Create(Vector2)"/> for spawning in world and proper syncing. </summary>
 		public Rocket()
 		{
 			foreach (string moduleName in DefaultModuleNames)
 				Modules[moduleName] = CreateModule(moduleName);
-
-			ResetRenderTarget();
 		}
 
 		private RocketModule CreateModule(string moduleName)
@@ -190,14 +190,16 @@ namespace Macrocosm.Content.Rockets
 			};
 		}
 
+		/// <summary> Called when initially creating the rocket </summary>
 		public void OnCreation()
 		{
 			CurrentWorld = MacrocosmSubworld.CurrentID;
 			Inventory = new(DefaultInventorySize, this);
-		}
+			OnWorldSpawn();
+        }
 
-		/// <summary> Called when spawning into a new world </summary>
-		public void OnWorldSpawn()
+        /// <summary> Called when spawning into a new world </summary>
+        public void OnWorldSpawn()
 		{
 			ResetAnimation();
 			ResetRenderTarget();
@@ -250,6 +252,13 @@ namespace Macrocosm.Content.Rockets
 				Landing = true;
 				Travel();
 			}
+
+			// reset render target after first update to fix reload issue
+			if (!ranFirstUpdate)
+			{
+				ResetRenderTarget();
+                ranFirstUpdate = true;
+            }
 		}
 
 		/// <summary> Safely despawn the rocket </summary>

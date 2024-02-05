@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.Config;
 using Macrocosm.Common.UI;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
@@ -46,7 +47,7 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
 			string extra2 = hasSpecial ? ")" : "";
 
 			// Get the extra info and display it between parantheses if a special value key is provided alongside the numeric value
-			LocalizedText extraInfo = hasSpecial ? Language.GetText(specialValuesPath + base.specialValueKey) : LocalizedText.Empty;
+			LocalizedText extraInfo = hasSpecial ? Language.GetOrRegister(specialValuesPath + base.specialValueKey, () => Utility.SanitizeCodeCase(base.specialValueKey)) : LocalizedText.Empty;
 
 			// Each InfoElement gets the localized text associated with the value based on the current configuration, and may update the value as well
 			formattedLocalizedText = GetLocalizedValueUnitText(ref value).WithFormatArgs(value, extra1, extraInfo, extra2);

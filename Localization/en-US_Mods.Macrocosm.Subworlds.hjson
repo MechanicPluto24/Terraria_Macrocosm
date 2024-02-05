@@ -10,12 +10,12 @@ Vulcan: {
 
 Mercury: {
 	DisplayName: Mercury
-	FlavorText: default
+	FlavorText: The innermost planet to the Sun, Mercury is a barren, airless rock covered in countless craters, much like Earth's Moon. Temperatures vary dramatically from scorching during the day, and subzero during the night.
 }
 
 Venus: {
 	DisplayName: Venus
-	FlavorText: default
+	FlavorText: A hellish planet suffocated under an atmosphere comprised almost exclusively of carbon dioxide, and melting under infernal temperatures. Its scorching surface is covered in active volcanoes and vast plains of sulfur.
 }
 
 Earth: {
@@ -30,17 +30,23 @@ Moon: {
 
 Mars: {
 	DisplayName: Mars
-	FlavorText: default
+	FlavorText: While Mars may have once appeared much like Earth in its distant past, this arid desert has long since lost most of its atmosphere and oceans. What little life remains has since adapted to the planet's unforgiving environment, and is highly aggressive towards outsiders.
 }
 
 Phobos: {
 	DisplayName: Phobos
-	FlavorText: default
+	FlavorText: The sole moon of Mars. Its brother moon has been torn from Martian orbit, and the daemonic incursion on the moon's surface intends it to join its brother. Whatever plans these daemons have for Mars's twin moons, they cannot be allowed to see completion.
+	FlavorText_DeimosReturn: The innermost moon of Mars. It has fared far better than its brother Deimos, but still bears the scars of an otherworldly invasion, one that has completely distorted its brother beyond recognition.
 }
 
 Deimos: {
 	DisplayName: Deimos
-	FlavorText: default
+	FlavorText: The outermost moon of Mars. While it has been returned to Martian orbit this moon has been warped and mutilated, remade as an amalgamation of flesh and rock. The moon itself has been transformed into a colossal organism; how many other worlds now share its fate?
+}
+
+AsteroidBelt: {
+	DisplayName: Asteroid Belt
+	FlavorText: A circular ring of debris divides the inner and outer solar system, home to millions of chunks of rock and metal. Colonies of cybernetic organisms have established numerous colonies and facilities throughout the belt.
 }
 
 Ceres: {
@@ -55,12 +61,12 @@ Jupiter: {
 
 Io: {
 	DisplayName: Io
-	FlavorText: default
+	FlavorText: The innermost major moon of Jupiter, this primitive world mirrors the early history of Earth. Vast fields of sulfur, lava flows, and active volcanoes cover this moon's irradiated, highly unstable surface.
 }
 
 Europa: {
 	DisplayName: Europa
-	FlavorText: default
+	FlavorText: The frozen surface of Jupiter's moon Europa is theorized to cover a vast, global ocean. However, Europa also orbits within Jupiter's hazardous radiation belts, so whether life has had a chance to develop beneath the ice has yet to be determined.
 }
 
 Saturn: {
@@ -70,7 +76,7 @@ Saturn: {
 
 Titan: {
 	DisplayName: Titan
-	FlavorText: default
+	FlavorText: The largest moon of Saturn, and the only moon in the solar system with a dense atmosphere and clouds. Beneath its orange haze, the moon's surface is covered in numerous rivers and lakes of liquid methane.
 }
 
 Ouranos: {
@@ -80,7 +86,7 @@ Ouranos: {
 
 Miranda: {
 	DisplayName: Miranda
-	FlavorText: default
+	FlavorText: Ouranos's innermost moon Miranda is a grotesque labyrinth of canyons and jagged peaks. It is undetermined whether this moon's distorted appearance is owed to numerous heavy asteroid bombardments, or something lurking deep within the moon's abyssal chasms.
 }
 
 Neptune: {
@@ -95,15 +101,15 @@ Triton: {
 
 Pluto: {
 	DisplayName: Pluto
-	FlavorText: default
+	FlavorText: A frozen dwarf planet orbiting in the Kuiper Belt; an expanse of icy debris beyond Neptune. Its surface is perforated by tunnels carved by various insectoids that take refuge on this desolate world.
 }
 
 Charon: {
 	DisplayName: Charon
-	FlavorText: default
+	FlavorText: Pluto's largest satellite, and much like its parent planet, a frozen sphere of ice and rock. It has been colonized by various insectoids and daemons that took refuge on Pluto, and have begun spreading outwards to other dwarf planets.
 }
 
 Eris: {
 	DisplayName: Eris
-	FlavorText: default
+	FlavorText: This bone-white dwarf planet orbits close to the terminus of the solar system. A world ravaged by daemons and other eldritch monsters from beyond our solar system, from the void of interstellar space.
 }
