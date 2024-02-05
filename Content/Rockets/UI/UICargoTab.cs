@@ -164,9 +164,9 @@ namespace Macrocosm.Content.Rockets.UI
 			if (Rocket is not null && Rocket.HasInventory && Main.netMode == NetmodeID.MultiplayerClient)
 			{
 				if (Rocket.Inventory.CanInteract)
-					requestAccessButton.SetIcon(ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Inventory/InventoryOpen"));
+					requestAccessButton.SetImage(ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Inventory/InventoryOpen"));
 				else
-					requestAccessButton.SetIcon(ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Inventory/InventoryClosed"));
+					requestAccessButton.SetImage(ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Inventory/InventoryClosed"));
 			}
 		}
 

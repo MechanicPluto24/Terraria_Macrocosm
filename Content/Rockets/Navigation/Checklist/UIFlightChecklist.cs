@@ -33,9 +33,9 @@ namespace Macrocosm.Content.Rockets.Navigation.Checklist
 			CommonLaunchConditions.Add(new ChecklistCondition("Fuel", () => Rocket.Fuel >= Rocket.GetFuelCost(MapTarget.WorldID)));
 
 			// NOTE: This must be kept as an explicit lambda expression!
-#pragma warning disable IDE0200
+			#pragma warning disable IDE0200
 			CommonLaunchConditions.Add(new ChecklistCondition("Obstruction", () => Rocket.CheckFlightPathObstruction(), checkPeriod: 10));
-#pragma warning restore IDE0200
+			#pragma warning restore IDE0200
 
 			CommonLaunchConditions.Add(new ChecklistCondition("Boss", () => !Utility.BossActive && !Utility.MoonLordIncoming, hideIfMet: true));
 			CommonLaunchConditions.Add(new ChecklistCondition("Invasion", () => !Utility.InvastionActive && !Utility.PillarsActive, hideIfMet: true));
@@ -49,46 +49,50 @@ namespace Macrocosm.Content.Rockets.Navigation.Checklist
 			BorderColor = UITheme.Current.PanelStyle.BorderColor;
 		}
 
+		public void Check()
+		{
+            bool anyConditionChanged = false;
+            bool allConditionsMet = true;
+
+            bool ProcessCondition(ChecklistCondition condition)
+            {
+                bool wasMet = condition.Check();
+                anyConditionChanged |= condition.HasChanged;
+                allConditionsMet &= wasMet;
+                return wasMet;
+            }
+
+            if (ProcessCondition(SelectedLaunchCondition) && ProcessCondition(DifferentTargetLaunchCondition))
+            {
+                foreach (var condition in CommonLaunchConditions)
+                    ProcessCondition(condition);
+
+                if (MapTarget != null)
+                {
+                    allConditionsMet &= MapTarget.CheckLaunchConditions();
+                    if (MapTarget.LaunchConditions != null)
+                        foreach (var condition in MapTarget.LaunchConditions)
+                            ProcessCondition(condition);
+
+                    MapTarget.IsReachable = allConditionsMet;
+                }
+            }
+
+            if (anyConditionChanged)
+            {
+                Deactivate();
+                ClearList();
+                AddRange(GetUpdatedChecklist());
+                Activate();
+            }
+
+            AllMet = allConditionsMet;
+        }
+
 		public override void Update(GameTime gameTime)
 		{
 			base.Update(gameTime);
-
-			bool anyConditionChanged = false;
-			bool allConditionsMet = true;
-
-			bool ProcessCondition(ChecklistCondition condition)
-			{
-				bool wasMet = condition.Check();
-				anyConditionChanged |= condition.HasChanged;
-				allConditionsMet &= wasMet;
-				return wasMet;
-			}
-
-			if (ProcessCondition(SelectedLaunchCondition) && ProcessCondition(DifferentTargetLaunchCondition))
-			{
-				foreach (var condition in CommonLaunchConditions)
-					ProcessCondition(condition);
-
-				if (MapTarget != null)
-				{
-					allConditionsMet &= MapTarget.CheckLaunchConditions();
-					if (MapTarget.LaunchConditions != null)
-						foreach (var condition in MapTarget.LaunchConditions)
-							ProcessCondition(condition);
-
-					MapTarget.IsReachable = allConditionsMet;
-				}
-			}
-
-			if (anyConditionChanged)
-			{
-				Deactivate();
-				ClearList();
-				AddRange(GetUpdatedChecklist());
-				Activate();
-			}
-
-			AllMet = allConditionsMet;
+			Check();
 		}
 
 		private List<UIElement> GetUpdatedChecklist()

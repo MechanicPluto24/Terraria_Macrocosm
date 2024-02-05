@@ -1,5 +1,6 @@
 using Macrocosm.Common.Bases;
 using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.Projectiles.Friendly.Melee;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -12,10 +13,13 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 	{
 		public override Vector2 SpriteHandlePosition => new(23, 68);
 
-		public override void SetStaticDefaults()
+        public override int SwingEffectType => ModContent.ProjectileType<ArtemiteGreatswordSwing>();
+
+        public override void SetStaticDefaults()
 		{
 
 		}
+
 		public override void SetDefaultsHeldProjectile()
 		{
 			Item.damage = 225;

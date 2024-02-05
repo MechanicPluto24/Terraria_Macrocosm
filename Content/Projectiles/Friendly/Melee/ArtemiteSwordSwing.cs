@@ -44,8 +44,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
 		public override void AI()
 		{
-			float scaleFactor = 1.8f;
-			float baseScale = 0f;
+			float scaleFactor = 1.5f;
+			float baseScale = 1f;
 			float progress = SwingRotation / TargetSwingRotation;
 			Player player = Main.player[Projectile.owner];
 			Item item = player.HeldItem;
@@ -58,14 +58,16 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
 			Projectile.scale = baseScale + MathHelper.SmoothStep(0, 1, progress) * scaleFactor;
 			Projectile.scale *= player.GetAdjustedItemScale(item);
-			Projectile.scale *= 1.5f;
 
 			Vector2 hitboxPos = Projectile.Center - PositionAdjustment + Utility.PolarVector(200, Projectile.rotation);
 
-			for (int i = 0; i < (int)(10 * (progress < 0.3f ? 0 : progress)); i++)
+			for (int i = 0; i < 2; i++)
 			{
+				if (progress < 0.15f)
+					break;
+
 				Vector2 dustVelocity = new Vector2(Main.rand.NextFloat(1, 20 * speed * progress), 0).RotatedBy(Projectile.rotation + MathHelper.PiOver2 * Projectile.direction) + Main.player[Projectile.owner].velocity;
-				Dust dust = Dust.NewDustDirect(hitboxPos, 1, 1, ModContent.DustType<ArtemiteBrightDust>(), dustVelocity.X, dustVelocity.Y, Scale: Main.rand.NextFloat(2f, 3f));
+				Dust dust = Dust.NewDustDirect(Vector2.Lerp(hitboxPos, player.Center, Main.rand.NextFloat()), 1, 1, ModContent.DustType<ArtemiteBrightDust>(), dustVelocity.X, dustVelocity.Y, Scale: Main.rand.NextFloat(1.2f, 2f));
 				dust.noGravity = true;
 
 				if (Main.rand.NextBool(4))

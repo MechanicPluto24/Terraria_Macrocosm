@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Rockets
 
 			foreach (var module in Modules.Values)
 			{
-				//Modules[moduleName].Detail = dummy.Modules[moduleName].Detail ;
+                module.Detail = source.Modules[module.Name].Detail ;
 				module.Pattern = source.Modules[module.Name].Pattern;
 			}
 
@@ -41,7 +41,7 @@ namespace Macrocosm.Content.Rockets
 
 			foreach (var moduleKvp in Modules)
 			{
-				moduleKvp.Value.Detail = null;
+				moduleKvp.Value.Detail = default;
 				moduleKvp.Value.Pattern = CustomizationStorage.GetDefaultPattern(moduleKvp.Key);
 			}
 
@@ -62,11 +62,12 @@ namespace Macrocosm.Content.Rockets
 				modulesArray.Add(new JObject
 				{
 					["moduleName"] = module.Name,
-					["pattern"] = module.Pattern.ToJObject()
+                    ["detail"] = module.Detail.Name,
+				    ["pattern"] = module.Pattern.ToJObject()
 				});
 			}
 
-			jObject["modules"] = modulesArray;
+            jObject["modules"] = modulesArray;
 
 			return jObject.ToString(Formatting.Indented);
 		}
@@ -89,7 +90,8 @@ namespace Macrocosm.Content.Rockets
 					{
 						try
 						{
-							module.Pattern = Pattern.FromJObject(moduleJObject["pattern"].Value<JObject>());
+							module.Detail = CustomizationStorage.TryGetDetail(moduleName, moduleJObject["detail"].Value<string>(), out Detail detail) ? detail : new Detail();
+                            module.Pattern = Pattern.FromJObject(moduleJObject["pattern"].Value<JObject>());
 						}
 						catch (Exception ex)
 						{

@@ -66,7 +66,10 @@ namespace Macrocosm.Common.Debugging
 		private static List<DebugDrawData> DrawDatas { get; set; }
 		private static Texture2D DebugCrossTexture { get; set; }
 
-		public void Load(Mod mod)
+		public static bool DrawCursorTileCoords { get; set; }
+		public static bool DrawCursorWorldCoords { get; set; }
+
+        public void Load(Mod mod)
 		{
 			DrawDatas = new();
 			DebugCrossTexture = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/DebugCross").Value;
@@ -114,6 +117,20 @@ namespace Macrocosm.Common.Debugging
 					DrawDatas.RemoveAt(i--);
 				}
 			}
+
+			if(DrawCursorTileCoords || DrawCursorWorldCoords)
+			{
+				string mouseText = "";
+
+				if (DrawCursorTileCoords)
+					mouseText += $"{Main.MouseWorld.ToTileCoordinates()}\n";
+
+                if (DrawCursorWorldCoords)
+                    mouseText += $"{Main.MouseWorld}\n";
+
+                Main.instance.MouseText(mouseText);
+            }
+
 			Main.spriteBatch.End();
 		}
 	}

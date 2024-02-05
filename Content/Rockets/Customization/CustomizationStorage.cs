@@ -13,6 +13,7 @@ namespace Macrocosm.Content.Rockets.Customization
 	public class CustomizationStorage : ModSystem
 	{
 		public static bool Initialized { get; private set; }
+		private static bool initialLoad;
 
 		private static Dictionary<(string moduleName, string patternName), Pattern> patterns;
 		private static Dictionary<(string moduleName, string detailName), Detail> details;
@@ -20,12 +21,12 @@ namespace Macrocosm.Content.Rockets.Customization
 		private static Dictionary<(string moduleName, string patternName), bool> patternUnlockStatus;
 		private static Dictionary<(string moduleName, string detailName), bool> detailUnlockStatus;
 
-
 		public override void Load()
 		{
+            initialLoad = true;
+
 			patterns = new();
 			details = new();
-
 			patternUnlockStatus = new();
 			detailUnlockStatus = new();
 
@@ -33,29 +34,34 @@ namespace Macrocosm.Content.Rockets.Customization
 			LoadDetails();
 
 			Initialized = true;
-		}
+        }
 
 		public override void Unload()
 		{
-			patterns.Clear();
-			details.Clear();
-			patternUnlockStatus.Clear();
-			detailUnlockStatus.Clear();
+            initialLoad = false;
 
 			patterns = null;
 			details = null;
 			patternUnlockStatus = null;
 			detailUnlockStatus = null;
 
+            Initialized = false;
+        }
 
-			Initialized = false;
-		}
-
-		public static void Reset()
+        public static void Reset()
 		{
-			ModContent.GetInstance<CustomizationStorage>().Unload();
-			ModContent.GetInstance<CustomizationStorage>().Load();
-		}
+            Initialized = false;
+
+            patterns = new();
+            details = new();
+            patternUnlockStatus = new();
+            detailUnlockStatus = new();
+
+            LoadPatterns();
+            LoadDetails();
+
+			Initialized = true;
+        }
 
 		/// <summary>
 		/// Gets a pattern from the pattern storage.
@@ -125,20 +131,39 @@ namespace Macrocosm.Content.Rockets.Customization
 		public static Detail GetDetail(string moduleName, string detailName)
 			=> details[(moduleName, detailName)];
 
-		/// <summary>
-		/// Attempts to get a detail reference from the detail storage.
-		/// </summary>
-		/// <param name="moduleName"> The rocket module this detail belongs to </param>
-		/// <param name="detailName"> The detail name </param>
-		/// <param name="detail"> The detail, null if not found </param>
-		/// <returns> Whether the specified detail has been found </returns>
+        public static Detail GetDefaultDetail(string moduleName)
+			=> details[(moduleName, "None")];
+
+        public static List<Detail> GetUnlockedDetails(string moduleName)
+        {
+            return GetDetailsWhere(moduleName, detail =>
+            {
+                var key = (moduleName, detail.Name);
+                return detailUnlockStatus.ContainsKey(key) && detailUnlockStatus[key];
+            });
+        }
+
+        public static List<Detail> GetDetailsWhere(string moduleName, Func<Detail, bool> match)
+        {
+            var detailsForModule = details
+                .Select(kvp => kvp.Value)
+                .Where(detail => detail.ModuleName == moduleName && match(detail))
+                .ToList();
+
+            return detailsForModule;
+        }
+
+        /// <summary>
+        /// Attempts to get a detail reference from the detail storage.
+        /// </summary>
+        /// <param name="moduleName"> The rocket module this detail belongs to </param>
+        /// <param name="detailName"> The detail name </param>
+        /// <param name="detail"> The detail, null if not found </param>
+        /// <returns> Whether the specified detail has been found </returns>
 		public static bool TryGetDetail(string moduleName, string detailName, out Detail detail)
 			=> details.TryGetValue((moduleName, detailName), out detail);
 
-		public override void ClearWorld()
-		{
-			Reset();
-		}
+        public override void ClearWorld() => Reset();
 
 		public override void SaveWorldData(TagCompound tag) => SaveData(tag);
 
@@ -200,11 +225,6 @@ namespace Macrocosm.Content.Rockets.Customization
 			detailUnlockStatus.Add((moduleName, detailName), unlockedByDefault);
 		}
 
-		public static UIListScrollablePanel ProvidePatternUI(string moduleName)
-		{
-			throw new NotImplementedException();
-		}
-
 		private static void LoadPatterns()
 		{
 			try
@@ -226,21 +246,68 @@ namespace Macrocosm.Content.Rockets.Customization
 				Macrocosm.Instance.Logger.Error(ex.Message);
 			}
 
-			// Just for testing the scrollbar
-			for (int i = 1; i <= 7; i++)
-				AddPattern("ServiceModule", "Test" + i, true, new(Color.Transparent), new(Color.White));
+			for(int i = 0; i < 60; i++)
+			{
+				AddPattern("EngineModule", $"Test{i}", true);
+			}
 
-			for (int i = 1; i <= 8; i++)
-				AddPattern("ReactorModule", "Test" + i, true, new(Color.Transparent), new(Color.White));
+            string logstring = "Loaded " + patterns.Count.ToString() + " pattern" + (patterns.Count == 1 ? "" : "s") + ":\n";
 
-			for (int i = 1; i <= 74; i++)
-				AddPattern("EngineModule", "Test" + i, true, new(Color.White), new(Color.White));
-		}
+            foreach (string moduleName in Rocket.DefaultModuleNames)
+			{
+				logstring += $" - Module: {moduleName}\n\t";
+                foreach (var kvp in patterns)
+				{
+					(string patternModuleName, string patternName) = kvp.Key;
+                    if(patternModuleName == moduleName)
+                        logstring += $"{patternName} ";
+                }
+                logstring += "\n\n";
+            }
 
-		private static void LoadDetails()
+			if(initialLoad)
+				Macrocosm.Instance.Logger.Info(logstring);
+        }
+
+        private static void LoadDetails()
 		{
-			foreach (var country in Utility.CountryCodesAlpha3)
-				AddDetail("EngineModule", "Flag_" + country, true);
-		}
+            foreach (string moduleName in Rocket.DefaultModuleNames)
+                 AddDetail(moduleName, "None", true);
+ 
+            // Find all existing details
+            string lookupString = "Content/Rockets/Customization/Details/";
+            var detailPathsWithIcons = Macrocosm.Instance.RootContentSource.GetAllAssetsStartingWith(lookupString).ToList();
+			var detailPaths = detailPathsWithIcons.Where(x => !x.Contains("/Icons")).ToList();
+
+            // Log the detail list
+            foreach (var detailWithModule in detailPaths)
+			{
+				string[] split = detailWithModule.Replace(lookupString, "").Split('/');
+
+				if(split.Length == 2) 
+				{
+					string module = split[0];
+					string detail = split[1].Replace(".rawimg", "");
+
+					AddDetail(module, detail, true);
+                }
+            }
+
+            string logstring = "Loaded " + details.Count.ToString() + " detail" + (detailPaths.Count == 1 ? "" : "s") + ":\n";
+            foreach (string moduleName in Rocket.DefaultModuleNames)
+            {
+                logstring += $" - Module: {moduleName}\n\t";
+                foreach (var kvp in details)
+                {
+                    (string DetailModuleName, string detailName) = kvp.Key;
+                    if (DetailModuleName == moduleName)
+                        logstring += $"{detailName} ";
+                }
+                logstring += "\n\n";
+            }
+
+            if (initialLoad)
+                Macrocosm.Instance.Logger.Info(logstring);
+        }
 	}
 }

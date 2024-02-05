@@ -99,8 +99,6 @@ namespace Macrocosm.Content.Rockets
 				}
 			};
 
-			rocket.ResetRenderTarget();
-
 			return rocket;
 		}
 	}

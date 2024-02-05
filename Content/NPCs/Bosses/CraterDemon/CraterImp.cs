@@ -1,8 +1,11 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Graphics;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.NPCs.Global;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using System;
 using Terraria;
 using Terraria.GameContent;
@@ -65,7 +68,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			NPC.width = NPC.height = 56;
 			NPC.lifeMax = 1500;
 			NPC.defense = 25;
-			NPC.damage = 40;
+			NPC.damage = 50;
 			NPC.knockBackResist = 0f;
 			NPC.noGravity = true;
 			NPC.noTileCollide = true;
@@ -92,7 +95,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
         public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
         {
-			NPC.damage = (int)(NPC.damage * 0.55f * bossAdjustment);
+			NPC.lifeMax = (int)(NPC.lifeMax * 0.55f * bossAdjustment);
+			NPC.damage = (int)(NPC.damage * 0.75f * bossAdjustment);
         }
 
         public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
@@ -151,19 +155,17 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			if (NPC.IsABestiaryIconDummy)
 				return;
 
-			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Bosses/CraterDemon/CraterImp_Glow").Value;
+			Texture2D glowmask = ModContent.Request<Texture2D>(Texture + "_Glow", AssetRequestMode.ImmediateLoad).Value;
 
-			SpriteEffects effect = (NPC.rotation > MathHelper.PiOver2 && NPC.rotation < 3 * MathHelper.PiOver2) || (NPC.rotation < -MathHelper.PiOver2 && NPC.rotation > -3 * MathHelper.PiOver2)
+            SpriteEffects effect = (NPC.rotation > MathHelper.PiOver2 && NPC.rotation < 3 * MathHelper.PiOver2) || (NPC.rotation < -MathHelper.PiOver2 && NPC.rotation > -3 * MathHelper.PiOver2)
 				? SpriteEffects.FlipVertically
 				: SpriteEffects.None;
 
 			spriteBatch.Draw(glowmask, NPC.Center - Main.screenPosition, NPC.frame, (Color)GetAlpha(Color.White), NPC.rotation, NPC.Size / 2f, NPC.scale, effect, 0f);
-		}
+        }
 
-		public override void AI()
+        public override void AI()
 		{
-			NPC.damage = NPC.defDamage;
-
 			if (AI_Attack != AttackType.Despawning && (!Main.npc[ParentBoss].active || Main.npc[ParentBoss].type != ModContent.NPCType<CraterDemon>()))
 			{
 				NPC.life = 0;
@@ -271,15 +273,13 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                                                                    5f ;
 
 							Vector2 shootVelocity = (player.Center - NPC.Center).SafeNormalize(default) * shootSpeed;
-							Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, shootVelocity, ModContent.ProjectileType<PhantasmalBolt>(), Utility.TrueDamage(Main.masterMode ? 135 : Main.expertMode ? 90 : 45), 1f, Main.myPlayer); 
+							Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, shootVelocity, ModContent.ProjectileType<PhantasmalBolt>(), Utility.TrueDamage((int)(NPC.damage * 0.8f)), 1f, Main.myPlayer); 
 						}
 					}
 
 					break;
 
 				case AttackType.ChargeAtPlayer:
-
-					NPC.damage = 50;
 
                     //Wait until mouth is open
                     if (AI_AttackProgress == 0)
@@ -325,8 +325,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 					break;
 
 				case AttackType.Chomp:
-
-                    NPC.damage = 70;
 
                     NPC.velocity *= 1f - 5f / 60f;
 

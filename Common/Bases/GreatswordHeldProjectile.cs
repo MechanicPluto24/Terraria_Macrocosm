@@ -25,6 +25,7 @@ namespace Macrocosm.Common.Bases
 		public virtual (float min, float max) ChargeBasedDashAmount => (0f, 5.5f);
 		public virtual string HeldProjectileTexturePath => Texture;
 
+		public virtual int SwingEffectType => -1;
 		public Texture2D HeldProjectileTexture => ModContent.Request<Texture2D>(HeldProjectileTexturePath, AssetRequestMode.ImmediateLoad).Value;
 	}
 
@@ -64,9 +65,14 @@ namespace Macrocosm.Common.Bases
 		private (float min, float max) ChargeBasedDashAmount { get; set; }
 		private (float min, float max) ChargeBasedDamageRatio { get; set; }
 		private Vector2 SpriteHandlePosition { get; set; }
+        private int SwingEffectType { get; set; }
+        private int SwingShootType { get; set; }
 
-		private float armRotation = 0f;
+
+        private float armRotation = 0f;
 		private float hitTimer = 0f;
+		private bool shotEffect;
+		private Projectile swing;
 		protected override void OnSpawn()
 		{
 			ChargeEndPlayerDirection = 1;
@@ -82,6 +88,7 @@ namespace Macrocosm.Common.Bases
 					+ MathF.Pow(greatswordHeldProjectileItem.HeldProjectileTexture.Height, 2)
 				);
 				SwordWidth = greatswordHeldProjectileItem.SwordWidth;
+				SwingEffectType = greatswordHeldProjectileItem.SwingEffectType;
 				ChargeBasedDashAmount = greatswordHeldProjectileItem.ChargeBasedDashAmount;
 				ChargeBasedDamageRatio = greatswordHeldProjectileItem.ChargeBasedDamageRatio;
 				SpriteHandlePosition = greatswordHeldProjectileItem.SpriteHandlePosition;
@@ -130,17 +137,28 @@ namespace Macrocosm.Common.Bases
 
 				case GreatswordState.Swing:
 					Player.direction = ChargeEndPlayerDirection;
-					if (!SwingStyle.Update(ref armRotation, ref Projectile.rotation, Charge))
+
+                    if (SwingEffectType > 0 && Player.whoAmI == Main.myPlayer && swing is null)
+					{
+                        swing = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Player.MountedCenter, new Vector2(Player.direction, 0f), SwingEffectType, Projectile.damage, Projectile.knockBack, Player.whoAmI, (float)Player.direction * Player.gravDir, 12, -MathHelper.PiOver2 * 0.5f);
+					}
+
+                    if (!SwingStyle.Update(ref armRotation, ref Projectile.rotation, Charge))
 					{
 						UnAlive();
-					}
-					break;
+						swing.active = false;
+
+                    }
+
+                    break;
 			}
 
 			float localArmRot = Player.direction * armRotation;
 			Vector2 armDirection = (localArmRot + MathHelper.PiOver2).ToRotationVector2();
 
-			Projectile.Center = Player.RotatedRelativePoint(Player.MountedCenter) + armDirection * 18;
+
+
+            Projectile.Center = Player.RotatedRelativePoint(Player.MountedCenter) + armDirection * 18;
 			Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, localArmRot);
 			Player.SetCompositeArmBack(true, Player.CompositeArmStretchAmount.Full, localArmRot + 0.1f * Player.direction);
 
@@ -205,27 +223,6 @@ namespace Macrocosm.Common.Bases
 			}
 
 			SwingStyle.PostDrawSword(this, lightColor);
-		}
-	}
-
-	public class GreatswordGlobalNPC : GlobalNPC
-	{
-		public override bool InstancePerEntity => true;
-		public bool HasMark { get; private set; }
-
-		public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref NPC.HitModifiers modifiers)
-		{
-			if (projectile.ModProjectile is GreatswordHeldProjectile)
-			{
-				if (HasMark)
-				{
-					modifiers.SourceDamage *= 2f;
-					HasMark = false;
-					return;
-				}
-
-				HasMark = true;
-			}
 		}
 	}
 }

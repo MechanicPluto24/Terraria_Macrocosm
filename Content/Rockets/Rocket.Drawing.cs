@@ -51,7 +51,7 @@ namespace Macrocosm.Content.Rockets
 			if (useRenderTarget)
 			{
 				// Prepare our RenderTarget
-				GetRenderTarget(drawMode);
+				renderTarget = GetRenderTarget(drawMode);
 
 				// Save our SpriteBatch state
 				state.SaveState(spriteBatch);
@@ -59,7 +59,7 @@ namespace Macrocosm.Content.Rockets
 
 				switch (drawMode)
 				{
-					// Only DrawMode.World consumes the buffers
+					// Only DrawMode.World consumes the lighting buffers
 					case DrawMode.World:
 						PrepareEffect(drawMode);
 						PrepareLightingBuffers(Width, Height, out int numVertices, out int primitiveCount);

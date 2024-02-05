@@ -28,7 +28,7 @@ namespace Macrocosm.Content.Rockets.UI
 
 		public UINavigationPanel()
 		{
-			WorldDataSystem.Instance.PropertyChanged += (sender, args) => UpdateMapVisibility(context: args.PropertyName);
+			WorldDataSystem.Instance.PropertyChanged += (sender, args) => UpdateMapVisibility();
 		}
 
 		public override void OnInitialize()
@@ -104,7 +104,7 @@ namespace Macrocosm.Content.Rockets.UI
 
 			CurrentMap = newMap;
 			CurrentMap.ResetAllTargets();
-			if (prevTarget is not null && CurrentMap.TryFindTargetByName(prevTarget.Name, out UINavigationTarget target))
+			if (prevTarget is not null && CurrentMap.TryFindTarget(prevTarget.Name, out UINavigationTarget target))
 				target.Selected = true;
 
 			CurrentMap.ShowAnimation(prevMap);
@@ -130,24 +130,32 @@ namespace Macrocosm.Content.Rockets.UI
 		private const string navigationMapsPath = "Macrocosm/Content/Rockets/Textures/NavigationMaps/";
 		private const string buttonsPath = "Macrocosm/Assets/Textures/UI/Buttons/";
 
-		private void UpdateMapVisibility(string context)
+		private void UpdateMapVisibility()
 		{
-			if (context is "FoundVulcan" or "Any")
+			if (WorldDataSystem.Instance.FoundVulcan)
 			{
-				if (WorldDataSystem.Instance.FoundVulcan)
-				{
-					solarSystemInner.AddTarget(new UINavigationTarget(this, new Vector2(226, 88), 12, 12, "Vulcan"));
-					solarSystemInner.Texture = ModContent.Request<Texture2D>(navigationMapsPath + "SolarSystemInnerVulcan", AssetRequestMode.ImmediateLoad).Value;
-				}
-				else
-				{
-					solarSystemInner.RemoveTargetByName("Vulcan");
-					solarSystemInner.Texture = ModContent.Request<Texture2D>(navigationMapsPath + "SolarSystemInner", AssetRequestMode.ImmediateLoad).Value;
-				}
+				solarSystemInner.AddTarget(new UINavigationTarget(this, new Vector2(226, 88), 12, 12, "Vulcan"));
+				solarSystemInner.Texture = ModContent.Request<Texture2D>(navigationMapsPath + "SolarSystemInnerVulcan", AssetRequestMode.ImmediateLoad).Value;
 			}
-		}
+			else
+			{
+				solarSystemInner.RemoveTarget("Vulcan");
+				solarSystemInner.Texture = ModContent.Request<Texture2D>(navigationMapsPath + "SolarSystemInner", AssetRequestMode.ImmediateLoad).Value;
+			}
 
-		private void InitializePanelContent()
+            /* 
+			if(WorldDataSystem.Instance.DeimosReturn)
+			{
+				//...
+			}
+			else 
+			{
+				//...
+			}
+			 */
+        }
+
+        private void InitializePanelContent()
 		{
 			AssetRequestMode mode = AssetRequestMode.ImmediateLoad;
 
@@ -201,7 +209,7 @@ namespace Macrocosm.Content.Rockets.UI
 
 			solarSystemOuter.Next = solarSystemInner;
 
-			UpdateMapVisibility("Any");
+			UpdateMapVisibility();
 		}
 	}
 }

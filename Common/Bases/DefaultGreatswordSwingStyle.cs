@@ -5,12 +5,14 @@ namespace Macrocosm.Common.Bases
 {
 	public class DefaultGreatswordSwingStyle : GreatswordSwingStyle
 	{
-		private float? maxSwingTimer = null;
-		private float swingTimer = 1f;
-		private float SwingTime => swingTimer / maxSwingTimer.Value;
+        protected float? maxSwingTimer = null;
+        protected float swingTimer = 1f;
+        protected float SwingTime => swingTimer / maxSwingTimer.Value;
+
 		private const float MAX_REST_TIMER = 8f;
 		private float restTimer = 1f;
-		private float? initialArmRotation = null;
+        private float? initialArmRotation = null;
+
 		public override bool Update(ref float armRotation, ref float projectileRotation, float charge)
 		{
 			maxSwingTimer ??= 88 - 20 * charge;

@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 
@@ -32,7 +33,8 @@ namespace Macrocosm.Content.Rockets.UI
 		{
 			FocusContext = "PatternSelection";
 			OnLeftClick += (_, _) => { HasFocus = true; };
-		}
+			HoverText = Language.GetOrRegister("Mods.Macrocosm.UI.Rocket.Customization.Patterns." + Pattern.Name, () => Pattern.Name);
+        }
 
 		private SpriteBatchState state;
 		protected override void DrawSelf(SpriteBatch spriteBatch)
