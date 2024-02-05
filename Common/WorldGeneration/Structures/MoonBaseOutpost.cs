@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Content.Tiles.Blocks;
+using Macrocosm.Content.Tiles.Walls;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,10 @@ namespace Macrocosm.Common.WorldGeneration.Structures
             WorldUtils.Gen(new Point(room.X, room.Y), new Shapes.Rectangle(room.Width, room.Height), Actions.Chain(new Actions.SetTileKeepWall((ushort)ModContent.TileType<MoonBasePlating>()), new Actions.SetFrames(frameNeighbors: true)));
             WorldUtils.Gen(new Point(room.X, room.Y + room.Height - 1 - 3), new Shapes.Rectangle(1, 3), new Actions.ClearTile(frameNeighbors: true));
             WorldUtils.Gen(new Point(room.X + room.Width - 1, room.Y + room.Height - 1 - 3), new Shapes.Rectangle(1, 3), new Actions.ClearTile(frameNeighbors: true));
-            WorldUtils.Gen(new Point(room.X + 1, room.Y + 1), new Shapes.Rectangle(room.Width - 2, room.Height - 2), Actions.Chain(new Actions.ClearTile(frameNeighbors: true), new Actions.PlaceWall(WallID.MercuryBrickWall)));
+            WorldUtils.Gen(new Point(room.X + 1, room.Y + 1), new Shapes.Rectangle(room.Width - 2, room.Height - 2), Actions.Chain(new Actions.ClearTile(frameNeighbors: true), new Actions.PlaceWall((ushort)ModContent.WallType<MoonBasePlatingWall>())));
+            WorldUtils.Gen(new Point(room.X + 1, room.Y + room.Height - 2), new Shapes.Rectangle(room.Width - 2, 1), Actions.Chain(new Actions.ClearWall(frameNeighbors: true), new Actions.PlaceWall((ushort)ModContent.WallType<HazardWall>())));
+
+            structures.AddProtectedStructure(room, padding: 10);
 
             return true;
         }
