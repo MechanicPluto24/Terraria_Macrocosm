@@ -15,9 +15,10 @@ namespace Macrocosm.Common.Utils
 			return Main.rand.NextFloat(-MathHelper.Pi, MathHelper.Pi);
 		}
 
-		public static T GetRandom<T>(this IList<T> list)
+		public static T GetRandom<T>(this IList<T> list, UnifiedRandom random = null)
 		{
-			return list[Main.rand.Next(list.Count)];
+            random ??= Main.rand;
+			return list[random.Next(list.Count)];
 		}
 
 		public static int Next(this UnifiedRandom random, Range range)

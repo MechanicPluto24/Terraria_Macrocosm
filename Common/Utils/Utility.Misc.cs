@@ -1,9 +1,11 @@
 ﻿using log4net;
 using Microsoft.Xna.Framework;
 using MonoMod.Cil;
+using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Terraria;
 using Terraria.Audio;
 using Terraria.Chat;
@@ -19,7 +21,25 @@ namespace Macrocosm.Common.Utils
 	{
 		public static string GetNamespacePath(this object obj) => (obj.GetType().Namespace + "." + obj.GetType().Name).Replace('.', '/');
 
-		public static bool IsAprilFools()
+        public static void InvokeOnMainThread(Action action)
+        {
+            if (!AssetRepository.IsMainThread)
+            {
+                ManualResetEvent evt = new(false);
+
+                Main.QueueMainThreadAction(() =>
+                {
+                    action();
+                    evt.Set();
+                });
+
+                evt.WaitOne();
+            }
+            else
+                action();
+        }
+
+        public static bool IsAprilFools()
 			=> DateTime.Now.Month == 4 && DateTime.Now.Day == 1;
 
 		public static string GetCompassCoordinates(Player player)
