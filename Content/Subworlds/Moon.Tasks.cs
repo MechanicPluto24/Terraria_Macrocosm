@@ -572,7 +572,8 @@ namespace Macrocosm.Content.Subworlds
             }
         }*/
 
-		[Task]
+		// Disabled for now
+		//[Task]
 		private void RoomsTasks(GenerationProgress progress)
 		{
 			progress.Message = Language.GetTextValue("Rooms");
