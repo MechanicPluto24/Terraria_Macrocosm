@@ -970,3 +970,8 @@ Coal: {
 	DisplayName: Coal
 	Tooltip: ""
 }
+
+MoonBaseDoor: {
+	DisplayName: Moon Base Door
+	Tooltip: ""
+}
