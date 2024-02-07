@@ -48,7 +48,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			Player player = Main.player[Projectile.owner];
 			Item item = player.HeldItem;
 
-			float speed = 0.48f * player.GetTotalAttackSpeed(DamageClass.Melee);
+			float speed = 0.44f * player.GetTotalAttackSpeed(DamageClass.Melee);
 			SwingRotation += speed;
 
 			Projectile.rotation = (float)Math.PI * SwingDirection * progress + Projectile.velocity.ToRotation() + SwingDirection * (float)Math.PI + player.fullRotation;
@@ -56,7 +56,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
 			Projectile.scale = 2f * player.GetAdjustedItemScale(item);
 
-			Vector2 hitboxPos = Projectile.Center - PositionAdjustment + Utility.PolarVector(125, Projectile.rotation);
+			Vector2 hitboxPos = Projectile.Center - PositionAdjustment + Utility.PolarVector(175, Projectile.rotation);
 
             for (int i = 0; i < 2; i++)
             {
