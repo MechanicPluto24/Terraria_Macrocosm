@@ -56,19 +56,19 @@ namespace Macrocosm.Content.Tiles.Blocks
 
 		public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
 		{
-			Tile tile = Main.tile[i, j];
-
-			var info = new TileNeighbourInfo(i, j).GetPredicateNeighbourInfo((neighbour)
-				=> WorldGen.SolidTile(neighbour) && neighbour.TileType != Type);
-
 			TileFraming.PlatingStyle(i, j);
-
-			if (tile.IsSloped() || info.Count4Way > 0)
-				tile.TileFrameY += 90;
-
 			return false;
 		}
 
+        public override void SetDrawPositions(int i, int j, ref int width, ref int offsetY, ref int height, ref short tileFrameX, ref short tileFrameY)
+        {
+            Tile tile = Main.tile[i, j];
 
-	}
+            var info = new TileNeighbourInfo(i, j).GetPredicateNeighbourInfo((neighbour)
+                => WorldGen.SolidTile(neighbour) && neighbour.TileType != Type);
+
+            if (tile.IsSloped() || info.Count4Way > 0)
+                tileFrameY += 90;
+        }
+    }
 }

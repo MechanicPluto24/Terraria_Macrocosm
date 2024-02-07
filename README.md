@@ -20,7 +20,7 @@ RighteousRyan - Admin and Lead Coder\
 ClockworkCorvus, Toxin - Moderator\
 Lincolnennis, Universe - Composer\
 absoluteAquarian, 4mbr0s3 2, Feldy, Hallam, LadyLone, sucss, SnowyStarfall, and Thanatos - Programmers\
-Daniel, Dovahkick, Juice, OmegA-Vinier, Rocket, Uncon Arts, and William - Spriters/Artists\
+Daniel, Dovahkick, Demi, OmegA-Vinier, Rocket, Uncon_Arts, and William - Spriters/Artists\
 dontkickmychick - Lorewriter\
 Zetry - Soundsmith
 
