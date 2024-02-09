@@ -975,3 +975,8 @@ MoonBaseDoor: {
 	DisplayName: Moon Base Door
 	Tooltip: ""
 }
+
+OxygenSystem: {
+	DisplayName: Oxygen System
+	Tooltip: ""
+}

@@ -65,7 +65,49 @@ namespace Macrocosm.Common.Utils
 			return (int)tile.BlockType > 1;
 		}
 
-		public static bool AnyConnectedSlope(int i, int j)
+		public static SpriteEffects GetTileSpriteEffects(int i, int j)
+		{
+			Tile tile = Main.tile[i, j];
+			short drawFrameX = tile.TileFrameX;
+            short drawFrameY = tile.TileFrameY;
+            Main.instance.TilesRenderer.GetTileDrawData(
+                i, j, tile, tile.TileType, ref drawFrameX, ref drawFrameY,
+                out _, out _, out _, out _,
+                out _, out _,
+                out SpriteEffects effect, 
+				out _, out _, out _
+            );
+
+			return effect;
+        }
+
+        public static void GetTileDrawPositions(int i, int j, out int tileWidth, out int offsetY, out int tileHeight, out short drawFrameX, out short drawFrameY)
+        {
+            Tile tile = Main.tile[i, j];
+            drawFrameX = tile.TileFrameX;
+            drawFrameY = tile.TileFrameY;
+            Main.instance.TilesRenderer.GetTileDrawData(
+                i, j, tile, tile.TileType, ref drawFrameX, ref drawFrameY,
+                out tileWidth, out tileHeight, out offsetY, out _,
+                out _, out _,
+                out _, out _, out _, out _
+            );
+        }
+
+        public static void GetTileAnimationFrame(int i, int j, out int addFrameX, out int addFrameY)
+        {
+            Tile tile = Main.tile[i, j];
+            short drawFrameX = tile.TileFrameX;
+            short drawFrameY = tile.TileFrameY;
+            Main.instance.TilesRenderer.GetTileDrawData(
+                i, j, tile, tile.TileType, ref drawFrameX, ref drawFrameY,
+                out _, out _, out _, out _,
+                out addFrameX, out addFrameY,
+                out _, out _, out _, out _
+            );
+        }
+
+        public static bool AnyConnectedSlope(int i, int j)
 		{
 			Tile tileTop = Main.tile[i, j - 1];
 			Tile tileBottom = Main.tile[i, j + 1];
