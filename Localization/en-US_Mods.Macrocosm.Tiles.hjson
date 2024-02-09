@@ -38,3 +38,4 @@ Motor.MapEntry: Motor
 PrintedCircuitBoard.MapEntry: Printed Circuit Board
 MoonBaseLocker.MapEntry: Moon Base Locker
 Coal.MapEntry: Coal
+OxygenSystem.MapEntry: Oxygen System

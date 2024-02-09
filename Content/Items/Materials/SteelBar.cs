@@ -34,7 +34,7 @@ namespace Macrocosm.Content.Items.Materials
 		{
 			Recipe recipe = Recipe.Create(Type);
 			recipe.AddIngredient(ItemID.IronBar, 2);
-			recipe.AddIngredient(ItemID.Coal);
+			recipe.AddIngredient(ModContent.ItemType<Coal>());
 			recipe.AddTile(TileID.Hellforge);
 			recipe.Register();
 		}

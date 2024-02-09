@@ -276,7 +276,7 @@ namespace Macrocosm.Content.Rockets.Customization
  
             // Find all existing details
             string lookupString = "Content/Rockets/Customization/Details/";
-            var detailPathsWithIcons = Macrocosm.Instance.RootContentSource.GetAllAssetsStartingWith(lookupString).ToList();
+            var detailPathsWithIcons = Macrocosm.Instance.RootContentSource.GetAllAssetsStartingWith(lookupString, true).ToList();
 			var detailPaths = detailPathsWithIcons.Where(x => !x.Contains("/Icons")).ToList();
 
             // Log the detail list
