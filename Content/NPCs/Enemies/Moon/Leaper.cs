@@ -20,6 +20,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			base.SetStaticDefaults();
 			Main.npcFrameCount[Type] = 24;
 		}
+
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
@@ -56,7 +57,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		public override void AI()
 		{
-			// add slimeAI for leaps? 
 			Utility.AIZombie(NPC, ref NPC.ai, false, true, velMax: 4, maxJumpTilesX: 15, maxJumpTilesY: 10, moveInterval: 0.07f);
 
 			if (NPC.velocity.Y < 0f)
@@ -70,7 +70,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		public override void FindFrame(int frameHeight)
 		{
-
 			int ticksPerFrame = 5;
 
 			int idleFrameInitial = 0;

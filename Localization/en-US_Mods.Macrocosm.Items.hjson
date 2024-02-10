@@ -980,3 +980,8 @@ OxygenSystem: {
 	DisplayName: Oxygen System
 	Tooltip: ""
 }
+
+MercurianBanner: {
+	DisplayName: Mercurian Banner
+	Tooltip: ""
+}

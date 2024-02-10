@@ -13,7 +13,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture
 {
-	internal class OxygenSystem : ModTile
+	public class OxygenSystem : ModTile
 	{
 		public override void SetStaticDefaults()
 		{
@@ -59,23 +59,10 @@ namespace Macrocosm.Content.Tiles.Furniture
                         tile.TileFrameX -= 72;
                     else
                         tile.TileFrameX += 72;
-                }
-            }
 
-            if (Wiring.running)
-            {
-                Wiring.SkipWire(leftX, topY);
-                Wiring.SkipWire(leftX, topY + 1);
-                Wiring.SkipWire(leftX, topY + 2);
-                Wiring.SkipWire(leftX + 1, topY);
-                Wiring.SkipWire(leftX + 1, topY + 1);
-                Wiring.SkipWire(leftX + 1, topY + 2);
-                Wiring.SkipWire(leftX + 2, topY);
-                Wiring.SkipWire(leftX + 2, topY + 1);
-                Wiring.SkipWire(leftX + 2, topY + 2);
-                Wiring.SkipWire(leftX + 3, topY);
-                Wiring.SkipWire(leftX + 3, topY + 1);
-                Wiring.SkipWire(leftX + 3, topY + 2);
+                    if (Wiring.running)
+                         Wiring.SkipWire(x, y);
+                }
             }
 
             if (Main.netMode != NetmodeID.SinglePlayer)

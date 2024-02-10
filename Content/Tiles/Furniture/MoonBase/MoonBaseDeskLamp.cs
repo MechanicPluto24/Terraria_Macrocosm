@@ -59,18 +59,14 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 						Main.tile[x, y].TileFrameX -= 36;
 					else
 						Main.tile[x, y].TileFrameX += 36;
-				}
-			}
-			if (Wiring.running)
-			{
-				Wiring.SkipWire(leftX, topY);
-				Wiring.SkipWire(leftX, topY + 1);
-				Wiring.SkipWire(leftX + 1, topY);
-				Wiring.SkipWire(leftX + 1, topY + 1);
+
+                    if (Wiring.running)
+                        Wiring.SkipWire(x, y);
+                }
 			}
 
 			if (Main.netMode != NetmodeID.SinglePlayer)
-				NetMessage.SendTileSquare(-1, leftX, topY + 1, 2);
+				NetMessage.SendTileSquare(-1, leftX, topY, 2, 2);
 		}
 
 		public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)

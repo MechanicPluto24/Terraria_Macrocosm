@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.GameContent.Drawing;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -106,6 +107,15 @@ namespace Macrocosm.Common.Utils
                 out _, out _, out _, out _
             );
         }
+
+		public static void TileRenderer_AddSpecialPoint(int x, int y, string tileCounterType)
+		{
+            Type tileCounterTypeEnum = typeof(TileDrawing).Assembly.GetType("Terraria.GameContent.Drawing.TileDrawing+TileCounterType") 
+				?? throw new InvalidOperationException("TileCounterType enum not found.");
+
+            object enumValue = Enum.Parse(tileCounterTypeEnum, tileCounterType); 
+            Utility.InvokeMethod(Main.instance.TilesRenderer, "AddSpecialPoint", x, y, enumValue);
+		}
 
         public static bool AnyConnectedSlope(int i, int j)
 		{

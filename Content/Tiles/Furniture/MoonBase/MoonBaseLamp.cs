@@ -38,16 +38,16 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 			int topY = j - tile.TileFrameY / 18 % 3;
 			short frameAdjustment = (short)(tile.TileFrameX > 0 ? -18 : 18);
 
-			Main.tile[i, topY].TileFrameX += frameAdjustment;
-			Main.tile[i, topY + 1].TileFrameX += frameAdjustment;
-			Main.tile[i, topY + 2].TileFrameX += frameAdjustment;
+			for(int y = topY; y < topY + 3; y++)
+			{
+                Main.tile[i, y].TileFrameX += frameAdjustment;
 
-			Wiring.SkipWire(i, topY);
-			Wiring.SkipWire(i, topY + 1);
-			Wiring.SkipWire(i, topY + 2);
+				if (Wiring.running)
+					Wiring.SkipWire(i, y);
+            }
 
 			if (Main.netMode != NetmodeID.SinglePlayer)
-				NetMessage.SendTileSquare(-1, i, topY + 1, 3, TileChangeType.None);
+				NetMessage.SendTileSquare(-1, i, topY, 1, 3);
 		}
 
 		public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
