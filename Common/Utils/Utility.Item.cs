@@ -1,10 +1,12 @@
 ﻿using Macrocosm.Content.Items.Global;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Utils
 {
@@ -62,7 +64,28 @@ namespace Macrocosm.Common.Utils
 
 		}
 
-		public static void DrawBossBagEffect(this Item item, SpriteBatch spriteBatch, Color colorFront, Color colorBack, float rotation, float scale)
+		public static void AddVariationToRubblemakers(int itemType, int tileType, int tileStyle)
+		{
+            FlexibleTileWand.RubblePlacementSmall.AddVariation(itemType, tileType, tileStyle);
+            FlexibleTileWand.RubblePlacementMedium.AddVariation(itemType, tileType, tileStyle);
+            FlexibleTileWand.RubblePlacementLarge.AddVariation(itemType, tileType, tileStyle);
+        }
+
+        public static void AddVariationsToRubblemakers(int itemType, int tileType, params int[] tileStyles)
+        {
+            FlexibleTileWand.RubblePlacementSmall.AddVariations(itemType, tileType, tileStyles);
+            FlexibleTileWand.RubblePlacementMedium.AddVariations(itemType, tileType, tileStyles);
+            FlexibleTileWand.RubblePlacementLarge.AddVariations(itemType, tileType, tileStyles);
+        }
+
+        public static void AddVariationsToRubblemakers(int itemType, int tileType, Range tileStyles)
+        {
+            FlexibleTileWand.RubblePlacementSmall.AddVariations(itemType, tileType, tileStyles);
+            FlexibleTileWand.RubblePlacementMedium.AddVariations(itemType, tileType, tileStyles);
+            FlexibleTileWand.RubblePlacementLarge.AddVariations(itemType, tileType, tileStyles);
+        }
+
+        public static void DrawBossBagEffect(this Item item, SpriteBatch spriteBatch, Color colorFront, Color colorBack, float rotation, float scale)
 		{
 			Texture2D texture = TextureAssets.Item[item.type].Value;
 			Rectangle frame = texture.Frame();

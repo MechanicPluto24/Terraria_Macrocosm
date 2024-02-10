@@ -48,16 +48,12 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 					Main.tile[x, j].TileFrameX -= 54;
 				else
 					Main.tile[x, j].TileFrameX += 54;
-			}
 
-			if (Wiring.running)
-			{
-				Wiring.SkipWire(left, j);
-				Wiring.SkipWire(left + 1, j);
-				Wiring.SkipWire(left + 2, j);
-			}
+				if (Wiring.running)
+                    Wiring.SkipWire(x, j);
+            }
 
-			NetMessage.SendTileSquare(-1, left, j, 3);
+			NetMessage.SendTileSquare(-1, left, j, 3, 1);
 		}
 
 		public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
