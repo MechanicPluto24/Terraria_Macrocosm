@@ -1,15 +1,72 @@
 using Macrocosm.Common.DataStructures;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Reflection;
 using Terraria;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Utils
 {
 	public static partial class Utility
 	{
-		/// <summary> Saves the SpriteBatch parameters. Prefer to use <see cref="SpriteBatchState.SaveState(SpriteBatch)"/> instead</summary>
-		public static SpriteBatchState SaveState(this SpriteBatch spriteBatch)
+        public static (VertexPositionColorTexture[] vertices, short[] indices) CreateRectangularQuadMesh(Vector2 position, float width, float height, int countX, int countY, Func<Vector2, Color> colorFunction, bool debug = false)
+        {
+            VertexPositionColorTexture[] vertices = new VertexPositionColorTexture[(countX + 1) * (countY + 1)];
+            short[] indices = new short[countX * countY * 6];
+
+            float horizontalStep = width / countX;
+            float verticalStep = height / countY;
+
+            for (int y = 0; y <= countY; y++)
+            {
+                for (int x = 0; x <= countX; x++)
+                {
+					Vector2 samplePosition = position + new Vector2(x * horizontalStep, y * verticalStep);
+					vertices[y * (countX + 1) + x] = new VertexPositionColorTexture()
+					{
+						Position = new Vector3(samplePosition, 0f),
+						TextureCoordinate = new Vector2(x / (float)countX, y / (float)countY),
+						Color = colorFunction(samplePosition)
+                    };
+                }
+            }
+
+            int index = 0;
+            for (int y = 0; y < countY; y++)
+            {
+                for (int x = 0; x < countX; x++)
+                {
+                    indices[index++] = (short)(y * countX + x);
+                    indices[index++] = (short)(y * countX + x + 1);
+                    indices[index++] = (short)((y + 1) * countX + x + 1);
+
+                    indices[index++] = (short)(y * countX + x);
+                    indices[index++] = (short)((y + 1) * countX + x + 1);
+                    indices[index++] = (short)((y + 1) * countX + x);
+                }
+            }
+
+			if (debug)
+			{
+				bool beginCalled = Main.spriteBatch.BeginCalled();
+
+				if(!beginCalled) 
+					Main.spriteBatch.Begin();
+
+                var tex = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Circle5", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+                foreach (VertexPositionColorTexture vertex in vertices)
+                 	Main.spriteBatch.Draw(tex, new Vector2(vertex.Position.X, vertex.Position.Y), tex.Bounds, new Color(1f, 1f, 1f, 0f), 0f, Vector2.Zero, 0.01f, SpriteEffects.None, 0f);
+       			
+				if(!beginCalled)
+					Main.spriteBatch.End();
+            }
+
+            return (vertices, indices);
+        }
+
+        /// <summary> Saves the SpriteBatch parameters. Prefer to use <see cref="SpriteBatchState.SaveState(SpriteBatch)"/> instead</summary>
+        public static SpriteBatchState SaveState(this SpriteBatch spriteBatch)
 		{
 			if (spriteBatch.BeginCalled())
 			{
