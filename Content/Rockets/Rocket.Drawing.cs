@@ -297,21 +297,8 @@ namespace Macrocosm.Content.Rockets
 				}
 			}
 
-			// Vertex debug
-			//Main.spriteBatch.EndIfBeginCalled();
-			//Main.spriteBatch.Begin();
-
-			//var tex = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Circle5", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-
-			//foreach (VertexPositionColorTexture vertex in vertices)
-			//{
-			//	Main.spriteBatch.Draw(tex, new Vector2(vertex.Position.X, vertex.Position.Y), tex.Bounds, new Color(1f, 1f, 1f, 0f), 0f, Vector2.Zero, 0.01f, SpriteEffects.None, 0f);
-			//}
-
-			//Main.spriteBatch.End();
-
-			// Create our indices
-			indices ??= new short[indexCount];
+            // Create our indices
+            indices ??= new short[indexCount];
 			int index = 0;
 
 			for (int y = 0; y < h - 1; y++)
@@ -376,9 +363,10 @@ namespace Macrocosm.Content.Rockets
 			// Apply our effect and send our draw call to the GPU
 			meshEffect.CurrentTechnique.Passes[0].Apply();
 			PrimitivesSystem.GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, numVertices, 0, primitiveCount);
+			DebugVertices();
 
-			// Reset our settings back to the previosu ones
-			PrimitivesSystem.GraphicsDevice.ScissorRectangle = scissorRectangle;
+            // Reset our settings back to the previosu ones
+            PrimitivesSystem.GraphicsDevice.ScissorRectangle = scissorRectangle;
 			PrimitivesSystem.GraphicsDevice.RasterizerState = rasterizerState;
 			PrimitivesSystem.GraphicsDevice.SetVertexBuffers(previousVertices);
 			PrimitivesSystem.GraphicsDevice.Indices = previousIndices;
@@ -386,6 +374,22 @@ namespace Macrocosm.Content.Rockets
 			// Reset texture register
 			PrimitivesSystem.GraphicsDevice.Textures[0] = null;
 		}
+
+		private void DebugVertices()
+		{
+            // Vertex debug
+            bool beginCalled = Main.spriteBatch.BeginCalled();
+
+            if (!beginCalled)
+                Main.spriteBatch.Begin();
+
+            var tex = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Circle5", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+            foreach (VertexPositionColorTexture vertex in vertices)
+                Main.spriteBatch.Draw(tex, new Vector2(vertex.Position.X, vertex.Position.Y), tex.Bounds, new Color(1f, 1f, 1f, 0f), 0f, Vector2.Zero, 0.01f, SpriteEffects.None, 0f);
+
+            if (!beginCalled)
+                Main.spriteBatch.End();
+        }
 
 		// Events
 		private void OnResolutionChanged(Matrix matrix)
