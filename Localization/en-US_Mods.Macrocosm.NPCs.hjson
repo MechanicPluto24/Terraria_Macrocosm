@@ -132,3 +132,8 @@ MoonChampion: {
 		Advice3: If you wish to explore the Moon, do not forget your spacesuit!
 	}
 }
+
+Dweller: {
+	DisplayName: Dweller
+	BestiaryFlavorText: Mods.Macrocosm.NPCs.Dweller.BestiaryFlavorText
+}
