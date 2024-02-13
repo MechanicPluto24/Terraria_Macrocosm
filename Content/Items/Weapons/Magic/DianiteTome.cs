@@ -4,8 +4,10 @@ using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.ID;
+using Terraria.Map;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Magic
@@ -21,7 +23,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 		{
 			Item.damage = 125;
 			Item.DamageType = DamageClass.Magic;
-			Item.mana = 30;
+			Item.mana = 5;
 			Item.width = 80;
 			Item.height = 80;
 			Item.useTime = 12;
@@ -29,12 +31,13 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 			Item.useStyle = ItemUseStyleID.Shoot;
 			Item.noMelee = true;
 			Item.knockBack = 5;
-			Item.value = 10000;
+            Item.channel = true;
+            Item.value = 10000;
 			Item.rare = ModContent.RarityType<MoonRarityT1>();
 			Item.UseSound = SoundID.Item20;
-			Item.autoReuse = true;
-			Item.shoot = ModContent.ProjectileType<DianiteMeteorSmall>();
-			Item.shootSpeed = 16f;
+			//Item.autoReuse = true;
+			Item.shoot = ModContent.ProjectileType<DianitePortal>();
+			//Item.shootSpeed = 0;
 			Item.tileBoost = 50;
 		}
 
@@ -53,7 +56,13 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 
 		public override Vector2? HoldoutOffset() => new Vector2(10, 8);
 
-		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockBack)
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockBack)
+        {
+			Projectile.NewProjectile(source, Main.MouseWorld, velocity, type, damage, knockBack, player.whoAmI);
+			return false;
+        }
+
+        /*public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockBack)
 		{
 			int numProj = 2 + Main.rand.Next(1);  //This defines how many projectiles to shoot
 
@@ -84,6 +93,6 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 				Projectile.NewProjectile(source, playerOffset.X, playerOffset.Y, SpeedX, SpeedY, projType, damage, knockBack, Main.myPlayer, Main.MouseWorld.Y);
 			}
 			return false;
-		}
+		}*/
 	}
 }
