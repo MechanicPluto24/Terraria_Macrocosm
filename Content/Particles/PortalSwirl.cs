@@ -48,9 +48,9 @@ namespace Macrocosm.Content.Particles
 		{
 			float speed = Velocity.LengthSquared();
 
-			Color color = (Color.Lerp(Color.White, Color, speed) * 0.6f).WithOpacity(1f);
+			Color color = (Color.Lerp(Color.White, Color, speed) * 0.9f).WithOpacity(1f);
 
-			Texture2D glowTex = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Circle6", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+			Texture2D glowTex = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Swirl1", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
 
 			Main.spriteBatch.Draw(
 				glowTex,
@@ -59,8 +59,8 @@ namespace Macrocosm.Content.Particles
 				color,
 				Velocity.ToRotation(),
 				glowTex.Size() * 0.5f,
-				new Vector2(Math.Clamp(speed, 0, 3), Math.Clamp(speed, 0, 0.5f)) * 0.15f * Scale,
-				SpriteEffects.None,
+				new Vector2(Math.Clamp(speed, 0, 2), Math.Clamp(speed, 0, 0.5f)) * 0.15f * Scale,
+				SpriteEffects.FlipHorizontally | SpriteEffects.FlipVertically,
 				0
 			);
 
