@@ -29,8 +29,12 @@ namespace Macrocosm.Content.Subworlds
 		{
 			GenerateAluminum(progress, configuration);
 			GenerateLithium(progress, configuration);
+			GenerateCoal(progress, configuration);
 			GenerateOilShales(progress, configuration);
-			GenerateSilicaSand_Desert(progress, configuration);
+
+			// TODO: these need some attention
+			//GenerateSilicaSand_Underground(progress, configuration);
+			//GenerateSilicaSand_Desert(progress, configuration);
 		}
 
 		private void GenerateAluminum(GenerationProgress progress, GameConfiguration configuration)
@@ -48,25 +52,22 @@ namespace Macrocosm.Content.Subworlds
 				WorldGen.TileRunner(WorldGen.genRand.Next(0, Main.maxTilesX), WorldGen.genRand.Next((int)GenVars.rockLayerLow, Main.maxTilesY), WorldGen.genRand.Next(4, 6), WorldGen.genRand.Next(4, 6), TileType<LithiumOre>());
 		}
 
-		private void GenerateOilShales(GenerationProgress progress, GameConfiguration configuration)
+        private void GenerateCoal(GenerationProgress progress, GameConfiguration configuration)
+        {
+            for (int i = 0; i < (int)(Main.maxTilesX * Main.maxTilesY * 0.00008); i++)
+                WorldGen.TileRunner(WorldGen.genRand.Next(0, Main.maxTilesX), WorldGen.genRand.Next((int)GenVars.rockLayerLow, Main.maxTilesY), WorldGen.genRand.Next(3, 7), WorldGen.genRand.Next(3, 7), TileType<Coal>());
+        }
+
+        private void GenerateOilShales(GenerationProgress progress, GameConfiguration configuration)
 		{
-			for (int i = 0; i < Main.maxTilesX * Main.maxTilesY * 0.00035; i++)
+			for (int i = 0; i < Main.maxTilesX * Main.maxTilesY * 0.0005; i++)
 			{
 				int tileX = WorldGen.genRand.Next(GenVars.desertHiveLeft, GenVars.desertHiveRight);
 				int tileY = WorldGen.genRand.Next(GenVars.desertHiveHigh, GenVars.desertHiveLow);
 
-				// Get the progress in the desert hive depth (0 - top, 1 - bottom)
 				float depthProgress = (float)(tileY - GenVars.desertHiveHigh) / (GenVars.desertHiveLow - GenVars.desertHiveHigh);
 
-				int topDenominator = 1;
-				int bottomDenominator = 40;
-
-				// Scale the chance by depth
-				int chance = (int)(topDenominator + depthProgress * bottomDenominator);
-
-				// Chance to place oil shale increases the lower you go
-				// TODO: check why this doesn't look right in practice
-				if (!Main.rand.NextBool(chance))
+				if (Main.rand.NextFloat() < depthProgress)
 				{
 					int type = Main.tile[tileX, tileY].TileType;
 					if (TileID.Sets.Conversion.HardenedSand[type] || TileID.Sets.Conversion.Sandstone[type])
@@ -75,11 +76,39 @@ namespace Macrocosm.Content.Subworlds
 			}
 		}
 
-		// TODO: decide presence in sand patches, underground desert and surface deserts
-		private void GenerateSilicaSand_Desert(GenerationProgress progress, GameConfiguration configuration)
-		{
+		// TODO: Avoid snow, ice, mud and the sort...
+        private void GenerateSilicaSand_Underground(GenerationProgress progress, GameConfiguration configuration)
+        {
+            for (int i = 0; i < (int)(Main.maxTilesX * Main.maxTilesY * 0.000008); i++)
+                WorldGen.TileRunner(WorldGen.genRand.Next(0, Main.maxTilesX), WorldGen.genRand.Next((int)GenVars.rockLayerLow, (int)GenVars.rockLayerHigh), WorldGen.genRand.Next(7, 9), WorldGen.genRand.Next(5, 7), TileType<SilicaSand>());
+        }
 
-		}
+        // TODO: This causes weird artifacts due to the gravity of the silica sand
+        private void GenerateSilicaSand_Desert(GenerationProgress progress, GameConfiguration configuration)
+		{
+			// Desert
+            for (int i = 0; i < Main.maxTilesX * Main.maxTilesY * 0.0005; i++)
+            {
+                int tileX = WorldGen.genRand.Next(GenVars.desertHiveLeft, GenVars.desertHiveRight);
+                int tileY = WorldGen.genRand.Next(GenVars.desertHiveHigh, GenVars.desertHiveLow);
+
+                float depthProgress = (float)(tileY - GenVars.desertHiveHigh) / (GenVars.desertHiveLow - GenVars.desertHiveHigh);
+
+				if (Main.rand.NextFloat() < depthProgress)
+				{
+					int type = Main.tile[tileX, tileY].TileType;
+					if (TileID.Sets.Conversion.Sand[type] || TileID.Sets.Conversion.HardenedSand[type] || TileID.Sets.Conversion.Sandstone[type])
+                        Utility.BlobTileRunner(
+							tileX, tileY, TileType<SilicaSand>(),
+							repeatCount: 1..2, sprayRadius: 10..40, blobSize: 10..30,
+							perTileCheck: (i, j) => WorldGen.SolidOrSlopedTile(i, j) && (
+								TileID.Sets.Conversion.Sand[Main.tile[i,j].TileType] || 
+								TileID.Sets.Conversion.HardenedSand[Main.tile[i, j].TileType] || 
+								TileID.Sets.Conversion.Sandstone[Main.tile[i, j].TileType])
+						);
+                }
+            }
+        }
 
 		private void GenerateSilicaSand_Ocean(GenerationProgress progress, GameConfiguration configuration)
 		{
@@ -95,7 +124,8 @@ namespace Macrocosm.Content.Subworlds
 
 				if (type is TileID.Dirt or TileID.Stone)
 				{
-					Utility.BlobTileRunner(tileX, tileY, TileType<SilicaSand>(),
+					Utility.BlobTileRunner(
+						tileX, tileY, TileType<SilicaSand>(),
 						repeatCount: 1..2, sprayRadius: 10..40, blobSize: 10..30,
 						perTileCheck: (i, j) => WorldGen.SolidOrSlopedTile(i, j) && (Main.tile[i, j].TileType is TileID.Dirt or TileID.Stone)
 					);
