@@ -31,11 +31,28 @@ namespace Macrocosm.Common.Utils
 			return lerpValue / maxLerpValue;
 		}
 
-		#endregion
+        public static float WrapLerpAngle(float a, float b, float t)
+        {
+            float difference = b - a;
+            if (Math.Abs(difference) > MathHelper.Pi)
+            {
+                if (difference > 0f)
+                {
+                    difference -= MathHelper.TwoPi;
+                }
+                else
+                {
+                    difference += MathHelper.TwoPi;
+                }
+            }
+            return a + difference * t;
+        }
 
-		#region Vectors
+        #endregion
 
-		public static Vector2 Absolute(this Vector2 vector)
+        #region Vectors
+
+        public static Vector2 Absolute(this Vector2 vector)
 		{
 			float x = Math.Abs(vector.X);
 			float y = Math.Abs(vector.Y);
