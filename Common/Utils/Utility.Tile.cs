@@ -273,7 +273,7 @@ namespace Macrocosm.Common.Utils
 				for (int y1 = leftY; y1 < rightY; y1++)
 				{
 					Tile tile = Framing.GetTileSafely(x1, y1);
-					if (tile is { HasTile: true } && tile.TileType == type && (addTile == null || addTile(tile)) && (dist == -1 || Vector2.Distance(originalPos, new Vector2(x1, y1)) < dist))
+					if (tile is { HasTile: true } && (tile.TileType == type || type == -1) && (addTile == null || addTile(tile)) && (dist == -1 || Vector2.Distance(originalPos, new Vector2(x1, y1)) < dist))
 					{
 						dist = Vector2.Distance(originalPos, new Vector2(x1, y1));
 						if (type == 21 || TileObjectData.GetTileData(tile.TileType, 0) != null && (TileObjectData.GetTileData(tile.TileType, 0).Width > 1 || TileObjectData.GetTileData(tile.TileType, 0).Height > 1))

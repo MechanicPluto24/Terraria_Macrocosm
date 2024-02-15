@@ -52,10 +52,18 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 Projectile.ai[1] -= 10;
                 if (Projectile.owner == Main.myPlayer)
                 {
-                    Vector2 shootVel = (Main.MouseWorld - Projectile.Center).SafeNormalize(Vector2.UnitX * (float)Projectile.direction);
-                    shootVel *= 16f;
-                    Vector2 vector = new(Projectile.position.X + (float)Projectile.width * 0.5f, Projectile.position.Y + (float)Projectile.height * 0.5f);
-                    Projectile.NewProjectile(Projectile.InheritSource(Projectile), vector, shootVel.RotatedByRandom(MathHelper.Pi / 32), ModContent.ProjectileType<DianiteMeteorSmall>(), (int)(Projectile.damage), Projectile.knockBack, Main.player[Projectile.owner].whoAmI);
+                    int damage = Projectile.damage;
+                    Vector2 shootVel = (Main.MouseWorld - Projectile.Center).SafeNormalize(Vector2.UnitX * (float)Projectile.direction) * 16f;
+                    Vector2 vector = new(Projectile.position.X + Projectile.width/2f, Projectile.position.Y + Projectile.height/2f);
+                    int type = ModContent.ProjectileType<DianiteMeteorSmall>();
+
+                    if (Main.rand.NextBool(4))
+                    {
+                        type = ModContent.ProjectileType<DianiteMeteor>();
+                        damage = (int)(damage * 1.2f);
+                    }
+
+                    Projectile.NewProjectile(Projectile.InheritSource(Projectile), vector, shootVel.RotatedByRandom(MathHelper.Pi/24), type, damage, Projectile.knockBack, Main.player[Projectile.owner].whoAmI);
                 }
             }
 
@@ -113,12 +121,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
             Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, (color * 1f).WithOpacity(1f), Projectile.rotation * 1.65f, texture.Size() / 2f, Projectile.scale * 0.75f, SpriteEffects.None, 0);
 
-            Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Flare3").Value;
-            float scale = Projectile.scale * Main.rand.NextFloat(0.9f, 1.1f);
-            Main.spriteBatch.Draw(flare, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(255, 170, 33).WithOpacity(0.55f), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
+            Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Flare2").Value;
+            float scale = Projectile.scale * Main.rand.NextFloat(0.85f, 1.15f);
+            Main.spriteBatch.Draw(flare, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(255, 170, 33).WithOpacity(0.35f), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
 
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(BlendState.AlphaBlend, state);
+            Main.spriteBatch.Begin(state);
 
             return false;
         }

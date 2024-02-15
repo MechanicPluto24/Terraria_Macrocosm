@@ -11,6 +11,8 @@ using Macrocosm.Common.Utils;
 using Newtonsoft.Json.Linq;
 using Macrocosm.Common.Subworlds;
 using System.Linq.Expressions;
+using System.Reflection;
+using System.Linq;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
@@ -23,35 +25,47 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             public const int SegmentCount = 3;
 
+            public Vector2 Velocity;
+            public Vector2 TipPosition;
+
+            public Vector2 TargetPosition
+            {
+                get => targetPosition;
+                set
+                {
+                    lastTargetPosition = targetPosition;
+                    targetPosition = value;
+                }
+            }
+
+            private Vector2 targetPosition;
+            private Vector2 lastTargetPosition;
+
+            public float SpeedTowardsTarget = 1f;
+            public bool TargetOutOfRange;
+            public bool AtTargetPosition;
+
             private readonly NPC npc;
             private readonly int index;
+            private readonly Vector2 baseOffset;
 
-            public Vector2 velocity;
-            public Vector2 tipPosition;
-
-            public Vector2 targetPosition;
-
-            public float rotationLeg1, rotationLeg2, rotationFoot;
+            private float rotationLeg1, rotationLeg2, rotationFoot;
             private float prevRotationLeg1, prevRotationLeg2, prevRotationFoot;
 
             private Vector2 basePosition, joint1Position, joint2Position;
             private Vector2 prevBasePosition, prevJoint1Position, prevJoint2Position;
 
+            private readonly Texture2D leg1, leg2, foot;
             private Vector2 leg1Length, leg2Length, footLength;
 
             private float lastExtensionDistance;
 
-            private readonly Texture2D head;
-            private readonly Texture2D leg1;
-            private readonly Texture2D leg2;
-            private readonly Texture2D foot;
-
-            public Leg(NPC npc, int index)
+            public Leg(NPC npc, int index, Vector2 baseOffset)
             {
                 this.npc = npc;
                 this.index = index;
+                this.baseOffset = baseOffset;
 
-                head = ModContent.Request<Texture2D>(npc.ModNPC.Texture, AssetRequestMode.ImmediateLoad).Value;
                 leg1 = ModContent.Request<Texture2D>(npc.ModNPC.Texture + "_Leg1", AssetRequestMode.ImmediateLoad).Value;
                 leg2 = ModContent.Request<Texture2D>(npc.ModNPC.Texture + "_Leg2", AssetRequestMode.ImmediateLoad).Value;
                 foot = ModContent.Request<Texture2D>(npc.ModNPC.Texture + "_Foot", AssetRequestMode.ImmediateLoad).Value;
@@ -62,51 +76,46 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             }
 
             private bool firstUpdate;
-
             public void Update()
             {
                 bool leftLeg = index >= 3;
-                basePosition = new Vector2(npc.Center.X, npc.position.Y) + new Vector2(18 - (8 * index), head.Height);
+                basePosition = new Vector2(npc.Center.X, npc.position.Y) + npc.velocity + baseOffset;
 
                 if (!firstUpdate)
                 {
-                    prevBasePosition = prevJoint1Position = prevJoint2Position = tipPosition = basePosition;
+                    prevBasePosition = prevJoint1Position = prevJoint2Position = TipPosition = basePosition;
                     prevRotationLeg1 = prevRotationLeg2 = prevRotationFoot = 0f;
                     firstUpdate = true;
                 }
 
                 float smoothingFactor = 0.35f;
-                Vector2 baseToTipVector = tipPosition - basePosition;
-                float baseToTipDistance = baseToTipVector.Length();
                 float totalLegLength = leg1Length.Length() + leg2Length.Length() + footLength.Length();
+
+                Vector2 baseToTipVector = TipPosition - basePosition;
+                Vector2 baseToTargetVector = targetPosition - basePosition;
+                float baseToTipDistance = baseToTipVector.Length();
+                float baseToTargetDistance = baseToTargetVector.Length();
 
                 if (baseToTipDistance > totalLegLength)
                 {
                     baseToTipVector.Normalize();
                     baseToTipVector *= totalLegLength;
-                    tipPosition = basePosition + baseToTipVector;
+                    TipPosition = basePosition + baseToTipVector;
                 }
 
-                if (leftLeg)
-                {
-                    if(tipPosition.X >= basePosition.X - 80)
-                        tipPosition.X = basePosition.X - 80; 
-                }
+                TargetOutOfRange = baseToTargetDistance > totalLegLength;
+                AtTargetPosition = baseToTargetDistance < 100;
+
+                float tipToTargetDistance = Vector2.Distance(targetPosition, TipPosition);
+                float progress = MathHelper.Clamp(Vector2.Distance(TipPosition, lastTargetPosition) / Vector2.Distance(targetPosition, lastTargetPosition), 0f, 1f);
+                Velocity.Y -= (float)Math.Sin(Math.PI * progress) * SpeedTowardsTarget * 2f;
+
+                if (tipToTargetDistance > 5f)
+                    Velocity = Vector2.Lerp(Velocity, (targetPosition - TipPosition).SafeNormalize(default) * SpeedTowardsTarget * 0.5f, 0.4f);
                 else
-                {
-                    if (tipPosition.X <= basePosition.X + 80)
-                        tipPosition.X = basePosition.X + 80;
-                }
+                    Velocity = Vector2.Zero;
 
-                velocity.Y += 1f * MacrocosmSubworld.CurrentGravityMultiplier;
-
-                if (Vector2.Distance(targetPosition, tipPosition) > 10f)
-                    velocity = Vector2.Lerp(velocity, (targetPosition - tipPosition).SafeNormalize(default) * 10, 0.6f);
-                else
-                    velocity = Vector2.Zero;
-
-                velocity = Collision.TileCollision(tipPosition, velocity, 1, 1);
-                tipPosition += velocity;
+                TipPosition += Velocity;
 
                 Vector2 desiredTipPosition = prevJoint1Position + footLength.RotatedBy(prevRotationFoot);
                 baseToTipVector = desiredTipPosition - basePosition;
@@ -130,21 +139,19 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 joint1Position = basePosition + leg1Length.RotatedBy(rotationLeg1);
                 joint2Position = joint1Position + leg2Length.RotatedBy(rotationLeg2);
 
-                rotationFoot = (tipPosition - joint2Position).ToRotation();
+                rotationFoot = (TipPosition - joint2Position).ToRotation();
 
-                float extensionDist = Vector2.Distance(prevJoint2Position, tipPosition) / footLength.Length();
+                float extensionDist = Vector2.Distance(prevJoint2Position, TipPosition) / footLength.Length();
                 lastExtensionDistance += (extensionDist - lastExtensionDistance) * smoothingFactor;
                 lastExtensionDistance = MathHelper.Clamp(lastExtensionDistance * lastExtensionDistance, 0.0f, 1.0f);
 
-                basePosition = Vector2.Lerp(prevBasePosition, basePosition, 0.8f);
-                joint1Position = Vector2.Lerp(prevJoint1Position, joint1Position, 0.75f);
-                joint2Position = Vector2.Lerp(prevJoint2Position, joint2Position, 0.7f);
+                joint1Position = Vector2.Lerp(prevJoint1Position, joint1Position, 0.9f);
+                joint2Position = Vector2.Lerp(prevJoint2Position, joint2Position, 0.8f);
 
                 rotationLeg1 = Utility.WrapLerpAngle(prevRotationLeg1, rotationLeg1, smoothingFactor);
                 rotationLeg2 = Utility.WrapLerpAngle(prevRotationLeg2, rotationLeg2, smoothingFactor);
                 rotationFoot = Utility.WrapLerpAngle(prevRotationFoot, rotationFoot, smoothingFactor);
 
-                prevBasePosition = basePosition;
                 prevJoint1Position = joint1Position;
                 prevJoint2Position = joint2Position;
                 prevRotationLeg1 = rotationLeg1;
@@ -158,14 +165,16 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
                 Texture2D cross = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "DebugCross").Value;
 
-                Vector2 originLeg1 = new Vector2(leg1.Width / 2f, 0);
-                Vector2 originLeg2 = new Vector2(leg2.Width / 2f, 0);
-                Vector2 originFoot = new Vector2(foot.Width / 2f, 0);
+                Vector2 originLeg1 = new(leg1.Width / 2f, 0);
+                Vector2 originLeg2 = new(leg2.Width / 2f, 0);
+                Vector2 originFoot = new(foot.Width / 2f, 0);
 
                 spriteBatch.Draw(leg1, basePosition - screenPos, null, drawColor, rotationLeg1 - MathHelper.PiOver2, originLeg1, npc.scale, effects, 0f);
                 spriteBatch.Draw(leg2, joint1Position - screenPos, null, drawColor, rotationLeg2 - MathHelper.PiOver2, originLeg2, npc.scale, effects, 0f);
                 spriteBatch.Draw(foot, joint2Position - screenPos, null, drawColor, rotationFoot - MathHelper.PiOver2, originFoot, npc.scale, effects, 0f);
 
+                // Debug stuff
+                /*
                 spriteBatch.Draw(cross, basePosition - screenPos, null, Color.Red, 0f, cross.Size()/2f, 2f, SpriteEffects.None, 0);
                 spriteBatch.Draw(cross, joint1Position - screenPos, null, Color.Yellow, 0f, cross.Size() / 2f, 2f, SpriteEffects.None, 0);
                 spriteBatch.Draw(cross, joint2Position - screenPos, null, Color.LimeGreen, 0f, cross.Size() / 2f, 2f, SpriteEffects.None, 0);
@@ -173,13 +182,28 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 Vector2 visualTipPosition = joint2Position + footLength.RotatedBy(rotationFoot); 
                 spriteBatch.Draw(cross, visualTipPosition - screenPos, null, Color.Blue, 0f, cross.Size() / 2f, 2f, SpriteEffects.None, 0);
 
-                spriteBatch.Draw(cross, tipPosition - screenPos, null, Color.Cyan, 0f, cross.Size() / 2f, 2f, SpriteEffects.None, 0);
-                spriteBatch.Draw(cross, targetPosition - screenPos, null, Color.Magenta, 0f, cross.Size() / 2f, 2f, SpriteEffects.None, 0);
+                spriteBatch.Draw(cross, TipPosition - screenPos, null, Color.Cyan, 0f, cross.Size() / 2f, 2f, SpriteEffects.None, 0);
+                */
+                spriteBatch.Draw(cross, targetPosition - screenPos, null, Utility.HSLToRGB(new((index + 1) / 6f, 1f, 0.5f)), 0f, cross.Size() / 2f, 2f, SpriteEffects.None, 0);
+                //spriteBatch.Draw(cross, lastTargetPosition - screenPos, null, Utility.HSLToRGB(new((index + 1) / 6f, 1f, 0.2f)), 0f, cross.Size() / 2f, 2f, SpriteEffects.None, 0);
             }
         }
 
+        public enum AIState
+        {
+            Walk
+        }
+
+        public AIState ActionState
+        {
+            get => (AIState)NPC.ai[0];
+            set => NPC.ai[0] = (float)value;
+        }
+
         public Player TargetPlayer => Main.player[NPC.target];
-        public bool HasTarget => TargetPlayer is not null;
+        public bool HasTarget => TargetPlayer is not null && TargetPlayer.active && !TargetPlayer.dead;
+
+        Texture2D head;
 
         public override void SetStaticDefaults()
         {
@@ -187,9 +211,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         }
 
         public override void SetDefaults()
-        {
-            NPC.width = 150;
-            NPC.height = 200;
+        {   
             NPC.damage = 150;
             NPC.defense = 25;
             NPC.lifeMax = 6000;
@@ -197,8 +219,14 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.DeathSound = SoundID.NPCDeath2;
             NPC.knockBackResist = 0.5f;
             NPC.aiStyle = -1;
+            NPC.noGravity = false;
 
             SpawnModBiomes = new int[1] { ModContent.GetInstance<UndergroundMoonBiome>().Type };
+
+            head = ModContent.Request<Texture2D>(Texture, AssetRequestMode.ImmediateLoad).Value;
+
+            NPC.width = head.Width;
+            NPC.height = head.Height + 122;
 
             InitializeLegs();
         }
@@ -207,7 +235,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {           
             for (int i = 0; i < LegCount; i++)
             {
-                Legs[i] = new Leg(NPC, i);
+                Legs[i] = new Leg(NPC, i, new Vector2(18 - (8 * i), head.Height * 0.8f));
             }
         }
 
@@ -215,29 +243,83 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             NPC.TargetClosest(faceTarget: false);
 
-            if(HasTarget && NPC.DistanceSQ(TargetPlayer.Center) > 1f)
+            int legsTouchingGround = Legs.Count(leg => WorldGen.SolidOrSlopedTile(Main.tile[leg.TipPosition.ToTileCoordinates()]));
+            bool anyLegTouchingGround = legsTouchingGround > 0;
+
+            float speed = 6f;
+            if (HasTarget && NPC.DistanceSQ(TargetPlayer.Center) > 100f * 100f)
             {
                 Vector2 direction = NPC.Center.DirectionTo(TargetPlayer.Center);
-                NPC.velocity.X = direction.X * 5f;
+                NPC.velocity.X = direction.X * speed;
             }
 
-            if(NPC.collideX)
+            NPC.GravityMultiplier *= 1.5f;
+
+            if (NPC.collideX)
             {
-                NPC.velocity.Y = -5;
+                NPC.velocity.Y = -10;
             }
-            else if(!NPC.collideY && NPC.velocity.Y < 0)
+            else if (!NPC.collideY && NPC.velocity.Y < 0)
             {
-                NPC.velocity.Y += 10;
+                NPC.velocity.Y += 20;
             }
 
+            NPC.ai[1] += 0.03f * speed;
+
+            float stepSize = 50f;  
+            float stepRadius = 20f;
             for (int i = 0; i < LegCount; i++)
             {
-                int legIndexFactor = i - 3 + (i >= 3 ? 1 : 0);
-                int legIndexSign = Math.Sign(legIndexFactor);
+                float legMultiplier = (i <= 2 ? 1 * (i + 1) : -1f * (i - LegCount / 2 + 1));
+                bool isLegMoving = (Math.Truncate((NPC.ai[1] % 3) + 1)) == Math.Abs(legMultiplier);
+                if (isLegMoving)
+                {
+                    Vector2 targetPosition = new Vector2(NPC.Center.X, NPC.position.Y + NPC.height) + new Vector2(stepSize * legMultiplier, stepRadius);
+                    Legs[i].TargetPosition = FindSuitableGround(targetPosition, verticalRange: 10, horizontalRange: 5);
+                }
 
-                Legs[i].targetPosition = Main.MouseWorld + new Vector2(60, 0) * -legIndexFactor;
+                Legs[i].SpeedTowardsTarget = speed * 4f;
                 Legs[i].Update();
             }
+
+        }
+
+        private Vector2 FindSuitableGround(Vector2 position, int verticalRange, int horizontalRange)
+        {
+            Point startTile = position.ToTileCoordinates();
+
+            if (WorldGen.InWorld(startTile.X, startTile.Y))
+            {
+                for (int y = startTile.Y; y < startTile.Y + verticalRange && y < Main.maxTilesY; y++)
+                     if (WorldGen.SolidTile(startTile.X, y) && !WorldGen.SolidTile(startTile.X, y - 1))
+                         return new Vector2(startTile.X * 16, y * 16);
+ 
+                for (int y = startTile.Y; y > startTile.Y - verticalRange && y >= 0; y--)
+                     if (WorldGen.SolidTile(startTile.X, y) && !WorldGen.SolidTile(startTile.X, y - 1))
+                         return new Vector2(startTile.X * 16, y * 16);
+ 
+                for (int x = -horizontalRange; x <= horizontalRange; x++)
+                {
+                    if (x == 0)
+                        continue;  
+
+                    for (int y = startTile.Y; y < startTile.Y + verticalRange && y < Main.maxTilesY; y++)
+                    {
+                        int checkX = startTile.X + x;
+                        if (WorldGen.SolidTile(checkX, y) && !WorldGen.SolidTile(checkX, y - 1))
+                             return new Vector2(checkX * 16, y * 16);
+                    }
+
+                    for (int y = startTile.Y; y > startTile.Y - verticalRange && y >= 0; y--)
+                    {
+                        int checkX = startTile.X + x;
+                        if (WorldGen.SolidTile(checkX, y) && !WorldGen.SolidTile(checkX, y - 1))
+                             return new Vector2(checkX * 16, y * 16);
+                    }
+                }
+            }
+
+            return Utility.GetClosestTile(startTile.X, startTile.Y, -1, 200, (t) => Main.tileSolid[t.TileType] && !t.IsActuated) * 16f;
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
@@ -249,7 +331,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 Legs[i].Draw(spriteBatch, NPC, screenPos, drawColor);
             }
 
-            Texture2D head = ModContent.Request<Texture2D>(Texture, AssetRequestMode.ImmediateLoad).Value;
             spriteBatch.Draw(head, new Vector2(NPC.Center.X, NPC.position.Y + head.Height/2) - Main.screenPosition, NPC.frame, drawColor, NPC.rotation, head.Size() / 2f, NPC.scale, effects, 0);
 
             return false;

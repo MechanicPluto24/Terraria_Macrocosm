@@ -29,23 +29,19 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 		public override bool PreDraw(ref Color lightColor)
 		{
 			ProjectileID.Sets.TrailCacheLength[Type] = 10;
-			float count = Math.Abs(Projectile.velocity.X) + Math.Abs(Projectile.velocity.Y) * 10f;
-
-			if (count > 25f)
-				count = 25f;
-
 			state.SaveState(Main.spriteBatch);
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.Additive, state);
 
-			for (int n = 2; n < count - 5; n++)
-			{
-				Vector2 trailPosition = Projectile.Center - Projectile.velocity * n * 0.15f;
-				Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, trailPosition - Main.screenPosition, null, Color.OrangeRed * (0.8f - (float)n / count), Projectile.rotation + ((float)n / count), TextureAssets.Projectile[Type].Value.Size() / 2f, Projectile.scale * (1f - (float)n / count), SpriteEffects.None, 0f);
-			}
+            float count = 25f;
+            for (int n = 2; n < count; n++)
+            {
+                Vector2 trailPosition = Projectile.Center - Projectile.velocity.SafeNormalize(default) * n * 5;
+                Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, trailPosition - Main.screenPosition, null, Color.OrangeRed * (1f - (float)n / count), 0f, TextureAssets.Projectile[Type].Value.Size() / 2f, Projectile.scale * (0.5f + 0.5f * (1f - (float)n / count)), SpriteEffects.None, 0f);
+            }
 
-			Projectile.GetTrail().Draw(TextureAssets.Projectile[Type].Size() / 2f);
+            Projectile.GetTrail().Draw(TextureAssets.Projectile[Type].Size() / 2f);
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(state);
