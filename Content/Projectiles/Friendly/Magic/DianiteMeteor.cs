@@ -30,6 +30,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			Projectile.DamageType = DamageClass.Magic;
 			Projectile.ignoreWater = true;
 
+			Projectile.alpha = 255;
+
 			Projectile.SetTrail<DianiteMeteorTrail>();
 		}
 
@@ -45,25 +47,27 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			{
 				rotationClockwise = Main.rand.NextBool();
 				spawned = true;
-
-				// sync ai array on spawn
 				Projectile.netUpdate = true;
 			}
 
-			if (Main.rand.NextBool())
-			{
-				Vector2 velocity = -Projectile.velocity.RotatedByRandom(MathHelper.Pi / 2f) * 0.1f;
-				Dust dust = Dust.NewDustDirect(Projectile.position, (int)(Projectile.width), 1, DustID.Flare, velocity.X, velocity.Y, Scale: 1f);
-				dust.noGravity = true;
-			}
+			Projectile.velocity.Y += 0.1f;
 
 			if (rotationClockwise)
-				Projectile.rotation += 0.2f;
+				Projectile.rotation += 0.1f;
 			else
-				Projectile.rotation -= 0.2f;
-		}
+				Projectile.rotation -= 0.1f;
 
-		public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough, ref Vector2 hitboxCenterFrac)
+
+            if (Projectile.alpha > 0)
+                 Projectile.alpha -= 15;
+ 
+            Vector2 velocity = -Projectile.velocity.RotatedByRandom(MathHelper.Pi / 2f) * 0.1f;
+            Dust dust = Dust.NewDustDirect(Projectile.position, (int)(Projectile.width), (int)(Projectile.height), DustID.Flare, velocity.X, velocity.Y, Scale: 1f);
+            dust.noGravity = true;
+
+        }
+
+        public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough, ref Vector2 hitboxCenterFrac)
 		{
 			if (InitialTargetPositionY > Projectile.position.Y)
 				return false;
@@ -74,25 +78,20 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 		private SpriteBatchState state;
 		public override bool PreDraw(ref Color lightColor)
 		{
-			float count = Math.Abs(Projectile.velocity.X) + Math.Abs(Projectile.velocity.Y) * 10f;
-
-			if (count > 50f)
-				count = 50f;
-
 			state.SaveState(Main.spriteBatch);
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.Additive, state);
 
 			Projectile.GetTrail().Draw(TextureAssets.Projectile[Type].Size() / 2f);
-			for (int n = 2; n < count; n++)
-			{
-				Vector2 trailPosition = Projectile.Center - Projectile.velocity * n * 0.15f;
-				Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, trailPosition - Main.screenPosition, null, Color.OrangeRed * (0.75f - (float)n / count), Projectile.rotation + ((float)n / count), TextureAssets.Projectile[Type].Value.Size() / 2f, Projectile.scale * (1f - (float)n / count), SpriteEffects.None, 0f);
-			}
+            float count = 25f;
+            for (int n = 2; n < count; n++)
+            {
+                Vector2 trailPosition = Projectile.Center - Projectile.velocity.SafeNormalize(default) * n * 7;
+                Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, trailPosition - Main.screenPosition, null, Color.OrangeRed * (1f - (float)n / count), 0f, TextureAssets.Projectile[Type].Value.Size() / 2f, Projectile.scale * (0.5f + 0.5f * (1f - (float)n / count)), SpriteEffects.None, 0f);
+            }
 
-
-			Main.spriteBatch.End();
+            Main.spriteBatch.End();
 			Main.spriteBatch.Begin(state);
 
 			return true;
