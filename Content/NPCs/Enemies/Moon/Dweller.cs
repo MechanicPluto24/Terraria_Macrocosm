@@ -8,11 +8,8 @@ using Terraria.ModLoader;
 using ReLogic.Content;
 using System;
 using Macrocosm.Common.Utils;
-using Newtonsoft.Json.Linq;
-using Macrocosm.Common.Subworlds;
-using System.Linq.Expressions;
-using System.Reflection;
 using System.Linq;
+using Terraria.GameContent;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
@@ -107,11 +104,11 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 AtTargetPosition = baseToTargetDistance < 100;
 
                 float tipToTargetDistance = Vector2.Distance(targetPosition, TipPosition);
-                float progress = MathHelper.Clamp(Vector2.Distance(TipPosition, lastTargetPosition) / Vector2.Distance(targetPosition, lastTargetPosition), 0f, 1f);
-                Velocity.Y -= (float)Math.Sin(Math.PI * progress) * SpeedTowardsTarget * 2f;
+                //float progress = MathHelper.Clamp(Vector2.Distance(TipPosition, lastTargetPosition) / Vector2.Distance(targetPosition, lastTargetPosition), 0f, 1f);
+                //Velocity.Y -= (float)Math.Sin(Math.PI * progress) * 50f;
 
                 if (tipToTargetDistance > 5f)
-                    Velocity = Vector2.Lerp(Velocity, (targetPosition - TipPosition).SafeNormalize(default) * SpeedTowardsTarget * 0.5f, 0.4f);
+                    Velocity = Vector2.Lerp(Velocity, (targetPosition - TipPosition).SafeNormalize(default) * SpeedTowardsTarget, 0.4f);
                 else
                     Velocity = Vector2.Zero;
 
@@ -141,8 +138,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
                 rotationFoot = (TipPosition - joint2Position).ToRotation();
 
-                float extensionDist = Vector2.Distance(prevJoint2Position, TipPosition) / footLength.Length();
-                lastExtensionDistance += (extensionDist - lastExtensionDistance) * smoothingFactor;
+                float extensionDist = Vector2.Distance(joint2Position, targetPosition) / footLength.Length();
+                lastExtensionDistance = MathHelper.Lerp(lastExtensionDistance, extensionDist, smoothingFactor);
                 lastExtensionDistance = MathHelper.Clamp(lastExtensionDistance * lastExtensionDistance, 0.0f, 1.0f);
 
                 joint1Position = Vector2.Lerp(prevJoint1Position, joint1Position, 0.9f);
@@ -182,9 +179,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 Vector2 visualTipPosition = joint2Position + footLength.RotatedBy(rotationFoot); 
                 spriteBatch.Draw(cross, visualTipPosition - screenPos, null, Color.Blue, 0f, cross.Size() / 2f, 2f, SpriteEffects.None, 0);
 
-                spriteBatch.Draw(cross, TipPosition - screenPos, null, Color.Cyan, 0f, cross.Size() / 2f, 2f, SpriteEffects.None, 0);
                 */
                 spriteBatch.Draw(cross, targetPosition - screenPos, null, Utility.HSLToRGB(new((index + 1) / 6f, 1f, 0.5f)), 0f, cross.Size() / 2f, 2f, SpriteEffects.None, 0);
+                spriteBatch.Draw(cross, TipPosition - screenPos, null, Color.Cyan, 0f, cross.Size() / 2f, 2f, SpriteEffects.None, 0);
                 //spriteBatch.Draw(cross, lastTargetPosition - screenPos, null, Utility.HSLToRGB(new((index + 1) / 6f, 1f, 0.2f)), 0f, cross.Size() / 2f, 2f, SpriteEffects.None, 0);
             }
         }
@@ -200,10 +197,13 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             set => NPC.ai[0] = (float)value;
         }
 
+        public ref float LegTimer => ref NPC.ai[1];
+
         public Player TargetPlayer => Main.player[NPC.target];
         public bool HasTarget => TargetPlayer is not null && TargetPlayer.active && !TargetPlayer.dead;
 
-        Texture2D head;
+        private Texture2D head;
+        private Rectangle collisionHitbox;
 
         public override void SetStaticDefaults()
         {
@@ -219,14 +219,13 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.DeathSound = SoundID.NPCDeath2;
             NPC.knockBackResist = 0.5f;
             NPC.aiStyle = -1;
-            NPC.noGravity = false;
 
             SpawnModBiomes = new int[1] { ModContent.GetInstance<UndergroundMoonBiome>().Type };
 
             head = ModContent.Request<Texture2D>(Texture, AssetRequestMode.ImmediateLoad).Value;
 
             NPC.width = head.Width;
-            NPC.height = head.Height + 122;
+            NPC.height = head.Height;
 
             InitializeLegs();
         }
@@ -245,36 +244,52 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             int legsTouchingGround = Legs.Count(leg => WorldGen.SolidOrSlopedTile(Main.tile[leg.TipPosition.ToTileCoordinates()]));
             bool anyLegTouchingGround = legsTouchingGround > 0;
+            collisionHitbox = new((int)NPC.position.X, (int)NPC.position.Y, 4 * 16, 12 * 16);
+            Rectangle tileCollisionHitbox = new (collisionHitbox.X / 16, collisionHitbox.Y / 16, collisionHitbox.Width / 16, collisionHitbox.Height / 16);
+            bool midAir = Utility.EmptyTiles(tileCollisionHitbox);
+
+            NPC.noGravity = true;
+            NPC.noTileCollide = true;
 
             float speed = 6f;
             if (HasTarget && NPC.DistanceSQ(TargetPlayer.Center) > 100f * 100f)
             {
                 Vector2 direction = NPC.Center.DirectionTo(TargetPlayer.Center);
                 NPC.velocity.X = direction.X * speed;
+
+                if(midAir && !(Legs.Any(leg => leg.TipPosition.Y < (collisionHitbox.Y + collisionHitbox.Height))))
+                {
+                    NPC.velocity.Y = Math.Abs(NPC.velocity.Y);
+                    NPC.velocity.Y += NPC.gravity;
+                }
+                else if (anyLegTouchingGround)
+                {
+                    NPC.velocity.Y = direction.Y * speed;
+                }
             }
 
-            NPC.GravityMultiplier *= 1.5f;
+            LegTimer += 0.012f * speed;
 
-            if (NPC.collideX)
-            {
-                NPC.velocity.Y = -10;
-            }
-            else if (!NPC.collideY && NPC.velocity.Y < 0)
-            {
-                NPC.velocity.Y += 20;
-            }
-
-            NPC.ai[1] += 0.03f * speed;
-
-            float stepSize = 50f;  
-            float stepRadius = 20f;
+            float stepSize = 160f;  
+            float restDistance = 60f;  
             for (int i = 0; i < LegCount; i++)
             {
                 float legMultiplier = (i <= 2 ? 1 * (i + 1) : -1f * (i - LegCount / 2 + 1));
-                bool isLegMoving = (Math.Truncate((NPC.ai[1] % 3) + 1)) == Math.Abs(legMultiplier);
+                bool isLegMoving = (Math.Truncate((LegTimer % 3) + 1)) == Math.Abs(legMultiplier);
                 if (isLegMoving)
                 {
-                    Vector2 targetPosition = new Vector2(NPC.Center.X, NPC.position.Y + NPC.height) + new Vector2(stepSize * legMultiplier, stepRadius);
+                    float direction = Math.Sign(NPC.velocity.X);
+                    float legDirection = Math.Sign(legMultiplier);
+                    bool sameDirection = direction == legDirection;
+                    float speedAmount = Math.Abs(NPC.velocity.X) / speed;
+
+                    float legOffset;
+                    if (sameDirection)
+                        legOffset = MathHelper.Lerp(legMultiplier * restDistance, stepSize * legDirection, speedAmount);
+                    else 
+                        legOffset = MathHelper.Lerp(legMultiplier * restDistance, stepSize * 0.5f * legDirection, speedAmount);
+
+                    Vector2 targetPosition = new(NPC.Center.X + legOffset, NPC.position.Y + NPC.height + 122);
                     Legs[i].TargetPosition = FindSuitableGround(targetPosition, verticalRange: 10, horizontalRange: 5);
                 }
 
@@ -331,7 +346,13 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 Legs[i].Draw(spriteBatch, NPC, screenPos, drawColor);
             }
 
+
             spriteBatch.Draw(head, new Vector2(NPC.Center.X, NPC.position.Y + head.Height/2) - Main.screenPosition, NPC.frame, drawColor, NPC.rotation, head.Size() / 2f, NPC.scale, effects, 0);
+
+            Rectangle hitbox = collisionHitbox;
+            hitbox.X -= (int)screenPos.X;
+            hitbox.Y -= (int)screenPos.Y;
+            spriteBatch.Draw(TextureAssets.MagicPixel.Value, hitbox, Color.Purple * 0.5f);
 
             return false;
         }
