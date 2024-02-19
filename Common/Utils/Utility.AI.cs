@@ -5145,16 +5145,18 @@ namespace Macrocosm.Common.Utils
 		///</summary>
 		public static bool EmptyTiles(Rectangle rect)
 		{
-			int topX = rect.X / 16, topY = rect.Y / 16;
+			int topX = rect.X;
+			int topY = rect.Y;
 			for (int x = topX; x < topX + rect.Width; x++)
 			{
-				for (int y = topY; x < topY + rect.Height; y++)
+				for (int y = topY; y < topY + rect.Height; y++)
 				{
-					Tile tile = Framing.GetTileSafely(x, y);
+                    Tile tile = Framing.GetTileSafely(x, y);
 					if (tile is { HasUnactuatedTile: true } && Main.tileSolid[tile.TileType])
 					{
 						return false;
 					}
+
 				}
 			}
 			return true;
