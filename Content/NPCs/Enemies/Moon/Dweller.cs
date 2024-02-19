@@ -220,10 +220,12 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.knockBackResist = 0.5f;
             NPC.aiStyle = -1;
 
+            NPC.noGravity = true;
+            NPC.noTileCollide = true;
+
             SpawnModBiomes = new int[1] { ModContent.GetInstance<UndergroundMoonBiome>().Type };
 
             head = ModContent.Request<Texture2D>(Texture, AssetRequestMode.ImmediateLoad).Value;
-
             NPC.width = head.Width;
             NPC.height = head.Height;
 
@@ -247,9 +249,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             collisionHitbox = new((int)NPC.position.X, (int)NPC.position.Y, 4 * 16, 12 * 16);
             Rectangle tileCollisionHitbox = new (collisionHitbox.X / 16, collisionHitbox.Y / 16, collisionHitbox.Width / 16, collisionHitbox.Height / 16);
             bool midAir = Utility.EmptyTiles(tileCollisionHitbox);
-
-            NPC.noGravity = true;
-            NPC.noTileCollide = true;
 
             float speed = 6f;
             if (HasTarget && NPC.DistanceSQ(TargetPlayer.Center) > 100f * 100f)
@@ -346,13 +345,15 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 Legs[i].Draw(spriteBatch, NPC, screenPos, drawColor);
             }
 
-
             spriteBatch.Draw(head, new Vector2(NPC.Center.X, NPC.position.Y + head.Height/2) - Main.screenPosition, NPC.frame, drawColor, NPC.rotation, head.Size() / 2f, NPC.scale, effects, 0);
 
+            // Debug collision hitbox
+            /*
             Rectangle hitbox = collisionHitbox;
             hitbox.X -= (int)screenPos.X;
             hitbox.Y -= (int)screenPos.Y;
             spriteBatch.Draw(TextureAssets.MagicPixel.Value, hitbox, Color.Purple * 0.5f);
+            */
 
             return false;
         }
