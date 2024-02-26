@@ -30,9 +30,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		public override void SetDefaults()
 		{
 			NPC.CloneDefaults(NPCID.DiggerHead);
-			NPC.damage = 100;
-			NPC.lifeMax = 1000;
-			NPC.defense = 20;
+			NPC.damage = 175;
+			NPC.lifeMax = 1250;
+			NPC.defense = 63;
 			NPC.width = 92;
 			NPC.height = 92;
 			NPC.aiStyle = -1;
@@ -107,8 +107,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		public override void SetDefaults()
 		{
 			NPC.CloneDefaults(NPCID.DiggerBody);
-			NPC.damage = 80;
-			NPC.defense = 30;
+			NPC.damage = 120;
+			NPC.defense = 69;
 			NPC.width = 58;
 			NPC.height = 58;
 			NPC.aiStyle = -1;
@@ -145,8 +145,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		public override void SetDefaults()
 		{
 			NPC.CloneDefaults(NPCID.DiggerTail);
-			NPC.damage = 84;
-			NPC.defense = 64;
+			NPC.damage = 100;
+			NPC.defense = 75;
 			NPC.width = 54;
 			NPC.height = 54;
 			NPC.aiStyle = -1;

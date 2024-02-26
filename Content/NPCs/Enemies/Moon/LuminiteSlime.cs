@@ -27,9 +27,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 			NPC.width = 36;
 			NPC.height = 22;
-			NPC.damage = 50;
-			NPC.defense = 60;
-			NPC.lifeMax = 2000;
+			NPC.damage = 80;
+			NPC.defense = 64;
+			NPC.lifeMax = 550;
 			NPC.HitSound = SoundID.NPCHit1;
 			NPC.DeathSound = SoundID.NPCDeath1;
 			NPC.value = 60f;
@@ -101,7 +101,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 				for (int i = 0; i < Main.rand.Next(3, 7); i++)
 				{
 					Vector2 projVelocity = Utility.PolarVector(2.6f, Main.rand.NextFloat(-MathHelper.Pi + MathHelper.PiOver4, -MathHelper.PiOver4));
-					Projectile proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, projVelocity, ModContent.ProjectileType<LuminiteShard>(), (int)(NPC.damage * 0.75f), 1f, Main.myPlayer, ai1: NPC.target);
+					Projectile proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, projVelocity, ModContent.ProjectileType<LuminiteShard>(), Utility.TrueDamage((int)(NPC.damage * 1.35f)), 1f, Main.myPlayer, ai1: NPC.target);
 					proj.netUpdate = true;
 				}
 			}
