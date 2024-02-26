@@ -35,6 +35,8 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			Item.value = 10000;
 			Item.rare = ModContent.RarityType<MoonRarityT1>();
 			Item.UseSound = SoundID.Item38;
+
+			Item.autoReuse = true;
 		}
 
 		private int altUseCooldown;
@@ -54,7 +56,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 				Item.damage = 240;
                 Item.useTime = 6;
 				Item.useAnimation = 36;
-				altUseCooldown = 55;
+				altUseCooldown = 65;
 			}
 			else
 			{
@@ -76,7 +78,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 		{
 			if (player.AltFunction())
 			{
-				float radians = MathHelper.ToRadians(5);
+				float radians = MathHelper.ToRadians(15);
 				velocity = velocity.RotatedBy(Main.rand.NextFloat(-radians, radians));
 				SoundEngine.PlaySound(SoundID.Item38 with { PitchRange = (0f, 0.5f) }, position);
 			}

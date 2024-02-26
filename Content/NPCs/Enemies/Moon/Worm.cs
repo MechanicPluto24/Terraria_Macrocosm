@@ -242,7 +242,6 @@ namespace Macrocosm.Content.NPCs
 
 					// Here we determine the length of the worm.
 					int randomWormLength = Main.rand.Next(MinSegmentLength, MaxSegmentLength + 1);
-
 					int distance = randomWormLength - 2;
 
 					IEntitySource source = NPC.GetSource_FromAI();

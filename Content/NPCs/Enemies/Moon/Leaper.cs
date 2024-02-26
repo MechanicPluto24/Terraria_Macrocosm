@@ -27,9 +27,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 			NPC.width = 36;
 			NPC.height = 44;
-			NPC.damage = 100;
-			NPC.defense = 75;
-			NPC.lifeMax = 3000;
+			NPC.damage = 65;
+			NPC.defense = 60;
+			NPC.lifeMax = 700;
 			NPC.HitSound = SoundID.NPCHit1;
 			NPC.DeathSound = SoundID.NPCDeath2;
 			NPC.knockBackResist = 0.5f;
@@ -58,6 +58,11 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		public override void AI()
 		{
 			Utility.AIZombie(NPC, ref NPC.ai, false, true, velMax: 4, maxJumpTilesX: 15, maxJumpTilesY: 10, moveInterval: 0.07f);
+
+			//if(charge)
+			//	 NPC.damage = (int)(NPC.defDamage * 1.35f)
+			//else
+			NPC.damage = NPC.defDamage; 
 
 			if (NPC.velocity.Y < 0f)
 				NPC.velocity.Y += 0.1f;

@@ -11,6 +11,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
+			NPC.lifeMax = 650;
+			NPC.damage = 80;
+			NPC.defense = 68;
 		}
 
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
@@ -56,7 +59,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			for (int i = 0; i < Main.rand.Next(3, 7); i++)
 			{
 				Vector2 projVelocity = Utility.PolarVector(2.6f, Main.rand.NextFloat(-MathHelper.Pi + MathHelper.PiOver4, -MathHelper.PiOver4));
-				Projectile proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, projVelocity, ModContent.ProjectileType<LuminiteStar>(), (int)(NPC.damage * 0.75f), 1f, Main.myPlayer, ai1: NPC.target);
+				Projectile proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, projVelocity, ModContent.ProjectileType<LuminiteStar>(), Utility.TrueDamage((int)(NPC.damage * 1.5f)), 1f, Main.myPlayer, ai1: NPC.target);
 				proj.netUpdate = true;
 			}
 

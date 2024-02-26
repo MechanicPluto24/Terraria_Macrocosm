@@ -178,10 +178,10 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
                 Vector2 visualTipPosition = joint2Position + footLength.RotatedBy(rotationFoot); 
                 spriteBatch.Draw(cross, visualTipPosition - screenPos, null, Color.Blue, 0f, cross.Size() / 2f, 2f, SpriteEffects.None, 0);
-
-                */
-                spriteBatch.Draw(cross, targetPosition - screenPos, null, Utility.HSLToRGB(new((index + 1) / 6f, 1f, 0.5f)), 0f, cross.Size() / 2f, 2f, SpriteEffects.None, 0);
                 spriteBatch.Draw(cross, TipPosition - screenPos, null, Color.Cyan, 0f, cross.Size() / 2f, 2f, SpriteEffects.None, 0);
+                */
+
+                spriteBatch.Draw(cross, targetPosition - screenPos, null, Utility.HSLToRGB(new((index + 1) / 6f, 1f, 0.5f)), 0f, cross.Size() / 2f, 2f, SpriteEffects.None, 0);
                 //spriteBatch.Draw(cross, lastTargetPosition - screenPos, null, Utility.HSLToRGB(new((index + 1) / 6f, 1f, 0.2f)), 0f, cross.Size() / 2f, 2f, SpriteEffects.None, 0);
             }
         }
@@ -249,6 +249,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             collisionHitbox = new((int)NPC.position.X, (int)NPC.position.Y, 4 * 16, 12 * 16);
             Rectangle tileCollisionHitbox = new (collisionHitbox.X / 16, collisionHitbox.Y / 16, collisionHitbox.Width / 16, collisionHitbox.Height / 16);
             bool midAir = Utility.EmptyTiles(tileCollisionHitbox);
+            bool allowedVerticalMovement = false;
 
             float speed = 6f;
             if (HasTarget && NPC.DistanceSQ(TargetPlayer.Center) > 100f * 100f)
@@ -256,7 +257,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 Vector2 direction = NPC.Center.DirectionTo(TargetPlayer.Center);
                 NPC.velocity.X = direction.X * speed;
 
-                if(midAir && !(Legs.Any(leg => leg.TipPosition.Y < (collisionHitbox.Y + collisionHitbox.Height))))
+                if(midAir && !(Legs.Any(leg => leg.TipPosition.Y < (NPC.position.Y + NPC.height))))
                 {
                     NPC.velocity.Y = Math.Abs(NPC.velocity.Y);
                     NPC.velocity.Y += NPC.gravity;
@@ -264,10 +265,14 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 else if (anyLegTouchingGround)
                 {
                     NPC.velocity.Y = direction.Y * speed;
+                    allowedVerticalMovement = true;
                 }
             }
 
-            LegTimer += 0.012f * speed;
+            if(Math.Abs(NPC.velocity.X) > Math.Abs(NPC.velocity.Y))
+                LegTimer += 0.015f * speed;
+            else
+                LegTimer += 0.006f * speed;
 
             float stepSize = 160f;  
             float restDistance = 60f;  
@@ -289,6 +294,10 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                         legOffset = MathHelper.Lerp(legMultiplier * restDistance, stepSize * 0.5f * legDirection, speedAmount);
 
                     Vector2 targetPosition = new(NPC.Center.X + legOffset, NPC.position.Y + NPC.height + 122);
+
+                    if (allowedVerticalMovement && NPC.velocity.Y < 0)
+                        targetPosition.Y = NPC.position.Y - 20 * legMultiplier;
+
                     Legs[i].TargetPosition = FindSuitableGround(targetPosition, verticalRange: 10, horizontalRange: 5);
                 }
 

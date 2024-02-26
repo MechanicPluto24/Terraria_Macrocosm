@@ -31,7 +31,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			Item.shoot = ModContent.ProjectileType<LHBMinigunProjectile>();
 			Item.shootSpeed = 32f;
 			Item.DamageType = DamageClass.Ranged;
-			Item.damage = 45;
+			Item.damage = 35;
 			Item.reuseDelay = 8;
 			Item.useAmmo = AmmoID.Bullet;
 			Item.mana = 0;

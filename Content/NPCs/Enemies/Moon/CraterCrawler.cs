@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-	// These three class showcase usage of the WormHead, WormBody and WormTail ExampleMod classes from Worm.cs
+	// Adapted from Example Mod
 	public class CraterCrawlerHead : WormHead, IMoonEnemy
 	{
 		public override int BodyType => ModContent.NPCType<CraterCrawlerBody>();
@@ -30,8 +30,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		public override void SetDefaults()
 		{
 			NPC.CloneDefaults(NPCID.DiggerHead);
-			NPC.damage = 100;
-			NPC.defense = 20;
+			NPC.lifeMax = 900;
+			NPC.damage = 90;
+			NPC.defense = 40;
 			NPC.width = 20;
 			NPC.height = 20;
 			NPC.aiStyle = -1;
@@ -112,8 +113,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		public override void SetDefaults()
 		{
 			NPC.CloneDefaults(NPCID.DiggerBody);
-			NPC.damage = 80;
-			NPC.defense = 30;
+			NPC.damage = 60;
+			NPC.defense = 45;
 			NPC.width = 16;
 			NPC.height = 16;
 			NPC.aiStyle = -1;
@@ -156,8 +157,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		public override void SetDefaults()
 		{
 			NPC.CloneDefaults(NPCID.DiggerTail);
-			NPC.damage = 84;
-			NPC.defense = 64;
+			NPC.damage = 50;
+			NPC.defense = 50;
 			NPC.width = 30;
 			NPC.height = 30;
 			NPC.aiStyle = -1;

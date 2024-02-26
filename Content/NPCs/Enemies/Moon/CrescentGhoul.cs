@@ -1,7 +1,6 @@
 ﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.NPCs.Global;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -9,7 +8,6 @@ using System;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.GameContent.Bestiary;
-using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -44,14 +42,11 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		public override void SetDefaults()
 		{
-
-			base.SetDefaults();
-
 			NPC.width = 72;
 			NPC.height = 84;
-			NPC.lifeMax = 4000;
-			NPC.damage = 200;
-			NPC.defense = 60;
+			NPC.lifeMax = 1000;
+			NPC.damage = 65;
+			NPC.defense = 70;
 			NPC.HitSound = SoundID.NPCHit2;
 			NPC.DeathSound = SoundID.NPCDeath2;
 			NPC.aiStyle = -1;
@@ -105,6 +100,11 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 			if (Main.expertMode)
 				kbResist *= Main.GameModeInfo.KnockbackToEnemiesMultiplier;
+
+			if (AI_State == ActionState.Chase)
+				NPC.damage = NPC.defDamage;
+			else 
+				NPC.damage = NPC.defDamage * 2;
 
 			if (AI_State != ActionState.Spin)
 				Utility.LookAt(playerActive ? Main.player[NPC.target].Center : NPC.Center + NPC.velocity, NPC, 0);
