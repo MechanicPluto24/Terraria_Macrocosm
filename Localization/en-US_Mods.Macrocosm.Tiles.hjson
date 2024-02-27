@@ -26,13 +26,6 @@ MoonBaseConsole.MapEntry: Console
 MoonBaseDeskLamp.MapEntry: DeskLamp
 LexanGlass.MapEntry: Lexan Glass
 XFLR6.MapEntry: XFLR-6
-
-MoonBaseChest: {
-	MapEntryNormal: Moon Base Storage Unit
-	MapEntryUnlocked: Moon Base Electronic Storage Unit
-	MapEntryLocked: Moon Base Electronic Storage Unit (Locked)
-}
-
 TeddyBear.MapEntry: Teddy Bear
 Motor.MapEntry: Motor
 PrintedCircuitBoard.MapEntry: Printed Circuit Board
@@ -40,3 +33,13 @@ MoonBaseLocker.MapEntry: Moon Base Locker
 Coal.MapEntry: Coal
 OxygenSystem.MapEntry: Oxygen System
 MercurianBanner.MapEntry: Mercurian Banner
+DeadworldMusicBox.MapEntry: Music Box (Deadworld)
+RequiemMusicBox.MapEntry: Music Box (Requiem)
+SpaceInvaderMusicBox.MapEntry: Music Box (Space Invader)
+StygiaMusicBox.MapEntry: Music Box (Stygia)
+
+MoonBaseChest: {
+	MapEntryNormal: Moon Base Storage Unit
+	MapEntryUnlocked: Moon Base Electronic Storage Unit
+	MapEntryLocked: Moon Base Electronic Storage Unit (Locked)
+}

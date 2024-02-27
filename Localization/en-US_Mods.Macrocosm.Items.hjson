@@ -985,3 +985,23 @@ MercurianBanner: {
 	DisplayName: Mercurian Banner
 	Tooltip: ""
 }
+
+DeadworldMusicBox: {
+	DisplayName: Music Box (Deadworld)
+	Tooltip: ""
+}
+
+RequiemMusicBox: {
+	DisplayName: Music Box (Requiem)
+	Tooltip: ""
+}
+
+SpaceInvaderMusicBox: {
+	DisplayName: Music Box (Space Invader)
+	Tooltip: ""
+}
+
+StygiaMusicBox: {
+	DisplayName: Music Box (Stygia)
+	Tooltip: ""
+}
