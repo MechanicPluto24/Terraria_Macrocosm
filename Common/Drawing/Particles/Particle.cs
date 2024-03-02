@@ -58,7 +58,7 @@ namespace Macrocosm.Common.Drawing.Particles
 		public Texture2D Texture => ParticleManager.Textures[Type];
 
 		/// <summary> The texture size of this <c>Particle</c> </summary>
-		// TODO: Maybe replace this to a configurable size if ever implementing particle collision
+		// TODO: Maybe replace this to an overridable size if ever implementing particle collision
 		public Vector2 Size
 		{
 			get
@@ -205,7 +205,7 @@ namespace Macrocosm.Common.Drawing.Particles
 
 		/// <summary>
 		/// Used for drawing things before the particle, with additive blending. Modify the spritebatch only when absolutely necessary.
-		/// Substract <see cref="Main.screenPosition"> screenPosition </see> from the <see cref="Particle.Position">Position</see> position before drawing.
+		/// Substract <see cref="Main.screenPosition"> screenPosition </see> from the <see cref="Particle.Position">Position</see> before drawing.
 		/// Return false to stop the default, alpha blended, drawing logic. Returns true by default.
 		/// </summary>
 		/// <param name="spriteBatch"> The spritebatch </param>
@@ -219,7 +219,7 @@ namespace Macrocosm.Common.Drawing.Particles
 
 		/// <summary> 
 		/// Used for drawing the particle with alpha blending. Modify the spritebatch only when absolutely necessary.
-		/// Substract <see cref="Main.screenPosition"> screenPosition </see> from the <see cref="Particle.Position">Position</see> position before drawing.
+		/// Substract <see cref="Main.screenPosition"> screenPosition </see> from the <see cref="Particle.Position">Position</see> before drawing.
 		/// Only called if <see cref="PreDrawAdditive(SpriteBatch, Vector2, Color)"/> returns true.
 		/// </summary>
 		/// <param name="spriteBatch"> The spritebatch </param>
@@ -232,7 +232,7 @@ namespace Macrocosm.Common.Drawing.Particles
 
 		/// <summary> 
 		/// Used for drawing things after the particle, with additive blending. Modify the spritebatch only when absolutely necessary.
-		/// Substract <see cref="Main.screenPosition"> screenPosition </see> from the <see cref="Particle.Position">Position</see> position before drawing 
+		/// Substract <see cref="Main.screenPosition"> screenPosition </see> from the <see cref="Particle.Position">Position</see> before drawing.
 		/// </summary>
 		/// <param name="spriteBatch"></param>
 		/// <param name="screenPosition"></param>

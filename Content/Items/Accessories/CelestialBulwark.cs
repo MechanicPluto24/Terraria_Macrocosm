@@ -1,15 +1,19 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.Particles;
 using Macrocosm.Content.Players;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Accessories.CelestialBulwark
+namespace Macrocosm.Content.Items.Accessories
 {
 	[AutoloadEquip(EquipType.Shield)]
 	public class CelestialBulwark : ModItem
@@ -40,14 +44,77 @@ namespace Macrocosm.Content.Items.Accessories.CelestialBulwark
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
 			DashPlayer dashPlayer = player.GetModPlayer<DashPlayer>();
+
 			dashPlayer.AccDashHorizontal = true;
-			dashPlayer.AccDashVelocity = 14f;
+			dashPlayer.AccDashVertical = true;
+
+			dashPlayer.AccDashSpeedX = 14f;
+			dashPlayer.AccDashSpeedY = 8f;
+
 			dashPlayer.AccDashDamage = Item.damage;
 			dashPlayer.AccDashKnockback = Item.knockBack;
 			dashPlayer.AccDashImmuneTime = 6;
+
+			dashPlayer.AccDashHitboxIncrease = 16;
+
+			dashPlayer.AccDashAfterImage = true;
+			dashPlayer.AccDashStartVisuals = StartDashVisuals;
+			dashPlayer.AccDashVisuals = DashVisuals;
+
+			dashPlayer.OnCollisionWithNPC = OnNPCCollide;
 		}
 
-		public override void AddRecipes()
+        public override void UpdateVanity(Player player)
+        {
+        }
+
+        private void StartDashVisuals(Player player)
+        {
+            Particle.CreateParticle<CelestialBulwarkDashParticle>(p =>
+            {
+                p.Scale = 0.35f;
+                p.Color = CelestialDisco.CelestialColor;
+                p.Position = player.Center;
+                p.PlayerID = player.whoAmI;
+                p.Rotation = player.velocity.ToRotation() - MathHelper.PiOver2;
+            });
+
+			/*
+            for (int k = 0; k < 50; k++)
+            {
+                int dustType = ModContent.DustType<CelestialDust>();
+                Dust dust = Dust.NewDustDirect(new Vector2(player.position.X, player.position.Y), player.width, player.height, dustType, 0f, 0f, 100, default, 2f);
+				dust.velocity = Main.rand.NextVector2Unit().RotatedBy(player.velocity.ToRotation());
+            }
+			*/
+        }
+
+        private void DashVisuals(Player player)
+        {
+			DashPlayer dashPlayer = player.GetModPlayer<DashPlayer>();
+            float progress = (float)dashPlayer.DashTimer / dashPlayer.AccDashDuration;
+            Lighting.AddLight(player.Center, CelestialDisco.CelestialColor.ToVector3() * 5f * Utility.QuadraticEaseIn(progress));
+			int count = (int)MathF.Floor(5 * progress);
+
+            for (int i = 0; i < count; i++)
+            {
+                Dust.NewDustDirect(player.Center + new Vector2(35, 0).RotatedBy(player.velocity.ToRotation()) + Main.rand.NextVector2Circular(50, 50) * progress, 1, 1, ModContent.DustType<CelestialDust>(), 0f, 0f, 100, default, 1.1f);
+            }
+        }
+
+        private void OnNPCCollide(Player player, NPC npc)
+		{
+            for (int i = 0; i < 10; i++)
+                Particle.CreateParticle<CelestialStar>(npc.Center + Main.rand.NextVector2Circular(npc.width/2, npc.height/2), npc.velocity + Main.rand.NextVector2Circular(2,2), scale: 1.2f);
+
+            for (int i = 0; i < 25; i++)
+            {
+				Vector2 dustVelocity = Main.rand.NextVector2Circular(2, 2);
+                Dust.NewDustDirect(new Vector2(npc.position.X, npc.position.Y), npc.width, npc.height, ModContent.DustType<CelestialDust>(), dustVelocity.X, dustVelocity.Y, 100, default, 1.5f);
+            }
+        }
+
+        public override void AddRecipes()
 		{
 			Recipe recipe = Recipe.Create(Type);
 			recipe.AddIngredient(ModContent.ItemType<BrokenHeroShield>());
@@ -73,10 +140,10 @@ namespace Macrocosm.Content.Items.Accessories.CelestialBulwark
 
 		private static Texture2D[] celestialTextures =
 			{
-				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark/CelestialBulwark_Mask_Nebula").Value,
-				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark/CelestialBulwark_Mask_Stardust").Value,
-				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark/CelestialBulwark_Mask_Vortex").Value,
-				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark/CelestialBulwark_Mask_Solar").Value
+				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark_Mask_Nebula").Value,
+				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark_Mask_Stardust").Value,
+				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark_Mask_Vortex").Value,
+				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark_Mask_Solar").Value
 			};
 
 

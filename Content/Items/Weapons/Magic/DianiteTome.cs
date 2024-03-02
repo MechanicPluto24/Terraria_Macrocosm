@@ -23,7 +23,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 		{
 			Item.damage = 125;
 			Item.DamageType = DamageClass.Magic;
-			Item.mana = 5;
+			Item.mana = 25;
 			Item.width = 80;
 			Item.height = 80;
 			Item.useTime = 12;

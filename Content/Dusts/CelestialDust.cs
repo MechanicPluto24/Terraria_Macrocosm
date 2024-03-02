@@ -11,21 +11,20 @@ namespace Macrocosm.Content.Dusts
 		public override void OnSpawn(Dust dust)
 		{
 			dust.noLight = true;
-			dust.scale = Main.rand.NextFloat(1, 1.35f);
 		}
 
 		public override bool Update(Dust dust)
 		{
 			dust.velocity.Y += 0.01f;
 			dust.position += dust.velocity;
-			dust.scale -= 0.02f;
+			dust.scale -= 0.05f;
 			dust.rotation += (dust.velocity.Y - dust.velocity.X) / 5;
 
 			dust.color = CelestialDisco.CelestialColor.WithOpacity(0.8f);
 
-			Lighting.AddLight(dust.position, dust.color.ToVector3() * 0.6f);
+			Lighting.AddLight(dust.position, dust.color.ToVector3() * 0.6f * dust.scale);
 
-			if (dust.scale < 0f)
+			if (dust.scale < 0.2f)
 				dust.active = false;
 
 			return false;
@@ -35,6 +34,6 @@ namespace Macrocosm.Content.Dusts
 
 
 		public override Color? GetAlpha(Dust dust, Color lightColor)
-			=> new Color(lightColor.R, lightColor.G, lightColor.B, 255);
+			=> Color.White;
 	}
 }

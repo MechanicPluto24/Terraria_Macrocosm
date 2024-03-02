@@ -1005,3 +1005,8 @@ StygiaMusicBox: {
 	DisplayName: Music Box (Stygia)
 	Tooltip: ""
 }
+
+OsmiumBoots: {
+	DisplayName: Osmium Boots
+	Tooltip: ""
+}

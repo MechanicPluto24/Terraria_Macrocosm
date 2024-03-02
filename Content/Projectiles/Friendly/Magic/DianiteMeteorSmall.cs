@@ -34,7 +34,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.Additive, state);
 
-            float count = 25f;
+            float count = 25f * (float)(1f - Projectile.alpha / 255f);
             for (int n = 2; n < count; n++)
             {
                 Vector2 trailPosition = Projectile.Center - Projectile.velocity.SafeNormalize(default) * n * 5;

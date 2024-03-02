@@ -21,7 +21,7 @@ namespace Macrocosm.Content.DrawLayers
 			if (drawInfo.drawPlayer.shieldRaised)
 				return;
 
-			Texture2D texture = ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark/CelestialBulwark_Shield_Mask").Value;
+			Texture2D texture = ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark_Shield_Mask").Value;
 			Color drawColor = CelestialDisco.CelestialColor;
 
 			if (drawInfo.shadow > 0f)

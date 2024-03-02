@@ -2,76 +2,126 @@
 using Macrocosm.Common.Netcode;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.IO;
 using Terraria;
+using Terraria.Graphics.Shaders;
+using Terraria.Graphics;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Macrocosm.Common.Utils;
+using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Content.Particles;
 
 namespace Macrocosm.Content.Players
 {
 	public class DashPlayer : ModPlayer
 	{
+		/// <summary> Whether the player can dash horizontally (left or right) </summary>
+		public bool AccDashHorizontal { get; set; }
 
-		public bool AccDashHorizontal = false;
-		public bool AccDashVertical = false;
+        /// <summary> Whether the player can dash vertically (up or down) </summary>
+        public bool AccDashVertical { get; set; }
 
-		public float AccDashDamage = 0f;    // Set this to > 0 in ModItem.UpdateAccessory for damaging collision 
+        /// <summary> Whether the player can dash downwards (down only) </summary>
+        public bool AccDashDownwards { get; set; }
 
-		// EoC defaults, overridable in ModItem.UpdateAccessory
-		public float AccDashVelocity = 10f; // EoC default velocity 
-		public float AccDashKnockback = 9f; // EoC default knockback (if damage > 0)
-		public int AccDashImmuneTime = 4;   // EoC default immune time  (if damage > 0)
+        /// <summary> Cooldown between dashes, defaults to EoC shield value </summary>
+        public int AccDashCooldown { get; set; }
 
-		public int AccDashCooldown = 50;
-		public int AccDashDuration = 35;
+        /// <summary> Dash duration, defaults to EoC shield value </summary>
+        public int AccDashDuration { get; set; }
 
-		public enum DashDir { Down, Up, Right, Left, None = -1 }
+        /// <summary> The damage applied on collision with the enemy, value <= 0 for no damage, defaults to 0 </summary>
+        public float AccDashDamage { get; set; }
 
-		public DashDir DashDirection = DashDir.None;
+        /// <summary> The horizontal dash speed, defaults to EoC shield value </summary>
+        public float AccDashSpeedX { get; set; }
+
+        /// <summary> The vertical dash speed, defaults to half of the EoC shield value </summary>
+        public float AccDashSpeedY { get; set; }
+
+        /// <summary> The knockback applied on collision with the enemy, when <see cref="AccDashDamage"/> > 0 </summary>
+        public float AccDashKnockback { get; set; }
+
+        /// <summary> The immunity time applied on collision with the enemy, when <see cref="AccDashDamage"/> > 0 </summary>
+        public int AccDashImmuneTime { get; set; }
+
+        /// <summary> The player hitbox increase for larger collision hitbox, using <see cref="Rectangle.Inflate(int, int)"/></summary>
+        public int AccDashHitboxIncrease { get; set; } 
+
+		/// <summary> Whether the dash makes a player afterimage </summary>
+        public bool AccDashAfterImage { get; set; }
+
+		/// <summary> Action called when starting the dash, used mainly for visual and sound effects </summary>
+        public Action<Player> AccDashStartVisuals { get; set; }
+
+        /// <summary> Action called for the duration of the dash, used mainly for visual and sound effects </summary>
+        public Action<Player> AccDashVisuals { get; set; }
+
+		public enum Direction { Down, Up, Right, Left, None = -1 }
+
+		/// <summary> The dash direction triggered by the player </summary>
+		public Direction DashDirection { get; set; } = Direction.None;
 		private int dashDelay = 0;
 		private int dashTimer = 0;
 
+        /// <summary> Any dash accessory equipped and active </summary>
+        public bool DashAccessoryEquipped => AccDashHorizontal || AccDashVertical || AccDashDownwards;
 
-		private bool celestialBulwarkVisible = false;
+        /// <summary> Dash timer, from 0 to <see cref="AccDashDuration"/> </summary>
+        public int DashTimer => dashTimer;
 
-		public override void PostUpdateBuffs()
+		/// <summary> Whether the player has collided during the dash with an NPC this frame </summary>
+		public bool CollidedWithNPC { get; set; }
+
+		/// <summary> Action called when colliding with an NPC </summary>
+		public Action<Player, NPC> OnCollisionWithNPC { get; set; }
+
+        public override void PostUpdateBuffs()
 		{
-			celestialBulwarkVisible = (Player.shield == EquipLoader.GetEquipSlot(Macrocosm.Instance, "CelestialBulwark", EquipType.Shield));
-
-			if (celestialBulwarkVisible)
-				Lighting.AddLight(Player.Center, CelestialDisco.CelestialColor.ToVector3() * 0.4f);
 		}
 
 		public override void ResetEffects()
 		{
 			AccDashHorizontal = false;
 			AccDashVertical = false;
+			AccDashDownwards = false;
 
-			AccDashDamage = 0f;
+            AccDashCooldown = 50;
+            AccDashDuration = 35;
+
+            AccDashSpeedX = 14f;
+            AccDashSpeedY = 7f;
+
+            AccDashDamage = 0f;
 			AccDashKnockback = 9f;
-
 			AccDashImmuneTime = 4;
-			AccDashVelocity = 10f;
+			AccDashHitboxIncrease = 1;
 
-			AccDashCooldown = 50;
-			AccDashDuration = 35;
+			AccDashAfterImage = true;
+            AccDashStartVisuals = null;
+			AccDashVisuals = null;
 
-			// ResetEffects is called not long after player.doubleTapCardinalTimer's values have been set
-			// When a directional key is pressed and released, vanilla starts a 15 tick (1/4 second) timer during which a second press activates a dash
-			// If the timers are set to 15, then this is the first press just processed by the vanilla logic.  Otherwise, it's a double-tap
+			CollidedWithNPC = false;
+			OnCollisionWithNPC = null;
 
-			if (Player.whoAmI == Main.myPlayer)
+            // ResetEffects is called not long after player.doubleTapCardinalTimer's values have been set
+            // When a directional key is pressed and released, vanilla starts a 15 tick (1/4 second) timer during which a second press activates a dash
+            // If the timers are set to 15, then this is the first press just processed by the vanilla logic.  Otherwise, it's a double-tap
+            if (Player.whoAmI == Main.myPlayer)
 			{
-				if (Player.controlDown && Player.releaseDown && Player.doubleTapCardinalTimer[(int)DashDir.Down] < 15)
-					DashDirection = DashDir.Down;
-				else if (Player.controlUp && Player.releaseUp && Player.doubleTapCardinalTimer[(int)DashDir.Up] < 15)
-					DashDirection = DashDir.Up;
-				else if (Player.controlRight && Player.releaseRight && Player.doubleTapCardinalTimer[(int)DashDir.Right] < 15)
-					DashDirection = DashDir.Right;
-				else if (Player.controlLeft && Player.releaseLeft && Player.doubleTapCardinalTimer[(int)DashDir.Left] < 15)
-					DashDirection = DashDir.Left;
+				if (Player.controlDown && Player.releaseDown && Player.doubleTapCardinalTimer[(int)Direction.Down] < 15)
+					DashDirection = Direction.Down;
+				else if (Player.controlUp && Player.releaseUp && Player.doubleTapCardinalTimer[(int)Direction.Up] < 15)
+					DashDirection = Direction.Up;
+				else if (Player.controlRight && Player.releaseRight && Player.doubleTapCardinalTimer[(int)Direction.Right] < 15)
+					DashDirection = Direction.Right;
+				else if (Player.controlLeft && Player.releaseLeft && Player.doubleTapCardinalTimer[(int)Direction.Left] < 15)
+					DashDirection = Direction.Left;
 				else
-					DashDirection = DashDir.None;
+					DashDirection = Direction.None;
 			}
 			//else
 			//{
@@ -82,36 +132,32 @@ namespace Macrocosm.Content.Players
 
 		public override void PreUpdateMovement()
 		{
-			bool canDash = Player.dashType == 0 && // player doesn't have Tabi or EoCShield equipped (give priority to those dashes)
-						  !Player.setSolar && // player isn't wearing solar armor
-						  !Player.mount.Active;    // player isn't mounted, since dashes on a mount look weird
-
 			// INFO: since other clients have DashDir.None for this player because of the reset, this entire code does not run
 			// since general movement in synced automatically, and dash collision is synced below,
 			// the only inconsistency remaining is the lack of dust effects
-			if (canDash && DashDirection != DashDir.None && dashDelay == 0)
+			if (CanUseDash() && DashDirection != Direction.None && dashDelay == 0)
 			{
 				Vector2 newVelocity = Player.velocity;
 
 				switch (DashDirection)
 				{
 					// Only apply the dash velocity if our current speed in the wanted direction is less than DashVelocity
-					case DashDir.Up when Player.velocity.Y > -AccDashVelocity && AccDashVertical:
-					case DashDir.Down when Player.velocity.Y < AccDashVelocity && AccDashVertical:
+					case Direction.Up when Player.velocity.Y > -AccDashSpeedY && AccDashVertical:
+					case Direction.Down when Player.velocity.Y < AccDashSpeedY && (AccDashVertical || AccDashDownwards):
 						{
 							// Y-velocity is set here
-							// If the direction requested was DashUp, then we adjust the velocity to make the dash appear "faster" due to gravity being immediately in effect
+							// If the direction requested was DashUp, then we adjust the velocity to make the dash appear "faster" to compensate gravity being immediately in effect
 							// This adjustment is roughly 1.3x the intended dash velocity
-							float dashDirection = DashDirection == DashDir.Down ? 1 : -1.3f;
-							newVelocity.Y = dashDirection * AccDashVelocity;
+							float dashDirection = DashDirection == Direction.Down ? 1 : -1.3f;
+							newVelocity.Y = dashDirection * AccDashSpeedY;
 							break;
 						}
-					case DashDir.Left when Player.velocity.X > -AccDashVelocity && AccDashHorizontal:
-					case DashDir.Right when Player.velocity.X < AccDashVelocity && AccDashHorizontal:
+					case Direction.Left when Player.velocity.X > -AccDashSpeedX && AccDashHorizontal:
+					case Direction.Right when Player.velocity.X < AccDashSpeedX && AccDashHorizontal:
 						{
 							// X-velocity is set here
-							float dashDirection = DashDirection == DashDir.Right ? 1 : -1;
-							newVelocity.X = dashDirection * AccDashVelocity;
+							float dashDirection = DashDirection == Direction.Right ? 1 : -1;
+							newVelocity.X = dashDirection * AccDashSpeedX;
 							break;
 						}
 					default:
@@ -122,128 +168,109 @@ namespace Macrocosm.Content.Players
 				dashDelay = AccDashCooldown;
 				dashTimer = AccDashDuration;
 				Player.velocity = newVelocity;
-
-				// TODO: sync this
-				StartDashVisuals();
+                AccDashStartVisuals?.Invoke(Player);
 			}
 
-			if (dashDelay > 0)
-				dashDelay--;
+            if (dashDelay > 0)
+                dashDelay--;
 
-			if (dashDelay == 0)
-				Player.eocHit = -1;
+            if (dashDelay == 0)
+                Player.eocHit = -1;
 
-			if (dashTimer > 0)
-			{
-				Player.eocDash = dashTimer;
-				Player.armorEffectDrawShadowEOCShield = true;
-				dashTimer--;
+            if (dashTimer > 0)
+            {
+                 dashTimer--;
 
-				// TODO: sync this
-				DashVisuals();
+                AccDashVisuals?.Invoke(Player);
 
-				#region Dash damage
+                if (AccDashAfterImage)
+                {
+                    Player.eocDash = dashTimer;
+                    Player.armorEffectDrawShadowEOCShield = true;
+                }
 
-				// collision with NPCs and the knockback that comes afterwards have to be synced 
-				if (Player.whoAmI == Main.myPlayer)
-				{
-					if (Player.eocHit < 0)
+                if (AccDashDamage > 0)
+                    DashDamage();
+            }
+        }
+
+        private bool CanUseDash()
+        {
+            return DashAccessoryEquipped
+                && Player.dashType == DashID.None // player doesn't have Tabi or EoCShield equipped (give priority to those dashes)
+                && !Player.setSolar // player isn't wearing solar armor
+                && !Player.mount.Active; // player isn't mounted, since dashes on a mount look weird
+        }
+
+        private void DashDamage()
+        {
+            // collision with NPCs and the knockback that comes afterwards have to be synced 
+            if (Player.whoAmI == Main.myPlayer)
+            {
+                if (Player.eocHit < 0)
+                {
+					Rectangle playerHitbox = new((int)(Player.position.X + Player.velocity.X * 0.5f - 4.0f), (int)(Player.position.Y + Player.velocity.Y * 0.5f - 4.0f), Player.width + 8, Player.height + 8);
+					playerHitbox.Inflate(AccDashHitboxIncrease, AccDashHitboxIncrease);
+
+					for (int i = 0; i < Main.maxNPCs; i++)
 					{
-						if (AccDashDamage > 0f)
+						NPC npc = Main.npc[i];
+
+						if (!npc.active || npc.dontTakeDamage || npc.friendly || (npc.aiStyle == Terraria.ID.NPCAIStyleID.Fairy && !(npc.ai[2] <= 1f)) || !Player.CanNPCBeHitByPlayerOrPlayerProjectile(npc))
+							continue;
+
+						Rectangle npcHitbox = npc.getRect();
+						if (playerHitbox.Intersects(npcHitbox) && (npc.noTileCollide || Player.CanHit(npc)))
 						{
-							Rectangle rectangle = new((int)(Player.position.X + Player.velocity.X * 0.5f - 4.0f), (int)(Player.position.Y + Player.velocity.Y * 0.5f - 4.0f), Player.width + 8, Player.height + 8);
+							float damage = AccDashDamage * Player.GetDamage(DamageClass.Melee).Multiplicative;
+							float knockback = AccDashKnockback;
+							int direction = Player.direction;
+							bool crit = false;
 
-							for (int i = 0; i < Main.maxNPCs; i++)
-							{
-								NPC npc = Main.npc[i];
+							if (Player.kbGlove)
+								knockback *= 2f;
 
-								if (!npc.active || npc.dontTakeDamage || npc.friendly || (npc.aiStyle == Terraria.ID.NPCAIStyleID.Fairy && !(npc.ai[2] <= 1f)) || !Player.CanNPCBeHitByPlayerOrPlayerProjectile(npc))
-									continue;
+							if (Player.kbBuff)
+								knockback *= 1.5f;
 
-								Rectangle rect = npc.getRect();
-								if (rectangle.Intersects(rect) && (npc.noTileCollide || Player.CanHit(npc)))
-								{
-									float damage = AccDashDamage * Player.GetDamage(DamageClass.Melee).Multiplicative;
-									float knockback = AccDashKnockback;
-									int direction = Player.direction;
-									bool crit = false;
+							if (Main.rand.Next(100) < Player.GetTotalCritChance(DamageClass.Melee))
+								crit = true;
 
-									if (Player.kbGlove)
-										knockback *= 2f;
+							if (Player.velocity.X < 0f)
+								direction = -1;
 
-									if (Player.kbBuff)
-										knockback *= 1.5f;
+							if (Player.velocity.X > 0f)
+								direction = 1;
 
-									if (Main.rand.Next(100) < Player.GetTotalCritChance(DamageClass.Melee))
-										crit = true;
+							if (Player.whoAmI == Main.myPlayer)
+								Player.ApplyDamageToNPC(npc, (int)damage, knockback, direction, crit);
 
-									if (Player.velocity.X < 0f)
-										direction = -1;
+							Player.eocDash = 10;
+							Player.dashDelay = AccDashCooldown;
 
-									if (Player.velocity.X > 0f)
-										direction = 1;
+							if(Math.Abs(Player.velocity.X) > Math.Abs(Player.velocity.Y))
+								Player.velocity.X = -direction * AccDashSpeedX * 0.75f;
+							else
+							Player.velocity.Y = -1f * AccDashSpeedY * 0.5f;
 
-									if (Player.whoAmI == Main.myPlayer)
-										Player.ApplyDamageToNPC(npc, (int)damage, knockback, direction, crit);
+							Player.GiveImmuneTimeForCollisionAttack(AccDashImmuneTime);
+							Player.eocHit = i;
 
-									Player.eocDash = 10;
-									Player.dashDelay = AccDashCooldown;
-									Player.velocity.X = -direction * AccDashVelocity * 0.75f;
-									Player.velocity.Y = -1f * AccDashVelocity * 0.25f;
-									Player.GiveImmuneTimeForCollisionAttack(AccDashImmuneTime);
-									Player.eocHit = i;
-
-								}
-							}
+							CollidedWithNPC = true;
+							OnCollisionWithNPC?.Invoke(Player, npc);
 						}
 					}
-					else if ((!Player.controlLeft || !(Player.velocity.X < 0f)) && (!Player.controlRight || !(Player.velocity.X > 0f)))
-					{
-						Player.velocity.X *= 0.95f;
-					}
+                }
+                else if ((!Player.controlLeft || !(Player.velocity.X < 0f)) && (!Player.controlRight || !(Player.velocity.X > 0f)))
+                {
+                    Player.velocity.X *= 0.95f;
+                }
 
-					NetMessage.SendData(MessageID.PlayerControls, number: Player.whoAmI);
-				}
+                NetMessage.SendData(MessageID.PlayerControls, number: Player.whoAmI);
+            }
+        }
 
-
-				#endregion
-			}
-		}
-
-		public void StartDashVisuals()
-		{
-			if (celestialBulwarkVisible)
-			{
-				for (int i = 0; i < 30; i++)
-				{
-					int dustIdx = Dust.NewDust(new Vector2(Player.position.X - 20, Player.position.Y - 10), Player.width + 20, Player.height + 10, ModContent.DustType<CelestialDust>(), Player.direction * -1f, 0f, 0, default, 2f);
-					Main.dust[dustIdx].position.X += Main.rand.Next(-5, 6);
-					Main.dust[dustIdx].position.Y += Main.rand.Next(-5, 6);
-					Main.dust[dustIdx].velocity.X *= 0.6f;
-					Main.dust[dustIdx].scale *= 1.4f + (float)Main.rand.Next(20) * 0.01f;
-				}
-			}
-		}
-
-		public void DashVisuals()
-		{
-			if (celestialBulwarkVisible)
-			{
-				for (int k = 0; k < 3; k++)
-				{
-					int dustType = ModContent.DustType<CelestialDust>();
-					//int dustIdx = ((Player.velocity.Y != 0f) ? 
-					//	Dust.NewDust(new Vector2(Player.position.X, Player.position.Y + Player.height / 2 - 8f), Player.width, 16, dustType, 0f, 0f, 100, default, 1.4f) : 
-					//	Dust.NewDust(new Vector2(Player.position.X, Player.position.Y + Player.height - 4f), Player.width, 8, dustType, 0f, 0f, 100, default, 1.4f));
-
-					int dustIdx = Dust.NewDust(new Vector2(Player.position.X, Player.position.Y), Player.width, Player.height, dustType, 0f, 0f, 100, default, 1.4f);
-					Main.dust[dustIdx].velocity *= 0.1f;
-					Main.dust[dustIdx].scale *= 1f + (float)Main.rand.Next(20) * 0.01f;
-				}
-			}
-		}
-
-		public override void CopyClientState(ModPlayer clientClone)/* tModPorter Suggestion: Replace Item.Clone usages with Item.CopyNetStateTo */
+		public override void CopyClientState(ModPlayer clientClone) 
 		{
 			(clientClone as DashPlayer).DashDirection = DashDirection;
 		}
@@ -271,7 +298,7 @@ namespace Macrocosm.Content.Players
 			DashPlayer dashPlayer = Main.player[playerWhoAmI].GetModPlayer<DashPlayer>();
 
 			int newDir = reader.ReadByte();
-			dashPlayer.DashDirection = (DashDir)newDir;
+			dashPlayer.DashDirection = (Direction)newDir;
 
 			if (Main.netMode == NetmodeID.Server)
 				dashPlayer.SyncPlayer(-1, whoAmI, false);
