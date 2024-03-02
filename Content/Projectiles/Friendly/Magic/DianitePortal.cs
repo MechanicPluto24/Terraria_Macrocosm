@@ -4,6 +4,7 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
@@ -16,6 +17,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         protected int defWidth;
         protected int defHeight;
 
+        protected bool manaCheck = true;
+
         public override void SetDefaults()
 		{
             defWidth = defHeight = Projectile.width = Projectile.height = 68;
@@ -25,13 +28,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Projectile.penetrate = -1;
             Projectile.tileCollide = false;
             Projectile.alpha = 255;
-
         }
 
         public override void AI()
 		{
             Player player = Main.player[Projectile.owner];
-            if (!player.active || player.dead || !player.channel)
+
+            if (!player.active || player.dead || !player.channel || !manaCheck)
             {
                 Projectile.Kill();
                 return;
@@ -50,20 +53,29 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             if (Projectile.ai[1] >= 10)
             {
                 Projectile.ai[1] -= 10;
+                manaCheck = player.CheckMana(3, true);
+
                 if (Projectile.owner == Main.myPlayer)
                 {
+                    Vector2 target = (Main.MouseWorld - Projectile.Center).SafeNormalize(default);
+                    int direction = Math.Sign(target.X);
+
+                    float shootAngle = -MathHelper.Pi/7 * direction * MathF.Abs(MathF.Cos(target.ToRotation()));
+                    float shootSpeed = Main.rand.NextFloat(16f, 20f);
+
+                    Vector2 shootVelocity = target.RotatedBy(shootAngle) * shootSpeed;
+                    Vector2 shootPosition = Projectile.Center + Main.rand.NextVector2Circular(30, 30);
+
                     int damage = Projectile.damage;
-                    Vector2 shootVel = (Main.MouseWorld - Projectile.Center).SafeNormalize(Vector2.UnitX * (float)Projectile.direction) * 16f;
-                    Vector2 vector = new(Projectile.position.X + Projectile.width/2f, Projectile.position.Y + Projectile.height/2f);
                     int type = ModContent.ProjectileType<DianiteMeteorSmall>();
 
                     if (Main.rand.NextBool(4))
                     {
-                        type = ModContent.ProjectileType<DianiteMeteor>();
                         damage = (int)(damage * 1.2f);
+                        type = ModContent.ProjectileType<DianiteMeteor>();
                     }
 
-                    Projectile.NewProjectile(Projectile.InheritSource(Projectile), vector, shootVel.RotatedByRandom(MathHelper.Pi/24), type, damage, Projectile.knockBack, Main.player[Projectile.owner].whoAmI);
+                    Projectile.NewProjectile(Projectile.InheritSource(Projectile), shootPosition, shootVelocity.RotatedByRandom(MathHelper.Pi/24), type, damage, Projectile.knockBack, Main.player[Projectile.owner].whoAmI);
                 }
             }
 
@@ -75,8 +87,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Projectile.Center = center;
 
             Lighting.AddLight(Projectile.Center, new Color(255, 170, 33).ToVector3() * 5f * Projectile.scale);
+            SpawnParticles(10);
+        }
 
-            for (int i = 0; i < 10; i++)
+        private void SpawnParticles(int count)
+        {
+            for (int i = 0; i < count; i++)
             {
                 float progress = (1f - Projectile.ai[0] / 255f);
                 Particle.CreateParticle<PortalSwirl>(p =>
@@ -97,8 +113,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
         public override void OnKill(int timeLeft)
 		{
-			//SoundEngine.PlaySound(SoundID.Item89, Projectile.position);
-		}
+            //SoundEngine.PlaySound(SoundID.Item89, Projectile.position);
+            SpawnParticles(100);
+        }
 
         public override Color? GetAlpha(Color lightColor)
             => Color.White * (1f - Projectile.alpha / 255f);

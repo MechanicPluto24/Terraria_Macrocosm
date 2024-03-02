@@ -50,7 +50,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 				Projectile.netUpdate = true;
 			}
 
-			Projectile.velocity.Y += 0.1f;
+			Projectile.velocity.Y += 0.5f;
 
 			if (rotationClockwise)
 				Projectile.rotation += 0.1f;
@@ -84,7 +84,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			Main.spriteBatch.Begin(BlendState.Additive, state);
 
 			Projectile.GetTrail().Draw(TextureAssets.Projectile[Type].Size() / 2f);
-            float count = 25f;
+            float count = 25f * (float)(1f - Projectile.alpha/255f);
             for (int n = 2; n < count; n++)
             {
                 Vector2 trailPosition = Projectile.Center - Projectile.velocity.SafeNormalize(default) * n * 7;
