@@ -50,7 +50,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 				Projectile.netUpdate = true;
 			}
 
-			Projectile.velocity.Y += 0.5f;
+			Projectile.velocity.Y += 0.2f;
 
 			if (rotationClockwise)
 				Projectile.rotation += 0.1f;

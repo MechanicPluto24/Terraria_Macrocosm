@@ -60,7 +60,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                     Vector2 target = (Main.MouseWorld - Projectile.Center).SafeNormalize(default);
                     int direction = Math.Sign(target.X);
 
-                    float shootAngle = -MathHelper.Pi/7 * direction * MathF.Abs(MathF.Cos(target.ToRotation()));
+                    float shootAngle = -MathHelper.Pi/12 * direction * MathF.Abs(MathF.Cos(target.ToRotation()));
                     float shootSpeed = Main.rand.NextFloat(16f, 20f);
 
                     Vector2 shootVelocity = target.RotatedBy(shootAngle) * shootSpeed;
