@@ -35,6 +35,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			Item.reuseDelay = 8;
 			Item.useAmmo = AmmoID.Bullet;
 			Item.mana = 0;
+			Item.knockBack = 0.01f;
 		}
 
 		public override bool CanUseItem(Player player) => player.ownedProjectileCounts[Item.shoot] <= 0;

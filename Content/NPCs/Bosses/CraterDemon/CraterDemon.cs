@@ -782,21 +782,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
         public override void AI()
         {
-            Main.NewText("AttackState: " + AI_Attack.ToString());
-            Main.NewText("AttackProgress: " + (AI_Attack == AttackState.Charge ? ((ChargeSubphase)AI_AttackProgress).ToString() : AI_AttackProgress.ToString()));
-            Main.NewText("AI_Timer: " + AI_Timer);
-
-            if (AI_Attack == AttackState.Charge)
-            {
-                Main.NewText($"Charge: {chargeAttackCount}/{maxChargeAttackCount}");
-                Main.NewText($"PortalCharge: {portalAttackCount}/{maxPortalAttackCount}");
-                Main.NewText("\n\n");
-            }
-            else
-            {
-                Main.NewText("\n\n\n");
-            }
-
             NPC.defense = NPC.defDefense;
 
             if (!spawned)
@@ -964,6 +949,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
             bigPortal.SpawnParticles(bigPortal, NPC);
             bigPortal2.SpawnParticles(bigPortal2, NPC);
+
+            //DisplayDebugInfo();
         }
 
         private void AI_FadeIn()
@@ -1925,6 +1912,24 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             head.Height = (int)(head.Height * NPC.scale);
             jaw.Width = (int)(jaw.Width * NPC.scale);
             jaw.Height = (int)(jaw.Height * NPC.scale);
+        }
+
+        private void DisplayDebugInfo()
+        {
+            Main.NewText("AttackState: " + AI_Attack.ToString());
+            Main.NewText("AttackProgress: " + (AI_Attack == AttackState.Charge ? ((ChargeSubphase)AI_AttackProgress).ToString() : AI_AttackProgress.ToString()));
+            Main.NewText("AI_Timer: " + AI_Timer);
+
+            if (AI_Attack == AttackState.Charge)
+            {
+                Main.NewText($"Charge: {chargeAttackCount}/{maxChargeAttackCount}");
+                Main.NewText($"PortalCharge: {portalAttackCount}/{maxPortalAttackCount}");
+                Main.NewText("\n\n");
+            }
+            else
+            {
+                Main.NewText("\n\n\n");
+            }
         }
     }
 }
