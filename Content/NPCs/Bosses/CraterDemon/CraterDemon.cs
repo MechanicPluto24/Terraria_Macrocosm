@@ -782,7 +782,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
         public override void AI()
         {
-            /*
             Main.NewText("AttackState: " + AI_Attack.ToString());
             Main.NewText("AttackProgress: " + (AI_Attack == AttackState.Charge ? ((ChargeSubphase)AI_AttackProgress).ToString() : AI_AttackProgress.ToString()));
             Main.NewText("AI_Timer: " + AI_Timer);
@@ -797,7 +796,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             {
                 Main.NewText("\n\n\n");
             }
-            */
 
             NPC.defense = NPC.defDefense;
 
@@ -830,7 +828,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                                                     Main.expertMode ? 0.5f :
                                                                       0.4f));
 
-            if (!phase2 && AI_Attack != AttackState.Phase2Transition && NPC.scale >= 1f && NPC.life < phase2Life)
+            if (!phase2 && (AI_Attack is not AttackState.Phase2Transition and not AttackState.FadeAway) && NPC.scale >= 1f && NPC.life < phase2Life)
             {
                 AI_Attack = AttackState.Phase2Transition;
                 AI_Timer = Phase2Transition_InitialTimer;
@@ -943,7 +941,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             NPC.spriteDirection = -1;
 
             // scale up and close down any existing portals if no longer used
-            if (AI_Attack != AttackState.FadeIn && AI_Attack != AttackState.Charge && AI_Attack != AttackState.FadeAway)
+            if (!(AI_Attack is AttackState.FadeIn or AttackState.Charge or AttackState.FadeAway))
             {
                 if (NPC.scale < 0.99f)
                     UpdateScale(Utility.ScaleLogarithmic(NPC.scale, 1, 9.2153f, 1f / 60f));
@@ -1104,7 +1102,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
             if (AI_AttackProgress == 1)
             {
-
                 if (AI_Timer == Math.Floor(Phase2Transition_InitialTimer * 0.8f))
                     SoundEngine.PlaySound(SoundID.ForceRoar with { Pitch = -0.6f }, NPC.position);
 

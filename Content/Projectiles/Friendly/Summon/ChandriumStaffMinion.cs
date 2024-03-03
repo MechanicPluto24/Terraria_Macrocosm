@@ -139,8 +139,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 			// Teleport to player if distance is too big
 			vectorToIdlePosition = idlePosition - Projectile.Center;
 			distanceToIdlePosition = vectorToIdlePosition.Length();
+			bool shouldTeleportToOwner = HasTarget ? distanceToIdlePosition > 4000f : distanceToIdlePosition > 2000f;
 
-			if (Main.myPlayer == owner.whoAmI && distanceToIdlePosition > 2000f)
+
+            if (Main.myPlayer == owner.whoAmI && shouldTeleportToOwner)
 			{
 				// Whenever you deal with non-regular events that change the behavior or position drastically, make sure to only run the code on the owner of the projectile,
 				// and then set netUpdate to true

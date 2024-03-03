@@ -21,10 +21,10 @@ namespace Macrocosm.Content.Tiles.Furniture
 			TileObjectData.newTile.CoordinateWidth = 16;
 			TileObjectData.newTile.CoordinateHeights = new int[] { 16, 16, 16, 16 };
 			TileObjectData.newTile.CoordinatePadding = 2;
-			TileObjectData.newTile.Direction = TileObjectDirection.PlaceRight;
+			TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;
 			TileObjectData.newTile.StyleHorizontal = false;
 			TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
-			TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceLeft;
+			TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceRight;
 			TileObjectData.addAlternate(1);
 			TileObjectData.addTile(Type);
 
