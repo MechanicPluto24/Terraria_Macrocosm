@@ -64,7 +64,6 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
 
 		public override List<string> SetNPCNameList()
 		{
-			// TODO: should we localize these?
 			return new List<string>() {
 				"Mann"   , // Hugh Mann (Interstellar)
                 "Doyle"  , // (Interstellar)
