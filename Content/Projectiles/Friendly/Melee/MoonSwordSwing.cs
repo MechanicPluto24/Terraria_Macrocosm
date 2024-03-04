@@ -92,7 +92,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, state);
 
 			Vector2 starPos = position + (Projectile.rotation + Utils.Remap(progress, 0f, 1f, 0f, (float)Math.PI / 4f) * Projectile.ai[0]).ToRotationVector2() * ((float)val.Width() * 0.5f - 4f) * scale;
-			DrawParticles(Projectile.Opacity, SpriteEffects.None, starPos, color * progressScale * 0.5f, color3, progress, 0f, 0.5f, 0.5f, 1f, 0f, new Vector2(1f, Utils.Remap(progress, 0f, 1f, 0.5f, 1f)) * scale, Vector2.One * scale * 1.5f);
+            Utility.DrawSwingEffectStar(Projectile.Opacity, SpriteEffects.None, starPos, color * progressScale * 0.5f, color3, progress, 0f, 0.5f, 0.5f, 1f, 0f, new Vector2(1f, Utils.Remap(progress, 0f, 1f, 0.5f, 1f)) * scale, Vector2.One * scale * 1.5f);
 
 			Main.spriteBatch.Draw(val.Value, position, frame, color * brightness * progressScale, Projectile.rotation + Projectile.ai[0] * ((float)Math.PI / 4f) * -1f * (1f - progress), origin, scale * 0.95f, effects, 0f);
 
@@ -104,12 +104,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			Main.spriteBatch.Draw(val.Value, position, frame, color3 * brightness * progressScale * 0.3f, Projectile.rotation, origin, scale, effects, 0f);
 			Main.spriteBatch.Draw(val.Value, position, frame, color2 * brightness * progressScale * 0.5f, Projectile.rotation, origin, scale * 0.975f, effects, 0f);
 
-			for (float f = 0f; f < 16f; f += 0.5f)
+			for (float f = 0f; f < 16f; f += 0.05f)
 			{
 				float angle = Projectile.rotation + Projectile.ai[0] * (f - 2f) * ((float)Math.PI * -2f) * 0.025f + Utils.Remap(progress, 0f, 1f, 0f, (float)Math.PI / 2.8f) * Projectile.ai[0];
 				Vector2 drawpos = position + angle.ToRotationVector2() * ((float)val.Width() * 0.5f - 8f) * scale;
-				DrawParticles(Projectile.Opacity, SpriteEffects.None, drawpos, new Color(255, 255, 255, 0) * progressScale * 0.8f * (float)(f / 8f), color3, progress, 0f, 0.5f, 0.5f, 1f, angle, new Vector2(0.1f, Utils.Remap(progress, 0f, 1f, 2f, 0f)) * scale, Vector2.One * scale * 1.2f);
+                Utility.DrawSwingEffectStar(Projectile.Opacity, SpriteEffects.None, drawpos, new Color(255, 255, 255, 0) * progressScale * 0.8f * (1f - (float)(f / 16f)), color3, progress, 0f, 0.5f, 0.5f, 1f, angle, new Vector2(0.1f, Utils.Remap(progress, 0f, 1f, 0f, 2f)) , Vector2.One * scale * 1.8f);
 
+				/*
 				if (f < 10f)
 				{
 					angle = Projectile.rotation + Projectile.ai[0] * (f - 2f) * ((float)Math.PI * -2f) * 0.025f + Utils.Remap(progress, 0f, 1f, 0f, (float)Math.PI / 14f) * Projectile.ai[0];
@@ -120,6 +121,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 					drawpos = position + angle.ToRotationVector2() * ((float)val.Width() * 0.5f - 34f) * scale;
 					DrawParticles(Projectile.Opacity, SpriteEffects.None, drawpos, color * progressScale * 0.4f * (float)(f / 16f), color3, progress, 0f, 0.5f, 0.5f, 1f, angle, new Vector2(0f, Utils.Remap(progress, 0f, 1f, 2f, 0f)) * scale, Vector2.One * scale * 0.5f);
 				}
+				*/
 			}
 
 			Main.spriteBatch.End();
@@ -128,18 +130,5 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			return false;
 		}
 
-		private static void DrawParticles(float opacity, SpriteEffects dir, Vector2 drawpos, Microsoft.Xna.Framework.Color drawColor, Microsoft.Xna.Framework.Color shineColor, float flareCounter, float fadeInStart, float fadeInEnd, float fadeOutStart, float fadeOutEnd, float rotation, Vector2 scale, Vector2 fatness)
-		{
-			float fade = Utils.GetLerpValue(fadeInStart, fadeInEnd, flareCounter, clamped: true) * Utils.GetLerpValue(fadeOutEnd, fadeOutStart, flareCounter, clamped: true);
-
-			Color color = (shineColor * opacity * 0.5f).WithOpacity(0f) * fade;
-			Color color2 = drawColor * 0.5f * fade;
-
-			Vector2 scaleX = new Vector2(fatness.X * 0.5f, scale.X) * fade;
-			//Vector2 scaleY = new Vector2(fatness.Y * 0.5f, scale.Y) * fade;
-
-			Main.spriteBatch.DrawStar(drawpos, 2, color, scaleX, spriteEffects: dir, entity: true);
-			Main.spriteBatch.DrawStar(drawpos, 2, color2, scaleX * 0.6f, spriteEffects: dir, entity: true);
-		}
 	}
 }

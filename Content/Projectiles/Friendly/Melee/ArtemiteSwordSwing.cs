@@ -1,8 +1,11 @@
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Reflection.Metadata;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
@@ -41,7 +44,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 		public ref float TargetSwingRotation => ref Projectile.ai[1];
 		public ref float SwingRotation => ref Projectile.ai[2];
 
-
+		private float oldRotation;
 		public override void AI()
 		{
 			float scaleFactor = 1.5f;
@@ -51,9 +54,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			Item item = player.HeldItem;
 			float speed = player.GetTotalAttackSpeed(DamageClass.Melee);
 
-			SwingRotation += 1.75f * speed;
+			SwingRotation += 1.65f * speed;
 
-			Projectile.rotation = (float)Math.PI * SwingDirection * progress + Projectile.velocity.ToRotation() + SwingDirection * (float)Math.PI + player.fullRotation;
+			oldRotation = Projectile.rotation;
+            Projectile.rotation = (float)Math.PI * SwingDirection * progress + Projectile.velocity.ToRotation() + SwingDirection * (float)Math.PI + player.fullRotation;
 			Projectile.Center = player.RotatedRelativePoint(player.MountedCenter) + PositionAdjustment;
 
 			Projectile.scale = baseScale + MathHelper.SmoothStep(0, 1, progress) * scaleFactor;
@@ -82,11 +86,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 				Projectile.Kill();
 		}
 
-		public override bool PreDraw(ref Color lightColor)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+			Particle.CreateParticle<ArtemiteStar>(target.Center, -Vector2.UnitY, 1f, 0f, shouldSync: true);
+        }
+
+        public override bool PreDraw(ref Color lightColor)
 		{
 			Texture2D texture = TextureAssets.Projectile[Type].Value;
-			//Texture2D star = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Star1").Value;
-			Player player = Main.player[Projectile.owner];
 
 			Rectangle frame = texture.Frame(1, 4, frameY: 3);
 			Vector2 origin = frame.Size() / 2f;
@@ -107,19 +114,22 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), (color * progressScale).WithOpacity(0.2f - 0.2f * progressScale), Projectile.rotation, origin, Projectile.scale * 0.75f, effects, 0f);
 			Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), (color * progressScale).WithOpacity(0.1f - 0.05f * progressScale), Projectile.rotation, origin, Projectile.scale * 0.55f, effects, 0f);
 
-			/*
-            state.SaveState(Main.spriteBatch);
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(BlendState.Additive, state);
+			int iteration = 0;
+            for (float f = 0f; f < 16f; f += 0.04f)
+            {
+                float starProgress = f / 16f;
 
-            float rotation = Projectile.rotation + (MathHelper.PiOver4 / 2f * player.direction);
+                float angle = Projectile.rotation + SwingDirection * (f - 2f) * ((float)Math.PI * -2f) * 0.025f + MathHelper.Pi * 0.17f * SwingDirection;
+                Vector2 drawpos = position + angle.ToRotationVector2() * ((float)frame.Width * 0.5f - 8f) * Projectile.scale * MathHelper.Lerp(1.025f, 1.005f, starProgress);
+                Utility.DrawSwingEffectStar(1f, SpriteEffects.None, drawpos, new Color(255, 255, 255, 0), color, progress, 0f, 0.5f, 1f, 1f, angle, new Vector2(0.1f + 0.2f * starProgress, 1.1f) * (1f - starProgress) * progress, Vector2.One * 0.7f);
+				
+				if(iteration++ == 0)
+                    Utility.DrawSwingEffectStar(1f, SpriteEffects.None, drawpos + new Vector2(10, 0).RotatedBy(Projectile.rotation) * progress, new Color(255, 255, 255, 0) , color, progress, 0f, 0.5f, 1f, 1f, angle, new Vector2(0.2f, 1.2f) * (1f - starProgress), new Vector2(10f, 20f));
+            }
 
-            Main.spriteBatch.DrawStar(player.Center + Utility.PolarVector(100, rotation) - Main.screenPosition, 2, new Color(168, 215, 215) * Projectile.scale * (0.4f + 0.6f * progress) * 0.6f, 1.2f, Projectile.rotation - MathHelper.PiOver4, entity: true);
-
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(state);
-            */
-			return false;
+            return false;
 		}
-	}
+
+       
+    }
 }

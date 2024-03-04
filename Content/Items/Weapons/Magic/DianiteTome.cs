@@ -35,10 +35,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
             Item.value = 10000;
 			Item.rare = ModContent.RarityType<MoonRarityT1>();
 			Item.UseSound = SoundID.Item20;
-			//Item.autoReuse = true;
 			Item.shoot = ModContent.ProjectileType<DianitePortal>();
-			//Item.shootSpeed = 0;
-			Item.tileBoost = 50;
 		}
 
 		public override void AddRecipes()

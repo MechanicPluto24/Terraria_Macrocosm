@@ -48,14 +48,20 @@ namespace Macrocosm.Content.Items.Accessories
 			dashPlayer.AccDashHorizontal = true;
 			dashPlayer.AccDashVertical = true;
 
-			dashPlayer.AccDashSpeedX = 14f;
+            dashPlayer.AccDashCooldown = 45;
+            dashPlayer.AccDashDuration = 35;
+
+            dashPlayer.AccDashSpeedX = 14f;
 			dashPlayer.AccDashSpeedY = 8f;
+
+			dashPlayer.AccDashPreserveVelocity = false;
+			dashPlayer.AccDashAllowMovementDuringDashMultiplier = 0.5f;
 
 			dashPlayer.AccDashDamage = Item.damage;
 			dashPlayer.AccDashKnockback = Item.knockBack;
 			dashPlayer.AccDashImmuneTime = 6;
 
-			dashPlayer.AccDashHitboxIncrease = 16;
+			dashPlayer.AccDashHitboxIncrease = (int)(12 * Utility.CubicEaseIn(dashPlayer.DashProgress));
 
 			dashPlayer.AccDashAfterImage = true;
 			dashPlayer.AccDashStartVisuals = StartDashVisuals;
@@ -78,15 +84,6 @@ namespace Macrocosm.Content.Items.Accessories
                 p.PlayerID = player.whoAmI;
                 p.Rotation = player.velocity.ToRotation() - MathHelper.PiOver2;
             });
-
-			/*
-            for (int k = 0; k < 50; k++)
-            {
-                int dustType = ModContent.DustType<CelestialDust>();
-                Dust dust = Dust.NewDustDirect(new Vector2(player.position.X, player.position.Y), player.width, player.height, dustType, 0f, 0f, 100, default, 2f);
-				dust.velocity = Main.rand.NextVector2Unit().RotatedBy(player.velocity.ToRotation());
-            }
-			*/
         }
 
         private void DashVisuals(Player player)
@@ -104,7 +101,10 @@ namespace Macrocosm.Content.Items.Accessories
 
         private void OnNPCCollide(Player player, NPC npc)
 		{
-            for (int i = 0; i < 10; i++)
+            DashPlayer dashPlayer = player.GetModPlayer<DashPlayer>();
+			int count = (int)(10 * dashPlayer.DashProgress);
+
+            for (int i = 0; i < count; i++)
                 Particle.CreateParticle<CelestialStar>(npc.Center + Main.rand.NextVector2Circular(npc.width/2, npc.height/2), npc.velocity + Main.rand.NextVector2Circular(2,2), scale: 1.2f);
 
             for (int i = 0; i < 25; i++)

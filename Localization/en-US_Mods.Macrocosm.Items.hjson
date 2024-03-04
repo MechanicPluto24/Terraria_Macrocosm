@@ -141,8 +141,8 @@ CraterDemonSummon: {
 
 Moonstone: {
 	DisplayName: Moonstone
-	TooltipChampion: These are a currency for the Moon Champion, but unfortunately he is not with you
-	TooltipNoChampion: These are a currency for {0}, the Moon Champion
+	TooltipNoChampion: These are a currency for the Moon Champion, but unfortunately he is not with you
+	TooltipChampion: These are a currency for {0}, the Moon Champion
 	Tooltip: ""
 }
 
@@ -434,6 +434,11 @@ WhenDayBreaks: {
 Freedomfaller: {
 	DisplayName: Freedomfaller
 	Tooltip: "'T. Williams'"
+}
+
+ShoresOfOblivion: {
+	DisplayName: Shores Of Oblivion
+	Tooltip: E. Bracht
 }
 
 CraterDemonRelic: {
@@ -939,11 +944,6 @@ Apollo115: {
 CraterDemonPet: {
 	DisplayName: Toy Rocket
 	Tooltip: Summons a Mini Crater Demon
-}
-
-ShoresOfOblivion: {
-	DisplayName: Shores Of Oblivion
-	Tooltip: ""
 }
 
 MoonBasePlatingWall: {

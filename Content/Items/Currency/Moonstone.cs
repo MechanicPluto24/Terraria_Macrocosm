@@ -27,24 +27,25 @@ namespace Macrocosm.Content.Items.Currency
 			for (int iterate = 0; iterate < Main.maxNPCs; iterate++)
 			{
 				NPC npc = Main.npc[iterate];
-				if (npc.type == ModContent.NPCType<MoonChampion>() && !npc.active)
-				{
-					tooltips.Add(new TooltipLine(Mod, "Name", "ForTheChamp")
-					{
-						OverrideColor = Color.DarkGray,
-						Text = Language.GetTextValue("Mods.Macrocosm.Items.Moonstone.TooltipNoChampion")
-					});
-					return;
-				}
-				else if (npc.type == ModContent.NPCType<MoonChampion>() && npc.active)
+				if (npc.type == ModContent.NPCType<MoonChampion>() && npc.active)
 				{
 					tooltips.Add(new TooltipLine(Mod, "Name", "ForTheChamp")
 					{
 						OverrideColor = Color.White,
 						Text = Language.GetText("Mods.Macrocosm.Items.Moonstone.TooltipChampion").Format(Main.npc[champ].GivenName)
 					});
+					return;			
 				}
-			}
+                else
+                {
+                    tooltips.Add(new TooltipLine(Mod, "Name", "ForTheChamp")
+                    {
+                        OverrideColor = Color.DarkGray,
+                        Text = Language.GetTextValue("Mods.Macrocosm.Items.Moonstone.TooltipNoChampion")
+                    });
+                    return;
+                }
+            }
 		}
 	}
 }

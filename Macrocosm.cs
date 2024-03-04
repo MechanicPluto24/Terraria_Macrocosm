@@ -1,4 +1,5 @@
 using Macrocosm.Common.Netcode;
+using Macrocosm.Content.Items.Currency;
 using Macrocosm.Content.Subworlds;
 using Macrocosm.Content.Tiles.Blocks;
 using Microsoft.Xna.Framework.Graphics;
@@ -41,6 +42,7 @@ namespace Macrocosm
 				LoadEffects();
 			}
 
+			CurrencyManager.Load();
 			LoadTimeModCalls();
 		}
 
