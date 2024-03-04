@@ -127,8 +127,22 @@ namespace Macrocosm.Common.Utils
 			}
 		}
 
-		/// <summary> Convenience method for getting lighting color using an npc or projectile position.</summary>
-		public static Color GetLightColor(Vector2 position)
+        public static void DrawSwingEffectStar(float opacity, SpriteEffects dir, Vector2 drawpos, Microsoft.Xna.Framework.Color drawColor, Microsoft.Xna.Framework.Color shineColor, float flareCounter, float fadeInStart, float fadeInEnd, float fadeOutStart, float fadeOutEnd, float rotation, Vector2 scale, Vector2 fatness)
+        {
+            float fade = InverseLerp(fadeInStart, fadeInEnd, flareCounter, clamped: true) * InverseLerp(fadeOutEnd, fadeOutStart, flareCounter, clamped: true);
+
+            Color color = (shineColor * opacity * 0.5f).WithOpacity(0f) * fade;
+            Color color2 = drawColor * 0.5f * fade;
+
+            Vector2 scaleX = new Vector2(fatness.X * 0.5f, scale.X) * fade;
+            Vector2 scaleY = new Vector2(fatness.Y * 0.5f, scale.Y) * fade;
+
+            Main.spriteBatch.DrawStar(drawpos, 2, color, scaleX, spriteEffects: dir, entity: true);
+            Main.spriteBatch.DrawStar(drawpos, 2, color2, scaleX * 0.6f, spriteEffects: dir, entity: true);
+        }
+
+        /// <summary> Convenience method for getting lighting color using an npc or projectile position.</summary>
+        public static Color GetLightColor(Vector2 position)
 		{
 			return Lighting.GetColor((int)(position.X / 16f), (int)(position.Y / 16f));
 		}

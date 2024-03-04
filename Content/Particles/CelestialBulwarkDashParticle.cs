@@ -29,7 +29,7 @@ namespace Macrocosm.Content.Particles
 
         public Player Player => Main.player[PlayerID];
         public DashPlayer DashPlayer => Player.GetModPlayer<DashPlayer>();
-        public float Progress => (float)DashPlayer.DashTimer / DashPlayer.AccDashDuration;
+        public float Progress => DashPlayer.DashProgress;
 
         public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
 		{

@@ -42,6 +42,21 @@ namespace Macrocosm.Content.Players
         /// <summary> The vertical dash speed, defaults to half of the EoC shield value </summary>
         public float AccDashSpeedY { get; set; }
 
+        /// <summary> 
+		/// Whether to keep the other velocity component when dashing, or reset it
+		/// <br>(keep <see cref="Player.velocity.Y"/> when dashing horizontally, and vice-versa).</br>
+		/// <br>Defaults to true.</br>
+		/// </summary>
+        public bool AccDashPreserveVelocity { get; set; }
+
+        /// <summary>
+        /// Multiplier to allow player controls during dash. 
+		/// <br>1f - can move for the full duration of the dash </br>
+		/// <br>0f - can't move at all during the dash </br>
+		/// <br>Defaults to 1f.</br>
+		/// </summary>
+        public float AccDashAllowMovementDuringDashMultiplier { get; set; }
+
         /// <summary> The knockback applied on collision with the enemy, when <see cref="AccDashDamage"/> > 0 </summary>
         public float AccDashKnockback { get; set; }
 
@@ -64,6 +79,7 @@ namespace Macrocosm.Content.Players
 
 		/// <summary> The dash direction triggered by the player </summary>
 		public Direction DashDirection { get; set; } = Direction.None;
+		private Direction LastValidDashDirection;
 		private int dashDelay = 0;
 		private int dashTimer = 0;
 
@@ -72,6 +88,7 @@ namespace Macrocosm.Content.Players
 
         /// <summary> Dash timer, from 0 to <see cref="AccDashDuration"/> </summary>
         public int DashTimer => dashTimer;
+        public float DashProgress => (float)dashTimer/AccDashDuration;
 
 		/// <summary> Whether the player has collided during the dash with an NPC this frame </summary>
 		public bool CollidedWithNPC { get; set; }
@@ -95,6 +112,9 @@ namespace Macrocosm.Content.Players
             AccDashSpeedX = 14f;
             AccDashSpeedY = 7f;
 
+			AccDashPreserveVelocity = true;
+			AccDashAllowMovementDuringDashMultiplier = 1f;
+
             AccDashDamage = 0f;
 			AccDashKnockback = 9f;
 			AccDashImmuneTime = 4;
@@ -106,6 +126,7 @@ namespace Macrocosm.Content.Players
 
 			CollidedWithNPC = false;
 			OnCollisionWithNPC = null;
+
 
             // ResetEffects is called not long after player.doubleTapCardinalTimer's values have been set
             // When a directional key is pressed and released, vanilla starts a 15 tick (1/4 second) timer during which a second press activates a dash
@@ -128,14 +149,17 @@ namespace Macrocosm.Content.Players
 			//	// FIXME: this gets reset again here right after syncing with modpackets
 			//	DashDirection = DashDir.None;
 			//}
-		}
+
+			if (DashDirection is not Direction.None)
+				LastValidDashDirection = DashDirection;
+        }
 
 		public override void PreUpdateMovement()
 		{
-			// INFO: since other clients have DashDir.None for this player because of the reset, this entire code does not run
-			// since general movement in synced automatically, and dash collision is synced below,
-			// the only inconsistency remaining is the lack of dust effects
-			if (CanUseDash() && DashDirection != Direction.None && dashDelay == 0)
+            // INFO: since other clients have DashDir.None for this player because of the reset, this entire code does not run
+            // since general movement in synced automatically, and dash collision is synced below,
+            // the only inconsistency remaining is the lack of dust effects
+            if (CanUseDash() && DashDirection != Direction.None && dashDelay == 0)
 			{
 				Vector2 newVelocity = Player.velocity;
 
@@ -150,6 +174,8 @@ namespace Macrocosm.Content.Players
 							// This adjustment is roughly 1.3x the intended dash velocity
 							float dashDirection = DashDirection == Direction.Down ? 1 : -1.3f;
 							newVelocity.Y = dashDirection * AccDashSpeedY;
+							if(!AccDashPreserveVelocity)
+								newVelocity.X = 0;
 							break;
 						}
 					case Direction.Left when Player.velocity.X > -AccDashSpeedX && AccDashHorizontal:
@@ -157,7 +183,9 @@ namespace Macrocosm.Content.Players
 						{
 							// X-velocity is set here
 							float dashDirection = DashDirection == Direction.Right ? 1 : -1;
-							newVelocity.X = dashDirection * AccDashSpeedX;
+                            newVelocity.X = dashDirection * AccDashSpeedX;
+                            if (!AccDashPreserveVelocity)
+                                newVelocity.Y = 0;
 							break;
 						}
 					default:
@@ -167,7 +195,7 @@ namespace Macrocosm.Content.Players
 				// start the dash
 				dashDelay = AccDashCooldown;
 				dashTimer = AccDashDuration;
-				Player.velocity = newVelocity;
+                Player.velocity = newVelocity;
                 AccDashStartVisuals?.Invoke(Player);
 			}
 
@@ -191,6 +219,14 @@ namespace Macrocosm.Content.Players
 
                 if (AccDashDamage > 0)
                     DashDamage();
+            }
+
+            if (dashTimer > (int)(AccDashAllowMovementDuringDashMultiplier * AccDashDuration))
+            {
+				if (LastValidDashDirection is Direction.Down or Direction.Up)
+				{
+					Player.velocity.X = 0f;
+				}
             }
         }
 

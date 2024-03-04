@@ -7,13 +7,13 @@ using Terraria;
 
 namespace Macrocosm.Content.Particles
 {
-	public class CelestialStar : Particle
+	public class ArtemiteStar : Particle
 	{
 		public override string TexturePath => Macrocosm.EmptyTexPath;
 
 		public float Alpha = 0.3f;
+        public Color Color = new(130, 220, 199);
 
-        private Color Color = Color.White;
 		bool fadeIn = true;
 		float defScale;
 		float actualScale;
@@ -41,8 +41,6 @@ namespace Macrocosm.Content.Particles
                 Alpha = MathHelper.Clamp(Alpha * 0.92f, 0f, 1f);
                 actualScale *= 0.95f;
             }
-
-            Color = CelestialDisco.CelestialColor;
 
 			Lighting.AddLight(Center, Color.ToVector3() * Alpha);
 
