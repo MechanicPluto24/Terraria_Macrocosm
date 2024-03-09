@@ -37,7 +37,7 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 			TileObjectData.addTile(Type);
 
 			AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTorch);
-			AdjTiles = new int[] { TileID.Candelabras };
+			AdjTiles = [TileID.Candelabras];
 
 			DustType = ModContent.DustType<MoonBasePlatingDust>();
 

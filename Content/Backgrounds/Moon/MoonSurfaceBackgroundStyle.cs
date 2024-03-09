@@ -23,11 +23,11 @@ namespace Macrocosm.Content.Backgrounds.Moon
 
 			float a = 1300f;
 			float b = 1750f;
-			int[] textureSlots = new int[] {
+			int[] textureSlots = [
 				BackgroundTextureLoader.GetBackgroundSlot("Macrocosm/Content/Backgrounds/Moon/MoonSurfaceFar"),
 				BackgroundTextureLoader.GetBackgroundSlot("Macrocosm/Content/Backgrounds/Moon/MoonSurfaceMid"),
 				BackgroundTextureLoader.GetBackgroundSlot("Macrocosm/Content/Backgrounds/Moon/MoonSurfaceNear"),
-			};
+			];
 			int length = textureSlots.Length;
 			for (int i = 0; i < textureSlots.Length; i++)
 			{

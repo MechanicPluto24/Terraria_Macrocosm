@@ -223,7 +223,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.noGravity = true;
             NPC.noTileCollide = true;
 
-            SpawnModBiomes = new int[1] { ModContent.GetInstance<UndergroundMoonBiome>().Type };
+            SpawnModBiomes = [ModContent.GetInstance<UndergroundMoonBiome>().Type];
 
             head = ModContent.Request<Texture2D>(Texture, AssetRequestMode.ImmediateLoad).Value;
             NPC.width = head.Width;

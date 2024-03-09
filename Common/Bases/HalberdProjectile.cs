@@ -38,7 +38,7 @@ namespace Macrocosm.Common.Bases
         private const float ARC_ANGLE_DEG = 30f;
 
         //private float armRotation = 0f;
-        private float[] stateDmgMulti = new float[6] { 3f, 2f, 8f, 1f, 10f, 1f };
+        private float[] stateDmgMulti = [3f, 2f, 8f, 1f, 10f, 1f];
         private List<NPC> NPCsHit = new List<NPC>();
         private Rectangle angleHitbox;
 
@@ -51,7 +51,7 @@ namespace Macrocosm.Common.Bases
         public int RotDiag;
         public override void SetDefaults()
         {
-            baseMaxProgress = new int[6] { baseSpeed, baseSpeed / 3, baseSpeed / 3, (int)(baseSpeed * 2f / 3), baseSpeed / 4, baseSpeed / 2 };
+            baseMaxProgress = [baseSpeed, baseSpeed / 3, baseSpeed / 3, (int)(baseSpeed * 2f / 3), baseSpeed / 4, baseSpeed / 2];
             farOffset = halberdSize - rotationOffset;
             midOffset = (int)MathHelper.Lerp(startOffset, farOffset, 0.67f);
             RotDiag = Utility.SquareDiagonal(rotationOffset);

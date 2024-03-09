@@ -28,7 +28,7 @@ namespace Macrocosm.Common.Config
 		[Header("$Mods.Macrocosm.Configs.MacrocosmConfig.UIHeader")]
 		[DrawTicks]
 		[DefaultValue("Macrocosm")]
-		[OptionStrings(new string[] { "Macrocosm", "Terraria" })]
+		[OptionStrings(["Macrocosm", "Terraria"])]
 		public string SelectedUITheme { get; set; }
 
 		/// <summary> Supported unit systems in Macrocosm </summary>

@@ -7,7 +7,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture
 {
-	public class OilRefinery : ModTile
+	public class EarthGlobe : ModTile
 	{
 		public override void SetStaticDefaults()
 		{
@@ -15,26 +15,22 @@ namespace Macrocosm.Content.Tiles.Furniture
 			Main.tileNoAttach[Type] = true;
 			Main.tileLavaDeath[Type] = true;
 
-			TileObjectData.newTile.CopyFrom(TileObjectData.Style5x4);
-			TileObjectData.newTile.Width = 4;
-			TileObjectData.newTile.Height = 4;
+			TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
 			TileObjectData.newTile.CoordinateWidth = 16;
-			TileObjectData.newTile.CoordinateHeights = [16, 16, 16, 16];
+			TileObjectData.newTile.CoordinateHeights = [16, 16];
 			TileObjectData.newTile.CoordinatePadding = 2;
 			TileObjectData.newTile.Direction = TileObjectDirection.PlaceRight;
-			TileObjectData.newTile.StyleHorizontal = false;
+			TileObjectData.newTile.StyleHorizontal = true;
+			TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
+			TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceLeft;
+			TileObjectData.addAlternate(1);
 			TileObjectData.addTile(Type);
 
 			HitSound = SoundID.Dig;
 			DustType = -1;
 
-			AddMapEntry(new Color(121, 107, 91), CreateMapEntryName());
+			AddMapEntry(new Color(0, 144, 239), CreateMapEntryName());
 		}
-
-		public override void KillMultiTile(int i, int j, int frameX, int frameY)
-		{
-		}
-
 	}
 
 }

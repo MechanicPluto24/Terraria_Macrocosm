@@ -56,7 +56,7 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
 			NPC.DeathSound = SoundID.NPCDeath3;
 			NPC.knockBackResist = 0.2f;
 			AnimationType = NPCID.Guide;
-			SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBiome>().Type };
+			SpawnModBiomes = [ModContent.GetInstance<MoonBiome>().Type];
 		}
 
 		public override bool CanTownNPCSpawn(int numTownNPCs)

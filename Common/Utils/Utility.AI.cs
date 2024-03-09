@@ -5765,7 +5765,7 @@ namespace Macrocosm.Common.Utils
 
 		public static Vector2 Trace(Vector2 start, Vector2 end, object ignore, int ignoreType, object dim, bool npcCheck = true, bool tileCheck = true, bool playerCheck = true, bool returnCenter = false, float jump = 1F, bool ignorePlatforms = true)
 		{
-			return Trace(start, end, ignore, ignoreType, dim, npcCheck, tileCheck, playerCheck, returnCenter, ignorePlatforms ? new[] { 19 } : default, jump); //ignores wooden platforms
+			return Trace(start, end, ignore, ignoreType, dim, npcCheck, tileCheck, playerCheck, returnCenter, ignorePlatforms ? [19] : default, jump); //ignores wooden platforms
 		}
 
 		/* **Code edited from Yoraiz0r's 'Holowires' Mod!**

@@ -860,7 +860,7 @@ namespace Macrocosm.Common.Utils
 			float scale = (codable is NPC ? ((NPC)codable).scale : ((Projectile)codable).scale);
 			float rotation = (codable is NPC ? ((NPC)codable).rotation : ((Projectile)codable).rotation);
 			int spriteDirection = (codable is NPC ? ((NPC)codable).spriteDirection : ((Projectile)codable).spriteDirection);
-			Vector2[] velocities = new Vector2[] { codable.velocity };
+			Vector2[] velocities = [codable.velocity];
 			if (useOldPos)
 			{
 				velocities = (codable is NPC ? ((NPC)codable).oldPos : ((Projectile)codable).oldPos);
@@ -911,7 +911,7 @@ namespace Macrocosm.Common.Utils
 
 		public static void DrawChain(object sb, Texture2D texture, int shader, Vector2 start, Vector2 end, float Jump = 0f, Color? overrideColor = null, float scale = 1f, bool drawEndsUnder = false, Func<Texture2D, Vector2, Vector2, Vector2, Rectangle, Color, float, float, int, bool> OnDrawTex = null)
 		{
-			DrawChain(sb, new Texture2D[] { texture, texture, texture }, shader, start, end, Jump, overrideColor, scale, drawEndsUnder, OnDrawTex);
+			DrawChain(sb, [texture, texture, texture], shader, start, end, Jump, overrideColor, scale, drawEndsUnder, OnDrawTex);
 		}
 
 		//code written by Yoraiz0r, heavily edited by GroxTheGreat

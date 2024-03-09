@@ -29,7 +29,7 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 			AddToArray(ref TileID.Sets.RoomNeeds.CountsAsDoor);
 
 			DustType = ModContent.DustType<MoonBasePlatingDust>();
-			AdjTiles = new int[] { TileID.ClosedDoor };
+			AdjTiles = [TileID.ClosedDoor];
 
 			AddMapEntry(new Color(200, 200, 200), Language.GetText("MapObject.Door"));
 

@@ -19,7 +19,7 @@ namespace Macrocosm.Common.Drawing
 
 		public static float CelestialStyleProgress;
 		private static int celesialCounter = 0;
-		private static readonly Color[] celestialColors = { NebulaColor, StardustColor, VortexColor, SolarColor };
+		private static readonly Color[] celestialColors = [NebulaColor, StardustColor, VortexColor, SolarColor];
 
 		public override void PostUpdateEverything()
 		{

@@ -161,9 +161,9 @@ namespace Macrocosm.Content.Rockets.Modules
 			Main.graphics.GraphicsDevice.SamplerStates[1] = samplerState;
 		}
 
-		protected readonly Vector3[] blueprintKeys = new Vector3[] {
+		protected readonly Vector3[] blueprintKeys = [
 			new Vector3(0.47f, 0.47f, 0.47f),
 			new Vector3(0.74f, 0.74f, 0.74f)
-		};
+		];
 	}
 }

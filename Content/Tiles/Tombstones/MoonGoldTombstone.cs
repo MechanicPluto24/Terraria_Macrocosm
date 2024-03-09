@@ -12,7 +12,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Tombstones
 {
-	public class MoonGoldTombstone : ModTile
+	public class MoonGoldTombstone : ModTile, ITombstoneTile
 	{
 		public override void SetStaticDefaults()
 		{

@@ -28,25 +28,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 		private SpriteBatchState state;
 		public override bool PreDraw(ref Color lightColor)
 		{
-			ProjectileID.Sets.TrailCacheLength[Type] = 10;
-			state.SaveState(Main.spriteBatch);
-
-			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(BlendState.Additive, state);
-
-            float count = 25f * (float)(1f - Projectile.alpha / 255f);
-            for (int n = 2; n < count; n++)
-            {
-                Vector2 trailPosition = Projectile.Center - Projectile.velocity.SafeNormalize(default) * n * 5;
-                Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, trailPosition - Main.screenPosition, null, Color.OrangeRed * (1f - (float)n / count), 0f, TextureAssets.Projectile[Type].Value.Size() / 2f, Projectile.scale * (0.5f + 0.5f * (1f - (float)n / count)), SpriteEffects.None, 0f);
-            }
-
-            Projectile.GetTrail().Draw(TextureAssets.Projectile[Type].Size() / 2f);
-
-			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(state);
-
-			return true;
+			trailOffset = 4;
+            return base.PreDraw(ref lightColor);
 		}
 
 		public override void OnKill(int timeLeft)

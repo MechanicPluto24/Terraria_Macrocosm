@@ -43,3 +43,5 @@ MoonBaseChest: {
 	MapEntryUnlocked: Moon Base Electronic Storage Unit
 	MapEntryLocked: Moon Base Electronic Storage Unit (Locked)
 }
+
+EarthGlobe.MapEntry: Earth Globe

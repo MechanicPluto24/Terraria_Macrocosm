@@ -92,7 +92,7 @@ namespace Macrocosm.Content.Rockets.Customization
 			if (index < 0 || index >= 8) throw new ArgumentException($"Index out of bounds: {index}");
 			return new((colors) => colors[index], "Map")
 			{
-				Parameters = new object[] { index }
+				Parameters = [index]
 			};
 		}
 
@@ -102,7 +102,7 @@ namespace Macrocosm.Content.Rockets.Customization
 			if (index2 < 0 || index2 >= 8) throw new ArgumentException($"Index out of bounds: {index2}");
 			var colorFunc = new ColorFunction((colors) => Color.Lerp(colors[index1], colors[index2], amount), "Lerp")
 			{
-				Parameters = new object[] { index1, index2, amount }
+				Parameters = [index1, index2, amount]
 			};
 			return colorFunc;
 		}

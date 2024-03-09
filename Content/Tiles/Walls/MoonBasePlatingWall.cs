@@ -16,10 +16,10 @@ namespace Macrocosm.Content.Tiles.Walls
 
             // Adaptation of stone slab framing style (wallLargeFrames = 1),
             // but without the interlocked pattern (2 fewer repeats on Y)
-            wallFrameNumberLookup = new int[2][] {
-                new int[3] { 2, 4, 2 },
-                new int[3] { 1, 3, 1 },
-            };
+            wallFrameNumberLookup = [
+                [2, 4, 2],
+                [1, 3, 1],
+            ];
         }
 
         public override bool WallFrame(int i, int j, bool randomizeFrame, ref int style, ref int frameNumber)

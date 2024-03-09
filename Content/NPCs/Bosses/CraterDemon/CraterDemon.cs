@@ -176,7 +176,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             DashIntoPortal
         }
 
-        private readonly AttackInfo[] attacks = new AttackInfo[]{
+        private readonly AttackInfo[] attacks = [
 			// AttackState.DoNothing
 			new AttackInfo(){
                 initialProgress = null,
@@ -209,7 +209,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 initialProgress = null,
                 initialTimer = (CD) => (int)(50 * CD.GetDifficultyScaling(DifficultyScale.AttackDurationScaling))
             }
-        };
+        ];
 
         private enum DifficultyScale
         {

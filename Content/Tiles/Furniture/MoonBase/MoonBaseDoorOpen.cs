@@ -26,7 +26,7 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 			AddToArray(ref TileID.Sets.RoomNeeds.CountsAsDoor);
 
 			DustType = ModContent.DustType<MoonBasePlatingDust>();
-			AdjTiles = new int[] { TileID.OpenDoor };
+			AdjTiles = [TileID.OpenDoor];
 
 			RegisterItemDrop(ModContent.ItemType<MoonBaseDoor>(), 0);
 
