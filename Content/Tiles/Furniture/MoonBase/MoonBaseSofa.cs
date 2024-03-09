@@ -33,7 +33,7 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 			AddMapEntry(new Color(253, 221, 3), Language.GetText("ItemName.Sofa"));
 
 			AddToArray(ref TileID.Sets.RoomNeeds.CountsAsChair);
-			AdjTiles = new int[] { TileID.Benches };
+			AdjTiles = [TileID.Benches];
 			DustType = ModContent.DustType<MoonBasePlatingDust>();
 		}
 

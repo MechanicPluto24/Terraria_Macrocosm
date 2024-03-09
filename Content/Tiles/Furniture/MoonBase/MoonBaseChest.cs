@@ -64,7 +64,7 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 			Main.tileOreFinderPriority[Type] = 1050;
 
 			DustType = ModContent.DustType<MoonBasePlatingDust>();
-			AdjTiles = new int[] { TileID.Containers };
+			AdjTiles = [TileID.Containers];
 
 			AddMapEntry(new Color(200, 200, 200), this.GetLocalization("MapEntryNormal"), MapChestName);
 			AddMapEntry(new Color(200, 200, 200), this.GetLocalization("MapEntryUnlocked"), MapChestName);
@@ -81,18 +81,18 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 
 			TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
 			TileObjectData.newTile.Origin = new Point16(0, 1);
-			TileObjectData.newTile.CoordinateHeights = new[] { 16, 18 };
+			TileObjectData.newTile.CoordinateHeights = [16, 18];
 			TileObjectData.newTile.HookCheckIfCanPlace = new PlacementHook(Chest.FindEmptyChest, -1, 0, true);
 			TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(Chest.AfterPlacement_Hook, -1, 0, false);
 
-			TileObjectData.newTile.AnchorInvalidTiles = new int[]
-			{
-				TileID.MagicalIceBlock,
+			TileObjectData.newTile.AnchorInvalidTiles =
+            [
+                TileID.MagicalIceBlock,
 				TileID.Boulder,
 				TileID.BouncyBoulder,
 				TileID.LifeCrystalBoulder,
 				TileID.RollingCactus
-			};
+			];
 
 			TileObjectData.newTile.StyleHorizontal = true;
 			TileObjectData.newTile.LavaDeath = false;

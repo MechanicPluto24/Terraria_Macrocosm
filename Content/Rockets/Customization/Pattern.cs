@@ -159,7 +159,7 @@ namespace Macrocosm.Content.Rockets.Customization
 
 		/// <summary> Color mask keys </summary>
 		public static Vector3[] ColorKeys { get; } =
-		{
+		[
 			new Vector3(0f, 1f, 1f),     // Cyan (Rocket tip, booster tips, etc.)
 			new Vector3(1f, 0f, 1f),     // Magenta (The "background" of the pattern)
 			new Vector3(1f, 1f, 0f),     // Yellow  
@@ -168,6 +168,6 @@ namespace Macrocosm.Content.Rockets.Customization
 			new Vector3(0f, 0f, 1f),     // Blue   
 			new Vector3(1f,.5f, 0f),     // Orange
 			new Vector3(0f,.5f, 1f)      // Azure
-		};
+		];
 	}
 }

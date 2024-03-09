@@ -37,7 +37,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			NPC.aiStyle = -1;
 			AnimationType = NPCID.BlueSlime;
 
-			SpawnModBiomes = new int[1] { ModContent.GetInstance<UndergroundMoonBiome>().Type };
+			SpawnModBiomes = [ModContent.GetInstance<UndergroundMoonBiome>().Type];
 		}
 
 		protected readonly float attackTime = 280f;

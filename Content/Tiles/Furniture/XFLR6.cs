@@ -18,7 +18,7 @@ namespace Macrocosm.Content.Tiles.Furniture
 			TileObjectData.newTile.Width = 3;
 			TileObjectData.newTile.Height = 5;
 			TileObjectData.newTile.CoordinateWidth = 16;
-			TileObjectData.newTile.CoordinateHeights = new int[] { 16, 16, 16, 16, 16 };
+			TileObjectData.newTile.CoordinateHeights = [16, 16, 16, 16, 16];
 			TileObjectData.newTile.CoordinatePadding = 2;
 			TileObjectData.addTile(Type);
 

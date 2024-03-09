@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Tiles.Paintings
 			TileObjectData.newTile.Width = 6;
 			TileObjectData.newTile.Height = 4;
 			TileObjectData.newTile.Origin = new Point16(3, 2);
-			TileObjectData.newTile.CoordinateHeights = new int[] { 16, 16, 16, 16 };
+			TileObjectData.newTile.CoordinateHeights = [16, 16, 16, 16];
 			TileObjectData.addTile(Type);
 
 			TileID.Sets.DisableSmartCursor[Type] = true;

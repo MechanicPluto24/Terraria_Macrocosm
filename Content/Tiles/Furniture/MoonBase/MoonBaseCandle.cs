@@ -25,7 +25,7 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 			TileObjectData.newTile.LavaPlacement = LiquidPlacement.NotAllowed;
 			TileObjectData.addTile(Type);
 
-			AdjTiles = new int[] { TileID.Candles };
+			AdjTiles = [TileID.Candles];
 			AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTorch);
 
 			DustType = ModContent.DustType<MoonBasePlatingDust>();

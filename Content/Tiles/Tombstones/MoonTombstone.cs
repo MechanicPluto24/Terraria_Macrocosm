@@ -9,7 +9,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Tombstones
 {
-	public class MoonTombstone : ModTile
+	public class MoonTombstone : ModTile, ITombstoneTile
 	{
 		public override void SetStaticDefaults()
 		{
@@ -33,5 +33,10 @@ namespace Macrocosm.Content.Tiles.Tombstones
             RegisterItemDrop(ModContent.ItemType<Items.Placeable.Tombstones.MoonTombstone>(), 0, 1);
             RegisterItemDrop(ModContent.ItemType<Items.Placeable.Tombstones.MoonHeadstone>(), 2, 3);
         }
-	}
+
+        public override void NearbyEffects(int i, int j, bool closer)
+        {
+            base.NearbyEffects(i, j, closer);
+        }
+    }
 }

@@ -37,7 +37,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
 		public ref float InitialTargetPositionY => ref Projectile.ai[0];
 
-
+		protected int trailOffset = 6;
 		bool spawned = false;
 		bool rotationClockwise = false;
 
@@ -60,7 +60,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
             if (Projectile.alpha > 0)
                  Projectile.alpha -= 15;
- 
+
             Vector2 velocity = -Projectile.velocity.RotatedByRandom(MathHelper.Pi / 2f) * 0.1f;
             Dust dust = Dust.NewDustDirect(Projectile.position, (int)(Projectile.width), (int)(Projectile.height), DustID.Flare, velocity.X, velocity.Y, Scale: 1f);
             dust.noGravity = true;
@@ -83,18 +83,34 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.Additive, state);
 
+            Texture2D texture = TextureAssets.Projectile[Type].Value;
 			Projectile.GetTrail().Draw(TextureAssets.Projectile[Type].Size() / 2f);
             float count = 25f * (float)(1f - Projectile.alpha/255f);
             for (int n = 2; n < count; n++)
             {
-                Vector2 trailPosition = Projectile.Center - Projectile.velocity.SafeNormalize(default) * n * 7;
-                Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, trailPosition - Main.screenPosition, null, Color.OrangeRed * (1f - (float)n / count), 0f, TextureAssets.Projectile[Type].Value.Size() / 2f, Projectile.scale * (0.5f + 0.5f * (1f - (float)n / count)), SpriteEffects.None, 0f);
+                Vector2 trailPosition = Projectile.Center - Projectile.velocity.SafeNormalize(default) * n * trailOffset;
+                Main.EntitySpriteDraw(texture, trailPosition - Main.screenPosition, null, Color.OrangeRed * (1f - (float)n / count), 0f, texture.Size() / 2f, Projectile.scale * (0.5f + 0.5f * (1f - (float)n / count)), SpriteEffects.None, 0f);
             }
 
-            Main.spriteBatch.End();
-			Main.spriteBatch.Begin(state);
+            Effect effect = ModContent.Request<Effect>(Macrocosm.EffectAssetsPath + "ColorGradientSquare", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+            Rectangle sourceRect = TextureAssets.Projectile[Type].Frame(1, Main.projFrames[Type], frameY: Projectile.frame);
 
-			return true;
+            effect.Parameters["uSourceRect"].SetValue(new Vector4((float)sourceRect.X, (float)sourceRect.Y, (float)sourceRect.Width, (float)sourceRect.Height));
+            effect.Parameters["uImageSize0"].SetValue(TextureAssets.Projectile[Type].Size());
+
+            effect.Parameters["uColorIntensity"].SetValue(new Vector4(0.8f, 0f, 0f, 1f));
+            effect.Parameters["uOffset"].SetValue(new Vector2(0));
+            effect.Parameters["uSize"].SetValue(0f);
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(effect, state);
+
+            Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, Projectile.GetAlpha(lightColor), Projectile.rotation, texture.Size() / 2f, Projectile.scale, SpriteEffects.None, 0f);
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(state);
+
+            return false;
 		}
 
 		public override void OnKill(int timeLeft)

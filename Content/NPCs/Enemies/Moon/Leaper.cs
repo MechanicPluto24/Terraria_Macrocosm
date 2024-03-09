@@ -38,7 +38,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			Banner = Item.NPCtoBanner(NPCID.Zombie);
 			BannerItem = Item.BannerToItem(Banner);
 
-			SpawnModBiomes = new int[1] { ModContent.GetInstance<UndergroundMoonBiome>().Type };
+			SpawnModBiomes = [ModContent.GetInstance<UndergroundMoonBiome>().Type];
 		}
 
 		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)

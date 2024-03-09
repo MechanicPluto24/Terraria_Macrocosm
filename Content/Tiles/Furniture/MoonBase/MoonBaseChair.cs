@@ -27,12 +27,12 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 			AddToArray(ref TileID.Sets.RoomNeeds.CountsAsChair);
 
 			DustType = ModContent.DustType<MoonBasePlatingDust>();
-			AdjTiles = new int[] { TileID.Chairs };
+			AdjTiles = [TileID.Chairs];
 
 			AddMapEntry(new Color(109, 87, 78), Language.GetText("MapObject.Chair"));
 
 			TileObjectData.newTile.CopyFrom(TileObjectData.Style1x2);
-			TileObjectData.newTile.CoordinateHeights = new[] { 16, 18 };
+			TileObjectData.newTile.CoordinateHeights = [16, 18];
 			TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;
 			TileObjectData.newTile.StyleWrapLimit = 2;
 			TileObjectData.newTile.StyleMultiplier = 2;

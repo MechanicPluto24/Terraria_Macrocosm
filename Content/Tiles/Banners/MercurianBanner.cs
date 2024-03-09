@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Tiles.Banners
             TileObjectData.newTile.Width = 3;
             TileObjectData.newTile.Height = 6;
 
-            TileObjectData.newTile.CoordinateHeights = new int[6] { 16, 16, 16, 16, 16, 16 };
+            TileObjectData.newTile.CoordinateHeights = [16, 16, 16, 16, 16, 16];
             TileObjectData.newTile.CoordinateWidth = 16;
             TileObjectData.newTile.CoordinatePadding = 2;
 

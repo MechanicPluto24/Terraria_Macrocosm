@@ -83,11 +83,11 @@ namespace Macrocosm.Content.Items.Global
 					itemLoot.Add(ItemDropRule.NotScalingWithLuck(aluminumBarType, 12 * 4, 10, 20));
 
 					// this is to avoid getting both lithium & aluminum ores
-					itemLoot.Add(ItemDropRule.SequentialRulesNotScalingWithLuck(14 * 4, new IItemDropRule[]
-					{
-						ItemDropRule.NotScalingWithLuck(aluminumOreType, 1, 30, 49),
+					itemLoot.Add(ItemDropRule.SequentialRulesNotScalingWithLuck(14 * 4,
+                    [
+                        ItemDropRule.NotScalingWithLuck(aluminumOreType, 1, 30, 49),
 						ItemDropRule.NotScalingWithLuck(lithiumType, 1, 30, 49)
-					}));
+					]));
 
 
 					if (item.type == ItemID.OasisCrateHard)
@@ -101,11 +101,11 @@ namespace Macrocosm.Content.Items.Global
 					itemLoot.Add(ItemDropRule.NotScalingWithLuck(aluminumBarType, 12 * 4, 10, 20));
 
 					// this is to avoid getting both lithium & aluminum ores
-					itemLoot.Add(ItemDropRule.SequentialRulesNotScalingWithLuck(14 * 4, new IItemDropRule[]
-					{
-						ItemDropRule.NotScalingWithLuck(aluminumOreType, 1, 30, 49),
+					itemLoot.Add(ItemDropRule.SequentialRulesNotScalingWithLuck(14 * 4,
+                    [
+                        ItemDropRule.NotScalingWithLuck(aluminumOreType, 1, 30, 49),
 						ItemDropRule.NotScalingWithLuck(lithiumType, 1, 30, 49)
-					}));
+					]));
 
 					if (item.type == ItemID.OasisCrate)
 					{

@@ -61,18 +61,16 @@ namespace Macrocosm.Common.WorldGeneration.Structures
                 //ItemType<SomeSummonerWeapon>(),
             };
             Utility.GenerateChest(room.X + room.Width / 2, room.Y + room.Height - 2, TileType<MoonBaseChest>(), 0, 
-                new int[]
-                {
+                [
                     mainLoot.GetRandom(WorldGen.genRand),
                     ItemID.SuperHealingPotion,
                     ItemID.SuperManaPotion
-                },
-                new int[]
-                {
+                ],
+                [
                     1,
                     WorldGen.genRand.Next(10),
                     WorldGen.genRand.Next(8),
-                },
+                ],
                 randomPrefix: true
             );
 

@@ -118,77 +118,53 @@ namespace Macrocosm.Content.Players
 
 		public override void PostUpdateBuffs()
 		{
-			if (SubworldSystem.AnyActive<Macrocosm>())
-			{
-				UpdateSpaceEnvironmentalDebuffs();
-			}
-		}
-
-		public void UpdateSpaceEnvironmentalDebuffs()
-		{
 			if (!Player.GetModPlayer<RocketPlayer>().InRocket)
 			{
-				if (SubworldSystem.IsActive<Moon>())
+				if (SubworldSystem.AnyActive<Macrocosm>())
 				{
 					if (SpaceProtection == SpaceProtection.None)
 						Player.AddBuff(BuffType<Depressurized>(), 2);
-					//if (protectTier <= SpaceProtection.Tier1)
-					//Player.AddBuff(BuffType<Irradiated>(), 2);
 				}
-				//else if (SubworldSystem.IsActive<Mars>())
 			}
-		}
-
-		public override void PostUpdateMiscEffects()
-		{
-			//UpdateGravity();
-			UpdateFilterEffects();
 		}
 
 		public override void PostUpdateEquips()
 		{
-			UpdateSpaceArmourImmunities();
-			if (Player.GetModPlayer<MacrocosmPlayer>().SpaceProtection > SpaceProtection.None)
+            if (SpaceProtection > SpaceProtection.None)
+                Player.buffImmune[BuffType<Depressurized>()] = true;
+            //if (SpaceProtection > SpaceProtection.Tier1) {}
+
+            if (Player.GetModPlayer<MacrocosmPlayer>().SpaceProtection > SpaceProtection.None)
 				Player.setBonus = Language.GetTextValue("Mods.Macrocosm.Items.SetBonuses.SpaceProtection_" + SpaceProtection.ToString());
 		}
 
-		public void UpdateSpaceArmourImmunities()
-		{
-			if (SpaceProtection > SpaceProtection.None)
-				Player.buffImmune[BuffType<Depressurized>()] = true;
-			if (SpaceProtection > SpaceProtection.Tier1)
-			{
-			}
-		}
-
-		//private void UpdateGravity()
-		//{
-		//	if (MacrocosmSubworld.AnyActive)
-		//		Player.gravity = Player.defaultGravity * MacrocosmSubworld.Current.GravityMultiplier;
-		//}
-
-		private void UpdateFilterEffects()
-		{
-			if (Main.dedServ)
-				return;
-
-			if (Player.InModBiome<IrradiationBiome>())
-			{
-				if (!Filters.Scene["Macrocosm:RadiationNoise"].IsActive())
-					Filters.Scene.Activate("Macrocosm:RadiationNoise");
-
-				RadNoiseIntensity += 0.189f * Utility.InverseLerp(400, 10000, TileCounts.Instance.IrradiatedRockCount, clamped: true);
-
-				Filters.Scene["Macrocosm:RadiationNoise"].GetShader().UseIntensity(RadNoiseIntensity);
-			}
+        public override void PostUpdateMiscEffects()
+        {
+			if (SubworldSystem.AnyActive<Macrocosm>())
+				Main.SceneMetrics.GraveyardTileCount = 0;
 			else
-			{
-				if (Filters.Scene["Macrocosm:RadiationNoise"].IsActive())
-					Filters.Scene.Deactivate("Macrocosm:RadiationNoise");
-			}
-		}
+				Main.SceneMetrics.GraveyardTileCount += TileCounts.Instance.GraveyardTileCount;
 
-		public bool HasVisitedSubworld(string subworldId) => visitedSubworlds.Contains(subworldId);
+            if (!Main.dedServ)
+			{
+                if (Player.InModBiome<IrradiationBiome>())
+                {
+                    if (!Filters.Scene["Macrocosm:RadiationNoise"].IsActive())
+                        Filters.Scene.Activate("Macrocosm:RadiationNoise");
+
+                    RadNoiseIntensity += 0.189f * Utility.InverseLerp(400, 10000, TileCounts.Instance.IrradiatedRockCount, clamped: true);
+
+                    Filters.Scene["Macrocosm:RadiationNoise"].GetShader().UseIntensity(RadNoiseIntensity);
+                }
+                else
+                {
+                    if (Filters.Scene["Macrocosm:RadiationNoise"].IsActive())
+                        Filters.Scene.Deactivate("Macrocosm:RadiationNoise");
+                }
+            }
+        }
+
+        public bool HasVisitedSubworld(string subworldId) => visitedSubworlds.Contains(subworldId);
 
 		public void SetReturnSubworld(string subworldId)
 		{

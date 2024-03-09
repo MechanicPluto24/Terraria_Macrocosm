@@ -828,7 +828,7 @@ namespace Macrocosm.Common.TileFrame
 		/// Adaption of the vanilla tile blend code using dedicated frames
 		/// </summary>
 		public static void BlendLikeDirt(int i, int j, int typeToBlendWith, bool asDirt = false)
-			=> BlendLikeDirt(i, j, new int[] { typeToBlendWith }, asDirt);
+			=> BlendLikeDirt(i, j, [typeToBlendWith], asDirt);
 
 		/// <summary>
 		/// Appears to be broken, do not use 

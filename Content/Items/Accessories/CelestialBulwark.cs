@@ -139,12 +139,12 @@ namespace Macrocosm.Content.Items.Accessories
 		}
 
 		private static Texture2D[] celestialTextures =
-			{
+			[
 				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark_Mask_Nebula").Value,
 				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark_Mask_Stardust").Value,
 				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark_Mask_Vortex").Value,
 				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark_Mask_Solar").Value
-			};
+			];
 
 
 		private SpriteBatchState state;

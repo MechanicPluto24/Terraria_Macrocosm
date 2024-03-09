@@ -277,7 +277,7 @@ namespace Macrocosm.Common.Utils
 
 		public static int GetItemstackSum(Player player, int type, bool typeIsAmmo = false, bool includeAmmo = false, bool includeCoins = false)
 		{
-			return GetItemstackSum(player, new[] { type }, typeIsAmmo, includeAmmo, includeCoins);
+			return GetItemstackSum(player, [type], typeIsAmmo, includeAmmo, includeCoins);
 		}
 
 		/*

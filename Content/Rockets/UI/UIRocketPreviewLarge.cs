@@ -71,9 +71,9 @@ namespace Macrocosm.Content.Rockets.UI
 		private float zoomedOutModuleOffsetY = 15f;
 		private float zoomedOutZoom = 1f;
 
-		private float[] moduleZooms = { 0.35f, 0.35f, 0.35f, 0.55f, 0.52f, 0.52f };
-		private float[] moduleOffsetsX = { -220f, -220f, -220f, -80f, 40f, -250f };
-		private float[] moduleOffsetsY = { 140f, -40f, -320f, -460f, -520f, -520f };
+		private float[] moduleZooms = [0.35f, 0.35f, 0.35f, 0.55f, 0.52f, 0.52f];
+		private float[] moduleOffsetsX = [-220f, -220f, -220f, -80f, 40f, -250f];
+		private float[] moduleOffsetsY = [140f, -40f, -320f, -460f, -520f, -520f];
 
 		public UIRocketPreviewLarge()
 		{

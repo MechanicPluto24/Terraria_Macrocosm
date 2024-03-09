@@ -146,8 +146,9 @@ namespace Macrocosm.Common.Bases
                     if (!SwingStyle.Update(ref armRotation, ref Projectile.rotation, Charge))
 					{
 						UnAlive();
-						swing.active = false;
 
+						if(swing is not null) 
+							swing.active = false;
                     }
 
                     break;

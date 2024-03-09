@@ -1010,3 +1010,8 @@ OsmiumBoots: {
 	DisplayName: Osmium Boots
 	Tooltip: ""
 }
+
+EarthGlobe: {
+	DisplayName: Earth Globe
+	Tooltip: ""
+}

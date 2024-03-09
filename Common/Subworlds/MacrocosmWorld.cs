@@ -158,7 +158,7 @@ namespace Macrocosm.Common.Subworlds
 			Main.StopRain(); // Rain, rain, go away, come again another day
 		}
 
-		private void DrawWorldListPlanetIcons(On_UIWorldListItem.orig_DrawSelf orig, UIWorldListItem uIItem, SpriteBatch spriteBatch)
+        private void DrawWorldListPlanetIcons(On_UIWorldListItem.orig_DrawSelf orig, UIWorldListItem uIItem, SpriteBatch spriteBatch)
 		{
 			orig(uIItem, spriteBatch);
 
