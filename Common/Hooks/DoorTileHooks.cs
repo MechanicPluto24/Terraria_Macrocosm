@@ -4,6 +4,9 @@ using Terraria.Audio;
 using Terraria.ModLoader;
 using Terraria.ID;
 using Terraria.GameContent;
+using MonoMod.Cil;
+using Microsoft.Xna.Framework;
+using Mono.Cecil.Cil;
 
 namespace Macrocosm.Common.Hooks
 {
@@ -31,8 +34,16 @@ namespace Macrocosm.Common.Hooks
         /// </summary>
         public int StyleCount { get; }
 
+        /// <summary> Number of Y frames used solely for animation </summary>
+        public int AnimationFrames => 0;
+
         /// <summary> The door activate sound. Defaults to <see cref="SoundID.DoorOpen"/> or <see cref="SoundID.DoorClosed"/>, depending on <see cref="IsClosed"/>. </summary>
         public SoundStyle? ActivateSound => null;
+
+        public Rectangle ModifyAutoDoorPlayerCollisionRectangle(Point tileCoords, Rectangle original)
+        {
+            return original;
+        }
     }
 
     public class DoorTileHooks : ILoadable
@@ -41,21 +52,18 @@ namespace Macrocosm.Common.Hooks
         {
             On_WorldGen.OpenDoor += On_WorldGen_OpenDoor;
             On_WorldGen.CloseDoor += On_WorldGen_CloseDoor;
-            //On_DoorOpeningHelper.TryGetHandler += On_DoorOpeningHelper_TryGetHandler;
+            IL_DoorOpeningHelper.CommonDoorOpeningInfoProvider.TryOpenDoor += ModifyAutoDoorPlayerCollisionRectangleILHook;
+            IL_DoorOpeningHelper.CommonDoorOpeningInfoProvider.TryCloseDoor += ModifyAutoDoorPlayerCollisionRectangleILHook;
         }
+
 
         public void Unload()
         {
             On_WorldGen.OpenDoor -= On_WorldGen_OpenDoor;
             On_WorldGen.CloseDoor -= On_WorldGen_CloseDoor;
-            //On_DoorOpeningHelper.TryGetHandler -= On_DoorOpeningHelper_TryGetHandler;
+            IL_DoorOpeningHelper.CommonDoorOpeningInfoProvider.TryOpenDoor -= ModifyAutoDoorPlayerCollisionRectangleILHook;
+            IL_DoorOpeningHelper.CommonDoorOpeningInfoProvider.TryCloseDoor -= ModifyAutoDoorPlayerCollisionRectangleILHook;
         }
-
-        /*
-        private bool On_DoorOpeningHelper_TryGetHandler(On_DoorOpeningHelper.orig_TryGetHandler orig, DoorOpeningHelper self, Microsoft.Xna.Framework.Point tileCoords, object infoProvider)
-        {
-        }
-        */
 
         /// <summary> Hook for opening custom modded doors. </summary>
         private bool On_WorldGen_OpenDoor(On_WorldGen.orig_OpenDoor orig, int i, int j, int direction)
@@ -91,6 +99,13 @@ namespace Macrocosm.Common.Hooks
                 tilePosY = j - frameY / 18;
 
                 targetFrameY = (short)((offsetFromOrigin % 36) * (18 * door.Height));
+
+                if (door.AnimationFrames > 0)
+                {
+                    Animation.NewTemporaryAnimation(0, tile.TileType, i, j);
+                    targetFrameY += (short)(18 * door.Height * door.AnimationFrames);
+                }
+
                 SoundEngine.PlaySound(door.ActivateSound ?? SoundID.DoorOpen, new(i * 16, j * 16));
 
                 ushort openDoorID = (ushort)TileLoader.OpenDoorID(Main.tile[i, j]);
@@ -142,6 +157,7 @@ namespace Macrocosm.Common.Hooks
 
                 int frameY = tile.TileFrameY;
                 int offsetFromOrigin = 0;
+                int targetFrameY = frameY;
                 int targetFrameX = 0;
                 while (frameY >= 18 * door.Height)
                 {
@@ -192,6 +208,8 @@ namespace Macrocosm.Common.Hooks
 
                 ushort closeDoorID = (ushort)TileLoader.CloseDoorID(tile);
 
+                
+
                 for (int x = doorOpenTilePosX; x < doorOpenTilePosX + door.Width; x++)
                 {
                     for (int y = tilePosY; y < tilePosY + door.Height; y++)
@@ -199,10 +217,16 @@ namespace Macrocosm.Common.Hooks
                         tile = Main.tile[x, y];
                         if (x == tilePosX)
                         {
-                            
                             tile.TileType = closeDoorID;
-                            if(TileLoader.GetTile(closeDoorID) is IDoorTile closedDoor)
+                            if (TileLoader.GetTile(closeDoorID) is IDoorTile closedDoor)
+                            {
                                 tile.TileFrameX = (short)(WorldGen.genRand.Next(closedDoor.StyleCount) * 18 + targetFrameX);
+                                if (door.AnimationFrames > 0)
+                                {
+                                    Animation.NewTemporaryAnimation(0, tile.TileType, i, j);
+                                    tile.TileFrameY += (short)(18 * door.Height * door.AnimationFrames);
+                                }
+                            }
                         }
                         else
                         {
@@ -236,5 +260,59 @@ namespace Macrocosm.Common.Hooks
             return orig(i,j,forced);
         }
 
+        private void ModifyAutoDoorPlayerCollisionRectangleILHook(ILContext il)
+        {
+            var c = new ILCursor(il);
+
+            if (!c.TryGotoNext(MoveType.After,
+                i => i.MatchCall(typeof(Rectangle), ".ctor")))
+            {
+                Macrocosm.Instance.Logger.Error("Failed to inject ILHook: ModifyDoorOpenCollisionRectangleILHook");
+                return;
+            }
+
+            // Load local variable 0 (Point tileCoordsForToggling) onto the eval stack.
+            c.Emit(OpCodes.Ldloc, 0);
+
+            // Load the adress local variable 2 (Rectangle rectangle) onto the eval stack.
+            c.Emit(OpCodes.Ldloca, 2);
+
+            // Hook to modify the rectangle
+            c.EmitDelegate(ModifyAutoDoorPlayerCollisionRectangle);
+        }
+
+        private void ModifyAutoDoorPlayerCollisionRectangle(Point tileCoords, ref Rectangle original)
+        {
+            Tile tile = Main.tile[tileCoords];
+            if (TileLoader.GetTile(tile.TileType) is IDoorTile door)
+                original = door.ModifyAutoDoorPlayerCollisionRectangle(tileCoords, original);
+        }
+
+        /*
+        private void GetCustomDoorHeight(ILContext il)
+        {
+            var c = new ILCursor(il);
+
+            // Find where '48' is loaded onto the eval stack.
+            if (!c.TryGotoNext(i => i.MatchLdcI4(48)))
+                return;
+
+            // Load arg0 (Point tileCoordsForToggling) onto the eval stack.
+            c.Emit(OpCodes.Ldarg_0);
+
+            c.EmitDelegate(GetDoorHeightForPlayerOpenDoor);
+        }
+
+        private int GetDoorHeightForPlayerOpenDoor(Point tileCoords, int baseValue)
+        {
+            Tile tile = Main.tile[tileCoords];
+            if (TileLoader.GetTile(tile.TileType) is IDoorTile door)
+            {
+                return door.Height * 16;
+            }
+
+            return baseValue;
+        }
+        */
     }
 }
