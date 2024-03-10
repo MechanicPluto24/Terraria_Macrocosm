@@ -6,7 +6,12 @@ using Terraria.ID;
 
 namespace Macrocosm.Common.Hooks
 {
-    public interface IClosedSlidingDoor { }
+    public interface IClosedSlidingDoor 
+    {
+        public int DoorHeight => 3;
+        public int StyleCount => 1;
+
+    }
 
     public class OpenDoorHack : ILoadable
     {
@@ -26,7 +31,7 @@ namespace Macrocosm.Common.Hooks
         /// </summary>
         private bool On_WorldGen_OpenDoor(On_WorldGen.orig_OpenDoor orig, int i, int j, int direction)
         {
-            if (TileLoader.GetTile(Main.tile[i, j].TileType) is IClosedSlidingDoor)
+            if (TileLoader.GetTile(Main.tile[i, j].TileType) is IClosedSlidingDoor door)
             {
                 Tile tile = Main.tile[i, j];
                 int tilePosX, tilePosY;
@@ -46,52 +51,35 @@ namespace Macrocosm.Common.Hooks
                     offsetFromOrigin++;
                 }
 
-                if (tile.TileFrameX >= 54)
+                if (tile.TileFrameX >= 18 * door.StyleCount)
                 {
-                    int frameX = tile.TileFrameX / 54;
-                    offsetFromOrigin += 36 * frameX;
-                    targetFrameX = (short)(targetFrameX + (short)(72 * frameX));
+                    int frameX = tile.TileFrameX / (18 * door.StyleCount);
+                    offsetFromOrigin += 36 * frameX; // Not sure of this
+                    targetFrameX = (short)(targetFrameX + (short)((18 + 18 * door.StyleCount) * frameX));
                 }
 
                 tilePosX = i;
                 tilePosY = j - frameY / 18;
 
-                TileColorCache cache = Main.tile[tilePosX, tilePosY].BlockColorAndCoating();
-                TileColorCache cache2 = Main.tile[tilePosX, tilePosY + 1].BlockColorAndCoating();
-                TileColorCache cache3 = Main.tile[tilePosX, tilePosY + 2].BlockColorAndCoating();
-
-                if (Main.netMode != NetmodeID.MultiplayerClient && Wiring.running)
-                {
-                    Wiring.SkipWire(tilePosX, tilePosY);
-                    Wiring.SkipWire(tilePosX, tilePosY + 1);
-                    Wiring.SkipWire(tilePosX, tilePosY + 2);
-                }
-
-                targetFrameY = (short)(offsetFromOrigin % 36 * 54);
+                targetFrameY = (short)((offsetFromOrigin % 36) * (18 * door.DoorHeight));
                 SoundEngine.PlaySound(SoundID.DoorOpen, new(i * 16, j * 16));
 
                 ushort openDoorID = (ushort)TileLoader.OpenDoorID(Main.tile[i, j]);
 
-                tile = Main.tile[tilePosX, tilePosY];
-                tile.HasTile = true;
-                tile.TileType = openDoorID;
-                tile.TileFrameY = targetFrameY;
-                tile.TileFrameX = targetFrameX;
-                tile.UseBlockColors(cache);
+                for(int y = 0; y < door.DoorHeight; y++)
+                {
+                    TileColorCache cache = Main.tile[tilePosX, tilePosY + y].BlockColorAndCoating();
 
-                tile = Main.tile[tilePosX, tilePosY + 1];
-                tile.HasTile = true;
-                tile.TileType = openDoorID;
-                tile.TileFrameY = (short)(targetFrameY + 18);
-                tile.TileFrameX = targetFrameX;
-                tile.UseBlockColors(cache2);
+                    if (Main.netMode != NetmodeID.MultiplayerClient && Wiring.running)
+                         Wiring.SkipWire(tilePosX, tilePosY + y);
 
-                tile = Main.tile[tilePosX, tilePosY + 2];
-                tile.HasTile = true;
-                tile.TileType = openDoorID;
-                tile.TileFrameY = (short)(targetFrameY + 36);
-                tile.TileFrameX = targetFrameX;
-                tile.UseBlockColors(cache3);
+                    tile = Main.tile[tilePosX, tilePosY + y];
+                    tile.HasTile = true;
+                    tile.TileType = openDoorID;
+                    tile.TileFrameY = (short)(targetFrameY + y * 18);
+                    tile.TileFrameX = targetFrameX;
+                    tile.UseBlockColors(cache);
+                }
 
                 return true;
             }
