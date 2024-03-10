@@ -109,9 +109,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
             Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, Projectile.GetAlpha(Color.Lerp(lightColor, Color.OrangeRed, 1f - Projectile.alpha/255f)).WithOpacity(0.75f), Projectile.rotation, texture.Size() / 2f, Projectile.scale, SpriteEffects.None, 0f);
 
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(state);
-
             return false;
 		}
 
