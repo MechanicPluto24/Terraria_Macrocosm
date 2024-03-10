@@ -13,9 +13,14 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 {
-    public class MoonBaseDoorClosed : ModTile, IClosedSlidingDoor
+    public class MoonBaseDoorClosed : ModTile, IDoorTile
 	{
-		public override void SetStaticDefaults() 
+		public int Height => 3;
+		public int Width => 1;
+		public bool IsClosed => true;
+		public int StyleCount => 1;
+
+        public override void SetStaticDefaults() 
 		{
 			Main.tileFrameImportant[Type] = true;
 			Main.tileBlockLight[Type] = true;
@@ -35,8 +40,8 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 
 			AddMapEntry(new Color(200, 200, 200), Language.GetText("MapObject.Door"));
             TileObjectData.newTile.CopyFrom(TileObjectData.GetTileData(TileID.ClosedDoor, 0));
-            TileObjectData.newTile.Width = 1;
-			TileObjectData.newTile.Height = 3;
+            TileObjectData.newTile.Width = Width;
+			TileObjectData.newTile.Height = Height;
 			TileObjectData.newTile.Origin = new Point16(0, 0);
 			TileObjectData.newTile.AnchorTop = new AnchorData(AnchorType.SolidTile, TileObjectData.newTile.Width, 0);
 			TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile, TileObjectData.newTile.Width, 0);
@@ -46,19 +51,21 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 			TileObjectData.newTile.CoordinateWidth = 16;
 			TileObjectData.newTile.CoordinatePadding = 2;
 			TileObjectData.newTile.StyleHorizontal = false;
-
-			TileObjectData.addTile(Type);
+            TileObjectData.addTile(Type);
 		}
 
-		public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings) {
+		public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings)
+		{
 			return true;
 		}
 
-		public override void NumDust(int i, int j, bool fail, ref int num) {
+		public override void NumDust(int i, int j, bool fail, ref int num) 
+		{
 			num = 1;
 		}
 
-		public override void MouseOver(int i, int j) {
+		public override void MouseOver(int i, int j) 
+		{
 			Player player = Main.LocalPlayer;
 			player.noThrow = 2;
 			player.cursorItemIconEnabled = true;

@@ -1,3 +1,4 @@
+using Macrocosm.Common.Hooks;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Placeable.Furniture.MoonBase;
 using Microsoft.Xna.Framework;
@@ -10,9 +11,14 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 {
-	public class MoonBaseDoorOpen : ModTile
+	public class MoonBaseDoorOpen : ModTile, IDoorTile
 	{
-		public override void SetStaticDefaults() {
+		public int Height => 3;
+		public int Width => 1;
+        public bool IsClosed => false;
+		public int StyleCount => 1;
+
+        public override void SetStaticDefaults() {
 			// Properties
 			Main.tileFrameImportant[Type] = true;
 			Main.tileSolid[Type] = false;
@@ -33,19 +39,23 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 			AddMapEntry(new Color(200, 200, 200), Language.GetText("MapObject.Door"));
 
 			TileObjectData.newTile.CopyFrom(TileObjectData.GetTileData(TileID.OpenDoor, 0));
-            TileObjectData.newTile.Width = 1;
+            TileObjectData.newTile.Width = Width;
+            TileObjectData.newTile.Height = Height;
             TileObjectData.addTile(Type);
 		}
 
-		public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings) {
+		public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings) 
+		{
 			return true;
 		}
 
-		public override void NumDust(int i, int j, bool fail, ref int num) {
+		public override void NumDust(int i, int j, bool fail, ref int num)
+		{
 			num = 1;
 		}
 
-		public override void MouseOver(int i, int j) {
+		public override void MouseOver(int i, int j) 
+		{
 			Player player = Main.LocalPlayer;
 			player.noThrow = 2;
 			player.cursorItemIconEnabled = true;

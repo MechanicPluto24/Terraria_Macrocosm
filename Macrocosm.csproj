@@ -24,13 +24,6 @@
 	<NoWarn>$(NoWarn);IDE0051</NoWarn> <!-- Macrocosm uses reflection in some places, unused private methods are expected -->
 	<NoWarn>$(NoWarn);CA1822</NoWarn> <!-- Private methods that don't deal with instance data should sometimes be left instanced, not static, due to tML's nature -->
   </PropertyGroup>
-  <ItemGroup>
-    <None Remove="Content\Items\Placeable\Furniture\MoonBase\MoonBaseBulkhead.png" />
-    <None Remove="Content\Tiles\Furniture\MoonBase\MoonBaseBulkheadClosed.png" />
-    <None Remove="Content\Tiles\Furniture\MoonBase\MoonBaseBulkheadClosed_Highlight.png" />
-    <None Remove="Content\Tiles\Furniture\MoonBase\MoonBaseBulkheadOpen.png" />
-    <None Remove="Content\Tiles\Furniture\MoonBase\MoonBaseBulkheadOpen_Highlight.png" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="tModLoader.CodeAssist" Version="0.1.*" />
