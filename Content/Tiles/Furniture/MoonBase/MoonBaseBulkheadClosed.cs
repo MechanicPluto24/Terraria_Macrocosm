@@ -22,6 +22,7 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 		public int Width => 1;
 		public bool IsClosed => true;
 		public int StyleCount => 1;
+        public int AnimationFrames => 1;
 
         public override void SetStaticDefaults() 
 		{
@@ -83,6 +84,26 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
             TileObjectData.addTile(Type);
         }
 
+        public Rectangle ModifyAutoDoorPlayerCollisionRectangle(Point tileCoords, Rectangle original)
+        {
+            Rectangle result = original;
+            result.Y -= 16;
+            result.Height = Height * 16;
+            return result;
+        }
+
+        public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)
+        {
+            Tile tile = Main.tile[i, j];
+            Animation.GetTemporaryFrame(i, j, out int frame);
+            if (tile.TileFrameY >= 18 * Height && frame == 0)
+                tile.TileFrameY -= (short)(18 * Height); 
+        }
+
+        public override void AnimateTile(ref int frame, ref int frameCounter)
+        {
+            
+        }
 
         public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings) 
 		{

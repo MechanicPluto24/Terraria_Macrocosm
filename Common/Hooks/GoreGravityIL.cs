@@ -23,13 +23,14 @@ namespace Macrocosm.Common.Hooks
 		{
 			var c = new ILCursor(il);
 
-			// matches "if (type < 411 || type > 430)" (general gores)
-			if (!c.TryGotoNext(
+            // matches "if (type < 411 || type > 430)" (general gores)
+            if (!c.TryGotoNext(
 				i => i.MatchLdfld<Gore>("type"),
 				i => i.MatchLdcI4(430)
 				))
 			{
 				Macrocosm.Instance.Logger.Error("Failed to inject ILHook: GoreGravityIL");
+				return;
 			}
 
 			// matches "velocity.Y += 0.2f" ... this might break if other mods alter gore gravity 
