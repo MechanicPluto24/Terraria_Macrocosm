@@ -1015,3 +1015,8 @@ EarthGlobe: {
 	DisplayName: Earth Globe
 	Tooltip: ""
 }
+
+MoonBaseBulkhead: {
+	DisplayName: Moon Base Bulkhead
+	Tooltip: ""
+}

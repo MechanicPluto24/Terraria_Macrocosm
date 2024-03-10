@@ -10,7 +10,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 {
-	public class MoonBaseDoorOpen : ModTile
+	public class MoonBaseBulkheadOpen : ModTile
 	{
 		public override void SetStaticDefaults() {
 			// Properties
@@ -34,6 +34,8 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 
 			TileObjectData.newTile.CopyFrom(TileObjectData.GetTileData(TileID.OpenDoor, 0));
             TileObjectData.newTile.Width = 1;
+            TileObjectData.newTile.Height = 5;
+            TileObjectData.newTile.CoordinateHeights = [16,16,16,16,16];
             TileObjectData.addTile(Type);
 		}
 
