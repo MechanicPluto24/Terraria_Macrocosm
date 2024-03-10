@@ -19,10 +19,11 @@ namespace Macrocosm.Content.Tiles.Furniture
 			TileObjectData.newTile.CoordinateWidth = 16;
 			TileObjectData.newTile.CoordinateHeights = [16, 16];
 			TileObjectData.newTile.CoordinatePadding = 2;
-			TileObjectData.newTile.Direction = TileObjectDirection.PlaceRight;
+			TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;
 			TileObjectData.newTile.StyleHorizontal = true;
+			TileObjectData.newTile.DrawYOffset = 2;
 			TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
-			TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceLeft;
+			TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceRight;
 			TileObjectData.addAlternate(1);
 			TileObjectData.addTile(Type);
 
@@ -30,7 +31,9 @@ namespace Macrocosm.Content.Tiles.Furniture
 			DustType = -1;
 
 			AddMapEntry(new Color(0, 144, 239), CreateMapEntryName());
-		}
-	}
+
+            RegisterItemDrop(ModContent.ItemType<Items.Placeable.Furniture.EarthGlobe>(), 0, 1);
+        }
+    }
 
 }

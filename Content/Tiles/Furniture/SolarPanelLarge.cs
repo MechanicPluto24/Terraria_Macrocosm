@@ -32,9 +32,11 @@ namespace Macrocosm.Content.Tiles.Furniture
 			DustType = -1;
 
 			AddMapEntry(new Color(0, 52, 154), CreateMapEntryName());
-		}
 
-		public override void KillMultiTile(int i, int j, int frameX, int frameY)
+            RegisterItemDrop(ModContent.ItemType<Items.Placeable.Furniture.SolarPanelLarge>(), 0, 1);
+        }
+
+        public override void KillMultiTile(int i, int j, int frameX, int frameY)
 		{
 		}
 

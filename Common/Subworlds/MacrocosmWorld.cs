@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.Netcode;
 using Macrocosm.Content.Players;
 using Macrocosm.Content.Subworlds;
+using Macrocosm.Content.Tiles.Furniture.MoonBase;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SubworldLibrary;
@@ -13,6 +14,7 @@ using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using Terraria.ObjectData;
 
 namespace Macrocosm.Common.Subworlds
 {

@@ -1,3 +1,4 @@
+using Macrocosm.Common.Hooks;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Placeable.Furniture.MoonBase;
 using Microsoft.Xna.Framework;
@@ -10,9 +11,14 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 {
-	public class MoonBaseDoorOpen : ModTile
+	public class MoonBaseDoorOpen : ModTile, IDoorTile
 	{
-		public override void SetStaticDefaults() {
+		public int Height => 3;
+		public int Width => 1;
+        public bool IsClosed => false;
+		public int StyleCount => 1;
+
+        public override void SetStaticDefaults() {
 			// Properties
 			Main.tileFrameImportant[Type] = true;
 			Main.tileSolid[Type] = false;
@@ -33,59 +39,23 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 			AddMapEntry(new Color(200, 200, 200), Language.GetText("MapObject.Door"));
 
 			TileObjectData.newTile.CopyFrom(TileObjectData.GetTileData(TileID.OpenDoor, 0));
-            TileObjectData.newTile.Width = 1;
-            /* This is what is copied from the OpenDoor tile
-			TileObjectData.newTile.Width = 2;
-			TileObjectData.newTile.Height = 3;
-			TileObjectData.newTile.Origin = new Point16(0, 0);
-			TileObjectData.newTile.AnchorTop = new AnchorData(AnchorType.SolidTile, 1, 0);
-			TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile, 1, 0);
-			TileObjectData.newTile.UsesCustomCanPlace = true;
-			TileObjectData.newTile.LavaDeath = true;
-			TileObjectData.newTile.CoordinateHeights = new[] { 16, 16, 16 };
-			TileObjectData.newTile.CoordinateWidth = 16;
-			TileObjectData.newTile.CoordinatePadding = 2;
-			TileObjectData.newTile.StyleHorizontal = true;
-			TileObjectData.newTile.StyleMultiplier = 2;
-			TileObjectData.newTile.StyleWrapLimit = 2;
-			TileObjectData.newTile.Direction = TileObjectDirection.PlaceRight;
-			TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
-			TileObjectData.newAlternate.Origin = new Point16(0, 1);
-			TileObjectData.addAlternate(0);
-			TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
-			TileObjectData.newAlternate.Origin = new Point16(0, 2);
-			TileObjectData.addAlternate(0);
-			TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
-			TileObjectData.newAlternate.Origin = new Point16(1, 0);
-			TileObjectData.newAlternate.AnchorTop = new AnchorData(AnchorType.SolidTile, 1, 1);
-			TileObjectData.newAlternate.AnchorBottom = new AnchorData(AnchorType.SolidTile, 1, 1);
-			TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceLeft;
-			TileObjectData.addAlternate(1);
-			TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
-			TileObjectData.newAlternate.Origin = new Point16(1, 1);
-			TileObjectData.newAlternate.AnchorTop = new AnchorData(AnchorType.SolidTile, 1, 1);
-			TileObjectData.newAlternate.AnchorBottom = new AnchorData(AnchorType.SolidTile, 1, 1);
-			TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceLeft;
-			TileObjectData.addAlternate(1);
-			TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
-			TileObjectData.newAlternate.Origin = new Point16(1, 2);
-			TileObjectData.newAlternate.AnchorTop = new AnchorData(AnchorType.SolidTile, 1, 1);
-			TileObjectData.newAlternate.AnchorBottom = new AnchorData(AnchorType.SolidTile, 1, 1);
-			TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceLeft;
-			TileObjectData.addAlternate(1);
-			*/
+            TileObjectData.newTile.Width = Width;
+            TileObjectData.newTile.Height = Height;
             TileObjectData.addTile(Type);
 		}
 
-		public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings) {
+		public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings) 
+		{
 			return true;
 		}
 
-		public override void NumDust(int i, int j, bool fail, ref int num) {
+		public override void NumDust(int i, int j, bool fail, ref int num)
+		{
 			num = 1;
 		}
 
-		public override void MouseOver(int i, int j) {
+		public override void MouseOver(int i, int j) 
+		{
 			Player player = Main.LocalPlayer;
 			player.noThrow = 2;
 			player.cursorItemIconEnabled = true;

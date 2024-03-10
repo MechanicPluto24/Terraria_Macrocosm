@@ -64,8 +64,13 @@ namespace Macrocosm.Content.Tiles.Blocks
         {
             Tile tile = Main.tile[i, j];
 
-            var info = new TileNeighbourInfo(i, j).GetPredicateNeighbourInfo((neighbour)
-                => WorldGen.SolidTile(neighbour) && neighbour.TileType != Type);
+            var info = new TileNeighbourInfo(i, j).GetPredicateNeighbourInfo
+			(
+				(neighbour) => 
+					WorldGen.SolidTile(neighbour) && neighbour.TileType != Type ||
+					TileID.Sets.CloseDoorID[neighbour.TileType] > 0 ||
+					neighbour.TileType == TileID.TallGateOpen
+			);
 
             if (tile.IsSloped() || info.Count4Way > 0)
                 tileFrameY += 90;
