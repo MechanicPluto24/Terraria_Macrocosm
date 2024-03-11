@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Hooks
 {
-	public class RemoveItemLight : ILoadable
+	public class TorchLightHooks : ILoadable
 	{
 		public void Load(Mod mod)
 		{

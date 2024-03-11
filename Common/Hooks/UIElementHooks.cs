@@ -5,7 +5,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Common.Hooks
 {
-	public class UIElementDetours : ILoadable
+	public class UIElementHooks : ILoadable
 	{
 		private static Dictionary<string, IFocusable> focusedElementsByContext;
 

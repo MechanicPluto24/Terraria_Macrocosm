@@ -1,10 +1,11 @@
-﻿using Macrocosm.Content.Dusts;
+﻿using Macrocosm.Common.Bases;
+using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Tiles.Blocks;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Tombstones
 {
-    public class MoonTombstone : MacrocosmTombstone
+    public class MoonTombstone : TombstoneProjectile
     {
         public override int TileType => ModContent.TileType<Tiles.Tombstones.MoonTombstone>();
 

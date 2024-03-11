@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Macrocosm.Content.Tiles.Tombstones
+namespace Macrocosm.Common.Bases
 {
     internal interface ITombstoneTile
     {
+        public bool AllowGrayeyardOnEarth => true;
     }
 }

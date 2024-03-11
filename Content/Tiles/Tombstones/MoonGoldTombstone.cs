@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.Dusts;
+﻿using Macrocosm.Common.Bases;
+using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Placeable.Tombstones;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Tombstones
 {
-	public class MoonGoldTombstone : ModTile, ITombstoneTile
+    public class MoonGoldTombstone : ModTile, ITombstoneTile
 	{
 		public override void SetStaticDefaults()
 		{

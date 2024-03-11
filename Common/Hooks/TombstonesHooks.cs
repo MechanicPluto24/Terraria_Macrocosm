@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Hooks
 {
-	class TombstonesHook : ILoadable
+	class TombstonesHooks : ILoadable
 	{
 		public void Load(Mod mod)
 		{
