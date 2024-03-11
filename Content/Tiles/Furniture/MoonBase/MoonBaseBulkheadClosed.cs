@@ -1,4 +1,5 @@
-using Macrocosm.Common.Hooks;
+using Macrocosm.Common.Bases;
+using Macrocosm.Common.TileFrame;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Placeable.Furniture.MoonBase;
@@ -22,7 +23,7 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 		public int Width => 1;
 		public bool IsClosed => true;
 		public int StyleCount => 1;
-        public int AnimationFrames => 1;
+        public int TileAnimationID => TileAnimation.RegisterTileAnimation(2, 60, [2,1,0]);
 
         public override void SetStaticDefaults() 
 		{
@@ -32,7 +33,8 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 			Main.tileNoAttach[Type] = true;
 			Main.tileLavaDeath[Type] = true;
 			TileID.Sets.NotReallySolid[Type] = true;
-			TileID.Sets.DrawsWalls[Type] = true;
+            TileID.Sets.HousingWalls[Type] = true;
+            TileID.Sets.DrawsWalls[Type] = true;
 			TileID.Sets.HasOutlines[Type] = true;
 			TileID.Sets.DisableSmartCursor[Type] = true;
 			TileID.Sets.OpenDoorID[Type] = ModContent.TileType<MoonBaseBulkheadOpen>();
@@ -58,29 +60,6 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
             TileObjectData.newTile.CoordinatePadding = 2;
             TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;
 
-            /*
-            TileObjectData.newTile.StyleMultiplier = 2;
-            TileObjectData.newTile.StyleWrapLimit = 2;
-
-            for (int k = 1; k < 5; k++)
-            {
-                TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
-                TileObjectData.newAlternate.Origin = new Point16(0, k);
-                TileObjectData.addAlternate(0);
-            }
-
-            TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
-            TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceRight;
-            TileObjectData.addAlternate(1);
-            for (int l = 1; l < 5; l++)
-            {
-                TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
-                TileObjectData.newAlternate.Origin = new Point16(0, l);
-                TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceRight;
-                TileObjectData.addAlternate(1);
-            }
-            */
-
             TileObjectData.addTile(Type);
         }
 
@@ -95,20 +74,13 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
         public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)
         {
             Tile tile = Main.tile[i, j];
-            Animation.GetTemporaryFrame(i, j, out int frame);
-            if (tile.TileFrameY >= 18 * Height && frame == 0)
-                tile.TileFrameY -= (short)(18 * Height); 
+            int frameX = tile.TileFrameX % (18 * Width);
+            int frameY = tile.TileFrameY % (18 * Height);
+            if (TileAnimation.GetTemporaryFrame(i - frameX / 18, j - frameY / 18, out var frame))
+                tile.TileFrameY = (short)(18 * frame + frameY);
         }
 
-        public override void AnimateTile(ref int frame, ref int frameCounter)
-        {
-            
-        }
-
-        public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings) 
-		{
-			return true;
-		}
+        public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings) => true;
 
 		public override void NumDust(int i, int j, bool fail, ref int num)
 		{

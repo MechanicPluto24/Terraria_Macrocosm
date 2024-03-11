@@ -1,4 +1,4 @@
-using Macrocosm.Common.Hooks;
+using Macrocosm.Common.Bases;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Placeable.Furniture.MoonBase;
 using Microsoft.Xna.Framework;

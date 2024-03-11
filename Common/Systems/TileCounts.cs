@@ -1,5 +1,5 @@
-﻿using Macrocosm.Content.Tiles.Blocks;
-using Macrocosm.Content.Tiles.Tombstones;
+﻿using Macrocosm.Common.Bases;
+using Macrocosm.Content.Tiles.Blocks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,11 +7,11 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Systems
 {
-	class TileCounts : ModSystem
+    class TileCounts : ModSystem
 	{
-		public int RegolithCount = 0;
-		public int IrradiatedRockCount = 0;
-		public int GraveyardTileCount = 0;
+		public int RegolithCount { get; private set; } = 0;
+		public int IrradiatedRockCount { get; private set; } = 0;
+		public int GraveyardMacrocosmTileCount { get; private set; } = 0;
 
 		private int[] graveyardTileTypes;
 
@@ -31,14 +31,18 @@ namespace Macrocosm.Common.Systems
 			IrradiatedRockCount = tileCounts[ModContent.TileType<IrradiatedRock>()];
 
 			foreach(int type in graveyardTileTypes)
-                GraveyardTileCount += tileCounts[type];
+			{
+				ModTile tile = TileLoader.GetTile(type);
+				if(tile is ITombstoneTile tombstone && tombstone.AllowGrayeyardOnEarth)
+					GraveyardMacrocosmTileCount += tileCounts[type];
+			}
         }
 
 		public override void ResetNearbyTileEffects()
 		{
 			RegolithCount = 0;
 			IrradiatedRockCount = 0;
-            GraveyardTileCount = 0;
+            GraveyardMacrocosmTileCount = 0;
         }
 	}
 }

@@ -7,44 +7,11 @@ using Terraria.GameContent;
 using MonoMod.Cil;
 using Microsoft.Xna.Framework;
 using Mono.Cecil.Cil;
+using Macrocosm.Common.Bases;
+using Macrocosm.Common.TileFrame;
 
 namespace Macrocosm.Common.Hooks
 {
-    public interface IDoorTile
-    {
-        /// <summary> Door height in tiles. Should be >= 1 </summary>
-        public int Height { get; }
-
-        /// <summary> 
-        /// Door width in tiles.
-        /// For the current implementation, it should be 1 for closed doors; 1 or 2 for open doors. 
-        /// </summary>
-        public int Width { get; }
-
-        /// <summary> Whether this tile is the closed state of the door </summary>
-        public bool IsClosed { get; }
-
-        /// <summary> Whether this door is locked <b>(TODO)</b></summary>
-        public bool IsLocked => false;
-
-        /// <summary>
-        /// Number of styles for this door. 
-        /// For closed doors, it means the number of alternate styles.
-        /// For open doors, it should be 1 for sliding doors, or 2 for hinged doors.
-        /// </summary>
-        public int StyleCount { get; }
-
-        /// <summary> Number of Y frames used solely for animation </summary>
-        public int AnimationFrames => 0;
-
-        /// <summary> The door activate sound. Defaults to <see cref="SoundID.DoorOpen"/> or <see cref="SoundID.DoorClosed"/>, depending on <see cref="IsClosed"/>. </summary>
-        public SoundStyle? ActivateSound => null;
-
-        public Rectangle ModifyAutoDoorPlayerCollisionRectangle(Point tileCoords, Rectangle original)
-        {
-            return original;
-        }
-    }
 
     public class DoorTileHooks : ILoadable
     {
@@ -100,12 +67,9 @@ namespace Macrocosm.Common.Hooks
 
                 targetFrameY = (short)((offsetFromOrigin % 36) * (18 * door.Height));
 
-                if (door.AnimationFrames > 0)
-                {
-                    Animation.NewTemporaryAnimation(0, tile.TileType, i, j);
-                    targetFrameY += (short)(18 * door.Height * door.AnimationFrames);
-                }
-
+                if (door.TileAnimationID > 0)
+                     TileAnimation.NewTemporaryAnimation(door.TileAnimationID, tile.TileType, tilePosX, tilePosY);
+ 
                 SoundEngine.PlaySound(door.ActivateSound ?? SoundID.DoorOpen, new(i * 16, j * 16));
 
                 ushort openDoorID = (ushort)TileLoader.OpenDoorID(Main.tile[i, j]);
@@ -208,7 +172,8 @@ namespace Macrocosm.Common.Hooks
 
                 ushort closeDoorID = (ushort)TileLoader.CloseDoorID(tile);
 
-                
+                if (door.TileAnimationID > 0)
+                    TileAnimation.NewTemporaryAnimation(door.TileAnimationID, tile.TileType, tilePosX, tilePosY);
 
                 for (int x = doorOpenTilePosX; x < doorOpenTilePosX + door.Width; x++)
                 {
@@ -221,11 +186,6 @@ namespace Macrocosm.Common.Hooks
                             if (TileLoader.GetTile(closeDoorID) is IDoorTile closedDoor)
                             {
                                 tile.TileFrameX = (short)(WorldGen.genRand.Next(closedDoor.StyleCount) * 18 + targetFrameX);
-                                if (door.AnimationFrames > 0)
-                                {
-                                    Animation.NewTemporaryAnimation(0, tile.TileType, i, j);
-                                    tile.TileFrameY += (short)(18 * door.Height * door.AnimationFrames);
-                                }
                             }
                         }
                         else

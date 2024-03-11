@@ -1,4 +1,4 @@
-using Macrocosm.Common.Hooks;
+using Macrocosm.Common.Bases;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Placeable.Furniture.MoonBase;
 using Microsoft.Xna.Framework;
@@ -11,7 +11,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 {
-	public class MoonBaseDoorOpen : ModTile, IDoorTile
+    public class MoonBaseDoorOpen : ModTile, IDoorTile
 	{
 		public int Height => 3;
 		public int Width => 1;
