@@ -19,7 +19,10 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 			Main.tileLavaDeath[Type] = true;
 
 			TileObjectData.newTile.CopyFrom(TileObjectData.Style1x2);
-			TileObjectData.addTile(Type);
+			TileObjectData.newTile.Height = 3;
+			TileObjectData.newTile.CoordinateHeights = [16, 16, 16];
+            TileObjectData.newTile.DrawYOffset = 2;
+            TileObjectData.addTile(Type);
 
 			HitSound = SoundID.Dig;
 

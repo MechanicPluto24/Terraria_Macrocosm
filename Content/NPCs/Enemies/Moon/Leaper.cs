@@ -57,7 +57,10 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		public override void AI()
 		{
-			Utility.AIZombie(NPC, ref NPC.ai, false, true, velMax: 4, maxJumpTilesX: 15, maxJumpTilesY: 10, moveInterval: 0.07f);
+			if(Lighting.GetColor(NPC.Center.ToTileCoordinates()).GetLuminanceNTSC() > 0.5f)
+				Utility.AIZombie(NPC, ref NPC.ai, false, true, velMax: 4, maxJumpTilesX: 15, maxJumpTilesY: 10, moveInterval: 0.07f);
+
+			NPC.despawnEncouraged = false;
 
 			//if(charge)
 			//	 NPC.damage = (int)(NPC.defDamage * 1.35f)

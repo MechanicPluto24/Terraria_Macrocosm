@@ -11,7 +11,7 @@ namespace Macrocosm.Common.Systems
 	{
 		public int RegolithCount { get; private set; } = 0;
 		public int IrradiatedRockCount { get; private set; } = 0;
-		public int GraveyardMacrocosmTileCount { get; private set; } = 0;
+		public int GraveyardModTileCount { get; private set; } = 0;
 
 		private int[] graveyardTileTypes;
 
@@ -34,7 +34,7 @@ namespace Macrocosm.Common.Systems
 			{
 				ModTile tile = TileLoader.GetTile(type);
 				if(tile is ITombstoneTile tombstone && tombstone.AllowGrayeyardOnEarth)
-					GraveyardMacrocosmTileCount += tileCounts[type];
+					GraveyardModTileCount += tileCounts[type];
 			}
         }
 
@@ -42,7 +42,7 @@ namespace Macrocosm.Common.Systems
 		{
 			RegolithCount = 0;
 			IrradiatedRockCount = 0;
-            GraveyardMacrocosmTileCount = 0;
+            GraveyardModTileCount = 0;
         }
 	}
 }

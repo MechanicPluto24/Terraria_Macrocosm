@@ -20,11 +20,10 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 		public int Width => 1;
         public bool IsClosed => false;
         public int StyleCount => 1;
-        public int TileAnimationID => TileAnimation.RegisterTileAnimation(2, 60, [2, 1, 0]);
+        public int TileAnimationID => TileAnimation.RegisterTileAnimation(2, 5, [2, 1, 0]);
 
         public override void SetStaticDefaults()
 		{
-			// Properties
 			Main.tileFrameImportant[Type] = true;
 			Main.tileSolid[Type] = false;
 			Main.tileLavaDeath[Type] = true;
@@ -52,10 +51,8 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
             TileObjectData.newTile.LavaDeath = true;
             TileObjectData.newTile.DrawYOffset = 0;
             TileObjectData.newTile.CoordinateHeights = [16, 16, 16, 16, 16];
-
             TileObjectData.newTile.CoordinateWidth = 16;
             TileObjectData.newTile.CoordinatePadding = 2;
-            TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;
 
             TileObjectData.addTile(Type);
         }
@@ -71,10 +68,9 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
         public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)
         {
             Tile tile = Main.tile[i, j];
-            int frameX = tile.TileFrameX % (18 * Width);
-            int frameY = tile.TileFrameY % (18 * Height);
-            if (TileAnimation.GetTemporaryFrame(i - frameX / 18, j - frameY / 18, out var frame))
-                tile.TileFrameY = (short)(18 * frame + frameY);
+            int frameY = tile.TileFrameY % (Height * 18);
+            if (TileAnimation.GetTemporaryFrame(i, j, out var frame))
+                frameYOffset = (short)(18 * Height * frame);
         }
 
         public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings) => true;

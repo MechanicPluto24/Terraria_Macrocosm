@@ -21,36 +21,32 @@ namespace Macrocosm.Content.Particles
 		public override void OnSpawn()
 		{
 			defScale = Scale;
-			actualScale = 0.5f;
-			Alpha = 0.3f;
+			actualScale = 0.1f;
         }
 
 		public override void AI()
 		{
 			if (fadeIn)
 			{
-                actualScale *= 1.15f;
-
-				Alpha = MathHelper.Clamp(Alpha * 1.2f, 0f, 1f);
+                actualScale *= 1.25f;
 
 				if (actualScale > defScale)
 					fadeIn = false;
 			}
 			else
 			{
-                Alpha = MathHelper.Clamp(Alpha * 0.92f, 0f, 1f);
-                actualScale *= 0.95f;
+                actualScale *= 0.775f;
             }
 
-			Lighting.AddLight(Center, Color.ToVector3() * Alpha);
+			Lighting.AddLight(Center, Color.ToVector3() * actualScale);
 
-            if (actualScale < 0.2f)
+            if (actualScale < 0.2f && !fadeIn)
 				Kill();
 		}
 
 		public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
 		{
-			spriteBatch.DrawStar(Position - screenPosition, 2, Color.WithOpacity(Alpha), actualScale, Rotation);
+			spriteBatch.DrawStar(Position - screenPosition, 2, Color, actualScale, Rotation);
 			return false;
 		}
 	}

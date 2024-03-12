@@ -41,7 +41,8 @@ namespace Macrocosm.Common.Hooks
                 int tilePosX, tilePosY;
                 short targetFrameY, targetFrameX = 0;
                 int frameY = tile.TileFrameY;
-                int offsetFromOrigin = 0;
+
+                int frameOffset = 0;
 
                 if (TileLoader.OpenDoorID(tile) < 0)
                     return false;
@@ -52,52 +53,46 @@ namespace Macrocosm.Common.Hooks
                 while (frameY >= 18 * door.Height)
                 {
                     frameY -= 18 * door.Height;
-                    offsetFromOrigin++;
+                    frameOffset++;
                 }
 
                 if (tile.TileFrameX >= 18 * door.StyleCount)
                 {
                     int frameX = tile.TileFrameX / (18 * door.StyleCount);
-                    offsetFromOrigin += 36 * frameX; // Not sure of this
+                    frameOffset += 36 * frameX; // Not sure of this
                     targetFrameX = (short)(targetFrameX + (short)((18 + 18 * door.StyleCount) * frameX));
                 }
 
                 tilePosX = i;
                 tilePosY = j - frameY / 18;
 
-                targetFrameY = (short)((offsetFromOrigin % 36) * (18 * door.Height));
+                targetFrameY = (short)((frameOffset % 36) * (18 * door.Height));
 
-                if (door.TileAnimationID > 0)
-                     TileAnimation.NewTemporaryAnimation(door.TileAnimationID, tile.TileType, tilePosX, tilePosY);
- 
                 SoundEngine.PlaySound(door.ActivateSound ?? SoundID.DoorOpen, new(i * 16, j * 16));
 
                 ushort openDoorID = (ushort)TileLoader.OpenDoorID(Main.tile[i, j]);
 
-                for(int x = 0; x < door.Width; x++)
+                for (int x = tilePosX; x < tilePosX + door.Width; x++)
                 {
-                    for (int y = 0; y < door.Height; y++)
+                    for (int y = tilePosY; y < tilePosY + door.Height; y++)
                     {
                         // NOTE: No x indexing here
-                        TileColorCache cache = Main.tile[tilePosX, tilePosY + y].BlockColorAndCoating();
+                        TileColorCache cache = Main.tile[tilePosX, y].BlockColorAndCoating();
 
                         if (Main.netMode != NetmodeID.MultiplayerClient && Wiring.running)
-                            Wiring.SkipWire(tilePosX + x, tilePosY + y);
+                            Wiring.SkipWire(x, y);
 
-                        tile = Main.tile[tilePosX + x, tilePosY + y];
+                        tile = Main.tile[x, y];
                         tile.HasTile = true;
                         tile.TileType = openDoorID;
-                        tile.TileFrameY = (short)(targetFrameY + y * 18);
+                        tile.TileFrameY = (short)(targetFrameY + (y - tilePosY) * 18);
                         tile.TileFrameX = targetFrameX;
                         tile.UseBlockColors(cache);
+
+                        if (TileLoader.GetTile(openDoorID) is IDoorTile openDoor && openDoor.TileAnimationID > 0 && !TileAnimation.GetTemporaryFrame(x, y, out _))
+                             TileAnimation.NewTemporaryAnimation(openDoor.TileAnimationID, openDoorID, x, y);
                     }
                 }
-
-                /*
-                for (int x = tilePosX - 1; x <= tilePosX + 2; x++)
-                    for (int y = tilePosY - 1; y <= tilePosY + 2; y++)
-                        WorldGen.TileFrame(x, y);
-                */
 
                 return true;
             }
@@ -120,19 +115,22 @@ namespace Macrocosm.Common.Hooks
                     return false;
 
                 int frameY = tile.TileFrameY;
-                int offsetFromOrigin = 0;
+
+                int frameOffset = 0;
+
                 int targetFrameY = frameY;
                 int targetFrameX = 0;
+
                 while (frameY >= 18 * door.Height)
                 {
                     frameY -= 18 * door.Height;
-                    offsetFromOrigin++;
+                    frameOffset++;
                 }
 
                 if (frameX >= 18 * door.StyleCount * door.Width)
                 {
                     int huh = 54;
-                    offsetFromOrigin += (18 * door.StyleCount) * (frameX / (18 * door.StyleCount * door.Width));
+                    frameOffset += (18 * door.StyleCount) * (frameX / (18 * door.StyleCount * door.Width));
                     targetFrameX += huh * (frameX / (18 * door.StyleCount * door.Width));
                 }
 
@@ -171,10 +169,6 @@ namespace Macrocosm.Common.Hooks
                 }
 
                 ushort closeDoorID = (ushort)TileLoader.CloseDoorID(tile);
-
-                if (door.TileAnimationID > 0)
-                    TileAnimation.NewTemporaryAnimation(door.TileAnimationID, tile.TileType, tilePosX, tilePosY);
-
                 for (int x = doorOpenTilePosX; x < doorOpenTilePosX + door.Width; x++)
                 {
                     for (int y = tilePosY; y < tilePosY + door.Height; y++)
@@ -186,7 +180,10 @@ namespace Macrocosm.Common.Hooks
                             if (TileLoader.GetTile(closeDoorID) is IDoorTile closedDoor)
                             {
                                 tile.TileFrameX = (short)(WorldGen.genRand.Next(closedDoor.StyleCount) * 18 + targetFrameX);
-                            }
+
+                                if(closedDoor.TileAnimationID > 0 && !TileAnimation.GetTemporaryFrame(x, y, out _))
+                                     TileAnimation.NewTemporaryAnimation(closedDoor.TileAnimationID, closeDoorID, x, y);
+                             }
                         }
                         else
                         {
@@ -202,16 +199,6 @@ namespace Macrocosm.Common.Hooks
                         Wiring.SkipWire(tilePosX, tilePosY + y);
                     }
                 }
-
-                /*
-                for (int x = tilePosX - 1; x <= tilePosX + 1; x++)
-                {
-                    for (int y = tilePosY - 1; y <= tilePosY + 2; y++)
-                    {
-                        WorldGen.TileFrame(x, y);
-                    }
-                }
-                */
 
                 SoundEngine.PlaySound(door.ActivateSound ?? SoundID.DoorClosed, new(i * 16, j * 16));
                 return true;
@@ -247,32 +234,5 @@ namespace Macrocosm.Common.Hooks
             if (TileLoader.GetTile(tile.TileType) is IDoorTile door)
                 original = door.ModifyAutoDoorPlayerCollisionRectangle(tileCoords, original);
         }
-
-        /*
-        private void GetCustomDoorHeight(ILContext il)
-        {
-            var c = new ILCursor(il);
-
-            // Find where '48' is loaded onto the eval stack.
-            if (!c.TryGotoNext(i => i.MatchLdcI4(48)))
-                return;
-
-            // Load arg0 (Point tileCoordsForToggling) onto the eval stack.
-            c.Emit(OpCodes.Ldarg_0);
-
-            c.EmitDelegate(GetDoorHeightForPlayerOpenDoor);
-        }
-
-        private int GetDoorHeightForPlayerOpenDoor(Point tileCoords, int baseValue)
-        {
-            Tile tile = Main.tile[tileCoords];
-            if (TileLoader.GetTile(tile.TileType) is IDoorTile door)
-            {
-                return door.Height * 16;
-            }
-
-            return baseValue;
-        }
-        */
     }
 }
