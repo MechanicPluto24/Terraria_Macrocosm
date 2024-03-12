@@ -88,7 +88,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-			Particle.CreateParticle<ArtemiteStar>(target.Center, -Vector2.UnitY, 1f, 0f, shouldSync: true);
+			Particle.CreateParticle<ArtemiteStar>(target.Center + Main.rand.NextVector2Circular(target.width/2, target.height/2), -Vector2.UnitY * 0.4f, 1f, 0f, shouldSync: true);
         }
 
         public override bool PreDraw(ref Color lightColor)

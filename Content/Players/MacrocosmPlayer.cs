@@ -143,7 +143,7 @@ namespace Macrocosm.Content.Players
 			if (SubworldSystem.AnyActive<Macrocosm>())
 				Main.SceneMetrics.GraveyardTileCount = 0;
 			else
-				Main.SceneMetrics.GraveyardTileCount += TileCounts.Instance.GraveyardMacrocosmTileCount;
+				Main.SceneMetrics.GraveyardTileCount += TileCounts.Instance.GraveyardModTileCount;
 
             if (!Main.dedServ)
 			{

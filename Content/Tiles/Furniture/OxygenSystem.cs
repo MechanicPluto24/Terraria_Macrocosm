@@ -75,7 +75,7 @@ namespace Macrocosm.Content.Tiles.Furniture
             Texture2D glow = ModContent.Request<Texture2D>(Texture + "_Glow").Value;
             Vector2 zero = Main.drawToScreen ? Vector2.Zero : new Vector2(Main.offScreenRange);
 
-            Utility.GetTileAnimationFrame(i, j, out int addFrameX, out _);
+            Utility.GetTileFrameOffset(i, j, out int addFrameX, out _);
 
             int width = TileObjectData.GetTileData(tile).CoordinateWidth;
             int height = TileObjectData.GetTileData(tile).CoordinateHeights[tile.TileFrameY / 18 % 3];

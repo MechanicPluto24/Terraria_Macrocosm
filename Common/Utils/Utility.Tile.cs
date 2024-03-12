@@ -95,7 +95,7 @@ namespace Macrocosm.Common.Utils
             );
         }
 
-        public static void GetTileAnimationFrame(int i, int j, out int addFrameX, out int addFrameY)
+        public static void GetTileFrameOffset(int i, int j, out int addFrameX, out int addFrameY)
         {
             Tile tile = Main.tile[i, j];
             short drawFrameX = tile.TileFrameX;

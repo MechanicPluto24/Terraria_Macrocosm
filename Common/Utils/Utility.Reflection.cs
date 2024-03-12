@@ -47,16 +47,16 @@ namespace Macrocosm.Common.Utils
 			return (T)property.GetValue(obj);
 		}
 
-		/// <summary> Invokes a private method on a given object. </summary>
-		/// <param name="instance"> The object on which to invoke the method. If the method is static, pass the type. </param>
-		/// <param name="methodName"> Name of the method to invoke. </param>
-		/// <param name="parameters"> Parameters to pass to the method. </param>
-		/// <returns> Result of the method invocation. </returns>
-		public static object InvokeMethod(object instance, string methodName, params object[] parameters)
-		{
-			if (instance == null && !(parameters?.Length > 0 && parameters[0] is Type))
-				throw new ArgumentNullException(nameof(instance), "The instance should not be null, unless you're invoking a static method and the first parameter in 'parameters' is of type 'Type'.");
+        public static object InvokeStaticMethod(this Type type, string methodName, params object[] parameters) 
+			=> InvokeMethod(type, methodName, parameters);
 
+        /// <summary> Invokes a private method on a given object. </summary>
+        /// <param name="instance"> The object on which to invoke the method. If the method is static, pass the type. </param>
+        /// <param name="methodName"> Name of the method to invoke. </param>
+        /// <param name="parameters"> Parameters to pass to the method. </param>
+        /// <returns> Result of the method invocation. </returns>
+        public static object InvokeMethod(object instance, string methodName, params object[] parameters)
+		{
 			Type type = instance as Type ?? instance.GetType();
 			MethodInfo methodInfo = type.GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
 
