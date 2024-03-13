@@ -23,7 +23,7 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 		public int Width => 1;
 		public bool IsClosed => true;
 		public int StyleCount => 1;
-        public int TileAnimationID => TileAnimation.RegisterTileAnimation(2, 5, [2,1,0]);
+        public AnimationData? AnimationData => new(3, 5, [3, 2, 1, 0], forcedUpdate: true);
 
         public override void SetStaticDefaults() 
 		{
@@ -72,9 +72,10 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
         public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)
         {
             Tile tile = Main.tile[i, j];
+            int frameX = tile.TileFrameX % (Width * 18);
             int frameY = tile.TileFrameY % (Height * 18);
-            if (TileAnimation.GetTemporaryFrame(i, j, out var frame))
-                frameYOffset = (short)(18 * Height * frame);
+            if (TileAnimation.GetTemporaryFrame(i - frameX / 18, j - frameY / 18, out int frame))
+                 frameYOffset = (short)(18 * Height * frame);
         }
 
         public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings) => true;

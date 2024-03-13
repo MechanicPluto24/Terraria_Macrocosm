@@ -1,6 +1,7 @@
 ﻿using Terraria.Audio;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
+using Macrocosm.Common.TileFrame;
 
 namespace Macrocosm.Common.Bases
 {
@@ -31,7 +32,7 @@ namespace Macrocosm.Common.Bases
         /// <summary> The door activate sound. Defaults to <see cref="SoundID.DoorOpen"/> or <see cref="SoundID.DoorClosed"/>, depending on <see cref="IsClosed"/>. </summary>
         public SoundStyle? ActivateSound => null;
 
-        public int TileAnimationID => -1;
+        public AnimationData? AnimationData => null;
 
         public Rectangle ModifyAutoDoorPlayerCollisionRectangle(Point tileCoords, Rectangle original)
         {

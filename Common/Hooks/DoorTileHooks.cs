@@ -70,6 +70,7 @@ namespace Macrocosm.Common.Hooks
 
                 SoundEngine.PlaySound(door.ActivateSound ?? SoundID.DoorOpen, new(i * 16, j * 16));
 
+                ushort closeDoorID = tile.TileType;
                 ushort openDoorID = (ushort)TileLoader.OpenDoorID(Main.tile[i, j]);
 
                 for (int x = tilePosX; x < tilePosX + door.Width; x++)
@@ -82,15 +83,15 @@ namespace Macrocosm.Common.Hooks
                         if (Main.netMode != NetmodeID.MultiplayerClient && Wiring.running)
                             Wiring.SkipWire(x, y);
 
+                        if (TileLoader.GetTile(openDoorID) is IDoorTile openDoor && openDoor.AnimationData is not null)
+                            TileAnimation.NewTemporaryAnimation(openDoor.AnimationData.Value, x, y, openDoorID, closeDoorID);
+
                         tile = Main.tile[x, y];
                         tile.HasTile = true;
                         tile.TileType = openDoorID;
                         tile.TileFrameY = (short)(targetFrameY + (y - tilePosY) * 18);
                         tile.TileFrameX = targetFrameX;
                         tile.UseBlockColors(cache);
-
-                        if (TileLoader.GetTile(openDoorID) is IDoorTile openDoor && openDoor.TileAnimationID > 0 && !TileAnimation.GetTemporaryFrame(x, y, out _))
-                             TileAnimation.NewTemporaryAnimation(openDoor.TileAnimationID, openDoorID, x, y);
                     }
                 }
 
@@ -168,6 +169,7 @@ namespace Macrocosm.Common.Hooks
                     }
                 }
 
+                ushort openDoorID = tile.TileType;
                 ushort closeDoorID = (ushort)TileLoader.CloseDoorID(tile);
                 for (int x = doorOpenTilePosX; x < doorOpenTilePosX + door.Width; x++)
                 {
@@ -176,14 +178,14 @@ namespace Macrocosm.Common.Hooks
                         tile = Main.tile[x, y];
                         if (x == tilePosX)
                         {
-                            tile.TileType = closeDoorID;
                             if (TileLoader.GetTile(closeDoorID) is IDoorTile closedDoor)
                             {
-                                tile.TileFrameX = (short)(WorldGen.genRand.Next(closedDoor.StyleCount) * 18 + targetFrameX);
+                                if (closedDoor.AnimationData is not null)
+                                    TileAnimation.NewTemporaryAnimation(closedDoor.AnimationData.Value, x, y, closeDoorID, openDoorID);
 
-                                if(closedDoor.TileAnimationID > 0 && !TileAnimation.GetTemporaryFrame(x, y, out _))
-                                     TileAnimation.NewTemporaryAnimation(closedDoor.TileAnimationID, closeDoorID, x, y);
-                             }
+                                tile.TileType = closeDoorID;
+                                tile.TileFrameX = (short)(WorldGen.genRand.Next(closedDoor.StyleCount) * 18 + targetFrameX);
+                            }
                         }
                         else
                         {

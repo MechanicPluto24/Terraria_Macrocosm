@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Netcode;
+using Macrocosm.Common.TileFrame;
 using Macrocosm.Content.Players;
 using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
