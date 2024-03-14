@@ -69,7 +69,8 @@ namespace Macrocosm.Content.Items.MeteorChunks
 		/// <summary> Draw with the default appearance in the inventory </summary>
 		public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
 		{
-			Draw(spriteBatch, 0, false, position + new Vector2(0, TextureAssets.Item[Type].Height() / 3f), drawColor, 0f, origin, scale * 4);
+			var size = TextureAssets.Item[Type].Size();
+			Draw(spriteBatch, 0, false, position + new Vector2(0, size.Y/4f + 6), drawColor, 0f, origin, scale * 4);
 			return false;
 		}
 

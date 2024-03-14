@@ -33,14 +33,12 @@ namespace Macrocosm.Content.Particles
 				origScale = Scale;
 				spawned = true;
 
-				Color = (new List<Color>() {
-					new Color(177, 230, 207),
-					new Color(83, 129, 167),
-					new Color(157, 136, 169),
-					new Color(130, 179, 185)
-				}).GetRandom();
-
-
+				Color = new List<Color>() {
+					new(177, 230, 207),
+					new(83, 129, 167),
+					new(157, 136, 169),
+					new(130, 179, 185)
+				}.GetRandom();
 			}
 			float speed = Velocity.LengthSquared() * 0.9f;
 			Rotation = Velocity.ToRotation();

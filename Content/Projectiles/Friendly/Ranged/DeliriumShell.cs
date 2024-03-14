@@ -16,15 +16,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 	{
 		public float BlastRadius => 100;
 
-		public int OriginalWidth => 14;
-		public int OriginalHeight => 14;
+		public int DefWidth => 14;
+		public int DefHeight => 14;
 
 		public override void SetDefaults()
 		{
 			Projectile.CloneDefaults(14);
 			AIType = ProjectileID.Bullet;
-			Projectile.width = OriginalWidth;
-			Projectile.height = OriginalHeight;
+			Projectile.width = DefWidth;
+			Projectile.height = DefHeight;
 			Projectile.timeLeft = 270;
 			Projectile.light = 0f;
 		}

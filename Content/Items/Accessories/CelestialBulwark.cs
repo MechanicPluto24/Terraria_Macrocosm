@@ -12,6 +12,7 @@ using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Default;
 
 namespace Macrocosm.Content.Items.Accessories
 {
@@ -76,6 +77,13 @@ namespace Macrocosm.Content.Items.Accessories
 
         private void StartDashVisuals(Player player)
         {
+			int dye = -1;
+			for (int i = 3; i <= 9; i++)
+			{
+				if (player.armor[i].type == Type)
+					dye = player.dye[i].dye;
+			}
+
             Particle.CreateParticle<CelestialBulwarkDashParticle>(p =>
             {
                 p.Scale = 0.35f;
@@ -83,6 +91,7 @@ namespace Macrocosm.Content.Items.Accessories
                 p.Position = player.Center;
                 p.PlayerID = player.whoAmI;
                 p.Rotation = player.velocity.ToRotation() - MathHelper.PiOver2;
+				p.DyeType = dye;
             });
         }
 
@@ -90,7 +99,6 @@ namespace Macrocosm.Content.Items.Accessories
         {
 			DashPlayer dashPlayer = player.GetModPlayer<DashPlayer>();
             float progress = (float)dashPlayer.DashTimer / dashPlayer.AccDashDuration;
-            Lighting.AddLight(player.Center, CelestialDisco.CelestialColor.ToVector3() * 5f * Utility.QuadraticEaseIn(progress));
 			int count = (int)MathF.Floor(5 * progress);
 
             for (int i = 0; i < count; i++)

@@ -34,8 +34,8 @@ namespace Macrocosm.Common.Bases
 		public int DebrisCount;
 		public Vector2 DebrisVelocity;
 
-		public int OriginalWidth => Width;
-		public int OriginalHeight => Height;
+		public int DefWidth => Width;
+		public int DefHeight => Height;
 
 		public float BlastRadius => Width * BlastRadiusMultiplier;
 

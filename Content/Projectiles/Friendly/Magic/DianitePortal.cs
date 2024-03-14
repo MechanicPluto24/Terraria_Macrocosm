@@ -3,10 +3,13 @@ using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
+using Terraria.Audio;
 using Terraria.GameContent;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
@@ -18,6 +21,19 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         protected int defHeight;
 
         protected bool manaCheck = true;
+
+        public int AITimer
+        {
+            get => (int)Projectile.ai[0];
+            set => Projectile.ai[0] = value;
+        }
+
+        public int AIShootTimer
+        {
+            get => (int)Projectile.ai[1];
+            set => Projectile.ai[1] = value;
+        }
+
 
         public override void SetDefaults()
 		{
@@ -45,14 +61,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
             Projectile.rotation += MathHelper.ToRadians(7.4f) * player.direction;
 
-            if (Projectile.ai[0] >= 12)
-                Projectile.ai[1]++;
-            else
-                Projectile.ai[0]++;
+            AITimer++;
 
-            if (Projectile.ai[1] >= 10)
+            if (AITimer > 12 && AITimer % 10 == 0)
             {
-                Projectile.ai[1] -= 10;
                 manaCheck = player.CheckMana(3, true);
 
                 if (Projectile.owner == Main.myPlayer)
@@ -74,10 +86,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                         damage = (int)(damage * 1.2f);
                         type = ModContent.ProjectileType<DianiteMeteor>();
                     }
-
+       
                     Projectile.NewProjectile(Projectile.InheritSource(Projectile), shootPosition, shootVelocity.RotatedByRandom(MathHelper.Pi/24), type, damage, Projectile.knockBack, Main.player[Projectile.owner].whoAmI);
                 }
             }
+
+            if(AITimer % 16 == 0)
+                SoundEngine.PlaySound(SoundID.Item20, Projectile.Center);
 
             Projectile.alpha = (int)MathHelper.Clamp((int)(255 - Projectile.ai[0]/12f * 255f), 0f, 255f);
             Vector2 center = Projectile.Center;

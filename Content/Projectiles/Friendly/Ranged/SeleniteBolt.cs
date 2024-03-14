@@ -1,6 +1,8 @@
 using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Particles;
 using Macrocosm.Content.Projectiles.Global;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -11,7 +13,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-	public class SeleniteBeam : ModProjectile, IRangedProjectile
+	public class SeleniteBolt : ModProjectile, IRangedProjectile, IExplosive
 	{
 		public override string Texture => Macrocosm.EmptyTexPath;
 
@@ -20,6 +22,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			get => MathHelper.Clamp(Projectile.ai[0], 0f, 1f);
 			set => Projectile.ai[0] = MathHelper.Clamp(value, 0f, 1f);
 		}
+		public int DefWidth => 8;
+		public int DefHeight => 8;
+		public float BlastRadius => 100;
 
         float trailMultiplier = 0f;
 
@@ -54,15 +59,21 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 		public override void OnKill(int timeLeft)
 		{
-			SoundEngine.PlaySound(SoundID.Item10);
+            SoundEngine.PlaySound(SoundID.Item10);
 
-			for (int i = 0; i < 35; i++)
+			for (int i = 0; i < 80; i++)
 			{
-				Dust dust = Dust.NewDustPerfect(Projectile.Center + Projectile.oldVelocity, ModContent.DustType<SeleniteBrightDust>(), Main.rand.NextVector2CircularEdge(10, 10) * Main.rand.NextFloat(1f), Scale: Main.rand.NextFloat(1f, 2f));
+                Dust dust = Dust.NewDustPerfect(Projectile.Center + Projectile.oldVelocity, ModContent.DustType<SeleniteBrightDust>(), Main.rand.NextVector2Circular(8, 8), Scale: Main.rand.NextFloat(1f, 1.4f));
 				dust.noGravity = true;
+            }
+
+			for (int i = 0; i < 30; i++)
+			{
+				Particle.CreateParticle<SeleniteSpark>(Projectile.Center + Projectile.oldVelocity, Main.rand.NextVector2Circular(9, 2), 5f, 0f);
+				Particle.CreateParticle<SeleniteSpark>(Projectile.Center + Projectile.oldVelocity, Main.rand.NextVector2Circular(2, 9), 5f, 0f);
 			}
 
-			float count = Projectile.oldVelocity.LengthSquared() * trailMultiplier;
+            float count = Projectile.oldVelocity.LengthSquared() * trailMultiplier;
 			for (int i = 1; i < count; i++)
 			{
 				Vector2 trailPosition = Projectile.Center - Projectile.oldVelocity * i * 0.4f;

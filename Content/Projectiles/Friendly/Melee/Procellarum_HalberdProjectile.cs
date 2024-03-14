@@ -25,11 +25,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             End
         }
         ProcellarumState chargeState;
-        public override int baseSpeed => 75;
-        public override int halberdSize => 200;
-        public override int rotPointToBlade => 20;
-        public override int rotationOffset => 39;
-        public override int startOffset => 64 - rotationOffset;
+        public override int baseSpeed => 65;
+        public override int HalberdSize => 200;
+        public override int RotPointToBlade => 20;
+        public override int RotationOffset => 39;
+        public override int StartOffset => 64 - RotationOffset;
 
         public const int MAX_CHARGE_STAGE = 3;
         public const int TICKS_PER_STAGE = 60;
@@ -73,16 +73,16 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 {
 
                     Player.direction = 1;
-                    DrawOriginOffsetX = -(halberdSize / 2) + rotationOffset;
-                    DrawOriginOffsetY = RotDiag - rotationOffset;
-                    DrawOffsetX = RotDiag - rotationOffset;
+                    DrawOriginOffsetX = -(HalberdSize / 2) + RotationOffset;
+                    DrawOriginOffsetY = RotDiag - RotationOffset;
+                    DrawOffsetX = RotDiag - RotationOffset;
                 }
                 else
                 {
                     Player.direction = -1;
-                    DrawOriginOffsetX = (halberdSize / 2) - rotationOffset;
-                    DrawOriginOffsetY = RotDiag - rotationOffset;
-                    DrawOffsetX = -halberdSize + RotDiag + rotationOffset;
+                    DrawOriginOffsetX = (HalberdSize / 2) - RotationOffset;
+                    DrawOriginOffsetY = RotDiag - RotationOffset;
+                    DrawOffsetX = -HalberdSize + RotDiag + RotationOffset;
                     Projectile.rotation -= MathHelper.PiOver2;
                 }
                 Projectile.spriteDirection = Player.direction;
@@ -100,7 +100,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                         {
                             currentChargeTick = 0;
                             currentChargeStage += 1;
-                            Main.NewText(currentChargeStage);
+                            //Main.NewText(currentChargeStage);
                         }
                         if (!Main.mouseRight)
                         {

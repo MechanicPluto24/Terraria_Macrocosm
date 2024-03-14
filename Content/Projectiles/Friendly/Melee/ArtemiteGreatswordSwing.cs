@@ -48,7 +48,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			Player player = Main.player[Projectile.owner];
 			Item item = player.HeldItem;
 
-			float speed = 0.44f * player.GetTotalAttackSpeed(DamageClass.Melee);
+			float speed = 0.48f * player.GetTotalAttackSpeed(DamageClass.Melee);
 			SwingRotation += speed;
 
 			Projectile.rotation = (float)Math.PI * SwingDirection * progress + Projectile.velocity.ToRotation() + SwingDirection * (float)Math.PI + player.fullRotation;
@@ -99,9 +99,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 1), color * 0.15f, Projectile.rotation, origin, Projectile.scale, effects, 0f);
 			Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 2), color * 0.7f * progressScale * 0.3f, Projectile.rotation, origin, Projectile.scale, effects, 0f);
 			Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 2), color * 0.8f * progressScale * 0.5f, Projectile.rotation, origin, Projectile.scale * 0.975f, effects, 0f);
-			Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), (Color.White * (0.2f - 0.2f * progressScale)).WithOpacity(0.4f - 0.4f * progressScale), Projectile.rotation, origin, Projectile.scale * 0.95f, effects, 0f);
-			Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), (color * progressScale).WithOpacity(0.2f - 0.2f * progressScale), Projectile.rotation, origin, Projectile.scale * 0.75f, effects, 0f);
-			Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), (color * progressScale).WithOpacity(0.1f - 0.05f * progressScale), Projectile.rotation, origin, Projectile.scale * 0.55f, effects, 0f);
+            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), (color * progressScale).WithOpacity(0.4f - 0.39f * (1f - progressScale)), Projectile.rotation, origin, Projectile.scale * 0.95f, effects, 0f);
+            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), (color * progressScale).WithOpacity(0.5f - 0.49f * (1f - progressScale)), Projectile.rotation, origin, Projectile.scale * 0.75f, effects, 0f);
+            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), (color * progressScale).WithOpacity(0.05f - 0.04f * (1f - progressScale)), Projectile.rotation, origin, Projectile.scale * 0.55f, effects, 0f);
 
             int iteration = 0;
             for (float f = 0f; f < 16f; f += 0.04f)

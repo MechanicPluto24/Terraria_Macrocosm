@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Common.Utils;
+using Microsoft.Xna.Framework;
 using System.IO;
 using System.Linq;
 using Terraria;
@@ -14,8 +15,10 @@ namespace Macrocosm.Common.Bases
 	{
 		public virtual void SetDefaultsHeldProjectile() { }
 		public virtual bool CanUseItemHeldProjectile(Player player) => true;
+		public virtual void OnShoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int damage, float knockback, bool rightClick) { }
 
 		public virtual float? ProjectileScale => null;
+		public virtual bool RightClickUse => false;
 
 		/// <summary>
 		/// Use SetDefaultsHeldProjectile instead.
@@ -45,35 +48,42 @@ namespace Macrocosm.Common.Bases
 			SetDefaultsHeldProjectile();
 		}
 
-		public sealed override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+        public sealed override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
-			Projectile projectile = Projectile.NewProjectileDirect(source, position, velocity, ProjectileType<T>(), damage, knockback, player.whoAmI);
-			projectile.scale = ProjectileScale ?? Item.scale;
+            if (!RightClickUse || player.AltFunction())
+            {
+                Projectile projectile = Projectile.NewProjectileDirect(source, position, velocity, ProjectileType<T>(), damage, knockback, player.whoAmI);
+                projectile.scale = ProjectileScale ?? Item.scale;
 
-			if (projectile.ModProjectile is HeldProjectile heldProjectile)
+                if (projectile.ModProjectile is HeldProjectile heldProjectile)
+                {
+                    heldProjectile.ShootProjectileType = type;
+                }
+
+                // This needs to be called once more, in order to properly sync the ExtraAI,
+                // without using the ai[] array, including the item used which can only be synced there.
+                if (Main.netMode != NetmodeID.SinglePlayer && player.whoAmI == Main.myPlayer)
+                    NetMessage.SendData(MessageID.SyncProjectile, -1, -1, null, projectile.whoAmI);
+
+				OnShoot(player, source, position, velocity, damage, knockback, RightClickUse && player.AltFunction());
+            }
+			else
 			{
-				heldProjectile.ShootProjectileType = type;
-			}
-
-			// This needs to be called once more, in order to properly sync the ExtraAI,
-			// without using the ai[] array, including the item used which can only be synced there.
-			if (Main.netMode != NetmodeID.SinglePlayer && player.whoAmI == Main.myPlayer)
-				NetMessage.SendData(MessageID.SyncProjectile, -1, -1, null, projectile.whoAmI);
+                OnShoot(player, source, position, velocity, damage, knockback, false);
+            }
 
             return false;
 		}
 
-		/// <summary>
-		/// Use CanUseItemHeldProjectile instead.
-		/// </summary>
-		/// <param name="player"></param>
-		/// <returns></returns>
+		/// <summary> Use <see cref="CanUseItemHeldProjectile(Player)"/> instead. </summary>
 		public sealed override bool CanUseItem(Player player) => Main.projectile.FirstOrDefault(
 			projectile => projectile.ModProjectile is T && projectile.owner == player.whoAmI && projectile.active
 		) is null && CanUseItemHeldProjectile(player);
-	}
 
-	public abstract class HeldProjectile : ModProjectile
+        public override bool AltFunctionUse(Player player) => RightClickUse && CanUseItem(player);
+    }
+
+    public abstract class HeldProjectile : ModProjectile
 	{
 		public enum HeldProjectileKillMode
 		{
@@ -187,7 +197,6 @@ namespace Macrocosm.Common.Bases
 
 		public sealed override void SendExtraAI(BinaryWriter writer)
 		{
-			// TODO: this could be a job for the NetSyncAttribute
 			writer.Write((short)ShootProjectileType);
 			writer.Write(Projectile.scale);
 			ItemIO.Send(item, writer);

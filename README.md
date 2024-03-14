@@ -15,14 +15,37 @@ After the Moon is complete, the next celestial body to be visited will be Mars.
 <center>
 
 ### Developer Team
-MechanicPluto24 - Creator and Lead Developer\
-RighteousRyan - Admin and Lead Coder\
-ClockworkCorvus, Toxin - Moderator\
-Lincolnennis, Universe - Composer\
-absoluteAquarian, 4mbr0s3 2, Feldy, Hallam, LadyLone, sucss, SnowyStarfall, and Thanatos - Programmers\
-Daniel, Dovahkick, Demi, OmegA-Vinier, Rocket, Uncon_Arts, and William - Spriters/Artists\
-dontkickmychick - Lorewriter\
+MechanicPluto24 - Creator, Artist, Lead Developer
+
+RighteousRyan - Server Administrator, Programmer
+ClockworkCorvus - Server Moderator, Diplomat, Intellect
+Toxin - Server Moderator, Artist, Intellect
+
+Lincolnennis - Composer
+Universe - Composer
+
 Zetry - Soundsmith
+
+Dawnables - Scholar, Artist
+dontkickmychick - Scholar
+
+Daniel - Artist
+Demi - Artist
+Dovahkick - Spriter
+OmegA-Vinier - Spriter, Programmer
+Rocket - Spriter
+SpicySpaceSnake - Spriter
+Uncon_Arts - Artist
+William - Spriter
+
+4mbr0s3 2 - Programmer
+absoluteAquarian - Programmer
+Feldy - Programmer
+Hallam - Programmer
+LadyLone - Programmer
+SnowyStarfall - Programmer
+sucss - Programmer
+Thanatos - Programmer
 
 ### Special thanks
 ADVERSE KC, Almarduk, Crowlarghost, Delly, Dracos_V2, Draedon_Gaming, DrakonVörðr, Kiraa, Kirito, Master-Bit, Snowfall-The-Cat

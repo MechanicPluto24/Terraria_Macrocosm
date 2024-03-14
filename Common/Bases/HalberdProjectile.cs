@@ -38,23 +38,25 @@ namespace Macrocosm.Common.Bases
         private const float ARC_ANGLE_DEG = 30f;
 
         //private float armRotation = 0f;
-        private float[] stateDmgMulti = [3f, 2f, 8f, 1f, 10f, 1f];
-        private List<NPC> NPCsHit = new List<NPC>();
+        private readonly float[] stateDmgMulti = [3f, 2f, 8f, 1f, 10f, 1f];
+        private readonly List<NPC> NPCsHit = [];
         private Rectangle angleHitbox;
 
-        public abstract int halberdSize { get; }
-        public abstract int rotPointToBlade { get; }
-        public abstract int rotationOffset { get; }
-        public abstract int startOffset { get; }
+        public abstract int HalberdSize { get; }
+        public abstract int RotPointToBlade { get; }
+        public abstract int RotationOffset { get; }
+        public abstract int StartOffset { get; }
+
         public int midOffset;
         public int farOffset;
         public int RotDiag;
+
         public override void SetDefaults()
         {
             baseMaxProgress = [baseSpeed, baseSpeed / 3, baseSpeed / 3, (int)(baseSpeed * 2f / 3), baseSpeed / 4, baseSpeed / 2];
-            farOffset = halberdSize - rotationOffset;
-            midOffset = (int)MathHelper.Lerp(startOffset, farOffset, 0.67f);
-            RotDiag = Utility.SquareDiagonal(rotationOffset);
+            farOffset = HalberdSize - RotationOffset;
+            midOffset = (int)MathHelper.Lerp(StartOffset, farOffset, 0.67f);
+            RotDiag = Utility.SquareDiagonal(RotationOffset);
             Projectile.Size = new Vector2(2 * RotDiag);
 
             Projectile.timeLeft = 120;
@@ -72,7 +74,6 @@ namespace Macrocosm.Common.Bases
             state = HalberdState.AttackOne;
             useTimeMulti = Player.GetAttackSpeed(DamageClass.Melee);
         }
-
 
         public override void AI()
         {
@@ -98,19 +99,18 @@ namespace Macrocosm.Common.Bases
             float CursorRotation = (Main.MouseWorld - Player.MountedCenter).ToRotation();
 
             if (CursorRotation >= -MathHelper.PiOver2 && CursorRotation < MathHelper.PiOver2)
-            {
-                
+            { 
                 Player.direction = 1;
-                DrawOriginOffsetX = -(halberdSize / 2) + rotationOffset;
-                DrawOriginOffsetY = RotDiag - rotationOffset;
-                DrawOffsetX = RotDiag - rotationOffset;
+                DrawOriginOffsetX = -(HalberdSize / 2) + RotationOffset;
+                DrawOriginOffsetY = RotDiag - RotationOffset;
+                DrawOffsetX = RotDiag - RotationOffset;
             }
             else
             {
                 Player.direction = -1;
-                DrawOriginOffsetX = (halberdSize / 2) - rotationOffset;
-                DrawOriginOffsetY = RotDiag - rotationOffset;
-                DrawOffsetX = -halberdSize + RotDiag + rotationOffset;
+                DrawOriginOffsetX = (HalberdSize / 2) - RotationOffset;
+                DrawOriginOffsetY = RotDiag - RotationOffset;
+                DrawOffsetX = -HalberdSize + RotDiag + RotationOffset;
                 Projectile.rotation -= MathHelper.PiOver2;
             }
             Projectile.spriteDirection = Player.direction;
@@ -131,23 +131,23 @@ namespace Macrocosm.Common.Bases
 
                 case HalberdState.TransOne:
                     
-                    attackOffset = (float)MathHelper.Lerp(startOffset, midOffset, 0.5f * FloatAnimProgress);
+                    attackOffset = (float)MathHelper.Lerp(StartOffset, midOffset, 0.5f * FloatAnimProgress);
                     attackAngle = CursorRotation - (Player.direction * MathHelper.PiOver2 * MathF.Sin(MathHelper.TwoPi * 0.25f * FloatAnimProgress));
 
                     break;
                 case HalberdState.AttackTwo:
-                    attackOffset = (float)MathHelper.Lerp(startOffset, midOffset, 0.5f + 0.5f * MathF.Sin(MathHelper.TwoPi * 0.25f * FloatAnimProgress));
+                    attackOffset = (float)MathHelper.Lerp(StartOffset, midOffset, 0.5f + 0.5f * MathF.Sin(MathHelper.TwoPi * 0.25f * FloatAnimProgress));
                     attackAngle = CursorRotation - Player.direction * MathHelper.PiOver2;
                     attackAngle += Player.direction * (MathHelper.TwoPi / 3) * (1 - MathF.Cos(MathHelper.TwoPi * 0.25f * FloatAnimProgress));
 
                     break;
                 case HalberdState.TransTwo:
-                    attackOffset = (float)MathHelper.Lerp(midOffset, startOffset, 1 - MathF.Cos(MathHelper.TwoPi * 0.25f * FloatAnimProgress));
+                    attackOffset = (float)MathHelper.Lerp(midOffset, StartOffset, 1 - MathF.Cos(MathHelper.TwoPi * 0.25f * FloatAnimProgress));
                     attackAngle = (float)MathHelper.Lerp(CursorRotation + Player.direction * (MathHelper.Pi / 6), CursorRotation, FloatAnimProgress);
 
                     break;
                 case HalberdState.AttackThree:
-                    attackOffset = (int)MathHelper.Lerp(startOffset, farOffset, FloatAnimProgress);
+                    attackOffset = (int)MathHelper.Lerp(StartOffset, farOffset, FloatAnimProgress);
                     attackAngle = CursorRotation;
 
                     if (Player.velocity.X / Player.direction > 0 && currentAnimProgress == 0)
@@ -156,14 +156,16 @@ namespace Macrocosm.Common.Bases
                     }
                     break;
                 case HalberdState.TransThree:
-                    attackOffset = (int)Terraria.Utils.Lerp(farOffset, startOffset, FloatAnimProgress);
+                    attackOffset = (int)Terraria.Utils.Lerp(farOffset, StartOffset, FloatAnimProgress);
                     attackAngle = CursorRotation;
 
                     break;
             }
 
-            Projectile.position.X += MathF.Cos(attackAngle) * (startOffset + attackOffset);
-            Projectile.position.Y += MathF.Sin(attackAngle) * (startOffset + attackOffset);
+
+
+            Projectile.position.X += MathF.Cos(attackAngle) * (StartOffset + attackOffset);
+            Projectile.position.Y += MathF.Sin(attackAngle) * (StartOffset + attackOffset);
             Projectile.rotation += (Projectile.Center - Player.MountedCenter).ToRotation();
 
             if (Player.direction == 1)
@@ -171,7 +173,7 @@ namespace Macrocosm.Common.Bases
             else
                 Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, attackAngle - MathHelper.ToRadians(110));
 
-            int hitboxMin = Utility.SquareDiagonal(rotPointToBlade) * 2;
+            int hitboxMin = Utility.SquareDiagonal(RotPointToBlade) * 2;
             int hitboxMax = RotDiag * 2;
             if (attackAngle >= -MathHelper.PiOver2 && attackAngle < MathHelper.PiOver2)
             {
@@ -195,8 +197,10 @@ namespace Macrocosm.Common.Bases
                     currentAnimProgress = 0;
                     useTimeMulti = Player.GetAttackSpeed(DamageClass.Melee);
                     NPCsHit.Clear();
-                    
-                    state = Utility.Next(state);
+                    state = state.Next();
+
+                    if ((int)state % 2 == 0)
+                        SoundEngine.PlaySound(SoundID.Item1, Projectile.position);
                 }
                 else Projectile.Kill();
             }

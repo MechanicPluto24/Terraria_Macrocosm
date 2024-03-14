@@ -6,8 +6,8 @@ namespace Macrocosm.Content.Projectiles.Global
 	/// <summary> Interface for all ModProjectile types that explode in contact with the ground or an enemy </summary>
 	public interface IExplosive
 	{
-		public int OriginalWidth { get; }
-		public int OriginalHeight { get; }
+		public int DefWidth { get; }
+		public int DefHeight { get; }
 
 		/// <summary> The explosion blast radius </summary>
 		public float BlastRadius { get; }
