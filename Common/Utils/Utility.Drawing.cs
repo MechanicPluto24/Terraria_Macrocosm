@@ -358,10 +358,10 @@ namespace Macrocosm.Common.Utils
 			switch (dye)
 			{
 				case 1: returnColor = new Color(248, 63, 63); break; //red
-				case 5: returnColor = new Color(248, 148, 63); break; //orange
-                case 17: returnColor = new Color(48, 248, 70); break; //green
+				case 2: returnColor = new Color(248, 148, 63); break; //orange
                 case 3: returnColor = new Color(248, 242, 62); break; //yellow
 				case 4: returnColor = new Color(157, 248, 70); break; //lime
+                case 5: returnColor = new Color(48, 248, 70); break; //green
 				case 6: returnColor = new Color(60, 248, 70); break; //teal
 				case 7: returnColor = new Color(62, 242, 248); break; //cyan
 				case 8: returnColor = new Color(64, 181, 247); break; //sky blue
