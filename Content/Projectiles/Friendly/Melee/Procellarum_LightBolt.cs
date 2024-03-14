@@ -37,10 +37,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         public override void AI()
         {
             if (Projectile.ai[0] != 0)
-            {
-                HomeIn(Projectile.ai[0] - 1, Projectile.ai[1]);
-            }
-            else
+                 HomeIn(Projectile.ai[0] - 1, Projectile.ai[1]);
+             else
                 Projectile.rotation = Projectile.velocity.ToRotation();
         }
 
@@ -55,7 +53,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 Projectile.velocity = Utility.PolarVector(40 + firedIndex * 4, Projectile.rotation);
             }
             else
+            {
                 Projectile.rotation = currentRotation;
+            }
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            return true;
         }
 
         public override Color? GetAlpha(Color lightColor) => Color.White;

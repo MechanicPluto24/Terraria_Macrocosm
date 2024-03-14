@@ -8,6 +8,8 @@ using Terraria.Graphics.Shaders;
 using Terraria.Graphics;
 using Terraria.ModLoader;
 using Macrocosm.Content.Players;
+using Macrocosm.Common.Drawing;
+using static tModPorter.ProgressUpdate;
 
 namespace Macrocosm.Content.Particles
 {
@@ -21,6 +23,7 @@ namespace Macrocosm.Content.Particles
         public int PlayerID;
 		public Color Color;
         public float Opacity;
+        public int DyeType;
 
         private float defScale;
         private float defRotation;
@@ -64,8 +67,21 @@ namespace Macrocosm.Content.Particles
 
             if (DashPlayer.DashTimer <= 0)
                 Kill();
-
             Scale = MathHelper.Lerp(Scale * 0.8f, defScale, Progress);
+
+            Lighting.AddLight(Player.Center, Color.ToVector3() * 2f * Utility.QuadraticEaseIn(Progress));
+
+            if (DyeType > 0)
+            {
+                Color? dyeColor = Utility.GetDyeColor(DyeType);
+
+                if (dyeColor.HasValue)
+                    Color = dyeColor.Value;
+
+                switch (DyeType)
+                {
+                }
+            }
 
             if (collided)
                  Color *= 0.9f;

@@ -65,7 +65,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 				Item.useAnimation = 20;
 			}
 
-			return true;
+			return base.CanUseItemHeldProjectile(player);
 		}
 
 

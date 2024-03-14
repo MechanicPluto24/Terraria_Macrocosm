@@ -79,7 +79,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 							speed *= 0.466f;
                             knockback *= 2f;
 
-                            Projectile.NewProjectile(new EntitySource_ItemUse_WithAmmo(Player, currentItem, usedAmmoItemId), Projectile.Center, Vector2.Normalize(Projectile.velocity) * speed, ModContent.ProjectileType<SeleniteBeam>(), damage, knockback, Projectile.owner, ai0: strenght);
+                            Projectile.NewProjectile(new EntitySource_ItemUse_WithAmmo(Player, currentItem, usedAmmoItemId), Projectile.Center, Vector2.Normalize(Projectile.velocity) * speed, ModContent.ProjectileType<SeleniteBolt>(), damage, knockback, Projectile.owner, ai0: strenght);
 							SoundEngine.PlaySound(SoundID.Item72 with { Pitch = -0.5f, Volume = 0.4f });
 							AI_Charge = 0;
 						}

@@ -67,12 +67,12 @@ namespace Macrocosm.Common.Bases
 		private Vector2 SpriteHandlePosition { get; set; }
         private int SwingEffectType { get; set; }
         private int SwingShootType { get; set; }
-
+		private bool RightClickUse { get; set; }
 
         private float armRotation = 0f;
 		private float hitTimer = 0f;
 		private bool shotEffect;
-		private Projectile swing;
+		private Projectile swingEffect;
 		protected override void OnSpawn()
 		{
 			ChargeEndPlayerDirection = 1;
@@ -93,6 +93,7 @@ namespace Macrocosm.Common.Bases
 				ChargeBasedDamageRatio = greatswordHeldProjectileItem.ChargeBasedDamageRatio;
 				SpriteHandlePosition = greatswordHeldProjectileItem.SpriteHandlePosition;
 				MaxCharge = greatswordHeldProjectileItem.MaxCharge * (Projectile.extraUpdates + 1);
+				RightClickUse = greatswordHeldProjectileItem.RightClickUse;
 			}
 			else
 			{
@@ -115,7 +116,9 @@ namespace Macrocosm.Common.Bases
 
 					Player.velocity.X *= 0.96f;
 
-					if (Projectile.owner == Main.myPlayer && !Player.channel)
+					bool holding = RightClickUse ? Main.mouseRight : Player.channel;
+
+                    if (Projectile.owner == Main.myPlayer && !holding)
 					{
 						SoundEngine.PlaySound(SoundID.DD2_MonkStaffSwing, Projectile.Center);
 						ChargeEndPlayerDirection = Player.direction;
@@ -138,17 +141,17 @@ namespace Macrocosm.Common.Bases
 				case GreatswordState.Swing:
 					Player.direction = ChargeEndPlayerDirection;
 
-                    if (SwingEffectType > 0 && Player.whoAmI == Main.myPlayer && swing is null)
+                    if (SwingEffectType > 0 && Player.whoAmI == Main.myPlayer && swingEffect is null)
 					{
-                        swing = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Player.MountedCenter, new Vector2(Player.direction, 0f), SwingEffectType, Projectile.damage, Projectile.knockBack, Player.whoAmI, (float)Player.direction * Player.gravDir, 12, -MathHelper.PiOver2 * 0.5f);
+                        swingEffect = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Player.MountedCenter, new Vector2(Player.direction, 0f), SwingEffectType, Projectile.damage, Projectile.knockBack, Player.whoAmI, (float)Player.direction * Player.gravDir, 12, -MathHelper.PiOver2 * 0.5f);
 					}
 
                     if (!SwingStyle.Update(ref armRotation, ref Projectile.rotation, Charge))
 					{
 						UnAlive();
 
-						if(swing is not null) 
-							swing.active = false;
+						if(swingEffect is not null) 
+							swingEffect.active = false;
                     }
 
                     break;
@@ -156,8 +159,6 @@ namespace Macrocosm.Common.Bases
 
 			float localArmRot = Player.direction * armRotation;
 			Vector2 armDirection = (localArmRot + MathHelper.PiOver2).ToRotationVector2();
-
-
 
             Projectile.Center = Player.RotatedRelativePoint(Player.MountedCenter) + armDirection * 18;
 			Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, localArmRot);
