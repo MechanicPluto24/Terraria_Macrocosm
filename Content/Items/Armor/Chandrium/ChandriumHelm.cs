@@ -26,16 +26,16 @@ namespace Macrocosm.Content.Items.Armor.Chandrium
 		{
 			player.maxMinions += 1;
 			player.GetDamage<SummonDamageClass>() += 0.25f;
-		}
+            player.GetModPlayer<MacrocosmPlayer>().SpaceProtection += 1.5f;
+        }
 
-		public override bool IsArmorSet(Item head, Item body, Item legs)
+        public override bool IsArmorSet(Item head, Item body, Item legs)
 		{
 			return head.type == ModContent.ItemType<ChandriumHelm>() && body.type == ModContent.ItemType<ChandriumBreastplate>() && legs.type == ModContent.ItemType<ChandriumLeggings>();
 		}
 
 		public override void UpdateArmorSet(Player player)
 		{
-			player.GetModPlayer<MacrocosmPlayer>().SpaceProtection = SpaceProtection.Tier1;
 		}
 
 		public override void AddRecipes()

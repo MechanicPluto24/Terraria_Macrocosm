@@ -754,12 +754,12 @@ LaunchPadMarker: {
 }
 
 SetBonuses: {
-	SpaceProtection_Tier1:
+	SpaceProtection_1:
 		'''
 		Pressurized spacesuit allows for exploration of other celestial bodies.
 		Tier 1 extraterrestrial protection
 		'''
-	SpaceProtection_Tier2:
+	SpaceProtection_2:
 		'''
 		Lead-lined suit allows for safe exploration of highly irradiated environments.
 		Tier 2 extraterrestrial protection
@@ -1023,5 +1023,10 @@ MoonBaseBulkhead: {
 
 MoonBasePlatform: {
 	DisplayName: Moon Base Platform
+	Tooltip: ""
+}
+
+PowerJunction: {
+	DisplayName: Power Junction
 	Tooltip: ""
 }

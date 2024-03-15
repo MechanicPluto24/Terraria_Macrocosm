@@ -25,7 +25,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			Projectile.height = 16;
 		}
 
-		private SpriteBatchState state;
 		public override bool PreDraw(ref Color lightColor)
 		{
 			trailOffset = 4;

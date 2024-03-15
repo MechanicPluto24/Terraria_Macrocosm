@@ -24,9 +24,9 @@ namespace Macrocosm.Content.Items.Currency
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
 			int champ = NPC.FindFirstNPC(ModContent.NPCType<MoonChampion>());
-			for (int iterate = 0; iterate < Main.maxNPCs; iterate++)
+			for (int i = 0; i < Main.maxNPCs; i++)
 			{
-				NPC npc = Main.npc[iterate];
+				NPC npc = Main.npc[i];
 				if (npc.type == ModContent.NPCType<MoonChampion>() && npc.active)
 				{
 					tooltips.Add(new TooltipLine(Mod, "Name", "ForTheChamp")

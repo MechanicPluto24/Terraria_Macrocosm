@@ -26,16 +26,16 @@ namespace Macrocosm.Content.Items.Armor.Dianite
 		{
 			player.statManaMax2 += 60;
 			player.GetDamage<MagicDamageClass>() += 0.1f;
-		}
+            player.GetModPlayer<MacrocosmPlayer>().SpaceProtection += 1.5f;
+        }
 
-		public override bool IsArmorSet(Item head, Item body, Item legs)
+        public override bool IsArmorSet(Item head, Item body, Item legs)
 		{
 			return head.type == ModContent.ItemType<DianiteVisor>() && body.type == ModContent.ItemType<DianiteBreastplate>() && legs.type == ModContent.ItemType<DianiteLeggings>();
 		}
 
 		public override void UpdateArmorSet(Player player)
 		{
-			player.GetModPlayer<MacrocosmPlayer>().SpaceProtection = SpaceProtection.Tier1;
 		}
 
 		public override void AddRecipes()

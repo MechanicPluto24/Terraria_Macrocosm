@@ -26,16 +26,16 @@ namespace Macrocosm.Content.Items.Armor.Selenite
 			var modPlayer = player.GetModPlayer<MacrocosmPlayer>();
 			player.GetDamage<RangedDamageClass>() += 0.1f;
 			modPlayer.ChanceToNotConsumeAmmo += 0.15f;
-		}
+            player.GetModPlayer<MacrocosmPlayer>().SpaceProtection += 1.5f;
+        }
 
-		public override bool IsArmorSet(Item head, Item body, Item legs)
+        public override bool IsArmorSet(Item head, Item body, Item legs)
 		{
 			return head.type == ModContent.ItemType<SeleniteHeadgear>() && body.type == ModContent.ItemType<SeleniteBreastplate>() && legs.type == ModContent.ItemType<SeleniteLeggings>();
 		}
 
 		public override void UpdateArmorSet(Player player)
 		{
-			player.GetModPlayer<MacrocosmPlayer>().SpaceProtection = SpaceProtection.Tier1;
 		}
 
 		public override void AddRecipes()

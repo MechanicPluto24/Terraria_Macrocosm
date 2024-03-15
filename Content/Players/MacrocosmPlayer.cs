@@ -23,12 +23,10 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Players
 {
-    public enum SpaceProtection
+    public enum SpaceHazard
 	{
 		None,
-		Tier1,
-		Tier2,
-		Tier3
+		Vacuum
 	}
 
 	/// <summary>
@@ -51,7 +49,7 @@ namespace Macrocosm.Content.Players
 		/// The player's space protection level.
 		/// Not synced.
 		/// </summary>
-		public SpaceProtection SpaceProtection { get; set; } = SpaceProtection.None;
+		public float SpaceProtection { get; set; } = 0f;
 
 		/// <summary> 
 		/// The radiation effect intensity for this player. 
@@ -98,7 +96,7 @@ namespace Macrocosm.Content.Players
 
 		public override void ResetEffects()
 		{
-			SpaceProtection = SpaceProtection.None;
+			SpaceProtection = 0f;
 			RadNoiseIntensity = 0f;
 			ChanceToNotConsumeAmmo = 0f;
 			Player.buffImmune[BuffType<Depressurized>()] = false;
@@ -121,21 +119,23 @@ namespace Macrocosm.Content.Players
 			if (!Player.GetModPlayer<RocketPlayer>().InRocket)
 			{
 				if (SubworldSystem.AnyActive<Macrocosm>())
-				{
-					if (SpaceProtection == SpaceProtection.None)
-						Player.AddBuff(BuffType<Depressurized>(), 2);
-				}
-			}
-		}
+ 					Player.AddBuff(BuffType<Depressurized>(), 2);
+
+				//if(Player.InModBiome<IrradiationBiome>())
+                //    Player.AddBuff(BuffType<Irradiated>(), 2);
+            }
+        }
 
 		public override void PostUpdateEquips()
 		{
-            if (SpaceProtection > SpaceProtection.None)
+            if (SpaceProtection >= (float)SpaceHazard.Vacuum * 3)
                 Player.buffImmune[BuffType<Depressurized>()] = true;
-            //if (SpaceProtection > SpaceProtection.Tier1) {}
 
-            if (Player.GetModPlayer<MacrocosmPlayer>().SpaceProtection > SpaceProtection.None)
-				Player.setBonus = Language.GetTextValue("Mods.Macrocosm.Items.SetBonuses.SpaceProtection_" + SpaceProtection.ToString());
+            //if (SpaceProtection >= (float)SpaceHazard.Radiation * 3)
+            //    Player.buffImmune[BuffType<Irradiated>()] = true;
+
+            if (SpaceProtection >= 3f)
+				Player.setBonus = Language.GetTextValue("Mods.Macrocosm.Items.SetBonuses.SpaceProtection_" + (int)(SpaceProtection / 3f));
 		}
 
         public override void PostUpdateMiscEffects()
