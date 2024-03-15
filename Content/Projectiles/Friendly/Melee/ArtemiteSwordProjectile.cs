@@ -13,7 +13,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
 	public class ArtemiteSwordProjectile : ModProjectile
 	{
-        public override string Texture => Macrocosm.TextureAssetsPath + "Swing";
+        public override string Texture => Macrocosm.TexturesPath + "Swing";
 
         public override void SetStaticDefaults()
 		{

@@ -1030,3 +1030,8 @@ PowerJunction: {
 	DisplayName: Power Junction
 	Tooltip: ""
 }
+
+Computer: {
+	DisplayName: Computer
+	Tooltip: ""
+}

@@ -29,6 +29,13 @@ MacrocosmConfig: {
 		Label: UI Theme
 		Tooltip: The display UI theme
 	}
+
+	Graphics: High Resolution Effects Header
+
+	HighResolutionEffects: {
+		Label: High Resolution Effects
+		Tooltip: ""
+	}
 }
 
 UnitSystemType: {

@@ -44,7 +44,7 @@ namespace Macrocosm.Content.Rockets.UI
 			var dimensions = GetOuterDimensions();
 
 			// Load the coloring shader
-			Effect effect = ModContent.Request<Effect>(Macrocosm.EffectAssetsPath + "ColorMaskShading", AssetRequestMode.ImmediateLoad).Value;
+			Effect effect = ModContent.Request<Effect>(Macrocosm.ShadersPath + "ColorMaskShading", AssetRequestMode.ImmediateLoad).Value;
 
 			// Pass the pattern icon to the shader via the S1 register
 			Main.graphics.GraphicsDevice.Textures[1] = Pattern.IconTexture;

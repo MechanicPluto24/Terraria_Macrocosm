@@ -170,7 +170,7 @@ namespace Macrocosm.Common.Subworlds
 			if (player.TryGetReturnSubworld(uIItem.Data.UniqueId, out string id))
 				subworld = MacrocosmSubworld.SanitizeID(id);
 
-			if (ModContent.RequestIfExists<Texture2D>(Macrocosm.TextureAssetsPath + "Icons/" + subworld, out var asset))
+			if (ModContent.RequestIfExists<Texture2D>(Macrocosm.TexturesPath + "Icons/" + subworld, out var asset))
 				texture = asset.Value;
 
 			var dims = uIItem.GetOuterDimensions();

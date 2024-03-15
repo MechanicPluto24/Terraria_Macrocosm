@@ -269,7 +269,7 @@ namespace Macrocosm.Common.Drawing.Sky
 			}
 			else if (lightSource is not null && ConfigureShader is not null)
 			{
-				shader = ModContent.Request<Effect>(Macrocosm.EffectAssetsPath + "CelestialBodyShading", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+				shader = ModContent.Request<Effect>(Macrocosm.ShadersPath + "CelestialBodyShading", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
 
 				float rotation = (Position - lightSource.Position).ToRotation();
 				ConfigureShader(rotation, out float intensity, out Vector2 offset);

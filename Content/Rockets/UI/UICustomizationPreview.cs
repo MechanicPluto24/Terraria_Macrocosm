@@ -94,7 +94,7 @@ namespace Macrocosm.Content.Rockets.UI
 			int targetPixelsX = 48;
 			int targetPixelsY = (int)(targetPixelsX / aspectRatio);
 
-			Effect effect = ModContent.Request<Effect>(Macrocosm.EffectAssetsPath + "Pixelate", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+			Effect effect = ModContent.Request<Effect>(Macrocosm.ShadersPath + "Pixelate", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
 			effect.Parameters["uPixelCount"].SetValue(new Vector2(targetPixelsX, targetPixelsY));
 
 			state.SaveState(spriteBatch);

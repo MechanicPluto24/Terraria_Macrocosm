@@ -219,9 +219,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			var shader = new MiscShaderData(Main.VertexPixelShaderRef, "MagicMissile")
 							.UseProjectionMatrix(doUse: true)
 							.UseSaturation(-2.4f)
-							.UseImage0(ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "FadeOutMask"))
-							.UseImage1(ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "RocketExhaustTrail1"))
-							.UseImage2(ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "RocketExhaustTrail2"));
+							.UseImage0(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "FadeOutMask"))
+							.UseImage1(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "RocketExhaustTrail1"))
+							.UseImage2(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "RocketExhaustTrail2"));
 
 			shader.Apply();
 
@@ -236,7 +236,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(state1);
 
-			Effect effect = ModContent.Request<Effect>(Macrocosm.EffectAssetsPath + "ColorGradientSquare", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+			Effect effect = ModContent.Request<Effect>(Macrocosm.ShadersPath + "ColorGradientSquare", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
 			Rectangle sourceRect = TextureAssets.Projectile[Type].Frame(1, Main.projFrames[Type], frameY: Projectile.frame);
 
 			effect.Parameters["uSourceRect"].SetValue(new Vector4((float)sourceRect.X, (float)sourceRect.Y, (float)sourceRect.Width, (float)sourceRect.Height));

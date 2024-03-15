@@ -1,3 +1,4 @@
+using Macrocosm.Common.Config;
 using Macrocosm.Common.Netcode;
 using Macrocosm.Content.Items.Currency;
 using Macrocosm.Content.Subworlds;
@@ -20,12 +21,14 @@ namespace Macrocosm
 	{
 		public static Mod Instance => ModContent.GetInstance<Macrocosm>();
 
-		public const string EffectAssetsPath = "Macrocosm/Assets/Effects/";
-		public const string TextureAssetsPath = "Macrocosm/Assets/Textures/";
-		public const string MusicAssetsPath = "Macrocosm/Assets/Music/";
-		public const string SFXAssetsPath = "Macrocosm/Assets/Sounds/SFX/";
+		public const string TexturesPath = "Macrocosm/Assets/Textures/";
+		public static string TextureEffectsPath => TexturesPath + (MacrocosmConfig.Instance.HighResolutionEffects ? "HighRes/" : "LowRes/");
 
-		public const string EmptyTexPath = TextureAssetsPath + "Empty";
+		public const string ShadersPath = "Macrocosm/Assets/Effects/";
+		public const string MusicPath = "Macrocosm/Assets/Music/";
+		public const string SFXPath = "Macrocosm/Assets/Sounds/SFX/";
+
+		public const string EmptyTexPath = TexturesPath + "Empty";
 
 		public const int ItemShoot_UsesAmmo = 10;
 
@@ -54,7 +57,7 @@ namespace Macrocosm
 
 		private static void LoadResprites()
 		{
-			string respritePath = Macrocosm.TextureAssetsPath + "Resprites/";
+			string respritePath = Macrocosm.TexturesPath + "Resprites/";
 			TextureAssets.Moon[0] = ModContent.Request<Texture2D>(respritePath + "Moon_0");
 		}
 
@@ -67,7 +70,7 @@ namespace Macrocosm
 		{
 			AssetRequestMode mode = AssetRequestMode.ImmediateLoad;
 
-			Filters.Scene["Macrocosm:RadiationNoise"] = new Filter(new ScreenShaderData(new Ref<Effect>(ModContent.Request<Effect>(EffectAssetsPath + "RadiationNoise", mode).Value), "RadiationNoise"));
+			Filters.Scene["Macrocosm:RadiationNoise"] = new Filter(new ScreenShaderData(new Ref<Effect>(ModContent.Request<Effect>(ShadersPath + "RadiationNoise", mode).Value), "RadiationNoise"));
 			Filters.Scene["Macrocosm:RadiationNoise"].Load();
 		}
 

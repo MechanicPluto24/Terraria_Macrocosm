@@ -4,7 +4,7 @@ namespace Macrocosm.Content.Sounds
 {
 	public static class SFX
 	{
-		public const string SFXPath = Macrocosm.SFXAssetsPath;
+		public const string SFXPath = Macrocosm.SFXPath;
 
 		public static readonly SoundStyle AssaultRifle = new(SFXPath + "AssaultRifle_", 4);
 		public static readonly SoundStyle GrenadeLauncherThunk = new(SFXPath + "GrenadeLauncherThunk");

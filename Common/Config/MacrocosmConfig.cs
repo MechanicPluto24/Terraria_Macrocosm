@@ -25,7 +25,11 @@ namespace Macrocosm.Common.Config
 		[ReloadRequired]
 		public bool FancyGunEffects { get; set; }
 
-		[Header("$Mods.Macrocosm.Configs.MacrocosmConfig.UIHeader")]
+        [Header("$Mods.Macrocosm.Configs.MacrocosmConfig.Graphics")]
+        [DefaultValue(false)]
+        public bool HighResolutionEffects { get; set; }
+
+        [Header("$Mods.Macrocosm.Configs.MacrocosmConfig.UIHeader")]
 		[DrawTicks]
 		[DefaultValue("Macrocosm")]
 		[OptionStrings(["Macrocosm", "Terraria"])]

@@ -108,8 +108,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                     return;
 
                 Texture2D portal = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Bosses/CraterDemon/BigPortal").Value;
-                Texture2D circle = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Circle7").Value;
-                Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Flare3").Value;
+                Texture2D circle = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Circle6").Value;
+                Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Flare1").Value;
 
                 spriteBatch.Draw(portal, center - screenPos, null, Color.White * alpha * 0.4f, (-rotation) * 0.65f, portal.Size() / 2f, scale * 1.2f, SpriteEffects.FlipHorizontally, 0);
                 spriteBatch.Draw(portal, center - screenPos, null, Color.White * alpha * 0.8f, rotation, portal.Size() / 2f, scale, SpriteEffects.None, 0);
@@ -118,8 +118,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 spriteBatch.End();
                 spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, state);
 
-                spriteBatch.Draw(circle, center - screenPos, null, new Color(30, 255, 105).WithOpacity(0.5f * (1f - lensFlareIntensity)), 0f, flare.Size() / 2f, scale * 1.8f * Main.rand.NextFloat(0.9f, 1.1f) * (1f - lensFlareIntensity), SpriteEffects.None, 0f);
-                spriteBatch.Draw(flare, center - screenPos, null, new Color(30, 255, 105).WithOpacity(0.5f * lensFlareIntensity), 0f, flare.Size() / 2f, scale * 1.8f * Main.rand.NextFloat(0.9f, 1.1f) * lensFlareIntensity, SpriteEffects.None, 0f);
+                spriteBatch.Draw(circle, center - screenPos, null, new Color(30, 255, 105).WithOpacity(0.5f * (1f - lensFlareIntensity)), 0f, circle.Size() / 2f, scale * 0.8f * Main.rand.NextFloat(0.9f, 1.1f) * (1f - lensFlareIntensity), SpriteEffects.None, 0f);
+                spriteBatch.Draw(flare, center - screenPos, null, new Color(30, 255, 105).WithOpacity(0.5f * lensFlareIntensity), 0f, flare.Size() / 2f, new Vector2(scale * 0.55f, scale * 0.85f) * Main.rand.NextFloat(0.9f, 1.1f) * lensFlareIntensity, SpriteEffects.None, 0f);
 
                 spriteBatch.Draw(portal, center - screenPos, null, Color.White.WithOpacity(0.6f), rotation * 4f, portal.Size() / 2f, scale * 0.85f, SpriteEffects.None, 0);
 
@@ -628,7 +628,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             spriteBatch.End();
             spriteBatch.Begin(BlendState.Additive, state2);
 
-            Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Flare2").Value;
+            Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Flare2").Value;
 
             if (AI_Attack == AttackState.Phase2Transition && AI_AttackProgress >= 1)
             {

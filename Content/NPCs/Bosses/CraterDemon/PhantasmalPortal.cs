@@ -141,7 +141,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 			Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, color * 1f, (0f - Projectile.rotation) * 0.65f, texture.Size() / 2f, Projectile.scale * 0.8f, SpriteEffects.None, 0);
 
-			Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Flare3").Value;
+			Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Flare3").Value;
 			float scale = Projectile.scale * Main.rand.NextFloat(0.9f, 1.1f);
 			Main.spriteBatch.Draw(flare, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(30, 255, 105).WithOpacity(0.55f), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
 

@@ -6,7 +6,7 @@ namespace Macrocosm.Common.UI
 {
 	public class UIConnectors
 	{
-		const string Path = Macrocosm.TextureAssetsPath + "UI/Connectors/";
+		const string Path = Macrocosm.TexturesPath + "UI/Connectors/";
 
 		public static void DrawConnectorHorizontal(SpriteBatch spriteBatch, Rectangle destinationRectangle, Color color, Color borderColor)
 		{

@@ -35,7 +35,7 @@ namespace Macrocosm.Content.Rockets.UI
 
 			var rocketPlayer = player.GetModPlayer<RocketPlayer>();
 			Texture2D texture = Macrocosm.EmptyTex;
-			if (ModContent.RequestIfExists(Macrocosm.TextureAssetsPath + "Icons/" + rocketPlayer.TargetWorld, out Asset<Texture2D> iconTexture))
+			if (ModContent.RequestIfExists(Macrocosm.TexturesPath + "Icons/" + rocketPlayer.TargetWorld, out Asset<Texture2D> iconTexture))
 				texture = iconTexture.Value;
 
 			spriteBatch.Draw(texture, worldIconPosition, Color.White);
