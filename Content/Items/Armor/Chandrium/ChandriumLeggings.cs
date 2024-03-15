@@ -1,4 +1,5 @@
 using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.Players;
 using Macrocosm.Content.Rarities;
 using Terraria;
 using Terraria.ID;
@@ -26,9 +27,10 @@ namespace Macrocosm.Content.Items.Armor.Chandrium
 		{
 			player.maxMinions += 1;
 			player.moveSpeed += 0.1f;
-		}
+            player.GetModPlayer<MacrocosmPlayer>().SpaceProtection += 1.5f;
+        }
 
-		public override void AddRecipes()
+        public override void AddRecipes()
 		{
 			Recipe recipe = Recipe.Create(Type);
 			recipe.AddIngredient(ModContent.ItemType<ChandriumBar>(), 12);

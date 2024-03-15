@@ -1,4 +1,5 @@
 // using Macrocosm.Tiles;
+using Macrocosm.Content.Players;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -21,12 +22,13 @@ namespace Macrocosm.Content.Items.Armor.Astronaut
 			Item.defense = 6;
 		}
 
-		public override void UpdateEquip(Player player)
+        public override void UpdateEquip(Player player)
 		{
 			player.moveSpeed += 0.05f;
-		}
+            player.GetModPlayer<MacrocosmPlayer>().SpaceProtection += 1f;
+        }
 
-		public override void AddRecipes()
+        public override void AddRecipes()
 		{
 			Recipe recipe = Recipe.Create(Type);
 			recipe.AddIngredient(ItemID.DirtBlock, 10);

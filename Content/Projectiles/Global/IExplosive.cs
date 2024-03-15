@@ -15,7 +15,7 @@ namespace Macrocosm.Content.Projectiles.Global
 		/// <summary> Called when the projectile hits anything. By default, explodes the projectile with the corresponding blast radius. Implement this only for otherwise special behaviour. </summary>
 		public void OnHit(Projectile projectile)
 		{
-			projectile.Explode(BlastRadius);
+			projectile.Explode(BlastRadius, 2);
 		}
 	}
 }

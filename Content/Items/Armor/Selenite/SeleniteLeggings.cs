@@ -1,4 +1,5 @@
 using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.Players;
 using Macrocosm.Content.Rarities;
 using Terraria;
 using Terraria.ID;
@@ -27,9 +28,10 @@ namespace Macrocosm.Content.Items.Armor.Selenite
 		{
 			player.GetDamage<RangedDamageClass>() += 0.05f;
 			player.moveSpeed += 0.2f;
-		}
+            player.GetModPlayer<MacrocosmPlayer>().SpaceProtection += 1.5f;
+        }
 
-		public override void AddRecipes()
+        public override void AddRecipes()
 		{
 			Recipe recipe = Recipe.Create(Type);
 			recipe.AddIngredient(ModContent.ItemType<SeleniteBar>(), 12);

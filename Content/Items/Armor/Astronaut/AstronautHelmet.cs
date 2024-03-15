@@ -20,17 +20,21 @@ namespace Macrocosm.Content.Items.Armor.Astronaut
 			Item.defense = 4;
 		}
 
-		public override bool IsArmorSet(Item head, Item body, Item legs)
+        public override void UpdateEquip(Player player)
+        {
+            player.GetModPlayer<MacrocosmPlayer>().SpaceProtection += 1f;
+        }
+
+        public override bool IsArmorSet(Item head, Item body, Item legs)
 		{
 			return head.type == ModContent.ItemType<AstronautHelmet>() && body.type == ModContent.ItemType<AstronautSuit>() && legs.type == ModContent.ItemType<AstronautLeggings>();
 		}
 
 		public override void UpdateArmorSet(Player player)
 		{
-			player.GetModPlayer<MacrocosmPlayer>().SpaceProtection = SpaceProtection.Tier1;
-		}
+        }
 
-		public override void AddRecipes()
+        public override void AddRecipes()
 		{
 			Recipe recipe = Recipe.Create(Type);
 			recipe.AddIngredient(ItemID.DirtBlock, 10);

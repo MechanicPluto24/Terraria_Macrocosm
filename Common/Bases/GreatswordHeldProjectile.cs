@@ -25,7 +25,8 @@ namespace Macrocosm.Common.Bases
 		public virtual (float min, float max) ChargeBasedDashAmount => (0f, 5.5f);
 		public virtual string HeldProjectileTexturePath => Texture;
 
-		public virtual int SwingEffectType => -1;
+		public virtual Action<Player, int> OnRelease => null;
+
 		public Texture2D HeldProjectileTexture => ModContent.Request<Texture2D>(HeldProjectileTexturePath, AssetRequestMode.ImmediateLoad).Value;
 	}
 
@@ -65,17 +66,19 @@ namespace Macrocosm.Common.Bases
 		private (float min, float max) ChargeBasedDashAmount { get; set; }
 		private (float min, float max) ChargeBasedDamageRatio { get; set; }
 		private Vector2 SpriteHandlePosition { get; set; }
-        private int SwingEffectType { get; set; }
-        private int SwingShootType { get; set; }
+
+		private Action<Player, int> OnRelease { get; set; } = null;
+
 		private bool RightClickUse { get; set; }
 
         private float armRotation = 0f;
 		private float hitTimer = 0f;
-		private bool shotEffect;
-		private Projectile swingEffect;
+		private bool released = false;
 		protected override void OnSpawn()
 		{
 			ChargeEndPlayerDirection = 1;
+
+			Projectile.usesOwnerMeleeHitCD = true;
 
 			if (item.ModItem is GreatswordHeldProjectileItem greatswordHeldProjectileItem)
 			{
@@ -88,7 +91,7 @@ namespace Macrocosm.Common.Bases
 					+ MathF.Pow(greatswordHeldProjectileItem.HeldProjectileTexture.Height, 2)
 				);
 				SwordWidth = greatswordHeldProjectileItem.SwordWidth;
-				SwingEffectType = greatswordHeldProjectileItem.SwingEffectType;
+                OnRelease = greatswordHeldProjectileItem.OnRelease;
 				ChargeBasedDashAmount = greatswordHeldProjectileItem.ChargeBasedDashAmount;
 				ChargeBasedDamageRatio = greatswordHeldProjectileItem.ChargeBasedDamageRatio;
 				SpriteHandlePosition = greatswordHeldProjectileItem.SpriteHandlePosition;
@@ -141,17 +144,16 @@ namespace Macrocosm.Common.Bases
 				case GreatswordState.Swing:
 					Player.direction = ChargeEndPlayerDirection;
 
-                    if (SwingEffectType > 0 && Player.whoAmI == Main.myPlayer && swingEffect is null)
+                    if (!released && Player.whoAmI == Main.myPlayer)
 					{
-                        swingEffect = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Player.MountedCenter, new Vector2(Player.direction, 0f), SwingEffectType, Projectile.damage, Projectile.knockBack, Player.whoAmI, (float)Player.direction * Player.gravDir, 12, -MathHelper.PiOver2 * 0.5f);
+                        int damage = (int)(Projectile.damage * MathHelper.Lerp(ChargeBasedDamageRatio.min, ChargeBasedDamageRatio.max, Charge));
+                        OnRelease.Invoke(Player, damage);
+						released = true;
 					}
 
                     if (!SwingStyle.Update(ref armRotation, ref Projectile.rotation, Charge))
 					{
 						UnAlive();
-
-						if(swingEffect is not null) 
-							swingEffect.active = false;
                     }
 
                     break;

@@ -29,16 +29,16 @@ namespace Macrocosm.Content.Items.Armor.Artemite
 		public override void UpdateEquip(Player player)
 		{
 			player.GetDamage<MeleeDamageClass>() += 0.18f;
-		}
+            player.GetModPlayer<MacrocosmPlayer>().SpaceProtection += 1.5f;
+        }
 
-		public override bool IsArmorSet(Item head, Item body, Item legs)
+        public override bool IsArmorSet(Item head, Item body, Item legs)
 		{
 			return head.type == ModContent.ItemType<ArtemiteHelmet>() && body.type == ModContent.ItemType<ArtemiteBreastplate>() && legs.type == ModContent.ItemType<ArtemiteLeggings>();
 		}
 
 		public override void UpdateArmorSet(Player player)
 		{
-			player.GetModPlayer<MacrocosmPlayer>().SpaceProtection = SpaceProtection.Tier1;
 		}
 
 		public override void AddRecipes()

@@ -83,9 +83,9 @@ namespace Macrocosm.Common.Hooks
                         if (Main.netMode != NetmodeID.MultiplayerClient && Wiring.running)
                             Wiring.SkipWire(x, y);
 
-                        if (TileLoader.GetTile(openDoorID) is IDoorTile openDoor && openDoor.AnimationData is not null)
-                            TileAnimation.NewTemporaryAnimation(openDoor.AnimationData.Value, x, y, openDoorID, closeDoorID);
-
+                        if (TileLoader.GetTile(openDoorID) is IDoorTile openDoor && openDoor.AnimationData.HasValue)
+                             TileAnimation.NewTemporaryAnimation(openDoor.AnimationData.Value, x, y, openDoorID, closeDoorID);
+ 
                         tile = Main.tile[x, y];
                         tile.HasTile = true;
                         tile.TileType = openDoorID;
@@ -180,11 +180,14 @@ namespace Macrocosm.Common.Hooks
                         {
                             if (TileLoader.GetTile(closeDoorID) is IDoorTile closedDoor)
                             {
-                                if (closedDoor.AnimationData is not null)
+                                if (closedDoor.AnimationData.HasValue)
+                                {
                                     TileAnimation.NewTemporaryAnimation(closedDoor.AnimationData.Value, x, y, closeDoorID, openDoorID);
+                                }
 
                                 tile.TileType = closeDoorID;
                                 tile.TileFrameX = (short)(WorldGen.genRand.Next(closedDoor.StyleCount) * 18 + targetFrameX);
+                                //tile.TileFrameY = (short)(tile.TileFrameY + animationFrameOffset);
                             }
                         }
                         else

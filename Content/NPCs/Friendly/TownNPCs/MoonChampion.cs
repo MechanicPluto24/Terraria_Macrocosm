@@ -26,12 +26,14 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
 		{
 			Main.npcFrameCount[NPC.type] = 26;
 			NPCID.Sets.ExtraFramesCount[NPC.type] = 9;
-			NPCID.Sets.AttackFrameCount[NPC.type] = 5;
-			NPCID.Sets.DangerDetectRange[NPC.type] = 50;
-			NPCID.Sets.AttackType[NPC.type] = 0;
-			NPCID.Sets.AttackTime[NPC.type] = 60;
-			NPCID.Sets.AttackAverageChance[NPC.type] = 30;
-			NPCID.Sets.HatOffsetY[NPC.type] = 0;
+
+            NPCID.Sets.AttackType[NPC.type] = 3;
+            NPCID.Sets.AttackFrameCount[NPC.type] = 5;
+            NPCID.Sets.DangerDetectRange[NPC.type] = 35;
+            NPCID.Sets.AttackTime[NPC.type] = 20;
+            NPCID.Sets.AttackAverageChance[NPC.type] = 1;
+
+            NPCID.Sets.HatOffsetY[NPC.type] = 0;
 
 			//NPCID.Sets.ShimmerTownTransform[NPC.type] = true; // TODO
 
@@ -64,7 +66,7 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
 
 		public override List<string> SetNPCNameList()
 		{
-			return new List<string>() {
+			return [
 				"Mann"   , // Hugh Mann (Interstellar)
                 "Doyle"  , // (Interstellar)
                 "Romilly", // (Interstellar)
@@ -74,7 +76,7 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
                 "Buzz"   , // Buzz Aldrin
                 "Chris"  , // Chris Hadfield
                 "Cooper"   // Joseph Cooper (Interstellar)
-            };
+            ];
 		}
 
 		private const string chatPath = "Mods.Macrocosm.NPCs.MoonChampion.Chat.";
@@ -154,7 +156,9 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
 
 		public override void PostAI()
 		{
-			if (!SubworldSystem.IsActive<Moon>())
+
+
+            if (!SubworldSystem.IsActive<Moon>())
 				NPC.active = false;
 		}
 
@@ -205,24 +209,23 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
 
 		public override void TownNPCAttackStrength(ref int damage, ref float knockback)
 		{
-			damage = 125;
+			damage = 60;
 			knockback = 5f;
 		}
 		public override void DrawTownAttackSwing(ref Texture2D item, ref Rectangle itemFrame, ref int itemSize, ref float scale, ref Vector2 offset)
 		{
-			Main.instance.LoadItem(ItemID.None);
-			item = TextureAssets.Item[ItemID.None].Value;
+            item = TextureAssets.Item[ItemID.None].Value;
 			scale = 1f;
 		}
 		public override void TownNPCAttackSwing(ref int itemWidth, ref int itemHeight)
 		{
 			itemWidth = 20;
-			itemHeight = 5;
+			itemHeight = NPC.height;
 		}
 		public override void TownNPCAttackCooldown(ref int cooldown, ref int randExtraCooldown)
 		{
-			cooldown = 1;
-			randExtraCooldown = 1;
+            cooldown = 20;
+			randExtraCooldown = 30;
 		}
 	}
 }

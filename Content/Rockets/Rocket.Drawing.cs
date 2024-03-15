@@ -363,7 +363,7 @@ namespace Macrocosm.Content.Rockets
 			// Apply our effect and send our draw call to the GPU
 			meshEffect.CurrentTechnique.Passes[0].Apply();
 			PrimitivesSystem.GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, numVertices, 0, primitiveCount);
-			DebugVertices();
+			//DebugVertices();
 
             // Reset our settings back to the previosu ones
             PrimitivesSystem.GraphicsDevice.ScissorRectangle = scissorRectangle;

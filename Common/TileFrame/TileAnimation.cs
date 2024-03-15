@@ -7,20 +7,22 @@ using System;
 
 namespace Macrocosm.Common.TileFrame
 {
-    public readonly struct AnimationData(int frameMax, int frameCounterMax, int[] frameData, bool forcedUpdate = false)
+    public readonly struct AnimationData(int frameMax, int frameCounterMax, int[] frameData, bool forcedUpdate = false, Action<Point16, ushort> onAnimationComplete = null)
     {
-        public readonly bool ForcedUpdate = forcedUpdate;
 
         public readonly int FrameMax = frameMax;
         public readonly int FrameCounterMax = frameCounterMax;
         public readonly int[] FrameData = frameData;
 
-        public override int GetHashCode() => HashCode.Combine(ForcedUpdate, FrameMax, FrameCounterMax, FrameData);
+        // Excluded from Equals
+        public readonly bool ForcedUpdate = forcedUpdate;
+        public readonly Action<Point16, ushort> OnAnimationComplete = onAnimationComplete;
+
+        public override int GetHashCode() => HashCode.Combine(FrameMax, FrameCounterMax, FrameData);
 
         public override bool Equals(object obj)
         {
             return obj is AnimationData data &&
-                   ForcedUpdate == data.ForcedUpdate &&
                    FrameMax == data.FrameMax &&
                    FrameCounterMax == data.FrameCounterMax &&
                    Enumerable.SequenceEqual(FrameData, data.FrameData);
@@ -44,15 +46,15 @@ namespace Macrocosm.Common.TileFrame
         private static List<Point16> awaitingRemoval;
         private static List<TileAnimation> awaitingAddition;
 
+        private AnimationData data;
+
         private bool temporary;
         private Point16 coordinates;
         private ushort tileType;
         private ushort[] otherAcceptedTileTypes;
+
         private int frame;
-        private int frameMax;
         private int frameCounter;
-        private int frameCounterMax;
-        private int[] frameData;
 
         public void Load(Mod mod)
         {
@@ -75,18 +77,13 @@ namespace Macrocosm.Common.TileFrame
         }
 
         public static void NewTemporaryAnimation(AnimationData data, int x, int y, ushort tileType, params ushort[] otherAcceptedTileTypes)
-            => NewTemporaryAnimation(data.FrameMax, data.FrameCounterMax, data.FrameData, data.ForcedUpdate, x, y, tileType, otherAcceptedTileTypes);
-
-        public static void NewTemporaryAnimation(int frameMax, int frameCounterMax, int[] frameData, bool forcedUpdate, int x, int y, ushort tileType, params ushort[] otherAcceptedTileTypes)
         {
             Point16 coordinates = new(x, y);
             if (x >= 0 && x < Main.maxTilesX && y >= 0 && y < Main.maxTilesY)
             {
                 TileAnimation animation = new()
                 {
-                    frameMax = frameMax,
-                    frameCounterMax = frameCounterMax,
-                    frameData = frameData,
+                    data = data,
 
                     frame = 0,
                     frameCounter = 0,
@@ -98,10 +95,13 @@ namespace Macrocosm.Common.TileFrame
                     temporary = true
                 };
 
-                if (forcedUpdate)
+                if (data.ForcedUpdate)
                 {
-                    temporaryAnimations[animation.coordinates] = animation;
-                    temporaryAnimations[animation.coordinates].Update();
+                    if (!temporaryAnimations.ContainsKey(animation.coordinates))
+                    {
+                        temporaryAnimations[animation.coordinates] = animation;
+                        temporaryAnimations[animation.coordinates].Update();
+                    }
                 }
                 else
                 {
@@ -189,16 +189,17 @@ namespace Macrocosm.Common.TileFrame
             }
 
             frameCounter++;
-            if (frameCounter < frameCounterMax)
+            if (frameCounter < data.FrameCounterMax)
             {
                 return;
             }
 
             frameCounter = 0;
             frame++;
-            if (frame >= frameMax)
+            if (frame >= data.FrameMax)
             {
                 frame = 0;
+                data.OnAnimationComplete?.Invoke(coordinates, tileType); 
                 if (temporary)
                 {
                     RemoveTemporaryAnimation(coordinates.X, coordinates.Y);
@@ -215,7 +216,7 @@ namespace Macrocosm.Common.TileFrame
                 return false;
             }
 
-            frameData = value.frameData[value.frame];
+            frameData = value.data.FrameData[value.frame];
             return true;
         }
     }
