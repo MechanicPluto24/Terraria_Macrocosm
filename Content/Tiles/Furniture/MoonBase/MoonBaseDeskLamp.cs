@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.Enums;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -25,8 +26,10 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 			TileObjectData.newTile.WaterPlacement = LiquidPlacement.NotAllowed;
 			TileObjectData.newTile.LavaPlacement = LiquidPlacement.NotAllowed;
 
-			// To ensure the right-facing style is properly registered, not the left-facing style "turned off" frame
-			TileObjectData.newTile.StyleMultiplier = 2;
+            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.Table, 2, 0);
+
+            // To ensure the right-facing style is properly registered, not the left-facing style "turned off" frame
+            TileObjectData.newTile.StyleMultiplier = 2;
 			TileObjectData.newTile.StyleWrapLimit = 4;
 
 			// Place right alternate

@@ -160,7 +160,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             {
                 SpriteEffects effects = npc.direction > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
-                Texture2D cross = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "DebugCross").Value;
+                Texture2D cross = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "DebugCross").Value;
 
                 Vector2 originLeg1 = new(leg1.Width / 2f, 0);
                 Vector2 originLeg2 = new(leg2.Width / 2f, 0);

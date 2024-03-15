@@ -90,7 +90,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
             if (flashTimer < maxFlashTimer)
             {
-                Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Flare2").Value;
+                Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Flare2").Value;
                 float progress = flashTimer / maxFlashTimer;
                 float scale = Projectile.scale * progress * 0.85f;
                 Vector2 position = spawnPosition + Projectile.Size / 2f;

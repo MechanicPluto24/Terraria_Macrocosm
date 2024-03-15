@@ -122,7 +122,7 @@ namespace Macrocosm.Content.Rockets
 				if (FlightProgress < 0.1f && !ForcedFlightAppearance)
 					scale *= Utility.QuadraticEaseOut(FlightProgress * 10f);
 
-				var flare = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Flare2").Value;
+				var flare = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Flare2").Value;
 				spriteBatch.Draw(flare, position + new Vector2(Bounds.Width / 2, Bounds.Height), null, new Color(255, 69, 0), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
 			}
 		}
@@ -182,7 +182,7 @@ namespace Macrocosm.Content.Rockets
 			// Guard against effect being null
 			if (meshEffect is null || meshEffect.IsDisposed)
 			{
-				meshEffect = ModContent.Request<Effect>(Macrocosm.EffectAssetsPath + "Mesh", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+				meshEffect = ModContent.Request<Effect>(Macrocosm.ShadersPath + "Mesh", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
 				meshTransform = meshEffect.Parameters["TransformMatrix"];
 			}
 
@@ -383,7 +383,7 @@ namespace Macrocosm.Content.Rockets
             if (!beginCalled)
                 Main.spriteBatch.Begin();
 
-            var tex = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Circle5", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+            var tex = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Circle5", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
             foreach (VertexPositionColorTexture vertex in vertices)
                 Main.spriteBatch.Draw(tex, new Vector2(vertex.Position.X, vertex.Position.Y), tex.Bounds, new Color(1f, 1f, 1f, 0f), 0f, Vector2.Zero, 0.01f, SpriteEffects.None, 0f);
 

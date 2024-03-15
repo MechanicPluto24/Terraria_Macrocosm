@@ -101,7 +101,7 @@ namespace Macrocosm.Common.Utils
                 if (!beginCalled)
                     Main.spriteBatch.Begin();
 
-                var tex = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Circle5", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+                var tex = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Circle5", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
                 foreach (VertexPositionColorTexture vertex in vertices)
                     Main.spriteBatch.Draw(tex, new Vector2(vertex.Position.X, vertex.Position.Y), tex.Bounds, new Color(1f, 1f, 1f, 0f), 0f, Vector2.Zero, 0.01f, SpriteEffects.None, 0f);
 

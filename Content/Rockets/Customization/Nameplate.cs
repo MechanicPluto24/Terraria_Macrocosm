@@ -53,7 +53,7 @@ namespace Macrocosm.Content.Rockets.Customization
 
 		public void Draw(SpriteBatch spriteBatch, Vector2 position)
 		{
-			Texture2D texture = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Fonts/RocketLettersSmall").Value;
+			Texture2D texture = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "Fonts/RocketLettersSmall").Value;
 			int numChars = (int)MathHelper.Clamp(text.Length, 0, MaxChars);
 
 			float offsetX = 6;

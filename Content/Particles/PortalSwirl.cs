@@ -50,7 +50,7 @@ namespace Macrocosm.Content.Particles
 
 			Color color = (Color.Lerp(Color.White, Color, speed) * 0.9f).WithOpacity(1f);
 
-			Texture2D glowTex = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Swirl1", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+			Texture2D glowTex = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Swirl1", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
 
 			Main.spriteBatch.Draw(
 				glowTex,

@@ -36,9 +36,9 @@ namespace Macrocosm.Content.Particles
 
         public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
 		{
-            Texture2D slash = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Slash1").Value;
-            Texture2D glow = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Circle5").Value;
-            //Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Star2").Value;
+            Texture2D slash = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Slash1").Value;
+            Texture2D glow = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Circle5").Value;
+            //Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Star2").Value;
 
             for (int i = 0; i < TrailCacheLenght; i++)
             {

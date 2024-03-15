@@ -153,7 +153,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
             Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, (color * 1f).WithOpacity(1f), Projectile.rotation * 1.65f, texture.Size() / 2f, Projectile.scale * 0.75f, SpriteEffects.None, 0);
 
-            Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Flare2").Value;
+            Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Flare2").Value;
             float scale = Projectile.scale * Main.rand.NextFloat(0.85f, 1.15f);
             Main.spriteBatch.Draw(flare, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(255, 170, 33).WithOpacity(0.35f), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
 
