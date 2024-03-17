@@ -30,7 +30,13 @@ namespace Macrocosm.Common.Utils
 			float maxLerpValue = MathF.Pow(logBase, 1f) - 1f;
 			return lerpValue / maxLerpValue;
 		}
-
+        public static float WrapProgress(float progress)
+        {
+            if (progress < 0.0f)
+                 progress = 1.0f + (progress % 1.0f);
+ 
+            return progress % 1.0f;
+        }
         public static float WrapLerpAngle(float a, float b, float t)
         {
             float difference = b - a;

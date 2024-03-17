@@ -46,6 +46,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         bool spawned = false;
         float defScale;
+        protected int particleOnHiyCount = 1;
     
         public override void AI()
 		{
@@ -55,7 +56,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 spawned = true;
             }
 
-			float progress = SwingRotation / TargetSwingRotation;
+            particleOnHiyCount = 1;
+
+            float progress = SwingRotation / TargetSwingRotation;
 			Player player = Main.player[Projectile.owner];
 			Item item = player.CurrentItem();
 
@@ -92,7 +95,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            Particle.CreateParticle<ArtemiteStar>(target.Center + Main.rand.NextVector2Circular(target.width / 2, target.height / 2), -Vector2.UnitY * 0.4f, 1f, 0f, shouldSync: true);
+            for(int i = 0; i < particleOnHiyCount; i++)
+                Particle.CreateParticle<ArtemiteStar>(target.Center + Main.rand.NextVector2Circular(target.width / 2, target.height / 2) * i, -Vector2.UnitY * 0.4f, 1f, 0f, shouldSync: true);
         }
 
         public override bool PreDraw(ref Color lightColor)
@@ -150,11 +154,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 spawned = true;
             }
 
+            particleOnHiyCount = (int)(2 * (0.5f + 0.5f * Projectile.scale));
+
             float progress = SwingRotation / TargetSwingRotation;
             Player player = Main.player[Projectile.owner];
             Item item = player.CurrentItem();
 
-            float speed = 0.6f * player.GetTotalAttackSpeed(DamageClass.Melee);
+            float speed = 0.5f * player.GetTotalAttackSpeed(DamageClass.Melee);
             SwingRotation += speed;
 
             float angle = MathHelper.Pi - MathHelper.Pi/16;

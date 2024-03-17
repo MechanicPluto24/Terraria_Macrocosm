@@ -20,5 +20,16 @@ namespace Macrocosm.Common.Graphics
 			ColorBlendFunction = BlendFunction.ReverseSubtract,
 			AlphaBlendFunction = BlendFunction.ReverseSubtract,
 		};
-	}
+
+        public static readonly BlendState Negative = new()
+        {
+            ColorBlendFunction = BlendFunction.ReverseSubtract,
+            ColorSourceBlend = Blend.One,
+            ColorDestinationBlend = Blend.One,
+
+            AlphaBlendFunction = BlendFunction.ReverseSubtract,
+            AlphaSourceBlend = Blend.One,
+            AlphaDestinationBlend = Blend.One,
+        };
+    }
 }

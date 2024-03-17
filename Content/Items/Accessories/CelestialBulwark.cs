@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Graphics;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Materials;
@@ -10,6 +11,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
+using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Default;
@@ -77,21 +79,12 @@ namespace Macrocosm.Content.Items.Accessories
 
         private void StartDashVisuals(Player player)
         {
-			int dye = -1;
-			for (int i = 3; i <= 9; i++)
-			{
-				if (player.armor[i].type == Type)
-					dye = player.dye[i].dye;
-			}
-
             Particle.CreateParticle<CelestialBulwarkDashParticle>(p =>
             {
                 p.Scale = 0.35f;
-                p.Color = CelestialDisco.CelestialColor;
                 p.Position = player.Center;
                 p.PlayerID = player.whoAmI;
                 p.Rotation = player.velocity.ToRotation() - MathHelper.PiOver2;
-				p.DyeType = dye;
             });
         }
 
@@ -103,7 +96,10 @@ namespace Macrocosm.Content.Items.Accessories
 
             for (int i = 0; i < count; i++)
             {
-                Dust.NewDustDirect(player.Center + new Vector2(35, 0).RotatedBy(player.velocity.ToRotation()) + Main.rand.NextVector2Circular(50, 50) * progress, 1, 1, ModContent.DustType<CelestialDust>(), 0f, 0f, 100, default, 1.1f);
+                Dust dust = Dust.NewDustDirect(player.Center + new Vector2(35, 0).RotatedBy(player.velocity.ToRotation()) + Main.rand.NextVector2Circular(50, 50) * progress, 1, 1, ModContent.DustType<CelestialDust>(), 0f, 0f, 100, default, 1.1f);
+                GetEffectColor(player, out dust.color, out _, out _, out _, out bool rainbow);
+                if (rainbow)
+                    dust.color = Utility.MultiLerpColor(Main.rand.NextFloat(), Color.Red, Color.Green, Color.Blue).WithAlpha(100);
             }
         }
 
@@ -113,12 +109,21 @@ namespace Macrocosm.Content.Items.Accessories
 			int count = (int)(10 * dashPlayer.DashProgress);
 
             for (int i = 0; i < count; i++)
-                Particle.CreateParticle<CelestialStar>(npc.Center + Main.rand.NextVector2Circular(npc.width/2, npc.height/2), npc.velocity + Main.rand.NextVector2Circular(2,2), scale: 1.2f);
+			{
+                var star = Particle.CreateParticle<CelestialStar>(npc.Center + Main.rand.NextVector2Circular(npc.width/2, npc.height/2), npc.velocity + Main.rand.NextVector2Circular(2,2), scale: 1.2f);
+                GetEffectColor(player, out star.Color, out _, out _, out _, out bool rainbow);
+                if (rainbow)
+                    star.Color = Utility.MultiLerpColor(Main.rand.NextFloat(), Color.Red, Color.Green, Color.Blue).WithAlpha(127);
+            }
 
             for (int i = 0; i < 25; i++)
             {
 				Vector2 dustVelocity = Main.rand.NextVector2Circular(2, 2);
-                Dust.NewDustDirect(new Vector2(npc.position.X, npc.position.Y), npc.width, npc.height, ModContent.DustType<CelestialDust>(), dustVelocity.X, dustVelocity.Y, 100, default, 1.5f);
+                Dust dust = Dust.NewDustDirect(new Vector2(npc.position.X, npc.position.Y), npc.width, npc.height, ModContent.DustType<CelestialDust>(), dustVelocity.X, dustVelocity.Y, 100, default, 1.5f);
+                dust.color = CelestialDisco.CelestialColor.WithOpacity(0.8f);
+                GetEffectColor(player, out dust.color, out _, out _, out _, out bool rainbow);
+                if (rainbow)
+                    dust.color = Utility.MultiLerpColor(Main.rand.NextFloat(), Color.Red, Color.Green, Color.Blue).WithAlpha(100);
             }
         }
 
@@ -174,5 +179,121 @@ namespace Macrocosm.Content.Items.Accessories
 			spriteBatch.End();
 			spriteBatch.Begin(state);
 		}
+
+		public static bool GetEffectColor(Player player, out Color primaryColor) => GetEffectColor(player, out primaryColor, out _, out _, out _, out _);
+
+        public static bool GetEffectColor(Player player, out Color primaryColor, out Color? secondaryColor, out BlendState blendStateOverride, out bool bypassShader, out bool rainbow)
+		{
+            int dyeItemType = -1;
+			primaryColor = CelestialDisco.CelestialColor;
+            secondaryColor = CelestialDisco.CelestialColor;
+			blendStateOverride = null;
+			bypassShader = false;
+            rainbow = false;
+
+            for (int i = 3; i <= 9; i++)
+            {
+                if (player.armor[i].type == ModContent.ItemType<CelestialBulwark>())
+                    dyeItemType = player.dye[i].type;
+
+                if (dyeItemType > 0)
+                {
+                    var shader = GameShaders.Armor.GetShaderFromItemId(dyeItemType);
+                    Vector3 primary = typeof(ArmorShaderData).GetFieldValue<Vector3>("_uColor", shader);
+                    primaryColor = primary != Vector3.One ? new(primary) : primaryColor;
+                    Vector3 secondary = typeof(ArmorShaderData).GetFieldValue<Vector3>("_uSecondaryColor", shader);
+                    secondaryColor = secondary != Vector3.One ? new(secondary) : null;
+
+                    switch (dyeItemType)
+                    {
+                        // Bypass shader for "X and black" dyes for brighter glowmask
+                        case ItemID.RedandBlackDye:
+                        case ItemID.OrangeandBlackDye:
+                        case ItemID.YellowandBlackDye:
+                        case ItemID.LimeandBlackDye:
+                        case ItemID.GreenandBlackDye:
+                        case ItemID.TealandBlackDye:
+                        case ItemID.CyanandBlackDye:
+                        case ItemID.SkyBlueandBlackDye:
+                        case ItemID.BlueandBlackDye:
+                        case ItemID.PurpleandBlackDye:
+                        case ItemID.VioletandBlackDye:
+                        case ItemID.BrownAndBlackDye:
+                        case ItemID.FlameAndBlackDye:
+                        case ItemID.GreenFlameAndBlackDye:
+                        case ItemID.BlueFlameAndBlackDye:
+                            bypassShader = true;
+                            break;
+
+                        // Bypass shader for better shield glowmask for specific dyes
+                        case ItemID.TwilightDye:
+                        case ItemID.ChlorophyteDye:
+                        case ItemID.ReflectiveObsidianDye:
+                            bypassShader = true;
+                            break;
+
+                        // Make glowmask and effect white for some silver dyes
+                        case ItemID.SilverDye:
+                        case ItemID.BlackAndWhiteDye:
+                        case ItemID.ReflectiveSilverDye:
+                            primaryColor = Color.White;
+                            break;
+
+                        // Make glowmask actually silver 
+                        case ItemID.SilverAndBlackDye:
+                            primaryColor = Color.Silver;
+                            bypassShader = true;
+                            break;
+
+                        // Special rainbow effect 
+                        case ItemID.RainbowDye:
+                        case ItemID.IntenseRainbowDye:
+                        case ItemID.LivingRainbowDye:
+                        case ItemID.HallowBossDye:
+                            primaryColor = Main.DiscoColor;
+                            rainbow = true;
+                            break;
+
+                        // Substractive effect (black shadow dash)
+                        case ItemID.BlackDye:
+                        case ItemID.ShadowDye:
+                        case ItemID.GrimDye:
+                        case ItemID.LokisDye:
+                            blendStateOverride = CustomBlendStates.Subtractive;
+                            primaryColor = new Color(25, 25, 25);
+                            break;
+
+                        // Override color (Primary color was bypassed)
+                        case ItemID.LivingOceanDye:
+                            primaryColor = Color.Navy;
+                            break;
+
+                        // Override color (Glowmask was too dark)
+                        case ItemID.ReflectiveMetalDye:
+                            primaryColor = Color.White;
+                            break;
+
+                        // Negative color of Celestial Disco (might use some cooler effect on the sah)
+                        case ItemID.NegativeDye:
+                            primaryColor = new((new Vector3(1f) - CelestialDisco.CelestialColor.ToVector3()));
+                            break;
+
+                        // Alternating dark + rainbow color 
+                        case ItemID.MidnightRainbowDye:
+                            blendStateOverride = CustomBlendStates.Subtractive;
+                            secondaryColor = new Color(150, 150, 150);
+                            rainbow = true;
+                            break;
+
+                        default:
+                            break;
+                    }
+
+                    return true;
+                }
+            }
+
+			return false;
+        }
 	}
 }
