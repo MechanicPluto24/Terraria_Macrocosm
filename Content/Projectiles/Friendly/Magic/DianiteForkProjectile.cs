@@ -241,7 +241,30 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			Main.spriteBatch.Begin(BlendState.Additive, state);
 
 			Projectile.GetTrail().Draw(Projectile.Size / 2f);
-			Main.EntitySpriteDraw(glow, Projectile.Center - Main.screenPosition, null, new Color(215, 101, 0), 0f, glow.Size() / 2, 0.05f * Projectile.scale, SpriteEffects.None, 0f);
+
+            Color glowColor = new Color(248, 137, 0);
+            int glowTrailCount = (int)(ProjectileID.Sets.TrailCacheLength[Type] * 0.5f);
+            for (int i = 0; i < glowTrailCount; i++)
+            {
+                float trailMultCurrent = 1f - ((float)i / glowTrailCount);
+                float trailMultNext = 1f - ((float)(i + 1) / glowTrailCount);
+
+                Vector2 currentPosition = Projectile.oldPos[i] + Projectile.Size / 2f - Main.screenPosition;
+                Vector2 nextPosition = Projectile.oldPos[i + 1] + Projectile.Size / 2f - Main.screenPosition;
+
+                Vector2 firstLerpPosition = Vector2.Lerp(currentPosition, nextPosition, 1f / 3f);
+                Vector2 secondLerpPosition = Vector2.Lerp(currentPosition, nextPosition, 2f / 3f);
+
+                Main.EntitySpriteDraw(glow, currentPosition, null, glowColor.WithOpacity(0.33f), Projectile.rotation, glow.Size() / 2, 0.035f * Projectile.scale * trailMultCurrent, SpriteEffects.None, 0f);
+
+                float avgTrailMultFirst = (trailMultCurrent * 2 + trailMultNext) / 3;
+                float avgTrailMultSecond = (trailMultCurrent + trailMultNext * 2) / 3;
+
+                Main.EntitySpriteDraw(glow, firstLerpPosition, null, glowColor.WithOpacity(0.33f), Projectile.rotation, glow.Size() / 2, 0.035f * Projectile.scale * avgTrailMultFirst, SpriteEffects.None, 0f);
+                Main.EntitySpriteDraw(glow, secondLerpPosition, null, glowColor.WithOpacity(0.33f), Projectile.rotation, glow.Size() / 2, 0.035f * Projectile.scale * avgTrailMultSecond, SpriteEffects.None, 0f);
+            }
+
+            Main.EntitySpriteDraw(glow, Projectile.Center - Main.screenPosition, null, glowColor, Projectile.rotation, glow.Size() / 2, 0.042f * Projectile.scale, SpriteEffects.None, 0f);
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(state);

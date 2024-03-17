@@ -25,7 +25,7 @@ namespace Macrocosm.Common.Config
 		[ReloadRequired]
 		public bool FancyGunEffects { get; set; }
 
-        [Header("$Mods.Macrocosm.Configs.MacrocosmConfig.Graphics")]
+        [Header("$Mods.Macrocosm.Configs.MacrocosmConfig.GraphicsHeader")]
         [DefaultValue(false)]
         public bool HighResolutionEffects { get; set; }
 

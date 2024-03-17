@@ -40,11 +40,10 @@ namespace Macrocosm.Common.Subworlds
 
 		public static int CurrentIndex => SubworldSystem.AnyActive() ? SubworldSystem.GetIndex(CurrentID) : -1;
 
-		// TODO: We could protect the original properties get them only via statics?
-		public static double CurrentTimeRate => SubworldSystem.AnyActive<Macrocosm>() ? Current.TimeRate : Earth.TimeRate;
-		public static double CurrentDayLength => SubworldSystem.AnyActive<Macrocosm>() ? Current.DayLenght : Earth.DayLenght;
-		public static double CurrentNightLength => SubworldSystem.AnyActive<Macrocosm>() ? Current.NightLenght : Earth.NightLenght;
-		public static float CurrentGravityMultiplier => SubworldSystem.AnyActive<Macrocosm>() ? Current.GravityMultiplier : Earth.GravityMultiplier;
+		public static double CurrentTimeRate => Current is not null ? Current.TimeRate : Earth.TimeRate;
+		public static double CurrentDayLength => Current is not null ? Current.DayLenght : Earth.DayLenght;
+		public static double CurrentNightLength => Current is not null ? Current.NightLenght : Earth.NightLenght;
+		public static float CurrentGravityMultiplier => Current is not null ? Current.GravityMultiplier : Earth.GravityMultiplier;
 
 		/// <summary> The loading screen. </summary>
 		public static LoadingScreen LoadingScreen { get; set; }

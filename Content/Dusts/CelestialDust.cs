@@ -1,5 +1,6 @@
 using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Items.Accessories;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
@@ -20,9 +21,8 @@ namespace Macrocosm.Content.Dusts
 			dust.scale -= 0.05f;
 			dust.rotation += (dust.velocity.Y - dust.velocity.X) / 5;
 
-			dust.color = CelestialDisco.CelestialColor.WithOpacity(0.8f);
-
-			Lighting.AddLight(dust.position, dust.color.ToVector3() * 0.6f * dust.scale);
+            
+            Lighting.AddLight(dust.position, dust.color.ToVector3() * 0.6f * dust.scale);
 
 			if (dust.scale < 0.2f)
 				dust.active = false;

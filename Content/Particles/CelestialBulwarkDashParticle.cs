@@ -2,14 +2,16 @@
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using Terraria;
 using Terraria.Graphics.Shaders;
-using Terraria.Graphics;
 using Terraria.ModLoader;
 using Macrocosm.Content.Players;
 using Macrocosm.Common.Drawing;
-using static tModPorter.ProgressUpdate;
+using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Graphics;
+using Macrocosm.Content.Items.Accessories;
+using Terraria.ID;
+using System;
 
 namespace Macrocosm.Content.Particles
 {
@@ -22,66 +24,103 @@ namespace Macrocosm.Content.Particles
 
         public int PlayerID;
 		public Color Color;
+		public Color? SecondaryColor;
         public float Opacity;
-        public int DyeType;
 
         private float defScale;
         private float defRotation;
         private bool spawned;
         private bool collided;
 
+        private BlendState blendStateOverride;
+        private bool rainbow;
+
         public Player Player => Main.player[PlayerID];
         public DashPlayer DashPlayer => Player.GetModPlayer<DashPlayer>();
         public float Progress => DashPlayer.DashProgress;
 
+        SpriteBatchState state;
         public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
 		{
             Texture2D slash = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Slash1").Value;
             Texture2D glow = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Circle5").Value;
-            //Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Star2").Value;
 
+            if (blendStateOverride is not null)
+            {
+                state.SaveState(spriteBatch);
+                spriteBatch.End();
+                spriteBatch.Begin(blendStateOverride, state);
+            }
+            
             for (int i = 0; i < TrailCacheLenght; i++)
             {
                 float trailProgress = MathHelper.Clamp((float)i / TrailCacheLenght, 0f, 1f);
                 float scale = defScale - (Scale * trailProgress * 5f);
-                Color color = scale < 0 ? Color * Progress * (1f - trailProgress) : Color * Progress;
+
+                bool even = i % 2 == 0;
+                Color baseColor;
+                if (SecondaryColor.HasValue)
+                    baseColor = even ? Color : SecondaryColor.Value;
+                else 
+                    baseColor = Color;
+
+                // Special rainbow, used for Midnight Rainbow Dye (alternating dark and rainbow)
+                bool specialRainbow = blendStateOverride is not null && SecondaryColor.HasValue;
+
+                if (rainbow)
+                {
+                    float rainbowProgress = Utility.WrapProgress(trailProgress + CelestialDisco.CelestialStyleProgress);
+                    baseColor = Utility.MultiLerpColor(rainbowProgress, Color.Red, Color.Green, Color.Blue);
+
+                    // Special case, used for Midnight Rainbow Dye & Negative Dye
+                    if(specialRainbow && even)
+                    {
+                        baseColor = SecondaryColor.Value * (1f-trailProgress);
+                        spriteBatch.End();
+                        spriteBatch.Begin(blendStateOverride, state);
+                    }
+                }
+
+                Color color = scale < 0 ? baseColor * Progress * (1f - trailProgress) : baseColor * Progress;
+
                 Vector2 position = scale < 0 ? OldPositions[i] + new Vector2(0, 55).RotatedBy(OldRotations[i]) : Vector2.Lerp(OldPositions[i], Center, Progress * (1f - trailProgress));
                 spriteBatch.Draw(slash, position - screenPosition, null, color, OldRotations[i], slash.Size() / 2, scale, SpriteEffects.None, 0f);
+
+                if (specialRainbow && even)
+                {
+                    spriteBatch.End();
+                    spriteBatch.Begin(state);
+                }
             }
 
-			spriteBatch.Draw(slash, Center - screenPosition, null, Color * Progress, Rotation, slash.Size() / 2, Scale, SpriteEffects.None, 0f);
-			spriteBatch.Draw(glow, Center - screenPosition, null, Color.Lerp(Color.White, Color, 0.75f).WithOpacity(0.5f) * Progress, defRotation, glow.Size() / 2, Utility.QuadraticEaseIn(Progress) * 0.7f, SpriteEffects.None, 0f);
-			//spriteBatch.Draw(flare, Center + new Vector2(0, 30).RotatedBy(defRotation) - screenPosition, null, Color.Lerp(Color.White, Color, 0.5f).WithOpacity(0.5f) * Progress, 0f, flare.Size() / 2, Utility.CubicEaseIn(Progress) * 0.8f, SpriteEffects.None, 0f);
-			//spriteBatch.Draw(flare, Center + new Vector2(0, 30).RotatedBy(defRotation) - screenPosition, null, Color.Lerp(Color.White, Color, 0.5f).WithOpacity(0.5f) * Progress, MathHelper.PiOver2, flare.Size() / 2, Utility.QuadraticEaseIn(Progress) * 1.6f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(slash, Center - screenPosition, null, Color * Progress, Rotation, slash.Size() / 2, Scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(glow, Center - screenPosition, null, Color.Lerp(Color.White, Color, 0.75f).WithOpacity(0.5f) * Progress, defRotation, glow.Size() / 2, Utility.QuadraticEaseIn(Progress) * 0.7f, SpriteEffects.None, 0f);
+
+            if (blendStateOverride is not null)
+            {           
+                spriteBatch.End();
+                spriteBatch.Begin(state);
+            }
+
             return false;
 		}
 
         public override void AI()
-		{
-			if (!spawned)
-			{
-				spawned = true;
+        {
+            if (!spawned)
+            {
+                spawned = true;
                 defScale = Scale;
                 defRotation = Rotation;
-			}
+
+                CelestialBulwark.GetEffectColor(Player, out Color, out SecondaryColor, out blendStateOverride, out _, out rainbow);
+            }
 
             if (DashPlayer.DashTimer <= 0)
                 Kill();
             Scale = MathHelper.Lerp(Scale * 0.8f, defScale, Progress);
 
             Lighting.AddLight(Player.Center, Color.ToVector3() * 2f * Utility.QuadraticEaseIn(Progress));
-
-            if (DyeType > 0)
-            {
-                Color? dyeColor = Utility.GetDyeColor(DyeType);
-
-                if (dyeColor.HasValue)
-                    Color = dyeColor.Value;
-
-                switch (DyeType)
-                {
-                }
-            }
 
             if (collided)
                  Color *= 0.9f;

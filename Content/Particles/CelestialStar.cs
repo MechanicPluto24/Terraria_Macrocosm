@@ -12,8 +12,8 @@ namespace Macrocosm.Content.Particles
 		public override string TexturePath => Macrocosm.EmptyTexPath;
 
 		public float Alpha = 0.3f;
+        public Color Color = Color.White;
 
-        private Color Color = Color.White;
 		bool fadeIn = true;
 		float defScale;
 		float actualScale;
@@ -41,8 +41,6 @@ namespace Macrocosm.Content.Particles
                 Alpha = MathHelper.Clamp(Alpha * 0.92f, 0f, 1f);
                 actualScale *= 0.95f;
             }
-
-            Color = CelestialDisco.CelestialColor;
 
 			Lighting.AddLight(Center, Color.ToVector3() * Alpha);
 

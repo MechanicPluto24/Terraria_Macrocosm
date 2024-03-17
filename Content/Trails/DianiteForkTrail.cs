@@ -22,13 +22,13 @@ namespace Macrocosm.Content.Trails
 
 		public override Color TrailColors(float progressOnStrip)
 		{
-			Color result = Color.Lerp(new Color(255, 101, 0), new Color(255, 255, 0) * progressOnStrip, progressOnStrip).WithAlpha(127);
-			return result;
+			Color result = Color.Lerp(new Color(248, 137, 0).WithLuminance(0.5f), Color.Yellow, progressOnStrip);
+            return result;
 		}
 
 		public override float TrailWidths(float progressOnStrip)
 		{
-			return 4f;
+			return MathHelper.Lerp(4f, 6f, progressOnStrip);
 		}
 	}
 }

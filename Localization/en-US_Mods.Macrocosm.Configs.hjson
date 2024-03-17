@@ -2,8 +2,9 @@
 
 MacrocosmConfig: {
 	DisplayName: General Configuration
-	UIHeader: User Interface
 	GameplayHeader: Gameplay
+	GraphicsHeader: Graphics
+	UIHeader: User Interface
 
 	AlwaysDisplayTitleScreens: {
 		Label: Always display title screens
@@ -15,26 +16,24 @@ MacrocosmConfig: {
 		Tooltip: Whether guns have fancy use effects, such as recoil. Requires mod reload.
 	}
 
+	HighResolutionEffects: {
+		Label: High Resolution Effects
+		Tooltip: Use high resolution visual effects.
+	}
+
 	UnitSystem: {
 		Label: Unit system
-		Tooltip: The unit system used to display numeric values
+		Tooltip: The unit system used to display numeric values.
 	}
 
 	DisplayGravityInGs: {
 		Label: Display gravity values in Gs
-		Tooltip: Whether to display the gravity in Gs or gravitational acceleration measured in the current unit system
+		Tooltip: Whether to display the gravity in Gs, or gravitational acceleration measured in the current unit system.
 	}
 
 	SelectedUITheme: {
 		Label: UI Theme
-		Tooltip: The display UI theme
-	}
-
-	Graphics: High Resolution Effects Header
-
-	HighResolutionEffects: {
-		Label: High Resolution Effects
-		Tooltip: ""
+		Tooltip: The mod's UI display theme.
 	}
 }
 
