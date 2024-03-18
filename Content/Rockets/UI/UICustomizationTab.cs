@@ -479,8 +479,26 @@ namespace Macrocosm.Content.Rockets.UI
 			RefreshPatternColorPickers();
 		}
 
-		private void ApplyUnlockableItem()
+        private bool CheckUnlockableItemUnlocked()
+        {
+            if (Inventory[0].ModItem is PatternDesign patternDesign)
+            {
+                foreach (var (moduleName, patternName) in patternDesign.Patterns)
+				{
+                    if(CustomizationStorage.GetPatternUnlockedStatus(moduleName, patternName))
+						return true;
+				}
+            }
+
+			return false;
+        }
+
+
+        private void ApplyUnlockableItem()
 		{
+			if (CheckUnlockableItemUnlocked())
+				return;
+
             if(Inventory[0].ModItem is PatternDesign patternDesign)
 			{
                 SoundEngine.PlaySound(SoundID.MenuTick);
@@ -909,12 +927,12 @@ namespace Macrocosm.Content.Rockets.UI
 			};
 			rocketCustomizationControlPanel.Append(unlockableItemSlot);
 
-            unlockableApplyButton = new(ModContent.Request<Texture2D>(symbolsPath + "Hammer"))
-            {
-                VAlign = 0.5f,
-                Left = new(0f, 0.6f),
+			unlockableApplyButton = new(ModContent.Request<Texture2D>(symbolsPath + "Hammer"))
+			{
+				VAlign = 0.5f,
+				Left = new(0f, 0.6f),
 				GrayscaleIconIfNotInteractible = true,
-                CheckInteractible = () => Inventory[0].ModItem is PatternDesign
+				CheckInteractible = () => !CheckUnlockableItemUnlocked() && Inventory[0].ModItem is PatternDesign patternDesign
             };
             unlockableApplyButton.OnLeftClick += (_, _) => ApplyUnlockableItem();
             rocketCustomizationControlPanel.Append(unlockableApplyButton);
