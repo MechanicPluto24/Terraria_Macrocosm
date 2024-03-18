@@ -1,8 +1,8 @@
 ﻿using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Storage;
 using Macrocosm.Content.Players;
 using Macrocosm.Content.Rockets;
 using Macrocosm.Content.Rockets.LaunchPads;
-using Macrocosm.Content.Rockets.Storage;
 using System;
 using System.IO;
 using Terraria;
