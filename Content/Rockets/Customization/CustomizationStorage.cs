@@ -123,12 +123,15 @@ namespace Macrocosm.Content.Rockets.Customization
 		public static void SetPatternUnlockedStatus(string moduleName, string patternName, bool unlockedState)
 			 => patternUnlockStatus[(moduleName, patternName)] = unlockedState;
 
-		/// <summary>
-		/// Gets the detail reference from the detail storage.
-		/// </summary>
-		/// <param name="moduleName"> The rocket module this detail belongs to </param>
-		/// <param name="detailName"> The detail name </param>
-		public static Detail GetDetail(string moduleName, string detailName)
+        public static bool GetPatternUnlockedStatus(string moduleName, string patternName)
+             => patternUnlockStatus[(moduleName, patternName)];
+
+        /// <summary>
+        /// Gets the detail reference from the detail storage.
+        /// </summary>
+        /// <param name="moduleName"> The rocket module this detail belongs to </param>
+        /// <param name="detailName"> The detail name </param>
+        public static Detail GetDetail(string moduleName, string detailName)
 			=> details[(moduleName, detailName)];
 
         public static Detail GetDefaultDetail(string moduleName)
