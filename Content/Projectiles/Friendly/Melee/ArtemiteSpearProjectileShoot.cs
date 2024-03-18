@@ -52,5 +52,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 				dust.noGravity = true;
 			}
  		}
-	}
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            return base.PreDraw(ref lightColor);
+        }
+    }
 }

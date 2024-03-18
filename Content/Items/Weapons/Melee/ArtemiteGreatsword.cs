@@ -76,12 +76,11 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 		public override Action<Player, int> OnRelease => (player, damage) =>
 		{
             float charge = (damage - (Item.damage * ChargeBasedDamageRatio.min)) / ((Item.damage * ChargeBasedDamageRatio.max) - (Item.damage * ChargeBasedDamageRatio.min));
-            Main.NewText(charge);
             if (charge > 0.65f)
 			{
                 Projectile swing = Projectile.NewProjectileDirect(null, player.MountedCenter, new Vector2(player.direction, 0f), ModContent.ProjectileType<ArtemiteGreatswordSwing>(), 0, 0, player.whoAmI, player.direction * player.gravDir, 12, -MathHelper.PiOver4);
                 Projectile swing2 = Projectile.NewProjectileDirect(null, player.MountedCenter, new Vector2(player.direction, 0f), ModContent.ProjectileType<ArtemiteGreatswordSwing2>(), damage, 5, player.whoAmI, player.direction * player.gravDir, 12, -MathHelper.PiOver4);
-                swing2.scale = charge * 0.8f;
+                swing2.scale = charge;
                 swing.alpha = (byte)(255f * (1f - charge));
                 swing2.netUpdate = true;
             }
