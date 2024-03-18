@@ -254,7 +254,7 @@ namespace Macrocosm.Content.Items.Accessories
                             rainbow = true;
                             break;
 
-                        // Substractive effect (black shadow dash)
+                        // Subtractive effect (black shadow dash)
                         case ItemID.BlackDye:
                         case ItemID.ShadowDye:
                         case ItemID.GrimDye:
@@ -273,7 +273,7 @@ namespace Macrocosm.Content.Items.Accessories
                             primaryColor = Color.White;
                             break;
 
-                        // Negative color of Celestial Disco (might use some cooler effect on the sah)
+                        // Negative color of Celestial Disco (might use some cooler effect on the dash)
                         case ItemID.NegativeDye:
                             primaryColor = new((new Vector3(1f) - CelestialDisco.CelestialColor.ToVector3()));
                             break;
