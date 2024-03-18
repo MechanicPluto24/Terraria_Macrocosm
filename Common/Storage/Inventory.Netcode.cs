@@ -1,5 +1,6 @@
 ﻿
 using Macrocosm.Common.Netcode;
+using Macrocosm.Content.Rockets;
 using System;
 using System.IO;
 using Terraria;
@@ -7,9 +8,9 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
-namespace Macrocosm.Content.Rockets.Storage
+namespace Macrocosm.Common.Storage
 {
-	public partial class Inventory
+    public partial class Inventory
 	{
 		public enum InventoryMessageType
 		{
@@ -52,7 +53,8 @@ namespace Macrocosm.Content.Rockets.Storage
 
 			packet.Write((byte)MessageType.SyncInventory);
 			packet.Write((byte)InventoryMessageType.SyncEverything);
-			packet.Write((byte)Owner.WhoAmI);
+			packet.Write(Owner.InventoryOwnerType);
+			packet.Write(Owner.InventorySerializationIndex);
 			packet.Write((ushort)Size);
 			packet.Write((byte)interactingPlayer);
 
@@ -64,13 +66,15 @@ namespace Macrocosm.Content.Rockets.Storage
 
 		private static void ReceiveSyncEverything(BinaryReader reader, int sender)
 		{
-			int rocketId = reader.ReadByte();
-			Rocket owner = RocketManager.Rockets[rocketId];
+			string ownerType = reader.ReadString();
+			int ownerSerializationIndex = reader.ReadInt32();
+
+			IInventoryOwner owner = IInventoryOwner.GetInventoryOwnerInstance(ownerType, ownerSerializationIndex);
 
 			Inventory inventory;
 			int newSize = reader.ReadUInt16();
 
-			if (owner.HasInventory)
+			if (owner.Inventory is not null)
 				inventory = owner.Inventory;
 			else
 				owner.Inventory = inventory = new(newSize, owner);
@@ -98,22 +102,25 @@ namespace Macrocosm.Content.Rockets.Storage
 
 			packet.Write((byte)MessageType.SyncInventory);
 			packet.Write((byte)InventoryMessageType.SyncSize);
-			packet.Write((byte)Owner.WhoAmI);
-			packet.Write((ushort)Size);
+            packet.Write(Owner.InventoryOwnerType);
+            packet.Write(Owner.InventorySerializationIndex);
+            packet.Write((ushort)Size);
 
 			packet.Send(toClient, ignoreClient);
 		}
 
 		private static void ReceiveSyncSize(BinaryReader reader, int sender)
 		{
-			int rocketId = reader.ReadByte();
-			Rocket owner = RocketManager.Rockets[rocketId];
-			Inventory inventory = owner.Inventory;
+            string ownerType = reader.ReadString();
+            int ownerSerializationIndex = reader.ReadInt32();
+
+            IInventoryOwner owner = IInventoryOwner.GetInventoryOwnerInstance(ownerType, ownerSerializationIndex);
+            Inventory inventory = owner.Inventory;
 
 			// FIXME: inventory is sometimes already null ?!?!
 			int newSize = reader.ReadUInt16();
 
-			if (owner.HasInventory)
+			if (owner.Inventory is not null)
 			{
 				int oldSize = inventory.Size;
 
@@ -144,15 +151,34 @@ namespace Macrocosm.Content.Rockets.Storage
 
 			packet.Write((byte)MessageType.SyncInventory);
 			packet.Write((byte)InventoryMessageType.SyncItem);
-			packet.Write((byte)Owner.WhoAmI);
-			packet.Write((ushort)index);
+            packet.Write(Owner.InventoryOwnerType);
+            packet.Write(Owner.InventorySerializationIndex);
+            packet.Write((ushort)index);
 
 			ItemIO.Send(items[index], packet, writeStack: true, writeFavorite: false);
 
 			packet.Send(toClient, ignoreClient);
 		}
 
-		public void SyncInteraction(int toClient = -1, int ignoreClient = -1)
+        private static void ReceiveSyncItem(BinaryReader reader, int sender)
+        {
+            string ownerType = reader.ReadString();
+            int ownerSerializationIndex = reader.ReadInt32();
+
+            IInventoryOwner owner = IInventoryOwner.GetInventoryOwnerInstance(ownerType, ownerSerializationIndex);
+            Inventory inventory = owner.Inventory;
+
+            int index = reader.ReadUInt16();
+
+            inventory[index] = ItemIO.Receive(reader, readStack: true, readFavorite: false);
+
+            if (Main.netMode == NetmodeID.Server)
+            {
+                inventory.SyncItem(index, ignoreClient: sender);
+            }
+        }
+
+        public void SyncInteraction(int toClient = -1, int ignoreClient = -1)
 		{
 			if (Main.netMode == NetmodeID.SinglePlayer)
 				return;
@@ -161,40 +187,26 @@ namespace Macrocosm.Content.Rockets.Storage
 
 			packet.Write((byte)MessageType.SyncInventory);
 			packet.Write((byte)InventoryMessageType.SyncInteraction);
-			packet.Write((byte)Owner.WhoAmI);
-			packet.Write((byte)interactingPlayer);
+            packet.Write(Owner.InventoryOwnerType);
+            packet.Write(Owner.InventorySerializationIndex);
+            packet.Write((byte)interactingPlayer);
 
 			packet.Send(toClient, ignoreClient);
 		}
 
 		private static void ReceiveSyncInteraction(BinaryReader reader, int sender)
 		{
-			int rocketId = reader.ReadByte();
-			Rocket owner = RocketManager.Rockets[rocketId];
-			Inventory inventory = owner.Inventory;
+            string ownerType = reader.ReadString();
+            int ownerSerializationIndex = reader.ReadInt32();
+
+            IInventoryOwner owner = IInventoryOwner.GetInventoryOwnerInstance(ownerType, ownerSerializationIndex);
+            Inventory inventory = owner.Inventory;
 
 			inventory.interactingPlayer = reader.ReadByte();
 
 			if (Main.netMode == NetmodeID.Server)
 			{
 				inventory.SyncInteraction(ignoreClient: sender);
-			}
-		}
-
-		private static void ReceiveSyncItem(BinaryReader reader, int sender)
-		{
-			int rocketId = reader.ReadByte();
-
-			Rocket owner = RocketManager.Rockets[rocketId];
-			Inventory inventory = owner.Inventory;
-
-			int index = reader.ReadUInt16();
-
-			inventory[index] = ItemIO.Receive(reader, readStack: true, readFavorite: false);
-
-			if (Main.netMode == NetmodeID.Server)
-			{
-				inventory.SyncItem(index, ignoreClient: sender);
 			}
 		}
 	}
