@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Drawing;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
@@ -13,6 +14,9 @@ namespace Macrocosm.Content.Particles
 
 		public float Alpha = 0.3f;
         public Color Color = Color.White;
+        public Color? SecondaryColor = Color.White;
+
+		public BlendState BlendStateOverride = null;
 
 		bool fadeIn = true;
 		float defScale;
@@ -22,36 +26,48 @@ namespace Macrocosm.Content.Particles
 		{
 			defScale = Scale;
 			actualScale = 0.5f;
-			Alpha = 0.3f;
+			Alpha = 1f;
         }
 
 		public override void AI()
 		{
 			if (fadeIn)
 			{
-                actualScale *= 1.15f;
-
-				Alpha = MathHelper.Clamp(Alpha * 1.2f, 0f, 1f);
-
+                actualScale *= 1.45f;
 				if (actualScale > defScale)
 					fadeIn = false;
 			}
 			else
 			{
-                Alpha = MathHelper.Clamp(Alpha * 0.92f, 0f, 1f);
-                actualScale *= 0.95f;
+                actualScale *= 0.92f;
             }
 
-			Lighting.AddLight(Center, Color.ToVector3() * Alpha);
+			Velocity *= 0.98f;
+
+			Lighting.AddLight(Center, Color.ToVector3() * (actualScale / defScale));
 
             if (actualScale < 0.2f)
 				Kill();
 		}
 
+		SpriteBatchState state;
 		public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
 		{
-			spriteBatch.DrawStar(Position - screenPosition, 2, Color.WithOpacity(Alpha), actualScale, Rotation);
-			return false;
+			if(BlendStateOverride is not null)
+			{
+				state.SaveState(spriteBatch);
+				spriteBatch.End();
+				spriteBatch.Begin(BlendStateOverride, state);
+			}
+
+			spriteBatch.DrawStar(Position - screenPosition, 2, Color * (actualScale/defScale), actualScale, Rotation);
+
+            if (BlendStateOverride is not null)
+            {
+                spriteBatch.End();
+                spriteBatch.Begin(state);
+            }
+            return false;
 		}
 	}
 }

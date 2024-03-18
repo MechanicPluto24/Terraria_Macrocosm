@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Graphics;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
@@ -97,7 +98,11 @@ namespace Macrocosm.Content.Items.Accessories
             for (int i = 0; i < count; i++)
             {
                 Dust dust = Dust.NewDustDirect(player.Center + new Vector2(35, 0).RotatedBy(player.velocity.ToRotation()) + Main.rand.NextVector2Circular(50, 50) * progress, 1, 1, ModContent.DustType<CelestialDust>(), 0f, 0f, 100, default, 1.1f);
-                GetEffectColor(player, out dust.color, out _, out _, out _, out bool rainbow);
+                GetEffectColor(player, out dust.color, out Color? secondaryColor, out _, out _, out bool rainbow);
+
+                if (secondaryColor.HasValue && dust.dustIndex % 2 == 0)
+                    dust.color = secondaryColor.Value;
+
                 if (rainbow)
                     dust.color = Utility.MultiLerpColor(Main.rand.NextFloat(), Color.Red, Color.Green, Color.Blue).WithAlpha(100);
             }
@@ -111,17 +116,32 @@ namespace Macrocosm.Content.Items.Accessories
             for (int i = 0; i < count; i++)
 			{
                 var star = Particle.CreateParticle<CelestialStar>(npc.Center + Main.rand.NextVector2Circular(npc.width/2, npc.height/2), npc.velocity + Main.rand.NextVector2Circular(2,2), scale: 1.2f);
-                GetEffectColor(player, out star.Color, out _, out _, out _, out bool rainbow);
+                GetEffectColor(player, out star.Color, out Color? secondaryColor, out star.BlendStateOverride, out _, out bool rainbow);
+
+                if (secondaryColor.HasValue && ParticleManager.Particles.IndexOf(star) % 2 == 0)
+                    star.Color = secondaryColor.Value;
+
                 if (rainbow)
+                {
                     star.Color = Utility.MultiLerpColor(Main.rand.NextFloat(), Color.Red, Color.Green, Color.Blue).WithAlpha(127);
+
+                    if (star.BlendStateOverride == CustomBlendStates.Subtractive)
+                        if (ParticleManager.Particles.IndexOf(star) % 2 == 0)
+                            star.BlendStateOverride = null;
+                        else
+                            star.Color = new Color(70,70,70);
+                }
             }
 
             for (int i = 0; i < 25; i++)
             {
 				Vector2 dustVelocity = Main.rand.NextVector2Circular(2, 2);
                 Dust dust = Dust.NewDustDirect(new Vector2(npc.position.X, npc.position.Y), npc.width, npc.height, ModContent.DustType<CelestialDust>(), dustVelocity.X, dustVelocity.Y, 100, default, 1.5f);
-                dust.color = CelestialDisco.CelestialColor.WithOpacity(0.8f);
-                GetEffectColor(player, out dust.color, out _, out _, out _, out bool rainbow);
+                GetEffectColor(player, out dust.color, out Color? secondaryColor, out _, out _, out bool rainbow);
+
+                if (secondaryColor.HasValue && dust.dustIndex % 2 == 0)
+                    dust.color = secondaryColor.Value;
+
                 if (rainbow)
                     dust.color = Utility.MultiLerpColor(Main.rand.NextFloat(), Color.Red, Color.Green, Color.Blue).WithAlpha(100);
             }
@@ -257,10 +277,16 @@ namespace Macrocosm.Content.Items.Accessories
                         // Subtractive effect (black shadow dash)
                         case ItemID.BlackDye:
                         case ItemID.ShadowDye:
-                        case ItemID.GrimDye:
                         case ItemID.LokisDye:
                             blendStateOverride = CustomBlendStates.Subtractive;
                             primaryColor = new Color(25, 25, 25);
+                            break;
+
+                        // Subtractive red and black dash
+                        case ItemID.GrimDye:
+                            blendStateOverride = CustomBlendStates.Subtractive;
+                            primaryColor = new Color(25, 25, 25);
+                            secondaryColor = new Color(0, 65, 65);
                             break;
 
                         // Override color (Primary color was bypassed)
@@ -273,15 +299,18 @@ namespace Macrocosm.Content.Items.Accessories
                             primaryColor = Color.White;
                             break;
 
-                        // Negative color of Celestial Disco (might use some cooler effect on the dash)
+                        // I have no clue what is going on but looks cool
                         case ItemID.NegativeDye:
-                            primaryColor = new((new Vector3(1f) - CelestialDisco.CelestialColor.ToVector3()));
+                            blendStateOverride = CustomBlendStates.Subtractive;
+                            secondaryColor = new(new Vector3(1f) - CelestialDisco.CelestialColor.ToVector3() * 0.8f);
+                            primaryColor = CelestialDisco.CelestialColor * 0.8f;
                             break;
 
-                        // Alternating dark + rainbow color 
+                        // Alternating black + rainbow color 
                         case ItemID.MidnightRainbowDye:
                             blendStateOverride = CustomBlendStates.Subtractive;
-                            secondaryColor = new Color(150, 150, 150);
+                            primaryColor = new(70, 70, 70);
+                            secondaryColor = new(70, 70, 70);
                             rainbow = true;
                             break;
 

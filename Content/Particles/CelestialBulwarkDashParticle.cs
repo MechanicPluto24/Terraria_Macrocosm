@@ -42,6 +42,7 @@ namespace Macrocosm.Content.Particles
         SpriteBatchState state;
         public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
 		{
+            bool specialRainbow = false;
             Texture2D slash = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Slash1").Value;
             Texture2D glow = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Circle5").Value;
 
@@ -60,25 +61,30 @@ namespace Macrocosm.Content.Particles
                 bool even = i % 2 == 0;
                 Color baseColor;
                 if (SecondaryColor.HasValue)
+                {
                     baseColor = even ? Color : SecondaryColor.Value;
-                else 
+                }
+                else
+                {
                     baseColor = Color;
+                }
 
-                // Special rainbow, used for Midnight Rainbow Dye (alternating dark and rainbow)
-                bool specialRainbow = blendStateOverride is not null && SecondaryColor.HasValue;
 
                 if (rainbow)
                 {
                     float rainbowProgress = Utility.WrapProgress(trailProgress + CelestialDisco.CelestialStyleProgress);
-                    baseColor = Utility.MultiLerpColor(rainbowProgress, Color.Red, Color.Green, Color.Blue);
+                    baseColor = Utility.MultiLerpColor(rainbowProgress, new(255,0,0), new(0,255,0), new(0,0,255));
 
-                    // Special case, used for Midnight Rainbow Dye & Negative Dye
-                    if(specialRainbow && even)
+                    #region Special code for Subtractive + Rainbow
+
+                    specialRainbow = blendStateOverride == CustomBlendStates.Subtractive && SecondaryColor.HasValue;
+                    if (specialRainbow && even)
                     {
-                        baseColor = SecondaryColor.Value * (1f-trailProgress);
+                        baseColor = SecondaryColor.Value * (1f - trailProgress);
                         spriteBatch.End();
                         spriteBatch.Begin(blendStateOverride, state);
                     }
+                    #endregion
                 }
 
                 Color color = scale < 0 ? baseColor * Progress * (1f - trailProgress) : baseColor * Progress;
@@ -86,11 +92,13 @@ namespace Macrocosm.Content.Particles
                 Vector2 position = scale < 0 ? OldPositions[i] + new Vector2(0, 55).RotatedBy(OldRotations[i]) : Vector2.Lerp(OldPositions[i], Center, Progress * (1f - trailProgress));
                 spriteBatch.Draw(slash, position - screenPosition, null, color, OldRotations[i], slash.Size() / 2, scale, SpriteEffects.None, 0f);
 
+                #region Special code for Midnight Rainbow
                 if (specialRainbow && even)
                 {
                     spriteBatch.End();
                     spriteBatch.Begin(state);
                 }
+                #endregion
             }
 
             spriteBatch.Draw(slash, Center - screenPosition, null, Color * Progress, Rotation, slash.Size() / 2, Scale, SpriteEffects.None, 0f);

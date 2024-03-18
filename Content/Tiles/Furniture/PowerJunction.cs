@@ -26,6 +26,8 @@ namespace Macrocosm.Content.Tiles.Furniture
 			TileObjectData.newTile.CoordinateHeights = [16, 16];
 			TileObjectData.addTile(Type);
 
+			DustType = -1;
+
 			AddMapEntry(new Color(99, 50, 30), CreateMapEntryName());
 		}
 	}

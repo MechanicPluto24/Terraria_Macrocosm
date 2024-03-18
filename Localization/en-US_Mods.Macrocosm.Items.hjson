@@ -1035,3 +1035,8 @@ Computer: {
 	DisplayName: Computer
 	Tooltip: ""
 }
+
+HelixPatternDesign: {
+	DisplayName: Helix Pattern Design
+	Tooltip: ""
+}
