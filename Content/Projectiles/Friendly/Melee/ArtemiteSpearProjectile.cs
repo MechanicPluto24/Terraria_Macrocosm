@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
@@ -8,6 +9,7 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
+using static tModPorter.ProgressUpdate;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
@@ -23,8 +25,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 		public override void SetDefaults()
 		{
 			Projectile.CloneDefaults(ProjectileID.Spear); // Clone the default values for a vanilla spear. Spear specific values set for width, height, aiStyle, friendly, penetrate, tileCollide, scale, hide, ownerHitCheck, and melee.
-			Projectile.width = 42;
-			Projectile.height = 42;
+			Projectile.width = 32;
+			Projectile.height = 32;
 			Projectile.scale = 0.95f;
 		}
 
@@ -91,12 +93,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         {
             Particle.CreateParticle<ArtemiteStar>((p) =>
             {
-                p.Position = target.Center;
-                p.Velocity = -Vector2.UnitY * 0.4f;
+                p.Position = Projectile.Center;
+                p.Velocity = Projectile.velocity;
                 p.Scale = 1.2f;
-                p.Rotation = Projectile.oldVelocity.ToRotation() + MathHelper.PiOver2;
+                p.Rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
                 p.StarPointCount = 1;
-            },  shouldSync: true
+                p.FadeInSpeed = 1.6f;
+                p.FadeOutSpeed = 0.7f;
+            }, shouldSync: true
             );
         }
 
@@ -104,7 +108,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         {
             Player player = Main.player[Projectile.owner];
             Texture2D texture = TextureAssets.Extra[ExtrasID.SharpTears].Value;
-            float animationProgress = Utils.Remap(player.itemAnimation, player.itemAnimationMax, player.itemAnimationMax / 3, 0f, 1f);
+
+            float halfDuration = player.itemAnimationMax * 0.5f;
+			float animationProgress = Projectile.timeLeft < halfDuration ? Projectile.timeLeft / halfDuration : (player.itemAnimationMax - Projectile.timeLeft) / halfDuration;
             
 			Vector2 effectCenter = Projectile.Center + Projectile.velocity.ToRotation().ToRotationVector2() * (20f + 50f * 1f / (1f - player.GetAttackSpeed(DamageClass.Melee)) * animationProgress);
             Rectangle effectArea = Utils.CenteredRectangle(effectCenter, new Vector2(20f + 30f * animationProgress));
@@ -117,8 +123,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
             Main.EntitySpriteDraw(texture, Projectile.Center + new Vector2(0f, Projectile.gfxOffY) - Main.screenPosition, null, effectColor, rotation, texture.Size()/2f, new Vector2(fadeInOutProgress * effectScale, effectScale) * Projectile.scale * effectScale, spriteEffect);
 
-            for (float progress = 0.4f; progress <= 1f; progress += 0.1f)
-                 Main.EntitySpriteDraw(texture, Vector2.Lerp(player.MountedCenter, Projectile.Center + new Vector2(0f, Projectile.gfxOffY), progress + 0.2f) - Main.screenPosition + new Vector2(0f, 2f), null, effectColor * 0.75f * progress, rotation, textureOrigin, new Vector2(fadeInOutProgress * effectScale * fadeInOutProgress, effectScale * 2f * fadeInOutProgress) * Projectile.scale * effectScale, spriteEffect);
+            for (float progress = 0.4f; progress <= 1f; progress += 0.4f)
+                 Main.EntitySpriteDraw(texture, Vector2.Lerp(player.MountedCenter, Projectile.Center + new Vector2(0f, Projectile.gfxOffY), progress + 0.2f) - Main.screenPosition + new Vector2(0f, 0f), null, effectColor * 0.75f * progress, rotation, texture.Size()/2f, new Vector2(fadeInOutProgress * effectScale * fadeInOutProgress, effectScale * 2f * fadeInOutProgress) * Projectile.scale * effectScale, spriteEffect);
  
             return true;
         }
@@ -127,8 +133,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             base.ModifyDamageHitbox(ref hitbox);
             Player player = Main.player[Projectile.owner];
             float animationProgress = Utils.Remap(player.itemAnimation, player.itemAnimationMax, player.itemAnimationMax / 3, 0f, 1f);
-            float extensionSize = 20f + 30f * animationProgress;
-            hitbox = Utils.CenteredRectangle(hitbox.Center.ToVector2(), new Vector2(hitbox.Width + extensionSize, hitbox.Height + extensionSize));
+            float fadeInOutProgress = 1f - (1f - Utils.Remap(animationProgress, 0f, 0.3f, 0f, 1f) * Utils.Remap(animationProgress, 0.3f, 1f, 1f, 0f)) * (1f - Utils.Remap(animationProgress, 0f, 0.3f, 0f, 1f) * Utils.Remap(animationProgress, 0.3f, 1f, 1f, 0f));
+            hitbox = Utils.CenteredRectangle(hitbox.Center.ToVector2() + Utility.PolarVector(50 * fadeInOutProgress, Projectile.velocity.ToRotation()), new Vector2(hitbox.Width, hitbox.Height));
         }
     }
 }

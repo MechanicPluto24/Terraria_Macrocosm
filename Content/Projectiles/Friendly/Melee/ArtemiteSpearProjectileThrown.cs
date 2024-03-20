@@ -68,11 +68,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
             Particle.CreateParticle<ArtemiteStar>((p) =>
             {
-                p.Position = target.Center;
-                p.Velocity = -Vector2.UnitY * 0.4f;
+                p.Position = Projectile.Center;
+                p.Velocity = Vector2.Zero;
                 p.Scale = 1.2f;
-                p.Rotation = Projectile.oldVelocity.ToRotation() + MathHelper.PiOver2;
+                p.Rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
                 p.StarPointCount = 1;
+                p.FadeInSpeed = 1.8f;
+                p.FadeOutSpeed = 0.8f;
             },  shouldSync: true
             );
         }

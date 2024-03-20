@@ -13,6 +13,9 @@ namespace Macrocosm.Content.Particles
 
 		public int StarPointCount { get; set; } = 2;
 
+		public float FadeInSpeed { get; set; } = 1.25f;
+		public float FadeOutSpeed { get; set; } = 0.775f;
+
 		public float Alpha = 0.3f;
         public Color Color = new(130, 220, 199);
 
@@ -31,17 +34,17 @@ namespace Macrocosm.Content.Particles
 		{
 			if (fadeIn)
 			{
-                actualScale *= 1.25f;
+                actualScale *= FadeInSpeed;
 
 				if (actualScale > defScale)
 					fadeIn = false;
 			}
 			else
 			{
-                actualScale *= 0.775f;
+                actualScale *= FadeOutSpeed;
             }
 
-			Lighting.AddLight(Center, Color.ToVector3() * actualScale);
+			Lighting.AddLight(Center, Color.ToVector3() * actualScale * 0.5f);
 
             if (actualScale < 0.2f && !fadeIn)
 				Kill();
