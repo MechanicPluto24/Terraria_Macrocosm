@@ -1,13 +1,12 @@
 using Macrocosm.Content.Items.Placeable.Blocks;
 using Terraria;
-using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Placeable.Walls
 {
-	public class MoonBasePlatingWall : ModItem
+	public class MoonBaseHazardWall : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
@@ -25,12 +24,11 @@ namespace Macrocosm.Content.Items.Placeable.Walls
 			Item.useTime = 7;
 			Item.useStyle = ItemUseStyleID.Swing;
 			Item.consumable = true;
-			
-			Item.createWall = WallType<Tiles.Walls.MoonBasePlatingWall>();
-        }
+			Item.createWall = WallType<Tiles.Walls.MoonBaseHazardWall>();
+		}
 
         public override void AddRecipes()
-		{
+        {
             CreateRecipe(4)
                 .AddIngredient<MoonBasePlating>()
                 .AddTile(TileID.WorkBenches)
@@ -38,22 +36,22 @@ namespace Macrocosm.Content.Items.Placeable.Walls
                 .AddCustomShimmerResult(ItemType<MoonBasePlatingWallUnsafe>())
                 .Register();
         }
-	}
+    }
 
-    public class MoonBasePlatingWallUnsafe : MoonBasePlatingWall
-    {
+	public class MoonBaseHazardWallUnsafe : MoonBaseHazardWall
+	{
         public override string Texture => base.Texture.Replace("Unsafe", "");
 
         public override void SetStaticDefaults()
-        {
-            base.SetStaticDefaults();
-            ItemID.Sets.DrawUnsafeIndicator[Type] = true;
-        }
+		{
+			base.SetStaticDefaults();
+			ItemID.Sets.DrawUnsafeIndicator[Type] = true;
+		}
 
-        public override void SetDefaults()
-        {
+		public override void SetDefaults()
+		{
             base.SetDefaults();
-            Item.createWall = WallType<Tiles.Walls.MoonBasePlatingWallUnsafe>();
+            Item.createWall = WallType<Tiles.Walls.MoonBaseHazardWallUnsafe>();
         }
 
         public override void AddRecipes()

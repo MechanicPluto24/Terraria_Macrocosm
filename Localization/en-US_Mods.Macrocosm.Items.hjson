@@ -1040,3 +1040,43 @@ HelixPatternDesign: {
 	DisplayName: Helix Pattern Design
 	Tooltip: ""
 }
+
+MoonBaseCrate: {
+	DisplayName: Moon Base Crate
+	Tooltip: ""
+}
+
+MoonBaseHazardWall: {
+	DisplayName: Moon Base Hazard Wall
+	Tooltip: ""
+}
+
+MoonBaseHazardWallUnsafe: {
+	DisplayName: Moon Base Hazard Wall Unsafe
+	Tooltip: ""
+}
+
+MoonBasePlatingWallUnsafe: {
+	DisplayName: Moon Base Plating Wall Unsafe
+	Tooltip: ""
+}
+
+MoonBaseSquarePaneledWall: {
+	DisplayName: Moon Base Square Paneled Wall
+	Tooltip: ""
+}
+
+MoonBaseSquarePaneledWallUnsafe: {
+	DisplayName: Moon Base Square Paneled Wall Unsafe
+	Tooltip: ""
+}
+
+MoonBaseTrimmingWall: {
+	DisplayName: Moon Base Trimming Wall
+	Tooltip: ""
+}
+
+MoonBaseTrimmingWallUnsafe: {
+	DisplayName: Moon Base Trimming Wall Unsafe
+	Tooltip: ""
+}
