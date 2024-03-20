@@ -11,6 +11,8 @@ namespace Macrocosm.Content.Particles
 	{
 		public override string TexturePath => Macrocosm.EmptyTexPath;
 
+		public int StarPointCount { get; set; } = 2;
+
 		public float Alpha = 0.3f;
         public Color Color = new(130, 220, 199);
 
@@ -18,13 +20,11 @@ namespace Macrocosm.Content.Particles
 		float defScale;
 		float actualScale;
 
-		bool rotationAware = false;
 
 		public override void OnSpawn()
 		{
 			defScale = Scale;
 			actualScale = 0.1f;
-			rotationAware = Rotation != 0f;
         }
 
 		public override void AI()
@@ -49,7 +49,7 @@ namespace Macrocosm.Content.Particles
 
 		public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
 		{
-			spriteBatch.DrawStar(Position - screenPosition, rotationAware ? 1 : 2, Color, actualScale, Rotation);
+			spriteBatch.DrawStar(Position - screenPosition, StarPointCount, Color, actualScale, Rotation);
 			return false;
 		}
 	}

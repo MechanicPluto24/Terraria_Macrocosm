@@ -61,7 +61,13 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 
         public override void OnHitNPC(Player player, NPC target, NPC.HitInfo hit, int damageDone)
         {
-            Particle.CreateParticle<ArtemiteStar>(target.Center + Main.rand.NextVector2Circular(target.width / 2, target.height / 2), -Vector2.UnitY * 0.4f, 1f, 0f, shouldSync: true);
+            Particle.CreateParticle<ArtemiteStar>((p) =>
+            {
+                p.Position = target.Center;
+                p.Velocity = -Vector2.UnitY * 0.4f;
+                p.Scale = 1f;
+            }, shouldSync: true
+            );
         }
 
         public override void OnShoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int damage, float knockback, bool rightClick)
