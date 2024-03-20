@@ -66,8 +66,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 }
             }
 
-            Particle.CreateParticle<ArtemiteStar>(target.Center , -Vector2.UnitY * 0.4f, 1.2f, Projectile.oldVelocity.ToRotation() + MathHelper.PiOver2, shouldSync: true);
-
+            Particle.CreateParticle<ArtemiteStar>((p) =>
+            {
+                p.Position = target.Center;
+                p.Velocity = -Vector2.UnitY * 0.4f;
+                p.Scale = 1.2f;
+                p.Rotation = Projectile.oldVelocity.ToRotation() + MathHelper.PiOver2;
+                p.StarPointCount = 1;
+            },  shouldSync: true
+            );
         }
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)

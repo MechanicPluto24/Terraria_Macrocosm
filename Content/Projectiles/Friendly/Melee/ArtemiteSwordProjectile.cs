@@ -49,7 +49,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            Particle.CreateParticle<ArtemiteStar>(target.Center, -Vector2.UnitY, 1f, 0f, shouldSync: true);
+            Particle.CreateParticle<ArtemiteStar>((p) =>
+            {
+                p.Position = target.Center;
+                p.Velocity = -Vector2.UnitY * 0.4f;
+                p.Scale = 1f;
+            }, shouldSync: true
+            );
         }
 
         public override bool PreDraw(ref Color lightColor)

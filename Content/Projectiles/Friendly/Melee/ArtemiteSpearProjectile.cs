@@ -1,4 +1,6 @@
-﻿using Macrocosm.Content.Dusts;
+﻿using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -60,74 +62,73 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			// Apply proper rotation to the sprite.
 			Projectile.rotation += MathHelper.ToRadians(Projectile.spriteDirection == -1 ? 40f : 135f);
 
+			/*
 			if (Projectile.timeLeft == halfDuration)
 			{
 				Vector2 shootPosition = Projectile.Center;
 				Vector2 shootVelocity = Projectile.velocity * 15f;
-				//Projectile.NewProjectile(Projectile.GetSource_FromThis(), shootPosition, shootVelocity, ModContent.ProjectileType<ArtemiteSpearProjectileShoot>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
+				Projectile.NewProjectile(Projectile.GetSource_FromThis(), shootPosition, shootVelocity, ModContent.ProjectileType<ArtemiteSpearProjectileShoot>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
 			}
+			*/
 
 			// Spawn dust on use
 			if (!Main.dedServ)
 			{
 				if (Main.rand.NextBool(3))
-				{
 					Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<ArtemiteDust>(), Projectile.velocity.X * 2f, Projectile.velocity.Y * 2f, Scale: 0.6f);
+
+                if (Main.rand.NextBool(3))
+				{
+                    Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<ArtemiteBrightDust>(), Projectile.velocity.X * 2f, Projectile.velocity.Y * 2f, Scale: 0.6f);
+					dust.noGravity = true;
 				}
-			}
-
-			return false; // Don't execute vanilla AI.
-		}
-
-		// Clean this up lol
-        public override bool PreDraw(ref Color lightColor)
-        {
-            Player player = Main.player[Projectile.owner];  
-            float a = Utils.Remap(player.itemAnimation, player.itemAnimationMax, player.itemAnimationMax / 3, 0f, 1f);
-            float b = 20f;
-			float c = 50f;
-			float d = 20f;
-			float e = 30f;
-            c *= 1f / (1f - player.GetAttackSpeed(DamageClass.Melee));
-            float num7 = b + c * a;
-            float num8 = d + e * a;
-            float f = Projectile.velocity.ToRotation();
-            Vector2 center = Projectile.Center + f.ToRotationVector2() * num7;
-            Vector2 vector2 = Projectile.Center + new Vector2(0f, Projectile.gfxOffY);
-            SpriteEffects dir = SpriteEffects.None;
-            if (Projectile.spriteDirection == -1)
-                dir = SpriteEffects.FlipHorizontally;
-            Rectangle extensionBox = Utils.CenteredRectangle(center, new Vector2(num8, num8));
-            Vector2 value2 = player.RotatedRelativePoint(player.MountedCenter, reverseRotation: false, addGfxOffY: false);
-            float num3 = extensionBox.Size().Length() / Projectile.Hitbox.Size().Length();
-            float num4 = Utils.Remap(player.itemAnimation, player.itemAnimationMax, (float)player.itemAnimationMax / 3f, 0f, 1f);
-            float num5 = Utils.Remap(num4, 0f, 0.3f, 0f, 1f) * Utils.Remap(num4, 0.3f, 1f, 1f, 0f);
-            num5 = 1f - (1f - num5) * (1f - num5);
-            Vector2 vector3 = Projectile.Center + new Vector2(0f, Projectile.gfxOffY);
-            Vector2.Lerp(value2, vector3, 1.5f);
-            Texture2D value3 = TextureAssets.Extra[98].Value;
-            Vector2 origin = value3.Size() / 2f;
-			Color color = new Color(130, 220, 199,0);
-
-            float num6 = (Projectile.velocity.ToRotation() + MathHelper.PiOver2);
-
-            Main.EntitySpriteDraw(value3, Vector2.Lerp(vector3, vector2, 0.5f) - Main.screenPosition, null, color * num5, num6, origin, new Vector2(num5 * num3, num3) * Projectile.scale * num3, dir);
-            Main.EntitySpriteDraw(value3, Vector2.Lerp(vector3, vector2, 1f) - Main.screenPosition, null, color * num5, num6, origin, new Vector2(num5 * num3, num3 * 1.5f) * Projectile.scale * num3, dir);
-            Main.EntitySpriteDraw(value3, Vector2.Lerp(value2, vector2, num4 * 1.5f - 0.5f) - Main.screenPosition + new Vector2(0f, 2f), null, color * num5, num6, origin, new Vector2(num5 * num3 * 1f * num5, num3 * 2f * num5) * Projectile.scale * num3, dir);
-            for (float x = 0.4f; x <= 1f; x += 0.1f)
-            {
-                Vector2 vector4 = Vector2.Lerp(value2, vector3, x + 0.2f);
-                Main.EntitySpriteDraw(value3, vector4 - Main.screenPosition + new Vector2(0f, 2f), null, color * num5 * 0.75f * x, num6, origin, new Vector2(num5 * num3 * 1f * num5, num3 * 2f * num5) * Projectile.scale * num3, dir);
             }
 
-            return base.PreDraw(ref lightColor);
+            return false;  
+		}
+
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            Particle.CreateParticle<ArtemiteStar>((p) =>
+            {
+                p.Position = target.Center;
+                p.Velocity = -Vector2.UnitY * 0.4f;
+                p.Scale = 1.2f;
+                p.Rotation = Projectile.oldVelocity.ToRotation() + MathHelper.PiOver2;
+                p.StarPointCount = 1;
+            },  shouldSync: true
+            );
         }
 
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Player player = Main.player[Projectile.owner];
+            Texture2D texture = TextureAssets.Extra[ExtrasID.SharpTears].Value;
+            float animationProgress = Utils.Remap(player.itemAnimation, player.itemAnimationMax, player.itemAnimationMax / 3, 0f, 1f);
+            
+			Vector2 effectCenter = Projectile.Center + Projectile.velocity.ToRotation().ToRotationVector2() * (20f + 50f * 1f / (1f - player.GetAttackSpeed(DamageClass.Melee)) * animationProgress);
+            Rectangle effectArea = Utils.CenteredRectangle(effectCenter, new Vector2(20f + 30f * animationProgress));
+            float effectScale = effectArea.Size().Length() / Projectile.Hitbox.Size().Length();
+            
+			float fadeInOutProgress = 1f - (1f - Utils.Remap(animationProgress, 0f, 0.3f, 0f, 1f) * Utils.Remap(animationProgress, 0.3f, 1f, 1f, 0f)) * (1f - Utils.Remap(animationProgress, 0f, 0.3f, 0f, 1f) * Utils.Remap(animationProgress, 0.3f, 1f, 1f, 0f));
+            Color effectColor = new Color(130, 220, 199, 0) * fadeInOutProgress;
+            float rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
+            SpriteEffects spriteEffect = Projectile.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+
+            Main.EntitySpriteDraw(texture, Projectile.Center + new Vector2(0f, Projectile.gfxOffY) - Main.screenPosition, null, effectColor, rotation, texture.Size()/2f, new Vector2(fadeInOutProgress * effectScale, effectScale) * Projectile.scale * effectScale, spriteEffect);
+
+            for (float progress = 0.4f; progress <= 1f; progress += 0.1f)
+                 Main.EntitySpriteDraw(texture, Vector2.Lerp(player.MountedCenter, Projectile.Center + new Vector2(0f, Projectile.gfxOffY), progress + 0.2f) - Main.screenPosition + new Vector2(0f, 2f), null, effectColor * 0.75f * progress, rotation, textureOrigin, new Vector2(fadeInOutProgress * effectScale * fadeInOutProgress, effectScale * 2f * fadeInOutProgress) * Projectile.scale * effectScale, spriteEffect);
+ 
+            return true;
+        }
         public override void ModifyDamageHitbox(ref Rectangle hitbox)
         {
             base.ModifyDamageHitbox(ref hitbox);
+            Player player = Main.player[Projectile.owner];
+            float animationProgress = Utils.Remap(player.itemAnimation, player.itemAnimationMax, player.itemAnimationMax / 3, 0f, 1f);
+            float extensionSize = 20f + 30f * animationProgress;
+            hitbox = Utils.CenteredRectangle(hitbox.Center.ToVector2(), new Vector2(hitbox.Width + extensionSize, hitbox.Height + extensionSize));
         }
-
-
     }
 }
