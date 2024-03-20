@@ -33,7 +33,7 @@ namespace Macrocosm.Common.WorldGeneration.Structures
            
             // Walls
             WorldUtils.Gen(new Point(room.X + 1, room.Y + 1), new Shapes.Rectangle(room.Width - 2, room.Height - 2), Actions.Chain(new Actions.ClearTile(frameNeighbors: true), new Actions.PlaceWall((ushort)WallType<MoonBasePlatingWall>())));
-            WorldUtils.Gen(new Point(room.X + 1, room.Y + room.Height - 2), new Shapes.Rectangle(room.Width - 2, 1), Actions.Chain(new Actions.ClearWall(frameNeighbors: true), new Actions.PlaceWall((ushort)WallType<HazardWall>())));
+            WorldUtils.Gen(new Point(room.X + 1, room.Y + room.Height - 2), new Shapes.Rectangle(room.Width - 2, 1), Actions.Chain(new Actions.ClearWall(frameNeighbors: true), new Actions.PlaceWall((ushort)WallType<MoonBaseHazardWall>())));
 
             StylizeRoomCorners(room);
 

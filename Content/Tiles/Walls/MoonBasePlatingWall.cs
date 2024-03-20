@@ -31,4 +31,15 @@ namespace Macrocosm.Content.Tiles.Walls
             return true;
         }
     }
+
+    public class MoonBasePlatingWallUnsafe : MoonBasePlatingWall
+    {
+        public override string Texture => base.Texture.Replace("Unsafe", "");
+
+        public override void SetStaticDefaults()
+        {
+            base.SetStaticDefaults();
+            Main.wallHouse[Type] = false;
+        }
+    }
 }
