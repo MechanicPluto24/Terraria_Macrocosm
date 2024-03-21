@@ -33,7 +33,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 		private readonly int ManaUseRate = 10;
 		private readonly int ManaUseAmount = 5;
 
-
 		public override float CircularHoldoutOffset => 45;
 
 		public override void SetProjectileStaticDefaults()
@@ -90,7 +89,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 				float knockback = item.knockBack;
 
 				if (StillInUse && AI_UseCounter % ManaUseRate == 0)
-					Player.CheckMana(item, ManaUseAmount, true);
+					Player.CheckMana(item, ManaUseAmount, pay: true);
 
 				Vector2 rotPoint1 = Utility.RotatingPoint(Projectile.Center, new Vector2(62, 12 * Projectile.spriteDirection), Projectile.rotation);
 				Vector2 rotPoint2 = Utility.RotatingPoint(Projectile.Center, new Vector2(92, 12 * Projectile.spriteDirection), Projectile.rotation);

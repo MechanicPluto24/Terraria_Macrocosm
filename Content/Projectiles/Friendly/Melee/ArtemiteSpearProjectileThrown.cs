@@ -4,6 +4,7 @@ using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Linq;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
@@ -29,8 +30,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         public override void SetDefaults()
         {
-            Projectile.width = 18;
-            Projectile.height = 18;
+            Projectile.width = 32;
+            Projectile.height = 32;
 
             AIType = ProjectileID.WoodenArrowFriendly;
 
@@ -54,28 +55,30 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             {
                 fadeOut = true;
                 Projectile.timeLeft = (int)(1f / 0.085f);
-
             }
             else
             {
                 for (int i = 0; i < 2; i++)
                 {
-                    Vector2 position = target.Center + Main.rand.NextVector2CircularEdge(450, 450);
-                    Vector2 velocity = new Vector2(25, 0).RotatedBy((target.Center - position).ToRotation());
-                    Projectile.NewProjectile(Projectile.GetSource_OnHit(target), position, velocity, Type, (int)(Projectile.damage * 0.5f), Projectile.knockBack, Main.myPlayer, ai0: 1f);
+                    float radius = 450f;
+                    float speed = 25f;
+                    Vector2 targetPosition = target.Center + target.velocity * (radius / speed);
+                    Vector2 spawnPosition = targetPosition + Main.rand.NextVector2CircularEdge(radius, radius);
+                    Vector2 velocity = new Vector2(speed, 0).RotatedBy((targetPosition - spawnPosition).ToRotation());
+                    Projectile.NewProjectile(Projectile.GetSource_OnHit(target), spawnPosition, velocity, Type, (int)(Projectile.damage * 0.5f), Projectile.knockBack, Main.myPlayer, ai0: 1f);
                 }
             }
 
             Particle.CreateParticle<ArtemiteStar>((p) =>
             {
                 p.Position = Projectile.Center;
-                p.Velocity = Vector2.Zero;
+                p.Velocity = Projectile.velocity * 0.1f;
                 p.Scale = 1.2f;
                 p.Rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
                 p.StarPointCount = 1;
-                p.FadeInSpeed = 1.8f;
-                p.FadeOutSpeed = 0.8f;
-            },  shouldSync: true
+                p.FadeInFactor = 1.8f;
+                p.FadeOutFactor = 0.8f;
+            }, shouldSync: true
             );
         }
 
@@ -149,8 +152,27 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                     int type = Main.rand.NextBool() ? ModContent.DustType<ArtemiteBrightDust>() : ModContent.DustType<ArtemiteDust>();
                     Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, type, Main.rand.NextFloat(-1.6f, 1.6f), Main.rand.NextFloat(-1.6f, 1.6f), Scale: Main.rand.NextFloat(0.7f, 1f));
                     dust.noGravity = true;
+                    dust = Dust.NewDustDirect(Projectile.oldPos.ToList().GetRandom(), Projectile.width, Projectile.height, type, Main.rand.NextFloat(-1.6f, 1.6f), Main.rand.NextFloat(-1.6f, 1.6f), Scale: Main.rand.NextFloat(0.7f, 1f));
+                    dust.noGravity = true;
                 }
             }   
+        }
+
+        public override bool OnTileCollide(Vector2 oldVelocity)
+        {
+            Particle.CreateParticle<ArtemiteStar>((p) =>
+            {
+                p.Position = Projectile.Center - oldVelocity;
+                p.Velocity = oldVelocity * 0.4f;
+                p.Scale = 1.2f;
+                p.Rotation = oldVelocity.ToRotation() + MathHelper.PiOver2;
+                p.StarPointCount = 1;
+                p.FadeInFactor = 2f;
+                p.FadeOutFactor = 0.85f;
+            }, shouldSync: true
+            );
+
+            return base.OnTileCollide(oldVelocity);
         }
 
         public override bool PreDraw(ref Color lightColor)
@@ -158,20 +180,27 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Texture2D texture = TextureAssets.Projectile[Type].Value;
             Color color = Phantom ? new Color(130, 220, 199, 0) * opacity : lightColor;
 
-            for (int i = 0; i < Projectile.oldPos.Length; i++)
+            if (!Phantom)
             {
-                Vector2 drawPos = Projectile.oldPos[i] + Projectile.Size / 2 - Main.screenPosition;
-                float trailFactor = (((float)Projectile.oldPos.Length - i) / Projectile.oldPos.Length);
-                Color trailColor = color * trailFactor * 0.1f;
-                SpriteEffects effect = Projectile.oldSpriteDirection[i] == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-                Main.EntitySpriteDraw(texture, drawPos, null, trailColor, Projectile.oldRot[i], Projectile.Size / 2, Projectile.scale, effect, 0f);
+                for (int i = 0; i < Projectile.oldPos.Length; i++)
+                {
+                    Vector2 drawPos = Projectile.oldPos[i] + Projectile.Size / 2f - Main.screenPosition;
+                    float trailFactor = (((float)Projectile.oldPos.Length - i) / Projectile.oldPos.Length);
+                    Color trailColor = color * trailFactor * 0.5f;
+                    SpriteEffects effect = Projectile.oldSpriteDirection[i] == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+                    Main.EntitySpriteDraw(texture, drawPos, null, trailColor, Projectile.oldRot[i], Projectile.Size / 2, Projectile.scale, effect, 0f);
+                }
+
+
+                Texture2D glow = TextureAssets.Extra[ExtrasID.SharpTears].Value;
+                Main.EntitySpriteDraw(glow, Projectile.Center + new Vector2(0f, Projectile.gfxOffY) - Main.screenPosition, null, new Color(130, 220, 199, 0), Projectile.rotation - MathHelper.PiOver4, glow.Size() / 2f, Projectile.scale, SpriteEffects.None);
+
+                for (float progress = 0.4f; progress <= 1f; progress += 0.4f)
+                    Main.EntitySpriteDraw(glow, Vector2.Lerp(Projectile.Center + Projectile.velocity, Projectile.Center, progress + 0.2f) - Main.screenPosition + new Vector2(0f, 0f), null, new Color(130, 220, 199, 0) * 0.75f * progress, Projectile.rotation - MathHelper.PiOver4, glow.Size() / 2f, new Vector2(0.8f, 2.2f) * Projectile.scale, SpriteEffects.None);
             }
 
-            Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, color, Projectile.rotation, texture.Size() / 2f, Projectile.scale, SpriteEffects.None, 0);
-            if(Phantom)
-                Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, color, Projectile.rotation, texture.Size() / 2f, Projectile.scale * 0.5f, SpriteEffects.None, 0);
-
-
+            Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, color, Projectile.rotation, Projectile.Size / 2f, Projectile.scale, SpriteEffects.None, 0);
+            
             return false;
         }
     }

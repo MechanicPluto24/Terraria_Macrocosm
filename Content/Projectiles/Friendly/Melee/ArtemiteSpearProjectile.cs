@@ -28,6 +28,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			Projectile.width = 32;
 			Projectile.height = 32;
 			Projectile.scale = 0.95f;
+
+			Projectile.usesOwnerMeleeHitCD = true;
 		}
 
 		public override bool PreAI()
@@ -94,12 +96,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Particle.CreateParticle<ArtemiteStar>((p) =>
             {
                 p.Position = Projectile.Center;
-                p.Velocity = Projectile.velocity;
+                p.Velocity = Projectile.oldVelocity * 4f;
                 p.Scale = 1.2f;
-                p.Rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
-                p.StarPointCount = 1;
-                p.FadeInSpeed = 1.6f;
-                p.FadeOutSpeed = 0.7f;
+				p.Rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
+				p.StarPointCount = 1;
+                p.FadeInFactor = 1.2f;
+                p.FadeOutFactor = 0.7f;
             }, shouldSync: true
             );
         }

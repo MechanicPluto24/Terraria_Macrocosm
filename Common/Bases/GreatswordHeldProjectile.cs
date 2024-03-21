@@ -34,25 +34,25 @@ namespace Macrocosm.Common.Bases
 	{
 		public override string Texture => "Terraria/Images/Item_0";
 		public sealed override HeldProjectileKillMode KillMode => HeldProjectileKillMode.Manual;
-		private enum GreatswordState
+        public enum GreatswordState
 		{
 			Charge,
 			Swing
 		}
 
-		private GreatswordState State
+		public GreatswordState State
 		{
 			get => (GreatswordState)Projectile.ai[0];
 			set => Projectile.ai[0] = (float)value;
 		}
 
-		private int ChargeEndPlayerDirection
+        public int ChargeEndPlayerDirection
 		{
 			get => (int)Projectile.ai[1] > 0 ? 1 : -1;
 			set => Projectile.ai[1] = value > 0 ? 1 : -1;
 		}
 
-		private int MaxCharge { get; set; }
+        public int MaxCharge { get; set; }
 		private int chargeTimer = 0;
 		/// <summary>
 		/// Charge ranging from 0 to 1.
@@ -60,16 +60,15 @@ namespace Macrocosm.Common.Bases
 		public float Charge => (float)chargeTimer / MaxCharge;
 
 		public Texture2D GreatswordTexture { get; private set; }
+        public float SwordWidth { get; set; }
+        public float SwordLenght { get; set; }
+        public (float min, float max) ChargeBasedDashAmount { get; set; }
+        public (float min, float max) ChargeBasedDamageRatio { get; set; }
+        public Vector2 SpriteHandlePosition { get; set; }
+        public bool RightClickUse { get; set; }
+
 		private GreatswordSwingStyle SwingStyle { get; set; }
-		private float SwordWidth { get; set; }
-		private float SwordLenght { get; set; }
-		private (float min, float max) ChargeBasedDashAmount { get; set; }
-		private (float min, float max) ChargeBasedDamageRatio { get; set; }
-		private Vector2 SpriteHandlePosition { get; set; }
-
 		private Action<Player, int> OnRelease { get; set; } = null;
-
-		private bool RightClickUse { get; set; }
 
         private float armRotation = 0f;
 		private float hitTimer = 0f;
@@ -207,24 +206,21 @@ namespace Macrocosm.Common.Bases
 
 		public override void Draw(Color lightColor)
 		{
-			SwingStyle.PreDrawSword(this, lightColor);
-
-			Main.spriteBatch.Draw(
-				GreatswordTexture,
-				Projectile.Center - Main.screenPosition,
-				null,
-				lightColor,
-				Projectile.rotation * Player.direction,
-				Player.direction == -1 ? new Vector2(GreatswordTexture.Width - SpriteHandlePosition.X, SpriteHandlePosition.Y) : SpriteHandlePosition,
-				Projectile.scale,
-				Player.direction == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None,
-				0f
-			);
-
-			if (State == GreatswordState.Charge)
+			Color? drawColor = null;
+			if(SwingStyle.PreDrawSword(this, lightColor, ref drawColor))
 			{
-				// TODO: Some charge up effect.
-			}
+                Main.spriteBatch.Draw(
+					GreatswordTexture,
+					Projectile.Center - Main.screenPosition,
+					null,
+                    drawColor is null ? lightColor : drawColor.Value,
+					Projectile.rotation * Player.direction,
+					Player.direction == -1 ? new Vector2(GreatswordTexture.Width - SpriteHandlePosition.X, SpriteHandlePosition.Y) : SpriteHandlePosition,
+					Projectile.scale,
+					Player.direction == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None,
+					0f
+				);
+            }
 
 			SwingStyle.PostDrawSword(this, lightColor);
 		}

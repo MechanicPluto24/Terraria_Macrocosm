@@ -13,7 +13,6 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 	{
 		public override void SetStaticDefaults()
 		{
-
 		}
 
 		public override void SetDefaults()
@@ -37,7 +36,12 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 			Item.mana = 5;
 		}
 
-		public override bool CanUseItem(Player player) =>
+        public override void ModifyManaCost(Player player, ref float reduce, ref float mult)
+        {
+			mult = 0f;
+        }
+
+        public override bool CanUseItem(Player player) =>
 			player.ownedProjectileCounts[Item.shoot] <= 0 &&
 			!player.HasBuff<HandheldEngineOverheat>();
 
