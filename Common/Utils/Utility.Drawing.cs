@@ -71,7 +71,7 @@ namespace Macrocosm.Common.Utils
 
 		public static void DrawStar(this SpriteBatch spriteBatch, Vector2 position, int points, Color color, float scale = 1f, float rotation = 0f, SpriteEffects spriteEffects = SpriteEffects.None, bool entity = false)
 		{
-			Texture2D tex = TextureAssets.Extra[89].Value;
+			Texture2D tex = TextureAssets.Extra[ExtrasID.SharpTears].Value;
 			float rotationStep = MathHelper.Pi / points;
 
 			for (int i = 0; i < points; i++)
@@ -87,9 +87,9 @@ namespace Macrocosm.Common.Utils
 
 		public static void DrawStar(this SpriteBatch spriteBatch, Vector2 position, List<float> rotations, Color color, float scale = 1f, SpriteEffects spriteEffects = SpriteEffects.None, bool entity = false)
 		{
-			Texture2D tex = TextureAssets.Extra[89].Value;
+            Texture2D tex = TextureAssets.Extra[ExtrasID.SharpTears].Value;
 
-			foreach (var rotation in rotations)
+            foreach (var rotation in rotations)
 			{
 				if (entity)
 					Main.EntitySpriteDraw(tex, position, null, color, rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
@@ -100,8 +100,8 @@ namespace Macrocosm.Common.Utils
 
 		public static void DrawStar(this SpriteBatch spriteBatch, Vector2 position, int points, Color color, Vector2 scale, float rotation = 0f, SpriteEffects spriteEffects = SpriteEffects.None, bool entity = false)
 		{
-			Texture2D tex = TextureAssets.Extra[89].Value;
-			float rotationStep = MathHelper.Pi / points;
+            Texture2D tex = TextureAssets.Extra[ExtrasID.SharpTears].Value;
+            float rotationStep = MathHelper.Pi / points;
 
 			for (int i = 0; i < points; i++)
 			{
@@ -116,9 +116,9 @@ namespace Macrocosm.Common.Utils
 
 		public static void DrawStar(this SpriteBatch spriteBatch, Vector2 position, List<float> rotations, Color color, Vector2 scale, SpriteEffects spriteEffects = SpriteEffects.None, bool entity = false)
 		{
-			Texture2D tex = TextureAssets.Extra[89].Value;
+            Texture2D tex = TextureAssets.Extra[ExtrasID.SharpTears].Value;
 
-			foreach (var rotation in rotations)
+            foreach (var rotation in rotations)
 			{
 				if (entity)
 					Main.EntitySpriteDraw(tex, position, null, color, rotation, tex.Size() / 2f, scale, spriteEffects, 0f);

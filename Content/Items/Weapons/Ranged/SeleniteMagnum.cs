@@ -23,7 +23,12 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 			RecoilStartFrame = 5
 		};
 
-		public override void SetDefaultsHeldProjectile()
+		public override void SetStaticDefaults()
+        {
+            ItemID.Sets.ItemsThatAllowRepeatedRightClick[Type] = true;
+        }
+
+        public override void SetDefaultsHeldProjectile()
 		{
 			Item.DefaultToRangedWeapon(10, AmmoID.Bullet, 20, 20, true);
 			Item.damage = 280;
@@ -51,7 +56,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
 		public override bool CanUseItemHeldProjectile(Player player)
 		{
-			if (player.AltFunction())
+            if (player.AltFunction())
 			{
 				Item.damage = 240;
                 Item.useTime = 6;

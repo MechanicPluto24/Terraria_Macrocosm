@@ -24,9 +24,7 @@ namespace Macrocosm.Common.Bases
 		public virtual (float min, float max) ChargeBasedDamageRatio => (0.2f, 1f);
 		public virtual (float min, float max) ChargeBasedDashAmount => (0f, 5.5f);
 		public virtual string HeldProjectileTexturePath => Texture;
-
 		public virtual Action<Player, int> OnRelease => null;
-
 		public Texture2D HeldProjectileTexture => ModContent.Request<Texture2D>(HeldProjectileTexturePath, AssetRequestMode.ImmediateLoad).Value;
 	}
 
@@ -54,9 +52,8 @@ namespace Macrocosm.Common.Bases
 
         public int MaxCharge { get; set; }
 		private int chargeTimer = 0;
-		/// <summary>
-		/// Charge ranging from 0 to 1.
-		/// </summary>
+
+		/// <summary> Charge ranging from 0 to 1. </summary>
 		public float Charge => (float)chargeTimer / MaxCharge;
 
 		public Texture2D GreatswordTexture { get; private set; }

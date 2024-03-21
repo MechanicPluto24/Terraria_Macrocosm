@@ -168,7 +168,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Player player = Main.player[Projectile.owner];
             Item item = player.CurrentItem();
 
-            float speed = 0.5f * player.GetTotalAttackSpeed(DamageClass.Melee);
+            float speed = 0.6f * player.GetTotalAttackSpeed(DamageClass.Melee);
             SwingRotation += speed;
 
             float angle = MathHelper.Pi - MathHelper.Pi/16;
