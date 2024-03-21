@@ -101,6 +101,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                     p.Position = target.Center;
                     p.Velocity = -Vector2.UnitY * 0.4f;
                     p.Scale = 1f;
+                    p.Rotation = MathHelper.PiOver4;
                 }, shouldSync: true
                 );
         }
@@ -160,6 +161,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 spawned = true;
             }
 
+            float scaleFactor = 1.85f;
             particleOnHitCount = (int)(2 * (0.5f + 0.5f * Projectile.scale));
 
             float progress = SwingRotation / TargetSwingRotation;
@@ -173,9 +175,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Projectile.rotation = angle * SwingDirection * progress + Projectile.velocity.ToRotation() + SwingDirection * angle + player.fullRotation;
             Projectile.Center = player.RotatedRelativePoint(player.MountedCenter) + PositionAdjustment;
 
-            Projectile.scale = 2.6f * player.GetAdjustedItemScale(item) * defScale;
+            Projectile.scale = defScale + MathHelper.SmoothStep(0, 1, progress) * scaleFactor;
+            Projectile.scale *= player.GetAdjustedItemScale(item);
 
-            Vector2 hitboxPos = Projectile.Center - PositionAdjustment + Utility.PolarVector(175, Projectile.rotation);
+            Vector2 hitboxPos = Projectile.Center - PositionAdjustment + Utility.PolarVector(225, Projectile.rotation);
 
             for (int i = 0; i < 2; i++)
             {
@@ -183,13 +186,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                     break;
 
                 Vector2 dustVelocity = new Vector2(Main.rand.NextFloat(1, 20 * speed * progress), 0).RotatedBy(Projectile.rotation + MathHelper.PiOver2 * Projectile.direction) + Main.player[Projectile.owner].velocity;
-                Dust dust = Dust.NewDustDirect(Vector2.Lerp(hitboxPos, player.Center, Main.rand.NextFloat()), 1, 1, ModContent.DustType<ArtemiteBrightDust>(), dustVelocity.X, dustVelocity.Y, Scale: Main.rand.NextFloat(1.2f, 2f));
-                dust.noGravity = true;
+                Particle.CreateParticle<ImbriumStar>(Vector2.Lerp(hitboxPos, player.Center, Main.rand.NextFloat()), dustVelocity * 0.7f, scale : 0.65f);
 
-                if (Main.rand.NextBool(4))
+                if (Main.rand.NextBool())
                 {
-                    dustVelocity = new Vector2(Main.rand.NextFloat(4, 6), 0).RotatedBy(Projectile.rotation - MathHelper.PiOver2 * Projectile.direction) + Main.player[Projectile.owner].velocity;
-                    dust = Dust.NewDustDirect(Vector2.Lerp(Projectile.position, player.Center, 0.5f), Projectile.width / 2, Projectile.height / 2, ModContent.DustType<ArtemiteDust>(), dustVelocity.X, dustVelocity.Y, Scale: Main.rand.NextFloat(0.6f, 1f)); ;
+                    Dust dust = Dust.NewDustDirect(Vector2.Lerp(hitboxPos, player.Center, Main.rand.NextFloat()), 1, 1, ModContent.DustType<ArtemiteBrightDust>(), dustVelocity.X, dustVelocity.Y, Scale: Main.rand.NextFloat(1.2f, 2f));
                     dust.noGravity = true;
                 }
             }
@@ -222,8 +223,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 2), color * 0.7f * progressScale * 0.3f, rotation, origin, scale, effects, 0f);
             Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 2), color * 0.8f * progressScale * 0.5f, rotation, origin, scale * 0.975f, effects, 0f);
             Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), (color * progressScale).WithOpacity(0.4f - 0.39f * (1f - progressScale)), rotation, origin, scale * 0.95f, effects, 0f);
-            //Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), (color * progressScale).WithOpacity(0.5f - 0.49f * (1f - progressScale)), rotation, origin, scale * 0.75f, effects, 0f);
-            //Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), (color * progressScale).WithOpacity(0.05f - 0.04f * (1f - progressScale)), rotation, origin, scale * 0.55f, effects, 0f);
+            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), (color * progressScale).WithOpacity(0.5f - 0.49f * (1f - progressScale)), rotation, origin, scale * 0.75f, effects, 0f);
+            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), (color * progressScale).WithOpacity(0.05f - 0.04f * (1f - progressScale)), rotation, origin, scale * 0.55f, effects, 0f);
 
             int iteration = 0;
             for (float f = 0f; f < 16f * (0.5f + opacity); f += 0.02f)

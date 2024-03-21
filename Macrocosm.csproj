@@ -25,14 +25,6 @@
 	<NoWarn>$(NoWarn);CA1822</NoWarn> <!-- Private methods that don't deal with instance data should sometimes be left instanced, not static, due to tML's nature -->
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="Content\Items\Placeable\Furniture\MoonBase\MoonBaseCrate.png" />
-    <None Remove="Content\Items\Placeable\Walls\MoonBaseSquarePaneledWall.png" />
-    <None Remove="Content\Items\Placeable\Walls\MoonBaseTrimmingWall.png" />
-    <None Remove="Content\Tiles\Furniture\MoonBase\MoonBaseCrate.png" />
-    <None Remove="Content\Tiles\Walls\MoonBaseSquarePaneledWall.png" />
-    <None Remove="Content\Tiles\Walls\MoonBaseTrimmingWall.png" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="tModLoader.CodeAssist" Version="0.1.*" />
   </ItemGroup>
   <ItemGroup>
