@@ -29,7 +29,10 @@ namespace Macrocosm.Common.Utils
 
 		public static Item CurrentItem(this Player player) => Main.mouseItem.type == ItemID.None ? player.inventory[player.selectedItem] : Main.mouseItem;
 
-		public static bool AltFunction(this Player player) => player.altFunctionUse == 2;
+		public static bool AltFunction(this Player player)
+		{
+			return player.altFunctionUse == 2;
+		}
 
 		public static Rectangle GetSwungItemHitbox(this Player player)
 		{

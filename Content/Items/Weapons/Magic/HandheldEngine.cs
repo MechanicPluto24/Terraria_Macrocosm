@@ -38,7 +38,6 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 
         public override void ModifyManaCost(Player player, ref float reduce, ref float mult)
         {
-			mult = 0f;
         }
 
         public override bool CanUseItem(Player player) =>

@@ -15,16 +15,17 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 	{
 		public override void SetStaticDefaults()
 		{
-			ItemID.Sets.SkipsInitialUseSound[Item.type] = true; // This skips use animation-tied sound playback, so that we're able to make it be tied to use time instead in the UseItem() hook.
-		}
+			ItemID.Sets.SkipsInitialUseSound[Type] = true;
+			ItemID.Sets.ItemsThatAllowRepeatedRightClick[Type] = true;
+        }
 
 		public override void SetDefaults()
 		{
 			Item.rare = ModContent.RarityType<MoonRarityT1>();
 			Item.value = Item.sellPrice(gold: 1);
 			Item.useStyle = ItemUseStyleID.Shoot;
-			Item.useAnimation = 18;
-			Item.useTime = 24;
+			Item.useAnimation = 14;
+			Item.useTime = 14;
 			Item.UseSound = SoundID.Item71;
 			Item.autoReuse = true;
 			Item.damage = 225;
@@ -50,14 +51,18 @@ namespace Macrocosm.Content.Items.Weapons.Melee
         {
             if (player.AltFunction())
             {
-
+				Item.useTime = 25;
+				Item.useAnimation = 17;
+				Item.useStyle = ItemUseStyleID.Swing;
                 altUseCooldown = 25;
-
 				return true;
             }
             else if(player.ownedProjectileCounts[ModContent.ProjectileType<ArtemiteSpearProjectile>()] < 1)
             {
-				return true;
+                Item.useAnimation = 18;
+                Item.useTime = 24;
+                Item.useStyle = ItemUseStyleID.Shoot;
+                return true;
             }
 
             return false;

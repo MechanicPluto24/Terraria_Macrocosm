@@ -30,8 +30,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         public override void SetDefaults()
         {
-            Projectile.width = 32;
-            Projectile.height = 32;
+            Projectile.width = 16;
+            Projectile.height = 16;
 
             AIType = ProjectileID.WoodenArrowFriendly;
 
@@ -191,12 +191,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                     Main.EntitySpriteDraw(texture, drawPos, null, trailColor, Projectile.oldRot[i], Projectile.Size / 2, Projectile.scale, effect, 0f);
                 }
 
-
                 Texture2D glow = TextureAssets.Extra[ExtrasID.SharpTears].Value;
                 Main.EntitySpriteDraw(glow, Projectile.Center + new Vector2(0f, Projectile.gfxOffY) - Main.screenPosition, null, new Color(130, 220, 199, 0), Projectile.rotation - MathHelper.PiOver4, glow.Size() / 2f, Projectile.scale, SpriteEffects.None);
 
                 for (float progress = 0.4f; progress <= 1f; progress += 0.4f)
-                    Main.EntitySpriteDraw(glow, Vector2.Lerp(Projectile.Center + Projectile.velocity, Projectile.Center, progress + 0.2f) - Main.screenPosition + new Vector2(0f, 0f), null, new Color(130, 220, 199, 0) * 0.75f * progress, Projectile.rotation - MathHelper.PiOver4, glow.Size() / 2f, new Vector2(0.8f, 2.2f) * Projectile.scale, SpriteEffects.None);
+                    Main.EntitySpriteDraw(glow, Vector2.Lerp(Projectile.Center + Projectile.velocity, Projectile.Center, progress + 0.9f) - Main.screenPosition + new Vector2(0f, 0f), null, new Color(130, 220, 199, 0) * 0.75f * progress, Projectile.rotation - MathHelper.PiOver4, glow.Size() / 2f, new Vector2(0.8f, 2.2f) * Projectile.scale, SpriteEffects.None);
             }
 
             Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, color, Projectile.rotation, Projectile.Size / 2f, Projectile.scale, SpriteEffects.None, 0);
