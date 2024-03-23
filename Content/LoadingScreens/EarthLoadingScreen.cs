@@ -12,21 +12,21 @@ namespace Macrocosm.Content.LoadingScreens
 {
 	public class EarthLoadingScreen : LoadingScreen
 	{
-		private List<Texture2D> earthBackgrounds;
-		private Texture2D earthBackground;
+		private List<Asset<Texture2D>> earthBackgrounds;
+		private Asset<Texture2D> earthBackground;
 
 		public EarthLoadingScreen()
 		{
 			AssetRequestMode mode = AssetRequestMode.ImmediateLoad;
 
-			earthBackgrounds = new List<Texture2D>(){
-				ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/Backgrounds/Earth_Africa").Value,
-				ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/Backgrounds/Earth_Asia", mode).Value,
-				ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/Backgrounds/Earth_Australia", mode).Value,
-				ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/Backgrounds/Earth_Europe", mode).Value,
-				ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/Backgrounds/Earth_NorthAmerica", mode).Value,
-				ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/Backgrounds/Earth_SouthAmerica", mode).Value
-			};
+			earthBackgrounds = [
+				ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/Backgrounds/Earth_Africa"),
+				ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/Backgrounds/Earth_Asia", mode),
+				ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/Backgrounds/Earth_Australia", mode),
+				ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/Backgrounds/Earth_Europe", mode),
+				ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/Backgrounds/Earth_NorthAmerica", mode),
+				ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/Backgrounds/Earth_SouthAmerica", mode)
+			];
 		}
 
 		private readonly float animationDuration = 1000f;
@@ -60,7 +60,7 @@ namespace Macrocosm.Content.LoadingScreens
 
 			spriteBatch.Draw
 			(
-				earthBackground,
+				earthBackground.Value,
 				new Rectangle(0, movement, Main.screenWidth, Main.screenHeight),
 				null,
 				bodyColor

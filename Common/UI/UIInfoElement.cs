@@ -23,8 +23,8 @@ namespace Macrocosm.Common.UI
 
 		public UIInfoElement(LocalizedColorScaleText displayText, Asset<Texture2D> icon = null, Asset<Texture2D> iconSymbol = null, LocalizedText hoverText = null)
 		{
-			this.icon = icon ?? Macrocosm.EmptyTexAsset;
-			this.iconSymbol = iconSymbol ?? Macrocosm.EmptyTexAsset;
+			this.icon = icon ?? Macrocosm.EmptyTex;
+			this.iconSymbol = iconSymbol ?? Macrocosm.EmptyTex;
 			this.displayText = displayText;
 
 			if (hoverText is null)

@@ -4,6 +4,7 @@ using Macrocosm.Content.Dusts;
 using Macrocosm.Content.NPCs.Global;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using System;
 using Terraria;
 using Terraria.GameContent;
@@ -31,7 +32,15 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		public ref float AI_Timer => ref NPC.ai[1];
 
-		public override void SetStaticDefaults()
+
+		private Asset<Texture2D> glowmask;
+
+        public override void Load()
+        {
+            glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Enemies/Moon/CrescentGhoul_Glow");
+        }
+
+        public override void SetStaticDefaults()
 		{
 			base.SetStaticDefaults();
 
@@ -235,10 +244,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
 		public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
-			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Enemies/Moon/CrescentGhoul_Glow").Value;
 			SpriteEffects effect = NPC.spriteDirection == -1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 			int frameHeight = TextureAssets.Npc[Type].Height() / Main.npcFrameCount[Type];
-			spriteBatch.Draw(glowmask, NPC.Center - Main.screenPosition, NPC.frame, Color.White, NPC.rotation, new Vector2(TextureAssets.Npc[Type].Width() / 2f, frameHeight / 2f), NPC.scale, effect, 0f);
+			spriteBatch.Draw(glowmask.Value, NPC.Center - Main.screenPosition, NPC.frame, Color.White, NPC.rotation, new Vector2(TextureAssets.Npc[Type].Width() / 2f, frameHeight / 2f), NPC.scale, effect, 0f);
 		}
 
 		public override void FindFrame(int frameHeight)

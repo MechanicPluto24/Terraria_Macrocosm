@@ -2,6 +2,7 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -12,10 +13,10 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 	{
 		public override void SetStaticDefaults()
 		{
+            Item.Glowmask().Texture = ModContent.Request<Texture2D>("Macrocosm/Content/Items/Weapons/Melee/Noxsaber_Glow");
+        }
 
-		}
-
-		public override void SetDefaults()
+        public override void SetDefaults()
 		{
 			Item.damage = 777;
 			Item.DamageType = DamageClass.Melee;
@@ -29,7 +30,6 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 			Item.rare = ModContent.RarityType<MoonRarityT3>();
 			Item.UseSound = SoundID.Item15;
 			Item.autoReuse = true; // Lets you use the item without clicking the mouse repeatedly (i.e. swinging swords)
-			Item.Glowmask().Texture = ModContent.Request<Texture2D>("Macrocosm/Content/Items/Weapons/Melee/Noxsaber_Glow").Value;
 		}
 
 		public override void MeleeEffects(Player player, Rectangle hitbox)

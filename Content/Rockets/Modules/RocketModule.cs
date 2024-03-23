@@ -89,7 +89,7 @@ namespace Macrocosm.Content.Rockets.Modules
 				if (HasPattern)
 				{
 					// Pass the pattern to the shader via the S1 register
-					Main.graphics.GraphicsDevice.Textures[1] = Pattern.Texture;
+					Main.graphics.GraphicsDevice.Textures[1] = Pattern.Texture.Value;
 					Main.graphics.GraphicsDevice.Textures[2] = null;
 
 					// Change sampler state for proper alignment at all zoom levels 
@@ -109,7 +109,7 @@ namespace Macrocosm.Content.Rockets.Modules
 				if (HasDetail)
 				{
 					// Pass the detail to the shader via the S2 register
-					Main.graphics.GraphicsDevice.Textures[2] = Detail.Texture;
+					Main.graphics.GraphicsDevice.Textures[2] = Detail.Texture.Value;
 					Main.graphics.GraphicsDevice.SamplerStates[2] = SamplerState.PointClamp;
 
 				}

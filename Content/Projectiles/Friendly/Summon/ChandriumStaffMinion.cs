@@ -5,6 +5,7 @@ using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using System;
 using Terraria;
 using Terraria.DataStructures;
@@ -16,7 +17,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 {
     public class ChandriumStaffMinion : ModProjectile
 	{
-		public override void SetStaticDefaults()
+		private Asset<Texture2D> glowmask;
+        public override void Load()
+        {
+            glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Summon/ChandriumStaffMinion_Glow");
+        }
+
+        public override void SetStaticDefaults()
 		{
 			Main.projFrames[Type] = 4;
 			ProjectileID.Sets.MinionTargettingFeature[Type] = true;
@@ -64,8 +71,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
 		public override void PostDraw(Color lightColor)
 		{
-			Texture2D glow = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Summon/ChandriumStaffMinion_Glow").Value;
-			Projectile.DrawAnimatedExtra(glow, Color.White, Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, Projectile.spriteDirection == 1 ? new Vector2(0, 6) : new Vector2(0, -2));
+			Projectile.DrawAnimatedExtra(glowmask.Value, Color.White, Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, Projectile.spriteDirection == 1 ? new Vector2(0, 6) : new Vector2(0, -2));
 		}
 
 		public override void AI()

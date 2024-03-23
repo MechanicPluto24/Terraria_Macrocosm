@@ -7,9 +7,9 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
-namespace Macrocosm.Content.Tiles.Furniture.MoonBase
+namespace Macrocosm.Content.Tiles.Furniture
 {
-	internal class MoonBaseDeskLamp : ModTile
+	internal class ConstructionLight : ModTile
 	{
 		public override void SetStaticDefaults()
 		{
@@ -20,6 +20,8 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 			Main.tileLavaDeath[Type] = true;
 
 			TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
+			TileObjectData.newTile.Width = 2;
+			TileObjectData.newTile.Height = 3;
 			TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;
 			TileObjectData.newTile.StyleHorizontal = true;
 			TileObjectData.newTile.WaterDeath = true;
@@ -32,6 +34,8 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
             TileObjectData.newTile.StyleMultiplier = 2;
 			TileObjectData.newTile.StyleWrapLimit = 4;
 
+			TileObjectData.newTile.CoordinateHeights = [16, 16, 16];
+
 			// Place right alternate
 			TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
 			TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceRight;
@@ -40,24 +44,23 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 			TileObjectData.addTile(Type);
 
 			AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTorch);
-			AdjTiles = [TileID.Candelabras];
+			AdjTiles = [TileID.Lamps];
 
 			DustType = ModContent.DustType<MoonBasePlatingDust>();
 
-			AddMapEntry(new Color(253, 221, 3), CreateMapEntryName());
+			AddMapEntry(new Color(192, 137, 39), CreateMapEntryName());
 
-            RegisterItemDrop(ModContent.ItemType<Items.Placeable.Furniture.MoonBase.MoonBaseDeskLamp>(), 0, 1);
-
+            RegisterItemDrop(ModContent.ItemType<Items.Placeable.Furniture.ConstructionLight>(), 0, 1);
         }
 
         public override void HitWire(int i, int j)
 		{
 			int leftX = i - Main.tile[i, j].TileFrameX / 18 % 2;
-			int topY = j - Main.tile[i, j].TileFrameY / 18 % 2;
+			int topY = j - Main.tile[i, j].TileFrameY / 18 % 3;
 
 			for (int x = leftX; x < leftX + 2; x++)
 			{
-				for (int y = topY; y < topY + 2; y++)
+				for (int y = topY; y < topY + 3; y++)
 				{
 					// Turn light on and off based on frame.
 					// Each style has 2 "on" and 2 "off" frames per row. 
@@ -72,7 +75,7 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 			}
 
 			if (Main.netMode != NetmodeID.SinglePlayer)
-				NetMessage.SendTileSquare(-1, leftX, topY, 2, 2);
+				NetMessage.SendTileSquare(-1, leftX, topY, 2, 3);
 		}
 
 		public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)

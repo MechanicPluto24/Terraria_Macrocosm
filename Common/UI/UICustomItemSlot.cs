@@ -58,7 +58,7 @@ namespace Macrocosm.Common.UI
 			SetAppearance
 			(
 				terrariaDefault ? TextureAssets.InventoryBack : ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/InventorySlot"),
-				terrariaDefault ? Macrocosm.EmptyTexAsset : ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/InventorySlotBorder"),
+				terrariaDefault ? Macrocosm.EmptyTex : ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/InventorySlotBorder"),
 				UITheme.Current.InventorySlotStyle.BackgroundColor,
 				UITheme.Current.InventorySlotStyle.BorderColor,
 				terrariaDefault ? 0.2f : 0.8f

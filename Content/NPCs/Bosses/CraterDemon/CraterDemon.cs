@@ -19,6 +19,7 @@ using Macrocosm.Content.NPCs.Global;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -392,6 +393,13 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
         private const int Animation_LookRight_JawClosed = 4;
         private const int Animation_LookRight_JawOpen = 5;
 
+
+        private Asset<Texture2D> glowmask;
+        public override void Load()
+        {
+            glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Bosses/CraterDemon/CraterDemon_Glow");
+        }
+
         public override void SetStaticDefaults()
         {
             Main.npcFrameCount[NPC.type] = 6;
@@ -599,16 +607,14 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             if (AI_Attack == AttackState.Charge && AI_AttackProgress > 2 && NPC.alpha >= 160)
                 return true;
 
-            Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Bosses/CraterDemon/CraterDemon_Glow").Value;
-
             for (int i = 0; i < NPC.oldPos.Length; i++)
             {
                 Vector2 drawPos = NPC.oldPos[i] - Main.screenPosition + new Vector2(0, 4);
                 Color trailColor = NPC.GetAlpha(drawColor) * (((float)NPC.oldPos.Length - i) / NPC.oldPos.Length);
-                spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, drawPos, NPC.frame, trailColor * 0.6f, NPC.rotation, Vector2.Zero, NPC.scale, SpriteEffects.None, 0f);
+                spriteBatch.Draw(TextureAssets.Npc[Type].Value, drawPos, NPC.frame, trailColor * 0.6f, NPC.rotation, Vector2.Zero, NPC.scale, SpriteEffects.None, 0f);
 
                 Color glowColor = (Color)GetAlpha(Color.White) * (((float)NPC.oldPos.Length - i) / NPC.oldPos.Length);
-                spriteBatch.Draw(glowmask, drawPos, NPC.frame, glowColor * 0.6f, NPC.rotation, Vector2.Zero, NPC.scale, SpriteEffects.None, 0f);
+                spriteBatch.Draw(glowmask.Value, drawPos, NPC.frame, glowColor * 0.6f, NPC.rotation, Vector2.Zero, NPC.scale, SpriteEffects.None, 0f);
             }
 
             return true;
@@ -616,9 +622,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
         public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Bosses/CraterDemon/CraterDemon_Glow").Value;
-            spriteBatch.Draw(glowmask, NPC.position - screenPos + new Vector2(0, 4), NPC.frame, (Color)GetAlpha(Color.White), NPC.rotation, Vector2.Zero, NPC.scale, SpriteEffects.None, 0f);
-
+            spriteBatch.Draw(glowmask.Value, NPC.position - screenPos + new Vector2(0, 4), NPC.frame, (Color)GetAlpha(Color.White), NPC.rotation, Vector2.Zero, NPC.scale, SpriteEffects.None, 0f);
             DrawLensFlares(spriteBatch, screenPos);
         }
 

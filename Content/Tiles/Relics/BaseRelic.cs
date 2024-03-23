@@ -23,22 +23,18 @@ namespace Macrocosm.Content.Tiles.Relics
 		public const int HorizontalFrames = 1;
 		public const int VerticalFrames = 1;
 
-		public Asset<Texture2D> RelicTexture;
+		protected Asset<Texture2D> relicTexture;
 
 		// Vanilla copy of the pedestal texture 
 		public override string Texture => "Macrocosm/Content/Tiles/Relics/RelicPedestal";
 
 		public override void Load()
 		{
-			if (!Main.dedServ)
-			{
-				RelicTexture = ModContent.Request<Texture2D>(RelicTextureName);
-			}
+			relicTexture = ModContent.Request<Texture2D>(RelicTextureName);
 		}
 
 		public override void Unload()
 		{
-			RelicTexture = null;
 		}
 
 		public override void SetStaticDefaults()
@@ -72,17 +68,16 @@ namespace Macrocosm.Content.Tiles.Relics
 
 		public override void SpecialDraw(int i, int j, SpriteBatch spriteBatch)
 		{
-			// This is lighting-mode specific, always include this if you draw tiles manually
-			Vector2 offScreen = new Vector2(Main.offScreenRange);
+			Vector2 offScreen = new(Main.offScreenRange);
 			if (Main.drawToScreen)
 				offScreen = Vector2.Zero;
 
-			Point p = new Point(i, j);
+			Point p = new(i, j);
 			Tile tile = Main.tile[p.X, p.Y];
 			if (tile == null || !tile.HasTile)
 				return;
 
-			Texture2D texture = RelicTexture.Value;
+			Texture2D texture = relicTexture.Value;
 
 			int frameY = tile.TileFrameX / FrameWidth;
 			Rectangle frame = texture.Frame(HorizontalFrames, VerticalFrames, 0, frameY);

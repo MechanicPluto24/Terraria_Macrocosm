@@ -3,6 +3,7 @@ using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using System;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -27,7 +28,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
         public UILaunchPadInfoElement() : base(
 			Language.GetText("Mods.Macrocosm.UI.Rocket.Common.WorldSpawn"),
-			ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/WorldInfo/SpawnPoint"),
+			ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/WorldInfo/SpawnPoint", AssetRequestMode.ImmediateLoad),
 			null,
 			null
 		)
@@ -44,20 +45,30 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
 			BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor;
 			BorderColor = UITheme.Current.PanelStyle.BorderColor;
-			uIDisplayText.TextColor = UITheme.Current.CommonTextColor;
+
+			if(uIDisplayText is not null)
+				uIDisplayText.TextColor = UITheme.Current.CommonTextColor;
 
 			if (CanInteract)
 			{
-				if (HasFocus || IsMouseHovering)
+				if (IsMouseHovering)
 				{
 					BackgroundColor = UITheme.Current.ButtonHighlightStyle.BackgroundColor;
 					BorderColor = UITheme.Current.ButtonHighlightStyle.BorderColor;
 				}
+
+				if (HasFocus)
+				{
+                    BackgroundColor = UITheme.Current.ButtonStyle.BackgroundColor;
+                    BorderColor = UITheme.Current.ButtonHighlightStyle.BorderColor;
+                }
 			}
 			else
 			{
 				BackgroundColor = Color.Lerp(UITheme.Current.PanelStyle.BackgroundColor, Color.DarkGray, 0.1f);
-				uIDisplayText.TextColor = Color.LightGray;
+
+                if (uIDisplayText is not null)
+                    uIDisplayText.TextColor = Color.LightGray;
 			}
 
 			if (IsCurrent)

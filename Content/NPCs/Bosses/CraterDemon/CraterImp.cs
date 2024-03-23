@@ -27,8 +27,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             Chomp = 2,
             FadeOut = 3
         };
+        public bool DropMoonstone => false;
 
-		public ref float AI_Timer => ref NPC.ai[0];
+        public ref float AI_Timer => ref NPC.ai[0];
 		public AttackType AI_Attack 
 		{
 			get => (AttackType)NPC.ai[1];
@@ -45,9 +46,13 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 		public const int WaitTime = 4 * 60;
 
-		bool IMoonEnemy.DropMoonstone => false;
+		private Asset<Texture2D> glowmask;
+        public override void Load()
+        {
+            glowmask = ModContent.Request<Texture2D>(Texture+ "_Glow");
+        }
 
-		public override void SetStaticDefaults()
+        public override void SetStaticDefaults()
 		{
 			Main.npcFrameCount[NPC.type] = 4;
 			NPCID.Sets.TrailCacheLength[NPC.type] = 5;
@@ -115,10 +120,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Vector2 vector, Color drawColor)
 		{
-			Texture2D texture = TextureAssets.Npc[NPC.type].Value;
-			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Bosses/CraterDemon/CraterImp_Glow").Value;
-            NPCID.Sets.TrailCacheLength[NPC.type] = 5;
-            NPCID.Sets.TrailingMode[NPC.type] = 3;
+			Texture2D texture = TextureAssets.Npc[Type].Value;
 
             Color color = GetAlpha(drawColor) ?? Color.White;
 
@@ -139,7 +141,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 				// trailing glowmask (behind the trail and the npc)
 				Color glowColor = (Color)(GetAlpha(Color.White) * (((float)NPC.oldPos.Length - i) / NPC.oldPos.Length));
-				spriteBatch.Draw(glowmask, drawPos, NPC.frame, glowColor * 0.4f, NPC.rotation, NPC.Size / 2f, NPC.scale, effect, 0f);
+				spriteBatch.Draw(glowmask.Value, drawPos, NPC.frame, glowColor * 0.4f, NPC.rotation, NPC.Size / 2f, NPC.scale, effect, 0f);
 			}
 
 			spriteBatch.Draw(texture, NPC.Center - Main.screenPosition, NPC.frame, color, NPC.rotation, NPC.Size / 2f, NPC.scale, effect, 0);
@@ -155,13 +157,11 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			if (NPC.IsABestiaryIconDummy)
 				return;
 
-			Texture2D glowmask = ModContent.Request<Texture2D>(Texture + "_Glow", AssetRequestMode.ImmediateLoad).Value;
-
             SpriteEffects effect = (NPC.rotation > MathHelper.PiOver2 && NPC.rotation < 3 * MathHelper.PiOver2) || (NPC.rotation < -MathHelper.PiOver2 && NPC.rotation > -3 * MathHelper.PiOver2)
 				? SpriteEffects.FlipVertically
 				: SpriteEffects.None;
 
-			spriteBatch.Draw(glowmask, NPC.Center - Main.screenPosition, NPC.frame, (Color)GetAlpha(Color.White), NPC.rotation, NPC.Size / 2f, NPC.scale, effect, 0f);
+			spriteBatch.Draw(glowmask.Value, NPC.Center - Main.screenPosition, NPC.frame, (Color)GetAlpha(Color.White), NPC.rotation, NPC.Size / 2f, NPC.scale, effect, 0f);
         }
 
         public override void AI()

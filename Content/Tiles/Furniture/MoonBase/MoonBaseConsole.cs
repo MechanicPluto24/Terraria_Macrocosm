@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
@@ -12,7 +13,13 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 {
 	public class MoonBaseConsole : ModTile
 	{
-		public override void SetStaticDefaults()
+        private Asset<Texture2D> glowmask;
+        public override void Load()
+        {
+            glowmask = ModContent.Request<Texture2D>(Texture + "_Glow");
+        }
+
+        public override void SetStaticDefaults()
 		{
 			Main.tileFrameImportant[Type] = true;
 			Main.tileNoAttach[Type] = true;
@@ -32,19 +39,20 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 			DustType = ModContent.DustType<MoonBasePlatingDust>();
 
 			AddMapEntry(new Color(180, 180, 180), CreateMapEntryName());
-		}
 
-		public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
+            RegisterItemDrop(ModContent.ItemType<Items.Placeable.Furniture.MoonBase.MoonBaseConsole>(), 0, 1);
+        }
+
+        public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
 		{
 			Tile tile = Main.tile[i, j];
-			Texture2D glow = ModContent.Request<Texture2D>(Texture + "_Glow").Value;
 			Vector2 zero = Main.drawToScreen ? Vector2.Zero : new Vector2(Main.offScreenRange);
 
             int width = TileObjectData.GetTileData(tile).CoordinateWidth;
             int height = TileObjectData.GetTileData(tile).CoordinateHeights[tile.TileFrameY / 18 % 2];
 
 			spriteBatch.Draw(
-				glow,
+				glowmask.Value,
 				new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero,
 				new Rectangle(tile.TileFrameX, tile.TileFrameY, width, height),
 				Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f

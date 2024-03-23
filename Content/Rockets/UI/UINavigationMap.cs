@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria.UI;
@@ -19,7 +20,7 @@ namespace Macrocosm.Content.Rockets.UI
 		public UINavigationMap DefaultNext = null;
 
 		/// <summary> The displayed background texture </summary>
-		public Texture2D Texture;
+		public Asset<Texture2D> Texture;
 
 		/// <summary> Whether this animation map is undergoing a transition animation </summary>
 		public bool AnimationActive => showAnimationActive;
@@ -39,13 +40,13 @@ namespace Macrocosm.Content.Rockets.UI
 		// Each target of this map can link to another map on zoom in  
 		private Dictionary<UINavigationTarget, UINavigationMap> nextTargetMap = new();
 
-		private Texture2D animationPrevTexture;
+		private Asset<Texture2D> animationPrevTexture;
 		private bool showAnimationActive = false;
 
 		private float opacity = 1f;
 		private float transitionSpeed = 0.03f;
 
-		public UINavigationMap(Texture2D texture, UINavigationMap next = null, UINavigationMap prev = null, UINavigationMap defaultNext = null)
+		public UINavigationMap(Asset<Texture2D> texture, UINavigationMap next = null, UINavigationMap prev = null, UINavigationMap defaultNext = null)
 		{
 			Texture = texture;
 
@@ -200,9 +201,9 @@ namespace Macrocosm.Content.Rockets.UI
 			Rectangle rect = dimensions.ToRectangle();
 
 			if (animationPrevTexture is not null && showAnimationActive)
-				spriteBatch.Draw(animationPrevTexture, rect, null, Color.White * (1 - opacity));
+				spriteBatch.Draw(animationPrevTexture.Value, rect, null, Color.White * (1 - opacity));
 
-			spriteBatch.Draw(Texture, rect, null, Color.White * opacity);
+			spriteBatch.Draw(Texture.Value, rect, null, Color.White * opacity);
 		}
 	}
 }

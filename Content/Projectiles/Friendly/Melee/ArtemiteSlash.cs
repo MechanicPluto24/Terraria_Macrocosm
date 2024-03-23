@@ -25,9 +25,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 		}
 
 		bool spawned;
-		float rotationSpeed;
 		public override void AI()
 		{
+			if (!spawned)
+			{
+				spawned = true;
+			}
+
 			Player player = Main.player[Projectile.owner];
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
 		}

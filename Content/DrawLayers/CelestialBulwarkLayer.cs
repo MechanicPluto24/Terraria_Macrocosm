@@ -3,6 +3,7 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Accessories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Graphics.Shaders;
@@ -12,7 +13,14 @@ namespace Macrocosm.Content.DrawLayers
 {
 	public class CelestialBulwarkLayer : PlayerDrawLayer
 	{
-		public override Position GetDefaultPosition()
+        Asset<Texture2D> shieldMask;
+
+        public override void Load()
+        {
+            shieldMask = ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark_Shield_Mask");
+        }
+
+        public override Position GetDefaultPosition()
 			=> new AfterParent(PlayerDrawLayers.Shield);
 
 		public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
@@ -23,7 +31,6 @@ namespace Macrocosm.Content.DrawLayers
             if (drawInfo.drawPlayer.shieldRaised)
                 return;
 
-            Texture2D texture = ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark_Shield_Mask").Value;
             CelestialBulwark.GetEffectColor(drawInfo.drawPlayer, out Color drawColor, out Color? secondaryColor, out _, out bool bypassShader, out _);
 
             int shader = bypassShader ? -1 : drawInfo.cShield;
@@ -36,17 +43,17 @@ namespace Macrocosm.Content.DrawLayers
             Rectangle bodyFrame = drawInfo.drawPlayer.bodyFrame;
             Vector2 bodyVect = drawInfo.bodyVect;
 
-            if (bodyFrame.Width != texture.Width)
+            if (bodyFrame.Width != shieldMask.Width())
             {
-                bodyFrame.Width = texture.Width;
-                bodyVect.X += bodyFrame.Width - texture.Width;
+                bodyFrame.Width = shieldMask.Width();
+                bodyVect.X += bodyFrame.Width - shieldMask.Width();
 
                 if (drawInfo.playerEffect.HasFlag(SpriteEffects.FlipHorizontally))
                     bodyVect.X = bodyFrame.Width - bodyVect.X;
             }
 
             Vector2 position = Vector2.Zero + new Vector2((int)(drawInfo.Position.X - Main.screenPosition.X - bodyFrame.Width / 2 + drawInfo.drawPlayer.width / 2), (int)(drawInfo.Position.Y - Main.screenPosition.Y + drawInfo.drawPlayer.height - drawInfo.drawPlayer.bodyFrame.Height + 4f)) + drawInfo.drawPlayer.bodyPosition + new Vector2(bodyFrame.Width / 2, drawInfo.drawPlayer.bodyFrame.Height / 2);
-            DrawData item = new(texture, position, bodyFrame, drawColor, drawInfo.drawPlayer.bodyRotation, bodyVect, 1f, drawInfo.playerEffect, 1)
+            DrawData item = new(shieldMask.Value, position, bodyFrame, drawColor, drawInfo.drawPlayer.bodyRotation, bodyVect, 1f, drawInfo.playerEffect, 1)
             {
                 shader = shader
             };

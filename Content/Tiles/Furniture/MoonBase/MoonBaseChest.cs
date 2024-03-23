@@ -4,6 +4,7 @@ using Macrocosm.Content.Items.Tools;
 using Macrocosm.Content.Players;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using System;
 using Terraria;
 using Terraria.Audio;
@@ -45,7 +46,14 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 			return (State)style;
 		}
 
-		public override void SetStaticDefaults()
+        private Asset<Texture2D> glowmask;
+
+        public override void Load()
+        {
+            glowmask = ModContent.Request<Texture2D>(Texture + "_Glow");
+        }
+
+        public override void SetStaticDefaults()
 		{
 			Main.tileSpelunker[Type] = true;
 			Main.tileContainer[Type] = true;
@@ -307,13 +315,12 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 				return;
 
 			Tile tile = Main.tile[i, j];
-			Texture2D glow = ModContent.Request<Texture2D>("Macrocosm/Content/Tiles/Furniture/MoonBase/MoonBaseChest_Glow").Value;
 			Vector2 zero = Main.drawToScreen ? Vector2.Zero : new Vector2(Main.offScreenRange);
 
 			int height = TileObjectData.GetTileData(tile).CoordinateHeights[tile.TileFrameY / 18 % 2];
 
 			spriteBatch.Draw(
-				glow,
+				glowmask.Value,
 				new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero,
 				new Rectangle(tile.TileFrameX, tile.TileFrameY, 16, height),
 				Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);

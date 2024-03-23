@@ -27,21 +27,20 @@ namespace Macrocosm
 		public const string ShadersPath = "Macrocosm/Assets/Effects/";
 		public const string MusicPath = "Macrocosm/Assets/Music/";
 		public const string SFXPath = "Macrocosm/Assets/Sounds/SFX/";
-
-		public const string EmptyTexPath = TexturesPath + "Empty";
+		public const string EmptyTexPath = TexturesPath + "Empty"; 
 
 		public const int ItemShoot_UsesAmmo = 10;
 
-		public static Asset<Texture2D> EmptyTexAsset => ModContent.Request<Texture2D>(EmptyTexPath);
-		public static Texture2D EmptyTex => EmptyTexAsset.Value;
-
+		public static Asset<Texture2D> EmptyTex { get; set; }
 		public static Type[] GetTypes() => AssemblyManager.GetLoadableTypes(Instance.Code);
 
 		public override void Load()
 		{
 			if (!Main.dedServ)
-			{
-				LoadResprites();
+            {
+                EmptyTex = ModContent.Request<Texture2D>(EmptyTexPath);
+
+                LoadResprites();
 				LoadEffects();
 			}
 

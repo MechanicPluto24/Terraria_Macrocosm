@@ -135,12 +135,12 @@ namespace Macrocosm.Content.Rockets.UI
 			if (WorldDataSystem.Instance.FoundVulcan)
 			{
 				solarSystemInner.AddTarget(new UINavigationTarget(this, new Vector2(226, 88), 12, 12, "Vulcan"));
-				solarSystemInner.Texture = ModContent.Request<Texture2D>(navigationMapsPath + "SolarSystemInnerVulcan", AssetRequestMode.ImmediateLoad).Value;
+				solarSystemInner.Texture = ModContent.Request<Texture2D>(navigationMapsPath + "SolarSystemInnerVulcan", AssetRequestMode.ImmediateLoad);
 			}
 			else
 			{
 				solarSystemInner.RemoveTarget("Vulcan");
-				solarSystemInner.Texture = ModContent.Request<Texture2D>(navigationMapsPath + "SolarSystemInner", AssetRequestMode.ImmediateLoad).Value;
+				solarSystemInner.Texture = ModContent.Request<Texture2D>(navigationMapsPath + "SolarSystemInner", AssetRequestMode.ImmediateLoad);
 			}
 
             /* 
@@ -163,9 +163,9 @@ namespace Macrocosm.Content.Rockets.UI
 			Asset<Texture2D> zoomOutTexture = ModContent.Request<Texture2D>(buttonsPath + "ZoomOutButton", mode);
 			Asset<Texture2D> zoomButtonBorder = ModContent.Request<Texture2D>(buttonsPath + "ZoomButtonBorder", mode);
 
-			Texture2D outlineSmall = ModContent.Request<Texture2D>(buttonsPath + "SelectionOutlineSmall", mode).Value;
-			Texture2D outlineMedium = ModContent.Request<Texture2D>(buttonsPath + "SelectionOutlineMedium", mode).Value;
-			Texture2D outlineLarge = ModContent.Request<Texture2D>(buttonsPath + "SelectionOutlineLarge", mode).Value;
+            Asset<Texture2D> outlineSmall = ModContent.Request<Texture2D>(buttonsPath + "SelectionOutlineSmall", mode);
+            Asset<Texture2D> outlineMedium = ModContent.Request<Texture2D>(buttonsPath + "SelectionOutlineMedium", mode);
+            Asset<Texture2D> outlineLarge = ModContent.Request<Texture2D>(buttonsPath + "SelectionOutlineLarge", mode);
 
 			zoomInButton = new(zoomInTexture, zoomButtonBorder, Language.GetText("Mods.Macrocosm.UI.Common.ZoomIn"))
 			{
@@ -183,9 +183,9 @@ namespace Macrocosm.Content.Rockets.UI
 			zoomOutButton.OnLeftClick += (_, _) => ZoomOut();
 			zoomOutButton.CheckInteractible = () => CurrentMap.HasPrev;
 
-			earthSystem = new(ModContent.Request<Texture2D>(navigationMapsPath + "EarthSystem", mode).Value);
-			solarSystemInner = new(ModContent.Request<Texture2D>(navigationMapsPath + "SolarSystemInner", mode).Value, defaultNext: GetInitialNavigationMap());
-			solarSystemOuter = new(ModContent.Request<Texture2D>(navigationMapsPath + "SolarSystemOuter", mode).Value, defaultNext: solarSystemInner);
+			earthSystem = new(ModContent.Request<Texture2D>(navigationMapsPath + "EarthSystem", mode));
+			solarSystemInner = new(ModContent.Request<Texture2D>(navigationMapsPath + "SolarSystemInner", mode), defaultNext: GetInitialNavigationMap());
+			solarSystemOuter = new(ModContent.Request<Texture2D>(navigationMapsPath + "SolarSystemOuter", mode), defaultNext: solarSystemInner);
 
 			earthSystem.AddTarget(new UINavigationTarget(this, new Vector2(64, 24), 160, 160, "Earth", Earth.LaunchConditions, outline: outlineLarge));
 			earthSystem.AddTarget(new UINavigationTarget(this, new Vector2(424, 32), 48, 48, Moon.Instance, outline: outlineMedium));

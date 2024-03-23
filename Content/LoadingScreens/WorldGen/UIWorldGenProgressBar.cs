@@ -11,10 +11,10 @@ namespace Macrocosm.Content.LoadingScreens.WorldGen
 {
 	public class UIWorldGenProgressBar : UIGenProgressBar
 	{
-		private readonly Texture2D texUpper;
-		private readonly Texture2D texLower;
-		private readonly Texture2D fillLarge;
-		private readonly Texture2D fillSmall;
+		private readonly Asset<Texture2D> texUpper;
+		private readonly Asset<Texture2D> texLower;
+		private readonly Asset<Texture2D> fillLarge;
+		private readonly Asset<Texture2D> fillSmall;
 
 		private readonly Color fillLargeStart;
 		private readonly Color fillLargeEnd;
@@ -28,19 +28,19 @@ namespace Macrocosm.Content.LoadingScreens.WorldGen
 
 		public void SetPosition(float x, float y) => position = new Vector2(x, y);
 
-		public UIWorldGenProgressBar(Texture2D texUpper, Texture2D texLower)
+		public UIWorldGenProgressBar(Asset<Texture2D> texUpper, Asset<Texture2D> texLower)
 		{
 			if (Main.netMode != NetmodeID.Server)
 			{
 				this.texUpper = texUpper;
 				this.texLower = texLower;
-				fillLarge = ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/WorldGen/DefaultLargeFill", AssetRequestMode.ImmediateLoad).Value;
-				fillSmall = ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/WorldGen/DefaultSmallFill", AssetRequestMode.ImmediateLoad).Value;
+				fillLarge = ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/WorldGen/DefaultLargeFill", AssetRequestMode.ImmediateLoad);
+				fillSmall = ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/WorldGen/DefaultSmallFill", AssetRequestMode.ImmediateLoad);
 			}
 			base.Recalculate();
 		}
 
-		public UIWorldGenProgressBar(Texture2D texUpper, Texture2D texLower, Color fillLargeStart, Color fillLargeEnd, Color fillSmallStart, Color fillSmallEnd) : this(texUpper, texLower)
+		public UIWorldGenProgressBar(Asset<Texture2D> texUpper, Asset<Texture2D> texLower, Color fillLargeStart, Color fillLargeEnd, Color fillSmallStart, Color fillSmallEnd) : this(texUpper, texLower)
 		{
 			this.fillLargeStart = fillLargeStart;
 			this.fillLargeEnd = fillLargeEnd;
@@ -49,7 +49,7 @@ namespace Macrocosm.Content.LoadingScreens.WorldGen
 			base.Recalculate();
 		}
 
-		public UIWorldGenProgressBar(Texture2D texUpper, Texture2D texLower, Texture2D fillLarge, Texture2D fillSmall) : this(texUpper, texLower)
+		public UIWorldGenProgressBar(Asset<Texture2D> texUpper, Asset<Texture2D> texLower, Asset<Texture2D> fillLarge, Asset<Texture2D> fillSmall) : this(texUpper, texLower)
 		{
 			if (Main.netMode != NetmodeID.Server)
 			{
@@ -59,7 +59,7 @@ namespace Macrocosm.Content.LoadingScreens.WorldGen
 			base.Recalculate();
 		}
 
-		public UIWorldGenProgressBar(Texture2D texUpper, Texture2D texLower, Texture2D fillLarge, Texture2D fillSmall, Color fillLargeStart, Color fillLargeEnd, Color fillSmallStart, Color fillSmallEnd) : this(texUpper, texLower, fillLarge, fillSmall)
+		public UIWorldGenProgressBar(Asset<Texture2D> texUpper, Asset<Texture2D> texLower, Asset<Texture2D> fillLarge, Asset<Texture2D> fillSmall, Color fillLargeStart, Color fillLargeEnd, Color fillSmallStart, Color fillSmallEnd) : this(texUpper, texLower, fillLarge, fillSmall)
 		{
 			this.fillLargeStart = fillLargeStart;
 			this.fillLargeEnd = fillLargeEnd;
@@ -84,12 +84,12 @@ namespace Macrocosm.Content.LoadingScreens.WorldGen
 
 				Rectangle r = GetDimensions().ToRectangle();
 				r.X -= 8;
-				spriteBatch.Draw(texUpper, position + r.TopLeft(), Color.White);
-				spriteBatch.Draw(texLower, position + r.TopLeft() + new Vector2(44f, 60f), Color.White);
+				spriteBatch.Draw(texUpper.Value, position + r.TopLeft(), Color.White);
+				spriteBatch.Draw(texLower.Value, position + r.TopLeft() + new Vector2(44f, 60f), Color.White);
 			}
 		}
 
-		private static void DrawFilling(SpriteBatch spriteBatch, Rectangle rect, float progress, Texture2D texture, Color barStart, Color barEnd, Color background)
+		private static void DrawFilling(SpriteBatch spriteBatch, Rectangle rect, float progress, Asset<Texture2D> texture, Color barStart, Color barEnd, Color background)
 		{
 
 			spriteBatch.Draw(TextureAssets.MagicPixel.Value, rect, background);
@@ -97,9 +97,9 @@ namespace Macrocosm.Content.LoadingScreens.WorldGen
 			int steps = (int)((rect.Right - rect.Left) * progress);
 			for (int i = 0; i < steps; i++)
 			{
-				spriteBatch.Draw(texture, new Rectangle(rect.Left + i, rect.Y, 1, rect.Height), Color.Lerp(barStart, barEnd, (float)i / steps));
+				spriteBatch.Draw(texture.Value, new Rectangle(rect.Left + i, rect.Y, 1, rect.Height), Color.Lerp(barStart, barEnd, (float)i / steps));
 			}
-			spriteBatch.Draw(texture, new Rectangle(rect.X + (int)(progress * rect.Width), rect.Y, 2, rect.Height), null, Color.Lerp(barStart, barEnd, 0.5f));
+			spriteBatch.Draw(texture.Value, new Rectangle(rect.X + (int)(progress * rect.Width), rect.Y, 2, rect.Height), null, Color.Lerp(barStart, barEnd, 0.5f));
 		}
 	}
 }

@@ -1048,7 +1048,7 @@ namespace Macrocosm.Content.Rockets.UI
 
             nameplateAcceptResetButton = new
 			(
-				Macrocosm.EmptyTexAsset,
+				Macrocosm.EmptyTex,
                 ModContent.Request<Texture2D>(symbolsPath + "ResetWhite"),
                 ModContent.Request<Texture2D>(symbolsPath + "ResetBorderHighlight"),
                 ModContent.Request<Texture2D>(symbolsPath + "ResetBorderHighlight")

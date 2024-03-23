@@ -165,7 +165,7 @@ namespace Macrocosm.Common.Subworlds
 
 			var player = Main.LocalPlayer.GetModPlayer<MacrocosmPlayer>();
 			string subworld = "Earth";
-			Texture2D texture = Macrocosm.EmptyTex;
+			Texture2D texture = Macrocosm.EmptyTex.Value;
 
 			if (player.TryGetReturnSubworld(uIItem.Data.UniqueId, out string id))
 				subworld = MacrocosmSubworld.SanitizeID(id);

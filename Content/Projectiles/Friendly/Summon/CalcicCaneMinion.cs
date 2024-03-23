@@ -3,6 +3,7 @@ using Macrocosm.Content.Buffs.Minions;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using System;
 using Terraria;
 using Terraria.DataStructures;
@@ -12,12 +13,16 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Summon
 {
-    /// <summary>
-    /// This is based off ExampleMod for now 
-    /// </summary>
     public class CalcicCaneMinion : ModProjectile
 	{
-		public override void SetStaticDefaults()
+
+		private Asset<Texture2D> glowmask;
+        public override void Load()
+        {
+            glowmask = ModContent.Request<Texture2D>(Texture+ "_Glow");
+        }
+
+        public override void SetStaticDefaults()
 		{
 			Main.projFrames[Type] = 10;
 			ProjectileID.Sets.MinionTargettingFeature[Type] = true;
@@ -66,8 +71,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
 		public override bool PreDraw(ref Color lightColor)
 		{
-			Texture2D tex = TextureAssets.Projectile[Type].Value;
-			Texture2D glow = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Summon/CalcicCaneMinion_Glow").Value;
+			Texture2D texture = TextureAssets.Projectile[Type].Value;
 
 			for (int i = 0; i < Projectile.oldPos.Length; i++)
 			{
@@ -76,8 +80,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 				float trailFactor = (((float)Projectile.oldPos.Length - i) / Projectile.oldPos.Length);
 				Color color = Projectile.GetAlpha(lightColor) * trailFactor * dashFactor;
 				SpriteEffects effect = Projectile.oldSpriteDirection[i] == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-				Main.EntitySpriteDraw(tex, drawPos, tex.Frame(1, Main.projFrames[Type], frameY: Projectile.frame), color * 0.6f, Projectile.oldRot[i], Projectile.Size / 2, Projectile.scale, effect, 0f);
-				Main.EntitySpriteDraw(glow, drawPos, tex.Frame(1, Main.projFrames[Type], frameY: Projectile.frame), Color.White * trailFactor * dashFactor, Projectile.oldRot[i], Projectile.Size / 2, Projectile.scale, effect, 0f);
+				Main.EntitySpriteDraw(texture, drawPos, texture.Frame(1, Main.projFrames[Type], frameY: Projectile.frame), color * 0.6f, Projectile.oldRot[i], Projectile.Size / 2, Projectile.scale, effect, 0f);
+				Main.EntitySpriteDraw(glowmask.Value, drawPos, texture.Frame(1, Main.projFrames[Type], frameY: Projectile.frame), Color.White * trailFactor * dashFactor, Projectile.oldRot[i], Projectile.Size / 2, Projectile.scale, effect, 0f);
 			}
 
 			return true;
@@ -85,8 +89,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
 		public override void PostDraw(Color lightColor)
 		{
-			Texture2D glow = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Summon/CalcicCaneMinion_Glow").Value;
-			Projectile.DrawAnimatedExtra(glow, Color.White, Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, new Vector2(0, Projectile.spriteDirection == 1 ? 5 : -1));
+			Projectile.DrawAnimatedExtra(glowmask.Value, Color.White, Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, new Vector2(0, Projectile.spriteDirection == 1 ? 5 : -1));
 		}
 
 		bool spawned = false;
