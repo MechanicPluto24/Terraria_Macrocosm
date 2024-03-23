@@ -26,7 +26,7 @@ namespace Macrocosm.Common.UI
 		private Asset<Texture2D> backPanelTexture;
 		private Asset<Texture2D> backPanelBorderTexture;
 
-		public UIPanelIconButton() : this(Macrocosm.EmptyTexAsset) { }
+		public UIPanelIconButton() : this(Macrocosm.EmptyTex) { }
 
 		public UIPanelIconButton(Asset<Texture2D> texture) :
 			this(texture,

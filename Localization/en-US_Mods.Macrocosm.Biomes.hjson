@@ -3,6 +3,11 @@ MoonBiome: {
 	TownNPCDialogueName: The Moon
 }
 
+BloodMoonBiome: {
+	DisplayName: Blood Moon
+	TownNPCDialogueName: Blood Moon
+}
+
 BasaltBiome: {
 	DisplayName: Basalt
 	TownNPCDialogueName: The Basalt

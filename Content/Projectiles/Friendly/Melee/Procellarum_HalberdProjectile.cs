@@ -192,12 +192,19 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
     }
     public class ProcellarumGlobalNPC : GlobalNPC
     {
+        private static Asset<Texture2D> mark;
+
+        public override void Load()
+        {
+            mark = ModContent.Request<Texture2D>("Macrocosm/Content/Buffs/Debuffs/Procellarum_LightningMark");
+        }
+
         public override void PostDraw(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             if (npc.HasBuff(ModContent.BuffType<Procellarum_LightningMarkDebuff>()))
             {
-                Vector2 markPosition = new Vector2(npc.position.X + 0.5f * npc.width - 12, npc.position.Y - 36);
-                spriteBatch.Draw(ModContent.Request<Texture2D>("Macrocosm/Content/Buffs/Debuffs/Procellarum_LightningMark").Value, markPosition - screenPos, Color.White);
+                Vector2 markPosition = new(npc.position.X + 0.5f * npc.width - 12, npc.position.Y - 36);
+                spriteBatch.Draw(mark.Value, markPosition - screenPos, Color.White);
             }
         }
 

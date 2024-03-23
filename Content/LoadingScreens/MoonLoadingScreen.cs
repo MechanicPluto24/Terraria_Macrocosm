@@ -12,17 +12,17 @@ namespace Macrocosm.Content.LoadingScreens
 {
 	public class MoonLoadingScreen : LoadingScreen
 	{
-		private Texture2D lunaBackground;
-		private Stars starsDrawing;
-		private CelestialBody earth;
+		private readonly Asset<Texture2D> lunaBackground;
+		private readonly Stars starsDrawing;
+		private readonly CelestialBody earth;
 
 		public MoonLoadingScreen()
 		{
-			lunaBackground = ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/Backgrounds/Luna", AssetRequestMode.ImmediateLoad).Value;
+			lunaBackground = ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/Backgrounds/Luna", AssetRequestMode.ImmediateLoad);
 			starsDrawing = new();
 
-			Texture2D earthSmallBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/Earth", AssetRequestMode.ImmediateLoad).Value;
-			Texture2D earthSmallAtmoBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/EarthAtmo", AssetRequestMode.ImmediateLoad).Value;
+            Asset<Texture2D> earthSmallBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/Earth", AssetRequestMode.ImmediateLoad);
+            Asset<Texture2D> earthSmallAtmoBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/EarthAtmo", AssetRequestMode.ImmediateLoad);
 			earth = new CelestialBody(earthSmallBackground, earthSmallAtmoBackground, 0.7f);
 		}
 
@@ -61,8 +61,8 @@ namespace Macrocosm.Content.LoadingScreens
 			int movement = 500 + (int)(Utility.QuadraticEaseIn(progress) * 500f);
 
 			spriteBatch.Draw(
-					lunaBackground,
-					new Rectangle((int)(Main.screenWidth - lunaBackground.Width * scale), (int)(Main.screenHeight - lunaBackground.Height * scale + movement), (int)(lunaBackground.Width * scale), (int)(lunaBackground.Height * scale)),
+					lunaBackground.Value,
+					new Rectangle((int)(Main.screenWidth - lunaBackground.Width() * scale), (int)(Main.screenHeight - lunaBackground.Height() * scale + movement), (int)(lunaBackground.Width() * scale), (int)(lunaBackground.Height() * scale)),
 					null,
 					bodyColor
 			);

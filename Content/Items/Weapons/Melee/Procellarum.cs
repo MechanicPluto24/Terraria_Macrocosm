@@ -13,7 +13,6 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 {
     public class Procellarum : ModItem
     {
-
         public override void SetStaticDefaults()
         {
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;

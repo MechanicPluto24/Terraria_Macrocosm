@@ -34,7 +34,7 @@ namespace Macrocosm.Content.Rockets.UI
 			Vector2 headIconPosition = dimensions.Position() + new Vector2(dimensions.Width * 0.08f, dimensions.Height * 0.42f);
 
 			var rocketPlayer = player.GetModPlayer<RocketPlayer>();
-			Texture2D texture = Macrocosm.EmptyTex;
+			Texture2D texture = Macrocosm.EmptyTex.Value;
 			if (ModContent.RequestIfExists(Macrocosm.TexturesPath + "Icons/" + rocketPlayer.TargetWorld, out Asset<Texture2D> iconTexture))
 				texture = iconTexture.Value;
 

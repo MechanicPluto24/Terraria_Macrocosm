@@ -43,6 +43,6 @@ def generate_all_flags(size, output_folder, canvas_size=(0, 0), offset=(0, 0), p
         if result:
             print(f"Generated {width}x{height} flag for {country.name} - {country.alpha_3}")
 
-generate_all_flags(32, '../Content/Rockets/Customization/Details/Icons/', canvas_size=(30, 20), offset=(0, 0), prefix="Flag_", trim = True)
-generate_all_flags(32, '../Content/Rockets/Customization/Details/EngineModule/', canvas_size=(120, 302), offset=(45, 18), prefix="Flag_", trim = False)
+generate_all_flags(32, './Icons/', canvas_size=(30, 20), offset=(0, 0), prefix="Flag_", trim = True)
+generate_all_flags(32, './Details/', canvas_size=(120, 302), offset=(45, 18), prefix="Flag_", trim = False)
 

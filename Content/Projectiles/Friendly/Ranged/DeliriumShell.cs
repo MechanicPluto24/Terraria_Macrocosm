@@ -6,6 +6,7 @@ using Macrocosm.Content.Particles;
 using Macrocosm.Content.Projectiles.Global;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -19,7 +20,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 		public int DefWidth => 14;
 		public int DefHeight => 14;
 
-		public override void SetDefaults()
+
+		private Asset<Texture2D> aura;
+
+        public override void Load()
+        {
+            aura = ModContent.Request<Texture2D>(Texture + "Aura");
+        }
+
+        public override void SetDefaults()
 		{
 			Projectile.CloneDefaults(14);
 			AIType = ProjectileID.Bullet;
@@ -91,7 +100,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			if (Projectile.timeLeft < 3)
 				return false;
 
-			Texture2D tex = ModContent.Request<Texture2D>(Texture + "Aura").Value;
 
 			var spriteBatch = Main.spriteBatch;
 			state.SaveState(Main.spriteBatch);
@@ -99,13 +107,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 			spriteBatch.End();
 			spriteBatch.Begin(BlendState.Additive, state);
 
-			Main.EntitySpriteDraw(tex, Projectile.Center - new Vector2(0, 38).RotatedBy(Projectile.rotation - MathHelper.Pi) - Main.screenPosition, null, Color.White.WithOpacity(0.3f * auraAlpha), Projectile.rotation - MathHelper.Pi, tex.Size() / 2, 0.8f, SpriteEffects.FlipHorizontally, 0);
-			Main.EntitySpriteDraw(tex, Projectile.Center - new Vector2(0, 58).RotatedBy(Projectile.rotation - MathHelper.Pi) - Main.screenPosition, null, Color.White.WithOpacity(0.1f * auraAlpha), Projectile.rotation - MathHelper.Pi, tex.Size() / 2, 0.8f, SpriteEffects.None, 0);
+			Main.EntitySpriteDraw(aura.Value, Projectile.Center - new Vector2(0, 38).RotatedBy(Projectile.rotation - MathHelper.Pi) - Main.screenPosition, null, Color.White.WithOpacity(0.3f * auraAlpha), Projectile.rotation - MathHelper.Pi, aura.Size() / 2, 0.8f, SpriteEffects.FlipHorizontally, 0);
+			Main.EntitySpriteDraw(aura.Value, Projectile.Center - new Vector2(0, 58).RotatedBy(Projectile.rotation - MathHelper.Pi) - Main.screenPosition, null, Color.White.WithOpacity(0.1f * auraAlpha), Projectile.rotation - MathHelper.Pi, aura.Size() / 2, 0.8f, SpriteEffects.None, 0);
 
 			spriteBatch.End();
 			spriteBatch.Begin(BlendState.AlphaBlend, state);
 
-			Main.EntitySpriteDraw(tex, Projectile.Center - new Vector2(0, 18).RotatedBy(Projectile.rotation - MathHelper.Pi) - Main.screenPosition, null, Color.White.WithOpacity(0.6f), Projectile.rotation - MathHelper.Pi, tex.Size() / 2, 0.8f, SpriteEffects.None, 0);
+			Main.EntitySpriteDraw(aura.Value, Projectile.Center - new Vector2(0, 18).RotatedBy(Projectile.rotation - MathHelper.Pi) - Main.screenPosition, null, Color.White.WithOpacity(0.6f), Projectile.rotation - MathHelper.Pi, aura.Size() / 2, 0.8f, SpriteEffects.None, 0);
 
 			spriteBatch.End();
 			spriteBatch.Begin(state);

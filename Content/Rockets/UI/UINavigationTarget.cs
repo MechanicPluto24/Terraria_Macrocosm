@@ -5,6 +5,7 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.Navigation.Checklist;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
@@ -55,7 +56,7 @@ namespace Macrocosm.Content.Rockets.UI
 		}
 
 		// selection outline texture, has default
-		private readonly Texture2D selectionOutline = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Buttons/SelectionOutlineSmall", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+		private readonly Asset<Texture2D> selectionOutline = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Buttons/SelectionOutlineSmall", AssetRequestMode.ImmediateLoad);
 
 		// Selection outline rotation
 		private float rotation = 0f;
@@ -78,7 +79,7 @@ namespace Macrocosm.Content.Rockets.UI
 		/// <param name="width"> Interactible area width in pixels </param>
 		/// <param name="height"> Interactible area height in pixels </param>
 		/// <param name="targetSubworld"> The subworld (instance) associated with the map target </param>
-		public UINavigationTarget(UINavigationPanel owner, Vector2 position, float width, float height, MacrocosmSubworld targetSubworld, Texture2D outline = null) : this(owner, position, width, height)
+		public UINavigationTarget(UINavigationPanel owner, Vector2 position, float width, float height, MacrocosmSubworld targetSubworld, Asset<Texture2D> outline = null) : this(owner, position, width, height)
 		{
 			LaunchConditions = targetSubworld.LaunchConditions;
 			Name = targetSubworld.Name;
@@ -93,7 +94,7 @@ namespace Macrocosm.Content.Rockets.UI
 		/// <param name="height"> Interactible area height in pixels </param>
 		/// <param name="targetId"> The special ID of the target, handled in <see cref="Rocket.Travel"/> </param>
 		/// <param name="canLaunch"> Function that determines whether the target is selectable, defaults to false </param>
-		public UINavigationTarget(UINavigationPanel owner, Vector2 position, float width, float height, string targetId, ChecklistConditionCollection launchConditions = null, Texture2D outline = null) : this(owner, position, width, height)
+		public UINavigationTarget(UINavigationPanel owner, Vector2 position, float width, float height, string targetId, ChecklistConditionCollection launchConditions = null, Asset<Texture2D> outline = null) : this(owner, position, width, height)
 		{
 			LaunchConditions = launchConditions;
 			Name = targetId;
@@ -201,14 +202,14 @@ namespace Macrocosm.Content.Rockets.UI
 			// Should draw the outline if not fully transparent
 			if (targetOpacity > 0f)
 			{
-				Vector2 origin = new(selectionOutline.Width / 2f, selectionOutline.Height / 2f);
+				Vector2 origin = new(selectionOutline.Width() / 2f, selectionOutline.Height() / 2f);
 
 				state.SaveState(spriteBatch);
 				spriteBatch.End();
 				spriteBatch.Begin(BlendState.NonPremultiplied, SamplerState.AnisotropicClamp, state);
 
 				float scale = 0.918f + (0.98f - 0.918f) * Utility.NormalizedUIScale;
-				spriteBatch.Draw(selectionOutline, rect.Center(), null, drawColor.WithOpacity(targetOpacity), rotation, origin, scale, SpriteEffects.None, 0f);
+				spriteBatch.Draw(selectionOutline.Value, rect.Center(), null, drawColor.WithOpacity(targetOpacity), rotation, origin, scale, SpriteEffects.None, 0f);
 
 				spriteBatch.End();
 				spriteBatch.Begin(state);

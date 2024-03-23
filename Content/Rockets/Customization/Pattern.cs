@@ -24,6 +24,16 @@ namespace Macrocosm.Content.Rockets.Customization
 
         public const int MaxColorCount = 8;
 
+
+        public string TexturePath => GetType().Namespace.Replace('.', '/') + "/Patterns/" + ModuleName + "/" + Name;
+        public string IconTexturePath => GetType().Namespace.Replace('.', '/') + "/Patterns/Icons/" + Name;
+
+        private readonly Asset<Texture2D> texture;
+        private readonly Asset<Texture2D> iconTexture;
+
+        public Asset<Texture2D> Texture => texture;
+        public Asset<Texture2D> IconTexture => iconTexture;
+
         public Pattern(string moduleName, string patternName, params PatternColorData[] defaultColorData)
         {
             ModuleName = moduleName;
@@ -50,31 +60,17 @@ namespace Macrocosm.Content.Rockets.Customization
             }
 
             ColorData = ImmutableArray.Create(colorData);
+
+            if (ModContent.RequestIfExists(TexturePath, out Asset<Texture2D> patternTexture))
+                texture = patternTexture;
+            else
+                texture = Macrocosm.EmptyTex;
+
+            if (ModContent.RequestIfExists(IconTexturePath, out Asset<Texture2D> patternIconTexture))
+                iconTexture = patternIconTexture;
+            else
+                iconTexture = Macrocosm.EmptyTex;
         }
-
-		public string TexturePath => GetType().Namespace.Replace('.', '/') + "/Patterns/" + ModuleName + "/" + Name;
-		public Texture2D Texture
-		{
-			get
-			{
-				if (ModContent.RequestIfExists(TexturePath, out Asset<Texture2D> paintMask))
-					return paintMask.Value;
-				else
-					return Macrocosm.EmptyTex;
-			}
-		}
-
-		public string IconTexturePath => GetType().Namespace.Replace('.', '/') + "/Patterns/Icons/" + Name;
-		public Texture2D IconTexture
-		{
-			get
-			{
-				if (ModContent.RequestIfExists(IconTexturePath, out Asset<Texture2D> paintMask))
-					return paintMask.Value;
-				else
-					return Macrocosm.EmptyTex;
-			}
-		}
 
 		public Color GetColor(int index)
 		{

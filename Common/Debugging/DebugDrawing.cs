@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -64,15 +65,15 @@ namespace Macrocosm.Common.Debugging
 		}
 
 		private static List<DebugDrawData> DrawDatas { get; set; }
-		private static Texture2D DebugCrossTexture { get; set; }
+		private static Asset<Texture2D> DebugCrossTexture { get; set; }
 
 		public static bool DrawCursorTileCoords { get; set; }
 		public static bool DrawCursorWorldCoords { get; set; }
 
         public void Load(Mod mod)
 		{
-			DrawDatas = new();
-			DebugCrossTexture = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/DebugCross").Value;
+			DrawDatas = [];
+			DebugCrossTexture = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/DebugCross");
 			On_Main.Draw += Draw;
 		}
 
@@ -107,7 +108,7 @@ namespace Macrocosm.Common.Debugging
 				if (drawData.Tick())
 				{
 					Main.spriteBatch.Draw(
-						DebugCrossTexture,
+						DebugCrossTexture.Value,
 						drawData.Position - Vector2.One * 6,
 						Color.Lerp(Color.Red, Color.GhostWhite, MathF.Sin(Main.GameUpdateCount * 0.1f))
 					);

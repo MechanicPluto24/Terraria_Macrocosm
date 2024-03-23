@@ -7,6 +7,7 @@ using Macrocosm.Content.Particles;
 using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using ReLogic.Utilities;
 using System;
 using Terraria;
@@ -35,7 +36,18 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
 		public override float CircularHoldoutOffset => 45;
 
-		public override void SetProjectileStaticDefaults()
+		private Asset<Texture2D> glowmask;
+        private Asset<Texture2D> flame;
+		private Asset<Texture2D> warning;
+
+        public override void Load()
+        {
+            glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Magic/HandheldEngineProjectile_Glow");
+            flame = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Magic/HandheldEngineProjectile_Flame");
+            warning = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Magic/HandheldEngineProjectile_Warning");
+        }
+
+        public override void SetProjectileStaticDefaults()
 		{
 			Main.projFrames[Type] = windupFrames + shootFrames;
 		}
@@ -252,9 +264,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
 		public override void PostDraw(Color lightColor)
 		{
-			Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Magic/HandheldEngineProjectile_Glow").Value;
-			Texture2D flame = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Magic/HandheldEngineProjectile_Flame").Value;
-			Texture2D warning = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Magic/HandheldEngineProjectile_Warning").Value;
 			SpriteEffects effects = Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None;
 
 			int frameY = OwnerHasMana ? 0 : (AI_UseCounter % 24 < 12 ? 1 : 2);
@@ -266,13 +275,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.Additive, state2);
 
-			Projectile.DrawAnimatedExtra(warning, Color.White, effects, new Vector2(5, 14), frame: sourceRect);
+			Projectile.DrawAnimatedExtra(warning.Value, Color.White, effects, new Vector2(5, 14), frame: sourceRect);
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(BlendState.AlphaBlend, state2);
 
-			Projectile.DrawAnimatedExtra(glowmask, Color.Lerp(Color.White, new Color(245, 80, 20), AI_Overheat).WithOpacity(0.9f - 0.9f * AI_Overheat), effects, new Vector2(5, 14));
-			Projectile.DrawAnimatedExtra(flame, (Color.Lerp(Color.White, new Color(245, 120, 40), AI_Overheat) * (alpha + 0.9f * AI_Overheat)).WithOpacity(0f), effects, new Vector2(5, 14));
+			Projectile.DrawAnimatedExtra(glowmask.Value, Color.Lerp(Color.White, new Color(245, 80, 20), AI_Overheat).WithOpacity(0.9f - 0.9f * AI_Overheat), effects, new Vector2(5, 14));
+			Projectile.DrawAnimatedExtra(flame.Value, (Color.Lerp(Color.White, new Color(245, 120, 40), AI_Overheat) * (alpha + 0.9f * AI_Overheat)).WithOpacity(0f), effects, new Vector2(5, 14));
 
 			Main.spriteBatch.End();
 

@@ -308,9 +308,10 @@ namespace Macrocosm.Content.Rockets.UI
 					// Mark the current launchpad of this rocket 
 					if (Rocket is not null && launchPad.RocketID == Rocket.WhoAmI)
 						storedInfoElement.IsCurrent = true;
-				}
 
-                storedInfoElement.IsReachable = target is not null && target.IsReachable;
+                    storedInfoElement.IsReachable = target is not null && target.IsReachable;
+                }
+
             }
 
             // Remove inactive launchpads

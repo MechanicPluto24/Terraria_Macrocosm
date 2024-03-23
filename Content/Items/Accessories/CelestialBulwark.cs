@@ -10,6 +10,7 @@ using Macrocosm.Content.Particles;
 using Macrocosm.Content.Players;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using System;
 using Terraria;
 using Terraria.Graphics.Shaders;
@@ -171,20 +172,20 @@ namespace Macrocosm.Content.Items.Accessories
 			Lighting.AddLight(Item.Center, CelestialDisco.CelestialColor.ToVector3());
 		}
 
-		private static Texture2D[] celestialTextures =
+		private static readonly Asset<Texture2D>[] celestialTextures =
 			[
-				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark_Mask_Nebula").Value,
-				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark_Mask_Stardust").Value,
-				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark_Mask_Vortex").Value,
-				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark_Mask_Solar").Value
+				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark_Mask_Nebula"),
+				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark_Mask_Stardust"),
+				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark_Mask_Vortex"),
+				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark_Mask_Solar")
 			];
 
 
 		private SpriteBatchState state;
 		private void DrawMask(SpriteBatch spriteBatch, Vector2 position, Vector2 origin, float scale = 1f, float rotation = 0f)
 		{
-			Texture2D currentTex = celestialTextures[(int)CelestialDisco.CelestialStyle];
-			Texture2D nextTex = celestialTextures[(int)CelestialDisco.NextCelestialStyle];
+            Asset<Texture2D> currentTex = celestialTextures[(int)CelestialDisco.CelestialStyle];
+            Asset<Texture2D> nextTex = celestialTextures[(int)CelestialDisco.NextCelestialStyle];
 			Color currentColor = Color.White.WithOpacity(CelestialDisco.CelestialStyleProgress);
 			Color nextColor = Color.White.WithOpacity(1f - CelestialDisco.CelestialStyleProgress);
 
@@ -193,8 +194,8 @@ namespace Macrocosm.Content.Items.Accessories
 
 			spriteBatch.Begin(BlendState.NonPremultiplied, state);
 
-			spriteBatch.Draw(currentTex, position, null, nextColor, rotation, origin, scale, SpriteEffects.None, 0f);
-			spriteBatch.Draw(nextTex, position, null, currentColor, rotation, origin, scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(currentTex.Value, position, null, nextColor, rotation, origin, scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(nextTex.Value, position, null, currentColor, rotation, origin, scale, SpriteEffects.None, 0f);
 
 			spriteBatch.End();
 			spriteBatch.Begin(state);

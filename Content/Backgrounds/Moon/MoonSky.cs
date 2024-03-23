@@ -17,23 +17,30 @@ namespace Macrocosm.Content.Backgrounds.Moon
 		public bool Active;
 		public float Intensity;
 
-		private Stars starsDay;
-		private Stars starsNight;
+		private readonly Stars starsDay;
+		private readonly Stars starsNight;
 
-		private CelestialBody earth;
-		private CelestialBody sun;
+		private readonly CelestialBody earth;
+		private readonly CelestialBody sun;
 
-		private Texture2D skyTexture;
+		private readonly Asset<Texture2D> skyTexture;
 
-		private Texture2D sunTexture;
+		private readonly Asset<Texture2D> sunTexture;
+				
+		private readonly Asset<Texture2D> earthBody;
+		private readonly Asset<Texture2D> earthBodyDrunk;
+		private readonly Asset<Texture2D> earthBodyFlat;
+		private readonly Asset<Texture2D> earthAtmo;
 
-		private Texture2D earthBody;
-		private Texture2D earthBodyDrunk;
-		private Texture2D earthBodyFlat;
-
-		private Texture2D earthAtmo;
-		private Texture2D earthBodyShadow;
-		private Texture2D earthAtmoShadow;
+		private readonly Asset<Texture2D> nebulaYellow;
+		private readonly Asset<Texture2D> nebulaRinged;
+		private readonly Asset<Texture2D> nebulaMythril;
+		private readonly Asset<Texture2D> nebulaBlue;
+		private readonly Asset<Texture2D> nebulaGreen;
+		private readonly Asset<Texture2D> nebulaPink;
+		private readonly Asset<Texture2D> nebulaOrange;
+		private readonly Asset<Texture2D> nebulaPurple;
+        private readonly Asset<Texture2D> nebulaNormal;
 
 		const float fadeOutTimeDawn = 7200f; //  4:30 -  6:30: nebula and night stars dim
 		const float fadeInTimeDusk = 46800f; // 17:30 - 19:30: nebula and night stars brighten
@@ -43,16 +50,14 @@ namespace Macrocosm.Content.Backgrounds.Moon
 		public MoonSky()
 		{
 			AssetRequestMode mode = AssetRequestMode.ImmediateLoad;
-			skyTexture = ModContent.Request<Texture2D>(AssetPath + "MoonSky", mode).Value;
+			skyTexture = ModContent.Request<Texture2D>(AssetPath + "MoonSky", mode);
 
-			sunTexture = ModContent.Request<Texture2D>(AssetPath + "Sun", mode).Value;
-			earthBody = ModContent.Request<Texture2D>(AssetPath + "Earth", mode).Value;
-			earthBodyDrunk = ModContent.Request<Texture2D>(AssetPath + "EarthDrunk", mode).Value;
-			earthBodyFlat = ModContent.Request<Texture2D>(AssetPath + "EarthFlat", mode).Value;
+			sunTexture = ModContent.Request<Texture2D>(AssetPath + "Sun", mode);
+			earthBody = ModContent.Request<Texture2D>(AssetPath + "Earth", mode);
+			earthBodyDrunk = ModContent.Request<Texture2D>(AssetPath + "EarthDrunk", mode);
+			earthBodyFlat = ModContent.Request<Texture2D>(AssetPath + "EarthFlat", mode);
 
-			earthAtmo = ModContent.Request<Texture2D>(AssetPath + "EarthAtmo", mode).Value;
-			earthBodyShadow = ModContent.Request<Texture2D>(AssetPath + "EarthShadowMask", mode).Value;
-			earthAtmoShadow = ModContent.Request<Texture2D>(AssetPath + "EarthAtmoShadowMask", mode).Value;
+			earthAtmo = ModContent.Request<Texture2D>(AssetPath + "EarthAtmo", mode);
 
 			starsDay = new();
 			starsNight = new();
@@ -89,7 +94,17 @@ namespace Macrocosm.Content.Backgrounds.Moon
 
 				intensity = 0.96f;
 			};
-		}
+
+            nebulaYellow = ModContent.Request<Texture2D>(AssetPath + "NebulaYellow");
+			nebulaRinged = ModContent.Request<Texture2D>(AssetPath + "NebulaRinged");
+            nebulaMythril = ModContent.Request<Texture2D>(AssetPath + "NebulaMythril");
+            nebulaBlue = ModContent.Request<Texture2D>(AssetPath + "NebulaBlue");
+            nebulaGreen = ModContent.Request<Texture2D>(AssetPath + "NebulaGreen");
+            nebulaPink = ModContent.Request<Texture2D>(AssetPath + "NebulaPink");
+            nebulaOrange = ModContent.Request<Texture2D>(AssetPath + "NebulaOrange");
+            nebulaPurple = ModContent.Request<Texture2D>(AssetPath + "NebulaPurple");
+            nebulaNormal = ModContent.Request<Texture2D>(AssetPath + "NebulaNormal");
+        }
 
 		public void Load(Mod mod)
 		{
@@ -130,7 +145,7 @@ namespace Macrocosm.Content.Backgrounds.Moon
 			{
 				Main.graphics.GraphicsDevice.Clear(Color.Black);
 
-				spriteBatch.Draw(skyTexture, new Rectangle(0, Math.Max(0, (int)((Main.worldSurface * 16.0 - Main.screenPosition.Y - 2400.0) * 0.10000000149011612)),
+				spriteBatch.Draw(skyTexture.Value, new Rectangle(0, Math.Max(0, (int)((Main.worldSurface * 16.0 - Main.screenPosition.Y - 2400.0) * 0.10000000149011612)),
 					Main.screenWidth, Main.screenHeight), Color.White * Math.Min(1f, (Main.screenPosition.Y - 800f) / 1000f) * Intensity);
 
 				float nebulaBrightness = ComputeBrightness(fadeOutTimeDawn, fadeInTimeDusk, 0.17f, 0.45f);
@@ -146,19 +161,19 @@ namespace Macrocosm.Content.Backgrounds.Moon
 			}
 		}
 
-		private static void DrawMoonNebula(float brightness)
+		private void DrawMoonNebula(float brightness)
 		{
 			Texture2D nebula = Main.moonType switch
 			{
-				1 => ModContent.Request<Texture2D>(AssetPath + "NebulaYellow").Value,
-				2 => ModContent.Request<Texture2D>(AssetPath + "NebulaRinged").Value,
-				3 => ModContent.Request<Texture2D>(AssetPath + "NebulaMythril").Value,
-				4 => ModContent.Request<Texture2D>(AssetPath + "NebulaBlue").Value,
-				5 => ModContent.Request<Texture2D>(AssetPath + "NebulaGreen").Value,
-				6 => ModContent.Request<Texture2D>(AssetPath + "NebulaPink").Value,
-				7 => ModContent.Request<Texture2D>(AssetPath + "NebulaOrange").Value,
-				8 => ModContent.Request<Texture2D>(AssetPath + "NebulaPurple").Value,
-				_ => ModContent.Request<Texture2D>(AssetPath + "NebulaNormal").Value,
+				1 => nebulaYellow.Value,
+				2 => nebulaRinged.Value,
+				3 => nebulaMythril.Value,
+				4 => nebulaBlue.Value,
+				5 => nebulaGreen.Value,
+				6 => nebulaPink.Value,
+				7 => nebulaOrange.Value,
+				8 => nebulaPurple.Value,
+				_ => nebulaNormal.Value
 			};
 
 			Color nebulaColor = (Color.White * brightness).WithOpacity(0f);
@@ -187,9 +202,9 @@ namespace Macrocosm.Content.Backgrounds.Moon
 				earth.SetLightSource(sun);
 
 				if (Main.drunkWorld)
-					earth.SetTextures(earthBodyDrunk, earthAtmo, earthBodyShadow, earthAtmoShadow);
+					earth.SetTextures(earthBodyDrunk, earthAtmo);
 				else
-					earth.SetTextures(earthBody, earthAtmo, earthBodyShadow, earthAtmoShadow);
+					earth.SetTextures(earthBody, earthAtmo);
 			}
 		}
 

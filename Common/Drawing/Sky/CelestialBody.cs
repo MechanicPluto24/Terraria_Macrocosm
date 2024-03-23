@@ -3,6 +3,7 @@ using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -21,11 +22,11 @@ namespace Macrocosm.Common.Drawing.Sky
 	public class CelestialBody
 	{
 		/// <summary> The CelestialBody's texture width </summary>
-		public float Width => bodyTexture.Width;
+		public float Width => bodyTexture.Width();
 		/// <summary> The CelestialBody's texture width </summary>
-		public float Height => bodyTexture.Height;
+		public float Height => bodyTexture.Height();
 
-		public Vector2 Size => new(bodyTexture.Width, bodyTexture.Height);
+		public Vector2 Size => new(bodyTexture.Width(), bodyTexture.Height());
 
 		/// <summary> Whether the CelestialBody has an atmosphere texture </summary>
 		public bool HasAtmo => atmoTexture is not null;
@@ -72,8 +73,8 @@ namespace Macrocosm.Common.Drawing.Sky
 
 		#region Private vars 
 
-		private Texture2D bodyTexture;
-		private Texture2D atmoTexture;
+		private Asset<Texture2D> bodyTexture;
+		private Asset<Texture2D> atmoTexture;
 
 		private Vector2 averageOffset = default;
 		private float parallaxSpeedX = 0f;
@@ -100,7 +101,7 @@ namespace Macrocosm.Common.Drawing.Sky
 
 		#endregion
 
-		public CelestialBody(Texture2D bodyTexture = null, Texture2D atmoTexture = null, float scale = 1f, float rotation = 0f)
+		public CelestialBody(Asset<Texture2D> bodyTexture = null, Asset<Texture2D> atmoTexture = null, float scale = 1f, float rotation = 0f)
 		{
 			this.bodyTexture = bodyTexture;
 			Scale = scale;
@@ -127,7 +128,7 @@ namespace Macrocosm.Common.Drawing.Sky
 		public void SetLightSource(CelestialBody lightSource) => this.lightSource = lightSource;
 
 		/// <summary> Set the composing textures of the CelestialBody </summary>
-		public void SetTextures(Texture2D bodyTexture = null, Texture2D atmoTexture = null, Texture2D bodyOverlayTexture = null, Texture2D atmoOverlayTexture = null)
+		public void SetTextures(Asset<Texture2D> bodyTexture = null, Asset<Texture2D> atmoTexture = null, Texture2D bodyOverlayTexture = null, Texture2D atmoOverlayTexture = null)
 		{
 			// TODO: ignore nulls and add a better removal mechanism?
 			this.bodyTexture = bodyTexture;
@@ -285,7 +286,7 @@ namespace Macrocosm.Common.Drawing.Sky
 				if (atmoTexture is not null)
 				{
 					spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, shader, state);
-					spriteBatch.Draw(atmoTexture, Position, null, Color, Rotation, atmoTexture.Size() / 2, Scale, default, 0f);
+					spriteBatch.Draw(atmoTexture.Value, Position, null, Color, Rotation, atmoTexture.Size() / 2, Scale, default, 0f);
 					spriteBatch.End();
 				}
 			}
@@ -297,7 +298,7 @@ namespace Macrocosm.Common.Drawing.Sky
 				if (bodyTexture is not null)
 				{
 					spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, shader, state);
-					spriteBatch.Draw(bodyTexture, Position, null, Color, Rotation, bodyTexture.Size() / 2, Scale, default, 0f);
+					spriteBatch.Draw(bodyTexture.Value, Position, null, Color, Rotation, bodyTexture.Size() / 2, Scale, default, 0f);
 					spriteBatch.End();
 				}
 			}
@@ -359,7 +360,7 @@ namespace Macrocosm.Common.Drawing.Sky
 
 			double bgTop = -(Main.LocalPlayer.Center.Y - Main.screenHeight / 2) / (Main.worldSurface * 16.0 - 600.0) * 200.0;
 
-			int timeX = (int)(Main.time / duration * (Main.screenWidth + bodyTexture.Width * 2)) - bodyTexture.Width;
+			int timeX = (int)(Main.time / duration * (Main.screenWidth + bodyTexture.Width() * 2)) - bodyTexture.Width();
 			double timeY = Main.time < duration / 2 ? //Gets the Y axis for the angle depending on the time
 				Math.Pow((Main.time / duration - 0.5) * 2.0, 2.0) : //AM
 				Math.Pow(1.0 - Main.time / duration * 2.0, 2.0); //PM

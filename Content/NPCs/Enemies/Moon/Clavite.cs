@@ -25,7 +25,15 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			Dash
 		}
 
-		public override void SetStaticDefaults()
+		private Asset<Texture2D> glowmask;
+		private Asset<Texture2D> glowX4;
+        public override void Load()
+        {
+            glowmask = ModContent.Request<Texture2D>(Texture + "_Glow", AssetRequestMode.ImmediateLoad);
+            glowX4 = ModContent.Request<Texture2D>(Texture + "_GlowX4", AssetRequestMode.ImmediateLoad);
+        }
+
+        public override void SetStaticDefaults()
 		{
 			base.SetStaticDefaults();
 
@@ -216,9 +224,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 				0f
 			);
 
-			Texture2D glowTexture = ModContent.Request<Texture2D>(Texture + "_Glow", AssetRequestMode.ImmediateLoad).Value;
 			spriteBatch.Draw(
-				glowTexture,
+				glowmask.Value,
 				NPC.Center - screenPos,
 				NPC.frame,
 				Color.White,
@@ -233,10 +240,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			spriteBatch.End();
 			spriteBatch.Begin(BlendState.Additive, state);
 
-			Texture2D glowX4Texture = ModContent.Request<Texture2D>(Texture + "_GlowX4", AssetRequestMode.ImmediateLoad).Value;
 			Rectangle glowX4Source = new(NPC.frame.X * 4, NPC.frame.Y * 4, NPC.frame.Width * 4, NPC.frame.Height * 4);
 			spriteBatch.Draw(
-				glowX4Texture,
+				glowX4.Value,
 				NPC.Center - screenPos,
 				glowX4Source,
 				Color.White * 0.25f,
@@ -252,7 +258,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 				float factor = 1f - (float)i / (NPC.oldPos.Length + 1);
 
 				spriteBatch.Draw(
-					glowTexture,
+					glowmask.Value,
 					NPC.oldPos[i] + NPC.Size * 0.5f - screenPos,
 					NPC.frame,
 					Color.White * factor * 0.66f,
@@ -264,7 +270,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 				);
 
 				spriteBatch.Draw(
-					glowX4Texture,
+					glowX4.Value,
 					NPC.oldPos[i] + NPC.Size * 0.5f - screenPos,
 					glowX4Source,
 					Color.White * 0.15f * factor,

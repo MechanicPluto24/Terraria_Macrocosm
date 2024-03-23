@@ -17,19 +17,22 @@ namespace Macrocosm.Content.Rockets.UI
 	{
 		public Pattern Pattern { get; set; }
 
+
+		private Asset<Texture2D> panel;
 		public UIPatternIcon(Pattern pattern)
 		: base
 		(
-			Macrocosm.EmptyTexAsset,
+			Macrocosm.EmptyTex,
 			ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanel", AssetRequestMode.ImmediateLoad),
 			ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanelBorder", AssetRequestMode.ImmediateLoad),
 			ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanelHoverBorder", AssetRequestMode.ImmediateLoad)
 		)
 		{
 			Pattern = pattern;
-		}
+			panel = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanel", AssetRequestMode.ImmediateLoad);
+        }
 
-		public override void OnInitialize()
+        public override void OnInitialize()
 		{
 			FocusContext = "PatternSelection";
 			OnLeftClick += (_, _) => { HasFocus = true; };
@@ -47,7 +50,7 @@ namespace Macrocosm.Content.Rockets.UI
 			Effect effect = ModContent.Request<Effect>(Macrocosm.ShadersPath + "ColorMaskShading", AssetRequestMode.ImmediateLoad).Value;
 
 			// Pass the pattern icon to the shader via the S1 register
-			Main.graphics.GraphicsDevice.Textures[1] = Pattern.IconTexture;
+			Main.graphics.GraphicsDevice.Textures[1] = Pattern.IconTexture.Value;
 
 			// Change sampler state for proper alignment at all UI scales 
 			SamplerState samplerState = spriteBatch.GraphicsDevice.SamplerStates[1];
@@ -67,8 +70,7 @@ namespace Macrocosm.Content.Rockets.UI
 			spriteBatch.End();
 			spriteBatch.Begin(state.SpriteSortMode, state.BlendState, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, effect, state.Matrix);
 
-			Texture2D texture = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanel").Value;
-			spriteBatch.Draw(texture, dimensions.Position(), null, Color.White, 0f, Vector2.Zero, 0.995f, SpriteEffects.None, 0f);
+			spriteBatch.Draw(panel.Value, dimensions.Position(), null, Color.White, 0f, Vector2.Zero, 0.995f, SpriteEffects.None, 0f);
 
 			spriteBatch.End();
 			spriteBatch.Begin(state);

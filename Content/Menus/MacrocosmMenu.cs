@@ -17,40 +17,48 @@ namespace Macrocosm.Content.Menus
 		private const string AssetPath = "Macrocosm/Content/Menus/";
 		private const AssetRequestMode Mode = AssetRequestMode.ImmediateLoad;
 
-		private readonly List<CelestialBody> celestialBodies = new();
+		private readonly List<CelestialBody> celestialBodies = [];
 
 		public readonly Stars Stars = new();
 
-		public readonly CelestialBody Sun = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Sun", Mode).Value);
+		public readonly CelestialBody Sun = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Sun", Mode));
 
-		public readonly CelestialBody Vulcan = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Vulcan", Mode).Value);
-		public readonly CelestialBody Mercury = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Mercury", Mode).Value);
-		public readonly CelestialBody Venus = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Venus", Mode).Value);
-		public readonly CelestialBody Earth = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Earth", Mode).Value);
-		public readonly CelestialBody Luna = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Luna", Mode).Value);
-		public readonly CelestialBody Mars = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Mars", Mode).Value);
-		public readonly CelestialBody Phobos = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Phobos", Mode).Value);
-		public readonly CelestialBody Deimos = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Deimos", Mode).Value);
-		public readonly CelestialBody Ceres = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Ceres", Mode).Value);
-		public readonly CelestialBody Jupiter = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Jupiter", Mode).Value);
-		public readonly CelestialBody Io = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Io", Mode).Value);
-		public readonly CelestialBody Europa = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Europa", Mode).Value);
-		public readonly CelestialBody Saturn = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Saturn", Mode).Value,
-													ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SaturnRings", Mode).Value);
-		public readonly CelestialBody Titan = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Titan", Mode).Value);
-		public readonly CelestialBody Ouranos = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Ouranos", Mode).Value,
-													ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/OuranosRings", Mode).Value);
-		public readonly CelestialBody Miranda = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Miranda", Mode).Value);
-		public readonly CelestialBody Neptune = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Neptune", Mode).Value);
-		public readonly CelestialBody Triton = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Triton", Mode).Value);
-		public readonly CelestialBody Pluto = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Pluto", Mode).Value);
-		public readonly CelestialBody Charon = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Charon", Mode).Value);
-		public readonly CelestialBody Eris = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Eris", Mode).Value);
+		public readonly CelestialBody Vulcan = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Vulcan", Mode));
+		public readonly CelestialBody Mercury = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Mercury", Mode));
+		public readonly CelestialBody Venus = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Venus", Mode));
+		public readonly CelestialBody Earth = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Earth", Mode));
+		public readonly CelestialBody Luna = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Luna", Mode));
+		public readonly CelestialBody Mars = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Mars", Mode));
+		public readonly CelestialBody Phobos = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Phobos", Mode));
+		public readonly CelestialBody Deimos = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Deimos", Mode));
+		public readonly CelestialBody Ceres = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Ceres", Mode));
+		public readonly CelestialBody Jupiter = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Jupiter", Mode));
+		public readonly CelestialBody Io = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Io", Mode));
+		public readonly CelestialBody Europa = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Europa", Mode));
+		public readonly CelestialBody Saturn = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Saturn", Mode),
+													ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SaturnRings", Mode));
+		public readonly CelestialBody Titan = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Titan", Mode));
+		public readonly CelestialBody Ouranos = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Ouranos", Mode),
+													ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/OuranosRings", Mode));
+		public readonly CelestialBody Miranda = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Miranda", Mode));
+		public readonly CelestialBody Neptune = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Neptune", Mode));
+		public readonly CelestialBody Triton = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Triton", Mode));
+		public readonly CelestialBody Pluto = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Pluto", Mode));
+		public readonly CelestialBody Charon = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Charon", Mode));
+		public readonly CelestialBody Eris = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Eris", Mode));
 
-		public MacrocosmMenu()
+        private readonly Asset<Texture2D> sunCorona1 = ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SunCorona1", Mode);
+        private readonly Asset<Texture2D> sunCorona2 = ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SunCorona2", Mode);
+        private readonly Asset<Texture2D> sunCorona3 = ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SunCorona3", Mode);
+        private readonly Asset<Texture2D> sunCorona4 = ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SunCorona4", Mode);
+        private readonly Asset<Texture2D> sunCorona5 = ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SunCorona5", Mode);
+
+		private readonly Asset<Texture2D> logo = ModContent.Request<Texture2D>(AssetPath + "Logo", Mode);
+
+        public MacrocosmMenu()
 		{
-			celestialBodies = new()
-			{
+			celestialBodies =
+            [
 				//Sun,
  				Vulcan,
 				Mercury,
@@ -73,18 +81,14 @@ namespace Macrocosm.Content.Menus
 				Pluto,
 				Charon,
 				Eris
-			};
+			];
 		}
-		public override Asset<Texture2D> Logo => ModContent.Request<Texture2D>(AssetPath + "Logo");
-
-		public override Asset<Texture2D> SunTexture => ModContent.Request<Texture2D>(Macrocosm.EmptyTexPath);
-
-		public override Asset<Texture2D> MoonTexture => ModContent.Request<Texture2D>(Macrocosm.EmptyTexPath);
-
-		public override int Music => MusicLoader.GetMusicSlot(Mod, "Assets/Music/Deadworld");
+		public override Asset<Texture2D> Logo => logo;
+        public override Asset<Texture2D> SunTexture => Macrocosm.EmptyTex;
+		public override Asset<Texture2D> MoonTexture => Macrocosm.EmptyTex;
+        public override int Music => MusicLoader.GetMusicSlot(Mod, "Assets/Music/Deadworld");
 
 		public override ModSurfaceBackgroundStyle MenuBackgroundStyle => base.MenuBackgroundStyle;
-
 		public override string DisplayName => "Macrocosm";
 
 		public override void OnSelected()
@@ -194,23 +198,17 @@ namespace Macrocosm.Content.Menus
 
 		private void DrawSunCorona()
 		{
-			Texture2D SunCorona1 = ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SunCorona1", Mode).Value;
-			Texture2D SunCorona2 = ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SunCorona2", Mode).Value;
-			Texture2D SunCorona3 = ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SunCorona3", Mode).Value;
-			Texture2D SunCorona4 = ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SunCorona4", Mode).Value;
-			Texture2D SunCorona5 = ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SunCorona5", Mode).Value;
-
 			SpriteBatch spriteBatch = Main.spriteBatch;
 
 			state2.SaveState(spriteBatch);
 			spriteBatch.End();
 			spriteBatch.Begin(BlendState.NonPremultiplied, state2);
 
-			spriteBatch.Draw(SunCorona1, Sun.Position, null, (Color.White * (0.4f + 0.8f * Utility.PositiveSineWave(800, 0f))).WithOpacity(0.6f + 0.2f * Utility.PositiveSineWave(800, 0f)), 0, SunCorona1.Size() / 2, 0.85f + 0.04f * Utility.SineWave(800, 0f), SpriteEffects.None, 0f);
-			spriteBatch.Draw(SunCorona2, Sun.Position, null, (Color.White * (0.6f + 0.4f * Utility.PositiveSineWave(600, MathF.PI / 8))).WithOpacity(0.6f + 0.4f * Utility.PositiveSineWave(600, MathF.PI / 8)), 0, SunCorona1.Size() / 2, 0.85f + 0.03f * Utility.SineWave(600, MathF.PI / 8), SpriteEffects.None, 0f);
-			spriteBatch.Draw(SunCorona3, Sun.Position, null, (Color.White * (0.8f + 0.2f * Utility.PositiveSineWave(500, MathF.PI / 4))).WithOpacity(0.8f + 0.2f * Utility.PositiveSineWave(500, MathF.PI / 4)), 0, SunCorona1.Size() / 2, 0.85f + 0.03f * Utility.SineWave(500, MathF.PI / 3), SpriteEffects.None, 0f);
-			spriteBatch.Draw(SunCorona4, Sun.Position, null, (Color.White * (0.7f + 0.3f * Utility.PositiveSineWave(500, MathF.PI / 2))).WithOpacity(0.8f + 0.2f * Utility.PositiveSineWave(500, MathF.PI / 2)), 0, SunCorona1.Size() / 2, 0.85f + 0.02f * Utility.SineWave(500, MathF.PI / 2), SpriteEffects.None, 0f);
-			spriteBatch.Draw(SunCorona5, Sun.Position, null, (Color.White * (0.6f + 0.4f * Utility.PositiveSineWave(300, MathF.PI / 2))).WithOpacity(0.9f + 0.1f * Utility.PositiveSineWave(300, MathF.PI / 2)), 0, SunCorona1.Size() / 2, 0.85f * 0.95f + 0.02f * Utility.SineWave(300, MathF.PI / 2), SpriteEffects.None, 0f);
+			spriteBatch.Draw(sunCorona1.Value, Sun.Position, null, (Color.White * (0.4f + 0.8f * Utility.PositiveSineWave(800, 0f))).WithOpacity(0.6f + 0.2f * Utility.PositiveSineWave(800, 0f)), 0, sunCorona1.Size() / 2, 0.85f + 0.04f * Utility.SineWave(800, 0f), SpriteEffects.None, 0f);
+			spriteBatch.Draw(sunCorona2.Value, Sun.Position, null, (Color.White * (0.6f + 0.4f * Utility.PositiveSineWave(600, MathF.PI / 8))).WithOpacity(0.6f + 0.4f * Utility.PositiveSineWave(600, MathF.PI / 8)), 0, sunCorona1.Size() / 2, 0.85f + 0.03f * Utility.SineWave(600, MathF.PI / 8), SpriteEffects.None, 0f);
+			spriteBatch.Draw(sunCorona3.Value, Sun.Position, null, (Color.White * (0.8f + 0.2f * Utility.PositiveSineWave(500, MathF.PI / 4))).WithOpacity(0.8f + 0.2f * Utility.PositiveSineWave(500, MathF.PI / 4)), 0, sunCorona1.Size() / 2, 0.85f + 0.03f * Utility.SineWave(500, MathF.PI / 3), SpriteEffects.None, 0f);
+			spriteBatch.Draw(sunCorona4.Value, Sun.Position, null, (Color.White * (0.7f + 0.3f * Utility.PositiveSineWave(500, MathF.PI / 2))).WithOpacity(0.8f + 0.2f * Utility.PositiveSineWave(500, MathF.PI / 2)), 0, sunCorona1.Size() / 2, 0.85f + 0.02f * Utility.SineWave(500, MathF.PI / 2), SpriteEffects.None, 0f);
+			spriteBatch.Draw(sunCorona5.Value, Sun.Position, null, (Color.White * (0.6f + 0.4f * Utility.PositiveSineWave(300, MathF.PI / 2))).WithOpacity(0.9f + 0.1f * Utility.PositiveSineWave(300, MathF.PI / 2)), 0, sunCorona1.Size() / 2, 0.85f * 0.95f + 0.02f * Utility.SineWave(300, MathF.PI / 2), SpriteEffects.None, 0f);
 
 			spriteBatch.End();
 			spriteBatch.Begin(state2);

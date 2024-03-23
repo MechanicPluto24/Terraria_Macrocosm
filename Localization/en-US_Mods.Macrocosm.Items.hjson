@@ -1080,3 +1080,23 @@ MoonBaseTrimmingWallUnsafe: {
 	DisplayName: Moon Base Trimming Wall Unsafe
 	Tooltip: ""
 }
+
+Gear: {
+	DisplayName: Gear
+	Tooltip: ""
+}
+
+SpacesuitFabric: {
+	DisplayName: Spacesuit Fabric
+	Tooltip: ""
+}
+
+ConstructionLight: {
+	DisplayName: Construction Light
+	Tooltip: ""
+}
+
+OreExcavator: {
+	DisplayName: Ore Excavator
+	Tooltip: ""
+}

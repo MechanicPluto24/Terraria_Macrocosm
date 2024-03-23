@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
@@ -14,8 +15,18 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 {
 	internal class MoonBaseSofa : ModTile
 	{
-		// TODO: sitting for sofas
-		public override void SetStaticDefaults()
+
+        private Asset<Texture2D> extra;
+		private Asset<Texture2D> extraHighlight;
+
+        public override void Load()
+        {
+            extra = ModContent.Request<Texture2D>(Texture+ "_Extra");
+            extraHighlight = ModContent.Request<Texture2D>(Texture + "_Extra_Highlight");
+        }
+
+
+        public override void SetStaticDefaults()
 		{
 			Main.tileFrameImportant[Type] = true;
 			Main.tileNoAttach[Type] = true;
@@ -49,14 +60,13 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 			if (tile.TileType == Type && tile.TileFrameX / 18 % 3 == 2 && tileRight.TileType != Type)
 			{
 				TileObjectData data = TileObjectData.GetTileData(Type, 0);
-				Texture2D texture = ModContent.Request<Texture2D>("Macrocosm/Content/Tiles/Furniture/MoonBase/MoonBaseSofa_Extra").Value;
 				Vector2 position = new Vector2((i + 1) * 16f, j * 16f) - Main.screenPosition + zero;
 				Color color = Lighting.GetColor(i + 1, j);
 
 				if (tile.TileFrameY / 18 % 2 is 0)
-					spriteBatch.Draw(texture, position, new Rectangle(0, 0, 2, data.CoordinateHeights[0]), color);
+					spriteBatch.Draw(extra.Value, position, new Rectangle(0, 0, 2, data.CoordinateHeights[0]), color);
 				else if (tile.TileFrameY / 18 % 2 is 1)
-					spriteBatch.Draw(texture, position, new Rectangle(0, data.CoordinateHeights[0] + data.CoordinatePadding, 2, data.CoordinateHeights[1]), color);
+					spriteBatch.Draw(extra.Value, position, new Rectangle(0, data.CoordinateHeights[0] + data.CoordinatePadding, 2, data.CoordinateHeights[1]), color);
 
 				// Also draw highlight extra if the actual tile is highlighted
 				if (Main.InSmartCursorHighlightArea(i, j, out bool actuallySelected))
@@ -64,13 +74,13 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 					int light = (color.R + color.G + color.B) / 3;
 					if (light > 10)
 					{
-						Texture2D highlightTexture = ModContent.Request<Texture2D>("Macrocosm/Content/Tiles/Furniture/MoonBase/MoonBaseSofa_Extra_Highlight").Value;
+
 						Color highlightColor = Colors.GetSelectionGlowColor(actuallySelected, light);
 
 						if (tile.TileFrameY / 18 % 2 == 0)
-							spriteBatch.Draw(highlightTexture, position, new Rectangle(0, 0, 2, data.CoordinateHeights[0]), highlightColor);
+							spriteBatch.Draw(extraHighlight.Value, position, new Rectangle(0, 0, 2, data.CoordinateHeights[0]), highlightColor);
 						else if (tile.TileFrameY / 18 % 2 == 1)
-							spriteBatch.Draw(highlightTexture, position, new Rectangle(0, data.CoordinateHeights[0] + data.CoordinatePadding, 2, data.CoordinateHeights[1]), highlightColor);
+							spriteBatch.Draw(extraHighlight.Value, position, new Rectangle(0, data.CoordinateHeights[0] + data.CoordinatePadding, 2, data.CoordinateHeights[1]), highlightColor);
 					}
 				}
 			}

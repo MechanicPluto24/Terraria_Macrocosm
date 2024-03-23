@@ -42,12 +42,11 @@ namespace Macrocosm.Content.DrawLayers
 
 			if (heldItem.TryGetGlobalItem(out GlowmaskGlobalItem result))
 			{
-				Texture2D glowTexture = result.Texture;
-
-				if (glowTexture != null)
+				if (result.Texture != null)
 				{
+                    Texture2D glowTexture = result.Texture.Value;
 
-					Texture2D itemTexture = TextureAssets.Item[itemID].Value;
+                    Texture2D itemTexture = TextureAssets.Item[itemID].Value;
 					Vector2 position = new((int)(drawInfo.ItemLocation.X - Main.screenPosition.X), (int)(drawInfo.ItemLocation.Y - Main.screenPosition.Y));
 					Rectangle? sourceRect = new Rectangle(0, 0, itemTexture.Width, itemTexture.Height);
 

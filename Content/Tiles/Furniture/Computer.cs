@@ -29,6 +29,8 @@ namespace Macrocosm.Content.Tiles.Furniture
 			DustType = -1;
 
 			AddMapEntry(new Color(185, 176, 158), CreateMapEntryName());
+
+            RegisterItemDrop(ModContent.ItemType<Items.Placeable.Furniture.Computer>(), 0, 1);
         }
-	}
+    }
 }
