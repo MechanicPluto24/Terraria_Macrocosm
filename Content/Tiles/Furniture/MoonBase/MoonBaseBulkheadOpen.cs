@@ -1,5 +1,6 @@
 using Macrocosm.Common.Bases;
 using Macrocosm.Common.TileFrame;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Placeable.Furniture.MoonBase;
 using Microsoft.Xna.Framework;
@@ -67,10 +68,7 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 
         public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)
         {
-            Tile tile = Main.tile[i, j];
-            int frameX = tile.TileFrameX % (Width * 18);
-            int frameY = tile.TileFrameY % (Height * 18);
-            if (TileAnimation.GetTemporaryFrame(i - frameX / 18, j - frameY / 18, out int frame))
+            if (TileAnimation.GetTemporaryFrame(Utility.GetMultitileTopLeft(i,j), out int frame))
                 frameYOffset = (short)(18 * Height * frame);
         }
 
