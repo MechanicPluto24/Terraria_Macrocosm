@@ -27,7 +27,12 @@ namespace Macrocosm.Common.Utils
 			Main.instance.CameraModifiers.Add(new ScreenshakeCameraModifier(intensity, context));
 		}
 
-		public static Item CurrentItem(this Player player) => Main.mouseItem.type == ItemID.None ? player.inventory[player.selectedItem] : Main.mouseItem;
+		public static Player GetClosestPlayer(Vector2 position, int width, int height) => Main.player[Player.FindClosest(position, width, height)];
+        public static Player GetClosestPlayer(Point tileCoords, int width, int height) => Main.player[Player.FindClosest(tileCoords.ToWorldCoordinates() , width, height)];
+        public static Player GetClosestPlayer(Point16 tileCoords, int width, int height) => Main.player[Player.FindClosest(tileCoords.ToWorldCoordinates() , width, height)];
+
+
+        public static Item CurrentItem(this Player player) => Main.mouseItem.type == ItemID.None ? player.inventory[player.selectedItem] : Main.mouseItem;
 
 		public static bool AltFunction(this Player player)
 		{

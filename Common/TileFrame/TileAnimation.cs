@@ -4,6 +4,7 @@ using Terraria.DataStructures;
 using Terraria;
 using System.Linq;
 using System;
+using Microsoft.Xna.Framework;
 
 namespace Macrocosm.Common.TileFrame
 {
@@ -206,6 +207,9 @@ namespace Macrocosm.Common.TileFrame
                 }
             }
         }
+
+        public static bool GetTemporaryFrame(Point16 coords, out int frameData) => GetTemporaryFrame(coords.ToPoint(), out frameData);
+        public static bool GetTemporaryFrame(Point coords, out int frameData) => GetTemporaryFrame(coords.X, coords.Y, out frameData);
 
         public static bool GetTemporaryFrame(int x, int y, out int frameData)
         {

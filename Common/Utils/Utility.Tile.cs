@@ -14,25 +14,38 @@ namespace Macrocosm.Common.Utils
 {
 	public static partial class Utility
 	{
-		/// <summary>
-		/// Gets the top-left tile of a multitile
-		/// </summary>
-		/// <param name="i">The tile X-coordinate</param>
-		/// <param name="j">The tile Y-coordinate</param>
-		public static Point16 GetTileOrigin(int i, int j)
+        /// <summary>
+        /// Gets the top-left tile coordinates of a multitile
+        /// </summary>
+        /// <param name="i">The tile X-coordinate</param>
+        /// <param name="j">The tile Y-coordinate</param>
+        public static Point16 GetMultitileTopLeft(int i, int j)
 		{
-			//Framing.GetTileSafely ensures that the returned Tile instance is not null
-			//Do note that neither this method nor Framing.GetTileSafely check if the wanted coordiates are in the world!
-			Tile tile = Framing.GetTileSafely(i, j);
+            Tile tile = Main.tile[i, j];
 
-			Point16 coord = new Point16(i, j);
-			Point16 frame = new Point16(tile.TileFrameX / 18, tile.TileFrameY / 18);
+            int frameX = 0;
+            int frameY = 0;
 
-			return coord - frame;
-		}
+            if (tile.HasTile)
+            {
+                int style = 0, alt = 0;
+                TileObjectData.GetTileInfo(tile, ref style, ref alt);
+                TileObjectData data = TileObjectData.GetTileData(tile.TileType, style, alt);
+
+                if (data != null)
+                {
+                    int size = 16 + data.CoordinatePadding;
+
+                    frameX = tile.TileFrameX % (size * data.Width) / size;
+                    frameY = tile.TileFrameY % (size * data.Height) / size;
+                }
+            }
+
+            return new Point16(i - frameX, j - frameY);
+        }
 
 		/// <summary>
-		/// Uses <seealso cref="GetTileOrigin(int, int)"/> to try to get the entity bound to the multitile at (<paramref name="i"/>, <paramref name="j"/>).
+		/// Uses <seealso cref="GetMultitileTopLeft(int, int)"/> to try to get the entity bound to the multitile at (<paramref name="i"/>, <paramref name="j"/>).
 		/// </summary>
 		/// <typeparam name="T">The type to get the entity as</typeparam>
 		/// <param name="i">The tile X-coordinate</param>
@@ -41,7 +54,7 @@ namespace Macrocosm.Common.Utils
 		/// <returns><see langword="true"/> if there was a <typeparamref name="T"/> instance, or <see langword="false"/> if there was no entity present OR the entity was not a <typeparamref name="T"/> instance.</returns>
 		public static bool TryGetTileEntityAs<T>(int i, int j, out T entity) where T : TileEntity
 		{
-			Point16 origin = GetTileOrigin(i, j);
+			Point16 origin = GetMultitileTopLeft(i, j);
 
 			//TileEntity.ByPosition is a Dictionary<Point16, TileEntity> which contains all placed TileEntity instances in the world
 			//TryGetValue is used to both check if the dictionary has the key, origin, and get the value from that key if it's there
