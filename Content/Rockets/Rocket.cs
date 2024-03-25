@@ -3,6 +3,7 @@ using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.Systems;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.CursorIcons;
 using Macrocosm.Content.Particles;
@@ -10,7 +11,6 @@ using Macrocosm.Content.Players;
 using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.LaunchPads;
 using Macrocosm.Content.Rockets.Modules;
-using Macrocosm.Content.Rockets.UI;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -22,7 +22,7 @@ using Terraria.Localization;
 
 namespace Macrocosm.Content.Rockets
 {
-	public partial class Rocket : IInventoryOwner
+    public partial class Rocket : IInventoryOwner
 	{
 		/// <summary> The rocket's identifier </summary>
 		public int WhoAmI = -1;
@@ -481,7 +481,7 @@ namespace Macrocosm.Content.Rockets
 				}
 				else
 				{
-					if (!RocketUISystem.RocketUIActive)
+					if (!UISystem.RocketUIActive)
 					{
 						Main.LocalPlayer.noThrow = 2;
 						Main.LocalPlayer.cursorItemIconEnabled = true;
@@ -612,7 +612,7 @@ namespace Macrocosm.Content.Rockets
 				if (LandingProgress >= 0.99f)
 				{
 					if (GetRocketPlayer(Main.myPlayer).InRocket)
-						RocketUISystem.ShowRocketUI(this);
+						UISystem.ShowRocketUI(this);
 
 					Landing = false;
 					ResetAnimation();

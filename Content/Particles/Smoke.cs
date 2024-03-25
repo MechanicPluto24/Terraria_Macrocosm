@@ -16,8 +16,6 @@ namespace Macrocosm.Content.Particles
 
 		public float Opacity = 1f;
 
-		private float Alpha = 255;
-
 		public override void AI()
 		{
 			Velocity *= 0.98f;

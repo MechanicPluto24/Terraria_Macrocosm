@@ -14,7 +14,7 @@ using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Bases
+namespace Macrocosm.Common.Bases.Projectiles
 {
     public abstract class HalberdProjectile : ModProjectile
     {
@@ -94,12 +94,12 @@ namespace Macrocosm.Common.Bases
             float attackOffset = 0f;
             float attackAngle = 0f;
 
-            float angleOffset = MathHelper.Pi * 3/4;
+            float angleOffset = MathHelper.Pi * 3 / 4;
             Projectile.rotation = angleOffset;
             float CursorRotation = (Main.MouseWorld - Player.MountedCenter).ToRotation();
 
             if (CursorRotation >= -MathHelper.PiOver2 && CursorRotation < MathHelper.PiOver2)
-            { 
+            {
                 Player.direction = 1;
                 DrawOriginOffsetX = -(HalberdSize / 2) + RotationOffset;
                 DrawOriginOffsetY = RotDiag - RotationOffset;
@@ -108,7 +108,7 @@ namespace Macrocosm.Common.Bases
             else
             {
                 Player.direction = -1;
-                DrawOriginOffsetX = (HalberdSize / 2) - RotationOffset;
+                DrawOriginOffsetX = HalberdSize / 2 - RotationOffset;
                 DrawOriginOffsetY = RotDiag - RotationOffset;
                 DrawOffsetX = -HalberdSize + RotDiag + RotationOffset;
                 Projectile.rotation -= MathHelper.PiOver2;
@@ -120,19 +120,19 @@ namespace Macrocosm.Common.Bases
             switch (state)
             {
                 case HalberdState.AttackOne:
-                    
-                    attackOffset = (midOffset) * MathF.Sin(MathHelper.Pi * currentAnimProgress / finalMaxProgress[0]);
-                    attackAngle = CursorRotation - (Player.direction * (MathHelper.Pi * ARC_ANGLE_DEG / 180) * MathF.Sin(MathHelper.TwoPi * FloatAnimProgress));
-                    
+
+                    attackOffset = midOffset * MathF.Sin(MathHelper.Pi * currentAnimProgress / finalMaxProgress[0]);
+                    attackAngle = CursorRotation - Player.direction * (MathHelper.Pi * ARC_ANGLE_DEG / 180) * MathF.Sin(MathHelper.TwoPi * FloatAnimProgress);
+
                     if (currentAnimProgress == finalMaxProgress[(int)state] / 2)
                         NPCsHit.Clear();
 
                     break;
 
                 case HalberdState.TransOne:
-                    
+
                     attackOffset = (float)MathHelper.Lerp(StartOffset, midOffset, 0.5f * FloatAnimProgress);
-                    attackAngle = CursorRotation - (Player.direction * MathHelper.PiOver2 * MathF.Sin(MathHelper.TwoPi * 0.25f * FloatAnimProgress));
+                    attackAngle = CursorRotation - Player.direction * MathHelper.PiOver2 * MathF.Sin(MathHelper.TwoPi * 0.25f * FloatAnimProgress);
 
                     break;
                 case HalberdState.AttackTwo:

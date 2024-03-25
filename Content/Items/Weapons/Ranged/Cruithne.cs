@@ -1,4 +1,4 @@
-using Macrocosm.Common.Bases;
+using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Content.Rarities;
@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
-	public class Cruithne : GunHeldProjectileItem
+    public class Cruithne : GunHeldProjectileItem
 	{
 		public override GunHeldProjectileData GunHeldProjectileData => new()
 		{

@@ -1,4 +1,4 @@
-﻿using Macrocosm.Common.Bases;
+﻿using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Content.Items.MeteorChunks;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Environment.Meteors
 {
-	public class NebulaMeteor : BaseMeteor
+    public class NebulaMeteor : BaseMeteor
 	{
 		public NebulaMeteor()
 		{

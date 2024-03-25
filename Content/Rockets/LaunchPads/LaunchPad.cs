@@ -1,8 +1,8 @@
 ﻿using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.Systems;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.CursorIcons;
-using Macrocosm.Content.Rockets.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -12,7 +12,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.LaunchPads
 {
-	public partial class LaunchPad
+    public partial class LaunchPad
 	{
 		[NetSync] public bool Active;
 		[NetSync] public Point16 StartTile;
@@ -92,11 +92,11 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 			{
 				if (Main.mouseRight && Main.mouseRightRelease)
 				{
-					RocketUISystem.ShowAssemblyUI(this);
+					UISystem.ShowAssemblyUI(this);
 				}
 				else
 				{
-					if (!RocketUISystem.AssemblyUIActive)
+					if (!UISystem.AssemblyUIActive)
 					{
 						Main.LocalPlayer.noThrow = 2;
 						Main.LocalPlayer.cursorItemIconEnabled = true;

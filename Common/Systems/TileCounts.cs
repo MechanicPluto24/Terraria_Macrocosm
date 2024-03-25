@@ -1,4 +1,4 @@
-﻿using Macrocosm.Common.Bases;
+﻿using Macrocosm.Common.Bases.Tiles;
 using Macrocosm.Content.Tiles.Blocks;
 using System;
 using System.Collections.Generic;

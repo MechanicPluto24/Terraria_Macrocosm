@@ -1,4 +1,4 @@
-using Macrocosm.Common.Bases;
+using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Materials;
@@ -15,7 +15,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Melee
 {
-	public class ArtemiteGreatsword : GreatswordHeldProjectileItem
+    public class ArtemiteGreatsword : GreatswordHeldProjectileItem
 	{
 		public override Vector2 SpriteHandlePosition => new(23, 68);
 		public override bool RightClickUse => true;

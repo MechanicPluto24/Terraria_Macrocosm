@@ -1,4 +1,4 @@
-﻿using Macrocosm.Common.Bases;
+﻿using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Tiles.Blocks;
 using Terraria.ModLoader;

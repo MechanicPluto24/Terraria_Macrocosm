@@ -3,7 +3,7 @@ using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Macrocosm.Common.TileFrame;
 
-namespace Macrocosm.Common.Bases
+namespace Macrocosm.Common.Bases.Tiles
 {
     public interface IDoorTile
     {

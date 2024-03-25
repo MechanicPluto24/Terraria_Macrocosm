@@ -1,4 +1,4 @@
-﻿using Macrocosm.Common.Bases;
+﻿using Macrocosm.Common.Bases.NPCs;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
@@ -17,7 +17,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-	public class Clavite : ComplexAINPC<Clavite.AIState>, IMoonEnemy
+    public class Clavite : ComplexAINPC<Clavite.AIState>, IMoonEnemy
 	{
 		public enum AIState
 		{

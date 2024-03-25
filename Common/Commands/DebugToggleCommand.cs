@@ -1,13 +1,13 @@
 ﻿using Macrocosm.Common.Debugging;
 using Macrocosm.Common.Netcode;
+using Macrocosm.Common.Systems;
 using Macrocosm.Content.Rockets;
-using Macrocosm.Content.Rockets.UI;
 using Terraria;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Commands
 {
-	public class DebugToggleCommand : ModCommand
+    public class DebugToggleCommand : ModCommand
 	{
 		public override string Command => "debug";
 
@@ -32,7 +32,7 @@ namespace Macrocosm.Common.Commands
 						break;
 
 					case "ui" or "rocketui":
-						RocketUISystem.DebugModeActive = !RocketUISystem.DebugModeActive;
+						UISystem.DebugModeActive = !UISystem.DebugModeActive;
 						break;
 
 					case "packets" or "packet" or "packethandler":

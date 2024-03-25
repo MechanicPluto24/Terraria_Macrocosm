@@ -1,8 +1,8 @@
 ﻿using Macrocosm.Common.Netcode;
+using Macrocosm.Common.Systems;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.CameraModifiers;
 using Macrocosm.Content.Rockets;
-using Macrocosm.Content.Rockets.UI;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.IO;
@@ -13,7 +13,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Players
 {
-	public class RocketPlayer : ModPlayer
+    public class RocketPlayer : ModPlayer
 	{
 		public bool InRocket { get; set; } = false;
 		public bool IsCommander { get; set; } = false;
@@ -71,7 +71,7 @@ namespace Macrocosm.Content.Players
 			Utility.UICloseOthers();
 
 			if (Player.whoAmI == Main.myPlayer)
-				RocketUISystem.ShowRocketUI(RocketManager.Rockets[RocketID]);
+				UISystem.ShowRocketUI(RocketManager.Rockets[RocketID]);
 		}
 
 		public void DisembarkFromRocket()
@@ -105,22 +105,22 @@ namespace Macrocosm.Content.Players
 				{
 					cameraModifier.TargetPosition = RocketManager.Rockets[RocketID].Center - new Vector2(Main.screenWidth, Main.screenHeight) / 2f;
 
-					bool escapePressed = Player.controlInv && RocketUISystem.RocketUIActive;
+					bool escapePressed = Player.controlInv && UISystem.RocketUIActive;
 
 					// Escape or 'R' will disembark this player, but not during flight
 					if (((escapePressed || Player.controlMount) && !rocket.Launched) || !rocket.ActiveInCurrentWorld)
 						DisembarkFromRocket();
 
 					if (rocket.Launched || rocket.Landing)
-						RocketUISystem.Hide();
-					else if (!RocketUISystem.RocketUIActive)
-						RocketUISystem.ShowRocketUI(rocket);
+						UISystem.Hide();
+					else if (!UISystem.RocketUIActive)
+						UISystem.ShowRocketUI(rocket);
 				}
 			}
 			else if (Player.whoAmI == Main.myPlayer)
 			{
-				if (RocketUISystem.RocketUIActive)
-					RocketUISystem.Hide();
+				if (UISystem.RocketUIActive)
+					UISystem.Hide();
 
 				if (cameraModifier is not null)
 					cameraModifier.ReturnToNormalPosition = true;

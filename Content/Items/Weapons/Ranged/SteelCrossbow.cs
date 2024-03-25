@@ -1,4 +1,4 @@
-using Macrocosm.Common.Bases;
+using Macrocosm.Common.Bases.Projectiles;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
-	public class SteelCrossbow : GunHeldProjectileItem
+    public class SteelCrossbow : GunHeldProjectileItem
 	{
 		public override void SetStaticDefaults()
 		{

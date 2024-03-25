@@ -1,4 +1,4 @@
-using Macrocosm.Common.Bases;
+using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
@@ -8,7 +8,7 @@ using Terraria.ID;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-	public class ArchersLineProjectile : RicochetBullet
+    public class ArchersLineProjectile : RicochetBullet
 	{
 		public override int RicochetCount => 10;
 

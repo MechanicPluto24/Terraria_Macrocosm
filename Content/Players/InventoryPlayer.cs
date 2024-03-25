@@ -1,7 +1,7 @@
 ﻿using Macrocosm.Common.Storage;
+using Macrocosm.Common.Systems;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets;
-using Macrocosm.Content.Rockets.UI;
 using System;
 using System.Linq;
 using Terraria;
@@ -12,15 +12,15 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Players
 {
-	public class InventoryPlayer : ModPlayer
+    public class InventoryPlayer : ModPlayer
 	{
 		// TODO: make this logic more general once we use Inventories is other places
 		/// <summary> The currently active inventory, check for <see cref="CustomInventoryActive"/> beforehand. </summary>
-		public static Inventory ActiveInventory => RocketUISystem.Instance.UIRocketState.Rocket.Inventory;
+		public static Inventory ActiveInventory => UISystem.Instance.UIRocketState.Rocket.Inventory;
 
 		/// <summary> Whether there is a custom inventory currently being displayed </summary>
-		public static bool CustomInventoryActive => RocketUISystem.RocketUIActive &&
-			RocketUISystem.Instance.UIRocketState.Rocket is not null &&
+		public static bool CustomInventoryActive => UISystem.RocketUIActive &&
+			UISystem.Instance.UIRocketState.Rocket is not null &&
 			ActiveInventory is not null;
 
 		public override void Load()

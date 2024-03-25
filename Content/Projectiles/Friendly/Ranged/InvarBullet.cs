@@ -1,4 +1,4 @@
-using Macrocosm.Common.Bases;
+using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-	public class InvarBullet : RicochetBullet
+    public class InvarBullet : RicochetBullet
 	{
 		public override int RicochetCount => 3;
 

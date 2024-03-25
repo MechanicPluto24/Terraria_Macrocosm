@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.UI;
+﻿using Macrocosm.Common.Systems;
+using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.LaunchPads;
@@ -11,7 +12,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.UI
 {
-	public class AssemblyUIState : UIState
+    public class AssemblyUIState : UIState
 	{
 		public LaunchPad LaunchPad { get; set; } = new();
 		public Rocket Rocket { get; set; } = new();
@@ -92,7 +93,7 @@ namespace Macrocosm.Content.Rockets.UI
 			Player player = Main.LocalPlayer;
 
 			if (LaunchPad is not null && (!LaunchPad.Hitbox.InPlayerInteractionRange(TileReachCheckSettings.Simple) || player.UICloseConditions()))
-				RocketUISystem.Hide();
+				UISystem.Hide();
 		}
 	}
 }

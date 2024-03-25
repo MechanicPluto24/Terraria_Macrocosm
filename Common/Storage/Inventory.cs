@@ -63,7 +63,6 @@ namespace Macrocosm.Common.Storage
             }
         }
 
-        // TODO: entity or spacecraft abstraction (?)
         public IInventoryOwner Owner { get; init; }
 
         public Inventory(int size, IInventoryOwner owner)
@@ -140,10 +139,12 @@ namespace Macrocosm.Common.Storage
                 Array.Fill(items, new Item(), oldSize, newSize - oldSize);
         }
 
-        public bool TryPlacingItem(Item item, bool justCheck = false)
+        public bool TryPlacingItem(Item item, bool justCheck = false, bool serverSync = true)
         {
             if (ChestUI.IsBlockedFromTransferIntoChest(item, items))
                 return false;
+
+            bool shouldSync = Main.netMode == NetmodeID.MultiplayerClient || (serverSync && Main.netMode == NetmodeID.Server);
 
             Player player = Main.LocalPlayer;
             bool result = false;
@@ -188,7 +189,7 @@ namespace Macrocosm.Common.Storage
                         slots[i].ClearGlow();
                     }
 
-                    if (Main.netMode == NetmodeID.MultiplayerClient)
+                    if (shouldSync)
                         SyncItem(i);
                 }
             }
@@ -212,7 +213,7 @@ namespace Macrocosm.Common.Storage
                     slots[j].ClearGlow();
                     ItemSlot.AnnounceTransfer(new ItemSlot.ItemTransferInfo(items[j], 0, 3));
 
-                    if (Main.netMode == NetmodeID.MultiplayerClient)
+                    if (shouldSync)
                         SyncItem(j);
 
                     break;
