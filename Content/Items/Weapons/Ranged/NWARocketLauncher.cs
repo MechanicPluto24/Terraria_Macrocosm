@@ -1,4 +1,4 @@
-using Macrocosm.Common.Bases;
+using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.NPCs.Global;
 using Macrocosm.Content.Projectiles.Friendly.Ranged;
@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
-	public class NWARocketLauncher : GunHeldProjectileItem
+    public class NWARocketLauncher : GunHeldProjectileItem
 	{
 		public override GunHeldProjectileData GunHeldProjectileData => new()
 		{

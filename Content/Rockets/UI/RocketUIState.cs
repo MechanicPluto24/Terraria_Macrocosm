@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.UI;
+﻿using Macrocosm.Common.Systems;
+using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
@@ -14,7 +15,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.UI
 {
-	public class RocketUIState : UIState, IRocketUIDataConsumer
+    public class RocketUIState : UIState, IRocketUIDataConsumer
 	{
 		public Rocket Rocket { get; set; }
 
@@ -200,7 +201,7 @@ namespace Macrocosm.Content.Rockets.UI
 			Player player = Main.LocalPlayer;
 
 			if (Rocket is not null && !Rocket.Active || !Rocket.Bounds.InPlayerInteractionRange(TileReachCheckSettings.Simple) || Rocket.Launched || player.controlMount || player.UICloseConditions())
-				RocketUISystem.Hide();
+				UISystem.Hide();
 		}
 	}
 }

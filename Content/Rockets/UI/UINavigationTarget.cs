@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.Systems;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.Navigation.Checklist;
@@ -13,7 +14,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.UI
 {
-	public class UINavigationTarget : UIElement, IConsistentUpdateable
+    public class UINavigationTarget : UIElement, IConsistentUpdateable
 	{
 		/// <summary> The panel instance this target belongs to </summary>
 		public UINavigationPanel OwnerPanel { get; set; }
@@ -196,7 +197,7 @@ namespace Macrocosm.Content.Rockets.UI
 		{
 			Rectangle rect = GetDimensions().ToRectangle();
 
-			if (RocketUISystem.DebugModeActive)
+			if (UISystem.DebugModeActive)
 				spriteBatch.Draw(TextureAssets.MagicPixel.Value, rect, Color.Green.WithOpacity(0.1f));
 
 			// Should draw the outline if not fully transparent

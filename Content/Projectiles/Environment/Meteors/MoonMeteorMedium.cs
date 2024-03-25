@@ -1,4 +1,4 @@
-﻿using Macrocosm.Common.Bases;
+﻿using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.MeteorChunks;
 using Macrocosm.Content.Projectiles.Environment.Debris;
@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Environment.Meteors
 {
-	public class MoonMeteorMedium : BaseMeteor
+    public class MoonMeteorMedium : BaseMeteor
 	{
 		public MoonMeteorMedium()
 		{

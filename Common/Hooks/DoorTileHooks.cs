@@ -7,8 +7,8 @@ using Terraria.GameContent;
 using MonoMod.Cil;
 using Microsoft.Xna.Framework;
 using Mono.Cecil.Cil;
-using Macrocosm.Common.Bases;
 using Macrocosm.Common.TileFrame;
+using Macrocosm.Common.Bases.Tiles;
 
 namespace Macrocosm.Common.Hooks
 {

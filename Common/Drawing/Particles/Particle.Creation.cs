@@ -78,13 +78,14 @@ namespace Macrocosm.Common.Drawing.Particles
 		/// <param name="type"> The type of the particle, found in <see cref="ParticleOrchestraType"/> </param>
 		/// <param name="position"> The position of the particle in the world </param>
 		/// <param name="velocity"> The initial velocity of this particle </param>
-		public static void CreateParticle(ParticleOrchestraType type, Vector2 position, Vector2 velocity)
+		public static void CreateParticle(ParticleOrchestraType type, Vector2 position, Vector2 velocity, int uniqueInfoPiece = 0)
 		{
 			ParticleOrchestraSettings settings = new()
 			{
 				PositionInWorld = position,
-				MovementVector = velocity
-			};
+				MovementVector = velocity,
+                UniqueInfoPiece = uniqueInfoPiece
+            };
 
 			ParticleOrchestrator.SpawnParticlesDirect(type, settings);
 		}

@@ -8,7 +8,7 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Bases
+namespace Macrocosm.Common.Bases.Projectiles
 {
     public abstract class TombstoneProjectile : ModProjectile
     {

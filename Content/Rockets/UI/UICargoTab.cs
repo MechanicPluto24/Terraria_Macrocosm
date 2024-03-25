@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Storage;
+using Macrocosm.Common.Systems;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
@@ -19,7 +20,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.UI
 {
-	public class UICargoTab : UIPanel, ITabUIElement, IRocketUIDataConsumer
+    public class UICargoTab : UIPanel, ITabUIElement, IRocketUIDataConsumer
 	{
 		public Rocket Rocket { get; set; } = new();
 
@@ -146,7 +147,7 @@ namespace Macrocosm.Content.Rockets.UI
 		private void UpdateInventory()
 		{
 			// Use H and J to increase/decrease inventory size, for testing
-			if (RocketUISystem.DebugModeActive)
+			if (UISystem.DebugModeActive)
 			{
 				if (Main.LocalPlayer.controlQuickHeal && Rocket.Inventory.Size < Inventory.MaxInventorySize)
 					Rocket.Inventory.Size += 1;

@@ -1,4 +1,4 @@
-﻿using Macrocosm.Common.Bases;
+﻿using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Buffs.Debuffs;
 using Macrocosm.Content.Dusts;

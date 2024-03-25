@@ -1,4 +1,4 @@
-using Macrocosm.Common.Bases;
+using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Weapons.Ranged;
@@ -14,7 +14,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-	public class SeleniteBowHeld : ChargedHeldProjectile
+    public class SeleniteBowHeld : ChargedHeldProjectile
 	{
 		public override string Texture => "Macrocosm/Content/Items/Weapons/Ranged/SeleniteBow";
 

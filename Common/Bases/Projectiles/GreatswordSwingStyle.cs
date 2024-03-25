@@ -1,19 +1,19 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 
-namespace Macrocosm.Common.Bases
+namespace Macrocosm.Common.Bases.Projectiles
 {
-	public abstract class GreatswordSwingStyle
-	{
-		/// <summary>
-		/// Defines how a <see cref="GreatswordHeldProjectile"/> should act after having been charged.
-		/// </summary>
-		/// <returns><c>true</c> - keep the projectile alive <br/> <c>false</c> - kill projectile</returns>
-		public abstract bool Update(ref float armRotation, ref float projectileRotation, float charge);
+    public abstract class GreatswordSwingStyle
+    {
+        /// <summary>
+        /// Defines how a <see cref="GreatswordHeldProjectile"/> should act after having been charged.
+        /// </summary>
+        /// <returns><c>true</c> - keep the projectile alive <br/> <c>false</c> - kill projectile</returns>
+        public abstract bool Update(ref float armRotation, ref float projectileRotation, float charge);
 
-		public virtual bool PreDrawSword(GreatswordHeldProjectile greatswordProjectile, Color lightColor, ref Color? drawColor ) { return true; }
-		public virtual void PostDrawSword(GreatswordHeldProjectile greatswordProjectile, Color lightColor) { }
-	}
+        public virtual bool PreDrawSword(GreatswordHeldProjectile greatswordProjectile, Color lightColor, ref Color? drawColor) { return true; }
+        public virtual void PostDrawSword(GreatswordHeldProjectile greatswordProjectile, Color lightColor) { }
+    }
 
     public class DefaultGreatswordSwingStyle : GreatswordSwingStyle
     {
