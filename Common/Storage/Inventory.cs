@@ -25,6 +25,10 @@ namespace Macrocosm.Common.Storage
             set => items[index] = value;
         }
 
+        private UICustomItemSlot[] uiItemSlots;
+
+        public IInventoryOwner Owner { get; set; }
+
         public const int MaxInventorySize = ushort.MaxValue;
         public int Size
         {
@@ -63,15 +67,18 @@ namespace Macrocosm.Common.Storage
             }
         }
 
-        public IInventoryOwner Owner { get; init; }
-
-        public Inventory(int size, IInventoryOwner owner)
+        public Inventory(int size, IInventoryOwner owner = null)
         {
             int clampedSize = (int)MathHelper.Clamp(size, 0, MaxInventorySize);
 
             items = new Item[clampedSize];
+            uiItemSlots = new UICustomItemSlot[clampedSize];
+
             for (int i = 0; i < items.Length; i++)
+            {
                 items[i] = new Item();
+                uiItemSlots[i] = new(this, i);
+            }
 
             Owner = owner;
 
@@ -81,15 +88,7 @@ namespace Macrocosm.Common.Storage
                 interactingPlayer = Main.maxPlayers;
         }
 
-        private Dictionary<int, UICustomItemSlot> slots = new();
-        public UICustomItemSlot CreateItemSlot(int index, int itemSlotContext = ItemSlot.Context.ChestItem, float scale = default)
-        {
-            UICustomItemSlot slot = new(this, index, itemSlotContext, scale);
-            slots[index] = slot;
-            return slot;
-        }
-
-        public void SetGlow(int index, float time, float hue) => slots[index].SetGlow(time, hue);
+        public void SetGlow(int index, float time, float hue) => uiItemSlots[index].SetGlow(time, hue);
 
         /// <summary> Drops an item in the world </summary>
         /// <param name="index"> The item slot index </param>
@@ -174,7 +173,7 @@ namespace Macrocosm.Common.Storage
                     if (item.stack <= 0)
                     {
                         item.SetDefaults();
-                        slots[i].ClearGlow();
+                        uiItemSlots[i].ClearGlow();
 
                         if (Main.netMode == NetmodeID.MultiplayerClient)
                             SyncItem(i);
@@ -186,7 +185,7 @@ namespace Macrocosm.Common.Storage
                     {
                         items[i] = item.Clone();
                         item.SetDefaults();
-                        slots[i].ClearGlow();
+                        uiItemSlots[i].ClearGlow();
                     }
 
                     if (shouldSync)
@@ -210,7 +209,7 @@ namespace Macrocosm.Common.Storage
                     SoundEngine.PlaySound(SoundID.Grab);
                     items[j] = item.Clone();
                     item.SetDefaults();
-                    slots[j].ClearGlow();
+                    uiItemSlots[j].ClearGlow();
                     ItemSlot.AnnounceTransfer(new ItemSlot.ItemTransferInfo(items[j], 0, 3));
 
                     if (shouldSync)
@@ -233,7 +232,7 @@ namespace Macrocosm.Common.Storage
                 {
                     items[i].position = player.Center;
                     items[i] = player.GetItem(Main.myPlayer, items[i], GetItemSettings.LootAllSettingsRegularChest);
-                    slots[i].ClearGlow();
+                    uiItemSlots[i].ClearGlow();
 
                     if (Main.netMode == NetmodeID.MultiplayerClient)
                         SyncItem(i);

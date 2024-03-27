@@ -7,15 +7,26 @@ using Terraria.DataStructures;
 
 namespace Macrocosm.Common.Storage
 {
+    // This needs some attention, it's not that great as it was in my mind.
+    // Owner references for Inventories are currently only needed for the InventoryItemDropLocation,
+    // in case the inventory is resized or the container is destroyed.
+    // Maybe there's a better way to do this. 
+    // -- Feldy
     public interface IInventoryOwner
     {
         public Inventory Inventory { get; set; }
+        public string InventoryOwnerType
+        {
+            get
+            {
+                if (this is TileEntity)
+                    return nameof(TileEntity);
 
-        public string InventoryOwnerType => GetType().Name;
-
+                return GetType().Name;
+            }
+        }
         public Vector2 InventoryItemDropLocation => Main.LocalPlayer.Center;
-
-        public int InventorySerializationIndex => -1;
+        public int InventorySerializationIndex => 0;
 
         // TODO: Unhardcode this, make getting the instance part of the interface... somehow
         public static IInventoryOwner GetInventoryOwnerInstance(string ownerType, int serializationIndex)
@@ -26,21 +37,17 @@ namespace Macrocosm.Common.Storage
                 return null;
             }
 
-            switch (ownerType)
+            return ownerType switch
             {
-                case "Rocket":
-                    return (serializationIndex >= 0 && serializationIndex < RocketManager.MaxRockets) ? RocketManager.Rockets[serializationIndex] : new();
+                "Rocket" => (serializationIndex >= 0 && serializationIndex < RocketManager.MaxRockets) ? RocketManager.Rockets[serializationIndex] : new(),
 
-                //case "Launchpad":
-                //return ...
+                //"Launchpad" => ...
 
-                case "OreExcavatorTE":
-                    return TileEntity.ByID[serializationIndex] as OreExcavatorTE;
+                // TEs are added to the ByID dictionary after the deserialization... the owner association has to be done manually 
+                "TileEntity" => null,
 
-                default:
-                    Utility.LogChatMessage($"IInventoryOwner: Unknown owner type {ownerType}", Utility.MessageSeverity.Error);
-                    return null;
-            }
+                _ => null,
+            };
         }
     }
 }

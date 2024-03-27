@@ -20,7 +20,13 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 {
 	public class MoonBaseChest : ModTile
 	{
-		public enum State
+        private static Asset<Texture2D> glowmask;
+        public override void Load()
+        {
+            glowmask = ModContent.Request<Texture2D>(Texture + "_Glow");
+        }
+
+        public enum State
 		{
 			/// <summary> Default style (not lockable or unlockable) </summary>
 			Normal,
@@ -45,13 +51,6 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 
 			return (State)style;
 		}
-
-        private Asset<Texture2D> glowmask;
-
-        public override void Load()
-        {
-            glowmask = ModContent.Request<Texture2D>(Texture + "_Glow");
-        }
 
         public override void SetStaticDefaults()
 		{

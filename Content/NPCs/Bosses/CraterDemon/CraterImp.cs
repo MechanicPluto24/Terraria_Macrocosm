@@ -46,7 +46,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 		public const int WaitTime = 4 * 60;
 
-		private Asset<Texture2D> glowmask;
+		private static Asset<Texture2D> glowmask;
         public override void Load()
         {
             glowmask = ModContent.Request<Texture2D>(Texture+ "_Glow");

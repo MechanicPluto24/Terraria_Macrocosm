@@ -21,17 +21,19 @@ namespace Macrocosm.Content.Machines
         public override MachineTile MachineTile => ModContent.GetInstance<OreExcavator>();
         public override bool Operating => Main.tile[Position].TileFrameY >= 16 * MachineTile.Height;
 
+
         protected SimpleLootTable loot;
         protected int checkTimer;
         protected bool ranFirstUpdate;
 
         protected virtual int OreGenerationRate => 60;
-        protected virtual int InventorySize => 40;
+        protected virtual int InventorySize => 50;
 
         public Inventory Inventory { get; set; }
 
+        public SimpleLootTable Loot => loot;
+
         public Vector2 InventoryItemDropLocation => Position.ToVector2() * 16 + new Vector2(MachineTile.Width, MachineTile.Height) * 16 / 2;
-        public int InventorySerializationIndex => ID;
 
         public override int Hook_AfterPlacement(int i, int j, int type, int style, int direction, int alternate)
         {
@@ -93,7 +95,10 @@ namespace Macrocosm.Content.Machines
         {
             if (!ranFirstUpdate)
             {
-                Inventory = new(InventorySize, this);
+                Inventory ??= new(InventorySize, this);
+
+                if (Inventory.Owner is null)
+                    Inventory.Owner = this;
 
                 // Generate loot table based on current subworld
                 loot = new();
@@ -146,8 +151,6 @@ namespace Macrocosm.Content.Machines
         {
             if (tag.ContainsKey(nameof(Inventory)))
                 Inventory = tag.Get<Inventory>(nameof(Inventory));
-            else
-                Inventory = new(InventorySize, this);
         }
     }
 }

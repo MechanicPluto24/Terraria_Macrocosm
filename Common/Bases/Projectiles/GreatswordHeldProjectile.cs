@@ -143,7 +143,7 @@ namespace Macrocosm.Common.Bases.Projectiles
                     if (!released && Player.whoAmI == Main.myPlayer)
                     {
                         int damage = (int)(Projectile.damage * MathHelper.Lerp(ChargeBasedDamageRatio.min, ChargeBasedDamageRatio.max, Charge));
-                        OnRelease.Invoke(Player, damage);
+                        OnRelease?.Invoke(Player, damage);
                         released = true;
                     }
 

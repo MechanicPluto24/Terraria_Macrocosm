@@ -33,7 +33,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 		public ref float AI_Timer => ref NPC.ai[1];
 
 
-		private Asset<Texture2D> glowmask;
+		private static Asset<Texture2D> glowmask;
 
         public override void Load()
         {

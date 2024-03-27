@@ -3,6 +3,8 @@ using Macrocosm.Content.Biomes;
 using Macrocosm.Content.NPCs.Bosses.CraterDemon;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -13,7 +15,15 @@ namespace Macrocosm.Content.Items.Consumables.BossSummons
 	//Had to salvage it from an extracted DLL, so no comments.  Oops.  -- absoluteAquarian
 	public class CraterDemonSummon : ModItem
 	{
-		public override void SetStaticDefaults()
+        // Different sprite for drawing in world and in inventory, as opposed from the player-held variant
+        private static Asset<Texture2D> itemSprite;
+
+        public override void Load()
+        {
+            itemSprite = ModContent.Request<Texture2D>(Texture + "_Item");
+        }
+
+        public override void SetStaticDefaults()
 		{
 			ItemID.Sets.SortingPriorityBossSpawns[Item.type] = 13;
 			Item.ResearchUnlockCount = 3;
@@ -42,5 +52,17 @@ namespace Macrocosm.Content.Items.Consumables.BossSummons
 
 			return true;
 		}
-	}
+
+        public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
+		{
+            spriteBatch.Draw(itemSprite.Value, position, new Rectangle(0, 0, itemSprite.Width(), itemSprite.Height()), drawColor, 0f, itemSprite.Size()/2f, scale, SpriteEffects.None, 0);
+			return false;
+		}
+
+        public override bool PreDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
+        {
+            spriteBatch.Draw(itemSprite.Value, Item.position - Main.screenPosition, null, alphaColor, rotation, itemSprite.Size()/2f, scale, SpriteEffects.None, 0);
+            return false;
+        }
+    }
 }

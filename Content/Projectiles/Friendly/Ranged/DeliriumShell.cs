@@ -15,18 +15,16 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
 	public class DeliriumShell : ModProjectile, IRangedProjectile, IExplosive
 	{
-		public float BlastRadius => 100;
-
-		public int DefWidth => 14;
-		public int DefHeight => 14;
-
-
-		private Asset<Texture2D> aura;
-
+        private static Asset<Texture2D> aura;
         public override void Load()
         {
             aura = ModContent.Request<Texture2D>(Texture + "Aura");
         }
+
+        public float BlastRadius => 100;
+
+		public int DefWidth => 14;
+		public int DefHeight => 14;
 
         public override void SetDefaults()
 		{
