@@ -16,7 +16,7 @@ namespace Macrocosm.Content.Tiles.Furniture
 {
 	public class OxygenSystem : ModTile
 	{
-        private Asset<Texture2D> glowmask;
+        private static Asset<Texture2D> glowmask;
         public override void Load()
         {
             glowmask = ModContent.Request<Texture2D>(Texture + "_Glow");

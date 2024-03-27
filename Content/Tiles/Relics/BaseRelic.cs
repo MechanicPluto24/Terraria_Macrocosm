@@ -27,7 +27,6 @@ namespace Macrocosm.Content.Tiles.Relics
 
 		// Vanilla copy of the pedestal texture 
 		public override string Texture => "Macrocosm/Content/Tiles/Relics/RelicPedestal";
-
 		public override void Load()
 		{
 			relicTexture = ModContent.Request<Texture2D>(RelicTextureName);

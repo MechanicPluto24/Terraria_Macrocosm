@@ -15,16 +15,14 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 {
 	internal class MoonBaseSofa : ModTile
 	{
-
-        private Asset<Texture2D> extra;
-		private Asset<Texture2D> extraHighlight;
+        private static Asset<Texture2D> extra;
+		private static Asset<Texture2D> extraHighlight;
 
         public override void Load()
         {
             extra = ModContent.Request<Texture2D>(Texture+ "_Extra");
             extraHighlight = ModContent.Request<Texture2D>(Texture + "_Extra_Highlight");
         }
-
 
         public override void SetStaticDefaults()
 		{

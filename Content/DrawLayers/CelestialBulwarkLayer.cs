@@ -13,7 +13,7 @@ namespace Macrocosm.Content.DrawLayers
 {
 	public class CelestialBulwarkLayer : PlayerDrawLayer
 	{
-        Asset<Texture2D> shieldMask;
+        private static Asset<Texture2D> shieldMask;
 
         public override void Load()
         {

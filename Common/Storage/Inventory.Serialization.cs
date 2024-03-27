@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Content.Rockets;
 using System;
+using Terraria;
 using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Common.Storage
@@ -16,7 +17,12 @@ namespace Macrocosm.Common.Storage
 				["OwnerSerializationIndex"] = Owner is not null ? Owner.InventorySerializationIndex : -1,
 			};
 
-			for (int i = 0; i < Size; i++)
+            foreach (var te in Terraria.DataStructures.TileEntity.ByID)
+            {
+                Console.WriteLine($"{te.Key}: {te.Value}");
+            }
+
+            for (int i = 0; i < Size; i++)
 				tag.Add($"Item{i}", ItemIO.Save(items[i]));
 
 			return tag;
@@ -37,7 +43,12 @@ namespace Macrocosm.Common.Storage
             if (tag.ContainsKey("OwnerSerializationIndex"))
                 ownerSerializationIndex = tag.GetInt("OwnerSerializationIndex");
 
-			IInventoryOwner owner = IInventoryOwner.GetInventoryOwnerInstance(ownerType, ownerSerializationIndex);
+            foreach (var te in Terraria.DataStructures.TileEntity.ByID)
+            {
+                Console.WriteLine($"{te.Key}: {te.Value}");
+            }
+
+            IInventoryOwner owner = IInventoryOwner.GetInventoryOwnerInstance(ownerType, ownerSerializationIndex);
 			Inventory inventory = new(size, owner);
 
 			for (int i = 0; i < size; i++)

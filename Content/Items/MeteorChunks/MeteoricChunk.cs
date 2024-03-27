@@ -62,24 +62,23 @@ namespace Macrocosm.Content.Items.MeteorChunks
 		/// <summary> Draw with a random frame and flipping in the world </summary>
 		public override bool PreDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
 		{
-			Draw(spriteBatch, frameY, flip, Item.Center - Main.screenPosition, lightColor, rotation, Item.Size / 2, scale);
+			Draw(spriteBatch, frameY, flip, Item.Center - Main.screenPosition, lightColor, rotation, scale);
 			return false;
 		}
 
 		/// <summary> Draw with the default appearance in the inventory </summary>
 		public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
 		{
-			var size = TextureAssets.Item[Type].Size();
-			Draw(spriteBatch, 0, false, position + new Vector2(0, size.Y/4f + 6), drawColor, 0f, origin, scale * 4);
+			Draw(spriteBatch, 0, false, position, drawColor, 0f, scale * 4);
 			return false;
 		}
 
-		private void Draw(SpriteBatch spriteBatch, int frameY, bool flip, Vector2 position, Color color, float rotation, Vector2 origin, float scale)
+		private void Draw(SpriteBatch spriteBatch, int frameY, bool flip, Vector2 position, Color color, float rotation, float scale)
 		{
 			Texture2D texture = TextureAssets.Item[Type].Value;
 			SpriteEffects effects = flip ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 			Rectangle sourceRect = texture.Frame(1, 4, frameY: frameY);
-			spriteBatch.Draw(texture, position, sourceRect, color, rotation, origin, scale, effects, 0f);
+			spriteBatch.Draw(texture, position, sourceRect, color, rotation, new Vector2(texture.Width / 2, texture.Height / (4 * 2)), scale, effects, 0f);
 		}
 	}
 }

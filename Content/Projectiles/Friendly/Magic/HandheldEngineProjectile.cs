@@ -22,7 +22,18 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
     public class HandheldEngineProjectile : ChargedHeldProjectile
 	{
-		public ref float AI_Overheat => ref Projectile.ai[0];
+        private static Asset<Texture2D> glowmask;
+        private static Asset<Texture2D> flame;
+        private static Asset<Texture2D> warning;
+
+        public override void Load()
+        {
+            glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Magic/HandheldEngineProjectile_Glow");
+            flame = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Magic/HandheldEngineProjectile_Flame");
+            warning = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Magic/HandheldEngineProjectile_Warning");
+        }
+
+        public ref float AI_Overheat => ref Projectile.ai[0];
 		public ref float AI_UseCounter => ref Projectile.ai[1];
 		public float AI_Windup = 0;
 
@@ -35,17 +46,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 		private readonly int ManaUseAmount = 5;
 
 		public override float CircularHoldoutOffset => 45;
-
-		private Asset<Texture2D> glowmask;
-        private Asset<Texture2D> flame;
-		private Asset<Texture2D> warning;
-
-        public override void Load()
-        {
-            glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Magic/HandheldEngineProjectile_Glow");
-            flame = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Magic/HandheldEngineProjectile_Flame");
-            warning = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Magic/HandheldEngineProjectile_Warning");
-        }
 
         public override void SetProjectileStaticDefaults()
 		{

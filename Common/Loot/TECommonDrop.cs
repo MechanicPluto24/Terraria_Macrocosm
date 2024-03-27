@@ -28,17 +28,14 @@ namespace Macrocosm.Common.Loot
             if (info.player.RollLuck(chanceDenominator) < chanceNumerator)
             {
                 Vector2 position = TileEntity.Position.ToWorldCoordinates();
-                Vector2 itemTransferVelocity = -Vector2.UnitY * 70f;
-
                 TileObjectData data = TileObjectData.GetTileData(Main.tile[TileEntity.Position]);
                 if (data is not null)
-                {
-                    position = new(position.X + data.Width * 16 / 2, position.Y + data.Height * 16);
-                }
-
+                     position = new(position.X + data.Width * 16 / 2, position.Y + data.Height * 16);
+ 
+                Vector2 itemTransferVelocity = -Vector2.UnitY * 70f;
                 int stack = info.rng.Next(amountDroppedMinimum, amountDroppedMaximum + 1);
 
-                if (TileEntity is IInventoryOwner inventoryOwner)
+                if (TileEntity is IInventoryOwner inventoryOwner && inventoryOwner.Inventory is not null)
                 {
                     Item item = new(itemId, stack);
                     inventoryOwner.Inventory.TryPlacingItem(item);

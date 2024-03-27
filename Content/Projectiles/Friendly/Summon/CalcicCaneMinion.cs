@@ -16,7 +16,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
     public class CalcicCaneMinion : ModProjectile
 	{
 
-		private Asset<Texture2D> glowmask;
+		private static Asset<Texture2D> glowmask;
         public override void Load()
         {
             glowmask = ModContent.Request<Texture2D>(Texture+ "_Glow");

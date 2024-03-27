@@ -67,7 +67,6 @@ namespace Macrocosm.Common.Utils
 		/// <param name="parent"> The parent </param>
 		/// <param name="toRemove"> The child to be replaced </param>
 		/// <param name="newElement"> The element to replace the child with </param>
-		/// <param name="updateReference"> Whether to also update the old element reference with the new one </param>
 		// This is preferred instead of immediate replacement since, if the method is called while updating, where 
 		// the children are also iterated upon, the children collection would be modified, causing an exception
 		public static void ReplaceChildWith(this UIElement parent, UIElement toRemove, UIElement newElement)

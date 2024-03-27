@@ -75,7 +75,7 @@ namespace Macrocosm.Common.UI
 			list.SetPadding(ListOuterPadding);
 			list.ListPadding = ListPadding;
 
-			if (title is not null)
+            if (title is not null)
 			{
 				title.Top = new(15, 0);
 				title.HAlign = TitleHAlign;
@@ -103,7 +103,9 @@ namespace Macrocosm.Common.UI
 
 		public void SetTitle(LocalizedColorScaleText title)
 		{
-			RemoveChild(this.title);
+			if(this.title is not null)
+				RemoveChild(this.title);
+
 			this.title = title.ProvideUI();
 			Initialize();
 		}

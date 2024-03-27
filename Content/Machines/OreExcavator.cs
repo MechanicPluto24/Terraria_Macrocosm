@@ -1,23 +1,14 @@
-﻿using Humanizer;
-using Macrocosm.Common.Bases.Machines;
+﻿using Macrocosm.Common.Bases.Machines;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Systems;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Machines;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
-using System.Collections.Generic;
 using Terraria;
-using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.Enums;
-using Terraria.GameContent.Drawing;
-using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
-using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
@@ -80,7 +71,7 @@ namespace Macrocosm.Content.Machines
                 for (int y = origin.Y; y < origin.Y + Height; y++)
                 {
                     Tile tile = Main.tile[x, y];
-                    if (Main.tile[i, j].TileFrameY > Height * 16)
+                    if (tile.TileFrameY >= Height * 16)
                         tile.TileFrameY -= (short)(Height * 16);
                     else
                         tile.TileFrameY += (short)(Height * 16);

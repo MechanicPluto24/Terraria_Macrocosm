@@ -25,8 +25,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			Dash
 		}
 
-		private Asset<Texture2D> glowmask;
-		private Asset<Texture2D> glowX4;
+		private static Asset<Texture2D> glowmask;
+		private static Asset<Texture2D> glowX4;
         public override void Load()
         {
             glowmask = ModContent.Request<Texture2D>(Texture + "_Glow", AssetRequestMode.ImmediateLoad);

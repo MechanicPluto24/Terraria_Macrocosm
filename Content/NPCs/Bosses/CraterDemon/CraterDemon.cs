@@ -394,7 +394,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
         private const int Animation_LookRight_JawOpen = 5;
 
 
-        private Asset<Texture2D> glowmask;
+        private static Asset<Texture2D> glowmask;
         public override void Load()
         {
             glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Bosses/CraterDemon/CraterDemon_Glow");
