@@ -10,9 +10,9 @@ using Terraria.GameContent.Drawing;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ObjectData;
 
-namespace Macrocosm.Common.Loot
+namespace Macrocosm.Common.Loot.DropRules
 {
-    public class TECommonDrop : CommonDrop
+    public class TECommonDrop : CommonDrop, IBlacklistable
     {
         public TileEntity TileEntity;
 
@@ -22,6 +22,11 @@ namespace Macrocosm.Common.Loot
             TileEntity = tileEntity;
         }
 
+        public bool Blacklisted { get; set; }
+        public int ItemID => itemId;
+
+        public override bool CanDrop(DropAttemptInfo info) => !Blacklisted;
+
         public override ItemDropAttemptResult TryDroppingItem(DropAttemptInfo info)
         {
             ItemDropAttemptResult result;
@@ -30,8 +35,8 @@ namespace Macrocosm.Common.Loot
                 Vector2 position = TileEntity.Position.ToWorldCoordinates();
                 TileObjectData data = TileObjectData.GetTileData(Main.tile[TileEntity.Position]);
                 if (data is not null)
-                     position = new(position.X + data.Width * 16 / 2, position.Y + data.Height * 16);
- 
+                    position = new(position.X + data.Width * 16 / 2, position.Y + data.Height * 16);
+
                 Vector2 itemTransferVelocity = -Vector2.UnitY * 70f;
                 int stack = info.rng.Next(amountDroppedMinimum, amountDroppedMaximum + 1);
 

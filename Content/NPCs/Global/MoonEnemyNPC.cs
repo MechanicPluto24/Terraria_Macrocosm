@@ -1,4 +1,5 @@
-using Macrocosm.Common.DropRules;
+using Macrocosm.Common.Loot;
+using Macrocosm.Common.Loot.DropConditions;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Items.Currency;
 using Macrocosm.Content.Subworlds;
