@@ -15,51 +15,64 @@ namespace Macrocosm.Common.Loot
     /// </summary>
     public class SimpleLootTable : ILoot
     {
-        private readonly List<IItemDropRule> entries;
+        public readonly List<IItemDropRule> Entries; 
+
+        public readonly List<IBlacklistable> BlacklistableEntries;
 
         public SimpleLootTable()
         {
-            entries = [];
+            Entries = [];
+            BlacklistableEntries = [];
         }
 
         public IItemDropRule Add(IItemDropRule entry)
         {
-            entries.Add(entry);
+            Entries.Add(entry);
+
+            if (entry is IBlacklistable blacklistable)
+                BlacklistableEntries.Add(blacklistable);
+
             return entry;
         }
 
-        public List<IItemDropRule> Get(bool includeGlobalDrops = true) => entries;
+        public List<IItemDropRule> Get(bool includeGlobalDrops = true) => Entries;
 
         public IItemDropRule Remove(IItemDropRule entry)
         {
-            entries.Remove(entry);
+            Entries.Remove(entry);
+
+            if(entry is IBlacklistable blacklistable)
+                BlacklistableEntries.Remove(blacklistable);
+
             return entry;
         }
 
         public void RemoveWhere(Predicate<IItemDropRule> predicate, bool includeGlobalDrops = true)
         {
-            foreach (var entry in Get())
+            foreach (var entry in Entries)
             {
                 if (predicate(entry))
                      Remove(entry);
             }
         }
 
+        public static readonly DropAttemptInfo CommonDropAttemptInfo = new()
+        {
+            player = Main.LocalPlayer,
+            IsExpertMode = Main.expertMode,
+            IsMasterMode = Main.masterMode,
+            IsInSimulation = false,
+            rng = Main.rand,
+            npc = null,
+            item = 0
+        };
+
         public void Drop(Player player)
         {
-            DropAttemptInfo info = new()
-            {
-                player = player,
-                IsExpertMode = Main.expertMode,
-                IsMasterMode = Main.masterMode,
-                IsInSimulation = false,
-                rng = Main.rand,
+            DropAttemptInfo info = CommonDropAttemptInfo;
+            info.player = player;
 
-                npc = null,
-                item = 0
-            };
-
-            foreach (IItemDropRule rule in Get())
+            foreach (IItemDropRule rule in Entries)
             {
                 ResolveRule(rule, info);
             }

@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Bases.Machines;
+using Macrocosm.Common.Loot;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Microsoft.Xna.Framework;
@@ -61,23 +62,43 @@ namespace Macrocosm.Content.Machines
 
             List<DropRateInfo> dropRates = [];
             DropRateInfoChainFeed ratesInfo = new(1f);
-            foreach (var drop in OreExcavator.Loot.Get())
-                drop.ReportDroprates(dropRates, ratesInfo);
+            foreach (var drop in OreExcavator.Loot.Entries)
+                if(drop.CanDrop(SimpleLootTable.CommonDropAttemptInfo) || (drop is IBlacklistable blacklistable && blacklistable.Blacklisted))
+                    drop.ReportDroprates(dropRates, ratesInfo);
 
-            foreach (DropRateInfo info in dropRates)
+            foreach (DropRateInfo dropRateInfo in dropRates)
             {
-                UIBestiaryInfoItemLine infoElement = new(info, new() { UnlockState = BestiaryEntryUnlockState.CanShowDropsWithDropRates_4 })
+                UIItemDropInfo itemDropInfo = new(dropRateInfo)
                 {
                     Left = new(0,0),
                     Width = new(0, 1f),
                     BackgroundColor = UITheme.Current.InfoElementStyle.BackgroundColor,
                     BorderColor = UITheme.Current.InfoElementStyle.BorderColor
                 };
-                
-                dropRateList.Add(infoElement);
+                CheckBlacklisted(itemDropInfo, dropRateInfo);
+                itemDropInfo.OnLeftClick += (_, element) => BlacklistItem(element as UIItemDropInfo, dropRateInfo);
+                dropRateList.Add(itemDropInfo);
             }
 
             return dropRateList;
+        }
+
+        private void CheckBlacklisted(UIItemDropInfo itemDropInfo, DropRateInfo dropRateInfo)
+        {
+            foreach (var blacklistable in OreExcavator.Loot.BlacklistableEntries)
+            {
+                if (dropRateInfo.itemId == blacklistable.ItemID && blacklistable.Blacklisted)
+                    itemDropInfo.ToggleBlacklisted();
+            }
+        }
+
+        private void BlacklistItem(UIItemDropInfo itemDropInfo, DropRateInfo dropRateInfo)
+        {
+            foreach (var blacklistable in OreExcavator.Loot.BlacklistableEntries)
+            {
+                if (dropRateInfo.itemId == blacklistable.ItemID)
+                     blacklistable.Blacklisted = itemDropInfo.ToggleBlacklisted();
+            }
         }
 
         public override void Update(GameTime gameTime)

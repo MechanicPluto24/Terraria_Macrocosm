@@ -31,12 +31,6 @@ namespace Macrocosm.Common.Storage
         // TODO: Unhardcode this, make getting the instance part of the interface... somehow
         public static IInventoryOwner GetInventoryOwnerInstance(string ownerType, int serializationIndex)
         {
-            if(serializationIndex < 0)
-            {
-                Utility.LogChatMessage($"IInventoryOwner: Invalid serialization index ({serializationIndex})", Utility.MessageSeverity.Error);
-                return null;
-            }
-
             return ownerType switch
             {
                 "Rocket" => (serializationIndex >= 0 && serializationIndex < RocketManager.MaxRockets) ? RocketManager.Rockets[serializationIndex] : new(),

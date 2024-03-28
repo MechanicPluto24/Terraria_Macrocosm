@@ -230,17 +230,17 @@ namespace Macrocosm.Common.Utils
 			);
 		}
 
-		#region BaseMod Utility
-		//------------------------------------------------------//
-		//---------------------- BASE TILE ---------------------//
-		//------------------------------------------------------//
-		// Contains methods dealing with tiles, except          //
-		// generation. (for that, see BaseWorldGen/BaseGoreGen) //
-		//------------------------------------------------------//
-		//  Author(s): Grox the Great                           //
-		//------------------------------------------------------//
+        #region BaseMod Utility
+        //------------------------------------------------------//
+        //---------------------- BASE TILE ---------------------//
+        //------------------------------------------------------//
+        // Contains methods dealing with tiles, except          //
+        // generation. (for that, see BaseWorldGen/BaseGoreGen) //
+        //------------------------------------------------------//
+        //  Author(s): Grox the Great                           //
+        //------------------------------------------------------//
 
-		public static void AddMapEntry(ModTile tile, Color color)
+        public static void AddMapEntry(ModTile tile, Color color)
 		{
 			tile.AddMapEntry(color);
 		}

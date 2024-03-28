@@ -10,9 +10,9 @@ using Terraria.GameContent.Drawing;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ObjectData;
 
-namespace Macrocosm.Common.Loot
+namespace Macrocosm.Common.Loot.DropRules
 {
-    public class TEDropWithConditionRule : TECommonDrop 
+    public class TEDropWithConditionRule : TECommonDrop
     {
         public IItemDropRuleCondition Condition;
 
@@ -22,6 +22,6 @@ namespace Macrocosm.Common.Loot
             Condition = condition;
         }
 
-        public override bool CanDrop(DropAttemptInfo info) => Condition.CanDrop(info);
+        public override bool CanDrop(DropAttemptInfo info) => base.CanDrop(info) && Condition.CanDrop(info);
     }
 }
