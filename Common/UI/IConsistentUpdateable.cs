@@ -1,7 +1,7 @@
 ﻿namespace Macrocosm.Common.UI
 {
-	public interface IConsistentUpdateable
-	{
-		public void Update();
-	}
+    public interface IConsistentUpdateable
+    {
+        public void Update();
+    }
 }

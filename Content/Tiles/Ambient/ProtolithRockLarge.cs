@@ -7,27 +7,27 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Ambient
 {
-	public class ProtolithRockLarge : ModTile
-	{
-		public override void SetStaticDefaults()
-		{
-			Main.tileSolid[Type] = false;
-			Main.tileSolidTop[Type] = false;
-			Main.tileTable[Type] = false;
-			Main.tileNoAttach[Type] = true;
-			Main.tileFrameImportant[Type] = true;
-			Main.tileLavaDeath[Type] = true;
+    public class ProtolithRockLarge : ModTile
+    {
+        public override void SetStaticDefaults()
+        {
+            Main.tileSolid[Type] = false;
+            Main.tileSolidTop[Type] = false;
+            Main.tileTable[Type] = false;
+            Main.tileNoAttach[Type] = true;
+            Main.tileFrameImportant[Type] = true;
+            Main.tileLavaDeath[Type] = true;
 
-			DustType = ModContent.DustType<ProtolithDust>();
+            DustType = ModContent.DustType<ProtolithDust>();
 
-			TileObjectData.newTile.CopyFrom(TileObjectData.Style3x2);
+            TileObjectData.newTile.CopyFrom(TileObjectData.Style3x2);
 
-			TileObjectData.newTile.StyleHorizontal = true;
-			TileObjectData.newTile.DrawYOffset = 2;
-			TileObjectData.addTile(Type);
+            TileObjectData.newTile.StyleHorizontal = true;
+            TileObjectData.newTile.DrawYOffset = 2;
+            TileObjectData.addTile(Type);
 
-			TileID.Sets.DisableSmartCursor[Type] = true;
-			AddMapEntry(new Color(65, 65, 65));
-		}
-	}
+            TileID.Sets.DisableSmartCursor[Type] = true;
+            AddMapEntry(new Color(65, 65, 65));
+        }
+    }
 }

@@ -9,24 +9,24 @@ using Terraria.ModLoader;
 namespace Macrocosm.Content.Items.Weapons.Melee
 {
     public class SteelZweihander : GreatswordHeldProjectileItem
-	{
-		public override Vector2 SpriteHandlePosition => new(12, 52);
+    {
+        public override Vector2 SpriteHandlePosition => new(12, 52);
 
-		public override bool RightClickUse => true;
+        public override bool RightClickUse => true;
 
         public override void SetStaticDefaults()
-		{
+        {
 
-		}
+        }
 
-		public override void SetDefaultsHeldProjectile()
-		{
-			Item.damage = 55;
-			Item.DamageType = DamageClass.Melee;
-			Item.knockBack = 5;
-			Item.value = 10000;
-			Item.rare = ItemRarityID.Orange;
-		}
+        public override void SetDefaultsHeldProjectile()
+        {
+            Item.damage = 55;
+            Item.DamageType = DamageClass.Melee;
+            Item.knockBack = 5;
+            Item.value = 10000;
+            Item.rare = ItemRarityID.Orange;
+        }
 
         public override bool CanUseItemHeldProjectile(Player player)
         {
@@ -51,11 +51,11 @@ namespace Macrocosm.Content.Items.Weapons.Melee
         }
 
         public override void AddRecipes()
-		{
-			Recipe recipe = Recipe.Create(Type);
-			recipe.AddIngredient<SteelBar>(16);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.Register();
-		}
-	}
+        {
+            Recipe recipe = Recipe.Create(Type);
+            recipe.AddIngredient<SteelBar>(16);
+            recipe.AddTile(TileID.WorkBenches);
+            recipe.Register();
+        }
+    }
 }

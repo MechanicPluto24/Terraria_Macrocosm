@@ -5,9 +5,9 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-	public readonly struct Detail
-	{
-		public string Name { get;  }
+    public readonly struct Detail
+    {
+        public string Name { get; }
         public string ModuleName { get; }
 
         public string TexturePath => GetType().Namespace.Replace('.', '/') + "/Details/" + ModuleName + "/" + Name;
@@ -31,7 +31,7 @@ namespace Macrocosm.Content.Rockets.Customization
                 texture = Macrocosm.EmptyTex;
 
             if (ModContent.RequestIfExists(IconTexturePath, out Asset<Texture2D> detailIconTexture))
-                iconTexture = detailIconTexture ;
+                iconTexture = detailIconTexture;
             else
                 iconTexture = Macrocosm.EmptyTex;
         }
@@ -39,7 +39,7 @@ namespace Macrocosm.Content.Rockets.Customization
         public override bool Equals(object obj)
         {
             return obj is Detail detail &&
-                   Name == detail.Name; 
+                   Name == detail.Name;
         }
 
         public static bool operator ==(Detail left, Detail right)

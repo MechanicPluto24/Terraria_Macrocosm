@@ -1,16 +1,10 @@
 ﻿using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using ReLogic.Content;
 using System;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
-using Terraria.GameContent;
-using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -30,7 +24,7 @@ namespace Macrocosm.Common.Bases.Projectiles
         private HalberdState state;
 
         public Player Player => Main.player[Projectile.owner];
-        public abstract int baseSpeed { get; }
+        public abstract int BaseSpeed { get; }
         private int currentAnimProgress = 0;
         private int[] baseMaxProgress = new int[5];
         private float useTimeMulti;
@@ -39,7 +33,7 @@ namespace Macrocosm.Common.Bases.Projectiles
 
         //private float armRotation = 0f;
         private readonly float[] stateDmgMulti = [3f, 2f, 8f, 1f, 10f, 1f];
-        private readonly List<NPC> NPCsHit = [];
+        private readonly List<NPC> NPCsHit = new();
         private Rectangle angleHitbox;
 
         public abstract int HalberdSize { get; }
@@ -53,7 +47,7 @@ namespace Macrocosm.Common.Bases.Projectiles
 
         public override void SetDefaults()
         {
-            baseMaxProgress = [baseSpeed, baseSpeed / 3, baseSpeed / 3, (int)(baseSpeed * 2f / 3), baseSpeed / 4, baseSpeed / 2];
+            baseMaxProgress = [BaseSpeed, BaseSpeed / 3, BaseSpeed / 3, (int)(BaseSpeed * 2f / 3), BaseSpeed / 4, BaseSpeed / 2];
             farOffset = HalberdSize - RotationOffset;
             midOffset = (int)MathHelper.Lerp(StartOffset, farOffset, 0.67f);
             RotDiag = Utility.SquareDiagonal(RotationOffset);

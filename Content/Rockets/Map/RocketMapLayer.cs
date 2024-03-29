@@ -8,25 +8,25 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.Map
 {
-	public class RocketMapLayer : ModMapLayer
-	{
-		private Asset<Texture2D> texture;
+    public class RocketMapLayer : ModMapLayer
+    {
+        private Asset<Texture2D> texture;
         public override void Load()
         {
             texture = ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Map/RocketMap", ReLogic.Content.AssetRequestMode.ImmediateLoad);
         }
 
         public override void Draw(ref MapOverlayDrawContext context, ref string text)
-		{
+        {
 
-			foreach (Rocket rocket in RocketManager.Rockets)
-			{
-				if (!rocket.ActiveInCurrentWorld)
-					continue;
+            foreach (Rocket rocket in RocketManager.Rockets)
+            {
+                if (!rocket.ActiveInCurrentWorld)
+                    continue;
 
-				if (context.Draw(texture.Value, (rocket.Center + new Vector2(0, rocket.Bounds.Height / 2f)) / 16f, Color.White, new SpriteFrame(1, 1, 0, 0), 0.95f, 0.95f, Alignment.Bottom).IsMouseOver)
-					text = rocket.DisplayName;
-			}
-		}
-	}
+                if (context.Draw(texture.Value, (rocket.Center + new Vector2(0, rocket.Bounds.Height / 2f)) / 16f, Color.White, new SpriteFrame(1, 1, 0, 0), 0.95f, 0.95f, Alignment.Bottom).IsMouseOver)
+                    text = rocket.DisplayName;
+            }
+        }
+    }
 }

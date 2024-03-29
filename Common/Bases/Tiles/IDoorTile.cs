@@ -1,7 +1,7 @@
-﻿using Terraria.Audio;
-using Terraria.ID;
+﻿using Macrocosm.Common.TileFrame;
 using Microsoft.Xna.Framework;
-using Macrocosm.Common.TileFrame;
+using Terraria.Audio;
+using Terraria.ID;
 
 namespace Macrocosm.Common.Bases.Tiles
 {

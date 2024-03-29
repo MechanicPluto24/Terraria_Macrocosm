@@ -9,34 +9,34 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
 {
-	public class WorldInfo : ILoadable
-	{
-		private static Dictionary<string, List<InfoElement>> worldInfoStorage;
+    public class WorldInfo : ILoadable
+    {
+        private static Dictionary<string, List<InfoElement>> worldInfoStorage;
 
-		public void Load(Mod mod)
-		{
-			worldInfoStorage = new Dictionary<string, List<InfoElement>>();
-			LoadData();
-		}
+        public void Load(Mod mod)
+        {
+            worldInfoStorage = new Dictionary<string, List<InfoElement>>();
+            LoadData();
+        }
 
-		public void Unload()
-		{
-			worldInfoStorage.Clear();
-			worldInfoStorage = null;
-		}
+        public void Unload()
+        {
+            worldInfoStorage.Clear();
+            worldInfoStorage = null;
+        }
 
-		public static void Add(string subworldId, params InfoElement[] infoElements)
-			=> worldInfoStorage.Add(subworldId, infoElements.ToList());
+        public static void Add(string subworldId, params InfoElement[] infoElements)
+            => worldInfoStorage.Add(subworldId, infoElements.ToList());
 
-		public static List<InfoElement> GetInfoElements(string subworldId) => worldInfoStorage[subworldId];
+        public static List<InfoElement> GetInfoElements(string subworldId) => worldInfoStorage[subworldId];
 
-		public static bool TryGetValue(string key, out List<InfoElement> info)
-			=> worldInfoStorage.TryGetValue(key, out info);
+        public static bool TryGetValue(string key, out List<InfoElement> info)
+            => worldInfoStorage.TryGetValue(key, out info);
 
-		public static LocalizedText GetFlavorText(string subworldId)
-		{
+        public static LocalizedText GetFlavorText(string subworldId)
+        {
             if (subworldId == "Phobos" && WorldDataSystem.Instance.DeimosReturn)
-                 return Utility.GetLocalizedTextOrEmpty("Mods.Macrocosm.Subworlds." + subworldId + ".FlavorText_DeimosReturn");
+                return Utility.GetLocalizedTextOrEmpty("Mods.Macrocosm.Subworlds." + subworldId + ".FlavorText_DeimosReturn");
 
             return Utility.GetLocalizedTextOrEmpty("Mods.Macrocosm.Subworlds." + subworldId + ".FlavorText");
         }
@@ -56,61 +56,61 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
         /// </br> </br>
         /// </summary>
         private static void LoadData()
-		{
-			Add("Sun",
-				new GravityInfoElement(28f),
-				new RadiusInfoElement(695700f),
-				new ThreatLevelInfoElement(ThreatLevel.Apollyon, Color.Red)
-			);
-
-			Add("Vulcan",
-				new DayPeriodInfoElement("TidallyLocked"),
-				new ThreatLevelInfoElement(ThreatLevel.Cataclysmic, Color.Orange)
-			);
-
-			Add("Mercury",
-				new GravityInfoElement(0.38f),
-				new RadiusInfoElement(2439.7f),
-				new DayPeriodInfoElement(58f),
-                new ThreatLevelInfoElement(ThreatLevel.Treacherous, Color.Yellow)
+        {
+            Add("Sun",
+                new GravityInfoElement(28f),
+                new RadiusInfoElement(695700f),
+                new ThreatLevelInfoElement(ThreatLevel.Apollyon, Color.Red)
             );
 
-			Add("Venus",
-				new GravityInfoElement(0.9f),
-				new RadiusInfoElement(6051.8f),
-				new DayPeriodInfoElement(116f),
+            Add("Vulcan",
+                new DayPeriodInfoElement("TidallyLocked"),
                 new ThreatLevelInfoElement(ThreatLevel.Cataclysmic, Color.Orange)
             );
 
-			Add("Earth",
-				new GravityInfoElement(1f),
-				new RadiusInfoElement(6371f),
-				new DayPeriodInfoElement(1f),
-				new ThreatLevelInfoElement(ThreatLevel.Harmless, Color.White)
-			);
+            Add("Mercury",
+                new GravityInfoElement(0.38f),
+                new RadiusInfoElement(2439.7f),
+                new DayPeriodInfoElement(58f),
+                new ThreatLevelInfoElement(ThreatLevel.Treacherous, Color.Yellow)
+            );
 
-			Add("Moon",
-				new GravityInfoElement(0.125f),
-				new RadiusInfoElement(1737.4f),
-				new DayPeriodInfoElement(8f, "TidallyLocked"),
-				new ThreatLevelInfoElement(ThreatLevel.Arduous, Color.White),
-				new HazardInfoElement("MeteorStorms"),
-				new HazardInfoElement("SolarStorms")
-			);
+            Add("Venus",
+                new GravityInfoElement(0.9f),
+                new RadiusInfoElement(6051.8f),
+                new DayPeriodInfoElement(116f),
+                new ThreatLevelInfoElement(ThreatLevel.Cataclysmic, Color.Orange)
+            );
 
-			Add("Mars",
-				new GravityInfoElement(0.38f),
-				new RadiusInfoElement(3389.5f),
-				new DayPeriodInfoElement(24.62f),
+            Add("Earth",
+                new GravityInfoElement(1f),
+                new RadiusInfoElement(6371f),
+                new DayPeriodInfoElement(1f),
+                new ThreatLevelInfoElement(ThreatLevel.Harmless, Color.White)
+            );
+
+            Add("Moon",
+                new GravityInfoElement(0.125f),
+                new RadiusInfoElement(1737.4f),
+                new DayPeriodInfoElement(8f, "TidallyLocked"),
+                new ThreatLevelInfoElement(ThreatLevel.Arduous, Color.White),
+                new HazardInfoElement("MeteorStorms"),
+                new HazardInfoElement("SolarStorms")
+            );
+
+            Add("Mars",
+                new GravityInfoElement(0.38f),
+                new RadiusInfoElement(3389.5f),
+                new DayPeriodInfoElement(24.62f),
                 new ThreatLevelInfoElement(ThreatLevel.Challenging, Color.Yellow)
             );
 
-			Add("Phobos",
-				new GravityInfoElement("Unstable"),
+            Add("Phobos",
+                new GravityInfoElement("Unstable"),
                 new ThreatLevelInfoElement(ThreatLevel.Challenging, Color.Yellow)
             );
 
-			Add("Deimos",
+            Add("Deimos",
                 new ThreatLevelInfoElement(ThreatLevel.Challenging, Color.Yellow)
             );
 
@@ -122,72 +122,72 @@ namespace Macrocosm.Content.Rockets.Navigation.NavigationInfo
                 new ThreatLevelInfoElement(ThreatLevel.Dangerous, Color.Yellow)
             );
 
-			Add("Jupiter",
-				new GravityInfoElement(2.52f),
-				new RadiusInfoElement(69911f),
-				new DayPeriodInfoElement(0.3f),
+            Add("Jupiter",
+                new GravityInfoElement(2.52f),
+                new RadiusInfoElement(69911f),
+                new DayPeriodInfoElement(0.3f),
                 new ThreatLevelInfoElement(ThreatLevel.Nightmare, Color.Orange)
             );
 
-			Add("Io",
+            Add("Io",
                 new ThreatLevelInfoElement(ThreatLevel.Treacherous, Color.Yellow)
             );
 
-			Add("Europa",
+            Add("Europa",
                 new ThreatLevelInfoElement(ThreatLevel.Treacherous, Color.Yellow)
             );
 
-			Add("Saturn",
-				new GravityInfoElement(1.065f),
-				new RadiusInfoElement(58232f),
-				new DayPeriodInfoElement(0.43f),
+            Add("Saturn",
+                new GravityInfoElement(1.065f),
+                new RadiusInfoElement(58232f),
+                new DayPeriodInfoElement(0.43f),
                 new ThreatLevelInfoElement(ThreatLevel.Nightmare, Color.Orange)
             );
 
-			Add("Titan",
+            Add("Titan",
                 new ThreatLevelInfoElement(ThreatLevel.Treacherous, Color.Yellow)
             );
 
-			Add("Ouranos",
-				new GravityInfoElement(0.89f),
-				new RadiusInfoElement(25362f),
-				new DayPeriodInfoElement(0.718f),
+            Add("Ouranos",
+                new GravityInfoElement(0.89f),
+                new RadiusInfoElement(25362f),
+                new DayPeriodInfoElement(0.718f),
                 new ThreatLevelInfoElement(ThreatLevel.Nightmare, Color.Orange)
             );
 
-			Add("Miranda",
+            Add("Miranda",
                 new ThreatLevelInfoElement(ThreatLevel.Lethal, Color.Orange)
             );
 
-			Add("Neptune",
-				new GravityInfoElement(1.14f),
-				new RadiusInfoElement(24622f),
-				new DayPeriodInfoElement(0.671f),
+            Add("Neptune",
+                new GravityInfoElement(1.14f),
+                new RadiusInfoElement(24622f),
+                new DayPeriodInfoElement(0.671f),
                 new ThreatLevelInfoElement(ThreatLevel.Nightmare, Color.Orange)
             );
 
-			Add("Triton",
+            Add("Triton",
                 new ThreatLevelInfoElement(ThreatLevel.Lethal, Color.Orange)
             );
 
-			Add("Pluto",
-				new GravityInfoElement(0.064f),
-				new RadiusInfoElement(1188.3f),
-				new DayPeriodInfoElement(153.3f),
+            Add("Pluto",
+                new GravityInfoElement(0.064f),
+                new RadiusInfoElement(1188.3f),
+                new DayPeriodInfoElement(153.3f),
                 new ThreatLevelInfoElement(ThreatLevel.Lethal, Color.Orange)
             );
 
-			Add("Charon",
+            Add("Charon",
                 new ThreatLevelInfoElement(ThreatLevel.Lethal, Color.Orange)
             );
 
-			Add("Eris",
+            Add("Eris",
                 new ThreatLevelInfoElement(ThreatLevel.Cataclysmic, Color.Orange)
             );
 
-			Add("Nibiru",
-				new ThreatLevelInfoElement(ThreatLevel.Unknown, Color.Purple)
-			);
-		}
-	}
+            Add("Nibiru",
+                new ThreatLevelInfoElement(ThreatLevel.Unknown, Color.Purple)
+            );
+        }
+    }
 }

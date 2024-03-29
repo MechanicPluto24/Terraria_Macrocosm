@@ -8,16 +8,16 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture
 {
-	public class Computer : ModTile
-	{
-		public override void SetStaticDefaults()
-		{
-			Main.tileFrameImportant[Type] = true;
-			Main.tileNoAttach[Type] = true;
-			Main.tileLavaDeath[Type] = true;
+    public class Computer : ModTile
+    {
+        public override void SetStaticDefaults()
+        {
+            Main.tileFrameImportant[Type] = true;
+            Main.tileNoAttach[Type] = true;
+            Main.tileLavaDeath[Type] = true;
 
-			TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
-			TileObjectData.newTile.StyleHorizontal = true;
+            TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
+            TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.Table, 2, 0);
             TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;
             TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
@@ -25,10 +25,10 @@ namespace Macrocosm.Content.Tiles.Furniture
             TileObjectData.addAlternate(1);
             TileObjectData.addTile(Type);
 
-			HitSound = SoundID.Dig;
-			DustType = -1;
+            HitSound = SoundID.Dig;
+            DustType = -1;
 
-			AddMapEntry(new Color(185, 176, 158), CreateMapEntryName());
+            AddMapEntry(new Color(185, 176, 158), CreateMapEntryName());
 
             RegisterItemDrop(ModContent.ItemType<Items.Placeable.Furniture.Computer>(), 0, 1);
         }

@@ -11,31 +11,31 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Melee
 {
-	public class ArtemiteSpear : ModItem
-	{
-		public override void SetStaticDefaults()
-		{
-			ItemID.Sets.SkipsInitialUseSound[Type] = true;
-			ItemID.Sets.ItemsThatAllowRepeatedRightClick[Type] = true;
+    public class ArtemiteSpear : ModItem
+    {
+        public override void SetStaticDefaults()
+        {
+            ItemID.Sets.SkipsInitialUseSound[Type] = true;
+            ItemID.Sets.ItemsThatAllowRepeatedRightClick[Type] = true;
         }
 
-		public override void SetDefaults()
-		{
-			Item.rare = ModContent.RarityType<MoonRarityT1>();
-			Item.value = Item.sellPrice(gold: 1);
-			Item.useStyle = ItemUseStyleID.Shoot;
-			Item.useAnimation = 14;
-			Item.useTime = 14;
-			Item.UseSound = SoundID.Item71;
-			Item.autoReuse = true;
-			Item.damage = 225;
-			Item.knockBack = 6.5f;
-			Item.noUseGraphic = true;
-			Item.DamageType = DamageClass.MeleeNoSpeed;
-			Item.noMelee = true;
-			Item.shootSpeed = 1f;
-			Item.shoot = ModContent.ProjectileType<ArtemiteSpearProjectile>();
-		}
+        public override void SetDefaults()
+        {
+            Item.rare = ModContent.RarityType<MoonRarityT1>();
+            Item.value = Item.sellPrice(gold: 1);
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.useAnimation = 14;
+            Item.useTime = 14;
+            Item.UseSound = SoundID.Item71;
+            Item.autoReuse = true;
+            Item.damage = 225;
+            Item.knockBack = 6.5f;
+            Item.noUseGraphic = true;
+            Item.DamageType = DamageClass.MeleeNoSpeed;
+            Item.noMelee = true;
+            Item.shootSpeed = 1f;
+            Item.shoot = ModContent.ProjectileType<ArtemiteSpearProjectile>();
+        }
 
         private int altUseCooldown;
 
@@ -51,13 +51,13 @@ namespace Macrocosm.Content.Items.Weapons.Melee
         {
             if (player.AltFunction())
             {
-				Item.useTime = 25;
-				Item.useAnimation = 17;
-				Item.useStyle = ItemUseStyleID.Swing;
+                Item.useTime = 25;
+                Item.useAnimation = 17;
+                Item.useStyle = ItemUseStyleID.Swing;
                 altUseCooldown = 25;
-				return true;
+                return true;
             }
-            else if(player.ownedProjectileCounts[ModContent.ProjectileType<ArtemiteSpearProjectile>()] < 1)
+            else if (player.ownedProjectileCounts[ModContent.ProjectileType<ArtemiteSpearProjectile>()] < 1)
             {
                 Item.useAnimation = 18;
                 Item.useTime = 24;
@@ -70,12 +70,12 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-			if (player.AltFunction())
-			{
-				Projectile.NewProjectile(source, position, velocity * 25, ModContent.ProjectileType<ArtemiteSpearProjectileThrown>(), damage, knockback, Main.myPlayer, ai0: 0f);
-			}
-			else
-			{
+            if (player.AltFunction())
+            {
+                Projectile.NewProjectile(source, position, velocity * 25, ModContent.ProjectileType<ArtemiteSpearProjectileThrown>(), damage, knockback, Main.myPlayer, ai0: 0f);
+            }
+            else
+            {
                 Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<ArtemiteSpearProjectile>(), damage, knockback, Main.myPlayer, ai0: 0f);
             }
 
@@ -83,20 +83,20 @@ namespace Macrocosm.Content.Items.Weapons.Melee
         }
 
         public override bool? UseItem(Player player)
-		{
-			if (!Main.dedServ && Item.UseSound.HasValue)
-			{
-				SoundEngine.PlaySound(Item.UseSound.Value, player.Center);
-			}
-			return null;
-		}
+        {
+            if (!Main.dedServ && Item.UseSound.HasValue)
+            {
+                SoundEngine.PlaySound(Item.UseSound.Value, player.Center);
+            }
+            return null;
+        }
 
-		public override void AddRecipes()
-		{
-			Recipe recipe = Recipe.Create(Type);
-			recipe.AddIngredient<ArtemiteBar>(12);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.Register();
-		}
-	}
+        public override void AddRecipes()
+        {
+            Recipe recipe = Recipe.Create(Type);
+            recipe.AddIngredient<ArtemiteBar>(12);
+            recipe.AddTile(TileID.WorkBenches);
+            recipe.Register();
+        }
+    }
 }

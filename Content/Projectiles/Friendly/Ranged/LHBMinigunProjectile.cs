@@ -101,7 +101,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                         if (Player.PickAmmo(currentItem, out int projToShoot, out float speed, out int damage, out float knockback, out _))
                         {
                             // We want to disable knockback for this weapon but keep it able to receive the Unreal modifier
-                            knockback = 0f; 
+                            knockback = 0f;
                             Projectile.NewProjectile(Projectile.GetSource_FromAI(), rotPoint, Vector2.Normalize(Projectile.velocity).RotatedByRandom(MathHelper.ToRadians(14)) * speed, projToShoot, damage, knockback, Projectile.owner);
                         }
                         else

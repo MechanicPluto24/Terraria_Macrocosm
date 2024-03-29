@@ -5,20 +5,20 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Armor.Astronaut
 {
-	[AutoloadEquip(EquipType.Head)]
-	public class AstronautHelmet : ModItem
-	{
-		public override void SetStaticDefaults()
-		{
-		}
-		public override void SetDefaults()
-		{
-			Item.width = 18;
-			Item.height = 18;
-			Item.value = 10000;
-			Item.rare = ItemRarityID.Purple;
-			Item.defense = 4;
-		}
+    [AutoloadEquip(EquipType.Head)]
+    public class AstronautHelmet : ModItem
+    {
+        public override void SetStaticDefaults()
+        {
+        }
+        public override void SetDefaults()
+        {
+            Item.width = 18;
+            Item.height = 18;
+            Item.value = 10000;
+            Item.rare = ItemRarityID.Purple;
+            Item.defense = 4;
+        }
 
         public override void UpdateEquip(Player player)
         {
@@ -26,20 +26,20 @@ namespace Macrocosm.Content.Items.Armor.Astronaut
         }
 
         public override bool IsArmorSet(Item head, Item body, Item legs)
-		{
-			return head.type == ModContent.ItemType<AstronautHelmet>() && body.type == ModContent.ItemType<AstronautSuit>() && legs.type == ModContent.ItemType<AstronautLeggings>();
-		}
+        {
+            return head.type == ModContent.ItemType<AstronautHelmet>() && body.type == ModContent.ItemType<AstronautSuit>() && legs.type == ModContent.ItemType<AstronautLeggings>();
+        }
 
-		public override void UpdateArmorSet(Player player)
-		{
+        public override void UpdateArmorSet(Player player)
+        {
         }
 
         public override void AddRecipes()
-		{
-			Recipe recipe = Recipe.Create(Type);
-			recipe.AddIngredient(ItemID.DirtBlock, 10);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.Register();
-		}
-	}
+        {
+            Recipe recipe = Recipe.Create(Type);
+            recipe.AddIngredient(ItemID.DirtBlock, 10);
+            recipe.AddTile(TileID.WorkBenches);
+            recipe.Register();
+        }
+    }
 }

@@ -17,87 +17,92 @@ using Terraria.ModLoader.Core;
 
 namespace Macrocosm
 {
-	public class Macrocosm : Mod
-	{
-		public static Mod Instance => ModContent.GetInstance<Macrocosm>();
+    public class Macrocosm : Mod
+    {
+        public static Mod Instance => ModContent.GetInstance<Macrocosm>();
 
-		public const string TexturesPath = "Macrocosm/Assets/Textures/";
-		public static string TextureEffectsPath => TexturesPath + (MacrocosmConfig.Instance.HighResolutionEffects ? "HighRes/" : "LowRes/");
+        public const string TexturesPath = "Macrocosm/Assets/Textures/";
+        public static string TextureEffectsPath => TexturesPath + (MacrocosmConfig.Instance.HighResolutionEffects ? "HighRes/" : "LowRes/");
 
-		public const string ShadersPath = "Macrocosm/Assets/Effects/";
-		public const string MusicPath = "Macrocosm/Assets/Music/";
-		public const string SFXPath = "Macrocosm/Assets/Sounds/SFX/";
-		public const string EmptyTexPath = TexturesPath + "Empty"; 
+        public const string ShadersPath = "Macrocosm/Assets/Effects/";
+        public const string MusicPath = "Macrocosm/Assets/Music/";
+        public const string SFXPath = "Macrocosm/Assets/Sounds/SFX/";
+        public const string EmptyTexPath = TexturesPath + "Empty";
 
-		public const int ItemShoot_UsesAmmo = 10;
+        public const int ItemShoot_UsesAmmo = 10;
 
-		public static Asset<Texture2D> EmptyTex { get; set; }
-		public static Type[] GetTypes() => AssemblyManager.GetLoadableTypes(Instance.Code);
+        public static Asset<Texture2D> EmptyTex { get; set; }
+        public static Type[] GetTypes() => AssemblyManager.GetLoadableTypes(Instance.Code);
 
-		public override void Load()
-		{
-			if (!Main.dedServ)
+        public override void Load()
+        {
+            if (!Main.dedServ)
             {
                 EmptyTex = ModContent.Request<Texture2D>(EmptyTexPath);
 
                 LoadResprites();
-				LoadEffects();
-			}
+                LoadEffects();
+            }
 
-			CurrencyManager.Load();
-			LoadTimeModCalls();
-		}
+            CurrencyManager.Load();
+            LoadTimeModCalls();
+        }
 
-		public override void Unload()
-		{
-			UnloadResprites();
-			UnloadEffects();
-		}
+        public override void PostSetupContent()
+        {
+            base.PostSetupContent();
+        }
 
-		private static void LoadResprites()
-		{
-			string respritePath = Macrocosm.TexturesPath + "Resprites/";
-			TextureAssets.Moon[0] = ModContent.Request<Texture2D>(respritePath + "Moon_0");
-		}
+        public override void Unload()
+        {
+            UnloadResprites();
+            UnloadEffects();
+        }
 
-		private static void UnloadResprites()
-		{
-			TextureAssets.Moon[0] = Main.Assets.Request<Texture2D>("Images/Moon_0", AssetRequestMode.ImmediateLoad);
-		}
+        private static void LoadResprites()
+        {
+            string respritePath = Macrocosm.TexturesPath + "Resprites/";
+            TextureAssets.Moon[0] = ModContent.Request<Texture2D>(respritePath + "Moon_0");
+        }
 
-		private static void LoadEffects()
-		{
-			AssetRequestMode mode = AssetRequestMode.ImmediateLoad;
+        private static void UnloadResprites()
+        {
+            TextureAssets.Moon[0] = Main.Assets.Request<Texture2D>("Images/Moon_0", AssetRequestMode.ImmediateLoad);
+        }
 
-			Filters.Scene["Macrocosm:RadiationNoise"] = new Filter(new ScreenShaderData(new Ref<Effect>(ModContent.Request<Effect>(ShadersPath + "RadiationNoise", mode).Value), "RadiationNoise"));
-			Filters.Scene["Macrocosm:RadiationNoise"].Load();
-		}
+        private static void LoadEffects()
+        {
+            AssetRequestMode mode = AssetRequestMode.ImmediateLoad;
 
-		private static void UnloadEffects()
-		{
-			// What goes here?
-		}
+            Filters.Scene["Macrocosm:RadiationNoise"] = new Filter(new ScreenShaderData(new Ref<Effect>(ModContent.Request<Effect>(ShadersPath + "RadiationNoise", mode).Value), "RadiationNoise"));
+            Filters.Scene["Macrocosm:RadiationNoise"].Load();
+        }
 
-		private void LoadTimeModCalls()
-		{
-			#region Ryan's mods calls
+        private static void UnloadEffects()
+        {
+            // What goes here?
+        }
 
-			if (ModLoader.TryGetMod("TerrariaAmbience", out Mod ta))
-				ta.Call("AddTilesToList", null, "Stone", Array.Empty<string>(), new int[]
-				{
-					ModContent.TileType<Regolith>(),
-					ModContent.TileType<Protolith>()
-				});
+        private void LoadTimeModCalls()
+        {
+            #region Ryan's mods calls
 
-			if (ModLoader.TryGetMod("TerrariaAmbienceAPI", out Mod taAPI))
-				taAPI.Call("Ambience", this, "MoonAmbience", "Assets/Sounds/Ambient/Moon", 1f, 0.0075f, new Func<bool>(SubworldSystem.IsActive<Moon>));
+            if (ModLoader.TryGetMod("TerrariaAmbience", out Mod ta))
+                ta.Call("AddTilesToList", null, "Stone", Array.Empty<string>(), new int[]
+                {
+                    ModContent.TileType<Regolith>(),
+                    ModContent.TileType<Protolith>()
+                });
 
-			#endregion
-		}
+            if (ModLoader.TryGetMod("TerrariaAmbienceAPI", out Mod taAPI))
+                taAPI.Call("Ambience", this, "MoonAmbience", "Assets/Sounds/Ambient/Moon", 1f, 0.0075f, new Func<bool>(SubworldSystem.IsActive<Moon>));
 
-		public override void HandlePacket(BinaryReader reader, int whoAmI)
-		{
-			PacketHandler.HandlePacket(reader, whoAmI);
-		}
-	}
+            #endregion
+        }
+
+        public override void HandlePacket(BinaryReader reader, int whoAmI)
+        {
+            PacketHandler.HandlePacket(reader, whoAmI);
+        }
+    }
 }

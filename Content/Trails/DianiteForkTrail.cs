@@ -8,27 +8,27 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Trails
 {
-	public class DianiteForkTrail : VertexTrail
-	{
-		private static MiscShaderData shader = new MiscShaderData(Main.VertexPixelShaderRef, "MagicMissile")
-			.UseProjectionMatrix(doUse: true)
-			.UseImage0("Images/Extra_195")
-			.UseImage1("Images/Extra_195")
-			.UseImage2(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "FadeInTrail"));
+    public class DianiteForkTrail : VertexTrail
+    {
+        private static MiscShaderData shader = new MiscShaderData(Main.VertexPixelShaderRef, "MagicMissile")
+            .UseProjectionMatrix(doUse: true)
+            .UseImage0("Images/Extra_195")
+            .UseImage1("Images/Extra_195")
+            .UseImage2(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "FadeInTrail"));
 
-		public override MiscShaderData TrailShader => shader;
+        public override MiscShaderData TrailShader => shader;
 
-		public override float Saturation => 0f;
+        public override float Saturation => 0f;
 
-		public override Color TrailColors(float progressOnStrip)
-		{
-			Color result = Color.Lerp(new Color(248, 137, 0).WithLuminance(0.5f), Color.Yellow, progressOnStrip);
+        public override Color TrailColors(float progressOnStrip)
+        {
+            Color result = Color.Lerp(new Color(248, 137, 0).WithLuminance(0.5f), Color.Yellow, progressOnStrip);
             return result;
-		}
+        }
 
-		public override float TrailWidths(float progressOnStrip)
-		{
-			return MathHelper.Lerp(4f, 6f, progressOnStrip);
-		}
-	}
+        public override float TrailWidths(float progressOnStrip)
+        {
+            return MathHelper.Lerp(4f, 6f, progressOnStrip);
+        }
+    }
 }

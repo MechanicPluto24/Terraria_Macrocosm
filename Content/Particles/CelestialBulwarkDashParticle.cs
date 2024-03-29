@@ -1,30 +1,27 @@
-﻿using Macrocosm.Common.Drawing.Particles;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing;
+using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Graphics;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Items.Accessories;
+using Macrocosm.Content.Players;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
-using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
-using Macrocosm.Content.Players;
-using Macrocosm.Common.Drawing;
-using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Graphics;
-using Macrocosm.Content.Items.Accessories;
-using Terraria.ID;
-using System;
 
 namespace Macrocosm.Content.Particles
 {
-	public class CelestialBulwarkDashParticle : Particle
-	{
-		public override int SpawnTimeLeft => 1000;
-		public override string TexturePath => Macrocosm.EmptyTexPath;
-		public override ParticleDrawLayer DrawLayer => ParticleDrawLayer.BeforeNPCs;
+    public class CelestialBulwarkDashParticle : Particle
+    {
+        public override int SpawnTimeLeft => 1000;
+        public override string TexturePath => Macrocosm.EmptyTexPath;
+        public override ParticleDrawLayer DrawLayer => ParticleDrawLayer.BeforeNPCs;
         public override int TrailCacheLenght => 24;
 
         public int PlayerID;
-		public Color Color;
-		public Color? SecondaryColor;
+        public Color Color;
+        public Color? SecondaryColor;
         public float Opacity;
 
         private float defScale;
@@ -41,7 +38,7 @@ namespace Macrocosm.Content.Particles
 
         SpriteBatchState state;
         public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
-		{
+        {
             bool specialRainbow = false;
             Texture2D slash = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Slash1").Value;
             Texture2D glow = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Circle5").Value;
@@ -52,7 +49,7 @@ namespace Macrocosm.Content.Particles
                 spriteBatch.End();
                 spriteBatch.Begin(blendStateOverride, state);
             }
-            
+
             for (int i = 0; i < TrailCacheLenght; i++)
             {
                 float trailProgress = MathHelper.Clamp((float)i / TrailCacheLenght, 0f, 1f);
@@ -73,7 +70,7 @@ namespace Macrocosm.Content.Particles
                 if (rainbow)
                 {
                     float rainbowProgress = Utility.WrapProgress(trailProgress + CelestialDisco.CelestialStyleProgress);
-                    baseColor = Utility.MultiLerpColor(rainbowProgress, new(255,0,0), new(0,255,0), new(0,0,255));
+                    baseColor = Utility.Rainbow(rainbowProgress);
 
                     #region Special code for Subtractive + Rainbow
 
@@ -105,13 +102,13 @@ namespace Macrocosm.Content.Particles
             spriteBatch.Draw(glow, Center - screenPosition, null, Color.Lerp(Color.White, Color, 0.75f).WithOpacity(0.5f) * Progress, defRotation, glow.Size() / 2, Utility.QuadraticEaseIn(Progress) * 0.7f, SpriteEffects.None, 0f);
 
             if (blendStateOverride is not null)
-            {           
+            {
                 spriteBatch.End();
                 spriteBatch.Begin(state);
             }
 
             return false;
-		}
+        }
 
         public override void AI()
         {
@@ -131,17 +128,17 @@ namespace Macrocosm.Content.Particles
             Lighting.AddLight(Player.Center, Color.ToVector3() * 2f * Utility.QuadraticEaseIn(Progress));
 
             if (collided)
-                 Color *= 0.9f;
+                Color *= 0.9f;
             else
-                 collided = DashPlayer.CollidedWithNPC;
- 
+                collided = DashPlayer.CollidedWithNPC;
+
             if (Player.velocity.Length() > 0.5f)
             {
-                if(!collided)
+                if (!collided)
                     Rotation = Player.velocity.ToRotation() - MathHelper.PiOver2;
 
                 Position = Player.Center + new Vector2(0, 15).RotatedBy(Rotation);
             }
-		}
-	}
+        }
+    }
 }

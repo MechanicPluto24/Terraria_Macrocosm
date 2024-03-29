@@ -9,16 +9,16 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Banners
 {
-	public class MercurianBanner : ModTile
-	{
-		public override void SetStaticDefaults()
-		{
-			Main.tileFrameImportant[Type] = true;
-			Main.tileNoAttach[Type] = true;
-			Main.tileWaterDeath[Type] = true;
-			Main.tileLavaDeath[Type] = true;
+    public class MercurianBanner : ModTile
+    {
+        public override void SetStaticDefaults()
+        {
+            Main.tileFrameImportant[Type] = true;
+            Main.tileNoAttach[Type] = true;
+            Main.tileWaterDeath[Type] = true;
+            Main.tileLavaDeath[Type] = true;
 
-			//TileID.Sets.SwaysInWindBasic[Type] = true;
+            //TileID.Sets.SwaysInWindBasic[Type] = true;
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style1x2Top);
             TileObjectData.newTile.Width = 3;
@@ -31,19 +31,19 @@ namespace Macrocosm.Content.Tiles.Banners
             TileObjectData.newTile.StyleHorizontal = true;
 
             TileObjectData.newTile.Origin = new Point16(1, 0);
-			TileObjectData.newTile.AnchorTop = new AnchorData(AnchorType.SolidTile, 3, 0);
+            TileObjectData.newTile.AnchorTop = new AnchorData(AnchorType.SolidTile, 3, 0);
 
-			TileObjectData.newTile.WaterPlacement = LiquidPlacement.NotAllowed;
-			TileObjectData.newTile.LavaPlacement = LiquidPlacement.NotAllowed;
+            TileObjectData.newTile.WaterPlacement = LiquidPlacement.NotAllowed;
+            TileObjectData.newTile.LavaPlacement = LiquidPlacement.NotAllowed;
 
-			TileObjectData.addTile(Type);
+            TileObjectData.addTile(Type);
 
-			DustType = ModContent.DustType<DianiteDust>(); // placeholder
+            DustType = ModContent.DustType<DianiteDust>(); // placeholder
 
-			RegisterItemDrop(ModContent.ItemType<Items.Placeable.Banners.MercurianBanner>(), 0, 1);
+            RegisterItemDrop(ModContent.ItemType<Items.Placeable.Banners.MercurianBanner>(), 0, 1);
 
-			LocalizedText name = CreateMapEntryName();
-			AddMapEntry(new Color(251, 105, 15), name);
-		}
+            LocalizedText name = CreateMapEntryName();
+            AddMapEntry(new Color(251, 105, 15), name);
+        }
     }
 }

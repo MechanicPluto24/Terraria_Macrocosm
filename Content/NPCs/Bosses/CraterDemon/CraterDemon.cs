@@ -23,7 +23,6 @@ using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
@@ -428,7 +427,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
             NPC.defense = 150;
             NPC.damage = 80;
-            NPC.lifeMax = 45000;  
+            NPC.lifeMax = 45000;
 
             NPC.boss = true;
             NPC.noGravity = true;
@@ -1146,7 +1145,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                         float portalAttackChance = Main.getGoodWorld ? 0.1f :
                                                     Main.masterMode ? 0.25f :
                                                     Main.expertMode ? 0.35f :
-                                                                      0.50f ;
+                                                                      0.50f;
 
                         if (CountAliveCraterImps() > 0)
                             portalAttackChance *= 2f;
@@ -1561,7 +1560,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                             portalAttackCount++;
                             AI_AttackProgress = (int)ChargeSubphase.DashIntoPortal;
 
-                            if(Main.netMode != NetmodeID.MultiplayerClient)
+                            if (Main.netMode != NetmodeID.MultiplayerClient)
                             {
                                 maxChargeAttackCount = Main.rand.Next(GetDifficultyInfo(DifficultyInfo.ChargeAttackCountMin), GetDifficultyInfo(DifficultyInfo.ChargeAttackCountMax) + 1) - 2;
                                 NPC.netUpdate = true;

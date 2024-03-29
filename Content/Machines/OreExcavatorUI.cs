@@ -1,13 +1,13 @@
-﻿using Macrocosm.Common.Bases.Machines;
-using Macrocosm.Common.Loot;
+﻿using Macrocosm.Common.Loot;
+using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
-using Terraria.GameContent.Bestiary;
+using System.Linq;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.GameContent.UI.Elements;
-using Terraria.UI;
 
 
 namespace Macrocosm.Content.Machines
@@ -32,7 +32,7 @@ namespace Macrocosm.Content.Machines
 
             Recalculate();
 
-            if(OreExcavator.Inventory is not null)
+            if (OreExcavator.Inventory is not null)
             {
                 inventoryPanel = OreExcavator.Inventory.ProvideUI(iconsPerRow: 10, rowsWithoutScrollbar: 5, buttonMenuTopPercent: 0.765f);
                 inventoryPanel.Width = new(0, 0.69f);
@@ -60,17 +60,19 @@ namespace Macrocosm.Content.Machines
                 PaddingRight = 2f
             };
 
-            List<DropRateInfo> dropRates = [];
+            List<DropRateInfo> dropRates = new();
             DropRateInfoChainFeed ratesInfo = new(1f);
             foreach (var drop in OreExcavator.Loot.Entries)
-                if(drop.CanDrop(SimpleLootTable.CommonDropAttemptInfo) || (drop is IBlacklistable blacklistable && blacklistable.Blacklisted))
+                if (drop.CanDrop(SimpleLootTable.CommonDropAttemptInfo) || (drop is IBlacklistable blacklistable && blacklistable.Blacklisted))
                     drop.ReportDroprates(dropRates, ratesInfo);
 
-            foreach (DropRateInfo dropRateInfo in dropRates)
+            List<DropRateInfo> sortedDropRates = dropRates.OrderBy(entry => new Terraria.Item(entry.itemId).value).OrderBy(entry => entry.ComputeDropRarity()).ToList();
+
+            foreach (DropRateInfo dropRateInfo in sortedDropRates)
             {
                 UIItemDropInfo itemDropInfo = new(dropRateInfo)
                 {
-                    Left = new(0,0),
+                    Left = new(0, 0),
                     Width = new(0, 1f),
                     BackgroundColor = UITheme.Current.InfoElementStyle.BackgroundColor,
                     BorderColor = UITheme.Current.InfoElementStyle.BorderColor
@@ -97,7 +99,7 @@ namespace Macrocosm.Content.Machines
             foreach (var blacklistable in OreExcavator.Loot.BlacklistableEntries)
             {
                 if (dropRateInfo.itemId == blacklistable.ItemID)
-                     blacklistable.Blacklisted = itemDropInfo.ToggleBlacklisted();
+                    blacklistable.Blacklisted = itemDropInfo.ToggleBlacklisted();
             }
         }
 

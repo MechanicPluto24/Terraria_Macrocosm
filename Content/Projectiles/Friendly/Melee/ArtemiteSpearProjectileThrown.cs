@@ -12,11 +12,11 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
-	public class ArtemiteSpearProjectileThrown : ModProjectile
-	{
+    public class ArtemiteSpearProjectileThrown : ModProjectile
+    {
         public override string Texture => base.Texture.Replace("Thrown", "");
 
-        public bool Phantom 
+        public bool Phantom
         {
             get => Projectile.ai[0] > 0f;
             set => Projectile.ai[0] = value ? 1f : 0f;
@@ -40,7 +40,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Projectile.ignoreWater = true; // Does the projectile's speed be influenced by water?
             Projectile.tileCollide = true; // Can the projectile collide with tiles?
 
-            Projectile.penetrate = 1;  
+            Projectile.penetrate = 1;
 
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = 25;
@@ -127,7 +127,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 {
                     if (opacity < 1f)
                         opacity += 0.085f;
-                }  
+                }
             }
             else
             {
@@ -155,7 +155,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                     dust = Dust.NewDustDirect(Projectile.oldPos.ToList().GetRandom(), Projectile.width, Projectile.height, type, Main.rand.NextFloat(-1.6f, 1.6f), Main.rand.NextFloat(-1.6f, 1.6f), Scale: Main.rand.NextFloat(0.7f, 1f));
                     dust.noGravity = true;
                 }
-            }   
+            }
         }
 
         public override bool OnTileCollide(Vector2 oldVelocity)
@@ -199,7 +199,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             }
 
             Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, color, Projectile.rotation, Projectile.Size / 2f, Projectile.scale, SpriteEffects.None, 0);
-            
+
             return false;
         }
     }

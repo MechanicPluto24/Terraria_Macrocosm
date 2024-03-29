@@ -1,17 +1,6 @@
-﻿using Macrocosm.Common.Bases;
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Buffs.Debuffs;
-using Macrocosm.Content.Dusts;
+﻿using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
-using System;
-using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
 using Terraria;
-using Terraria.Audio;
-using Terraria.DataStructures;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Melee
@@ -37,8 +26,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         public override void AI()
         {
             if (Projectile.ai[0] != 0)
-                 HomeIn(Projectile.ai[0] - 1, Projectile.ai[1]);
-             else
+                HomeIn(Projectile.ai[0] - 1, Projectile.ai[1]);
+            else
                 Projectile.rotation = Projectile.velocity.ToRotation();
         }
 
