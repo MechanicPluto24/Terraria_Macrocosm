@@ -3,18 +3,18 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Placeable.Furniture
 {
-	public class TitaniumLoom : ModItem
-	{
-		public override void SetStaticDefaults()
-		{
-		}
+    public class TitaniumLoom : ModItem
+    {
+        public override void SetStaticDefaults()
+        {
+        }
 
-		public override void SetDefaults()
-		{
-			Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.IndustrialLoom>(), tileStyleToPlace: 0);
-			Item.width = 50;
-			Item.height = 24;
-			Item.value = 500;
-		}
-	}
+        public override void SetDefaults()
+        {
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.IndustrialLoom>(), tileStyleToPlace: 0);
+            Item.width = 50;
+            Item.height = 24;
+            Item.value = 500;
+        }
+    }
 }

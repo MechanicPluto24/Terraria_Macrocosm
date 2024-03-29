@@ -1,20 +1,9 @@
-﻿using Macrocosm.Common.Systems;
-using Macrocosm.Common.UI;
-using Macrocosm.Common.UI.Themes;
-using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Linq;
-using System.Text.RegularExpressions;
 using Terraria;
-using Terraria.DataStructures;
-using Terraria.GameContent.UI.Elements;
-using Terraria.Localization;
-using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace Macrocosm.Common.Bases.Machines
+namespace Macrocosm.Common.Systems.Power
 {
     public class MachineUIState : UIState
     {

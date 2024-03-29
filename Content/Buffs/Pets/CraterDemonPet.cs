@@ -1,5 +1,4 @@
-﻿using Macrocosm.Content.Projectiles.Friendly.Pets;
-using Terraria;
+﻿using Terraria;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Buffs.Pets

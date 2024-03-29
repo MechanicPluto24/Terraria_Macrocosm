@@ -1,18 +1,16 @@
-﻿using Macrocosm.Common.Drawing;
-using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Accessories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.DrawLayers
 {
-	public class CelestialBulwarkLayer : PlayerDrawLayer
-	{
+    public class CelestialBulwarkLayer : PlayerDrawLayer
+    {
         private static Asset<Texture2D> shieldMask;
 
         public override void Load()
@@ -21,12 +19,12 @@ namespace Macrocosm.Content.DrawLayers
         }
 
         public override Position GetDefaultPosition()
-			=> new AfterParent(PlayerDrawLayers.Shield);
+            => new AfterParent(PlayerDrawLayers.Shield);
 
-		public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
-			=> drawInfo.drawPlayer.shield == EquipLoader.GetEquipSlot(Macrocosm.Instance, "CelestialBulwark", EquipType.Shield);
+        public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
+            => drawInfo.drawPlayer.shield == EquipLoader.GetEquipSlot(Macrocosm.Instance, "CelestialBulwark", EquipType.Shield);
 
-		protected override void Draw(ref PlayerDrawSet drawInfo)
+        protected override void Draw(ref PlayerDrawSet drawInfo)
         {
             if (drawInfo.drawPlayer.shieldRaised)
                 return;

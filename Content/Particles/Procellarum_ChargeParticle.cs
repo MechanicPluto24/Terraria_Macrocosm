@@ -1,9 +1,4 @@
-﻿using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Common.Utils;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria;
+﻿using Macrocosm.Common.Drawing.Particles;
 
 namespace Macrocosm.Content.Particles
 {

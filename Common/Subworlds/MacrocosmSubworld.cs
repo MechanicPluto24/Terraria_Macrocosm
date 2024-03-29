@@ -14,241 +14,251 @@ using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Common.Subworlds
 {
-	public abstract partial class MacrocosmSubworld : Subworld
-	{
-		/// <summary> Time rate of this subworld, compared to Earth's (1.0) </summary>
-		public virtual double TimeRate { get; } = Earth.TimeRate;
+    public abstract partial class MacrocosmSubworld : Subworld
+    {
+        public string ID => Mod.Name + "/" + Name;
 
-		/// <summary> Day lenght of this subworld in ticks </summary>
-		public virtual double DayLenght { get; } = Earth.DayLenght;
+        /// <summary> Time rate of this subworld, compared to Earth's (1.0) </summary>
+        public virtual double TimeRate { get; } = Earth.TimeRate;
 
-		/// <summary> Night lenght of this subworld in ticks </summary>
-		public virtual double NightLenght { get; } = Earth.NightLenght;
+        /// <summary> Day lenght of this subworld in ticks </summary>
+        public virtual double DayLenght { get; } = Earth.DayLenght;
 
-		/// <summary> The gravity multiplier, measured in G (Earth has 1G) </summary>
-		public virtual float GravityMultiplier { get; } = Earth.GravityMultiplier;
+        /// <summary> Night lenght of this subworld in ticks </summary>
+        public virtual double NightLenght { get; } = Earth.NightLenght;
 
-		/// <summary> Whether wiring should function in this subworld </summary>
-		public bool ShouldUpdateWiring { get; set; } = true;
+        /// <summary> The gravity multiplier, measured in G (Earth has 1G) </summary>
+        public virtual float GravityMultiplier { get; } = Earth.GravityMultiplier;
 
-		/// <summary> Determine the size of this subworld </summary>
-		/// <param name="earthWorldSize"> The Earth's world size </param>
-		public virtual WorldSize SetSubworldSize(WorldSize earthWorldSize)
-		{
-			return earthWorldSize;
-		}
+        /// <summary> Whether wiring should function in this subworld </summary>
+        public bool ShouldUpdateWiring { get; set; } = true;
 
-		/// <summary> The width is determined in ReadCopiedMainWorldData using GetWorldSize </summary>
-		public sealed override int Width => SetSubworldSize(Earth.WorldSize).Width;
+        /// <summary> Determine the size of this subworld </summary>
+        /// <param name="earthWorldSize"> The Earth's world size </param>
+        public virtual WorldSize SetSubworldSize(WorldSize earthWorldSize)
+        {
+            return earthWorldSize;
+        }
 
-		/// <summary> The height is determined in ReadCopiedMainWorldData using GetWorldSize </summary>
-		public sealed override int Height => SetSubworldSize(Earth.WorldSize).Height;
+        /// <summary> The width is determined in ReadCopiedMainWorldData using GetWorldSize </summary>
+        public sealed override int Width => SetSubworldSize(Earth.WorldSize).Width;
 
-		/// <summary> Specifies the conditions for reaching this particular subworld </summary>
-		public virtual ChecklistConditionCollection LaunchConditions { get; } = new();
+        /// <summary> The height is determined in ReadCopiedMainWorldData using GetWorldSize </summary>
+        public sealed override int Height => SetSubworldSize(Earth.WorldSize).Height;
 
-		/// <summary> Called when entering a subworld. </summary>
-		public virtual void OnEnterWorld() { }
+        /// <summary> Specifies the conditions for reaching this particular subworld </summary>
+        public virtual ChecklistConditionCollection LaunchConditions { get; } = new();
 
-		/// <summary> Called when exiting a subworld. </summary>
-		public virtual void OnExitWorld() { }
+        /// <summary> Called when entering a subworld. </summary>
+        public virtual void OnEnterWorld() { }
 
-		/// <summary> The map background color for each depth layer (Surface, Underground, Cavern, Underworld) </summary>
-		public virtual Dictionary<MapColorType, Color> MapColors { get; } = null;
+        /// <summary> Called when exiting a subworld. </summary>
+        public virtual void OnExitWorld() { }
 
-		public Guid MainWorldUniqueId { get; private set; }
+        public Guid MainWorldUniqueId { get; private set; }
 
+        /// <summary> The map background color for each depth layer (Surface, Underground, Cavern, Underworld) </summary>
+        public virtual Dictionary<MapColorType, Color> MapColors { get; } = null;
 
-		/// <summary> 
-		/// Determines what <see cref="SubworldSystem.Exit"/> will do. 
-		/// <br> If travelling using conventional methods, where <see cref="MacrocosmPlayer.TriggeredSubworldTravel"/> is set, will return to the main world (Earth). </br>
-		/// <br> Otherwise, return to the main menu. This is used when clicking "Return" from the in-game settings menu, while in a subworld. </br>
-		/// </summary>
-		public override int ReturnDestination
-		{
-			get
-			{
-				// Return to the main world (Earth)
-				if (Main.LocalPlayer.GetModPlayer<MacrocosmPlayer>().TriggeredSubworldTravel)
-					return base.ReturnDestination;
-				// Go to main menu
-				else
-					return int.MinValue;
-			}
-		}
+        /// <summary> 
+        /// Determines what <see cref="SubworldSystem.Exit"/> will do. 
+        /// <br> If travelling using conventional methods, where <see cref="MacrocosmPlayer.TriggeredSubworldTravel"/> is set, will return to the main world (Earth). </br>
+        /// <br> Otherwise, return to the main menu. This is used when clicking "Return" from the in-game settings menu, while in a subworld. </br>
+        /// </summary>
+        public override int ReturnDestination
+        {
+            get
+            {
+                // Return to the main world (Earth)
+                if (Main.LocalPlayer.GetModPlayer<MacrocosmPlayer>().TriggeredSubworldTravel)
+                    return base.ReturnDestination;
+                // Go to main menu
+                else
+                    return int.MinValue;
+            }
+        }
 
+        public override void Load()
+        {
+        }
 
-		public override void OnEnter()
-		{
-			OnEnterWorld();
-		}
+        public override void SetStaticDefaults()
+        {
+        }
 
-		public override void OnExit()
-		{
-			OnExitWorld();
-		}
+        public override void OnLoad()
+        {
+        }
 
-		public override void DrawMenu(GameTime gameTime)
-		{
-			if (LoadingScreen is not null)
-				LoadingScreen.Draw(gameTime, Main.spriteBatch);
-			else
-				base.DrawMenu(gameTime);
-		}
+        public override void OnEnter()
+        {
+            OnEnterWorld();
+            MapTileSystem.ApplyMapTileColors();
+        }
 
-		public override float GetGravity(Entity entity)
-		{
-			if (entity is Player)
-				return Player.defaultGravity * CurrentGravityMultiplier;
+        public override void OnExit()
+        {
+            OnExitWorld();
+            MapTileSystem.RestoreMapTileColors();
+        }
 
-			// This is set using the new NPC.GravityMultiplier tML property in MacrocosmGlobalNPC instead
-			if (entity is NPC)
-				return base.GetGravity(entity);
+        public override void DrawMenu(GameTime gameTime)
+        {
+            if (LoadingScreen is not null)
+                LoadingScreen.Draw(gameTime, Main.spriteBatch);
+            else
+                base.DrawMenu(gameTime);
+        }
 
-			return base.GetGravity(entity);
-		}
+        public override float GetGravity(Entity entity)
+        {
+            if (entity is Player)
+                return Player.defaultGravity * CurrentGravityMultiplier;
 
-		public override void OnLoad()
-		{
-		}
+            // This is instead modified using the new NPC.GravityMultiplier tML property in MacrocosmGlobalNPC 
+            if (entity is NPC)
+                return base.GetGravity(entity);
 
-		private static void SaveData(TagCompound tag)
-		{
-			WorldDataSystem.Instance.SaveData(tag);
-			RocketManager.SaveData(tag);
-			LaunchPadManager.SaveData(tag);
-			CustomizationStorage.SaveData(tag);
-		}
+            return base.GetGravity(entity);
+        }
 
-		private static void LoadData(TagCompound tag)
-		{
-			WorldDataSystem.Instance.LoadData(tag);
-			RocketManager.LoadData(tag);
-			LaunchPadManager.LoadData(tag);
-			CustomizationStorage.LoadData(tag);
-		}
+        private static void SaveData(TagCompound tag)
+        {
+            WorldDataSystem.Instance.SaveData(tag);
+            RocketManager.SaveData(tag);
+            LaunchPadManager.SaveData(tag);
+            CustomizationStorage.SaveData(tag);
+        }
 
-		public override void CopySubworldData()
-		{
-			TagCompound subworldDataTag = new();
-			SaveData(subworldDataTag);
-			Hacks.SubworldSystem_CopyWorldData("Macrocosm:subworldDataTag", subworldDataTag);
-		}
+        private static void LoadData(TagCompound tag)
+        {
+            WorldDataSystem.Instance.LoadData(tag);
+            RocketManager.LoadData(tag);
+            LaunchPadManager.LoadData(tag);
+            CustomizationStorage.LoadData(tag);
+        }
 
-		public override void ReadCopiedSubworldData()
-		{
-			TagCompound subworldDataTag = SubworldSystem.ReadCopiedWorldData<TagCompound>("Macrocosm:subworldDataTag");
-			LoadData(subworldDataTag);
-		}
+        public override void CopySubworldData()
+        {
+            TagCompound subworldDataTag = new();
+            SaveData(subworldDataTag);
+            Hacks.SubworldSystem_CopyWorldData("Macrocosm:subworldDataTag", subworldDataTag);
+        }
 
-		public override void CopyMainWorldData()
-		{
-			TagCompound mainWorldDataTag = new();
-			SaveData(mainWorldDataTag);
-			SaveEarthSpecificData(mainWorldDataTag);
-			SubworldSystem.CopyWorldData("Macrocosm:mainWorldDataTag", mainWorldDataTag);
-		}
+        public override void ReadCopiedSubworldData()
+        {
+            TagCompound subworldDataTag = SubworldSystem.ReadCopiedWorldData<TagCompound>("Macrocosm:subworldDataTag");
+            LoadData(subworldDataTag);
+        }
 
-		public override void ReadCopiedMainWorldData()
-		{
-			TagCompound mainWorldDataTag = SubworldSystem.ReadCopiedWorldData<TagCompound>("Macrocosm:mainWorldDataTag");
-			LoadData(mainWorldDataTag);
-			LoadEarthSpecificData(mainWorldDataTag);
-		}
+        public override void CopyMainWorldData()
+        {
+            TagCompound mainWorldDataTag = new();
+            SaveData(mainWorldDataTag);
+            SaveEarthSpecificData(mainWorldDataTag);
+            SubworldSystem.CopyWorldData("Macrocosm:mainWorldDataTag", mainWorldDataTag);
+        }
 
-		private void SaveEarthSpecificData(TagCompound tag)
-		{
-			// Save the main world's UniqueId for subworlds to use
-			tag[nameof(MainWorldUniqueId)] = Main.ActiveWorldFileData.UniqueId.ToString();
+        public override void ReadCopiedMainWorldData()
+        {
+            TagCompound mainWorldDataTag = SubworldSystem.ReadCopiedWorldData<TagCompound>("Macrocosm:mainWorldDataTag");
+            LoadData(mainWorldDataTag);
+            LoadEarthSpecificData(mainWorldDataTag);
+        }
 
-			// Save Earth's world size for other subworlds to use 
-			tag[nameof(Earth) + nameof(Earth.WorldSize)] = Earth.WorldSize;
-		}
+        private void SaveEarthSpecificData(TagCompound tag)
+        {
+            // Save the main world's UniqueId for subworlds to use
+            tag[nameof(MainWorldUniqueId)] = Main.ActiveWorldFileData.UniqueId.ToString();
 
-		private void LoadEarthSpecificData(TagCompound tag)
-		{
-			// Read the main world's UniqueId
-			if (tag.ContainsKey(nameof(MainWorldUniqueId)))
-				MainWorldUniqueId = new Guid(tag.GetString(nameof(MainWorldUniqueId)));
+            // Save Earth's world size for other subworlds to use 
+            tag[nameof(Earth) + nameof(Earth.WorldSize)] = Earth.WorldSize;
+        }
 
-			// Read world size and apply it here. 
-			// In SubLib maxTiles are assigned before the data is read.
-			// ReadCopiedMainWorldData is called before worldgen so it can be safely used there.
-			if (tag.ContainsKey(nameof(Earth) + nameof(Earth.WorldSize)))
-			{
-				Earth.WorldSize = tag.Get<WorldSize>(nameof(Earth) + nameof(Earth.WorldSize));
-				WorldSize subworldSize = SetSubworldSize(Earth.WorldSize);
-				Main.maxTilesX = subworldSize.Width;
-				Main.maxTilesY = subworldSize.Height;
-			}
-		}
+        private void LoadEarthSpecificData(TagCompound tag)
+        {
+            // Read the main world's UniqueId
+            if (tag.ContainsKey(nameof(MainWorldUniqueId)))
+                MainWorldUniqueId = new Guid(tag.GetString(nameof(MainWorldUniqueId)));
 
-		/// <summary> 
-		/// Use this if you want to do something before anything in the World gets updated.
-		/// Called after UI updates, but before anything in the World (Players, NPCs, Projectiles,
-		/// Tiles) gets updated.
-		/// When Terraria.Main.autoPause is true or Terraria.Main.FrameSkipMode is 0 or 2,
-		/// the game may do a partial update. This means that it only updates menus and some
-		/// animations, but not the World or Entities. This hook - and every hook after it
-		/// - only gets called on frames with a full update.
-		/// </summary>
-		public virtual void PreUpdateEntities() { }
+            // Read world size and apply it here. 
+            // In SubLib maxTiles are assigned before the data is read.
+            // ReadCopiedMainWorldData is called before worldgen so it can be safely used there.
+            if (tag.ContainsKey(nameof(Earth) + nameof(Earth.WorldSize)))
+            {
+                Earth.WorldSize = tag.Get<WorldSize>(nameof(Earth) + nameof(Earth.WorldSize));
+                WorldSize subworldSize = SetSubworldSize(Earth.WorldSize);
+                Main.maxTilesX = subworldSize.Width;
+                Main.maxTilesY = subworldSize.Height;
+            }
+        }
 
-		/// <summary> Called before Players get updated . </summary>
-		public virtual void PreUpdatePlayers() { }
+        /// <summary> 
+        /// Use this if you want to do something before anything in the World gets updated.
+        /// Called after UI updates, but before anything in the World (Players, NPCs, Projectiles,
+        /// Tiles) gets updated.
+        /// When Terraria.Main.autoPause is true or Terraria.Main.FrameSkipMode is 0 or 2,
+        /// the game may do a partial update. This means that it only updates menus and some
+        /// animations, but not the World or Entities. This hook - and every hook after it
+        /// - only gets called on frames with a full update.
+        /// </summary>
+        public virtual void PreUpdateEntities() { }
 
-		/// <summary> Called after Players get updated . </summary>
-		public virtual void PostUpdatePlayers() { }
+        /// <summary> Called before Players get updated . </summary>
+        public virtual void PreUpdatePlayers() { }
 
-		/// <summary> Called before NPCs get updated. </summary>
-		public virtual void PreUpdateNPCs() { }
+        /// <summary> Called after Players get updated . </summary>
+        public virtual void PostUpdatePlayers() { }
 
-		/// <summary> Called after NPCs get updated. </summary>
-		public virtual void PostUpdateNPCs() { }
+        /// <summary> Called before NPCs get updated. </summary>
+        public virtual void PreUpdateNPCs() { }
 
-		/// <summary> Called before Gores get updated. </summary>
-		public virtual void PreUpdateGores() { }
+        /// <summary> Called after NPCs get updated. </summary>
+        public virtual void PostUpdateNPCs() { }
 
-		/// <summary> Called after Gores get updated. </summary>
-		public virtual void PostUpdateGores() { }
+        /// <summary> Called before Gores get updated. </summary>
+        public virtual void PreUpdateGores() { }
 
-		/// <summary> Called before Projectiles get updated. </summary>
-		public virtual void PreUpdateProjectiles() { }
+        /// <summary> Called after Gores get updated. </summary>
+        public virtual void PostUpdateGores() { }
 
-		/// <summary> Called after Projectiles get updated. </summary>
-		public virtual void PostUpdateProjectiles() { }
+        /// <summary> Called before Projectiles get updated. </summary>
+        public virtual void PreUpdateProjectiles() { }
 
-		/// <summary> Called before Items get updated. </summary>
-		public virtual void PreUpdateItems() { }
+        /// <summary> Called after Projectiles get updated. </summary>
+        public virtual void PostUpdateProjectiles() { }
 
-		/// <summary> Called after Items get updated. </summary>
-		public virtual void PostUpdateItems() { }
+        /// <summary> Called before Items get updated. </summary>
+        public virtual void PreUpdateItems() { }
 
-		/// <summary> Called before Dusts get updated. </summary>
-		public virtual void PreUpdateDusts() { }
+        /// <summary> Called after Items get updated. </summary>
+        public virtual void PostUpdateItems() { }
 
-		/// <summary> Called after Dusts get updated. </summary>
-		public virtual void PostUpdateDusts() { }
+        /// <summary> Called before Dusts get updated. </summary>
+        public virtual void PreUpdateDusts() { }
 
-		/// <summary> Called before Time gets updated. </summary>
-		public virtual void PreUpdateTime() { }
+        /// <summary> Called after Dusts get updated. </summary>
+        public virtual void PostUpdateDusts() { }
 
-		/// <summary> Called after Time gets updated. </summary>
-		public virtual void PostUpdateTime() { }
+        /// <summary> Called before Time gets updated. </summary>
+        public virtual void PreUpdateTime() { }
 
-		/// <summary> Called before the subworld is updated. Not called on multiplayer clients </summary>
-		public virtual void PreUpdateWorld() { }
+        /// <summary> Called after Time gets updated. </summary>
+        public virtual void PostUpdateTime() { }
 
-		/// <summary> Called after the subworld is updated. Not called on multiplayer clients </summary>
-		public virtual void PostUpdateWorld() { }
+        /// <summary> Called before the subworld is updated. Not called on multiplayer clients </summary>
+        public virtual void PreUpdateWorld() { }
 
-		/// <summary> Called before Invasions get updated. Not called for multiplayer clients. </summary>
-		public virtual void PreUpdateInvasions() { }
+        /// <summary> Called after the subworld is updated. Not called on multiplayer clients </summary>
+        public virtual void PostUpdateWorld() { }
 
-		/// <summary> Called after Invasions get updated. Not called for multiplayer clients. </summary>
-		public virtual void PostUpdateInvasions() { }
+        /// <summary> Called before Invasions get updated. Not called for multiplayer clients. </summary>
+        public virtual void PreUpdateInvasions() { }
 
-		/// <summary> Called after the Network got updated, this is the last hook that happens in a subworld update. </summary>
-		public virtual void PostUpdateEverything() { }
-	}
+        /// <summary> Called after Invasions get updated. Not called for multiplayer clients. </summary>
+        public virtual void PostUpdateInvasions() { }
+
+        /// <summary> Called after the Network got updated, this is the last hook that happens in a subworld update. </summary>
+        public virtual void PostUpdateEverything() { }
+    }
 }

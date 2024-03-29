@@ -8,48 +8,47 @@ using System;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
-using static tModPorter.ProgressUpdate;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
-	public class ArtemiteGreatswordSwing : ModProjectile
-	{
-		public override string Texture => Macrocosm.TexturesPath + "Swing";
+    public class ArtemiteGreatswordSwing : ModProjectile
+    {
+        public override string Texture => Macrocosm.TexturesPath + "Swing";
 
-		public override void SetDefaults()
-		{
-			Projectile.width = 120;
-			Projectile.height = 120;
-			Projectile.aiStyle = -1;
-			Projectile.friendly = true;
-			Projectile.DamageType = DamageClass.Melee;
-			Projectile.penetrate = -1;
-			Projectile.usesLocalNPCImmunity = true;
-			Projectile.tileCollide = false;
-			Projectile.ignoreWater = true;
-			Projectile.localNPCHitCooldown = -1;
-			Projectile.ownerHitCheck = true;
-			Projectile.ownerHitCheckDistance = 300f;
-			Projectile.usesOwnerMeleeHitCD = true;
-			Projectile.stopsDealingDamageAfterPenetrateHits = true;
-		}
+        public override void SetDefaults()
+        {
+            Projectile.width = 120;
+            Projectile.height = 120;
+            Projectile.aiStyle = -1;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.penetrate = -1;
+            Projectile.usesLocalNPCImmunity = true;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.localNPCHitCooldown = -1;
+            Projectile.ownerHitCheck = true;
+            Projectile.ownerHitCheckDistance = 300f;
+            Projectile.usesOwnerMeleeHitCD = true;
+            Projectile.stopsDealingDamageAfterPenetrateHits = true;
+        }
 
-		public override void ModifyDamageHitbox(ref Rectangle hitbox)
-		{
-		}
+        public override void ModifyDamageHitbox(ref Rectangle hitbox)
+        {
+        }
 
-		protected Vector2 PositionAdjustment => new Vector2(55 * Projectile.scale, 0).RotatedBy(Projectile.rotation);
+        protected Vector2 PositionAdjustment => new Vector2(55 * Projectile.scale, 0).RotatedBy(Projectile.rotation);
 
-		public ref float SwingDirection => ref Projectile.ai[0];
-		public ref float TargetSwingRotation => ref Projectile.ai[1];
-		public ref float SwingRotation => ref Projectile.ai[2];
+        public ref float SwingDirection => ref Projectile.ai[0];
+        public ref float TargetSwingRotation => ref Projectile.ai[1];
+        public ref float SwingRotation => ref Projectile.ai[2];
 
         bool spawned = false;
         float defScale;
         protected int particleOnHitCount = 1;
-    
+
         public override void AI()
-		{
+        {
             if (!spawned)
             {
                 defScale = Projectile.scale;
@@ -59,19 +58,19 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             particleOnHitCount = 1;
 
             float progress = SwingRotation / TargetSwingRotation;
-			Player player = Main.player[Projectile.owner];
-			Item item = player.CurrentItem();
+            Player player = Main.player[Projectile.owner];
+            Item item = player.CurrentItem();
 
-			float speed = 0.6f * player.GetTotalAttackSpeed(DamageClass.Melee);
-			SwingRotation += speed;
+            float speed = 0.6f * player.GetTotalAttackSpeed(DamageClass.Melee);
+            SwingRotation += speed;
 
             float angle = MathHelper.Pi;
             Projectile.rotation = angle * SwingDirection * progress + Projectile.velocity.ToRotation() + SwingDirection * angle + player.fullRotation;
             Projectile.Center = player.RotatedRelativePoint(player.MountedCenter) + PositionAdjustment;
 
-			Projectile.scale = 2f * player.GetAdjustedItemScale(item) * defScale;
+            Projectile.scale = 2f * player.GetAdjustedItemScale(item) * defScale;
 
-			Vector2 hitboxPos = Projectile.Center - PositionAdjustment + Utility.PolarVector(175, Projectile.rotation);
+            Vector2 hitboxPos = Projectile.Center - PositionAdjustment + Utility.PolarVector(175, Projectile.rotation);
 
             for (int i = 0; i < 2; i++)
             {
@@ -90,12 +89,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 }
             }
             if (SwingRotation >= TargetSwingRotation + 1)
-				Projectile.Kill();
-		}
+                Projectile.Kill();
+        }
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            for(int i = 0; i < particleOnHitCount; i++)
+            for (int i = 0; i < particleOnHitCount; i++)
                 Particle.CreateParticle<ArtemiteStar>((p) =>
                 {
                     p.Position = target.Center;
@@ -107,27 +106,27 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         }
 
         public override bool PreDraw(ref Color lightColor)
-		{
-			Texture2D texture = TextureAssets.Projectile[Type].Value;
-			Player player = Main.player[Projectile.owner];
+        {
+            Texture2D texture = TextureAssets.Projectile[Type].Value;
+            Player player = Main.player[Projectile.owner];
 
-			Rectangle frame = texture.Frame(1, 4, frameY: 3);
-			Vector2 origin = frame.Size() / 2f;
+            Rectangle frame = texture.Frame(1, 4, frameY: 3);
+            Vector2 origin = frame.Size() / 2f;
 
-			Vector2 position = Projectile.Center - PositionAdjustment - Main.screenPosition;
-			SpriteEffects effects = Projectile.ai[0] < 0f ? SpriteEffects.FlipVertically : SpriteEffects.None;
+            Vector2 position = Projectile.Center - PositionAdjustment - Main.screenPosition;
+            SpriteEffects effects = Projectile.ai[0] < 0f ? SpriteEffects.FlipVertically : SpriteEffects.None;
 
-			float progress = SwingRotation / TargetSwingRotation;
-			float progressScale = Utils.Remap(progress, 0f, 0.6f, 0f, 1f) * Utils.Remap(progress, 0.6f, 1f, 1f, 0f);
+            float progress = SwingRotation / TargetSwingRotation;
+            float progressScale = Utils.Remap(progress, 0f, 0.6f, 0f, 1f) * Utils.Remap(progress, 0.6f, 1f, 1f, 0f);
 
-			Color color = new Color(130, 220, 199).WithOpacity(1f - progress) * 1.2f; 
+            Color color = new Color(130, 220, 199).WithOpacity(1f - progress) * 1.2f;
 
-			float scale = Projectile.scale;
-			float rotation = Projectile.rotation;
-			Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 0), color * progressScale, rotation + Projectile.ai[0] * ((float)Math.PI / 4f) * -1f * (1f - progress), origin, scale * 0.95f, effects, 0f);
-			Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 1), color * 0.15f, rotation, origin, scale, effects, 0f);
-			Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 2), color * 0.7f * progressScale * 0.3f, rotation, origin, scale, effects, 0f);
-			Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 2), color * 0.8f * progressScale * 0.5f, rotation, origin, scale * 0.975f, effects, 0f);
+            float scale = Projectile.scale;
+            float rotation = Projectile.rotation;
+            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 0), color * progressScale, rotation + Projectile.ai[0] * ((float)Math.PI / 4f) * -1f * (1f - progress), origin, scale * 0.95f, effects, 0f);
+            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 1), color * 0.15f, rotation, origin, scale, effects, 0f);
+            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 2), color * 0.7f * progressScale * 0.3f, rotation, origin, scale, effects, 0f);
+            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 2), color * 0.8f * progressScale * 0.5f, rotation, origin, scale * 0.975f, effects, 0f);
             Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), (color * progressScale).WithOpacity(0.4f - 0.39f * (1f - progressScale)), rotation, origin, scale * 0.95f, effects, 0f);
             Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), (color * progressScale).WithOpacity(0.5f - 0.49f * (1f - progressScale)), rotation, origin, scale * 0.75f, effects, 0f);
             Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), (color * progressScale).WithOpacity(0.05f - 0.04f * (1f - progressScale)), rotation, origin, scale * 0.55f, effects, 0f);
@@ -145,11 +144,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             }
 
             return false;
-		}
+        }
     }
 
-	public class ArtemiteGreatswordSwing2 : ArtemiteGreatswordSwing
-	{
+    public class ArtemiteGreatswordSwing2 : ArtemiteGreatswordSwing
+    {
         bool spawned = false;
         float defScale;
 
@@ -171,7 +170,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             float speed = 0.6f * player.GetTotalAttackSpeed(DamageClass.Melee);
             SwingRotation += speed;
 
-            float angle = MathHelper.Pi - MathHelper.Pi/16;
+            float angle = MathHelper.Pi - MathHelper.Pi / 16;
             Projectile.rotation = angle * SwingDirection * progress + Projectile.velocity.ToRotation() + SwingDirection * angle + player.fullRotation;
             Projectile.Center = player.RotatedRelativePoint(player.MountedCenter) + PositionAdjustment;
 
@@ -186,7 +185,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                     break;
 
                 Vector2 dustVelocity = new Vector2(Main.rand.NextFloat(1, 20 * speed * progress), 0).RotatedBy(Projectile.rotation + MathHelper.PiOver2 * Projectile.direction) + Main.player[Projectile.owner].velocity;
-                Particle.CreateParticle<ImbriumStar>(Vector2.Lerp(hitboxPos, player.Center, Main.rand.NextFloat()), dustVelocity * 0.7f, scale : 0.65f);
+                Particle.CreateParticle<ImbriumStar>(Vector2.Lerp(hitboxPos, player.Center, Main.rand.NextFloat()), dustVelocity * 0.7f, scale: 0.65f);
 
                 if (Main.rand.NextBool())
                 {
@@ -214,7 +213,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             float progressScale = Utils.Remap(progress, 0f, 0.6f, 0f, 1f) * Utils.Remap(progress, 0.6f, 1f, 1f, 0f);
 
             float opacity = (1f - Projectile.alpha / 255f);
-            Color color = new Color(81, 180, 114).WithOpacity(1f - progress) * opacity; 
+            Color color = new Color(81, 180, 114).WithOpacity(1f - progress) * opacity;
 
             float scale = Projectile.scale;
             float rotation = Projectile.rotation;

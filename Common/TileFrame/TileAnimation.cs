@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using Terraria.ModLoader;
-using Terraria.DataStructures;
-using Terraria;
-using System.Linq;
+﻿using Microsoft.Xna.Framework;
 using System;
-using Microsoft.Xna.Framework;
+using System.Collections.Generic;
+using System.Linq;
+using Terraria;
+using Terraria.DataStructures;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Common.TileFrame
 {
@@ -41,7 +41,7 @@ namespace Macrocosm.Common.TileFrame
     }
 
     public class TileAnimation : ILoadable
-    { 
+    {
         private static List<TileAnimation> animations;
         private static Dictionary<Point16, TileAnimation> temporaryAnimations;
         private static List<Point16> awaitingRemoval;
@@ -59,10 +59,10 @@ namespace Macrocosm.Common.TileFrame
 
         public void Load(Mod mod)
         {
-            animations = [];
-            temporaryAnimations = [];
-            awaitingRemoval = [];
-            awaitingAddition = [];
+            animations = new();
+            temporaryAnimations = new();
+            awaitingRemoval = new();
+            awaitingAddition = new();
 
             On_Animation.UpdateAll += On_Animation_UpdateAll;
         }
@@ -137,8 +137,8 @@ namespace Macrocosm.Common.TileFrame
         private static void UpdateAll()
         {
             for (int i = 0; i < animations.Count; i++)
-                 animations[i].Update();
- 
+                animations[i].Update();
+
             if (awaitingAddition.Count > 0)
             {
                 for (int j = 0; j < awaitingAddition.Count; j++)
@@ -181,7 +181,7 @@ namespace Macrocosm.Common.TileFrame
                             isCorrectType = true;
                     }
                 }
-               
+
                 if (!isCorrectType)
                 {
                     RemoveTemporaryAnimation(coordinates.X, coordinates.Y);
@@ -200,7 +200,7 @@ namespace Macrocosm.Common.TileFrame
             if (frame >= data.FrameMax)
             {
                 frame = 0;
-                data.OnAnimationComplete?.Invoke(coordinates, tileType); 
+                data.OnAnimationComplete?.Invoke(coordinates, tileType);
                 if (temporary)
                 {
                     RemoveTemporaryAnimation(coordinates.X, coordinates.Y);
@@ -230,7 +230,7 @@ namespace Macrocosm.Common.TileFrame
     {
         public const int Terraria_Animation_TypeCount = 5;
 
-        private static readonly Dictionary<int, AnimationData> customAnimations = [];
+        private static readonly Dictionary<int, AnimationData> customAnimations = new();
 
         private readonly struct AnimationData(int frameMax, int frameCounterMax, int[] frameData)
         {

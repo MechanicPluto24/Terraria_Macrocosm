@@ -1,15 +1,13 @@
-﻿using Macrocosm.Content.Backgrounds.Moon;
-using Macrocosm.Content.Subworlds;
-using Microsoft.Xna.Framework;
+﻿using Macrocosm.Content.Subworlds;
 using SubworldLibrary;
 using Terraria;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Biomes
 {
-	public class BloodMoonBiome : ModBiome
-	{
-		public override SceneEffectPriority Priority => SceneEffectPriority.BossLow;
+    public class BloodMoonBiome : ModBiome
+    {
+        public override SceneEffectPriority Priority => SceneEffectPriority.BossLow;
         public override string BestiaryIcon => Macrocosm.TexturesPath + "Icons/BloodMoon";
         public override string BackgroundPath => "Macrocosm/Content/Biomes/MoonBiome_Background";
         public override string MapBackground => BackgroundPath;
@@ -34,7 +32,7 @@ namespace Macrocosm.Content.Biomes
         }
 
         public override bool IsBiomeActive(Player player)
-			=> SubworldSystem.IsActive<Moon>() && Main.bloodMoon;
+            => SubworldSystem.IsActive<Moon>() && Main.bloodMoon;
 
-	}
+    }
 }

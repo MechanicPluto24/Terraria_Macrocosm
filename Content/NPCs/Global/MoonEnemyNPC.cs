@@ -1,4 +1,3 @@
-using Macrocosm.Common.Loot;
 using Macrocosm.Common.Loot.DropConditions;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Items.Currency;
@@ -13,13 +12,13 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Global
 {
-	public class MoonEnemyNPC : GlobalNPC
-	{
-		public override bool InstancePerEntity => true;
+    public class MoonEnemyNPC : GlobalNPC
+    {
+        public override bool InstancePerEntity => true;
 
-		public override void SetDefaults(NPC entity)
-		{
-			if(entity.ModNPC is IMoonEnemy)
+        public override void SetDefaults(NPC entity)
+        {
+            if (entity.ModNPC is IMoonEnemy)
                 entity.ModNPC.SpawnModBiomes = entity.ModNPC.SpawnModBiomes.Prepend(ModContent.GetInstance<MoonBiome>().Type).ToArray();
         }
 

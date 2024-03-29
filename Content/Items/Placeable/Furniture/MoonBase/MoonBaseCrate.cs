@@ -1,6 +1,5 @@
 ﻿using Macrocosm.Content.Items.Currency;
 using Macrocosm.Content.Items.Materials;
-using Macrocosm.Content.Items.Placeable.Blocks;
 using Macrocosm.Content.Items.Weapons.Magic;
 using Macrocosm.Content.Items.Weapons.Melee;
 using Macrocosm.Content.Items.Weapons.Ranged;
@@ -12,8 +11,8 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Placeable.Furniture.MoonBase
 {
-	public class MoonBaseCrate : ModItem
-	{
+    public class MoonBaseCrate : ModItem
+    {
         public override void SetStaticDefaults()
         {
             //ItemID.Sets.IsFishingCrate[Type] = true;
@@ -22,13 +21,13 @@ namespace Macrocosm.Content.Items.Placeable.Furniture.MoonBase
         }
 
         public override void SetDefaults()
-		{
-			Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.MoonBase.MoonBaseCrate>());
-			Item.width = 32;
-			Item.height = 32;
-			Item.value = 500;
-			Item.rare = ModContent.RarityType<MoonRarityT1>();
-		}
+        {
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.MoonBase.MoonBaseCrate>());
+            Item.width = 32;
+            Item.height = 32;
+            Item.value = 500;
+            Item.rare = ModContent.RarityType<MoonRarityT1>();
+        }
 
         public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
         {

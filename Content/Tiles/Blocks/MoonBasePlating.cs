@@ -9,68 +9,68 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles.Blocks
 {
-	public class MoonBasePlating : ModTile
-	{
-		public override void SetStaticDefaults()
-		{
-			Main.tileSolid[Type] = true;
-			Main.tileBlockLight[Type] = true;
-			Main.tileLighted[Type] = true;
-			Main.tileBlendAll[Type] = true;
+    public class MoonBasePlating : ModTile
+    {
+        public override void SetStaticDefaults()
+        {
+            Main.tileSolid[Type] = true;
+            Main.tileBlockLight[Type] = true;
+            Main.tileLighted[Type] = true;
+            Main.tileBlendAll[Type] = true;
 
-			//Main.tileMerge[ModContent.TileType<Regolith>()][Type] = true;
-			//Main.tileMerge[ModContent.TileType<RegolithBrick>()][Type] = true;
-			//Main.tileMerge[ModContent.TileType<Protolith>()][Type] = true;
-			//Main.tileMerge[ModContent.TileType<IrradiatedRock>()][Type] = true;
-			//Main.tileMerge[ModContent.TileType<IrradiatedBrick>()][Type] = true;
-			//
-			//Main.tileMerge[Type][ModContent.TileType<Regolith>()] = true;
-			//Main.tileMerge[Type][ModContent.TileType<RegolithBrick>()] = true;
-			//Main.tileMerge[Type][ModContent.TileType<Protolith>()] = true;
-			//Main.tileMerge[Type][ModContent.TileType<IrradiatedRock>()] = true;
-			//Main.tileMerge[Type][ModContent.TileType<IrradiatedBrick>()] = true;
+            //Main.tileMerge[ModContent.TileType<Regolith>()][Type] = true;
+            //Main.tileMerge[ModContent.TileType<RegolithBrick>()][Type] = true;
+            //Main.tileMerge[ModContent.TileType<Protolith>()][Type] = true;
+            //Main.tileMerge[ModContent.TileType<IrradiatedRock>()][Type] = true;
+            //Main.tileMerge[ModContent.TileType<IrradiatedBrick>()][Type] = true;
+            //
+            //Main.tileMerge[Type][ModContent.TileType<Regolith>()] = true;
+            //Main.tileMerge[Type][ModContent.TileType<RegolithBrick>()] = true;
+            //Main.tileMerge[Type][ModContent.TileType<Protolith>()] = true;
+            //Main.tileMerge[Type][ModContent.TileType<IrradiatedRock>()] = true;
+            //Main.tileMerge[Type][ModContent.TileType<IrradiatedBrick>()] = true;
 
-			TileID.Sets.IgnoresNearbyHalfbricksWhenDrawn[Type] = true;
-			//TileID.Sets.GemsparkFramingTypes[Type] = Type;
+            TileID.Sets.IgnoresNearbyHalfbricksWhenDrawn[Type] = true;
+            //TileID.Sets.GemsparkFramingTypes[Type] = Type;
 
-			DustType = ModContent.DustType<MoonBasePlatingDust>();
+            DustType = ModContent.DustType<MoonBasePlatingDust>();
 
-			MinPick = 225;
-			MineResist = 4f;
+            MinPick = 225;
+            MineResist = 4f;
 
-			AddMapEntry(new Color(180, 180, 180));
-		}
+            AddMapEntry(new Color(180, 180, 180));
+        }
 
-		public override bool Slope(int i, int j)
-		{
-			WorldGen.TileFrame(i + 1, j + 1);
-			WorldGen.TileFrame(i + 1, j - 1);
-			WorldGen.TileFrame(i - 1, j + 1);
-			WorldGen.TileFrame(i - 1, j - 1);
-			return true;
-		}
+        public override bool Slope(int i, int j)
+        {
+            WorldGen.TileFrame(i + 1, j + 1);
+            WorldGen.TileFrame(i + 1, j - 1);
+            WorldGen.TileFrame(i - 1, j + 1);
+            WorldGen.TileFrame(i - 1, j - 1);
+            return true;
+        }
 
-		public override void KillTile(int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem)
-		{
-		}
+        public override void KillTile(int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem)
+        {
+        }
 
-		public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
-		{
-			TileFraming.PlatingStyle(i, j);
-			return false;
-		}
+        public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
+        {
+            TileFraming.PlatingStyle(i, j);
+            return false;
+        }
 
         public override void SetDrawPositions(int i, int j, ref int width, ref int offsetY, ref int height, ref short tileFrameX, ref short tileFrameY)
         {
             Tile tile = Main.tile[i, j];
 
             var info = new TileNeighbourInfo(i, j).GetPredicateNeighbourInfo
-			(
-				(neighbour) => 
-					WorldGen.SolidTile(neighbour) && neighbour.TileType != Type ||
-					TileID.Sets.CloseDoorID[neighbour.TileType] > 0 ||
-					neighbour.TileType == TileID.TallGateOpen
-			);
+            (
+                (neighbour) =>
+                    WorldGen.SolidTile(neighbour) && neighbour.TileType != Type ||
+                    TileID.Sets.CloseDoorID[neighbour.TileType] > 0 ||
+                    neighbour.TileType == TileID.TallGateOpen
+            );
 
             if (tile.IsSloped() || info.Count4Way > 0)
                 tileFrameY += 90;

@@ -1,4 +1,3 @@
-using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
@@ -16,7 +15,7 @@ namespace Macrocosm.Content.Tiles.Walls
 
     public class MoonBaseTrimmingWallUnsafe : MoonBaseTrimmingWall
     {
-        public override string Texture => base.Texture.Replace("Unsafe","");
+        public override string Texture => base.Texture.Replace("Unsafe", "");
 
         public override void SetStaticDefaults()
         {

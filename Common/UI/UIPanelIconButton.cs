@@ -10,43 +10,43 @@ using Terraria.UI;
 
 namespace Macrocosm.Common.UI
 {
-	public class UIPanelIconButton : UIHoverImageButton
-	{
-		public Color IconColor { get; set; } = Color.White;
-		public bool GrayscaleIconIfNotInteractible { get; set; } = false;
-		public bool OverrideBackgroundColor { get; set; } = false;
+    public class UIPanelIconButton : UIHoverImageButton
+    {
+        public Color IconColor { get; set; } = Color.White;
+        public bool GrayscaleIconIfNotInteractible { get; set; } = false;
+        public bool OverrideBackgroundColor { get; set; } = false;
 
-		public Color BackPanelColor { get; set; } = UITheme.Current.ButtonStyle.BackgroundColor;
-		public Color FocusedBackPanelColor { get; set; } = UITheme.Current.ButtonHighlightStyle.BackgroundColor;
-		public Color NotInteractibleBackPanelColor { get; set; } = UITheme.Current.ButtonStyle.BackgroundColor.WithSaturation(0.5f);
+        public Color BackPanelColor { get; set; } = UITheme.Current.ButtonStyle.BackgroundColor;
+        public Color FocusedBackPanelColor { get; set; } = UITheme.Current.ButtonHighlightStyle.BackgroundColor;
+        public Color NotInteractibleBackPanelColor { get; set; } = UITheme.Current.ButtonStyle.BackgroundColor.WithSaturation(0.5f);
 
-		public Color BackPanelBorderColor { get; set; } = UITheme.Current.ButtonStyle.BorderColor;
-		public Color BackPanelHoverBorderColor { get; set; } = UITheme.Current.ButtonHighlightStyle.BorderColor;
+        public Color BackPanelBorderColor { get; set; } = UITheme.Current.ButtonStyle.BorderColor;
+        public Color BackPanelHoverBorderColor { get; set; } = UITheme.Current.ButtonHighlightStyle.BorderColor;
 
-		private Asset<Texture2D> backPanelTexture;
-		private Asset<Texture2D> backPanelBorderTexture;
+        private Asset<Texture2D> backPanelTexture;
+        private Asset<Texture2D> backPanelBorderTexture;
 
-		public UIPanelIconButton() : this(Macrocosm.EmptyTex) { }
+        public UIPanelIconButton() : this(Macrocosm.EmptyTex) { }
 
-		public UIPanelIconButton(Asset<Texture2D> texture) :
-			this(texture,
-				 ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/SmallPanel", AssetRequestMode.ImmediateLoad),
-				 ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/SmallPanelBorder", AssetRequestMode.ImmediateLoad),
-				 ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/SmallPanelHoverBorder", AssetRequestMode.ImmediateLoad)
-			)
-		{ }
+        public UIPanelIconButton(Asset<Texture2D> texture) :
+            this(texture,
+                 ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/SmallPanel", AssetRequestMode.ImmediateLoad),
+                 ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/SmallPanelBorder", AssetRequestMode.ImmediateLoad),
+                 ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/SmallPanelHoverBorder", AssetRequestMode.ImmediateLoad)
+            )
+        { }
 
-		public UIPanelIconButton(
-			Asset<Texture2D> texture,
-			Asset<Texture2D> backPanelTexture,
-			Asset<Texture2D> backPanelBorderTexture,
-			Asset<Texture2D> backPanelHoverBorderTexture)
-			: base(texture, backPanelHoverBorderTexture)
-		{
-			SetPanelTextures(backPanelTexture, backPanelBorderTexture);
+        public UIPanelIconButton(
+            Asset<Texture2D> texture,
+            Asset<Texture2D> backPanelTexture,
+            Asset<Texture2D> backPanelBorderTexture,
+            Asset<Texture2D> backPanelHoverBorderTexture)
+            : base(texture, backPanelHoverBorderTexture)
+        {
+            SetPanelTextures(backPanelTexture, backPanelBorderTexture);
         }
 
-		public void SetPanelTextures(Asset<Texture2D> backPanelTexture, Asset<Texture2D> backPanelBorderTexture, Asset<Texture2D> backPanelHoverBorderTexture = null)
+        public void SetPanelTextures(Asset<Texture2D> backPanelTexture, Asset<Texture2D> backPanelBorderTexture, Asset<Texture2D> backPanelHoverBorderTexture = null)
         {
             this.backPanelTexture = backPanelTexture;
             this.backPanelBorderTexture = backPanelBorderTexture;
@@ -54,51 +54,51 @@ namespace Macrocosm.Common.UI
             Width.Set(backPanelTexture.Width(), 0f);
             Height.Set(backPanelTexture.Height(), 0f);
 
-			if (backPanelHoverBorderTexture is not null)
-				SetBorderTexture(backPanelHoverBorderTexture);
+            if (backPanelHoverBorderTexture is not null)
+                SetBorderTexture(backPanelHoverBorderTexture);
         }
 
         public new void SetImage(Asset<Texture2D> texture)
-		{
-			var width = Width;
-			var height = Height;
-			base.SetImage(texture);
-			Width = width;
-			Height = height;
-		}
+        {
+            var width = Width;
+            var height = Height;
+            base.SetImage(texture);
+            Width = width;
+            Height = height;
+        }
 
-		SpriteBatchState state;
-		protected override void DrawSelf(SpriteBatch spriteBatch)
-		{
-			bool interactible = CheckInteractible();
+        SpriteBatchState state;
+        protected override void DrawSelf(SpriteBatch spriteBatch)
+        {
+            bool interactible = CheckInteractible();
 
-			CalculatedStyle dimensions = GetDimensions();
-			Vector2 position = dimensions.Position() + new Vector2(dimensions.Width, dimensions.Height) / 2f;
+            CalculatedStyle dimensions = GetDimensions();
+            Vector2 position = dimensions.Position() + new Vector2(dimensions.Width, dimensions.Height) / 2f;
 
             Color backPanelBorderColor = BackPanelBorderColor * (IsMouseHovering && CheckInteractible() ? visibilityHover : visibilityInteractible);
-			Color backPanelColor;
+            Color backPanelColor;
 
-			if (!interactible)
-				backPanelColor = BackPanelColor.WithSaturation(0.25f);
-			else if ((HasFocus || IsMouseHovering) && !OverrideBackgroundColor)
-				backPanelColor = FocusedBackPanelColor;
-			else
-				backPanelColor = BackPanelColor;
+            if (!interactible)
+                backPanelColor = BackPanelColor.WithSaturation(0.25f);
+            else if ((HasFocus || IsMouseHovering) && !OverrideBackgroundColor)
+                backPanelColor = FocusedBackPanelColor;
+            else
+                backPanelColor = BackPanelColor;
 
-			if (!OverrideBackgroundColor)
-				backPanelColor *= IsMouseHovering && interactible ? visibilityHover : visibilityInteractible;
+            if (!OverrideBackgroundColor)
+                backPanelColor *= IsMouseHovering && interactible ? visibilityHover : visibilityInteractible;
 
             spriteBatch.Draw(backPanelTexture.Value, position, null, backPanelColor, 0f, backPanelTexture.Size() / 2f, 1f, SpriteEffects.None, 0f);
-			spriteBatch.Draw(backPanelBorderTexture.Value, position, null, backPanelBorderColor, 0f, backPanelBorderTexture.Size() / 2f, 1f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(backPanelBorderTexture.Value, position, null, backPanelBorderColor, 0f, backPanelBorderTexture.Size() / 2f, 1f, SpriteEffects.None, 0f);
 
-			if ((IsMouseHovering || (HasFocus && DrawBorderIfInFocus) || remoteInteractionFeedbackTicks > 0) && interactible)
-				spriteBatch.Draw(borderTexture .Value, position, null, BackPanelHoverBorderColor, 0f, borderTexture.Size() / 2f, 1f, SpriteEffects.None, 0f);
+            if ((IsMouseHovering || (HasFocus && DrawBorderIfInFocus) || remoteInteractionFeedbackTicks > 0) && interactible)
+                spriteBatch.Draw(borderTexture.Value, position, null, BackPanelHoverBorderColor, 0f, borderTexture.Size() / 2f, 1f, SpriteEffects.None, 0f);
 
-			DrawIcon(spriteBatch, position, interactible);
-		}
+            DrawIcon(spriteBatch, position, interactible);
+        }
 
-		private void DrawIcon(SpriteBatch spriteBatch, Vector2 position, bool interactible)
-		{
+        private void DrawIcon(SpriteBatch spriteBatch, Vector2 position, bool interactible)
+        {
             if (GrayscaleIconIfNotInteractible && !interactible)
             {
                 Effect grayscaleEffect = ModContent.Request<Effect>("Macrocosm/Assets/Effects/Grayscale").Value;
@@ -115,5 +115,5 @@ namespace Macrocosm.Common.UI
                 spriteBatch.Begin(state);
             }
         }
-	}
+    }
 }

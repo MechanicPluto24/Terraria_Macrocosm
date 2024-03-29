@@ -7,11 +7,8 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
 using Terraria;
-using Terraria.Audio;
 using Terraria.DataStructures;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Melee
@@ -25,7 +22,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             End
         }
         ProcellarumState chargeState;
-        public override int baseSpeed => 65;
+        public override int BaseSpeed => 65;
         public override int HalberdSize => 200;
         public override int RotPointToBlade => 20;
         public override int RotationOffset => 39;
@@ -165,7 +162,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                         break;
                 }
                 Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.ThreeQuarters, Player.direction * -MathHelper.PiOver2);
-                float holdAngle = -MathHelper.PiOver2 + MathHelper.Pi * 20/180 * Player.direction;
+                float holdAngle = -MathHelper.PiOver2 + MathHelper.Pi * 20 / 180 * Player.direction;
                 Projectile.Center = Player.MountedCenter + Player.direction * new Vector2(8, 0);
                 if (chargeState != ProcellarumState.End)
                 {
@@ -210,7 +207,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref NPC.HitModifiers modifiers)
         {
-            if(projectile.type == ModContent.ProjectileType<Procellarum_LightBolt>())
+            if (projectile.type == ModContent.ProjectileType<Procellarum_LightBolt>())
             {
                 modifiers.FinalDamage *= 2;
             }

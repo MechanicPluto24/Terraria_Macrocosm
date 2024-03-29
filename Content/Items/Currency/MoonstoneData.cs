@@ -1,19 +1,17 @@
 using Microsoft.Xna.Framework;
-using Terraria;
 using Terraria.GameContent.UI;
-using Terraria.Localization;
 
 namespace Macrocosm.Content.Items.Currency
 {
-	public class MoonstoneData : CustomCurrencySingleCoin
-	{
-		public MoonstoneData(int coinItemID, long currencyCap, string currencyTextKey) : base(coinItemID, currencyCap) 
-		{
+    public class MoonstoneData : CustomCurrencySingleCoin
+    {
+        public MoonstoneData(int coinItemID, long currencyCap, string currencyTextKey) : base(coinItemID, currencyCap)
+        {
             this.CurrencyTextKey = currencyTextKey;
             CurrencyTextColor = Color.DarkGray;
-		}
+        }
 
-		/*
+        /*
 		public override void GetPriceText(string[] lines, ref int currentLine, long price)
 		{
 			Color color = CurrencyTextColor * ((float)Main.mouseTextColor / 255f);
@@ -29,5 +27,5 @@ namespace Macrocosm.Content.Items.Currency
 		}
 		*/
 
-	}
+    }
 }

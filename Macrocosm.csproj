@@ -26,6 +26,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Content\Items\Consumables\BossSummons\CraterDemonSummon_Item.png" />
+    <None Remove="Content\Machines\OreExcavator_Glow.png" />
     <None Remove="Content\Tiles\Paintings\p10.png" />
   </ItemGroup>
   <ItemGroup>

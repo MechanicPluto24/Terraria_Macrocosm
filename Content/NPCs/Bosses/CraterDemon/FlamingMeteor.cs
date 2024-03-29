@@ -10,82 +10,82 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 {
-	//Had to salvage it from an extracted DLL, so no comments.  Oops.  -- absoluteAquarian
-	public class FlamingMeteor : ModProjectile
-	{
-		public override void SetStaticDefaults()
-		{
-			ProjectileID.Sets.TrailCacheLength[Type] = 35;
-			ProjectileID.Sets.TrailingMode[Type] = 3;
+    //Had to salvage it from an extracted DLL, so no comments.  Oops.  -- absoluteAquarian
+    public class FlamingMeteor : ModProjectile
+    {
+        public override void SetStaticDefaults()
+        {
+            ProjectileID.Sets.TrailCacheLength[Type] = 35;
+            ProjectileID.Sets.TrailingMode[Type] = 3;
 
-			Main.projFrames[Type] = 6;
-		}
+            Main.projFrames[Type] = 6;
+        }
 
-		public override void SetDefaults()
-		{
-			Projectile.width = 28;
-			Projectile.height = 28;
-			Projectile.hostile = true;
-			Projectile.friendly = false;
-			Projectile.tileCollide = false;
-			Projectile.timeLeft = 600;
-			Projectile.penetrate = -1;
-			Projectile.alpha = 255;
+        public override void SetDefaults()
+        {
+            Projectile.width = 28;
+            Projectile.height = 28;
+            Projectile.hostile = true;
+            Projectile.friendly = false;
+            Projectile.tileCollide = false;
+            Projectile.timeLeft = 600;
+            Projectile.penetrate = -1;
+            Projectile.alpha = 255;
 
-			Projectile.SetTrail<FlamingMeteorTrail>();
-		}
+            Projectile.SetTrail<FlamingMeteorTrail>();
+        }
 
         private float flashTimer;
         private float maxFlashTimer = 5;
 
-		private bool spawned;
-		private Vector2 spawnPosition;
-		public override void AI()
-		{
-			if (!spawned)
-			{
-				spawnPosition = Projectile.position;
-				spawned = true;
+        private bool spawned;
+        private Vector2 spawnPosition;
+        public override void AI()
+        {
+            if (!spawned)
+            {
+                spawnPosition = Projectile.position;
+                spawned = true;
             }
 
-			Projectile.velocity.Y += 0.2f;
-			if (Projectile.velocity.Y > 24f)
-				Projectile.velocity.Y = 24f;
+            Projectile.velocity.Y += 0.2f;
+            if (Projectile.velocity.Y > 24f)
+                Projectile.velocity.Y = 24f;
 
-			if (Projectile.velocity != Vector2.Zero)
-				Projectile.rotation = Projectile.velocity.ToRotation() - MathHelper.PiOver2;
+            if (Projectile.velocity != Vector2.Zero)
+                Projectile.rotation = Projectile.velocity.ToRotation() - MathHelper.PiOver2;
 
-			Lighting.AddLight(Projectile.Center, new Color(242, 142, 35).ToVector3());
+            Lighting.AddLight(Projectile.Center, new Color(242, 142, 35).ToVector3());
 
-			for (int i = 0; i < 2; i++)
-			{
-				Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.Torch, -Projectile.velocity.X * 0.2f, -Projectile.velocity.Y * 0.2f, 127, new Color(255, 255, 255), Main.rand.NextFloat(1.1f, 1.4f));
-				dust.noGravity = true;
-				dust.noLight = true;
-			}
+            for (int i = 0; i < 2; i++)
+            {
+                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.Torch, -Projectile.velocity.X * 0.2f, -Projectile.velocity.Y * 0.2f, 127, new Color(255, 255, 255), Main.rand.NextFloat(1.1f, 1.4f));
+                dust.noGravity = true;
+                dust.noLight = true;
+            }
 
-			if (++Projectile.frameCounter >= 4)
-			{
-				Projectile.frameCounter = 0;
-				Projectile.frame = ++Projectile.frame % Main.projFrames[Type]; // 6 frames @ 4 ticks/frame
-			}
+            if (++Projectile.frameCounter >= 4)
+            {
+                Projectile.frameCounter = 0;
+                Projectile.frame = ++Projectile.frame % Main.projFrames[Type]; // 6 frames @ 4 ticks/frame
+            }
 
-			Projectile.alpha -= 15;
+            Projectile.alpha -= 15;
             flashTimer++;
         }
 
         private SpriteBatchState state;
-		public override bool PreDraw(ref Color lightColor)
-		{
+        public override bool PreDraw(ref Color lightColor)
+        {
             ProjectileID.Sets.TrailCacheLength[Type] = 15;
             Texture2D tex = TextureAssets.Projectile[Type].Value;
 
-			Rectangle sourceRect = tex.Frame(1, Main.projFrames[Type], frameY: Projectile.frame);
-			Vector2 origin = Projectile.Size / 2f + new Vector2(6, 32);
+            Rectangle sourceRect = tex.Frame(1, Main.projFrames[Type], frameY: Projectile.frame);
+            Vector2 origin = Projectile.Size / 2f + new Vector2(6, 32);
 
-			state.SaveState(Main.spriteBatch);
-			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(BlendState.Additive, state);
+            state.SaveState(Main.spriteBatch);
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(BlendState.Additive, state);
 
 
             if (flashTimer < maxFlashTimer)
@@ -97,8 +97,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 float opacity = 1f;
                 Main.spriteBatch.Draw(flare, position - Main.screenPosition, null, new Color(242, 142, 35).WithOpacity(opacity), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
             }
-			else
-			{
+            else
+            {
                 Projectile.GetTrail().Draw(Projectile.Size / 2f);
             }
 
@@ -108,10 +108,10 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition, sourceRect, (Color.White * (1f - Projectile.alpha / 255f)).WithAlpha(65), Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
 
             return false;
-		}
+        }
 
-		public override void ModifyDamageHitbox(ref Rectangle hitbox)
-		{
-		}
-	}
+        public override void ModifyDamageHitbox(ref Rectangle hitbox)
+        {
+        }
+    }
 }

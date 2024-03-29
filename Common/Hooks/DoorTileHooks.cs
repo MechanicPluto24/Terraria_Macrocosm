@@ -1,14 +1,13 @@
-﻿using System;
-using Terraria;
-using Terraria.Audio;
-using Terraria.ModLoader;
-using Terraria.ID;
-using Terraria.GameContent;
-using MonoMod.Cil;
+﻿using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Common.TileFrame;
 using Microsoft.Xna.Framework;
 using Mono.Cecil.Cil;
-using Macrocosm.Common.TileFrame;
-using Macrocosm.Common.Bases.Tiles;
+using MonoMod.Cil;
+using Terraria;
+using Terraria.Audio;
+using Terraria.GameContent;
+using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Hooks
 {
@@ -84,8 +83,8 @@ namespace Macrocosm.Common.Hooks
                             Wiring.SkipWire(x, y);
 
                         if (TileLoader.GetTile(openDoorID) is IDoorTile openDoor && openDoor.AnimationData.HasValue)
-                             TileAnimation.NewTemporaryAnimation(openDoor.AnimationData.Value, x, y, openDoorID, closeDoorID);
- 
+                            TileAnimation.NewTemporaryAnimation(openDoor.AnimationData.Value, x, y, openDoorID, closeDoorID);
+
                         tile = Main.tile[x, y];
                         tile.HasTile = true;
                         tile.TileType = openDoorID;
@@ -98,7 +97,7 @@ namespace Macrocosm.Common.Hooks
                 return true;
             }
 
-            return orig(i,j,direction);
+            return orig(i, j, direction);
         }
 
         /// <summary> Hook for closing custom modded doors. </summary>
@@ -199,7 +198,7 @@ namespace Macrocosm.Common.Hooks
 
                 if (Main.netMode != NetmodeID.MultiplayerClient && Wiring.running)
                 {
-                    for(int y = 0; y < door.Height; y++)
+                    for (int y = 0; y < door.Height; y++)
                     {
                         Wiring.SkipWire(tilePosX, tilePosY + y);
                     }
@@ -209,7 +208,7 @@ namespace Macrocosm.Common.Hooks
                 return true;
             }
 
-            return orig(i,j,forced);
+            return orig(i, j, forced);
         }
 
         private void ModifyAutoDoorPlayerCollisionRectangleILHook(ILContext il)

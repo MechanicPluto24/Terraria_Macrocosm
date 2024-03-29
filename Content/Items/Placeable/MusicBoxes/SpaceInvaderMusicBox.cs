@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 namespace Macrocosm.Content.Items.Placeable.MusicBoxes
 {
     public class SpaceInvaderMusicBox : ModItem
-	{
+    {
         public override void SetStaticDefaults()
         {
             ItemID.Sets.CanGetPrefixes[Type] = false;

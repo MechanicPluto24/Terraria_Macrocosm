@@ -1,15 +1,14 @@
-﻿using Macrocosm.Content.Biomes;
+﻿using Macrocosm.Common.Utils;
+using Macrocosm.Content.Biomes;
 using Macrocosm.Content.NPCs.Global;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Terraria.ID;
-using Terraria;
-using Terraria.ModLoader;
 using ReLogic.Content;
 using System;
-using Macrocosm.Common.Utils;
 using System.Linq;
-using Terraria.GameContent;
+using Terraria;
+using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
@@ -125,7 +124,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 float angleJoint1 = (float)Math.Acos(MathHelper.Clamp(cosAngleJoint1, -1f, 1f));
 
                 rotationLeg1 = baseToTipVector.ToRotation() + angleJoint1;
-   
+
                 float cosAngleJoint2 = (length1 * length1 + length2 * length2 - baseToTipDistance * baseToTipDistance) / (2 * length1 * length2);
                 float angleJoint2 = (float)Math.Acos(MathHelper.Clamp(cosAngleJoint2, -1f, 1f));
 
@@ -211,7 +210,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         }
 
         public override void SetDefaults()
-        {   
+        {
             NPC.damage = 150;
             NPC.defense = 25;
             NPC.lifeMax = 6000;
@@ -233,7 +232,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         }
 
         private void InitializeLegs()
-        {           
+        {
             for (int i = 0; i < LegCount; i++)
             {
                 Legs[i] = new Leg(NPC, i, new Vector2(18 - (8 * i), head.Height * 0.8f));
@@ -247,7 +246,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             int legsTouchingGround = Legs.Count(leg => WorldGen.SolidOrSlopedTile(Main.tile[leg.TipPosition.ToTileCoordinates()]));
             bool anyLegTouchingGround = legsTouchingGround > 0;
             collisionHitbox = new((int)NPC.position.X, (int)NPC.position.Y, 4 * 16, 12 * 16);
-            Rectangle tileCollisionHitbox = new (collisionHitbox.X / 16, collisionHitbox.Y / 16, collisionHitbox.Width / 16, collisionHitbox.Height / 16);
+            Rectangle tileCollisionHitbox = new(collisionHitbox.X / 16, collisionHitbox.Y / 16, collisionHitbox.Width / 16, collisionHitbox.Height / 16);
             bool midAir = Utility.EmptyTiles(tileCollisionHitbox);
             bool allowedVerticalMovement = false;
 
@@ -257,7 +256,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 Vector2 direction = NPC.Center.DirectionTo(TargetPlayer.Center);
                 NPC.velocity.X = direction.X * speed;
 
-                if(midAir && !(Legs.Any(leg => leg.TipPosition.Y < (NPC.position.Y + NPC.height))))
+                if (midAir && !(Legs.Any(leg => leg.TipPosition.Y < (NPC.position.Y + NPC.height))))
                 {
                     NPC.velocity.Y = Math.Abs(NPC.velocity.Y);
                     NPC.velocity.Y += NPC.gravity;
@@ -269,13 +268,13 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 }
             }
 
-            if(Math.Abs(NPC.velocity.X) > Math.Abs(NPC.velocity.Y))
+            if (Math.Abs(NPC.velocity.X) > Math.Abs(NPC.velocity.Y))
                 LegTimer += 0.015f * speed;
             else
                 LegTimer += 0.006f * speed;
 
-            float stepSize = 160f;  
-            float restDistance = 60f;  
+            float stepSize = 160f;
+            float restDistance = 60f;
             for (int i = 0; i < LegCount; i++)
             {
                 float legMultiplier = (i <= 2 ? 1 * (i + 1) : -1f * (i - LegCount / 2 + 1));
@@ -290,7 +289,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                     float legOffset;
                     if (sameDirection)
                         legOffset = MathHelper.Lerp(legMultiplier * restDistance, stepSize * legDirection, speedAmount);
-                    else 
+                    else
                         legOffset = MathHelper.Lerp(legMultiplier * restDistance, stepSize * 0.5f * legDirection, speedAmount);
 
                     Vector2 targetPosition = new(NPC.Center.X + legOffset, NPC.position.Y + NPC.height + 122);
@@ -314,30 +313,30 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             if (WorldGen.InWorld(startTile.X, startTile.Y))
             {
                 for (int y = startTile.Y; y < startTile.Y + verticalRange && y < Main.maxTilesY; y++)
-                     if (WorldGen.SolidTile(startTile.X, y) && !WorldGen.SolidTile(startTile.X, y - 1))
-                         return new Vector2(startTile.X * 16, y * 16);
- 
+                    if (WorldGen.SolidTile(startTile.X, y) && !WorldGen.SolidTile(startTile.X, y - 1))
+                        return new Vector2(startTile.X * 16, y * 16);
+
                 for (int y = startTile.Y; y > startTile.Y - verticalRange && y >= 0; y--)
-                     if (WorldGen.SolidTile(startTile.X, y) && !WorldGen.SolidTile(startTile.X, y - 1))
-                         return new Vector2(startTile.X * 16, y * 16);
- 
+                    if (WorldGen.SolidTile(startTile.X, y) && !WorldGen.SolidTile(startTile.X, y - 1))
+                        return new Vector2(startTile.X * 16, y * 16);
+
                 for (int x = -horizontalRange; x <= horizontalRange; x++)
                 {
                     if (x == 0)
-                        continue;  
+                        continue;
 
                     for (int y = startTile.Y; y < startTile.Y + verticalRange && y < Main.maxTilesY; y++)
                     {
                         int checkX = startTile.X + x;
                         if (WorldGen.SolidTile(checkX, y) && !WorldGen.SolidTile(checkX, y - 1))
-                             return new Vector2(checkX * 16, y * 16);
+                            return new Vector2(checkX * 16, y * 16);
                     }
 
                     for (int y = startTile.Y; y > startTile.Y - verticalRange && y >= 0; y--)
                     {
                         int checkX = startTile.X + x;
                         if (WorldGen.SolidTile(checkX, y) && !WorldGen.SolidTile(checkX, y - 1))
-                             return new Vector2(checkX * 16, y * 16);
+                            return new Vector2(checkX * 16, y * 16);
                     }
                 }
             }
@@ -354,7 +353,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 Legs[i].Draw(spriteBatch, NPC, screenPos, drawColor);
             }
 
-            spriteBatch.Draw(head, new Vector2(NPC.Center.X, NPC.position.Y + head.Height/2) - Main.screenPosition, NPC.frame, drawColor, NPC.rotation, head.Size() / 2f, NPC.scale, effects, 0);
+            spriteBatch.Draw(head, new Vector2(NPC.Center.X, NPC.position.Y + head.Height / 2) - Main.screenPosition, NPC.frame, drawColor, NPC.rotation, head.Size() / 2f, NPC.scale, effects, 0);
 
             // Debug collision hitbox
             /*

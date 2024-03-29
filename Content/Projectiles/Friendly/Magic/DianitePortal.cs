@@ -3,7 +3,6 @@ using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
@@ -36,18 +35,18 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
 
         public override void SetDefaults()
-		{
+        {
             defWidth = defHeight = Projectile.width = Projectile.height = 68;
             Projectile.height = 68;
-			Projectile.friendly = true;
-			Projectile.DamageType = DamageClass.Magic;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Magic;
             Projectile.penetrate = -1;
             Projectile.tileCollide = false;
             Projectile.alpha = 255;
         }
 
         public override void AI()
-		{
+        {
             Player player = Main.player[Projectile.owner];
 
             if (!player.active || player.dead || !player.channel || !manaCheck)
@@ -72,7 +71,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                     Vector2 target = (Main.MouseWorld - Projectile.Center).SafeNormalize(default);
                     int direction = Math.Sign(target.X);
 
-                    float shootAngle = -MathHelper.Pi/12 * direction * MathF.Abs(MathF.Cos(target.ToRotation()));
+                    float shootAngle = -MathHelper.Pi / 12 * direction * MathF.Abs(MathF.Cos(target.ToRotation()));
                     float shootSpeed = Main.rand.NextFloat(16f, 20f);
 
                     Vector2 shootVelocity = target.RotatedBy(shootAngle) * shootSpeed;
@@ -86,15 +85,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                         damage = (int)(damage * 1.2f);
                         type = ModContent.ProjectileType<DianiteMeteor>();
                     }
-       
-                    Projectile.NewProjectile(Projectile.InheritSource(Projectile), shootPosition, shootVelocity.RotatedByRandom(MathHelper.Pi/24), type, damage, Projectile.knockBack, Main.player[Projectile.owner].whoAmI);
+
+                    Projectile.NewProjectile(Projectile.InheritSource(Projectile), shootPosition, shootVelocity.RotatedByRandom(MathHelper.Pi / 24), type, damage, Projectile.knockBack, Main.player[Projectile.owner].whoAmI);
                 }
             }
 
-            if(AITimer % 16 == 0)
+            if (AITimer % 16 == 0)
                 SoundEngine.PlaySound(SoundID.Item20, Projectile.Center);
 
-            Projectile.alpha = (int)MathHelper.Clamp((int)(255 - Projectile.ai[0]/12f * 255f), 0f, 255f);
+            Projectile.alpha = (int)MathHelper.Clamp((int)(255 - Projectile.ai[0] / 12f * 255f), 0f, 255f);
             Vector2 center = Projectile.Center;
             Projectile.scale = 0.05f + 0.65f * (1f - Projectile.alpha / 255f);
             Projectile.width = (int)(defWidth * Projectile.scale);
@@ -127,7 +126,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         }
 
         public override void OnKill(int timeLeft)
-		{
+        {
             //SoundEngine.PlaySound(SoundID.Item89, Projectile.position);
             SpawnParticles(100);
         }

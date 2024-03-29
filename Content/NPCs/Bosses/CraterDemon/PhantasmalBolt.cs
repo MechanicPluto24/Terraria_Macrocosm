@@ -1,14 +1,9 @@
-﻿using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Particles;
+﻿using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Graphics.PackedVector;
 using System;
 using Terraria;
 using Terraria.GameContent;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
@@ -74,14 +69,14 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             {
                 Projectile.frameCounter = 0;
                 if (++Projectile.frame >= 5)
-                    Projectile.frame = 0; 
+                    Projectile.frame = 0;
             }
-            return;        
+            return;
         }
 
         public override bool PreDraw(ref Color lightColor)
         {
-            float count = 18 * (1f - Projectile.alpha / 255f); 
+            float count = 18 * (1f - Projectile.alpha / 255f);
             for (int n = 0; n < count; n++)
             {
                 float factor = (1f - Projectile.alpha / 255f);
@@ -89,8 +84,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 Texture2D texture = TextureAssets.Projectile[Type].Value;
                 int frameY = (Projectile.frame + n) % 5;
                 Rectangle frame = texture.Frame(verticalFrames: Main.projFrames[Type], frameY: frameY);
-                Vector2 trailPosition = Projectile.position + frame.Size()/2f - Projectile.velocity.SafeNormalize(default) * n * 5f;
-                Main.spriteBatch.Draw(texture, trailPosition - Main.screenPosition, frame, color, Projectile.rotation, frame.Size()/2f, Projectile.scale, SpriteEffects.None, 0);
+                Vector2 trailPosition = Projectile.position + frame.Size() / 2f - Projectile.velocity.SafeNormalize(default) * n * 5f;
+                Main.spriteBatch.Draw(texture, trailPosition - Main.screenPosition, frame, color, Projectile.rotation, frame.Size() / 2f, Projectile.scale, SpriteEffects.None, 0);
             }
 
             return false;

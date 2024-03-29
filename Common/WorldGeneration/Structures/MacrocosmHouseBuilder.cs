@@ -1,12 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Terraria;
-using Terraria.GameContent.Biomes.CaveHouse;
 using Terraria.ID;
 using Terraria.Utilities;
 using Terraria.WorldBuilding;
@@ -57,7 +55,7 @@ namespace Macrocosm.Common.WorldGeneration
 
         public override bool Place(Point origin, StructureMap structures)
         {
-            if(!(IsValid = Initialize(origin, structures, out List<Rectangle> rooms)))
+            if (!(IsValid = Initialize(origin, structures, out List<Rectangle> rooms)))
                 return false;
 
             Rooms = rooms;
@@ -181,8 +179,8 @@ namespace Macrocosm.Common.WorldGeneration
                 if (room.Y + room.Height > Main.maxTilesY - 220)
                     return false;
 
-                if(!structures.CanPlace(room))
-                    return false;       
+                if (!structures.CanPlace(room))
+                    return false;
             }
 
             return true;
@@ -234,7 +232,7 @@ namespace Macrocosm.Common.WorldGeneration
                         WorldGen.PlaceTile(room.X + 1, room.Y + 1, TileType, true);
                         tile.Slope = SlopeType.SlopeUpLeft;
                     }
-                   
+
                     tile = Main.tile[room.X + room.Width - 2, room.Y + 1];
                     if (!tile.HasTile)
                     {
@@ -280,7 +278,7 @@ namespace Macrocosm.Common.WorldGeneration
                             }
                         case 1:
                             {
-                                if(ChandelierEntry.IsValid)
+                                if (ChandelierEntry.IsValid)
                                 {
                                     int num5 = room.Y + 1;
                                     WorldGen.PlaceTile(tileX, num5, ChandelierEntry.Type, mute: true, forced: false, -1, ChandelierEntry.GetStyle());
@@ -294,7 +292,7 @@ namespace Macrocosm.Common.WorldGeneration
                                         }
                                     }
                                 }
-                                
+
                                 break;
                             }
                     }

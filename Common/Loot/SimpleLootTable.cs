@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ModLoader;
@@ -15,14 +12,14 @@ namespace Macrocosm.Common.Loot
     /// </summary>
     public class SimpleLootTable : ILoot
     {
-        public readonly List<IItemDropRule> Entries; 
+        public readonly List<IItemDropRule> Entries;
 
         public readonly List<IBlacklistable> BlacklistableEntries;
 
         public SimpleLootTable()
         {
-            Entries = [];
-            BlacklistableEntries = [];
+            Entries = new();
+            BlacklistableEntries = new();
         }
 
         public IItemDropRule Add(IItemDropRule entry)
@@ -41,7 +38,7 @@ namespace Macrocosm.Common.Loot
         {
             Entries.Remove(entry);
 
-            if(entry is IBlacklistable blacklistable)
+            if (entry is IBlacklistable blacklistable)
                 BlacklistableEntries.Remove(blacklistable);
 
             return entry;
@@ -52,7 +49,7 @@ namespace Macrocosm.Common.Loot
             foreach (var entry in Entries)
             {
                 if (predicate(entry))
-                     Remove(entry);
+                    Remove(entry);
             }
         }
 

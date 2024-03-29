@@ -10,14 +10,14 @@ using Terraria.WorldBuilding;
 
 namespace Macrocosm.Common.Commands
 {
-	public class WorldRegenCommand : ModCommand
-	{
-		public override string Command => "regen";
+    public class WorldRegenCommand : ModCommand
+    {
+        public override string Command => "regen";
 
-		public override CommandType Type => CommandType.Chat;
+        public override CommandType Type => CommandType.Chat;
 
-		public override void Action(CommandCaller caller, string input, string[] args)
-		{
+        public override void Action(CommandCaller caller, string input, string[] args)
+        {
             #if !DEBUG
 				Main.NewText("You must be in debug mode to use this!");
 				return;
@@ -62,5 +62,5 @@ namespace Macrocosm.Common.Commands
                 Utility.LogChatMessage($"Reframe complete in {stopwatch.Elapsed}");
             }
         }
-	}
+    }
 }

@@ -1,5 +1,5 @@
-﻿using Macrocosm.Common.Bases.Machines;
-using Macrocosm.Common.Config;
+﻿using Macrocosm.Common.Config;
+using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;

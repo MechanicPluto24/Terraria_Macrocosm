@@ -11,7 +11,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.Localization;
@@ -21,154 +20,154 @@ using Terraria.UI;
 namespace Macrocosm.Content.Rockets.UI
 {
     public class UICargoTab : UIPanel, ITabUIElement, IRocketUIDataConsumer
-	{
-		public Rocket Rocket { get; set; } = new();
+    {
+        public Rocket Rocket { get; set; } = new();
 
-		private int InventorySize => (Rocket is not null && Rocket.HasInventory) ? Rocket.Inventory.Size : 0;
-		private int cacheSize = Rocket.DefaultInventorySize;
+        private int InventorySize => (Rocket is not null && Rocket.HasInventory) ? Rocket.Inventory.Size : 0;
+        private int cacheSize = Rocket.DefaultInventorySize;
 
-		private UIPanel inventoryPanel;
-		private UIPanelIconButton requestAccessButton;
+        private UIPanel inventoryPanel;
+        private UIPanelIconButton requestAccessButton;
 
         private UIListScrollablePanel crewPanel;
-		private UIPanel fuelPanel;
+        private UIPanel fuelPanel;
 
-		private Player commander = Main.LocalPlayer;
-		private Player prevCommander = Main.LocalPlayer;
-		private List<Player> crew = new();
-		private List<Player> prevCrew = new();
+        private Player commander = Main.LocalPlayer;
+        private Player prevCommander = Main.LocalPlayer;
+        private List<Player> crew = new();
+        private List<Player> prevCrew = new();
 
-		public UICargoTab()
-		{
-		}
+        public UICargoTab()
+        {
+        }
 
-		public void OnRocketChanged()
-		{
-			cacheSize = InventorySize;
-			this.ReplaceChildWith(inventoryPanel, inventoryPanel = CreateInventoryPanel());
-		}
+        public void OnRocketChanged()
+        {
+            cacheSize = InventorySize;
+            this.ReplaceChildWith(inventoryPanel, inventoryPanel = CreateInventoryPanel());
+        }
 
-		public void OnTabOpen()
-		{
-			cacheSize = InventorySize;
-			this.ReplaceChildWith(inventoryPanel, inventoryPanel = CreateInventoryPanel());
-		}
+        public void OnTabOpen()
+        {
+            cacheSize = InventorySize;
+            this.ReplaceChildWith(inventoryPanel, inventoryPanel = CreateInventoryPanel());
+        }
 
-		public override void OnInitialize()
-		{
-			Width.Set(0, 1f);
-			Height.Set(0, 1f);
-			HAlign = 0.5f;
-			VAlign = 0.5f;
+        public override void OnInitialize()
+        {
+            Width.Set(0, 1f);
+            Height.Set(0, 1f);
+            HAlign = 0.5f;
+            VAlign = 0.5f;
 
-			SetPadding(6f);
+            SetPadding(6f);
 
-			BackgroundColor = UITheme.Current.TabStyle.BackgroundColor;
-			BorderColor = UITheme.Current.TabStyle.BorderColor;
+            BackgroundColor = UITheme.Current.TabStyle.BackgroundColor;
+            BorderColor = UITheme.Current.TabStyle.BorderColor;
 
             inventoryPanel = CreateInventoryPanel();
             inventoryPanel.Activate();
             Append(inventoryPanel);
 
-			crewPanel = CreateCrewPanel();
-			Append(crewPanel);
+            crewPanel = CreateCrewPanel();
+            Append(crewPanel);
 
-			fuelPanel = new()
-			{
-				Width = new(0, 0.4f),
-				Height = new(0, 1f),
-				HAlign = 0f,
-				BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
-				BorderColor = UITheme.Current.PanelStyle.BorderColor
-			};
-			fuelPanel.SetPadding(2f);
-			fuelPanel.Activate();
-			Append(fuelPanel);
-		}
+            fuelPanel = new()
+            {
+                Width = new(0, 0.4f),
+                Height = new(0, 1f),
+                HAlign = 0f,
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor
+            };
+            fuelPanel.SetPadding(2f);
+            fuelPanel.Activate();
+            Append(fuelPanel);
+        }
 
-		public override void Update(GameTime gameTime)
-		{
-			base.Update(gameTime);
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
 
-			UpdateCrewPanel();
-			UpdateInventory();
-		}
+            UpdateCrewPanel();
+            UpdateInventory();
+        }
 
-		private void UpdateCrewPanel()
-		{
-			if (Main.netMode != NetmodeID.MultiplayerClient)
-				return;
+        private void UpdateCrewPanel()
+        {
+            if (Main.netMode != NetmodeID.MultiplayerClient)
+                return;
 
-			crew.Clear();
+            crew.Clear();
 
-			for (int i = 0; i < Main.maxPlayers; i++)
-			{
-				var player = Main.player[i];
+            for (int i = 0; i < Main.maxPlayers; i++)
+            {
+                var player = Main.player[i];
 
-				if (!player.active)
-					continue;
+                if (!player.active)
+                    continue;
 
-				var rocketPlayer = player.GetModPlayer<RocketPlayer>();
+                var rocketPlayer = player.GetModPlayer<RocketPlayer>();
 
-				if (rocketPlayer.InRocket && rocketPlayer.RocketID == Rocket.WhoAmI)
-				{
-					if (rocketPlayer.IsCommander)
-						commander = player;
-					else
-						crew.Add(player);
-				}
-			}
+                if (rocketPlayer.InRocket && rocketPlayer.RocketID == Rocket.WhoAmI)
+                {
+                    if (rocketPlayer.IsCommander)
+                        commander = player;
+                    else
+                        crew.Add(player);
+                }
+            }
 
-			// TODO: check why this doesn't get updated when a remote client leaves the rocket 
-			if (!commander.Equals(prevCommander) || !crew.SequenceEqual(prevCrew))
-			{
-				crewPanel.Deactivate();
-				crewPanel.ClearList();
+            // TODO: check why this doesn't get updated when a remote client leaves the rocket 
+            if (!commander.Equals(prevCommander) || !crew.SequenceEqual(prevCrew))
+            {
+                crewPanel.Deactivate();
+                crewPanel.ClearList();
 
-				crewPanel.Add(new UIPlayerInfoElement(commander));
-				crew.ForEach(player => crewPanel.Add(new UIPlayerInfoElement(player)));
+                crewPanel.Add(new UIPlayerInfoElement(commander));
+                crew.ForEach(player => crewPanel.Add(new UIPlayerInfoElement(player)));
 
-				if (crew.Any())
-					crewPanel.OfType<UIPlayerInfoElement>().LastOrDefault().LastInList = true;
+                if (crew.Any())
+                    crewPanel.OfType<UIPlayerInfoElement>().LastOrDefault().LastInList = true;
 
-				prevCommander = commander;
-				prevCrew = crew;
+                prevCommander = commander;
+                prevCrew = crew;
 
-				Activate();
-			}
-		}
+                Activate();
+            }
+        }
 
-		private void UpdateInventory()
-		{
-			// Use H and J to increase/decrease inventory size, for testing
-			if (UISystem.DebugModeActive)
-			{
-				if (Main.LocalPlayer.controlQuickHeal && Rocket.Inventory.Size < Inventory.MaxInventorySize)
-					Rocket.Inventory.Size += 1;
+        private void UpdateInventory()
+        {
+            // Use H and J to increase/decrease inventory size, for testing
+            if (UISystem.DebugModeActive)
+            {
+                if (Main.LocalPlayer.controlQuickHeal && Rocket.Inventory.Size < Inventory.MaxInventorySize)
+                    Rocket.Inventory.Size += 1;
 
-				if (Main.LocalPlayer.controlQuickMana && Rocket.Inventory.Size > 1)
-					Rocket.Inventory.Size -= 1;
-			}
+                if (Main.LocalPlayer.controlQuickMana && Rocket.Inventory.Size > 1)
+                    Rocket.Inventory.Size -= 1;
+            }
 
-			if (cacheSize != InventorySize)
-			{
-				cacheSize = InventorySize;
-				this.ReplaceChildWith(inventoryPanel, inventoryPanel = CreateInventoryPanel());
-			}
+            if (cacheSize != InventorySize)
+            {
+                cacheSize = InventorySize;
+                this.ReplaceChildWith(inventoryPanel, inventoryPanel = CreateInventoryPanel());
+            }
 
-			if (Rocket is not null && Rocket.HasInventory && Main.netMode == NetmodeID.MultiplayerClient)
-			{
-				if (Rocket.Inventory.CanInteract)
-					requestAccessButton.SetImage(ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Inventory/InventoryOpen"));
-				else
-					requestAccessButton.SetImage(ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Inventory/InventoryClosed"));
-			}
-		}
+            if (Rocket is not null && Rocket.HasInventory && Main.netMode == NetmodeID.MultiplayerClient)
+            {
+                if (Rocket.Inventory.CanInteract)
+                    requestAccessButton.SetImage(ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Inventory/InventoryOpen"));
+                else
+                    requestAccessButton.SetImage(ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Inventory/InventoryClosed"));
+            }
+        }
 
-		private UIPanel CreateInventoryPanel()
-		{
+        private UIPanel CreateInventoryPanel()
+        {
             if (Rocket.HasInventory)
-			{
+            {
                 inventoryPanel = Rocket.Inventory.ProvideUI(out var slots, out var lootAllButton, out var depositAllButton, out var quickStackButton, out var restockInventoryButton, out var sortInventoryButton, iconsPerRow: 10, rowsWithoutScrollbar: 5);
                 inventoryPanel.Width = new(0, 0.596f);
                 inventoryPanel.Height = new(0, 0.535f);
@@ -176,20 +175,20 @@ namespace Macrocosm.Content.Rockets.UI
                 inventoryPanel.Top = new(0, 0);
                 inventoryPanel.HAlign = 0f;
                 inventoryPanel.SetPadding(0f);
-				inventoryPanel.PaddingLeft = 2f;
+                inventoryPanel.PaddingLeft = 2f;
 
                 inventoryPanel.Append(new UIHorizontalSeparator()
-				{
-					Width = new(0, 0.99f),
-					Top = new(0, 0.12f),
-					HAlign = 0.5f,
+                {
+                    Width = new(0, 0.99f),
+                    Top = new(0, 0.12f),
+                    HAlign = 0.5f,
                     Color = UITheme.Current.SeparatorColor
                 });
 
                 slots.SetTitle(new LocalizedColorScaleText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Inventory"), scale: 1.2f));
-				slots.Width = new(0, 1f);
-				slots.Height = new(0, 0.9f);
-				slots.Top = new(0, 0);
+                slots.Width = new(0, 1f);
+                slots.Height = new(0, 0.9f);
+                slots.Top = new(0, 0);
                 slots.SetPadding(0f);
 
                 if (Main.netMode == NetmodeID.MultiplayerClient)
@@ -226,38 +225,38 @@ namespace Macrocosm.Content.Rockets.UI
                     sortInventoryButton.Left.Percent = 0.72f;
                 }
             }
-			else
-			{
-				inventoryPanel = new();
-			}
+            else
+            {
+                inventoryPanel = new();
+            }
 
-			return inventoryPanel;
-		}
+            return inventoryPanel;
+        }
 
-		private UIListScrollablePanel CreateCrewPanel()
-		{
-			crewPanel = new(new LocalizedColorScaleText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Crew"), scale: 1.2f))
-			{
-				Top = new(0f, 0.54f),
-				Left = new(0, 0.405f),
-				Height = new(0, 0.46f),
-				Width = new(0, 0.596f),
-				BorderColor = UITheme.Current.PanelStyle.BorderColor,
-				BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
-				ScrollbarHAlign = 1.015f,
-				ListWidthWithScrollbar = new StyleDimension(0, 1f),
-				ShiftTitleIfHasScrollbar = false,
-				PaddingLeft = 12f,
-				PaddingRight = 12f,
-				ListOuterPadding = 12f,
-				PaddingTop = 0f,
-				PaddingBottom = 0f
-			};
+        private UIListScrollablePanel CreateCrewPanel()
+        {
+            crewPanel = new(new LocalizedColorScaleText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Crew"), scale: 1.2f))
+            {
+                Top = new(0f, 0.54f),
+                Left = new(0, 0.405f),
+                Height = new(0, 0.46f),
+                Width = new(0, 0.596f),
+                BorderColor = UITheme.Current.PanelStyle.BorderColor,
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+                ScrollbarHAlign = 1.015f,
+                ListWidthWithScrollbar = new StyleDimension(0, 1f),
+                ShiftTitleIfHasScrollbar = false,
+                PaddingLeft = 12f,
+                PaddingRight = 12f,
+                ListOuterPadding = 12f,
+                PaddingTop = 0f,
+                PaddingBottom = 0f
+            };
 
-			if (Main.netMode == NetmodeID.SinglePlayer)
-				crewPanel.Add(new UIPlayerInfoElement(Main.LocalPlayer));
+            if (Main.netMode == NetmodeID.SinglePlayer)
+                crewPanel.Add(new UIPlayerInfoElement(Main.LocalPlayer));
 
-			return crewPanel;
-		}
-	}
+            return crewPanel;
+        }
+    }
 }

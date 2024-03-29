@@ -6,8 +6,8 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 {
-	internal class MoonBaseCrate : ModTile
-	{
+    internal class MoonBaseCrate : ModTile
+    {
         public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
@@ -16,7 +16,7 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
             TileObjectData.newTile.CoordinateHeights = [16, 18];
-            TileObjectData.newTile.StyleHorizontal = true; 
+            TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.addTile(Type);
 
             DustType = ModContent.DustType<MoonBasePlatingDust>();

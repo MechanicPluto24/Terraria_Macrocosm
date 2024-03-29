@@ -3,16 +3,8 @@ using Macrocosm.Content.Tiles.Ambient;
 using Macrocosm.Content.Tiles.Blocks;
 using Macrocosm.Content.Tiles.Furniture.MoonBase;
 using Macrocosm.Content.Tiles.Walls;
-using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.WorldBuilding;
 
 namespace Macrocosm.Common.WorldGeneration.Structures
 {

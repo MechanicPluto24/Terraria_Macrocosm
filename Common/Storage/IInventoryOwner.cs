@@ -1,6 +1,4 @@
-﻿using Macrocosm.Common.Utils;
-using Macrocosm.Content.Machines;
-using Macrocosm.Content.Rockets;
+﻿using Macrocosm.Content.Rockets;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;

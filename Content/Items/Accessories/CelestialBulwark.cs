@@ -1,7 +1,6 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Graphics;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
@@ -16,64 +15,63 @@ using Terraria;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.ModLoader.Default;
 
 namespace Macrocosm.Content.Items.Accessories
 {
-	[AutoloadEquip(EquipType.Shield)]
-	public class CelestialBulwark : ModItem
-	{
-		public override void SetStaticDefaults()
-		{
+    [AutoloadEquip(EquipType.Shield)]
+    public class CelestialBulwark : ModItem
+    {
+        public override void SetStaticDefaults()
+        {
 
-		}
-		public override void SetDefaults()
-		{
-			Item.damage = 120;
-			Item.DamageType = DamageClass.Melee;
-			Item.crit = 0;
-			Item.knockBack = 9f;
-			Item.width = 34;
-			Item.height = 40;
-			Item.value = Item.sellPrice(gold: 10);
-			Item.rare = ItemRarityID.Expert;
-			Item.expert = true;
-			Item.accessory = true;
+        }
+        public override void SetDefaults()
+        {
+            Item.damage = 120;
+            Item.DamageType = DamageClass.Melee;
+            Item.crit = 0;
+            Item.knockBack = 9f;
+            Item.width = 34;
+            Item.height = 40;
+            Item.value = Item.sellPrice(gold: 10);
+            Item.rare = ItemRarityID.Expert;
+            Item.expert = true;
+            Item.accessory = true;
 
-			Item.defense = 14;
-		}
+            Item.defense = 14;
+        }
 
-		public override bool CanAccessoryBeEquippedWith(Item equippedItem, Item incomingItem, Player player)
-			=> !((equippedItem.type == Type && incomingItem.type == ItemID.EoCShield) || (incomingItem.type == Type && equippedItem.type == ItemID.EoCShield));
+        public override bool CanAccessoryBeEquippedWith(Item equippedItem, Item incomingItem, Player player)
+            => !((equippedItem.type == Type && incomingItem.type == ItemID.EoCShield) || (incomingItem.type == Type && equippedItem.type == ItemID.EoCShield));
 
-		public override void UpdateAccessory(Player player, bool hideVisual)
-		{
-			DashPlayer dashPlayer = player.GetModPlayer<DashPlayer>();
+        public override void UpdateAccessory(Player player, bool hideVisual)
+        {
+            DashPlayer dashPlayer = player.GetModPlayer<DashPlayer>();
 
-			dashPlayer.AccDashHorizontal = true;
-			dashPlayer.AccDashVertical = true;
+            dashPlayer.AccDashHorizontal = true;
+            dashPlayer.AccDashVertical = true;
 
             dashPlayer.AccDashCooldown = 45;
             dashPlayer.AccDashDuration = 35;
 
             dashPlayer.AccDashSpeedX = 14f;
-			dashPlayer.AccDashSpeedY = 8f;
+            dashPlayer.AccDashSpeedY = 8f;
 
-			dashPlayer.AccDashPreserveVelocity = false;
-			dashPlayer.AccDashAllowMovementDuringDashMultiplier = 0.5f;
+            dashPlayer.AccDashPreserveVelocity = false;
+            dashPlayer.AccDashAllowMovementDuringDashMultiplier = 0.5f;
 
-			dashPlayer.AccDashDamage = Item.damage;
-			dashPlayer.AccDashKnockback = Item.knockBack;
-			dashPlayer.AccDashImmuneTime = 6;
+            dashPlayer.AccDashDamage = Item.damage;
+            dashPlayer.AccDashKnockback = Item.knockBack;
+            dashPlayer.AccDashImmuneTime = 6;
 
-			dashPlayer.AccDashHitboxIncrease = (int)(12 * Utility.CubicEaseIn(dashPlayer.DashProgress));
+            dashPlayer.AccDashHitboxIncrease = (int)(12 * Utility.CubicEaseIn(dashPlayer.DashProgress));
 
-			dashPlayer.AccDashAfterImage = true;
-			dashPlayer.AccDashStartVisuals = StartDashVisuals;
-			dashPlayer.AccDashVisuals = DashVisuals;
+            dashPlayer.AccDashAfterImage = true;
+            dashPlayer.AccDashStartVisuals = StartDashVisuals;
+            dashPlayer.AccDashVisuals = DashVisuals;
 
-			dashPlayer.OnCollisionWithNPC = OnNPCCollide;
-		}
+            dashPlayer.OnCollisionWithNPC = OnNPCCollide;
+        }
 
         public override void UpdateVanity(Player player)
         {
@@ -92,9 +90,9 @@ namespace Macrocosm.Content.Items.Accessories
 
         private void DashVisuals(Player player)
         {
-			DashPlayer dashPlayer = player.GetModPlayer<DashPlayer>();
+            DashPlayer dashPlayer = player.GetModPlayer<DashPlayer>();
             float progress = (float)dashPlayer.DashTimer / dashPlayer.AccDashDuration;
-			int count = (int)MathF.Floor(5 * progress);
+            int count = (int)MathF.Floor(5 * progress);
 
             for (int i = 0; i < count; i++)
             {
@@ -110,13 +108,13 @@ namespace Macrocosm.Content.Items.Accessories
         }
 
         private void OnNPCCollide(Player player, NPC npc)
-		{
+        {
             DashPlayer dashPlayer = player.GetModPlayer<DashPlayer>();
-			int count = (int)(10 * dashPlayer.DashProgress);
+            int count = (int)(10 * dashPlayer.DashProgress);
 
             for (int i = 0; i < count; i++)
-			{
-                var star = Particle.CreateParticle<CelestialStar>(npc.Center + Main.rand.NextVector2Circular(npc.width/2, npc.height/2), npc.velocity + Main.rand.NextVector2Circular(2,2), scale: 1.2f);
+            {
+                var star = Particle.CreateParticle<CelestialStar>(npc.Center + Main.rand.NextVector2Circular(npc.width / 2, npc.height / 2), npc.velocity + Main.rand.NextVector2Circular(2, 2), scale: 1.2f);
                 GetEffectColor(player, out star.Color, out Color? secondaryColor, out star.BlendStateOverride, out _, out bool rainbow);
 
                 if (secondaryColor.HasValue && ParticleManager.Particles.IndexOf(star) % 2 == 0)
@@ -130,13 +128,13 @@ namespace Macrocosm.Content.Items.Accessories
                         if (ParticleManager.Particles.IndexOf(star) % 2 == 0)
                             star.BlendStateOverride = null;
                         else
-                            star.Color = new Color(70,70,70);
+                            star.Color = new Color(70, 70, 70);
                 }
             }
 
             for (int i = 0; i < 25; i++)
             {
-				Vector2 dustVelocity = Main.rand.NextVector2Circular(2, 2);
+                Vector2 dustVelocity = Main.rand.NextVector2Circular(2, 2);
                 Dust dust = Dust.NewDustDirect(new Vector2(npc.position.X, npc.position.Y), npc.width, npc.height, ModContent.DustType<CelestialDust>(), dustVelocity.X, dustVelocity.Y, 100, default, 1.5f);
                 GetEffectColor(player, out dust.color, out Color? secondaryColor, out _, out _, out bool rainbow);
 
@@ -149,67 +147,67 @@ namespace Macrocosm.Content.Items.Accessories
         }
 
         public override void AddRecipes()
-		{
-			Recipe recipe = Recipe.Create(Type);
-			recipe.AddIngredient(ModContent.ItemType<BrokenHeroShield>());
-			recipe.AddIngredient(ItemID.EoCShield);
-			recipe.AddIngredient(ItemID.FragmentNebula, 15);
-			recipe.AddIngredient(ItemID.FragmentStardust, 15);
-			recipe.AddIngredient(ItemID.FragmentVortex, 15);
-			recipe.AddIngredient(ItemID.FragmentSolar, 15);
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.Register();
-		}
+        {
+            Recipe recipe = Recipe.Create(Type);
+            recipe.AddIngredient(ModContent.ItemType<BrokenHeroShield>());
+            recipe.AddIngredient(ItemID.EoCShield);
+            recipe.AddIngredient(ItemID.FragmentNebula, 15);
+            recipe.AddIngredient(ItemID.FragmentStardust, 15);
+            recipe.AddIngredient(ItemID.FragmentVortex, 15);
+            recipe.AddIngredient(ItemID.FragmentSolar, 15);
+            recipe.AddTile(TileID.LunarCraftingStation);
+            recipe.Register();
+        }
 
-		public override void PostDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
-		{
-			DrawMask(spriteBatch, position, origin, scale);
-		}
+        public override void PostDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
+        {
+            DrawMask(spriteBatch, position, origin, scale);
+        }
 
-		public override void PostDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
-		{
-			DrawMask(spriteBatch, Item.Center - Main.screenPosition, Item.Size / 2f, scale, rotation);
-			Lighting.AddLight(Item.Center, CelestialDisco.CelestialColor.ToVector3());
-		}
+        public override void PostDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
+        {
+            DrawMask(spriteBatch, Item.Center - Main.screenPosition, Item.Size / 2f, scale, rotation);
+            Lighting.AddLight(Item.Center, CelestialDisco.CelestialColor.ToVector3());
+        }
 
-		private static readonly Asset<Texture2D>[] celestialTextures =
-			[
-				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark_Mask_Nebula"),
-				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark_Mask_Stardust"),
-				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark_Mask_Vortex"),
-				ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark_Mask_Solar")
-			];
+        private static readonly Asset<Texture2D>[] celestialTextures =
+            [
+                ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark_Mask_Nebula"),
+                ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark_Mask_Stardust"),
+                ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark_Mask_Vortex"),
+                ModContent.Request<Texture2D>("Macrocosm/Content/Items/Accessories/CelestialBulwark_Mask_Solar")
+            ];
 
 
-		private SpriteBatchState state;
-		private void DrawMask(SpriteBatch spriteBatch, Vector2 position, Vector2 origin, float scale = 1f, float rotation = 0f)
-		{
+        private SpriteBatchState state;
+        private void DrawMask(SpriteBatch spriteBatch, Vector2 position, Vector2 origin, float scale = 1f, float rotation = 0f)
+        {
             Asset<Texture2D> currentTex = celestialTextures[(int)CelestialDisco.CelestialStyle];
             Asset<Texture2D> nextTex = celestialTextures[(int)CelestialDisco.NextCelestialStyle];
-			Color currentColor = Color.White.WithOpacity(CelestialDisco.CelestialStyleProgress);
-			Color nextColor = Color.White.WithOpacity(1f - CelestialDisco.CelestialStyleProgress);
+            Color currentColor = Color.White.WithOpacity(CelestialDisco.CelestialStyleProgress);
+            Color nextColor = Color.White.WithOpacity(1f - CelestialDisco.CelestialStyleProgress);
 
-			state.SaveState(spriteBatch);
-			spriteBatch.EndIfBeginCalled();
+            state.SaveState(spriteBatch);
+            spriteBatch.EndIfBeginCalled();
 
-			spriteBatch.Begin(BlendState.NonPremultiplied, state);
+            spriteBatch.Begin(BlendState.NonPremultiplied, state);
 
-			spriteBatch.Draw(currentTex.Value, position, null, nextColor, rotation, origin, scale, SpriteEffects.None, 0f);
-			spriteBatch.Draw(nextTex.Value, position, null, currentColor, rotation, origin, scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(currentTex.Value, position, null, nextColor, rotation, origin, scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(nextTex.Value, position, null, currentColor, rotation, origin, scale, SpriteEffects.None, 0f);
 
-			spriteBatch.End();
-			spriteBatch.Begin(state);
-		}
+            spriteBatch.End();
+            spriteBatch.Begin(state);
+        }
 
-		public static bool GetEffectColor(Player player, out Color primaryColor) => GetEffectColor(player, out primaryColor, out _, out _, out _, out _);
+        public static bool GetEffectColor(Player player, out Color primaryColor) => GetEffectColor(player, out primaryColor, out _, out _, out _, out _);
 
         public static bool GetEffectColor(Player player, out Color primaryColor, out Color? secondaryColor, out BlendState blendStateOverride, out bool bypassShader, out bool rainbow)
-		{
+        {
             int dyeItemType = -1;
-			primaryColor = CelestialDisco.CelestialColor;
+            primaryColor = CelestialDisco.CelestialColor;
             secondaryColor = CelestialDisco.CelestialColor;
-			blendStateOverride = null;
-			bypassShader = false;
+            blendStateOverride = null;
+            bypassShader = false;
             rainbow = false;
 
             for (int i = 3; i <= 9; i++)
@@ -323,7 +321,7 @@ namespace Macrocosm.Content.Items.Accessories
                 }
             }
 
-			return false;
+            return false;
         }
-	}
+    }
 }

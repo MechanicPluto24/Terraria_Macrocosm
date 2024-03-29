@@ -4,8 +4,6 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Placeable.Furniture.MoonBase;
 using Microsoft.Xna.Framework;
-using System.Collections.Generic;
-using System.Reflection;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
@@ -18,33 +16,33 @@ using Terraria.ObjectData;
 namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 {
     public class MoonBaseBulkheadClosed : ModTile, IDoorTile
-	{
-		public int Height => 5;
-		public int Width => 1;
-		public bool IsClosed => true;
-		public int StyleCount => 1;
+    {
+        public int Height => 5;
+        public int Width => 1;
+        public bool IsClosed => true;
+        public int StyleCount => 1;
         public AnimationData? AnimationData => new(3, 5, [3, 2, 1, 0], forcedUpdate: true);
 
-        public override void SetStaticDefaults() 
-		{
-			Main.tileFrameImportant[Type] = true;
-			Main.tileBlockLight[Type] = true;
-			Main.tileSolid[Type] = true;
-			Main.tileNoAttach[Type] = true;
-			Main.tileLavaDeath[Type] = true;
-			TileID.Sets.NotReallySolid[Type] = true;
+        public override void SetStaticDefaults()
+        {
+            Main.tileFrameImportant[Type] = true;
+            Main.tileBlockLight[Type] = true;
+            Main.tileSolid[Type] = true;
+            Main.tileNoAttach[Type] = true;
+            Main.tileLavaDeath[Type] = true;
+            TileID.Sets.NotReallySolid[Type] = true;
             TileID.Sets.HousingWalls[Type] = true;
             TileID.Sets.DrawsWalls[Type] = true;
-			TileID.Sets.HasOutlines[Type] = true;
-			TileID.Sets.DisableSmartCursor[Type] = true;
-			TileID.Sets.OpenDoorID[Type] = ModContent.TileType<MoonBaseBulkheadOpen>();
+            TileID.Sets.HasOutlines[Type] = true;
+            TileID.Sets.DisableSmartCursor[Type] = true;
+            TileID.Sets.OpenDoorID[Type] = ModContent.TileType<MoonBaseBulkheadOpen>();
 
-			AddToArray(ref TileID.Sets.RoomNeeds.CountsAsDoor);
+            AddToArray(ref TileID.Sets.RoomNeeds.CountsAsDoor);
 
-			DustType = ModContent.DustType<MoonBasePlatingDust>();
-			AdjTiles = [TileID.ClosedDoor];
+            DustType = ModContent.DustType<MoonBasePlatingDust>();
+            AdjTiles = [TileID.ClosedDoor];
 
-			AddMapEntry(new Color(200, 200, 200), Language.GetText("MapObject.Door"));
+            AddMapEntry(new Color(200, 200, 200), Language.GetText("MapObject.Door"));
 
             TileObjectData.newTile.Width = Width;
             TileObjectData.newTile.Height = Height;
@@ -77,17 +75,17 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 
         public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings) => true;
 
-		public override void NumDust(int i, int j, bool fail, ref int num)
-		{
-			num = 1;
-		}
+        public override void NumDust(int i, int j, bool fail, ref int num)
+        {
+            num = 1;
+        }
 
-		public override void MouseOver(int i, int j) 
-		{
-			Player player = Main.LocalPlayer;
-			player.noThrow = 2;
-			player.cursorItemIconEnabled = true;
-			player.cursorItemIconID = ModContent.ItemType<MoonBaseBulkhead>();
+        public override void MouseOver(int i, int j)
+        {
+            Player player = Main.LocalPlayer;
+            player.noThrow = 2;
+            player.cursorItemIconEnabled = true;
+            player.cursorItemIconID = ModContent.ItemType<MoonBaseBulkhead>();
         }
     }
 }

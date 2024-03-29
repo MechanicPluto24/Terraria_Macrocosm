@@ -30,7 +30,7 @@ namespace Macrocosm.Common.WorldGeneration.Structures
 
             // Base structure
             WorldUtils.Gen(new Point(room.X, room.Y), new Shapes.Rectangle(room.Width, room.Height), Actions.Chain(new Actions.SetTileKeepWall((ushort)TileType<MoonBasePlating>()), new Actions.SetFrames(frameNeighbors: true)));
-           
+
             // Walls
             WorldUtils.Gen(new Point(room.X + 1, room.Y + 1), new Shapes.Rectangle(room.Width - 2, room.Height - 2), Actions.Chain(new Actions.ClearTile(frameNeighbors: true), new Actions.PlaceWall((ushort)WallType<MoonBasePlatingWall>())));
             WorldUtils.Gen(new Point(room.X + 1, room.Y + room.Height - 2), new Shapes.Rectangle(room.Width - 2, 1), Actions.Chain(new Actions.ClearWall(frameNeighbors: true), new Actions.PlaceWall((ushort)WallType<MoonBaseHazardWall>())));
@@ -60,7 +60,7 @@ namespace Macrocosm.Common.WorldGeneration.Structures
                 ItemType<Copernicus>(),
                 //ItemType<SomeSummonerWeapon>(),
             };
-            Utility.GenerateChest(room.X + room.Width / 2, room.Y + room.Height - 2, TileType<MoonBaseChest>(), 0, 
+            Utility.GenerateChest(room.X + room.Width / 2, room.Y + room.Height - 2, TileType<MoonBaseChest>(), 0,
                 [
                     mainLoot.GetRandom(WorldGen.genRand),
                     ItemID.SuperHealingPotion,
@@ -85,9 +85,9 @@ namespace Macrocosm.Common.WorldGeneration.Structures
 
             if (!solidDown)
                 return new(-1, -1, 0, 0);
- 
+
             int maxY = Terraria.Utils.Clamp(solidGround.Y - origin.Y, 8, 12);
-            int roomHeight = (int)(maxY * 0.75); 
+            int roomHeight = (int)(maxY * 0.75);
 
             bool solidLeft = WorldUtils.Find(origin, Searches.Chain(new Searches.Left(5), new Conditions.IsSolid()), out Point leftBound);
             bool solidRight = WorldUtils.Find(origin, Searches.Chain(new Searches.Right(5), new Conditions.IsSolid()), out Point rightBound);

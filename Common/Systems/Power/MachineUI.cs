@@ -4,9 +4,8 @@ using Microsoft.Xna.Framework;
 using System.Text.RegularExpressions;
 using Terraria.GameContent.UI.Elements;
 using Terraria.Localization;
-using Terraria.UI;
 
-namespace Macrocosm.Common.Bases.Machines
+namespace Macrocosm.Common.Systems.Power
 {
     public abstract class MachineUI : UIDragablePanel
     {

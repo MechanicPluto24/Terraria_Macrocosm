@@ -1,10 +1,11 @@
-﻿using Macrocosm.Common.Bases.Machines;
-using Macrocosm.Common.Drawing.Particles;
+﻿using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Systems;
+using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
@@ -19,6 +20,8 @@ namespace Macrocosm.Content.Machines
         public override short Width => 7;
         public override short Height => 10;
         public override MachineTE MachineTE => ModContent.GetInstance<OreExcavatorTE>();
+
+        private static Asset<Texture2D> glowmask;
 
         public override void SetStaticDefaults()
         {
@@ -35,6 +38,8 @@ namespace Macrocosm.Content.Machines
             TileObjectData.newTile.CoordinateHeights = [16, 16, 16, 16, 16, 16, 16, 16, 16, 16];
             TileObjectData.newTile.CoordinateWidth = 16;
             TileObjectData.newTile.CoordinatePadding = 0; // No padding, in order to make animating the sprite easier
+
+            TileObjectData.newTile.DrawYOffset = 2;
 
             TileObjectData.newTile.Origin = new Point16(0, Height - 1);
             TileObjectData.newTile.AnchorTop = new AnchorData();
@@ -63,6 +68,31 @@ namespace Macrocosm.Content.Machines
             AddMapEntry(new Color(206, 117, 44), CreateMapEntryName());
         }
 
+        public override bool GetPowerState(int i, int j) => Main.tile[i, j].TileFrameY >= (Height * 16) * 1;
+
+        public override bool IsOperating(int i, int j) => Main.tile[i, j].TileFrameY >= (Height * 16) * 2;
+
+        public override void TogglePowerState(int i, int j)
+        {
+            Point16 origin = Utility.GetMultitileTopLeft(i, j);
+            for (int x = origin.X; x < origin.X + Width; x++)
+            {
+                for (int y = origin.Y; y < origin.Y + Height; y++)
+                {
+                    Tile tile = Main.tile[x, y];
+                    if (GetPowerState(x, y))
+                        tile.TileFrameY -= (short)(Height * 16 * (IsOperating(x, y) ? 2 : 1));
+                    else
+                        tile.TileFrameY += (short)(Height * 16);
+
+                    //TODO: exclude other tiles of the multitile
+                }
+            }
+
+            if (Main.netMode != NetmodeID.SinglePlayer)
+                NetMessage.SendTileSquare(-1, origin.X, origin.Y, Width, Height);
+        }
+
         public override void HitWire(int i, int j)
         {
             Point16 origin = Utility.GetMultitileTopLeft(i, j);
@@ -71,13 +101,17 @@ namespace Macrocosm.Content.Machines
                 for (int y = origin.Y; y < origin.Y + Height; y++)
                 {
                     Tile tile = Main.tile[x, y];
-                    if (tile.TileFrameY >= Height * 16)
-                        tile.TileFrameY -= (short)(Height * 16);
-                    else
-                        tile.TileFrameY += (short)(Height * 16);
 
-                    if (Wiring.running)
-                        Wiring.SkipWire(x, y);
+                    if (GetPowerState(x, y))
+                    {
+                        if (IsOperating(x, y))
+                            tile.TileFrameY -= (short)(Height * 16);
+                        else
+                            tile.TileFrameY += (short)(Height * 16);
+
+                        if (Wiring.running)
+                            Wiring.SkipWire(x, y);
+                    }
                 }
             }
 
@@ -87,32 +121,35 @@ namespace Macrocosm.Content.Machines
 
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
-            Chest.DestroyChest(i, j);
             ModContent.GetInstance<OreExcavatorTE>().Kill(i, j);
         }
 
         public override bool RightClick(int i, int j)
         {
             Player player = Main.LocalPlayer;
-
             Main.mouseRightRelease = false;
             Utility.UICloseOthers();
 
             Point16 origin = Utility.GetMultitileTopLeft(i, j);
-            if (i == origin.X + 4 && j == origin.Y + 5)
+            if ((i >= origin.X + 0 && i <= origin.X + 1) && (j >= origin.Y + 7 && j <= origin.Y + 8))
             {
                 for (int x = origin.X; x < origin.X + Width; x++)
                 {
                     for (int y = origin.Y; y < origin.Y + Height; y++)
                     {
                         Tile tile = Main.tile[x, y];
-                        if (tile.TileFrameY >= Height * 16)
-                            tile.TileFrameY -= (short)(Height * 16);
-                        else
-                            tile.TileFrameY += (short)(Height * 16);
+                        if (GetPowerState(x, y))
+                        {
+                            if (IsOperating(x, y))
+                                tile.TileFrameY -= (short)(Height * 16);
+                            else
+                                tile.TileFrameY += (short)(Height * 16);
+                        }
                     }
                 }
 
+                if (Main.netMode != NetmodeID.SinglePlayer)
+                    NetMessage.SendTileSquare(-1, origin.X, origin.Y, Width, Height);
             }
             else
             {
@@ -127,7 +164,7 @@ namespace Macrocosm.Content.Machines
 
         public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)
         {
-            if (Main.tile[i, j].TileFrameY >= 16 * Height)
+            if (IsOperating(i, j))
                 frameYOffset = 16 * Height * Main.tileFrame[type];
         }
 
@@ -137,45 +174,75 @@ namespace Macrocosm.Content.Machines
             if (frameCounter >= 4)
             {
                 frameCounter = 0;
-                if (++frame >= 8)
+                if (++frame >= 4)
                     frame = 0;
             }
         }
 
+        public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
+        {
+            glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
+            Utility.DrawTileGlowmask(i, j, spriteBatch, glowmask);
+        }
+
         public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref TileDrawInfo drawData)
         {
-            Tile tile = Main.tile[i, j];
+            if (Main.gamePaused)
+                return;
 
+            Tile tile = Main.tile[i, j];
             int tileOffsetX = tile.TileFrameX % (Width * 16) / 16;
             int tileOffsetY = tile.TileFrameY % (Height * 16) / 16;
 
-            if (Main.tile[i, j].TileFrameY >= 16 * Height)
+            if (IsOperating(i, j))
             {
                 // Exhaust position - spawn smoke
-                if (tileOffsetX == 1 && tileOffsetY == 0 && !Main.gamePaused)
+                if (tileOffsetX == 1 && tileOffsetY == 0)
                 {
-                    if (Main.tileFrame[Type] % 2 == 0)
+                    if (Main.tileFrame[Type] % 2 == 1)
                     {
-                        for (int p = 0; p < 1; p++)
+                        for (int s = 0; s < 2; s++)
                         {
-                            Smoke smoke = Particle.CreateParticle<Smoke>(new Vector2(i, j) * 16f + new Vector2(0, 4f), new Vector2(0, -1.4f).RotatedByRandom(MathHelper.Pi / 8), 1f, 0f);
-                            smoke.Color = new Color(80, 80, 80, 215);
-                            smoke.FadeIn = true;
-                            smoke.Opacity = 0f;
+                            Smoke smoke = Particle.CreateParticle<Smoke>((p) =>
+                            {
+                                p.Position = new Vector2(i, j) * 16f + new Vector2(1f, 16f);
+                                p.Velocity = new Vector2(0, -1.1f).RotatedByRandom(MathHelper.Pi / 16);
+                                p.Scale = 0.3f;
+                                p.Rotation = 0f;
+                                p.DrawColor = (new Color(80, 80, 80) * Main.rand.NextFloat(0.75f, 1f)).WithAlpha(215);
+                                p.FadeIn = true;
+                                p.Opacity = 0f;
+                                p.ExpansionRate = 0.0075f;
+                            });
                         }
                     }
                 }
 
-                // Anchor tile below drill - make hit tile dust
-                if (tileOffsetX is 2 or 3 && tileOffsetY == 9)
+                // Anchor tile below drill - make hit tile dust and spawn smoke "dust"
+                if (tileOffsetX is 2 or 3 && tileOffsetY == Height - 1)
                 {
-                    if (Main.tileFrame[Type] is 6 or 7)
+                    if (Main.tileFrame[Type] == 3)
                     {
-                        if (Main.rand.NextBool(2))
-                            WorldGen.KillTile(i, j + 1, effectOnly: true, fail: true);
+                        WorldGen.KillTile(i, j + 1, effectOnly: true, fail: true);
+                        WorldGen.KillTile(i, j + 2, effectOnly: true, fail: true);
+                    }
 
-                        if (Main.rand.NextBool(3))
-                            WorldGen.KillTile(i, j + 2, effectOnly: true, fail: true);
+                    if (Main.tileFrame[Type] % 2 == 0)
+                    {
+                        for (int s = 0; s < 2; s++)
+                        {
+                            Smoke smoke = Particle.CreateParticle<Smoke>((p) =>
+                            {
+                                p.Position = new Vector2(i + 1, j + 1) * 16;
+                                p.Velocity = new Vector2(Main.rand.NextFloat(-0.7f, 0.7f), Main.rand.NextFloat(-0.1f, -0.25f));
+                                p.Scale = 0.3f;
+                                p.Rotation = 0f;
+                                p.DrawColor = (Color.Lerp(Color.Gray, Color.Beige, Main.rand.NextFloat()) * Main.rand.NextFloat(0.2f, 0.8f));
+                                p.FadeIn = true;
+                                p.Opacity = 0f;
+                                p.ExpansionRate = 0.0075f;
+                            });
+                        }
                     }
                 }
             }
@@ -183,6 +250,17 @@ namespace Macrocosm.Content.Machines
 
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
+            Tile tile = Main.tile[i, j];
+            int tileOffsetX = tile.TileFrameX % (Width * 16) / 16;
+            int tileOffsetY = tile.TileFrameY % (Height * 16) / 16;
+
+            if (tileOffsetX is 2 && tileOffsetY is 6)
+            {
+                if (IsOperating(i, j))
+                    g = 0.2f;
+                else if (GetPowerState(i, j))
+                    r = 0.2f;
+            }
         }
     }
 }

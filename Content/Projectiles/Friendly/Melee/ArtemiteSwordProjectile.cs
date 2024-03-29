@@ -3,7 +3,6 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using rail;
 using System;
 using Terraria;
 using Terraria.GameContent;
@@ -11,41 +10,41 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
-	public class ArtemiteSwordProjectile : ModProjectile
-	{
+    public class ArtemiteSwordProjectile : ModProjectile
+    {
         public override string Texture => Macrocosm.TexturesPath + "Swing";
 
         public override void SetStaticDefaults()
-		{
-		}
+        {
+        }
 
-		public override void SetDefaults()
-		{
-			Projectile.width = 34;
-			Projectile.height = 32;
-			Projectile.aiStyle = -1;
-			Projectile.friendly = true;
-			Projectile.DamageType = DamageClass.Melee;
-			Projectile.tileCollide = false;
-			Projectile.ignoreWater = true;
-			Projectile.timeLeft = 120;
-			Projectile.scale = 1f;
-		}
+        public override void SetDefaults()
+        {
+            Projectile.width = 34;
+            Projectile.height = 32;
+            Projectile.aiStyle = -1;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.timeLeft = 120;
+            Projectile.scale = 1f;
+        }
 
         private int spawnTimeLeft;
         private bool spawned;
 
-		public override void AI()
-		{
+        public override void AI()
+        {
             if (!spawned)
             {
                 spawnTimeLeft = Projectile.timeLeft;
                 spawned = true;
             }
 
-			Projectile.rotation -= 0.25f;
+            Projectile.rotation -= 0.25f;
             Projectile.velocity *= 1.02f;
-		}
+        }
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
@@ -63,20 +62,20 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         {
             Texture2D texture = TextureAssets.Projectile[Type].Value;
             Rectangle frame = texture.Frame(1, 4, frameY: 3);
-            Vector2 origin = new(frame.Width/2, frame.Height/2);
+            Vector2 origin = new(frame.Width / 2, frame.Height / 2);
 
             int count = 4;
             for (int i = 0; i < count; i++)
             {
-                Vector2 position = Projectile.Center + Utility.PolarVector(1, Projectile.rotation + (MathHelper.TwoPi/ count) * i) ;
+                Vector2 position = Projectile.Center + Utility.PolarVector(1, Projectile.rotation + (MathHelper.TwoPi / count) * i);
                 SpriteEffects effects = Projectile.ai[0] < 0f ? SpriteEffects.FlipVertically : SpriteEffects.None;
 
-                float progress = (float)Projectile.timeLeft/spawnTimeLeft;
+                float progress = (float)Projectile.timeLeft / spawnTimeLeft;
                 float progressScale = Utils.Remap(progress, 0f, 0.6f, 0f, 1f) * Utils.Remap(progress, 0.6f, 1f, 1f, 0f);
 
                 float rotation = (Projectile.Center - position).ToRotation() - MathHelper.Pi;
                 Color color = new Color(130, 220, 199).WithOpacity(1f - progress);
-                float scale = Projectile.scale + Projectile.scale * ((float)i/count);
+                float scale = Projectile.scale + Projectile.scale * ((float)i / count);
 
                 Main.EntitySpriteDraw(texture, position - Main.screenPosition, texture.Frame(1, 4, frameY: 0), color * progressScale, rotation + Projectile.ai[0] * ((float)Math.PI / 4f) * -1f * (1f - progress), origin, scale * 0.95f, effects, 0f);
                 Main.EntitySpriteDraw(texture, position - Main.screenPosition, texture.Frame(1, 4, frameY: 1), color * 0.15f, rotation, origin, scale, effects, 0f);
@@ -101,7 +100,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 }
                 */
             }
-            
+
             return false;
         }
     }

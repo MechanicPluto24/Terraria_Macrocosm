@@ -1,47 +1,45 @@
 ﻿using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Macrocosm.Content.Particles
 {
-	public class Smoke : Particle
-	{
-		public override int FrameNumber => 3;
-		public override bool SetRandomFrameOnSpawn => true;
+    public class Smoke : Particle
+    {
+        public override int FrameNumber => 3;
+        public override bool SetRandomFrameOnSpawn => true;
 
-		public Color? Color;
+        public Color DrawColor;
+        public float Opacity = 1f;
+        public float ExpansionRate = -0.005f;
 
-		public bool FadeIn;
-		private bool fadedIn;
+        public bool FadeIn;
+        private bool fadedIn;
 
-		public float Opacity = 1f;
+        public override void AI()
+        {
+            Scale += ExpansionRate;
 
-		public override void AI()
-		{
-			Velocity *= 0.98f;
-			Scale -= 0.005f;
-
-			if(!fadedIn)
-			{
+            if (!fadedIn)
+            {
                 Opacity += 0.03f;
-
-				if (Opacity >= 1f)
-					fadedIn = true;
+                if (Opacity >= 1f)
+                    fadedIn = true;
             }
-			else
-			{
+            else
+            {
                 if (Opacity > 0f)
-                    Opacity -= 0.015f;
+                    Opacity -= 0.012f;
             }
 
-            if (Scale < 0.1)
-				Kill();
-		}
+            if (Scale < 0.1 || (Opacity <= 0 && fadedIn))
+                Kill();
+        }
 
-		public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
-		{
-			spriteBatch.Draw(Texture, Position - screenPosition, GetFrame(), (Color ?? lightColor) * Opacity, Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
-		}
-
-	}
+        public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
+        {
+            spriteBatch.Draw(Texture, Position - screenPosition, GetFrame(), Utility.Colorize(DrawColor, lightColor).WithAlpha(DrawColor.A) * Opacity , Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
+        }
+    }
 }
