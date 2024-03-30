@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -30,19 +31,23 @@ namespace Macrocosm.Common.Loot.DropRules
             ItemDropAttemptResult result;
             if (info.player.RollLuck(chanceDenominator) < chanceNumerator)
             {
+                int stack = info.rng.Next(amountDroppedMinimum, amountDroppedMaximum + 1);
                 Vector2 position = TileEntity.Position.ToWorldCoordinates();
                 TileObjectData data = TileObjectData.GetTileData(Main.tile[TileEntity.Position]);
                 if (data is not null)
-                    position = new(position.X + data.Width * 16 / 2, position.Y + data.Height * 16);
-
-                Vector2 itemTransferVelocity = -Vector2.UnitY * 70f;
-                int stack = info.rng.Next(amountDroppedMinimum, amountDroppedMaximum + 1);
+                    position = new(position.X + data.Width * 16 / 2, position.Y + (data.Height + 3) * 16);
 
                 if (TileEntity is IInventoryOwner inventoryOwner && inventoryOwner.Inventory is not null)
                 {
                     Item item = new(itemId, stack);
                     inventoryOwner.Inventory.TryPlacingItem(item);
-                    Particle.CreateParticle(ParticleOrchestraType.ItemTransfer, position, itemTransferVelocity, uniqueInfoPiece: itemId);
+
+                    Particle.CreateParticle<ItemTransferParticle>((p) =>
+                    {
+                        p.StartPosition = position + Main.rand.NextVector2Circular(32, 16);
+                        p.EndPosition = position + new Vector2(0,-96) + Main.rand.NextVector2Circular(16, 16);
+                        p.ItemType = itemId;
+                    });
                 }
                 else
                 {

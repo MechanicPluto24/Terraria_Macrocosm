@@ -11,9 +11,9 @@ MacrocosmConfig: {
 		Tooltip: Whether to display the introdcutory title screen even if you've visited this celestial body before.
 	}
 
-	FancyGunEffects: {
-		Label: Fancy gun effects
-		Tooltip: Whether guns have fancy use effects, such as recoil. Requires mod reload.
+	GunRecoilEffects: {
+		Label: Gun recoil effects
+		Tooltip: Whether guns have recoil effects.
 	}
 
 	HighResolutionEffects: {

@@ -1849,14 +1849,13 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 return null;
 
             GetHitboxRects(out Rectangle head, out Rectangle jaw);
-            return projectile.Colliding(projectile.Hitbox, head) || projectile.Colliding(projectile.Hitbox, jaw);
+            return projectile.Colliding(projectile.Hitbox, head) || projectile.Colliding(projectile.Hitbox, jaw) ? null : (bool?)false;
         }
 
         private bool? CanBeHitByThing(Rectangle hitbox)
         {
             //Make the hit detection dynamic be based on the sprite for extra coolness points
             GetHitboxRects(out Rectangle head, out Rectangle jaw);
-
             return head.Intersects(hitbox) || jaw.Intersects(hitbox) ? null : (bool?)false;
         }
 

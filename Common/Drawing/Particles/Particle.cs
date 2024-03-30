@@ -105,7 +105,7 @@ namespace Macrocosm.Common.Drawing.Particles
         /// <summary> The  <c>Particle</c>'s total lifetime. If <see cref="DespawnOnAnimationComplete"/> is true, this defaults to the animation duration. </summary>
         public virtual int SpawnTimeLeft => DespawnOnAnimationComplete ? FrameNumber * FrameSpeed - 1 : 300;
 
-        /// <summary> Whether the <c>Particle</c> should update its position </summary>
+        /// <summary> Whether the <c>Particle</c> should update its position based on velocity </summary>
         public virtual bool ShouldUpdatePosition => true;
 
         /// <summary> The draw layer of this <c>Particle</c>, see <see cref="ParticleDrawLayer"/> </summary>

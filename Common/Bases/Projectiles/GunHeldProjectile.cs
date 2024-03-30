@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Common.Config;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
@@ -25,7 +26,7 @@ namespace Macrocosm.Common.Bases.Projectiles
         /// <summary> The initial recoil animation horizontal offset and rotation </summary>
         public (float horizontal, float rotation) Recoil { get; init; } = (6f, 0.2f);
 
-        /// <summary> The diminishing multiplier of the recoil animation. Should be smaller than 1f </summary>
+        /// <summary> The diminishing multiplier of the recoil animation. Should be less than 1f </summary>
         public float RecoilDiminish { get; init; } = 0.92f;
 
         /// <summary> The animation frame where the recoil is applied </summary>
@@ -34,8 +35,8 @@ namespace Macrocosm.Common.Bases.Projectiles
         /// <summary> Whether the player also uses the back arm to hold the projectile </summary>
         public bool UseBackArm { get; init; } = true;
 
-        /// <summary> Whether the gun actively follows the cursor after shooting </summary>
-        public bool FollowsCursor { get; init; } = true;
+        /// <summary> Whether the gun actively follows the aim position after shooting. </summary>
+        public bool FollowsAimPosition { get; init; } = true;
     }
 
     public abstract class GunHeldProjectileItem : HeldProjectileItem<GunHeldProjectile>
@@ -45,7 +46,7 @@ namespace Macrocosm.Common.Bases.Projectiles
 
         public abstract GunHeldProjectileData GunHeldProjectileData { get; }
 
-        public new virtual bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+        public virtual bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback, GunHeldProjectile heldProjectile)
         {
             return true;
         }
@@ -59,7 +60,7 @@ namespace Macrocosm.Common.Bases.Projectiles
         private GunHeldProjectileData GunHeldProjectileData { get; set; }
 
         private Texture2D GunTexture { get; set; }
-        private Vector2 DirectionToMouse
+        private Vector2 DirectionToAim
         {
             get
             {
@@ -75,24 +76,27 @@ namespace Macrocosm.Common.Bases.Projectiles
             }
         }
 
+        private Vector2 aim;
         private Vector2 currentRecoil;
         private int frame;
 
-        private void UpdateCenterAndDirection(bool updateMouse = true)
+        public void SetAim(Vector2 aim) => this.aim = aim;
+
+        public void UpdateCenterAndDirection(bool updateForAim)
         {
-            if (Main.myPlayer == Projectile.owner && updateMouse)
+            if (Main.myPlayer == Projectile.owner && updateForAim)
             {
                 Projectile.Center = Player.RotatedRelativePoint(Player.MountedCenter) + new Vector2(-4 * Player.direction, -2);
-                DirectionToMouse = Projectile.Center.DirectionTo(Main.MouseWorld);
-                Projectile.Center += DirectionToMouse.RotatedBy(-MathHelper.PiOver2 * Player.direction) * GunHeldProjectileData.CenterYOffset;
-                DirectionToMouse = (Projectile.Center - DirectionToMouse * 50).DirectionTo(Main.MouseWorld);
+                DirectionToAim = Projectile.Center.DirectionTo(aim);
+                Projectile.Center += DirectionToAim.RotatedBy(-MathHelper.PiOver2 * Player.direction) * GunHeldProjectileData.CenterYOffset;
+                DirectionToAim = (Projectile.Center - DirectionToAim * 50).DirectionTo(aim);
 
                 Projectile.netUpdate = true;
             }
             else
             {
                 Projectile.Center = Player.RotatedRelativePoint(Player.MountedCenter) + new Vector2(-4 * Player.direction, -2);
-                Projectile.Center += DirectionToMouse.RotatedBy(-MathHelper.PiOver2 * Player.direction) * GunHeldProjectileData.CenterYOffset;
+                Projectile.Center += DirectionToAim.RotatedBy(-MathHelper.PiOver2 * Player.direction) * GunHeldProjectileData.CenterYOffset;
             }
         }
 
@@ -109,20 +113,22 @@ namespace Macrocosm.Common.Bases.Projectiles
 
             GunHeldProjectileData = gunHeldProjectileItem.GunHeldProjectileData;
 
-            UpdateCenterAndDirection();
+            aim = Main.MouseWorld;
+            UpdateCenterAndDirection(updateForAim: true);
+            Projectile.rotation = DirectionToAim.ToRotation();
 
             if (Main.myPlayer == Projectile.owner)
             {
                 Vector2 shootPosition = Projectile.Center;
 
-                Vector2 extendedPosition = Projectile.Center + DirectionToMouse * GunHeldProjectileData.MuzzleOffset;
+                Vector2 extendedPosition = Projectile.Center + DirectionToAim * GunHeldProjectileData.MuzzleOffset;
 
                 if (Collision.CanHit(shootPosition, 0, 0, extendedPosition, 0, 0))
                 {
                     shootPosition = extendedPosition;
                 }
 
-                Vector2 velocity = DirectionToMouse * Projectile.velocity.Length();
+                Vector2 velocity = DirectionToAim * Projectile.velocity.Length();
 
                 if (
                     gunHeldProjectileItem.Shoot(
@@ -132,7 +138,8 @@ namespace Macrocosm.Common.Bases.Projectiles
                         velocity,
                         ShootProjectileType,
                         Projectile.damage,
-                        Projectile.knockBack
+                        Projectile.knockBack,
+                        this
                         )
                     )
                 {
@@ -151,37 +158,46 @@ namespace Macrocosm.Common.Bases.Projectiles
 
         public override void AI()
         {
-            UpdateCenterAndDirection(GunHeldProjectileData.FollowsCursor);
+            bool recoil = MacrocosmConfig.Instance.GunRecoilEffects;
 
-            float mouseDirectionRotation = DirectionToMouse.ToRotation();
-            int newPlayerDirection = MathF.Abs(mouseDirectionRotation) <= MathHelper.PiOver2 ? 1 : -1;
-            if (newPlayerDirection != Player.direction)
+            if (recoil && GunHeldProjectileData.FollowsAimPosition)
+                aim = Main.MouseWorld;
+
+            UpdateCenterAndDirection(updateForAim: recoil);
+
+            if (recoil)
             {
-                Player.ChangeDir(newPlayerDirection);
-                currentRecoil.Y *= -1;
+                float mouseDirectionRotation = DirectionToAim.ToRotation();
+                int newPlayerDirection = MathF.Abs(mouseDirectionRotation) <= MathHelper.PiOver2 ? 1 : -1;
+                if (newPlayerDirection != Player.direction)
+                {
+                    Player.ChangeDir(newPlayerDirection);
+                    currentRecoil.Y *= -1;
+                }
+
+                Projectile.rotation = mouseDirectionRotation - currentRecoil.Y * Player.direction;
+
+                Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, Projectile.rotation - MathHelper.PiOver2);
+
+                if (GunHeldProjectileData.UseBackArm)
+                {
+                    Player.SetCompositeArmBack(true, Player.CompositeArmStretchAmount.ThreeQuarters, Projectile.rotation - MathHelper.PiOver2);
+                }
+
+                if (frame++ == Projectile.extraUpdates * GunHeldProjectileData.RecoilStartFrame)
+                {
+                    currentRecoil = new Vector2(GunHeldProjectileData.Recoil.horizontal, GunHeldProjectileData.Recoil.rotation);
+                }
+
+                currentRecoil *= GunHeldProjectileData.RecoilDiminish;
             }
-
-            Projectile.rotation = mouseDirectionRotation - currentRecoil.Y * Player.direction;
-
-            Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, Projectile.rotation - MathHelper.PiOver2);
-
-            if (GunHeldProjectileData.UseBackArm)
-            {
-                Player.SetCompositeArmBack(true, Player.CompositeArmStretchAmount.ThreeQuarters, Projectile.rotation - MathHelper.PiOver2);
-            }
-
-            if (frame++ == Projectile.extraUpdates * GunHeldProjectileData.RecoilStartFrame)
-            {
-                currentRecoil = new Vector2(GunHeldProjectileData.Recoil.horizontal, GunHeldProjectileData.Recoil.rotation);
-            }
-
-            currentRecoil *= GunHeldProjectileData.RecoilDiminish;
         }
 
         public override void Draw(Color lightColor)
         {
+            float recoil = MacrocosmConfig.Instance.GunRecoilEffects ? currentRecoil.X : 0f;
             // 19 here is for the arm length.
-            Vector2 normOrigin = GunHeldProjectileData.GunBarrelPosition + Vector2.UnitX * (currentRecoil.X - 19);
+            Vector2 normOrigin = GunHeldProjectileData.GunBarrelPosition + Vector2.UnitX * (recoil - 19);
             Main.EntitySpriteDraw(
                 GunTexture,
                 Projectile.Center - Main.screenPosition,
