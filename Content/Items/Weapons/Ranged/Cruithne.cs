@@ -29,7 +29,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
         public override void SetDefaultsHeldProjectile()
         {
-            Item.damage = 110;
+            Item.damage = 120;
             Item.DamageType = DamageClass.Ranged;
             Item.width = 52;
             Item.height = 16;
@@ -68,7 +68,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             return true;
         }
 
-        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockBack)
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockBack, GunHeldProjectile heldProjectile)
         {
             int numberProjectiles = player.AltFunction() ? 1 : 6;
             int degree = player.AltFunction() ? 0 : 12;

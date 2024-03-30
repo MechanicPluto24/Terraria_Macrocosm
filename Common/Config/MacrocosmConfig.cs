@@ -22,8 +22,7 @@ namespace Macrocosm.Common.Config
         public bool AlwaysDisplayTitleScreens { get; set; }
 
         [DefaultValue(true)]
-        [ReloadRequired]
-        public bool FancyGunEffects { get; set; }
+        public bool GunRecoilEffects { get; set; }
 
         [Header("$Mods.Macrocosm.Configs.MacrocosmConfig.GraphicsHeader")]
         [DefaultValue(false)]

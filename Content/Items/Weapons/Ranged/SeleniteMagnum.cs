@@ -18,9 +18,10 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             GunBarrelPosition = new(18, 7),
             CenterYOffset = 4,
             MuzzleOffset = 20,
-            Recoil = (7, 0.4f),
+            Recoil = (5, 0.25f),
             UseBackArm = false,
-            RecoilStartFrame = 5
+            RecoilStartFrame = 5,
+            FollowsAimPosition = false
         };
 
         public override void SetStaticDefaults()
@@ -79,12 +80,14 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
         }
 
-        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback, GunHeldProjectile heldProjectile)
         {
             if (player.AltFunction())
             {
-                float radians = MathHelper.ToRadians(15);
-                velocity = velocity.RotatedBy(Main.rand.NextFloat(-radians, radians));
+                float halfSpreadCone = MathHelper.ToRadians(20);
+                float spreadCone = Main.rand.NextFloat(-halfSpreadCone, halfSpreadCone);
+                velocity = velocity.RotatedBy(spreadCone);
+                heldProjectile.Projectile.rotation = velocity.ToRotation();
                 SoundEngine.PlaySound(SoundID.Item38 with { PitchRange = (0f, 0.5f) }, position);
             }
 

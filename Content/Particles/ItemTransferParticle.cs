@@ -9,33 +9,37 @@ using Macrocosm.Common.Utils;
 
 namespace Macrocosm.Content.Particles
 {
+    // Adapted from ParticleOrchestraType.ItemTransfer
+    // Excludes the "Chest eating item" sound, and applies light color
     public class ItemTransferParticle : Particle
     {
-        public override int SpawnTimeLeft => spawnTimeLeft;
+        public override string TexturePath => Macrocosm.EmptyTexPath;
+        public override bool ShouldUpdatePosition => false; 
+
+        public override int SpawnTimeLeft => spawnTimeLeft ??= Main.rand.Next(60, 80);
+        private int? spawnTimeLeft;
 
         public Vector2 StartPosition;
         public Vector2 EndPosition;
 
-        public Vector2 BezierHelper1;
-        public Vector2 BezierHelper2;
+        public Vector2 MovementBezier;
+        public Vector2 ScaleBezier;
+
+        public float Opacity;
 
         public int ItemType;
-
         private Item item = new();
-        private int spawnTimeLeft;
 
         public override void OnSpawn()
         {
             if(ContentSamples.ItemsByType.TryGetValue(ItemType, out Item item) && !item.IsAir)
             {
-                this.item = new(ItemType);
-
-                spawnTimeLeft = Main.rand.Next(60, 80);
+                this.item = item;
 
                 Vector2 movement = new(0f, -1f);
-                float distance = Vector2.Distance(EndPosition, StartPosition);
-                BezierHelper1 = movement * distance + Main.rand.NextVector2Circular(32f, 32f);
-                BezierHelper2 = -movement * distance + Main.rand.NextVector2Circular(32f, 32f);
+                float distance = Vector2.Distance(StartPosition, EndPosition);
+                MovementBezier = movement * distance + Main.rand.NextVector2Circular(32f, 32f);
+                ScaleBezier = -movement * distance + Main.rand.NextVector2Circular(32f, 32f);
             }
             else
             {
@@ -45,22 +49,23 @@ namespace Macrocosm.Content.Particles
 
         public override void AI()
         {
+            float progress = (float)TimeLeft / SpawnTimeLeft;
+
+            float movementProgress = Utils.Remap(progress, 0.1f, 0.5f, 0f, 0.85f);
+            movementProgress = Utils.Remap(progress, 0.5f, 0.9f, movementProgress, 1f);
+
+            Vector2.Hermite(ref EndPosition, ref MovementBezier, ref StartPosition, ref ScaleBezier, movementProgress, out Position);
+
+            float scaleProgress = Utils.Remap(progress, 0f, 0.1f, 0f, 1f);
+            scaleProgress = Utils.Remap(progress, 0.85f, 0.95f, scaleProgress, 0f);
+            Scale = item.scale * scaleProgress;
+
+            Opacity = Utils.Remap(progress, 0f, 0.25f, 0f, 1f) * Utils.Remap(progress, 0.85f, 0.95f, 1f, 0f);
         }
 
         public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
-            float progress = TimeLeft / SpawnTimeLeft;
-
-            float bezierProgress1 = Utils.Remap(progress, 0.1f, 0.5f, 0f, 0.85f);
-            bezierProgress1 = Utils.Remap(progress, 0.5f, 0.9f, bezierProgress1, 1f);
-
-            Vector2.Hermite(ref StartPosition, ref BezierHelper1, ref EndPosition, ref BezierHelper2, bezierProgress1, out Vector2 position);
-
-            float bezierProgress2 = Utils.Remap(progress, 0f, 0.1f, 0f, 1f);
-            bezierProgress2 = Utils.Remap(progress, 0.85f, 0.95f, bezierProgress2, 0f);
-
-            float opacity = Utils.Remap(progress, 0f, 0.25f, 0f, 1f) * Utils.Remap(progress, 0.85f, 0.95f, 1f, 0f);
-            ItemSlot.DrawItemIcon(item, ItemSlot.Context.InWorld, spriteBatch, position - screenPosition, item.scale * bezierProgress2, 100f, Utility.Colorize(Color.White, lightColor) * opacity);
+            ItemSlot.DrawItemIcon(item, ItemSlot.Context.InWorld, spriteBatch, Position - screenPosition, Scale, 100f, Utility.Colorize(Color.White, lightColor) * Opacity);
         }
     }
 }
