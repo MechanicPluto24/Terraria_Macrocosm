@@ -12,8 +12,8 @@ namespace Macrocosm.Content.Items.Machines
         public override void SetDefaults()
         {
             Item.DefaultToPlaceableTile(ModContent.TileType<Content.Machines.OreExcavator>());
-            Item.width = 21;
-            Item.height = 32;
+            Item.width = 60;
+            Item.height = 84;
             Item.value = 500;
         }
 

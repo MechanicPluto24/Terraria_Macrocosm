@@ -23,7 +23,7 @@ namespace Macrocosm.Content.LoadingScreens
 
             Asset<Texture2D> earthSmallBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/Earth", AssetRequestMode.ImmediateLoad);
             Asset<Texture2D> earthSmallAtmoBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/EarthAtmo", AssetRequestMode.ImmediateLoad);
-            earth = new CelestialBody(earthSmallBackground, earthSmallAtmoBackground, 0.7f);
+            earth = new CelestialBody(earthSmallBackground, earthSmallAtmoBackground, scale: 0.7f);
         }
 
         private readonly float animationDuration = 1000f;
@@ -43,8 +43,6 @@ namespace Macrocosm.Content.LoadingScreens
             starsDrawing.Clear();
             starsDrawing.SpawnStars(200, 250, twinkleFactor: 0.1f);
         }
-
-
 
         private SpriteBatchState state;
         protected override void PreDraw(SpriteBatch spriteBatch)
