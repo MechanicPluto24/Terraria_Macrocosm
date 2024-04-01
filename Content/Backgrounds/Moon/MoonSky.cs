@@ -63,37 +63,15 @@ namespace Macrocosm.Content.Backgrounds.Moon
             starsNight = new();
 
             sun = new CelestialBody(sunTexture);
-            earth = new CelestialBody(earthBody, earthAtmo, 0.9f);
+            earth = new CelestialBody(earthBody, earthAtmo, scale: 0.9f);
 
             sun.SetupSkyRotation(SkyRotationMode.Day);
 
             earth.SetParallax(0.01f, 0.12f, new Vector2(0f, -200f));
 
             earth.SetLightSource(sun);
-            earth.ConfigureShader = (float rotation, out float intensity, out Vector2 offset) =>
-            {
-                Vector2 screenSize = Main.ScreenSize.ToVector2();
-                float distance = Vector2.Distance(earth.Position / screenSize, earth.LightSource.Position / screenSize);
-                float offsetRadius = MathHelper.Lerp(0.12f, 0.56f, 1 - distance);
-
-                if (!Main.dayTime)
-                {
-                    offsetRadius = MathHelper.Lerp(0.56f, 0.01f, 1 - distance);
-                    rotation += MathHelper.Pi;
-                }
-                else
-                {
-                    if (distance < 0.1f)
-                    {
-                        float proximityFactor = 1 - (distance / 0.1f);
-                        offsetRadius += 0.8f * proximityFactor;
-                    }
-                }
-
-                offset = Utility.PolarVector(offsetRadius, rotation) * 0.65f;
-
-                intensity = 0.96f;
-            };
+            earth.ConfigureBackShader = ConfigureEarthShader;
+            earth.ConfigureBodyShader = ConfigureEarthShader;
 
             nebulaYellow = ModContent.Request<Texture2D>(AssetPath + "NebulaYellow");
             nebulaRinged = ModContent.Request<Texture2D>(AssetPath + "NebulaRinged");
@@ -231,6 +209,31 @@ namespace Macrocosm.Content.Backgrounds.Moon
             return brightness;
         }
 
+        private void ConfigureEarthShader(CelestialBody earth, float rotation, out float intensity, out Vector2 offset, out float radius, ref Vector2 shadeResolution)
+        {
+            Vector2 screenSize = Main.ScreenSize.ToVector2();
+            float distance = Vector2.Distance(earth.Position / screenSize, earth.LightSource.Position / screenSize);
+            float offsetRadius = MathHelper.Lerp(0.12f, 0.56f, 1 - distance);
+
+            if (!Main.dayTime)
+            {
+                offsetRadius = MathHelper.Lerp(0.56f, 0.01f, 1 - distance);
+                rotation += MathHelper.Pi;
+            }
+            else
+            {
+                if (distance < 0.1f)
+                {
+                    float proximityFactor = 1 - (distance / 0.1f);
+                    offsetRadius += 0.8f * proximityFactor;
+                }
+            }
+
+            offset = Utility.PolarVector(offsetRadius, rotation) * 0.65f;
+            intensity = 0.96f;
+            shadeResolution /= 2;
+            radius = 1f;
+        }
 
         public override Color OnTileColor(Color inColor)
         {

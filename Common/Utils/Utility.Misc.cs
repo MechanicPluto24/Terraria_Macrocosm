@@ -40,7 +40,7 @@ namespace Macrocosm.Common.Utils
         }
 
         public static bool IsAprilFools()
-            => DateTime.Now.Month == 4 && DateTime.Now.Day == 1;
+            => DateTime.Now.Month == 5 && DateTime.Now.Day == 1;
 
         public static string GetCompassCoordinates(Player player)
             => GetCompassCoordinates(player.Center);

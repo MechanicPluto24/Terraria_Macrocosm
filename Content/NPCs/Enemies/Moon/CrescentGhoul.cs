@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
+using Macrocosm.Content.NPCs.Bosses.CraterDemon;
 using Macrocosm.Content.NPCs.Global;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -290,6 +291,12 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             if (NPC.life <= 0)
             {
                 var entitySource = NPC.GetSource_Death();
+                if (NPC.life <= 0)
+                {
+                    Gore.NewGore(entitySource, NPC.position, NPC.velocity, Mod.Find<ModGore>("CrescentGhoulGore1").Type);
+                    Gore.NewGore(entitySource, NPC.position, NPC.velocity, Mod.Find<ModGore>("CrescentGhoulGore2").Type);
+                    Gore.NewGore(entitySource, NPC.position, NPC.velocity, Mod.Find<ModGore>("CrescentGhoulGore3").Type);
+                }
 
                 for (int i = 0; i < 50; i++)
                 {

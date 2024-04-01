@@ -411,7 +411,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 return;
 
             var entitySource = NPC.GetSource_Death();
-
             if (NPC.life <= 0)
             {
                 for (int i = 0; i < 15; i++)
