@@ -18,7 +18,7 @@ namespace Macrocosm.Content.Menus
         private const string AssetPath = "Macrocosm/Content/Menus/";
         private const AssetRequestMode Mode = AssetRequestMode.ImmediateLoad;
 
-        private readonly List<CelestialBody> grabbable = new();
+        private readonly List<CelestialBody> interactible = new();
         private readonly List<CelestialBody> celestialBodies = new();
 
         public readonly Stars Stars = new();
@@ -28,29 +28,39 @@ namespace Macrocosm.Content.Menus
         public readonly CelestialBody Vulcan = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Vulcan", Mode));
         public readonly CelestialBody Mercury = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Mercury", Mode));
         public readonly CelestialBody Venus = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Venus", Mode));
+
         public readonly CelestialBody Earth = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Earth", Mode));
         public readonly CelestialBody Luna = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Luna", Mode));
+
         public readonly CelestialBody Mars = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Mars", Mode));
         public readonly CelestialBody Phobos = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Phobos", Mode));
         public readonly CelestialBody Deimos = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Deimos", Mode));
+
         public readonly CelestialBody Ceres = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Ceres", Mode));
+        private readonly Asset<Texture2D> asteroids = ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Asteroids", Mode);
+        public readonly List<CelestialBody> AsteroidBelt = new();
+
         public readonly CelestialBody Jupiter = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Jupiter", Mode));
         public readonly CelestialBody Io = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Io", Mode));
         public readonly CelestialBody Europa = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Europa", Mode));
+
         public readonly CelestialBody Saturn = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Saturn", Mode),
                                                     ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SaturnRings", Mode),
                                                     ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SaturnRings", Mode));
         public readonly CelestialBody Titan = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Titan", Mode));
+
         public readonly CelestialBody Ouranos = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Ouranos", Mode),
                                                     ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/OuranosRings", Mode));
         public readonly CelestialBody Miranda = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Miranda", Mode));
+
         public readonly CelestialBody Neptune = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Neptune", Mode));
         public readonly CelestialBody Triton = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Triton", Mode));
-        public readonly CelestialBody Pluto = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Pluto", Mode));
-        public readonly CelestialBody Charon = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Charon", Mode));
-        public readonly CelestialBody Eris = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Eris", Mode));
 
         private readonly CelestialBody plutoBarycenter = new(size: new Vector2(100, 100));
+        public readonly CelestialBody Pluto = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Pluto", Mode));
+        public readonly CelestialBody Charon = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Charon", Mode));
+
+        public readonly CelestialBody Eris = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Eris", Mode));
 
         private readonly Asset<Texture2D> sunCorona1 = ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SunCorona1", Mode);
         private readonly Asset<Texture2D> sunCorona2 = ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SunCorona2", Mode);
@@ -93,7 +103,7 @@ namespace Macrocosm.Content.Menus
                 Eris
             ];
 
-            grabbable =
+            interactible =
             [
                 Vulcan,
                 Mercury,
@@ -127,6 +137,8 @@ namespace Macrocosm.Content.Menus
         {
             Stars.Clear();
             Sun.ClearOrbitChildren();
+            AsteroidBelt.Clear();
+            released.Clear();
         }
 
         private SpriteBatchState state1, state2;
@@ -198,6 +210,19 @@ namespace Macrocosm.Content.Menus
 
             Ceres.SetOrbitParent(Sun, 362, Rand(), 0.0006f);
 
+            for (int i = 0; i < 500; i++)
+            {
+                Rectangle sourceRect = asteroids.Frame(verticalFrames: 8, frameY: Main.rand.Next(8));
+                CelestialBody asteroid = new(asteroids, scale: 0.5f, bodySourceRect: sourceRect);
+                asteroid.SetOrbitParent(Sun, 
+                    orbitRadius: 400 + Main.rand.NextFloat(150) * MathF.Sin(Rand()), 
+                    orbitRotation: Rand(),
+                    orbitSpeed: Main.rand.NextFloat(0.00015f, 0.00045f)
+                    );
+                asteroid.ConfigureBodyShader = ConfigureBodyShader;
+                AsteroidBelt.Add(asteroid);
+            }
+
             Jupiter.SetOrbitParent(Sun, 410, Rand(), 0.0004f);
             Io.SetOrbitParent(Jupiter, new Vector2(48, 20), 0.2f, Rand(), 0.012f);
             Europa.SetOrbitParent(Jupiter, new Vector2(54, 18), 0.1f, Rand(), 0.01f);
@@ -220,9 +245,6 @@ namespace Macrocosm.Content.Menus
             Pluto.AddOrbitChild(Charon, 18, 3.14f, 0.008f);
 
             Eris.SetOrbitParent(Sun, 810, Rand(), 0.00018f);
-
-            released.Clear();
-            doomed.Clear();
         }
 
         private static float Rand() => Utility.RandomRotation();
@@ -319,14 +341,13 @@ namespace Macrocosm.Content.Menus
 
         private CelestialBody grabbed;
         private readonly Dictionary<CelestialBody, int> released = new();
-
         private void Interact()
         {
             Main.alreadyGrabbingSunOrMoon = false;
 
             if (grabbed is null && !released.Any())
             {
-                foreach (var celestialBody in grabbable)
+                foreach (var celestialBody in interactible)
                 {
                     if(celestialBody.Hitbox.Contains(Main.mouseX, Main.mouseY) && Main.mouseLeft)
                     {

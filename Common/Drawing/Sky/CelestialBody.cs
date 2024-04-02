@@ -38,7 +38,8 @@ namespace Macrocosm.Common.Drawing.Sky
         public Rectangle Hitbox => new((int)(Position.X - Width/2f), (int)(Position.Y - Height/2f), (int)(Width), (int)(Height));
 
         /// <summary> The CelestialBody's scale </summary>
-        public float Scale { 
+        public float Scale 
+        { 
             get => scale;
             set
             {
@@ -48,7 +49,11 @@ namespace Macrocosm.Common.Drawing.Sky
         }
 
         /// <summary> The CelestialBody's rotation </summary>
-        public float Rotation { get => rotation; set => rotation = value; }
+        public float Rotation 
+        { 
+            get => rotation;
+            set => rotation = value; 
+        }
 
         /// <summary> The draw color  </summary>
         public Color Color = Color.White;
@@ -95,6 +100,10 @@ namespace Macrocosm.Common.Drawing.Sky
         private Asset<Texture2D> bodyTexture;
         private Asset<Texture2D> frontTexture;
 
+        private Rectangle? backSourceRect;
+        private Rectangle? bodySourceRect;
+        private Rectangle? frontSourceRect;
+
         private Vector2 averageOffset = default;
         private float parallaxSpeedX = 0f;
         private float parallaxSpeedY = 0f;
@@ -119,14 +128,26 @@ namespace Macrocosm.Common.Drawing.Sky
 
         #endregion
 
-        public CelestialBody(Asset<Texture2D> bodyTexture = null, Asset<Texture2D> backTexture = null, Asset<Texture2D> frontTexture = null, float scale = 1f, float rotation = 0f, Vector2? size = null)
+        public CelestialBody
+        (
+            Asset<Texture2D> bodyTexture = null,
+            Asset<Texture2D> backTexture = null,
+            Asset<Texture2D> frontTexture = null,
+            float scale = 1f,
+            float rotation = 0f,
+            Vector2? size = null,
+            Rectangle? backSourceRect = null,
+            Rectangle? bodySourceRect = null,
+            Rectangle? frontSourceRect = null
+        )
         {
             this.bodyTexture = bodyTexture;
             this.backTexture = backTexture;
             this.frontTexture = frontTexture;
 
-            Scale = scale;
-            Rotation = rotation;
+            this.backSourceRect = backSourceRect;
+            this.bodySourceRect = bodySourceRect;
+            this.frontSourceRect = frontSourceRect;
 
             if (size.HasValue)
             {
@@ -136,13 +157,14 @@ namespace Macrocosm.Common.Drawing.Sky
             {
                 defSize = new
                 (
-                    bodyTexture is null ? 1 : bodyTexture.Width() , 
-                    bodyTexture is null ? 1 : bodyTexture.Height()
+                    bodyTexture is null ? 1 : (bodySourceRect.HasValue ? bodySourceRect.Value.Width : bodyTexture.Width()),
+                    bodyTexture is null ? 1 : (bodySourceRect.HasValue ? bodySourceRect.Value.Height : bodyTexture.Height())
                 );
             }
 
-            Size = defSize * scale;
-
+            Scale = scale;
+            Rotation = rotation;
+            
             shadingShader = ModContent.Request<Effect>(Macrocosm.ShadersPath + "CelestialBodyShading", AssetRequestMode.ImmediateLoad);
         }
 
@@ -170,6 +192,15 @@ namespace Macrocosm.Common.Drawing.Sky
             this.bodyTexture = bodyTexture;
             this.backTexture = backTexture;
             this.frontTexture = frontTexture;
+        }
+
+        public void SetCommonSourceRectangle(Rectangle? commonSourceRect = null) => SetSourceRectangles(commonSourceRect, commonSourceRect, commonSourceRect);
+
+        public void SetSourceRectangles(Rectangle? backSourceRect = null, Rectangle? bodySourceRect = null, Rectangle? frontSourceRect = null)
+        {
+            this.backSourceRect = backSourceRect;
+            this.bodySourceRect = bodySourceRect;
+            this.frontSourceRect = frontSourceRect;
         }
 
         /// <summary>
@@ -344,7 +375,7 @@ namespace Macrocosm.Common.Drawing.Sky
                 if (OverrideBackDraw is null)
                 {
                     spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, SamplerState.LinearClamp, default, state.RasterizerState, backShader, state.Matrix);
-                    spriteBatch.Draw(backTexture.Value, Position, null, Color, Rotation, backTexture.Size() / 2, Scale, default, 0f);
+                    spriteBatch.Draw(backTexture.Value, Position, backSourceRect, Color, Rotation, backTexture.Size() / 2, Scale, default, 0f);
                     spriteBatch.End();
                 }
                 else OverrideBackDraw(this, spriteBatch, state, backTexture, backShader);
@@ -375,7 +406,7 @@ namespace Macrocosm.Common.Drawing.Sky
                 if (OverrideBodyDraw is null)
                 {
                     spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, default, state.RasterizerState, bodyShader, state.Matrix);
-                    spriteBatch.Draw(bodyTexture.Value, Position, null, Color.Red, Rotation, bodyTexture.Size() / 2, Scale, default, 0f);
+                    spriteBatch.Draw(bodyTexture.Value, Position, bodySourceRect, Color, Rotation, bodyTexture.Size() / 2, Scale, default, 0f);
                     spriteBatch.End();
                 }
                 else OverrideBodyDraw(this, spriteBatch, state, bodyTexture, bodyShader);
@@ -406,7 +437,7 @@ namespace Macrocosm.Common.Drawing.Sky
                 if (OverrideFrontDraw is null)
                 {
                     spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, SamplerState.LinearClamp, default, state.RasterizerState, frontShader, state.Matrix);
-                    spriteBatch.Draw(frontTexture.Value, Position, null, Color, Rotation, frontTexture.Size() / 2, Scale, default, 0f);
+                    spriteBatch.Draw(frontTexture.Value, Position, frontSourceRect, Color, Rotation, frontTexture.Size() / 2, Scale, default, 0f);
                     spriteBatch.End();
                 }
                 else OverrideFrontDraw(this, spriteBatch, state, frontTexture, frontShader);

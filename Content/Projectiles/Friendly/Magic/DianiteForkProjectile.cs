@@ -92,7 +92,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         {
             if (!spawned)
             {
-                targetAngle = (OrbitAngle * MathHelper.Pi / 180) - MathHelper.Pi / 2;
+                targetAngle = MathHelper.Pi/8 - MathHelper.Pi/4 * (OrbitAngle / 180);
                 spawned = true;
 
                 targetPosition = Projectile.Center;
@@ -132,7 +132,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
                         if (Projectile.owner == Main.myPlayer)
                         {
-                            floatDuration = (ushort)Main.rand.Next(1, 12);
+                            floatDuration = (ushort)Main.rand.Next(20, 40);
                             Projectile.netUpdate = true;
                         }
                     }
@@ -151,7 +151,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
                         if (Projectile.owner == Main.myPlayer)
                         {
-                            turnSpeed = Main.rand.NextFloat(0.01f, 0.1f);
+                            turnSpeed = Main.rand.NextFloat(0.01f, 0.07f);
                             Projectile.netUpdate = true;
                         }
 
@@ -166,8 +166,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                     break;
 
                 case ActionState.Home:
-
-                    float homingDistance = 800f;
+ 
+                    float homingDistance = 500f;
                     float closestDistance = homingDistance;
 
                     for (int i = 0; i < Main.maxNPCs; i++)
