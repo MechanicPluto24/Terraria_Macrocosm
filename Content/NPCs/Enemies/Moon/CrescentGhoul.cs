@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.NPCs.Bosses.CraterDemon;
 using Macrocosm.Content.NPCs.Global;
 using Microsoft.Xna.Framework;
@@ -10,6 +11,7 @@ using System;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.GameContent.Bestiary;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -68,10 +70,21 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
         {
-            bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[]
-            {
-				//BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Times.NightTime,
-			});
+            /*
+            bestiaryEntry.Info.Add(
+				BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Times.NightTime
+			);
+            */
+        }
+
+        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        {
+            return spawnInfo.Player.InModBiome<MoonBiome>() && !Main.dayTime && spawnInfo.SpawnTileY <= Main.worldSurface + 100 ? .1f : 0f;
+        }
+
+        public override void ModifyNPCLoot(NPCLoot loot)
+        {
+            loot.Add(ItemDropRule.Common(ModContent.ItemType<AlienResidue>(), 3));
         }
 
         /// <summary> Adapted from Corite AI </summary>
@@ -216,15 +229,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
                 NPC.velocity *= 0.95f;
             }
-        }
-
-        public override float SpawnChance(NPCSpawnInfo spawnInfo)
-        {
-            return spawnInfo.Player.InModBiome<MoonBiome>() && !Main.dayTime && spawnInfo.SpawnTileY <= Main.worldSurface + 100 ? .1f : 0f;
-        }
-
-        public override void ModifyNPCLoot(NPCLoot loot)
-        {
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)

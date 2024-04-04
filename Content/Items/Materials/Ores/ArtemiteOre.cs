@@ -1,11 +1,12 @@
-﻿using Terraria;
+using Macrocosm.Content.Rarities;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 
-namespace Macrocosm.Content.Items.Materials
+namespace Macrocosm.Content.Items.Materials.Ores
 {
-    public class AluminumOre : ModItem
+    public class ArtemiteOre : ModItem
     {
         public override void SetStaticDefaults()
         {
@@ -24,10 +25,11 @@ namespace Macrocosm.Content.Items.Materials
             Item.useTime = 10;
             Item.autoReuse = true;
             Item.consumable = true;
-            Item.createTile = TileType<Tiles.Ores.AluminumOre>();
+            Item.createTile = TileType<Tiles.Ores.ArtemiteOre>();
             Item.placeStyle = 0;
-            Item.rare = ItemRarityID.White;
+            Item.rare = RarityType<MoonRarityT1>();
             Item.material = true;
+
             // Set other Item.X values here
         }
 

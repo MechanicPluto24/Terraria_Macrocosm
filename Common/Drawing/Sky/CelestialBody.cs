@@ -1,10 +1,10 @@
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
+using Microsoft.CodeAnalysis.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using SteelSeries.GameSense;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -12,16 +12,16 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Drawing.Sky
 {
-    public enum SkyRotationMode
-    {
-        None,
-        Day,
-        Night,
-        Any
-    }
-
     public class CelestialBody
     {
+        public enum SkyRotationMode
+        {
+            None,
+            Day,
+            Night,
+            Any
+        }
+
         /// <summary> The CelestialBody's width </summary>
         public float Width => Size.X;
 
@@ -61,14 +61,13 @@ namespace Macrocosm.Common.Drawing.Sky
         /// <summary> References another CelestialBody as a source of light </summary>
         public CelestialBody LightSource { get => lightSource; set => lightSource = value; }
 
-        /// <summary> Rotation of the CelestialBody overlay </summary>
-        public float OverlayRotation { get => overlayRotation; set => overlayRotation = value; }
-
         /// <summary> The rotation of the CelestialBody's orbit around another CelestialBody </summary>
-        public float OrbitRotation { get => orbitRotation % MathHelper.TwoPi - MathHelper.Pi; set => orbitRotation = value; }
+        public float OrbitRotation { get => orbitRotation % MathHelper.TwoPi - MathHelper.Pi; }
 
         /// <summary> The CelestialBody's orbit angular speed around another CelestialBody </summary>
-        public float OrbitSpeed { get => orbitSpeed; set => orbitSpeed = value; }
+        public float OrbitSpeed => orbitSpeed;
+
+        public float OrbitAngle => orbitAngle;
 
         /// <summary> Whether the CelestialBody should update its position or not </summary>
         public bool ShouldUpdate { get; set; } = true;
@@ -251,7 +250,7 @@ namespace Macrocosm.Common.Drawing.Sky
         /// </summary>
         /// <param name="orbitParent"> The parent CelestialBody this should orbit around </param>
         /// <param name="orbitEllipse"> The ellipse min and max at 0 angle </param>
-        /// <param name="orbitAngle"> The tilt of the orbit (TODO) </param>
+        /// <param name="orbitAngle"> The tilt of the orbit </param>
         /// <param name="orbitRotation"> Initial angle of that orbit (in radians </param>
         /// <param name="orbitSpeed">  The speed at which this object is orbiting (in rad/tick) (FIXME) </param>
         public void SetOrbitParent(CelestialBody orbitParent, Vector2 orbitEllipse, float orbitAngle, float orbitRotation, float orbitSpeed)
@@ -317,7 +316,7 @@ namespace Macrocosm.Common.Drawing.Sky
         /// </summary>
         /// <param name="spriteBatch"> The SpriteBatch </param>
         /// <param name="withChildren"> Whether to draw the CelestialBody with all its orbiting children </param>
-        public void Draw(SpriteBatch spriteBatch, bool withChildren = true)
+        public void Draw(SpriteBatch spriteBatch)
         {
             Update();
 
@@ -325,30 +324,29 @@ namespace Macrocosm.Common.Drawing.Sky
                 return;
 
             state.SaveState(spriteBatch);
+            bool beginCalled = spriteBatch.BeginCalled();
             spriteBatch.EndIfBeginCalled();
-
-            if(withChildren)
-                DrawChildren(spriteBatch, state, inFront: false);
 
             DrawBack(spriteBatch);
             DrawBody(spriteBatch);
             DrawFront(spriteBatch);
 
-            if (withChildren)
-                DrawChildren(spriteBatch, state, inFront: true);
-
-            spriteBatch.Begin(state);
+            if(beginCalled)
+                spriteBatch.Begin(state);
         }
 
-        private void DrawChildren(SpriteBatch spriteBatch, SpriteBatchState state, bool inFront)
+        public void DrawChildren(SpriteBatch spriteBatch, Func<CelestialBody, bool> shouldDrawChild, bool recursive = false)
         {
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, state);
             foreach (CelestialBody child in orbitChildren)
             {
-                if (child.OrbitRotation >= orbitAngle && !inFront || child.OrbitRotation < orbitAngle && inFront)
-                    child.Draw(spriteBatch, withChildren: true);
+                if (shouldDrawChild(child))
+                {
+                    child.Draw(spriteBatch);
+
+                    if (recursive)
+                        child.DrawChildren(spriteBatch, shouldDrawChild, recursive);
+                }
             }
-            spriteBatch.End();
         }
 
         private void DrawBack(SpriteBatch spriteBatch)
@@ -363,11 +361,13 @@ namespace Macrocosm.Common.Drawing.Sky
                 backShader = shadingShader.Value;
                 float rotation = (Position - lightSource.Position).ToRotation();
                 Vector2 shadeResolution = backTexture.Size();
+                Vector4 sourceRect = backSourceRect.HasValue ? backSourceRect.Value.Normalize(backTexture.Size()) : new Vector4(0, 0, 1, 1);
                 ConfigureBackShader(this, rotation, out float intensity, out Vector2 offset, out float radius, ref shadeResolution);
                 backShader.Parameters["uOffset"].SetValue(offset);
                 backShader.Parameters["uIntensity"].SetValue(intensity);
                 backShader.Parameters["uRadius"].SetValue(radius);
-                backShader.Parameters["uTextureResolution"].SetValue(shadeResolution);
+                backShader.Parameters["uShadeResolution"].SetValue(shadeResolution);
+                backShader.Parameters["uSourceRect"].SetValue(sourceRect);
             }
 
             if (backTexture is not null)
@@ -394,11 +394,13 @@ namespace Macrocosm.Common.Drawing.Sky
                 bodyShader = shadingShader.Value;
                 float rotation = (Position - lightSource.Position).ToRotation();
                 Vector2 shadeResolution = bodyTexture.Size();
+                Vector4 sourceRect = bodySourceRect.HasValue ? bodySourceRect.Value.Normalize(bodyTexture.Size()) : new Vector4(0, 0, 1, 1);
                 ConfigureBodyShader(this, rotation, out float intensity, out Vector2 offset, out float radius, ref shadeResolution);
                 bodyShader.Parameters["uOffset"].SetValue(offset);
                 bodyShader.Parameters["uIntensity"].SetValue(intensity);
                 bodyShader.Parameters["uRadius"].SetValue(radius);
-                bodyShader.Parameters["uTextureResolution"].SetValue(shadeResolution);
+                bodyShader.Parameters["uShadeResolution"].SetValue(shadeResolution);
+                bodyShader.Parameters["uSourceRect"].SetValue(sourceRect);
             }
 
             if (bodyTexture is not null)
@@ -425,11 +427,13 @@ namespace Macrocosm.Common.Drawing.Sky
                 frontShader = shadingShader.Value;
                 float rotation = (Position - lightSource.Position).ToRotation();
                 Vector2 shadeResolution = frontTexture.Size();
+                Vector4 sourceRect = frontSourceRect.HasValue ? frontSourceRect.Value.Normalize(frontTexture.Size()) : new Vector4(0, 0, 1, 1);
                 ConfigureFrontShader(this, rotation, out float intensity, out Vector2 offset, out float radius, ref shadeResolution);
                 frontShader.Parameters["uOffset"].SetValue(offset);
                 frontShader.Parameters["uIntensity"].SetValue(intensity);
                 frontShader.Parameters["uRadius"].SetValue(radius);
-                frontShader.Parameters["uTextureResolution"].SetValue(shadeResolution);
+                frontShader.Parameters["uShadeResolution"].SetValue(shadeResolution);
+                frontShader.Parameters["uSourceRect"].SetValue(sourceRect);
             }
 
             if (frontTexture is not null)

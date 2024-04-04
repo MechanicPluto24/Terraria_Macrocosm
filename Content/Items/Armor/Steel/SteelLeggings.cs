@@ -1,4 +1,4 @@
-using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.Items.Materials.Bars;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -23,10 +23,10 @@ namespace Macrocosm.Content.Items.Armor.Steel
 
         public override void AddRecipes()
         {
-            Recipe recipe = Recipe.Create(Type);
-            recipe.AddIngredient(ModContent.ItemType<SteelBar>(), 15);
-            recipe.AddTile(TileID.Anvils);
-            recipe.Register();
+            CreateRecipe()
+            .AddIngredient<SteelBar>(15)
+            .AddTile(TileID.Anvils)
+            .Register();
         }
     }
 }

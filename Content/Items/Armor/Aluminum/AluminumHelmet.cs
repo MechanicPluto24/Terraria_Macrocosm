@@ -1,4 +1,4 @@
-using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.Items.Materials.Bars;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -34,10 +34,10 @@ namespace Macrocosm.Content.Items.Armor.Aluminum
 
         public override void AddRecipes()
         {
-            Recipe recipe = Recipe.Create(Type);
-            recipe.AddIngredient(ModContent.ItemType<AluminumBar>(), 16);
-            recipe.AddTile(TileID.Anvils);
-            recipe.Register();
+            CreateRecipe()
+            .AddIngredient<AluminumBar>(16)
+            .AddTile(TileID.Anvils)
+            .Register();
         }
     }
 }

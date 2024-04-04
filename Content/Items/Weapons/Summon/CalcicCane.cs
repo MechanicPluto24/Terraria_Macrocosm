@@ -13,7 +13,6 @@ namespace Macrocosm.Content.Items.Weapons.Summon
     {
         public override void SetStaticDefaults()
         {
-
             ItemID.Sets.GamepadWholeScreenUseRange[Item.type] = true;
             ItemID.Sets.LockOnIgnoresCollision[Item.type] = true;
         }

@@ -18,8 +18,9 @@ namespace Macrocosm.Content.Menus
         private const string AssetPath = "Macrocosm/Content/Menus/";
         private const AssetRequestMode Mode = AssetRequestMode.ImmediateLoad;
 
-        private readonly List<CelestialBody> interactible = new();
         private readonly List<CelestialBody> celestialBodies = new();
+        private readonly List<CelestialBody> planetsWithMoons = new();
+        private readonly List<CelestialBody> interactible = new();
 
         public readonly Stars Stars = new();
 
@@ -50,6 +51,7 @@ namespace Macrocosm.Content.Menus
         public readonly CelestialBody Titan = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Titan", Mode));
 
         public readonly CelestialBody Ouranos = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Ouranos", Mode),
+                                                    ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/OuranosRings", Mode),
                                                     ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/OuranosRings", Mode));
         public readonly CelestialBody Miranda = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Miranda", Mode));
 
@@ -61,6 +63,8 @@ namespace Macrocosm.Content.Menus
         public readonly CelestialBody Charon = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Charon", Mode));
 
         public readonly CelestialBody Eris = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Eris", Mode));
+        private readonly Asset<Texture2D> icyAsteroids = ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/IcyAsteroids", Mode);
+        public readonly List<CelestialBody> KuiperBelt = new();
 
         private readonly Asset<Texture2D> sunCorona1 = ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SunCorona1", Mode);
         private readonly Asset<Texture2D> sunCorona2 = ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SunCorona2", Mode);
@@ -69,6 +73,7 @@ namespace Macrocosm.Content.Menus
         private readonly Asset<Texture2D> sunCorona5 = ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SunCorona5", Mode);
 
         private readonly Asset<Texture2D> logo = ModContent.Request<Texture2D>(AssetPath + "Logo", Mode);
+        private readonly Asset<Texture2D> logoOld = ModContent.Request<Texture2D>(AssetPath + "Old/Logo", Mode);
 
         private readonly Asset<Texture2D> milkyWay = ModContent.Request<Texture2D>(AssetPath + "MilkyWay", Mode);
         private readonly Asset<Texture2D> nebula = ModContent.Request<Texture2D>(AssetPath + "Nebula", Mode);
@@ -103,6 +108,17 @@ namespace Macrocosm.Content.Menus
                 Eris
             ];
 
+            planetsWithMoons = 
+            [
+                Earth,
+                Mars,
+                Jupiter,
+                Saturn,
+                Ouranos,
+                Neptune,
+                plutoBarycenter
+            ];
+
             interactible =
             [
                 Vulcan,
@@ -119,7 +135,9 @@ namespace Macrocosm.Content.Menus
                 Eris
             ];
         }
-        public override Asset<Texture2D> Logo => logo;
+
+        private bool drawOldLogo = false;
+        public override Asset<Texture2D> Logo => !drawOldLogo? logo : logoOld;
         public override Asset<Texture2D> SunTexture => Macrocosm.EmptyTex;
         public override Asset<Texture2D> MoonTexture => Macrocosm.EmptyTex;
         public override int Music => MusicLoader.GetMusicSlot(Mod, "Assets/Music/Deadworld");
@@ -141,11 +159,20 @@ namespace Macrocosm.Content.Menus
             released.Clear();
         }
 
+
         private SpriteBatchState state1, state2;
         public override bool PreDrawLogo(SpriteBatch spriteBatch, ref Vector2 logoDrawCenter, ref float logoRotation, ref float logoScale, ref Color drawColor)
         {
+            if (drawOldLogo)
+                logoScale *= 0.65f;
+            else
+                logoScale *= 1.1f;
+
+            drawColor = Color.White;
+
             Rectangle screen = new(0, 0, Main.screenWidth + 1, Main.screenHeight + 1);
             spriteBatch.Draw(TextureAssets.BlackTile.Value, screen, Color.Black);
+
             state1.SaveState(spriteBatch);
             spriteBatch.End();
             spriteBatch.Begin(BlendState.Additive, state1);
@@ -158,30 +185,31 @@ namespace Macrocosm.Content.Menus
             spriteBatch.Begin(state1);
 
             Sun.SetPosition(Main.screenWidth / 2, Main.screenHeight / 2);
+            Sun.Scale = 0.85f + 0.01f * Utility.SineWave(500, MathF.PI / 2);
+
+            // Draw the moons behind the host planet
+            foreach (CelestialBody planet in planetsWithMoons)
+                planet.DrawChildren(spriteBatch, (child) => child.OrbitRotation >= child.OrbitAngle);
+
+            // Draw the planets behind the Sun
+            Sun.DrawChildren(spriteBatch, (_) => true);
+
+            // Draw the moons in front of the host planet
+            foreach (CelestialBody planet in planetsWithMoons)
+                planet.DrawChildren(spriteBatch, (child) => child.OrbitRotation < child.OrbitAngle);
 
             DrawSunCorona();
 
-            logoScale *= 0.65f;
-            drawColor = Color.White;
+            // Draw the Sun and additive effects
+            Sun.Draw(spriteBatch);
+            DrawSunLightEffects(spriteBatch);
 
-            Sun.Scale = 0.85f + 0.01f * Utility.SineWave(500, MathF.PI / 2);
-
-            // includes all orbiting descendants in the tree 
-            Sun.Draw(spriteBatch, withChildren: true);
-
-
-            spriteBatch.End();
-            spriteBatch.Begin(BlendState.Additive, state1);
-            var flare = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "HighRes/Flare3").Value;
-            var scorch1 = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "HighRes/Scorch1").Value;
-            spriteBatch.Draw(flare, Sun.Position, null, new Color(255, 96, 4) * (0.9f + 0.1f * SolarFlareProgress), 0f, flare.Size()/2f, 2.3f + 0.2f * SolarFlareProgress, SpriteEffects.None, 0);
-            spriteBatch.Draw(scorch1, Sun.Position, null, new Color(255, 193, 0) * (0.3f + 0.05f * SolarFlareProgress), 0.25f * Utility.PositiveTriangleWave(2000), scorch1.Size()/2f, 2.5f + 0.015f * SolarFlareProgress, SpriteEffects.None, 0);
-            spriteBatch.End();
-            spriteBatch.Begin(state1);
             Interact();
 
             return true;
         }
+
+        private float SolarFlareProgress => Utility.PositiveSineWave(450, MathF.PI / 2);
 
         private void SetupCelestialBodies()
         {
@@ -197,6 +225,9 @@ namespace Macrocosm.Content.Menus
             Sun.Position = Utility.ScreenCenter;
             Sun.OverrideBodyShader = Sun_GetShader;
 
+            SetUpAsteroidBelt();
+            SetUpKuiperBelt();
+
             Vulcan.SetOrbitParent(Sun, 174, Rand(), 0.0022f);
             Mercury.SetOrbitParent(Sun, 204, Rand(), 0.0018f);
             Venus.SetOrbitParent(Sun, 238, Rand(), 0.0014f);
@@ -210,19 +241,6 @@ namespace Macrocosm.Content.Menus
 
             Ceres.SetOrbitParent(Sun, 362, Rand(), 0.0006f);
 
-            for (int i = 0; i < 500; i++)
-            {
-                Rectangle sourceRect = asteroids.Frame(verticalFrames: 8, frameY: Main.rand.Next(8));
-                CelestialBody asteroid = new(asteroids, scale: 0.5f, bodySourceRect: sourceRect);
-                asteroid.SetOrbitParent(Sun, 
-                    orbitRadius: 400 + Main.rand.NextFloat(150) * MathF.Sin(Rand()), 
-                    orbitRotation: Rand(),
-                    orbitSpeed: Main.rand.NextFloat(0.00015f, 0.00045f)
-                    );
-                asteroid.ConfigureBodyShader = ConfigureBodyShader;
-                AsteroidBelt.Add(asteroid);
-            }
-
             Jupiter.SetOrbitParent(Sun, 410, Rand(), 0.0004f);
             Io.SetOrbitParent(Jupiter, new Vector2(48, 20), 0.2f, Rand(), 0.012f);
             Europa.SetOrbitParent(Jupiter, new Vector2(54, 18), 0.1f, Rand(), 0.01f);
@@ -235,6 +253,8 @@ namespace Macrocosm.Content.Menus
             Titan.SetOrbitParent(Saturn, new Vector2(52, 28), 0.8f, Rand(), 0.012f);
 
             Ouranos.SetOrbitParent(Sun, 622, Rand(), 0.0003f);
+            Ouranos.OverrideBackDraw = Ouranos_DrawRings_Back;
+            Ouranos.OverrideFrontDraw = Ouranos_DrawRings_Front;
             Miranda.SetOrbitParent(Ouranos, new Vector2(42, 18), 0f, Rand(), 0.017f);
 
             Neptune.SetOrbitParent(Sun, 700, Rand(), 0.00027f);
@@ -246,10 +266,37 @@ namespace Macrocosm.Content.Menus
 
             Eris.SetOrbitParent(Sun, 810, Rand(), 0.00018f);
         }
-
         private static float Rand() => Utility.RandomRotation();
 
-        private float SolarFlareProgress => Utility.PositiveSineWave(500, MathF.PI / 2);
+        private void SetUpAsteroidBelt()
+        {
+            for (int i = 0; i < 450; i++)
+            {
+                Rectangle sourceRect = asteroids.Frame(verticalFrames: 8, frameY: Main.rand.Next(8));
+                CelestialBody asteroid = new(asteroids, scale: 0.6f, bodySourceRect: sourceRect);
+                asteroid.SetOrbitParent(Sun,
+                    orbitRadius: 370 + Main.rand.NextFloat(40) * MathF.Sin(Rand()),
+                    orbitRotation: Rand(),
+                    orbitSpeed: Main.rand.NextFloat(0.00001f, 0.00045f)
+                    );
+                AsteroidBelt.Add(asteroid);
+            }
+        }
+
+        private void SetUpKuiperBelt()
+        {
+            for (int i = 0; i < 600; i++)
+            {
+                Rectangle sourceRect = icyAsteroids.Frame(verticalFrames: 8, frameY: Main.rand.Next(8));
+                CelestialBody icyAsteroid = new(icyAsteroids, scale: 0.6f, bodySourceRect: sourceRect);
+                icyAsteroid.SetOrbitParent(Sun,
+                    orbitRadius: 800 + Main.rand.NextFloat(100) * MathF.Sin(Rand()),
+                    orbitRotation: Rand(),
+                    orbitSpeed: Main.rand.NextFloat(0.00005f, 0.00015f)
+                    );
+                KuiperBelt.Add(icyAsteroid);
+            }
+        }
 
         private void DrawSunCorona()
         {
@@ -258,31 +305,40 @@ namespace Macrocosm.Content.Menus
             state2.SaveState(spriteBatch);
             spriteBatch.End();
 
-            Effect effect = radialSaturation.Value;
-            effect.Parameters["uCenter"].SetValue(Vector2.One * 0.5f);
-            effect.Parameters["uRadius"].SetValue(0.075f + 0.75f * SolarFlareProgress);
-            effect.Parameters["uIntensity"].SetValue(0.025f + 0.025f * SolarFlareProgress);
+            spriteBatch.Begin(BlendState.AlphaBlend, state2);
 
-            spriteBatch.Begin(BlendState.NonPremultiplied, effect, state2);
-
-            spriteBatch.Draw(sunCorona1.Value, Sun.Position, null, (Color.White * (0.4f + 0.8f * Utility.PositiveSineWave(800, 0f))).WithOpacity(0.6f + 0.2f * Utility.PositiveSineWave(800, 0f)), 0, sunCorona1.Size() / 2, 0.85f + 0.04f * Utility.SineWave(800, 0f), SpriteEffects.None, 0f);
-            spriteBatch.Draw(sunCorona2.Value, Sun.Position, null, (Color.White * (0.6f + 0.4f * Utility.PositiveSineWave(600, MathF.PI / 8))).WithOpacity(0.6f + 0.4f * Utility.PositiveSineWave(600, MathF.PI / 8)), 0, sunCorona1.Size() / 2, 0.85f + 0.03f * Utility.SineWave(600, MathF.PI / 8), SpriteEffects.None, 0f);
-            spriteBatch.Draw(sunCorona3.Value, Sun.Position, null, (Color.White * (0.8f + 0.2f * Utility.PositiveSineWave(500, MathF.PI / 4))).WithOpacity(0.8f + 0.2f * Utility.PositiveSineWave(500, MathF.PI / 4)), 0, sunCorona1.Size() / 2, 0.85f + 0.03f * Utility.SineWave(500, MathF.PI / 3), SpriteEffects.None, 0f);
-            spriteBatch.Draw(sunCorona4.Value, Sun.Position, null, (Color.White * (0.7f + 0.3f * Utility.PositiveSineWave(500, MathF.PI / 2))).WithOpacity(0.8f + 0.2f * Utility.PositiveSineWave(500, MathF.PI / 2)), 0, sunCorona1.Size() / 2, 0.85f + 0.02f * Utility.SineWave(500, MathF.PI / 2), SpriteEffects.None, 0f);
-            spriteBatch.Draw(sunCorona5.Value, Sun.Position, null, (Color.White * (0.6f + 0.4f * Utility.PositiveSineWave(300, MathF.PI / 2))).WithOpacity(0.9f + 0.1f * Utility.PositiveSineWave(300, MathF.PI / 2)), 0, sunCorona1.Size() / 2, 0.85f * 0.95f + 0.02f * Utility.SineWave(300, MathF.PI / 2), SpriteEffects.None, 0f);
+            spriteBatch.Draw(sunCorona1.Value, Sun.Position, null, (new Color(127,127,127,127) * (0.4f + 0.8f * Utility.PositiveSineWave(800, 0f))), 0, sunCorona1.Size() / 2, 0.85f + 0.04f * Utility.SineWave(800, 0f), SpriteEffects.None, 0f);
+            spriteBatch.Draw(sunCorona2.Value, Sun.Position, null, (new Color(127,127,127,127) * (0.6f + 0.4f * Utility.PositiveSineWave(600, MathF.PI / 8))), 0, sunCorona1.Size() / 2, 0.85f + 0.03f * Utility.SineWave(600, MathF.PI / 8), SpriteEffects.None, 0f);
+            spriteBatch.Draw(sunCorona3.Value, Sun.Position, null, (new Color(127,127,127,127) * (0.8f + 0.2f * Utility.PositiveSineWave(500, MathF.PI / 4))), 0, sunCorona1.Size() / 2, 0.85f + 0.03f * Utility.SineWave(500, MathF.PI / 3), SpriteEffects.None, 0f);
+            spriteBatch.Draw(sunCorona4.Value, Sun.Position, null, (new Color(127,127,127,127) * (0.7f + 0.3f * Utility.PositiveSineWave(500, MathF.PI / 2))), 0, sunCorona1.Size() / 2, 0.85f + 0.02f * Utility.SineWave(500, MathF.PI / 2), SpriteEffects.None, 0f);
+            spriteBatch.Draw(sunCorona5.Value, Sun.Position, null, (new Color(127,127,127,127) * (0.6f + 0.4f * Utility.PositiveSineWave(300, MathF.PI / 2))), 0, sunCorona1.Size() / 2, 0.85f * 0.95f + 0.02f * Utility.SineWave(300, MathF.PI / 2), SpriteEffects.None, 0f);
 
             spriteBatch.End();
             spriteBatch.Begin(state2);
         }
 
+        private void DrawSunLightEffects(SpriteBatch spriteBatch)
+        {
+            spriteBatch.End();
+            spriteBatch.Begin(BlendState.Additive, state1);
+            var flare = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "HighRes/Flare3").Value;
+            var scorch1 = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "HighRes/Scorch1").Value;
+            var scorch2 = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "HighRes/Scorch2").Value;
+            spriteBatch.Draw(flare, Sun.Position, null, new Color(255, 96, 4) * (0.9f + 0.1f * SolarFlareProgress), 0f, flare.Size() / 2f, 2.2f + 0.2f * SolarFlareProgress, SpriteEffects.None, 0);
+            spriteBatch.Draw(scorch1, Sun.Position, null, new Color(255, 193, 0) * (0.25f + 0.01f * SolarFlareProgress), MathHelper.TwoPi * Utility.PositiveTriangleWave(15000), scorch1.Size() / 2f, 2.5f + 0.01f * SolarFlareProgress, SpriteEffects.None, 0);
+            spriteBatch.Draw(scorch2, Sun.Position, null, new Color(255, 193, 0) * (0.2f + 0.01f * SolarFlareProgress), MathHelper.TwoPi * -Utility.PositiveTriangleWave(15000), scorch2.Size() / 2f, 2.5f + 0.01f * SolarFlareProgress, SpriteEffects.None, 0);
+            spriteBatch.End();
+            spriteBatch.Begin(state1);
+        }
+
         private void ConfigureBodyShader(CelestialBody celestialBody, float rotation, out float intensity, out Vector2 offset, out float radius, ref Vector2 shadeResolution)
         {
-            intensity = -1f;
             float rotationProgress = Math.Abs(MathF.Cos((rotation + MathHelper.Pi)));
-            float offsetRadius = MathHelper.Lerp(-0.8f, -0.5f, Utility.QuadraticEaseInOut(rotationProgress));
+            intensity = 1f;
+            float offsetRadius = MathHelper.Lerp(0.5f, 0.3f, Utility.QuadraticEaseInOut(rotationProgress));
             offset = Utility.PolarVector(offsetRadius, rotation);
             shadeResolution *= 1;
-            radius = MathHelper.Lerp(1.5f, 1.1f, Math.Abs(rotationProgress)) - 0.15f * SolarFlareProgress;
+            radius = MathHelper.Lerp(1.8f, 1.3f, Math.Abs(rotationProgress)) - 0.15f * SolarFlareProgress;
         }
 
         private Effect Sun_GetShader()
@@ -296,38 +352,35 @@ namespace Macrocosm.Content.Menus
 
         private void Saturn_DrawRings_Back(CelestialBody saturn, SpriteBatch spriteBatch, SpriteBatchState state, Asset<Texture2D> rings, Effect shader)
         {
-            Matrix uiScaleMatrix = state.Matrix;
-            Matrix transformationMatrix =
-                Matrix.CreateTranslation(-saturn.Position.X, -saturn.Position.Y, 0f) * // Translate to screen origin
-                Matrix.CreateRotationX(MathHelper.Pi * 0.4f * 1) *                         // Apply X skew 
-                Matrix.CreateRotationY(MathHelper.Pi * 0.2f * 1) *                         // Apply Y skew
-                Matrix.CreateTranslation(saturn.Position.X, saturn.Position.Y, 0f) *   // Translate back to original position
-                Matrix.CreateScale(uiScaleMatrix.M11, uiScaleMatrix.M22, 0f);          // Apply UI scale
-
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, shader, transformationMatrix);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, shader, Saturn_GetMatrix(saturn, state.Matrix));
 
             Rectangle sourceRect = new(0, 0, rings.Width(), rings.Height()/2);
             Vector2 position = saturn.Position;
             spriteBatch.Draw(rings.Value, position, sourceRect, Color.White, 0f, new Vector2(sourceRect.Width / 2, sourceRect.Height), saturn.Scale, default, 0f);
+
             spriteBatch.End();
         }
 
         private void Saturn_DrawRings_Front(CelestialBody saturn, SpriteBatch spriteBatch, SpriteBatchState state, Asset<Texture2D> rings, Effect shader)
         {
-            Matrix uiScaleMatrix = state.Matrix;
-            Matrix transformationMatrix =
-                Matrix.CreateTranslation(-saturn.Position.X, -saturn.Position.Y, 0f) * // Translate to screen origin
-                Matrix.CreateRotationX(MathHelper.Pi * 0.4f * 1) *                         // Apply X skew 
-                Matrix.CreateRotationY(MathHelper.Pi * 0.2f * 1) *                         // Apply Y skew
-                Matrix.CreateTranslation(saturn.Position.X, saturn.Position.Y, 0f) *   // Translate back to original position
-                Matrix.CreateScale(uiScaleMatrix.M11, uiScaleMatrix.M22, 0f);          // Apply UI scale
-
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, shader, transformationMatrix);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, shader, Saturn_GetMatrix(saturn, state.Matrix));
 
             Rectangle sourceRect = new(0, rings.Height() / 2, rings.Width(), rings.Height() / 2);
             Vector2 position = saturn.Position + new Vector2(0, 0);
-            spriteBatch.Draw(rings.Value, position, sourceRect, Color.White, 0f, new Vector2(rings.Height()/2f, 0), saturn.Scale, default, 0f);
+            spriteBatch.Draw(rings.Value, position, sourceRect, Color.White, 0f, new Vector2(rings.Height() / 2f, 0), saturn.Scale, default, 0f);
+
             spriteBatch.End();
+        }
+
+        private static Matrix Saturn_GetMatrix(CelestialBody saturn, Matrix uiScaleMatrix)
+        {
+            Matrix transformationMatrix =
+                Matrix.CreateTranslation(-saturn.Position.X, -saturn.Position.Y, 0f) * // Translate to screen origin
+                Matrix.CreateRotationX(MathHelper.Pi * 0.4f * 1) *                     // Apply X skew 
+                Matrix.CreateRotationY(MathHelper.Pi * 0.2f * 1) *                     // Apply Y skew
+                Matrix.CreateTranslation(saturn.Position.X, saturn.Position.Y, 0f) *   // Translate back to original position
+                Matrix.CreateScale(uiScaleMatrix.M11, uiScaleMatrix.M22, 0f);          // Apply UI scale
+            return transformationMatrix;
         }
 
         private void Saturn_ConfigureRingsShader(CelestialBody saturn, float rotation, out float intensity, out Vector2 offset, out float radius, ref Vector2 shadeResolution)
@@ -337,6 +390,40 @@ namespace Macrocosm.Content.Menus
             float offsetRadius = MathHelper.Lerp(-0.45f, -0.4f, Utility.QuadraticEaseInOut(rotationProgress));
             offset = Utility.PolarVector(offsetRadius, rotation + MathHelper.Pi/8);
             radius = MathHelper.Lerp(0.35f, 0.4f, Utility.QuadraticEaseInOut(rotationProgress));
+        }
+
+        private void Ouranos_DrawRings_Back(CelestialBody ouranos, SpriteBatch spriteBatch, SpriteBatchState state, Asset<Texture2D> rings, Effect shader)
+        {
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, shader, Ouranos_GetMatrix(ouranos, state.Matrix));
+
+            Rectangle sourceRect = new(0, 0, rings.Width(), rings.Height() / 2);
+            Vector2 position = ouranos.Position;
+            spriteBatch.Draw(rings.Value, position, sourceRect, Color.White, MathHelper.PiOver2, new Vector2(sourceRect.Width / 2, sourceRect.Height), ouranos.Scale * 1f, default, 0f);
+
+            spriteBatch.End();
+        }
+
+        private void Ouranos_DrawRings_Front(CelestialBody ouranos, SpriteBatch spriteBatch, SpriteBatchState state, Asset<Texture2D> rings, Effect shader)
+        {
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, shader, Ouranos_GetMatrix(ouranos, state.Matrix));
+
+            Rectangle sourceRect = new(0, rings.Height() / 2, rings.Width(), rings.Height() / 2);
+            Vector2 position = ouranos.Position + new Vector2(0, 0);
+            spriteBatch.Draw(rings.Value, position, sourceRect, Color.White, MathHelper.PiOver2, new Vector2(rings.Height() / 2f, 0), ouranos.Scale * 1f, default, 0f); 
+
+            spriteBatch.End();
+        }
+
+        private static Matrix Ouranos_GetMatrix(CelestialBody ouranos, Matrix uiScaleMatrix)
+        {
+            Matrix transformationMatrix =
+                Matrix.CreateTranslation(-ouranos.Position.X, -ouranos.Position.Y, 0f) * // Translate to screen origin
+                Matrix.CreateRotationX(MathHelper.Pi * 0.2f) *                           // Apply X skew 
+                Matrix.CreateRotationY(MathHelper.Pi * 0.4f) *                           // Apply Y skew
+                Matrix.CreateRotationZ(MathHelper.Pi * 0.3f) *                           // Apply Z skew
+                Matrix.CreateTranslation(ouranos.Position.X, ouranos.Position.Y, 0f) *   // Translate back to original position
+                Matrix.CreateScale(uiScaleMatrix.M11, uiScaleMatrix.M22, 0f);            // Apply UI scale
+            return transformationMatrix;
         }
 
         private CelestialBody grabbed;

@@ -1,3 +1,4 @@
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -37,7 +38,7 @@ public class UIItemDropInfo : UIPanel
         OnMouseOver += MouseOver;
         OnMouseOut += MouseOut;
         BorderColor = new Color(89, 116, 213, 255);
-        GetDropInfo(info, locked, out var stackRange, out var droprate);
+        info.GetInfoText(locked, out var stackRange, out var dropRate);
 
         if (locked)
         {
@@ -74,9 +75,9 @@ public class UIItemDropInfo : UIPanel
             Append(itemIcon);
 
             if (!string.IsNullOrEmpty(stackRange))
-                droprate = stackRange + " " + droprate;
+                dropRate = stackRange + " " + dropRate;
 
-            textPanel = new(droprate, textScale)
+            textPanel = new(dropRate, textScale)
             {
                 IgnoresMouseInteraction = true,
                 DrawPanel = false,
@@ -93,31 +94,6 @@ public class UIItemDropInfo : UIPanel
         bool blacklisted = itemIcon.ToggleBlacklisted();
         textPanel.TextColor = blacklisted ? Color.Gray : Color.White;
         return blacklisted;
-    }
-
-    protected void GetDropInfo(DropRateInfo dropRateInfo, bool locked, out string stackRange, out string droprate)
-    {
-        if (dropRateInfo.stackMin != dropRateInfo.stackMax)
-            stackRange = $" ({dropRateInfo.stackMin}-{dropRateInfo.stackMax})";
-        else if (dropRateInfo.stackMin == 1)
-            stackRange = "";
-        else
-            stackRange = " (" + dropRateInfo.stackMin + ")";
-
-        string originalFormat = "P";
-        if (dropRateInfo.dropRate < 0.001)
-            originalFormat = "P4";
-
-        if (dropRateInfo.dropRate != 1f)
-            droprate = Terraria.Utils.PrettifyPercentDisplay(dropRateInfo.dropRate, originalFormat);
-        else
-            droprate = "100%";
-
-        if (locked)
-        {
-            droprate = "???";
-            stackRange = "";
-        }
     }
 
     protected override void DrawSelf(SpriteBatch spriteBatch)

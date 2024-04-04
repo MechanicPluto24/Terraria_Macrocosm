@@ -9,6 +9,7 @@ using System.Threading;
 using Terraria;
 using Terraria.Audio;
 using Terraria.Chat;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -64,22 +65,22 @@ namespace Macrocosm.Common.Utils
             switch (severity)
             {
                 case MessageSeverity.Info:
-                    Chat(message, Color.White, sync: false);
+                    if(!Main.gameMenu) Chat(message, Color.White, sync: false);
                     Macrocosm.Instance.Logger.Info(message);
                     break;
 
                 case MessageSeverity.Warn:
-                    Chat(message, Color.Gold, sync: false);
+                    if (!Main.gameMenu) Chat(message, Color.Gold, sync: false);
                     Macrocosm.Instance.Logger.Warn(message);
                     break;
 
                 case MessageSeverity.Error:
-                    Chat(message, Color.Red, sync: false);
+                    if (!Main.gameMenu) Chat(message, Color.Red, sync: false);
                     Macrocosm.Instance.Logger.Error(message);
                     break;
 
                 case MessageSeverity.Fatal:
-                    Chat(message, Color.Purple, sync: false);
+                    if (!Main.gameMenu) Chat(message, Color.Purple, sync: false);
                     Macrocosm.Instance.Logger.Fatal(message);
                     break;
             }

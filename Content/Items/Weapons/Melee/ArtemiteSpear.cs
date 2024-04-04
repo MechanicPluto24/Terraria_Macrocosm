@@ -1,5 +1,5 @@
 ﻿using Macrocosm.Common.Utils;
-using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.Items.Materials.Bars;
 using Macrocosm.Content.Projectiles.Friendly.Melee;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
@@ -93,10 +93,10 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 
         public override void AddRecipes()
         {
-            Recipe recipe = Recipe.Create(Type);
-            recipe.AddIngredient<ArtemiteBar>(12);
-            recipe.AddTile(TileID.WorkBenches);
-            recipe.Register();
+            CreateRecipe()
+            .AddIngredient<ArtemiteBar>(12)
+            .AddTile(TileID.LunarCraftingStation)
+            .Register();
         }
     }
 }

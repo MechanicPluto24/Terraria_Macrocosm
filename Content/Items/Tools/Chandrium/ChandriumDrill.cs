@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.Projectiles.Friendly.Tools;
+﻿using Macrocosm.Content.Items.Materials.Bars;
+using Macrocosm.Content.Projectiles.Friendly.Tools;
 using Macrocosm.Content.Rarities;
 using Terraria;
 using Terraria.ID;
@@ -35,6 +36,14 @@ namespace Macrocosm.Content.Items.Tools.Chandrium
             Item.noMelee = true;
             Item.shoot = ModContent.ProjectileType<ChandriumDrillProjectile>();
             Item.shootSpeed = 32;
+        }
+
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+            .AddIngredient<ChandriumBar>(12)
+            .AddTile(TileID.LunarCraftingStation)
+            .Register();
         }
     }
 }

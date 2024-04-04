@@ -1,9 +1,10 @@
+using Macrocosm.Content.Items.Materials.Ores;
 using Macrocosm.Content.Rarities;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Materials
+namespace Macrocosm.Content.Items.Materials.Bars
 {
     public class DianiteBar : ModItem
     {
@@ -33,10 +34,10 @@ namespace Macrocosm.Content.Items.Materials
 
         public override void AddRecipes()
         {
-            Recipe recipe = Recipe.Create(Type);
-            recipe.AddIngredient<DianiteOre>(6);
-            recipe.AddTile(TileID.WorkBenches);
-            recipe.Register();
+            CreateRecipe()
+            .AddIngredient<DianiteOre>(6)
+            .AddTile(TileID.LunarCraftingStation)
+            .Register();
         }
     }
 }

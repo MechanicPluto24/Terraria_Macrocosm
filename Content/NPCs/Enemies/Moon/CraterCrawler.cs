@@ -1,9 +1,12 @@
-﻿using Macrocosm.Content.NPCs.Global;
+﻿using Macrocosm.Content.Biomes;
+using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.NPCs.Global;
 using Microsoft.Xna.Framework;
 using System.IO;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent.Bestiary;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -38,14 +41,23 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.aiStyle = -1;
         }
 
+        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        {
+            return spawnInfo.Player.InModBiome<MoonBiome>() && !Main.dayTime && spawnInfo.SpawnTileY <= Main.worldSurface + 100 ? .1f : 0f;
+        }
+
+        public override void ModifyNPCLoot(NPCLoot loot)
+        {
+            loot.Add(ItemDropRule.Common(ModContent.ItemType<AlienResidue>(), 2, 1, 2));
+        }
+
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
         {
-            // We can use AddRange instead of calling Add multiple times in order to add multiple items at once
-            bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[]
-            {
-				// Sets the spawning conditions of this NPC that is listed in the bestiary.
-				//BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Times.NightTime,
-			});
+            /*
+            bestiaryEntry.Info.Add(
+				BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Times.NightTime
+			);
+            */
         }
 
         public override void Init()

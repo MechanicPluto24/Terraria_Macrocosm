@@ -1,15 +1,17 @@
-﻿using Terraria;
+using Macrocosm.Content.Items.Materials.Ores;
+using Macrocosm.Content.Rarities;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 
-namespace Macrocosm.Content.Items.Materials
+namespace Macrocosm.Content.Items.Materials.Bars
 {
-    public class OilShale : ModItem
+    public class SeleniteBar : ModItem
     {
         public override void SetStaticDefaults()
         {
-            Item.ResearchUnlockCount = 50;
+            Item.ResearchUnlockCount = 25;
         }
 
         public override void SetDefaults()
@@ -24,9 +26,9 @@ namespace Macrocosm.Content.Items.Materials
             Item.useTime = 10;
             Item.autoReuse = true;
             Item.consumable = true;
-            Item.createTile = TileType<Tiles.Ores.OilShale>();
+            Item.createTile = TileType<Tiles.Bars.SeleniteBar>();
             Item.placeStyle = 0;
-            Item.rare = ItemRarityID.Blue;
+            Item.rare = RarityType<MoonRarityT1>();
             Item.material = true;
 
             // Set other Item.X values here
@@ -34,7 +36,10 @@ namespace Macrocosm.Content.Items.Materials
 
         public override void AddRecipes()
         {
-
+            CreateRecipe()
+            .AddIngredient<SeleniteOre>(6)
+            .AddTile(TileID.LunarCraftingStation)
+            .Register();
         }
     }
 }

@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
 
@@ -79,7 +80,6 @@ namespace Macrocosm.Common.Utils
             return new Rectangle(newX, newY, newWidth, newHeight);
         }
 
-
         public static Rectangle AdjustAspectRatio(this Rectangle rectangle, int targetWidth, int targetHeight)
         {
             float aspectRatio = (float)rectangle.Width / rectangle.Height;
@@ -105,6 +105,15 @@ namespace Macrocosm.Common.Utils
             }
 
             return new Rectangle(rectangle.X, rectangle.Y, targetWidth, targetHeight);
+        }
+
+        public static Vector4 Normalize(this Rectangle rectangle, Vector2 maxSize)
+        {
+            float x = rectangle.X / maxSize.X;
+            float y = rectangle.Y / maxSize.Y;
+            float width = rectangle.Width / maxSize.X;
+            float height = rectangle.Height / maxSize.Y;
+            return new Vector4(x, y, width, height); 
         }
         #endregion
 

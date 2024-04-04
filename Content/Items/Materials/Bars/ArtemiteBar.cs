@@ -1,12 +1,13 @@
+using Macrocosm.Content.Items.Materials.Ores;
 using Macrocosm.Content.Rarities;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 
-namespace Macrocosm.Content.Items.Materials
+namespace Macrocosm.Content.Items.Materials.Bars
 {
-    public class ChandriumBar : ModItem
+    public class ArtemiteBar : ModItem
     {
         public override void SetStaticDefaults()
         {
@@ -25,21 +26,21 @@ namespace Macrocosm.Content.Items.Materials
             Item.useTime = 10;
             Item.autoReuse = true;
             Item.consumable = true;
-            Item.createTile = TileType<Tiles.Bars.ChandriumBar>();
+            Item.createTile = TileType<Tiles.Bars.ArtemiteBar>();
             Item.placeStyle = 0;
-            Item.rare = ModContent.RarityType<MoonRarityT1>();
+            Item.rare = RarityType<MoonRarityT1>();
             Item.material = true;
-
 
             // Set other Item.X values here
         }
 
         public override void AddRecipes()
         {
-            Recipe recipe = Recipe.Create(Type);
-            recipe.AddIngredient<ChandriumOre>(6);
-            recipe.AddTile(TileID.WorkBenches);
-            recipe.Register();
+
+            CreateRecipe()
+            .AddIngredient<ArtemiteOre>(6)
+            .AddTile(TileID.LunarCraftingStation)
+            .Register();
         }
     }
 }

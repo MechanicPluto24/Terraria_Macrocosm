@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Content.Projectiles.Friendly.Tools;
 using Macrocosm.Content.Rarities;
+using Macrocosm.Content.Tiles.Furniture;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -35,6 +36,14 @@ namespace Macrocosm.Content.Items.Tools.Selenite
             Item.noMelee = true;
             Item.shoot = ModContent.ProjectileType<SeleniteDrillProjectile>();
             Item.shootSpeed = 32;
+        }
+
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+            .AddIngredient<SeleniteDrill>(12)
+            .AddTile(TileID.LunarCraftingStation)
+            .Register();
         }
     }
 }

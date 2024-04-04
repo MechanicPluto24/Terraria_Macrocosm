@@ -1,5 +1,7 @@
 ﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
+using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.Items.Placeable.Blocks;
 using Macrocosm.Content.NPCs.Bosses.CraterDemon;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
@@ -12,7 +14,6 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Consumables.BossSummons
 {
-    //Had to salvage it from an extracted DLL, so no comments.  Oops.  -- absoluteAquarian
     public class CraterDemonSummon : ModItem
     {
         // Different sprite for drawing in world and in inventory, as opposed from the player-held variant
@@ -53,6 +54,15 @@ namespace Macrocosm.Content.Items.Consumables.BossSummons
             return true;
         }
 
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient<AlienResidue>(50)
+                .AddIngredient<SpaceDust>(10)
+                .AddIngredient<AlienResidue>(20)
+                .AddTile(TileID.LunarCraftingStation) // TODO: Nuclear altar
+                .Register();
+        }
         public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
         {
             spriteBatch.Draw(itemSprite.Value, position, new Rectangle(0, 0, itemSprite.Width(), itemSprite.Height()), drawColor, 0f, itemSprite.Size() / 2f, scale, SpriteEffects.None, 0);

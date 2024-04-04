@@ -1,5 +1,5 @@
 // using Macrocosm.Tiles;
-using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.Items.Materials.Bars;
 using Macrocosm.Content.Players;
 using Macrocosm.Content.Rarities;
 using Terraria;
@@ -43,10 +43,10 @@ namespace Macrocosm.Content.Items.Armor.Chandrium
 
         public override void AddRecipes()
         {
-            Recipe recipe = Recipe.Create(Type);
-            recipe.AddIngredient(ModContent.ItemType<ChandriumBar>(), 16);
-            recipe.AddTile(TileID.WorkBenches);
-            recipe.Register();
+            CreateRecipe()
+            .AddIngredient<ChandriumBar>(16)
+            .AddTile(TileID.LunarCraftingStation)
+            .Register();
         }
     }
 }

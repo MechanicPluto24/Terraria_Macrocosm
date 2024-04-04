@@ -1,11 +1,12 @@
-﻿using Terraria;
+using Macrocosm.Content.Rarities;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 
-namespace Macrocosm.Content.Items.Materials
+namespace Macrocosm.Content.Items.Materials.Ores
 {
-    public class Coal : ModItem
+    public class SeleniteOre : ModItem
     {
         public override void SetStaticDefaults()
         {
@@ -15,7 +16,7 @@ namespace Macrocosm.Content.Items.Materials
         public override void SetDefaults()
         {
             Item.width = 20;
-            Item.height = 16;
+            Item.height = 20;
             Item.maxStack = Item.CommonMaxStack;
             Item.value = 750;
             Item.useStyle = ItemUseStyleID.Swing;
@@ -24,18 +25,17 @@ namespace Macrocosm.Content.Items.Materials
             Item.useTime = 10;
             Item.autoReuse = true;
             Item.consumable = true;
-            Item.createTile = TileType<Tiles.Ores.Coal>();
+            Item.createTile = TileType<Tiles.Ores.SeleniteOre>();
             Item.placeStyle = 0;
-            Item.rare = ItemRarityID.White;
+            Item.rare = RarityType<MoonRarityT1>();
             Item.material = true;
+
+            // Set other Item.X values here
         }
 
         public override void AddRecipes()
         {
-            Recipe.Create(ItemID.Torch, 5)
-            .AddIngredient(Type, 1)
-            .AddRecipeGroup(RecipeGroupID.Wood, 1)
-            .Register();
+
         }
     }
 }

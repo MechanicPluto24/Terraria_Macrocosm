@@ -130,6 +130,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
                         Projectile.velocity = movementVector.RotatedBy(targetAngle) * 0.8f;
 
+                        for (int i = 0; i < 35; i++)
+                        {
+                            Vector2 velocity = Main.rand.NextVector2Circular(16, 1f).RotatedBy(Projectile.velocity.ToRotation());
+                            Dust dust = Dust.NewDustPerfect(targetPosition, ModContent.DustType<DianiteBrightDust>(), velocity, Scale: Main.rand.NextFloat(1f, 1.4f));
+                            dust.noGravity = true;
+                        }
+
                         if (Projectile.owner == Main.myPlayer)
                         {
                             floatDuration = (ushort)Main.rand.Next(20, 40);
@@ -153,13 +160,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                         {
                             turnSpeed = Main.rand.NextFloat(0.01f, 0.07f);
                             Projectile.netUpdate = true;
-                        }
-
-                        for (int i = 0; i < 15; i++)
-                        {
-                            Vector2 velocity = Main.rand.NextVector2Circular(16, 2f).RotatedBy(movementVector.ToRotation());
-                            Dust dust = Dust.NewDustPerfect(targetPosition, ModContent.DustType<DianiteBrightDust>(), velocity, Scale: Main.rand.NextFloat(1f, 1.4f));
-                            dust.noGravity = true;
                         }
                     }
 

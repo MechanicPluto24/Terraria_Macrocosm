@@ -128,7 +128,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
             return true;
         }
-        public override void ModifyDamageHitbox(ref Rectangle hitbox)
+        public override void ModifyDamageHitbox(ref Rectangle hitbox) 
         {
             base.ModifyDamageHitbox(ref hitbox);
             Player player = Main.player[Projectile.owner];
