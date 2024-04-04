@@ -128,8 +128,11 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 Main.spriteBatch.Draw(flare, position - Main.screenPosition, null, new Color(92, 206, 130).WithOpacity(opacity), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
             }
 
+            // Strange
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(BlendState.NonPremultiplied, state);
+            Main.spriteBatch.Begin(BlendState.AlphaBlend, state);
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(state);
 
             return false;
         }

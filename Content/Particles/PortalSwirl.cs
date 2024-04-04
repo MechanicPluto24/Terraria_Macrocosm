@@ -40,8 +40,6 @@ namespace Macrocosm.Content.Particles
                 Velocity = Vector2.Lerp(Velocity, toCenter, 0.3f);
                 Velocity *= 0.995f;
             }
-
-
         }
 
         public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)

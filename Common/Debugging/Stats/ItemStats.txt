@@ -7,7 +7,7 @@ CelestialBulwark
 		Stardust Fragment x 15
 		Vortex Fragment x 15
 		Solar Fragment x 15
-		@
+		at
 		Ancient Manipulator
 
 
@@ -24,7 +24,7 @@ AluminumBoots
 	Value: 30 silver
 	Recipes:
 		Aluminum Bar x 18
-		@
+		at
 		Anvil
 
 
@@ -32,7 +32,7 @@ AluminumBreastplate
 	Value: 40 silver
 	Recipes:
 		Aluminum Bar x 22
-		@
+		at
 		Anvil
 
 
@@ -40,7 +40,7 @@ AluminumHelmet
 	Value: 25 silver
 	Recipes:
 		Aluminum Bar x 16
-		@
+		at
 		Anvil
 
 
@@ -48,7 +48,7 @@ ArtemiteBreastplate
 	Value: 1 gold
 	Recipes:
 		Artemite Bar x 16
-		@
+		at
 		Ancient Manipulator
 
 
@@ -56,7 +56,7 @@ ArtemiteHelmet
 	Value: 1 gold
 	Recipes:
 		Artemite Bar x 8
-		@
+		at
 		Ancient Manipulator
 
 
@@ -64,7 +64,7 @@ ArtemiteLeggings
 	Value: 1 gold
 	Recipes:
 		Artemite Bar x 12
-		@
+		at
 		Ancient Manipulator
 
 
@@ -73,7 +73,7 @@ AstronautHelmet
 	Recipes:
 		Spacesuit Fabric x 20
 		Lexan Glass x 5
-		@
+		at
 		Industrial Loom
 
 
@@ -81,7 +81,7 @@ AstronautLeggings
 	Value: 1 gold
 	Recipes:
 		Spacesuit Fabric x 20
-		@
+		at
 		Industrial Loom
 
 
@@ -89,7 +89,7 @@ AstronautSuit
 	Value: 1 gold
 	Recipes:
 		Spacesuit Fabric x 20
-		@
+		at
 		Industrial Loom
 
 
@@ -97,7 +97,7 @@ ChandriumBreastplate
 	Value: 1 gold
 	Recipes:
 		Chandrium Bar x 16
-		@
+		at
 		Ancient Manipulator
 
 
@@ -105,7 +105,7 @@ ChandriumHelm
 	Value: 1 gold
 	Recipes:
 		Chandrium Bar x 8
-		@
+		at
 		Ancient Manipulator
 
 
@@ -113,7 +113,7 @@ ChandriumLeggings
 	Value: 1 gold
 	Recipes:
 		Chandrium Bar x 12
-		@
+		at
 		Ancient Manipulator
 
 
@@ -121,7 +121,7 @@ DianiteBreastplate
 	Value: 1 gold
 	Recipes:
 		Dianite Bar x 16
-		@
+		at
 		Ancient Manipulator
 
 
@@ -129,7 +129,7 @@ DianiteLeggings
 	Value: 1 gold
 	Recipes:
 		Dianite Bar x 12
-		@
+		at
 		Ancient Manipulator
 
 
@@ -137,7 +137,7 @@ DianiteVisor
 	Value: 1 gold
 	Recipes:
 		Dianite Bar x 8
-		@
+		at
 		Ancient Manipulator
 
 
@@ -145,7 +145,7 @@ SeleniteBreastplate
 	Value: 1 gold
 	Recipes:
 		Selenite Bar x 16
-		@
+		at
 		Ancient Manipulator
 
 
@@ -153,7 +153,7 @@ SeleniteHeadgear
 	Value: 1 gold
 	Recipes:
 		Selenite Bar x 8
-		@
+		at
 		Ancient Manipulator
 
 
@@ -161,7 +161,7 @@ SeleniteLeggings
 	Value: 1 gold
 	Recipes:
 		Selenite Bar x 12
-		@
+		at
 		Ancient Manipulator
 
 
@@ -169,7 +169,7 @@ SteelChestplate
 	Value: 2 gold 50 silver
 	Recipes:
 		Steel Bar x 20
-		@
+		at
 		Anvil
 
 
@@ -177,7 +177,7 @@ SteelHelmet
 	Value: 4 gold
 	Recipes:
 		Steel Bar x 10
-		@
+		at
 		Anvil
 
 
@@ -185,7 +185,7 @@ SteelLeggings
 	Value: 2 gold 50 silver
 	Recipes:
 		Steel Bar x 15
-		@
+		at
 		Anvil
 
 
@@ -198,7 +198,7 @@ CraterDemonSummon
 		Alien Residue x 50
 		Space Dust x 10
 		Alien Residue x 20
-		@
+		at
 		Ancient Manipulator
 
 
@@ -239,7 +239,7 @@ AluminumBar
 	Value: 7 silver 50 copper
 	Recipes:
 		Aluminum Ore x 4
-		@
+		at
 		Anvil
 
 
@@ -247,7 +247,7 @@ ArtemiteBar
 	Value: 7 silver 50 copper
 	Recipes:
 		Artemite Ore x 6
-		@
+		at
 		Ancient Manipulator
 
 
@@ -255,7 +255,7 @@ ChandriumBar
 	Value: 7 silver 50 copper
 	Recipes:
 		Chandrium Ore x 6
-		@
+		at
 		Ancient Manipulator
 
 
@@ -263,7 +263,7 @@ DianiteBar
 	Value: 7 silver 50 copper
 	Recipes:
 		Dianite Ore x 6
-		@
+		at
 		Ancient Manipulator
 
 
@@ -271,7 +271,7 @@ SeleniteBar
 	Value: 7 silver 50 copper
 	Recipes:
 		Selenite Ore x 6
-		@
+		at
 		Ancient Manipulator
 
 
@@ -280,7 +280,7 @@ SteelBar
 	Recipes:
 		Iron Bar x 2
 		Coal x 1
-		@
+		at
 		Hellforge
 
 
@@ -331,7 +331,7 @@ OxygenSystem
 	Recipes:
 		Oxygen Tank x 2
 		Printed Circuit Board x 1
-		@
+		at
 		Work Bench
 
 
@@ -375,7 +375,7 @@ IrradiatedBrick
 	Value: 7 silver 50 copper
 	Recipes:
 		Irradiated Rock x 2
-		@
+		at
 		Work Bench
 
 
@@ -398,7 +398,7 @@ RegolithBrick
 	Value: 7 silver 50 copper
 	Recipes:
 		Regolith x 2
-		@
+		at
 		Work Bench
 
 
@@ -434,7 +434,7 @@ MoonBaseBed
 	Recipes:
 		Moon Base Plating x 15
 		Silk x 5
-		@
+		at
 		Work Bench
 
 
@@ -442,7 +442,7 @@ MoonBaseBulkhead
 	Value: 1 silver 50 copper
 	Recipes:
 		Moon Base Plating x 10
-		@
+		at
 		Work Bench
 
 
@@ -450,7 +450,7 @@ MoonBaseCandle
 	Value: 5 silver
 	Recipes:
 		Moon Base Plating x 4
-		@
+		at
 		Work Bench
 
 
@@ -458,7 +458,7 @@ MoonBaseChair
 	Value: 5 silver
 	Recipes:
 		Moon Base Plating x 5
-		@
+		at
 		Work Bench
 
 
@@ -467,7 +467,7 @@ MoonBaseChest
 	Recipes:
 		Moon Base Plating x 8
 		Iron Ore x 1
-		@
+		at
 		Work Bench
 
 
@@ -484,7 +484,7 @@ MoonBaseConsole
 		Moon Base Plating x 8
 		Printed Circuit Board x 1
 		Glass x 1
-		@
+		at
 		Work Bench
 
 
@@ -495,7 +495,7 @@ MoonBaseDeskLamp
 	Value: 5 silver
 	Recipes:
 		Moon Base Plating x 5
-		@
+		at
 		Work Bench
 
 
@@ -503,7 +503,7 @@ MoonBaseDoor
 	Value: 1 silver 50 copper
 	Recipes:
 		Moon Base Plating x 5
-		@
+		at
 		Work Bench
 
 
@@ -511,7 +511,7 @@ MoonBaseLamp
 	Value: 5 silver
 	Recipes:
 		Moon Base Plating x 3
-		@
+		at
 		Work Bench
 
 
@@ -519,7 +519,7 @@ MoonBaseLantern
 	Value: 5 silver
 	Recipes:
 		Moon Base Plating x 3
-		@
+		at
 		Work Bench
 
 
@@ -527,7 +527,7 @@ MoonBaseLocker
 	Value: 5 silver
 	Recipes:
 		Moon Base Plating x 8
-		@
+		at
 		Work Bench
 
 
@@ -535,7 +535,7 @@ MoonBaseNeonTube
 	Value: 5 silver
 	Recipes:
 		Moon Base Plating x 4
-		@
+		at
 		Work Bench
 
 
@@ -543,6 +543,7 @@ MoonBasePlatform
 	Value: No value
 	Recipes:
 		Moon Base Plating x 1
+			=> x2
 
 
 MoonBaseSofa
@@ -550,7 +551,7 @@ MoonBaseSofa
 	Recipes:
 		Moon Base Plating x 5
 		Silk x 2
-		@
+		at
 		Work Bench
 
 
@@ -642,24 +643,27 @@ IrradiatedBrickWall
 	Value: No value
 	Recipes:
 		Irradiated Brick x 1
-		@
+		at
 		Work Bench
+			=> x4
 
 
 IrradiatedRockWall
 	Value: No value
 	Recipes:
 		Irradiated Rock x 1
-		@
+		at
 		Work Bench
+			=> x4
 
 
 MoonBaseHazardWall
 	Value: No value
 	Recipes:
 		Moon Base Plating x 1
-		@
+		at
 		Work Bench
+			=> x4
 
 
 MoonBaseHazardWallUnsafe
@@ -669,8 +673,9 @@ MoonBasePlatingWall
 	Value: No value
 	Recipes:
 		Moon Base Plating x 1
-		@
+		at
 		Work Bench
+			=> x4
 
 
 MoonBasePlatingWallUnsafe
@@ -680,8 +685,9 @@ MoonBaseSquarePaneledWall
 	Value: No value
 	Recipes:
 		Moon Base Plating x 1
-		@
+		at
 		Work Bench
+			=> x4
 
 
 MoonBaseSquarePaneledWallUnsafe
@@ -691,8 +697,9 @@ MoonBaseTrimmingWall
 	Value: No value
 	Recipes:
 		Moon Base Plating x 1
-		@
+		at
 		Work Bench
+			=> x4
 
 
 MoonBaseTrimmingWallUnsafe
@@ -702,24 +709,27 @@ ProtolithWall
 	Value: No value
 	Recipes:
 		Protolith x 1
-		@
+		at
 		Work Bench
+			=> x4
 
 
 RegolithBrickWall
 	Value: No value
 	Recipes:
 		Regolith Brick x 1
-		@
+		at
 		Work Bench
+			=> x4
 
 
 RegolithWall
 	Value: No value
 	Recipes:
 		Regolith x 1
-		@
+		at
 		Work Bench
+			=> x4
 
 
 AluminumAxe
@@ -727,7 +737,7 @@ AluminumAxe
 	Recipes:
 		Aluminum Bar x 8
 		Wood x 4
-		@
+		at
 		Anvil
 
 
@@ -736,7 +746,7 @@ AluminumHammer
 	Recipes:
 		Aluminum Bar x 8
 		Wood x 4
-		@
+		at
 		Anvil
 
 
@@ -745,7 +755,7 @@ AluminumPickaxe
 	Recipes:
 		Aluminum Bar x 10
 		Wood x 4
-		@
+		at
 		Anvil
 
 
@@ -756,7 +766,7 @@ ArtemiteDrill
 	Value: 40 gold
 	Recipes:
 		Artemite Bar x 12
-		@
+		at
 		Ancient Manipulator
 
 
@@ -773,7 +783,7 @@ ChandriumDrill
 	Value: 40 gold
 	Recipes:
 		Chandrium Bar x 12
-		@
+		at
 		Ancient Manipulator
 
 
@@ -787,7 +797,7 @@ DianiteAxe
 	Value: 1 gold
 	Recipes:
 		Dianite Bar x 12
-		@
+		at
 		Ancient Manipulator
 
 
@@ -795,7 +805,7 @@ DianiteDrill
 	Value: 40 gold
 	Recipes:
 		Dianite Bar x 12
-		@
+		at
 		Ancient Manipulator
 
 
@@ -803,7 +813,7 @@ DianiteHammer
 	Value: 1 gold
 	Recipes:
 		Dianite Bar x 12
-		@
+		at
 		Ancient Manipulator
 
 
@@ -811,7 +821,7 @@ DianitePickaxe
 	Value: 1 gold
 	Recipes:
 		Dianite Bar x 12
-		@
+		at
 		Ancient Manipulator
 
 
@@ -819,7 +829,7 @@ SeleniteAxe
 	Value: 1 gold
 	Recipes:
 		Selenite Bar x 12
-		@
+		at
 		Ancient Manipulator
 
 
@@ -827,7 +837,7 @@ SeleniteDrill
 	Value: 40 gold
 	Recipes:
 		Selenite Drill x 12
-		@
+		at
 		Ancient Manipulator
 
 
@@ -835,7 +845,7 @@ SeleniteHammer
 	Value: 1 gold
 	Recipes:
 		Selenite Bar x 12
-		@
+		at
 		Ancient Manipulator
 
 
@@ -843,7 +853,7 @@ SelenitePickaxe
 	Value: 1 gold
 	Recipes:
 		Selenite Bar x 12
-		@
+		at
 		Ancient Manipulator
 
 
@@ -852,7 +862,7 @@ SteelHamaxe
 	Recipes:
 		Steel Bar x 12
 		Wood x 4
-		@
+		at
 		Anvil
 
 
@@ -861,7 +871,7 @@ SteelPickaxe
 	Recipes:
 		Steel Bar x 16
 		Wood x 4
-		@
+		at
 		Anvil
 
 
@@ -875,7 +885,7 @@ DianiteFork
 	Value: 1 gold
 	Recipes:
 		Dianite Bar x 12
-		@
+		at
 		Ancient Manipulator
 
 
@@ -883,7 +893,7 @@ DianiteTome
 	Value: 1 gold
 	Recipes:
 		Dianite Bar x 12
-		@
+		at
 		Ancient Manipulator
 
 
@@ -897,7 +907,7 @@ AluminumBroadsword
 	Value: 15 silver 50 copper
 	Recipes:
 		Aluminum Bar x 8
-		@
+		at
 		Anvil
 
 
@@ -905,7 +915,7 @@ AluminumShortsword
 	Value: 11 silver
 	Recipes:
 		Aluminum Bar x 6
-		@
+		at
 		Anvil
 
 
@@ -913,7 +923,7 @@ ArtemiteGreatsword
 	Value: 1 gold
 	Recipes:
 		Artemite Bar x 12
-		@
+		at
 		Ancient Manipulator
 
 
@@ -921,7 +931,7 @@ ArtemiteSpear
 	Value: 5 gold
 	Recipes:
 		Artemite Bar x 12
-		@
+		at
 		Ancient Manipulator
 
 
@@ -929,7 +939,7 @@ ArtemiteSword
 	Value: 1 gold
 	Recipes:
 		Artemite Bar x 12
-		@
+		at
 		Ancient Manipulator
 
 
@@ -958,7 +968,7 @@ SteelZweihander
 	Value: 1 gold
 	Recipes:
 		Steel Bar x 16
-		@
+		at
 		Work Bench
 
 
@@ -966,7 +976,7 @@ AluminumBow
 	Value: 13 silver
 	Recipes:
 		Aluminum Bar x 7
-		@
+		at
 		Anvil
 
 
@@ -989,7 +999,7 @@ SeleniteBow
 	Value: 1 gold
 	Recipes:
 		Selenite Bar x 12
-		@
+		at
 		Ancient Manipulator
 
 
@@ -997,7 +1007,7 @@ SeleniteMagnum
 	Value: 1 gold
 	Recipes:
 		Selenite Bar x 12
-		@
+		at
 		Ancient Manipulator
 
 
@@ -1017,7 +1027,7 @@ ChandriumStaff
 	Value: 1 platinum 50 gold
 	Recipes:
 		Chandrium Bar x 12
-		@
+		at
 		Ancient Manipulator
 
 
@@ -1025,7 +1035,7 @@ ChandriumWhip
 	Value: No value
 	Recipes:
 		Chandrium Bar x 12
-		@
+		at
 		Ancient Manipulator
 
 

@@ -15,7 +15,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
     {
         public override void SetStaticDefaults()
         {
-            ProjectileID.Sets.TrailCacheLength[Type] = 35;
+            ProjectileID.Sets.TrailCacheLength[Type] = 15;
             ProjectileID.Sets.TrailingMode[Type] = 3;
 
             Main.projFrames[Type] = 6;
@@ -31,6 +31,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             Projectile.timeLeft = 600;
             Projectile.penetrate = -1;
             Projectile.alpha = 255;
+
+            ProjectileID.Sets.TrailCacheLength[Type] = 2;
+
 
             Projectile.SetTrail<FlamingMeteorTrail>();
         }

@@ -98,13 +98,13 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 }
             }
 
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < 10; i++)
             {
                 float progress = (1f - AITimer / 255f);
                 Particle.CreateParticle<PortalSwirl>(p =>
                 {
-                    p.Position = Projectile.Center + Main.rand.NextVector2Circular(Projectile.width, Projectile.height) * 2.2f * progress;
-                    p.Velocity = Vector2.One * 8;
+                    p.Position = Projectile.Center + Main.rand.NextVector2Circular(Projectile.width, Projectile.height) * 1.6f * progress;
+                    p.Velocity = Vector2.One * 18;
                     p.Scale = (0.1f + Main.rand.NextFloat(0.1f)) * progress;
                     p.Color = new Color(92, 206, 130);
                     p.TargetCenter = Projectile.Center;
@@ -145,8 +145,11 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             float scale = Projectile.scale * Main.rand.NextFloat(0.9f, 1.1f);
             Main.spriteBatch.Draw(flare, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(30, 255, 105).WithOpacity(0.55f), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
 
+            // Strange
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.AlphaBlend, state);
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(state);
 
             return false;
         }
