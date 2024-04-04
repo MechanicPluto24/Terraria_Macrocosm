@@ -1,16 +1,17 @@
+using Macrocosm.Content.Items.Materials.Ores;
 using Macrocosm.Content.Rarities;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 
-namespace Macrocosm.Content.Items.Materials
+namespace Macrocosm.Content.Items.Materials.Bars
 {
-    public class DianiteOre : ModItem
+    public class ChandriumBar : ModItem
     {
         public override void SetStaticDefaults()
         {
-            Item.ResearchUnlockCount = 100;
+            Item.ResearchUnlockCount = 25;
         }
 
         public override void SetDefaults()
@@ -25,17 +26,21 @@ namespace Macrocosm.Content.Items.Materials
             Item.useTime = 10;
             Item.autoReuse = true;
             Item.consumable = true;
-            Item.createTile = TileType<Tiles.Ores.DianiteOre>();
+            Item.createTile = TileType<Tiles.Bars.ChandriumBar>();
             Item.placeStyle = 0;
-            Item.rare = ModContent.RarityType<MoonRarityT1>();
+            Item.rare = RarityType<MoonRarityT1>();
             Item.material = true;
+
 
             // Set other Item.X values here
         }
 
         public override void AddRecipes()
         {
-
+            CreateRecipe()
+            .AddIngredient<ChandriumOre>(6)
+            .AddTile(TileID.LunarCraftingStation)
+            .Register();
         }
     }
 }

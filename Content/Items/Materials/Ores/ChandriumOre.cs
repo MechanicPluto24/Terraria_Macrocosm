@@ -1,15 +1,16 @@
-﻿using Terraria;
+using Macrocosm.Content.Rarities;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 
-namespace Macrocosm.Content.Items.Materials
+namespace Macrocosm.Content.Items.Materials.Ores
 {
-    public class LithiumOre : ModItem
+    public class ChandriumOre : ModItem
     {
         public override void SetStaticDefaults()
         {
-            Item.ResearchUnlockCount = 50;
+            Item.ResearchUnlockCount = 100;
         }
 
         public override void SetDefaults()
@@ -24,9 +25,9 @@ namespace Macrocosm.Content.Items.Materials
             Item.useTime = 10;
             Item.autoReuse = true;
             Item.consumable = true;
-            Item.createTile = TileType<Tiles.Ores.LithiumOre>();
+            Item.createTile = TileType<Tiles.Ores.ChandriumOre>();
             Item.placeStyle = 0;
-            Item.rare = ItemRarityID.White;
+            Item.rare = RarityType<MoonRarityT1>();
             Item.material = true;
 
             // Set other Item.X values here

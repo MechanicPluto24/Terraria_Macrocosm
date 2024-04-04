@@ -20,8 +20,6 @@ namespace Macrocosm.Content.Items.Materials
             Item.value = 100;
             Item.rare = ModContent.RarityType<MoonRarityT1>();
             Item.material = true;
-
-            // Set other Item.X values here
         }
 
         public override void Update(ref float gravity, ref float maxFallSpeed)
@@ -32,7 +30,6 @@ namespace Macrocosm.Content.Items.Materials
 
         public override void AddRecipes()
         {
-            // Recipes here. See Basic Recipe Guide
         }
     }
 }

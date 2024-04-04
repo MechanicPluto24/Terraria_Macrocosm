@@ -1,4 +1,4 @@
-using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.Items.Materials.Bars;
 using Macrocosm.Content.Rarities;
 using Terraria;
 using Terraria.ID;
@@ -32,10 +32,10 @@ namespace Macrocosm.Content.Items.Tools.Dianite
 
         public override void AddRecipes()
         {
-            Recipe recipe = Recipe.Create(Type);
-            recipe.AddIngredient<DianiteBar>(12);
-            recipe.AddTile(TileID.WorkBenches);
-            recipe.Register();
+            CreateRecipe()
+            .AddIngredient<DianiteBar>(12)
+            .AddTile(TileID.LunarCraftingStation)
+            .Register();
         }
     }
 }

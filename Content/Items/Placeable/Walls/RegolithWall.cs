@@ -28,11 +28,10 @@ namespace Macrocosm.Content.Items.Placeable.Walls
 
         public override void AddRecipes()
         {
-
-            Recipe recipe = Recipe.Create(Type, 4);
-            recipe.AddIngredient<Regolith>();
-            recipe.AddTile(TileID.WorkBenches);
-            recipe.Register();
+            CreateRecipe(4)
+            .AddIngredient<Regolith>()
+            .AddTile(TileID.WorkBenches)
+            .Register();
         }
     }
 }

@@ -1,6 +1,6 @@
 using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.Items.Materials.Bars;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -52,10 +52,10 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 
         public override void AddRecipes()
         {
-            Recipe recipe = Recipe.Create(Type);
-            recipe.AddIngredient<SteelBar>(16);
-            recipe.AddTile(TileID.WorkBenches);
-            recipe.Register();
+            CreateRecipe()
+            .AddIngredient<SteelBar>(16)
+            .AddTile(TileID.WorkBenches)
+            .Register();
         }
     }
 }

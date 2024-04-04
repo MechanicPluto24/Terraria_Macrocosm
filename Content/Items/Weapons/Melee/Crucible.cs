@@ -45,11 +45,6 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 
         public override void AddRecipes()
         {
-            Recipe recipe = Recipe.Create(Type);
-            recipe.AddIngredient(ItemID.HellstoneBar, 20);
-            recipe.AddIngredient(ItemID.SoulofFright, 10);
-            recipe.AddTile(TileID.WorkBenches);
-            recipe.Register();
         }
     }
 }

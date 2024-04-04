@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Content.Buffs.Minions;
+using Macrocosm.Content.Items.Materials.Bars;
 using Macrocosm.Content.Projectiles.Friendly.Summon;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
@@ -56,7 +57,10 @@ namespace Macrocosm.Content.Items.Weapons.Summon
 
         public override void AddRecipes()
         {
-
+            CreateRecipe()
+            .AddIngredient<ChandriumBar>(12)
+            .AddTile(TileID.LunarCraftingStation)
+            .Register();
         }
     }
 }

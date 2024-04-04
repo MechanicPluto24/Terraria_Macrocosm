@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Debugging;
+using Macrocosm.Common.Debugging.Stats;
 using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Systems;
 using Macrocosm.Content.Rockets;
@@ -29,22 +30,33 @@ namespace Macrocosm.Common.Commands
                 {
                     case "rockets":
                         RocketManager.DebugModeActive = !RocketManager.DebugModeActive;
+                        Main.NewText($"Rocket debug: {RocketManager.DebugModeActive}");
                         break;
 
                     case "ui" or "rocketui":
                         UISystem.DebugModeActive = !UISystem.DebugModeActive;
+                        Main.NewText($"UI debug: {UISystem.DebugModeActive}");
                         break;
 
                     case "packets" or "packet" or "packethandler":
                         PacketHandler.DebugModeActive = !PacketHandler.DebugModeActive;
+                        Main.NewText($"Packet debug: {PacketHandler.DebugModeActive}");
                         break;
 
                     case "tilecoords":
                         DebugDrawing.DrawCursorTileCoords = !DebugDrawing.DrawCursorTileCoords;
+                        Main.NewText($"Tile coords debug: {DebugDrawing.DrawCursorTileCoords}");
                         break;
 
                     case "worldcoords":
                         DebugDrawing.DrawCursorWorldCoords = !DebugDrawing.DrawCursorWorldCoords;
+                        Main.NewText($"World coords debug: {DebugDrawing.DrawCursorWorldCoords}");
+                        break;
+
+                    case "stats":
+                        ContentStats.AnalyzeContent(Macrocosm.Instance);
+                        ContentStats.AnalyzeItems(Macrocosm.Instance);
+                        Main.NewText("Exported content stats");
                         break;
 
                     default:

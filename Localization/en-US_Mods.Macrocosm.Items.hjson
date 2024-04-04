@@ -1100,3 +1100,8 @@ OreExcavator: {
 	DisplayName: Ore Excavator
 	Tooltip: ""
 }
+
+AlienResidue: {
+	DisplayName: Alien Residue
+	Tooltip: ""
+}

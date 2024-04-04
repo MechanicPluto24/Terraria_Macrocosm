@@ -3,7 +3,7 @@ using Terraria.GameContent;
 
 namespace Macrocosm.Common.Utils
 {
-    public static class Extension
+    public static partial class Utility
     {
         public static int[] ToIntArray(this Range range, int length = int.MaxValue)
         {

@@ -6,7 +6,7 @@ using Macrocosm.Common.Storage;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.Items.Materials.Ores;
 using Macrocosm.Content.Items.Placeable.Blocks;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;

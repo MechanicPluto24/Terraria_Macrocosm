@@ -118,6 +118,31 @@ namespace Macrocosm.Common.Utils
             }
         }
 
+        public static void GetInfoText(this DropRateInfo dropRateInfo, bool locked, out string stackRange, out string dropRate)
+        {
+            if (dropRateInfo.stackMin != dropRateInfo.stackMax)
+                stackRange = $"({dropRateInfo.stackMin}-{dropRateInfo.stackMax})";
+            else if (dropRateInfo.stackMin == 1)
+                stackRange = "";
+            else
+                stackRange = "(" + dropRateInfo.stackMin + ")";
+
+            string originalFormat = "P";
+            if (dropRateInfo.dropRate < 0.001)
+                originalFormat = "P4";
+
+            if (dropRateInfo.dropRate != 1f)
+                dropRate = Terraria.Utils.PrettifyPercentDisplay(dropRateInfo.dropRate, originalFormat);
+            else
+                dropRate = "100%";
+
+            if (locked)
+            {
+                dropRate = "???";
+                stackRange = "";
+            }
+        }
+
         public static float ComputeDropRarity(this DropRateInfo dropRateInfo)
         {
             float averageStack = (dropRateInfo.stackMin + dropRateInfo.stackMax) / 2f;

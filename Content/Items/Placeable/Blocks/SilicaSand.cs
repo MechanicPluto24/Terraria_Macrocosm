@@ -1,4 +1,4 @@
-﻿using Macrocosm.Content.Items.Materials;
+﻿using Macrocosm.Content.Items.Materials.Ores;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

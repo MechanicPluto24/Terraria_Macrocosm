@@ -25,10 +25,5 @@ namespace Macrocosm.Content.Items.Dev
             Item.UseSound = SoundID.Item1;
             Item.autoReuse = false;
         }
-
-        public override void AddRecipes()
-        {
-
-        }
     }
 }

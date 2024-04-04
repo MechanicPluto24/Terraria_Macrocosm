@@ -1,16 +1,16 @@
-using Macrocosm.Content.Rarities;
+﻿using Macrocosm.Content.Items.Materials.Ores;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 
-namespace Macrocosm.Content.Items.Materials
+namespace Macrocosm.Content.Items.Materials.Bars
 {
-    public class SeleniteOre : ModItem
+    public class AluminumBar : ModItem
     {
         public override void SetStaticDefaults()
         {
-            Item.ResearchUnlockCount = 100;
+            Item.ResearchUnlockCount = 25;
         }
 
         public override void SetDefaults()
@@ -25,17 +25,19 @@ namespace Macrocosm.Content.Items.Materials
             Item.useTime = 10;
             Item.autoReuse = true;
             Item.consumable = true;
-            Item.createTile = TileType<Tiles.Ores.SeleniteOre>();
+            Item.createTile = TileType<Tiles.Bars.AluminumBar>();
             Item.placeStyle = 0;
-            Item.rare = ModContent.RarityType<MoonRarityT1>();
+            Item.rare = ItemRarityID.White;
             Item.material = true;
-
             // Set other Item.X values here
         }
 
         public override void AddRecipes()
         {
-
+            CreateRecipe()
+            .AddIngredient<AluminumOre>(4)
+            .AddTile(TileID.Anvils)
+            .Register();
         }
     }
 }

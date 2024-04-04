@@ -30,10 +30,10 @@ namespace Macrocosm.Content.Items.Placeable.Blocks
 
         public override void AddRecipes()
         {
-            Recipe recipe = Recipe.Create(Type);
-            recipe.AddIngredient<Regolith>(2);
-            recipe.AddTile(TileID.WorkBenches);
-            recipe.Register();
+            CreateRecipe()
+            .AddIngredient<Regolith>(2)
+            .AddTile(TileID.WorkBenches)
+            .Register();
         }
     }
 }

@@ -50,8 +50,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override void ModifyNPCLoot(NPCLoot loot)
         {
-            loot.Add(ItemDropRule.Common(ModContent.ItemType<SpaceDust>()));
-            loot.Add(ItemDropRule.Common(ItemID.LunarOre, 1, 3, 13));
+            loot.Add(ItemDropRule.Common(ItemID.LunarOre, 2, 2, 12));
         }
 
         public override void HitEffect(NPC.HitInfo hit)

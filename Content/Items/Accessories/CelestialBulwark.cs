@@ -148,15 +148,15 @@ namespace Macrocosm.Content.Items.Accessories
 
         public override void AddRecipes()
         {
-            Recipe recipe = Recipe.Create(Type);
-            recipe.AddIngredient(ModContent.ItemType<BrokenHeroShield>());
-            recipe.AddIngredient(ItemID.EoCShield);
-            recipe.AddIngredient(ItemID.FragmentNebula, 15);
-            recipe.AddIngredient(ItemID.FragmentStardust, 15);
-            recipe.AddIngredient(ItemID.FragmentVortex, 15);
-            recipe.AddIngredient(ItemID.FragmentSolar, 15);
-            recipe.AddTile(TileID.LunarCraftingStation);
-            recipe.Register();
+            CreateRecipe()
+            .AddIngredient<BrokenHeroShield>()
+            .AddIngredient(ItemID.EoCShield)
+            .AddIngredient(ItemID.FragmentNebula, 15)
+            .AddIngredient(ItemID.FragmentStardust, 15)
+            .AddIngredient(ItemID.FragmentVortex, 15)
+            .AddIngredient(ItemID.FragmentSolar, 15)
+            .AddTile(TileID.LunarCraftingStation)
+            .Register();
         }
 
         public override void PostDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)

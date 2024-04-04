@@ -1,16 +1,16 @@
-using Macrocosm.Content.Rarities;
+﻿using Macrocosm.Content.Items.Materials.Ores;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 
-namespace Macrocosm.Content.Items.Materials
+namespace Macrocosm.Content.Items.Materials.Bars
 {
-    public class ChandriumOre : ModItem
+    public class SteelBar : ModItem
     {
         public override void SetStaticDefaults()
         {
-            Item.ResearchUnlockCount = 100;
+            Item.ResearchUnlockCount = 25;
         }
 
         public override void SetDefaults()
@@ -18,24 +18,26 @@ namespace Macrocosm.Content.Items.Materials
             Item.width = 20;
             Item.height = 20;
             Item.maxStack = Item.CommonMaxStack;
-            Item.value = 750;
+            Item.value = Item.sellPrice(silver: 35);
             Item.useStyle = ItemUseStyleID.Swing;
             Item.useTurn = true;
             Item.useAnimation = 15;
             Item.useTime = 10;
             Item.autoReuse = true;
             Item.consumable = true;
-            Item.createTile = TileType<Tiles.Ores.ChandriumOre>();
+            Item.createTile = TileType<Tiles.Bars.SteelBar>();
             Item.placeStyle = 0;
-            Item.rare = ModContent.RarityType<MoonRarityT1>();
+            Item.rare = ItemRarityID.Green;
             Item.material = true;
-
-            // Set other Item.X values here
         }
 
         public override void AddRecipes()
         {
-
+            CreateRecipe()
+            .AddIngredient(ItemID.IronBar, 2)
+            .AddIngredient(ItemType<Coal>())
+            .AddTile(TileID.Hellforge)
+            .Register();
         }
     }
 }

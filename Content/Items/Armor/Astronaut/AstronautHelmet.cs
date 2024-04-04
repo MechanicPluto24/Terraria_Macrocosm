@@ -1,4 +1,7 @@
+using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.Items.Placeable.Blocks;
 using Macrocosm.Content.Players;
+using Macrocosm.Content.Tiles.Furniture;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -36,10 +39,11 @@ namespace Macrocosm.Content.Items.Armor.Astronaut
 
         public override void AddRecipes()
         {
-            Recipe recipe = Recipe.Create(Type);
-            recipe.AddIngredient(ItemID.DirtBlock, 10);
-            recipe.AddTile(TileID.WorkBenches);
-            recipe.Register();
+            CreateRecipe()
+            .AddIngredient<SpacesuitFabric>(20)
+            .AddIngredient<LexanGlass>(5)
+            .AddTile<IndustrialLoom>()
+            .Register();
         }
     }
 }

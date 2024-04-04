@@ -65,7 +65,7 @@ namespace Macrocosm.Content.Backgrounds.Moon
             sun = new CelestialBody(sunTexture);
             earth = new CelestialBody(earthBody, earthAtmo, scale: 0.9f);
 
-            sun.SetupSkyRotation(SkyRotationMode.Day);
+            sun.SetupSkyRotation(CelestialBody.SkyRotationMode.Day);
 
             earth.SetParallax(0.01f, 0.12f, new Vector2(0f, -200f));
 

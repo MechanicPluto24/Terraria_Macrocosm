@@ -57,6 +57,16 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.noTileCollide = true;
         }
 
+        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        {
+            return spawnInfo.Player.InModBiome<MoonBiome>() && Main.dayTime && spawnInfo.SpawnTileY <= Main.worldSurface + 100 ? .1f : 0f;
+        }
+
+        public override void ModifyNPCLoot(NPCLoot loot)
+        {
+            loot.Add(ItemDropRule.Common(ModContent.ItemType<AlienResidue>(), 4));
+        }
+
         private Vector2? flyToOffset = null;
 
         [StateMethod(AIState.Fly)]
@@ -144,16 +154,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                     NPC.frame.Y = 0;
                 }
             }
-        }
-
-        public override float SpawnChance(NPCSpawnInfo spawnInfo)
-        {
-            return spawnInfo.Player.InModBiome<MoonBiome>() && Main.dayTime && spawnInfo.SpawnTileY <= Main.worldSurface + 100 ? .1f : 0f;
-        }
-
-        public override void ModifyNPCLoot(NPCLoot loot)
-        {
-            loot.Add(ItemDropRule.Common(ModContent.ItemType<SpaceDust>()));
         }
 
         public override void HitEffect(NPC.HitInfo hit)

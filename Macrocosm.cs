@@ -1,4 +1,5 @@
 using Macrocosm.Common.Config;
+using Macrocosm.Common.Debugging;
 using Macrocosm.Common.Netcode;
 using Macrocosm.Content.Items.Currency;
 using Macrocosm.Content.Subworlds;
@@ -48,11 +49,6 @@ namespace Macrocosm
             LoadTimeModCalls();
         }
 
-        public override void PostSetupContent()
-        {
-            base.PostSetupContent();
-        }
-
         public override void Unload()
         {
             UnloadResprites();
@@ -61,7 +57,7 @@ namespace Macrocosm
 
         private static void LoadResprites()
         {
-            string respritePath = Macrocosm.TexturesPath + "Resprites/";
+            string respritePath = TexturesPath + "Resprites/";
             TextureAssets.Moon[0] = ModContent.Request<Texture2D>(respritePath + "Moon_0");
         }
 
