@@ -87,13 +87,13 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
             public void SpawnParticles(BigPortalInfo info, NPC owner)
             {
-                for (int i = 0; i < 20; i++)
+                for (int i = 0; i < 6; i++)
                 {
                     Particle.CreateParticle<PortalSwirl>(p =>
                     {
-                        p.Position = info.center + Main.rand.NextVector2Circular(180, 180) * 0.95f * info.scale;
-                        p.Velocity = Vector2.One * 22;
-                        p.Scale = (0.1f + Main.rand.NextFloat(0.1f)) * info.scale;
+                        p.Position = info.center + Main.rand.NextVector2CircularEdge(140, 140) * info.scale * Main.rand.NextFloat(0.5f, 1f);
+                        p.Velocity = Vector2.One * 24;
+                        p.Scale = (0.14f + Main.rand.NextFloat(0.1f)) * info.scale;
                         p.Color = new Color(92, 206, 130);
                         p.TargetCenter = info.center;
                         p.CustomDrawer = owner;

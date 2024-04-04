@@ -54,8 +54,7 @@ namespace Macrocosm.Common.Commands
                         break;
 
                     case "stats":
-                        ContentStats.AnalyzeContent(Macrocosm.Instance);
-                        ContentStats.AnalyzeItems(Macrocosm.Instance);
+                        ContentStats.Analyze(Macrocosm.Instance);
                         Main.NewText("Exported content stats");
                         break;
 

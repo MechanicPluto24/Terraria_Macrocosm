@@ -35,7 +35,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             Main.npcFrameCount[Type] = 32;
 
             SpawnModBiomes = [ModContent.GetInstance<BloodMoonBiome>().Type];
-
         }
 
         public override void SetDefaults()

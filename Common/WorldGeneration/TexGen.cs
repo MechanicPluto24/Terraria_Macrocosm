@@ -84,7 +84,7 @@ namespace Macrocosm.Common.WorldGeneration
         /// </summary>
         /// <param name="silent"> Play sound on tile place </param>
         /// <param name="sync"> Sync placement </param>
-        public void Generate(int x, int y, bool silent, bool sync, GenerationProgress progress = null, bool soullessSecret = false)
+        public void Generate(int x, int y, bool silent, bool sync, GenerationProgress progress = null)
         {
             for (int x1 = 0; x1 < width; x1++)
             {
