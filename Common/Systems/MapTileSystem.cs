@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
+using SubworldLibrary;
 using System;
 using System.Collections.Generic;
 using Terraria.ID;
@@ -22,6 +23,12 @@ namespace Macrocosm.Common.Systems
         public override void Unload()
         {
             mapTileColorLookupBySubworld = null;
+        }
+
+        public override void ClearWorld()
+        {
+            if (!SubworldSystem.AnyActive<Macrocosm>())
+                RestoreMapTileColors();
         }
 
         // Apply map color modifications to vanilla tiles. 

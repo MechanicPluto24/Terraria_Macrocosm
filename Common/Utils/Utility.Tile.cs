@@ -75,10 +75,8 @@ namespace Macrocosm.Common.Utils
         public static Vector2 ToWorldCoordinates(this Point16 point)
             => new(point.X * 16f, point.Y * 16f);
 
-        public static bool IsSloped(this Tile tile)
-        {
-            return (int)tile.BlockType > 1;
-        }
+        public static bool IsSloped(this Tile tile) => (int)tile.BlockType > 1;
+        public static bool AnyWire(this Tile tile) => tile.RedWire || tile.BlueWire || tile.GreenWire || tile.YellowWire;
 
         public static SpriteEffects GetTileSpriteEffects(int i, int j)
         {

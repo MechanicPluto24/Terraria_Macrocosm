@@ -5,9 +5,9 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
-namespace Macrocosm.Content.Tiles.Furniture
+namespace Macrocosm.Content.Machines
 {
-    public class SolarPanelLarge : ModTile
+    public class SolarPanelSmall : ModTile
     {
         public override void SetStaticDefaults()
         {
@@ -15,17 +15,17 @@ namespace Macrocosm.Content.Tiles.Furniture
             Main.tileNoAttach[Type] = true;
             Main.tileLavaDeath[Type] = true;
 
-            TileObjectData.newTile.CopyFrom(TileObjectData.Style6x3);
-            TileObjectData.newTile.Width = 6;
-            TileObjectData.newTile.Height = 4;
+            TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
+            TileObjectData.newTile.Width = 3;
+            TileObjectData.newTile.Height = 2;
             TileObjectData.newTile.CoordinateWidth = 16;
-            TileObjectData.newTile.CoordinateHeights = [16, 16, 16, 16];
+            TileObjectData.newTile.CoordinateHeights = [16, 16];
             TileObjectData.newTile.CoordinatePadding = 2;
             TileObjectData.newTile.DrawYOffset = 2;
-            TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;
+            TileObjectData.newTile.Direction = TileObjectDirection.PlaceRight;
             TileObjectData.newTile.StyleHorizontal = false;
             TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
-            TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceRight;
+            TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceLeft;
             TileObjectData.addAlternate(1);
             TileObjectData.addTile(Type);
 
@@ -34,7 +34,7 @@ namespace Macrocosm.Content.Tiles.Furniture
 
             AddMapEntry(new Color(0, 52, 154), CreateMapEntryName());
 
-            RegisterItemDrop(ModContent.ItemType<Items.Placeable.Furniture.SolarPanelLarge>(), 0, 1);
+            RegisterItemDrop(ModContent.ItemType<Content.Items.Machines.SolarPanelSmall>(), 0, 1);
         }
 
         public override void KillMultiTile(int i, int j, int frameX, int frameY)

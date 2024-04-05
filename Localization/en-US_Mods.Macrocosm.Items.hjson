@@ -1105,3 +1105,8 @@ AlienResidue: {
 	DisplayName: Alien Residue
 	Tooltip: ""
 }
+
+CopperWire: {
+	DisplayName: Copper Wire
+	Tooltip: ""
+}
