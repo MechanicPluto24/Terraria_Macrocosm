@@ -59,28 +59,6 @@ namespace Macrocosm.Content.Machines
 
         public override void MachineUpdate()
         {
-            bool foundPower = false;
-            for (int i = Position.X - 5; i < Position.X + MachineTile.Width + 5; i++)
-            {
-                for (int j = Position.Y - 5; j < Position.Y + MachineTile.Height + 5; j++)
-                {
-                    if (WorldGen.InWorld(i, j))
-                    {
-                        Tile tile = Main.tile[i, j];
-                        if (TileLoader.GetTile(tile.TileType) is Tiles.Furniture.SolarPanelLarge)
-                        {
-                            foundPower = true;
-                        }
-                    }
-                }
-            }
-
-            if (foundPower && !MachineTile.GetPowerState(Position.X, Position.Y))
-                MachineTile.TogglePowerState(Position.X, Position.Y);
-
-            if (!foundPower && MachineTile.GetPowerState(Position.X, Position.Y))
-                MachineTile.TogglePowerState(Position.X, Position.Y);
-
             blacklistedIds = Loot.BlacklistableEntries.Where((entry) => entry.Blacklisted).Select((entry) => entry.ItemID).ToList();
 
             if (Operating)
@@ -209,32 +187,6 @@ namespace Macrocosm.Content.Machines
 
                     break;
             }
-        }
-
-        public override int Hook_AfterPlacement(int i, int j, int type, int style, int direction, int alternate)
-        {
-            if (Main.netMode == NetmodeID.MultiplayerClient)
-            {
-                NetMessage.SendTileSquare(Main.myPlayer, i, j, MachineTile.Width, MachineTile.Height);
-                NetMessage.SendData(MessageID.TileEntityPlacement, number: i, number2: j, number3: Type);
-            }
-
-            Point16 tileOrigin = new(0, MachineTile.Height - 1);
-            int placedEntity = Place(i - tileOrigin.X, j - tileOrigin.Y);
-
-            return placedEntity;
-        }
-
-        public override bool IsTileValidForEntity(int x, int y)
-        {
-            Tile tile = Main.tile[x, y];
-            return tile.HasTile && tile.TileType == ModContent.TileType<OreExcavator>();
-        }
-
-        public override void OnNetPlace()
-        {
-            if (Main.netMode == NetmodeID.Server)
-                NetMessage.SendData(MessageID.TileEntitySharing, number: ID, number2: Position.X, number3: Position.Y);
         }
 
         // TODO: some way of syncing the blacklist from the client with the server-owned TE

@@ -1,9 +1,9 @@
 ﻿using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Placeable.Furniture
+namespace Macrocosm.Content.Items.Machines
 {
-    public class SolarPanelSmall : ModItem
+    public class SolarPanelLarge : ModItem
     {
         public override void SetStaticDefaults()
         {
@@ -11,7 +11,7 @@ namespace Macrocosm.Content.Items.Placeable.Furniture
 
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.SolarPanelSmall>());
+            Item.DefaultToPlaceableTile(ModContent.TileType<Content.Machines.SolarPanelLarge>());
             Item.width = 44;
             Item.height = 34;
             Item.value = 500;

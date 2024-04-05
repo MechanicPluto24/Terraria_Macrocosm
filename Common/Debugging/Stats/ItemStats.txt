@@ -232,6 +232,12 @@ Teleporter
 OreExcavator
 	Value: 5 silver
 
+SolarPanelLarge
+	Value: 5 silver
+
+SolarPanelSmall
+	Value: 5 silver
+
 AlienResidue
 	Value: 5 silver
 
@@ -561,12 +567,6 @@ OilRefinery
 PowerJunction
 	Value: 5 silver
 
-SolarPanelLarge
-	Value: 5 silver
-
-SolarPanelSmall
-	Value: 5 silver
-
 SpaceTeddy
 	Value: 5 silver
 
@@ -731,6 +731,9 @@ RegolithWall
 		Work Bench
 			=> x4
 
+
+CopperWire
+	Value: 10 copper
 
 AluminumAxe
 	Value: 13 silver 75 copper
