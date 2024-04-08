@@ -48,7 +48,7 @@ LuminiteSlimeVolatile: {
 
 MoonWormHead: {
 	DisplayName: Moon Worm
-	BestiaryFlavorText: The head of the mysterious moon worm, featuring sensory appendages that help it navigate underground.
+	BestiaryFlavorText: ""
 }
 
 MoonWormBody.DisplayName: Moon Worm
@@ -71,7 +71,12 @@ RegolithSlime: {
 
 ZombieSecurity: {
 	DisplayName: Zombie Security
-	BestiaryFlavorText: Remnants of the crater's security personnel, now reanimated and patrolling the area as undead sentinels.
+	BestiaryFlavorText: Remnants of the Moon Base's security personnel, now reanimated and patrolling the area as undead sentinels.
+}
+
+Dweller: {
+	DisplayName: Dweller
+	BestiaryFlavorText: ""
 }
 
 MoonChampion: {
@@ -133,7 +138,3 @@ MoonChampion: {
 	}
 }
 
-Dweller: {
-	DisplayName: Dweller
-	BestiaryFlavorText: Mods.Macrocosm.NPCs.Dweller.BestiaryFlavorText
-}

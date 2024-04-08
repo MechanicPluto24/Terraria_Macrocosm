@@ -49,13 +49,9 @@ MoonPhaseGlobeProjectile.DisplayName: Moon Phase Globe
 DianiteForkCoreProjectile.DisplayName: Dianite Fork
 DianiteForkProjectile.DisplayName: Dianite Fork
 RegolithDebris.DisplayName: Regolith Debris
-SilicaCrimsandProjectile.DisplayName: Silica Crimsand
-SilicaEbonsandProjectile.DisplayName: Silica Ebonsand
-SilicaPearlsandProjectile.DisplayName: Silica Pearlsand
-SilicaSandProjectile.DisplayName: Silica Sand
 HalberdHeldProjectile.DisplayName: Halberd Held Projectile
-Procellarum_HalberdProjectile.DisplayName: Procellarum_ Halberd Projectile
-Procellarum_LightBolt.DisplayName: Procellarum_ Light Bolt
+Procellarum_HalberdProjectile.DisplayName: Procellarum
+Procellarum_LightBolt.DisplayName: Procellarum
 InvarArrow.DisplayName: Invar Arrow
 InvarBullet.DisplayName: Invar Bullet
 RapaciousBrandProjectile.DisplayName: Rapacious Brand
@@ -67,19 +63,19 @@ LuminiteShard.DisplayName: Luminite Shard
 LuminiteStar.DisplayName: Luminite Star
 PhantasmalBolt.DisplayName: Phantasmal Bolt
 CraterDemonPet.DisplayName: Mini Crater Demon
-ArtemiteGreatswordSwing.DisplayName: Artemite Greatsword Swing
+ArtemiteGreatswordSwing.DisplayName: Artemite Greatsword
 MoonGoldTombstone.DisplayName: Moon Gold Tombstone
 DianitePortal.DisplayName: Dianite Portal
 ArtemiteBoomerang.DisplayName: Artemite Boomerang
-ArtemiteGreatswordSwing2.DisplayName: Artemite Greatsword Swing2
-ArtemiteSpearProjectileThrown.DisplayName: Artemite Spear Projectile Thrown
+ArtemiteGreatswordSwing2.DisplayName: Artemite Greatsword
+ArtemiteSpearProjectileThrown.DisplayName: Artemite Spear 
 ArtemiteSlash.DisplayName: Artemite Slash
 ArtemiteSpike.DisplayName: Artemite Spike
-SilicaCrimsandBall.DisplayName: Silica Crimsand Ball
-SilicaCrimsandFalling.DisplayName: Silica Crimsand Falling
-SilicaEbonsandBall.DisplayName: Silica Ebonsand Ball
-SilicaEbonsandFalling.DisplayName: Silica Ebonsand Falling
-SilicaPearlsandBall.DisplayName: Silica Pearlsand Ball
-SilicaPearlsandFalling.DisplayName: Silica Pearlsand Falling
-SilicaSandBall.DisplayName: Silica Sand Ball
-SilicaSandFalling.DisplayName: Silica Sand Falling
+SilicaCrimsandBall.DisplayName: Silica Crimsand
+SilicaCrimsandFalling.DisplayName: Silica Crimsand
+SilicaEbonsandBall.DisplayName: Silica Ebonsand
+SilicaEbonsandFalling.DisplayName: Silica Ebonsand
+SilicaPearlsandBall.DisplayName: Silica Pearlsand
+SilicaPearlsandFalling.DisplayName: Silica Pearlsand
+SilicaSandBall.DisplayName: Silica Sand
+SilicaSandFalling.DisplayName: Silica Sand
