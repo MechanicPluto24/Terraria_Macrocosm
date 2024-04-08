@@ -75,10 +75,9 @@ namespace Macrocosm.Common.Utils
         public static Vector2 ToWorldCoordinates(this Point16 point)
             => new(point.X * 16f, point.Y * 16f);
 
-        public static bool IsSloped(this Tile tile)
-        {
-            return (int)tile.BlockType > 1;
-        }
+        public static bool IsSloped(this Tile tile) => (int)tile.BlockType > 1;
+
+        public static ulong GetTileFrameSeed(int i, int j) => Main.TileFrameSeed ^ (ulong)((long)j << 32 | (long)(uint)i); // Don't remove any casts.
 
         public static SpriteEffects GetTileSpriteEffects(int i, int j)
         {
@@ -122,7 +121,7 @@ namespace Macrocosm.Common.Utils
             );
         }
 
-        public static void DrawTileGlowmask(int i, int j, SpriteBatch spriteBatch, Asset<Texture2D> texture, Color? drawColor = null)
+        public static void DrawTileGlowmask(int i, int j, SpriteBatch spriteBatch, Asset<Texture2D> texture, Vector2 drawOffset = default, Color? drawColor = null)
         {
             Tile tile = Main.tile[i, j];
             Vector2 zero = Main.drawToScreen ? Vector2.Zero : new Vector2(Main.offScreenRange);
@@ -138,7 +137,7 @@ namespace Macrocosm.Common.Utils
 
             spriteBatch.Draw(
                 texture.Value,
-                new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero,
+                new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero + drawOffset,
                 new Rectangle(tile.TileFrameX + addFrameX, tile.TileFrameY + addFrameY, width, height),
                 drawColor.Value, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f
             );

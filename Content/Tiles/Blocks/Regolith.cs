@@ -20,17 +20,14 @@ namespace Macrocosm.Content.Tiles.Blocks
             MineResist = 3f;
             AddMapEntry(new Color(220, 220, 220));
             HitSound = SoundID.Dig;
+            DustType = ModContent.DustType<RegolithDust>();
         }
 
-        public override bool HasWalkDust()
-        {
-            return true;
-        }
+        public override bool HasWalkDust() => Main.rand.NextBool(3);
 
-        public override bool CreateDust(int i, int j, ref int type)
+        public override void WalkDust(ref int dustType, ref bool makeDust, ref Color color)
         {
-            type = Dust.NewDust(new Vector2(i, j).ToWorldCoordinates(), 16, 16, ModContent.DustType<RegolithDust>());
-            return false;
+            dustType = ModContent.DustType<RegolithDust>();
         }
 
         public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)

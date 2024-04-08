@@ -2,9 +2,9 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Placeable.Blocks
+namespace Macrocosm.Content.Items.Materials
 {
-    public class MoonBasePlating : ModItem
+    public class Plastic : ModItem
     {
         public override void SetStaticDefaults()
         {
@@ -13,12 +13,16 @@ namespace Macrocosm.Content.Items.Placeable.Blocks
 
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Blocks.MoonBasePlating>());
+            Item.width = 20;
+            Item.height = 20;
+            Item.maxStack = Item.CommonMaxStack;
+            Item.value = 100;
+            Item.rare = ItemRarityID.LightRed;
+            Item.material = true;
         }
 
         public override void AddRecipes()
         {
-
         }
     }
 }

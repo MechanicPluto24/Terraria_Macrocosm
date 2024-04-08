@@ -14,23 +14,30 @@ namespace Macrocosm.Content.Tiles.Blocks
         {
             Main.tileSolid[Type] = true;
             Main.tileBrick[Type] = true;
-            Main.tileMergeDirt[Type] = false;
+            Main.tileMergeDirt[Type] = true;
             Main.tileBlockLight[Type] = true;
-            Main.tileSand[Type] = false;
 
-            //TileID.Sets.TouchDamageSands[Type] = 15;
-
-            TileID.Sets.Conversion.Sand[Type] = true; // Allows Clentaminator solutions to convert this tile to their respective Sand tiles.
-            TileID.Sets.ForAdvancedCollision.ForSandshark[Type] = true; // Allows Sandshark enemies to "swim" in this sand.
+            Main.tileSand[Type] = true;
+            TileID.Sets.ForAdvancedCollision.ForSandshark[Type] = true;
+            TileID.Sets.CanBeDugByShovel[Type] = true;
             TileID.Sets.Falling[Type] = true;
-            AddMapEntry(new Color(195, 197, 196), CreateMapEntryName());
+            TileID.Sets.Suffocate[Type] = true;
+            TileID.Sets.FallingBlockProjectile[Type] = new(ModContent.ProjectileType<SilicaEbonsandFalling>(), FallingProjectileDamage: 15);
 
+            TileID.Sets.CanBeClearedDuringOreRunner[Type] = true;
+            TileID.Sets.GeneralPlacementTiles[Type] = false;
+            TileID.Sets.ChecksForMerge[Type] = true;
+
+            MineResist = 0.5f;
             DustType = ModContent.DustType<SilicaEbonsandDust>();
+            AddMapEntry(new Color(195, 197, 196));
         }
 
-        public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
-             => Utility.SandTileFrame(i, j, ModContent.ProjectileType<SilicaEbonsandProjectile>());
+        public override bool HasWalkDust() => Main.rand.NextBool(3);
 
-        public override void NumDust(int i, int j, bool fail, ref int num) => num = fail ? 1 : 3;
+        public override void WalkDust(ref int dustType, ref bool makeDust, ref Color color)
+        {
+            dustType = ModContent.DustType<SilicaEbonsandDust>();
+        }
     }
 }

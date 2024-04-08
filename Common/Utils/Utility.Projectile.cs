@@ -131,7 +131,6 @@ namespace Macrocosm.Common.Utils
             }
         }
 
-
         public static void AIFallingBlock(Projectile projectile, bool falling)
         {
             projectile.tileCollide = true;

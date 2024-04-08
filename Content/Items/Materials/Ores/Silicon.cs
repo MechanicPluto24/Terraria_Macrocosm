@@ -8,7 +8,7 @@ namespace Macrocosm.Content.Items.Materials.Ores
     {
         public override void SetStaticDefaults()
         {
-            Item.ResearchUnlockCount = 25;
+            Item.ResearchUnlockCount = 100;
         }
 
         public override void SetDefaults()
@@ -19,15 +19,6 @@ namespace Macrocosm.Content.Items.Materials.Ores
             Item.value = 750;
             Item.rare = ItemRarityID.White;
             Item.material = true;
-
-            // TODO: if ever added as a block
-            //Item.useStyle = ItemUseStyleID.Swing;
-            //Item.useTurn = true;
-            //Item.useAnimation = 15;
-            //Item.useTime = 10;
-            //Item.autoReuse = true;
-            //Item.consumable = true;
-            //Item.placeStyle = 0;
         }
     }
 }

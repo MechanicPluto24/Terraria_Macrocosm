@@ -70,7 +70,7 @@ namespace Macrocosm
         {
             AssetRequestMode mode = AssetRequestMode.ImmediateLoad;
 
-            Filters.Scene["Macrocosm:RadiationNoise"] = new Filter(new ScreenShaderData(new Ref<Effect>(ModContent.Request<Effect>(ShadersPath + "RadiationNoise", mode).Value), "RadiationNoise"));
+            Filters.Scene["Macrocosm:RadiationNoise"] = new Filter(new ScreenShaderData(ModContent.Request<Effect>(ShadersPath + "RadiationNoise", mode), "RadiationNoise"));
             Filters.Scene["Macrocosm:RadiationNoise"].Load();
         }
 

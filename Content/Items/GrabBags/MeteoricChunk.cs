@@ -9,7 +9,7 @@ using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.MeteorChunks
+namespace Macrocosm.Content.Items.GrabBags
 {
     public class MeteoricChunk : ModItem
     {
@@ -18,7 +18,7 @@ namespace Macrocosm.Content.Items.MeteorChunks
 
         public override void SetStaticDefaults()
         {
-            Item.ResearchUnlockCount = 25;
+            Item.ResearchUnlockCount = 10;
         }
 
         override public void SetDefaults()

@@ -8,7 +8,6 @@ namespace Macrocosm.Content.Items.Placeable.Furniture
         public override void SetDefaults()
         {
             Item.DefaultToPlaceableTile(ModContent.TileType<Rockets.LaunchPads.LaunchPadMarker>());
-            Item.placeStyle = 3;
 
             Item.width = 16;
             Item.height = 16;

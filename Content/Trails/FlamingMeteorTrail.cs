@@ -27,6 +27,5 @@ namespace Macrocosm.Content.Trails
         {
             return 45;
         }
-
     }
 }

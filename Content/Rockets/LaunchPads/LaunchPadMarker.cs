@@ -16,10 +16,10 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 {
     public enum MarkerState
     {
+        Inactive,
         Invalid,
         Occupied,
-        Vacant,
-        Inactive
+        Vacant
     };
 
     public class LaunchPadMarker : ModTile
@@ -36,14 +36,112 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style1x1);
             TileObjectData.newTile.StyleHorizontal = true;
-            TileObjectData.newTile.UsesCustomCanPlace = true;
-            TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(ModContent.GetInstance<LaunchPadMarkerTE>().Hook_AfterPlacement, -1, 0, false);
+            TileObjectData.newTile.DrawYOffset = 2;
 
             TileObjectData.addTile(Type);
 
             LocalizedText name = CreateMapEntryName();
 
             AddMapEntry(new Color(200, 200, 200), name);
+        }
+
+        public static void SetState(int i, int j, MarkerState state)
+        {
+            Tile tile = Main.tile[i, j];
+            if(tile.HasTile && tile.TileType == ModContent.TileType<LaunchPadMarker>())
+            {
+                tile.TileFrameX = (short)(18 * (short)state);
+            }
+        }
+
+        public static void SetState(Point16 coords, MarkerState state) => SetState(coords.X, coords.Y, state);
+        public static void SetState(Point coords, MarkerState state) => SetState(coords.X, coords.Y, state);
+
+        public override bool RightClick(int i, int j)
+        {
+            if (Utility.CoordinatesOutOfBounds(i + LaunchPad.MaxWidth, j) || Utility.CoordinatesOutOfBounds(i - LaunchPad.MaxWidth, j))
+                return false;
+
+            if (LaunchPadManager.TryGetLaunchPadAtTileCoordinates(MacrocosmSubworld.CurrentID, new(i, j), out _))
+                return false;
+
+            int tileY = j;
+            SetState(i, j, MarkerState.Invalid);
+
+            bool tooCloseRight = false;
+            bool foundObstructionRight = false;
+            bool foundLaunchpadRight = false;
+            for(int tileX = i + 1; tileX < i + LaunchPad.MaxWidth; tileX++)
+            {
+                Tile tile = Main.tile[tileX, tileY];
+                if (tile.HasTile)
+                {
+                    if(WorldGen.SolidOrSlopedTile(tileX, tileY))
+                    {
+                        foundObstructionRight = true;
+                    }
+                    else if(!foundObstructionRight && tile.TileType == Type)
+                    {
+                        foundLaunchpadRight = true;
+
+                        if (tileX - i < LaunchPad.MinWidth)
+                        {
+                            tooCloseRight = true;
+                        }
+                        else if(!tooCloseRight)
+                        {
+                            LaunchPad.Create(i, j, tileX, tileY);
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            bool tooCloseLeft = false;
+            bool foundObstructionLeft = false;
+            bool foundLaunchpadLeft = false;
+            for (int tileX = i - 1; tileX > i - LaunchPad.MaxWidth; tileX--)
+            {
+                Tile tile = Main.tile[tileX, tileY];
+                if (tile.HasTile)
+                {
+                    if (WorldGen.SolidOrSlopedTile(tileX, tileY))
+                    {
+                        foundObstructionLeft = true;
+                    }
+                    else if (!foundObstructionLeft && tile.TileType == Type)
+                    {
+                        bool foundLaunchPadLeft = true;
+
+                        if (i - tileX < LaunchPad.MinWidth)
+                        {
+                            tooCloseLeft = true;
+                        }
+                        else if(!tooCloseLeft)
+                        {
+                            LaunchPad.Create(tileX, tileY, i, j);
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            // TODO: localize these messages
+
+            if (tooCloseLeft || tooCloseRight)
+            {
+                Main.NewText("The launch pad markers are too close to one another.", Color.Yellow);
+                return false;
+            }
+
+            if ((foundObstructionRight && foundLaunchpadRight) || (foundObstructionLeft && foundLaunchpadLeft))
+            {
+                Main.NewText("There is a solid block, can't place launch pad here.", Color.Yellow);
+                return false;
+            }
+
+            Main.NewText("Found no other valid launch pad marker in the vicinity.", Color.Yellow);
+            return false;
         }
 
         public override bool CanPlace(int i, int j)
@@ -61,20 +159,30 @@ namespace Macrocosm.Content.Rockets.LaunchPads
                     return;
                 }
             }
-
-            ModContent.GetInstance<LaunchPadMarkerTE>().Kill(i, j);
         }
 
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
         {
             glowmask ??= ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/LaunchPads/LaunchPadMarker_Glow");
             Utility.DrawTileGlowmask(i, j, spriteBatch, glowmask);
+
+            /*
+            float cycle = Utility.PositiveSineWave(130 + ((i % 10) + (j % 10)));
+            for (int x = -1; x <= 1; x++)
+            {
+                for (int y = -1; y <= 1; y++)
+                {
+                    Vector2 offset = new Vector2(x, y) * (0.25f + 0.25f * cycle);
+                    Utility.DrawTileGlowmask(i, j, spriteBatch, glowmask, drawOffset: offset);
+                }
+            }
+            */
         }
 
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
             Tile tile = Main.tile[i, j];
-            if (tile.TileFrameX <= (int)MarkerState.Inactive * 18)
+            if (tile.TileFrameX > (int)MarkerState.Inactive * 18)
             {
                 switch (tile.TileFrameX / 18)
                 {
@@ -98,218 +206,10 @@ namespace Macrocosm.Content.Rockets.LaunchPads
                 }
             }
 
-            //float mult = 0.8f;
-            //r *= mult;
-            //g *= mult;
-            //b *= mult;
-        }
-    }
-
-    public class LaunchPadMarkerTE : ModTileEntity
-    {
-        public int CheckInterval { get; set; } = 30;
-        public int MinCheckDistance { get; set; } = 20;
-        public int CheckDistance { get; set; } = 40;
-
-        public LaunchPad LaunchPad { get; set; }
-        public bool HasLaunchPad => LaunchPad != null;
-
-
-        public LaunchPadMarkerTE Pair { get; set; }
-        public bool HasPair => Pair != null;
-        public bool IsPair { get; set; }
-
-        public MarkerState MarkerState { get; set; } = MarkerState.Inactive;
-        private MarkerState lastMarkerState = MarkerState.Inactive;
-
-        private int checkTimer;
-
-        public override void Update()
-        {
-            if (IsPair)
-                return;
-
-            checkTimer++;
-
-            if (checkTimer >= CheckInterval)
-            {
-                checkTimer = 0;
-
-                MarkerState = MarkerState.Inactive;
-
-                int x = Position.X;
-                int y = Position.Y;
-
-                if (CheckAdjacentMarkers(x, y, out LaunchPadMarkerTE pair))
-                {
-                    Pair = pair;
-                    Pair.IsPair = true;
-
-                    LaunchPad = LaunchPadManager.GetLaunchPadAtStartTile(MacrocosmSubworld.CurrentID, new(x, y));
-                    LaunchPad ??= LaunchPad.Create(x, y, Pair.Position.X, Pair.Position.Y);
-                    Pair.LaunchPad = LaunchPad;
-
-                    if (LaunchPad.HasRocket)
-                        MarkerState = MarkerState.Occupied;
-                    else
-                        MarkerState = MarkerState.Vacant;
-                }
-
-                if (HasPair)
-                    Pair.MarkerState = MarkerState;
-
-                if (MarkerState != lastMarkerState)
-                    OnStateChanged();
-
-                lastMarkerState = MarkerState;
-            }
-
-            Main.tile[Position.ToPoint()].TileFrameX = GetFrame();
-
-            if (HasPair)
-                Main.tile[Pair.Position.ToPoint()].TileFrameX = GetFrame();
-        }
-
-        private bool CheckAdjacentMarkers(int x, int y, out LaunchPadMarkerTE pair)
-        {
-            int startCheck = x;
-
-            x = startCheck;
-            while (x < startCheck + CheckDistance)
-            {
-                x++;
-
-                Tile tile = Main.tile[x, y];
-                if (tile.HasTile)
-                {
-                    if (tile.TileType == ModContent.TileType<LaunchPadMarker>())
-                    {
-                        bool result = TileEntity.ByPosition.TryGetValue(new(x, y), out TileEntity foundPair);
-                        pair = foundPair as LaunchPadMarkerTE;
-                        return result;
-                    }
-                    else if (HasPair && WorldGen.SolidOrSlopedTile(tile))
-                    {
-                        MarkerState = MarkerState.Invalid;
-                        pair = Pair;
-
-                        if (!TileEntity.ByPosition.TryGetValue(Pair.Position, out _))
-                            Pair = null;
-
-                        return false;
-                    }
-                }
-            }
-
-            // No valid adjacent markers found
-            pair = null;
-            return false;
-        }
-
-        private void OnStateChanged()
-        {
-            if (MarkerState is MarkerState.Invalid or MarkerState.Inactive)
-            {
-                if (HasLaunchPad)
-                {
-                    LaunchPadManager.Remove(MacrocosmSubworld.CurrentID, LaunchPad);
-                    LaunchPad = null;
-                }
-            }
-
-            Main.tile[Position.ToPoint()].TileFrameX = GetFrame();
-
-            if (HasPair)
-                Main.tile[Pair.Position.ToPoint()].TileFrameX = GetFrame();
-
-            NetMessage.SendData(MessageID.TileEntitySharing, -1, -1, null, ID, Position.X, Position.Y);
-        }
-
-        private short GetFrame() => (short)((int)MarkerState * 18);
-
-        public override void NetSend(BinaryWriter writer)
-        {
-            writer.Write((byte)MarkerState);
-
-            writer.Write(HasPair);
-            if (HasPair)
-            {
-                writer.WritePoint16(Pair.Position);
-            }
-
-            writer.Write(HasLaunchPad);
-            if (HasLaunchPad)
-            {
-                writer.WritePoint16(LaunchPad.StartTile);
-            }
-
-        }
-
-        public override void NetReceive(BinaryReader reader)
-        {
-            MarkerState = (MarkerState)reader.ReadByte();
-            Utility.Chat(MarkerState.ToString(), sync: false);
-
-            bool hasPair = reader.ReadBoolean();
-            if (hasPair)
-            {
-                TileEntity.ByPosition.TryGetValue(reader.ReadPoint16(), out TileEntity foundPair);
-                Pair = foundPair as LaunchPadMarkerTE;
-            }
-
-            bool hasLaunchPad = reader.ReadBoolean();
-            if (hasLaunchPad)
-            {
-                LaunchPad = LaunchPadManager.GetLaunchPadAtStartTile(MacrocosmSubworld.CurrentID, reader.ReadPoint16());
-            }
-
-
-            Main.tile[Position.ToPoint()].TileFrameX = GetFrame();
-
-            if (HasPair)
-                Main.tile[Pair.Position.ToPoint()].TileFrameX = GetFrame();
-        }
-
-        public override bool IsTileValidForEntity(int x, int y)
-        {
-            Tile tile = Main.tile[x, y];
-            return tile.HasTile && tile.TileType == ModContent.TileType<LaunchPadMarker>();
-        }
-
-        public override int Hook_AfterPlacement(int i, int j, int type, int style, int direction, int alternate)
-        {
-            TileObjectData tileData = TileObjectData.GetTileData(type, style, alternate);
-
-            if (Main.netMode == NetmodeID.MultiplayerClient)
-            {
-                //Sync the entire multitile's area. 
-                NetMessage.SendTileSquare(Main.myPlayer, i, j, tileData.Width, tileData.Height);
-
-                //Sync the placement of the tile entity with other clients
-                NetMessage.SendData(MessageID.TileEntityPlacement, -1, -1, null, i, j, Type);
-
-                return -1;
-            }
-
-            int placedEntity = Place(i, j);
-
-            return placedEntity;
-        }
-
-        public override void OnNetPlace()
-        {
-            NetMessage.SendData(MessageID.TileEntitySharing, -1, -1, null, ID, Position.X, Position.Y);
-        }
-
-        public override void OnKill()
-        {
-            if (HasPair)
-            {
-                Pair.MarkerState = MarkerState.Inactive;
-                Pair.IsPair = false;
-                Pair.LaunchPad = null;
-                NetMessage.SendData(MessageID.TileEntitySharing, -1, -1, null, Pair.ID, Pair.Position.X, Pair.Position.Y);
-            }
+            float mult = 0.6f + 0.2f * Utility.PositiveSineWave(130 + ((i % 10) + (j % 10)));
+            r *= mult;
+            g *= mult;
+            b *= mult;
         }
     }
 }
