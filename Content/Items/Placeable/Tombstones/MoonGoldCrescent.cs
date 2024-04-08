@@ -15,16 +15,9 @@ namespace Macrocosm.Content.Items.Placeable.Tombstones
 
         public override void SetDefaults()
         {
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Tombstones.MoonGoldTombstone>(), 2);
             Item.width = 28;
             Item.height = 32;
-            Item.useTurn = true;
-            Item.useStyle = ItemUseStyleID.Swing;
-            Item.useAnimation = 15;
-            Item.useTime = 10;
-            Item.maxStack = Item.CommonMaxStack;
-            Item.consumable = true;
-            Item.createTile = ModContent.TileType<Tiles.Tombstones.MoonGoldTombstone>();
-            Item.placeStyle = 2;
             Item.rare = ItemRarityID.Purple;
         }
     }

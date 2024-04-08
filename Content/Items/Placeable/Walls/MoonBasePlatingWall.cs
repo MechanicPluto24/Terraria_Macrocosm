@@ -2,7 +2,6 @@ using Macrocosm.Content.Items.Placeable.Blocks;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Placeable.Walls
 {
@@ -15,17 +14,9 @@ namespace Macrocosm.Content.Items.Placeable.Walls
 
         public override void SetDefaults()
         {
-            Item.width = 12;
-            Item.height = 12;
-            Item.maxStack = Item.CommonMaxStack;
-            Item.useTurn = true;
-            Item.autoReuse = true;
-            Item.useAnimation = 15;
-            Item.useTime = 7;
-            Item.useStyle = ItemUseStyleID.Swing;
-            Item.consumable = true;
-
-            Item.createWall = WallType<Tiles.Walls.MoonBasePlatingWall>();
+            Item.DefaultToPlaceableWall(ModContent.WallType<Tiles.Walls.MoonBasePlatingWall>());
+            Item.width = 24;
+            Item.height = 24;
         }
 
         public override void AddRecipes()
@@ -34,7 +25,7 @@ namespace Macrocosm.Content.Items.Placeable.Walls
                 .AddIngredient<MoonBasePlating>()
                 .AddTile(TileID.WorkBenches)
                 .DisableDecraft()
-                .AddCustomShimmerResult(ItemType<MoonBasePlatingWallUnsafe>())
+                .AddCustomShimmerResult(ModContent.ItemType<MoonBasePlatingWallUnsafe>())
                 .Register();
         }
     }
@@ -52,7 +43,7 @@ namespace Macrocosm.Content.Items.Placeable.Walls
         public override void SetDefaults()
         {
             base.SetDefaults();
-            Item.createWall = WallType<Tiles.Walls.MoonBasePlatingWallUnsafe>();
+            Item.createWall = ModContent.WallType<Tiles.Walls.MoonBasePlatingWallUnsafe>();
         }
 
         public override void AddRecipes()

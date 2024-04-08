@@ -1105,3 +1105,18 @@ AlienResidue: {
 	DisplayName: Alien Residue
 	Tooltip: ""
 }
+
+Plastic: {
+	DisplayName: Plastic
+	Tooltip: ""
+}
+
+ReactorComponent: {
+	DisplayName: Reactor Component
+	Tooltip: ""
+}
+
+ReactorHousing: {
+	DisplayName: Reactor Housing
+	Tooltip: ""
+}

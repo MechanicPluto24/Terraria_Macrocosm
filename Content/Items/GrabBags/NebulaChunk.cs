@@ -4,13 +4,13 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.MeteorChunks
+namespace Macrocosm.Content.Items.GrabBags
 {
-    public class VortexChunk : ModItem
+    public class NebulaChunk : ModItem
     {
         public override void SetStaticDefaults()
         {
-            Item.ResearchUnlockCount = 25;
+            Item.ResearchUnlockCount = 10;
         }
 
         override public void SetDefaults()
@@ -26,7 +26,7 @@ namespace Macrocosm.Content.Items.MeteorChunks
 
         public override void RightClick(Player player)
         {
-            int itemType = ItemID.FragmentVortex;
+            int itemType = ItemID.FragmentNebula;
             player.QuickSpawnItem(player.GetSource_OpenItem(Type), itemType, Main.rand.Next(20, 50));
 
         }
@@ -35,13 +35,13 @@ namespace Macrocosm.Content.Items.MeteorChunks
         {
             if (Main.rand.NextBool(3))
             {
-                int type = DustID.Vortex;
+                int type = Main.rand.NextFromList<int>(71, 260);
                 Vector2 rotVector1 = Vector2.UnitY.RotatedByRandom(MathHelper.TwoPi) * MathF.Abs(MathF.Sin((float)Main.timeForVisualEffects)) * 1.1f;
                 Dust lightDust = Main.dust[Dust.NewDustPerfect(Item.Center - rotVector1, type).dustIndex];
-                lightDust.noGravity = true;
-                lightDust.position = Item.Center - rotVector1 * Main.rand.Next(10, 21);
-                lightDust.velocity = rotVector1.RotatedBy(MathHelper.PiOver2) * 7f;
-                lightDust.scale = 1.2f;
+                lightDust.noGravity = false;
+                lightDust.position = Item.Center - rotVector1 * Main.rand.Next(10, 11);
+                lightDust.velocity = rotVector1.RotatedBy(MathHelper.PiOver2) * 1.2f;
+                lightDust.scale = .8f;
                 lightDust.customData = Item.Center;
             }
         }

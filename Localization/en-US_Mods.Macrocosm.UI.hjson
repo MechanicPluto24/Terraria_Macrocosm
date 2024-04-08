@@ -27,7 +27,8 @@ Rocket: {
 		Payload: Payload
 		Inventory: Inventory
 		Fuel: Fuel
-		Customization: Customization
+		Customization: Customizationd
+		Assembly: Assembly
 	}
 
 	Inventory.OpenInventory: Open Inventory

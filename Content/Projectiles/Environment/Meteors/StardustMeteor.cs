@@ -1,6 +1,6 @@
 ﻿using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Content.Items.MeteorChunks;
+using Macrocosm.Content.Items.GrabBags;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.GameContent.Drawing;

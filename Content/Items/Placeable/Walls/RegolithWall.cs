@@ -14,16 +14,9 @@ namespace Macrocosm.Content.Items.Placeable.Walls
 
         public override void SetDefaults()
         {
-            Item.width = 12;
-            Item.height = 12;
-            Item.maxStack = Item.CommonMaxStack;
-            Item.useTurn = true;
-            Item.autoReuse = true;
-            Item.useAnimation = 15;
-            Item.useTime = 7;
-            Item.useStyle = ItemUseStyleID.Swing;
-            Item.consumable = true;
-            Item.createWall = ModContent.WallType<Tiles.Walls.RegolithWall>();
+            Item.DefaultToPlaceableWall(ModContent.WallType<Tiles.Walls.RegolithWall>());
+            Item.width = 24;
+            Item.height = 24;
         }
 
         public override void AddRecipes()

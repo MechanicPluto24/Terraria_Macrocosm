@@ -8,6 +8,11 @@ namespace Macrocosm.Content.Items.Consumables.Unlockables
     {
         public abstract List<(string moduleName, string patternName)> Patterns { get; }
 
+        public override void SetStaticDefaults()
+        {
+            Item.ResearchUnlockCount = 5;
+        }
+
         public override void SetDefaults()
         {
             Item.width = 30;

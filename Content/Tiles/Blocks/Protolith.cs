@@ -21,12 +21,7 @@ namespace Macrocosm.Content.Tiles.Blocks
             MineResist = 3f;
             AddMapEntry(new Color(65, 65, 65));
             HitSound = SoundID.Tink;
-        }
-
-        public override bool CreateDust(int i, int j, ref int type)
-        {
-            type = Dust.NewDust(new Vector2(i, j).ToWorldCoordinates(), 16, 16, ModContent.DustType<ProtolithDust>());
-            return false;
+            DustType = ModContent.DustType<ProtolithDust>();
         }
 
         public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
