@@ -1,9 +1,9 @@
 using Macrocosm.Common.Config;
 using Macrocosm.Common.Debugging;
 using Macrocosm.Common.Netcode;
-using Macrocosm.Content.Items.Currency;
+using Macrocosm.Common.Systems;
 using Macrocosm.Content.Subworlds;
-using Macrocosm.Content.Tiles.Blocks;
+using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SubworldLibrary;
@@ -45,7 +45,6 @@ namespace Macrocosm
                 LoadEffects();
             }
 
-            CurrencyManager.Load();
             LoadTimeModCalls();
         }
 

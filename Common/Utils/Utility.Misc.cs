@@ -9,7 +9,6 @@ using System.Threading;
 using Terraria;
 using Terraria.Audio;
 using Terraria.Chat;
-using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -20,7 +19,10 @@ namespace Macrocosm.Common.Utils
 {
     public static partial class Utility
     {
-        public static string GetNamespacePath(this object obj) => (obj.GetType().Namespace + "." + obj.GetType().Name).Replace('.', '/');
+        public static string GetNamespacePath(this object obj)
+        {
+            return (obj.GetType().Namespace + "." + obj.GetType().Name).Replace('.', '/');
+        }
 
         public static void InvokeOnMainThread(Action action)
         {
@@ -31,27 +33,35 @@ namespace Macrocosm.Common.Utils
                 Main.QueueMainThreadAction(() =>
                 {
                     action();
-                    evt.Set();
+                    _ = evt.Set();
                 });
 
-                evt.WaitOne();
+                _ = evt.WaitOne();
             }
             else
+            {
                 action();
+            }
         }
 
         public static bool IsAprilFools()
-            => DateTime.Now.Month == 5 && DateTime.Now.Day == 1;
+        {
+            return DateTime.Now.Month == 5 && DateTime.Now.Day == 1;
+        }
 
         public static string GetCompassCoordinates(Player player)
-            => GetCompassCoordinates(player.Center);
+        {
+            return GetCompassCoordinates(player.Center);
+        }
 
         public static string GetCompassCoordinates(Vector2 position)
-            => GetCompassCoordinates((int)(position.X / 16f));
+        {
+            return GetCompassCoordinates((int)(position.X / 16f));
+        }
 
         public static string GetCompassCoordinates(int tileX)
         {
-            int posX = tileX * 2 - Main.maxTilesX;
+            int posX = (tileX * 2) - Main.maxTilesX;
             string text = (posX > 0) ? Language.GetTextValue("GameUI.CompassEast", posX) :
                           ((posX >= 0) ? Language.GetTextValue("GameUI.CompassCenter") :
                                          Language.GetTextValue("GameUI.CompassWest", -posX));
@@ -65,22 +75,38 @@ namespace Macrocosm.Common.Utils
             switch (severity)
             {
                 case MessageSeverity.Info:
-                    if(!Main.gameMenu) Chat(message, Color.White, sync: false);
+                    if (!Main.gameMenu)
+                    {
+                        Chat(message, Color.White, sync: false);
+                    }
+
                     Macrocosm.Instance.Logger.Info(message);
                     break;
 
                 case MessageSeverity.Warn:
-                    if (!Main.gameMenu) Chat(message, Color.Gold, sync: false);
+                    if (!Main.gameMenu)
+                    {
+                        Chat(message, Color.Gold, sync: false);
+                    }
+
                     Macrocosm.Instance.Logger.Warn(message);
                     break;
 
                 case MessageSeverity.Error:
-                    if (!Main.gameMenu) Chat(message, Color.Red, sync: false);
+                    if (!Main.gameMenu)
+                    {
+                        Chat(message, Color.Red, sync: false);
+                    }
+
                     Macrocosm.Instance.Logger.Error(message);
                     break;
 
                 case MessageSeverity.Fatal:
-                    if (!Main.gameMenu) Chat(message, Color.Purple, sync: false);
+                    if (!Main.gameMenu)
+                    {
+                        Chat(message, Color.Purple, sync: false);
+                    }
+
                     Macrocosm.Instance.Logger.Fatal(message);
                     break;
             }
@@ -143,18 +169,26 @@ namespace Macrocosm.Common.Utils
             Main.mouseRightRelease = false;
             int left = i;
             int top = j;
-            if (tile.TileFrameX % 36 != 0) left--;
-            if (tile.TileFrameY != 0) top--;
+            if (tile.TileFrameX % 36 != 0)
+            {
+                left--;
+            }
+
+            if (tile.TileFrameY != 0)
+            {
+                top--;
+            }
+
             if (player.sign >= 0)
             {
-                SoundEngine.PlaySound(SoundID.MenuClose);
+                _ = SoundEngine.PlaySound(SoundID.MenuClose);
                 player.sign = -1;
                 Main.editSign = false;
                 Main.npcChatText = "";
             }
             if (Main.editChest)
             {
-                SoundEngine.PlaySound(SoundID.MenuTick);
+                _ = SoundEngine.PlaySound(SoundID.MenuTick);
                 Main.editChest = false;
                 Main.npcChatText = "";
             }
@@ -169,7 +203,7 @@ namespace Macrocosm.Common.Utils
                 {
                     player.chest = -1;
                     Recipe.FindRecipes();
-                    SoundEngine.PlaySound(SoundID.MenuClose);
+                    _ = SoundEngine.PlaySound(SoundID.MenuClose);
                 }
                 else
                 {
@@ -186,7 +220,7 @@ namespace Macrocosm.Common.Utils
                     if (chest == player.chest)
                     {
                         player.chest = -1;
-                        SoundEngine.PlaySound(SoundID.MenuClose);
+                        _ = SoundEngine.PlaySound(SoundID.MenuClose);
                     }
                     else
                     {
@@ -195,7 +229,7 @@ namespace Macrocosm.Common.Utils
                         Main.recBigList = false;
                         player.chestX = left;
                         player.chestY = top;
-                        SoundEngine.PlaySound(player.chest < 0 ? SoundID.MenuOpen : SoundID.MenuTick);
+                        _ = SoundEngine.PlaySound(player.chest < 0 ? SoundID.MenuOpen : SoundID.MenuTick);
                     }
                     Recipe.FindRecipes();
                 }
@@ -205,23 +239,45 @@ namespace Macrocosm.Common.Utils
         public static void DisplayTime(double time = -1, Color? OverrideColor = null, bool sync = false)
         {
             string text = "AM";
-            if (time <= -1) time = Main.time;
+            if (time <= -1)
+            {
+                time = Main.time;
+            }
 
             if (!Main.dayTime) { time += 54000.0; }
             time = time / 86400.0 * 24.0;
             time = time - 7.5 - 12.0;
 
-            if (time < 0.0) time += 24.0;
-            if (time >= 12.0) text = "PM";
+            if (time < 0.0)
+            {
+                time += 24.0;
+            }
+
+            if (time >= 12.0)
+            {
+                text = "PM";
+            }
 
             int intTime = (int)time;
             double deltaTime = time - intTime;
             deltaTime = (int)(deltaTime * 60.0);
             string text2 = string.Concat(deltaTime);
 
-            if (deltaTime < 10.0) text2 = "0" + text2;
-            if (intTime > 12) intTime -= 12;
-            if (intTime == 0) intTime = 12;
+            if (deltaTime < 10.0)
+            {
+                text2 = "0" + text2;
+            }
+
+            if (intTime > 12)
+            {
+                intTime -= 12;
+            }
+
+            if (intTime == 0)
+            {
+                intTime = 12;
+            }
+
             string newText = string.Concat("Time: ", intTime, ":", text2, " ", text);
             Chat(newText, OverrideColor != null ? (Color)OverrideColor : new Color(255, 240, 20), sync);
         }
@@ -232,7 +288,11 @@ namespace Macrocosm.Common.Utils
             val += silver * 100;
             val += gold * 10000;
             val += plat * 1000000;
-            if (sellPrice) val *= 5;
+            if (sellPrice)
+            {
+                val *= 5;
+            }
+
             return val;
         }
 
@@ -251,19 +311,42 @@ namespace Macrocosm.Common.Utils
         }
 
         public static bool CanHit(Rectangle rect, Rectangle rect2)
-            => Collision.CanHit(new Vector2(rect.X, rect.Y), rect.Width, rect.Height, new Vector2(rect2.X, rect2.Y), rect2.Width, rect2.Height);
+        {
+            return Collision.CanHit(new Vector2(rect.X, rect.Y), rect.Width, rect.Height, new Vector2(rect2.X, rect2.Y), rect2.Width, rect2.Height);
+        }
 
-        public static Vector2 TileToPos(Vector2 tile) => tile * new Vector2(16, 16);
-        public static Vector2 PosToTile(Vector2 pos) => pos / new Vector2(16, 16);
+        public static Vector2 TileToPos(Vector2 tile)
+        {
+            return tile * new Vector2(16, 16);
+        }
+
+        public static Vector2 PosToTile(Vector2 pos)
+        {
+            return pos / new Vector2(16, 16);
+        }
 
         ///<summary>
         /// These two methods convert from game ticks to seconds and vise versa.
         ///</summary>
-        public static int TicksToSeconds(int ticks) => ticks / 60;
-        public static int SecondsToTicks(int seconds) => seconds * 60;
+        public static int TicksToSeconds(int ticks)
+        {
+            return ticks / 60;
+        }
 
-        public static int TicksToMinutes(int ticks) => TicksToSeconds(ticks) / 60;
-        public static int MinutesToTicks(int minutes) => SecondsToTicks(minutes) * 60;
+        public static int SecondsToTicks(int seconds)
+        {
+            return seconds * 60;
+        }
+
+        public static int TicksToMinutes(int ticks)
+        {
+            return TicksToSeconds(ticks) / 60;
+        }
+
+        public static int MinutesToTicks(int minutes)
+        {
+            return SecondsToTicks(minutes) * 60;
+        }
 
         ///<summary>
         /// Adds a value to the given array at the specified index. If index is -1, it adds it to the end.
@@ -420,8 +503,8 @@ namespace Macrocosm.Common.Utils
         ///</summary>
         public static Rectangle ScaleRectangle(Rectangle rect, float scale)
         {
-            float ratioWidth = (rect.Width * scale - rect.Width) / 2;
-            float ratioHeight = (rect.Height * scale - rect.Height) / 2;
+            float ratioWidth = ((rect.Width * scale) - rect.Width) / 2;
+            float ratioHeight = ((rect.Height * scale) - rect.Height) / 2;
             int x = rect.X - (int)ratioWidth;
             int y = rect.Y - (int)ratioHeight;
             int width = rect.Width + (int)(ratioWidth * 2);
@@ -438,7 +521,7 @@ namespace Macrocosm.Common.Utils
             float total = per;
             int currentID = 0;
             while (percent / total > 1f && currentID < floats.Length - 2) { total += per; currentID++; }
-            return MathHelper.Lerp(floats[currentID], floats[currentID + 1], (percent - per * currentID) / per);
+            return MathHelper.Lerp(floats[currentID], floats[currentID + 1], (percent - (per * currentID)) / per);
         }
 
         ///<summary>
@@ -450,7 +533,7 @@ namespace Macrocosm.Common.Utils
             float total = per;
             int currentID = 0;
             while (percent / total > 1f && currentID < vectors.Length - 2) { total += per; currentID++; }
-            return Vector2.Lerp(vectors[currentID], vectors[currentID + 1], (percent - per * currentID) / per);
+            return Vector2.Lerp(vectors[currentID], vectors[currentID + 1], (percent - (per * currentID)) / per);
         }
 
         ///<summary>
@@ -462,7 +545,7 @@ namespace Macrocosm.Common.Utils
             float total = per;
             int currentID = 0;
             while (percent / total > 1f && currentID < colors.Length - 2) { total += per; currentID++; }
-            return Color.Lerp(colors[currentID], colors[currentID + 1], (percent - per * currentID) / per);
+            return Color.Lerp(colors[currentID], colors[currentID + 1], (percent - (per * currentID)) / per);
         }
 
         ///<summary>
@@ -491,8 +574,8 @@ namespace Macrocosm.Common.Utils
         /// </summary>
         public static Vector2 RotateVector(Vector2 origin, Vector2 vecToRot, float rot)
         {
-            float newPosX = (float)(Math.Cos(rot) * (vecToRot.X - origin.X) - Math.Sin(rot) * (vecToRot.Y - origin.Y) + origin.X);
-            float newPosY = (float)(Math.Sin(rot) * (vecToRot.X - origin.X) + Math.Cos(rot) * (vecToRot.Y - origin.Y) + origin.Y);
+            float newPosX = (float)((Math.Cos(rot) * (vecToRot.X - origin.X)) - (Math.Sin(rot) * (vecToRot.Y - origin.Y)) + origin.X);
+            float newPosY = (float)((Math.Sin(rot) * (vecToRot.X - origin.X)) + (Math.Cos(rot) * (vecToRot.Y - origin.Y)) + origin.Y);
             return new Vector2(newPosX, newPosY);
         }
 
@@ -552,7 +635,7 @@ namespace Macrocosm.Common.Utils
             float way = 0f;
             while (way < length)
             {
-                points.Add(start + dir * way);
+                points.Add(start + (dir * way));
                 way += jump;
             }
             return points.ToArray();
@@ -568,7 +651,7 @@ namespace Macrocosm.Common.Utils
             float way = 0f;
             while (way < length)
             {
-                Vector2 vec = start.ToVector2() + dir * way;
+                Vector2 vec = start.ToVector2() + (dir * way);
                 Point p = new((int)vec.X, (int)vec.Y);
                 points.Add(p);
                 way += jump;

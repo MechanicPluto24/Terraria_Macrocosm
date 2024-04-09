@@ -13,7 +13,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
     {
         public override void SetStaticDefaults()
         {
-            Item.Glowmask().Texture = ModContent.Request<Texture2D>("Macrocosm/Content/Items/Weapons/Melee/Crucible_Glow");
+            Item.Glowmask().Texture = ModContent.Request<Texture2D>(Texture + "_Glow");
         }
 
         public override void SetDefaults()

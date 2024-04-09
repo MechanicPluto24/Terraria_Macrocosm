@@ -1,11 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Modules
 {
     public class ReactorModule : RocketModule
     {
+        private Asset<Texture2D> glowmask;
+
         public ReactorModule(Rocket rocket) : base(rocket)
         {
         }
@@ -20,7 +23,8 @@ namespace Macrocosm.Content.Rockets.Modules
         // Reactor glowmask
         public override void PostDraw(SpriteBatch spriteBatch, Vector2 position)
         {
-            spriteBatch.Draw(ModContent.Request<Texture2D>(TexturePath + "Glow").Value, position, null, Color.White, 0f, Origin, 1f, SpriteEffects.None, 0f);
+            glowmask ??= ModContent.Request<Texture2D>(TexturePath + "Glow");
+            spriteBatch.Draw(glowmask.Value, position, null, Color.White, 0f, Origin, 1f, SpriteEffects.None, 0f);
         }
     }
 }

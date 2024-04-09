@@ -14,11 +14,6 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
     public class MoonBaseConsole : ModTile
     {
         private static Asset<Texture2D> glowmask;
-        public override void Load()
-        {
-            glowmask = ModContent.Request<Texture2D>(Texture + "_Glow");
-        }
-
         public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
@@ -40,7 +35,7 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 
             AddMapEntry(new Color(180, 180, 180), CreateMapEntryName());
 
-            RegisterItemDrop(ModContent.ItemType<Items.Placeable.Furniture.MoonBase.MoonBaseConsole>(), 0, 1);
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.MoonBase.MoonBaseConsole>(), 0, 1);
         }
 
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
@@ -50,6 +45,8 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 
             int width = TileObjectData.GetTileData(tile).CoordinateWidth;
             int height = TileObjectData.GetTileData(tile).CoordinateHeights[tile.TileFrameY / 18 % 2];
+
+            glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
 
             spriteBatch.Draw(
                 glowmask.Value,

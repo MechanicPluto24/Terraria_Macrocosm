@@ -1,7 +1,6 @@
 ﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
-using Macrocosm.Content.Items.Materials;
-using Macrocosm.Content.Items.Placeable.Blocks;
+using Macrocosm.Content.Items.Materials.Drops;
 using Macrocosm.Content.NPCs.Bosses.CraterDemon;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
@@ -60,7 +59,7 @@ namespace Macrocosm.Content.Items.Consumables.BossSummons
                 .AddIngredient<AlienResidue>(50)
                 .AddIngredient<SpaceDust>(10)
                 .AddIngredient<AlienResidue>(20)
-                .AddTile(TileID.LunarCraftingStation) // TODO: Nuclear altar
+                .AddTile(TileID.LunarCraftingStation) // TODO: @ Nuclear altar
                 .Register();
         }
         public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)

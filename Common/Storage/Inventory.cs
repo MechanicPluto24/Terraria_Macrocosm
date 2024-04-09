@@ -89,6 +89,14 @@ namespace Macrocosm.Common.Storage
 
         public void SetGlow(int index, float time, float hue) => uiItemSlots[index].SetGlow(time, hue);
 
+        public void DropAllItems(Vector2 worldPosition, bool sync = true, bool fromClient = false)
+        {
+            for (int i = 0; i < Size; i++)
+            {
+                DropItem(i, worldPosition, sync, fromClient);
+            }
+        }
+
         /// <summary> Drops an item in the world </summary>
         /// <param name="index"> The item slot index </param>
         /// <param name="worldPosition"> The world position to drop this item </param>

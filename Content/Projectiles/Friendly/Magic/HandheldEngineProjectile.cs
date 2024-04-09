@@ -26,13 +26,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         private static Asset<Texture2D> flame;
         private static Asset<Texture2D> warning;
 
-        public override void Load()
-        {
-            glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Magic/HandheldEngineProjectile_Glow");
-            flame = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Magic/HandheldEngineProjectile_Flame");
-            warning = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Magic/HandheldEngineProjectile_Warning");
-        }
-
         public ref float AI_Overheat => ref Projectile.ai[0];
         public ref float AI_UseCounter => ref Projectile.ai[1];
         public float AI_Windup = 0;
@@ -264,6 +257,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
         public override void PostDraw(Color lightColor)
         {
+            glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
+            flame ??= ModContent.Request<Texture2D>(Texture + "_Flame");
+            warning ??= ModContent.Request<Texture2D>(Texture + "_Warning");
+
             SpriteEffects effects = Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None;
 
             int frameY = OwnerHasMana ? 0 : (AI_UseCounter % 24 < 12 ? 1 : 2);

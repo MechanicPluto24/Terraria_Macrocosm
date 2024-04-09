@@ -10,21 +10,31 @@ namespace Macrocosm.Common.Utils
         #region Alpha manipulation
 
         public static Color WithOpacity(this Color color, float opacity)
-            => new(color.R, color.G, color.B, (byte)(opacity * 255));
+        {
+            return new(color.R, color.G, color.B, (byte)(opacity * 255));
+        }
 
         public static Color WithAlpha(this Color color, byte alpha)
-            => new(color.R, color.G, color.B, alpha);
+        {
+            return new(color.R, color.G, color.B, alpha);
+        }
 
         #endregion
 
         #region Hex format conversion
-        public static string GetHex(this Color color) => "#" + color.Hex3().ToUpper();
+        public static string GetHex(this Color color)
+        {
+            return "#" + color.Hex3().ToUpper();
+        }
+
         public static bool TryGetColorFromHex(string hexString, out Color color)
         {
             if (hexString.StartsWith("#"))
+            {
                 hexString = hexString[1..];
+            }
 
-            if (hexString.Length <= 6 && uint.TryParse(hexString, NumberStyles.HexNumber, CultureInfo.CurrentCulture, out var result))
+            if (hexString.Length <= 6 && uint.TryParse(hexString, NumberStyles.HexNumber, CultureInfo.CurrentCulture, out uint result))
             {
                 uint b = result & 0xFFu;
                 uint g = (result >> 8) & 0xFFu;
@@ -53,15 +63,40 @@ namespace Macrocosm.Common.Utils
 
         #region HSL conversion
 
-        public static Color WithHue(this Color color, float hue) => HSLToRGB(ToHSL(color) with { X = hue });
-        public static Color WithSaturation(this Color color, float saturation) => HSLToRGB(ToHSL(color) with { Y = saturation });
-        public static Color WithLuminance(this Color color, float luminance) => HSLToRGB(ToHSL(color) with { Z = luminance });
+        public static Color WithHue(this Color color, float hue)
+        {
+            return HSLToRGB(ToHSL(color) with { X = hue });
+        }
 
-        public static Vector3 RGBToHSL(Color color) => color.ToHSL();
-        public static Vector3 ToHSL(this Color color) => Main.rgbToHsl(color);
+        public static Color WithSaturation(this Color color, float saturation)
+        {
+            return HSLToRGB(ToHSL(color) with { Y = saturation });
+        }
 
-        public static Color HSLToRGB(Vector3 hsl) => Main.hslToRgb(hsl);
-        public static Color HSLToRGB(float hue, float saturation, float luminance) => Main.hslToRgb(hue, saturation, luminance);
+        public static Color WithLuminance(this Color color, float luminance)
+        {
+            return HSLToRGB(ToHSL(color) with { Z = luminance });
+        }
+
+        public static Vector3 RGBToHSL(Color color)
+        {
+            return color.ToHSL();
+        }
+
+        public static Vector3 ToHSL(this Color color)
+        {
+            return Main.rgbToHsl(color);
+        }
+
+        public static Color HSLToRGB(Vector3 hsl)
+        {
+            return Main.hslToRgb(hsl);
+        }
+
+        public static Color HSLToRGB(float hue, float saturation, float luminance)
+        {
+            return Main.hslToRgb(hue, saturation, luminance);
+        }
 
         public static Vector3 ToScaledHSL(this Color color, float luminanceFactor)
         {
@@ -71,20 +106,27 @@ namespace Macrocosm.Common.Utils
             return Vector3.Clamp(value, Vector3.Zero, Vector3.One);
         }
 
-        public static Color ScaledHSLToRGB(Vector3 hsl, float luminanceFactor) => ScaledHSLToRGB(hsl.X, hsl.Y, hsl.Z, luminanceFactor);
+        public static Color ScaledHSLToRGB(Vector3 hsl, float luminanceFactor)
+        {
+            return ScaledHSLToRGB(hsl.X, hsl.Y, hsl.Z, luminanceFactor);
+        }
+
         public static Color ScaledHSLToRGB(float hue, float saturation, float luminance, float luminanceFactor)
         {
             float invFactor = 1f - luminanceFactor;
-            return HSLToRGB(hue, saturation, luminance * luminanceFactor + invFactor);
+            return HSLToRGB(hue, saturation, (luminance * luminanceFactor) + invFactor);
         }
 
         public static Vector3 ScaleHSL(float hue, float saturation, float luminance, float luminanceFactor)
         {
             float invFactor = 1f - luminanceFactor;
-            return new Vector3(hue, saturation, luminance * luminanceFactor + invFactor);
+            return new Vector3(hue, saturation, (luminance * luminanceFactor) + invFactor);
         }
 
-        public static Vector3 ScaleHSL(Vector3 hsl, float luminanceFactor) => ScaleHSL(hsl.X, hsl.Y, hsl.Z, luminanceFactor);
+        public static Vector3 ScaleHSL(Vector3 hsl, float luminanceFactor)
+        {
+            return ScaleHSL(hsl.X, hsl.Y, hsl.Z, luminanceFactor);
+        }
 
         #endregion
 
@@ -111,7 +153,9 @@ namespace Macrocosm.Common.Utils
 
         /// <summary> Gets the normalized brightness of a color using the NTSC formula </summary>
         public static float GetBrightness(this Color rgbColor)
-            => 0.299f * rgbColor.R / 255 + 0.587f * rgbColor.G / 255 + 0.114f * rgbColor.B / 255;
+        {
+            return (0.299f * rgbColor.R / 255) + (0.587f * rgbColor.G / 255) + (0.114f * rgbColor.B / 255);
+        }
 
         /// <summary> Returns the monochrome version of a color using the NTSC formula </summary>
         public static Color ToGrayscale(this Color rgbColor)
@@ -219,12 +263,7 @@ namespace Macrocosm.Common.Utils
                 return Color.Lerp(b, g, (percent - 0.25f) / 0.25f);
             }
 
-            if (percent <= 0.75f)
-            {
-                return Color.Lerp(g, y, (percent - 0.5f) / 0.25f);
-            }
-
-            return Color.Lerp(y, r, (percent - 0.75f) / 0.25f);
+            return percent <= 0.75f ? Color.Lerp(g, y, (percent - 0.5f) / 0.25f) : Color.Lerp(y, r, (percent - 0.75f) / 0.25f);
         }
 
         public static Vector3[] ToVector3Array(this Color[] colors)
@@ -232,7 +271,9 @@ namespace Macrocosm.Common.Utils
             Vector3[] vectors = new Vector3[colors.Length];
 
             for (int i = 0; i < colors.Length; i++)
+            {
                 vectors[i] = colors[i].ToVector3();
+            }
 
             return vectors;
         }
@@ -242,7 +283,9 @@ namespace Macrocosm.Common.Utils
             Vector4[] vectors = new Vector4[colors.Length];
 
             for (int i = 0; i < colors.Length; i++)
+            {
                 vectors[i] = colors[i].ToVector4();
+            }
 
             return vectors;
         }

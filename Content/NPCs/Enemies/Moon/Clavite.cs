@@ -2,7 +2,7 @@
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
-using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.Items.Materials.Drops;
 using Macrocosm.Content.NPCs.Global;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -27,11 +27,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         private static Asset<Texture2D> glowmask;
         private static Asset<Texture2D> glowX4;
-        public override void Load()
-        {
-            glowmask = ModContent.Request<Texture2D>(Texture + "_Glow", AssetRequestMode.ImmediateLoad);
-            glowX4 = ModContent.Request<Texture2D>(Texture + "_GlowX4", AssetRequestMode.ImmediateLoad);
-        }
 
         public override void SetStaticDefaults()
         {
@@ -185,6 +180,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
+            glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
+            glowX4 ??= ModContent.Request<Texture2D>(Texture + "_GlowX4");
+
             if (NPC.IsABestiaryIconDummy)
                 NPC.rotation = MathHelper.Pi;
 

@@ -4,6 +4,7 @@ using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.LaunchPads;
 using Microsoft.Xna.Framework;
+using MonoMod.Core.Utils;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent.UI.Elements;
@@ -15,7 +16,6 @@ namespace Macrocosm.Content.Rockets.UI
     public class AssemblyUIState : UIState
     {
         public LaunchPad LaunchPad { get; set; } = new();
-        public Rocket Rocket { get; set; } = new();
 
         private UIText title;
         private UIDragablePanel window;
@@ -43,7 +43,7 @@ namespace Macrocosm.Content.Rockets.UI
             title = new(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Assembly"), 0.6f, true)
             {
                 IsWrapped = false,
-                HAlign = 0.5f,
+                HAlign = 0.49f,
                 VAlign = 0.005f,
                 Top = new(-34, 0),
                 TextColor = Color.White
@@ -54,25 +54,13 @@ namespace Macrocosm.Content.Rockets.UI
             window.Append(assemblyTab);
         }
 
-        public void OnRocketChanged()
-        {
-            window.ExecuteRecursively((uIElement) =>
-            {
-                if (uIElement is IRocketUIDataConsumer rocketDataConsumer)
-                    rocketDataConsumer.Rocket = Rocket;
-            });
-        }
-
         public void OnShow()
         {
+            Initialize();
+            assemblyTab.LaunchPad = LaunchPad;
+
             window.ExecuteRecursively((uIElement) =>
             {
-                if (uIElement is IRocketUIDataConsumer rocketDataConsumer)
-                {
-                    rocketDataConsumer.Rocket = Rocket;
-                    rocketDataConsumer.OnRocketChanged();
-                }
-
                 if (uIElement is ITabUIElement tab)
                     tab.OnTabOpen();
             });

@@ -40,7 +40,7 @@ namespace Macrocosm.Content.Tiles.Banners
 
             DustType = ModContent.DustType<DianiteDust>(); // placeholder
 
-            RegisterItemDrop(ModContent.ItemType<Items.Placeable.Banners.MercurianBanner>(), 0, 1);
+            RegisterItemDrop(ModContent.ItemType<Items.Banners.MercurianBanner>(), 0, 1);
 
             LocalizedText name = CreateMapEntryName();
             AddMapEntry(new Color(251, 105, 15), name);

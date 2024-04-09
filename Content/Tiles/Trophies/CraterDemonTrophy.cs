@@ -25,7 +25,7 @@ namespace Macrocosm.Content.Tiles.Trophies
 
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
-            Item.NewItem(new EntitySource_TileBreak(i, j), i * 16, j * 16, 32, 32, ModContent.ItemType<Items.Placeable.Trophies.CraterDemonTrophy>());
+            Item.NewItem(new EntitySource_TileBreak(i, j), i * 16, j * 16, 32, 32, ModContent.ItemType<Items.Trophies.CraterDemonTrophy>());
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Projectiles.Environment.Sands
         {
             ProjectileID.Sets.ForcePlateDetection[Type] = true;
             ProjectileID.Sets.FallingBlockDoesNotFallThroughPlatforms[Type] = true;
-            ProjectileID.Sets.FallingBlockTileItem[Type] = new(ModContent.TileType<Tiles.Blocks.SilicaEbonsand>());
+            ProjectileID.Sets.FallingBlockTileItem[Type] = new(ModContent.TileType<Tiles.Blocks.Sands.SilicaEbonsand>());
         }
 
         public override void SetDefaults()
