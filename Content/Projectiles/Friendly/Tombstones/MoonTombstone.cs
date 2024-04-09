@@ -1,6 +1,6 @@
 ﻿using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Tiles.Blocks;
+using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Tombstones

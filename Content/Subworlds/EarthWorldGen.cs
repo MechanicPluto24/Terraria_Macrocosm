@@ -1,5 +1,5 @@
 ﻿using Macrocosm.Common.Utils;
-using Macrocosm.Content.Tiles.Blocks;
+using Macrocosm.Content.Tiles.Blocks.Sands;
 using Macrocosm.Content.Tiles.Ores;
 using System.Collections.Generic;
 using Terraria;

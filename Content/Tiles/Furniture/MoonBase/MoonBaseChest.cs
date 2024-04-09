@@ -1,6 +1,6 @@
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.CursorIcons;
-using Macrocosm.Content.Items.Tools;
+using Macrocosm.Content.Items.Materials.Drops;
 using Macrocosm.Content.Players;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -21,10 +21,6 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
     public class MoonBaseChest : ModTile
     {
         private static Asset<Texture2D> glowmask;
-        public override void Load()
-        {
-            glowmask = ModContent.Request<Texture2D>(Texture + "_Glow");
-        }
 
         public enum State
         {
@@ -79,7 +75,7 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 
             // Style 1 is the chest when locked. We want that tile style to drop the chest item as well. Use the Chest Lock item to lock this chest.
             // No item places chest in the locked style, so the automatically determined item drop is unknown, this is why RegisterItemDrop is necessary in this situation. 
-            RegisterItemDrop(ModContent.ItemType<Items.Placeable.Furniture.MoonBase.MoonBaseChest>(), 1);
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.MoonBase.MoonBaseChest>(), 1);
 
             // Sometimes mods remove content, such as tile styles, or tiles accidentally get corrupted.
             // We can, if desired, register a fallback item for any tile style that doesn't have an automatically determined item drop.
@@ -278,7 +274,7 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 
                 if (player.cursorItemIconText == defaultName)
                 {
-                    player.cursorItemIconID = ModContent.ItemType<Items.Placeable.Furniture.MoonBase.MoonBaseChest>();
+                    player.cursorItemIconID = ModContent.ItemType<Items.Furniture.MoonBase.MoonBaseChest>();
 
                     if (GetState(left, top) is State.Locked)
                     {
@@ -317,6 +313,8 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
             Vector2 zero = Main.drawToScreen ? Vector2.Zero : new Vector2(Main.offScreenRange);
 
             int height = TileObjectData.GetTileData(tile).CoordinateHeights[tile.TileFrameY / 18 % 2];
+
+            glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
 
             spriteBatch.Draw(
                 glowmask.Value,

@@ -50,7 +50,7 @@ namespace Macrocosm.Content.Tiles.Furniture
 
             AddMapEntry(new Color(192, 137, 39), CreateMapEntryName());
 
-            RegisterItemDrop(ModContent.ItemType<Items.Placeable.Furniture.ConstructionLight>(), 0, 1);
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.ConstructionLight>(), 0, 1);
         }
 
         public override void HitWire(int i, int j)

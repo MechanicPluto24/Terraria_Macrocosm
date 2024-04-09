@@ -45,7 +45,7 @@ namespace Macrocosm.Common.Utils
         {
             if (setTime) { projectile.timeLeft = 10; }
             Entity target = getTarget == null ? null : getTarget(projectile, owner);
-            if (target == null) { target = owner; }
+            target ??= owner;
             bool targetOwner = target == owner;
             ai[0] += 1f;
             if (ai[0] > vineTimeExtend)
@@ -58,7 +58,7 @@ namespace Macrocosm.Common.Utils
             {
                 float distTargetX = targetCenter.X - endPoint.X;
                 float distTargetY = targetCenter.Y - endPoint.Y;
-                float distTarget = (float)Math.Sqrt(distTargetX * distTargetX + distTargetY * distTargetY);
+                float distTarget = (float)Math.Sqrt((distTargetX * distTargetX) + (distTargetY * distTargetY));
                 if (distTarget > vineLength)
                 {
                     projectile.velocity *= 0.85f;
@@ -154,7 +154,11 @@ namespace Macrocosm.Common.Utils
             projectile.timeLeft = 10;
             bool tileCollide = projectile.tileCollide;
             AIMinionFlier(projectile, ref ai, owner, ref tileCollide, ref projectile.netUpdate, pet ? 0 : projectile.minionPos, movementFixed, hover, hoverHeight, lineDist, returnDist, teleportDist, moveInterval, maxSpeed, maxSpeedFlying, getTarget, shootTarget);
-            if (!dummyTileCollide) projectile.tileCollide = tileCollide;
+            if (!dummyTileCollide)
+            {
+                projectile.tileCollide = tileCollide;
+            }
+
             if (autoSpriteDir) { projectile.spriteDirection = projectile.direction; }
             if (ai[0] == 1) { projectile.spriteDirection = owner.velocity.X == 0 ? projectile.spriteDirection : owner.velocity.X > 0 ? 1 : -1; }
             if ((getTarget == null || getTarget(projectile, owner) == null || getTarget(projectile, owner) == owner) && Math.Abs(projectile.velocity.X + projectile.velocity.Y) <= 0.025f) { projectile.spriteDirection = owner.Center.X > projectile.Center.X ? 1 : -1; }
@@ -187,24 +191,24 @@ namespace Macrocosm.Common.Utils
             float prevAI = ai[0];
             ai[0] = ai[0] == 1 && (dist > Math.Max(lineDist, returnDist / 2f) || !Utility.CanHit(codable.Hitbox, owner.Hitbox)) || dist > returnDist || inTile ? 1 : 0;
             if (ai[0] != prevAI) { netUpdate = true; }
-            if (ai[0] == 0 || ai[0] == 1)
+            if (ai[0] is 0 or 1)
             {
                 if (ai[0] == 1) { moveInterval *= 1.5f; maxSpeedFlying *= 1.5f; }
                 tileCollide = ai[0] == 0;
                 Entity target = getTarget == null ? owner : getTarget(codable, owner);
-                if (target == null) { target = owner; }
+                target ??= owner;
                 Vector2 targetCenter = target.Center;
                 bool isOwner = target == owner;
                 bool dontMove = ai[0] == 0 && shootTarget != null && shootTarget(codable, owner, target);
                 if (isOwner)
                 {
                     targetCenter.Y -= hoverHeight;
-                    if (hover) { targetCenter.X += (lineDist + lineDist * minionPos) * -target.direction; }
+                    if (hover) { targetCenter.X += (lineDist + (lineDist * minionPos)) * -target.direction; }
                 }
                 if (!hover || !isOwner)
                 {
                     float dirDist = hover ? 1.2f : 1.8f;
-                    float dir = dist < lineDist * minionPos + lineDist * dirDist ? codable.velocity.X > 0 ? 1f : -1f : target.Center.X > codable.Center.X ? 1f : -1f;
+                    float dir = dist < (lineDist * minionPos) + (lineDist * dirDist) ? codable.velocity.X > 0 ? 1f : -1f : target.Center.X > codable.Center.X ? 1f : -1f;
                     //Semierratic movement so it looks more like a swarm and less like synchronized swimmers.
                     targetCenter.X += (minionPos == 0 ? 0f : minionPos % 5 == 0 ? lineDist / 4f : minionPos % 4 == 0 ? lineDist / 2f : minionPos % 3 == 0 ? lineDist / 3f : 0f) * dir;
                     targetCenter.X += lineDist * 2f * dir;
@@ -278,7 +282,7 @@ namespace Macrocosm.Common.Utils
                 if (targetCenter == default)
                 {
                     targetCenter = owner.Center;
-                    targetCenter.X += (owner.width + 10 + lineDist * minionPos) * -owner.direction;
+                    targetCenter.X += (owner.width + 10 + (lineDist * minionPos)) * -owner.direction;
                 }
                 float targetDistX = Math.Abs(codable.Center.X - targetCenter.X);
                 float targetDistY = Math.Abs(codable.Center.Y - targetCenter.Y);
@@ -312,7 +316,7 @@ namespace Macrocosm.Common.Utils
                 {
                     if (codable.velocity.X < 0f && moveDirection == -1 || codable.velocity.X > 0f && moveDirection == 1)
                     {
-                        bool test = target != null && !isOwner && targetDistX < 50f && targetDistY > codable.height + codable.height / 2 && targetDistY < 16f * (jumpDistY + 1) && Utility.CanHit(codable.Hitbox, target.Hitbox);
+                        bool test = target != null && !isOwner && targetDistX < 50f && targetDistY > codable.height + (codable.height / 2) && targetDistY < 16f * (jumpDistY + 1) && Utility.CanHit(codable.Hitbox, target.Hitbox);
                         Vector2 newVec = AttemptJump(codable.position, codable.velocity, codable.width, codable.height, moveDirection, moveDirectionY, jumpDistX, jumpDistY, maxSpeed, true, target, test);
                         if (tileCollide)
                         {
@@ -390,7 +394,7 @@ namespace Macrocosm.Common.Utils
                 if (targetCenter == default)
                 {
                     targetCenter = owner.Center;
-                    targetCenter.X += (lineDist + lineDist * minionPos) * -owner.direction;
+                    targetCenter.X += (lineDist + (lineDist * minionPos)) * -owner.direction;
                 }
                 float targetDistX = Math.Abs(codable.Center.X - targetCenter.X);
                 int moveDirection = targetCenter.X > codable.Center.X ? 1 : -1;
@@ -821,11 +825,11 @@ namespace Macrocosm.Common.Utils
                     {
                         moreFrames = true;
                     }
-                    if (angleVector.X * (projectile.extraUpdates + 1) * 2f * velSpeed + projectile.localAI[0] > changeAngleAt)
+                    if ((angleVector.X * (projectile.extraUpdates + 1) * 2f * velSpeed) + projectile.localAI[0] > changeAngleAt)
                     {
                         moreFrames = true;
                     }
-                    if (angleVector.X * (projectile.extraUpdates + 1) * 2f * velSpeed + projectile.localAI[0] < -changeAngleAt)
+                    if ((angleVector.X * (projectile.extraUpdates + 1) * 2f * velSpeed) + projectile.localAI[0] < -changeAngleAt)
                     {
                         moreFrames = true;
                     }
@@ -871,7 +875,11 @@ namespace Macrocosm.Common.Utils
         public static void AIProjWorm(Projectile p, ref int npcTargetToAttack, int[] wormTypes, float velScalar = 1f, float velScalarIdle = 1f, float velocityMax = 30f, float velocityMaxIdle = 15f)
         {
             Player plrOwner = Main.player[p.owner];
-            if ((int)Main.time % 120 == 0) p.netUpdate = true;
+            if ((int)Main.time % 120 == 0)
+            {
+                p.netUpdate = true;
+            }
+
             if (!plrOwner.active) { p.active = false; return; }
             bool isHead = p.type == wormTypes[0];
             bool isWorm = Utility.InArray(wormTypes, p.type);
@@ -937,11 +945,19 @@ namespace Macrocosm.Common.Utils
                 {
                     NPC npcTarget2 = Main.npc[target];
                     Vector2 npcDist = npcTarget2.Center - p.Center;
-                    (npcDist.X > 0f).ToDirectionInt();
-                    (npcDist.Y > 0f).ToDirectionInt();
+                    _ = (npcDist.X > 0f).ToDirectionInt();
+                    _ = (npcDist.Y > 0f).ToDirectionInt();
                     float velocityScalar = 0.4f;
-                    if (npcDist.Length() < 600f) velocityScalar = 0.6f;
-                    if (npcDist.Length() < 300f) velocityScalar = 0.8f;
+                    if (npcDist.Length() < 600f)
+                    {
+                        velocityScalar = 0.6f;
+                    }
+
+                    if (npcDist.Length() < 300f)
+                    {
+                        velocityScalar = 0.8f;
+                    }
+
                     velocityScalar *= velScalar;
                     if (npcDist.Length() > npcTarget2.Size.Length() * 0.75f)
                     {
@@ -1002,7 +1018,7 @@ namespace Macrocosm.Common.Utils
                 }
                 float scaleChange = MathHelper.Clamp(p.localAI[0], 0f, 50f);
                 p.position = p.Center;
-                p.scale = 1f + scaleChange * 0.01f;
+                p.scale = 1f + (scaleChange * 0.01f);
                 p.width = p.height = (int)(wormWidthHeight * p.scale);
                 p.Center = p.position;
                 if (p.alpha > 0)
@@ -1070,7 +1086,7 @@ namespace Macrocosm.Common.Utils
                 p.Center = p.position;
                 if (centerDist != Vector2.Zero)
                 {
-                    p.Center = projCenter - Vector2.Normalize(centerDist) * tileScalar * projectileScale;
+                    p.Center = projCenter - (Vector2.Normalize(centerDist) * tileScalar * projectileScale);
                 }
                 p.spriteDirection = centerDist.X > 0f ? 1 : -1;
             }
@@ -1083,7 +1099,10 @@ namespace Macrocosm.Common.Utils
 
         public static void AIProjSpaceOctopus(Projectile projectile, ref float[] ai, int parentNPCType, int fireProjType = -1, float shootVelocity = 16f, float hoverTime = 210f, float xMult = 0.15f, float yMult = 0.075f, int fireDmg = -1, bool useParentTarget = true, bool noParentHover = false, Action<int, Projectile> spawnDust = null)
         {
-            if (fireDmg == -1) fireDmg = projectile.damage;
+            if (fireDmg == -1)
+            {
+                fireDmg = projectile.damage;
+            }
 
             ai[0] += 1f;
             if (ai[0] < hoverTime)
@@ -1156,7 +1175,7 @@ namespace Macrocosm.Common.Utils
                 {
                     if (Main.netMode != NetmodeID.MultiplayerClient && Collision.CanHitLine(projectile.Center, 0, 0, Main.player[parentTarget].Center, 0, 0))
                     {
-                        Projectile.NewProjectile(projectile.GetSource_FromAI(), projectile.Center.X, projectile.Center.Y, distVecNormal.X * shootVelocity, distVecNormal.Y * shootVelocity, fireProjType, fireDmg, 1f, Main.myPlayer);
+                        _ = Projectile.NewProjectile(projectile.GetSource_FromAI(), projectile.Center.X, projectile.Center.Y, distVecNormal.X * shootVelocity, distVecNormal.Y * shootVelocity, fireProjType, fireDmg, 1f, Main.myPlayer);
                     }
                     ai[0] = 0f;
                 }
@@ -1170,9 +1189,21 @@ namespace Macrocosm.Common.Utils
 
         public static void AIYoyo(Projectile p, ref float[] ai, ref float[] localAI, float yoyoTimeMax = -1, float maxRange = -1, float topSpeed = -1, bool dontChannel = false, float rotAmount = 0.45f)
         {
-            if (yoyoTimeMax == -1) yoyoTimeMax = ProjectileID.Sets.YoyosLifeTimeMultiplier[p.type];
-            if (maxRange == -1) maxRange = ProjectileID.Sets.YoyosMaximumRange[p.type];
-            if (topSpeed == -1) topSpeed = ProjectileID.Sets.YoyosTopSpeed[p.type];
+            if (yoyoTimeMax == -1)
+            {
+                yoyoTimeMax = ProjectileID.Sets.YoyosLifeTimeMultiplier[p.type];
+            }
+
+            if (maxRange == -1)
+            {
+                maxRange = ProjectileID.Sets.YoyosMaximumRange[p.type];
+            }
+
+            if (topSpeed == -1)
+            {
+                topSpeed = ProjectileID.Sets.YoyosTopSpeed[p.type];
+            }
+
             AIYoyo(p, ref ai, ref localAI, Main.player[p.owner], Main.player[p.owner].channel, default, yoyoTimeMax, maxRange, topSpeed, dontChannel, rotAmount);
         }
 
@@ -1182,23 +1213,36 @@ namespace Macrocosm.Common.Utils
             Player powner = playerYoyo ? (Player)owner : null;
             float meleeSpeed = playerYoyo ? powner.GetAttackSpeed(DamageClass.Melee) : 1f;
             Vector2 targetP = targetPos;
-            if (playerYoyo && Main.myPlayer == p.owner && targetPos == default) targetP = Main.ReverseGravitySupport(Main.MouseScreen) + Main.screenPosition;
+            if (playerYoyo && Main.myPlayer == p.owner && targetPos == default)
+            {
+                targetP = Main.ReverseGravitySupport(Main.MouseScreen) + Main.screenPosition;
+            }
 
             bool yoyoFound = false;
             if (owner is Player)
             {
                 for (int i = 0; i < p.whoAmI; i++)
                 {
-                    if (Main.projectile[i].active && Main.projectile[i].owner == p.owner && Main.projectile[i].type == p.type) yoyoFound = true;
+                    if (Main.projectile[i].active && Main.projectile[i].owner == p.owner && Main.projectile[i].type == p.type)
+                    {
+                        yoyoFound = true;
+                    }
                 }
             }
             if (playerYoyo && p.owner == Main.myPlayer || !playerYoyo && Main.netMode != NetmodeID.MultiplayerClient)
             {
                 localAI[0] += 1f;
-                if (yoyoFound) localAI[0] += Main.rand.Next(10, 31) * 0.1f;
+                if (yoyoFound)
+                {
+                    localAI[0] += Main.rand.Next(10, 31) * 0.1f;
+                }
+
                 float yoyoTimeLeft = localAI[0] / 60f;
                 yoyoTimeLeft /= (1f + meleeSpeed) / 2f;
-                if (yoyoTimeMax != -1f && yoyoTimeLeft > yoyoTimeMax) ai[0] = -1f;
+                if (yoyoTimeMax != -1f && yoyoTimeLeft > yoyoTimeMax)
+                {
+                    ai[0] = -1f;
+                }
             }
             if (playerYoyo && powner.dead || !playerYoyo && !owner.active) { p.Kill(); return; }
             if (playerYoyo && !dontChannel && !yoyoFound)
@@ -1206,7 +1250,7 @@ namespace Macrocosm.Common.Utils
                 powner.heldProj = p.whoAmI;
                 powner.itemAnimation = 2;
                 powner.itemTime = 2;
-                if (p.position.X + p.width / 2 > powner.position.X + powner.width / 2)
+                if (p.position.X + (p.width / 2) > powner.position.X + (powner.width / 2))
                 {
                     powner.ChangeDir(1);
                     p.direction = 1;
@@ -1217,18 +1261,22 @@ namespace Macrocosm.Common.Utils
                     p.direction = -1;
                 }
             }
-            if (p.velocity.HasNaNs()) p.Kill();
+            if (p.velocity.HasNaNs())
+            {
+                p.Kill();
+            }
+
             p.timeLeft = 6;
             float pMaxRange = maxRange;
             float pTopSpeed = topSpeed;
             if (playerYoyo && powner.yoyoString)
             {
-                pMaxRange = pMaxRange * 1.25f + 30f;
+                pMaxRange = (pMaxRange * 1.25f) + 30f;
             }
-            pMaxRange /= (1f + meleeSpeed * 3f) / 4f;
-            pTopSpeed /= (1f + meleeSpeed * 3f) / 4f;
-            float topSpeedX = 14f - pTopSpeed / 2f;
-            float topSpeedY = 5f + pTopSpeed / 2f;
+            pMaxRange /= (1f + (meleeSpeed * 3f)) / 4f;
+            pTopSpeed /= (1f + (meleeSpeed * 3f)) / 4f;
+            float topSpeedX = 14f - (pTopSpeed / 2f);
+            float topSpeedY = 5f + (pTopSpeed / 2f);
             if (yoyoFound)
             {
                 topSpeedY += 20f;
@@ -1301,21 +1349,36 @@ namespace Macrocosm.Common.Utils
                     {
                         topSpeedX /= 2f;
                         pTopSpeed *= 2f;
-                        if (p.Center.X > owner.Center.X && p.velocity.X > 0f) p.velocity.X *= 0.5f;
-                        if (p.Center.Y > owner.Center.Y && p.velocity.Y > 0f) p.velocity.Y *= 0.5f;
-                        if (p.Center.X < owner.Center.X && p.velocity.X > 0f) p.velocity.X *= 0.5f;
-                        if (p.Center.Y < owner.Center.Y && p.velocity.Y > 0f) p.velocity.Y *= 0.5f;
+                        if (p.Center.X > owner.Center.X && p.velocity.X > 0f)
+                        {
+                            p.velocity.X *= 0.5f;
+                        }
+
+                        if (p.Center.Y > owner.Center.Y && p.velocity.Y > 0f)
+                        {
+                            p.velocity.Y *= 0.5f;
+                        }
+
+                        if (p.Center.X < owner.Center.X && p.velocity.X > 0f)
+                        {
+                            p.velocity.X *= 0.5f;
+                        }
+
+                        if (p.Center.Y < owner.Center.Y && p.velocity.Y > 0f)
+                        {
+                            p.velocity.Y *= 0.5f;
+                        }
                     }
                     Vector2 coord = new(ai[0], ai[1]);
                     Vector2 coordDist = coord - p.Center;
-                    p.velocity.Length();
+                    _ = p.velocity.Length();
                     float coordLength = coordDist.Length();
                     if (coordLength > topSpeedY)
                     {
                         coordDist.Normalize();
                         float scaleFactor = coordLength > pTopSpeed * 2f ? pTopSpeed : coordLength / 2f;
                         coordDist *= scaleFactor;
-                        p.velocity = (p.velocity * (topSpeedX - 1f) + coordDist) / topSpeedX;
+                        p.velocity = ((p.velocity * (topSpeedX - 1f)) + coordDist) / topSpeedX;
                     }
                     else if (yoyoFound)
                     {
@@ -1324,7 +1387,7 @@ namespace Macrocosm.Common.Utils
                             coordDist = p.velocity;
                             coordDist.Normalize();
                             coordDist *= pTopSpeed * 0.6f;
-                            p.velocity = (p.velocity * (topSpeedX - 1f) + coordDist) / topSpeedX;
+                            p.velocity = ((p.velocity * (topSpeedX - 1f)) + coordDist) / topSpeedX;
                         }
                     }
                     else
@@ -1353,7 +1416,7 @@ namespace Macrocosm.Common.Utils
                 {
                     posDist.Normalize();
                     posDist *= pTopSpeed;
-                    p.velocity = (p.velocity * (topSpeedX - 1f) + posDist) / topSpeedX;
+                    p.velocity = ((p.velocity * (topSpeedX - 1f)) + posDist) / topSpeedX;
                 }
             }
             p.rotation += rotAmount;
@@ -1683,7 +1746,7 @@ namespace Macrocosm.Common.Utils
         public static void EntityCollideYoyo(Projectile p, ref float[] ai, ref float[] localAI, Entity owner, Entity target, bool spawnCounterweight = true, float velMult = 1f)
         {
             if (owner is Player player && spawnCounterweight) { player.Counterweight(target.Center, p.damage, p.knockBack); }
-            if (target.Center.X < owner.Center.X) { p.direction = -1; } else { p.direction = 1; }
+            p.direction = target.Center.X < owner.Center.X ? -1 : 1;
             if (ai[0] >= 0f)
             {
                 Vector2 value2 = p.Center - target.Center;
@@ -1713,7 +1776,10 @@ namespace Macrocosm.Common.Utils
         {
             if (landingHorizon != -1)
             {
-                if (p.position.Y > landingHorizon) p.tileCollide = true;
+                if (p.position.Y > landingHorizon)
+                {
+                    p.tileCollide = true;
+                }
             }
             else
             {
@@ -1722,9 +1788,15 @@ namespace Macrocosm.Common.Utils
                     ai[0] = 1f;
                     p.netUpdate = true;
                 }
-                if (ai[0] != 0f) p.tileCollide = true;
+                if (ai[0] != 0f)
+                {
+                    p.tileCollide = true;
+                }
             }
-            if (fadein) p.alpha = Math.Max(0, p.alpha - 25);
+            if (fadein)
+            {
+                p.alpha = Math.Max(0, p.alpha - 25);
+            }
         }
 
         /*
@@ -1885,7 +1957,7 @@ namespace Macrocosm.Common.Utils
                         float dustY = p.velocity.Y / 3f * m;
                         int offset = 1;
                         Vector2 pos = new(p.position.X - offset, p.position.Y - offset);
-                        int width = p.width + offset * 2; int height = p.height + offset * 2;
+                        int width = p.width + (offset * 2); int height = p.height + (offset * 2);
                         int dustID = spawnDust(p, pos, width, height);
                         if (dustID != -1)
                         {
@@ -1900,7 +1972,7 @@ namespace Macrocosm.Common.Utils
                     {
                         int offset = 1;
                         Vector2 pos = new(p.position.X - offset, p.position.Y - offset);
-                        int width = p.width + offset * 2; int height = p.height + offset * 2;
+                        int width = p.width + (offset * 2); int height = p.height + (offset * 2);
                         int dustID = spawnDust(p, pos, width, height);
                         if (dustID != -1)
                         {
@@ -1915,7 +1987,10 @@ namespace Macrocosm.Common.Utils
                 p.scale -= scaleReduce;
                 if (p.scale <= 0f) { p.Kill(); }
                 p.velocity.Y += gravity;
-                if (Main.netMode != NetmodeID.Server && spawnDust != null) spawnDust(p, p.position, p.width, p.height);
+                if (Main.netMode != NetmodeID.Server && spawnDust != null)
+                {
+                    _ = spawnDust(p, p.position, p.width, p.height);
+                }
             }
         }
 
@@ -1971,8 +2046,8 @@ namespace Macrocosm.Common.Utils
         public static void AISpear(Projectile p, ref float[] ai, Vector2 center, int ownerDirection, int itemAnimation, int itemAnimationMax, float initialSpeed = 3f, float moveOutward = 1.4f, float moveInward = 1.6f, bool overrideKill = false, bool frozen = false)
         {
             p.direction = ownerDirection;
-            p.position.X = center.X - p.width * 0.5f;
-            p.position.Y = center.Y - p.height * 0.5f;
+            p.position.X = center.X - (p.width * 0.5f);
+            p.position.Y = center.Y - (p.height * 0.5f);
             if (ai[0] == 0f) { ai[0] = initialSpeed; p.netUpdate = true; }
             if (!frozen)
             {
@@ -2007,7 +2082,7 @@ namespace Macrocosm.Common.Utils
             if (playSound && p.soundDelay == 0 && !Main.dedServ)
             {
                 p.soundDelay = 8;
-                SoundEngine.PlaySound(SoundID.Item7, p.position);
+                _ = SoundEngine.PlaySound(SoundID.Item7, p.position);
             }
             if (ai[0] == 0f)
             {
@@ -2024,7 +2099,7 @@ namespace Macrocosm.Common.Utils
                 p.tileCollide = false;
                 float distPlayerX = center.X - p.Center.X;
                 float distPlayerY = center.Y - p.Center.Y;
-                float distPlayer = (float)Math.Sqrt(distPlayerX * distPlayerX + distPlayerY * distPlayerY);
+                float distPlayer = (float)Math.Sqrt((distPlayerX * distPlayerX) + (distPlayerY * distPlayerY));
                 if (distPlayer > 3000f)
                 {
                     p.Kill();
@@ -2119,7 +2194,7 @@ namespace Macrocosm.Common.Utils
             p.direction = p.Center.X > connectedPoint.X ? 1 : -1;
             float pointX = connectedPoint.X - p.Center.X;
             float pointY = connectedPoint.Y - p.Center.Y;
-            float pointDist = (float)Math.Sqrt(pointX * pointX + pointY * pointY);
+            float pointDist = (float)Math.Sqrt((pointX * pointX) + (pointY * pointY));
             if (ai[0] == 0f)
             {
                 p.tileCollide = true;
@@ -2144,8 +2219,8 @@ namespace Macrocosm.Common.Utils
                 float meleeSpeed1 = 14f / meleeSpeed;
                 float meleeSpeed2 = 0.9f / meleeSpeed;
                 float maxBallDistance = chainDistance + 140f;
-                Math.Abs(pointX);
-                Math.Abs(pointY);
+                _ = Math.Abs(pointX);
+                _ = Math.Abs(pointY);
                 if (ai[1] == 1f) { p.tileCollide = false; }
                 if (!channel || pointDist > maxBallDistance || !p.tileCollide)
                 {
@@ -2165,7 +2240,7 @@ namespace Macrocosm.Common.Utils
                     pointY *= pointDist;
                     float pointX2 = pointX - p.velocity.X;
                     float pointY2 = pointY - p.velocity.Y;
-                    float pointDist2 = (float)Math.Sqrt(pointX2 * pointX2 + pointY2 * pointY2);
+                    float pointDist2 = (float)Math.Sqrt((pointX2 * pointX2) + (pointY2 * pointY2));
                     pointDist2 = meleeSpeed2 / pointDist2;
                     pointX2 *= pointDist2;
                     pointY2 *= pointDist2;
@@ -2184,7 +2259,7 @@ namespace Macrocosm.Common.Utils
                     if (connectedPointVelocity.X == 0f) { p.velocity.X *= 0.96f; }
                 }
             }
-            p.rotation = (float)Math.Atan2(pointY, pointX) - p.velocity.X * 0.1f;
+            p.rotation = (float)Math.Atan2(pointY, pointX) - (p.velocity.X * 0.1f);
         }
 
         ///<summary>
@@ -2213,7 +2288,9 @@ namespace Macrocosm.Common.Utils
                     p.netUpdate = true;
                     Collision.HitTiles(p.position, p.velocity, p.width, p.height);
                     if (playSound && !Main.dedServ)
-                        SoundEngine.PlaySound(SoundID.Dig, p.position);
+                    {
+                        _ = SoundEngine.PlaySound(SoundID.Dig, p.position);
+                    }
                 }
             }
         }
@@ -2253,7 +2330,10 @@ namespace Macrocosm.Common.Utils
                         }
                     }
                 }
-                if (stick) break;
+                if (stick)
+                {
+                    break;
+                }
             }
             return stick;
         }
@@ -2282,10 +2362,7 @@ namespace Macrocosm.Common.Utils
                         dist.Normalize();
                         if (dist.X == 0f && dist.Y == 0f)
                         {
-                            if (m > npc.whoAmI)
-                                dist.X = 1f;
-                            else
-                                dist.X = -1f;
+                            dist.X = m > npc.whoAmI ? 1f : -1f;
                         }
                         dist *= 0.4f;
                         npc.velocity -= dist;
@@ -2302,7 +2379,9 @@ namespace Macrocosm.Common.Utils
                     if (npc.localAI[0] == 0f)
                     {
                         if (!Main.dedServ)
-                            SoundEngine.PlaySound(SoundID.Item8, npc.Center);
+                        {
+                            _ = SoundEngine.PlaySound(SoundID.Item8, npc.Center);
+                        }
 
                         npc.TargetClosest();
                         if (npc.direction > 0)
@@ -2319,7 +2398,7 @@ namespace Macrocosm.Common.Utils
                         }
                     }
                     npc.localAI[0] += 1f;
-                    float timerPartial = 1f - npc.localAI[0] / timerMax;
+                    float timerPartial = 1f - (npc.localAI[0] / timerMax);
                     float timerPartialTimes20 = timerPartial * 20f;
                     int nextNPC = 0;
                     while (nextNPC < timerPartialTimes20)
@@ -2341,28 +2420,35 @@ namespace Macrocosm.Common.Utils
                 npc.velocity.X += npc.ai[1] * velIntervalX;
 
                 if (npc.velocity.X > velMaxX)
+                {
                     npc.velocity.X = velMaxX;
+                }
                 else if (npc.velocity.X < -velMaxX)
+                {
                     npc.velocity.X = -velMaxX;
+                }
 
                 float playerDistY = Main.player[npc.target].Center.Y - npc.Center.Y;
                 if (Math.Abs(playerDistY) > velMaxY)
+                {
                     velScalarY = velScalarYMax;
+                }
 
                 if (playerDistY > velMaxY)
+                {
                     playerDistY = velMaxY;
+                }
                 else if (playerDistY < -velMaxY)
+                {
                     playerDistY = -velMaxY;
+                }
 
-                npc.velocity.Y = (npc.velocity.Y * (velScalarY - 1f) + playerDistY) / velScalarY;
+                npc.velocity.Y = ((npc.velocity.Y * (velScalarY - 1f)) + playerDistY) / velScalarY;
                 if (npc.ai[1] > 0f && Main.player[npc.target].Center.X - npc.Center.X < -distanceBeforeTakeoff || npc.ai[1] < 0f && Main.player[npc.target].Center.X - npc.Center.X > distanceBeforeTakeoff)
                 {
                     npc.ai[0] = 2f;
                     npc.ai[1] = 0f;
-                    if (npc.Center.Y + 20f > Main.player[npc.target].Center.Y)
-                        npc.ai[1] = -1f;
-                    else
-                        npc.ai[1] = 1f;
+                    npc.ai[1] = npc.Center.Y + 20f > Main.player[npc.target].Center.Y ? -1f : 1f;
                 }
             }
             else if (npc.ai[0] == 2f)
@@ -2370,7 +2456,9 @@ namespace Macrocosm.Common.Utils
                 npc.velocity.Y += npc.ai[1] * velIntervalYTurn;
 
                 if (npc.velocity.Length() > velIntervalMaxTurn)
+                {
                     npc.velocity *= velIntervalScalar;
+                }
 
                 if (npc.velocity.X is > -1f and < 1f)
                 {
@@ -2384,12 +2472,18 @@ namespace Macrocosm.Common.Utils
                 npc.velocity.X += npc.ai[1] * velIntervalXTurn;
 
                 if (npc.Center.Y > Main.player[npc.target].Center.Y)
+                {
                     npc.velocity.Y -= velIntervalY;
+                }
                 else
+                {
                     npc.velocity.Y += velIntervalY;
+                }
 
                 if (npc.velocity.Length() > velIntervalMaxTurn)
+                {
                     npc.velocity *= velIntervalScalar;
+                }
 
                 if (npc.velocity.Y is > -1f and < 1f)
                 {
@@ -2470,9 +2564,21 @@ namespace Macrocosm.Common.Utils
         public static void AIElemental(NPC npc, ref float[] ai, ref int idleTimer, bool? noDamageMode = null, int noDamageTimeMax = 120, bool gravityChange = true, bool tileCollideChange = true, float startPhaseDist = 800f, float stopPhaseDist = 600f, int idleTooLong = 180, float velSpeed = 2f)
         {
             bool noDmg = noDamageMode == null ? Main.expertMode : (bool)noDamageMode;
-            if (gravityChange) npc.noGravity = true;
-            if (tileCollideChange) npc.noTileCollide = false;
-            if (noDmg) npc.dontTakeDamage = false;
+            if (gravityChange)
+            {
+                npc.noGravity = true;
+            }
+
+            if (tileCollideChange)
+            {
+                npc.noTileCollide = false;
+            }
+
+            if (noDmg)
+            {
+                npc.dontTakeDamage = false;
+            }
+
             Player targetPlayer = npc.target < 0 ? null : Main.player[npc.target];
             Vector2 playerCenter = targetPlayer == null ? npc.Center + new Vector2(0, 5f) : targetPlayer.Center;
 
@@ -2484,8 +2590,16 @@ namespace Macrocosm.Common.Utils
             }
             if (ai[0] == -1f) //immortal
             {
-                if (noDmg) npc.dontTakeDamage = true;
-                if (gravityChange) npc.noGravity = false;
+                if (noDmg)
+                {
+                    npc.dontTakeDamage = true;
+                }
+
+                if (gravityChange)
+                {
+                    npc.noGravity = false;
+                }
+
                 npc.velocity.X *= 0.98f;
                 ai[1] += 1f;
                 if (ai[1] >= noDamageTimeMax)
@@ -2557,7 +2671,7 @@ namespace Macrocosm.Common.Utils
                 float speedAdjuster = 50f;
                 distDiff.Normalize();
                 distDiff *= velSpeed2;
-                npc.velocity = (npc.velocity * (speedAdjuster - 1) + distDiff) / speedAdjuster;
+                npc.velocity = ((npc.velocity * (speedAdjuster - 1)) + distDiff) / speedAdjuster;
                 if (!Collision.CanHit(npc.Center, 1, 1, playerCenter, 1, 1))
                 {
                     ai[0] = 0f;
@@ -2573,7 +2687,7 @@ namespace Macrocosm.Common.Utils
                 float speedAdjusterPhase = 4f;
                 distDiff.Normalize();
                 distDiff *= velSpeedPhase;
-                npc.velocity = (npc.velocity * (speedAdjusterPhase - 1) + distDiff) / speedAdjusterPhase;
+                npc.velocity = ((npc.velocity * (speedAdjusterPhase - 1)) + distDiff) / speedAdjusterPhase;
                 if (distLength < stopPhaseDist && !Collision.SolidCollision(npc.position, npc.width, npc.height))
                 {
                     ai[0] = 0f;
@@ -2588,7 +2702,7 @@ namespace Macrocosm.Common.Utils
                 float speedAdjusterHorizontal = 3f;
                 targetDiff.Normalize();
                 targetDiff *= velSpeedHorizontal;
-                npc.velocity = (npc.velocity * (speedAdjusterHorizontal - 1f) + targetDiff) / speedAdjusterHorizontal;
+                npc.velocity = ((npc.velocity * (speedAdjusterHorizontal - 1f)) + targetDiff) / speedAdjusterHorizontal;
                 if (npc.collideX || npc.collideY)
                 {
                     ai[0] = 4f;
@@ -2601,8 +2715,16 @@ namespace Macrocosm.Common.Utils
             }
             else if (ai[0] == 4f) //idle floating
             {
-                if (npc.collideX) npc.velocity.X *= -0.8f;
-                if (npc.collideY) npc.velocity.Y *= -0.8f;
+                if (npc.collideX)
+                {
+                    npc.velocity.X *= -0.8f;
+                }
+
+                if (npc.collideY)
+                {
+                    npc.velocity.Y *= -0.8f;
+                }
+
                 Vector2 velVec;
                 if (npc.velocity.X == 0f && npc.velocity.Y == 0f)
                 {
@@ -2616,7 +2738,7 @@ namespace Macrocosm.Common.Utils
                 velVec = npc.velocity;
                 velVec.Normalize();
                 velVec *= velSpeedIdle;
-                npc.velocity = (npc.velocity * (speedAdjusterIdle - 1f) + velVec) / speedAdjusterIdle;
+                npc.velocity = ((npc.velocity * (speedAdjusterIdle - 1f)) + velVec) / speedAdjusterIdle;
                 ai[1] += 1f;
                 if (ai[1] > idleTooLong)
                 {
@@ -2655,7 +2777,11 @@ namespace Macrocosm.Common.Utils
 
         public static void AIWeapon(NPC npc, ref float[] ai, int rotTime = 120, int moveTime = 100, float maxSpeed = 6f, float movementScalar = 1f, float rotScalar = 1f)
         {
-            if (npc.target is < 0 or 255 || Main.player[npc.target].dead) npc.TargetClosest();
+            if (npc.target is < 0 or 255 || Main.player[npc.target].dead)
+            {
+                npc.TargetClosest();
+            }
+
             AIWeapon(npc, ref ai, ref npc.rotation, Main.player[npc.target].Center, npc.justHit, rotTime, moveTime, maxSpeed, movementScalar, rotScalar);
         }
 
@@ -2676,7 +2802,7 @@ namespace Macrocosm.Common.Utils
                 Vector2 vector2 = codable.Center;
                 float distX = targetPos.X - vector2.X;
                 float distY = targetPos.Y - vector2.Y;
-                float dist = (float)Math.Sqrt(distX * distX + distY * distY);
+                float dist = (float)Math.Sqrt((distX * distX) + (distY * distY));
                 float distMult = 9f / dist;
                 codable.velocity.X = distX * distMult * movementScalar;
                 codable.velocity.Y = distY * distMult * movementScalar;
@@ -2697,7 +2823,11 @@ namespace Macrocosm.Common.Utils
                 }
                 codable.velocity *= 0.99f;
                 ++ai[1];
-                if (ai[1] < moveTime) return;
+                if (ai[1] < moveTime)
+                {
+                    return;
+                }
+
                 ai[0] = 2f;
                 ai[1] = 0.0f;
                 codable.velocity.X = 0.0f;
@@ -2712,8 +2842,12 @@ namespace Macrocosm.Common.Utils
                 }
                 codable.velocity *= 0.96f;
                 ++ai[1];
-                rotation += (float)(0.1 + (double)(ai[1] / rotTime) * 0.4f) * codable.direction * rotScalar;
-                if (ai[1] < rotTime) return;
+                rotation += (float)(0.1 + ((double)(ai[1] / rotTime) * 0.4f)) * codable.direction * rotScalar;
+                if (ai[1] < rotTime)
+                {
+                    return;
+                }
+
                 if (codable is NPC nPC) { nPC.netUpdate = true; } else if (codable is Projectile projectile) { projectile.netUpdate = true; }
                 ai[0] = 0.0f;
                 ai[1] = 0.0f;
@@ -2877,9 +3011,9 @@ namespace Macrocosm.Common.Utils
                 else
                 if (npc.directionY == 1 && !npc.collideX) { snailStatus = 0; }
                 else
-                if (npc.direction == 1 && !npc.collideY) { snailStatus = 3; }
-                else
-                { snailStatus = 2; }
+                {
+                    snailStatus = npc.direction == 1 && !npc.collideY ? 3 : 2;
+                }
                 npc.velocity.X = moveInterval * npc.direction;
                 npc.velocity.Y = moveInterval * npc.directionY;
             }
@@ -2888,25 +3022,47 @@ namespace Macrocosm.Common.Utils
         public static void CollisionTest(NPC npc, ref bool left, ref bool right, ref bool up, ref bool down)
         {
             up = down = left = right = false;
-            int lengthX = npc.width / 16 + (npc.width % 16 > 0 ? 1 : 0);
-            int lengthY = npc.height / 16 + (npc.height % 16 > 0 ? 1 : 0);
+            int lengthX = (npc.width / 16) + (npc.width % 16 > 0 ? 1 : 0);
+            int lengthY = (npc.height / 16) + (npc.height % 16 > 0 ? 1 : 0);
             int xLeft = Math.Max(0, Math.Min(Main.maxTilesX - 1, (int)(npc.position.X / 16f) - 1)), xRight = Math.Max(0, Math.Min(Main.maxTilesX - 1, xLeft + lengthX + 1));
             int yUp = Math.Max(0, Math.Min(Main.maxTilesY - 1, (int)(npc.position.Y / 16f) - 1)), yDown = Math.Max(0, Math.Min(Main.maxTilesY - 1, yUp + lengthY + 1));
             //TOP/DOWN
             for (int x2 = xLeft; x2 < xRight; x2++)
             {
                 Tile tileUp = Main.tile[x2, yUp], tileDown = Main.tile[x2, yDown];
-                if (tileUp is { HasUnactuatedTile: true } && Main.tileSolid[tileUp.TileType] && !Main.tileSolidTop[tileUp.TileType]) up = true;
-                if (tileDown is { HasUnactuatedTile: true } && Main.tileSolid[tileDown.TileType]) down = true;
-                if (up && down) break;
+                if (tileUp is { HasUnactuatedTile: true } && Main.tileSolid[tileUp.TileType] && !Main.tileSolidTop[tileUp.TileType])
+                {
+                    up = true;
+                }
+
+                if (tileDown is { HasUnactuatedTile: true } && Main.tileSolid[tileDown.TileType])
+                {
+                    down = true;
+                }
+
+                if (up && down)
+                {
+                    break;
+                }
             }
             //LEFT/RIGHT
             for (int y2 = yUp; y2 < yDown; y2++)
             {
                 Tile tileLeft = Main.tile[xLeft, y2], tileRight = Main.tile[xRight, y2];
-                if (tileLeft is { HasUnactuatedTile: true } && Main.tileSolid[tileLeft.TileType] && !Main.tileSolidTop[tileLeft.TileType]) left = true;
-                if (tileRight is { HasUnactuatedTile: true } && Main.tileSolid[tileRight.TileType] && !Main.tileSolidTop[tileRight.TileType]) right = true;
-                if (left && right) break;
+                if (tileLeft is { HasUnactuatedTile: true } && Main.tileSolid[tileLeft.TileType] && !Main.tileSolidTop[tileLeft.TileType])
+                {
+                    left = true;
+                }
+
+                if (tileRight is { HasUnactuatedTile: true } && Main.tileSolid[tileRight.TileType] && !Main.tileSolidTop[tileRight.TileType])
+                {
+                    right = true;
+                }
+
+                if (left && right)
+                {
+                    break;
+                }
             }
         }
 
@@ -2930,20 +3086,39 @@ namespace Macrocosm.Common.Utils
         public static void AISpore(Entity codable, ref float[] ai, Vector2 target, int targetWidth = 16, float moveIntervalX = 0.1f, float moveIntervalY = 0.02f, float maxSpeedX = 5f, float maxSpeedY = 1f)
         {
             codable.velocity.Y += moveIntervalY;
-            if (codable.velocity.Y < 0f) codable.velocity.Y *= 0.99f;
-            if (codable.velocity.Y > 1f) codable.velocity.Y = 1f;
+            if (codable.velocity.Y < 0f)
+            {
+                codable.velocity.Y *= 0.99f;
+            }
+
+            if (codable.velocity.Y > 1f)
+            {
+                codable.velocity.Y = 1f;
+            }
+
             int widthHalf = targetWidth / 2;
             if (codable.position.X + codable.width < target.X - widthHalf)
             {
-                if (codable.velocity.X < 0) codable.velocity.X *= 0.98f;
+                if (codable.velocity.X < 0)
+                {
+                    codable.velocity.X *= 0.98f;
+                }
+
                 codable.velocity.X += moveIntervalX;
             }
             else if (codable.position.X > target.X + widthHalf)
             {
-                if (codable.velocity.X > 0) codable.velocity.X *= 0.98f;
+                if (codable.velocity.X > 0)
+                {
+                    codable.velocity.X *= 0.98f;
+                }
+
                 codable.velocity.X -= moveIntervalX;
             }
-            if (codable.velocity.X > maxSpeedX || codable.velocity.X < -maxSpeedX) codable.velocity.X *= 0.97f;
+            if (codable.velocity.X > maxSpeedX || codable.velocity.X < -maxSpeedX)
+            {
+                codable.velocity.X *= 0.97f;
+            }
         }
 
         /*
@@ -2965,16 +3140,39 @@ namespace Macrocosm.Common.Utils
                 isMoving = true;
                 ++ai[3];
             }
-            if (npc.position.X == npc.oldPosition.X || ai[3] >= ticksUntilBoredom || isMoving) ++ai[3];
-            else if (ai[3] > 0f) --ai[3];
-            if (ai[3] > ticksUntilBoredom * 10) ai[3] = 0f;
-            if (npc.justHit) ai[3] = 0f;
-            if (ai[3] == ticksUntilBoredom) npc.netUpdate = true;
+            if (npc.position.X == npc.oldPosition.X || ai[3] >= ticksUntilBoredom || isMoving)
+            {
+                ++ai[3];
+            }
+            else if (ai[3] > 0f)
+            {
+                --ai[3];
+            }
+
+            if (ai[3] > ticksUntilBoredom * 10)
+            {
+                ai[3] = 0f;
+            }
+
+            if (npc.justHit)
+            {
+                ai[3] = 0f;
+            }
+
+            if (ai[3] == ticksUntilBoredom)
+            {
+                npc.netUpdate = true;
+            }
+
             Vector2 npcCenter = npc.Center;
             float distX = Main.player[npc.target].Center.X - npcCenter.X;
             float distY = Main.player[npc.target].Center.Y - npcCenter.Y;
-            float dist = (float)Math.Sqrt(distX * distX + distY * distY);
-            if (dist < 200f) ai[3] = 0f;
+            float dist = (float)Math.Sqrt((distX * distX) + (distY * distY));
+            if (dist < 200f)
+            {
+                ai[3] = 0f;
+            }
+
             if (!allowBoredom || ai[3] < ticksUntilBoredom)
             {
                 npc.TargetClosest();
@@ -2989,25 +3187,41 @@ namespace Macrocosm.Common.Utils
                         if (ai[0] >= 2.0) { npc.direction *= -1; npc.spriteDirection = npc.direction; ai[0] = 0f; }
                     }
                 }
-                else ai[0] = 0f;
+                else
+                {
+                    ai[0] = 0f;
+                }
+
                 npc.directionY = -1;
-                if (npc.direction == 0) npc.direction = 1;
+                if (npc.direction == 0)
+                {
+                    npc.direction = 1;
+                }
             }
             if (npc.velocity.Y == 0f || npc.wet || npc.velocity.X <= 0f && npc.direction < 0 || npc.velocity.X >= 0f && npc.direction > 0)
             {
                 if (npc.velocity.X < -maxSpeed || npc.velocity.X > maxSpeed)
                 {
-                    if (npc.velocity.Y == 0f) npc.velocity *= 0.8f;
+                    if (npc.velocity.Y == 0f)
+                    {
+                        npc.velocity *= 0.8f;
+                    }
                 }
                 else if (npc.velocity.X < maxSpeed && npc.direction == 1)
                 {
                     npc.velocity.X += moveInterval;
-                    if (npc.velocity.X > maxSpeed) npc.velocity.X = maxSpeed;
+                    if (npc.velocity.X > maxSpeed)
+                    {
+                        npc.velocity.X = maxSpeed;
+                    }
                 }
                 else if (npc.velocity.X > -maxSpeed && npc.direction == -1)
                 {
                     npc.velocity.X -= moveInterval;
-                    if (npc.velocity.X < -maxSpeed) npc.velocity.X = -maxSpeed;
+                    if (npc.velocity.X < -maxSpeed)
+                    {
+                        npc.velocity.X = -maxSpeed;
+                    }
                 }
             }
         }
@@ -3026,8 +3240,16 @@ namespace Macrocosm.Common.Utils
         public static void AIFriendly(NPC npc, ref float[] ai, float moveInterval = 0.07f, float maxSpeed = 1f, bool critter = false, bool? seekHome = null, bool canTeleportHome = true, bool canFindHouse = true, bool canOpenDoors = true)
         {
             bool seekHouse = Main.raining;
-            if (!Main.dayTime || Main.eclipse) seekHouse = true;
-            if (seekHome != null) seekHouse = (bool)seekHome;
+            if (!Main.dayTime || Main.eclipse)
+            {
+                seekHouse = true;
+            }
+
+            if (seekHome != null)
+            {
+                seekHouse = (bool)seekHome;
+            }
+
             int npcTileX = (int)(npc.position.X + (double)(npc.width / 2)) / 16;
             int npcTileY = (int)(npc.position.Y + (double)npc.height + 1.0) / 16;
             if (critter && npc.target == 255)
@@ -3035,18 +3257,28 @@ namespace Macrocosm.Common.Utils
                 npc.TargetClosest();
                 npc.direction = npc.Center.X < Main.player[npc.target].Center.X ? 1 : -1;
                 npc.spriteDirection = npc.direction;
-                if (npc.homeTileX == -1) npc.homeTileX = (int)(npc.Center.X / 16f);
+                if (npc.homeTileX == -1)
+                {
+                    npc.homeTileX = (int)(npc.Center.X / 16f);
+                }
             }
             bool isTalking = false;
             npc.directionY = -1;
-            if (npc.direction == 0) npc.direction = 1;
+            if (npc.direction == 0)
+            {
+                npc.direction = 1;
+            }
             //Sets AI if the npc is speaking to a player
             for (int m1 = 0; m1 < 255; ++m1)
             {
                 if (Main.player[m1].active && Main.player[m1].talkNPC == npc.whoAmI)
                 {
                     isTalking = true;
-                    if (ai[0] != 0f) npc.netUpdate = true;
+                    if (ai[0] != 0f)
+                    {
+                        npc.netUpdate = true;
+                    }
+
                     ai[0] = 0f; ai[1] = 300f; ai[2] = 100f;
                     npc.direction = Main.player[m1].Center.X >= npc.Center.X ? 1 : -1;
                 }
@@ -3057,7 +3289,9 @@ namespace Macrocosm.Common.Utils
                 npc.HitEffect();
                 npc.active = false;
                 if (npc.type == NPCID.OldMan && !Main.dedServ)
-                    SoundEngine.PlaySound(SoundID.Roar, npc.position);
+                {
+                    _ = SoundEngine.PlaySound(SoundID.Roar, npc.position);
+                }
             }
             //prevent a -1, -1 saving scenario
             if (npc.homeTileX == -1 && npc.homeTileY == -1 || npc.homeTileX == ushort.MaxValue && npc.homeTileY == ushort.MaxValue)
@@ -3069,7 +3303,9 @@ namespace Macrocosm.Common.Utils
             if (Main.netMode != NetmodeID.MultiplayerClient && npc.homeTileY > 0)
             {
                 while (!WorldGen.SolidTile(npc.homeTileX, homeTileY) && homeTileY < Main.maxTilesY - 20)
+                {
                     ++homeTileY;
+                }
             }
             //handle teleporting to the home tile
             if (Main.netMode != NetmodeID.MultiplayerClient && canTeleportHome && seekHouse && (npcTileX != npc.homeTileX || npcTileY != homeTileY) && !npc.homeless)
@@ -3077,13 +3313,19 @@ namespace Macrocosm.Common.Utils
                 bool moveToHome = true;
                 for (int m2 = 0; m2 < 2; ++m2)
                 {
-                    Rectangle checkRect = new((int)(npc.Center.X - NPC.sWidth / 2 - NPC.safeRangeX), (int)(npc.Center.Y - NPC.sHeight / 2 - NPC.safeRangeY), NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
+                    Rectangle checkRect = new((int)(npc.Center.X - (NPC.sWidth / 2) - NPC.safeRangeX), (int)(npc.Center.Y - (NPC.sHeight / 2) - NPC.safeRangeY), NPC.sWidth + (NPC.safeRangeX * 2), NPC.sHeight + (NPC.safeRangeY * 2));
                     if (m2 == 1)
-                        checkRect = new Rectangle(npc.homeTileX * 16 + 8 - NPC.sWidth / 2 - NPC.safeRangeX, homeTileY * 16 + 8 - NPC.sHeight / 2 - NPC.safeRangeY, NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
+                    {
+                        checkRect = new Rectangle((npc.homeTileX * 16) + 8 - (NPC.sWidth / 2) - NPC.safeRangeX, (homeTileY * 16) + 8 - (NPC.sHeight / 2) - NPC.safeRangeY, NPC.sWidth + (NPC.safeRangeX * 2), NPC.sHeight + (NPC.safeRangeY * 2));
+                    }
+
                     for (int m3 = 0; m3 < 255; m3++)
                     {
                         if (Main.player[m3].active && Main.player[m3].Hitbox.Intersects(checkRect)) { moveToHome = false; break; }
-                        if (!moveToHome) break;
+                        if (!moveToHome)
+                        {
+                            break;
+                        }
                     }
                 }
                 if (moveToHome)
@@ -3092,8 +3334,8 @@ namespace Macrocosm.Common.Utils
                     {
                         npc.velocity.X = 0.0f;
                         npc.velocity.Y = 0.0f;
-                        npc.position.X = npc.homeTileX * 16 + 8 - npc.width / 2;
-                        npc.position.Y = homeTileY * 16 - npc.height - 0.1f;
+                        npc.position.X = (npc.homeTileX * 16) + 8 - (npc.width / 2);
+                        npc.position.Y = (homeTileY * 16) - npc.height - 0.1f;
                         npc.netUpdate = true;
                     }
                     else //or find a new one
@@ -3107,7 +3349,11 @@ namespace Macrocosm.Common.Utils
             //slow down
             if (ai[0] == 0f)
             {
-                if (ai[2] > 0f) --ai[2];
+                if (ai[2] > 0f)
+                {
+                    --ai[2];
+                }
+
                 if (seekHouse && !isTalking && !critter)
                 {
                     if (Main.netMode != NetmodeID.MultiplayerClient)
@@ -3115,10 +3361,23 @@ namespace Macrocosm.Common.Utils
                         //stop at the home tile
                         if (npcTileX == npc.homeTileX && npcTileY == homeTileY)
                         {
-                            if (npc.velocity.X != 0f) npc.netUpdate = true;
-                            if (npc.velocity.X > 0.1f) npc.velocity.X -= 0.1f;
-                            else if (npc.velocity.X < -0.1f) npc.velocity.X += 0.1f;
-                            else npc.velocity.X = 0f;
+                            if (npc.velocity.X != 0f)
+                            {
+                                npc.netUpdate = true;
+                            }
+
+                            if (npc.velocity.X > 0.1f)
+                            {
+                                npc.velocity.X -= 0.1f;
+                            }
+                            else if (npc.velocity.X < -0.1f)
+                            {
+                                npc.velocity.X += 0.1f;
+                            }
+                            else
+                            {
+                                npc.velocity.X = 0f;
+                            }
                         }
                         else
                         {
@@ -3131,34 +3390,63 @@ namespace Macrocosm.Common.Utils
                 else
                 {
                     //just stop in general
-                    if (npc.velocity.X > 0.1f) npc.velocity.X -= 0.1f;
-                    else if (npc.velocity.X < -0.1f) npc.velocity.X += 0.1f;
-                    else npc.velocity.X = 0f;
+                    if (npc.velocity.X > 0.1f)
+                    {
+                        npc.velocity.X -= 0.1f;
+                    }
+                    else if (npc.velocity.X < -0.1f)
+                    {
+                        npc.velocity.X += 0.1f;
+                    }
+                    else
+                    {
+                        npc.velocity.X = 0f;
+                    }
+
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        if (ai[1] > 0) --ai[1];
+                        if (ai[1] > 0)
+                        {
+                            --ai[1];
+                        }
+
                         if (ai[1] <= 0)
                         {
                             ai[0] = 1f;
                             ai[1] = 200 + Main.rand.Next(200);
-                            if (critter) ai[1] += Main.rand.Next(200, 400);
+                            if (critter)
+                            {
+                                ai[1] += Main.rand.Next(200, 400);
+                            }
+
                             ai[2] = 0f;
                             npc.netUpdate = true;
                         }
                     }
                 }
-                if (Main.netMode == NetmodeID.MultiplayerClient || seekHouse && (npcTileX != npc.homeTileX || npcTileY != homeTileY)) return;
+                if (Main.netMode == NetmodeID.MultiplayerClient || seekHouse && (npcTileX != npc.homeTileX || npcTileY != homeTileY))
+                {
+                    return;
+                }
                 //move towards the home point
                 if (npcTileX < npc.homeTileX - 25 || npcTileX > npc.homeTileX + 25)
                 {
-                    if (ai[2] != 0f) return;
+                    if (ai[2] != 0f)
+                    {
+                        return;
+                    }
+
                     if (npcTileX < npc.homeTileX - 50 && npc.direction == -1) { npc.direction = 1; npc.netUpdate = true; }
                     else
-                    { if (npcTileX <= npc.homeTileX + 50 || npc.direction != 1) return; npc.direction = -1; npc.netUpdate = true; }
+                    { if (npcTileX <= npc.homeTileX + 50 || npc.direction != 1) { return; } npc.direction = -1; npc.netUpdate = true; }
                 }
                 else
                 {
-                    if (!Main.rand.NextBool(80) || (double)ai[2] != 0) return;
+                    if (!Main.rand.NextBool(80) || (double)ai[2] != 0)
+                    {
+                        return;
+                    }
+
                     ai[2] = 200f;
                     npc.direction *= -1;
                     npc.netUpdate = true;
@@ -3180,15 +3468,23 @@ namespace Macrocosm.Common.Utils
                 if (Main.netMode != NetmodeID.MultiplayerClient && !npc.homeless && !Main.tileDungeon[Main.tile[npcTileX, npcTileY].TileType] && (npcTileX < npc.homeTileX - 35 || npcTileX > npc.homeTileX + 35))
                 {
                     if (npc.Center.X < npc.homeTileX * 16 && npc.direction == -1)
+                    {
                         ai[1] -= 5f;
+                    }
                     else if (npc.Center.X > npc.homeTileX * 16 && npc.direction == 1)
+                    {
                         ai[1] -= 5f;
+                    }
                 }
                 --ai[1];
                 if (ai[1] <= 0f)
                 {
                     ai[0] = 0f; ai[1] = 300 + Main.rand.Next(300);
-                    if (critter) ai[1] -= Main.rand.Next(100);
+                    if (critter)
+                    {
+                        ai[1] -= Main.rand.Next(100);
+                    }
+
                     ai[2] = 60f; npc.netUpdate = true;
                 }
                 //close doors the npc has opened
@@ -3200,33 +3496,54 @@ namespace Macrocosm.Common.Utils
                         NetMessage.SendData(MessageID.ToggleDoorState, -1, -1, NetworkText.FromLiteral(""), 1, npc.doorX, npc.doorY, npc.direction);
                     }
                     if (npc.Center.X / 16f > npc.doorX + 4 || npc.Center.X / 16f < npc.doorX - 4 || npc.Center.Y / 16f > npc.doorY + 4 || npc.Center.Y / 16f < npc.doorY - 4)
+                    {
                         npc.closeDoor = false;
+                    }
                 }
                 if (npc.Center.X < -maxSpeed || npc.velocity.X > maxSpeed)
                 {
-                    if (npc.velocity.Y == 0) npc.velocity *= 0.8f;
+                    if (npc.velocity.Y == 0)
+                    {
+                        npc.velocity *= 0.8f;
+                    }
                 }
                 else if (npc.velocity.X < maxSpeed && npc.direction == 1)
                 {
                     npc.velocity.X += moveInterval;
-                    if (npc.velocity.X > maxSpeed) npc.velocity.X = maxSpeed;
+                    if (npc.velocity.X > maxSpeed)
+                    {
+                        npc.velocity.X = maxSpeed;
+                    }
                 }
                 else if (npc.velocity.X > -maxSpeed && npc.direction == -1)
                 {
                     npc.velocity.X -= moveInterval;
-                    if (npc.velocity.X > maxSpeed) npc.velocity.X = maxSpeed;
+                    if (npc.velocity.X > maxSpeed)
+                    {
+                        npc.velocity.X = maxSpeed;
+                    }
                 }
                 WalkupHalfBricks(npc);
-                if (npc.velocity.Y != 0f) return;
-                if (npc.position.X == ai[2]) npc.direction *= -1;
+                if (npc.velocity.Y != 0f)
+                {
+                    return;
+                }
+
+                if (npc.position.X == ai[2])
+                {
+                    npc.direction *= -1;
+                }
+
                 ai[2] = -1f;
-                int tileX2 = (int)((npc.Center.X + 15 * npc.direction) / 16f);
+                int tileX2 = (int)((npc.Center.X + (15 * npc.direction)) / 16f);
                 int tileY2 = (int)((npc.position.Y + npc.height - 16f) / 16f);
                 //Main.tile[tileX2 - npc.direction, tileY2 + 1].halfBrick();
                 if (canOpenDoors && Main.tile[tileX2, tileY2 - 2].HasUnactuatedTile && Main.tile[tileX2, tileY2 - 2].TileType == 10 && (Main.rand.NextBool(10) || seekHouse))
                 {
                     if (Main.netMode == NetmodeID.MultiplayerClient)
+                    {
                         return;
+                    }
                     //attempt to open the door...
                     if (WorldGen.OpenDoor(tileX2, tileY2 - 2, npc.direction))
                     {
@@ -3282,7 +3599,7 @@ namespace Macrocosm.Common.Utils
                             }
                             else { npc.direction *= -1; npc.netUpdate = true; }
                         }
-                        else if (npc.position.Y + npc.height - tileY2 * 16f > 20f)
+                        else if (npc.position.Y + npc.height - (tileY2 * 16f) > 20f)
                         {
                             if (Main.tile[tileX2, tileY2].HasUnactuatedTile && Main.tileSolid[Main.tile[tileX2, tileY2].TileType] && Main.tile[tileX2, tileY2].Slope == 0)
                             {
@@ -3304,9 +3621,16 @@ namespace Macrocosm.Common.Utils
                             }
                         }
                         catch { }
-                        if ((double)npc.velocity.Y < 0f) ai[2] = npc.position.X;
+                        if ((double)npc.velocity.Y < 0f)
+                        {
+                            ai[2] = npc.position.X;
+                        }
                     }
-                    if (npc.velocity.Y < 0f && npc.wet) npc.velocity.Y *= 1.2f;
+                    if (npc.velocity.Y < 0f && npc.wet)
+                    {
+                        npc.velocity.Y *= 1.2f;
+                    }
+
                     npc.velocity.Y *= 1.2f;
                 }
             }
@@ -3335,7 +3659,7 @@ namespace Macrocosm.Common.Utils
             npcCenter.Y = (int)(npcCenter.Y / 8f) * 8f;
             float distX2 = distDx - npcCenter.X;
             float distY2 = distDy - npcCenter.Y;
-            float dist = (float)Math.Sqrt(distX2 * distX2 + distY2 * distY2);
+            float dist = (float)Math.Sqrt((distX2 * distX2) + (distY2 * distY2));
             float speedX1;
             float speedY1;
             if (dist == 0f)
@@ -3392,7 +3716,10 @@ namespace Macrocosm.Common.Utils
                 if (npc.timeLeft > 10) { npc.timeLeft = 10; }
             }
             if ((npc.velocity.X <= 0f || npc.oldVelocity.X >= 0f) && (npc.velocity.X >= 0f || npc.oldVelocity.X <= 0f) && (npc.velocity.Y <= 0f || npc.oldVelocity.Y >= 0f) && (npc.velocity.Y >= 0.0 || npc.oldVelocity.Y <= 0f) || npc.justHit)
+            {
                 return;
+            }
+
             npc.netUpdate = true;
         }
 
@@ -3414,7 +3741,11 @@ namespace Macrocosm.Common.Utils
             if (ai[1] == 0f)
             {
                 if (rotate) { npc.rotation += npc.direction * npc.directionY * 0.13f; }
-                if (npc.collideY) ai[0] = 2f;
+                if (npc.collideY)
+                {
+                    ai[0] = 2f;
+                }
+
                 if (!npc.collideY && ai[0] == 2f)
                 {
                     npc.direction = -npc.direction;
@@ -3426,7 +3757,11 @@ namespace Macrocosm.Common.Utils
             else
             {
                 if (rotate) { npc.rotation -= npc.direction * npc.directionY * 0.13f; }
-                if (npc.collideX) ai[0] = 2f;
+                if (npc.collideX)
+                {
+                    ai[0] = 2f;
+                }
+
                 if (!npc.collideX && ai[0] == 2f)
                 {
                     npc.directionY = -npc.directionY;
@@ -3454,7 +3789,10 @@ namespace Macrocosm.Common.Utils
         public static void AISpider(NPC npc, ref float[] ai, bool ignoreSight = false, float moveInterval = 0.08f, float slowSpeed = 1.5f, float maxSpeed = 3f, float distanceDivider = 2f, float bounceScalar = 0.5f, int transformType = -1)
         {
             if (npc.target is < 0 or 255 || Main.player[npc.target].dead)
+            {
                 npc.TargetClosest();
+            }
+
             Vector2 npcCenter = npc.Center;
             float distX = Main.player[npc.target].Center.X;
             float distY = Main.player[npc.target].Center.Y;
@@ -3464,7 +3802,7 @@ namespace Macrocosm.Common.Utils
             npcCenter.Y = (int)(npcCenter.Y / 8f) * 8f;
             float distX2 = distDx - npcCenter.X;
             float distY2 = distDy - npcCenter.Y;
-            float dist = (float)Math.Sqrt(distX2 * distX2 + distY2 * distY2);
+            float dist = (float)Math.Sqrt((distX2 * distX2) + (distY2 * distY2));
             float velX;
             float velY;
             if (dist == 0f)
@@ -3508,25 +3846,33 @@ namespace Macrocosm.Common.Utils
                 {
                     npc.velocity.X += moveInterval;
                     if ((double)npc.velocity.X < 0 && (double)velX > 0)
+                    {
                         npc.velocity.X += moveInterval;
+                    }
                 }
                 else if (npc.velocity.X > (double)velX)
                 {
                     npc.velocity.X -= moveInterval;
                     if ((double)npc.velocity.X > 0 && (double)velX < 0)
+                    {
                         npc.velocity.X -= moveInterval;
+                    }
                 }
                 if (npc.velocity.Y < (double)velY)
                 {
                     npc.velocity.Y += moveInterval;
                     if ((double)npc.velocity.Y < 0 && (double)velY > 0)
+                    {
                         npc.velocity.Y += moveInterval;
+                    }
                 }
                 else if (npc.velocity.Y > (double)velY)
                 {
                     npc.velocity.Y -= moveInterval;
                     if ((double)npc.velocity.Y > 0 && (double)velY < 0)
+                    {
                         npc.velocity.Y -= moveInterval;
+                    }
                 }
                 npc.rotation = (float)Math.Atan2(velY, velX);
             }
@@ -3545,7 +3891,10 @@ namespace Macrocosm.Common.Utils
                 if (npc.velocity.Y is < 0f and > -1.5f) { npc.velocity.Y = -2f; }
             }
             if ((npc.velocity.X > 0f && npc.oldVelocity.X < 0f || npc.velocity.X < 0f && npc.oldVelocity.X > 0f || npc.velocity.Y > 0f && npc.oldVelocity.Y < 0f || npc.velocity.Y < 0f && npc.oldVelocity.Y > 0f) && !npc.justHit)
+            {
                 npc.netUpdate = true;
+            }
+
             if (Main.netMode != NetmodeID.MultiplayerClient && transformType != -1)
             {
                 int centerTileX = (int)npc.Center.X / 16;
@@ -3558,7 +3907,10 @@ namespace Macrocosm.Common.Utils
                         if (Main.tile[x, y].WallType > 0) { wallExists = true; break; }
                     }
                 }
-                if (!wallExists) npc.Transform(transformType);
+                if (!wallExists)
+                {
+                    npc.Transform(transformType);
+                }
             }
         }
 
@@ -3578,7 +3930,7 @@ namespace Macrocosm.Common.Utils
             npc.TargetClosest();
             float distX = Main.player[npc.target].Center.X - npc.Center.X;
             float distY = Main.player[npc.target].Center.Y - npc.Center.Y;
-            float dist = (float)Math.Sqrt(distX * distX + distY * distY);
+            float dist = (float)Math.Sqrt((distX * distX) + (distY * distY));
             ai[1] += 1f;
             if (ai[1] > 600f)
             {
@@ -3595,22 +3947,22 @@ namespace Macrocosm.Common.Utils
             {
                 ai[0] += 0.9f;
                 if (ai[0] > 0f) { npc.velocity.Y += closeIncrement; } else { npc.velocity.Y -= closeIncrement; }
-                if (ai[0] < -100f || ai[0] > 100f) { npc.velocity.X += closeIncrement; } else { npc.velocity.X -= closeIncrement; }
+                if (ai[0] is < (-100f) or > 100f) { npc.velocity.X += closeIncrement; } else { npc.velocity.X -= closeIncrement; }
                 if (ai[0] > 200f) { ai[0] = -200f; }
             }
             if (dist > maxDistance)
             {
-                distanceAmt = maxDistanceAmt + maxDistanceAmt / 4f;
+                distanceAmt = maxDistanceAmt + (maxDistanceAmt / 4f);
                 increment = 0.3f;
             }
             else
-            if (dist > maxDistance - maxDistance / 7f)
+            if (dist > maxDistance - (maxDistance / 7f))
             {
-                distanceAmt = maxDistanceAmt - maxDistanceAmt / 4f;
+                distanceAmt = maxDistanceAmt - (maxDistanceAmt / 4f);
                 increment = 0.2f;
             }
             else
-            if (dist > maxDistance - 2 * (maxDistance / 7f))
+            if (dist > maxDistance - (2 * (maxDistance / 7f)))
             {
                 distanceAmt = maxDistanceAmt / 2.66f;
                 increment = 0.1f;
@@ -3685,16 +4037,9 @@ namespace Macrocosm.Common.Utils
             else
             {
                 ai[2] += 1f;
-                if (Main.player[npc.target].position.X + Main.player[npc.target].width / 2 > npc.position.X + npc.width / 2)
-                {
-                    npc.direction = -1;
-                }
-                else
-                {
-                    npc.direction = 1;
-                }
+                npc.direction = Main.player[npc.target].position.X + (Main.player[npc.target].width / 2) > npc.position.X + (npc.width / 2) ? -1 : 1;
             }
-            int tileX = (int)(npc.Center.X / 16f) + npc.direction * 2;
+            int tileX = (int)(npc.Center.X / 16f) + (npc.direction * 2);
             int tileY = (int)((npc.position.Y + npc.height) / 16f);
             bool tileBelowEmpty = true;
             for (int tY = tileY; tY < tileY + hoverHeight; tY++)
@@ -3891,7 +4236,9 @@ namespace Macrocosm.Common.Utils
                 if (!Main.tile[tx, ty].HasUnactuatedTile || !Main.tileSolid[Main.tile[tx, ty].TileType] || Main.tileSolid[Main.tile[tx, ty].TileType] && Main.tileSolidTop[Main.tile[tx, ty].TileType])
                 {
                     if (npc.DeathSound != null && !Main.dedServ)
-                        SoundEngine.PlaySound((SoundStyle)npc.DeathSound, npc.Center);
+                    {
+                        _ = SoundEngine.PlaySound((SoundStyle)npc.DeathSound, npc.Center);
+                    }
 
                     npc.life = -1;
                     npc.HitEffect();
@@ -3906,11 +4253,11 @@ namespace Macrocosm.Common.Utils
                 vineLength = vineLengthLong;
                 if (ai[2] > vineTimeMax) { ai[2] = 0f; }
             }
-            Vector2 endPointCenter = isTilePos ? new Vector2(ai[0] * 16f + 8f, ai[1] * 16f + 8f) : new Vector2(ai[0], ai[1]);
+            Vector2 endPointCenter = isTilePos ? new Vector2((ai[0] * 16f) + 8f, (ai[1] * 16f) + 8f) : new Vector2(ai[0], ai[1]);
             Vector2 playerCenter = Main.player[npc.target].Center + targetOffset;
-            float distPlayerX = playerCenter.X - npc.width / 2 - endPointCenter.X;
-            float distPlayerY = playerCenter.Y - npc.height / 2 - endPointCenter.Y;
-            float distPlayer = (float)Math.Sqrt(distPlayerX * distPlayerX + distPlayerY * distPlayerY);
+            float distPlayerX = playerCenter.X - (npc.width / 2) - endPointCenter.X;
+            float distPlayerY = playerCenter.Y - (npc.height / 2) - endPointCenter.Y;
+            float distPlayer = (float)Math.Sqrt((distPlayerX * distPlayerX) + (distPlayerY * distPlayerY));
             if (distPlayer > vineLength)
             {
                 distPlayer = vineLength / distPlayer;
@@ -4015,16 +4362,26 @@ namespace Macrocosm.Common.Utils
             }
             else
             if (npc.ai[3] > 0f)
+            {
                 npc.realLife = (int)npc.ai[3];
+            }
 
             if (npc.ai[0] == -1f)
+            {
                 npc.ai[0] = npc.whoAmI;
+            }
+
             if (npc.target is < 0 or 255 || Main.player[npc.target].dead)
+            {
                 npc.TargetClosest();
+            }
+
             if (isHead)
             {
                 if ((npc.target is < 0 or 255 || Main.player[npc.target].dead) && npc.timeLeft > 300)
+                {
                     npc.timeLeft = 300;
+                }
             }
             else
             {
@@ -4079,20 +4436,19 @@ namespace Macrocosm.Common.Utils
                         float ai2 = npc.ai[2] - 1f;
                         float ai3 = npc.ai[3];
                         if (split)
+                        {
                             npc.ai[3] = 0f;
+                        }
 
                         if (isHead)
                         {
                             npc.ai[0] = NPC.NewNPC(npc.GetSource_FromAI(), (int)npc.Center.X, (int)npc.Center.Y, wormTypes[1], npc.whoAmI, ai0, ai1, ai2, ai3);
                         }
                         else
-                        if (isBody && npc.ai[2] > 0f)
                         {
-                            npc.ai[0] = NPC.NewNPC(npc.GetSource_FromAI(), (int)npc.Center.X, (int)npc.Center.Y, wormTypes[wormLength - (int)npc.ai[2]], npc.whoAmI, ai0, ai1, ai2, ai3);
-                        }
-                        else
-                        {
-                            npc.ai[0] = NPC.NewNPC(npc.GetSource_FromAI(), (int)npc.Center.X, (int)npc.Center.Y, wormTypes[^1], npc.whoAmI, ai0, ai1, ai2, ai3);
+                            npc.ai[0] = isBody && npc.ai[2] > 0f
+                                ? NPC.NewNPC(npc.GetSource_FromAI(), (int)npc.Center.X, (int)npc.Center.Y, wormTypes[wormLength - (int)npc.ai[2]], npc.whoAmI, ai0, ai1, ai2, ai3)
+                                : NPC.NewNPC(npc.GetSource_FromAI(), (int)npc.Center.X, (int)npc.Center.Y, wormTypes[^1], npc.whoAmI, ai0, ai1, ai2, ai3);
                         }
                         /*if (!split)
 						{
@@ -4175,7 +4531,9 @@ namespace Macrocosm.Common.Utils
                     }
                 }
                 if (!npc.active && Main.netMode == NetmodeID.Server)
+                {
                     NetMessage.SendData(MessageID.DamageNPC, -1, -1, NetworkText.FromLiteral(""), npc.whoAmI, 1, 0f, 0f, -1);
+                }
             }
             int tileX = (int)(npc.position.X / 16f) - 1;
             int tileCenterX = (int)(npc.Center.X / 16f) + 2;
@@ -4240,7 +4598,7 @@ namespace Macrocosm.Common.Utils
             playerCenterX = (int)(playerCenterX / 16f) * 16; playerCenterY = (int)(playerCenterY / 16f) * 16;
             npcCenter.X = (int)(npcCenter.X / 16f) * 16; npcCenter.Y = (int)(npcCenter.Y / 16f) * 16;
             playerCenterX -= npcCenter.X; playerCenterY -= npcCenter.Y;
-            float dist = (float)Math.Sqrt(playerCenterX * playerCenterX + playerCenterY * playerCenterY);
+            float dist = (float)Math.Sqrt((playerCenterX * playerCenterX) + (playerCenterY * playerCenterY));
             isDigging = canMove;
             if (npc.ai[1] > 0f && npc.ai[1] < Main.maxNPCs)
             {
@@ -4263,7 +4621,7 @@ namespace Macrocosm.Common.Utils
                     Vector2 rotVec = Utility.RotateVector(frontNPC.Center, frontNPC.Center + new Vector2(0f, 30f), frontNPC.rotation);
                     npc.rotation = Utility.RotationTo(npc.Center, rotVec) + 1.57f;
                 }
-                dist = (float)Math.Sqrt(playerCenterX * playerCenterX + playerCenterY * playerCenterY);
+                dist = (float)Math.Sqrt((playerCenterX * playerCenterX) + (playerCenterY * playerCenterY));
                 dist = (dist - npc.width - partDistanceAddon) / dist;
                 playerCenterX *= dist;
                 playerCenterY *= dist;
@@ -4317,9 +4675,11 @@ namespace Macrocosm.Common.Utils
                         npc.soundDelay = (int)distSoundDelay;
 
                         if (!Main.dedServ)
-                            SoundEngine.PlaySound(SoundID.Roar, npc.position);
+                        {
+                            _ = SoundEngine.PlaySound(SoundID.Roar, npc.position);
+                        }
                     }
-                    dist = (float)Math.Sqrt(playerCenterX * playerCenterX + playerCenterY * playerCenterY);
+                    dist = (float)Math.Sqrt((playerCenterX * playerCenterX) + (playerCenterY * playerCenterY));
                     float absPlayerCenterX = Math.Abs(playerCenterX);
                     float absPlayerCenterY = Math.Abs(playerCenterY);
                     float newSpeed = maxSpeed / dist;
@@ -4438,13 +4798,13 @@ namespace Macrocosm.Common.Utils
             if (immobile)
             {
                 npc.velocity.X *= 0.93f;
-                if (npc.velocity.X > -0.1 && npc.velocity.X < 0.1) { npc.velocity.X = 0f; }
+                if (npc.velocity.X is > (float)-0.1 and < (float)0.1) { npc.velocity.X = 0f; }
             }
             if (ai[0] == 0f) { ai[0] = Math.Max(0, Math.Max(teleportInterval, teleportInterval - 150)); }
             if (ai[2] != 0f && ai[3] != 0f)
             {
-                teleportEffects?.Invoke(true); npc.position.X = ai[2] * 16f - npc.width / 2 + 8f;
-                npc.position.Y = ai[3] * 16f - npc.height;
+                teleportEffects?.Invoke(true); npc.position.X = (ai[2] * 16f) - (npc.width / 2) + 8f;
+                npc.position.Y = (ai[3] * 16f) - npc.height;
                 npc.velocity.X = 0f; npc.velocity.Y = 0f;
                 ai[2] = 0f; ai[3] = 0f;
                 teleportEffects?.Invoke(false);
@@ -4701,7 +5061,11 @@ namespace Macrocosm.Common.Utils
                         newVec = Collision.TileCollision(npc.position, newVec, npc.width, npc.height);
                         Vector4 slopeVec = Collision.SlopeCollision(npc.position, newVec, npc.width, npc.height);
                         Vector2 slopeVel = new(slopeVec.Z, slopeVec.W);
-                        if (onTileCollide != null && npc.velocity != slopeVel) onTileCollide(npc.velocity.X != slopeVel.X, npc.velocity.Y != slopeVel.Y, npc.velocity, slopeVel);
+                        if (onTileCollide != null && npc.velocity != slopeVel)
+                        {
+                            onTileCollide(npc.velocity.X != slopeVel.X, npc.velocity.Y != slopeVel.Y, npc.velocity, slopeVel);
+                        }
+
                         npc.position = new Vector2(slopeVec.X, slopeVec.Y);
                         npc.velocity = slopeVel;
                     }
@@ -4829,7 +5193,9 @@ namespace Macrocosm.Common.Utils
             }
 
             if (ai[2] > 1f)
+            {
                 ai[2] -= 1f;
+            }
 
             //if the npc is wet...
             if (npc.wet)
@@ -4859,13 +5225,19 @@ namespace Macrocosm.Common.Utils
             if (npc.velocity.Y == 0f)
             {
                 if (ai[3] == npc.position.X)
-                    npc.direction *= -1; ai[2] = 200f;
+                {
+                    npc.direction *= -1;
+                }
+
+                ai[2] = 200f;
 
                 ai[3] = 0f;
                 npc.velocity.X *= 0.8f;
 
                 if (npc.velocity.X is > -0.1f and < 0.1f)
+                {
                     npc.velocity.X = 0f;
+                }
 
                 if (getNewTarget)
                 {
@@ -4879,7 +5251,9 @@ namespace Macrocosm.Common.Utils
                 {
                     npc.netUpdate = true;
                     if (ai[2] == 1f && getNewTarget)
+                    {
                         npc.TargetClosest();
+                    }
 
                     if (ai[1] == 2f) //larger jump
                     {
@@ -4930,24 +5304,41 @@ namespace Macrocosm.Common.Utils
         public static void WalkupHalfBricks(Entity codable, ref float gfxOffY, ref float stepSpeed)
         {
             if (codable == null)
+            {
                 return;
+            }
+
             if (codable.velocity.Y >= 0f)
             {
                 int offset = 0;
-                if (codable.velocity.X < 0f) offset = -1;
-                if (codable.velocity.X > 0f) offset = 1;
+                if (codable.velocity.X < 0f)
+                {
+                    offset = -1;
+                }
+
+                if (codable.velocity.X > 0f)
+                {
+                    offset = 1;
+                }
+
                 Vector2 pos = codable.position;
                 pos.X += codable.velocity.X;
-                int tileX = (int)((pos.X + (double)(codable.width / 2) + (codable.width / 2 + 1) * offset) / 16.0);
+                int tileX = (int)((pos.X + (double)(codable.width / 2) + (((codable.width / 2) + 1) * offset)) / 16.0);
                 int tileY = (int)((pos.Y + (double)codable.height - 1.0) / 16.0);
 
-                if (tileX * 16 < pos.X + (double)codable.width && tileX * 16 + 16 > (double)pos.X && (Main.tile[tileX, tileY].HasUnactuatedTile && Main.tile[tileX, tileY].Slope == 0 && Main.tile[tileX, tileY - 1].Slope == 0 && Main.tileSolid[Main.tile[tileX, tileY].TileType] && !Main.tileSolidTop[Main.tile[tileX, tileY].TileType] || Main.tile[tileX, tileY - 1].IsHalfBlock && Main.tile[tileX, tileY - 1].HasUnactuatedTile) && (!Main.tile[tileX, tileY - 1].HasUnactuatedTile || !Main.tileSolid[Main.tile[tileX, tileY - 1].TileType] || Main.tileSolidTop[Main.tile[tileX, tileY - 1].TileType] || Main.tile[tileX, tileY - 1].IsHalfBlock && (!Main.tile[tileX, tileY - 4].HasUnactuatedTile || !Main.tileSolid[Main.tile[tileX, tileY - 4].TileType] || Main.tileSolidTop[Main.tile[tileX, tileY - 4].TileType])) && (!Main.tile[tileX, tileY - 2].HasUnactuatedTile || !Main.tileSolid[Main.tile[tileX, tileY - 2].TileType] || Main.tileSolidTop[Main.tile[tileX, tileY - 2].TileType]) && (!Main.tile[tileX, tileY - 3].HasUnactuatedTile || !Main.tileSolid[Main.tile[tileX, tileY - 3].TileType] || Main.tileSolidTop[Main.tile[tileX, tileY - 3].TileType]) && (!Main.tile[tileX - offset, tileY - 3].HasUnactuatedTile || !Main.tileSolid[Main.tile[tileX - offset, tileY - 3].TileType]))
+                if (tileX * 16 < pos.X + (double)codable.width && (tileX * 16) + 16 > (double)pos.X && (Main.tile[tileX, tileY].HasUnactuatedTile && Main.tile[tileX, tileY].Slope == 0 && Main.tile[tileX, tileY - 1].Slope == 0 && Main.tileSolid[Main.tile[tileX, tileY].TileType] && !Main.tileSolidTop[Main.tile[tileX, tileY].TileType] || Main.tile[tileX, tileY - 1].IsHalfBlock && Main.tile[tileX, tileY - 1].HasUnactuatedTile) && (!Main.tile[tileX, tileY - 1].HasUnactuatedTile || !Main.tileSolid[Main.tile[tileX, tileY - 1].TileType] || Main.tileSolidTop[Main.tile[tileX, tileY - 1].TileType] || Main.tile[tileX, tileY - 1].IsHalfBlock && (!Main.tile[tileX, tileY - 4].HasUnactuatedTile || !Main.tileSolid[Main.tile[tileX, tileY - 4].TileType] || Main.tileSolidTop[Main.tile[tileX, tileY - 4].TileType])) && (!Main.tile[tileX, tileY - 2].HasUnactuatedTile || !Main.tileSolid[Main.tile[tileX, tileY - 2].TileType] || Main.tileSolidTop[Main.tile[tileX, tileY - 2].TileType]) && (!Main.tile[tileX, tileY - 3].HasUnactuatedTile || !Main.tileSolid[Main.tile[tileX, tileY - 3].TileType] || Main.tileSolidTop[Main.tile[tileX, tileY - 3].TileType]) && (!Main.tile[tileX - offset, tileY - 3].HasUnactuatedTile || !Main.tileSolid[Main.tile[tileX - offset, tileY - 3].TileType]))
                 {
                     float tileWorldY = tileY * 16;
                     if (Main.tile[tileX, tileY].IsHalfBlock)
+                    {
                         tileWorldY += 8f;
+                    }
+
                     if (Main.tile[tileX, tileY - 1].IsHalfBlock)
+                    {
                         tileWorldY -= 8f;
+                    }
+
                     if (tileWorldY < pos.Y + (double)codable.height)
                     {
                         float tileWorldYHeight = pos.Y + codable.height - tileWorldY;
@@ -4988,9 +5379,9 @@ namespace Macrocosm.Common.Utils
             {
                 tileDistX -= 2;
                 Vector2 newVelocity = velocity;
-                int tileX = Math.Max(10, Math.Min(Main.maxTilesX - 10, (int)((position.X + width * 0.5f + (width * 0.5f + 8f) * direction) / 16f)));
+                int tileX = Math.Max(10, Math.Min(Main.maxTilesX - 10, (int)((position.X + (width * 0.5f) + (((width * 0.5f) + 8f) * direction)) / 16f)));
                 int tileY = Math.Max(10, Math.Min(Main.maxTilesY - 10, (int)((position.Y + height - 15f) / 16f)));
-                int tileItX = Math.Max(10, Math.Min(Main.maxTilesX - 10, tileX + direction * tileDistX));
+                int tileItX = Math.Max(10, Math.Min(Main.maxTilesX - 10, tileX + (direction * tileDistX)));
                 int tileItY = Math.Max(10, Math.Min(Main.maxTilesY - 10, tileY - tileDistY));
                 int lastY = tileY;
                 int tileHeight = (int)(height / 16f);
@@ -4999,10 +5390,10 @@ namespace Macrocosm.Common.Utils
                 Rectangle hitbox = new((int)position.X, (int)position.Y, width, height);
                 //attempt to jump over walls if possible.
 
-                if (ignoreTiles && target != null && Math.Abs(position.X + width * 0.5f - target.Center.X) < width + 120)
+                if (ignoreTiles && target != null && Math.Abs(position.X + (width * 0.5f) - target.Center.X) < width + 120)
                 {
-                    float dist = (int)Math.Abs(position.Y + height * 0.5f - target.Center.Y) / 16;
-                    if (dist < tileDistY + 2) { newVelocity.Y = -8f + dist * -0.5f; } // dist +=2; newVelocity.Y = -(5f + dist * (dist > 3 ? 1f - ((dist - 2f) * 0.0525f) : 1f)); }
+                    float dist = (int)Math.Abs(position.Y + (height * 0.5f) - target.Center.Y) / 16;
+                    if (dist < tileDistY + 2) { newVelocity.Y = -8f + (dist * -0.5f); } // dist +=2; newVelocity.Y = -(5f + dist * (dist > 3 ? 1f - ((dist - 2f) * 0.0525f) : 1f)); }
                 }
                 if (newVelocity.Y == velocity.Y)
                 {
@@ -5014,14 +5405,16 @@ namespace Macrocosm.Common.Utils
                         {
                             if (!Main.tileSolidTop[tile.TileType])
                             {
-                                Rectangle tileHitbox = new(tileX * 16, y * 16, 16, 16);
-                                tileHitbox.Y = hitbox.Y;
+                                Rectangle tileHitbox = new(tileX * 16, y * 16, 16, 16)
+                                {
+                                    Y = hitbox.Y
+                                };
                                 if (tileHitbox.Intersects(hitbox)) { newVelocity = velocity; break; }
                             }
                             if (tileNear.HasUnactuatedTile && Main.tileSolid[tileNear.TileType] && !Main.tileSolidTop[tileNear.TileType]) { newVelocity = velocity; break; }
                             if (target != null && y * 16 < target.Center.Y) { continue; }
                             lastY = y;
-                            newVelocity.Y = -(5f + (tileY - y) * (tileY - y > 3 ? 1f - (tileY - y - 2) * 0.0525f : 1f));
+                            newVelocity.Y = -(5f + ((tileY - y) * (tileY - y > 3 ? 1f - ((tileY - y - 2) * 0.0525f) : 1f)));
                         }
                         else
                         if (lastY - y >= tileHeight) { break; }
@@ -5033,7 +5426,7 @@ namespace Macrocosm.Common.Utils
                     //...and there's a gap in front of the npc, attempt to jump across it.
                     if (directionY < 0 && (!Main.tile[tileX, tileY + 1].HasUnactuatedTile || !Main.tileSolid[Main.tile[tileX, tileY + 1].TileType]) && (!Main.tile[tileX + direction, tileY + 1].HasUnactuatedTile || !Main.tileSolid[Main.tile[tileX + direction, tileY + 1].TileType]))
                     {
-                        if (!Main.tile[tileX + direction, tileY + 2].HasUnactuatedTile || !Main.tileSolid[Main.tile[tileX, tileY + 2].TileType] || target == null || target.Center.Y + target.height * 0.25f < tileY * 16f)
+                        if (!Main.tile[tileX + direction, tileY + 2].HasUnactuatedTile || !Main.tileSolid[Main.tile[tileX, tileY + 2].TileType] || target == null || target.Center.Y + (target.height * 0.25f) < tileY * 16f)
                         {
                             newVelocity.Y = -8f;
                             newVelocity.X *= 1.5f * (1f / maxSpeedX);
@@ -5089,7 +5482,7 @@ namespace Macrocosm.Common.Utils
             bool hitTile = HitTileOnSide(npc, 3);
             if (hitTile)
             {
-                int tileX = (int)((npc.Center.X + (npc.width / 2 + 8f) * npc.spriteDirection) / 16f);
+                int tileX = (int)((npc.Center.X + (((npc.width / 2) + 8f) * npc.spriteDirection)) / 16f);
                 int tileY = (int)((npc.position.Y + npc.height - 15f) / 16f);
                 if (Framing.GetTileSafely(tileX, tileY - 1).HasUnactuatedTile && Framing.GetTileSafely(tileX, tileY - 1).TileType == TileID.ClosedDoor /*|| TileLoader.ModdedDoors.Contains(Framing.GetTileSafely(tileX, tileY - 1).TileType)*/)
                 {
@@ -5128,7 +5521,9 @@ namespace Macrocosm.Common.Utils
                                 npc.netUpdate = true;
                             }
                             if (Main.netMode == NetmodeID.Server && openedDoor)
+                            {
                                 NetMessage.SendData(MessageID.ToggleDoorState, -1, -1, NetworkText.FromLiteral(""), 0, tileX, tileY, npc.spriteDirection);
+                            }
                         }
                     }
                     return true;
@@ -5243,11 +5638,18 @@ namespace Macrocosm.Common.Utils
         ///</summary>
         public static void KillNPC(NPC npc)
         {
-            if (Main.netMode == NetmodeID.MultiplayerClient) return;
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+            {
+                return;
+            }
+
             npc.active = false;
             int npcID = npc.whoAmI;
             Main.npc[npcID] = new NPC();
-            if (Main.netMode == NetmodeID.Server) NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, npcID);
+            if (Main.netMode == NetmodeID.Server)
+            {
+                NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, npcID);
+            }
         }
 
         public static int GetProjectile(Vector2 center, int projType = -1, int owner = -1, float distance = -1, Func<Projectile, bool> canAdd = null)
@@ -5377,7 +5779,11 @@ namespace Macrocosm.Common.Utils
                 NPC npc = Main.npc[i];
                 if (npc is { active: true, life: > 0 } && (npcType == -1 || npc.type == npcType) && npc.type != NPCID.TargetDummy)
                 {
-                    if (!rect.Intersects(npc.Hitbox)) continue;
+                    if (!rect.Intersects(npc.Hitbox))
+                    {
+                        continue;
+                    }
+
                     bool add = true;
                     if (npcsToExclude != default(int[]))
                     {
@@ -5386,7 +5792,11 @@ namespace Macrocosm.Common.Utils
                             if (m == npc.whoAmI) { add = false; break; }
                         }
                     }
-                    if (add && canAdd != null && !canAdd(npc)) continue;
+                    if (add && canAdd != null && !canAdd(npc))
+                    {
+                        continue;
+                    }
+
                     if (add) { allNPCs.Add(i); }
                 }
             }
@@ -5397,6 +5807,7 @@ namespace Macrocosm.Common.Utils
         {
             return GetNPC(center, npcType, default, distance, canAdd);
         }
+
         /*
          * Gets the closest NPC with the given type within the given distance from the center. If distance is -1, it gets the closest NPC.
          * 
@@ -5435,6 +5846,7 @@ namespace Macrocosm.Common.Utils
         {
             return GetNPCs(center, npcType, Array.Empty<int>(), distance, canAdd);
         }
+
         /*
          * Gets all NPCs of the given type within a given distance from the center.
          * 
@@ -5517,6 +5929,7 @@ namespace Macrocosm.Common.Utils
         {
             return GetPlayer(center, default, true, distance, canAdd);
         }
+
         /*
          * Gets the closest player within the given distance from the center. If distance is -1, it gets the closest player.
          * 
@@ -5555,6 +5968,7 @@ namespace Macrocosm.Common.Utils
         {
             return GetPlayers(center, default, true, distance, canAdd);
         }
+
         /*
          * Gets all players within a given distance from the center.
          * 
@@ -5594,11 +6008,7 @@ namespace Macrocosm.Common.Utils
                 return npc.life > 0 && (!npc.friendly || npc.type == NPCID.Guide && player.killGuide) && !npc.dontTakeDamage;
             }
 
-            if (codable is Player player2)
-            {
-                return player2.statLife > 0 && !player2.immune && player2.hostile && (player.team == 0 || player2.team == 0 || player.team != player2.team);
-            }
-            return false;
+            return codable is Player player2 && player2.statLife > 0 && !player2.immune && player2.hostile && (player.team == 0 || player2.team == 0 || player.team != player2.team);
         }
 
         ///<summary>
@@ -5672,7 +6082,7 @@ namespace Macrocosm.Common.Utils
         {
             if (lookType == 0)
             {
-                if (lookTarget.X > center.X) { spriteDirection = -1; } else { spriteDirection = 1; }
+                spriteDirection = lookTarget.X > center.X ? -1 : 1;
                 if (flipSpriteDir) { spriteDirection *= -1; }
                 float rotX = lookTarget.X - center.X;
                 float rotY = lookTarget.Y - center.Y;
@@ -5682,7 +6092,7 @@ namespace Macrocosm.Common.Utils
             else
             if (lookType == 1)
             {
-                if (lookTarget.X > center.X) { spriteDirection = -1; } else { spriteDirection = 1; }
+                spriteDirection = lookTarget.X > center.X ? -1 : 1;
                 if (flipSpriteDir) { spriteDirection *= -1; }
             }
             else
@@ -5696,7 +6106,7 @@ namespace Macrocosm.Common.Utils
             if (lookType is 3 or 4)
             {
                 int oldDirection = spriteDirection;
-                if (lookType == 3 && lookTarget.X > center.X) { spriteDirection = -1; } else { spriteDirection = 1; }
+                spriteDirection = lookType == 3 && lookTarget.X > center.X ? -1 : 1;
                 if (lookType == 3 && flipSpriteDir) { spriteDirection *= -1; }
                 if (oldDirection != spriteDirection)
                 {
@@ -5785,7 +6195,7 @@ namespace Macrocosm.Common.Utils
             try
             {
                 if (ignore == null) { return start; }
-                if (dim == null) { dim = new Rectangle(0, 0, 1, 1); }
+                dim ??= new Rectangle(0, 0, 1, 1);
                 if (start.X < 0) { start.X = 0; }
                 if (start.X > Main.maxTilesX * 16) { start.X = Main.maxTilesX * 16; }
                 if (start.Y < 0) { start.Y = 0; }
@@ -5803,7 +6213,7 @@ namespace Macrocosm.Common.Utils
                 float way = 0f;
                 while (way < length)
                 {
-                    Vector2 v = pstart + dir * way + tc;
+                    Vector2 v = pstart + (dir * way) + tc;
                     Rectangle dimensions = (Rectangle)dim;
                     Rectangle posRect = new((int)v.X - (dimensions.Width == 1 ? 0 : dimensions.Width / 2), (int)v.Y - (dimensions.Height == 1 ? 0 : dimensions.Height / 2), dimensions.Width, dimensions.Height);
                     if (tileCheck)
@@ -5822,7 +6232,7 @@ namespace Macrocosm.Common.Utils
                                     bool ignoreTile = tileTypesToIgnore is { Length: > 0 } && Utility.InArray(tileTypesToIgnore, tile.TileType);
                                     if (!ignoreTile && Main.tileSolid[tile.TileType])
                                     {
-                                        return returnCenter ? new Vector2(vecX * 16 + 8, vecY * 16 + 8) : v;
+                                        return returnCenter ? new Vector2((vecX * 16) + 8, (vecY * 16) + 8) : v;
                                     }
                                 }
                             }
@@ -5875,7 +6285,7 @@ namespace Macrocosm.Common.Utils
             List<Vector2> vList = new();
             while (way < length)
             {
-                vList.Add(start + dir * way);
+                vList.Add(start + (dir * way));
                 way += jump;
             }
             return vList.ToArray();
@@ -5890,7 +6300,11 @@ namespace Macrocosm.Common.Utils
         {
             if (player != null)
             {
-                if ((float)Main.rand.NextDouble() <= chance) player.QuickSpawnItem(codable.GetSource_Death(), type, amt);
+                if ((float)Main.rand.NextDouble() <= chance)
+                {
+                    _ = player.QuickSpawnItem(codable.GetSource_Death(), type, amt);
+                }
+
                 return -2;
             }
             else
@@ -5901,7 +6315,7 @@ namespace Macrocosm.Common.Utils
 
         public static int DropItem(Entity codable, int type, int amt, int maxStack, int chance, bool clusterItem = false)
         {
-            return DropItem(codable, type, amt, maxStack, (float)chance / 100f, clusterItem);
+            return DropItem(codable, type, amt, maxStack, chance / 100f, clusterItem);
         }
 
         /*
@@ -5928,7 +6342,11 @@ namespace Macrocosm.Common.Utils
                         if (stackCount == amt || stackCount2 == maxStack)
                         {
                             itemID = Item.NewItem(codable.GetSource_Death(), (int)codable.position.X, (int)codable.position.Y, codable.width, codable.height, type, stackCount2, false, 0);
-                            if (sync) NetMessage.SendData(MessageID.SyncItem, -1, -1, null, itemID, 0f, 0f, 0f, 0, 0, 0);
+                            if (sync)
+                            {
+                                NetMessage.SendData(MessageID.SyncItem, -1, -1, null, itemID, 0f, 0f, 0f, 0, 0, 0);
+                            }
+
                             stackCount2 = 0;
                         }
                     }
@@ -5940,7 +6358,10 @@ namespace Macrocosm.Common.Utils
                     {
                         count++;
                         itemID = Item.NewItem(codable.GetSource_Death(), (int)codable.position.X, (int)codable.position.Y, codable.width, codable.height, type, 1, false, 0);
-                        if (sync) NetMessage.SendData(MessageID.SyncItem, -1, -1, null, itemID, 0f, 0f, 0f, 0, 0, 0);
+                        if (sync)
+                        {
+                            NetMessage.SendData(MessageID.SyncItem, -1, -1, null, itemID, 0f, 0f, 0f, 0, 0, 0);
+                        }
                     }
                 }
             }
@@ -5955,7 +6376,7 @@ namespace Macrocosm.Common.Utils
         {
             if (p.owner == Main.myPlayer)
             {
-                NetMessage.SendData(MessageID.KillProjectile, -1, -1, NetworkText.FromLiteral(""), p.identity, (float)p.owner, 0f, 0f, 0);
+                NetMessage.SendData(MessageID.KillProjectile, -1, -1, NetworkText.FromLiteral(""), p.identity, p.owner, 0f, 0f, 0);
             }
             p.active = false;
         }
@@ -5972,28 +6393,28 @@ namespace Macrocosm.Common.Utils
             UnifiedRandom rand = Main.rand;
             for (int m = 0; m < loopAmount; m++)
             {
-                Vector2 gorePos = new Vector2(center.X - 24f, center.Y - 24f);
-                Vector2 velocityDefault = default(Vector2);
+                Vector2 gorePos = new(center.X - 24f, center.Y - 24f);
+                Vector2 velocityDefault = default;
                 int goreID = Gore.NewGore(null, gorePos, velocityDefault, Main.rand.Next(61, 64), 1f);
                 Gore gore = Main.gore[goreID];
                 gore.scale = scale * 1.5f;
                 gore.velocity.X = rand.NextBool(2) ? -(gore.velocity.X + 1.5f) : gore.velocity.X + 1.5f;
-                gore.velocity.Y = gore.velocity.Y + 1.5f;
+                gore.velocity.Y += 1.5f;
                 goreID = Gore.NewGore(null, gorePos, velocityDefault, Main.rand.Next(61, 64), 1f);
                 gore = Main.gore[goreID];
                 gore.scale = scale * 1.5f;
                 gore.velocity.X = rand.NextBool(2) ? -(gore.velocity.X + 1.5f) : gore.velocity.X + 1.5f;
-                gore.velocity.Y = gore.velocity.Y + 1.5f;
+                gore.velocity.Y += 1.5f;
                 goreID = Gore.NewGore(null, gorePos, velocityDefault, Main.rand.Next(61, 64), 1f);
                 gore = Main.gore[goreID];
                 gore.scale = scale * 1.5f;
                 gore.velocity.X = rand.NextBool(2) ? -(gore.velocity.X + 1.5f) : gore.velocity.X + 1.5f;
-                gore.velocity.Y = gore.velocity.Y + 1.5f;
+                gore.velocity.Y += 1.5f;
                 goreID = Gore.NewGore(null, gorePos, velocityDefault, Main.rand.Next(61, 64), 1f);
                 gore = Main.gore[goreID];
                 gore.scale = scale * 1.5f;
                 gore.velocity.X = rand.NextBool(2) ? -(gore.velocity.X + 1.5f) : gore.velocity.X + 1.5f;
-                gore.velocity.Y = gore.velocity.Y + 1.5f;
+                gore.velocity.Y += 1.5f;
             }
         }
     }

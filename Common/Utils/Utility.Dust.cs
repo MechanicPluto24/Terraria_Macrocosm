@@ -11,7 +11,7 @@ namespace Macrocosm.Common.Utils
         public static Rectangle VanillaDustFrame(int dustType)
         {
             int frameX = dustType * 10 % 1000;
-            int frameY = dustType * 10 / 1000 * 30 + Main.rand.Next(3) * 10;
+            int frameY = (dustType * 10 / 1000 * 30) + (Main.rand.Next(3) * 10);
             return new Rectangle(frameX, frameY, 8, 8);
         }
 
@@ -20,14 +20,17 @@ namespace Macrocosm.Common.Utils
         /// Use with the <c>dust.frame</c> of this instace as  <c>sourceRectangle</c> when drawing 
         /// </summary>
         public static Texture2D GetTexture(this Dust dust)
-             => GetDustTexture(dust.type);
+        {
+            return GetDustTexture(dust.type);
+        }
 
         /// <summary> 
         /// Get the spritesheet of this particular dust type.  
         /// Use with <c>dust.frame</c> as <c>sourceRectangle</c> when drawing.
         /// </summary>
         public static Texture2D GetDustTexture(int dustType)
-             => ModContent.GetModDust(dustType).Texture2D.Value;
-
+        {
+            return ModContent.GetModDust(dustType).Texture2D.Value;
+        }
     }
 }

@@ -27,7 +27,7 @@ namespace Macrocosm.Common.TileFrame
         {
             Tile tile = Main.tile[i, j];
             //var info = new TileNeighbourInfo(i, j).TypedSolid(tile.TileType);
-            BasicFraming(i, j, countHalfBlocks: false);
+            CommonFraming(i, j, countHalfBlocks: false);
 
             // TODO: integrate this slope check logic to a TileNeightbourInfo delegate (if possible)
 
@@ -116,98 +116,98 @@ namespace Macrocosm.Common.TileFrame
             // _ T #
             //   # _
             if (right && bottom && !top && !left && !bottomRight)
-                SetFrame(tile, 234, 0);
+                tile.SetFrame(234, 0);
 
             // _ #  
             // _ T #
             //   _  
             if (top && right && !bottom && !left && !topRight)
-                SetFrame(tile, 234, 36);
+                tile.SetFrame(234, 36);
 
             //   _  
             // # T _
             // _ #  
             if (left && bottom && !top && !right && !bottomLeft)
-                SetFrame(tile, 270, 0);
+                tile.SetFrame(270, 0);
 
             // _ #  
             // # T _
             //   _  
             if (top && left && !bottom && !right && !topLeft)
-                SetFrame(tile, 270, 36);
+                tile.SetFrame(270, 36);
 
 
             //   # _
             // _ T #
             //   # _
             if (top && bottom & right && !left && !topRight && !bottomRight)
-                SetFrame(tile, 234, 18);
+                tile.SetFrame(234, 18);
 
             // _ #  
             // # T _
             // _ #  
             if (top && bottom & left && !right && !topLeft && !bottomLeft)
-                SetFrame(tile, 270, 18);
+                tile.SetFrame(270, 18);
 
             // _ # _
             // # T #
             //   _  
             if (left && right && top && !bottom && !topLeft && !topRight)
-                SetFrame(tile, 252, 36);
+                tile.SetFrame(252, 36);
 
             //   _  
             // # T #
             // _ # _
             if (left && right && bottom && !top && !bottomRight && !bottomLeft)
-                SetFrame(tile, 252, 0);
+                tile.SetFrame(252, 0);
 
             //   # _
             // _ T #
             //   # #
             if (bottom && bottomRight && right && !topRight && top && !left)
-                SetFrame(tile, 288, 0);
+                tile.SetFrame(288, 0);
 
             //   # #
             // _ T #
             //   # _
             if (top && topRight && right && !bottomRight && bottom && !left)
-                SetFrame(tile, 288, 18);
+                tile.SetFrame(288, 18);
 
             // _ #  
             // # T _
             // # #  
             if (bottom && bottomLeft && left && !topLeft && top && !right)
-                SetFrame(tile, 306, 0);
+                tile.SetFrame(306, 0);
 
             // # #  
             // # T _
             // _ #  
             if (top && topLeft && left && !bottomLeft && bottom && !right)
-                SetFrame(tile, 306, 18);
+                tile.SetFrame(306, 18);
 
             //   _   
             // # T # 
             // _ # # 
             if (right && bottomRight && bottom && !bottomLeft && left && !top)
-                SetFrame(tile, 288, 36);
+                tile.SetFrame(288, 36);
 
             //   _   
             // # T # 
             // # # _ 
             if (left && bottomLeft && bottom && !bottomRight && right && !top)
-                SetFrame(tile, 306, 36);
+                tile.SetFrame(306, 36);
 
             // _ # # 
             // # T #
             //   _   
             if (right && topRight && top && !topLeft && left && !bottom)
-                SetFrame(tile, 288, 54);
+                tile.SetFrame(288, 54);
 
             // # # _ 
             // # T # 
             // _ _   
             if (left && topLeft && top && !topRight && right && !bottom)
-                SetFrame(tile, 306, 54);
+                tile.SetFrame(306, 54);
 
             // Neighbour count dependent frames
             switch (count)
@@ -218,7 +218,7 @@ namespace Macrocosm.Common.TileFrame
                         // # T #
                         // _ # _
                         if (top && right && bottom && left)
-                            SetFrame(tile, 252, 18);
+                            tile.SetFrame(252, 18);
 
                         break;
                     }
@@ -229,25 +229,25 @@ namespace Macrocosm.Common.TileFrame
                         // # T #
                         // _ # #
                         if (!topLeft && !topRight && !bottomLeft)
-                            SetFrame(tile, 216, 54);
+                            tile.SetFrame(216, 54);
 
                         // _ # _
                         // # T #
                         // # # _
                         if (!topLeft && !topRight && !bottomRight)
-                            SetFrame(tile, 234, 54);
+                            tile.SetFrame(234, 54);
 
                         // _ # #
                         // # T #
                         // _ # _
                         if (!bottomLeft && !bottomRight && !topLeft)
-                            SetFrame(tile, 216, 72);
+                            tile.SetFrame(216, 72);
 
                         // # # _
                         // # T #
                         // _ # _
                         if (!bottomLeft && !bottomRight && !topRight)
-                            SetFrame(tile, 234, 72);
+                            tile.SetFrame(234, 72);
 
                         break;
                     }
@@ -258,13 +258,13 @@ namespace Macrocosm.Common.TileFrame
                         // # T #
                         // # # _
                         if (!topLeft && !bottomRight)
-                            SetFrame(tile, 306, 72);
+                            tile.SetFrame(306, 72);
 
                         // # # _
                         // # T #
                         // _ # #
                         if (!topRight && !bottomLeft)
-                            SetFrame(tile, 288, 72);
+                            tile.SetFrame(288, 72);
 
                         break;
                     }
@@ -275,33 +275,39 @@ namespace Macrocosm.Common.TileFrame
                         // # T #
                         // # # #
                         if (!topRight)
-                            SetFrame(tile, 270, 54);
+                            tile.SetFrame(270, 54);
 
                         // _ # #
                         // # T #
                         // # # #
                         if (!topLeft)
-                            SetFrame(tile, 252, 54);
+                            tile.SetFrame(252, 54);
 
                         // # # #
                         // # T #
                         // # # _
                         if (!bottomRight)
-                            SetFrame(tile, 270, 72);
+                            tile.SetFrame(270, 72);
 
                         // # # #
                         // # T #
                         // _ # #
                         if (!bottomLeft)
-                            SetFrame(tile, 252, 72);
+                            tile.SetFrame(252, 72);
 
                         break;
                     }
             }
         }
 
-        /// <summary> Copy of the common framing all blocks in Terraria use </summary>
-        public static void BasicFraming(int i, int j, bool countHalfBlocks = false)
+        /// <summary>
+        /// Copy of the common framing all blocks in Terraria use, with some extra settings
+        /// </summary>
+        /// <param name="i"> Tile X </param>
+        /// <param name="j"> Tile Y </param>
+        /// <param name="countHalfBlocks"> Count half blocks for merging </param>
+        /// <param name="customVariation"> Optional user defined variation, should be in the 0-2 range, randomized by default </param>
+        public static void CommonFraming(int i, int j, bool countHalfBlocks = false, int? customVariation = null)
         {
             Tile tile = Main.tile[i, j];
             int type = tile.TileType;
@@ -431,7 +437,7 @@ namespace Macrocosm.Common.TileFrame
 
             Point frame = new(-1, -1);
 
-            int variation = WorldGen.genRand.Next(3);
+            int variation = customVariation ?? WorldGen.genRand.Next(3);
 
             if (frame.X < 0 || frame.Y < 0)
             {
@@ -823,15 +829,12 @@ namespace Macrocosm.Common.TileFrame
             Main.tile[i, j].TileFrameY = (short)frame.Y;
         }
 
-        /// <summary>
-        /// Appears to be broken, do not use 
-        /// Adaption of the vanilla tile blend code using dedicated frames
-        /// </summary>
+        /// <inheritdoc cref="BlendLikeDirt(int, int, int[], bool)"/>
         public static void BlendLikeDirt(int i, int j, int typeToBlendWith, bool asDirt = false)
             => BlendLikeDirt(i, j, [typeToBlendWith], asDirt);
 
         /// <summary>
-        /// Appears to be broken, do not use 
+        /// APPEARS TO BE BROKEN, DO NOT USE.  
         /// Adaption of the vanilla tile blend code using dedicated frames
         /// </summary>
         public static void BlendLikeDirt(int i, int j, int[] typesToBlendWith, bool asDirt = false)
@@ -1940,11 +1943,7 @@ namespace Macrocosm.Common.TileFrame
 
         #endregion
 
-        private static void SetFrame(Tile tile, int x, int y)
-        {
-            tile.TileFrameX = (short)x;
-            tile.TileFrameY = (short)y;
-        }
+
 
         // TODO
         /*

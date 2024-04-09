@@ -1,7 +1,7 @@
 // using Macrocosm.Tiles;
-using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.Items.Materials.Refined;
 using Macrocosm.Content.Players;
-using Macrocosm.Content.Tiles.Furniture;
+using Macrocosm.Content.Tiles.Crafting;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

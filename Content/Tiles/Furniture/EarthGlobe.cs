@@ -32,7 +32,7 @@ namespace Macrocosm.Content.Tiles.Furniture
 
             AddMapEntry(new Color(0, 144, 239), CreateMapEntryName());
 
-            RegisterItemDrop(ModContent.ItemType<Items.Placeable.Furniture.EarthGlobe>(), 0, 1);
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.EarthGlobe>(), 0, 1);
         }
     }
 

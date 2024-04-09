@@ -17,13 +17,12 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
     {
         public enum AttackType
         {
-            Despawning = -3,
             Spawning = -2,
             Wait = -1,
             FloatTowardPlayer = 0,
             ChargeAtPlayer = 1,
             Chomp = 2,
-            FadeOut = 3
+            Despawning = 3
         };
         public bool DropMoonstone => false;
 
@@ -45,10 +44,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
         public const int WaitTime = 4 * 60;
 
         private static Asset<Texture2D> glowmask;
-        public override void Load()
-        {
-            glowmask = ModContent.Request<Texture2D>(Texture + "_Glow");
-        }
 
         public override void SetStaticDefaults()
         {
@@ -119,6 +114,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 vector, Color drawColor)
         {
             Texture2D texture = TextureAssets.Npc[Type].Value;
+            glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
 
             Color color = GetAlpha(drawColor) ?? Color.White;
 
@@ -159,6 +155,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 ? SpriteEffects.FlipVertically
                 : SpriteEffects.None;
 
+            glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
             spriteBatch.Draw(glowmask.Value, NPC.Center - Main.screenPosition, NPC.frame, (Color)GetAlpha(Color.White), NPC.rotation, NPC.Size / 2f, NPC.scale, effect, 0f);
         }
 
@@ -196,20 +193,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
             switch (AI_Attack)
             {
-                case AttackType.Despawning:
-
-                    NPC.velocity *= 1f - 3f / 60f;
-                    targetAlpha += 255f / (2 * 60);
-                    SpawnDusts();
-
-                    if (targetAlpha > 255)
-                        NPC.active = false;
-
-                    targetFrame = 0;
-                    NPC.frameCounter = 0;
-                    break;
-
-
                 case AttackType.Spawning:
                     targetAlpha -= 255f / (2 * 60);
 
@@ -218,7 +201,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                     if (targetAlpha <= 0)
                     {
                         targetAlpha = 0;
-
                         AI_Attack = AttackType.Wait;
                     }
 
@@ -333,6 +315,19 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                         AI_Attack = AttackType.Wait;
                         AI_AttackProgress = 0;
                     }
+                    break;
+
+                case AttackType.Despawning:
+
+                    NPC.velocity *= 1f - 3f / 60f;
+                    targetAlpha += 255f / (2 * 60);
+                    SpawnDusts();
+
+                    if (targetAlpha > 255)
+                        NPC.active = false;
+
+                    targetFrame = 0;
+                    NPC.frameCounter = 0;
                     break;
             }
 

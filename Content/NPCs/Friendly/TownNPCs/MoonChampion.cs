@@ -171,7 +171,7 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
                 shop.Add(new Item(type)
                 {
                     shopCustomPrice = price,
-                    shopSpecialCurrency = CurrencyManager.MoonStone,
+                    shopSpecialCurrency = CurrencySystem.MoonStone,
                 });
             }
 

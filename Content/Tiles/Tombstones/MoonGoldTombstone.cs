@@ -30,9 +30,9 @@ namespace Macrocosm.Content.Tiles.Tombstones
 
             AddMapEntry(new Color(148, 124, 22));
 
-            RegisterItemDrop(ModContent.ItemType<Items.Placeable.Tombstones.MoonGoldTombstone>(), 0, 1);
-            RegisterItemDrop(ModContent.ItemType<Items.Placeable.Tombstones.MoonGoldCrescent>(), 2, 3);
-            RegisterItemDrop(ModContent.ItemType<Items.Placeable.Tombstones.MoonGoldLunarCross>(), 4, 5);
+            RegisterItemDrop(ModContent.ItemType<Items.Tombstones.MoonGoldTombstone>(), 0, 1);
+            RegisterItemDrop(ModContent.ItemType<Items.Tombstones.MoonGoldCrescent>(), 2, 3);
+            RegisterItemDrop(ModContent.ItemType<Items.Tombstones.MoonGoldLunarCross>(), 4, 5);
         }
     }
 }

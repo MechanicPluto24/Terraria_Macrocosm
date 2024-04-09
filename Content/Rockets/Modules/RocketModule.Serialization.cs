@@ -17,6 +17,7 @@ namespace Macrocosm.Content.Rockets.Modules
 
             tag["Type"] = FullName;
             tag["Name"] = Name;
+            tag["IsBlueprint"] = IsBlueprint;
 
             if (Detail != default)
                 tag["DetailName"] = Detail.Name;
@@ -45,6 +46,9 @@ namespace Macrocosm.Content.Rockets.Modules
 
             RocketModule module = Activator.CreateInstance(Type.GetType(type), ownerRocket) as RocketModule;
             module.DeserializeModuleSpecificData(tag, ownerRocket);
+
+            if (tag.ContainsKey("IsBlueprint"))
+                module.IsBlueprint = tag.GetBool("IsBlueprint");
 
             if (tag.ContainsKey("DetailName"))
                 module.Detail = CustomizationStorage.GetDetail(name, tag.GetString("DetailName"));

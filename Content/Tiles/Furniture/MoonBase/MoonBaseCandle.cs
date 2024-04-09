@@ -57,7 +57,7 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
             Player player = Main.LocalPlayer;
             player.noThrow = 2;
             player.cursorItemIconEnabled = true;
-            player.cursorItemIconID = ModContent.ItemType<Items.Placeable.Furniture.MoonBase.MoonBaseCandle>();
+            player.cursorItemIconID = ModContent.ItemType<Items.Furniture.MoonBase.MoonBaseCandle>();
         }
 
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)

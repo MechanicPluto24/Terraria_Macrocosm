@@ -5,6 +5,7 @@ using Macrocosm.Content.Items.Weapons.Ranged;
 using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using ReLogic.Utilities;
 using Terraria;
 using Terraria.Audio;
@@ -15,6 +16,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
     public class LHBMinigunProjectile : ChargedHeldProjectile
     {
+        private static Asset<Texture2D> glowmask;
+
         private const int windupFrames = 4; // number of windup animaton frames
         private const int shootFrames = 6;  // number of shooting animaton frames
 
@@ -136,8 +139,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
         public override void PostDraw(Color lightColor)
         {
-            Texture2D glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Ranged/LHBMinigunProjectile_Glow").Value;
-            Projectile.DrawAnimatedExtra(glowmask, Color.White, Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None, new Vector2(5, 10));
+            glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
+            Projectile.DrawAnimatedExtra(glowmask.Value, Color.White, Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None, new Vector2(5, 10));
         }
 
         private SlotId playingSoundId_1 = SlotId.Invalid;

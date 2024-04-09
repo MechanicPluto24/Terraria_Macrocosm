@@ -96,7 +96,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
         {
             return GetLaunchPads(subworldId).FirstOrDefault(lp =>
             {
-                Rectangle coordinates = new(lp.StartTile.X, lp.StartTile.Y, lp.EndTile.X - lp.StartTile.X + 2, lp.EndTile.Y - lp.StartTile.Y + 2);
+                Rectangle coordinates = new(lp.StartTile.X, lp.StartTile.Y, lp.EndTile.X - lp.StartTile.X + 1, lp.EndTile.Y - lp.StartTile.Y + 1);
                 return coordinates.Contains(tile.X, tile.Y);
             });
         }
@@ -116,7 +116,6 @@ namespace Macrocosm.Content.Rockets.LaunchPads
             return launchPad != null;
         }
 
-        private int checkTimer;
         public override void PostUpdateNPCs()
         {
             UpdateLaunchPads();
@@ -124,8 +123,6 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
         private void UpdateLaunchPads()
         {
-            checkTimer++;
-
             if (launchPadStorage.ContainsKey(MacrocosmSubworld.CurrentID))
             {
                 for (int i = 0; i < launchPadStorage[MacrocosmSubworld.CurrentID].Count; i++)
@@ -134,24 +131,16 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
                     if (!launchPad.Active)
                     {
+                        launchPad.Inventory?.DropAllItems(launchPad.Position);
                         launchPadStorage[MacrocosmSubworld.CurrentID].RemoveAt(i);
                         i--;
                     }
                     else
                     {
-                        if (checkTimer >= 10)
-                        {
-                            launchPad.TileCheck();
-                            checkTimer = 0;
-                        }
-
                         launchPad.Update();
                     }
                 }
             }
-
-            if (checkTimer >= 10)
-                checkTimer = 0;
         }
 
         public override void PostDrawTiles()

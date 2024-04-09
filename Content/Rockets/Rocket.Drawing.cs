@@ -169,10 +169,17 @@ namespace Macrocosm.Content.Rockets
             {
                 Vector2 drawPosition = GetModuleRelativePosition(module, position);
 
-                if (module is BoosterLeft)
-                    drawPosition.X -= 78;
+                if (module.IsBlueprint)
+                {
+                    if (module is BoosterLeft)
+                        drawPosition.X -= 78;
 
-                module.DrawBlueprint(spriteBatch, drawPosition);
+                    module.DrawBlueprint(spriteBatch, drawPosition);
+                }
+                else
+                {
+                    module.Draw(spriteBatch, drawPosition);
+                }
             }
         }
 

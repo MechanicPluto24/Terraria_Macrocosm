@@ -50,3 +50,4 @@ Computer.MapEntry: Computer
 MoonBaseCrate.MapEntry: Moon Base Crate
 ConstructionLight.MapEntry: Construction Light
 OreExcavator.MapEntry: Ore Excavator
+Fabricator.MapEntry: Fabricator

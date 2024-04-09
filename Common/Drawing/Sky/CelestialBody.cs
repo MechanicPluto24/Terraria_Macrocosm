@@ -113,7 +113,6 @@ namespace Macrocosm.Common.Drawing.Sky
         private SkyRotationMode rotationMode = SkyRotationMode.None;
 
         private CelestialBody lightSource = null;
-        private float overlayRotation = 0f;
 
         private CelestialBody orbitParent = null;
         private readonly List<CelestialBody> orbitChildren = new();

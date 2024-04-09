@@ -9,7 +9,7 @@ namespace Macrocosm.Content.Items.Materials.Ores
     {
         public override void SetStaticDefaults()
         {
-            Item.ResearchUnlockCount = 50;
+            Item.ResearchUnlockCount = 100;
         }
 
         public override void SetDefaults()

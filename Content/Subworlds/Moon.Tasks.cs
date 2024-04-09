@@ -3,7 +3,7 @@ using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Macrocosm.Common.WorldGeneration.Structures;
 using Macrocosm.Content.Tiles.Ambient;
-using Macrocosm.Content.Tiles.Blocks;
+using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Macrocosm.Content.Tiles.Ores;
 using Macrocosm.Content.Tiles.Walls;
 using Microsoft.Xna.Framework;

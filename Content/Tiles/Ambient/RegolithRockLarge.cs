@@ -1,6 +1,6 @@
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Items.Placeable.Blocks;
+using Macrocosm.Content.Items.Blocks.Terrain;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.GameContent;

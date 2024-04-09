@@ -2,7 +2,7 @@ using Macrocosm.Common.Bases.Tiles;
 using Macrocosm.Common.TileFrame;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Items.Placeable.Furniture.MoonBase;
+using Macrocosm.Content.Items.Furniture.MoonBase;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;

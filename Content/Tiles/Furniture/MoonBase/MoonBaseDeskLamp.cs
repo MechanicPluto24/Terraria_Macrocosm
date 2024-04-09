@@ -46,7 +46,7 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 
             AddMapEntry(new Color(253, 221, 3), CreateMapEntryName());
 
-            RegisterItemDrop(ModContent.ItemType<Items.Placeable.Furniture.MoonBase.MoonBaseDeskLamp>(), 0, 1);
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.MoonBase.MoonBaseDeskLamp>(), 0, 1);
 
         }
 

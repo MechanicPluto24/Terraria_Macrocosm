@@ -1,6 +1,6 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Content.Tiles.Ambient;
-using Macrocosm.Content.Tiles.Blocks;
+using Macrocosm.Content.Tiles.Blocks.Bricks;
 using Macrocosm.Content.Tiles.Furniture.MoonBase;
 using Macrocosm.Content.Tiles.Walls;
 using Terraria.ID;

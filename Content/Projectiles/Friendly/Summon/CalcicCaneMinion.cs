@@ -16,11 +16,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
     public class CalcicCaneMinion : ModProjectile
     {
         private static Asset<Texture2D> glowmask;
-        public override void Load()
-        {
-            glowmask = ModContent.Request<Texture2D>(Texture + "_Glow");
-        }
-
         public override void SetStaticDefaults()
         {
             Main.projFrames[Type] = 10;
@@ -71,6 +66,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D texture = TextureAssets.Projectile[Type].Value;
+            glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
 
             for (int i = 0; i < Projectile.oldPos.Length; i++)
             {
@@ -88,6 +84,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
         public override void PostDraw(Color lightColor)
         {
+            glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
             Projectile.DrawAnimatedExtra(glowmask.Value, Color.White, Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, new Vector2(0, Projectile.spriteDirection == 1 ? 5 : -1));
         }
 
