@@ -4,7 +4,7 @@ using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Graphics;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.Items.Materials.Drops;
 using Macrocosm.Content.Particles;
 using Macrocosm.Content.Players;
 using Microsoft.Xna.Framework;

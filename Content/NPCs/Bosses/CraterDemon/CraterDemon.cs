@@ -5,10 +5,10 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Consumables.BossBags;
 using Macrocosm.Content.Items.Currency;
-using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.Items.Materials.Drops;
 using Macrocosm.Content.Items.Pets;
-using Macrocosm.Content.Items.Placeable.Relics;
-using Macrocosm.Content.Items.Placeable.Trophies;
+using Macrocosm.Content.Items.Relics;
+using Macrocosm.Content.Items.Trophies;
 using Macrocosm.Content.Items.Vanity.BossMasks;
 using Macrocosm.Content.Items.Weapons.Magic;
 using Macrocosm.Content.Items.Weapons.Melee;
@@ -392,12 +392,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
         private const int Animation_LookRight_JawClosed = 4;
         private const int Animation_LookRight_JawOpen = 5;
 
-
         private static Asset<Texture2D> glowmask;
-        public override void Load()
-        {
-            glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Bosses/CraterDemon/CraterDemon_Glow");
-        }
 
         public override void SetStaticDefaults()
         {
@@ -613,6 +608,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 spriteBatch.Draw(TextureAssets.Npc[Type].Value, drawPos, NPC.frame, trailColor * 0.6f, NPC.rotation, Vector2.Zero, NPC.scale, SpriteEffects.None, 0f);
 
                 Color glowColor = (Color)GetAlpha(Color.White) * (((float)NPC.oldPos.Length - i) / NPC.oldPos.Length);
+
+                glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
                 spriteBatch.Draw(glowmask.Value, drawPos, NPC.frame, glowColor * 0.6f, NPC.rotation, Vector2.Zero, NPC.scale, SpriteEffects.None, 0f);
             }
 
@@ -621,6 +618,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
         public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
+            glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
             spriteBatch.Draw(glowmask.Value, NPC.position - screenPos + new Vector2(0, 4), NPC.frame, (Color)GetAlpha(Color.White), NPC.rotation, Vector2.Zero, NPC.scale, SpriteEffects.None, 0f);
             DrawLensFlares(spriteBatch, screenPos);
         }

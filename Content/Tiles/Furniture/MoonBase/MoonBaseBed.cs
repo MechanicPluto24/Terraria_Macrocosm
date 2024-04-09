@@ -126,7 +126,7 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
             {
                 player.noThrow = 2;
                 player.cursorItemIconEnabled = true;
-                player.cursorItemIconID = ModContent.ItemType<Items.Placeable.Furniture.MoonBase.MoonBaseBed>();
+                player.cursorItemIconID = ModContent.ItemType<Items.Furniture.MoonBase.MoonBaseBed>();
             }
         }
     }

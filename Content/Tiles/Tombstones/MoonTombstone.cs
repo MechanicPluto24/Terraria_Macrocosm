@@ -30,8 +30,8 @@ namespace Macrocosm.Content.Tiles.Tombstones
 
             AddMapEntry(new Color(180, 180, 180));
 
-            RegisterItemDrop(ModContent.ItemType<Items.Placeable.Tombstones.MoonTombstone>(), 0, 1);
-            RegisterItemDrop(ModContent.ItemType<Items.Placeable.Tombstones.MoonHeadstone>(), 2, 3);
+            RegisterItemDrop(ModContent.ItemType<Items.Tombstones.MoonTombstone>(), 0, 1);
+            RegisterItemDrop(ModContent.ItemType<Items.Tombstones.MoonHeadstone>(), 2, 3);
         }
 
         public override void NearbyEffects(int i, int j, bool closer)

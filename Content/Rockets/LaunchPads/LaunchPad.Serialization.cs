@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Macrocosm.Common.Storage;
+using System;
 using Terraria.DataStructures;
 using Terraria.ModLoader.IO;
 
@@ -19,7 +20,11 @@ namespace Macrocosm.Content.Rockets.LaunchPads
                 [nameof(EndTile)] = EndTile,
                 [nameof(RocketID)] = RocketID,
                 [nameof(CompassCoordinates)] = CompassCoordinates,
+                [nameof(Inventory)] = Inventory
             };
+
+            if (!HasRocket)
+                tag[nameof(rocketUnderConstruction)] = rocketUnderConstruction;
 
             return tag;
         }
@@ -41,6 +46,12 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
             if (tag.ContainsKey(nameof(CompassCoordinates)))
                 launchPad.CompassCoordinates = tag.GetString(nameof(CompassCoordinates));
+
+            if(tag.ContainsKey(nameof(Inventory)))
+                launchPad.Inventory = tag.Get<Inventory>(nameof(Inventory));
+
+            if (!launchPad.HasRocket && tag.ContainsKey(nameof(rocketUnderConstruction)))
+                launchPad.rocketUnderConstruction = tag.Get<Rocket>(nameof(rocketUnderConstruction));
 
             return launchPad;
         }

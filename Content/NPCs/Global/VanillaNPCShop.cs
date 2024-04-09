@@ -1,4 +1,4 @@
-﻿using Macrocosm.Content.Items.Placeable.Paintings;
+﻿using Macrocosm.Content.Items.Paintings;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

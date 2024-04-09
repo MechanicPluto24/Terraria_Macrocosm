@@ -1,6 +1,6 @@
 ﻿using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Items.MeteorChunks;
+using Macrocosm.Content.Items.GrabBags;
 using Macrocosm.Content.Projectiles.Environment.Debris;
 using Microsoft.Xna.Framework;
 using Terraria;

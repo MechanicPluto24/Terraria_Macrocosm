@@ -53,9 +53,11 @@ namespace Macrocosm.Common.Debugging.Stats
             Item item = modItem.Item;
 
             if (item.value > 0)
-                writer.WriteLine("\tValue: " + Main.ValueToCoins(item.value));
+                writer.WriteLine($"\tValue: {Main.ValueToCoins(item.value)}");
             else
                 writer.WriteLine("\tValue: No value");
+
+            writer.WriteLine($"\tResearch count: {item.ResearchUnlockCount}");
 
             bool alreadyFoundRecipesForThisItem = false;
             foreach (Recipe recipe in Main.recipe)

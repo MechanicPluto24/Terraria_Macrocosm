@@ -337,7 +337,7 @@ namespace Macrocosm.Content.Menus
             intensity = 1f;
             float offsetRadius = MathHelper.Lerp(0.5f, 0.3f, Utility.QuadraticEaseInOut(rotationProgress));
             offset = Utility.PolarVector(offsetRadius, rotation);
-            shadeResolution *= 1;
+            shadeResolution *= 2;
             radius = MathHelper.Lerp(1.8f, 1.3f, Math.Abs(rotationProgress)) - 0.15f * SolarFlareProgress;
         }
 

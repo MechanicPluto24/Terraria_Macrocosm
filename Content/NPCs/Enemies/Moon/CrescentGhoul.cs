@@ -1,7 +1,7 @@
 ﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.Items.Materials.Drops;
 using Macrocosm.Content.NPCs.Bosses.CraterDemon;
 using Macrocosm.Content.NPCs.Global;
 using Microsoft.Xna.Framework;
@@ -22,9 +22,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         public enum ActionState
         {
             Chase,
-            StartSpin,
+            Accelerate,
             Spin,
-            StopSpin
+            Decelerate
         }
 
         public ActionState AI_State
@@ -35,13 +35,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public ref float AI_Timer => ref NPC.ai[1];
 
-
         private static Asset<Texture2D> glowmask;
-
-        public override void Load()
-        {
-            glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Enemies/Moon/CrescentGhoul_Glow");
-        }
 
         public override void SetStaticDefaults()
         {
@@ -165,13 +159,13 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 }
                 else
                 {
-                    AI_State = ActionState.StartSpin;
+                    AI_State = ActionState.Accelerate;
                     NPC.ai[2] = positionDiff.X;
                     NPC.ai[3] = positionDiff.Y;
                     NPC.netUpdate = true;
                 }
             }
-            else if (AI_State == ActionState.StartSpin)
+            else if (AI_State == ActionState.Accelerate)
             {
                 NPC.knockBackResist = 0f;
                 NPC.velocity *= startSpinDeceleration;
@@ -199,7 +193,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
                 if (NPC.velocity.Length() < dashStopSpeed)
                 {
-                    AI_State = ActionState.StopSpin;
+                    AI_State = ActionState.Decelerate;
                     AI_Timer = 45f;
                     NPC.ai[2] = 0f;
                     NPC.ai[3] = 0f;
@@ -217,7 +211,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 }
 
             }
-            else if (AI_State == ActionState.StopSpin)
+            else if (AI_State == ActionState.Decelerate)
             {
                 AI_Timer -= 3f;
                 if (AI_Timer <= 0f)
@@ -249,6 +243,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
+            glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
             SpriteEffects effect = NPC.spriteDirection == -1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
             int frameHeight = TextureAssets.Npc[Type].Height() / Main.npcFrameCount[Type];
             spriteBatch.Draw(glowmask.Value, NPC.Center - Main.screenPosition, NPC.frame, Color.White, NPC.rotation, new Vector2(TextureAssets.Npc[Type].Width() / 2f, frameHeight / 2f), NPC.scale, effect, 0f);

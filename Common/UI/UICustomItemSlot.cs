@@ -1,9 +1,12 @@
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System.Collections.Generic;
+using System.Linq;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
@@ -13,6 +16,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 using Terraria.UI.Chat;
+using static Macrocosm.Content.Tiles.Furniture.MoonBase.MoonBaseChest;
 using static Terraria.UI.ItemSlot;
 
 namespace Macrocosm.Common.UI
@@ -43,6 +47,14 @@ namespace Macrocosm.Common.UI
         public bool CanTrash { get; set; } = false;
         public bool CanFavorite { get; set; } = false;
         protected Vector2 DrawOffset { get; set; } = new Vector2(52f, 52f) * -0.5f;
+
+        public float SizeLimit { get; set; } = 32f;
+
+        public List<int> Whitelist { get; set; } = new();
+        public List<int> Blacklist { get; set; } = new();
+
+        public Asset<Texture2D> BlueprintTexture;
+
 
         public UICustomItemSlot(Inventory inventory, int itemIndex, int itemSlotContext = Context.ChestItem, float scale = default)
         {
@@ -189,6 +201,12 @@ namespace Macrocosm.Common.UI
                 return;
             }
 
+            if (Whitelist.Any() && !Whitelist.Contains(Main.mouseItem.type) && Main.mouseItem.type != 0)
+                return;
+
+            if (Blacklist.Any() && Blacklist.Contains(Main.mouseItem.type) && Main.mouseItem.type != 0)
+                return;
+
             if (!(Main.mouseItem.maxStack > 1 && item.type == Main.mouseItem.type && item.stack != item.maxStack && Main.mouseItem.stack != Main.mouseItem.maxStack))
                 Terraria.Utils.Swap(ref item, ref Main.mouseItem);
 
@@ -328,6 +346,9 @@ namespace Macrocosm.Common.UI
             spriteBatch.Draw(slotTexture.Value, position, null, slotColor, 0f, default, Main.inventoryScale, SpriteEffects.None, 0f);
             spriteBatch.Draw(slotBorderTexture.Value, position, null, slotBorderColor, 0f, default, Main.inventoryScale, SpriteEffects.None, 0f);
 
+            if (BlueprintTexture is not null)
+                spriteBatch.Draw(BlueprintTexture.Value, position + (slotTexture.Size() / 2f * Main.inventoryScale), null, slotBorderColor, 0f, BlueprintTexture.Size() / 2f, Main.inventoryScale, SpriteEffects.None, 0f);
+
             if (item.favorited)
                 spriteBatch.Draw(slotFavoritedTexture.Value, position, null, slotFavoritedColor, 0f, default, Main.inventoryScale, SpriteEffects.None, 0f);
 
@@ -358,7 +379,7 @@ namespace Macrocosm.Common.UI
             Vector2 vector = slotTexture.Size() * Main.inventoryScale;
             if (item.type > ItemID.None && item.stack > 0)
             {
-                float _ = ItemSlot.DrawItemIcon(item, itemSlotContext, spriteBatch, position + vector / 2f, Main.inventoryScale, 32f, color);
+                DrawItemIcon(item, itemSlotContext, spriteBatch, position + vector / 2f, Main.inventoryScale, SizeLimit, color);
                 DrawExtras(spriteBatch, ref item, position);
 
                 if (item.stack > 1)
@@ -405,6 +426,36 @@ namespace Macrocosm.Common.UI
                 spriteBatch.Draw(texture, position + offset + new Vector2(40f, 40f) * Main.inventoryScale, rectangle, color, 0f, rectangle.Size() / 2f, 1f, SpriteEffects.None, 0f);
             }
         }
+
+        /*
+        private SpriteBatchState state;
+        private void DrawBlueprint(SpriteBatch spriteBatch, Vector2 position, Color outlineColor, Color fillColor)
+        {
+            state.SaveState(spriteBatch);
+            SamplerState samplerState = Main.graphics.GraphicsDevice.SamplerStates[1];
+
+            Effect effect = ModContent.Request<Effect>(Macrocosm.ShadersPath + "ColorMaskShading", AssetRequestMode.ImmediateLoad).Value;
+            Main.graphics.GraphicsDevice.Textures[1] = BlueprintTexture.Value;
+            Main.graphics.GraphicsDevice.SamplerStates[1] = SamplerState.PointClamp;
+
+            effect.Parameters["uColorCount"].SetValue(2);
+            effect.Parameters["uColorKey"].SetValue(blueprintKeys);
+            effect.Parameters["uColor"].SetValue((new Color[] { fillColor, outlineColor }).ToVector4Array());
+            effect.Parameters["uSampleBrightness"].SetValue(false);
+            spriteBatch.End();
+            spriteBatch.Begin(state.SpriteSortMode, state.BlendState, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, effect, state.Matrix);
+            spriteBatch.Draw(BlueprintTexture.Value, position + (slotTexture.Size() / 2f * Main.inventoryScale) , null, Color.White, 0f, BlueprintTexture.Size() / 2f, Main.inventoryScale, SpriteEffects.None, 0f);
+            spriteBatch.End();
+            spriteBatch.Begin(state);
+            Main.graphics.GraphicsDevice.Textures[1] = null;
+            Main.graphics.GraphicsDevice.SamplerStates[1] = samplerState;
+        }
+
+        private readonly Vector3[] blueprintKeys = [
+            new Vector3(0.47f, 0.47f, 0.47f),
+            new Vector3(0.74f, 0.74f, 0.74f)
+        ];
+        */
     }
 }
 

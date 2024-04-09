@@ -85,7 +85,7 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 
             player.noThrow = 2;
             player.cursorItemIconEnabled = true;
-            player.cursorItemIconID = ModContent.ItemType<Items.Placeable.Furniture.MoonBase.MoonBaseChair>();
+            player.cursorItemIconID = ModContent.ItemType<Items.Furniture.MoonBase.MoonBaseChair>();
 
             if (Main.tile[i, j].TileFrameX / 18 < 1)
                 player.cursorItemIconReversed = true;

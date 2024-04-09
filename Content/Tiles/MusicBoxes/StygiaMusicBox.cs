@@ -29,7 +29,7 @@ namespace Macrocosm.Content.Tiles.MusicBoxes
             Player player = Main.LocalPlayer;
             player.noThrow = 2;
             player.cursorItemIconEnabled = true;
-            player.cursorItemIconID = ModContent.ItemType<Items.Placeable.MusicBoxes.StygiaMusicBox>();
+            player.cursorItemIconID = ModContent.ItemType<Items.MusicBoxes.StygiaMusicBox>();
         }
     }
 }

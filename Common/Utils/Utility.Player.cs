@@ -27,12 +27,25 @@ namespace Macrocosm.Common.Utils
             Main.instance.CameraModifiers.Add(new ScreenshakeCameraModifier(intensity, context));
         }
 
-        public static Player GetClosestPlayer(Vector2 position, int width, int height) => Main.player[Player.FindClosest(position, width, height)];
-        public static Player GetClosestPlayer(Point tileCoords, int width, int height) => Main.player[Player.FindClosest(tileCoords.ToWorldCoordinates(), width, height)];
-        public static Player GetClosestPlayer(Point16 tileCoords, int width, int height) => Main.player[Player.FindClosest(tileCoords.ToWorldCoordinates(), width, height)];
+        public static Player GetClosestPlayer(Vector2 position, int width, int height)
+        {
+            return Main.player[Player.FindClosest(position, width, height)];
+        }
 
+        public static Player GetClosestPlayer(Point tileCoords, int width, int height)
+        {
+            return Main.player[Player.FindClosest(tileCoords.ToWorldCoordinates(), width, height)];
+        }
 
-        public static Item CurrentItem(this Player player) => Main.mouseItem.type == ItemID.None ? player.inventory[player.selectedItem] : Main.mouseItem;
+        public static Player GetClosestPlayer(Point16 tileCoords, int width, int height)
+        {
+            return Main.player[Player.FindClosest(tileCoords.ToWorldCoordinates(), width, height)];
+        }
+
+        public static Item CurrentItem(this Player player)
+        {
+            return Main.mouseItem.type == ItemID.None ? player.inventory[player.selectedItem] : Main.mouseItem;
+        }
 
         public static bool AltFunction(this Player player)
         {
@@ -45,24 +58,32 @@ namespace Macrocosm.Common.Utils
             Item item = player.HeldItem;
             bool flag21 = false;
 
-            Rectangle hitbox = new Rectangle((int)player.itemLocation.X, (int)player.itemLocation.Y, 32, 32);
+            Rectangle hitbox = new((int)player.itemLocation.X, (int)player.itemLocation.Y, 32, 32);
             if (!Main.dedServ)
+            {
                 hitbox = new Rectangle((int)player.itemLocation.X, (int)player.itemLocation.Y, TextureAssets.Item[item.type].Width(), TextureAssets.Item[item.type].Height());
+            }
 
             hitbox.Width = (int)(hitbox.Width * item.scale);
             hitbox.Height = (int)(hitbox.Height * item.scale);
             if (player.direction == -1)
+            {
                 hitbox.X -= hitbox.Width;
+            }
 
             if (player.gravDir == 1f)
+            {
                 hitbox.Y -= hitbox.Height;
+            }
 
             if (item.useStyle == ItemUseStyleID.Swing)
             {
                 if (player.itemAnimation < player.itemAnimationMax * 0.333)
                 {
                     if (player.direction == -1)
-                        hitbox.X -= (int)(hitbox.Width * 1.4 - hitbox.Width);
+                    {
+                        hitbox.X -= (int)((hitbox.Width * 1.4) - hitbox.Width);
+                    }
 
                     hitbox.Width = (int)(hitbox.Width * 1.4);
                     hitbox.Y += (int)(hitbox.Height * 0.5 * player.gravDir);
@@ -71,10 +92,12 @@ namespace Macrocosm.Common.Utils
                 else if (player.itemAnimation >= player.itemAnimationMax * 0.666)
                 {
                     if (player.direction == 1)
+                    {
                         hitbox.X -= (int)(hitbox.Width * 1.2);
+                    }
 
                     hitbox.Width *= 2;
-                    hitbox.Y -= (int)((hitbox.Height * 1.4 - hitbox.Height) * player.gravDir);
+                    hitbox.Y -= (int)(((hitbox.Height * 1.4) - hitbox.Height) * player.gravDir);
                     hitbox.Height = (int)(hitbox.Height * 1.4);
                 }
             }
@@ -87,7 +110,9 @@ namespace Macrocosm.Common.Utils
                 else
                 {
                     if (player.direction == -1)
-                        hitbox.X -= (int)(hitbox.Width * 1.4 - hitbox.Width);
+                    {
+                        hitbox.X -= (int)((hitbox.Width * 1.4) - hitbox.Width);
+                    }
 
                     hitbox.Width = (int)(hitbox.Width * 1.4);
                     hitbox.Y += (int)(hitbox.Height * 0.6);
@@ -155,13 +180,41 @@ namespace Macrocosm.Common.Utils
         public static bool ConsumeAmmo(Player player, Item item, Item ammo)
         {
             bool consume = true;
-            if (player.magicQuiver && ammo.ammo == AmmoID.Arrow && Main.rand.NextBool(5)) consume = false;
-            if (player.ammoBox && Main.rand.NextBool(5)) consume = false;
-            if (player.ammoPotion && Main.rand.NextBool(5)) consume = false;
-            if (player.ammoCost80 && Main.rand.NextBool(5)) consume = false;
-            if (player.ammoCost75 && Main.rand.NextBool(4)) consume = false;
-            if (!PlayerLoader.CanConsumeAmmo(player, item, ammo)) consume = false;
-            if (!ItemLoader.CanConsumeAmmo(item, ammo, player)) consume = false;
+            if (player.magicQuiver && ammo.ammo == AmmoID.Arrow && Main.rand.NextBool(5))
+            {
+                consume = false;
+            }
+
+            if (player.ammoBox && Main.rand.NextBool(5))
+            {
+                consume = false;
+            }
+
+            if (player.ammoPotion && Main.rand.NextBool(5))
+            {
+                consume = false;
+            }
+
+            if (player.ammoCost80 && Main.rand.NextBool(5))
+            {
+                consume = false;
+            }
+
+            if (player.ammoCost75 && Main.rand.NextBool(4))
+            {
+                consume = false;
+            }
+
+            if (!PlayerLoader.CanConsumeAmmo(player, item, ammo))
+            {
+                consume = false;
+            }
+
+            if (!ItemLoader.CanConsumeAmmo(item, ammo, player))
+            {
+                consume = false;
+            }
+
             return consume;
         }
 
@@ -239,20 +292,36 @@ namespace Macrocosm.Common.Utils
             if (vanity)
             {
                 if (armorType == 0)
+                {
                     return player.armor[10] != null && player.armor[10].type == itemType || player.armor[0] != null && player.armor[0].type == itemType;
+                }
+
                 if (armorType == 1)
+                {
                     return player.armor[11] != null && player.armor[11].type == itemType || player.armor[1] != null && player.armor[1].type == itemType;
+                }
+
                 if (armorType == 2)
+                {
                     return player.armor[12] != null && player.armor[12].type == itemType || player.armor[2] != null && player.armor[2].type == itemType;
+                }
             }
             else
             {
                 if (armorType == 0)
+                {
                     return player.armor[0] != null && player.armor[0].type == itemType;
+                }
+
                 if (armorType == 1)
+                {
                     return player.armor[1] != null && player.armor[1].type == itemType;
+                }
+
                 if (armorType == 2)
+                {
                     return player.armor[2] != null && player.armor[2].type == itemType;
+                }
             }
             return false;
         }
@@ -336,7 +405,11 @@ namespace Macrocosm.Common.Utils
          */
         public static bool HasItem(Player player, int[] types, ref int index, int[] counts = default, bool includeAmmo = false, bool includeCoins = false)
         {
-            if (types == null || types.Length == 0) return false; //no types to check!			
+            if (types == null || types.Length == 0)
+            {
+                return false; //no types to check!			
+            }
+
             if (counts == null || counts.Length == 0) { counts = Utility.FillArray(new int[types.Length], 1); }
             int countIndex = -1;
             if (includeCoins)
@@ -365,7 +438,11 @@ namespace Macrocosm.Common.Utils
 
         public static bool HasAllItems(Player player, int[] types, ref int[] indicies, int[] counts = default, bool includeAmmo = false, bool includeCoins = false)
         {
-            if (types == null || types.Length == 0) return false; //no types to check!
+            if (types == null || types.Length == 0)
+            {
+                return false; //no types to check!
+            }
+
             if (counts == null || counts.Length == 0) { counts = Utility.FillArray(new int[types.Length], 1); }
             int[] indexArray = new int[types.Length];
             bool[] foundItem = new bool[types.Length];
@@ -375,7 +452,11 @@ namespace Macrocosm.Common.Utils
                 {
                     for (int m2 = 0; m2 < types.Length; m2++)
                     {
-                        if (foundItem[m2]) continue;
+                        if (foundItem[m2])
+                        {
+                            continue;
+                        }
+
                         Item item = player.inventory[m];
                         if (item != null && item.type == types[m2] && item.stack >= counts[m2]) { foundItem[m2] = true; indexArray[m2] = m; }
                     }
@@ -387,7 +468,11 @@ namespace Macrocosm.Common.Utils
                 {
                     for (int m2 = 0; m2 < types.Length; m2++)
                     {
-                        if (foundItem[m2]) continue;
+                        if (foundItem[m2])
+                        {
+                            continue;
+                        }
+
                         Item item = player.inventory[m];
                         if (item != null && item.type == types[m2] && item.stack >= counts[m2]) { foundItem[m2] = true; indexArray[m2] = m; }
                     }
@@ -397,12 +482,23 @@ namespace Macrocosm.Common.Utils
             {
                 for (int m2 = 0; m2 < types.Length; m2++)
                 {
-                    if (foundItem[m2]) continue;
+                    if (foundItem[m2])
+                    {
+                        continue;
+                    }
+
                     Item item = player.inventory[m];
                     if (item != null && item.type == types[m2] && item.stack >= counts[m2]) { foundItem[m2] = true; indexArray[m2] = m; }
                 }
             }
-            foreach (bool f in foundItem) if (!f) return false;
+            foreach (bool f in foundItem)
+            {
+                if (!f)
+                {
+                    return false;
+                }
+            }
+
             return true;
         }
 
@@ -505,9 +601,20 @@ namespace Macrocosm.Common.Utils
         {
             foreach (Item item in items)
             {
-                if (item == null || item.IsAir) return false; //items in the list cannot be null!
-                if (!item.Name.StartsWith(setName)) return false;
-                if (mod != null && item.ModItem != null && !item.ModItem.Mod.Name.ToLower().Equals(mod.Name.ToLower())) return false;
+                if (item == null || item.IsAir)
+                {
+                    return false; //items in the list cannot be null!
+                }
+
+                if (!item.Name.StartsWith(setName))
+                {
+                    return false;
+                }
+
+                if (mod != null && item.ModItem != null && !item.ModItem.Mod.Name.ToLower().Equals(mod.Name.ToLower()))
+                {
+                    return false;
+                }
             }
             return true;
         }

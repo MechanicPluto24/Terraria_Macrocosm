@@ -1,5 +1,5 @@
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.Items.Materials.Drops;
 using Macrocosm.Content.NPCs.Global;
 using Terraria;
 using Terraria.GameContent.ItemDropRules;
@@ -41,7 +41,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return spawnInfo.SpawnTileType == ModContent.TileType<Tiles.Blocks.Regolith>() && Main.dayTime ? 0.1f : 0f;
+            return spawnInfo.SpawnTileType == ModContent.TileType<Tiles.Blocks.Terrain.Regolith>() && Main.dayTime ? 0.1f : 0f;
         }
 
         public override void ModifyNPCLoot(NPCLoot loot)
