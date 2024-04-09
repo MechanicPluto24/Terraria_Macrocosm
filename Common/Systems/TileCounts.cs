@@ -1,5 +1,5 @@
 ﻿using Macrocosm.Common.Bases.Tiles;
-using Macrocosm.Content.Tiles.Blocks;
+using Macrocosm.Content.Tiles.Blocks.Terrain;
 using System;
 using System.Collections.Generic;
 using System.Linq;

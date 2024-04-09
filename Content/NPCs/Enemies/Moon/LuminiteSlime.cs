@@ -4,7 +4,7 @@ using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.NPCs.Global;
 using Macrocosm.Content.Projectiles.Hostile;
-using Macrocosm.Content.Tiles.Blocks;
+using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.GameContent.ItemDropRules;

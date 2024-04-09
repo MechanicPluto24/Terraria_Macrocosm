@@ -214,6 +214,80 @@ SteelLeggings
 		Anvil
 
 
+MercurianBanner
+	Value: 5 silver
+	Research count: 1
+
+CoalBrick
+	Value: No value
+	Research count: 100
+	Recipes:
+		Coal x 2
+		at
+		Furnace
+
+
+IrradiatedBrick
+	Value: No value
+	Research count: 100
+	Recipes:
+		Irradiated Rock x 2
+		at
+		Work Bench
+
+
+RegolithBrick
+	Value: No value
+	Research count: 100
+	Recipes:
+		Regolith x 2
+		at
+		Work Bench
+
+
+LexanGlass
+	Value: No value
+	Research count: 100
+	Recipes:
+		Plastic x 15
+		Glass x 15
+		at
+		Glass Kiln
+			=> x15
+
+
+MoonBasePlating
+	Value: No value
+	Research count: 100
+
+SilicaCrimsand
+	Value: No value
+	Research count: 200
+
+SilicaEbonsand
+	Value: No value
+	Research count: 200
+
+SilicaPearlsand
+	Value: No value
+	Research count: 200
+
+SilicaSand
+	Value: No value
+	Research count: 200
+
+IrradiatedRock
+	Value: No value
+	Research count: 100
+
+Protolith
+	Value: No value
+	Research count: 100
+
+Regolith
+	Value: No value
+	Research count: 100
+
 CraterDemonBossBag
 	Value: No value
 	Research count: 3
@@ -236,6 +310,22 @@ MoonPhaseGlobe
 HelixPatternDesign
 	Value: No value
 	Research count: 5
+
+AdamantiteLoom
+	Value: 5 silver
+	Research count: 1
+
+Fabricator
+	Value: 5 silver
+	Research count: 1
+
+OilRefinery
+	Value: 5 silver
+	Research count: 1
+
+TitaniumLoom
+	Value: 5 silver
+	Research count: 1
 
 Moonstone
 	Value: 7 silver 50 copper
@@ -265,266 +355,11 @@ Teleporter
 	Value: 10 gold
 	Research count: 1
 
-MeteoricChunk
-	Value: 5 silver
-	Research count: 10
-
-NebulaChunk
-	Value: 5 silver
-	Research count: 10
-
-SolarChunk
-	Value: 5 silver
-	Research count: 10
-
-StardustChunk
-	Value: 5 silver
-	Research count: 10
-
-VortexChunk
-	Value: 5 silver
-	Research count: 10
-
-OreExcavator
-	Value: 5 silver
-	Research count: 1
-
-AlienResidue
-	Value: 5 silver
-	Research count: 25
-
-AluminumBar
-	Value: 7 silver 50 copper
-	Research count: 25
-	Recipes:
-		Aluminum Ore x 4
-		at
-		Anvil
-
-
-ArtemiteBar
-	Value: 7 silver 50 copper
-	Research count: 25
-	Recipes:
-		Artemite Ore x 6
-		at
-		Ancient Manipulator
-
-
-ChandriumBar
-	Value: 7 silver 50 copper
-	Research count: 25
-	Recipes:
-		Chandrium Ore x 6
-		at
-		Ancient Manipulator
-
-
-DianiteBar
-	Value: 7 silver 50 copper
-	Research count: 25
-	Recipes:
-		Dianite Ore x 6
-		at
-		Ancient Manipulator
-
-
-SeleniteBar
-	Value: 7 silver 50 copper
-	Research count: 25
-	Recipes:
-		Selenite Ore x 6
-		at
-		Ancient Manipulator
-
-
-SteelBar
-	Value: 1 gold 75 silver
-	Research count: 25
-	Recipes:
-		Iron Bar x 2
-		Coal x 1
-		at
-		Hellforge
-
-
-BrokenHeroShield
-	Value: 1 gold
-	Research count: 1
-
-CortexFragment
-	Value: 1 silver
-	Research count: 1
-
-DeliriumPlating
-	Value: 1 silver
-	Research count: 25
-
-Gear
-	Value: 1 silver
-	Research count: 5
-
-Motor
-	Value: 1 silver
-	Research count: 5
-
-AluminumOre
-	Value: 7 silver 50 copper
-	Research count: 100
-
-ArtemiteOre
-	Value: 7 silver 50 copper
-	Research count: 100
-
-ChandriumOre
-	Value: 7 silver 50 copper
-	Research count: 100
-
-Coal
-	Value: 7 silver 50 copper
-	Research count: 100
-
-DianiteOre
-	Value: 7 silver 50 copper
-	Research count: 100
-
-LithiumOre
-	Value: 7 silver 50 copper
-	Research count: 100
-
-OilShale
-	Value: 7 silver 50 copper
-	Research count: 100
-
-SeleniteOre
-	Value: 7 silver 50 copper
-	Research count: 100
-
-Silicon
-	Value: 7 silver 50 copper
-	Research count: 100
-
-OxygenSystem
-	Value: 1 silver
-	Research count: 5
-	Recipes:
-		Oxygen Tank x 2
-		Printed Circuit Board x 1
-		at
-		Work Bench
-
-
-OxygenTank
-	Value: 1 silver
-	Research count: 5
-
-Plastic
-	Value: 1 silver
-	Research count: 100
-
-PrintedCircuitBoard
-	Value: 1 silver
-	Research count: 5
-
-ReactorComponent
-	Value: 1 silver
-	Research count: 5
-
-ReactorHousing
-	Value: 1 silver
-	Research count: 5
-
-SpaceDust
-	Value: 1 silver
-	Research count: 25
-
-SpacesuitFabric
-	Value: 1 silver
-	Research count: 25
-
-SpaceShuttle
-	Value: 3 silver
-	Research count: 1
-
-CraterDemonPet
-	Value: No value
-	Research count: 1
-
-MercurianBanner
-	Value: 5 silver
-	Research count: 1
-
-IrradiatedBrick
-	Value: No value
-	Research count: 100
-	Recipes:
-		Irradiated Rock x 2
-		at
-		Work Bench
-
-
-IrradiatedRock
-	Value: No value
-	Research count: 100
-
-LexanGlass
-	Value: No value
-	Research count: 100
-
-MoonBasePlating
-	Value: No value
-	Research count: 100
-
-Protolith
-	Value: No value
-	Research count: 100
-
-Regolith
-	Value: No value
-	Research count: 100
-
-RegolithBrick
-	Value: No value
-	Research count: 100
-	Recipes:
-		Regolith x 2
-		at
-		Work Bench
-
-
-SilicaCrimsand
-	Value: No value
-	Research count: 200
-
-SilicaEbonsand
-	Value: No value
-	Research count: 200
-
-SilicaPearlsand
-	Value: No value
-	Research count: 200
-
-SilicaSand
-	Value: No value
-	Research count: 200
-
-AdamantiteLoom
-	Value: 5 silver
-	Research count: 1
-
-Computer
-	Value: 5 silver
-	Research count: 1
-
 ConstructionLight
 	Value: 5 silver
 	Research count: 1
 
 EarthGlobe
-	Value: 5 silver
-	Research count: 1
-
-LaunchPadMarker
 	Value: 5 silver
 	Research count: 1
 
@@ -670,14 +505,6 @@ MoonBaseSofa
 		Work Bench
 
 
-OilRefinery
-	Value: 5 silver
-	Research count: 1
-
-PowerJunction
-	Value: 5 silver
-	Research count: 1
-
 SolarPanelLarge
 	Value: 5 silver
 	Research count: 1
@@ -694,12 +521,342 @@ TeddyBear
 	Value: 5 silver
 	Research count: 1
 
-TitaniumLoom
+XFLR6
 	Value: 5 silver
 	Research count: 1
 
-XFLR6
+MeteoricChunk
 	Value: 5 silver
+	Research count: 10
+
+NebulaChunk
+	Value: 5 silver
+	Research count: 10
+
+SolarChunk
+	Value: 5 silver
+	Research count: 10
+
+StardustChunk
+	Value: 5 silver
+	Research count: 10
+
+VortexChunk
+	Value: 5 silver
+	Research count: 10
+
+OreExcavator
+	Value: 5 silver
+	Research count: 1
+
+AluminumBar
+	Value: 7 silver 50 copper
+	Research count: 25
+	Recipes:
+		Aluminum Ore x 4
+		at
+		Anvil
+
+
+ArtemiteBar
+	Value: 7 silver 50 copper
+	Research count: 25
+	Recipes:
+		Artemite Ore x 6
+		at
+		Ancient Manipulator
+
+
+ChandriumBar
+	Value: 7 silver 50 copper
+	Research count: 25
+	Recipes:
+		Chandrium Ore x 6
+		at
+		Ancient Manipulator
+
+
+DianiteBar
+	Value: 7 silver 50 copper
+	Research count: 25
+	Recipes:
+		Dianite Ore x 6
+		at
+		Ancient Manipulator
+
+
+SeleniteBar
+	Value: 7 silver 50 copper
+	Research count: 25
+	Recipes:
+		Selenite Ore x 6
+		at
+		Ancient Manipulator
+
+
+SteelBar
+	Value: 1 gold 75 silver
+	Research count: 25
+	Recipes:
+		Iron Bar x 2
+		Coal x 1
+		at
+		Hellforge
+
+
+AlienResidue
+	Value: 5 silver
+	Research count: 25
+
+BrokenHeroShield
+	Value: 1 gold
+	Research count: 1
+
+CortexFragment
+	Value: 1 silver
+	Research count: 1
+
+DeliriumPlating
+	Value: 1 silver
+	Research count: 25
+
+SpaceDust
+	Value: 1 silver
+	Research count: 25
+
+ZombieFinger
+	Value: 2 silver
+	Research count: 1
+
+AluminumOre
+	Value: 7 silver 50 copper
+	Research count: 100
+
+ArtemiteOre
+	Value: 7 silver 50 copper
+	Research count: 100
+
+ChandriumOre
+	Value: 7 silver 50 copper
+	Research count: 100
+
+Coal
+	Value: 7 silver 50 copper
+	Research count: 100
+
+DianiteOre
+	Value: 7 silver 50 copper
+	Research count: 100
+
+LithiumOre
+	Value: 7 silver 50 copper
+	Research count: 100
+
+OilShale
+	Value: 7 silver 50 copper
+	Research count: 100
+
+SeleniteOre
+	Value: 7 silver 50 copper
+	Research count: 100
+
+Silicon
+	Value: 7 silver 50 copper
+	Research count: 100
+
+FuelCell
+	Value: 1 silver
+	Research count: 100
+
+Plastic
+	Value: 1 silver
+	Research count: 100
+	Recipes:
+		Coal x 5
+		Oil Shale x 5
+		at
+		Alchemy Table
+
+
+SpacesuitFabric
+	Value: 1 silver
+	Research count: 25
+	Recipes:
+		Plastic x 1
+		Silk x 2
+		at
+		Industrial Loom
+
+
+Battery
+	Value: 1 silver
+	Research count: 5
+	Recipes:
+		Lithium x 2
+		Coal x 1
+		Copper Bar x 1
+		at
+		Fabricator
+
+		Lithium x 2
+		Coal x 1
+		Tin Bar x 1
+		at
+		Fabricator
+
+
+CompactDisk
+	Value: 1 silver
+	Research count: 5
+
+Computer
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Plastic x 5
+		Printed Circuit Board x 2
+		Glass x 2
+		at
+		Fabricator
+
+
+ElasticFiber
+	Value: 1 silver
+	Research count: 5
+
+Gear
+	Value: 1 silver
+	Research count: 5
+	Recipes:
+		Steel Bar x 2
+		at
+		Anvil
+
+
+Motor
+	Value: 1 silver
+	Research count: 5
+	Recipes:
+		Gear x 2
+		Steel Bar x 5
+		at
+		Fabricator
+
+
+OxygenSystem
+	Value: 1 silver
+	Research count: 5
+	Recipes:
+		Oxygen Tank x 2
+		Printed Circuit Board x 1
+		Plastic x 3
+		Copper Bar x 10
+		at
+		Fabricator
+
+		Oxygen Tank x 2
+		Printed Circuit Board x 1
+		Plastic x 3
+		Tin Bar x 10
+		at
+		Fabricator
+
+
+OxygenTank
+	Value: 1 silver
+	Research count: 5
+	Recipes:
+		Steel Bar x 5
+		Aluminum Bar x 10
+		at
+		Fabricator
+
+
+PowerJunction
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Battery x 4
+		Printed Circuit Board x 2
+		Plastic x 5
+		at
+		Fabricator
+
+
+PrintedCircuitBoard
+	Value: 1 silver
+	Research count: 5
+	Recipes:
+		Silicon x 5
+		Plastic x 2
+		Wire x 25
+		Silver Bar x 2
+		at
+		Fabricator
+
+		Silicon x 5
+		Plastic x 2
+		Wire x 25
+		Tungsten Bar x 2
+		at
+		Fabricator
+
+
+ReactorComponent
+	Value: 1 silver
+	Research count: 5
+	Recipes:
+		Steel Bar x 20
+		Luminite Bar x 20
+		Glass x 50
+		Iron Bar x 50
+		at
+		Fabricator
+
+		Steel Bar x 20
+		Luminite Bar x 20
+		Glass x 50
+		Lead Bar x 50
+		at
+		Fabricator
+
+
+ReactorHousing
+	Value: 1 silver
+	Research count: 5
+	Recipes:
+		Steel Bar x 35
+		Silt Block x 50
+		Stone Block x 100
+		at
+		Fabricator
+
+
+RocketLandingLeg
+	Value: 1 silver
+	Research count: 5
+
+RocketPlating
+	Value: 1 silver
+	Research count: 5
+	Recipes:
+		Aluminum Bar x 10
+		Steel Bar x 10
+		Meteorite Bar x 10
+		Adamantite Bar x 10
+		at
+		Fabricator
+
+		Aluminum Bar x 10
+		Steel Bar x 10
+		Meteorite Bar x 10
+		Titanium Bar x 10
+		at
+		Fabricator
+
+
+SpaceShuttle
+	Value: 3 silver
 	Research count: 1
 
 DeadworldMusicBox
@@ -754,8 +911,16 @@ WhenDayBreaks
 	Value: No value
 	Research count: 1
 
+CraterDemonPet
+	Value: No value
+	Research count: 1
+
 CraterDemonRelic
 	Value: 5 gold
+	Research count: 1
+
+LaunchPadMarker
+	Value: 5 silver
 	Research count: 1
 
 MoonGoldCrescent
@@ -777,116 +942,6 @@ MoonHeadstone
 MoonTombstone
 	Value: No value
 	Research count: 2
-
-CraterDemonTrophy
-	Value: 1 gold
-	Research count: 1
-
-IrradiatedBrickWall
-	Value: No value
-	Research count: 400
-	Recipes:
-		Irradiated Brick x 1
-		at
-		Work Bench
-			=> x4
-
-
-IrradiatedRockWall
-	Value: No value
-	Research count: 400
-	Recipes:
-		Irradiated Rock x 1
-		at
-		Work Bench
-			=> x4
-
-
-MoonBaseHazardWall
-	Value: No value
-	Research count: 400
-	Recipes:
-		Moon Base Plating x 1
-		at
-		Work Bench
-			=> x4
-
-
-MoonBaseHazardWallUnsafe
-	Value: No value
-	Research count: 400
-
-MoonBasePlatingWall
-	Value: No value
-	Research count: 400
-	Recipes:
-		Moon Base Plating x 1
-		at
-		Work Bench
-			=> x4
-
-
-MoonBasePlatingWallUnsafe
-	Value: No value
-	Research count: 400
-
-MoonBaseSquarePaneledWall
-	Value: No value
-	Research count: 400
-	Recipes:
-		Moon Base Plating x 1
-		at
-		Work Bench
-			=> x4
-
-
-MoonBaseSquarePaneledWallUnsafe
-	Value: No value
-	Research count: 400
-
-MoonBaseTrimmingWall
-	Value: No value
-	Research count: 400
-	Recipes:
-		Moon Base Plating x 1
-		at
-		Work Bench
-			=> x4
-
-
-MoonBaseTrimmingWallUnsafe
-	Value: No value
-	Research count: 400
-
-ProtolithWall
-	Value: No value
-	Research count: 400
-	Recipes:
-		Protolith x 1
-		at
-		Work Bench
-			=> x4
-
-
-RegolithBrickWall
-	Value: No value
-	Research count: 400
-	Recipes:
-		Regolith Brick x 1
-		at
-		Work Bench
-			=> x4
-
-
-RegolithWall
-	Value: No value
-	Research count: 400
-	Recipes:
-		Regolith x 1
-		at
-		Work Bench
-			=> x4
-
 
 AluminumAxe
 	Value: 13 silver 75 copper
@@ -1052,13 +1107,119 @@ SteelPickaxe
 		Anvil
 
 
-ZombieFinger
-	Value: 2 silver
+CraterDemonTrophy
+	Value: 1 gold
 	Research count: 1
 
 CraterDemonMask
 	Value: 1 gold
 	Research count: 1
+
+IrradiatedBrickWall
+	Value: No value
+	Research count: 400
+	Recipes:
+		Irradiated Brick x 1
+		at
+		Work Bench
+			=> x4
+
+
+IrradiatedRockWall
+	Value: No value
+	Research count: 400
+	Recipes:
+		Irradiated Rock x 1
+		at
+		Work Bench
+			=> x4
+
+
+MoonBaseHazardWall
+	Value: No value
+	Research count: 400
+	Recipes:
+		Moon Base Plating x 1
+		at
+		Work Bench
+			=> x4
+
+
+MoonBaseHazardWallUnsafe
+	Value: No value
+	Research count: 400
+
+MoonBasePlatingWall
+	Value: No value
+	Research count: 400
+	Recipes:
+		Moon Base Plating x 1
+		at
+		Work Bench
+			=> x4
+
+
+MoonBasePlatingWallUnsafe
+	Value: No value
+	Research count: 400
+
+MoonBaseSquarePaneledWall
+	Value: No value
+	Research count: 400
+	Recipes:
+		Moon Base Plating x 1
+		at
+		Work Bench
+			=> x4
+
+
+MoonBaseSquarePaneledWallUnsafe
+	Value: No value
+	Research count: 400
+
+MoonBaseTrimmingWall
+	Value: No value
+	Research count: 400
+	Recipes:
+		Moon Base Plating x 1
+		at
+		Work Bench
+			=> x4
+
+
+MoonBaseTrimmingWallUnsafe
+	Value: No value
+	Research count: 400
+
+ProtolithWall
+	Value: No value
+	Research count: 400
+	Recipes:
+		Protolith x 1
+		at
+		Work Bench
+			=> x4
+
+
+RegolithBrickWall
+	Value: No value
+	Research count: 400
+	Recipes:
+		Regolith Brick x 1
+		at
+		Work Bench
+			=> x4
+
+
+RegolithWall
+	Value: No value
+	Research count: 400
+	Recipes:
+		Regolith x 1
+		at
+		Work Bench
+			=> x4
+
 
 DianiteFork
 	Value: 1 gold

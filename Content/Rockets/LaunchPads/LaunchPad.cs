@@ -1,8 +1,10 @@
 ﻿using Macrocosm.Common.Netcode;
+using Macrocosm.Common.Storage;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.CursorIcons;
+using Macrocosm.Content.Tiles.Special;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -12,10 +14,10 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.LaunchPads
 {
-    public partial class LaunchPad
+    public partial class LaunchPad : IInventoryOwner
     {
-        public static int MinWidth => 12;
-        public static int MaxWidth => 24;
+        public static int MinWidth => 18;
+        public static int MaxWidth => 34;
 
         [NetSync] public bool Active;
         [NetSync] public Point16 StartTile;
@@ -23,11 +25,23 @@ namespace Macrocosm.Content.Rockets.LaunchPads
         [NetSync] public int RocketID = -1;
         [NetSync] public string CompassCoordinates = "";
 
+        public Rocket Rocket => HasRocket ? RocketManager.Rockets[RocketID] : rocketUnderConstruction;
         public bool HasRocket => RocketID >= 0;
+
+        private Rocket rocketUnderConstruction;
+        private Inventory constructionInventory;
 
         public int Width => EndTile.X + 1 - StartTile.X;
         public Rectangle Hitbox => new((int)(StartTile.X * 16f), (int)(StartTile.Y * 16f), Width * 16, 16);
         public Vector2 Position => new(((StartTile.X + (EndTile.X - StartTile.X) / 2f) * 16f), StartTile.Y * 16f);
+
+        public Vector2 InventoryItemDropLocation => Position;
+        public int InventorySerializationIndex => ((StartTile.Y & 0xFFFF) << 16) | (StartTile.X & 0xFFFF);
+        public Inventory Inventory
+        {
+            get => constructionInventory;
+            set => constructionInventory = value;
+        }
 
         private bool isMouseOver = false;
         private bool spawned = false;
@@ -36,9 +50,15 @@ namespace Macrocosm.Content.Rockets.LaunchPads
         {
             StartTile = new();
             EndTile = new();
+
+            constructionInventory = new(15, this);
+
+            rocketUnderConstruction = new();
+            foreach (var module in rocketUnderConstruction.Modules)
+                module.Value.IsBlueprint = true;
         }
 
-        public LaunchPad(int startTileX, int startTileY, int endTileX, int endTileY)
+        public LaunchPad(int startTileX, int startTileY, int endTileX, int endTileY) : this()
         {
             StartTile = new(startTileX, startTileY);
             EndTile = new(endTileX, endTileY);
@@ -178,7 +198,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
                     {
                         Main.LocalPlayer.noThrow = 2;
                         Main.LocalPlayer.cursorItemIconEnabled = true;
-                        Main.LocalPlayer.cursorItemIconID = CursorIcon.GetType<Items.CursorIcons.QuestionMark>();
+                        Main.LocalPlayer.cursorItemIconID = CursorIcon.GetType<QuestionMark>();
                     }
                 }
             }

@@ -46,7 +46,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return spawnInfo.SpawnTileType == ModContent.TileType<Tiles.Blocks.IrradiatedRock>() ? 0.1f : 0f;
+            return spawnInfo.SpawnTileType == ModContent.TileType<Tiles.Blocks.Terrain.IrradiatedRock>() ? 0.1f : 0f;
         }
 
         public override void ModifyNPCLoot(NPCLoot loot)

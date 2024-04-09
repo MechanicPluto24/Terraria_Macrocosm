@@ -1120,3 +1120,43 @@ ReactorHousing: {
 	DisplayName: Reactor Housing
 	Tooltip: ""
 }
+
+Fabricator: {
+	DisplayName: Fabricator
+	Tooltip: ""
+}
+
+Battery: {
+	DisplayName: Battery
+	Tooltip: ""
+}
+
+CompactDisk: {
+	DisplayName: Compact Disk
+	Tooltip: ""
+}
+
+ElasticFiber: {
+	DisplayName: Elastic Fiber
+	Tooltip: ""
+}
+
+RocketLandingLeg: {
+	DisplayName: Rocket Landing Leg
+	Tooltip: ""
+}
+
+RocketPlating: {
+	DisplayName: Rocket Plating
+	Tooltip: ""
+}
+
+CoalBrick: {
+	DisplayName: Coal Brick
+	Tooltip: ""
+}
+
+FuelCell: {
+	DisplayName: Fuel Cell
+	Tooltip: ""
+}

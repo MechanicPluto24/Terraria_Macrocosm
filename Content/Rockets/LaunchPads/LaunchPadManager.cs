@@ -131,6 +131,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
                     if (!launchPad.Active)
                     {
+                        launchPad.Inventory?.DropAllItems(launchPad.Position);
                         launchPadStorage[MacrocosmSubworld.CurrentID].RemoveAt(i);
                         i--;
                     }

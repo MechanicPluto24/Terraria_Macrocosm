@@ -1,7 +1,7 @@
 ﻿using Macrocosm.Common.Subworlds;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Tiles.Ambient;
-using Macrocosm.Content.Tiles.Blocks;
+using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;

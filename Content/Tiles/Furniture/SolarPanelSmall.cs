@@ -34,7 +34,7 @@ namespace Macrocosm.Content.Tiles.Furniture
 
             AddMapEntry(new Color(0, 52, 154), CreateMapEntryName());
 
-            RegisterItemDrop(ModContent.ItemType<Items.Placeable.Furniture.SolarPanelSmall>(), 0, 1);
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.SolarPanelSmall>(), 0, 1);
         }
 
         public override void KillMultiTile(int i, int j, int frameX, int frameY)

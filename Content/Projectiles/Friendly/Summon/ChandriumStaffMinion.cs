@@ -18,10 +18,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
     public class ChandriumStaffMinion : ModProjectile
     {
         private static Asset<Texture2D> glowmask;
-        public override void Load()
-        {
-            glowmask = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Summon/ChandriumStaffMinion_Glow");
-        }
 
         public override void SetStaticDefaults()
         {
@@ -68,11 +64,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
         public override bool MinionContactDamage() => true;
 
         private bool spawned = false;
-
-        public override void PostDraw(Color lightColor)
-        {
-            Projectile.DrawAnimatedExtra(glowmask.Value, Color.White, Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, Projectile.spriteDirection == 1 ? new Vector2(0, 6) : new Vector2(0, -2));
-        }
 
         public override void AI()
         {
@@ -383,6 +374,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             Main.EntitySpriteDraw(tex, pos, tex.Frame(1, Main.projFrames[Type], frameY: Projectile.frame), lightColor * (1f - Projectile.alpha / 255f), Projectile.rotation, Projectile.Size / 2, Projectile.scale, effects, 0f);
 
             return false;
+        }
+
+        public override void PostDraw(Color lightColor)
+        {
+            glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
+            Projectile.DrawAnimatedExtra(glowmask.Value, Color.White, Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, Projectile.spriteDirection == 1 ? new Vector2(0, 6) : new Vector2(0, -2));
         }
     }
 }

@@ -15,6 +15,12 @@ namespace Macrocosm.Common.Utils
 {
     public static partial class Utility
     {
+        public static void SetFrame(this Tile tile, int x, int y)
+        {
+            tile.TileFrameX = (short)x;
+            tile.TileFrameY = (short)y;
+        }
+
         /// <summary>
         /// Gets the top-left tile coordinates of a multitile
         /// </summary>
@@ -132,12 +138,15 @@ namespace Macrocosm.Common.Utils
             int tileSize = 16 + data.CoordinatePadding;
             int width = data.CoordinateWidth;
             int height = data.CoordinateHeights[tile.TileFrameY / tileSize % data.Height];
+            Vector2 tileDataDrawOffset = new(data.DrawXOffset, data.DrawYOffset);
 
             drawColor ??= Color.White;
 
+            Vector2 position = new Vector2(i, j) * 16 + zero + tileDataDrawOffset + drawOffset - Main.screenPosition;
+
             spriteBatch.Draw(
                 texture.Value,
-                new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero + drawOffset,
+                position,
                 new Rectangle(tile.TileFrameX + addFrameX, tile.TileFrameY + addFrameY, width, height),
                 drawColor.Value, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f
             );
@@ -243,32 +252,6 @@ namespace Macrocosm.Common.Utils
         //------------------------------------------------------//
         //  Author(s): Grox the Great                           //
         //------------------------------------------------------//
-
-        public static void AddMapEntry(ModTile tile, Color color)
-        {
-            tile.AddMapEntry(color);
-        }
-
-        public static void AddMapEntry(ModTile tile, Color color, string name)
-        {
-            LocalizedText name2 = tile.CreateMapEntryName();
-            // name2.SetDefault(name);
-            tile.AddMapEntry(color, name2);
-        }
-
-        public static void SetTileFrame(int x, int y, int tileWidth, int tileHeight, int frame, int tileFrameWidth = 16)
-        {
-            int type = Main.tile[x, y].TileType;
-            int frameWidth = (tileFrameWidth + 2) * tileWidth;
-            for (int x1 = 0; x1 < tileWidth; x1++)
-            {
-                for (int y1 = 0; y1 < tileHeight; y1++)
-                {
-                    int x2 = x + x1; int y2 = y + y1;
-                    Main.tile[x2, y2].TileFrameX = (short)(frame * frameWidth + (tileFrameWidth + 2) * x1);
-                }
-            }
-        }
 
         /*
          * Returns all tiles of the given type nearby using the given distance.

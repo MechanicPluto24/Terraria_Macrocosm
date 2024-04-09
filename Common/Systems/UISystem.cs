@@ -154,8 +154,10 @@ namespace Macrocosm.Common.Systems
 
             Main.playerInventory = true;
 
+            UIAssemblyState = new();
             UIAssemblyState.LaunchPad = launchPad;
             UIAssemblyState.OnShow();
+            UIAssemblyState.Activate();
 
             UserInterface.SetState(UIAssemblyState);
         }

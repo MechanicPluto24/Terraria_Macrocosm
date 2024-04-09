@@ -1,4 +1,4 @@
-﻿using Macrocosm.Content.Tiles.Blocks;
+﻿using Macrocosm.Content.Tiles.Blocks.Sands;
 using System;
 using Terraria;
 using Terraria.ID;
