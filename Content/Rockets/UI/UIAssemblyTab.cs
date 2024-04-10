@@ -12,6 +12,8 @@ using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.UI;
 using Terraria.ID;
+using Macrocosm.Content.Items.Blocks;
+using System;
 
 namespace Macrocosm.Content.Rockets.UI
 {
@@ -29,6 +31,8 @@ namespace Macrocosm.Content.Rockets.UI
         private Asset<Texture2D> GetBlueprint<T>() where T : ModItem
             => ModContent.RequestIfExists(ModContent.GetInstance<T>().Texture + "_Blueprint", out Asset<Texture2D> blueprint) ? blueprint : null;
 
+        private int[] assemblyRequiredAmountsBySlotId;
+
         public override void OnInitialize()
         {
             Width.Set(0, 1f);
@@ -41,10 +45,13 @@ namespace Macrocosm.Content.Rockets.UI
             BackgroundColor = UITheme.Current.TabStyle.BackgroundColor;
             BorderColor = UITheme.Current.TabStyle.BorderColor;
 
+            assemblyRequiredAmountsBySlotId = new int[15];
+            Array.Fill(assemblyRequiredAmountsBySlotId, 1);
+
             for (int i = 0; i < Inventory.Size; i++)
             {
                 var slot = Inventory.ProvideItemSlot(i);
-                slot.SizeLimit += 4;
+                slot.SizeLimit += 8;
 
                 switch (i)
                 {
@@ -54,16 +61,23 @@ namespace Macrocosm.Content.Rockets.UI
                         slot.Left = new(0, 0.65f + 0.06f);
                         slot.Whitelist = [ModContent.ItemType<RocketPlating>()];
                         slot.BlueprintTexture = GetBlueprint<RocketPlating>();
+                        assemblyRequiredAmountsBySlotId[i] = 50;
                         break;
 
                     case 1:
                         slot.Top = new(0, 0.075f);
                         slot.Left = new(0, 0.65f + 0.12f);
+                        slot.Whitelist = [ModContent.ItemType<LexanGlass>()];
+                        slot.BlueprintTexture = GetBlueprint<LexanGlass>();
+                        assemblyRequiredAmountsBySlotId[i] = 25;
                         break;
 
                     case 2:
                         slot.Top = new(0, 0.075f);
                         slot.Left = new(0, 0.65f + 0.18f);
+                        slot.Whitelist = [ModContent.ItemType<Computer>()];
+                        slot.BlueprintTexture = GetBlueprint<Computer>();
+                        assemblyRequiredAmountsBySlotId[i] = 5;
                         break;
 
                     // Service Module
@@ -72,6 +86,7 @@ namespace Macrocosm.Content.Rockets.UI
                         slot.Left = new(0, 0.08f + 0.06f);
                         slot.Whitelist = [ModContent.ItemType<RocketPlating>()];
                         slot.BlueprintTexture = GetBlueprint<RocketPlating>();
+                        assemblyRequiredAmountsBySlotId[i] = 50;
                         break;
 
                     case 4:
@@ -90,6 +105,7 @@ namespace Macrocosm.Content.Rockets.UI
                         slot.Left = new(0, 0.65f + 0.06f);
                         slot.Whitelist = [ModContent.ItemType<RocketPlating>()];
                         slot.BlueprintTexture = GetBlueprint<RocketPlating>();
+                        assemblyRequiredAmountsBySlotId[i] = 50;
                         break;
 
                     case 7:
@@ -104,6 +120,7 @@ namespace Macrocosm.Content.Rockets.UI
                         slot.Left = new(0, 0.65f + 0.18f);
                         slot.Whitelist = [ModContent.ItemType<ReactorHousing>()];
                         slot.BlueprintTexture = GetBlueprint<ReactorHousing>();
+                        assemblyRequiredAmountsBySlotId[i] = 2;
                         break;
 
                     // Engine Module
@@ -112,6 +129,7 @@ namespace Macrocosm.Content.Rockets.UI
                         slot.Left = new(0, 0.08f + 0.06f);
                         slot.Whitelist = [ModContent.ItemType<RocketPlating>()];
                         slot.BlueprintTexture = GetBlueprint<RocketPlating>();
+                        assemblyRequiredAmountsBySlotId[i] = 50;
                         break;
 
                     case 10:
@@ -130,6 +148,7 @@ namespace Macrocosm.Content.Rockets.UI
                         slot.Left = new(0, 0.65f + 0.06f);
                         slot.Whitelist = [ModContent.ItemType<RocketPlating>()];
                         slot.BlueprintTexture = GetBlueprint<RocketPlating>();
+                        assemblyRequiredAmountsBySlotId[i] = 50;
                         break;
 
                     case 13:
@@ -140,8 +159,20 @@ namespace Macrocosm.Content.Rockets.UI
                     case 14:
                         slot.Top = new(0, 0.6f);
                         slot.Left = new(0, 0.65f + 0.18f);
+                        slot.Whitelist = [ModContent.ItemType<RocketLandingLeg>()];
+                        slot.BlueprintTexture = GetBlueprint<RocketLandingLeg>();
+                        assemblyRequiredAmountsBySlotId[i] = 3;
                         break;
+                }
 
+                if(assemblyRequiredAmountsBySlotId[i] > 1)
+                {
+                    UIText amountRequiredText = new("x" + assemblyRequiredAmountsBySlotId[i].ToString(), textScale: 0.8f)
+                    {
+                        Top = new(0, 0.98f),
+                        HAlign = 0.5f
+                    };
+                    slot.Append(amountRequiredText);
                 }
 
                 Append(slot);

@@ -96,7 +96,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
             {
                 CheckMarkers();
                 CheckRocket();
-                CheckTiles();
+                //CheckTiles();
 
                 checkCounter = 0;
             }

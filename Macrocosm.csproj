@@ -25,8 +25,11 @@
 	<NoWarn>$(NoWarn);CA1822</NoWarn> <!-- Private methods that don't deal with instance data should sometimes be left instanced, not static, due to tML's nature -->
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Content\Items\Blocks\LexanGlass_Blueprint.png" />
+    <None Remove="Content\Items\Materials\Tech\Computer_Blueprint.png" />
     <None Remove="Content\Items\Materials\Tech\ReactorComponent_Blueprint.png" />
     <None Remove="Content\Items\Materials\Tech\ReactorHousing_Blueprint.png" />
+    <None Remove="Content\Items\Materials\Tech\RocketLandingLeg_Blueprint.png" />
     <None Remove="Content\Items\Materials\Tech\RocketPlating_Blueprint.png" />
   </ItemGroup>
 
