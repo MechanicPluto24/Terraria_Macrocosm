@@ -38,7 +38,7 @@ namespace Macrocosm.Content.Rockets.Modules
             spriteBatch.Begin(state1);
         }
 
-        public override void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 position)
+        public override void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 position, bool inWorld)
         {
             state2.SaveState(spriteBatch, true);
 

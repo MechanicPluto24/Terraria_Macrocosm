@@ -67,11 +67,11 @@ namespace Macrocosm.Content.Rockets.Modules
             this.rocket = rocket;
         }
 
-        public virtual void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 position)
+        public virtual void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 position, bool inWorld)
         {
         }
 
-        public virtual void PostDraw(SpriteBatch spriteBatch, Vector2 position)
+        public virtual void PostDraw(SpriteBatch spriteBatch, Vector2 position, bool inWorld)
         {
         }
 

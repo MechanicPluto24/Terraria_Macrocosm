@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Drawing.Particles;
+﻿using Macrocosm.Common.Drawing;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Systems;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
@@ -160,6 +161,34 @@ namespace Macrocosm.Content.Machines
             }
 
             return true;
+        }
+
+        public override void MouseOver(int i, int j)
+        {
+            Player player = Main.LocalPlayer;
+
+            if (!UISystem.Active && !player.mouseInterface)
+            {
+                player.noThrow = 2;
+
+                Point16 origin = Utility.GetMultitileTopLeft(i, j);
+                if ((i >= origin.X + 0 && i <= origin.X + 1) && (j >= origin.Y + 7 && j <= origin.Y + 8))
+                {
+                    if(GetPowerState(origin.X, origin.Y))
+                    {
+                        if (IsOperating(origin.X, origin.Y))
+                            CursorIcon.Current = CursorIcon.MachineTurnOff;
+                        else
+                            CursorIcon.Current = CursorIcon.MachineTurnOn;
+                    }
+                }
+                else
+                {
+                    Main.instance.MouseText("TOO BIG");
+                    player.cursorItemIconEnabled = true;
+                    player.cursorItemIconID = ModContent.ItemType<Items.Machines.OreExcavator>();
+                }
+            }
         }
 
         public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)

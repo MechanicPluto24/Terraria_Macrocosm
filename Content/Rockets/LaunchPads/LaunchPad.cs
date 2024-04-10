@@ -1,9 +1,9 @@
-﻿using Macrocosm.Common.Netcode;
+﻿using Macrocosm.Common.Drawing;
+using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Items.CursorIcons;
 using Macrocosm.Content.Tiles.Special;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -194,11 +194,10 @@ namespace Macrocosm.Content.Rockets.LaunchPads
                 }
                 else
                 {
-                    if (!UISystem.AssemblyUIActive)
+                    if (!UISystem.Active)
                     {
                         Main.LocalPlayer.noThrow = 2;
-                        Main.LocalPlayer.cursorItemIconEnabled = true;
-                        Main.LocalPlayer.cursorItemIconID = CursorIcon.GetType<QuestionMark>();
+                        CursorIcon.Current = CursorIcon.LaunchPad;
                     }
                 }
             }

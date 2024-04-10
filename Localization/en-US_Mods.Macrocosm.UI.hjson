@@ -27,7 +27,7 @@ Rocket: {
 		Payload: Payload
 		Inventory: Inventory
 		Fuel: Fuel
-		Customization: Customizationd
+		Customization: Customization
 		Assembly: Assembly
 	}
 

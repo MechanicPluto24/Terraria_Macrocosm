@@ -7,7 +7,7 @@ namespace Macrocosm.Content.Rockets.Modules
 {
     public class ReactorModule : RocketModule
     {
-        private Asset<Texture2D> glowmask;
+        private static Asset<Texture2D> glowmask;
 
         public ReactorModule(Rocket rocket) : base(rocket)
         {
@@ -21,10 +21,13 @@ namespace Macrocosm.Content.Rockets.Modules
         public override Rectangle Hitbox => base.Hitbox with { Y = base.Hitbox.Y + 4 };
 
         // Reactor glowmask
-        public override void PostDraw(SpriteBatch spriteBatch, Vector2 position)
+        public override void PostDraw(SpriteBatch spriteBatch, Vector2 position, bool inWorld)
         {
-            glowmask ??= ModContent.Request<Texture2D>(TexturePath + "Glow");
-            spriteBatch.Draw(glowmask.Value, position, null, Color.White, 0f, Origin, 1f, SpriteEffects.None, 0f);
+            if (inWorld)
+            {
+                glowmask ??= ModContent.Request<Texture2D>(TexturePath + "Glow");
+                spriteBatch.Draw(glowmask.Value, position, null, Color.White, 0f, Origin, 1f, SpriteEffects.None, 0f);
+            }  
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Macrocosm.Content.Rockets.Modules
         }
 
         private SpriteBatchState state1, state2;
-        public override void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 position)
+        public override void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 position, bool inWorld)
         {
             state1.SaveState(spriteBatch, true);
             spriteBatch.End();
@@ -37,7 +37,7 @@ namespace Macrocosm.Content.Rockets.Modules
             Texture2D rearLandingLeg = ModContent.Request<Texture2D>(TexturePath + "_LandingLeg", AssetRequestMode.ImmediateLoad).Value;
             Vector2 drawPos = position + new Vector2(Texture.Width / 2f - rearLandingLeg.Width / 2f, 314f);
 
-            if (RocketManager.Rockets.Contains(rocket))
+            if (inWorld)
                 lightColor = Lighting.GetColor((drawPos + Main.screenPosition).ToTileCoordinates());
 
             spriteBatch.Draw(rearLandingLeg, drawPos, rearLandingLeg.Frame(1, base.NumberOfFrames, frameY: CurrentFrame), lightColor);
