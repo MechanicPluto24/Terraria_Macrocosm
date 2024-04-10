@@ -4,6 +4,7 @@ using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
@@ -65,6 +66,8 @@ namespace Macrocosm.Common.Storage
                     SyncInteraction();
             }
         }
+
+        public bool IsEmpty => items.All(item => item.type == ItemID.None);
 
         public Inventory(int size, IInventoryOwner owner = null)
         {

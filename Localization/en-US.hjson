@@ -8,6 +8,7 @@ Mods: {
 		Messages: {
 			MarkerTooClose: The launch pad markers are too close to each other.
 			MarkerSolidBlock: There is a solid block, can't place launch pad here.
+			MarkerFoundGap: The area is not flat, can't place launchpad here.
 			MarkerNoPair: Found no other valid launch pad marker in the vicinity.
 		}
 
