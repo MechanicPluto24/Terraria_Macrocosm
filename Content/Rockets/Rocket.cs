@@ -5,7 +5,6 @@ using Macrocosm.Common.Storage;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Items.CursorIcons;
 using Macrocosm.Content.Particles;
 using Macrocosm.Content.Players;
 using Macrocosm.Content.Rockets.Customization;
@@ -481,11 +480,10 @@ namespace Macrocosm.Content.Rockets
                 }
                 else
                 {
-                    if (!UISystem.RocketUIActive)
+                    if (!UISystem.Active)
                     {
                         Main.LocalPlayer.noThrow = 2;
-                        Main.LocalPlayer.cursorItemIconEnabled = true;
-                        Main.LocalPlayer.cursorItemIconID = CursorIcon.GetType<Items.CursorIcons.Rocket>();
+                        CursorIcon.Current = CursorIcon.Rocket;
                     }
                 }
             }

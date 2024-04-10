@@ -331,14 +331,6 @@ Moonstone
 	Value: 7 silver 50 copper
 	Research count: 100
 
-QuestionMark
-	Value: No value
-	Research count: 1
-
-Rocket
-	Value: No value
-	Research count: 1
-
 BanHammer
 	Value: 1 gold
 	Research count: 1

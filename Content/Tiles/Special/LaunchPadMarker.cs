@@ -1,5 +1,7 @@
-﻿using Macrocosm.Common.Netcode;
+﻿using Macrocosm.Common.Drawing;
+using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.Systems;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.LaunchPads;
 using Microsoft.Xna.Framework;
@@ -161,6 +163,15 @@ namespace Macrocosm.Content.Tiles.Special
             // Found no other valid launch pad marker in the vicinity.
             Main.NewText(Language.GetText("Mods.Macrocosm.Messages.MarkerNoPair"), Color.Yellow);
             return false;
+        }
+
+        public override void MouseOver(int i, int j)
+        {
+            if (!LaunchPadManager.TryGetLaunchPadAtTileCoordinates(MacrocosmSubworld.CurrentID, new(i, j), out _) && !UISystem.Active)
+            {
+                Main.LocalPlayer.noThrow = 2;
+                CursorIcon.Current = CursorIcon.Wrench;
+            }
         }
 
         public override bool CanPlace(int i, int j)

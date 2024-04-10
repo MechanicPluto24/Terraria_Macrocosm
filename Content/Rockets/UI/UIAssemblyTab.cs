@@ -14,6 +14,7 @@ using Terraria.UI;
 using Terraria.ID;
 using Macrocosm.Content.Items.Blocks;
 using System;
+using System.Linq;
 
 namespace Macrocosm.Content.Rockets.UI
 {
@@ -195,12 +196,23 @@ namespace Macrocosm.Content.Rockets.UI
         {
             base.Update(gameTime);
 
-            Rocket.Modules["CommandPod"].IsBlueprint = Inventory.Items[0].type == 0 || Inventory.Items[1].type == 0 || Inventory.Items[2].type == 0;
-            Rocket.Modules["ServiceModule"].IsBlueprint = Inventory.Items[3].type == 0 || Inventory.Items[4].type == 0 || Inventory.Items[5].type == 0;
-            Rocket.Modules["ReactorModule"].IsBlueprint = Inventory.Items[6].type == 0 || Inventory.Items[7].type == 0 || Inventory.Items[8].type == 0;
-            Rocket.Modules["EngineModule"].IsBlueprint = Inventory.Items[9].type == 0 || Inventory.Items[10].type == 0 || Inventory.Items[11].type == 0;
-            Rocket.Modules["BoosterLeft"].IsBlueprint = Inventory.Items[12].type == 0 || Inventory.Items[13].type == 0 || Inventory.Items[14].type == 0;
-            Rocket.Modules["BoosterRight"].IsBlueprint = Inventory.Items[12].type == 0 || Inventory.Items[13].type == 0 || Inventory.Items[14].type == 0;
+            if (!Rocket.Active)
+            {
+                Rocket.Modules["CommandPod"].IsBlueprint = Inventory.Items[0].type == 0 || Inventory.Items[1].type == 0 || Inventory.Items[2].type == 0;
+                Rocket.Modules["ServiceModule"].IsBlueprint = Inventory.Items[3].type == 0 || Inventory.Items[4].type == 0 || Inventory.Items[5].type == 0;
+                Rocket.Modules["ReactorModule"].IsBlueprint = Inventory.Items[6].type == 0 || Inventory.Items[7].type == 0 || Inventory.Items[8].type == 0;
+                Rocket.Modules["EngineModule"].IsBlueprint = Inventory.Items[9].type == 0 || Inventory.Items[10].type == 0 || Inventory.Items[11].type == 0;
+                Rocket.Modules["BoosterLeft"].IsBlueprint = Inventory.Items[12].type == 0 || Inventory.Items[13].type == 0 || Inventory.Items[14].type == 0;
+                Rocket.Modules["BoosterRight"].IsBlueprint = Inventory.Items[12].type == 0 || Inventory.Items[13].type == 0 || Inventory.Items[14].type == 0;
+            }
+            else
+            {
+                foreach(var module in Rocket.Modules)
+                {
+                    module.Value.IsBlueprint = false;
+                }
+            }
+            
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -208,7 +220,11 @@ namespace Macrocosm.Content.Rockets.UI
             base.Draw(spriteBatch);
 
             CalculatedStyle dimensions = GetDimensions();
-            Rocket.Draw(Rocket.DrawMode.Blueprint, spriteBatch, dimensions.Center() - Rocket.Bounds.Size() / 2f, useRenderTarget: false);
+
+            if(!Rocket.Active)
+                Rocket.Draw(Rocket.DrawMode.Blueprint, spriteBatch, dimensions.Center() - Rocket.Bounds.Size() / 2f, useRenderTarget: false);
+            else
+                Rocket.Draw(Rocket.DrawMode.Dummy, spriteBatch, dimensions.Center() - Rocket.Bounds.Size() / 2f, useRenderTarget: false);
         }
     }
 }

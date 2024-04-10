@@ -98,19 +98,19 @@ namespace Macrocosm.Content.Rockets
             }
         }
 
-        public void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 position)
+        public void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 position, bool inWorld = true)
         {
             foreach (RocketModule module in ModulesByDrawPriority)
             {
-                module.PreDrawBeforeTiles(spriteBatch, GetModuleRelativePosition(module, position));
+                module.PreDrawBeforeTiles(spriteBatch, GetModuleRelativePosition(module, position), inWorld);
             }
         }
 
-        public void PostDraw(SpriteBatch spriteBatch, Vector2 position)
+        public void PostDraw(SpriteBatch spriteBatch, Vector2 position, bool inWorld = true)
         {
             foreach (RocketModule module in ModulesByDrawPriority)
             {
-                module.PostDraw(spriteBatch, GetModuleRelativePosition(module, position));
+                module.PostDraw(spriteBatch, GetModuleRelativePosition(module, position), inWorld);
             }
         }
 
@@ -151,9 +151,9 @@ namespace Macrocosm.Content.Rockets
 
         private void DrawDummy(SpriteBatch spriteBatch, Vector2 position)
         {
-            PreDrawBeforeTiles(spriteBatch, position);
+            PreDrawBeforeTiles(spriteBatch, position, inWorld: false);
             DrawWorld(spriteBatch, position);
-            PostDraw(spriteBatch, position);
+            PostDraw(spriteBatch, position, inWorld: false);
 
             state2.SaveState(spriteBatch);
             spriteBatch.End();

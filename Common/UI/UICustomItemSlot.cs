@@ -54,7 +54,7 @@ namespace Macrocosm.Common.UI
         public List<int> Blacklist { get; set; } = new();
 
         public Asset<Texture2D> BlueprintTexture;
-
+        
 
         public UICustomItemSlot(Inventory inventory, int itemIndex, int itemSlotContext = Context.ChestItem, float scale = default)
         {
@@ -347,7 +347,15 @@ namespace Macrocosm.Common.UI
             spriteBatch.Draw(slotBorderTexture.Value, position, null, slotBorderColor, 0f, default, Main.inventoryScale, SpriteEffects.None, 0f);
 
             if (BlueprintTexture is not null)
+            {
+                if (IsMouseHovering)
+                {
+                    // TODO: add Blueprint data to pass item type instead of texture
+                    Main.instance.MouseTextNoOverride(new Item(Whitelist[0]).Name);
+                }
+
                 spriteBatch.Draw(BlueprintTexture.Value, position + (slotTexture.Size() / 2f * Main.inventoryScale), null, slotBorderColor, 0f, BlueprintTexture.Size() / 2f, Main.inventoryScale, SpriteEffects.None, 0f);
+            }
 
             if (item.favorited)
                 spriteBatch.Draw(slotFavoritedTexture.Value, position, null, slotFavoritedColor, 0f, default, Main.inventoryScale, SpriteEffects.None, 0f);
