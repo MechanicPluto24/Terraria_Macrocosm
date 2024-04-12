@@ -18,10 +18,6 @@ namespace Macrocosm.Content.Rockets.Modules
 
         private SpriteBatchState state1, state2;
 
-        protected Booster(Rocket rocket) : base(rocket)
-        {
-        }
-
         public override void Draw(SpriteBatch spriteBatch, Vector2 position)
         {
             // Draw the booster module with the base logic

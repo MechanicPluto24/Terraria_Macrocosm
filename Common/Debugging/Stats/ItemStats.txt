@@ -725,6 +725,23 @@ Gear
 		Anvil
 
 
+LandingGear
+	Value: 1 silver
+	Research count: 5
+	Recipes:
+		Steel Bar x 10
+		Gear x 4
+		Adamantite Bar x 10
+		at
+		Fabricator
+
+		Steel Bar x 10
+		Gear x 4
+		Titanium Bar x 10
+		at
+		Fabricator
+
+
 Motor
 	Value: 1 silver
 	Research count: 5
@@ -820,23 +837,6 @@ ReactorHousing
 		Steel Bar x 35
 		Silt Block x 50
 		Stone Block x 100
-		at
-		Fabricator
-
-
-RocketLandingLeg
-	Value: 1 silver
-	Research count: 5
-	Recipes:
-		Steel Bar x 10
-		Gear x 4
-		Adamantite Bar x 10
-		at
-		Fabricator
-
-		Steel Bar x 10
-		Gear x 4
-		Titanium Bar x 10
 		at
 		Fabricator
 

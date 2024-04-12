@@ -45,13 +45,18 @@ Rocket: {
 		ResetPattern: Reset pattern to default appearance
 	}
 
+	Assembly: {
+		Assemble: Assemble
+		AnyChest: Any Chest
+	}
+
 	Modules: {
-		CommandPod: Command Pod
-		ServiceModule: Service Module
-		ReactorModule: Reactor Module
-		EngineModule: Engine Module
-		BoosterLeft: Left Booster
-		BoosterRight: Right Booster
+		CommandPod.DisplayName: Command Pod
+		ServiceModule.DisplayName: Service Module
+		ReactorModule.DisplayName: Reactor Module
+		EngineModule.DisplayName: Engine Module
+		BoosterLeft.DisplayName: Left Booster
+		BoosterRight.DisplayName: Right Booster
 	}
 
 	LaunchButton: {

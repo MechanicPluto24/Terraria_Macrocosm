@@ -178,6 +178,7 @@ namespace Macrocosm.Content.Rockets
                 }
                 else
                 {
+                    module.PreDrawBeforeTiles(spriteBatch, drawPosition, inWorld: false);
                     module.Draw(spriteBatch, drawPosition);
                 }
             }

@@ -1,6 +1,6 @@
 ﻿using Macrocosm.Common.Subworlds;
 using Macrocosm.Content.Projectiles.Environment.Meteors;
-using Macrocosm.Content.Rockets.Navigation.Checklist;
+using Macrocosm.Content.Rockets.UI.Navigation.Checklist;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;

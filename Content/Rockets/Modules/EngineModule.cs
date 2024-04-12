@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Items.Materials.Tech;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -20,9 +21,13 @@ namespace Macrocosm.Content.Rockets.Modules
         public override int Width => 120;
         public override int Height => 302 + (RearLandingLegRaised ? 18 : 26);
 
-        public EngineModule(Rocket rocket) : base(rocket)
+        public override AssemblyRecipe Recipe => new AssemblyRecipe()
         {
-        }
+            new(ModContent.ItemType<RocketPlating>(), 50),
+            new(ModContent.ItemType<RocketPlating>(), 1),
+            new(ModContent.ItemType<RocketPlating>(), 1),
+            new(ModContent.ItemType<LandingGear>(), 3)
+        };
 
         private SpriteBatchState state1, state2;
         public override void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 position, bool inWorld)

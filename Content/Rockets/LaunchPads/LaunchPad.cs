@@ -2,11 +2,13 @@
 using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.Systems;
+using Macrocosm.Common.Systems.UI;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Rockets.Modules;
 using Macrocosm.Content.Tiles.Special;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
@@ -25,11 +27,11 @@ namespace Macrocosm.Content.Rockets.LaunchPads
         [NetSync] public int RocketID = -1;
         [NetSync] public string CompassCoordinates = "";
 
-        public Rocket Rocket => HasRocket ? RocketManager.Rockets[RocketID] : rocketUnderConstruction;
+        public Rocket Rocket => HasRocket ? RocketManager.Rockets[RocketID] : unassembledRocket;
         public bool HasRocket => RocketID >= 0;
 
-        private Rocket rocketUnderConstruction;
-        private Inventory constructionInventory;
+        private Rocket unassembledRocket;
+        private Inventory assemblyInventory;
 
         public int Width => EndTile.X + 1 - StartTile.X;
         public Rectangle Hitbox => new((int)(StartTile.X * 16f), (int)(StartTile.Y * 16f), Width * 16, 16);
@@ -39,8 +41,8 @@ namespace Macrocosm.Content.Rockets.LaunchPads
         public int InventorySerializationIndex => ((StartTile.Y & 0xFFFF) << 16) | (StartTile.X & 0xFFFF);
         public Inventory Inventory
         {
-            get => constructionInventory;
-            set => constructionInventory = value;
+            get => assemblyInventory;
+            set => assemblyInventory = value;
         }
 
         private bool isMouseOver = false;
@@ -51,11 +53,11 @@ namespace Macrocosm.Content.Rockets.LaunchPads
             StartTile = new();
             EndTile = new();
 
-            constructionInventory = new(15, this);
-
-            rocketUnderConstruction = new();
-            foreach (var module in rocketUnderConstruction.Modules)
+            unassembledRocket = new();
+            foreach (var module in unassembledRocket.Modules)
                 module.Value.IsBlueprint = true;
+
+            assemblyInventory = new(CountRequiredAssemblyItemSlots(unassembledRocket), this);
         }
 
         public LaunchPad(int startTileX, int startTileY, int endTileX, int endTileY) : this()
@@ -211,6 +213,18 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
             if (isMouseOver)
                 spriteBatch.Draw(TextureAssets.MagicPixel.Value, rect, Color.Gold * 0.25f);
+        }
+
+        private int CountRequiredAssemblyItemSlots(Rocket rocket)
+        {
+            int count = 0;
+            foreach (var kvp in rocket.Modules)
+            {
+                RocketModule module = kvp.Value;
+                count += module.Recipe.Count();
+            }
+
+            return count;
         }
     }
 }
