@@ -3,7 +3,7 @@ using Macrocosm.Content.Players;
 using Macrocosm.Content.Rockets;
 using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.LaunchPads;
-using Macrocosm.Content.Rockets.Navigation.Checklist;
+using Macrocosm.Content.Rockets.UI.Navigation.Checklist;
 using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;

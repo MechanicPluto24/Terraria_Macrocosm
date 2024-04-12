@@ -1,7 +1,7 @@
 ﻿using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Common.Systems;
 using Macrocosm.Common.Systems.Power;
+using Macrocosm.Common.Systems.UI;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;

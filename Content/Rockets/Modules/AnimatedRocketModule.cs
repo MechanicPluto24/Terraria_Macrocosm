@@ -17,7 +17,7 @@
         private bool isAnimating = false;
         private bool isAnimatingForward = true;
 
-        protected AnimatedRocketModule(Rocket rocket) : base(rocket)
+        protected AnimatedRocketModule() : base()
         {
         }
 

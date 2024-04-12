@@ -1160,3 +1160,8 @@ FuelCell: {
 	DisplayName: Fuel Cell
 	Tooltip: ""
 }
+
+LandingGear: {
+	DisplayName: Landing Gear
+	Tooltip: ""
+}

@@ -1,4 +1,5 @@
-﻿using Terraria.Localization;
+﻿using System.Text.RegularExpressions;
+using Terraria.Localization;
 
 namespace Macrocosm.Common.Utils
 {
@@ -18,24 +19,7 @@ namespace Macrocosm.Common.Utils
 
         public static string TrimTrailingZeroesAndDot(string decimalNumberText) => string.Format("{0:n}", decimalNumberText).TrimEnd('0').TrimEnd('.');
 
-        public static string SanitizeCodeCase(string camelCase)
-        {
-            if (string.IsNullOrEmpty(camelCase))
-                return camelCase;
-
-            string result = camelCase[0].ToString();
-
-            for (int i = 1; i < camelCase.Length; i++)
-            {
-                if (char.IsUpper(camelCase[i]))
-                {
-                    result += " ";
-                }
-                result += camelCase[i];
-            }
-
-            return result;
-        }
+        public static string PrettyPrintName(string name) => Regex.Replace(name, "([A-Z])", " $1").Trim();
     }
 }
 

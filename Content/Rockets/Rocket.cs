@@ -3,7 +3,7 @@ using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.Systems;
+using Macrocosm.Common.Systems.UI;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
 using Macrocosm.Content.Players;
@@ -175,19 +175,22 @@ namespace Macrocosm.Content.Rockets
         public Rocket()
         {
             foreach (string moduleName in DefaultModuleNames)
+            {
                 Modules[moduleName] = CreateModule(moduleName);
+                Modules[moduleName].SetRocket(this);
+            }
         }
 
         private RocketModule CreateModule(string moduleName)
         {
             return moduleName switch
             {
-                "CommandPod" => new CommandPod(this),
-                "ServiceModule" => new ServiceModule(this),
-                "ReactorModule" => new ReactorModule(this),
-                "EngineModule" => new EngineModule(this),
-                "BoosterLeft" => new BoosterLeft(this),
-                "BoosterRight" => new BoosterRight(this),
+                "CommandPod" => new CommandPod(),
+                "ServiceModule" => new ServiceModule(),
+                "ReactorModule" => new ReactorModule(),
+                "EngineModule" => new EngineModule(),
+                "BoosterLeft" => new BoosterLeft(),
+                "BoosterRight" => new BoosterRight(),
                 _ => throw new ArgumentException($"Unknown module name: {moduleName}")
             };
         }
@@ -311,9 +314,9 @@ namespace Macrocosm.Content.Rockets
                 CommandPod => origin + new Vector2(Width / 2f - commandPod.Width / 2f, 0),
                 ServiceModule => origin + new Vector2(Width / 2f - serviceModule.Width / 2f, commandPod.Height),
                 ReactorModule => origin + new Vector2(Width / 2f - reactorModule.Width / 2f, commandPod.Height + serviceModule.Height - 2),
-                EngineModule => origin + new Vector2(Width / 2f - engineModule.Width / 2f, commandPod.Height + serviceModule.Height + reactorModule.Height - 10),
-                BoosterLeft => origin + new Vector2(78, commandPod.Height + serviceModule.Height + reactorModule.Height + 6),
-                BoosterRight => origin + new Vector2(152, commandPod.Height + serviceModule.Height + reactorModule.Height + 6),
+                EngineModule => origin + new Vector2(Width / 2f - engineModule.Width / 2f, commandPod.Height + serviceModule.Height + reactorModule.Height - 4),
+                BoosterLeft => origin + new Vector2(78, commandPod.Height + serviceModule.Height + reactorModule.Height + 12),
+                BoosterRight => origin + new Vector2(152, commandPod.Height + serviceModule.Height + reactorModule.Height + 12),
                 _ => default,
             };
         }

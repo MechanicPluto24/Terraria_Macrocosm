@@ -130,7 +130,7 @@ tab_width = 4
 indent_size = 4
 end_of_line = crlf
 dotnet_style_object_initializer = true:suggestion
-dotnet_style_collection_initializer = false:suggestion
+dotnet_style_collection_initializer = true:silent
 dotnet_style_prefer_simplified_boolean_expressions = true:suggestion
 dotnet_style_prefer_conditional_expression_over_assignment = true:silent
 dotnet_style_explicit_tuple_names = true:suggestion
@@ -155,7 +155,7 @@ dotnet_style_qualification_for_field = false:silent
 dotnet_style_qualification_for_property = false:silent
 dotnet_style_qualification_for_method = false:silent
 dotnet_style_qualification_for_event = false:silent
-dotnet_style_prefer_collection_expression = never:suggestion
+dotnet_style_prefer_collection_expression = when_types_loosely_match:silent
 
 [*.cs]
 csharp_using_directive_placement = outside_namespace:silent
@@ -164,7 +164,7 @@ csharp_prefer_braces = true:silent
 csharp_style_namespace_declarations = block_scoped:silent
 csharp_style_prefer_method_group_conversion = true:silent
 csharp_style_prefer_top_level_statements = true:silent
-csharp_style_prefer_primary_constructors = false:silent
+csharp_style_prefer_primary_constructors = true:silent
 csharp_style_expression_bodied_methods = false:silent
 csharp_style_expression_bodied_constructors = false:silent
 csharp_style_expression_bodied_operators = false:silent

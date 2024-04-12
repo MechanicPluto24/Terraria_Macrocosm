@@ -176,7 +176,7 @@ namespace Macrocosm.Common.Storage
 
             for (int i = 0; i < count; i++)
             {
-                UICustomItemSlot uiItemSlot = ProvideItemSlot(i, ItemSlot.Context.ChestItem);
+                UIInventorySlot uiItemSlot = ProvideItemSlot(i, ItemSlot.Context.ChestItem);
                 uiItemSlot.Left = new(i % iconsPerRow * iconSize + iconOffsetLeft, 0f);
                 uiItemSlot.Top = new(i / iconsPerRow * iconSize + iconOffsetTop, 0f);
                 uiItemSlot.SetPadding(0f);
@@ -187,9 +187,9 @@ namespace Macrocosm.Common.Storage
             return inventorySlots;
         }
 
-        public UICustomItemSlot ProvideItemSlot(int index, int itemSlotContext = ItemSlot.Context.ChestItem, float scale = default)
+        public UIInventorySlot ProvideItemSlot(int index, int itemSlotContext = ItemSlot.Context.ChestItem, float scale = default)
         {
-            UICustomItemSlot slot = new(this, index, itemSlotContext, scale);
+            UIInventorySlot slot = new(this, index, itemSlotContext, scale);
             uiItemSlots[index] = slot;
             return slot;
         }

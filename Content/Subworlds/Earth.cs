@@ -1,5 +1,5 @@
 ﻿using Macrocosm.Common.Subworlds;
-using Macrocosm.Content.Rockets.Navigation.Checklist;
+using Macrocosm.Content.Rockets.UI.Navigation.Checklist;
 using Terraria;
 
 namespace Macrocosm.Content.Subworlds

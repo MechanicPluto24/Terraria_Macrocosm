@@ -25,7 +25,7 @@ namespace Macrocosm.Common.Storage
             set => items[index] = value;
         }
 
-        private UICustomItemSlot[] uiItemSlots;
+        private UIInventorySlot[] uiItemSlots;
 
         public IInventoryOwner Owner { get; set; }
 
@@ -74,7 +74,7 @@ namespace Macrocosm.Common.Storage
             int clampedSize = (int)MathHelper.Clamp(size, 0, MaxInventorySize);
 
             items = new Item[clampedSize];
-            uiItemSlots = new UICustomItemSlot[clampedSize];
+            uiItemSlots = new UIInventorySlot[clampedSize];
 
             for (int i = 0; i < items.Length; i++)
             {
