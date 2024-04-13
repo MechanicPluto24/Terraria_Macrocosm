@@ -4,6 +4,7 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Players;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using ReLogic.Content;
 using Terraria;
 using Terraria.ModLoader;
@@ -35,7 +36,9 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
 
             var rocketPlayer = player.GetModPlayer<RocketPlayer>();
             Texture2D texture = Macrocosm.EmptyTex.Value;
-            if (ModContent.RequestIfExists(Macrocosm.TexturesPath + "Icons/" + rocketPlayer.TargetWorld, out Asset<Texture2D> iconTexture))
+
+            string targetWorld = rocketPlayer.TargetWorld[(rocketPlayer.TargetWorld.LastIndexOf('/') + 1)..];
+            if (ModContent.RequestIfExists(Macrocosm.TexturesPath + "Icons/" + targetWorld, out Asset<Texture2D> iconTexture))
                 texture = iconTexture.Value;
 
             spriteBatch.Draw(texture, worldIconPosition, Color.White);

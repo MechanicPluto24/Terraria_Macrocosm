@@ -1,4 +1,6 @@
 ﻿using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.Utils;
+using Macrocosm.Content.Items.Global;
 using Macrocosm.Content.Tiles.Special;
 using Terraria;
 using Terraria.ModLoader;
@@ -46,7 +48,8 @@ namespace Macrocosm.Content.Rockets.LaunchPads
         {
             if (LaunchPadManager.TryGetLaunchPadAtTileCoordinates(MacrocosmSubworld.CurrentID, new(i, j), out LaunchPad launchPad))
             {
-                if(Main.tile[i, j].TileType == ModContent.TileType<LaunchPadMarker>() && !launchPad.Inventory.IsEmpty)
+                bool canKillMarker = !launchPad.Inventory.IsEmpty && !launchPad.HasRocket && !(Main.LocalPlayer.CurrentItem().ModItem is IDevItem);
+                if (Main.tile[i, j].TileType == ModContent.TileType<LaunchPadMarker>() && canKillMarker)
                     fail = true;
             }
 
@@ -100,7 +103,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
                         Wiring.SkipWire(tileX, tileY);
 
                 if (launchPad.HasRocket)
-                    RocketManager.Rockets[launchPad.RocketID].Launch(targetWorld: "None.. for now");
+                    RocketManager.Rockets[launchPad.RocketID].Launch(targetWorld: MacrocosmSubworld.CurrentID);
             }
         }
 

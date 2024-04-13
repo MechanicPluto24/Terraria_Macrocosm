@@ -13,9 +13,9 @@ namespace Macrocosm.Content.Rockets.Modules
 
         public override AssemblyRecipe Recipe { get; } = new AssemblyRecipe()
         {
-            new(ModContent.ItemType<RocketPlating>(), 50),
-            new(ModContent.ItemType<LexanGlass>(), 45),
-            new(ModContent.ItemType<Computer>(), 5),
+            new(ModContent.ItemType<RocketPlating>(), 10),
+            new(ModContent.ItemType<LexanGlass>(), 6),
+            new(ModContent.ItemType<Computer>(), 3),
         };
 
     }

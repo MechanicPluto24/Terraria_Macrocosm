@@ -26,17 +26,9 @@ namespace Macrocosm.Content.Items.Materials.Tech
         {
             CreateRecipe()
                 .AddIngredient<SteelBar>(20)
-                .AddIngredient(ItemID.LunarBar, 20)
-                .AddIngredient(ItemID.Glass, 50)
-                .AddIngredient(ItemID.IronBar, 50)
-                .AddTile<Tiles.Crafting.Fabricator>()
-                .Register();
-
-            CreateRecipe()
-                .AddIngredient<SteelBar>(20)
-                .AddIngredient(ItemID.LunarBar, 20)
-                .AddIngredient(ItemID.Glass, 50)
-                .AddIngredient(ItemID.LeadBar, 50)
+                .AddIngredient(ItemID.LunarBar, 10)
+                .AddIngredient(ItemID.LeadBar, 10)
+                .AddIngredient(ItemID.Glass, 5)
                 .AddTile<Tiles.Crafting.Fabricator>()
                 .Register();
         }

@@ -9,15 +9,13 @@ namespace Macrocosm.Common.Drawing
 {
     public class CursorIcon : ModSystem
     {
-        public const string IconPath = Macrocosm.TexturesPath + "UI/Symbols/";
-
-        public static Icon Rocket { get; } = new(IconPath + "Rocket");
-        public static Icon LaunchPad { get; } = new(IconPath + "LaunchPad");
-        public static Icon Wrench { get; } = new(IconPath + "Wrench");
-        public static Icon MachineTurnOn { get; } = new(IconPath + "MachineTurnOn", scale: 1f);
-        public static Icon MachineTurnOff { get; } = new(IconPath + "MachineTurnOff", scale: 1f);
-        public static Icon SpaceStation { get; } = new(IconPath + "SpaceStation");
-        public static Icon QuestionMark { get; } = new(IconPath + "QuestionMark");
+        public static Icon Rocket { get; } = new(Macrocosm.SymbolsPath + "Rocket");
+        public static Icon LaunchPad { get; } = new(Macrocosm.SymbolsPath + "LaunchPad");
+        public static Icon Wrench { get; } = new(Macrocosm.SymbolsPath + "Wrench");
+        public static Icon MachineTurnOn { get; } = new(Macrocosm.SymbolsPath + "MachineTurnOn", scale: 1f);
+        public static Icon MachineTurnOff { get; } = new(Macrocosm.SymbolsPath + "MachineTurnOff", scale: 1f);
+        public static Icon SpaceStation { get; } = new(Macrocosm.SymbolsPath + "SpaceStation");
+        public static Icon QuestionMark { get; } = new(Macrocosm.SymbolsPath + "QuestionMark");
 
         public record Icon(string texturePath, float scale = 1f)
         {

@@ -22,8 +22,8 @@ namespace Macrocosm.Content.Items.Materials.Tech
         public override void AddRecipes()
         {
             CreateRecipe()
-              .AddIngredient<Plastic>(5)
-              .AddIngredient<PrintedCircuitBoard>(2)
+              .AddIngredient<Plastic>(20)
+              .AddIngredient<PrintedCircuitBoard>(5)
               .AddIngredient(ItemID.Glass, 2)
               .AddTile<Tiles.Crafting.Fabricator>()
               .Register();

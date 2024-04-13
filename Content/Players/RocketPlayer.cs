@@ -4,6 +4,7 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.CameraModifiers;
 using Macrocosm.Content.Rockets;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -67,11 +68,6 @@ namespace Macrocosm.Content.Players
 
             if (Player.mount.Active)
                 Player.mount.Dismount(Player);
-
-            Utility.UICloseOthers();
-
-            if (Player.whoAmI == Main.myPlayer)
-                UISystem.ShowRocketUI(RocketManager.Rockets[RocketID]);
         }
 
         public void DisembarkFromRocket()
@@ -105,16 +101,29 @@ namespace Macrocosm.Content.Players
                 {
                     cameraModifier.TargetPosition = RocketManager.Rockets[RocketID].Center - new Vector2(Main.screenWidth, Main.screenHeight) / 2f;
 
-                    bool escapePressed = Player.controlInv && UISystem.RocketUIActive;
-
-                    // Escape or 'R' will disembark this player, but not during flight
-                    if (((escapePressed || Player.controlMount) && !rocket.Launched) || !rocket.ActiveInCurrentWorld)
+                    if (!rocket.Bounds.Contains(Player.Center.ToPoint()) || !rocket.ActiveInCurrentWorld)
                         DisembarkFromRocket();
 
+                    bool escapePressed = (Main.keyState.KeyPressed(Keys.Escape) && !Main.oldKeyState.KeyPressed(Keys.Escape));
+
+                    bool dismountPressed = (Main.keyState.KeyPressed(Keys.R) && !Main.oldKeyState.KeyPressed(Keys.R));
+
                     if (rocket.Launched || rocket.Landing)
+                    {
                         UISystem.Hide();
-                    else if (!UISystem.RocketUIActive)
-                        UISystem.ShowRocketUI(rocket);
+                    }
+                    else if (escapePressed)
+                    {
+                        if (UISystem.Active)
+                            UISystem.Hide();
+                        else
+                            DisembarkFromRocket();
+                    }
+                    else if (dismountPressed)
+                    {
+                        UISystem.Hide();
+                        DisembarkFromRocket();
+                    }
                 }
             }
             else if (Player.whoAmI == Main.myPlayer)

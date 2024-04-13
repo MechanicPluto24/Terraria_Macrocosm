@@ -18,10 +18,10 @@ namespace Macrocosm.Content.Rockets.Modules
 
         public override AssemblyRecipe Recipe { get; } = new AssemblyRecipe()
         {
-            new(ModContent.ItemType<RocketPlating>(), 50),
-            new(ModContent.ItemType<PowerJunction>(), 10),
-            new(ModContent.ItemType<OxygenSystem>()),
-            new((item) => item.IsChest(), Language.GetText("Mods.Macrocosm.UI.Rocket.Assembly.AnyChest"), 10) 
+            new(ModContent.ItemType<RocketPlating>(), 25),
+            new(ModContent.ItemType<PowerJunction>(), 3),
+            new(ModContent.ItemType<OxygenSystem>(), 3),
+            new((item) => item.IsChest(), Language.GetText("Mods.Macrocosm.UI.LaunchPad.AnyChest"), 1) 
         };
     }
 }

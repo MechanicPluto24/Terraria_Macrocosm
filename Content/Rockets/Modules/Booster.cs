@@ -38,7 +38,7 @@ namespace Macrocosm.Content.Rockets.Modules
         {
             state2.SaveState(spriteBatch, true);
 
-            if (rocket.StaticFire || rocket.InFlight || rocket.ForcedFlightAppearance)
+            if (rocket.StaticFire || rocket.InFlight || rocket.ForcedFlightAppearance || rocket.Landing)
             {
                 spriteBatch.End();
                 spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, state2);
@@ -48,6 +48,9 @@ namespace Macrocosm.Content.Rockets.Modules
 
                 if (rocket.InFlight || rocket.ForcedFlightAppearance)
                     DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(rocket.FlightProgress, 0f, 0.1f) * 10f));
+
+                if (rocket.Landing)
+                    DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(rocket.LandingProgress, 0f, 0.1f) * 10f));
 
                 spriteBatch.End();
                 spriteBatch.Begin(state2);

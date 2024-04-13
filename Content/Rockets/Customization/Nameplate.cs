@@ -45,11 +45,11 @@ namespace Macrocosm.Content.Rockets.Customization
         private const int characterWidth = 2 + 6;
         private const int characterHeight = 2 + 8;
 
-        /// <summary> Formats the input text so the output can only contain the supported characters (including lowercase letters) </summary>
+        /// <summary> Formats the input text so the output can only contain the supported characters (including the respective lowercase letters) </summary>
         public static string FormatText(string text) => new(text.Where(SupportedCharacters.Contains).ToArray());
 
         /// <summary> Whether the rocket's name supports this character </summary>
-        public static bool SupportsChar(char c) => SupportedCharacters.IndexOf(c) != -1;
+        public static bool SupportsChar(char c) => SupportedCharacters.Contains(c);
 
         public void Draw(SpriteBatch spriteBatch, Vector2 position)
         {

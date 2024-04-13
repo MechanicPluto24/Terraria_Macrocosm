@@ -2,6 +2,7 @@ Mods: {
 	Macrocosm: {
 		Common: {
 			Rocket: Rocket
+			LaunchPad: Launchpad
 			DevItem: Developer Item
 		}
 

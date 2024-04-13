@@ -26,16 +26,9 @@ namespace Macrocosm.Content.Items.Materials.Tech
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient<LithiumOre>(2)
-                .AddIngredient<Coal>(1)
-                .AddIngredient(ItemID.CopperBar, 1)
-                .AddTile<Tiles.Crafting.Fabricator>()
-                .Register();
-
-            CreateRecipe()
-                .AddIngredient<LithiumOre>(2)
-                .AddIngredient<Coal>(1)
-                .AddIngredient(ItemID.TinBar, 1)
+                .AddIngredient<LithiumOre>(10)
+                .AddIngredient<Coal>(2)
+                .AddIngredient(ItemID.TinBar, 4)
                 .AddTile<Tiles.Crafting.Fabricator>()
                 .Register();
         }
