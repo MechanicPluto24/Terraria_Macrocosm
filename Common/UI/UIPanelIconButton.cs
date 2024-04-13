@@ -80,7 +80,7 @@ namespace Macrocosm.Common.UI
             if (uIText is not null && HasChild(uIText))
                 RemoveChild(uIText);
 
-            uIText = text.ProvideUI();
+            uIText = text.ProvideUIText();
             uIText.HAlign = align;
             uIText.VAlign = 0.5f;
 

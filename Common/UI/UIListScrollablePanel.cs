@@ -50,12 +50,12 @@ namespace Macrocosm.Common.UI
 
         public UIListScrollablePanel(LocalizedColorScaleText title) : this()
         {
-            this.title = title.ProvideUI();
+            this.title = title.ProvideUIText();
         }
 
         public UIListScrollablePanel(List<UIElement> list, LocalizedColorScaleText title = null)
         {
-            this.title = title?.ProvideUI();
+            this.title = title?.ProvideUIText();
 
             this.list = new();
             list.AddRange(list);
@@ -63,7 +63,7 @@ namespace Macrocosm.Common.UI
 
         public UIListScrollablePanel(UIList list, LocalizedColorScaleText title = null)
         {
-            this.title = title?.ProvideUI();
+            this.title = title?.ProvideUIText();
             this.list = list;
         }
 
@@ -106,7 +106,7 @@ namespace Macrocosm.Common.UI
             if (this.title is not null)
                 RemoveChild(this.title);
 
-            this.title = title.ProvideUI();
+            this.title = title.ProvideUIText();
             Initialize();
         }
 

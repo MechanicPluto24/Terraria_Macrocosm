@@ -1156,12 +1156,13 @@ CoalBrick: {
 	Tooltip: ""
 }
 
-FuelCell: {
-	DisplayName: Fuel Cell
-	Tooltip: ""
-}
 
 LandingGear: {
 	DisplayName: Landing Gear
+	Tooltip: ""
+}
+
+FuelTank: {
+	DisplayName: Fuel Tank
 	Tooltip: ""
 }

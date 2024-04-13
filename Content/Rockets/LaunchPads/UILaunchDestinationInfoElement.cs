@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.LaunchPads
 {
-    public class UILaunchPadInfoElement : UIInfoElement, IFocusable
+    public class UILaunchDestinationInfoElement : UIInfoElement, IFocusable
     {
         public LaunchPad LaunchPad { get; init; }
 
@@ -25,15 +25,20 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
         public bool CanInteract => !IsCurrent && IsReachable && (IsSpawnPointDefault || !LaunchPad.HasRocket);
 
-        public UILaunchPadInfoElement() : base(
-            Language.GetText("Mods.Macrocosm.UI.Rocket.Common.WorldSpawn"),
-            ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/WorldInfo/SpawnPoint", AssetRequestMode.ImmediateLoad),
+        public UILaunchDestinationInfoElement() : base(
+            Language.GetText("Mods.Macrocosm.UI.LaunchPad.UnknownLocation"),
+            ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "QuestionMark", AssetRequestMode.ImmediateLoad),
             null,
             null
         )
         { }
 
-        public UILaunchPadInfoElement(LaunchPad launchPad) : base(launchPad.CompassCoordinates, null, null, null)
+        public UILaunchDestinationInfoElement(LaunchPad launchPad) : base(
+            $"{launchPad.DisplayName} ({launchPad.CompassCoordinates})",
+            ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "LaunchPad", AssetRequestMode.ImmediateLoad),
+            null,
+            null
+        )
         {
             LaunchPad = launchPad;
         }
@@ -70,10 +75,12 @@ namespace Macrocosm.Content.Rockets.LaunchPads
                     uIDisplayText.TextColor = Color.LightGray;
             }
 
+            /*
             if (IsCurrent)
             {
                 BorderColor = Color.LimeGreen;
             }
+            */
         }
 
     }

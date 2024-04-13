@@ -17,7 +17,7 @@ namespace Macrocosm.Common.UI
         protected readonly LocalizedColorScaleText displayText;
         protected readonly LocalizedText hoverText;
 
-        protected UIText uIDisplayText;
+        protected UISnippetText uIDisplayText;
 
         public float IconHAlign { get; set; } = 0.1f;
 
@@ -49,7 +49,7 @@ namespace Macrocosm.Common.UI
             BackgroundColor = UITheme.Current.InfoElementStyle.BackgroundColor;
             BorderColor = UITheme.Current.InfoElementStyle.BorderColor;
 
-            uIDisplayText = displayText.ProvideUI();
+            uIDisplayText = displayText.ProvideUISnippetText();
             uIDisplayText.Left = new StyleDimension(40, 0);
             uIDisplayText.VAlign = 0.5f;
 

@@ -36,9 +36,6 @@ namespace Macrocosm.Common.Systems.UI
         {
         }
 
-        private const string buttonsPath = "Macrocosm/Assets/Textures/UI/Buttons/";
-
-
         public override void OnInitialize()
         {
             var mode = ReLogic.Content.AssetRequestMode.ImmediateLoad;
@@ -80,7 +77,7 @@ namespace Macrocosm.Common.Systems.UI
             navigation.CustomizationPreview.OnLeftClick += SetTab_Customization;
             //Navigation.PayloadFuelPreview.OnLeftClick += SetTab_Payload;
 
-            tabLeftButton = new(ModContent.Request<Texture2D>(buttonsPath + "BackArrow", mode), ModContent.Request<Texture2D>(buttonsPath + "BackArrowBorder", mode), Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Customization"))
+            tabLeftButton = new(ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "BackArrow", mode), ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "BackArrowBorder", mode), Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Customization"))
             {
                 Top = new(-38, 0f),
                 Left = new(0, 0.005f),
@@ -91,7 +88,7 @@ namespace Macrocosm.Common.Systems.UI
             tabLeftButton.OnLeftClick += SetTab_Customization;
             window.Append(tabLeftButton);
 
-            tabRightButton = new(ModContent.Request<Texture2D>(buttonsPath + "ForwardArrow", mode), ModContent.Request<Texture2D>(buttonsPath + "ForwardArrowBorder", mode), Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Payload"))
+            tabRightButton = new(ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ForwardArrow", mode), ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ForwardArrowBorder", mode), Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Payload"))
             {
                 Top = new(-38, 0f),
                 Left = new(0, 0.955f),

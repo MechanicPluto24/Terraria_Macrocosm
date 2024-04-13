@@ -28,9 +28,11 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
         public LaunchPad LaunchPad { get; set; } = new();
         private Inventory Inventory => LaunchPad.Inventory;
 
-        private Dictionary<string, UIModuleAssemblyElement> assemblyElements = new();
+        private Dictionary<string, UIModuleAssemblyElement> assemblyElements;
         private UIRocketBlueprint uIRocketBlueprint;
         private UIPanelIconButton assembleButton;
+        private UIInputTextBox nameTextBox;
+        private UIPanelIconButton nameAcceptResetButton;
 
         public UIAssemblyTab()
         {
@@ -43,32 +45,19 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
             HAlign = 0.5f;
             VAlign = 0.5f;
 
-            SetPadding(3f);
+            SetPadding(4f);
 
             BackgroundColor = UITheme.Current.TabStyle.BackgroundColor;
             BorderColor = UITheme.Current.TabStyle.BorderColor;
 
-            assembleButton = new(
-                ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/Symbols/Wrench"),
-                ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/WidePanel", AssetRequestMode.ImmediateLoad),
-                ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/WidePanelBorder", AssetRequestMode.ImmediateLoad),
-                ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/WidePanelHoverBorder", AssetRequestMode.ImmediateLoad)
-            )
-            {
-                Top = new(0, 0.86f),
-                Left = new(0, 0.2f),
-                CheckInteractible = CheckInteractible,
-                GrayscaleIconIfNotInteractible = true,
-                GetIconPosition = (dimensions) => dimensions.Position() + new Vector2(dimensions.Width * 0.2f, dimensions.Height * 0.5f)
-            };
-            assembleButton.SetText(new(Language.GetText("Mods.Macrocosm.UI.Rocket.Assembly.Assemble")), 0.8f);
-            assembleButton.OnLeftClick += (_, _) => AssembleRocket();
-            Append(assembleButton);
-
             uIRocketBlueprint = new();
             Append(uIRocketBlueprint);
 
-            AddAssemblyElements();
+            nameTextBox = CreateNameTextBox();
+            assembleButton = CreateAssembleButton();
+            assemblyElements = CreateAssemblyElements();
+
+            UpdateBlueprint();
         }
 
         public void OnTabOpen()
@@ -85,10 +74,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
             Check(consume: true);
         }
 
-        private bool CheckInteractible()
-        {
-            return Check(consume: false) && !LaunchPad.Rocket.Active && RocketManager.ActiveRocketCount < RocketManager.MaxRockets;
-        }
+        private bool CheckInteractible() => Check(consume: false) && !LaunchPad.Rocket.Active && RocketManager.ActiveRocketCount < RocketManager.MaxRockets;
 
         private bool Check(bool consume)
         {
@@ -110,7 +96,22 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+            UpdateTextbox();
+            UpdateBlueprint();
+        }
 
+        private void UpdateTextbox()
+        {
+            if (!nameTextBox.HasFocus)
+                nameTextBox.Text = LaunchPad.DisplayName;
+
+            if (nameTextBox.Text == Language.GetTextValue("Mods.Macrocosm.Common.LaunchPad") && !nameTextBox.HasFocus)
+                nameTextBox.TextColor = Color.Gray;
+            else
+                nameTextBox.TextColor = Color.White;
+        }
+        private void UpdateBlueprint()
+        {
             uIRocketBlueprint.Rocket = Rocket;
 
             foreach (var kvp in Rocket.Modules)
@@ -131,8 +132,103 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
             }
         }
 
-        private void AddAssemblyElements()
+
+
+        private UIInputTextBox CreateNameTextBox()
         {
+            nameTextBox = new(Language.GetTextValue("Mods.Macrocosm.Common.LaunchPad"))
+            {
+                Width = new(0f, 0.3f),
+                Height = new(0f, 0.05f),
+                Top = new(0, 0.025f),
+                Left = new(0, 0.125f),
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor,
+                HoverBorderColor = UITheme.Current.ButtonHighlightStyle.BorderColor,
+                TextMaxLenght = 15,
+                TextScale = 0.8f,
+                FocusContext = "TextBox",
+                OnFocusGain = () =>
+                {
+                    nameAcceptResetButton.SetPanelTextures(
+                        ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "CheckmarkWhite"),
+                        ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "CheckmarkBorderHighlight"),
+                        ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "CheckmarkBorderHighlight")
+                    );
+                },
+                OnFocusLost = () =>
+                {
+                    nameAcceptResetButton.SetPanelTextures(
+                        ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "ResetWhite"),
+                        ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "ResetBorderHighlight"),
+                        ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "ResetBorderHighlight")
+                    );
+                }
+            };
+            Append(nameTextBox);
+
+            nameAcceptResetButton = new
+            (
+                Macrocosm.EmptyTex,
+                ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "ResetWhite"),
+                ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "ResetBorderHighlight"),
+                ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "ResetBorderHighlight")
+            )
+            {
+                Width = new(20, 0),
+                Height = new(20, 0),
+                Top = new(0, 0.0345f),
+                Left = new(0, 0.388f),
+                BackPanelColor = Color.White,
+                FocusedBackPanelColor = Color.White,
+                BackPanelBorderColor = Color.Transparent,
+                BackPanelHoverBorderColor = Color.White
+            };
+            nameAcceptResetButton.OnLeftClick += (_, _) =>
+            {
+                if (nameTextBox.HasFocus)
+                {
+                    LaunchPad.CustomName = nameTextBox.Text;
+                    nameTextBox.HasFocus = false;
+                }
+                else
+                {
+                    LaunchPad.CustomName = "";
+                    nameTextBox.Text = Language.GetTextValue("Mods.Macrocosm.Common.LaunchPad");
+                }
+
+            };
+            Append(nameAcceptResetButton);
+
+            return nameTextBox;
+        }
+
+        private UIPanelIconButton CreateAssembleButton()
+        {
+            assembleButton = new(
+                            ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "Wrench"),
+                            ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/WidePanel", AssetRequestMode.ImmediateLoad),
+                            ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/WidePanelBorder", AssetRequestMode.ImmediateLoad),
+                            ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/WidePanelHoverBorder", AssetRequestMode.ImmediateLoad)
+                        )
+            {
+                Top = new(0, 0.86f),
+                Left = new(0, 0.2f),
+                CheckInteractible = CheckInteractible,
+                GrayscaleIconIfNotInteractible = true,
+                GetIconPosition = (dimensions) => dimensions.Position() + new Vector2(dimensions.Width * 0.2f, dimensions.Height * 0.5f)
+            };
+            assembleButton.SetText(new(Language.GetText("Mods.Macrocosm.UI.LaunchPad.Assemble")), 0.8f);
+            assembleButton.OnLeftClick += (_, _) => AssembleRocket();
+            Append(assembleButton);
+
+            return assembleButton;
+        }
+
+        private Dictionary<string, UIModuleAssemblyElement> CreateAssemblyElements()
+        {
+            assemblyElements = new();
+
             int slotCount = 0;
             int assemblyElementCount = 0;
             foreach (var kvp in Rocket.Modules)
@@ -175,6 +271,8 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
                     Append(assemblyElement);
                 }
             }
+
+            return assemblyElements;
         }
         private Asset<Texture2D> GetBlueprintTexture(int itemType)
         {

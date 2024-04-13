@@ -19,9 +19,9 @@ namespace Macrocosm.Content.Items.Blocks
 
         public override void AddRecipes()
         {
-            CreateRecipe(15)
-                .AddIngredient<Plastic>(15)
-                .AddIngredient(ItemID.Glass, 15)
+            CreateRecipe(1)
+                .AddIngredient<Plastic>(2)
+                .AddIngredient(ItemID.Glass, 1)
                 .AddTile(TileID.GlassKiln)
                 .Register();
         }

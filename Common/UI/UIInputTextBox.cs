@@ -22,6 +22,12 @@ namespace Macrocosm.Common.UI
             set => textField.TextColor = value;
         }
 
+        public bool ForceHideHintText
+        {
+            get => textField.ForceHideHintText;
+            set => textField.ForceHideHintText = value;
+        }
+
         public float TextScale { get; set; } = 1f;
 
         public int TextMaxLenght { get; set; } = 20;
@@ -37,11 +43,14 @@ namespace Macrocosm.Common.UI
         public Func<string, string> FormatText { get; set; } = (text) => text;
 
         public Color? HoverBorderColor { get; set; }
+        public bool AllowSnippets { get; set; } = true;
+
         private Color normalBorderColor;
 
         public UIInputTextBox(string defaultText)
         {
             textField = new(defaultText);
+            textField.AllowSnippets = AllowSnippets;
         }
 
         public override void OnInitialize()

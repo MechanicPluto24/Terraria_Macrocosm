@@ -667,7 +667,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             };
             patternConfigPanel.Append(colorPickerSeparator);
 
-            resetPatternButton = new(ModContent.Request<Texture2D>(symbolsPath + "ResetWhite"))
+            resetPatternButton = new(ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "ResetWhite"))
             {
                 HAlign = 0f,
                 Top = new(0f, 0.04f),
@@ -752,18 +752,18 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             JumpToModule("EngineModule");
 
             nameplateAcceptResetButton.SetPanelTextures(
-                ModContent.Request<Texture2D>(symbolsPath + "CheckmarkWhite"),
-                ModContent.Request<Texture2D>(symbolsPath + "CheckmarkBorderHighlight"),
-                ModContent.Request<Texture2D>(symbolsPath + "CheckmarkBorderHighlight")
+                ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "CheckmarkWhite"),
+                ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "CheckmarkBorderHighlight"),
+                ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "CheckmarkBorderHighlight")
             );
         }
 
         private void NameplateTextOnFocusLost()
         {
             nameplateAcceptResetButton.SetPanelTextures(
-                ModContent.Request<Texture2D>(symbolsPath + "ResetWhite"),
-                ModContent.Request<Texture2D>(symbolsPath + "ResetBorderHighlight"),
-                ModContent.Request<Texture2D>(symbolsPath + "ResetBorderHighlight")
+                ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "ResetWhite"),
+                ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "ResetBorderHighlight"),
+                ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "ResetBorderHighlight")
             );
         }
 
@@ -807,10 +807,6 @@ namespace Macrocosm.Content.Rockets.UI.Customization
         #endregion
 
         #region UI creation methods
-        private const string buttonsPath = "Macrocosm/Assets/Textures/UI/Buttons/";
-        private const string symbolsPath = "Macrocosm/Assets/Textures/UI/Symbols/";
-
-
         private UIPanel CreateRocketPreview()
         {
             rocketPreviewBackground = new()
@@ -882,7 +878,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             };
             modulePicker.Append(modulePickerIconPanel);
 
-            leftButton = new(ModContent.Request<Texture2D>(buttonsPath + "BackArrow", mode), ModContent.Request<Texture2D>(buttonsPath + "BackArrowBorder", mode))
+            leftButton = new(ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "BackArrow", mode), ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "BackArrowBorder", mode))
             {
                 VAlign = 0.5f,
                 Left = new StyleDimension(0f, 0f),
@@ -892,7 +888,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
 
             modulePicker.Append(leftButton);
 
-            rightButton = new(ModContent.Request<Texture2D>(buttonsPath + "ForwardArrow", mode), ModContent.Request<Texture2D>(buttonsPath + "ForwardArrowBorder", mode))
+            rightButton = new(ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ForwardArrow", mode), ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ForwardArrowBorder", mode))
             {
                 VAlign = 0.5f,
                 Left = new StyleDimension(0, 0.79f),
@@ -927,7 +923,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             };
             rocketCustomizationControlPanel.Append(unlockableItemSlot);
 
-            unlockableApplyButton = new(ModContent.Request<Texture2D>(symbolsPath + "Hammer"))
+            unlockableApplyButton = new(ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "Hammer"))
             {
                 VAlign = 0.5f,
                 Left = new(0f, 0.6f),
@@ -964,7 +960,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             };
             rocketCustomizationControlPanel.Append(separator1);
 
-            rocketResetButton = new(ModContent.Request<Texture2D>(symbolsPath + "ResetWhite"))
+            rocketResetButton = new(ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "ResetWhite"))
             {
                 VAlign = 0.9f,
                 Left = new(0f, 0.448f),
@@ -982,7 +978,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             };
             rocketCustomizationControlPanel.Append(separator2);
 
-            rocketCancelButton = new(ModContent.Request<Texture2D>(symbolsPath + "CrossmarkRed"))
+            rocketCancelButton = new(ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "CrossmarkRed"))
             {
                 VAlign = 0.9f,
                 Left = new(0f, 0.6f),
@@ -991,7 +987,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             rocketCancelButton.OnLeftClick += (_, _) => DiscardCustomizationChanges();
             rocketCustomizationControlPanel.Append(rocketCancelButton);
 
-            rocketApplyButton = new(ModContent.Request<Texture2D>(symbolsPath + "CheckmarkGreen"))
+            rocketApplyButton = new(ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "CheckmarkGreen"))
             {
                 VAlign = 0.9f,
                 Left = new(0f, 0.715f),
@@ -1039,6 +1035,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
                 HoverBorderColor = UITheme.Current.ButtonHighlightStyle.BorderColor,
                 TextMaxLenght = Nameplate.MaxChars,
                 TextScale = 1f,
+                AllowSnippets = false,
                 FormatText = Nameplate.FormatText,
                 FocusContext = "TextBox",
                 OnFocusGain = NameplateTextOnFocusGain,
@@ -1049,9 +1046,9 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             nameplateAcceptResetButton = new
             (
                 Macrocosm.EmptyTex,
-                ModContent.Request<Texture2D>(symbolsPath + "ResetWhite"),
-                ModContent.Request<Texture2D>(symbolsPath + "ResetBorderHighlight"),
-                ModContent.Request<Texture2D>(symbolsPath + "ResetBorderHighlight")
+                ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "ResetWhite"),
+                ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "ResetBorderHighlight"),
+                ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "ResetBorderHighlight")
             )
             {
                 Width = new(20, 0),
@@ -1083,7 +1080,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
 
             nameplateConfigPanel.Append(nameplateColorPicker);
 
-            alignLeft = new(ModContent.Request<Texture2D>(symbolsPath + "AlignLeft"))
+            alignLeft = new(ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "AlignLeft"))
             {
                 VAlign = 0.5f,
                 HAlign = 0f,
@@ -1100,7 +1097,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
 
             nameplateConfigPanel.Append(alignLeft);
 
-            alignCenterHorizontal = new(ModContent.Request<Texture2D>(symbolsPath + "AlignCenterHorizontal"))
+            alignCenterHorizontal = new(ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "AlignCenterHorizontal"))
             {
                 VAlign = 0.5f,
                 Left = new(0f, 0.628f),
@@ -1115,7 +1112,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             alignCenterHorizontal.OnLeftClick += (_, _) => alignCenterHorizontal.HasFocus = true;
             nameplateConfigPanel.Append(alignCenterHorizontal);
 
-            alignRight = new(ModContent.Request<Texture2D>(symbolsPath + "AlignRight"))
+            alignRight = new(ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "AlignRight"))
             {
                 VAlign = 0.5f,
                 Left = new(0f, 0.696f),
@@ -1130,7 +1127,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             alignRight.OnLeftClick += (_, _) => alignRight.HasFocus = true;
             nameplateConfigPanel.Append(alignRight);
 
-            alignTop = new(ModContent.Request<Texture2D>(symbolsPath + "AlignTop"))
+            alignTop = new(ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "AlignTop"))
             {
                 VAlign = 0.5f,
                 Left = new(0f, 0.78f),
@@ -1145,7 +1142,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             alignTop.OnLeftClick += (_, _) => alignTop.HasFocus = true;
             nameplateConfigPanel.Append(alignTop);
 
-            alignCenterVertical = new(ModContent.Request<Texture2D>(symbolsPath + "AlignCenterVertical"))
+            alignCenterVertical = new(ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "AlignCenterVertical"))
             {
                 VAlign = 0.5f,
                 Left = new(0f, 0.848f),
@@ -1160,7 +1157,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             alignCenterVertical.OnLeftClick += (_, _) => alignCenterVertical.HasFocus = true;
             nameplateConfigPanel.Append(alignCenterVertical);
 
-            alignBottom = new(ModContent.Request<Texture2D>(symbolsPath + "AlignBottom"))
+            alignBottom = new(ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "AlignBottom"))
             {
                 VAlign = 0.5f,
                 Left = new(0f, 0.917f),

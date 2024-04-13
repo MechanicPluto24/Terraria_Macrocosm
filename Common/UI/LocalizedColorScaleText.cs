@@ -31,13 +31,23 @@ namespace Macrocosm.Common.UI
         }
 
         /// <summary> Gets a <see cref="UIText"/> based on the text data </summary>
-        public UIText ProvideUI()
+        public UIText ProvideUIText()
         {
-            return new(LocalizedText, Scale, LargeText)
+            return new UIText(LocalizedText, Scale, LargeText)
             {
                 TextColor = Color,
             };
         }
+
+        /// <summary> Gets a <see cref="UISnippetText"/> based on the text data </summary>
+        public UISnippetText ProvideUISnippetText()
+        {
+            return new UISnippetText(LocalizedText, Scale, LargeText)
+            {
+                TextColor = Color,
+            };
+        }
+
 
         /// <summary> Draws the text directly to the screen </summary>
         public void DrawDirect(SpriteBatch spriteBatch, Vector2 centerPosition, Color? overrideColor = null)

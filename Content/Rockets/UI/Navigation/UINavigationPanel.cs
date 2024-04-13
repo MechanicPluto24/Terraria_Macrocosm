@@ -128,7 +128,6 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
         }
 
         private const string navigationMapsPath = "Macrocosm/Content/Rockets/Textures/NavigationMaps/";
-        private const string buttonsPath = "Macrocosm/Assets/Textures/UI/Buttons/";
 
         private void UpdateMapVisibility()
         {
@@ -159,13 +158,13 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
         {
             AssetRequestMode mode = AssetRequestMode.ImmediateLoad;
 
-            Asset<Texture2D> zoomInTexture = ModContent.Request<Texture2D>(buttonsPath + "ZoomInButton", mode);
-            Asset<Texture2D> zoomOutTexture = ModContent.Request<Texture2D>(buttonsPath + "ZoomOutButton", mode);
-            Asset<Texture2D> zoomButtonBorder = ModContent.Request<Texture2D>(buttonsPath + "ZoomButtonBorder", mode);
+            Asset<Texture2D> zoomInTexture = ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ZoomInButton", mode);
+            Asset<Texture2D> zoomOutTexture = ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ZoomOutButton", mode);
+            Asset<Texture2D> zoomButtonBorder = ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ZoomButtonBorder", mode);
 
-            Asset<Texture2D> outlineSmall = ModContent.Request<Texture2D>(buttonsPath + "SelectionOutlineSmall", mode);
-            Asset<Texture2D> outlineMedium = ModContent.Request<Texture2D>(buttonsPath + "SelectionOutlineMedium", mode);
-            Asset<Texture2D> outlineLarge = ModContent.Request<Texture2D>(buttonsPath + "SelectionOutlineLarge", mode);
+            Asset<Texture2D> outlineSmall = ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "SelectionOutlineSmall", mode);
+            Asset<Texture2D> outlineMedium = ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "SelectionOutlineMedium", mode);
+            Asset<Texture2D> outlineLarge = ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "SelectionOutlineLarge", mode);
 
             zoomInButton = new(zoomInTexture, zoomButtonBorder, Language.GetText("Mods.Macrocosm.UI.Common.ZoomIn"))
             {

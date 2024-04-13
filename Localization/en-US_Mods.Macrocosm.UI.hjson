@@ -12,6 +12,13 @@ Common: {
 	CancelColor: Discard color changes
 	ZoomIn: Zoom In
 	ZoomOut: Zoom Out
+	Inventory.OpenInventory: Open Inventory
+}
+
+LaunchPad: {
+	Assemble: Assemble
+	AnyChest: Any Chest
+	UnknownLocation: Unknown
 }
 
 Rocket: {
@@ -20,7 +27,6 @@ Rocket: {
 		Navigation: Navigation
 		Checklist: Pre-flight checklist
 		LaunchLocations: Launch Locations
-		WorldSpawn: World Spawn
 		Crew: Crew
 		Commander: Commander
 		Cargo: Cargo
@@ -30,8 +36,6 @@ Rocket: {
 		Customization: Customization
 		Assembly: Assembly
 	}
-
-	Inventory.OpenInventory: Open Inventory
 
 	Customization: {
 		Apply: Apply rocket appearance changes
@@ -43,11 +47,6 @@ Rocket: {
 		ResetModule: Reset module to default appearance
 		ResetRocket: Reset rocket to default appearance
 		ResetPattern: Reset pattern to default appearance
-	}
-
-	Assembly: {
-		Assemble: Assemble
-		AnyChest: Any Chest
 	}
 
 	Modules: {

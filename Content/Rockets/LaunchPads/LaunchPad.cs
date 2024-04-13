@@ -4,6 +4,7 @@ using Macrocosm.Common.Storage;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.UI;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.Modules;
 using Macrocosm.Content.Tiles.Special;
 using Microsoft.Xna.Framework;
@@ -12,6 +13,7 @@ using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.LaunchPads
@@ -25,7 +27,11 @@ namespace Macrocosm.Content.Rockets.LaunchPads
         [NetSync] public Point16 StartTile;
         [NetSync] public Point16 EndTile;
         [NetSync] public int RocketID = -1;
+        [NetSync] public string CustomName = "";
         [NetSync] public string CompassCoordinates = "";
+
+        public string DisplayName
+            => !string.IsNullOrEmpty(CustomName) ? CustomName : Language.GetTextValue("Mods.Macrocosm.Common.LaunchPad");
 
         public Rocket Rocket => HasRocket ? RocketManager.Rockets[RocketID] : unassembledRocket;
         public bool HasRocket => RocketID >= 0;
@@ -89,26 +95,16 @@ namespace Macrocosm.Content.Rockets.LaunchPads
         public static LaunchPad Create(Point16 startTile, Point16 endTile, bool shouldSync = true) => Create(startTile.X, startTile.Y, endTile.X, endTile.Y, shouldSync);
 
 
-        private int checkCounter;
-        private const int checkCounterMax = 10;
-
         public void Update()
         {
-            if(checkCounter++ >= checkCounterMax)
-            {
-                CheckMarkers();
-                CheckRocket();
-                //CheckTiles();
-
-                checkCounter = 0;
-            }
+            CheckMarkers();
+            CheckRocket();
             
             if(spawned)
                 Interact();
 
             if (!spawned)
             {
-                CheckRocket();
                 spawned = true;
             }
         }
@@ -118,18 +114,19 @@ namespace Macrocosm.Content.Rockets.LaunchPads
             if (Main.tile[StartTile].TileType != ModContent.TileType<LaunchPadMarker>())
             {
                 Active = false;
+                LaunchPadMarker.SetState(StartTile, MarkerState.Inactive);
                 LaunchPadMarker.SetState(EndTile, MarkerState.Inactive);
-                NetSync(MacrocosmSubworld.CurrentID);
-                return;
             }
 
             if (Main.tile[EndTile].TileType != ModContent.TileType<LaunchPadMarker>())
             {
                 Active = false;
                 LaunchPadMarker.SetState(StartTile, MarkerState.Inactive);
-                NetSync(MacrocosmSubworld.CurrentID);
-                return;
+                LaunchPadMarker.SetState(EndTile, MarkerState.Inactive);
             }
+
+            if(!Active)
+                NetSync(MacrocosmSubworld.CurrentID);
         }
 
         private void CheckRocket()
@@ -221,7 +218,8 @@ namespace Macrocosm.Content.Rockets.LaunchPads
             foreach (var kvp in rocket.Modules)
             {
                 RocketModule module = kvp.Value;
-                count += module.Recipe.Count();
+                if(!module.Recipe.Linked)
+                    count += module.Recipe.Count();
             }
 
             return count;
