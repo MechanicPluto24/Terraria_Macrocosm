@@ -12,6 +12,7 @@ namespace Macrocosm.Content.Subworlds
         public const double TimeRate = 1.0;
         public const double DayLenght = Main.dayLength;
         public const double NightLenght = Main.nightLength;
+        public const float AtmosphericDensity = 1f;
         public const float GoreGravity = 0.2f;
         public const float NPCGravity = 0.3f;
         public const float GravityMultiplier = 1f;

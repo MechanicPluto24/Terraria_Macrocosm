@@ -129,7 +129,6 @@ namespace Macrocosm.Content.Rockets
                     continue;
 
                 rocket.Draw(Rocket.DrawMode.World, Main.spriteBatch, rocket.Position - Main.screenPosition);
-                rocket.PostDraw(Main.spriteBatch, rocket.Position - Main.screenPosition);
 
                 if (DebugModeActive)
                 {
@@ -142,6 +141,22 @@ namespace Macrocosm.Content.Rockets
             {
                 string text = $"Rockets active: {Rockets.Where(r => r.Active).Count()}\nHere: {Rockets.Where(r => r.ActiveInCurrentWorld).Count()}";
                 ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, FontAssets.DeathText.Value, text, new Vector2(Main.screenWidth * 0.5f, 40f), Color.White, 0f, Vector2.Zero, Vector2.One * 0.5f);
+            }
+        }
+
+        private static void PostDrawRockets(RocketDrawLayer layer)
+        {
+            for (int i = 0; i < MaxRockets; i++)
+            {
+                Rocket rocket = Rockets[i];
+
+                if (!rocket.ActiveInCurrentWorld)
+                    continue;
+
+                if (rocket.DrawLayer != layer)
+                    continue;
+
+                rocket.PostDraw(Main.spriteBatch, rocket.Position - Main.screenPosition);
             }
         }
 
@@ -251,6 +266,11 @@ namespace Macrocosm.Content.Rockets
             DrawRockets(RocketDrawLayer.BeforeNPCs);
 
             spriteBatch.End();
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, default, default, Main.GameViewMatrix.ZoomMatrix);
+
+            PostDrawRockets(RocketDrawLayer.BeforeNPCs);
+
+            spriteBatch.End();
             spriteBatch.Begin(state1);
 
             orig(self, behindTiles);
@@ -260,6 +280,11 @@ namespace Macrocosm.Content.Rockets
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, default, default, Main.GameViewMatrix.ZoomMatrix);
 
             DrawRockets(RocketDrawLayer.AfterNPCs);
+
+            spriteBatch.End();
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, default, default, Main.GameViewMatrix.ZoomMatrix);
+
+            PostDrawRockets(RocketDrawLayer.AfterNPCs);
 
             spriteBatch.End();
             spriteBatch.Begin(state2);
@@ -273,12 +298,22 @@ namespace Macrocosm.Content.Rockets
             DrawRockets(RocketDrawLayer.BeforeProjectiles);
 
             spriteBatch.End();
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, default, default, Main.GameViewMatrix.ZoomMatrix);
+
+            PostDrawRockets(RocketDrawLayer.BeforeProjectiles);
+
+            spriteBatch.End();
 
             orig(self);
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, default, default, Main.GameViewMatrix.ZoomMatrix);
 
             DrawRockets(RocketDrawLayer.AfterProjectiles);
+
+            spriteBatch.End();
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, default, default, Main.GameViewMatrix.ZoomMatrix);
+
+            PostDrawRockets(RocketDrawLayer.AfterProjectiles);
 
             spriteBatch.End();
         }

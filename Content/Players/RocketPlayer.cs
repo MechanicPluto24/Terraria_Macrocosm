@@ -105,8 +105,7 @@ namespace Macrocosm.Content.Players
                         DisembarkFromRocket();
 
                     bool escapePressed = (Main.keyState.KeyPressed(Keys.Escape) && !Main.oldKeyState.KeyPressed(Keys.Escape));
-
-                    bool dismountPressed = (Main.keyState.KeyPressed(Keys.R) && !Main.oldKeyState.KeyPressed(Keys.R));
+                    bool dismountPressed = Player.controlMount;
 
                     if (rocket.Launched || rocket.Landing)
                     {

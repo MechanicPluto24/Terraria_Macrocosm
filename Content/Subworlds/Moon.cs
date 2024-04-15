@@ -30,11 +30,8 @@ namespace Macrocosm.Content.Subworlds
 
         /// <summary> About 6 times lower than default (1, as on Earth) </summary>
         public override float GravityMultiplier => 0.166f;
+        public override float AtmosphericDensity => 0.1f;
 
-        public override bool NormalUpdates => false;
-
-        public override bool ShouldSave => true;
-        public override bool NoPlayerSaving => false;
 
         public override ChecklistConditionCollection LaunchConditions => new()
         {

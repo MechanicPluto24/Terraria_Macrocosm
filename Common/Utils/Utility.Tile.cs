@@ -1,13 +1,16 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Common.Systems;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
+using System.Security.Policy;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent.Drawing;
 using Terraria.ID;
 using Terraria.Localization;
+using Terraria.Map;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
@@ -41,10 +44,10 @@ namespace Macrocosm.Common.Utils
 
                 if (data != null)
                 {
-                    int size = 16 + data.CoordinatePadding;
+                    int padding = 16 + data.CoordinatePadding;
 
-                    frameX = tile.TileFrameX % (size * data.Width) / size;
-                    frameY = tile.TileFrameY % (size * data.Height) / size;
+                    frameX = tile.TileFrameX % (padding * data.Width) / padding;
+                    frameY = tile.TileFrameY % (padding * data.Height) / padding;
                 }
             }
 
@@ -184,89 +187,23 @@ namespace Macrocosm.Common.Utils
         public static bool HasBlendingFrame(int i, int j) => Main.tile[i, j].TileFrameX >= 234 || Main.tile[i, j].TileFrameY >= 90;
         public static bool HasBlendingFrame(this Tile tile) => tile.TileFrameX >= 234 || tile.TileFrameY >= 90;
 
-        public static bool SandTileFrame(int i, int j, int projectileType)
-        {
-            if (WorldGen.noTileActions)
-                return true;
-
-            Tile above = Main.tile[i, j - 1];
-            Tile below = Main.tile[i, j + 1];
-            bool canFall = true;
-
-            if (below == null || below.HasTile)
-                canFall = false;
-
-            if (above.HasTile && (TileID.Sets.BasicChest[above.TileType] || TileID.Sets.BasicChestFake[above.TileType] || above.TileType == TileID.PalmTree))
-                canFall = false;
-
-            if (canFall)
-            {
-                float positionX = i * 16 + 8;
-                float positionY = j * 16 + 8;
-
-                if (Main.netMode == NetmodeID.SinglePlayer)
-                {
-                    Main.tile[i, j].ClearTile();
-                    int proj = Projectile.NewProjectile(new EntitySource_TileBreak(i, j), positionX, positionY, 0f, 0.41f, projectileType, 10, 0f, Main.myPlayer);
-                    Main.projectile[proj].ai[0] = 1f;
-                    WorldGen.SquareTileFrame(i, j);
-                }
-                else if (Main.netMode == NetmodeID.Server)
-                {
-                    Main.tile[i, j].ClearTile();
-                    bool spawnProj = true;
-
-                    for (int k = 0; k < 1000; k++)
-                    {
-                        Projectile otherProj = Main.projectile[k];
-
-                        if (otherProj.active && otherProj.owner == Main.myPlayer && otherProj.type == projectileType && Math.Abs(otherProj.timeLeft - 3600) < 60 && otherProj.Distance(new Vector2(positionX, positionY)) < 4f)
-                        {
-                            spawnProj = false;
-                            break;
-                        }
-                    }
-
-                    if (spawnProj)
-                    {
-                        int proj = Projectile.NewProjectile(new EntitySource_TileBreak(i, j), positionX, positionY, 0f, 2.5f, projectileType, 10, 0f, Main.myPlayer);
-                        Main.projectile[proj].velocity.Y = 0.5f;
-                        Main.projectile[proj].position.Y += 2f;
-                        Main.projectile[proj].netUpdate = true;
-                    }
-
-                    NetMessage.SendTileSquare(-1, i, j, 1);
-                    WorldGen.SquareTileFrame(i, j);
-                }
-                return false;
-            }
-            return true;
-        }
-
-        #region BaseMod Utility
-        //------------------------------------------------------//
-        //---------------------- BASE TILE ---------------------//
-        //------------------------------------------------------//
-        // Contains methods dealing with tiles, except          //
-        // generation. (for that, see BaseWorldGen/BaseGoreGen) //
-        //------------------------------------------------------//
-        //  Author(s): Grox the Great                           //
-        //------------------------------------------------------//
-
-        /*
-         * Returns all tiles of the given type nearby using the given distance.
-		 * 
-		 * distance: how far from the x, y coordinates in tiles to check.
-		 * addTile : action that can be used to have custom check parameters.
-         */
-        public static Vector2 GetClosestTile(int x, int y, int type, int distance = 25, Func<Tile, bool> addTile = null)
+        /// <summary>
+        /// Returns the position of closest tile of the given type nearby using the given distance.
+        /// By GroxTheGreat @ BaseMod
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="type"></param>
+        /// <param name="distance"> How far from the x, y coordinates in tiles to check. </param>
+        /// <param name="addTile"> Action that can be used to have custom check parameters. </param>
+        public static Point GetClosestTile(int x, int y, int type, int distance = 25, Func<Tile, bool> addTile = null)
         {
             Vector2 originalPos = new(x, y);
             int leftX = Math.Max(10, x - distance);
             int leftY = Math.Max(10, y - distance);
             int rightX = Math.Min(Main.maxTilesX - 10, x + distance);
             int rightY = Math.Min(Main.maxTilesY - 10, y + distance);
-            Vector2 pos = default;
+            Point pos = default;
             float dist = -1;
             for (int x1 = leftX; x1 < rightX; x1++)
             {
@@ -286,14 +223,14 @@ namespace Macrocosm.Common.Utils
                             }
                             else
                             {
-                                Vector2 top = FindTopLeft(x2, y2);
+                                Vector2 top = GetMultitileTopLeft(x2, y2).ToVector2();
                                 x2 = (int)top.X; y2 = (int)top.Y;
                             }
-                            pos = new Vector2(x2, y2);
+                            pos = new(x2, y2);
                         }
                         else
                         {
-                            pos = new Vector2(x1, y1);
+                            pos = new(x1, y1);
                         }
                     }
                 }
@@ -301,27 +238,15 @@ namespace Macrocosm.Common.Utils
             return pos;
         }
 
-        public static Point FindTopLeftPoint(int x, int y)
-        {
-            Vector2 v2 = FindTopLeft(x, y);
-            return new Point((int)v2.X, (int)v2.Y);
-        }
-
-        public static Vector2 FindTopLeft(int x, int y)
-        {
-            Tile tile = Framing.GetTileSafely(x, y); if (tile == null) return new Vector2(x, y);
-            TileObjectData data = TileObjectData.GetTileData(tile.TileType, 0);
-            x -= tile.TileFrameX / 18 % data.Width;
-            y -= tile.TileFrameY / 18 % data.Height;
-            return new Vector2(x, y);
-        }
-
-        /*
-         * Returns all tiles of the given type nearby using the given distance.
-		 * 
-		 * distance: how far from the x, y coordinates in tiles to check.
-		 * addTile : action that can be used to have custom check parameters.
-         */
+        /// <summary>
+        /// Returns all tiles of the given type nearby using the given distance.
+        /// By GroxTheGreat @ BaseMod
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="type"></param>
+        /// <param name="distance"> How far from the x, y coordinates in tiles to check. </param>
+        /// <param name="addTile"> Action that can be used to have custom check parameters. </param>
         public static Vector2[] GetTiles(int x, int y, int type, int distance = 25, Func<Tile, bool> addTile = null)
         {
             int leftX = Math.Max(10, x - distance);
@@ -346,7 +271,9 @@ namespace Macrocosm.Common.Utils
                             }
                             else
                             {
-                                Point p = FindTopLeftPoint(x2, y2); x2 = p.X; y2 = p.Y;
+                                Point p = GetMultitileTopLeft(x2, y2).ToPoint();
+                                x2 = p.X; 
+                                y2 = p.Y;
                             }
                             Vector2 topLeft = new(x2, y2);
                             if (tilePos.Contains(topLeft)) { continue; }
@@ -364,6 +291,7 @@ namespace Macrocosm.Common.Utils
 
         ///<summary>
         /// Returns the total count of the given liquid within the distance provided.
+        /// By GroxTheGreat @ BaseMod
         ///</summary>
         public static int LiquidCount(int x, int y, int distance = 25, int liquidType = 0)
         {
@@ -388,6 +316,7 @@ namespace Macrocosm.Common.Utils
 
         ///<summary>
         /// Returns true if the tile type acts similarly to a platform.
+        /// By GroxTheGreat @ BaseMod
         ///</summary>
         public static bool IsPlatform(int type)
         {
@@ -398,6 +327,7 @@ namespace Macrocosm.Common.Utils
 
         ///<summary>
         /// Goes through a square area given by the x, y and width, height params, and returns true if they are all of the type given.
+        /// By GroxTheGreat @ BaseMod
         ///</summary>
         public static bool IsType(int x, int y, int width, int height, int type)
         {
@@ -413,10 +343,11 @@ namespace Macrocosm.Common.Utils
             return true;
         }
 
-        /**
-         * Return the count of tiles and walls of the given types within the given distance.
-         * If a location has a tile and a wall it is only counted once.
-         */
+        /// <summary>
+        /// Return the count of tiles and walls of the given types within the given distance.
+        /// If a location has a tile and a wall it is only counted once.
+        /// By GroxTheGreat @ BaseMod
+        /// </summary>
         public static int GetTileAndWallCount(Vector2 tileCenter, int[] tileTypes, int[] wallTypes, int distance = 35)
         {
             int tileCount = 0;
@@ -451,9 +382,10 @@ namespace Macrocosm.Common.Utils
             return tileCount;
         }
 
-        /**
-         * Return the count of walls of the given types within the given distance.
-         */
+        /// <summary>
+        /// Return the count of walls of the given types within the given distance.
+        /// By GroxTheGreat @ BaseMod
+        /// </summary>
         public static int GetWallCount(Vector2 tileCenter, int[] wallTypes, int distance = 35)
         {
             int wallCount = 0;
@@ -475,9 +407,10 @@ namespace Macrocosm.Common.Utils
             return wallCount;
         }
 
-        /**
-         * Return the count of tiles of the given types within the given distance.
-         */
+        /// <summary>
+        /// Return the count of tiles of the given types within the given distance.
+        /// By GroxTheGreat @ BaseMod
+        /// </summary>
         public static int GetTileCount(Vector2 tileCenter, int[] tileTypes, int distance = 35)
         {
             int tileCount = 0;
@@ -499,7 +432,24 @@ namespace Macrocosm.Common.Utils
             return tileCount;
         }
 
-        #endregion
 
+        public static Color GetTileColor(Point coords) => GetTileColor(coords.X, coords.Y);
+
+        public static Color GetTileColor(int i, int j)
+        {
+            if (CoordinatesOutOfBounds(i, j))
+                return default;
+
+            if (!Main.tile[i, j].HasTile)
+                return default;
+
+            Color[] colorLookup = MapTileSystem.GetMapColorLookup();
+
+            if(colorLookup is null)
+                return default;
+
+            MapTile mapTile = MapHelper.CreateMapTile(i, j, 255);
+            return colorLookup[mapTile.Type];
+        }
     }
 }

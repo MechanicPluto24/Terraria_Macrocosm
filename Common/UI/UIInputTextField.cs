@@ -17,8 +17,6 @@ namespace Macrocosm.Common.UI
         private readonly string hintText;
         private string currentText = string.Empty;
         private int textBlinkerCounter;
-        private UISnippetText uiDisplayText;
-
         public float TextScale { get; set; } = 1f;
 
         public Color HintColor { get; set; } = Color.Gray;
