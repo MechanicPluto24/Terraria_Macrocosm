@@ -1156,7 +1156,6 @@ CoalBrick: {
 	Tooltip: ""
 }
 
-
 LandingGear: {
 	DisplayName: Landing Gear
 	Tooltip: ""

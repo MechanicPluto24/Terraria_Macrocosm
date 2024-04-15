@@ -27,6 +27,8 @@ namespace Macrocosm.Content.Rockets
         private VertexPositionColorTexture[] vertices;
         private short[] indices;
 
+        public bool HasRenderTarget => renderTarget is not null && !renderTarget.IsDisposed;
+
         public void ResetRenderTarget()
         {
             renderTarget?.Dispose();
@@ -116,11 +118,18 @@ namespace Macrocosm.Content.Rockets
 
         public void DrawOverlay(SpriteBatch spriteBatch, Vector2 position)
         {
-            if (InFlight || ForcedFlightAppearance)
+            if (StaticFire || InFlight || Landing || ForcedFlightAppearance)
             {
                 float scale = 1.2f * Main.rand.NextFloat(0.85f, 1f);
-                if (FlightProgress < 0.1f && !ForcedFlightAppearance)
-                    scale *= Utility.QuadraticEaseOut(FlightProgress * 10f);
+
+                if (ForcedFlightAppearance)
+                    scale *= 1.25f;
+
+                if (StaticFire)
+                    scale *= Utility.QuadraticEaseOut(StaticFireProgress);
+
+                if(Landing && LandingProgress > 0.9f)
+                    scale *= Utility.QuadraticEaseOut((1f - LandingProgress) * 10f);
 
                 var flare = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Flare2").Value;
                 spriteBatch.Draw(flare, position + new Vector2(Bounds.Width / 2, Bounds.Height), null, new Color(255, 69, 0), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
@@ -157,7 +166,7 @@ namespace Macrocosm.Content.Rockets
 
             state2.SaveState(spriteBatch);
             spriteBatch.End();
-            spriteBatch.Begin(BlendState.Additive, state);
+            spriteBatch.Begin(state.SpriteSortMode, BlendState.Additive, state.SamplerState, state.DepthStencilState, state.RasterizerState, state.Effect, Main.UIScaleMatrix);
             DrawOverlay(spriteBatch, position);
             spriteBatch.End();
             spriteBatch.Begin(state);

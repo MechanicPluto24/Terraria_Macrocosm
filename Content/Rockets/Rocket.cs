@@ -13,11 +13,13 @@ using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.LaunchPads;
 using Macrocosm.Content.Rockets.Modules;
 using Microsoft.Xna.Framework;
+using SubworldLibrary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.GameContent.Golf;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -244,6 +246,7 @@ namespace Macrocosm.Content.Rockets
             Fuel = 1000f;
 
             Movement();
+            Effects();
 
             if (Stationary)
             {
@@ -458,7 +461,7 @@ namespace Macrocosm.Content.Rockets
                     return AtPosition(Utility.SpawnWorldPosition);
                 else
                 */
-                    return false;
+                return false;
             }
 
             if (LaunchPadManager.InCurrentWorld(launchPad))
@@ -491,7 +494,7 @@ namespace Macrocosm.Content.Rockets
                     if (!rocketPlayer.InRocket)
                     {
                         bool noCommanderInRocket = (Main.netMode == NetmodeID.SinglePlayer) || !TryFindingCommander(out _);
-                        rocketPlayer.EmbarkPlayerInRocket(WhoAmI, noCommanderInRocket);                      
+                        rocketPlayer.EmbarkPlayerInRocket(WhoAmI, noCommanderInRocket);
                     }
                     else if (!UISystem.Active)
                     {
@@ -580,18 +583,18 @@ namespace Macrocosm.Content.Rockets
         // Handles the rocket's movement during flight
         private void Movement()
         {
-            float gravityForce = 0.1f * MacrocosmSubworld.CurrentGravityMultiplier;
+            float gravity = MacrocosmSubworld.CurrentGravityMultiplier;
+            float gravityFactor = 0.7f + 0.3f * gravity;
 
             if (Launched)
             {
                 FlightTime++;
 
-
                 if (InFlight)
                 {
                     float easedFlightProgress = Utility.QuartEaseIn(FlightProgress);
                     float launchDistance = Math.Abs(StartPositionY - WorldExitPositionY);
-                    float launchDuration = 10f * 60f;
+                    float launchDuration = 10f * 60f * gravityFactor;
                     float launchIncrement = launchDistance / launchDuration;
 
                     Position = new Vector2(Position.X, MathHelper.Lerp(StartPositionY, WorldExitPositionY, easedFlightProgress));
@@ -599,33 +602,18 @@ namespace Macrocosm.Content.Rockets
                     FlightProgress = MathHelper.Clamp(FlightProgress, 0f, 1f);
 
                     UpdateModuleAnimation();
-
-                    if (easedFlightProgress > 0.075f)
+                    if (easedFlightProgress > 0.01f)
                         SetModuleAnimation(landing: false);
 
-                    if(GetRocketPlayer(Main.myPlayer).InRocket)
+                    if (GetRocketPlayer(Main.myPlayer).InRocket)
                         Main.BlackFadeIn = (int)(255f * easedFlightProgress);
-
-                    SpawnSmoke(countPerTick: 5, secondaryBoosterSmoke: true);
-                    if(FlightProgress < 0.4f)
-                        SpawnDust(5);
-
-                    SetScreenshake();
                 }
-                else if (StaticFire)
-                {
-                    if (StaticFireProgress < 0.05f)
-                        SpawnDust(10);
-
-                    SpawnDust(2);
-                }
-
             }
             else if (Landing)
             {
                 float easedLandingProgress = Utility.QuadraticEaseOut(LandingProgress);
                 float landingDistance = Math.Abs(WorldExitPositionY - TargetLandingPosition.Y + Height);
-                float landingDuration = 10f * 60f;
+                float landingDuration = 10f * 60f * (1f / gravityFactor);
                 float landingIncrement = landingDistance / landingDuration;
                 Position = new Vector2(Position.X, MathHelper.Lerp(WorldExitPositionY, TargetLandingPosition.Y - Height, easedLandingProgress));
                 LandingProgress += landingIncrement / landingDistance;
@@ -634,19 +622,12 @@ namespace Macrocosm.Content.Rockets
                 UpdateModuleAnimation();
 
                 if (easedLandingProgress > 0.95f)
-                     SetModuleAnimation(landing: true);
+                    SetModuleAnimation(landing: true);
 
                 if (GetRocketPlayer(Main.myPlayer).InRocket)
                     Main.BlackFadeIn = (int)(255f * (1f - easedLandingProgress));
 
-                //SpawnSmoke(countPerTick: 5, secondaryBoosterSmoke: true, 2f);
-
-                if (easedLandingProgress > 0.9f)
-                    SpawnDust((int)(10 * Utility.InverseLerp(0.9f, 1f, easedLandingProgress)));
-
-                SetScreenshake();
-
-                if (LandingProgress >= 0.999f)
+                if (LandingProgress >= 1f - float.Epsilon)
                 {
                     Landing = false;
                     ResetAnimation();
@@ -654,34 +635,10 @@ namespace Macrocosm.Content.Rockets
             }
             else
             {
-                Velocity.Y += gravityForce;
+                Velocity.Y += 0.1f * gravity;
             }
 
-            Light();
         }
-
-        private void Light()
-        {
-            // Hack to force render tiles below the rocket to avoid seeing the trail behind full black tiles
-            if (Launched || Landing)
-            {
-                for (int i = (int)(Position.X / 16f); i < (int)(Position.X / 16f) + Width / 16; i++)
-                {
-                    for (int j = (int)(Position.Y / 16f) + Height / 16 - 5; j < (int)(Position.Y / 16f) + Height / 16 + 15; j++)
-                    {
-                        Lighting.AddLight(new Vector2(i * 16, j * 16), new Vector3(0.01f));
-                    }
-
-                }
-            }
-
-            if (StaticFire)
-                Lighting.AddLight(new Vector2(Center.X, Position.Y + Height + 15), new Color(215, 69, 0).ToVector3() * StaticFireProgress);
-
-            if (FlightTime >= LiftoffTime)
-                Lighting.AddLight(new Vector2(Center.X, Position.Y + Height + 15), new Color(215, 69, 0).ToVector3() * 10f);
-        }
-
         private void UpdateModuleAnimation()
         {
             bool animationActive = false;
@@ -714,35 +671,91 @@ namespace Macrocosm.Content.Rockets
             }
         }
 
-        // Sets the screenshake during flight 
-        private void SetScreenshake()
+        private void Effects()
         {
-            float intenstity = 0;
+            if (!Launched && !Landing)
+                return;
+
+            float easedFlightProgress = Utility.QuartEaseIn(FlightProgress);
+            float easedLandingProgress = Utility.QuadraticEaseOut(LandingProgress);
+
+            float gravityFactor = 0.7f + 0.3f * MacrocosmSubworld.CurrentGravityMultiplier;
+            float atmoDesityFactor = 0.5f + 0.5f * MacrocosmSubworld.CurrentAtmosphericDensity;
+
+
+            Point tilePos = (Position + new Vector2(Width / 2f, Height)).ToTileCoordinates();
+            Point closestTile = Utility.GetClosestTile(tilePos.X, tilePos.Y, -1, 15, (t) => Main.tileSolid[t.TileType] && !t.IsActuated);
+            closestTile.Y += 1;
+
+            float lightIntensity = 0f;
+            float screenshakeIntensity = 0f;
+
+            if (StaticFire)
+            {
+                lightIntensity = StaticFireProgress;
+                screenshakeIntensity = 5f * (Utility.QuadraticEaseOut(StaticFireProgress));
+
+                int count = MacrocosmSubworld.CurrentAtmosphericDensity < 1f ? 1 : (int)(3f * atmoDesityFactor * StaticFireProgress);
+                SpawnSmokeExhaustTrail(countPerTick: count);
+
+                if(Main.rand.NextFloat() < StaticFireProgress)
+                    SpawnTileDust(closestTile, 1);
+            }
 
             if (InFlight)
             {
-                if (FlightTime >= LiftoffTime && FlightProgress < 0.05f)
-                    intenstity = 30f;
-                else
-                    intenstity = 15f * (1f - Utility.QuadraticEaseOut(FlightProgress));
-            }
-            else if (Landing)
-            {
-                intenstity = 5f * (Utility.QuadraticEaseOut(LandingProgress));
+                lightIntensity = 10f;
+                screenshakeIntensity = FlightProgress < 0.05f ? 30f : 15f * (1f - Utility.QuadraticEaseOut(FlightProgress));
+
+                int count = MacrocosmSubworld.CurrentAtmosphericDensity < 1f ? 2 : (int)(5f * atmoDesityFactor);
+                SpawnSmokeExhaustTrail(countPerTick: count);
+
+                if (easedFlightProgress < 0.1f)
+                     SpawnTileDust(closestTile, 2);
             }
 
-            Main.LocalPlayer.AddScreenshake(intenstity, "RocketFlight");
+            if (Landing)
+            {
+                lightIntensity = 10f;
+                screenshakeIntensity = 2f * (Utility.QuadraticEaseOut(LandingProgress));
+
+                int count = MacrocosmSubworld.CurrentAtmosphericDensity < 1f ? 1 : (int)(3f * atmoDesityFactor);
+                SpawnSmokeExhaustTrail(countPerTick: count);
+
+                if(easedLandingProgress > 0.9f)
+                     SpawnTileDust(closestTile, 2);
+ 
+                if (LandingProgress >= 1f - 0.03f)
+                {
+                    SpawnTileDust(closestTile, 15);
+                    SpawnHitTileDust(closestTile);
+                    screenshakeIntensity = 20f * gravityFactor;
+                }
+            }
+
+            //Lighting.AddLight(new Vector2(Center.X, Position.Y + Height + 15), new Color(215, 69, 0).ToVector3() * lightIntensity);
+            Main.LocalPlayer.AddScreenshake(screenshakeIntensity, $"Rocket{WhoAmI}");
+
+            // Hack to force render the tiles otherwise completetly unlighted, so the trail does not draw in front of them 
+            for (int i = (int)(Position.X / 16f); i < (int)(Position.X / 16f) + Width / 16; i++)
+                for (int j = (int)(Position.Y / 16f) + Height / 16 - 5; j < (int)(Position.Y / 16f) + Height / 16 + 15; j++)
+                    Lighting.AddLight(new Vector2(i * 16, j * 16), new Vector3(0.01f));
         }
 
-        // Handle visuals (dusts, particles)
-        private void SpawnSmoke(int countPerTick, bool secondaryBoosterSmoke = false, float speedScale = 1f)
+        private void SpawnSmokeExhaustTrail(int countPerTick, float speed = 1f)
         {
             for (int i = 0; i < countPerTick; i++)
             {
+                Vector2 position = new Vector2(Center.X, Position.Y + Height - 28);
+
+                Vector2 velocity = new Vector2(Main.rand.NextFloat(-0.6f, 0.6f), Main.rand.NextFloat(2, 10));
+                if (Landing)
+                    velocity = new(Main.rand.NextFloat(-0.4f, 0.4f), Main.rand.NextFloat(8, 16));
+
                 var smoke = Particle.CreateParticle<RocketExhaustSmoke>(p =>
                 {
-                    p.Position = new Vector2(Center.X, Position.Y + Height - 28);
-                    p.Velocity = new Vector2(Main.rand.NextFloat(-0.6f, 0.6f), Main.rand.NextFloat(2, 10)) * speedScale;
+                    p.Position = position;
+                    p.Velocity = velocity * speed;
                     p.Scale = Main.rand.NextFloat(1.2f, 1.6f);
                     p.Rotation = 0f;
                     p.FadeIn = true;
@@ -757,54 +770,65 @@ namespace Macrocosm.Content.Rockets
                 }, shouldSync: false);
             }
 
-            if (secondaryBoosterSmoke)
+            int smallSmokeCount = (int)(countPerTick * 2f);
+
+            var boosterLeft = Modules["BoosterLeft"] as Booster;
+            var boosterRight = Modules["BoosterRight"] as Booster;
+
+            for (int i = 0; i < smallSmokeCount; i++)
             {
-                int smallSmokeCount = (int)(countPerTick * 1.5f);
+                Vector2 position = i % 2 == 0 ?
+                                new Vector2(boosterLeft.Position.X + boosterLeft.ExhaustOffsetX, Position.Y + Height - 28) :
+                                new Vector2(boosterRight.Position.X + boosterRight.ExhaustOffsetX, Position.Y + Height - 28);
 
-                var boosterLeft = Modules["BoosterLeft"] as Booster;
-                var boosterRight = Modules["BoosterRight"] as Booster;
 
-                for (int i = 0; i < smallSmokeCount; i++)
+                Vector2 velocity = new(Main.rand.NextFloat(-0.4f, 0.4f), Main.rand.NextFloat(2, 4));
+                if(Landing)
+                    velocity = new(Main.rand.NextFloat(-0.4f, 0.4f), Main.rand.NextFloat(8, 12));
+
+                var smoke = Particle.CreateParticle<RocketExhaustSmoke>(p =>
                 {
-                    Vector2 position = i % 2 == 0 ?
-                                    new Vector2(boosterLeft.Position.X + boosterLeft.ExhaustOffsetX, Position.Y + Height - 28) :
-                                    new Vector2(boosterRight.Position.X + boosterRight.ExhaustOffsetX, Position.Y + Height - 28);
-
-                    var smoke = Particle.CreateParticle<RocketExhaustSmoke>(p =>
-                    {
-                        p.Position = position;
-                        p.Velocity = new Vector2(Main.rand.NextFloat(-0.4f, 0.4f), Main.rand.NextFloat(2, 4)) * speedScale;
-                        p.Scale = Main.rand.NextFloat(0.6f, 0.9f);
-                        p.Rotation = 0f;
-                        p.FadeIn = true;
-                        p.FadeOut = true;
-                        p.FadeInSpeed = 2;
-                        p.FadeOutSpeed = 12;
-                        p.TargetAlpha = 128;
-                        p.ScaleDownSpeed = 0.0015f;
-                        p.Deceleration = 0.993f;
-                        p.DrawColor = Color.White.WithAlpha(150);
-                        p.Collide = true;
-                    }, shouldSync: false);
-                }
+                    p.Position = position;
+                    p.Velocity = velocity * speed;
+                    p.Scale = Main.rand.NextFloat(0.6f, 0.9f);
+                    p.Rotation = 0f;
+                    p.FadeIn = true;
+                    p.FadeOut = true;
+                    p.FadeInSpeed = 2;
+                    p.FadeOutSpeed = 12;
+                    p.TargetAlpha = 128;
+                    p.ScaleDownSpeed = 0.0015f;
+                    p.Deceleration = 0.993f;
+                    p.DrawColor = Color.White.WithAlpha(150);
+                    p.Collide = true;
+                }, shouldSync: false);
             }
         }
 
-        private void SpawnDust(int countPerTick, bool secondaryBoosterSmoke = false, float speedScale = 1f)
+        private void SpawnTileDust(Point tileCoords, int countPerTick)
         {
             for (int i = 0; i < countPerTick; i++)
             {
                 var smoke = Particle.CreateParticle<Smoke>(p =>
                 {
-                    p.Position = Landing ? TargetLandingPosition : Position + new Vector2(Width/2, Height);
-                    p.Velocity = new Vector2(Main.rand.NextFloat(-2.5f, 2.5f), Main.rand.NextFloat(-0.1f, -2f));
-                    p.Scale = Main.rand.NextFloat(0.6f, 0.9f);
-                    p.Rotation = 0f;
-                    p.DrawColor = (Color.Lerp(Color.White, Color.LightGray, Main.rand.NextFloat()) * Main.rand.NextFloat(0.2f, 0.8f));
+                    p.Position = tileCoords.ToWorldCoordinates();
+                    p.Velocity = new Vector2(Main.rand.NextFloat(-4f, 4f), Main.rand.NextFloat(-0.1f, -1f));
+                    p.Scale = Main.rand.NextFloat(0.5f, 1.2f);
+                    p.Rotation = Utility.RandomRotation();
+                    p.DrawColor = Color.Lerp(Utility.GetTileColor(tileCoords), Color.Gray, 0.5f) * Main.rand.NextFloat(0.2f, 0.8f);
                     p.FadeIn = true;
                     p.Opacity = 0f;
                     p.ExpansionRate = 0.0075f;
                 });
+            }
+        }
+
+        private void SpawnHitTileDust(Point tileCoords)
+        {
+            for (int x = -8; x < 8; x++)
+            {
+                if(x is < -6 or > -2 and < 2 or > 6 && !Utility.CoordinatesOutOfBounds(tileCoords.X - x, tileCoords.Y))
+                    WorldGen.KillTile_MakeTileDust(tileCoords.X - x, tileCoords.Y, Main.tile[tileCoords.X - x, tileCoords.Y]);
             }
         }
 
