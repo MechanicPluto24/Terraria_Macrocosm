@@ -1,4 +1,5 @@
 ﻿
+using Macrocosm.Common.Systems.UI;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
@@ -16,6 +17,12 @@ namespace Macrocosm.Common.Storage
 {
     public partial class Inventory
     {
+        /// <summary> The currently displayed inventory, reset every UI update. Check for <see cref="CustomInventoryActive"/> beforehand. </summary>
+        public static Inventory ActiveInventory { get; set; }
+
+        /// <summary> Whether there is a custom inventory currently being displayed </summary>
+        public static bool CustomInventoryActive => ActiveInventory is not null;
+
         private Item[] items;
         public Item[] Items => items;
 
@@ -148,7 +155,7 @@ namespace Macrocosm.Common.Storage
                 Array.Fill(items, new Item(), oldSize, newSize - oldSize);
         }
 
-        public bool TryPlacingItem(Item item, bool justCheck = false, bool serverSync = true)
+        public bool TryPlacingItem(Item item, bool justCheck = false, bool sound = true, bool serverSync = true)
         {
             if (ChestUI.IsBlockedFromTransferIntoChest(item, items))
                 return false;
@@ -179,7 +186,9 @@ namespace Macrocosm.Common.Storage
 
                     ItemLoader.StackItems(items[i], item, out _);
 
-                    SoundEngine.PlaySound(SoundID.Grab);
+                    if(sound)
+                        SoundEngine.PlaySound(SoundID.Grab);
+
                     if (item.stack <= 0)
                     {
                         item.SetDefaults();
@@ -216,7 +225,9 @@ namespace Macrocosm.Common.Storage
                         break;
                     }
 
-                    SoundEngine.PlaySound(SoundID.Grab);
+                    if(sound)
+                        SoundEngine.PlaySound(SoundID.Grab);
+
                     items[j] = item.Clone();
                     item.SetDefaults();
                     uiItemSlots[j].ClearGlow();

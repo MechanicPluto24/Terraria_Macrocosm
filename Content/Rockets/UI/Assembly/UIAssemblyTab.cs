@@ -19,6 +19,7 @@ using Macrocosm.Content.Rockets.Modules;
 using System.Collections.Generic;
 using rail;
 using Terraria.Localization;
+using Terraria.GameContent;
 
 namespace Macrocosm.Content.Rockets.UI.Assembly
 {
@@ -31,6 +32,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
         private Dictionary<string, UIModuleAssemblyElement> assemblyElements;
         private UIRocketBlueprint uIRocketBlueprint;
         private UIPanelIconButton assembleButton;
+        private UIInfoElement compass;
         private UIInputTextBox nameTextBox;
         private UIPanelIconButton nameAcceptResetButton;
 
@@ -54,6 +56,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
             Append(uIRocketBlueprint);
 
             nameTextBox = CreateNameTextBox();
+            compass = CreateCompassCoordinatesInfo();
             assembleButton = CreateAssembleButton();
             assemblyElements = CreateAssemblyElements();
 
@@ -70,7 +73,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
 
         private void AssembleRocket()
         {
-            Rocket.Create(LaunchPad.Position - new Vector2(Rocket.Width / 2f - 8, Rocket.Height - 18));
+            Rocket.Create(LaunchPad.CenterWorld - new Vector2(Rocket.Width / 2f - 8, Rocket.Height - 18));
             Check(consume: true);
         }
 
@@ -98,6 +101,8 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
             base.Update(gameTime);
             UpdateTextbox();
             UpdateBlueprint();
+
+            Inventory.ActiveInventory = LaunchPad.Inventory;
         }
 
         private void UpdateTextbox()
@@ -110,6 +115,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
             else
                 nameTextBox.TextColor = Color.White;
         }
+
         private void UpdateBlueprint()
         {
             uIRocketBlueprint.Rocket = Rocket;
@@ -132,20 +138,18 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
             }
         }
 
-
-
         private UIInputTextBox CreateNameTextBox()
         {
             nameTextBox = new(Language.GetTextValue("Mods.Macrocosm.Common.LaunchPad"))
             {
                 Width = new(0f, 0.3f),
                 Height = new(0f, 0.05f),
-                Top = new(0, 0.025f),
+                Top = new(0, 0.065f),
                 Left = new(0, 0.125f),
                 BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
                 BorderColor = UITheme.Current.PanelStyle.BorderColor,
                 HoverBorderColor = UITheme.Current.ButtonHighlightStyle.BorderColor,
-                TextMaxLenght = 15,
+                TextMaxLenght = 18,
                 TextScale = 0.8f,
                 FocusContext = "TextBox",
                 OnFocusGain = () =>
@@ -177,7 +181,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
             {
                 Width = new(20, 0),
                 Height = new(20, 0),
-                Top = new(0, 0.0345f),
+                Top = new(0, 0.0745f),
                 Left = new(0, 0.388f),
                 BackPanelColor = Color.White,
                 FocusedBackPanelColor = Color.White,
@@ -203,16 +207,34 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
             return nameTextBox;
         }
 
+        private UIInfoElement CreateCompassCoordinatesInfo()
+        {
+            compass = new(Language.GetTextValue(LaunchPad.CompassCoordinates), TextureAssets.Item[ItemID.Compass])
+            {
+                Width = new(160, 0),
+                Height = new(30, 0),
+                Top = new(0, 0.016f),
+                Left = new(0, 0.18f),
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor
+            };
+            Append(compass);
+            compass.Activate();
+
+            return compass;
+        }
+
         private UIPanelIconButton CreateAssembleButton()
         {
-            assembleButton = new(
-                            ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "Wrench"),
-                            ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/WidePanel", AssetRequestMode.ImmediateLoad),
-                            ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/WidePanelBorder", AssetRequestMode.ImmediateLoad),
-                            ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/WidePanelHoverBorder", AssetRequestMode.ImmediateLoad)
-                        )
+            assembleButton = new
+            (
+                ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "Wrench"),
+                ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/WidePanel", AssetRequestMode.ImmediateLoad),
+                ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/WidePanelBorder", AssetRequestMode.ImmediateLoad),
+                ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/WidePanelHoverBorder", AssetRequestMode.ImmediateLoad)
+            )
             {
-                Top = new(0, 0.86f),
+                Top = new(0, 0.895f),
                 Left = new(0, 0.2f),
                 CheckInteractible = CheckInteractible,
                 GrayscaleIconIfNotInteractible = true,
@@ -265,10 +287,20 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
                     UIModuleAssemblyElement assemblyElement = new(module, slots);
                     assemblyElements[module.Name] = assemblyElement;
 
-                    assemblyElement.Top = new(0, 0.1f + 0.185f * assemblyElementCount++);
+                    assemblyElement.Top = new(0, 0.14f + 0.185f * assemblyElementCount++);
                     assemblyElement.Left = new(0, 0.15f);
 
                     Append(assemblyElement);
+                }
+            }
+
+            foreach (var kvp in Rocket.Modules)
+            {
+                RocketModule module = kvp.Value;
+
+                if (module.Recipe.Linked)
+                {
+                    assemblyElements[module.Recipe.LinkedResult.Name].LinkedModules.Add(module);
                 }
             }
 

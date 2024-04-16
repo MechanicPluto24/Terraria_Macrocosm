@@ -30,22 +30,24 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
         public readonly string Name = "default";
 
         /// <summary>
-        /// The mod-indepentent world ID, respective to the <see cref="MacrocosmSubworld.CurrentID"/>
+        /// The mod-independent world ID, respective to the <see cref="MacrocosmSubworld.CurrentID"/>
         /// </summary>
         public string WorldID => Macrocosm.Instance.Name + "/" + Name;
-
 
         /// <summary> Collection to determine whether the subworld is accesible </summary>
         public ChecklistConditionCollection LaunchConditions { get; set; } = null;
 
         /// <summary> Whether the target satisfies the launch conditions </summary>
-        public bool IsReachable = false;
+        public bool IsReachable { get; set; } = false;
+
+        /// <summary> Whether the launch location is selected </summary>
+        public bool LaunchLocationSelected { get; set; } = false;
 
         /// <summary> Whether this target's ID is equal to the current subworld </summary>
         public bool AlreadyHere => WorldID == MacrocosmSubworld.CurrentID;
 
         /// <summary> Whether the target is currently selected </summary>
-        public bool Selected;
+        public bool Selected { get; set; }
 
         public void ResetAnimation()
         {
@@ -152,6 +154,8 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
                 {
                     if (AlreadyHere)
                         targetColor = Color.Gray;
+                    else if(!LaunchLocationSelected)
+                        targetColor = Color.Gold;
                     else if (IsReachable)
                         targetColor = new Color(0, 255, 0);
                     else

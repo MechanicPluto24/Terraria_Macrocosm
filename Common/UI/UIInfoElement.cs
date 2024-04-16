@@ -43,12 +43,6 @@ namespace Macrocosm.Common.UI
 
         public override void OnInitialize()
         {
-            Width.Set(0f, 1f);
-            Height.Set(40f, 0f);
-
-            BackgroundColor = UITheme.Current.InfoElementStyle.BackgroundColor;
-            BorderColor = UITheme.Current.InfoElementStyle.BorderColor;
-
             uIDisplayText = displayText.ProvideUISnippetText();
             uIDisplayText.Left = new StyleDimension(40, 0);
             uIDisplayText.VAlign = 0.5f;

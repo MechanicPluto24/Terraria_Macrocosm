@@ -9,8 +9,8 @@ using Macrocosm.Common.Utils;
 
 namespace Macrocosm.Content.Particles
 {
-    // Adapted from ParticleOrchestraType.ItemTransfer
-    // Excludes the "Chest eating item" sound, and applies light color
+    // Adapted from ParticleOrchestraType.ItemTransfer, 
+    // but this one actually applies light color!
     public class ItemTransferParticle : Particle
     {
         public override string TexturePath => Macrocosm.EmptyTexPath;

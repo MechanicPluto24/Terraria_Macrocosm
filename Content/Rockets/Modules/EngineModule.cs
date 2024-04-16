@@ -25,7 +25,7 @@ namespace Macrocosm.Content.Rockets.Modules
         {
             new(ModContent.ItemType<RocketPlating>(), 45),
             new(ModContent.ItemType<FuelTank>(), 15),
-            new(ModContent.ItemType<RocketPlating>(), 1),
+            new(ModContent.ItemType<EngineComponent>(), 4),
             new(ModContent.ItemType<LandingGear>(), 3)
         };
 

@@ -28,7 +28,6 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
 
         public UINavigationPanel()
         {
-            WorldDataSystem.Instance.PropertyChanged += (sender, args) => UpdateMapVisibility();
         }
 
         public override void OnInitialize()
@@ -129,7 +128,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
 
         private const string navigationMapsPath = "Macrocosm/Content/Rockets/Textures/NavigationMaps/";
 
-        private void UpdateMapVisibility()
+        public void UpdateMapVisibility()
         {
             if (WorldDataSystem.Instance.FoundVulcan)
             {

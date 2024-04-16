@@ -26,6 +26,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation.Checklist
             LangKey = langKey;
             predicate = canLaunch;
             this.checkPeriod = checkPeriod;
+            checkCounter = checkPeriod - 1;
             HideIfMet = hideIfMet;
 
             checklistInfoElement = new(langKey);

@@ -17,18 +17,21 @@ namespace Macrocosm.Content.Rockets.UI.Navigation.Checklist
         public UINavigationTarget MapTarget { get; set; }
         public LaunchPad TargetLaunchpad { get; set; }
 
+        public bool SelectedSpawnLocation { get; set; }
+
         public bool AllMet { get; set; }
 
         public ChecklistCondition SelectedLaunchCondition;
         public ChecklistCondition DifferentTargetLaunchCondition;
+        public ChecklistCondition LaunchpadVacantCondition;
 
         public ChecklistConditionCollection CommonLaunchConditions = new();
 
         public UIFlightChecklist() : base(new LocalizedColorScaleText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Checklist"), scale: 1.2f))
         {
-            SelectedLaunchCondition = new ChecklistCondition("Selected", () => MapTarget is not null);
-
+            SelectedLaunchCondition = new ChecklistCondition("Selected", () => MapTarget is not null && (TargetLaunchpad is not null || SelectedSpawnLocation));
             DifferentTargetLaunchCondition = new ChecklistCondition("DifferentTarget", () => !Rocket.AtCurrentLaunchpad(TargetLaunchpad, MapTarget.WorldID));
+            LaunchpadVacantCondition = new ChecklistCondition("VacantLaunchpad", () => SelectedSpawnLocation || (TargetLaunchpad is not null && !TargetLaunchpad.HasRocket));
 
             CommonLaunchConditions.Add(new ChecklistCondition("Fuel", () => Rocket.Fuel >= Rocket.GetFuelCost(MapTarget.WorldID)));
 
@@ -49,7 +52,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation.Checklist
             BorderColor = UITheme.Current.PanelStyle.BorderColor;
         }
 
-        public void Check()
+        public bool Check()
         {
             bool anyConditionChanged = false;
             bool allConditionsMet = true;
@@ -62,7 +65,9 @@ namespace Macrocosm.Content.Rockets.UI.Navigation.Checklist
                 return wasMet;
             }
 
-            if (ProcessCondition(SelectedLaunchCondition) && ProcessCondition(DifferentTargetLaunchCondition))
+            if (ProcessCondition(SelectedLaunchCondition)
+                && ProcessCondition(DifferentTargetLaunchCondition)
+                && ProcessCondition(LaunchpadVacantCondition))
             {
                 foreach (var condition in CommonLaunchConditions)
                     ProcessCondition(condition);
@@ -73,8 +78,6 @@ namespace Macrocosm.Content.Rockets.UI.Navigation.Checklist
                     if (MapTarget.LaunchConditions != null)
                         foreach (var condition in MapTarget.LaunchConditions)
                             ProcessCondition(condition);
-
-                    MapTarget.IsReachable = allConditionsMet;
                 }
             }
 
@@ -87,12 +90,13 @@ namespace Macrocosm.Content.Rockets.UI.Navigation.Checklist
             }
 
             AllMet = allConditionsMet;
+
+            return AllMet;
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            Check();
         }
 
         private List<UIElement> GetUpdatedChecklist()
@@ -107,6 +111,10 @@ namespace Macrocosm.Content.Rockets.UI.Navigation.Checklist
             else if (!DifferentTargetLaunchCondition.IsMet)
             {
                 checklistConditions.Add(DifferentTargetLaunchCondition);
+            }
+            else if (!LaunchpadVacantCondition.IsMet)
+            {
+                checklistConditions.Add(LaunchpadVacantCondition);
             }
             else
             {

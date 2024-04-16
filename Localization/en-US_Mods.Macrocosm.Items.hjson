@@ -1165,3 +1165,8 @@ FuelTank: {
 	DisplayName: Fuel Tank
 	Tooltip: ""
 }
+
+EngineComponent: {
+	DisplayName: Engine Component
+	Tooltip: ""
+}

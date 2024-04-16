@@ -4,6 +4,7 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.Modules;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Linq;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -174,7 +175,7 @@ namespace Macrocosm.Content.Rockets
 
         private void DrawBlueprint(SpriteBatch spriteBatch, Vector2 position)
         {
-            foreach (RocketModule module in ModulesByDrawPriority)
+            foreach (RocketModule module in ModulesByDrawPriority.OrderBy(module => module.BlueprintHighlighted))
             {
                 Vector2 drawPosition = GetModuleRelativePosition(module, position);
 

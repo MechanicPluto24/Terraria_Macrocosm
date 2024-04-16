@@ -41,9 +41,10 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
         public int Width => EndTile.X + 1 - StartTile.X;
         public Rectangle Hitbox => new((int)(StartTile.X * 16f), (int)(StartTile.Y * 16f), Width * 16, 16);
-        public Vector2 Position => new(((StartTile.X + (EndTile.X - StartTile.X) / 2f) * 16f), StartTile.Y * 16f);
+        public Point CenterTile => new((StartTile.X + (EndTile.X - StartTile.X) / 2), StartTile.Y);
+        public Vector2 CenterWorld => new(((StartTile.X + (EndTile.X - StartTile.X) / 2f) * 16f), StartTile.Y * 16f);
 
-        public Vector2 InventoryItemDropLocation => Position;
+        public Vector2 InventoryItemDropLocation => CenterWorld;
         public int InventorySerializationIndex => ((StartTile.Y & 0xFFFF) << 16) | (StartTile.X & 0xFFFF);
         public Inventory Inventory
         {
@@ -79,14 +80,13 @@ namespace Macrocosm.Content.Rockets.LaunchPads
         {
             LaunchPad launchPad = new(startTileX, startTileY, endTileX, endTileY);
 
-            launchPad.CompassCoordinates = Utility.GetCompassCoordinates(launchPad.Position);
+            launchPad.CompassCoordinates = Utility.GetCompassCoordinates(launchPad.CenterWorld);
             launchPad.Active = true;
 
             if (shouldSync)
                 launchPad.NetSync(MacrocosmSubworld.CurrentID);
 
             LaunchPadManager.Add(MacrocosmSubworld.CurrentID, launchPad);
-
             return launchPad;
         }
 

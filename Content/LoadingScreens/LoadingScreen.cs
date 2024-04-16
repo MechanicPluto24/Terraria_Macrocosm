@@ -64,7 +64,7 @@ namespace Macrocosm.Content.LoadingScreens
 
         public void SetTargetWorld(string targetWorld)
         {
-            targetWorld = MacrocosmSubworld.SanitizeID(targetWorld);
+            targetWorld = MacrocosmSubworld.SanitizeID(targetWorld, out _);
 
             switch (targetWorld)
             {
@@ -107,6 +107,9 @@ namespace Macrocosm.Content.LoadingScreens
 
             UpdateAnimation();
             Update();
+
+            if (rocket is not null)
+                rocket.PlaySound();
 
             // Make SubworldSystem.cache null if on game menu. 
             // Remove once https://github.com/jjohnsnaill/SubworldLibrary/pull/35 is merged.
