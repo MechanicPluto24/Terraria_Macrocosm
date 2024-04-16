@@ -15,10 +15,8 @@ namespace Macrocosm.Content.LoadingScreens
         enum TitleState
         {
             Inactive,
-            FadingToBlack,
-            Black,
-            FadingTitleIn,
-            TitleShown,
+            FadingIn,
+            Active,
             FadingOut
         }
 
@@ -60,15 +58,11 @@ namespace Macrocosm.Content.LoadingScreens
             };
         }
 
-        public static void Start(bool noTitle)
+        public static void Start()
         {
             timer = 0;
             titleFadeValue = 0f;
-            //FadeEffect.StartFadeIn(0.01f);
-            currentState = TitleState.Black;
-
-            if (noTitle)
-                title = null;
+            currentState = TitleState.FadingIn;
         }
 
         public static void Update()
@@ -78,82 +72,36 @@ namespace Macrocosm.Content.LoadingScreens
                 case TitleState.Inactive:
                     break;
 
-                case TitleState.FadingToBlack:
-                    break;
-
-                case TitleState.Black:
-                    timer++;
-                    if (timer >= 30) // 0.5 seconds
-                    {
-                        if (title is null)
-                        {
-                            FadeEffect.ResetFade();
-                            FadeEffect.StartFadeIn(0.01f);
-                            currentState = TitleState.FadingOut;
-                        }
-                        else
-                        {
-                            currentState = TitleState.FadingTitleIn;
-                        }
-
-                    }
-                    break;
-
-                case TitleState.FadingTitleIn:
+                case TitleState.FadingIn:
                     titleFadeValue += titleFadeRate;
                     if (titleFadeValue >= 1f)
                     {
                         titleFadeValue = 1f;
-                        currentState = TitleState.TitleShown;
+                        currentState = TitleState.Active;
                         timer = 0;
                     }
                     break;
 
-                case TitleState.TitleShown:
+                case TitleState.Active:
                     timer++;
-                    if (timer >= 90) // 1.5 seconds
+                    if (timer >= 90)
                     {
                         currentState = TitleState.FadingOut;
-                        FadeEffect.ResetFade();
-                        FadeEffect.StartFadeIn(0.01f);
                     }
                     break;
 
                 case TitleState.FadingOut:
                     titleFadeValue -= titleFadeRate;
                     if (titleFadeValue <= 0f)
-                    {
-                        titleFadeValue = 0f;
-                    }
-                    if (!FadeEffect.IsFading && titleFadeValue == 0f)
-                    {
-                        currentState = TitleState.Inactive;
-                    }
+                         currentState = TitleState.Inactive;
                     break;
             }
         }
 
         public static void Draw(SpriteBatch spriteBatch)
         {
-            switch (currentState)
-            {
-                case TitleState.FadingToBlack:
-                    //MacrocosmSubworld.LoadingScreen?.Draw(gameTime, spriteBatch);
-                    //FadeEffect.Draw();
-                    break;
-
-                case TitleState.Black:
-                case TitleState.FadingTitleIn:
-                case TitleState.TitleShown:
-                    FadeEffect.DrawBlack(1f);
-                    title?.DrawDirect(spriteBatch, new Vector2(Main.screenWidth / 2f, Main.screenHeight * 0.2f), title.Color * titleFadeValue);
-                    break;
-
-                case TitleState.FadingOut:
-                    FadeEffect.Draw();
-                    title?.DrawDirect(spriteBatch, new Vector2(Main.screenWidth / 2f, Main.screenHeight * 0.2f), title.Color * titleFadeValue);
-                    break;
-            }
+            if(currentState is not TitleState.Inactive)
+                title?.DrawDirect(spriteBatch, new Vector2(Main.screenWidth / 2f, Main.screenHeight * 0.2f), title.Color * titleFadeValue);
         }
     }
 }

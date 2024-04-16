@@ -108,9 +108,6 @@ namespace Macrocosm.Content.LoadingScreens
             UpdateAnimation();
             Update();
 
-            if (rocket is not null)
-                rocket.PlaySound();
-
             // Make SubworldSystem.cache null if on game menu. 
             // Remove once https://github.com/jjohnsnaill/SubworldLibrary/pull/35 is merged.
             if (Main.gameMenu && Main.menuMode == 0)
