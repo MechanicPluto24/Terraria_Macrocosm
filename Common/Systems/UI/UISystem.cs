@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Config;
+using Macrocosm.Common.Storage;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
@@ -190,6 +191,7 @@ namespace Macrocosm.Common.Systems.UI
         {
             UIRocketState?.OnHide();
             UIAssemblyState?.OnHide();
+            UIMachineState?.OnHide();
 
             if (Main.netMode != NetmodeID.Server)
                 UserInterface?.SetState(null);
@@ -197,6 +199,8 @@ namespace Macrocosm.Common.Systems.UI
 
         public override void UpdateUI(GameTime gameTime)
         {
+            Inventory.ActiveInventory = null;
+
             // press Ctrl + Shift + E to reset UI
             if (UserInterface.CurrentState is not null &&
                 Main.keyState.IsKeyDown(Keys.LeftControl) &&

@@ -62,6 +62,7 @@ Rocket: {
 		NoTarget: NO TARGET
 		CantReach: INACCESSIBLE
 		DifferentTarget: CURRENT LOCATION
+		Occupied: OCCUPIED
 		ZoomIn: ZOOM IN
 		Launch: LAUNCH
 		LaunchInactive: LAUNCH
@@ -161,6 +162,13 @@ Rocket: {
 		DifferentTarget: {
 			NotMet: {
 				Display: You are already here
+				Hover: default
+			}
+		}
+
+		VacantLaunchpad: {
+			NotMet: {
+				Display: Launchpad is occupied
 				Hover: default
 			}
 		}

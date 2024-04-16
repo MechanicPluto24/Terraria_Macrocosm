@@ -212,7 +212,7 @@ namespace Macrocosm.Common.UI
                 return;
             }
 
-            if (!checkReserved(Main.mouseItem) && Main.mouseItem.type != ItemID.None)
+            if (Main.mouseItem.type != ItemID.None && checkReserved is not null && !checkReserved(Main.mouseItem))
                 return;
 
             if (!(Main.mouseItem.maxStack > 1 && item.type == Main.mouseItem.type && item.stack != item.maxStack && Main.mouseItem.stack != Main.mouseItem.maxStack))
@@ -357,7 +357,7 @@ namespace Macrocosm.Common.UI
             if (IsMouseHovering && reservedTooltip is not null)
                 Main.instance.MouseTextNoOverride(reservedTooltip.Value);
 
-            if (reservedTexture is not null)
+            if (reservedTexture is not null && item.type == ItemID.None)
                 spriteBatch.Draw(reservedTexture.Value, position + (slotTexture.Size() / 2f * Main.inventoryScale), null, slotBorderColor, 0f, reservedTexture.Size() / 2f, Main.inventoryScale, SpriteEffects.None, 0f);
 
             if (item.favorited)

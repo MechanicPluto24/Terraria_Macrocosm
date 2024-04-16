@@ -66,6 +66,10 @@ namespace Macrocosm.Content.Rockets.Modules
 
         public virtual string BlueprintPath => (GetType().Namespace + "/Blueprints/" + Name).Replace(".", "/");
         public Texture2D Blueprint => ModContent.Request<Texture2D>(BlueprintPath, AssetRequestMode.ImmediateLoad).Value;
+        public bool BlueprintHighlighted { get; set; } = false;
+
+        public Color BlueprintOutlineColor = UITheme.Current.PanelStyle.BorderColor;
+        public Color BlueprintFillColor = UITheme.Current.PanelStyle.BackgroundColor;
 
         protected Rocket rocket;
 
@@ -157,7 +161,11 @@ namespace Macrocosm.Content.Rockets.Modules
 
             effect.Parameters["uColorCount"].SetValue(2);
             effect.Parameters["uColorKey"].SetValue(blueprintKeys);
-            effect.Parameters["uColor"].SetValue((new Color[] { UITheme.Current.PanelStyle.BorderColor, UITheme.Current.PanelStyle.BackgroundColor }).ToVector4Array());
+            effect.Parameters["uColor"].SetValue((new Color[]
+            {
+                BlueprintHighlighted ? UITheme.Current.ButtonHighlightStyle.BorderColor : UITheme.Current.PanelStyle.BorderColor,
+                UITheme.Current.PanelStyle.BackgroundColor
+            }).ToVector4Array());
             effect.Parameters["uSampleBrightness"].SetValue(false);
 
             spriteBatch.End();

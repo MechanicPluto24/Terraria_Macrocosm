@@ -91,6 +91,8 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
 
             UpdateCrewPanel();
             UpdateInventory();
+
+            Inventory.ActiveInventory = Rocket.Inventory;
         }
 
         private void UpdateCrewPanel()

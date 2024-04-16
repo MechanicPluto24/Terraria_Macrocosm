@@ -143,52 +143,48 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             Projectile.DrawAnimatedExtra(glowmask.Value, Color.White, Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None, new Vector2(5, 10));
         }
 
-        private SlotId playingSoundId_1 = SlotId.Invalid;
-        private SlotId playingSoundId_2 = SlotId.Invalid;
+        private ProjectileAudioTracker tracker;
         private void PlaySounds()
         {
             if (!StillInUse)
                 return;
 
-            if (!playingSoundId_1.IsValid && AI_Windup < windupTime)
+            tracker ??= new(Projectile);
+
+            if (AI_Windup < windupTime)
             {
-                playingSoundId_1 = SoundEngine.PlaySound(SFX.MinigunWindup with
+                SoundEngine.PlaySound(SFX.MinigunWindup with
                 {
                     Volume = 0.15f,
-                    IsLooped = true,
+                    MaxInstances = 1,
                     SoundLimitBehavior = SoundLimitBehavior.IgnoreNew
                 },
-                Projectile.position);
+                Projectile.position, updateCallback: (sound) =>
+                {
+                    sound.Position = Projectile.position;
+                    if (AI_Windup >= windupTime) return false;
+                    return tracker.IsActiveAndInGame();
+                });
             }
 
-            if (!playingSoundId_2.IsValid && AI_Windup >= windupTime)
+            if (AI_Windup >= windupTime)
             {
-                playingSoundId_2 = SoundEngine.PlaySound(SFX.MinigunFire with
+                SoundEngine.PlaySound(SFX.MinigunFire with
                 {
                     Volume = 0.15f,
-                    IsLooped = true,
+                    MaxInstances = 1,
                     SoundLimitBehavior = SoundLimitBehavior.IgnoreNew
                 },
-                Projectile.position);
-
-                if (SoundEngine.TryGetActiveSound(playingSoundId_1, out ActiveSound sound))
-                    sound.Stop();
+                Projectile.position, updateCallback: (sound) =>
+                {
+                    sound.Position = Projectile.position;
+                    return tracker.IsActiveAndInGame();
+                });
             }
-
-            if (SoundEngine.TryGetActiveSound(playingSoundId_1, out ActiveSound playingSound1))
-                playingSound1.Position = Projectile.position;
-
-            if (SoundEngine.TryGetActiveSound(playingSoundId_2, out ActiveSound playingSound2))
-                playingSound2.Position = Projectile.position;
         }
 
         public override void OnKill(int timeLeft)
         {
-            if (SoundEngine.TryGetActiveSound(playingSoundId_1, out ActiveSound playingSound1))
-                playingSound1.Stop();
-
-            if (SoundEngine.TryGetActiveSound(playingSoundId_2, out ActiveSound playingSound2))
-                playingSound2.Stop();
         }
     }
 }

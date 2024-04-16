@@ -1,12 +1,13 @@
-using Macrocosm.Content.Items.Crafting;
 using Macrocosm.Content.Items.Materials.Bars;
+using Macrocosm.Content.Items.Materials.Ores;
+using Macrocosm.Content.Items.Materials.Refined;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Materials.Tech
 {
-    public class RocketPlating : ModItem
+    public class EngineComponent : ModItem
     {
         public override void SetStaticDefaults()
         {
@@ -15,29 +16,27 @@ namespace Macrocosm.Content.Items.Materials.Tech
 
         public override void SetDefaults()
         {
-            Item.width = 38;
+            Item.width = 30;
             Item.height = 28;
             Item.maxStack = Item.CommonMaxStack;
             Item.value = 100;
-            Item.rare = ItemRarityID.Purple;
+            Item.rare = ItemRarityID.Cyan;
             Item.material = true;
         }
 
         public override void AddRecipes()
         {
-            CreateRecipe(2)
-                .AddIngredient<AluminumBar>(5)
-                .AddIngredient<SteelBar>(5)
-                .AddIngredient(ItemID.MeteoriteBar, 2)
-                .AddIngredient(ItemID.AdamantiteBar, 1)
+            CreateRecipe()
+                .AddIngredient<SteelBar>(20)
+                .AddIngredient(ItemID.CobaltBar, 20)
+                .AddIngredient(ItemID.TungstenBar, 10)
                 .AddTile<Tiles.Crafting.Fabricator>()
                 .Register();
 
-            CreateRecipe(2)
-                .AddIngredient<AluminumBar>(5)
-                .AddIngredient<SteelBar>(5)
-                .AddIngredient(ItemID.MeteoriteBar, 2)
-                .AddIngredient(ItemID.TitaniumBar, 1)
+            CreateRecipe()
+                .AddIngredient<SteelBar>(20)
+                .AddIngredient(ItemID.PalladiumBar, 20)
+                .AddIngredient(ItemID.TungstenBar, 10)
                 .AddTile<Tiles.Crafting.Fabricator>()
                 .Register();
         }

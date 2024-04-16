@@ -48,8 +48,12 @@ namespace Macrocosm.Content.Rockets.LaunchPads
         {
             if (LaunchPadManager.TryGetLaunchPadAtTileCoordinates(MacrocosmSubworld.CurrentID, new(i, j), out LaunchPad launchPad))
             {
-                bool canKillMarker = !launchPad.Inventory.IsEmpty && !launchPad.HasRocket && !(Main.LocalPlayer.CurrentItem().ModItem is IDevItem);
-                if (Main.tile[i, j].TileType == ModContent.TileType<LaunchPadMarker>() && canKillMarker)
+                bool canKillMarker = launchPad.Inventory.IsEmpty && !launchPad.HasRocket;
+
+                if (Main.LocalPlayer.CurrentItem().ModItem is IDevItem)
+                    canKillMarker = true;
+
+                if (Main.tile[i, j].TileType == ModContent.TileType<LaunchPadMarker>() && !canKillMarker)
                     fail = true;
             }
 

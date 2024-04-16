@@ -10,12 +10,14 @@ using System.Security.Policy;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.Localization;
+using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.UI.Assembly
 {
     public class UIModuleAssemblyElement : UIPanel
     {
         public RocketModule Module { get; set; }
+        public List<RocketModule> LinkedModules { get; set; } = new();
 
         private List<UIInventorySlot> slots;
         private UIText uITitle;
@@ -64,5 +66,21 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
         }
 
         public bool Check(bool consume = false) => Module.Recipe.Check(consume, slots.Select((slot) => slot.Item).ToArray());
+
+        public override void MouseOver(UIMouseEvent evt)
+        {
+            Module.BlueprintHighlighted = true;
+
+            foreach (var module in LinkedModules)
+                module.BlueprintHighlighted = true;
+        }
+
+        public override void MouseOut(UIMouseEvent evt)
+        {
+            Module.BlueprintHighlighted = false;
+
+            foreach (var module in LinkedModules)
+                module.BlueprintHighlighted = false;
+        }
     }
 }

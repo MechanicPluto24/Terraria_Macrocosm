@@ -1,5 +1,7 @@
 ﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.UI;
+using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Players;
 using Microsoft.Xna.Framework;
@@ -19,6 +21,10 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
         public UIPlayerHeadInfoElement(Player player) : base(player.name)
         {
             this.player = player;
+            Width = new(0f, 1f);
+            Height = new(40f, 0f);
+            BackgroundColor = UITheme.Current.InfoElementStyle.BackgroundColor;
+            BorderColor = UITheme.Current.InfoElementStyle.BorderColor;
         }
 
         SpriteBatchState state;
@@ -37,7 +43,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
             var rocketPlayer = player.GetModPlayer<RocketPlayer>();
             Texture2D texture = Macrocosm.EmptyTex.Value;
 
-            string targetWorld = rocketPlayer.TargetWorld[(rocketPlayer.TargetWorld.LastIndexOf('/') + 1)..];
+            string targetWorld = MacrocosmSubworld.SanitizeID(rocketPlayer.TargetWorld, out _);
             if (ModContent.RequestIfExists(Macrocosm.TexturesPath + "Icons/" + targetWorld, out Asset<Texture2D> iconTexture))
                 texture = iconTexture.Value;
 

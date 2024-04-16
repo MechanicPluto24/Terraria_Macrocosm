@@ -82,7 +82,6 @@ namespace Macrocosm.Common.Systems
 
         #endregion
 
-
         public void ResetFlags()
         {
             // Moon flags

@@ -712,6 +712,23 @@ ElasticFiber
 	Value: 1 silver
 	Research count: 5
 
+EngineComponent
+	Value: 1 silver
+	Research count: 5
+	Recipes:
+		Steel Bar x 20
+		Cobalt Bar x 20
+		Tungsten Bar x 10
+		at
+		Fabricator
+
+		Steel Bar x 20
+		Palladium Bar x 20
+		Tungsten Bar x 10
+		at
+		Fabricator
+
+
 FuelTank
 	Value: 1 silver
 	Research count: 100
@@ -837,6 +854,7 @@ RocketPlating
 		Adamantite Bar x 1
 		at
 		Fabricator
+			=> x2
 
 		Aluminum Bar x 5
 		Steel Bar x 5
@@ -844,6 +862,7 @@ RocketPlating
 		Titanium Bar x 1
 		at
 		Fabricator
+			=> x2
 
 
 SpaceShuttle

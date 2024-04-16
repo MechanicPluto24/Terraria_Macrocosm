@@ -12,12 +12,15 @@ using Macrocosm.Content.Players;
 using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.LaunchPads;
 using Macrocosm.Content.Rockets.Modules;
+using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
+using ReLogic.Utilities;
 using SubworldLibrary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.GameContent.Golf;
 using Terraria.ID;
@@ -136,7 +139,6 @@ namespace Macrocosm.Content.Rockets
         private bool ranFirstUpdate;
 
         private bool forcedStationaryAppearance;
-
         /// <summary> Whether this rocket is forced in a stationary (i.e. landed) state, visually </summary>
         public bool ForcedStationaryAppearance
         {
@@ -247,6 +249,7 @@ namespace Macrocosm.Content.Rockets
 
             Movement();
             Effects();
+            PlaySound();
 
             if (Stationary)
             {
@@ -464,10 +467,10 @@ namespace Macrocosm.Content.Rockets
                 return false;
             }
 
-            if (LaunchPadManager.InCurrentWorld(launchPad))
+            if (worldId == MacrocosmSubworld.CurrentID)
+                return launchPad.RocketID == WhoAmI;
+            else
                 return false;
-
-            return launchPad.RocketID == WhoAmI;
         }
 
         public bool CheckTileCollision()
@@ -832,6 +835,43 @@ namespace Macrocosm.Content.Rockets
             }
         }
 
+        public void PlaySound()
+        {
+            if(StaticFire || InFlight || ForcedFlightAppearance)
+            {
+                float intensity = !StaticFire ? 1f : 0.5f + 0.5f * StaticFireProgress;
+                SoundEngine.PlaySound(SFX.RocketFlight with
+                {
+                    Volume = intensity,
+                    PlayOnlyIfFocused = true,
+                    MaxInstances = 1,
+                    SoundLimitBehavior = SoundLimitBehavior.IgnoreNew
+                },
+                Center, updateCallback: (sound) =>
+                {
+                    sound.Position = Center;
+                    return StaticFire || InFlight || ForcedFlightAppearance;
+                });
+            }
+
+            if (Landing)
+            {
+                float intensity = LandingProgress < 0.9f ? 1f : (1f - LandingProgress) * 10f;
+                SoundEngine.PlaySound(SFX.RocketFlight with
+                {
+                    Volume = intensity,
+                    PlayOnlyIfFocused = true,
+                    MaxInstances = 1,
+                    SoundLimitBehavior = SoundLimitBehavior.IgnoreNew
+                },
+                Center, updateCallback: (sound) =>
+                {
+                    sound.Position = Center;
+                    return Landing;
+                });
+            }
+        }
+
         // Handles the subworld travel
         private void Travel()
         {
@@ -844,7 +884,7 @@ namespace Macrocosm.Content.Rockets
             // Set as default if no launchpad has been selected (i.e. the World Spawn option) 
             // For different world travel, the correct value is assigned when spawning in that world
             if (targetLaunchPad is not null)
-                TargetLandingPosition = targetLaunchPad.Position + new Vector2(16, 16);
+                TargetLandingPosition = targetLaunchPad.CenterWorld + new Vector2(16, 16);
             else
                 TargetLandingPosition = default;
 

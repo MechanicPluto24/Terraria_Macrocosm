@@ -36,7 +36,26 @@ namespace Macrocosm.Common.Subworlds
         /// </summary>
         public static string CurrentID => SubworldSystem.AnyActive() ? SubworldSystem.Current.Mod.Name + "/" + SubworldSystem.Current.Name : "Macrocosm/Earth";
         public static bool IsValidID(string id) => SubworldSystem.GetIndex(id) >= 0 || id is "Macrocosm/Earth";
-        public static string SanitizeID(string id) => id.Replace(Macrocosm.Instance.Name + "/", "");
+        public static string SanitizeID(string id, out string modName)
+        {
+            string[] split = id.Split("/");
+
+            if (string.IsNullOrEmpty(id))
+            {
+                modName = "Macrocosm";
+                return "";
+            }
+            else if(split.Length == 1)
+            {
+                modName = "Macrocosm";
+                return split[0];
+            }
+            else
+            {
+                modName = split[0];
+                return split[1];
+            }   
+        }
 
         public static int CurrentIndex => SubworldSystem.AnyActive() ? SubworldSystem.GetIndex(CurrentID) : -1;
 

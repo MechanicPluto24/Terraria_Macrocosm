@@ -23,6 +23,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
             NoTarget,
             CantReach,
             DifferentTarget,
+            Occupied,
             ZoomIn,
             Launch,
             LaunchInactive
@@ -82,6 +83,12 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
                 case StateType.DifferentTarget:
                     textColor = Color.Gray * 1.3f;
                     textScale = 0.58f;
+                    CanClick = false;
+                    break;
+
+                case StateType.Occupied:
+                    textColor = Color.Red;
+                    textScale = 1f;
                     CanClick = false;
                     break;
 
