@@ -26,6 +26,7 @@ using Terraria.GameContent.Golf;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using XPT.Core.Audio.MP3Sharp;
 
 namespace Macrocosm.Content.Rockets
 {
@@ -126,17 +127,20 @@ namespace Macrocosm.Content.Rockets
         public List<string> ModuleNames => Modules.Keys.ToList();
 
         public int StaticFireBeginTime = 120;
-        public bool StaticFire => StaticFireProgress > 0f;
+        public bool StaticFire => StaticFireProgress > 0f && FlightTime < LiftoffTime;
         public float StaticFireProgress => Utility.InverseLerp(LiftoffTime - StaticFireBeginTime, LiftoffTime, FlightTime, clamped: true);
 
         /// <summary> The flight sequence progress </summary>
         public float FlightProgress { get; set; }
+        private float EasedFlightProgress => Utility.QuartEaseIn(FlightProgress);
 
         /// <summary> The landing sequence progress </summary>
         public float LandingProgress { get; set; }
+        private float EasedLandingProgress => Utility.QuadraticEaseOut(LandingProgress);
 
         private float worldExitSpeed;
         private bool ranFirstUpdate;
+        private bool canAnimate = true;
 
         private bool forcedStationaryAppearance;
         /// <summary> Whether this rocket is forced in a stationary (i.e. landed) state, visually </summary>
@@ -426,6 +430,7 @@ namespace Macrocosm.Content.Rockets
         /// </summary>
         public void Launch(string targetWorld, LaunchPad targetLaunchPad = null)
         {
+            Main.playerInventory = false;
             Launched = true;
             StartPositionY = Position.Y;
             TargetWorld = targetWorld;
@@ -523,6 +528,8 @@ namespace Macrocosm.Content.Rockets
 
         public void ResetAnimation()
         {
+            canAnimate = true;
+
             foreach (RocketModule module in Modules.Values)
             {
                 if (module is AnimatedRocketModule animatedModule)
@@ -541,8 +548,6 @@ namespace Macrocosm.Content.Rockets
                             animatedModule.CurrentFrame = 0;
                         else
                             animatedModule.CurrentFrame = animatedModule.NumberOfFrames - 1;
-
-                        animatedModule.ShouldAnimate = true;
                     }
                 }
             }
@@ -595,40 +600,38 @@ namespace Macrocosm.Content.Rockets
 
                 if (InFlight)
                 {
-                    float easedFlightProgress = Utility.QuartEaseIn(FlightProgress);
                     float launchDistance = Math.Abs(StartPositionY - WorldExitPositionY);
                     float launchDuration = 10f * 60f * gravityFactor;
                     float launchIncrement = launchDistance / launchDuration;
 
-                    Position = new Vector2(Position.X, MathHelper.Lerp(StartPositionY, WorldExitPositionY, easedFlightProgress));
+                    Position = new Vector2(Position.X, MathHelper.Lerp(StartPositionY, WorldExitPositionY, EasedFlightProgress));
                     FlightProgress += launchIncrement / launchDistance;
                     FlightProgress = MathHelper.Clamp(FlightProgress, 0f, 1f);
 
                     UpdateModuleAnimation();
-                    if (easedFlightProgress > 0.01f)
-                        SetModuleAnimation(landing: false);
+                    if (EasedFlightProgress > 0.01f)
+                        StartModuleAnimation(landing: false);
 
                     if (GetRocketPlayer(Main.myPlayer).InRocket)
-                        Main.BlackFadeIn = (int)(255f * easedFlightProgress);
+                        Main.BlackFadeIn = (int)(255f * EasedFlightProgress);
                 }
             }
             else if (Landing)
             {
-                float easedLandingProgress = Utility.QuadraticEaseOut(LandingProgress);
                 float landingDistance = Math.Abs(WorldExitPositionY - TargetLandingPosition.Y + Height);
                 float landingDuration = 10f * 60f * (1f / gravityFactor);
                 float landingIncrement = landingDistance / landingDuration;
-                Position = new Vector2(Position.X, MathHelper.Lerp(WorldExitPositionY, TargetLandingPosition.Y - Height, easedLandingProgress));
+                Position = new Vector2(Position.X, MathHelper.Lerp(WorldExitPositionY, TargetLandingPosition.Y - Height, EasedLandingProgress));
                 LandingProgress += landingIncrement / landingDistance;
                 LandingProgress = MathHelper.Clamp(LandingProgress, 0f, 1f);
 
                 UpdateModuleAnimation();
 
-                if (easedLandingProgress > 0.95f)
-                    SetModuleAnimation(landing: true);
+                if (EasedLandingProgress > 0.95f)
+                    StartModuleAnimation(landing: true);
 
                 if (GetRocketPlayer(Main.myPlayer).InRocket)
-                    Main.BlackFadeIn = (int)(255f * (1f - easedLandingProgress));
+                    Main.BlackFadeIn = (int)(255f * (1f - EasedLandingProgress));
 
                 if (LandingProgress >= 1f - float.Epsilon)
                 {
@@ -658,29 +661,42 @@ namespace Macrocosm.Content.Rockets
                 ResetRenderTarget();
         }
 
-        private void SetModuleAnimation(bool landing = false)
+        private void StartModuleAnimation(bool landing = false)
         {
-            foreach (RocketModule module in Modules.Values)
+            if (canAnimate)
             {
-                if (module is AnimatedRocketModule animatedModule)
+                foreach (RocketModule module in Modules.Values)
                 {
-                    if (landing)
-                        animatedModule.StartAnimation();
-                    else
-                        animatedModule.StartReverseAnimation();
-
-                    animatedModule.ShouldAnimate = false;
+                    if (module is AnimatedRocketModule animatedModule)
+                    {
+                        if (landing)
+                            animatedModule.StartAnimation();
+                        else
+                            animatedModule.StartReverseAnimation();
+                    }
                 }
+
+                SoundEngine.PlaySound(SFX.RocketLandingLeg with
+                {
+                    Volume = 1f,
+                    PlayOnlyIfFocused = true,
+                    MaxInstances = 1,
+                    SoundLimitBehavior = SoundLimitBehavior.IgnoreNew
+                },
+                Center, updateCallback: (sound) =>
+                {
+                    sound.Position = Center;
+                    return true;
+                });
             }
+
+            canAnimate = false;
         }
 
         private void Effects()
         {
             if (!Launched && !Landing)
                 return;
-
-            float easedFlightProgress = Utility.QuartEaseIn(FlightProgress);
-            float easedLandingProgress = Utility.QuadraticEaseOut(LandingProgress);
 
             float gravityFactor = 0.7f + 0.3f * MacrocosmSubworld.CurrentGravityMultiplier;
             float atmoDesityFactor = 0.5f + 0.5f * MacrocosmSubworld.CurrentAtmosphericDensity;
@@ -713,7 +729,7 @@ namespace Macrocosm.Content.Rockets
                 int count = MacrocosmSubworld.CurrentAtmosphericDensity < 1f ? 2 : (int)(5f * atmoDesityFactor);
                 SpawnSmokeExhaustTrail(countPerTick: count);
 
-                if (easedFlightProgress < 0.1f)
+                if (EasedFlightProgress < 0.1f)
                      SpawnTileDust(closestTile, 2);
             }
 
@@ -723,9 +739,9 @@ namespace Macrocosm.Content.Rockets
                 screenshakeIntensity = 2f * (Utility.QuadraticEaseOut(LandingProgress));
 
                 int count = MacrocosmSubworld.CurrentAtmosphericDensity < 1f ? 1 : (int)(3f * atmoDesityFactor);
-                SpawnSmokeExhaustTrail(countPerTick: count);
+                SpawnSmokeExhaustTrail(countPerTick: count, speed: 2f * (1.2f - EasedLandingProgress));
 
-                if(easedLandingProgress > 0.9f)
+                if(EasedLandingProgress > 0.9f)
                      SpawnTileDust(closestTile, 2);
  
                 if (LandingProgress >= 1f - 0.03f)
@@ -837,35 +853,69 @@ namespace Macrocosm.Content.Rockets
 
         public void PlaySound()
         {
-            if(StaticFire || InFlight || ForcedFlightAppearance)
+            if (StaticFire)
             {
-                float intensity = !StaticFire ? 1f : 0.5f + 0.5f * StaticFireProgress;
-                SoundEngine.PlaySound(SFX.RocketFlight with
+                float intensity = 1f;
+                SoundEngine.PlaySound(SFX.RocketLoop with
                 {
                     Volume = intensity,
-                    PlayOnlyIfFocused = true,
                     MaxInstances = 1,
                     SoundLimitBehavior = SoundLimitBehavior.IgnoreNew
                 },
                 Center, updateCallback: (sound) =>
                 {
+                    sound.Pitch = MathHelper.Lerp(-1f, 0, StaticFireProgress);
+                    sound.Volume = intensity;
                     sound.Position = Center;
-                    return StaticFire || InFlight || ForcedFlightAppearance;
+                    return FlightTime < LiftoffTime;
+                }); 
+            }
+
+            if (FlightTime == LiftoffTime)
+            {
+                SoundEngine.PlaySound(SFX.RocketLaunch with
+                {
+                    Volume = 1f,
+                    MaxInstances = 1,
+                    SoundLimitBehavior = SoundLimitBehavior.IgnoreNew,
+                },
+                Center, updateCallback: (sound) =>
+                {
+                    sound.Position = Center;
+                    return InFlight;
+                });
+            }
+
+            if (InFlight)
+            {
+                SoundEngine.PlaySound(SFX.RocketLoop with
+                {
+                    Volume = 1f,
+                    IsLooped = true,
+                    MaxInstances = 1,
+                    SoundLimitBehavior = SoundLimitBehavior.IgnoreNew
+                },
+                Center, updateCallback: (sound) =>
+                {
+                    sound.Pitch = Main.rand.NextFloat(-0.1f, 0.1f);
+                    sound.Position = Center;
+                    return InFlight;
                 });
             }
 
             if (Landing)
             {
-                float intensity = LandingProgress < 0.9f ? 1f : (1f - LandingProgress) * 10f;
-                SoundEngine.PlaySound(SFX.RocketFlight with
+                SoundEngine.PlaySound(SFX.RocketLoop with
                 {
-                    Volume = intensity,
-                    PlayOnlyIfFocused = true,
                     MaxInstances = 1,
+                    IsLooped = true,
+                    Volume = 1f,
                     SoundLimitBehavior = SoundLimitBehavior.IgnoreNew
                 },
                 Center, updateCallback: (sound) =>
                 {
+                    sound.Pitch = Main.rand.NextFloat(-0.1f, 0.1f);
+                    sound.Volume = LandingProgress < 0.8f ? 1f : (1f - LandingProgress) * 5f;
                     sound.Position = Center;
                     return Landing;
                 });
