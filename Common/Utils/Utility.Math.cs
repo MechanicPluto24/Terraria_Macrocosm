@@ -65,6 +65,27 @@ namespace Macrocosm.Common.Utils
             return new Vector2(x, y);
         }
 
+        public static Vector2 ClampOutsideCircle(Vector2 point, Vector2 circleCenter, float radius)
+        {
+            Vector2 fromCenterToPoint = point - circleCenter;
+            float distance = fromCenterToPoint.Length();
+
+            if (distance <= radius)
+            {
+                if (distance == 0)
+                {
+                    return circleCenter + new Vector2(radius, 0);
+                }
+                else
+                {
+                    fromCenterToPoint.Normalize();
+                    point = circleCenter + fromCenterToPoint * (radius + 1.0f);
+                }
+            }
+
+            return point;
+        }
+
         #endregion
 
         #region Rectangles

@@ -8,7 +8,7 @@ float4 uSourceRect;      // The source rectangle (x, y, width, height) in normal
 
 static const float PI = 3.14159265f;
  
-float4 CelestialBodyShading(float2 texCoord : TEXCOORD) : COLOR
+float4 RadialLighting(float2 texCoord : TEXCOORD) : COLOR
 {
     float2 sampleCoord = texCoord;
     sampleCoord *= uShadeResolution;
@@ -34,11 +34,11 @@ float4 CelestialBodyShading(float2 texCoord : TEXCOORD) : COLOR
     return color;
 }
 
-technique Technique1 
+technique 
 {
-    pass CelestialBodyShading 
+    pass RadialLighting
     {
-        PixelShader = compile ps_3_0 CelestialBodyShading();
+        PixelShader = compile ps_3_0 RadialLighting();
     }
 }
 

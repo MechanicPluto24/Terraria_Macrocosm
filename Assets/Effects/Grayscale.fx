@@ -7,7 +7,7 @@ float4 Grayscale(float2 texCoord : TEXCOORD0) : COLOR0
     return float4(gray, gray, gray, color.a);
 }
 
-technique Technique1
+technique
 {
     pass Grayscale
     {

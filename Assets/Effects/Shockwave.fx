@@ -33,7 +33,7 @@ float4 Shockwave(float4 position : SV_POSITION, float2 coords : TEXCOORD0) : COL
     return tex2D(uImage0, sampleCoords);
 }
 
-technique Technique1
+technique
 {
     pass Shockwave
     {

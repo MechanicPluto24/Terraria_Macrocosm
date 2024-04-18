@@ -35,7 +35,7 @@ float4 RadiationNoise(float2 coords : TEXCOORD0) : COLOR0
     return color;
 }
 
-technique Technique1
+technique
 {
     pass RadiationNoise
     {
