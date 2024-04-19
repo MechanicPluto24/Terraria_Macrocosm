@@ -557,7 +557,7 @@ namespace Macrocosm.Common.Drawing.Sky
             if (orbitEllipse.X == orbitEllipse.Y)
             {
                 radius = orbitEllipse.X;
-                orbitRotation += orbitSpeed * 10;
+                orbitRotation += orbitSpeed;
             }
             else
             {
