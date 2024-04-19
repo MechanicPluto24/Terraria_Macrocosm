@@ -287,41 +287,44 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
         private SlotId playingSoundId_1 = SlotId.Invalid;
         private SlotId playingSoundId_2 = SlotId.Invalid;
+        private ProjectileAudioTracker tracker;
         private void PlaySounds()
         {
             if (!StillInUse)
                 return;
 
-            if (!playingSoundId_1.IsValid)
-            {
-                playingSoundId_1 = SoundEngine.PlaySound(SFX.HandheldThrusterFlame with
-                {
-                    Volume = 0.3f,
-                    IsLooped = true,
-                    SoundLimitBehavior = SoundLimitBehavior.IgnoreNew
-                },
-                Projectile.position);
-            }
+            tracker ??= new(Projectile);
 
-            if (!OwnerHasMana && !playingSoundId_2.IsValid)
+            SoundEngine.PlaySound(SFX.HandheldThrusterFlame with
             {
-                playingSoundId_2 = SoundEngine.PlaySound(SFX.HandheldThrusterOverheat with
+                Volume = 0.3f,
+                MaxInstances = 1,
+                SoundLimitBehavior = SoundLimitBehavior.IgnoreNew
+            },
+            Projectile.position, updateCallback: (sound) =>
+            {
+                sound.Position = Projectile.position;
+                return tracker.IsActiveAndInGame();
+            });
+
+            if (!OwnerHasMana )
+            {
+                SoundEngine.PlaySound(SFX.HandheldThrusterOverheat with
                 {
                     Volume = 0.3f,
-                    IsLooped = true,
+                    MaxInstances = 1,   
                     SoundLimitBehavior = SoundLimitBehavior.IgnoreNew
                 },
-                Projectile.position);
+                Projectile.position, updateCallback: (sound) =>
+                {
+                    sound.Position = Projectile.position;
+                    return tracker.IsActiveAndInGame();
+                });
             }
         }
 
         public override void OnKill(int timeLeft)
         {
-            if (SoundEngine.TryGetActiveSound(playingSoundId_1, out ActiveSound playingSound1))
-                playingSound1.Stop();
-
-            if (SoundEngine.TryGetActiveSound(playingSoundId_2, out ActiveSound playingSound2))
-                playingSound2.Stop();
         }
     }
 }

@@ -1,5 +1,5 @@
+using Macrocosm.Common.Drawing;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Items.CursorIcons;
 using Macrocosm.Content.Items.Materials.Drops;
 using Macrocosm.Content.Players;
 using Microsoft.Xna.Framework;
@@ -281,7 +281,7 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
                         if (player.GetModPlayer<MacrocosmPlayer>().KnowsToUseZombieFinger)
                             player.cursorItemIconID = ModContent.ItemType<ZombieFinger>();
                         else
-                            player.cursorItemIconID = CursorIcon.GetType<QuestionMark>();
+                            CursorIcon.Current = CursorIcon.QuestionMark;
                     }
 
                     player.cursorItemIconText = "";

@@ -12,6 +12,13 @@ Common: {
 	CancelColor: Discard color changes
 	ZoomIn: Zoom In
 	ZoomOut: Zoom Out
+	Inventory.OpenInventory: Open Inventory
+}
+
+LaunchPad: {
+	Assemble: Assemble
+	AnyChest: Any Chest
+	UnknownLocation: Unknown
 }
 
 Rocket: {
@@ -20,18 +27,15 @@ Rocket: {
 		Navigation: Navigation
 		Checklist: Pre-flight checklist
 		LaunchLocations: Launch Locations
-		WorldSpawn: World Spawn
 		Crew: Crew
 		Commander: Commander
 		Cargo: Cargo
 		Payload: Payload
 		Inventory: Inventory
 		Fuel: Fuel
-		Customization: Customizationd
+		Customization: Customization
 		Assembly: Assembly
 	}
-
-	Inventory.OpenInventory: Open Inventory
 
 	Customization: {
 		Apply: Apply rocket appearance changes
@@ -46,18 +50,19 @@ Rocket: {
 	}
 
 	Modules: {
-		CommandPod: Command Pod
-		ServiceModule: Service Module
-		ReactorModule: Reactor Module
-		EngineModule: Engine Module
-		BoosterLeft: Left Booster
-		BoosterRight: Right Booster
+		CommandPod.DisplayName: Command Pod
+		ServiceModule.DisplayName: Service Module
+		ReactorModule.DisplayName: Reactor Module
+		EngineModule.DisplayName: Engine Module
+		BoosterLeft.DisplayName: Left Booster
+		BoosterRight.DisplayName: Right Booster
 	}
 
 	LaunchButton: {
 		NoTarget: NO TARGET
 		CantReach: INACCESSIBLE
 		DifferentTarget: CURRENT LOCATION
+		Occupied: OCCUPIED
 		ZoomIn: ZOOM IN
 		Launch: LAUNCH
 		LaunchInactive: LAUNCH
@@ -157,6 +162,13 @@ Rocket: {
 		DifferentTarget: {
 			NotMet: {
 				Display: You are already here
+				Hover: default
+			}
+		}
+
+		VacantLaunchpad: {
+			NotMet: {
+				Display: Launchpad is occupied
 				Hover: default
 			}
 		}

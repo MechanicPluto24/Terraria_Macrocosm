@@ -23,12 +23,14 @@ namespace Macrocosm
         public static Mod Instance => ModContent.GetInstance<Macrocosm>();
 
         public const string TexturesPath = "Macrocosm/Assets/Textures/";
+        public const string EmptyTexPath = TexturesPath + "Empty";
+        public const string SymbolsPath = TexturesPath + "UI/Symbols/";
+        public const string ButtonsPath = TexturesPath + "UI/Buttons/";
         public static string TextureEffectsPath => TexturesPath + (MacrocosmConfig.Instance.HighResolutionEffects ? "HighRes/" : "LowRes/");
 
         public const string ShadersPath = "Macrocosm/Assets/Effects/";
         public const string MusicPath = "Macrocosm/Assets/Music/";
         public const string SFXPath = "Macrocosm/Assets/Sounds/SFX/";
-        public const string EmptyTexPath = TexturesPath + "Empty";
 
         public const int ItemShoot_UsesAmmo = 10;
 

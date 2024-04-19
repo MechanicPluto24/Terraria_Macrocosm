@@ -1,6 +1,8 @@
-﻿using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Common.Systems;
+﻿using Macrocosm.Common.Drawing;
+using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.Power;
+using Macrocosm.Common.Systems.UI;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
@@ -162,6 +164,34 @@ namespace Macrocosm.Content.Machines
             return true;
         }
 
+        public override void MouseOver(int i, int j)
+        {
+            Player player = Main.LocalPlayer;
+
+            if (!UISystem.Active && !player.mouseInterface)
+            {
+                player.noThrow = 2;
+
+                Point16 origin = Utility.GetMultitileTopLeft(i, j);
+                if ((i >= origin.X + 0 && i <= origin.X + 1) && (j >= origin.Y + 7 && j <= origin.Y + 8))
+                {
+                    if (GetPowerState(origin.X, origin.Y))
+                    {
+                        if (IsOperating(origin.X, origin.Y))
+                            CursorIcon.Current = CursorIcon.MachineTurnOff;
+                        else
+                            CursorIcon.Current = CursorIcon.MachineTurnOn;
+                    }
+                }
+                else
+                {
+                    Main.instance.MouseText("TOO BIG");
+                    player.cursorItemIconEnabled = true;
+                    player.cursorItemIconID = ModContent.ItemType<Items.Machines.OreExcavator>();
+                }
+            }
+        }
+
         public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)
         {
             if (IsOperating(i, j))
@@ -201,12 +231,14 @@ namespace Macrocosm.Content.Machines
                 {
                     if (Main.tileFrame[Type] % 2 == 1)
                     {
-                        for (int s = 0; s < 2; s++)
+                        float atmoDensity = (0.3f + 0.7f * MacrocosmSubworld.CurrentAtmosphericDensity);
+                        int count = atmoDensity < 1f ? 1 : 2;
+                        for (int s = 0; s < count; s++)
                         {
                             Smoke smoke = Particle.CreateParticle<Smoke>((p) =>
                             {
                                 p.Position = new Vector2(i, j) * 16f + new Vector2(1f, 16f);
-                                p.Velocity = new Vector2(0, -1.1f).RotatedByRandom(MathHelper.Pi / 16);
+                                p.Velocity = new Vector2(0, -1.1f).RotatedByRandom(MathHelper.Pi / 16) * atmoDensity;
                                 p.Scale = 0.3f;
                                 p.Rotation = 0f;
                                 p.DrawColor = (new Color(80, 80, 80) * Main.rand.NextFloat(0.75f, 1f)).WithAlpha(215);
@@ -223,21 +255,24 @@ namespace Macrocosm.Content.Machines
                 {
                     if (Main.tileFrame[Type] == 3)
                     {
-                        WorldGen.KillTile(i, j + 1, effectOnly: true, fail: true);
-                        WorldGen.KillTile(i, j + 2, effectOnly: true, fail: true);
+                        if(Main.rand.NextBool()) WorldGen.KillTile(i, j + 1, effectOnly: true, fail: true);
+                        if(Main.rand.NextBool()) WorldGen.KillTile(i, j + 2, effectOnly: true, fail: true);
+                        if(Main.rand.NextBool()) WorldGen.KillTile(i + 1, j + 1, effectOnly: true, fail: true);
+                        if(Main.rand.NextBool()) WorldGen.KillTile(i + 1, j + 2, effectOnly: true, fail: true);
                     }
 
                     if (Main.tileFrame[Type] % 2 == 0)
                     {
                         for (int s = 0; s < 2; s++)
                         {
+                            Point hitTile = new(i + 1, j + 1 + s);
                             Smoke smoke = Particle.CreateParticle<Smoke>((p) =>
                             {
-                                p.Position = new Vector2(i + 1, j + 1) * 16;
+                                p.Position = hitTile.ToWorldCoordinates();
                                 p.Velocity = new Vector2(Main.rand.NextFloat(-0.7f, 0.7f), Main.rand.NextFloat(-0.1f, -0.25f));
                                 p.Scale = 0.3f;
                                 p.Rotation = 0f;
-                                p.DrawColor = (Color.Lerp(Color.Gray, Color.Beige, Main.rand.NextFloat()) * Main.rand.NextFloat(0.2f, 0.8f));
+                                p.DrawColor = Color.Lerp(Utility.GetTileColor(hitTile), Color.Gray, 0.5f) * Main.rand.NextFloat(0.2f, 0.8f);
                                 p.FadeIn = true;
                                 p.Opacity = 0f;
                                 p.ExpansionRate = 0.0075f;

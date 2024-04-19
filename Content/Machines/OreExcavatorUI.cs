@@ -1,8 +1,10 @@
 ﻿using Macrocosm.Common.Loot;
+using Macrocosm.Common.Storage;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Rockets;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.Linq;
@@ -106,6 +108,7 @@ namespace Macrocosm.Content.Machines
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+            Inventory.ActiveInventory = OreExcavator.Inventory;
         }
     }
 }

@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
             };
 
             if (!HasRocket)
-                tag[nameof(rocketUnderConstruction)] = rocketUnderConstruction;
+                tag[nameof(unassembledRocket)] = unassembledRocket;
 
             return tag;
         }
@@ -47,11 +47,14 @@ namespace Macrocosm.Content.Rockets.LaunchPads
             if (tag.ContainsKey(nameof(CompassCoordinates)))
                 launchPad.CompassCoordinates = tag.GetString(nameof(CompassCoordinates));
 
-            if(tag.ContainsKey(nameof(Inventory)))
-                launchPad.Inventory = tag.Get<Inventory>(nameof(Inventory));
+            if (!launchPad.HasRocket && tag.ContainsKey(nameof(unassembledRocket)))
+                launchPad.unassembledRocket = tag.Get<Rocket>(nameof(unassembledRocket));
 
-            if (!launchPad.HasRocket && tag.ContainsKey(nameof(rocketUnderConstruction)))
-                launchPad.rocketUnderConstruction = tag.Get<Rocket>(nameof(rocketUnderConstruction));
+            if (tag.ContainsKey(nameof(Inventory)))
+            {
+                launchPad.Inventory = tag.Get<Inventory>(nameof(Inventory));
+                launchPad.Inventory.Size = launchPad.CountRequiredAssemblyItemSlots(launchPad.Rocket);
+            }
 
             return launchPad;
         }

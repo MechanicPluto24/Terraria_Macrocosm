@@ -27,7 +27,7 @@ namespace Macrocosm.Common.Subworlds
     public partial class MacrocosmSubworld
     {
         /// <summary> Get the current <c>MacrocosmSubworld</c> active instance. 
-        /// Earth returns null! You should check for <see cref="SubworldSystem.AnyActive"/> for <b>Macrocosm</b> before accessing this. </summary>
+        /// Earth returns null! You should check for <see cref="SubworldSystem.AnyActive{Macrocosm}"/> for <see cref="Macrocosm"/> before accessing this. </summary>
         public static MacrocosmSubworld Current => SubworldSystem.AnyActive<Macrocosm>() ? SubworldSystem.Current as MacrocosmSubworld : null;
 
         /// <summary>
@@ -36,7 +36,26 @@ namespace Macrocosm.Common.Subworlds
         /// </summary>
         public static string CurrentID => SubworldSystem.AnyActive() ? SubworldSystem.Current.Mod.Name + "/" + SubworldSystem.Current.Name : "Macrocosm/Earth";
         public static bool IsValidID(string id) => SubworldSystem.GetIndex(id) >= 0 || id is "Macrocosm/Earth";
-        public static string SanitizeID(string id) => id.Replace(Macrocosm.Instance.Name + "/", "");
+        public static string SanitizeID(string id, out string modName)
+        {
+            string[] split = id.Split("/");
+
+            if (string.IsNullOrEmpty(id))
+            {
+                modName = "Macrocosm";
+                return "";
+            }
+            else if(split.Length == 1)
+            {
+                modName = "Macrocosm";
+                return split[0];
+            }
+            else
+            {
+                modName = split[0];
+                return split[1];
+            }   
+        }
 
         public static int CurrentIndex => SubworldSystem.AnyActive() ? SubworldSystem.GetIndex(CurrentID) : -1;
 
@@ -44,6 +63,7 @@ namespace Macrocosm.Common.Subworlds
         public static double CurrentDayLength => Current is not null ? Current.DayLenght : Earth.DayLenght;
         public static double CurrentNightLength => Current is not null ? Current.NightLenght : Earth.NightLenght;
         public static float CurrentGravityMultiplier => Current is not null ? Current.GravityMultiplier : Earth.GravityMultiplier;
+        public static float CurrentAtmosphericDensity => Current is not null ? Current.AtmosphericDensity : Earth.AtmosphericDensity;
 
         /// <summary> The loading screen. </summary>
         public static LoadingScreen LoadingScreen { get; set; }

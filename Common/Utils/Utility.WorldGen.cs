@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ObjectData;
 using Terraria.WorldBuilding;
@@ -654,13 +655,13 @@ namespace Macrocosm.Common.Utils
                     if (width > 1 || height > 1)
                     {
                         int xs = x, ys = y;
-                        Vector2 newPos = Utility.FindTopLeft(xs, ys);
+                        Point16 newPos = GetMultitileTopLeft(xs, ys);
                         for (int x1 = 0; x1 < width; x1++)
                         {
                             for (int y1 = 0; y1 < height; y1++)
                             {
-                                int x2 = (int)newPos.X + x1;
-                                int y2 = (int)newPos.Y + y1;
+                                int x2 = newPos.X + x1;
+                                int y2 = newPos.Y + y1;
                                 if (x1 == 0 && y1 == 0 && Main.tile[x2, y2].TileType == 21) //is a chest, special case to prevent dupe glitch
                                 {
                                     KillChestAndItems(x2, y2);
@@ -677,8 +678,8 @@ namespace Macrocosm.Common.Utils
                         {
                             for (int y1 = 0; y1 < height; y1++)
                             {
-                                int x2 = (int)newPos.X + x1;
-                                int y2 = (int)newPos.Y + y1;
+                                int x2 = newPos.X + x1;
+                                int y2 = newPos.Y + y1;
                                 WorldGen.SquareTileFrame(x2, y2);
                                 WorldGen.SquareWallFrame(x2, y2);
                             }

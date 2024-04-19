@@ -25,8 +25,8 @@ namespace Macrocosm.Content.Items.Materials.Refined
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient<Coal>(5)
-                .AddIngredient<OilShale>(5)
+                .AddIngredient<Coal>(3)
+                .AddIngredient<OilShale>(1)
                 .AddTile(TileID.AlchemyTable)
                 .Register();
         }

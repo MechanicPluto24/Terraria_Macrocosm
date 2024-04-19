@@ -27,7 +27,7 @@ float4 ColorGradientSquare(float2 texCoord : TEXCOORD) : COLOR
     return float4(newColor, alpha);
 }
 
-technique Technique1
+technique
 {
     pass ColorGradientSquare
     {

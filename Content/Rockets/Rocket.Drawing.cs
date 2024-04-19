@@ -4,6 +4,7 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.Modules;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Linq;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -26,6 +27,8 @@ namespace Macrocosm.Content.Rockets
         private DynamicIndexBuffer indexBuffer;
         private VertexPositionColorTexture[] vertices;
         private short[] indices;
+
+        public bool HasRenderTarget => renderTarget is not null && !renderTarget.IsDisposed;
 
         public void ResetRenderTarget()
         {
@@ -98,29 +101,36 @@ namespace Macrocosm.Content.Rockets
             }
         }
 
-        public void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 position)
+        public void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 position, bool inWorld = true)
         {
             foreach (RocketModule module in ModulesByDrawPriority)
             {
-                module.PreDrawBeforeTiles(spriteBatch, GetModuleRelativePosition(module, position));
+                module.PreDrawBeforeTiles(spriteBatch, GetModuleRelativePosition(module, position), inWorld);
             }
         }
 
-        public void PostDraw(SpriteBatch spriteBatch, Vector2 position)
+        public void PostDraw(SpriteBatch spriteBatch, Vector2 position, bool inWorld = true)
         {
             foreach (RocketModule module in ModulesByDrawPriority)
             {
-                module.PostDraw(spriteBatch, GetModuleRelativePosition(module, position));
+                module.PostDraw(spriteBatch, GetModuleRelativePosition(module, position), inWorld);
             }
         }
 
         public void DrawOverlay(SpriteBatch spriteBatch, Vector2 position)
         {
-            if (InFlight || ForcedFlightAppearance)
+            if (StaticFire || InFlight || Landing || ForcedFlightAppearance)
             {
                 float scale = 1.2f * Main.rand.NextFloat(0.85f, 1f);
-                if (FlightProgress < 0.1f && !ForcedFlightAppearance)
-                    scale *= Utility.QuadraticEaseOut(FlightProgress * 10f);
+
+                if (ForcedFlightAppearance)
+                    scale *= 1.25f;
+
+                if (StaticFire)
+                    scale *= Utility.QuadraticEaseOut(StaticFireProgress);
+
+                if(Landing && LandingProgress > 0.9f)
+                    scale *= Utility.QuadraticEaseOut((1f - LandingProgress) * 10f);
 
                 var flare = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Flare2").Value;
                 spriteBatch.Draw(flare, position + new Vector2(Bounds.Width / 2, Bounds.Height), null, new Color(255, 69, 0), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
@@ -151,13 +161,13 @@ namespace Macrocosm.Content.Rockets
 
         private void DrawDummy(SpriteBatch spriteBatch, Vector2 position)
         {
-            PreDrawBeforeTiles(spriteBatch, position);
+            PreDrawBeforeTiles(spriteBatch, position, inWorld: false);
             DrawWorld(spriteBatch, position);
-            PostDraw(spriteBatch, position);
+            PostDraw(spriteBatch, position, inWorld: false);
 
             state2.SaveState(spriteBatch);
             spriteBatch.End();
-            spriteBatch.Begin(BlendState.Additive, state);
+            spriteBatch.Begin(state.SpriteSortMode, BlendState.Additive, state.SamplerState, state.DepthStencilState, state.RasterizerState, state.Effect, Main.UIScaleMatrix);
             DrawOverlay(spriteBatch, position);
             spriteBatch.End();
             spriteBatch.Begin(state);
@@ -165,7 +175,7 @@ namespace Macrocosm.Content.Rockets
 
         private void DrawBlueprint(SpriteBatch spriteBatch, Vector2 position)
         {
-            foreach (RocketModule module in ModulesByDrawPriority)
+            foreach (RocketModule module in ModulesByDrawPriority.OrderBy(module => module.BlueprintHighlighted))
             {
                 Vector2 drawPosition = GetModuleRelativePosition(module, position);
 
@@ -178,6 +188,7 @@ namespace Macrocosm.Content.Rockets
                 }
                 else
                 {
+                    module.PreDrawBeforeTiles(spriteBatch, drawPosition, inWorld: false);
                     module.Draw(spriteBatch, drawPosition);
                 }
             }

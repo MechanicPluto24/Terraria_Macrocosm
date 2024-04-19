@@ -1,10 +1,11 @@
+using Macrocosm.Common.Bases.Items;
 using Macrocosm.Content.Items.Materials.Tech;
 using Terraria;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Furniture.MoonBase
 {
-    public class MoonBaseChestElectronic : ModItem
+    public class MoonBaseChestElectronic : ModItem, IChest
     {
         public override void SetDefaults()
         {

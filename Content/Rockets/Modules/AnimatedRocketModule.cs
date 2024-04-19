@@ -7,17 +7,14 @@
 
         /// <summary> The total number of frames </summary>
         public virtual int NumberOfFrames { get; set; } = 10;
-
         public int FrameSpeed { get; set; } = 4;
-
-        public bool ShouldAnimate { get; set; } = true;
         public bool IsAnimationActive => isAnimating;
 
         private int frameCounter;
         private bool isAnimating = false;
         private bool isAnimatingForward = true;
 
-        protected AnimatedRocketModule(Rocket rocket) : base(rocket)
+        protected AnimatedRocketModule() : base()
         {
         }
 
@@ -61,18 +58,12 @@
 
         public void StartAnimation()
         {
-            if (!ShouldAnimate)
-                return;
-
             isAnimatingForward = true;
             isAnimating = true;
         }
 
         public void StartReverseAnimation()
         {
-            if (!ShouldAnimate)
-                return;
-
             isAnimatingForward = false;
             isAnimating = true;
         }

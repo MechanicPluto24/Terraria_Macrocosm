@@ -71,7 +71,7 @@ float4 ColorMaskShading(float2 texCoord : TEXCOORD) : COLOR0
     return float4(color.rgb, color.a);
 }
 
-technique Technique1 
+technique 
 {
     pass ColorMaskShading
     {

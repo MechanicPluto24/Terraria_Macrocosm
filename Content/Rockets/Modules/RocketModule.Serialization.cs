@@ -44,7 +44,8 @@ namespace Macrocosm.Content.Rockets.Modules
             string type = tag.GetString("Type");
             string name = tag.GetString("Name");
 
-            RocketModule module = Activator.CreateInstance(Type.GetType(type), ownerRocket) as RocketModule;
+            RocketModule module = Activator.CreateInstance(Type.GetType(type)) as RocketModule;
+            module.rocket = ownerRocket;
             module.DeserializeModuleSpecificData(tag, ownerRocket);
 
             if (tag.ContainsKey("IsBlueprint"))

@@ -5,27 +5,25 @@ using Macrocosm.Content.Rockets.Customization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Modules
 {
-    public abstract partial class RocketModule
+    public abstract partial class RocketModule : ModType, ILocalizedModType
     {
-        public string Name => GetType().Name;
+        public string LocalizationCategory => "UI.Rocket.Modules";
+        //public LocalizedText DisplayName => this.GetLocalization("DisplayName", PrettyPrintName);
+        public LocalizedText DisplayName => Language.GetOrRegister("Mods.Macrocosm.UI.Rocket.Modules." + Name + ".DisplayName", PrettyPrintName);
 
-        public string FullName => GetType().Namespace + "." + Name;
-
-        /// <summary> This module's draw priority </summary>
-        public abstract int DrawPriority { get; }
-
-        public Detail Detail { get; set; }
-        public Pattern Pattern { get; set; }
-
-        public bool HasPattern => Pattern != default;
-        public bool HasDetail => Detail != default;
-        private bool SpecialDraw => HasPattern || HasDetail;
+        public readonly static List<RocketModule> Templates = new();
+        protected sealed override void Register() 
+        {
+            Templates.Add(Activator.CreateInstance(GetType()) as RocketModule);
+        }
 
         public Vector2 Position { get; set; }
         public Vector2 Center
@@ -43,6 +41,18 @@ namespace Macrocosm.Content.Rockets.Modules
         /// <summary> The module's collision hitbox. </summary>
         public virtual Rectangle Hitbox => new((int)Position.X, (int)Position.Y, Width, Height);
 
+        public abstract AssemblyRecipe Recipe { get; }
+
+        public Detail Detail { get; set; }
+        public Pattern Pattern { get; set; }
+
+        public bool HasPattern => Pattern != default;
+        public bool HasDetail => Detail != default;
+        private bool SpecialDraw => HasPattern || HasDetail;
+
+        /// <summary> This module's draw priority </summary>
+        public abstract int DrawPriority { get; }
+
         /// <summary> The module's draw origin </summary>
         protected virtual Vector2 Origin => new(0, 0);
 
@@ -56,22 +66,26 @@ namespace Macrocosm.Content.Rockets.Modules
 
         public virtual string BlueprintPath => (GetType().Namespace + "/Blueprints/" + Name).Replace(".", "/");
         public Texture2D Blueprint => ModContent.Request<Texture2D>(BlueprintPath, AssetRequestMode.ImmediateLoad).Value;
+        public bool BlueprintHighlighted { get; set; } = false;
 
+        public Color BlueprintOutlineColor = UITheme.Current.PanelStyle.BorderColor;
+        public Color BlueprintFillColor = UITheme.Current.PanelStyle.BackgroundColor;
 
         protected Rocket rocket;
 
-        public RocketModule(Rocket rocket)
+        public RocketModule()
         {
             Detail = CustomizationStorage.GetDefaultDetail(Name);
             Pattern = CustomizationStorage.GetDefaultPattern(Name);
-            this.rocket = rocket;
         }
 
-        public virtual void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 position)
+        public void SetRocket(Rocket value) => rocket = value;
+
+        public virtual void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 position, bool inWorld)
         {
         }
 
-        public virtual void PostDraw(SpriteBatch spriteBatch, Vector2 position)
+        public virtual void PostDraw(SpriteBatch spriteBatch, Vector2 position, bool inWorld)
         {
         }
 
@@ -147,7 +161,11 @@ namespace Macrocosm.Content.Rockets.Modules
 
             effect.Parameters["uColorCount"].SetValue(2);
             effect.Parameters["uColorKey"].SetValue(blueprintKeys);
-            effect.Parameters["uColor"].SetValue((new Color[] { UITheme.Current.PanelStyle.BorderColor, UITheme.Current.PanelStyle.BackgroundColor }).ToVector4Array());
+            effect.Parameters["uColor"].SetValue((new Color[]
+            {
+                BlueprintHighlighted ? UITheme.Current.ButtonHighlightStyle.BorderColor : UITheme.Current.PanelStyle.BorderColor,
+                UITheme.Current.PanelStyle.BackgroundColor
+            }).ToVector4Array());
             effect.Parameters["uSampleBrightness"].SetValue(false);
 
             spriteBatch.End();

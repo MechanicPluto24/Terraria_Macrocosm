@@ -341,7 +341,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 }
             }
 
-            return Utility.GetClosestTile(startTile.X, startTile.Y, -1, 200, (t) => Main.tileSolid[t.TileType] && !t.IsActuated) * 16f;
+            return Utility.GetClosestTile(startTile.X, startTile.Y, -1, 200, (t) => Main.tileSolid[t.TileType] && !t.IsActuated).ToVector2() * 16f;
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)

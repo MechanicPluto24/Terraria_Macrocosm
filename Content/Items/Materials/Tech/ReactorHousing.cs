@@ -25,9 +25,9 @@ namespace Macrocosm.Content.Items.Materials.Tech
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient<SteelBar>(35)
-                .AddIngredient(ItemID.SiltBlock, 50)
-                .AddIngredient(ItemID.StoneBlock, 100)
+                .AddIngredient<SteelBar>(10)
+                .AddIngredient(ItemID.SiltBlock, 20)
+                .AddIngredient(ItemID.StoneBlock, 50)
                 .AddTile<Tiles.Crafting.Fabricator>()
                 .Register();
         }

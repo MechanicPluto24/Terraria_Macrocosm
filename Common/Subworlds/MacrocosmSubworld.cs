@@ -3,7 +3,7 @@ using Macrocosm.Content.Players;
 using Macrocosm.Content.Rockets;
 using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.LaunchPads;
-using Macrocosm.Content.Rockets.Navigation.Checklist;
+using Macrocosm.Content.Rockets.UI.Navigation.Checklist;
 using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
@@ -18,6 +18,11 @@ namespace Macrocosm.Common.Subworlds
     {
         public string ID => Mod.Name + "/" + Name;
 
+        public override bool NormalUpdates => false;
+        public override bool ShouldSave => true;
+        public override bool NoPlayerSaving => false;
+
+
         /// <summary> Time rate of this subworld, compared to Earth's (1.0) </summary>
         public virtual double TimeRate { get; } = Earth.TimeRate;
 
@@ -30,6 +35,12 @@ namespace Macrocosm.Common.Subworlds
         /// <summary> The gravity multiplier, measured in G (Earth has 1G) </summary>
         public virtual float GravityMultiplier { get; } = Earth.GravityMultiplier;
 
+        /// <summary> 
+        /// The atmospheric density, in terms of Earth's atmospheric density.
+        /// 0f means vacuum, 1f means equal to Earth's, >1f means higher that Earth's.
+        /// </summary>
+        public virtual float AtmosphericDensity { get; } = Earth.AtmosphericDensity; 
+
         /// <summary> Whether wiring should function in this subworld </summary>
         public bool ShouldUpdateWiring { get; set; } = true;
 
@@ -40,10 +51,10 @@ namespace Macrocosm.Common.Subworlds
             return earthWorldSize;
         }
 
-        /// <summary> The width is determined in ReadCopiedMainWorldData using GetWorldSize </summary>
+        /// <summary> The width is determined in ReadCopiedMainWorldData using <see cref="SetSubworldSize(WorldSize)"> </summary>
         public sealed override int Width => SetSubworldSize(Earth.WorldSize).Width;
 
-        /// <summary> The height is determined in ReadCopiedMainWorldData using GetWorldSize </summary>
+        /// <summary> The height is determined in ReadCopiedMainWorldData using <see cref="SetSubworldSize(WorldSize)"> </summary>
         public sealed override int Height => SetSubworldSize(Earth.WorldSize).Height;
 
         /// <summary> Specifies the conditions for reaching this particular subworld </summary>

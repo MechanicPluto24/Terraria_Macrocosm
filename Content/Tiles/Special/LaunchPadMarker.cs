@@ -1,5 +1,7 @@
-﻿using Macrocosm.Common.Netcode;
+﻿using Macrocosm.Common.Drawing;
+using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.Systems.UI;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.LaunchPads;
 using Microsoft.Xna.Framework;
@@ -73,70 +75,85 @@ namespace Macrocosm.Content.Tiles.Special
 
             bool tooCloseRight = false;
             bool foundObstructionRight = false;
-            bool foundLaunchpadRight = false;
+            bool foundGapRight = false;
+            bool foundMarkerRight = false;
             for (int tileX = i + 1; tileX < i + LaunchPad.MaxWidth; tileX++)
             {
                 Tile tile = Main.tile[tileX, tileY];
-                if (tile.HasTile)
+                if (WorldGen.SolidOrSlopedTile(tileX, tileY))
                 {
-                    if (WorldGen.SolidOrSlopedTile(tileX, tileY))
-                    {
-                        foundObstructionRight = true;
-                    }
-                    else if (tile.TileType == Type)
-                    {
-                        foundLaunchpadRight = true;
+                    foundObstructionRight = true;
+                }
 
-                        if (tileX - i < LaunchPad.MinWidth)
-                        {
-                            tooCloseRight = !foundObstructionRight;
-                        }
-                        else if (!tooCloseRight && !foundObstructionRight)
-                        {
-                            LaunchPad.Create(i, j, tileX, tileY);
-                            return true;
-                        }
+                if (!WorldGen.SolidOrSlopedTile(tileX, tileY + 1))
+                {
+                    foundGapRight = true;
+                }
+
+                if (tile.TileType == Type)
+                {
+                    foundMarkerRight = true;
+
+                    if (tileX - i < LaunchPad.MinWidth)
+                    {
+                        tooCloseRight = !foundObstructionRight && !foundGapRight;
+                    }
+                    else if (!tooCloseRight && !foundObstructionRight && !foundGapRight)
+                    {
+                        LaunchPad.Create(i, j, tileX, tileY);
+                        return true;
                     }
                 }
             }
 
             bool tooCloseLeft = false;
             bool foundObstructionLeft = false;
-            bool foundLaunchpadLeft = false;
+            bool foundGapLeft = false;
+            bool foundMarkerLeft = false;
             for (int tileX = i - 1; tileX > i - LaunchPad.MaxWidth; tileX--)
             {
                 Tile tile = Main.tile[tileX, tileY];
-                if (tile.HasTile)
+                if (WorldGen.SolidOrSlopedTile(tileX, tileY))
                 {
-                    if (WorldGen.SolidOrSlopedTile(tileX, tileY))
-                    {
-                        foundObstructionLeft = true;
-                    }
-                    else if (tile.TileType == Type)
-                    {
-                        foundLaunchpadLeft = true;
+                    foundObstructionLeft = true;
+                }
 
-                        if (i - tileX < LaunchPad.MinWidth)
-                        {
-                            tooCloseLeft = !foundObstructionLeft;
-                        }
-                        else if (!tooCloseLeft && !foundObstructionLeft)
-                        {
-                            LaunchPad.Create(tileX, tileY, i, j);
-                            return true;
-                        }
+                if (!WorldGen.SolidOrSlopedTile(tileX, tileY + 1))
+                {
+                    foundGapLeft = true;
+                }
+
+                if (tile.TileType == Type)
+                {
+                    foundMarkerLeft = true;
+
+                    if (i - tileX < LaunchPad.MinWidth)
+                    {
+                        tooCloseLeft = !foundObstructionLeft && !foundGapLeft;
+                    }
+                    else if (!tooCloseLeft && !foundObstructionLeft && !foundGapLeft)
+                    {
+                        LaunchPad.Create(tileX, tileY, i, j);
+                        return true;
                     }
                 }
             }
 
-            if (tooCloseLeft || tooCloseRight)
+            if (tooCloseLeft && foundMarkerLeft || tooCloseRight && foundMarkerRight)
             {
                 // The launch pad markers are too close to each other.
                 Main.NewText(Language.GetText("Mods.Macrocosm.Messages.MarkerTooClose"), Color.Yellow);
                 return false;
             }
 
-            if (foundObstructionRight && foundLaunchpadRight || foundObstructionLeft && foundLaunchpadLeft)
+            if (foundGapLeft && foundMarkerLeft && !foundObstructionLeft || foundGapRight && foundMarkerRight && !foundObstructionRight)
+            {
+                // The area is not flat, can't place launchpad here.
+                Main.NewText(Language.GetText("Mods.Macrocosm.Messages.MarkerFoundGap"), Color.Yellow);
+                return false;
+            }
+
+            if (foundObstructionRight && foundMarkerRight || foundObstructionLeft && foundMarkerLeft)
             {
                 // There is a solid block, can't place launch pad here.
                 Main.NewText(Language.GetText("Mods.Macrocosm.Messages.MarkerSolidBlock"), Color.Yellow);
@@ -148,9 +165,18 @@ namespace Macrocosm.Content.Tiles.Special
             return false;
         }
 
+        public override void MouseOver(int i, int j)
+        {
+            if (!LaunchPadManager.TryGetLaunchPadAtTileCoordinates(MacrocosmSubworld.CurrentID, new(i, j), out _) && !UISystem.Active)
+            {
+                Main.LocalPlayer.noThrow = 2;
+                CursorIcon.Current = CursorIcon.Wrench;
+            }
+        }
+
         public override bool CanPlace(int i, int j)
         {
-            return LaunchPadManager.TryGetLaunchPadAtTileCoordinates(MacrocosmSubworld.CurrentID, new(i, j), out _);
+            return !LaunchPadManager.TryGetLaunchPadAtTileCoordinates(MacrocosmSubworld.CurrentID, new(i, j), out _);
         }
 
         public override void KillTile(int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem)

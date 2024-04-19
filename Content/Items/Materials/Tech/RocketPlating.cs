@@ -25,19 +25,19 @@ namespace Macrocosm.Content.Items.Materials.Tech
 
         public override void AddRecipes()
         {
-            CreateRecipe()
-                .AddIngredient<AluminumBar>(10)
-                .AddIngredient<SteelBar>(10)
-                .AddIngredient(ItemID.MeteoriteBar, 10)
-                .AddIngredient(ItemID.AdamantiteBar, 10)
+            CreateRecipe(2)
+                .AddIngredient<AluminumBar>(5)
+                .AddIngredient<SteelBar>(5)
+                .AddIngredient(ItemID.MeteoriteBar, 2)
+                .AddIngredient(ItemID.AdamantiteBar, 1)
                 .AddTile<Tiles.Crafting.Fabricator>()
                 .Register();
 
-            CreateRecipe()
-                .AddIngredient<AluminumBar>(10)
-                .AddIngredient<SteelBar>(10)
-                .AddIngredient(ItemID.MeteoriteBar, 10)
-                .AddIngredient(ItemID.TitaniumBar, 10)
+            CreateRecipe(2)
+                .AddIngredient<AluminumBar>(5)
+                .AddIngredient<SteelBar>(5)
+                .AddIngredient(ItemID.MeteoriteBar, 2)
+                .AddIngredient(ItemID.TitaniumBar, 1)
                 .AddTile<Tiles.Crafting.Fabricator>()
                 .Register();
         }

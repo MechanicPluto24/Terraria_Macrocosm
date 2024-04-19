@@ -249,11 +249,10 @@ LexanGlass
 	Value: No value
 	Research count: 100
 	Recipes:
-		Plastic x 15
-		Glass x 15
+		Plastic x 2
+		Glass x 1
 		at
 		Glass Kiln
-			=> x15
 
 
 MoonBasePlating
@@ -330,14 +329,6 @@ TitaniumLoom
 Moonstone
 	Value: 7 silver 50 copper
 	Research count: 100
-
-QuestionMark
-	Value: No value
-	Research count: 1
-
-Rocket
-	Value: No value
-	Research count: 1
 
 BanHammer
 	Value: 1 gold
@@ -598,10 +589,17 @@ SteelBar
 	Value: 1 gold 75 silver
 	Research count: 25
 	Recipes:
-		Iron Bar x 2
+		Iron Bar x 8
 		Coal x 1
 		at
 		Hellforge
+			=> x3
+
+		Lead Bar x 8
+		Coal x 1
+		at
+		Hellforge
+			=> x3
 
 
 AlienResidue
@@ -664,16 +662,12 @@ Silicon
 	Value: 7 silver 50 copper
 	Research count: 100
 
-FuelCell
-	Value: 1 silver
-	Research count: 100
-
 Plastic
 	Value: 1 silver
 	Research count: 100
 	Recipes:
-		Coal x 5
-		Oil Shale x 5
+		Coal x 3
+		Oil Shale x 1
 		at
 		Alchemy Table
 
@@ -692,15 +686,9 @@ Battery
 	Value: 1 silver
 	Research count: 5
 	Recipes:
-		Lithium x 2
-		Coal x 1
-		Copper Bar x 1
-		at
-		Fabricator
-
-		Lithium x 2
-		Coal x 1
-		Tin Bar x 1
+		Lithium x 10
+		Coal x 2
+		Tin Bar x 4
 		at
 		Fabricator
 
@@ -713,8 +701,8 @@ Computer
 	Value: 5 silver
 	Research count: 1
 	Recipes:
-		Plastic x 5
-		Printed Circuit Board x 2
+		Plastic x 20
+		Printed Circuit Board x 5
 		Glass x 2
 		at
 		Fabricator
@@ -724,6 +712,34 @@ ElasticFiber
 	Value: 1 silver
 	Research count: 5
 
+EngineComponent
+	Value: 1 silver
+	Research count: 5
+	Recipes:
+		Steel Bar x 20
+		Cobalt Bar x 20
+		Tungsten Bar x 10
+		at
+		Fabricator
+
+		Steel Bar x 20
+		Palladium Bar x 20
+		Tungsten Bar x 10
+		at
+		Fabricator
+
+
+FuelTank
+	Value: 1 silver
+	Research count: 100
+	Recipes:
+		Aluminum Bar x 10
+		Steel Bar x 5
+		Silicon x 8
+		at
+		Fabricator
+
+
 Gear
 	Value: 1 silver
 	Research count: 5
@@ -731,6 +747,23 @@ Gear
 		Steel Bar x 2
 		at
 		Anvil
+
+
+LandingGear
+	Value: 1 silver
+	Research count: 5
+	Recipes:
+		Steel Bar x 20
+		Gear x 10
+		Adamantite Bar x 15
+		at
+		Fabricator
+
+		Steel Bar x 20
+		Gear x 10
+		Titanium Bar x 15
+		at
+		Fabricator
 
 
 Motor
@@ -747,17 +780,10 @@ OxygenSystem
 	Value: 1 silver
 	Research count: 5
 	Recipes:
-		Oxygen Tank x 2
+		Plastic x 10
+		Tin Bar x 5
+		Oxygen Tank x 4
 		Printed Circuit Board x 1
-		Plastic x 3
-		Copper Bar x 10
-		at
-		Fabricator
-
-		Oxygen Tank x 2
-		Printed Circuit Board x 1
-		Plastic x 3
-		Tin Bar x 10
 		at
 		Fabricator
 
@@ -766,8 +792,8 @@ OxygenTank
 	Value: 1 silver
 	Research count: 5
 	Recipes:
-		Steel Bar x 5
-		Aluminum Bar x 10
+		Steel Bar x 1
+		Aluminum Bar x 8
 		at
 		Fabricator
 
@@ -787,17 +813,10 @@ PrintedCircuitBoard
 	Value: 1 silver
 	Research count: 5
 	Recipes:
-		Silicon x 5
-		Plastic x 2
-		Wire x 25
-		Silver Bar x 2
-		at
-		Fabricator
-
-		Silicon x 5
-		Plastic x 2
-		Wire x 25
-		Tungsten Bar x 2
+		Silicon x 6
+		Plastic x 1
+		Wire x 10
+		Silver Bar x 1
 		at
 		Fabricator
 
@@ -807,16 +826,9 @@ ReactorComponent
 	Research count: 5
 	Recipes:
 		Steel Bar x 20
-		Luminite Bar x 20
-		Glass x 50
-		Iron Bar x 50
-		at
-		Fabricator
-
-		Steel Bar x 20
-		Luminite Bar x 20
-		Glass x 50
-		Lead Bar x 50
+		Luminite Bar x 10
+		Lead Bar x 10
+		Glass x 5
 		at
 		Fabricator
 
@@ -825,34 +837,32 @@ ReactorHousing
 	Value: 1 silver
 	Research count: 5
 	Recipes:
-		Steel Bar x 35
-		Silt Block x 50
-		Stone Block x 100
+		Steel Bar x 10
+		Silt Block x 20
+		Stone Block x 50
 		at
 		Fabricator
 
-
-RocketLandingLeg
-	Value: 1 silver
-	Research count: 5
 
 RocketPlating
 	Value: 1 silver
 	Research count: 5
 	Recipes:
-		Aluminum Bar x 10
-		Steel Bar x 10
-		Meteorite Bar x 10
-		Adamantite Bar x 10
+		Aluminum Bar x 5
+		Steel Bar x 5
+		Meteorite Bar x 2
+		Adamantite Bar x 1
 		at
 		Fabricator
+			=> x2
 
-		Aluminum Bar x 10
-		Steel Bar x 10
-		Meteorite Bar x 10
-		Titanium Bar x 10
+		Aluminum Bar x 5
+		Steel Bar x 5
+		Meteorite Bar x 2
+		Titanium Bar x 1
 		at
 		Fabricator
+			=> x2
 
 
 SpaceShuttle

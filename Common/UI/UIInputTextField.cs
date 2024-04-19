@@ -1,18 +1,22 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Common.Utils;
+using Microsoft.CodeAnalysis.Text;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Graphics;
 using System;
 using Terraria;
+using Terraria.GameContent;
+using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
+using Terraria.UI.Chat;
 
 namespace Macrocosm.Common.UI
 {
     public class UIInputTextField : UIElement
     {
-
         private readonly string hintText;
         private string currentText = string.Empty;
         private int textBlinkerCounter;
-
         public float TextScale { get; set; } = 1f;
 
         public Color HintColor { get; set; } = Color.Gray;
@@ -20,8 +24,8 @@ namespace Macrocosm.Common.UI
 
         public Func<string, string> FormatText { get; set; } = (text) => text;
         public int TextMaxLenght { get; set; } = 20;
-
         public bool ForceHideHintText { get; set; } = true;
+        public bool AllowSnippets { get; set; }
 
         public bool CurrentlyInputtingText { get; set; } = false;
 
@@ -38,6 +42,7 @@ namespace Macrocosm.Common.UI
             }
         }
 
+
         public delegate void EventHandler(object sender, EventArgs e);
         public event EventHandler OnTextChange;
 
@@ -45,6 +50,13 @@ namespace Macrocosm.Common.UI
         {
             this.hintText = hintText;
         }
+
+        public override void OnInitialize()
+        {
+            Width = new(0, 1f);
+            Height = new(0, 1f);
+        }
+
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
             string newString = currentText;
@@ -66,20 +78,46 @@ namespace Macrocosm.Common.UI
                 currentText = currentText[..TextMaxLenght];
 
             currentText = FormatText(currentText);
-            string displayString = currentText;
 
+            Color drawColor;
+            string drawText;
+            if (currentText.Length == 0 && !ForceHideHintText)
+            {
+                drawColor = HintColor;
+                drawText = hintText;
+            }
+            else
+            {
+                drawColor = TextColor;
+                drawText = currentText;
+            }
+
+            CalculatedStyle dimensions = GetDimensions();
+            CalculatedStyle innerDimensions = GetInnerDimensions();
+
+            DynamicSpriteFont font = FontAssets.MouseText.Value;
+            Vector2 textSize = ChatManager.GetStringSize(font, drawText, new Vector2(1));
+            float scale = TextScale;
+            if (true && textSize.X > innerDimensions.Width)
+                scale *= innerDimensions.Width / textSize.X;
+
+            Vector2 position = innerDimensions.Position() + new Vector2(0, -4f * TextScale);
+            Vector2 origin = new Vector2(0f, 0f);
+
+            string visibleText = currentText;
             if (CurrentlyInputtingText)
             {
                 if (++textBlinkerCounter / 20 % 2 == 0)
-                    displayString += "|";
+                    visibleText += "|";
             }
 
-            CalculatedStyle space = GetDimensions();
+            TextSnippet[] snippets = ChatManager.ParseMessage(visibleText, drawColor).ToArray();
 
-            if (currentText.Length == 0 && !ForceHideHintText)
-                Terraria.Utils.DrawBorderString(spriteBatch, hintText, new Vector2(space.X, space.Y), HintColor, TextScale, anchory: 0.12f);
-            else
-                Terraria.Utils.DrawBorderString(spriteBatch, displayString, new Vector2(space.X, space.Y), TextColor, TextScale, anchory: 0.12f);
+            if (!AllowSnippets)
+                ChatManager.ConvertNormalSnippets(snippets);
+
+            ChatManager.DrawColorCodedStringShadow(spriteBatch, font, snippets, position, Color.Black.WithAlpha(drawColor.A), 0f, origin, new(scale), -1f, 1.5f);
+            ChatManager.DrawColorCodedString(spriteBatch, font, snippets, position, drawColor, 0f, origin, new(scale), out var _, -1f, ignoreColors: true);
         }
     }
 }
