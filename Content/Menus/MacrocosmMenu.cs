@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -189,14 +190,14 @@ namespace Macrocosm.Content.Menus
 
             // Draw the moons behind the host planet
             foreach (CelestialBody planet in planetsWithMoons)
-                planet.DrawChildren(spriteBatch, (child) => child.OrbitRotation >= child.OrbitAngle);
+                planet.DrawChildren(spriteBatch, (child) => child.OrbitRotation - MathHelper.Pi >= child.OrbitAngle);
 
             // Draw the planets behind the Sun
             Sun.DrawChildren(spriteBatch, (_) => true);
 
             // Draw the moons in front of the host planet
             foreach (CelestialBody planet in planetsWithMoons)
-                planet.DrawChildren(spriteBatch, (child) => child.OrbitRotation < child.OrbitAngle);
+                planet.DrawChildren(spriteBatch, (child) => child.OrbitRotation - MathHelper.Pi < child.OrbitAngle);
 
             DrawSunCorona();
 
@@ -218,11 +219,11 @@ namespace Macrocosm.Content.Menus
                 body.ShouldUpdate = true;
                 body.Scale = 0.6f;
 
-                body.SetLightSource(Sun);
-                body.ConfigureBodyShader = ConfigureBodyShader;
+                body.SetLighting(Sun);
+                body.ConfigureBodySphericalShader = ConfigureBodyShader;
             }
 
-            Sun.Position = Utility.ScreenCenter;
+            Sun.Center = Utility.ScreenCenter;
             Sun.OverrideBodyShader = Sun_GetShader;
 
             SetUpAsteroidBelt();
@@ -246,8 +247,8 @@ namespace Macrocosm.Content.Menus
             Europa.SetOrbitParent(Jupiter, new Vector2(54, 18), 0.1f, Rand(), 0.01f);
 
             Saturn.SetOrbitParent(Sun, 514, Rand(), 0.00037f);
-            Saturn.ConfigureBackShader = Saturn_ConfigureRingsShader;
-            Saturn.ConfigureFrontShader = Saturn_ConfigureRingsShader;
+            Saturn.ConfigureBackRadialShader = Saturn_ConfigureRingsShader;
+            Saturn.ConfigureFrontRadialShader = Saturn_ConfigureRingsShader;
             Saturn.OverrideBackDraw = Saturn_DrawRings_Back;
             Saturn.OverrideFrontDraw = Saturn_DrawRings_Front;
             Titan.SetOrbitParent(Saturn, new Vector2(52, 28), 0.8f, Rand(), 0.012f);
@@ -307,11 +308,11 @@ namespace Macrocosm.Content.Menus
 
             spriteBatch.Begin(BlendState.AlphaBlend, state2);
 
-            spriteBatch.Draw(sunCorona1.Value, Sun.Position, null, (new Color(127,127,127,127) * (0.4f + 0.8f * Utility.PositiveSineWave(800, 0f))), 0, sunCorona1.Size() / 2, 0.85f + 0.04f * Utility.SineWave(800, 0f), SpriteEffects.None, 0f);
-            spriteBatch.Draw(sunCorona2.Value, Sun.Position, null, (new Color(127,127,127,127) * (0.6f + 0.4f * Utility.PositiveSineWave(600, MathF.PI / 8))), 0, sunCorona1.Size() / 2, 0.85f + 0.03f * Utility.SineWave(600, MathF.PI / 8), SpriteEffects.None, 0f);
-            spriteBatch.Draw(sunCorona3.Value, Sun.Position, null, (new Color(127,127,127,127) * (0.8f + 0.2f * Utility.PositiveSineWave(500, MathF.PI / 4))), 0, sunCorona1.Size() / 2, 0.85f + 0.03f * Utility.SineWave(500, MathF.PI / 3), SpriteEffects.None, 0f);
-            spriteBatch.Draw(sunCorona4.Value, Sun.Position, null, (new Color(127,127,127,127) * (0.7f + 0.3f * Utility.PositiveSineWave(500, MathF.PI / 2))), 0, sunCorona1.Size() / 2, 0.85f + 0.02f * Utility.SineWave(500, MathF.PI / 2), SpriteEffects.None, 0f);
-            spriteBatch.Draw(sunCorona5.Value, Sun.Position, null, (new Color(127,127,127,127) * (0.6f + 0.4f * Utility.PositiveSineWave(300, MathF.PI / 2))), 0, sunCorona1.Size() / 2, 0.85f * 0.95f + 0.02f * Utility.SineWave(300, MathF.PI / 2), SpriteEffects.None, 0f);
+            spriteBatch.Draw(sunCorona1.Value, Sun.Center, null, (new Color(127,127,127,127) * (0.4f + 0.8f * Utility.PositiveSineWave(800, 0f))), 0, sunCorona1.Size() / 2, 0.85f + 0.04f * Utility.SineWave(800, 0f), SpriteEffects.None, 0f);
+            spriteBatch.Draw(sunCorona2.Value, Sun.Center, null, (new Color(127,127,127,127) * (0.6f + 0.4f * Utility.PositiveSineWave(600, MathF.PI / 8))), 0, sunCorona1.Size() / 2, 0.85f + 0.03f * Utility.SineWave(600, MathF.PI / 8), SpriteEffects.None, 0f);
+            spriteBatch.Draw(sunCorona3.Value, Sun.Center, null, (new Color(127,127,127,127) * (0.8f + 0.2f * Utility.PositiveSineWave(500, MathF.PI / 4))), 0, sunCorona1.Size() / 2, 0.85f + 0.03f * Utility.SineWave(500, MathF.PI / 3), SpriteEffects.None, 0f);
+            spriteBatch.Draw(sunCorona4.Value, Sun.Center, null, (new Color(127,127,127,127) * (0.7f + 0.3f * Utility.PositiveSineWave(500, MathF.PI / 2))), 0, sunCorona1.Size() / 2, 0.85f + 0.02f * Utility.SineWave(500, MathF.PI / 2), SpriteEffects.None, 0f);
+            spriteBatch.Draw(sunCorona5.Value, Sun.Center, null, (new Color(127,127,127,127) * (0.6f + 0.4f * Utility.PositiveSineWave(300, MathF.PI / 2))), 0, sunCorona1.Size() / 2, 0.85f * 0.95f + 0.02f * Utility.SineWave(300, MathF.PI / 2), SpriteEffects.None, 0f);
 
             spriteBatch.End();
             spriteBatch.Begin(state2);
@@ -324,11 +325,20 @@ namespace Macrocosm.Content.Menus
             var flare = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "HighRes/Flare3").Value;
             var scorch1 = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "HighRes/Scorch1").Value;
             var scorch2 = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "HighRes/Scorch2").Value;
-            spriteBatch.Draw(flare, Sun.Position, null, new Color(255, 96, 4) * (0.9f + 0.1f * SolarFlareProgress), 0f, flare.Size() / 2f, 2.2f + 0.2f * SolarFlareProgress, SpriteEffects.None, 0);
-            spriteBatch.Draw(scorch1, Sun.Position, null, new Color(255, 193, 0) * (0.25f + 0.01f * SolarFlareProgress), MathHelper.TwoPi * Utility.PositiveTriangleWave(15000), scorch1.Size() / 2f, 2.5f + 0.01f * SolarFlareProgress, SpriteEffects.None, 0);
-            spriteBatch.Draw(scorch2, Sun.Position, null, new Color(255, 193, 0) * (0.2f + 0.01f * SolarFlareProgress), MathHelper.TwoPi * -Utility.PositiveTriangleWave(15000), scorch2.Size() / 2f, 2.5f + 0.01f * SolarFlareProgress, SpriteEffects.None, 0);
+            spriteBatch.Draw(flare, Sun.Center, null, new Color(255, 96, 4) * (0.9f + 0.1f * SolarFlareProgress), 0f, flare.Size() / 2f, 2.2f + 0.2f * SolarFlareProgress, SpriteEffects.None, 0);
+            spriteBatch.Draw(scorch1, Sun.Center, null, new Color(255, 193, 0) * (0.25f + 0.01f * SolarFlareProgress), MathHelper.TwoPi * Utility.PositiveTriangleWave(15000), scorch1.Size() / 2f, 2.5f + 0.01f * SolarFlareProgress, SpriteEffects.None, 0);
+            spriteBatch.Draw(scorch2, Sun.Center, null, new Color(255, 193, 0) * (0.2f + 0.01f * SolarFlareProgress), MathHelper.TwoPi * -Utility.PositiveTriangleWave(15000), scorch2.Size() / 2f, 2.5f + 0.01f * SolarFlareProgress, SpriteEffects.None, 0);
             spriteBatch.End();
             spriteBatch.Begin(state1);
+        }
+
+        private void ConfigureBodyShader(CelestialBody celestialBody, CelestialBody lightSource, out Vector3 lightPosition, out float radius, out int pixelSize)
+        {
+            float rotationProgress = Math.Abs(MathHelper.WrapAngle(celestialBody.OrbitRotation + MathHelper.PiOver2)) / MathHelper.Pi;
+            float depth = MathHelper.Lerp(500, -50, Utility.CubicEaseInOut(rotationProgress));
+            lightPosition = new Vector3(lightSource.Center, depth);
+            radius = 0.01f;
+            pixelSize = 1;
         }
 
         private void ConfigureBodyShader(CelestialBody celestialBody, float rotation, out float intensity, out Vector2 offset, out float radius, ref Vector2 shadeResolution)
@@ -355,7 +365,7 @@ namespace Macrocosm.Content.Menus
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, shader, Saturn_GetMatrix(saturn, state.Matrix));
 
             Rectangle sourceRect = new(0, 0, rings.Width(), rings.Height()/2);
-            Vector2 position = saturn.Position;
+            Vector2 position = saturn.Center;
             spriteBatch.Draw(rings.Value, position, sourceRect, Color.White, 0f, new Vector2(sourceRect.Width / 2, sourceRect.Height), saturn.Scale, default, 0f);
 
             spriteBatch.End();
@@ -366,7 +376,7 @@ namespace Macrocosm.Content.Menus
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, shader, Saturn_GetMatrix(saturn, state.Matrix));
 
             Rectangle sourceRect = new(0, rings.Height() / 2, rings.Width(), rings.Height() / 2);
-            Vector2 position = saturn.Position + new Vector2(0, 0);
+            Vector2 position = saturn.Center + new Vector2(0, 0);
             spriteBatch.Draw(rings.Value, position, sourceRect, Color.White, 0f, new Vector2(rings.Height() / 2f, 0), saturn.Scale, default, 0f);
 
             spriteBatch.End();
@@ -375,10 +385,10 @@ namespace Macrocosm.Content.Menus
         private static Matrix Saturn_GetMatrix(CelestialBody saturn, Matrix uiScaleMatrix)
         {
             Matrix transformationMatrix =
-                Matrix.CreateTranslation(-saturn.Position.X, -saturn.Position.Y, 0f) * // Translate to screen origin
+                Matrix.CreateTranslation(-saturn.Center.X, -saturn.Center.Y, 0f) * // Translate to screen origin
                 Matrix.CreateRotationX(MathHelper.Pi * 0.4f * 1) *                     // Apply X skew 
                 Matrix.CreateRotationY(MathHelper.Pi * 0.2f * 1) *                     // Apply Y skew
-                Matrix.CreateTranslation(saturn.Position.X, saturn.Position.Y, 0f) *   // Translate back to original position
+                Matrix.CreateTranslation(saturn.Center.X, saturn.Center.Y, 0f) *   // Translate back to original position
                 Matrix.CreateScale(uiScaleMatrix.M11, uiScaleMatrix.M22, 0f);          // Apply UI scale
             return transformationMatrix;
         }
@@ -397,7 +407,7 @@ namespace Macrocosm.Content.Menus
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, shader, Ouranos_GetMatrix(ouranos, state.Matrix));
 
             Rectangle sourceRect = new(0, 0, rings.Width(), rings.Height() / 2);
-            Vector2 position = ouranos.Position;
+            Vector2 position = ouranos.Center;
             spriteBatch.Draw(rings.Value, position, sourceRect, Color.White, MathHelper.PiOver2, new Vector2(sourceRect.Width / 2, sourceRect.Height), ouranos.Scale * 1f, default, 0f);
 
             spriteBatch.End();
@@ -408,7 +418,7 @@ namespace Macrocosm.Content.Menus
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, shader, Ouranos_GetMatrix(ouranos, state.Matrix));
 
             Rectangle sourceRect = new(0, rings.Height() / 2, rings.Width(), rings.Height() / 2);
-            Vector2 position = ouranos.Position + new Vector2(0, 0);
+            Vector2 position = ouranos.Center + new Vector2(0, 0);
             spriteBatch.Draw(rings.Value, position, sourceRect, Color.White, MathHelper.PiOver2, new Vector2(rings.Height() / 2f, 0), ouranos.Scale * 1f, default, 0f); 
 
             spriteBatch.End();
@@ -417,11 +427,11 @@ namespace Macrocosm.Content.Menus
         private static Matrix Ouranos_GetMatrix(CelestialBody ouranos, Matrix uiScaleMatrix)
         {
             Matrix transformationMatrix =
-                Matrix.CreateTranslation(-ouranos.Position.X, -ouranos.Position.Y, 0f) * // Translate to screen origin
+                Matrix.CreateTranslation(-ouranos.Center.X, -ouranos.Center.Y, 0f) * // Translate to screen origin
                 Matrix.CreateRotationX(MathHelper.Pi * 0.2f) *                           // Apply X skew 
                 Matrix.CreateRotationY(MathHelper.Pi * 0.4f) *                           // Apply Y skew
                 Matrix.CreateRotationZ(MathHelper.Pi * 0.3f) *                           // Apply Z skew
-                Matrix.CreateTranslation(ouranos.Position.X, ouranos.Position.Y, 0f) *   // Translate back to original position
+                Matrix.CreateTranslation(ouranos.Center.X, ouranos.Center.Y, 0f) *   // Translate back to original position
                 Matrix.CreateScale(uiScaleMatrix.M11, uiScaleMatrix.M22, 0f);            // Apply UI scale
             return transformationMatrix;
         }
@@ -452,11 +462,11 @@ namespace Macrocosm.Content.Menus
 
                 float minDistanceFromSun = 160 + Math.Max(grabbed.Width, grabbed.Height);
                 bool forceRelease = false;
-                if (Vector2.Distance(mousePosition, Sun.Position) < minDistanceFromSun)
+                if (Vector2.Distance(mousePosition, Sun.Center) < minDistanceFromSun)
                 {
-                    targetPosition = Vector2.Lerp(grabbed.Position, Sun.Position + (mousePosition - Sun.Position) * minDistanceFromSun, 0.0005f);
+                    targetPosition = Vector2.Lerp(grabbed.Center, Sun.Center + (mousePosition - Sun.Center) * minDistanceFromSun, 0.0005f);
 
-                    if (Vector2.Distance(grabbed.Position, mousePosition) > 80f)
+                    if (Vector2.Distance(grabbed.Center, mousePosition) > 80f)
                         forceRelease = true;
                 }
                 else
@@ -465,7 +475,8 @@ namespace Macrocosm.Content.Menus
                     targetPosition = mousePosition;
                 }
 
-                grabbed.Position = Vector2.Lerp(grabbed.Position, targetPosition, 0.1f);
+                grabbed.Center = Vector2.Lerp(grabbed.Center, targetPosition, 0.1f);
+                grabbed.OrbitRotation = (grabbed.Center - Sun.Center).ToRotation();
 
                 if (!Main.mouseLeft || forceRelease)
                 {
@@ -482,7 +493,7 @@ namespace Macrocosm.Content.Menus
                 released[planet]--;
                 float releaseProgress = released[planet] / 30f;
 
-                Vector2 directionFromSun = planet.Position - Sun.Position;
+                Vector2 directionFromSun = planet.Center - Sun.Center;
                 if (released[kvp.Key] <= 0)
                 {
                     planet.SetOrbitParent(Sun, directionFromSun.Length(), directionFromSun.ToRotation(), planet.OrbitSpeed);
@@ -491,10 +502,9 @@ namespace Macrocosm.Content.Menus
                 }
                 else
                 {
-                    Vector2 movementTarget = planet.Position + new Vector2(500, 0).RotatedBy((Main.MouseScreen - planet.Position).ToRotation());
-                    planet.Position = Vector2.Lerp(planet.Position, movementTarget, 0.01f * releaseProgress);
+                    Vector2 movementTarget = planet.Center + new Vector2(500, 0).RotatedBy(planet.OrbitRotation + MathHelper.PiOver2);
+                    planet.Center = Vector2.Lerp(planet.Center, movementTarget, 0.01f * releaseProgress);
                 }
-
             }
 
             foreach (var cb in toRemove)

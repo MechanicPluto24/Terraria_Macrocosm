@@ -1,5 +1,5 @@
 ﻿using Macrocosm.Common.Storage;
-using Macrocosm.Common.Systems;
+using Macrocosm.Common.Systems.UI;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets;
 using System;
@@ -14,15 +14,6 @@ namespace Macrocosm.Content.Players
 {
     public class InventoryPlayer : ModPlayer
     {
-        // TODO: make this logic more general once we use Inventories is other places
-        /// <summary> The currently active inventory, check for <see cref="CustomInventoryActive"/> beforehand. </summary>
-        public static Inventory ActiveInventory => UISystem.Instance.UIRocketState.Rocket.Inventory;
-
-        /// <summary> Whether there is a custom inventory currently being displayed </summary>
-        public static bool CustomInventoryActive => UISystem.RocketUIActive &&
-            UISystem.Instance.UIRocketState.Rocket is not null &&
-            ActiveInventory is not null;
-
         public override void Load()
         {
             On_Player.QuickStackAllChests += On_Player_QuickStackAllChests;
@@ -40,11 +31,11 @@ namespace Macrocosm.Content.Players
         // Quick store hover icon to custom inventory 
         public override bool HoverSlot(Item[] inventory, int context, int slot)
         {
-            if (CustomInventoryActive && ItemSlot.ShiftInUse && context == ItemSlot.Context.InventoryItem)
+            if (Inventory.CustomInventoryActive && ItemSlot.ShiftInUse && context == ItemSlot.Context.InventoryItem)
             {
                 Item item = inventory[slot];
 
-                if (ActiveInventory.TryPlacingItem(item, justCheck: true))
+                if (Inventory.ActiveInventory.TryPlacingItem(item, justCheck: true))
                     Main.cursorOverride = CursorOverrideID.InventoryToChest;
 
                 return true;
@@ -56,10 +47,10 @@ namespace Macrocosm.Content.Players
         // Shift click to custom inventory
         public override bool ShiftClickSlot(Item[] inventory, int context, int slot)
         {
-            if (CustomInventoryActive && ItemSlot.ShiftInUse && context == ItemSlot.Context.InventoryItem)
+            if (Inventory.CustomInventoryActive && ItemSlot.ShiftInUse && context == ItemSlot.Context.InventoryItem)
             {
                 Item item = inventory[slot];
-                if (ActiveInventory.TryPlacingItem(item))
+                if (Inventory.ActiveInventory.TryPlacingItem(item))
                     return true;
             }
 
@@ -97,7 +88,7 @@ namespace Macrocosm.Content.Players
             bool sortRanOnPlayerInventory = ignoreSlots.Distinct().OrderBy(n => n).Take(10).SequenceEqual(Enumerable.Range(0, 10));
 
             // Don't sort it if a custom inventory is currently active
-            if (CustomInventoryActive && sortRanOnPlayerInventory)
+            if (Inventory.CustomInventoryActive && sortRanOnPlayerInventory)
                 return;
 
             orig(inv, ignoreSlots);
@@ -106,10 +97,10 @@ namespace Macrocosm.Content.Players
         // If a custom inventory is currently active, apply the on-sort glow on the custom inventory instead
         private void On_ItemSlot_SetGlow(On_ItemSlot.orig_SetGlow orig, int index, float hue, bool chest)
         {
-            if (CustomInventoryActive)
+            if (Inventory.CustomInventoryActive)
             {
-                if (index < ActiveInventory.Items.Length)
-                    ActiveInventory.SetGlow(index, 300, hue);
+                if (index < Inventory.ActiveInventory.Items.Length)
+                    Inventory.ActiveInventory.SetGlow(index, 300, hue);
 
                 return;
             }

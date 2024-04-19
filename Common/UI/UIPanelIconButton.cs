@@ -4,7 +4,11 @@ using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System;
+using System.Configuration;
 using Terraria;
+using Terraria.GameContent.UI.Elements;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.UI;
 
@@ -25,6 +29,8 @@ namespace Macrocosm.Common.UI
 
         private Asset<Texture2D> backPanelTexture;
         private Asset<Texture2D> backPanelBorderTexture;
+
+        private UIText uIText;
 
         public UIPanelIconButton() : this(Macrocosm.EmptyTex) { }
 
@@ -67,13 +73,27 @@ namespace Macrocosm.Common.UI
             Height = height;
         }
 
+        public Func<CalculatedStyle, Vector2> GetIconPosition { get; set; } = (dimensions) => dimensions.Center();
+
+        public void SetText(LocalizedColorScaleText text, float align = 0.5f)
+        {
+            if (uIText is not null && HasChild(uIText))
+                RemoveChild(uIText);
+
+            uIText = text.ProvideUIText();
+            uIText.HAlign = align;
+            uIText.VAlign = 0.5f;
+
+            Append(uIText);
+        }
+
         SpriteBatchState state;
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
             bool interactible = CheckInteractible();
 
             CalculatedStyle dimensions = GetDimensions();
-            Vector2 position = dimensions.Position() + new Vector2(dimensions.Width, dimensions.Height) / 2f;
+            Vector2 position = dimensions.Center(); ;
 
             Color backPanelBorderColor = BackPanelBorderColor * (IsMouseHovering && CheckInteractible() ? visibilityHover : visibilityInteractible);
             Color backPanelColor;
@@ -94,7 +114,7 @@ namespace Macrocosm.Common.UI
             if ((IsMouseHovering || (HasFocus && DrawBorderIfInFocus) || remoteInteractionFeedbackTicks > 0) && interactible)
                 spriteBatch.Draw(borderTexture.Value, position, null, BackPanelHoverBorderColor, 0f, borderTexture.Size() / 2f, 1f, SpriteEffects.None, 0f);
 
-            DrawIcon(spriteBatch, position, interactible);
+            DrawIcon(spriteBatch, GetIconPosition(dimensions), interactible);
         }
 
         private void DrawIcon(SpriteBatch spriteBatch, Vector2 position, bool interactible)

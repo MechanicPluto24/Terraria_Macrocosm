@@ -15,6 +15,9 @@ namespace Macrocosm.Content.Sounds
         public static readonly SoundStyle HandheldThrusterFlame = new(SFXPath + "HandheldThrusterFlame");
         public static readonly SoundStyle HandheldThrusterOverheat = new(SFXPath + "HandheldThrusterOverheat");
         public static readonly SoundStyle DesertEagleShoot = new(SFXPath + "DesertEagleShoot");
+        public static readonly SoundStyle RocketLoop = new(SFXPath + "RocketLoop");
+        public static readonly SoundStyle RocketLaunch = new(SFXPath + "RocketLaunch");
+        public static readonly SoundStyle RocketLandingLeg = new(SFXPath + "RocketLandingLeg");
 
     }
 }

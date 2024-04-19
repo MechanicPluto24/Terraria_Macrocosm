@@ -25,12 +25,8 @@ namespace Macrocosm.Common.Systems
             mapTileColorLookupBySubworld = null;
         }
 
-        public override void ClearWorld()
-        {
-            if (!SubworldSystem.AnyActive<Macrocosm>())
-                RestoreMapTileColors();
-        }
-
+        // Currently not working, do we even want this? 
+        /*
         // Apply map color modifications to vanilla tiles. 
         // At PostSetupContent, the map colors for any modded tiles are not yet populated!
         public override void PostSetupContent()
@@ -40,6 +36,19 @@ namespace Macrocosm.Common.Systems
             vanillaColorLookup[TileID.LunarOre] = new Color(104, 202, 163);
 
             typeof(MapHelper).SetFieldValue("colorLookup", vanillaColorLookup);
+        }
+        */
+
+        public static Color[] GetMapColorLookup()
+        {
+            MacrocosmSubworld subworld = MacrocosmSubworld.Current;
+            if (subworld is not null && mapTileColorLookupBySubworld.TryGetValue(subworld.ID, out Color[] subworldMapTileColorLookup))
+            {
+                return subworldMapTileColorLookup;
+            }
+
+            defaultColorLookup ??= (Color[])typeof(MapHelper).GetFieldValue("colorLookup");
+            return defaultColorLookup;
         }
 
         /// <summary> 

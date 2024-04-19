@@ -69,9 +69,9 @@ namespace Macrocosm.Content.Backgrounds.Moon
 
             earth.SetParallax(0.01f, 0.12f, new Vector2(0f, -200f));
 
-            earth.SetLightSource(sun);
-            earth.ConfigureBackShader = ConfigureEarthShader;
-            earth.ConfigureBodyShader = ConfigureEarthShader;
+            earth.SetLighting(sun);
+            earth.ConfigureBackRadialShader = ConfigureEarthAtmoShader;
+            earth.ConfigureBodySphericalShader = ConfigureEarthBodyShader;
 
             nebulaYellow = ModContent.Request<Texture2D>(AssetPath + "NebulaYellow");
             nebulaRinged = ModContent.Request<Texture2D>(AssetPath + "NebulaRinged");
@@ -172,12 +172,12 @@ namespace Macrocosm.Content.Backgrounds.Moon
         {
             if (Utility.IsAprilFools())
             {
-                earth.SetLightSource(null);
+                earth.SetLighting(null);
                 earth.SetTextures(earthBodyFlat);
             }
             else
             {
-                earth.SetLightSource(sun);
+                earth.SetLighting(sun);
 
                 if (Main.drunkWorld)
                     earth.SetTextures(earthBodyDrunk, earthAtmo);
@@ -209,16 +209,37 @@ namespace Macrocosm.Content.Backgrounds.Moon
             return brightness;
         }
 
-        private void ConfigureEarthShader(CelestialBody earth, float rotation, out float intensity, out Vector2 offset, out float radius, ref Vector2 shadeResolution)
+        private void ConfigureEarthBodyShader(CelestialBody celestialBody, CelestialBody lightSource, out Vector3 lightPosition, out float radius, out int pixelSize) 
+        {
+            float distanceFactor;
+            float depth;
+            if (Main.dayTime)
+            {
+                distanceFactor = MathHelper.Clamp(Vector2.Distance(celestialBody.Center, lightSource.Center) / Math.Max(celestialBody.Width * 2, celestialBody.Height * 2), 0, 1);
+                depth = MathHelper.Lerp(-60, 400, Utility.QuadraticEaseIn(distanceFactor));
+                lightPosition = new Vector3(Utility.ClampOutsideCircle(lightSource.Center, celestialBody.Center, earth.Width / 2 * 2), depth);
+                radius = 0.1f;
+            }
+            else
+            {
+                distanceFactor = MathHelper.Clamp(Vector2.Distance(celestialBody.Center, lightSource.Center) / Math.Max(celestialBody.Width * 2, celestialBody.Height * 2), 0, 1);
+                depth = MathHelper.Lerp(400, 5000, 1f - Utility.QuadraticEaseOut(distanceFactor));
+                lightPosition = new Vector3(Utility.ClampOutsideCircle(lightSource.Center, celestialBody.Center, earth.Width / 2 * 2), depth);
+                radius = 0.01f;
+            }
+
+            pixelSize = 1;
+        }
+
+        private void ConfigureEarthAtmoShader(CelestialBody earth, float rotation, out float intensity, out Vector2 offset, out float radius, ref Vector2 shadeResolution)
         {
             Vector2 screenSize = Main.ScreenSize.ToVector2();
-            float distance = Vector2.Distance(earth.Position / screenSize, earth.LightSource.Position / screenSize);
+            float distance = Vector2.Distance(earth.Center / screenSize, earth.LightSource.Center / screenSize);
             float offsetRadius = MathHelper.Lerp(0.12f, 0.56f, 1 - distance);
 
             if (!Main.dayTime)
             {
                 offsetRadius = MathHelper.Lerp(0.56f, 0.01f, 1 - distance);
-                rotation += MathHelper.Pi;
             }
             else
             {

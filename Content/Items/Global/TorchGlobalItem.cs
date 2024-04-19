@@ -1,3 +1,4 @@
+using Macrocosm.Common.Utils;
 using SubworldLibrary;
 using System.Collections.Generic;
 using Terraria;
@@ -8,33 +9,28 @@ namespace Macrocosm.Content.Items.Global
 {
     public class TorchGlobalItem : GlobalItem
     {
-        /// <summary> Returns whether the provided item type is a torch </summary>
-        public static bool IsTorch(int itemId) => ItemID.Sets.Torches[itemId];
-
-        /// <summary> Returns whether the provided item instance is a torch </summary>
-        public static bool IsTorch(Item item) => IsTorch(item.type);
         public static bool HasFlame(Item item) => flameItems.Contains(item.type);
 
         private static readonly List<int> flameItems = new();
 
-        public override void Load()
+        public override void SetStaticDefaults()
         {
-            // add all vanilla items that have a flame to the list
+            // Add all vanilla items that have a flame to the list
             for (int type = 0; type < ItemID.Count; type++)
             {
-                Item item = new(type); // this calls SetDefaults
+                Item item = ContentSamples.ItemsByType[type];
 
-                // this excludes non-torch items like the NightGlow
-                if (item.flame && IsTorch(item))
+                // This excludes non-torch items like the NightGlow
+                if (item.flame && item.IsTorch())
                     flameItems.Add(type);
             }
         }
 
         public override void HoldItem(Item item, Player player)
         {
-            // whenever holding an item that initially had a flame,
+            // Whenever holding an item that initially had a flame,
             // disable it if a subworld, otherwise set it back 
-            if (HasFlame(item) && IsTorch(item))
+            if (HasFlame(item) && Utility.IsTorch(item))
                 item.flame = !SubworldSystem.AnyActive<Macrocosm>();
         }
     }

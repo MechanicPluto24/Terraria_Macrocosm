@@ -19,7 +19,7 @@ public class UIItemDropInfo : UIPanel
     private readonly Item infoDisplayItem;
     private readonly bool hideMouseOver = false;
 
-    private readonly UICustomItemIcon itemIcon;
+    private readonly UIInventoryItemIcon itemIcon;
     private readonly UITextPanel<string> textPanel;
 
     public int OrderInUIList { get; set; }

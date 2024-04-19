@@ -20,14 +20,13 @@ namespace Macrocosm.Content.Items.Materials.Tech
             Item.value = 100;
             Item.rare = ItemRarityID.Green;
             Item.material = true;
-
         }
 
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient<SteelBar>(5)
-                .AddIngredient<AluminumBar>(10)
+                .AddIngredient<SteelBar>(1)
+                .AddIngredient<AluminumBar>(8)
                 .AddTile<Tiles.Crafting.Fabricator>()
                 .Register();
         }

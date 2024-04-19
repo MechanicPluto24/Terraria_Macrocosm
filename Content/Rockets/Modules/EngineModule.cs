@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Items.Materials.Tech;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -20,12 +21,16 @@ namespace Macrocosm.Content.Rockets.Modules
         public override int Width => 120;
         public override int Height => 302 + (RearLandingLegRaised ? 18 : 26);
 
-        public EngineModule(Rocket rocket) : base(rocket)
+        public override AssemblyRecipe Recipe { get; } = new AssemblyRecipe()
         {
-        }
+            new(ModContent.ItemType<RocketPlating>(), 45),
+            new(ModContent.ItemType<FuelTank>(), 15),
+            new(ModContent.ItemType<EngineComponent>(), 4),
+            new(ModContent.ItemType<LandingGear>(), 3)
+        };
 
         private SpriteBatchState state1, state2;
-        public override void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 position)
+        public override void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 position, bool inWorld)
         {
             state1.SaveState(spriteBatch, true);
             spriteBatch.End();
@@ -37,7 +42,7 @@ namespace Macrocosm.Content.Rockets.Modules
             Texture2D rearLandingLeg = ModContent.Request<Texture2D>(TexturePath + "_LandingLeg", AssetRequestMode.ImmediateLoad).Value;
             Vector2 drawPos = position + new Vector2(Texture.Width / 2f - rearLandingLeg.Width / 2f, 314f);
 
-            if (RocketManager.Rockets.Contains(rocket))
+            if (inWorld)
                 lightColor = Lighting.GetColor((drawPos + Main.screenPosition).ToTileCoordinates());
 
             spriteBatch.Draw(rearLandingLeg, drawPos, rearLandingLeg.Frame(1, base.NumberOfFrames, frameY: CurrentFrame), lightColor);
@@ -47,7 +52,7 @@ namespace Macrocosm.Content.Rockets.Modules
             spriteBatch.Draw(boosterRear, position + new Vector2(Texture.Width / 2f - boosterRear.Width / 2f, 294f), null, lightColor, 0f, Origin, 1f, SpriteEffects.None, 0f);
 
             // Draw the exhaust trail 
-            if (rocket.StaticFire || rocket.InFlight || rocket.ForcedFlightAppearance)
+            if (rocket.StaticFire || rocket.InFlight || rocket.ForcedFlightAppearance || rocket.Landing)
             {
                 spriteBatch.End();
                 spriteBatch.Begin(BlendState.Additive, state1);
@@ -57,6 +62,10 @@ namespace Macrocosm.Content.Rockets.Modules
 
                 if (rocket.InFlight || rocket.ForcedFlightAppearance)
                     DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(rocket.FlightProgress, 0f, 0.1f) * 10f));
+
+                if (rocket.Landing)
+                    DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(rocket.LandingProgress, 0f, 0.1f) * 10f));
+
             }
 
             spriteBatch.End();

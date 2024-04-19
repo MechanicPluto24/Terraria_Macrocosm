@@ -1,3 +1,4 @@
+using Macrocosm.Common.Bases.Items;
 using Macrocosm.Content.Items.Blocks;
 using Terraria;
 using Terraria.ID;
@@ -5,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Furniture.MoonBase
 {
-    public class MoonBaseChest : ModItem
+    public class MoonBaseChest : ModItem, IChest
     {
         public override void SetDefaults()
         {

@@ -64,7 +64,7 @@ namespace Macrocosm.Content.LoadingScreens
 
         public void SetTargetWorld(string targetWorld)
         {
-            targetWorld = MacrocosmSubworld.SanitizeID(targetWorld);
+            targetWorld = MacrocosmSubworld.SanitizeID(targetWorld, out _);
 
             switch (targetWorld)
             {

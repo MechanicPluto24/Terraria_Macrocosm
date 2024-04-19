@@ -2,6 +2,7 @@
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
@@ -17,6 +18,8 @@ namespace Macrocosm.Content.Rockets.LaunchPads
     {
         private static Dictionary<string, List<LaunchPad>> launchPadStorage;
 
+        public static event EventHandler OnLaunchpadCreation;
+
         public override void Load()
         {
             launchPadStorage = new Dictionary<string, List<LaunchPad>>();
@@ -28,7 +31,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
             launchPadStorage = null;
         }
 
-        public static void Add(string subworldId, LaunchPad launchPad)
+        public static void Add(string subworldId, LaunchPad launchPad, bool notify = true)
         {
             if (launchPadStorage.ContainsKey(subworldId))
             {
@@ -38,6 +41,9 @@ namespace Macrocosm.Content.Rockets.LaunchPads
             {
                 launchPadStorage.Add(subworldId, new() { launchPad });
             }
+
+            if (notify)
+                OnLaunchpadCreation?.Invoke(null, new());
         }
 
         public static void Remove(string subworldId, LaunchPad launchPad, bool shouldSync = true)
@@ -131,7 +137,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
                     if (!launchPad.Active)
                     {
-                        launchPad.Inventory?.DropAllItems(launchPad.Position);
+                        launchPad.Inventory?.DropAllItems(launchPad.CenterWorld);
                         launchPadStorage[MacrocosmSubworld.CurrentID].RemoveAt(i);
                         i--;
                     }

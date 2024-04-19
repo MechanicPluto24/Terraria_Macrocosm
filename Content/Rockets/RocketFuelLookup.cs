@@ -21,8 +21,8 @@ namespace Macrocosm.Content.Rockets
 
         public static float GetFuelCost(string location, string destination)
         {
-            location = MacrocosmSubworld.SanitizeID(location);
-            destination = MacrocosmSubworld.SanitizeID(destination);
+            location = MacrocosmSubworld.SanitizeID(location, out _);
+            destination = MacrocosmSubworld.SanitizeID(destination, out _);
 
             string key = location + "_" + destination;
 

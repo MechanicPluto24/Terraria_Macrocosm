@@ -1,7 +1,7 @@
 ﻿using Macrocosm.Common.Debugging;
 using Macrocosm.Common.Debugging.Stats;
 using Macrocosm.Common.Netcode;
-using Macrocosm.Common.Systems;
+using Macrocosm.Common.Systems.UI;
 using Macrocosm.Content.Rockets;
 using Terraria;
 using Terraria.ModLoader;

@@ -18,10 +18,6 @@ namespace Macrocosm.Content.Rockets.Modules
 
         private SpriteBatchState state1, state2;
 
-        protected Booster(Rocket rocket) : base(rocket)
-        {
-        }
-
         public override void Draw(SpriteBatch spriteBatch, Vector2 position)
         {
             // Draw the booster module with the base logic
@@ -38,11 +34,11 @@ namespace Macrocosm.Content.Rockets.Modules
             spriteBatch.Begin(state1);
         }
 
-        public override void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 position)
+        public override void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 position, bool inWorld)
         {
             state2.SaveState(spriteBatch, true);
 
-            if (rocket.StaticFire || rocket.InFlight || rocket.ForcedFlightAppearance)
+            if (rocket.StaticFire || rocket.InFlight || rocket.ForcedFlightAppearance || rocket.Landing)
             {
                 spriteBatch.End();
                 spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, state2);
@@ -52,6 +48,9 @@ namespace Macrocosm.Content.Rockets.Modules
 
                 if (rocket.InFlight || rocket.ForcedFlightAppearance)
                     DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(rocket.FlightProgress, 0f, 0.1f) * 10f));
+
+                if (rocket.Landing)
+                    DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(rocket.LandingProgress, 0f, 0.1f) * 10f));
 
                 spriteBatch.End();
                 spriteBatch.Begin(state2);

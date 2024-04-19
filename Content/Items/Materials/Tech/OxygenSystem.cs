@@ -26,18 +26,10 @@ namespace Macrocosm.Content.Items.Materials.Tech
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient<OxygenTank>(2)
+                .AddIngredient<Plastic>(10)
+                .AddIngredient(ItemID.TinBar, 5)
+                .AddIngredient<OxygenTank>(4)
                 .AddIngredient<PrintedCircuitBoard>()
-                .AddIngredient<Plastic>(3)
-                .AddIngredient(ItemID.CopperBar, 10)
-                .AddTile<Tiles.Crafting.Fabricator>()
-                .Register();
-
-            CreateRecipe()
-                .AddIngredient<OxygenTank>(2)
-                .AddIngredient<PrintedCircuitBoard>()
-                .AddIngredient<Plastic>(3)
-                .AddIngredient(ItemID.TinBar, 10)
                 .AddTile<Tiles.Crafting.Fabricator>() 
                 .Register();
         }
