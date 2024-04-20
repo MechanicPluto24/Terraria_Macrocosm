@@ -11,7 +11,7 @@ namespace Macrocosm.Content.Items.Crafting
 
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Crafting.OilRefinery>());
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Crafting.Fabricator>());
             Item.width = 48;
             Item.height = 50;
             Item.value = 500;

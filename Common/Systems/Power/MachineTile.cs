@@ -9,8 +9,8 @@ namespace Macrocosm.Common.Systems.Power
 
         public abstract MachineTE MachineTE { get; }
 
-        public virtual bool IsOperating(int i, int j) => false;
-        public virtual bool GetPowerState(int i, int j) => false;
-        public virtual void TogglePowerState(int i, int j) { }
+        public virtual bool IsPoweredUpFrame(int i, int j) => false;
+        public virtual bool IsOperatingFrame(int i, int j) => IsPoweredUpFrame(i, j);
+        public virtual void TogglePowerStateFrame(int i, int j) { }
     }
 }

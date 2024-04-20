@@ -1,3 +1,4 @@
+using Macrocosm.Common.Bases.Items;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Materials.Bars;
 using Macrocosm.Content.Items.Materials.Ores;
@@ -10,18 +11,12 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Materials.Tech
 {
-    public class FuelTank : ModItem
+    public class FuelTank : ModItem, IFillableContainer
     {
         private Asset<Texture2D> fillTexture;
 
-        public override void Load()
-        {
-            fillTexture = ModContent.Request<Texture2D>(Texture + "_Fill");
-        }
-
         public bool Full => fill >= 1;
         public bool Empty => fill <= 0;
-
 
         private float fill;
         public float Fill
@@ -43,7 +38,7 @@ namespace Macrocosm.Content.Items.Materials.Tech
             Item.value = 100;
             Item.rare = ItemRarityID.LightRed;
             Item.material = true;
-            fill = Main.rand.NextFloat(1f);
+            fill = 0;
         }
 
         public override void AddRecipes()
@@ -87,12 +82,12 @@ namespace Macrocosm.Content.Items.Materials.Tech
         {
             int y = fill switch
             {
-                <= 0f => 36,
-                > 0f and < 0.2f => 34,
+                <= 0f              => 36,
+                >  0f   and < 0.2f => 34,
                 >= 0.2f and < 0.6f => 30,
                 >= 0.6f and < 0.8f => 26,
-                >= 0.8f and < 1f => 22,
-                _ => 18,
+                >= 0.8f and < 1f   => 22,
+                _                  => 18,
             };
             return new(0, y, fillTexture.Width(), fillTexture.Height());
         }

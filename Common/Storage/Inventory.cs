@@ -168,6 +168,12 @@ namespace Macrocosm.Common.Storage
             {
                 for (int i = 0; i < Size; i++)
                 {
+                    if (!uiItemSlots[i].CanInteract)
+                        continue;
+
+                    if (uiItemSlots[i].ReservedCheck(item))
+                        continue;
+
                     if (items[i].stack >= items[i].maxStack || item.type != items[i].type)
                         continue;
 
@@ -216,6 +222,12 @@ namespace Macrocosm.Common.Storage
             {
                 for (int j = 0; j < Size; j++)
                 {
+                    if (!uiItemSlots[j].CanInteract)
+                        continue;
+
+                    if (!uiItemSlots[j].ReservedCheck(item))
+                        continue;
+
                     if (items[j].stack != 0)
                         continue;
 
@@ -249,7 +261,7 @@ namespace Macrocosm.Common.Storage
             Player player = Main.LocalPlayer;
             for (int i = 0; i < Size; i++)
             {
-                if (items[i].type > ItemID.None)
+                if (items[i].type > ItemID.None && uiItemSlots[i].CanInteract)
                 {
                     items[i].position = player.Center;
                     items[i] = player.GetItem(Main.myPlayer, items[i], GetItemSettings.LootAllSettingsRegularChest);
@@ -275,6 +287,9 @@ namespace Macrocosm.Common.Storage
                     {
                         for (int i = 0; i < Size; i++)
                         {
+                            if (!uiItemSlots[i].CanInteract)
+                                continue;
+
                             if (items[i].stack >= items[i].maxStack || player.inventory[slot].type != items[i].type)
                                 continue;
 
@@ -306,6 +321,9 @@ namespace Macrocosm.Common.Storage
                     {
                         for (int i = 0; i < Size; i++)
                         {
+                            if (!uiItemSlots[i].CanInteract)
+                                continue;
+
                             if (items[i].stack == 0)
                             {
                                 SoundEngine.PlaySound(SoundID.Grab);
@@ -343,7 +361,7 @@ namespace Macrocosm.Common.Storage
 
             for (int i = 0; i < Size; i++)
             {
-                if (items[i].type > ItemID.None && items[i].stack > 0 && (items[i].type < ItemID.CopperCoin || items[i].type > ItemID.PlatinumCoin))
+                if (items[i].type > ItemID.None && items[i].stack > 0 && (items[i].type < ItemID.CopperCoin || items[i].type > ItemID.PlatinumCoin) && uiItemSlots[i].CanInteract)
                 {
                     itemIndexes.Add(i);
                     itemTypes.Add(items[i].netID);
@@ -490,6 +508,9 @@ namespace Macrocosm.Common.Storage
             bool successfulTransfer = false;
             for (int i = 0; i < Size; i++)
             {
+                if (!uiItemSlots[i].CanInteract)
+                    continue;
+
                 if (items[i].stack < 1 || !foundItemIds.Contains(items[i].netID))
                     continue;
 

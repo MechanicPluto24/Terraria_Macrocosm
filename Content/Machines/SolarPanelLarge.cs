@@ -15,10 +15,6 @@ namespace Macrocosm.Content.Machines
         public override short Height => 4;
         public override MachineTE MachineTE => ModContent.GetInstance<SolarPanelLargeTE>();
 
-        public override bool IsOperating(int i, int j) => false;
-        public override bool GetPowerState(int i, int j) => false;
-        public override void TogglePowerState(int i, int j) { }
-
         public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
@@ -53,8 +49,7 @@ namespace Macrocosm.Content.Machines
 
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
+            ModContent.GetInstance<SolarPanelLargeTE>().Kill(i, j);
         }
-
     }
-
 }

@@ -318,10 +318,6 @@ Fabricator
 	Value: 5 silver
 	Research count: 1
 
-OilRefinery
-	Value: 5 silver
-	Research count: 1
-
 TitaniumLoom
 	Value: 5 silver
 	Research count: 1
@@ -496,14 +492,6 @@ MoonBaseSofa
 		Work Bench
 
 
-SolarPanelLarge
-	Value: 5 silver
-	Research count: 1
-
-SolarPanelSmall
-	Value: 5 silver
-	Research count: 1
-
 SpaceTeddy
 	Value: 5 silver
 	Research count: 1
@@ -536,7 +524,19 @@ VortexChunk
 	Value: 5 silver
 	Research count: 10
 
+OilRefinery
+	Value: 5 silver
+	Research count: 1
+
 OreExcavator
+	Value: 5 silver
+	Research count: 1
+
+SolarPanelLarge
+	Value: 5 silver
+	Research count: 1
+
+SolarPanelSmall
 	Value: 5 silver
 	Research count: 1
 
@@ -924,6 +924,10 @@ WhenDayBreaks
 CraterDemonPet
 	Value: No value
 	Research count: 1
+
+CopperWire
+	Value: 10 copper
+	Research count: 100
 
 CraterDemonRelic
 	Value: 5 gold

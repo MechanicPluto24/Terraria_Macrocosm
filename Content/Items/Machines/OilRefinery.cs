@@ -1,7 +1,7 @@
 ﻿using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Crafting
+namespace Macrocosm.Content.Items.Machines
 {
     public class OilRefinery : ModItem
     {
@@ -11,7 +11,7 @@ namespace Macrocosm.Content.Items.Crafting
 
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Crafting.OilRefinery>());
+            Item.DefaultToPlaceableTile(ModContent.TileType<Content.Machines.OilRefinery>());
             Item.width = 42;
             Item.height = 32;
             Item.value = 500;

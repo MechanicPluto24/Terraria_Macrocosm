@@ -47,7 +47,7 @@ namespace Macrocosm.Common.UI
         private Asset<Texture2D> slotFavoritedTexture;
         private Color slotFavoritedColor;
 
-
+        public bool CanInteract { get; set; } = true;
         public bool CanTrash { get; set; } = false;
         public bool CanFavorite { get; set; } = false;
         protected Vector2 DrawOffset { get; set; } = new Vector2(52f, 52f) * -0.5f;
@@ -110,15 +110,23 @@ namespace Macrocosm.Common.UI
 
         public void ClearGlow() => glowTime = 0;
 
-        public void AddReserved(Func<Item, bool> checkReserved, LocalizedText reservedTooltip, Asset<Texture2D> reservedTexture = null)
+        public void AddReserved(Func<Item, bool> checkReserved, LocalizedText reservedTooltip = null, Asset<Texture2D> reservedTexture = null)
         {
             this.checkReserved = checkReserved;
             this.reservedTooltip = reservedTooltip;
             this.reservedTexture = reservedTexture;
         }
 
-        public void AddReserved(int itemType, LocalizedText reservedTooltip, Asset<Texture2D> reservedTexture = null) 
+        public void AddReserved(int itemType, LocalizedText reservedTooltip = null, Asset<Texture2D> reservedTexture = null) 
             => AddReserved((item) => item.type == itemType, reservedTooltip, reservedTexture);
+
+        public void Consume(int amount)
+        {
+            Item.stack -= amount;
+
+            if (Item.stack <= 0)
+                Item.TurnToAir();
+        }
 
         protected virtual void HandleItemSlotLogic()
         {
@@ -212,7 +220,10 @@ namespace Macrocosm.Common.UI
                 return;
             }
 
-            if (Main.mouseItem.type != ItemID.None && checkReserved is not null && !checkReserved(Main.mouseItem))
+            if (!CanInteract)
+                return;
+
+            if (!ReservedCheck(Main.mouseItem))
                 return;
 
             if (!(Main.mouseItem.maxStack > 1 && item.type == Main.mouseItem.type && item.stack != item.maxStack && Main.mouseItem.stack != Main.mouseItem.maxStack))
@@ -249,6 +260,14 @@ namespace Macrocosm.Common.UI
 
             if (Main.netMode == NetmodeID.MultiplayerClient)
                 shouldNetsync = true;
+        }
+
+        public bool ReservedCheck(Item item)
+        {
+            if (item.type != ItemID.None && checkReserved is not null)
+                return checkReserved(item);
+
+            return true;
         }
 
         private void HandleRightClick(ref Item item)
