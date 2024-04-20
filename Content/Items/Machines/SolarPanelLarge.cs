@@ -1,11 +1,7 @@
 ﻿using Terraria;
 using Terraria.ModLoader;
 
-<<<<<<<< HEAD:Content/Items/Machines/SolarPanelLarge.cs
 namespace Macrocosm.Content.Items.Machines
-========
-namespace Macrocosm.Content.Items.Furniture
->>>>>>>> master:Content/Items/Furniture/SolarPanelLarge.cs
 {
     public class SolarPanelLarge : ModItem
     {

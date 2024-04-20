@@ -23,7 +23,7 @@ namespace Macrocosm.Common.Systems.Power
             BackgroundColor = UITheme.Current.TabStyle.BackgroundColor;
             BorderColor = UITheme.Current.WindowStyle.BorderColor;
             SetPadding(6f);
-            PaddingTop = 40f;
+            PaddingTop = 42f;
 
             LocalizedText text = Language.GetOrRegister
             (
@@ -36,7 +36,7 @@ namespace Macrocosm.Common.Systems.Power
                 IsWrapped = false,
                 HAlign = 0.5f,
                 VAlign = 0.035f,
-                Top = new(-38, 0),
+                Top = new(-42, 0),
                 TextColor = Color.White
             };
 

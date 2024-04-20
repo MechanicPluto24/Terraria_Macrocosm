@@ -8,6 +8,8 @@ using Terraria.ModLoader.IO;
 using System.Linq;
 using System;
 using System.Collections.Generic;
+using Terraria.UI.Chat;
+using Terraria.GameContent;
 
 namespace Macrocosm.Common.Systems.Power
 {
@@ -217,6 +219,9 @@ namespace Macrocosm.Common.Systems.Power
                     }
                 }
             }
+
+            DebugDrawMachines(spriteBatch);
+
             spriteBatch.End();
         }
 
@@ -236,6 +241,20 @@ namespace Macrocosm.Common.Systems.Power
                     break;
             }
             return color;
+        }
+
+        private void DebugDrawMachines(SpriteBatch spriteBatch)
+        {
+            foreach(var kvp in TileEntity.ByID)
+            {
+                if(kvp.Value is MachineTE machine)
+                {
+                    string activePower = machine.ActivePower.ToString();
+                    string maxPower = machine.GeneratedPower > 0 ? machine.GeneratedPower.ToString() : machine.ConsumedPower.ToString();
+                    Vector2 position = machine.Position.ToWorldCoordinates() - new Vector2(8, 16 + 8) - Main.screenPosition;
+                    ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, $"{activePower}/{maxPower}", position, Color.White, 0f, Vector2.Zero, Vector2.One);
+                }
+            }
         }
     }
 }

@@ -25,7 +25,6 @@ namespace Macrocosm.Content.Machines
     public class OreExcavatorTE : MachineTE, IInventoryOwner
     {
         public override MachineTile MachineTile => ModContent.GetInstance<OreExcavator>();
-        public override bool Operating => MachineTile.IsOperating(Position.X, Position.Y);
 
         public SimpleLootTable Loot { get; set; }
         protected virtual int OreGenerationRate => 60;
@@ -33,6 +32,7 @@ namespace Macrocosm.Content.Machines
         public Inventory Inventory { get; set; }
         protected virtual int InventorySize => 50;
         public Vector2 InventoryItemDropLocation => Position.ToVector2() * 16 + new Vector2(MachineTile.Width, MachineTile.Height) * 16 / 2;
+
 
         protected int checkTimer;
         protected List<int> blacklistedIds = null;
@@ -62,8 +62,12 @@ namespace Macrocosm.Content.Machines
         {
             blacklistedIds = Loot.BlacklistableEntries.Where((entry) => entry.Blacklisted).Select((entry) => entry.ItemID).ToList();
 
+            ConsumedPower = 1f;
+
             if (Operating)
+            {
                 checkTimer++;
+            }
 
             if (checkTimer >= OreGenerationRate)
             {

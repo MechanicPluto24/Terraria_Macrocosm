@@ -70,11 +70,10 @@ namespace Macrocosm.Content.Machines
             AddMapEntry(new Color(206, 117, 44), CreateMapEntryName());
         }
 
-        public override bool GetPowerState(int i, int j) => Main.tile[i, j].TileFrameY >= (Height * 16) * 1;
+        public override bool IsPoweredUpFrame(int i, int j) => Main.tile[i, j].TileFrameY >= (Height * 16) * 1;
+        public override bool IsOperatingFrame(int i, int j) => Main.tile[i, j].TileFrameY >= (Height * 16) * 2;
 
-        public override bool IsOperating(int i, int j) => Main.tile[i, j].TileFrameY >= (Height * 16) * 2;
-
-        public override void TogglePowerState(int i, int j)
+        public override void TogglePowerStateFrame(int i, int j)
         {
             Point16 origin = Utility.GetMultitileTopLeft(i, j);
             for (int x = origin.X; x < origin.X + Width; x++)
@@ -82,12 +81,10 @@ namespace Macrocosm.Content.Machines
                 for (int y = origin.Y; y < origin.Y + Height; y++)
                 {
                     Tile tile = Main.tile[x, y];
-                    if (GetPowerState(x, y))
-                        tile.TileFrameY -= (short)(Height * 16 * (IsOperating(x, y) ? 2 : 1));
+                    if (IsPoweredUpFrame(x, y))
+                        tile.TileFrameY -= (short)(Height * 16 * (IsOperatingFrame(x, y) ? 2 : 1));
                     else
                         tile.TileFrameY += (short)(Height * 16);
-
-                    //TODO: exclude other tiles of the multitile
                 }
             }
 
@@ -104,9 +101,9 @@ namespace Macrocosm.Content.Machines
                 {
                     Tile tile = Main.tile[x, y];
 
-                    if (GetPowerState(x, y))
+                    if (IsPoweredUpFrame(x, y))
                     {
-                        if (IsOperating(x, y))
+                        if (IsOperatingFrame(x, y))
                             tile.TileFrameY -= (short)(Height * 16);
                         else
                             tile.TileFrameY += (short)(Height * 16);
@@ -140,9 +137,9 @@ namespace Macrocosm.Content.Machines
                     for (int y = origin.Y; y < origin.Y + Height; y++)
                     {
                         Tile tile = Main.tile[x, y];
-                        if (GetPowerState(x, y))
+                        if (IsPoweredUpFrame(x, y))
                         {
-                            if (IsOperating(x, y))
+                            if (IsOperatingFrame(x, y))
                                 tile.TileFrameY -= (short)(Height * 16);
                             else
                                 tile.TileFrameY += (short)(Height * 16);
@@ -175,9 +172,9 @@ namespace Macrocosm.Content.Machines
                 Point16 origin = Utility.GetMultitileTopLeft(i, j);
                 if ((i >= origin.X + 0 && i <= origin.X + 1) && (j >= origin.Y + 7 && j <= origin.Y + 8))
                 {
-                    if (GetPowerState(origin.X, origin.Y))
+                    if (IsPoweredUpFrame(origin.X, origin.Y))
                     {
-                        if (IsOperating(origin.X, origin.Y))
+                        if (IsOperatingFrame(origin.X, origin.Y))
                             CursorIcon.Current = CursorIcon.MachineTurnOff;
                         else
                             CursorIcon.Current = CursorIcon.MachineTurnOn;
@@ -194,7 +191,7 @@ namespace Macrocosm.Content.Machines
 
         public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)
         {
-            if (IsOperating(i, j))
+            if (IsOperatingFrame(i, j))
                 frameYOffset = 16 * Height * Main.tileFrame[type];
         }
 
@@ -224,7 +221,7 @@ namespace Macrocosm.Content.Machines
             int tileOffsetX = tile.TileFrameX % (Width * 16) / 16;
             int tileOffsetY = tile.TileFrameY % (Height * 16) / 16;
 
-            if (IsOperating(i, j))
+            if (IsOperatingFrame(i, j))
             {
                 // Exhaust position - spawn smoke
                 if (tileOffsetX == 1 && tileOffsetY == 0)
@@ -291,9 +288,9 @@ namespace Macrocosm.Content.Machines
 
             if (tileOffsetX is 2 && tileOffsetY is 6)
             {
-                if (IsOperating(i, j))
+                if (IsOperatingFrame(i, j))
                     g = 0.2f;
-                else if (GetPowerState(i, j))
+                else if (IsPoweredUpFrame(i, j))
                     r = 0.2f;
             }
         }

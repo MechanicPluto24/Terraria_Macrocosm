@@ -1,6 +1,8 @@
 ﻿using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
+using System.Reflection.PortableExecutable;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -13,15 +15,34 @@ namespace Macrocosm.Common.Systems.Power
     {
         public abstract MachineTile MachineTile { get; }
 
-        public abstract bool Operating { get; }
+        public virtual bool Operating => MachineTile.IsOperatingFrame(Position.X, Position.Y);
+        public virtual bool PoweredUp => MachineTile.IsPoweredUpFrame(Position.X, Position.Y);
 
-        public float Power { get; set; }
+        public float ActivePower { get; protected set; }
+
+        public float ConsumedPower { get; protected set; }
+        public float GeneratedPower { get; protected set; }
 
         /// <summary> Things to happen before the first update tick. Only runs on SP and Server. </summary>
         public virtual void OnFirstUpdate() { }
 
         /// <summary> Update hook. Only runs on SP and Server </summary>
         public virtual void MachineUpdate() { }
+
+        public virtual void OnPowerUp() { }
+        public virtual void OnPowerDown() { }
+
+        public void PowerUp()
+        {
+            MachineTile.TogglePowerStateFrame(Position.X, Position.Y);
+            OnPowerUp();
+        }
+
+        public void PowerDown()
+        {
+            MachineTile.TogglePowerStateFrame(Position.X, Position.Y);
+            OnPowerDown();
+        }
 
         private bool ranFirstUpdate = false;
         public sealed override void Update()
@@ -33,12 +54,15 @@ namespace Macrocosm.Common.Systems.Power
                 ranFirstUpdate = true;
             }
 
-            UpdatePower();
-
             MachineUpdate();
 
-            if(!Operating)
-                Power = 0;
+            if(GeneratedPower > 0)
+                ActivePower = GeneratedPower;
+
+            if (ConsumedPower > 0)
+                ActivePower = 0;
+
+            UpdatePower();
         }
 
         private void UpdatePower()
@@ -50,27 +74,26 @@ namespace Macrocosm.Common.Systems.Power
                 {
                     if (WorldGen.InWorld(i, j))
                     {
-                        Tile tile = Main.tile[i, j];
-                        if (IsPowered(i,j))
+                        var visited = new HashSet<Point16>();
+                        if (CheckForPower(i, j, visited))
                         {
                             foundPower = true;
                         }
+
+                        WireEffects(foundPower, visited);
                     }
                 }
             }
 
-            if (foundPower && !MachineTile.GetPowerState(Position.X, Position.Y))
-                MachineTile.TogglePowerState(Position.X, Position.Y);
+            if (foundPower && !PoweredUp)
+            {
+                PowerUp();
+            }
 
-            if (!foundPower && MachineTile.GetPowerState(Position.X, Position.Y))
-                MachineTile.TogglePowerState(Position.X, Position.Y);
-        }
-
-        public bool IsPowered(int x, int y)
-        {
-            // To avoid revisiting tiles
-            var visited = new HashSet<Point16>();
-            return CheckForPower(x, y, visited);
+            if (!foundPower && PoweredUp)
+            {
+                PowerDown();
+            }
         }
 
         private bool CheckForPower(int x, int y, HashSet<Point16> visited)
@@ -80,7 +103,10 @@ namespace Macrocosm.Common.Systems.Power
 
             visited.Add(new Point16(x, y));
 
-            if (IsPowerSourceActive(x, y))
+            if (ConsumedPower > 0)
+                ActivePower += TryConsumingPowerFromGenerators(x, y);
+
+            if (ConsumedPower > 0 && ActivePower >= ConsumedPower)
                 return true;
 
             Point[] directions = 
@@ -90,12 +116,6 @@ namespace Macrocosm.Common.Systems.Power
                 new(-1, 0),
                 new(1, 0)
             ];
-
-            if (Main.rand.NextBool(20) && PowerWiring.Map[x,y].AnyWire)
-            {
-                var d = Dust.NewDustPerfect(new Vector2(x * 16 + 8, y * 16 + 8), DustID.Electric, Scale: 0.2f);
-                d.noGravity = false;
-            }
 
             foreach (var dir in directions)
             {
@@ -113,19 +133,24 @@ namespace Macrocosm.Common.Systems.Power
             return false;
         }
 
-        private bool IsPowerSourceActive(int x, int y)
+        private float TryConsumingPowerFromGenerators(int x, int y)
         {
             Tile tile = Main.tile[x, y];
 
             if (TileLoader.GetTile(tile.TileType) is MachineTile)
             {
-                if(Utility.TryGetTileEntityAs(x, y, out MachineTE machine))
+                if(Utility.TryGetTileEntityAs(x, y, out MachineTE machine) && machine != this && machine.GeneratedPower > 0)
                 {
-                    return machine.Power > 0;
+                    float sourcePower = machine.ActivePower;
+                    float powerNeeded = ConsumedPower - ActivePower;
+                    machine.ActivePower -= powerNeeded;
+                    machine.ActivePower = Math.Max(0, machine.ActivePower);
+                    return sourcePower - machine.ActivePower;
                 }
             }
 
-            return false;
+            return 0f;
+
         }
 
         public override bool IsTileValidForEntity(int x, int y)
@@ -152,5 +177,21 @@ namespace Macrocosm.Common.Systems.Power
             if (Main.netMode == NetmodeID.Server)
                 NetMessage.SendData(MessageID.TileEntitySharing, number: ID, number2: Position.X, number3: Position.Y);
         }
+
+        private void WireEffects(bool foundPower, HashSet<Point16> visited)
+        {
+            if (foundPower && PoweredUp && ConsumedPower > 0)
+            {
+                foreach (var p in visited)
+                {
+                    if (Main.rand.NextBool(20) && PowerWiring.Map[p].AnyWire)
+                    {
+                        var d = Dust.NewDustDirect(p.ToWorldCoordinates() + new Vector2(2), 8, 8, DustID.Electric, Scale: 0.2f, SpeedX: 0, SpeedY: 0);
+                        d.noGravity = false;
+                    }
+                }
+            }
+        }
+
     }
 }
