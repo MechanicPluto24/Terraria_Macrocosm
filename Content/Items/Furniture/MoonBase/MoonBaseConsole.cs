@@ -26,7 +26,7 @@ namespace Macrocosm.Content.Items.Furniture.MoonBase
             .AddIngredient<MoonBasePlating>(8)
             .AddIngredient<PrintedCircuitBoard>()
             .AddIngredient(ItemID.Glass)
-            .AddTile(TileID.WorkBenches)
+            .AddTile<Tiles.Crafting.Fabricator>()
             .Register();
         }
     }

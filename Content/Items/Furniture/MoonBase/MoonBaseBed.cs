@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Content.Items.Blocks;
+using Macrocosm.Content.Items.Crafting;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -24,7 +25,7 @@ namespace Macrocosm.Content.Items.Furniture.MoonBase
             CreateRecipe()
             .AddIngredient<MoonBasePlating>(15)
             .AddIngredient(ItemID.Silk, 5)
-            .AddTile(TileID.WorkBenches)
+            .AddTile<Tiles.Crafting.Fabricator>()
             .Register();
         }
     }
