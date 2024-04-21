@@ -12,7 +12,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 {
-    public class MoonBaseChair : ModTile
+    public class MoonBaseChairSleek : ModTile
     {
         public override void SetStaticDefaults()
         {
@@ -32,13 +32,13 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
             AddMapEntry(new Color(200, 200, 200), Language.GetText("MapObject.Chair"));
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style1x2);
-            TileObjectData.newTile.CoordinateHeights = [16, 18];
-            TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;
+            TileObjectData.newTile.CoordinateHeights = [16, 16];
+            TileObjectData.newTile.Direction = TileObjectDirection.PlaceRight;
             TileObjectData.newTile.StyleWrapLimit = 2;
             TileObjectData.newTile.StyleMultiplier = 2;
             TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
-            TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceRight;
+            TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceLeft;
             TileObjectData.addAlternate(1);
             TileObjectData.addTile(Type);
         }

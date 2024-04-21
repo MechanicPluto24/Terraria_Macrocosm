@@ -22,6 +22,7 @@ namespace Macrocosm.Content.Items.Furniture.MoonBase
             CreateRecipe()
                 .AddIngredient<MoonBaseChest>()
                 .AddIngredient<PrintedCircuitBoard>()
+                .AddTile<Tiles.Crafting.Fabricator>()
                 .Register();
         }
     }

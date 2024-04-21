@@ -357,7 +357,7 @@ MoonBaseBed
 		Moon Base Plating x 15
 		Silk x 5
 		at
-		Work Bench
+		Fabricator
 
 
 MoonBaseBulkhead
@@ -366,7 +366,7 @@ MoonBaseBulkhead
 	Recipes:
 		Moon Base Plating x 10
 		at
-		Work Bench
+		Fabricator
 
 
 MoonBaseCandle
@@ -375,7 +375,7 @@ MoonBaseCandle
 	Recipes:
 		Moon Base Plating x 4
 		at
-		Work Bench
+		Fabricator
 
 
 MoonBaseChair
@@ -384,7 +384,16 @@ MoonBaseChair
 	Recipes:
 		Moon Base Plating x 5
 		at
-		Work Bench
+		Fabricator
+
+
+MoonBaseChairSleek
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Moon Base Plating x 5
+		at
+		Fabricator
 
 
 MoonBaseChest
@@ -392,9 +401,9 @@ MoonBaseChest
 	Research count: 1
 	Recipes:
 		Moon Base Plating x 8
-		Iron Ore x 1
+		Iron Bar x 1
 		at
-		Work Bench
+		Fabricator
 
 
 MoonBaseChestElectronic
@@ -403,6 +412,8 @@ MoonBaseChestElectronic
 	Recipes:
 		Moon Base Storage Unit x 1
 		Printed Circuit Board x 1
+		at
+		Fabricator
 
 
 MoonBaseConsole
@@ -413,7 +424,7 @@ MoonBaseConsole
 		Printed Circuit Board x 1
 		Glass x 1
 		at
-		Work Bench
+		Fabricator
 
 
 MoonBaseCrate
@@ -426,7 +437,7 @@ MoonBaseDeskLamp
 	Recipes:
 		Moon Base Plating x 5
 		at
-		Work Bench
+		Fabricator
 
 
 MoonBaseDoor
@@ -435,7 +446,16 @@ MoonBaseDoor
 	Recipes:
 		Moon Base Plating x 5
 		at
-		Work Bench
+		Fabricator
+
+
+MoonBaseGurney
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Moon Base Plating x 12
+		at
+		Fabricator
 
 
 MoonBaseLamp
@@ -444,7 +464,7 @@ MoonBaseLamp
 	Recipes:
 		Moon Base Plating x 3
 		at
-		Work Bench
+		Fabricator
 
 
 MoonBaseLantern
@@ -453,7 +473,7 @@ MoonBaseLantern
 	Recipes:
 		Moon Base Plating x 3
 		at
-		Work Bench
+		Fabricator
 
 
 MoonBaseLocker
@@ -462,7 +482,7 @@ MoonBaseLocker
 	Recipes:
 		Moon Base Plating x 8
 		at
-		Work Bench
+		Fabricator
 
 
 MoonBaseNeonTube
@@ -471,7 +491,7 @@ MoonBaseNeonTube
 	Recipes:
 		Moon Base Plating x 4
 		at
-		Work Bench
+		Fabricator
 
 
 MoonBasePlatform
@@ -489,7 +509,25 @@ MoonBaseSofa
 		Moon Base Plating x 5
 		Silk x 2
 		at
-		Work Bench
+		Fabricator
+
+
+MoonBaseTable
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Moon Base Plating x 12
+		at
+		Fabricator
+
+
+MoonBaseWorkbench
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Moon Base Plating x 6
+		at
+		Fabricator
 
 
 SpaceTeddy

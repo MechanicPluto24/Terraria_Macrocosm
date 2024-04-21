@@ -29,7 +29,7 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
             AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTorch);
             DustType = ModContent.DustType<MoonBasePlatingDust>();
 
-            AddMapEntry(new Color(253, 221, 3), Language.GetText("ItemName.Lantern"));
+            AddMapEntry(new Color(200, 200, 200), Language.GetText("ItemName.Lantern"));
         }
 
         public override void HitWire(int i, int j)
