@@ -25,7 +25,7 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 
             DustType = ModContent.DustType<MoonBasePlatingDust>();
 
-            AddMapEntry(new Color(180, 180, 180), CreateMapEntryName());
+            AddMapEntry(new Color(200, 200, 200), CreateMapEntryName());
         }
     }
 }

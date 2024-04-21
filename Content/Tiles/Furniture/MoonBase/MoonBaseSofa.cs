@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.Dusts;
+﻿using Macrocosm.Common.Utils;
+using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -39,7 +40,7 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
             TileObjectData.newTile.Origin = new Point16(1, 1);
             TileObjectData.addTile(Type);
 
-            AddMapEntry(new Color(253, 221, 3), Language.GetText("ItemName.Sofa"));
+            AddMapEntry(new Color(200, 200, 200), Language.GetText("ItemName.Sofa"));
 
             AddToArray(ref TileID.Sets.RoomNeeds.CountsAsChair);
             AdjTiles = [TileID.Benches];
@@ -55,11 +56,11 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
             Tile tileRight = Main.tile[i + 1, j];
             Vector2 zero = Main.drawToScreen ? Vector2.Zero : new Vector2(Main.offScreenRange);
 
-            if (tile.TileType == Type && tile.TileFrameX / 18 % 3 == 2 && tileRight.TileType != Type)
+            if (tile.TileType == Type && tile.TileFrameX / 18 % 3 == 2 && tileRight.TileType != Type && !tile.IsTileInvisible)
             {
                 TileObjectData data = TileObjectData.GetTileData(Type, 0);
                 Vector2 position = new Vector2((i + 1) * 16f, j * 16f) - Main.screenPosition + zero;
-                Color color = Lighting.GetColor(i + 1, j);
+                Color color = Utility.Colorize(tile.GetPaintColor(), Lighting.GetColor(i + 1, j));
 
                 if (tile.TileFrameY / 18 % 2 is 0)
                     spriteBatch.Draw(extra.Value, position, new Rectangle(0, 0, 2, data.CoordinateHeights[0]), color);

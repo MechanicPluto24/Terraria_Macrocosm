@@ -16,5 +16,9 @@ namespace Macrocosm.Content.Items.Crafting
             Item.height = 50;
             Item.value = 500;
         }
+
+        public override void AddRecipes()
+        {
+        }
     }
 }
