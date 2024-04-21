@@ -46,10 +46,7 @@ namespace Macrocosm.Content.Machines
 
         public override void MachineUpdate()
         {
-            if (PoweredUp)
-                ConsumedPower = 0.8f;
-            else
-                ConsumedPower = 0;
+            ConsumedPower = 0.6f;
         }
 
         public override void NetSend(BinaryWriter writer)
