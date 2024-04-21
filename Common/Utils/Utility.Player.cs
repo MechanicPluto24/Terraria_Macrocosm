@@ -52,6 +52,9 @@ namespace Macrocosm.Common.Utils
             return player.altFunctionUse == 2;
         }
 
+        public static Tile TargetTile() => Main.tile[Player.tileTargetX, Player.tileTargetY];
+        public static Tile TargetTile(this Player player) => Main.tile[Player.tileTargetX, Player.tileTargetY];
+
         public static Rectangle GetSwungItemHitbox(this Player player)
         {
             //Found in Player.cs

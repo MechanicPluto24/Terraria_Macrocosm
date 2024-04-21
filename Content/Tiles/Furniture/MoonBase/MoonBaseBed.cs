@@ -29,7 +29,6 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
             DustType = ModContent.DustType<MoonBasePlatingDust>();
             AdjTiles = [TileID.Beds];
 
-            // Placement
             TileObjectData.newTile.CopyFrom(TileObjectData.Style3x3Wall);
             TileObjectData.newTile.Width = 4;
             TileObjectData.newTile.Height = 3;
@@ -43,8 +42,7 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
             TileObjectData.addAlternate(1);
             TileObjectData.addTile(Type);
 
-            // Etc
-            AddMapEntry(new Color(253, 221, 3), Language.GetText("ItemName.Bed"));
+            AddMapEntry(new Color(200, 200, 200), Language.GetText("ItemName.Bed"));
         }
 
         public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings)

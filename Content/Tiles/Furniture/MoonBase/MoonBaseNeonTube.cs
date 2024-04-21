@@ -35,7 +35,7 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
             DustType = ModContent.DustType<MoonBasePlatingDust>();
 
             LocalizedText name = CreateMapEntryName();
-            AddMapEntry(new Color(253, 221, 3), name);
+            AddMapEntry(new Color(200, 200, 200), name);
         }
 
         public override void HitWire(int i, int j)

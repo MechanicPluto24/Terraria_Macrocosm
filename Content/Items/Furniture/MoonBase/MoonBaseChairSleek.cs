@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Furniture.MoonBase
 {
-    public class MoonBaseChair : ModItem
+    public class MoonBaseChairSleek : ModItem
     {
         public override void SetStaticDefaults()
         {
@@ -13,7 +13,7 @@ namespace Macrocosm.Content.Items.Furniture.MoonBase
 
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.MoonBase.MoonBaseChair>());
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.MoonBase.MoonBaseChairSleek>());
             Item.width = 16;
             Item.height = 32;
             Item.value = 500;

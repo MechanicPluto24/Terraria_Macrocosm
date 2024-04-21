@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Items.Furniture.MoonBase
             CreateRecipe()
             .AddIngredient<MoonBasePlating>(5)
             .AddIngredient(ItemID.Silk, 2)
-            .AddTile(TileID.WorkBenches)
+            .AddTile<Tiles.Crafting.Fabricator>()
             .Register();
         }
     }

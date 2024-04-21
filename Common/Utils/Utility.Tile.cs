@@ -432,6 +432,7 @@ namespace Macrocosm.Common.Utils
             return tileCount;
         }
 
+        public static Color GetPaintColor(this Tile tile) => WorldGen.paintColor(tile.TileColor);
 
         public static Color GetTileColor(Point coords) => GetTileColor(coords.X, coords.Y);
 

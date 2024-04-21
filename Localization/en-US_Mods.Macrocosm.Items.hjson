@@ -1,3 +1,16 @@
+SetBonuses: {
+	SpaceProtection_1:
+		'''
+		Pressurized spacesuit allows for exploration of other celestial bodies.
+		Tier 1 extraterrestrial protection
+		'''
+	SpaceProtection_2:
+		'''
+		Lead-lined suit allows for safe exploration of highly irradiated environments.
+		Tier 2 extraterrestrial protection
+		'''
+}
+
 CelestialBulwark: {
 	DisplayName: Celestial Bulwark
 	Tooltip:
@@ -348,11 +361,6 @@ IrradiatedRock: {
 
 IrradiatedRockWall: {
 	DisplayName: Irradiated Rock Wall
-	Tooltip: ""
-}
-
-MoonBasePlating: {
-	DisplayName: Moon Base Plating
 	Tooltip: ""
 }
 
@@ -753,19 +761,6 @@ LaunchPadMarker: {
 	Tooltip: ""
 }
 
-SetBonuses: {
-	SpaceProtection_1:
-		'''
-		Pressurized spacesuit allows for exploration of other celestial bodies.
-		Tier 1 extraterrestrial protection
-		'''
-	SpaceProtection_2:
-		'''
-		Lead-lined suit allows for safe exploration of highly irradiated environments.
-		Tier 2 extraterrestrial protection
-		'''
-}
-
 SteelBar: {
 	DisplayName: Steel Bar
 	Tooltip: ""
@@ -796,6 +791,57 @@ SteelRifle: {
 	Tooltip: ""
 }
 
+MoonBasePlating: {
+	DisplayName: Moon Base Plating
+	Tooltip: ""
+}
+
+MoonBasePlatform: {
+	DisplayName: Moon Base Platform
+	Tooltip: ""
+}
+
+
+MoonBaseHazardWall: {
+	DisplayName: Moon Base Hazard Wall
+	Tooltip: ""
+}
+
+MoonBaseHazardWallUnsafe: {
+	DisplayName: Unsafe Moon Base Hazard Wall 
+	Tooltip: ""
+}
+
+MoonBasePlatingWall: {
+	DisplayName: Moon Base Plating Wall
+	Tooltip: ""
+}
+
+MoonBasePlatingWallUnsafe: {
+	DisplayName: Unsafe Moon Base Plating Wall 
+	Tooltip: ""
+}
+
+MoonBaseSquarePaneledWall: {
+	DisplayName: Moon Base Square Paneled Wall
+	Tooltip: ""
+}
+
+MoonBaseSquarePaneledWallUnsafe: {
+	DisplayName: Unsafe Moon Base Square Paneled Wall 
+	Tooltip: ""
+}
+
+MoonBaseTrimmingWall: {
+	DisplayName: Moon Base Trimming Wall
+	Tooltip: ""
+}
+
+MoonBaseTrimmingWallUnsafe: {
+	DisplayName: Unsafe Moon Base Trimming Wall 
+	Tooltip: ""
+}
+
 MoonBaseCandle: {
 	DisplayName: Moon Base Candle
 	Tooltip: ""
@@ -816,13 +862,23 @@ MoonBaseNeonTube: {
 	Tooltip: ""
 }
 
-OilRefinery: {
-	DisplayName: Oil Refinery
+MoonBaseCrate: {
+	DisplayName: Moon Base Crate
 	Tooltip: ""
 }
 
-SolarPanelSmall: {
-	DisplayName: Small Solar Panel
+MoonBaseGurney: {
+	DisplayName: Moon Base Gurney
+	Tooltip: ""
+}
+
+MoonBaseTable: {
+	DisplayName: Moon Base Table
+	Tooltip: ""
+}
+
+MoonBaseWorkbench: {
+	DisplayName: Moon Base Workbench
 	Tooltip: ""
 }
 
@@ -832,7 +888,12 @@ MoonBaseBed: {
 }
 
 MoonBaseChair: {
-	DisplayName: Moon Base Chair
+	DisplayName: Moon Base Reception Chair
+	Tooltip: ""
+}
+
+MoonBaseChairSleek: {
+	DisplayName: Moon Base Sleek Chair
 	Tooltip: ""
 }
 
@@ -846,18 +907,13 @@ MoonBaseSofa: {
 	Tooltip: ""
 }
 
-Procellarum: {
-	DisplayName: Procellarum
-	Tooltip: ""
-}
-
 MoonBaseChest: {
 	DisplayName: Moon Base Storage Unit
 	Tooltip: ""
 }
 
-LexanGlass: {
-	DisplayName: Lexan Glass
+MoonBaseChestElectronic: {
+	DisplayName: Moon Base Electronic Storage Unit
 	Tooltip: ""
 }
 
@@ -866,13 +922,43 @@ MoonBaseConsole: {
 	Tooltip: ""
 }
 
-QuestionMark: {
-	DisplayName: Question Mark
+MoonBaseLocker: {
+	DisplayName: Moon Base Locker
 	Tooltip: ""
 }
 
-MoonBaseChestElectronic: {
-	DisplayName: Moon Base Electronic Storage Unit
+MoonBaseDoor: {
+	DisplayName: Moon Base Door
+	Tooltip: ""
+}
+
+MoonBaseBulkhead: {
+	DisplayName: Moon Base Bulkhead
+	Tooltip: ""
+}
+
+OilRefinery: {
+	DisplayName: Oil Refinery
+	Tooltip: ""
+}
+
+SolarPanelSmall: {
+	DisplayName: Small Solar Panel
+	Tooltip: ""
+}
+
+Procellarum: {
+	DisplayName: Procellarum
+	Tooltip: ""
+}
+
+LexanGlass: {
+	DisplayName: Lexan Glass
+	Tooltip: ""
+}
+
+QuestionMark: {
+	DisplayName: Question Mark
 	Tooltip: ""
 }
 
@@ -931,11 +1017,6 @@ Motor: {
 	Tooltip: ""
 }
 
-MoonBaseLocker: {
-	DisplayName: Moon Base Locker
-	Tooltip: ""
-}
-
 Apollo115: {
 	DisplayName: Apollo115
 	Tooltip: ""
@@ -944,11 +1025,6 @@ Apollo115: {
 CraterDemonPet: {
 	DisplayName: Toy Rocket
 	Tooltip: Summons a Mini Crater Demon
-}
-
-MoonBasePlatingWall: {
-	DisplayName: Moon Base Plating Wall
-	Tooltip: ""
 }
 
 MoonGoldCrescent: {
@@ -968,11 +1044,6 @@ MoonHeadstone: {
 
 Coal: {
 	DisplayName: Coal
-	Tooltip: ""
-}
-
-MoonBaseDoor: {
-	DisplayName: Moon Base Door
 	Tooltip: ""
 }
 
@@ -1016,16 +1087,6 @@ EarthGlobe: {
 	Tooltip: ""
 }
 
-MoonBaseBulkhead: {
-	DisplayName: Moon Base Bulkhead
-	Tooltip: ""
-}
-
-MoonBasePlatform: {
-	DisplayName: Moon Base Platform
-	Tooltip: ""
-}
-
 PowerJunction: {
 	DisplayName: Power Junction
 	Tooltip: ""
@@ -1038,46 +1099,6 @@ Computer: {
 
 HelixPatternDesign: {
 	DisplayName: Helix Pattern Design
-	Tooltip: ""
-}
-
-MoonBaseCrate: {
-	DisplayName: Moon Base Crate
-	Tooltip: ""
-}
-
-MoonBaseHazardWall: {
-	DisplayName: Moon Base Hazard Wall
-	Tooltip: ""
-}
-
-MoonBaseHazardWallUnsafe: {
-	DisplayName: Moon Base Hazard Wall Unsafe
-	Tooltip: ""
-}
-
-MoonBasePlatingWallUnsafe: {
-	DisplayName: Moon Base Plating Wall Unsafe
-	Tooltip: ""
-}
-
-MoonBaseSquarePaneledWall: {
-	DisplayName: Moon Base Square Paneled Wall
-	Tooltip: ""
-}
-
-MoonBaseSquarePaneledWallUnsafe: {
-	DisplayName: Moon Base Square Paneled Wall Unsafe
-	Tooltip: ""
-}
-
-MoonBaseTrimmingWall: {
-	DisplayName: Moon Base Trimming Wall
-	Tooltip: ""
-}
-
-MoonBaseTrimmingWallUnsafe: {
-	DisplayName: Moon Base Trimming Wall Unsafe
 	Tooltip: ""
 }
 

@@ -26,6 +26,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Assets\Effects\SphereLighting.fx" />
+    <None Remove="Content\Tiles\Furniture\MoonBase\MoonBaseChairSleek_Highlight.png" />
   </ItemGroup>
 
   <ItemGroup>
