@@ -1,4 +1,5 @@
-﻿using Terraria;
+﻿using Macrocosm.Common.Systems.Power;
+using Terraria;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Machines
@@ -15,6 +16,7 @@ namespace Macrocosm.Content.Items.Machines
             Item.width = 44;
             Item.height = 34;
             Item.value = 500;
+            Item.mech = true;
         }
     }
 }

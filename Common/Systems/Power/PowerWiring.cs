@@ -6,10 +6,12 @@ using Terraria.DataStructures;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using System.Linq;
-using System;
 using System.Collections.Generic;
 using Terraria.UI.Chat;
 using Terraria.GameContent;
+using Macrocosm.Common.Utils;
+using Terraria.ID;
+using Macrocosm.Content.Items.Wires;
 
 namespace Macrocosm.Common.Systems.Power
 {
@@ -28,58 +30,12 @@ namespace Macrocosm.Common.Systems.Power
         Hidden
     }
 
-    public readonly struct WireData : TagSerializable
-    {
-        private readonly byte data;
-
-        public bool AnyWire => data != 0;
-        public bool CopperWire => (data & 0x01) != 0;
-
-        public static implicit operator WireData(byte value) => new(value);
-        public static implicit operator byte(WireData powerWireData) => powerWireData.data;
-
-        // Expand this if needed
-        private const int WireTypeMask = 0x01;
-
-        public WireData() { }
-        public WireData(WireType type)
-        {
-            data = type switch
-            {
-                WireType.None   => new WireData((byte)(data & ~WireTypeMask)),
-                WireType.Copper => new WireData((byte)((data & ~WireTypeMask) | 0x01)),
-                _ => new(),
-            };
-        }
-
-        public WireData(byte data)
-        {
-            this.data = data;
-        }
-
-        public TagCompound SerializeData()
-        {
-            TagCompound tag = new();
-            tag[nameof(data)] = data;
-            return tag;
-        }
-
-        public static readonly Func<TagCompound, WireData> DESERIALIZER = DeserializeData;
-        public static WireData DeserializeData(TagCompound tag)
-        {
-            if (tag.ContainsKey(nameof(data)))
-                return new(tag.GetByte(nameof(data)));
-
-            return default;
-        }
-    }
-
     public class PowerWiring : ModSystem
     {
         public static PowerWiring Map => ModContent.GetInstance<PowerWiring>();
         private Dictionary<Point16, WireData> wireMap = new();
 
-        private Asset<Texture2D> powerWire;
+        private Asset<Texture2D> wireTexture;
 
         public WireData this[Point16 point]
         {
@@ -91,27 +47,59 @@ namespace Macrocosm.Common.Systems.Power
                 return data;
             }
 
-            set
+            private set
             {
                 wireMap[point] = value;
+                CircuitSystem.SearchCircuits();
             }
         }
 
         public WireData this[int x, int y]
         {
             get => this[new Point16(x, y)];
-            set => this[new Point16(x, y)] = value;
+            private set => this[new Point16(x, y)] = value;
         }
 
         public WireData this[Point point]
         {
             get => this[new Point16(point)];
-            set => this[new Point16(point)] = value;
+            private set => this[new Point16(point)] = value;
+        }
+
+        public static void PlaceWire(Point coords, WireType type) => Map[coords] = new(type);
+        public static void PlaceWire(int x, int y, WireType type) => Map[x, y] = new(type);
+
+        public static void CutWire(Point coords) => CutWire(coords.X, coords.Y);
+        public static void CutWire(int x, int y)
+        {
+            int itemDrop = -1;
+            int dustType = -1;
+            if (Map[x, y].CopperWire)
+            {
+                itemDrop = ModContent.ItemType<CopperWire>();
+                dustType = DustID.Copper;
+            }
+
+            Map[x, y] = new();
+
+            if (itemDrop > 0)
+            {
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                    Item.NewItem(new EntitySource_TileBreak(x, x, "PowerWireCut"), new Vector2(x * 16 + 8, y * 16 + 8), itemDrop);
+            }
+
+            if (dustType > 0)
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    Dust.NewDustDirect(new Vector2(x * 16 + 8, y * 16 + 8), 1, 1, DustID.Copper);
+                }
+            }
         }
 
         public override void Load()
         {
-            powerWire = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "PowerWire");
+            wireTexture = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "PowerWire");
         }
 
         public override void Unload()
@@ -123,37 +111,15 @@ namespace Macrocosm.Common.Systems.Power
             wireMap = new();
         }
 
-        public override void SaveWorldData(TagCompound tag)
+        public bool ShouldDrawWires
         {
-            List<TagCompound> wireTags = new();
-
-            foreach(var kvp in wireMap)
+            get
             {
-                TagCompound entry = new();
-                entry["coords"] = kvp.Key;
-                entry["data"] = kvp.Value;
-                wireTags.Add(entry);
-            }
+                Item item = Main.LocalPlayer.HeldItem;
+                if (item.mech)
+                    return true;
 
-            tag[nameof(wireMap)] = wireTags;
-        }
-
-        public override void LoadWorldData(TagCompound tag)
-        {
-            wireMap = new Dictionary<Point16, WireData>();
-
-            if (tag.ContainsKey(nameof(wireMap)))
-            {
-                var wireTags = tag.GetList<TagCompound>(nameof(wireMap));
-                foreach (var entry in wireTags)
-                {
-                    if(entry.ContainsKey("coords") && entry.ContainsKey("data"))
-                    {
-                        Point16 coords = entry.Get<Point16>("coords");
-                        WireData data = entry.Get<WireData>("data");
-                        wireMap[coords] = data;
-                    }
-                }
+                return false;
             }
         }
 
@@ -161,6 +127,9 @@ namespace Macrocosm.Common.Systems.Power
 
         public override void PostDrawTiles()
         {
+            if (!ShouldDrawWires)
+                return;
+
             SpriteBatch spriteBatch = Main.spriteBatch;
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, default, null, Main.GameViewMatrix.ZoomMatrix);
 
@@ -214,7 +183,7 @@ namespace Macrocosm.Common.Systems.Power
                             Color color = GetWireColor(i, j, CopperVisibility);
 
                             if (color != Color.Transparent)
-                                spriteBatch.Draw(powerWire.Value, new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero, frame, color, 0f, zero, 1f, SpriteEffects.None, 0f);
+                                spriteBatch.Draw(wireTexture.Value, new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero, frame, color, 0f, zero, 1f, SpriteEffects.None, 0f);
                         }
                     }
                 }
@@ -239,6 +208,44 @@ namespace Macrocosm.Common.Systems.Power
                     break;
             }
             return color;
+        }
+
+        public static void MakeWireDust(Point coords)
+        {
+        }
+
+        public override void SaveWorldData(TagCompound tag)
+        {
+            List<TagCompound> wireTags = new();
+
+            foreach (var kvp in wireMap)
+            {
+                TagCompound entry = new();
+                entry["coords"] = kvp.Key;
+                entry["data"] = kvp.Value;
+                wireTags.Add(entry);
+            }
+
+            tag[nameof(wireMap)] = wireTags;
+        }
+
+        public override void LoadWorldData(TagCompound tag)
+        {
+            wireMap = new Dictionary<Point16, WireData>();
+
+            if (tag.ContainsKey(nameof(wireMap)))
+            {
+                var wireTags = tag.GetList<TagCompound>(nameof(wireMap));
+                foreach (var entry in wireTags)
+                {
+                    if (entry.ContainsKey("coords") && entry.ContainsKey("data"))
+                    {
+                        Point16 coords = entry.Get<Point16>("coords");
+                        WireData data = entry.Get<WireData>("data");
+                        wireMap[coords] = data;
+                    }
+                }
+            }
         }
     }
 }

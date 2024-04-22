@@ -51,7 +51,7 @@ namespace Macrocosm.Content.Particles
 
         public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
-            spriteBatch.DrawStar(Position - screenPosition, StarPointCount, Color, actualScale, Rotation);
+            spriteBatch.DrawStar(Position - screenPosition, StarPointCount, Color, new Vector2(0.5f * actualScale, actualScale), Rotation);
             return false;
         }
     }

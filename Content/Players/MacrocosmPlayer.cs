@@ -2,6 +2,7 @@
 using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems;
+using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Debuffs;
@@ -195,6 +196,8 @@ namespace Macrocosm.Content.Players
                         LoadingTitleSequence.Start();
                 }
             }
+
+            CircuitSystem.SearchCircuits();
         }
 
         public static void LastSubworldCheck(BinaryReader reader, int whoAmI)

@@ -834,7 +834,7 @@ namespace Macrocosm.Content.Rockets
                     p.Velocity = new Vector2(Main.rand.NextFloat(-4f, 4f), Main.rand.NextFloat(-0.1f, -1f));
                     p.Scale = Main.rand.NextFloat(0.5f, 1.2f);
                     p.Rotation = Utility.RandomRotation();
-                    p.DrawColor = Color.Lerp(Utility.GetTileColor(tileCoords), Color.Gray, 0.5f) * Main.rand.NextFloat(0.2f, 0.8f);
+                    p.DrawColor = Smoke.GetTileHitColor(tileCoords);
                     p.FadeIn = true;
                     p.Opacity = 0f;
                     p.ExpansionRate = 0.0075f;

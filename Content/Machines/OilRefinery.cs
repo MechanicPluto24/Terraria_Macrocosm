@@ -18,7 +18,7 @@ namespace Macrocosm.Content.Machines
         public override short Height => 4;
         public override MachineTE MachineTE => ModContent.GetInstance<OilRefineryTE>();
 
-        public override bool IsPoweredUpFrame(int i, int j) => Main.tile[i, j].TileFrameY >= (Height * 18);
+        public override bool IsPoweredOnFrame(int i, int j) => Main.tile[i, j].TileFrameY >= (Height * 18);
 
         public override void SetStaticDefaults()
         {
@@ -32,7 +32,6 @@ namespace Macrocosm.Content.Machines
             TileObjectData.newTile.CoordinateWidth = 16;
             TileObjectData.newTile.CoordinateHeights = [16, 16, 16, 16];
             TileObjectData.newTile.CoordinatePadding = 2;
-            TileObjectData.newTile.Direction = TileObjectDirection.PlaceRight;
             TileObjectData.newTile.StyleHorizontal = false;
 
             TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(MachineTE.Hook_AfterPlacement, -1, 0, false);
@@ -55,7 +54,7 @@ namespace Macrocosm.Content.Machines
                 for (int y = origin.Y; y < origin.Y + Height; y++)
                 {
                     Tile tile = Main.tile[x, y];
-                    if (IsPoweredUpFrame(x, y))
+                    if (IsPoweredOnFrame(x, y))
                         tile.TileFrameY -= (short)(Height * 18);
                     else
                         tile.TileFrameY += (short)(Height * 18);
@@ -64,11 +63,6 @@ namespace Macrocosm.Content.Machines
 
             if (Main.netMode != NetmodeID.SinglePlayer)
                 NetMessage.SendTileSquare(-1, origin.X, origin.Y, Width, Height);
-        }
-
-        public override void KillMultiTile(int i, int j, int frameX, int frameY)
-        {
-            ModContent.GetInstance<OilRefineryTE>().Kill(i, j);
         }
 
         public override bool RightClick(int i, int j)

@@ -46,12 +46,5 @@ namespace Macrocosm.Content.Machines
 
             RegisterItemDrop(ModContent.ItemType<Items.Machines.SolarPanelSmall>(), 0, 1);
         }
-
-        public override void KillMultiTile(int i, int j, int frameX, int frameY)
-        {
-            ModContent.GetInstance<SolarPanelSmallTE>().Kill(i, j);
-        }
-
     }
-
 }

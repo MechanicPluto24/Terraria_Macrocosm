@@ -50,6 +50,11 @@ namespace Macrocosm.Common.Drawing.Particles
             On_Main.DrawNPCs -= DrawParticles_NPCs;
         }
 
+        public override void ClearWorld()
+        {
+            ClearAllParticles();
+        }
+
         public override void PreUpdateDusts()
         {
             UpdateParticles();

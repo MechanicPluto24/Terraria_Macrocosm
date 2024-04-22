@@ -16,14 +16,24 @@ namespace Macrocosm.Common.Systems.Power
         public abstract MachineTile MachineTile { get; }
 
         public virtual bool Operating => MachineTile.IsOperatingFrame(Position.X, Position.Y);
-        public virtual bool PoweredUp => MachineTile.IsPoweredUpFrame(Position.X, Position.Y);
+        public virtual bool PoweredOn => MachineTile.IsPoweredOnFrame(Position.X, Position.Y);
+
+        private float activePower;
+        public float ActivePower
+        {
+            get => activePower;
+            set
+            {
+                activePower = MathHelper.Lerp(activePower, value, 0.25f);
+            }
+        }
 
         public bool IsConsumer => consumedPower != null;
         private float? consumedPower;
 
         public float ConsumedPower 
         { 
-            get => consumedPower.HasValue ? consumedPower.Value : 0f;
+            get => consumedPower ?? 0f;
             set
             {
                 consumedPower = value;
@@ -35,7 +45,7 @@ namespace Macrocosm.Common.Systems.Power
         private float? generatedPower;
         public float GeneratedPower
         {
-            get => generatedPower.HasValue ? generatedPower.Value : 0f;
+            get => generatedPower ?? 0f;
             set
             {
                 generatedPower = value;
@@ -49,19 +59,19 @@ namespace Macrocosm.Common.Systems.Power
         /// <summary> Update hook. Only runs on SP and Server </summary>
         public virtual void MachineUpdate() { }
 
-        public virtual void OnPowerUp() { }
-        public virtual void OnPowerDown() { }
+        public virtual void OnPowerOn() { }
+        public virtual void OnPowerOff() { }
 
-        public void PowerUp()
+        public void PowerOn()
         {
             MachineTile.TogglePowerStateFrame(Position.X, Position.Y);
-            OnPowerUp();
+            OnPowerOn();
         }
 
-        public void PowerDown()
+        public void PowerOff()
         {
             MachineTile.TogglePowerStateFrame(Position.X, Position.Y);
-            OnPowerDown();
+            OnPowerOff();
         }
 
         private bool ranFirstUpdate = false;
@@ -111,12 +121,11 @@ namespace Macrocosm.Common.Systems.Power
 
             foreach (var dir in directions)
             {
-                int newX = x + dir.X;
-                int newY = y + dir.Y;
-
-                if (PowerWiring.Map[new Point16(newX, newY)].AnyWire)
+                int checkX = x + dir.X;
+                int checkY = y + dir.Y;
+                if (PowerWiring.Map[new Point16(checkX, checkY)].AnyWire)
                 {
-                    if (CheckForConnection(newX, newY, other, visited))
+                    if (CheckForConnection(checkX, checkY, other, visited))
                         return true;
                 }
             }
@@ -140,13 +149,18 @@ namespace Macrocosm.Common.Systems.Power
             Point16 tileOrigin = TileObjectData.GetTileData(type, style).Origin;
             int placedEntity = Place(i - tileOrigin.X, j - tileOrigin.Y);
 
+            CircuitSystem.SearchCircuits();
+
             return placedEntity;
         }
 
         public override void OnNetPlace()
         {
             if (Main.netMode == NetmodeID.Server)
+            {
                 NetMessage.SendData(MessageID.TileEntitySharing, number: ID, number2: Position.X, number3: Position.Y);
+                CircuitSystem.SearchCircuits();
+            }
         }
     }
 }

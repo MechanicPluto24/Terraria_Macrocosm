@@ -21,7 +21,6 @@ namespace Macrocosm.Content.Tiles.Crafting
             TileObjectData.newTile.CoordinateWidth = 16;
             TileObjectData.newTile.CoordinateHeights = [16, 16, 16];
             TileObjectData.newTile.CoordinatePadding = 2;
-            TileObjectData.newTile.Direction = TileObjectDirection.PlaceRight;
             TileObjectData.newTile.StyleHorizontal = false;
             TileObjectData.addTile(Type);
 
