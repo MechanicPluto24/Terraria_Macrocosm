@@ -45,7 +45,7 @@ namespace Macrocosm.Content.Machines
 
             TileObjectData.newTile.Origin = new Point16(0, Height - 1);
             TileObjectData.newTile.AnchorTop = new AnchorData();
-            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile, Width, 0);
+            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop, Width, 0);
 
             TileObjectData.newTile.WaterPlacement = LiquidPlacement.NotAllowed;
             TileObjectData.newTile.LavaPlacement = LiquidPlacement.NotAllowed;
@@ -70,7 +70,7 @@ namespace Macrocosm.Content.Machines
             AddMapEntry(new Color(206, 117, 44), CreateMapEntryName());
         }
 
-        public override bool IsPoweredUpFrame(int i, int j) => Main.tile[i, j].TileFrameY >= (Height * 16) * 1;
+        public override bool IsPoweredOnFrame(int i, int j) => Main.tile[i, j].TileFrameY >= (Height * 16) * 1;
         public override bool IsOperatingFrame(int i, int j) => Main.tile[i, j].TileFrameY >= (Height * 16) * 2;
 
         public override void TogglePowerStateFrame(int i, int j)
@@ -81,7 +81,7 @@ namespace Macrocosm.Content.Machines
                 for (int y = origin.Y; y < origin.Y + Height; y++)
                 {
                     Tile tile = Main.tile[x, y];
-                    if (IsPoweredUpFrame(x, y))
+                    if (IsPoweredOnFrame(x, y))
                         tile.TileFrameY -= (short)(Height * 16 * (IsOperatingFrame(x, y) ? 2 : 1));
                     else
                         tile.TileFrameY += (short)(Height * 16);
@@ -101,7 +101,7 @@ namespace Macrocosm.Content.Machines
                 {
                     Tile tile = Main.tile[x, y];
 
-                    if (IsPoweredUpFrame(x, y))
+                    if (IsPoweredOnFrame(x, y))
                     {
                         if (IsOperatingFrame(x, y))
                             tile.TileFrameY -= (short)(Height * 16);
@@ -118,11 +118,6 @@ namespace Macrocosm.Content.Machines
                 NetMessage.SendTileSquare(-1, origin.X, origin.Y, Width, Height);
         }
 
-        public override void KillMultiTile(int i, int j, int frameX, int frameY)
-        {
-            ModContent.GetInstance<OreExcavatorTE>().Kill(i, j);
-        }
-
         public override bool RightClick(int i, int j)
         {
             Player player = Main.LocalPlayer;
@@ -137,7 +132,7 @@ namespace Macrocosm.Content.Machines
                     for (int y = origin.Y; y < origin.Y + Height; y++)
                     {
                         Tile tile = Main.tile[x, y];
-                        if (IsPoweredUpFrame(x, y))
+                        if (IsPoweredOnFrame(x, y))
                         {
                             if (IsOperatingFrame(x, y))
                                 tile.TileFrameY -= (short)(Height * 16);
@@ -172,7 +167,7 @@ namespace Macrocosm.Content.Machines
                 Point16 origin = Utility.GetMultitileTopLeft(i, j);
                 if ((i >= origin.X + 0 && i <= origin.X + 1) && (j >= origin.Y + 7 && j <= origin.Y + 8))
                 {
-                    if (IsPoweredUpFrame(origin.X, origin.Y))
+                    if (IsPoweredOnFrame(origin.X, origin.Y))
                     {
                         if (IsOperatingFrame(origin.X, origin.Y))
                             CursorIcon.Current = CursorIcon.MachineTurnOff;
@@ -262,14 +257,14 @@ namespace Macrocosm.Content.Machines
                     {
                         for (int s = 0; s < 2; s++)
                         {
-                            Point hitTile = new(i + 1, j + 1 + s);
+                            Point hitTile = new(i + 1, j + 2 + s);
                             Smoke smoke = Particle.CreateParticle<Smoke>((p) =>
                             {
                                 p.Position = hitTile.ToWorldCoordinates();
                                 p.Velocity = new Vector2(Main.rand.NextFloat(-0.7f, 0.7f), Main.rand.NextFloat(-0.1f, -0.25f));
                                 p.Scale = 0.3f;
                                 p.Rotation = 0f;
-                                p.DrawColor = Color.Lerp(Utility.GetTileColor(hitTile), Color.Gray, 0.5f) * Main.rand.NextFloat(0.2f, 0.8f);
+                                p.DrawColor = Smoke.GetTileHitColor(hitTile);
                                 p.FadeIn = true;
                                 p.Opacity = 0f;
                                 p.ExpansionRate = 0.0075f;
@@ -290,7 +285,7 @@ namespace Macrocosm.Content.Machines
             {
                 if (IsOperatingFrame(i, j))
                     g = 0.2f;
-                else if (IsPoweredUpFrame(i, j))
+                else if (IsPoweredOnFrame(i, j))
                     r = 0.2f;
             }
         }

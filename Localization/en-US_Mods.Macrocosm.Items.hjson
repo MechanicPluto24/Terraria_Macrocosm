@@ -801,14 +801,13 @@ MoonBasePlatform: {
 	Tooltip: ""
 }
 
-
 MoonBaseHazardWall: {
 	DisplayName: Moon Base Hazard Wall
 	Tooltip: ""
 }
 
 MoonBaseHazardWallUnsafe: {
-	DisplayName: Unsafe Moon Base Hazard Wall 
+	DisplayName: Unsafe Moon Base Hazard Wall
 	Tooltip: ""
 }
 
@@ -818,7 +817,7 @@ MoonBasePlatingWall: {
 }
 
 MoonBasePlatingWallUnsafe: {
-	DisplayName: Unsafe Moon Base Plating Wall 
+	DisplayName: Unsafe Moon Base Plating Wall
 	Tooltip: ""
 }
 
@@ -828,7 +827,7 @@ MoonBaseSquarePaneledWall: {
 }
 
 MoonBaseSquarePaneledWallUnsafe: {
-	DisplayName: Unsafe Moon Base Square Paneled Wall 
+	DisplayName: Unsafe Moon Base Square Paneled Wall
 	Tooltip: ""
 }
 
@@ -838,7 +837,7 @@ MoonBaseTrimmingWall: {
 }
 
 MoonBaseTrimmingWallUnsafe: {
-	DisplayName: Unsafe Moon Base Trimming Wall 
+	DisplayName: Unsafe Moon Base Trimming Wall
 	Tooltip: ""
 }
 

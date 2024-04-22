@@ -963,10 +963,6 @@ CraterDemonPet
 	Value: No value
 	Research count: 1
 
-CopperWire
-	Value: 10 copper
-	Research count: 100
-
 CraterDemonRelic
 	Value: 5 gold
 	Research count: 1
@@ -1461,4 +1457,8 @@ ChandriumWhip
 		at
 		Ancient Manipulator
 
+
+CopperWire
+	Value: 10 copper
+	Research count: 100
 

@@ -9,8 +9,14 @@ namespace Macrocosm.Common.Systems.Power
 
         public abstract MachineTE MachineTE { get; }
 
-        public virtual bool IsPoweredUpFrame(int i, int j) => false;
-        public virtual bool IsOperatingFrame(int i, int j) => IsPoweredUpFrame(i, j);
+        public virtual bool IsPoweredOnFrame(int i, int j) => false;
+        public virtual bool IsOperatingFrame(int i, int j) => IsPoweredOnFrame(i, j);
         public virtual void TogglePowerStateFrame(int i, int j) { }
+
+        public override void KillMultiTile(int i, int j, int frameX, int frameY)
+        {
+            MachineTE.Kill(i, j);
+            CircuitSystem.SearchCircuits();
+        }
     }
 }

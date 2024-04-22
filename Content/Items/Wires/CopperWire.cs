@@ -1,10 +1,11 @@
 ﻿using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Placeable.Wires
+namespace Macrocosm.Content.Items.Wires
 {
     public class CopperWire : ModItem
     {
@@ -25,18 +26,19 @@ namespace Macrocosm.Content.Items.Placeable.Wires
             Item.useAnimation = 10;
             Item.autoReuse = true;
             Item.consumable = true;
+            Item.mech = true;
         }
 
         public override bool? UseItem(Player player)
         {
-            if(player.whoAmI == Main.myPlayer)
+            if (player.whoAmI == Main.myPlayer)
             {
-                Tile tile = Main.tile[Player.tileTargetX, Player.tileTargetY];
-                WireData wireData = PowerWiring.Map[Player.tileTargetX, Player.tileTargetY];
+                Point targetCoords = player.TargetCoords();
+                WireData wireData = PowerWiring.Map[player.TargetCoords()];
 
-                if (!tile.AnyWire() && !wireData.CopperWire)
+                if (!wireData.CopperWire)
                 {
-                    PowerWiring.Map[Player.tileTargetX, Player.tileTargetY] = new(WireType.Copper);
+                    PowerWiring.PlaceWire(targetCoords, WireType.Copper);
                     return true;
                 }
 
