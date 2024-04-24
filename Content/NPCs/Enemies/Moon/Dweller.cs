@@ -7,6 +7,7 @@ using ReLogic.Content;
 using System;
 using System.Linq;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -90,16 +91,30 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                         leg3 = legFront3;
                         break;
                 }
-
-
-                leg1Length = new Vector2(leg1.Height(), 0);
-                leg2Length = new Vector2(leg2.Height(), 0);
-                leg3Length = new Vector2(leg3.Height(), 0);
             }
 
             private bool firstUpdate;
             public void Update()
             {
+                switch (legType)
+                {
+                    case LegType.Back:
+                        leg1Length = new Vector2(MathF.Sqrt(MathF.Pow(leg1.Width(), 2) + MathF.Pow(leg1.Height(), 2)), 0) * 0.8f;
+                        leg2Length = new Vector2(MathF.Sqrt(MathF.Pow(leg2.Width(), 2) + MathF.Pow(leg2.Height(), 2)), 0) * 0.6f;
+                        leg3Length = new Vector2(MathF.Sqrt(MathF.Pow(leg3.Width(), 2) + MathF.Pow(leg3.Height(), 2)), 0) * 0.8f;
+                        break;
+                    case LegType.Mid:
+                        leg1Length = new Vector2(MathF.Sqrt(MathF.Pow(leg1.Width(), 2) + MathF.Pow(leg1.Height(), 2)), 0) * 0.8f;
+                        leg2Length = new Vector2(MathF.Sqrt(MathF.Pow(leg2.Width(), 2) + MathF.Pow(leg2.Height(), 2)), 0) * 0.8f;
+                        leg3Length = new Vector2(MathF.Sqrt(MathF.Pow(leg3.Width(), 2) + MathF.Pow(leg3.Height(), 2)), 0) * 0.8f;
+                        break;
+                    case LegType.Front:
+                        leg1Length = new Vector2(MathF.Sqrt(MathF.Pow(leg1.Width(), 2) + MathF.Pow(leg1.Height(), 2)), 0);
+                        leg2Length = new Vector2(MathF.Sqrt(MathF.Pow(leg2.Width(), 2) + MathF.Pow(leg2.Height(), 2)), 0);
+                        leg3Length = new Vector2(MathF.Sqrt(MathF.Pow(leg3.Width(), 2) + MathF.Pow(leg3.Height(), 2)), 0);
+                        break;
+                }
+
                 bool leftLeg = index >= 3;
                 basePosition = new Vector2(npc.Center.X, npc.position.Y) + npc.velocity + baseOffset;
 
@@ -183,20 +198,73 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             public void Draw(SpriteBatch spriteBatch, NPC npc, Vector2 screenPos, Color drawColor)
             {
-                if (legType != LegType.Back)
+                bool leftLeg = index > 2;
+
+                if (legType != LegType.Mid)
                     return;
 
-                SpriteEffects effects = index < 3 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+                SpriteEffects effectsLeg1 = default;
+                SpriteEffects effectsLeg2 = default;
+                SpriteEffects effectsLeg3 = default;
+                Vector2 originLeg1 = default;
+                Vector2 originLeg2 = default;
+                Vector2 originFoot = default;
+                float rotationOffsetLeg1 = 0f;
+                float rotationOffsetLeg2 = 0f;
+                float rotationOffsetLeg3 = 0f;
+
+                float rotationTest = MathHelper.Pi * Utility.SineWave(100);
+                Main.NewText(rotationTest);
+
+                switch (legType)
+                {
+                    case LegType.Back:
+                        effectsLeg1 = leftLeg ? SpriteEffects.None : SpriteEffects.FlipVertically;
+                        effectsLeg2 = leftLeg ? SpriteEffects.None : SpriteEffects.FlipVertically; 
+                        effectsLeg3 = leftLeg ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+                        originLeg1 = leftLeg ? new(0, 0) : new(0, 27);
+                        originLeg2 = leftLeg ? new(5, 22) : new(5, 0);
+                        originFoot = leftLeg ? new(8, 5) : new(28, 5);
+                        rotationOffsetLeg1 = leftLeg ? -MathHelper.Pi/4 + MathHelper.Pi/12: MathHelper.Pi/7;
+                        rotationOffsetLeg2 = leftLeg ? MathHelper.Pi / 3 : -MathHelper.Pi/3;
+                        rotationOffsetLeg3 = leftLeg ? -MathHelper.Pi / 2 + MathHelper.Pi/16: -MathHelper.Pi/2 - MathHelper.Pi/32;
+                        break;
+                    case LegType.Mid:
+                        effectsLeg1 = leftLeg ? SpriteEffects.None : SpriteEffects.None;
+                        effectsLeg2 = leftLeg ? SpriteEffects.None : SpriteEffects.None;
+                        effectsLeg3 = leftLeg ? SpriteEffects.None : SpriteEffects.FlipVertically;
+                        originLeg1 = leftLeg ? new(0, 0) : new(0, 27);
+                        originLeg2 = leftLeg ? new(5, 22) : new(5, 0);
+                        originFoot = leftLeg ? new(8, 5) : new(28, 5);
+                        rotationOffsetLeg1 = 0f;
+                        rotationOffsetLeg2 = 0f;
+                        rotationOffsetLeg3 = 0f;
+                        break;
+                    case LegType.Front:
+                        effectsLeg1 = leftLeg ? SpriteEffects.None : SpriteEffects.FlipVertically;
+                        effectsLeg2 = leftLeg ? SpriteEffects.None : SpriteEffects.FlipVertically;
+                        effectsLeg3 = leftLeg ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+                        originLeg1 = leftLeg ? new(0, 0) : new(0, 27);
+                        originLeg2 = leftLeg ? new(5, 22) : new(5, 0);
+                        originFoot = leftLeg ? new(8, 5) : new(28, 5);
+                        rotationOffsetLeg1 = leftLeg ? -MathHelper.Pi / 4 + MathHelper.Pi / 12 : MathHelper.Pi / 7;
+                        rotationOffsetLeg2 = leftLeg ? MathHelper.Pi / 3 : -MathHelper.Pi / 3;
+                        rotationOffsetLeg3 = leftLeg ? -MathHelper.Pi / 2 + MathHelper.Pi / 16 : -MathHelper.Pi / 2 - MathHelper.Pi / 32;
+                        break;
+                    default:
+
+                        break;
+                }
 
                 Texture2D cross = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "DebugCross").Value;
+                spriteBatch.Draw(leg1.Value, basePosition - screenPos, null, drawColor, rotationLeg1 + rotationOffsetLeg1, originLeg1, npc.scale, effectsLeg1, 0f);
+                spriteBatch.Draw(leg2.Value, joint1Position - screenPos, null, drawColor, rotationLeg2 + rotationOffsetLeg2, originLeg2, npc.scale, effectsLeg2, 0f);
+                spriteBatch.Draw(leg3.Value, joint2Position - screenPos, null, drawColor, rotationFoot + rotationOffsetLeg3, originFoot, npc.scale, effectsLeg3, 0f);
 
-                Vector2 originLeg1 = new(leg1.Width() / 2f, 0);
-                Vector2 originLeg2 = new(leg2.Width() / 2f, 0);
-                Vector2 originFoot = new(leg3.Width() / 2f, 0);
 
-                spriteBatch.Draw(leg1.Value, basePosition - screenPos, null, drawColor, rotationLeg1 - MathHelper.PiOver2, originLeg1, npc.scale, effects, 0f);
-                spriteBatch.Draw(leg2.Value, joint1Position - screenPos, null, drawColor, rotationLeg2 - MathHelper.PiOver2, originLeg2, npc.scale, effects, 0f);
-                spriteBatch.Draw(leg3.Value, joint2Position - screenPos, null, drawColor, rotationFoot - MathHelper.PiOver2, originFoot, npc.scale, effects, 0f);
+                Utils.DrawLine(spriteBatch, basePosition, joint1Position, Color.Red);
+                Utils.DrawLine(spriteBatch, joint1Position, joint2Position, Color.Green);
+                Utils.DrawLine(spriteBatch, joint2Position, TipPosition, Color.Blue);
 
                 // Debug stuff
                 /*
@@ -227,7 +295,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         private static Asset<Texture2D> legMid1;
         private static Asset<Texture2D> legMid2;
         private static Asset<Texture2D> legMid3;
-                
+
         private static Asset<Texture2D> legFront1;
         private static Asset<Texture2D> legFront2;
         private static Asset<Texture2D> legFront3;
@@ -320,7 +388,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             bool midAir = Utility.EmptyTiles(tileCollisionHitbox);
             bool allowedVerticalMovement = false;
 
-            float speed = 6f;
+            float speed = 1f;
             if (HasTarget && NPC.DistanceSQ(TargetPlayer.Center) > 100f * 100f)
             {
                 Vector2 direction = NPC.Center.DirectionTo(TargetPlayer.Center);
@@ -328,7 +396,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
                 if (midAir && !(Legs.Any(leg => leg.TipPosition.Y < (NPC.position.Y + NPC.height))))
                 {
-                    NPC.velocity.Y = Math.Abs(NPC.velocity.Y);
+                    NPC.velocity.Y = 0;
                     NPC.velocity.Y += NPC.gravity;
                 }
                 else if (anyLegTouchingGround)
@@ -421,11 +489,11 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             Legs[2].Draw(spriteBatch, NPC, screenPos, drawColor);
             Legs[3].Draw(spriteBatch, NPC, screenPos, drawColor);
 
-            spriteBatch.Draw(headBack.Value, new Vector2(NPC.Center.X, NPC.position.Y + headBack.Height() / 2) - Main.screenPosition, null, drawColor, NPC.rotation, headBack.Size() / 2f, NPC.scale, effects, 0);
-            spriteBatch.Draw(headJawRight.Value, new Vector2(NPC.Center.X, NPC.position.Y + headJawRight.Height() / 2) - Main.screenPosition, null, drawColor, NPC.rotation, headJawRight.Size() / 2f, NPC.scale, effects, 0);
-            spriteBatch.Draw(headJawLeft.Value, new Vector2(NPC.Center.X, NPC.position.Y + headJawLeft.Height() / 2) - Main.screenPosition, null, drawColor, NPC.rotation, headJawLeft.Size() / 2f, NPC.scale, effects, 0);
-            spriteBatch.Draw(headShellRight.Value, new Vector2(NPC.Center.X, NPC.position.Y + headBack.Height() / 2) - Main.screenPosition, null, drawColor, NPC.rotation, headShellRight.Size() / 2f, NPC.scale, effects, 0);
-            spriteBatch.Draw(headShellLeft.Value, new Vector2(NPC.Center.X, NPC.position.Y + headBack.Height() / 2) - Main.screenPosition, null, drawColor, NPC.rotation, headShellLeft.Size() / 2f, NPC.scale, effects, 0);
+            //spriteBatch.Draw(headBack.Value, new Vector2(NPC.Center.X, NPC.position.Y + headBack.Height() / 2) - Main.screenPosition, null, drawColor, NPC.rotation, headBack.Size() / 2f, NPC.scale, effects, 0);
+            //spriteBatch.Draw(headJawRight.Value, new Vector2(NPC.Center.X, NPC.position.Y + headJawRight.Height() / 2) - Main.screenPosition, null, drawColor, NPC.rotation, headJawRight.Size() / 2f, NPC.scale, effects, 0);
+            //spriteBatch.Draw(headJawLeft.Value, new Vector2(NPC.Center.X, NPC.position.Y + headJawLeft.Height() / 2) - Main.screenPosition, null, drawColor, NPC.rotation, headJawLeft.Size() / 2f, NPC.scale, effects, 0);
+            //spriteBatch.Draw(headShellRight.Value, new Vector2(NPC.Center.X, NPC.position.Y + headBack.Height() / 2) - Main.screenPosition, null, drawColor, NPC.rotation, headShellRight.Size() / 2f, NPC.scale, effects, 0);
+            //spriteBatch.Draw(headShellLeft.Value, new Vector2(NPC.Center.X, NPC.position.Y + headBack.Height() / 2) - Main.screenPosition, null, drawColor, NPC.rotation, headShellLeft.Size() / 2f, NPC.scale, effects, 0);
 
             Legs[1].Draw(spriteBatch, NPC, screenPos, drawColor);
             Legs[4].Draw(spriteBatch, NPC, screenPos, drawColor);
@@ -433,13 +501,13 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             Legs[0].Draw(spriteBatch, NPC, screenPos, drawColor);
             Legs[5].Draw(spriteBatch, NPC, screenPos, drawColor);
 
+            return false;
+
             // Debug collision hitbox
-            /*
             Rectangle hitbox = collisionHitbox;
             hitbox.X -= (int)screenPos.X;
             hitbox.Y -= (int)screenPos.Y;
             spriteBatch.Draw(TextureAssets.MagicPixel.Value, hitbox, Color.Purple * 0.5f);
-            */
 
             return false;
         }
