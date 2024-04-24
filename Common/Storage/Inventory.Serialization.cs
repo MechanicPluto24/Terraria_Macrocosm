@@ -16,11 +16,6 @@ namespace Macrocosm.Common.Storage
                 ["OwnerSerializationIndex"] = Owner is not null ? Owner.InventorySerializationIndex : -1,
             };
 
-            foreach (var te in Terraria.DataStructures.TileEntity.ByID)
-            {
-                Console.WriteLine($"{te.Key}: {te.Value}");
-            }
-
             for (int i = 0; i < Size; i++)
                 tag.Add($"Item{i}", ItemIO.Save(items[i]));
 
@@ -41,11 +36,6 @@ namespace Macrocosm.Common.Storage
 
             if (tag.ContainsKey("OwnerSerializationIndex"))
                 ownerSerializationIndex = tag.GetInt("OwnerSerializationIndex");
-
-            foreach (var te in Terraria.DataStructures.TileEntity.ByID)
-            {
-                Console.WriteLine($"{te.Key}: {te.Value}");
-            }
 
             IInventoryOwner owner = IInventoryOwner.GetInventoryOwnerInstance(ownerType, ownerSerializationIndex);
             Inventory inventory = new(size, owner);

@@ -214,12 +214,10 @@ namespace Macrocosm.Content.Rockets
             OnWorldSpawn();
         }
 
-        /// <summary> Called when spawning into a new world </summary>
+        /// <summary> Called when spawning into a new world (creation or travel) </summary>
         public void OnWorldSpawn()
         {
             ResetAnimation();
-            ResetRenderTarget();
-
             if (Landing && ActiveInCurrentWorld)
             {
                 // Travel to spawn point if a specific launchpad has not been set
