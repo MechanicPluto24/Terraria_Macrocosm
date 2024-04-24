@@ -28,6 +28,8 @@ namespace Macrocosm.Content.Rockets
         private VertexPositionColorTexture[] vertices;
         private short[] indices;
 
+        private bool firstDraw = true;
+
         public bool HasRenderTarget => renderTarget is not null && !renderTarget.IsDisposed;
 
         public void ResetRenderTarget()
@@ -77,6 +79,12 @@ namespace Macrocosm.Content.Rockets
                         spriteBatch.End();
 
                         break;
+                }
+
+                if(firstDraw)
+                {
+                    ResetRenderTarget();
+                    firstDraw = false;
                 }
 
                 // Reset our SpriteBatch to its previous state

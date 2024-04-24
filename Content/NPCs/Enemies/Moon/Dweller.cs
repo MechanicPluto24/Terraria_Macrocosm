@@ -99,19 +99,19 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 switch (legType)
                 {
                     case LegType.Back:
-                        leg1Length = new Vector2(MathF.Sqrt(MathF.Pow(leg1.Width(), 2) + MathF.Pow(leg1.Height(), 2)), 0) * 0.8f;
-                        leg2Length = new Vector2(MathF.Sqrt(MathF.Pow(leg2.Width(), 2) + MathF.Pow(leg2.Height(), 2)), 0) * 0.6f;
+                        leg1Length = new Vector2(MathF.Sqrt(MathF.Pow(leg1.Width(), 2) + MathF.Pow(leg1.Height(), 2)), 0) * 0.9f;
+                        leg2Length = new Vector2(MathF.Sqrt(MathF.Pow(leg2.Width(), 2) + MathF.Pow(leg2.Height(), 2)), 0) * 2.2f;
                         leg3Length = new Vector2(MathF.Sqrt(MathF.Pow(leg3.Width(), 2) + MathF.Pow(leg3.Height(), 2)), 0) * 0.8f;
                         break;
                     case LegType.Mid:
                         leg1Length = new Vector2(MathF.Sqrt(MathF.Pow(leg1.Width(), 2) + MathF.Pow(leg1.Height(), 2)), 0) * 0.8f;
                         leg2Length = new Vector2(MathF.Sqrt(MathF.Pow(leg2.Width(), 2) + MathF.Pow(leg2.Height(), 2)), 0) * 0.8f;
-                        leg3Length = new Vector2(MathF.Sqrt(MathF.Pow(leg3.Width(), 2) + MathF.Pow(leg3.Height(), 2)), 0) * 0.8f;
+                        leg3Length = new Vector2(MathF.Sqrt(MathF.Pow(leg3.Width(), 2) + MathF.Pow(leg3.Height(), 2)), 0) * 0.75f;
                         break;
                     case LegType.Front:
-                        leg1Length = new Vector2(MathF.Sqrt(MathF.Pow(leg1.Width(), 2) + MathF.Pow(leg1.Height(), 2)), 0);
-                        leg2Length = new Vector2(MathF.Sqrt(MathF.Pow(leg2.Width(), 2) + MathF.Pow(leg2.Height(), 2)), 0);
-                        leg3Length = new Vector2(MathF.Sqrt(MathF.Pow(leg3.Width(), 2) + MathF.Pow(leg3.Height(), 2)), 0);
+                        leg1Length = new Vector2(MathF.Sqrt(MathF.Pow(leg1.Width(), 2) + MathF.Pow(leg1.Height(), 2)), 0) * 0.9f;
+                        leg2Length = new Vector2(MathF.Sqrt(MathF.Pow(leg2.Width(), 2) + MathF.Pow(leg2.Height(), 2)), 0) * 0.9f;
+                        leg3Length = new Vector2(MathF.Sqrt(MathF.Pow(leg3.Width(), 2) + MathF.Pow(leg3.Height(), 2)), 0) * 0.7f;
                         break;
                 }
 
@@ -144,8 +144,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 AtTargetPosition = baseToTargetDistance < 100;
 
                 float tipToTargetDistance = Vector2.Distance(targetPosition, TipPosition);
-                //float progress = MathHelper.Clamp(Vector2.Distance(TipPosition, lastTargetPosition) / Vector2.Distance(targetPosition, lastTargetPosition), 0f, 1f);
-                //Velocity.Y -= (float)Math.Sin(Math.PI * progress) * 50f;
 
                 if (tipToTargetDistance > 5f)
                     Velocity = Vector2.Lerp(Velocity, (targetPosition - TipPosition).SafeNormalize(default) * SpeedTowardsTarget, 0.4f);
@@ -200,9 +198,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             {
                 bool leftLeg = index > 2;
 
-                if (legType != LegType.Mid)
-                    return;
-
                 SpriteEffects effectsLeg1 = default;
                 SpriteEffects effectsLeg2 = default;
                 SpriteEffects effectsLeg3 = default;
@@ -213,65 +208,62 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 float rotationOffsetLeg2 = 0f;
                 float rotationOffsetLeg3 = 0f;
 
-                float rotationTest = MathHelper.Pi * Utility.SineWave(100);
-                Main.NewText(rotationTest);
-
                 switch (legType)
                 {
                     case LegType.Back:
                         effectsLeg1 = leftLeg ? SpriteEffects.None : SpriteEffects.FlipVertically;
-                        effectsLeg2 = leftLeg ? SpriteEffects.None : SpriteEffects.FlipVertically; 
-                        effectsLeg3 = leftLeg ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
-                        originLeg1 = leftLeg ? new(0, 0) : new(0, 27);
-                        originLeg2 = leftLeg ? new(5, 22) : new(5, 0);
-                        originFoot = leftLeg ? new(8, 5) : new(28, 5);
-                        rotationOffsetLeg1 = leftLeg ? -MathHelper.Pi/4 + MathHelper.Pi/12: MathHelper.Pi/7;
-                        rotationOffsetLeg2 = leftLeg ? MathHelper.Pi / 3 : -MathHelper.Pi/3;
-                        rotationOffsetLeg3 = leftLeg ? -MathHelper.Pi / 2 + MathHelper.Pi/16: -MathHelper.Pi/2 - MathHelper.Pi/32;
+                        effectsLeg2 = leftLeg ? SpriteEffects.FlipVertically : SpriteEffects.None;
+                        effectsLeg3 = leftLeg ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+                        originLeg1 = leftLeg ? new(0, 0) : new(-4, 32);
+                        originLeg2 = leftLeg ? new(12, 24) : new(20, 8);
+                        originFoot = leftLeg ? new(24, 0) : new(22, 4);
+                        rotationOffsetLeg1 = leftLeg ? -MathHelper.Pi / 4 + MathHelper.Pi / 12 : MathHelper.Pi / 8;
+                        rotationOffsetLeg2 = leftLeg ? MathHelper.Pi / 2 + MathHelper.Pi / 8 : -MathHelper.Pi / 2 - MathHelper.Pi/4;
+                        rotationOffsetLeg3 = leftLeg ? -MathHelper.Pi / 2 - MathHelper.Pi / 16 : -MathHelper.Pi / 2;
                         break;
                     case LegType.Mid:
-                        effectsLeg1 = leftLeg ? SpriteEffects.None : SpriteEffects.None;
-                        effectsLeg2 = leftLeg ? SpriteEffects.None : SpriteEffects.None;
-                        effectsLeg3 = leftLeg ? SpriteEffects.None : SpriteEffects.FlipVertically;
-                        originLeg1 = leftLeg ? new(0, 0) : new(0, 27);
-                        originLeg2 = leftLeg ? new(5, 22) : new(5, 0);
-                        originFoot = leftLeg ? new(8, 5) : new(28, 5);
-                        rotationOffsetLeg1 = 0f;
-                        rotationOffsetLeg2 = 0f;
-                        rotationOffsetLeg3 = 0f;
+                        effectsLeg1 = leftLeg ? SpriteEffects.FlipVertically : SpriteEffects.None;
+                        effectsLeg2 = leftLeg ? SpriteEffects.FlipVertically : SpriteEffects.None;
+                        effectsLeg3 = leftLeg ? SpriteEffects.FlipVertically : SpriteEffects.None;
+                        originLeg1 = leftLeg ? new(8, 42) : new(6, 4);
+                        originLeg2 = leftLeg ? new(6, 6) : new(0, 32);
+                        originFoot = leftLeg ? new(14, 72) : new(10, 14);
+                        rotationOffsetLeg1 = leftLeg ? MathHelper.Pi/4: -MathHelper.Pi / 4;
+                        rotationOffsetLeg2 = leftLeg ? -MathHelper.Pi / 6 : MathHelper.Pi / 8;
+                        rotationOffsetLeg3 = leftLeg ? MathHelper.Pi / 6 : -MathHelper.Pi / 6;
                         break;
                     case LegType.Front:
-                        effectsLeg1 = leftLeg ? SpriteEffects.None : SpriteEffects.FlipVertically;
-                        effectsLeg2 = leftLeg ? SpriteEffects.None : SpriteEffects.FlipVertically;
-                        effectsLeg3 = leftLeg ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
-                        originLeg1 = leftLeg ? new(0, 0) : new(0, 27);
-                        originLeg2 = leftLeg ? new(5, 22) : new(5, 0);
-                        originFoot = leftLeg ? new(8, 5) : new(28, 5);
-                        rotationOffsetLeg1 = leftLeg ? -MathHelper.Pi / 4 + MathHelper.Pi / 12 : MathHelper.Pi / 7;
-                        rotationOffsetLeg2 = leftLeg ? MathHelper.Pi / 3 : -MathHelper.Pi / 3;
-                        rotationOffsetLeg3 = leftLeg ? -MathHelper.Pi / 2 + MathHelper.Pi / 16 : -MathHelper.Pi / 2 - MathHelper.Pi / 32;
+                        effectsLeg1 = leftLeg ? SpriteEffects.FlipVertically : SpriteEffects.None;
+                        effectsLeg2 = leftLeg ? SpriteEffects.FlipVertically : SpriteEffects.FlipHorizontally | SpriteEffects.FlipVertically;
+                        effectsLeg3 = leftLeg ? SpriteEffects.FlipVertically : SpriteEffects.None;
+                        originLeg1 = leftLeg ? new(6, 54) : new(14, 0);
+                        originLeg2 = leftLeg ? new(4, -4) : new(42, -12);
+                        originFoot = leftLeg ? new(16, 80) : new(-2, 12);
+                        rotationOffsetLeg1 = leftLeg ? MathHelper.Pi / 2 - MathHelper.Pi / 8 : -MathHelper.Pi / 4 - MathHelper.Pi / 4;
+                        rotationOffsetLeg2 = leftLeg ? -MathHelper.Pi / 4 : -MathHelper.Pi / 2 - MathHelper.Pi / 8;
+                        rotationOffsetLeg3 = leftLeg ? MathHelper.Pi / 4 + MathHelper.Pi / 12 : -MathHelper.Pi / 4 - MathHelper.Pi / 12;
                         break;
                     default:
 
                         break;
                 }
 
-                Texture2D cross = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "DebugCross").Value;
                 spriteBatch.Draw(leg1.Value, basePosition - screenPos, null, drawColor, rotationLeg1 + rotationOffsetLeg1, originLeg1, npc.scale, effectsLeg1, 0f);
                 spriteBatch.Draw(leg2.Value, joint1Position - screenPos, null, drawColor, rotationLeg2 + rotationOffsetLeg2, originLeg2, npc.scale, effectsLeg2, 0f);
                 spriteBatch.Draw(leg3.Value, joint2Position - screenPos, null, drawColor, rotationFoot + rotationOffsetLeg3, originFoot, npc.scale, effectsLeg3, 0f);
 
+                //DebugDraw(spriteBatch, screenPos);
+            }
+
+            private void DebugDraw(SpriteBatch spriteBatch, Vector2 screenPos)
+            {
+                Texture2D cross = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "DebugCross").Value;
 
                 Utils.DrawLine(spriteBatch, basePosition, joint1Position, Color.Red);
                 Utils.DrawLine(spriteBatch, joint1Position, joint2Position, Color.Green);
                 Utils.DrawLine(spriteBatch, joint2Position, TipPosition, Color.Blue);
 
-                // Debug stuff
                 /*
-                spriteBatch.Draw(cross, basePosition - screenPos, null, Color.Red, 0f, cross.Size()/2f, 2f, SpriteEffects.None, 0);
-                spriteBatch.Draw(cross, joint1Position - screenPos, null, Color.Yellow, 0f, cross.Size() / 2f, 2f, SpriteEffects.None, 0);
-                spriteBatch.Draw(cross, joint2Position - screenPos, null, Color.LimeGreen, 0f, cross.Size() / 2f, 2f, SpriteEffects.None, 0);
-
                 Vector2 visualTipPosition = joint2Position + footLength.RotatedBy(rotationFoot); 
                 spriteBatch.Draw(cross, visualTipPosition - screenPos, null, Color.Blue, 0f, cross.Size() / 2f, 2f, SpriteEffects.None, 0);
                 spriteBatch.Draw(cross, TipPosition - screenPos, null, Color.Cyan, 0f, cross.Size() / 2f, 2f, SpriteEffects.None, 0);
@@ -373,7 +365,18 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             for (int i = 0; i < LegCount; i++)
             {
-                Legs[i] = new Leg(NPC, i, LegTypeFromIndex(i), new Vector2(18 - (8 * i), NPC.height * 0.8f));
+                float posX = i switch
+                {
+                    0 => 16,
+                    1 => 16,
+                    2 => 32,
+                    3 => -24,
+                    4 => -8,
+                    5 => -8,
+                    _ => 0
+                };
+
+                Legs[i] = new Leg(NPC, i, LegTypeFromIndex(i), new Vector2(posX, NPC.height * 0.74f));
             }
         }
 
@@ -383,12 +386,12 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             int legsTouchingGround = Legs.Count(leg => WorldGen.SolidOrSlopedTile(Main.tile[leg.TipPosition.ToTileCoordinates()]));
             bool anyLegTouchingGround = legsTouchingGround > 0;
-            collisionHitbox = new((int)NPC.position.X, (int)NPC.position.Y, 4 * 16, 12 * 16);
+            collisionHitbox = new((int)NPC.position.X, (int)NPC.position.Y, 4 * 16, 10 * 16);
             Rectangle tileCollisionHitbox = new(collisionHitbox.X / 16, collisionHitbox.Y / 16, collisionHitbox.Width / 16, collisionHitbox.Height / 16);
             bool midAir = Utility.EmptyTiles(tileCollisionHitbox);
             bool allowedVerticalMovement = false;
 
-            float speed = 1f;
+            float speed = 4f;
             if (HasTarget && NPC.DistanceSQ(TargetPlayer.Center) > 100f * 100f)
             {
                 Vector2 direction = NPC.Center.DirectionTo(TargetPlayer.Center);
@@ -415,8 +418,20 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             float restDistance = 60f;
             for (int i = 0; i < LegCount; i++)
             {
-                float legMultiplier = (i <= 2 ? 1 * (i + 1) : -1f * (i - LegCount / 2 + 1));
-                bool isLegMoving = (Math.Truncate((LegTimer % 3) + 1)) == Math.Abs(legMultiplier);
+                int legMovementIdentifier = (i <= 2 ? 1 * (i + 1) : -1 * (i - LegCount / 2 + 1));
+
+                float legMultiplier = i switch
+                {
+                    0 => 2f,
+                    1 => 4f,
+                    2 => 1.1f,
+                    3 => -1.1f,
+                    4 => -4f,
+                    5 => -2f,
+                    _ => 0f,
+                };
+
+                bool isLegMoving = (Math.Truncate((LegTimer % 3) + 1)) == Math.Abs(legMovementIdentifier);
                 if (isLegMoving)
                 {
                     float direction = Math.Sign(NPC.velocity.X);
@@ -489,14 +504,14 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             Legs[2].Draw(spriteBatch, NPC, screenPos, drawColor);
             Legs[3].Draw(spriteBatch, NPC, screenPos, drawColor);
 
-            //spriteBatch.Draw(headBack.Value, new Vector2(NPC.Center.X, NPC.position.Y + headBack.Height() / 2) - Main.screenPosition, null, drawColor, NPC.rotation, headBack.Size() / 2f, NPC.scale, effects, 0);
-            //spriteBatch.Draw(headJawRight.Value, new Vector2(NPC.Center.X, NPC.position.Y + headJawRight.Height() / 2) - Main.screenPosition, null, drawColor, NPC.rotation, headJawRight.Size() / 2f, NPC.scale, effects, 0);
-            //spriteBatch.Draw(headJawLeft.Value, new Vector2(NPC.Center.X, NPC.position.Y + headJawLeft.Height() / 2) - Main.screenPosition, null, drawColor, NPC.rotation, headJawLeft.Size() / 2f, NPC.scale, effects, 0);
-            //spriteBatch.Draw(headShellRight.Value, new Vector2(NPC.Center.X, NPC.position.Y + headBack.Height() / 2) - Main.screenPosition, null, drawColor, NPC.rotation, headShellRight.Size() / 2f, NPC.scale, effects, 0);
-            //spriteBatch.Draw(headShellLeft.Value, new Vector2(NPC.Center.X, NPC.position.Y + headBack.Height() / 2) - Main.screenPosition, null, drawColor, NPC.rotation, headShellLeft.Size() / 2f, NPC.scale, effects, 0);
-
             Legs[1].Draw(spriteBatch, NPC, screenPos, drawColor);
             Legs[4].Draw(spriteBatch, NPC, screenPos, drawColor);
+
+            spriteBatch.Draw(headBack.Value, new Vector2(NPC.Center.X, NPC.position.Y + headBack.Height() / 2) - Main.screenPosition, null, drawColor, NPC.rotation, headBack.Size() / 2f, NPC.scale, effects, 0);
+            spriteBatch.Draw(headJawRight.Value, new Vector2(NPC.Center.X, NPC.position.Y + headJawRight.Height() / 2) - Main.screenPosition, null, drawColor, NPC.rotation, headJawRight.Size() / 2f, NPC.scale, effects, 0);
+            spriteBatch.Draw(headJawLeft.Value, new Vector2(NPC.Center.X, NPC.position.Y + headJawLeft.Height() / 2) - Main.screenPosition, null, drawColor, NPC.rotation, headJawLeft.Size() / 2f, NPC.scale, effects, 0);
+            spriteBatch.Draw(headShellRight.Value, new Vector2(NPC.Center.X, NPC.position.Y + headBack.Height() / 2) - Main.screenPosition, null, drawColor, NPC.rotation, headShellRight.Size() / 2f, NPC.scale, effects, 0);
+            spriteBatch.Draw(headShellLeft.Value, new Vector2(NPC.Center.X, NPC.position.Y + headBack.Height() / 2) - Main.screenPosition, null, drawColor, NPC.rotation, headShellLeft.Size() / 2f, NPC.scale, effects, 0);
 
             Legs[0].Draw(spriteBatch, NPC, screenPos, drawColor);
             Legs[5].Draw(spriteBatch, NPC, screenPos, drawColor);

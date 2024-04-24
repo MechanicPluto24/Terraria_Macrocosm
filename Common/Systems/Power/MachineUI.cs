@@ -12,7 +12,6 @@ namespace Macrocosm.Common.Systems.Power
         public MachineTE MachineTE { get; set; }
 
         protected UIText title;
-        protected UIPanel backgroundPanel;
 
         public override void OnInitialize()
         {
