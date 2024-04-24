@@ -17,6 +17,13 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         private const int LegCount = 6;
         private readonly Leg[] Legs = new Leg[LegCount];
 
+        private enum LegType
+        {
+            Back,
+            Mid,
+            Front
+        }
+
         private class Leg
         {
             public const int SegmentCount = 3;
@@ -51,24 +58,43 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             private Vector2 basePosition, joint1Position, joint2Position;
             private Vector2 prevBasePosition, prevJoint1Position, prevJoint2Position;
 
-            private readonly Texture2D leg1, leg2, foot;
-            private Vector2 leg1Length, leg2Length, footLength;
+            private readonly Asset<Texture2D> leg1, leg2, leg3;
+            private Vector2 leg1Length, leg2Length, leg3Length;
 
             private float lastExtensionDistance;
 
-            public Leg(NPC npc, int index, Vector2 baseOffset)
+            private LegType legType;
+
+            public Leg(NPC npc, int index, LegType legType, Vector2 baseOffset)
             {
                 this.npc = npc;
                 this.index = index;
                 this.baseOffset = baseOffset;
 
-                leg1 = ModContent.Request<Texture2D>(npc.ModNPC.Texture + "_Leg1", AssetRequestMode.ImmediateLoad).Value;
-                leg2 = ModContent.Request<Texture2D>(npc.ModNPC.Texture + "_Leg2", AssetRequestMode.ImmediateLoad).Value;
-                foot = ModContent.Request<Texture2D>(npc.ModNPC.Texture + "_Foot", AssetRequestMode.ImmediateLoad).Value;
+                this.legType = legType;
+                switch (legType)
+                {
+                    case LegType.Back:
+                        leg1 = legBack1;
+                        leg2 = legBack2;
+                        leg3 = legBack3;
+                        break;
+                    case LegType.Mid:
+                        leg1 = legMid1;
+                        leg2 = legMid2;
+                        leg3 = legMid3;
+                        break;
+                    case LegType.Front:
+                        leg1 = legFront1;
+                        leg2 = legFront2;
+                        leg3 = legFront3;
+                        break;
+                }
 
-                leg1Length = new Vector2(leg1.Height, 0);
-                leg2Length = new Vector2(leg2.Height, 0);
-                footLength = new Vector2(foot.Height, 0);
+
+                leg1Length = new Vector2(leg1.Height(), 0);
+                leg2Length = new Vector2(leg2.Height(), 0);
+                leg3Length = new Vector2(leg3.Height(), 0);
             }
 
             private bool firstUpdate;
@@ -85,7 +111,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 }
 
                 float smoothingFactor = 0.35f;
-                float totalLegLength = leg1Length.Length() + leg2Length.Length() + footLength.Length();
+                float totalLegLength = leg1Length.Length() + leg2Length.Length() + leg3Length.Length();
 
                 Vector2 baseToTipVector = TipPosition - basePosition;
                 Vector2 baseToTargetVector = targetPosition - basePosition;
@@ -113,7 +139,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
                 TipPosition += Velocity;
 
-                Vector2 desiredTipPosition = prevJoint1Position + footLength.RotatedBy(prevRotationFoot);
+                Vector2 desiredTipPosition = prevJoint1Position + leg3Length.RotatedBy(prevRotationFoot);
                 baseToTipVector = desiredTipPosition - basePosition;
                 baseToTipDistance = baseToTipVector.Length();
 
@@ -137,7 +163,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
                 rotationFoot = (TipPosition - joint2Position).ToRotation();
 
-                float extensionDist = Vector2.Distance(joint2Position, targetPosition) / footLength.Length();
+                float extensionDist = Vector2.Distance(joint2Position, targetPosition) / leg3Length.Length();
                 lastExtensionDistance = MathHelper.Lerp(lastExtensionDistance, extensionDist, smoothingFactor);
                 lastExtensionDistance = MathHelper.Clamp(lastExtensionDistance * lastExtensionDistance, 0.0f, 1.0f);
 
@@ -157,17 +183,20 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             public void Draw(SpriteBatch spriteBatch, NPC npc, Vector2 screenPos, Color drawColor)
             {
-                SpriteEffects effects = npc.direction > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+                if (legType != LegType.Back)
+                    return;
+
+                SpriteEffects effects = index < 3 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
 
                 Texture2D cross = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "DebugCross").Value;
 
-                Vector2 originLeg1 = new(leg1.Width / 2f, 0);
-                Vector2 originLeg2 = new(leg2.Width / 2f, 0);
-                Vector2 originFoot = new(foot.Width / 2f, 0);
+                Vector2 originLeg1 = new(leg1.Width() / 2f, 0);
+                Vector2 originLeg2 = new(leg2.Width() / 2f, 0);
+                Vector2 originFoot = new(leg3.Width() / 2f, 0);
 
-                spriteBatch.Draw(leg1, basePosition - screenPos, null, drawColor, rotationLeg1 - MathHelper.PiOver2, originLeg1, npc.scale, effects, 0f);
-                spriteBatch.Draw(leg2, joint1Position - screenPos, null, drawColor, rotationLeg2 - MathHelper.PiOver2, originLeg2, npc.scale, effects, 0f);
-                spriteBatch.Draw(foot, joint2Position - screenPos, null, drawColor, rotationFoot - MathHelper.PiOver2, originFoot, npc.scale, effects, 0f);
+                spriteBatch.Draw(leg1.Value, basePosition - screenPos, null, drawColor, rotationLeg1 - MathHelper.PiOver2, originLeg1, npc.scale, effects, 0f);
+                spriteBatch.Draw(leg2.Value, joint1Position - screenPos, null, drawColor, rotationLeg2 - MathHelper.PiOver2, originLeg2, npc.scale, effects, 0f);
+                spriteBatch.Draw(leg3.Value, joint2Position - screenPos, null, drawColor, rotationFoot - MathHelper.PiOver2, originFoot, npc.scale, effects, 0f);
 
                 // Debug stuff
                 /*
@@ -183,6 +212,49 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 spriteBatch.Draw(cross, targetPosition - screenPos, null, Utility.HSLToRGB(new((index + 1) / 6f, 1f, 0.5f)), 0f, cross.Size() / 2f, 2f, SpriteEffects.None, 0);
                 //spriteBatch.Draw(cross, lastTargetPosition - screenPos, null, Utility.HSLToRGB(new((index + 1) / 6f, 1f, 0.2f)), 0f, cross.Size() / 2f, 2f, SpriteEffects.None, 0);
             }
+        }
+
+        private static Asset<Texture2D> headBack;
+        private static Asset<Texture2D> headJawLeft;
+        private static Asset<Texture2D> headJawRight;
+        private static Asset<Texture2D> headShellLeft;
+        private static Asset<Texture2D> headShellRight;
+
+        private static Asset<Texture2D> legBack1;
+        private static Asset<Texture2D> legBack2;
+        private static Asset<Texture2D> legBack3;
+
+        private static Asset<Texture2D> legMid1;
+        private static Asset<Texture2D> legMid2;
+        private static Asset<Texture2D> legMid3;
+                
+        private static Asset<Texture2D> legFront1;
+        private static Asset<Texture2D> legFront2;
+        private static Asset<Texture2D> legFront3;
+
+
+        public override string Texture => Macrocosm.EmptyTexPath;
+        private string TexturePath => this.GetNamespacePath();
+
+        public override void Load()
+        {
+            headBack = ModContent.Request<Texture2D>(TexturePath + "_Head_Back");
+            headJawLeft = ModContent.Request<Texture2D>(TexturePath + "_Head_JawLeft");
+            headJawRight = ModContent.Request<Texture2D>(TexturePath + "_Head_JawRight");
+            headShellLeft = ModContent.Request<Texture2D>(TexturePath + "_Head_ShellLeft");
+            headShellRight = ModContent.Request<Texture2D>(TexturePath + "_Head_ShellRight");
+
+            legBack1 = ModContent.Request<Texture2D>(TexturePath + "_Leg_Back1");
+            legBack2 = ModContent.Request<Texture2D>(TexturePath + "_Leg_Back2");
+            legBack3 = ModContent.Request<Texture2D>(TexturePath + "_Leg_Back3");
+
+            legMid1 = ModContent.Request<Texture2D>(TexturePath + "_Leg_Mid1");
+            legMid2 = ModContent.Request<Texture2D>(TexturePath + "_Leg_Mid2");
+            legMid3 = ModContent.Request<Texture2D>(TexturePath + "_Leg_Mid3");
+
+            legFront1 = ModContent.Request<Texture2D>(TexturePath + "_Leg_Front1");
+            legFront2 = ModContent.Request<Texture2D>(TexturePath + "_Leg_Front2");
+            legFront3 = ModContent.Request<Texture2D>(TexturePath + "_Leg_Front3");
         }
 
         public enum AIState
@@ -201,7 +273,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         public Player TargetPlayer => Main.player[NPC.target];
         public bool HasTarget => TargetPlayer is not null && TargetPlayer.active && !TargetPlayer.dead;
 
-        private Texture2D head;
         private Rectangle collisionHitbox;
 
         public override void SetStaticDefaults()
@@ -224,9 +295,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             SpawnModBiomes = [ModContent.GetInstance<UndergroundMoonBiome>().Type];
 
-            head = ModContent.Request<Texture2D>(Texture, AssetRequestMode.ImmediateLoad).Value;
-            NPC.width = head.Width;
-            NPC.height = head.Height;
+            NPC.width = headBack.Width();
+            NPC.height = headJawLeft.Height();
 
             InitializeLegs();
         }
@@ -235,7 +305,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             for (int i = 0; i < LegCount; i++)
             {
-                Legs[i] = new Leg(NPC, i, new Vector2(18 - (8 * i), head.Height * 0.8f));
+                Legs[i] = new Leg(NPC, i, LegTypeFromIndex(i), new Vector2(18 - (8 * i), NPC.height * 0.8f));
             }
         }
 
@@ -348,12 +418,20 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             SpriteEffects effects = NPC.direction > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
-            for (int i = 0; i < LegCount; i++)
-            {
-                Legs[i].Draw(spriteBatch, NPC, screenPos, drawColor);
-            }
+            Legs[2].Draw(spriteBatch, NPC, screenPos, drawColor);
+            Legs[3].Draw(spriteBatch, NPC, screenPos, drawColor);
 
-            spriteBatch.Draw(head, new Vector2(NPC.Center.X, NPC.position.Y + head.Height / 2) - Main.screenPosition, NPC.frame, drawColor, NPC.rotation, head.Size() / 2f, NPC.scale, effects, 0);
+            spriteBatch.Draw(headBack.Value, new Vector2(NPC.Center.X, NPC.position.Y + headBack.Height() / 2) - Main.screenPosition, null, drawColor, NPC.rotation, headBack.Size() / 2f, NPC.scale, effects, 0);
+            spriteBatch.Draw(headJawRight.Value, new Vector2(NPC.Center.X, NPC.position.Y + headJawRight.Height() / 2) - Main.screenPosition, null, drawColor, NPC.rotation, headJawRight.Size() / 2f, NPC.scale, effects, 0);
+            spriteBatch.Draw(headJawLeft.Value, new Vector2(NPC.Center.X, NPC.position.Y + headJawLeft.Height() / 2) - Main.screenPosition, null, drawColor, NPC.rotation, headJawLeft.Size() / 2f, NPC.scale, effects, 0);
+            spriteBatch.Draw(headShellRight.Value, new Vector2(NPC.Center.X, NPC.position.Y + headBack.Height() / 2) - Main.screenPosition, null, drawColor, NPC.rotation, headShellRight.Size() / 2f, NPC.scale, effects, 0);
+            spriteBatch.Draw(headShellLeft.Value, new Vector2(NPC.Center.X, NPC.position.Y + headBack.Height() / 2) - Main.screenPosition, null, drawColor, NPC.rotation, headShellLeft.Size() / 2f, NPC.scale, effects, 0);
+
+            Legs[1].Draw(spriteBatch, NPC, screenPos, drawColor);
+            Legs[4].Draw(spriteBatch, NPC, screenPos, drawColor);
+
+            Legs[0].Draw(spriteBatch, NPC, screenPos, drawColor);
+            Legs[5].Draw(spriteBatch, NPC, screenPos, drawColor);
 
             // Debug collision hitbox
             /*
@@ -364,6 +442,14 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             */
 
             return false;
+        }
+
+        private LegType LegTypeFromIndex(int index)
+        {
+            return
+            index is 0 or 5 ? LegType.Front :
+            index is 1 or 4 ? LegType.Mid :
+                              LegType.Back;
         }
     }
 }
