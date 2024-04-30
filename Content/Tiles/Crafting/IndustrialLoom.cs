@@ -34,7 +34,6 @@ namespace Macrocosm.Content.Tiles.Crafting
         {
             int ticksPerFrame = 3;
             int frameCount = 7;
-
             if (++frameCounter >= ticksPerFrame)
             {
                 frameCounter = 0;

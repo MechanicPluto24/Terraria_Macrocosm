@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Currency;
+using Macrocosm.Content.Items.Furniture;
 using Macrocosm.Content.Items.Materials.Drops;
 using Macrocosm.Content.Items.Vanity.BossMasks;
 using Macrocosm.Content.Items.Weapons.Magic;
@@ -40,6 +41,8 @@ namespace Macrocosm.Content.Items.Consumables.BossBags
             itemLoot.Add(ItemDropRule.NotScalingWithLuck(ModContent.ItemType<CraterDemonMask>(), 7));
             itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<Moonstone>(), 1, 30, 60));
             itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<DeliriumPlating>(), 1, 30, 90));
+
+            itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<SpookyDookie>(), 14));
 
             itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<BrokenHeroShield>()));
 

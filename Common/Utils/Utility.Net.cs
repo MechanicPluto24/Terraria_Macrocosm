@@ -49,7 +49,8 @@ namespace Macrocosm.Common.Utils
         }
 
         ///<summary>
-        /// Writes a vector2 array to an obj[] array that can be sent via netmessaging.        ///</summary>
+        /// Writes a vector2 array to an obj[] array that can be sent via netmessaging.
+        ///</summary>
         public static object[] WriteVector2Array(Vector2[] array)
         {
             System.Collections.Generic.List<object> list = new System.Collections.Generic.List<object>();
@@ -62,7 +63,8 @@ namespace Macrocosm.Common.Utils
         }
 
         ///<summary>
-        /// Writes a vector2 array to a binary writer.        ///</summary>
+        /// Writes a vector2 array to a binary writer.
+        ///</summary>
         public static void WriteVector2Array(Vector2[] array, BinaryWriter writer)
         {
             writer.Write(array.Length);
@@ -73,7 +75,8 @@ namespace Macrocosm.Common.Utils
         }
 
         ///<summary>
-        /// Reads a vector2 array from a binary reader.        ///</summary>
+        /// Reads a vector2 array from a binary reader.
+        ///</summary>
         public static Vector2[] ReadVector2Array(BinaryReader reader)
         {
             int arrayLength = reader.ReadInt32();

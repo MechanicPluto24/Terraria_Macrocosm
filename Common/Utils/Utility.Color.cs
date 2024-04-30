@@ -167,7 +167,8 @@ namespace Macrocosm.Common.Utils
         }
 
         ///<summary>
-        /// Alters the brightness of the color by the amount of the factor. If factor is negative, it darkens it. Else, it brightens it.        ///</summary>
+        /// Alters the brightness of the color by the amount of the factor. If factor is negative, it darkens it. Else, it brightens it.
+        ///</summary>
         public static Color Brighten(this Color color, int factor)
         {
             int r = Math.Max(0, Math.Min(255, color.R + factor));
@@ -177,7 +178,8 @@ namespace Macrocosm.Common.Utils
         }
 
         ///<summary>
-        /// Alters the brightness of the color by the multiplier.        ///</summary>
+        /// Alters the brightness of the color by the multiplier.
+        ///</summary>
         public static Color ColorMult(Color color, float mult)
         {
             int r = Math.Max(0, Math.Min(255, (int)(color.R * mult)));
@@ -187,7 +189,8 @@ namespace Macrocosm.Common.Utils
         }
 
         ///<summary>
-        /// Clamps the first color to be no lower then the values of the second color.        ///</summary>
+        /// Clamps the first color to be no lower then the values of the second color.
+        ///</summary>
         public static Color ColorClamp(Color color1, Color color2)
         {
             int r = color1.R;
@@ -202,7 +205,8 @@ namespace Macrocosm.Common.Utils
         }
 
         ///<summary>
-        /// Clamps the first color to be no lower then the brightness of the second color.        ///</summary>
+        /// Clamps the first color to be no lower then the brightness of the second color.
+        ///</summary>
         public static Color ColorBrightnessClamp(Color color1, Color color2)
         {
             float r = color1.R / 255f;
@@ -217,7 +221,8 @@ namespace Macrocosm.Common.Utils
         }
 
         ///<summary>
-        /// Tints the light color according to the buff color given. (prevents 'darkness' occuring if more than one is applied)        ///</summary>
+        /// Tints the light color according to the buff color given. (prevents 'darkness' occuring if more than one is applied)
+        ///</summary>
         public static Color BuffColorize(Color buffColor, Color lightColor)
         {
             Color color2 = ColorBrightnessClamp(buffColor, lightColor);
@@ -225,7 +230,8 @@ namespace Macrocosm.Common.Utils
         }
 
         ///<summary>
-        /// Tints the light color according to the tint color given.        ///</summary>
+        /// Tints the light color according to the tint color given.
+        ///</summary>
         public static Color Colorize(Color tint, Color lightColor)
         {
             float r = lightColor.R / 255f;

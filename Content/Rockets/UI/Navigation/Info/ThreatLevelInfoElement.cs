@@ -31,13 +31,13 @@ namespace Macrocosm.Content.Rockets.UI.Navigation.Info
 
         public ThreatLevelInfoElement(ThreatLevel level, Color textColor) : base((float)level)
         {
-            formattedLocalizedText = Language.GetText("Mods.Macrocosm.UI.Rocket.ThreatLevel.Threat" + (int)value).WithFormatArgs((int)value);
+            formattedLocalizedText = Language.GetText("Mods.Macrocosm.UI.Rocket.Navigation.ThreatLevel.Threat" + (int)value).WithFormatArgs((int)value);
             this.textColor = textColor;
         }
 
         protected override LocalizedColorScaleText GetText() => new(formattedLocalizedText, textColor, scale: 0.9f);
 
-        protected override LocalizedText GetHoverText() => Language.GetText("Mods.Macrocosm.UI.Rocket.ThreatLevel.Name");
+        protected override LocalizedText GetHoverText() => Language.GetText("Mods.Macrocosm.UI.Rocket.Navigation.ThreatLevel.Name");
 
         protected override Asset<Texture2D> GetIcon() => ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/WorldInfo/ThreatLevel");
 

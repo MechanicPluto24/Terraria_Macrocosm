@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.LoadingScreens
 {
-    public class LoadingTitleSequence : ModSystem
+    public class TitleCard : ModSystem
     {
         enum TitleState
         {

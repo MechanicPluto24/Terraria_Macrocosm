@@ -1181,9 +1181,11 @@ LandingGear: {
 	Tooltip: ""
 }
 
-FuelTank: {
-	DisplayName: Fuel Tank
+FuelCanister: {
+	DisplayName: Fuel Canister
 	Tooltip: ""
+	CapacityTooltip: Can hold up to {0} {1} of fuel
+	AmountTooltip: "{0}/{1} {2}"
 }
 
 EngineComponent: {
@@ -1193,5 +1195,15 @@ EngineComponent: {
 
 CopperWire: {
 	DisplayName: Copper Wire
+	Tooltip: ""
+}
+
+GothicCoalBrick: {
+	DisplayName: Gothic Coal Brick
+	Tooltip: ""
+}
+
+SpookyDookie: {
+	DisplayName: Spooky Dookie
 	Tooltip: ""
 }

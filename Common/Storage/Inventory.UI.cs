@@ -15,9 +15,34 @@ namespace Macrocosm.Common.Storage
 {
     public partial class Inventory
     {
-        public UIPanel ProvideUI(int iconsPerRow = 10, int rowsWithoutScrollbar = 5, float iconSize = 48f, float buttonMenuTopPercent = 0.83f) => ProvideUI(out _, out _, out _, out _, out _, out _, iconsPerRow, rowsWithoutScrollbar, iconSize, buttonMenuTopPercent);
+        public UIPanel ProvideUI
+        (
+            int start = 0,
+            int? end = null,
+            int iconsPerRow = 10,
+            int rowsWithoutScrollbar = 5,
+            float iconSize = 48f,
+            float buttonMenuTopPercent = 0.83f
+        )
+        {
+            return ProvideUI(out _, out _, out _, out _, out _, out _, start, end, iconsPerRow, rowsWithoutScrollbar, iconSize, buttonMenuTopPercent);
+        }
 
-        public UIPanel ProvideUI(out UIListScrollablePanel inventorySlots, out UIPanelIconButton lootAllButton, out UIPanelIconButton depositAllButton, out UIPanelIconButton quickStackButton, out UIPanelIconButton restockInventoryButton, out UIPanelIconButton sortInventoryButton, int iconsPerRow = 1, int rowsWithoutScrollbar = 5, float iconSize = 48f, float buttonMenuTopPercent = 0.83f)
+        public UIPanel ProvideUI
+        (
+            out UIListScrollablePanel inventorySlots,
+            out UIPanelIconButton lootAllButton,
+            out UIPanelIconButton depositAllButton,
+            out UIPanelIconButton quickStackButton,
+            out UIPanelIconButton restockInventoryButton,
+            out UIPanelIconButton sortInventoryButton,
+            int start = 0,
+            int? end = null,
+            int iconsPerRow = 1,
+            int rowsWithoutScrollbar = 5,
+            float iconSize = 48f,
+            float buttonMenuTopPercent = 0.83f
+        )
         {
             UIPanel inventoryPanel = new()
             {
@@ -31,7 +56,7 @@ namespace Macrocosm.Common.Storage
             };
             inventoryPanel.SetPadding(0f);
 
-            inventorySlots = CreateInventorySlotsList(iconsPerRow, rowsWithoutScrollbar, iconSize);
+            inventorySlots = CreateInventorySlotsList(start, end, iconsPerRow, rowsWithoutScrollbar, iconSize);
             inventoryPanel.Append(inventorySlots);
 
             inventoryPanel.Append(new UIHorizontalSeparator()
@@ -135,7 +160,7 @@ namespace Macrocosm.Common.Storage
             return inventoryPanel;
         }
 
-        private UIListScrollablePanel CreateInventorySlotsList(int iconsPerRow = 10, int rowsWithoutScrollbar = 5, float iconSize = 48f)
+        private UIListScrollablePanel CreateInventorySlotsList(int start = 0, int? end = null, int iconsPerRow = 10, int rowsWithoutScrollbar = 5, float iconSize = 48f)
         {
             UIListScrollablePanel inventorySlots = new()
             {
@@ -156,11 +181,13 @@ namespace Macrocosm.Common.Storage
             };
             inventorySlots.SetPadding(0f);
 
-            int count = Size;
             float iconOffsetTop = 0f;
             float iconOffsetLeft;
 
-            if (count <= iconsPerRow * rowsWithoutScrollbar)
+            int slotLastIndex = end ?? Size;
+            int slotCount = slotLastIndex - start;
+
+            if (slotCount <= iconsPerRow * rowsWithoutScrollbar)
                 iconOffsetLeft = 12f;
             else
                 iconOffsetLeft = 2f;
@@ -168,17 +195,19 @@ namespace Macrocosm.Common.Storage
             UIElement itemSlotContainer = new()
             {
                 Width = new(0f, 1f),
-                Height = new(iconSize * (count / iconsPerRow + (count % iconsPerRow != 0 ? 1 : 0)), 0f),
+                Height = new(iconSize * (slotCount / iconsPerRow + (slotCount % iconsPerRow != 0 ? 1 : 0)), 0f),
             };
 
             inventorySlots.Add(itemSlotContainer);
             itemSlotContainer.SetPadding(0f);
 
-            for (int i = 0; i < count; i++)
+            for (int i = start; i < slotLastIndex; i++)
             {
                 UIInventorySlot uiItemSlot = ProvideItemSlot(i, ItemSlot.Context.ChestItem);
-                uiItemSlot.Left = new(i % iconsPerRow * iconSize + iconOffsetLeft, 0f);
-                uiItemSlot.Top = new(i / iconsPerRow * iconSize + iconOffsetTop, 0f);
+
+                int slotIndex = i - start;
+                uiItemSlot.Left = new(slotIndex % iconsPerRow * iconSize + iconOffsetLeft, 0f);
+                uiItemSlot.Top = new(slotIndex / iconsPerRow * iconSize + iconOffsetTop, 0f);
                 uiItemSlot.SetPadding(0f);
 
                 itemSlotContainer.Append(uiItemSlot);

@@ -89,7 +89,7 @@ namespace Macrocosm.Common.Subworlds
                 {
                     SubworldSystem.Exit();
                     LoadingScreen?.SetTargetWorld(targetWorld);
-                    LoadingTitleSequence.SetTargetWorld(targetWorld);
+                    TitleCard.SetTargetWorld(targetWorld);
                     return true;
                 }
 
@@ -98,7 +98,7 @@ namespace Macrocosm.Common.Subworlds
                 if (entered)
                 {
                     LoadingScreen?.SetTargetWorld(targetWorld);
-                    LoadingTitleSequence.SetTargetWorld(targetWorld);
+                    TitleCard.SetTargetWorld(targetWorld);
                 }
                 else
                 {

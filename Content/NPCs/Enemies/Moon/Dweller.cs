@@ -516,13 +516,13 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             Legs[0].Draw(spriteBatch, NPC, screenPos, drawColor);
             Legs[5].Draw(spriteBatch, NPC, screenPos, drawColor);
 
-            return false;
-
+            /*
             // Debug collision hitbox
             Rectangle hitbox = collisionHitbox;
             hitbox.X -= (int)screenPos.X;
             hitbox.Y -= (int)screenPos.Y;
             spriteBatch.Draw(TextureAssets.MagicPixel.Value, hitbox, Color.Purple * 0.5f);
+            */
 
             return false;
         }
