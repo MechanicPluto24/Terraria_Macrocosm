@@ -79,7 +79,7 @@ namespace Macrocosm.Content.Machines
         public virtual void PopulateItemLoot()
         {
             SceneData scene = new(Position);
-            scene.Scan();
+            //scene.Scan();
 
             switch (MacrocosmSubworld.CurrentID)
             {

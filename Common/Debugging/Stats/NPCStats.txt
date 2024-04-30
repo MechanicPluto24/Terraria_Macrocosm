@@ -11,6 +11,7 @@ CraterDemon
 		Crater Demon Mask, 14.29%
 		Moonstone, (30-60) 100%
 		Delirium Plating, (30-90) 100%
+		Spooky Dookie, 7.14%
 		Calcic Cane, 25%
 		Cruithne-3753, 25%
 		Imbrium Jewel, 25%

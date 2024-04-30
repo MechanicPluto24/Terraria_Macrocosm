@@ -16,7 +16,7 @@ namespace Macrocosm.Content.Items.Materials.Tech
         public override void SetDefaults()
         {
             Item.width = 16;
-            Item.height = 28;
+            Item.height = 30;
             Item.maxStack = Item.CommonMaxStack;
             Item.value = 100;
             Item.rare = ItemRarityID.Green;

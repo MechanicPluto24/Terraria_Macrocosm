@@ -20,6 +20,7 @@ namespace Macrocosm.Common.DataStructures
         {
             sceneMetrics = new();
             this.scanCenterWorldCoordinates = scanCenterWorldCoordinates;
+            Scan();
         }
 
         public SceneData(Point scanCenterTileCoordinates) : this(scanCenterTileCoordinates.ToWorldCoordinates()) { }

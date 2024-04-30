@@ -23,7 +23,7 @@ namespace Macrocosm.Common.TileFrame
         /// Style currently used for plating blocks with special frames (e.g. Moon Base Plating) 
         /// Adapted from the Gemspark blend style 
         /// </summary>
-        public static void PlatingStyle(int i, int j)
+        public static void PlatingStyle(int i, int j, bool countHalfBlocks = false)
         {
             Tile tile = Main.tile[i, j];
             //var info = new TileNeighbourInfo(i, j).TypedSolid(tile.TileType);
@@ -44,31 +44,31 @@ namespace Macrocosm.Common.TileFrame
             if (tileTop.IsSloped() && !tileTop.TopSlope)
                 top = false;
 
-            bool bottom = tileBottom.HasTile && tileBottom.TileType == tile.TileType && !tileBottom.IsHalfBlock;
+            bool bottom = tileBottom.HasTile && tileBottom.TileType == tile.TileType && (countHalfBlocks || !tileBottom.IsHalfBlock);
             if (tileBottom.IsSloped() && !tileBottom.BottomSlope)
                 bottom = false;
 
-            bool left = tileLeft.HasTile && tileLeft.TileType == tile.TileType && !tileLeft.IsHalfBlock;
+            bool left = tileLeft.HasTile && tileLeft.TileType == tile.TileType && (countHalfBlocks || !tileLeft.IsHalfBlock);
             if (tileLeft.IsSloped() && !tileLeft.LeftSlope)
                 left = false;
 
-            bool right = tileRight.HasTile && tileRight.TileType == tile.TileType && !tileRight.IsHalfBlock;
+            bool right = tileRight.HasTile && tileRight.TileType == tile.TileType && (countHalfBlocks || !tileRight.IsHalfBlock);
             if (tileRight.IsSloped() && !tileRight.RightSlope)
                 right = false;
 
-            bool topLeft = tileTopLeft.HasTile && tileTopLeft.TileType == tile.TileType && !tileTopLeft.IsHalfBlock;
+            bool topLeft = tileTopLeft.HasTile && tileTopLeft.TileType == tile.TileType && (countHalfBlocks || !tileTopLeft.IsHalfBlock);
             if (tileTopLeft.IsSloped() && (tileTopLeft.BottomSlope || tileTopLeft.RightSlope))
                 topLeft = false;
 
-            bool topRight = tileTopRight.HasTile && tileTopRight.TileType == tile.TileType && !tileTopRight.IsHalfBlock;
+            bool topRight = tileTopRight.HasTile && tileTopRight.TileType == tile.TileType && (countHalfBlocks || !tileTopRight.IsHalfBlock);
             if (tileTopRight.IsSloped() && (tileTopRight.BottomSlope || tileTopRight.LeftSlope))
                 topRight = false;
 
-            bool bottomLeft = tileBottomLeft.HasTile && tileBottomLeft.TileType == tile.TileType && !tileBottomLeft.IsHalfBlock;
+            bool bottomLeft = tileBottomLeft.HasTile && tileBottomLeft.TileType == tile.TileType && (countHalfBlocks || !tileBottomLeft.IsHalfBlock);
             if (tileBottomLeft.IsSloped() && (tileBottomLeft.TopSlope || tileBottomLeft.RightSlope))
                 bottomLeft = false;
 
-            bool bottomRight = tileBottomRight.HasTile && tileBottomRight.TileType == tile.TileType && !tileBottomRight.IsHalfBlock;
+            bool bottomRight = tileBottomRight.HasTile && tileBottomRight.TileType == tile.TileType && (countHalfBlocks || !tileBottomRight.IsHalfBlock);
             if (tileBottomRight.IsSloped() && (tileBottomRight.TopSlope || tileBottomRight.LeftSlope))
                 bottomRight = false;
 
@@ -1942,8 +1942,6 @@ namespace Macrocosm.Common.TileFrame
         }
 
         #endregion
-
-
 
         // TODO
         /*

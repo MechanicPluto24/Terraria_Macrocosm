@@ -18,18 +18,6 @@ namespace Macrocosm.Content.Tiles.Blocks
             Main.tileLighted[Type] = true;
             Main.tileBlendAll[Type] = true;
 
-            //Main.tileMerge[ModContent.TileType<Regolith>()][Type] = true;
-            //Main.tileMerge[ModContent.TileType<RegolithBrick>()][Type] = true;
-            //Main.tileMerge[ModContent.TileType<Protolith>()][Type] = true;
-            //Main.tileMerge[ModContent.TileType<IrradiatedRock>()][Type] = true;
-            //Main.tileMerge[ModContent.TileType<IrradiatedBrick>()][Type] = true;
-            //
-            //Main.tileMerge[Type][ModContent.TileType<Regolith>()] = true;
-            //Main.tileMerge[Type][ModContent.TileType<RegolithBrick>()] = true;
-            //Main.tileMerge[Type][ModContent.TileType<Protolith>()] = true;
-            //Main.tileMerge[Type][ModContent.TileType<IrradiatedRock>()] = true;
-            //Main.tileMerge[Type][ModContent.TileType<IrradiatedBrick>()] = true;
-
             TileID.Sets.IgnoresNearbyHalfbricksWhenDrawn[Type] = true;
             //TileID.Sets.GemsparkFramingTypes[Type] = Type;
 

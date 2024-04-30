@@ -63,9 +63,9 @@ namespace Macrocosm.Content.Machines
                 resultSlot.Top = new(0, 0.45f);
                 resultSlot.Left = new(0, 0.68f);
                 resultSlot.AddReserved(
-                    (item) => item.ModItem is IFillableContainer,
-                    Language.GetText("Fillable"),
-                    ModContent.Request<Texture2D>(ContentSamples.ItemsByType[ModContent.ItemType<FuelTank>()].ModItem.Texture + "_Blueprint")
+                    (item) => item.ModItem is FuelCanister,
+                    Lang.GetItemName(ModContent.ItemType<FuelCanister>()),
+                    ModContent.Request<Texture2D>(ContentSamples.ItemsByType[ModContent.ItemType<FuelCanister>()].ModItem.Texture + "_Blueprint")
                 );
                 backgroundPanel.Append(resultSlot);
             }
@@ -75,6 +75,11 @@ namespace Macrocosm.Content.Machines
         {
             base.Update(gameTime);
             Inventory.ActiveInventory = OilRefinery.Inventory;
+
+            if(resultSlot.Item.ModItem is FuelCanister fuelCanister && !fuelCanister.Full)
+            {
+                fuelCanister.FuelPercent += 0.01f;
+            }
         }
     }
 }

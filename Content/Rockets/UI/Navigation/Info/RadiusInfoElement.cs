@@ -20,7 +20,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation.Info
 
             value = MathF.Round(value, 2);
 
-            return Language.GetText("Mods.Macrocosm.UI.Rocket.Radius.Unit" + type.ToString());
+            return Language.GetText("Mods.Macrocosm.UI.Rocket.Navigation.Radius.Unit" + type.ToString());
         }
     }
 }

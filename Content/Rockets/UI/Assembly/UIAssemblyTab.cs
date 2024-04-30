@@ -240,7 +240,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
                 GrayscaleIconIfNotInteractible = true,
                 GetIconPosition = (dimensions) => dimensions.Position() + new Vector2(dimensions.Width * 0.2f, dimensions.Height * 0.5f)
             };
-            assembleButton.SetText(new(Language.GetText("Mods.Macrocosm.UI.LaunchPad.Assemble")), 0.8f);
+            assembleButton.SetText(new(Language.GetText("Mods.Macrocosm.UI.LaunchPad.Assemble")), 0.8f, darkenTextIfNotInteractible: true);
             assembleButton.OnLeftClick += (_, _) => AssembleRocket();
             Append(assembleButton);
 

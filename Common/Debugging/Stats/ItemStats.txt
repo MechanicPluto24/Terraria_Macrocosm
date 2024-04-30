@@ -227,6 +227,15 @@ CoalBrick
 		Furnace
 
 
+GothicCoalBrick
+	Value: No value
+	Research count: 100
+	Recipes:
+		Coal x 2
+		at
+		Heavy Work Bench
+
+
 IrradiatedBrick
 	Value: No value
 	Research count: 100
@@ -534,6 +543,10 @@ SpaceTeddy
 	Value: 5 silver
 	Research count: 1
 
+SpookyDookie
+	Value: 1 silver 50 copper
+	Research count: 1
+
 TeddyBear
 	Value: 5 silver
 	Research count: 1
@@ -767,7 +780,7 @@ EngineComponent
 		Fabricator
 
 
-FuelTank
+FuelCanister
 	Value: 1 silver
 	Research count: 100
 	Recipes:

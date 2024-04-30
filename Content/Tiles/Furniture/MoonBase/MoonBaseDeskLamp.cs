@@ -28,6 +28,8 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 
             TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.Table, 2, 0);
 
+            TileObjectData.newTile.DrawYOffset = 2;
+
             // To ensure the right-facing style is properly registered, not the left-facing style "turned off" frame
             TileObjectData.newTile.StyleMultiplier = 2;
             TileObjectData.newTile.StyleWrapLimit = 4;

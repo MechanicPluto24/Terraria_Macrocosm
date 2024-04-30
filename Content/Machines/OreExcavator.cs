@@ -192,11 +192,12 @@ namespace Macrocosm.Content.Machines
 
         public override void AnimateTile(ref int frame, ref int frameCounter)
         {
-            frameCounter++;
-            if (frameCounter >= 4)
+            int ticksPerFrame = 4;
+            int frameCount = 4;
+            if (++frameCounter >= ticksPerFrame)
             {
                 frameCounter = 0;
-                if (++frame >= 4)
+                if (++frame >= frameCount)
                     frame = 0;
             }
         }

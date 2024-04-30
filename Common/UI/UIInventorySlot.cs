@@ -228,7 +228,7 @@ namespace Macrocosm.Common.UI
 
             if (!(Main.mouseItem.maxStack > 1 && item.type == Main.mouseItem.type && item.stack != item.maxStack && Main.mouseItem.stack != Main.mouseItem.maxStack))
                 Terraria.Utils.Swap(ref item, ref Main.mouseItem);
-
+            
             if (item.stack > 0)
                 AnnounceTransfer(new ItemTransferInfo(item, Context.MouseItem, itemSlotContext, item.stack));
             else
@@ -279,7 +279,6 @@ namespace Macrocosm.Common.UI
 
             if (!Main.mouseRight)
                 return;
-
 
             if (item.maxStack == 1)
             {

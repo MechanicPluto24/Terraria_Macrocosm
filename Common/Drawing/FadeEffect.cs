@@ -7,6 +7,8 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Drawing
 {
+    // Currently only used in loading screens, prefer Main.BlackFadeIn for in-game.
+    // TODO: rework into a clone of BlackFadeIn with custom colors?
     public class FadeEffect : ModSystem
     {
         public static bool IsFading => isFading;

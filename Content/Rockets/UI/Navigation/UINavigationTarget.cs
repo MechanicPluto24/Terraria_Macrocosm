@@ -14,7 +14,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.UI.Navigation
 {
-    public class UINavigationTarget : UIElement, IConsistentUpdateable
+    public class UINavigationTarget : UIElement, IFixedUpdateable
     {
         /// <summary> The panel instance this target belongs to </summary>
         public UINavigationPanel OwnerPanel { get; set; }
@@ -135,7 +135,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
             OnLeftDoubleClick += (_, _) => OwnerPanel.ZoomIn(useDefault: false);
         }
 
-        public void Update()
+        public void FixedUpdate()
         {
             rotation += 0.006f;
 

@@ -2,6 +2,8 @@
 using Macrocosm.Common.Systems.UI;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets;
+using Microsoft.CodeAnalysis;
+using Microsoft.Xna.Framework;
 using System;
 using System.Linq;
 using Terraria;
@@ -61,6 +63,8 @@ namespace Macrocosm.Content.Players
         {
             orig(player);
 
+            TileReachCheckSettings settings = TileReachCheckSettings.QuickStackToNearbyChests;
+
             if (player.whoAmI == Main.myPlayer && !player.HasLockedInventory())
             {
                 for (int i = 0; i < RocketManager.MaxRockets; i++)
@@ -68,13 +72,27 @@ namespace Macrocosm.Content.Players
                     Rocket rocket = RocketManager.Rockets[i];
 
                     if (rocket.ActiveInCurrentWorld &&
-                        rocket.Bounds.InPlayerInteractionRange(TileReachCheckSettings.QuickStackToNearbyChests) &&
+                        rocket.Bounds.InPlayerInteractionRange(settings) &&
                         !rocket.Launched &&
                         !player.GetModPlayer<RocketPlayer>().InRocket
                     )
                     {
                         ContainerTransferContext transferContext = new(rocket.Center);
                         rocket.Inventory.QuickStack(transferContext);
+                    }
+                }
+
+                foreach(var kvp in TileEntity.ByPosition)
+                {
+                    TileEntity entity = kvp.Value; 
+                    Point16 tileCoordinates = kvp.Key;
+
+                    if (entity is IInventoryOwner inventoryOwner &&
+                         Main.LocalPlayer.IsInTileInteractionRange(tileCoordinates.X, tileCoordinates.Y, settings)
+                    )
+                    {
+                        ContainerTransferContext transferContext = new(inventoryOwner.InventoryItemDropLocation);
+                        inventoryOwner.Inventory.QuickStack(transferContext);
                     }
                 }
             }

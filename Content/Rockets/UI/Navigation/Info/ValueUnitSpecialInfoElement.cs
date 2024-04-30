@@ -61,7 +61,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation.Info
 
         protected override LocalizedColorScaleText GetText() => new(formattedLocalizedText, scale: 0.9f);
 
-        protected override LocalizedText GetHoverText() => Language.GetText("Mods.Macrocosm.UI.Rocket." + infoElementKey + ".Name");
+        protected override LocalizedText GetHoverText() => Language.GetText("Mods.Macrocosm.UI.Rocket.Navigation." + infoElementKey + ".Name");
 
         protected override Asset<Texture2D> GetIcon() => ModContent.Request<Texture2D>("Macrocosm/Content/Rockets/Textures/WorldInfo/" + infoElementKey);
 

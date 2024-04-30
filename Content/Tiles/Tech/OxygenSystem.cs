@@ -88,11 +88,12 @@ namespace Macrocosm.Content.Tiles.Tech
 
         public override void AnimateTile(ref int frame, ref int frameCounter)
         {
-            frameCounter++;
-            if (frameCounter >= 60)
+            int ticksPerFrame = 60;
+            int frameCount = 2;
+            if (++frameCounter >= ticksPerFrame)
             {
                 frameCounter = 0;
-                if (++frame >= 2)
+                if (++frame >= frameCount)
                     frame = 0;
             }
         }

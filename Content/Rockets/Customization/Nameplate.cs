@@ -1,4 +1,4 @@
-﻿using Macrocosm.Common.DataStructures;
+﻿using Macrocosm.Common.Enums;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

@@ -37,6 +37,15 @@ Rocket: {
 		Assembly: Assembly
 	}
 
+	Modules: {
+		CommandPod.DisplayName: Command Pod
+		ServiceModule.DisplayName: Service Module
+		ReactorModule.DisplayName: Reactor Module
+		EngineModule.DisplayName: Engine Module
+		BoosterLeft.DisplayName: Left Booster
+		BoosterRight.DisplayName: Right Booster
+	}
+
 	Customization: {
 		Apply: Apply rocket appearance changes
 		Cancel: Discard rocket appearance changes
@@ -49,130 +58,127 @@ Rocket: {
 		ResetPattern: Reset pattern to default appearance
 	}
 
-	Modules: {
-		CommandPod.DisplayName: Command Pod
-		ServiceModule.DisplayName: Service Module
-		ReactorModule.DisplayName: Reactor Module
-		EngineModule.DisplayName: Engine Module
-		BoosterLeft.DisplayName: Left Booster
-		BoosterRight.DisplayName: Right Booster
-	}
+	Cargo.DumpFuel: Dump
 
-	LaunchButton: {
-		NoTarget: NO TARGET
-		CantReach: INACCESSIBLE
-		DifferentTarget: CURRENT LOCATION
-		Occupied: OCCUPIED
-		ZoomIn: ZOOM IN
-		Launch: LAUNCH
-		LaunchInactive: LAUNCH
-	}
-
-	Gravity: {
-		Name: Gravity
-		UnitG: "{0} G {1}{2}{3}"
-		UnitMetric: "{0} m/s² {1}{2}{3}"
-		UnitImperial: "{0} ft/s² {1}{2}{3}"
-	}
-
-	Radius: {
-		Name: Radius
-		UnitMetric: "{0} km {1}{2}{3}"
-		UnitImperial: "{0} {^0:mile;miles} {1}{2}{3}"
-	}
-
-	DayPeriod: {
-		Name: Day Period
-		UnitDays: "{0} {^0:day;days} {1}{2}{3}"
-		UnitHours: "{0} {^0:hour;hours} {1}{2}{3}"
-	}
-
-	Special: {
-		TidallyLocked: Tidally Locked
-		Unstable: Unstable
-	}
-
-	ThreatLevel: {
-		Name: Threat Level
-		Threat1: "{0} - Harmless"
-		Threat2: "{0} - Arduous"
-		Threat3: "{0} - Challenging"
-		Threat4: "{0} - Dangerous"
-		Threat5: "{0} - Treacherous"
-		Threat6: "{0} - Lethal"
-		Threat7: "{0} - Cataclysmic"
-		Threat8: "{0} - Nightmare"
-		Threat9: "{0} - Apollyon"
-		Threat10: "{0} - Unknown"
-	}
-
-	Hazard: {
-		Name: Hazard
-		MeteorStorms: Meteor Storms
-		SolarStorms: Solar Storms
-	}
-
-	Checklist: {
-		Fuel: {
-			Met.Display: Enough fuel
-
-			NotMet: {
-				Display: Not enough fuel
-				Hover: You need more fuel to launch the rocket
-			}
+	Navigation: {
+		LaunchButton: {
+			NoTarget: NO TARGET
+			CantReach: INACCESSIBLE
+			DifferentTarget: CURRENT LOCATION
+			Occupied: OCCUPIED
+			ZoomIn: ZOOM IN
+			Launch: LAUNCH
+			LaunchInactive: LAUNCH
 		}
 
-		Obstruction: {
-			Met.Display: Path unobstructed
-
-			NotMet: {
-				Display: Path obstructed
-				Hover: There is an obstruction in the rocket's flight path
-			}
+		Gravity: {
+			Name: Gravity
+			UnitG: "{0} G {1}{2}{3}"
+			UnitMetric: "{0} m/s² {1}{2}{3}"
+			UnitImperial: "{0} ft/s² {1}{2}{3}"
 		}
 
-		Boss: {
-			NotMet: {
-				Display: Boss alive
-				Hover: You must defeat the boss before being able to fly safely
-			}
+		Radius: {
+			Name: Radius
+			UnitMetric: "{0} km {1}{2}{3}"
+			UnitImperial: "{0} {^0:mile;miles} {1}{2}{3}"
 		}
 
-		Invasion: {
-			NotMet: {
-				Display: Invasion ongoing
-				Hover: You must defeat the ongoing invasion before being able to fly safely
-			}
+		DayPeriod: {
+			Name: Day Period
+			UnitDays: "{0} {^0:day;days} {1}{2}{3}"
+			UnitHours: "{0} {^0:hour;hours} {1}{2}{3}"
 		}
 
-		BloodMoon: {
-			NotMet: {
-				Display: Blood Moon ongoing
-				Hover: The vacuum of space is not safe when there's a Blood Moon
-			}
+		Special: {
+			TidallyLocked: Tidally Locked
+			Unstable: Unstable
 		}
 
-		Selected: {
-			NotMet: {
-				Display: Select a destination
-				Hover: default
-			}
+		ThreatLevel: {
+			Name: Threat Level
+			Threat1: "{0} - Harmless"
+			Threat2: "{0} - Arduous"
+			Threat3: "{0} - Challenging"
+			Threat4: "{0} - Dangerous"
+			Threat5: "{0} - Treacherous"
+			Threat6: "{0} - Lethal"
+			Threat7: "{0} - Cataclysmic"
+			Threat8: "{0} - Nightmare"
+			Threat9: "{0} - Apollyon"
+			Threat10: "{0} - Unknown"
 		}
 
-		DifferentTarget: {
-			NotMet: {
-				Display: You are already here
-				Hover: default
-			}
+		Hazard: {
+			Name: Hazard
+			MeteorStorms: Meteor Storms
+			SolarStorms: Solar Storms
 		}
 
-		VacantLaunchpad: {
-			NotMet: {
-				Display: Launchpad is occupied
-				Hover: default
+		Checklist: {
+			Fuel: {
+				Met.Display: Enough fuel
+
+				NotMet: {
+					Display: Not enough fuel
+					Hover: You need more fuel to launch the rocket
+				}
+			}
+
+			Obstruction: {
+				Met.Display: Path unobstructed
+
+				NotMet: {
+					Display: Path obstructed
+					Hover: There is an obstruction in the rocket's flight path
+				}
+			}
+
+			Boss: {
+				NotMet: {
+					Display: Boss alive
+					Hover: You must defeat the boss before being able to fly safely
+				}
+			}
+
+			Invasion: {
+				NotMet: {
+					Display: Invasion ongoing
+					Hover: You must defeat the ongoing invasion before being able to fly safely
+				}
+			}
+
+			BloodMoon: {
+				NotMet: {
+					Display: Blood Moon ongoing
+					Hover: The vacuum of space is not safe when there's a Blood Moon
+				}
+			}
+
+			Selected: {
+				NotMet: {
+					Display: Select a destination
+					Hover: default
+				}
+			}
+
+			DifferentTarget: {
+				NotMet: {
+					Display: You are already here
+					Hover: default
+				}
+			}
+
+			VacantLaunchpad: {
+				NotMet: {
+					Display: Launchpad is occupied
+					Hover: default
+				}
 			}
 		}
 	}
+
+	Special.TidallyLocked: Tidally Locked
 }
 
 LoadingScreenTips: {

@@ -51,7 +51,6 @@ namespace Macrocosm.Common.Systems.UI
             window.BackgroundColor = UITheme.Current.WindowStyle.BackgroundColor;
             window.BorderColor = UITheme.Current.WindowStyle.BorderColor;
 
-
             Append(window);
 
             title = new(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Navigation"), 0.6f, true)
@@ -64,7 +63,6 @@ namespace Macrocosm.Common.Systems.UI
             };
             window.Append(title);
 
-
             navigation = new();
             customization = new();
             cargo = new();
@@ -75,7 +73,6 @@ namespace Macrocosm.Common.Systems.UI
 
             window.Append(navigation);
             navigation.CustomizationPreview.OnLeftClick += SetTab_Customization;
-            //Navigation.PayloadFuelPreview.OnLeftClick += SetTab_Payload;
 
             tabLeftButton = new(ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "BackArrow", mode), ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "BackArrowBorder", mode), Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Customization"))
             {
@@ -96,7 +93,7 @@ namespace Macrocosm.Common.Systems.UI
                 CheckInteractible = () => !window.Children.Contains(cargo)
             };
             tabRightButton.SetVisibility(1f, 0f, 1f);
-            tabRightButton.OnLeftClick += SetTab_Payload;
+            tabRightButton.OnLeftClick += SetTab_Cargo;
             window.Append(tabRightButton);
         }
 
@@ -157,7 +154,7 @@ namespace Macrocosm.Common.Systems.UI
         // The tabbing logic with interface could use some linked list behavior (?) 
         private void SetTab_Customization(UIMouseEvent evt, UIElement listeningElement)
         {
-            tabRightButton.OnLeftClick -= SetTab_Payload;
+            tabRightButton.OnLeftClick -= SetTab_Cargo;
             tabRightButton.OnLeftClick += SetTab_Navigation;
 
             SwitchTab(customization);
@@ -166,7 +163,7 @@ namespace Macrocosm.Common.Systems.UI
             tabRightButton.HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Navigation");
         }
 
-        private void SetTab_Payload(UIMouseEvent evt, UIElement listeningElement)
+        private void SetTab_Cargo(UIMouseEvent evt, UIElement listeningElement)
         {
             tabLeftButton.OnLeftClick -= SetTab_Customization;
             tabLeftButton.OnLeftClick += SetTab_Navigation;
@@ -184,7 +181,7 @@ namespace Macrocosm.Common.Systems.UI
             tabLeftButton.OnLeftClick += SetTab_Customization;
 
             tabRightButton.OnLeftClick -= SetTab_Navigation;
-            tabRightButton.OnLeftClick += SetTab_Payload;
+            tabRightButton.OnLeftClick += SetTab_Cargo;
 
             SwitchTab(navigation);
 

@@ -249,8 +249,8 @@ namespace Macrocosm.Common.Systems.UI
             if (element is null)
                 return;
 
-            if (element is IConsistentUpdateable updateable)
-                updateable.Update();
+            if (element is IFixedUpdateable updateable)
+                updateable.FixedUpdate();
         }
     }
 }

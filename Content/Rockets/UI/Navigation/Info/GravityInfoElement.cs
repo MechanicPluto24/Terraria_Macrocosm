@@ -29,7 +29,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation.Info
                 value = MathF.Round(value, 3);
             }
 
-            return Language.GetText("Mods.Macrocosm.UI.Rocket.Gravity.Unit" + unit);
+            return Language.GetText("Mods.Macrocosm.UI.Rocket.Navigation.Gravity.Unit" + unit);
         }
     }
 }

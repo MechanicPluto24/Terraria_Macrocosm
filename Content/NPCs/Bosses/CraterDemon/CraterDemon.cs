@@ -5,6 +5,7 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Consumables.BossBags;
 using Macrocosm.Content.Items.Currency;
+using Macrocosm.Content.Items.Furniture;
 using Macrocosm.Content.Items.Materials.Drops;
 using Macrocosm.Content.Items.Pets;
 using Macrocosm.Content.Items.Relics;
@@ -29,6 +30,7 @@ using Terraria.GameContent;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.UI;
 
 namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 {
@@ -489,6 +491,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
             notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<Moonstone>(), 1, 30, 60));
             notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<DeliriumPlating>(), 1, 30, 90));
+
+            notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<SpookyDookie>(), 14));
 
             notExpertRule.OnSuccess(ItemDropRule.OneFromOptions(1,
                 ModContent.ItemType<CalcicCane>(),
