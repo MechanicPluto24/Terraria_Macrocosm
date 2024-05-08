@@ -5,6 +5,7 @@ using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Players;
 using Macrocosm.Content.Rockets.LaunchPads;
+using Macrocosm.Content.Rockets.UI.Cargo;
 using Macrocosm.Content.Rockets.UI.Customization;
 using Macrocosm.Content.Rockets.UI.Navigation.Checklist;
 using Macrocosm.Content.Rockets.UI.Navigation.Info;
@@ -23,6 +24,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
         public Rocket Rocket { get; set; } = new();
 
         public UIRocketPreviewSmall CustomizationPreview { get; set; }
+        public UICargoFuelPreview CargoPreview { get; set; }
 
         private UILaunchButton launchButton;
         private UINavigationPanel navigationPanel;
@@ -85,6 +87,10 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
             CustomizationPreview = new();
             Append(CustomizationPreview);
             CustomizationPreview.Activate();
+
+            CargoPreview = new();
+            Append(CargoPreview);
+            CargoPreview.Activate();
         }
 
         public override void OnDeactivate()

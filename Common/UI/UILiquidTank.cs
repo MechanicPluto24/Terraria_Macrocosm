@@ -28,7 +28,13 @@ namespace Macrocosm.Common.UI
         private readonly int liquidType;
 
         /// <summary> Use <see cref="WaterStyleID"/>! </summary>
-        public UILiquidTank(int liquidType)
+        public UILiquidTank(int liquidType) : base
+        (
+            customBackground: ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/SquarePanelBackground"),
+            customborder: ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/SquarePanelBorder"),
+            customCornerSize: 12,
+            customBarSize: 4
+        )
         {
             this.liquidType = liquidType;
         }
@@ -41,7 +47,7 @@ namespace Macrocosm.Common.UI
 
         public override void OnInitialize()
         {
-            BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor;
+            BackgroundColor = UITheme.Current.ButtonStyle.BackgroundColor;
             BorderColor = UITheme.Current.PanelStyle.BorderColor;
             OverflowHidden = true;
             SetPadding(2f);
@@ -49,7 +55,8 @@ namespace Macrocosm.Common.UI
             uiLiquid = new(liquidType)
             {
                 Width = new(0, 1f),
-                Height = new(0, 1f)
+                Height = new(0, 1f),
+                RoundCorners = true
             };
             Append(uiLiquid);
         }

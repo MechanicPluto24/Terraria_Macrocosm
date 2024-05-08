@@ -882,17 +882,18 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             };
             modulePicker.Append(modulePickerIconPanel);
 
-            leftButton = new(ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "BackArrow", mode), ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "BackArrowBorder", mode))
+            leftButton = new(ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ShortArrow", mode), ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ShortArrowBorder", mode))
             {
                 VAlign = 0.5f,
                 Left = new StyleDimension(0f, 0f),
+                SpriteEffects = SpriteEffects.FlipHorizontally,
                 CheckInteractible = () => !rocketPreview.ZoomedOut
             };
             leftButton.OnLeftClick += (_, _) => PickPreviousModule();
 
             modulePicker.Append(leftButton);
 
-            rightButton = new(ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ForwardArrow", mode), ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ForwardArrowBorder", mode))
+            rightButton = new(ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ShortArrow", mode), ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ShortArrowBorder", mode))
             {
                 VAlign = 0.5f,
                 Left = new StyleDimension(0, 0.79f),

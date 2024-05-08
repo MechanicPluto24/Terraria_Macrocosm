@@ -14,10 +14,11 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Materials.Tech
 {
+    // TODO: fuel serialization
     public class FuelCanister : ModItem
     {
         public float CurrentFuel { get; set; }
-        protected virtual float MaxFuel => 10;
+        public virtual float MaxFuel => 10;
 
         public float FuelPercent
         {

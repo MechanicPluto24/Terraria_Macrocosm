@@ -14,6 +14,12 @@ using Terraria.UI;
 
 namespace Macrocosm.Common.UI
 {
+    // TODO: a way to resize it and use UIPanel logic??
+    // Currently it's only fixed size, using the textures found in Assets/Textures/UI: SmallPanel, LargePanel, WidePanel
+    /// <summary>
+    /// Panel with button functionality, fixed size depending on panel texture.
+    /// Has an image icon, border highlighting, hover text, and the possibility to add text on it.
+    /// </summary>
     public class UIPanelIconButton : UIHoverImageButton
     {
         public Color IconColor { get; set; } = Color.White;

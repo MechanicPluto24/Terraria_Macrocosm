@@ -28,11 +28,11 @@ namespace Macrocosm.Common.UI
 
         private /*const*/ readonly int sliceSize = 1;
         private /*const*/ readonly int surfaceSliceHeight = 3;
-        private /*const*/ readonly int cornerSize = 10;
 
         public float LiquidLevel { get; set; } = 0f;
         public float WaveFrequency { get; set; } = 5f;
         public float WaveAmplitude { get; set; } = 0.1f;
+        public bool RoundCorners { get; set; } = false;
 
         /// <summary> Use <see cref="WaterStyleID"/>! </summary>
         public UILiquid(int liquidId)
@@ -74,7 +74,6 @@ namespace Macrocosm.Common.UI
             float quaternaryWaveAmplitude = WaveAmplitude * 0.15f;
             float quaternaryWaveFrequency = WaveFrequency * 2f;
 
-            int radius = cornerSize;
             Rectangle dims = GetDimensions().ToRectangle();
 
             for (int x = 0; x < fillArea.Width; x += sliceSize)
@@ -86,51 +85,19 @@ namespace Macrocosm.Common.UI
                 float totalWaveOffset = primaryWaveOffset + secondaryWaveOffset + tertiaryWaveOffset + quaternaryWaveOffset;
 
                 float waveTop = fillArea.Top + totalWaveOffset;
-                waveTop = Math.Max(waveTop, CalculateCornerYOffsetTop(radius, x, dims.Width, dims.Top));
 
                 spriteBatch.Draw(texture.Value, new Vector2(fillArea.X + x, waveTop - surfaceSliceHeight), surfaceSourceRectangle, Color.White);
 
-                int fillBottom = CalculateCornerYOffsetBottom(radius, x, dims.Width, dims.Bottom);
+                int fillBottom = dims.Bottom;
+                if (RoundCorners && (x < 2 || x >= dims.Width - 2))
+                    fillBottom -= 2;
+
                 int waveFillHeight = fillBottom - (int)waveTop;
                 if (waveFillHeight > 0)
                 {
                     spriteBatch.Draw(texture.Value, new Rectangle(fillArea.X + x, (int)waveTop, sliceSize, waveFillHeight), fillSourceRectangle, Color.White);
                 }
             }
-        }
-        private int CalculateCornerYOffsetTop(int radius, int x, int fullWidth, int topYOffset)
-        {
-            if (x < radius)
-            {
-                int dx = radius - x;  
-                int dy = (int)Math.Sqrt(radius * radius - dx * dx);  
-                return (topYOffset + radius) - dy;  
-            }
-            else if (x >= fullWidth - radius)
-            {
-                int dx = x - (fullWidth - radius); 
-                int dy = (int)Math.Sqrt(radius * radius - dx * dx); 
-                return (topYOffset + radius) - dy;  
-            }
-
-            return topYOffset;
-        }
-
-        private int CalculateCornerYOffsetBottom(int radius, int x, int fullWidth, int bottomYOffset)
-        {
-            if (x < radius)
-            {
-                int dx = radius - x;
-                int dy = radius - (int)Math.Sqrt(radius * radius - dx * dx);
-                return bottomYOffset - dy;
-            }
-            else if (x >= fullWidth - radius)
-            {
-                int dx = x - (fullWidth - radius);
-                int dy = radius - (int)Math.Sqrt(radius * radius - dx * dx);
-                return bottomYOffset - dy;
-            }
-            return bottomYOffset;
         }
 
         private Rectangle GetFillArea()

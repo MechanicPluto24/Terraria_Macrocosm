@@ -64,10 +64,13 @@ namespace Macrocosm.Content.Rockets
         private LaunchPad targetLaunchPad;
 
         /// <summary> The amount of fuel currently stored in the rocket, as an absolute value </summary>
-        [NetSync] public float Fuel;
+        [NetSync] public float Fuel = 0f;
 
-        /// <summary> The rocket's fuel capacity as an absoulute value </summary>
-        [NetSync] public float FuelCapacity = 1000f;
+        /// <summary> The rocket's fuel capacity as an absolute value </summary>
+        [NetSync] public float FuelCapacity = DefaultFuelCapacity;
+
+        /// <summary> The default fuel capacity </summary>
+        public const float DefaultFuelCapacity = 1000f;
 
         /// <summary> The rocket's current world, "Earth" if active and not in a subworld. Other mod's subworlds have the mod name prepended </summary>
         [NetSync] public string CurrentWorld = "";
@@ -75,10 +78,8 @@ namespace Macrocosm.Content.Rockets
         /// <summary> Whether the rocket is active in the current world and should be updated and visible </summary>
         public bool ActiveInCurrentWorld => Active && CurrentWorld == MacrocosmSubworld.CurrentID;
 
-        /// <summary> Number of ticks of the launch countdown (seconds * 60 ticks/sec) </summary>
+        /// <summary> Number of ticks of the launch countdown (seconds * 60 ticks/sec). Includes <see cref="StaticFire"/> </summary>
         public int LiftoffTime = 3 * 60;
-
-        public float MaxFlightSpeed = 25f;
 
         /// <summary> Whether this rocket is currently in flight </summary>
         public bool InFlight => FlightTime >= LiftoffTime;
@@ -118,16 +119,22 @@ namespace Macrocosm.Content.Rockets
         public string DisplayName
             => Nameplate.IsValid() ? Nameplate.Text : Language.GetTextValue("Mods.Macrocosm.Common.Rocket");
 
-        /// <summary> Dictionary of all the rocket's modules by name, in their order found in ModuleNames </summary>
+        /// <summary> Dictionary of all the rocket's modules, by name, in the order found in <see cref="ModuleNames"/> </summary>
         public Dictionary<string, RocketModule> Modules = new();
 
+        /// <summary> The rocket's modules ordered by their <see cref="RocketModule.DrawPriority"/> </summary>
         public List<RocketModule> ModulesByDrawPriority => Modules.Values.OrderBy(module => module.DrawPriority).ToList();
 
         /// <summary> List of the module names, in the customization access order </summary>
         public List<string> ModuleNames => Modules.Keys.ToList();
 
-        public int StaticFireBeginTime = 120;
+        /// <summary> The time (in ticks) after launch for the <see cref="StaticFire"/> </summary>
+        public const int StaticFireBeginTime = 120;
+
+        /// <summary> Whether the rocket is in the static fire part of the launch sequence </summary>
         public bool StaticFire => StaticFireProgress > 0f && FlightTime < LiftoffTime;
+
+        /// <summary> The progress of the <see cref="StaticFire"/> </summary>
         public float StaticFireProgress => Utility.InverseLerp(LiftoffTime - StaticFireBeginTime, LiftoffTime, FlightTime, clamped: true);
 
         /// <summary> The flight sequence progress </summary>
@@ -138,7 +145,6 @@ namespace Macrocosm.Content.Rockets
         public float LandingProgress { get; set; }
         private float EasedLandingProgress => Utility.QuadraticEaseOut(LandingProgress);
 
-        private float worldExitSpeed;
         private bool ranFirstUpdate;
         private bool canAnimate = true;
 
@@ -174,7 +180,6 @@ namespace Macrocosm.Content.Rockets
             }
         }
 
-        public bool HasInventory => Inventory is not null;
         public Inventory Inventory { get; set; }
 
         public const int DefaultGeneralInventorySize = 50;
@@ -306,7 +311,7 @@ namespace Macrocosm.Content.Rockets
                 }
             }
 
-            if (Active && HasInventory)
+            if (Active)
             {
                 Inventory.Size = 0;
                 Inventory.SyncSize();
@@ -319,6 +324,7 @@ namespace Macrocosm.Content.Rockets
             NetSync();
         }
 
+        // Gets the position of a module with respect to the provided origin
         private Vector2 GetModuleRelativePosition(RocketModule module, Vector2 origin)
         {
             var commandPod = Modules["CommandPod"];
@@ -348,7 +354,7 @@ namespace Macrocosm.Content.Rockets
         }
 
         /// <summary> Gets the RocketPlayer bound to the provided player ID </summary>
-        /// <param name="playerID"> The player ID </param>
+        /// <param name="playerID"> The player whoAmI </param>
         public RocketPlayer GetRocketPlayer(int playerID) => Main.player[playerID].GetModPlayer<RocketPlayer>();
 
         /// <summary> Gets the commander of this rocket </summary>
@@ -373,15 +379,15 @@ namespace Macrocosm.Content.Rockets
         }
 
         /// <summary> Checks whether the provided player ID is on this rocket </summary>
-        /// <param name="playerID"> The player ID </param>
+        /// <param name="playerID"> The player whoAmI </param>
         public bool CheckPlayerInRocket(int playerID) => Main.player[playerID].active && GetRocketPlayer(playerID).InRocket && GetRocketPlayer(playerID).RocketID == WhoAmI;
 
         /// <summary> Checks whether the provided player ID is a commander on this rocket </summary>
-        /// <param name="playerID"> The player ID </param>
+        /// <param name="playerID"> The player whoAmI </param>
         public bool CheckPlayerCommander(int playerID) => Main.player[playerID].active && GetRocketPlayer(playerID).IsCommander && GetRocketPlayer(playerID).RocketID == WhoAmI;
 
         /// <summary> Checks whether this rocket has a commander </summary>
-        /// <param name="playerID"> The commander player ID </param>
+        /// <param name="playerID"> The commander player whoAmI </param>
         public bool TryFindingCommander(out int playerID)
         {
             for (int i = 0; i < Main.maxPlayers; i++)
