@@ -188,9 +188,7 @@ namespace Macrocosm.Content.Rockets
                     var rocket = Rockets[i];
                     rocket.NetSync(toClient: remoteClient);
                     rocket.SendCustomizationData(toClient: remoteClient);
-
-                    if (rocket.HasInventory)
-                        rocket.Inventory.SyncEverything(toClient: remoteClient);
+                    rocket.Inventory.SyncEverything(toClient: remoteClient);
                 }
             }
 

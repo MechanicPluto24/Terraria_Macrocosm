@@ -3,6 +3,7 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Global;
 using Macrocosm.Content.Tiles.Special;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.LaunchPads
@@ -38,9 +39,9 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
         public override bool CanPlace(int i, int j, int type)
         {
-            if (LaunchPadManager.TryGetLaunchPadAtTileCoordinates(MacrocosmSubworld.CurrentID, new(i, j), out _) && type > 0 && Main.tileSolid[type])
-                return false;
-
+            if (LaunchPadManager.TryGetLaunchPadAtTileCoordinates(MacrocosmSubworld.CurrentID, new(i, j), out _) && type >= TileID.Dirt && Main.tileSolid[type]) 
+                 return false;
+ 
             return true;
         }
 

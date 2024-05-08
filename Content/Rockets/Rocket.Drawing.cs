@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Linq;
 using Terraria;
+using Terraria.Graphics.Capture;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets
@@ -215,7 +216,7 @@ namespace Macrocosm.Content.Rockets
             // We want our vertices to scale correctly
             if (drawMode is DrawMode.World)
             {
-                meshTransform.SetValue(PrimitivesSystem.WorldViewProjection);
+                meshTransform.SetValue(PrimitivesSystem.WorldViewProjection);           
             }
             else
             {

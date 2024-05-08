@@ -74,18 +74,26 @@ namespace Macrocosm.Common.Systems.UI
             window.Append(navigation);
             navigation.CustomizationPreview.OnLeftClick += SetTab_Customization;
 
-            tabLeftButton = new(ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "BackArrow", mode), ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "BackArrowBorder", mode), Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Customization"))
+            tabLeftButton = new
+            (
+                ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ShortArrow", mode),
+                ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ShortArrowBorder", mode),
+                Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Customization"))
             {
                 Top = new(-38, 0f),
                 Left = new(0, 0.005f),
-
+                SpriteEffects = SpriteEffects.FlipHorizontally,
                 CheckInteractible = () => !window.Children.Contains(customization)
             };
             tabLeftButton.SetVisibility(1f, 0f, 1f);
             tabLeftButton.OnLeftClick += SetTab_Customization;
             window.Append(tabLeftButton);
 
-            tabRightButton = new(ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ForwardArrow", mode), ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ForwardArrowBorder", mode), Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Payload"))
+            tabRightButton = new
+            (
+                ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ShortArrow", mode),
+                ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ShortArrowBorder", mode),
+                Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Payload"))
             {
                 Top = new(-38, 0f),
                 Left = new(0, 0.955f),

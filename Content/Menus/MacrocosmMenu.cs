@@ -481,7 +481,7 @@ namespace Macrocosm.Content.Menus
                 if (!Main.mouseLeft || forceRelease)
                 {
                     if (!released.ContainsKey(grabbed))
-                        released.Add(grabbed, 30);
+                        released.Add(grabbed, /*30*/ 1);
                     grabbed = null;
                 }
             }
