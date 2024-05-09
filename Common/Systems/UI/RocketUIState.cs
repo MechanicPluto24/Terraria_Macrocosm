@@ -73,6 +73,7 @@ namespace Macrocosm.Common.Systems.UI
 
             window.Append(navigation);
             navigation.CustomizationPreview.OnLeftClick += SetTab_Customization;
+            navigation.CargoPreview.OnLeftClick += SetTab_Cargo;
 
             tabLeftButton = new
             (

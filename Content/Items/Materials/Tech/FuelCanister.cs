@@ -7,32 +7,24 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System.Collections.Generic;
+using System.IO;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Items.Materials.Tech
 {
-    // TODO: fuel serialization
-    public class FuelCanister : ModItem
+    public class FuelCanister : ModItem, ILiquidContainer
     {
-        public float CurrentFuel { get; set; }
-        public virtual float MaxFuel => 10;
-
-        public float FuelPercent
-        {
-            get => MathHelper.Clamp(CurrentFuel / MaxFuel, 0, 1);
-            set => CurrentFuel = MathHelper.Clamp(value * MaxFuel, 0, MaxFuel);
-        }
-
-        public bool Full => FuelPercent >= 1;
-        public bool Empty => FuelPercent <= 0;
+        public float Amount { get; set; }
+        public float Capacity => 10f;
 
         private Asset<Texture2D> fillTexture;
 
-        public static LocalizedText CapacityTooltip;
-        public static LocalizedText AmountTooltip;
+        private static LocalizedText CapacityTooltip;
+        private static LocalizedText AmountTooltip;
 
         public override void SetStaticDefaults()
         {
@@ -50,13 +42,14 @@ namespace Macrocosm.Content.Items.Materials.Tech
             Item.value = 100;
             Item.rare = ItemRarityID.LightRed;
             Item.material = true;
-            CurrentFuel = 0;
+            Amount = 0;
         }
 
         public override bool CanStack(Item source)
         {
-            FuelCanister sourceCanister = source.ModItem as FuelCanister;
-            return Empty && sourceCanister.Empty || Full && sourceCanister.Full;
+            ILiquidContainer thisContainer = this;
+            ILiquidContainer sourceContainer = source.ModItem as ILiquidContainer;
+            return thisContainer.Empty && sourceContainer.Empty || thisContainer.Full && sourceContainer.Full;
         }
 
         public override void OnStack(Item source, int numToTransfer)
@@ -67,19 +60,19 @@ namespace Macrocosm.Content.Items.Materials.Tech
         {
             if(MacrocosmConfig.Instance.UnitSystem == MacrocosmConfig.UnitSystemType.Metric)
             {
-                float maxFuel = MaxFuel;
-                float currentFuel = CurrentFuel;
+                float maxFuel = Capacity;
+                float currentFuel = Amount;
                 string unit = "liters"; // TODO: localize
                 tooltips.Add(new TooltipLine(Mod, nameof(CapacityTooltip), CapacityTooltip.Format(maxFuel, unit)));
-                tooltips.Add(new TooltipLine(Mod, nameof(AmountTooltip), AmountTooltip.Format(currentFuel, maxFuel, unit)));
+                tooltips.Add(new TooltipLine(Mod, nameof(AmountTooltip), AmountTooltip.Format($"{currentFuel:0.##}", maxFuel, unit)));
             }
             else if (MacrocosmConfig.Instance.UnitSystem == MacrocosmConfig.UnitSystemType.Imperial)
             {
-                float maxFuel = MaxFuel / 3.785f;
-                float currentFuel = CurrentFuel / 3.785f;
+                float maxFuel = Capacity / 3.785f;
+                float currentFuel = Amount / 3.785f;
                 string unit = "liters"; // TODO: localize
                 tooltips.Add(new TooltipLine(Mod, nameof(CapacityTooltip), CapacityTooltip.Format(maxFuel, unit)));
-                tooltips.Add(new TooltipLine(Mod, nameof(AmountTooltip), AmountTooltip.Format(currentFuel, maxFuel, unit)));
+                tooltips.Add(new TooltipLine(Mod, nameof(AmountTooltip), AmountTooltip.Format($"{currentFuel:0.##}", maxFuel, unit)));
             }
         }
 
@@ -91,6 +84,28 @@ namespace Macrocosm.Content.Items.Materials.Tech
                 .AddIngredient<Silicon>(8)
                 .AddTile<Tiles.Crafting.Fabricator>()
                 .Register();
+        }
+
+        public override void SaveData(TagCompound tag)
+        {
+            if(Amount != default)
+                tag[nameof(Amount)] = Amount;
+        }
+
+        public override void LoadData(TagCompound tag)
+        {
+            if (tag.ContainsKey(nameof(Amount)))
+                Amount = tag.GetFloat(nameof(Amount));
+        }
+
+        public override void NetSend(BinaryWriter writer)
+        {
+            writer.Write(Amount);
+        }
+
+        public override void NetReceive(BinaryReader reader)
+        {
+            Amount = reader.ReadSingle();
         }
 
         public override void PostDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
@@ -112,7 +127,7 @@ namespace Macrocosm.Content.Items.Materials.Tech
 
         public Rectangle GetSourceRect()
         {
-            int y = FuelPercent switch
+            int y = (this as ILiquidContainer).Percent switch
             {
                 <= 0f => 36,
                 > 0f and < 0.2f => 34,

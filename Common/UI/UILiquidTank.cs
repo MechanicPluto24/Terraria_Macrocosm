@@ -2,6 +2,7 @@
 using Macrocosm.Common.Graphics;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Liquids;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -24,8 +25,12 @@ namespace Macrocosm.Common.UI
     /// <summary> Panel wrapper for <see cref="UILiquid"/> with automatic hiding of overflow and (TODO) gradations </summary>
     public class UILiquidTank : UIPanel
     {
-        private UILiquid uiLiquid;
+        // temporary
+        private readonly LiquidType? macrocosmLiquidType;
+
         private readonly int liquidType;
+
+        private UILiquid uiLiquid;
 
         /// <summary> Use <see cref="WaterStyleID"/>! </summary>
         public UILiquidTank(int liquidType) : base
@@ -37,6 +42,11 @@ namespace Macrocosm.Common.UI
         )
         {
             this.liquidType = liquidType;
+        }
+
+        public UILiquidTank(LiquidType macrocosmLiquidType) : this(0)
+        {
+            this.macrocosmLiquidType = macrocosmLiquidType;
         }
 
         public float LiquidLevel { get; set; }
@@ -52,12 +62,15 @@ namespace Macrocosm.Common.UI
             OverflowHidden = true;
             SetPadding(2f);
 
-            uiLiquid = new(liquidType)
-            {
-                Width = new(0, 1f),
-                Height = new(0, 1f),
-                RoundCorners = true
-            };
+            if (macrocosmLiquidType.HasValue)
+                uiLiquid = new(macrocosmLiquidType.Value);
+            else 
+                uiLiquid = new(liquidType);
+
+            uiLiquid.Width = new(0, 1f);
+            uiLiquid.Height = new(0, 1f);
+            uiLiquid.RoundCorners = true;
+
             Append(uiLiquid);
         }
 

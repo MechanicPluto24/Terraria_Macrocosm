@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.UI;
+﻿using Macrocosm.Common.Bases.Items;
+using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Materials.Tech;
@@ -30,7 +31,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
         private UIPanel fuelPlacementPanel;
         private UILiquidTank canisterBufferTank;
         private UIHoverImageButton overflowWarningIcon;
-        private UIInventorySlot fuelCanisterItemSlot;
+        private UIInventorySlot liquidContainerItemSlot;
         private UIHoverImageButton dumpFuelButton;
 
         private UILiquidTank rocketFuelTank;
@@ -64,7 +65,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
 
             Append(titleSeparator);
 
-            rocketFuelTank = new(WaterStyleID.Lava)
+            rocketFuelTank = new(Liquids.LiquidType.RocketFuel)
             {
                 Width = new(0, 0.421f),
                 Height = new(0, 0.8f),
@@ -100,7 +101,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
             overflowWarningIcon.SetVisibility(1f, 0f, 1f);
             fuelPlacementPanel.Append(overflowWarningIcon);
 
-            canisterBufferTank = new(WaterStyleID.Lava)
+            canisterBufferTank = new(Liquids.LiquidType.RocketFuel)
             {
                 Width = new(0, 0.2f),
                 Height = new(0, 0.8f),
@@ -109,8 +110,8 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
             };
             fuelPlacementPanel.Append(canisterBufferTank);
 
-            fuelCanisterItemSlot = CreateFuelCanisterItemSlot();
-            fuelPlacementPanel.Append(fuelCanisterItemSlot);
+            liquidContainerItemSlot = CreateFuelCanisterItemSlot();
+            fuelPlacementPanel.Append(liquidContainerItemSlot);
 
             dumpFuelButton = new
             (
@@ -133,15 +134,15 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
 
         private UIInventorySlot CreateFuelCanisterItemSlot()
         {
-            fuelCanisterItemSlot = Rocket.Inventory.ProvideItemSlot(Rocket.SpecialInventorySlot_FuelTank);
-            fuelCanisterItemSlot.Top = new(0, 0.1f);
-            fuelCanisterItemSlot.Left = new(0, 0.5f);
-            fuelCanisterItemSlot.AddReserved(
-                (item) => item.ModItem is FuelCanister,
+            liquidContainerItemSlot = Rocket.Inventory.ProvideItemSlot(Rocket.SpecialInventorySlot_FuelTank);
+            liquidContainerItemSlot.Top = new(0, 0.1f);
+            liquidContainerItemSlot.Left = new(0, 0.5f);
+            liquidContainerItemSlot.AddReserved(
+                (item) => item.ModItem is ILiquidContainer,
                 Lang.GetItemName(ModContent.ItemType<FuelCanister>()),
                 ModContent.Request<Texture2D>(ContentSamples.ItemsByType[ModContent.ItemType<FuelCanister>()].ModItem.Texture + "_Blueprint")
             );
-            return fuelCanisterItemSlot;
+            return liquidContainerItemSlot;
         }
 
         public void FixedUpdate()
@@ -152,25 +153,25 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
             float neededFuel = Rocket.FuelCapacity - Rocket.Fuel;
             float canisterBufferLevel = 0f;
 
-            if (fuelCanisterItemSlot.Item.type == ItemID.None)
+            if (liquidContainerItemSlot.Item.type == ItemID.None)
             {
                 dumpButtonInteractible = false;
 
                 if (neededFuel <= 0f)
-                    fuelCanisterItemSlot.CanInteract = false;
+                    liquidContainerItemSlot.CanInteract = false;
             }
 
             if (neededFuel <= 0f)
                  dumpButtonInteractible = false;
  
-            if (fuelCanisterItemSlot.Item.ModItem is FuelCanister fuelCanister)
+            if (liquidContainerItemSlot.Item.ModItem is ILiquidContainer container)
             {
-                float availableFuel = fuelCanister.CurrentFuel * fuelCanister.Item.stack;
+                float availableFuel = container.Amount * liquidContainerItemSlot.Item.stack;
 
                 if (availableFuel <= 0)
                     dumpButtonInteractible = false;  
 
-                if (availableFuel > neededFuel && fuelCanister.Item.stack > 1)
+                if (availableFuel > neededFuel && liquidContainerItemSlot.Item.stack > 1)
                 {
                     dumpButtonInteractible = false;
                     overflowWarningVisible = true;
@@ -178,7 +179,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
 
                 if(neededFuel > 0f)
                 {
-                    canisterBufferLevel = (fuelCanister.CurrentFuel * fuelCanister.Item.stack) / (Rocket.FuelCapacity - Rocket.Fuel);
+                    canisterBufferLevel = (container.Amount * liquidContainerItemSlot.Item.stack) / (Rocket.FuelCapacity - Rocket.Fuel);
                     if (canisterBufferLevel > 1f)
                         canisterBufferLevel = 1f;
                 }
@@ -197,19 +198,19 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
 
         public void RefreshItemSlot()
         {
-            fuelPlacementPanel.ReplaceChildWith(fuelCanisterItemSlot, fuelCanisterItemSlot = CreateFuelCanisterItemSlot());
+            fuelPlacementPanel.ReplaceChildWith(liquidContainerItemSlot, liquidContainerItemSlot = CreateFuelCanisterItemSlot());
         }
 
         private void DumpFuel()
         {
-            if (fuelCanisterItemSlot.Item.ModItem is FuelCanister fuelCanister && !fuelCanister.Empty)
+            if (liquidContainerItemSlot.Item.ModItem is ILiquidContainer container && !container.Empty)
             {
-                float availableFuel = fuelCanister.CurrentFuel * fuelCanister.Item.stack;
+                float availableFuel = container.Amount * liquidContainerItemSlot.Item.stack;
                 float neededFuel = Rocket.FuelCapacity - Rocket.Fuel;
                 float addedFuel = Math.Min(availableFuel, neededFuel);
 
                 Rocket.Fuel += addedFuel;
-                fuelCanister.CurrentFuel -= addedFuel / fuelCanister.Item.stack;
+                container.Amount -= addedFuel / liquidContainerItemSlot.Item.stack;
 
                 Rocket.NetSync();
                 Rocket.Inventory.SyncItem(Rocket.SpecialInventorySlot_FuelTank);

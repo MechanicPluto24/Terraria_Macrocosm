@@ -26,7 +26,7 @@ namespace Macrocosm.Common.Drawing.Particles
 
         public override void Load()
         {
-            ParticleManager.Textures.Add(ModContent.Request<Texture2D>(TexturePath, AssetRequestMode.ImmediateLoad).Value);
+            ParticleManager.Textures.Add(ModContent.Request<Texture2D>(TexturePath));
             OnLoad();
         }
 
@@ -55,7 +55,7 @@ namespace Macrocosm.Common.Drawing.Particles
         }
 
         /// <summary> The <c>Particle</c>'s texture, autoloaded </summary>
-        public Texture2D Texture => ParticleManager.Textures[Type];
+        public Asset<Texture2D> Texture => ParticleManager.Textures[Type];
 
         /// <summary> The texture size of this <c>Particle</c> </summary>
         // TODO: Maybe replace this to an overridable size if ever implementing particle collision
@@ -99,7 +99,7 @@ namespace Macrocosm.Common.Drawing.Particles
         /// <summary> The <c>Particle</c>'s center coordinates in the world </summary>
         public Vector2 Center => Position + Size / 2;
 
-        /// <summary> Path to the <c>Particle</c>'s texture, override for custom loading (non-autoload) </summary>
+        /// <summary> Path to the <c>Particle</c>'s texture, override for custom loading. </summary>
         public virtual string TexturePath => Utility.GetNamespacePath(this);
 
         /// <summary> The  <c>Particle</c>'s total lifetime. If <see cref="DespawnOnAnimationComplete"/> is true, this defaults to the animation duration. </summary>
@@ -195,8 +195,8 @@ namespace Macrocosm.Common.Drawing.Particles
                 return null;
 
 
-            int frameHeight = Texture.Height / FrameNumber;
-            return new Rectangle(0, frameHeight * currentFrame, Texture.Width, frameHeight);
+            int frameHeight = Texture.Height() / FrameNumber;
+            return new Rectangle(0, frameHeight * currentFrame, Texture.Width(), frameHeight);
         }
 
         #endregion
@@ -227,7 +227,7 @@ namespace Macrocosm.Common.Drawing.Particles
         /// <param name="lightColor"> The light color at the particle's position </param>
         public virtual void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
-            spriteBatch.Draw(Texture, Position - screenPosition, GetFrame(), lightColor, Rotation, Size * 0.5f, ScaleV, SpriteEffects.None, 0f);
+            spriteBatch.Draw(Texture.Value, Position - screenPosition, GetFrame(), lightColor, Rotation, Size * 0.5f, ScaleV, SpriteEffects.None, 0f);
         }
 
         /// <summary> 
@@ -245,6 +245,9 @@ namespace Macrocosm.Common.Drawing.Particles
         {
             if (ShouldUpdatePosition)
                 Position += Velocity;
+
+            if (DrawLayer is ParticleDrawLayer.UI && !HasCustomDrawer)
+                Position += Main.screenPosition;
 
             PopulateTrailData();
             AI();

@@ -78,9 +78,11 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
             Append(launchLocationsList);
             launchLocationsList.Activate();
 
-            launchButton = new();
-            launchButton.ZoomIn = navigationPanel.ZoomIn;
-            launchButton.Launch = () => Rocket.Launch(target.WorldID, targetLaunchPad);
+            launchButton = new()
+            {
+                ZoomIn = navigationPanel.ZoomIn,
+                Launch = () => Rocket.Launch(target.WorldID, targetLaunchPad)
+            };
             Append(launchButton);
             launchButton.Activate();
 
@@ -183,9 +185,11 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
 
         private void UpdateMapTarget()
         {
+            bool checklistResult = flightChecklist.Check();
+
             if (target is not null)
             {
-                target.IsReachable = flightChecklist.Check();
+                target.IsReachable = checklistResult;
                 target.LaunchLocationSelected = targetLaunchPad is not null || selectedSpawnLocation;
             }
         }
@@ -345,13 +349,13 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
 
             launchLocationsList.AddRange(vacant.Cast<UIElement>().ToList());
 
-            if(vacant.Any() && occupied.Any()) 
+            if(vacant.Count > 0 && occupied.Count > 0) 
                 launchLocationsList.Add(new UIHorizontalSeparator() { Width = new StyleDimension(0, 1), Color = UITheme.Current.SeparatorColor });
 
             launchLocationsList.AddRange(occupied.Cast<UIElement>().ToList());
 
             // Add the "Unknown" launch location if no vacant launchpads were found
-            if (!vacant.Any())
+            if (vacant.Count == 0)
             {
                 spawnInfoElement = new()
                 {

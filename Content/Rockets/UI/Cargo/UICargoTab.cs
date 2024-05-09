@@ -122,10 +122,10 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
                 crewPanel.Deactivate();
                 crewPanel.ClearList();
 
-                crewPanel.Add(new UIPlayerInfoElement(commander));
-                crew.ForEach(player => crewPanel.Add(new UIPlayerInfoElement(player)));
+                crewPanel.Add(new UIPlayerInfoElement(commander, large: false));
+                crew.ForEach(player => crewPanel.Add(new UIPlayerInfoElement(player, large: false)));
 
-                if (crew.Any())
+                if (crew.Count > 0)
                     crewPanel.OfType<UIPlayerInfoElement>().LastOrDefault().LastInList = true;
 
                 prevCommander = commander;
@@ -260,7 +260,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
             };
 
             if (Main.netMode == NetmodeID.SinglePlayer)
-                crewPanel.Add(new UIPlayerInfoElement(Main.LocalPlayer));
+                crewPanel.Add(new UIPlayerInfoElement(Main.LocalPlayer, large: false));
 
             return crewPanel;
         }
