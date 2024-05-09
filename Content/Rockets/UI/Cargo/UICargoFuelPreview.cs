@@ -2,6 +2,7 @@
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Materials.Tech;
+using Macrocosm.Content.Liquids;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -45,7 +46,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
             };
             Append(title);
 
-            rocketFuelTank = new(WaterStyleID.Lava)
+            rocketFuelTank = new(LiquidType.RocketFuel)
             {
                 Width = new(0, 0.8f),
                 Height = new(0, 0.9f),

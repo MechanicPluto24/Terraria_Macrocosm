@@ -100,7 +100,7 @@ namespace Macrocosm.Content.Particles
 
         public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
-            spriteBatch.Draw(Texture, Position - screenPosition, GetFrame(), Color.Lerp(DrawColor, lightColor, 0.5f).WithAlpha(DrawColor.A) * ((float)alpha / 255f), Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(Texture.Value, Position - screenPosition, GetFrame(), Color.Lerp(DrawColor, lightColor, 0.5f).WithAlpha(DrawColor.A) * ((float)alpha / 255f), Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
         }
 
     }

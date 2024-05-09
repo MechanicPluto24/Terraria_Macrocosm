@@ -50,6 +50,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation.Checklist
             base.OnInitialize();
             BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor;
             BorderColor = UITheme.Current.PanelStyle.BorderColor;
+            AddRange(GetUpdatedChecklist());
         }
 
         public bool Check()

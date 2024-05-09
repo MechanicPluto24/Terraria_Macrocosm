@@ -1,12 +1,17 @@
-﻿using Terraria;
+﻿using Macrocosm.Common.Bases.Items;
+using Macrocosm.Content.Liquids;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Materials.Ores
 {
-    public class OilShale : ModItem
+    public class OilShale : ModItem, ILiquidExtractable
     {
+        public LiquidType LiquidType => LiquidType.Oil;
+        public float ExtractedAmount => 10f;
+
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 100;

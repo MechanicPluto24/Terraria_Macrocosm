@@ -26,8 +26,12 @@ namespace Macrocosm.Content.Machines
         public OilRefineryTE OilRefinery => MachineTE as OilRefineryTE;
 
         private UIPanel backgroundPanel;
+
         private UIInventorySlot sourceSlot;
+        private UILiquidTank sourceLiquidTank;
+
         private UIInventorySlot resultSlot;
+        private UILiquidTank resultLiquidTank;
 
         public OilRefineryUI()
         {
@@ -52,18 +56,36 @@ namespace Macrocosm.Content.Machines
             backgroundPanel.SetPadding(0);
             Append(backgroundPanel);
 
+            sourceLiquidTank = new(Liquids.LiquidType.Oil)
+            {
+                Width = new(25, 0),
+                Height = new(0, 0.8f),
+                Left = new(-25, 0.25f),
+                VAlign = 0.5f
+            };
+            Append(sourceLiquidTank);
+
+            resultLiquidTank = new(Liquids.LiquidType.RocketFuel)
+            {
+                Width = new(25, 0),
+                Height = new(0, 0.8f),
+                Left = new(0, 0.75f),
+                VAlign = 0.5f
+            };
+            Append(resultLiquidTank);
+
             if (OilRefinery.Inventory is not null)
             {
                 sourceSlot = OilRefinery.Inventory.ProvideItemSlot(0);
                 sourceSlot.Top = new(0, 0.45f);
-                sourceSlot.Left = new(0, 0.27f);
+                sourceSlot.Left = new(-48, 0.15f);
                 backgroundPanel.Append(sourceSlot);
 
                 resultSlot = OilRefinery.Inventory.ProvideItemSlot(1);
                 resultSlot.Top = new(0, 0.45f);
-                resultSlot.Left = new(0, 0.68f);
+                resultSlot.Left = new(0, 0.85f);
                 resultSlot.AddReserved(
-                    (item) => item.ModItem is FuelCanister,
+                    (item) => item.ModItem is ILiquidContainer,
                     Lang.GetItemName(ModContent.ItemType<FuelCanister>()),
                     ModContent.Request<Texture2D>(ContentSamples.ItemsByType[ModContent.ItemType<FuelCanister>()].ModItem.Texture + "_Blueprint")
                 );
@@ -74,12 +96,18 @@ namespace Macrocosm.Content.Machines
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
             Inventory.ActiveInventory = OilRefinery.Inventory;
 
-            if(resultSlot.Item.ModItem is FuelCanister fuelCanister && !fuelCanister.Full)
-            {
-                fuelCanister.FuelPercent += 0.01f;
-            }
+            resultSlot.CanInteract = OilRefinery.CanInteractWithResultSlot;
+
+            sourceLiquidTank.LiquidLevel = MathHelper.Lerp(sourceLiquidTank.LiquidLevel, OilRefinery.SourceTankAmount / OilRefinery.SourceTankCapacity, 0.025f);
+            sourceLiquidTank.WaveAmplitude = 1f;
+            sourceLiquidTank.WaveFrequency = 1f;
+
+            resultLiquidTank.LiquidLevel = MathHelper.Lerp(resultLiquidTank.LiquidLevel, OilRefinery.ResultTankAmount / OilRefinery.ResultTankCapacity, 0.025f);
+            resultLiquidTank.WaveAmplitude = 1f;
+            resultLiquidTank.WaveFrequency = 1f;
         }
     }
 }

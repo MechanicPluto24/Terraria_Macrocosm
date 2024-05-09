@@ -29,7 +29,6 @@ namespace Macrocosm.Common.Storage
 
         private Item[] items;
         private UIInventorySlot[] uiItemSlots;
-        private int specialSlotCount = 0;
 
         public Item this[int index]
         {

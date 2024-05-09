@@ -28,7 +28,7 @@ namespace Macrocosm.Content.Particles
 
         public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
-            spriteBatch.Draw(Texture, Position - screenPosition, GetFrame(), DrawColor, Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(Texture.Value, Position - screenPosition, GetFrame(), DrawColor, Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
         }
 
         public override void PostDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
@@ -40,7 +40,7 @@ namespace Macrocosm.Content.Particles
                 float scale = Scale * MathHelper.Lerp(ReplicaScalingFactor + (1f - ReplicaScalingFactor) * replicaDecrease, 1.06f, explosionProgress);
 
                 Color color = DrawColor.WithOpacity(((float)TimeLeft / SpawnTimeLeft) * 0.7f);
-                spriteBatch.Draw(Texture, Position - screenPosition, GetFrame(), color, Rotation, Size * 0.5f, scale, SpriteEffects.None, 0f);
+                spriteBatch.Draw(Texture.Value, Position - screenPosition, GetFrame(), color, Rotation, Size * 0.5f, scale, SpriteEffects.None, 0f);
             }
         }
 
