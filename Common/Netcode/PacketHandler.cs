@@ -64,7 +64,7 @@ namespace Macrocosm.Common.Netcode
                     break;
 
                 case MessageType.LastSubworldCheck:
-                    MacrocosmPlayer.LastSubworldCheck(reader, whoAmI);
+                    MacrocosmPlayer.ReceiveLastSubworldCheck(reader, whoAmI);
                     break;
 
                 case MessageType.SyncTEFromClient:

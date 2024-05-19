@@ -33,7 +33,7 @@ namespace Macrocosm.Common.Systems
             foreach (int type in graveyardTileTypes)
             {
                 ModTile tile = TileLoader.GetTile(type);
-                if (tile is ITombstoneTile tombstone && tombstone.AllowGrayeyardOnEarth)
+                if (tile is ITombstoneTile)
                     GraveyardModTileCount += tileCounts[type];
             }
         }

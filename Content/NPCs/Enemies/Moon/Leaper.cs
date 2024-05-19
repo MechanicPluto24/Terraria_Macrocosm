@@ -1,6 +1,6 @@
+using Macrocosm.Common.Global.NPCs;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
-using Macrocosm.Content.NPCs.Global;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.GameContent.Bestiary;

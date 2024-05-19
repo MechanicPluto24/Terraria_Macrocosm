@@ -5,6 +5,9 @@ using Terraria.ID;
 
 namespace Macrocosm.Common.Bases.Tiles
 {
+    /// <summary>
+    /// TML: Maybe add functionality to tModLoader 
+    /// </summary>
     public interface IDoorTile
     {
         /// <summary> Door height in tiles. Should be >= 1 </summary>

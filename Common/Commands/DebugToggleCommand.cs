@@ -3,6 +3,7 @@ using Macrocosm.Common.Debugging.Stats;
 using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Systems.UI;
 using Macrocosm.Content.Rockets;
+using System;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -28,7 +29,7 @@ namespace Macrocosm.Common.Commands
             }
             else switch (args[0].ToLower())
                 {
-                    case "rockets":
+                    case "rocket" or "rockets":
                         RocketManager.DebugModeActive = !RocketManager.DebugModeActive;
                         Main.NewText($"Rocket debug: {RocketManager.DebugModeActive}");
                         break;
@@ -56,6 +57,10 @@ namespace Macrocosm.Common.Commands
                     case "stats":
                         ContentStats.Analyze(Macrocosm.Instance);
                         Main.NewText("Exported content stats");
+                        break;
+
+                    case "gc":
+                        GC.Collect();
                         break;
 
                     default:

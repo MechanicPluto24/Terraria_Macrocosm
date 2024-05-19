@@ -96,8 +96,6 @@ namespace Macrocosm.Content.Backgrounds.Moon
 
         public override void Activate(Vector2 position, params object[] args)
         {
-            SkyManager.Instance["Macrocosm:MoonSky"] = new MoonSky();
-
             starsDay.SpawnStars(100, 130, baseScale: 1.4f, twinkleFactor: 0.05f);
             starsNight.SpawnStars(600, 700, baseScale: 0.8f, twinkleFactor: 0.05f);
 
@@ -292,7 +290,7 @@ namespace Macrocosm.Content.Backgrounds.Moon
 
         public override bool IsActive()
         {
-            return Active && Intensity > 0.001f;
+            return Active;
         }
     }
 }

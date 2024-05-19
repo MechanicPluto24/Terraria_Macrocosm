@@ -4,7 +4,6 @@ using Macrocosm.Common.Storage;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.UI;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.Modules;
 using Macrocosm.Content.Tiles.Special;
 using Microsoft.Xna.Framework;
@@ -13,6 +12,7 @@ using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
+using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
@@ -93,7 +93,6 @@ namespace Macrocosm.Content.Rockets.LaunchPads
         public static LaunchPad Create(int startTileX, int startTileY, bool shouldSync = true) => Create(startTileX, startTileY, startTileX, startTileY, shouldSync);
         public static LaunchPad Create(Point16 startTile, bool shouldSync = true) => Create(startTile.X, startTile.Y, shouldSync);
         public static LaunchPad Create(Point16 startTile, Point16 endTile, bool shouldSync = true) => Create(startTile.X, startTile.Y, endTile.X, endTile.Y, shouldSync);
-
 
         public void Update()
         {

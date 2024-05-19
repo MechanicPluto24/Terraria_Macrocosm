@@ -1,6 +1,6 @@
 ﻿using Macrocosm.Content.Liquids;
 
-namespace Macrocosm.Common.Bases.Items
+namespace Macrocosm.Common.Sets.Items
 {
     public interface ILiquidExtractable
     {

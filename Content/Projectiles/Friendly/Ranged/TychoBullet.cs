@@ -1,7 +1,7 @@
+using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
-using Macrocosm.Content.Projectiles.Global;
 using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-    public class TychoBullet : ModProjectile, IRangedProjectile
+    public class TychoBullet : ModProjectile, IHitTileProjectile
     {
         public override void SetStaticDefaults()
         {

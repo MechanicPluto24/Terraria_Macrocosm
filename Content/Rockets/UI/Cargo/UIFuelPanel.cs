@@ -1,4 +1,4 @@
-﻿using Macrocosm.Common.Bases.Items;
+﻿using Macrocosm.Common.Sets.Items;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
@@ -138,7 +138,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
             liquidContainerItemSlot.Top = new(0, 0.1f);
             liquidContainerItemSlot.Left = new(0, 0.5f);
             liquidContainerItemSlot.AddReserved(
-                (item) => item.ModItem is ILiquidContainer,
+                (item) => item.ModItem is LiquidContainer,
                 Lang.GetItemName(ModContent.ItemType<FuelCanister>()),
                 ModContent.Request<Texture2D>(ContentSamples.ItemsByType[ModContent.ItemType<FuelCanister>()].ModItem.Texture + "_Blueprint")
             );
@@ -149,6 +149,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
         {
             overflowWarningVisible = false;
             dumpButtonInteractible = true;
+            liquidContainerItemSlot.CanInteract = true;
 
             float neededFuel = Rocket.FuelCapacity - Rocket.Fuel;
             float canisterBufferLevel = 0f;
@@ -164,7 +165,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
             if (neededFuel <= 0f)
                  dumpButtonInteractible = false;
  
-            if (liquidContainerItemSlot.Item.ModItem is ILiquidContainer container)
+            if (liquidContainerItemSlot.Item.ModItem is LiquidContainer container)
             {
                 float availableFuel = container.Amount * liquidContainerItemSlot.Item.stack;
 
@@ -203,7 +204,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
 
         private void DumpFuel()
         {
-            if (liquidContainerItemSlot.Item.ModItem is ILiquidContainer container && !container.Empty)
+            if (liquidContainerItemSlot.Item.ModItem is LiquidContainer container && !container.Empty)
             {
                 float availableFuel = container.Amount * liquidContainerItemSlot.Item.stack;
                 float neededFuel = Rocket.FuelCapacity - Rocket.Fuel;

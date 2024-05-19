@@ -1,9 +1,9 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Global.NPCs;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Materials.Drops;
 using Macrocosm.Content.NPCs.Bosses.CraterDemon;
-using Macrocosm.Content.NPCs.Global;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;

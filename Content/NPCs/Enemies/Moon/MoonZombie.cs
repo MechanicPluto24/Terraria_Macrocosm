@@ -1,6 +1,6 @@
+using Macrocosm.Common.Global.NPCs;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.NPCs.Global;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

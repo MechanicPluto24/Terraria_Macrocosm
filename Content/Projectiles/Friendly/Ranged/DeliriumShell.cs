@@ -1,9 +1,10 @@
+using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Global.Projectiles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
-using Macrocosm.Content.Projectiles.Global;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -13,7 +14,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-    public class DeliriumShell : ModProjectile, IRangedProjectile, IExplosive
+    public class DeliriumShell : ModProjectile, IHitTileProjectile, IExplosive
     {
         private static Asset<Texture2D> aura;
         public override void Load()

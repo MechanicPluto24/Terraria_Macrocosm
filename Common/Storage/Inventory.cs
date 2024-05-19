@@ -60,7 +60,7 @@ namespace Macrocosm.Common.Storage
 
         public bool CanInteract => interactingPlayer == Main.myPlayer;
 
-        private int interactingPlayer;
+        private int interactingPlayer = 255;
         public int InteractingPlayer
         {
             get => interactingPlayer;

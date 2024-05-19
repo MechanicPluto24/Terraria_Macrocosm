@@ -1,6 +1,6 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Trails;
-using Macrocosm.Content.Projectiles.Global;
+using Macrocosm.Common.Global.Projectiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -16,17 +16,17 @@ namespace Macrocosm.Common.Utils
     {
         public static void SetTrail<T>(this Projectile projectile) where T : VertexTrail
         {
-            if (projectile.TryGetGlobalProjectile(out MacrocosmProjectile globalProj))
+            if (projectile.TryGetGlobalProjectile(out TrailGlobalProjectile globalProj))
             {
                 globalProj.Trail = Activator.CreateInstance<T>();
                 globalProj.Trail.Owner = projectile;
             }
         }
 
-        public static VertexTrail GetTrail(this Projectile projectile) => projectile.GetGlobalProjectile<MacrocosmProjectile>().Trail;
+        public static VertexTrail GetTrail(this Projectile projectile) => projectile.GetGlobalProjectile<TrailGlobalProjectile>().Trail;
         public static bool TryGetTrail(this Projectile projectile, out VertexTrail trail)
         {
-            trail = projectile.GetGlobalProjectile<MacrocosmProjectile>().Trail;
+            trail = projectile.GetGlobalProjectile<TrailGlobalProjectile>().Trail;
             return trail is not null;
         }
 

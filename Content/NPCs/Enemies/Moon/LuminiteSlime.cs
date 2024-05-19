@@ -1,8 +1,8 @@
+using Macrocosm.Common.Global.NPCs;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Materials;
-using Macrocosm.Content.NPCs.Global;
 using Macrocosm.Content.Projectiles.Hostile;
 using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Microsoft.Xna.Framework;

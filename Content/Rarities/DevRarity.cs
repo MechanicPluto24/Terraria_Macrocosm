@@ -13,9 +13,4 @@ namespace Macrocosm.Content.Rarities
             return Type;
         }
     }
-
-    public class DevGlobalItem : ModRarity
-    {
-
-    }
 }

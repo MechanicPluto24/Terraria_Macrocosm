@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Common.Systems.Power
 {
-    public abstract class MachineTE : ModTileEntity
+    public abstract class MachineTE : ModTileEntity, IClientUpdateable
     {
         public abstract MachineTile MachineTile { get; }
 
@@ -80,13 +81,21 @@ namespace Macrocosm.Common.Systems.Power
             if (!ranFirstUpdate)
             {
                 OnFirstUpdate();
-                NetMessage.SendData(MessageID.TileEntitySharing, number: ID, number2: Position.X, number3: Position.Y);
+
+                if(Main.netMode != NetmodeID.MultiplayerClient)
+                    NetMessage.SendData(MessageID.TileEntitySharing, number: ID, number2: Position.X, number3: Position.Y);
+
                 ranFirstUpdate = true;
             }
 
             GeneratedPower = 0;
             ConsumedPower = 0;
             MachineUpdate();
+        }
+
+        public void ClientUpdate()
+        {
+            Update();
         }
 
         public bool IsConnected(MachineTE other)

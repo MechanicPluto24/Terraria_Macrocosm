@@ -31,6 +31,7 @@ namespace Macrocosm.Common.Commands
                 Utility.LogChatMessage($"Started world regeneration at {DateTime.Now}");
                 var stopwatch = Stopwatch.StartNew();
 
+                Main.gameMenu = true;
                 if (!SubworldSystem.AnyActive())
                 {
                     WorldUtils.DebugRegen();
@@ -41,6 +42,7 @@ namespace Macrocosm.Common.Commands
                     WorldGen._genRand = new UnifiedRandom(Main.ActiveWorldFileData.Seed);
                     SubworldSystem.Current.Tasks.ForEach(t => t.Apply(WorldGenerator.CurrentGenerationProgress = new(), SubworldSystem.Current.Config?.GetPassConfiguration(t.Name)));
                 }
+                Main.gameMenu = false;
 
                 stopwatch.Stop();
                 Utility.LogChatMessage($"World regeneration complete in {stopwatch.Elapsed}");

@@ -1,4 +1,4 @@
-﻿using Macrocosm.Common.Subworlds;
+﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Content.Rockets.UI.Navigation.Checklist;
 using Terraria;
 

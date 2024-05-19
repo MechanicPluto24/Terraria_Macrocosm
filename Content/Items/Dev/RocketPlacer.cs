@@ -1,5 +1,5 @@
-﻿using Macrocosm.Common.Utils;
-using Macrocosm.Content.Items.Global;
+﻿using Macrocosm.Common.Global.Items;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets;
 using Terraria;
 using Terraria.ID;

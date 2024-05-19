@@ -94,6 +94,8 @@ namespace Macrocosm.Content.Players
         /// </summary>
         private readonly Dictionary<Guid, string> lastSubworldIdByWorldUniqueId = new();
 
+        private Guid currentMainWorldUniqueId = Guid.Empty;
+
         public override void ResetEffects()
         {
             SpaceProtection = 0f;
@@ -112,6 +114,12 @@ namespace Macrocosm.Content.Players
                 consumeAmmo = false;
 
             return consumeAmmo;
+        }
+
+        public override void PreUpdate()
+        {
+            if(Main.netMode != NetmodeID.MultiplayerClient)
+                currentMainWorldUniqueId = SubworldSystem.AnyActive<Macrocosm>() ? MacrocosmSubworld.Current.MainWorldUniqueId : Main.ActiveWorldFileData.UniqueId;
         }
 
         public override void PostUpdateBuffs()
@@ -168,8 +176,10 @@ namespace Macrocosm.Content.Players
 
         public void SetReturnSubworld(string subworldId)
         {
-            Guid guid = SubworldSystem.AnyActive<Macrocosm>() ? MacrocosmSubworld.Current.MainWorldUniqueId : Main.ActiveWorldFileData.UniqueId;
-            lastSubworldIdByWorldUniqueId[guid] = subworldId;
+            if (currentMainWorldUniqueId == Guid.Empty)
+                Utility.LogChatMessage("Main world GUID not received from the server", Utility.MessageSeverity.Error);
+
+            lastSubworldIdByWorldUniqueId[currentMainWorldUniqueId] = subworldId;
         }
 
         public bool TryGetReturnSubworld(Guid worldUniqueId, out string subworldId) => lastSubworldIdByWorldUniqueId.TryGetValue(worldUniqueId, out subworldId);
@@ -178,7 +188,11 @@ namespace Macrocosm.Content.Players
         {
             if (Main.netMode == NetmodeID.SinglePlayer)
             {
-                LastSubworldCheck(Main.ActiveWorldFileData.UniqueId);
+                if (!SubworldSystem.AnyActive<Macrocosm>() && !TriggeredSubworldTravel && lastSubworldIdByWorldUniqueId.TryGetValue(currentMainWorldUniqueId, out string lastSubworldId))
+                {
+                    if (lastSubworldId is not "Macrocosm/Earth")
+                        MacrocosmSubworld.Travel(lastSubworldId, trigger: false);
+                }
             }
 
             if (TriggeredSubworldTravel)
@@ -200,15 +214,19 @@ namespace Macrocosm.Content.Players
             CircuitSystem.SearchCircuits();
         }
 
-        public static void LastSubworldCheck(BinaryReader reader, int whoAmI)
+        public static void ReceiveLastSubworldCheck(BinaryReader reader, int whoAmI)
         {
+            var macrocosmPlayer = Main.LocalPlayer.GetModPlayer<MacrocosmPlayer>();
+            
             Guid mainWorldUniqueId = new(reader.ReadString());
-            Main.LocalPlayer.GetModPlayer<MacrocosmPlayer>().LastSubworldCheck(mainWorldUniqueId);
-        }
+            macrocosmPlayer.currentMainWorldUniqueId = mainWorldUniqueId;
 
-        private void LastSubworldCheck(Guid mainWorldUniqueId)
-        {
-            if (!SubworldSystem.AnyActive<Macrocosm>() && !TriggeredSubworldTravel && lastSubworldIdByWorldUniqueId.TryGetValue(mainWorldUniqueId, out string lastSubworldId))
+            if 
+            (
+                !SubworldSystem.AnyActive<Macrocosm>()
+                && !macrocosmPlayer.TriggeredSubworldTravel
+                && macrocosmPlayer.lastSubworldIdByWorldUniqueId.TryGetValue(macrocosmPlayer.currentMainWorldUniqueId, out string lastSubworldId)
+            )
             {
                 if (lastSubworldId is not "Macrocosm/Earth")
                     MacrocosmSubworld.Travel(lastSubworldId, trigger: false);

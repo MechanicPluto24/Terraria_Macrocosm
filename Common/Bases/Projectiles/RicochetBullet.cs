@@ -1,4 +1,3 @@
-using Macrocosm.Content.Projectiles.Global;
 using Microsoft.Xna.Framework;
 using System.IO;
 using Terraria;
@@ -10,7 +9,7 @@ namespace Macrocosm.Common.Bases.Projectiles
     /// <summary>
     /// Base class for a bullet projectile that bounces from enemy to enemy. 
     /// </summary>
-    public abstract class RicochetBullet : ModProjectile, IRangedProjectile
+    public abstract class RicochetBullet : ModProjectile, IHitTileProjectile
     {
         /// <summary> The number of ricochets </summary>
         public virtual int RicochetCount { get; set; } = 2;

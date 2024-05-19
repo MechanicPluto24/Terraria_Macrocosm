@@ -34,7 +34,11 @@ namespace Macrocosm.Common.Hooks
             }
 
             // matches "velocity.Y += 0.2f" ... this might break if other mods alter gore gravity 
-            if (!c.TryGotoNext(i => i.MatchLdcR4(0.2f))) return;
+            if (!c.TryGotoNext(i => i.MatchLdcR4(0.2f)))
+            {
+                Macrocosm.Instance.Logger.Error("Failed to inject ILHook: GoreGravityIL");
+                return;
+            };
 
             c.Remove();
             c.EmitDelegate(GetGoreGravity);

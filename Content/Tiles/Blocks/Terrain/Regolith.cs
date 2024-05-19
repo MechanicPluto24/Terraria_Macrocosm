@@ -14,8 +14,7 @@ namespace Macrocosm.Content.Tiles.Blocks.Terrain
             Main.tileSolid[Type] = true;
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = true;
-            Main.tileMerge[Type][ModContent.TileType<Protolith>()] = true;
-            Main.tileMerge[Type][ModContent.TileType<IrradiatedRock>()] = true;
+            TileID.Sets.ChecksForMerge[Type] = true;
             MinPick = 225;
             MineResist = 3f;
             AddMapEntry(new Color(220, 220, 220));
