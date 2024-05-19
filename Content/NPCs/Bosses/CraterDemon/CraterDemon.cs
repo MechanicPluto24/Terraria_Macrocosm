@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Global.NPCs;
 using Macrocosm.Common.Systems;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
@@ -16,7 +17,6 @@ using Macrocosm.Content.Items.Weapons.Melee;
 using Macrocosm.Content.Items.Weapons.Ranged;
 using Macrocosm.Content.Items.Weapons.Summon;
 using Macrocosm.Content.NPCs.Friendly.TownNPCs;
-using Macrocosm.Content.NPCs.Global;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

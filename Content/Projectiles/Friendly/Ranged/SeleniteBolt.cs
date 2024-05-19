@@ -1,9 +1,10 @@
+using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Global.Projectiles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
-using Macrocosm.Content.Projectiles.Global;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -13,7 +14,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-    public class SeleniteBolt : ModProjectile, IRangedProjectile, IExplosive
+    public class SeleniteBolt : ModProjectile, IHitTileProjectile, IExplosive
     {
         public override string Texture => Macrocosm.EmptyTexPath;
 

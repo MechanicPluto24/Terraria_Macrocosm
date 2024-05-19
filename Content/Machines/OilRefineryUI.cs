@@ -1,4 +1,4 @@
-﻿using Macrocosm.Common.Bases.Items;
+﻿using Macrocosm.Common.Sets.Items;
 using Macrocosm.Common.Loot;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Systems.Power;
@@ -85,7 +85,7 @@ namespace Macrocosm.Content.Machines
                 resultSlot.Top = new(0, 0.45f);
                 resultSlot.Left = new(0, 0.85f);
                 resultSlot.AddReserved(
-                    (item) => item.ModItem is ILiquidContainer,
+                    (item) => item.ModItem is LiquidContainer,
                     Lang.GetItemName(ModContent.ItemType<FuelCanister>()),
                     ModContent.Request<Texture2D>(ContentSamples.ItemsByType[ModContent.ItemType<FuelCanister>()].ModItem.Texture + "_Blueprint")
                 );
@@ -98,7 +98,6 @@ namespace Macrocosm.Content.Machines
             base.Update(gameTime);
 
             Inventory.ActiveInventory = OilRefinery.Inventory;
-
             resultSlot.CanInteract = OilRefinery.CanInteractWithResultSlot;
 
             sourceLiquidTank.LiquidLevel = MathHelper.Lerp(sourceLiquidTank.LiquidLevel, OilRefinery.SourceTankAmount / OilRefinery.SourceTankCapacity, 0.025f);

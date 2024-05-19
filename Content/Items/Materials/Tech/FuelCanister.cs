@@ -1,4 +1,4 @@
-using Macrocosm.Common.Bases.Items;
+using Macrocosm.Common.Sets.Items;
 using Macrocosm.Common.Config;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Materials.Bars;
@@ -16,15 +16,14 @@ using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Items.Materials.Tech
 {
-    public class FuelCanister : ModItem, ILiquidContainer
+    public class FuelCanister : LiquidContainer
     {
-        public float Amount { get; set; }
-        public float Capacity => 10f;
-
         private Asset<Texture2D> fillTexture;
 
         private static LocalizedText CapacityTooltip;
         private static LocalizedText AmountTooltip;
+
+        public override float Capacity => 100;
 
         public override void SetStaticDefaults()
         {
@@ -42,14 +41,13 @@ namespace Macrocosm.Content.Items.Materials.Tech
             Item.value = 100;
             Item.rare = ItemRarityID.LightRed;
             Item.material = true;
-            Amount = 0;
+            Amount = 100;
         }
 
         public override bool CanStack(Item source)
         {
-            ILiquidContainer thisContainer = this;
-            ILiquidContainer sourceContainer = source.ModItem as ILiquidContainer;
-            return thisContainer.Empty && sourceContainer.Empty || thisContainer.Full && sourceContainer.Full;
+            LiquidContainer sourceContainer = source.ModItem as LiquidContainer;
+            return Empty && sourceContainer.Empty || Full && sourceContainer.Full;
         }
 
         public override void OnStack(Item source, int numToTransfer)
@@ -86,28 +84,6 @@ namespace Macrocosm.Content.Items.Materials.Tech
                 .Register();
         }
 
-        public override void SaveData(TagCompound tag)
-        {
-            if(Amount != default)
-                tag[nameof(Amount)] = Amount;
-        }
-
-        public override void LoadData(TagCompound tag)
-        {
-            if (tag.ContainsKey(nameof(Amount)))
-                Amount = tag.GetFloat(nameof(Amount));
-        }
-
-        public override void NetSend(BinaryWriter writer)
-        {
-            writer.Write(Amount);
-        }
-
-        public override void NetReceive(BinaryReader reader)
-        {
-            Amount = reader.ReadSingle();
-        }
-
         public override void PostDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
         {
             fillTexture ??= ModContent.Request<Texture2D>(Texture + "_Fill");
@@ -125,9 +101,9 @@ namespace Macrocosm.Content.Items.Materials.Tech
             spriteBatch.Draw(fillTexture.Value, drawPosition, sourceRect, lightColor, rotation, origin, scale, SpriteEffects.None, 0f);
         }
 
-        public Rectangle GetSourceRect()
+        private Rectangle GetSourceRect()
         {
-            int y = (this as ILiquidContainer).Percent switch
+            int y = Percent switch
             {
                 <= 0f => 36,
                 > 0f and < 0.2f => 34,

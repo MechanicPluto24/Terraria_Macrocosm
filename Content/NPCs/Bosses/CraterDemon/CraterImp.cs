@@ -1,6 +1,6 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Global.NPCs;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.NPCs.Global;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;

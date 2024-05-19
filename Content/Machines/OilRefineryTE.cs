@@ -1,4 +1,4 @@
-﻿using Macrocosm.Common.Bases.Items;
+﻿using Macrocosm.Common.Sets.Items;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Loot;
 using Macrocosm.Common.Loot.DropConditions;
@@ -133,7 +133,7 @@ namespace Macrocosm.Content.Machines
         {
             CanInteractWithResultSlot = true;
 
-            if (ResultItem.ModItem is ILiquidContainer container)
+            if (ResultItem.ModItem is LiquidContainer container)
             {
                 if (ResultTankAmount > 0f && ResultItem.stack > 0 && !container.Full)
                 {

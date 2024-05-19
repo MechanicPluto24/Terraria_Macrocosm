@@ -1,5 +1,5 @@
+using Macrocosm.Common.Global.NPCs;
 using Macrocosm.Content.Biomes;
-using Macrocosm.Content.NPCs.Global;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;

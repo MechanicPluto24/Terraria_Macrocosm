@@ -1,6 +1,6 @@
-﻿using Macrocosm.Content.Biomes;
+﻿using Macrocosm.Common.Global.NPCs;
+using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Items.Materials.Drops;
-using Macrocosm.Content.NPCs.Global;
 using Microsoft.Xna.Framework;
 using System.IO;
 using Terraria;

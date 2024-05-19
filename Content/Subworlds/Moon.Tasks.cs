@@ -1,5 +1,5 @@
 ﻿using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.Systems;
 using Macrocosm.Common.Utils;
 using Macrocosm.Common.WorldGeneration.Structures;
 using Macrocosm.Content.Tiles.Ambient;

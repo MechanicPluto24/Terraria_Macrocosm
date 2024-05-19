@@ -1,12 +1,18 @@
-using Macrocosm.Common.Bases.Items;
+using Macrocosm.Common.Sets;
+using Macrocosm.Common.Sets.Items;
 using Macrocosm.Content.Items.Materials.Tech;
 using Terraria;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Furniture.MoonBase
 {
-    public class MoonBaseChestElectronic : ModItem, IChest
+    public class MoonBaseChestElectronic : ModItem
     {
+        public override void SetStaticDefaults()
+        {
+            ItemSets.Chests[Type] = true;
+        }
+
         public override void SetDefaults()
         {
             Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.MoonBase.MoonBaseChest>());

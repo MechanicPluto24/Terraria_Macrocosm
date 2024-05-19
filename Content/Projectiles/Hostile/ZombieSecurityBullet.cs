@@ -1,5 +1,5 @@
+using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Projectiles.Global;
 using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Hostile
 {
-    public class ZombieSecurityBullet : ModProjectile, IRangedProjectile
+    public class ZombieSecurityBullet : ModProjectile, IHitTileProjectile
     {
         public override void SetStaticDefaults()
         {

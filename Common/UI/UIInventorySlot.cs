@@ -130,7 +130,7 @@ namespace Macrocosm.Common.UI
 
         protected virtual void HandleItemSlotLogic()
         {
-            if (IsMouseHovering && inventory.CanInteract)
+            if (IsMouseHovering && (inventory.CanInteract || CanInteract))
             {
                 Item inv = inventory[itemIndex];
                 HandleCursor(ref inv);
@@ -431,7 +431,7 @@ namespace Macrocosm.Common.UI
                 spriteBatch.Draw(texture, position + offset + new Vector2(40f, 40f) * Main.inventoryScale, rectangle, color, 0f, rectangle.Size() / 2f, 1f, SpriteEffects.None, 0f);
             }
 
-            if (Utility.IsRubblemaker(item.type))
+            if (item.type is ItemID.RubblemakerSmall or ItemID.RubblemakerMedium or ItemID.RubblemakerLarge)
             {
                 Texture2D texture = TextureAssets.Extra[ExtrasID.RubbleMakerIndicator].Value;
                 Vector2 offset = new Vector2(2f, -6f) * Main.inventoryScale;

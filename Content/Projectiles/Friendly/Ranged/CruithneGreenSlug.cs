@@ -1,4 +1,4 @@
-using Macrocosm.Content.Projectiles.Global;
+using Macrocosm.Common.Bases.Projectiles;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-    public class CruithneGreenSlug : ModProjectile, IRangedProjectile
+    public class CruithneGreenSlug : ModProjectile, IHitTileProjectile
     {
         public override void SetDefaults()
         {

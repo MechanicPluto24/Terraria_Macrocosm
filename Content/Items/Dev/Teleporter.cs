@@ -1,5 +1,5 @@
-﻿using Macrocosm.Common.Subworlds;
-using Macrocosm.Content.Items.Global;
+﻿using Macrocosm.Common.Global.Items;
+using Macrocosm.Common.Subworlds;
 using Macrocosm.Content.Rarities;
 using SubworldLibrary;
 using Terraria;

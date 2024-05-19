@@ -1,8 +1,8 @@
 using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Global.NPCs;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Items.Weapons.Ranged;
-using Macrocosm.Content.NPCs.Global;
 using Macrocosm.Content.Particles;
 using Macrocosm.Content.Projectiles.Hostile;
 using Microsoft.Xna.Framework;

@@ -79,6 +79,8 @@ namespace Macrocosm.Common.Systems.UI
                 if (uIElement is ITabUIElement tab)
                     tab.OnTabClose();
             });
+
+            LaunchPad.Inventory.InteractingPlayer = 255;
         }
 
         public override void Update(GameTime gameTime)

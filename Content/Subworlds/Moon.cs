@@ -81,7 +81,12 @@ namespace Macrocosm.Content.Subworlds
         }
 
         public override void PreUpdateEntities()
-        {
+        { 
+            if(!Main.dedServ)
+            {
+                if (!SkyManager.Instance["Macrocosm:MoonSky"].IsActive())
+                    SkyManager.Instance.Activate("Macrocosm:MoonSky");
+            }
         }
 
         //TODO: NetSync and add actual content

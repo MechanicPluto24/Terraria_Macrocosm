@@ -129,16 +129,16 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
         private void UpdateLaunchPads()
         {
-            if (launchPadStorage.ContainsKey(MacrocosmSubworld.CurrentID))
+            if (launchPadStorage.TryGetValue(MacrocosmSubworld.CurrentID, out List<LaunchPad> launchpadsInSubworld))
             {
-                for (int i = 0; i < launchPadStorage[MacrocosmSubworld.CurrentID].Count; i++)
+                for (int i = 0; i < launchpadsInSubworld.Count; i++)
                 {
-                    var launchPad = launchPadStorage[MacrocosmSubworld.CurrentID][i];
+                    var launchPad = launchpadsInSubworld[i];
 
                     if (!launchPad.Active)
                     {
-                        launchPad.Inventory?.DropAllItems(launchPad.CenterWorld);
-                        launchPadStorage[MacrocosmSubworld.CurrentID].RemoveAt(i);
+                        launchPad.Inventory?.DropAllItems(launchPad.CenterWorld, sync: false, fromClient: false);
+                        launchpadsInSubworld.RemoveAt(i);
                         i--;
                     }
                     else

@@ -1,8 +1,8 @@
 using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Global.NPCs;
+using Macrocosm.Common.Global.Projectiles;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.NPCs.Global;
 using Macrocosm.Content.Particles;
-using Macrocosm.Content.Projectiles.Global;
 using Macrocosm.Content.Trails;
 using Microsoft.Xna.Framework;
 using System;

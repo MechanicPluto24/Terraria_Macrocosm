@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Systems;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Systems;
 using Macrocosm.Content.Players;
 using Macrocosm.Content.Rockets;
 using Macrocosm.Content.Rockets.Customization;

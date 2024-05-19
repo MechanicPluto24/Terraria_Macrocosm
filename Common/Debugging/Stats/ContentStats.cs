@@ -22,7 +22,8 @@ namespace Macrocosm.Common.Debugging.Stats
             #if DEBUG
             try
             {
-                Analyze(Mod);
+                if(!Main.dedServ)
+                    Analyze(Mod);
             }
             catch
             {

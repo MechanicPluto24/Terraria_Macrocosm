@@ -1,5 +1,5 @@
-﻿using Macrocosm.Common.Utils;
-using Macrocosm.Content.Projectiles.Global;
+﻿using Macrocosm.Common.Global.Projectiles;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;

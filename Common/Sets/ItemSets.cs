@@ -1,0 +1,65 @@
+﻿using Terraria.ID;
+
+namespace Macrocosm.Common.Sets
+{
+    public class ItemSets
+    {
+        public static bool[] Chests { get; } = ItemID.Sets.Factory.CreateBoolSet
+        (
+            ItemID.Chest,
+            ItemID.GoldChest,
+            ItemID.FrozenChest,
+            ItemID.IvyChest,
+            ItemID.LihzahrdChest,
+            ItemID.LivingWoodChest,
+            ItemID.MushroomChest,
+            ItemID.RichMahoganyChest,
+            ItemID.DesertChest,
+            ItemID.SkywareChest,
+            ItemID.WaterChest,
+            ItemID.WebCoveredChest,
+            ItemID.GraniteChest,
+            ItemID.MarbleChest,
+            ItemID.ShadowChest,
+            ItemID.GoldenChest,
+            ItemID.CorruptionChest,
+            ItemID.CrimsonChest,
+            ItemID.HallowedChest,
+            ItemID.IceChest,
+            ItemID.JungleChest,
+            ItemID.DungeonDesertChest,
+            ItemID.GolfChest,
+            ItemID.NebulaChest,
+            ItemID.SolarChest,
+            ItemID.StardustChest,
+            ItemID.VortexChest,
+            ItemID.BoneChest,
+            ItemID.LesionChest,
+            ItemID.FleshChest,
+            ItemID.GlassChest,
+            ItemID.HoneyChest,
+            ItemID.SlimeChest,
+            ItemID.SteampunkChest,
+            ItemID.AshWoodChest,
+            ItemID.BalloonChest,
+            ItemID.BambooChest,
+            ItemID.BlueDungeonChest,
+            ItemID.BorealWoodChest,
+            ItemID.CactusChest,
+            ItemID.CrystalChest,
+            ItemID.DynastyChest,
+            ItemID.EbonwoodChest,
+            ItemID.GreenDungeonChest,
+            ItemID.MartianChest,
+            ItemID.MeteoriteChest,
+            ItemID.ObsidianChest,
+            ItemID.PalmWoodChest,
+            ItemID.PinkDungeonChest,
+            ItemID.PumpkinChest,
+            ItemID.CoralChest,
+            ItemID.ShadewoodChest,
+            ItemID.SpiderChest,
+            ItemID.SpookyChest
+        );
+    }
+}

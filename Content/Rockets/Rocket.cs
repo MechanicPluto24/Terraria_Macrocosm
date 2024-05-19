@@ -268,7 +268,7 @@ namespace Macrocosm.Content.Rockets
                 LookForCommander();
             }
 
-            if (Launched && Position.Y < WorldExitPositionY + 1)
+            if (CheckPlayerInRocket(Main.myPlayer) && Launched && Position.Y < WorldExitPositionY + 1)
             {
                 FlightTime = 0;
                 FlightProgress = 0f;
@@ -278,6 +278,9 @@ namespace Macrocosm.Content.Rockets
                 Landing = true;
                 ResetAnimation();
                 Travel();
+
+                if(CheckPlayerCommander(Main.myPlayer))
+                    NetSync();
             }
 
             // reset render target after first update to fix reload issue
@@ -311,17 +314,14 @@ namespace Macrocosm.Content.Rockets
                 }
             }
 
-            if (Active)
-            {
-                Inventory.Size = 0;
-                Inventory.SyncSize();
+            bool sync = Main.netMode != NetmodeID.SinglePlayer;
+            bool fromClient = Main.netMode == NetmodeID.MultiplayerClient;
+            Inventory.DropAllItems(Center, sync, fromClient);
 
-                Inventory = null;
-            }
-
-            CurrentWorld = "";
             Active = false;
-            NetSync();
+
+            if(sync)
+                NetSync();
         }
 
         // Gets the position of a module with respect to the provided origin
@@ -694,7 +694,7 @@ namespace Macrocosm.Content.Rockets
                 Center, updateCallback: (sound) =>
                 {
                     sound.Position = Center;
-                    return true;
+                    return ActiveInCurrentWorld;
                 });
             }
 
@@ -875,7 +875,7 @@ namespace Macrocosm.Content.Rockets
                     sound.Pitch = MathHelper.Lerp(-1f, 0, StaticFireProgress);
                     sound.Volume = intensity;
                     sound.Position = Center;
-                    return FlightTime < LiftoffTime;
+                    return FlightTime < LiftoffTime && ActiveInCurrentWorld;
                 }); 
             }
 
@@ -890,7 +890,7 @@ namespace Macrocosm.Content.Rockets
                 Center, updateCallback: (sound) =>
                 {
                     sound.Position = Center;
-                    return InFlight;
+                    return InFlight && ActiveInCurrentWorld;
                 });
             }
 
@@ -907,7 +907,7 @@ namespace Macrocosm.Content.Rockets
                 {
                     sound.Pitch = Main.rand.NextFloat(-0.1f, 0.1f);
                     sound.Position = Center;
-                    return InFlight;
+                    return InFlight && ActiveInCurrentWorld;
                 });
             }
 
@@ -925,7 +925,7 @@ namespace Macrocosm.Content.Rockets
                     sound.Pitch = Main.rand.NextFloat(-0.1f, 0.1f);
                     sound.Volume = LandingProgress < 0.8f ? 1f : (1f - LandingProgress) * 5f;
                     sound.Position = Center;
-                    return Landing;
+                    return Landing && ActiveInCurrentWorld;
                 });
             }
         }
@@ -934,6 +934,7 @@ namespace Macrocosm.Content.Rockets
         private void Travel()
         {
             bool samePlanet = CurrentWorld == TargetWorld;
+
             CurrentWorld = TargetWorld;
 
             RocketPlayer commander = GetCommander();
@@ -970,17 +971,8 @@ namespace Macrocosm.Content.Rockets
             }
             else
             {
-                if (Main.netMode == NetmodeID.Server)
-                    return;
-
                 if (CheckPlayerInRocket(Main.myPlayer))
-                {
-                    if (!MacrocosmSubworld.Travel(TargetWorld, this))
-                    {
-                        CurrentWorld = MacrocosmSubworld.CurrentID;
-                        NetSync();
-                    }
-                }
+                     MacrocosmSubworld.Travel(TargetWorld, this);
             }
         }
     }

@@ -1,4 +1,4 @@
-﻿using Macrocosm.Common.Bases.Items;
+﻿using Macrocosm.Common.Sets.Items;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Systems.UI;
 using Macrocosm.Common.UI;
