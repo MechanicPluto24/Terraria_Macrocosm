@@ -39,9 +39,7 @@ namespace Macrocosm.Common.Global.NPCs
             LocalizedText flavorText = Language.GetOrRegister("Mods.Macrocosm.NPCs." + npc.ModNPC.Name + ".BestiaryFlavorText");
             if (flavorText != LocalizedText.Empty)
             {
-                bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[] {
-                    new FlavorTextBestiaryInfoElement(flavorText.Key)
-                });
+                bestiaryEntry.Info.AddRange([new FlavorTextBestiaryInfoElement(flavorText.Key)]);
             }
         }
 

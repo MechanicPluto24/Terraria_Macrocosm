@@ -657,7 +657,7 @@ namespace Macrocosm.Content.Subworlds
                             && WorldGen.genRand.NextFloat() < largeRockSpawnChance
                             )
                         {
-                            WorldGen.PlaceTile(i, j - 1, TileType<RegolithRockLargeNatural>(), style: WorldGen.genRand.Next(2), mute: true);
+                            WorldGen.PlaceTile(i, j - 1, TileType<RegolithRockLargeNatural>(), style: WorldGen.genRand.Next(5), mute: true);
                         }
                     }
                 }
