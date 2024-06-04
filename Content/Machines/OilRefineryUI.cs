@@ -21,7 +21,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Machines
 {
-    internal class OilRefineryUI : MachineUI
+    public class OilRefineryUI : MachineUI
     {
         public OilRefineryTE OilRefinery => MachineTE as OilRefineryTE;
 

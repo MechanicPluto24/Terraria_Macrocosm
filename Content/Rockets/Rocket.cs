@@ -278,9 +278,6 @@ namespace Macrocosm.Content.Rockets
                 Landing = true;
                 ResetAnimation();
                 Travel();
-
-                if(CheckPlayerCommander(Main.myPlayer))
-                    NetSync();
             }
 
             // reset render target after first update to fix reload issue
@@ -933,11 +930,15 @@ namespace Macrocosm.Content.Rockets
         // Handles the subworld travel
         private void Travel()
         {
+            RocketPlayer commander = GetCommander();
+
             bool samePlanet = CurrentWorld == TargetWorld;
 
-            CurrentWorld = TargetWorld;
-
-            RocketPlayer commander = GetCommander();
+            if(Main.netMode != NetmodeID.MultiplayerClient)
+            {
+                CurrentWorld = TargetWorld;
+                NetSync();
+            }
 
             // Determine the landing location.
             // Set as default if no launchpad has been selected (i.e. the World Spawn option) 

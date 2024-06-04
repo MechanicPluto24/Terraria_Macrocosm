@@ -26,7 +26,6 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
             TileObjectData.newTile.CopyFrom(TileObjectData.Style3x2);
             TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.newTile.CoordinateHeights = [16, 16];
-            TileObjectData.newTile.DrawYOffset = 2;
             TileObjectData.addTile(Type);
 
             AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTable);

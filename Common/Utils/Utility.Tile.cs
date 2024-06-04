@@ -141,6 +141,10 @@ namespace Macrocosm.Common.Utils
             var data = TileObjectData.GetTileData(tile);
             int tileSize = 16 + data.CoordinatePadding;
             int width = data.CoordinateWidth;
+
+            if (tile.TileFrameY < 0)
+                return;
+
             int height = data.CoordinateHeights[tile.TileFrameY / tileSize % data.Height];
             Vector2 tileDataDrawOffset = new(data.DrawXOffset, data.DrawYOffset);
 

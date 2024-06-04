@@ -10,7 +10,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 {
-    internal class MoonBaseNeonTube : ModTile
+    public class MoonBaseNeonTube : ModTile
     {
         public override void SetStaticDefaults()
         {

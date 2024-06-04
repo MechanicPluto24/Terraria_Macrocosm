@@ -17,7 +17,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.UI.Cargo
 {
-    internal class UIFuelPanel : UIPanel, IRocketUIDataConsumer, IFixedUpdateable
+    public class UIFuelPanel : UIPanel, IRocketUIDataConsumer, IFixedUpdateable
     {
         public Rocket Rocket { get; set; } = new();
         private Item ItemInFuelTankSlot => Rocket.Inventory[Rocket.SpecialInventorySlot_FuelTank];

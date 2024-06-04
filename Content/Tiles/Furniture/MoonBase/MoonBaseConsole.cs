@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.Dusts;
+﻿using Macrocosm.Common.Utils;
+using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -23,10 +24,14 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
             TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
             TileObjectData.newTile.Direction = TileObjectDirection.PlaceRight;
             TileObjectData.newTile.StyleHorizontal = true;
+            TileObjectData.newTile.StyleWrapLimit = 2;
             TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.Table, 2, 0);
             TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
             TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceLeft;
             TileObjectData.addAlternate(1);
+            TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
+            TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceLeft;
+            TileObjectData.addAlternate(3);
             TileObjectData.addTile(Type);
 
             HitSound = SoundID.Dig;
@@ -38,24 +43,65 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
             RegisterItemDrop(ModContent.ItemType<Items.Furniture.MoonBase.MoonBaseConsole>(), 0, 1);
         }
 
-        public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
+        public override void HitWire(int i, int j)
         {
-            Tile tile = Main.tile[i, j];
-            Vector2 zero = Main.drawToScreen ? Vector2.Zero : new Vector2(Main.offScreenRange);
+            int leftX = i - Main.tile[i, j].TileFrameX / 18 % 2;
+            int topY = j - Main.tile[i, j].TileFrameY / 18 % 2;
 
-            int width = TileObjectData.GetTileData(tile).CoordinateWidth;
-            int height = TileObjectData.GetTileData(tile).CoordinateHeights[tile.TileFrameY / 18 % 2];
+            for (int x = leftX; x < leftX + 2; x++)
+            {
+                for (int y = topY; y < topY + 2; y++)
+                {
+                    if (Main.tile[x, y].TileFrameY < 36)
+                        Main.tile[x, y].TileFrameY += 36;
+                    else
+                        Main.tile[x, y].TileFrameY -= 36;
 
-            glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
+                    if (Wiring.running)
+                        Wiring.SkipWire(x, y);
+                }
+            }
 
-            spriteBatch.Draw(
-                glowmask.Value,
-                new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero,
-                new Rectangle(tile.TileFrameX, tile.TileFrameY, width, height),
-                Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f
-            );
+            if (Main.netMode != NetmodeID.SinglePlayer)
+                NetMessage.SendTileSquare(-1, leftX, topY, 2, 2);
         }
 
-    }
+        public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)
+        {
+            Tile tile = Main.tile[i, j];
+            if (tile.TileFrameY >= 18 * 2)
+            {
+                frameYOffset = 18 * 2 * Main.tileFrame[type];
+            }
+        }
 
+        public override void AnimateTile(ref int frame, ref int frameCounter)
+        {
+            int ticksPerFrame = 10;
+            int frameCount = 6;
+            if (++frameCounter >= ticksPerFrame)
+            {
+                frameCounter = 0;
+                if (++frame >= frameCount)
+                    frame = 0;
+            }
+        }
+
+        public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
+        {
+            Tile tile = Main.tile[i, j];
+            if (tile.TileFrameY >= 18 * 2)
+            {
+                r = 0f;
+                g = 0.1f;
+                b = 0f;
+            }
+        }
+
+        public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
+        {
+            glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
+            Utility.DrawTileGlowmask(i, j, spriteBatch, glowmask);
+        }
+    }
 }

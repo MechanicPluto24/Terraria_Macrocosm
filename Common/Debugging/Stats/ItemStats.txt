@@ -254,6 +254,14 @@ RegolithBrick
 		Work Bench
 
 
+CheeseBlock
+	Value: No value
+	Research count: 100
+	Recipes:
+		Cheese x 1
+			=> x10
+
+
 LexanGlass
 	Value: No value
 	Research count: 100
@@ -351,6 +359,161 @@ Teleporter
 	Value: 10 gold
 	Research count: 1
 
+CapstoneRush
+	Value: 2 gold 50 silver
+	Research count: 5
+
+Cheese
+	Value: 2 gold 50 silver
+	Research count: 5
+
+CheeseBathtub
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 14
+
+
+CheeseBed
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 15
+		Silk x 5
+
+
+CheeseBookcase
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 20
+		Book x 10
+
+
+CheeseCandelabra
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 5
+		Torch x 3
+
+
+CheeseCandle
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 4
+		Torch x 1
+
+
+CheeseChair
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 4
+
+
+CheeseChandelier
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 4
+		Torch x 4
+		Chain x 1
+
+
+CheeseChest
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 8
+		Iron Bar x 2
+
+
+CheeseClock
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 16
+		Iron Bar x 3
+
+
+CheeseDoor
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 6
+
+
+CheeseDresser
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 16
+
+
+CheeseLamp
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 3
+		Torch x 1
+
+
+CheeseLantern
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 6
+		Torch x 1
+
+
+CheesePiano
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 15
+		Bone x 4
+		Book x 1
+
+
+CheeseSink
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 6
+		Water Bucket x 1
+
+
+CheeseSofa
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 5
+		Silk x 2
+
+
+CheeseTable
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 8
+
+
+CheeseToilet
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 6
+
+
+CheeseWorkbench
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 10
+
+
 ConstructionLight
 	Value: 5 silver
 	Research count: 1
@@ -369,6 +532,14 @@ MoonBaseBed
 		Fabricator
 
 
+MoonBaseBookcase
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Moon Base Plating x 20
+		Book x 10
+
+
 MoonBaseBulkhead
 	Value: 1 silver 50 copper
 	Research count: 1
@@ -383,6 +554,17 @@ MoonBaseCandle
 	Research count: 1
 	Recipes:
 		Moon Base Plating x 4
+		at
+		Fabricator
+
+
+MoonBaseCeilingMonitor
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Moon Base Plating x 8
+		Printed Circuit Board x 1
+		Glass x 1
 		at
 		Fabricator
 
@@ -445,6 +627,17 @@ MoonBaseDeskLamp
 	Research count: 1
 	Recipes:
 		Moon Base Plating x 5
+		at
+		Fabricator
+
+
+MoonBaseDeskMonitor
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Moon Base Plating x 8
+		Printed Circuit Board x 1
+		Glass x 1
 		at
 		Fabricator
 
@@ -526,6 +719,17 @@ MoonBaseTable
 	Research count: 1
 	Recipes:
 		Moon Base Plating x 12
+		at
+		Fabricator
+
+
+MoonBaseWallMonitor
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Moon Base Plating x 8
+		Printed Circuit Board x 1
+		Glass x 1
 		at
 		Fabricator
 

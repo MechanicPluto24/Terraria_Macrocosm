@@ -109,7 +109,7 @@ namespace Macrocosm.Common.Subworlds
             }
             else
             {
-                return true;
+                return false;
             }
         }
 
