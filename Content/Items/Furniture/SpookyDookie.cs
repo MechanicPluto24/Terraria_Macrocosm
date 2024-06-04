@@ -5,7 +5,7 @@ using Terraria;
 
 namespace Macrocosm.Content.Items.Furniture
 {
-    internal class SpookyDookie : ModItem
+    public class SpookyDookie : ModItem
     {
         public override void SetDefaults()
         {

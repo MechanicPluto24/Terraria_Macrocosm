@@ -41,6 +41,8 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
             TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceLeft;
             TileObjectData.addAlternate(1);
             TileObjectData.addTile(Type);
+
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.MoonBase.MoonBaseChairSleek>(), 0, 1);
         }
 
         public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings)

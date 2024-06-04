@@ -9,7 +9,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 {
-    internal class MoonBaseCandle : ModTile
+    public class MoonBaseCandle : ModTile
     {
         public override void SetStaticDefaults()
         {

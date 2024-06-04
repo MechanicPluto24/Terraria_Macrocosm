@@ -14,7 +14,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.UI.Navigation
 {
-    internal class UIPlayerHeadInfoElement : UIInfoElement
+    public class UIPlayerHeadInfoElement : UIInfoElement
     {
         private Player player;
 

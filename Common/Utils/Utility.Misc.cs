@@ -69,6 +69,42 @@ namespace Macrocosm.Common.Utils
             return text;
         }
 
+        public static void PrintTime()
+        {
+            string am_pm = "AM";
+
+            double time = Main.time;
+            if (!Main.dayTime)
+            {
+                time += 54000.0;
+            }
+
+            time = (time / 86400.0) * 24.0;
+            time = time - 7.5 - 12.0;
+
+            if (time < 0.0)
+                time += 24.0;
+
+            if (time >= 12.0)
+                am_pm = "PM";
+
+            int hh = (int)time;
+            double deltaTime = time - hh;
+            deltaTime = (int)(deltaTime * 60.0);
+            string mm = string.Concat(deltaTime);
+
+            if (deltaTime < 10.0)
+                mm = "0" + mm;
+
+            if (hh > 12)
+                hh -= 12;
+
+            if (hh == 0)
+                hh = 12;
+
+            Main.NewText($"Time: {hh}:{mm} {am_pm}", 255, 240, 20);
+        }
+
         public enum MessageSeverity { Info, Warn, Error, Fatal }
         public static void LogChatMessage(string message, MessageSeverity severity = MessageSeverity.Info)
         {

@@ -1207,3 +1207,133 @@ SpookyDookie: {
 	DisplayName: Spooky Dookie
 	Tooltip: ""
 }
+
+CheeseBlock: {
+	DisplayName: Cheese Block
+	Tooltip: ""
+}
+
+Cheese: {
+	DisplayName: Cheese
+	Tooltip: ""
+}
+
+CapstoneRush: {
+	DisplayName: Capstone Rush
+	Tooltip: ""
+}
+
+CheeseBathtub: {
+	DisplayName: Cheese Bathtub
+	Tooltip: ""
+}
+
+CheeseBed: {
+	DisplayName: Cheese Bed
+	Tooltip: ""
+}
+
+CheeseBookcase: {
+	DisplayName: Cheese Bookcase
+	Tooltip: ""
+}
+
+CheeseCandelabra: {
+	DisplayName: Cheese Candelabra
+	Tooltip: ""
+}
+
+CheeseCandle: {
+	DisplayName: Cheese Candle
+	Tooltip: ""
+}
+
+CheeseChair: {
+	DisplayName: Cheese Chair
+	Tooltip: ""
+}
+
+CheeseChandelier: {
+	DisplayName: Cheese Chandelier
+	Tooltip: ""
+}
+
+CheeseChest: {
+	DisplayName: Cheese Chest
+	Tooltip: ""
+}
+
+CheeseClock: {
+	DisplayName: Cheese Clock
+	Tooltip: ""
+}
+
+CheeseDoor: {
+	DisplayName: Cheese Door
+	Tooltip: ""
+}
+
+CheeseDresser: {
+	DisplayName: Cheese Dresser
+	Tooltip: ""
+}
+
+CheeseLamp: {
+	DisplayName: Cheese Lamp
+	Tooltip: ""
+}
+
+CheeseLantern: {
+	DisplayName: Cheese Lantern
+	Tooltip: ""
+}
+
+CheesePiano: {
+	DisplayName: Cheese Piano
+	Tooltip: ""
+}
+
+CheeseSink: {
+	DisplayName: Cheese Sink
+	Tooltip: ""
+}
+
+CheeseSofa: {
+	DisplayName: Cheese Sofa
+	Tooltip: ""
+}
+
+CheeseTable: {
+	DisplayName: Cheese Table
+	Tooltip: ""
+}
+
+CheeseToilet: {
+	DisplayName: Cheese Toilet
+	Tooltip: ""
+}
+
+CheeseWorkbench: {
+	DisplayName: Cheese Workbench
+	Tooltip: ""
+}
+
+MoonBaseBookcase: {
+	DisplayName: Moon Base Bookcase
+	Tooltip: ""
+}
+
+MoonBaseCeilingMonitor: {
+	DisplayName: Moon Base Ceiling Monitor
+	Tooltip: ""
+}
+
+MoonBaseDeskMonitor: {
+	DisplayName: Moon Base Desk Monitor
+	Tooltip: ""
+}
+
+MoonBaseWallMonitor: {
+	DisplayName: Moon Base Wall Monitor
+	Tooltip: ""
+}

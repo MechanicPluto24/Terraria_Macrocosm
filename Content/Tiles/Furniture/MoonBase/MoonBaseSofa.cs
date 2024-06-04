@@ -14,7 +14,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 {
-    internal class MoonBaseSofa : ModTile
+    public class MoonBaseSofa : ModTile
     {
         private static Asset<Texture2D> extra;
         private static Asset<Texture2D> extraHighlight;

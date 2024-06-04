@@ -15,7 +15,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.UI.Cargo
 {
-    internal class UIPlayerInfoElement : UIPanel
+    public class UIPlayerInfoElement : UIPanel
     {
         private readonly Player player;
         private readonly bool large;

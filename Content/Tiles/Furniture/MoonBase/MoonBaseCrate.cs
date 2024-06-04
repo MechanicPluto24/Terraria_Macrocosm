@@ -6,7 +6,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 {
-    internal class MoonBaseCrate : ModTile
+    public class MoonBaseCrate : ModTile
     {
         public override void SetStaticDefaults()
         {

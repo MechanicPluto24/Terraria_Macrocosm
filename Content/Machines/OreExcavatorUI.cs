@@ -14,7 +14,7 @@ using Terraria.GameContent.UI.Elements;
 
 namespace Macrocosm.Content.Machines
 {
-    internal class OreExcavatorUI : MachineUI
+    public class OreExcavatorUI : MachineUI
     {
         public OreExcavatorTE OreExcavator => MachineTE as OreExcavatorTE;
 

@@ -9,7 +9,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture
 {
-    internal class ConstructionLight : ModTile
+    public class ConstructionLight : ModTile
     {
         public override void SetStaticDefaults()
         {
