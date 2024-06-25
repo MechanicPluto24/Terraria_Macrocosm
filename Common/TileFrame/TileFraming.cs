@@ -23,6 +23,7 @@ namespace Macrocosm.Common.TileFrame
         {
             IL_WorldGen.TileFrame -= IL_WorldGen_TileFrame;
         }
+
         private void IL_WorldGen_TileFrame(ILContext il)
         {
             var c = new ILCursor(il);

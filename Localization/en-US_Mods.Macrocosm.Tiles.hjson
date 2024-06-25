@@ -62,3 +62,6 @@ MoonBaseBookcase.MapEntry: Moon Base Bookcase
 MoonBaseCeilingMonitor.MapEntry: Moon Base Ceiling Monitor
 MoonBaseDeskMonitor.MapEntry: Moon Base Desk Monitor
 MoonBaseWallMonitor.MapEntry: Moon Base Wall Monitor
+WindTurbine.MapEntry: Wind Turbine
+LuminiteBookcase.MapEntry: Luminite Bookcase
+MoonBaseDresser.MapEntry: Moon Base Dresser

@@ -26,6 +26,7 @@ namespace Macrocosm.Content.Items.Furniture.Cheese
                 .AddIngredient<CheeseBlock>(4)
                 .AddIngredient(ItemID.Torch, 4)
                 .AddIngredient(ItemID.Chain, 1)
+                .AddTile(TileID.WorkBenches)
                 .Register();
         }
     }

@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Content.Items.Blocks;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 
@@ -24,6 +25,7 @@ namespace Macrocosm.Content.Items.Furniture.Cheese
         {
             CreateRecipe()
                 .AddIngredient<CheeseBlock>(14)
+                .AddTile(TileID.WorkBenches)
                 .Register();
         }
     }

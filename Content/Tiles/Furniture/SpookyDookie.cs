@@ -49,6 +49,8 @@ namespace Macrocosm.Content.Tiles.Furniture
             TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceRight;
             TileObjectData.addAlternate(1);  
             TileObjectData.addTile(Type);
+
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.SpookyDookie>(), 0, 1);
         }
 
         public override void NumDust(int i, int j, bool fail, ref int num)

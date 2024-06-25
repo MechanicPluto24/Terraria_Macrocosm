@@ -39,7 +39,7 @@ namespace Macrocosm.Content.Machines
 
             TileObjectData.newTile.CoordinateHeights = [16, 16, 16, 16, 16, 16, 16, 16, 16, 16];
             TileObjectData.newTile.CoordinateWidth = 16;
-            TileObjectData.newTile.CoordinatePadding = 0; // No padding, in order to make animating the sprite easier
+            TileObjectData.newTile.CoordinatePadding = 2;  
 
             TileObjectData.newTile.DrawYOffset = 2;
 
@@ -70,8 +70,8 @@ namespace Macrocosm.Content.Machines
             AddMapEntry(new Color(206, 117, 44), CreateMapEntryName());
         }
 
-        public override bool IsPoweredOnFrame(int i, int j) => Main.tile[i, j].TileFrameY >= (Height * 16) * 1;
-        public override bool IsOperatingFrame(int i, int j) => Main.tile[i, j].TileFrameY >= (Height * 16) * 2;
+        public override bool IsPoweredOnFrame(int i, int j) => Main.tile[i, j].TileFrameY >= (Height * 18) * 1;
+        public override bool IsOperatingFrame(int i, int j) => Main.tile[i, j].TileFrameY >= (Height * 18) * 2;
 
         public override void TogglePowerStateFrame(int i, int j)
         {
@@ -82,9 +82,9 @@ namespace Macrocosm.Content.Machines
                 {
                     Tile tile = Main.tile[x, y];
                     if (IsPoweredOnFrame(x, y))
-                        tile.TileFrameY -= (short)(Height * 16 * (IsOperatingFrame(x, y) ? 2 : 1));
+                        tile.TileFrameY -= (short)(Height * 18 * (IsOperatingFrame(x, y) ? 2 : 1));
                     else
-                        tile.TileFrameY += (short)(Height * 16);
+                        tile.TileFrameY += (short)(Height * 18);
                 }
             }
 
@@ -104,9 +104,9 @@ namespace Macrocosm.Content.Machines
                     if (IsPoweredOnFrame(x, y))
                     {
                         if (IsOperatingFrame(x, y))
-                            tile.TileFrameY -= (short)(Height * 16);
+                            tile.TileFrameY -= (short)(Height * 18);
                         else
-                            tile.TileFrameY += (short)(Height * 16);
+                            tile.TileFrameY += (short)(Height * 18);
 
                         if (Wiring.running)
                             Wiring.SkipWire(x, y);
@@ -135,9 +135,9 @@ namespace Macrocosm.Content.Machines
                         if (IsPoweredOnFrame(x, y))
                         {
                             if (IsOperatingFrame(x, y))
-                                tile.TileFrameY -= (short)(Height * 16);
+                                tile.TileFrameY -= (short)(Height * 18);
                             else
-                                tile.TileFrameY += (short)(Height * 16);
+                                tile.TileFrameY += (short)(Height * 18);
                         }
                     }
                 }
@@ -187,7 +187,7 @@ namespace Macrocosm.Content.Machines
         public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)
         {
             if (IsOperatingFrame(i, j))
-                frameYOffset = 16 * Height * Main.tileFrame[type];
+                frameYOffset = 18 * Height * Main.tileFrame[type];
         }
 
         public override void AnimateTile(ref int frame, ref int frameCounter)
@@ -214,8 +214,8 @@ namespace Macrocosm.Content.Machines
                 return;
 
             Tile tile = Main.tile[i, j];
-            int tileOffsetX = tile.TileFrameX % (Width * 16) / 16;
-            int tileOffsetY = tile.TileFrameY % (Height * 16) / 16;
+            int tileOffsetX = tile.TileFrameX % (Width * 18) / 18;
+            int tileOffsetY = tile.TileFrameY % (Height * 18) / 18;
 
             if (IsOperatingFrame(i, j))
             {
@@ -279,8 +279,8 @@ namespace Macrocosm.Content.Machines
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
             Tile tile = Main.tile[i, j];
-            int tileOffsetX = tile.TileFrameX % (Width * 16) / 16;
-            int tileOffsetY = tile.TileFrameY % (Height * 16) / 16;
+            int tileOffsetX = tile.TileFrameX % (Width * 18) / 18;
+            int tileOffsetY = tile.TileFrameY % (Height * 18) / 18;
 
             if (tileOffsetX is 2 && tileOffsetY is 6)
             {
