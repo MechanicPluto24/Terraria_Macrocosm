@@ -1,8 +1,8 @@
 ﻿using Macrocosm.Common.Utils;
+using Macrocosm.Content.Items.Armor.Vanity.BossMasks;
 using Macrocosm.Content.Items.Currency;
 using Macrocosm.Content.Items.Furniture;
 using Macrocosm.Content.Items.Materials.Drops;
-using Macrocosm.Content.Items.Vanity.BossMasks;
 using Macrocosm.Content.Items.Weapons.Magic;
 using Macrocosm.Content.Items.Weapons.Melee;
 using Macrocosm.Content.Items.Weapons.Ranged;

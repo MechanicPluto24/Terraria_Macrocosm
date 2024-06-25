@@ -15,8 +15,8 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
     {
         public override GunHeldProjectileData GunHeldProjectileData => new()
         {
-            GunBarrelPosition = new(18, 7),
-            CenterYOffset = 4,
+            GunBarrelPosition = new(22, 6),
+            CenterYOffset = 8,
             MuzzleOffset = 20,
             Recoil = (5, 0.25f),
             UseBackArm = false,
@@ -34,8 +34,8 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             Item.DefaultToRangedWeapon(10, AmmoID.Bullet, 20, 20, true);
             Item.damage = 280;
 
-            Item.width = 34;
-            Item.height = 20;
+            Item.width = 42;
+            Item.height = 24;
 
             Item.knockBack = 4f;
             Item.value = 10000;

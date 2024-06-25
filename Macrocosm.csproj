@@ -24,6 +24,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Content\Machines\WindTurbine.png" />
+    <None Remove="Content\Tiles\Furniture\Boombox.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="SubworldLibrary">

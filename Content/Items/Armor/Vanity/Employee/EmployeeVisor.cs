@@ -2,10 +2,10 @@ using Macrocosm.Content.Rarities;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Vanity.BossMasks
+namespace Macrocosm.Content.Items.Armor.Vanity.Employee
 {
     [AutoloadEquip(EquipType.Head)]
-    public class CraterDemonMask : ModItem
+    public class EmployeeVisor : ModItem
     {
         public override void SetStaticDefaults()
         {
@@ -13,11 +13,15 @@ namespace Macrocosm.Content.Items.Vanity.BossMasks
 
         public override void SetDefaults()
         {
-            Item.width = 24;
+            Item.width = 22;
             Item.height = 20;
-            Item.value = 10000;
+            Item.value = Item.sellPrice(silver: 200);
             Item.rare = ModContent.RarityType<MoonRarityT1>();
-            Item.defense = 26;
+            Item.vanity = true;
+        }
+
+        public override void AddRecipes()
+        {
         }
     }
 }

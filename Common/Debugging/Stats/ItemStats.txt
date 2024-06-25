@@ -214,6 +214,22 @@ SteelLeggings
 		Anvil
 
 
+CraterDemonMask
+	Value: 1 gold
+	Research count: 1
+
+EmployeeBoots
+	Value: 10 gold
+	Research count: 1
+
+EmployeeSuit
+	Value: 7 gold 50 silver
+	Research count: 1
+
+EmployeeVisor
+	Value: 10 gold
+	Research count: 1
+
 MercurianBanner
 	Value: 5 silver
 	Research count: 1
@@ -366,6 +382,10 @@ CapstoneRush
 Cheese
 	Value: 2 gold 50 silver
 	Research count: 5
+
+Boombox
+	Value: 5 silver
+	Research count: 1
 
 CheeseBathtub
 	Value: 1 silver 50 copper
@@ -1468,10 +1488,6 @@ CraterDemonTrophy
 	Value: 1 gold
 	Research count: 1
 
-CraterDemonMask
-	Value: 1 gold
-	Research count: 1
-
 IrradiatedBrickWall
 	Value: No value
 	Research count: 400
@@ -1685,6 +1701,10 @@ SteelZweihander
 		at
 		Work Bench
 
+
+StopSign
+	Value: 1 platinum
+	Research count: 1
 
 AluminumBow
 	Value: 13 silver

@@ -37,6 +37,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
             TileObjectData.newTile.CoordinateHeights = [16, 16];
             TileObjectData.newTile.DrawYOffset = 2;
+            TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;
 
             TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
