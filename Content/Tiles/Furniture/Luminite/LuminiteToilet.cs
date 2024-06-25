@@ -122,9 +122,9 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
 
             player.noThrow = 2;
             player.cursorItemIconEnabled = true;
-            player.cursorItemIconID = ModContent.ItemType<Items.Furniture.SpookyDookie>();
+            player.cursorItemIconID = ModContent.ItemType<Items.Furniture.Luminite.LuminiteToilet>();
 
-            if (Main.tile[i, j].TileFrameX / 18 < 1)
+            if (Main.tile[i, j].TileFrameX / 18 >= 1)
             {
                 player.cursorItemIconReversed = true;
             }

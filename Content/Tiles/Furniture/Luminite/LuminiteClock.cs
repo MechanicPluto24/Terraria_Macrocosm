@@ -41,6 +41,15 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             return true;
         }
 
+        public override void MouseOver(int i, int j)
+        {
+            Player player = Main.LocalPlayer;
+
+            player.noThrow = 2;
+            player.cursorItemIconEnabled = true;
+            player.cursorItemIconID = ModContent.ItemType<Items.Furniture.Luminite.LuminiteClock>();
+        }
+
         public override void NumDust(int i, int j, bool fail, ref int num) => num = fail ? 1 : 3;
     }
 }

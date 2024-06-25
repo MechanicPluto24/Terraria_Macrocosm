@@ -1372,3 +1372,28 @@ WindTurbine: {
 	DisplayName: Wind Turbine
 	Tooltip: ""
 }
+
+EmployeeBoots: {
+	DisplayName: Employee Boots
+	Tooltip: ""
+}
+
+EmployeeSuit: {
+	DisplayName: Employee Suit
+	Tooltip: ""
+}
+
+EmployeeVisor: {
+	DisplayName: Employee Visor
+	Tooltip: ""
+}
+
+Boombox: {
+	DisplayName: Boombox
+	Tooltip: ""
+}
+
+StopSign: {
+	DisplayName: Stop Sign
+	Tooltip: ""
+}
