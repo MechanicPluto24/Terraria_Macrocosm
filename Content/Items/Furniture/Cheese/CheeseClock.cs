@@ -14,8 +14,8 @@ namespace Macrocosm.Content.Items.Furniture.Cheese
         public override void SetDefaults()
         {
             Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Cheese.CheeseClock>());
-            Item.width = 32;
-            Item.height = 28;
+            Item.width = 18;
+            Item.height = 32;
             Item.maxStack = Item.CommonMaxStack;
             Item.value = 150;
         }
@@ -25,6 +25,7 @@ namespace Macrocosm.Content.Items.Furniture.Cheese
             CreateRecipe()
                 .AddIngredient<CheeseBlock>(16)
                 .AddRecipeGroup(RecipeGroupID.IronBar, 3)
+                .AddTile(TileID.WorkBenches)
                 .Register();
         }
     }

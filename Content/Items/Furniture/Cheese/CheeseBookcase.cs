@@ -25,6 +25,7 @@ namespace Macrocosm.Content.Items.Furniture.Cheese
             CreateRecipe()
                 .AddIngredient<CheeseBlock>(20)
                 .AddIngredient(ItemID.Book, 10)
+                .AddTile(TileID.WorkBenches)
                 .Register();
         }
     }

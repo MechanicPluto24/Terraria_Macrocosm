@@ -372,6 +372,8 @@ CheeseBathtub
 	Research count: 1
 	Recipes:
 		Cheese Block x 14
+		at
+		Work Bench
 
 
 CheeseBed
@@ -380,6 +382,8 @@ CheeseBed
 	Recipes:
 		Cheese Block x 15
 		Silk x 5
+		at
+		Work Bench
 
 
 CheeseBookcase
@@ -388,6 +392,8 @@ CheeseBookcase
 	Recipes:
 		Cheese Block x 20
 		Book x 10
+		at
+		Work Bench
 
 
 CheeseCandelabra
@@ -396,6 +402,8 @@ CheeseCandelabra
 	Recipes:
 		Cheese Block x 5
 		Torch x 3
+		at
+		Work Bench
 
 
 CheeseCandle
@@ -404,6 +412,8 @@ CheeseCandle
 	Recipes:
 		Cheese Block x 4
 		Torch x 1
+		at
+		Work Bench
 
 
 CheeseChair
@@ -411,6 +421,8 @@ CheeseChair
 	Research count: 1
 	Recipes:
 		Cheese Block x 4
+		at
+		Work Bench
 
 
 CheeseChandelier
@@ -420,6 +432,8 @@ CheeseChandelier
 		Cheese Block x 4
 		Torch x 4
 		Chain x 1
+		at
+		Work Bench
 
 
 CheeseChest
@@ -428,6 +442,8 @@ CheeseChest
 	Recipes:
 		Cheese Block x 8
 		Iron Bar x 2
+		at
+		Work Bench
 
 
 CheeseClock
@@ -436,6 +452,8 @@ CheeseClock
 	Recipes:
 		Cheese Block x 16
 		Iron Bar x 3
+		at
+		Work Bench
 
 
 CheeseDoor
@@ -443,6 +461,8 @@ CheeseDoor
 	Research count: 1
 	Recipes:
 		Cheese Block x 6
+		at
+		Work Bench
 
 
 CheeseDresser
@@ -450,6 +470,8 @@ CheeseDresser
 	Research count: 1
 	Recipes:
 		Cheese Block x 16
+		at
+		Work Bench
 
 
 CheeseLamp
@@ -458,6 +480,8 @@ CheeseLamp
 	Recipes:
 		Cheese Block x 3
 		Torch x 1
+		at
+		Work Bench
 
 
 CheeseLantern
@@ -466,6 +490,8 @@ CheeseLantern
 	Recipes:
 		Cheese Block x 6
 		Torch x 1
+		at
+		Work Bench
 
 
 CheesePiano
@@ -475,6 +501,8 @@ CheesePiano
 		Cheese Block x 15
 		Bone x 4
 		Book x 1
+		at
+		Work Bench
 
 
 CheeseSink
@@ -483,6 +511,8 @@ CheeseSink
 	Recipes:
 		Cheese Block x 6
 		Water Bucket x 1
+		at
+		Work Bench
 
 
 CheeseSofa
@@ -491,6 +521,8 @@ CheeseSofa
 	Recipes:
 		Cheese Block x 5
 		Silk x 2
+		at
+		Work Bench
 
 
 CheeseTable
@@ -498,6 +530,8 @@ CheeseTable
 	Research count: 1
 	Recipes:
 		Cheese Block x 8
+		at
+		Work Bench
 
 
 CheeseToilet
@@ -505,6 +539,8 @@ CheeseToilet
 	Research count: 1
 	Recipes:
 		Cheese Block x 6
+		at
+		Work Bench
 
 
 CheeseWorkbench
@@ -521,6 +557,44 @@ ConstructionLight
 EarthGlobe
 	Value: 5 silver
 	Research count: 1
+
+LuminiteBookcase
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Luminite Brick x 20
+		Book x 10
+		at
+		Mythril Anvil
+
+
+LuminiteChair
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Luminite Brick x 20
+		at
+		Mythril Anvil
+
+
+LuminiteClock
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Luminite Brick x 20
+		Iron Bar x 3
+		at
+		Work Bench
+
+
+LuminiteToilet
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Luminite Brick x 6
+		at
+		Work Bench
+
 
 MoonBaseBed
 	Value: 5 silver
@@ -651,6 +725,13 @@ MoonBaseDoor
 		Fabricator
 
 
+MoonBaseDresser
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Moon Base Plating x 16
+
+
 MoonBaseGurney
 	Value: 5 silver
 	Research count: 1
@@ -723,6 +804,13 @@ MoonBaseTable
 		Fabricator
 
 
+MoonBaseToilet
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Moon Base Plating x 6
+
+
 MoonBaseWallMonitor
 	Value: 5 silver
 	Research count: 1
@@ -792,6 +880,10 @@ SolarPanelLarge
 	Research count: 1
 
 SolarPanelSmall
+	Value: 5 silver
+	Research count: 1
+
+WindTurbine
 	Value: 5 silver
 	Research count: 1
 

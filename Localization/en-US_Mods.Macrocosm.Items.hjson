@@ -1337,3 +1337,38 @@ MoonBaseWallMonitor: {
 	DisplayName: Moon Base Wall Monitor
 	Tooltip: ""
 }
+
+LuminiteBookcase: {
+	DisplayName: Luminite Bookcase
+	Tooltip: ""
+}
+
+LuminiteChair: {
+	DisplayName: Luminite Chair
+	Tooltip: ""
+}
+
+LuminiteClock: {
+	DisplayName: Luminite Clock
+	Tooltip: ""
+}
+
+LuminiteToilet: {
+	DisplayName: Luminite Toilet
+	Tooltip: ""
+}
+
+MoonBaseDresser: {
+	DisplayName: Moon Base Dresser
+	Tooltip: ""
+}
+
+MoonBaseToilet: {
+	DisplayName: Moon Base Toilet
+	Tooltip: ""
+}
+
+WindTurbine: {
+	DisplayName: Wind Turbine
+	Tooltip: ""
+}
