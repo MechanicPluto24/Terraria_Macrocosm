@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using System;
@@ -8,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles.Blocks.Terrain
 {
-    public class Protolith : ModTile
+    public class Protolith : ModTile, IModifyTileFrame
     {
         public override void SetStaticDefaults()
         {
@@ -23,9 +24,10 @@ namespace Macrocosm.Content.Tiles.Blocks.Terrain
             DustType = ModContent.DustType<ProtolithDust>();
         }
 
-        public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
+        public void ModifyTileFrame(int i, int j, ref int up, ref int down, ref int left, ref int right, ref int upLeft, ref int upRight, ref int downLeft, ref int downRight)
         {
-            return true;
+            WorldGen.TileMergeAttempt(-2, ModContent.TileType<Regolith>(), ref up, ref down, ref left, ref right, ref upLeft, ref upRight, ref downLeft, ref downRight);
+            WorldGen.TileMergeAttemptFrametest(i, j, Type, ModContent.TileType<IrradiatedRock>(), ref up, ref down, ref left, ref right, ref upLeft, ref upRight, ref downLeft, ref downRight);
         }
     }
 }
