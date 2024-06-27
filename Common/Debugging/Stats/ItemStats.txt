@@ -903,7 +903,11 @@ SolarPanelSmall
 	Value: 5 silver
 	Research count: 1
 
-WindTurbine
+WindTurbineLarge
+	Value: 5 silver
+	Research count: 1
+
+WindTurbineSmall
 	Value: 5 silver
 	Research count: 1
 

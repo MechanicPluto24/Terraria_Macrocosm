@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Machines
 {
-    public class WindTurbine : ModItem
+    public class WindTurbineLarge : ModItem
     {
         public override void SetStaticDefaults()
         {
@@ -12,9 +12,9 @@ namespace Macrocosm.Content.Items.Machines
 
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Content.Machines.WindTurbine>());
-            Item.width = 36;
-            Item.height = 84;
+            Item.DefaultToPlaceableTile(ModContent.TileType<Content.Machines.WindTurbineLarge>());
+            Item.width = 20;
+            Item.height = 48;
             Item.value = 500;
             Item.mech = true;
         }

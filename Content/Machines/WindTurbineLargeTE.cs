@@ -5,9 +5,9 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Machines
 {
-    public class WindTurbineTE : MachineTE
+    public class WindTurbineLargeTE : MachineTE
     {
-        public override MachineTile MachineTile => ModContent.GetInstance<WindTurbine>();
+        public override MachineTile MachineTile => ModContent.GetInstance<WindTurbineLarge>();
         public override bool PoweredOn => Math.Abs(Main.windSpeedCurrent) > 0.1f;
 
         public override void OnFirstUpdate()
@@ -17,7 +17,7 @@ namespace Macrocosm.Content.Machines
         public override void MachineUpdate()
         {
             if(PoweredOn)
-                GeneratedPower = 2f * Math.Abs(Main.windSpeedCurrent);
+                GeneratedPower = 3f * Math.Abs(Main.windSpeedCurrent);
             else
                 GeneratedPower = 0;
         }
