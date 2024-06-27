@@ -18,12 +18,12 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Machines
 {
-    public class WindTurbine : MachineTile
+    public class WindTurbineSmall : MachineTile
     {
         public override short Width => 3;
         public override short Height => 7;
 
-        public override MachineTE MachineTE => ModContent.GetInstance<WindTurbineTE>();
+        public override MachineTE MachineTE => ModContent.GetInstance<WindTurbineSmallTE>();
 
         public override void SetStaticDefaults()
         {

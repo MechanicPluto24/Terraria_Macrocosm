@@ -131,7 +131,7 @@ namespace Macrocosm.Common.Utils
             );
         }
 
-        public static void DrawTileGlowmask(int i, int j, SpriteBatch spriteBatch, Asset<Texture2D> texture, Vector2 drawOffset = default, Color? drawColor = null)
+        public static void DrawTileExtraTexture(int i, int j, SpriteBatch spriteBatch, Asset<Texture2D> texture, Vector2 drawOffset = default, Color? drawColor = null)
         {
             Tile tile = Main.tile[i, j];
             Vector2 zero = Main.drawToScreen ? Vector2.Zero : new Vector2(Main.offScreenRange);

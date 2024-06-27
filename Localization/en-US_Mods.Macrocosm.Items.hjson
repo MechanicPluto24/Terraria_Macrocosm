@@ -1397,3 +1397,13 @@ StopSign: {
 	DisplayName: Stop Sign
 	Tooltip: ""
 }
+
+WindTurbineLarge: {
+	DisplayName: Wind Turbine Large
+	Tooltip: ""
+}
+
+WindTurbineSmall: {
+	DisplayName: Wind Turbine Small
+	Tooltip: ""
+}

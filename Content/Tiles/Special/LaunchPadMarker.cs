@@ -192,7 +192,7 @@ namespace Macrocosm.Content.Tiles.Special
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
         {
             glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
-            Utility.DrawTileGlowmask(i, j, spriteBatch, glowmask);
+            Utility.DrawTileExtraTexture(i, j, spriteBatch, glowmask);
 
             /*
             float cycle = Utility.PositiveSineWave(130 + ((i % 10) + (j % 10)));
