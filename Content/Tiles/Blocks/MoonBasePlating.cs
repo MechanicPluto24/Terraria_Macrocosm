@@ -2,6 +2,7 @@ using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.TileFrame;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Tiles.Furniture.MoonBase;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -56,8 +57,10 @@ namespace Macrocosm.Content.Tiles.Blocks
             (
                 (neighbour) =>
                     WorldGen.SolidTile(neighbour) && neighbour.TileType != Type ||
+                    Utility.IsPlatform(neighbour.TileType) ||
                     TileID.Sets.CloseDoorID[neighbour.TileType] > 0 ||
                     neighbour.TileType == TileID.TallGateOpen
+                    
             );
 
             if (tile.IsSloped() || info.Count4Way > 0)

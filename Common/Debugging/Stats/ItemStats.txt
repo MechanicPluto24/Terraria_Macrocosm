@@ -1288,6 +1288,14 @@ ShoresOfOblivion
 	Value: No value
 	Research count: 1
 
+WeCanDoItBlue
+	Value: No value
+	Research count: 1
+
+WeCanDoItYellow
+	Value: No value
+	Research count: 1
+
 WhenDayBreaks
 	Value: No value
 	Research count: 1

@@ -64,17 +64,17 @@ namespace Macrocosm.Content.Machines
 
         public override void AnimateTile(ref int frame, ref int frameCounter)
         {
-            int ticksPerFrame = Math.Clamp((int)(10 * (1f - Math.Abs(Main.windSpeedCurrent))), 2, 6);
+            int ticksPerFrame = Math.Clamp((int)(10 * (1f - Math.Abs(Utility.WindSpeedScaled))), 2, 6);
 
             int frameCount = 9;
 
-            if(Math.Abs(Main.windSpeedCurrent) > 0.1f)
+            if(Math.Abs(Utility.WindSpeedScaled) > 0.1f)
             {
                 if (++frameCounter >= ticksPerFrame)
                 {
                     frameCounter = 0;
 
-                    if (Main.windSpeedCurrent > 0f)
+                    if (Utility.WindSpeedScaled > 0f)
                         frame++;
                     else
                         frame--;

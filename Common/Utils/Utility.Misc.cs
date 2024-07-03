@@ -100,6 +100,14 @@ namespace Macrocosm.Common.Utils
             Main.NewText(Language.GetTextValue("Game.Time", hh + ":" + text + " " + am_pm), byte.MaxValue, 240, 20);
         }
 
+        /// <summary> Max absolute value of <see cref="Main.windSpeedCurrent"> </summary>
+        public const float MaxWindSpeedAbsolute = maxValue_Main_windSpeedTarget * (1f + 5f / 9f * maxValue_Main_maxRaining);
+        private const float maxValue_Main_windSpeedTarget = 0.8f;
+        private const float maxValue_Main_maxRaining = 0.9f;
+
+        /// <summary> Scaled value of <see cref="Main.windSpeedCurrent"/> in between <c>[-1; 1]</c> </summary>
+        public static float WindSpeedScaled => Main.windSpeedCurrent / MaxWindSpeedAbsolute;
+
         public enum MessageSeverity { Info, Warn, Error, Fatal }
         public static void LogChatMessage(string message, MessageSeverity severity = MessageSeverity.Info)
         {

@@ -5,9 +5,11 @@ using Macrocosm.Content.Rockets;
 using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
+using System;
 using System.Reflection;
 using Terraria;
 using Terraria.ID;
+using Terraria.IO;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
@@ -59,6 +61,8 @@ namespace Macrocosm.Common.Subworlds
 
         public static int CurrentIndex => SubworldSystem.AnyActive() ? SubworldSystem.GetIndex(CurrentID) : -1;
 
+        public static Guid MainWorldUniqueID => SubworldSystem.AnyActive() ? typeof(SubworldSystem).GetFieldValue<WorldFileData>("main").UniqueId : Main.ActiveWorldFileData.UniqueId;
+
         public static double CurrentTimeRate => Current is not null ? Current.TimeRate : Earth.TimeRate;
         public static double CurrentDayLength => Current is not null ? Current.DayLenght : Earth.DayLenght;
         public static double CurrentNightLength => Current is not null ? Current.NightLenght : Earth.NightLenght;
@@ -82,8 +86,8 @@ namespace Macrocosm.Common.Subworlds
 
                 UpdateLoadingScreen(rocket, targetWorld);
 
-                Main.LocalPlayer.GetModPlayer<MacrocosmPlayer>().TriggeredSubworldTravel = trigger;
-                Main.LocalPlayer.GetModPlayer<MacrocosmPlayer>().SetReturnSubworld(targetWorld);
+                Main.LocalPlayer.GetModPlayer<SubworldTravelPlayer>().TriggeredSubworldTravel = trigger;
+                Main.LocalPlayer.GetModPlayer<SubworldTravelPlayer>().SetReturnSubworld(targetWorld);
 
                 if (targetWorld == "Macrocosm/Earth")
                 {

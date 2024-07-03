@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Storage;
+using Macrocosm.Common.Subworlds;
 using Macrocosm.Content.Players;
 using Macrocosm.Content.Rockets;
 using Macrocosm.Content.Rockets.LaunchPads;
@@ -64,7 +65,7 @@ namespace Macrocosm.Common.Netcode
                     break;
 
                 case MessageType.LastSubworldCheck:
-                    MacrocosmPlayer.ReceiveLastSubworldCheck(reader, whoAmI);
+                    SubworldTravelPlayer.ReceiveLastSubworldCheck(reader, whoAmI);
                     break;
 
                 case MessageType.SyncTEFromClient:
