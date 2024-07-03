@@ -14,29 +14,14 @@ namespace Macrocosm.Common.Global.Tiles
     {
         public override void Load()
         {
-            On_Player.PlaceThing_Tiles += On_Player_PlaceThing_Tiles;
-
             On_WorldGen.KillTile_MakeTileDust += On_WorldGen_KillTile_MakeTileDust;
             On_WorldGen.KillTile_PlaySounds += On_WorldGen_KillTile_PlaySounds;
         }
 
         public override void Unload()
         {
-            On_Player.PlaceThing_Tiles -= On_Player_PlaceThing_Tiles;
             On_WorldGen.KillTile_MakeTileDust -= On_WorldGen_KillTile_MakeTileDust;
             On_WorldGen.KillTile_PlaySounds -= On_WorldGen_KillTile_PlaySounds;
-        }
-
-        /// <summary> 
-        /// Temporary workaround for <see href="https://github.com/tModLoader/tModLoader/issues/3509"/>
-        /// Remove once resolved.
-        /// </summary>
-        private void On_Player_PlaceThing_Tiles(On_Player.orig_PlaceThing_Tiles orig, Player self)
-        {
-            if (TileLoader.CanPlace(Player.tileTargetX, Player.tileTargetY, self.inventory[self.selectedItem].createTile))
-            {
-                orig(self);
-            }
         }
 
         public override bool CanPlace(int i, int j, int type)

@@ -1407,3 +1407,13 @@ WindTurbineSmall: {
 	DisplayName: Wind Turbine Small
 	Tooltip: ""
 }
+
+WeCanDoItBlue: {
+	DisplayName: We Can Do It Blue
+	Tooltip: ""
+}
+
+WeCanDoItYellow: {
+	DisplayName: We Can Do It Yellow
+	Tooltip: ""
+}

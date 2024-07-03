@@ -11,6 +11,9 @@ using SubworldLibrary;
 using System;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.DataStructures;
+using Terraria.GameContent.Creative;
+using Terraria.GameContent.Events;
 using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Common.Subworlds
@@ -61,14 +64,6 @@ namespace Macrocosm.Common.Subworlds
         /// <summary> Specifies the conditions for reaching this particular subworld </summary>
         public virtual ChecklistConditionCollection LaunchConditions { get; } = new();
 
-        /// <summary> Called when entering a subworld. </summary>
-        public virtual void OnEnterWorld() { }
-
-        /// <summary> Called when exiting a subworld. </summary>
-        public virtual void OnExitWorld() { }
-
-        public Guid MainWorldUniqueId { get; private set; }
-
         /// <summary> The map background color for each depth layer (Surface, Underground, Cavern, Underworld) </summary>
         public virtual Dictionary<MapColorType, Color> MapColors { get; } = null;
 
@@ -82,7 +77,7 @@ namespace Macrocosm.Common.Subworlds
             get
             {
                 // Return to the main world (Earth)
-                if (Main.LocalPlayer.GetModPlayer<MacrocosmPlayer>().TriggeredSubworldTravel)
+                if (Main.LocalPlayer.GetModPlayer<SubworldTravelPlayer>().TriggeredSubworldTravel)
                     return base.ReturnDestination;
                 // Go to main menu
                 else
@@ -90,25 +85,22 @@ namespace Macrocosm.Common.Subworlds
             }
         }
 
-        public override void Load()
-        {
-        }
+        // TODO
+        public List<int> TownNPCs = [];
 
-        public override void SetStaticDefaults()
-        {
-        }
+        /// <summary> Called when entering a subworld. </summary>
+        public virtual void OnEnterWorld() { }
 
-        public override void OnLoad()
-        {
-        }
+        /// <summary> Called when exiting a subworld. </summary>
+        public virtual void OnExitWorld() { }
 
-        public override void OnEnter()
+        public sealed override void OnEnter()
         {
             OnEnterWorld();
             MapTileSystem.ApplyMapTileColors();
         }
 
-        public override void OnExit()
+        public sealed override void OnExit()
         {
             OnExitWorld();
             MapTileSystem.RestoreMapTileColors();
@@ -132,6 +124,110 @@ namespace Macrocosm.Common.Subworlds
                 return base.GetGravity(entity);
 
             return base.GetGravity(entity);
+        }
+
+        public override void Update()
+        {
+            SubworldSystem.hideUnderworld = true;
+            SubworldSystem.noReturn = false;
+
+            UpdateTime();
+            GameMechanicsUpdates();
+            FreezeEnvironment();
+        }
+
+        // Updates the time 
+        private void UpdateTime()
+        {
+            double timeRate = TimeRate;
+
+            // Fast forward 60 times if using sun/moon-dials
+            if (Main.IsFastForwardingTime())
+            {
+                timeRate *= 60.0;
+                Main.desiredWorldTilesUpdateRate = timeRate / 60.0;
+                Main.desiredWorldEventsUpdateRate = timeRate;
+            }
+
+            // Apply current journey power time modifier
+            timeRate *= CreativePowerManager.Instance.GetPower<CreativePowers.ModifyTimeRate>().TargetTimeRate;
+
+            // Apply all players sleeping multiplier 
+            if (Main.CurrentFrameFlags.SleepingPlayersCount == Main.CurrentFrameFlags.ActivePlayersCount && Main.CurrentFrameFlags.SleepingPlayersCount > 0)
+                timeRate *= 5;
+
+            // Don't pass time if disabled from the journey powers 
+            if (CreativePowerManager.Instance.GetPower<CreativePowers.FreezeTime>().Enabled)
+                timeRate = 0;
+
+            Main.time += timeRate;
+            Main.desiredWorldTilesUpdateRate = timeRate / 60.0;
+            Main.desiredWorldEventsUpdateRate = timeRate;
+
+            MacrocosmWorld.IsDusk = Main.dayTime && Main.time >= DayLenght;
+            MacrocosmWorld.IsDawn = !Main.dayTime && Main.time >= NightLenght;
+
+            if (MacrocosmWorld.IsDusk)
+            {
+                Main.time = 0;
+                Main.dayTime = false;
+
+                if (Main.fastForwardTimeToDusk)
+                    Main.fastForwardTimeToDusk = false;
+            }
+
+            if (MacrocosmWorld.IsDawn)
+            {
+                Main.time = 0;
+                Main.dayTime = true;
+
+                if (Main.fastForwardTimeToDawn)
+                    Main.fastForwardTimeToDawn = false;
+            }
+        }
+
+        // Updates wiring, TEs and liquids 
+        private void GameMechanicsUpdates()
+        {
+            if (Current.ShouldUpdateWiring)
+                Wiring.UpdateMech();
+
+            TileEntity.UpdateStart();
+            foreach (TileEntity te in TileEntity.ByID.Values)
+            {
+                te.Update();
+            }
+            TileEntity.UpdateEnd();
+
+            if (++Liquid.skipCount > 1)
+            {
+                Liquid.UpdateLiquid();
+                Liquid.skipCount = 0;
+            }
+        }
+
+        // Freezes environment factors like rain or clouds. 
+        // Required when NormalUpdates are turned on (if we ever want that), and as failsafe if something is still non-default with updates turned off.
+        private void FreezeEnvironment()
+        {
+            //if (Main.gameMenu)
+            //	return;
+
+            // TODO: make these per-subworld if using Terraria's weather system for future planets
+            Main.numClouds = 0;
+            Main.windSpeedCurrent = 0;
+            Main.weatherCounter = 0;
+
+            // Tricky way to stop vanilla fallen stars for spawning when NormalUpdates are turned on 
+            Star.starfallBoost = 0;
+
+            Main.slimeRain = false;
+            Main.slimeRainTime = 0;
+
+            Main.StopSlimeRain(false);
+
+            LanternNight.WorldClear();
+            Main.StopRain(); // Rain, rain, go away, come again another day
         }
 
         private static void SaveData(TagCompound tag)
@@ -180,19 +276,12 @@ namespace Macrocosm.Common.Subworlds
 
         private void SaveEarthSpecificData(TagCompound tag)
         {
-            // Save the main world's UniqueId for subworlds to use
-            tag[nameof(MainWorldUniqueId)] = Main.ActiveWorldFileData.UniqueId.ToString();
-
             // Save Earth's world size for other subworlds to use 
             tag[nameof(Earth) + nameof(Earth.WorldSize)] = Earth.WorldSize;
         }
 
         private void LoadEarthSpecificData(TagCompound tag)
         {
-            // Read the main world's UniqueId
-            if (tag.ContainsKey(nameof(MainWorldUniqueId)))
-                MainWorldUniqueId = new Guid(tag.GetString(nameof(MainWorldUniqueId)));
-
             // Read world size and apply it here. 
             // In SubLib maxTiles are assigned before the data is read.
             // ReadCopiedMainWorldData is called before worldgen so it can be safely used there.

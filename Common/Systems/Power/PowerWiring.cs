@@ -32,7 +32,9 @@ namespace Macrocosm.Common.Systems.Power
 
     public class PowerWiring : ModSystem
     {
-        public static PowerWiring Map => ModContent.GetInstance<PowerWiring>();
+        public static PowerWiring Instance => ModContent.GetInstance<PowerWiring>();
+        public static PowerWiring Map => Instance;
+
         private Dictionary<Point16, WireData> wireMap = new();
 
         private Asset<Texture2D> wireTexture;

@@ -16,6 +16,7 @@ using System.Linq;
 using Terraria;
 using Terraria.Graphics.Effects;
 using Terraria.ID;
+using Terraria.IO;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -35,16 +36,6 @@ namespace Macrocosm.Content.Players
     /// </summary>
     public class MacrocosmPlayer : ModPlayer
     {
-        /// <summary>
-        /// Whether the player has voluntarily initiated subworld travel. Not synced. 
-        /// <br> Value can be set in <see cref="MacrocosmSubworld.Travel"/>via the <c>trigger</c> parameter</br>
-        /// <br> If true, the title sequence will display, and SubworldSystem.Exit() will move the player to Earth.</br> 
-        /// <br> (Player took a Rocket, or used Teleporter)</br>
-        /// <br> If false, the title sequence will display, and SubworldSystem.Exit() will return to the main menu. </br>
-        /// <br> (Player clicks the "Return" button from the in-game options menu, or is forced to a subworld on world enter) </br>
-        /// </summary>
-        public bool TriggeredSubworldTravel { get; set; }
-
         /// <summary> 
         /// The player's space protection level.
         /// Not synced.
@@ -81,29 +72,12 @@ namespace Macrocosm.Content.Players
 
         private float chanceToNotConsumeAmmo = 0f;
 
-        /// <summary>
-        /// The subworlds this player has visited.
-        /// Persistent. Local to the player. Not synced.
-        /// </summary>
-        //TODO: sync this if needed
-        private List<string> visitedSubworlds = new();
-
-        /// <summary>
-        /// A dictionary of this player's last known subworld Id, by each Terraria main world file visited.
-        /// Not synced.
-        /// </summary>
-        private readonly Dictionary<Guid, string> lastSubworldIdByWorldUniqueId = new();
-
-        private Guid currentMainWorldUniqueId = Guid.Empty;
-
         public override void ResetEffects()
         {
             SpaceProtection = 0f;
             RadNoiseIntensity = 0f;
             ChanceToNotConsumeAmmo = 0f;
             Player.buffImmune[BuffType<Depressurized>()] = false;
-
-            TriggeredSubworldTravel = false;
         }
 
         public override bool CanConsumeAmmo(Item weapon, Item ammo)
@@ -118,8 +92,6 @@ namespace Macrocosm.Content.Players
 
         public override void PreUpdate()
         {
-            if(Main.netMode != NetmodeID.MultiplayerClient)
-                currentMainWorldUniqueId = SubworldSystem.AnyActive<Macrocosm>() ? MacrocosmSubworld.Current.MainWorldUniqueId : Main.ActiveWorldFileData.UniqueId;
         }
 
         public override void PostUpdateBuffs()
@@ -172,65 +144,9 @@ namespace Macrocosm.Content.Players
             }
         }
 
-        public bool HasVisitedSubworld(string subworldId) => visitedSubworlds.Contains(subworldId);
-
-        public void SetReturnSubworld(string subworldId)
-        {
-            if (currentMainWorldUniqueId == Guid.Empty)
-                Utility.LogChatMessage("Main world GUID not received from the server", Utility.MessageSeverity.Error);
-
-            lastSubworldIdByWorldUniqueId[currentMainWorldUniqueId] = subworldId;
-        }
-
-        public bool TryGetReturnSubworld(Guid worldUniqueId, out string subworldId) => lastSubworldIdByWorldUniqueId.TryGetValue(worldUniqueId, out subworldId);
-
         public override void OnEnterWorld()
         {
-            if (Main.netMode == NetmodeID.SinglePlayer)
-            {
-                if (!SubworldSystem.AnyActive<Macrocosm>() && !TriggeredSubworldTravel && lastSubworldIdByWorldUniqueId.TryGetValue(currentMainWorldUniqueId, out string lastSubworldId))
-                {
-                    if (lastSubworldId is not "Macrocosm/Earth")
-                        MacrocosmSubworld.Travel(lastSubworldId, trigger: false);
-                }
-            }
-
-            if (TriggeredSubworldTravel)
-            {
-                if (SubworldSystem.AnyActive<Macrocosm>())
-                {
-                    if (!HasVisitedSubworld(MacrocosmSubworld.CurrentID) || MacrocosmConfig.Instance.AlwaysDisplayTitleCards)
-                        TitleCard.Start();
-
-                    visitedSubworlds.Add(MacrocosmSubworld.CurrentID);
-                }
-                else
-                {
-                    if(MacrocosmConfig.Instance.AlwaysDisplayTitleCards)
-                        TitleCard.Start();
-                }
-            }
-
             CircuitSystem.SearchCircuits();
-        }
-
-        public static void ReceiveLastSubworldCheck(BinaryReader reader, int whoAmI)
-        {
-            var macrocosmPlayer = Main.LocalPlayer.GetModPlayer<MacrocosmPlayer>();
-            
-            Guid mainWorldUniqueId = new(reader.ReadString());
-            macrocosmPlayer.currentMainWorldUniqueId = mainWorldUniqueId;
-
-            if 
-            (
-                !SubworldSystem.AnyActive<Macrocosm>()
-                && !macrocosmPlayer.TriggeredSubworldTravel
-                && macrocosmPlayer.lastSubworldIdByWorldUniqueId.TryGetValue(macrocosmPlayer.currentMainWorldUniqueId, out string lastSubworldId)
-            )
-            {
-                if (lastSubworldId is not "Macrocosm/Earth")
-                    MacrocosmSubworld.Travel(lastSubworldId, trigger: false);
-            }
         }
 
         public override void CopyClientState(ModPlayer clientClone)
@@ -264,30 +180,11 @@ namespace Macrocosm.Content.Players
         {
             if (KnowsToUseZombieFinger)
                 tag[nameof(KnowsToUseZombieFinger)] = true;
-
-            if (visitedSubworlds.Any())
-                tag[nameof(visitedSubworlds)] = visitedSubworlds;
-
-            TagCompound lastSubworldsByWorld = new();
-            foreach (var kvp in lastSubworldIdByWorldUniqueId)
-                lastSubworldsByWorld[kvp.Key.ToString()] = kvp.Value;
-
-            tag[nameof(lastSubworldIdByWorldUniqueId)] = lastSubworldsByWorld;
         }
 
         public override void LoadData(TagCompound tag)
         {
             KnowsToUseZombieFinger = tag.ContainsKey(nameof(KnowsToUseZombieFinger));
-
-            if (tag.ContainsKey(nameof(visitedSubworlds)))
-                visitedSubworlds = tag.GetList<string>(nameof(visitedSubworlds)).ToList();
-
-            if (tag.ContainsKey(nameof(lastSubworldIdByWorldUniqueId)))
-            {
-                TagCompound lastSubworldsByWorld = tag.GetCompound(nameof(lastSubworldIdByWorldUniqueId));
-                foreach (var kvp in lastSubworldsByWorld)
-                    lastSubworldIdByWorldUniqueId[new Guid(kvp.Key)] = lastSubworldsByWorld.GetString(kvp.Key);
-            }
         }
     }
 }

@@ -72,8 +72,13 @@ namespace Macrocosm.Content.Machines
             {
                 Main.instance.TilesRenderer.AddSpecialLegacyPoint(i, j);
             }
+        }
 
-            rotationCounter += 0.015f * Main.windSpeedCurrent;
+        // Called once an update, can use for the rotation animation
+        public override void AnimateTile(ref int frame, ref int frameCounter)
+        {
+            rotationCounter += (MathHelper.Pi * 0.04f) * Utility.WindSpeedScaled;
+            rotationCounter = MathHelper.WrapAngle(rotationCounter);
         }
 
         private SpriteBatchState state;
@@ -86,15 +91,14 @@ namespace Macrocosm.Content.Machines
             Vector2 tileDrawPosition = new Vector2(i, j) * 16f + zero - Main.screenPosition;
             Color drawColor = Lighting.GetColor(i,j);
 
-            //float turbineScale = 1f * Math.Sign(Main.windSpeedCurrent) * Math.Clamp(Math.Abs(Main.windSpeedCurrent), 0.65f, 1f);
             float turbineScale = 1f;
             Vector2 turbineOffset = new(8, 11);
             Matrix turbineMatrix = GetTurbineMatrix(tileDrawPosition + turbineOffset, state.Matrix);
-            SpriteEffects turbineEffects = Main.windSpeedCurrent > 0f ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+            SpriteEffects turbineEffects = Utility.WindSpeedScaled > 0f ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
-            Vector2 bladeOffset = new(Main.windSpeedCurrent < 0f ? 6 + 8f * -Main.windSpeedCurrent : 1 + 5 * (1.2f - Main.windSpeedCurrent), 11f);
+            Vector2 bladeOffset = new(Utility.WindSpeedScaled < 0f ? (6 + 9.6f * -Utility.WindSpeedScaled) : (1 + 6f * (1f - Utility.WindSpeedScaled)), y: 11);
             Matrix bladeMatrix = GetBladesMatrix(tileDrawPosition + bladeOffset, state.Matrix);
-            float bladeRotation = (float)(rotationCounter);
+            float bladeRotation = rotationCounter - (MathHelper.Pi/32 * (i/4)); 
 
             state.SaveState(spriteBatch, continuous: true);
             spriteBatch.End();
@@ -113,7 +117,7 @@ namespace Macrocosm.Content.Machines
 
         private static Matrix GetTurbineMatrix(Vector2 drawPosition, Matrix baseMatrix)
         {
-            float radians = MathHelper.Clamp(MathHelper.PiOver2 * (1.2f - Math.Abs(Main.windSpeedCurrent)), 0f, 1f);
+            float radians = MathHelper.Clamp(MathHelper.PiOver2 * (1f - Math.Abs(Utility.WindSpeedScaled)), 0f, 1f);
             Matrix transformationMatrix =
                 Matrix.CreateTranslation(-drawPosition.X, -drawPosition.Y, 0f) * // Translate to screen origin
                 Matrix.CreateRotationY(radians) *                                // Apply Y skew
@@ -125,7 +129,7 @@ namespace Macrocosm.Content.Machines
         private static Matrix GetBladesMatrix(Vector2 drawPosition, Matrix baseMatrix)
         {
 
-            float radians = MathHelper.PiOver2 * Main.windSpeedCurrent * 0.55f;
+            float radians = MathHelper.PiOver2 * Utility.WindSpeedScaled * 0.66f;
             Matrix transformationMatrix =
                 Matrix.CreateTranslation(-drawPosition.X, -drawPosition.Y, 0f) * // Translate to screen origin
                 Matrix.CreateRotationY(radians) *                                // Apply Y skew

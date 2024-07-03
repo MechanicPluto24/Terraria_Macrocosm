@@ -4,6 +4,7 @@ Mods: {
 			Rocket: Rocket
 			LaunchPad: Launchpad
 			DevItem: Developer Item
+			Poster: Poster
 		}
 
 		Messages: {

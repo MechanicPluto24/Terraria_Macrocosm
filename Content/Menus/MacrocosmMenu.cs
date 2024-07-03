@@ -263,7 +263,7 @@ namespace Macrocosm.Content.Menus
 
             plutoBarycenter.SetOrbitParent(Sun, new Vector2(760, 620), 0.28f, Rand(), 0.00022f);
             plutoBarycenter.AddOrbitChild(Pluto, 4, 0f, 0.005f);
-            Pluto.AddOrbitChild(Charon, 18, 3.14f, 0.008f);
+            plutoBarycenter.AddOrbitChild(Charon, 18, 3.14f, 0.008f);
 
             Eris.SetOrbitParent(Sun, 810, Rand(), 0.00018f);
         }

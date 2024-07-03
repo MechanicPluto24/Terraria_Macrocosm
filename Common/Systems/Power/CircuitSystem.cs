@@ -108,7 +108,8 @@ namespace Macrocosm.Common.Systems.Power
             SpriteBatch spriteBatch = Main.spriteBatch;
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, default, null, Main.GameViewMatrix.ZoomMatrix);
 
-            DebugDrawMachines(spriteBatch);
+            if(PowerWiring.Instance.ShouldDrawWires)
+                DebugDrawMachines(spriteBatch);
 
             spriteBatch.End();
         }
