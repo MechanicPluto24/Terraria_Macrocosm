@@ -6,7 +6,7 @@ using Macrocosm.Content.Tiles.Walls;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.WorldGeneration.Structures
+namespace Macrocosm.Content.WorldGeneration.Structures
 {
     public class LunarianHouseBuilder : MacrocosmHouseBuilder
     {

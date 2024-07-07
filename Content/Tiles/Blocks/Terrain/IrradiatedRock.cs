@@ -16,6 +16,8 @@ namespace Macrocosm.Content.Tiles.Blocks.Terrain
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = true;
 
+            TileID.Sets.CanBeClearedDuringOreRunner[Type] = true;
+
             MinPick = 275;
             MineResist = 3f;
             AddMapEntry(new Color(199, 199, 184));

@@ -327,7 +327,7 @@ namespace Macrocosm.Common.Utils
                 int y = WorldGen.genRand.Next(0, Main.maxTilesY);
                 if (Main.tile[x, y].HasTile && Main.tile[x, y].TileType == replaceTileType || replaceTileType == -1)
                 {
-                    WorldGen.TileRunner(x, y, strength, steps, tileType);
+                    WorldGen.TileRunner(x, y, strength, steps, (ushort)tileType);
                 }
             }
         }

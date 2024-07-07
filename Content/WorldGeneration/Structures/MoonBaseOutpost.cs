@@ -14,7 +14,7 @@ using Terraria.ID;
 using Terraria.WorldBuilding;
 using static Terraria.ModLoader.ModContent;
 
-namespace Macrocosm.Common.WorldGeneration.Structures
+namespace Macrocosm.Content.WorldGeneration.Structures
 {
     public class MoonBaseOutpost : MicroBiome
     {

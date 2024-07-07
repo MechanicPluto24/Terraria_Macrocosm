@@ -9,7 +9,7 @@ using Terraria.ID;
 using Terraria.Utilities;
 using Terraria.WorldBuilding;
 
-namespace Macrocosm.Common.WorldGeneration
+namespace Macrocosm.Content.WorldGeneration.Structures
 {
     // TODO: more abstraction, width & height configuration
     public abstract class MacrocosmHouseBuilder : MicroBiome
