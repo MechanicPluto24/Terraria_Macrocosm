@@ -1,18 +1,23 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Systems;
 using Macrocosm.Common.Utils;
-using Macrocosm.Common.WorldGeneration.Structures;
+using Macrocosm.Common.WorldGeneration;
 using Macrocosm.Content.Tiles.Ambient;
 using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Macrocosm.Content.Tiles.Ores;
 using Macrocosm.Content.Tiles.Walls;
+using Macrocosm.Content.WorldGeneration.Structures;
+using Macrocosm.Content.WorldGeneration.Structures.Shrines;
 using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.Localization;
+using Terraria.ModLoader;
 using Terraria.WorldBuilding;
 using static Macrocosm.Common.Utils.Utility;
 using static Terraria.ModLoader.ModContent;
@@ -27,22 +32,30 @@ namespace Macrocosm.Content.Subworlds
         private float TerrainPercentage { get; } = 0.8f;
         private int GroundY => (int)(Main.maxTilesY * (1f - TerrainPercentage));
         private static float FunnySurfaceEquation(float x) => MathF.Sin(2f * x) + MathF.Sin(MathHelper.Pi * x) + 0.4f * MathF.Cos(10f * x);
-        private static float StartYOffset { get; set; }
-        private int SurfaceHeight(int i) => (int)(FunnySurfaceEquation(i * SurfaceWidthFrequency + StartYOffset) * SurfaceHeightFrequency) + GroundY;
+        private int SurfaceHeight(int i) => (int)(FunnySurfaceEquation(i * SurfaceWidthFrequency + gen_StartYOffset) * SurfaceHeightFrequency) + GroundY;
+
+        private static float gen_StartYOffset;
+
+        private static Point gen_HeavenforgeShrinePosition;
+        private static Point gen_MercuryShrinePosition;
+        private static Point gen_LunarRustShrinePosition;
+        private static Point gen_StarRoyaleShrinePosition;
+        private static Point gen_AstraShrinePosition;
+        private static Point gen_CryocoreShrinePosition;
+        private static Point gen_DarkCelestialShrinePosition;
+        private static Point gen_CosmicEmberShrinePosition;
 
         [Task]
         private void TerrainTask(GenerationProgress progress)
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.TerrainPass");
 
-            Range hallownest = 35..55;
             ushort protolithType = (ushort)TileType<Protolith>();
 
             Main.worldSurface = GroundY + SurfaceHeightFrequency * 2;
             Main.rockLayer = GroundY + RegolithLayerHeight;
 
-            PerlinNoise2D noise = new(MacrocosmWorld.Seed);
-            StartYOffset = WorldGen.genRand.NextFloat() * 2.3f;
+            gen_StartYOffset = WorldGen.genRand.NextFloat() * 2.3f;
 
             for (int i = 0; i < Main.maxTilesX; i++)
             {
@@ -50,37 +63,9 @@ namespace Macrocosm.Content.Subworlds
                 for (int j = startJ; j < Main.maxTilesY; j++)
                 {
                     progress.Set((float)(j + i * Main.maxTilesY) / (Main.maxTilesX * Main.maxTilesY));
-                    if (
-                        WorldGen.genRand.NextFloat() < 1f - 0.01f * (
-                            hallownest.Start.Value + (hallownest.End.Value - hallownest.Start.Value) * MathF.Sin((float)(j - startJ) / (Main.maxTilesY - startJ) * MathHelper.Pi))
-                        || noise.GetValue(i * 0.048f, j * 0.048f) > 0f
-                        )
-                    {
-                        FastPlaceTile(i, j, protolithType);
-                    }
+                    FastPlaceTile(i, j, protolithType);
                 }
             }
-
-            for (int i = 0; i < Main.maxTilesX; i++)
-            {
-                if (WorldGen.genRand.NextFloat() < 0.01f)
-                {
-                    int j = WorldGen.genRand.Next((int)Main.rockLayer, Main.maxTilesY - 250);
-                    ForEachInCircle(
-                        i,
-                        j,
-                        WorldGen.genRand.Next(20, 55),
-                        (i, j) =>
-                        {
-                            if (WorldGen.genRand.NextFloat() < 0.4f)
-                            {
-                                FastRemoveTile(i, j);
-                            }
-                        }
-                    );
-                }
-            }
-
 
             int regolithWall = WallType<RegolithWall>();
             for (int i = 0; i < Main.maxTilesX; i++)
@@ -95,49 +80,79 @@ namespace Macrocosm.Content.Subworlds
         }
 
         [Task]
-        private void CraterTask(GenerationProgress progress)
+        private void CaveTask(GenerationProgress progress)
         {
-            progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.CraterPass");
+            progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.TerrainPass");
 
-            void SpawnMeteors(Range minMaxCount, Range minMaxRadius)
+            double smallCaveFreq = 0.0009;
+            double largeCaveFreq = 0.00013;
+
+            int airTileType = -1;
+
+            List<Point> smallCaves = new();
+            List<Point> largeCaves = new();
+
+            // generate small caves in the protolith layer 
+            for (int smallCaveSpot = 0; smallCaveSpot < (int)((double)(Main.maxTilesX * Main.maxTilesY) * smallCaveFreq); smallCaveSpot++)
             {
-                int count = WorldGen.genRand.Next(minMaxCount);
-                for (int x = 0; x < count; x++)
+                float percentDone = (float)((double)smallCaveSpot / ((double)(Main.maxTilesX * Main.maxTilesY) * smallCaveFreq));
+                progress.Set(percentDone * 0.5f);
+
+                int tileX = WorldGen.genRand.Next(0, Main.maxTilesX);
+                int tileY = WorldGen.genRand.Next((int)Main.rockLayer, Main.maxTilesY);
+
+                // really small holes 
+                WorldGen.TileRunner(tileX, tileY, WorldGen.genRand.Next(2, 5), WorldGen.genRand.Next(2, 20), airTileType);
+
+                tileX = WorldGen.genRand.Next(0, Main.maxTilesX);
+                tileY = WorldGen.genRand.Next((int)Main.rockLayer, Main.maxTilesY);
+                while (((double)tileY < Main.rockLayer) || ((double)tileX > (double)Main.maxTilesX * 0.45 && (double)tileX < (double)Main.maxTilesX * 0.55 && (double)tileY < Main.rockLayer))
                 {
-                    int i = (int)((x + WorldGen.genRand.NextFloat() * 0.9f) * (Main.maxTilesX / count));
-                    for (int j = 0; j < Main.maxTilesY; j++)
-                    {
-                        if (Main.tile[i, j].HasTile)
-                        {
-                            int radius = WorldGen.genRand.Next(minMaxRadius);
-                            ForEachInCircle(
-                                i,
-                                j - (int)(radius * 0.6f),
-                                radius,
-                                (i1, j1) =>
-                                {
-                                    FastRemoveWall(i1, j1);
-
-                                    float iDistance = (float)Math.Abs(i - i1) / radius;
-                                    float jDistance = (float)Math.Abs(j - j1) / radius;
-                                    if (WorldGen.genRand.NextFloat() < iDistance * 0.6f || WorldGen.genRand.NextFloat() < jDistance * 0.6f)
-                                    {
-                                        return;
-                                    }
-
-                                    FastRemoveTile(i1, j1);
-                                }
-                            );
-
-                            break;
-                        }
-                    }
+                    tileX = WorldGen.genRand.Next(0, Main.maxTilesX);
+                    tileY = WorldGen.genRand.Next((int)Main.rockLayer, Main.maxTilesY);
                 }
+
+                // small caves 
+                smallCaves.Add(new Point(tileX, tileY));
+                WorldGen.TileRunner(tileX, tileY, WorldGen.genRand.Next(8, 15), WorldGen.genRand.Next(7, 30), airTileType);
             }
 
-            SpawnMeteors(2..5, 100..150);
-            SpawnMeteors(5..6, 30..40);
-            SpawnMeteors(25..36, 7..15);
+            //generate large caves 
+            for (int largeCaveSpot = 0; largeCaveSpot < (int)((double)(Main.maxTilesX * Main.maxTilesY) * largeCaveFreq); largeCaveSpot++)
+            {
+                float percentDone = (float)((double)largeCaveSpot / ((double)(Main.maxTilesX * Main.maxTilesY) * largeCaveFreq));
+                progress.Set(0.5f + percentDone * 0.5f);
+
+                int tileX = WorldGen.genRand.Next(0, Main.maxTilesX);
+                int tileY = WorldGen.genRand.Next((int)Main.rockLayer, Main.maxTilesY);
+                largeCaves.Add(new Point(tileX, tileY));
+                WorldGen.TileRunner(tileX, tileY, WorldGen.genRand.Next(5, 26), WorldGen.genRand.Next(50, 350), airTileType);
+            }
+        }
+
+        [Task]
+        private void PrepareHeavenforgeShrine(GenerationProgress progress)
+        {
+            Structure shrine = new HeavenforgeShrine();
+            int x = WorldGen.genRand.Next(0, Main.maxTilesX - shrine.Size.X);
+            int y = WorldGen.genRand.Next(SurfaceHeight(x) + RegolithLayerHeight * 2, Main.maxTilesY - shrine.Size.Y);
+
+            WorldUtils.Gen(new Point(x + shrine.Size.X / 2, y + shrine.Size.Y / 2), new CustomShapes.ChasmSideways(35, 5, 200, 3, 0, dir: true), new Actions.ClearTile());
+            WorldUtils.Gen(new Point(x + shrine.Size.X / 2, y + shrine.Size.Y / 2), new CustomShapes.ChasmSideways(35, 5, 200, 3, 0, dir: false), new Actions.ClearTile());
+            
+            gen_HeavenforgeShrinePosition = new(x, y);
+        }
+
+        [Task]
+        private void PrepareMercuryShrine(GenerationProgress progress)
+        {
+            Structure shrine = new MercuryShrine();
+            int x = WorldGen.genRand.Next(0, Main.maxTilesX - shrine.Size.X);
+            int y = WorldGen.genRand.Next(SurfaceHeight(x) + RegolithLayerHeight * 2, Main.maxTilesY - shrine.Size.Y);
+
+            WorldUtils.Gen(new Point(x + shrine.Size.X / 2, y), new CustomShapes.Chasm(30, 5, 50, 2, 0, dir: true), new Actions.ClearTile());
+
+            gen_MercuryShrinePosition = new(x, y);
         }
 
         [Task]
@@ -183,13 +198,7 @@ namespace Macrocosm.Content.Subworlds
                             iPos,
                             jPos,
                             radius,
-                            (i, j) =>
-                            {
-                                if (WorldGen.genRand.NextFloat() < 0.7f)
-                                {
-                                    FastRemoveTile(i, j);
-                                }
-                            }
+                            FastRemoveTile
                         );
 
                         if (WorldGen.genRand.NextFloat() < 0.1f)
@@ -200,159 +209,52 @@ namespace Macrocosm.Content.Subworlds
                                 iPos + (int)(randomDirection.X * offset),
                                 jPos + (int)(randomDirection.Y * offset),
                                 radius * 2,
-                                (i, j) =>
+                                FastRemoveTile
+                            );
+                        }
+                    }
+                }
+            }
+        }
+
+        [Task]
+        private void CraterTask(GenerationProgress progress)
+        {
+            progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.CraterPass");
+
+            void SpawnMeteors(Range minMaxCount, Range minMaxRadius)
+            {
+                int count = WorldGen.genRand.Next(minMaxCount);
+                for (int x = 0; x < count; x++)
+                {
+                    int i = (int)((x + WorldGen.genRand.NextFloat() * 0.9f) * (Main.maxTilesX / count));
+                    for (int j = 0; j < Main.maxTilesY; j++)
+                    {
+                        if (Main.tile[i, j].HasTile)
+                        {
+                            int radius = WorldGen.genRand.Next(minMaxRadius);
+                            ForEachInCircle(
+                                i,
+                                j - (int)(radius * 0.6f),
+                                radius,
+                                (i1, j1) =>
                                 {
-                                    if (WorldGen.genRand.NextFloat() < 0.45f)
-                                    {
-                                        FastRemoveTile(i, j);
-                                    }
+                                    FastRemoveWall(i1, j1);
+                                    float iDistance = (float)Math.Abs(i - i1) / radius;
+                                    float jDistance = (float)Math.Abs(j - j1) / radius;
+                                    FastRemoveTile(i1, j1);
                                 }
                             );
+
+                            break;
                         }
                     }
                 }
             }
-        }
 
-        [Task]
-        private void SmoothTask(GenerationProgress progress)
-        {
-            Stopwatch stopwatch = Stopwatch.StartNew();
-
-            progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.SmoothPass");
-
-            ushort protolithType = (ushort)TileType<Protolith>();
-            int repeats = 5;
-
-            for (int x = 0; x < repeats; x++)
-            {
-                ForEachInRectangle(
-                    0,
-                    0,
-                    Main.maxTilesX,
-                    Main.maxTilesY,
-                    (i, j) =>
-                    {
-                        progress.Set(
-                                0.25d * (j + i * Main.maxTilesY + x * Main.maxTilesX * Main.maxTilesY) / (Main.maxTilesX * Main.maxTilesY * repeats)
-                            );
-
-                        TileNeighbourInfo neighbourInfo = new(i, j);
-                        if (neighbourInfo.Solid.Count > 4)
-                        {
-                            FastPlaceTile(i, j, protolithType);
-                        }
-                        else if (neighbourInfo.Solid.Count < 4)
-                        {
-                            FastRemoveTile(i, j);
-                        }
-                    }
-                );
-            }
-
-            ForEachInRectangle(
-                0,
-                0,
-                Main.maxTilesX,
-                Main.maxTilesY,
-                (i, j) =>
-                {
-                    progress.Set(0.25d + 0.25d * i / Main.maxTilesX);
-                    if (!WorldGen.genRand.NextBool(4))
-                    {
-                        if (WorldGen.genRand.NextBool())
-                        {
-                            SafeSlopeTile(i, j);
-                        }
-                        else
-                        {
-                            SafePoundTile(i, j);
-                        }
-                    }
-                }
-            );
-
-            stopwatch.Stop();
-            Macrocosm.Instance.Logger.Info($"Smoothing time: {stopwatch.Elapsed}");
-
-            stopwatch.Start();
-
-            /*
-            ForEachInRectangle(
-                0,
-                GroundY + RegolithLayerHeight,
-                Main.maxTilesX,
-                Main.maxTilesY,
-                (i, j) =>
-                {
-                    progress.Set(0.5d + 0.25d * i / Main.maxTilesX);
-                    if (ConnectedTiles(i, j, tile => tile.HasTile, out List<(int, int)> coordinates, 140))
-                    {
-                        foreach ((int x, int y) in coordinates)
-                        {
-                            FastRemoveTile(x, y);
-                        }
-                    }
-                },
-                2,
-                2
-            );
-            */
-
-            ForEachInRectangle(
-                0,
-                GroundY + RegolithLayerHeight,
-                Main.maxTilesX,
-                Main.maxTilesY,
-                (i, j) =>
-                {
-                    progress.Set(0.75d + 0.25d * i / Main.maxTilesX);
-                    var info = new TileNeighbourInfo(i, j).HasTile;
-                    if (Main.tile[i, j].HasTile && info.Count == 0)
-                    {
-                        FastRemoveTile(i, j);
-                    }
-                    else if (info.Count > 6)
-                    {
-                        FastPlaceTile(i, j, protolithType);
-                    }
-                }
-            );
-
-            stopwatch.Stop();
-            Macrocosm.Instance.Logger.Info($"Smoothing cleanup time: {stopwatch.Elapsed}");
-        }
-
-        [Task]
-        private void WallTask(GenerationProgress progress)
-        {
-            progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.WallPass");
-            int protolithWall = WallType<ProtolithWall>();
-
-            int wallCount = 100;
-            for (int z = 0; z < wallCount; z++)
-            {
-                progress.Set(0.5d + 0.5d * z / wallCount);
-                Point point = new();
-
-                do
-                {
-                    int x = WorldGen.genRand.Next(0, Main.maxTilesX);
-                    point = new Point(x, WorldGen.genRand.Next(SurfaceHeight(x) + 15 + RegolithLayerHeight, Main.maxTilesY));
-                }
-                while (
-                    Main.tile[point.X, point.Y].HasTile ||
-                    Main.tile[point.X, point.Y].WallType == protolithWall
-                );
-
-                if (ConnectedTiles(point.X, point.Y, tile => !tile.HasTile, out var coordinates, 9999))
-                {
-                    foreach ((int i, int j) in coordinates)
-                    {
-                        FastPlaceWall(i, j, protolithWall);
-                    }
-                }
-            }
+            SpawnMeteors(2..5, 100..150);
+            SpawnMeteors(5..6, 30..40);
+            SpawnMeteors(25..36, 7..15);
         }
 
         [Task]
@@ -531,46 +433,71 @@ namespace Macrocosm.Content.Subworlds
             GenerateOre(TileID.LunarOre, 0.00005, WorldGen.genRand.Next(9, 15), WorldGen.genRand.Next(9, 15), protolithType);
         }
 
-        /*[GenPass(nameof(OrePass), InsertMode.After)]
-        private void ChestPass(GenerationProgress progress)
+        [Task]
+        private void SmoothTask(GenerationProgress progress)
         {
-            progress.Message = "Chess";
+            progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.SmoothPass");
+            SmoothTiles(20, 20, Main.maxTilesX - 20, Main.maxTilesY - 20);
+        }
 
-            float chestSpawnChance = 0.003f;
-            int protolithType = TileType<Protolith>();
-            bool TryPlaceChest(int i, int j)
+        [Task]
+        private void WallTask(GenerationProgress progress)
+        {
+            progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.WallPass");
+            int protolithWall = WallType<ProtolithWall>();
+
+            int wallCount = 100;
+            for (int z = 0; z < wallCount; z++)
             {
-                TileNeighbourInfo neighbourInfo = new(i, j);
-                if (
-                    !Main.tile[i, j].HasTile
-                    && !neighbourInfo.Solid.Right
-                    && !neighbourInfo.Solid.TopRight
-                    && !neighbourInfo.Solid.Top
-                    && neighbourInfo.Solid.Bottom
-                    && neighbourInfo.Solid.BottomRight
-                    )
+                progress.Set(0.5d + 0.5d * z / wallCount);
+                Point point = new();
+
+                do
                 {
-                    WorldGen.PlaceChest(i, j, 21, false, 1);
-                    return true;
+                    int x = WorldGen.genRand.Next(0, Main.maxTilesX);
+                    point = new Point(x, WorldGen.genRand.Next(SurfaceHeight(x) + 15 + RegolithLayerHeight, Main.maxTilesY));
                 }
+                while (
+                    Main.tile[point.X, point.Y].HasTile ||
+                    Main.tile[point.X, point.Y].WallType == protolithWall
+                );
 
-                return false;
-            }
-
-            for (int i = 0; i < Main.maxTilesX; i++)
-            {
-                progress.Set((float)i / Main.maxTilesX);
-                for (int j = (int)Main.rockLayer; j < Main.maxTilesY; j++)
+                if (ConnectedTiles(point.X, point.Y, tile => !tile.HasTile, out var coordinates, 9999))
                 {
-                    if (Main.tile[i, j].TileType == protolithType && WorldGen.genRand.NextFloat() < chestSpawnChance)
+                    foreach ((int i, int j) in coordinates)
                     {
-                        TryPlaceChest(i, j - 1);
+                        FastPlaceWall(i, j, protolithWall);
                     }
                 }
             }
-        }*/
+        }
 
-        // Disabled for now
+        [Task]
+        private void PlaceHeavenforgeShrine(GenerationProgress progress)
+        {
+            Structure shrine = new HeavenforgeShrine();
+            bool solidDown = WorldUtils.Find(gen_HeavenforgeShrinePosition, Searches.Chain(new Searches.Down(150), new Conditions.IsSolid()), out Point solidGround);
+            if (solidDown && shrine.Place(new Point16(solidGround.X, solidGround.Y + shrine.Size.Y), StructureMap))
+                return;
+
+            int fallbackX = WorldGen.genRand.Next(0, Main.maxTilesX - shrine.Size.X);
+            int fallbackY = WorldGen.genRand.Next(SurfaceHeight(fallbackX) + RegolithLayerHeight, Main.maxTilesY - shrine.Size.Y);
+            shrine.Place(new Point16(fallbackX, fallbackY), StructureMap);
+        }
+
+        [Task]
+        private void PlaceMercuryShrine(GenerationProgress progress)
+        {
+            Structure shrine = new MercuryShrine();
+            bool solidUp = WorldUtils.Find(gen_MercuryShrinePosition, Searches.Chain(new Searches.Up(150), new Conditions.IsSolid()), out Point solidGround);
+            if (solidUp && shrine.Place(new Point16(solidGround), StructureMap))
+                return;
+
+            int fallbackX = WorldGen.genRand.Next(0, Main.maxTilesX - shrine.Size.X);
+            int fallbackY = WorldGen.genRand.Next(SurfaceHeight(fallbackX) + RegolithLayerHeight, Main.maxTilesY - shrine.Size.Y);
+            shrine.Place(new Point16(fallbackX, fallbackY), StructureMap);
+        }
+
         //[Task]
         private void RoomsTasks(GenerationProgress progress)
         {

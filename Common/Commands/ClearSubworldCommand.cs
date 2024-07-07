@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using SubworldLibrary;
 using System.IO;
 using Terraria;
 using Terraria.ModLoader;
@@ -24,7 +25,13 @@ namespace Macrocosm.Common.Commands
                 return;
             }
 
-            string subworldDirectory = Main.worldPathName[..^4];
+            if (SubworldSystem.AnyActive())
+            {
+                Main.NewText("You must be on the main world to use this command.", Color.Red);
+                return;
+            }
+
+            string subworldDirectory = Path.Combine(Main.WorldPath, Main.ActiveWorldFileData.UniqueId.ToString());
             if (Directory.Exists(subworldDirectory))
             {
                 void DeleteWorldWithExtensionIfExists(string extension)
