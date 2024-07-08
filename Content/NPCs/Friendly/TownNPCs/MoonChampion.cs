@@ -1,5 +1,6 @@
 using Macrocosm.Common.Systems;
 using Macrocosm.Content.Biomes;
+using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Armor.Astronaut;
 using Macrocosm.Content.Items.Currency;
 using Macrocosm.Content.Subworlds;
@@ -24,11 +25,11 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
 
         public override void SetStaticDefaults()
         {
-            Main.npcFrameCount[NPC.type] = 26;
-            NPCID.Sets.ExtraFramesCount[NPC.type] = 9;
+            Main.npcFrameCount[NPC.type] = 27;
+            NPCID.Sets.ExtraFramesCount[NPC.type] = 10;
+            NPCID.Sets.AttackFrameCount[NPC.type] = 6;
 
             NPCID.Sets.AttackType[NPC.type] = 3;
-            NPCID.Sets.AttackFrameCount[NPC.type] = 5;
             NPCID.Sets.DangerDetectRange[NPC.type] = 35;
             NPCID.Sets.AttackTime[NPC.type] = 20;
             NPCID.Sets.AttackAverageChance[NPC.type] = 1;
@@ -177,6 +178,37 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
             AddNewSlot(ModContent.ItemType<AstronautLeggings>(), 20);
 
             shop.Register();
+        }
+
+        public override void HitEffect(NPC.HitInfo hit)
+        {
+            if (NPC.life > 0)
+            {
+                for (int i = 0; i < 30; i++)
+                {
+                    int dustType = Utils.SelectRandom<int>(Main.rand, ModContent.DustType<RegolithDust>(), DustID.Blood);
+
+                    Dust dust = Dust.NewDustDirect(NPC.position, NPC.width, NPC.height, dustType);
+                    dust.velocity.X *= (dust.velocity.X + +Main.rand.Next(0, 100) * 0.015f) * hit.HitDirection;
+                    dust.velocity.Y = 3f + Main.rand.Next(-50, 51) * 0.01f;
+                    dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
+                    dust.noGravity = true;
+                }
+            }
+
+            if (Main.dedServ)
+                return; // don't run on the server
+
+            if (NPC.life <= 0)
+            {
+                var entitySource = NPC.GetSource_Death();
+
+                Gore.NewGore(entitySource, NPC.position, NPC.velocity, Mod.Find<ModGore>("MoonChampionGoreHead").Type);
+                Gore.NewGore(entitySource, NPC.position, NPC.velocity, Mod.Find<ModGore>("MoonChampionGoreArm").Type);
+                Gore.NewGore(entitySource, NPC.position, NPC.velocity, Mod.Find<ModGore>("MoonChampionGoreArm").Type);
+                Gore.NewGore(entitySource, NPC.position, NPC.velocity, Mod.Find<ModGore>("MoonChampionGoreLeg").Type);
+                Gore.NewGore(entitySource, NPC.position, NPC.velocity, Mod.Find<ModGore>("MoonChampionGoreLeg").Type);
+            }
         }
 
         public override bool CanGoToStatue(bool toKingStatue) => toKingStatue;

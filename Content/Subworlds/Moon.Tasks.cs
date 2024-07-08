@@ -80,9 +80,49 @@ namespace Macrocosm.Content.Subworlds
         }
 
         [Task]
+        private void CraterTask(GenerationProgress progress)
+        {
+            progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.CraterPass");
+
+            void SpawnMeteors(Range minMaxCount, Range minMaxRadius)
+            {
+                int count = WorldGen.genRand.Next(minMaxCount);
+                for (int x = 0; x < count; x++)
+                {
+                    int i = (int)((x + WorldGen.genRand.NextFloat() * 0.9f) * (Main.maxTilesX / count));
+                    for (int j = 0; j < Main.maxTilesY; j++)
+                    {
+                        if (Main.tile[i, j].HasTile)
+                        {
+                            int radius = WorldGen.genRand.Next(minMaxRadius);
+                            ForEachInCircle(
+                                i,
+                                j - (int)(radius * 0.6f),
+                                radius,
+                                (i1, j1) =>
+                                {
+                                    FastRemoveWall(i1, j1);
+                                    float iDistance = (float)Math.Abs(i - i1) / radius;
+                                    float jDistance = (float)Math.Abs(j - j1) / radius;
+                                    FastRemoveTile(i1, j1);
+                                }
+                            );
+
+                            break;
+                        }
+                    }
+                }
+            }
+
+            SpawnMeteors(2..5, 100..150);
+            SpawnMeteors(5..6, 30..40);
+            SpawnMeteors(25..36, 7..15);
+        }
+
+        [Task]
         private void CaveTask(GenerationProgress progress)
         {
-            progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.TerrainPass");
+            progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.CavePass");
 
             double smallCaveFreq = 0.0009;
             double largeCaveFreq = 0.00013;
@@ -131,33 +171,10 @@ namespace Macrocosm.Content.Subworlds
         }
 
         [Task]
-        private void PrepareHeavenforgeShrine(GenerationProgress progress)
-        {
-            Structure shrine = new HeavenforgeShrine();
-            int x = WorldGen.genRand.Next(0, Main.maxTilesX - shrine.Size.X);
-            int y = WorldGen.genRand.Next(SurfaceHeight(x) + RegolithLayerHeight * 2, Main.maxTilesY - shrine.Size.Y);
-
-            WorldUtils.Gen(new Point(x + shrine.Size.X / 2, y + shrine.Size.Y / 2), new CustomShapes.ChasmSideways(35, 5, 200, 3, 0, dir: true), new Actions.ClearTile());
-            WorldUtils.Gen(new Point(x + shrine.Size.X / 2, y + shrine.Size.Y / 2), new CustomShapes.ChasmSideways(35, 5, 200, 3, 0, dir: false), new Actions.ClearTile());
-            
-            gen_HeavenforgeShrinePosition = new(x, y);
-        }
-
-        [Task]
-        private void PrepareMercuryShrine(GenerationProgress progress)
-        {
-            Structure shrine = new MercuryShrine();
-            int x = WorldGen.genRand.Next(0, Main.maxTilesX - shrine.Size.X);
-            int y = WorldGen.genRand.Next(SurfaceHeight(x) + RegolithLayerHeight * 2, Main.maxTilesY - shrine.Size.Y);
-
-            WorldUtils.Gen(new Point(x + shrine.Size.X / 2, y), new CustomShapes.Chasm(30, 5, 50, 2, 0, dir: true), new Actions.ClearTile());
-
-            gen_MercuryShrinePosition = new(x, y);
-        }
-
-        [Task]
         private void SurfaceTunnelTask(GenerationProgress progress)
         {
+            progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.CavePass");
+
             float verticalTunnelSpawnChance = 0.005f;
             int verticalTunnelSpread = 230;
             int verticalTunnelLength = RegolithLayerHeight + 170;
@@ -218,49 +235,38 @@ namespace Macrocosm.Content.Subworlds
         }
 
         [Task]
-        private void CraterTask(GenerationProgress progress)
+        private void PrepareHeavenforgeShrine(GenerationProgress progress)
         {
-            progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.CraterPass");
+            progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.CavePass");
 
-            void SpawnMeteors(Range minMaxCount, Range minMaxRadius)
-            {
-                int count = WorldGen.genRand.Next(minMaxCount);
-                for (int x = 0; x < count; x++)
-                {
-                    int i = (int)((x + WorldGen.genRand.NextFloat() * 0.9f) * (Main.maxTilesX / count));
-                    for (int j = 0; j < Main.maxTilesY; j++)
-                    {
-                        if (Main.tile[i, j].HasTile)
-                        {
-                            int radius = WorldGen.genRand.Next(minMaxRadius);
-                            ForEachInCircle(
-                                i,
-                                j - (int)(radius * 0.6f),
-                                radius,
-                                (i1, j1) =>
-                                {
-                                    FastRemoveWall(i1, j1);
-                                    float iDistance = (float)Math.Abs(i - i1) / radius;
-                                    float jDistance = (float)Math.Abs(j - j1) / radius;
-                                    FastRemoveTile(i1, j1);
-                                }
-                            );
+            Structure shrine = new HeavenforgeShrine();
+            int x = WorldGen.genRand.Next(0, Main.maxTilesX - shrine.Size.X);
+            int y = WorldGen.genRand.Next(SurfaceHeight(x) + RegolithLayerHeight * 2, Main.maxTilesY - shrine.Size.Y);
 
-                            break;
-                        }
-                    }
-                }
-            }
+            WorldUtils.Gen(new Point(x + shrine.Size.X / 2, y + shrine.Size.Y / 2), new CustomShapes.ChasmSideways(20, 5, 140, 3, 0, dir: true), new Actions.ClearTile());
+            WorldUtils.Gen(new Point(x + shrine.Size.X / 2, y + shrine.Size.Y / 2), new CustomShapes.ChasmSideways(20, 5, 140, 3, 0, dir: false), new Actions.ClearTile());
+            
+            gen_HeavenforgeShrinePosition = new(x, y);
+        }
 
-            SpawnMeteors(2..5, 100..150);
-            SpawnMeteors(5..6, 30..40);
-            SpawnMeteors(25..36, 7..15);
+        [Task]
+        private void PrepareMercuryShrine(GenerationProgress progress)
+        {
+            progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.CavePass");
+
+            Structure shrine = new MercuryShrine();
+            int x = WorldGen.genRand.Next(0, Main.maxTilesX - shrine.Size.X);
+            int y = WorldGen.genRand.Next(SurfaceHeight(x) + RegolithLayerHeight * 2, Main.maxTilesY - shrine.Size.Y);
+
+            WorldUtils.Gen(new Point(x + shrine.Size.X / 2, y), new CustomShapes.Chasm(30, 10, 140, 2, 0, dir: true), new Actions.ClearTile());
+
+            gen_MercuryShrinePosition = new(x, y);
         }
 
         [Task]
         private void RegolithTask(GenerationProgress progress)
         {
-            progress.Message = "Regoliths";
+            progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.CavePass");
 
             float randomOffset = WorldGen.genRand.NextFloat() * 4.23f;
             ushort regolithType = (ushort)TileType<Regolith>();
@@ -311,10 +317,42 @@ namespace Macrocosm.Content.Subworlds
             }
         }
 
+        [Task]
+        private void WallTask(GenerationProgress progress)
+        {
+            progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.WallPass");
+            int protolithWall = WallType<ProtolithWall>();
+
+            int wallCount = 100;
+            for (int z = 0; z < wallCount; z++)
+            {
+                progress.Set(0.5d + 0.5d * z / wallCount);
+                Point point = new();
+
+                do
+                {
+                    int x = WorldGen.genRand.Next(0, Main.maxTilesX);
+                    point = new Point(x, WorldGen.genRand.Next(SurfaceHeight(x) + 15 + RegolithLayerHeight, Main.maxTilesY));
+                }
+                while (
+                    Main.tile[point.X, point.Y].HasTile ||
+                    Main.tile[point.X, point.Y].WallType == protolithWall
+                );
+
+                if (ConnectedTiles(point.X, point.Y, tile => !tile.HasTile, out var coordinates, 9999))
+                {
+                    foreach ((int i, int j) in coordinates)
+                    {
+                        FastPlaceWall(i, j, protolithWall);
+                    }
+                }
+            }
+        }
+
         //[Task]
         private void IrradiationPass(GenerationProgress progress)
         {
-            progress.Message = "Piss";
+            progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.IrradiationPass");
 
             ushort irradiationRockType = (ushort)TileType<IrradiatedRock>();
             ushort irradiationWallType = (ushort)WallType<IrradiatedRockWall>();
@@ -386,42 +424,6 @@ namespace Macrocosm.Content.Subworlds
         [Task]
         private void OreTask(GenerationProgress progress)
         {
-            /*progress.Message = "Shi";
-
-            ushort protolithType = (ushort)TileType<Protolith>();
-
-            void SpreadOre(ushort oreType, float chance, Range repeatCount, Range sprayRadius, Range blobSize)
-            {
-                for (int i = 0; i < Main.maxTilesX; i++)
-                {
-                    for (int j = (int)Main.rockLayer; j < Main.maxTilesY; j++)
-                    {
-                        if (
-                            WorldGen.genRand.NextFloat() < chance &&
-                            CountConnectedTiles(i, j, tile => tile.HasTile, 35) == 35
-                            )
-                        {
-                            BlobTileRunner(i, j, oreType, repeatCount, sprayRadius, blobSize);
-                        }
-                    }
-                }
-            }
-
-            SpreadOre((ushort)TileType<ArtemiteOre>(), 0.00026f, 6..9, 3..5, 7..9);
-            progress.Set(0.20f);
-
-            SpreadOre((ushort)TileType<ChandriumOre>(), 0.00026f, 5..7, 6..8, 8..10);
-            progress.Set(0.40f);
-
-            SpreadOre((ushort)TileType<DianiteOre>(), 0.00026f, 7..9, 2..4, 6..8);
-            progress.Set(0.60f);
-
-            SpreadOre((ushort)TileType<SeleniteOre>(), 0.00026f, 3..5, 6..12, 9..12);
-            progress.Set(0.80f);
-
-            SpreadOre(TileID.LunarOre, 0.0002f, 4..6, 7..12, 12..15);
-            progress.Set(1f);*/
-
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.OrePass");
 
             int protolithType = TileType<Protolith>();
@@ -437,47 +439,18 @@ namespace Macrocosm.Content.Subworlds
         private void SmoothTask(GenerationProgress progress)
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.SmoothPass");
-            SmoothTiles(20, 20, Main.maxTilesX - 20, Main.maxTilesY - 20);
+            SmoothWorld(progress);
         }
 
-        [Task]
-        private void WallTask(GenerationProgress progress)
-        {
-            progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.WallPass");
-            int protolithWall = WallType<ProtolithWall>();
-
-            int wallCount = 100;
-            for (int z = 0; z < wallCount; z++)
-            {
-                progress.Set(0.5d + 0.5d * z / wallCount);
-                Point point = new();
-
-                do
-                {
-                    int x = WorldGen.genRand.Next(0, Main.maxTilesX);
-                    point = new Point(x, WorldGen.genRand.Next(SurfaceHeight(x) + 15 + RegolithLayerHeight, Main.maxTilesY));
-                }
-                while (
-                    Main.tile[point.X, point.Y].HasTile ||
-                    Main.tile[point.X, point.Y].WallType == protolithWall
-                );
-
-                if (ConnectedTiles(point.X, point.Y, tile => !tile.HasTile, out var coordinates, 9999))
-                {
-                    foreach ((int i, int j) in coordinates)
-                    {
-                        FastPlaceWall(i, j, protolithWall);
-                    }
-                }
-            }
-        }
 
         [Task]
         private void PlaceHeavenforgeShrine(GenerationProgress progress)
         {
+            progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
+
             Structure shrine = new HeavenforgeShrine();
             bool solidDown = WorldUtils.Find(gen_HeavenforgeShrinePosition, Searches.Chain(new Searches.Down(150), new Conditions.IsSolid()), out Point solidGround);
-            if (solidDown && shrine.Place(new Point16(solidGround.X, solidGround.Y + shrine.Size.Y), StructureMap))
+            if (solidDown && shrine.Place(new Point16(solidGround.X, solidGround.Y + shrine.Size.Y / 2), StructureMap))
                 return;
 
             int fallbackX = WorldGen.genRand.Next(0, Main.maxTilesX - shrine.Size.X);
@@ -488,9 +461,11 @@ namespace Macrocosm.Content.Subworlds
         [Task]
         private void PlaceMercuryShrine(GenerationProgress progress)
         {
+            progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
+
             Structure shrine = new MercuryShrine();
             bool solidUp = WorldUtils.Find(gen_MercuryShrinePosition, Searches.Chain(new Searches.Up(150), new Conditions.IsSolid()), out Point solidGround);
-            if (solidUp && shrine.Place(new Point16(solidGround), StructureMap))
+            if (solidUp && shrine.Place(new Point16(solidGround.X + shrine.Size.X / 2, solidGround.Y - 10), StructureMap))
                 return;
 
             int fallbackX = WorldGen.genRand.Next(0, Main.maxTilesX - shrine.Size.X);
@@ -501,7 +476,7 @@ namespace Macrocosm.Content.Subworlds
         //[Task]
         private void RoomsTasks(GenerationProgress progress)
         {
-            progress.Message = Language.GetTextValue("Rooms");
+            progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
 
             int tries = 10000;
             int count = WorldGen.genRand.Next(20, 80);

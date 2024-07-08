@@ -54,7 +54,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             {
                 for (int y = topY; y < topY + 2; y++)
                 {
-                    if (Main.tile[x, y].TileFrameX / 18 % 2 == 1)
+                    if (Main.tile[x, y].TileFrameX / 18 / 2 == 1)
                         Main.tile[x, y].TileFrameX -= 36;
                     else
                         Main.tile[x, y].TileFrameX += 36;
