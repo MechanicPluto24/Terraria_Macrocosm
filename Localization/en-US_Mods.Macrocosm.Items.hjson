@@ -1417,3 +1417,13 @@ WeCanDoItYellow: {
 	DisplayName: We Can Do It Yellow
 	Tooltip: ""
 }
+
+DisplayScreen: {
+	DisplayName: Display Screen
+	Tooltip: ""
+}
+
+MoonBaseBathtub: {
+	DisplayName: Moon Base Bathtub
+	Tooltip: ""
+}

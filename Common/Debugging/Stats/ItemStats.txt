@@ -574,6 +574,18 @@ ConstructionLight
 	Value: 5 silver
 	Research count: 1
 
+DisplayScreen
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Plastic x 5
+		Aluminum Bar x 2
+		Printed Circuit Board x 1
+		Glass x 10
+		at
+		Fabricator
+
+
 EarthGlobe
 	Value: 5 silver
 	Research count: 1
@@ -614,6 +626,15 @@ LuminiteToilet
 		Luminite Brick x 6
 		at
 		Work Bench
+
+
+MoonBaseBathtub
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Moon Base Plating x 14
+		at
+		Fabricator
 
 
 MoonBaseBed
