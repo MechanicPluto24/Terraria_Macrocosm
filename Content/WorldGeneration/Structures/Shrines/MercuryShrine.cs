@@ -17,7 +17,9 @@ namespace Macrocosm.Content.WorldGeneration.Structures.Shrines
 
         public override void PostPlace(Point16 origin)
         {
-            for(int vein = WorldGen.genRand.Next(6); vein < WorldGen.genRand.Next(13); vein++)
+            int min = WorldGen.genRand.Next(6);
+            int max = WorldGen.genRand.Next(6, 13);
+            for (int vein = min; vein < max; vein++)
             {
                 WorldGen.OreRunner(
                     i: origin.X + (int)(Size.X * WorldGen.genRand.NextFloat(0.5f)),
