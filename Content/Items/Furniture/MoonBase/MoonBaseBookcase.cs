@@ -16,7 +16,6 @@ namespace Macrocosm.Content.Items.Furniture.MoonBase
             Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.MoonBase.MoonBaseBookcase>(), tileStyleToPlace: 0);
             Item.width = 28;
             Item.height = 34;
-            Item.maxStack = Item.CommonMaxStack;
             Item.value = 150;
         }
 

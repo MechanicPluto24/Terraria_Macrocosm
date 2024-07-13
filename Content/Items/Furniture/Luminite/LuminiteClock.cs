@@ -15,7 +15,6 @@ namespace Macrocosm.Content.Items.Furniture.Luminite
             Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminiteClock>());
             Item.width = 20;
             Item.height = 40;
-            Item.maxStack = Item.CommonMaxStack;
             Item.value = 150;
         }
 

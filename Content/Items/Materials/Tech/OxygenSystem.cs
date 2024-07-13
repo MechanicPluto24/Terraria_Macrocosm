@@ -17,7 +17,6 @@ namespace Macrocosm.Content.Items.Materials.Tech
             Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Tech.OxygenSystem>());
             Item.width = 26;
             Item.height = 24;
-            Item.maxStack = Item.CommonMaxStack;
             Item.value = 100;
             Item.rare = ItemRarityID.Green;
             Item.material = true;

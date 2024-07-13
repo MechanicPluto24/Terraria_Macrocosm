@@ -22,7 +22,6 @@ SilicaEbonsand.MapEntry: Silica Ebonsand
 SilicaPearlsand.MapEntry: Silica Pearlsand
 SilicaSand.MapEntry: Silica Sand
 MoonBaseNeonTube.MapEntry: Neon Tube
-MoonBaseConsole.MapEntry: Console
 MoonBaseDeskLamp.MapEntry: DeskLamp
 LexanGlass.MapEntry: Lexan Glass
 XFLR6.MapEntry: XFLR-6
@@ -68,3 +67,6 @@ MoonBaseDresser.MapEntry: Moon Base Dresser
 Boombox.MapEntry: Boombox
 WindTurbineLarge.MapEntry: Wind Turbine Large
 WindTurbineSmall.MapEntry: Wind Turbine Small
+MoonBaseControlPanel.MapEntry: Moon Base Control Panel
+MoonBaseControlStation.MapEntry: Moon Base Control Station
+MoonBaseDeskClock.MapEntry: Moon Base Desk Clock

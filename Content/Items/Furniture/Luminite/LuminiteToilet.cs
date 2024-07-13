@@ -16,7 +16,6 @@ namespace Macrocosm.Content.Items.Furniture.Luminite
             Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminiteToilet>());
             Item.width = 16;
             Item.height = 24;
-            Item.maxStack = Item.CommonMaxStack;
             Item.value = 150;
         }
 
