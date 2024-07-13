@@ -722,7 +722,7 @@ MoonBaseChestElectronic
 		Fabricator
 
 
-MoonBaseConsole
+MoonBaseControlPanel
 	Value: 5 silver
 	Research count: 1
 	Recipes:
@@ -733,9 +733,30 @@ MoonBaseConsole
 		Fabricator
 
 
+MoonBaseControlStation
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Moon Base Plating x 10
+		Printed Circuit Board x 2
+		Glass x 4
+		at
+		Fabricator
+
+
 MoonBaseCrate
 	Value: 5 silver
 	Research count: 10
+
+MoonBaseDeskClock
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Moon Base Plating x 2
+		Printed Circuit Board x 1
+		at
+		Fabricator
+
 
 MoonBaseDeskLamp
 	Value: 5 silver
@@ -818,12 +839,33 @@ MoonBaseNeonTube
 		Fabricator
 
 
+MoonBasePiano
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Moon Base Plating x 15
+		Bone x 4
+		Printed Circuit Board x 1
+		at
+		Fabricator
+
+
 MoonBasePlatform
 	Value: No value
 	Research count: 200
 	Recipes:
 		Moon Base Plating x 1
 			=> x2
+
+
+MoonBaseSink
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 6
+		Water Bucket x 1
+		at
+		Work Bench
 
 
 MoonBaseSofa
@@ -1314,7 +1356,7 @@ WeCanDoItBlue
 	Research count: 1
 
 WeCanDoItYellow
-	Value: No value
+	Value: 5 silver
 	Research count: 1
 
 WhenDayBreaks

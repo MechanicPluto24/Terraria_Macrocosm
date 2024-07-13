@@ -15,7 +15,6 @@ namespace Macrocosm.Content.Items.Furniture.Luminite
             Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminiteBookcase>());
             Item.width = 28;
             Item.height = 34;
-            Item.maxStack = Item.CommonMaxStack;
             Item.value = 150;
         }
 

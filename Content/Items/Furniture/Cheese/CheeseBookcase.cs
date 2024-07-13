@@ -16,7 +16,6 @@ namespace Macrocosm.Content.Items.Furniture.Cheese
             Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Cheese.CheeseBookcase>());
             Item.width = 28;
             Item.height = 34;
-            Item.maxStack = Item.CommonMaxStack;
             Item.value = 150;
         }
 

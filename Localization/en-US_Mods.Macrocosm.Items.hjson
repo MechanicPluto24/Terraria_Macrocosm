@@ -916,11 +916,6 @@ MoonBaseChestElectronic: {
 	Tooltip: ""
 }
 
-MoonBaseConsole: {
-	DisplayName: Moon Base Console
-	Tooltip: ""
-}
-
 MoonBaseLocker: {
 	DisplayName: Moon Base Locker
 	Tooltip: ""
@@ -1425,5 +1420,30 @@ DisplayScreen: {
 
 MoonBaseBathtub: {
 	DisplayName: Moon Base Bathtub
+	Tooltip: ""
+}
+
+MoonBaseControlPanel: {
+	DisplayName: Moon Base Control Panel
+	Tooltip: ""
+}
+
+MoonBaseControlStation: {
+	DisplayName: Moon Base Control Station
+	Tooltip: ""
+}
+
+MoonBaseDeskClock: {
+	DisplayName: Moon Base Desk Clock
+	Tooltip: ""
+}
+
+MoonBasePiano: {
+	DisplayName: Moon Base Piano
+	Tooltip: ""
+}
+
+MoonBaseSink: {
+	DisplayName: Moon Base Sink
 	Tooltip: ""
 }

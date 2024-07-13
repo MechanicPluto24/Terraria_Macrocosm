@@ -16,7 +16,6 @@ namespace Macrocosm.Content.Items.Furniture.MoonBase
             Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.MoonBase.MoonBaseToilet>());
             Item.width = 16;
             Item.height = 26;
-            Item.maxStack = Item.CommonMaxStack;
             Item.value = 150;
         }
 

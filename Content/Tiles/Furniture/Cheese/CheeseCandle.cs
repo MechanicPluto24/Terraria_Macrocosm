@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
+using Microsoft.Build.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -50,6 +51,9 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
                 Main.tile[i, j].TileFrameX -= 18;
             else
                 Main.tile[i, j].TileFrameX += 18;
+
+            if (Main.netMode != NetmodeID.SinglePlayer)
+                NetMessage.SendTileSquare(-1, i, j, 1, 1);
         }
 
         public override bool RightClick(int i, int j)
@@ -58,6 +62,9 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
                 Main.tile[i, j].TileFrameX -= 18;
             else
                 Main.tile[i, j].TileFrameX += 18;
+
+            if (Main.netMode != NetmodeID.SinglePlayer)
+                NetMessage.SendTileSquare(-1, i, j, 1, 1);
 
             return true;
         }

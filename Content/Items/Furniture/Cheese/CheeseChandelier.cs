@@ -16,7 +16,6 @@ namespace Macrocosm.Content.Items.Furniture.Cheese
             Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Cheese.CheeseChandelier>());
             Item.width = 32;
             Item.height = 32;
-            Item.maxStack = Item.CommonMaxStack;
             Item.value = 150;
         }
 

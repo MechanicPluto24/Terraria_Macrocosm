@@ -12,11 +12,12 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 {
-    public class MoonBaseConsole : ModTile
+    public class MoonBaseControlPanel : ModTile
     {
         private static Asset<Texture2D> glowmask;
         public override void SetStaticDefaults()
         {
+            Main.tileLighted[Type] = true;
             Main.tileFrameImportant[Type] = true;
             Main.tileNoAttach[Type] = true;
             Main.tileLavaDeath[Type] = true;
@@ -40,7 +41,7 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 
             AddMapEntry(new Color(200, 200, 200), CreateMapEntryName());
 
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.MoonBase.MoonBaseConsole>(), 0, 1);
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.MoonBase.MoonBaseControlPanel>(), 0, 1);
         }
 
         public override void HitWire(int i, int j)
