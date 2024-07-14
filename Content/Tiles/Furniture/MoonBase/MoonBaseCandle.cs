@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Content.Dusts;
+using Microsoft.Build.Tasks;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Enums;
@@ -39,6 +40,9 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
                 Main.tile[i, j].TileFrameX -= 18;
             else
                 Main.tile[i, j].TileFrameX += 18;
+
+            if (Main.netMode != NetmodeID.SinglePlayer)
+                NetMessage.SendTileSquare(-1, i, j, 1, 1);
         }
 
         public override bool RightClick(int i, int j)

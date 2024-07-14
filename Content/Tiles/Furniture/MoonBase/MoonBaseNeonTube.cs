@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Content.Dusts;
+using Microsoft.Build.Tasks;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -53,7 +54,8 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
                     Wiring.SkipWire(x, j);
             }
 
-            NetMessage.SendTileSquare(-1, left, j, 3, 1);
+            if (Main.netMode != NetmodeID.SinglePlayer)
+                NetMessage.SendTileSquare(-1, left, j, 3, 1);
         }
 
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)

@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.Systems.Power;
 using Macrocosm.Content.Players;
 using Macrocosm.Content.Rockets;
 using Macrocosm.Content.Rockets.LaunchPads;
@@ -23,7 +24,8 @@ namespace Macrocosm.Common.Netcode
         SyncMacrocosmPlayer,
         RequestLastSubworld,
         LastSubworldCheck,
-        SyncTEFromClient
+        SyncTEFromClient,
+        SyncPowerWire
     }
 
     public class PacketHandler
@@ -70,6 +72,10 @@ namespace Macrocosm.Common.Netcode
 
                 case MessageType.SyncTEFromClient:
                     TENetHelper.ReceiveSyncTEFromClient(reader, whoAmI);
+                    break;
+
+                case MessageType.SyncPowerWire:
+                    PowerWiring.ReceiveSyncPowerWire(reader, whoAmI);
                     break;
 
                 default:

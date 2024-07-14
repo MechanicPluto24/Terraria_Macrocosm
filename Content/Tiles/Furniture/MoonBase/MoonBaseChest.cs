@@ -275,14 +275,16 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
 
                 if (player.cursorItemIconText == defaultName)
                 {
-                    player.cursorItemIconID = ModContent.ItemType<Items.Furniture.MoonBase.MoonBaseChest>();
-
                     if (GetState(left, top) is State.Locked)
                     {
                         if (player.GetModPlayer<MacrocosmPlayer>().KnowsToUseZombieFinger)
                             player.cursorItemIconID = ModContent.ItemType<ZombieFinger>();
                         else
                             CursorIcon.Current = CursorIcon.QuestionMark;
+                    }
+                    else
+                    {
+                        player.cursorItemIconID = ModContent.ItemType<Items.Furniture.MoonBase.MoonBaseChest>();
                     }
 
                     player.cursorItemIconText = "";

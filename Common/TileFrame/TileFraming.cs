@@ -21,11 +21,11 @@ namespace Macrocosm.Common.TileFrame
         /// Style currently used for plating blocks with special frames (e.g. Moon Base Plating) 
         /// Adapted from the Gemspark blend style 
         /// </summary>
-        public static void PlatingStyle(int i, int j, bool countHalfBlocks = false)
+        public static void PlatingStyle(int i, int j, bool resetFrame = false, bool countHalfBlocks = false)
         {
             Tile tile = Main.tile[i, j];
             //var info = new TileNeighbourInfo(i, j).TypedSolid(tile.TileType);
-            CommonFraming(i, j, countHalfBlocks: false);
+            CommonFraming(i, j, resetFrame, countHalfBlocks);
 
             // TODO: integrate this slope check logic to a TileNeightbourInfo delegate (if possible)
 
@@ -305,7 +305,7 @@ namespace Macrocosm.Common.TileFrame
         /// <param name="j"> Tile Y </param>
         /// <param name="countHalfBlocks"> Count half blocks for merging </param>
         /// <param name="customVariation"> Optional user defined variation, should be in the 0-2 range, randomized by default </param>
-        public static void CommonFraming(int i, int j, bool countHalfBlocks = false, int? customVariation = null)
+        public static void CommonFraming(int i, int j, bool resetFrame = false,  bool countHalfBlocks = false, int? customVariation = null)
         {
             Tile tile = Main.tile[i, j];
             int type = tile.TileType;
@@ -435,7 +435,20 @@ namespace Macrocosm.Common.TileFrame
 
             Point frame = new(-1, -1);
 
-            int variation = customVariation ?? WorldGen.genRand.Next(3);
+            int variation;
+            if (customVariation.HasValue)
+            {
+                variation = customVariation.Value;
+            }
+            else if (!resetFrame)
+            {
+                variation = tile.TileFrameNumber;
+            }
+            else
+            {
+                variation = WorldGen.genRand.Next(3);
+                tile.TileFrameNumber = variation;
+            }
 
             if (frame.X < 0 || frame.Y < 0)
             {

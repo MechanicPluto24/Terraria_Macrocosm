@@ -148,9 +148,7 @@ namespace Macrocosm.Content.Machines
             else
             {
                 if (Utility.TryGetTileEntityAs(i, j, out OreExcavatorTE oreExcavator))
-                {
-                    UISystem.ShowMachineUI(oreExcavator, new OreExcavatorUI());
-                }
+                     UISystem.ShowMachineUI(oreExcavator, new OreExcavatorUI());
             }
 
             return true;
@@ -177,9 +175,7 @@ namespace Macrocosm.Content.Machines
                 }
                 else
                 {
-                    Main.instance.MouseText("TOO BIG");
-                    player.cursorItemIconEnabled = true;
-                    player.cursorItemIconID = ModContent.ItemType<Items.Machines.OreExcavator>();
+                    CursorIcon.Current = CursorIcon.Drill;
                 }
             }
         }

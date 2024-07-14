@@ -1,14 +1,17 @@
 ﻿using Macrocosm.Common.Bases.Tiles;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Reflection.PortableExecutable;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
+using Terraria.UI.Chat;
 
 namespace Macrocosm.Common.Systems.Power
 {
@@ -54,10 +57,10 @@ namespace Macrocosm.Common.Systems.Power
             }
         }
 
-        /// <summary> Things to happen before the first update tick. Only runs on SP and Server. </summary>
+        /// <summary> Things to happen before the first update tick. </summary>
         public virtual void OnFirstUpdate() { }
 
-        /// <summary> Update hook. Only runs on SP and Server </summary>
+        /// <summary> Update hook. </summary>
         public virtual void MachineUpdate() { }
 
         public virtual void OnPowerOn() { }
@@ -81,11 +84,10 @@ namespace Macrocosm.Common.Systems.Power
             if (!ranFirstUpdate)
             {
                 OnFirstUpdate();
-
-                if(Main.netMode != NetmodeID.MultiplayerClient)
-                    NetMessage.SendData(MessageID.TileEntitySharing, number: ID, number2: Position.X, number3: Position.Y);
-
                 ranFirstUpdate = true;
+
+                //if(Main.netMode != NetmodeID.MultiplayerClient)
+                //    NetMessage.SendData(MessageID.TileEntitySharing, number: ID, number2: Position.X, number3: Position.Y);
             }
 
             GeneratedPower = 0;
@@ -96,6 +98,14 @@ namespace Macrocosm.Common.Systems.Power
         public void ClientUpdate()
         {
             Update();
+        }
+
+        public void DisplayPowerInfo()
+        {
+            string activePower = ActivePower.ToString("F2");
+            string maxPower = (IsGenerator ? GeneratedPower : ConsumedPower).ToString("F2");
+            string info = $"{activePower}W/{maxPower}W";
+            Utility.Chat(info, Color.Teal);
         }
 
         public bool IsConnected(MachineTE other)
@@ -144,22 +154,25 @@ namespace Macrocosm.Common.Systems.Power
 
         public override bool IsTileValidForEntity(int x, int y)
         {
-            return Main.tile[x, y].TileType == MachineTile.Type;
+            Tile tile = Main.tile[x, y];
+            return tile.HasTile && tile.TileType == MachineTile.Type;
         }
 
         public override int Hook_AfterPlacement(int i, int j, int type, int style, int direction, int alternate)
         {
+            Point16 tileOrigin = TileObjectData.GetTileData(type, style).Origin;
+            int x = i - tileOrigin.X;
+            int y = j - tileOrigin.Y;
+
             if (Main.netMode == NetmodeID.MultiplayerClient)
             {
-                NetMessage.SendTileSquare(Main.myPlayer, i, j, MachineTile.Width, MachineTile.Height);
-                NetMessage.SendData(MessageID.TileEntityPlacement, number: i, number2: j, number3: Type);
+                NetMessage.SendTileSquare(Main.myPlayer, x, y, MachineTile.Width, MachineTile.Height);
+                NetMessage.SendData(MessageID.TileEntityPlacement, number: x, number2: y, number3: Type);
+                return -1;
             }
 
-            Point16 tileOrigin = TileObjectData.GetTileData(type, style).Origin;
-            int placedEntity = Place(i - tileOrigin.X, j - tileOrigin.Y);
-
+            int placedEntity = Place(x, y);
             CircuitSystem.SearchCircuits();
-
             return placedEntity;
         }
 

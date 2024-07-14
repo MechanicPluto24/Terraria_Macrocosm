@@ -31,10 +31,10 @@ namespace Macrocosm.Common.Systems.Power
         }
 
         private static int updateTimer = 0;
-        private const int updateRate = 60;
+        private const int updateRate = 1;
         public override void PostUpdateEverything()
         {
-            if(updateTimer++ >= 1)
+            if(updateTimer++ >= updateRate)
             {
                 SolveCircuits();
                 updateTimer = 0;
@@ -105,6 +105,7 @@ namespace Macrocosm.Common.Systems.Power
 
         public override void PostDrawTiles()
         {
+            /*
             SpriteBatch spriteBatch = Main.spriteBatch;
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, default, null, Main.GameViewMatrix.ZoomMatrix);
 
@@ -112,6 +113,7 @@ namespace Macrocosm.Common.Systems.Power
                 DebugDrawMachines(spriteBatch);
 
             spriteBatch.End();
+            */
         }
 
         private static void DebugDrawMachines(SpriteBatch spriteBatch)
