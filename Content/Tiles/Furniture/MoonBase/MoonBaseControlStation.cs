@@ -62,7 +62,7 @@ namespace Macrocosm.Content.Tiles.Furniture.MoonBase
             }
 
             if (Main.netMode != NetmodeID.SinglePlayer)
-                NetMessage.SendTileSquare(-1, leftX, topY, 2, 2);
+                NetMessage.SendTileSquare(-1, leftX, topY, 4, 3);
         }
 
         public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)

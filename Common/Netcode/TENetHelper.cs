@@ -20,6 +20,8 @@ namespace Macrocosm.Common.Netcode
             packet.Write(found);
             if (found)
                 TileEntity.Write(packet, TileEntity.ByID[id], networkSend: true, lightSend: true);
+
+            packet.Send();
         }
 
         public static void ReceiveSyncTEFromClient(BinaryReader reader, int sender)

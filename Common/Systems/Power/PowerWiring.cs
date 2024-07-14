@@ -12,6 +12,8 @@ using Terraria.GameContent;
 using Macrocosm.Common.Utils;
 using Terraria.ID;
 using Macrocosm.Content.Items.Wires;
+using Macrocosm.Common.Netcode;
+using System.IO;
 
 namespace Macrocosm.Common.Systems.Power
 {
@@ -38,6 +40,20 @@ namespace Macrocosm.Common.Systems.Power
         private Dictionary<Point16, WireData> wireMap = new();
 
         private Asset<Texture2D> wireTexture;
+
+        public override void Load()
+        {
+            wireTexture = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "PowerWire");
+        }
+
+        public override void Unload()
+        {
+        }
+
+        public override void ClearWorld()
+        {
+            wireMap = new();
+        }
 
         public WireData this[Point16 point]
         {
@@ -67,52 +83,6 @@ namespace Macrocosm.Common.Systems.Power
             get => this[new Point16(point)];
             private set => this[new Point16(point)] = value;
         }
-
-        public static void PlaceWire(Point coords, WireType type) => Map[coords] = new(type);
-        public static void PlaceWire(int x, int y, WireType type) => Map[x, y] = new(type);
-
-        public static void CutWire(Point coords) => CutWire(coords.X, coords.Y);
-        public static void CutWire(int x, int y)
-        {
-            int itemDrop = -1;
-            int dustType = -1;
-            if (Map[x, y].CopperWire)
-            {
-                itemDrop = ModContent.ItemType<CopperWire>();
-                dustType = DustID.Copper;
-            }
-
-            Map[x, y] = new();
-
-            if (itemDrop > 0)
-            {
-                if (Main.netMode != NetmodeID.MultiplayerClient)
-                    Item.NewItem(new EntitySource_TileBreak(x, x, "PowerWireCut"), new Vector2(x * 16 + 8, y * 16 + 8), itemDrop);
-            }
-
-            if (dustType > 0)
-            {
-                for (int i = 0; i < 10; i++)
-                {
-                    Dust.NewDustDirect(new Vector2(x * 16 + 8, y * 16 + 8), 1, 1, DustID.Copper);
-                }
-            }
-        }
-
-        public override void Load()
-        {
-            wireTexture = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "PowerWire");
-        }
-
-        public override void Unload()
-        {
-        }
-
-        public override void ClearWorld()
-        {
-            wireMap = new();
-        }
-
         public bool ShouldDrawWires
         {
             get
@@ -126,6 +96,39 @@ namespace Macrocosm.Common.Systems.Power
         }
 
         public WireVisibility CopperVisibility { get; set; } = WireVisibility.Normal;
+
+        public static void PlaceWire(Point coords, WireType type, bool sync = true) => PlaceWire(coords.X, coords.Y, type, sync);
+        public static void PlaceWire(int x, int y, WireType type, bool sync = true)
+        {
+            Map[x, y] = new(type);
+
+            if(sync && Main.netMode != NetmodeID.SinglePlayer)
+                SyncPowerWire(x, y, type);
+        }
+
+        public static void CutWire(Point coords, bool sync = true) => CutWire(coords.X, coords.Y, sync);
+        public static void CutWire(int x, int y, bool sync = true)
+        {
+            int itemDrop = -1;
+            int dustType = -1;
+            if (Map[x, y].CopperWire)
+            {
+                itemDrop = ModContent.ItemType<CopperWire>();
+                dustType = DustID.Copper;
+            }
+
+            Map[x, y] = new();
+
+            if (itemDrop > 0 && Main.netMode != NetmodeID.MultiplayerClient)
+                Item.NewItem(new EntitySource_TileBreak(x, x, "PowerWireCut"), new Vector2(x * 16 + 8, y * 16 + 8), itemDrop);
+
+            if (dustType > 0)
+                for (int i = 0; i < 10; i++)
+                    Dust.NewDustDirect(new Vector2(x * 16 + 8, y * 16 + 8), 1, 1, dustType);
+ 
+            if (sync && Main.netMode != NetmodeID.SinglePlayer)
+                SyncPowerWire(x, y, WireType.None);
+        }
 
         public override void PostDrawTiles()
         {
@@ -212,8 +215,31 @@ namespace Macrocosm.Common.Systems.Power
             return color;
         }
 
-        public static void MakeWireDust(Point coords)
+        public static void SyncPowerWire(int x, int y, WireType type, int toClient = -1, int ignoreClient = -1)
         {
+            ModPacket packet = Macrocosm.Instance.GetPacket();
+
+            packet.Write((byte)MessageType.SyncPowerWire);
+            packet.Write((ushort)x);
+            packet.Write((ushort)y);
+            packet.Write((byte)type);
+
+            packet.Send(toClient, ignoreClient);
+        }
+
+        public static void ReceiveSyncPowerWire(BinaryReader reader, int sender)
+        {
+            int x = reader.ReadUInt16();
+            int y = reader.ReadUInt16();
+            WireType type = (WireType)reader.ReadByte();
+
+            if (type != WireType.None)
+                PlaceWire(x, y, type, sync: false);
+            else
+                CutWire(x, y, sync: false);
+
+            if (Main.netMode == NetmodeID.Server)
+                SyncPowerWire(x, y, type, ignoreClient: sender);
         }
 
         public override void SaveWorldData(TagCompound tag)

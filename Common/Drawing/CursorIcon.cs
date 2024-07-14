@@ -16,6 +16,7 @@ namespace Macrocosm.Common.Drawing
         public static Icon MachineTurnOff { get; } = new(Macrocosm.SymbolsPath + "MachineTurnOff", scale: 1f);
         public static Icon SpaceStation { get; } = new(Macrocosm.SymbolsPath + "SpaceStation");
         public static Icon QuestionMark { get; } = new(Macrocosm.SymbolsPath + "QuestionMark");
+        public static Icon Drill { get; } = new(Macrocosm.SymbolsPath + "Drill");
 
         public record Icon(string texturePath, float scale = 1f)
         {
