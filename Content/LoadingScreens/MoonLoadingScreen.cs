@@ -52,7 +52,7 @@ namespace Macrocosm.Content.LoadingScreens
             spriteBatch.Begin(BlendState.NonPremultiplied, state);
 
             Color bodyColor = (Color.White * (float)(animationTimer / 5) * 1f).WithOpacity(1f);
-            float scale = Main.UIScale;
+            float scale = Main.UIScale * 0.75f;
 
             float progress = MathHelper.Clamp(animationTimer / animationDuration, 0f, 1f);
             progress = (float)Math.Pow(progress, 0.6);

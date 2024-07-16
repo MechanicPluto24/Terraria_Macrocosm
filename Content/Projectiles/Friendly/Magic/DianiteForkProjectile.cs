@@ -2,6 +2,7 @@ using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Trails;
+using Microsoft.Build.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -22,6 +23,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             ProjectileID.Sets.TrailingMode[Type] = 3;
         }
 
+        private const int spawnTimeLeft = 45; //90
+
         public override void SetDefaults()
         {
             Projectile.width = 8;
@@ -31,7 +34,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Projectile.tileCollide = true;
             Projectile.ignoreWater = true;
             Projectile.penetrate = 1;
-            Projectile.timeLeft = 45;
+            Projectile.timeLeft = 90;
 
             Projectile.SetTrail<DianiteForkTrail>();
         }
@@ -50,6 +53,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             get => (int)Projectile.ai[2];
             set => Projectile.ai[2] = value;
         }
+
+        public float TimeLeftProgress => (float)Projectile.timeLeft / 90;
+
+        private int spawnDamage;
 
         // The orbit center's position
         private Vector2 targetPosition;
@@ -97,12 +104,20 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
                 targetPosition = Projectile.Center;
                 movementVector = Projectile.velocity;
+
+                spawnDamage = Projectile.damage;
             }
 
             AI_Timer++;
 
             // Keep alive unless metting specific conditions
             Projectile.timeLeft++;
+
+            Projectile.Opacity = TimeLeftProgress;
+
+            Projectile.damage = (int)(spawnDamage * TimeLeftProgress);
+            if (TimeLeftProgress < 0.2f)
+                Projectile.damage = 0;
 
             switch (AI_State)
             {
@@ -173,7 +188,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                     for (int i = 0; i < Main.maxNPCs; i++)
                     {
                         NPC npc = Main.npc[i];
-                        if (npc.active && !npc.friendly && npc.lifeMax > 5 && !npc.dontTakeDamage)
+                        if (npc.active && !npc.friendly && npc.lifeMax > 5 && !npc.dontTakeDamage && npc.type != NPCID.TargetDummy)
                         {
                             float distance = Vector2.Distance(Projectile.Center, npc.Center);
                             if (distance < closestDistance)
@@ -189,16 +204,17 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                     {
                         Vector2 direction = (TargetNPC.Center - Projectile.Center).SafeNormalize(Vector2.Zero);
                         Projectile.velocity = Vector2.Lerp(Projectile.velocity, direction * originalSpeed, turnSpeed);
+                        Projectile.timeLeft--;
                     }
                     else
                     {
-                        Projectile.timeLeft--;
+                        Projectile.timeLeft -= 2;
                     }
 
                     break;
             }
 
-            Lighting.AddLight(Projectile.Center, new Color(255, 146, 0).ToVector3());
+            Lighting.AddLight(Projectile.Center, new Color(255, 146, 0).ToVector3() * TimeLeftProgress);
 
             if (AI_State is ActionState.Orbit)
             {
@@ -210,7 +226,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             }
             else
             {
-                if (AI_Timer % 2 == 0)
+                if (AI_Timer % (2 + (int)(3 * (1f - TimeLeftProgress))) == 0)
                 {
                     Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<DianiteBrightDust>(), -Projectile.velocity.X * 0.4f, -Projectile.velocity.Y * 0.4f);
                     dust.noGravity = true;
@@ -221,7 +237,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
         public override void OnKill(int timeLeft)
         {
-            for (int i = 0; i < 20; i++)
+            int count = (int)(20f * Projectile.Opacity);
+            for (int i = 0; i < count; i++)
             {
                 Vector2 velocity = Main.rand.NextVector2Circular(4, 4);
                 Dust dust = Dust.NewDustPerfect(Projectile.position, ModContent.DustType<DianiteBrightDust>(), velocity, Scale: Main.rand.NextFloat(1f, 1.6f));
@@ -235,16 +252,17 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Texture2D tex = TextureAssets.Projectile[Type].Value;
             Texture2D glow = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Circle6").Value;
             Vector2 origin = Projectile.Size / 2f;
-            ;
+
             state.SaveState(Main.spriteBatch);
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
+            Projectile.GetTrail().Opacity = TimeLeftProgress;
             Projectile.GetTrail().Draw(Projectile.Size / 2f);
 
-            Color glowColor = new Color(248, 137, 0);
-            int glowTrailCount = (int)(ProjectileID.Sets.TrailCacheLength[Type] * 0.5f);
-            for (int i = 0; i < glowTrailCount; i++)
+            Color glowColor = new Color(248, 137, 0).WithOpacity(Projectile.Opacity);
+            int glowTrailCount = (int)(ProjectileID.Sets.TrailCacheLength[Type] * 0.5f * TimeLeftProgress);
+            for (int i = 0; i < glowTrailCount - 1; i++)
             {
                 float trailMultCurrent = 1f - ((float)i / glowTrailCount);
                 float trailMultNext = 1f - ((float)(i + 1) / glowTrailCount);
@@ -270,7 +288,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Main.spriteBatch.Begin(state);
 
             Main.EntitySpriteDraw(tex, Projectile.Center - Main.screenPosition,
-                null, Color.White, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
+                null, Color.White * TimeLeftProgress, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);

@@ -21,11 +21,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         public ref float AI_Timer => ref Projectile.ai[1];
         public ref float AI_Charge => ref Projectile.ai[2];
 
+        private bool altAttackActive = false;
+        private int altAttackCount = 0;
+
         public override float CircularHoldoutOffset => 8f;
 
-        protected override bool StillInUse => base.StillInUse || Main.mouseRight || itemUseTime > 0;
+        protected override bool StillInUse => base.StillInUse || Main.mouseRight || itemUseTime > 0 || altAttackActive;
 
         public override bool ShouldUpdateAimRotation => true;
+
 
         public override void SetProjectileStaticDefaults()
         {
@@ -47,7 +51,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 float speed;
                 int usedAmmoItemId;
 
-                if (Main.mouseRight)
+                if (Main.mouseRight && !altAttackActive)
                 {
                     AI_Charge += 1f * Player.GetAttackSpeed(DamageClass.Ranged);
 
@@ -66,19 +70,18 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                         }, Projectile.position);
                     }
                 }
-                else
+                else if(!altAttackActive)
                 {
                     if (AI_Charge > MinCharge)
                     {
-                        if (Player.PickAmmo(currentItem, out _, out speed, out damage, out knockback, out usedAmmoItemId))
+                        if (Player.PickAmmo(currentItem, out _, out _, out _, out _, out _))
                         {
                             float charge = MathHelper.Clamp(AI_Charge / MaxCharge, 0f, 1f);
-                            damage += (int)(damage * charge * 1.75f);
-                            speed *= 0.466f;
-                            knockback *= 2f;
 
-                            Projectile.NewProjectile(new EntitySource_ItemUse_WithAmmo(Player, currentItem, usedAmmoItemId), Projectile.Center, Vector2.Normalize(Projectile.velocity) * speed, ModContent.ProjectileType<SeleniteBolt>(), damage, knockback, Projectile.owner, ai0: charge);
-                            SoundEngine.PlaySound(SoundID.Item72 with { Pitch = -0.5f, Volume = 0.4f });
+                            altAttackCount = 3 + (int)(7 * charge);
+                            altAttackActive = true;
+
+                            AI_Timer = 0;
                             AI_Charge = 0;
                         }
                     }
@@ -86,7 +89,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                     {
                         if (Player.PickAmmo(currentItem, out int projToShoot, out speed, out damage, out knockback, out usedAmmoItemId))
                         {
-                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Normalize(Projectile.velocity) * speed, projToShoot, damage, knockback, Projectile.owner);
+                            // Shoot 2 parallel arrows
+                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center + new Vector2(0, -7).RotatedBy(Projectile.velocity.ToRotation()), Vector2.Normalize(Projectile.velocity) * speed, projToShoot, damage, knockback, Projectile.owner);
+                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center + new Vector2(0, +7).RotatedBy(Projectile.velocity.ToRotation()), Vector2.Normalize(Projectile.velocity) * speed, projToShoot, damage, knockback, Projectile.owner);
+
                             AI_Timer = 0;
                             SoundEngine.PlaySound(SoundID.Item5, Projectile.position);
                         }
@@ -96,6 +102,27 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                         }
                     }
                 }
+                else
+                {
+                    int altAttackRate = 5;
+
+                    if (AI_Timer >= altAttackCount * altAttackRate)
+                    {
+                        altAttackActive = false;
+                        altAttackCount = 0;
+                    }
+                    else if (AI_Timer % altAttackRate == 0)
+                    { 
+                        if (Player.PickAmmo(currentItem, out _, out speed, out damage, out knockback, out _))
+                        {
+                            Vector2 position = Projectile.Center - new Vector2(20, 0).RotatedBy(Projectile.rotation) + Main.rand.NextVector2Circular(32, 32);
+                            Vector2 velocity = Vector2.Normalize(Projectile.velocity).RotatedByRandom(MathHelper.ToRadians(15)) * speed * 0.666f;
+                            damage = (int)(damage * 0.5f);
+                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<SeleniteBolt>(), damage, knockback, Projectile.owner, 1f);
+                        }
+                    }
+                }
+
                 AI_Timer++;
             }
         }
@@ -118,21 +145,24 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         {
             var spriteBatch = Main.spriteBatch;
 
-            if (AI_Charge > 0)
+            if (AI_Charge > 0 || altAttackActive)
             {
                 state.SaveState(spriteBatch);
                 spriteBatch.End();
                 spriteBatch.Begin(BlendState.AlphaBlend, state);
 
-                float rotation = Projectile.rotation + EffectTimer;
                 float progress = MathHelper.Clamp(AI_Charge / MaxCharge, 0f, 1f);
+                if (altAttackActive)
+                    progress = (1f - (AI_Timer / 50f)) * (altAttackCount/10f);
+
+                float rotation = Projectile.rotation + EffectTimer;
                 float scale = 0.5f * Projectile.scale * progress;
                 byte alpha = (byte)(255 - MathHelper.Clamp(64 + Opacity, 0, 255));
                 Vector2 offset = default;
 
                 if (AI_Charge < MaxCharge)
                 {
-                    scale += 0.3f * Utility.QuadraticEaseOut(progress);
+                    scale += 0.5f * Utility.QuadraticEaseOut(progress);
                     rotation += 0.5f * Utility.CubicEaseInOut(progress);
                     Opacity += 1f;
                     offset = Main.rand.NextVector2Circular(1, 1) * progress;
@@ -140,7 +170,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
                 if (AI_Charge >= MaxCharge)
                 {
-                    scale += 0.3f;
+                    scale += 0.5f;
                     rotation += 0.5f;
                     offset = Main.rand.NextVector2Circular(1, 1);
                     EffectTimer += 0.001f;
