@@ -25,7 +25,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         }
         public int DefWidth => 8;
         public int DefHeight => 8;
-        public float BlastRadius => 100;
+        public float BlastRadius => 16 * 3;
 
         float trailMultiplier = 0f;
 
@@ -53,7 +53,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
 
             if (trailMultiplier < 1f)
-                trailMultiplier += 0.015f * (0.1f + Strenght * 0.9f);
+                trailMultiplier += 0.006f;
 
             Lighting.AddLight(Projectile.Center, new Color(177, 230, 204).ToVector3() * 0.6f);
         }

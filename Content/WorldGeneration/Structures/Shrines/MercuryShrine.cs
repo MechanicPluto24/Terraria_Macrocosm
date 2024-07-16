@@ -17,23 +17,22 @@ namespace Macrocosm.Content.WorldGeneration.Structures.Shrines
 
         public override void PostPlace(Point16 origin)
         {
-            int min = WorldGen.genRand.Next(6);
-            int max = WorldGen.genRand.Next(6, 13);
-            for (int vein = min; vein < max; vein++)
+            int max = WorldGen.genRand.Next(30, 41);
+            for (int vein = 0; vein < max; vein++)
             {
                 WorldGen.OreRunner(
-                    i: origin.X + (int)(Size.X * WorldGen.genRand.NextFloat(0.5f)),
-                    j: origin.Y + (int)(Size.Y * WorldGen.genRand.NextFloat(0.2f)),
-                    strength: WorldGen.genRand.Next(1, 2),
-                    steps: WorldGen.genRand.Next(1, 8),
+                    i: origin.X - (int)(Size.X * WorldGen.genRand.NextFloat(0.5f)) + (int)(Size.X * WorldGen.genRand.NextFloat(1.5f)),
+                    j: origin.Y - (int)(Size.Y * WorldGen.genRand.NextFloat(0.3f)) + (int)(Size.Y * WorldGen.genRand.NextFloat(1.3f)),
+                    strength: WorldGen.genRand.Next(2, 5),
+                    steps: WorldGen.genRand.Next(6, 8),
                     type: (ushort)ModContent.TileType<ArtemiteOre>()
                 );
 
                 WorldGen.OreRunner(
-                    i: origin.X + Size.X - (int)(Size.X * WorldGen.genRand.NextFloat(0.5f)),
-                    j: origin.Y + (int)(Size.Y * WorldGen.genRand.NextFloat(0.2f)),
-                    strength: WorldGen.genRand.Next(1, 2),
-                    steps: WorldGen.genRand.Next(1, 8),
+                    i: origin.X - (int)(Size.X * WorldGen.genRand.NextFloat(0.5f)) + (int)(Size.X * WorldGen.genRand.NextFloat(1.5f)),
+                    j: origin.Y - (int)(Size.Y * WorldGen.genRand.NextFloat(0.3f)) + (int)(Size.Y * WorldGen.genRand.NextFloat(1.3f)),
+                    strength: WorldGen.genRand.Next(2, 5),
+                    steps: WorldGen.genRand.Next(6, 8),
                     type: TileID.LunarBlockSolar
                 );
             }

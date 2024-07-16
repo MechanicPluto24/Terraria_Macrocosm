@@ -16,23 +16,22 @@ namespace Macrocosm.Content.WorldGeneration.Structures.Shrines
 
         public override void PostPlace(Point16 origin)
         {
-            int min = WorldGen.genRand.Next(15);
             int max = WorldGen.genRand.Next(15, 26);
-            for (int vein = min; vein < max; vein++)
+            for (int vein = 0; vein < max; vein++)
             {
                 WorldGen.OreRunner(
                     i: origin.X + (int)(Size.X * WorldGen.genRand.NextFloat(1f)),
                     j: origin.Y + (int)(Size.Y * WorldGen.genRand.NextFloat(1f)),
-                    strength: WorldGen.genRand.Next(1, 4),
-                    steps: WorldGen.genRand.Next(1, 3),
+                    strength: WorldGen.genRand.Next(2, 5),
+                    steps: WorldGen.genRand.Next(4, 8),
                     type: (ushort)ModContent.TileType<ArtemiteOre>()
                 );
 
                 WorldGen.OreRunner(
                     i: origin.X + (int)(Size.X * WorldGen.genRand.NextFloat(1f)),
                     j: origin.Y + (int)(Size.Y * WorldGen.genRand.NextFloat(1f)),
-                    strength: WorldGen.genRand.Next(1, 4),
-                    steps: WorldGen.genRand.Next(1, 3),
+                    strength: WorldGen.genRand.Next(2, 5),
+                    steps: WorldGen.genRand.Next(4, 8),
                     type: TileID.LunarBlockSolar
                 );
             }
