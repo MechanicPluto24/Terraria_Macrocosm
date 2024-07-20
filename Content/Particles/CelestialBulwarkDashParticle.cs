@@ -121,8 +121,9 @@ namespace Macrocosm.Content.Particles
                 CelestialBulwark.GetEffectColor(Player, out Color, out SecondaryColor, out blendStateOverride, out _, out rainbow);
             }
 
-            if (DashPlayer.DashTimer <= 0)
+            if (DashPlayer.DashTimer <= 0 || Player.dead || Player.CCed)
                 Kill();
+
             Scale = MathHelper.Lerp(Scale * 0.8f, defScale, Progress);
 
             Lighting.AddLight(Player.Center, Color.ToVector3() * 2f * Utility.QuadraticEaseIn(Progress));

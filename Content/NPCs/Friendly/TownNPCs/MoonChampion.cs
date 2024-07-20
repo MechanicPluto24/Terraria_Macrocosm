@@ -82,9 +82,6 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
 
         private const string chatPath = "Mods.Macrocosm.NPCs.MoonChampion.Chat.";
 
-        // NOTE: I cannot guarentee that all of this code is in tip-top shape, so if there is anything off, just let ryan know :poggers:
-        // "Ok I think I made it in tip-top shape now probably" - 4mbr0s3 2
-        // Localized by Feldy.. see the chat lines and comments for references in the localization files
         public override string GetChat()
         {
             Player player = Main.player[Main.myPlayer];
@@ -93,36 +90,33 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
             {
                 HasBeenChatWithForTheFirstTime = true;
                 NPC.netUpdate = true;
-                return Language.GetTextValue(chatPath + "FirstTime");
+                return Language.GetTextValue(chatPath + $"Rescued{Main.rand.Next(1, 3 + 1)}");
             }
 
             List<string> chatBag = new();
-            if (Main.dayTime)
+
+            if (Main.bloodMoon)
             {
-                chatBag.Add(Language.GetTextValue(chatPath + "Day1"));
-                chatBag.Add(Language.GetTextValue(chatPath + "Day2"));
-                chatBag.Add(Language.GetTextValue(chatPath + "Day3"));
-                if (Main.rand.NextFloat() < 0.2f)
-                    chatBag.Add(Language.GetTextValue(chatPath + "DayRare"));
+                for (int i = 1; i <= 4; i++)
+                    chatBag.Add(Language.GetTextValue(chatPath + $"BloodMoon{i}"));
+            }
+            /*
+            else if (MacrocosmWorld.SolarStorm)
+            {
+                for (int i = 1; i <= 4; i++)
+                    chatBag.Add(Language.GetTextValue(chatPath + $"SolarStorm{i}"));
+            }
+            */
+            else if (Main.dayTime)
+            {
+                for(int i = 1; i <= 9; i++)
+                    chatBag.Add(Language.GetTextValue(chatPath + $"Day{i}"));
             }
             else
             {
-                chatBag.Add(Language.GetTextValue(chatPath + "Night1"));
-                chatBag.Add(Language.GetTextValue(chatPath + "Night2"));
-                chatBag.Add(Language.GetTextValue(chatPath + "Night3"));
+                for (int i = 1; i <= 8; i++)
+                    chatBag.Add(Language.GetTextValue(chatPath + $"Night{i}"));
             }
-
-            int coinCount = player.CountItem(ModContent.ItemType<Moonstone>());
-            if (coinCount > 0)
-                chatBag.Add(Language.GetText(chatPath + "Moonstones").Format(coinCount));
-            else
-                chatBag.Add(Language.GetTextValue(chatPath + "NoMoonstones"));
-
-            chatBag.Add(Language.GetTextValue(chatPath + "Standard1"));
-            chatBag.Add(Language.GetTextValue(chatPath + "Standard2"));
-            chatBag.Add(Language.GetTextValue(chatPath + "Standard3"));
-            chatBag.Add(Language.GetTextValue(chatPath + "Standard4"));
-            chatBag.Add(Language.GetTextValue(chatPath + "Standard5"));
 
             return chatBag[Main.rand.Next(chatBag.Count)];
         }
@@ -141,19 +135,12 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
             }
             else
             {
-                Main.npcChatText = Main.rand.Next(3) switch
-                {
-                    1 => Language.GetTextValue(chatPath + "Advice1"),
-                    2 => Language.GetTextValue(chatPath + "Advice2"),
-                    _ => Language.GetTextValue(chatPath + "Advice3")
-                };
+                Main.npcChatText = Language.GetTextValue(chatPath + $"Advice{Main.rand.Next(1, 5 + 1)}");
             }
         }
 
         public override void PostAI()
         {
-
-
             if (!SubworldSystem.IsActive<Moon>())
                 NPC.active = false;
         }

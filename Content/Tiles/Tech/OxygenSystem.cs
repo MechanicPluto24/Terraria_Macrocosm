@@ -41,7 +41,7 @@ namespace Macrocosm.Content.Tiles.Tech
 
             TileObjectData.addTile(Type);
 
-            DustType = ModContent.DustType<MoonBasePlatingDust>();
+            DustType = ModContent.DustType<IndustrialPlatingDust>();
 
             LocalizedText name = CreateMapEntryName();
             AddMapEntry(new Color(253, 221, 3), name);

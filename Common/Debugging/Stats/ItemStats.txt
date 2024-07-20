@@ -278,6 +278,10 @@ CheeseBlock
 			=> x10
 
 
+IndustrialPlating
+	Value: No value
+	Research count: 100
+
 LexanGlass
 	Value: No value
 	Research count: 100
@@ -287,10 +291,6 @@ LexanGlass
 		at
 		Glass Kiln
 
-
-MoonBasePlating
-	Value: No value
-	Research count: 100
 
 SilicaCrimsand
 	Value: No value
@@ -590,6 +590,292 @@ EarthGlobe
 	Value: 5 silver
 	Research count: 1
 
+IndustrialBathtub
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Industrial Plating x 14
+		at
+		Fabricator
+
+
+IndustrialBed
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 15
+		Silk x 5
+		at
+		Fabricator
+
+
+IndustrialBookcase
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Industrial Plating x 20
+		Book x 10
+
+
+IndustrialBulkhead
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Industrial Plating x 10
+		at
+		Fabricator
+
+
+IndustrialCandle
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 4
+		at
+		Fabricator
+
+
+IndustrialCeilingMonitor
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 8
+		Printed Circuit Board x 1
+		Glass x 1
+		at
+		Fabricator
+
+
+IndustrialChair
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 5
+		at
+		Fabricator
+
+
+IndustrialChairSleek
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 5
+		at
+		Fabricator
+
+
+IndustrialChest
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 8
+		Iron Bar x 1
+		at
+		Fabricator
+
+
+IndustrialChestElectronic
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Storage Unit x 1
+		Printed Circuit Board x 1
+		at
+		Fabricator
+
+
+IndustrialControlPanel
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 8
+		Printed Circuit Board x 1
+		Glass x 1
+		at
+		Fabricator
+
+
+IndustrialControlStation
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 10
+		Printed Circuit Board x 2
+		Glass x 4
+		at
+		Fabricator
+
+
+IndustrialCrate
+	Value: 5 silver
+	Research count: 10
+
+IndustrialDeskClock
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 2
+		Printed Circuit Board x 1
+		at
+		Fabricator
+
+
+IndustrialDeskLamp
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 5
+		at
+		Fabricator
+
+
+IndustrialDeskMonitor
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 8
+		Printed Circuit Board x 1
+		Glass x 1
+		at
+		Fabricator
+
+
+IndustrialDoor
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Industrial Plating x 5
+		at
+		Fabricator
+
+
+IndustrialDresser
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Industrial Plating x 16
+
+
+IndustrialGurney
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 12
+		at
+		Fabricator
+
+
+IndustrialLamp
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 3
+		at
+		Fabricator
+
+
+IndustrialLantern
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 3
+		at
+		Fabricator
+
+
+IndustrialLocker
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 8
+		at
+		Fabricator
+
+
+IndustrialNeonTube
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 4
+		at
+		Fabricator
+
+
+IndustrialPiano
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 15
+		Bone x 4
+		Printed Circuit Board x 1
+		at
+		Fabricator
+
+
+IndustrialPlatform
+	Value: No value
+	Research count: 200
+	Recipes:
+		Industrial Plating x 1
+			=> x2
+
+
+IndustrialSink
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 6
+		Water Bucket x 1
+		at
+		Work Bench
+
+
+IndustrialSofa
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 5
+		Silk x 2
+		at
+		Fabricator
+
+
+IndustrialTable
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 12
+		at
+		Fabricator
+
+
+IndustrialToilet
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Industrial Plating x 6
+
+
+IndustrialWallMonitor
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 8
+		Printed Circuit Board x 1
+		Glass x 1
+		at
+		Fabricator
+
+
+IndustrialWorkbench
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 6
+		at
+		Fabricator
+
+
 LuminiteBookcase
 	Value: 1 silver 50 copper
 	Research count: 1
@@ -628,292 +914,6 @@ LuminiteToilet
 		Work Bench
 
 
-MoonBaseBathtub
-	Value: 1 silver 50 copper
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 14
-		at
-		Fabricator
-
-
-MoonBaseBed
-	Value: 5 silver
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 15
-		Silk x 5
-		at
-		Fabricator
-
-
-MoonBaseBookcase
-	Value: 1 silver 50 copper
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 20
-		Book x 10
-
-
-MoonBaseBulkhead
-	Value: 1 silver 50 copper
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 10
-		at
-		Fabricator
-
-
-MoonBaseCandle
-	Value: 5 silver
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 4
-		at
-		Fabricator
-
-
-MoonBaseCeilingMonitor
-	Value: 5 silver
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 8
-		Printed Circuit Board x 1
-		Glass x 1
-		at
-		Fabricator
-
-
-MoonBaseChair
-	Value: 5 silver
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 5
-		at
-		Fabricator
-
-
-MoonBaseChairSleek
-	Value: 5 silver
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 5
-		at
-		Fabricator
-
-
-MoonBaseChest
-	Value: 5 silver
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 8
-		Iron Bar x 1
-		at
-		Fabricator
-
-
-MoonBaseChestElectronic
-	Value: 5 silver
-	Research count: 1
-	Recipes:
-		Moon Base Storage Unit x 1
-		Printed Circuit Board x 1
-		at
-		Fabricator
-
-
-MoonBaseControlPanel
-	Value: 5 silver
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 8
-		Printed Circuit Board x 1
-		Glass x 1
-		at
-		Fabricator
-
-
-MoonBaseControlStation
-	Value: 5 silver
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 10
-		Printed Circuit Board x 2
-		Glass x 4
-		at
-		Fabricator
-
-
-MoonBaseCrate
-	Value: 5 silver
-	Research count: 10
-
-MoonBaseDeskClock
-	Value: 5 silver
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 2
-		Printed Circuit Board x 1
-		at
-		Fabricator
-
-
-MoonBaseDeskLamp
-	Value: 5 silver
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 5
-		at
-		Fabricator
-
-
-MoonBaseDeskMonitor
-	Value: 5 silver
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 8
-		Printed Circuit Board x 1
-		Glass x 1
-		at
-		Fabricator
-
-
-MoonBaseDoor
-	Value: 1 silver 50 copper
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 5
-		at
-		Fabricator
-
-
-MoonBaseDresser
-	Value: 1 silver 50 copper
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 16
-
-
-MoonBaseGurney
-	Value: 5 silver
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 12
-		at
-		Fabricator
-
-
-MoonBaseLamp
-	Value: 5 silver
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 3
-		at
-		Fabricator
-
-
-MoonBaseLantern
-	Value: 5 silver
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 3
-		at
-		Fabricator
-
-
-MoonBaseLocker
-	Value: 5 silver
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 8
-		at
-		Fabricator
-
-
-MoonBaseNeonTube
-	Value: 5 silver
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 4
-		at
-		Fabricator
-
-
-MoonBasePiano
-	Value: 5 silver
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 15
-		Bone x 4
-		Printed Circuit Board x 1
-		at
-		Fabricator
-
-
-MoonBasePlatform
-	Value: No value
-	Research count: 200
-	Recipes:
-		Moon Base Plating x 1
-			=> x2
-
-
-MoonBaseSink
-	Value: 1 silver 50 copper
-	Research count: 1
-	Recipes:
-		Cheese Block x 6
-		Water Bucket x 1
-		at
-		Work Bench
-
-
-MoonBaseSofa
-	Value: 5 silver
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 5
-		Silk x 2
-		at
-		Fabricator
-
-
-MoonBaseTable
-	Value: 5 silver
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 12
-		at
-		Fabricator
-
-
-MoonBaseToilet
-	Value: 1 silver 50 copper
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 6
-
-
-MoonBaseWallMonitor
-	Value: 5 silver
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 8
-		Printed Circuit Board x 1
-		Glass x 1
-		at
-		Fabricator
-
-
-MoonBaseWorkbench
-	Value: 5 silver
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 6
-		at
-		Fabricator
-
-
 SpaceTeddy
 	Value: 5 silver
 	Research count: 1
@@ -949,6 +949,10 @@ StardustChunk
 VortexChunk
 	Value: 5 silver
 	Research count: 10
+
+BurnerGenerator
+	Value: 5 silver
+	Research count: 1
 
 OilRefinery
 	Value: 5 silver
@@ -1563,6 +1567,62 @@ CraterDemonTrophy
 	Value: 1 gold
 	Research count: 1
 
+IndustrialHazardWall
+	Value: No value
+	Research count: 400
+	Recipes:
+		Industrial Plating x 1
+		at
+		Work Bench
+			=> x4
+
+
+IndustrialHazardWallUnsafe
+	Value: No value
+	Research count: 400
+
+IndustrialPlatingWall
+	Value: No value
+	Research count: 400
+	Recipes:
+		Industrial Plating x 1
+		at
+		Work Bench
+			=> x4
+
+
+IndustrialPlatingWallUnsafe
+	Value: No value
+	Research count: 400
+
+IndustrialSquarePaneledWall
+	Value: No value
+	Research count: 400
+	Recipes:
+		Industrial Plating x 1
+		at
+		Work Bench
+			=> x4
+
+
+IndustrialSquarePaneledWallUnsafe
+	Value: No value
+	Research count: 400
+
+IndustrialTrimmingWall
+	Value: No value
+	Research count: 400
+	Recipes:
+		Industrial Plating x 1
+		at
+		Work Bench
+			=> x4
+
+
+IndustrialTrimmingWallUnsafe
+	Value: No value
+	Research count: 400
+
 IrradiatedBrickWall
 	Value: No value
 	Research count: 400
@@ -1582,62 +1642,6 @@ IrradiatedRockWall
 		Work Bench
 			=> x4
 
-
-MoonBaseHazardWall
-	Value: No value
-	Research count: 400
-	Recipes:
-		Moon Base Plating x 1
-		at
-		Work Bench
-			=> x4
-
-
-MoonBaseHazardWallUnsafe
-	Value: No value
-	Research count: 400
-
-MoonBasePlatingWall
-	Value: No value
-	Research count: 400
-	Recipes:
-		Moon Base Plating x 1
-		at
-		Work Bench
-			=> x4
-
-
-MoonBasePlatingWallUnsafe
-	Value: No value
-	Research count: 400
-
-MoonBaseSquarePaneledWall
-	Value: No value
-	Research count: 400
-	Recipes:
-		Moon Base Plating x 1
-		at
-		Work Bench
-			=> x4
-
-
-MoonBaseSquarePaneledWallUnsafe
-	Value: No value
-	Research count: 400
-
-MoonBaseTrimmingWall
-	Value: No value
-	Research count: 400
-	Recipes:
-		Moon Base Plating x 1
-		at
-		Work Bench
-			=> x4
-
-
-MoonBaseTrimmingWallUnsafe
-	Value: No value
-	Research count: 400
 
 ProtolithWall
 	Value: No value
