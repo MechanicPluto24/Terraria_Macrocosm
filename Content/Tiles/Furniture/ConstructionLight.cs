@@ -46,7 +46,7 @@ namespace Macrocosm.Content.Tiles.Furniture
             AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTorch);
             AdjTiles = [TileID.Lamps];
 
-            DustType = ModContent.DustType<MoonBasePlatingDust>();
+            DustType = ModContent.DustType<IndustrialPlatingDust>();
 
             AddMapEntry(new Color(192, 137, 39), CreateMapEntryName());
 

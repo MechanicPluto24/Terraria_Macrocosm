@@ -18,7 +18,7 @@ namespace Macrocosm.Common.TileFrame
         // ---------------
 
         /// <summary> 
-        /// Style currently used for plating blocks with special frames (e.g. Moon Base Plating) 
+        /// Style currently used for plating blocks with special frames (e.g. Industrial Plating) 
         /// Adapted from the Gemspark blend style 
         /// </summary>
         public static void PlatingStyle(int i, int j, bool resetFrame = false, bool countHalfBlocks = false)

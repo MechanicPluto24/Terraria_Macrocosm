@@ -4,7 +4,7 @@ using Macrocosm.Content.Items.Weapons.Magic;
 using Macrocosm.Content.Items.Weapons.Melee;
 using Macrocosm.Content.Items.Weapons.Ranged;
 using Macrocosm.Content.Tiles.Blocks;
-using Macrocosm.Content.Tiles.Furniture.MoonBase;
+using Macrocosm.Content.Tiles.Furniture.Industrial;
 using Macrocosm.Content.Tiles.Walls;
 using Microsoft.Xna.Framework;
 using System;
@@ -29,11 +29,11 @@ namespace Macrocosm.Content.WorldGeneration.Structures
                 return false;
 
             // Base structure
-            WorldUtils.Gen(new Point(room.X, room.Y), new Shapes.Rectangle(room.Width, room.Height), Actions.Chain(new Actions.SetTileKeepWall((ushort)TileType<MoonBasePlating>()), new Actions.SetFrames(frameNeighbors: true)));
+            WorldUtils.Gen(new Point(room.X, room.Y), new Shapes.Rectangle(room.Width, room.Height), Actions.Chain(new Actions.SetTileKeepWall((ushort)TileType<IndustrialPlating>()), new Actions.SetFrames(frameNeighbors: true)));
 
             // Walls
-            WorldUtils.Gen(new Point(room.X + 1, room.Y + 1), new Shapes.Rectangle(room.Width - 2, room.Height - 2), Actions.Chain(new Actions.ClearTile(frameNeighbors: true), new Actions.PlaceWall((ushort)WallType<MoonBasePlatingWall>())));
-            WorldUtils.Gen(new Point(room.X + 1, room.Y + room.Height - 2), new Shapes.Rectangle(room.Width - 2, 1), Actions.Chain(new Actions.ClearWall(frameNeighbors: true), new Actions.PlaceWall((ushort)WallType<MoonBaseHazardWall>())));
+            WorldUtils.Gen(new Point(room.X + 1, room.Y + 1), new Shapes.Rectangle(room.Width - 2, room.Height - 2), Actions.Chain(new Actions.ClearTile(frameNeighbors: true), new Actions.PlaceWall((ushort)WallType<IndustrialPlatingWall>())));
+            WorldUtils.Gen(new Point(room.X + 1, room.Y + room.Height - 2), new Shapes.Rectangle(room.Width - 2, 1), Actions.Chain(new Actions.ClearWall(frameNeighbors: true), new Actions.PlaceWall((ushort)WallType<IndustrialHazardWall>())));
 
             StylizeRoomCorners(room);
 
@@ -42,14 +42,14 @@ namespace Macrocosm.Content.WorldGeneration.Structures
             if (!Main.tile[room.X - 1, room.Y + room.Height - 1 - 2].HasTile && info.Count <= 3)
             {
                 WorldUtils.Gen(new Point(room.X, room.Y + room.Height - 1 - 3), new Shapes.Rectangle(1, 3), new Actions.ClearTile(frameNeighbors: true));
-                WorldGen.PlaceTile(room.X, room.Y + room.Height - 1 - 3, TileType<MoonBaseDoorClosed>(), true);
+                WorldGen.PlaceTile(room.X, room.Y + room.Height - 1 - 3, TileType<IndustrialDoorClosed>(), true);
             }
 
             info = new TileNeighbourInfo(room.X + room.Width, room.Y + room.Height - 1 - 2).Solid;
             if (!Main.tile[room.X + room.Width, room.Y + room.Height - 1 - 2].HasTile && info.Count <= 3)
             {
                 WorldUtils.Gen(new Point(room.X + room.Width - 1, room.Y + room.Height - 1 - 3), new Shapes.Rectangle(1, 3), new Actions.ClearTile(frameNeighbors: true));
-                WorldGen.PlaceTile(room.X + room.Width - 1, room.Y + room.Height - 1 - 3, TileType<MoonBaseDoorClosed>(), true);
+                WorldGen.PlaceTile(room.X + room.Width - 1, room.Y + room.Height - 1 - 3, TileType<IndustrialDoorClosed>(), true);
             }
 
             // Place the chest
@@ -60,7 +60,7 @@ namespace Macrocosm.Content.WorldGeneration.Structures
                 ItemType<Copernicus>(),
                 //ItemType<SomeSummonerWeapon>(),
             };
-            Utility.GenerateChest(room.X + room.Width / 2, room.Y + room.Height - 2, TileType<MoonBaseChest>(), 0,
+            Utility.GenerateChest(room.X + room.Width / 2, room.Y + room.Height - 2, TileType<IndustrialChest>(), 0,
                 [
                     mainLoot.GetRandom(WorldGen.genRand),
                     ItemID.SuperHealingPotion,
@@ -119,14 +119,14 @@ namespace Macrocosm.Content.WorldGeneration.Structures
             Tile tile = Main.tile[room.X + 1, room.Y + 1];
             if (!tile.HasTile)
             {
-                WorldGen.PlaceTile(room.X + 1, room.Y + 1, TileType<MoonBasePlating>(), true);
+                WorldGen.PlaceTile(room.X + 1, room.Y + 1, TileType<IndustrialPlating>(), true);
                 tile.Slope = SlopeType.SlopeUpLeft;
             }
 
             tile = Main.tile[room.X + room.Width - 2, room.Y + 1];
             if (!tile.HasTile)
             {
-                WorldGen.PlaceTile(room.X + room.Width - 2, room.Y + 1, TileType<MoonBasePlating>(), true);
+                WorldGen.PlaceTile(room.X + room.Width - 2, room.Y + 1, TileType<IndustrialPlating>(), true);
                 tile.Slope = SlopeType.SlopeUpRight;
             }
         }

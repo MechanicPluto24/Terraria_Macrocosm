@@ -257,8 +257,8 @@ namespace Macrocosm.Content.Subworlds
             int x, y;
             do
             {
-                x = WorldGen.genRand.Next(0, Main.maxTilesX - shrine.Size.X);
-                y = WorldGen.genRand.Next(SurfaceHeight(x) + RegolithLayerHeight * 2, Main.maxTilesY - shrine.Size.Y * 2);
+                x = WorldGen.genRand.Next((int)(Main.maxTilesX * (0.115f * 0 + 0.03f)), (int)(Main.maxTilesX * (0.145f * 0 + 0.03f)));
+                y = WorldGen.genRand.Next((int)(Main.maxTilesY * 0.55f), (int)(Main.maxTilesY * 0.65f));
             } while (!(StructureMap.CanPlace(new Rectangle(x, y, shrine.Size.X, shrine.Size.Y)) && WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Rectangle(shrine.Size.X, shrine.Size.Y), new Conditions.IsSolid()), out _)));
             StructureMap.AddProtectedStructure(new Rectangle(x, y, shrine.Size.X, shrine.Size.Y), 10);
 
@@ -278,8 +278,8 @@ namespace Macrocosm.Content.Subworlds
             int x, y;
             do
             {
-                x = WorldGen.genRand.Next(0, Main.maxTilesX - shrine.Size.X);
-                y = WorldGen.genRand.Next(SurfaceHeight(x) + RegolithLayerHeight * 2, Main.maxTilesY - shrine.Size.Y * 2);
+                x = WorldGen.genRand.Next((int)(Main.maxTilesX * (0.115f * 1 + 0.03f)), (int)(Main.maxTilesX * (0.145f * 1 + 0.03f)));
+                y = WorldGen.genRand.Next((int)(Main.maxTilesY * 0.55f), (int)(Main.maxTilesY * 0.65f));
             } while (!(StructureMap.CanPlace(new Rectangle(x, y, shrine.Size.X, shrine.Size.Y)) && WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Rectangle(shrine.Size.X, shrine.Size.Y), new Conditions.IsSolid()), out _)));
             StructureMap.AddProtectedStructure(new Rectangle(x, y, shrine.Size.X, shrine.Size.Y), 10);
 
@@ -299,8 +299,8 @@ namespace Macrocosm.Content.Subworlds
             int x, y;
             do
             {
-                x = WorldGen.genRand.Next(0, Main.maxTilesX - shrine.Size.X);
-                y = WorldGen.genRand.Next(SurfaceHeight(x) + RegolithLayerHeight * 2, Main.maxTilesY - shrine.Size.Y * 2);
+                x = WorldGen.genRand.Next((int)(Main.maxTilesX * (0.115f * 2 + 0.03f)), (int)(Main.maxTilesX * (0.145f * 2 + 0.03f)));
+                y = WorldGen.genRand.Next((int)(Main.maxTilesY * 0.55f), (int)(Main.maxTilesY * 0.65f));
             } while (!(StructureMap.CanPlace(new Rectangle(x, y, shrine.Size.X, shrine.Size.Y)) && WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Rectangle(shrine.Size.X, shrine.Size.Y), new Conditions.IsSolid()), out _)));
             StructureMap.AddProtectedStructure(new Rectangle(x, y, shrine.Size.X, shrine.Size.Y), 10);
 
@@ -320,8 +320,8 @@ namespace Macrocosm.Content.Subworlds
             int x, y;
             do
             {
-                x = WorldGen.genRand.Next(0, Main.maxTilesX - shrine.Size.X);
-                y = WorldGen.genRand.Next(SurfaceHeight(x) + RegolithLayerHeight * 2, Main.maxTilesY - shrine.Size.Y * 2);
+                x = WorldGen.genRand.Next((int)(Main.maxTilesX * (0.115f * 3 + 0.03f)), (int)(Main.maxTilesX * (0.145f * 3 + 0.03f)));
+                y = WorldGen.genRand.Next((int)(Main.maxTilesY * 0.55f), (int)(Main.maxTilesY * 0.65f));
             } while (!(StructureMap.CanPlace(new Rectangle(x, y, shrine.Size.X, shrine.Size.Y)) && WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Rectangle(shrine.Size.X, shrine.Size.Y), new Conditions.IsSolid()), out _)));
             StructureMap.AddProtectedStructure(new Rectangle(x, y, shrine.Size.X, shrine.Size.Y), 10);
 
@@ -342,8 +342,8 @@ namespace Macrocosm.Content.Subworlds
             int x, y;
             do
             {
-                x = WorldGen.genRand.Next(0, Main.maxTilesX - shrine.Size.X);
-                y = WorldGen.genRand.Next(SurfaceHeight(x) + RegolithLayerHeight * 2, Main.maxTilesY - shrine.Size.Y * 2);
+                x = WorldGen.genRand.Next((int)(Main.maxTilesX * (0.115f * 4 + 0.03f)), (int)(Main.maxTilesX * (0.145f * 4 + 0.03f)));
+                y = WorldGen.genRand.Next((int)(Main.maxTilesY * 0.55f), (int)(Main.maxTilesY * 0.65f));
             } while (!(StructureMap.CanPlace(new Rectangle(x, y, shrine.Size.X, shrine.Size.Y)) && WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Rectangle(shrine.Size.X, shrine.Size.Y), new Conditions.IsSolid()), out _)));
             StructureMap.AddProtectedStructure(new Rectangle(x, y, shrine.Size.X, shrine.Size.Y), 10);
 
@@ -364,8 +364,8 @@ namespace Macrocosm.Content.Subworlds
             int x, y;
             do
             {
-                x = WorldGen.genRand.Next(0, Main.maxTilesX - shrine.Size.X);
-                y = WorldGen.genRand.Next(SurfaceHeight(x) + RegolithLayerHeight * 2, Main.maxTilesY - shrine.Size.Y * 2);
+                x = WorldGen.genRand.Next((int)(Main.maxTilesX * (0.115f * 5 + 0.03f)), (int)(Main.maxTilesX * (0.145f * 5 + 0.03f)));
+                y = WorldGen.genRand.Next((int)(Main.maxTilesY * 0.55f), (int)(Main.maxTilesY * 0.65f));
             } while (!(StructureMap.CanPlace(new Rectangle(x, y, shrine.Size.X, shrine.Size.Y)) && WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Rectangle(shrine.Size.X, shrine.Size.Y), new Conditions.IsSolid()), out _)));
             StructureMap.AddProtectedStructure(new Rectangle(x, y, shrine.Size.X, shrine.Size.Y), 10);
 
@@ -386,8 +386,8 @@ namespace Macrocosm.Content.Subworlds
             int x, y;
             do
             {
-                x = WorldGen.genRand.Next(0, Main.maxTilesX - shrine.Size.X);
-                y = WorldGen.genRand.Next(SurfaceHeight(x) + RegolithLayerHeight * 2, Main.maxTilesY - shrine.Size.Y * 2);
+                x = WorldGen.genRand.Next((int)(Main.maxTilesX * (0.115f * 6 + 0.03f)), (int)(Main.maxTilesX * (0.145f * 6 + 0.03f)));
+                y = WorldGen.genRand.Next((int)(Main.maxTilesY * 0.55f), (int)(Main.maxTilesY * 0.65f));
             } while (!StructureMap.CanPlace(new Rectangle(x, y, shrine.Size.X, shrine.Size.Y)) && WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Rectangle(shrine.Size.X, shrine.Size.Y), new Conditions.IsSolid()), out _));
             StructureMap.AddProtectedStructure(new Rectangle(x, y, shrine.Size.X, shrine.Size.Y), 10);
 
@@ -408,8 +408,8 @@ namespace Macrocosm.Content.Subworlds
             int x, y;
             do
             {
-                x = WorldGen.genRand.Next(0, Main.maxTilesX - shrine.Size.X);
-                y = WorldGen.genRand.Next(SurfaceHeight(x) + RegolithLayerHeight * 2, Main.maxTilesY - shrine.Size.Y * 2);
+                x = WorldGen.genRand.Next((int)(Main.maxTilesX * (0.115f * 7 + 0.03f)), (int)(Main.maxTilesX * (0.145f * 7 + 0.03f)));
+                y = WorldGen.genRand.Next((int)(Main.maxTilesY * 0.55f), (int)(Main.maxTilesY * 0.65f));
             } while (!(StructureMap.CanPlace(new Rectangle(x, y, shrine.Size.X, shrine.Size.Y)) && WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Rectangle(shrine.Size.X, shrine.Size.Y), new Conditions.IsSolid()), out _)));
             StructureMap.AddProtectedStructure(new Rectangle(x, y, shrine.Size.X, shrine.Size.Y), 10);
 

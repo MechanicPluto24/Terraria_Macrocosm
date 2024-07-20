@@ -791,143 +791,203 @@ SteelRifle: {
 	Tooltip: ""
 }
 
-MoonBasePlating: {
-	DisplayName: Moon Base Plating
+IndustrialPlating: {
+	DisplayName: Industrial Plating
 	Tooltip: ""
 }
 
-MoonBasePlatform: {
-	DisplayName: Moon Base Platform
+IndustrialPlatform: {
+	DisplayName: Industrial Platform
 	Tooltip: ""
 }
 
-MoonBaseHazardWall: {
-	DisplayName: Moon Base Hazard Wall
+IndustrialHazardWall: {
+	DisplayName: Industrial Hazard Wall
 	Tooltip: ""
 }
 
-MoonBaseHazardWallUnsafe: {
-	DisplayName: Unsafe Moon Base Hazard Wall
+IndustrialHazardWallUnsafe: {
+	DisplayName: Unsafe Industrial Hazard Wall
 	Tooltip: ""
 }
 
-MoonBasePlatingWall: {
-	DisplayName: Moon Base Plating Wall
+IndustrialPlatingWall: {
+	DisplayName: Industrial Plating Wall
 	Tooltip: ""
 }
 
-MoonBasePlatingWallUnsafe: {
-	DisplayName: Unsafe Moon Base Plating Wall
+IndustrialPlatingWallUnsafe: {
+	DisplayName: Unsafe Industrial Plating Wall
 	Tooltip: ""
 }
 
-MoonBaseSquarePaneledWall: {
-	DisplayName: Moon Base Square Paneled Wall
+IndustrialSquarePaneledWall: {
+	DisplayName: Industrial Square Paneled Wall
 	Tooltip: ""
 }
 
-MoonBaseSquarePaneledWallUnsafe: {
-	DisplayName: Unsafe Moon Base Square Paneled Wall
+IndustrialSquarePaneledWallUnsafe: {
+	DisplayName: Unsafe Industrial Square Paneled Wall
 	Tooltip: ""
 }
 
-MoonBaseTrimmingWall: {
-	DisplayName: Moon Base Trimming Wall
+IndustrialTrimmingWall: {
+	DisplayName: Industrial Trimming Wall
 	Tooltip: ""
 }
 
-MoonBaseTrimmingWallUnsafe: {
-	DisplayName: Unsafe Moon Base Trimming Wall
+IndustrialTrimmingWallUnsafe: {
+	DisplayName: Unsafe Industrial Trimming Wall
 	Tooltip: ""
 }
 
-MoonBaseCandle: {
-	DisplayName: Moon Base Candle
+IndustrialCandle: {
+	DisplayName: Industrial Candle
 	Tooltip: ""
 }
 
-MoonBaseLamp: {
-	DisplayName: Moon Base Lamp
+IndustrialLamp: {
+	DisplayName: Industrial Lamp
 	Tooltip: ""
 }
 
-MoonBaseLantern: {
-	DisplayName: Moon Base Lantern
+IndustrialLantern: {
+	DisplayName: Industrial Lantern
 	Tooltip: ""
 }
 
-MoonBaseNeonTube: {
-	DisplayName: Moon Base Neon Tube
+IndustrialNeonTube: {
+	DisplayName: Industrial Neon Tube
 	Tooltip: ""
 }
 
-MoonBaseCrate: {
-	DisplayName: Moon Base Crate
+IndustrialCrate: {
+	DisplayName: Industrial Crate
 	Tooltip: ""
 }
 
-MoonBaseGurney: {
-	DisplayName: Moon Base Gurney
+IndustrialGurney: {
+	DisplayName: Industrial Gurney
 	Tooltip: ""
 }
 
-MoonBaseTable: {
-	DisplayName: Moon Base Table
+IndustrialTable: {
+	DisplayName: Industrial Table
 	Tooltip: ""
 }
 
-MoonBaseWorkbench: {
-	DisplayName: Moon Base Workbench
+IndustrialWorkbench: {
+	DisplayName: Industrial Workbench
 	Tooltip: ""
 }
 
-MoonBaseBed: {
-	DisplayName: Moon Base Bed
+IndustrialBed: {
+	DisplayName: Industrial Bed
 	Tooltip: ""
 }
 
-MoonBaseChair: {
-	DisplayName: Moon Base Reception Chair
+IndustrialChair: {
+	DisplayName: Industrial Reception Chair
 	Tooltip: ""
 }
 
-MoonBaseChairSleek: {
-	DisplayName: Moon Base Sleek Chair
+IndustrialChairSleek: {
+	DisplayName: Industrial Sleek Chair
 	Tooltip: ""
 }
 
-MoonBaseDeskLamp: {
-	DisplayName: Moon Base Desk Lamp
+IndustrialDeskLamp: {
+	DisplayName: Industrial Desk Lamp
 	Tooltip: ""
 }
 
-MoonBaseSofa: {
-	DisplayName: Moon Base Sofa
+IndustrialSofa: {
+	DisplayName: Industrial Sofa
 	Tooltip: ""
 }
 
-MoonBaseChest: {
-	DisplayName: Moon Base Storage Unit
+IndustrialChest: {
+	DisplayName: Industrial Storage Unit
 	Tooltip: ""
 }
 
-MoonBaseChestElectronic: {
-	DisplayName: Moon Base Electronic Storage Unit
+IndustrialChestElectronic: {
+	DisplayName: Industrial Electronic Storage Unit
 	Tooltip: ""
 }
 
-MoonBaseLocker: {
-	DisplayName: Moon Base Locker
+IndustrialLocker: {
+	DisplayName: Industrial Locker
 	Tooltip: ""
 }
 
-MoonBaseDoor: {
-	DisplayName: Moon Base Door
+IndustrialDoor: {
+	DisplayName: Industrial Door
 	Tooltip: ""
 }
 
-MoonBaseBulkhead: {
-	DisplayName: Moon Base Bulkhead
+IndustrialBulkhead: {
+	DisplayName: Industrial Bulkhead
+	Tooltip: ""
+}
+
+IndustrialBathtub: {
+	DisplayName: Industrial Bathtub
+	Tooltip: ""
+}
+
+IndustrialControlPanel: {
+	DisplayName: Industrial Control Panel
+	Tooltip: ""
+}
+
+IndustrialControlStation: {
+	DisplayName: Industrial Control Station
+	Tooltip: ""
+}
+
+IndustrialDeskClock: {
+	DisplayName: Industrial Desk Clock
+	Tooltip: ""
+}
+
+IndustrialPiano: {
+	DisplayName: Industrial Piano
+	Tooltip: ""
+}
+
+IndustrialSink: {
+	DisplayName: Industrial Sink
+	Tooltip: ""
+}
+
+IndustrialBookcase: {
+	DisplayName: Industrial Bookcase
+	Tooltip: ""
+}
+
+IndustrialCeilingMonitor: {
+	DisplayName: Industrial Ceiling Monitor
+	Tooltip: ""
+}
+
+IndustrialDeskMonitor: {
+	DisplayName: Industrial Desk Monitor
+	Tooltip: ""
+}
+
+IndustrialWallMonitor: {
+	DisplayName: Industrial Wall Monitor
+	Tooltip: ""
+}
+
+IndustrialDresser: {
+	DisplayName: Industrial Dresser
+	Tooltip: ""
+}
+
+IndustrialToilet: {
+	DisplayName: Industrial Toilet
 	Tooltip: ""
 }
 
@@ -1313,26 +1373,6 @@ CheeseWorkbench: {
 	Tooltip: ""
 }
 
-MoonBaseBookcase: {
-	DisplayName: Moon Base Bookcase
-	Tooltip: ""
-}
-
-MoonBaseCeilingMonitor: {
-	DisplayName: Moon Base Ceiling Monitor
-	Tooltip: ""
-}
-
-MoonBaseDeskMonitor: {
-	DisplayName: Moon Base Desk Monitor
-	Tooltip: ""
-}
-
-MoonBaseWallMonitor: {
-	DisplayName: Moon Base Wall Monitor
-	Tooltip: ""
-}
-
 LuminiteBookcase: {
 	DisplayName: Luminite Bookcase
 	Tooltip: ""
@@ -1350,16 +1390,6 @@ LuminiteClock: {
 
 LuminiteToilet: {
 	DisplayName: Luminite Toilet
-	Tooltip: ""
-}
-
-MoonBaseDresser: {
-	DisplayName: Moon Base Dresser
-	Tooltip: ""
-}
-
-MoonBaseToilet: {
-	DisplayName: Moon Base Toilet
 	Tooltip: ""
 }
 
@@ -1418,32 +1448,3 @@ DisplayScreen: {
 	Tooltip: ""
 }
 
-MoonBaseBathtub: {
-	DisplayName: Moon Base Bathtub
-	Tooltip: ""
-}
-
-MoonBaseControlPanel: {
-	DisplayName: Moon Base Control Panel
-	Tooltip: ""
-}
-
-MoonBaseControlStation: {
-	DisplayName: Moon Base Control Station
-	Tooltip: ""
-}
-
-MoonBaseDeskClock: {
-	DisplayName: Moon Base Desk Clock
-	Tooltip: ""
-}
-
-MoonBasePiano: {
-	DisplayName: Moon Base Piano
-	Tooltip: ""
-}
-
-MoonBaseSink: {
-	DisplayName: Moon Base Sink
-	Tooltip: ""
-}

@@ -18,7 +18,6 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.UI;
 using Terraria.UI.Chat;
-using static Macrocosm.Content.Tiles.Furniture.MoonBase.MoonBaseChest;
 using static Terraria.UI.ItemSlot;
 
 namespace Macrocosm.Common.UI
