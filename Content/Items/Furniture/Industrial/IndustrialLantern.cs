@@ -5,6 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Furniture.Industrial
 {
+    [LegacyName("MoonBaseLantern")]
     public class IndustrialLantern : ModItem
     {
         public override void SetDefaults()

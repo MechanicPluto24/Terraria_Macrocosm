@@ -4,6 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles.Walls
 {
+    [LegacyName("MoonBaseTrimmingWall")]
     public class IndustrialTrimmingWall : ModWall
     {
         public override void SetStaticDefaults()
@@ -13,6 +14,7 @@ namespace Macrocosm.Content.Tiles.Walls
         }
     }
 
+    [LegacyName("MoonBaseTrimmingWallUnsafe")]
     public class IndustrialTrimmingWallUnsafe : IndustrialTrimmingWall
     {
         public override string Texture => base.Texture.Replace("Unsafe", "");

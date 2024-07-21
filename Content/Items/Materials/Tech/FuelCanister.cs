@@ -13,6 +13,9 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using Macrocosm.Common.Enums;
+using Macrocosm.Common.Sets;
+using Macrocosm.Common.DataStructures;
 
 namespace Macrocosm.Content.Items.Materials.Tech
 {
@@ -28,6 +31,8 @@ namespace Macrocosm.Content.Items.Materials.Tech
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 100;
+
+            ItemSets.Fuels[Type] = new FuelData(() => (FuelPotency)(Percent * (float)FuelPotency.VeryHigh), 240);
 
             CapacityTooltip = this.GetLocalization(nameof(CapacityTooltip), () => "Can hold up to {0} {1} of fuel");
             AmountTooltip = this.GetLocalization(nameof(AmountTooltip), () => "{0}/{1} {2}");

@@ -5,6 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Furniture.Industrial
 {
+    [LegacyName("MoonBaseLocker")]
     public class IndustrialLocker : ModItem
     {
         public override void SetStaticDefaults()

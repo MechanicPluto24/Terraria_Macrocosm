@@ -69,6 +69,26 @@ namespace Macrocosm.Content.Machines
 
         public override bool IsPoweredOnFrame(int i, int j) => Main.tile[i, j].TileFrameY >= (Height * 18);
 
+        public override void TogglePowerStateFrame(int i, int j)
+        {
+            Point16 origin = Utility.GetMultitileTopLeft(i, j);
+            for (int x = origin.X; x < origin.X + Width; x++)
+            {
+                for (int y = origin.Y; y < origin.Y + Height; y++)
+                {
+                    Tile tile = Main.tile[x, y];
+
+                    if (IsPoweredOnFrame(x, y))
+                        tile.TileFrameY -= (short)(Height * 18);
+                    else
+                        tile.TileFrameY += (short)(Height * 18);
+                }
+            }
+
+            if (Main.netMode != NetmodeID.SinglePlayer)
+                NetMessage.SendTileSquare(-1, origin.X, origin.Y, Width, Height);
+        }
+
         public override void HitWire(int i, int j)
         {
             Point16 origin = Utility.GetMultitileTopLeft(i, j);
@@ -94,6 +114,7 @@ namespace Macrocosm.Content.Machines
 
         public override bool RightClick(int i, int j)
         {
+            /*
             Point16 origin = Utility.GetMultitileTopLeft(i, j);
 
             for (int x = origin.X; x < origin.X + Width; x++)
@@ -109,8 +130,14 @@ namespace Macrocosm.Content.Machines
                 }
             }
 
+
             if (Main.netMode != NetmodeID.SinglePlayer)
                 NetMessage.SendTileSquare(-1, origin.X, origin.Y, Width, Height);
+
+            */
+
+            if (Utility.TryGetTileEntityAs(i, j, out BurnerGeneratorTE burnerGenerator))
+                UISystem.ShowMachineUI(burnerGenerator, new BurnerGeneratorUI());
 
             return true;
         }

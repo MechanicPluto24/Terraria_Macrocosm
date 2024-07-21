@@ -1448,3 +1448,7 @@ DisplayScreen: {
 	Tooltip: ""
 }
 
+BurnerGenerator: {
+	DisplayName: Burner Generator
+	Tooltip: ""
+}

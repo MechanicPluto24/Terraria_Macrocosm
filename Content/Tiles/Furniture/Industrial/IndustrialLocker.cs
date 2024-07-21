@@ -7,6 +7,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
+    [LegacyName("MoonBaseLocker")]
     public class IndustrialLocker : ModTile
     {
         public override void SetStaticDefaults()

@@ -5,6 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Furniture.Industrial
 {
+    [LegacyName("MoonBaseBookcase")]
     public class IndustrialBookcase : ModItem
     {
         public override void SetStaticDefaults()

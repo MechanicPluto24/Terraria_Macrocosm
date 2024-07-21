@@ -4,6 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Dusts
 {
+    [LegacyName("MoonBasePlatingDust")]
     public class IndustrialPlatingDust : ModDust
     {
         public override void OnSpawn(Dust dust)

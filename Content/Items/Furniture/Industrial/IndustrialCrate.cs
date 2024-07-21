@@ -12,6 +12,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Furniture.Industrial
 {
+    [LegacyName("MoonBaseCrate")]
     public class IndustrialCrate : ModItem
     {
         public override void SetStaticDefaults()

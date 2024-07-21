@@ -18,6 +18,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
+    [LegacyName("MoonBaseChest")]
     public class IndustrialChest : ModTile
     {
         private static Asset<Texture2D> glowmask;

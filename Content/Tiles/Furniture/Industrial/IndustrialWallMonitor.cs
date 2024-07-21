@@ -13,6 +13,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
+    [LegacyName("MoonBaseWallMonitor")]
     public class IndustrialWallMonitor : ModTile
     {
         private static Asset<Texture2D> glowmask;

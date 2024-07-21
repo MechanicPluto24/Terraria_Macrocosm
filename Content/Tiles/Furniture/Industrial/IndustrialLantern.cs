@@ -9,6 +9,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
+    [LegacyName("MoonBaseLantern")]
     public class IndustrialLantern : ModTile
     {
         public override void SetStaticDefaults()

@@ -5,6 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Furniture.Industrial
 {
+    [LegacyName("MoonBaseChairSleek")]
     public class IndustrialChairSleek : ModItem
     {
         public override void SetStaticDefaults()

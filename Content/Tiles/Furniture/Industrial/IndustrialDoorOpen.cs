@@ -11,6 +11,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
+    [LegacyName("MoonBaseDoorOpen")]
     public class IndustrialDoorOpen : ModTile, IDoorTile
     {
         public int Height => 3;
