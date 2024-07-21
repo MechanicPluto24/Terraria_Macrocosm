@@ -14,6 +14,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
+    [LegacyName("MoonBaseSofa")]
     public class IndustrialSofa : ModTile
     {
         private static Asset<Texture2D> extra;

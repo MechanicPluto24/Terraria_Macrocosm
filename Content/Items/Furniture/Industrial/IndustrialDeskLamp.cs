@@ -5,6 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Furniture.Industrial
 {
+    [LegacyName("MoonBaseDeskLamp")]
     public class IndustrialDeskLamp : ModItem
     {
         public override void SetDefaults()

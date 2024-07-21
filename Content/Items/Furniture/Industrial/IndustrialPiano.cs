@@ -7,6 +7,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Furniture.Industrial
 {
+    [LegacyName("MoonBasePiano")]
     public class IndustrialPiano : ModItem
     {
         public override void SetStaticDefaults()

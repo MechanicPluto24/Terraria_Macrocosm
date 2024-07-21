@@ -1,23 +1,115 @@
-﻿using Macrocosm.Common.Systems.Power;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Enums;
+using Macrocosm.Common.Sets;
+using Macrocosm.Common.Storage;
+using Macrocosm.Common.Systems.Power;
+using Microsoft.Xna.Framework;
+using System.IO;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Machines
 {
-    public class BurnerGeneratorTE : MachineTE
+    public class BurnerGeneratorTE : MachineTE, IInventoryOwner
     {
         public override MachineTile MachineTile => ModContent.GetInstance<BurnerGenerator>();
 
+        public Inventory Inventory { get; set; }
+        protected virtual int InventorySize => 50;
+        public Vector2 InventoryItemDropLocation => Position.ToVector2() * 16 + new Vector2(MachineTile.Width, MachineTile.Height) * 16 / 2;
+
+        public Item ConsumedItem { get; set; } = new(ItemID.None);
+
+        protected int checkTimer;
+
         public override void OnFirstUpdate()
         {
+            // Create new inventory if none found on world load
+            Inventory ??= new(InventorySize, this);
+
+            // Assign inventory owner if the inventory was found on load
+            // IInvetoryOwner does not work well with TileEntities >:(
+            if (Inventory.Owner is null)
+                Inventory.Owner = this;
         }
 
         public override void MachineUpdate()
         {
-            if(PoweredOn)
-                GeneratedPower = 1f;
+            if (PoweredOn)
+            {
+                if(ConsumedItem.type > ItemID.None)
+                {
+                    checkTimer = 0;
+                    GeneratedPower = 0;
+                    bool fuelFound = false;
+
+                    foreach (Item item in Inventory)
+                    {
+                        FuelData fuelData = ItemSets.Fuels[item.type];
+                        if (fuelData.Potency > FuelPotency.None)
+                        {
+                            ConsumedItem = new(item.type, stack: 1);
+
+                            item.stack--;
+                            if (item.stack < 0)
+                                item.TurnToAir();
+
+                            fuelFound = true;
+                            break;
+                        }
+                    }
+
+                    if (!fuelFound)
+                        MachineTile.TogglePowerStateFrame(Position.X, Position.Y);
+                }
+                else
+                {
+                    FuelData fuelData = ItemSets.Fuels[ConsumedItem.type];
+
+                    GeneratedPower = 0.2f * (int)fuelData.Potency;
+
+                    if (checkTimer++ >= fuelData.ConsumtionRate)
+                    {
+                        checkTimer = 0;
+                        ConsumedItem.TurnToAir(fullReset: true);    
+                    }
+                }
+            }
             else
+            {
                 GeneratedPower = 0;
+            }
+        }
+
+        public override void NetSend(BinaryWriter writer)
+        {
+            TagIO.Write(Inventory.SerializeData(), writer);
+            ItemIO.Send(ConsumedItem, writer);
+        }
+
+        public override void NetReceive(BinaryReader reader)
+        {
+            TagCompound tag = TagIO.Read(reader);
+            Inventory = Inventory.DeserializeData(tag);
+
+            ConsumedItem = ItemIO.Receive(reader);
+        }
+
+        public override void SaveData(TagCompound tag)
+        {
+            tag[nameof(Inventory)] = Inventory;
+            tag[nameof(ConsumedItem)] = ItemIO.Save(ConsumedItem);
+        }
+
+        public override void LoadData(TagCompound tag)
+        {
+            if (tag.ContainsKey(nameof(Inventory)))
+                Inventory = tag.Get<Inventory>(nameof(Inventory));
+
+            if (tag.ContainsKey(nameof(ConsumedItem)))
+                ItemIO.Load(ConsumedItem, tag.GetCompound(nameof(ConsumedItem)));
         }
     }
 }

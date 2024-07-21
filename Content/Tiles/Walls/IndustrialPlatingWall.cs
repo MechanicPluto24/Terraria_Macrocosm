@@ -5,6 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles.Walls
 {
+    [LegacyName("MoonBasePlatingWall")]
     public class IndustrialPlatingWall : ModWall
     {
         private static int[][] wallFrameNumberLookup;
@@ -32,6 +33,7 @@ namespace Macrocosm.Content.Tiles.Walls
         }
     }
 
+    [LegacyName("MoonBasePlatingWallUnsafe")]
     public class IndustrialPlatingWallUnsafe : IndustrialPlatingWall
     {
         public override string Texture => base.Texture.Replace("Unsafe", "");

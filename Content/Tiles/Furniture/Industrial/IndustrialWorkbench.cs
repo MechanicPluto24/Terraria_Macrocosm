@@ -8,6 +8,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
+    [LegacyName("MoonBaseWorkbench")]
     public class IndustrialWorkbench : ModTile
     {
         public override void SetStaticDefaults()

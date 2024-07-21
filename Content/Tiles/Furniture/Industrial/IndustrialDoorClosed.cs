@@ -13,6 +13,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
+    [LegacyName("MoonBaseDoorClosed")]
     public class IndustrialDoorClosed : ModTile, IDoorTile
     {
         public int Height => 3;

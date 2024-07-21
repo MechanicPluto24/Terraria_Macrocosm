@@ -5,6 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Walls
 {
+    [LegacyName("MoonBaseHazardWall")]
     public class IndustrialHazardWall : ModItem
     {
         public override void SetStaticDefaults()
@@ -30,6 +31,7 @@ namespace Macrocosm.Content.Items.Walls
         }
     }
 
+    [LegacyName("MoonBaseHazardWallUnsafe")]
     public class IndustrialHazardWallUnsafe : IndustrialHazardWall
     {
         public override string Texture => base.Texture.Replace("Unsafe", "");

@@ -4,6 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Furniture.Industrial
 {
+    [LegacyName("MoonBasePlatform")]
     public class IndustrialPlatform : ModItem
     {
         public override void SetStaticDefaults()

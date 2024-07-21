@@ -13,6 +13,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
+    [LegacyName("MoonBaseDeskClock")]
     public class IndustrialDeskClock : ModTile
     {
         private static Asset<Texture2D> glowmask;
@@ -25,7 +26,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             Main.tileWaterDeath[Type] = true;
             Main.tileLavaDeath[Type] = true;
 
-            //TileID.Sets.Clock[Type] = true;
+            TileID.Sets.Clock[Type] = true;
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style2x1);
             TileObjectData.newTile.WaterDeath = true;
@@ -61,12 +62,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
         }
 
         public override void NearbyEffects(int i, int j, bool closer)
-        {
-            if (!closer)
-                return;
-
-            if (Main.tile[i, j].TileFrameY >= 18 && Main.LocalPlayer.accWatch < 3)
-                Main.LocalPlayer.accWatch = 3;
+        { 
         }
 
         public override bool RightClick(int x, int y)

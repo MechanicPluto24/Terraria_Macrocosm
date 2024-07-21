@@ -9,6 +9,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
+    [LegacyName("MoonBaseBathtub")]
     public class IndustrialBathtub : ModTile
     {
         public override void SetStaticDefaults()

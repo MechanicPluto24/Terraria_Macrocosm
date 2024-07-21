@@ -12,6 +12,7 @@ using Macrocosm.Content.Dusts;
 
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
+    [LegacyName("MoonBaseToilet")]
     public class IndustrialToilet : ModTile
     {
         // Calculated by adding all CoordinateHeights + CoordinatePaddingFix.Y applied to all of them + 2

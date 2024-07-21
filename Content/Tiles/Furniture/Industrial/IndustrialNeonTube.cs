@@ -11,6 +11,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
+    [LegacyName("MoonBaseNeonTube")]
     public class IndustrialNeonTube : ModTile
     {
         public override void SetStaticDefaults()

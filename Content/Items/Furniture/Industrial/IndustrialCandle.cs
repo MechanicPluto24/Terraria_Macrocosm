@@ -5,6 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Furniture.Industrial
 {
+    [LegacyName("MoonBaseCandle")]
     public class IndustrialCandle : ModItem
     {
         public override void SetDefaults()

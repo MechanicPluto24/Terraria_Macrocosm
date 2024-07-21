@@ -12,6 +12,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
+    [LegacyName("MoonBaseChairSleek")]
     public class IndustrialChairSleek : ModTile
     {
         public override void SetStaticDefaults()

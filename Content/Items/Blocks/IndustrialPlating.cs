@@ -4,6 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Blocks
 {
+    [LegacyName("MoonBasePlating")]
     public class IndustrialPlating : ModItem
     {
         public override void SetStaticDefaults()

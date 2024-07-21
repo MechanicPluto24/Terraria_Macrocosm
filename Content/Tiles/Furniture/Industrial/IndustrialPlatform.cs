@@ -7,6 +7,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
+    [LegacyName("MoonBasePlatform")]
     public class IndustrialPlatform : ModTile
     {
         public override void SetStaticDefaults()

@@ -4,6 +4,7 @@ using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
@@ -15,7 +16,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Common.Storage
 {
-    public partial class Inventory
+    public partial class Inventory : IEnumerable<Item>
     {
         /// <summary>
         /// <br> The currently displayed inventory, reset every UI update. Allows for logic such as shift clicking items. </br>
@@ -832,5 +833,14 @@ namespace Macrocosm.Common.Storage
             return coinCount - coinsCountPostMove;
         }
 
+        public IEnumerator<Item> GetEnumerator()
+        {
+            return ((IEnumerable<Item>)items).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return items.GetEnumerator();
+        }
     }
 }
