@@ -14,10 +14,12 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
     {
         public override void SetStaticDefaults()
         {
-            TileID.Sets.CountsAsWaterSource[Type] = true;
             Main.tileFrameImportant[Type] = true;
             Main.tileNoAttach[Type] = true;
             Main.tileLavaDeath[Type] = true;
+            
+            TileID.Sets.CountsAsWaterSource[Type] = true;
+
             TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
             TileObjectData.newTile.CoordinateHeights = [16, 16];
             TileObjectData.newTile.DrawYOffset = 2;

@@ -131,7 +131,8 @@ namespace Macrocosm.Content.Rockets
                 if (rocket.DrawLayer != layer)
                     continue;
 
-                rocket.Draw(Rocket.DrawMode.World, Main.spriteBatch, rocket.Position - Main.screenPosition);
+                bool useRenderTarget = Main.CaptureModeDisabled;
+                rocket.Draw(Rocket.DrawMode.World, Main.spriteBatch, rocket.Position - Main.screenPosition, true);
 
                 if (DebugModeActive)
                 {
