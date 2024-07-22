@@ -1452,3 +1452,13 @@ BurnerGenerator: {
 	DisplayName: Burner Generator
 	Tooltip: ""
 }
+
+IndustrialServer: {
+	DisplayName: Industrial Server
+	Tooltip: ""
+}
+
+InANutshell: {
+	DisplayName: In A Nutshell
+	Tooltip: ""
+}

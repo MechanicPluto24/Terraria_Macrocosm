@@ -71,3 +71,4 @@ IndustrialControlPanel.MapEntry: Industrial Control Panel
 IndustrialControlStation.MapEntry: Industrial Control Station
 IndustrialDeskClock.MapEntry: Industrial Desk Clock
 BurnerGenerator.MapEntry: Burner Generator
+IndustrialServer.MapEntry: Industrial Server

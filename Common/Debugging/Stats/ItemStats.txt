@@ -820,6 +820,16 @@ IndustrialPlatform
 			=> x2
 
 
+IndustrialServer
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 12
+		Printed Circuit Board x 2
+		at
+		Fabricator
+
+
 IndustrialSink
 	Value: 1 silver 50 copper
 	Research count: 1
@@ -1340,6 +1350,10 @@ Empress
 	Research count: 1
 
 Freedomfaller
+	Value: No value
+	Research count: 1
+
+InANutshell
 	Value: No value
 	Research count: 1
 
