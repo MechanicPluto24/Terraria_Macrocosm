@@ -18,6 +18,8 @@ namespace Macrocosm.Content.Particles
         public bool FadeIn;
         private bool fadedIn;
 
+        public float WindFactor = 0f;
+
         public override void AI()
         {
             Scale += ExpansionRate;
@@ -33,6 +35,8 @@ namespace Macrocosm.Content.Particles
                 if (Opacity > 0f)
                     Opacity -= 0.012f;
             }
+
+            Velocity.X += WindFactor * Utility.WindSpeedScaled;
 
             if (Scale < 0.1 || (Opacity <= 0 && fadedIn))
                 Kill();

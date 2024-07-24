@@ -189,18 +189,22 @@ namespace Macrocosm.Content.Machines
                 {
                     {
                         float atmoDensity = (0.3f + 0.7f * MacrocosmSubworld.CurrentAtmosphericDensity);
-                        if(true)
+                        for(int k = 0; k < 4; k++)
                         {
+                            if (Main.rand.NextBool(2))
+                                continue;
+
                             Smoke smoke = Particle.CreateParticle<Smoke>((p) =>
                             {
-                                p.Position = new Vector2(i, j) * 16f + new Vector2(Main.rand.NextBool() ? 4 : 12, 8f);
-                                p.Velocity = new Vector2(0, -1.1f).RotatedByRandom(MathHelper.Pi / 16) * atmoDensity;
-                                p.Scale = 0.3f;
+                                p.Position = new Vector2(i, j) * 16f + new Vector2(k % 2 == 0 ? 4 : 13, 18f);
+                                p.Velocity = new Vector2(0, -0.7f).RotatedByRandom(MathHelper.Pi / 16) * atmoDensity;
+                                p.Scale = 0.1f;
                                 p.Rotation = 0f;
                                 p.DrawColor = (new Color(80, 80, 80) * Main.rand.NextFloat(0.75f, 1f)).WithAlpha(215);
                                 p.FadeIn = true;
                                 p.Opacity = 0f;
                                 p.ExpansionRate = 0.0075f;
+                                p.WindFactor = 0.01f;
                             });
                         }
                     }
