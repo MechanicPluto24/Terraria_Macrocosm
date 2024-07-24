@@ -85,6 +85,7 @@ namespace Macrocosm.Content.Machines
 
         public override void NetSend(BinaryWriter writer)
         {
+            Inventory ??= new(InventorySize, this);
             TagIO.Write(Inventory.SerializeData(), writer);
             ItemIO.Send(ConsumedItem, writer);
         }

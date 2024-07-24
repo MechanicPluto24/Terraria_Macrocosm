@@ -234,6 +234,7 @@ namespace Macrocosm.Content.Machines
                                 p.FadeIn = true;
                                 p.Opacity = 0f;
                                 p.ExpansionRate = 0.0075f;
+                                p.WindFactor = 0.01f;
                             });
                         }
                     }

@@ -3,6 +3,8 @@ using Macrocosm.Content.Items.Furniture;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System;
+using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -16,6 +18,13 @@ namespace Macrocosm.Content.Tiles.Furniture
     {
 
         private static Asset<Texture2D> glowmask;
+
+        private static readonly int[] maxFramesByStyle = [
+            1,  
+            1,  
+            1,  
+            12, 
+        ];
 
         public override void SetStaticDefaults()
         {
@@ -32,7 +41,7 @@ namespace Macrocosm.Content.Tiles.Furniture
             TileObjectData.newTile.CopyFrom(TileObjectData.Style3x3Wall);
             TileObjectData.newTile.Width = 6;
             TileObjectData.newTile.Height = 4;
-            TileObjectData.newTile.StyleHorizontal = true;
+            TileObjectData.newTile.StyleHorizontal = false;
             TileObjectData.newTile.Origin = new Point16(3, 2);
             TileObjectData.newTile.CoordinateHeights = [16, 16, 16, 16];
             TileObjectData.addTile(Type);
@@ -47,6 +56,7 @@ namespace Macrocosm.Content.Tiles.Furniture
 
         public override void HitWire(int i, int j)
         {
+            int frameNumber = Main.tile[i, j].TileFrameX / (18 * 6);
             int leftX = i - Main.tile[i, j].TileFrameX / 18 % 6;
             int topY = j - Main.tile[i, j].TileFrameY / 18 % 4;
 
@@ -54,10 +64,11 @@ namespace Macrocosm.Content.Tiles.Furniture
             {
                 for (int y = topY; y < topY + 4; y++)
                 {
-                    if (Main.tile[x, y].TileFrameY / 18 / 4 == 3)
-                        Main.tile[x, y].TileFrameY = (short)(Main.tile[x, y].TileFrameY % (4 * 18));
+                    Tile tile = Main.tile[x, y];
+                    if (frameNumber == 3)
+                        tile.TileFrameX = (short)(tile.TileFrameX % (6 * 18));
                     else
-                        Main.tile[x, y].TileFrameY += 4 * 18;
+                        tile.TileFrameX += 6 * 18;
 
                     if (Wiring.running)
                         Wiring.SkipWire(x, y);
@@ -70,6 +81,7 @@ namespace Macrocosm.Content.Tiles.Furniture
 
         public override bool RightClick(int i, int j)
         {
+            int frameNumber = Main.tile[i, j].TileFrameX / (18 * 6);
             int leftX = i - Main.tile[i, j].TileFrameX / 18 % 6;
             int topY = j - Main.tile[i, j].TileFrameY / 18 % 4;
 
@@ -77,10 +89,11 @@ namespace Macrocosm.Content.Tiles.Furniture
             {
                 for (int y = topY; y < topY + 4; y++)
                 {
-                    if (Main.tile[x, y].TileFrameY / 18 / 4 == 3)
-                        Main.tile[x, y].TileFrameY = (short)(Main.tile[x, y].TileFrameY % (4 * 18));
+                    Tile tile = Main.tile[x, y];
+                    if (frameNumber == 3)
+                        tile.TileFrameX = (short)(tile.TileFrameX % (6 * 18));
                     else
-                        Main.tile[x, y].TileFrameY += 4 * 18;
+                        tile.TileFrameX += 6 * 18;
                 }
             }
 
@@ -98,33 +111,56 @@ namespace Macrocosm.Content.Tiles.Furniture
             player.cursorItemIconID = ModContent.ItemType<Items.Furniture.DisplayScreen>();
         }
 
+        public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)
+        {
+            Tile tile = Main.tile[i, j];
+            int frameNumber = tile.TileFrameX / (18 * 6);
+            frameYOffset = 18 * 4 * Math.Clamp(Main.tileFrame[type], 0, maxFramesByStyle[frameNumber] - 1);
+        }
+
+        public override void AnimateTile(ref int frame, ref int frameCounter)
+        {
+            int ticksPerFrame = 8;
+            int frameCount = maxFramesByStyle.Max();
+            if (++frameCounter >= ticksPerFrame)
+            {
+                frameCounter = 0;
+                if (++frame >= frameCount)
+                    frame = 0;
+            }
+        }
+
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
-            if (Main.tile[i,j].TileFrameY / 18 / 4 > 0) 
+            Tile tile = Main.tile[i, j];
+            int frameNumber = tile.TileFrameX / (18 * 6);
+
+            // Any ON frame
+            if (frameNumber > 0) 
             {
                 // Green LED
-                if (Main.tile[i, j].TileFrameY / 18 % 4 == 3)
+                if (tile.TileFrameX / 18 % 4 == 3) // 4th row of tiles
                 {
                     g += 0.1f;
                 }
                 else
                 {
-                    // Earth screen
-                    if (Main.tile[i, j].TileFrameY / 18 / 4 == 1)
+                    // Earth screen frame
+                    if (frameNumber == 1)
                     {
                         r += 0.04f;
                         g += 0.22f;
                         b += 0.33f;
                     }
-                    // Moon screen
-                    else if (Main.tile[i, j].TileFrameY / 18 / 4 == 2)
+                    // Moon screen frame
+                    else if (frameNumber == 2)
                     {
                         r += 0.2f;
                         g += 0.2f;
                         b += 0.2f;
                     }
-                    // Earth -> Moon travel screen
-                    else if (Main.tile[i, j].TileFrameY / 18 / 4 == 2)
+                    // Earth -> Moon transfer screen frame
+                    else if (frameNumber == 3)
                     {
                         r += 0.1f;
                         g += 0.45f;
@@ -135,7 +171,7 @@ namespace Macrocosm.Content.Tiles.Furniture
             else 
             {
                 // Red LED
-                if (Main.tile[i, j].TileFrameY / 18 % 4 == 3)
+                if (tile.TileFrameX / 18 % 4 == 3)
                     r += 0.1f;
             }
         }
