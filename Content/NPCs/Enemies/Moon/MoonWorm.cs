@@ -5,8 +5,12 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent.Bestiary;
 using Terraria.ID;
+using Terraria.Audio;
 using Terraria.ModLoader;
-
+using Macrocosm.Content.Biomes;
+using Macrocosm.Content.Projectiles.Environment.Debris;
+using Macrocosm.Content.Projectiles.Hostile;
+using Macrocosm.Content.Dusts;
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
     // These three class showcase usage of the WormHead, WormBody and WormTail ExampleMod classes from Worm.cs
@@ -31,12 +35,21 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             NPC.CloneDefaults(NPCID.DiggerHead);
             NPC.damage = 175;
-            NPC.lifeMax = 1250;
+            NPC.lifeMax = 3250;
             NPC.defense = 63;
-            NPC.width = 92;
-            NPC.height = 92;
+            NPC.width = 86;
+            NPC.height = 86;
             NPC.aiStyle = -1;
         }
+        public override void HitEffect(NPC.HitInfo hit)
+        {
+            if (NPC.life <= 0)
+            {
+                Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("MoonWormHead1").Type);
+                Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("MoonWormHead2").Type);
+            }
+        }
+       
 
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
         {
@@ -47,15 +60,19 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 				//BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Times.NightTime,
 			});
         }
-
-        public override void Init()
+        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        {
+            return spawnInfo.Player.InModBiome<MoonBiome>() && !Main.dayTime && spawnInfo.SpawnTileY <= Main.worldSurface + 200 ? .01f : 0f;
+        }
+        public override void Init()//Made the worm a little bit longer
         {
             // Set the segment variance
             // If you want the segment length to be constant, set these two properties to the same value
-            MinSegmentLength = 12;
-            MaxSegmentLength = 18;
+            MinSegmentLength = 14;
+            MaxSegmentLength = 22;
             FlipSprite = true;
-
+            NPC.position.Y+=1200;
+            SoundEngine.PlaySound(SoundID.NPCDeath10);
             CommonWormInit(this);
         }
 
@@ -76,21 +93,38 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             attackCounter = reader.ReadInt32();
         }
-
+        public bool burst= false;//Has the worm bursted out of the ground.
         public override void AI()
         {
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
+                NPC.despawnEncouraged = false;
                 // tick down the attack counter.
                 if (attackCounter > 0)
                     attackCounter--;
 
                 Player target = Main.player[NPC.target];
                 // If the attack counter is 0, this NPC is less than 12.5 tiles away from its target, and has a path to the target unobstructed by blocks, summon a projectile.
-                if (attackCounter <= 0 && Vector2.Distance(NPC.Center, target.Center) < 200 && Collision.CanHit(NPC.Center, 1, 1, target.Center, 1, 1))
+                if (attackCounter <= 0 && Vector2.Distance(NPC.Center, target.Center) < 2000 && Collision.CanHit(NPC.Center, 1, 1, target.Center, 1, 1)&&burst==false)
                 {
-                    // some projectile attack here?
+                    SoundEngine.PlaySound(SoundID.DD2_ExplosiveTrapExplode);
+                    burst=true;
+                    for(int i =0; i<50; i++){ //Spawn a lot of debris
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(),NPC.Center,NPC.velocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(MathHelper.Pi)*(float)Main.rand.NextFloat(1.0f,30.0f), ModContent.ProjectileType<RegolithDebris>(),0,0f,-1);
+                    }
+                    for(int i =0; i<90; i++){ //Spawn a lot of dust
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(),NPC.Center,NPC.velocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(MathHelper.Pi)*(float)Main.rand.NextFloat(1.0f,15.0f), ModContent.ProjectileType<MoonWormDust>(),0,0f,-1);
+                    }
+                    for(int i =0; i<10; i++)//Spawn damaging projectiles
+                    {
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(),NPC.Center,NPC.velocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(MathHelper.Pi)*(float)Main.rand.NextFloat(10.0f,20.0f), ModContent.ProjectileType<MoonRubble>(),50,0f,-1);
+
+                    }
+
+
+
                 }
+
             }
         }
     }
@@ -109,15 +143,30 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.CloneDefaults(NPCID.DiggerBody);
             NPC.damage = 120;
             NPC.defense = 69;
-            NPC.width = 58;
-            NPC.height = 58;
+            NPC.width = 54;
+            NPC.height = 54;
             NPC.aiStyle = -1;
         }
 
         public override void Init()
         {
             FlipSprite = true;
+            NPC.position.Y+=1200;
             MoonWormHead.CommonWormInit(this);
+        }
+        public override void HitEffect(NPC.HitInfo hit)
+        {
+            if (NPC.life <= 0)
+            {
+                if ((int)NPC.frameCounter==1){
+                Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("MoonWormSegment1").Type);
+                Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("MoonWormSegment2").Type);
+                }
+                else{
+                    Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("MoonWormAlternate1").Type);
+                    Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("MoonWormAlternate2").Type);
+                }
+            }
         }
 
         public override void OnSpawn(IEntitySource source)
@@ -147,14 +196,26 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.CloneDefaults(NPCID.DiggerTail);
             NPC.damage = 100;
             NPC.defense = 75;
-            NPC.width = 54;
-            NPC.height = 54;
+            NPC.width = 50;
+            NPC.height = 50;
             NPC.aiStyle = -1;
+        }
+        public override void HitEffect(NPC.HitInfo hit)
+        {
+            if (NPC.life <= 0)
+            {
+              
+                Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("MoonWormTail").Type);
+           
+                
+                
+            }
         }
 
         public override void Init()
         {
             FlipSprite = true;
+            
             MoonWormHead.CommonWormInit(this);
         }
     }
