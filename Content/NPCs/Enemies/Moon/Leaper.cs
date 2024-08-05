@@ -10,13 +10,13 @@ using Terraria.ModLoader;
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
     // incomplete
-    // (TODO: leaps)
+    // TODO Make it stick to walls.
     public class Leaper : ModNPC, IMoonEnemy
     {
         public override void SetStaticDefaults()
         {
             base.SetStaticDefaults();
-            Main.npcFrameCount[Type] = 24;
+            Main.npcFrameCount[Type] = 39;
         }
 
         public override void SetDefaults()
@@ -52,11 +52,46 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             return spawnInfo.Player.InModBiome<MoonBiome>() && spawnInfo.Player.ZoneRockLayerHeight ? .1f : 0f;
         }
+      
+        public float LightValueFlee = 0.1f; //This light value causes the leaper to flee.
+        public float LightValueRage = 0.5f; //This light value causes the leaper to enrage faster.
+        public float RageThreshold = 60f; //Determines the switch between fleeing and hostility.
+        public float Rage=0f; //Determines the leapers level of hostility. <5f flee, >5f attack, >7f rage.
+        public bool Fear=false; //is it fleeing?
+        public float RageManager(float Lightlevel)//Manages the leapers rage.
+        {
+        if (Lightlevel<LightValueFlee)
+            return -0.03f; //Calms down when in darkness
+        if (Lightlevel>=LightValueFlee&&Lightlevel<LightValueRage)
+            return 0.04f; //Becomes angry when in moderate light.
+        if (Lightlevel>=LightValueRage)
+            return 0.09f; //Becomes enrages quickly while in bright light
+        else
+            return 0f; //I dont think this will be useful but you never know.
+        }
 
         public override void AI()
         {
-            if (Lighting.GetColor(NPC.Center.ToTileCoordinates()).GetBrightness() > 0.5f)
-                Utility.AIZombie(NPC, ref NPC.ai, false, true, velMax: 4, maxJumpTilesX: 15, maxJumpTilesY: 10, moveInterval: 0.07f);
+            Rage+=RageManager(Lighting.GetColor(NPC.Center.ToTileCoordinates()).GetBrightness()); //manage rage.
+            //put caps on rage.
+            if(Rage > 60f)
+                Rage = 60f;
+            if(Rage < 0f)
+                Rage = 0f;
+
+
+            if (Rage<=0.01f){//Pure darkness, stalk the player slowly.
+                Utility.AIZombie(NPC, ref NPC.ai, false, true, velMax: 2, maxJumpTilesX: 15, maxJumpTilesY: 10, moveInterval: 0.06f);
+                Fear=false;
+            }
+            if (Rage>0.01f&&Rage<RageThreshold){//Flee.
+                Utility.AIZombie(NPC, ref NPC.ai, false, true, velMax: 4, maxJumpTilesX: 15, maxJumpTilesY: 10, moveInterval: -0.075f);
+                 Fear=true;
+            }
+            if (Rage>=RageThreshold){//Attack with increasing speed.
+                Utility.AIZombie(NPC, ref NPC.ai, false, true, velMax: 7, maxJumpTilesX: 18, maxJumpTilesY: 12, moveInterval: 0.08f+(Rage/100f));
+                Fear=false;
+            }
 
             NPC.despawnEncouraged = false;
 
@@ -64,9 +99,12 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             //	 NPC.damage = (int)(NPC.defDamage * 1.35f)
             //else
             NPC.damage = NPC.defDamage;
-
+             
             if (NPC.velocity.Y < 0f)
                 NPC.velocity.Y += 0.1f;
+               
+        
+           
         }
 
         // frames 0 - 9: idle 
@@ -81,8 +119,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             int idleFrameInitial = 0;
             int idleFrameCount = 10;
 
-            //int leapFrameInitial = 10;
-            //int leapFrameCount = 7;
+            int leapFrameInitial = 10;
+            int leapFrameCount = 7;
 
             int midAirFrame = 16;
 
@@ -99,7 +137,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 }
 
             NPC.frameCounter++;
-            NPC.spriteDirection = NPC.direction;
+            NPC.spriteDirection = Fear==true ? -NPC.direction:NPC.direction; //Edtited this line to make the leaper face the right direction
 
             if (NPC.velocity == Vector2.Zero)
             {
@@ -112,7 +150,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                         NPC.frame.Y = idleFrameInitial * frameHeight;
                 }
             }
-            else
+            else if(NPC.velocity.Y==0f)
             {
                 NPC.frame.Y = (int)(NPC.frameCounter / ticksPerFrame + runFrameInitial) * frameHeight;
 
@@ -120,6 +158,15 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 {
                     NPC.frameCounter = 0;
                     NPC.frame.Y = runFrameInitial * frameHeight;
+                }
+            }
+            else{
+                NPC.frame.Y = (int)(NPC.frameCounter / ticksPerFrame + leapFrameInitial) * frameHeight;
+
+                if (NPC.frameCounter >= ticksPerFrame * leapFrameCount)
+                {
+                    NPC.frameCounter = midAirFrame;
+                    NPC.frame.Y = midAirFrame * frameHeight;
                 }
             }
         }
