@@ -335,6 +335,10 @@ CraterDemonSummon
 		Ancient Manipulator
 
 
+Medkit
+	Value: 1 gold
+	Research count: 30
+
 MoonPhaseGlobe
 	Value: 75 gold
 	Research count: 1

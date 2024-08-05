@@ -47,3 +47,23 @@ CraterDemonPet: {
 	DisplayName: Mini Crater Demon
 	Description: It's small! (Replace this lol)
 }
+
+MedkitHigh: {
+	DisplayName: Medkit High
+	Description: Mods.Macrocosm.Buffs.MedkitHigh.Description
+}
+
+MedkitLow: {
+	DisplayName: Medkit Low
+	Description: Mods.Macrocosm.Buffs.MedkitLow.Description
+}
+
+MedkitMedium: {
+	DisplayName: Medkit Medium
+	Description: Mods.Macrocosm.Buffs.MedkitMedium.Description
+}
+
+Irradiated: {
+	DisplayName: Irradiated
+	Description: Mods.Macrocosm.Buffs.Irradiated.Description
+}
