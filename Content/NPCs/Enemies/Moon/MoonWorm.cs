@@ -1,4 +1,4 @@
-﻿using Macrocosm.Common.Global.NPCs;
+using Macrocosm.Common.Global.NPCs;
 using Microsoft.Xna.Framework;
 using System.IO;
 using Terraria;
@@ -49,6 +49,10 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("MoonWormHead2").Type);
             }
         }
+        public override void ModifyNPCLoot(NPCLoot loot)
+        {
+            loot.Add(ItemDropRule.Common(ModContent.ItemType<AlienResidue>(), 1,2,8));//Make the worms drop quite a bit of residue, because they're rare.
+        }
        
 
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
@@ -93,11 +97,29 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             attackCounter = reader.ReadInt32();
         }
+
+        public bool CheckForSoildTile(int x, int y){
+            Tile tile = Main.tile[x, y];
+            if (tile.HasUnactuatedTile==true)
+                return true;
+            else{
+            return false;
+            }
+        }
         public bool burst= false;//Has the worm bursted out of the ground.
         public override void AI()
         {
+        
+                
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
+               
+
+
+                
+
+
+
                 NPC.despawnEncouraged = false;
                 // tick down the attack counter.
                 if (attackCounter > 0)
@@ -127,6 +149,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             }
         }
+        
     }
 
     public class MoonWormBody : WormBody
