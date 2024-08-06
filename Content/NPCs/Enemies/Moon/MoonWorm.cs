@@ -11,6 +11,8 @@ using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Projectiles.Environment.Debris;
 using Macrocosm.Content.Projectiles.Hostile;
 using Macrocosm.Content.Dusts;
+using Terraria.GameContent.ItemDropRules;
+using Macrocosm.Content.Items.Materials.Drops;
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
     // These three class showcase usage of the WormHead, WormBody and WormTail ExampleMod classes from Worm.cs
