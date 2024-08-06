@@ -48,18 +48,19 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                     Projectile.velocity*=0f;
                 Timer++;
             }
+            if (Timer%6==1)
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, OldVelocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(Math.PI/4)*17f, ModContent.ProjectileType<FrigorianIceShard>(), Projectile.damage/4, 2, -1);
+           
             if (Timer>30)
                 CreateALotOfIce();           
         }
         public void CreateALotOfIce(){
             if (Main.netMode != NetmodeID.MultiplayerClient){
-            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, OldVelocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(Math.PI/4)*17f, ModContent.ProjectileType<FrigorianIceShard>(), Projectile.damage/4, 2, -1);
-            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, OldVelocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(Math.PI/4)*17f, ModContent.ProjectileType<FrigorianIceShard>(), Projectile.damage/4, 2, -1);
-            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, OldVelocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(Math.PI/4)*17f, ModContent.ProjectileType<FrigorianIceShard>(), Projectile.damage/4, 2, -1);
-            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, OldVelocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(Math.PI/4)*17f, ModContent.ProjectileType<FrigorianIceShard>(), Projectile.damage/4, 2, -1);
+           
             Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, OldVelocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(Math.PI/4)*13f, ModContent.ProjectileType<FrigorianIceShardAlt>(), Projectile.damage/2, 2, -1);
             Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, OldVelocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(Math.PI/4)*13f, ModContent.ProjectileType<FrigorianIceShardAlt>(), Projectile.damage/2, 2, -1);
-    
+            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, OldVelocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(Math.PI/4)*13f, ModContent.ProjectileType<FrigorianIceShardAlt>(), Projectile.damage/2, 2, -1);
             }
              Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, Projectile.velocity*0f, Mod.Find<ModGore>("FrigorianGore1").Type);
             Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, Projectile.velocity*0f, Mod.Find<ModGore>("FrigorianGore2").Type);
@@ -158,7 +159,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 		}
         public override void SetDefaults()
         {
-            Projectile.scale=0.7f;
+            Projectile.scale=0.5f;
             Projectile.width = 30;
             Projectile.height = 36;
             Projectile.friendly = true;
