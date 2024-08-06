@@ -1,20 +1,20 @@
-﻿using Terraria;
-using Terraria.ID;
+using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Debuffs
+namespace Macrocosm.Content.Debuffs.Environment
 {
-    public class HandheldEngineOverheat : ModBuff
+    public class Depressurized : ModBuff
     {
         public override void SetStaticDefaults()
         {
             Main.debuff[Type] = true;
             Main.buffNoSave[Type] = true;
-            BuffID.Sets.NurseCannotRemoveDebuff[Type] = true;
+            Main.buffNoTimeDisplay[Type] = false;
+            Main.pvpBuff[Type] = true;
         }
-
         public override void Update(Player player, ref int buffIndex)
         {
+            player.lifeRegen -= (int)(0.1f * player.statLifeMax2);
         }
     }
 }

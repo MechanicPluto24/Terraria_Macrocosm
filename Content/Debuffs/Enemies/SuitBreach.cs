@@ -1,9 +1,9 @@
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Debuffs
+namespace Macrocosm.Content.Debuffs.Enemies
 {
-    public class Fear : ModBuff
+    public class SuitBreach : ModBuff
     {
         public override void SetStaticDefaults()
         {
@@ -15,8 +15,7 @@ namespace Macrocosm.Content.Debuffs
 
         public override void Update(Player player, ref int buffIndex)
         {
-            player.cursed = true;
-            player.moveSpeed /= 4;
+            player.lifeRegen -= (int)(0.05f * player.statLifeMax2);
         }
     }
 }
