@@ -1462,3 +1462,9 @@ InANutshell: {
 	DisplayName: In A Nutshell
 	Tooltip: ""
 }
+
+Medkit: {
+	DisplayName: Medkit
+	Tooltip: ""
+	RestoreLifeText: "{0} over {1} {^1:second;seconds}"
+}

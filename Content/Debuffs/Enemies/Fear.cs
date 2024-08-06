@@ -1,9 +1,9 @@
-﻿using Terraria;
+using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Buffs.Debuffs
+namespace Macrocosm.Content.Debuffs.Enemies
 {
-    public class Procellarum_LightningMarkDebuff : ModBuff
+    public class Fear : ModBuff
     {
         public override void SetStaticDefaults()
         {
@@ -11,6 +11,12 @@ namespace Macrocosm.Content.Buffs.Debuffs
             Main.buffNoSave[Type] = true;
             Main.buffNoTimeDisplay[Type] = false;
             Main.pvpBuff[Type] = true;
+        }
+
+        public override void Update(Player player, ref int buffIndex)
+        {
+            player.cursed = true;
+            player.moveSpeed /= 4;
         }
     }
 }
