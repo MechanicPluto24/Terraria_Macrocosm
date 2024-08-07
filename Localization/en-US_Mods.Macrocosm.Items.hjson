@@ -1468,3 +1468,13 @@ Medkit: {
 	Tooltip: ""
 	RestoreLifeText: "{0} over {1} {^1:second;seconds}"
 }
+
+FrigorianGaze: {
+	DisplayName: Frigorian Gaze
+	Tooltip: ""
+}
+
+StarDestroyer: {
+	DisplayName: Star Destroyer
+	Tooltip: ""
+}
