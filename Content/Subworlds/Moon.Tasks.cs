@@ -26,6 +26,7 @@ namespace Macrocosm.Content.Subworlds
 {
     public partial class Moon
     {
+        public int CynthalithlithLayerHeight { get; } = 50;
         public int RegolithLayerHeight { get; } = 200;
         private float SurfaceWidthFrequency { get; } = 0.003f;
         private float SurfaceHeightFrequency { get; } = 20f;
@@ -468,6 +469,31 @@ namespace Macrocosm.Content.Subworlds
                     }
 
                     FastPlaceTile(i, j, regolithType);
+                }
+            }
+        }
+        [Task]
+        private void CynthalithTask(GenerationProgress progress)
+        {
+            progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.Cynthalith");
+
+            float randomOffset = WorldGen.genRand.NextFloat() * 4.23f;
+            ushort cynthalithType = (ushort)TileType<Cynthalith>();
+
+            for (int i = 0; i < Main.maxTilesX; i++)
+            {
+                int offset = (int)(FunnySurfaceEquation(i * 0.02f + randomOffset) * 3f);
+                int surfaceHeight = SurfaceHeight(i);
+                for (int j = surfaceHeight+CynthalithlithLayerHeight; j < surfaceHeight + RegolithLayerHeight+30; j++)
+                {
+                    if (!Main.tile[i, j].HasTile)
+                    {
+                        continue;
+                    }
+                    if (j < surfaceHeight+60&&Main.rand.Next(Math.Abs(surfaceHeight+60-j))<10){
+                        continue;
+                    }
+                    FastPlaceTile(i, j, cynthalithType);
                 }
             }
         }

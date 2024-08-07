@@ -426,13 +426,16 @@ namespace Macrocosm.Content.NPCs
         {
             // Keep searching for a new target
             NPC.TargetClosest(true);
-
+            //edited this because pluto wanted the worms to go underground faster, original fall speed was 0.11f
             // Constant gravity of 0.11 pixels/tick
-            NPC.velocity.Y += 0.11f;
-
+            NPC.velocity.Y += 0.3f;
+            //edited this so that worms could fall at up to 1.5* their max velcoity.
             // Ensure that the NPC does not fall too quickly
-            if (NPC.velocity.Y > speed)
-                NPC.velocity.Y = speed;
+            if (NPC.velocity.Y > speed*1.5f)
+            {
+                NPC.velocity.Y = speed*1.5f;
+                NPC.velocity.X*=6f;//Added to make worms look nicer
+            }
 
             // The following behaviour mimicks vanilla worm movement
             if (Math.Abs(NPC.velocity.X) + Math.Abs(NPC.velocity.Y) < speed * 0.4f)

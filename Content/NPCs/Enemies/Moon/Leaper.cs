@@ -10,7 +10,8 @@ using Terraria.ModLoader;
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
     // incomplete
-    // TODO Make it stick to walls.
+    // TODO Make it stick to walls and add leaping animation.
+
     public class Leaper : ModNPC, IMoonEnemy
     {
         public override void SetStaticDefaults()
@@ -55,7 +56,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
       
         public float LightValueFlee = 0.1f; //This light value causes the leaper to flee.
         public float LightValueRage = 0.5f; //This light value causes the leaper to enrage faster.
-        public float RageThreshold = 60f; //Determines the switch between fleeing and hostility.
+        public float RageThreshold = 30f; //Determines the switch between fleeing and hostility.
         public float Rage=0f; //Determines the leapers level of hostility. <5f flee, >5f attack, >7f rage.
         public bool Fear=false; //is it fleeing?
         public float RageManager(float Lightlevel)//Manages the leapers rage.
@@ -74,8 +75,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             Rage+=RageManager(Lighting.GetColor(NPC.Center.ToTileCoordinates()).GetBrightness()); //manage rage.
             //put caps on rage.
-            if(Rage > 60f)
-                Rage = 60f;
+            if(Rage > 30f)
+                Rage = 30f;
             if(Rage < 0f)
                 Rage = 0f;
 
