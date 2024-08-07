@@ -32,7 +32,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             Item.UseSound = SoundID.Item9;
             Item.useAnimation = 10;
             Item.useTime =10;
-           
+           	Item.DamageType = DamageClass.Ranged;
 			Item.noMelee = true;
             Item.useStyle=5;
             Item.useAmmo = AmmoID.FallenStar;
