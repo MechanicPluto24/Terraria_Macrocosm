@@ -763,6 +763,8 @@ namespace Macrocosm.Content.Subworlds
             float mediumRockSpawnChance = 0.05f;
             float largeRockSpawnChance = 0.01f;
             ushort regolithType = (ushort)TileType<Regolith>();
+            float AltarChance = 0.0025f;
+            ushort ProtolithType = (ushort)TileType<Protolith>();
 
             for (int i = 0; i < Main.maxTilesX - 1; i++)
             {
@@ -799,6 +801,30 @@ namespace Macrocosm.Content.Subworlds
                             )
                         {
                             WorldGen.PlaceTile(i, j - 1, TileType<RegolithRockLargeNatural>(), style: WorldGen.genRand.Next(5), mute: true);
+                        }
+                    }
+                }
+            }
+            for (int i = 0; i < Main.maxTilesX - 1; i++)
+            {
+                progress.Set((float)i / Main.maxTilesX);
+                for (int j = 1; j < Main.maxTilesY; j++)
+                {
+                    TileNeighbourInfo neighbourInfo = new(i, j);
+                    TileNeighbourInfo aboveNeighbourInfo = new(i, j - 1);
+                    if (Main.tile[i, j].HasTile && Main.tile[i, j].TileType == ProtolithType)
+                    {
+                        if ( neighbourInfo.Solid.Right
+                            && neighbourInfo.Solid.Left
+                            && !neighbourInfo.HasTile.Top
+                            && !neighbourInfo.HasTile.TopRight
+                            && !neighbourInfo.HasTile.TopLeft
+                            && !aboveNeighbourInfo.HasTile.Top
+                            && !aboveNeighbourInfo.HasTile.TopRight
+                            && !aboveNeighbourInfo.HasTile.TopLeft
+                            && WorldGen.genRand.NextFloat() < AltarChance)
+                        {
+                            WorldGen.PlaceTile(i, j - 1, TileType<IrradiatedAltar>(), mute: true);
                         }
                     }
                 }
