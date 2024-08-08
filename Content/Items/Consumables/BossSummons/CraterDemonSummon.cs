@@ -10,7 +10,7 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-
+using Macrocosm.Content.Tiles.Ambient;
 namespace Macrocosm.Content.Items.Consumables.BossSummons
 {
     public class CraterDemonSummon : ModItem
@@ -56,10 +56,10 @@ namespace Macrocosm.Content.Items.Consumables.BossSummons
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient<AlienResidue>(50)
-                .AddIngredient<SpaceDust>(10)
-                .AddIngredient<AlienResidue>(20)
-                .AddTile(TileID.LunarCraftingStation) // TODO: @ Nuclear altar
+                .AddIngredient<AlienResidue>(7)
+                .AddIngredient<SpaceDust>(5)
+                .AddIngredient(ItemID.LunarBar, 10)
+                .AddTile(ModContent.TileType<IrradiatedAltar>())
                 .Register();
         }
         public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
