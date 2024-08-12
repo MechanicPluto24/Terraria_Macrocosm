@@ -1,9 +1,9 @@
 using Terraria;
 using Terraria.ModLoader;
 using  Macrocosm.Content.Players;
-namespace Macrocosm.Content.Debuffs
+namespace Macrocosm.Content.Debuffs.RadDebuffs
 {
-    public class MildNecrosis : ModBuff.RadDebuffs
+    public class MildNecrosis : ModBuff
     {
         public override void SetStaticDefaults()
         {
