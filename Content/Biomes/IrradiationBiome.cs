@@ -24,6 +24,7 @@ namespace Macrocosm.Content.Biomes
         public override void OnInBiome(Player player)
         {
             base.OnInBiome(player);
+            player.GetModPlayer<IrradiationPlayer>().IrradiationLevels+=0.0003f;
         }
 
         public override void OnLeave(Player player)
