@@ -1,7 +1,7 @@
 ﻿using Macrocosm.Common.Systems;
 using Terraria;
 using Terraria.ModLoader;
-
+using Macrocosm.Content.Players;
 namespace Macrocosm.Content.Biomes
 {
     public class IrradiationBiome : MoonBiome

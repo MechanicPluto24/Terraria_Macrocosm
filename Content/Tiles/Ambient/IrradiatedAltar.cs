@@ -5,7 +5,7 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
-
+using Macrocosm.Content.Players;
 namespace Macrocosm.Content.Tiles.Ambient
 {
     

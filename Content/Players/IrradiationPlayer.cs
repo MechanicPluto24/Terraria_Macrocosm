@@ -5,7 +5,7 @@ using Macrocosm.Common.Systems;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
-using Macrocosm.Content.Debuffs;
+using Macrocosm.Content.Debuffs.RadDebuffs;
 using Macrocosm.Content.LoadingScreens;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
