@@ -772,23 +772,7 @@ namespace Macrocosm.Content.Subworlds
 
         }
 
-            count = WorldGen.genRand.Next(200, 300);
-            tries = 20000;
-            for (int i = 0; i < count; i++)
-            {
-                if (tries <= 0)
-                    break;
-
-                int tileX = WorldGen.genRand.Next(80, Main.maxTilesX - 80);
-                int tileY = WorldGen.genRand.Next((int)(SurfaceHeight(tileX) + RegolithLayerHeight + 20.0), Main.maxTilesY - 230);
-                var outpost = new MoonBaseOutpost();
-                if (WorldGen.SolidTile(tileX, tileY) || !outpost.Place(new(tileX, tileY), StructureMap))
-                {
-                    tries--;
-                    i--;
-                }
-            }
-        }
+          
 
 
         [Task]
