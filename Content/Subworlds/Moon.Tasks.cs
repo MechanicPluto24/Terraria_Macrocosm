@@ -8,6 +8,7 @@ using Macrocosm.Content.Tiles.Ores;
 using Macrocosm.Content.Tiles.Walls;
 using Macrocosm.Content.WorldGeneration.Structures;
 using Macrocosm.Content.WorldGeneration.Structures.Shrines;
+using Macrocosm.Content.WorldGeneration.Structures.LunarOutposts;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -45,6 +46,31 @@ namespace Macrocosm.Content.Subworlds
         private static Point gen_CryocoreShrinePosition;
         private static Point gen_DarkCelestialShrinePosition;
         private static Point gen_CosmicEmberShrinePosition;
+        public Structure DetrmineLunarHouse()
+        {
+        int i = Main.rand.Next(0,9);
+        //Lists were being funky, so whilst this is lame, it always works.
+        if(i==0)
+            return new LunarHouse1();
+        if(i==1)
+            return new LunarHouse2();
+        if(i==2)
+            return new LunarHouse3();
+        if(i==3)
+            return new LunarHouse4();
+        if(i==4)
+            return new LunarHouse5();
+        if(i==5)
+            return new LunarHouse6();
+        if(i==6)
+            return new LunarHouse7();
+        if(i==7)
+            return new LunarHouse8();
+        if(i==8)
+            return new LunarHouse9();
+        else
+         return null;
+        }
 
         [Task]
         private void TerrainTask(GenerationProgress progress)
@@ -712,7 +738,7 @@ namespace Macrocosm.Content.Subworlds
             shrine.Place(new Point16(fallbackX, fallbackY), null);
         }
 
-        //[Task]
+        [Task]
         private void RoomsTasks(GenerationProgress progress)
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
@@ -728,13 +754,23 @@ namespace Macrocosm.Content.Subworlds
                 int tileX = WorldGen.genRand.Next(80, Main.maxTilesX - 80);
                 int tileY = WorldGen.genRand.Next((int)(SurfaceHeight(tileX) + RegolithLayerHeight + 20.0), Main.maxTilesY - 230);
 
-                var builder = new LunarianHouseBuilder();
+                var builder =  DetrmineLunarHouse();
                 if (!builder.Place(new(tileX, tileY), StructureMap))
                 {
                     tries--;
                     i--;
                 }
             }
+            
+            
+        }
+         [Task]
+        private void Horror(GenerationProgress progress){
+             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.Horror");
+            var cheesebuilder =  new CHEESE();
+            cheesebuilder.Place(new Point16(420, 1000), StructureMap);
+
+        }
 
             count = WorldGen.genRand.Next(200, 300);
             tries = 20000;

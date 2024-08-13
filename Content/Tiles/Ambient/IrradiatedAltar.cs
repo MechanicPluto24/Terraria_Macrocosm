@@ -5,7 +5,7 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
-
+using Macrocosm.Content.Players;
 namespace Macrocosm.Content.Tiles.Ambient
 {
     
@@ -40,6 +40,13 @@ namespace Macrocosm.Content.Tiles.Ambient
         public override void NumDust(int x, int y, bool fail, ref int num)
         {
             num = fail ? 1 : 3;
+        }
+		public override void NearbyEffects(int i, int j, bool closer)
+        {
+            Player player = Main.LocalPlayer;
+            int distance = (int)Vector2.Distance(player.Center/16, new Vector2(i, j));//Not MoR's player distance code whatsoever. :D
+            if (distance<=20)
+                player.GetModPlayer<IrradiationPlayer>().IrradiationLevels+=0.0006f;
         }
     }
 }

@@ -589,6 +589,7 @@ namespace Macrocosm.Content.NPCs
 
         public override void SetStaticDefaults()
         {
+			NPC.despawnEncouraged = false;
             NPCID.Sets.NPCBestiaryDrawModifiers value = new NPCID.Sets.NPCBestiaryDrawModifiers() { Hide = true };
             NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
         }
@@ -654,6 +655,7 @@ namespace Macrocosm.Content.NPCs
 
         public override void SetStaticDefaults()
         {
+		 	NPC.despawnEncouraged = false;
             NPCID.Sets.NPCBestiaryDrawModifiers value = new NPCID.Sets.NPCBestiaryDrawModifiers() { Hide = true };
             NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
         }

@@ -1,7 +1,7 @@
 ﻿using Macrocosm.Common.Systems;
 using Terraria;
 using Terraria.ModLoader;
-
+using Macrocosm.Content.Players;
 namespace Macrocosm.Content.Biomes
 {
     public class IrradiationBiome : MoonBiome
@@ -24,6 +24,7 @@ namespace Macrocosm.Content.Biomes
         public override void OnInBiome(Player player)
         {
             base.OnInBiome(player);
+            player.GetModPlayer<IrradiationPlayer>().IrradiationLevels+=0.0003f;
         }
 
         public override void OnLeave(Player player)
