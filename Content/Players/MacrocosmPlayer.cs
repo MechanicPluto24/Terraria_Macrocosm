@@ -251,20 +251,7 @@ namespace Macrocosm.Content.Players
 
         private void Update_FilterEffects()
         {
-            if (Player.InModBiome<IrradiationBiome>())
-            {
-                if (!Filters.Scene["Macrocosm:RadiationNoise"].IsActive())
-                    Filters.Scene.Activate("Macrocosm:RadiationNoise");
-
-                RadiationEffectIntensity += 0.189f * Utility.InverseLerp(400, 10000, TileCounts.Instance.IrradiatedRockCount, clamped: true);
-
-                Filters.Scene["Macrocosm:RadiationNoise"].GetShader().UseIntensity(RadiationEffectIntensity);
-            }
-            else
-            {
-                if (Filters.Scene["Macrocosm:RadiationNoise"].IsActive())
-                    Filters.Scene.Deactivate("Macrocosm:RadiationNoise");
-            }
+            
         }
 
         #endregion
