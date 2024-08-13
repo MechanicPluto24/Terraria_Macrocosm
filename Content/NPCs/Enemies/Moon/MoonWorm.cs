@@ -77,7 +77,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             MinSegmentLength = 14;
             MaxSegmentLength = 22;
             FlipSprite = true;
-            NPC.position.Y+=1200;
+            NPC.position.Y+=1000;
             SoundEngine.PlaySound(SoundID.NPCDeath10);
             CommonWormInit(this);
         }
