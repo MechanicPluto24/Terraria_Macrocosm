@@ -1,6 +1,4 @@
 using Macrocosm.Content.Items.Materials.Bars;
-using Macrocosm.Content.Items.Materials.Ores;
-using Macrocosm.Content.Items.Materials.Refined;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

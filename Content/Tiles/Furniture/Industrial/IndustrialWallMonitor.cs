@@ -5,9 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.Enums;
 using Terraria.ID;
-using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
@@ -68,7 +66,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             Tile tile = Main.tile[i, j];
             if (tile.TileFrameY >= 18 * 2)
             {
-                frameYOffset = 18 * 2 * ((Main.tileFrame[type] + i/2) % 5);
+                frameYOffset = 18 * 2 * ((Main.tileFrame[type] + i / 2) % 5);
             }
         }
 

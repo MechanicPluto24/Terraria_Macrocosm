@@ -8,7 +8,6 @@ using Macrocosm.Content.Rockets.UI.Navigation.Checklist;
 using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
-using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
@@ -43,7 +42,7 @@ namespace Macrocosm.Common.Subworlds
         /// The atmospheric density, in terms of Earth's atmospheric density.
         /// 0f means vacuum, 1f means equal to Earth's, >1f means higher that Earth's.
         /// </summary>
-        public virtual float AtmosphericDensity { get; } = Earth.AtmosphericDensity; 
+        public virtual float AtmosphericDensity { get; } = Earth.AtmosphericDensity;
 
         /// <summary> Whether wiring should function in this subworld </summary>
         public bool ShouldUpdateWiring { get; set; } = true;

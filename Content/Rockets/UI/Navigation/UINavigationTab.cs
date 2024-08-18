@@ -148,7 +148,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
                     CreateWorldInfoPanel(target.WorldID);
                 }
             }
-            else if(launchLocationsList.Any())
+            else if (launchLocationsList.Any())
             {
                 launchLocationsList.ClearList();
             }
@@ -157,8 +157,8 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
         private void UpdateLaunchLocationsList()
         {
             if (target is not null && target != lastTarget)
-                 CreateLaunchLocationPanel(target.WorldID);
- 
+                CreateLaunchLocationPanel(target.WorldID);
+
             targetLaunchPad = null;
             selectedSpawnLocation = false;
 
@@ -166,7 +166,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
             {
                 if (lpInfo.HasFocus)
                 {
-                    if(lpInfo.LaunchPad is not null)
+                    if (lpInfo.LaunchPad is not null)
                         targetLaunchPad = lpInfo.LaunchPad;
                     else
                         selectedSpawnLocation = true;
@@ -304,7 +304,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
                     HAlign = 0.5f,
                     Height = new(0, 0.505f),
                     BorderColor = UITheme.Current.PanelStyle.BorderColor,
-                    BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor 
+                    BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor
                 };
                 launchLocationsList.SetPadding(0f);
                 launchLocationsList.TitleHAlign = 0.6f;
@@ -349,7 +349,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
 
             launchLocationsList.AddRange(vacant.Cast<UIElement>().ToList());
 
-            if(vacant.Count > 0 && occupied.Count > 0) 
+            if (vacant.Count > 0 && occupied.Count > 0)
                 launchLocationsList.Add(new UIHorizontalSeparator() { Width = new StyleDimension(0, 1), Color = UITheme.Current.SeparatorColor });
 
             launchLocationsList.AddRange(occupied.Cast<UIElement>().ToList());
@@ -373,7 +373,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
 
             if (current is not null)
             {
-                launchLocationsList.Add(new UIHorizontalSeparator() { Width = new StyleDimension(0, 1), Color = UITheme.Current.SeparatorColor});
+                launchLocationsList.Add(new UIHorizontalSeparator() { Width = new StyleDimension(0, 1), Color = UITheme.Current.SeparatorColor });
                 launchLocationsList.Add(current);
             }
 
@@ -394,7 +394,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
         {
             if (listeningElement is UILaunchDestinationInfoElement infoElement)
             {
-                if(infoElement.HasFocus)
+                if (infoElement.HasFocus)
                     infoElement.HasFocus = false;
             }
         }

@@ -1,25 +1,23 @@
 using Macrocosm.Common.Global.NPCs;
-using Macrocosm.Common.Utils;
+using Macrocosm.Common.Sets;
 using Macrocosm.Content.Biomes;
-using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Items.Materials;
-using Macrocosm.Content.Projectiles.Hostile;
-using Macrocosm.Content.Tiles.Blocks.Terrain;
-using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-    public class KyaniteScarabSmall : ModNPC, IMoonEnemy
+    public class KyaniteScarabSmall : ModNPC
     {
         //Not going to do anything with this until Feldy makes the tile and we figure out something to make this work.
-        public override void SetStaticDefaults() {
-			
-			Main.npcFrameCount[NPC.type] = 7; 
-		}
+        public override void SetStaticDefaults()
+        {
+            Main.npcFrameCount[NPC.type] = 7;
+
+            NPCSets.MoonNPC[NPC.type] = true;
+            NPCSets.DropsMoonstone[NPC.type] = true;
+        }
+
         public override void SetDefaults()
         {
             NPC.width = 36;
@@ -34,7 +32,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.aiStyle = -1;
             SpawnModBiomes = [ModContent.GetInstance<UndergroundMoonBiome>().Type];
         }
-        public override void FindFrame(int frameHeight){
+
+        public override void FindFrame(int frameHeight)
+        {
             int ticksPerFrame = 5;
             NPC.frame.Y = (int)(NPC.frameCounter / ticksPerFrame + 0) * frameHeight;
 
@@ -44,6 +44,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 NPC.frame.Y = 0 * frameHeight;
             }
         }
+
         public override void HitEffect(NPC.HitInfo hit)
         {
             if (NPC.life <= 0)
@@ -58,8 +59,5 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("KyaniteSmallGore3").Type);
             }
         }
-
-     
-
     }
 }

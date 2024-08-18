@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Global.NPCs;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Systems;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
@@ -30,12 +31,11 @@ using Terraria.GameContent;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.UI;
 
 namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 {
     [AutoloadBossHead]
-    public class CraterDemon : ModNPC, IMoonEnemy
+    public class CraterDemon : ModNPC
     {
         private struct AttackInfo
         {
@@ -398,9 +398,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
         public override void SetStaticDefaults()
         {
-            Main.npcFrameCount[NPC.type] = 6;
-            NPCID.Sets.TrailCacheLength[NPC.type] = 5;
-            NPCID.Sets.TrailingMode[NPC.type] = 3;
+            Main.npcFrameCount[Type] = 6;
+            NPCID.Sets.TrailCacheLength[Type] = 5;
+            NPCID.Sets.TrailingMode[Type] = 3;
             NPCID.Sets.MPAllowedEnemies[Type] = true;
             NPCID.Sets.BossBestiaryPriority.Add(Type);
 
@@ -413,8 +413,10 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             };
 
             NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, bestiaryData);
-        }
 
+            NPCSets.MoonNPC[Type] = true;
+            NPCSets.DropsMoonstone[Type] = false;
+        }
 
         public override void SetDefaults()
         {
@@ -470,8 +472,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
         {
             potionType = ItemID.SuperHealingPotion;
         }
-
-        bool IMoonEnemy.DropMoonstone => false;
 
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {

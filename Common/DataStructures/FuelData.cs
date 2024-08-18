@@ -1,9 +1,4 @@
-﻿using Macrocosm.Common.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace Macrocosm.Common.DataStructures
 {
@@ -28,6 +23,8 @@ namespace Macrocosm.Common.DataStructures
         private readonly int consumtionRate;
 
         private readonly Func<FuelPotency> getPotency;
+
+        public FuelData() { }
 
         public FuelData(FuelPotency potency, int consumtionRate)
         {

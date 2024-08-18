@@ -35,7 +35,7 @@ namespace Macrocosm.Common.UI
             if (!HasValue && !HasSpecial)
                 return null;
 
-            return new UIInfoElement(GetText(), GetIcon(), GetIconSymbol(), GetHoverText()) 
+            return new UIInfoElement(GetText(), GetIcon(), GetIconSymbol(), GetHoverText())
             {
                 Width = new(0f, 1f),
                 Height = new(40f, 0f),

@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Content.Dusts;
-using Microsoft.Build.Tasks;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -26,9 +25,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             TileObjectData.newTile.Origin = new Point16(1, 0);
             TileObjectData.newTile.Height = 1;
             TileObjectData.newTile.Width = 3;
-            TileObjectData.newTile.StyleLineSkip = 2;
-            TileObjectData.newTile.WaterPlacement = LiquidPlacement.NotAllowed;
-            TileObjectData.newTile.LavaPlacement = LiquidPlacement.NotAllowed;
+            TileObjectData.newTile.StyleWrapLimit = 2;
             TileObjectData.addTile(Type);
 
             AdjTiles = [TileID.Chandeliers];

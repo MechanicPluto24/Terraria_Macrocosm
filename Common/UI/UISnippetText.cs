@@ -1,7 +1,7 @@
-using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
+using System;
 using Terraria.Localization;
 using Terraria.UI;
 using Terraria.UI.Chat;
@@ -125,7 +125,7 @@ public class UISnippetText : UIElement
         Vector2 baseScale = new(scale);
         TextSnippet[] snippets = ChatManager.ParseMessage(visibleText, color).ToArray();
 
-        if(!AllowSnippets)
+        if (!AllowSnippets)
             ChatManager.ConvertNormalSnippets(snippets);
 
         ChatManager.DrawColorCodedStringShadow(spriteBatch, font, snippets, position, baseColor, 0f, origin, baseScale, -1f, 1.5f);
@@ -153,9 +153,9 @@ public class UISnippetText : UIElement
 
         Vector2 size = ChatManager.GetStringSize(dynamicSpriteFont, visibleText, new Vector2(1));
         Vector2 adjustedSize = (textSize = ((!IsWrapped) ? (new Vector2(size.X, large ? 32f : 16f) * textScale) : (new Vector2(size.X, size.Y + WrappedTextBottomPadding) * textScale)));
-       
+
         if (!IsWrapped)
-             MinWidth.Set(adjustedSize.X + PaddingLeft + PaddingRight, 0f);
+            MinWidth.Set(adjustedSize.X + PaddingLeft + PaddingRight, 0f);
 
         MinHeight.Set(adjustedSize.Y + PaddingTop + PaddingBottom, 0f);
         OnInternalTextChange?.Invoke();

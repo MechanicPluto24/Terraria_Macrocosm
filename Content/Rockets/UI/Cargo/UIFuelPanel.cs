@@ -8,7 +8,6 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using Terraria;
-using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.Localization;
@@ -163,14 +162,14 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
             }
 
             if (neededFuel <= 0f)
-                 dumpButtonInteractible = false;
- 
+                dumpButtonInteractible = false;
+
             if (liquidContainerItemSlot.Item.ModItem is LiquidContainer container)
             {
                 float availableFuel = container.Amount * liquidContainerItemSlot.Item.stack;
 
                 if (availableFuel <= 0)
-                    dumpButtonInteractible = false;  
+                    dumpButtonInteractible = false;
 
                 if (availableFuel > neededFuel && liquidContainerItemSlot.Item.stack > 1)
                 {
@@ -178,7 +177,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
                     overflowWarningVisible = true;
                 }
 
-                if(neededFuel > 0f)
+                if (neededFuel > 0f)
                 {
                     canisterBufferLevel = (container.Amount * liquidContainerItemSlot.Item.stack) / (Rocket.FuelCapacity - Rocket.Fuel);
                     if (canisterBufferLevel > 1f)
@@ -191,7 +190,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
 
             // Animate rocket tank
             float rocketFuelPercent = Rocket.Fuel / Rocket.FuelCapacity;
-            if (rocketFuelPercent > 1f) 
+            if (rocketFuelPercent > 1f)
                 rocketFuelPercent = 1f;
 
             rocketFuelTank.LiquidLevel = MathHelper.Lerp(rocketFuelTank.LiquidLevel, rocketFuelPercent, 0.1f);

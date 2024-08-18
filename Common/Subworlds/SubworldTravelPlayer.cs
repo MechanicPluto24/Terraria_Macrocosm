@@ -1,17 +1,13 @@
 ﻿using Macrocosm.Common.Config;
-using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.LoadingScreens;
-using Macrocosm.Content.Players;
 using SubworldLibrary;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terraria.ID;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 

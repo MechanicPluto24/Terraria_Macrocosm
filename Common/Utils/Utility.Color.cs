@@ -1,3 +1,4 @@
+using Macrocosm.Common.Enums;
 using Microsoft.Xna.Framework;
 using System;
 using System.Globalization;
@@ -294,6 +295,40 @@ namespace Macrocosm.Common.Utils
             }
 
             return vectors;
+        }
+
+        public static Color GetTileColorFromLuminiteStyle(LuminiteStyle style)
+        {
+            return style switch
+            {
+                LuminiteStyle.Luminite => new Color(73, 168, 142),
+                LuminiteStyle.Heavenforge => new Color(195, 201, 215),
+                LuminiteStyle.LunarRust => new Color(83, 46, 57),
+                LuminiteStyle.Astra => new Color(23, 33, 81),
+                LuminiteStyle.DarkCelestial => new Color(91, 87, 167),
+                LuminiteStyle.Mercury => new Color(40, 49, 60),
+                LuminiteStyle.StarRoyale => new Color(21, 13, 77),
+                LuminiteStyle.Cryocore => new Color(11, 67, 80),
+                LuminiteStyle.CosmicEmber => new Color(53, 133, 103),
+                _ => Color.Transparent,
+            };
+        }
+
+        public static Color GetLightColorFromLuminiteStyle(LuminiteStyle style)
+        {
+            return style switch
+            {
+                LuminiteStyle.Luminite => new Color(154, 248, 224),
+                LuminiteStyle.Heavenforge => new Color(90, 83, 110),
+                LuminiteStyle.LunarRust => new Color(112, 242, 243),
+                LuminiteStyle.Astra => new Color(132, 255, 221),
+                LuminiteStyle.DarkCelestial => new Color(201, 126, 205),
+                LuminiteStyle.Mercury => new Color(200, 223, 223),
+                LuminiteStyle.StarRoyale => new Color(131, 198, 255),
+                LuminiteStyle.Cryocore => new Color(121, 245, 231),
+                LuminiteStyle.CosmicEmber => new Color(255, 180, 131),
+                _ => Color.Transparent,
+            };
         }
     }
 }

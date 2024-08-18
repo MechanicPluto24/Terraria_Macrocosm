@@ -1,7 +1,6 @@
 ﻿using SubworldLibrary;
 using System.Collections.Generic;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Hooks

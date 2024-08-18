@@ -29,7 +29,6 @@ namespace Macrocosm.Content.Tiles.Furniture
 
             TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.newTile.StyleWrapLimit = 2;
-            TileObjectData.newTile.StyleMultiplier = 2;
 
             TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.Table, 2, 0);
 

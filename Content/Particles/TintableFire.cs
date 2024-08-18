@@ -1,10 +1,6 @@
 ﻿using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Terraria;
-using System;
-using System.Collections.Generic;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Particles
@@ -14,7 +10,7 @@ namespace Macrocosm.Content.Particles
         public override int TrailCacheLenght => 15;
 
         public Color DrawColor;
-         public override string TexturePath => Macrocosm.EmptyTexPath;
+        public override string TexturePath => Macrocosm.EmptyTexPath;
         public bool FadeIn = false;
         public bool FadeOut = true;
         public override void OnSpawn()
@@ -29,21 +25,20 @@ namespace Macrocosm.Content.Particles
         public int FadeOutSpeed = 7;
         private float alpha = 255;
         private bool fadedIn = false;
-         public int TargetAlpha = 255;
+        public int TargetAlpha = 255;
         public override ParticleDrawLayer DrawLayer => ParticleDrawLayer.BeforeNPCs;
         public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
             Texture2D Texture = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Flame4").Value;
-            spriteBatch.Draw(Texture, Position - screenPosition, GetFrame(), DrawColor* ((float)alpha / 255f), Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(Texture, Position - screenPosition, GetFrame(), DrawColor * ((float)alpha / 255f), Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
         }
 
         public override void AI()
         {
-            
-            Scale*=0.98f;
-            Velocity.Y=-0.8f;
+            Scale *= 0.98f;
+            Velocity.Y = -0.8f;
             Rotation += 0.01f;
-             if (FadeIn && FadeOut)
+            if (FadeIn && FadeOut)
             {
                 if (!fadedIn)
                 {
@@ -69,7 +64,5 @@ namespace Macrocosm.Content.Particles
             if ((fadedIn && alpha <= 0))
                 Kill();
         }
-
-        
     }
 }

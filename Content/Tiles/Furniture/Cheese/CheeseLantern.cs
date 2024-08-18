@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.Enums;
 using Terraria.GameContent.Drawing;
 using Terraria.ID;
@@ -27,9 +28,12 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             Main.tileLavaDeath[Type] = true;
 
             TileObjectData.newTile.CopyFrom(TileObjectData.GetTileData(TileID.HangingLanterns, 0));
-            TileObjectData.newTile.StyleLineSkip = 2;
-            TileObjectData.newTile.WaterPlacement = LiquidPlacement.NotAllowed;
-            TileObjectData.newTile.LavaPlacement = LiquidPlacement.NotAllowed;
+            TileObjectData.newTile.StyleWrapLimit = 2;
+            TileObjectData.newTile.DrawYOffset = -2;
+            TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
+            TileObjectData.newAlternate.AnchorTop = new AnchorData(AnchorType.Platform, TileObjectData.newTile.Width, 0);
+            TileObjectData.newAlternate.DrawYOffset = -10;
+            TileObjectData.addAlternate(0);
             TileObjectData.addTile(Type);
 
             AdjTiles = [TileID.HangingLanterns];
@@ -68,12 +72,16 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             }
         }
 
+        // Workaround for platform hanging, alternates don't work currently
+        public override void SetDrawPositions(int i, int j, ref int width, ref int offsetY, ref int height, ref short tileFrameX, ref short tileFrameY)
+        {
+            Point16 topLeft = Utility.GetMultitileTopLeft(i, j);
+            if (WorldGen.IsBelowANonHammeredPlatform(topLeft.X, topLeft.Y))
+                offsetY -= 8;
+        }
+
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
         {
-            var tile = Main.tile[i, j];
-            if (!TileDrawing.IsVisible(tile))
-                return;
-
             flameTexture ??= ModContent.Request<Texture2D>(Texture + "_Flame");
             ulong randSeed = Main.TileFrameSeed ^ (ulong)((long)j << 32 | (long)(uint)i);
 
@@ -82,7 +90,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
                 float xx = Utils.RandomInt(ref randSeed, -10, 11) * 0.15f;
                 float yy = Utils.RandomInt(ref randSeed, -10, 1) * 0.35f;
 
-                Utility.DrawTileExtraTexture(i, j, spriteBatch, flameTexture, drawOffset: new Vector2(xx, yy), drawColor: new Color(100, 100, 100, 0));
+                Utility.DrawTileExtraTexture(i, j, spriteBatch, flameTexture, drawOffset: new Vector2(xx, yy + 10), drawColor: new Color(30, 30, 30, 0));
             }
         }
     }

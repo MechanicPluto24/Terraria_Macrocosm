@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Sets.Items;
-using Macrocosm.Common.Global.Items;
+﻿using Macrocosm.Common.Global.Items;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;

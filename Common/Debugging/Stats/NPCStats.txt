@@ -45,8 +45,6 @@ CraterCrawlerBody
 	Defense: 45
 	KB resist: 0
 	Damage: 60
-	Drops:
-		Moonstone, (1-5) 10%
 
 CraterCrawlerHead
 	Life: 900
@@ -62,8 +60,6 @@ CraterCrawlerTail
 	Defense: 50
 	KB resist: 0
 	Damage: 50
-	Drops:
-		Moonstone, (1-5) 10%
 
 CrescentGhoul
 	Life: 1000
@@ -82,12 +78,29 @@ Dweller
 	Drops:
 		Moonstone, (1-5) 10%
 
+KyaniteScarabSmall
+	Life: 200
+	Defense: 62
+	KB resist: 0.6
+	Damage: 50
+	Drops:
+		Moonstone, (1-5) 10%
+
 Leaper
 	Life: 700
 	Defense: 60
 	KB resist: 0.5
 	Damage: 65
 	Drops:
+		Moonstone, (1-5) 10%
+
+LuminiteElemental
+	Life: 580
+	Defense: 80
+	KB resist: 0.2
+	Damage: 75
+	Drops:
+		Luminite, (2-12) 50%
 		Moonstone, (1-5) 10%
 
 LuminiteSlime
@@ -108,20 +121,44 @@ LuminiteSlimeVolatile
 		Luminite, (2-12) 50%
 		Moonstone, (1-5) 10%
 
+MoonLich
+	Life: 14000
+	Defense: 75
+	KB resist: 0
+	Damage: 60
+	Drops:
+		Space Dust, (3-5) 100%
+		Moonstone, (1-5) 10%
+
+XenoHive
+	Life: 1000
+	Defense: 60
+	KB resist: 0.3
+	Damage: 65
+	Drops:
+		Moonstone, (1-5) 10%
+
+XenoHornet
+	Life: 200
+	Defense: 30
+	KB resist: 0.3
+	Damage: 80
+	Drops:
+		Moonstone, (1-5) 10%
+
 MoonWormBody
 	Life: 200
 	Defense: 69
 	KB resist: 0
 	Damage: 120
-	Drops:
-		Moonstone, (1-5) 10%
 
 MoonWormHead
-	Life: 1250
+	Life: 3250
 	Defense: 63
 	KB resist: 0
 	Damage: 175
 	Drops:
+		Alien Residue, (2-8) 100%
 		Moonstone, (1-5) 10%
 
 MoonWormTail
@@ -129,8 +166,6 @@ MoonWormTail
 	Defense: 75
 	KB resist: 0
 	Damage: 100
-	Drops:
-		Moonstone, (1-5) 10%
 
 MoonZombie
 	Life: 500
@@ -172,6 +207,4 @@ MoonChampion
 	Defense: 100
 	KB resist: 0.2
 	Damage: 1000
-	Drops:
-		Moonstone, (1-5) 10%
 

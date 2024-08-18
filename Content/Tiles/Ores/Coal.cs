@@ -13,9 +13,10 @@ namespace Macrocosm.Content.Tiles.Ores
             TileID.Sets.Ore[Type] = true;
             Main.tileSpelunker[Type] = true;
             Main.tileOreFinderPriority[Type] = 190;
-            Main.tileMergeDirt[Type] = true;
             Main.tileSolid[Type] = true;
             Main.tileBlockLight[Type] = true;
+
+            Main.tileMergeDirt[Type] = true;
 
             AddMapEntry(new Color(32, 31, 33), CreateMapEntryName());
 

@@ -1,22 +1,19 @@
 using Macrocosm.Common.Bases.Projectiles;
-using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Sounds;
+using Macrocosm.Common.Sets;
 using Microsoft.Xna.Framework;
-using System.Linq;
 using Terraria;
-using Terraria.Audio;
-using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
     public class WaveRifleLaser : RicochetBullet
     {
-        
-
         public override void SetStaticDefaults()
         {
+            ProjectileSets.HitsTiles[Type] = true;
         }
+
         public override bool CanRicochet() => false;
+
         public override void SetProjectileDefaults()
         {
             Projectile.width = 4;
@@ -26,12 +23,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = 15;
         }
-         public override void AI()
+
+        public override void AI()
         {
             Lighting.AddLight(Projectile.position, new Color(255, 0, 255).ToVector3() * 0.6f);
         }
-
-      
-
     }
 }

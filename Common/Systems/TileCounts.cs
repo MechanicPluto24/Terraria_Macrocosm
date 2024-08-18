@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Common.Sets;
 using Macrocosm.Content.Tiles.Blocks.Terrain;
 using System;
 using System.Collections.Generic;
@@ -20,8 +21,9 @@ namespace Macrocosm.Common.Systems
         public override void PostSetupContent()
         {
             List<int> graveyardtypes = new();
-            foreach (var tile in ModContent.GetContent<ModTile>().Where(item => item is ITombstoneTile))
-                graveyardtypes.Add(tile.Type);
+            for(int type = 0; type < TileLoader.TileCount; type++)
+                if (TileSets.GraveyardTile[type])
+                    graveyardtypes.Add(type);
             graveyardTileTypes = graveyardtypes.ToArray();
         }
 
@@ -31,11 +33,7 @@ namespace Macrocosm.Common.Systems
             IrradiatedRockCount = tileCounts[ModContent.TileType<IrradiatedRock>()];
 
             foreach (int type in graveyardTileTypes)
-            {
-                ModTile tile = TileLoader.GetTile(type);
-                if (tile is ITombstoneTile)
-                    GraveyardModTileCount += tileCounts[type];
-            }
+                 GraveyardModTileCount += tileCounts[type];
         }
 
         public override void ResetNearbyTileEffects()

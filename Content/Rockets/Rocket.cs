@@ -5,7 +5,6 @@ using Macrocosm.Common.Storage;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.UI;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Items.Materials.Drops;
 using Macrocosm.Content.Items.Materials.Tech;
 using Macrocosm.Content.Particles;
 using Macrocosm.Content.Players;
@@ -14,19 +13,15 @@ using Macrocosm.Content.Rockets.LaunchPads;
 using Macrocosm.Content.Rockets.Modules;
 using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
-using ReLogic.Utilities;
-using SubworldLibrary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
-using Terraria.GameContent.Golf;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
-using XPT.Core.Audio.MP3Sharp;
 
 namespace Macrocosm.Content.Rockets
 {
@@ -317,7 +312,7 @@ namespace Macrocosm.Content.Rockets
 
             Active = false;
 
-            if(sync)
+            if (sync)
                 NetSync();
         }
 
@@ -722,7 +717,7 @@ namespace Macrocosm.Content.Rockets
                 int count = MacrocosmSubworld.CurrentAtmosphericDensity < 1f ? 1 : (int)(3f * atmoDesityFactor * StaticFireProgress);
                 SpawnSmokeExhaustTrail(countPerTick: count);
 
-                if(Main.rand.NextFloat() < StaticFireProgress)
+                if (Main.rand.NextFloat() < StaticFireProgress)
                     SpawnTileDust(closestTile, 1);
             }
 
@@ -735,7 +730,7 @@ namespace Macrocosm.Content.Rockets
                 SpawnSmokeExhaustTrail(countPerTick: count);
 
                 if (EasedFlightProgress < 0.1f)
-                     SpawnTileDust(closestTile, 2);
+                    SpawnTileDust(closestTile, 2);
             }
 
             if (Landing)
@@ -746,9 +741,9 @@ namespace Macrocosm.Content.Rockets
                 int count = MacrocosmSubworld.CurrentAtmosphericDensity < 1f ? 1 : (int)(3f * atmoDesityFactor);
                 SpawnSmokeExhaustTrail(countPerTick: count, speed: 2f * (1.2f - EasedLandingProgress));
 
-                if(EasedLandingProgress > 0.9f)
-                     SpawnTileDust(closestTile, 2);
- 
+                if (EasedLandingProgress > 0.9f)
+                    SpawnTileDust(closestTile, 2);
+
                 if (LandingProgress >= 1f - 0.03f)
                 {
                     SpawnTileDust(closestTile, 15);
@@ -807,7 +802,7 @@ namespace Macrocosm.Content.Rockets
 
 
                 Vector2 velocity = new(Main.rand.NextFloat(-0.4f, 0.4f), Main.rand.NextFloat(2, 4));
-                if(Landing)
+                if (Landing)
                     velocity = new(Main.rand.NextFloat(-0.4f, 0.4f), Main.rand.NextFloat(8, 12));
 
                 var smoke = Particle.CreateParticle<RocketExhaustSmoke>(p =>
@@ -851,7 +846,7 @@ namespace Macrocosm.Content.Rockets
         {
             for (int x = -8; x < 8; x++)
             {
-                if(x is < -6 or > -2 and < 2 or > 6 && !Utility.CoordinatesOutOfBounds(tileCoords.X - x, tileCoords.Y))
+                if (x is < -6 or > -2 and < 2 or > 6 && !Utility.CoordinatesOutOfBounds(tileCoords.X - x, tileCoords.Y))
                     WorldGen.KillTile_MakeTileDust(tileCoords.X - x, tileCoords.Y, Main.tile[tileCoords.X - x, tileCoords.Y]);
             }
         }
@@ -873,7 +868,7 @@ namespace Macrocosm.Content.Rockets
                     sound.Volume = intensity;
                     sound.Position = Center;
                     return FlightTime < LiftoffTime && ActiveInCurrentWorld;
-                }); 
+                });
             }
 
             if (FlightTime == LiftoffTime)
@@ -934,7 +929,7 @@ namespace Macrocosm.Content.Rockets
 
             bool samePlanet = CurrentWorld == TargetWorld;
 
-            if(Main.netMode != NetmodeID.MultiplayerClient)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 CurrentWorld = TargetWorld;
                 NetSync();
@@ -973,7 +968,7 @@ namespace Macrocosm.Content.Rockets
             else
             {
                 if (CheckPlayerInRocket(Main.myPlayer))
-                     MacrocosmSubworld.Travel(TargetWorld, this);
+                    MacrocosmSubworld.Travel(TargetWorld, this);
             }
         }
     }

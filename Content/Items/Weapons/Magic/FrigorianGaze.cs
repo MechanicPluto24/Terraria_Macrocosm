@@ -1,4 +1,3 @@
-using Macrocosm.Content.Items.Materials.Bars;
 using Macrocosm.Content.Projectiles.Friendly.Magic;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
@@ -33,18 +32,18 @@ namespace Macrocosm.Content.Items.Weapons.Magic
             Item.UseSound = SoundID.Item9;
             Item.shoot = ModContent.ProjectileType<DianitePortal>();
             Item.noUseGraphic = true;
-            Item.shootSpeed=10f;
+            Item.shootSpeed = 10f;
         }
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            
+
             Projectile.NewProjectileDirect(source, position, velocity, ModContent.ProjectileType<FrigorianGazeProjectile>(), damage, knockback, player.whoAmI);
-               
-            
-            return false;  
+
+
+            return false;
         }
 
-       
-			
+
+
     }
 }

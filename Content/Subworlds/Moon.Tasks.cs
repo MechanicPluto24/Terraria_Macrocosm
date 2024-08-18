@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Systems;
 using Macrocosm.Common.Utils;
 using Macrocosm.Common.WorldGeneration;
 using Macrocosm.Content.Tiles.Ambient;
@@ -7,18 +6,16 @@ using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Macrocosm.Content.Tiles.Ores;
 using Macrocosm.Content.Tiles.Walls;
 using Macrocosm.Content.WorldGeneration.Structures;
-using Macrocosm.Content.WorldGeneration.Structures.Shrines;
 using Macrocosm.Content.WorldGeneration.Structures.LunarOutposts;
+using Macrocosm.Content.WorldGeneration.Structures.Shrines;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.Localization;
-using Terraria.ModLoader;
 using Terraria.WorldBuilding;
 using static Macrocosm.Common.Utils.Utility;
 using static Terraria.ModLoader.ModContent;
@@ -46,30 +43,23 @@ namespace Macrocosm.Content.Subworlds
         private static Point gen_CryocoreShrinePosition;
         private static Point gen_DarkCelestialShrinePosition;
         private static Point gen_CosmicEmberShrinePosition;
-        public Structure DetrmineLunarHouse()
+
+        private Structure DetermineLunarHouse()
         {
-        int i = Main.rand.Next(0,9);
-        //Lists were being funky, so whilst this is lame, it always works.
-        if(i==0)
-            return new LunarHouse1();
-        if(i==1)
-            return new LunarHouse2();
-        if(i==2)
-            return new LunarHouse3();
-        if(i==3)
-            return new LunarHouse4();
-        if(i==4)
-            return new LunarHouse5();
-        if(i==5)
-            return new LunarHouse6();
-        if(i==6)
-            return new LunarHouse7();
-        if(i==7)
-            return new LunarHouse8();
-        if(i==8)
-            return new LunarHouse9();
-        else
-         return null;
+            int i = Main.rand.Next(0, 9);
+            return i switch
+            {
+                0 => new LunarHouse1(),
+                1 => new LunarHouse2(),
+                2 => new LunarHouse3(),
+                3 => new LunarHouse4(),
+                4 => new LunarHouse5(),
+                5 => new LunarHouse6(),
+                6 => new LunarHouse7(),
+                7 => new LunarHouse8(),
+                8 => new LunarHouse9(),
+                _ => null,
+            };
         }
 
         [Task]
@@ -510,13 +500,14 @@ namespace Macrocosm.Content.Subworlds
             {
                 int offset = (int)(FunnySurfaceEquation(i * 0.02f + randomOffset) * 3f);
                 int surfaceHeight = SurfaceHeight(i);
-                for (int j = surfaceHeight+CynthalithlithLayerHeight; j < surfaceHeight + RegolithLayerHeight+30; j++)
+                for (int j = surfaceHeight + CynthalithlithLayerHeight; j < surfaceHeight + RegolithLayerHeight + 30; j++)
                 {
                     if (!Main.tile[i, j].HasTile)
                     {
                         continue;
                     }
-                    if (j < surfaceHeight+60&&Main.rand.Next(Math.Abs(surfaceHeight+60-j))<10){
+                    if (j < surfaceHeight + 60 && Main.rand.Next(Math.Abs(surfaceHeight + 60 - j)) < 10)
+                    {
                         continue;
                     }
                     FastPlaceTile(i, j, cynthalithType);
@@ -754,26 +745,22 @@ namespace Macrocosm.Content.Subworlds
                 int tileX = WorldGen.genRand.Next(80, Main.maxTilesX - 80);
                 int tileY = WorldGen.genRand.Next((int)(SurfaceHeight(tileX) + RegolithLayerHeight + 20.0), Main.maxTilesY - 230);
 
-                var builder =  DetrmineLunarHouse();
+                var builder = DetermineLunarHouse();
                 if (!builder.Place(new(tileX, tileY), StructureMap))
                 {
                     tries--;
                     i--;
                 }
             }
-            
-            
-        }
-         [Task]
-        private void Horror(GenerationProgress progress){
-             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.Horror");
-            var cheesebuilder =  new CHEESE();
-            cheesebuilder.Place(new Point16(420, 1000), StructureMap);
-
         }
 
-          
-
+        [Task]
+        private void CheeseHouse(GenerationProgress progress)
+        {
+            progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.Horror");
+            Structure cheeseHouse = new CheeseHouse();
+            cheeseHouse.Place(new Point16(420, 1000), StructureMap);
+        }
 
         [Task]
         private void AmbientTask(GenerationProgress progress)
@@ -834,7 +821,7 @@ namespace Macrocosm.Content.Subworlds
                     TileNeighbourInfo aboveNeighbourInfo = new(i, j - 1);
                     if (Main.tile[i, j].HasTile && Main.tile[i, j].TileType == ProtolithType)
                     {
-                        if ( neighbourInfo.Solid.Right
+                        if (neighbourInfo.Solid.Right
                             && neighbourInfo.Solid.Left
                             && !neighbourInfo.HasTile.Top
                             && !neighbourInfo.HasTile.TopRight

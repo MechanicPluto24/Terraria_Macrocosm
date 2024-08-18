@@ -1,25 +1,16 @@
-﻿using Macrocosm.Common.Config;
-using Macrocosm.Common.Netcode;
-using Macrocosm.Common.Subworlds;
+﻿using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Systems;
 using Macrocosm.Common.Systems.Power;
-using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
-using Macrocosm.Content.Buffs.Medkit;
+using Macrocosm.Content.Buffs.Potions;
 using Macrocosm.Content.Debuffs.Environment;
-using Macrocosm.Content.Items.Consumables;
-using Macrocosm.Content.LoadingScreens;
+using Macrocosm.Content.Debuffs.Radiation;
+using Macrocosm.Content.Items.Consumables.Potions;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Terraria;
-using Terraria.DataStructures;
-using Terraria.Graphics.Effects;
 using Terraria.ID;
-using Terraria.IO;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -27,13 +18,6 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Players
 {
-    public enum SpaceHazard
-    {
-        None,
-        Vacuum,
-        Radiation
-    }
-
     /// <summary>
     /// Miscellaneous class for storing custom player data. 
     /// Complex, very specific systems should be implemented in a separate ModPlayer.
@@ -86,22 +70,12 @@ namespace Macrocosm.Content.Players
         public bool KnowsToUseZombieFinger = false;
         #endregion
 
-        #region Environment effect data
-        /// <summary> 
-        /// The radiation "static noise" effect intensity. 
-        /// Not synced.
-        /// </summary>
-        public float RadiationEffectIntensity = 0f;
-        #endregion
-
         public override void ResetEffects()
         {
             SpaceProtection = 0f;
-            RadiationEffectIntensity = 0f;
             ChanceToNotConsumeAmmo = 0f;
 
             Player.buffImmune[BuffType<Depressurized>()] = false;
-            Player.buffImmune[BuffType<Irradiated>()] = false;
         }
 
         #region Hooks
@@ -144,9 +118,6 @@ namespace Macrocosm.Content.Players
         {
             if (SubworldSystem.AnyActive<Macrocosm>())
                 Player.AddBuff(BuffType<Depressurized>(), 2);
-
-            if(Player.InModBiome<IrradiationBiome>())
-                Player.AddBuff(BuffType<Irradiated>(), 2);
         }
 
         private void Update_RocketImmunities()
@@ -154,17 +125,13 @@ namespace Macrocosm.Content.Players
             if (Player.GetModPlayer<RocketPlayer>().InRocket)
             {
                 Player.buffImmune[BuffType<Depressurized>()] = true;
-                Player.buffImmune[BuffType<Irradiated>()] = true;
             }
         }
 
         private void Update_EquipImmunities()
         {
-            if (SpaceProtection >= (float)SpaceHazard.Vacuum * 3)
+            if (SpaceProtection >= (float)3f)
                 Player.buffImmune[BuffType<Depressurized>()] = true;
-
-            if (SpaceProtection >= (float)SpaceHazard.Radiation * 3)
-                Player.buffImmune[BuffType<Irradiated>()] = true;
         }
 
         private void Update_SetBonuses()
@@ -207,7 +174,7 @@ namespace Macrocosm.Content.Players
         {
             if (medkitHitCooldown > 0)
                 return;
-            
+
             if (Player.HasBuff<MedkitMedium>())
             {
                 int index = Player.FindBuffIndex(BuffType<MedkitMedium>());
@@ -234,11 +201,6 @@ namespace Macrocosm.Content.Players
         public override void PostUpdateMiscEffects()
         {
             Update_Graveyard();
-
-            if (!Main.dedServ)
-            {
-                Update_FilterEffects();
-            }
         }
 
         private static void Update_Graveyard()
@@ -247,11 +209,6 @@ namespace Macrocosm.Content.Players
                 Main.SceneMetrics.GraveyardTileCount = 0;
             else
                 Main.SceneMetrics.GraveyardTileCount += TileCounts.Instance.GraveyardModTileCount;
-        }
-
-        private void Update_FilterEffects()
-        {
-            
         }
 
         #endregion

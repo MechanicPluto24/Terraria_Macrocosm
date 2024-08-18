@@ -1,10 +1,8 @@
-﻿using Macrocosm.Common.Sets.Items;
-using Macrocosm.Common.Storage;
+﻿using Macrocosm.Common.Storage;
 using Macrocosm.Common.Systems.UI;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Items.Materials.Tech;
 using Macrocosm.Content.Players;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -163,7 +161,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
         }
 
         private UIPanel CreateInventoryPanel()
-        {    
+        {
             inventoryPanel = Rocket.Inventory.ProvideUI
             (
                 out var slots,

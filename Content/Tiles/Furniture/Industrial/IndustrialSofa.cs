@@ -136,7 +136,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
 
             player.noThrow = 2;
             player.cursorItemIconEnabled = true;
-            player.cursorItemIconID = ModContent.ItemType<Items.Furniture.Industrial.IndustrialSofa>();
+            player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, TileObjectData.GetTileStyle(Main.tile[i, j]));
         }
     }
 }

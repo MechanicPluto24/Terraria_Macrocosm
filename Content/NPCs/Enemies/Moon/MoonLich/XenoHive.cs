@@ -1,6 +1,6 @@
 using Macrocosm.Common.Global.NPCs;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Biomes;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.GameContent.Bestiary;
@@ -9,20 +9,20 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
 {
- //TODO get an actual sprite.
+    //TODO get an actual sprite.
 
-    public class XenoHive : ModNPC, IMoonEnemy
+    public class XenoHive : ModNPC
     {
         public override void SetStaticDefaults()
         {
-            base.SetStaticDefaults();
             Main.npcFrameCount[Type] = 6;
+
+            NPCSets.MoonNPC[Type] = true;
+            NPCSets.DropsMoonstone[Type] = true;
         }
 
         public override void SetDefaults()
         {
-            base.SetDefaults();
-
             NPC.width = 85;
             NPC.height = 76;
             NPC.damage = 65;
@@ -33,7 +33,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
             NPC.knockBackResist = 0.3f;
             NPC.aiStyle = -1;
             AIType = NPCID.ZombieMushroom;
-            
+
         }
 
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
@@ -45,7 +45,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
             });
         }
 
-      
+
         int Timer;
         public override void AI()
         {
@@ -53,29 +53,30 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
 
 
 
-            if (Timer%600>60)
+            if (Timer % 600 > 60)
                 Utility.AIZombie(NPC, ref NPC.ai, false, true, velMax: 7, maxJumpTilesX: 18, maxJumpTilesY: 12, moveInterval: 0.08f);
             else
-                NPC.velocity.X*=0f;
-            if (Timer%600==30){
-               //This has to be synced right?
-                NPC.NewNPCDirect(NPC.GetSource_FromAI(),(int)NPC.Center.X,(int)NPC.Center.Y,ModContent.NPCType<XenoHornet>(), 0, 0f);
-                
-                
+                NPC.velocity.X *= 0f;
+            if (Timer % 600 == 30)
+            {
+                //This has to be synced right?
+                NPC.NewNPCDirect(NPC.GetSource_FromAI(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<XenoHornet>(), 0, 0f);
+
+
             }
-            
-        
-            
+
+
+
 
             NPC.despawnEncouraged = false;
 
-     
+
             NPC.damage = NPC.defDamage;
-             
-           
-               
-        
-           Timer++;
+
+
+
+
+            Timer++;
         }
 
         // frames 0 - 9: idle 
@@ -90,7 +91,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
             int idleFrameInitial = 0;
             int idleFrameCount = 2;
 
-    
+
 
             int runFrameInitial = 2;
             int runFrameCount = 4;
@@ -118,7 +119,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
                         NPC.frame.Y = idleFrameInitial * frameHeight;
                 }
             }
-            else{
+            else
+            {
                 NPC.frame.Y = (int)(NPC.frameCounter / ticksPerFrame + runFrameInitial) * frameHeight;
 
                 if (NPC.frameCounter >= ticksPerFrame * runFrameCount)

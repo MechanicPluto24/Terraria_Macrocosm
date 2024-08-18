@@ -1,110 +1,144 @@
-﻿using Macrocosm.Common.Config;
-using Macrocosm.Common.Netcode;
-using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.Systems;
-using Macrocosm.Common.Systems.Power;
+﻿using Macrocosm.Common.Enums;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Biomes;
-using Macrocosm.Content.Debuffs.RadDebuffs;
-using Macrocosm.Content.LoadingScreens;
+using Macrocosm.Content.Debuffs.Radiation;
 using Microsoft.Xna.Framework;
-using SubworldLibrary;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Terraria;
 using Terraria.Graphics.Effects;
-using Terraria.ID;
-using Terraria.IO;
-using Terraria.Localization;
 using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Players
 {
     public class IrradiationPlayer : ModPlayer
     {
-    public float IrradiationLevels=0f;
-    public float BaseIrradiationReduction=0.0001f;
-    public float AdditonalIrradiationReduction=0f;
-    public float RadNoiseIntensity=0f;
-    public int Tier1Type=0;
-    public int Tier2Type=0;
-    public int Tier3Type=0;
-    public int[] Tier1Debuffs= new int[]{
-    ModContent.BuffType<MildNecrosis>(),
-    ModContent.BuffType<WeakBones>()
-    };
-    public int[] Tier2Debuffs= new int[]{
-    ModContent.BuffType<Blindness>(),
-    ModContent.BuffType<Paralysis>()
-    };
-    public int[] Tier3Debuffs= new int[]{
-    ModContent.BuffType<OrganFailure>(),
-    ModContent.BuffType<Necrosis>()
-    };
+        /// <summary>
+        /// The player's irradiation level.
+        /// Not synced.
+        /// </summary>
+        public float IrradiationLevel { get; set; } = 0f;
 
+        /// <summary> 
+        /// Irradiation reduction per tick.
+        /// Not synced.
+        /// </summary>
+        public float IrradiationReduction { get; set; } = 0.002f;
 
-    public void HandleDebuffs(){
-        if (IrradiationLevels>=1f){
-        Player.AddBuff(Tier1Debuffs[Tier1Type],60);
-        }
-        else{
-            Tier1Type=Main.rand.Next(0,2);
-        }
-        if (IrradiationLevels>=2.5f){
-        Player.AddBuff(Tier2Debuffs[Tier2Type],60);
-        }
-        else{
-            Tier2Type=Main.rand.Next(0,2);
-        }
-        if (IrradiationLevels>=4f){
-        Player.AddBuff(Tier3Debuffs[Tier3Type],60);
-        }
-        else{
-            Tier3Type=Main.rand.Next(0,2);
-        }
-    }
+        /// <summary>
+        /// Visual static noise intensity
+        /// </summary>
+        public float RadiationNoiseIntensity { get; set; } = 0f;
 
+        int[] mildDebuffs;
+        int[] moderateDebuffs;
+        int[] severeDebuffs;
 
-
-    public override void PostUpdateMiscEffects()
-    {
-    IrradiationLevels-=(BaseIrradiationReduction+AdditonalIrradiationReduction);
-    if (IrradiationLevels<0f)
-        IrradiationLevels=0f;
-    
-        if (IrradiationLevels>=0.5f){
-                    if (!Filters.Scene["Macrocosm:RadiationNoise"].IsActive())
-                        Filters.Scene.Activate("Macrocosm:RadiationNoise");
-
-                    RadNoiseIntensity = 0.2f * IrradiationLevels;
-
-                    Filters.Scene["Macrocosm:RadiationNoise"].GetShader().UseIntensity(RadNoiseIntensity);
-        }
-        else
+        public override void OnEnterWorld()
         {
-        if (Filters.Scene["Macrocosm:RadiationNoise"].IsActive())
-            Filters.Scene.Deactivate("Macrocosm:RadiationNoise");
+            IrradiationLevel = 0f;
         }
-        HandleDebuffs();
-         
-    }
-    public override void Load()
-        {
-            IrradiationLevels = 0f;
-        }
+
         public override void Initialize()
         {
-            IrradiationLevels = 0f;
+            IrradiationLevel = 0f;
         }
+
         public override void UpdateDead()
         {
-            IrradiationLevels = 0f;
-        }
-        
+            IrradiationLevel = 0f;
 
+            RadiationNoiseIntensity *= 0.95f;
+            UpdateEffects();
+        }
+
+        public override void ResetEffects()
+        {
+            RadiationNoiseIntensity = 0f;
+            IrradiationReduction = 0.002f;
+        }
+
+        public override void PostUpdateMiscEffects()
+        {
+            if (Main.gamePaused)
+                return;
+
+            UpdateRadiation();
+            UpdateSymptomDebuffs();
+            UpdateEffects();
+        }
+
+        private void UpdateRadiation()
+        {
+            IrradiationLevel -= IrradiationReduction;
+            IrradiationLevel = MathHelper.Clamp(IrradiationLevel, 0, 6f);
+
+            RadiationNoiseIntensity += 0.05f * IrradiationLevel;
+            RadiationNoiseIntensity = MathHelper.Clamp(RadiationNoiseIntensity, 0, 0.5f);
+
+            //Main.NewText($"Irradiation: {IrradiationLevel}, RadNoise: {RadiationNoiseIntensity}");
+
+            if (IrradiationLevel >= 0.55)
+                Player.AddBuff(ModContent.BuffType<Irradiated>(), 2);
+            if (IrradiationLevel <= 0.45)
+                Player.ClearBuff(ModContent.BuffType<Irradiated>());
+        }
+
+        private void UpdateSymptomDebuffs()
+        {
+            if (!Main.rand.NextBool(600))
+                return;
+
+            int buffType = 0;
+
+            mildDebuffs ??= BuffSets.GetRadiationDebuffs(RadiationSeverity.Mild);
+            moderateDebuffs ??= BuffSets.GetRadiationDebuffs(RadiationSeverity.Moderate);
+            severeDebuffs ??= BuffSets.GetRadiationDebuffs(RadiationSeverity.Severe);
+
+            if (IrradiationLevel >= 4f)
+            {
+                if (Main.rand.NextFloat() <= 0.5f)   
+                    buffType = severeDebuffs.GetRandom();
+                else if (Main.rand.NextFloat() <= 0.7f)   
+                     buffType = moderateDebuffs.GetRandom();
+                else
+                     buffType = mildDebuffs.GetRandom();
+            }
+            else if (IrradiationLevel >= 2.5f)
+            {
+                if (Main.rand.NextFloat() <= 0.7f) 
+                    buffType = moderateDebuffs.GetRandom();
+                else
+                    buffType = mildDebuffs.GetRandom();
+            }
+            else if (IrradiationLevel >= 1f)
+            {
+                buffType = mildDebuffs.GetRandom();
+            }
+
+            int duration = BuffSets.TypicalDuration[buffType];
+            if (duration <= 0)
+                duration = 60;
+            duration = (int)(duration * Main.rand.NextFloat(0.6f, 1f));
+
+            if (buffType > 0)
+                Player.AddBuff(buffType, duration);
+        }
+
+        private void UpdateEffects()
+        {
+            if (RadiationNoiseIntensity >= 0.01f)
+            {
+                if (!Filters.Scene["Macrocosm:RadiationNoise"].IsActive())
+                    Filters.Scene.Activate("Macrocosm:RadiationNoise");
+
+                Filters.Scene["Macrocosm:RadiationNoise"].GetShader().UseIntensity(RadiationNoiseIntensity);
+            }
+            else
+            {
+                if (Filters.Scene["Macrocosm:RadiationNoise"].IsActive())
+                    Filters.Scene.Deactivate("Macrocosm:RadiationNoise");
+            }
+        }
     }
 }
 

@@ -88,3 +88,8 @@ StarDestroyerStar.DisplayName: Star Destroyer Star
 StarDestroyerStarBlue.DisplayName: Star Destroyer Star Blue
 StarDestroyerStarYellow.DisplayName: Star Destroyer Star Yellow
 MoonRubble.DisplayName: Moon Rubble
+MoonLichNPCSummon.DisplayName: Moon Lich N P C Summon
+DualWaveGunsHeld.DisplayName: Dual Wave Guns Held
+WaveGunLaser.DisplayName: Wave Gun Laser
+WaveRifleLaser.DisplayName: Wave Rifle Laser
+LichBolt.DisplayName: Lich Bolt

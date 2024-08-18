@@ -1,7 +1,6 @@
 ﻿using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
 using System;
-using Terraria;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Machines
@@ -17,7 +16,7 @@ namespace Macrocosm.Content.Machines
 
         public override void MachineUpdate()
         {
-            if(PoweredOn)
+            if (PoweredOn)
                 GeneratedPower = 2f * Math.Abs(Utility.WindSpeedScaled);
             else
                 GeneratedPower = 0;

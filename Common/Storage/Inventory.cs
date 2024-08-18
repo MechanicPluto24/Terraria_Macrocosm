@@ -1,6 +1,4 @@
-﻿
-using Macrocosm.Common.Systems.UI;
-using Macrocosm.Common.UI;
+﻿using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using System;
@@ -197,7 +195,7 @@ namespace Macrocosm.Common.Storage
 
                     ItemLoader.StackItems(items[i], item, out _);
 
-                    if(sound)
+                    if (sound)
                         SoundEngine.PlaySound(SoundID.Grab);
 
                     if (item.stack <= 0)
@@ -242,7 +240,7 @@ namespace Macrocosm.Common.Storage
                         break;
                     }
 
-                    if(sound)
+                    if (sound)
                         SoundEngine.PlaySound(SoundID.Grab);
 
                     items[j] = item.Clone();

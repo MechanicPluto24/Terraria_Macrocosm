@@ -1,5 +1,9 @@
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Subworlds;
+using Macrocosm.Content.Biomes;
+using Macrocosm.Content.Subworlds;
 using SubworldLibrary;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent.Bestiary;
 using Terraria.ID;
@@ -11,9 +15,46 @@ namespace Macrocosm.Common.Global.NPCs
     /// <summary> Global NPC for general NPC modifications (loot, spawn pools) </summary>
     public class MacrocosmGlobalNPC : GlobalNPC
     {
-        public override void SetStaticDefaults()
+        /// <summary> For subworld specific spawn pools </summary>
+        public override void EditSpawnPool(IDictionary<int, float> pool, NPCSpawnInfo spawnInfo)
         {
-            SetImmunities();
+            for (int type = 0; type < NPCLoader.NPCCount; type++)
+            {
+                if (SubworldSystem.IsActive<Moon>() && !NPCSets.MoonNPC[type]) { pool.Remove(type); }
+                //if (SubworldSystem.IsActive<Mars>() && !NPCSets.MarsNPCs[type]) { pool.Remove(type); }
+                //...
+            }
+        }
+
+        public override void EditSpawnRate(Player player, ref int spawnRate, ref int maxSpawns)
+        {
+            if (!SubworldSystem.AnyActive<Macrocosm>())
+                return;
+
+            if (player.InModBiome<UndergroundMoonBiome>())
+            {
+                spawnRate = (int)(spawnRate * 0.75f);
+                maxSpawns = (int)(maxSpawns * 1.5f);
+            }
+            /*
+            else if (player.InModBiome<IrradiationBiome>())
+            {
+                //...
+            }
+            */
+            else if (player.InModBiome<MoonBiome>())
+            {
+                if (Main.dayTime)
+                {
+                    spawnRate = (int)(spawnRate * 1f);
+                    maxSpawns = (int)(maxSpawns * 1f);
+                }
+                else
+                {
+                    spawnRate = (int)(spawnRate * 0.6f);
+                    maxSpawns = (int)(maxSpawns * 2f);
+                }
+            }
         }
 
         public override void AI(NPC npc)
@@ -40,23 +81,6 @@ namespace Macrocosm.Common.Global.NPCs
             if (flavorText != LocalizedText.Empty)
             {
                 bestiaryEntry.Info.AddRange([new FlavorTextBestiaryInfoElement(flavorText.Key)]);
-            }
-        }
-
-        private static void SetImmunities()
-        {
-            for (int type = 0; type < NPCLoader.NPCCount; type++)
-            {
-                ModNPC npc = NPCLoader.GetNPC(type);
-
-                if (npc is IMoonEnemy)
-                {
-                    NPCID.Sets.SpecificDebuffImmunity[type][BuffID.OnFire] = true;
-                    NPCID.Sets.SpecificDebuffImmunity[type][BuffID.CursedInferno] = true;
-                    NPCID.Sets.SpecificDebuffImmunity[type][BuffID.Frostburn] = true;
-                    NPCID.Sets.SpecificDebuffImmunity[type][BuffID.Confused] = true;
-                    NPCID.Sets.SpecificDebuffImmunity[type][BuffID.Poisoned] = true;
-                }
             }
         }
     }

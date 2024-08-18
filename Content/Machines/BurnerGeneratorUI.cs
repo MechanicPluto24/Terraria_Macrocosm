@@ -1,15 +1,7 @@
-﻿using Macrocosm.Common.Loot;
-using Macrocosm.Common.Netcode;
-using Macrocosm.Common.Storage;
+﻿using Macrocosm.Common.Storage;
 using Macrocosm.Common.Systems.Power;
-using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Rockets;
 using Microsoft.Xna.Framework;
-using System.Collections.Generic;
-using System.Linq;
-using Terraria.GameContent.ItemDropRules;
 using Terraria.GameContent.UI.Elements;
 
 

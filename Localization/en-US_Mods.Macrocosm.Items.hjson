@@ -1478,3 +1478,383 @@ StarDestroyer: {
 	DisplayName: Star Destroyer
 	Tooltip: ""
 }
+
+DualWaveGuns: {
+	DisplayName: Dual Wave Guns
+	Tooltip: ""
+}
+
+WaveGunBlue: {
+	DisplayName: Wave Gun Blue
+	Tooltip: ""
+}
+
+WaveGunRed: {
+	DisplayName: Wave Gun Red
+	Tooltip: ""
+}
+
+WaveGunSingle: {
+	DisplayName: Wave Gun Single
+	Tooltip: ""
+}
+
+Cynthalith: {
+	DisplayName: Cynthalith
+	Tooltip: ""
+}
+
+AstraBookcase: {
+	DisplayName: Astra Bookcase
+	Tooltip: ""
+}
+
+AstraChair: {
+	DisplayName: Astra Chair
+	Tooltip: ""
+}
+
+AstraChest: {
+	DisplayName: Astra Chest
+	Tooltip: ""
+}
+
+AstraClock: {
+	DisplayName: Astra Clock
+	Tooltip: ""
+}
+
+AstraToilet: {
+	DisplayName: Astra Toilet
+	Tooltip: ""
+}
+
+CosmicEmberBookcase: {
+	DisplayName: Cosmic Ember Bookcase
+	Tooltip: ""
+}
+
+CosmicEmberChair: {
+	DisplayName: Cosmic Ember Chair
+	Tooltip: ""
+}
+
+CosmicEmberChest: {
+	DisplayName: Cosmic Ember Chest
+	Tooltip: ""
+}
+
+CosmicEmberClock: {
+	DisplayName: Cosmic Ember Clock
+	Tooltip: ""
+}
+
+CosmicEmberToilet: {
+	DisplayName: Cosmic Ember Toilet
+	Tooltip: ""
+}
+
+CryocoreBookcase: {
+	DisplayName: Cryocore Bookcase
+	Tooltip: ""
+}
+
+CryocoreChair: {
+	DisplayName: Cryocore Chair
+	Tooltip: ""
+}
+
+CryocoreChest: {
+	DisplayName: Cryocore Chest
+	Tooltip: ""
+}
+
+CryocoreClock: {
+	DisplayName: Cryocore Clock
+	Tooltip: ""
+}
+
+CryocoreToilet: {
+	DisplayName: Cryocore Toilet
+	Tooltip: ""
+}
+
+DarkCelestialBookcase: {
+	DisplayName: Dark Celestial Bookcase
+	Tooltip: ""
+}
+
+DarkCelestialChair: {
+	DisplayName: Dark Celestial Chair
+	Tooltip: ""
+}
+
+DarkCelestialChest: {
+	DisplayName: Dark Celestial Chest
+	Tooltip: ""
+}
+
+DarkCelestialClock: {
+	DisplayName: Dark Celestial Clock
+	Tooltip: ""
+}
+
+DarkCelestialToilet: {
+	DisplayName: Dark Celestial Toilet
+	Tooltip: ""
+}
+
+HeavenforgeBookcase: {
+	DisplayName: Heavenforge Bookcase
+	Tooltip: ""
+}
+
+HeavenforgeChair: {
+	DisplayName: Heavenforge Chair
+	Tooltip: ""
+}
+
+HeavenforgeChest: {
+	DisplayName: Heavenforge Chest
+	Tooltip: ""
+}
+
+HeavenforgeClock: {
+	DisplayName: Heavenforge Clock
+	Tooltip: ""
+}
+
+HeavenforgeToilet: {
+	DisplayName: Heavenforge Toilet
+	Tooltip: ""
+}
+
+LuminiteChest: {
+	DisplayName: Luminite Chest
+	Tooltip: ""
+}
+
+LunarRustBookcase: {
+	DisplayName: Lunar Rust Bookcase
+	Tooltip: ""
+}
+
+LunarRustChair: {
+	DisplayName: Lunar Rust Chair
+	Tooltip: ""
+}
+
+LunarRustChest: {
+	DisplayName: Lunar Rust Chest
+	Tooltip: ""
+}
+
+LunarRustClock: {
+	DisplayName: Lunar Rust Clock
+	Tooltip: ""
+}
+
+LunarRustToilet: {
+	DisplayName: Lunar Rust Toilet
+	Tooltip: ""
+}
+
+MercuryBookcase: {
+	DisplayName: Mercury Bookcase
+	Tooltip: ""
+}
+
+MercuryChair: {
+	DisplayName: Mercury Chair
+	Tooltip: ""
+}
+
+MercuryChest: {
+	DisplayName: Mercury Chest
+	Tooltip: ""
+}
+
+MercuryClock: {
+	DisplayName: Mercury Clock
+	Tooltip: ""
+}
+
+MercuryToilet: {
+	DisplayName: Mercury Toilet
+	Tooltip: ""
+}
+
+StarRoyaleBookcase: {
+	DisplayName: Star Royale Bookcase
+	Tooltip: ""
+}
+
+StarRoyaleChair: {
+	DisplayName: Star Royale Chair
+	Tooltip: ""
+}
+
+StarRoyaleChest: {
+	DisplayName: Star Royale Chest
+	Tooltip: ""
+}
+
+StarRoyaleClock: {
+	DisplayName: Star Royale Clock
+	Tooltip: ""
+}
+
+StarRoyaleToilet: {
+	DisplayName: Star Royale Toilet
+	Tooltip: ""
+}
+
+XaocKey: {
+	DisplayName: Xaoc Key
+	Tooltip: ""
+}
+
+AstraCandelabra: {
+	DisplayName: Astra Candelabra
+	Tooltip: ""
+}
+
+AstraCandle: {
+	DisplayName: Astra Candle
+	Tooltip: ""
+}
+
+AstraLantern: {
+	DisplayName: Astra Lantern
+	Tooltip: ""
+}
+
+CosmicEmberCandelabra: {
+	DisplayName: Cosmic Ember Candelabra
+	Tooltip: ""
+}
+
+CosmicEmberCandle: {
+	DisplayName: Cosmic Ember Candle
+	Tooltip: ""
+}
+
+CosmicEmberLantern: {
+	DisplayName: Cosmic Ember Lantern
+	Tooltip: ""
+}
+
+CryocoreCandelabra: {
+	DisplayName: Cryocore Candelabra
+	Tooltip: ""
+}
+
+CryocoreCandle: {
+	DisplayName: Cryocore Candle
+	Tooltip: ""
+}
+
+CryocoreLantern: {
+	DisplayName: Cryocore Lantern
+	Tooltip: ""
+}
+
+DarkCelestialCandelabra: {
+	DisplayName: Dark Celestial Candelabra
+	Tooltip: ""
+}
+
+DarkCelestialCandle: {
+	DisplayName: Dark Celestial Candle
+	Tooltip: ""
+}
+
+DarkCelestialLantern: {
+	DisplayName: Dark Celestial Lantern
+	Tooltip: ""
+}
+
+HeavenforgeCandelabra: {
+	DisplayName: Heavenforge Candelabra
+	Tooltip: ""
+}
+
+HeavenforgeCandle: {
+	DisplayName: Heavenforge Candle
+	Tooltip: ""
+}
+
+HeavenforgeLantern: {
+	DisplayName: Heavenforge Lantern
+	Tooltip: ""
+}
+
+LuminiteCandelabra: {
+	DisplayName: Luminite Candelabra
+	Tooltip: ""
+}
+
+LuminiteCandle: {
+	DisplayName: Luminite Candle
+	Tooltip: ""
+}
+
+LuminiteLantern: {
+	DisplayName: Luminite Lantern
+	Tooltip: ""
+}
+
+LunarRustCandelabra: {
+	DisplayName: Lunar Rust Candelabra
+	Tooltip: ""
+}
+
+LunarRustCandle: {
+	DisplayName: Lunar Rust Candle
+	Tooltip: ""
+}
+
+LunarRustLantern: {
+	DisplayName: Lunar Rust Lantern
+	Tooltip: ""
+}
+
+MercuryCandelabra: {
+	DisplayName: Mercury Candelabra
+	Tooltip: ""
+}
+
+MercuryCandle: {
+	DisplayName: Mercury Candle
+	Tooltip: ""
+}
+
+MercuryLantern: {
+	DisplayName: Mercury Lantern
+	Tooltip: ""
+}
+
+StarRoyaleCandelabra: {
+	DisplayName: Star Royale Candelabra
+	Tooltip: ""
+}
+
+StarRoyaleCandle: {
+	DisplayName: Star Royale Candle
+	Tooltip: ""
+}
+
+StarRoyaleLantern: {
+	DisplayName: Star Royale Lantern
+	Tooltip: ""
+}
+
+WiringKit: {
+	DisplayName: Wiring Kit
+	Tooltip: ""
+}
+
+AntiRadiationPills: {
+	DisplayName: Anti Radiation Pills
+	Tooltip: ""
+}

@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Bases.Projectiles
 {
-    public abstract class BaseMeteor : ModProjectile, IExplosive
+    public abstract class BaseMeteor : ModProjectile
     {
         public int Width;
         public int Height;
@@ -34,13 +34,9 @@ namespace Macrocosm.Common.Bases.Projectiles
         public int DebrisCount;
         public Vector2 DebrisVelocity;
 
-        public int DefWidth => Width;
-        public int DefHeight => Height;
-
-        public float BlastRadius => Width * BlastRadiusMultiplier;
-
         public override void SetStaticDefaults()
         {
+            ProjectileID.Sets.Explosive[Type] = true;
         }
 
         public override void SetDefaults()
@@ -74,17 +70,29 @@ namespace Macrocosm.Common.Bases.Projectiles
             }
         }
 
+        public override void PrepareBombToBlow()
+        {
+            Projectile.tileCollide = false;
+            Projectile.alpha = 255;
+            Projectile.Resize((int)(Projectile.width * BlastRadiusMultiplier), (int)(Projectile.height * BlastRadiusMultiplier));
+            Projectile.knockBack = 12f;
+        }
+        public override bool OnTileCollide(Vector2 oldVelocity)
+        {
+            Projectile.timeLeft = 3;
+            Projectile.velocity *= 0f;
+            return false;
+        }
+
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
         }
 
-        public override bool OnTileCollide(Vector2 oldVelocity)
-        {
-            return false;
-        }
-
         override public void AI()
         {
+            if (Projectile.owner == Main.myPlayer && Projectile.timeLeft <= 3)
+                Projectile.PrepareBombToBlow();
+
             AI_Rotation();
             AI_SpawnDusts();
             ExtraAI();

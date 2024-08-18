@@ -1,8 +1,5 @@
-﻿using Macrocosm.Common.Utils;
-using Macrocosm.Content.Dusts;
+﻿using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
@@ -86,7 +83,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
 
             player.noThrow = 2;
             player.cursorItemIconEnabled = true;
-            player.cursorItemIconID = ModContent.ItemType<Items.Furniture.Cheese.CheeseSofa>();
+            player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, TileObjectData.GetTileStyle(Main.tile[i, j]));
         }
     }
 }

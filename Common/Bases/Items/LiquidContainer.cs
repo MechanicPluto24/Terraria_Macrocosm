@@ -7,7 +7,7 @@ namespace Macrocosm.Common.Sets.Items
 {
     public abstract class LiquidContainer : ModItem
     {
-        public float Amount { get; set; }   
+        public float Amount { get; set; }
         public abstract float Capacity { get; }
 
         public bool Full => Amount >= Capacity;

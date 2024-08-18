@@ -3,13 +3,12 @@ using Microsoft.Xna.Framework;
 using StructureHelper;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.ModLoader;
 using Terraria.WorldBuilding;
 
 namespace Macrocosm.Common.WorldGeneration
 {
     public abstract class Structure
-    { 
+    {
         public virtual string StructureFile => this.GetNamespacePath().Replace("Macrocosm/", "");
 
         public bool IsMultistructure => Generator.IsMultistructure(StructureFile, Macrocosm.Instance) ?? false;
@@ -20,7 +19,7 @@ namespace Macrocosm.Common.WorldGeneration
         {
             get
             {
-                if(size == default)
+                if (size == default)
                 {
                     Point16 dims = default;
                     if (IsMultistructure)
@@ -53,7 +52,7 @@ namespace Macrocosm.Common.WorldGeneration
         {
             if (!WorldGen.InWorld(origin.X, origin.Y))
                 return false;
-    
+
             Rectangle area = new(origin.X, origin.Y, Size.X, Size.Y);
             if (structures != null && !structures.CanPlace(area))
                 return false;
@@ -67,7 +66,7 @@ namespace Macrocosm.Common.WorldGeneration
             bool success;
             if (IsMultistructure)
             {
-                if(variant is null)
+                if (variant is null)
                     success = Generator.GenerateMultistructureRandom(StructureFile, origin, Macrocosm.Instance, false, ignoreNull, genFlags);
                 else
                     success = Generator.GenerateMultistructureSpecific(StructureFile, origin, Macrocosm.Instance, variant.Value, false, ignoreNull, genFlags);
@@ -77,7 +76,7 @@ namespace Macrocosm.Common.WorldGeneration
                 success = Generator.GenerateStructure(StructureFile, origin, Macrocosm.Instance, false, ignoreNull, genFlags);
             }
 
-            if (success) 
+            if (success)
             {
                 structures?.AddProtectedStructure(area, padding: 10);
                 PostPlace(origin);

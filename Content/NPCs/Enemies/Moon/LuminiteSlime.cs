@@ -1,8 +1,8 @@
 using Macrocosm.Common.Global.NPCs;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Projectiles.Hostile;
 using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Microsoft.Xna.Framework;
@@ -13,18 +13,19 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-    public class LuminiteSlime : ModNPC, IMoonEnemy
+    public class LuminiteSlime : ModNPC
     {
         public static Color EffectColor => new Color(92, 228, 162);
         public override void SetStaticDefaults()
         {
             Main.npcFrameCount[NPC.type] = Main.npcFrameCount[NPCID.BlueSlime];
+
+            NPCSets.MoonNPC[Type] = true;
+            NPCSets.DropsMoonstone[Type] = true;
         }
 
         public override void SetDefaults()
         {
-            base.SetDefaults();
-
             NPC.width = 36;
             NPC.height = 22;
             NPC.damage = 80;
@@ -113,7 +114,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             for (int i = 0; i < count; i++)
             {
                 Vector2 dustVelocity = Utility.PolarVector(0.01f, Utility.RandomRotation());
-                Dust.NewDust(NPC.position, NPC.width, NPC.height, ModContent.DustType<LuminiteDust>(), dustVelocity.X, dustVelocity.Y, newColor: Color.White * 0.1f);
+                Dust.NewDust(NPC.position, NPC.width, NPC.height, ModContent.DustType<LuminiteBrightDust>(), dustVelocity.X, dustVelocity.Y, newColor: Color.White * 0.1f);
             }
         }
     }

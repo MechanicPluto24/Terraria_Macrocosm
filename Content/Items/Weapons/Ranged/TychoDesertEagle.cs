@@ -4,6 +4,7 @@ using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -49,12 +50,17 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             Item.useAmmo = AmmoID.Bullet; //uses bullets as ammunition
         }
 
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback, GunHeldProjectile heldProjectile)
+        {
+            return base.Shoot(player, source, position, velocity, type, damage, knockback, heldProjectile);
+        }
+
+
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
             position += new Vector2(44, -4 * Math.Sign(velocity.X)).RotatedBy(velocity.ToRotation());
             type = ModContent.ProjectileType<TychoBullet>();
         }
-
 
         public override Vector2? HoldoutOffset() => new Vector2(4, 0);
 

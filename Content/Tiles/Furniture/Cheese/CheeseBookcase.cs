@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
@@ -23,7 +24,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             HitSound = SoundID.Dig;
             DustType = ModContent.DustType<CheeseDust>();
 
-            AddMapEntry(new Color(220, 216, 121), CreateMapEntryName());
+            AddMapEntry(new Color(220, 216, 121), Language.GetText("ItemName.Bookcase"));
         }
     }
 }

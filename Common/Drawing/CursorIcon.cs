@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Utils;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
@@ -33,7 +32,7 @@ namespace Macrocosm.Common.Drawing
             }
         }
 
-        public static Icon Current { get; set; } 
+        public static Icon Current { get; set; }
 
         public override void Load()
         {
@@ -69,5 +68,5 @@ namespace Macrocosm.Common.Drawing
         }
     }
 
-    
+
 }

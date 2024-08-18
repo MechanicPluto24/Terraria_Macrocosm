@@ -8,6 +8,7 @@ using Terraria.DataStructures;
 using Terraria.Enums;
 using Terraria.GameContent.Drawing;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
@@ -27,9 +28,6 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
             TileObjectData.newTile.StyleHorizontal = true;
-            TileObjectData.newTile.WaterDeath = true;
-            TileObjectData.newTile.WaterPlacement = LiquidPlacement.NotAllowed;
-            TileObjectData.newTile.LavaPlacement = LiquidPlacement.NotAllowed;
             TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.Table, 2, 0);
             TileObjectData.newTile.CoordinateHeights = [16, 18];
 
@@ -40,7 +38,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
 
             DustType = ModContent.DustType<CheeseDust>();
 
-            AddMapEntry(new Color(220, 216, 121), CreateMapEntryName());
+            AddMapEntry(new Color(220, 216, 121), Language.GetText("ItemName.Candelabra"));
 
             RegisterItemDrop(ModContent.ItemType<Items.Furniture.Cheese.CheeseCandelabra>(), 0, 1);
         }
@@ -82,10 +80,6 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
 
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
         {
-            var tile = Main.tile[i, j];
-            if (!TileDrawing.IsVisible(tile))
-                return;
-
             flameTexture ??= ModContent.Request<Texture2D>(Texture + "_Flame");
             ulong randSeed = Main.TileFrameSeed ^ (ulong)((long)j << 32 | (long)(uint)i);
 
@@ -94,7 +88,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
                 float xx = Utils.RandomInt(ref randSeed, -10, 11) * 0.15f;
                 float yy = Utils.RandomInt(ref randSeed, -10, 1) * 0.35f;
 
-                Utility.DrawTileExtraTexture(i, j, spriteBatch, flameTexture, drawOffset: new Vector2(xx, yy), drawColor: new Color(100, 100, 100, 0));
+                Utility.DrawTileExtraTexture(i, j, spriteBatch, flameTexture, drawOffset: new Vector2(xx, yy), drawColor: new Color(50, 50, 50, 0));
             }
         }
     }

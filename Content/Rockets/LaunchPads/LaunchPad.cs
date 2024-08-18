@@ -12,7 +12,6 @@ using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
-using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
@@ -98,8 +97,8 @@ namespace Macrocosm.Content.Rockets.LaunchPads
         {
             CheckMarkers();
             CheckRocket();
-            
-            if(spawned)
+
+            if (spawned)
                 Interact();
 
             if (!spawned)
@@ -124,7 +123,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
                 LaunchPadMarker.SetState(EndTile, MarkerState.Inactive);
             }
 
-            if(!Active)
+            if (!Active)
                 NetSync(MacrocosmSubworld.CurrentID);
         }
 
@@ -217,7 +216,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
             foreach (var kvp in rocket.Modules)
             {
                 RocketModule module = kvp.Value;
-                if(!module.Recipe.Linked)
+                if (!module.Recipe.Linked)
                     count += module.Recipe.Count();
             }
 

@@ -35,7 +35,6 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             TileObjectData.newTile.CoordinateHeights = [16, 16];
             TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;
             TileObjectData.newTile.StyleWrapLimit = 2;
-            TileObjectData.newTile.StyleMultiplier = 2;
             TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
             TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceRight;
@@ -87,7 +86,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
 
             player.noThrow = 2;
             player.cursorItemIconEnabled = true;
-            player.cursorItemIconID = ModContent.ItemType<Items.Furniture.Cheese.CheeseChair>();
+            player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, TileObjectData.GetTileStyle(Main.tile[i, j]));
 
             if (Main.tile[i, j].TileFrameX / 18 % 2 == 0)
                 player.cursorItemIconReversed = true;

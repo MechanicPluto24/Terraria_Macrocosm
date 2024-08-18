@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Global.NPCs;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
@@ -13,7 +14,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 {
-    public class CraterImp : ModNPC, IMoonEnemy
+    public class CraterImp : ModNPC
     {
         public enum AttackType
         {
@@ -24,7 +25,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             Chomp = 2,
             Despawning = 3
         };
-        public bool DropMoonstone => false;
 
         public ref float AI_Timer => ref NPC.ai[0];
         public AttackType AI_Attack
@@ -47,11 +47,11 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
         public override void SetStaticDefaults()
         {
-            Main.npcFrameCount[NPC.type] = 4;
-            NPCID.Sets.TrailCacheLength[NPC.type] = 5;
-            NPCID.Sets.TrailingMode[NPC.type] = 3;
+            Main.npcFrameCount[Type] = 4;
+            NPCID.Sets.TrailCacheLength[Type] = 5;
+            NPCID.Sets.TrailingMode[Type] = 3;
 
-            NPCID.Sets.ImmuneToRegularBuffs[NPC.type] = true;
+            NPCID.Sets.ImmuneToRegularBuffs[Type] = true;
 
             NPCID.Sets.NPCBestiaryDrawModifiers bestiaryData = new()
             {
@@ -59,6 +59,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 Velocity = 1f
             };
             NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, bestiaryData);
+
+            NPCSets.MoonNPC[Type] = true;
+            NPCSets.DropsMoonstone[Type] = false;
         }
 
         public override void SetDefaults()

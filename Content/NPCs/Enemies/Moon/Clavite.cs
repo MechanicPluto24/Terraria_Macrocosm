@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.Bases.NPCs;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Global.NPCs;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Items.Materials.Drops;
@@ -17,7 +18,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-    public class Clavite : ComplexAINPC<Clavite.AIState>, IMoonEnemy
+    public class Clavite : ComplexAINPC<Clavite.AIState>
     {
         public enum AIState
         {
@@ -35,6 +36,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             Main.npcFrameCount[Type] = 2;
             NPCID.Sets.TrailCacheLength[Type] = 5;
             NPCID.Sets.TrailingMode[Type] = 1;
+
+            NPCSets.MoonNPC[Type] = true;
+            NPCSets.DropsMoonstone[Type] = true;
         }
 
         public override void SetDefaults2()

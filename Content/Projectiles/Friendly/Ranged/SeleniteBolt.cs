@@ -2,6 +2,7 @@ using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Global.Projectiles;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
@@ -14,7 +15,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-    public class SeleniteBolt : ModProjectile, IHitTileProjectile, IExplosive
+    public class SeleniteBolt : ModProjectile
     {
         public override string Texture => Macrocosm.EmptyTexPath;
 
@@ -23,11 +24,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             get => MathHelper.Clamp(Projectile.ai[0], 0f, 1f);
             set => Projectile.ai[0] = MathHelper.Clamp(value, 0f, 1f);
         }
-        public int DefWidth => 8;
-        public int DefHeight => 8;
-        public float BlastRadius => 16 * 3;
 
         float trailMultiplier = 0f;
+
+        public override void SetStaticDefaults()
+        {
+            ProjectileID.Sets.RocketsSkipDamageForPlayers[Type] = true;
+            ProjectileID.Sets.Explosive[Type] = true;
+            ProjectileSets.HitsTiles[Type] = true;
+        }
 
         public override void SetDefaults()
         {
@@ -50,12 +55,30 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
         public override void AI()
         {
+            if (Projectile.owner == Main.myPlayer && Projectile.timeLeft <= 3)
+                Projectile.PrepareBombToBlow();
+
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
 
             if (trailMultiplier < 1f)
                 trailMultiplier += 0.006f;
 
             Lighting.AddLight(Projectile.Center, new Color(177, 230, 204).ToVector3() * 0.6f);
+        }
+
+        public override void PrepareBombToBlow()
+        {
+            Projectile.tileCollide = false;
+            Projectile.alpha = 255;
+            Projectile.Resize(64, 64);
+            Projectile.knockBack = 6f;
+        }
+
+        public override bool OnTileCollide(Vector2 oldVelocity)
+        {
+            Projectile.timeLeft = 3;
+            Projectile.velocity *= 0f;
+            return false;
         }
 
         public override void OnKill(int timeLeft)

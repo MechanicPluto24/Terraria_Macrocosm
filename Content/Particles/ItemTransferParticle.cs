@@ -1,11 +1,10 @@
 ﻿using Macrocosm.Common.Drawing.Particles;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria.Graphics.Renderers;
-using Terraria.UI;
-using Terraria;
-using Microsoft.Xna.Framework;
-using Terraria.ID;
 using Macrocosm.Common.Utils;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Terraria;
+using Terraria.ID;
+using Terraria.UI;
 
 namespace Macrocosm.Content.Particles
 {
@@ -14,7 +13,7 @@ namespace Macrocosm.Content.Particles
     public class ItemTransferParticle : Particle
     {
         public override string TexturePath => Macrocosm.EmptyTexPath;
-        public override bool ShouldUpdatePosition => false; 
+        public override bool ShouldUpdatePosition => false;
 
         public override int SpawnTimeLeft => spawnTimeLeft ??= Main.rand.Next(60, 80);
         private int? spawnTimeLeft;
@@ -32,7 +31,7 @@ namespace Macrocosm.Content.Particles
 
         public override void OnSpawn()
         {
-            if(ContentSamples.ItemsByType.TryGetValue(ItemType, out Item item) && !item.IsAir)
+            if (ContentSamples.ItemsByType.TryGetValue(ItemType, out Item item) && !item.IsAir)
             {
                 this.item = item;
 
@@ -44,7 +43,7 @@ namespace Macrocosm.Content.Particles
             else
             {
                 Kill();
-            }        
+            }
         }
 
         public override void AI()

@@ -1,7 +1,7 @@
 using Macrocosm.Common.Bases.Projectiles;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics.PackedVector;
 using System;
 using Terraria;
 using Terraria.ID;
@@ -9,12 +9,14 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-    public class CruithneGreenSlug : ModProjectile, IHitTileProjectile
+    public class CruithneGreenSlug : ModProjectile
     {
         public override void SetStaticDefaults()
         {
             ProjectileID.Sets.TrailCacheLength[Type] = 100;
             ProjectileID.Sets.TrailingMode[Type] = 0;
+
+            ProjectileSets.HitsTiles[Type] = true;
         }
 
         public override void SetDefaults()

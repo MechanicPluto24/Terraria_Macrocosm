@@ -1,22 +1,21 @@
-﻿using Terraria.DataStructures;
+﻿using Macrocosm.Common.Enums;
+using Macrocosm.Common.Utils;
+using Microsoft.Xna.Framework;
+using System;
+using Terraria;
+using Terraria.DataStructures;
 using Terraria.Enums;
-using Terraria.GameContent.ObjectInteractions;
 using Terraria.GameContent;
+using Terraria.GameContent.ObjectInteractions;
 using Terraria.ID;
 using Terraria.Localization;
-using Terraria;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
-using Microsoft.Xna.Framework;
-using Macrocosm.Content.Dusts;
 
 namespace Macrocosm.Content.Tiles.Furniture.Luminite
 {
     public class LuminiteToilet : ModTile
     {
-        // Calculated by adding all CoordinateHeights + CoordinatePaddingFix.Y applied to all of them + 2
-        public const int NextStyleHeight = 40;
-
         public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
@@ -30,10 +29,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             AddToArray(ref TileID.Sets.RoomNeeds.CountsAsChair);
 
             DustType = DustID.LunarOre;
-            AdjTiles = [TileID.Toilets]; // Consider adding TileID.Chairs to AdjTiles to mirror "(regular) Toilet" and "Golden Toilet" behavior for crafting stations
-
-            // Names
-            AddMapEntry(new Color(73, 168, 142), Language.GetText("MapObject.Toilet"));
+            AdjTiles = [TileID.Toilets]; // Consider adding TileID.Toilets to AdjTiles to mirror "(regular) Toilet" and "Golden Toilet" behavior for crafting stations
 
             // Placement
             TileObjectData.newTile.CopyFrom(TileObjectData.Style1x2);
@@ -42,16 +38,35 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;
 
             TileObjectData.newTile.StyleWrapLimit = 2;
-            TileObjectData.newTile.StyleMultiplier = 2;
             TileObjectData.newTile.StyleHorizontal = true;
 
             TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
             TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceRight;
-            TileObjectData.addAlternate(1);  
+            TileObjectData.addAlternate(1);
             TileObjectData.addTile(Type);
 
+            foreach (LuminiteStyle style in Enum.GetValues(typeof(LuminiteStyle)))
+                AddMapEntry(Utility.GetTileColorFromLuminiteStyle(style), Language.GetText("MapObject.Toilet"));
+
+            // To complete direction-dependent item drops
             RegisterItemDrop(ModContent.ItemType<Items.Furniture.Luminite.LuminiteToilet>(), 0, 1);
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Heavenforge.HeavenforgeToilet>(), 2, 3);
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.LunarRust.LunarRustToilet>(), 4, 5);
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Astra.AstraToilet>(), 6, 7);
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.DarkCelestial.DarkCelestialToilet>(), 8, 9);
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Mercury.MercuryToilet>(), 10, 11);
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.StarRoyale.StarRoyaleToilet>(), 12, 13);
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Cryocore.CryocoreToilet>(), 14, 15);
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.CosmicEmber.CosmicEmberToilet>(), 16, 17);
         }
+
+        public override bool CreateDust(int i, int j, ref int type)
+        {
+            type = Utility.GetDustTypeFromLuminiteStyle((LuminiteStyle)(Main.tile[i, j].TileFrameY / (18 * 2)));
+            return true;
+        }
+
+        public override ushort GetMapOption(int i, int j) => (ushort)(Main.tile[i, j].TileFrameY / (18 * 2));
 
         public override void NumDust(int i, int j, bool fail, ref int num)
         {
@@ -60,7 +75,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
 
         public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings)
         {
-            return settings.player.IsWithinSnappngRangeToTile(i, j, PlayerSittingHelper.ChairSittingMaxDistance);  
+            return settings.player.IsWithinSnappngRangeToTile(i, j, PlayerSittingHelper.ChairSittingMaxDistance);
         }
 
         public override void ModifySittingTargetInfo(int i, int j, ref TileRestingInfo info)
@@ -82,7 +97,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             info.AnchorTilePosition.X = i; // Our chair is only 1 wide, so nothing special required
             info.AnchorTilePosition.Y = j;
 
-            if (tile.TileFrameY % NextStyleHeight == 0)
+            if (tile.TileFrameY % (18 * 2) == 0)
             {
                 info.AnchorTilePosition.Y++; // Here, since our chair is only 2 tiles high, we can just check if the tile is the top-most one, then move it 1 down
             }
@@ -103,7 +118,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             Player player = Main.LocalPlayer;
 
             if (player.IsWithinSnappngRangeToTile(i, j, PlayerSittingHelper.ChairSittingMaxDistance))
-            {  
+            {
                 player.GamepadEnableGrappleCooldown();
                 player.sitting.SitDown(player, i, j);
             }
@@ -116,13 +131,13 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             Player player = Main.LocalPlayer;
 
             if (!player.IsWithinSnappngRangeToTile(i, j, PlayerSittingHelper.ChairSittingMaxDistance))
-            { 
+            {
                 return;
             }
 
             player.noThrow = 2;
             player.cursorItemIconEnabled = true;
-            player.cursorItemIconID = ModContent.ItemType<Items.Furniture.Luminite.LuminiteToilet>();
+            player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, TileObjectData.GetTileStyle(Main.tile[i, j]));
 
             if (Main.tile[i, j].TileFrameX / 18 >= 1)
             {
@@ -135,7 +150,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             Tile tile = Main.tile[i, j];
 
             int spawnX = i;
-            int spawnY = j - (tile.TileFrameY % NextStyleHeight) / 18;
+            int spawnY = j - (tile.TileFrameY % (18 * 2)) / 18;
 
             Wiring.SkipWire(spawnX, spawnY);
             Wiring.SkipWire(spawnX, spawnY + 1);

@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Utils;
-using Macrocosm.Common.WorldGeneration;
+﻿using Macrocosm.Common.WorldGeneration;
 using Macrocosm.Content.Tiles.Ores;
 using Terraria;
 using Terraria.DataStructures;

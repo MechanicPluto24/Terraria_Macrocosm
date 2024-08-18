@@ -1,21 +1,17 @@
-using Macrocosm.Common.Sets.Items;
 using Macrocosm.Common.Config;
-using Macrocosm.Common.Utils;
+using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Sets;
+using Macrocosm.Common.Sets.Items;
 using Macrocosm.Content.Items.Materials.Bars;
 using Macrocosm.Content.Items.Materials.Ores;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System.Collections.Generic;
-using System.IO;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
-using Macrocosm.Common.Enums;
-using Macrocosm.Common.Sets;
-using Macrocosm.Common.DataStructures;
 
 namespace Macrocosm.Content.Items.Materials.Tech
 {
@@ -32,7 +28,7 @@ namespace Macrocosm.Content.Items.Materials.Tech
         {
             Item.ResearchUnlockCount = 100;
 
-            ItemSets.Fuels[Type] = new FuelData(() => (FuelPotency)(Percent * (float)FuelPotency.VeryHigh), 240);
+            ItemSets.FuelData[Type] = new FuelData(() => (FuelPotency)(Percent * (float)FuelPotency.VeryHigh), 240);
 
             CapacityTooltip = this.GetLocalization(nameof(CapacityTooltip), () => "Can hold up to {0} {1} of fuel");
             AmountTooltip = this.GetLocalization(nameof(AmountTooltip), () => "{0}/{1} {2}");
@@ -61,7 +57,7 @@ namespace Macrocosm.Content.Items.Materials.Tech
 
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            if(MacrocosmConfig.Instance.UnitSystem == MacrocosmConfig.UnitSystemType.Metric)
+            if (MacrocosmConfig.Instance.UnitSystem == MacrocosmConfig.UnitSystemType.Metric)
             {
                 float maxFuel = Capacity;
                 float currentFuel = Amount;

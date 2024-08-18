@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
-using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
@@ -19,7 +18,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             Main.tileLavaDeath[Type] = true;
             Main.tileFrameImportant[Type] = true;
             TileID.Sets.DisableSmartCursor[Type] = true;
-            TileID.Sets.IgnoredByNpcStepUp[Type] = true;  
+            TileID.Sets.IgnoredByNpcStepUp[Type] = true;
 
             DustType = ModContent.DustType<IndustrialPlatingDust>();
             AdjTiles = [TileID.Tables];

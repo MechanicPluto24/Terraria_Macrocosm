@@ -1,22 +1,11 @@
 ﻿using Macrocosm.Common.Bases.Tiles;
 using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Players;
 using Macrocosm.Content.Subworlds;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using SubworldLibrary;
-using System;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.GameContent.Creative;
-using Terraria.GameContent.Events;
-using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
-using Terraria.IO;
-using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Systems
@@ -49,7 +38,7 @@ namespace Macrocosm.Common.Systems
             if (SubworldSystem.AnyActive<Macrocosm>())
                 MacrocosmSubworld.Current.PreUpdatePlayers();
         }
-   
+
         public override void PostUpdatePlayers()
         {
             if (SubworldSystem.AnyActive<Macrocosm>())

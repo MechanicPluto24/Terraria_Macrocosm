@@ -42,7 +42,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             TileObjectData.newTile.DrawYOffset = 2;
             TileObjectData.newTile.HookCheckIfCanPlace = new PlacementHook(Chest.FindEmptyChest, -1, 0, true);
             TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(Chest.AfterPlacement_Hook, -1, 0, false);
-            TileObjectData.newTile.AnchorInvalidTiles = 
+            TileObjectData.newTile.AnchorInvalidTiles =
             [
                 TileID.MagicalIceBlock,
                 TileID.Boulder,
@@ -70,8 +70,10 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             int left = i;
             int top = j;
             Tile tile = Main.tile[i, j];
+
             if (tile.TileFrameX % 36 != 0)
                 left--;
+
             if (tile.TileFrameY != 0)
                 top--;
 
@@ -179,7 +181,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
                 player.cursorItemIconText = Main.chest[chest].name.Length > 0 ? Main.chest[chest].name : defaultName;
                 if (player.cursorItemIconText == defaultName)
                 {
-                    player.cursorItemIconID = ModContent.ItemType<Items.Furniture.Cheese.CheeseChest>();
+                    player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, TileObjectData.GetTileStyle(Main.tile[i, j]));
                     player.cursorItemIconText = "";
                 }
             }

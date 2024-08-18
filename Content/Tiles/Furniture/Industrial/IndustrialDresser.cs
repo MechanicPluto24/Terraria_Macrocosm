@@ -6,6 +6,7 @@ using Terraria.DataStructures;
 using Terraria.GameContent.ObjectInteractions;
 using Terraria.ID;
 using Terraria.Localization;
+using Terraria.Map;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
@@ -43,16 +44,15 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             TileObjectData.newTile.LavaDeath = false;
             TileObjectData.addTile(Type);
             AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTable);
-            LocalizedText name = CreateMapEntryName();
 
-            AddMapEntry(new Color(200, 200, 200), CreateMapEntryName());
+            AddMapEntry(new Color(200, 200, 200), Language.GetText("ItemName.Dresser"));
             AdjTiles = [TileID.Dressers];
             DustType = ModContent.DustType<IndustrialPlatingDust>();
         }
 
         public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings) => true;
 
-        public override LocalizedText DefaultContainerName(int frameX, int frameY) => CreateMapEntryName();
+        public override LocalizedText DefaultContainerName(int frameX, int frameY) => Lang._mapLegendCache[MapHelper.TileToLookup(Type, 0)];
 
         public override void ModifySmartInteractCoords(ref int width, ref int height, ref int frameWidth, ref int frameHeight, ref int extraY)
         {
@@ -144,7 +144,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             return true;
         }
 
-        public static void MouseOverNearAndFarSharedLogic(Player player, int i, int j)
+        public void MouseOverNearAndFarSharedLogic(Player player, int i, int j)
         {
             Tile tile = Main.tile[i, j];
             int left = i;
@@ -166,7 +166,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
                     player.cursorItemIconText = defaultName;
                 if (player.cursorItemIconText == defaultName)
                 {
-                    player.cursorItemIconID = ModContent.ItemType<Items.Furniture.Industrial.IndustrialDresser>();
+                    player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, TileObjectData.GetTileStyle(Main.tile[i, j]));
                     player.cursorItemIconText = "";
                 }
             }

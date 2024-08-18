@@ -1,25 +1,20 @@
 ﻿using Macrocosm.Common.Storage;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
-using Macrocosm.Content.Items.Materials.Tech;
 using Macrocosm.Content.Rockets.LaunchPads;
+using Macrocosm.Content.Rockets.Modules;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using System.Runtime.CompilerServices;
-using Terraria;
-using Terraria.GameContent.UI.Elements;
-using Terraria.ModLoader;
-using Terraria.UI;
-using Terraria.ID;
-using Macrocosm.Content.Items.Blocks;
 using System;
-using System.Linq;
-using Macrocosm.Content.Rockets.Modules;
 using System.Collections.Generic;
-using rail;
-using Terraria.Localization;
+using System.Linq;
+using Terraria;
 using Terraria.GameContent;
+using Terraria.GameContent.UI.Elements;
+using Terraria.ID;
+using Terraria.Localization;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.UI.Assembly
 {

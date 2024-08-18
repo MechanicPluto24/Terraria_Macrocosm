@@ -29,7 +29,7 @@ namespace Macrocosm.Content.Items.Materials.Tech
                 .AddIngredient(ItemID.TinBar, 5)
                 .AddIngredient<OxygenTank>(4)
                 .AddIngredient<PrintedCircuitBoard>()
-                .AddTile<Tiles.Crafting.Fabricator>() 
+                .AddTile<Tiles.Crafting.Fabricator>()
                 .Register();
         }
     }

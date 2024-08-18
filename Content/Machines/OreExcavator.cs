@@ -39,16 +39,13 @@ namespace Macrocosm.Content.Machines
 
             TileObjectData.newTile.CoordinateHeights = [16, 16, 16, 16, 16, 16, 16, 16, 16, 16];
             TileObjectData.newTile.CoordinateWidth = 16;
-            TileObjectData.newTile.CoordinatePadding = 2;  
+            TileObjectData.newTile.CoordinatePadding = 2;
 
             TileObjectData.newTile.DrawYOffset = 2;
 
             TileObjectData.newTile.Origin = new Point16(0, Height - 1);
             TileObjectData.newTile.AnchorTop = new AnchorData();
             TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop, Width, 0);
-
-            TileObjectData.newTile.WaterPlacement = LiquidPlacement.NotAllowed;
-            TileObjectData.newTile.LavaPlacement = LiquidPlacement.NotAllowed;
 
             TileObjectData.newTile.AnchorInvalidTiles =
             [
@@ -148,7 +145,7 @@ namespace Macrocosm.Content.Machines
             else
             {
                 if (Utility.TryGetTileEntityAs(i, j, out OreExcavatorTE oreExcavator))
-                     UISystem.ShowMachineUI(oreExcavator, new OreExcavatorUI());
+                    UISystem.ShowMachineUI(oreExcavator, new OreExcavatorUI());
             }
 
             return true;
@@ -245,10 +242,10 @@ namespace Macrocosm.Content.Machines
                 {
                     if (Main.tileFrame[Type] == 3)
                     {
-                        if(Main.rand.NextBool()) WorldGen.KillTile(i, j + 1, effectOnly: true, fail: true);
-                        if(Main.rand.NextBool()) WorldGen.KillTile(i, j + 2, effectOnly: true, fail: true);
-                        if(Main.rand.NextBool()) WorldGen.KillTile(i + 1, j + 1, effectOnly: true, fail: true);
-                        if(Main.rand.NextBool()) WorldGen.KillTile(i + 1, j + 2, effectOnly: true, fail: true);
+                        if (Main.rand.NextBool()) WorldGen.KillTile(i, j + 1, effectOnly: true, fail: true);
+                        if (Main.rand.NextBool()) WorldGen.KillTile(i, j + 2, effectOnly: true, fail: true);
+                        if (Main.rand.NextBool()) WorldGen.KillTile(i + 1, j + 1, effectOnly: true, fail: true);
+                        if (Main.rand.NextBool()) WorldGen.KillTile(i + 1, j + 2, effectOnly: true, fail: true);
                     }
 
                     if (Main.tileFrame[Type] % 2 == 0)

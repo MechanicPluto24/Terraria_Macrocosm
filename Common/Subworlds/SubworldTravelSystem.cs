@@ -1,17 +1,18 @@
 ﻿using Macrocosm.Common.Netcode;
+using Macrocosm.Common.Utils;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
+using SubworldLibrary;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Terraria;
+using Terraria.Audio;
+using Terraria.GameContent.UI.Elements;
+using Terraria.GameContent.UI.States;
 using Terraria.ID;
 using Terraria.Localization;
-using Terraria;
 using Terraria.ModLoader;
-using Macrocosm.Content.Players;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria.GameContent.UI.Elements;
-using Microsoft.Xna.Framework;
+using Terraria.UI;
 
 namespace Macrocosm.Common.Subworlds
 {
@@ -19,12 +20,12 @@ namespace Macrocosm.Common.Subworlds
     {
         public override void Load()
         {
-            On_UIWorldListItem.DrawSelf += DrawWorldListPlanetIcons;
+            On_UIWorldListItem.ctor += UIWorldListItem_ctor;
         }
 
         public override void Unload()
         {
-            On_UIWorldListItem.DrawSelf -= DrawWorldListPlanetIcons;
+            On_UIWorldListItem.ctor -= UIWorldListItem_ctor;
         }
 
         // Send current main world GUID and ask player to travel to last known subworld  
@@ -42,29 +43,41 @@ namespace Macrocosm.Common.Subworlds
             return false;
         }
 
-        // Draw last known subworld icon in world selection screen
-        private void DrawWorldListPlanetIcons(On_UIWorldListItem.orig_DrawSelf orig, UIWorldListItem uIItem, SpriteBatch spriteBatch)
+        private void UIWorldListItem_ctor(On_UIWorldListItem.orig_ctor orig, UIWorldListItem self, Terraria.IO.WorldFileData data, int orderInList, bool canBePlayed)
         {
-            orig(uIItem, spriteBatch);
+            orig(self, data, orderInList, canBePlayed);
+            UIText buttonLabel = typeof(UIWorldListItem).GetFieldValue<UIText>("_buttonLabel", obj: self);
 
             var player = Main.LocalPlayer.GetModPlayer<SubworldTravelPlayer>();
             string subworld = "Earth";
-            Texture2D texture = Macrocosm.EmptyTex.Value;
-
-            if (player.TryGetReturnSubworld(uIItem.Data.UniqueId, out string id))
+            if (player.TryGetReturnSubworld(self.Data.UniqueId, out string id))
                 subworld = MacrocosmSubworld.SanitizeID(id, out _);
 
-            if (ModContent.RequestIfExists<Texture2D>(Macrocosm.TexturesPath + "Icons/" + subworld, out var asset))
-                texture = asset.Value;
+            bool exists = ModContent.RequestIfExists(Macrocosm.TexturesPath + "Icons/" + subworld, out Asset<Texture2D> texture);
+            UIImage icon = new(exists ? texture : Macrocosm.EmptyTex)
+            {
+                Left = new(0, 0),
+                Top = new(4.2f, 0),
+                HAlign = 0f,
+                VAlign = 1f,
+                ImageScale = 0.76f
+            };
+            if (exists)
+            {
+                icon.OnMouseOver += (_, _) =>
+                {
+                    SoundEngine.PlaySound(SoundID.MenuTick);
+                    buttonLabel.SetText(Language.GetTextValue("Mods.Macrocosm.Subworlds." + subworld + ".DisplayName"));
+                };
+                icon.OnMouseOut += (_, _) =>
+                {
+                    buttonLabel.SetText("");
+                };
+            }
+            self.Append(icon);
 
-            var dims = uIItem.GetOuterDimensions();
-            var pos = new Vector2(dims.X + texture.Width + 102, dims.Y + dims.Height - texture.Height + 1);
-
-            Rectangle bounds = new((int)pos.X, (int)pos.Y, texture.Width, texture.Height);
-            spriteBatch.Draw(texture, pos, null, Color.White, 0f, Vector2.Zero, 0.8f, SpriteEffects.None, 0f);
-
-            if (bounds.Contains(Main.mouseX, Main.mouseY))
-                Main.instance.MouseText(Language.GetTextValue("Mods.Macrocosm.Subworlds." + subworld + ".DisplayName"));
+            icon.Left.Pixels = buttonLabel.Left.Pixels - 6;
+            buttonLabel.Left.Pixels += icon.Width.Pixels * 0.84f;
         }
     }
 }

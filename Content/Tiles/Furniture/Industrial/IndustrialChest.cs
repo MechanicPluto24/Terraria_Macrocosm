@@ -1,6 +1,6 @@
 using Macrocosm.Common.Drawing;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Items.Materials.Drops;
+using Macrocosm.Content.Items.Keys;
 using Macrocosm.Content.Players;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -25,7 +25,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
 
         public enum State
         {
-            /// <summary> Default style (not lockable or unlockable) </summary>
+            /// <summary> Default style (neither lockable nor unlockable) </summary>
             Normal,
             /// <summary> Unlocked chest, lockable </summary>
             Unlocked,
@@ -74,13 +74,10 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             AddMapEntry(new Color(200, 200, 200), this.GetLocalization("MapEntryUnlocked"), MapChestName);
             AddMapEntry(new Color(200, 200, 200), this.GetLocalization("MapEntryLocked"), MapChestName);
 
-            // Style 1 is the chest when locked. We want that tile style to drop the chest item as well. Use the Chest Lock item to lock this chest.
-            // No item places chest in the locked style, so the automatically determined item drop is unknown, this is why RegisterItemDrop is necessary in this situation. 
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialChest>(), 1);
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialChest>(), 0);
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialChestElectronic>(), 1, 2);
 
-            // Sometimes mods remove content, such as tile styles, or tiles accidentally get corrupted.
-            // We can, if desired, register a fallback item for any tile style that doesn't have an automatically determined item drop.
-            // This is done by omitting the tileStyles parameter.
+            // Sometimes mods remove content, such as tile styles, or tiles accidentally get corrupted. We can, if desired, register a fallback item for any tile style that doesn't have an automatically determined item drop. This is done by omitting the tileStyles parameter.
             RegisterItemDrop(ItemID.Chest);
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
@@ -105,39 +102,24 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             TileObjectData.addTile(Type);
         }
 
-        public override ushort GetMapOption(int i, int j)
-        {
-            return (ushort)(Main.tile[i, j].TileFrameX / 36);
-        }
+        public override ushort GetMapOption(int i, int j) => (ushort)(Main.tile[i, j].TileFrameX / 36);
 
-        public override LocalizedText DefaultContainerName(int frameX, int frameY)
-        {
-            return this.GetLocalization("MapEntry" + ((State)(frameX / 36)).ToString());
-        }
+        public override LocalizedText DefaultContainerName(int frameX, int frameY) => this.GetLocalization("MapEntry" + ((State)(frameX / 36)).ToString());
 
-        public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings)
-        {
-            return true;
-        }
+        public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings) => true;
 
-        public override bool IsLockedChest(int i, int j)
-        {
-            return GetState(i, j) is State.Locked;
-        }
+        public override bool IsLockedChest(int i, int j) => GetState(i, j) is State.Locked;
 
         public override bool UnlockChest(int i, int j, ref short frameXAdjustment, ref int dustType, ref bool manual)
         {
             if (GetState(i, j) is not State.Locked)
-                return false;
+                return false; 
 
             dustType = DustType;
             return true;
         }
 
-        public override bool LockChest(int i, int j, ref short frameXAdjustment, ref bool manual)
-        {
-            return GetState(i, j) is State.Unlocked;
-        }
+        public override bool LockChest(int i, int j, ref short frameXAdjustment, ref bool manual) => GetState(i, j) is State.Unlocked;
 
         public static string MapChestName(string name, int i, int j)
         {
@@ -152,7 +134,6 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
                 top--;
 
             int chest = Chest.FindChest(left, top);
-
             if (chest < 0)
                 return Language.GetTextValue("LegacyChestType.0");
 
@@ -285,7 +266,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
                     }
                     else
                     {
-                        player.cursorItemIconID = ModContent.ItemType<Items.Furniture.Industrial.IndustrialChest>();
+                        player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, TileObjectData.GetTileStyle(Main.tile[i, j]));
                     }
 
                     player.cursorItemIconText = "";

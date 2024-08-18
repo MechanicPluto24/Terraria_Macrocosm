@@ -1,8 +1,6 @@
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Rockets.UI.Navigation.Info;
-using Microsoft.CodeAnalysis.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -10,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
-using Terraria.Utilities.Terraria.Utilities;
 
 namespace Macrocosm.Common.Drawing.Sky
 {
@@ -39,11 +36,11 @@ namespace Macrocosm.Common.Drawing.Sky
         public Vector2 Position => Center - Size / 2f;
 
         /// <summary> The CelestialBody's hitbox, defined by size and center position </summary>
-        public Rectangle Hitbox => new((int)(Center.X - Width/2f), (int)(Center.Y - Height/2f), (int)(Width), (int)(Height));
+        public Rectangle Hitbox => new((int)(Center.X - Width / 2f), (int)(Center.Y - Height / 2f), (int)(Width), (int)(Height));
 
         /// <summary> The CelestialBody's scale </summary>
-        public float Scale 
-        { 
+        public float Scale
+        {
             get => scale;
             set
             {
@@ -53,10 +50,10 @@ namespace Macrocosm.Common.Drawing.Sky
         }
 
         /// <summary> The CelestialBody's rotation </summary>
-        public float Rotation 
-        { 
+        public float Rotation
+        {
             get => rotation;
-            set => rotation = value; 
+            set => rotation = value;
         }
 
         /// <summary> The draw color  </summary>
@@ -67,7 +64,7 @@ namespace Macrocosm.Common.Drawing.Sky
 
         /// <summary> The rotation of the CelestialBody's orbit around another CelestialBody </summary>
         public float OrbitRotation
-        { 
+        {
             get => orbitRotation % MathHelper.TwoPi;
             set => orbitRotation = value;
         }
@@ -347,7 +344,7 @@ namespace Macrocosm.Common.Drawing.Sky
             DrawBody(spriteBatch);
             DrawFront(spriteBatch);
 
-            if(beginCalled)
+            if (beginCalled)
                 spriteBatch.Begin(state);
         }
 
@@ -372,7 +369,7 @@ namespace Macrocosm.Common.Drawing.Sky
             {
                 backShader = OverrideBackShader();
             }
-            else if (lightSource is not null) 
+            else if (lightSource is not null)
             {
                 if (ConfigureBackRadialShader is not null)
                 {
@@ -387,7 +384,7 @@ namespace Macrocosm.Common.Drawing.Sky
                     backShader.Parameters["uShadeResolution"].SetValue(shadeResolution);
                     backShader.Parameters["uSourceRect"].SetValue(sourceRect);
                 }
-                else if(ConfigureBackSphericalShader is not null)
+                else if (ConfigureBackSphericalShader is not null)
                 {
                     backShader = sphereLightingShader.Value;
                     ConfigureBackSphericalShader(this, lightSource, out Vector3 lightPosition, out float radius, out int pixelSize);
@@ -420,7 +417,7 @@ namespace Macrocosm.Common.Drawing.Sky
             {
                 bodyShader = OverrideBodyShader();
             }
-            else if (lightSource is not null) 
+            else if (lightSource is not null)
             {
                 if (ConfigureBodyRadialShader is not null)
                 {
@@ -467,7 +464,7 @@ namespace Macrocosm.Common.Drawing.Sky
             {
                 frontShader = OverrideFrontShader();
             }
-            else if (lightSource is not null) 
+            else if (lightSource is not null)
             {
                 if (ConfigureFrontRadialShader is not null)
                 {

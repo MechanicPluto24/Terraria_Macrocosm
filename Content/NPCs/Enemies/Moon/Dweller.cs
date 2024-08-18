@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Global.NPCs;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Microsoft.Xna.Framework;
@@ -7,13 +8,12 @@ using ReLogic.Content;
 using System;
 using System.Linq;
 using Terraria;
-using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-    public class Dweller : ModNPC, IMoonEnemy
+    public class Dweller : ModNPC
     {
         private const int LegCount = 6;
         private readonly Leg[] Legs = new Leg[LegCount];
@@ -218,7 +218,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                         originLeg2 = leftLeg ? new(12, 24) : new(20, 8);
                         originFoot = leftLeg ? new(24, 0) : new(22, 4);
                         rotationOffsetLeg1 = leftLeg ? -MathHelper.Pi / 4 + MathHelper.Pi / 12 : MathHelper.Pi / 8;
-                        rotationOffsetLeg2 = leftLeg ? MathHelper.Pi / 2 + MathHelper.Pi / 8 : -MathHelper.Pi / 2 - MathHelper.Pi/4;
+                        rotationOffsetLeg2 = leftLeg ? MathHelper.Pi / 2 + MathHelper.Pi / 8 : -MathHelper.Pi / 2 - MathHelper.Pi / 4;
                         rotationOffsetLeg3 = leftLeg ? -MathHelper.Pi / 2 - MathHelper.Pi / 16 : -MathHelper.Pi / 2;
                         break;
                     case LegType.Mid:
@@ -228,7 +228,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                         originLeg1 = leftLeg ? new(8, 42) : new(6, 4);
                         originLeg2 = leftLeg ? new(6, 6) : new(0, 32);
                         originFoot = leftLeg ? new(14, 72) : new(10, 14);
-                        rotationOffsetLeg1 = leftLeg ? MathHelper.Pi/4: -MathHelper.Pi / 4;
+                        rotationOffsetLeg1 = leftLeg ? MathHelper.Pi / 4 : -MathHelper.Pi / 4;
                         rotationOffsetLeg2 = leftLeg ? -MathHelper.Pi / 6 : MathHelper.Pi / 8;
                         rotationOffsetLeg3 = leftLeg ? MathHelper.Pi / 6 : -MathHelper.Pi / 6;
                         break;
@@ -337,7 +337,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override void SetStaticDefaults()
         {
-            base.SetStaticDefaults();
+            NPCSets.MoonNPC[Type] = true;
+            NPCSets.DropsMoonstone[Type] = true;
         }
 
         public override void SetDefaults()

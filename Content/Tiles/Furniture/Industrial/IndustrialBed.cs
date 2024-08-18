@@ -34,7 +34,6 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             TileObjectData.newTile.Width = 4;
             TileObjectData.newTile.Height = 3;
             TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;
-            TileObjectData.newTile.StyleMultiplier = 2;
             TileObjectData.newTile.StyleWrapLimit = 2;
             TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.newTile.CoordinateHeights = [16, 16, 16];
@@ -56,7 +55,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             // Because beds have special smart interaction, this splits up the left and right side into 2x3 sections
             width = 2;
             height = 3;
-            //extraY = 0; // Depends on how you set up frameHeight and CoordinateHeights and CoordinatePaddingFix.Y
+            //extraY = 0;  
         }
 
         public override void ModifySleepingTargetInfo(int i, int j, ref TileRestingInfo info)
@@ -125,7 +124,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             {
                 player.noThrow = 2;
                 player.cursorItemIconEnabled = true;
-                player.cursorItemIconID = ModContent.ItemType<Items.Furniture.Industrial.IndustrialBed>();
+                player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, TileObjectData.GetTileStyle(Main.tile[i, j]));
             }
         }
     }

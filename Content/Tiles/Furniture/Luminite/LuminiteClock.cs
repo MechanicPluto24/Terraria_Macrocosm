@@ -1,6 +1,7 @@
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
+using System;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent.ObjectInteractions;
@@ -28,10 +29,20 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             TileObjectData.newTile.Height = 5;
             TileObjectData.newTile.CoordinateHeights = [16, 16, 16, 16, 16];
             TileObjectData.newTile.Origin = new Point16(0, 4);
+            TileObjectData.newTile.DrawYOffset = 2;
             TileObjectData.addTile(Type);
 
-            AddMapEntry(new Color(73, 168, 142), Language.GetText("ItemName.GrandfatherClock"));
+            foreach (LuminiteStyle style in Enum.GetValues(typeof(LuminiteStyle)))
+                AddMapEntry(Utility.GetTileColorFromLuminiteStyle(style), Language.GetText("ItemName.GrandfatherClock"));
         }
+
+        public override bool CreateDust(int i, int j, ref int type)
+        {
+            type = Utility.GetDustTypeFromLuminiteStyle((LuminiteStyle)(Main.tile[i, j].TileFrameX / (18 * 2)));
+            return true;
+        }
+
+        public override ushort GetMapOption(int i, int j) => (ushort)(Main.tile[i, j].TileFrameX / (18 * 2));
 
         public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings) => true;
 
@@ -47,7 +58,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
 
             player.noThrow = 2;
             player.cursorItemIconEnabled = true;
-            player.cursorItemIconID = ModContent.ItemType<Items.Furniture.Luminite.LuminiteClock>();
+            player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, TileObjectData.GetTileStyle(Main.tile[i, j]));
         }
 
         public override void NumDust(int i, int j, bool fail, ref int num) => num = fail ? 1 : 3;

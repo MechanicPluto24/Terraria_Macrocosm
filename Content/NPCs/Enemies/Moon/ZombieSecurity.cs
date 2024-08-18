@@ -1,5 +1,6 @@
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Global.NPCs;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Items.Weapons.Ranged;
@@ -16,7 +17,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-    public class ZombieSecurity : ModNPC, IMoonEnemy
+    public class ZombieSecurity : ModNPC
     {
         public enum ActionState
         {
@@ -57,6 +58,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         public override void SetStaticDefaults()
         {
             Main.npcFrameCount[Type] = 32;
+
+            NPCSets.MoonNPC[Type] = true;
+            NPCSets.DropsMoonstone[Type] = true;
         }
 
         public override void SetDefaults()

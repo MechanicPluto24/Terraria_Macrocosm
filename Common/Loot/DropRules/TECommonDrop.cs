@@ -5,7 +5,6 @@ using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.GameContent.Drawing;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ObjectData;
 
@@ -45,7 +44,7 @@ namespace Macrocosm.Common.Loot.DropRules
                     Particle.CreateParticle<ItemTransferParticle>((p) =>
                     {
                         p.StartPosition = position + Main.rand.NextVector2Circular(32, 16);
-                        p.EndPosition = position + new Vector2(0,-96) + Main.rand.NextVector2Circular(16, 16);
+                        p.EndPosition = position + new Vector2(0, -96) + Main.rand.NextVector2Circular(16, 16);
                         p.ItemType = itemId;
                     });
                 }

@@ -1,4 +1,5 @@
 using Macrocosm.Common.Global.NPCs;
+using Macrocosm.Common.Sets;
 using Macrocosm.Content.Biomes;
 using Microsoft.Xna.Framework;
 using System;
@@ -9,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-    public class BloodMoonJuggernaut : ModNPC, IMoonEnemy
+    public class BloodMoonJuggernaut : ModNPC
     {
         public enum ActionState
         {
@@ -31,10 +32,12 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override void SetStaticDefaults()
         {
-            base.SetStaticDefaults();
             Main.npcFrameCount[Type] = 32;
 
-            SpawnModBiomes = [ModContent.GetInstance<BloodMoonBiome>().Type];
+            SpawnModBiomes = [ModContent.GetInstance<DemonSunBiome>().Type];
+
+            NPCSets.MoonNPC[Type] = true;
+            NPCSets.DropsMoonstone[Type] = true;
         }
 
         public override void SetDefaults()

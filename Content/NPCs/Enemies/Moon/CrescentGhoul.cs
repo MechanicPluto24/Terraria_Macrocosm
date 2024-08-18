@@ -1,9 +1,9 @@
 ﻿using Macrocosm.Common.Global.NPCs;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Materials.Drops;
-using Macrocosm.Content.NPCs.Bosses.CraterDemon;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -17,7 +17,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-    public class CrescentGhoul : ModNPC, IMoonEnemy
+    public class CrescentGhoul : ModNPC
     {
         public enum ActionState
         {
@@ -39,11 +39,12 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override void SetStaticDefaults()
         {
-            base.SetStaticDefaults();
-
             Main.npcFrameCount[NPC.type] = 4;
             NPCID.Sets.TrailCacheLength[NPC.type] = 4;
             NPCID.Sets.TrailingMode[NPC.type] = 0;
+
+            NPCSets.MoonNPC[Type] = true;
+            NPCSets.DropsMoonstone[Type] = true;
         }
 
         public override void SetDefaults()

@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Drawing;
-using Macrocosm.Common.Subworlds;
+﻿using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -93,14 +92,14 @@ namespace Macrocosm.Content.LoadingScreens
                 case TitleState.FadingOut:
                     titleFadeValue -= titleFadeRate;
                     if (titleFadeValue <= 0f)
-                         currentState = TitleState.Inactive;
+                        currentState = TitleState.Inactive;
                     break;
             }
         }
 
         public static void Draw(SpriteBatch spriteBatch)
         {
-            if(currentState is not TitleState.Inactive)
+            if (currentState is not TitleState.Inactive)
                 title?.DrawDirect(spriteBatch, new Vector2(Main.screenWidth / 2f, Main.screenHeight * 0.2f), title.Color * titleFadeValue);
         }
     }

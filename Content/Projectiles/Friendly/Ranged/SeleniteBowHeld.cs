@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Audio;
-using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -70,7 +69,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                         }, Projectile.position);
                     }
                 }
-                else if(!altAttackActive)
+                else if (!altAttackActive)
                 {
                     if (AI_Charge > MinCharge)
                     {
@@ -112,7 +111,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                         altAttackCount = 0;
                     }
                     else if (AI_Timer % altAttackRate == 0)
-                    { 
+                    {
                         if (Player.PickAmmo(currentItem, out _, out speed, out damage, out knockback, out _))
                         {
                             Vector2 position = Projectile.Center - new Vector2(20, 0).RotatedBy(Projectile.rotation) + Main.rand.NextVector2Circular(32, 32);
@@ -153,7 +152,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
                 float progress = MathHelper.Clamp(AI_Charge / MaxCharge, 0f, 1f);
                 if (altAttackActive)
-                    progress = (1f - (AI_Timer / 50f)) * (altAttackCount/10f);
+                    progress = (1f - (AI_Timer / 50f)) * (altAttackCount / 10f);
 
                 float rotation = Projectile.rotation + EffectTimer;
                 float scale = 0.5f * Projectile.scale * progress;

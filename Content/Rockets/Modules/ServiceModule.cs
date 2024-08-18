@@ -1,9 +1,6 @@
-﻿using Macrocosm.Common.Bases;
-using Macrocosm.Common.Sets;
-using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Sets;
 using Macrocosm.Content.Items.Materials.Tech;
 using Microsoft.Xna.Framework;
-using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
@@ -23,7 +20,7 @@ namespace Macrocosm.Content.Rockets.Modules
             new(ModContent.ItemType<RocketPlating>(), 25),
             new(ModContent.ItemType<PowerJunction>(), 3),
             new(ModContent.ItemType<OxygenSystem>(), 3),
-            new((item) => ItemSets.Chests[item.type], Language.GetText("Mods.Macrocosm.UI.LaunchPad.AnyChest"), 1) 
+            new((item) => ItemSets.Chest[item.type], Language.GetText("Mods.Macrocosm.UI.LaunchPad.AnyChest"), 1)
         };
     }
 }

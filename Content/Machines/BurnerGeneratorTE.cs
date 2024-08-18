@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Systems.Power;
@@ -39,7 +38,7 @@ namespace Macrocosm.Content.Machines
         {
             if (PoweredOn)
             {
-                if(ConsumedItem.type > ItemID.None)
+                if (ConsumedItem.type > ItemID.None)
                 {
                     checkTimer = 0;
                     GeneratedPower = 0;
@@ -47,7 +46,7 @@ namespace Macrocosm.Content.Machines
 
                     foreach (Item item in Inventory)
                     {
-                        FuelData fuelData = ItemSets.Fuels[item.type];
+                        FuelData fuelData = ItemSets.FuelData[item.type];
                         if (fuelData.Potency > FuelPotency.None)
                         {
                             ConsumedItem = new(item.type, stack: 1);
@@ -66,14 +65,14 @@ namespace Macrocosm.Content.Machines
                 }
                 else
                 {
-                    FuelData fuelData = ItemSets.Fuels[ConsumedItem.type];
+                    FuelData fuelData = ItemSets.FuelData[ConsumedItem.type];
 
                     GeneratedPower = 0.2f * (int)fuelData.Potency;
 
                     if (checkTimer++ >= fuelData.ConsumtionRate)
                     {
                         checkTimer = 0;
-                        ConsumedItem.TurnToAir(fullReset: true);    
+                        ConsumedItem.TurnToAir(fullReset: true);
                     }
                 }
             }

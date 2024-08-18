@@ -1,16 +1,15 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Macrocosm.Common.Utils;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
-using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI.Chat;
-using Microsoft.Xna.Framework;
-using Macrocosm.Common.Utils;
-using System.Collections.Generic;
-using System;
-using Terraria.ID;
-using System.Reflection.PortableExecutable;
-using System.Linq;
 
 namespace Macrocosm.Common.Systems.Power
 {
@@ -34,7 +33,7 @@ namespace Macrocosm.Common.Systems.Power
         private const int updateRate = 1;
         public override void PostUpdateEverything()
         {
-            if(updateTimer++ >= updateRate)
+            if (updateTimer++ >= updateRate)
             {
                 SolveCircuits();
                 updateTimer = 0;
@@ -94,26 +93,13 @@ namespace Macrocosm.Common.Systems.Power
             {
                 foreach (var p in visited)
                 {
-                    if (Main.rand.NextBool(20) && PowerWiring.Map[p].AnyWire)
+                    if (Main.rand.NextBool(20) && Main.tile[p].AnyWire())
                     {
                         var d = Dust.NewDustDirect(p.ToWorldCoordinates() + new Vector2(2), 8, 8, DustID.Electric, Scale: 0.2f, SpeedX: 0, SpeedY: 0);
                         d.noGravity = false;
                     }
                 }
             }
-        }
-
-        public override void PostDrawTiles()
-        {
-            /*
-            SpriteBatch spriteBatch = Main.spriteBatch;
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, default, null, Main.GameViewMatrix.ZoomMatrix);
-
-            if(PowerWiring.Instance.ShouldDrawWires)
-                DebugDrawMachines(spriteBatch);
-
-            spriteBatch.End();
-            */
         }
 
         private static void DebugDrawMachines(SpriteBatch spriteBatch)

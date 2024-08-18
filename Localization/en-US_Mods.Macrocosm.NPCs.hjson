@@ -162,3 +162,18 @@ LuminiteElemental: {
 	DisplayName: Luminite Elemental
 	BestiaryFlavorText: Mods.Macrocosm.NPCs.LuminiteElemental.BestiaryFlavorText
 }
+
+MoonLich: {
+	DisplayName: Moon Lich
+	BestiaryFlavorText: Mods.Macrocosm.NPCs.MoonLich.BestiaryFlavorText
+}
+
+XenoHive: {
+	DisplayName: Xeno Hive
+	BestiaryFlavorText: Mods.Macrocosm.NPCs.XenoHive.BestiaryFlavorText
+}
+
+XenoHornet: {
+	DisplayName: Xeno Hornet
+	BestiaryFlavorText: Mods.Macrocosm.NPCs.XenoHornet.BestiaryFlavorText
+}

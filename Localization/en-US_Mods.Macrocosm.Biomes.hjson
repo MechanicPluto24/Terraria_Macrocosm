@@ -22,3 +22,8 @@ UndergroundMoonBiome: {
 	DisplayName: Underground Moon
 	TownNPCDialogueName: The Underground Moon
 }
+
+DemonSunBiome: {
+	DisplayName: Demon Sun Biome
+	TownNPCDialogueName: the Demon Sun Biome
+}

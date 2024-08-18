@@ -16,7 +16,8 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             Main.tileTable[Type] = true;
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
-            TileObjectData.newTile.CoordinateHeights = [16, 18];
+            TileObjectData.newTile.CoordinateHeights = [16, 16];
+            TileObjectData.newTile.DrawYOffset = 2;
             TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.addTile(Type);
 

@@ -1,4 +1,5 @@
-﻿using Terraria;
+﻿using Macrocosm.Common.Enums;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -12,7 +13,7 @@ namespace Macrocosm.Content.Items.Furniture.Luminite
 
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminiteBookcase>());
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminiteBookcase>(), (int)LuminiteStyle.Luminite);
             Item.width = 28;
             Item.height = 34;
             Item.value = 150;

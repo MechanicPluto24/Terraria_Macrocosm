@@ -67,3 +67,43 @@ Irradiated: {
 	DisplayName: Irradiated
 	Description: Mods.Macrocosm.Buffs.Irradiated.Description
 }
+
+Blindness: {
+	DisplayName: Blindness
+	Description: Mods.Macrocosm.Buffs.Blindness.Description
+}
+
+MildNecrosis: {
+	DisplayName: Mild Necrosis
+	Description: Mods.Macrocosm.Buffs.MildNecrosis.Description
+}
+
+Necrosis: {
+	DisplayName: Necrosis
+	Description: Mods.Macrocosm.Buffs.Necrosis.Description
+}
+
+OrganFailure: {
+	DisplayName: Organ Failure
+	Description: Mods.Macrocosm.Buffs.OrganFailure.Description
+}
+
+Paralysis: {
+	DisplayName: Paralysis
+	Description: Mods.Macrocosm.Buffs.Paralysis.Description
+}
+
+WeakBones: {
+	DisplayName: Weak Bones
+	Description: Mods.Macrocosm.Buffs.WeakBones.Description
+}
+
+Fatigue: {
+	DisplayName: Fatigue
+	Description: Mods.Macrocosm.Buffs.Fatigue.Description
+}
+
+AntiRadiationPills: {
+	DisplayName: Anti Radiation Pills
+	Description: Mods.Macrocosm.Buffs.AntiRadiationPills.Description
+}

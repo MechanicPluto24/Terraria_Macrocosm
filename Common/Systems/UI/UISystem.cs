@@ -180,7 +180,7 @@ namespace Macrocosm.Common.Systems.UI
             if (Main.netMode == NetmodeID.Server || UserInterface.CurrentState is not null)
                 return;
 
-            if 
+            if
             (
                 UIMachineState is not null
                 && UIMachineState.MachineUI.MachineTE is IInventoryOwner inventoryOwner

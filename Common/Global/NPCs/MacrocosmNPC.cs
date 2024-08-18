@@ -1,8 +1,17 @@
+using Macrocosm.Common.Loot.DropConditions;
 using Macrocosm.Common.Netcode;
+using Macrocosm.Common.Sets;
+using Macrocosm.Content.Biomes;
+using Macrocosm.Content.Items.Currency;
+using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SubworldLibrary;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Terraria;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
@@ -15,7 +24,23 @@ namespace Macrocosm.Common.Global.NPCs
         protected override bool CloneNewInstances => false;
 
         /// <summary> If this is only set on a local client, the logic accessing this needs to be synced </summary>
-        public bool TargetedByHomingProjectile;
+        public bool TargetedByHomingProjectile { get; set; }
+
+        public override void SetDefaults(NPC npc)
+        {
+            if (npc.ModNPC is not null && NPCSets.MoonNPC[npc.type])
+                npc.ModNPC.SpawnModBiomes = npc.ModNPC.SpawnModBiomes.Prepend(ModContent.GetInstance<MoonBiome>().Type).ToArray();
+
+            //if (npc.ModNPC is not null && NPCSets.MarsEnemies[npc.type])
+            //    npc.ModNPC.SpawnModBiomes = npc.ModNPC.SpawnModBiomes.Prepend(ModContent.GetInstance<MarsBiome>().Type).ToArray();
+        }
+
+        public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
+        {
+            // Make all DropsMoonstone NPCs drop Moonstone while on the Moon
+            if (NPCSets.DropsMoonstone[npc.type])
+                npcLoot.Add(new ItemDropWithConditionRule(ModContent.ItemType<Moonstone>(), 10, 1, 5, new SubworldDropCondition<Moon>(canShowInBestiary: true)));
+        }
 
         public override void SendExtraAI(NPC npc, BitWriter bitWriter, BinaryWriter binaryWriter)
         {

@@ -26,10 +26,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             Main.tileLavaDeath[Type] = true;
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style1xX);
-            TileObjectData.newTile.StyleLineSkip = 2;
-            TileObjectData.newTile.WaterDeath = true;
-            TileObjectData.newTile.WaterPlacement = LiquidPlacement.NotAllowed;
-            TileObjectData.newTile.LavaPlacement = LiquidPlacement.NotAllowed;
+            TileObjectData.newTile.StyleWrapLimit = 2;
             TileObjectData.addTile(Type);
 
             AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTorch);
@@ -69,10 +66,6 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
 
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
         {
-            var tile = Main.tile[i, j];
-            if (!TileDrawing.IsVisible(tile))
-                return;
-
             flameTexture ??= ModContent.Request<Texture2D>(Texture + "_Flame");
             ulong randSeed = Main.TileFrameSeed ^ (ulong)((long)j << 32 | (long)(uint)i);
 

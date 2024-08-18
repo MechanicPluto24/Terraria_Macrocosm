@@ -21,19 +21,19 @@ namespace Macrocosm.Content.Biomes
         {
         }
 
+        public override bool IsBiomeActive(Player player)
+            => TileCounts.Instance.IrradiatedRockCount > 400;
+
         public override void OnInBiome(Player player)
         {
-            base.OnInBiome(player);
-            player.GetModPlayer<IrradiationPlayer>().IrradiationLevels+=0.0003f;
+        }
+
+        public override void OnEnter(Player player)
+        {
         }
 
         public override void OnLeave(Player player)
         {
-            base.OnLeave(player);
         }
-
-        public override bool IsBiomeActive(Player player)
-            => TileCounts.Instance.IrradiatedRockCount > 400;
-
     }
 }

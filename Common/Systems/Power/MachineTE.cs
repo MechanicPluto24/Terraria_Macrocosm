@@ -1,17 +1,16 @@
 ﻿using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Reflection.PortableExecutable;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.GameContent;
 using Terraria.ID;
+using Terraria.Localization;
+using Terraria.Map;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
-using Terraria.UI.Chat;
 
 namespace Macrocosm.Common.Systems.Power
 {
@@ -35,8 +34,8 @@ namespace Macrocosm.Common.Systems.Power
         public bool IsConsumer => consumedPower != null;
         private float? consumedPower;
 
-        public float ConsumedPower 
-        { 
+        public float ConsumedPower
+        {
             get => consumedPower ?? 0f;
             set
             {
@@ -100,12 +99,14 @@ namespace Macrocosm.Common.Systems.Power
             Update();
         }
 
-        public void DisplayPowerInfo()
+        public string GetPowerInfo()
         {
-            string activePower = ActivePower.ToString("F2");
-            string maxPower = (IsGenerator ? GeneratedPower : ConsumedPower).ToString("F2");
-            string info = $"{activePower}W/{maxPower}W";
-            Utility.Chat(info, Color.Teal);
+            // TODO: localize these 4 words
+            string name = Lang.GetMapObjectName(MapHelper.TileToLookup(MachineTile.Type, 0));
+            if (IsGenerator)
+                return $"{name} - Available: {ActivePower:F2}W / Generated: {GeneratedPower:F2} W";
+            else
+                return $"{name} - Consumed: {ActivePower:F2}W / Required: {ConsumedPower:F2} W";
         }
 
         public bool IsConnected(MachineTE other)
@@ -117,7 +118,18 @@ namespace Macrocosm.Common.Systems.Power
                     if (WorldGen.InWorld(i, j))
                     {
                         var visited = new HashSet<Point16>();
-                        if (CheckForConnection(i, j, other, visited))
+
+                        var tile = Main.tile[i, j];
+                        if (tile.RedWire && CheckForConnection(i, j, other, visited, VanillaWireType.Red))
+                            return true;
+
+                        if (tile.BlueWire && CheckForConnection(i, j, other, visited, VanillaWireType.Blue))
+                            return true;
+
+                        if (tile.GreenWire && CheckForConnection(i, j, other, visited, VanillaWireType.Green))
+                            return true;
+
+                        if (tile.YellowWire && CheckForConnection(i, j, other, visited, VanillaWireType.Yellow))
                             return true;
                     }
                 }
@@ -126,7 +138,8 @@ namespace Macrocosm.Common.Systems.Power
             return false;
         }
 
-        private bool CheckForConnection(int x, int y, MachineTE other, HashSet<Point16> visited)
+
+        private bool CheckForConnection(int x, int y, MachineTE other, HashSet<Point16> visited, VanillaWireType wireType)
         {
             if (!WorldGen.InWorld(x, y) || visited.Contains(new Point16(x, y)))
                 return false;
@@ -142,15 +155,44 @@ namespace Macrocosm.Common.Systems.Power
             {
                 int checkX = x + dir.X;
                 int checkY = y + dir.Y;
-                if (PowerWiring.Map[new Point16(checkX, checkY)].AnyWire)
+
+                if (!WorldGen.InWorld(checkX, checkY))
+                    continue;
+
+                var currentTile = Main.tile[x, y];
+                var checkTile = Main.tile[checkX, checkY];
+
+                switch (wireType)
                 {
-                    if (CheckForConnection(checkX, checkY, other, visited))
-                        return true;
+                    case VanillaWireType.Red: 
+                        if (currentTile.RedWire && checkTile.RedWire)
+                            if (CheckForConnection(checkX, checkY, other, visited, wireType))
+                                return true;
+                        break;
+
+                    case VanillaWireType.Blue:  
+                        if (currentTile.BlueWire && checkTile.BlueWire)
+                            if (CheckForConnection(checkX, checkY, other, visited, wireType))
+                                return true;
+                        break;
+
+                    case VanillaWireType.Green:
+                        if (currentTile.GreenWire && checkTile.GreenWire)
+                            if (CheckForConnection(checkX, checkY, other, visited, wireType))
+                                return true;
+                        break;
+
+                    case VanillaWireType.Yellow:
+                        if (currentTile.YellowWire && checkTile.YellowWire)
+                            if (CheckForConnection(checkX, checkY, other, visited, wireType))
+                                return true;
+                        break;
                 }
             }
 
             return false;
         }
+
 
         public override bool IsTileValidForEntity(int x, int y)
         {

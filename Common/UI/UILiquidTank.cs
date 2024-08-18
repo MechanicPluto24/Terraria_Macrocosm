@@ -1,24 +1,10 @@
-﻿using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Graphics;
-using Macrocosm.Common.UI.Themes;
-using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.UI.Themes;
 using Macrocosm.Content.Liquids;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
-using System;
-using System.Collections.Generic;
-using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terraria;
-using Terraria.GameContent;
-using Terraria.GameContent.Liquid;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.UI;
 
 namespace Macrocosm.Common.UI
 {
@@ -64,7 +50,7 @@ namespace Macrocosm.Common.UI
 
             if (macrocosmLiquidType.HasValue)
                 uiLiquid = new(macrocosmLiquidType.Value);
-            else 
+            else
                 uiLiquid = new(liquidType);
 
             uiLiquid.Width = new(0, 1f);

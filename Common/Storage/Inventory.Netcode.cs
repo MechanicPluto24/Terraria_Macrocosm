@@ -75,12 +75,12 @@ namespace Macrocosm.Common.Storage
                 items[i] = ItemIO.Receive(reader, readStack: true, readFavorite: true);
 
             IInventoryOwner owner = IInventoryOwner.GetInventoryOwnerInstance(ownerType, ownerSerializationIndex);
-            if(owner is not null)
+            if (owner is not null)
             {
                 Inventory inventory;
 
                 //if (owner.Inventory is not null)
-                    inventory = owner.Inventory;
+                inventory = owner.Inventory;
                 //else
                 //    owner.Inventory = inventory = new(newSize, owner);
 
@@ -93,7 +93,7 @@ namespace Macrocosm.Common.Storage
                     inventory[i] = items[i].Clone();
 
                 if (Main.netMode == NetmodeID.Server)
-                     inventory.SyncEverything(ignoreClient: sender);
+                    inventory.SyncEverything(ignoreClient: sender);
             }
         }
 
@@ -130,7 +130,7 @@ namespace Macrocosm.Common.Storage
                     inventory.OnResize(oldSize, newSize);
 
                 if (Main.netMode == NetmodeID.Server)
-                     inventory.SyncSize(ignoreClient: sender);
+                    inventory.SyncSize(ignoreClient: sender);
             }
         }
 
@@ -165,13 +165,13 @@ namespace Macrocosm.Common.Storage
             Item item = ItemIO.Receive(reader, readStack: true, readFavorite: false);
 
             IInventoryOwner owner = IInventoryOwner.GetInventoryOwnerInstance(ownerType, ownerSerializationIndex);
-            if(owner is not null)
+            if (owner is not null)
             {
                 Inventory inventory = owner.Inventory;
                 inventory[itemIndex] = item;
 
                 if (Main.netMode == NetmodeID.Server)
-                     inventory.SyncItem(itemIndex, ignoreClient: sender);
+                    inventory.SyncItem(itemIndex, ignoreClient: sender);
             }
         }
 
@@ -204,8 +204,8 @@ namespace Macrocosm.Common.Storage
                 inventory.interactingPlayer = interactingPlayer;
 
                 if (Main.netMode == NetmodeID.Server)
-                     inventory.SyncInteraction(ignoreClient: sender);
-            }          
+                    inventory.SyncInteraction(ignoreClient: sender);
+            }
         }
     }
 }
