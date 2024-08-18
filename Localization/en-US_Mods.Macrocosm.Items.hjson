@@ -16,6 +16,7 @@ CelestialBulwark: {
 	Tooltip:
 		'''
 		Allows the player to dash into the enemy
+		Allows for horizontal and vertical dashing
 		Double tap a direction
 		'''
 }
@@ -147,7 +148,7 @@ CraterDemonSummon: {
 	DisplayName: Daemonic Tablet
 	Tooltip:
 		'''
-		Summons the Crater Demon
+		Summons Crater Demon
 		Must be used on the Moon
 		'''
 }
@@ -406,7 +407,7 @@ TitaniumLoom: {
 
 SolarPanelLarge: {
 	DisplayName: Large Solar Panel
-	Tooltip: ""
+	Tooltip: Coverts solar energy into electricity
 }
 
 BloodSunRising: {
@@ -576,7 +577,10 @@ DianiteFork: {
 
 DianiteTome: {
 	DisplayName: Dianite Tome
-	Tooltip: ""
+	Tooltip:'''
+	Conjure a portal to rain
+	flaming meteors down on your foes
+        '''
 }
 
 ImbriumJewel: {
@@ -654,21 +658,17 @@ Cruithne: {
 }
 
 LHBMinigun: {
-	DisplayName: L.H.B.-805
+	DisplayName: LHB-59
 	Tooltip:
 		'''
-		What's more effective than bullets?
-		A whole LOT of bullets.
+		'What's more effective than bullets?
+		A whole LOT of bullets.'
 		'''
 }
 
 NWARocketLauncher: {
-	DisplayName: N.W.A.-12691
-	Tooltip:
-		'''
-		Shoots rockets 
-		<right> to lock onto an enemy
-		'''
+	DisplayName: NWA-5000
+	Tooltip: <right> to lock onto an enemy
 }
 
 SeleniteBow: {
@@ -678,7 +678,7 @@ SeleniteBow: {
 
 SeleniteMagnum: {
 	DisplayName: Selenite Magnum
-	Tooltip: ""
+	Tooltip: <right> to rapidly fan six bullets
 }
 
 CalcicCane: {
@@ -758,7 +758,7 @@ SilicaSand: {
 
 LaunchPadMarker: {
 	DisplayName: Launchpad Marker
-	Tooltip: ""
+	Tooltip: Used to create a launch pad for rockets
 }
 
 SteelBar: {
@@ -993,12 +993,12 @@ IndustrialToilet: {
 
 OilRefinery: {
 	DisplayName: Oil Refinery
-	Tooltip: ""
+	Tooltip: Used to refine fuel and other fluids
 }
 
 SolarPanelSmall: {
-	DisplayName: Small Solar Panel
-	Tooltip: ""
+	DisplayName: Solar Panel
+	Tooltip: Converts solar energy into electricity
 }
 
 Procellarum: {
@@ -1023,7 +1023,7 @@ ZombieFinger: {
 
 XFLR6: {
 	DisplayName: XFLR-6
-	Tooltip: Well, what do you think of that? Look what the goat created.
+	Tooltip: 'Well, what do you think of that? Look what the goat created.'
 }
 
 InvarArrow: {
@@ -1078,7 +1078,11 @@ Apollo115: {
 
 CraterDemonPet: {
 	DisplayName: Toy Rocket
-	Tooltip: Summons a Mini Crater Demon
+	Tooltip:
+	'''
+        Summons a Crater Imp
+	'Fly me to the Moon!'
+        '''
 }
 
 MoonGoldCrescent: {
@@ -1133,12 +1137,12 @@ StygiaMusicBox: {
 
 OsmiumBoots: {
 	DisplayName: Osmium Boots
-	Tooltip: ""
+	Tooltip: Increases player's fall speed
 }
 
 EarthGlobe: {
 	DisplayName: Earth Globe
-	Tooltip: ""
+	Tooltip: 'Home sweet home!'
 }
 
 PowerJunction: {
@@ -1173,7 +1177,11 @@ ConstructionLight: {
 
 OreExcavator: {
 	DisplayName: Ore Excavator
-	Tooltip: ""
+	Tooltip: '''
+        Automatically extracts ores and resources from underground
+	Does not damage terrain
+	Multiple excavators deployed on the same planet will yield diminishing results
+        '''
 }
 
 AlienResidue: {
@@ -1260,7 +1268,7 @@ GothicCoalBrick: {
 
 SpookyDookie: {
 	DisplayName: Spooky Dookie
-	Tooltip: ""
+	Tooltip: 'Go ahead...'
 }
 
 CheeseBlock: {
@@ -1365,7 +1373,7 @@ CheeseTable: {
 
 CheeseToilet: {
 	DisplayName: Cheese Toilet
-	Tooltip: ""
+	Tooltip: 'This is a horrible idea.'
 }
 
 CheeseWorkbench: {
@@ -1420,27 +1428,27 @@ Boombox: {
 
 StopSign: {
 	DisplayName: Stop Sign
-	Tooltip: ""
+	Tooltip: 'Stop right there!'
 }
 
 WindTurbineLarge: {
-	DisplayName: Wind Turbine Large
-	Tooltip: ""
+	DisplayName: Large Wind Turbine
+	Tooltip: Converts wind energy into electricity
 }
 
 WindTurbineSmall: {
-	DisplayName: Wind Turbine Small
-	Tooltip: ""
+	DisplayName: Wind Turbine
+	Tooltip: Converts wind energy into electricity
 }
 
 WeCanDoItBlue: {
-	DisplayName: We Can Do It Blue
-	Tooltip: ""
+	DisplayName: We Can Do It!
+	Tooltip: 'Now in blue!'
 }
 
 WeCanDoItYellow: {
-	DisplayName: We Can Do It Yellow
-	Tooltip: ""
+	DisplayName: We Can Do It!
+	Tooltip: 'Now in yellow!'
 }
 
 DisplayScreen: {
@@ -1450,7 +1458,7 @@ DisplayScreen: {
 
 BurnerGenerator: {
 	DisplayName: Burner Generator
-	Tooltip: ""
+	Tooltip: Converts combustable fuel into electricity
 }
 
 IndustrialServer: {
