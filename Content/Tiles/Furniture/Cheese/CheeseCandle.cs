@@ -1,6 +1,5 @@
 ﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
-using Microsoft.Build.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -27,9 +26,6 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             Main.tileLavaDeath[Type] = true;
 
             TileObjectData.newTile.CopyFrom(TileObjectData.GetTileData(TileID.Candles, 0));
-            TileObjectData.newTile.WaterDeath = true;
-            TileObjectData.newTile.WaterPlacement = LiquidPlacement.NotAllowed;
-            TileObjectData.newTile.LavaPlacement = LiquidPlacement.NotAllowed;
 
             // This candle is higher than 16 pixels, but still fits into a 1x1 tile
             TileObjectData.newTile.CoordinateHeights = [26];
@@ -75,7 +71,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             Player player = Main.LocalPlayer;
             player.noThrow = 2;
             player.cursorItemIconEnabled = true;
-            player.cursorItemIconID = ModContent.ItemType<Items.Furniture.Cheese.CheeseCandle>();
+            player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, TileObjectData.GetTileStyle(Main.tile[i, j]));
         }
 
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
@@ -91,10 +87,6 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
 
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
         {
-            var tile = Main.tile[i, j];
-            if (!TileDrawing.IsVisible(tile))
-                return;
-
             flameTexture ??= ModContent.Request<Texture2D>(Texture + "_Flame");
             ulong randSeed = Main.TileFrameSeed ^ (ulong)((long)j << 32 | (long)(uint)i);
 
@@ -103,7 +95,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
                 float xx = Utils.RandomInt(ref randSeed, -10, 11) * 0.15f;
                 float yy = Utils.RandomInt(ref randSeed, -10, 1) * 0.35f;
 
-                Utility.DrawTileExtraTexture(i, j, spriteBatch, flameTexture, drawOffset: new Vector2(xx, yy), drawColor: new Color(100, 100, 100, 0));
+                Utility.DrawTileExtraTexture(i, j, spriteBatch, flameTexture, drawOffset: new Vector2(xx, yy), drawColor: new Color(50, 50, 50, 0));
             }
         }
     }

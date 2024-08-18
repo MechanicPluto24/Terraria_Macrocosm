@@ -1,6 +1,8 @@
-﻿using Macrocosm.Content.Dusts;
+﻿using Macrocosm.Common.Utils;
+using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.Enums;
 using Terraria.ID;
 using Terraria.Localization;
@@ -20,10 +22,13 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             Main.tileWaterDeath[Type] = true;
             Main.tileLavaDeath[Type] = true;
 
-            TileObjectData.newTile.CopyFrom(TileObjectData.GetTileData(TileID.HangingLanterns, 0));
-            TileObjectData.newTile.StyleLineSkip = 2;
-            TileObjectData.newTile.WaterPlacement = LiquidPlacement.NotAllowed;
-            TileObjectData.newTile.LavaPlacement = LiquidPlacement.NotAllowed;
+            TileObjectData.newTile.CopyFrom(TileObjectData.Style1x2Top);
+            TileObjectData.newTile.DrawYOffset = -2;
+            TileObjectData.newTile.StyleWrapLimit = 2;
+            TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
+            TileObjectData.newAlternate.AnchorTop = new AnchorData(AnchorType.Platform, TileObjectData.newTile.Width, 0);
+            TileObjectData.newAlternate.DrawYOffset = -10;
+            TileObjectData.addAlternate(0);
             TileObjectData.addTile(Type);
 
             AdjTiles = [TileID.HangingLanterns];
@@ -49,6 +54,14 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
 
             if (Main.netMode != NetmodeID.SinglePlayer)
                 NetMessage.SendTileSquare(-1, i, topY, 1, 2);
+        }
+
+        // Workaround for platform hanging, alternates don't work currently
+        public override void SetDrawPositions(int i, int j, ref int width, ref int offsetY, ref int height, ref short tileFrameX, ref short tileFrameY)
+        {
+            Point16 topLeft = Utility.GetMultitileTopLeft(i, j);
+            if (WorldGen.IsBelowANonHammeredPlatform(topLeft.X, topLeft.Y))
+                 offsetY -= 8;
         }
 
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)

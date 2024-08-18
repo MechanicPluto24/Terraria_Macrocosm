@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.ModLoader;
-using Terraria.Utilities;
 
 namespace Macrocosm.Common.UI
 {
@@ -16,7 +15,7 @@ namespace Macrocosm.Common.UI
             spriteBatch.Draw(ModContent.Request<Texture2D>(Path + "ConnectorHorizontal_Border").Value, destinationRectangle, borderColor);
 
             int connectorCorrection = 10;
-            int edgeSize = destinationRectangle.Height; 
+            int edgeSize = destinationRectangle.Height;
             leftEndpoint = new Rectangle(destinationRectangle.X - connectorCorrection, destinationRectangle.Y, edgeSize, destinationRectangle.Height);
             rightEndpoint = new Rectangle(destinationRectangle.X + destinationRectangle.Width - edgeSize + connectorCorrection, destinationRectangle.Y, edgeSize, destinationRectangle.Height);
         }
@@ -28,7 +27,7 @@ namespace Macrocosm.Common.UI
             spriteBatch.Draw(ModContent.Request<Texture2D>(Path + "ConnectorVertical_Border").Value, destinationRectangle, borderColor);
 
             int connectorCorrection = 10;
-            int edgeSize = destinationRectangle.Width; 
+            int edgeSize = destinationRectangle.Width;
             topEndpoint = new Rectangle(destinationRectangle.X, destinationRectangle.Y - connectorCorrection, destinationRectangle.Width, edgeSize);
             bottomEndpoint = new Rectangle(destinationRectangle.X, destinationRectangle.Y + destinationRectangle.Height - edgeSize + connectorCorrection, destinationRectangle.Width, edgeSize);
         }

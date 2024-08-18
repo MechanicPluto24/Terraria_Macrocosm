@@ -28,10 +28,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             TileID.Sets.Clock[Type] = true;
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style2x1);
-            TileObjectData.newTile.WaterDeath = true;
             TileObjectData.newTile.StyleHorizontal = false;
-            TileObjectData.newTile.WaterPlacement = LiquidPlacement.NotAllowed;
-            TileObjectData.newTile.LavaPlacement = LiquidPlacement.NotAllowed;
             TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.Table, 2, 0);
             TileObjectData.addTile(Type);
 
@@ -61,7 +58,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
         }
 
         public override void NearbyEffects(int i, int j, bool closer)
-        { 
+        {
         }
 
         public override bool RightClick(int x, int y)
@@ -77,12 +74,12 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
 
         public override void MouseOver(int i, int j)
         {
-            if(Main.tile[i, j].TileFrameY >= 18)
+            if (Main.tile[i, j].TileFrameY >= 18)
             {
                 Player player = Main.LocalPlayer;
                 player.noThrow = 2;
                 player.cursorItemIconEnabled = true;
-                player.cursorItemIconID = ModContent.ItemType<Items.Furniture.Industrial.IndustrialDeskClock>();
+                player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, TileObjectData.GetTileStyle(Main.tile[i, j]));
             }
         }
         public override void NumDust(int i, int j, bool fail, ref int num) => num = fail ? 1 : 3;

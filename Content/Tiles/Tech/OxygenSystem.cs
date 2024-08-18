@@ -36,9 +36,6 @@ namespace Macrocosm.Content.Tiles.Tech
             TileObjectData.newTile.Origin = new Point16(1, 0);
             TileObjectData.newTile.AnchorTop = new AnchorData(AnchorType.SolidTile, 4, 0);
 
-            TileObjectData.newTile.WaterPlacement = LiquidPlacement.NotAllowed;
-            TileObjectData.newTile.LavaPlacement = LiquidPlacement.NotAllowed;
-
             TileObjectData.addTile(Type);
 
             DustType = ModContent.DustType<IndustrialPlatingDust>();

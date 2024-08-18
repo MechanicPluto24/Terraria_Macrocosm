@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Drawing;
-using Macrocosm.Common.Drawing.Particles;
+﻿using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Systems.UI;
@@ -7,7 +6,6 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
@@ -37,16 +35,13 @@ namespace Macrocosm.Content.Machines
 
             TileObjectData.newTile.CoordinateHeights = [16, 16, 16];
             TileObjectData.newTile.CoordinateWidth = 16;
-            TileObjectData.newTile.CoordinatePadding = 2;  
+            TileObjectData.newTile.CoordinatePadding = 2;
 
             TileObjectData.newTile.DrawYOffset = 2;
 
             TileObjectData.newTile.Origin = new Point16(0, Height - 1);
             TileObjectData.newTile.AnchorTop = new AnchorData();
             TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop, Width, 0);
-
-            TileObjectData.newTile.WaterPlacement = LiquidPlacement.NotAllowed;
-            TileObjectData.newTile.LavaPlacement = LiquidPlacement.NotAllowed;
 
             TileObjectData.newTile.AnchorInvalidTiles =
             [
@@ -151,7 +146,7 @@ namespace Macrocosm.Content.Machines
                 player.noThrow = 2;
 
                 Main.LocalPlayer.cursorItemIconEnabled = true;
-                Main.LocalPlayer.cursorItemIconID = ModContent.ItemType<Items.Machines.BurnerGenerator>();
+                player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, TileObjectData.GetTileStyle(Main.tile[i, j]));
             }
         }
 
@@ -189,7 +184,7 @@ namespace Macrocosm.Content.Machines
                 {
                     {
                         float atmoDensity = (0.3f + 0.7f * MacrocosmSubworld.CurrentAtmosphericDensity);
-                        for(int k = 0; k < 4; k++)
+                        for (int k = 0; k < 4; k++)
                         {
                             if (Main.rand.NextBool(2))
                                 continue;

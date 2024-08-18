@@ -1,4 +1,3 @@
-using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
@@ -6,8 +5,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
@@ -56,7 +53,7 @@ namespace Macrocosm.Common.UI
         private Func<Item, bool> checkReserved;
         private LocalizedText reservedTooltip;
         private Asset<Texture2D> reservedTexture;
-        
+
         public UIInventorySlot(Inventory inventory, int itemIndex, int itemSlotContext = Context.ChestItem, float scale = default)
         {
             this.inventory = inventory;
@@ -116,7 +113,7 @@ namespace Macrocosm.Common.UI
             this.reservedTexture = reservedTexture;
         }
 
-        public void AddReserved(int itemType, LocalizedText reservedTooltip = null, Asset<Texture2D> reservedTexture = null) 
+        public void AddReserved(int itemType, LocalizedText reservedTooltip = null, Asset<Texture2D> reservedTexture = null)
             => AddReserved((item) => item.type == itemType, reservedTooltip, reservedTexture);
 
         public void Consume(int amount)
@@ -227,7 +224,7 @@ namespace Macrocosm.Common.UI
 
             if (!(Main.mouseItem.maxStack > 1 && item.type == Main.mouseItem.type && item.stack != item.maxStack && Main.mouseItem.stack != Main.mouseItem.maxStack))
                 Terraria.Utils.Swap(ref item, ref Main.mouseItem);
-            
+
             if (item.stack > 0)
                 AnnounceTransfer(new ItemTransferInfo(item, Context.MouseItem, itemSlotContext, item.stack));
             else

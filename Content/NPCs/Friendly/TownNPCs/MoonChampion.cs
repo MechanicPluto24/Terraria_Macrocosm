@@ -2,7 +2,6 @@ using Macrocosm.Common.Systems;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Armor.Astronaut;
-using Macrocosm.Content.Items.Currency;
 using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -109,7 +108,7 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
             */
             else if (Main.dayTime)
             {
-                for(int i = 1; i <= 9; i++)
+                for (int i = 1; i <= 9; i++)
                     chatBag.Add(Language.GetTextValue(chatPath + $"Day{i}"));
             }
             else

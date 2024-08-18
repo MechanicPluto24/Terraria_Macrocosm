@@ -89,7 +89,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                     case ProcellarumState.Charging:
                         Projectile.timeLeft += 1;
 
-                        int dust = Dust.NewDust(Projectile.Center, 5, 5, ModContent.DustType<LuminiteDust>(), Player.velocity.X + Main.rand.Next(-5, 5), Player.velocity.Y + Main.rand.Next(-5, 5));
+                        int dust = Dust.NewDust(Projectile.Center, 5, 5, ModContent.DustType<LuminiteBrightDust>(), Player.velocity.X + Main.rand.Next(-5, 5), Player.velocity.Y + Main.rand.Next(-5, 5));
                         //Main.dust[dust].scale = 1f - (currentChargeTick * 0.1f);
 
                         currentChargeTick += 1;

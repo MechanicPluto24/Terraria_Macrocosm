@@ -4,12 +4,9 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
-using System.Security.Policy;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent.Drawing;
-using Terraria.ID;
-using Terraria.Localization;
 using Terraria.Map;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
@@ -134,6 +131,10 @@ namespace Macrocosm.Common.Utils
         public static void DrawTileExtraTexture(int i, int j, SpriteBatch spriteBatch, Asset<Texture2D> texture, Vector2 drawOffset = default, Color? drawColor = null)
         {
             Tile tile = Main.tile[i, j];
+
+            if (!TileDrawing.IsVisible(tile))
+                return;
+
             Vector2 zero = Main.drawToScreen ? Vector2.Zero : new Vector2(Main.offScreenRange);
 
             GetTileFrameOffset(i, j, out int addFrameX, out int addFrameY);
@@ -146,11 +147,12 @@ namespace Macrocosm.Common.Utils
                 return;
 
             int height = data.CoordinateHeights[tile.TileFrameY / tileSize % data.Height];
-            Vector2 tileDataDrawOffset = new(data.DrawXOffset, data.DrawYOffset);
+
+            drawOffset += new Vector2(data.DrawXOffset, data.DrawYOffset);
 
             drawColor ??= Color.White;
 
-            Vector2 position = new Vector2(i, j) * 16 + zero + tileDataDrawOffset + drawOffset - Main.screenPosition;
+            Vector2 position = new Vector2(i, j) * 16 + zero + drawOffset - Main.screenPosition;
 
             spriteBatch.Draw(
                 texture.Value,
@@ -277,7 +279,7 @@ namespace Macrocosm.Common.Utils
                             else
                             {
                                 Point p = GetMultitileTopLeft(x2, y2).ToPoint();
-                                x2 = p.X; 
+                                x2 = p.X;
                                 y2 = p.Y;
                             }
                             Vector2 topLeft = new(x2, y2);
@@ -438,7 +440,7 @@ namespace Macrocosm.Common.Utils
         }
 
         public static Color GetPaintColor(Point coords) => WorldGen.paintColor(Main.tile[coords].TileColor);
-        public static Color GetPaintColor(int i, int j) => WorldGen.paintColor(Main.tile[i,j].TileColor);
+        public static Color GetPaintColor(int i, int j) => WorldGen.paintColor(Main.tile[i, j].TileColor);
         public static Color GetPaintColor(this Tile tile) => WorldGen.paintColor(tile.TileColor);
 
         public static Color GetTileColor(Point coords) => GetTileColor(coords.X, coords.Y);
@@ -453,7 +455,7 @@ namespace Macrocosm.Common.Utils
 
             Color[] colorLookup = MapTileSystem.GetMapColorLookup();
 
-            if(colorLookup is null)
+            if (colorLookup is null)
                 return default;
 
             MapTile mapTile = MapHelper.CreateMapTile(i, j, 255);

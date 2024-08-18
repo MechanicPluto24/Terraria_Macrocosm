@@ -1,10 +1,6 @@
 ﻿using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Enums;
-using Macrocosm.Content.Items.Materials.Ores;
-using Macrocosm.Content.Items.Materials.Tech;
-using System;
+using Macrocosm.Content.Liquids;
 using Terraria.ID;
-using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Sets
 {
@@ -14,18 +10,24 @@ namespace Macrocosm.Common.Sets
     /// </summary>
     public class ItemSets
     {
-        /// <summary>
-        /// Items that count as fuel and by potency, see <see cref="FuelPotency"/>.
-        /// </summary>
-        public static FuelData[] Fuels { get; } = ItemID.Sets.Factory.CreateCustomSet(defaultState: new FuelData(FuelPotency.None, 0),
-            
+        // TODO: complete this
+        /// <summary> Set of items of their <see cref="DataStructures.FuelData"/>, for use in burner machines.  </summary>
+        public static FuelData[] FuelData { get; } = ItemID.Sets.Factory.CreateCustomSet(defaultState: new FuelData(),
+
             ItemID.Book, new FuelData(FuelPotency.VeryLow, 60),
             ItemID.Wood, new FuelData(FuelPotency.Low, 80),
             ItemID.Coal, new FuelData(FuelPotency.High, 240)
         );
 
-        /// <summary> Chests used for the assembly recipe of the Service Module. </summary>
-        public static bool[] Chests { get; } = ItemID.Sets.Factory.CreateBoolSet
+        public static LiquidExtractData[] LiquidExtractData { get; } = ItemID.Sets.Factory.CreateCustomSet(defaultState: new LiquidExtractData());
+
+        public static int[] PotionDelay { get; } = ItemID.Sets.Factory.CreateIntSet(defaultState: 0);
+
+        /// <summary> 
+        /// Chests.
+        /// Used for the assembly recipe of the Service Module. 
+        /// </summary>
+        public static bool[] Chest { get; } = ItemID.Sets.Factory.CreateBoolSet
         (
             ItemID.Chest,
             ItemID.GoldChest,
@@ -82,6 +84,5 @@ namespace Macrocosm.Common.Sets
             ItemID.SpiderChest,
             ItemID.SpookyChest
         );
-
     }
 }

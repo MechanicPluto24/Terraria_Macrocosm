@@ -431,10 +431,10 @@ namespace Macrocosm.Content.NPCs
             NPC.velocity.Y += 0.3f;
             //edited this so that worms could fall at up to 1.5* their max velcoity.
             // Ensure that the NPC does not fall too quickly
-            if (NPC.velocity.Y > speed*1.5f)
+            if (NPC.velocity.Y > speed * 1.5f)
             {
-                NPC.velocity.Y = speed*1.5f;
-                NPC.velocity.X*=6f;//Added to make worms look nicer
+                NPC.velocity.Y = speed * 1.5f;
+                NPC.velocity.X *= 6f;//Added to make worms look nicer
             }
 
             // The following behaviour mimicks vanilla worm movement
@@ -589,7 +589,7 @@ namespace Macrocosm.Content.NPCs
 
         public override void SetStaticDefaults()
         {
-			NPC.despawnEncouraged = false;
+            NPC.despawnEncouraged = false;
             NPCID.Sets.NPCBestiaryDrawModifiers value = new NPCID.Sets.NPCBestiaryDrawModifiers() { Hide = true };
             NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
         }
@@ -655,7 +655,7 @@ namespace Macrocosm.Content.NPCs
 
         public override void SetStaticDefaults()
         {
-		 	NPC.despawnEncouraged = false;
+            NPC.despawnEncouraged = false;
             NPCID.Sets.NPCBestiaryDrawModifiers value = new NPCID.Sets.NPCBestiaryDrawModifiers() { Hide = true };
             NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
         }

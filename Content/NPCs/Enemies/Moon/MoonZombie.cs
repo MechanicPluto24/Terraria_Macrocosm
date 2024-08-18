@@ -1,4 +1,5 @@
 using Macrocosm.Common.Global.NPCs;
+using Macrocosm.Common.Sets;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
 using Terraria;
@@ -7,17 +8,18 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-    public class MoonZombie : ModNPC, IMoonEnemy
+    public class MoonZombie : ModNPC
     {
         public override void SetStaticDefaults()
         {
             Main.npcFrameCount[Type] = 9;
+
+            NPCSets.MoonNPC[Type] = true;
+            NPCSets.DropsMoonstone[Type] = true;
         }
 
         public override void SetDefaults()
         {
-            base.SetDefaults();
-
             NPC.width = 18;
             NPC.height = 44;
             NPC.damage = 70;

@@ -1,5 +1,8 @@
-﻿using Macrocosm.Content.Dusts;
+﻿using Macrocosm.Common.Enums;
+using Macrocosm.Common.Utils;
+using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
+using System;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
@@ -29,26 +32,42 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             DustType = DustID.LunarOre;
             AdjTiles = [TileID.Chairs];
 
-            AddMapEntry(new Color(73, 168, 142), Language.GetText("MapObject.Chair"));
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style1x2);
-            TileObjectData.newTile.CoordinateHeights = [16, 18];
+            TileObjectData.newTile.CoordinateHeights = [16, 16];
             TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;
             TileObjectData.newTile.StyleWrapLimit = 2;
-            TileObjectData.newTile.StyleMultiplier = 2;
             TileObjectData.newTile.StyleHorizontal = true;
+            TileObjectData.newTile.DrawYOffset = 2;
             TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
             TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceRight;
             TileObjectData.addAlternate(1);
             TileObjectData.addTile(Type);
 
+            foreach (LuminiteStyle style in Enum.GetValues(typeof(LuminiteStyle)))
+                AddMapEntry(Utility.GetTileColorFromLuminiteStyle(style), Language.GetText("MapObject.Chair"));
+
+            // To complete direction-dependent item drops
             RegisterItemDrop(ModContent.ItemType<Items.Furniture.Luminite.LuminiteChair>(), 0, 1);
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Heavenforge.HeavenforgeChair>(), 2, 3);
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.LunarRust.LunarRustChair>(), 4, 5);
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Astra.AstraChair>(), 6, 7);
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.DarkCelestial.DarkCelestialChair>(), 8, 9);
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Mercury.MercuryChair>(), 10, 11);
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.StarRoyale.StarRoyaleChair>(), 12, 13);
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Cryocore.CryocoreChair>(), 14, 15);
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.CosmicEmber.CosmicEmberChair>(), 16, 17);
         }
 
-        public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings)
+        public override bool CreateDust(int i, int j, ref int type)
         {
-            return settings.player.IsWithinSnappngRangeToTile(i, j, PlayerSittingHelper.ChairSittingMaxDistance);
+            type = Utility.GetDustTypeFromLuminiteStyle((LuminiteStyle)(Main.tile[i, j].TileFrameY / (18 * 2)));
+            return true;
         }
+
+        public override ushort GetMapOption(int i, int j) => (ushort)(Main.tile[i, j].TileFrameY / (18 * 2));
+
+        public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings) => settings.player.IsWithinSnappngRangeToTile(i, j, PlayerSittingHelper.ChairSittingMaxDistance);
 
         public override void ModifySittingTargetInfo(int i, int j, ref TileRestingInfo info)
         {
@@ -87,9 +106,9 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
 
             player.noThrow = 2;
             player.cursorItemIconEnabled = true;
-            player.cursorItemIconID = ModContent.ItemType<Items.Furniture.Luminite.LuminiteChair>();
+            player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, TileObjectData.GetTileStyle(Main.tile[i, j]));
 
-            if (Main.tile[i, j].TileFrameX / 18 < 1)
+            if (Main.tile[i, j].TileFrameX / 18 % 2 == 0)
                 player.cursorItemIconReversed = true;
         }
     }

@@ -1,15 +1,10 @@
-﻿using Macrocosm.Common.Storage;
-using Macrocosm.Common.UI;
+﻿using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Content.Rockets.Modules;
 using Microsoft.Xna.Framework;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Policy;
-using Terraria;
 using Terraria.GameContent.UI.Elements;
-using Terraria.Localization;
 using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.UI.Assembly

@@ -20,7 +20,7 @@ namespace Macrocosm.Content.Rockets.Modules
         public LocalizedText DisplayName => Language.GetOrRegister("Mods.Macrocosm.UI.Rocket.Modules." + Name + ".DisplayName", PrettyPrintName);
 
         public readonly static List<RocketModule> Templates = new();
-        protected sealed override void Register() 
+        protected sealed override void Register()
         {
             Templates.Add(Activator.CreateInstance(GetType()) as RocketModule);
         }

@@ -2,7 +2,6 @@ using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Trails;
-using Microsoft.Build.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -99,7 +98,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         {
             if (!spawned)
             {
-                targetAngle = MathHelper.Pi/8 - MathHelper.Pi/4 * (OrbitAngle / 180);
+                targetAngle = MathHelper.Pi / 8 - MathHelper.Pi / 4 * (OrbitAngle / 180);
                 spawned = true;
 
                 targetPosition = Projectile.Center;
@@ -181,7 +180,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                     break;
 
                 case ActionState.Home:
- 
+
                     float homingDistance = 500f;
                     float closestDistance = homingDistance;
 

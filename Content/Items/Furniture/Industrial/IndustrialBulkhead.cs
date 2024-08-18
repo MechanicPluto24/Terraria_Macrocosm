@@ -1,7 +1,6 @@
 using Macrocosm.Content.Items.Blocks;
 using Macrocosm.Content.Tiles.Furniture.Industrial;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Furniture.Industrial

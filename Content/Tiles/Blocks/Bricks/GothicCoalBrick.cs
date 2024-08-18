@@ -1,6 +1,4 @@
-using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.TileFrame;
-using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;

@@ -11,7 +11,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
         public override void SetStaticDefaults()
         {
 
- 
+
         }
         public override string Texture => Macrocosm.EmptyTexPath;
 
@@ -35,10 +35,12 @@ namespace Macrocosm.Content.Items.Weapons.Magic
             Item.shootSpeed = 28f;
         }
     }
-    public class WaveGunBlue : WaveGunSingle{
-    public override string Texture => "Macrocosm/Content/Items/Weapons/Magic/WaveGunBlue";    
+    public class WaveGunBlue : WaveGunSingle
+    {
+        public override string Texture => "Macrocosm/Content/Items/Weapons/Magic/WaveGunBlue";
     }
-    public class WaveGunRed : WaveGunSingle{
-    public override string Texture => "Macrocosm/Content/Items/Weapons/Magic/WaveGunRed";    
+    public class WaveGunRed : WaveGunSingle
+    {
+        public override string Texture => "Macrocosm/Content/Items/Weapons/Magic/WaveGunRed";
     }
 }

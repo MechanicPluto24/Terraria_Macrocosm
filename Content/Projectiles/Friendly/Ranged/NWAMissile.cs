@@ -13,27 +13,25 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-    public class NWAMissile : ModProjectile, IExplosive
+    public class NWAMissile : ModProjectile
     {
         public ref float AI_HomingTimer => ref Projectile.ai[0];
         public ref float AI_AccelerationTimer => ref Projectile.ai[1];
         public ref float AI_InitialDecelerationTimer => ref Projectile.ai[2];
 
-        public float BlastRadius => 120;
-
-        public int DefWidth => 16;
-        public int DefHeight => 16;
-
         public override void SetStaticDefaults()
         {
             ProjectileID.Sets.TrailCacheLength[Type] = 30;
             ProjectileID.Sets.TrailingMode[Type] = 3;
+
+            ProjectileID.Sets.RocketsSkipDamageForPlayers[Type] = true;
+            ProjectileID.Sets.Explosive[Type] = true;
         }
 
         public override void SetDefaults()
         {
-            Projectile.width = DefWidth;
-            Projectile.height = DefHeight;
+            Projectile.width = 16;
+            Projectile.height = 16;
             Projectile.aiStyle = -1;
             Projectile.penetrate = -1;
             Projectile.friendly = true;
@@ -45,13 +43,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             Projectile.SetTrail<MissileTrail>();
         }
 
-        public override void ModifyDamageHitbox(ref Rectangle hitbox)
-        {
-        }
-
         /// <summary> Adapted from Projectile.AI_016() for homing snowman rockets </summary>
         public override void AI()
         {
+            if (Projectile.owner == Main.myPlayer && Projectile.timeLeft <= 3)
+                Projectile.PrepareBombToBlow();
+
             #region Acceleration
 
             float timeToReachTopSpeed = 10;
@@ -203,12 +200,25 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             #endregion
         }
 
+        public override void PrepareBombToBlow()
+        {
+            Projectile.tileCollide = false;
+            Projectile.alpha = 255;
+            Projectile.Resize(128, 128);
+            Projectile.knockBack = 8f;
+        }
+
+        public override bool OnTileCollide(Vector2 oldVelocity)
+        {
+            Projectile.timeLeft = 3;
+            Projectile.velocity *= 0f;
+            return false;
+        }
+
         public override void OnKill(int timeLeft)
         {
             if (Main.dedServ)
                 return;
-
-            Projectile.Resize(DefWidth, DefHeight);
 
             SoundEngine.PlaySound(SoundID.Item14, Projectile.position);
 

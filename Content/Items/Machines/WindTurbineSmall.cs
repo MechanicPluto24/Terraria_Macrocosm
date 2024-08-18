@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Systems.Power;
-using Terraria;
+﻿using Terraria;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Machines

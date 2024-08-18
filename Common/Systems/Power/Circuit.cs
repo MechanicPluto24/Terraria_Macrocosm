@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Collections;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
-using Terraria;
 
 namespace Macrocosm.Common.Systems.Power
 {
@@ -15,7 +14,7 @@ namespace Macrocosm.Common.Systems.Power
 
         public int NodeCount => machines.Count;
 
-        public Circuit() { }    
+        public Circuit() { }
 
         public void Add(MachineTE machine)
         {
@@ -26,12 +25,12 @@ namespace Macrocosm.Common.Systems.Power
         {
             float totalGeneratedPower = 0;
             float totalConsumedPower = 0;
-            foreach(var machine in machines)
+            foreach (var machine in machines)
             {
                 if (machine.IsGenerator)
                     totalGeneratedPower += machine.GeneratedPower;
 
-                if(machine.IsConsumer)
+                if (machine.IsConsumer)
                     totalConsumedPower += machine.ConsumedPower;
             }
 

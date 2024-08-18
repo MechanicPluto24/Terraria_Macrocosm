@@ -1,5 +1,4 @@
 using Macrocosm.Common.Sets;
-using Macrocosm.Common.Sets.Items;
 using Macrocosm.Content.Items.Materials.Tech;
 using Terraria;
 using Terraria.ModLoader;
@@ -11,7 +10,7 @@ namespace Macrocosm.Content.Items.Furniture.Industrial
     {
         public override void SetStaticDefaults()
         {
-            ItemSets.Chests[Type] = true;
+            ItemSets.Chest[Type] = true;
         }
 
         public override void SetDefaults()

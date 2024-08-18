@@ -17,6 +17,10 @@ namespace Macrocosm.Content.Tiles.Ores
             Main.tileSolid[Type] = true;
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = true;
+
+            TileID.Sets.ChecksForMerge[Type] = true;
+            Main.tileMerge[TileID.Sandstone][Type] = true;
+
             MinPick = 40;
             MineResist = 5f;
 

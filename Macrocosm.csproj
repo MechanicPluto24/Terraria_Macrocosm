@@ -22,6 +22,25 @@
 	<NoWarn>$(NoWarn);IDE0051</NoWarn> <!-- Macrocosm uses reflection in some places, unused private methods are expected -->
 	<NoWarn>$(NoWarn);CA1822</NoWarn> <!-- Private methods that don't deal with instance data should sometimes be left instanced, not static, due to tML's nature -->
   </PropertyGroup>
+  <ItemGroup>
+    <AdditionalFiles Remove="Content\Tiles\Furniture\Luminite\LuminiteCandelabra.png" />
+    <AdditionalFiles Remove="Content\Tiles\Furniture\Luminite\LuminiteCandelabra_Glow.png" />
+    <AdditionalFiles Remove="Content\Tiles\Furniture\Luminite\LuminiteChest.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Content\Debuffs\Radiation\Fatigue.png" />
+    <None Remove="Content\Dusts\CynthalithDust.png" />
+    <None Remove="Content\Items\Consumables\Potions\AdrenalineInjector.png" />
+    <None Remove="Content\Items\Consumables\Potions\AntiRadiationPills.png" />
+    <None Remove="Content\Items\Consumables\Potions\Pill.png" />
+    <None Remove="Content\Items\Consumables\Potions\SyringeGreen.png" />
+    <None Remove="Content\Items\Consumables\Potions\SyringeOrange.png" />
+    <None Remove="Content\Items\Keys\XaocKey.png" />
+    <None Remove="Content\Tiles\Furniture\Luminite\LuminiteCandle_Glow.png" />
+    <None Remove="Content\Tiles\Furniture\Luminite\LuminiteChest_Highlight.png" />
+    <None Remove="Content\Tiles\Furniture\Luminite\LuminiteLantern.png" />
+    <None Remove="Content\Tiles\Pickups\AntiRadiationPills.png" />
+  </ItemGroup>
 
 
   <ItemGroup>
@@ -31,9 +50,6 @@
 	<Reference Include="StructureHelper">
 		<HintPath>References\StructureHelper.dll</HintPath>
 	</Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Content\Items\Potions\" />
   </ItemGroup>
   <!-- <Target BeforeTargets="Build" Name="BuildEffects" Inputs="Assets/Effects/*.fx" Outputs="Assets/Effects/*.fxc"> -->
       <!-- <Exec Command="EasyXnb.exe" WorkingDirectory="Tools/EasyXnb" /> -->

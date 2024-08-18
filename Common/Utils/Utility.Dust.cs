@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Common.Enums;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.GameContent;
@@ -13,7 +14,7 @@ namespace Macrocosm.Common.Utils
         /// Get the spritesheet of this particular dust type.  
         /// Use with <c>dust.frame</c> as <c>sourceRectangle</c> when drawing. For vanilla dust types, see <see cref="VanillaDustFrame(int)"/>
         /// </summary>
-        public static Texture2D GetDustTexture(int dustType) 
+        public static Texture2D GetDustTexture(int dustType)
             => ModContent.GetModDust(dustType) is ModDust modDust ? modDust.Texture2D.Value : TextureAssets.Dust.Value;
 
         /// <inheritdoc cref="GetDustTexture(int)"></inheritdoc>
@@ -25,6 +26,23 @@ namespace Macrocosm.Common.Utils
             int frameX = dustType * 10 % 1000;
             int frameY = (dustType * 10 / 1000 * 30) + (Main.rand.Next(3) * 10);
             return new Rectangle(frameX, frameY, 8, 8);
+        }
+
+        public static int GetDustTypeFromLuminiteStyle(LuminiteStyle style)
+        {
+            return style switch
+            {
+                LuminiteStyle.Luminite => DustID.LunarOre,
+                LuminiteStyle.Heavenforge => DustID.Heavenforge,
+                LuminiteStyle.LunarRust => DustID.LunarRust,
+                LuminiteStyle.Astra => DustID.Astra,
+                LuminiteStyle.DarkCelestial => DustID.DarkCelestial,
+                LuminiteStyle.Mercury => DustID.Mercury,
+                LuminiteStyle.StarRoyale => DustID.StarRoyale,
+                LuminiteStyle.Cryocore => DustID.Cryocore,
+                LuminiteStyle.CosmicEmber => DustID.CosmicEmber,
+                _ => -1,
+            };
         }
 
         /// <summary>
@@ -828,7 +846,7 @@ namespace Macrocosm.Common.Utils
                 int gem = tile.TileType - TileID.AmethystGemsparkOff;
                 dustType = DustID.GemAmethyst + gem;
                 if (gem == 6)
-                     dustType = DustID.GemAmber;
+                    dustType = DustID.GemAmber;
             }
 
             if (tile.TileType is >= TileID.AmethystGemspark and <= TileID.AmethystGemspark)
@@ -836,7 +854,7 @@ namespace Macrocosm.Common.Utils
                 int gem = tile.TileType - TileID.AmethystGemspark;
                 dustType = DustID.GemAmethyst + gem;
                 if (gem == 6)
-                     dustType = DustID.GemAmber;
+                    dustType = DustID.GemAmber;
             }
 
             if (tile.TileType == TileID.ExposedGems)
@@ -844,7 +862,7 @@ namespace Macrocosm.Common.Utils
                 int frameX = tile.TileFrameX / 18;
                 dustType = DustID.GemAmethyst + frameX;
                 if (frameX == 6)
-                     dustType = DustID.GemAmber;
+                    dustType = DustID.GemAmber;
             }
 
             if (tile.TileType == TileID.GemLocks)
@@ -2564,7 +2582,7 @@ namespace Macrocosm.Common.Utils
                     int offsetY = (int)tile.LiquidAmount / 16;
                     offsetY -= 3;
                     if (WorldGen.SolidTile(i, j - 1) && offsetY > 8)
-                         offsetY = 8;
+                        offsetY = 8;
 
                     offset = new Vector2(0, offsetY);
                 }

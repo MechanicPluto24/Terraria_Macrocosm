@@ -1,4 +1,3 @@
-using Macrocosm.Content.Items.Crafting;
 using Macrocosm.Content.Items.Materials.Bars;
 using Terraria;
 using Terraria.ID;

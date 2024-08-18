@@ -17,7 +17,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             Main.tileFrameImportant[Type] = true;
             Main.tileNoAttach[Type] = true;
             Main.tileLavaDeath[Type] = true;
-            
+
             TileID.Sets.CountsAsWaterSource[Type] = true;
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);

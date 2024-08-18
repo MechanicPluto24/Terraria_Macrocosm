@@ -5,10 +5,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
-using System.Configuration;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
-using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.UI;
 
@@ -102,7 +100,7 @@ namespace Macrocosm.Common.UI
         {
             base.Update(gameTime);
 
-            if(uIText is not null && HasChild(uIText))
+            if (uIText is not null && HasChild(uIText))
             {
                 uIText.TextColor = baseTextColor;
 
@@ -110,7 +108,7 @@ namespace Macrocosm.Common.UI
                 {
                     uIText.TextColor *= 0.5f;
                 }
-            } 
+            }
         }
 
         SpriteBatchState state;

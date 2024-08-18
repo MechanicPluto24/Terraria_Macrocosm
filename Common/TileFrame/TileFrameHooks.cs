@@ -2,17 +2,13 @@
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Common.TileFrame
 {
+    // TODO: disable when tML ModifyFrameMerge is available
     public class TileFrameHooks : ModSystem
     {
         public override void Load()
@@ -27,6 +23,7 @@ namespace Macrocosm.Common.TileFrame
 
         public override void SetStaticDefaults()
         {
+            // Fallback, each tile should set them in anticipation to tML Sept stable update which adds a similar hook
             for (int type = 0; type < TileLoader.TileCount; type++)
             {
                 if (TileLoader.GetTile(type) is IModifyTileFrame)
@@ -77,9 +74,9 @@ namespace Macrocosm.Common.TileFrame
         public void ModifyTileFrame(int i, int j, ref int up, ref int down, ref int left, ref int right, ref int upLeft, ref int upRight, ref int downLeft, ref int downRight)
         {
             Tile tile = Main.tile[i, j];
-            
-            if(TileLoader.GetTile(tile.TileType) is IModifyTileFrame modifyTile)
-                modifyTile.ModifyTileFrame(i,j, ref up, ref down, ref left, ref right, ref upLeft, ref upRight, ref downLeft, ref downRight);
+
+            if (TileLoader.GetTile(tile.TileType) is IModifyTileFrame modifyTile)
+                modifyTile.ModifyTileFrame(i, j, ref up, ref down, ref left, ref right, ref upLeft, ref upRight, ref downLeft, ref downRight);
         }
     }
 }

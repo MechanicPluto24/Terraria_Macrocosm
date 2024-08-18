@@ -20,23 +20,23 @@ namespace Macrocosm.Content.Biomes
         public override string BackgroundPath => "Macrocosm/Content/Biomes/MoonBiome_Background";
         public override string MapBackground => BackgroundPath;
 
-
         public override void SetStaticDefaults()
         {
-        }
-
-        public override void OnInBiome(Player player)
-        {
-            base.OnInBiome(player);
-        }
-
-        public override void OnLeave(Player player)
-        {
-            base.OnLeave(player);
         }
 
         public override bool IsBiomeActive(Player player)
             => SubworldSystem.IsActive<Moon>() && (player.position.Y / 16 > Main.rockLayer);
 
+        public override void OnInBiome(Player player)
+        {
+        }
+
+        public override void OnEnter(Player player)
+        {
+        }
+
+        public override void OnLeave(Player player)
+        {
+        }
     }
 }

@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Linq;
 using Terraria;
-using Terraria.Graphics.Capture;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets
@@ -82,7 +81,7 @@ namespace Macrocosm.Content.Rockets
                         break;
                 }
 
-                if(firstDraw)
+                if (firstDraw)
                 {
                     ResetRenderTarget();
                     firstDraw = false;
@@ -138,7 +137,7 @@ namespace Macrocosm.Content.Rockets
                 if (StaticFire)
                     scale *= Utility.QuadraticEaseOut(StaticFireProgress);
 
-                if(Landing && LandingProgress > 0.9f)
+                if (Landing && LandingProgress > 0.9f)
                     scale *= Utility.QuadraticEaseOut((1f - LandingProgress) * 10f);
 
                 var flare = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Flare2").Value;
@@ -216,7 +215,7 @@ namespace Macrocosm.Content.Rockets
             // We want our vertices to scale correctly
             if (drawMode is DrawMode.World)
             {
-                meshTransform.SetValue(PrimitivesSystem.WorldViewProjection);           
+                meshTransform.SetValue(PrimitivesSystem.WorldViewProjection);
             }
             else
             {

@@ -1,8 +1,6 @@
-using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Projectiles.Environment.Sands;
 using Microsoft.Xna.Framework;
-using rail;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

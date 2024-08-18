@@ -33,10 +33,10 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             AddMapEntry(new Color(200, 200, 200), Language.GetText("MapObject.Chair"));
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style1x2);
-            TileObjectData.newTile.CoordinateHeights = [16, 18];
+            TileObjectData.newTile.CoordinateHeights = [16, 16];
             TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;
+            TileObjectData.newTile.DrawYOffset = 2;
             TileObjectData.newTile.StyleWrapLimit = 2;
-            TileObjectData.newTile.StyleMultiplier = 2;
             TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
             TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceRight;
@@ -44,6 +44,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             TileObjectData.addTile(Type);
 
             RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialChair>(), 0, 1);
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialChairSleek>(), 2, 3);
         }
 
         public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings)
@@ -88,9 +89,9 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
 
             player.noThrow = 2;
             player.cursorItemIconEnabled = true;
-            player.cursorItemIconID = ModContent.ItemType<Items.Furniture.Industrial.IndustrialChair>();
+            player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, TileObjectData.GetTileStyle(Main.tile[i, j]));
 
-            if (Main.tile[i, j].TileFrameX / 18 < 1)
+            if (Main.tile[i, j].TileFrameX / 18 % 2 == 0)
                 player.cursorItemIconReversed = true;
         }
     }

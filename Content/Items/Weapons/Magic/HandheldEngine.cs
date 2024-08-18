@@ -1,4 +1,3 @@
-using Macrocosm.Content.Debuffs;
 using Macrocosm.Content.Debuffs.Weapons;
 using Macrocosm.Content.Projectiles.Friendly.Magic;
 using Macrocosm.Content.Rarities;

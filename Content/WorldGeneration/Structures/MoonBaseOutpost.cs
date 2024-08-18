@@ -16,6 +16,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.WorldGeneration.Structures
 {
+    [Obsolete("Replaced with LunarHouse")]
     public class MoonBaseOutpost : MicroBiome
     {
         public override bool Place(Point origin, StructureMap structures)

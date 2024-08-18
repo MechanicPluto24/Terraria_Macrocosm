@@ -1,24 +1,11 @@
-﻿using Macrocosm.Common.Sets.Items;
-using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Loot;
-using Macrocosm.Common.Loot.DropConditions;
-using Macrocosm.Common.Loot.DropRules;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Sets;
+using Macrocosm.Common.Sets.Items;
 using Macrocosm.Common.Storage;
-using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.Power;
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Items.Blocks.Sands;
-using Macrocosm.Content.Items.Blocks.Terrain;
-using Macrocosm.Content.Items.Materials.Ores;
-using Macrocosm.Content.Items.Materials.Tech;
 using Microsoft.Xna.Framework;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Terraria;
-using Terraria.DataStructures;
-using Terraria.GameContent.ItemDropRules;
-using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
@@ -54,7 +41,7 @@ namespace Macrocosm.Content.Machines
 
         public void StartRefining()
         {
-            if(CanRefine)
+            if (CanRefine)
                 refining = true;
         }
 
@@ -85,7 +72,8 @@ namespace Macrocosm.Content.Machines
 
         private void Extract()
         {
-            if (Operating && SourceTankAmount < SourceTankCapacity && SourceItem.ModItem is ILiquidExtractable extractable)
+            LiquidExtractData data = ItemSets.LiquidExtractData[SourceItem.type];
+            if (Operating && SourceTankAmount < SourceTankCapacity && data.Extractable)
             {
                 sourceTimer++;
                 if (sourceTimer >= maxSourceTimer)
@@ -97,7 +85,7 @@ namespace Macrocosm.Content.Machines
                     else
                         SourceItem.stack--;
 
-                    SourceTankAmount += extractable.ExtractedAmount;
+                    SourceTankAmount += data.ExtractedAmount;
                 }
             }
             else
@@ -142,7 +130,7 @@ namespace Macrocosm.Content.Machines
                 }
 
                 CanInteractWithResultSlot = container.Full || container.Empty;
-            }      
+            }
         }
 
         public override void NetSend(BinaryWriter writer)
@@ -166,7 +154,7 @@ namespace Macrocosm.Content.Machines
         {
             tag[nameof(Inventory)] = Inventory;
 
-            if(SourceTankAmount != default)
+            if (SourceTankAmount != default)
                 tag[nameof(SourceTankAmount)] = SourceTankAmount;
 
             if (ResultTankAmount != default)
@@ -178,7 +166,7 @@ namespace Macrocosm.Content.Machines
             if (tag.ContainsKey(nameof(Inventory)))
                 Inventory = tag.Get<Inventory>(nameof(Inventory));
 
-            if(tag.ContainsKey(nameof(SourceTankAmount)))
+            if (tag.ContainsKey(nameof(SourceTankAmount)))
                 SourceTankAmount = tag.GetFloat(nameof(SourceTankAmount));
 
             if (tag.ContainsKey(nameof(ResultTankAmount)))

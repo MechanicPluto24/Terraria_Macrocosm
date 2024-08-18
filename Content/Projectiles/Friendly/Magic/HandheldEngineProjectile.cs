@@ -307,12 +307,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 return tracker.IsActiveAndInGame();
             });
 
-            if (!OwnerHasMana )
+            if (!OwnerHasMana)
             {
                 SoundEngine.PlaySound(SFX.HandheldThrusterOverheat with
                 {
                     Volume = 0.3f,
-                    MaxInstances = 1,   
+                    MaxInstances = 1,
                     SoundLimitBehavior = SoundLimitBehavior.IgnoreNew
                 },
                 Projectile.position, updateCallback: (sound) =>

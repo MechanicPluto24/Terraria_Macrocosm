@@ -207,7 +207,7 @@ namespace Macrocosm.Content.Backgrounds.Moon
             return brightness;
         }
 
-        private void ConfigureEarthBodyShader(CelestialBody celestialBody, CelestialBody lightSource, out Vector3 lightPosition, out float radius, out int pixelSize) 
+        private void ConfigureEarthBodyShader(CelestialBody celestialBody, CelestialBody lightSource, out Vector3 lightPosition, out float radius, out int pixelSize)
         {
             float distanceFactor;
             float depth;

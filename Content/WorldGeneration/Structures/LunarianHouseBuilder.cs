@@ -3,11 +3,13 @@ using Macrocosm.Content.Tiles.Ambient;
 using Macrocosm.Content.Tiles.Blocks.Bricks;
 using Macrocosm.Content.Tiles.Furniture.Industrial;
 using Macrocosm.Content.Tiles.Walls;
+using System;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.WorldGeneration.Structures
 {
+    [Obsolete("Replaced with Shrines & Lunarian Houses")]
     public class LunarianHouseBuilder : MacrocosmHouseBuilder
     {
         public LunarianHouseBuilder() : base()

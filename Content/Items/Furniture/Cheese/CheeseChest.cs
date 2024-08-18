@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.Items.Blocks;
+﻿using Macrocosm.Common.Sets;
+using Macrocosm.Content.Items.Blocks;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -9,6 +10,7 @@ namespace Macrocosm.Content.Items.Furniture.Cheese
     {
         public override void SetStaticDefaults()
         {
+            ItemSets.Chest[Type] = true;
         }
 
         public override void SetDefaults()

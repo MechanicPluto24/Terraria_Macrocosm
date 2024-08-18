@@ -1,18 +1,10 @@
-﻿using Macrocosm.Common.Drawing;
-using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.Systems.Power;
-using Macrocosm.Common.Systems.UI;
+﻿using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using System;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
-using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
@@ -39,16 +31,13 @@ namespace Macrocosm.Content.Machines
 
             TileObjectData.newTile.CoordinateHeights = [16, 16, 16, 16, 16, 16, 16];
             TileObjectData.newTile.CoordinateWidth = 16;
-            TileObjectData.newTile.CoordinatePadding = 2;  
+            TileObjectData.newTile.CoordinatePadding = 2;
 
             TileObjectData.newTile.DrawYOffset = 2;
 
             TileObjectData.newTile.Origin = new Point16(1, Height - 1);
             TileObjectData.newTile.AnchorTop = new AnchorData();
             TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop, Width, 0);
-
-            TileObjectData.newTile.WaterPlacement = LiquidPlacement.NotAllowed;
-            TileObjectData.newTile.LavaPlacement = LiquidPlacement.NotAllowed;
 
             TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(MachineTE.Hook_AfterPlacement, -1, 0, false);
             TileObjectData.newTile.UsesCustomCanPlace = true;
@@ -68,7 +57,7 @@ namespace Macrocosm.Content.Machines
 
             int frameCount = 9;
 
-            if(Math.Abs(Utility.WindSpeedScaled) > 0.1f)
+            if (Math.Abs(Utility.WindSpeedScaled) > 0.1f)
             {
                 if (++frameCounter >= ticksPerFrame)
                 {
@@ -83,7 +72,7 @@ namespace Macrocosm.Content.Machines
                         frame = 0;
 
                     if (frame < 0)
-                        frame = frameCount-1;
+                        frame = frameCount - 1;
                 }
             }
         }

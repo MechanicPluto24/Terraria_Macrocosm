@@ -1,10 +1,7 @@
 using Macrocosm.Common.Bases.Projectiles;
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Items.Materials.Bars;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Melee

@@ -22,7 +22,7 @@ namespace Macrocosm.Content.Items.Furniture.Industrial
 
         public override bool? UseItem(Player player)
         {
-            if(Main.rand.NextBool(5))
+            if (Main.rand.NextBool(5))
                 Item.placeStyle = 1;
             else
                 Item.placeStyle = 0;

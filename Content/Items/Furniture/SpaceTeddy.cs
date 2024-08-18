@@ -11,7 +11,7 @@ namespace Macrocosm.Content.Items.Furniture
 
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.TeddyBear>(), tileStyleToPlace: 1);
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.TeddyBear>(), tileStyleToPlace: 2);
             Item.width = 20;
             Item.height = 28;
             Item.value = 500;

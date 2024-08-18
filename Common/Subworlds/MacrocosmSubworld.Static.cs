@@ -47,7 +47,7 @@ namespace Macrocosm.Common.Subworlds
                 modName = "Macrocosm";
                 return "";
             }
-            else if(split.Length == 1)
+            else if (split.Length == 1)
             {
                 modName = "Macrocosm";
                 return split[0];
@@ -56,7 +56,7 @@ namespace Macrocosm.Common.Subworlds
             {
                 modName = split[0];
                 return split[1];
-            }   
+            }
         }
 
         public static int CurrentIndex => SubworldSystem.AnyActive() ? SubworldSystem.GetIndex(CurrentID) : -1;

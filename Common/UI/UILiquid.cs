@@ -9,14 +9,8 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
-using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
-using Terraria.GameContent;
 using Terraria.GameContent.Liquid;
-using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
@@ -88,7 +82,7 @@ namespace Macrocosm.Common.UI
                 */
             }
 
-            foreach(Particle bubble in bubbles) 
+            foreach (Particle bubble in bubbles)
             {
                 if (bubble.Position.X < fillArea.X)
                     bubble.Velocity.X = 0.5f;
@@ -161,7 +155,7 @@ namespace Macrocosm.Common.UI
 
         private void DrawWaves(SpriteBatch spriteBatch, Rectangle fillArea)
         {
-           
+
         }
 
         private Rectangle GetFillArea()

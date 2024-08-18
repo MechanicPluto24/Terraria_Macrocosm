@@ -42,7 +42,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
 
             RegisterItemDrop(ModContent.ItemType<IndustrialBulkhead>(), 0);
 
-            AddMapEntry(new Color(200, 200, 200), Language.GetText("MapObject.Door"));
+            AddMapEntry(new Color(200, 200, 200), CreateMapEntryName());
 
             TileObjectData.newTile.Width = Width;
             TileObjectData.newTile.Height = Height;
@@ -85,7 +85,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             Player player = Main.LocalPlayer;
             player.noThrow = 2;
             player.cursorItemIconEnabled = true;
-            player.cursorItemIconID = ModContent.ItemType<IndustrialBulkhead>();
+            player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, TileObjectData.GetTileStyle(Main.tile[i, j]));
         }
     }
 }

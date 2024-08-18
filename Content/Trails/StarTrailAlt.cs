@@ -20,7 +20,7 @@ namespace Macrocosm.Content.Trails
 
         public override Color TrailColors(float progressOnStrip)
         {
-            return Color.Lerp(Color.Transparent, new Color(255,180,25, 0) * 0.8f, progressOnStrip * 1 / progressOnStrip);
+            return Color.Lerp(Color.Transparent, new Color(255, 180, 25, 0) * 0.8f, progressOnStrip * 1 / progressOnStrip);
         }
 
         public override float TrailWidths(float progressOnStrip)

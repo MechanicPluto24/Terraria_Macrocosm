@@ -3,7 +3,6 @@ using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.GameContent;
 using Terraria.GameContent.ObjectInteractions;
 using Terraria.ID;
 using Terraria.Localization;
@@ -39,10 +38,10 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
         public override void MouseOver(int i, int j)
         {
             Player player = Main.LocalPlayer;
- 
+
             player.noThrow = 2;
             player.cursorItemIconEnabled = true;
-            player.cursorItemIconID = ModContent.ItemType<Items.Furniture.Cheese.CheeseClock>();
+            player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, TileObjectData.GetTileStyle(Main.tile[i, j]));
         }
 
         public override bool RightClick(int x, int y)

@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Terraria;
 using Terraria.ID;
@@ -13,7 +12,7 @@ namespace Macrocosm.Content.Items.Materials.Ores
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 100;
-            ItemSets.Fuels[Type] = new FuelData(FuelPotency.High, 240);
+            ItemSets.FuelData[Type] = new FuelData(FuelPotency.High, 240);
         }
 
         public override void SetDefaults()

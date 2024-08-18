@@ -90,7 +90,7 @@ namespace Macrocosm.Common.Systems
                 self.GetType().SetFieldValue("Duration", 1f, self);
                 return true;
             }
- 
+
             return orig(self, currentTime);
         }
 

@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
@@ -270,7 +269,7 @@ namespace Macrocosm.Content.Rockets.Customization
         }
 
         private static void LoadDetails()
-        {           
+        {
             foreach (string moduleName in Rocket.DefaultModuleNames)
                 AddDetail(moduleName, "None", true);
 

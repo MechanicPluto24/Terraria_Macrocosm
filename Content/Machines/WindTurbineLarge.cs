@@ -1,12 +1,6 @@
 ﻿using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Drawing;
-using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Common.Drawing.Sky;
-using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.Power;
-using Macrocosm.Common.Systems.UI;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -14,7 +8,6 @@ using System;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
-using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
@@ -46,16 +39,13 @@ namespace Macrocosm.Content.Machines
 
             TileObjectData.newTile.CoordinateHeights = [16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16];
             TileObjectData.newTile.CoordinateWidth = 16;
-            TileObjectData.newTile.CoordinatePadding = 2;  
+            TileObjectData.newTile.CoordinatePadding = 2;
 
             TileObjectData.newTile.DrawYOffset = 2;
 
             TileObjectData.newTile.Origin = new Point16(1, Height - 1);
             TileObjectData.newTile.AnchorTop = new AnchorData();
             TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop, Width, 0);
-
-            TileObjectData.newTile.WaterPlacement = LiquidPlacement.NotAllowed;
-            TileObjectData.newTile.LavaPlacement = LiquidPlacement.NotAllowed;
 
             TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(MachineTE.Hook_AfterPlacement, -1, 0, false);
             TileObjectData.newTile.UsesCustomCanPlace = true;
@@ -89,7 +79,7 @@ namespace Macrocosm.Content.Machines
 
             Vector2 zero = Main.drawToScreen ? Vector2.Zero : new Vector2(Main.offScreenRange);
             Vector2 tileDrawPosition = new Vector2(i, j) * 16f + zero - Main.screenPosition;
-            Color drawColor = Lighting.GetColor(i,j);
+            Color drawColor = Lighting.GetColor(i, j);
 
             float turbineScale = 1f;
             Vector2 turbineOffset = new(8, 11);
@@ -98,7 +88,7 @@ namespace Macrocosm.Content.Machines
 
             Vector2 bladeOffset = new(Utility.WindSpeedScaled < 0f ? (6 + 9.6f * -Utility.WindSpeedScaled) : (1 + 6f * (1f - Utility.WindSpeedScaled)), y: 11);
             Matrix bladeMatrix = GetBladesMatrix(tileDrawPosition + bladeOffset, state.Matrix);
-            float bladeRotation = rotationCounter - (MathHelper.Pi/32 * (i/4)); 
+            float bladeRotation = rotationCounter - (MathHelper.Pi / 32 * (i / 4));
 
             state.SaveState(spriteBatch, continuous: true);
             spriteBatch.End();
@@ -109,7 +99,7 @@ namespace Macrocosm.Content.Machines
             spriteBatch.End();
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, state.DepthStencilState, state.RasterizerState, null, bladeMatrix);
 
-            spriteBatch.Draw(blades.Value, tileDrawPosition + bladeOffset, null, drawColor, bladeRotation, blades.Size()/2f + new Vector2(-0.11f, 0f), 1f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(blades.Value, tileDrawPosition + bladeOffset, null, drawColor, bladeRotation, blades.Size() / 2f + new Vector2(-0.11f, 0f), 1f, SpriteEffects.None, 0f);
 
             spriteBatch.End();
             spriteBatch.Begin(state);

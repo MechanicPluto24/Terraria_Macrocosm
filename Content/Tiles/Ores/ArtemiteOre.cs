@@ -22,6 +22,9 @@ namespace Macrocosm.Content.Tiles.Ores
             Main.tileSolid[Type] = true;
             Main.tileBlockLight[Type] = true;
 
+            TileID.Sets.ChecksForMerge[Type] = true;
+            Main.tileMerge[ModContent.TileType<Regolith>()][Type] = true;
+
             LocalizedText name = CreateMapEntryName();
             AddMapEntry(new Color(139, 146, 161), name);
 

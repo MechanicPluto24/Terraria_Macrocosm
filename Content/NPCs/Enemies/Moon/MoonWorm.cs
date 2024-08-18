@@ -1,22 +1,22 @@
 using Macrocosm.Common.Global.NPCs;
+using Macrocosm.Common.Sets;
+using Macrocosm.Content.Biomes;
+using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Items.Materials.Drops;
+using Macrocosm.Content.Projectiles.Environment.Debris;
+using Macrocosm.Content.Projectiles.Hostile;
 using Microsoft.Xna.Framework;
 using System.IO;
 using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.GameContent.Bestiary;
-using Terraria.ID;
-using Terraria.Audio;
-using Terraria.ModLoader;
-using Macrocosm.Content.Biomes;
-using Macrocosm.Content.Projectiles.Environment.Debris;
-using Macrocosm.Content.Projectiles.Hostile;
-using Macrocosm.Content.Dusts;
 using Terraria.GameContent.ItemDropRules;
-using Macrocosm.Content.Items.Materials.Drops;
+using Terraria.ID;
+using Terraria.ModLoader;
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-    // These three class showcase usage of the WormHead, WormBody and WormTail ExampleMod classes from Worm.cs
-    public class MoonWormHead : WormHead, IMoonEnemy
+    public class MoonWormHead : WormHead
     {
         public override int BodyType => ModContent.NPCType<MoonWormBody>();
         public override int TailType => ModContent.NPCType<MoonWormTail>();
@@ -31,6 +31,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 PortraitPositionYOverride = 12f
             };
             NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, drawModifier);
+
+            NPCSets.MoonNPC[NPC.type] = true;
+            NPCSets.DropsMoonstone[NPC.type] = true;
         }
 
         public override void SetDefaults()
@@ -53,9 +56,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         }
         public override void ModifyNPCLoot(NPCLoot loot)
         {
-            loot.Add(ItemDropRule.Common(ModContent.ItemType<AlienResidue>(), 1,2,8));//Make the worms drop quite a bit of residue, because they're rare.
+            loot.Add(ItemDropRule.Common(ModContent.ItemType<AlienResidue>(), 1, 2, 8));//Make the worms drop quite a bit of residue, because they're rare.
         }
-       
+
 
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
         {
@@ -77,7 +80,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             MinSegmentLength = 14;
             MaxSegmentLength = 22;
             FlipSprite = true;
-            NPC.position.Y+=1000;
+            NPC.position.Y += 1000;
             SoundEngine.PlaySound(SoundID.NPCDeath10);
             CommonWormInit(this);
         }
@@ -100,25 +103,27 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             attackCounter = reader.ReadInt32();
         }
 
-        public bool CheckForSoildTile(int x, int y){
+        public bool CheckForSoildTile(int x, int y)
+        {
             Tile tile = Main.tile[x, y];
-            if (tile.HasUnactuatedTile==true)
+            if (tile.HasUnactuatedTile == true)
                 return true;
-            else{
-            return false;
+            else
+            {
+                return false;
             }
         }
-        public bool burst= false;//Has the worm bursted out of the ground.
+        public bool burst = false;//Has the worm bursted out of the ground.
         public override void AI()
         {
-        
-                
+
+
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-               
 
 
-                
+
+
 
 
 
@@ -129,19 +134,21 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
                 Player target = Main.player[NPC.target];
                 // If the attack counter is 0, this NPC is less than 12.5 tiles away from its target, and has a path to the target unobstructed by blocks, summon a projectile.
-                if (attackCounter <= 0 && Vector2.Distance(NPC.Center, target.Center) < 2000 && Collision.CanHit(NPC.Center, 1, 1, target.Center, 1, 1)&&burst==false)
+                if (attackCounter <= 0 && Vector2.Distance(NPC.Center, target.Center) < 2000 && Collision.CanHit(NPC.Center, 1, 1, target.Center, 1, 1) && burst == false)
                 {
                     SoundEngine.PlaySound(SoundID.DD2_ExplosiveTrapExplode);
-                    burst=true;
-                    for(int i =0; i<50; i++){ //Spawn a lot of debris
-                        Projectile.NewProjectile(NPC.GetSource_FromAI(),NPC.Center,NPC.velocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(MathHelper.Pi)*(float)Main.rand.NextFloat(1.0f,30.0f), ModContent.ProjectileType<RegolithDebris>(),0,0f,-1);
+                    burst = true;
+                    for (int i = 0; i < 50; i++)
+                    { //Spawn a lot of debris
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, NPC.velocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(MathHelper.Pi) * (float)Main.rand.NextFloat(1.0f, 30.0f), ModContent.ProjectileType<RegolithDebris>(), 0, 0f, -1);
                     }
-                    for(int i =0; i<90; i++){ //Spawn a lot of dust
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(),NPC.Center,NPC.velocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(MathHelper.Pi)*(float)Main.rand.NextFloat(1.0f,15.0f), ModContent.ProjectileType<MoonWormDust>(),0,0f,-1);
+                    for (int i = 0; i < 90; i++)
+                    { //Spawn a lot of dust
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, NPC.velocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(MathHelper.Pi) * (float)Main.rand.NextFloat(1.0f, 15.0f), ModContent.ProjectileType<MoonWormDust>(), 0, 0f, -1);
                     }
-                    for(int i =0; i<10; i++)//Spawn damaging projectiles
+                    for (int i = 0; i < 10; i++)//Spawn damaging projectiles
                     {
-                    Projectile.NewProjectile(NPC.GetSource_FromAI(),NPC.Center,NPC.velocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(MathHelper.Pi)*(float)Main.rand.NextFloat(10.0f,20.0f), ModContent.ProjectileType<MoonRubble>(),50,0f,-1);
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, NPC.velocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(MathHelper.Pi) * (float)Main.rand.NextFloat(10.0f, 20.0f), ModContent.ProjectileType<MoonRubble>(), 50, 0f, -1);
 
                     }
 
@@ -151,7 +158,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             }
         }
-        
+
     }
 
     public class MoonWormBody : WormBody
@@ -176,18 +183,20 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         public override void Init()
         {
             FlipSprite = true;
-            NPC.position.Y+=1200;
+            NPC.position.Y += 1200;
             MoonWormHead.CommonWormInit(this);
         }
         public override void HitEffect(NPC.HitInfo hit)
         {
             if (NPC.life <= 0)
             {
-                if ((int)NPC.frameCounter==1){
-                Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("MoonWormSegment1").Type);
-                Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("MoonWormSegment2").Type);
+                if ((int)NPC.frameCounter == 1)
+                {
+                    Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("MoonWormSegment1").Type);
+                    Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("MoonWormSegment2").Type);
                 }
-                else{
+                else
+                {
                     Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("MoonWormAlternate1").Type);
                     Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("MoonWormAlternate2").Type);
                 }
@@ -229,18 +238,18 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             if (NPC.life <= 0)
             {
-              
+
                 Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("MoonWormTail").Type);
-           
-                
-                
+
+
+
             }
         }
 
         public override void Init()
         {
             FlipSprite = true;
-            
+
             MoonWormHead.CommonWormInit(this);
         }
     }

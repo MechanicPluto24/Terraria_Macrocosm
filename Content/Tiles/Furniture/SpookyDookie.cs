@@ -1,22 +1,19 @@
-﻿using Terraria.DataStructures;
+﻿using Macrocosm.Content.Dusts;
+using Microsoft.Xna.Framework;
+using Terraria;
+using Terraria.DataStructures;
 using Terraria.Enums;
-using Terraria.GameContent.ObjectInteractions;
 using Terraria.GameContent;
+using Terraria.GameContent.ObjectInteractions;
 using Terraria.ID;
 using Terraria.Localization;
-using Terraria;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
-using Microsoft.Xna.Framework;
-using Macrocosm.Content.Dusts;
 
 namespace Macrocosm.Content.Tiles.Furniture
 {
     public class SpookyDookie : ModTile
     {
-        // Calculated by adding all CoordinateHeights + CoordinatePaddingFix.Y applied to all of them + 2
-        public const int NextStyleHeight = 40;
-
         public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
@@ -37,17 +34,16 @@ namespace Macrocosm.Content.Tiles.Furniture
 
             // Placement
             TileObjectData.newTile.CopyFrom(TileObjectData.Style1x2);
-            TileObjectData.newTile.CoordinateHeights = [16, 18];
-            TileObjectData.newTile.CoordinatePaddingFix = new Point16(0, 2);
+            TileObjectData.newTile.CoordinateHeights = [16, 16];
+            TileObjectData.newTile.DrawYOffset = 2;
             TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;
 
             TileObjectData.newTile.StyleWrapLimit = 2;
-            TileObjectData.newTile.StyleMultiplier = 2;
             TileObjectData.newTile.StyleHorizontal = true;
 
             TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
             TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceRight;
-            TileObjectData.addAlternate(1);  
+            TileObjectData.addAlternate(1);
             TileObjectData.addTile(Type);
 
             RegisterItemDrop(ModContent.ItemType<Items.Furniture.SpookyDookie>(), 0, 1);
@@ -60,7 +56,7 @@ namespace Macrocosm.Content.Tiles.Furniture
 
         public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings)
         {
-            return settings.player.IsWithinSnappngRangeToTile(i, j, PlayerSittingHelper.ChairSittingMaxDistance);  
+            return settings.player.IsWithinSnappngRangeToTile(i, j, PlayerSittingHelper.ChairSittingMaxDistance);
         }
 
         public override void ModifySittingTargetInfo(int i, int j, ref TileRestingInfo info)
@@ -82,7 +78,7 @@ namespace Macrocosm.Content.Tiles.Furniture
             info.AnchorTilePosition.X = i; // Our chair is only 1 wide, so nothing special required
             info.AnchorTilePosition.Y = j;
 
-            if (tile.TileFrameY % NextStyleHeight == 0)
+            if (tile.TileFrameY % (18 * 2) == 0)
             {
                 info.AnchorTilePosition.Y++; // Here, since our chair is only 2 tiles high, we can just check if the tile is the top-most one, then move it 1 down
             }
@@ -103,7 +99,7 @@ namespace Macrocosm.Content.Tiles.Furniture
             Player player = Main.LocalPlayer;
 
             if (player.IsWithinSnappngRangeToTile(i, j, PlayerSittingHelper.ChairSittingMaxDistance))
-            {  
+            {
                 player.GamepadEnableGrappleCooldown();
                 player.sitting.SitDown(player, i, j);
             }
@@ -116,13 +112,14 @@ namespace Macrocosm.Content.Tiles.Furniture
             Player player = Main.LocalPlayer;
 
             if (!player.IsWithinSnappngRangeToTile(i, j, PlayerSittingHelper.ChairSittingMaxDistance))
-            { 
+            {
                 return;
             }
 
             player.noThrow = 2;
             player.cursorItemIconEnabled = true;
-            player.cursorItemIconID = ModContent.ItemType<Items.Furniture.SpookyDookie>();
+
+            player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, TileObjectData.GetTileStyle(Main.tile[i, j]));
 
             if (Main.tile[i, j].TileFrameX / 18 < 1)
             {
@@ -135,7 +132,7 @@ namespace Macrocosm.Content.Tiles.Furniture
             Tile tile = Main.tile[i, j];
 
             int spawnX = i;
-            int spawnY = j - (tile.TileFrameY % NextStyleHeight) / 18;
+            int spawnY = j - (tile.TileFrameY % (18 * 2)) / 18;
 
             Wiring.SkipWire(spawnX, spawnY);
             Wiring.SkipWire(spawnX, spawnY + 1);

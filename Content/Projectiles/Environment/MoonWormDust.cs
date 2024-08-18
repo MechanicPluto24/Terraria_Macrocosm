@@ -1,9 +1,6 @@
-﻿using Macrocosm.Common.Utils;
-using Terraria;
-using Terraria.ModLoader;
-using Terraria.ID;
+﻿using Terraria;
 using Terraria.DataStructures;
-using Macrocosm.Common.Drawing.Particles;
+using Terraria.ModLoader;
 namespace Macrocosm.Content.Dusts
 {
     public class MoonWormDust : ModProjectile
@@ -16,7 +13,7 @@ namespace Macrocosm.Content.Dusts
         }
         public override void OnSpawn(IEntitySource source)
         {
-     
+
             Projectile.frame = Main.rand.Next(3);
         }
         public override void SetDefaults()
@@ -38,7 +35,7 @@ namespace Macrocosm.Content.Dusts
             {
                 Projectile.active = false;
             }
-            
+
         }
     }
 }

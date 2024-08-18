@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Global.NPCs;
+using Macrocosm.Common.Sets;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Items.Materials.Drops;
 using Microsoft.Xna.Framework;
@@ -13,7 +14,7 @@ using Terraria.ModLoader;
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
     // Adapted from Example Mod
-    public class CraterCrawlerHead : WormHead, IMoonEnemy
+    public class CraterCrawlerHead : WormHead
     {
         public override int BodyType => ModContent.NPCType<CraterCrawlerBody>();
         public override int TailType => ModContent.NPCType<CraterCrawlerTail>();
@@ -28,6 +29,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 PortraitPositionYOverride = 12f
             };
             NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, drawModifier);
+
+            NPCSets.MoonNPC[Type] = true;
+            NPCSets.DropsMoonstone[Type] = true;
         }
 
         public override void SetDefaults()

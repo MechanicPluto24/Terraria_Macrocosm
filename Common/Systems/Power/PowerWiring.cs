@@ -1,22 +1,20 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Common.Netcode;
+using Macrocosm.Content.Items.Wires;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using System.Linq;
-using System.Collections.Generic;
-using Terraria.UI.Chat;
-using Terraria.GameContent;
-using Macrocosm.Common.Utils;
-using Terraria.ID;
-using Macrocosm.Content.Items.Wires;
-using Macrocosm.Common.Netcode;
-using System.IO;
 
 namespace Macrocosm.Common.Systems.Power
 {
+    [Obsolete("Power uses vanilla wires now")]
     public enum WireType
     {
         None,
@@ -24,6 +22,7 @@ namespace Macrocosm.Common.Systems.Power
         // ...
     }
 
+    [Obsolete("Power uses vanilla wires now")]
     public enum WireVisibility
     {
         Normal,
@@ -32,8 +31,59 @@ namespace Macrocosm.Common.Systems.Power
         Hidden
     }
 
+    [Obsolete("Power uses vanilla wires now")]
+    public readonly struct WireData : TagSerializable
+    {
+        private readonly byte data;
+
+        public bool AnyWire => data != 0;
+        public bool CopperWire => (data & 0x01) != 0;
+
+        public static implicit operator WireData(byte value) => new(value);
+        public static implicit operator byte(WireData powerWireData) => powerWireData.data;
+
+        // Expand this if needed
+        private const int WireTypeMask = 0x01;
+
+        public WireData() { }
+        public WireData(WireType type)
+        {
+            data = type switch
+            {
+                WireType.None => new WireData((byte)(data & ~WireTypeMask)),
+                WireType.Copper => new WireData((byte)((data & ~WireTypeMask) | 0x01)),
+                _ => new(),
+            };
+        }
+
+        public WireData(byte data)
+        {
+            this.data = data;
+        }
+
+        public TagCompound SerializeData()
+        {
+            TagCompound tag = new();
+            tag[nameof(data)] = data;
+            return tag;
+        }
+
+        public static readonly Func<TagCompound, WireData> DESERIALIZER = DeserializeData;
+        public static WireData DeserializeData(TagCompound tag)
+        {
+            if (tag.ContainsKey(nameof(data)))
+                return new(tag.GetByte(nameof(data)));
+
+            return default;
+        }
+    }
+
+
+    [Obsolete("Power uses vanilla wires now")]
     public class PowerWiring : ModSystem
     {
+        public override bool IsLoadingEnabled(Mod mod) => false;
+
         public static PowerWiring Instance => ModContent.GetInstance<PowerWiring>();
         public static PowerWiring Map => Instance;
 
@@ -102,7 +152,7 @@ namespace Macrocosm.Common.Systems.Power
         {
             Map[x, y] = new(type);
 
-            if(sync && Main.netMode != NetmodeID.SinglePlayer)
+            if (sync && Main.netMode != NetmodeID.SinglePlayer)
                 SyncPowerWire(x, y, type);
         }
 
@@ -125,7 +175,7 @@ namespace Macrocosm.Common.Systems.Power
             if (dustType > 0)
                 for (int i = 0; i < 10; i++)
                     Dust.NewDustDirect(new Vector2(x * 16 + 8, y * 16 + 8), 1, 1, dustType);
- 
+
             if (sync && Main.netMode != NetmodeID.SinglePlayer)
                 SyncPowerWire(x, y, WireType.None);
         }

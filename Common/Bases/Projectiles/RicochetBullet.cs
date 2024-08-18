@@ -9,7 +9,7 @@ namespace Macrocosm.Common.Bases.Projectiles
     /// <summary>
     /// Base class for a bullet projectile that bounces from enemy to enemy. 
     /// </summary>
-    public abstract class RicochetBullet : ModProjectile, IHitTileProjectile
+    public abstract class RicochetBullet : ModProjectile
     {
         /// <summary> The number of ricochets </summary>
         public virtual int RicochetCount { get; set; } = 2;
@@ -38,7 +38,6 @@ namespace Macrocosm.Common.Bases.Projectiles
 
         private int newTarget = -1;
         private bool HasNewTarget => newTarget != -1;
-
 
         public override void SetDefaults()
         {

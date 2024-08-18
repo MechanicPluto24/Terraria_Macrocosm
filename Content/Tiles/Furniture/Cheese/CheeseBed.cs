@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.Enums;
 using Terraria.GameContent;
 using Terraria.GameContent.ObjectInteractions;
 using Terraria.ID;
@@ -14,28 +13,25 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
 {
     public class CheeseBed : ModTile
     {
-        //Calculated by adding all CoordinateHeights + CoordinatePaddingFix.Y applied to all of them + 2
-        public const int NextStyleHeight = 38; 
-
         public override void SetStaticDefaults()
         {
             // Properties
             Main.tileFrameImportant[Type] = true;
             Main.tileLavaDeath[Type] = true;
             TileID.Sets.HasOutlines[Type] = true;
-            TileID.Sets.CanBeSleptIn[Type] = true;  
-            TileID.Sets.InteractibleByNPCs[Type] = true;  
+            TileID.Sets.CanBeSleptIn[Type] = true;
+            TileID.Sets.InteractibleByNPCs[Type] = true;
             TileID.Sets.IsValidSpawnPoint[Type] = true;
             TileID.Sets.DisableSmartCursor[Type] = true;
 
-            AddToArray(ref TileID.Sets.RoomNeeds.CountsAsChair);  
+            AddToArray(ref TileID.Sets.RoomNeeds.CountsAsChair);
 
             DustType = ModContent.DustType<CheeseDust>();
             AdjTiles = [TileID.Beds];
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style4x2); // this style already takes care of direction for us
-            TileObjectData.newTile.CoordinateHeights = new[] { 16, 18 };
-            TileObjectData.newTile.CoordinatePaddingFix = new Point16(0, -2);
+            TileObjectData.newTile.CoordinateHeights = [16, 16];
+            TileObjectData.newTile.DrawYOffset = 2;
             TileObjectData.addTile(Type);
 
             AddMapEntry(new Color(220, 216, 121), Language.GetText("ItemName.Bed"));
@@ -51,7 +47,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             // Because beds have special smart interaction, this splits up the left and right side into the necessary 2x2 sections
             width = 2; // Default to the Width defined for TileObjectData.newTile
             height = 2; // Default to the Height defined for TileObjectData.newTile
-            //extraY = 0; // Depends on how you set up frameHeight and CoordinateHeights and CoordinatePaddingFix.Y
+            //extraY = 0;  
         }
 
         public override void ModifySleepingTargetInfo(int i, int j, ref TileRestingInfo info)
@@ -71,13 +67,13 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             int spawnX = (i - (tile.TileFrameX / 18)) + (tile.TileFrameX >= 72 ? 5 : 2);
             int spawnY = j + 2;
 
-            if (tile.TileFrameY % NextStyleHeight != 0)
+            if (tile.TileFrameY % 18 * 2 != 0)
             {
                 spawnY--;
             }
 
             if (!Player.IsHoveringOverABottomSideOfABed(i, j))
-            {  
+            {
                 if (player.IsWithinSnappngRangeToTile(i, j, PlayerSleepingHelper.BedSleepingMaxDistance))
                 {
                     player.GamepadEnableGrappleCooldown();
@@ -120,7 +116,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             {
                 player.noThrow = 2;
                 player.cursorItemIconEnabled = true;
-                player.cursorItemIconID = ModContent.ItemType<Items.Furniture.Cheese.CheeseBed>();
+                player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, TileObjectData.GetTileStyle(Main.tile[i, j]));
             }
         }
     }

@@ -36,7 +36,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
 
         public override void OnInitialize()
         {
-            if(large)
+            if (large)
                 Height.Set(74, 0f);
             else
                 Height.Set(40, 0f);

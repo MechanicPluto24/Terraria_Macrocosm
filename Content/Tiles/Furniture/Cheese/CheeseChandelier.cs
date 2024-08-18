@@ -4,8 +4,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
-using Terraria.DataStructures;
-using Terraria.Enums;
 using Terraria.GameContent.Drawing;
 using Terraria.ID;
 using Terraria.Localization;
@@ -34,8 +32,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
 
             DustType = ModContent.DustType<CheeseDust>();
 
-            LocalizedText name = CreateMapEntryName();
-            AddMapEntry(new Color(220, 216, 121), name);
+            AddMapEntry(new Color(220, 216, 121), Language.GetText("ItemName.Chandelier"));
         }
 
         public override void HitWire(int i, int j)
@@ -72,10 +69,6 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
 
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
         {
-            var tile = Main.tile[i, j];
-            if (!TileDrawing.IsVisible(tile))
-                return;
-
             flameTexture ??= ModContent.Request<Texture2D>(Texture + "_Flame");
             ulong randSeed = Main.TileFrameSeed ^ (ulong)((long)j << 32 | (long)(uint)i);
 

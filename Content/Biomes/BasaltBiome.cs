@@ -20,19 +20,20 @@ namespace Macrocosm.Content.Biomes
         {
         }
 
+        public override bool IsBiomeActive(Player player)
+            => false; // TileCounts.Instance.BasaltCount > 40;
+
         public override void OnInBiome(Player player)
         {
-            base.OnInBiome(player);
+        }
+
+        public override void OnEnter(Player player)
+        {
         }
 
         public override void OnLeave(Player player)
         {
-            base.OnLeave(player);
         }
-
-        public override bool IsBiomeActive(Player player)
-            => false; // TileCounts.Instance.BasaltCount > 40;
-
     }
 }
 

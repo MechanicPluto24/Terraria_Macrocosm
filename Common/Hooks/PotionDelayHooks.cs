@@ -1,9 +1,4 @@
-﻿using Macrocosm.Common.Bases.Items;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Macrocosm.Common.Sets;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -23,9 +18,10 @@ namespace Macrocosm.Common.Hooks
 
         private void On_Player_ApplyPotionDelay(On_Player.orig_ApplyPotionDelay orig, Player self, Item sItem)
         {
-            if(sItem.ModItem is IPotionDelayConsumable consumable)
+            int delay = ItemSets.PotionDelay[sItem.type];
+            if (delay > 0)
             {
-                self.potionDelay = consumable.PotionDelay;
+                self.potionDelay = delay;
 
                 if (self.pStone)
                     self.potionDelay = (int)((float)self.potionDelay * Player.PhilosopherStoneDurationMultiplier);

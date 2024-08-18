@@ -18,10 +18,10 @@ namespace Macrocosm.Common.Commands
 
         public override void Action(CommandCaller caller, string input, string[] args)
         {
-            #if !DEBUG
+#if !DEBUG
 				Main.NewText("You must be in debug mode to use this!");
 				return;
-            #endif
+#endif
 
             bool doRegen = args.Length == 0 || args.Contains("gen");
             bool doReframe = args.Length == 0 || args.Contains("frame");

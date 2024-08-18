@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Content.Dusts;
-using Microsoft.Build.Tasks;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Enums;
@@ -22,9 +21,6 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             Main.tileLavaDeath[Type] = true;
 
             TileObjectData.newTile.CopyFrom(TileObjectData.GetTileData(TileID.Candles, 0));
-            TileObjectData.newTile.WaterDeath = true;
-            TileObjectData.newTile.WaterPlacement = LiquidPlacement.NotAllowed;
-            TileObjectData.newTile.LavaPlacement = LiquidPlacement.NotAllowed;
             TileObjectData.addTile(Type);
 
             AdjTiles = [TileID.Candles];
@@ -62,7 +58,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             Player player = Main.LocalPlayer;
             player.noThrow = 2;
             player.cursorItemIconEnabled = true;
-            player.cursorItemIconID = ModContent.ItemType<Items.Furniture.Industrial.IndustrialCandle>();
+            player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, TileObjectData.GetTileStyle(Main.tile[i, j]));
         }
 
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)

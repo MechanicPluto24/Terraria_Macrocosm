@@ -154,7 +154,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
                 {
                     if (AlreadyHere)
                         targetColor = Color.Gray;
-                    else if(!LaunchLocationSelected)
+                    else if (!LaunchLocationSelected)
                         targetColor = Color.Gold;
                     else if (IsReachable)
                         targetColor = new Color(0, 255, 0);

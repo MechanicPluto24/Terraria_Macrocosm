@@ -1,13 +1,8 @@
 ﻿using Macrocosm.Common.Subworlds;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Tiles.Ambient;
-using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Audio;
-using Terraria.DataStructures;
-using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -15,7 +10,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
 {
     public class MoonRubble : ModProjectile
     {
-        
+
 
         public override void SetStaticDefaults()
         {
@@ -30,12 +25,12 @@ namespace Macrocosm.Content.Projectiles.Hostile
             Projectile.tileCollide = false;
 
             Projectile.timeLeft = 300;
-            Projectile.hostile=true;
+            Projectile.hostile = true;
             Projectile.netImportant = true;
-            Projectile.scale=Main.rand.NextFloat(0.5f,1.5f);
+            Projectile.scale = Main.rand.NextFloat(0.5f, 1.5f);
         }
 
-        
+
         //Literally just regolith debris lol.
         //TODO Sprite is made by me and is therfore bad and needs to be resprited.
         public bool ScheduleAmbientTileSpawnEffect
@@ -100,6 +95,6 @@ namespace Macrocosm.Content.Projectiles.Hostile
             return base.GetAlpha(lightColor);
         }
 
-       
+
     }
 }
