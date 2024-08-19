@@ -15,7 +15,7 @@ namespace Macrocosm.Common.Systems
         public int RegolithCount { get; private set; } = 0;
         public int IrradiatedRockCount { get; private set; } = 0;
         public int GraveyardModTileCount { get; private set; } = 0;
-
+        public int MonolithCount { get; private set; } = 0;
         private int[] graveyardTileTypes;
 
         public override void PostSetupContent()
@@ -31,6 +31,7 @@ namespace Macrocosm.Common.Systems
         {
             RegolithCount = tileCounts[ModContent.TileType<Regolith>()];
             IrradiatedRockCount = tileCounts[ModContent.TileType<IrradiatedRock>()];
+            MonolithCount = tileCounts[ModContent.TileType<Monolith>()];
 
             foreach (int type in graveyardTileTypes)
                  GraveyardModTileCount += tileCounts[type];
@@ -41,6 +42,7 @@ namespace Macrocosm.Common.Systems
             RegolithCount = 0;
             IrradiatedRockCount = 0;
             GraveyardModTileCount = 0;
+            MonolithCount=0;
         }
     }
 }
