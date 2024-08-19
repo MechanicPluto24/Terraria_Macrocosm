@@ -1,4 +1,3 @@
-using Macrocosm.Common.Global.NPCs;
 using Macrocosm.Common.Sets;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
@@ -23,17 +22,17 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override void SetStaticDefaults()
         {
-            var drawModifier = new NPCID.Sets.NPCBestiaryDrawModifiers()    // Influences how the NPC looks in the Bestiary
+            var drawModifier = new NPCID.Sets.NPCBestiaryDrawModifiers() // Influences how the NPC looks in the Bestiary
             {
                 CustomTexturePath = "Macrocosm/Content/NPCs/Enemies/Moon/MoonWorm_Bestiary", // If the NPC is multiple parts like a worm, a custom texture for the Bestiary is encouraged.
                 Position = new Vector2(40f, 24f),
                 PortraitPositionXOverride = 0f,
                 PortraitPositionYOverride = 12f
             };
-            NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, drawModifier);
+            NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, drawModifier);
 
-            NPCSets.MoonNPC[NPC.type] = true;
-            NPCSets.DropsMoonstone[NPC.type] = true;
+            NPCSets.MoonNPC[Type] = true;
+            NPCSets.DropsMoonstone[Type] = true;
         }
 
         public override void SetDefaults()
@@ -113,20 +112,13 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 return false;
             }
         }
-        public bool burst = false;//Has the worm bursted out of the ground.
+
+        public bool burst = false; // Has the worm bursted out of the ground.
+
         public override void AI()
         {
-
-
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-
-
-
-
-
-
-
                 NPC.despawnEncouraged = false;
                 // tick down the attack counter.
                 if (attackCounter > 0)
@@ -160,14 +152,13 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         }
 
     }
-
     public class MoonWormBody : WormBody
     {
         public override void SetStaticDefaults()
         {
             Main.npcFrameCount[Type] = 2;
             NPCID.Sets.NPCBestiaryDrawModifiers value = new NPCID.Sets.NPCBestiaryDrawModifiers() { Hide = true }; // Hides this NPC from the Bestiary, useful for multi-part NPCs whom you only want one entry.
-            NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
+            NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, value);
         }
 
         public override void SetDefaults()
@@ -177,7 +168,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.defense = 69;
             NPC.width = 54;
             NPC.height = 54;
-            NPC.npcSlots=0f;
+            NPC.npcSlots = 0f;
             NPC.aiStyle = -1;
         }
 
@@ -223,7 +214,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             {
                 Hide = true // Hides this NPC from the Bestiary, useful for multi-part NPCs whom you only want one entry.
             };
-            NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
+            NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, value);
         }
 
         public override void SetDefaults()
@@ -234,7 +225,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.width = 50;
             NPC.height = 50;
             NPC.aiStyle = -1;
-            NPC.npcSlots=0f;
+            NPC.npcSlots = 0f;
         }
         public override void HitEffect(NPC.HitInfo hit)
         {
@@ -242,8 +233,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             {
 
                 Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("MoonWormTail").Type);
-
-
 
             }
         }

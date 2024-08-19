@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Global.NPCs;
-using Macrocosm.Common.Sets;
+﻿using Macrocosm.Common.Sets;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Items.Materials.Drops;
 using Microsoft.Xna.Framework;
@@ -131,7 +130,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.CloneDefaults(NPCID.DiggerBody);
             NPC.damage = 60;
             NPC.defense = 45;
-            NPC.npcSlots=0f;
+            NPC.npcSlots = 0f;
             NPC.width = 16;
             NPC.height = 16;
             NPC.aiStyle = -1;
@@ -178,7 +177,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.defense = 50;
             NPC.width = 30;
             NPC.height = 30;
-            NPC.npcSlots=0f;
+            NPC.npcSlots = 0f;
             NPC.aiStyle = -1;
         }
 

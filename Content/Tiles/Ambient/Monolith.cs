@@ -1,10 +1,9 @@
-using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
 using Terraria.DataStructures;
 using Terraria.Enums;
+using Terraria.ID;
+using Terraria.ModLoader;
 using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Ambient
@@ -22,15 +21,9 @@ namespace Macrocosm.Content.Tiles.Ambient
             MinPick = 999999999;
             TileObjectData.newTile.CopyFrom(TileObjectData.Style4x2);
             TileObjectData.newTile.Origin = new Point16(0, 7);
-            TileObjectData.newTile.Width=4;
-            TileObjectData.newTile.Height=8;
-            TileObjectData.newTile.CoordinateHeights=new[]{
-                16,16,16,16,16,16,16,16
-                
-                
-            };
-
-          
+            TileObjectData.newTile.Width = 4;
+            TileObjectData.newTile.Height = 8;
+            TileObjectData.newTile.CoordinateHeights = [16,16,16,16,16,16,16,16];
             TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, TileObjectData.newTile.Width, 0);
             TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.newTile.DrawYOffset = 0;

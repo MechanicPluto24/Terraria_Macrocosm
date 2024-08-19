@@ -1,4 +1,3 @@
-using Macrocosm.Common.Global.NPCs;
 using Macrocosm.Common.Sets;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
@@ -36,14 +35,15 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return spawnInfo.Player.InModBiome<MoonBiome>() &&spawnInfo.SpawnTileY<Main.rockLayer&& !Main.dayTime ? .1f : 0f;
+            return spawnInfo.Player.InModBiome<MoonBiome>() && spawnInfo.SpawnTileY < Main.rockLayer && !Main.dayTime ? .1f : 0f;
         }
 
-        public override void AI()
+        public override bool PreAI()
         {
             if (NPC.velocity.Y < 0f)
                 NPC.velocity.Y += 0.1f;
-            base.AI();
+
+            return true;
         }
 
         public override void FindFrame(int frameHeight)
