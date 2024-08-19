@@ -177,6 +177,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.defense = 69;
             NPC.width = 54;
             NPC.height = 54;
+            NPC.npcSlots=0f;
             NPC.aiStyle = -1;
         }
 
@@ -233,6 +234,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.width = 50;
             NPC.height = 50;
             NPC.aiStyle = -1;
+            NPC.npcSlots=0f;
         }
         public override void HitEffect(NPC.HitInfo hit)
         {
