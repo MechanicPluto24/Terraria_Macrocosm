@@ -18,11 +18,6 @@ namespace Macrocosm.Content.Subworlds
     /// </summary>
     public partial class Moon : MacrocosmSubworld
     {
-        private static Moon instance;
-        public static Moon Instance { get { instance ??= new(); return instance; } }
-
-        public float MeteorBoost { get; set; } = 1f;
-
         // 8 times slower than on Earth (a Terrarian lunar month lasts for 8 in-game days)
         public override double TimeRate => 0.125;
 
@@ -67,6 +62,11 @@ namespace Macrocosm.Content.Subworlds
             return false;
         }
 
+        public override void UpdateRemotely()
+        {
+            UpdateMeteorStorm();
+        }
+
         public override void PreUpdateWorld()
         {
             UpdateBloodMoon();
@@ -100,48 +100,31 @@ namespace Macrocosm.Content.Subworlds
 			*/
         }
 
-        
-        private void UpdateMeteorStorm()
-        {
-        
-        IsMeteorStorm=true;
-        if (IsMeteorStorm)
-            MeteorBoost=4000f;
-        else
-            MeteorBoost=1f;
-        }
-
         //TODO 
-        private void UpdateSolarStorm() {}
+        private void UpdateSolarStorm() { }
 
+        private float meteorBoost = 1f;
+        private double meteorTimePass = 0.0;
 
+        private void UpdateMeteorStorm()
+        {      
+            MeteorStormActive = true;
 
-
-        public override void UpdateEvents()
-        {
-        
-        UpdateMeteorStorm();
-        UpdateSolarStorm();
-        UpdateBloodMoon();
+            if (MeteorStormActive)
+                meteorBoost = 4000f;
+            else
+                meteorBoost = 1f;
         }
 
-
-
-
-        private double timePass = 0.0;
         private void UpdateMeteors()
         {
-            // handled by server 
-            if (Main.netMode == NetmodeID.MultiplayerClient)
-                return;
-
-            timePass += Main.desiredWorldEventsUpdateRate;
+            meteorTimePass += Main.desiredWorldEventsUpdateRate;
 
             int closestPlayer = 0;
 
-            for (int l = 1; l <= (int)timePass; l++)
+            for (int l = 1; l <= (int)meteorTimePass; l++)
             {
-                float frequency = 2f * Instance.MeteorBoost;
+                float frequency = 2f * meteorBoost;
 
                 if (Main.rand.Next(8000) >= frequency)
                     continue;
@@ -195,7 +178,7 @@ namespace Macrocosm.Content.Subworlds
                 }
             }
 
-            timePass %= 1.0;
+            meteorTimePass %= 1.0;
         }
     }
 }
