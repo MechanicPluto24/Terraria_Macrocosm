@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Terraria;
+using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -28,11 +29,24 @@ namespace Macrocosm.Common.Global.NPCs
 
         public override void SetDefaults(NPC npc)
         {
-            if (npc.ModNPC is not null && NPCSets.MoonNPC[npc.type])
-                npc.ModNPC.SpawnModBiomes = npc.ModNPC.SpawnModBiomes.Prepend(ModContent.GetInstance<MoonBiome>().Type).ToArray();
+            if (npc.ModNPC is ModNPC modNPC)
+            {
+                if (NPCSets.MoonNPC[npc.type])
+                    modNPC.SpawnModBiomes = npc.ModNPC.SpawnModBiomes.Prepend(ModContent.GetInstance<MoonBiome>().Type).ToArray();
+                //else if (NPCSets.MarsEnemies[npc.type])
+                //    modNPC.SpawnModBiomes = npc.ModNPC.SpawnModBiomes.Prepend(ModContent.GetInstance<MarsBiome>().Type).ToArray();
+                else
+                    modNPC.SpawnModBiomes = npc.ModNPC.SpawnModBiomes.Prepend(ModContent.GetInstance<EarthBiome>().Type).ToArray();
+            }
+        }
 
-            //if (npc.ModNPC is not null && NPCSets.MarsEnemies[npc.type])
-            //    npc.ModNPC.SpawnModBiomes = npc.ModNPC.SpawnModBiomes.Prepend(ModContent.GetInstance<MarsBiome>().Type).ToArray();
+        public override void SetBestiary(NPC npc, BestiaryDatabase database, BestiaryEntry bestiaryEntry)
+        {
+            if(npc.ModNPC is null)
+            {
+                EarthBiome earthBiome = ModContent.GetInstance<EarthBiome>();
+                bestiaryEntry.Info.Add(new ModBiomeBestiaryInfoElement(Mod, earthBiome.DisplayName.Key, earthBiome.BestiaryIcon, null, null));
+            }
         }
 
         public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)

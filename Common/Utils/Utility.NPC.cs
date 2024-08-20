@@ -65,42 +65,5 @@ namespace Macrocosm.Common.Utils
             npc.scale = newScale;
             npc.Center = center;
         }
-
-        public static int[] FindNearestTile(Vector2 center, int diameter, int type)//TODO get this to work.
-        {
-            bool HasBeenFound = false;
-            int StartingTileX = (int)center.X - (int)(diameter / 2);
-            int StartingTileY = (int)center.Y - (int)(diameter / 2);
-            int[] coords = { -1, -1 };
-            Vector2 dist = new Vector2(999, 999);
-            for (int x = StartingTileX; x <= diameter; x++)
-            {
-                for (int y = StartingTileY; y <= diameter; y++)
-                {
-                    Tile tileCheck = Main.tile[x, y];
-                    if (tileCheck.HasUnactuatedTile == true)
-                    {
-                        if (tileCheck.TileType == type)
-                        {
-                            Vector2 toTile = new Vector2(tileCheck.TileFrameX, tileCheck.TileFrameY) - center;
-                            int toTileDist = (int)((Math.Sqrt(((int)toTile.X ^ 2) + ((int)toTile.Y ^ 2))));
-                            int TrueDist = (int)((Math.Sqrt(((int)dist.X ^ 2) + ((int)dist.Y ^ 2))));
-                            if (toTileDist < TrueDist)
-                            {
-                                dist = toTile;
-                                coords[0] = x;
-                                coords[1] = y;
-                                HasBeenFound = true;
-                            }
-
-                        }
-
-                    }
-                }
-            }
-
-
-            return coords;
-        }
     }
 }

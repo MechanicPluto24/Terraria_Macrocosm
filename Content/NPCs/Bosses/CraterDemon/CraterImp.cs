@@ -143,10 +143,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
             spriteBatch.Draw(texture, NPC.Center - Main.screenPosition, NPC.frame, color, NPC.rotation, NPC.Size / 2f, NPC.scale, effect, 0);
 
-            if (NPC.IsABestiaryIconDummy)
-                return true;
-
-            return false;
+            return NPC.IsABestiaryIconDummy;
         }
 
         public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)

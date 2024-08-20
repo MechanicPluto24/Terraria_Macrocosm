@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-    public class BloodMoonJuggernaut : ModNPC
+    public class Bruiser : ModNPC
     {
         public enum ActionState
         {
