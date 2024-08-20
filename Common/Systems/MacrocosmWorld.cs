@@ -31,6 +31,15 @@ namespace Macrocosm.Common.Systems
         {
             if (SubworldSystem.AnyActive<Macrocosm>())
                 MacrocosmSubworld.Current.PreUpdateEntities();
+
+            if(Main.netMode == NetmodeID.SinglePlayer)
+            {
+                foreach (MacrocosmSubworld subworld in MacrocosmSubworld.Subworlds)
+                {
+                    if (!subworld.IsActive)
+                        subworld.UpdateRemotely();
+                }
+            }
         }
 
         public override void PreUpdatePlayers()
