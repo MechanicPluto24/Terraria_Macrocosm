@@ -6,6 +6,7 @@ using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Terraria;
 using Terraria.ID;
@@ -58,6 +59,8 @@ namespace Macrocosm.Common.Subworlds
                 return split[1];
             }
         }
+
+        public static List<MacrocosmSubworld> Subworlds { get; } = [];
 
         public static int CurrentIndex => SubworldSystem.AnyActive() ? SubworldSystem.GetIndex(CurrentID) : -1;
 

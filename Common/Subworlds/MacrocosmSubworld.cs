@@ -25,6 +25,7 @@ namespace Macrocosm.Common.Subworlds
         public override bool ShouldSave => true;
         public override bool NoPlayerSaving => false;
 
+        public bool IsActive => Current.ID == ID;
 
         /// <summary> Time rate of this subworld, compared to Earth's (1.0) </summary>
         public virtual double TimeRate { get; } = Earth.TimeRate;
@@ -87,8 +88,16 @@ namespace Macrocosm.Common.Subworlds
             }
         }
 
-        // TODO
-        public List<int> TownNPCs = [];
+        // TODO: NPCs residing on this subworld
+        public List<int> TownNPCs { get; } = [];
+
+        // Basic example of world flags local to this subworld. Will rework in the future.
+        public bool MeteorStormActive { get; set; } = false;
+
+        public override void SetStaticDefaults()
+        {
+            Subworlds.Add(this);
+        }
 
         /// <summary> Called when entering a subworld. </summary>
         public virtual void OnEnterWorld() { }
@@ -137,6 +146,9 @@ namespace Macrocosm.Common.Subworlds
             GameMechanicsUpdates();
             FreezeEnvironment();
         }
+
+        /// <summary> WIP - Lightly update the subworld while it is not active in singleplayer </summary>
+        public virtual void UpdateRemotely() { }
 
         // Updates the time 
         private void UpdateTime()
