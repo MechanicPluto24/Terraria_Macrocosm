@@ -1,6 +1,6 @@
 ﻿
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Items.Materials.Ores;
+using Macrocosm.Content.Items.Ores;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;

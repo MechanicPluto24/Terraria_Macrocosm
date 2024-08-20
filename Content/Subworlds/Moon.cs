@@ -25,13 +25,14 @@ namespace Macrocosm.Content.Subworlds
         public float MeteorBoost { get; set; } = 1f;
 
 
-        /// <summary> 8 times slower than on Earth (a Terrarian lunar month lasts for 8 in-game days) </summary>
+        // 8 times slower than on Earth (a Terrarian lunar month lasts for 8 in-game days)
         public override double TimeRate => 0.125;
 
-        /// <summary> About 6 times lower than default (1, as on Earth) </summary>
+        // About 6 times lower than default (1, as on Earth)
         public override float GravityMultiplier => 0.166f;
         public override float AtmosphericDensity => 0.1f;
 
+        public override int[] EvaporatingLiquidTypes => [LiquidID.Water];
 
         public override ChecklistConditionCollection LaunchConditions => new()
         {

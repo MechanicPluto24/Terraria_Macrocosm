@@ -45,7 +45,10 @@ namespace Macrocosm.Common.Subworlds
         public virtual float AtmosphericDensity { get; } = Earth.AtmosphericDensity;
 
         /// <summary> Whether wiring should function in this subworld </summary>
-        public bool ShouldUpdateWiring { get; set; } = true;
+        public virtual bool ShouldUpdateWiring { get; set; } = true;
+
+        /// <summary> Collection of LiquidIDs that should evaporate in this subworld </summary>
+        public virtual int[] EvaporatingLiquidTypes => [];
 
         /// <summary> Determine the size of this subworld </summary>
         /// <param name="earthWorldSize"> The Earth's world size </param>
