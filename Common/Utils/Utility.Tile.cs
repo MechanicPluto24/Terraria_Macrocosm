@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent.Drawing;
+using Terraria.ID;
 using Terraria.Map;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
@@ -194,13 +195,16 @@ namespace Macrocosm.Common.Utils
         public static bool HasBlendingFrame(int i, int j) => Main.tile[i, j].TileFrameX >= 234 || Main.tile[i, j].TileFrameY >= 90;
         public static bool HasBlendingFrame(this Tile tile) => tile.TileFrameX >= 234 || tile.TileFrameY >= 90;
 
+        public static Point GetClosestTile(Vector2 worldPosition, int type, int distance = 25, Func<Tile, bool> addTile = null) =>
+            GetClosestTile((int)(worldPosition.X / 16f), (int)(worldPosition.Y / 16f), type, distance, addTile);
+
+        public static Point GetClosestTile(Point tileCoord, int type, int distance = 25, Func<Tile, bool> addTile = null) =>
+            GetClosestTile(tileCoord.X, tileCoord.Y, type, distance, addTile);
+
         /// <summary>
         /// Returns the position of closest tile of the given type nearby using the given distance.
         /// By GroxTheGreat @ BaseMod
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="type"></param>
         /// <param name="distance"> How far from the x, y coordinates in tiles to check. </param>
         /// <param name="addTile"> Action that can be used to have custom check parameters. </param>
         public static Point GetClosestTile(int x, int y, int type, int distance = 25, Func<Tile, bool> addTile = null)
@@ -220,10 +224,10 @@ namespace Macrocosm.Common.Utils
                     if (tile is { HasTile: true } && (tile.TileType == type || type == -1) && (addTile == null || addTile(tile)) && (dist == -1 || Vector2.Distance(originalPos, new Vector2(x1, y1)) < dist))
                     {
                         dist = Vector2.Distance(originalPos, new Vector2(x1, y1));
-                        if (type == 21 || TileObjectData.GetTileData(tile.TileType, 0) != null && (TileObjectData.GetTileData(tile.TileType, 0).Width > 1 || TileObjectData.GetTileData(tile.TileType, 0).Height > 1))
+                        if (TileID.Sets.BasicChest[type] || (TileObjectData.GetTileData(tile.TileType, 0) != null && (TileObjectData.GetTileData(tile.TileType, 0).Width > 1 || TileObjectData.GetTileData(tile.TileType, 0).Height > 1)))
                         {
                             int x2 = x1; int y2 = y1;
-                            if (type == 21)
+                            if (TileID.Sets.BasicChest[type])
                             {
                                 x2 -= tile.TileFrameX / 18 % 2;
                                 y2 -= tile.TileFrameY / 18 % 2;
@@ -231,7 +235,8 @@ namespace Macrocosm.Common.Utils
                             else
                             {
                                 Vector2 top = GetMultitileTopLeft(x2, y2).ToVector2();
-                                x2 = (int)top.X; y2 = (int)top.Y;
+                                x2 = (int)top.X; 
+                                y2 = (int)top.Y;
                             }
                             pos = new(x2, y2);
                         }

@@ -6,7 +6,7 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.NPCs
+namespace Macrocosm.Common.Bases
 {
     public enum WormSegmentType
     {
@@ -57,7 +57,7 @@ namespace Macrocosm.Content.NPCs
             => SegmentType == WormSegmentType.Head ? null : false;
 
         public NPC GetFollowingSegment()
-            => this.NPC.ai[1] >= Main.maxNPCs ? null : this.FollowingNPC;
+            => NPC.ai[1] >= Main.maxNPCs ? null : FollowingNPC;
 
         private bool startDespawning;
 
@@ -180,7 +180,7 @@ namespace Macrocosm.Content.NPCs
         /// This method only runs if <see cref="HasCustomBodySegments"/> returns <see langword="true"/>.
         /// </summary>
         /// <param name="segmentCount">How many body segements are expected to be spawned</param>
-        /// <returns>The whoAmI of the most-recently spawned NPC, which is the result of calling <see cref="NPC.NewNPC(Terraria.DataStructures.IEntitySource, int, int, int, int, float, float, float, float, int)"/></returns>
+        /// <returns>The whoAmI of the most-recently spawned NPC, which is the result of calling <see cref="NPC.NewNPC(IEntitySource, int, int, int, int, float, float, float, float, int)"/></returns>
         public virtual int SpawnBodySegments(int segmentCount)
         {
             // Defaults to just returning this NPC's whoAmI, since the tail segment uses the return value as its "following" NPC index
@@ -398,10 +398,10 @@ namespace Macrocosm.Content.NPCs
             // Copy the value, since it will be clobbered later
             Vector2 npcCenter = NPC.Center;
 
-            float targetRoundedPosX = (float)((int)(targetXPos / 16f) * 16);
-            float targetRoundedPosY = (float)((int)(targetYPos / 16f) * 16);
-            npcCenter.X = (float)((int)(npcCenter.X / 16f) * 16);
-            npcCenter.Y = (float)((int)(npcCenter.Y / 16f) * 16);
+            float targetRoundedPosX = (int)(targetXPos / 16f) * 16;
+            float targetRoundedPosY = (int)(targetYPos / 16f) * 16;
+            npcCenter.X = (int)(npcCenter.X / 16f) * 16;
+            npcCenter.Y = (int)(npcCenter.Y / 16f) * 16;
             float dirX = targetRoundedPosX - npcCenter.X;
             float dirY = targetRoundedPosY - npcCenter.Y;
 
@@ -490,7 +490,7 @@ namespace Macrocosm.Content.NPCs
             dirX *= newSpeed;
             dirY *= newSpeed;
 
-            if ((NPC.velocity.X > 0 && dirX > 0) || (NPC.velocity.X < 0 && dirX < 0) || (NPC.velocity.Y > 0 && dirY > 0) || (NPC.velocity.Y < 0 && dirY < 0))
+            if (NPC.velocity.X > 0 && dirX > 0 || NPC.velocity.X < 0 && dirX < 0 || NPC.velocity.Y > 0 && dirY > 0 || NPC.velocity.Y < 0 && dirY < 0)
             {
                 // The NPC is moving towards the target location
                 if (NPC.velocity.X < dirX)
@@ -504,7 +504,7 @@ namespace Macrocosm.Content.NPCs
                     NPC.velocity.Y -= acceleration;
 
                 // The intended Y-velocity is small AND the NPC is moving to the left and the target is to the right of the NPC or vice versa
-                if (Math.Abs(dirY) < speed * 0.2 && ((NPC.velocity.X > 0 && dirX < 0) || (NPC.velocity.X < 0 && dirX > 0)))
+                if (Math.Abs(dirY) < speed * 0.2 && (NPC.velocity.X > 0 && dirX < 0 || NPC.velocity.X < 0 && dirX > 0))
                 {
                     if (NPC.velocity.Y > 0)
                         NPC.velocity.Y += acceleration * 2f;
@@ -513,7 +513,7 @@ namespace Macrocosm.Content.NPCs
                 }
 
                 // The intended X-velocity is small AND the NPC is moving up/down and the target is below/above the NPC
-                if (Math.Abs(dirX) < speed * 0.2 && ((NPC.velocity.Y > 0 && dirY < 0) || (NPC.velocity.Y < 0 && dirY > 0)))
+                if (Math.Abs(dirX) < speed * 0.2 && (NPC.velocity.Y > 0 && dirY < 0 || NPC.velocity.Y < 0 && dirY > 0))
                 {
                     if (NPC.velocity.X > 0)
                         NPC.velocity.X = NPC.velocity.X + acceleration * 2f;
@@ -578,7 +578,7 @@ namespace Macrocosm.Content.NPCs
             }
 
             // Force a netupdate if the NPC's velocity changed sign and it was not "just hit" by a player
-            if (((NPC.velocity.X > 0 && NPC.oldVelocity.X < 0) || (NPC.velocity.X < 0 && NPC.oldVelocity.X > 0) || (NPC.velocity.Y > 0 && NPC.oldVelocity.Y < 0) || (NPC.velocity.Y < 0 && NPC.oldVelocity.Y > 0)) && !NPC.justHit)
+            if ((NPC.velocity.X > 0 && NPC.oldVelocity.X < 0 || NPC.velocity.X < 0 && NPC.oldVelocity.X > 0 || NPC.velocity.Y > 0 && NPC.oldVelocity.Y < 0 || NPC.velocity.Y < 0 && NPC.oldVelocity.Y > 0) && !NPC.justHit)
                 NPC.netUpdate = true;
         }
     }

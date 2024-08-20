@@ -11,7 +11,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.NPCs.Enemies.Moon
+namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller
 {
     public class Dweller : ModNPC
     {
@@ -398,7 +398,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 Vector2 direction = NPC.Center.DirectionTo(TargetPlayer.Center);
                 NPC.velocity.X = direction.X * speed;
 
-                if (midAir && !(Legs.Any(leg => leg.TipPosition.Y < (NPC.position.Y + NPC.height))))
+                if (midAir && !Legs.Any(leg => leg.TipPosition.Y < NPC.position.Y + NPC.height))
                 {
                     NPC.velocity.Y = 0;
                     NPC.velocity.Y += NPC.gravity;
@@ -419,7 +419,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             float restDistance = 60f;
             for (int i = 0; i < LegCount; i++)
             {
-                int legMovementIdentifier = (i <= 2 ? 1 * (i + 1) : -1 * (i - LegCount / 2 + 1));
+                int legMovementIdentifier = i <= 2 ? 1 * (i + 1) : -1 * (i - LegCount / 2 + 1);
 
                 float legMultiplier = i switch
                 {
@@ -432,7 +432,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                     _ => 0f,
                 };
 
-                bool isLegMoving = (Math.Truncate((LegTimer % 3) + 1)) == Math.Abs(legMovementIdentifier);
+                bool isLegMoving = Math.Truncate(LegTimer % 3 + 1) == Math.Abs(legMovementIdentifier);
                 if (isLegMoving)
                 {
                     float direction = Math.Sign(NPC.velocity.X);
