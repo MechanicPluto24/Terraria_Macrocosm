@@ -27,3 +27,8 @@ DemonSunBiome: {
 	DisplayName: Demon Sun Biome
 	TownNPCDialogueName: the Demon Sun Biome
 }
+
+MonolithBiome: {
+	DisplayName: Monolith Biome
+	TownNPCDialogueName: the Monolith Biome
+}

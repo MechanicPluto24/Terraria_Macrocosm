@@ -30,7 +30,7 @@ namespace Macrocosm.Content.Tiles.Tech
 
             AddMapEntry(new Color(185, 176, 158), CreateMapEntryName());
 
-            RegisterItemDrop(ModContent.ItemType<Items.Materials.Tech.Computer>(), 0, 1);
+            RegisterItemDrop(ModContent.ItemType<Items.Tech.Computer>(), 0, 1);
         }
     }
 }

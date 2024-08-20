@@ -29,7 +29,7 @@ namespace Macrocosm.Content.Tiles.Tech
             TileObjectData.addAlternate(1);
             TileObjectData.addTile(Type);
 
-            RegisterItemDrop(ModContent.ItemType<Items.Materials.Tech.Motor>(), 0, 1);
+            RegisterItemDrop(ModContent.ItemType<Items.Tech.Motor>(), 0, 1);
 
             HitSound = SoundID.Dig;
             DustType = -1;
