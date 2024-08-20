@@ -9,7 +9,6 @@ using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Utilities;
-
 namespace Macrocosm.Content.Subworlds
 {
     /// <summary>
@@ -23,7 +22,6 @@ namespace Macrocosm.Content.Subworlds
         public static Moon Instance { get { instance ??= new(); return instance; } }
 
         public float MeteorBoost { get; set; } = 1f;
-
 
         // 8 times slower than on Earth (a Terrarian lunar month lasts for 8 in-game days)
         public override double TimeRate => 0.125;
@@ -102,11 +100,33 @@ namespace Macrocosm.Content.Subworlds
 			*/
         }
 
-        //TODO 
-        private void UpdateMeteorStorm() { }
+        
+        private void UpdateMeteorStorm()
+        {
+        
+        IsMeteorStorm=true;
+        if (IsMeteorStorm)
+            MeteorBoost=4000f;
+        else
+            MeteorBoost=1f;
+        }
 
         //TODO 
-        private void UpdateSolarStorm() { }
+        private void UpdateSolarStorm() {}
+
+
+
+
+        public override void UpdateEvents()
+        {
+        
+        UpdateMeteorStorm();
+        UpdateSolarStorm();
+        UpdateBloodMoon();
+        }
+
+
+
 
         private double timePass = 0.0;
         private void UpdateMeteors()
