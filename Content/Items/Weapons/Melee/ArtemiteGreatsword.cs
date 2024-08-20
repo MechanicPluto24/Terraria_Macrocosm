@@ -1,7 +1,7 @@
 using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Items.Materials.Bars;
+using Macrocosm.Content.Items.Bars;
 using Macrocosm.Content.Particles;
 using Macrocosm.Content.Projectiles.Friendly.Melee;
 using Macrocosm.Content.Rarities;

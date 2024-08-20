@@ -1,4 +1,4 @@
-﻿using Macrocosm.Content.Items.Materials.Tech;
+﻿using Macrocosm.Content.Items.Tech;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;

@@ -1,4 +1,4 @@
-using Macrocosm.Content.Items.Materials.Bars;
+using Macrocosm.Content.Items.Bars;
 using Macrocosm.Content.Projectiles.Friendly.Magic;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;

@@ -577,10 +577,11 @@ DianiteFork: {
 
 DianiteTome: {
 	DisplayName: Dianite Tome
-	Tooltip:'''
-	Conjure a portal to rain
-	flaming meteors down on your foes
-        '''
+	Tooltip:
+		'''
+		Conjure a portal to rain
+		flaming meteors down on your foes
+		'''
 }
 
 ImbriumJewel: {
@@ -1023,7 +1024,7 @@ ZombieFinger: {
 
 XFLR6: {
 	DisplayName: XFLR-6
-	Tooltip: 'Well, what do you think of that? Look what the goat created.'
+	Tooltip: Well, what do you think of that? Look what the goat created.
 }
 
 InvarArrow: {
@@ -1079,10 +1080,11 @@ Apollo115: {
 CraterDemonPet: {
 	DisplayName: Toy Rocket
 	Tooltip:
-	'''
-        Summons a Crater Imp
-	'Fly me to the Moon!'
-        '''
+		'''
+		       Summons a Crater Imp
+		'Fly me to the Moon!'
+		       
+		'''
 }
 
 MoonGoldCrescent: {
@@ -1142,7 +1144,7 @@ OsmiumBoots: {
 
 EarthGlobe: {
 	DisplayName: Earth Globe
-	Tooltip: 'Home sweet home!'
+	Tooltip: Home sweet home!
 }
 
 PowerJunction: {
@@ -1177,11 +1179,12 @@ ConstructionLight: {
 
 OreExcavator: {
 	DisplayName: Ore Excavator
-	Tooltip: '''
-        Automatically extracts ores and resources from underground
-	Does not damage terrain
-	Multiple excavators deployed on the same planet will yield diminishing results
-        '''
+	Tooltip:
+		'''
+		Automatically extracts ores and resources from underground
+		Does not damage terrain
+		Multiple excavators deployed on the same planet will yield diminishing results
+		'''
 }
 
 AlienResidue: {
@@ -1268,7 +1271,7 @@ GothicCoalBrick: {
 
 SpookyDookie: {
 	DisplayName: Spooky Dookie
-	Tooltip: 'Go ahead...'
+	Tooltip: Go ahead...
 }
 
 CheeseBlock: {
@@ -1373,7 +1376,7 @@ CheeseTable: {
 
 CheeseToilet: {
 	DisplayName: Cheese Toilet
-	Tooltip: 'This is a horrible idea.'
+	Tooltip: This is a horrible idea.
 }
 
 CheeseWorkbench: {
@@ -1428,7 +1431,7 @@ Boombox: {
 
 StopSign: {
 	DisplayName: Stop Sign
-	Tooltip: 'Stop right there!'
+	Tooltip: Stop right there!
 }
 
 WindTurbineLarge: {
@@ -1443,12 +1446,12 @@ WindTurbineSmall: {
 
 WeCanDoItBlue: {
 	DisplayName: We Can Do It!
-	Tooltip: 'Now in blue!'
+	Tooltip: Now in blue!
 }
 
 WeCanDoItYellow: {
 	DisplayName: We Can Do It!
-	Tooltip: 'Now in yellow!'
+	Tooltip: Now in yellow!
 }
 
 DisplayScreen: {
@@ -1864,5 +1867,15 @@ WiringKit: {
 
 AntiRadiationPills: {
 	DisplayName: Anti Radiation Pills
+	Tooltip: ""
+}
+
+AirVent: {
+	DisplayName: Air Vent
+	Tooltip: ""
+}
+
+Sledgehammer: {
+	DisplayName: Sledgehammer
 	Tooltip: ""
 }

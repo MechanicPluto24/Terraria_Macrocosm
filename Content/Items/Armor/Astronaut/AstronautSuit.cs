@@ -1,5 +1,5 @@
 // using Macrocosm.Tiles;
-using Macrocosm.Content.Items.Materials.Refined;
+using Macrocosm.Content.Items.Refined;
 using Macrocosm.Content.Players;
 using Macrocosm.Content.Tiles.Crafting;
 using Terraria;

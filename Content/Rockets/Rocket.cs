@@ -5,7 +5,7 @@ using Macrocosm.Common.Storage;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.UI;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Items.Materials.Tech;
+using Macrocosm.Content.Items.Tech;
 using Macrocosm.Content.Particles;
 using Macrocosm.Content.Players;
 using Macrocosm.Content.Rockets.Customization;

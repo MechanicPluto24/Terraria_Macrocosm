@@ -234,6 +234,68 @@ MercurianBanner
 	Value: 5 silver
 	Research count: 1
 
+AluminumBar
+	Value: 7 silver 50 copper
+	Research count: 25
+	Recipes:
+		Aluminum Ore x 4
+		at
+		Anvil
+
+
+ArtemiteBar
+	Value: 7 silver 50 copper
+	Research count: 25
+	Recipes:
+		Artemite Ore x 6
+		at
+		Ancient Manipulator
+
+
+ChandriumBar
+	Value: 7 silver 50 copper
+	Research count: 25
+	Recipes:
+		Chandrium Ore x 6
+		at
+		Ancient Manipulator
+
+
+DianiteBar
+	Value: 7 silver 50 copper
+	Research count: 25
+	Recipes:
+		Dianite Ore x 6
+		at
+		Ancient Manipulator
+
+
+SeleniteBar
+	Value: 7 silver 50 copper
+	Research count: 25
+	Recipes:
+		Selenite Ore x 6
+		at
+		Ancient Manipulator
+
+
+SteelBar
+	Value: 1 gold 75 silver
+	Research count: 25
+	Recipes:
+		Iron Bar x 8
+		Coal x 1
+		at
+		Hellforge
+			=> x3
+
+		Lead Bar x 8
+		Coal x 1
+		at
+		Hellforge
+			=> x3
+
+
 CoalBrick
 	Value: No value
 	Research count: 100
@@ -386,6 +448,26 @@ RocketPlacer
 Teleporter
 	Value: 10 gold
 	Research count: 1
+
+AlienResidue
+	Value: 5 silver
+	Research count: 25
+
+BrokenHeroShield
+	Value: 1 gold
+	Research count: 1
+
+CortexFragment
+	Value: 1 silver
+	Research count: 1
+
+DeliriumPlating
+	Value: 1 silver
+	Research count: 25
+
+SpaceDust
+	Value: 1 silver
+	Research count: 25
 
 CapstoneRush
 	Value: 2 gold 50 silver
@@ -1672,87 +1754,25 @@ WindTurbineSmall
 	Value: 5 silver
 	Research count: 1
 
-AluminumBar
-	Value: 7 silver 50 copper
-	Research count: 25
-	Recipes:
-		Aluminum Ore x 4
-		at
-		Anvil
-
-
-ArtemiteBar
-	Value: 7 silver 50 copper
-	Research count: 25
-	Recipes:
-		Artemite Ore x 6
-		at
-		Ancient Manipulator
-
-
-ChandriumBar
-	Value: 7 silver 50 copper
-	Research count: 25
-	Recipes:
-		Chandrium Ore x 6
-		at
-		Ancient Manipulator
-
-
-DianiteBar
-	Value: 7 silver 50 copper
-	Research count: 25
-	Recipes:
-		Dianite Ore x 6
-		at
-		Ancient Manipulator
-
-
-SeleniteBar
-	Value: 7 silver 50 copper
-	Research count: 25
-	Recipes:
-		Selenite Ore x 6
-		at
-		Ancient Manipulator
-
-
-SteelBar
-	Value: 1 gold 75 silver
-	Research count: 25
-	Recipes:
-		Iron Bar x 8
-		Coal x 1
-		at
-		Hellforge
-			=> x3
-
-		Lead Bar x 8
-		Coal x 1
-		at
-		Hellforge
-			=> x3
-
-
-AlienResidue
-	Value: 5 silver
-	Research count: 25
-
-BrokenHeroShield
-	Value: 1 gold
+SpaceShuttle
+	Value: 3 silver
 	Research count: 1
 
-CortexFragment
-	Value: 1 silver
+DeadworldMusicBox
+	Value: 10 gold
 	Research count: 1
 
-DeliriumPlating
-	Value: 1 silver
-	Research count: 25
+RequiemMusicBox
+	Value: 10 gold
+	Research count: 1
 
-SpaceDust
-	Value: 1 silver
-	Research count: 25
+SpaceInvaderMusicBox
+	Value: 10 gold
+	Research count: 1
+
+StygiaMusicBox
+	Value: 10 gold
+	Research count: 1
 
 AluminumOre
 	Value: 7 silver 50 copper
@@ -1790,6 +1810,58 @@ Silicon
 	Value: 7 silver 50 copper
 	Research count: 100
 
+Apollo115
+	Value: No value
+	Research count: 1
+
+BloodSunRising
+	Value: No value
+	Research count: 1
+
+DarkFortress
+	Value: No value
+	Research count: 1
+
+Empress
+	Value: No value
+	Research count: 1
+
+Freedomfaller
+	Value: No value
+	Research count: 1
+
+InANutshell
+	Value: No value
+	Research count: 1
+
+Overlord
+	Value: No value
+	Research count: 1
+
+Retributor
+	Value: No value
+	Research count: 1
+
+ShoresOfOblivion
+	Value: No value
+	Research count: 1
+
+WeCanDoItBlue
+	Value: No value
+	Research count: 1
+
+WeCanDoItYellow
+	Value: 5 silver
+	Research count: 1
+
+WhenDayBreaks
+	Value: No value
+	Research count: 1
+
+CraterDemonPet
+	Value: No value
+	Research count: 1
+
 Plastic
 	Value: 1 silver
 	Research count: 100
@@ -1808,6 +1880,23 @@ SpacesuitFabric
 		Silk x 2
 		at
 		Industrial Loom
+
+
+CraterDemonRelic
+	Value: 5 gold
+	Research count: 1
+
+LaunchPadMarker
+	Value: 5 silver
+	Research count: 1
+
+AirVent
+	Value: 1 silver
+	Research count: 5
+	Recipes:
+		Steel Bar x 2
+		at
+		Anvil
 
 
 Battery
@@ -1993,86 +2082,6 @@ RocketPlating
 			=> x2
 
 
-SpaceShuttle
-	Value: 3 silver
-	Research count: 1
-
-DeadworldMusicBox
-	Value: 10 gold
-	Research count: 1
-
-RequiemMusicBox
-	Value: 10 gold
-	Research count: 1
-
-SpaceInvaderMusicBox
-	Value: 10 gold
-	Research count: 1
-
-StygiaMusicBox
-	Value: 10 gold
-	Research count: 1
-
-Apollo115
-	Value: No value
-	Research count: 1
-
-BloodSunRising
-	Value: No value
-	Research count: 1
-
-DarkFortress
-	Value: No value
-	Research count: 1
-
-Empress
-	Value: No value
-	Research count: 1
-
-Freedomfaller
-	Value: No value
-	Research count: 1
-
-InANutshell
-	Value: No value
-	Research count: 1
-
-Overlord
-	Value: No value
-	Research count: 1
-
-Retributor
-	Value: No value
-	Research count: 1
-
-ShoresOfOblivion
-	Value: No value
-	Research count: 1
-
-WeCanDoItBlue
-	Value: No value
-	Research count: 1
-
-WeCanDoItYellow
-	Value: 5 silver
-	Research count: 1
-
-WhenDayBreaks
-	Value: No value
-	Research count: 1
-
-CraterDemonPet
-	Value: No value
-	Research count: 1
-
-CraterDemonRelic
-	Value: 5 gold
-	Research count: 1
-
-LaunchPadMarker
-	Value: 5 silver
-	Research count: 1
-
 MoonGoldCrescent
 	Value: No value
 	Research count: 2
@@ -2236,6 +2245,10 @@ SelenitePickaxe
 		at
 		Ancient Manipulator
 
+
+Sledgehammer
+	Value: 1 gold
+	Research count: 1
 
 SteelHamaxe
 	Value: 2 gold 50 silver

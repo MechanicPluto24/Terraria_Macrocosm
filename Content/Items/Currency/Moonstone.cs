@@ -1,4 +1,4 @@
-using Macrocosm.Content.NPCs.Friendly.TownNPCs;
+using Macrocosm.Content.NPCs.TownNPCs;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using Terraria;

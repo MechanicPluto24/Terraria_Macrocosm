@@ -12,8 +12,8 @@ namespace Macrocosm.Content.Items.Machines
         public override void SetDefaults()
         {
             Item.DefaultToPlaceableTile(ModContent.TileType<Content.Machines.WindTurbineLarge>());
-            Item.width = 20;
-            Item.height = 48;
+            Item.width = 28;
+            Item.height = 56;
             Item.value = 500;
             Item.mech = true;
         }
