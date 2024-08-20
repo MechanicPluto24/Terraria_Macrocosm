@@ -1,5 +1,5 @@
-using Macrocosm.Content.Items.Materials.Bars;
-using Macrocosm.Content.Items.Materials.Ores;
+using Macrocosm.Content.Items.Bars;
+using Macrocosm.Content.Items.Ores;
 using Terraria;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;

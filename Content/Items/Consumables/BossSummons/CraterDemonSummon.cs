@@ -1,6 +1,5 @@
 ﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
-using Macrocosm.Content.Items.Materials.Drops;
 using Macrocosm.Content.NPCs.Bosses.CraterDemon;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
@@ -11,6 +10,7 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Macrocosm.Content.Tiles.Ambient;
+using Macrocosm.Content.Items.Drops;
 namespace Macrocosm.Content.Items.Consumables.BossSummons
 {
     public class CraterDemonSummon : ModItem

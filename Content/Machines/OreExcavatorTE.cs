@@ -8,7 +8,7 @@ using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Blocks.Sands;
 using Macrocosm.Content.Items.Blocks.Terrain;
-using Macrocosm.Content.Items.Materials.Ores;
+using Macrocosm.Content.Items.Ores;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.IO;

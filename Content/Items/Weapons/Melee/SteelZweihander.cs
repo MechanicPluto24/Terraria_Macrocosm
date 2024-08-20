@@ -1,6 +1,6 @@
 using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Items.Materials.Bars;
+using Macrocosm.Content.Items.Bars;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;

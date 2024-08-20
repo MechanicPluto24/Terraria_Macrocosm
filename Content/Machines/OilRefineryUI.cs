@@ -3,7 +3,7 @@ using Macrocosm.Common.Storage;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
-using Macrocosm.Content.Items.Materials.Tech;
+using Macrocosm.Content.Items.Tech;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;

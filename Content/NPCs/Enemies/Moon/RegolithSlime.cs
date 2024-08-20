@@ -1,7 +1,7 @@
 using Macrocosm.Common.Global.NPCs;
 using Macrocosm.Common.Sets;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Items.Materials.Drops;
+using Macrocosm.Content.Items.Drops;
 using Terraria;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;

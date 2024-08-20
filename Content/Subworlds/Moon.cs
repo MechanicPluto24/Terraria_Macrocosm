@@ -22,7 +22,7 @@ namespace Macrocosm.Content.Subworlds
         public static Moon Instance { get { instance ??= new(); return instance; } }
 
         public float MeteorBoost { get; set; } = 1f;
-        
+
         // 8 times slower than on Earth (a Terrarian lunar month lasts for 8 in-game days)
         public override double TimeRate => 0.125;
 
