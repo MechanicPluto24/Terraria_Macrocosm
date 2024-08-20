@@ -26,6 +26,10 @@ namespace Macrocosm.Common.Subworlds
         public override bool NoPlayerSaving => false;
 
 
+
+        //Event things
+        public bool IsMeteorStorm= false;
+
         /// <summary> Time rate of this subworld, compared to Earth's (1.0) </summary>
         public virtual double TimeRate { get; } = Earth.TimeRate;
 
@@ -45,7 +49,10 @@ namespace Macrocosm.Common.Subworlds
         public virtual float AtmosphericDensity { get; } = Earth.AtmosphericDensity;
 
         /// <summary> Whether wiring should function in this subworld </summary>
-        public bool ShouldUpdateWiring { get; set; } = true;
+        public virtual bool ShouldUpdateWiring { get; set; } = true;
+
+        /// <summary> Collection of LiquidIDs that should evaporate in this subworld </summary>
+        public virtual int[] EvaporatingLiquidTypes => [];
 
         /// <summary> Determine the size of this subworld </summary>
         /// <param name="earthWorldSize"> The Earth's world size </param>
@@ -133,6 +140,10 @@ namespace Macrocosm.Common.Subworlds
             UpdateTime();
             GameMechanicsUpdates();
             FreezeEnvironment();
+            UpdateEvents();
+        }
+        public virtual void UpdateEvents()
+        {
         }
 
         // Updates the time 
