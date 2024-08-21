@@ -47,9 +47,5 @@ namespace Macrocosm.Content.Items.Walls
             base.SetDefaults();
             Item.createWall = ModContent.WallType<Tiles.Walls.IndustrialPlatingWallUnsafe>();
         }
-
-        public override void AddRecipes()
-        {
-        }
     }
 }

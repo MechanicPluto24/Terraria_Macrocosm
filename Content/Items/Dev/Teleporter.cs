@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Global.Items;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Content.Rarities;
 using SubworldLibrary;
@@ -8,10 +9,11 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Dev
 {
-    class Teleporter : ModItem, IDevItem
+    class Teleporter : ModItem
     {
         public override void SetStaticDefaults()
         {
+            ItemSets.DeveloperItem[Type] = true;
         }
         public override void SetDefaults()
         {

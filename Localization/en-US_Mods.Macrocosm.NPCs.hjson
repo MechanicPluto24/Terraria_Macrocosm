@@ -1,6 +1,8 @@
 CraterDemon: {
 	DisplayName: Crater Demon
 	BestiaryFlavorText: This massive meteorite demon is a member of a race that invaded the Moon long ago, and bears the scars of an ancient war.
+	SpawnInfo: Use a [i:Macrocosm/CraterDemonSummon] at any time on the Moon.
+	DespawnMessage: "{0} has left."
 }
 
 CraterImp: {
@@ -176,4 +178,9 @@ XenoHive: {
 XenoHornet: {
 	DisplayName: Xeno Hornet
 	BestiaryFlavorText: Mods.Macrocosm.NPCs.XenoHornet.BestiaryFlavorText
+}
+
+Bruiser: {
+	DisplayName: Bruiser
+	BestiaryFlavorText: Mods.Macrocosm.NPCs.Bruiser.BestiaryFlavorText
 }

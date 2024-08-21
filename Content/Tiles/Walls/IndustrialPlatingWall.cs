@@ -1,4 +1,5 @@
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
@@ -15,6 +16,8 @@ namespace Macrocosm.Content.Tiles.Walls
             Main.wallHouse[Type] = true;
             AddMapEntry(new Color(71, 71, 74));
 
+            DustType = ModContent.DustType<IndustrialPlatingDust>();
+
             // Adaptation of stone slab framing style (wallLargeFrames = 1),
             // but without the interlocked pattern (2 fewer repeats on Y)
             wallFrameNumberLookup = [
@@ -30,6 +33,19 @@ namespace Macrocosm.Content.Tiles.Walls
 
             frameNumber = wallFrameNumberLookup[j % 2][i % 3] - 1;
             return true;
+        }
+    }
+
+    [LegacyName("MoonBasePlatingWallNatural")]
+    public class IndustrialPlatingWallNatural : IndustrialPlatingWall
+    {
+        public override string Texture => base.Texture.Replace("Natural", "");
+
+        public override void SetStaticDefaults()
+        {
+            base.SetStaticDefaults();
+            Main.wallHouse[Type] = false;
+            RegisterItemDrop(ModContent.ItemType<Items.Walls.IndustrialPlatingWall>());
         }
     }
 

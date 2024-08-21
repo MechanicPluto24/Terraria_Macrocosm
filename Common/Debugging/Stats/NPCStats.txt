@@ -23,7 +23,7 @@ CraterImp
 	KB resist: 0
 	Damage: 50
 
-BloodMoonJuggernaut
+Bruiser
 	Life: 10000
 	Defense: 80
 	KB resist: 0

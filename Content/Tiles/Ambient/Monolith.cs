@@ -18,7 +18,9 @@ namespace Macrocosm.Content.Tiles.Ambient
             Main.tileNoAttach[Type] = true;
             Main.tileFrameImportant[Type] = true;
             Main.tileLavaDeath[Type] = false;
-            MinPick = 999999999;
+
+            MinPick = 9999; // Very hard to break.
+
             TileObjectData.newTile.CopyFrom(TileObjectData.Style4x2);
             TileObjectData.newTile.Origin = new Point16(0, 7);
             TileObjectData.newTile.Width = 4;

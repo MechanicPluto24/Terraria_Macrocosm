@@ -17,7 +17,7 @@ namespace Macrocosm.Content.Tiles.Ambient
             Main.tileNoAttach[Type] = true;
             DustType = ModContent.DustType<XaocGreenDust>();
 
-            MinPick = 999999999;//Very hard to break.
+            MinPick = 9999; // Very hard to break.
             Main.tileLighted[Type] = true;
             TileObjectData.newTile.CopyFrom(TileObjectData.Style3x2);
             TileObjectData.newTile.StyleHorizontal = true;
