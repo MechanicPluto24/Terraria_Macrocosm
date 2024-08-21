@@ -108,7 +108,7 @@ namespace Macrocosm.Content.Subworlds
 
         private void UpdateMeteorStorm()
         {      
-            MeteorStormActive = true;
+            MeteorStormActive = false;  
 
             if (MeteorStormActive)
                 meteorBoost = 4000f;

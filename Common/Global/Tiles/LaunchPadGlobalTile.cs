@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Global.Items;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets;
@@ -38,7 +39,7 @@ namespace Macrocosm.Common.Global.Tiles
             {
                 bool canKillMarker = launchPad.Inventory.IsEmpty && !launchPad.HasRocket;
 
-                if (Main.LocalPlayer.CurrentItem().ModItem is IDevItem)
+                if (ItemSets.DeveloperItem[Main.LocalPlayer.CurrentItem().type])
                     canKillMarker = true;
 
                 if (Main.tile[i, j].TileType == ModContent.TileType<LaunchPadMarker>() && !canKillMarker)

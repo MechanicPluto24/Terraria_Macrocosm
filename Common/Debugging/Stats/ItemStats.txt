@@ -441,6 +441,10 @@ DevPick
 	Value: 1 gold
 	Research count: 1
 
+IrradiatedAltar
+	Value: No value
+	Research count: 0
+
 RocketPlacer
 	Value: No value
 	Research count: 1
@@ -2291,6 +2295,12 @@ IndustrialHazardWall
 IndustrialHazardWallUnsafe
 	Value: No value
 	Research count: 400
+	Recipes:
+		Industrial Plating x 1
+		at
+		Work Bench
+			=> x4
+
 
 IndustrialPlatingWall
 	Value: No value
@@ -2305,6 +2315,12 @@ IndustrialPlatingWall
 IndustrialPlatingWallUnsafe
 	Value: No value
 	Research count: 400
+	Recipes:
+		Industrial Plating x 1
+		at
+		Work Bench
+			=> x4
+
 
 IndustrialSquarePaneledWall
 	Value: No value
@@ -2319,6 +2335,12 @@ IndustrialSquarePaneledWall
 IndustrialSquarePaneledWallUnsafe
 	Value: No value
 	Research count: 400
+	Recipes:
+		Industrial Plating x 1
+		at
+		Work Bench
+			=> x4
+
 
 IndustrialTrimmingWall
 	Value: No value
@@ -2333,8 +2355,24 @@ IndustrialTrimmingWall
 IndustrialTrimmingWallUnsafe
 	Value: No value
 	Research count: 400
+	Recipes:
+		Industrial Plating x 1
+		at
+		Work Bench
+			=> x4
+
 
 IrradiatedBrickWall
+	Value: No value
+	Research count: 400
+	Recipes:
+		Irradiated Brick x 1
+		at
+		Work Bench
+			=> x4
+
+
+IrradiatedBrickWallUnsafe
 	Value: No value
 	Research count: 400
 	Recipes:
@@ -2354,7 +2392,27 @@ IrradiatedRockWall
 			=> x4
 
 
+IrradiatedRockWallUnsafe
+	Value: No value
+	Research count: 400
+	Recipes:
+		Irradiated Rock x 1
+		at
+		Work Bench
+			=> x4
+
+
 ProtolithWall
+	Value: No value
+	Research count: 400
+	Recipes:
+		Protolith x 1
+		at
+		Work Bench
+			=> x4
+
+
+ProtolithWallUnsafe
 	Value: No value
 	Research count: 400
 	Recipes:
@@ -2374,7 +2432,27 @@ RegolithBrickWall
 			=> x4
 
 
+RegolithBrickWallUnsafe
+	Value: No value
+	Research count: 400
+	Recipes:
+		Regolith Brick x 1
+		at
+		Work Bench
+			=> x4
+
+
 RegolithWall
+	Value: No value
+	Research count: 400
+	Recipes:
+		Regolith x 1
+		at
+		Work Bench
+			=> x4
+
+
+RegolithWallUnsafe
 	Value: No value
 	Research count: 400
 	Recipes:

@@ -55,7 +55,7 @@ namespace Macrocosm
 
         public override void PostSetupContent()
         {
-            Crossmod.Load();
+            CrossMod.Load();
         }
 
         private static void LoadResprites()

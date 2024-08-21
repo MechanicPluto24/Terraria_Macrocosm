@@ -1,20 +1,20 @@
-﻿using Macrocosm.Content.Rarities;
+﻿using Macrocosm.Common.Sets;
+using Macrocosm.Content.Rarities;
 using System.Collections.Generic;
+using System.Drawing;
 using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Global.Items
 {
-    public interface IDevItem { }
-
     public class DevGlobalItem : GlobalItem
     {
-        public override bool AppliesToEntity(Item entity, bool lateInstantiation) => entity.ModItem is IDevItem;
+        public override bool AppliesToEntity(Item item, bool lateInstantiation) => ItemSets.DeveloperItem[item.type];
 
-        public override void SetDefaults(Item entity)
+        public override void SetDefaults(Item item)
         {
-            entity.rare = ModContent.RarityType<DevRarity>();
+            item.rare = ModContent.RarityType<DevRarity>();
         }
 
         public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)

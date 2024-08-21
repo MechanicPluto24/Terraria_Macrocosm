@@ -32,3 +32,8 @@ MonolithBiome: {
 	DisplayName: Monolith Biome
 	TownNPCDialogueName: the Monolith Biome
 }
+
+EarthBiome: {
+	DisplayName: Earth Biome
+	TownNPCDialogueName: the Earth Biome
+}
