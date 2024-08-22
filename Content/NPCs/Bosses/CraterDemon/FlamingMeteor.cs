@@ -32,7 +32,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
         private float flashTimer;
         private float maxFlashTimer = 5;
         private bool spawned;
-
+        public override bool? DrawHealthBar(byte hbPosition,ref float scale,ref Vector2 position )=>false;
         public override void AI()
         {
             if (!spawned)
