@@ -1,202 +1,203 @@
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.Utils;
+using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
     public class FrigorianGazeProjectile : ModProjectile
     {
+        public override void SetStaticDefaults()
+        {
+            Main.projFrames[Type] = 2;
+        }
+
         public override void SetDefaults()
         {
-            Projectile.width = 22;
-            Projectile.height = 22;
+            Projectile.width = 16;
+            Projectile.height = 16;
             Projectile.friendly = false;
             Projectile.hostile = false;
             Projectile.DamageType = DamageClass.Magic;
             Projectile.timeLeft = 1000;
+            Projectile.penetrate = -1;
+            Projectile.tileCollide = true;
         }
-        int TimeUntilMandatoryBreak = 500;
-        int Timer;
-        bool Broke = false;
-        bool HitSomething = false;
-        Vector2 OldVelocity = new Vector2(0, 0);
+
+        public int AI_Timer
+        {
+            get => (int)Projectile.ai[0];
+            set => Projectile.ai[0] = value;
+        }
+
+        public bool Broke
+        {
+            get => Projectile.ai[1] > 0;
+            set => Projectile.ai[1] = value ? 1f : 0f;
+        }
+
+        public int BounceCounter
+        {
+            get => (int)Projectile.ai[2];
+            set => Projectile.ai[2] = value;
+        }
+
+        public bool HitSomething => BounceCounter == 1;
+
+        private bool exploded;
+
+        private int timeUntilMandatoryBreak = 500;
+        private int numBounces = 3;
+        private bool spawned = false;
+
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
             Broke = true;
-            HitSomething = true;
-            OldVelocity = oldVelocity * -1f;
+            Projectile.oldVelocity = oldVelocity;
+            Bounce(oldVelocity);
             return false;
+        }
+
+        public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
+        {
+        }
+
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
         }
 
         public override void AI()
         {
-            TimeUntilMandatoryBreak--;
-            Projectile.velocity.Y += 0.25f * MacrocosmSubworld.CurrentGravityMultiplier;
-            if (TimeUntilMandatoryBreak < 1)
+            if (exploded)
+                return;
+
+            if (!spawned)
+            {
+                Projectile.frame = 0;
+                spawned = true;
+            }
+
+            Projectile.velocity.Y += 0.9f * MacrocosmSubworld.CurrentGravityMultiplier;
+
+            if (Projectile.timeLeft < timeUntilMandatoryBreak)
             {
                 Broke = true;
-                OldVelocity = Projectile.velocity * -1f;
+                Bounce(Projectile.oldVelocity);
             }
-            if (Broke == true)
-            {
-                if (HitSomething == true)
-                    Projectile.velocity *= 0f;
-                Timer++;
-            }
-            if (Timer % 6 == 1)
-                if (Main.netMode != NetmodeID.MultiplayerClient)
-                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, OldVelocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(Math.PI / 4) * 17f, ModContent.ProjectileType<FrigorianIceShard>(), Projectile.damage / 4, 2, -1);
 
-            if (Timer > 30)
+            if (Broke)
+            {
+                Projectile.rotation += Projectile.velocity.X * 0.01f;
+                Projectile.frame = 1;
+                AI_Timer++;
+            }
+            else
+            {
+                Projectile.rotation += Projectile.velocity.X * 0.01f;
+                Projectile.frame = 0;
+            }
+
+            if (AI_Timer % 6 == 1)
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.oldVelocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(Math.PI / 4) * 17f, ModContent.ProjectileType<FrigorianIceShard>(), Projectile.damage / 4, 2, -1);
+
+            if (BounceCounter > numBounces)
                 CreateALotOfIce();
+
+            Projectile.oldVelocity = Projectile.velocity * -1f;
         }
-        public void CreateALotOfIce()
+
+        private void Bounce(Vector2 oldVelocity)
+        {
+            BounceCounter++;
+
+            if (BounceCounter < numBounces)
+            {
+                float bounceFactor = 0.5f + 0.5f * BounceCounter / (float)numBounces;
+
+                for (int i = 0; i < (int)10; i++)
+                {
+                    Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<FrigorianDust>());
+                    dust.velocity.X = Main.rand.Next(-30, 31) * 0.02f;
+                    dust.velocity.Y = Main.rand.Next(-30, 30) * 0.02f;
+                    dust.scale *= 1f + Main.rand.Next(-12, 13) * 0.01f;
+                    dust.noGravity = true;
+                }
+
+                if (BounceCounter == 1)
+                     Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, Vector2.Zero, Mod.Find<ModGore>("FrigorianGore2").Type);
+ 
+                SoundEngine.PlaySound(SoundID.Item107 with
+                {
+                    Volume = 0.5f * bounceFactor,
+                    Pitch = 0.25f + 0.35f * bounceFactor
+                },
+                Projectile.position);
+
+                Projectile.velocity.X = (Math.Abs(Projectile.velocity.X) < 1f ? -oldVelocity.X : oldVelocity.X) * bounceFactor;
+                Projectile.velocity.Y = -Projectile.velocity.Y * bounceFactor;
+
+                Projectile.rotation = 0f;
+            }
+        }
+
+        private void CreateALotOfIce()
         {
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-
-                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, OldVelocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(Math.PI / 4) * 13f, ModContent.ProjectileType<FrigorianIceShardAlt>(), Projectile.damage / 2, 2, -1);
-                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, OldVelocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(Math.PI / 4) * 13f, ModContent.ProjectileType<FrigorianIceShardAlt>(), Projectile.damage / 2, 2, -1);
-                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, OldVelocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(Math.PI / 4) * 13f, ModContent.ProjectileType<FrigorianIceShardAlt>(), Projectile.damage / 2, 2, -1);
+                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, (-Vector2.UnitY * 8f).RotatedByRandom(Math.PI / 4), ModContent.ProjectileType<FrigorianIceCrystal>(), Projectile.damage / 2, 2, -1);
+                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, (-Vector2.UnitY * 8f).RotatedByRandom(Math.PI / 4), ModContent.ProjectileType<FrigorianIceCrystal>(), Projectile.damage / 2, 2, -1);
+                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, (-Vector2.UnitY * 8f).RotatedByRandom(Math.PI / 4), ModContent.ProjectileType<FrigorianIceCrystal>(), Projectile.damage / 2, 2, -1);
             }
-            Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, Projectile.velocity * 0f, Mod.Find<ModGore>("FrigorianGore1").Type);
-            Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, Projectile.velocity * 0f, Mod.Find<ModGore>("FrigorianGore2").Type);
-            Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, Projectile.velocity * 0f, Mod.Find<ModGore>("FrigorianGore3").Type);
-            for (int i = 0; i < 3; i++)
+
+            Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, Projectile.velocity * 0.1f, Mod.Find<ModGore>("FrigorianGore1").Type);
+            Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, Projectile.velocity * 0.1f, Mod.Find<ModGore>("FrigorianGore2").Type);
+            Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, Projectile.velocity * 0.1f, Mod.Find<ModGore>("FrigorianGore3").Type);
+
+            for (int i = 0; i < 30; i++)
             {
                 Particle.CreateParticle<IceMist>((p) =>
                 {
                     p.Position = Projectile.Center;
-                    p.Velocity = OldVelocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(Math.PI / 4) * 2f;
-                    p.Scale = 1f;
+                    p.Velocity = -Vector2.UnitY.RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(0.2f, 4f);
+                    p.Scale = Main.rand.NextFloat(0.2f, 0.5f);
                 }, shouldSync: true
                 );
             }
-            Projectile.Kill();
-        }
 
-
-
-    }
-    public class FrigorianIceShard : ModProjectile
-    {
-        public NPC FindClosestNPC(float maxDetectDistance)
-        {//example mod
-            NPC closestNPC = null;
-
-
-            float sqrMaxDetectDistance = maxDetectDistance * maxDetectDistance;
-
-
-            for (int k = 0; k < Main.maxNPCs; k++)
+            for (int i = 0; i < 40; i++)
             {
-                NPC target = Main.npc[k];
-
-                if (target.CanBeChasedBy())
-                {
-
-                    float sqrDistanceToTarget = Vector2.DistanceSquared(target.Center, Projectile.Center);
-
-                    if (sqrDistanceToTarget < sqrMaxDetectDistance)
-                    {
-                        sqrMaxDetectDistance = sqrDistanceToTarget;
-                        closestNPC = target;
-                    }
-                }
+                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<FrigorianDust>());
+                dust.velocity.X = Main.rand.Next(-70, 71) * 0.04f;
+                dust.velocity.Y = Main.rand.Next(-70, 70) * 0.04f;
+                dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.02f;
+                dust.noGravity = true;
             }
 
-            return closestNPC;
-        }
-        public override void SetDefaults()
-        {
-            Projectile.width = 22;
-            Projectile.height = 12;
             Projectile.friendly = true;
-            Projectile.DamageType = DamageClass.Magic;
-            Projectile.timeLeft = 500;
+            Projectile.Resize(300, 300);
+            Projectile.timeLeft = 3;
+            Projectile.alpha = 255;
+            Projectile.velocity *= 0;
+            exploded = true;
         }
 
+        public override Color? GetAlpha(Color lightColor) => lightColor * (BounceCounter <= 1 ? 1f : 1f - 0.5f * (BounceCounter / (float)numBounces));
 
-        public override void AI()
+        public override bool PreDraw(ref Color lightColor)
         {
-
-            Projectile.rotation = Projectile.velocity.ToRotation();
-            NPC closestNPC = FindClosestNPC(9000f);
-            if (closestNPC == null)
-            {
-
-                return;
-            }
-            else
-            {
-                Vector2 vel = (closestNPC.Center - Projectile.Center).SafeNormalize(Vector2.UnitX);
-                Projectile.velocity = Projectile.velocity + (vel * 0.9f);
-                Projectile.velocity = (Projectile.velocity).SafeNormalize(Vector2.UnitX);
-                Projectile.velocity *= 17f;
-            }
-
+            return base.PreDraw(ref lightColor);
         }
-    }
-    public class FrigorianIceShardAlt : ModProjectile
-    {
-        public NPC FindClosestNPC(float maxDetectDistance)
-        {//example mod
-            NPC closestNPC = null;
 
-
-            float sqrMaxDetectDistance = maxDetectDistance * maxDetectDistance;
-
-
-            for (int k = 0; k < Main.maxNPCs; k++)
-            {
-                NPC target = Main.npc[k];
-
-                if (target.CanBeChasedBy())
-                {
-
-                    float sqrDistanceToTarget = Vector2.DistanceSquared(target.Center, Projectile.Center);
-
-                    if (sqrDistanceToTarget < sqrMaxDetectDistance)
-                    {
-                        sqrMaxDetectDistance = sqrDistanceToTarget;
-                        closestNPC = target;
-                    }
-                }
-            }
-
-            return closestNPC;
-        }
-        public override void SetDefaults()
+        public override void PostDraw(Color lightColor)
         {
-            Projectile.scale = 0.5f;
-            Projectile.width = 30;
-            Projectile.height = 36;
-            Projectile.friendly = true;
-            Projectile.DamageType = DamageClass.Magic;
-            Projectile.timeLeft = 500;
-        }
-
-
-        public override void AI()
-        {
-            Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.ToRadians(90);
-            NPC closestNPC = FindClosestNPC(9000f);
-            if (closestNPC == null)
-            {
-
-                return;
-            }
-            else
-            {
-                Vector2 vel = (closestNPC.Center - Projectile.Center).SafeNormalize(Vector2.UnitX);
-                Projectile.velocity = Projectile.velocity + (vel * 0.5f);
-                Projectile.velocity = (Projectile.velocity).SafeNormalize(Vector2.UnitX);
-                Projectile.velocity *= 13f;
-            }
+            base.PostDraw(lightColor);
         }
     }
 }

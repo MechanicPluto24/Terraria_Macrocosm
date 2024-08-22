@@ -11,33 +11,33 @@ namespace Macrocosm.Content.Particles
 
         public override string TexturePath => Macrocosm.TextureEffectsPath + "Smoke1";
         public Color DrawColor = new Color(56, 188, 173, 0);
-        public float Opacity = 1f;
+        public float Opacity = 0.3f;
         public float ExpansionRate = -0.008f;
-
+        
         public bool FadeIn;
-        private bool fadedIn;
+        private bool fadedIn=false;
 
         public float WindFactor = 0f;
 
         public override void AI()
         {
-            Scale += ExpansionRate;
-
             if (!fadedIn)
             {
-                Opacity += 0.03f;
+                Scale -= ExpansionRate/3;
+                Opacity += 0.05f;
                 if (Opacity >= 1f)
                     fadedIn = true;
             }
             else
             {
+                Scale += ExpansionRate/3;
                 if (Opacity > 0f)
                     Opacity -= 0.012f;
             }
 
             Velocity.X += WindFactor * Utility.WindSpeedScaled;
 
-            if (Scale < 0.1 || (Opacity <= 0 && fadedIn))
+            if (Scale < 0.1f || (Opacity <= 0 && fadedIn))
                 Kill();
         }
 

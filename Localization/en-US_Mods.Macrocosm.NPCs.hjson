@@ -174,3 +174,18 @@ Bruiser: {
 	DisplayName: Bruiser
 	BestiaryFlavorText: A hulking, tanky behemoth of alien flesh, bone, and fury. Get too close and they'll slug your bloody entrails into orbit!
 }
+
+FlamingMeteor: {
+	DisplayName: Flaming Meteor
+	BestiaryFlavorText: Mods.Macrocosm.NPCs.FlamingMeteor.BestiaryFlavorText
+}
+
+LunarChimera: {
+	DisplayName: Lunar Chimera
+	BestiaryFlavorText: Mods.Macrocosm.NPCs.LunarChimera.BestiaryFlavorText
+}
+
+Scatterbrained: {
+	DisplayName: Scatterbrained
+	BestiaryFlavorText: Mods.Macrocosm.NPCs.Scatterbrained.BestiaryFlavorText
+}

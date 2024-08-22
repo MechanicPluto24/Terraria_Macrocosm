@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.Enums;
 using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.Systems;
 using Macrocosm.Content.Projectiles.Environment.Meteors;
 using Macrocosm.Content.Rockets.UI.Navigation.Checklist;
 using Microsoft.Xna.Framework;
@@ -56,6 +57,9 @@ namespace Macrocosm.Content.Subworlds
         public override void OnEnterWorld()
         {
             SkyManager.Instance.Activate("Macrocosm:MoonSky");
+
+            meteorStormWaitTimeToStart = Main.rand.Next(62000, 82000);
+            meteorStormWaitTimeToEnd = Main.rand.Next(900, 2700);
         }
 
         public override void OnExitWorld()
@@ -113,17 +117,34 @@ namespace Macrocosm.Content.Subworlds
         //TODO 
         private void UpdateSolarStorm() { }
 
-        private float meteorBoost = 1f;
-        private double meteorTimePass = 0.0;
+        public float MeteorBoost { get; set; } = 1f;
 
+        private double meteorTimePass = 0.0;
+        private int meteorStormCounter = 0;
+        private int meteorStormWaitTimeToStart;
+        private int meteorStormWaitTimeToEnd;
         private void UpdateMeteorStorm()
-        {      
-            MeteorStormActive = false;  
+        {
+            meteorStormCounter++;
+
+            if (meteorStormWaitTimeToStart <= meteorStormCounter && !MeteorStormActive)
+            {
+                MeteorStormActive = true;
+                meteorStormCounter = 0;
+                meteorStormWaitTimeToStart = Main.rand.Next(62000, 82000);
+            }
+
+            if (MeteorStormActive && meteorStormWaitTimeToEnd <= meteorStormCounter)
+            {
+                MeteorStormActive = false;
+                meteorStormCounter = 0;
+                meteorStormWaitTimeToEnd = Main.rand.Next(900, 2700);
+            }
 
             if (MeteorStormActive)
-                meteorBoost = 4000f;
+                MeteorBoost = 1000f;
             else
-                meteorBoost = 1f;
+                MeteorBoost = 1f;
         }
 
         private void UpdateMeteors()
@@ -134,7 +155,7 @@ namespace Macrocosm.Content.Subworlds
 
             for (int l = 1; l <= (int)meteorTimePass; l++)
             {
-                float frequency = 2f * meteorBoost;
+                float frequency = 2f * MeteorBoost;
 
                 if (Main.rand.Next(8000) >= frequency)
                     continue;
