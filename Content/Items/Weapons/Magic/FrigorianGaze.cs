@@ -40,8 +40,5 @@ namespace Macrocosm.Content.Items.Weapons.Magic
             Projectile.NewProjectileDirect(source, position, velocity, ModContent.ProjectileType<FrigorianGazeProjectile>(), damage, knockback, player.whoAmI);
             return false;
         }
-
-
-
     }
 }
