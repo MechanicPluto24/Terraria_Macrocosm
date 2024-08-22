@@ -40,7 +40,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         public override void AI()
         {
             TimeUntilMandatoryBreak--;
-            Projectile.velocity.Y += MacrocosmSubworld.Current.GravityMultiplier;
+            Projectile.velocity.Y += 0.25f * MacrocosmSubworld.CurrentGravityMultiplier;
             if (TimeUntilMandatoryBreak < 1)
             {
                 Broke = true;

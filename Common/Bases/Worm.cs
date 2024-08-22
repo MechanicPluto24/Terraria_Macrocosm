@@ -590,8 +590,8 @@ namespace Macrocosm.Common.Bases
         public override void SetStaticDefaults()
         {
             NPC.despawnEncouraged = false;
-            NPCID.Sets.NPCBestiaryDrawModifiers value = new NPCID.Sets.NPCBestiaryDrawModifiers() { Hide = true };
-            NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
+            NPCID.Sets.NPCBestiaryDrawModifiers value = new() { Hide = true };
+            NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, value);
         }
 
         public override void BodyTailAI()
@@ -656,8 +656,8 @@ namespace Macrocosm.Common.Bases
         public override void SetStaticDefaults()
         {
             NPC.despawnEncouraged = false;
-            NPCID.Sets.NPCBestiaryDrawModifiers value = new NPCID.Sets.NPCBestiaryDrawModifiers() { Hide = true };
-            NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
+            NPCID.Sets.NPCBestiaryDrawModifiers value = new() { Hide = true };
+            NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, value);
         }
 
         public override void BodyTailAI()

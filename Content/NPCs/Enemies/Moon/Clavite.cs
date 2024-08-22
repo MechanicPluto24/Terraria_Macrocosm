@@ -157,9 +157,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override void HitEffect(NPC.HitInfo hit)
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 20; i++)
             {
-                int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.Stone);
+                int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, i % 2 == 0 ? DustID.Stone : DustID.GreenBlood);
                 Dust dust = Main.dust[dustIndex];
                 dust.velocity.X *= dust.velocity.X * 1.25f * hit.HitDirection + Main.rand.Next(0, 100) * 0.015f;
                 dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;
@@ -179,6 +179,15 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 Gore.NewGore(entitySource, NPC.position, -NPC.velocity, Mod.Find<ModGore>("ClaviteGoreJaw2").Type);
                 Gore.NewGore(entitySource, NPC.position, -NPC.velocity * 1.5f, Mod.Find<ModGore>("ClaviteGoreEye1").Type);
                 Gore.NewGore(entitySource, NPC.position, -NPC.velocity * 2, Mod.Find<ModGore>("ClaviteGoreEye2").Type);
+
+                for (int i = 0; i < 100; i++)
+                {
+                    int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, i % 2 == 0 ? DustID.Stone : DustID.GreenBlood);
+                    Dust dust = Main.dust[dustIndex];
+                    dust.velocity.X *= dust.velocity.X * 1.25f * hit.HitDirection + Main.rand.Next(0, 100) * 0.015f;
+                    dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;
+                    dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
+                }
             }
         }
 
