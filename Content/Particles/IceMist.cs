@@ -21,8 +21,6 @@ namespace Macrocosm.Content.Particles
 
         public override void AI()
         {
-            
-
             if (!fadedIn)
             {
                 Scale -= ExpansionRate/3;

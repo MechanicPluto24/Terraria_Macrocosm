@@ -221,11 +221,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 positions[i] += Utility.PolarVector(4f * i, Projectile.rotation);
 
             var shader = new MiscShaderData(Main.VertexPixelShaderRef, "MagicMissile")
-                            .UseProjectionMatrix(doUse: true)
-                            .UseSaturation(-2.4f)
-                            .UseImage0(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "FadeOutMask"))
-                            .UseImage1(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "RocketExhaustTrail1"))
-                            .UseImage2(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "RocketExhaustTrail2"));
+                .UseProjectionMatrix(doUse: true)
+                .UseSaturation(-2.4f)
+                .UseImage0(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "FadeOutMask"))
+                .UseImage1(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "RocketExhaustTrail1"))
+                .UseImage2(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "RocketExhaustTrail2"));
 
             shader.Apply();
 

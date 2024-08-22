@@ -12,6 +12,30 @@ namespace Macrocosm.Common.Utils
 {
     public static partial class Utility
     {
+        public static NPC GetClosestNPC(Vector2 position, float maxDetectDistance)
+        {
+            NPC closestNPC = null;
+            float sqrMaxDetectDistance = maxDetectDistance * maxDetectDistance;
+
+            for (int k = 0; k < Main.maxNPCs; k++)
+            {
+                NPC target = Main.npc[k];
+
+                if (target.CanBeChasedBy())
+                {
+                    float sqrDistanceToTarget = Vector2.DistanceSquared(target.Center, position);
+
+                    if (sqrDistanceToTarget < sqrMaxDetectDistance)
+                    {
+                        sqrMaxDetectDistance = sqrDistanceToTarget;
+                        closestNPC = target;
+                    }
+                }
+            }
+
+            return closestNPC;
+        }
+
         //------------------------------------------------------//
         //-------------------BASE AI CLASS----------------------//
         //------------------------------------------------------//

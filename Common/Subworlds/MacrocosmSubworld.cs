@@ -88,9 +88,6 @@ namespace Macrocosm.Common.Subworlds
             }
         }
 
-        // TODO: NPCs residing on this subworld
-        public List<int> TownNPCs { get; } = [];
-
         // Basic example of world flags local to this subworld. Will rework in the future.
         public bool MeteorStormActive { get; set; } = false;
 
