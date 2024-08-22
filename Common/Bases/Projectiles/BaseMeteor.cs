@@ -111,7 +111,7 @@ namespace Macrocosm.Common.Bases.Projectiles
             for (int i = 0; i < ImpactDustCount; i++)
             {
                 Dust dust = Dust.NewDustDirect(
-                    new Vector2(Projectile.Center.X, Projectile.Center.Y + 0.25f * Projectile.height),
+                    new Vector2(Projectile.Center.X, Projectile.Center.Y),
                     Width,
                     Height,
                     dustType,

@@ -8,10 +8,6 @@ namespace Macrocosm.Common.Systems.Power
     {
         private readonly HashSet<MachineTE> machines = new();
 
-        // remove
-        private readonly HashSet<MachineTE> generators = new();
-        private readonly HashSet<MachineTE> consumers = new();
-
         public int NodeCount => machines.Count;
 
         public Circuit() { }

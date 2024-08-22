@@ -22,7 +22,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Crossmod
 {
-    public class Crossmod
+    public class CrossMod
     {
         private static Mod Mod => Macrocosm.Instance;
 
@@ -64,7 +64,7 @@ namespace Macrocosm.Common.Crossmod
             #region CraterDemon
             if (ModLoader.TryGetMod("BossChecklist", out Mod bossChecklist))
             {
-                bossChecklist.Call("LogBoss", Mod, nameof(CraterDemon), 1.9f, () => WorldDataSystem.Instance.DownedCraterDemon, ModContent.NPCType<CraterDemon>(), new Dictionary<string, object>()
+                bossChecklist.Call("LogBoss", Mod, nameof(CraterDemon), 20f, () => WorldDataSystem.Instance.DownedCraterDemon, ModContent.NPCType<CraterDemon>(), new Dictionary<string, object>()
                 {
                     ["spawnItems"] = ModContent.ItemType<CraterDemonSummon>(),
                     ["collectibles"] = new List<int>
@@ -76,7 +76,8 @@ namespace Macrocosm.Common.Crossmod
                             ModContent.ItemType<SpaceInvaderMusicBox>()
                         },
                     ["availability"] = () => true,
-                    ["despawnMessage"] = ModContent.GetInstance<CraterDemon>().GetLocalization("DespawnMessage"),
+                    ["spawnInfo"] = ModContent.GetInstance<CraterDemon>().GetLocalization("SpawnInfo"),
+                    ["despawnMessage"] = (NPC npc) => npc.ModNPC.GetLocalization("DespawnMessage").WithFormatArgs(npc.FullName),
                     ["customPortrait"] = (SpriteBatch spriteBatch, Rectangle rect, Color color) =>
                     {
                         Texture2D texture = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/BossChecklist/CraterDemon").Value;
@@ -133,7 +134,7 @@ namespace Macrocosm.Common.Crossmod
         {
             if (ModLoader.TryGetMod("Wikithis", out Mod wikithis) && !Main.dedServ)
             {
-                wikithis.Call("AddModURL", Mod, "https://terrariamods.wiki.gg/wiki/Macrocosm/{}");
+                wikithis.Call("AddModURL", Mod, "https://terrariamods.fandom.com/wiki/Macrocosm/{}");
             }
         }
     }

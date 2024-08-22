@@ -105,13 +105,27 @@ namespace Macrocosm.Content.Subworlds
 
         private float meteorBoost = 1f;
         private double meteorTimePass = 0.0;
-
+        private int meteorStormCounter = 0;
+        private int meteorStormWaitTimeToStart = Main.rand.Next(62000,82000);
+        private int meteorStormWaitTimeToEnd = Main.rand.Next(900,2700);
         private void UpdateMeteorStorm()
-        {      
-            MeteorStormActive = true;
+        {   
+            meteorStormCounter++;
 
+            if (meteorStormWaitTimeToStart <= meteorStormCounter&&MeteorStormActive==false)   {
+                MeteorStormActive = true;
+                meteorStormCounter=0;
+                meteorStormWaitTimeToStart = Main.rand.Next(62000,82000);
+            }
+
+            if (MeteorStormActive==true &&meteorStormWaitTimeToEnd <= meteorStormCounter){
+                MeteorStormActive = false;
+                meteorStormCounter=0;
+                meteorStormWaitTimeToEnd = Main.rand.Next(900,2700);
+
+            }
             if (MeteorStormActive)
-                meteorBoost = 4000f;
+                meteorBoost = 1000f;
             else
                 meteorBoost = 1f;
         }

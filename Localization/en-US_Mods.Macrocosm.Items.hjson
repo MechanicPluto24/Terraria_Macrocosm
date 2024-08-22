@@ -1879,3 +1879,33 @@ Sledgehammer: {
 	DisplayName: Sledgehammer
 	Tooltip: ""
 }
+
+IrradiatedAltar: {
+	DisplayName: Irradiated Altar
+	Tooltip: ""
+}
+
+IrradiatedBrickWallUnsafe: {
+	DisplayName: Irradiated Brick Wall Unsafe
+	Tooltip: ""
+}
+
+IrradiatedRockWallUnsafe: {
+	DisplayName: Irradiated Rock Wall Unsafe
+	Tooltip: ""
+}
+
+ProtolithWallUnsafe: {
+	DisplayName: Protolith Wall Unsafe
+	Tooltip: ""
+}
+
+RegolithBrickWallUnsafe: {
+	DisplayName: Regolith Brick Wall Unsafe
+	Tooltip: ""
+}
+
+RegolithWallUnsafe: {
+	DisplayName: Regolith Wall Unsafe
+	Tooltip: ""
+}
