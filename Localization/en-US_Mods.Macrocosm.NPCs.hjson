@@ -184,3 +184,18 @@ Bruiser: {
 	DisplayName: Bruiser
 	BestiaryFlavorText: Mods.Macrocosm.NPCs.Bruiser.BestiaryFlavorText
 }
+
+FlamingMeteor: {
+	DisplayName: Flaming Meteor
+	BestiaryFlavorText: Mods.Macrocosm.NPCs.FlamingMeteor.BestiaryFlavorText
+}
+
+LunarChimera: {
+	DisplayName: Lunar Chimera
+	BestiaryFlavorText: Mods.Macrocosm.NPCs.LunarChimera.BestiaryFlavorText
+}
+
+Scatterbrained: {
+	DisplayName: Scatterbrained
+	BestiaryFlavorText: Mods.Macrocosm.NPCs.Scatterbrained.BestiaryFlavorText
+}

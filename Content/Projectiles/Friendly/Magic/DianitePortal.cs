@@ -58,7 +58,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             player.heldProj = Projectile.whoAmI;
             player.SetDummyItemTime(2);
 
-            Projectile.rotation += MathHelper.ToRadians(7.4f) * player.direction;
+            Projectile.rotation -= MathHelper.ToRadians(7.4f);
 
             AITimer++;
 

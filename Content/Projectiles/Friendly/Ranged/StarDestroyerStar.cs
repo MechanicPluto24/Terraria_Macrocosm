@@ -21,7 +21,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             ProjectileID.Sets.TrailingMode[Type] = 3;
         }
 
-
         public Color colour = new Color(0, 0, 0);
         public override void SetDefaults()
         {
@@ -35,12 +34,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             Projectile.timeLeft = 600;
             ProjectileID.Sets.TrailCacheLength[Type] = 2;
         }
-
-
-
-
-
     }
+
     public class StarDestroyerStarBlue : StarDestroyerStar
     {
         public NPC FindClosestNPC(float maxDetectDistance)
@@ -74,7 +69,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         public override string Texture => "Macrocosm/Content/Projectiles/Friendly/Ranged/StarDestroyerStar";
         public override void AI()
         {
-
+            Projectile.rotation += 0.5f;
             colour = new Color(100, 100, 255);
             Projectile.SetTrail<StarTrail>();
             Projectile.rotation = Projectile.velocity.ToRotation();
@@ -133,7 +128,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         public override string Texture => "Macrocosm/Content/Projectiles/Friendly/Ranged/StarDestroyerStar";
         public override void AI()
         {
-
+            Projectile.rotation += 0.5f;
             colour = new Color(255, 180, 25);
             Projectile.SetTrail<StarTrailAlt>();
             Projectile.rotation = Projectile.velocity.ToRotation();
@@ -144,10 +139,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 Gore.NewGore(Projectile.GetSource_Death(), Projectile.Center, -Projectile.velocity.RotatedByRandom(Math.PI * 2) * 0.3f, 16);//16 and 17 are the star gores.
                 Gore.NewGore(Projectile.GetSource_Death(), Projectile.Center, Projectile.velocity.RotatedByRandom(Math.PI * 2) * 0.3f, 17);
             }
-
-
-
-
         }
 
         private SpriteBatchState state;

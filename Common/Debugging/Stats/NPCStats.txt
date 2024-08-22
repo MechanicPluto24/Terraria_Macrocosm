@@ -23,6 +23,12 @@ CraterImp
 	KB resist: 0
 	Damage: 50
 
+FlamingMeteor
+	Life: 450
+	Defense: 0
+	KB resist: 1
+	Damage: 0
+
 Bruiser
 	Life: 10000
 	Defense: 80
@@ -121,6 +127,14 @@ LuminiteSlimeVolatile
 		Luminite, (2-12) 50%
 		Moonstone, (1-5) 10%
 
+LunarChimera
+	Life: 1500
+	Defense: 90
+	KB resist: 0.5
+	Damage: 100
+	Drops:
+		Moonstone, (1-5) 10%
+
 MoonLich
 	Life: 14000
 	Defense: 75
@@ -128,6 +142,14 @@ MoonLich
 	Damage: 60
 	Drops:
 		Space Dust, (3-5) 100%
+		Moonstone, (1-5) 10%
+
+Scatterbrained
+	Life: 650
+	Defense: 70
+	KB resist: 0.2
+	Damage: 80
+	Drops:
 		Moonstone, (1-5) 10%
 
 XenoHive

@@ -10,13 +10,15 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 {
-    //(-Vector2.UnitY).RotatedByRandom(MathHelper.PiOver2) * Main.rand.NextFloat(12f, 16f)
     //Had to salvage it from an extracted DLL, so no comments.  Oops.  -- absoluteAquarian
     public class FlamingMeteor : ModNPC
     {
         public override void SetStaticDefaults()
         {
             Main.npcFrameCount[Type] = 6;
+
+            NPCID.Sets.TrailCacheLength[Type] = 15;
+            NPCID.Sets.TrailingMode[Type] = 3;
         }
 
         public override void SetDefaults()
@@ -25,19 +27,22 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             NPC.height = 28;
             NPC.friendly = false;
             NPC.noTileCollide = true;
-            NPC.lifeMax = 450;
-            NPC.timeLeft=600;
+            NPC.lifeMax = 20;
+            NPC.timeLeft = 600;
+            NPC.damage = 100;
         }
 
         private float flashTimer;
         private float maxFlashTimer = 5;
         private bool spawned;
+        private Vector2 spawnPosition;
+        private FlamingMeteorTrail trail;
 
         public override void AI()
         {
             if (!spawned)
             {
-                
+                trail = new();
                 NPC.velocity = (-Vector2.UnitY).RotatedByRandom(MathHelper.PiOver2) * Main.rand.NextFloat(12f, 16f);
                 spawned = true;
             }
@@ -58,10 +63,41 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 dust.noLight = true;
             }
 
-            
-            
             flashTimer++;
         }
+
+        public override void HitEffect(NPC.HitInfo hit)
+        {
+            for (int i = 0; i < 50; i++)
+            {
+                Dust dust = Dust.NewDustDirect(NPC.position, NPC.width, NPC.height, DustID.Torch, Main.rand.NextFloat(-10f, 11f), Main.rand.NextFloat(-10f, 11f), 127, new Color(255, 255, 255), Main.rand.NextFloat(1.1f, 1.4f));
+                dust.noGravity = true;
+                dust.noLight = true;
+            }
+
+            //(-Vector2.UnitY).RotatedByRandom(MathHelper.PiOver2) * Main.rand.NextFloat(12f, 16f)
+            if (NPC.life <= 0 && Main.netMode != NetmodeID.MultiplayerClient)
+            {
+
+                int cd = NPC.FindFirstNPC(ModContent.NPCType<CraterDemon>());
+                if (cd < 0)
+                {
+                    NPC.velocity = NPC.velocity.RotatedByRandom(MathHelper.Pi / 8);
+                }
+                else
+                {
+                    float speed = NPC.velocity.Length();
+                    Vector2 aim = (Main.npc[cd].position - NPC.Center).SafeNormalize(default);
+                    NPC.velocity = NPC.velocity.RotatedBy(aim.ToRotation());
+                }
+
+                NPC.life = 1;
+                //NPC.friendly = true;
+                NPC.dontTakeDamage = true;
+                NPC.netUpdate = true;
+            }
+        }
+
         public override void FindFrame(int frameHeight)
         {
             NPC.spriteDirection = -NPC.direction;
@@ -80,22 +116,42 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 }
             }
         }
-        public override void HitEffect(NPC.HitInfo hit)
+
+        private SpriteBatchState state;
+        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-           
-            if (NPC.life <= 0)
+
+            NPCID.Sets.TrailCacheLength[Type] = 5;
+            NPCID.Sets.TrailingMode[Type] = 3;
+
+            Rectangle sourceRect = NPC.frame;
+            Vector2 origin = NPC.Size / 2f + new Vector2(6, 32);
+
+            state.SaveState(Main.spriteBatch);
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(BlendState.Additive, state);
+
+
+            if (flashTimer < maxFlashTimer)
             {
-               NPC.velocity *=-0.6f*(hit.Knockback/2f);
-               NPC.velocity = NPC.velocity.RotatedByRandom(MathHelper.Pi/3);
-               NPC.life=1;
-               NPC.friendly = true;
-               NPC.dontTakeDamage = true;
+                Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Flare2").Value;
+                float progress = flashTimer / maxFlashTimer;
+                float scale = NPC.scale * progress * 0.85f;
+                Vector2 position = spawnPosition + NPC.Size / 2f;
+                float opacity = 1f;
+                Main.spriteBatch.Draw(flare, position - screenPos, null, new Color(242, 142, 35).WithOpacity(opacity), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
             }
+            else
+            {
+                trail.Draw(NPC.oldPos, NPC.oldRot, NPC.Size / 2f);
+            }
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(state);
+
+            Main.EntitySpriteDraw(TextureAssets.Npc[Type].Value, NPC.Center - Main.screenPosition, sourceRect, (Color.White * (1f - NPC.alpha / 255f)).WithAlpha(65), NPC.rotation, origin, NPC.scale, SpriteEffects.None, 0);
+
+            return false;
         }
-
-     
-        
-
-        
     }
 }

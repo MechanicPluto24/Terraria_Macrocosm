@@ -44,7 +44,6 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             else
                 Item.useAmmo = AmmoID.Bullet;
             return true;
-
         }
 
         float StarType = 0;

@@ -1,6 +1,5 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Common.Global.NPCs;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Systems;
 using Macrocosm.Common.Utils;
@@ -404,6 +403,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             NPCID.Sets.MPAllowedEnemies[Type] = true;
             NPCID.Sets.BossBestiaryPriority.Add(Type);
 
+            // For the meteors
+            NPCID.Sets.TakesDamageFromHostilesWithoutBeingFriendly[Type] = true;  
+
             NPCID.Sets.ImmuneToRegularBuffs[Type] = true;
 
             NPCID.Sets.NPCBestiaryDrawModifiers bestiaryData = new()
@@ -437,17 +439,16 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             NPC.aiStyle = -1;
 
             NPC.npcSlots = 40f;
-            NPCID.Sets.TakesDamageFromHostilesWithoutBeingFriendly[Type]=true;//for the meteors.
             NPC.HitSound = SoundID.NPCHit2;
 
             if (!Main.dedServ)
                 Music = MusicLoader.GetMusicSlot(Mod, "Assets/Music/SpaceInvader");
         }
 
-        public override bool CanBeHitByNPC(NPC attacker)=>attacker.type==ModContent.NPCType<FlamingMeteor>()&&attacker.friendly;
-
-
-
+        public override bool CanBeHitByNPC(NPC attacker)
+        {
+            return attacker.type == ModContent.NPCType<FlamingMeteor>() && attacker.dontTakeDamage;
+        }
 
         public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
         {
@@ -1162,6 +1163,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                     }
 
                     SetAttack(setAttack);
+
+                    SetAttack(AttackState.SummonMeteors);
                 }
 
                 NPC.netUpdate = true;
@@ -1175,7 +1178,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             {
                 Vector2 orig = player.Center + player.velocity;
 
-                int count = GetDifficultyInfo(DifficultyInfo.MeteorShootBurst);
+                int count = GetDifficultyInfo(DifficultyInfo.MeteorShootBurst) * 1000;
 
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
@@ -1185,7 +1188,10 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                         float posY = orig.Y + Main.rand.NextFloat(-3f, -1f) * 30 * 16;
                         Vector2 velocity = new Vector2(MathF.Abs((new Vector2(posX, posY) - player.Center).ToRotation()) > MathHelper.PiOver2 ? 1 : -1, 1).RotatedByRandom(MathHelper.ToRadians(30)) * Main.rand.NextFloat(8f, 16f);
                         int damage = Utility.TrueDamage(Main.masterMode ? 240 : Main.expertMode ? 120 : 60);
-                        NPC.NewNPC(NPC.GetSource_FromAI(), (int)posX, (int)posY, ModContent.NPCType<FlamingMeteor>());
+                        NPC meteor = NPC.NewNPCDirect(NPC.GetSource_FromAI(), (int)posX, (int)posY, ModContent.NPCType<FlamingMeteor>());
+                        meteor.damage = damage;
+                        meteor.velocity = velocity;
+                        meteor.netUpdate = true;
                     }
                 }
 
