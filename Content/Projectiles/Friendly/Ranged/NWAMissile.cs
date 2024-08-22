@@ -210,8 +210,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            Projectile.timeLeft = 3;
-            Projectile.velocity *= 0f;
+            Projectile.timeLeft = 2;
             return false;
         }
 
@@ -274,7 +273,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         {
             Projectile.GetTrail().Opacity = Projectile.localAI[1];
 
-            if (Projectile.alpha < 1)
+            if (Projectile.alpha < 1 && Projectile.timeLeft > 3)
                 Projectile.GetTrail().Draw(Projectile.Size / 2f);
 
             return true;

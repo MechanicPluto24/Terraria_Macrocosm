@@ -23,6 +23,8 @@ namespace Macrocosm.Common.Sets
 
         public static int[] PotionDelay { get; } = ItemID.Sets.Factory.CreateIntSet(defaultState: 0);
 
+        public static bool[] DeveloperItem { get; } = ItemID.Sets.Factory.CreateBoolSet();
+
         /// <summary> 
         /// Chests.
         /// Used for the assembly recipe of the Service Module. 

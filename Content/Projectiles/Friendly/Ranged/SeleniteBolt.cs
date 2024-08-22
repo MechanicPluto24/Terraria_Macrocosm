@@ -77,7 +77,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
             Projectile.timeLeft = 3;
-            Projectile.velocity *= 0f;
             return false;
         }
 
