@@ -437,12 +437,17 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             NPC.aiStyle = -1;
 
             NPC.npcSlots = 40f;
-
+            NPCID.Sets.TakesDamageFromHostilesWithoutBeingFriendly[Type]=true;//for the meteors.
             NPC.HitSound = SoundID.NPCHit2;
 
             if (!Main.dedServ)
                 Music = MusicLoader.GetMusicSlot(Mod, "Assets/Music/SpaceInvader");
         }
+
+        public override bool CanBeHitByNPC(NPC attacker)=>attacker.type==ModContent.NPCType<FlamingMeteor>()&&attacker.friendly;
+
+
+
 
         public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
         {
@@ -1180,7 +1185,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                         float posY = orig.Y + Main.rand.NextFloat(-3f, -1f) * 30 * 16;
                         Vector2 velocity = new Vector2(MathF.Abs((new Vector2(posX, posY) - player.Center).ToRotation()) > MathHelper.PiOver2 ? 1 : -1, 1).RotatedByRandom(MathHelper.ToRadians(30)) * Main.rand.NextFloat(8f, 16f);
                         int damage = Utility.TrueDamage(Main.masterMode ? 240 : Main.expertMode ? 120 : 60);
-                        Projectile.NewProjectile(NPC.GetSource_FromAI(), new Vector2(posX, posY), velocity, ModContent.ProjectileType<FlamingMeteor>(), damage, 0f, Main.myPlayer);
+                        NPC.NewNPC(NPC.GetSource_FromAI(), (int)posX, (int)posY, ModContent.NPCType<FlamingMeteor>());
                     }
                 }
 
