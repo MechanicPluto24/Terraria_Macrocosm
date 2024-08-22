@@ -5,11 +5,16 @@ using Microsoft.Xna.Framework;
 using System;
 using Terraria;
 using Terraria.ID;
+using Macrocosm.Content.Dusts;
 using Terraria.ModLoader;
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
     public class FrigorianGazeProjectile : ModProjectile
     {
+        public override void SetStaticDefaults()
+        {
+            Main.projFrames[Type] = 2;
+        }
         public override void SetDefaults()
         {
             Projectile.width = 22;
@@ -43,6 +48,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             }
             if (Broke == true)
             {
+                Projectile.frame =1;
                 if (HitSomething == true)
                     Projectile.velocity *= 0f;
                 Timer++;
@@ -53,6 +59,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
             if (Timer > 30)
                 CreateALotOfIce();
+
+            Projectile.frame =0;
         }
         public void CreateALotOfIce()
         {
@@ -66,16 +74,28 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, Projectile.velocity * 0f, Mod.Find<ModGore>("FrigorianGore1").Type);
             Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, Projectile.velocity * 0f, Mod.Find<ModGore>("FrigorianGore2").Type);
             Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, Projectile.velocity * 0f, Mod.Find<ModGore>("FrigorianGore3").Type);
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 4; i++)
             {
                 Particle.CreateParticle<IceMist>((p) =>
                 {
                     p.Position = Projectile.Center;
                     p.Velocity = OldVelocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(Math.PI / 4) * 2f;
-                    p.Scale = 1f;
+                    p.Scale = 0.6f;
                 }, shouldSync: true
                 );
+
+                
             }
+            for (int i = 0; i <12 ; i++)
+            {
+               Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<FrigorianDust>());
+                    dust.velocity.X = (dust.velocity.X + Main.rand.Next(0, 100) * 0.02f);
+                    dust.velocity.Y = Main.rand.Next(-50, 51) * 0.02f;
+                    dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
+                    dust.noGravity = true;
+                
+            }
+            
             Projectile.Kill();
         }
 
