@@ -60,7 +60,31 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
             }
             if (Timer > 30)
             {
-                NPC.NewNPCDirect(Projectile.GetSource_FromAI(), (int)Projectile.Center.X, (int)Projectile.Center.Y, ModContent.NPCType<XenoHive>(), 0, 0f);
+                int NpcToSummon=Main.rand.Next(1,4);
+                switch(NpcToSummon)
+                {
+                    case 1:
+                        NPC.NewNPCDirect(Projectile.GetSource_FromAI(), (int)Projectile.Center.X, (int)Projectile.Center.Y, ModContent.NPCType<XenoHive>(), 0, 0f);
+                        break;
+                    case 2:
+                        NPC.NewNPCDirect(Projectile.GetSource_FromAI(), (int)Projectile.Center.X, (int)Projectile.Center.Y, ModContent.NPCType<LunarChimera>(), 0, 0f);
+                        break;
+                    case 3:
+                        NPC.NewNPCDirect(Projectile.GetSource_FromAI(), (int)Projectile.Center.X, (int)Projectile.Center.Y, ModContent.NPCType<Scatterbrained>(), 0, 0f);
+                        break;
+                    default:
+                        break;
+                }
+                for(int i=0;i<20;i++){
+                    Particle.CreateParticle<TintableFire>(p =>
+                {
+                p.Position = Projectile.position;
+                p.Velocity = Vector2.UnitX.RotatedByRandom(MathHelper.TwoPi);
+                p.DrawColor = new Color(100, 255, 255, 0);
+                p.Scale = 0.03f;
+                });
+                }
+                
                 Projectile.Kill();
             }
 
