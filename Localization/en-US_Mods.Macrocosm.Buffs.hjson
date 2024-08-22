@@ -45,21 +45,21 @@ HandheldEngineOverheat: {
 
 CraterDemonPet: {
 	DisplayName: Mini Crater Demon
-	Description: It's small! (Replace this lol)
+	Description: Mods.Macrocosm.Buffs.CraterDemonPet.Description
 }
 
 MedkitHigh: {
-	DisplayName: Medkit High
+	DisplayName: Medkit
 	Description: Mods.Macrocosm.Buffs.MedkitHigh.Description
 }
 
 MedkitLow: {
-	DisplayName: Medkit Low
+	DisplayName: Medkit
 	Description: Mods.Macrocosm.Buffs.MedkitLow.Description
 }
 
 MedkitMedium: {
-	DisplayName: Medkit Medium
+	DisplayName: Medkit
 	Description: Mods.Macrocosm.Buffs.MedkitMedium.Description
 }
 

@@ -23,16 +23,16 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
         public UINavigationMap OwnerMap => OwnerPanel.CurrentMap;
 
         /// <summary> 
-        /// The identification of this target, respective to this world's <see cref="MacrocosmSubworld.CurrentMacrocosmID"/>.
-        /// Must be unique within the same <c>UINavigationMap</c>, but can have same ID-linked targets in other navigation maps.
-        /// For travel purposes, use <see cref="WorldID"/>!
+        /// The name identification of this target.
+        /// <br/> For travel purposes, use <see cref="TargetID"/>!
+        /// <br/> Must be unique within the same <c>UINavigationMap</c>, but can have same ID-linked targets in other navigation maps.
         /// </summary>
         public readonly string Name = "default";
 
         /// <summary>
         /// The mod-independent world ID, respective to the <see cref="MacrocosmSubworld.CurrentID"/>
         /// </summary>
-        public string WorldID => Macrocosm.Instance.Name + "/" + Name;
+        public string TargetID => Macrocosm.Instance.Name + "/" + Name;
 
         /// <summary> Collection to determine whether the subworld is accesible </summary>
         public ChecklistConditionCollection LaunchConditions { get; set; } = null;
@@ -44,7 +44,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
         public bool LaunchLocationSelected { get; set; } = false;
 
         /// <summary> Whether this target's ID is equal to the current subworld </summary>
-        public bool AlreadyHere => WorldID == MacrocosmSubworld.CurrentID;
+        public bool AlreadyHere => TargetID == MacrocosmSubworld.CurrentID;
 
         /// <summary> Whether the target is currently selected </summary>
         public bool Selected { get; set; }
@@ -95,12 +95,11 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
         /// <param name="position"> The map target's position relative to the top corner of the NavigationMap </param>
         /// <param name="width"> Interactible area width in pixels </param>
         /// <param name="height"> Interactible area height in pixels </param>
-        /// <param name="targetId"> The special ID of the target, handled in <see cref="Rocket.Travel"/> </param>
-        /// <param name="canLaunch"> Function that determines whether the target is selectable, defaults to false </param>
-        public UINavigationTarget(UINavigationPanel owner, Vector2 position, float width, float height, string targetId, ChecklistConditionCollection launchConditions = null, Asset<Texture2D> outline = null) : this(owner, position, width, height)
+        /// <param name="targetName"> The name of the target, handled in <see cref="Rocket.Travel"/> </param>
+        public UINavigationTarget(UINavigationPanel owner, Vector2 position, float width, float height, string targetName, ChecklistConditionCollection launchConditions = null, Asset<Texture2D> outline = null) : this(owner, position, width, height)
         {
             LaunchConditions = launchConditions;
-            Name = targetId;
+            Name = targetName;
 
             selectionOutline = outline ?? selectionOutline;
         }

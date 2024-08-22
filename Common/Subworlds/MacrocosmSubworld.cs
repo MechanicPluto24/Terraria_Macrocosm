@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Systems;
 using Macrocosm.Content.Players;
 using Macrocosm.Content.Rockets;
@@ -21,11 +22,20 @@ namespace Macrocosm.Common.Subworlds
     {
         public string ID => Mod.Name + "/" + Name;
 
+        public override void SetStaticDefaults()
+        {
+            Subworlds.Add(ID, this);
+        }
+
+        #region Sublib options
+
         public override bool NormalUpdates => false;
         public override bool ShouldSave => true;
         public override bool NoPlayerSaving => false;
 
-        public bool IsActive => Current.ID == ID;
+        #endregion
+
+        #region Environment parameters
 
         /// <summary> Time rate of this subworld, compared to Earth's (1.0) </summary>
         public virtual double TimeRate { get; } = Earth.TimeRate;
@@ -45,11 +55,17 @@ namespace Macrocosm.Common.Subworlds
         /// </summary>
         public virtual float AtmosphericDensity { get; } = Earth.AtmosphericDensity;
 
-        /// <summary> Whether wiring should function in this subworld </summary>
+        /// <summary> Whether wiring should function in this subworld. Useful for solar storms :) </summary>
         public virtual bool ShouldUpdateWiring { get; set; } = true;
 
         /// <summary> Collection of LiquidIDs that should evaporate in this subworld </summary>
         public virtual int[] EvaporatingLiquidTypes => [];
+
+        /// <summary> The map background color for each depth layer (Surface, Underground, Cavern, Underworld) </summary>
+        public virtual Dictionary<MapColorType, Color> MapColors { get; } = null;
+        #endregion
+
+        #region Size
 
         /// <summary> Determine the size of this subworld </summary>
         /// <param name="earthWorldSize"> The Earth's world size </param>
@@ -64,11 +80,12 @@ namespace Macrocosm.Common.Subworlds
         /// <summary> The height is determined in ReadCopiedMainWorldData using <see cref="SetSubworldSize(WorldSize)"> </summary>
         public sealed override int Height => SetSubworldSize(Earth.WorldSize).Height;
 
+        #endregion
+
+        #region Travel
+
         /// <summary> Specifies the conditions for reaching this particular subworld </summary>
         public virtual ChecklistConditionCollection LaunchConditions { get; } = new();
-
-        /// <summary> The map background color for each depth layer (Surface, Underground, Cavern, Underworld) </summary>
-        public virtual Dictionary<MapColorType, Color> MapColors { get; } = null;
 
         /// <summary> 
         /// Determines what <see cref="SubworldSystem.Exit"/> will do. 
@@ -88,16 +105,16 @@ namespace Macrocosm.Common.Subworlds
             }
         }
 
-        // TODO: NPCs residing on this subworld
-        public List<int> TownNPCs { get; } = [];
+        #endregion
+
+        #region Flags
 
         // Basic example of world flags local to this subworld. Will rework in the future.
         public bool MeteorStormActive { get; set; } = false;
 
-        public override void SetStaticDefaults()
-        {
-            Subworlds.Add(this);
-        }
+        #endregion
+
+        #region Travel hooks
 
         /// <summary> Called when entering a subworld. </summary>
         public virtual void OnEnterWorld() { }
@@ -117,25 +134,9 @@ namespace Macrocosm.Common.Subworlds
             MapTileSystem.RestoreMapTileColors();
         }
 
-        public override void DrawMenu(GameTime gameTime)
-        {
-            if (LoadingScreen is not null)
-                LoadingScreen.Draw(gameTime, Main.spriteBatch);
-            else
-                base.DrawMenu(gameTime);
-        }
+        #endregion
 
-        public override float GetGravity(Entity entity)
-        {
-            if (entity is Player)
-                return Player.defaultGravity * CurrentGravityMultiplier;
-
-            // This is instead modified using the new NPC.GravityMultiplier tML property in MacrocosmGlobalNPC 
-            if (entity is NPC)
-                return base.GetGravity(entity);
-
-            return base.GetGravity(entity);
-        }
+        #region Common updates
 
         public override void Update()
         {
@@ -147,7 +148,10 @@ namespace Macrocosm.Common.Subworlds
             FreezeEnvironment();
         }
 
-        /// <summary> WIP - Lightly update the subworld while it is not active in singleplayer </summary>
+        /// <summary>
+        /// WIP - Lightly update the subworld while it is not active in singleplayer. 
+        /// Useful for randomly triggering events while not there.
+        /// </summary>
         public virtual void UpdateRemotely() { }
 
         // Updates the time 
@@ -220,44 +224,67 @@ namespace Macrocosm.Common.Subworlds
             }
         }
 
-        // Freezes environment factors like rain or clouds. 
-        // Required when NormalUpdates are turned on (if we ever want that), and as failsafe if something is still non-default with updates turned off.
+        // Freezes environment variables such as rain or clouds. 
         private void FreezeEnvironment()
         {
-            //if (Main.gameMenu)
-            //	return;
-
             // TODO: make these per-subworld if using Terraria's weather system for future planets
             Main.numClouds = 0;
             Main.windSpeedCurrent = 0;
             Main.weatherCounter = 0;
 
-            // Tricky way to stop vanilla fallen stars for spawning when NormalUpdates are turned on 
+            // Tricky way to stop vanilla fallen stars  
             Star.starfallBoost = 0;
 
             Main.slimeRain = false;
             Main.slimeRainTime = 0;
-
             Main.StopSlimeRain(false);
 
             LanternNight.WorldClear();
-            Main.StopRain(); // Rain, rain, go away, come again another day
+
+            // Rain, rain, go away, come again another day
+            Main.StopRain();
         }
+
+        #endregion
+
+        public override void DrawMenu(GameTime gameTime)
+        {
+            if (LoadingScreen is not null)
+                LoadingScreen.Draw(gameTime, Main.spriteBatch);
+            else
+                base.DrawMenu(gameTime);
+        }
+
+        public override float GetGravity(Entity entity)
+        {
+            if (entity is Player)
+                return Player.defaultGravity * CurrentGravityMultiplier;
+
+            // This is instead modified using the new NPC.GravityMultiplier tML property in MacrocosmGlobalNPC 
+            if (entity is NPC)
+                return base.GetGravity(entity);
+
+            return base.GetGravity(entity);
+        }
+
+        #region Saving and loading
 
         private static void SaveData(TagCompound tag)
         {
-            WorldDataSystem.Instance.SaveData(tag);
+            WorldFlags.SaveData(tag);
             RocketManager.SaveData(tag);
             LaunchPadManager.SaveData(tag);
             CustomizationStorage.SaveData(tag);
+            TownNPCSystem.SaveData(tag);
         }
 
         private static void LoadData(TagCompound tag)
         {
-            WorldDataSystem.Instance.LoadData(tag);
+            WorldFlags.LoadData(tag);
             RocketManager.LoadData(tag);
             LaunchPadManager.LoadData(tag);
             CustomizationStorage.LoadData(tag);
+            TownNPCSystem.LoadData(tag);
         }
 
         public override void CopySubworldData()
@@ -307,6 +334,10 @@ namespace Macrocosm.Common.Subworlds
                 Main.maxTilesY = subworldSize.Height;
             }
         }
+
+        #endregion
+
+        #region Update hooks
 
         /// <summary> 
         /// Use this if you want to do something before anything in the World gets updated.
@@ -364,16 +395,21 @@ namespace Macrocosm.Common.Subworlds
         /// <summary> Called before the subworld is updated. Not called on multiplayer clients </summary>
         public virtual void PreUpdateWorld() { }
 
+        /// <summary>  </summary>
+        public virtual void RandomTileUpdate(int i, int j, bool underground) { }
+
         /// <summary> Called after the subworld is updated. Not called on multiplayer clients </summary>
         public virtual void PostUpdateWorld() { }
 
-        /// <summary> Called before Invasions get updated. Not called for multiplayer clients. </summary>
+        /// <summary> Called before Invasions get updated. Not called on multiplayer clients. </summary>
         public virtual void PreUpdateInvasions() { }
 
-        /// <summary> Called after Invasions get updated. Not called for multiplayer clients. </summary>
+        /// <summary> Called after Invasions get updated. Not called on multiplayer clients. </summary>
         public virtual void PostUpdateInvasions() { }
 
         /// <summary> Called after the Network got updated, this is the last hook that happens in a subworld update. </summary>
         public virtual void PostUpdateEverything() { }
+
+        #endregion
     }
 }
