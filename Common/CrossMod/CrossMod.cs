@@ -22,11 +22,9 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Crossmod
 {
-    public class CrossMod
+    public class CrossMod : ModSystem
     {
-        private static Mod Mod => Macrocosm.Instance;
-
-        public static void Load()
+        public override void PostSetupContent()
         {
             Call_BossChecklist();
             Call_Fargowiltas();
@@ -35,7 +33,7 @@ namespace Macrocosm.Common.Crossmod
             Call_TerrariaAmbience();
         }
 
-        private static void Call_BossChecklist()
+        private void Call_BossChecklist()
         {
             #region Vanilla value reference
             /*
@@ -64,7 +62,7 @@ namespace Macrocosm.Common.Crossmod
             #region CraterDemon
             if (ModLoader.TryGetMod("BossChecklist", out Mod bossChecklist))
             {
-                bossChecklist.Call("LogBoss", Mod, nameof(CraterDemon), 20f, () => WorldDataSystem.Instance.DownedCraterDemon, ModContent.NPCType<CraterDemon>(), new Dictionary<string, object>()
+                bossChecklist.Call("LogBoss", Mod, nameof(CraterDemon), 20f, () => WorldFlags.DownedCraterDemon, ModContent.NPCType<CraterDemon>(), new Dictionary<string, object>()
                 {
                     ["spawnItems"] = ModContent.ItemType<CraterDemonSummon>(),
                     ["collectibles"] = new List<int>
@@ -89,15 +87,15 @@ namespace Macrocosm.Common.Crossmod
             #endregion
         }
 
-        private static void Call_Fargowiltas()
+        private void Call_Fargowiltas()
         {
             if (ModLoader.TryGetMod("Fargowiltas", out Mod fargos))
             {
-                fargos.Call("AddSummon", 19.0f, "Macrocosm", "CraterDemonSummon", () => WorldDataSystem.Instance.DownedCraterDemon, Item.buyPrice(gold: 15));
+                fargos.Call("AddSummon", 19.0f, "Macrocosm", "CraterDemonSummon", () => WorldFlags.DownedCraterDemon, Item.buyPrice(gold: 15));
             }
         }
 
-        private static void Call_MusicDisplay()
+        private void Call_MusicDisplay()
         {
             if (ModLoader.TryGetMod("MusicDisplay", out Mod musicDisplay))
             {
@@ -111,7 +109,7 @@ namespace Macrocosm.Common.Crossmod
         }
 
 
-        private static void Call_TerrariaAmbience()
+        private void Call_TerrariaAmbience()
         {
             if (ModLoader.TryGetMod("TerrariaAmbience", out Mod ta))
             {
@@ -130,7 +128,7 @@ namespace Macrocosm.Common.Crossmod
             }
         }
 
-        private static void Call_Wikithis()
+        private void Call_Wikithis()
         {
             if (ModLoader.TryGetMod("Wikithis", out Mod wikithis) && !Main.dedServ)
             {

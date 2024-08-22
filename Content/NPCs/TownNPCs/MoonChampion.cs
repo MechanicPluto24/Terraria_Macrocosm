@@ -1,3 +1,4 @@
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Systems;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
@@ -37,6 +38,8 @@ namespace Macrocosm.Content.NPCs.TownNPCs
 
             //NPCID.Sets.ShimmerTownTransform[NPC.type] = true; // TODO
 
+            NPCSets.MoonNPC[NPC.type] = true;
+
             NPCID.Sets.NPCBestiaryDrawModifiers drawModifiers = new()
             {
                 Velocity = 1f // Draws the NPC in the bestiary as if its walking +1 tiles in the x direction
@@ -61,8 +64,7 @@ namespace Macrocosm.Content.NPCs.TownNPCs
             SpawnModBiomes = [ModContent.GetInstance<MoonBiome>().Type];
         }
 
-        public override bool CanTownNPCSpawn(int numTownNPCs)
-            => WorldDataSystem.Instance.DownedCraterDemon;
+        public override bool CanTownNPCSpawn(int numTownNPCs) => WorldFlags.DownedCraterDemon;
 
         public override List<string> SetNPCNameList()
         {

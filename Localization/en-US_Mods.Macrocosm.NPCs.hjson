@@ -10,11 +10,6 @@ CraterImp: {
 	BestiaryFlavorText: Smaller companions of the infamous Crater Demon, these lesser demons aid their master in combat.
 }
 
-BloodMoonJuggernaut: {
-	DisplayName: Juggernaut
-	BestiaryFlavorText: A hulking, tanky behemoth of alien flesh, bone, and fury. Get too close and they'll slug your bloody entrails into orbit!
-}
-
 Clavite: {
 	DisplayName: Clavite
 	BestiaryFlavorText: A ravenous alien that prowls the surface of the Moon, attacking and charging at anything it finds.
@@ -82,13 +77,8 @@ Dweller: {
 }
 
 /*
-MOON LICH: An ancient alien infused with powerful lunar magic, boasting the ability to reanimate the dead to serve and fight for their new master.
 SCATTERBRAINED: Reanimated storm divers, their bodies reconfigured and distorted. Their attacks are slow and inaccurate, but deadly.
 GUTBELCHER: Reconstructed amalgams of various lunar aliens, belching their acidic and volatile insides at their targets.
-XENOHIVE: Zombified aliens molded to serve as mobile hives for swarms of alien leeches, deployed to defend their Lich.
-ALIEN LEECH: Tiny, mutated alien drones that have evolved to fly with small, biochemical jets. They can quickly overwhelm their targets in large numbers.
-
-LUMINITE ELEMENTAL: Even on this desolate Moon, elementals have manifested in clumps of luminite ore, using its bizarre properties to defend itself.
 LUMINITE HORROR: Possessed by countless souls of restless, enraged lunar spirits, this hulking mass of raw luminite patrols the Moon's caverns for new victims.
 */
 
@@ -162,27 +152,27 @@ KyaniteScarabSmall: {
 
 LuminiteElemental: {
 	DisplayName: Luminite Elemental
-	BestiaryFlavorText: Mods.Macrocosm.NPCs.LuminiteElemental.BestiaryFlavorText
+	BestiaryFlavorText: Even on this desolate Moon, elementals have manifested in clumps of luminite ore, using its bizarre properties to defend itself.
 }
 
 MoonLich: {
 	DisplayName: Moon Lich
-	BestiaryFlavorText: Mods.Macrocosm.NPCs.MoonLich.BestiaryFlavorText
+	BestiaryFlavorText: An ancient alien infused with powerful lunar magic, boasting the ability to reanimate the dead to serve and fight for their new master.
 }
 
 XenoHive: {
 	DisplayName: Xeno Hive
-	BestiaryFlavorText: Mods.Macrocosm.NPCs.XenoHive.BestiaryFlavorText
+	BestiaryFlavorText: Zombified aliens molded to serve as mobile hives for swarms of alien leeches, deployed to defend their Lich.
 }
 
 XenoHornet: {
-	DisplayName: Xeno Hornet
-	BestiaryFlavorText: Mods.Macrocosm.NPCs.XenoHornet.BestiaryFlavorText
+	DisplayName: Alien Leech
+	BestiaryFlavorText: Tiny, mutated alien drones that have evolved to fly with small, biochemical jets. They can quickly overwhelm their targets in large numbers.
 }
 
 Bruiser: {
 	DisplayName: Bruiser
-	BestiaryFlavorText: Mods.Macrocosm.NPCs.Bruiser.BestiaryFlavorText
+	BestiaryFlavorText: A hulking, tanky behemoth of alien flesh, bone, and fury. Get too close and they'll slug your bloody entrails into orbit!
 }
 
 FlamingMeteor: {

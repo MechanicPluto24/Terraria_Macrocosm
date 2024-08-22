@@ -4,6 +4,7 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Drops;
+using Macrocosm.Content.NPCs.Bosses.CraterDemon;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -113,8 +114,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             // the radius around the player where the ghoul tends to spin 
             float dashRadius = 60f;
-            // huh 
-            float dashFactorThird = 0.33333334f * dashRadius;
 
             if (Main.expertMode)
                 kbResist *= Main.GameModeInfo.KnockbackToEnemiesMultiplier;
@@ -208,7 +207,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                     if (positionDiff.HasNaNs())
                         positionDiff = new Vector2(NPC.direction, 0f);
 
-                    NPC.velocity = (NPC.velocity * (dashRadius - 1f) + positionDiff * (NPC.velocity.Length() + dashFactorThird)) / dashRadius;
+                    NPC.velocity = (NPC.velocity * (dashRadius - 1f) + positionDiff * (NPC.velocity.Length() + dashRadius / 3f)) / dashRadius;
                 }
 
             }
@@ -276,9 +275,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override void HitEffect(NPC.HitInfo hit)
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 20; i++)
             {
-                int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, ModContent.DustType<RegolithDust>());
+                int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, i % 2 == 0 ? ModContent.DustType<RegolithDust>() : DustID.GreenBlood);
                 Dust dust = Main.dust[dustIndex];
                 dust.velocity.X *= dust.velocity.X * 1.25f * hit.HitDirection + Main.rand.Next(0, 100) * 0.015f;
                 dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;
@@ -300,7 +299,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
                 for (int i = 0; i < 50; i++)
                 {
-                    int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, ModContent.DustType<RegolithDust>());
+                    int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, i % 2 == 0 ? ModContent.DustType<RegolithDust>() : DustID.GreenBlood);
                     Dust dust = Main.dust[dustIndex];
                     dust.velocity.X *= dust.velocity.X * 1.25f * hit.HitDirection + Main.rand.Next(0, 100) * 0.015f;
                     dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;

@@ -29,10 +29,10 @@ namespace Macrocosm.Content.Rockets.UI.Navigation.Checklist
         public UIFlightChecklist() : base(new LocalizedColorScaleText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Checklist"), scale: 1.2f))
         {
             SelectedLaunchCondition = new ChecklistCondition("Selected", () => MapTarget is not null && (TargetLaunchpad is not null || SelectedSpawnLocation));
-            DifferentTargetLaunchCondition = new ChecklistCondition("DifferentTarget", () => !Rocket.AtCurrentLaunchpad(TargetLaunchpad, MapTarget.WorldID));
+            DifferentTargetLaunchCondition = new ChecklistCondition("DifferentTarget", () => !Rocket.AtCurrentLaunchpad(TargetLaunchpad, MapTarget.TargetID));
             LaunchpadVacantCondition = new ChecklistCondition("VacantLaunchpad", () => SelectedSpawnLocation || (TargetLaunchpad is not null && !TargetLaunchpad.HasRocket));
 
-            CommonLaunchConditions.Add(new ChecklistCondition("Fuel", () => Rocket.Fuel >= Rocket.GetFuelCost(MapTarget.WorldID)));
+            CommonLaunchConditions.Add(new ChecklistCondition("Fuel", () => Rocket.Fuel >= Rocket.GetFuelCost(MapTarget.TargetID)));
 
             // NOTE: This must be kept as an explicit lambda expression!
 #pragma warning disable IDE0200

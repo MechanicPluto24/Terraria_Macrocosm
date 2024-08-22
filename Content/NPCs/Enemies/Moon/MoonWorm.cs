@@ -46,34 +46,28 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.height = 86;
             NPC.aiStyle = -1;
         }
-        public override void HitEffect(NPC.HitInfo hit)
-        {
-            if (NPC.life <= 0)
-            {
-                Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("MoonWormHead1").Type);
-                Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("MoonWormHead2").Type);
-            }
-        }
+
         public override void ModifyNPCLoot(NPCLoot loot)
         {
-            loot.Add(ItemDropRule.Common(ModContent.ItemType<AlienResidue>(), 1, 2, 8));//Make the worms drop quite a bit of residue, because they're rare.
+            loot.Add(ItemDropRule.Common(ModContent.ItemType<AlienResidue>(), 1, 4, 10));  
         }
 
 
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
         {
-            // We can use AddRange instead of calling Add multiple times in order to add multiple items at once
             bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[]
             {
 				// Sets the spawning conditions of this NPC that is listed in the bestiary.
 				//BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Times.NightTime,
 			});
         }
+
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
             return spawnInfo.Player.InModBiome<MoonBiome>() && !Main.dayTime && spawnInfo.SpawnTileY <= Main.worldSurface + 200 ? .01f : 0f;
         }
-        public override void Init()//Made the worm a little bit longer
+
+        public override void Init() 
         {
             // Set the segment variance
             // If you want the segment length to be constant, set these two properties to the same value
@@ -144,14 +138,36 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                         Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, NPC.velocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(MathHelper.Pi) * (float)Main.rand.NextFloat(10.0f, 20.0f), ModContent.ProjectileType<MoonRubble>(), 50, 0f, -1);
 
                     }
-
-
-
                 }
-
             }
         }
 
+        public override void HitEffect(NPC.HitInfo hit)
+        {
+            for (int i = 0; i < 14; i++)
+            {
+                int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, i % 2 == 0 ? ModContent.DustType<RegolithDust>() : DustID.GreenBlood);
+                Dust dust = Main.dust[dustIndex];
+                dust.velocity.X *= dust.velocity.X * 1.25f * hit.HitDirection + Main.rand.Next(0, 100) * 0.015f;
+                dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;
+                dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
+            }
+
+            if (NPC.life <= 0)
+            {
+                Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("MoonWormHead1").Type);
+                Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("MoonWormHead2").Type);
+
+                for (int i = 0; i < 40; i++)
+                {
+                    int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, i % 2 == 0 ? ModContent.DustType<RegolithDust>() : DustID.GreenBlood);
+                    Dust dust = Main.dust[dustIndex];
+                    dust.velocity.X *= dust.velocity.X * 1.25f * hit.HitDirection + Main.rand.Next(0, 100) * 0.015f;
+                    dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;
+                    dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
+                }
+            }
+        }
     }
     public class MoonWormBody : WormBody
     {
@@ -181,6 +197,15 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         }
         public override void HitEffect(NPC.HitInfo hit)
         {
+            for (int i = 0; i < 14; i++)
+            {
+                int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, i % 2 == 0 ? ModContent.DustType<RegolithDust>() : DustID.GreenBlood);
+                Dust dust = Main.dust[dustIndex];
+                dust.velocity.X *= dust.velocity.X * 1.25f * hit.HitDirection + Main.rand.Next(0, 100) * 0.015f;
+                dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;
+                dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
+            }
+
             if (NPC.life <= 0)
             {
                 if ((int)NPC.frameCounter == 1)
@@ -192,6 +217,15 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 {
                     Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("MoonWormAlternate1").Type);
                     Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("MoonWormAlternate2").Type);
+                }
+
+                for (int i = 0; i < 40; i++)
+                {
+                    int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, i % 2 == 0 ? ModContent.DustType<RegolithDust>() : DustID.GreenBlood);
+                    Dust dust = Main.dust[dustIndex];
+                    dust.velocity.X *= dust.velocity.X * 1.25f * hit.HitDirection + Main.rand.Next(0, 100) * 0.015f;
+                    dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;
+                    dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
                 }
             }
         }
@@ -230,11 +264,27 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         }
         public override void HitEffect(NPC.HitInfo hit)
         {
+            for (int i = 0; i < 14; i++)
+            {
+                int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, i % 2 == 0 ? ModContent.DustType<RegolithDust>() : DustID.GreenBlood);
+                Dust dust = Main.dust[dustIndex];
+                dust.velocity.X *= dust.velocity.X * 1.25f * hit.HitDirection + Main.rand.Next(0, 100) * 0.015f;
+                dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;
+                dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
+            }
+
             if (NPC.life <= 0)
             {
-
                 Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("MoonWormTail").Type);
 
+                for (int i = 0; i < 40; i++)
+                {
+                    int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, i % 2 == 0 ? ModContent.DustType<RegolithDust>() : DustID.GreenBlood);
+                    Dust dust = Main.dust[dustIndex];
+                    dust.velocity.X *= dust.velocity.X * 1.25f * hit.HitDirection + Main.rand.Next(0, 100) * 0.015f;
+                    dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;
+                    dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
+                }
             }
         }
 

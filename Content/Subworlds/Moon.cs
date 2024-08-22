@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Subworlds;
+﻿using Macrocosm.Common.Enums;
+using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems;
 using Macrocosm.Content.Projectiles.Environment.Meteors;
 using Macrocosm.Content.Rockets.UI.Navigation.Checklist;
@@ -6,9 +7,12 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.GameContent.Bestiary;
+using Terraria.GameContent.Events;
 using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Net;
 using Terraria.Utilities;
 namespace Macrocosm.Content.Subworlds
 {
@@ -19,6 +23,8 @@ namespace Macrocosm.Content.Subworlds
     /// </summary>
     public partial class Moon : MacrocosmSubworld
     {
+        public static Moon Instance => ModContent.GetInstance<Moon>();
+
         // 8 times slower than on Earth (a Terrarian lunar month lasts for 8 in-game days)
         public override double TimeRate => 0.125;
 
@@ -71,6 +77,15 @@ namespace Macrocosm.Content.Subworlds
             UpdateMeteorStorm();
         }
 
+        public override void PreUpdateEntities()
+        {
+            if (!Main.dedServ)
+            {
+                if (!SkyManager.Instance["Macrocosm:MoonSky"].IsActive())
+                    SkyManager.Instance.Activate("Macrocosm:MoonSky");
+            }
+        }
+
         public override void PreUpdateWorld()
         {
             UpdateBloodMoon();
@@ -83,13 +98,8 @@ namespace Macrocosm.Content.Subworlds
             UpdateMeteors();
         }
 
-        public override void PreUpdateEntities()
+        public override void PostUpdateTime()
         {
-            if (!Main.dedServ)
-            {
-                if (!SkyManager.Instance["Macrocosm:MoonSky"].IsActive())
-                    SkyManager.Instance.Activate("Macrocosm:MoonSky");
-            }
         }
 
         //TODO: NetSync and add actual content
