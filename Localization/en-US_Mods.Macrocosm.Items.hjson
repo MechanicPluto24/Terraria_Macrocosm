@@ -1,14 +1,6 @@
 SetBonuses: {
-	SpaceProtection_1:
-		'''
-		Pressurized spacesuit allows for exploration of other celestial bodies.
-		Tier 1 extraterrestrial protection
-		'''
-	SpaceProtection_2:
-		'''
-		Lead-lined suit allows for safe exploration of highly irradiated environments.
-		Tier 2 extraterrestrial protection
-		'''
+	SpaceProtection_1: Pressurized spacesuit allows for exploration of other celestial bodies.
+	SpaceProtection_2: Lead-lined suit allows for safe exploration of highly irradiated environments.
 }
 
 CelestialBulwark: {
@@ -70,7 +62,7 @@ ChandriumBreastplate: {
 	DisplayName: Chandrium Breastplate
 	Tooltip:
 		'''
-		Increases max number of minion by 1
+		Increases max number of minions by 1
 		15% increased whip range and speed
 		'''
 }
@@ -579,7 +571,7 @@ DianiteTome: {
 	DisplayName: Dianite Tome
 	Tooltip:
 		'''
-		Conjure a portal to rain
+		Conjure a portal to rain 
 		flaming meteors down on your foes
 		'''
 }
@@ -650,7 +642,7 @@ ArchersLine: {
 
 Copernicus: {
 	DisplayName: Copernicus
-	Tooltip: <right> to launch a plasma ball grenade
+	Tooltip: ""
 }
 
 Cruithne: {
@@ -662,8 +654,8 @@ LHBMinigun: {
 	DisplayName: LHB-59
 	Tooltip:
 		'''
-		'What's more effective than bullets?
-		A whole LOT of bullets.'
+		'What's more effective than bullets?''
+		'A whole LOT of bullets.'
 		'''
 }
 
@@ -694,7 +686,7 @@ ChandriumStaff: {
 
 ChandriumWhip: {
 	DisplayName: Chandrium Whip
-	Tooltip: ""
+	Tooltip: Extra damage every third hit
 }
 
 HandheldEngine: {
@@ -733,7 +725,7 @@ ChampionsBladeRepaired: {
 }
 
 ChampionsBlade: {
-	DisplayName: Champions Blade
+	DisplayName: Champion's Blade
 	Tooltip: ""
 }
 
@@ -1024,7 +1016,7 @@ ZombieFinger: {
 
 XFLR6: {
 	DisplayName: XFLR-6
-	Tooltip: Well, what do you think of that? Look what the goat created.
+	Tooltip: 'Well, what do you think of that? Look what the goat created.'
 }
 
 InvarArrow: {
@@ -1081,7 +1073,7 @@ CraterDemonPet: {
 	DisplayName: Toy Rocket
 	Tooltip:
 		'''
-		       Summons a Crater Imp
+		Summons a Crater Imp
 		'Fly me to the Moon!'
 		       
 		'''

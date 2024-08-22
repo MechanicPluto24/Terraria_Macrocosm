@@ -506,10 +506,10 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
         public override void OnKill()
         {
-            if (!WorldDataSystem.Instance.DownedCraterDemon)
+            if (!WorldFlags.DownedCraterDemon)
                 NPC.NewNPC(NPC.GetSource_Death(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<MoonChampion>());
 
-            WorldDataSystem.Instance.DownedCraterDemon = true;
+            WorldFlags.SetFlag(ref WorldFlags.DownedCraterDemon);
         }
 
         public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)

@@ -30,20 +30,14 @@ namespace Macrocosm.Content.Items.Weapons.Magic
             Item.value = 10000;
             Item.rare = ModContent.RarityType<MoonRarityT3>();
             Item.UseSound = SoundID.Item9;
-            Item.shoot = ModContent.ProjectileType<DianitePortal>();
+            Item.shoot = ModContent.ProjectileType<FrigorianGazeProjectile>();
             Item.noUseGraphic = true;
             Item.shootSpeed = 10f;
         }
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-
             Projectile.NewProjectileDirect(source, position, velocity, ModContent.ProjectileType<FrigorianGazeProjectile>(), damage, knockback, player.whoAmI);
-
-
             return false;
         }
-
-
-
     }
 }
