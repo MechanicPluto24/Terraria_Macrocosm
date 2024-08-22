@@ -13,13 +13,13 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
-    public class DianitePortal : ModProjectile
+    public class MicronovaPortal : ModProjectile
     {
 
         protected int defWidth;
         protected int defHeight;
 
-        protected bool manaCheck = true;
+     
 
         public int AITimer
         {
@@ -27,11 +27,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             set => Projectile.ai[0] = value;
         }
 
-        public int AIShootTimer
-        {
-            get => (int)Projectile.ai[1];
-            set => Projectile.ai[1] = value;
-        }
+
 
 
         public override void SetDefaults()
@@ -48,60 +44,40 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         public override void AI()
         {
             Player player = Main.player[Projectile.owner];
-
-            if (!player.active || player.dead || !player.channel || !manaCheck)
-            {
-                Projectile.Kill();
-                return;
-            }
-
-            player.heldProj = Projectile.whoAmI;
-            player.SetDummyItemTime(2);
-
-            Projectile.rotation -= MathHelper.ToRadians(7.4f);
-
+            Projectile.rotation += MathHelper.ToRadians(7.4f);
+            Projectile.velocity*=0f;
             AITimer++;
 
-            if (AITimer > 24 && AITimer % 10 == 0)
+            if (AITimer == 20)
             {
-                manaCheck = player.CheckMana(3, true);
+            
 
-                if (Projectile.owner == Main.myPlayer)
-                {
+               
                     Vector2 target = (Main.MouseWorld - Projectile.Center).SafeNormalize(default);
-                    int direction = Math.Sign(target.X);
+                  
 
-                    float shootAngle = -MathHelper.Pi / 12 * direction * MathF.Abs(MathF.Cos(target.ToRotation()));
-                    float shootSpeed = Main.rand.NextFloat(16f, 20f);
-
-                    Vector2 shootVelocity = target.RotatedBy(shootAngle) * shootSpeed;
-                    Vector2 shootPosition = Projectile.Center + Main.rand.NextVector2Circular(30, 30);
+                    Vector2 shootVelocity = target * 1f;
+                    Vector2 shootPosition = Projectile.Center;
 
                     int damage = Projectile.damage;
-                    int type = ModContent.ProjectileType<DianiteMeteorSmall>();
-
-                    if (Main.rand.NextBool(4))
-                    {
-                        damage = (int)(damage * 1.2f);
-                        type = ModContent.ProjectileType<DianiteMeteor>();
-                    }
-
-                    Projectile.NewProjectile(Projectile.InheritSource(Projectile), shootPosition, shootVelocity.RotatedByRandom(MathHelper.Pi / 24), type, damage, Projectile.knockBack, Main.player[Projectile.owner].whoAmI);
-                }
+                    Projectile.NewProjectile(Projectile.InheritSource(Projectile), shootPosition, shootVelocity.RotatedByRandom(MathHelper.Pi / 24), ModContent.ProjectileType<MicronovaBeam>(), damage, Projectile.knockBack, Main.player[Projectile.owner].whoAmI);
+                
             }
 
             if (AITimer % 16 == 0)
                 SoundEngine.PlaySound(SoundID.Item20, Projectile.Center);
 
-            Projectile.alpha = (int)MathHelper.Clamp((int)(255 - (Projectile.ai[0] / 24f) * 255f), 0f, 255f);
+            Projectile.alpha = (int)MathHelper.Clamp((int)(255 - (Projectile.ai[0] / 5f) * 255f), 0f, 255f);
             Vector2 center = Projectile.Center;
             Projectile.scale = 0.05f + 0.65f * (1f - Projectile.alpha / 255f);
             Projectile.width = (int)(defWidth * Projectile.scale);
             Projectile.height = (int)(defHeight * Projectile.scale);
             Projectile.Center = center;
 
-            Lighting.AddLight(Projectile.Center, new Color(255, 170, 33).ToVector3() * 5f * Projectile.scale);
-            SpawnParticles(10);
+            Lighting.AddLight(Projectile.Center, new Color(0, 170, 200).ToVector3() * 5f * Projectile.scale);
+            SpawnParticles(5);
+            if (AITimer>60)
+                Projectile.Kill();
         }
 
         private void SpawnParticles(int count)
@@ -114,7 +90,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                     p.Position = Projectile.Center + Main.rand.NextVector2Circular(Projectile.width, Projectile.height) * 1.6f * progress;
                     p.Velocity = Vector2.One * 18;
                     p.Scale = (0.1f + Main.rand.NextFloat(0.1f)) * progress;
-                    p.Color = new Color(255, 170, 33) * 0.6f;
+                    p.Color = new Color(0, 170, 200) * 0.6f;
                     p.TargetCenter = Projectile.Center;
                 });
             }
@@ -135,8 +111,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             => Color.White * (1f - Projectile.alpha / 255f);
 
         private SpriteBatchState state;
-        public override bool PreDraw(ref Color lightColor)
-        {
+        public override void PostDraw(Color lightColor){
             Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
 
             Color color = Color.White * Projectile.Opacity;
@@ -155,14 +130,17 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
             Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Flare2").Value;
             float scale = Projectile.scale * Main.rand.NextFloat(0.85f, 1.15f);
-            Main.spriteBatch.Draw(flare, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(255, 170, 33).WithOpacity(0.35f * Projectile.Opacity), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(flare, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(0, 170, 200).WithOpacity(0.35f * Projectile.Opacity), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
 
             // Strange
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.AlphaBlend, state);
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);
+    }
 
+        public override bool PreDraw(ref Color lightColor)
+        {
             return false;
         }
     }

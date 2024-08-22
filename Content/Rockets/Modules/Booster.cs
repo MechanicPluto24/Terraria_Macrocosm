@@ -72,11 +72,11 @@ namespace Macrocosm.Content.Rockets.Modules
                 positions[i] += new Vector2(0f, 4f * i);
 
             var shader = new MiscShaderData(Main.VertexPixelShaderRef, "MagicMissile")
-                            .UseProjectionMatrix(doUse: false)
-                            .UseSaturation(-2.2f)
-                            .UseImage0(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "FadeOutMask"))
-                            .UseImage1(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "RocketExhaustTrail2"))
-                            .UseImage2(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "RocketExhaustTrail2"));
+                .UseProjectionMatrix(doUse: false)
+                .UseSaturation(-2.2f)
+                .UseImage0(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "FadeOutMask"))
+                .UseImage1(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "RocketExhaustTrail2"))
+                .UseImage2(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "RocketExhaustTrail2"));
 
             shader.Apply();
 

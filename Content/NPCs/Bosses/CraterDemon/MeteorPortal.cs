@@ -71,8 +71,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 {
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, (-Vector2.UnitY).RotatedByRandom(MathHelper.PiOver2) * Main.rand.NextFloat(12f, 16f), ModContent.ProjectileType<FlamingMeteor>(),
-                            Projectile.damage, Projectile.knockBack, Projectile.owner);
+                        NPC.NewNPC(Projectile.GetSource_FromAI(), (int)Projectile.Center.X, (int)Projectile.Center.Y, ModContent.NPCType<FlamingMeteor>());
                     }
 
                     Terraria.Audio.SoundEngine.PlaySound(SoundID.Item20, Projectile.Center);
