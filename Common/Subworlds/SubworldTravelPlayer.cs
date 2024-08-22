@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.Config;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.LoadingScreens;
+using Macrocosm.Content.Subworlds;
 using SubworldLibrary;
 using System;
 using System.Collections.Generic;
@@ -64,7 +65,7 @@ namespace Macrocosm.Common.Subworlds
                 currentMainWorldUniqueId = MacrocosmSubworld.MainWorldUniqueID;
                 if (!SubworldSystem.AnyActive<Macrocosm>() && !TriggeredSubworldTravel && lastSubworldIdByWorldUniqueId.TryGetValue(currentMainWorldUniqueId, out string lastSubworldId))
                 {
-                    if (lastSubworldId is not "Macrocosm/Earth")
+                    if (lastSubworldId is not Earth.ID)
                         MacrocosmSubworld.Travel(lastSubworldId, trigger: false);
                 }
             }
@@ -100,7 +101,7 @@ namespace Macrocosm.Common.Subworlds
                 && macrocosmPlayer.lastSubworldIdByWorldUniqueId.TryGetValue(macrocosmPlayer.currentMainWorldUniqueId, out string lastSubworldId)
             )
             {
-                if (lastSubworldId is not "Macrocosm/Earth")
+                if (lastSubworldId is not Earth.ID)
                     MacrocosmSubworld.Travel(lastSubworldId, trigger: false);
             }
         }

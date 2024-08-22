@@ -9,6 +9,7 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Blocks.Sands;
 using Macrocosm.Content.Items.Blocks.Terrain;
 using Macrocosm.Content.Items.Ores;
+using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.IO;
@@ -72,9 +73,9 @@ namespace Macrocosm.Content.Machines
             SceneData scene = new(Position);
             //scene.Scan();
 
-            switch (MacrocosmSubworld.CurrentID)
+            switch (MacrocosmSubworld.SanitizeID(MacrocosmSubworld.CurrentID))
             {
-                case "Macrocosm/Moon":
+                case nameof(Moon):
 
                     Loot.Add(new TECommonDrop(this, ModContent.ItemType<Regolith>(), 20, amountDroppedMinimum: 10, amountDroppedMaximum: 100));
                     Loot.Add(new TECommonDrop(this, ModContent.ItemType<Protolith>(), 20, amountDroppedMinimum: 10, amountDroppedMaximum: 100));
