@@ -35,6 +35,15 @@ namespace Macrocosm.Common.TileFrame
         {
             var c = new ILCursor(il);
 
+            int up = 0;
+            int down = 0;
+            int left = 0;
+            int right = 0; 
+            int upLeft = 0;
+            int upRight = 0;
+            int downLeft = 0;
+            int downRight = 0;
+
             // Match:
             // TileMergeAttempt(num, Main.tileMerge[num], ref up, ref down, ref left, ref right, ref upLeft, ref upRight, ref downLeft, ref downRight);
             if (!c.TryGotoNext(MoveType.After,
@@ -42,14 +51,14 @@ namespace Macrocosm.Common.TileFrame
                     i => i.OpCode == OpCodes.Ldsfld && i.Operand is FieldReference field && field.Name == "tileMerge", // ldsfld bool[][] Terraria.Main::tileMerge
                     i => i.OpCode == OpCodes.Ldloc_3, // ldloc.3
                     i => i.OpCode == OpCodes.Ldelem_Ref, // ldelem.ref
-                    i => i.MatchLdloca(out _), // ldloca.s up
-                    i => i.MatchLdloca(out _), // ldloca.s down
-                    i => i.MatchLdloca(out _), // ldloca.s left
-                    i => i.MatchLdloca(out _), // ldloca.s right
-                    i => i.MatchLdloca(out _), // ldloca.s upLeft
-                    i => i.MatchLdloca(out _), // ldloca.s upRight
-                    i => i.MatchLdloca(out _), // ldloca.s downLeft
-                    i => i.MatchLdloca(out _), // ldloca.s downRight
+                    i => i.MatchLdloca(out up), 
+                    i => i.MatchLdloca(out down),  
+                    i => i.MatchLdloca(out left),  
+                    i => i.MatchLdloca(out right), 
+                    i => i.MatchLdloca(out upLeft),  
+                    i => i.MatchLdloca(out upRight), 
+                    i => i.MatchLdloca(out downLeft),  
+                    i => i.MatchLdloca(out downRight),  
                     i => i.MatchCall("Terraria.WorldGen", "TileMergeAttempt")
                 ))
             {
@@ -59,14 +68,14 @@ namespace Macrocosm.Common.TileFrame
 
             c.Emit(OpCodes.Ldarg_0); // i
             c.Emit(OpCodes.Ldarg_1); // j
-            c.Emit(OpCodes.Ldloca, 84); // up
-            c.Emit(OpCodes.Ldloca, 89); // down
-            c.Emit(OpCodes.Ldloca, 86); // left
-            c.Emit(OpCodes.Ldloca, 87); // right
-            c.Emit(OpCodes.Ldloca, 83); // upLeft
-            c.Emit(OpCodes.Ldloca, 85); // upRight
-            c.Emit(OpCodes.Ldloca, 88); // downLeft
-            c.Emit(OpCodes.Ldloca, 90); // downRight
+            c.Emit(OpCodes.Ldloca, up);
+            c.Emit(OpCodes.Ldloca, down);
+            c.Emit(OpCodes.Ldloca, left);
+            c.Emit(OpCodes.Ldloca, right);
+            c.Emit(OpCodes.Ldloca, upLeft);
+            c.Emit(OpCodes.Ldloca, upRight);
+            c.Emit(OpCodes.Ldloca, downLeft);
+            c.Emit(OpCodes.Ldloca, downRight);
 
             c.EmitDelegate(ModifyTileFrame);
         }

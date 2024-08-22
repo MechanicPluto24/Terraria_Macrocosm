@@ -64,8 +64,8 @@ IndustrialDeskClock.MapEntry: Desk Clock
 BurnerGenerator.MapEntry: Burner Generator
 IndustrialServer.MapEntry: Server
 Medkit.MapEntry: Medkit
-IndustrialBulkheadClosed.MapEntry: Industrial Bulkhead Closed
-IndustrialBulkheadOpen.MapEntry: Industrial Bulkhead Open
+IndustrialBulkheadClosed.MapEntry: Bulkhead
+IndustrialBulkheadOpen.MapEntry: Bulkhead
 
 LuminiteChest: {
 	MapEntry0: Mods.Macrocosm.Tiles.LuminiteChest.MapEntry0

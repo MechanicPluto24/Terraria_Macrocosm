@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Subworlds;
+﻿using Macrocosm.Common.Enums;
+using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using System;

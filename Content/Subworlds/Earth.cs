@@ -4,11 +4,11 @@ using Terraria;
 
 namespace Macrocosm.Content.Subworlds
 {
-    /// <summary>
-    /// Not really a subworld but could be used for code consistency purposes
-    /// </summary>
+    /// <summary> Not a subworld, used for fetching the main world defaults of subworld-dependent values </summary>
     public static class Earth
     {
+        public const string ID = "Macrocosm/Earth";
+
         public const double TimeRate = 1.0;
         public const double DayLenght = Main.dayLength;
         public const double NightLenght = Main.nightLength;

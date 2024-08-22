@@ -2,6 +2,7 @@
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Content.Rarities;
+using Macrocosm.Content.Subworlds;
 using SubworldLibrary;
 using Terraria;
 using Terraria.ID;
@@ -32,9 +33,9 @@ namespace Macrocosm.Content.Items.Dev
             if (player.whoAmI == Main.myPlayer)
             {
                 if (!SubworldSystem.AnyActive<Macrocosm>())
-                    MacrocosmSubworld.Travel("Macrocosm/Moon");
+                    MacrocosmSubworld.Travel(Moon.Instance.ID);
                 else
-                    MacrocosmSubworld.Travel("Macrocosm/Earth");
+                    MacrocosmSubworld.Travel(Earth.ID);
             }
 
             return true;

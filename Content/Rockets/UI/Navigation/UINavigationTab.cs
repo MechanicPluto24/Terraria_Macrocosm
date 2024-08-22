@@ -81,7 +81,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
             launchButton = new()
             {
                 ZoomIn = navigationPanel.ZoomIn,
-                Launch = () => Rocket.Launch(target.WorldID, targetLaunchPad)
+                Launch = () => Rocket.Launch(target.TargetID, targetLaunchPad)
             };
             Append(launchButton);
             launchButton.Activate();
@@ -102,32 +102,25 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
         public void OnTabOpen()
         {
             CustomizationPreview.OnTabOpen();
-            WorldDataSystem.Instance.PropertyChanged += WorldDataSystem_PropertyChanged;
             LaunchPadManager.OnLaunchpadCreation += LaunchPadManager_OnLaunchpadCreation;
         }
 
         public void OnTabClose()
         {
-            WorldDataSystem.Instance.PropertyChanged -= WorldDataSystem_PropertyChanged;
             LaunchPadManager.OnLaunchpadCreation -= LaunchPadManager_OnLaunchpadCreation;
-        }
-
-        private void WorldDataSystem_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            navigationPanel.UpdateMapVisibility();
         }
 
         private void LaunchPadManager_OnLaunchpadCreation(object sender, System.EventArgs e)
         {
             if (target is not null)
-                CreateLaunchLocationPanel(target.WorldID);
+                CreateLaunchLocationPanel(target.TargetID);
         }
 
         public override void Update(GameTime gameTime)
         {
             lastTarget = target;
             target = navigationPanel.CurrentMap.GetSelectedTarget();
-            Main.LocalPlayer.GetModPlayer<RocketPlayer>().TargetWorld = target is null ? "" : target.WorldID;
+            Main.LocalPlayer.GetModPlayer<RocketPlayer>().TargetWorld = target is null ? "" : target.TargetID;
 
             base.Update(gameTime);
 
@@ -145,7 +138,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
                 if (target != lastTarget)
                 {
                     launchLocationsList.ClearList();
-                    CreateWorldInfoPanel(target.WorldID);
+                    CreateWorldInfoPanel(target.TargetID);
                 }
             }
             else if (launchLocationsList.Any())
@@ -157,7 +150,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
         private void UpdateLaunchLocationsList()
         {
             if (target is not null && target != lastTarget)
-                CreateLaunchLocationPanel(target.WorldID);
+                CreateLaunchLocationPanel(target.TargetID);
 
             targetLaunchPad = null;
             selectedSpawnLocation = false;

@@ -35,7 +35,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation.Info
 
         public static LocalizedText GetFlavorText(string subworldId)
         {
-            if (subworldId == "Phobos" && WorldDataSystem.Instance.DeimosReturn)
+            if (subworldId == "Phobos" && WorldFlags.DeimosReturn)
                 return Utility.GetLocalizedTextOrEmpty("Mods.Macrocosm.Subworlds." + subworldId + ".FlavorText_DeimosReturn");
 
             return Utility.GetLocalizedTextOrEmpty("Mods.Macrocosm.Subworlds." + subworldId + ".FlavorText");
