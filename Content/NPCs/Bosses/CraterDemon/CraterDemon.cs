@@ -1164,7 +1164,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
                     SetAttack(setAttack);
 
-                    SetAttack(AttackState.SummonMeteors);
+                    
                 }
 
                 NPC.netUpdate = true;
@@ -1178,7 +1178,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             {
                 Vector2 orig = player.Center + player.velocity;
 
-                int count = GetDifficultyInfo(DifficultyInfo.MeteorShootBurst) * 1000;
+                int count = GetDifficultyInfo(DifficultyInfo.MeteorShootBurst);
 
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
@@ -1257,7 +1257,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                             damage = (int)(damage * 1.2f);
                         }
 
-                        Projectile.NewProjectile(NPC.GetSource_FromAI(), spawn, velocity, type, damage, 1f, Main.myPlayer, ai0: player.whoAmI);
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), spawn, velocity, type, damage, 1f, Main.myPlayer, ai0: player.whoAmI, ai2: NPC.whoAmI);
                     }
 
                     SoundEngine.PlaySound(SoundID.Zombie93, NPC.Center);
