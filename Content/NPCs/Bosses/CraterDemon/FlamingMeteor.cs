@@ -7,6 +7,8 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Content.Particles;
 
 namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 {
@@ -27,7 +29,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             NPC.height = 28;
             NPC.friendly = false;
             NPC.noTileCollide = true;
-            NPC.lifeMax = 20;
+            NPC.lifeMax = 400;
             NPC.timeLeft = 600;
             NPC.damage = 100;
         }
@@ -92,10 +94,18 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                     NPC.velocity = NPC.velocity.RotatedBy(aim.ToRotation());
                 }
 
-                NPC.life = 1;
+                //NPC.life = 1;
                 //NPC.friendly = true;
-                NPC.dontTakeDamage = true;
-                NPC.netUpdate = true;
+               // NPC.dontTakeDamage = true;
+                //NPC.netUpdate = true;
+            var explosion = Particle.CreateParticle<TintableExplosion>(p =>
+            {
+                p.Position = NPC.Center;
+                p.DrawColor = (new Color(200, 120, 60)).WithOpacity(0.8f);
+                p.Scale = 1.5f;
+                p.NumberOfInnerReplicas = 8;
+                p.ReplicaScalingFactor = 0.4f;
+            });
             }
         }
 
@@ -146,7 +156,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             {
                 trail.Draw(NPC.oldPos, NPC.oldRot, NPC.Size / 2f);
             }
-
+           
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);
 
