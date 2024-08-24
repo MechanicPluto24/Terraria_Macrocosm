@@ -1,5 +1,7 @@
 ﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Particles;
 using Macrocosm.Content.Trails;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -7,8 +9,6 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Content.Particles;
 
 namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 {
@@ -37,7 +37,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
         private float flashTimer;
         private float maxFlashTimer = 5;
         private bool spawned;
-        public override bool? DrawHealthBar(byte hbPosition,ref float scale,ref Vector2 position )=>false;
+        public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position) => false;
         private Vector2 spawnPosition;
         private FlamingMeteorTrail trail;
 
@@ -96,16 +96,16 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
                 //NPC.life = 1;
                 //NPC.friendly = true;
-               // NPC.dontTakeDamage = true;
+                // NPC.dontTakeDamage = true;
                 //NPC.netUpdate = true;
-            var explosion = Particle.CreateParticle<TintableExplosion>(p =>
-            {
-                p.Position = NPC.Center;
-                p.DrawColor = (new Color(200, 120, 60)).WithOpacity(0.8f);
-                p.Scale = 1.5f;
-                p.NumberOfInnerReplicas = 8;
-                p.ReplicaScalingFactor = 0.4f;
-            });
+                var explosion = Particle.CreateParticle<TintableExplosion>(p =>
+                {
+                    p.Position = NPC.Center;
+                    p.DrawColor = (new Color(200, 120, 60)).WithOpacity(0.8f);
+                    p.Scale = 1.5f;
+                    p.NumberOfInnerReplicas = 8;
+                    p.ReplicaScalingFactor = 0.4f;
+                });
             }
         }
 
@@ -156,7 +156,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             {
                 trail.Draw(NPC.oldPos, NPC.oldRot, NPC.Size / 2f);
             }
-           
+
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);
 
