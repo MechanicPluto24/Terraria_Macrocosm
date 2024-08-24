@@ -2502,6 +2502,10 @@ ImbriumJewel
 	Value: 1 platinum
 	Research count: 1
 
+Micronova
+	Value: 10 gold
+	Research count: 1
+
 WaveGunBlue
 	Value: 25 gold
 	Research count: 1
