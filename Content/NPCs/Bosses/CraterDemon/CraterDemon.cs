@@ -404,7 +404,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             NPCID.Sets.BossBestiaryPriority.Add(Type);
 
             // For the meteors
-            NPCID.Sets.TakesDamageFromHostilesWithoutBeingFriendly[Type] = true;  
+            NPCID.Sets.TakesDamageFromHostilesWithoutBeingFriendly[Type] = true;
 
             NPCID.Sets.ImmuneToRegularBuffs[Type] = true;
 
@@ -1164,7 +1164,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
                     SetAttack(setAttack);
 
-                    
+
                 }
 
                 NPC.netUpdate = true;

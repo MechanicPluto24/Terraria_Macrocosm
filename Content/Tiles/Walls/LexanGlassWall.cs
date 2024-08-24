@@ -1,6 +1,4 @@
-using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
-using Terraria;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles.Walls
@@ -9,12 +7,10 @@ namespace Macrocosm.Content.Tiles.Walls
     {
         public override void SetStaticDefaults()
         {
-           
-            AddMapEntry(new Color(20, 20, 20));
 
-          
+            AddMapEntry(new Color(20, 20, 20));
         }
     }
 
-   
+
 }
