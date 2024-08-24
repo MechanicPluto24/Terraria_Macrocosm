@@ -28,7 +28,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             set => Projectile.ai[2] = value;
         }
 
-        public int SpawnPeriod => 60;
+        public int SpawnPeriod => 12;
 
         public const int PortalTimerMax = (int)(4f * 60 + 1.5f * 60 + 24);
 
@@ -77,9 +77,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        for (int i = 0; i < 5; i++)
+                        for (int i = 0; i < 1; i++)
                         {
-                            Vector2 velocity = (Main.player[TargetPlayer].Center - Projectile.Center).SafeNormalize(Vector2.One).RotatedByRandom(MathHelper.PiOver4) * Main.rand.NextFloat(12, 20);
+                            Vector2 velocity = (Main.player[TargetPlayer].Center - Projectile.Center).SafeNormalize(Vector2.One).RotatedByRandom(MathHelper.PiOver4*0.6) * Main.rand.NextFloat(12, 20);
                             int type = ModContent.ProjectileType<PhantasmalImpSmall>();
                             int damage = Projectile.damage;
 
