@@ -62,7 +62,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
             AITimer++;
 
-            if (AITimer > 24 && AITimer % 10 == 0)
+            if (AITimer > 24 && AITimer % 7 == 0)
             {
                 manaCheck = player.CheckMana(3, true);
 
