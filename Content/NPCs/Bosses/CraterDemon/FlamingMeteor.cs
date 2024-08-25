@@ -1,5 +1,6 @@
-﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Content.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
 using Macrocosm.Content.Trails;
@@ -31,7 +32,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             NPC.noTileCollide = true;
             NPC.lifeMax = 400;
             NPC.timeLeft = 600;
-            NPC.damage = 100;
+            NPC.damage = 200;
         }
 
         private float flashTimer;

@@ -38,7 +38,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
         public override bool CanUseItem(Player player) => player.ownedProjectileCounts[ModContent.ProjectileType<DualWaveGunsHeld>()] < 1;
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            float maxCharge = 90f * player.GetAttackSpeed(DamageClass.Ranged);
+            float maxCharge = 90f * player.GetAttackSpeed(DamageClass.Magic);
             Vector2 aim = velocity;
             Projectile.NewProjectileDirect(source, position, aim, ModContent.ProjectileType<DualWaveGunsHeld>(), damage, knockback, player.whoAmI, maxCharge);
             return false;

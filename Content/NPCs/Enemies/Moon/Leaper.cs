@@ -31,10 +31,10 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.height = 44;
             NPC.damage = 65;
             NPC.defense = 60;
-            NPC.lifeMax = 700;
+            NPC.lifeMax = 900;
             NPC.HitSound = SoundID.NPCHit1;
             NPC.DeathSound = SoundID.NPCDeath2;
-            NPC.knockBackResist = 0.5f;
+            NPC.knockBackResist = 0.03f;
             NPC.aiStyle = -1;
             AIType = NPCID.ZombieMushroom;
             Banner = Item.NPCtoBanner(NPCID.Zombie);
@@ -171,7 +171,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public float LightValueFlee = 0.1f; //This light value causes the leaper to flee.
         public float LightValueRage = 0.5f; //This light value causes the leaper to enrage faster.
-        public float RageThreshold = 30f; //Determines the switch between fleeing and hostility.
+        public float RageThreshold = 12f; //Determines the switch between fleeing and hostility.
         public float Rage = 0f; //Determines the leapers level of hostility. <5f flee, >5f attack, >7f rage.
         public bool Fear = false; //is it fleeing?
         public float RageManager(float Lightlevel)//Manages the leapers rage.
@@ -190,8 +190,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             Rage += RageManager(Lighting.GetColor(NPC.Center.ToTileCoordinates()).GetBrightness()); //manage rage.
             //put caps on rage.
-            if (Rage > 30f)
-                Rage = 30f;
+            if (Rage > RageThreshold)
+                Rage = RageThreshold;
             if (Rage < 0f)
                 Rage = 0f;
 

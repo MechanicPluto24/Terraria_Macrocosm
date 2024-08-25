@@ -58,7 +58,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                         if (Player.PickAmmo(currentItem, out int projToShoot, out speed, out damage, out knockback, out usedAmmoItemId))
                         {
 
-                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Normalize(Projectile.velocity) * speed, projToShoot, damage / 2, knockback, Projectile.owner);
+                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Normalize(Projectile.velocity) * speed, ModContent.ProjectileType<WaveGunLaser>(), damage, knockback, Projectile.owner);
 
 
                             AI_Timer = 0;
@@ -80,7 +80,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
 
 
-                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Normalize(Projectile.velocity) * 34f, ModContent.ProjectileType<WaveRifleLaser>(), damage / 2, knockback, Projectile.owner);
+                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Normalize(Projectile.velocity) * 34f, ModContent.ProjectileType<WaveRifleLaser>(), damage, knockback, Projectile.owner);
 
                     }
                 }
