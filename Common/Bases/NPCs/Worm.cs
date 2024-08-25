@@ -6,7 +6,7 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Bases
+namespace Macrocosm.Common.Bases.NPCs
 {
     public enum WormSegmentType
     {

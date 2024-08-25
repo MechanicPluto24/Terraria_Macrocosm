@@ -72,14 +72,13 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             else
             {
                 AITimer = 0f;
-                if (Projectile.timeLeft % SpawnPeriod == 0&&Projectile.timeLeft>180)
+                if (Projectile.timeLeft % SpawnPeriod == 0 && Projectile.timeLeft > 180)
                 {
-
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
                         for (int i = 0; i < 1; i++)
                         {
-                            Vector2 velocity = (Main.player[TargetPlayer].Center - Projectile.Center).SafeNormalize(Vector2.One).RotatedByRandom(MathHelper.PiOver4*0.6) * Main.rand.NextFloat(12, 20);
+                            Vector2 velocity = (Main.player[TargetPlayer].Center - Projectile.Center).SafeNormalize(Vector2.One).RotatedByRandom(MathHelper.PiOver4 * 0.6) * Main.rand.NextFloat(12, 20);
                             int type = ModContent.ProjectileType<PhantasmalImpSmall>();
                             int damage = Projectile.damage;
 
@@ -143,7 +142,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
             Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Flare3").Value;
             float scale = Projectile.scale * Main.rand.NextFloat(0.9f, 1.1f);
-            Main.spriteBatch.Draw(flare, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(30, 255, 105).WithOpacity(0.85f), 0f, flare.Size() / 2f, scale*2f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(flare, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(30, 255, 105).WithOpacity(0.85f), 0f, flare.Size() / 2f, scale * 2f, SpriteEffects.None, 0f);
 
             // Strange
             Main.spriteBatch.End();

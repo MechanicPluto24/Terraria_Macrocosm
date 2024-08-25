@@ -1906,3 +1906,8 @@ Micronova: {
 	DisplayName: Micronova
 	Tooltip: ""
 }
+
+LexanGlassWall: {
+	DisplayName: Lexan Glass Wall
+	Tooltip: ""
+}

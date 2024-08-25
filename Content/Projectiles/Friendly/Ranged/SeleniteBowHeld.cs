@@ -11,6 +11,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
+    // Scrapped but alt attack can be reused for a magic weapon
     public class SeleniteBowHeld : ChargedHeldProjectile
     {
         public override string Texture => "Macrocosm/Content/Items/Weapons/Ranged/SeleniteBow";

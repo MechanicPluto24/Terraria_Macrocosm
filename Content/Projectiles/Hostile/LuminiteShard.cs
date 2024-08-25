@@ -99,6 +99,10 @@ namespace Macrocosm.Content.Projectiles.Hostile
                     Projectile.netUpdate = true;
                 }
             }
+            else if (!hasTarget)
+            {
+                Fall = true;
+            }
 
             if (Fall)
             {

@@ -1,5 +1,5 @@
 CraterDemon
-	Life: 45000
+	Life: 100000
 	Defense: 150
 	KB resist: 0
 	Damage: 80
@@ -24,10 +24,10 @@ CraterImp
 	Damage: 50
 
 FlamingMeteor
-	Life: 20
+	Life: 400
 	Defense: 0
 	KB resist: 1
-	Damage: 100
+	Damage: 200
 
 Bruiser
 	Life: 10000
@@ -93,9 +93,9 @@ KyaniteScarabSmall
 		Moonstone, (1-5) 10%
 
 Leaper
-	Life: 700
+	Life: 900
 	Defense: 60
-	KB resist: 0.5
+	KB resist: 0.03
 	Damage: 65
 	Drops:
 		Moonstone, (1-5) 10%
