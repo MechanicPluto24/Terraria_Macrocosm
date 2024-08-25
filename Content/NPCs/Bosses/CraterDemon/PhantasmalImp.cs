@@ -97,6 +97,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 {
                     Vector2 notDirection = Main.npc[Parent].Center - Projectile.Center;
                     Direction=((Direction + (notDirection * 0.002f)).SafeNormalize(Vector2.UnitX));
+                    Direction = Main.npc[Parent].Center - Projectile.Center;
+
                 }
 
                 Direction = Direction.SafeNormalize(Vector2.UnitY);

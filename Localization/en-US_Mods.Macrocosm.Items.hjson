@@ -1016,7 +1016,7 @@ ZombieFinger: {
 
 XFLR6: {
 	DisplayName: XFLR-6
-	Tooltip: 'Well, what do you think of that? Look what the goat created.'
+	Tooltip: Well, what do you think of that? Look what the goat created.
 }
 
 InvarArrow: {
@@ -1899,5 +1899,10 @@ RegolithBrickWallUnsafe: {
 
 RegolithWallUnsafe: {
 	DisplayName: Regolith Wall Unsafe
+	Tooltip: ""
+}
+
+Micronova: {
+	DisplayName: Micronova
 	Tooltip: ""
 }
