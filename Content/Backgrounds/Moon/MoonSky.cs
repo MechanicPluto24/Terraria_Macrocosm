@@ -94,6 +94,15 @@ namespace Macrocosm.Content.Backgrounds.Moon
 
         public void Unload() { }
 
+        public override void Reset()
+        {
+            starsDay.Clear();
+            starsNight.Clear();
+            Active = false;
+        }
+
+        public override bool IsActive() => Active;
+
         public override void Activate(Vector2 position, params object[] args)
         {
             starsDay.SpawnStars(100, 130, baseScale: 1.4f, twinkleFactor: 0.05f);
@@ -114,6 +123,34 @@ namespace Macrocosm.Content.Backgrounds.Moon
             starsNight.Clear();
             Active = false;
         }
+
+        public override float GetCloudAlpha() => 0f;
+
+        public override Color OnTileColor(Color inColor)
+        {
+            Color darkColor = new Color(35, 35, 35);
+            Color earthshineBlue = Color.Lerp(new Color(39, 87, 155), darkColor, 0.6f);
+
+            if (Main.dayTime)
+            {
+                if (Main.time < MacrocosmSubworld.CurrentDayLength * 0.1)
+                    return Color.Lerp(darkColor, Color.White, (float)(Main.time / (MacrocosmSubworld.CurrentDayLength * 0.1)));
+                else if (Main.time > MacrocosmSubworld.CurrentDayLength * 0.9)
+                    return Color.Lerp(darkColor, Color.White, (float)((MacrocosmSubworld.CurrentDayLength - Main.time) / (MacrocosmSubworld.CurrentDayLength - MacrocosmSubworld.CurrentDayLength * 0.9)));
+                else
+                    return Color.White;
+            }
+            else
+            {
+                if (Main.time < MacrocosmSubworld.CurrentNightLength * 0.2)
+                    return Color.Lerp(darkColor, earthshineBlue, (float)(Main.time / (MacrocosmSubworld.CurrentNightLength * 0.2)));
+                else if (Main.time > MacrocosmSubworld.CurrentNightLength * 0.8)
+                    return Color.Lerp(darkColor, earthshineBlue, (float)((MacrocosmSubworld.CurrentNightLength - Main.time) / (MacrocosmSubworld.CurrentNightLength - MacrocosmSubworld.CurrentNightLength * 0.8)));
+                else
+                    return earthshineBlue;
+            }
+        }
+
 
         public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth)
         {
@@ -254,43 +291,5 @@ namespace Macrocosm.Content.Backgrounds.Moon
             radius = 1f;
         }
 
-        public override Color OnTileColor(Color inColor)
-        {
-            Color darkColor = new Color(35, 35, 35);
-            Color earthshineBlue = Color.Lerp(new Color(39, 87, 155), darkColor, 0.6f);
-
-            if (Main.dayTime)
-            {
-                if (Main.time < MacrocosmSubworld.CurrentDayLength * 0.1)
-                    return Color.Lerp(darkColor, Color.White, (float)(Main.time / (MacrocosmSubworld.CurrentDayLength * 0.1)));
-                else if (Main.time > MacrocosmSubworld.CurrentDayLength * 0.9)
-                    return Color.Lerp(darkColor, Color.White, (float)((MacrocosmSubworld.CurrentDayLength - Main.time) / (MacrocosmSubworld.CurrentDayLength - MacrocosmSubworld.CurrentDayLength * 0.9)));
-                else
-                    return Color.White;
-            }
-            else
-            {
-                if (Main.time < MacrocosmSubworld.CurrentNightLength * 0.2)
-                    return Color.Lerp(darkColor, earthshineBlue, (float)(Main.time / (MacrocosmSubworld.CurrentNightLength * 0.2)));
-                else if (Main.time > MacrocosmSubworld.CurrentNightLength * 0.8)
-                    return Color.Lerp(darkColor, earthshineBlue, (float)((MacrocosmSubworld.CurrentNightLength - Main.time) / (MacrocosmSubworld.CurrentNightLength - MacrocosmSubworld.CurrentNightLength * 0.8)));
-                else
-                    return earthshineBlue;
-            }
-        }
-
-        public override float GetCloudAlpha() => 0f;
-
-        public override void Reset()
-        {
-            starsDay.Clear();
-            starsNight.Clear();
-            Active = false;
-        }
-
-        public override bool IsActive()
-        {
-            return Active;
-        }
     }
 }

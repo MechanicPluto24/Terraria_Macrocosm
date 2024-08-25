@@ -1,4 +1,4 @@
-﻿using Macrocosm.Common.Bases;
+﻿using Macrocosm.Common.Bases.NPCs;
 using Macrocosm.Common.Sets;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;

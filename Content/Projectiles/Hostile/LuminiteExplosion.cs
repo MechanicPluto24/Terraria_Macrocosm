@@ -19,14 +19,14 @@ namespace Macrocosm.Content.Projectiles.Hostile
         private int sizeScale;
         public override void SetDefaults()
         {
-            sizeScale = 15;
+            sizeScale = 4;
             defWidth = defHeight = 4;
             Projectile.width = defWidth;
             Projectile.height = defHeight;
             Projectile.hostile = true;
             Projectile.friendly = false;
             Projectile.tileCollide = false;
-            Projectile.timeLeft = 8;
+            Projectile.timeLeft = 10;
             Projectile.penetrate = -1;
             Projectile.tileCollide = false;
         }

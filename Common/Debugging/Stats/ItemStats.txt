@@ -2402,6 +2402,16 @@ IrradiatedRockWallUnsafe
 			=> x4
 
 
+LexanGlassWall
+	Value: No value
+	Research count: 400
+	Recipes:
+		Lexan Glass x 1
+		at
+		Work Bench
+			=> x4
+
+
 ProtolithWall
 	Value: No value
 	Research count: 400

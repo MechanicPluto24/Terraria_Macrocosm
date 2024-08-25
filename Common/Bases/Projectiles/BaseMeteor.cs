@@ -1,10 +1,9 @@
-﻿using Macrocosm.Common.Global.Projectiles;
+﻿using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
-using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Content.Particles;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -70,7 +69,6 @@ namespace Macrocosm.Common.Bases.Projectiles
                     p.NumberOfInnerReplicas = 8;
                     p.ReplicaScalingFactor = 0.4f;
                 });
-        
             }
 
             // handled by server 

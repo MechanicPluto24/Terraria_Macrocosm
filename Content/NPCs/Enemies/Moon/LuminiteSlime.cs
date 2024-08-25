@@ -98,10 +98,10 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-                for (int i = 0; i < Main.rand.Next(3, 7); i++)
+                for (int i = 0; i < Main.rand.Next(3, 5); i++)
                 {
-                    Vector2 projVelocity = Utility.PolarVector(2.6f, Main.rand.NextFloat(-MathHelper.Pi + MathHelper.PiOver4, -MathHelper.PiOver4));
-                    Projectile proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, projVelocity, ModContent.ProjectileType<LuminiteShard>(), Utility.TrueDamage((int)(NPC.damage * 1.35f)), 1f, Main.myPlayer, ai1: NPC.target);
+                    Vector2 projVelocity = Utility.PolarVector(8f, Main.rand.NextFloat(-MathHelper.Pi + MathHelper.PiOver4, -MathHelper.PiOver4));
+                    Projectile proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, projVelocity, ModContent.ProjectileType<LuminiteShard>(), Utility.TrueDamage((int)(NPC.damage * 1.35f)), 1f, Main.myPlayer, ai1: NPC.target, ai2: 1f);
                     proj.netUpdate = true;
                 }
             }
