@@ -79,6 +79,12 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             NPC.HitSound = SoundID.NPCHit2;
             NPC.DeathSound = SoundID.NPCDeath2;
         }
+         public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
+        {
+            //For comparison, Moon Lord's scale factor is 0.7f
+            NPC.ScaleHealthBy(0.4f, balance, bossAdjustment);
+            NPC.damage = (int)(NPC.damage * 0.5f * bossAdjustment);
+        }
 
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
         {
@@ -94,11 +100,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 CycleAnimation();
         }
 
-        public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
-        {
-            NPC.lifeMax = (int)(NPC.lifeMax * 0.55f * bossAdjustment);
-            NPC.damage = (int)(NPC.damage * 0.75f * bossAdjustment);
-        }
+       
 
         public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
         {
