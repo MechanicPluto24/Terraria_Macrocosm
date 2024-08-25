@@ -80,7 +80,7 @@ SilicaPearlsandFalling.DisplayName: Silica Pearlsand
 SilicaSandBall.DisplayName: Silica Sand
 SilicaSandFalling.DisplayName: Silica Sand
 MoonWormDust.DisplayName: Moon Worm Dust
-FrigorianGazeProjectile.DisplayName: Frigorian Gaze 
+FrigorianGazeProjectile.DisplayName: Frigorian Gaze
 FrigorianIceSpike.DisplayName: Frigorian Ice Spike
 FrigorianIceCrystal.DisplayName: Frigorian Ice Crystal
 StarDestroyerBeam.DisplayName: Star Destroyer Beam
@@ -88,11 +88,13 @@ StarDestroyerStar.DisplayName: Star Destroyer Star
 StarDestroyerStarBlue.DisplayName: Star Destroyer Star Blue
 StarDestroyerStarYellow.DisplayName: Star Destroyer Star Yellow
 MoonRubble.DisplayName: Moon Rubble
-MoonLichNPCSummon.DisplayName: Moon Lich  
+MoonLichNPCSummon.DisplayName: Moon Lich
 DualWaveGunsHeld.DisplayName: Dual Wave Guns Held
 WaveGunLaser.DisplayName: Wave Gun Laser
 WaveRifleLaser.DisplayName: Wave Rifle Laser
 LichBolt.DisplayName: Lich Bolt
 GreenLaser.DisplayName: Green Laser
 LunarBarf.DisplayName: Lunar Barf
-
+FrigorianIceShard.DisplayName: Frigorian Ice Shard
+MicronovaBeam.DisplayName: Micronova Beam
+MicronovaPortal.DisplayName: Micronova Portal
