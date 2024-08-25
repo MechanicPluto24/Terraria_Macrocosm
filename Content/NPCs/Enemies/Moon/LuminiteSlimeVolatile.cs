@@ -3,7 +3,8 @@ using Macrocosm.Content.Projectiles.Hostile;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
-
+using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Content.Particles;
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
     public class LuminiteSlimeVolatile : LuminiteSlime
@@ -46,12 +47,20 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override void OnKill()
         {
-            Projectile.NewProjectile(NPC.GetSource_Death(), NPC.Center, default, ModContent.ProjectileType<LuminiteExplosion>(), (int)(NPC.damage * 0.65f), 3, Main.myPlayer);
+            Projectile.NewProjectile(NPC.GetSource_Death(), NPC.Center, default, ModContent.ProjectileType<LuminiteExplosion>(), (int)(NPC.damage * 0.35f), 3, Main.myPlayer);
 
             for (int i = 0; i < 5; i++)
             {
-                Projectile.NewProjectile(NPC.GetSource_Death(), NPC.Center, (-Vector2.UnitY).RotatedByRandom(MathHelper.PiOver2) * Main.rand.NextFloat(5f, 10f), ModContent.ProjectileType<LuminiteShard>(), (int)(NPC.damage * 0.5f), 1f, Main.myPlayer, ai1: -1, ai2: 1);
+                Projectile.NewProjectile(NPC.GetSource_Death(), NPC.Center, (-Vector2.UnitY).RotatedByRandom(MathHelper.PiOver2) * Main.rand.NextFloat(5f, 10f), ModContent.ProjectileType<LuminiteShard>(), (int)(NPC.damage * 0.25f), 1f, Main.myPlayer, ai1: -1, ai2: 1);
             }
+            var explosion = Particle.CreateParticle<TintableExplosion>(p =>
+                {
+                    p.Position = NPC.Center;
+                    p.DrawColor = (new Color(50, 200, 170)).WithOpacity(0.8f);
+                    p.Scale = 1.7f;
+                    p.NumberOfInnerReplicas = 8;
+                    p.ReplicaScalingFactor = 0.4f;
+                });
         }
 
         protected override void ProjectileAttack()

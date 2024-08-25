@@ -428,7 +428,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
             NPC.defense = 150;
             NPC.damage = 80;
-            NPC.lifeMax = 45000;
+            NPC.lifeMax = 100000;
 
             NPC.boss = true;
             NPC.noGravity = true;
@@ -453,8 +453,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
         public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
         {
             //For comparison, Moon Lord's scale factor is 0.7f
-            NPC.ScaleHealthBy(0.75f, balance, bossAdjustment);
-            NPC.damage = (int)(NPC.damage * 0.75f * bossAdjustment);
+            NPC.ScaleHealthBy(0.55f, balance, bossAdjustment);
+            NPC.damage = (int)(NPC.damage * 0.6f * bossAdjustment);
         }
 
         private void ScaleDamage()

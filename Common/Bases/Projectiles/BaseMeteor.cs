@@ -3,6 +3,8 @@ using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
+using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Content.Particles;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -60,6 +62,15 @@ namespace Macrocosm.Common.Bases.Projectiles
                 SpawnImpactDusts();
                 SpawnDebris();
                 ImpactSounds();
+                var explosion = Particle.CreateParticle<TintableExplosion>(p =>
+                {
+                    p.Position = Projectile.Center;
+                    p.DrawColor = (new Color(120, 120, 120)).WithOpacity(0.8f);
+                    p.Scale = 1.7f;
+                    p.NumberOfInnerReplicas = 8;
+                    p.ReplicaScalingFactor = 0.4f;
+                });
+        
             }
 
             // handled by server 
