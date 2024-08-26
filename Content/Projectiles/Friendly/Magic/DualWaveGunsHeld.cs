@@ -10,6 +10,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
     public class DualWaveGunsHeld : ChargedHeldProjectile
     {
+        //TODO, make better idk how, also add recoil for both guns, though idk why this isn't working...
         public override string Texture => Macrocosm.EmptyTexPath;
 
         public float MinCharge => MaxCharge * 0.2f;
@@ -19,6 +20,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
         private bool altAttackActive = false;
         private int altAttackCount = 0;
+        public int fired;
 
         public override float CircularHoldoutOffset => 8f;
 
@@ -35,9 +37,24 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         {
 
         }
+        float BlueRotation=0f;
+        float RedRotation=0f;
 
         public override void ProjectileAI()
         {
+            BlueRotation-=0.07f;
+            RedRotation-=0.07f;
+
+            if(BlueRotation<0f)
+                BlueRotation=0f;
+            if(RedRotation<0f)
+                RedRotation=0f;
+
+
+
+
+
+
             if (Player.whoAmI == Main.myPlayer)
             {
                 Item currentItem = Player.CurrentItem();
@@ -55,19 +72,30 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
                     if (AI_Timer % currentItem.useTime == 0)
                     {
-                        if (Player.PickAmmo(currentItem, out int projToShoot, out speed, out damage, out knockback, out usedAmmoItemId))
-                        {
+                      
 
-                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Normalize(Projectile.velocity) * speed, ModContent.ProjectileType<WaveGunLaser>(), damage, knockback, Projectile.owner);
+                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Normalize(Projectile.velocity) * 28f, ModContent.ProjectileType<WaveGunLaser>(), (int)damage/1.4, knockback, Projectile.owner);
 
+                           
+                            if (fired%2==0){
+                                RedRotation+=0.3f;
+                                
+                            }
+                            else{
+                                BlueRotation+=0.3f;
+                               
+                            }
+                            fired++;
+                            
+                            
+                                
+                                
 
+                            
                             AI_Timer = 0;
                             SoundEngine.PlaySound(SoundID.Item11, Projectile.position);
-                        }
-                        else if (itemUseTime <= 0)
-                        {
-                            Projectile.Kill();
-                        }
+                        
+                        
                     }
                 }
                 else
@@ -97,10 +125,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 var spriteBatch = Main.spriteBatch;
                 Texture2D texture2 = ModContent.Request<Texture2D>("Macrocosm/Content/Items/Weapons/Magic/WaveGunBlue").Value;
                 Vector2 rotPoint2 = Utility.RotatingPoint(Projectile.Center, new Vector2(15, 0), Projectile.rotation);
-                spriteBatch.Draw(texture2, rotPoint2 - Main.screenPosition, null, lightColor, Projectile.rotation, texture2.Size() / 2f, Projectile.scale, Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None, 0f);
+                spriteBatch.Draw(texture2, rotPoint2 - Main.screenPosition, null, lightColor, Projectile.rotation+BlueRotation, texture2.Size() / 2f, Projectile.scale, Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None, 0f);
                 Texture2D texture1 = ModContent.Request<Texture2D>("Macrocosm/Content/Items/Weapons/Magic/WaveGunRed").Value;
                 Vector2 rotPoint = Utility.RotatingPoint(Projectile.Center, new Vector2(10, 0), Projectile.rotation);
-                spriteBatch.Draw(texture1, rotPoint - Main.screenPosition, null, lightColor, Projectile.rotation, texture1.Size() / 2f, Projectile.scale, Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None, 0f);
+                spriteBatch.Draw(texture1, rotPoint - Main.screenPosition, null, lightColor, Projectile.rotation+RedRotation, texture1.Size() / 2f, Projectile.scale, Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None, 0f);
             }
             else
             {
