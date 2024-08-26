@@ -38,4 +38,28 @@ namespace Macrocosm.Content.Biomes
         {
         }
     }
+    public class NightMoonBiome : ModBiome//Really just exists for icon and BG purposes, if you know a better way to do so than inform me...
+    {
+        public override string BestiaryIcon => Macrocosm.TexturesPath + "Icons/NightMoon";
+        public override string BackgroundPath => Macrocosm.TexturesPath + "MapBackgrounds/Moon";
+
+        public override void SetStaticDefaults()
+        {
+        }
+
+        public override bool IsBiomeActive(Player player)
+            => false;
+
+        public override void OnInBiome(Player player)
+        {
+        }
+
+        public override void OnEnter(Player player)
+        {
+        }
+
+        public override void OnLeave(Player player)
+        {
+        }
+    }
 }
