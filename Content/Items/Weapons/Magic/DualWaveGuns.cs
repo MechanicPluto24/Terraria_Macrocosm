@@ -32,6 +32,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
             Item.noUseGraphic = true;
             Item.shoot = ModContent.ProjectileType<WaveGunLaser>();
             Item.shootSpeed = 28f;
+            Item.channel = true;
         }
         public override bool AltFunctionUse(Player player) => true;
         public override bool CanConsumeAmmo(Item ammo, Player player) => false;

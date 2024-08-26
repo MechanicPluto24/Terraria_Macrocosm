@@ -112,7 +112,7 @@ namespace Macrocosm.Content.Machines
                 Matrix.CreateTranslation(-drawPosition.X, -drawPosition.Y, 0f) * // Translate to screen origin
                 Matrix.CreateRotationY(radians) *                                // Apply Y skew
                 Matrix.CreateTranslation(drawPosition.X, drawPosition.Y, 0f) *   // Translate back to original position
-                Matrix.CreateScale(baseMatrix.M11, baseMatrix.M22, 0f);          // Apply UI scale
+                Matrix.CreateScale(baseMatrix.M11, baseMatrix.M22, 0f);          // Apply scale
             return transformationMatrix;
         }
 
@@ -124,7 +124,7 @@ namespace Macrocosm.Content.Machines
                 Matrix.CreateTranslation(-drawPosition.X, -drawPosition.Y, 0f) * // Translate to screen origin
                 Matrix.CreateRotationY(radians) *                                // Apply Y skew
                 Matrix.CreateTranslation(drawPosition.X, drawPosition.Y, 0f) *   // Translate back to original position
-                Matrix.CreateScale(baseMatrix.M11, baseMatrix.M22, 0f);          // Apply UI scale
+                Matrix.CreateScale(baseMatrix.M11, baseMatrix.M22, 0f);          // Apply scale
             return transformationMatrix;
         }
     }

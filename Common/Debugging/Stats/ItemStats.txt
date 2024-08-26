@@ -472,6 +472,10 @@ DeliriumPlating
 SpaceDust
 	Value: 1 silver
 	Research count: 25
+	Recipes:
+		Fallen Star x 1
+			=> x5
+
 
 CapstoneRush
 	Value: 2 gold 50 silver

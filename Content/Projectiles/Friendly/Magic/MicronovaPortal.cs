@@ -4,7 +4,6 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
@@ -15,20 +14,17 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
     public class MicronovaPortal : ModProjectile
     {
-
         protected int defWidth;
         protected int defHeight;
 
-     
+        private bool spawned;
+        private Vector2 shootAim;
 
         public int AITimer
         {
             get => (int)Projectile.ai[0];
             set => Projectile.ai[0] = value;
         }
-
-
-
 
         public override void SetDefaults()
         {
@@ -43,25 +39,22 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
         public override void AI()
         {
+            if (!spawned)
+            {
+                Vector2 target = (Main.MouseWorld - Projectile.Center).SafeNormalize(default);
+                shootAim = target.RotatedByRandom(MathHelper.Pi / 24);
+                spawned = true;
+            }
+
             Player player = Main.player[Projectile.owner];
             Projectile.rotation += MathHelper.ToRadians(7.4f);
-            Projectile.velocity*=0f;
+            Projectile.velocity *= 0f;
             AITimer++;
 
             if (AITimer == 20)
             {
-            
-
-               
-                    Vector2 target = (Main.MouseWorld - Projectile.Center).SafeNormalize(default);
-                  
-
-                    Vector2 shootVelocity = target * 1f;
-                    Vector2 shootPosition = Projectile.Center;
-
-                    int damage = Projectile.damage;
-                    Projectile.NewProjectile(Projectile.InheritSource(Projectile), shootPosition, shootVelocity.RotatedByRandom(MathHelper.Pi / 24), ModContent.ProjectileType<MicronovaBeam>(), damage, Projectile.knockBack, Main.player[Projectile.owner].whoAmI);
-                
+                int damage = Projectile.damage;
+                Projectile.NewProjectile(Projectile.InheritSource(Projectile), Projectile.Center, shootAim, ModContent.ProjectileType<MicronovaBeam>(), damage, Projectile.knockBack, Main.player[Projectile.owner].whoAmI);
             }
 
             if (AITimer % 16 == 0)
@@ -76,12 +69,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
             Lighting.AddLight(Projectile.Center, new Color(0, 170, 200).ToVector3() * 5f * Projectile.scale);
             SpawnParticles(5);
-            if (AITimer>60)
+            if (AITimer > 60)
                 Projectile.Kill();
         }
 
         private void SpawnParticles(int count)
         {
+            return;
             for (int i = 0; i < count; i++)
             {
                 float progress = (1f - Projectile.alpha / 255f);
@@ -110,15 +104,22 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         public override Color? GetAlpha(Color lightColor)
             => Color.White * (1f - Projectile.alpha / 255f);
 
-        private SpriteBatchState state;
-        public override void PostDraw(Color lightColor){
-            Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
 
+        private SpriteBatchState state;
+        public override void PostDraw(Color lightColor)
+        {
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
             Color color = Color.White * Projectile.Opacity;
 
-            state.SaveState(Main.spriteBatch);
+            Matrix matrix = GetSkewMatrix(Projectile.Center - Main.screenPosition, state.Matrix, shootAim);
+
+            state.SaveState(Main.spriteBatch, continuous: true);
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(BlendState.AlphaBlend, state);
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearClamp, state.DepthStencilState, state.RasterizerState, null, matrix);
 
             Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, (color * 0.4f * Projectile.Opacity), (0f - Projectile.rotation) * 0.65f, texture.Size() / 2f, Projectile.scale * 1.8f, SpriteEffects.FlipHorizontally, 0);
             Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, (color).WithOpacity(0.9f * Projectile.Opacity), Projectile.rotation, texture.Size() / 2f, Projectile.scale * 1.5f, SpriteEffects.None, 0);
@@ -126,22 +127,35 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
-            Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, (color * 1f).WithOpacity(Projectile.Opacity), Projectile.rotation * 1.65f, texture.Size() / 2f, Projectile.scale * 0.75f, SpriteEffects.None, 0);
-
             Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Flare2").Value;
-            float scale = Projectile.scale * Main.rand.NextFloat(0.85f, 1.15f);
-            Main.spriteBatch.Draw(flare, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(0, 170, 200).WithOpacity(0.35f * Projectile.Opacity), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
+            float scale = Projectile.scale * Main.rand.NextFloat(1.15f, 1.35f);
+            Main.spriteBatch.Draw(flare, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(0, 170, 200).WithOpacity(0.85f * Projectile.Opacity), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
 
-            // Strange
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.AlphaBlend, state);
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(state);
-    }
-
-        public override bool PreDraw(ref Color lightColor)
-        {
             return false;
         }
+
+        private static Matrix GetSkewMatrix(Vector2 drawPosition, Matrix baseMatrix, Vector2 aim)
+        {
+            Vector2 rotation = Utils.ToRotationVector2(aim.ToRotation());
+            float radiansX = rotation.Y;
+            float radiansY = rotation.X;
+
+            // TODO
+            Matrix transformationMatrix =
+                Matrix.CreateTranslation(-drawPosition.X, -drawPosition.Y, 0f) * // Translate to screen origin
+                Matrix.CreateRotationY(radiansY) *                                // Apply Y skew
+                Matrix.CreateTranslation(drawPosition.X, drawPosition.Y, 0f) *   // Translate back to original position
+                Matrix.CreateScale(baseMatrix.M11, baseMatrix.M22, 0f);          // Apply scale
+
+            return baseMatrix;   
+        }
+
+        private static Matrix GetBladesMatrix(Vector2 drawPosition, Matrix baseMatrix)
+        {
+            return baseMatrix;
+        }
+
     }
 }
