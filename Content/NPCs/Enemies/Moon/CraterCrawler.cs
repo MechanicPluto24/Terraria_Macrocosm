@@ -1,4 +1,4 @@
-﻿using Macrocosm.Common.Bases.NPCs;
+﻿using Macrocosm.Common.Bases;
 using Macrocosm.Common.Sets;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
@@ -43,6 +43,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.defense = 40;
             NPC.width = 20;
             NPC.height = 20;
+            SpawnModBiomes = [ModContent.GetInstance<NightMoonBiome>().Type];
             NPC.aiStyle = -1;
         }
 

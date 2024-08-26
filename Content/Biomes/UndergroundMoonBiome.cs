@@ -16,8 +16,8 @@ namespace Macrocosm.Content.Biomes
         public override int Music => MusicLoader.GetMusicSlot(Mod, "Assets/Music/Stygia");
 
 
-        public override string BestiaryIcon => "Macrocosm/Content/Biomes/MoonBiome_Icon";
-        public override string BackgroundPath => "Macrocosm/Content/Biomes/MoonBiome_Background";
+        public override string BestiaryIcon => Macrocosm.TexturesPath + "Icons/UndergroundMoon";
+        public override string BackgroundPath => Macrocosm.TexturesPath + "MapBackgrounds/Moon";//Needs proper background
         public override string MapBackground => BackgroundPath;
 
         public override void SetStaticDefaults()

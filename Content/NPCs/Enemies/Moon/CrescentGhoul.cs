@@ -62,16 +62,10 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.knockBackResist = 0f;
             NPC.noGravity = true;
             NPC.noTileCollide = true;
+            SpawnModBiomes = [ModContent.GetInstance<NightMoonBiome>().Type];
         }
 
-        public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
-        {
-            /*
-            bestiaryEntry.Info.Add(
-				BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Times.NightTime
-			);
-            */
-        }
+        
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {

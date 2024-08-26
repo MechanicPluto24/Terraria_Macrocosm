@@ -2,7 +2,6 @@ using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Content.Particles;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Particles;
 using Macrocosm.Content.Trails;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -19,7 +18,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
         public override void SetStaticDefaults()
         {
             Main.npcFrameCount[Type] = 6;
-
+            NPCID.Sets.NPCBestiaryDrawModifiers value = new NPCID.Sets.NPCBestiaryDrawModifiers() { Hide = true };
             NPCID.Sets.TrailCacheLength[Type] = 15;
             NPCID.Sets.TrailingMode[Type] = 3;
         }
@@ -33,6 +32,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             NPC.lifeMax = 400;
             NPC.timeLeft = 600;
             NPC.damage = 200;
+            NPC.knockBackResist=0.1f;
         }
 
         private float flashTimer;
