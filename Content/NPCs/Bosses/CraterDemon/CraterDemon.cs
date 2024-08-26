@@ -261,7 +261,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			 // Scaled element on :             NM1,  NM2,  EM1,   EM2,   MM1,   MM2,   FTW1,  FTW2
 			 /*AttackDurationScaling      */ { 1.25f, 1.1f, 1f, 0.8f, 0.75f, 0.65f, 0.6f, 0.55f },
 															    
-			 /*ChargeSpeed                */ { 20f, 36f, 24f, 38f, 30f, 40f, 34f, 42f },
+			 /*ChargeSpeed                */ { 20f, 30f, 24f, 34f, 26f, 36f, 30f, 40f },
 			 /*ChargeSlowdownFactor       */ { 1.8f, 2.2f, 1.9f, 2.3f, 2f, 2.4f, 2.1f, 2.5f },
 			 /*ChargeTargetSpeed          */ { 4.5f, 6.5f, 4.5f, 6.5f, 4.5f, 6.5f, 4.5f, 6.5f },
 																									   

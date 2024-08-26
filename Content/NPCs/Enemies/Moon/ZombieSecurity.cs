@@ -75,8 +75,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.aiStyle = -1;
             Banner = Item.NPCtoBanner(NPCID.Zombie);
             BannerItem = Item.BannerToItem(Banner);
-
-            //SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBaseBiome>() }
+            SpawnModBiomes = [ModContent.GetInstance<NightMoonBiome>().Type];
+            //SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBaseBiome>() } 
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
