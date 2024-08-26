@@ -40,7 +40,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             Banner = Item.NPCtoBanner(NPCID.Zombie);
             BannerItem = Item.BannerToItem(Banner);
 
-            SpawnModBiomes = [ModContent.GetInstance<UndergroundMoonBiome>().Type];
+            SpawnModBiomes = [ModContent.GetInstance<MoonUndergroundBiome>().Type];
         }
 
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
@@ -164,9 +164,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-
             return spawnInfo.Player.InModBiome<MoonBiome>() && spawnInfo.Player.ZoneRockLayerHeight ? .1f : 0f;
-
         }
 
         public float LightValueFlee = 0.1f; //This light value causes the leaper to flee.

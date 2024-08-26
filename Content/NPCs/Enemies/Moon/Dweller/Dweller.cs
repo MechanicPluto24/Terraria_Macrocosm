@@ -354,7 +354,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller
             NPC.noGravity = true;
             NPC.noTileCollide = true;
 
-            SpawnModBiomes = [ModContent.GetInstance<UndergroundMoonBiome>().Type];
+            SpawnModBiomes = [ModContent.GetInstance<MoonUndergroundBiome>().Type];
 
             NPC.width = headBack.Width();
             NPC.height = headJawLeft.Height();

@@ -62,10 +62,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.knockBackResist = 0f;
             NPC.noGravity = true;
             NPC.noTileCollide = true;
-            SpawnModBiomes = [ModContent.GetInstance<NightMoonBiome>().Type];
+            SpawnModBiomes = [ModContent.GetInstance<MoonNightBiome>().Type];
         }
-
-        
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {

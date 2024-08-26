@@ -2,7 +2,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Backgrounds.Moon
 {
-    public class MoonUgBgStyle : ModUndergroundBackgroundStyle
+    public class MoonUndergroundBackgroundStyle : ModUndergroundBackgroundStyle
     {
         public override void FillTextureArray(int[] textureSlots)
         {

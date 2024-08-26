@@ -30,6 +30,13 @@ namespace Macrocosm.Content.Items.Drops
 
         public override void AddRecipes()
         {
+            Recipe.Create(Type, 5)
+                .AddIngredient(ItemID.FallenStar, 1)
+                .Register();
+
+            Recipe.Create(ItemID.FallenStar, 1)
+                .AddIngredient(Type, 5)
+                .Register();
         }
     }
 }

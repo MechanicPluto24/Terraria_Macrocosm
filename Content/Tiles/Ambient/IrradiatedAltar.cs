@@ -2,6 +2,7 @@
 using Macrocosm.Content.Players;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 namespace Macrocosm.Content.Tiles.Ambient
@@ -13,6 +14,9 @@ namespace Macrocosm.Content.Tiles.Ambient
         {
             Main.tileLavaDeath[Type] = true;
             Main.tileFrameImportant[Type] = true;
+
+            TileID.Sets.PreventsTileRemovalIfOnTopOfIt[Type] = true;
+            TileID.Sets.PreventsTileReplaceIfOnTopOfIt[Type] = true;
 
             Main.tileNoAttach[Type] = true;
             DustType = ModContent.DustType<XaocGreenDust>();

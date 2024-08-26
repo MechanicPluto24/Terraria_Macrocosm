@@ -87,7 +87,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             attackPeriod = 180;
             panicAttackPeriod = 30;
 
-            SpawnModBiomes = [ModContent.GetInstance<UndergroundMoonBiome>().Type];
+            SpawnModBiomes = [ModContent.GetInstance<MoonUndergroundBiome>().Type];
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)

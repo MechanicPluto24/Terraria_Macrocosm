@@ -31,7 +31,7 @@ namespace Macrocosm.Common.Global.NPCs
             if (!SubworldSystem.AnyActive<Macrocosm>())
                 return;
 
-            if (player.InModBiome<UndergroundMoonBiome>())
+            if (player.InModBiome<MoonUndergroundBiome>())
             {
                 spawnRate = (int)(spawnRate * 0.75f);
                 maxSpawns = (int)(maxSpawns * 1.5f);
@@ -42,18 +42,15 @@ namespace Macrocosm.Common.Global.NPCs
                 //...
             }
             */
+            else if (player.InModBiome<MoonNightBiome>())
+            {
+                spawnRate = (int)(spawnRate * 0.6f);
+                maxSpawns = (int)(maxSpawns * 2f);
+            }
             else if (player.InModBiome<MoonBiome>())
             {
-                if (Main.dayTime)
-                {
-                    spawnRate = (int)(spawnRate * 1f);
-                    maxSpawns = (int)(maxSpawns * 1f);
-                }
-                else
-                {
-                    spawnRate = (int)(spawnRate * 0.6f);
-                    maxSpawns = (int)(maxSpawns * 2f);
-                }
+                spawnRate = (int)(spawnRate * 1f);
+                maxSpawns = (int)(maxSpawns * 1f);
             }
         }
 
