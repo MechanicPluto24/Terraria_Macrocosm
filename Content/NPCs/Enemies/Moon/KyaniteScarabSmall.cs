@@ -30,7 +30,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.value = 60f;
             NPC.knockBackResist = 0.6f;
             NPC.aiStyle = -1;
-            SpawnModBiomes = [ModContent.GetInstance<UndergroundMoonBiome>().Type];
+            SpawnModBiomes = [ModContent.GetInstance<MoonUndergroundBiome>().Type];
         }
 
         public override void FindFrame(int frameHeight)

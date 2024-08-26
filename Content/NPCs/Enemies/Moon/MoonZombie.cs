@@ -29,7 +29,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.knockBackResist = 0.5f;
             NPC.aiStyle = 3;
             AIType = NPCID.ZombieMushroom;
-            SpawnModBiomes = [ModContent.GetInstance<NightMoonBiome>().Type];
+            SpawnModBiomes = [ModContent.GetInstance<MoonNightBiome>().Type];
             Banner = Item.NPCtoBanner(NPCID.Zombie);
             BannerItem = Item.BannerToItem(Banner);
         }

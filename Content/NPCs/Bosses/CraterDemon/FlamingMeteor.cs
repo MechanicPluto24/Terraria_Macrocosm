@@ -18,9 +18,14 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
         public override void SetStaticDefaults()
         {
             Main.npcFrameCount[Type] = 6;
-            NPCID.Sets.NPCBestiaryDrawModifiers value = new NPCID.Sets.NPCBestiaryDrawModifiers() { Hide = true };
+
+            NPCID.Sets.ProjectileNPC[Type] = true;
+
             NPCID.Sets.TrailCacheLength[Type] = 15;
             NPCID.Sets.TrailingMode[Type] = 3;
+
+            NPCID.Sets.NPCBestiaryDrawModifiers value = new() { Hide = true };
+            NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, value);
         }
 
         public override void SetDefaults()

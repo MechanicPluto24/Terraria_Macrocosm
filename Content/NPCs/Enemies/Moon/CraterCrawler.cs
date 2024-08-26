@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Bases;
+using Macrocosm.Common.Bases.NPCs;
 using Macrocosm.Common.Sets;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
@@ -14,7 +15,6 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-    // Adapted from Example Mod
     public class CraterCrawlerHead : WormHead
     {
         public override int BodyType => ModContent.NPCType<CraterCrawlerBody>();
@@ -22,14 +22,14 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override void SetStaticDefaults()
         {
-            var drawModifier = new NPCID.Sets.NPCBestiaryDrawModifiers()    // Influences how the NPC looks in the Bestiary
+            NPCID.Sets.NPCBestiaryDrawModifiers value = new()  
             {
                 CustomTexturePath = "Macrocosm/Content/NPCs/Enemies/Moon/CraterCrawler_Bestiary", // If the NPC is multiple parts like a worm, a custom texture for the Bestiary is encouraged.
                 Position = new Vector2(40f, 24f),
                 PortraitPositionXOverride = 0f,
                 PortraitPositionYOverride = 12f
             };
-            NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, drawModifier);
+            NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
 
             NPCSets.MoonNPC[Type] = true;
             NPCSets.DropsMoonstone[Type] = true;
@@ -43,7 +43,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.defense = 40;
             NPC.width = 20;
             NPC.height = 20;
-            SpawnModBiomes = [ModContent.GetInstance<NightMoonBiome>().Type];
+            SpawnModBiomes = [ModContent.GetInstance<MoonNightBiome>().Type];
             NPC.aiStyle = -1;
         }
 
@@ -59,11 +59,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
         {
-            /*
-            bestiaryEntry.Info.Add(
-				BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Times.NightTime
-			);
-            */
         }
 
         public override void Init()
@@ -142,7 +137,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
     {
         public override void SetStaticDefaults()
         {
-            NPCID.Sets.NPCBestiaryDrawModifiers value = new NPCID.Sets.NPCBestiaryDrawModifiers() { Hide = true }; // Hides this NPC from the Bestiary, useful for multi-part NPCs whom you only want one entry.
+            NPCID.Sets.NPCBestiaryDrawModifiers value = new() { Hide = true };
             NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
         }
 
@@ -202,10 +197,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
     {
         public override void SetStaticDefaults()
         {
-            NPCID.Sets.NPCBestiaryDrawModifiers value = new()
-            {
-                Hide = true // Hides this NPC from the Bestiary, useful for multi-part NPCs whom you only want one entry.
-            };
+            NPCID.Sets.NPCBestiaryDrawModifiers value = new() { Hide = true  };
             NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
         }
 

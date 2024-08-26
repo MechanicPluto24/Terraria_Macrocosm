@@ -23,11 +23,6 @@ IrradiationBiome: {
 	TownNPCDialogueName: the Irradiation
 }
 
-UndergroundMoonBiome: {
-	DisplayName: Underground Moon
-	TownNPCDialogueName: the Underground Moon
-}
-
 DemonSunBiome: {
 	DisplayName: Demon Sun Biome
 	TownNPCDialogueName: the Demon Sun
@@ -36,4 +31,14 @@ DemonSunBiome: {
 MonolithBiome: {
 	DisplayName: Monolith Biome
 	TownNPCDialogueName: the Monolith Biome
+}
+
+MoonNightBiome: {
+	DisplayName: Moon Night
+	TownNPCDialogueName: the Moon Night
+}
+
+MoonUndergroundBiome: {
+	DisplayName: Moon Underground
+	TownNPCDialogueName: the Moon Underground
 }
