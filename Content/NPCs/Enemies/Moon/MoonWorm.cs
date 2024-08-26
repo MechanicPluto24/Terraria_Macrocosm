@@ -1,4 +1,4 @@
-using Macrocosm.Common.Bases.NPCs;
+using Macrocosm.Common.Bases;
 using Macrocosm.Common.Sets;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
@@ -45,6 +45,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.width = 86;
             NPC.height = 86;
             NPC.aiStyle = -1;
+            SpawnModBiomes = [ModContent.GetInstance<NightMoonBiome>().Type];
         }
 
         public override void ModifyNPCLoot(NPCLoot loot)
