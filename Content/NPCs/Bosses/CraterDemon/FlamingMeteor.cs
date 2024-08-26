@@ -36,7 +36,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             NPC.noTileCollide = true;
             NPC.lifeMax = 400;
             NPC.timeLeft = 600;
-            NPC.damage = 200;
+            NPC.damage = 50;
             NPC.knockBackResist=0.1f;
         }
 

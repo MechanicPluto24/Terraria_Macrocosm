@@ -12,6 +12,8 @@ namespace Macrocosm.Content.Tiles.Ambient
     {
         public override void SetStaticDefaults()
         {
+            TileID.Sets.PreventsTileRemovalIfOnTopOfIt[Type]=true;
+            TileID.Sets.PreventsTileReplaceIfOnTopOfIt[Type]=true;
             Main.tileLavaDeath[Type] = true;
             Main.tileFrameImportant[Type] = true;
 
