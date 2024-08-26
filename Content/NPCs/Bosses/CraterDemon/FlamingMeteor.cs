@@ -21,17 +21,19 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             NPCID.Sets.NPCBestiaryDrawModifiers value = new NPCID.Sets.NPCBestiaryDrawModifiers() { Hide = true };
             NPCID.Sets.TrailCacheLength[Type] = 15;
             NPCID.Sets.TrailingMode[Type] = 3;
+            NPCID.Sets.ProjectileNPC[Type] = true;
         }
 
         public override void SetDefaults()
         {
+            
             NPC.width = 28;
             NPC.height = 28;
             NPC.friendly = false;
             NPC.noTileCollide = true;
             NPC.lifeMax = 400;
             NPC.timeLeft = 600;
-            NPC.damage = 200;
+            NPC.damage = 50;
             NPC.knockBackResist=0.1f;
         }
 
@@ -41,6 +43,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
         public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position) => false;
         private Vector2 spawnPosition;
         private FlamingMeteorTrail trail;
+        
 
         public override void AI()
         {

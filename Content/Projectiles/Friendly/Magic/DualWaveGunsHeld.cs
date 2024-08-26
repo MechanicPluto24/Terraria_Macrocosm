@@ -74,7 +74,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                     {
                       
 
-                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Normalize(Projectile.velocity) * 28f, ModContent.ProjectileType<WaveGunLaser>(), (int)damage/1.4, knockback, Projectile.owner);
+                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Normalize(Projectile.velocity) * 28f, ModContent.ProjectileType<WaveGunLaser>(), (int)(damage/1.4), knockback, Projectile.owner);
 
                            
                             if (fired%2==0){

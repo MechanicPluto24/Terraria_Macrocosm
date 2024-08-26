@@ -2,6 +2,7 @@
 using Macrocosm.Content.Players;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 namespace Macrocosm.Content.Tiles.Ambient
@@ -11,6 +12,8 @@ namespace Macrocosm.Content.Tiles.Ambient
     {
         public override void SetStaticDefaults()
         {
+            TileID.Sets.PreventsTileRemovalIfOnTopOfIt[Type]=true;
+            TileID.Sets.PreventsTileReplaceIfOnTopOfIt[Type]=true;
             Main.tileLavaDeath[Type] = true;
             Main.tileFrameImportant[Type] = true;
 
