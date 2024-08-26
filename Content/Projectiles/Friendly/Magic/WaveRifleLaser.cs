@@ -1,11 +1,11 @@
 using Macrocosm.Common.Bases.Projectiles;
-using Macrocosm.Common.Sets;
 using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Sets;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
-using Macrocosm.Common.Utils;
-using Microsoft.Xna.Framework.Graphics;
 using Terraria.ModLoader;
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
@@ -17,8 +17,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         }
 
         public override bool CanRicochet() => false;
-        bool HitSomething=false;
-        int Timer=0;
+        bool HitSomething = false;
+        int Timer = 0;
+
         public override void SetProjectileDefaults()
         {
             Projectile.width = 4;
@@ -32,20 +33,19 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         public override void AI()
         {
             Lighting.AddLight(Projectile.position, new Color(255, 0, 255).ToVector3() * 0.6f);
-            
+
             Timer++;
-            if (Timer>90)
+            if (Timer > 90)
             {
                 for (int i = 0; i < 5; i++)
-                    { 
-                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.velocity.SafeNormalize(Vector2.UnitX).RotatedBy(MathHelper.ToRadians(i*72)) *20f, ModContent.ProjectileType<WaveStar>(), Projectile.damage/3, 0f, -1);
-                    }
-                    Projectile.Kill();
+                {
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.velocity.SafeNormalize(Vector2.UnitX).RotatedBy(MathHelper.ToRadians(i * 72)) * 20f, ModContent.ProjectileType<WaveStar>(), Projectile.damage / 3, 0f, -1);
+                }
+                Projectile.Kill();
             }
-        
         }
-
     }
+
     public class WaveStar : ModProjectile
     {
         public override string Texture => Macrocosm.EmptyTexPath;
@@ -55,8 +55,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             ProjectileID.Sets.TrailCacheLength[Type] = 10;
             ProjectileID.Sets.TrailingMode[Type] = 0;
         }
-
-       
 
         public override void SetDefaults()
         {
@@ -72,13 +70,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         private SpriteBatchState state;
         public override bool PreDraw(ref Color lightColor)
         {
-            Projectile.DrawMagicPixelTrail(Vector2.Zero, 5f, 1f,new Color(255,0,255), new Color(255,0,255).WithOpacity(0f));
+            Projectile.DrawMagicPixelTrail(Vector2.Zero, 5f, 1f, new Color(255, 0, 255), new Color(255, 0, 255).WithOpacity(0f));
 
             state.SaveState(Main.spriteBatch);
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
-            Main.spriteBatch.DrawStar(Projectile.Center - Main.screenPosition, 1, new Color(255,0,255), 0.6f, Projectile.rotation + MathHelper.PiOver2, entity: true);
+            Main.spriteBatch.DrawStar(Projectile.Center - Main.screenPosition, 1, new Color(255, 0, 255), 0.6f, Projectile.rotation + MathHelper.PiOver2, entity: true);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);
@@ -86,16 +84,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             return false;
         }
 
-
-        
-
         public override void AI()
         {
-        Projectile.velocity*=0.995f;
-        Projectile.rotation = Projectile.velocity.ToRotation();
+            Projectile.velocity *= 0.995f;
+            Projectile.rotation = Projectile.velocity.ToRotation();
         }
-
-       
     }
-
 }

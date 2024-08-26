@@ -27,7 +27,7 @@ FlamingMeteor
 	Life: 400
 	Defense: 0
 	KB resist: 0.1
-	Damage: 200
+	Damage: 50
 
 Bruiser
 	Life: 10000
