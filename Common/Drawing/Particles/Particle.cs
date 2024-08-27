@@ -288,7 +288,7 @@ namespace Macrocosm.Common.Drawing.Particles
             Trail.Owner = this;
         }
 
-        public virtual int TrailCacheLenght { get; set; } = 1;
+        public virtual int TrailCacheLength { get; set; } = 1;
 
         public Vector2 OldPosition => OldPositions[0];
         public float OldRotation => OldRotations[0];
@@ -298,22 +298,22 @@ namespace Macrocosm.Common.Drawing.Particles
 
         private void PopulateTrailData()
         {
-            if (OldPositions.Length != TrailCacheLenght)
+            if (OldPositions.Length != TrailCacheLength)
             {
-                Array.Resize(ref OldPositions, TrailCacheLenght);
+                Array.Resize(ref OldPositions, TrailCacheLength);
                 Array.Fill(OldPositions, Position);
             }
 
-            if (OldRotations.Length != TrailCacheLenght)
+            if (OldRotations.Length != TrailCacheLength)
             {
-                Array.Resize(ref OldRotations, TrailCacheLenght);
+                Array.Resize(ref OldRotations, TrailCacheLength);
                 Array.Fill(OldRotations, Rotation);
             }
 
             OldPositions[0] = Position;
             OldRotations[0] = Rotation;
 
-            for (int i = TrailCacheLenght - 1; i > 0; i--)
+            for (int i = TrailCacheLength - 1; i > 0; i--)
             {
                 OldPositions[i] = OldPositions[i - 1];
                 OldRotations[i] = OldRotations[i - 1];

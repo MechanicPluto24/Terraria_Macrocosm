@@ -144,7 +144,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
                 BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
                 BorderColor = UITheme.Current.PanelStyle.BorderColor,
                 HoverBorderColor = UITheme.Current.ButtonHighlightStyle.BorderColor,
-                TextMaxLenght = 18,
+                TextMaxLength = 18,
                 TextScale = 0.8f,
                 FocusContext = "TextBox",
                 OnFocusGain = () =>

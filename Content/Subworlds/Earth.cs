@@ -10,8 +10,8 @@ namespace Macrocosm.Content.Subworlds
         public const string ID = "Macrocosm/Earth";
 
         public const double TimeRate = 1.0;
-        public const double DayLenght = Main.dayLength;
-        public const double NightLenght = Main.nightLength;
+        public const double DayLength = Main.dayLength;
+        public const double NightLength = Main.nightLength;
         public const float AtmosphericDensity = 1f;
         public const float GoreGravity = 0.2f;
         public const float NPCGravity = 0.3f;
@@ -19,10 +19,9 @@ namespace Macrocosm.Content.Subworlds
         public const float ItemGravity = 0.1f;
         public const float ItemMaxFallSpeed = 7;
 
-        private static WorldSize worldSize = WorldSize.Medium;
-        public static WorldSize WorldSize { get => worldSize; set => worldSize = value; }
+        public static WorldSize WorldSize { get; set; } = WorldSize.Medium;
 
-        public static ChecklistConditionCollection LaunchConditions = new()
+        public static ChecklistConditionCollection LaunchConditions { get; } = new()
         {
         };
     }

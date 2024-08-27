@@ -62,22 +62,6 @@ namespace Macrocosm.Common.Systems
             }
         }
 
-        // TODO: for meteor event
-        private static void UpdateSubworldsRemotely()
-        {
-            if (Main.netMode == NetmodeID.SinglePlayer)
-            {
-                MacrocosmSubworld current = MacrocosmSubworld.Current;
-
-                foreach (var kvp in MacrocosmSubworld.Subworlds)
-                {
-                    var subworld = kvp.Value;
-                    if (current is null || current.ID != subworld.ID)
-                        subworld.UpdateRemotely();
-                }
-            }
-        }
-
         private static void RandomTileUpdate()
         {
             MacrocosmSubworld current = MacrocosmSubworld.Current;
@@ -125,8 +109,6 @@ namespace Macrocosm.Common.Systems
         {
             if (SubworldSystem.AnyActive<Macrocosm>())
                 MacrocosmSubworld.Current.PreUpdateEntities();
-
-            UpdateSubworldsRemotely();
         }
 
         public override void PreUpdatePlayers()
@@ -204,7 +186,15 @@ namespace Macrocosm.Common.Systems
         public override void PreUpdateTime()
         {
             if (SubworldSystem.AnyActive<Macrocosm>())
+            {
                 MacrocosmSubworld.Current.PreUpdateTime();
+            }
+            else
+            {
+                // Set these flags on Earth
+                IsDusk = Main.dayTime && Main.time >= Main.dayLength;
+                IsDawn = !Main.dayTime && Main.time >= Main.nightLength;
+            }
         }
 
         public override void PostUpdateTime()
@@ -216,15 +206,7 @@ namespace Macrocosm.Common.Systems
         public override void PreUpdateWorld()
         {
             if (SubworldSystem.AnyActive<Macrocosm>())
-            {
-                MacrocosmSubworld.Current.PreUpdateWorld();
-            }
-            else
-            {
-                // Set these flags on Earth
-                IsDusk = Main.dayTime && Main.time >= Main.dayLength;
-                IsDawn = !Main.dayTime && Main.time >= Main.nightLength;
-            }
+                 MacrocosmSubworld.Current.PreUpdateWorld();
         }
 
         public override void PostUpdateWorld()

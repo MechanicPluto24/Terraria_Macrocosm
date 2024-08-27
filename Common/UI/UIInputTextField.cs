@@ -21,7 +21,7 @@ namespace Macrocosm.Common.UI
         public Color TextColor { get; set; } = Color.White;
 
         public Func<string, string> FormatText { get; set; } = (text) => text;
-        public int TextMaxLenght { get; set; } = 20;
+        public int TextMaxLength { get; set; } = 20;
         public bool ForceHideHintText { get; set; } = true;
         public bool AllowSnippets { get; set; }
 
@@ -72,8 +72,8 @@ namespace Macrocosm.Common.UI
                 OnTextChange?.Invoke(this, EventArgs.Empty);
             }
 
-            if (currentText.Length > TextMaxLenght)
-                currentText = currentText[..TextMaxLenght];
+            if (currentText.Length > TextMaxLength)
+                currentText = currentText[..TextMaxLength];
 
             currentText = FormatText(currentText);
 

@@ -224,7 +224,7 @@ namespace Macrocosm.Common.Utils
                     if (tile is { HasTile: true } && (tile.TileType == type || type == -1) && (addTile == null || addTile(tile)) && (dist == -1 || Vector2.Distance(originalPos, new Vector2(x1, y1)) < dist))
                     {
                         dist = Vector2.Distance(originalPos, new Vector2(x1, y1));
-                        if (TileID.Sets.BasicChest[type] || (TileObjectData.GetTileData(tile.TileType, 0) != null && (TileObjectData.GetTileData(tile.TileType, 0).Width > 1 || TileObjectData.GetTileData(tile.TileType, 0).Height > 1)))
+                        if (type > 0 && (TileID.Sets.BasicChest[type] || (TileObjectData.GetTileData(tile.TileType, 0) != null && (TileObjectData.GetTileData(tile.TileType, 0).Width > 1 || TileObjectData.GetTileData(tile.TileType, 0).Height > 1))))
                         {
                             int x2 = x1; int y2 = y1;
                             if (TileID.Sets.BasicChest[type])

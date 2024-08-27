@@ -1045,7 +1045,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
                 BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
                 BorderColor = UITheme.Current.PanelStyle.BorderColor,
                 HoverBorderColor = UITheme.Current.ButtonHighlightStyle.BorderColor,
-                TextMaxLenght = Nameplate.MaxChars,
+                TextMaxLength = Nameplate.MaxChars,
                 TextScale = 1f,
                 AllowSnippets = false,
                 FormatText = Nameplate.FormatText,

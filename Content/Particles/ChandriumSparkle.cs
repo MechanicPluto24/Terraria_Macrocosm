@@ -16,7 +16,7 @@ namespace Macrocosm.Content.Particles
     {
         public override string TexturePath => Macrocosm.EmptyTexPath;
 
-        public override int TrailCacheLenght => 3;
+        public override int TrailCacheLength => 3;
 
         public override ParticleDrawLayer DrawLayer => ParticleDrawLayer.AfterProjectiles;
 
@@ -40,9 +40,9 @@ namespace Macrocosm.Content.Particles
             spriteBatch.DrawStar(Position - screenPosition, 2, new Color(177, 107, 219, 127), ScaleV);
             Lighting.AddLight(Position, new Vector3(0.607f, 0.258f, 0.847f));
 
-            for (int i = 1; i < TrailCacheLenght; i++)
+            for (int i = 1; i < TrailCacheLength; i++)
             {
-                float factor = 1f - (i / (float)TrailCacheLenght);
+                float factor = 1f - (i / (float)TrailCacheLength);
                 spriteBatch.DrawStar(Vector2.Lerp(OldPositions[i - 1], OldPositions[i], factor) - screenPosition, new List<float> { OldRotations[i] }, new Color(177, 107, 219, (int)(127 * factor)), ScaleV * factor);
             }
         }

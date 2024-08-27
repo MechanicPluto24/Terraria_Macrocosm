@@ -9,7 +9,7 @@ namespace Macrocosm.Content.Particles
     public class PlasmaBall : Particle
     {
         public override int SpawnTimeLeft => 95;
-        public override int TrailCacheLenght => 7;
+        public override int TrailCacheLength => 7;
 
         public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {

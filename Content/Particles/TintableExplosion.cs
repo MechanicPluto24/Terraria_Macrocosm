@@ -8,7 +8,7 @@ namespace Macrocosm.Content.Particles
 {
     public class TintableExplosion : Particle
     {
-        public override int TrailCacheLenght => 15;
+        public override int TrailCacheLength => 15;
 
         public Color DrawColor;
         public int NumberOfInnerReplicas;

@@ -59,8 +59,8 @@ namespace Macrocosm.Common.Subworlds
         public static Guid MainWorldUniqueID => SubworldSystem.AnyActive() ? typeof(SubworldSystem).GetFieldValue<WorldFileData>("main").UniqueId : Main.ActiveWorldFileData.UniqueId;
 
         public static double CurrentTimeRate => Current is not null ? Current.TimeRate : Earth.TimeRate;
-        public static double CurrentDayLength => Current is not null ? Current.DayLenght : Earth.DayLenght;
-        public static double CurrentNightLength => Current is not null ? Current.NightLenght : Earth.NightLenght;
+        public static double CurrentDayLength => Current is not null ? Current.DayLength : Earth.DayLength;
+        public static double CurrentNightLength => Current is not null ? Current.NightLength : Earth.NightLength;
         public static float CurrentGravityMultiplier => Current is not null ? Current.GravityMultiplier : Earth.GravityMultiplier;
         public static float CurrentAtmosphericDensity => Current is not null ? Current.AtmosphericDensity : Earth.AtmosphericDensity;
 
