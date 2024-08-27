@@ -224,9 +224,9 @@ namespace Macrocosm.Content.Subworlds
                     skipI = verticalTunnelSpread;
                     int surfaceHeight = SurfaceHeight(i);
                     float eqOffset = WorldGen.genRand.NextFloat() * 10.25f;
-                    float tunnelLenght = verticalTunnelLength * WorldGen.genRand.NextFloat(0.45f, 1.2f);
+                    float tunnelLength = verticalTunnelLength * WorldGen.genRand.NextFloat(0.45f, 1.2f);
                     float tunnelSize = verticalTunnelSize * WorldGen.genRand.NextFloat(0.6f, 1f);
-                    for (int j = 0; j < tunnelLenght; j += (int)(tunnelSize * 0.66f))
+                    for (int j = 0; j < tunnelLength; j += (int)(tunnelSize * 0.66f))
                     {
                         int radius = (int)(((FunnySurfaceEquation(j * 0.01f + eqOffset * 2f) + 1f) * 0.1f + 0.8f) * tunnelSize);
 

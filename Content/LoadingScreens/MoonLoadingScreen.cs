@@ -21,8 +21,8 @@ namespace Macrocosm.Content.LoadingScreens
             lunaBackground = ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/Backgrounds/Luna", AssetRequestMode.ImmediateLoad);
             starsDrawing = new();
 
-            Asset<Texture2D> earthSmallBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/Earth", AssetRequestMode.ImmediateLoad);
-            Asset<Texture2D> earthSmallAtmoBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Backgrounds/Moon/EarthAtmo", AssetRequestMode.ImmediateLoad);
+            Asset<Texture2D> earthSmallBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Skies/Moon/Earth", AssetRequestMode.ImmediateLoad);
+            Asset<Texture2D> earthSmallAtmoBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Skies/Moon/EarthAtmo", AssetRequestMode.ImmediateLoad);
             earth = new CelestialBody(earthSmallBackground, earthSmallAtmoBackground, scale: 0.7f);
         }
 

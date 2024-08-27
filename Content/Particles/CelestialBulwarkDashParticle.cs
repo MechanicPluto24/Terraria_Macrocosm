@@ -17,7 +17,7 @@ namespace Macrocosm.Content.Particles
         public override int SpawnTimeLeft => 1000;
         public override string TexturePath => Macrocosm.EmptyTexPath;
         public override ParticleDrawLayer DrawLayer => ParticleDrawLayer.BeforeNPCs;
-        public override int TrailCacheLenght => 24;
+        public override int TrailCacheLength => 24;
 
         public int PlayerID;
         public Color Color;
@@ -50,9 +50,9 @@ namespace Macrocosm.Content.Particles
                 spriteBatch.Begin(blendStateOverride, state);
             }
 
-            for (int i = 0; i < TrailCacheLenght; i++)
+            for (int i = 0; i < TrailCacheLength; i++)
             {
-                float trailProgress = MathHelper.Clamp((float)i / TrailCacheLenght, 0f, 1f);
+                float trailProgress = MathHelper.Clamp((float)i / TrailCacheLength, 0f, 1f);
                 float scale = defScale - (Scale * trailProgress * 5f);
 
                 bool even = i % 2 == 0;

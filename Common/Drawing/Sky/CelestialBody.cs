@@ -526,7 +526,7 @@ namespace Macrocosm.Common.Drawing.Sky
             if (MacrocosmSubworld.Current is null)
                 duration = Main.dayTime ? Main.dayLength : Main.nightLength;
             else
-                duration = Main.dayTime ? MacrocosmSubworld.Current.DayLenght : MacrocosmSubworld.Current.NightLenght;
+                duration = Main.dayTime ? MacrocosmSubworld.Current.DayLength : MacrocosmSubworld.Current.NightLength;
 
             double bgTop = -(Main.LocalPlayer.Center.Y - Main.screenHeight / 2) / (Main.worldSurface * 16.0 - 600.0) * 200.0;
 

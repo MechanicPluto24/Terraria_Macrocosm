@@ -180,7 +180,7 @@ namespace Macrocosm.Common.Utils
             Lighting.AddLight((int)(position.X / 16f), (int)(position.Y / 16f), colorR / brightnessDivider, colorG / brightnessDivider, colorB / brightnessDivider);
         }
 
-        // TODO: - Add variation based on current subworld's day/night lenghts 
+        // TODO: - Add variation based on current subworld's day/night lengths
         //		 - Remove magic numbers lol 
         /// <summary> Used for linear brightness scaling along an entire day/night cycle  </summary>
         public static float GetProgressNoonToMidnight(float minBrightness, float maxBrightness)

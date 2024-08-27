@@ -12,6 +12,7 @@ using Terraria.GameContent.Events;
 using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 using Terraria.Net;
 using Terraria.Utilities;
 namespace Macrocosm.Content.Subworlds
@@ -72,11 +73,6 @@ namespace Macrocosm.Content.Subworlds
             return false;
         }
 
-        public override void UpdateRemotely()
-        {
-            UpdateMeteorStorm();
-        }
-
         public override void PreUpdateEntities()
         {
             if (!Main.dedServ)
@@ -95,28 +91,18 @@ namespace Macrocosm.Content.Subworlds
 
         public override void PostUpdateWorld()
         {
-            UpdateMeteors();
+            UpdateMeteorSpawn();
         }
 
-        public override void PostUpdateTime()
-        {
-        }
-
-        //TODO: NetSync and add actual content
+        //TODO
         private void UpdateBloodMoon()
         {
-            /*
-			if (MacrocosmWorld.IsDusk && Main.rand.NextBool(9)) 
- 				Main.bloodMoon = true;
- 
-			if (MacrocosmWorld.IsDawn && Main.bloodMoon)
-				Main.bloodMoon = false;
-			*/
         }
 
         //TODO 
         private void UpdateSolarStorm() { }
 
+        public bool MeteorStormActive { get; set; } = false;
         public float MeteorBoost { get; set; } = 1f;
 
         private double meteorTimePass = 0.0;
@@ -147,7 +133,7 @@ namespace Macrocosm.Content.Subworlds
                 MeteorBoost = 1f;
         }
 
-        private void UpdateMeteors()
+        private void UpdateMeteorSpawn()
         {
             meteorTimePass += Main.desiredWorldEventsUpdateRate;
 

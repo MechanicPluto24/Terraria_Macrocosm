@@ -40,11 +40,11 @@ namespace Macrocosm.Common.Subworlds
         /// <summary> Time rate of this subworld, compared to Earth's (1.0) </summary>
         public virtual double TimeRate { get; } = Earth.TimeRate;
 
-        /// <summary> Day lenght of this subworld in ticks </summary>
-        public virtual double DayLenght { get; } = Earth.DayLenght;
+        /// <summary> Day length of this subworld in ticks </summary>
+        public virtual double DayLength { get; } = Earth.DayLength;
 
-        /// <summary> Night lenght of this subworld in ticks </summary>
-        public virtual double NightLenght { get; } = Earth.NightLenght;
+        /// <summary> Night length of this subworld in ticks </summary>
+        public virtual double NightLength { get; } = Earth.NightLength;
 
         /// <summary> The gravity multiplier, measured in G (Earth has 1G) </summary>
         public virtual float GravityMultiplier { get; } = Earth.GravityMultiplier;
@@ -107,13 +107,6 @@ namespace Macrocosm.Common.Subworlds
 
         #endregion
 
-        #region Flags
-
-        // Basic example of world flags local to this subworld. Will rework in the future.
-        public bool MeteorStormActive { get; set; } = false;
-
-        #endregion
-
         #region Travel hooks
 
         /// <summary> Called when entering a subworld. </summary>
@@ -148,12 +141,6 @@ namespace Macrocosm.Common.Subworlds
             FreezeEnvironment();
         }
 
-        /// <summary>
-        /// WIP - Lightly update the subworld while it is not active in singleplayer. 
-        /// Useful for randomly triggering events while not there.
-        /// </summary>
-        public virtual void UpdateRemotely() { }
-
         // Updates the time 
         private void UpdateTime()
         {
@@ -182,8 +169,8 @@ namespace Macrocosm.Common.Subworlds
             Main.desiredWorldTilesUpdateRate = timeRate / 60.0;
             Main.desiredWorldEventsUpdateRate = timeRate;
 
-            MacrocosmWorld.IsDusk = Main.dayTime && Main.time >= DayLenght;
-            MacrocosmWorld.IsDawn = !Main.dayTime && Main.time >= NightLenght;
+            MacrocosmWorld.IsDusk = Main.dayTime && Main.time >= DayLength;
+            MacrocosmWorld.IsDawn = !Main.dayTime && Main.time >= NightLength;
 
             if (MacrocosmWorld.IsDusk)
             {
@@ -269,7 +256,7 @@ namespace Macrocosm.Common.Subworlds
 
         #region Saving and loading
 
-        private static void SaveData(TagCompound tag)
+        private void SaveData(TagCompound tag)
         {
             WorldFlags.SaveData(tag);
             RocketManager.SaveData(tag);
@@ -278,7 +265,7 @@ namespace Macrocosm.Common.Subworlds
             TownNPCSystem.SaveData(tag);
         }
 
-        private static void LoadData(TagCompound tag)
+        private void LoadData(TagCompound tag)
         {
             WorldFlags.LoadData(tag);
             RocketManager.LoadData(tag);

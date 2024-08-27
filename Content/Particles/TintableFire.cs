@@ -7,7 +7,7 @@ namespace Macrocosm.Content.Particles
 {
     public class TintableFire : Particle
     {
-        public override int TrailCacheLenght => 15;
+        public override int TrailCacheLength => 15;
 
         public Color DrawColor;
         public override string TexturePath => Macrocosm.EmptyTexPath;

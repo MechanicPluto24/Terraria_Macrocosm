@@ -28,6 +28,7 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.GameContent.ItemDropRules;
+using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -1164,12 +1165,12 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
                     SetAttack(setAttack);
 
-
                 }
 
                 NPC.netUpdate = true;
             }
         }
+
         private void AI_SummonMeteors(Player player)
         {
             FloatTowardsTarget(player);
