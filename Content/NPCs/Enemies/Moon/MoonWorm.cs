@@ -76,7 +76,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             MinSegmentLength = 14;
             MaxSegmentLength = 22;
             FlipSprite = true;
-            NPC.position.Y += 1000;
+            NPC.position.Y += 600;
             SoundEngine.PlaySound(SoundID.NPCDeath10);
             CommonWormInit(this);
         }
@@ -195,7 +195,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         public override void Init()
         {
             FlipSprite = true;
-            NPC.position.Y += 1200;
+            NPC.position.Y += 600;
             MoonWormHead.CommonWormInit(this);
         }
         public override void HitEffect(NPC.HitInfo hit)
@@ -291,7 +291,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         public override void Init()
         {
             FlipSprite = true;
-
+            NPC.position.Y += 600;
             MoonWormHead.CommonWormInit(this);
         }
     }
