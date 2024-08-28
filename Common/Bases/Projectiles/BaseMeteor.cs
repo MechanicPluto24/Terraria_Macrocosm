@@ -22,19 +22,6 @@ namespace Macrocosm.Common.Bases.Projectiles
         public float RotationMultiplier;
         public float BlastRadiusMultiplier = 1f;
 
-        public int DustType = -1;
-        public int ImpactDustCount;
-        public Vector2 ImpactDustSpeed;
-
-        public float DustScaleMin;
-        public float DustScaleMax;
-
-        public int AI_DustChanceDenominator;
-
-        public int DebrisType = -1;
-        public int DebrisCount;
-        public Vector2 DebrisVelocity;
-
         public override void SetStaticDefaults()
         {
             ProjectileID.Sets.Explosive[Type] = true;
@@ -58,24 +45,14 @@ namespace Macrocosm.Common.Bases.Projectiles
             // handled by clients 
             if (Main.netMode != NetmodeID.Server)
             {
-                SpawnImpactDusts();
-                SpawnDebris();
-                ImpactSounds();
-                var explosion = Particle.CreateParticle<TintableExplosion>(p =>
-                {
-                    p.Position = Projectile.Center;
-                    p.DrawColor = (new Color(120, 120, 120)).WithOpacity(0.8f);
-                    p.Scale = 1.7f;
-                    p.NumberOfInnerReplicas = 8;
-                    p.ReplicaScalingFactor = 0.4f;
-                });
+                ImpactEffects();
+                ImpactScreenshake();
             }
 
             // handled by server 
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 SpawnItems();
-                ImpactScreenshake();
             }
         }
 
@@ -86,6 +63,7 @@ namespace Macrocosm.Common.Bases.Projectiles
             Projectile.Resize((int)(Projectile.width * BlastRadiusMultiplier), (int)(Projectile.height * BlastRadiusMultiplier));
             Projectile.knockBack = 12f;
         }
+
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
             Projectile.timeLeft = 3;
@@ -97,56 +75,23 @@ namespace Macrocosm.Common.Bases.Projectiles
         {
         }
 
-        override public void AI()
+        public sealed override void AI()
         {
             if (Projectile.owner == Main.myPlayer && Projectile.timeLeft <= 3)
                 Projectile.PrepareBombToBlow();
 
             AI_Rotation();
-            AI_SpawnDusts();
-            ExtraAI();
+            MeteorAI();
         }
 
-        public virtual void SpawnImpactDusts()
+        public virtual void AI_Rotation()
         {
-            if (DustType < 0)
-                return;
-
-            SpawnImpactDusts(DustType);
+            Projectile.rotation += (Math.Abs(Projectile.velocity.X) + Math.Abs(Projectile.velocity.Y)) * RotationMultiplier * Projectile.direction;
         }
 
-        public void SpawnImpactDusts(int dustType, bool noGravity = false)
-        {
-            for (int i = 0; i < ImpactDustCount; i++)
-            {
-                Dust dust = Dust.NewDustDirect(
-                    new Vector2(Projectile.Center.X, Projectile.Center.Y),
-                    Width,
-                    Height,
-                    dustType,
-                    Main.rand.NextFloat(-ImpactDustSpeed.X, ImpactDustSpeed.X),
-                    Main.rand.NextFloat(0f, -ImpactDustSpeed.Y),
-                    Scale: Main.rand.NextFloat(DustScaleMin, DustScaleMax)
-                );
+        public virtual void MeteorAI() { }
 
-                dust.noGravity = noGravity;
-            }
-        }
-
-        public virtual void SpawnDebris()
-        {
-            if (DebrisType < 0)
-                return;
-
-            for (int i = 0; i < DebrisCount; i++)
-            {
-                Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center,
-                new Vector2(DebrisVelocity.X * Main.rand.NextFloat(-6f, 6f), DebrisVelocity.Y * Main.rand.NextFloat(-4f, -1f)),
-                DebrisType, 0, 0f, 255);
-            }
-        }
-
-        public virtual void ImpactSounds() { }
+        public virtual void ImpactEffects() { }
         public virtual void SpawnItems() { }
 
         public virtual void ImpactScreenshake()
@@ -164,43 +109,5 @@ namespace Macrocosm.Common.Bases.Projectiles
                 }
             }
         }
-
-        public virtual void AI_Rotation()
-        {
-            Projectile.rotation += (Math.Abs(Projectile.velocity.X) + Math.Abs(Projectile.velocity.Y)) * RotationMultiplier * Projectile.direction;
-
-        }
-
-        /// <summary> Override for custom dusts spawning </summary>
-        public virtual void AI_SpawnDusts()
-        {
-            if (DustType == -1)
-                return;
-
-            AI_SpawnDusts(DustType);
-        }
-
-        /// <summary> Call for custom dust types, different from the DustType property </summary>
-        public void AI_SpawnDusts(int dustType)
-        {
-            if (Main.rand.NextBool(AI_DustChanceDenominator))
-            {
-                Dust dust = Dust.NewDustDirect(
-                        new Vector2(Projectile.position.X, Projectile.position.Y),
-                        Projectile.width,
-                        Projectile.height,
-                        dustType,
-                        0f,
-                        0f,
-                        Scale: Main.rand.NextFloat(DustScaleMin, DustScaleMax)
-                    );
-
-                dust.noGravity = true;
-            }
-        }
-
-        /// <summary> Use for special AI </summary>
-        public virtual void ExtraAI() { }
-
     }
 }

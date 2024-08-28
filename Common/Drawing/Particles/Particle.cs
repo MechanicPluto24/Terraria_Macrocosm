@@ -40,6 +40,8 @@ namespace Macrocosm.Common.Drawing.Particles
             ParticleManager.Types.Add(GetType());
         }
 
+        public sealed override void SetupContent() => SetStaticDefaults();
+
         #endregion
 
         #region Fields & Properties

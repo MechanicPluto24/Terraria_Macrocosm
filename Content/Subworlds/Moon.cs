@@ -1,8 +1,10 @@
-﻿using Macrocosm.Common.Enums;
+﻿using Macrocosm.Common.Drawing.Sky;
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems;
 using Macrocosm.Content.Projectiles.Environment.Meteors;
 using Macrocosm.Content.Rockets.UI.Navigation.Checklist;
+using Macrocosm.Content.Skies.Ambience.Moon;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -158,6 +160,8 @@ namespace Macrocosm.Content.Subworlds
                         position.X = Main.player[closestPlayer].position.X + (float)Main.rand.Next(-offset, offset + 1);
                     }
                 }
+
+                MacrocosmAmbientSky.Instance.Spawn<MoonMeteor>(Main.player[closestPlayer], Main.rand.Next());
 
                 if (!Collision.SolidCollision(position, 16, 16))
                 {
