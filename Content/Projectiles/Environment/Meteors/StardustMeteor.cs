@@ -22,32 +22,50 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
 
             RotationMultiplier = 0.01f;
             BlastRadiusMultiplier = 3.5f;
-
-            DustType = DustID.YellowStarDust;
-            ImpactDustCount = Main.rand.Next(70, 80);
-            ImpactDustSpeed = new Vector2(3f, 10f);
-            DustScaleMin = 1f;
-            DustScaleMax = 1.6f;
-            AI_DustChanceDenominator = 1;
         }
 
-        public override void SpawnItems()
+        public override void MeteorAI()
         {
-            int type = ModContent.ItemType<StardustChunk>();
-            Vector2 position = new Vector2(Projectile.position.X + Width / 2, Projectile.position.Y - Height);
-            int itemIdx = Item.NewItem(Projectile.GetSource_FromThis(), position, new Vector2(Projectile.width, Projectile.height), type);
-            NetMessage.SendData(MessageID.SyncItem, -1, -1, null, itemIdx, 1f);
+            float DustScaleMin = 1f;
+            float DustScaleMax = 1.6f;
+
+            if (Main.rand.NextBool(1))
+            {
+                Dust dust = Dust.NewDustDirect(
+                        new Vector2(Projectile.position.X, Projectile.position.Y),
+                        Projectile.width,
+                        Projectile.height,
+                        Main.rand.NextBool() ? DustID.YellowStarDust : DustID.DungeonWater,
+                        0f,
+                        0f,
+                        Scale: Main.rand.NextFloat(DustScaleMin, DustScaleMax)
+                    );
+
+                dust.noGravity = true;
+            }
         }
 
-        public override void AI_SpawnDusts()
+        public override void ImpactEffects()
         {
-            int dustType = Main.rand.NextFromList(DustID.YellowStarDust, DustID.DungeonWater);
-            AI_SpawnDusts(dustType);
-        }
+            int ImpactDustCount = Main.rand.Next(140, 160) * 2;
+            Vector2 ImpactDustSpeed = new Vector2(3f, 10f);
+            float DustScaleMin = 1f;
+            float DustScaleMax = 1.6f;
 
-        public override void SpawnImpactDusts()
-        {
-            SpawnImpactDusts(DustID.YellowStarDust, noGravity: false);
+            for (int i = 0; i < ImpactDustCount; i++)
+            {
+                Dust dust = Dust.NewDustDirect(
+                    new Vector2(Projectile.Center.X, Projectile.Center.Y),
+                    Width,
+                    Height,
+                    i % 2 == 0 ? DustID.YellowStarDust : DustID.DungeonWater,
+                    Main.rand.NextFloat(-ImpactDustSpeed.X, ImpactDustSpeed.X),
+                    Main.rand.NextFloat(0f, -ImpactDustSpeed.Y),
+                    Scale: Main.rand.NextFloat(DustScaleMin, DustScaleMax)
+                );
+
+                dust.noGravity = true;
+            }
 
             for (int i = 0; i < Main.rand.Next(30, 50); i++)
             {
@@ -56,6 +74,14 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
 
                 Particle.CreateParticle(ParticleOrchestraType.StardustPunch, position, velocity);
             }
+        }
+
+        public override void SpawnItems()
+        {
+            int type = ModContent.ItemType<StardustChunk>();
+            Vector2 position = new Vector2(Projectile.position.X + Width / 2, Projectile.position.Y - Height);
+            int itemIdx = Item.NewItem(Projectile.GetSource_FromThis(), position, new Vector2(Projectile.width, Projectile.height), type);
+            NetMessage.SendData(MessageID.SyncItem, -1, -1, null, itemIdx, 1f);
         }
     }
 }
