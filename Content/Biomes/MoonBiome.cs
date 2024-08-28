@@ -24,8 +24,7 @@ namespace Macrocosm.Content.Biomes
         {
         }
 
-        public override bool IsBiomeActive(Player player)
-            => SubworldSystem.IsActive<Moon>();
+        public override bool IsBiomeActive(Player player) => SubworldSystem.IsActive<Moon>();
 
         public override void OnInBiome(Player player)
         {

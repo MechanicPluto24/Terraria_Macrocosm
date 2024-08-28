@@ -1,4 +1,6 @@
 ﻿using Macrocosm.Common.Systems;
+using Macrocosm.Content.Subworlds;
+using SubworldLibrary;
 using Terraria;
 using Terraria.ModLoader;
 namespace Macrocosm.Content.Biomes
@@ -12,7 +14,7 @@ namespace Macrocosm.Content.Biomes
         {
         }
 
-        public override bool IsBiomeActive(Player player) => base.IsBiomeActive(player) && TileCounts.Instance.MonolithCount > 0;
+        public override bool IsBiomeActive(Player player) => TileCounts.Instance.MonolithCount > 0;
 
         public override void OnInBiome(Player player)
         {

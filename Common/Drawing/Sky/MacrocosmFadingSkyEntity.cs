@@ -27,7 +27,7 @@ namespace Macrocosm.Common.Drawing.Sky
             OpacityNormalizedTimeToFadeOut = 0.9f;
         }
 
-        public override void Update(int frameCount)
+        public override void Update(GameTime gameTime, int frameCount)
         {
             if (!IsMovementDone(frameCount))
             {

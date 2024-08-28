@@ -1,6 +1,8 @@
 ﻿using Macrocosm.Common.Systems;
 using Macrocosm.Content.Backgrounds.Moon;
+using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
+using SubworldLibrary;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -23,7 +25,7 @@ namespace Macrocosm.Content.Biomes
         {
         }
 
-        public override bool IsBiomeActive(Player player) => base.IsBiomeActive(player) /*&& TileCounts.Instance.BasaltRockCount > 400*/;
+        public override bool IsBiomeActive(Player player) => SubworldSystem.IsActive<Moon>() /*&& TileCounts.Instance.BasaltRockCount > 400*/;
 
         public override void OnInBiome(Player player)
         {
