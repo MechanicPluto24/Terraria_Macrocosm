@@ -438,14 +438,14 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller
             }
 
             //Handle Rage and Behaviour
-            if (Lighting.GetColor(NPC.Center.ToTileCoordinates()).GetBrightness()>=0f&&Vector2.Distance(NPC.Center, target.Center) < 300f)
+            if (Lighting.GetColor(NPC.Center.ToTileCoordinates()).GetBrightness()>=0.1f&&Vector2.Distance(NPC.Center, target.Center) < 300f)
                 Rage+=0.01f;
 
             if(Rage<0.3f)
                 AI_State=ActionState.Stalk;
             else if(Rage<5f)
             {
-                if(Lighting.GetColor(NPC.Center.ToTileCoordinates()).GetBrightness()<=0.1f&&Vector2.Distance(NPC.Center, target.Center) > 300f)
+                if(Lighting.GetColor(NPC.Center.ToTileCoordinates()).GetBrightness()<=0.1f||Vector2.Distance(NPC.Center, target.Center) > 300f)
                     AI_State=ActionState.Stalk;
                 else
                     AI_State=ActionState.Flee;
