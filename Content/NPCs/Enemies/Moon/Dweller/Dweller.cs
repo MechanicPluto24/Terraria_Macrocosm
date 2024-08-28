@@ -48,6 +48,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller
             public float SpeedTowardsTarget = 1f;
             public bool TargetOutOfRange;
             public bool AtTargetPosition;
+           
 
             private readonly NPC npc;
             private readonly int index;
@@ -279,6 +280,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller
         private static Asset<Texture2D> headJawRight;
         private static Asset<Texture2D> headShellLeft;
         private static Asset<Texture2D> headShellRight;
+        private static Asset<Texture2D> headShellLeftGlow;
+        private static Asset<Texture2D> headShellRightGlow;
 
         private static Asset<Texture2D> legBack1;
         private static Asset<Texture2D> legBack2;
@@ -303,6 +306,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller
             headJawRight = ModContent.Request<Texture2D>(TexturePath + "_Head_JawRight");
             headShellLeft = ModContent.Request<Texture2D>(TexturePath + "_Head_ShellLeft");
             headShellRight = ModContent.Request<Texture2D>(TexturePath + "_Head_ShellRight");
+            headShellLeftGlow = ModContent.Request<Texture2D>(TexturePath + "_Head_ShellLeft_Glow");
+            headShellRightGlow = ModContent.Request<Texture2D>(TexturePath + "_Head_ShellRight_Glow");
 
             legBack1 = ModContent.Request<Texture2D>(TexturePath + "_Leg_Back1");
             legBack2 = ModContent.Request<Texture2D>(TexturePath + "_Leg_Back2");
@@ -317,16 +322,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller
             legFront3 = ModContent.Request<Texture2D>(TexturePath + "_Leg_Front3");
         }
 
-        public enum AIState
-        {
-            Walk
-        }
-
-        public AIState ActionState
-        {
-            get => (AIState)NPC.ai[0];
-            set => NPC.ai[0] = (float)value;
-        }
+      
 
         public ref float LegTimer => ref NPC.ai[1];
 
@@ -345,7 +341,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller
         {
             NPC.damage = 150;
             NPC.defense = 25;
-            NPC.lifeMax = 6000;
+            NPC.lifeMax = 20000;
             NPC.HitSound = SoundID.NPCHit1;
             NPC.DeathSound = SoundID.NPCDeath2;
             NPC.knockBackResist = 0.5f;
@@ -360,6 +356,11 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller
             NPC.height = headJawLeft.Height();
 
             InitializeLegs();
+        }
+
+        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        {
+            return spawnInfo.Player.InModBiome<MoonBiome>() && spawnInfo.SpawnTileY > Main.maxTilesY/2 ? .002f : 0f;
         }
 
         private void InitializeLegs()
@@ -381,9 +382,38 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller
             }
         }
 
+        public float Rotation = 0f;
+        public Vector2 ToPlayer;
+        public float HeadRotation;
+        public float Corpreal = 1f;
+        float speed = 1f;
+        int Timer=0;
+        float Rage=0f;
+
+        public enum ActionState
+        {
+            Stalk,
+            Flee,
+            Enrage
+        }
+
+        public ActionState AI_State
+        {
+            get => (ActionState)NPC.ai[0];
+            set => NPC.ai[0] = (float)value;
+        }
+
+        float JawRotation=0f;
         public override void AI()
         {
             NPC.TargetClosest(faceTarget: false);
+            Player target = Main.player[NPC.target];
+            Rotation=NPC.velocity.ToRotation();
+            ToPlayer =target.Center-NPC.Center;
+            HeadRotation = ToPlayer.ToRotation()+MathHelper.ToRadians(90);
+
+
+            
 
             int legsTouchingGround = Legs.Count(leg => WorldGen.SolidOrSlopedTile(Main.tile[leg.TipPosition.ToTileCoordinates()]));
             bool anyLegTouchingGround = legsTouchingGround > 0;
@@ -391,23 +421,95 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller
             Rectangle tileCollisionHitbox = new(collisionHitbox.X / 16, collisionHitbox.Y / 16, collisionHitbox.Width / 16, collisionHitbox.Height / 16);
             bool midAir = Utility.EmptyTiles(tileCollisionHitbox);
             bool allowedVerticalMovement = false;
+            bool clearLineOfSight = Collision.CanHitLine(NPC.position, NPC.width, NPC.height, target.position, target.width, target.height);
 
-            float speed = 4f;
-            if (HasTarget && NPC.DistanceSQ(TargetPlayer.Center) > 100f * 100f)
+
+
+
+            //Handle Incorpreality
+            if (Lighting.GetColor(NPC.Center.ToTileCoordinates()).GetBrightness()<=0.01f&&!clearLineOfSight&&Vector2.Distance(NPC.Center, target.Center) > 300f)
             {
-                Vector2 direction = NPC.Center.DirectionTo(TargetPlayer.Center);
-                NPC.velocity.X = direction.X * speed;
+                if(Corpreal>0f)
+                    Corpreal-=0.02f;
+            }
+            else{
+                if(Corpreal<1f)
+                    Corpreal+=0.02f;
+            }
 
-                if (midAir && !Legs.Any(leg => leg.TipPosition.Y < NPC.position.Y + NPC.height))
+            //Handle Rage and Behaviour
+            if (Lighting.GetColor(NPC.Center.ToTileCoordinates()).GetBrightness()>=0.1f&&Vector2.Distance(NPC.Center, target.Center) < 300f)
+                Rage+=0.01f;
+
+            if(Rage<0.3f)
+                AI_State=ActionState.Stalk;
+            else if(Rage<5f)
+            {
+                if(Lighting.GetColor(NPC.Center.ToTileCoordinates()).GetBrightness()<=0.1f||Vector2.Distance(NPC.Center, target.Center) > 300f)
+                    AI_State=ActionState.Stalk;
+                else
+                    AI_State=ActionState.Flee;
+            }
+            else
+                AI_State=ActionState.Enrage;
+
+            if (NPC.life<(int)(NPC.lifeMax*.75))
+                AI_State=ActionState.Enrage;
+
+
+
+
+            if (HasTarget)
+            {
+                Vector2 direction = ToPlayer.SafeNormalize(Vector2.UnitX);
+                if (AI_State==ActionState.Stalk){
+                speed= MathHelper.Lerp(speed,1f+((float)Math.Cos(Timer)*0.5f),0.1f);
+                if (anyLegTouchingGround)
                 {
-                    NPC.velocity.Y = 0;
-                    NPC.velocity.Y += NPC.gravity;
-                }
-                else if (anyLegTouchingGround)
-                {
-                    NPC.velocity.Y = direction.Y * speed;
+                    NPC.velocity = direction * speed;
                     allowedVerticalMovement = true;
                 }
+                else
+                {
+                    NPC.velocity.X=direction.X*speed;
+                    NPC.velocity.Y=NPC.gravity;
+                }
+                }
+                if (AI_State==ActionState.Flee){
+                speed= MathHelper.Lerp(speed,2f+((float)Math.Cos(Timer)*0.5f),0.2f);
+                if (anyLegTouchingGround)
+                {
+                    NPC.velocity = direction * -speed;
+                    allowedVerticalMovement = true;
+                }
+                else
+                {
+                    NPC.velocity.X=direction.X*-speed;
+                    NPC.velocity.Y=NPC.gravity;
+                }
+                }
+                 if (AI_State==ActionState.Enrage){
+                speed= MathHelper.Lerp(speed,4f+Math.Abs((float)Math.Cos(Timer)*3f),0.3f);
+                if (anyLegTouchingGround)
+                {
+                    NPC.velocity = direction * speed;
+                    allowedVerticalMovement = true;
+                }
+                else
+                {
+                    NPC.velocity.X=direction.X*speed;
+                    NPC.velocity.Y=NPC.gravity;
+                }
+
+                if (JawRotation<MathHelper.ToRadians(30f)){
+                    JawRotation+=MathHelper.ToRadians(0.12f);
+                }
+
+                }
+            }
+            else
+            {
+            NPC.velocity.Y=10f;
             }
 
             if (Math.Abs(NPC.velocity.X) > Math.Abs(NPC.velocity.Y))
@@ -457,6 +559,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller
                 Legs[i].SpeedTowardsTarget = speed * 4f;
                 Legs[i].Update();
             }
+            Timer++;
 
         }
 
@@ -502,20 +605,24 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller
         {
             SpriteEffects effects = NPC.direction > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
-            Legs[2].Draw(spriteBatch, NPC, screenPos, drawColor);
-            Legs[3].Draw(spriteBatch, NPC, screenPos, drawColor);
+            Legs[2].Draw(spriteBatch, NPC, screenPos, drawColor*Corpreal);
+            Legs[3].Draw(spriteBatch, NPC, screenPos, drawColor*Corpreal);
 
-            Legs[1].Draw(spriteBatch, NPC, screenPos, drawColor);
-            Legs[4].Draw(spriteBatch, NPC, screenPos, drawColor);
+            Legs[1].Draw(spriteBatch, NPC, screenPos, drawColor*Corpreal);
+            Legs[4].Draw(spriteBatch, NPC, screenPos, drawColor*Corpreal);
 
-            spriteBatch.Draw(headBack.Value, new Vector2(NPC.Center.X, NPC.position.Y + headBack.Height() / 2) - Main.screenPosition, null, drawColor, NPC.rotation, headBack.Size() / 2f, NPC.scale, effects, 0);
-            spriteBatch.Draw(headJawRight.Value, new Vector2(NPC.Center.X, NPC.position.Y + headJawRight.Height() / 2) - Main.screenPosition, null, drawColor, NPC.rotation, headJawRight.Size() / 2f, NPC.scale, effects, 0);
-            spriteBatch.Draw(headJawLeft.Value, new Vector2(NPC.Center.X, NPC.position.Y + headJawLeft.Height() / 2) - Main.screenPosition, null, drawColor, NPC.rotation, headJawLeft.Size() / 2f, NPC.scale, effects, 0);
-            spriteBatch.Draw(headShellRight.Value, new Vector2(NPC.Center.X, NPC.position.Y + headBack.Height() / 2) - Main.screenPosition, null, drawColor, NPC.rotation, headShellRight.Size() / 2f, NPC.scale, effects, 0);
-            spriteBatch.Draw(headShellLeft.Value, new Vector2(NPC.Center.X, NPC.position.Y + headBack.Height() / 2) - Main.screenPosition, null, drawColor, NPC.rotation, headShellLeft.Size() / 2f, NPC.scale, effects, 0);
+            Legs[0].Draw(spriteBatch, NPC, screenPos, drawColor*Corpreal);
+            Legs[5].Draw(spriteBatch, NPC, screenPos, drawColor*Corpreal);
 
-            Legs[0].Draw(spriteBatch, NPC, screenPos, drawColor);
-            Legs[5].Draw(spriteBatch, NPC, screenPos, drawColor);
+            spriteBatch.Draw(headBack.Value, new Vector2(NPC.Center.X, NPC.position.Y + headBack.Height() / 2) - Main.screenPosition, null, drawColor*Corpreal, HeadRotation, headBack.Size() / 2f, NPC.scale, effects, 0);
+            spriteBatch.Draw(headJawRight.Value, new Vector2(NPC.Center.X, NPC.position.Y + headJawRight.Height() / 2) - Main.screenPosition, null, drawColor*Corpreal, HeadRotation-JawRotation, headJawRight.Size() / 2f, NPC.scale, effects, 0);
+            spriteBatch.Draw(headJawLeft.Value, new Vector2(NPC.Center.X, NPC.position.Y + headJawLeft.Height() / 2) - Main.screenPosition, null, drawColor*Corpreal, HeadRotation+JawRotation, headJawLeft.Size() / 2f, NPC.scale, effects, 0);
+            spriteBatch.Draw(headShellRight.Value, new Vector2(NPC.Center.X, NPC.position.Y + headBack.Height() / 2) - Main.screenPosition, null, drawColor*Corpreal, HeadRotation-JawRotation, headShellRight.Size() / 2f, NPC.scale, effects, 0);
+            spriteBatch.Draw(headShellLeft.Value, new Vector2(NPC.Center.X, NPC.position.Y + headBack.Height() / 2) - Main.screenPosition, null, drawColor*Corpreal, HeadRotation+JawRotation, headShellLeft.Size() / 2f, NPC.scale, effects, 0);
+            spriteBatch.Draw(headShellRightGlow.Value, new Vector2(NPC.Center.X, NPC.position.Y + headBack.Height() / 2) - Main.screenPosition, null, Color.White*Corpreal, HeadRotation-JawRotation, headShellRight.Size() / 2f, NPC.scale, effects, 0);
+            spriteBatch.Draw(headShellLeftGlow.Value, new Vector2(NPC.Center.X, NPC.position.Y + headBack.Height() / 2) - Main.screenPosition, null, Color.White*Corpreal, HeadRotation+JawRotation, headShellLeft.Size() / 2f, NPC.scale, effects, 0);
+
+            
 
             /*
             // Debug collision hitbox
@@ -526,6 +633,15 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller
             */
 
             return false;
+        }
+
+
+        public override void ModifyHitByProjectile(Projectile projectile,ref NPC.HitModifiers modifiers)
+        {
+        if (AI_State!=ActionState.Enrage){
+            modifiers.FinalDamage*=0.5f;
+        }
+        modifiers.FinalDamage*=Corpreal;
         }
 
         private LegType LegTypeFromIndex(int index)

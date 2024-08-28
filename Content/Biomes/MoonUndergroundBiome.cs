@@ -7,9 +7,9 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Biomes
 {
-    public class MoonUndergroundBiome : MoonBiome
+    public class MoonUndergroundBiome : ModBiome
     {
-        public override SceneEffectPriority Priority => base.Priority + 1;
+        public override SceneEffectPriority Priority => SceneEffectPriority.Event;
 
         public override Color? BackgroundColor => base.BackgroundColor;
         public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.GetInstance<MoonSurfaceBackgroundStyle>();
@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Biomes
         {
         }
 
-        public override bool IsBiomeActive(Player player) => base.IsBiomeActive(player) && (player.position.Y / 16 > Main.rockLayer);
+        public override bool IsBiomeActive(Player player) =>SubworldSystem.IsActive<Moon>() && (player.position.Y / 16 > Main.rockLayer);
 
         public override void OnInBiome(Player player)
         {
