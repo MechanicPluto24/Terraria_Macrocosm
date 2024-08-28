@@ -29,6 +29,10 @@ namespace Macrocosm.Common.Global.NPCs
                 modifiers.FinalDamage *= 0.5f;//Nerfed
             if (projectile.type == ProjectileID.EmpressBlade)
                 modifiers.FinalDamage *= 1.01f;//buffed slightly
+            if (projectile.type == ProjectileID.Terrarian||projectile.type == ProjectileID.TerrarianBeam)
+                modifiers.FinalDamage *= 0.5f;//Nerfed
+            if (projectile.type == ProjectileID.NebulaBlaze1||projectile.type == ProjectileID.NebulaBlaze2)
+                modifiers.FinalDamage *= 0.5f;//Nerfed
         }
 
         public override void ModifyHitByItem(NPC npc, Player player, Item item, ref NPC.HitModifiers modifiers)

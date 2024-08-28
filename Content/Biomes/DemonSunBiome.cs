@@ -10,7 +10,7 @@ namespace Macrocosm.Content.Biomes
 {
     public class DemonSunBiome : ModBiome
     {
-        public override SceneEffectPriority Priority => base.Priority + 3;
+        public override SceneEffectPriority Priority => SceneEffectPriority.BossMedium;
 
         public override string BestiaryIcon => Macrocosm.TexturesPath + "Icons/BloodMoon";
         public override string BackgroundPath => Macrocosm.TexturesPath + "MapBackgrounds/Moon";
