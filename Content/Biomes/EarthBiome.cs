@@ -8,6 +8,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Biomes
 {
+    /// <summary> Only used in the bestiary </summary>
     public class EarthBiome : ModBiome
     {
         public override SceneEffectPriority Priority => SceneEffectPriority.None;

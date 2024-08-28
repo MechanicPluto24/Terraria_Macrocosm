@@ -4,6 +4,8 @@ using Terraria.ModLoader;
 using Macrocosm.Content.Players;
 using Macrocosm.Content.Backgrounds.Moon;
 using Microsoft.Xna.Framework;
+using Macrocosm.Content.Subworlds;
+using SubworldLibrary;
 namespace Macrocosm.Content.Biomes
 {
     public class IrradiationBiome : ModBiome
@@ -23,7 +25,7 @@ namespace Macrocosm.Content.Biomes
         {
         }
 
-        public override bool IsBiomeActive(Player player) => base.IsBiomeActive(player) && TileCounts.Instance.IrradiatedRockCount > 400;
+        public override bool IsBiomeActive(Player player) => SubworldSystem.IsActive<Moon>() && TileCounts.Instance.IrradiatedRockCount > 400;
 
         public override void OnInBiome(Player player)
         {

@@ -77,7 +77,7 @@ CrescentGhoul
 		Moonstone, (1-5) 10%
 
 Dweller
-	Life: 6000
+	Life: 20000
 	Defense: 25
 	KB resist: 0.5
 	Damage: 150

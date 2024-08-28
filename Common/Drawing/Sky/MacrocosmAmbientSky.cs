@@ -59,22 +59,12 @@ namespace Macrocosm.Common.Drawing.Sky
             frameCounter++;
             if (Main.netMode != NetmodeID.Server && AnActiveSkyConflictsWithAmbience() && SkyManager.Instance["Macrocosm:Ambience"].IsActive())
                 SkyManager.Instance.Deactivate("Macrocosm:Ambience");
-
-            foreach (SlotVector<MacrocosmSkyEntity>.ItemPair item in entities)
-            {
-                MacrocosmSkyEntity value = item.Value;
-                value.Update(frameCounter);
-                if (!value.IsActive)
-                {
-                    entities.Remove(item.Id);
-                    if (Main.netMode != NetmodeID.Server && entities.Count == 0 && SkyManager.Instance["Macrocosm:Ambience"].IsActive())
-                        SkyManager.Instance.Deactivate("Macrocosm:Ambience");
-                }
-            }
         }
 
         public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth)
         {
+            DrawUpdate();
+
             if (Main.gameMenu && Main.netMode == NetmodeID.SinglePlayer && SkyManager.Instance["Macrocosm:Ambience"].IsActive())
             {
                 entities.Clear();
@@ -83,6 +73,24 @@ namespace Macrocosm.Common.Drawing.Sky
 
             foreach (SlotVector<MacrocosmSkyEntity>.ItemPair item in entities)
                 item.Value.Draw(spriteBatch, 3f, minDepth, maxDepth);
+        }
+
+        private void DrawUpdate()
+        {
+            if (Main.gamePaused)
+                return;
+
+            foreach (SlotVector<MacrocosmSkyEntity>.ItemPair item in entities)
+            {
+                MacrocosmSkyEntity value = item.Value;
+                value.Update(null, frameCounter);
+                if (!value.IsActive)
+                {
+                    entities.Remove(item.Id);
+                    if (Main.netMode != NetmodeID.Server && entities.Count == 0 && SkyManager.Instance["Macrocosm:Ambience"].IsActive())
+                        SkyManager.Instance.Deactivate("Macrocosm:Ambience");
+                }
+            }
         }
 
         public override bool IsActive() => isActive;

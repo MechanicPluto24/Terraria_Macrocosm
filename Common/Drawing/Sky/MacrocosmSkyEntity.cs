@@ -53,7 +53,7 @@ namespace Macrocosm.Common.Drawing.Sky
 
         public abstract Color GetColor(Color backgroundColor);
 
-        public abstract void Update(int frameCount);
+        public abstract void Update(GameTime gameTime, int frameCount);
 
         protected void SetPositionInWorldBasedOnScreenSpace(Vector2 actualWorldSpace)
         {

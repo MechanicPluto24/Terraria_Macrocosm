@@ -161,7 +161,8 @@ namespace Macrocosm.Content.Subworlds
                     }
                 }
 
-                MacrocosmAmbientSky.Instance.Spawn<MoonMeteor>(Main.player[closestPlayer], Main.rand.Next());
+                for(int i = 0; i < Main.rand.Next(2, 5); i++)
+                    MacrocosmAmbientSky.Instance.Spawn<MoonMeteor>(Main.player[closestPlayer], Main.rand.Next());
 
                 if (!Collision.SolidCollision(position, 16, 16))
                 {
