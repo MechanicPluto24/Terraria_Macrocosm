@@ -6,9 +6,9 @@ using Macrocosm.Content.Backgrounds.Moon;
 using Microsoft.Xna.Framework;
 namespace Macrocosm.Content.Biomes
 {
-    public class IrradiationBiome : MoonBiome
+    public class IrradiationBiome : ModBiome
     {
-        public override SceneEffectPriority Priority => base.Priority + 2;
+        public override SceneEffectPriority Priority => SceneEffectPriority.BossLow;
 
         public override string BestiaryIcon => Macrocosm.TexturesPath + "Icons/Moon";
         public override string BackgroundPath => Macrocosm.TexturesPath + "MapBackgrounds/Moon";
