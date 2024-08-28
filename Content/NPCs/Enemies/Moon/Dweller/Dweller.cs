@@ -453,6 +453,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller
             else
                 AI_State=ActionState.Enrage;
 
+            if (NPC.life<(int)(NPC.lifeMax*.75))
+                AI_State=ActionState.Enrage;
+
 
 
 
@@ -503,6 +506,10 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller
                 }
 
                 }
+            }
+            else
+            {
+            NPC.velocity.Y=10f;
             }
 
             if (Math.Abs(NPC.velocity.X) > Math.Abs(NPC.velocity.Y))
