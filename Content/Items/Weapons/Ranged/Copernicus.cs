@@ -1,9 +1,12 @@
 using Macrocosm.Common.Bases.Projectiles;
+using Macrocosm.Common.Utils;
+using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Content.Rarities;
 using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -11,9 +14,10 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 {
     public class Copernicus : GunHeldProjectileItem
     {
+        private int grenadeCounter;
+
         public override void SetStaticDefaults()
         {
-
         }
 
         public override void SetDefaultsHeldProjectile()
@@ -56,7 +60,19 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
         public override void UpdateInventory(Player player)
         {
+            if (player.CurrentItem() != Item)
+                grenadeCounter = 0;
+        }
 
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback, GunHeldProjectile heldProjectile)
+        {
+            if(grenadeCounter++ > Main.rand.Next(3, 6))
+            {
+                Projectile.NewProjectile(source, position + new Vector2(0, 10 * player.direction).RotatedBy(velocity.ToRotation()), velocity * 0.4f, ModContent.ProjectileType<InhibitorFieldGrenade>(), damage, knockback, player.whoAmI, ai0: 450, ai1: 200);
+                grenadeCounter = 0;
+            }
+
+            return true;
         }
 
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)

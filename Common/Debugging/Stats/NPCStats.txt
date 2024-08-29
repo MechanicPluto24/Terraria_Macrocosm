@@ -29,6 +29,12 @@ FlamingMeteor
 	KB resist: 0.1
 	Damage: 50
 
+KyaniteScarabCritter
+	Life: 5
+	Defense: 0
+	KB resist: 1
+	Damage: 0
+
 Bruiser
 	Life: 10000
 	Defense: 80

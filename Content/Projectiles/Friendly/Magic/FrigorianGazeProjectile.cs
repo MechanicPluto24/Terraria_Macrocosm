@@ -140,8 +140,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 },
                 Projectile.position);
 
-                Projectile.velocity.X = (Math.Abs(Projectile.velocity.X) < 1f ? -oldVelocity.X : oldVelocity.X) * bounceFactor;
-                Projectile.velocity.Y = -Projectile.velocity.Y * bounceFactor;
+                if (Projectile.velocity.X != oldVelocity.X)
+                    Projectile.velocity.X = oldVelocity.X * -bounceFactor;
+
+                if (Projectile.velocity.Y != oldVelocity.Y && oldVelocity.Y > 0.7f)
+                    Projectile.velocity.Y = oldVelocity.Y * -bounceFactor;
 
                 Projectile.rotation = 0f;
             }

@@ -1,9 +1,12 @@
 using Macrocosm.Common.Bases;
 using Macrocosm.Common.Bases.NPCs;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Sets;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Drops;
+using Macrocosm.Content.Particles;
 using Macrocosm.Content.Projectiles.Environment.Debris;
 using Macrocosm.Content.Projectiles.Hostile;
 using Microsoft.Xna.Framework;
@@ -122,23 +125,35 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                     attackCounter--;
 
                 Player target = Main.player[NPC.target];
+
                 // If the attack counter is 0, this NPC is less than 12.5 tiles away from its target, and has a path to the target unobstructed by blocks, summon a projectile.
                 if (attackCounter <= 0 && Vector2.Distance(NPC.Center, target.Center) < 2000 && Collision.CanHit(NPC.Center, 1, 1, target.Center, 1, 1) && burst == false)
                 {
                     SoundEngine.PlaySound(SoundID.DD2_ExplosiveTrapExplode);
                     burst = true;
+
+                    // Spawn debris
                     for (int i = 0; i < 50; i++)
-                    { //Spawn a lot of debris
                         Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, NPC.velocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(MathHelper.Pi) * (float)Main.rand.NextFloat(1.0f, 30.0f), ModContent.ProjectileType<RegolithDebris>(), 0, 0f, -1);
-                    }
-                    for (int i = 0; i < 90; i++)
-                    { //Spawn a lot of dust
-                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, NPC.velocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(MathHelper.Pi) * (float)Main.rand.NextFloat(1.0f, 15.0f), ModContent.ProjectileType<MoonWormDust>(), 0, 0f, -1);
-                    }
-                    for (int i = 0; i < 10; i++)//Spawn damaging projectiles
-                    {
+                                       
+                    // Spawn damaging rubble
+                    for (int i = 0; i < 10; i++)
                         Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, NPC.velocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(MathHelper.Pi) * (float)Main.rand.NextFloat(10.0f, 20.0f), ModContent.ProjectileType<MoonRubble>(), 50, 0f, -1);
 
+                    // Spawn smoke
+                    for (int i = 0; i < 90; i++)
+                    {
+                        Smoke smoke = Particle.CreateParticle<Smoke>((p) =>
+                        {
+                            p.Position = NPC.Center;
+                            p.Velocity = NPC.velocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(MathHelper.Pi) * (float)Main.rand.NextFloat(1.0f, 15.0f);
+                            p.Scale = 1f;
+                            p.Rotation = 0f;
+                            p.DrawColor = Smoke.GetTileHitColor(Utility.GetClosestTile(NPC.Center, -1, addTile: (t) => Main.tileSolid[t.TileType] && !t.IsActuated));
+                            p.FadeIn = true;
+                            p.Opacity = 0f;
+                            p.ExpansionRate = 0.0075f;
+                        });
                     }
                 }
             }

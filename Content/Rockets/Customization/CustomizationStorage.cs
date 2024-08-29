@@ -68,7 +68,7 @@ namespace Macrocosm.Content.Rockets.Customization
             => patterns[(moduleName, patternName)];
 
         public static Pattern GetDefaultPattern(string moduleName)
-            => patterns[(moduleName, "Basic")];
+            => TryGetPattern(moduleName, "Basic", out var pattern) ? pattern : default; 
 
         public static List<Pattern> GetUnlockedPatterns(string moduleName)
         {

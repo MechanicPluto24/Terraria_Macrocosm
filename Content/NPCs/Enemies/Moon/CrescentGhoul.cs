@@ -243,13 +243,15 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override void FindFrame(int frameHeight)
         {
-            NPC.frame.Y = (int)(NPC.frameCounter / 10) * frameHeight;
+            int ticksPerFrame = 10;
+
+            NPC.frame.Y = (int)(NPC.frameCounter / ticksPerFrame) * frameHeight;
 
             if (NPC.localAI[0] == 0f)
             {
                 NPC.frameCounter++;
 
-                if (NPC.frameCounter >= 39)
+                if (NPC.frameCounter >= (Main.npcFrameCount[Type] * ticksPerFrame) - 1)
                     NPC.localAI[0] = 1f;
             }
             else if (NPC.localAI[0] == 1f)

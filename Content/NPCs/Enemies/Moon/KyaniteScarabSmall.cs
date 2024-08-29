@@ -1,5 +1,6 @@
 using Macrocosm.Common.Global.NPCs;
 using Macrocosm.Common.Sets;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Terraria;
 using Terraria.ID;
@@ -33,12 +34,18 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             SpawnModBiomes = [ModContent.GetInstance<MoonUndergroundBiome>().Type];
         }
 
+        public override void AI()
+        {
+            Utility.AIZombie(NPC, ref NPC.ai, fleeWhenDay: false, allowBoredom: false);
+            NPC.spriteDirection = NPC.direction;
+        }
+
         public override void FindFrame(int frameHeight)
         {
             int ticksPerFrame = 5;
             NPC.frame.Y = (int)(NPC.frameCounter / ticksPerFrame + 0) * frameHeight;
 
-            if (NPC.frameCounter >= ticksPerFrame * 7)
+            if (NPC.frameCounter >= ticksPerFrame * Main.npcFrameCount[Type] - 1)
             {
                 NPC.frameCounter = 0;
                 NPC.frame.Y = 0 * frameHeight;
@@ -50,13 +57,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             if (NPC.life <= 0)
             {
                 Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("KyaniteSmallGore1").Type);
-                Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("KyaniteSmallGore2").Type);
-                Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("KyaniteSmallGore2").Type);
-                Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("KyaniteSmallGore2").Type);
-                Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("KyaniteSmallGore2").Type);
-                Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("KyaniteSmallGore2").Type);
-                Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("KyaniteSmallGore2").Type);
                 Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("KyaniteSmallGore3").Type);
+                for (int i = 0; i < 6; i++)
+                    Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("KyaniteSmallGore2").Type);
             }
         }
     }

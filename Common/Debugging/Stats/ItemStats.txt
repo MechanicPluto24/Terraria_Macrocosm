@@ -429,6 +429,10 @@ TitaniumLoom
 	Value: 5 silver
 	Research count: 1
 
+KyaniteScarabCritter
+	Value: 1 silver 50 copper
+	Research count: 1
+
 Moonstone
 	Value: 7 silver 50 copper
 	Research count: 100
@@ -1004,6 +1008,15 @@ EarthGlobe
 	Value: 5 silver
 	Research count: 1
 
+Fridge
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Iron Bar x 8
+		at
+		Work Bench
+
+
 HeavenforgeBookcase
 	Value: 1 silver 50 copper
 	Research count: 1
@@ -1376,6 +1389,16 @@ IndustrialWorkbench
 		Industrial Plating x 6
 		at
 		Fabricator
+
+
+IVPole
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Plastic x 4
+		Aluminum Bar x 2
+		at
+		Work Bench
 
 
 LuminiteBookcase
