@@ -499,6 +499,7 @@ namespace Macrocosm.Content.Subworlds
                 }
             }
         }
+
         [Task]
         private void CynthalithTask(GenerationProgress progress)
         {
@@ -596,10 +597,6 @@ namespace Macrocosm.Content.Subworlds
                         float iDistance = Math.Abs(iOffset - i1) / (radius * 0.5f);
                         float jDistance = Math.Abs(jOffset - j1) / (radius * 0.5f);
 
-
-
-
-
                         if (Main.tile[i1, j1].WallType != WallID.None || j1 > CynthalithlithLayerHeight + SurfaceHeight(i1))
                         {
                             FastPlaceWall(i1, j1, IrradiationWallType);
@@ -618,7 +615,6 @@ namespace Macrocosm.Content.Subworlds
             int jOffset2 = (int)Main.worldSurface + (int)(IrradiationHeight / 1.5) - WorldGen.genRand.NextDirection(20..30);
 
             //Tunnels
-
 
             //Right facing tunnels
             for (int iteration = 0; iteration < Main.rand.Next(2, 5); iteration++)
@@ -868,98 +864,98 @@ namespace Macrocosm.Content.Subworlds
             Structure cheeseHouse = new CheeseHouse();
             cheeseHouse.Place(new Point16(420, 1000), StructureMap);
         }
-        [Task]
-        private void Monlith(GenerationProgress progress)
-        {
-            progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.Horror");
-            var monolith = new MonolithStructure();
-            for (int i = 0; i < 100; i++)
-            {
-                int x = WorldGen.genRand.Next(80, Main.maxTilesX - 80);
-                int y = SurfaceHeight(x);
-                if (Main.tile[x, y].HasTile)
-                {
-                    monolith.Place(new Point16(x, y - monolith.Size.Y), StructureMap);
-                    break;
-                }
-            }
-        }
 
         [Task]
         private void AmbientTask(GenerationProgress progress)
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.AmbientPass");
+
             float smallRockSpawnChance = 0.1f;
             float mediumRockSpawnChance = 0.05f;
             float largeRockSpawnChance = 0.01f;
+            float altarChance = 0.0025f;
+            float kyaniteNestChance = 0.0045f;
+
             ushort regolithType = (ushort)TileType<Regolith>();
-            float AltarChance = 0.0025f;
-            ushort ProtolithType = (ushort)TileType<Protolith>();
+            ushort protolithType = (ushort)TileType<Protolith>();
+            ushort irradiatedRockType = (ushort)TileType<IrradiatedRock>();
 
             for (int i = 0; i < Main.maxTilesX - 1; i++)
             {
                 progress.Set((float)i / Main.maxTilesX);
+
                 for (int j = 1; j < Main.maxTilesY; j++)
                 {
-                    TileNeighbourInfo neighbourInfo = new(i, j);
-                    TileNeighbourInfo aboveNeighbourInfo = new(i, j - 1);
-                    if (Main.tile[i, j].HasTile && Main.tile[i, j].TileType == regolithType)
+                    Tile tile = Main.tile[i, j];
+                    if (WorldGen.genRand.NextFloat() < smallRockSpawnChance && tile.HasTile && Main.tileSolid[tile.TileType] && !tile.IsActuated)
                     {
-                        if (WorldGen.genRand.NextFloat() < smallRockSpawnChance)
-                        {
+                        if(tile.TileType == regolithType)
                             WorldGen.PlaceTile(i, j - 1, TileType<RegolithRockSmallNatural>(), style: WorldGen.genRand.Next(10), mute: true);
-                        }
-                        else if (
-                                neighbourInfo.Solid.Right
-                            && !neighbourInfo.HasTile.Top
-                            && !neighbourInfo.HasTile.TopRight
-                            && WorldGen.genRand.NextFloat() < mediumRockSpawnChance
-                            )
-                        {
-                            WorldGen.PlaceTile(i, j - 1, TileType<RegolithRockMediumNatural>(), style: WorldGen.genRand.Next(6), mute: true);
-                        }
-                        else if (
-                                neighbourInfo.Solid.Right
-                            && neighbourInfo.Solid.Left
-                            && !neighbourInfo.HasTile.Top
-                            && !neighbourInfo.HasTile.TopRight
-                            && !neighbourInfo.HasTile.TopLeft
-                            && !aboveNeighbourInfo.HasTile.Top
-                            && !aboveNeighbourInfo.HasTile.TopRight
-                            && !aboveNeighbourInfo.HasTile.TopLeft
-                            && WorldGen.genRand.NextFloat() < largeRockSpawnChance
-                            )
-                        {
-                            WorldGen.PlaceTile(i, j - 1, TileType<RegolithRockLargeNatural>(), style: WorldGen.genRand.Next(5), mute: true);
-                        }
+
+                        if (tile.TileType == protolithType)
+                            WorldGen.PlaceTile(i, j - 1, TileType<ProtolithRockSmallNatural>(), style: WorldGen.genRand.Next(10), mute: true);
                     }
-                }
-            }
-            for (int i = 0; i < Main.maxTilesX - 1; i++)
-            {
-                progress.Set((float)i / Main.maxTilesX);
-                for (int j = 1; j < Main.maxTilesY; j++)
-                {
-                    TileNeighbourInfo neighbourInfo = new(i, j);
-                    TileNeighbourInfo aboveNeighbourInfo = new(i, j - 1);
-                    if (Main.tile[i, j].HasTile && Main.tile[i, j].TileType == ProtolithType)
+                    
+                    if (WorldGen.genRand.NextFloat() < mediumRockSpawnChance && CheckEmptyAboveWithSolidToTheRight(i, j, 2, 1))
                     {
-                        if (neighbourInfo.Solid.Right
-                            && neighbourInfo.Solid.Left
-                            && !neighbourInfo.HasTile.Top
-                            && !neighbourInfo.HasTile.TopRight
-                            && !neighbourInfo.HasTile.TopLeft
-                            && !aboveNeighbourInfo.HasTile.Top
-                            && !aboveNeighbourInfo.HasTile.TopRight
-                            && !aboveNeighbourInfo.HasTile.TopLeft
-                            && (WorldGen.genRand.NextFloat() < AltarChance || (Main.tile[i, j].TileType == (ushort)TileType<IrradiatedRock>() && WorldGen.genRand.NextFloat() < 0.035f && j > SurfaceHeight(i) + RegolithLayerHeight)))
-                        {
+                        if (tile.TileType == regolithType)
+                            WorldGen.PlaceTile(i, j - 1, TileType<RegolithRockMediumNatural>(), style: WorldGen.genRand.Next(6), mute: true);
+
+                        if (tile.TileType == protolithType)
+                            WorldGen.PlaceTile(i, j - 1, TileType<ProtolithRockMediumNatural>(), style: WorldGen.genRand.Next(6), mute: true);
+                    }
+                    
+                    if (WorldGen.genRand.NextFloat() < largeRockSpawnChance && CheckEmptyAboveWithSolidToTheRight(i, j, 3, 2))
+                    {
+                        if (tile.TileType == regolithType)
+                            WorldGen.PlaceTile(i, j - 1, TileType<RegolithRockLargeNatural>(), style: WorldGen.genRand.Next(5), mute: true);
+
+                        if (tile.TileType == protolithType)
+                            WorldGen.PlaceTile(i, j - 1, TileType<ProtolithRockLargeNatural>(), style: WorldGen.genRand.Next(5), mute: true);
+                    }
+
+                    if (WorldGen.genRand.NextFloat() < altarChance && CheckEmptyAboveWithSolidToTheRight(i, j, 3, 2))
+                    {
+                        if (tile.TileType == protolithType || tile.TileType == irradiatedRockType)
                             WorldGen.PlaceTile(i, j - 1, TileType<IrradiatedAltar>(), mute: true);
-                        }
+                    }
+
+                    if (WorldGen.genRand.NextFloat() < kyaniteNestChance && CheckEmptyAboveWithSolidToTheRight(i, j, 4, 3))
+                    {
+                        if (tile.TileType == protolithType)
+                            WorldGen.PlaceTile(i, j - 1, TileType<KyaniteNest>(), mute: true);
                     }
                 }
             }
         }
+
+        [Task]
+        private void MonolithTask(GenerationProgress progress)
+        {
+            int tries = 0;
+            bool placed = false;
+            while(tries < 1000)
+            {
+                int tileX = WorldGen.genRand.Next(80, Main.maxTilesX - 80);
+                int tileY = WorldGen.genRand.Next((int)(SurfaceHeight(tileX) + RegolithLayerHeight + 20.0), Main.maxTilesY - 230);
+                if (CheckEmptyAboveWithSolidToTheRight(tileX, tileY, 4, 8))
+                {
+                    if (WorldGen.PlaceTile(tileX, tileY - 1, TileType<Monolith>(), mute: true))
+                    {
+                        placed = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!placed)
+            {
+                int tileX = WorldGen.genRand.Next(80, Main.maxTilesX - 80);
+                int tileY = WorldGen.genRand.Next((int)(SurfaceHeight(tileX) + RegolithLayerHeight + 20.0), Main.maxTilesY - 230);
+                WorldGen.PlaceTile(tileX, tileY - 1, TileType<Monolith>(), mute: true, forced: true);
+            }
+        }
+
 
         [Task]
         private void SpawnTask(GenerationProgress progress)

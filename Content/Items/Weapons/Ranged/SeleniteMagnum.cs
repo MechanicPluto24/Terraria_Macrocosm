@@ -13,6 +13,8 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 {
     public class SeleniteMagnum : GunHeldProjectileItem
     {
+        private int altUseCooldown;
+
         public override GunHeldProjectileData GunHeldProjectileData => new()
         {
             GunBarrelPosition = new(22, 6),
@@ -45,8 +47,6 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             Item.autoReuse = true;
         }
 
-        private int altUseCooldown;
-
         public override void UpdateInventory(Player player)
         {
             if (altUseCooldown > 0)
@@ -73,7 +73,6 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
             return base.CanUseItemHeldProjectile(player);
         }
-
 
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {

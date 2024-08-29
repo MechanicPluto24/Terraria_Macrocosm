@@ -332,6 +332,51 @@ namespace Macrocosm.Common.Utils
             }
         }
 
+        public static bool CheckEmptyWithSolidBottom(int x, int y, int width, int height)
+        {
+            for (int i = x; i < x + width; i++)
+            {
+                for (int j = y; j < y + height; j++)
+                {
+                    Tile tile = Main.tile[i, j];
+                    if (tile.HasTile)
+                        return false;
+                }
+            }
+
+            for (int i = x; i < x + width; i++)
+            {
+                Tile tileBelow = Main.tile[i, y + height];
+                if (!tileBelow.HasTile || !Main.tileSolid[tileBelow.TileType] || tileBelow.IsActuated)
+                    return false;
+            }
+
+            return true;
+        }
+
+        public static bool CheckEmptyAboveWithSolidToTheRight(int x, int y, int width, int height)
+        {
+            for (int i = x; i < x + width; i++)
+            {
+                Tile tile = Main.tile[i, y];
+                if (!tile.HasTile || !Main.tileSolid[tile.TileType] || tile.IsActuated)
+                    return false;
+            }
+
+            for (int i = x; i < x + width; i++)
+            {
+                for (int j = y - height; j < y; j++)
+                {
+                    Tile tile = Main.tile[i, j];
+                    if (tile.HasTile)
+                        return false;
+                }
+            }
+
+            return true;
+        }
+
+
         /// <summary>
         /// Use with caution as it may break through the recursion limit if the maxCount is set too high.
         /// </summary>

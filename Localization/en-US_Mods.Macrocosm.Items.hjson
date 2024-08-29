@@ -1911,3 +1911,18 @@ LexanGlassWall: {
 	DisplayName: Lexan Glass Wall
 	Tooltip: ""
 }
+
+KyaniteScarabCritter: {
+	DisplayName: Kyanite Scarab Critter
+	Tooltip: ""
+}
+
+Fridge: {
+	DisplayName: Fridge
+	Tooltip: ""
+}
+
+IVPole: {
+	DisplayName: I V Pole
+	Tooltip: ""
+}

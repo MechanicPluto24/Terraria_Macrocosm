@@ -21,7 +21,8 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             Main.tileLavaDeath[Type] = true;
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style1xX);
-            TileObjectData.newTile.StyleWrapLimit = 2;
+            TileObjectData.newTile.Height = 3;
+            TileObjectData.newTile.CoordinateHeights = [16, 16, 16];
             TileObjectData.addTile(Type);
 
             AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTorch);

@@ -12,8 +12,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         public override void SetDefaults()
         {
             Projectile.scale = 1f;
-            Projectile.width = 32;
-            Projectile.height = 32;
+            Projectile.width = 30;
+            Projectile.height = 36;
             Projectile.friendly = true;
             Projectile.DamageType = DamageClass.Magic;
             Projectile.timeLeft = 500;
@@ -30,18 +30,20 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            Projectile.velocity.X = (Math.Abs(Projectile.velocity.X) < 1f ? -oldVelocity.X : oldVelocity.X) * 0.6f;
-            Projectile.velocity.Y = -Projectile.velocity.Y * 0.6f;
+            if (Projectile.velocity.X != oldVelocity.X)
+                Projectile.velocity.X = oldVelocity.X * -0.6f;
 
-            if(Projectile.velocity.LengthSquared() > 1f)
-                for (int i = 0; i < (int)10; i++)
-                {
-                    Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<FrigorianDust>());
-                    dust.velocity.X = Main.rand.Next(-30, 31) * 0.02f;
-                    dust.velocity.Y = Main.rand.Next(-30, 30) * 0.02f;
-                    dust.scale *= 1f + Main.rand.Next(-12, 13) * 0.01f;
-                    dust.noGravity = true;
-                }
+            if (Projectile.velocity.Y != oldVelocity.Y && oldVelocity.Y > 0.7f)
+                Projectile.velocity.Y = oldVelocity.Y * -0.6f;
+
+            for (int i = 0; i < (int)(3f * Projectile.velocity.LengthSquared()); i++)
+            {
+                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<FrigorianDust>());
+                dust.velocity.X = Main.rand.Next(-30, 31) * 0.02f;
+                dust.velocity.Y = Main.rand.Next(-30, 30) * 0.02f;
+                dust.scale *= 1f + Main.rand.Next(-12, 13) * 0.01f;
+                dust.noGravity = true;
+            }
 
             return false;
         }
