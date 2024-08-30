@@ -111,11 +111,12 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         public override void AI()
         {
             NPC.TargetClosest(faceTarget: true);
+            Player player = Main.player[NPC.target];
 
             if (Main.rand.NextBool(25))
                 SpawnDusts();
-
-            if (NPC.HasPlayerTarget && Main.player[NPC.target].Distance(NPC.Center) <= 1000f)
+            bool clearLineOfSight = Collision.CanHitLine(NPC.position, NPC.width, NPC.height, player.position, player.width, player.height);
+            if (NPC.HasPlayerTarget && clearLineOfSight)
                 AI_State = ActionState.Attacking;
             else
                 AI_State = ActionState.Idle;
