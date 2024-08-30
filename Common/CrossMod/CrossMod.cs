@@ -104,7 +104,7 @@ namespace Macrocosm.Common.Crossmod
                 AddMusic("Deadworld", "\"Deadworld\" - Theme of the Moon (Day)", "Lincoln Ennis");
                 AddMusic("Requiem", "\"Requiem\" - Theme of the Moon (Night)", "Lincoln Ennis");
                 AddMusic("Stygia", "\"Stygia\" - Theme of the Moon (Underground)", "Lincoln Ennis");
-                AddMusic("SpaceInvader", "\"SpaceInvader\" - Theme of Crater Demon", "Lincoln Ennis");
+                AddMusic("SpaceInvader", "\"Space Invader\" - Theme of Crater Demon", "Lincoln Ennis");
             }
         }
 

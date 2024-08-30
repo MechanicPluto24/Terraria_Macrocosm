@@ -12,6 +12,8 @@ namespace Macrocosm.Content.Biomes
     public class EarthBiome : ModBiome
     {
         public override SceneEffectPriority Priority => SceneEffectPriority.None;
+        public override float GetWeight(Player player) => 0f;
+
         public override string BestiaryIcon => Macrocosm.TexturesPath + "Icons/Earth";
 
         // To avoid MissingResourceException and defaulting in the bestiary

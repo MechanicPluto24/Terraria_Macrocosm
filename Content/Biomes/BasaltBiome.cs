@@ -19,13 +19,14 @@ namespace Macrocosm.Content.Biomes
         public override Color? BackgroundColor => base.BackgroundColor;
         public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.GetInstance<MoonSurfaceBackgroundStyle>();
         public override ModUndergroundBackgroundStyle UndergroundBackgroundStyle => ModContent.GetInstance<MoonUndergroundBackgroundStyle>();
-        public override int Music => Main.dayTime ? MusicLoader.GetMusicSlot(Mod, "Assets/Music/Deadworld") : MusicLoader.GetMusicSlot(Mod, "Assets/Music/Requiem");
+
+        //public override int Music => MusicLoader.GetMusicSlot(Mod, "Assets/Music/BasaltBiomeTheme");
 
         public override void SetStaticDefaults()
         {
         }
 
-        public override bool IsBiomeActive(Player player) => SubworldSystem.IsActive<Moon>() /*&& TileCounts.Instance.BasaltRockCount > 400*/;
+        public override bool IsBiomeActive(Player player) => false; /*SubworldSystem.IsActive<Moon>() && TileCounts.Instance.BasaltRockCount > 400*/
 
         public override void OnInBiome(Player player)
         {

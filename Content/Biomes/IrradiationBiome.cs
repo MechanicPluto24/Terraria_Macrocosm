@@ -10,7 +10,8 @@ namespace Macrocosm.Content.Biomes
 {
     public class IrradiationBiome : ModBiome
     {
-        public override SceneEffectPriority Priority => SceneEffectPriority.BossLow;
+        public override SceneEffectPriority Priority => SceneEffectPriority.Environment;
+        public override float GetWeight(Player player) => 0.6f;
 
         public override string BestiaryIcon => Macrocosm.TexturesPath + "Icons/Moon";
         public override string BackgroundPath => Macrocosm.TexturesPath + "MapBackgrounds/Moon";
@@ -19,7 +20,8 @@ namespace Macrocosm.Content.Biomes
         public override Color? BackgroundColor => base.BackgroundColor;
         public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.GetInstance<MoonSurfaceBackgroundStyle>();
         public override ModUndergroundBackgroundStyle UndergroundBackgroundStyle => ModContent.GetInstance<MoonUndergroundBackgroundStyle>();
-        public override int Music => Main.dayTime ? MusicLoader.GetMusicSlot(Mod, "Assets/Music/Deadworld") : MusicLoader.GetMusicSlot(Mod, "Assets/Music/Requiem");
+
+        // public override int Music => MusicLoader.GetMusicSlot(Mod, "Assets/Music/IrradiationBiomeTheme");
 
         public override void SetStaticDefaults()
         {
