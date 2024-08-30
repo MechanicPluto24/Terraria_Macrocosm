@@ -51,7 +51,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return spawnInfo.Player.InModBiome<MoonBiome>() && spawnInfo.SpawnTileY > Main.rockLayer ? .005f : 0f;
+            return spawnInfo.Player.InModBiome<MoonBiome>() && spawnInfo.SpawnTileY > Main.rockLayer ? .002f : 0f;
         }
 
         public override void ModifyNPCLoot(NPCLoot loot)
@@ -63,7 +63,10 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
         bool Summoned = false;
         public override void AI()
         {
+
             NPC.TargetClosest();
+            Player player = Main.player[NPC.target];
+            bool clearLineOfSight = Collision.CanHitLine(NPC.position, NPC.width, NPC.height, player.position, player.width, player.height);
             Lighting.AddLight(NPC.Center, (new Vector3(0.4f, 1f, 1f)));
             offsetY = (float)(Math.Sin(Timer / 10) * 7);
             Timer++;
@@ -75,11 +78,11 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
                                     p.DrawColor = new Color(100, 255, 255, 0);
                                     p.Scale = 0.1f;
                                 });
-            Player player = Main.player[NPC.target];
-
+            
+            if (clearLineOfSight && player.active && !player.dead){
             NPC.Move(player.Center, Vector2.Zero, 5, 0.1f);
             NPC.velocity += NPC.velocity.SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.PiOver2) * MathF.Sin(Main.GameUpdateCount * 0.05f);
-
+            }
             if (Timer % 80 == 79)
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
@@ -91,7 +94,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
                 }
             }
 
-            bool clearLineOfSight = Collision.CanHitLine(NPC.position, NPC.width, NPC.height, player.position, player.width, player.height);
+           
             if (clearLineOfSight && player.active && !player.dead && Summoned == false)
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
