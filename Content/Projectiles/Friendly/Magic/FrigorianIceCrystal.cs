@@ -36,7 +36,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             if (Projectile.velocity.Y != oldVelocity.Y && oldVelocity.Y > 0.7f)
                 Projectile.velocity.Y = oldVelocity.Y * -0.6f;
 
-            for (int i = 0; i < (int)(3f * Projectile.velocity.LengthSquared()); i++)
+            for (int i = 0; i < (int)(Projectile.velocity.Y / 4f); i++)
             {
                 Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<FrigorianDust>());
                 dust.velocity.X = Main.rand.Next(-30, 31) * 0.02f;

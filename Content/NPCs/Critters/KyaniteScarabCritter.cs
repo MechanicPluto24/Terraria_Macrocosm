@@ -47,10 +47,10 @@ namespace Macrocosm.Content.NPCs.Critters
 
         public override void FindFrame(int frameHeight)
         {
-            int ticksPerFrame = 5;
+            int ticksPerFrame = 8;
             NPC.frame.Y = (int)(NPC.frameCounter / ticksPerFrame) * frameHeight;
 
-            if (NPC.frameCounter >= (ticksPerFrame * Main.npcFrameCount[Type]) - 1)
+            if (NPC.frameCounter++ >= (ticksPerFrame * Main.npcFrameCount[Type]) - 1)
             {
                 NPC.frameCounter = 0;
                 NPC.frame.Y = 0 * frameHeight;

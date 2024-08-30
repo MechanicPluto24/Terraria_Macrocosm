@@ -1926,3 +1926,8 @@ IVPole: {
 	DisplayName: I V Pole
 	Tooltip: ""
 }
+
+DevOmnitool: {
+	DisplayName: Dev Omnitool
+	Tooltip: ""
+}
