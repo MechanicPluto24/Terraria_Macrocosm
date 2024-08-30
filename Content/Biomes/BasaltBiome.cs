@@ -10,7 +10,7 @@ namespace Macrocosm.Content.Biomes
 {
     public class BasaltBiome : ModBiome
     {
-        public override SceneEffectPriority Priority => SceneEffectPriority.BossLow;
+        public override SceneEffectPriority Priority => SceneEffectPriority.Environment;
 
         public override string BestiaryIcon => Macrocosm.TexturesPath + "Icons/Moon";
         public override string BackgroundPath => Macrocosm.TexturesPath + "MapBackgrounds/Moon";
