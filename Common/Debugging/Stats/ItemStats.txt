@@ -441,6 +441,10 @@ BanHammer
 	Value: 1 gold
 	Research count: 1
 
+DevOmnitool
+	Value: No value
+	Research count: 1
+
 DevPick
 	Value: 1 gold
 	Research count: 1

@@ -214,6 +214,7 @@ namespace Macrocosm.Common.Utils
             int leftY = Math.Max(10, y - distance);
             int rightX = Math.Min(Main.maxTilesX - 10, x + distance);
             int rightY = Math.Min(Main.maxTilesY - 10, y + distance);
+
             Point pos = default;
             float dist = -1;
             for (int x1 = leftX; x1 < rightX; x1++)

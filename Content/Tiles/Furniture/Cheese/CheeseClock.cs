@@ -28,6 +28,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             TileObjectData.newTile.Height = 5;
             TileObjectData.newTile.CoordinateHeights = [16, 16, 16, 16, 16];
             TileObjectData.newTile.Origin = new Point16(0, 4);
+            TileObjectData.newTile.DrawYOffset = 2;
             TileObjectData.addTile(Type);
 
             AddMapEntry(new Color(220, 216, 121), Language.GetText("ItemName.GrandfatherClock"));

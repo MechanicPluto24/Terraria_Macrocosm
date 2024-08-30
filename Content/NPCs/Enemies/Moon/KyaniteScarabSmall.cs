@@ -2,6 +2,7 @@ using Macrocosm.Common.Global.NPCs;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
+using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -42,14 +43,17 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override void FindFrame(int frameHeight)
         {
-            int ticksPerFrame = 5;
+            int ticksPerFrame = 8;
             NPC.frame.Y = (int)(NPC.frameCounter / ticksPerFrame + 0) * frameHeight;
 
-            if (NPC.frameCounter >= ticksPerFrame * Main.npcFrameCount[Type] - 1)
+            if (NPC.frameCounter++ >= (ticksPerFrame * (Main.npcFrameCount[Type] - 1)) - 1)
             {
                 NPC.frameCounter = 0;
                 NPC.frame.Y = 0 * frameHeight;
             }
+
+            if (Math.Abs(NPC.velocity.Y) > 0.01f)
+                NPC.frame.Y = (Main.npcFrameCount[Type] - 1) * frameHeight;
         }
 
         public override void HitEffect(NPC.HitInfo hit)

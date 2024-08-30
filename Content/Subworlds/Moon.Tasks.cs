@@ -923,7 +923,10 @@ namespace Macrocosm.Content.Subworlds
                     if (WorldGen.genRand.NextFloat() < kyaniteNestChance && CheckEmptyAboveWithSolidToTheRight(i, j, 4, 3))
                     {
                         if (tile.TileType == protolithType)
+                        {
                             WorldGen.PlaceTile(i, j - 1, TileType<KyaniteNest>(), mute: true);
+                            Console.WriteLine($"Placed Kyanite at {i},{j-1}");
+                        }
                     }
                 }
             }
