@@ -10,7 +10,7 @@ namespace Macrocosm.Content.Biomes
 {
     public class DemonSunBiome : ModBiome
     {
-        public override SceneEffectPriority Priority => SceneEffectPriority.BossMedium;
+        public override SceneEffectPriority Priority => SceneEffectPriority.Event;
 
         public override string BestiaryIcon => Macrocosm.TexturesPath + "Icons/BloodMoon";
         public override string BackgroundPath => Macrocosm.TexturesPath + "MapBackgrounds/Moon";
@@ -19,13 +19,14 @@ namespace Macrocosm.Content.Biomes
         public override Color? BackgroundColor => base.BackgroundColor;
         public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.GetInstance<MoonSurfaceBackgroundStyle>();
         public override ModUndergroundBackgroundStyle UndergroundBackgroundStyle => ModContent.GetInstance<MoonUndergroundBackgroundStyle>();
-        public override int Music => Main.dayTime ? MusicLoader.GetMusicSlot(Mod, "Assets/Music/Deadworld") : MusicLoader.GetMusicSlot(Mod, "Assets/Music/Requiem");
+
+        //public override int Music => MusicLoader.GetMusicSlot(Mod, "Assets/Music/DemonSunTheme");
 
         public override void SetStaticDefaults()
         {
         }
 
-        public override bool IsBiomeActive(Player player) => SubworldSystem.IsActive<Moon>() && TileCounts.Instance.IrradiatedRockCount > 400;
+        public override bool IsBiomeActive(Player player) => false; /* SubworldSystem.IsActive<Moon>() && WorldFlagSystem.DemonSunActive; */
 
         public override void OnInBiome(Player player)
         {
