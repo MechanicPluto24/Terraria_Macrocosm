@@ -1,3 +1,5 @@
+using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -83,6 +85,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         public override Color? GetAlpha(Color lightColor)
             => Color.White * (1f - Projectile.alpha / 255f);
 
+
+        private SpriteBatchState state;
         public override bool PreDraw(ref Color lightColor)
         {
             // If the beam doesn't have a defined direction, don't draw anything.
@@ -93,7 +97,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
             Texture2D texture = TextureAssets.Projectile[Type].Value;
             Vector2 centerFloored = Projectile.Center.Floor() + Projectile.velocity * Projectile.scale * 10.5f;
-            centerFloored += Main.rand.NextVector2Circular(5, 5);
+            centerFloored += new Vector2(0, Main.rand.NextFloat(-8f, 3f)).RotatedBy(Projectile.velocity.ToRotation());
 
             Vector2 drawScale = new Vector2(Projectile.scale);
 
@@ -106,7 +110,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
             // Draw the outer beam.
 
-            DrawBeam(Main.spriteBatch, texture, startPosition, endPosition, drawScale, new Color(255, 255, 255) * Transparency * (0.9f + (0.1f * ((float)(Math.Sin(AITimer))))));
+            state.SaveState(Main.spriteBatch);
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(BlendState.Additive, state);
+
+            DrawBeam(Main.spriteBatch, texture, startPosition, endPosition, drawScale, new Color(171, 255, 255) * Transparency * (0.9f + (0.1f * ((float)(Math.Sin(AITimer))))));
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(state);
 
             // Draw the inner beam, which is half size.
 
