@@ -102,8 +102,8 @@ namespace Macrocosm.Common.Drawing.Sky
 
         #region Private vars 
 
-        private Asset<Effect> sphereLightingShader;
-        private Asset<Effect> radialLightingShader;
+        private static Asset<Effect> sphereLightingShader;
+        private static Asset<Effect> radialLightingShader;
 
         private Asset<Texture2D> backTexture;
         private Asset<Texture2D> bodyTexture;
