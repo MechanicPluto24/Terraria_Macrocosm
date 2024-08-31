@@ -38,7 +38,7 @@ namespace Macrocosm.Content.Machines
         {
             if (PoweredOn)
             {
-                if (ConsumedItem.type > ItemID.None)
+                if (ConsumedItem.type != ItemID.None)
                 {
                     checkTimer = 0;
                     GeneratedPower = 0;
@@ -69,7 +69,7 @@ namespace Macrocosm.Content.Machines
 
                     GeneratedPower = 0.2f * (int)fuelData.Potency;
 
-                    if (checkTimer++ >= fuelData.ConsumtionRate)
+                    if (checkTimer++ >= fuelData.ConsumptionRate)
                     {
                         checkTimer = 0;
                         ConsumedItem.TurnToAir(fullReset: true);

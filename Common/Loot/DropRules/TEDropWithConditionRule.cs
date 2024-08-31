@@ -1,4 +1,5 @@
-﻿using Terraria.DataStructures;
+﻿using Macrocosm.Common.Systems.Power;
+using Terraria.DataStructures;
 using Terraria.GameContent.ItemDropRules;
 
 namespace Macrocosm.Common.Loot.DropRules
@@ -7,8 +8,8 @@ namespace Macrocosm.Common.Loot.DropRules
     {
         public IItemDropRuleCondition Condition;
 
-        public TEDropWithConditionRule(TileEntity tileEntity, int itemId, int chanceDenominator, IItemDropRuleCondition condition, int amountDroppedMinimum = 1, int amountDroppedMaximum = 1, int chanceNumerator = 1)
-            : base(tileEntity, itemId, chanceDenominator, amountDroppedMinimum, amountDroppedMaximum, chanceNumerator)
+        public TEDropWithConditionRule(MachineTE machineTE, int itemId, int chanceDenominator, IItemDropRuleCondition condition, int amountDroppedMinimum = 1, int amountDroppedMaximum = 1, int chanceNumerator = 1)
+            : base(machineTE, itemId, chanceDenominator, amountDroppedMinimum, amountDroppedMaximum, chanceNumerator)
         {
             Condition = condition;
         }

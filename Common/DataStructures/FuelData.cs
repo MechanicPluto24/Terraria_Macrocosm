@@ -39,6 +39,6 @@ namespace Macrocosm.Common.DataStructures
         }
 
         public FuelPotency Potency => getPotency is not null ? getPotency() : potency;
-        public int ConsumtionRate => consumtionRate;
+        public int ConsumptionRate => consumtionRate;
     }
 }

@@ -20,10 +20,13 @@ namespace Macrocosm.Content.Particles
 
         public override void OnSpawn()
         {
-            float speed = Velocity.Length();
-            Vector2 toCenter = (TargetCenter - Position).SafeNormalize(Vector2.One);
-            Vector2 tangential = new(-toCenter.Y, toCenter.X);
-            Velocity = tangential * speed;
+            if (TargetCenter != default)
+            {
+                float speed = Velocity.Length();
+                Vector2 toCenter = (TargetCenter - Position).SafeNormalize(Vector2.One);
+                Vector2 tangential = new(-toCenter.Y, toCenter.X);
+                Velocity = tangential * speed;
+            }
         }
 
         public override void AI()

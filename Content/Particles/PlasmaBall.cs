@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.Drawing.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -8,19 +9,21 @@ namespace Macrocosm.Content.Particles
 {
     public class PlasmaBall : Particle
     {
-        public override int SpawnTimeLeft => 95;
+        private static Asset<Texture2D> glow;
+
+        public override int SpawnTimeLeft => 135;
         public override int TrailCacheLength => 7;
 
         public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
-            Texture2D glow = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Circle6").Value;
-            spriteBatch.Draw(glow, Center - screenPosition, null, new Color(89, 151, 193), 0f, glow.Size() / 2, 0.0375f * ScaleV, SpriteEffects.None, 0f);
+            glow ??= ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Circle6");
+            spriteBatch.Draw(glow.Value, Center - screenPosition, null, new Color(89, 151, 193, 127), 0f, glow.Size()/2f, 0.0425f * ScaleV, SpriteEffects.None, 0f);
             return true;
         }
 
         public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
-            DrawMagicPixelTrail(Vector2.Zero, 4f, 1f, new Color(104, 255, 255), new Color(104, 255, 255, 0));
+            DrawMagicPixelTrail(Vector2.Zero, 4f, 1f, new Color(104, 255, 255, 15), new Color(104, 255, 255, 255));
             spriteBatch.Draw(Texture.Value, Center - screenPosition, null, Color.White, Rotation, Size / 2, ScaleV, SpriteEffects.None, 0f);
         }
 

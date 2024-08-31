@@ -89,6 +89,7 @@ namespace Macrocosm.Content.Rockets.Modules
         {
         }
 
+        private static Asset<Effect> colorMaskShading;
         private SpriteBatchState state;
         public virtual void Draw(SpriteBatch spriteBatch, Vector2 position)
         {
@@ -99,7 +100,8 @@ namespace Macrocosm.Content.Rockets.Modules
             if (SpecialDraw)
             {
                 // Load the coloring shader
-                Effect effect = ModContent.Request<Effect>(Macrocosm.ShadersPath + "ColorMaskShading", AssetRequestMode.ImmediateLoad).Value;
+                colorMaskShading ??= ModContent.Request<Effect>(Macrocosm.ShadersPath + "ColorMaskShading", AssetRequestMode.ImmediateLoad);
+                Effect effect = colorMaskShading.Value;
 
                 if (HasPattern)
                 {
@@ -155,7 +157,9 @@ namespace Macrocosm.Content.Rockets.Modules
             state.SaveState(spriteBatch);
             SamplerState samplerState = Main.graphics.GraphicsDevice.SamplerStates[1];
 
-            Effect effect = ModContent.Request<Effect>(Macrocosm.ShadersPath + "ColorMaskShading", AssetRequestMode.ImmediateLoad).Value;
+            colorMaskShading ??= ModContent.Request<Effect>(Macrocosm.ShadersPath + "ColorMaskShading", AssetRequestMode.ImmediateLoad);
+            Effect effect = colorMaskShading.Value;
+
             Main.graphics.GraphicsDevice.Textures[1] = Blueprint;
             Main.graphics.GraphicsDevice.SamplerStates[1] = SamplerState.PointClamp;
 

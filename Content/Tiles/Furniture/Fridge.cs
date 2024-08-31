@@ -1,3 +1,4 @@
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -35,7 +36,7 @@ namespace Macrocosm.Content.Tiles.Furniture
             TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
             TileObjectData.newTile.Width = 2;
             TileObjectData.newTile.Height = 3;
-            TileObjectData.newTile.Origin = new Point16(0, 1);
+            TileObjectData.newTile.Origin = new Point16(0, 2);
             TileObjectData.newTile.CoordinateHeights = [16, 16, 16];
             TileObjectData.newTile.DrawYOffset = 2;
             TileObjectData.newTile.HookCheckIfCanPlace = new PlacementHook(Chest.FindEmptyChest, -1, 0, true);
@@ -97,13 +98,10 @@ namespace Macrocosm.Content.Tiles.Furniture
             Player player = Main.LocalPlayer;
             Tile tile = Main.tile[i, j];
             Main.mouseRightRelease = false;
-            int left = i;
-            int top = j;
-            if (tile.TileFrameX % 36 != 0)
-                left--;
 
-            if (tile.TileFrameY != 0)
-                top--;
+            Point16 topLeft = Utility.GetMultitileTopLeft(i, j);
+            int left = topLeft.X;
+            int top = topLeft.Y;
 
             player.CloseSign();
             player.SetTalkNPC(-1);
@@ -162,12 +160,10 @@ namespace Macrocosm.Content.Tiles.Furniture
         {
             Player player = Main.LocalPlayer;
             Tile tile = Main.tile[i, j];
-            int left = i;
-            int top = j;
-            if (tile.TileFrameX % 36 != 0)
-                left--;
-            if (tile.TileFrameY != 0)
-                top--;
+
+            Point16 topLeft = Utility.GetMultitileTopLeft(i, j);
+            int left = topLeft.X;
+            int top = topLeft.Y;
 
             int chest = Chest.FindChest(left, top);
             player.cursorItemIconID = -1;
