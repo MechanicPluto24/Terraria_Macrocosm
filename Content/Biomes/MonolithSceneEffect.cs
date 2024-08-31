@@ -9,7 +9,6 @@ namespace Macrocosm.Content.Biomes
     {
         public override SceneEffectPriority Priority => SceneEffectPriority.Event;
         public override int Music =>  MusicLoader.GetMusicSlot(Mod, "Assets/Music/Silence");
-        public override int Music => 0;
         public override bool IsSceneEffectActive(Player player) => TileCounts.Instance.MonolithCount > 0;
     }
 }
