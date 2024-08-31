@@ -4,6 +4,7 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
@@ -47,20 +48,20 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             }
 
             Player player = Main.player[Projectile.owner];
-            Projectile.rotation += MathHelper.ToRadians(7.4f);
+            Projectile.rotation += MathHelper.ToRadians(16f);
             Projectile.velocity *= 0f;
             AITimer++;
 
             if (AITimer == 20)
             {
                 int damage = Projectile.damage;
-                Projectile.NewProjectile(Projectile.InheritSource(Projectile), Projectile.Center, shootAim, ModContent.ProjectileType<MicronovaBeam>(), damage, Projectile.knockBack, Main.player[Projectile.owner].whoAmI);
+                Projectile.NewProjectile(Terraria.Entity.InheritSource(Projectile), Projectile.Center + shootAim, shootAim, ModContent.ProjectileType<MicronovaBeam>(), damage, Projectile.knockBack, Main.player[Projectile.owner].whoAmI);
             }
 
             if (AITimer % 16 == 0)
                 SoundEngine.PlaySound(SoundID.Item20, Projectile.Center);
 
-            Projectile.alpha = (int)MathHelper.Clamp((int)(255 - (Projectile.ai[0] / 5f) * 255f), 0f, 255f);
+            Projectile.alpha = (int)MathHelper.Clamp((int)(255 - (Projectile.ai[0] / 20f) * 255f), 0f, 255f);
             Vector2 center = Projectile.Center;
             Projectile.scale = 0.05f + 0.65f * (1f - Projectile.alpha / 255f);
             Projectile.width = (int)(defWidth * Projectile.scale);
@@ -75,14 +76,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
         private void SpawnParticles(int count)
         {
-            return;
             for (int i = 0; i < count; i++)
             {
                 float progress = (1f - Projectile.alpha / 255f);
                 Particle.CreateParticle<PortalSwirl>(p =>
                 {
-                    p.Position = Projectile.Center + Main.rand.NextVector2Circular(Projectile.width, Projectile.height) * 1.6f * progress;
-                    p.Velocity = Vector2.One * 18;
+                    p.Position = Projectile.Center + Main.rand.NextVector2Circular(80, 180).RotatedBy(shootAim.ToRotation() + MathHelper.PiOver4) * 0.4f * progress;
+                    p.Velocity = Vector2.One * 12;
                     p.Scale = (0.1f + Main.rand.NextFloat(0.1f)) * progress;
                     p.Color = new Color(0, 170, 200) * 0.6f;
                     p.TargetCenter = Projectile.Center;
@@ -104,7 +104,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         public override Color? GetAlpha(Color lightColor)
             => Color.White * (1f - Projectile.alpha / 255f);
 
-
+        private static Asset<Effect> skew;
         private SpriteBatchState state;
         public override void PostDraw(Color lightColor)
         {
@@ -115,47 +115,34 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
             Color color = Color.White * Projectile.Opacity;
 
-            Matrix matrix = GetSkewMatrix(Projectile.Center - Main.screenPosition, state.Matrix, shootAim);
+            skew ??= ModContent.Request<Effect>(Macrocosm.ShadersPath + "Skew", AssetRequestMode.ImmediateLoad);
+            Effect effect = skew.Value;
+            effect.Parameters["uScale"].SetValue(0.6f);
+            effect.Parameters["uRotation"].SetValue(Projectile.rotation * 2);
 
-            state.SaveState(Main.spriteBatch, continuous: true);
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearClamp, state.DepthStencilState, state.RasterizerState, null, matrix);
-
-            Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, (color * 0.4f * Projectile.Opacity), (0f - Projectile.rotation) * 0.65f, texture.Size() / 2f, Projectile.scale * 1.8f, SpriteEffects.FlipHorizontally, 0);
-            Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, (color).WithOpacity(0.9f * Projectile.Opacity), Projectile.rotation, texture.Size() / 2f, Projectile.scale * 1.5f, SpriteEffects.None, 0);
+            state.SaveState(Main.spriteBatch);
 
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(BlendState.Additive, state);
+            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, effect, state);
 
-            Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Flare2").Value;
-            float scale = Projectile.scale * Main.rand.NextFloat(1.15f, 1.35f);
-            Main.spriteBatch.Draw(flare, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(0, 170, 200).WithOpacity(0.85f * Projectile.Opacity), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
+            // TODO: load these only once 
+            Texture2D twirl = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Twirl1").Value;
+            Texture2D glow = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Circle5").Value;
+            Main.spriteBatch.Draw(twirl, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(100, 170, 200).WithOpacity(1f), shootAim.ToRotation() + MathHelper.PiOver2, twirl.Size() / 2f, Projectile.scale * 0.295f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(glow, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(0, 170, 200).WithOpacity(0.8f), shootAim.ToRotation() + MathHelper.PiOver2, glow.Size() / 2f, Projectile.scale * 0.785f, SpriteEffects.None, 0f);
+
+            effect = skew.Value;
+            effect.Parameters["uScale"].SetValue(0.6f);
+            effect.Parameters["uRotation"].SetValue(Projectile.rotation);
 
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(BlendState.AlphaBlend, state);
+            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, effect, state);
+
+            Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, (color).WithOpacity(0.9f * Projectile.Opacity), shootAim.ToRotation() + MathHelper.PiOver2, texture.Size() / 2f, Projectile.scale * 1.5f, SpriteEffects.None, 0);
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(state);
             return false;
         }
-
-        private static Matrix GetSkewMatrix(Vector2 drawPosition, Matrix baseMatrix, Vector2 aim)
-        {
-            Vector2 rotation = Utils.ToRotationVector2(aim.ToRotation());
-            float radiansX = rotation.Y;
-            float radiansY = rotation.X;
-
-            // TODO
-            Matrix transformationMatrix =
-                Matrix.CreateTranslation(-drawPosition.X, -drawPosition.Y, 0f) * // Translate to screen origin
-                Matrix.CreateRotationY(radiansY) *                                // Apply Y skew
-                Matrix.CreateTranslation(drawPosition.X, drawPosition.Y, 0f) *   // Translate back to original position
-                Matrix.CreateScale(baseMatrix.M11, baseMatrix.M22, 0f);          // Apply scale
-
-            return baseMatrix;   
-        }
-
-        private static Matrix GetBladesMatrix(Vector2 drawPosition, Matrix baseMatrix)
-        {
-            return baseMatrix;
-        }
-
     }
 }

@@ -25,6 +25,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         private static Asset<Texture2D> glowmask;
         private static Asset<Texture2D> flame;
         private static Asset<Texture2D> warning;
+        private static Asset<Effect> colorGradientSquare;
 
         public ref float AI_Overheat => ref Projectile.ai[0];
         public ref float AI_UseCounter => ref Projectile.ai[1];
@@ -240,9 +241,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state1);
 
-            Effect effect = ModContent.Request<Effect>(Macrocosm.ShadersPath + "ColorGradientSquare", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
             Rectangle sourceRect = TextureAssets.Projectile[Type].Frame(1, Main.projFrames[Type], frameY: Projectile.frame);
 
+            colorGradientSquare ??= ModContent.Request<Effect>(Macrocosm.ShadersPath + "ColorGradientSquare", AssetRequestMode.ImmediateLoad);
+            Effect effect = colorGradientSquare.Value;
             effect.Parameters["uSourceRect"].SetValue(new Vector4((float)sourceRect.X, (float)sourceRect.Y, (float)sourceRect.Width, (float)sourceRect.Height));
             effect.Parameters["uImageSize0"].SetValue(TextureAssets.Projectile[Type].Size());
 
