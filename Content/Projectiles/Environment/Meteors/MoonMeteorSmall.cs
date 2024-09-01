@@ -14,11 +14,12 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
 {
     public class MoonMeteorSmall : BaseMeteor
     {
-        public MoonMeteorSmall()
+        public override void SetDefaults()
         {
-            Width = 32;
-            Height = 32;
-            Damage = 500;
+            base.SetDefaults();
+
+            Projectile.width = 32;
+            Projectile.height = 32;
 
             ScreenshakeMaxDist = 90f * 16f;
             ScreenshakeIntensity = 50f;
@@ -63,8 +64,8 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
             {
                 Dust dust = Dust.NewDustDirect(
                     new Vector2(Projectile.Center.X, Projectile.Center.Y),
-                    Width,
-                    Height,
+                    Projectile.width,
+                    Projectile.height,
                     ModContent.DustType<RegolithDust>(),
                     Main.rand.NextFloat(-ImpactDustSpeed.X, ImpactDustSpeed.X),
                     Main.rand.NextFloat(0f, -ImpactDustSpeed.Y),
@@ -96,7 +97,7 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
             if (Main.rand.NextBool(3))
             {
                 int type = ModContent.ItemType<MeteoricChunk>();
-                Vector2 position = new Vector2(Projectile.position.X + Width / 2, Projectile.position.Y - Height);
+                Vector2 position = new Vector2(Projectile.position.X + Projectile.width / 2, Projectile.position.Y - Projectile.height);
                 int itemIdx = Item.NewItem(Projectile.GetSource_FromThis(), position, new Vector2(Projectile.width, Projectile.height), type);
                 NetMessage.SendData(MessageID.SyncItem, -1, -1, null, itemIdx, 1f);
             }

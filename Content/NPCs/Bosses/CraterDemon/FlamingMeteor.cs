@@ -53,6 +53,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             {
                 trail = new();
                 NPC.velocity = (-Vector2.UnitY).RotatedByRandom(MathHelper.PiOver2) * Main.rand.NextFloat(12f, 16f);
+                spawnPosition = NPC.position;
                 spawned = true;
             }
 

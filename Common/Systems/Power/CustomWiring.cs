@@ -14,7 +14,6 @@ using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Common.Systems.Power
 {
-    [Obsolete("Power uses vanilla wires now")]
     public enum WireType
     {
         None,
@@ -22,7 +21,6 @@ namespace Macrocosm.Common.Systems.Power
         // ...
     }
 
-    [Obsolete("Power uses vanilla wires now")]
     public enum WireVisibility
     {
         Normal,
@@ -31,7 +29,6 @@ namespace Macrocosm.Common.Systems.Power
         Hidden
     }
 
-    [Obsolete("Power uses vanilla wires now")]
     public readonly struct WireData : TagSerializable
     {
         private readonly byte data;
@@ -78,14 +75,13 @@ namespace Macrocosm.Common.Systems.Power
         }
     }
 
-
-    [Obsolete("Power uses vanilla wires now")]
-    public class PowerWiring : ModSystem
+    /// <summary> Currently unused custom wiring system </summary>
+    public class CustomWiring : ModSystem
     {
         public override bool IsLoadingEnabled(Mod mod) => false;
 
-        public static PowerWiring Instance => ModContent.GetInstance<PowerWiring>();
-        public static PowerWiring Map => Instance;
+        public static CustomWiring Instance => ModContent.GetInstance<CustomWiring>();
+        public static CustomWiring Map => Instance;
 
         private Dictionary<Point16, WireData> wireMap = new();
 

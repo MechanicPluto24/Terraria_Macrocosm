@@ -56,8 +56,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
                 int damage = Player.GetWeaponDamage(currentItem);
                 float knockback = currentItem.knockBack;
-                float speed;
-                int usedAmmoItemId;
 
                 if (Main.mouseRight)
                     altAttackActive = true;

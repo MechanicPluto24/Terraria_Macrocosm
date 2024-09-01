@@ -11,11 +11,12 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
 {
     public class StardustMeteor : BaseMeteor
     {
-        public StardustMeteor()
+        public override void SetDefaults()
         {
-            Width = 52;
-            Height = 44;
-            Damage = 1500;
+            base.SetDefaults();
+
+            Projectile.width = 52;
+            Projectile.height = 44;
 
             ScreenshakeMaxDist = 140f * 16f;
             ScreenshakeIntensity = 100f;
@@ -56,8 +57,8 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
             {
                 Dust dust = Dust.NewDustDirect(
                     new Vector2(Projectile.Center.X, Projectile.Center.Y),
-                    Width,
-                    Height,
+                    Projectile.width,
+                    Projectile.height,
                     i % 2 == 0 ? DustID.YellowStarDust : DustID.DungeonWater,
                     Main.rand.NextFloat(-ImpactDustSpeed.X, ImpactDustSpeed.X),
                     Main.rand.NextFloat(0f, -ImpactDustSpeed.Y),
@@ -69,7 +70,7 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
 
             for (int i = 0; i < Main.rand.Next(30, 50); i++)
             {
-                Vector2 position = Projectile.Center + new Vector2(Width, Height).RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat();
+                Vector2 position = Projectile.Center + Projectile.Size.RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat();
                 Vector2 velocity = new(Main.rand.NextFloat(-10, 10), Main.rand.NextFloat(0f, -20f));
 
                 Particle.CreateParticle(ParticleOrchestraType.StardustPunch, position, velocity);
@@ -79,7 +80,7 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
         public override void SpawnItems()
         {
             int type = ModContent.ItemType<StardustChunk>();
-            Vector2 position = new Vector2(Projectile.position.X + Width / 2, Projectile.position.Y - Height);
+            Vector2 position = new Vector2(Projectile.position.X + Projectile.width / 2, Projectile.position.Y - Projectile.height);
             int itemIdx = Item.NewItem(Projectile.GetSource_FromThis(), position, new Vector2(Projectile.width, Projectile.height), type);
             NetMessage.SendData(MessageID.SyncItem, -1, -1, null, itemIdx, 1f);
         }

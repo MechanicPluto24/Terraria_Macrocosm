@@ -75,7 +75,7 @@ namespace Macrocosm.Common.Netcode
                     break;
 
                 case MessageType.SyncPowerWire:
-                    PowerWiring.ReceiveSyncPowerWire(reader, whoAmI);
+                    CustomWiring.ReceiveSyncPowerWire(reader, whoAmI);
                     break;
 
                 default:

@@ -9,11 +9,12 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
 {
     public class VortexMeteor : BaseMeteor
     {
-        public VortexMeteor()
+        public override void SetDefaults()
         {
-            Width = 52;
-            Height = 44;
-            Damage = 1500;
+            base.SetDefaults();
+
+            Projectile.width = 52;
+            Projectile.height = 44;
 
             ScreenshakeMaxDist = 140f * 16f;
             ScreenshakeIntensity = 100f;
@@ -54,8 +55,8 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
             {
                 Dust dust = Dust.NewDustDirect(
                     new Vector2(Projectile.Center.X, Projectile.Center.Y),
-                    Width,
-                    Height,
+                    Projectile.width,
+                    Projectile.height,
                     DustID.Vortex,
                     Main.rand.NextFloat(-ImpactDustSpeed.X, ImpactDustSpeed.X),
                     Main.rand.NextFloat(0f, -ImpactDustSpeed.Y),
@@ -69,7 +70,7 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
         public override void SpawnItems()
         {
             int type = ModContent.ItemType<VortexChunk>();
-            Vector2 position = new Vector2(Projectile.position.X + Width / 2, Projectile.position.Y - Height);
+            Vector2 position = new Vector2(Projectile.position.X + Projectile.width / 2, Projectile.position.Y - Projectile.height);
             int itemIdx = Item.NewItem(Projectile.GetSource_FromThis(), position, new Vector2(Projectile.width, Projectile.height), type);
             NetMessage.SendData(MessageID.SyncItem, -1, -1, null, itemIdx, 1f);
         }

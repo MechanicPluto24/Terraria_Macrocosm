@@ -8,7 +8,6 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Global.Items
 {
-    [Obsolete("Power uses vanilla wires now")]
     public class WireCutterGlobalItem : GlobalItem
     {
         public override bool IsLoadingEnabled(Mod mod) => false;
@@ -22,9 +21,9 @@ namespace Macrocosm.Common.Global.Items
             if (targetTile.AnyWire() || targetTile.HasActuator)
                 return null;
 
-            if (PowerWiring.Map[targetCoords].AnyWire)
+            if (CustomWiring.Map[targetCoords].AnyWire)
             {
-                PowerWiring.CutWire(targetCoords);
+                CustomWiring.CutWire(targetCoords);
                 return true;
             }
 

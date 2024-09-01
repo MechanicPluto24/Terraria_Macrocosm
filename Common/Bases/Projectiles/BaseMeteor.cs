@@ -3,24 +3,31 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Bases.Projectiles
 {
     public abstract class BaseMeteor : ModProjectile
     {
-        public int Width;
-        public int Height;
-
-        public int Damage;
+        public static List<LocalizedText> DeathMessages { get; } = [];
 
         public float ScreenshakeMaxDist;
         public float ScreenshakeIntensity;
 
         public float RotationMultiplier;
         public float BlastRadiusMultiplier = 1f;
+
+        public override void Load()
+        {
+            for (int i = 0; i < Language.FindAll(new LanguageSearchFilter((key, _) => key.StartsWith("Mods.Macrocosm.DeathMessages.Meteor"))).Length; i++)
+                DeathMessages.Add(Language.GetOrRegister($"Mods.Macrocosm.DeathMessages.Meteor.Message{i}"));
+        }
 
         public override void SetStaticDefaults()
         {
@@ -34,10 +41,20 @@ namespace Macrocosm.Common.Bases.Projectiles
             Projectile.hostile = true;
             Projectile.penetrate = -1;
             Projectile.tileCollide = true;
+        }
 
-            Projectile.width = Width;
-            Projectile.height = Height;
-            Projectile.damage = Damage;
+        public override void ModifyHitPlayer(Player target, ref Player.HurtModifiers modifiers)
+        {
+        }
+
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            if(Type == info.DamageSource.SourceProjectileType)
+            {
+                // Can't use info.DamageSource = PlayerDeathReason.ByCustomReason(...) here:
+                // HurtInfo is a value type and a DamageSource reassignment won't be reflected outside this method
+                info.DamageSource.SourceCustomReason = DeathMessages.GetRandom().Format(target.name);
+            }
         }
 
         public override void OnKill(int timeLeft)
