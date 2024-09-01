@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Wires
 {
-    [Obsolete("Power uses vanilla wires now")]
+    /// <summary> Custom wire, currently unused and disabled </summary>
     public class CopperWire : ModItem
     {
         public override bool IsLoadingEnabled(Mod mod) => false;
@@ -38,11 +38,11 @@ namespace Macrocosm.Content.Items.Wires
             if (player.whoAmI == Main.myPlayer)
             {
                 Point targetCoords = player.TargetCoords();
-                WireData wireData = PowerWiring.Map[player.TargetCoords()];
+                WireData wireData = CustomWiring.Map[player.TargetCoords()];
 
                 if (!wireData.CopperWire)
                 {
-                    PowerWiring.PlaceWire(targetCoords, WireType.Copper);
+                    CustomWiring.PlaceWire(targetCoords, WireType.Copper);
                     return true;
                 }
 
