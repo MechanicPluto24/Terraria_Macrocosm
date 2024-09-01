@@ -369,7 +369,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return spawnInfo.Player.InModBiome<MoonBiome>() && spawnInfo.SpawnTileY > Main.maxTilesY / 2 ? .002f : 0f;
+            return spawnInfo.Player.InModBiome<MoonBiome>() && spawnInfo.SpawnTileY > Main.maxTilesY / 2 ? .006f : 0f;
         }
 
         private void InitializeLegs()
