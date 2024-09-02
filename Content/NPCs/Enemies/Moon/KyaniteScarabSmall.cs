@@ -5,6 +5,7 @@ using Macrocosm.Content.Biomes;
 using System;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Tiles.Ambient;
 using Terraria;
 using Terraria.ID;
 using Microsoft.Xna.Framework.Graphics;
@@ -42,13 +43,29 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         bool HasRock=false;
         public override void AI()
         {
+            NPC.TargetClosest();
             Player target = Main.player[NPC.target];
             Point luminiteCoords = Utility.GetClosestTile(NPC.Center, TileID.LunarOre, 100);
             Vector2 luminitePosition = luminiteCoords.ToWorldCoordinates();
-            if(luminiteCoords != default&&Vector2.Distance(NPC.Center, target.Center) > 600f){
+            Point nestCoords = Utility.GetClosestTile(NPC.Center, ModContent.TileType<KyaniteNest>(), 200);
+            Vector2 nestPosition = nestCoords.ToWorldCoordinates();
+
+            if(Vector2.Distance(NPC.Center, target.Center) < 600f){
+                Utility.AIZombie(NPC, ref NPC.ai, fleeWhenDay: false, allowBoredom: false);
+            }
+            else{
+            if(nestCoords != default&&HasRock){
+            Utility.AIZombieToPosition(NPC, ref NPC.ai,nestPosition);
+            if (Vector2.Distance(NPC.Center, nestPosition) <80f)
+                NPC.active=false;
+                NPC.life=0;
+            }
+            else{
+
+            if(luminiteCoords != default){
                
-                if(Vector2.DistanceSquared(NPC.Center, luminitePosition) >40&&InterestTimer<1200){
-                    NPC.velocity = (luminitePosition - NPC.Center).SafeNormalize(Vector2.UnitX) * 3f;
+                if(Vector2.DistanceSquared(NPC.Center, luminitePosition) >50f&&InterestTimer<1200){
+                    Utility.AIZombieToPosition(NPC, ref NPC.ai,luminitePosition);
                     InterestTimer++;
                 }
                 else
@@ -73,15 +90,14 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
                 }
 
-
-
-
             }
-            else{
-            Utility.AIZombie(NPC, ref NPC.ai, fleeWhenDay: false, allowBoredom: false);
+            
+            
             }
            
-            NPC.spriteDirection = NPC.direction;
+            
+        }
+        NPC.spriteDirection = NPC.direction;
         }
 
         public override void FindFrame(int frameHeight)
@@ -115,7 +131,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             Texture2D rockTexture = ModContent.Request<Texture2D>(Texture + "_Pebble").Value;
             SpriteEffects Effect = NPC.direction == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-            Vector2 drawPos = NPC.direction == -1 ? (NPC.Center + new Vector2(-10f, (float)(NPC.height/2))) - Main.screenPosition:(NPC.Center + new Vector2(22f, (float)(NPC.height/2))) - Main.screenPosition;
+            Vector2 drawPos = NPC.direction == -1 ? (NPC.Center + new Vector2(-4f, (float)(NPC.height/2))) - Main.screenPosition:(NPC.Center + new Vector2(28f, (float)(NPC.height/2))) - Main.screenPosition;
             Color colour = NPC.GetAlpha(drawColor);
             if(HasRock)
                 spriteBatch.Draw(rockTexture, drawPos, null, colour, NPC.rotation, NPC.Size / 2, NPC.scale, Effect, 0f);
