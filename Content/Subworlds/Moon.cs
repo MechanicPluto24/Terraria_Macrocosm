@@ -130,7 +130,7 @@ namespace Macrocosm.Content.Subworlds
             }
 
             if (MeteorStormActive)
-                MeteorBoost = 1000f;
+                MeteorBoost = 100f;
             else
                 MeteorBoost = 1f;
         }
