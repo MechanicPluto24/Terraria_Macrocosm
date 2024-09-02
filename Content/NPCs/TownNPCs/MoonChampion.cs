@@ -3,6 +3,7 @@ using Macrocosm.Common.Systems;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Armor.Astronaut;
+using Macrocosm.Content.Items.Consumables.Throwable;
 using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -142,8 +143,6 @@ namespace Macrocosm.Content.NPCs.TownNPCs
 
         public override void PostAI()
         {
-            if (!SubworldSystem.IsActive<Moon>())
-                NPC.active = false;
         }
 
         public override void AddShops()
@@ -161,11 +160,23 @@ namespace Macrocosm.Content.NPCs.TownNPCs
 
             // TODO: for testing, subject to change - Feldy
             AddNewSlot(ItemID.SuperHealingPotion, 3);
+
+            AddNewSlot(ModContent.ItemType<LunarCrystal>(), 1);
+
             AddNewSlot(ModContent.ItemType<AstronautHelmet>(), 20);
             AddNewSlot(ModContent.ItemType<AstronautSuit>(), 20);
             AddNewSlot(ModContent.ItemType<AstronautLeggings>(), 20);
 
             shop.Register();
+        }
+
+        public override void ModifyActiveShop(string shopName, Item[] items)
+        {
+            foreach(Item item in items)
+            {
+                if (item is not null && item.type == ModContent.ItemType<LunarCrystal>())
+                    item.stack = 20;
+            }
         }
 
         public override void HitEffect(NPC.HitInfo hit)

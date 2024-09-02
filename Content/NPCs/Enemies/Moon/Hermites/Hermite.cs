@@ -1,11 +1,9 @@
-using Macrocosm.Common.Global.NPCs;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Blocks.Terrain;
-using Terraria;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+using Terraria;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -14,6 +12,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Hermites
 {
     public class Hermite : ModNPC
     {
+        private float alert = 0f;
+
         public override void SetStaticDefaults()
         {
             Main.npcFrameCount[NPC.type] = 2;
@@ -21,7 +21,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Hermites
             NPCSets.MoonNPC[Type] = true;
             NPCSets.DropsMoonstone[Type] = true;
         }
-        float Alert=0f;
 
         public override void SetDefaults()
         {
@@ -34,32 +33,37 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Hermites
             NPC.DeathSound = SoundID.NPCDeath2;
             NPC.value = 60f;
             NPC.knockBackResist = 0f;
-            NPC.scale=3f;//I had to make them A little larger, remove this when we have offical sprites.
+            NPC.scale = 3f;//I had to make them A little larger, remove this when we have offical sprites.
         }
+
         public override void AI()
         {
             NPC.TargetClosest(faceTarget: true);
             Player player = Main.player[NPC.target];
+
             if (Vector2.Distance(NPC.Center, player.Center) < 200f)
-                Alert+=0.01f;
-            if (Alert>0.6f){
-            Utility.AIZombie(NPC, ref NPC.ai, fleeWhenDay: false, allowBoredom: false,velMax: 1, maxJumpTilesX: 5, maxJumpTilesY: 3, moveInterval: 0.03f);    
-            NPC.dontTakeDamage=false;
+                alert += 0.01f;
+
+            if (alert > 0.6f)
+            {
+                Utility.AIZombie(NPC, ref NPC.ai, fleeWhenDay: false, allowBoredom: false, velMax: 1, maxJumpTilesX: 5, maxJumpTilesY: 3, moveInterval: 0.03f);
+                NPC.dontTakeDamage = false;
             }
-            else{
-                NPC.dontTakeDamage=true;
+            else
+            {
+                NPC.dontTakeDamage = true;
             }
             //This was easy... I may add them hiding again when the player is out of range but I'll wait until we have the sprites.
+        }
 
+        public override void FindFrame(int frameHeight)
+        {
+            if (alert > 0.6f)
+                NPC.frame.Y = 0 * frameHeight;
+            else
+                NPC.frame.Y = 1 * frameHeight;
         }
-        public override void FindFrame(int frameHeight){
-            if(Alert>0.6f){
-            NPC.frame.Y = 0* frameHeight;
-            }
-            else 
-                NPC.frame.Y = 1* frameHeight;
-        }
-      
+
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {

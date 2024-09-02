@@ -90,6 +90,15 @@ Dweller
 	Drops:
 		Moonstone, (1-5) 10%
 
+Hermite
+	Life: 600
+	Defense: 90
+	KB resist: 0
+	Damage: 60
+	Drops:
+		Regolith, 50%
+		Moonstone, (1-5) 10%
+
 KyaniteScarabSmall
 	Life: 200
 	Defense: 62
@@ -218,6 +227,15 @@ RegolithSlime
 	Damage: 60
 	Drops:
 		Space Dust, 50%
+		Moonstone, (1-5) 10%
+
+Shade
+	Life: 500
+	Defense: 60
+	KB resist: 0
+	Damage: 70
+	Drops:
+		Space Dust, 25%
 		Moonstone, (1-5) 10%
 
 ZombieSecurity

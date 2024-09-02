@@ -30,6 +30,7 @@ using Terraria.GameContent;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.Graphics.Effects;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
@@ -517,10 +518,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 NPC.NewNPC(NPC.GetSource_Death(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<MoonChampion>());
 
             WorldFlags.SetFlag(ref WorldFlags.DownedCraterDemon);
-        }
-
-        public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
-        {
         }
 
         private void UpdateScale(float newScale)
@@ -1852,6 +1849,16 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             }
 
             return drawColor * (1f - targetAlpha / 255f);
+        }
+
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            if (NPC.whoAmI == info.DamageSource.SourceNPCIndex)
+            {
+                // Can't use info.DamageSource = PlayerDeathReason.ByCustomReason(...) here:
+                // HurtInfo is a value type and a DamageSource reassignment won't be reflected outside this method
+                info.DamageSource.SourceCustomReason = this.GetLocalization("FunnyDeathMessage").Format(target.name);
+            }
         }
 
         public override bool? CanBeHitByItem(Player player, Item item)

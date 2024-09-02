@@ -1,5 +1,4 @@
 using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Global.NPCs;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
@@ -12,14 +11,12 @@ using ReLogic.Content;
 using System;
 using System.IO;
 using Terraria;
-using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-    //TODO Clean up this mess, make trails and add tile targeting.
     public class LuminiteElemental : ModNPC
     {
         private static Asset<Texture2D> pebbleTexture;
@@ -105,7 +102,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             SpawnDusts(3);
 
             if (NPC.life <= 0)
-                 SpawnDusts(15);
+                SpawnDusts(15);
         }
 
         public override void AI()
@@ -240,7 +237,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                             NPC.netUpdate = true;
                         }
                     }
-                    else 
+                    else
                     {
                         Healing = false;
                         NPC.netUpdate = true;
@@ -300,7 +297,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 float lerpFactor = i / (float)trailLength;
                 Vector2 previousOrbit = new
                 (
-                    (float)Math.Cos(MathHelper.ToRadians((pebbleOrbitTimer - i) * 2)) * 45f, 
+                    (float)Math.Cos(MathHelper.ToRadians((pebbleOrbitTimer - i) * 2)) * 45f,
                     -(float)Math.Sin(MathHelper.ToRadians((pebbleOrbitTimer - i) * 2)) * 12f
                 );
 

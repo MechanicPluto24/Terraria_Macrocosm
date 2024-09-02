@@ -27,7 +27,7 @@ namespace Macrocosm.Content.Items.Armor.Dianite
         {
             player.GetDamage<MagicDamageClass>() += 0.05f;
             player.moveSpeed += 0.1f;
-            player.GetModPlayer<MacrocosmPlayer>().SpaceProtection += 1.5f;
+            player.GetModPlayer<MacrocosmPlayer>().SpaceProtection += 1f;
         }
 
         public override void AddRecipes()

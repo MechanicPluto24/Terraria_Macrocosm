@@ -1931,3 +1931,13 @@ DevOmnitool: {
 	DisplayName: Dev Omnitool
 	Tooltip: ""
 }
+
+LunarCrystal: {
+	DisplayName: Lunar Crystal
+	Tooltip: ""
+}
+
+CrescentMoon: {
+	DisplayName: Crescent Moon
+	Tooltip: ""
+}

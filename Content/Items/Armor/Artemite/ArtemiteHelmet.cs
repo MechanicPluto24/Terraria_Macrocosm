@@ -29,7 +29,7 @@ namespace Macrocosm.Content.Items.Armor.Artemite
         public override void UpdateEquip(Player player)
         {
             player.GetDamage<MeleeDamageClass>() += 0.18f;
-            player.GetModPlayer<MacrocosmPlayer>().SpaceProtection += 1.5f;
+            player.GetModPlayer<MacrocosmPlayer>().SpaceProtection += 1f;
         }
 
         public override bool IsArmorSet(Item head, Item body, Item legs)

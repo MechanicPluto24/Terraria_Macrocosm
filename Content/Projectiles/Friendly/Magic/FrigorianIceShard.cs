@@ -46,5 +46,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 dust.noGravity = true;
             }
         }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            return base.PreDraw(ref lightColor);
+        }
     }
 }

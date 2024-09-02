@@ -26,7 +26,7 @@ namespace Macrocosm.Content.Items.Armor.Selenite
         public override void UpdateEquip(Player player)
         {
             player.GetCritChance<RangedDamageClass>() += 12f;
-            player.GetModPlayer<MacrocosmPlayer>().SpaceProtection += 1.5f;
+            player.GetModPlayer<MacrocosmPlayer>().SpaceProtection += 1f;
         }
 
         public override void AddRecipes()

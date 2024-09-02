@@ -1,7 +1,7 @@
 ﻿using Macrocosm.Content.Projectiles.Friendly.Thrown;
+using Macrocosm.Content.Rarities;
 using Terraria;
 using Terraria.ID;
-using Macrocosm.Content.Rarities;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Consumables.Throwable
@@ -19,7 +19,7 @@ namespace Macrocosm.Content.Items.Consumables.Throwable
             Item.width = 18;
             Item.height = 18;
             Item.value = Item.sellPrice(gold: 2);
-            Item.rare = ModContent.RarityType<MoonRarityT1>();;
+            Item.rare = ModContent.RarityType<MoonRarityT1>(); ;
         }
     }
 }

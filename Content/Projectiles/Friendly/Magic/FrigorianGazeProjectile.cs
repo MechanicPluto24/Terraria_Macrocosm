@@ -15,7 +15,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
     {
         public override void SetStaticDefaults()
         {
-            Main.projFrames[Type] = 2;
+            Main.projFrames[Type] = 3;
         }
 
         public override void SetDefaults()
@@ -28,6 +28,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Projectile.timeLeft = 1000;
             Projectile.penetrate = -1;
             Projectile.tileCollide = true;
+            Projectile.frame = 0;
         }
 
         public int AI_Timer
@@ -94,13 +95,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             if (Broke)
             {
                 Projectile.rotation += Projectile.velocity.X * 0.01f;
-                Projectile.frame = 1;
                 AI_Timer++;
             }
             else
             {
                 Projectile.rotation += Projectile.velocity.X * 0.01f;
-                Projectile.frame = 0;
             }
 
             if (AI_Timer % 6 == 1)
@@ -117,6 +116,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         {
             BounceCounter++;
 
+            if (BounceCounter < 3)
+            {
+                Projectile.frame = BounceCounter;
+
+                if(!Main.dedServ && BounceCounter > 0)
+                    Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, Vector2.Zero, Mod.Find<ModGore>($"FrigorianGore{BounceCounter}").Type);
+            }
+
             if (BounceCounter < numBounces)
             {
                 float bounceFactor = 0.5f + 0.5f * BounceCounter / (float)numBounces;
@@ -130,10 +137,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                     dust.noGravity = true;
                 }
 
-                if (BounceCounter == 1)
-                     Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, Vector2.Zero, Mod.Find<ModGore>("FrigorianGore2").Type);
- 
-                SoundEngine.PlaySound(SoundID.Item107 with
+                 SoundEngine.PlaySound(SoundID.Item107 with
                 {
                     Volume = 0.5f * bounceFactor,
                     Pitch = 0.25f + 0.35f * bounceFactor
@@ -159,9 +163,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, (-Vector2.UnitY * 8f).RotatedByRandom(Math.PI / 4), ModContent.ProjectileType<FrigorianIceCrystal>(), Projectile.damage / 2, 2, -1);
             }
 
-            Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, Projectile.velocity * 0.1f, Mod.Find<ModGore>("FrigorianGore1").Type);
-            Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, Projectile.velocity * 0.1f, Mod.Find<ModGore>("FrigorianGore2").Type);
-            Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, Projectile.velocity * 0.1f, Mod.Find<ModGore>("FrigorianGore3").Type);
+            for (int i = 0; i < 5; i++)
+                Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, Projectile.velocity * 0.1f, Mod.Find<ModGore>("FrigorianGore3").Type);
 
             for (int i = 0; i < 30; i++)
             {
@@ -191,7 +194,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             exploded = true;
         }
 
-        public override Color? GetAlpha(Color lightColor) => lightColor * (BounceCounter <= 1 ? 1f : 1f - 0.5f * (BounceCounter / (float)numBounces));
+        public override Color? GetAlpha(Color lightColor) => lightColor;
 
         public override bool PreDraw(ref Color lightColor)
         {

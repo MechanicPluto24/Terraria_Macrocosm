@@ -25,7 +25,7 @@ namespace Macrocosm.Common.Bases.Projectiles
 
         public override void Load()
         {
-            for (int i = 0; i < Language.FindAll(new LanguageSearchFilter((key, _) => key.StartsWith("Mods.Macrocosm.DeathMessages.Meteor"))).Length; i++)
+            for (int i = 0; i < Utility.FindAllThatStartWith("Mods.Macrocosm.DeathMessages.Meteor").Length; i++)
                 DeathMessages.Add(Language.GetOrRegister($"Mods.Macrocosm.DeathMessages.Meteor.Message{i}"));
         }
 

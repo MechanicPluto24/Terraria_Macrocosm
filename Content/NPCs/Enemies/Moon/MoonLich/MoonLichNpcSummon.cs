@@ -12,11 +12,14 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
     {
         public override string Texture => Macrocosm.EmptyTexPath;
 
+        private bool summon = false;
+        private int timer = 0;
+
+        private Color colour = new Color(100, 255, 255);
+
         public override void SetStaticDefaults()
         {
-
         }
-        Color colour = new Color(100, 255, 255);
 
         public override void SetDefaults()
         {
@@ -36,13 +39,13 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
         {
             return false;
         }
-        bool Summon = false;
-        int Timer = 0;
+
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            Summon = true;
+            summon = true;
             return false;
         }
+
         public override void AI()
         {
             Particle.CreateParticle<TintableFire>(p =>
@@ -52,16 +55,19 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
                 p.DrawColor = new Color(100, 255, 255, 0);
                 p.Scale = 0.03f;
             });
+
             Projectile.velocity.Y += 1f;
-            if (Summon == true)
+
+            if (summon == true)
             {
                 Projectile.velocity *= 0f;
-                Timer++;
+                timer++;
             }
-            if (Timer > 30)
+
+            if (timer > 30)
             {
-                int NpcToSummon=Main.rand.Next(1,4);
-                switch(NpcToSummon)
+                int npcToSummon = Main.rand.Next(1, 4);
+                switch (npcToSummon)
                 {
                     case 1:
                         NPC.NewNPCDirect(Projectile.GetSource_FromAI(), (int)Projectile.Center.X, (int)Projectile.Center.Y, ModContent.NPCType<XenoHive>(), 0, 0f);
@@ -75,19 +81,20 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
                     default:
                         break;
                 }
-                for(int i=0;i<20;i++){
-                    Particle.CreateParticle<TintableFire>(p =>
+
+                for (int i = 0; i < 20; i++)
                 {
-                p.Position = Projectile.position;
-                p.Velocity = Vector2.UnitX.RotatedByRandom(MathHelper.TwoPi);
-                p.DrawColor = new Color(100, 255, 255, 0);
-                p.Scale = 0.03f;
-                });
+                    Particle.CreateParticle<TintableFire>(p =>
+                    {
+                        p.Position = Projectile.position;
+                        p.Velocity = Vector2.UnitX.RotatedByRandom(MathHelper.TwoPi);
+                        p.DrawColor = new Color(100, 255, 255, 0);
+                        p.Scale = 0.03f;
+                    });
                 }
-                
+
                 Projectile.Kill();
             }
-
         }
 
         public override void OnKill(int timeLeft)

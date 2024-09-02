@@ -101,8 +101,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 var star = Particle.CreateParticle<ImbriumStar>(Projectile.oldPos[j] + Main.rand.NextVector2FromRectangle(new Rectangle(0, 0, (int)Projectile.Size.X, (int)Projectile.Size.Y)), Main.rand.NextVector2Circular(0.1f, 0.1f), scale: 0.4f * progress);
                 star.Alpha = 0.8f * progress;
             }
-
-
         }
     }
 }

@@ -5,6 +5,7 @@ using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
@@ -36,6 +37,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Projectile.penetrate = -1;
             Projectile.tileCollide = false;
             Projectile.alpha = 255;
+            Projectile.hide = true;
         }
 
         public override void AI()
@@ -143,6 +145,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);
             return false;
+        }
+
+        public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
+        {
+            behindProjectiles.Add(index);
         }
     }
 }

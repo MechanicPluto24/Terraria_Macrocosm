@@ -6,12 +6,21 @@ using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.Graphics.Effects;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Players
 {
     public class IrradiationPlayer : ModPlayer
     {
+        public static List<LocalizedText> DeathMessages { get; } = [];
+
+        public override void Load()
+        {
+            for (int i = 0; i < Utility.FindAllThatStartWith("Mods.Macrocosm.DeathMessages.Irradiated").Length; i++)
+                DeathMessages.Add(Language.GetOrRegister($"Mods.Macrocosm.DeathMessages.Irradiated.Message{i}"));
+        }
+
         /// <summary>
         /// The player's irradiation level.
         /// Not synced.

@@ -1,7 +1,6 @@
-using Macrocosm.Content.Items.Bars;
-using Terraria;
 using Macrocosm.Content.Projectiles.Friendly.Melee;
 using Macrocosm.Content.Rarities;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -11,7 +10,6 @@ namespace Macrocosm.Content.Items.Weapons.Melee
     {
         public override void SetStaticDefaults()
         {
-
         }
 
         public override void SetDefaults()
@@ -30,10 +28,10 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.autoReuse = true;
             Item.shoot = ModContent.ProjectileType<CrescentMoonProjectile>();
             Item.shootSpeed = 20;
+            Item.noUseGraphic = true;
         }
-        public override bool CanUseItem(Player player)
-        {
-            return player.ownedProjectileCounts[Item.shoot] < 1;
-        }
+
+        public override bool CanUseItem(Player player) => player.ownedProjectileCounts[Item.shoot] < 1;
+
     }
 }

@@ -31,7 +31,7 @@ namespace Macrocosm.Content.Items.Dev
 
         public override bool? UseItem(Player player)
         {
-            Microsoft.Xna.Framework.Point point = Utility.GetClosestTile(player.Center, ModContent.TileType<Monolith>(), 10000);
+            Microsoft.Xna.Framework.Point point = Utility.GetClosestTile(player.Center, ModContent.TileType<KyaniteNest>(), 10000);
             if (point != default)
                 player.Teleport(point.ToWorldCoordinates());
             return true;

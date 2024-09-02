@@ -138,7 +138,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 if (npc.velocity.X < 0f && npc.direction == -1 || npc.velocity.X > 0f && npc.direction == 1)
                 {
                     //...attempt to jump if needed.
-                    Vector2 newVec = Utility.AttemptJump(npc.position, npc.velocity, npc.width, npc.height, npc.direction, npc.directionY, maxJumpTilesX, maxJumpTilesY, velMax, jumpUpPlatforms, jumpUpPlatforms && notBored ? Main.player[npc.target] : null, ignoreJumpTiles);
+                    Vector2 newVec = Utility.AttemptJump(npc.position, npc.velocity, npc.width, npc.height, npc.direction, jumpUpPlatforms && notBored ? Main.player[npc.target] : null, npc.directionY, maxJumpTilesX, maxJumpTilesY, velMax, jumpUpPlatforms, ignoreJumpTiles);
                     if (npc.noTileCollide)
                     {
                         Jumping = true;
