@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Global.Items;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -19,12 +20,10 @@ namespace Macrocosm.Content.DrawLayers
     {
         public override void SetStaticDefaults()
         {
-            base.SetStaticDefaults();
         }
-        public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
-        {
-            return true;
-        }
+
+        public override bool GetDefaultVisibility(PlayerDrawSet drawInfo) => true;
+
         public override Position GetDefaultPosition() => new AfterParent(PlayerDrawLayers.HeldItem);
 
         protected override void Draw(ref PlayerDrawSet drawInfo)
@@ -45,6 +44,8 @@ namespace Macrocosm.Content.DrawLayers
                 if (result.Texture != null)
                 {
                     Texture2D glowTexture = result.Texture.Value;
+
+                    Color color = result.Color.HasValue ? result.Color.Value.WithAlpha((byte)heldItem.alpha) : drawInfo.itemColor;
 
                     Texture2D itemTexture = TextureAssets.Item[itemID].Value;
                     Vector2 position = new((int)(drawInfo.ItemLocation.X - Main.screenPosition.X), (int)(drawInfo.ItemLocation.Y - Main.screenPosition.Y));
@@ -85,9 +86,6 @@ namespace Macrocosm.Content.DrawLayers
                     {
                         return;
                     }
-                    //_ = drawInfo.drawPlayer.name;
-                    Color color = new(250, 250, 250, heldItem.alpha);
-                    //Vector2 vector = Vector2.Zero;
 
                     Vector2 origin = new(sourceRect.Value.Width * 0.5f - sourceRect.Value.Width * 0.5f * drawInfo.drawPlayer.direction, sourceRect.Value.Height);
                     if (heldItem.useStyle == ItemUseStyleID.DrinkLiquid && drawInfo.drawPlayer.itemAnimation > 0)
@@ -166,31 +164,31 @@ namespace Macrocosm.Content.DrawLayers
                         {
                             origin6 = new Vector2(itemTexture.Width + num12, itemTexture.Height / 2);
                         }
-                        drawData = new DrawData(glowTexture, new Vector2((int)(drawInfo.ItemLocation.X - Main.screenPosition.X + vector3.X), (int)(drawInfo.ItemLocation.Y - Main.screenPosition.Y + vector3.Y)), sourceRect, new Color(250, 250, 250, heldItem.alpha), drawInfo.drawPlayer.itemRotation, origin6, adjustedItemScale, drawInfo.itemEffect, 0);
+                        drawData = new DrawData(glowTexture, new Vector2((int)(drawInfo.ItemLocation.X - Main.screenPosition.X + vector3.X), (int)(drawInfo.ItemLocation.Y - Main.screenPosition.Y + vector3.Y)), sourceRect, color, drawInfo.drawPlayer.itemRotation, origin6, adjustedItemScale, drawInfo.itemEffect, 0);
                         drawInfo.DrawDataCache.Add(drawData);
                         if (heldItem.color != default)
                         {
-                            drawData = new DrawData(glowTexture, new Vector2((int)(drawInfo.ItemLocation.X - Main.screenPosition.X + vector3.X), (int)(drawInfo.ItemLocation.Y - Main.screenPosition.Y + vector3.Y)), sourceRect, new Color(250, 250, 250, heldItem.alpha), drawInfo.drawPlayer.itemRotation, origin6, adjustedItemScale, drawInfo.itemEffect, 0);
+                            drawData = new DrawData(glowTexture, new Vector2((int)(drawInfo.ItemLocation.X - Main.screenPosition.X + vector3.X), (int)(drawInfo.ItemLocation.Y - Main.screenPosition.Y + vector3.Y)), sourceRect, color, drawInfo.drawPlayer.itemRotation, origin6, adjustedItemScale, drawInfo.itemEffect, 0);
                             drawInfo.DrawDataCache.Add(drawData);
                         }
                         return;
                     }
                     if (drawInfo.drawPlayer.gravDir == -1f)
                     {
-                        drawData = new DrawData(glowTexture, position, sourceRect, new Color(250, 250, 250, heldItem.alpha), itemRotation, origin, adjustedItemScale, drawInfo.itemEffect, 0);
+                        drawData = new DrawData(glowTexture, position, sourceRect, color, itemRotation, origin, adjustedItemScale, drawInfo.itemEffect, 0);
                         drawInfo.DrawDataCache.Add(drawData);
                         if (heldItem.color != default)
                         {
-                            drawData = new DrawData(glowTexture, position, sourceRect, new Color(250, 250, 250, heldItem.alpha), itemRotation, origin, adjustedItemScale, drawInfo.itemEffect, 0);
+                            drawData = new DrawData(glowTexture, position, sourceRect, color, itemRotation, origin, adjustedItemScale, drawInfo.itemEffect, 0);
                             drawInfo.DrawDataCache.Add(drawData);
                         }
                         return;
                     }
-                    drawData = new DrawData(glowTexture, position, sourceRect, new Color(250, 250, 250, heldItem.alpha), itemRotation, origin, adjustedItemScale, drawInfo.itemEffect, 0);
+                    drawData = new DrawData(glowTexture, position, sourceRect, color, itemRotation, origin, adjustedItemScale, drawInfo.itemEffect, 0);
                     drawInfo.DrawDataCache.Add(drawData);
                     if (heldItem.color != default)
                     {
-                        drawData = new DrawData(glowTexture, position, sourceRect, new Color(250, 250, 250, heldItem.alpha), itemRotation, origin, adjustedItemScale, drawInfo.itemEffect, 0);
+                        drawData = new DrawData(glowTexture, position, sourceRect, color, itemRotation, origin, adjustedItemScale, drawInfo.itemEffect, 0);
                         drawInfo.DrawDataCache.Add(drawData);
                     }
                 }

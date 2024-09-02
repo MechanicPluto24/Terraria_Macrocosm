@@ -27,7 +27,7 @@ namespace Macrocosm.Content.Items.Armor.Dianite
         public override void UpdateEquip(Player player)
         {
             player.GetCritChance<MagicDamageClass>() += 12f;
-            player.GetModPlayer<MacrocosmPlayer>().SpaceProtection += 1.5f;
+            player.GetModPlayer<MacrocosmPlayer>().SpaceProtection += 1f;
         }
 
         public override void AddRecipes()

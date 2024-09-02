@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Common.Global.NPCs;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
@@ -9,6 +8,7 @@ using Macrocosm.Content.Particles;
 using Macrocosm.Content.Projectiles.Hostile;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using System;
 using Terraria;
 using Terraria.GameContent.Bestiary;
@@ -19,7 +19,12 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
 {
     public class MoonLich : ModNPC
     {
-        float offsetY = 0f;
+        private static Asset<Texture2D> handTexture;
+
+        private float offsetY = 0f;
+        private int timer;
+        private bool summoned = false;
+
         public override void SetStaticDefaults()
         {
             Main.npcFrameCount[NPC.type] = 4;
@@ -46,7 +51,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
 
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
         {
-
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
@@ -59,31 +63,30 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
             loot.Add(ItemDropRule.Common(ModContent.ItemType<SpaceDust>(), 1, 3, 5));
         }
 
-        int Timer;
-        bool Summoned = false;
         public override void AI()
         {
-
             NPC.TargetClosest();
             Player player = Main.player[NPC.target];
             bool clearLineOfSight = Collision.CanHitLine(NPC.position, NPC.width, NPC.height, player.position, player.width, player.height);
             Lighting.AddLight(NPC.Center, (new Vector3(0.4f, 1f, 1f)));
-            offsetY = (float)(Math.Sin(Timer / 10) * 7);
-            Timer++;
-            if (Timer % 5 == 0)
+            offsetY = (float)(Math.Sin(timer / 10) * 7);
+            timer++;
+            if (timer % 5 == 0)
                 Particle.CreateParticle<TintableFire>(p =>
-                                {
-                                    p.Position = NPC.position;
-                                    p.Velocity = Vector2.UnitX.RotatedByRandom(MathHelper.TwoPi);
-                                    p.DrawColor = new Color(100, 255, 255, 0);
-                                    p.Scale = 0.1f;
-                                });
-            
-            if (clearLineOfSight && player.active && !player.dead){
-            NPC.Move(player.Center, Vector2.Zero, 5, 0.1f);
-            NPC.velocity += NPC.velocity.SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.PiOver2) * MathF.Sin(Main.GameUpdateCount * 0.05f);
+                {
+                    p.Position = NPC.position;
+                    p.Velocity = Vector2.UnitX.RotatedByRandom(MathHelper.TwoPi);
+                    p.DrawColor = new Color(100, 255, 255, 0);
+                    p.Scale = 0.1f;
+                });
+
+            if (clearLineOfSight && player.active && !player.dead)
+            {
+                NPC.Move(player.Center, Vector2.Zero, 5, 0.1f);
+                NPC.velocity += NPC.velocity.SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.PiOver2) * MathF.Sin(Main.GameUpdateCount * 0.05f);
             }
-            if (Timer % 80 == 79)
+
+            if (timer % 80 == 79)
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
@@ -94,38 +97,32 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
                 }
             }
 
-           
-            if (clearLineOfSight && player.active && !player.dead && Summoned == false)
+            if (clearLineOfSight && player.active && !player.dead && summoned == false)
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-
                     Vector2 projVelocity = Utility.PolarVector(1.5f, Main.rand.NextFloat(0, MathHelper.Pi * 2));
                     Projectile proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, projVelocity, ModContent.ProjectileType<MoonLichNPCSummon>(), Utility.TrueDamage((int)(0)), 1f, Main.myPlayer, NPC.target);
                     proj.netUpdate = true;
-
                 }
-                Summoned = true;
+                summoned = true;
             }
-
-
-
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-
-            SpriteEffects Effect = NPC.direction == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+            SpriteEffects effects = NPC.direction == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
             Vector2 drawPos = (NPC.Center + new Vector2(35f, 50f + offsetY)) - Main.screenPosition;
             Color colour = NPC.GetAlpha(drawColor);
-            //Right
-            Texture2D texture = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Enemies/Moon/MoonLich/MoonLichHand").Value;
-            spriteBatch.Draw(texture, drawPos, null, colour, NPC.rotation, NPC.Size / 2, NPC.scale, Effect, 0f);
 
+            //Right
+            handTexture ??= ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Enemies/Moon/MoonLich/MoonLichHand");
+
+            spriteBatch.Draw(handTexture.Value, drawPos, null, colour, NPC.rotation, NPC.Size / 2, NPC.scale, effects, 0f);
 
             Vector2 drawPos2 = (NPC.Center + new Vector2(-35f, 50f + offsetY)) - Main.screenPosition;
-            //left
-            spriteBatch.Draw(texture, drawPos2, null, colour, NPC.rotation, NPC.Size / 2, NPC.scale, Effect, 0f);
+            spriteBatch.Draw(handTexture.Value, drawPos2, null, colour, NPC.rotation, NPC.Size / 2, NPC.scale, effects, 0f);
+
             return true;
         }
 

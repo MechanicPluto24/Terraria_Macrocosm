@@ -409,6 +409,10 @@ Medkit
 	Value: 1 gold
 	Research count: 20
 
+LunarCrystal
+	Value: 10 gold
+	Research count: 1
+
 MoonPhaseGlobe
 	Value: 75 gold
 	Research count: 1
@@ -2610,6 +2614,10 @@ ChampionsBlade
 
 ClawWrench
 	Value: No value
+	Research count: 1
+
+CrescentMoon
+	Value: 15 silver 50 copper
 	Research count: 1
 
 Crucible

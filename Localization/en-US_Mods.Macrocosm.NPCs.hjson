@@ -3,6 +3,7 @@ CraterDemon: {
 	BestiaryFlavorText: This massive meteorite demon is a member of a race that invaded the Moon long ago, and bears the scars of an ancient war.
 	SpawnInfo: Use a [i:Macrocosm/CraterDemonSummon] at any time on the Moon.
 	DespawnMessage: "{0} has left."
+	FunnyDeathMessage: "{0} died for the crater good"
 }
 
 CraterImp: {
@@ -193,4 +194,14 @@ Scatterbrained: {
 KyaniteScarabCritter: {
 	DisplayName: Kyanite Scarab Critter
 	BestiaryFlavorText: Mods.Macrocosm.NPCs.KyaniteScarabCritter.BestiaryFlavorText
+}
+
+Hermite: {
+	DisplayName: Hermite
+	BestiaryFlavorText: Mods.Macrocosm.NPCs.Hermite.BestiaryFlavorText
+}
+
+Shade: {
+	DisplayName: Shade
+	BestiaryFlavorText: Mods.Macrocosm.NPCs.Shade.BestiaryFlavorText
 }

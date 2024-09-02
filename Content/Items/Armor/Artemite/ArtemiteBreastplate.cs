@@ -32,7 +32,7 @@ namespace Macrocosm.Content.Items.Armor.Artemite
         public override void UpdateEquip(Player player)
         {
             player.GetCritChance<MeleeDamageClass>() += 6f;
-            player.GetModPlayer<MacrocosmPlayer>().SpaceProtection += 1.5f;
+            player.GetModPlayer<MacrocosmPlayer>().SpaceProtection += 1f;
         }
 
         public override void AddRecipes()

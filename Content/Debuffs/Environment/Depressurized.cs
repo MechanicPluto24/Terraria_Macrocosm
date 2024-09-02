@@ -1,10 +1,21 @@
+using Macrocosm.Common.Utils;
+using System.Collections.Generic;
 using Terraria;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Debuffs.Environment
 {
     public class Depressurized : ModBuff
     {
+        public static List<LocalizedText> DeathMessages { get; } = [];
+
+        public override void Load()
+        {
+            for (int i = 0; i < Utility.FindAllThatStartWith("Mods.Macrocosm.DeathMessages.Depressurized").Length; i++)
+                DeathMessages.Add(Language.GetOrRegister($"Mods.Macrocosm.DeathMessages.Depressurized.Message{i}"));
+        }
+
         public override void SetStaticDefaults()
         {
             Main.debuff[Type] = true;

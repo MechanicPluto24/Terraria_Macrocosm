@@ -3,6 +3,7 @@ using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -11,9 +12,11 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 {
     public class Crucible : ModItem
     {
-        public override void SetStaticDefaults()
+        private static Asset<Texture2D> glow;
+
+        public override void Load()
         {
-            Item.Glowmask().Texture = ModContent.Request<Texture2D>(Texture + "_Glow");
+            glow = ModContent.Request<Texture2D>(Texture + "_Glow");
         }
 
         public override void SetDefaults()
@@ -30,6 +33,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.rare = ModContent.RarityType<MoonRarityT3>();
             Item.UseSound = SoundID.Item20;
             Item.autoReuse = true; // Lets you use the item without clicking the mouse repeatedly (i.e. swinging swords)
+            Item.Glowmask().Texture = glow;
         }
         public override void MeleeEffects(Player player, Rectangle hitbox)
         {

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Common.Utils;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
@@ -13,8 +14,11 @@ namespace Macrocosm.Common.Global.Items
     public class GlowmaskGlobalItem : GlobalItem
     {
         public Asset<Texture2D> Texture = null;
+        public Color? Color = new(250, 250, 250);
+
         public int GlowOffsetY = 0;
         public int GlowOffsetX = 0;
+
         public override bool InstancePerEntity => true;
         public override GlobalItem Clone(Item item, Item itemClone)
         {
@@ -34,7 +38,7 @@ namespace Macrocosm.Common.Global.Items
                         item.position.Y - Main.screenPosition.Y + item.height - Texture.Height() * 0.5f + 2f
                     ),
                     new Rectangle(0, 0, Texture.Width(), Texture.Height()),
-                    Color.White,
+                    Color ?? Utility.Colorize(lightColor, alphaColor),
                     rotation,
                     Texture.Size() * 0.5f,
                     scale,

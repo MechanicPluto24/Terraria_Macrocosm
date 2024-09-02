@@ -27,7 +27,7 @@ namespace Macrocosm.Content.Items.Armor.Chandrium
         {
             player.maxMinions += 1;
             player.moveSpeed += 0.1f;
-            player.GetModPlayer<MacrocosmPlayer>().SpaceProtection += 1.5f;
+            player.GetModPlayer<MacrocosmPlayer>().SpaceProtection += 1f;
         }
 
         public override void AddRecipes()

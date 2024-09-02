@@ -27,7 +27,7 @@ namespace Macrocosm.Content.Items.Armor.Artemite
         {
             player.GetAttackSpeed<MeleeDamageClass>() += 0.15f;
             player.moveSpeed += 0.15f;
-            player.GetModPlayer<MacrocosmPlayer>().SpaceProtection += 1.5f;
+            player.GetModPlayer<MacrocosmPlayer>().SpaceProtection += 1f;
         }
 
         public override void AddRecipes()

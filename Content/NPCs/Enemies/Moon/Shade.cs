@@ -1,17 +1,11 @@
-﻿using Macrocosm.Common.Bases.NPCs;
-using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Global.NPCs;
-using Macrocosm.Common.Sets;
+﻿using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
-using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Macrocosm.Content.Items.Drops;
+using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
-using System;
 using Terraria;
-using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
@@ -28,17 +22,21 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             Flee,
             Enrage
         }
+
         public ActionState AI_State
         {
             get => (ActionState)NPC.ai[0];
             set => NPC.ai[0] = (float)value;
         }
-        public ref float AI_Speed => ref NPC.ai[3];
 
+        public ref float AI_Speed => ref NPC.ai[1];
+
+        public ref float AI_Rage => ref NPC.ai[2];
 
         public override void SetStaticDefaults()
         {
             Main.npcFrameCount[Type] = 1;
+
             NPCSets.MoonNPC[Type] = true;
             NPCSets.DropsMoonstone[Type] = true;
         }
@@ -57,33 +55,34 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.noGravity = true;
             NPC.noTileCollide = true;
             SpawnModBiomes = [ModContent.GetInstance<MoonUndergroundBiome>().Type];
-            AI_State=ActionState.Idle;
-            NPC.Opacity=0f;
-     
+            AI_State = ActionState.Idle;
+            NPC.Opacity = 0f;
+
         }
-        public float Rage=0f;
+
         public override void AI()
         {
-        NPC.TargetClosest(true);
-        Player player = Main.player[NPC.target];
-        bool clearLineOfSight = Collision.CanHitLine(NPC.position, NPC.width, NPC.height, player.position, player.width, player.height);
-        NPC.direction = NPC.Center.X < player.Center.X ? 1 : -1;
-        NPC.rotation = NPC.Center.DirectionTo(Main.player[NPC.target].Center).ToRotation();
-        if(NPC.HasPlayerTarget && clearLineOfSight&&AI_State == ActionState.Idle)
-            AI_State = ActionState.Attack;
+            NPC.TargetClosest(true);
+            Player player = Main.player[NPC.target];
+            bool clearLineOfSight = Collision.CanHitLine(NPC.position, NPC.width, NPC.height, player.position, player.width, player.height);
+            NPC.direction = NPC.Center.X < player.Center.X ? 1 : -1;
+            NPC.rotation = NPC.Center.DirectionTo(Main.player[NPC.target].Center).ToRotation();
 
-        if (Lighting.GetColor(NPC.Center.ToTileCoordinates()).GetBrightness() >= 0.1f && Vector2.Distance(NPC.Center, player.Center) < 200f)
-            Rage += 0.01f;
+            if (NPC.HasPlayerTarget && clearLineOfSight && AI_State == ActionState.Idle)
+                AI_State = ActionState.Attack;
 
-        if(Rage>0.1f&&Vector2.Distance(NPC.Center, player.Center) < 200f)
-            AI_State = ActionState.Flee;
-        else
-            AI_State = ActionState.Attack;
+            if (Lighting.GetColor(NPC.Center.ToTileCoordinates()).GetBrightness() >= 0.1f && Vector2.Distance(NPC.Center, player.Center) < 200f)
+                AI_Rage += 0.01f;
 
-        if(Rage>3f||NPC.life<(NPC.lifeMax/2))
-            AI_State = ActionState.Enrage;
+            if (AI_Rage > 0.1f && Vector2.Distance(NPC.Center, player.Center) < 200f)
+                AI_State = ActionState.Flee;
+            else
+                AI_State = ActionState.Attack;
 
-        switch (AI_State)
+            if (AI_Rage > 3f || NPC.life < (NPC.lifeMax / 2))
+                AI_State = ActionState.Enrage;
+
+            switch (AI_State)
             {
                 case ActionState.Idle:
                     Idle();
@@ -98,51 +97,58 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                     Enrage();
                     break;
             }
-        if(AI_State != ActionState.Idle)
-            if(NPC.Opacity<0.5f)
-                NPC.Opacity+=0.01f;
 
-        if(AI_State != ActionState.Idle)
-            NPC.dontTakeDamage=false;
-        else
-           NPC.dontTakeDamage=true;
-      
-   
+            if (AI_State != ActionState.Idle)
+                if (NPC.Opacity < 0.5f)
+                    NPC.Opacity += 0.01f;
 
+            if (AI_State != ActionState.Idle)
+                NPC.dontTakeDamage = false;
+            else
+                NPC.dontTakeDamage = true;
         }
+
         public void Idle()
         {
             //Does nothing
-            NPC.Opacity=0f;//just to be sure
-            AI_Speed=1f;
-            NPC.velocity*=0f;
+            NPC.Opacity = 0f;//just to be sure
+            AI_Speed = 1f;
+            NPC.velocity *= 0f;
         }
+
         public void Attack()
         {
             Player player = Main.player[NPC.target];
             Vector2 direction = (player.Center - NPC.Center).SafeNormalize(Vector2.UnitX);
             AI_Speed += 0.02f;
+
             if (AI_Speed > 2f)
                 AI_Speed = 2f;
+
             NPC.velocity = ((NPC.velocity + (direction * 0.8f)).SafeNormalize(Vector2.UnitX)) * AI_Speed;
-            
         }
+
         public void Flee()
         {
             Player player = Main.player[NPC.target];
             Vector2 direction = (player.Center - NPC.Center).SafeNormalize(Vector2.UnitX);
             AI_Speed -= 0.08f;
+
             if (AI_Speed < -2f)
                 AI_Speed = -2f;
+
             NPC.velocity = ((NPC.velocity + (direction * 0.8f)).SafeNormalize(Vector2.UnitX)) * AI_Speed;
         }
+
         public void Enrage()
         {
             Player player = Main.player[NPC.target];
             Vector2 direction = (player.Center - NPC.Center).SafeNormalize(Vector2.UnitX);
             AI_Speed += 0.05f;
+
             if (AI_Speed > 8f)
                 AI_Speed = 8f;
+
             NPC.velocity = ((NPC.velocity + (direction * 3f)).SafeNormalize(Vector2.UnitX)) * AI_Speed;
         }
 
@@ -169,16 +175,14 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                     dust.noGravity = true;
                 }
             }
-
-    
         }
+
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            SpriteEffects effects = SpriteEffects.None;
-            
-           Texture2D texture = TextureAssets.Npc[Type].Value;
-            spriteBatch.Draw(texture, NPC.position - Main.screenPosition, null, drawColor *NPC.Opacity, NPC.direction == 1 ? NPC.rotation : NPC.rotation + MathHelper.Pi, texture.Size() / 2f, NPC.scale, NPC.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0);
-          
+            SpriteEffects effects = NPC.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+
+            Texture2D texture = TextureAssets.Npc[Type].Value;
+            spriteBatch.Draw(texture, NPC.position - Main.screenPosition, null, drawColor * NPC.Opacity, NPC.direction == 1 ? NPC.rotation : NPC.rotation + MathHelper.Pi, texture.Size() / 2f, NPC.scale, effects, 0);
 
             /*
             // Debug collision hitbox
@@ -190,7 +194,5 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             return NPC.IsABestiaryIconDummy;
         }
-
-       
     }
 }
