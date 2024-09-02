@@ -5097,6 +5097,64 @@ namespace Macrocosm.Common.Utils
                 }
             }
         }
+        public static void AIZombieToPosition(NPC npc, ref float[] ai,Vector2 TargetPosition, float moveInterval = 0.07f, float velMax = 1f, int maxJumpTilesX = 3, int maxJumpTilesY = 4, bool jumpUpPlatforms = false, Action<bool, bool, Vector2, Vector2> onTileCollide = null, bool ignoreJumpTiles = false)
+        {
+            bool xVelocityChanged = false;
+            //This block of code checks for major X velocity/directional changes as well as periodically updates the npc.
+            if (npc.velocity.Y == 0f && (npc.velocity.X > 0f && npc.direction < 0 || npc.velocity.X < 0f && npc.direction > 0))
+            {
+                xVelocityChanged = true;
+            }
+            if(TargetPosition.X>npc.Center.X)
+                npc.direction=1;
+            else
+                npc.direction=-1;
+            
+    
+            //if velocity is less than -1 or greater than 1...
+            if (npc.velocity.X < -velMax || npc.velocity.X > velMax)
+            {
+                //...and npc is not falling or jumping, slow down x velocity.
+                if (npc.velocity.Y == 0f) { npc.velocity *= 0.8f; }
+            }
+            else
+            if (npc.velocity.X < velMax && npc.direction == 1) //handles movement to the right. Clamps at velMaxX.
+            {
+                npc.velocity.X += moveInterval;
+                if (npc.velocity.X > velMax) { npc.velocity.X = velMax; }
+            }
+            else
+            if (npc.velocity.X > -velMax && npc.direction == -1) //handles movement to the left. Clamps at -velMaxX.
+            {
+                npc.velocity.X -= moveInterval;
+                if (npc.velocity.X < -velMax) { npc.velocity.X = -velMax; }
+            }
+            WalkupHalfBricks(npc);
+            //if there's a solid floor under us...
+            if (HitTileOnSide(npc, 3))
+            {
+                //if the npc's velocity is going in the same direction as the npc's direction...
+                if (npc.velocity.X < 0f && npc.direction == -1 || npc.velocity.X > 0f && npc.direction == 1)
+                {
+                    //...attempt to jump if needed.
+                    Vector2 newVec = AttemptJumpToPosition(npc.position, npc.velocity,TargetPosition, npc.width, npc.height, npc.direction, npc.directionY, maxJumpTilesX, maxJumpTilesY, velMax, jumpUpPlatforms, ignoreJumpTiles);
+                    if (!npc.noTileCollide)
+                    {
+                        newVec = Collision.TileCollision(npc.position, newVec, npc.width, npc.height);
+                        Vector4 slopeVec = Collision.SlopeCollision(npc.position, newVec, npc.width, npc.height);
+                        Vector2 slopeVel = new(slopeVec.Z, slopeVec.W);
+                        if (onTileCollide != null && npc.velocity != slopeVel)
+                        {
+                            onTileCollide(npc.velocity.X != slopeVel.X, npc.velocity.Y != slopeVel.Y, npc.velocity, slopeVel);
+                        }
+
+                        npc.position = new Vector2(slopeVec.X, slopeVec.Y);
+                        npc.velocity = slopeVel;
+                    }
+                    if (npc.velocity != newVec) { npc.velocity = newVec; npc.netUpdate = true; }
+                }
+            }
+        }
 
         /*
          * A cleaned up copy of Demon Eye AI. (Flier AI)
@@ -5451,6 +5509,99 @@ namespace Macrocosm.Common.Utils
                     if (directionY < 0 && (!Main.tile[tileX, tileY + 1].HasUnactuatedTile || !Main.tileSolid[Main.tile[tileX, tileY + 1].TileType]) && (!Main.tile[tileX + direction, tileY + 1].HasUnactuatedTile || !Main.tileSolid[Main.tile[tileX + direction, tileY + 1].TileType]))
                     {
                         if (!Main.tile[tileX + direction, tileY + 2].HasUnactuatedTile || !Main.tileSolid[Main.tile[tileX, tileY + 2].TileType] || target == null || target.Center.Y + (target.height * 0.25f) < tileY * 16f)
+                        {
+                            newVelocity.Y = -8f;
+                            newVelocity.X *= 1.5f * (1f / maxSpeedX);
+                            if (tileX <= tileItX)
+                            {
+                                for (int x = tileX; x < tileItX; x++)
+                                {
+                                    Tile tile = Framing.GetTileSafely(x, tileY + 1);
+                                    if (x != tileX && !tile.HasUnactuatedTile)
+                                    {
+                                        newVelocity.Y -= 0.0325f;
+                                        newVelocity.X += direction * 0.255f;
+                                    }
+                                }
+                            }
+                            else
+                            if (tileX > tileItX)
+                            {
+                                for (int x = tileItX; x < tileX; x++)
+                                {
+                                    Tile tile = Framing.GetTileSafely(x, tileY + 1);
+                                    if (x != tileItX && !tile.HasUnactuatedTile)
+                                    {
+                                        newVelocity.Y -= 0.0325f;
+                                        newVelocity.X += direction * 0.255f;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                return newVelocity;
+            }
+            catch (Exception e)
+            {
+                Utility.LogFancy("ATTEMPT JUMP ERROR:", e);
+                return velocity;
+            }
+        }
+        public static Vector2 AttemptJumpToPosition(Vector2 position, Vector2 velocity, Vector2 target, int width, int height, int direction, float directionY = 0, int tileDistX = 3, int tileDistY = 4, float maxSpeedX = 1f, bool jumpUpPlatforms = false, bool ignoreTiles = false)
+        {
+            try
+            {
+                tileDistX -= 2;
+                Vector2 newVelocity = velocity;
+                int tileX = Math.Max(10, Math.Min(Main.maxTilesX - 10, (int)((position.X + (width * 0.5f) + (((width * 0.5f) + 8f) * direction)) / 16f)));
+                int tileY = Math.Max(10, Math.Min(Main.maxTilesY - 10, (int)((position.Y + height - 15f) / 16f)));
+                int tileItX = Math.Max(10, Math.Min(Main.maxTilesX - 10, tileX + (direction * tileDistX)));
+                int tileItY = Math.Max(10, Math.Min(Main.maxTilesY - 10, tileY - tileDistY));
+                int lastY = tileY;
+                int tileHeight = (int)(height / 16f);
+                if (height > tileHeight * 16) { tileHeight += 1; }
+
+                Rectangle hitbox = new((int)position.X, (int)position.Y, width, height);
+                //attempt to jump over walls if possible.
+
+                if (ignoreTiles && Math.Abs(position.X + (width * 0.5f) - target.X) < width + 120)
+                {
+                    float dist = (int)Math.Abs(position.Y + (height * 0.5f) - target.Y) / 16;
+                    if (dist < tileDistY + 2) { newVelocity.Y = -8f + (dist * -0.5f); } // dist +=2; newVelocity.Y = -(5f + dist * (dist > 3 ? 1f - ((dist - 2f) * 0.0525f) : 1f)); }
+                }
+                if (newVelocity.Y == velocity.Y)
+                {
+                    for (int y = tileY; y >= tileItY; y--)
+                    {
+                        Tile tile = Framing.GetTileSafely(tileX, y);
+                        Tile tileNear = Main.tile[Math.Min(Main.maxTilesX, tileX - direction), y];
+                        if (tile.HasUnactuatedTile && (y != tileY || tile.Slope == 0) && Main.tileSolid[tile.TileType] && (jumpUpPlatforms || !Main.tileSolidTop[tile.TileType]))
+                        {
+                            if (!Main.tileSolidTop[tile.TileType])
+                            {
+                                Rectangle tileHitbox = new(tileX * 16, y * 16, 16, 16)
+                                {
+                                    Y = hitbox.Y
+                                };
+                                if (tileHitbox.Intersects(hitbox)) { newVelocity = velocity; break; }
+                            }
+                            if (tileNear.HasUnactuatedTile && Main.tileSolid[tileNear.TileType] && !Main.tileSolidTop[tileNear.TileType]) { newVelocity = velocity; break; }
+                            if ( y * 16 < target.Y) { continue; }
+                            lastY = y;
+                            newVelocity.Y = -(5f + ((tileY - y) * (tileY - y > 3 ? 1f - ((tileY - y - 2) * 0.0525f) : 1f)));
+                        }
+                        else
+                        if (lastY - y >= tileHeight) { break; }
+                    }
+                }
+                // if the npc isn't jumping already...
+                if (newVelocity.Y == velocity.Y)
+                {
+                    //...and there's a gap in front of the npc, attempt to jump across it.
+                    if (directionY < 0 && (!Main.tile[tileX, tileY + 1].HasUnactuatedTile || !Main.tileSolid[Main.tile[tileX, tileY + 1].TileType]) && (!Main.tile[tileX + direction, tileY + 1].HasUnactuatedTile || !Main.tileSolid[Main.tile[tileX + direction, tileY + 1].TileType]))
+                    {
+                        if (!Main.tile[tileX + direction, tileY + 2].HasUnactuatedTile || !Main.tileSolid[Main.tile[tileX, tileY + 2].TileType] || target == null || target.Y< tileY * 16f)
                         {
                             newVelocity.Y = -8f;
                             newVelocity.X *= 1.5f * (1f / maxSpeedX);
