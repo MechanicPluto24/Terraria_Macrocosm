@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.Events;
 using Terraria.Graphics.Effects;
@@ -143,14 +144,16 @@ namespace Macrocosm.Content.Subworlds
 
             for (int l = 1; l <= (int)meteorTimePass; l++)
             {
-                float frequency = 2f * MeteorBoost;
+                float baseFrequency = 3f;
+                float frequency = baseFrequency * MeteorBoost;
 
                 if (Main.rand.Next(8000) >= frequency)
                     continue;
 
-                Vector2 position = new((Main.rand.Next(Main.maxTilesX - 50) + 100) * 16, Main.rand.Next((int)((double)Main.maxTilesY * 0.05)) * 16);
+                Vector2 position = new((Main.rand.Next(Main.maxTilesX - 50) + 100) * 16, Main.rand.Next((int)(Main.maxTilesY * 0.05)) * 16);
 
-                // 3/4 chance to spawn close to a player 
+                // 3/4 chance to spawn close to a an active (not afk) player on the surface.
+                // In vanilla, this only happens with a 1/15 chance, only in expert mode
                 if (!Main.rand.NextBool(4))
                 {
                     closestPlayer = Player.FindClosest(position, 1, 1);
@@ -173,6 +176,8 @@ namespace Macrocosm.Content.Subworlds
                     speedY *= mult;
 
                     WeightedRandom<int> choice = new(Main.rand);
+                    choice.Add(ProjectileID.FallingStar, 30.0);
+
                     choice.Add(ModContent.ProjectileType<MoonMeteorSmall>(), 50.0);
                     choice.Add(ModContent.ProjectileType<MoonMeteorMedium>(), 33.0);
                     choice.Add(ModContent.ProjectileType<MoonMeteorLarge>(), 12.0);
@@ -182,20 +187,20 @@ namespace Macrocosm.Content.Subworlds
                     choice.Add(ModContent.ProjectileType<StardustMeteor>(), 2.0);
                     choice.Add(ModContent.ProjectileType<VortexMeteor>(), 2.0);
 
-                    var source = Main.player[closestPlayer].GetSource_Misc("Meteor");
 
                     int type = choice;
-                    int damage;
+                    var source = type != ProjectileID.FallingStar ? new EntitySource_Misc("Meteor") : new EntitySource_Misc("FallingStar");
+                    int damage = 1500;
 
-                    if (type == ModContent.ProjectileType<MoonMeteorSmall>())
+                    if (type == ProjectileID.FallingStar)
+                        damage = 720;
+                    else if (type == ModContent.ProjectileType<MoonMeteorSmall>())
                         damage = 500;
                     else if (type == ModContent.ProjectileType<MoonMeteorMedium>())
                         damage = 1000;
                     else if (type == ModContent.ProjectileType<MoonMeteorLarge>())
                         damage = 1500;
-                    else
-                        damage = 2000;
-
+  
                     Projectile.NewProjectile(source, position.X, position.Y, speedX, speedY, type, damage, 0f); break;
                 }
             }

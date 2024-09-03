@@ -47,7 +47,8 @@ Clyder8 - Programmer \
 Dandy - Spriter \
 EduaRRdo - Spriter \
 Nicola - Artist \
-Nurby - Programmer
+Nurby - Programmer \
+Yttrium - Tester
 
 ### Special thanks
 4mbr0s3, absoluteAquarian, ADVERSE KC, Almarduk, Delly, Dracos_V2, Draedon_Gaming, DrakonVörðr, Kiraa, Kirito, Master-Bit, Snowfall-The-Cat, Thanatos

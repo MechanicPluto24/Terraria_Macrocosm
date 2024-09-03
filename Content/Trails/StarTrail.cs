@@ -16,7 +16,7 @@ namespace Macrocosm.Content.Trails
             .UseImage1(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "RocketExhaustTrail1"))
             .UseImage2(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "RocketExhaustTrail2"));
 
-        public override float Saturation => -1f;
+        public override float Saturation => -2f;
 
         public override Color TrailColors(float progressOnStrip)
         {
@@ -25,7 +25,7 @@ namespace Macrocosm.Content.Trails
 
         public override float TrailWidths(float progressOnStrip)
         {
-            return 40;
+            return 60;
         }
     }
 }

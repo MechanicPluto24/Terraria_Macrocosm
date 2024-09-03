@@ -1,27 +1,28 @@
 using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Particles;
 using Macrocosm.Content.Trails;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Newtonsoft.Json.Linq;
 using System;
 using Terraria;
+using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-    // I GIVE UP WITH THIS I'M JUST MAKING TWO DIFFERENT SUBCLASSES AT THIS POINT.
-    public class StarDestroyerStar : ModProjectile
+    public abstract class StarDestroyerStar : ModProjectile
     {
+        protected int timer = 0;
+        protected Color color = new(0, 0, 0);
+
         public override void SetStaticDefaults()
         {
             ProjectileID.Sets.TrailCacheLength[Type] = 15;
             ProjectileID.Sets.TrailingMode[Type] = 3;
         }
 
-        public Color colour = new Color(0, 0, 0);
         public override void SetDefaults()
         {
             Projectile.width = 24;
@@ -32,19 +33,25 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             Projectile.ignoreWater = true;
             Projectile.penetrate = 1;
             Projectile.timeLeft = 600;
-            ProjectileID.Sets.TrailCacheLength[Type] = 2;
+            Projectile.alpha = 255;
         }
     }
 
-    public class StarDestroyerStarBlue : StarDestroyerStar
+    public class StarDestroyerStar_Blue : StarDestroyerStar
     {
+        public override string Texture => base.Texture.Replace("_Blue", "");
+
+        public override void SetDefaults()
+        {
+            base.SetDefaults();
+            Projectile.SetTrail<StarTrail>();
+        }
+
         public NPC FindClosestNPC(float maxDetectDistance)
-        {//example mod
+        {
+            //example mod
             NPC closestNPC = null;
-
-
             float sqrMaxDetectDistance = maxDetectDistance * maxDetectDistance;
-
 
             for (int k = 0; k < Main.maxNPCs; k++)
             {
@@ -52,7 +59,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
                 if (target.CanBeChasedBy())
                 {
-
                     float sqrDistanceToTarget = Vector2.DistanceSquared(target.Center, Projectile.Center);
 
                     if (sqrDistanceToTarget < sqrMaxDetectDistance)
@@ -65,39 +71,36 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
             return closestNPC;
         }
-        int Timer = 0;
-        public override string Texture => "Macrocosm/Content/Projectiles/Friendly/Ranged/StarDestroyerStar";
+
         public override void AI()
         {
-            Projectile.rotation += 0.5f;
-            colour = new Color(100, 100, 255);
-            Projectile.SetTrail<StarTrail>();
-            Projectile.rotation = Projectile.velocity.ToRotation();
-            NPC closestNPC = FindClosestNPC(9000f);
-            if (closestNPC == null)
-            {
+            Projectile.rotation += 0.25f;
+            color = new Color(100, 100, 255);
 
-                return;
-            }
-            else
+            if (Projectile.alpha > 0)
+                Projectile.alpha -= 15;
+
+            NPC closestNPC = FindClosestNPC(9000f);
+
+            if (closestNPC != null)
             {
                 Vector2 vel = (closestNPC.Center - Projectile.Center).SafeNormalize(Vector2.UnitX);
                 Projectile.velocity = Projectile.velocity + (vel * 0.9f);
                 Projectile.velocity = (Projectile.velocity).SafeNormalize(Vector2.UnitX);
                 Projectile.velocity *= 30f;
             }
-            Timer++;
-            if (Timer % 6 == 0)
+
+            timer++;
+            if (timer % Main.rand.Next(4, 7) == 0)
             {
-                Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, -Projectile.velocity.RotatedByRandom(Math.PI * 2) * 0.3f, 16);//16 and 17 are the star gores.
-                Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, -Projectile.velocity.RotatedByRandom(Math.PI * 2) * 0.3f, 17);
+                // 16 and 17 are the star gores
+                Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, -Projectile.velocity.RotatedByRandom(0.4) * 0.1f, 17);
             }
         }
 
         private SpriteBatchState state;
         public override bool PreDraw(ref Color lightColor)
         {
-            ProjectileID.Sets.TrailCacheLength[Type] = 15;
             Texture2D tex = TextureAssets.Projectile[Type].Value;
             Rectangle sourceRect = tex.Frame(1, Main.projFrames[Type], frameY: Projectile.frame);
             Vector2 origin = Projectile.Size / 2f;
@@ -107,44 +110,76 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             Projectile.GetTrail().Draw(Projectile.Size / 2f);
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);
-            Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition, sourceRect, (Color.White), Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
-            Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition, sourceRect, (colour) * 0.4f, Projectile.rotation, origin, Projectile.scale * 1.8f, SpriteEffects.None, 0);
+
+            Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition, sourceRect, (Color.White) * Projectile.Opacity, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
+            Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition, sourceRect, (color) * 0.4f * Projectile.Opacity, Projectile.rotation, origin, Projectile.scale * 1.8f, SpriteEffects.None, 0);
+
+            Vector2 spinningPoint = new Vector2(0f, -4f);
+            Texture2D aura = TextureAssets.Extra[91].Value;
+            Vector2 auraOrigin = new Vector2((float)aura.Width / 2f, 10f);
+            Vector2 drawPosition = Projectile.Center + Projectile.velocity - Projectile.velocity * 0.5f;
+            Vector2 offset = new Vector2(0f, Projectile.gfxOffY);
+            float rotation = (float)Main.timeForVisualEffects / 60f;
+            float scale = 0f;
+            Color auraColor = (color * 0.4f).WithAlpha(0) * Projectile.Opacity;
+            float angle = Projectile.velocity.ToRotation();
+            Main.EntitySpriteDraw(aura, drawPosition - Main.screenPosition + offset + spinningPoint.RotatedBy((float)Math.PI * 2f * rotation), null, auraColor, angle + (float)Math.PI / 2f, auraOrigin, 1.5f + scale, SpriteEffects.None);
+            Main.EntitySpriteDraw(aura, drawPosition - Main.screenPosition + offset + spinningPoint.RotatedBy((float)Math.PI * 2f * rotation + (float)Math.PI * 2f / 3f), null, auraColor, angle + (float)Math.PI / 2f, auraOrigin, 1.1f + scale, SpriteEffects.None);
+            Main.EntitySpriteDraw(aura, drawPosition - Main.screenPosition + offset + spinningPoint.RotatedBy((float)Math.PI * 2f * rotation + 4.1887903f), null, auraColor, angle + (float)Math.PI / 2f, auraOrigin, 1.3f + scale, SpriteEffects.None);
+            
             return false;
         }
         public override void OnKill(int timeLeft)
         {
-
-            for (int i = 0; i < 10; i++)
+            SoundEngine.PlaySound(SoundID.Item10, Projectile.position);
+            for (int i = 0; i < 14; i++)
             {
-                Vector2 velocity = Main.rand.NextVector2Circular(5, 5);
-                Dust dust = Dust.NewDustPerfect(Projectile.position, 15, velocity, Scale: Main.rand.NextFloat(1f, 1.8f));
-                dust.noGravity = true;
+                Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Enchanted_Pink, Projectile.velocity.X * 0.1f, Projectile.velocity.Y * 0.1f, 150, default(Color), 0.8f);
+            }
+
+            for (float i = 0f; i < 2f; i += 0.125f)
+            {
+                Dust.NewDustPerfect(Projectile.Center, 278, Vector2.UnitY.RotatedBy(i * ((float)Math.PI * 2f) + Main.rand.NextFloat() * 0.5f) * (4f + Main.rand.NextFloat() * 4f), 150, Color.CornflowerBlue).noGravity = true;
+            }
+
+            for (float i = 0f; i < 2f; i += 0.125f)
+            {
+                Dust.NewDustPerfect(Projectile.Center, 278, Vector2.UnitY.RotatedBy(i * ((float)Math.PI * 2f) + Main.rand.NextFloat() * 0.5f) * (2f + Main.rand.NextFloat() * 3f), 150, Color.Gold).noGravity = true;
             }
         }
     }
-    public class StarDestroyerStarYellow : StarDestroyerStar
+    public class StarDestroyerStar_Yellow : StarDestroyerStar
     {
-        int Timer = 0;
-        public override string Texture => "Macrocosm/Content/Projectiles/Friendly/Ranged/StarDestroyerStar";
+        public override string Texture => base.Texture.Replace("_Yellow", "");
+
+        public override void SetDefaults()
+        {
+            base.SetDefaults();
+
+            Projectile.CritChance += 2;
+            Projectile.SetTrail<StarTrailAlt>();
+        }
+
         public override void AI()
         {
-            Projectile.rotation += 0.5f;
-            colour = new Color(255, 180, 25);
-            Projectile.SetTrail<StarTrailAlt>();
-            Projectile.rotation = Projectile.velocity.ToRotation();
-            Projectile.CritChance += 2;
-            Timer++;
-            if (Timer % 6 == 0)
+            Projectile.rotation += 0.25f;
+            color = new Color(255, 180, 25);
+
+            if (Projectile.alpha > 0)
+                Projectile.alpha -= 15;
+
+            timer++;
+
+            if (timer % Main.rand.Next(4, 7) == 0)
             {
-                Gore.NewGore(Projectile.GetSource_Death(), Projectile.Center, -Projectile.velocity.RotatedByRandom(Math.PI * 2) * 0.3f, 16);//16 and 17 are the star gores.
-                Gore.NewGore(Projectile.GetSource_Death(), Projectile.Center, Projectile.velocity.RotatedByRandom(Math.PI * 2) * 0.3f, 17);
+                // 16 and 17 are the star gores
+                Gore.NewGore(Projectile.GetSource_Death(), Projectile.Center, -Projectile.velocity.RotatedByRandom(0.4) * 0.1f, 16); 
             }
         }
 
         private SpriteBatchState state;
         public override bool PreDraw(ref Color lightColor)
         {
-            ProjectileID.Sets.TrailCacheLength[Type] = 15;
             Texture2D tex = TextureAssets.Projectile[Type].Value;
             Rectangle sourceRect = tex.Frame(1, Main.projFrames[Type], frameY: Projectile.frame);
             Vector2 origin = Projectile.Size / 2f;
@@ -154,27 +189,42 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             Projectile.GetTrail().Draw(Projectile.Size / 2f);
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);
-            Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition, sourceRect, (Color.White), Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
-            Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition, sourceRect, (colour) * 0.4f, Projectile.rotation, origin, Projectile.scale * 1.8f, SpriteEffects.None, 0);
+            Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition, sourceRect, (Color.White) * Projectile.Opacity, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
+            Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition, sourceRect, (color) * 0.4f * Projectile.Opacity, Projectile.rotation, origin, Projectile.scale * 1.8f, SpriteEffects.None, 0);
+
+            Vector2 spinningPoint = new Vector2(0f, -4f);
+            Texture2D aura = TextureAssets.Extra[91].Value;
+            Vector2 auraOrigin = new Vector2((float)aura.Width / 2f, 10f);
+            Vector2 drawPosition = Projectile.Center + Projectile.velocity - Projectile.velocity * 0.5f;
+            Vector2 offset = new Vector2(0f, Projectile.gfxOffY);
+            float rotation = (float)Main.timeForVisualEffects / 60f;
+            float scale = 0f;
+            Color auraColor = (color * 0.4f).WithAlpha(0) * Projectile.Opacity;
+            float angle = Projectile.velocity.ToRotation();
+            Main.EntitySpriteDraw(aura, drawPosition - Main.screenPosition + offset + spinningPoint.RotatedBy((float)Math.PI * 2f * rotation), null, auraColor, angle + (float)Math.PI / 2f, auraOrigin, 1.5f + scale, SpriteEffects.None);
+            Main.EntitySpriteDraw(aura, drawPosition - Main.screenPosition + offset + spinningPoint.RotatedBy((float)Math.PI * 2f * rotation + (float)Math.PI * 2f / 3f), null, auraColor, angle + (float)Math.PI / 2f, auraOrigin, 1.1f + scale, SpriteEffects.None);
+            Main.EntitySpriteDraw(aura, drawPosition - Main.screenPosition + offset + spinningPoint.RotatedBy((float)Math.PI * 2f * rotation + 4.1887903f), null, auraColor, angle + (float)Math.PI / 2f, auraOrigin, 1.3f + scale, SpriteEffects.None);
+
             return false;
         }
+
         public override void OnKill(int timeLeft)
         {
-
-            for (int i = 0; i < 10; i++)
+            SoundEngine.PlaySound(SoundID.Item10, Projectile.position);
+            for (int i = 0; i < 14; i++)
             {
-                Vector2 velocity = Main.rand.NextVector2Circular(5, 5);
-                Dust dust = Dust.NewDustPerfect(Projectile.position, 259, velocity, Scale: Main.rand.NextFloat(1f, 1.8f));
-                dust.noGravity = true;
+                Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Enchanted_Pink, Projectile.velocity.X * 0.1f, Projectile.velocity.Y * 0.1f, 150, default(Color), 0.8f);
             }
-            var explosion = Particle.CreateParticle<TintableExplosion>(Explosion =>
+
+            for (float i = 0f; i < 2f; i += 0.125f)
             {
-                Explosion.Position = Projectile.Center;
-                Explosion.DrawColor = colour.WithOpacity(0.8f);
-                Explosion.Scale = 1f;
-                Explosion.NumberOfInnerReplicas = 5;
-                Explosion.ReplicaScalingFactor = 0.25f;
-            });
+                Dust.NewDustPerfect(Projectile.Center, 278, Vector2.UnitY.RotatedBy(i * ((float)Math.PI * 2f) + Main.rand.NextFloat() * 0.5f) * (4f + Main.rand.NextFloat() * 4f), 150, Color.CornflowerBlue).noGravity = true;
+            }
+
+            for (float i = 0f; i < 2f; i += 0.125f)
+            {
+                Dust.NewDustPerfect(Projectile.Center, 278, Vector2.UnitY.RotatedBy(i * ((float)Math.PI * 2f) + Main.rand.NextFloat() * 0.5f) * (2f + Main.rand.NextFloat() * 3f), 150, Color.Gold).noGravity = true;
+            }
         }
     }
 
