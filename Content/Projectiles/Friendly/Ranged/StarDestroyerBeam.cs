@@ -28,24 +28,28 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             Projectile.penetrate = 4;
             Projectile.timeLeft = 600;
             Projectile.scale = 0.3f;
+            Projectile.alpha = 255;
 
             ProjectileID.Sets.TrailCacheLength[Type] = 2;
+
             if (Main.rand.NextBool() == true)
                 colour = new Color(100, 100, 255, 0);
             else
                 colour = new Color(255, 180, 25, 0);
-
-
         }
+
         public override void AI()
         {
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.ToRadians(90);
+
+            if(Projectile.alpha > 0)
+                Projectile.alpha -= 15;
         }
+
         private SpriteBatchState state;
         public override bool PreDraw(ref Color lightColor)
         {
-
-            Texture2D tex = TextureAssets.Projectile[Type].Value;
+            Texture2D tex = TextureAssets.Extra[ExtrasID.SharpTears].Value;
             Rectangle sourceRect = tex.Frame(1, Main.projFrames[Type], frameY: Projectile.frame);
             Vector2 origin = Projectile.Size / 2f;
             state.SaveState(Main.spriteBatch);
@@ -54,16 +58,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);
 
-            Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition, sourceRect, (colour), Projectile.rotation, tex.Size() / 2, Projectile.scale, SpriteEffects.None, 0);
+            Main.EntitySpriteDraw(tex, Projectile.Center - Main.screenPosition, sourceRect, (colour) * Projectile.Opacity, Projectile.rotation, tex.Size() / 2, new Vector2(Projectile.scale * 2f, Projectile.scale * 8f), SpriteEffects.None, 0);
             return false;
         }
-
-
-
-
     }
-
-
-
 }
 

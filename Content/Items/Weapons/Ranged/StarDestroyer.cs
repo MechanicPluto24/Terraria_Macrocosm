@@ -1,4 +1,4 @@
-using Macrocosm.Common.Utils;
+using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
@@ -8,14 +8,16 @@ using Terraria.ID;
 using Terraria.ModLoader;
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
-    public class StarDestroyer : ModItem
+    public class StarDestroyer : GunHeldProjectileItem
     {
+        private int starType = 0;
+
         public override void SetStaticDefaults()
         {
             ItemID.Sets.ItemsThatAllowRepeatedRightClick[Type] = true;
         }
 
-        public override void SetDefaults()
+        public override void SetDefaultsHeldProjectile()
         {
             Item.damage = 300;
             Item.knockBack = 4;
@@ -35,43 +37,33 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             Item.autoReuse = true;
         }
 
-        public override bool AltFunctionUse(Player player) => true;
-
-        public override bool CanConsumeAmmo(Item ammo, Player player)
+        public override GunHeldProjectileData GunHeldProjectileData => new()
         {
-            if (!player.AltFunction())
-                Item.useAmmo = AmmoID.FallenStar;
-            else
-                Item.useAmmo = AmmoID.Bullet;
-            return true;
-        }
+            GunBarrelPosition = new Vector2(26f, 7f),
+            CenterYOffset = 9f,
+            MuzzleOffset = 0f,
+            RecoilDiminish = 0.9f
+        };
 
-        float StarType = 0;
-
-        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback, GunHeldProjectile gunHeldProjectile)
         {
-            if (!player.AltFunction())
+            switch (starType)
             {
-                if (StarType == 0f)
-                    Projectile.NewProjectileDirect(source, position, velocity.RotatedByRandom(0.4), ModContent.ProjectileType<StarDestroyerStarBlue>(), damage, knockback, player.whoAmI);
-                if (StarType == 1f)
-                    Projectile.NewProjectileDirect(source, position, velocity.RotatedByRandom(0.4), ModContent.ProjectileType<StarDestroyerStarYellow>(), damage, knockback, player.whoAmI);
-                StarType++;
-                if (StarType > 1f)
-                    StarType = 0f;
+                case 0:
+                    Projectile.NewProjectileDirect(source, position, velocity.RotatedByRandom(0.1) * 1.2f, ModContent.ProjectileType<StarDestroyerStar_Blue>(), damage, knockback, player.whoAmI);
+                    break;
+                case 1:
+                    Projectile.NewProjectileDirect(source, position, velocity.RotatedByRandom(0.1) * 1.2f, ModContent.ProjectileType<StarDestroyerStar_Yellow>(), damage, knockback, player.whoAmI);
+                    break;
             }
-            else
-            {
-                Projectile.NewProjectileDirect(source, position, velocity.RotatedByRandom(0.001) * Main.rand.NextFloat(0.5f, 2.0f), ModContent.ProjectileType<StarDestroyerBeam>(), damage / 2, knockback, player.whoAmI);
-                Projectile.NewProjectileDirect(source, position, velocity.RotatedByRandom(0.001) * Main.rand.NextFloat(0.5f, 2.0f), ModContent.ProjectileType<StarDestroyerBeam>(), damage / 2, knockback, player.whoAmI);
-                Projectile.NewProjectileDirect(source, position, velocity.RotatedByRandom(0.001) * Main.rand.NextFloat(0.5f, 2.0f), ModContent.ProjectileType<StarDestroyerBeam>(), damage / 2, knockback, player.whoAmI);
-                Projectile.NewProjectileDirect(source, position, velocity.RotatedByRandom(0.001) * Main.rand.NextFloat(0.5f, 2.0f), ModContent.ProjectileType<StarDestroyerBeam>(), damage / 2, knockback, player.whoAmI);
-            }
+
+            if (starType++ > 1)
+                starType = 0;
+
+            for (int i = 0; i < Main.rand.Next(1, 3 + 1); i++)
+                Projectile.NewProjectileDirect(source, position, velocity.RotatedByRandom(0.1) * Main.rand.NextFloat(0.9f, 1.8f), ModContent.ProjectileType<StarDestroyerBeam>(), damage / 2, knockback, player.whoAmI);
+
             return false;
-        }
-
-        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
-        {
         }
     }
 }

@@ -84,7 +84,7 @@ namespace Macrocosm.Content.Machines
                 {
                     if (entry is IBlacklistable blacklistable)
                     {
-                        if (dropRateInfo.itemId == blacklistable.ItemID && blacklistable.Blacklisted)
+                        if (dropRateInfo.itemId == blacklistable.ItemID && (OreExcavator.BlacklistedItems.Contains(dropRateInfo.itemId) || blacklistable.Blacklisted))
                             itemDropInfo.ToggleBlacklisted();
                     }
                 }
@@ -123,7 +123,6 @@ namespace Macrocosm.Content.Machines
         {
             base.Update(gameTime);
             Inventory.ActiveInventory = OreExcavator.Inventory;
-
         }
     }
 }
