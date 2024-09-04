@@ -23,6 +23,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         }
 
         private const int spawnTimeLeft = 45; //90
+        private DianiteForkTrail trail;
 
         public override void SetDefaults()
         {
@@ -34,8 +35,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Projectile.ignoreWater = true;
             Projectile.penetrate = 1;
             Projectile.timeLeft = 90;
-
-            Projectile.SetTrail<DianiteForkTrail>();
+            trail = new();
         }
 
         public enum ActionState { Orbit, Float, Home }
@@ -256,8 +256,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
-            Projectile.GetTrail().Opacity = TimeLeftProgress;
-            Projectile.GetTrail().Draw(Projectile.Size / 2f);
+            trail.Opacity = TimeLeftProgress;
+            trail.Draw(Projectile, Projectile.Size / 2f);
 
             Color glowColor = new Color(248, 137, 0).WithOpacity(Projectile.Opacity);
             int glowTrailCount = (int)(ProjectileID.Sets.TrailCacheLength[Type] * 0.5f * TimeLeftProgress);

@@ -25,20 +25,21 @@ namespace Macrocosm.Common.Hooks
             On_Player.KillMe -= On_Player_KillMe;
         }
 
-        private void On_Player_KillMe(On_Player.orig_KillMe orig, Player self, PlayerDeathReason damageSource, double dmg, int hitDirection, bool pvp)
+        private void On_Player_KillMe(On_Player.orig_KillMe orig, Player player, PlayerDeathReason damageSource, double dmg, int hitDirection, bool pvp)
         {
             // 8 is the Burning "other" death message type.
             // Bad life regen (a.k.a. damage over time) deaths default to this
             // Here we are overriding it to our custom reasons.
-            if(damageSource.SourceOtherIndex == 8)
+            // Only overrided on the local client, will be synced and message will be broadcasted by the server 
+            if (damageSource.SourceOtherIndex == 8 && player.whoAmI == Main.myPlayer)
             {
-                if (self.GetModPlayer<IrradiationPlayer>().IrradiationLevel > 0f) 
-                    damageSource.SourceCustomReason = IrradiationPlayer.DeathMessages.GetRandom().Format(self.name);
-                else if (self.HasBuff(ModContent.BuffType<Depressurized>()))
-                    damageSource.SourceCustomReason = Depressurized.DeathMessages.GetRandom().Format(self.name);
+                if (player.GetModPlayer<IrradiationPlayer>().IrradiationLevel > 0f) 
+                    damageSource.SourceCustomReason = IrradiationPlayer.DeathMessages.GetRandom().Format(player.name);
+                else if (player.HasBuff(ModContent.BuffType<Depressurized>()))
+                    damageSource.SourceCustomReason = Depressurized.DeathMessages.GetRandom().Format(player.name);
             }
 
-            orig(self, damageSource, dmg, hitDirection, pvp);
+            orig(player, damageSource, dmg, hitDirection, pvp);
         }
     }
 }

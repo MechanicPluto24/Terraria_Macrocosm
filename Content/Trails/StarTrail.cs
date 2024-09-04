@@ -9,6 +9,8 @@ namespace Macrocosm.Content.Trails
 {
     public class StarTrail : VertexTrail
     {
+        public Color Color { get; set; } = new Color(100, 100, 255, 0);
+
         public override MiscShaderData TrailShader => new MiscShaderData(Main.VertexPixelShaderRef, "MagicMissile")
             .UseProjectionMatrix(doUse: true)
             .UseSaturation(Saturation)
@@ -20,12 +22,12 @@ namespace Macrocosm.Content.Trails
 
         public override Color TrailColors(float progressOnStrip)
         {
-            return Color.Lerp(Color.Transparent, new Color(100, 100, 255, 0) * 0.8f, progressOnStrip * 1 / progressOnStrip);
+            return Color.Lerp(Color.Transparent, Color * 0.8f, progressOnStrip * 1 / progressOnStrip);
         }
 
         public override float TrailWidths(float progressOnStrip)
         {
-            return 60;
+            return 45;
         }
     }
 }

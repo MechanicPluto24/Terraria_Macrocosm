@@ -2,7 +2,7 @@ Meteor: {
 	Message0: "{0} was flattened"
 	Message1: "{0} turned into a pancake"
 	Message2: "{0} got a taste of space"
-	Message3: "{0} was smote by the Moon Lord"
+	Message3: Is it a meteor or is it an asteroid? {0} found out the hard way!
 	Message4: "{0} was star-struck.. literally!"
 	Message5: "{0}'s last sight was truly out of this world"
 	Message6: Stars in the sky, and one on {0}
@@ -14,7 +14,6 @@ Meteor: {
 	Message12: "{0} wanted to touch the stars"
 	Message13: "{0} had a smashing time"
 	Message14: "{0} now knows how the dinosaurs felt like"
-	Message15: Is it a meteor or is it an asteroid? {0} found out the hard way!
 }
 
 Depressurized: {

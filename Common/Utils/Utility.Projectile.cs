@@ -14,22 +14,6 @@ namespace Macrocosm.Common.Utils
 {
     public static partial class Utility
     {
-        public static void SetTrail<T>(this Projectile projectile) where T : VertexTrail
-        {
-            if (projectile.TryGetGlobalProjectile(out TrailGlobalProjectile globalProj))
-            {
-                globalProj.Trail = Activator.CreateInstance<T>();
-                globalProj.Trail.Owner = projectile;
-            }
-        }
-
-        public static VertexTrail GetTrail(this Projectile projectile) => projectile.GetGlobalProjectile<TrailGlobalProjectile>().Trail;
-        public static bool TryGetTrail(this Projectile projectile, out VertexTrail trail)
-        {
-            trail = projectile.GetGlobalProjectile<TrailGlobalProjectile>().Trail;
-            return trail is not null;
-        }
-
         public static void Explode(this Projectile projectile, float blastRadius, int timeLeft = 1)
         {
             projectile.tileCollide = false;

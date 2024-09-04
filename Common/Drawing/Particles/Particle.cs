@@ -215,7 +215,6 @@ namespace Macrocosm.Common.Drawing.Particles
         /// <param name="lightColor"> The light color at the particle's position </param>
         public virtual bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
-            Trail?.Draw();
             return true;
         }
 
@@ -273,23 +272,7 @@ namespace Macrocosm.Common.Drawing.Particles
 
         #endregion
 
-        // TODO: This could use some touching up, maybe make trails a component or something
         #region Trails
-        public void DrawMagicPixelTrail(Vector2 rotatableOffsetFromCenter, float startWidth, float endWidth, Color startColor, Color? endColor = null)
-                => Utility.DrawMagicPixelTrail(Size / 2f, OldPositions, OldRotations, rotatableOffsetFromCenter, startWidth, endWidth, startColor, endColor);
-
-        /// <summary> The <see cref="Trails.VertexTrail"> VertexTrail </see> object bound to this <c>Particle</c> </summary>
-        public VertexTrail Trail { get; private set; }
-        public VertexTrail GetTrail() => Trail;
-
-        /// <summary> Binds the <c>Particle</c>'s trail to the specified <see cref="Trails.VertexTrail"> Trail </see> type </summary>
-        /// <typeparam name="T"> The trail type </typeparam>
-        public void SetTrail<T>() where T : VertexTrail
-        {
-            Trail = Activator.CreateInstance<T>();
-            Trail.Owner = this;
-        }
-
         public virtual int TrailCacheLength { get; set; } = 1;
 
         public Vector2 OldPosition => OldPositions[0];
