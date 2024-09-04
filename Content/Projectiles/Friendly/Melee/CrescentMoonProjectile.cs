@@ -47,20 +47,20 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Projectile.localNPCHitCooldown = -1;
             Projectile.usesLocalNPCImmunity = true;
         }
-       
+
         public override void AI()
         {
-            Projectile.velocity= Projectile.velocity.SafeNormalize(Vector2.UnitY);
-            Projectile.velocity*=speed;
+            Projectile.velocity = Projectile.velocity.SafeNormalize(Vector2.UnitY);
+            Projectile.velocity *= speed;
             Projectile.rotation += timer > 60 ? -0.65f : 0.65f;
-            if (((timer>45||ricochetCounter > 3)|| nothingToRicochet)&&speed>-45f)
-                speed-=2f;
-            if (speed<0f)
+
+            if (((timer > 45 || ricochetCounter > 3) || nothingToRicochet) && speed > -45f)
+                speed -= 2f;
+
+            if (speed < 0f)
             {
                 Projectile.velocity = (Main.player[Projectile.owner].Center - Projectile.Center).SafeNormalize(Vector2.UnitY);
                 Projectile.velocity *= -speed;
-               
-            
 
                 if (Projectile.Distance(Main.player[Projectile.owner].Center) < 50f)
                     Projectile.Kill();
@@ -79,7 +79,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             if (!HasNewTarget)
                 nothingToRicochet = true;
 
-        
             if (didRicochet)
             {
 

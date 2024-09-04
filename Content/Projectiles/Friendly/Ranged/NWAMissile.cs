@@ -15,6 +15,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
     public class NWAMissile : ModProjectile
     {
+        private MissileTrail trail;
+
         public ref float AI_HomingTimer => ref Projectile.ai[0];
         public ref float AI_AccelerationTimer => ref Projectile.ai[1];
         public ref float AI_InitialDecelerationTimer => ref Projectile.ai[2];
@@ -39,8 +41,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             Projectile.tileCollide = true;
             Projectile.ignoreWater = true;
             Projectile.light = .5f;
-
-            Projectile.SetTrail<MissileTrail>();
+            trail = new();
         }
 
         /// <summary> Adapted from Projectile.AI_016() for homing snowman rockets </summary>
@@ -271,10 +272,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Projectile.GetTrail().Opacity = Projectile.localAI[1];
+            trail.Opacity = Projectile.localAI[1];
 
             if (Projectile.alpha < 1 && Projectile.timeLeft > 3)
-                Projectile.GetTrail().Draw(Projectile.Size / 2f);
+                trail.Draw(Projectile, Projectile.Size / 2f);
 
             return true;
         }

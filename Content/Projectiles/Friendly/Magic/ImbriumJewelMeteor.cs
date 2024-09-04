@@ -14,6 +14,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
     public class ImbriumJewelMeteor : ModProjectile
     {
+        private ImbriumMeteorTrail trail;
+
         public override void SetStaticDefaults()
         {
             ProjectileID.Sets.TrailCacheLength[Type] = 20;
@@ -29,8 +31,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Projectile.timeLeft = 120;
             Projectile.DamageType = DamageClass.Magic;
             Projectile.alpha = 0;
-
-            Projectile.SetTrail<ImbriumMeteorTrail>();
+            trail = new();
         }
 
         public override void AI()
@@ -72,7 +73,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
-            Projectile.GetTrail().Draw(Projectile.Size / 2f);
+            trail.Draw(Projectile, Projectile.Size / 2f);
 
             Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition,
                 sourceRect, new Color(255, 255, 255, Projectile.alpha), Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);

@@ -14,6 +14,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
     public class DianiteMeteor : ModProjectile
     {
+        private DianiteMeteorTrail trail;
+
         public override void SetStaticDefaults()
         {
             ProjectileID.Sets.TrailCacheLength[Type] = 18;
@@ -28,10 +30,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Projectile.friendly = true;
             Projectile.DamageType = DamageClass.Magic;
             Projectile.ignoreWater = true;
-
             Projectile.alpha = 255;
-
-            Projectile.SetTrail<DianiteMeteorTrail>();
+            trail = new(trailStartWidth: Projectile.width);
         }
 
         public ref float InitialTargetPositionY => ref Projectile.ai[0];
@@ -83,7 +83,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
             Texture2D texture = TextureAssets.Projectile[Type].Value;
-            Projectile.GetTrail().Draw(TextureAssets.Projectile[Type].Size() / 2f);
+            trail.Draw(Projectile, TextureAssets.Projectile[Type].Size() / 2f);
             float count = 25f * (float)(1f - Projectile.alpha / 255f);
             for (int n = 2; n < count; n++)
             {

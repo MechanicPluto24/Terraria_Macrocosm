@@ -1,4 +1,5 @@
 using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
@@ -44,9 +45,22 @@ namespace Macrocosm.Common.Utils
         /// <param name="endWidth"> The trail width at its end </param>
         /// <param name="startColor"> The trail color near the NPC </param>
         /// <param name="endColor"> The trail color at its end </param>
-        public static void DrawSimpleTrail(this NPC npc, Vector2 rotatableOffsetFromCenter, float startWidth, float endWidth, Color startColor, Color? endColor = null)
+        public static void DrawMagicPixelTrail(this NPC npc, Vector2 rotatableOffsetFromCenter, float startWidth, float endWidth, Color startColor, Color? endColor = null)
         {
             DrawMagicPixelTrail(npc.Size / 2f, npc.oldPos, npc.oldRot, rotatableOffsetFromCenter, startWidth, endWidth, startColor, endColor);
+        }
+
+        /// <summary>
+        /// Draw a MagicPixel trail behind a particle, with length based on the trail cache length  
+        /// </summary>
+        /// <param name="rotatableOffsetFromCenter"> offset from projectile center when rotation is 0 </param>
+        /// <param name="startWidth"> The trail width near the projectile </param>
+        /// <param name="endWidth"> The trail width at its end </param>
+        /// <param name="startColor"> The trail color near the projectile  </param>
+        /// <param name="endColor"> The trail color at its end </param>
+        public static void DrawMagicPixelTrail(this Particle particle, Vector2 rotatableOffsetFromCenter, float startWidth, float endWidth, Color startColor, Color? endColor = null)
+        {
+            DrawMagicPixelTrail(particle.Size / 2f, particle.OldPositions, particle.OldRotations, rotatableOffsetFromCenter, startWidth, endWidth, startColor, endColor);
         }
 
         /// <summary> Adapted from Terraria.Main.DrawTrail </summary>

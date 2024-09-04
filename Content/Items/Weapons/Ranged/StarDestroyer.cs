@@ -47,15 +47,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback, GunHeldProjectile gunHeldProjectile)
         {
-            switch (starType)
-            {
-                case 0:
-                    Projectile.NewProjectileDirect(source, position, velocity.RotatedByRandom(0.1) * 1.2f, ModContent.ProjectileType<StarDestroyerStar_Blue>(), damage, knockback, player.whoAmI);
-                    break;
-                case 1:
-                    Projectile.NewProjectileDirect(source, position, velocity.RotatedByRandom(0.1) * 1.2f, ModContent.ProjectileType<StarDestroyerStar_Yellow>(), damage, knockback, player.whoAmI);
-                    break;
-            }
+            Projectile.NewProjectileDirect(source, position, velocity.RotatedByRandom(0.1) * 1.2f, ModContent.ProjectileType<StarDestroyerStar>(), damage, knockback, player.whoAmI, ai0: starType);
 
             if (starType++ > 1)
                 starType = 0;

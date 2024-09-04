@@ -1853,10 +1853,11 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
-            if (NPC.whoAmI == info.DamageSource.SourceNPCIndex)
+            if (Main.rand.NextBool(20))
             {
                 // Can't use info.DamageSource = PlayerDeathReason.ByCustomReason(...) here:
                 // HurtInfo is a value type and a DamageSource reassignment won't be reflected outside this method
+                // Called on the hit player client, will be synced and message will be broadcasted by the server 
                 info.DamageSource.SourceCustomReason = this.GetLocalization("FunnyDeathMessage").Format(target.name);
             }
         }
