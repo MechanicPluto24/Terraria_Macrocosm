@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
-    public class ArtemiteSpike : ModProjectile
+    public class RocheSpike : ModProjectile
     {
         public override void SetStaticDefaults()
         {
