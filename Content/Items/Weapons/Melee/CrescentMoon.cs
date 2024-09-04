@@ -14,12 +14,12 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 
         public override void SetDefaults()
         {
-            Item.damage = 300;
+            Item.damage = 440;
             Item.DamageType = DamageClass.Melee;
             Item.width = 36;
             Item.height = 36;
-            Item.useTime = 10;
-            Item.useAnimation = 10;
+            Item.useTime = 30;
+            Item.useAnimation = 30;
             Item.useStyle = ItemUseStyleID.Swing;
             Item.knockBack = 2f;
             Item.value = Item.sellPrice(silver: 3, copper: 10);
@@ -31,7 +31,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.noUseGraphic = true;
         }
 
-        public override bool CanUseItem(Player player) => player.ownedProjectileCounts[Item.shoot] < 1;
+        public override bool CanUseItem(Player player) => player.ownedProjectileCounts[Item.shoot] < 2;
 
     }
 }
