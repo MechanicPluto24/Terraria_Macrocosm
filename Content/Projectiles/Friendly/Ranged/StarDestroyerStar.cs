@@ -1,5 +1,7 @@
 using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Particles;
 using Macrocosm.Content.Trails;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -33,7 +35,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
         public override void SetDefaults()
         {
-            Projectile.width = 24;
+            Projectile.width = 22;
             Projectile.height = 22;
             Projectile.friendly = true;
             Projectile.DamageType = DamageClass.Ranged;
@@ -42,6 +44,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             Projectile.penetrate = 1;
             Projectile.timeLeft = 600;
             Projectile.alpha = 255;
+            Projectile.appliesImmunityTimeOnSingleHits = true;
         }
 
         private bool spawned;
@@ -61,6 +64,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 trail = new StarTrail { Color = color.WithAlpha(65) };
                 spawned = true;
             }
+
+            if (StarType is StarVariant.Yellow && Projectile.owner == Main.myPlayer && Projectile.timeLeft <= 3)
+                Projectile.PrepareBombToBlow();
 
             Projectile.rotation += 0.25f;
 
@@ -88,19 +94,63 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             }
         }
 
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            if (StarType == StarVariant.Yellow)
+                Projectile.timeLeft = 3;
+        }
+
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            if (StarType == StarVariant.Yellow)
+                Projectile.timeLeft = 3;
+        }
+
+        public override bool OnTileCollide(Vector2 oldVelocity)
+        {
+            if (StarType == StarVariant.Yellow)
+                Projectile.timeLeft = 3;
+
+            return true;
+        }
+
+        public override void PrepareBombToBlow()
+        {
+            Projectile.tileCollide = false;
+            Projectile.alpha = 255;
+            Projectile.Resize(128, 128);
+        }
+
         public override void OnKill(int timeLeft)
         {
             SoundEngine.PlaySound(SoundID.Item10, Projectile.position);
 
-            for (float i = 0f; i < 2f; i += 0.0125f)
-                Dust.NewDustPerfect(Projectile.Center, 278, Vector2.UnitY.RotatedBy(i * ((float)Math.PI * 2f)) * Main.rand.NextFloat(8f), 0, color * 0.5f).noGravity = true;
-
-            for (int i = 0; i < 8; i++)
+            if (StarType is StarVariant.Blue)
             {
-                int starGoreType = StarType is StarVariant.Blue ? 17 : 16; // 16 and 17 are the star gores
-                Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, new Vector2(0, 2).RotatedByRandom(MathHelper.TwoPi), starGoreType);
+                for (float i = 0f; i < 1.75f; i += 0.0125f)
+                    Dust.NewDustPerfect(Projectile.Center, 278, Vector2.UnitY.RotatedBy(i * ((float)Math.PI * 2f)) * Main.rand.NextFloat(6f), 0, color * 0.5f).noGravity = true;
+
+                for (int i = 0; i < 8; i++)
+                    Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, new Vector2(0, 2).RotatedByRandom(MathHelper.TwoPi), 17);
             }
-    }
+            else if (StarType is StarVariant.Yellow)
+            {
+                for (float i = 0f; i < 3f; i += 0.0125f)
+                    Dust.NewDustPerfect(Projectile.Center, 278, Vector2.UnitY.RotatedBy(i * ((float)Math.PI * 2f)) * Main.rand.NextFloat(12f), 0, color * 0.5f).noGravity = true;
+
+                for (int i = 0; i < 24; i++)
+                    Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, new Vector2(0, 4).RotatedByRandom(MathHelper.TwoPi), 16);
+
+                Particle.CreateParticle<TintableExplosion>(Explosion =>
+                {
+                    Explosion.Position = Projectile.Center;
+                    Explosion.DrawColor = color.WithOpacity(0.1f) * 0.4f;
+                    Explosion.Scale = 1f;
+                    Explosion.NumberOfInnerReplicas = 6;
+                    Explosion.ReplicaScalingFactor = 2.6f;
+                });
+            }
+        }
 
         private SpriteBatchState state;
         public override bool PreDraw(ref Color lightColor)
@@ -111,19 +161,19 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             state.SaveState(Main.spriteBatch);
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
-            trail.Draw(Projectile, Projectile.Size / 2f);
+            trail?.Draw(Projectile, Projectile.Size / 2f);
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);
 
             Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition, sourceRect, (Color.White) * Projectile.Opacity, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
             Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition, sourceRect, (color) * 0.4f * Projectile.Opacity, Projectile.rotation + MathHelper.Pi, origin, Projectile.scale * 1.6f, SpriteEffects.None, 0);
 
-            Vector2 spinningPoint = new Vector2(0f, -12f);
+            Vector2 spinningPoint = new Vector2(0f, -8f);
             Texture2D aura = TextureAssets.Extra[91].Value;
             Vector2 auraOrigin = new Vector2((float)aura.Width / 2f, 10f);
             Vector2 drawPosition = Projectile.Center + Projectile.velocity - Projectile.velocity * 0.5f;
             Vector2 offset = new Vector2(0f, Projectile.gfxOffY);
-            float rotation = (float)Main.timeForVisualEffects / 60f;
+            float rotation = (float)Main.timeForVisualEffects / 40f;
             float scale = 0f;
             Color auraColor = (color * 0.4f).WithAlpha(0) * Projectile.Opacity * 0.6f;
             float angle = Projectile.velocity.ToRotation();

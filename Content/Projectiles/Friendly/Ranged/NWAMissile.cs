@@ -275,7 +275,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             trail.Opacity = Projectile.localAI[1];
 
             if (Projectile.alpha < 1 && Projectile.timeLeft > 3)
-                trail.Draw(Projectile, Projectile.Size / 2f);
+                trail?.Draw(Projectile, Projectile.Size / 2f);
 
             return true;
         }

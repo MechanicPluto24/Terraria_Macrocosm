@@ -1,7 +1,6 @@
 ﻿using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Enums;
 using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.Systems;
 using Macrocosm.Content.Projectiles.Environment.Meteors;
 using Macrocosm.Content.Rockets.UI.Navigation.Checklist;
 using Macrocosm.Content.Skies.Ambience.Moon;
@@ -10,13 +9,9 @@ using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.GameContent.Bestiary;
-using Terraria.GameContent.Events;
 using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
-using Terraria.Net;
 using Terraria.Utilities;
 namespace Macrocosm.Content.Subworlds
 {
@@ -140,68 +135,77 @@ namespace Macrocosm.Content.Subworlds
         {
             meteorTimePass += Main.desiredWorldEventsUpdateRate;
 
-            int closestPlayer = 0;
-
             for (int l = 1; l <= (int)meteorTimePass; l++)
             {
-                float baseFrequency = 3f;
+                int closestPlayer;
+                int chance = 6000;
+                float baseFrequency = 1f;
                 float frequency = baseFrequency * MeteorBoost;
 
-                if (Main.rand.Next(8000) >= frequency)
-                    continue;
-
-                Vector2 position = new((Main.rand.Next(Main.maxTilesX - 50) + 100) * 16, Main.rand.Next((int)(Main.maxTilesY * 0.05)) * 16);
-
-                // 3/4 chance to spawn close to a an active (not afk) player on the surface.
-                // In vanilla, this only happens with a 1/15 chance, only in expert mode
-                if (!Main.rand.NextBool(4))
+                if (Main.rand.Next(chance) < frequency)
                 {
-                    closestPlayer = Player.FindClosest(position, 1, 1);
-                    if (Main.player[closestPlayer].position.Y < Main.worldSurface * 16.0 && Main.player[closestPlayer].afkCounter < 3600)
+                    Vector2 position = new((Main.rand.Next(Main.maxTilesX - 50) + 100) * 16, Main.rand.Next((int)(Main.maxTilesY * 0.05)) * 16);
+
+                    // 3/4 chance to spawn close to a an active (not afk) player on the surface.
+                    // In vanilla, this only happens with a 1/15 chance, only in expert mode
+                    if (!Main.rand.NextBool(4))
                     {
-                        int offset = Main.rand.Next(1, 640);
-                        position.X = Main.player[closestPlayer].position.X + (float)Main.rand.Next(-offset, offset + 1);
+                        closestPlayer = Player.FindClosest(position, 1, 1);
+                        if (Main.player[closestPlayer].position.Y < Main.worldSurface * 16.0 && Main.player[closestPlayer].afkCounter < 3600)
+                        {
+                            int offset = Main.rand.Next(1, 640);
+                            position.X = Main.player[closestPlayer].position.X + (float)Main.rand.Next(-offset, offset + 1);
+                        }
+                    }
+
+                    if (!Collision.SolidCollision(position, 16, 16))
+                    {
+                        float speedX = Main.rand.Next(-100, 101);
+                        float speedY = Main.rand.Next(200) + 100;
+                        float mult = 8 / (float)Math.Sqrt(speedX * speedX + speedY * speedY);
+                        speedX *= mult;
+                        speedY *= mult;
+
+                        WeightedRandom<int> choice = new(Main.rand);
+                        choice.Add(ProjectileID.FallingStar, 30.0);
+
+                        choice.Add(ModContent.ProjectileType<MoonMeteorSmall>(), 50.0);
+                        choice.Add(ModContent.ProjectileType<MoonMeteorMedium>(), 33.0);
+                        choice.Add(ModContent.ProjectileType<MoonMeteorLarge>(), 12.0);
+
+                        choice.Add(ModContent.ProjectileType<SolarMeteor>(), 2.0);
+                        choice.Add(ModContent.ProjectileType<NebulaMeteor>(), 2.0);
+                        choice.Add(ModContent.ProjectileType<StardustMeteor>(), 2.0);
+                        choice.Add(ModContent.ProjectileType<VortexMeteor>(), 2.0);
+
+
+                        int type = choice;
+                        var source = type != ProjectileID.FallingStar ? new EntitySource_Misc("Meteor") : new EntitySource_Misc("FallingStar");
+                        int damage = 1500;
+
+                        if (type == ProjectileID.FallingStar)
+                            damage = 720;
+                        else if (type == ModContent.ProjectileType<MoonMeteorSmall>())
+                            damage = 500;
+                        else if (type == ModContent.ProjectileType<MoonMeteorMedium>())
+                            damage = 1000;
+                        else if (type == ModContent.ProjectileType<MoonMeteorLarge>())
+                            damage = 1500;
+
+                        Projectile.NewProjectile(source, position.X, position.Y, speedX, speedY, type, damage, 0f); break;
                     }
                 }
 
-                for(int i = 0; i < Main.rand.Next(2, 5); i++)
-                    MacrocosmAmbientSky.Instance.Spawn<MoonMeteor>(Main.player[closestPlayer], Main.rand.Next());
-
-                if (!Collision.SolidCollision(position, 16, 16))
+                if (Main.rand.Next(chance / 3) < frequency)
                 {
-                    float speedX = Main.rand.Next(-100, 101);
-                    float speedY = Main.rand.Next(200) + 100;
-                    float mult = 8 / (float)Math.Sqrt(speedX * speedX + speedY * speedY);
-                    speedX *= mult;
-                    speedY *= mult;
-
-                    WeightedRandom<int> choice = new(Main.rand);
-                    choice.Add(ProjectileID.FallingStar, 30.0);
-
-                    choice.Add(ModContent.ProjectileType<MoonMeteorSmall>(), 50.0);
-                    choice.Add(ModContent.ProjectileType<MoonMeteorMedium>(), 33.0);
-                    choice.Add(ModContent.ProjectileType<MoonMeteorLarge>(), 12.0);
-
-                    choice.Add(ModContent.ProjectileType<SolarMeteor>(), 2.0);
-                    choice.Add(ModContent.ProjectileType<NebulaMeteor>(), 2.0);
-                    choice.Add(ModContent.ProjectileType<StardustMeteor>(), 2.0);
-                    choice.Add(ModContent.ProjectileType<VortexMeteor>(), 2.0);
-
-
-                    int type = choice;
-                    var source = type != ProjectileID.FallingStar ? new EntitySource_Misc("Meteor") : new EntitySource_Misc("FallingStar");
-                    int damage = 1500;
-
-                    if (type == ProjectileID.FallingStar)
-                        damage = 720;
-                    else if (type == ModContent.ProjectileType<MoonMeteorSmall>())
-                        damage = 500;
-                    else if (type == ModContent.ProjectileType<MoonMeteorMedium>())
-                        damage = 1000;
-                    else if (type == ModContent.ProjectileType<MoonMeteorLarge>())
-                        damage = 1500;
-  
-                    Projectile.NewProjectile(source, position.X, position.Y, speedX, speedY, type, damage, 0f); break;
+                    Vector2 position = new((Main.rand.Next(Main.maxTilesX - 50) + 100) * 16, Main.rand.Next((int)(Main.maxTilesY * 0.05)) * 16);
+                    closestPlayer = Player.FindClosest(position, 1, 1);
+                    if (Main.player[closestPlayer].position.Y < Main.worldSurface * 16.0 && Main.player[closestPlayer].afkCounter < 3600)
+                    {
+                        int offset = Main.rand.Next(60, 640);
+                        position.X = Main.player[closestPlayer].position.X + (float)Main.rand.Next(-offset, offset + 1);
+                    }
+                    MacrocosmAmbientSky.Instance.Spawn<MoonMeteor>(Main.player[closestPlayer], Main.rand.Next());
                 }
             }
 

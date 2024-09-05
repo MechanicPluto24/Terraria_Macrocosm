@@ -38,18 +38,9 @@ namespace Macrocosm.Content.Items.Weapons.Magic
         int count = 0;
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockBack)
         {
-            switch (count)
-            {
-                case 0:
-                    Projectile.NewProjectileDirect(source, position + new Vector2(Main.rand.NextFloat(-500f, 500f), Main.rand.NextFloat(-500f, 500f)), velocity, ModContent.ProjectileType<MicronovaPortal>(), damage, knockBack, player.whoAmI);
-                    count = 1;
-                    break;
-                case 1:
-                    Projectile.NewProjectileDirect(source, position + new Vector2(Main.rand.NextFloat(-500f, 500f), Main.rand.NextFloat(-500f, 500f)), velocity, ModContent.ProjectileType<MicronovaPortal>(), damage, knockBack, player.whoAmI);
-                    Projectile.NewProjectileDirect(source, position + new Vector2(Main.rand.NextFloat(-500f, 500f), Main.rand.NextFloat(-500f, 500f)), velocity, ModContent.ProjectileType<MicronovaPortal>(), damage, knockBack, player.whoAmI);
-                    count = 0;
-                    break;
-            }
+
+            Projectile.NewProjectileDirect(source, position + new Vector2(Main.rand.NextFloat(-500f, 500f), Main.rand.NextFloat(-500f, 500f)), velocity, ModContent.ProjectileType<MicronovaPortal>(), damage, knockBack, player.whoAmI);
+            Projectile.NewProjectileDirect(source, position + new Vector2(Main.rand.NextFloat(-500f, 500f), Main.rand.NextFloat(-500f, 500f)), velocity, ModContent.ProjectileType<MicronovaPortal>(), damage, knockBack, player.whoAmI);
 
             return false;
         }

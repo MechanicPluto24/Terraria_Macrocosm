@@ -87,6 +87,19 @@ namespace Macrocosm.Common.Utils
             }
         }
 
+        /// <summary>
+        /// <paramref name="lineFraming"/> is a delegate found in <see cref="Terraria.Utils"/>
+        /// <br/> See example implementations in: 
+        /// <br/> <see cref="DelegateMethods.RainbowLaserDraw(int, Vector2, float, Rectangle, out float, out Rectangle, out Vector2, out Color)"/>
+        /// <br/> <see cref="DelegateMethods.TurretLaserDraw(int, Vector2, float, Rectangle, out float, out Rectangle, out Vector2, out Color)"/>
+        /// <br/> <see cref="DelegateMethods.LightningLaserDraw(int, Vector2, float, Rectangle, out float, out Rectangle, out Vector2, out Color)"/>
+        /// </summary>
+        public static void DrawBeam(SpriteBatch spriteBatch, Texture2D texture, Vector2 startPosition, Vector2 endPosition, Vector2 drawScale, Color beamColor, Terraria.Utils.LaserLineFraming lineFraming)
+        {
+            DelegateMethods.c_1 = beamColor; // c_1 is an unnamed decompiled variable which is the render color of the beam drawn by the lineFraming delegate.
+            Terraria.Utils.DrawLaser(spriteBatch, texture, startPosition, endPosition, drawScale, lineFraming);
+        }
+
         public static void DrawStar(this SpriteBatch spriteBatch, Vector2 position, int points, Color color, float scale = 1f, float rotation = 0f, SpriteEffects spriteEffects = SpriteEffects.None, bool entity = false)
         {
             Texture2D tex = TextureAssets.Extra[ExtrasID.SharpTears].Value;

@@ -48,7 +48,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
-            trail.Draw(Projectile, new Vector2(24 * Projectile.direction, 4).RotatedBy(Projectile.rotation));
+            trail?.Draw(Projectile, new Vector2(24 * Projectile.direction, 4).RotatedBy(Projectile.rotation));
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);

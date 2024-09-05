@@ -83,7 +83,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
             Texture2D texture = TextureAssets.Projectile[Type].Value;
-            trail.Draw(Projectile, TextureAssets.Projectile[Type].Size() / 2f);
+            trail?.Draw(Projectile, TextureAssets.Projectile[Type].Size() / 2f);
             float count = 25f * (float)(1f - Projectile.alpha / 255f);
             for (int n = 2; n < count; n++)
             {
