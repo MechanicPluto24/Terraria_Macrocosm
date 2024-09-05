@@ -15,11 +15,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
     public class DianitePortal : ModProjectile
     {
-
         protected int defWidth;
         protected int defHeight;
 
         protected bool manaCheck = true;
+
+        private bool spawned;
 
         public int AITimer
         {
@@ -47,6 +48,23 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
         public override void AI()
         {
+            if (!spawned)
+            {
+                for (int i = 0; i < 25; i++)
+                {
+                    Particle.CreateParticle<PortalSwirl>(p =>
+                    {
+                        p.Position = Projectile.Center + Main.rand.NextVector2Circular(Projectile.width, Projectile.height) * 0.2f;
+                        p.Velocity = Vector2.One * 6;
+                        p.Scale = (0.1f + Main.rand.NextFloat(0.1f));
+                        p.Color = new Color(255, 170, 33) * 0.6f;
+                        p.TargetCenter = Projectile.Center;
+                    });
+                }
+
+                spawned = true;
+            }
+
             Player player = Main.player[Projectile.owner];
 
             if (!player.active || player.dead || !player.channel || !manaCheck)

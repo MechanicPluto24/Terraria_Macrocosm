@@ -22,8 +22,8 @@ namespace Macrocosm.Content.Items.Weapons.Magic
             Item.mana = 30;
             Item.width = 40;
             Item.height = 30;
-            Item.useTime = 20;
-            Item.useAnimation = 15;
+            Item.useTime = 40;
+            Item.useAnimation = 30;
             Item.autoReuse = false;
             Item.useStyle = ItemUseStyleID.Swing;
             Item.noMelee = true;

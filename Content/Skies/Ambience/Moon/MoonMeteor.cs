@@ -28,7 +28,7 @@ namespace Macrocosm.Content.Skies.Ambience.Moon
             FramingSpeed = int.MaxValue;
 
             float speedX = Main.rand.Next(-50, 51);
-            float speedY = Main.rand.Next(100) + 100;
+            float speedY = Main.rand.Next(80) + 20;
             float mult = 8 / (float)Math.Sqrt(speedX * speedX + speedY * speedY);
             speedX *= mult;
             speedY *= mult;
@@ -37,7 +37,7 @@ namespace Macrocosm.Content.Skies.Ambience.Moon
 
         public override void UpdateVelocity(int frameCount)
         {
-            Rotation += (Math.Abs(Velocity.X) + Math.Abs(Velocity.Y)) * 0.001f * Math.Sign(Velocity.X);
+            Rotation += (Math.Abs(Velocity.X) + Math.Abs(Velocity.Y)) * 0.005f * Math.Sign(Velocity.X);
         }
     }
 }

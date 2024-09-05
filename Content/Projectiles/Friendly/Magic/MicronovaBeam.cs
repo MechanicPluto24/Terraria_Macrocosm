@@ -25,6 +25,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             set => Projectile.ai[0] = value;
         }
 
+        public ref float AimX => ref Projectile.ai[1];
+        public ref float AimY => ref Projectile.ai[2];
+
         float Transparency = 0f;
         public override void SetDefaults()
         {
@@ -37,7 +40,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Projectile.penetrate = -1;
             Projectile.tileCollide = false;
             Projectile.alpha = 255;
-            Projectile.timeLeft = 30;
+            Projectile.timeLeft = 35;
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = 10;
         }
@@ -46,11 +49,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         public override void AI()
         {
             Player player = Main.player[Projectile.owner];
+
             if (AITimer < 1)
-            {
-                Vector2 target = (Main.MouseWorld - Projectile.Center).SafeNormalize(default);
-                Projectile.velocity = target;
-            }
+                 Projectile.velocity = new Vector2(AimX, AimY);
 
             Projectile.rotation = Projectile.velocity.ToRotation();
 
@@ -67,10 +68,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             */
 
             AITimer++;
-            if (AITimer < 5)
-                Transparency += 0.25f;
-            if (AITimer > 25)
-                Transparency -= 0.25f;
+
+            if (Transparency < 1f && AITimer < 25)
+                Transparency += 0.1f;
+            else 
+                Transparency -= 0.2f;
         }
 
         public override bool? CanHitNPC(NPC npc)
@@ -98,7 +100,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
             Texture2D texture = TextureAssets.Projectile[Type].Value;
             Vector2 centerFloored = Projectile.Center.Floor() + Projectile.velocity * Projectile.scale * 10.5f;
-            centerFloored += new Vector2(0, Main.rand.NextFloat(-8f, 3f)).RotatedBy(Projectile.velocity.ToRotation());
 
             Vector2 drawScale = new Vector2(Projectile.scale);
 
@@ -109,30 +110,21 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Vector2 startPosition = centerFloored - Main.screenPosition;
             Vector2 endPosition = startPosition + Projectile.velocity * visualBeamLength;
 
-            // Draw the outer beam.
-
             state.SaveState(Main.spriteBatch);
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
-            DrawBeam(Main.spriteBatch, texture, startPosition, endPosition, drawScale, new Color(171, 255, 255) * Transparency * (0.9f + (0.1f * ((float)(Math.Sin(AITimer))))));
+            Color color = new Color(171, 255, 255).WithAlpha(225) * Transparency * (0.9f + (0.1f * MathF.Sin(AITimer)));
+            for(int i = 0; i < 3; i++)
+            {
+                Vector2 visualStartPosition = startPosition + new Vector2(0, Main.rand.NextFloat(-10f, 4f)).RotatedBy(Projectile.velocity.ToRotation());
+                Utility.DrawBeam(Main.spriteBatch, texture, visualStartPosition, endPosition, drawScale, color, new Utils.LaserLineFraming(DelegateMethods.RainbowLaserDraw));
+            }
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);
 
-            // Draw the inner beam, which is half size.
-
-            // Returning false prevents Terraria from trying to draw the Projectile itself.
             return false;
-        }
-
-        private void DrawBeam(SpriteBatch spriteBatch, Texture2D texture, Vector2 startPosition, Vector2 endPosition, Vector2 drawScale, Color beamColor)
-        {
-            Utils.LaserLineFraming lineFraming = new Utils.LaserLineFraming(DelegateMethods.RainbowLaserDraw);
-
-            // c_1 is an unnamed decompiled variable which is the render color of the beam drawn by DelegateMethods.RainbowLaserDraw.
-            DelegateMethods.c_1 = beamColor;
-            Utils.DrawLaser(spriteBatch, texture, startPosition, endPosition, drawScale, lineFraming);
         }
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)

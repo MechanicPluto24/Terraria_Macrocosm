@@ -257,7 +257,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
             trail.Opacity = TimeLeftProgress;
-            trail.Draw(Projectile, Projectile.Size / 2f);
+            trail?.Draw(Projectile, Projectile.Size / 2f);
 
             Color glowColor = new Color(248, 137, 0).WithOpacity(Projectile.Opacity);
             int glowTrailCount = (int)(ProjectileID.Sets.TrailCacheLength[Type] * 0.5f * TimeLeftProgress);
