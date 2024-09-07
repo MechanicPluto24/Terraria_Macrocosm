@@ -38,9 +38,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         }
 
         private bool spawned;
-        private Vector2 spawnPosition;
-        private float flashTimer;
-        private float maxFlashTimer = 10;
 
         public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough, ref Vector2 hitboxCenterFrac)
             => false;
@@ -74,16 +71,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         private int floatDuration;
 
         // The speed at the start of the homing
-        private float originalSpeed;
 
         // The turn speed of the homing, randomized and netsynced
         private float turnSpeed;
-
-        // The targeted NPC whoAmI
-        private int targetNPC;
-
-        // The targeted NPC 
-        private NPC TargetNPC => Main.npc[targetNPC];
 
         public override void SendExtraAI(BinaryWriter writer)
         {
@@ -112,7 +102,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             {
                 targetAngle = MathHelper.Pi / 8 - MathHelper.Pi / 4 * (OrbitAngle / 180);
                 SoundEngine.PlaySound(SoundID.NPCDeath6 with { PitchRange = (-0.5f, 0.5f) }, Projectile.Center);
-                spawnPosition = Projectile.Center;
                 spawned = true;
 
                 targetPosition = Projectile.Center;
@@ -188,8 +177,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
             if (Projectile.alpha >= 255)
                 Projectile.active = false;
-
-            flashTimer++;
         }
         public NPC FindClosestNPC(float maxDetectDistance)
         {

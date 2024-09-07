@@ -2559,10 +2559,6 @@ WaveGunRed
 	Value: 25 gold
 	Research count: 1
 
-WaveGunSingle
-	Value: 25 gold
-	Research count: 1
-
 AluminumBroadsword
 	Value: 15 silver 50 copper
 	Research count: 1
@@ -2681,6 +2677,17 @@ LHBMinigun
 NWARocketLauncher
 	Value: 1 gold
 	Research count: 1
+
+RocheChakram
+	Value: 20 silver
+	Research count: 1
+	Recipes:
+		Selenite Bar x 1
+		Luminite Bar x 1
+		at
+		Ancient Manipulator
+			=> x20
+
 
 SeleniteBow
 	Value: 1 gold

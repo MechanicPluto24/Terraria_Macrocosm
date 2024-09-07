@@ -15,7 +15,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
     public class StarDestroyerStar : ModProjectile
     {
-        public enum StarVariant { Blue, Yellow }
+        public enum StarVariant 
+        { 
+            /// <summary> Blue stars penetrate enemies </summary>
+            Blue,
+            /// <summary> Yellow stars explode and have AoE </summary>
+            Yellow
+        }
+
         public StarVariant StarType
         {
             get => (Projectile.ai[0] == 0f ? StarVariant.Blue : StarVariant.Yellow);
@@ -41,12 +48,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             Projectile.DamageType = DamageClass.Ranged;
             Projectile.tileCollide = true;
             Projectile.ignoreWater = true;
-            Projectile.penetrate = 1;
             Projectile.timeLeft = 600;
             Projectile.alpha = 255;
-            Projectile.appliesImmunityTimeOnSingleHits = true;
         }
 
+        private float spawnSpeed;
         private bool spawned;
         public override void AI()
         {
@@ -54,19 +60,40 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             {
                 if (StarType is StarVariant.Blue)
                 {
+                    Projectile.CritChance += 2;
+                    Projectile.penetrate = 3;
+                    Projectile.usesLocalNPCImmunity = true;
+                    Projectile.localNPCHitCooldown = 10;
+
                     color = new Color(100, 100, 255);
                 }
                 else if (StarType is StarVariant.Yellow)
                 {
+                    Projectile.penetrate = 1;
+                    Projectile.usesLocalNPCImmunity = true;
+                    Projectile.localNPCHitCooldown = -1;
+
                     color = new Color(255, 180, 25);
-                    Projectile.CritChance += 2;
                 }
+
                 trail = new StarTrail { Color = color.WithAlpha(65) };
+                spawnSpeed = Projectile.velocity.Length();
+
                 spawned = true;
             }
 
             if (StarType is StarVariant.Yellow && Projectile.owner == Main.myPlayer && Projectile.timeLeft <= 3)
                 Projectile.PrepareBombToBlow();
+
+            if(StarType is StarVariant.Blue && Projectile.penetrate < 3)
+            {
+                NPC closestNPC = Utility.GetClosestNPC(Projectile.Center, 9000f);
+                if (closestNPC != null)
+                {
+                    Vector2 vel = (closestNPC.Center - Projectile.Center).SafeNormalize(Vector2.UnitX);
+                    Projectile.velocity = Projectile.velocity + vel * spawnSpeed * 0.1f;
+                }
+            }
 
             Projectile.rotation += 0.25f;
 
@@ -74,18 +101,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 Projectile.alpha -= 15;
 
             AI_Timer++;
-
-            if (StarType is StarVariant.Blue)
-            {
-                NPC closestNPC = Utility.GetClosestNPC(Projectile.Center, 9000f);
-                if (closestNPC != null)
-                {
-                    Vector2 vel = (closestNPC.Center - Projectile.Center).SafeNormalize(Vector2.UnitX);
-                    Projectile.velocity = Projectile.velocity + (vel * 0.9f);
-                    Projectile.velocity = (Projectile.velocity).SafeNormalize(Vector2.UnitX);
-                    Projectile.velocity *= 30f;
-                }
-            }
 
             if (Projectile.alpha <= 0 && (int)(AI_Timer % Main.rand.Next(5, 9)) == 0)
             {
@@ -119,6 +134,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             Projectile.tileCollide = false;
             Projectile.alpha = 255;
             Projectile.Resize(128, 128);
+            Projectile.penetrate = -1;
+            Projectile.velocity *= 0;
         }
 
         public override void OnKill(int timeLeft)

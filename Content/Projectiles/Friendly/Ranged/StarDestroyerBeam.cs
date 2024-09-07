@@ -41,6 +41,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             Projectile.timeLeft = 600;
             Projectile.scale = 0.3f;
             Projectile.alpha = 255;
+            Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = -1;
         }
 
         public override void AI()

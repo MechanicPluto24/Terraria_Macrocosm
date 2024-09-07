@@ -1941,3 +1941,8 @@ CrescentMoon: {
 	DisplayName: Crescent Moon
 	Tooltip: ""
 }
+
+RocheChakram: {
+	DisplayName: Roche Chakram
+	Tooltip: ""
+}

@@ -7,6 +7,7 @@ using ReLogic.Content;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
+using Terraria.GameContent;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -48,8 +49,10 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.shoot = ModContent.ProjectileType<ChampionsBladeSwing>();
             Item.noMelee = true; // This is set the sword itself doesn't deal damage (only the projectile does).
             Item.shootsEveryUse = true; // This makes sure Player.ItemAnimationJustStarted is set when swinging.
+
             Item.Glowmask().Texture = repairedTexture;
             Item.Glowmask().Color = null;
+            Item.Glowmask().DrawGlowInWorld = false;
         }
 
         public override void HoldItem(Player player)
@@ -113,11 +116,19 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             if (powerTime > 0)
                 damage = (int)(damage * 1.5f);
 
-            Projectile.NewProjectile(source, player.MountedCenter, new Vector2(player.direction, 0f), type, damage, knockback, player.whoAmI, player.direction * player.gravDir, player.itemAnimationMax, adjustedItemScale);
+            Projectile.NewProjectile(source, player.MountedCenter, new Vector2(player.direction, 0f), type, damage, knockback, player.whoAmI, ai0: player.direction * player.gravDir, ai1: player.itemAnimationMax, ai2: adjustedItemScale);
             NetMessage.SendData(MessageID.PlayerControls, -1, -1, null, player.whoAmI);
             bladeCharge += 100;
 
             return base.Shoot(player, source, position, velocity, type, damage, knockback);
+        }
+
+        public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
+        {
+            frame = new Rectangle(0, 24, 56, 54);
+            origin = frame.Size() / 2f;
+            spriteBatch.Draw(TextureAssets.Item[Type].Value, position, frame, drawColor, 0f, origin, scale * 1.3f, SpriteEffects.None, 0f);
+            return false;
         }
     }
 }
