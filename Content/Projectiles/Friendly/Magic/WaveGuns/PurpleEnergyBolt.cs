@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
+using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -54,9 +55,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
             int count = 140;
             for (int i = 0; i < count; i++)
             {
-                Vector2 velocity = Main.rand.NextVector2Circular(4, 12).RotatedBy(Projectile.oldVelocity.ToRotation() + MathHelper.PiOver2);
-                Dust dust = Dust.NewDustPerfect(Projectile.oldPosition + Projectile.Size / 2f + Projectile.oldVelocity, DustID.PurpleTorch, velocity, Scale: Main.rand.NextFloat(1f, 1.6f), Alpha: 0, newColor: new Color(255, 0, 255, 0));
-                dust.noGravity = true;
+                Vector2 velocity = Main.rand.NextVector2Circular(4, 4);
+                Dust dust = Dust.NewDustPerfect(Projectile.oldPosition + Projectile.Size / 2f + Projectile.oldVelocity, DustID.Electric, velocity, Scale: Main.rand.NextFloat(0.4f, 0.6f));
+                dust.noGravity = i % 2 == 0;
+                dust.noLight = false;
+                dust.alpha = 255;
+                dust.color = new Color(0, 0, 255, 255);
+                dust.shader = GameShaders.Armor.GetShaderFromItemId(ItemID.PurpleDye).UseColor(1f, 0f, 1f);
             }
 
             for (int i = 0; i < Projectile.oldPos.Length; i++)

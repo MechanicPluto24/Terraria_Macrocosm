@@ -33,14 +33,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         public override void AI()
         {
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
-            Projectile.velocity.Y += 0.03f;
+            Projectile.velocity.Y += 0.1f;
 
-            if (!Main.dedServ)
-            {
-                int type = Main.rand.NextBool() ? ModContent.DustType<SeleniteBrightDust>() : ModContent.DustType<SeleniteDust>();
-                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, type, Projectile.velocity.X / -64f, Projectile.velocity.Y / -16f, Scale: 0.8f);
-                dust.noGravity = true;
-            }
+            int type = ModContent.DustType<SeleniteBrightDust>();
+            Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, type, Projectile.velocity.X / -64f, Projectile.velocity.Y / -16f, Scale: 0.8f);
+            dust.noGravity = true;
         }
 
         public override void OnKill(int timeLeft)
