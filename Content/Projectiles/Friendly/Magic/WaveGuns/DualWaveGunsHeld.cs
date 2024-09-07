@@ -71,12 +71,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
                         if (fired % 2 == 0)
                         {
                             RedRotation += 0.3f;
-                             Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Normalize(Projectile.velocity) * 28f, ModContent.ProjectileType<RedEnergyBolt>(), (int)(damage / 1.4), knockback, Projectile.owner);
+                             Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Normalize(Projectile.velocity) * 28f, ModContent.ProjectileType<RedEnergyBolt>(), (int)(damage), knockback, Projectile.owner);
                         }
                         else
                         {
                             BlueRotation += 0.3f;
-                             Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Normalize(Projectile.velocity) * 28f, ModContent.ProjectileType<BlueEnergyBolt>(), (int)(damage / 1.4), knockback, Projectile.owner);
+                             Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Normalize(Projectile.velocity) * 28f, ModContent.ProjectileType<BlueEnergyBolt>(), (int)(damage), knockback, Projectile.owner);
                         }
                         fired++;
 
@@ -90,7 +90,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
 
                     if (AI_Timer % altAttackRate == 0)
                     {
-                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Normalize(Projectile.velocity) * 40f, ModContent.ProjectileType<PurpleEnergyBolt>(), damage, knockback, Projectile.owner);
+                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Normalize(Projectile.velocity) * 40f, ModContent.ProjectileType<PurpleEnergyBolt>(), (int)(damage*1.4), knockback, Projectile.owner);
                     }
                 }
 
