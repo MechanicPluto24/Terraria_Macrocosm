@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
+using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -47,21 +48,25 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
 
         public override void OnKill(int timeLeft)
         {
-            int count = 40;
+            int count = 60;
             for (int i = 0; i < count; i++)
             {
-                Vector2 velocity = Main.rand.NextVector2Circular(8, 8);
-                Dust dust = Dust.NewDustPerfect(Projectile.oldPosition + Projectile.Size / 2f + Projectile.oldVelocity, DustID.RedTorch, velocity, Scale: Main.rand.NextFloat(1f, 1.6f), Alpha: 0, newColor: new Color(255, 0, 0, 0));
-                dust.noGravity = true;
+                Vector2 velocity = Main.rand.NextVector2Circular(4, 4);
+                Dust dust = Dust.NewDustPerfect(Projectile.oldPosition + Projectile.Size / 2f + Projectile.oldVelocity, DustID.Electric, velocity, Scale: Main.rand.NextFloat(0.2f, 0.6f));
+                dust.noGravity = i % 2 == 0;
+                dust.noLight = false;
+                dust.alpha = 255;
+                dust.color = new Color(255, 0, 0, 255);
+                dust.shader = GameShaders.Armor.GetShaderFromItemId(ItemID.RedDye).UseColor(1f, 0f, 0f);
             }
 
             for (int i = 0; i < Projectile.oldPos.Length; i++)
             {
-                for (int j = 0; j < 3; j++)
+                for (int j = 0; j < 5; j++)
                 {
                     float progress = (float)i / (float)Projectile.oldPos.Length;
                     Vector2 pos = Projectile.oldPos[i];
-                    Dust dust = Dust.NewDustDirect(pos, 20, 20, DustID.RedTorch, 0f, Projectile.oldVelocity.Y * 0.5f, Scale: Main.rand.NextFloat(1f, 1.6f) * (1f - progress), Alpha: 0, newColor: new Color(255, 0, 0, 0));
+                    Dust dust = Dust.NewDustDirect(pos, 20, 20, DustID.RedTorch, 0f, Projectile.oldVelocity.Y * 0.5f, Scale: Main.rand.NextFloat(1.2f, 1.6f) * (1f - progress), Alpha: 0, newColor: new Color(255, 0, 0, 0));
                     dust.noGravity = true;
                 }
             }

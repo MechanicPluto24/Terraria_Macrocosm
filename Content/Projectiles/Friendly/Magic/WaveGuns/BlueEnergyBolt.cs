@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
+using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -48,12 +49,16 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
 
         public override void OnKill(int timeLeft)
         {
-            int count = 40;
+            int count = 60;
             for (int i = 0; i < count; i++)
             {
-                Vector2 velocity = Main.rand.NextVector2Circular(8, 8);
-                Dust dust = Dust.NewDustPerfect(Projectile.oldPosition + Projectile.Size / 2f + Projectile.oldVelocity, DustID.BlueTorch, velocity, Scale: Main.rand.NextFloat(1f, 1.6f), Alpha: 0, newColor: new Color(0, 0, 255, 0));
-                dust.noGravity = true;
+                Vector2 velocity = Main.rand.NextVector2Circular(4, 4);
+                Dust dust = Dust.NewDustPerfect(Projectile.oldPosition + Projectile.Size / 2f + Projectile.oldVelocity, DustID.Electric, velocity, Scale: Main.rand.NextFloat(0.2f, 0.6f));
+                dust.noGravity = i % 2 == 0;
+                dust.noLight = false;
+                dust.alpha = 255;
+                dust.color = new Color(0, 0, 255, 255);
+                dust.shader = GameShaders.Armor.GetShaderFromItemId(ItemID.BlueDye).UseColor(0f, 0f, 1f);
             }
 
             for (int i = 0; i < Projectile.oldPos.Length; i++)

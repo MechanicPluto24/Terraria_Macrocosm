@@ -1,7 +1,10 @@
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Weapons.Ranged;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
@@ -18,6 +21,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
         public override void SetStaticDefaults()
         {
+            ProjectileID.Sets.TrailCacheLength[Type] = 10;   
+            ProjectileID.Sets.TrailingMode[Type] = 3;   
         }
 
         public override void SetDefaults()
@@ -42,7 +47,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         {
             Player player = Main.player[Projectile.owner];
             bool foundOlder = true;
-            if (player.ownedProjectileCounts[ModContent.ProjectileType<RocheChakramProjectile>()] > 5)
+            if (player.ownedProjectileCounts[ModContent.ProjectileType<RocheChakramProjectile>()] > 3)
             {
                 for (int i = 0; i <= 1000; i++)
                 {
@@ -59,7 +64,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         }
 
         private bool spawned;
-
         public override void AI()
         {
             if (!spawned)
@@ -68,13 +72,27 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 spawned = true;
             }
 
-            if (ShouldExplode() == true)
+            for(int i = 0; i < 2; i++)
             {
                 Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<SeleniteBrightDust>());
-                dust.velocity.X = Main.rand.Next(-30, 31) * 0.01f;
-                dust.velocity.Y = Main.rand.Next(-30, 30) * 0.01f;
+                dust.velocity.X = Main.rand.Next(-30, 31) * 0.02f;
+                dust.velocity.Y = Main.rand.Next(-30, 30) * 0.02f;
                 dust.scale *= 1f + Main.rand.Next(-12, 13) * 0.01f;
                 dust.noGravity = true;
+            }
+                
+            if (Main.rand.NextBool(4))
+            {
+                Dust dust2 = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<SeleniteDust>());
+                dust2.velocity.X = Main.rand.Next(-30, 31) * 0.02f;
+                dust2.velocity.Y = Main.rand.Next(-30, 30) * 0.02f;
+                dust2.scale *= 1f + Main.rand.Next(-12, 13) * 0.005f;
+                dust2.noGravity = true;
+            }
+;
+
+            if (ShouldExplode())
+            {
                 ExplosionTimer++;
             }
 
@@ -92,7 +110,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 if (Projectile.Distance(Main.player[Projectile.owner].Center) < 50f)
                 {
                     Projectile.Kill();
-                    Item.NewItem(Projectile.GetSource_FromAI(), position: Main.player[Projectile.owner].Center, ModContent.ItemType<RocheChakram>(), noBroadcast: false, noGrabDelay: true, reverseLookup: true);
+                    if(Main.myPlayer == Projectile.owner)
+                        Main.player[Projectile.owner].QuickSpawnItem(Projectile.GetSource_FromAI(), ModContent.ItemType<RocheChakram>());
                 }
             }
 
@@ -102,15 +121,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
         public void Explode()
         {
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < 2; i++)
             {
-                if (Main.netMode != NetmodeID.MultiplayerClient)
+                if (Main.myPlayer == Projectile.owner)
                     Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.UnitY.RotatedByRandom(MathHelper.TwoPi) * 18f, ModContent.ProjectileType<RocheSpike>(), (int)(Projectile.damage / 2.5), 1f, Main.myPlayer, ai0: 0f);
             }
 
             for (int i = 0; i < (int)15; i++)
             {
-                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<LuminiteBrightDust>());
+                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<SeleniteBrightDust>());
                 dust.velocity.X = Main.rand.Next(-30, 31) * 0.02f;
                 dust.velocity.Y = Main.rand.Next(-30, 30) * 0.02f;
                 dust.scale *= 1f + Main.rand.Next(-12, 13) * 0.01f;
@@ -124,6 +143,22 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             }
 
             Projectile.Kill();
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            for (int i = 0; i < Projectile.oldPos.Length; i++)
+            {
+                Texture2D texture = TextureAssets.Projectile[Type].Value;    
+                Vector2 drawPos = Projectile.oldPos[i] + Projectile.Size / 2 - Main.screenPosition;
+                float dashFactor = MathHelper.Clamp(Projectile.velocity.Length(), 0, 20) / 20f;
+                float trailFactor = (((float)Projectile.oldPos.Length - i) / Projectile.oldPos.Length);
+                Color color = Projectile.GetAlpha(lightColor) * dashFactor * trailFactor;
+                SpriteEffects effect = Projectile.oldSpriteDirection[i] == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+                Main.EntitySpriteDraw(texture, drawPos, texture.Frame(1, Main.projFrames[Type], frameY: Projectile.frame), color * 0.6f, Projectile.oldRot[i], Projectile.Size / 2, Projectile.scale, effect, 0f);
+            }
+
+            return true;
         }
     }
 }
