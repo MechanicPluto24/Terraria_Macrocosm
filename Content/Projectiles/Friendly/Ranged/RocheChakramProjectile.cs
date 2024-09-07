@@ -7,9 +7,9 @@ using Terraria.ModLoader;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Items.Weapons.Melee;
+using Macrocosm.Content.Items.Weapons.Ranged;
 using Microsoft.Xna.Framework.Graphics;
-namespace Macrocosm.Content.Projectiles.Friendly.Melee
+namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
     public class RocheChakramProjectile : ModProjectile
     {
@@ -19,11 +19,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         public override void SetDefaults()
         {
-            Projectile.width = 34;
-            Projectile.height = 32;
+            Projectile.width = 46;
+            Projectile.height = 46;
             Projectile.aiStyle = -1;
             Projectile.friendly = true;
-            Projectile.DamageType = DamageClass.Melee;
+            Projectile.DamageType = DamageClass.Ranged;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
             Projectile.penetrate = -1;
@@ -55,8 +55,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         public override void AI()
         {
-            if(ShouldExplode()==true)
+            if(ShouldExplode()==true){
+                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<SeleniteBrightDust>());
+                    dust.velocity.X = Main.rand.Next(-30, 31) * 0.01f;
+                    dust.velocity.Y = Main.rand.Next(-30, 30) * 0.01f;
+                    dust.scale *= 1f + Main.rand.Next(-12, 13) * 0.01f;
+                    dust.noGravity = true;
                 ExplosionTimer++;
+            }
             Projectile.rotation +=0.65f;
             Projectile.velocity= Projectile.velocity.SafeNormalize(Vector2.UnitY);
             Projectile.velocity*=Speed;
@@ -90,13 +96,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                     dust.velocity.Y = Main.rand.Next(-30, 30) * 0.02f;
                     dust.scale *= 1f + Main.rand.Next(-12, 13) * 0.01f;
                     dust.noGravity = true;
-                }
-                {
-                    Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<ProtolithDust>());
-                    dust.velocity.X = Main.rand.Next(-30, 31) * 0.02f;
-                    dust.velocity.Y = Main.rand.Next(-30, 30) * 0.02f;
-                    dust.scale *= 1f + Main.rand.Next(-12, 13) * 0.01f;
-                    dust.noGravity = true;
+                
+                    Dust dust2 = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<SeleniteDust>());
+                    dust2.velocity.X = Main.rand.Next(-30, 31) * 0.02f;
+                    dust2.velocity.Y = Main.rand.Next(-30, 30) * 0.02f;
+                    dust2.scale *= 1f + Main.rand.Next(-12, 13) * 0.01f;
+                    dust2.noGravity = true;
                 }
 
             Projectile.Kill();

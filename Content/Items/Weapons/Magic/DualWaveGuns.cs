@@ -1,4 +1,5 @@
-using Macrocosm.Content.Projectiles.Friendly.Magic;
+using Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns;
+using Macrocosm.Content.Items.Weapons.Magic;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -15,7 +16,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 
         public override void SetDefaults()
         {
-            Item.damage = 200;
+            Item.damage = 300;
             Item.DamageType = DamageClass.Magic;
             Item.mana = 10;
             Item.width = 54;
@@ -26,11 +27,11 @@ namespace Macrocosm.Content.Items.Weapons.Magic
             Item.noMelee = true;
             Item.knockBack = 10;
             Item.value = Item.sellPrice(0, 10, 0, 0);
-            Item.rare = ModContent.RarityType<MoonRarityT1>();
+            Item.rare = ModContent.RarityType<MoonRarityT2>();
             Item.UseSound = SoundID.Item11;
             Item.autoReuse = true;
             Item.noUseGraphic = true;
-            Item.shoot = ModContent.ProjectileType<WaveGunLaser>();
+            Item.shoot = ModContent.ProjectileType<RedEnergyBolt>();
             Item.shootSpeed = 28f;
             Item.channel = true;
         }

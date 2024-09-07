@@ -1,6 +1,6 @@
 ﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Bars;
-using Macrocosm.Content.Projectiles.Friendly.Melee;
+using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -9,7 +9,7 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Weapons.Melee
+namespace Macrocosm.Content.Items.Weapons.Ranged
 {
     public class RocheChakram : ModItem
     {
@@ -18,7 +18,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             ItemID.Sets.SkipsInitialUseSound[Type] = true;
             
         }
-        public override string Texture => ModContent.GetInstance<RocheChakramProjectile>().Texture;
+   
         public override void SetDefaults()
         {
             Item.rare = ModContent.RarityType<MoonRarityT2>();
@@ -32,7 +32,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.damage = 300;
             Item.knockBack =0.5f;
             Item.noUseGraphic = true;
-            Item.DamageType = DamageClass.MeleeNoSpeed;
+            Item.DamageType = DamageClass.Ranged;
             Item.noMelee = true;
             Item.shootSpeed = 20f;
             Item.shoot = ModContent.ProjectileType<RocheChakramProjectile>();
@@ -61,6 +61,14 @@ namespace Macrocosm.Content.Items.Weapons.Melee
                 SoundEngine.PlaySound(Item.UseSound.Value, player.Center);
             }
             return null;
+        }
+        public override void AddRecipes()
+        {
+            CreateRecipe(20)
+            .AddIngredient<SeleniteBar>(1)
+            .AddIngredient(ItemID.LunarBar, 1)
+            .AddTile(TileID.LunarCraftingStation)
+            .Register();
         }
        
        
