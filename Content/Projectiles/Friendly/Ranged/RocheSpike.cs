@@ -4,7 +4,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Projectiles.Friendly.Melee
+namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
     public class RocheSpike : ModProjectile
     {
@@ -20,7 +20,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             AIType = ProjectileID.WoodenArrowFriendly;
 
             Projectile.friendly = true; // Can the projectile deal damage to enemies?
-            Projectile.DamageType = DamageClass.Melee;
+            Projectile.DamageType = DamageClass.Ranged;
             Projectile.ignoreWater = true; // Does the projectile's speed be influenced by water?
             Projectile.tileCollide = true; // Can the projectile collide with tiles?
 

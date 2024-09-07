@@ -6,7 +6,7 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-namespace Macrocosm.Content.Projectiles.Friendly.Magic
+namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
 {
     public class DualWaveGunsHeld : ChargedHeldProjectile
     {
@@ -66,15 +66,17 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 {
                     if (AI_Timer % currentItem.useTime == 0)
                     {
-                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Normalize(Projectile.velocity) * 28f, ModContent.ProjectileType<WaveGunLaser>(), (int)(damage / 1.4), knockback, Projectile.owner);
+                       
 
                         if (fired % 2 == 0)
                         {
                             RedRotation += 0.3f;
+                             Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Normalize(Projectile.velocity) * 28f, ModContent.ProjectileType<RedEnergyBolt>(), (int)(damage), knockback, Projectile.owner);
                         }
                         else
                         {
                             BlueRotation += 0.3f;
+                             Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Normalize(Projectile.velocity) * 28f, ModContent.ProjectileType<BlueEnergyBolt>(), (int)(damage), knockback, Projectile.owner);
                         }
                         fired++;
 
@@ -84,11 +86,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 }
                 else
                 {
-                    int altAttackRate = 34;
+                    int altAttackRate = 40;
 
                     if (AI_Timer % altAttackRate == 0)
                     {
-                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Normalize(Projectile.velocity) * 34f, ModContent.ProjectileType<WaveRifleLaser>(), damage, knockback, Projectile.owner);
+                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Normalize(Projectile.velocity) * 40f, ModContent.ProjectileType<PurpleEnergyBolt>(), (int)(damage*1.4), knockback, Projectile.owner);
                     }
                 }
 
@@ -111,7 +113,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             else
             {
                 var spriteBatch = Main.spriteBatch;
-                Texture2D texture3 = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Magic/WaveGunRifle").Value;
+                Texture2D texture3 = ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Magic/WaveGuns/WaveGunRifle").Value;
                 Vector2 rotPoint2 = Utility.RotatingPoint(Projectile.Center, new Vector2(10, 0), Projectile.rotation);
                 spriteBatch.Draw(texture3, rotPoint2 - Main.screenPosition, null, lightColor, Projectile.rotation, texture3.Size() / 2f, Projectile.scale, Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None, 0f);
             }

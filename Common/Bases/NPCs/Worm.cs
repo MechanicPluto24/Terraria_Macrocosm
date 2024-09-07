@@ -216,6 +216,10 @@ namespace Macrocosm.Common.Bases.NPCs
         {
             HeadAI_SpawnSegments();
 
+            HeadBehaviour();
+        }
+        public virtual void HeadBehaviour()
+        {
             bool collision = HeadAI_CheckCollisionForDustSpawns();
 
             HeadAI_CheckTargetDistance(ref collision);
@@ -597,8 +601,11 @@ namespace Macrocosm.Common.Bases.NPCs
         public override void BodyTailAI()
         {
             CommonAI_BodyTail(this);
+            CustomBodyAI(this);
             FlipBodyTail(this);
+            
         }
+        public virtual void CustomBodyAI(Worm worm){}
 
         public static void CommonAI_BodyTail(Worm worm)
         {
@@ -659,10 +666,12 @@ namespace Macrocosm.Common.Bases.NPCs
             NPCID.Sets.NPCBestiaryDrawModifiers value = new() { Hide = true };
             NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, value);
         }
+        public virtual void CustomTailAI(Worm worm){}
 
         public override void BodyTailAI()
         {
             WormBody.CommonAI_BodyTail(this);
+            CustomTailAI(this);
             FlipBodyTail(this);
         }
     }
