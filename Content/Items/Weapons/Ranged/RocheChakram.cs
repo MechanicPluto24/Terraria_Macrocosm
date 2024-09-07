@@ -62,6 +62,14 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             }
             return null;
         }
+        public override void AddRecipes()
+        {
+            CreateRecipe(20)
+            .AddIngredient<SeleniteBar>(1)
+            .AddIngredient(ItemID.LunarBar, 1)
+            .AddTile(TileID.LunarCraftingStation)
+            .Register();
+        }
        
        
     }
