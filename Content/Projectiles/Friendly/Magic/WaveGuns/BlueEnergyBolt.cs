@@ -20,8 +20,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
             ProjectileID.Sets.TrailCacheLength[Type] = 15;
             ProjectileID.Sets.TrailingMode[Type] = 3;
         }
-          public override string Texture => Macrocosm.EmptyTexPath;
+        public override string Texture => Macrocosm.EmptyTexPath;
         
+        private BlueEnergyTrail trail;
 
         public override void SetDefaults()
         {
@@ -32,7 +33,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
             Projectile.tileCollide = true;
             Projectile.ignoreWater = true;
             Projectile.timeLeft =300;
-            Projectile.SetTrail<BlueEnergyTrail>();
+            trail=new();
         }
         int Timer=0;
       
@@ -60,7 +61,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
             state.SaveState(Main.spriteBatch);
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
-            Projectile.GetTrail().Draw(Projectile.Size / 2f);
+            trail?.Draw(Projectile,Projectile.Size / 2f);
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);
             Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, new Color(150,150,255,0), Projectile.velocity.ToRotation()+(Timer/8), texture.Size() / 2f, Projectile.scale*0.05f, SpriteEffects.None, 0f);
