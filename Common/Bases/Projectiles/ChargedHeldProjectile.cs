@@ -22,8 +22,8 @@ namespace Macrocosm.Common.Bases.Projectiles
         {
             Projectile.CloneDefaults(ProjectileID.LastPrism);
             Projectile.friendly = true;
-            Projectile.width = 1;
-            Projectile.height = 1;
+            Projectile.width = 12;
+            Projectile.height = 12;
             Projectile.tileCollide = false;
 
             SetProjectileDefaults();

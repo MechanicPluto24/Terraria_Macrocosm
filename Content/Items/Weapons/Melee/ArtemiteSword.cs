@@ -32,7 +32,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.UseSound = SoundID.Item1;
             Item.autoReuse = true;
             Item.shoot = ModContent.ProjectileType<ArtemiteSwordSwing>();
-            Item.shootSpeed = 10f;
+            Item.shootSpeed = 25f;
         }
 
         public override void OnHitNPC(Player player, NPC target, NPC.HitInfo hit, int damageDone)
@@ -49,8 +49,8 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            //Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.MountedCenter, velocity, ModContent.ProjectileType<ArtemiteSwordProjectile>(), damage, knockback, player.whoAmI); //, player.GetAdjustedItemScale(Item));
-            Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.MountedCenter, new Vector2(player.direction, 0f), ModContent.ProjectileType<ArtemiteSwordSwing>(), damage, knockback, player.whoAmI, (float)player.direction * player.gravDir, 24); //, player.GetAdjustedItemScale(Item));
+            Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.MountedCenter, new Vector2(player.direction, 0f), ModContent.ProjectileType<ArtemiteSwordSwing>(), damage, knockback, player.whoAmI, ai0: player.direction * player.gravDir, ai1: player.itemAnimationMax, ai2: player.GetAdjustedItemScale(Item));
+            Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.MountedCenter, velocity, ModContent.ProjectileType<ArtemiteSwordShoot>(), damage, knockback, player.whoAmI);
             return false;
         }
 

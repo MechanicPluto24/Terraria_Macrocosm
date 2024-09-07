@@ -603,9 +603,9 @@ namespace Macrocosm.Common.Bases.NPCs
             CommonAI_BodyTail(this);
             CustomBodyAI(this);
             FlipBodyTail(this);
-            
+
         }
-        public virtual void CustomBodyAI(Worm worm){}
+        public virtual void CustomBodyAI(Worm worm) { }
 
         public static void CommonAI_BodyTail(Worm worm)
         {
@@ -666,7 +666,7 @@ namespace Macrocosm.Common.Bases.NPCs
             NPCID.Sets.NPCBestiaryDrawModifiers value = new() { Hide = true };
             NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, value);
         }
-        public virtual void CustomTailAI(Worm worm){}
+        public virtual void CustomTailAI(Worm worm) { }
 
         public override void BodyTailAI()
         {

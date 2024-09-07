@@ -13,13 +13,14 @@ namespace Macrocosm.Common.Global.Items
     /// </summary>
     public class GlowmaskGlobalItem : GlobalItem
     {
-        public Asset<Texture2D> Texture = null;
-        public Color? Color = new(250, 250, 250);
-
-        public int GlowOffsetY = 0;
-        public int GlowOffsetX = 0;
-
         public override bool InstancePerEntity => true;
+
+        public Asset<Texture2D> Texture { get; set; } = null;
+        public Color? Color { get; set; } = new(250, 250, 250);
+        public bool DrawGlowInWorld { get; set; } = true;
+        public int GlowOffsetY { get; set; } = 0;
+        public int GlowOffsetX { get; set; } = 0;
+
         public override GlobalItem Clone(Item item, Item itemClone)
         {
             return base.Clone(item, itemClone);
@@ -27,7 +28,7 @@ namespace Macrocosm.Common.Global.Items
 
         public override void PostDrawInWorld(Item item, SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
         {
-            if (Texture != null)
+            if (Texture != null && DrawGlowInWorld)
             {
                 spriteBatch.Draw
                 (

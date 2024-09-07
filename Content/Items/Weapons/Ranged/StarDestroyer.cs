@@ -52,7 +52,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             for (int i = 0; i < Main.rand.Next(1, 3 + 1); i++)
                 Projectile.NewProjectileDirect(source, position, velocity.RotatedByRandom(0.1) * Main.rand.NextFloat(0.9f, 1.6f), ModContent.ProjectileType<StarDestroyerBeam>(), damage / 2, knockback, player.whoAmI, ai0: i % 2);
 
-            if (starType++ > 1)
+            if (starType++ >= 1)
                 starType = 0;
 
             return false;

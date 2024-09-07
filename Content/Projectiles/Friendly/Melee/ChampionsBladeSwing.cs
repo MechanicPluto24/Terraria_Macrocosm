@@ -1,3 +1,4 @@
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -36,44 +37,36 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Projectile.usesOwnerMeleeHitCD = true; // This will make the projectile apply the standard number of immunity frames as normal melee attacks.
                                                    // Normally, projectiles die after they have hit all the enemies they can.
                                                    // But, for this case, we want the projectile to continue to live so we can have the visuals of the swing.
-            Projectile.stopsDealingDamageAfterPenetrateHits = true;
 
-            // We will be using custom AI for this projectile. The original Excalibur uses aiStyle 190.
+            Projectile.stopsDealingDamageAfterPenetrateHits = true;
             Projectile.aiStyle = -1;
-            // Projectile.aiStyle = ProjAIStyleID.NightsEdge; // 190
-            // AIType = ProjectileID.Excalibur;
 
             // If you are using custom AI, add this line. Otherwise, visuals from Flasks will spawn at the center of the projectile instead of around the arc.
             // We will spawn the visuals around the arc ourselves in the AI().
             Projectile.noEnchantmentVisuals = true;
         }
 
+        public ref float Timer => ref Projectile.localAI[0];
+        public ref float SwingDirection => ref Projectile.ai[0];
+        public ref float MaxTime => ref Projectile.ai[1];
+        public ref float Scale => ref Projectile.ai[2];
+
         public override void AI()
         {
-            // In our item, we spawn the projectile with the direction, max time, and scale
-            // Projectile.ai[0] == direction
-            // Projectile.ai[1] == max time
-            // Projectile.ai[2] == scale
-            // Projectile.localAI[0] == current time
-
-            // Terra Blade makes an extra sound when spawning.
-            // if (Projectile.localAI[0] == 0f) {
-            // 	SoundEngine.PlaySound(SoundID.Item60 with { Volume = 0.65f }, Projectile.position);
-            // }
-
-            Projectile.localAI[0]++; // Current time that the projectile has been alive.
+            Timer++; // Current time that the projectile has been alive.
             Player player = Main.player[Projectile.owner];
-            float percentageOfLife = Projectile.localAI[0] / Projectile.ai[1]; // The current time over the max time.
-            float direction = Projectile.ai[0];
+            float progress = Timer /MaxTime; // The current time over the max time.
+
             float velocityRotation = Projectile.velocity.ToRotation();
-            float adjustedRotation = MathHelper.Pi * direction * percentageOfLife + velocityRotation + direction * MathHelper.Pi + player.fullRotation;
+            float adjustedRotation = MathHelper.Pi * SwingDirection * progress + velocityRotation + SwingDirection * MathHelper.Pi + player.fullRotation;
+
             Projectile.rotation = adjustedRotation; // Set the rotation to our to the new rotation we calculated.
 
-            float scaleMulti = 0.6f; // Excalibur, Terra Blade, and The Horseman's Blade is 0.6f; True Excalibur is 1f; default is 0.2f 
+            float scaleMultiplier = 0.6f; // Excalibur, Terra Blade, and The Horseman's Blade is 0.6f; True Excalibur is 1f; default is 0.2f 
             float scaleAdder = 1f; // Excalibur, Terra Blade, and The Horseman's Blade is 1f; True Excalibur is 1.2f; default is 1f 
 
             Projectile.Center = player.RotatedRelativePoint(player.MountedCenter) - Projectile.velocity;
-            Projectile.scale = scaleAdder + percentageOfLife * scaleMulti;
+            Projectile.scale = scaleAdder + progress * scaleMultiplier;
 
             // The other sword projectiles that use AI Style 190 have different effects.
             // This example only includes the Excalibur.
@@ -82,7 +75,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             // Here we spawn some dust inside the arc of the swing.
             float dustRotation = Projectile.rotation + Main.rand.NextFloatDirection() * MathHelper.PiOver2 * 0.7f;
             Vector2 dustPosition = Projectile.Center + dustRotation.ToRotationVector2() * 84f * Projectile.scale;
-            Vector2 dustVelocity = (dustRotation + Projectile.ai[0] * MathHelper.PiOver2).ToRotationVector2();
+            Vector2 dustVelocity = (dustRotation + SwingDirection * MathHelper.PiOver2).ToRotationVector2();
             if (Main.rand.NextFloat() * 2f < Projectile.Opacity)
             {
                 // Original Excalibur color: Color.Gold, Color.White
@@ -98,13 +91,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 Dust.NewDustPerfect(dustPosition, DustID.TintableDustLighted, dustVelocity, 100, Color.SkyBlue * Projectile.Opacity, 1.2f * Projectile.Opacity);
             }
 
-            Projectile.scale *= Projectile.ai[2]; // Set the scale of the projectile to the scale of the item.
+            Projectile.scale *= Scale; // Set the scale of the projectile to the scale of the item.
 
             // If the projectile is as old as the max animation time, kill the projectile.
-            if (Projectile.localAI[0] >= Projectile.ai[1])
-            {
+            if (Timer >= MaxTime)
                 Projectile.Kill();
-            }
 
             // This for loop spawns the visuals when using Flasks (weapon imbues)
             for (float i = -MathHelper.PiOver4; i <= MathHelper.PiOver4; i += MathHelper.PiOver2)
@@ -124,14 +115,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             // This number affects how much the start and end of the collision will be rotated.
             // Bigger Pi numbers will rotate the collision counter clockwise.
             // Smaller Pi numbers will rotate the collision clockwise.
-            // (Projectile.ai[0] is the direction)
-            float collisionRotation = MathHelper.Pi * 2f / 25f * Projectile.ai[0];
+            // (SwingDirection is the direction)
+            float collisionRotation = MathHelper.Pi * 2f / 25f * SwingDirection;
             float maximumAngle = MathHelper.PiOver4; // The maximumAngle is used to limit the rotation to create a dead zone.
             float coneRotation = Projectile.rotation + collisionRotation;
 
             // Uncomment this line for a visual representation of the cone. The dusts are not perfect, but it gives a general idea.
             // Dust.NewDustPerfect(Projectile.Center + coneRotation.ToRotationVector2() * coneLength, DustID.Pixie, Vector2.Zero);
-            // Dust.NewDustPerfect(Projectile.Center, DustID.BlueFairy, new Vector2((float)Math.Cos(maximumAngle) * Projectile.ai[0], (float)Math.Sin(maximumAngle)) * 5f); // Assumes collisionRotation was not changed
+            // Dust.NewDustPerfect(Projectile.Center, DustID.BlueFairy, new Vector2((float)Math.Cos(maximumAngle) * SwingDirection, (float)Math.Sin(maximumAngle)) * 5f); // Assumes collisionRotation was not changed
 
             // First, we check to see if our first cone intersects the target.
             if (targetHitbox.IntersectsConeSlowMoreAccurate(Projectile.Center, coneLength, coneRotation, maximumAngle))
@@ -140,14 +131,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             }
 
             // The first cone isn't the entire swinging arc, though, so we need to check a second cone for the back of the arc.
-            float backOfTheSwing = Utils.Remap(Projectile.localAI[0], Projectile.ai[1] * 0.3f, Projectile.ai[1] * 0.5f, 1f, 0f);
+            float backOfTheSwing = Utils.Remap(Projectile.localAI[0], MaxTime * 0.3f, MaxTime * 0.5f, 1f, 0f);
             if (backOfTheSwing > 0f)
             {
-                float coneRotation2 = coneRotation - MathHelper.PiOver4 * Projectile.ai[0] * backOfTheSwing;
+                float coneRotation2 = coneRotation - MathHelper.PiOver4 * SwingDirection * backOfTheSwing;
 
                 // Uncomment this line for a visual representation of the cone. The dusts are not perfect, but it gives a general idea.
                 // Dust.NewDustPerfect(Projectile.Center + coneRotation2.ToRotationVector2() * coneLength, DustID.Enchanted_Pink, Vector2.Zero);
-                // Dust.NewDustPerfect(Projectile.Center, DustID.BlueFairy, new Vector2((float)Math.Cos(backOfTheSwing) * -Projectile.ai[0], (float)Math.Sin(backOfTheSwing)) * 5f); // Assumes collisionRotation was not changed
+                // Dust.NewDustPerfect(Projectile.Center, DustID.BlueFairy, new Vector2((float)Math.Cos(backOfTheSwing) * -SwingDirection, (float)Math.Sin(backOfTheSwing)) * 5f); // Assumes collisionRotation was not changed
 
                 if (targetHitbox.IntersectsConeSlowMoreAccurate(Projectile.Center, coneLength, coneRotation2, maximumAngle))
                 {
@@ -199,18 +190,17 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         {
             Vector2 position = Projectile.Center - Main.screenPosition;
             Texture2D texture = TextureAssets.Projectile[Type].Value;
-            Rectangle sourceRectangle = texture.Frame(1, 4); // The sourceRectangle says which frame to use.
-            Vector2 origin = sourceRectangle.Size() / 2f;
+            Vector2 origin = texture.Frame(1, 4).Size() / 2f;
             float scale = Projectile.scale * 1.1f;
-            SpriteEffects spriteEffects = ((!(Projectile.ai[0] >= 0f)) ? SpriteEffects.FlipVertically : SpriteEffects.None); // Flip the sprite based on the direction it is facing.
-            float percentageOfLife = Projectile.localAI[0] / Projectile.ai[1]; // The current time over the max time.
-            float lerpTime = Utils.Remap(percentageOfLife, 0f, 0.6f, 0f, 1f) * Utils.Remap(percentageOfLife, 0.6f, 1f, 1f, 0f);
+            SpriteEffects spriteEffects = ((!(SwingDirection >= 0f)) ? SpriteEffects.FlipVertically : SpriteEffects.None); // Flip the sprite based on the direction it is facing.
+            float progress = Timer / MaxTime;
+            float lerpTime = Utils.Remap(progress, 0f, 0.6f, 0f, 1f) * Utils.Remap(progress, 0.6f, 1f, 1f, 0f);
             float lightingColor = Lighting.GetColor(Projectile.Center.ToTileCoordinates()).ToVector3().Length() / (float)Math.Sqrt(3.0);
             lightingColor = Utils.Remap(lightingColor, 0.2f, 1f, 0f, 1f);
 
-            Color backDarkColor = new Color(60, 160, 180); // Original Excalibur color: Color(180, 160, 60)
-            Color middleMediumColor = new Color(80, 255, 255); // Original Excalibur color: Color(255, 255, 80)
-            Color frontLightColor = new Color(150, 240, 255); // Original Excalibur color: Color(255, 240, 150)
+            Color backDarkColor = new Color(60, 160, 180); 
+            Color middleMediumColor = new Color(80, 255, 255); 
+            Color frontLightColor = new Color(150, 240, 255);  
 
             Color whiteTimesLerpTime = Color.White * lerpTime * 0.5f;
             whiteTimesLerpTime.A = (byte)(whiteTimesLerpTime.A * (1f - lightingColor));
@@ -219,57 +209,36 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             faintLightingColor.B = (byte)(faintLightingColor.R * (0.25f + lightingColor * 0.75f));
 
             // Back part
-            Main.EntitySpriteDraw(texture, position, sourceRectangle, backDarkColor * lightingColor * lerpTime, Projectile.rotation + Projectile.ai[0] * MathHelper.PiOver4 * -1f * (1f - percentageOfLife), origin, scale, spriteEffects, 0f);
+            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 0), backDarkColor * lightingColor * lerpTime, Projectile.rotation + SwingDirection * MathHelper.PiOver4 * -1f * (1f - progress), origin, scale, spriteEffects, 0f);
             // Very faint part affected by the light color
-            Main.EntitySpriteDraw(texture, position, sourceRectangle, faintLightingColor * 0.15f, Projectile.rotation + Projectile.ai[0] * 0.01f, origin, scale, spriteEffects, 0f);
+            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 0), faintLightingColor * 0.15f, Projectile.rotation + SwingDirection * 0.01f, origin, scale, spriteEffects, 0f);
             // Middle part
-            Main.EntitySpriteDraw(texture, position, sourceRectangle, middleMediumColor * lightingColor * lerpTime * 0.3f, Projectile.rotation, origin, scale, spriteEffects, 0f);
+            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 0), middleMediumColor * lightingColor * lerpTime * 0.3f, Projectile.rotation, origin, scale, spriteEffects, 0f);
             // Front part
-            Main.EntitySpriteDraw(texture, position, sourceRectangle, frontLightColor * lightingColor * lerpTime * 0.5f, Projectile.rotation, origin, scale * 0.975f, spriteEffects, 0f);
+            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 0), frontLightColor * lightingColor * lerpTime * 0.5f, Projectile.rotation, origin, scale * 0.975f, spriteEffects, 0f);
             // Thin top line (final frame)
-            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, 0, 3), Color.White * 0.6f * lerpTime, Projectile.rotation + Projectile.ai[0] * 0.01f, origin, scale, spriteEffects, 0f);
+            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), Color.White * 0.6f * lerpTime, Projectile.rotation + SwingDirection * 0.01f, origin, scale, spriteEffects, 0f);
             // Thin middle line (final frame)
-            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, 0, 3), Color.White * 0.5f * lerpTime, Projectile.rotation + Projectile.ai[0] * -0.05f, origin, scale * 0.8f, spriteEffects, 0f);
+            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), Color.White * 0.5f * lerpTime, Projectile.rotation + SwingDirection * -0.05f, origin, scale * 0.8f, spriteEffects, 0f);
             // Thin bottom line (final frame)
-            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, 0, 3), Color.White * 0.4f * lerpTime, Projectile.rotation + Projectile.ai[0] * -0.1f, origin, scale * 0.6f, spriteEffects, 0f);
+            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), Color.White * 0.4f * lerpTime, Projectile.rotation + SwingDirection * -0.1f, origin, scale * 0.6f, spriteEffects, 0f);
 
             // This draws some sparkles around the circumference of the swing.
             for (float i = 0f; i < 8f; i += 1f)
             {
-                float edgeRotation = Projectile.rotation + Projectile.ai[0] * i * (MathHelper.Pi * -2f) * 0.025f + Utils.Remap(percentageOfLife, 0f, 1f, 0f, MathHelper.PiOver4) * Projectile.ai[0];
+                float edgeRotation = Projectile.rotation + SwingDirection * i * (MathHelper.Pi * -2f) * 0.025f + Utils.Remap(progress, 0f, 1f, 0f, MathHelper.PiOver4) * SwingDirection;
                 Vector2 drawPos = position + edgeRotation.ToRotationVector2() * ((float)texture.Width * 0.5f - 6f) * scale;
-                DrawPrettyStarSparkle(Projectile.Opacity, SpriteEffects.None, drawPos, new Color(255, 255, 255, 0) * lerpTime * (i / 9f), middleMediumColor, percentageOfLife, 0f, 0.5f, 0.5f, 1f, edgeRotation, new Vector2(0f, Utils.Remap(percentageOfLife, 0f, 1f, 3f, 0f)) * scale, Vector2.One * scale);
+                Utility.DrawPrettyStarSparkle(Projectile.Opacity, SpriteEffects.None, drawPos, new Color(255, 255, 255, 0) * lerpTime * (i / 9f), middleMediumColor, progress, 0f, 0.5f, 0.5f, 1f, edgeRotation, new Vector2(0f, Utils.Remap(progress, 0f, 1f, 3f, 0f)) * scale, Vector2.One * scale);
             }
 
             // This draws a large star sparkle at the front of the projectile.
-            Vector2 drawPos2 = position + (Projectile.rotation + Utils.Remap(percentageOfLife, 0f, 1f, 0f, MathHelper.PiOver4) * Projectile.ai[0]).ToRotationVector2() * ((float)texture.Width * 0.5f - 4f) * scale;
-            DrawPrettyStarSparkle(Projectile.Opacity, SpriteEffects.None, drawPos2, new Color(255, 255, 255, 0) * lerpTime * 0.5f, middleMediumColor, percentageOfLife, 0f, 0.5f, 0.5f, 1f, 0f, new Vector2(2f, Utils.Remap(percentageOfLife, 0f, 1f, 4f, 1f)) * scale, Vector2.One * scale);
+            Vector2 drawPos2 = position + (Projectile.rotation + Utils.Remap(progress, 0f, 1f, 0f, MathHelper.PiOver4) * SwingDirection).ToRotationVector2() * ((float)texture.Width * 0.5f - 4f) * scale;
+            Utility.DrawPrettyStarSparkle(Projectile.Opacity, SpriteEffects.None, drawPos2, new Color(255, 255, 255, 0) * lerpTime * 0.5f, middleMediumColor, progress, 0f, 0.5f, 0.5f, 1f, 0f, new Vector2(2f, Utils.Remap(progress, 0f, 1f, 4f, 1f)) * scale, Vector2.One * scale);
 
             // Uncomment this line for a visual representation of the projectile's size.
             // Main.EntitySpriteDraw(TextureAssets.MagicPixel.Value, position, sourceRectangle, Color.Orange * 0.75f, 0f, origin, scale, spriteEffects);
 
             return false;
-        }
-
-        // Copied from Main.DrawPrettyStarSparkle() which is private
-        private static void DrawPrettyStarSparkle(float opacity, SpriteEffects dir, Vector2 drawPos, Color drawColor, Color shineColor, float flareCounter, float fadeInStart, float fadeInEnd, float fadeOutStart, float fadeOutEnd, float rotation, Vector2 scale, Vector2 fatness)
-        {
-            Texture2D sparkleTexture = TextureAssets.Extra[98].Value;
-            Color bigColor = shineColor * opacity * 0.5f;
-            bigColor.A = 0;
-            Vector2 origin = sparkleTexture.Size() / 2f;
-            Color smallColor = drawColor * 0.5f;
-            float lerpValue = Utils.GetLerpValue(fadeInStart, fadeInEnd, flareCounter, clamped: true) * Utils.GetLerpValue(fadeOutEnd, fadeOutStart, flareCounter, clamped: true);
-            Vector2 scaleLeftRight = new Vector2(fatness.X * 0.5f, scale.X) * lerpValue;
-            Vector2 scaleUpDown = new Vector2(fatness.Y * 0.5f, scale.Y) * lerpValue;
-            bigColor *= lerpValue;
-            smallColor *= lerpValue;
-            // Bright, large part
-            Main.EntitySpriteDraw(sparkleTexture, drawPos, null, bigColor, MathHelper.PiOver2 + rotation, origin, scaleLeftRight, dir);
-            Main.EntitySpriteDraw(sparkleTexture, drawPos, null, bigColor, 0f + rotation, origin, scaleUpDown, dir);
-            // Dim, small part
-            Main.EntitySpriteDraw(sparkleTexture, drawPos, null, smallColor, MathHelper.PiOver2 + rotation, origin, scaleLeftRight * 0.6f, dir);
-            Main.EntitySpriteDraw(sparkleTexture, drawPos, null, smallColor, 0f + rotation, origin, scaleUpDown * 0.6f, dir);
-        }
+        }       
     }
 }

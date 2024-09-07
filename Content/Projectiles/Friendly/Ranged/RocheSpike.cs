@@ -37,7 +37,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
             if (!Main.dedServ)
             {
-                int type = Main.rand.NextBool() ? ModContent.DustType<ArtemiteBrightDust>() : ModContent.DustType<ArtemiteDust>();
+                int type = Main.rand.NextBool() ? ModContent.DustType<SeleniteBrightDust>() : ModContent.DustType<SeleniteDust>();
                 Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, type, Projectile.velocity.X / -64f, Projectile.velocity.Y / -16f, Scale: 0.8f);
                 dust.noGravity = true;
             }
@@ -47,7 +47,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         {
             for (int i = 0; i < Main.rand.Next(30, 40); i++)
             {
-                int type = Main.rand.NextBool() ? ModContent.DustType<ArtemiteBrightDust>() : ModContent.DustType<ArtemiteDust>();
+                int type = Main.rand.NextBool() ? ModContent.DustType<SeleniteBrightDust>() : ModContent.DustType<SeleniteDust>();
                 Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, type, Main.rand.NextFloat(-1.6f, 1.6f), Main.rand.NextFloat(-1.6f, 1.6f), Scale: Main.rand.NextFloat(0.7f, 1f));
                 dust.noGravity = true;
             }

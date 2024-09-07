@@ -2,6 +2,7 @@ using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -10,7 +11,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
 {
     public class DualWaveGunsHeld : ChargedHeldProjectile
     {
-        //TODO, make better idk how, also add recoil for both guns, though idk why this isn't working...
         public override string Texture => Macrocosm.EmptyTexPath;
 
         public float MinCharge => MaxCharge * 0.2f;
@@ -19,13 +19,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
         public ref float AI_Charge => ref Projectile.ai[2];
 
         private bool altAttackActive = false;
-        private int altAttackCount = 0;
         public int fired;
 
         public override float CircularHoldoutOffset => 8f;
 
-        protected override bool StillInUse => base.StillInUse || Main.mouseRight || itemUseTime > 0 || altAttackActive;
-
+        protected override bool StillInUse => base.StillInUse || itemUseTime > 0 || altAttackActive;
         public override bool ShouldUpdateAimRotation => true;
 
         public override void SetProjectileStaticDefaults()
@@ -34,6 +32,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
 
         public override void SetProjectileDefaults()
         {
+            Projectile.scale = 0.8f;
         }
 
         float BlueRotation = 0f;
@@ -66,19 +65,18 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
                 {
                     if (AI_Timer % currentItem.useTime == 0)
                     {
-                       
-
                         if (fired % 2 == 0)
                         {
                             RedRotation += 0.3f;
-                             Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Normalize(Projectile.velocity) * 28f, ModContent.ProjectileType<RedEnergyBolt>(), (int)(damage), knockback, Projectile.owner);
+                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Normalize(Projectile.velocity) * 28f, ModContent.ProjectileType<RedEnergyBolt>(), (int)(damage), knockback, Projectile.owner);
                         }
                         else
                         {
                             BlueRotation += 0.3f;
-                             Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Normalize(Projectile.velocity) * 28f, ModContent.ProjectileType<BlueEnergyBolt>(), (int)(damage), knockback, Projectile.owner);
+                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Normalize(Projectile.velocity) * 28f, ModContent.ProjectileType<BlueEnergyBolt>(), (int)(damage), knockback, Projectile.owner);
                         }
                         fired++;
+
 
                         AI_Timer = 0;
                         SoundEngine.PlaySound(SoundID.Item11, Projectile.position);
@@ -90,7 +88,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
 
                     if (AI_Timer % altAttackRate == 0)
                     {
-                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Normalize(Projectile.velocity) * 40f, ModContent.ProjectileType<PurpleEnergyBolt>(), (int)(damage*1.4), knockback, Projectile.owner);
+                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Normalize(Projectile.velocity) * 40f, ModContent.ProjectileType<PurpleEnergyBolt>(), (int)(damage * 1.4), knockback, Projectile.owner);
                     }
                 }
 

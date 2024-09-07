@@ -34,7 +34,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
             Projectile.tileCollide = true;
         }
 
-        private SpriteBatchState state;
         public override bool PreDraw(ref Color lightColor)
         {
             return false;

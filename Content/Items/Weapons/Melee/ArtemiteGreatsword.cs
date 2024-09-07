@@ -6,6 +6,7 @@ using Macrocosm.Content.Particles;
 using Macrocosm.Content.Projectiles.Friendly.Melee;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
+using Mono.Cecil;
 using System;
 using Terraria;
 using Terraria.DataStructures;
@@ -76,7 +77,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
         {
             if (!rightClick)
             {
-                Projectile.NewProjectileDirect(source, player.MountedCenter, new Vector2(player.direction, 0f), ModContent.ProjectileType<ArtemiteGreatswordSwing>(), damage, knockback, player.whoAmI, player.direction * player.gravDir, 12, -MathHelper.PiOver2 * 0.5f);
+                Projectile.NewProjectileDirect(source, player.MountedCenter, new Vector2(player.direction, 0f), ModContent.ProjectileType<ArtemiteGreatswordSwing>(), damage, knockback, player.whoAmI, ai0: player.direction * player.gravDir, ai1: player.itemAnimationMax, ai2: player.GetAdjustedItemScale(Item));
                 //Projectile.NewProjectileDirect(source, player.MountedCenter, new Vector2(player.direction, 0f), ModContent.ProjectileType<ArtemiteGreatswordSwing2>(), damage, knockback, player.whoAmI, player.direction * player.gravDir, 12, -MathHelper.PiOver2 * 0.5f);
             }
         }
@@ -86,15 +87,15 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             float charge = (damage - (Item.damage * ChargeBasedDamageRatio.min)) / ((Item.damage * ChargeBasedDamageRatio.max) - (Item.damage * ChargeBasedDamageRatio.min));
             if (charge > 0.65f)
             {
-                Projectile swing = Projectile.NewProjectileDirect(null, player.MountedCenter, new Vector2(player.direction, 0f), ModContent.ProjectileType<ArtemiteGreatswordSwing>(), 0, 0, player.whoAmI, player.direction * player.gravDir, 12, -MathHelper.PiOver4);
-                Projectile swing2 = Projectile.NewProjectileDirect(null, player.MountedCenter, new Vector2(player.direction, 0f), ModContent.ProjectileType<ArtemiteGreatswordSwing2>(), damage, 5, player.whoAmI, player.direction * player.gravDir, 12, -MathHelper.PiOver4);
+                Projectile swing = Projectile.NewProjectileDirect(null, player.MountedCenter, new Vector2(player.direction, 0f), ModContent.ProjectileType<ArtemiteGreatswordSwing>(), 0, 0, player.whoAmI, ai0: player.direction * player.gravDir, ai1: 24, ai2: player.GetAdjustedItemScale(Item));
+                Projectile swing2 = Projectile.NewProjectileDirect(null, player.MountedCenter, new Vector2(player.direction, 0f), ModContent.ProjectileType<ArtemiteGreatswordSwingEmpowered>(), damage, 5, player.whoAmI, ai0: player.direction * player.gravDir, ai1: 24, ai2: player.GetAdjustedItemScale(Item));
                 swing2.scale = charge;
                 swing.alpha = (byte)(255f * (1f - charge));
                 swing2.netUpdate = true;
             }
             else
             {
-                Projectile swing = Projectile.NewProjectileDirect(null, player.MountedCenter, new Vector2(player.direction, 0f), ModContent.ProjectileType<ArtemiteGreatswordSwing>(), damage, 0, player.whoAmI, player.direction * player.gravDir, 12, -MathHelper.PiOver4);
+                Projectile swing = Projectile.NewProjectileDirect(null, player.MountedCenter, new Vector2(player.direction, 0f), ModContent.ProjectileType<ArtemiteGreatswordSwing>(), damage, 0, player.whoAmI, ai0: player.direction * player.gravDir, ai1: 24, ai2: player.GetAdjustedItemScale(Item));
                 swing.scale = 1.15f - (0.2f * (1f - charge));
                 swing.netUpdate = true;
             }
@@ -122,7 +123,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             if (greatsword.State == GreatswordHeldProjectile.GreatswordState.Charge)
             {
                 Vector2 starPosition = greatsword.Projectile.Center + ((greatsword.Projectile.rotation - MathHelper.PiOver4) * greatsword.Player.direction + (greatsword.Player.direction == -1 ? MathHelper.Pi : 0f)).ToRotationVector2() * greatsword.SwordLength * 0.9f + new Vector2(greatsword.SwordWidth, 0) * greatsword.Player.direction;
-                Main.spriteBatch.DrawStar(starPosition + Main.rand.NextVector2Circular(1, 1) - Main.screenPosition, 2, new Color(130, 220, 199).WithOpacity(1f - greatsword.Charge), new Vector2(1f, 2.4f) * Utility.QuadraticEaseIn(greatsword.Charge) * 0.4f, 0f, entity: true);
+                Main.spriteBatch.DrawStar(starPosition + Main.rand.NextVector2Circular(1, 1) - Main.screenPosition, 2, new Color(130, 220, 199).WithOpacity(1f - greatsword.Charge), new Vector2(1f, 3.2f) * Utility.QuadraticEaseIn(greatsword.Charge) * 0.4f, 0f, entity: true);
             }
         }
     }

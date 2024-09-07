@@ -125,7 +125,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             }
         }
 
-        private SpriteBatchState state;
         public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             Texture2D rockTexture = ModContent.Request<Texture2D>(Texture + "_Pebble").Value;
