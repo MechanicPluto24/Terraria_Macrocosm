@@ -565,7 +565,7 @@ namespace Macrocosm.Common.Utils
                         int index = 0;
                         if (Utility.InArray(tiles, currentType, ref index))
                         {
-                            GenerateTile(x1, y1, replacements[index], -1, 0, true, false, -2, silent, false);
+                            GenerateTile(x1, y1, replacements[index], -1, 0, true, false, BlockType.Solid, silent, false);
                         }
                     }
                 }
@@ -599,7 +599,7 @@ namespace Macrocosm.Common.Utils
                         int index = 0;
                         if (Utility.InArray(walls, currentType, ref index))
                         {
-                            GenerateTile(x1, y1, -1, replacements[index], 0, true, false, -2, silent, false);
+                            GenerateTile(x1, y1, -1, replacements[index], 0, true, false, BlockType.Solid, silent, false);
                         }
                     }
                 }
@@ -680,7 +680,7 @@ namespace Macrocosm.Common.Utils
 			*  silent : If true, will not display dust nor sound.
 			*  sync : If true, will sync the client and server.
 			*/
-        public static void GenerateTile(int x, int y, int tile, int wall, int tileStyle = 0, bool active = true, bool removeLiquid = true, int slope = -2, bool silent = false, bool sync = true)
+        public static void GenerateTile(int x, int y, int tile, int wall, int tileStyle = 0, bool active = true, bool removeLiquid = true, BlockType blockType = BlockType.Solid, bool silent = false, bool sync = true)
         {
             try
             {
@@ -692,8 +692,7 @@ namespace Macrocosm.Common.Utils
                 int height = data == null ? 1 : data.Height;
                 int tileWidth = tile == -1 || data == null ? 1 : data.Width;
                 int tileHeight = tile == -1 || data == null ? 1 : data.Height;
-                byte oldSlope = (byte)Main.tile[x, y].Slope;
-                bool oldHalfBrick = Main.tile[x, y].IsHalfBlock;
+                BlockType oldBlockType = Main.tile[x, y].BlockType;
                 if (tile != -1)
                 {
                     WorldGen.destroyObject = true;
@@ -742,11 +741,7 @@ namespace Macrocosm.Common.Utils
                         {
                             Main.tile[x, y].TileType = (ushort)tile;
                             Mtile.HasTile = true;
-                            if (slope == -2 && oldHalfBrick) { Mtile.IsHalfBlock = true; }
-                            else
-                            if (slope == -1) { Mtile.IsHalfBlock = true; }
-                            else
-                            { Mtile.Slope = (SlopeType)(slope == -2 ? oldSlope : (byte)slope); }
+                            Mtile.BlockType = blockType == BlockType.Solid ? oldBlockType : blockType;                            
                             WorldGen.SquareTileFrame(x, y);
                         }
                         else

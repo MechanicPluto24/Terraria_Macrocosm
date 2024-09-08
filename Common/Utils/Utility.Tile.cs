@@ -450,21 +450,44 @@ namespace Macrocosm.Common.Utils
         public static Color GetPaintColor(this Tile tile) => WorldGen.paintColor(tile.TileColor);
 
         public static Color GetTileColor(Point coords) => GetTileColor(coords.X, coords.Y);
-
-        public static Color GetTileColor(int i, int j)
+        public static Color GetTileColor(int i, int j, byte light = 255, bool includePaint = true)
         {
             if (CoordinatesOutOfBounds(i, j))
-                return default;
+                return Color.Transparent;
 
-            if (!Main.tile[i, j].HasTile)
-                return default;
+            Tile tile = Main.tile[i, j];
+            if (!tile.HasTile || tile.IsTileInvisible)
+                return Color.Transparent;
 
             Color[] colorLookup = MapTileSystem.GetMapColorLookup();
 
             if (colorLookup is null)
-                return default;
+                return Color.Transparent;
 
-            MapTile mapTile = MapHelper.CreateMapTile(i, j, 255);
+            int tileType = tile.TileType;
+            ushort tile_mapTileType = MapHelper.tileLookup[tileType];
+            MapTile mapTile = MapTile.Create(tile_mapTileType, light, includePaint ? tile.TileColor : PaintID.None);
+            return colorLookup[mapTile.Type];
+        }
+
+        public static Color GetWallColor(Point coords) => GetWallColor(coords.X, coords.Y);
+        public static Color GetWallColor(int i, int j, byte light = 255, bool includePaint = true)
+        {
+            if (CoordinatesOutOfBounds(i, j))
+                return Color.Transparent;
+
+            Tile tile = Main.tile[i, j];
+            if (tile.WallType <= 0 || tile.IsWallInvisible)
+                return Color.Transparent;
+
+            Color[] colorLookup = MapTileSystem.GetMapColorLookup();
+
+            if (colorLookup is null)
+                return Color.Transparent;
+
+            int wallType = tile.WallType;
+            ushort wall_mapTileType = MapHelper.wallLookup[wallType];
+            MapTile mapTile = MapTile.Create(wall_mapTileType, light, includePaint ? tile.WallColor : PaintID.None);
             return colorLookup[mapTile.Type];
         }
     }
