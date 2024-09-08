@@ -2525,16 +2525,6 @@ DianiteTome
 		Ancient Manipulator
 
 
-DualWaveGuns
-	Value: 50 gold
-	Research count: 1
-	Recipes:
-		Wave Gun Blue x 1
-		Wave Gun Red x 1
-		at
-		Ancient Manipulator
-
-
 FrigorianGaze
 	Value: 1 gold
 	Research count: 1
@@ -2554,6 +2544,16 @@ Micronova
 WaveGunBlue
 	Value: 25 gold
 	Research count: 1
+
+WaveGunDual
+	Value: 50 gold
+	Research count: 1
+	Recipes:
+		Blue Wave Gun x 1
+		Red Wave Gun x 1
+		at
+		Ancient Manipulator
+
 
 WaveGunRed
 	Value: 25 gold

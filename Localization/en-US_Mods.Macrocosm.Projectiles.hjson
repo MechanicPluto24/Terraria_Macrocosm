@@ -116,3 +116,8 @@ BlueGunHeld.DisplayName: Blue Gun Held
 PurpleEnergyBolt.DisplayName: Purple Energy Bolt
 RedEnergyBolt.DisplayName: Red Energy Bolt
 RedGunHeld.DisplayName: Red Gun Held
+WaveGunEnergyBolt.DisplayName: Wave Gun Energy Bolt
+WaveGunBlueHeld.DisplayName: Wave Gun Blue Held
+WaveGunDualHeld.DisplayName: Wave Gun Dual Held
+WaveGunRedHeld.DisplayName: Wave Gun Red Held
+WaveGunRifleHeld.DisplayName: Wave Gun Rifle Held

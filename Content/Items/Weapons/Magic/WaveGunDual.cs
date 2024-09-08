@@ -1,0 +1,165 @@
+using Macrocosm.Common.Bases.Projectiles;
+using Macrocosm.Common.Utils;
+using Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns;
+using Macrocosm.Content.Rarities;
+using Macrocosm.Content.Sounds;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
+using System.IO;
+using Terraria;
+using Terraria.Audio;
+using Terraria.DataStructures;
+using Terraria.ID;
+using Terraria.Localization;
+using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
+namespace Macrocosm.Content.Items.Weapons.Magic
+{
+    public class WaveGunDual : ModItem
+    {
+        private static Asset<Texture2D> rifleTexture;
+
+        private static LocalizedText displayNameDual;
+        private static LocalizedText displayNameRifle;
+
+        public override void Load()
+        {
+            rifleTexture = ModContent.Request<Texture2D>(Texture + "_Rifle");
+            displayNameDual = Language.GetOrRegister(base.DisplayName.Key + "Dual", () => "Wave Gun (Dual)");
+            displayNameRifle = Language.GetOrRegister(base.DisplayName.Key + "Rifle", () => "Wave Gun (Rifle)");
+        }
+
+        public bool RifleMode { get; private set; }
+        private int shotCount;
+
+        public override void SetDefaults()
+        {
+            Item.damage = 300;
+            Item.DamageType = DamageClass.Magic;
+            Item.mana = 10;
+            Item.width = 54;
+            Item.height = 36;
+            Item.useTime = 14;
+            Item.useAnimation = 14;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 10;
+            Item.value = Item.sellPrice(0, 10, 0, 0);
+            Item.rare = ModContent.RarityType<MoonRarityT2>();
+            Item.autoReuse = true;
+            Item.noUseGraphic = true;
+            Item.shoot = ModContent.ProjectileType<WaveGunDualHeld>();
+            Item.shootSpeed = 28f;
+            Item.channel = true;
+        }
+
+        public override bool AltFunctionUse(Player player) => true;
+        public override bool CanConsumeAmmo(Item ammo, Player player) => false;
+        public override bool CanUseItem(Player player) => player.ownedProjectileCounts[ModContent.ProjectileType<WaveGunRifleHeld>()] < 1 && player.ownedProjectileCounts[ModContent.ProjectileType<WaveGunDualHeld>()] < 1;
+
+        public override bool? UseItem(Player player)
+        {
+            if (player.AltFunction())
+            {
+                Item.channel = false;
+                Item.useTime = 40;
+                Item.useAnimation = 40;
+                RifleMode = !RifleMode;
+                SoundEngine.PlaySound(RifleMode ? SFX.WaveGunJoin : SFX.WaveGunSplit, player.position);
+                Item.SetNameOverride(RifleMode ? displayNameRifle.Value : displayNameDual.Value);
+            }
+            else
+            {
+                Item.channel = true;
+
+                if (RifleMode)
+                {
+                    Item.useTime = 40;
+                    Item.useAnimation = 40;
+                }
+                else
+                {
+                    Item.useTime = 14;
+                    Item.useAnimation = 14;
+                }
+            }
+
+            return null;
+        }
+
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+        {
+            shotCount++;
+
+            if (RifleMode)
+            {
+                float maxCharge = 90f * player.GetAttackSpeed(DamageClass.Magic);
+                Vector2 aim = velocity;
+                float timer = player.AltFunction() ? -1 : Item.useTime - 1;
+                Projectile.NewProjectileDirect(source, position, aim, ModContent.ProjectileType<WaveGunRifleHeld>(), damage, knockback, player.whoAmI, ai0: maxCharge, ai1: timer);
+            }
+            else
+            {
+                float maxCharge = 90f * player.GetAttackSpeed(DamageClass.Magic);
+                Vector2 aim = velocity;
+                float timer = player.AltFunction() ? -1 : Item.useTime - 1;
+                Projectile.NewProjectileDirect(source, position, aim, ModContent.ProjectileType<WaveGunDualHeld>(), damage, knockback, player.whoAmI, ai0: maxCharge, ai1: timer, ai2: shotCount);
+            }
+          
+            return false;
+        }
+
+        public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
+        {
+            if (RifleMode)
+            {
+                spriteBatch.Draw(rifleTexture.Value, position - new Vector2(3, 0), null, drawColor, 0f, origin, scale, SpriteEffects.None, 0);
+                return false;
+            }
+          
+            return true;
+        }
+
+        public override bool PreDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
+        {
+            if (RifleMode)
+            {
+                spriteBatch.Draw(rifleTexture.Value, Item.position - Main.screenPosition, null, lightColor, rotation, rifleTexture.Size()/2f, scale, SpriteEffects.None, 0);
+                return false;
+            }
+
+            return true;
+        }
+
+        public override void NetSend(BinaryWriter writer)
+        {
+            writer.Write(RifleMode);
+        }
+
+        public override void NetReceive(BinaryReader reader)
+        {
+            RifleMode = reader.ReadBoolean();
+        }
+
+        public override void SaveData(TagCompound tag)
+        {
+            if(RifleMode)
+                tag[nameof(RifleMode)] = true;
+        }
+
+        public override void LoadData(TagCompound tag)
+        {
+            RifleMode = tag.ContainsKey(nameof(RifleMode));
+        }
+
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+            .AddIngredient<WaveGunBlue>(1)
+            .AddIngredient<WaveGunRed>(1)
+            .AddTile(TileID.LunarCraftingStation)
+            .Register();
+        }
+    }
+}

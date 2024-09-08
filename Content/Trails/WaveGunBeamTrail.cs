@@ -7,8 +7,15 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Trails
 {
-    public class BlueEnergyTrail : VertexTrail
+    public class WaveGunBeamTrail : VertexTrail
     {
+        public Color Color;
+
+        public WaveGunBeamTrail(Color color)
+        {
+            Color = color;
+        }
+
         public override MiscShaderData TrailShader => new MiscShaderData(Main.VertexPixelShaderRef, "MagicMissile")
             .UseProjectionMatrix(doUse: true)
             .UseSaturation(Saturation)
@@ -20,7 +27,7 @@ namespace Macrocosm.Content.Trails
 
         public override Color TrailColors(float progressOnStrip)
         {
-            return Color.Lerp(Color.Transparent, new Color(75, 75, 255, 0) * 0.8f, progressOnStrip * 1 / progressOnStrip);
+            return Color.Lerp(Color.Transparent, Color, progressOnStrip * 1 / progressOnStrip);
         }
 
         public override float TrailWidths(float progressOnStrip)

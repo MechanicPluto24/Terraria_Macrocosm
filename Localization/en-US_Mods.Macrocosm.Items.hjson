@@ -1482,24 +1482,21 @@ StarDestroyer: {
 	Tooltip: ""
 }
 
-DualWaveGuns: {
-	DisplayName: Dual Wave Guns
-	Tooltip: ""
-}
-
 WaveGunBlue: {
-	DisplayName: Wave Gun Blue
+	DisplayName: Blue Wave Gun
 	Tooltip: ""
 }
 
 WaveGunRed: {
-	DisplayName: Wave Gun Red
+	DisplayName: Red Wave Gun
 	Tooltip: ""
 }
 
-WaveGunSingle: {
-	DisplayName: Wave Gun Single
-	Tooltip: ""
+WaveGunDual: {
+	DisplayName: Wave Gun
+	Tooltip: Right click to switch firing mode
+	DisplayNameDual: Wave Gun (Dual)
+	DisplayNameRifle: Wave Gun (Rifle)
 }
 
 Cynthalith: {
