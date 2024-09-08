@@ -1,5 +1,6 @@
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
+using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -76,6 +77,7 @@ namespace Macrocosm.Common.Bases.Projectiles
         protected virtual void PlayerVisuals()
         {
             Projectile.rotation = Projectile.velocity.ToRotation();
+            Projectile.direction = Math.Sign(Projectile.velocity.X);
 
             if (Player.whoAmI != Main.myPlayer)
                 return;

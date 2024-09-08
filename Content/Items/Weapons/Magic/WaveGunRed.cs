@@ -28,16 +28,15 @@ namespace Macrocosm.Content.Items.Weapons.Magic
             Item.knockBack = 10;
             Item.value = Item.sellPrice(0, 5, 0, 0);
             Item.rare = ModContent.RarityType<MoonRarityT2>();
-            Item.UseSound = SoundID.Item11;
             Item.autoReuse = true;
-            Item.shoot = ModContent.ProjectileType<RedGunHeld>();
+            Item.shoot = ModContent.ProjectileType<WaveGunRedHeld>();
             Item.shootSpeed = 28f;
             Item.channel = true;
         }
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             Vector2 aim = velocity;
-            Projectile.NewProjectileDirect(source, position, aim, ModContent.ProjectileType<RedGunHeld>(), damage, knockback, player.whoAmI);
+            Projectile.NewProjectileDirect(source, position, aim, ModContent.ProjectileType<WaveGunRedHeld>(), damage, knockback, player.whoAmI);
             return false;
         }
     }
