@@ -12,12 +12,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
 	public class ChampionsBladeSwingEmpowered : ChampionsBladeSwing
     {
-        public override string Texture => Macrocosm.TexturesPath + "Swing";
+        public override string Texture => Macrocosm.TextureEffectsPath + "Twirl2";
 
         public override void SetStaticDefaults()
 		{
 			ProjectileID.Sets.AllowsContactDamageFromJellyfish[Type] = true;
-			Main.projFrames[Type] = 4;
+			Main.projFrames[Type] = 1;
 		}
 
 		public override void SetDefaults()
@@ -65,7 +65,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			float velocityRotation = Projectile.velocity.ToRotation();
 			float adjustedRotation = MathHelper.Pi * direction * percentageOfLife + velocityRotation + direction * MathHelper.Pi + player.fullRotation;
 			Projectile.rotation = adjustedRotation; // Set the rotation to our to the new rotation we calculated.
-
+			if (Timer%15==5)
+            {
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, (Main.MouseWorld-Projectile.Center).SafeNormalize(Vector2.UnitX) * 7f, ModContent.ProjectileType<ChampionsBladeSlash>(), (int)(Projectile.damage / 1.8), 1f, Main.myPlayer, ai0: 1f);
+            }
 			float scaleMulti = 0.6f; // Excalibur, Terra Blade, and The Horseman's Blade is 0.6f; True Excalibur is 1f; default is 0.2f 
 			float scaleAdder = 1f; // Excalibur, Terra Blade, and The Horseman's Blade is 1f; True Excalibur is 1.2f; default is 1f 
 
@@ -204,16 +208,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 		{
 			Vector2 position = Projectile.Center - Main.screenPosition;
 			Texture2D texture = TextureAssets.Projectile[Type].Value;
-			Rectangle sourceRectangle = texture.Frame(1, 4); // The sourceRectangle says which frame to use.
-			Vector2 origin = sourceRectangle.Size() / 2f;
-			float scale = Projectile.scale * 1.1f;
-			SpriteEffects spriteEffects = ((!(Projectile.ai[0] >= 0f)) ? SpriteEffects.FlipVertically : SpriteEffects.None); // Flip the sprite based on the direction it is facing.
+			Vector2 origin = texture.Size() / 2f;
+			float scale = Projectile.scale *0.9f;
+			SpriteEffects spriteEffects = ((!(Projectile.ai[0] >= 0f)) ? SpriteEffects.None : SpriteEffects.FlipVertically); // Flip the sprite based on the direction it is facing.
             float progress = Timer / MaxTime;
             float lerpTime = Utils.Remap(progress, 0f, 0.6f, 0f, 1f) * Utils.Remap(progress, 0.6f, 1f, 1f, 0f);
 			float lightingColor = Lighting.GetColor(Projectile.Center.ToTileCoordinates()).ToVector3().Length() / (float)Math.Sqrt(3.0);
 			lightingColor = Utils.Remap(lightingColor, 0.2f, 1f, 0f, 1f);
 
-			Color backDarkColor = new Color(60, 160, 180); // Original Excalibur color: Color(180, 160, 60)
+			Color backDarkColor = new Color(150, 240, 255,0)*1.2f; // Original Excalibur color: Color(180, 160, 60)
 			Color middleMediumColor = new Color(80, 255, 255); // Original Excalibur color: Color(255, 255, 80)
 			Color frontLightColor = new Color(150, 240, 255); // Original Excalibur color: Color(255, 240, 150)
 
@@ -224,20 +227,17 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			faintLightingColor.B = (byte)(faintLightingColor.R * (0.25f + lightingColor * 0.75f));
 
 			// Back part
-			Main.EntitySpriteDraw(texture, position, sourceRectangle, backDarkColor * lightingColor * lerpTime, Projectile.rotation + Projectile.ai[0] * MathHelper.PiOver4 * -1f * (1f - progress), origin, scale, spriteEffects, 0f);
-			// Very faint part affected by the light color
-			Main.EntitySpriteDraw(texture, position, sourceRectangle, faintLightingColor * 0.15f, Projectile.rotation + Projectile.ai[0] * 0.01f, origin, scale, spriteEffects, 0f);
-			// Middle part
-			Main.EntitySpriteDraw(texture, position, sourceRectangle, middleMediumColor * lightingColor * lerpTime * 0.3f, Projectile.rotation, origin, scale, spriteEffects, 0f);
-			// Front part
-			Main.EntitySpriteDraw(texture, position, sourceRectangle, frontLightColor * lightingColor * lerpTime * 0.5f, Projectile.rotation, origin, scale * 0.975f, spriteEffects, 0f);
-			// Thin top line (final frame)
-			Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, 0, 3), Color.White * 0.6f * lerpTime, Projectile.rotation + Projectile.ai[0] * 0.01f, origin, scale, spriteEffects, 0f);
-			// Thin middle line (final frame)
-			Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, 0, 3), Color.White * 0.5f * lerpTime, Projectile.rotation + Projectile.ai[0] * -0.05f, origin, scale * 0.8f, spriteEffects, 0f);
-			// Thin bottom line (final frame)
-			Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, 0, 3), Color.White * 0.4f * lerpTime, Projectile.rotation + Projectile.ai[0] * -0.1f, origin, scale * 0.6f, spriteEffects, 0f);
+			if (Projectile.direction==-1){
+				Main.EntitySpriteDraw(texture, position, null, backDarkColor * lerpTime, Projectile.rotation + MathHelper.PiOver2+MathHelper.PiOver4+Projectile.ai[0] * 1f  * (1f - progress), origin, scale* 1f, spriteEffects, 0f);
+				Main.EntitySpriteDraw(texture, position, null, backDarkColor * lerpTime*0.8f, Projectile.rotation + MathHelper.PiOver2+MathHelper.PiOver4+Projectile.ai[0] * 1f * (1f - progress), origin, scale * 0.8f, spriteEffects, 0f);
+				Main.EntitySpriteDraw(texture, position, null, backDarkColor * lerpTime*0.6f, Projectile.rotation + MathHelper.PiOver2+MathHelper.PiOver4+Projectile.ai[0] * 1f * (1f - progress), origin, scale * 0.6f, spriteEffects, 0f);
+			}
+			else{
+				Main.EntitySpriteDraw(texture, position, null, backDarkColor * lerpTime, Projectile.rotation - MathHelper.PiOver2-MathHelper.PiOver4+Projectile.ai[0]  * 1f * (1f - progress), origin, scale* 1f, spriteEffects, 0f);
+				Main.EntitySpriteDraw(texture, position, null, backDarkColor * lerpTime*0.8f, Projectile.rotation - MathHelper.PiOver2-MathHelper.PiOver4+Projectile.ai[0]  * 1f * (1f - progress), origin, scale* 0.8f, spriteEffects, 0f);
+				Main.EntitySpriteDraw(texture, position, null, backDarkColor * lerpTime*0.6f, Projectile.rotation - MathHelper.PiOver2-MathHelper.PiOver4+Projectile.ai[0]  * 1f * (1f - progress), origin, scale* 0.6f, spriteEffects, 0f);
 
+			}
 			// This draws some sparkles around the circumference of the swing.
 			for (float i = 0f; i < 8f; i += 1f)
 			{
