@@ -22,6 +22,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 
         private static LocalizedText displayNameDual;
         private static LocalizedText displayNameRifle;
+        public override LocalizedText DisplayName => displayNameDual;
 
         public override void Load()
         {
@@ -38,20 +39,23 @@ namespace Macrocosm.Content.Items.Weapons.Magic
             Item.damage = 300;
             Item.DamageType = DamageClass.Magic;
             Item.mana = 10;
+
             Item.width = 54;
             Item.height = 36;
+
             Item.useTime = 14;
             Item.useAnimation = 14;
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.noMelee = true;
-            Item.knockBack = 10;
+            Item.knockBack = 5;
             Item.value = Item.sellPrice(0, 10, 0, 0);
             Item.rare = ModContent.RarityType<MoonRarityT2>();
+
             Item.autoReuse = true;
             Item.noUseGraphic = true;
+            Item.channel = true;
             Item.shoot = ModContent.ProjectileType<WaveGunDualHeld>();
             Item.shootSpeed = 28f;
-            Item.channel = true;
         }
 
         public override bool AltFunctionUse(Player player) => true;
@@ -63,9 +67,10 @@ namespace Macrocosm.Content.Items.Weapons.Magic
             if (player.AltFunction())
             {
                 Item.channel = false;
-                Item.useTime = 40;
-                Item.useAnimation = 40;
+                Item.useTime = Item.useAnimation = 40;
+
                 RifleMode = !RifleMode;
+
                 SoundEngine.PlaySound(RifleMode ? SFX.WaveGunJoin : SFX.WaveGunSplit, player.position);
                 Item.SetNameOverride(RifleMode ? displayNameRifle.Value : displayNameDual.Value);
             }
@@ -75,13 +80,13 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 
                 if (RifleMode)
                 {
-                    Item.useTime = 40;
-                    Item.useAnimation = 40;
+                    Item.useTime = Item.useAnimation = 40;
+                    Item.shootSpeed = 40f;
                 }
                 else
                 {
-                    Item.useTime = 14;
-                    Item.useAnimation = 14;
+                    Item.useTime = Item.useAnimation = 14;
+                    Item.shootSpeed = 28f;
                 }
             }
 
@@ -90,22 +95,20 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
+            int fireRate = (int)(Item.useTime * player.GetAttackSpeed(DamageClass.Magic));
+            int timer = 0;
             shotCount++;
 
+            if (player.AltFunction())
+            {
+                fireRate = int.MaxValue;
+                timer = int.MaxValue/2;
+            }
+
             if (RifleMode)
-            {
-                float maxCharge = 90f * player.GetAttackSpeed(DamageClass.Magic);
-                Vector2 aim = velocity;
-                float timer = player.AltFunction() ? -1 : Item.useTime - 1;
-                Projectile.NewProjectileDirect(source, position, aim, ModContent.ProjectileType<WaveGunRifleHeld>(), damage, knockback, player.whoAmI, ai0: maxCharge, ai1: timer);
-            }
+                Projectile.NewProjectileDirect(source, position, velocity, ModContent.ProjectileType<WaveGunRifleHeld>(), damage, knockback, player.whoAmI, ai0: fireRate, ai1: timer);
             else
-            {
-                float maxCharge = 90f * player.GetAttackSpeed(DamageClass.Magic);
-                Vector2 aim = velocity;
-                float timer = player.AltFunction() ? -1 : Item.useTime - 1;
-                Projectile.NewProjectileDirect(source, position, aim, ModContent.ProjectileType<WaveGunDualHeld>(), damage, knockback, player.whoAmI, ai0: maxCharge, ai1: timer, ai2: shotCount);
-            }
+                Projectile.NewProjectileDirect(source, position, velocity, ModContent.ProjectileType<WaveGunDualHeld>(), damage, knockback, player.whoAmI, ai0: fireRate, ai1: timer, ai2: shotCount);
           
             return false;
         }

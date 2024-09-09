@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Particles
         public int NumberOfInnerReplicas;
         public float ReplicaScalingFactor;
 
-        public override int FrameNumber => 7;
+        public override int FrameCount => 7;
         public override int FrameSpeed => 4;
         public override bool DespawnOnAnimationComplete => true;
 
@@ -35,7 +35,7 @@ namespace Macrocosm.Content.Particles
         {
             for (int i = 1; i < NumberOfInnerReplicas; i++)
             {
-                float explosionProgress = (float)currentFrame / FrameNumber;
+                float explosionProgress = (float)currentFrame / FrameCount;
                 float replicaDecrease = 1f - (float)i / NumberOfInnerReplicas;
                 float scale = Scale * MathHelper.Lerp(ReplicaScalingFactor + (1f - ReplicaScalingFactor) * replicaDecrease, 1.06f, explosionProgress);
 

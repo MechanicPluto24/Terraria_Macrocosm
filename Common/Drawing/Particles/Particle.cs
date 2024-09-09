@@ -8,6 +8,7 @@ using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Utilities.Terraria.Utilities;
 
 
 namespace Macrocosm.Common.Drawing.Particles
@@ -51,7 +52,7 @@ namespace Macrocosm.Common.Drawing.Particles
             Active = true;
 
             if (SetRandomFrameOnSpawn)
-                currentFrame = Main.rand.Next(FrameNumber);
+                currentFrame = Main.rand.Next(FrameCount);
 
             //OnSpawn();
         }
@@ -91,6 +92,10 @@ namespace Macrocosm.Common.Drawing.Particles
         /// <summary> The <c>Particle</c>'s scale as a 2d vector </summary>
         [NetSync] public Vector2 ScaleV = new(1f);
 
+        [NetSync] public float FadeInNormalizedTime = 0f;
+
+        [NetSync] public float FadeOutNormalizedTime = 1f;
+
         /// <summary> The <c>Particle</c>'s scale as a scalar </summary>
         public float Scale
         {
@@ -105,7 +110,7 @@ namespace Macrocosm.Common.Drawing.Particles
         public virtual string TexturePath => Utility.GetNamespacePath(this);
 
         /// <summary> The  <c>Particle</c>'s total lifetime. If <see cref="DespawnOnAnimationComplete"/> is true, this defaults to the animation duration. </summary>
-        public virtual int SpawnTimeLeft => DespawnOnAnimationComplete ? FrameNumber * FrameSpeed - 1 : 300;
+        public virtual int SpawnTimeLeft => DespawnOnAnimationComplete ? FrameCount * FrameSpeed - 1 : 300;
 
         /// <summary> Whether the <c>Particle</c> should update its position based on velocity </summary>
         public virtual bool ShouldUpdatePosition => true;
@@ -113,6 +118,7 @@ namespace Macrocosm.Common.Drawing.Particles
         /// <summary> The draw layer of this <c>Particle</c>, see <see cref="ParticleDrawLayer"/>. Unused if <see cref="HasCustomDrawer"/>. </summary>
         public virtual ParticleDrawLayer DrawLayer => ParticleDrawLayer.AfterProjectiles;
 
+        public float FadeFactor => Utility.InverseLerp(0f, FadeInNormalizedTime, (float)TimeLeft / SpawnTimeLeft, clamped: true) * Utility.InverseLerp(1f, FadeOutNormalizedTime, (float)TimeLeft / SpawnTimeLeft, clamped: true);
         #endregion
 
         #region Hooks
@@ -153,30 +159,30 @@ namespace Macrocosm.Common.Drawing.Particles
         public virtual bool DespawnOnAnimationComplete => false;
 
         /// <summary> Number of animation frames of this particle </summary>
-        public virtual int FrameNumber => 1;
+        public virtual int FrameCount => 1;
 
         /// <summary> Particle animation update speed, in ticks per frame </summary>
-        public virtual int FrameSpeed => 1;
+        public virtual int FrameSpeed { get; set; } = 1;
 
         protected int currentFrame = 0;
         protected int frameCnt = 0;
 
-        /// <summary> Used for animating the <c>Particle</c>. By default, updates with <see cref="FrameNumber"/> and <see cref="FrameSpeed"/> </summary>
+        /// <summary> Used for animating the <c>Particle</c>. By default, updates with <see cref="FrameCount"/> and <see cref="FrameSpeed"/> </summary>
         public virtual void UpdateFrame()
         {
             // if not animated or frame was picked on spawn, don't update frame
-            if (FrameNumber <= 1 || SetRandomFrameOnSpawn)
+            if (FrameCount <= 1 || SetRandomFrameOnSpawn)
                 return;
 
             if (Main.hasFocus || Main.netMode == NetmodeID.MultiplayerClient)
             {
                 frameCnt++;
-                if (frameCnt == FrameSpeed)
+                if (frameCnt >= FrameSpeed)
                 {
                     frameCnt = 0;
                     currentFrame++;
 
-                    if (currentFrame >= FrameNumber)
+                    if (currentFrame >= FrameCount)
                         currentFrame = 0;
                 }
             }
@@ -188,16 +194,14 @@ namespace Macrocosm.Common.Drawing.Particles
         /// </summary>
         public virtual Rectangle? GetFrame()
         {
-
             if (Main.netMode == NetmodeID.Server)
                 return null;
 
-            // if not animated or frame is not picked randomly on spawn, draw the entire texture
-            if (FrameNumber <= 1 && !SetRandomFrameOnSpawn)
+            // if not animated and frame is not picked randomly on spawn, draw the entire texture
+            if (FrameCount <= 1 && !SetRandomFrameOnSpawn)
                 return null;
 
-
-            int frameHeight = Texture.Height() / FrameNumber;
+            int frameHeight = Texture.Height() / FrameCount;
             return new Rectangle(0, frameHeight * currentFrame, Texture.Width(), frameHeight);
         }
 
@@ -228,7 +232,7 @@ namespace Macrocosm.Common.Drawing.Particles
         /// <param name="lightColor"> The light color at the particle's position </param>
         public virtual void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
-            spriteBatch.Draw(Texture.Value, Position - screenPosition, GetFrame(), lightColor, Rotation, Size * 0.5f, ScaleV, SpriteEffects.None, 0f);
+            spriteBatch.Draw(Texture.Value, Position - screenPosition, GetFrame(), lightColor * FadeFactor, Rotation, Size * 0.5f, ScaleV, SpriteEffects.None, 0f);
         }
 
         /// <summary> 

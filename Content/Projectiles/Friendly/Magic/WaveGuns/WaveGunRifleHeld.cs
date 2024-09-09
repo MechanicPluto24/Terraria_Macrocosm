@@ -13,12 +13,17 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
     {
         public override string Texture => base.Texture;
 
-        public float MinCharge => MaxCharge * 0.2f;
-        public ref float MaxCharge => ref Projectile.ai[0];
-        public ref float AI_Timer => ref Projectile.ai[1];
-        public ref float AI_Charge => ref Projectile.ai[2];
+        public int AI_FireRate
+        {
+            get => (int)Projectile.ai[0]; 
+            set => Projectile.ai[0] = value;
+        }
 
-        public int fired;
+        public int AI_Timer
+        {
+            get => (int)Projectile.ai[1];
+            set => Projectile.ai[1] = value;
+        }
 
         public override float CircularHoldoutOffset => 8f;
         protected override bool StillInUse => base.StillInUse || itemUseTime > 0;
@@ -44,10 +49,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
                 int damage = Player.GetWeaponDamage(currentItem);
                 float knockback = currentItem.knockBack;
 
-                if (AI_Timer % currentItem.useTime == 0 && AI_Timer > 0)
+                if (AI_Timer % AI_FireRate == 0)
                 {
+                    Vector2 position = Projectile.Center + Projectile.velocity * 5;
+                    Vector2 velocity = Vector2.Normalize(Projectile.velocity) * currentItem.shootSpeed;
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<WaveGunEnergyBolt>(), (int)(damage * 1.4), knockback, Projectile.owner, ai0: (float)WaveGunEnergyBolt.BeamVariant.Purple);
+                    
                     SoundEngine.PlaySound(SFX.WaveGunShotRifle, Projectile.position);
-                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Normalize(Projectile.velocity) * 40f, ModContent.ProjectileType<WaveGunEnergyBolt>(), (int)(damage * 1.4), knockback, Projectile.owner, ai0: (float)WaveGunEnergyBolt.BeamVariant.Purple);
                 }
 
                 AI_Timer++;

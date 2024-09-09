@@ -1,10 +1,14 @@
 using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Particles;
 using Macrocosm.Content.Trails;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
+using Terraria.GameContent.Drawing;
+using Terraria.Graphics.Renderers;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -33,7 +37,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
             set => Projectile.ai[0] = (float)value;
         }
 
-        public int Timer
+        public int AI_Timer
         {
             get => (int)Projectile.ai[1];
             set => Projectile.ai[1] = value;
@@ -43,6 +47,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
         private Vector3 lightColor;
         private WaveGunBeamTrail trail;
         private bool spawned;
+        private bool collided;
 
         public override void SetDefaults()
         {
@@ -84,17 +89,21 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
                 spawned = true;
             }
 
-            Projectile.velocity = Projectile.velocity.RotatedBy(MathHelper.ToRadians((int)(Math.Cos(Timer / 10) / 10)));
+            Projectile.velocity = Projectile.velocity.RotatedBy(MathHelper.ToRadians((int)(Math.Cos(AI_Timer / 10) / 10)));
 
-            Timer++;
+            AI_Timer++;
 
             Lighting.AddLight(Projectile.Center, lightColor);
         }
 
+        public override bool OnTileCollide(Vector2 oldVelocity)
+        {
+            return true;
+        }
+
         public override void OnKill(int timeLeft)
         {
-            int count = BeamType is BeamVariant.Purple ? 120 : 60;  
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < (BeamType is BeamVariant.Purple ? 120 : 60); i++)
             {
                 Vector2 velocity = Main.rand.NextVector2Circular(4, 4);
                 Dust dust = Dust.NewDustPerfect(Projectile.oldPosition + Projectile.Size / 2f + Projectile.oldVelocity, DustID.Electric, velocity, Scale: Main.rand.NextFloat(0.2f, 0.6f));
@@ -115,12 +124,35 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
                     dust.shader = GameShaders.Armor.GetShaderFromItemId(ItemID.BlueDye).UseColor(lightColor);
                 }
             }
+
+            for (int i = 0; i < (BeamType is BeamVariant.Purple ? 18 : 12); i++)
+            {
+                Particle.CreateParticle<LightningParticle>((p) =>
+                {
+                    p.Position = Projectile.Center + Projectile.oldVelocity * 0.5f;
+                    p.Velocity = Main.rand.NextVector2Circular(8, 8);
+                    p.Scale = Main.rand.NextFloat(0.1f, 1f);
+                    p.FadeInNormalizedTime = 0.5f;
+                    p.FadeOutNormalizedTime = 1f;
+                    p.DrawColor = color.WithAlpha((byte)Main.rand.Next(0, 64));
+                    p.ScaleVelocity = 0.01f;
+                });
+            }
+
+            Particle.CreateParticle<TintableFlash>((p) =>
+            {
+                p.Position = Projectile.Center + Projectile.oldVelocity * 0.5f;
+                p.Scale = 0.05f;
+                p.ScaleIncr = 0.08f;
+                p.Color = color.WithAlpha(127);
+            });
+
         }
 
         private SpriteBatchState state;
         public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D texture = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Trace1").Value;
+            Texture2D texture = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + $"Trace{Main.rand.Next(2,5).ToString()}").Value;
             state.SaveState(Main.spriteBatch);
 
             Main.spriteBatch.End();
@@ -132,7 +164,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);
 
-            Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, color, Projectile.velocity.ToRotation() + MathHelper.PiOver2, texture.Size() / 2f, Projectile.scale * 0.35f, SpriteEffects.None, 0f);
+            Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, color, Projectile.velocity.ToRotation() + MathHelper.PiOver2, texture.Size() / 2f, Projectile.scale * 0.25f, SpriteEffects.None, 0f);
             
             return false;
         }

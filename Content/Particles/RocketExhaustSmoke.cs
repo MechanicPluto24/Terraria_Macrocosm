@@ -9,7 +9,7 @@ namespace Macrocosm.Content.Particles
 {
     public class RocketExhaustSmoke : Particle
     {
-        public override int FrameNumber => 3;
+        public override int FrameCount => 3;
         public override bool SetRandomFrameOnSpawn => true;
 
         public bool FadeIn = false;

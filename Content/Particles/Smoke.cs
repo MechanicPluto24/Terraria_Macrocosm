@@ -8,7 +8,7 @@ namespace Macrocosm.Content.Particles
 {
     public class Smoke : Particle
     {
-        public override int FrameNumber => 3;
+        public override int FrameCount => 3;
         public override bool SetRandomFrameOnSpawn => true;
 
         public Color DrawColor;

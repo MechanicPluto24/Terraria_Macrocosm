@@ -7,7 +7,7 @@ namespace Macrocosm.Content.Particles
 {
     public class IceMist : Particle
     {
-        public override int FrameNumber => 1;
+        public override int FrameCount => 1;
 
         public override string TexturePath => Macrocosm.TextureEffectsPath + "Smoke1";
         public Color DrawColor = new Color(56, 188, 173, 0);
