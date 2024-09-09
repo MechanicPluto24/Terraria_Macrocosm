@@ -12,12 +12,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
     public class ChampionsBladeSwing : ModProjectile
     {
-        public override string Texture => Macrocosm.TexturesPath + "Swing";
+        public override string Texture => Macrocosm.TextureEffectsPath + "Twirl1";
 
         public override void SetStaticDefaults()
         {
             ProjectileID.Sets.AllowsContactDamageFromJellyfish[Type] = true;
-            Main.projFrames[Type] = 4;
+            Main.projFrames[Type] = 1;
         }
 
         public override void SetDefaults()
@@ -49,7 +49,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         public ref float Timer => ref Projectile.localAI[0];
         public ref float SwingDirection => ref Projectile.ai[0];
         public ref float MaxTime => ref Projectile.ai[1];
-        public ref float Scale => ref Projectile.ai[2];
+   
 
         public override void AI()
         {
@@ -61,7 +61,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             float adjustedRotation = MathHelper.Pi * SwingDirection * progress + velocityRotation + SwingDirection * MathHelper.Pi + player.fullRotation;
 
             Projectile.rotation = adjustedRotation; // Set the rotation to our to the new rotation we calculated.
-
+            if (Timer%30==5)
+            {
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.velocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(MathHelper.Pi/4) * 7f, ModContent.ProjectileType<ChampionsBladeSlash>(), (int)(Projectile.damage / 2), 1f, Main.myPlayer, ai0: 0f);
+            }
             float scaleMultiplier = 0.6f; // Excalibur, Terra Blade, and The Horseman's Blade is 0.6f; True Excalibur is 1f; default is 0.2f 
             float scaleAdder = 1f; // Excalibur, Terra Blade, and The Horseman's Blade is 1f; True Excalibur is 1.2f; default is 1f 
 
@@ -91,7 +95,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 Dust.NewDustPerfect(dustPosition, DustID.TintableDustLighted, dustVelocity, 100, Color.SkyBlue * Projectile.Opacity, 1.2f * Projectile.Opacity);
             }
 
-            Projectile.scale *= Scale; // Set the scale of the projectile to the scale of the item.
+            
 
             // If the projectile is as old as the max animation time, kill the projectile.
             if (Timer >= MaxTime)
@@ -190,17 +194,17 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         {
             Vector2 position = Projectile.Center - Main.screenPosition;
             Texture2D texture = TextureAssets.Projectile[Type].Value;
-            Vector2 origin = texture.Frame(1, 4).Size() / 2f;
-            float scale = Projectile.scale * 1.1f;
-            SpriteEffects spriteEffects = ((!(SwingDirection >= 0f)) ? SpriteEffects.FlipVertically : SpriteEffects.None); // Flip the sprite based on the direction it is facing.
+            Vector2 origin = texture.Size() / 2f;
+            float scale = Projectile.scale * 0.8f;
+            SpriteEffects spriteEffects = ((!(SwingDirection >= 0f)) ? SpriteEffects.None : SpriteEffects.FlipVertically); // Flip the sprite based on the direction it is facing.
             float progress = Timer / MaxTime;
             float lerpTime = Utils.Remap(progress, 0f, 0.6f, 0f, 1f) * Utils.Remap(progress, 0.6f, 1f, 1f, 0f);
             float lightingColor = Lighting.GetColor(Projectile.Center.ToTileCoordinates()).ToVector3().Length() / (float)Math.Sqrt(3.0);
             lightingColor = Utils.Remap(lightingColor, 0.2f, 1f, 0f, 1f);
 
-            Color backDarkColor = new Color(60, 160, 180); 
+            Color backDarkColor = new Color(60, 160, 180,0); 
             Color middleMediumColor = new Color(80, 255, 255); 
-            Color frontLightColor = new Color(150, 240, 255);  
+            Color frontLightColor = new Color(150, 240, 255)*1.3f;  
 
             Color whiteTimesLerpTime = Color.White * lerpTime * 0.5f;
             whiteTimesLerpTime.A = (byte)(whiteTimesLerpTime.A * (1f - lightingColor));
@@ -209,19 +213,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             faintLightingColor.B = (byte)(faintLightingColor.R * (0.25f + lightingColor * 0.75f));
 
             // Back part
-            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 0), backDarkColor * lightingColor * lerpTime, Projectile.rotation + SwingDirection * MathHelper.PiOver4 * -1f * (1f - progress), origin, scale, spriteEffects, 0f);
-            // Very faint part affected by the light color
-            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 0), faintLightingColor * 0.15f, Projectile.rotation + SwingDirection * 0.01f, origin, scale, spriteEffects, 0f);
-            // Middle part
-            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 0), middleMediumColor * lightingColor * lerpTime * 0.3f, Projectile.rotation, origin, scale, spriteEffects, 0f);
-            // Front part
-            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 0), frontLightColor * lightingColor * lerpTime * 0.5f, Projectile.rotation, origin, scale * 0.975f, spriteEffects, 0f);
-            // Thin top line (final frame)
-            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), Color.White * 0.6f * lerpTime, Projectile.rotation + SwingDirection * 0.01f, origin, scale, spriteEffects, 0f);
-            // Thin middle line (final frame)
-            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), Color.White * 0.5f * lerpTime, Projectile.rotation + SwingDirection * -0.05f, origin, scale * 0.8f, spriteEffects, 0f);
-            // Thin bottom line (final frame)
-            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), Color.White * 0.4f * lerpTime, Projectile.rotation + SwingDirection * -0.1f, origin, scale * 0.6f, spriteEffects, 0f);
+            if (Projectile.direction==-1){
+				Main.EntitySpriteDraw(texture, position, null, backDarkColor * lerpTime, Projectile.rotation + MathHelper.PiOver2+MathHelper.PiOver4+Projectile.ai[0]  * 1f * (1f - progress), origin, scale, spriteEffects, 0f);
+                Main.EntitySpriteDraw(texture, position, null, backDarkColor * lerpTime*0.7f, Projectile.rotation + MathHelper.PiOver2+MathHelper.PiOver4+Projectile.ai[0]  * 1f * (1f - progress), origin, scale*0.7f, spriteEffects, 0f);
+
+            }
+			else{
+				Main.EntitySpriteDraw(texture, position, null, backDarkColor * lerpTime, Projectile.rotation - MathHelper.PiOver2-MathHelper.PiOver4+Projectile.ai[0]  * 1f * (1f - progress), origin, scale, spriteEffects, 0f);
+				Main.EntitySpriteDraw(texture, position, null, backDarkColor * lerpTime*0.7f, Projectile.rotation - MathHelper.PiOver2-MathHelper.PiOver4+Projectile.ai[0]  * 1f * (1f - progress), origin, scale*0.7f, spriteEffects, 0f);
+            }
 
             // This draws some sparkles around the circumference of the swing.
             for (float i = 0f; i < 8f; i += 1f)
