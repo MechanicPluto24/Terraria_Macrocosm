@@ -12,10 +12,18 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
 {
     public class WaveGunBlueHeld : ChargedHeldProjectile
     {
-        public override string Texture => ModContent.GetInstance<WaveGunRed>().Texture;
-        public ref float AI_Timer => ref Projectile.ai[1];
-        public ref float AI_Charge => ref Projectile.ai[2];
+        public override string Texture => ModContent.GetInstance<WaveGunBlue>().Texture;
+        public int AI_FireRate
+        {
+            get => (int)Projectile.ai[0];
+            set => Projectile.ai[0] = value;
+        }
 
+        public int AI_Timer
+        {
+            get => (int)Projectile.ai[1];
+            set => Projectile.ai[1] = value;
+        }
         public override float CircularHoldoutOffset => 4f;
 
         protected override bool StillInUse => base.StillInUse || itemUseTime > 0;
@@ -46,11 +54,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
 
                 int damage = Player.GetWeaponDamage(currentItem);
                 float knockback = currentItem.knockBack;
-                if (AI_Timer % currentItem.useTime == 0)
+                if (AI_Timer % AI_FireRate == 0)
                 {
-                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center + Projectile.velocity * 5f, Vector2.Normalize(Projectile.velocity.RotatedByRandom(MathHelper.PiOver2 / 9)) * 25f, ModContent.ProjectileType<WaveGunEnergyBolt>(), damage, knockback, Projectile.owner, ai0: (float)WaveGunEnergyBolt.BeamVariant.Blue);
+                    Vector2 position = Projectile.Center + Projectile.velocity * 8;
+                    Vector2 velocity = Vector2.Normalize(Projectile.velocity.RotatedByRandom(MathHelper.PiOver2 / 9)) * currentItem.shootSpeed;
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<WaveGunEnergyBolt>(), damage, knockback, Projectile.owner, ai0: (float)WaveGunEnergyBolt.BeamVariant.Blue);
                     SoundEngine.PlaySound(SFX.WaveGunShot, Projectile.position);
-                    GunRotation += 0.3f;
+                    GunRotation += 0.25f;
                 }
 
                 AI_Timer++;

@@ -15,10 +15,24 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
     {
         public override string Texture => Macrocosm.EmptyTexPath;
 
-        public float MinCharge => MaxCharge * 0.2f;
-        public ref float MaxCharge => ref Projectile.ai[0];
-        public ref float AI_Timer => ref Projectile.ai[1];
-        public ref float AI_Charge => ref Projectile.ai[2];
+        public int AI_FireRate
+        {
+            get => (int)Projectile.ai[0];
+            set => Projectile.ai[0] = value;
+        }
+
+        public int AI_Timer
+        {
+            get => (int)Projectile.ai[1];
+            set => Projectile.ai[1] = value;
+        }
+
+        public int AI_ShotCount
+        {
+            get => (int)Projectile.ai[2];
+            set => Projectile.ai[2] = value;
+        }
+
 
         public int fired;
         public override float CircularHoldoutOffset => 8f;
@@ -58,20 +72,23 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
                 int damage = Player.GetWeaponDamage(currentItem);
                 float knockback = currentItem.knockBack;
 
-                if (AI_Timer % currentItem.useTime == 0 && AI_Timer > 0)
+                if (AI_Timer % AI_FireRate == 0)
                 {
-                    if (AI_Charge % 2 == 0)
+                    Vector2 position = Projectile.Center + Projectile.velocity * 5;
+                     Vector2 velocity = Vector2.Normalize(Projectile.velocity) * currentItem.shootSpeed;
+
+                    if (AI_ShotCount % 2 == 0)
                     {
                         redRotation += 0.3f;
-                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Normalize(Projectile.velocity) * 28f, ModContent.ProjectileType<WaveGunEnergyBolt>(), (int)(damage), knockback, Projectile.owner, ai0: (float)WaveGunEnergyBolt.BeamVariant.Red);
+                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<WaveGunEnergyBolt>(), (int)(damage), knockback, Projectile.owner, ai0: (float)WaveGunEnergyBolt.BeamVariant.Red);
                     }
                     else
                     {
                         blueRotation += 0.3f;
-                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Normalize(Projectile.velocity) * 28f, ModContent.ProjectileType<WaveGunEnergyBolt>(), (int)(damage), knockback, Projectile.owner, ai0: (float)WaveGunEnergyBolt.BeamVariant.Blue);
+                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<WaveGunEnergyBolt>(), (int)(damage), knockback, Projectile.owner, ai0: (float)WaveGunEnergyBolt.BeamVariant.Blue);
                     }
 
-                    AI_Charge++;
+                    AI_ShotCount++;
 
                     SoundEngine.PlaySound(SFX.WaveGunShot, Projectile.position);
                 }

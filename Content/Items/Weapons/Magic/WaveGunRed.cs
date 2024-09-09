@@ -35,8 +35,8 @@ namespace Macrocosm.Content.Items.Weapons.Magic
         }
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            Vector2 aim = velocity;
-            Projectile.NewProjectileDirect(source, position, aim, ModContent.ProjectileType<WaveGunRedHeld>(), damage, knockback, player.whoAmI);
+            int fireRate = (int)(Item.useTime * player.GetAttackSpeed(DamageClass.Magic));
+            Projectile.NewProjectileDirect(source, position, velocity, ModContent.ProjectileType<WaveGunRedHeld>(), damage, knockback, player.whoAmI, ai0: fireRate);
             return false;
         }
     }

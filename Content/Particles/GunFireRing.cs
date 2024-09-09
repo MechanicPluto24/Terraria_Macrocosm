@@ -6,7 +6,7 @@ namespace Macrocosm.Content.Particles
 {
     public class GunFireRing : Particle
     {
-        public override int FrameNumber => 4;
+        public override int FrameCount => 4;
         public override int FrameSpeed => 8;
         public override bool DespawnOnAnimationComplete => true;
 
