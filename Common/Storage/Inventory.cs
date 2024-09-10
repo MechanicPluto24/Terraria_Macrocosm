@@ -17,14 +17,19 @@ namespace Macrocosm.Common.Storage
 {
     public partial class Inventory
     {
-        /// <summary> The currently displayed inventory, reset every UI update. Check for <see cref="CustomInventoryActive"/> beforehand. </summary>
+        /// <summary>
+        /// <br> The currently displayed inventory, reset every UI update. Allows for logic such as shift clicking items. </br>
+        /// <br> Set this in the UI update hook when dispalying a particular Inventory UI. </br>
+        /// <br> When accessing, check for <see cref="CustomInventoryActive"/> beforehand. </br>
+        /// </summary>
         public static Inventory ActiveInventory { get; set; }
 
         /// <summary> Whether there is a custom inventory currently being displayed </summary>
         public static bool CustomInventoryActive => ActiveInventory is not null;
 
         private Item[] items;
-        public Item[] Items => items;
+        private UIInventorySlot[] uiItemSlots;
+        private int specialSlotCount = 0;
 
         public Item this[int index]
         {
@@ -32,7 +37,7 @@ namespace Macrocosm.Common.Storage
             set => items[index] = value;
         }
 
-        private UIInventorySlot[] uiItemSlots;
+        public Item[] Items => items;
 
         public IInventoryOwner Owner { get; set; }
 
@@ -171,7 +176,7 @@ namespace Macrocosm.Common.Storage
                     if (!uiItemSlots[i].CanInteract)
                         continue;
 
-                    if (uiItemSlots[i].ReservedCheck(item))
+                    if (!uiItemSlots[i].ReservedCheck(item))
                         continue;
 
                     if (items[i].stack >= items[i].maxStack || item.type != items[i].type)

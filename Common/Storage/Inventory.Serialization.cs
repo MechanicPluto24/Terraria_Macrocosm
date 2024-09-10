@@ -26,7 +26,7 @@ namespace Macrocosm.Common.Storage
         {
             string ownerType = "";
             int ownerSerializationIndex = -1;
-            int size = Rocket.DefaultInventorySize;
+            int size = Rocket.DefaultTotalInventorySize;
 
             if (tag.ContainsKey(nameof(Size)))
                 size = tag.GetInt(nameof(Size));

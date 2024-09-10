@@ -19,7 +19,7 @@ namespace Macrocosm.Common.Config
 
         [Header("$Mods.Macrocosm.Configs.MacrocosmConfig.GameplayHeader")]
         [DefaultValue(false)]
-        public bool AlwaysDisplayTitleScreens { get; set; }
+        public bool AlwaysDisplayTitleCards { get; set; }
 
         [DefaultValue(true)]
         public bool GunRecoilEffects { get; set; }

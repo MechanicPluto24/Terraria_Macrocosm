@@ -1,4 +1,4 @@
-﻿using Macrocosm.Common.DataStructures;
+﻿using Macrocosm.Common.Enums;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
@@ -23,7 +23,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.UI.Customization
 {
-    public class UICustomizationTab : UIPanel, ITabUIElement, IRocketUIDataConsumer, IInventoryOwner
+    public class UICustomizationTab : UIPanel, ITabUIElement, IRocketUIDataConsumer
     {
         private Rocket rocket = new();
         public Rocket Rocket
@@ -77,7 +77,8 @@ namespace Macrocosm.Content.Rockets.UI.Customization
         private UIPanelIconButton rocketResetButton;
         private UIPanelIconButton rocketCopyButton;
         private UIPanelIconButton rocketPasteButton;
-        public Inventory Inventory { get; set; }
+
+        private Item ItemInUnlockableSlot => Rocket.Inventory[Rocket.SpecialInventorySlot_CustomizationUnlock];
         private UIInventorySlot unlockableItemSlot;
         private UIPanelIconButton unlockableApplyButton;
 
@@ -170,7 +171,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
         {
             Main.blockInput = false;
             AllLoseFocus();
-            Inventory.DropItem(0, Rocket.Center, sync: false, fromClient: true);
+            Rocket.Inventory.DropItem(Rocket.SpecialInventorySlot_CustomizationUnlock, Rocket.Center, sync: false, fromClient: true);
         }
 
         public override void Update(GameTime gameTime)
@@ -479,9 +480,9 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             RefreshPatternColorPickers();
         }
 
-        private bool CheckUnlockableItemUnlocked()
+        private bool CheckUnlockableItemUnlocked(Item item)
         {
-            if (Inventory[0].ModItem is PatternDesign patternDesign)
+            if (item.ModItem is PatternDesign patternDesign)
             {
                 foreach (var (moduleName, patternName) in patternDesign.Patterns)
                 {
@@ -496,15 +497,15 @@ namespace Macrocosm.Content.Rockets.UI.Customization
 
         private void ApplyUnlockableItem()
         {
-            if (CheckUnlockableItemUnlocked())
+            if (CheckUnlockableItemUnlocked(ItemInUnlockableSlot))
                 return;
 
-            if (Inventory[0].ModItem is PatternDesign patternDesign)
+            if (ItemInUnlockableSlot.ModItem is PatternDesign patternDesign)
             {
                 SoundEngine.PlaySound(SoundID.MenuTick);
                 foreach (var (moduleName, patternName) in patternDesign.Patterns)
                     CustomizationStorage.SetPatternUnlockedStatus(moduleName, patternName, unlockedState: true);
-                Inventory[0].TurnToAir();
+                ItemInUnlockableSlot.TurnToAir();
                 RefreshPatternConfigPanel();
             }
         }
@@ -915,12 +916,10 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             rocketCustomizationControlPanel.SetPadding(2f);
             customizationPanelBackground.Append(rocketCustomizationControlPanel);
 
-            Inventory = new(1, this);
-            unlockableItemSlot = new(Inventory, 0)
-            {
-                HAlign = 0.5f,
-                VAlign = 0.5f
-            };
+            unlockableItemSlot = Rocket.Inventory.ProvideItemSlot(Rocket.SpecialInventorySlot_CustomizationUnlock);
+            unlockableItemSlot.AddReserved(CheckUnlockableItemUnlocked);
+            unlockableItemSlot.HAlign = 0.5f;
+            unlockableItemSlot.VAlign = 0.5f;
             rocketCustomizationControlPanel.Append(unlockableItemSlot);
 
             unlockableApplyButton = new(ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "Hammer"))
@@ -928,7 +927,11 @@ namespace Macrocosm.Content.Rockets.UI.Customization
                 VAlign = 0.5f,
                 Left = new(0f, 0.6f),
                 GrayscaleIconIfNotInteractible = true,
-                CheckInteractible = () => !CheckUnlockableItemUnlocked() && Inventory[0].ModItem is PatternDesign patternDesign
+                CheckInteractible = () =>
+                {
+                    return !CheckUnlockableItemUnlocked(ItemInUnlockableSlot)
+                        && ItemInUnlockableSlot.ModItem is PatternDesign patternDesign;
+                }
             };
             unlockableApplyButton.OnLeftClick += (_, _) => ApplyUnlockableItem();
             rocketCustomizationControlPanel.Append(unlockableApplyButton);

@@ -177,7 +177,13 @@ namespace Macrocosm.Content.Rockets
         public bool HasInventory => Inventory is not null;
         public Inventory Inventory { get; set; }
 
-        public const int DefaultInventorySize = 50;
+        public const int DefaultGeneralInventorySize = 50;
+
+        public const int SpecialInventorySlot_CustomizationUnlock = 0;
+        public const int SpecialInventorySlot_FuelTank = 1;
+        public const int SpecialInventorySlot_Count = 2;
+
+        public const int DefaultTotalInventorySize = DefaultGeneralInventorySize + SpecialInventorySlot_Count;
 
         public Vector2 InventoryItemDropLocation => Center;
         public int InventorySerializationIndex => WhoAmI;
@@ -190,6 +196,8 @@ namespace Macrocosm.Content.Rockets
                 Modules[moduleName] = CreateModule(moduleName);
                 Modules[moduleName].SetRocket(this);
             }
+
+            Inventory = new(DefaultTotalInventorySize, this);
         }
 
         private RocketModule CreateModule(string moduleName)
@@ -210,7 +218,6 @@ namespace Macrocosm.Content.Rockets
         public void OnCreation()
         {
             CurrentWorld = MacrocosmSubworld.CurrentID;
-            Inventory = new(DefaultInventorySize, this);
             OnWorldSpawn();
         }
 

@@ -25,6 +25,17 @@
 	<NoWarn>$(NoWarn);CA1822</NoWarn> <!-- Private methods that don't deal with instance data should sometimes be left instanced, not static, due to tML's nature -->
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Content\Liquids\Oil.png" />
+    <None Remove="Content\Liquids\OilBubble.png" />
+    <None Remove="Content\Liquids\OilFill.png" />
+    <None Remove="Content\Liquids\OilSlope.png" />
+    <None Remove="Content\Liquids\OilSurface.png" />
+    <None Remove="Content\Liquids\OilWaterfall.png" />
+    <None Remove="Content\Liquids\RocketFuel.png" />
+    <None Remove="Content\Liquids\RocketFuelFill.png" />
+    <None Remove="Content\Liquids\RocketFuelSlope.png" />
+    <None Remove="Content\Liquids\RocketFuelSurface.png" />
+    <None Remove="Content\Liquids\RocketFuelWaterfall.png" />
     <None Remove="Content\NPCs\Enemies\Moon\Dweller_Head_Back.png" />
     <None Remove="Content\NPCs\Enemies\Moon\Dweller_Head_JawLeft.png" />
     <None Remove="Content\NPCs\Enemies\Moon\Dweller_Head_JawRight.png" />
@@ -39,6 +50,7 @@
     <None Remove="Content\NPCs\Enemies\Moon\Dweller_Leg_Mid1.png" />
     <None Remove="Content\NPCs\Enemies\Moon\Dweller_Leg_Mid2.png" />
     <None Remove="Content\NPCs\Enemies\Moon\Dweller_Leg_Mid3.png" />
+    <None Remove="Content\Particles\RocketFuelBubble.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="tModLoader.CodeAssist" Version="0.1.*" />

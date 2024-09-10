@@ -6,9 +6,9 @@ MacrocosmConfig: {
 	GraphicsHeader: Graphics
 	UIHeader: User Interface
 
-	AlwaysDisplayTitleScreens: {
-		Label: Always display title screens
-		Tooltip: Whether to display the introdcutory title screen even if you've visited this celestial body before.
+	AlwaysDisplayTitleCards: {
+		Label: Always display title cards
+		Tooltip: Whether to display the introductory title card even if you've visited this celestial body before.
 	}
 
 	GunRecoilEffects: {

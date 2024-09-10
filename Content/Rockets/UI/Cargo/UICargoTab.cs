@@ -1,8 +1,10 @@
-﻿using Macrocosm.Common.Storage;
+﻿using Macrocosm.Common.Bases.Items;
+using Macrocosm.Common.Storage;
 using Macrocosm.Common.Systems.UI;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Items.Materials.Tech;
 using Macrocosm.Content.Players;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -23,19 +25,24 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
     {
         public Rocket Rocket { get; set; } = new();
 
-        private int InventorySize => Rocket is not null && Rocket.HasInventory ? Rocket.Inventory.Size : 0;
-        private int cacheSize = Rocket.DefaultInventorySize;
+        private int InventorySize => Rocket is not null && Rocket.HasInventory ? Rocket.Inventory.Size - Rocket.SpecialInventorySlot_Count : 0;
+        private int cacheSize = Rocket.DefaultGeneralInventorySize;
 
         private UIPanel inventoryPanel;
         private UIPanelIconButton requestAccessButton;
 
         private UIListScrollablePanel crewPanel;
+
         private UIPanel fuelPanel;
+        private UIPanel fuelTankPanel;
+        private UILiquid fuelLiquid;
+        private Item ItemInFuelTankSlot => Rocket.Inventory[Rocket.SpecialInventorySlot_FuelTank];
+        private UIInventorySlot fuelTankItemSlot;
 
         private Player commander = Main.LocalPlayer;
         private Player prevCommander = Main.LocalPlayer;
-        private List<Player> crew = new();
-        private List<Player> prevCrew = new();
+        private List<Player> crew;
+        private List<Player> prevCrew;
 
         public UICargoTab()
         {
@@ -65,24 +72,15 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
             BackgroundColor = UITheme.Current.TabStyle.BackgroundColor;
             BorderColor = UITheme.Current.TabStyle.BorderColor;
 
+            fuelPanel = CreateFuelPanel();
+            Append(fuelPanel);
+
             inventoryPanel = CreateInventoryPanel();
             inventoryPanel.Activate();
             Append(inventoryPanel);
 
             crewPanel = CreateCrewPanel();
             Append(crewPanel);
-
-            fuelPanel = new()
-            {
-                Width = new(0, 0.4f),
-                Height = new(0, 1f),
-                HAlign = 0f,
-                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
-                BorderColor = UITheme.Current.PanelStyle.BorderColor
-            };
-            fuelPanel.SetPadding(2f);
-            fuelPanel.Activate();
-            Append(fuelPanel);
         }
 
         public override void Update(GameTime gameTime)
@@ -165,12 +163,71 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
                     requestAccessButton.SetImage(ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Inventory/InventoryClosed"));
             }
         }
+        private UIPanel CreateFuelPanel()
+        {
+            fuelPanel = new()
+            {
+                Width = new(0, 0.4f),
+                Height = new(0, 1f),
+                HAlign = 0f,
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor
+            };
+            fuelPanel.SetPadding(2f);
+            fuelPanel.Activate();
+
+            fuelTankPanel = new()
+            {
+                Width = new(0, 0.6f),
+                Height = new(0, 0.8f),
+                HAlign = 0.2f,
+                VAlign = 0.5f,
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor,
+                OverflowHidden = true
+            };
+            fuelTankPanel.SetPadding(2f);
+            fuelPanel.Append(fuelTankPanel);
+
+            fuelLiquid = new()
+            {
+                Width = new(0, 1f),
+                Height = new(0, 1f),
+                LiquidLevel = 0.5f,
+                WaveAmplitude = 2f,
+                WaveFrequency = 8f
+            };
+            fuelTankPanel.Append(fuelLiquid);
+
+            fuelTankItemSlot = Rocket.Inventory.ProvideItemSlot(Rocket.SpecialInventorySlot_FuelTank);
+            fuelTankItemSlot.Top = new(0, 0.45f);
+            fuelTankItemSlot.Left = new(0, 0.70f);
+            fuelTankItemSlot.AddReserved(
+                (item) => item.ModItem is IFillableContainer,
+                Lang.GetItemName(ModContent.ItemType<FuelTank>()),
+                ModContent.Request<Texture2D>(ContentSamples.ItemsByType[ModContent.ItemType<FuelTank>()].ModItem.Texture + "_Blueprint")
+            );
+            fuelPanel.Append(fuelTankItemSlot);
+
+            return fuelPanel;
+        }
 
         private UIPanel CreateInventoryPanel()
         {
             if (Rocket.HasInventory)
             {
-                inventoryPanel = Rocket.Inventory.ProvideUI(out var slots, out var lootAllButton, out var depositAllButton, out var quickStackButton, out var restockInventoryButton, out var sortInventoryButton, iconsPerRow: 10, rowsWithoutScrollbar: 5);
+                inventoryPanel = Rocket.Inventory.ProvideUI
+                (
+                    out var slots,
+                    out var lootAllButton,
+                    out var depositAllButton,
+                    out var quickStackButton,
+                    out var restockInventoryButton,
+                    out var sortInventoryButton,
+                    start: Rocket.SpecialInventorySlot_Count,
+                    iconsPerRow: 10,
+                    rowsWithoutScrollbar: 5
+                );
                 inventoryPanel.Width = new(0, 0.596f);
                 inventoryPanel.Height = new(0, 0.535f);
                 inventoryPanel.Left = new(0, 0.405f);
@@ -237,6 +294,9 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
 
         private UIListScrollablePanel CreateCrewPanel()
         {
+            crew = new();
+            prevCrew = new();
+
             crewPanel = new(new LocalizedColorScaleText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Crew"), scale: 1.2f))
             {
                 Top = new(0f, 0.54f),
@@ -260,5 +320,6 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
 
             return crewPanel;
         }
+
     }
 }
