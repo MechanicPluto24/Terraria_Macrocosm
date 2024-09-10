@@ -64,7 +64,7 @@ namespace Macrocosm.Content.Machines
                 resultSlot.Left = new(0, 0.68f);
                 resultSlot.AddReserved(
                     (item) => item.ModItem is IFillableContainer,
-                    Language.GetText("Fillable"),
+                    Lang.GetItemName(ModContent.ItemType<FuelTank>()),
                     ModContent.Request<Texture2D>(ContentSamples.ItemsByType[ModContent.ItemType<FuelTank>()].ModItem.Texture + "_Blueprint")
                 );
                 backgroundPanel.Append(resultSlot);

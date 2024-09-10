@@ -185,15 +185,15 @@ namespace Macrocosm.Content.Players
             {
                 if (SubworldSystem.AnyActive<Macrocosm>())
                 {
-                    if (!HasVisitedSubworld(MacrocosmSubworld.CurrentID) || MacrocosmConfig.Instance.AlwaysDisplayTitleScreens)
-                        LoadingTitleSequence.Start();
+                    if (!HasVisitedSubworld(MacrocosmSubworld.CurrentID) || MacrocosmConfig.Instance.AlwaysDisplayTitleCards)
+                        TitleCard.Start();
 
                     visitedSubworlds.Add(MacrocosmSubworld.CurrentID);
                 }
                 else
                 {
-                    if(MacrocosmConfig.Instance.AlwaysDisplayTitleScreens)
-                        LoadingTitleSequence.Start();
+                    if(MacrocosmConfig.Instance.AlwaysDisplayTitleCards)
+                        TitleCard.Start();
                 }
             }
 

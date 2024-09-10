@@ -17,7 +17,8 @@ namespace Macrocosm.Common.Drawing.Particles
         AfterProjectiles,
         BeforeNPCs,
         AfterNPCs,
-        BeforeTiles
+        BeforeTiles,
+        PostInterface
     }
 
     /// <summary> Particle system by sucss, Nurby & Feldy @ PellucidMod (RIP) </summary>
@@ -139,7 +140,7 @@ namespace Macrocosm.Common.Drawing.Particles
         }
 
 
-        private static SpriteBatchState state1, state2, state3;
+        private static SpriteBatchState state1, state2, state3, state4;
         private void DrawParticles_NPCs(On_Main.orig_DrawNPCs orig, Main self, bool behindTiles)
         {
             SpriteBatch spriteBatch = Main.spriteBatch;
@@ -196,6 +197,18 @@ namespace Macrocosm.Common.Drawing.Particles
             Main.spriteBatch.Begin(state3);
 
             orig(self, force);
+        }
+
+        public override void PostDrawInterface(SpriteBatch spriteBatch)
+        {
+            state4.SaveState(spriteBatch);
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, default, default, default, default, Main.GameViewMatrix.ZoomMatrix);
+
+            DrawParticles(ParticleDrawLayer.PostInterface);
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(state4);
         }
     }
 }

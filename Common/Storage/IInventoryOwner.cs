@@ -38,7 +38,8 @@ namespace Macrocosm.Common.Storage
 
                 "Launchpad" => LaunchPadManager.TryGetLaunchPadAtStartTile(MacrocosmSubworld.CurrentID, new Point16(serializationIndex & 0xFFFF, (serializationIndex >> 16) & 0xFFFF), out LaunchPad launchPad) ? launchPad as IInventoryOwner : null,
 
-                // TEs are added to the ByID dictionary after the deserialization... the owner association has to be done manually 
+                // TEs are added to the ByID dictionary after the deserialization...
+                // the owner association has to be done manually in the TE update hook
                 // This might not work as expected in multiplayer... pls help!!!
                 "TileEntity" => null,
 

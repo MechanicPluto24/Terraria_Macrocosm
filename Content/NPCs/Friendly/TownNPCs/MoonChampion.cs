@@ -122,11 +122,6 @@ namespace Macrocosm.Content.NPCs.Friendly.TownNPCs
             chatBag.Add(Language.GetTextValue(chatPath + "Standard3"));
             chatBag.Add(Language.GetTextValue(chatPath + "Standard4"));
             chatBag.Add(Language.GetTextValue(chatPath + "Standard5"));
-            chatBag.Add(Language.GetTextValue(chatPath + "Standard6"));
-            chatBag.Add(Language.GetTextValue(chatPath + "Standard7"));
-            chatBag.Add(Language.GetTextValue(chatPath + "Standard8"));
-            chatBag.Add(Language.GetTextValue(chatPath + "Standard9"));
-            chatBag.Add(Language.GetTextValue(chatPath + "Standard10"));
 
             return chatBag[Main.rand.Next(chatBag.Count)];
         }

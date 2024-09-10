@@ -1943,8 +1943,6 @@ namespace Macrocosm.Common.TileFrame
 
         #endregion
 
-
-
         // TODO
         /*
 		if (TileID.Sets.HasSlopeFrames[type])

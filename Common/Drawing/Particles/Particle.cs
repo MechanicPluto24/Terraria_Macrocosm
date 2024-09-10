@@ -108,7 +108,7 @@ namespace Macrocosm.Common.Drawing.Particles
         /// <summary> Whether the <c>Particle</c> should update its position based on velocity </summary>
         public virtual bool ShouldUpdatePosition => true;
 
-        /// <summary> The draw layer of this <c>Particle</c>, see <see cref="ParticleDrawLayer"/> </summary>
+        /// <summary> The draw layer of this <c>Particle</c>, see <see cref="ParticleDrawLayer"/>. Unused if <see cref="HasCustomDrawer"/>. </summary>
         public virtual ParticleDrawLayer DrawLayer => ParticleDrawLayer.AfterProjectiles;
 
         #endregion
