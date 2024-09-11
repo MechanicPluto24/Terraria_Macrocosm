@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
+using Terraria.ID;
 using Terraria.ModLoader;
 namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
 {
@@ -52,9 +53,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
                 if (AI_Timer % AI_FireRate == 0)
                 {
                     Vector2 position = Projectile.Center + Projectile.velocity * 5;
-                    Vector2 velocity = Vector2.Normalize(Projectile.velocity) * currentItem.shootSpeed;
+                    Vector2 velocity = Vector2.Normalize(Projectile.velocity) * (currentItem.shootSpeed / ContentSamples.ProjectilesByType[ModContent.ProjectileType<WaveGunEnergyBolt>()].extraUpdates);
                     Projectile.NewProjectile(Projectile.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<WaveGunEnergyBolt>(), (int)(damage * 1.4), knockback, Projectile.owner, ai0: (float)WaveGunEnergyBolt.BeamVariant.Purple);
-                    
+
+                    if (!Player.CheckMana(currentItem.mana, pay: true))
+                        Projectile.Kill();
+
                     SoundEngine.PlaySound(SFX.WaveGunShotRifle, Projectile.position);
                 }
 

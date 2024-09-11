@@ -1,7 +1,7 @@
-﻿using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Content.Particles;
-using Macrocosm.Content.Players;
+﻿using Macrocosm.Content.Players;
+using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Buffs.Weapons
@@ -17,24 +17,26 @@ namespace Macrocosm.Content.Buffs.Weapons
             if (player.buffTime[buffIndex] <= 1)
             {
                 player.GetModPlayer<MacrocosmPlayer>().ChandriumWhipStacks = 0;
-                KillParticle();
             }
 
-        }
-
-        public override bool RightClick(int buffIndex)
-        {
-            KillParticle();
-            return true;
-        }
-
-        public static void KillParticle()
-        {
-            foreach (Particle particle in ParticleManager.Particles)
+            if (player.HandPosition.HasValue)
             {
-                if (particle is ChandriumSparkle chandriumSparkle && chandriumSparkle.Owner == Main.myPlayer)
+                Vector2 vector = player.HandPosition.Value - player.velocity;
+                for (int i = 0; i < 4; i++)
                 {
-                    particle.Kill(shouldSync: true);
+                    Dust dust = Main.dust[Dust.NewDust(player.Center, 0, 0, DustID.PinkTorch, player.direction * 2, 0f, 150, default, 1.3f)];
+                    dust.position = vector;
+                    dust.velocity *= 0f;
+                    dust.noGravity = true;
+                    dust.fadeIn = 1f;
+                    dust.velocity += player.velocity;
+                    if (Main.rand.NextBool(2))
+                    {
+                        dust.position += Utils.RandomVector2(Main.rand, -4f, 4f);
+                        dust.scale += Main.rand.NextFloat();
+                        if (Main.rand.NextBool(2))
+                            dust.customData = this;
+                    }
                 }
             }
         }

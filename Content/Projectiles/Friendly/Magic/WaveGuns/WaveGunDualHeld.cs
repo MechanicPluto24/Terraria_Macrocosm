@@ -75,7 +75,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
                 if (AI_Timer % AI_FireRate == 0)
                 {
                     Vector2 position = Projectile.Center + Projectile.velocity * 5;
-                     Vector2 velocity = Vector2.Normalize(Projectile.velocity) * currentItem.shootSpeed;
+                     Vector2 velocity = Vector2.Normalize(Projectile.velocity) * (currentItem.shootSpeed / ContentSamples.ProjectilesByType[ModContent.ProjectileType<WaveGunEnergyBolt>()].extraUpdates);
 
                     if (AI_ShotCount % 2 == 0)
                     {
@@ -87,6 +87,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
                         blueRotation += 0.3f;
                         Projectile.NewProjectile(Projectile.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<WaveGunEnergyBolt>(), (int)(damage), knockback, Projectile.owner, ai0: (float)WaveGunEnergyBolt.BeamVariant.Blue);
                     }
+
+                    if (!Player.CheckMana(currentItem.mana, pay: true))
+                        Projectile.Kill();
 
                     AI_ShotCount++;
 

@@ -2549,8 +2549,8 @@ WaveGunDual
 	Value: 50 gold
 	Research count: 1
 	Recipes:
-		Blue Wave Gun x 1
-		Red Wave Gun x 1
+		Blue Zap Gun x 1
+		Red Zap Gun x 1
 		at
 		Ancient Manipulator
 
@@ -2614,6 +2614,10 @@ ClawWrench
 
 CrescentMoon
 	Value: 15 silver 50 copper
+	Research count: 1
+
+CrescentScripture
+	Value: 1 platinum
 	Research count: 1
 
 Crucible
@@ -2737,6 +2741,15 @@ ChandriumStaff
 
 
 ChandriumWhip
+	Value: No value
+	Research count: 1
+	Recipes:
+		Chandrium Bar x 12
+		at
+		Ancient Manipulator
+
+
+Totality
 	Value: No value
 	Research count: 1
 	Recipes:

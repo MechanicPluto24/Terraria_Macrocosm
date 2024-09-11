@@ -10,8 +10,8 @@ namespace Macrocosm.Content.Trails
 {
     public class LunarBloodTrail : VertexTrail
     {
-        public  Color BloodColour1{ get; set; }=new Color(94, 229, 163, 0);
-        public  Color BloodColour2{ get; set; }=new Color(213, 155, 148, 0);
+        public Color BloodColour1 { get; set; } = new Color(94, 229, 163, 0);
+        public Color BloodColour2 { get; set; } = new Color(213, 155, 148, 0);
         public override MiscShaderData TrailShader => new MiscShaderData(Main.VertexPixelShaderRef, "MagicMissile")
                         .UseProjectionMatrix(doUse: true)
                         .UseSaturation(Saturation)
@@ -19,12 +19,12 @@ namespace Macrocosm.Content.Trails
                         .UseImage1(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "FadeOutMask"))
                         .UseImage2("Images/Extra_193");
 
-      
+
         public override float Saturation => -2f;
         public override Color TrailColors(float progressOnStrip)
         {
-             float lerp = Utility.InverseLerp(0, 0.01f, progressOnStrip);
-             Color result = Color.Lerp(Color.Lerp(Color.Black.WithAlpha(0), BloodColour1, lerp), BloodColour2, progressOnStrip);
+            float lerp = Utility.InverseLerp(0, 0.01f, progressOnStrip);
+            Color result = Color.Lerp(Color.Lerp(Color.Black.WithAlpha(0), BloodColour1, lerp), BloodColour2, progressOnStrip);
             return result;
         }
 

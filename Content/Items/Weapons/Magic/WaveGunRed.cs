@@ -25,7 +25,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
             Item.useAnimation = 20;
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.noMelee = true;
-            Item.knockBack = 10;
+            Item.knockBack = 3f;
             Item.value = Item.sellPrice(0, 5, 0, 0);
             Item.rare = ModContent.RarityType<MoonRarityT2>();
             Item.autoReuse = true;
