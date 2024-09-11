@@ -1483,20 +1483,20 @@ StarDestroyer: {
 }
 
 WaveGunBlue: {
-	DisplayName: Blue Wave Gun
+	DisplayName: Blue Zap Gun
 	Tooltip: ""
 }
 
 WaveGunRed: {
-	DisplayName: Red Wave Gun
+	DisplayName: Red Zap Gun
 	Tooltip: ""
 }
 
 WaveGunDual: {
 	DisplayName: Wave Gun
 	Tooltip: Right click to switch firing mode
-	DisplayNameDual: Wave Gun (Dual)
-	DisplayNameRifle: Wave Gun (Rifle)
+	DisplayNameDual: Zap Gun Dual Wield
+	DisplayNameRifle: Wave Gun
 }
 
 Cynthalith: {
@@ -1941,5 +1941,15 @@ CrescentMoon: {
 
 RocheChakram: {
 	DisplayName: Roche Chakram
+	Tooltip: ""
+}
+
+CrescentScripture: {
+	DisplayName: Crescent Scripture
+	Tooltip: ""
+}
+
+Totality: {
+	DisplayName: Totality
 	Tooltip: ""
 }

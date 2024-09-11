@@ -92,7 +92,7 @@ namespace Macrocosm.Common.Drawing.Particles
         /// <summary> The <c>Particle</c>'s scale as a 2d vector </summary>
         [NetSync] public Vector2 ScaleV = new(1f);
 
-        [NetSync] public float FadeInNormalizedTime = 0f;
+        [NetSync] public float FadeInNormalizedTime = float.Epsilon;
 
         [NetSync] public float FadeOutNormalizedTime = 1f;
 
@@ -118,7 +118,7 @@ namespace Macrocosm.Common.Drawing.Particles
         /// <summary> The draw layer of this <c>Particle</c>, see <see cref="ParticleDrawLayer"/>. Unused if <see cref="HasCustomDrawer"/>. </summary>
         public virtual ParticleDrawLayer DrawLayer => ParticleDrawLayer.AfterProjectiles;
 
-        public float FadeFactor => Utility.InverseLerp(0f, FadeInNormalizedTime, (float)TimeLeft / SpawnTimeLeft, clamped: true) * Utility.InverseLerp(1f, FadeOutNormalizedTime, (float)TimeLeft / SpawnTimeLeft, clamped: true);
+        public float FadeFactor => Utility.InverseLerp(0f, FadeInNormalizedTime, (SpawnTimeLeft - (float)TimeLeft) / SpawnTimeLeft, clamped: true) * Utility.InverseLerp(1f, FadeOutNormalizedTime, (SpawnTimeLeft - (float)TimeLeft) / SpawnTimeLeft, clamped: true);
         #endregion
 
         #region Hooks

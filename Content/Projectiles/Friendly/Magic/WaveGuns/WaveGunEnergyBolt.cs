@@ -58,6 +58,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
             Projectile.tileCollide = true;
             Projectile.ignoreWater = true;
             Projectile.timeLeft = 300;
+            Projectile.extraUpdates = 3;
+
+            ProjectileID.Sets.TrailCacheLength[Type] = 75;
+            ProjectileID.Sets.TrailingMode[Type] = 3;
         }
 
         public override void AI()
@@ -81,6 +85,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
                 else if (BeamType == BeamVariant.Purple)
                 {
                     Projectile.penetrate = -1;
+                    Projectile.usesLocalNPCImmunity = true;
+                    Projectile.localNPCHitCooldown = -1;
                     color = new Color(255, 150, 255, 0);
                     lightColor = new Vector3(1f, 0, 1f);
                     trail = new WaveGunBeamTrail(new Color(255, 150, 255, 0) * 0.8f);
@@ -132,8 +138,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
                     p.Position = Projectile.Center + Projectile.oldVelocity * 0.5f;
                     p.Velocity = Main.rand.NextVector2Circular(8, 8);
                     p.Scale = Main.rand.NextFloat(0.1f, 1f);
-                    p.FadeInNormalizedTime = 0.5f;
-                    p.FadeOutNormalizedTime = 1f;
+                    p.FadeOutNormalizedTime = 0.5f;
                     p.DrawColor = color.WithAlpha((byte)Main.rand.Next(0, 64));
                     p.ScaleVelocity = 0.01f;
                 });

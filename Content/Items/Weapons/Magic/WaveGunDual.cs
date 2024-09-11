@@ -47,7 +47,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
             Item.useAnimation = 14;
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.noMelee = true;
-            Item.knockBack = 5;
+            Item.knockBack = 3f;
             Item.value = Item.sellPrice(0, 10, 0, 0);
             Item.rare = ModContent.RarityType<MoonRarityT2>();
 
@@ -61,6 +61,12 @@ namespace Macrocosm.Content.Items.Weapons.Magic
         public override bool AltFunctionUse(Player player) => true;
         public override bool CanConsumeAmmo(Item ammo, Player player) => false;
         public override bool CanUseItem(Player player) => player.ownedProjectileCounts[ModContent.ProjectileType<WaveGunRifleHeld>()] < 1 && player.ownedProjectileCounts[ModContent.ProjectileType<WaveGunDualHeld>()] < 1;
+
+        public override void ModifyManaCost(Player player, ref float reduce, ref float mult)
+        {
+            if (player.AltFunction())
+                mult = 0f;
+        }
 
         public override bool? UseItem(Player player)
         {
@@ -82,11 +88,13 @@ namespace Macrocosm.Content.Items.Weapons.Magic
                 {
                     Item.useTime = Item.useAnimation = 40;
                     Item.shootSpeed = 40f;
+                    Item.knockBack = 4f;
                 }
                 else
                 {
                     Item.useTime = Item.useAnimation = 14;
                     Item.shootSpeed = 28f;
+                    Item.knockBack = 3f;
                 }
             }
 
