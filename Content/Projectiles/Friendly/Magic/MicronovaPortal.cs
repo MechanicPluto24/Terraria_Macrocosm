@@ -16,6 +16,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
     public class MicronovaPortal : ModProjectile
     {
+        private static Asset<Texture2D> twirl;
+        private static Asset<Texture2D> glow;
+
         protected int defWidth;
         protected int defHeight;
 
@@ -127,11 +130,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, effect, state);
 
-            // TODO: load these only once 
-            Texture2D twirl = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Twirl1").Value;
-            Texture2D glow = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Circle5").Value;
-            Main.spriteBatch.Draw(twirl, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(100, 170, 200).WithOpacity(1f), shootAim.ToRotation() + MathHelper.PiOver2, twirl.Size() / 2f, Projectile.scale * 0.295f, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(glow, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(0, 170, 200).WithOpacity(0.8f), shootAim.ToRotation() + MathHelper.PiOver2, glow.Size() / 2f, Projectile.scale * 0.785f, SpriteEffects.None, 0f);
+            twirl ??= ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Twirl1");
+            glow ??= ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Circle5");
+
+            Main.spriteBatch.Draw(twirl.Value, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(135, 255, 240).WithOpacity(0.7f), shootAim.ToRotation() + MathHelper.PiOver2, twirl.Size() / 2f, Projectile.scale * 0.615f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(glow.Value, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(0, 170, 200).WithOpacity(0.8f), shootAim.ToRotation() + MathHelper.PiOver2, glow.Size() / 2f, Projectile.scale * 0.785f, SpriteEffects.None, 0f);
 
             effect = skew.Value;
             effect.Parameters["uScale"].SetValue(0.6f);

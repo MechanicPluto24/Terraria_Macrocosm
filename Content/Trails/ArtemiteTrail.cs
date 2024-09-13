@@ -10,6 +10,7 @@ namespace Macrocosm.Content.Trails
     public class ArtemiteTrail : VertexTrail
     {
         public Color Color { get; set; } = new Color(130, 220, 199, 255) * 1.4f;
+        public float WidthMult;
 
         public override MiscShaderData TrailShader => new MiscShaderData(Main.VertexPixelShaderRef, "MagicMissile")
             .UseProjectionMatrix(doUse: true)
@@ -25,7 +26,7 @@ namespace Macrocosm.Content.Trails
 
         public override float TrailWidths(float progressOnStrip)
         {
-            return 200;
+            return 200 * WidthMult;
         }
     }
 }

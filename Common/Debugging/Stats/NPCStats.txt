@@ -238,6 +238,14 @@ Shade
 		Space Dust, 25%
 		Moonstone, (1-5) 10%
 
+ZombieEngineer
+	Life: 550
+	Defense: 60
+	KB resist: 0.01
+	Damage: 80
+	Drops:
+		Moonstone, (1-5) 10%
+
 ZombieSecurity
 	Life: 650
 	Defense: 75

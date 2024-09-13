@@ -17,6 +17,8 @@ namespace Macrocosm.Content.Items.Weapons.Summon
         public override void SetDefaults()
         {
             Item.DefaultToWhip(ModContent.ProjectileType<TotalityProjectile>(), 180, 2, 4);
+            Item.width = 52;
+            Item.height = 48;
             Item.rare = ModContent.RarityType<MoonRarityT2>();
             Item.channel = true;
         }
