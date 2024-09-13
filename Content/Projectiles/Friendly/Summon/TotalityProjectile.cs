@@ -11,6 +11,7 @@ using System.IO;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
+using Terraria.GameContent.Drawing;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -44,6 +45,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
         {
             // minions will attack the npcs hit with this whip 
             Main.player[Projectile.owner].MinionAttackTargetNPC = target.whoAmI;
+
+            // similar to how we want the hit effect. need to replicate into out particle system
+            ParticleOrchestrator.SpawnParticlesDirect(ParticleOrchestraType.BlackLightningSmall, new ParticleOrchestraSettings() { PositionInWorld = target.Center });
+            ParticleOrchestrator.SpawnParticlesDirect(ParticleOrchestraType.BlackLightningHit, new ParticleOrchestraSettings() { PositionInWorld = target.Center });
         }
 
         private readonly int frameWidth = 18;
@@ -122,7 +127,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
                 if(!handle && !tip)
                     for(float f = 0f; f < 1f; f+= 0.5f)
-                        Main.spriteBatch.DrawStar(Vector2.Lerp(list[i], list[i + 1], f) + Main.rand.NextVector2Circular(6, 6) - Main.screenPosition, 1, new Color(253, 174, 248, 225), scale * 0.4f, rotation, flip, entity: true);
+                        Main.spriteBatch.DrawStar(Vector2.Lerp(list[i], list[i + 1], f) + Main.rand.NextVector2Circular(6, 6) - Main.screenPosition, 1, new Color(253, 174, 248, 125), scale * 0.4f, rotation, flip, entity: true);
 
                 Main.EntitySpriteDraw(texture, pos - Main.screenPosition, frame, color, rotation, origin, scale, flip, 0);
 

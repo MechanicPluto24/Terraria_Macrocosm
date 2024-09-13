@@ -61,6 +61,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             if (Projectile.Opacity < 1f)
                 Projectile.Opacity += 0.01f;
 
+            trail.WidthMult = Utility.BackEaseInOut(Projectile.Opacity);
+
             if (Timer < 40)
                 Speed *= 0.95f;
 
@@ -106,7 +108,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         private SpriteBatchState state;
         public override bool PreDraw(ref Color lightColor)
         {
-            ProjectileID.Sets.TrailCacheLength[Type] = 150;
+            ProjectileID.Sets.TrailCacheLength[Type] = 30;
             ProjectileID.Sets.TrailingMode[Type] = 3;
 
             state.SaveState(Main.spriteBatch);

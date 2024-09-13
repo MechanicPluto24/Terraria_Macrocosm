@@ -205,3 +205,8 @@ Shade: {
 	DisplayName: Shade
 	BestiaryFlavorText: Mods.Macrocosm.NPCs.Shade.BestiaryFlavorText
 }
+
+ZombieEngineer: {
+	DisplayName: Zombie Engineer
+	BestiaryFlavorText: Mods.Macrocosm.NPCs.ZombieEngineer.BestiaryFlavorText
+}
