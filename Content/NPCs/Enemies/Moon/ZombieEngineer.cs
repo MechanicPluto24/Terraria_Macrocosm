@@ -185,23 +185,17 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         private int npcFrame = 0;
         public void RaiseHead()
         {
-            if (raisedHead == false)
-            {
-                raisedHead = true;
-                NPC.frame.Y = 0;
+            if(raisedHead==false){
+                raisedHead=true;
+                NPC.frame.Y =0;
             }
-
-            NPC.velocity.X = 0f;
+            NPC.velocity.X=0f;
             headTimer++;
-
-            if (headTimer % 25 == 24)
-            {
+            if (headTimer%25==24){
                 npcFrame++;
             }
-
-            if (npcFrame > 3)
-            {
-                AI_State = ActionState.Attack;
+            if(npcFrame>2){
+                AI_State=ActionState.Attack;
             }
         }
 
@@ -214,7 +208,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             NPC.spriteDirection = NPC.velocity.X > 0f ? -1 : 1;
             int frameIndex = NPC.frame.Y / frameHeight;
-            npcFrame = frameIndex;
             if (NPC.velocity.Y == 0f)
             {
                 if (AI_State == ActionState.RaiseHead)

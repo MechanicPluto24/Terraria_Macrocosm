@@ -51,7 +51,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.aiStyle = -1;
             SpawnModBiomes = [ModContent.GetInstance<MoonNightBiome>().Type];
         }
-
+        public override float FallSpeed() =>0.2f;
         public override void ModifyNPCLoot(NPCLoot loot)
         {
             loot.Add(ItemDropRule.Common(ModContent.ItemType<AlienResidue>(), 1, 4, 10));  
@@ -247,6 +247,61 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 }
             }
         }
+        private bool CheckCollision()
+        {
+            int minTilePosX = (int)(NPC.Left.X / 16) - 1;
+            int maxTilePosX = (int)(NPC.Right.X / 16) + 2;
+            int minTilePosY = (int)(NPC.Top.Y / 16) - 1;
+            int maxTilePosY = (int)(NPC.Bottom.Y / 16) + 2;
+
+            // Ensure that the tile range is within the world bounds
+            if (minTilePosX < 0)
+                minTilePosX = 0;
+            if (maxTilePosX > Main.maxTilesX)
+                maxTilePosX = Main.maxTilesX;
+            if (minTilePosY < 0)
+                minTilePosY = 0;
+            if (maxTilePosY > Main.maxTilesY)
+                maxTilePosY = Main.maxTilesY;
+
+            bool collision = false;
+
+            // This is the initial check for collision with tiles.
+            for (int i = minTilePosX; i < maxTilePosX; ++i)
+            {
+                for (int j = minTilePosY; j < maxTilePosY; ++j)
+                {
+                    Tile tile = Main.tile[i, j];
+
+                    // If the tile is solid or is considered a platform, then there's valid collision
+                    if (tile.HasUnactuatedTile && (Main.tileSolid[tile.TileType] || Main.tileSolidTop[tile.TileType] && tile.TileFrameY == 0) || tile.LiquidAmount > 64)
+                    {
+                        Vector2 tileWorld = new Point16(i, j).ToWorldCoordinates(0, 0);
+
+                        if (NPC.Right.X > tileWorld.X && NPC.Left.X < tileWorld.X + 16 && NPC.Bottom.Y > tileWorld.Y && NPC.Top.Y < tileWorld.Y + 16)
+                        {
+                            // Collision found
+                            collision = true;
+                        }
+                    }
+                }
+            }
+
+            return collision;
+        }
+        float SmoothFallSpeed=0f;
+        public override void CustomBodyAI(Worm worm)
+        {
+            if(!CheckCollision())
+                SmoothFallSpeed+=0.1f;
+            else
+                SmoothFallSpeed-=0.1f;
+            if(SmoothFallSpeed>3f)
+                SmoothFallSpeed=3f;
+            if(SmoothFallSpeed<0f)
+                SmoothFallSpeed=0f;
+            NPC.position.Y+=SmoothFallSpeed;
+        }
 
         public override void OnSpawn(IEntitySource source)
         {
@@ -276,6 +331,61 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.height = 50;
             NPC.aiStyle = -1;
             NPC.npcSlots = 0f;
+        }
+          private bool CheckCollision()
+        {
+            int minTilePosX = (int)(NPC.Left.X / 16) - 1;
+            int maxTilePosX = (int)(NPC.Right.X / 16) + 2;
+            int minTilePosY = (int)(NPC.Top.Y / 16) - 1;
+            int maxTilePosY = (int)(NPC.Bottom.Y / 16) + 2;
+
+            // Ensure that the tile range is within the world bounds
+            if (minTilePosX < 0)
+                minTilePosX = 0;
+            if (maxTilePosX > Main.maxTilesX)
+                maxTilePosX = Main.maxTilesX;
+            if (minTilePosY < 0)
+                minTilePosY = 0;
+            if (maxTilePosY > Main.maxTilesY)
+                maxTilePosY = Main.maxTilesY;
+
+            bool collision = false;
+
+            // This is the initial check for collision with tiles.
+            for (int i = minTilePosX; i < maxTilePosX; ++i)
+            {
+                for (int j = minTilePosY; j < maxTilePosY; ++j)
+                {
+                    Tile tile = Main.tile[i, j];
+
+                    // If the tile is solid or is considered a platform, then there's valid collision
+                    if (tile.HasUnactuatedTile && (Main.tileSolid[tile.TileType] || Main.tileSolidTop[tile.TileType] && tile.TileFrameY == 0) || tile.LiquidAmount > 64)
+                    {
+                        Vector2 tileWorld = new Point16(i, j).ToWorldCoordinates(0, 0);
+
+                        if (NPC.Right.X > tileWorld.X && NPC.Left.X < tileWorld.X + 16 && NPC.Bottom.Y > tileWorld.Y && NPC.Top.Y < tileWorld.Y + 16)
+                        {
+                            // Collision found
+                            collision = true;
+                        }
+                    }
+                }
+            }
+
+            return collision;
+        }
+        float SmoothFallSpeed=0f;
+        public override void CustomTailAI(Worm worm)
+        {
+            if(!CheckCollision())
+                SmoothFallSpeed+=0.1f;
+            else
+                SmoothFallSpeed-=0.1f;
+            if(SmoothFallSpeed>3f)
+                SmoothFallSpeed=3f;
+            if(SmoothFallSpeed<0f)
+                SmoothFallSpeed=0f;
+            NPC.position.Y+=SmoothFallSpeed;
         }
         public override void HitEffect(NPC.HitInfo hit)
         {

@@ -2,6 +2,7 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Projectiles.Hostile;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Terraria.ModLoader;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Content.Particles;
@@ -19,7 +20,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return base.SpawnChance(spawnInfo);
+            return (spawnInfo.SpawnTileY > Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Protolith>()) ? 0.04f : 0f;
         }
 
         public override void HitEffect(NPC.HitInfo hit)
