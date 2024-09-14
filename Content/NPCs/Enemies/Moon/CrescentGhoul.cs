@@ -113,7 +113,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             if (AI_State == ActionState.Chase)
                 NPC.damage = NPC.defDamage;
             else
-                NPC.damage = NPC.defDamage * 2;
+                NPC.damage = (int)(NPC.defDamage * 1.5);
 
             if (AI_State != ActionState.Spin)
                 Utility.LookAt(playerActive ? Main.player[NPC.target].Center : NPC.Center + NPC.velocity, NPC, 0);
