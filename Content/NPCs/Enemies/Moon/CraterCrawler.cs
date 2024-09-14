@@ -34,7 +34,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPCSets.MoonNPC[Type] = true;
             NPCSets.DropsMoonstone[Type] = true;
         }
-
+        public override float FallSpeed() =>0.4f;
         public override void SetDefaults()
         {
             NPC.CloneDefaults(NPCID.DiggerHead);
