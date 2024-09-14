@@ -49,10 +49,10 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
         {
             Particle.CreateParticle<TintableFire>(p =>
             {
-                p.Position = Projectile.position;
+                p.Position = Projectile.position+new Vector2(0,Projectile.height/2);
                 p.Velocity = Vector2.UnitX.RotatedByRandom(MathHelper.TwoPi);
                 p.DrawColor = new Color(100, 255, 255, 0);
-                p.Scale = 0.03f;
+                p.Scale = 0.12f;
             });
 
             Projectile.velocity.Y += 1f;
@@ -85,10 +85,10 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
                 {
                     Particle.CreateParticle<TintableFire>(p =>
                     {
-                        p.Position = Projectile.position;
-                        p.Velocity = Vector2.UnitX.RotatedByRandom(MathHelper.TwoPi);
+                        p.Position = Projectile.position+new Vector2(0,Projectile.height/2);
+                        p.Velocity = Vector2.UnitX.RotatedByRandom(MathHelper.TwoPi)*Main.rand.NextFloat(1f,5f);
                         p.DrawColor = new Color(100, 255, 255, 0);
-                        p.Scale = 0.03f;
+                        p.Scale = 0.16f;
                     });
                 }
 

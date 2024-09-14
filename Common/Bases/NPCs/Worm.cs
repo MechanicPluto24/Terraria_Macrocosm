@@ -163,6 +163,9 @@ namespace Macrocosm.Common.Bases.NPCs
         /// <summary> Whether the NPC ignores tile collision when attempting to "dig" through tiles, like how Wyverns work. </summary>
         public bool CanFly { get; set; }
 
+
+        public virtual float FallSpeed()=>0.3f;
+
         /// <summary>
         /// The maximum distance in <b>pixels</b> within which the NPC will use tile collision, if <see cref="CanFly"/> returns <see langword="false"/>.<br/>
         /// Defaults to 1000 pixels, which is equivalent to 62.5 tiles.
@@ -336,9 +339,6 @@ namespace Macrocosm.Common.Bases.NPCs
                         {
                             // Collision found
                             collision = true;
-
-                            if (Main.rand.NextBool(100))
-                                WorldGen.KillTile(i, j, fail: true, effectOnly: true, noItem: false);
                         }
                     }
                 }
@@ -432,7 +432,7 @@ namespace Macrocosm.Common.Bases.NPCs
             NPC.TargetClosest(true);
             //edited this because pluto wanted the worms to go underground faster, original fall speed was 0.11f
             // Constant gravity of 0.11 pixels/tick
-            NPC.velocity.Y += 0.3f;
+            NPC.velocity.Y +=FallSpeed();
             //edited this so that worms could fall at up to 1.5* their max velcoity.
             // Ensure that the NPC does not fall too quickly
             if (NPC.velocity.Y > speed * 1.5f)
@@ -597,11 +597,11 @@ namespace Macrocosm.Common.Bases.NPCs
             NPCID.Sets.NPCBestiaryDrawModifiers value = new() { Hide = true };
             NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, value);
         }
-
+        
         public override void BodyTailAI()
         {
-            CommonAI_BodyTail(this);
             CustomBodyAI(this);
+            CommonAI_BodyTail(this);
             FlipBodyTail(this);
 
         }
@@ -670,8 +670,8 @@ namespace Macrocosm.Common.Bases.NPCs
 
         public override void BodyTailAI()
         {
-            WormBody.CommonAI_BodyTail(this);
             CustomTailAI(this);
+            WormBody.CommonAI_BodyTail(this);
             FlipBodyTail(this);
         }
     }
