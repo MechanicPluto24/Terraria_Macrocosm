@@ -185,8 +185,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         private int npcFrame = 0;
         public void RaiseHead()
         {
-            if(RaisedHead==false){
-                RaisedHead=true;
+            if(raisedHead==false){
+                raisedHead=true;
                 NPC.frame.Y =0;
             }
             NPC.velocity.X=0f;
