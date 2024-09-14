@@ -1,6 +1,7 @@
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
 using Macrocosm.Content.Trails;
 using Microsoft.Xna.Framework;
@@ -58,15 +59,40 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Projectile.rotation = Projectile.velocity.ToRotation() + 0.2f * Projectile.direction;
             Projectile.velocity = Projectile.velocity.SafeNormalize(Vector2.UnitY) * Speed;
 
+            bool speedUp = Timer >= 40;
+
             if (Projectile.Opacity < 1f)
                 Projectile.Opacity += 0.01f;
 
             trail.WidthMult = Utility.BackEaseInOut(Projectile.Opacity);
 
-            if (Timer < 40)
+            for (int i = 0; i < (int)(8f * Projectile.Opacity); i++)
+            {
+                if(i % 3 == 0)
+                {
+                    Dust dust = Dust.NewDustPerfect(Projectile.Center + Main.rand.NextVector2Circular(75, 75), ModContent.DustType<ArtemiteBrightDust>(), default, Scale: Main.rand.NextFloat(0.6f, 1f)); ;
+                    dust.velocity = speedUp ? Projectile.velocity : Vector2.Zero;
+                    dust.color = Color.White.WithAlpha((byte)Main.rand.Next(255)) * Main.rand.NextFloat();
+                    dust.noGravity = true;
+                }
+
+                if(speedUp || i % 3 == 0)
+                    Particle.CreateParticle<ArtemiteStar>((p) =>
+                    {
+                        p.Position = Projectile.Center + Main.rand.NextVector2Circular(80, 80);
+                        p.Velocity = speedUp ? Projectile.velocity * Main.rand.NextFloat(0.4f, 0.9f) : Vector2.Zero;
+                        p.StarPointCount = speedUp ? 1 : 2;
+                        p.Scale = speedUp ? Main.rand.NextFloat(1f, 2f) : Main.rand.NextFloat(0.5f, 1.5f);
+                        p.Rotation = speedUp ? Projectile.velocity.ToRotation() + MathHelper.PiOver2 : 0f;
+                        p.FadeInNormalizedTime = 0.1f;
+                        p.FadeOutNormalizedTime = 0.7f;
+                    });
+            }
+
+            if (!speedUp)
                 Speed *= 0.95f;
 
-            if (Timer >= 40 && Speed < 40f)
+            if (speedUp && Speed < 40f)
                 Speed *= 1.2f;
 
             Timer++;
@@ -144,9 +170,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             {
                 float edgeRotation = Projectile.rotation + Projectile.spriteDirection * i * (MathHelper.Pi * -2f) * 0.02f + Utils.Remap(progress, 0f, 1f, 0f, MathHelper.PiOver4 * 1.6f) * Projectile.spriteDirection;
                 Vector2 drawPos = position + edgeRotation.ToRotationVector2() * ((float)texture.Width * 0.5f - 1f) * scale;
-                Utility.DrawPrettyStarSparkle(Projectile.Opacity, SpriteEffects.None, drawPos, color.WithOpacity(Projectile.Opacity) * (i / 9f), middleMediumColor, progress, 0f, 0.5f, 0.5f, 1f, edgeRotation, new Vector2(0f, Utils.Remap(progress, 0f, 1f, 2f, 0f)) * scale, Vector2.One * scale);
+                Utility.DrawPrettyStarSparkle(Projectile.Opacity, SpriteEffects.None, drawPos, color.WithOpacity(Projectile.Opacity) * (i / 14f), middleMediumColor, progress, 0f, 0.5f, 0.5f, 1f, edgeRotation, new Vector2(0f, Utils.Remap(progress, 0f, 1f, 2f, 0f)) * scale, Vector2.One * scale);
             }
-                
+
             return false;
         }
     }

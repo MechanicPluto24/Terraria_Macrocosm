@@ -45,13 +45,13 @@ namespace Macrocosm.Content.Particles
 
             Lighting.AddLight(Center, Color.ToVector3() * actualScale * 0.5f);
 
-            if (actualScale < 0.2f && !fadeIn)
+            if (actualScale < 0.1f && !fadeIn)
                 Kill();
         }
 
         public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
-            spriteBatch.DrawStar(Position - screenPosition, StarPointCount, Color, new Vector2(0.5f * actualScale, actualScale), Rotation);
+            spriteBatch.DrawStar(Position - screenPosition, StarPointCount, Color * FadeFactor, new Vector2(0.5f * actualScale, actualScale), Rotation);
             return false;
         }
     }
