@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Drawing.Particles;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Buffs.Weapons;
 using Macrocosm.Content.Dusts;
@@ -56,6 +57,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
         private int[] animFrames;
 
+        private SpriteBatchState state;
         public override bool PreDraw(ref Color lightColor)
         {
             List<Vector2> list = new();
@@ -128,6 +130,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                 if(!handle && !tip)
                     for(float f = 0f; f < 1f; f+= 0.5f)
                         Main.spriteBatch.DrawStar(Vector2.Lerp(list[i], list[i + 1], f) + Main.rand.NextVector2Circular(6, 6) - Main.screenPosition, 1, new Color(253, 174, 248, 125), scale * 0.4f, rotation, flip, entity: true);
+
+                if (tip)
+                {
+                    Main.spriteBatch.DrawStar(Vector2.Lerp(list[^2], list[^3], 0.1f) - Main.screenPosition, 1, new Color(44, 210, 91, 150), new Vector2(scale * 0.4f, scale * 0.9f), rotation + MathHelper.Pi / 8, flip, entity: true);
+                    Main.spriteBatch.DrawStar(Vector2.Lerp(list[^2], list[^3], 0.1f) - Main.screenPosition, 1, new Color(253, 174, 248, 150), new Vector2(scale * 0.4f, scale * 1.3f), rotation, flip, entity: true);
+                    Main.spriteBatch.DrawStar(Vector2.Lerp(list[^2], list[^3], 0.1f) - Main.screenPosition, 1, new Color(90, 86, 167, 100), new Vector2(scale * 0.4f, scale * 0.9f), rotation - MathHelper.Pi / 8, flip, entity: true);
+                }
 
                 Main.EntitySpriteDraw(texture, pos - Main.screenPosition, frame, color, rotation, origin, scale, flip, 0);
 
