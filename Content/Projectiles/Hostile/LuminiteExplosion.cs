@@ -48,6 +48,12 @@ namespace Macrocosm.Content.Projectiles.Hostile
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
             Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, LuminiteSlime.EffectColor, 0f, texture.Size() / 2f, progress, SpriteEffects.None, 0f);
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(BlendState.Additive, state);
+
+            texture = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Star6").Value;
+            Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, new Color(213,155,148), 0f, texture.Size() / 2f, progress, SpriteEffects.None, 0f);
+
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);

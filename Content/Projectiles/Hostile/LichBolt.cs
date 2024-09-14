@@ -29,10 +29,10 @@ namespace Macrocosm.Content.Projectiles.Hostile
             Projectile.hostile = true;
             Projectile.friendly = false;
             Projectile.tileCollide = false;
-            Projectile.timeLeft = 600;
+            Projectile.timeLeft = 300;
             Projectile.penetrate = -1;
 
-            Projectile.tileCollide = true;
+            Projectile.tileCollide = false;
         }
 
         private SpriteBatchState state;
