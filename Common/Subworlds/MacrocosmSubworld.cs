@@ -148,11 +148,7 @@ namespace Macrocosm.Common.Subworlds
 
             // Fast forward 60 times if using sun/moon-dials
             if (Main.IsFastForwardingTime())
-            {
                 timeRate *= 60.0;
-                Main.desiredWorldTilesUpdateRate = timeRate / 60.0;
-                Main.desiredWorldEventsUpdateRate = timeRate;
-            }
 
             // Apply current journey power time modifier
             timeRate *= CreativePowerManager.Instance.GetPower<CreativePowers.ModifyTimeRate>().TargetTimeRate;
@@ -165,9 +161,17 @@ namespace Macrocosm.Common.Subworlds
             if (CreativePowerManager.Instance.GetPower<CreativePowers.FreezeTime>().Enabled)
                 timeRate = 0;
 
+            // Update time
             Main.time += timeRate;
+
+            // Set update rates
             Main.desiredWorldTilesUpdateRate = timeRate / 60.0;
             Main.desiredWorldEventsUpdateRate = timeRate;
+
+            // We don't want slower updates if the time rate is less than Earth
+            // TODO: adjust this for subworlds with a faster rate than Earth, while still letting vanilla time speedups increase the update rate
+            if (timeRate < 1.0)
+                Main.worldEventUpdates = 1;
 
             MacrocosmWorld.IsDusk = Main.dayTime && Main.time >= DayLength;
             MacrocosmWorld.IsDawn = !Main.dayTime && Main.time >= NightLength;
@@ -209,6 +213,8 @@ namespace Macrocosm.Common.Subworlds
                 Liquid.UpdateLiquid();
                 Liquid.skipCount = 0;
             }
+
+            CreditsRollEvent.UpdateTime();
         }
 
         // Freezes environment variables such as rain or clouds. 

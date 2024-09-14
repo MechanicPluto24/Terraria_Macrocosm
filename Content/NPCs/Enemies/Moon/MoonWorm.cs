@@ -51,7 +51,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.aiStyle = -1;
             SpawnModBiomes = [ModContent.GetInstance<MoonNightBiome>().Type];
         }
-        public override float FallSpeed() =>0.2f;
+        public override float FallSpeed => 0.2f;
         public override void ModifyNPCLoot(NPCLoot loot)
         {
             loot.Add(ItemDropRule.Common(ModContent.ItemType<AlienResidue>(), 1, 4, 10));  
