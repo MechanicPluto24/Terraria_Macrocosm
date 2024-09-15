@@ -163,7 +163,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public void Idle()
         {
-            if (Timer % 120f == 0f && Main.rand.NextBool(5))
+            if (Timer % 120f == 0f && Main.rand.NextBool(5)||NPC.velocity.X==0f)
             {
                 if (Main.rand.NextBool(2))
                     idleDirection = new Vector2(1, 0);
@@ -178,9 +178,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             Player player = Main.player[NPC.target];
             bool clearLineOfSight = Collision.CanHitLine(NPC.position, NPC.width, NPC.height, player.position, player.width, player.height);
-            Utility.AIFighter(NPC, ref NPC.ai, player.Center, moveInterval: runSpeed, velMax: 4f, maxJumpTilesX: 2, maxJumpTilesY: 1);
-            if (runSpeed < 3f)
-                runSpeed += 0.01f;
+            Utility.AIFighter(NPC, ref NPC.ai, player.Center, accelerationFactor: 0.08f, velMax: 4f, maxJumpTilesX: 2, maxJumpTilesY: 1);
+           
 
             if (Vector2.Distance(NPC.Center, player.Center) < 300f)
                 gasLeak = true;
