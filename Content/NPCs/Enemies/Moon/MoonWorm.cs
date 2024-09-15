@@ -46,12 +46,14 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.damage = 175;
             NPC.lifeMax = 3250;
             NPC.defense = 63;
+            FlipSprite = true;
             NPC.width = 86;
             NPC.height = 86;
             NPC.aiStyle = -1;
             SpawnModBiomes = [ModContent.GetInstance<MoonNightBiome>().Type];
         }
         public override float FallSpeed => 0.2f;
+        public override bool UseSmoothening => true;
         public override void ModifyNPCLoot(NPCLoot loot)
         {
             loot.Add(ItemDropRule.Common(ModContent.ItemType<AlienResidue>(), 1, 4, 10));  
@@ -206,7 +208,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.npcSlots = 0f;
             NPC.aiStyle = -1;
         }
-
+        public override bool UseSmoothening => true;
         public override void Init()
         {
             FlipSprite = true;

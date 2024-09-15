@@ -341,7 +341,7 @@ namespace Macrocosm.Common.Utils
                     if (codable.velocity.X < 0f && moveDirection == -1 || codable.velocity.X > 0f && moveDirection == 1)
                     {
                         bool test = target != null && !isOwner && targetDistX < 50f && targetDistY > codable.height + (codable.height / 2) && targetDistY < 16f * (jumpDistY + 1) && Utility.CanHit(codable.Hitbox, target.Hitbox);
-                        Vector2 newVec = AttemptJump(codable.position, codable.velocity, codable.width, codable.height, moveDirection, target, moveDirectionY, jumpDistX, jumpDistY, maxSpeed, true, test);
+                        Vector2 newVec = AttemptJump(codable.position, codable.velocity, codable.width, codable.height, moveDirection, target.Center, moveDirectionY, jumpDistX, jumpDistY, maxSpeed, true, test);
                         if (tileCollide)
                         {
                             newVec = Collision.TileCollision(codable.position, newVec, codable.width, codable.height);
@@ -5116,7 +5116,7 @@ namespace Macrocosm.Common.Utils
                 if (npc.velocity.X < 0f && npc.direction == -1 || npc.velocity.X > 0f && npc.direction == 1)
                 {
                     //...attempt to jump if needed.
-                    Vector2 newVec = AttemptJump(npc.position, npc.velocity, npc.width, npc.height, npc.direction, jumpUpPlatforms && notBored ? Main.player[npc.target] : null, npc.directionY, maxJumpTilesX, maxJumpTilesY, velMax, jumpUpPlatforms, ignoreJumpTiles);
+                    Vector2 newVec = AttemptJump(npc.position, npc.velocity, npc.width, npc.height, npc.direction,Main.player[npc.target].Center, npc.directionY, maxJumpTilesX, maxJumpTilesY, velMax, jumpUpPlatforms, ignoreJumpTiles);
                     if (!npc.noTileCollide)
                     {
                         newVec = Collision.TileCollision(npc.position, newVec, npc.width, npc.height);
@@ -5136,7 +5136,7 @@ namespace Macrocosm.Common.Utils
         }
 
         /// <summary> WIP, will be expanded </summary>
-        public static void AIFighter(NPC npc, ref float[] ai, Vector2 targetPosition, float moveInterval = 0.07f, float velMax = 1f, int maxJumpTilesX = 3, int maxJumpTilesY = 4, bool targetPlayers = true, bool jumpUpPlatforms = false, Action<bool, bool, Vector2, Vector2> onTileCollide = null, bool ignoreJumpTiles = false)
+        public static void AIFighter(NPC npc, ref float[] ai, Vector2 targetPosition, float accelerationFactor = 0.07f, float velMax = 1f, int maxJumpTilesX = 3, int maxJumpTilesY = 4, bool targetPlayers = true, bool jumpUpPlatforms = false, Action<bool, bool, Vector2, Vector2> onTileCollide = null, bool ignoreJumpTiles = false)
         {
             if (targetPosition.X > npc.Center.X)
                 npc.direction = 1;
@@ -5154,7 +5154,7 @@ namespace Macrocosm.Common.Utils
             }
             else if (npc.velocity.X < velMax && npc.direction == 1) //handles movement to the right. Clamps at velMaxX.
             {
-                npc.velocity.X += moveInterval;
+                npc.velocity.X += accelerationFactor;
                 if (npc.velocity.X > velMax)
                 {
                     npc.velocity.X = velMax;
@@ -5162,12 +5162,14 @@ namespace Macrocosm.Common.Utils
             }
             else if (npc.velocity.X > -velMax && npc.direction == -1) //handles movement to the left. Clamps at -velMaxX.
             {
-                npc.velocity.X -= moveInterval;
+                npc.velocity.X -= accelerationFactor;
                 if (npc.velocity.X < -velMax)
                 {
                     npc.velocity.X = -velMax;
                 }
             }
+
+
 
             WalkupHalfBricks(npc);
 
@@ -5500,121 +5502,7 @@ namespace Macrocosm.Common.Utils
          *  tileDistX/tileDistY : the tile amounts the object can jump across and over, respectively.
          *  float maxSpeedX : The maximum speed of the npc.
          */
-        public static Vector2 AttemptJump(Vector2 position, Vector2 velocity, int width, int height, int direction, Entity target = null, float directionY = 0, int tileDistX = 3, int tileDistY = 4, float maxSpeedX = 1f, bool jumpUpPlatforms = false, bool ignoreTiles = false)
-        {
-            try
-            {
-                tileDistX -= 2;
-                Vector2 newVelocity = velocity;
-                int tileX = Math.Max(10, Math.Min(Main.maxTilesX - 10, (int)((position.X + (width * 0.5f) + (((width * 0.5f) + 8f) * direction)) / 16f)));
-                int tileY = Math.Max(10, Math.Min(Main.maxTilesY - 10, (int)((position.Y + height - 15f) / 16f)));
-                int tileItX = Math.Max(10, Math.Min(Main.maxTilesX - 10, tileX + (direction * tileDistX)));
-                int tileItY = Math.Max(10, Math.Min(Main.maxTilesY - 10, tileY - tileDistY));
-                int lastY = tileY;
-                int tileHeight = (int)(height / 16f);
-                if (height > tileHeight * 16) { tileHeight += 1; }
-
-                Rectangle hitbox = new((int)position.X, (int)position.Y, width, height);
-                //attempt to jump over walls if possible.
-
-                if (ignoreTiles && target != null && Math.Abs(position.X + (width * 0.5f) - target.Center.X) < width + 120)
-                {
-                    float dist = (int)Math.Abs(position.Y + (height * 0.5f) - target.Center.Y) / 16;
-                    if (dist < tileDistY + 2)
-                    {
-                        newVelocity.Y = -8f + (dist * -0.5f);
-                        // dist +=2;
-                        // newVelocity.Y = -(5f + dist * (dist > 3 ? 1f - ((dist - 2f) * 0.0525f) : 1f)); 
-                    }
-                }
-
-                if (newVelocity.Y == velocity.Y)
-                {
-                    for (int y = tileY; y >= tileItY; y--)
-                    {
-                        Tile tile = Framing.GetTileSafely(tileX, y);
-                        Tile tileNear = Main.tile[Math.Min(Main.maxTilesX, tileX - direction), y];
-                        if (tile.HasUnactuatedTile && (y != tileY || tile.Slope == 0) && Main.tileSolid[tile.TileType] && (jumpUpPlatforms || !Main.tileSolidTop[tile.TileType]))
-                        {
-                            if (!Main.tileSolidTop[tile.TileType])
-                            {
-                                Rectangle tileHitbox = new(tileX * 16, y * 16, 16, 16)
-                                {
-                                    Y = hitbox.Y
-                                };
-
-                                if (tileHitbox.Intersects(hitbox))
-                                {
-                                    newVelocity = velocity; break;
-                                }
-                            }
-
-                            if (tileNear.HasUnactuatedTile && Main.tileSolid[tileNear.TileType] && !Main.tileSolidTop[tileNear.TileType])
-                            {
-                                newVelocity = velocity;
-                                break;
-                            }
-
-                            if (target != null && y * 16 < target.Center.Y)
-                                continue;
-
-                            lastY = y;
-                            newVelocity.Y = -(5f + ((tileY - y) * (tileY - y > 3 ? 1f - ((tileY - y - 2) * 0.0525f) : 1f)));
-                        }
-                        else if (lastY - y >= tileHeight)
-                        {
-                            break;
-                        }
-                    }
-                }
-
-                // if the npc isn't jumping already...
-                if (newVelocity.Y == velocity.Y)
-                {
-                    //...and there's a gap in front of the npc, attempt to jump across it.
-                    if (directionY < 0 && (!Main.tile[tileX, tileY + 1].HasUnactuatedTile || !Main.tileSolid[Main.tile[tileX, tileY + 1].TileType]) && (!Main.tile[tileX + direction, tileY + 1].HasUnactuatedTile || !Main.tileSolid[Main.tile[tileX + direction, tileY + 1].TileType]))
-                    {
-                        if (!Main.tile[tileX + direction, tileY + 2].HasUnactuatedTile || !Main.tileSolid[Main.tile[tileX, tileY + 2].TileType] || target == null || target.Center.Y + (target.height * 0.25f) < tileY * 16f)
-                        {
-                            newVelocity.Y = -8f;
-                            newVelocity.X *= 1.5f * (1f / maxSpeedX);
-                            if (tileX <= tileItX)
-                            {
-                                for (int x = tileX; x < tileItX; x++)
-                                {
-                                    Tile tile = Framing.GetTileSafely(x, tileY + 1);
-                                    if (x != tileX && !tile.HasUnactuatedTile)
-                                    {
-                                        newVelocity.Y -= 0.0325f;
-                                        newVelocity.X += direction * 0.255f;
-                                    }
-                                }
-                            }
-                            else if (tileX > tileItX)
-                            {
-                                for (int x = tileItX; x < tileX; x++)
-                                {
-                                    Tile tile = Framing.GetTileSafely(x, tileY + 1);
-                                    if (x != tileItX && !tile.HasUnactuatedTile)
-                                    {
-                                        newVelocity.Y -= 0.0325f;
-                                        newVelocity.X += direction * 0.255f;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                return newVelocity;
-
-            }
-            catch (Exception e)
-            {
-                LogFancy("ATTEMPT JUMP ERROR:", e);
-                return velocity;
-            }
-        }
+        
         public static Vector2 AttemptJump(Vector2 position, Vector2 velocity, int width, int height, int direction, Vector2 target, float directionY = 0, int tileDistX = 3, int tileDistY = 4, float maxSpeedX = 1f, bool jumpUpPlatforms = false, bool ignoreTiles = false)
         {
             try
