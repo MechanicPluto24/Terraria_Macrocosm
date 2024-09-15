@@ -775,7 +775,7 @@ namespace Macrocosm.Content.Rockets
                 {
                     p.Position = position;
                     p.Velocity = velocity * speed;
-                    p.Scale = Main.rand.NextFloat(1.2f, 1.6f);
+                    p.Scale = new(Main.rand.NextFloat(1.2f, 1.6f));
                     p.Rotation = 0f;
                     p.FadeIn = true;
                     p.FadeOut = true;
@@ -783,7 +783,7 @@ namespace Macrocosm.Content.Rockets
                     p.FadeOutSpeed = 15;
                     p.TargetAlpha = 128;
                     p.ScaleDownSpeed = 0.001f;
-                    p.Deceleration = 0.995f;
+                    p.Acceleration = new(0.995f);
                     p.DrawColor = Color.White.WithAlpha(150);
                     p.Collide = true;
                 }, shouldSync: false);
@@ -809,7 +809,7 @@ namespace Macrocosm.Content.Rockets
                 {
                     p.Position = position;
                     p.Velocity = velocity * speed;
-                    p.Scale = Main.rand.NextFloat(0.6f, 0.9f);
+                    p.Scale = new(Main.rand.NextFloat(0.6f, 0.9f));
                     p.Rotation = 0f;
                     p.FadeIn = true;
                     p.FadeOut = true;
@@ -817,7 +817,7 @@ namespace Macrocosm.Content.Rockets
                     p.FadeOutSpeed = 12;
                     p.TargetAlpha = 128;
                     p.ScaleDownSpeed = 0.0015f;
-                    p.Deceleration = 0.993f;
+                    p.Acceleration = new(0.993f);
                     p.DrawColor = Color.White.WithAlpha(150);
                     p.Collide = true;
                 }, shouldSync: false);
@@ -832,12 +832,12 @@ namespace Macrocosm.Content.Rockets
                 {
                     p.Position = tileCoords.ToWorldCoordinates();
                     p.Velocity = new Vector2(Main.rand.NextFloat(-4f, 4f), Main.rand.NextFloat(-0.1f, -1f));
-                    p.Scale = Main.rand.NextFloat(0.5f, 1.2f);
+                    p.Scale = new(Main.rand.NextFloat(0.5f, 1.2f));
                     p.Rotation = Utility.RandomRotation();
-                    p.DrawColor = Smoke.GetTileHitColor(tileCoords);
+                    p.Color = Smoke.GetTileHitColor(tileCoords);
                     p.FadeIn = true;
                     p.Opacity = 0f;
-                    p.ExpansionRate = 0.0075f;
+                    p.ScaleVelocity = new(0.0075f);
                 });
             }
         }

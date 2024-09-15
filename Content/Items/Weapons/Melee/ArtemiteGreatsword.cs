@@ -67,7 +67,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             {
                 p.Position = target.Center;
                 p.Velocity = -Vector2.UnitY * 0.4f;
-                p.Scale = 1f;
+                p.Scale = new(1f);
                 p.Rotation = MathHelper.PiOver4;
             }, shouldSync: true
             );
@@ -123,7 +123,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             if (greatsword.State == GreatswordHeldProjectile.GreatswordState.Charge)
             {
                 Vector2 starPosition = greatsword.Projectile.Center + ((greatsword.Projectile.rotation - MathHelper.PiOver4) * greatsword.Player.direction + (greatsword.Player.direction == -1 ? MathHelper.Pi : 0f)).ToRotationVector2() * greatsword.SwordLength * 0.9f + new Vector2(greatsword.SwordWidth, 0) * greatsword.Player.direction;
-                Main.spriteBatch.DrawStar(starPosition + Main.rand.NextVector2Circular(1, 1) - Main.screenPosition, 2, new Color(130, 220, 199).WithOpacity(1f - greatsword.Charge), new Vector2(1f, 3.2f) * Utility.QuadraticEaseIn(greatsword.Charge) * 0.4f, 0f, entity: true);
+                Utility.DrawStar(starPosition + Main.rand.NextVector2Circular(1, 1) - Main.screenPosition, 2, new Color(130, 220, 199).WithOpacity(1f - greatsword.Charge), new Vector2(1f, 3.2f) * Utility.QuadraticEaseIn(greatsword.Charge) * 0.4f, 0f, entity: true);
             }
         }
     }

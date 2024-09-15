@@ -44,7 +44,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
-            Main.spriteBatch.DrawStar(Projectile.Center - Main.screenPosition, 2, colour, 0.4f, Projectile.rotation, entity: true);
+            Utility.DrawStar(Projectile.Center - Main.screenPosition, 2, colour, 0.4f, Projectile.rotation, entity: true);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);

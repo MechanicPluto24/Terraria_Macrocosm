@@ -172,7 +172,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 {
                     p.Position = Projectile.Center;
                     p.Velocity = -Vector2.UnitY.RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(0.2f, 4f);
-                    p.Scale = Main.rand.NextFloat(0.2f, 0.5f);
+                    p.Scale = new(Main.rand.NextFloat(0.2f, 0.5f));
                 }, shouldSync: true
                 );
             }

@@ -131,7 +131,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 float theta = i + Main.rand.NextFloat(-MathHelper.PiOver4, MathHelper.PiOver4) * 0.5f;
                 Vector2 velocity = Utility.PolarVector(speed, theta);
 
-                Particle.CreateParticle<PlasmaBall>(Projectile.Center + netOffset, velocity, scale: Main.rand.NextFloat(0.2f, 1.2f));
+                var p = Particle.CreateParticle<PlasmaBall>(Projectile.Center + netOffset, velocity, scale: Main.rand.NextFloat(0.4f, 1.2f));
+                p.AllowNegativeScale = true;
+                p.FadeInNormalizedTime = 0f;
+                p.FadeOutNormalizedTime = Main.rand.NextFloat(0.2f, 0.9f);
             }
         }
     }
