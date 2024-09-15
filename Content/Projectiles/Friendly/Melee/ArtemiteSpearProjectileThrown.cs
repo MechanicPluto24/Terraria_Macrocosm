@@ -73,7 +73,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             {
                 p.Position = Projectile.Center;
                 p.Velocity = Projectile.velocity * 0.1f;
-                p.Scale = 1.2f;
+                p.Scale = new(1.2f);
                 p.Rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
                 p.StarPointCount = 1;
                 p.FadeInFactor = 1.8f;
@@ -164,7 +164,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             {
                 p.Position = Projectile.Center - oldVelocity;
                 p.Velocity = oldVelocity * 0.4f;
-                p.Scale = 1.2f;
+                p.Scale = new(1.2f);
                 p.Rotation = oldVelocity.ToRotation() + MathHelper.PiOver2;
                 p.StarPointCount = 1;
                 p.FadeInFactor = 2f;

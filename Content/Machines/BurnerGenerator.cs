@@ -193,12 +193,12 @@ namespace Macrocosm.Content.Machines
                             {
                                 p.Position = new Vector2(i, j) * 16f + new Vector2(k % 2 == 0 ? 4 : 13, 18f);
                                 p.Velocity = new Vector2(0, -0.7f).RotatedByRandom(MathHelper.Pi / 16) * atmoDensity;
-                                p.Scale = 0.1f;
+                                p.Scale = new(0.1f);
                                 p.Rotation = 0f;
-                                p.DrawColor = (new Color(80, 80, 80) * Main.rand.NextFloat(0.75f, 1f)).WithAlpha(215);
+                                p.Color = (new Color(80, 80, 80) * Main.rand.NextFloat(0.75f, 1f)).WithAlpha(215);
                                 p.FadeIn = true;
                                 p.Opacity = 0f;
-                                p.ExpansionRate = 0.0075f;
+                                p.ScaleVelocity = new(0.0075f);
                                 p.WindFactor = 0.01f;
                             });
                         }

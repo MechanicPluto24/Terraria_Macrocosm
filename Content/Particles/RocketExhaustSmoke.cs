@@ -19,8 +19,6 @@ namespace Macrocosm.Content.Particles
 
         public int TargetAlpha = 255;
 
-        public float Deceleration = 0.98f;
-
         public int FadeInSpeed = 1;
         public int FadeOutSpeed = 4;
 
@@ -41,13 +39,13 @@ namespace Macrocosm.Content.Particles
 
             if (FadeIn)
                 alpha = 0;
+
+            Acceleration = new(0.98f);
+            ScaleVelocity = new(-0.005f);
         }
 
         public override void AI()
         {
-            Velocity *= Deceleration;
-            Scale -= ScaleDownSpeed;
-
             if (FadeIn && FadeOut)
             {
                 if (!fadedIn)
@@ -94,7 +92,7 @@ namespace Macrocosm.Content.Particles
 
             alpha = (int)MathHelper.Clamp(alpha, 0, 255);
 
-            if (Scale < 0.1 || (fadedIn && alpha <= 0))
+            if (Scale.X < 0.1f || (fadedIn && alpha <= 0))
                 Kill();
         }
 

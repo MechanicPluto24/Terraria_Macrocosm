@@ -13,20 +13,13 @@ namespace Macrocosm.Content.Particles
     {
         public override string TexturePath => Macrocosm.TextureEffectsPath + "Flare2";
 
-        public Color Color;
-        public int ScaleVelocity;
-        public float ScaleIncr;
-        public int TimeToLive;
-
-        public override int SpawnTimeLeft => 6;
-
         public override void OnSpawn()
         {
+            TimeToLive = 6;
         }
 
         public override void AI()
         {
-            Scale += ScaleIncr;
             Lighting.AddLight(Position, Color.ToVector3());
         }
 

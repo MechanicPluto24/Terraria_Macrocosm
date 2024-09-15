@@ -156,7 +156,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                     {
                         p.Position = position;
                         p.Velocity = velocity;
-                        p.Scale = Main.rand.NextFloat(1.2f, 1.8f) * (1 - amp);
+                        p.Scale = new(Main.rand.NextFloat(1.2f, 1.8f) * (1 - amp));
                         p.Rotation = Projectile.rotation;
                         p.ColorOnSpawn = Color.White;
                         p.ColorOnDespawn = Color.Lerp(new Color(89, 151, 193), new Color(255, 177, 65), AI_Overheat);

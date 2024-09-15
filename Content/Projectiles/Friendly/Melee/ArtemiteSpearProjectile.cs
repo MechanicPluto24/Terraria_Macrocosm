@@ -95,7 +95,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             {
                 p.Position = Projectile.Center;
                 p.Velocity = new Vector2(3f, 0).RotatedBy(Projectile.velocity.ToRotation());
-                p.Scale = 1.2f;
+                p.Scale = new(1.2f);
                 p.Rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
                 p.StarPointCount = 1;
                 p.FadeInFactor = 1.2f;

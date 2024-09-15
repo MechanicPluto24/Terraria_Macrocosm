@@ -13,9 +13,9 @@ namespace Macrocosm.Content.Particles
         public Color DrawColor = new Color(56, 188, 173, 0);
         public float Opacity = 0.3f;
         public float ExpansionRate = -0.008f;
-        
+
         public bool FadeIn;
-        private bool fadedIn=false;
+        private bool fadedIn = false;
 
         public float WindFactor = 0f;
 
@@ -23,21 +23,21 @@ namespace Macrocosm.Content.Particles
         {
             if (!fadedIn)
             {
-                Scale -= ExpansionRate/3;
+                Scale -= new Vector2(ExpansionRate / 3);
                 Opacity += 0.05f;
                 if (Opacity >= 1f)
                     fadedIn = true;
             }
             else
             {
-                Scale += ExpansionRate/3;
+                Scale += new Vector2(ExpansionRate / 3);
                 if (Opacity > 0f)
                     Opacity -= 0.012f;
             }
 
             Velocity.X += WindFactor * Utility.WindSpeedScaled;
 
-            if (Scale < 0.1f || (Opacity <= 0 && fadedIn))
+            if (Scale.X < 0.1f || (Opacity <= 0 && fadedIn))
                 Kill();
         }
 

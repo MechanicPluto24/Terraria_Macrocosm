@@ -82,7 +82,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                         p.Position = Projectile.Center + Main.rand.NextVector2Circular(80, 80);
                         p.Velocity = speedUp ? Projectile.velocity * Main.rand.NextFloat(0.4f, 0.9f) : Vector2.Zero;
                         p.StarPointCount = speedUp ? 1 : 2;
-                        p.Scale = speedUp ? Main.rand.NextFloat(1f, 2f) : Main.rand.NextFloat(0.5f, 1.5f);
+                        p.Scale = speedUp ? new Vector2(Main.rand.NextFloat(1f, 2f)) : new Vector2(Main.rand.NextFloat(0.5f, 1.5f));
                         p.Rotation = speedUp ? Projectile.velocity.ToRotation() + MathHelper.PiOver2 : 0f;
                         p.FadeInNormalizedTime = 0.1f;
                         p.FadeOutNormalizedTime = 0.7f;
@@ -113,7 +113,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             {
                 p.Position = target.Center;
                 p.Velocity = -Vector2.UnitY * 0.4f;
-                p.Scale = 1f;
+                p.Scale = new(1f);
                 p.Rotation = MathHelper.PiOver4;
             }, shouldSync: true
             );
@@ -125,7 +125,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             {
                 p.Position = target.Center;
                 p.Velocity = -Vector2.UnitY * 0.4f;
-                p.Scale = 1f;
+                p.Scale = new(1f);
                 p.Rotation = MathHelper.PiOver4;
             }, shouldSync: true
             );

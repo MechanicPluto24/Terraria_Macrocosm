@@ -1,18 +1,15 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Buffs.Weapons;
-using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
-using Macrocosm.Content.Players;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
-using System.IO;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.GameContent.Drawing;
+using Terraria.Graphics.Renderers;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -47,10 +44,34 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             // minions will attack the npcs hit with this whip 
             Main.player[Projectile.owner].MinionAttackTargetNPC = target.whoAmI;
 
-            // similar to how we want the hit effect. need to replicate into out particle system
-            ParticleOrchestrator.SpawnParticlesDirect(ParticleOrchestraType.BlackLightningSmall, new ParticleOrchestraSettings() { PositionInWorld = target.Center });
-            ParticleOrchestrator.SpawnParticlesDirect(ParticleOrchestraType.BlackLightningHit, new ParticleOrchestraSettings() { PositionInWorld = target.Center });
+            for (float f = 0f; f < 1f; f += 1f / 24f)
+            {
+                float rotation = MathHelper.TwoPi * f + Main.rand.NextFloat() * MathHelper.TwoPi + Main.rand.NextFloatDirection() * 0.25f;
+
+                Color color = new List<Color>() {
+                        new Color(44, 210, 91),
+                        new Color(253, 174, 248),
+                        new Color(90, 86, 167)
+                    }.GetRandom();
+                color.A = (byte)Main.rand.Next(120, 200);
+
+                if (Main.rand.NextBool())
+                    color = new Color(85, 28, 37);
+
+                Particle.CreateParticle<LightningParticle>((p) =>
+                {
+                    p.Position = target.Center;
+                    p.Velocity = rotation.ToRotationVector2() * (Main.rand.NextFloat() * 6f + 0.1f) * new Vector2(1f, 0.5f);
+                    p.Rotation = rotation;
+                    p.Color = color;
+                    p.Scale = new(Main.rand.NextFloat(0.2f, 0.5f));
+                    p.ScaleVelocity = new Vector2(0.05f);
+                    p.FadeInNormalizedTime = 0.01f;
+                    p.FadeOutNormalizedTime = 0.5f;
+                });
+            }
         }
+
 
         private readonly int frameWidth = 18;
         private readonly int frameHeight = 26;
@@ -77,6 +98,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                 Vector2 origin = new(frameWidth / 2, frameHeight / 2);
                 float scale = 1;
 
+                Projectile.GetWhipSettings(Projectile, out float timeToFlyOut, out int _, out float _);
+                float progress = Timer / timeToFlyOut;
+
                 Vector2 element = list[i];
                 Vector2 diff = list[i + 1] - element;
 
@@ -91,12 +115,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                     frame.Y = 6 * frameHeight;
 
                     // For a more impactful look, this scales the tip of the whip up when fully extended, and down when curled up.
-                    Projectile.GetWhipSettings(Projectile, out float timeToFlyOut, out int _, out float _);
-                    float t = Timer / timeToFlyOut;
-                    scale = MathHelper.Lerp(0.4f, 1.3f, Utils.GetLerpValue(0.1f, 0.7f, t, true) * Utils.GetLerpValue(0.9f, 0.7f, t, true));
-
+                    scale = MathHelper.Lerp(0.4f, 1.3f, Utils.GetLerpValue(0.1f, 0.7f, progress, true) * Utils.GetLerpValue(0.9f, 0.7f, progress, true));
                     WhipTipPosition = pos;
-
 
                     /*
                     // Depends on whip extenstion
@@ -114,7 +134,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                     }
                     */
                 }
-                else if(handle) 
+                else if (handle)
                 {
                     frame.Y = 0;
                 }
@@ -127,18 +147,32 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                     frame.Y = animFrames[i] * frameHeight;
                 }
 
-                if(!handle && !tip)
-                    for(float f = 0f; f < 1f; f+= 0.5f)
-                        Main.spriteBatch.DrawStar(Vector2.Lerp(list[i], list[i + 1], f) + Main.rand.NextVector2Circular(6, 6) - Main.screenPosition, 1, new Color(253, 174, 248, 125), scale * 0.4f, rotation, flip, entity: true);
+                if (!handle && !tip)
+                    for (float f = 0f; f < 1f; f += 0.5f)
+                        Utility.DrawStar(Vector2.Lerp(list[i], list[i + 1], f) + Main.rand.NextVector2Circular(6, 6) - Main.screenPosition, 1, new Color(253, 174, 248, 125), scale * 0.4f, rotation, flip, entity: true);
 
                 if (tip)
                 {
-                    Main.spriteBatch.DrawStar(Vector2.Lerp(list[^2], list[^3], 0.1f) - Main.screenPosition, 1, new Color(44, 210, 91, 150), new Vector2(scale * 0.4f, scale * 0.9f), rotation + MathHelper.Pi / 8, flip, entity: true);
-                    Main.spriteBatch.DrawStar(Vector2.Lerp(list[^2], list[^3], 0.1f) - Main.screenPosition, 1, new Color(253, 174, 248, 150), new Vector2(scale * 0.4f, scale * 1.3f), rotation, flip, entity: true);
-                    Main.spriteBatch.DrawStar(Vector2.Lerp(list[^2], list[^3], 0.1f) - Main.screenPosition, 1, new Color(90, 86, 167, 100), new Vector2(scale * 0.4f, scale * 0.9f), rotation - MathHelper.Pi / 8, flip, entity: true);
+                    state.SaveState(Main.spriteBatch);
+                    Main.spriteBatch.End();
+                    Main.spriteBatch.Begin(BlendState.Additive, state);
+
+                    Texture2D glowTex = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Slash1").Value;
+                    float glowScale = MathHelper.Lerp(0.4f, 1.3f, Utils.GetLerpValue(0.1f, 0.7f, progress, true) * Utils.GetLerpValue(0.9f, 0.7f, progress, true)) * 1.1f;
+                    float glowProgress = 4f * progress * (1f - progress);
+                    glowScale *= glowProgress;
+                    Main.NewText(glowProgress);
+                    Main.EntitySpriteDraw(glowTex, Vector2.Lerp(list[^2], list[^3], 0.6f) - Main.screenPosition, null, new Color(44, 210, 91, 150) * glowScale, rotation + MathHelper.Pi / 6 * glowScale, glowTex.Size()/2f, new Vector2(glowScale * 0.02f, glowScale * 0.12f), default, 0);
+                    Main.EntitySpriteDraw(glowTex, Vector2.Lerp(list[^2], list[^3], 0.1f) - Main.screenPosition, null, new Color(253, 174, 248, 150) * glowScale, rotation, glowTex.Size() / 2f, new Vector2(glowScale * 0.02f, glowScale * 0.12f), default, 0);
+                    Main.EntitySpriteDraw(glowTex, Vector2.Lerp(list[^2], list[^3], 0.6f) - Main.screenPosition, null, new Color(90, 86, 167, 100) * glowScale, rotation - MathHelper.Pi / 6 * glowScale, glowTex.Size() / 2f, new Vector2(glowScale * 0.02f, glowScale * 0.12f), default, 0);
+
+                    Main.spriteBatch.End();
+                    Main.spriteBatch.Begin(state);
                 }
 
                 Main.EntitySpriteDraw(texture, pos - Main.screenPosition, frame, color, rotation, origin, scale, flip, 0);
+
+
 
                 pos += diff;
             }
