@@ -9,6 +9,7 @@ namespace Macrocosm.Content.Particles
     public class ArtemiteStar : Particle
     {
         public override string TexturePath => Macrocosm.EmptyTexPath;
+        public override int MaxPoolCount => 100;
 
         public int StarPointCount { get; set; }
         public float FadeInFactor { get; set; }

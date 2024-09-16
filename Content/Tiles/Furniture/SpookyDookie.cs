@@ -39,6 +39,7 @@ namespace Macrocosm.Content.Tiles.Furniture
             TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;
 
             TileObjectData.newTile.StyleWrapLimit = 2;
+            TileObjectData.newTile.StyleMultiplier = 2;
             TileObjectData.newTile.StyleHorizontal = true;
 
             TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
@@ -46,7 +47,6 @@ namespace Macrocosm.Content.Tiles.Furniture
             TileObjectData.addAlternate(1);
             TileObjectData.addTile(Type);
 
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.SpookyDookie>(), 0, 1);
         }
 
         public override void NumDust(int i, int j, bool fail, ref int num)

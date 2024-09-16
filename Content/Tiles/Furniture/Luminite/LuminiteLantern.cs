@@ -30,6 +30,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             TileObjectData.newTile.CopyFrom(TileObjectData.GetTileData(TileID.HangingLanterns, 0));
             TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.newTile.StyleWrapLimit = 2;
+            TileObjectData.newTile.StyleMultiplier = 2;
             TileObjectData.newTile.DrawYOffset = -2;
             TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
             TileObjectData.newAlternate.AnchorTop = new AnchorData(AnchorType.Platform, TileObjectData.newTile.Width, 0);
@@ -44,16 +45,6 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             foreach (LuminiteStyle style in Enum.GetValues(typeof(LuminiteStyle)))
                 AddMapEntry(Utility.GetTileColorFromLuminiteStyle(style), Language.GetText("ItemName.Lantern"));
 
-            // To complete direction-dependent item drops
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Luminite.LuminiteLantern>(), 0, 1);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Heavenforge.HeavenforgeLantern>(), 2, 3);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.LunarRust.LunarRustLantern>(), 4, 5);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Astra.AstraLantern>(), 6, 7);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.DarkCelestial.DarkCelestialLantern>(), 8, 9);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Mercury.MercuryLantern>(), 10, 11);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.StarRoyale.StarRoyaleLantern>(), 12, 13);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Cryocore.CryocoreLantern>(), 14, 15);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.CosmicEmber.CosmicEmberLantern>(), 16, 17);
         }
 
         public override bool CreateDust(int i, int j, ref int type)

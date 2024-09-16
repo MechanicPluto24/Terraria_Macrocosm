@@ -31,6 +31,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             TileObjectData.newTile.CoordinateHeights = [16];
             TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.newTile.StyleWrapLimit = 2;
+            TileObjectData.newTile.StyleMultiplier = 2;
             TileObjectData.addTile(Type);
 
             AdjTiles = [TileID.Candles];
@@ -41,16 +42,6 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             foreach (LuminiteStyle style in Enum.GetValues(typeof(LuminiteStyle)))
                 AddMapEntry(Utility.GetTileColorFromLuminiteStyle(style), Language.GetText("MapObject.Candle"));
 
-            // To complete direction-dependent item drops
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Luminite.LuminiteCandle>(), 0, 1);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Heavenforge.HeavenforgeCandle>(), 2, 3);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.LunarRust.LunarRustCandle>(), 4, 5);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Astra.AstraCandle>(), 6, 7);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.DarkCelestial.DarkCelestialCandle>(), 8, 9);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Mercury.MercuryCandle>(), 10, 11);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.StarRoyale.StarRoyaleCandle>(), 12, 13);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Cryocore.CryocoreCandle>(), 14, 15);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.CosmicEmber.CosmicEmberCandle>(), 16, 17);
         }
 
         public override bool CreateDust(int i, int j, ref int type)
