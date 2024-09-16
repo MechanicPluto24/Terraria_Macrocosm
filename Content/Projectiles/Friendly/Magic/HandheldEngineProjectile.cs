@@ -125,7 +125,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                             {
                                 p.Position = Projectile.position;
                                 p.Velocity = Vector2.UnitX.RotatedByRandom(MathHelper.TwoPi);
-                                p.DrawColor = Color.DarkGray;
+                                p.Color = Color.DarkGray;
                             });
                     }
                 }

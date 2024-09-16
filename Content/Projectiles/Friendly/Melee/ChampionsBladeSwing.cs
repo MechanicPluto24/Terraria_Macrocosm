@@ -155,7 +155,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             {
                 p.Position = target.Center;
                 p.Velocity = -Vector2.UnitY * 0.4f;
-                p.Scale = 1f;
+                p.Scale = new(1f);
                 p.Rotation = MathHelper.PiOver4;
             }, shouldSync: true
             );
@@ -169,7 +169,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             {
                 p.Position = target.Center;
                 p.Velocity = -Vector2.UnitY * 0.4f;
-                p.Scale = 1f;
+                p.Scale = new(1f);
                 p.Rotation = MathHelper.PiOver4;
             }, shouldSync: true
             );

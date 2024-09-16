@@ -89,7 +89,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                     Particle.CreateParticle<TintableExplosion>(p =>
                     {
                         p.Position = Projectile.Center + new Vector2((Projectile.width / 2), 0).RotatedBy(Projectile.rotation);
-                        p.DrawColor = (new Color(94, 229, 163, 200));
+                        p.Color = (new Color(94, 229, 163, 200));
                         p.Scale = new(1.5f);
                         p.NumberOfInnerReplicas = 8;
                         p.ReplicaScalingFactor = 0.4f;
@@ -98,7 +98,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                     Particle.CreateParticle<TintableExplosion>(p =>
                    {
                        p.Position = Projectile.Center + new Vector2((Projectile.width / 2), 0).RotatedBy(Projectile.rotation);
-                       p.DrawColor = (new Color(213, 155, 148, 200));
+                       p.Color = (new Color(213, 155, 148, 200));
                        p.Scale = new(1.2f);
                        p.NumberOfInnerReplicas = 6;
                        p.ReplicaScalingFactor = 0.2f;

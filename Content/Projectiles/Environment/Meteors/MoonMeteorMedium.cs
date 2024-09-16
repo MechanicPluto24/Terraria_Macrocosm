@@ -78,7 +78,7 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
             var explosion = Particle.CreateParticle<TintableExplosion>(p =>
             {
                 p.Position = Projectile.Center;
-                p.DrawColor = (new Color(120, 120, 120)).WithOpacity(0.8f);
+                p.Color = (new Color(120, 120, 120)).WithOpacity(0.8f);
                 p.Scale = new(1.5f);
                 p.NumberOfInnerReplicas = 10;
                 p.ReplicaScalingFactor = 0.4f;

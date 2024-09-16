@@ -10,23 +10,27 @@ namespace Macrocosm.Content.Particles
     {
         public override string TexturePath => Macrocosm.EmptyTexPath;
 
-        public int StarPointCount { get; set; } = 2;
+        public int StarPointCount { get; set; }
+        public float FadeInFactor { get; set; }
+        public float FadeOutFactor { get; set; }
 
-        public float FadeInFactor { get; set; } = 1.25f;
-        public float FadeOutFactor { get; set; } = 0.775f;
+        private bool fadeIn;
+        private float defScale;
+        private float actualScale;
 
-        public float Alpha = 0.3f;
-
-        bool fadeIn = true;
-        float defScale;
-        float actualScale;
-
+        public override void SetDefaults()
+        {
+            Color = new(130, 220, 199);
+            StarPointCount = 2;
+            FadeInFactor = 1.25f;
+            FadeOutFactor = 0.775f;
+            fadeIn = true;
+            actualScale = 0.1f;
+        }
 
         public override void OnSpawn()
         {
             defScale = Scale.X;
-            actualScale = 0.1f;
-            Color = new(130, 220, 199);
         }
 
         public override void AI()

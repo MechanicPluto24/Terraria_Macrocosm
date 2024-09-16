@@ -128,7 +128,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             var explosion = Particle.CreateParticle<TintableExplosion>(p =>
             {
                 p.Position = Projectile.Center + Projectile.oldVelocity + Main.rand.NextVector2Circular(10f, 10f);
-                p.DrawColor = (new Color(195, 115, 62)).WithOpacity(0.6f);
+                p.Color = (new Color(195, 115, 62)).WithOpacity(0.6f);
                 p.Scale = new(0.9f);
                 p.NumberOfInnerReplicas = 6;
                 p.ReplicaScalingFactor = 0.3f;

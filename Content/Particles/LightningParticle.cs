@@ -17,9 +17,13 @@ namespace Macrocosm.Content.Particles
         public override int FrameSpeed => 2;
         public override int FrameCount => 6;
 
-        public override void OnSpawn()
+        public override void SetDefaults()
         {
             TimeToLive = 18;
+        }
+
+        public override void OnSpawn()
+        {
         }
 
         public override void AI()
