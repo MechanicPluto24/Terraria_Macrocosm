@@ -79,7 +79,7 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
             {
                 p.Position = Projectile.Center;
                 p.DrawColor = (new Color(120, 120, 120)).WithOpacity(0.8f);
-                p.Scale = 1.25f;
+                p.Scale = new(1.25f);
                 p.NumberOfInnerReplicas = 8;
                 p.ReplicaScalingFactor = 0.4f;
             });

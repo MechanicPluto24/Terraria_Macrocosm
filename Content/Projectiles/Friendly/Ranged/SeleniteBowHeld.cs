@@ -178,7 +178,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 }
 
                 Vector2 rotPoint = Utility.RotatingPoint(Projectile.Center, new Vector2(20, 0), Projectile.rotation) + offset;
-                spriteBatch.DrawStar(rotPoint - Main.screenPosition, 2, new Color(131, 168, 171, alpha), new Vector2(0.5f, 1.5f) * scale, rotation);
+                Utility.DrawStar(rotPoint - Main.screenPosition, 2, new Color(131, 168, 171, alpha), new Vector2(0.5f, 1.5f) * scale, rotation);
 
                 spriteBatch.End();
                 spriteBatch.Begin(BlendState.AlphaBlend, state);

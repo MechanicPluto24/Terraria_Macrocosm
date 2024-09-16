@@ -14,13 +14,11 @@ namespace Macrocosm.Content.Particles
 {
     public class CelestialBulwarkDashParticle : Particle
     {
-        public override int SpawnTimeLeft => 1000;
         public override string TexturePath => Macrocosm.EmptyTexPath;
         public override ParticleDrawLayer DrawLayer => ParticleDrawLayer.BeforeNPCs;
         public override int TrailCacheLength => 24;
 
         public int PlayerID;
-        public Color Color;
         public Color? SecondaryColor;
         public float Opacity;
 
@@ -36,7 +34,12 @@ namespace Macrocosm.Content.Particles
         public DashPlayer DashPlayer => Player.GetModPlayer<DashPlayer>();
         public float Progress => DashPlayer.DashProgress;
 
-        SpriteBatchState state;
+        public override void OnSpawn()
+        {
+            TimeToLive = 1000;
+        }
+
+        private SpriteBatchState state;
         public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
             bool specialRainbow = false;
@@ -53,7 +56,7 @@ namespace Macrocosm.Content.Particles
             for (int i = 0; i < TrailCacheLength; i++)
             {
                 float trailProgress = MathHelper.Clamp((float)i / TrailCacheLength, 0f, 1f);
-                float scale = defScale - (Scale * trailProgress * 5f);
+                float scale = defScale - (Scale.X * trailProgress * 5f);
 
                 bool even = i % 2 == 0;
                 Color baseColor;
@@ -115,7 +118,7 @@ namespace Macrocosm.Content.Particles
             if (!spawned)
             {
                 spawned = true;
-                defScale = Scale;
+                defScale = Scale.X;
                 defRotation = Rotation;
 
                 CelestialBulwark.GetEffectColor(Player, out Color, out SecondaryColor, out blendStateOverride, out _, out rainbow);
@@ -124,7 +127,7 @@ namespace Macrocosm.Content.Particles
             if (DashPlayer.DashTimer <= 0 || Player.dead || Player.CCed)
                 Kill();
 
-            Scale = MathHelper.Lerp(Scale * 0.8f, defScale, Progress);
+            Scale.X = MathHelper.Lerp(Scale.X * 0.8f, defScale, Progress);
 
             Lighting.AddLight(Player.Center, Color.ToVector3() * 2f * Utility.QuadraticEaseIn(Progress));
 

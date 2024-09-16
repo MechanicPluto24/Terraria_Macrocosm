@@ -256,7 +256,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             {
                 p.Position = Projectile.Center;
                 p.DrawColor = (new Color(195, 115, 62)).WithOpacity(0.6f);
-                p.Scale = 1.2f;
+                p.Scale = new(1.2f);
                 p.NumberOfInnerReplicas = 9;
                 p.ReplicaScalingFactor = 0.5f;
             });

@@ -16,20 +16,19 @@ namespace Macrocosm.Content.Particles
         public override void OnSpawn()
         {
             color = Color.Lerp(Color.White, new Color(0, 217, 102, 255), 0.1f + 0.7f * Main.rand.NextFloat());
+            ScaleVelocity = new(-0.035f);
             //Rotation = Utility.RandomRotation();
         }
 
         public override void AI()
         {
-            Scale -= 0.035f;
-
-            if (Scale < 0.002f)
+            if (Scale.X < 0.002f)
                 Kill();
         }
 
         public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
-            spriteBatch.DrawStar(Position - screenPosition, 2, color.WithOpacity(Alpha), ScaleV);
+            Utility.DrawStar(Position - screenPosition, 2, color.WithOpacity(Alpha), Scale);
             return false;
         }
     }

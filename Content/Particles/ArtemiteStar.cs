@@ -16,7 +16,6 @@ namespace Macrocosm.Content.Particles
         public float FadeOutFactor { get; set; } = 0.775f;
 
         public float Alpha = 0.3f;
-        public Color Color = new(130, 220, 199);
 
         bool fadeIn = true;
         float defScale;
@@ -25,8 +24,9 @@ namespace Macrocosm.Content.Particles
 
         public override void OnSpawn()
         {
-            defScale = Scale;
+            defScale = Scale.X;
             actualScale = 0.1f;
+            Color = new(130, 220, 199);
         }
 
         public override void AI()
@@ -51,7 +51,7 @@ namespace Macrocosm.Content.Particles
 
         public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
-            spriteBatch.DrawStar(Position - screenPosition, StarPointCount, Color * FadeFactor, new Vector2(0.5f * actualScale, actualScale), Rotation);
+            Utility.DrawStar(Position - screenPosition, StarPointCount, Color * FadeFactor, new Vector2(0.5f * actualScale, actualScale), Rotation);
             return false;
         }
     }

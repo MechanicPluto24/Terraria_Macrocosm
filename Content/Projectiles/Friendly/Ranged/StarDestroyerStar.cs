@@ -162,7 +162,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 {
                     Explosion.Position = Projectile.Center;
                     Explosion.DrawColor = color.WithOpacity(0.1f) * 0.4f;
-                    Explosion.Scale = 1f;
+                    Explosion.Scale = new(1f);
                     Explosion.NumberOfInnerReplicas = 6;
                     Explosion.ReplicaScalingFactor = 2.6f;
                 });

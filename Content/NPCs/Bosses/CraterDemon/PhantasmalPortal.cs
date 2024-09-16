@@ -104,7 +104,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 {
                     p.Position = Projectile.Center + Main.rand.NextVector2Circular(Projectile.width, Projectile.height) * 1.6f * progress;
                     p.Velocity = Vector2.One * 18;
-                    p.Scale = (0.1f + Main.rand.NextFloat(0.1f)) * progress;
+                    p.Scale = new((0.1f + Main.rand.NextFloat(0.1f)) * progress);
                     p.Color = new Color(92, 206, 130);
                     p.TargetCenter = Projectile.Center;
                 });

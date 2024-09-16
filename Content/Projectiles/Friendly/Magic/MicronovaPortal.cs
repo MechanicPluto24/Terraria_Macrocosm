@@ -89,7 +89,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 {
                     p.Position = Projectile.Center + Main.rand.NextVector2Circular(80, 180).RotatedBy(shootAim.ToRotation() + MathHelper.PiOver4) * 0.4f * progress;
                     p.Velocity = Vector2.One * 12;
-                    p.Scale = (0.1f + Main.rand.NextFloat(0.1f)) * progress;
+                    p.Scale = new((0.1f + Main.rand.NextFloat(0.1f)) * progress);
                     p.Color = new Color(0, 170, 200) * 0.6f;
                     p.TargetCenter = Projectile.Center;
                 });

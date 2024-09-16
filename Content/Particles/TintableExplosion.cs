@@ -37,9 +37,9 @@ namespace Macrocosm.Content.Particles
             {
                 float explosionProgress = (float)currentFrame / FrameCount;
                 float replicaDecrease = 1f - (float)i / NumberOfInnerReplicas;
-                float scale = Scale * MathHelper.Lerp(ReplicaScalingFactor + (1f - ReplicaScalingFactor) * replicaDecrease, 1.06f, explosionProgress);
+                float scale = Scale.X * MathHelper.Lerp(ReplicaScalingFactor + (1f - ReplicaScalingFactor) * replicaDecrease, 1.06f, explosionProgress);
 
-                Color color = DrawColor.WithOpacity(((float)TimeLeft / SpawnTimeLeft) * 0.7f);
+                Color color = DrawColor.WithOpacity(((float)TimeLeft / TimeToLive) * 0.7f);
                 spriteBatch.Draw(Texture.Value, Position - screenPosition, GetFrame(), color, Rotation, Size * 0.5f, scale, SpriteEffects.None, 0f);
             }
         }

@@ -111,7 +111,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 {
                     p.Position = NPC.Center;
                     p.DrawColor = (new Color(242, 142, 35, 65));
-                    p.Scale = 1.5f;
+                    p.Scale = new(1.5f);
                     p.NumberOfInnerReplicas = 8;
                     p.ReplicaScalingFactor = 0.4f;
                 });
@@ -120,7 +120,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 {
                     p.Position = NPC.Center;
                     p.DrawColor = (new Color(30, 255, 105, 65));
-                    p.Scale = 1.2f;
+                    p.Scale = new(1.2f);
                     p.NumberOfInnerReplicas = 6;
                     p.ReplicaScalingFactor = 0.2f;
                 });
