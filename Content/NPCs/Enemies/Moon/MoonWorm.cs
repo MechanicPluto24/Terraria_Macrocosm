@@ -21,6 +21,51 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
     public class MoonWormHead : WormHead
     {
+        private bool CheckCollision()
+        {
+            int minTilePosX = (int)(NPC.Left.X / 16) - 1;
+            int maxTilePosX = (int)(NPC.Right.X / 16) + 2;
+            int minTilePosY = (int)(NPC.Top.Y / 16) - 1;
+            int maxTilePosY = (int)(NPC.Bottom.Y / 16) + 2;
+
+            // Ensure that the tile range is within the world bounds
+            if (minTilePosX < 0)
+                minTilePosX = 0;
+
+            if (maxTilePosX > Main.maxTilesX)
+                maxTilePosX = Main.maxTilesX;
+
+            if (minTilePosY < 0)
+                minTilePosY = 0;
+
+            if (maxTilePosY > Main.maxTilesY)
+                maxTilePosY = Main.maxTilesY;
+
+            bool collision = false;
+
+            // This is the initial check for collision with tiles.
+            for (int i = minTilePosX; i < maxTilePosX; ++i)
+            {
+                for (int j = minTilePosY; j < maxTilePosY; ++j)
+                {
+                    Tile tile = Main.tile[i, j];
+
+                    // If the tile is solid or is considered a platform, then there's valid collision
+                    if (tile.HasUnactuatedTile && (Main.tileSolid[tile.TileType] || Main.tileSolidTop[tile.TileType] && tile.TileFrameY == 0) || tile.LiquidAmount > 64)
+                    {
+                        Vector2 tileWorld = new Point16(i, j).ToWorldCoordinates(0, 0);
+
+                        if (NPC.Right.X > tileWorld.X && NPC.Left.X < tileWorld.X + 16 && NPC.Bottom.Y > tileWorld.Y && NPC.Top.Y < tileWorld.Y + 16)
+                        {
+                            // Collision found
+                            collision = true;
+                        }
+                    }
+                }
+            }
+
+            return collision;
+        }
         public override int BodyType => ModContent.NPCType<MoonWormBody>();
         public override int TailType => ModContent.NPCType<MoonWormTail>();
 
@@ -115,11 +160,15 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         }
 
         public bool burst = false; // Has the worm bursted out of the ground.
-
+        public int TouchedGround=0;
         public override void AI()
         {
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
+                if (CheckCollision())
+                   TouchedGround=20;
+                
+
                 NPC.despawnEncouraged = false;
                 // tick down the attack counter.
                 if (attackCounter > 0)
@@ -128,7 +177,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 Player target = Main.player[NPC.target];
 
                 // If the attack counter is 0, this NPC is less than 12.5 tiles away from its target, and has a path to the target unobstructed by blocks, summon a projectile.
-                if (attackCounter <= 0 && Vector2.Distance(NPC.Center, target.Center) < 2000 && Collision.CanHit(NPC.Center, 1, 1, target.Center, 1, 1) && burst == false)
+                if (attackCounter <= 0 && Vector2.Distance(NPC.Center, target.Center) < 2000 && Collision.CanHit(NPC.Center, 1, 1, target.Center, 1, 1) && burst == false&&(TouchedGround>=1))
                 {
                     SoundEngine.PlaySound(SoundID.DD2_ExplosiveTrapExplode);
                     burst = true;
@@ -157,6 +206,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                         });
                     }
                 }
+                TouchedGround--;
             }
         }
 

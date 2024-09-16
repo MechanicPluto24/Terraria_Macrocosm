@@ -16,7 +16,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
     public class Leaper : ModNPC
     {
-        private static Asset<Texture2D> eye;
+
         public override void SetStaticDefaults()
         {
             base.SetStaticDefaults();
@@ -310,13 +310,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         public override void ModifyNPCLoot(NPCLoot loot)
         {
         }
-        public override void PostDraw(SpriteBatch spriteBatch,Vector2 screenPos, Color drawColor)
-        {
-            eye ??= ModContent.Request<Texture2D>(Texture + "_Eye");
-            SpriteEffects effects = NPC.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-            Color glowColor = (Color.White*(((Rage/RageThreshold)*0.5f)+0.1f));
-            Main.EntitySpriteDraw(eye.Value, NPC.Center+(new Vector2(0f,3f)) - Main.screenPosition, NPC.frame, glowColor, 0f, NPC.frame.Size() * 0.5f, NPC.scale, effects, 0f);
-        }
+        
         public override void HitEffect(NPC.HitInfo hit)
         {
 
