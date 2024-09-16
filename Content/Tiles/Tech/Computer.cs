@@ -18,6 +18,8 @@ namespace Macrocosm.Content.Tiles.Tech
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
             TileObjectData.newTile.StyleHorizontal = true;
+            TileObjectData.newTile.StyleWrapLimit = 2;
+            TileObjectData.newTile.StyleMultiplier = 2;
             TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.Table, 2, 0);
             TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;
             TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
@@ -29,8 +31,6 @@ namespace Macrocosm.Content.Tiles.Tech
             DustType = -1;
 
             AddMapEntry(new Color(185, 176, 158), CreateMapEntryName());
-
-            RegisterItemDrop(ModContent.ItemType<Items.Tech.Computer>(), 0, 1);
         }
     }
 }

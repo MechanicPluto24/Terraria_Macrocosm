@@ -38,6 +38,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;
             TileObjectData.newTile.StyleWrapLimit = 2;
             TileObjectData.newTile.StyleHorizontal = true;
+            TileObjectData.newTile.StyleMultiplier = 2;
             TileObjectData.newTile.DrawYOffset = 2;
             TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
             TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceRight;
@@ -47,17 +48,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             foreach (LuminiteStyle style in Enum.GetValues(typeof(LuminiteStyle)))
                 AddMapEntry(Utility.GetTileColorFromLuminiteStyle(style), Language.GetText("MapObject.Chair"));
 
-            // To complete direction-dependent item drops
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Luminite.LuminiteChair>(), 0, 1);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Heavenforge.HeavenforgeChair>(), 2, 3);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.LunarRust.LunarRustChair>(), 4, 5);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Astra.AstraChair>(), 6, 7);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.DarkCelestial.DarkCelestialChair>(), 8, 9);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Mercury.MercuryChair>(), 10, 11);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.StarRoyale.StarRoyaleChair>(), 12, 13);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Cryocore.CryocoreChair>(), 14, 15);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.CosmicEmber.CosmicEmberChair>(), 16, 17);
-        }
+           }
 
         public override bool CreateDust(int i, int j, ref int type)
         {

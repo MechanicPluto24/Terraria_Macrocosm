@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Items.Furniture.Cryocore
 
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminiteCandelabra>(), (int)LuminiteStyle.Cryocore * 2);
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminiteCandelabra>(), (int)LuminiteStyle.Cryocore );
             Item.width = 30;
             Item.height = 22;
             Item.value = 150;

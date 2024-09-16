@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Items.Furniture.Heavenforge
 
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminiteCandelabra>(), (int)LuminiteStyle.Heavenforge * 2);
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminiteCandelabra>(), (int)LuminiteStyle.Heavenforge );
             Item.width = 30;
             Item.height = 22;
             Item.value = 150;
