@@ -1,10 +1,8 @@
-﻿using Macrocosm.Common.Bases.Items;
-using Macrocosm.Common.Storage;
+﻿using Macrocosm.Common.Storage;
 using Macrocosm.Common.Systems.UI;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Items.Materials.Tech;
 using Macrocosm.Content.Players;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -25,7 +23,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
     {
         public Rocket Rocket { get; set; } = new();
 
-        private int InventorySize => Rocket is not null && Rocket.HasInventory ? Rocket.Inventory.Size - Rocket.SpecialInventorySlot_Count : 0;
+        private int InventorySize => Rocket is not null ? Rocket.Inventory.Size - Rocket.SpecialInventorySlot_Count : 0;
         private int cacheSize = Rocket.DefaultGeneralInventorySize;
 
         private UIPanel inventoryPanel;
@@ -161,55 +159,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
                     requestAccessButton.SetImage(ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Inventory/InventoryClosed"));
             }
         }
-        private UIPanel CreateFuelPanel()
-        {
-            fuelPanel = new()
-            {
-                Width = new(0, 0.4f),
-                Height = new(0, 1f),
-                HAlign = 0f,
-                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
-                BorderColor = UITheme.Current.PanelStyle.BorderColor
-            };
-            fuelPanel.SetPadding(2f);
-            fuelPanel.Activate();
-
-            fuelTankPanel = new()
-            {
-                Width = new(0, 0.6f),
-                Height = new(0, 0.8f),
-                HAlign = 0.2f,
-                VAlign = 0.5f,
-                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
-                BorderColor = UITheme.Current.PanelStyle.BorderColor,
-                OverflowHidden = true
-            };
-            fuelTankPanel.SetPadding(2f);
-            fuelPanel.Append(fuelTankPanel);
-
-            fuelLiquid = new()
-            {
-                Width = new(0, 1f),
-                Height = new(0, 1f),
-                LiquidLevel = 0.5f,
-                WaveAmplitude = 2f,
-                WaveFrequency = 8f
-            };
-            fuelTankPanel.Append(fuelLiquid);
-
-            fuelTankItemSlot = Rocket.Inventory.ProvideItemSlot(Rocket.SpecialInventorySlot_FuelTank);
-            fuelTankItemSlot.Top = new(0, 0.45f);
-            fuelTankItemSlot.Left = new(0, 0.70f);
-            fuelTankItemSlot.AddReserved(
-                (item) => item.ModItem is IFillableContainer,
-                Lang.GetItemName(ModContent.ItemType<FuelTank>()),
-                ModContent.Request<Texture2D>(ContentSamples.ItemsByType[ModContent.ItemType<FuelTank>()].ModItem.Texture + "_Blueprint")
-            );
-            fuelPanel.Append(fuelTankItemSlot);
-
-            return fuelPanel;
-        }
-
+    
         private UIPanel CreateInventoryPanel()
         {
             inventoryPanel = Rocket.Inventory.ProvideUI

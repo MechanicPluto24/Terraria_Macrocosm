@@ -260,7 +260,7 @@ namespace Macrocosm.Common.Drawing.Particles
             if ((Scale.X < 0f || Scale.Y < 0f) && !AllowNegativeScale)
                 Scale = Vector2.Clamp(Scale, Vector2.Zero, new Vector2(float.MaxValue));
 
-            if (DrawLayer is ParticleDrawLayer.UI && !HasCustomDrawer)
+            if (DrawLayer is ParticleDrawLayer.PostInterface && !HasCustomDrawer)
                 Position += Main.screenPosition;
 
             PopulateTrailArrays();

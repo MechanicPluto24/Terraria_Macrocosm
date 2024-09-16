@@ -9,14 +9,8 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
-using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
-using Terraria.GameContent;
 using Terraria.GameContent.Liquid;
-using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
@@ -32,7 +26,6 @@ namespace Macrocosm.Common.UI
 
         private /*const*/ readonly int sliceSize = 1;
         private /*const*/ readonly int surfaceSliceHeight = 3;
-        private int cornerSize = 10;
 
         private readonly LiquidType? macrocosmLiquidType;
 
@@ -122,7 +115,6 @@ namespace Macrocosm.Common.UI
             float quaternaryWaveAmplitude = WaveAmplitude * 0.15f;
             float quaternaryWaveFrequency = WaveFrequency * 2f;
 
-            int radius = cornerSize;
             Rectangle dims = GetDimensions().ToRectangle();
 
             for (int x = 0; x < fillArea.Width; x += sliceSize)
@@ -134,13 +126,11 @@ namespace Macrocosm.Common.UI
                 float totalWaveOffset = primaryWaveOffset + secondaryWaveOffset + tertiaryWaveOffset + quaternaryWaveOffset;
 
                 float waveTop = fillArea.Top + totalWaveOffset;
-                waveTop = Math.Max(waveTop, CalculateCornerYOffsetTop(radius, x, dims.Width, dims.Top));
 
                 int fillBottom = dims.Bottom;
                 if (RoundCorners && (x < 2 || x >= dims.Width - 2))
                     fillBottom -= 2;
 
-                int fillBottom = CalculateCornerYOffsetBottom(radius, x, dims.Width, dims.Bottom);
                 int waveFillHeight = fillBottom - (int)waveTop;
                 if (waveFillHeight > 0)
                 {
@@ -161,8 +151,6 @@ namespace Macrocosm.Common.UI
                 spriteBatch.End();
                 spriteBatch.Begin(state);
             }
-
-            return topYOffset;
         }
 
         private void DrawWaves(SpriteBatch spriteBatch, Rectangle fillArea)
