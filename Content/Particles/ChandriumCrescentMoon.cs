@@ -3,24 +3,25 @@ using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.IO;
 
 namespace Macrocosm.Content.Particles
 {
     public class ChandriumCrescentMoon : Particle
     {
-        bool rotateClockwise = false;
+        public override void SetDefaults()
+        {
+            ScaleVelocity = new(-0.016f);
+            Color = new Color(180, 112, 226);
+            RotationVelocity = 0.12f * (Main.rand.NextBool() ? 1f : -1f);
+        }
 
         public override void OnSpawn()
         {
-            rotateClockwise = Main.rand.NextBool();
-            ScaleVelocity = new(-0.016f);
-            Color = new Color(180, 112, 226);
         }
 
         public override void AI()
         {
-            Rotation += 0.12f * (rotateClockwise ? 1f : -1f);
-
             if (Scale.X < 0.05f)
                 Kill();
 

@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Drawing.Trails;
-using Macrocosm.Common.Netcode;
+﻿using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -8,8 +7,6 @@ using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.Utilities.Terraria.Utilities;
-
 
 namespace Macrocosm.Common.Drawing.Particles
 {
@@ -24,7 +21,6 @@ namespace Macrocosm.Common.Drawing.Particles
         public int WhoAmI => ParticleManager.Particles.IndexOf(this);
 
         #region Loading
-
         public override void Load()
         {
             ParticleManager.Textures.Add(ModContent.Request<Texture2D>(TexturePath));
@@ -45,12 +41,7 @@ namespace Macrocosm.Common.Drawing.Particles
 
         #endregion
 
-        protected Particle()
-        {
-            Active = true;
-        }
-
-        #region Fields
+        #region Common Fields
         /// <summary> Whether the current particle instance is active </summary>
         [NetSync] public bool Active;
 
@@ -99,9 +90,15 @@ namespace Macrocosm.Common.Drawing.Particles
         /// <summary> The draw color </summary>
         [NetSync] public Color Color = Color.White;
 
+        /// <summary> Particle animation update speed, in ticks per frame </summary>
+        [NetSync] public int FrameSpeed;
+
+        protected int currentFrame = 0;
+        protected int frameCounter = 0;
+
         #endregion
 
-        #region Properties
+        #region Common Properties
         /// <summary> The <c>Particle</c>'s texture, autoloaded </summary>
         public Asset<Texture2D> Texture => ParticleManager.Textures[Type];
 
@@ -145,6 +142,53 @@ namespace Macrocosm.Common.Drawing.Particles
 
         #endregion
 
+        #region Pooling
+
+        /// <summary> The maximum number of particles of this type to keep in the pool. </summary>
+        public virtual int MaxPoolCount { get; }
+
+        /// <summary> Resets the particle's fields to their default values. </summary>
+        public void Reset()
+        {
+            Active = false;
+
+            TimeToLive = 300;
+            TimeLeft = TimeToLive;
+
+            Position = Vector2.Zero;
+            Velocity = Vector2.Zero;
+            Acceleration = Vector2.Zero;
+
+            Rotation = 0f;
+            RotationVelocity = 0f;
+            RotationAcceleration = 0f;
+
+            Scale = new Vector2(1f);
+            ScaleVelocity = Vector2.Zero;
+            ScaleAcceleration = Vector2.Zero;
+            AllowNegativeScale = false;
+
+            FadeInNormalizedTime = float.Epsilon;
+            FadeOutNormalizedTime = 1f;
+
+            Color = Color.White;
+
+            spawned = false;
+
+            CustomDrawer = null;
+
+            FrameSpeed = int.MaxValue;
+            frameCounter = 0;
+            currentFrame = 0;
+
+            OldPositions = new Vector2[1];
+            OldRotations = new float[1];
+
+            SetDefaults();
+        }
+
+        #endregion
+
         #region Hooks
 
         public bool HasCustomDrawer => CustomDrawer is not null;
@@ -153,14 +197,14 @@ namespace Macrocosm.Common.Drawing.Particles
         /// <summary> Used for loading tasks, called on Mod load </summary>
         public virtual void OnLoad() { }
 
-
         /// <summary> Used for unloading tasks, called on Mod unload </summary>
         public virtual void OnUnload() { }
 
+        /// <summary> Set default values of this particle, called when instanced or fetched from pool. Randomized values are allowed. Runs before <c>CreateParticle</c>, values set here might be overwritten. </summary>
+        public virtual void SetDefaults() { }
 
-        /// <summary> Called when the <c>Particle</c> is spawned </summary>
+        /// <summary> Called when the <c>Particle</c> is spawned, used to create effects or run custom spawn logic. Runs after <c>CreateParticle</c> (on first update tick), may use value set here</summary>
         public virtual void OnSpawn() { }
-
 
         /// <summary> Used for defining the <c>Particle</c>'s behaviour </summary>
         public virtual void AI() { }
@@ -176,20 +220,14 @@ namespace Macrocosm.Common.Drawing.Particles
 
         #region Animation
 
-        /// <summary> Whether to pick a random frame on spawn </summary>
+        /// <summary> Whether this particle type picks a random frame on spawn </summary>
         public virtual bool SetRandomFrameOnSpawn => false;
 
-        /// <summary> If true, particle will despawn on the end of animation </summary>
+        /// <summary> Whether this particle should despawn on the end of an animation cycle </summary>
         public virtual bool DespawnOnAnimationComplete => false;
 
         /// <summary> Number of animation frames of this particle </summary>
         public virtual int FrameCount => 1;
-
-        /// <summary> Particle animation update speed, in ticks per frame </summary>
-        public virtual int FrameSpeed { get; set; } = 1;
-
-        protected int currentFrame = 0;
-        protected int frameCnt = 0;
 
         /// <summary> Used for animating the <c>Particle</c>. By default, updates with <see cref="FrameCount"/> and <see cref="FrameSpeed"/> </summary>
         public virtual void UpdateFrame()
@@ -200,10 +238,10 @@ namespace Macrocosm.Common.Drawing.Particles
 
             if (Main.hasFocus || Main.netMode == NetmodeID.MultiplayerClient)
             {
-                frameCnt++;
-                if (frameCnt >= FrameSpeed)
+                frameCounter++;
+                if (frameCounter >= FrameSpeed)
                 {
-                    frameCnt = 0;
+                    frameCounter = 0;
                     currentFrame++;
 
                     if (currentFrame >= FrameCount)
@@ -232,14 +270,14 @@ namespace Macrocosm.Common.Drawing.Particles
         #endregion
 
         #region Logic
-        private bool spawned;
+        internal bool spawned;
         public void Update()
         {
             if (!spawned)
             {
                 OnSpawn();
 
-                if(DespawnOnAnimationComplete)
+                if (DespawnOnAnimationComplete)
                     TimeToLive = FrameCount * FrameSpeed - 1;
 
                 TimeLeft = TimeToLive;
@@ -273,11 +311,10 @@ namespace Macrocosm.Common.Drawing.Particles
 
         public void Kill(bool shouldSync = false)
         {
-            if (!Active)
-                return;
-
             OnKill();
             Active = false;
+
+            ParticleManager.RemoveParticle(this);
 
             if (shouldSync)
                 NetSync();
@@ -325,12 +362,20 @@ namespace Macrocosm.Common.Drawing.Particles
         #endregion
 
         #region Trails
+
+        /// <summary> This particle length of <see cref="OldPositions"/> and <see cref="OldRotations"/> </summary>
         public virtual int TrailCacheLength { get; set; } = 1;
 
+        /// <summary> Previous position </summary>
         public Vector2 OldPosition => OldPositions[0];
+
+        /// <summary> Previous rotation </summary>
         public float OldRotation => OldRotations[0];
 
+        /// <summary> Collection of old position, of length <see cref="TrailCacheLength"/> </summary>
         public Vector2[] OldPositions = new Vector2[1];
+
+        /// <summary> Collection of old rotations, of length <see cref="TrailCacheLength"/> </summary>
         public float[] OldRotations = new float[1];
 
         private void PopulateTrailArrays()

@@ -13,15 +13,23 @@ namespace Macrocosm.Content.Particles
         public override string TexturePath => Macrocosm.EmptyTexPath;
         public override ParticleDrawLayer DrawLayer => ParticleDrawLayer.AfterProjectiles;
 
-        public Color ColorOnSpawn;
-        public Color ColorOnDespawn;
+        public Color ColorOnSpawn { get; set; }
+        public Color ColorOnDespawn { get; set; }
 
         private float Opacity;
         private float defScale = 0f;
 
-        public override void OnSpawn()
+        public override void SetDefaults()
         {
             TimeToLive = 10;
+
+            Opacity = 0f;
+            ColorOnSpawn = default;
+            ColorOnDespawn = default;
+        }
+
+        public override void OnSpawn()
+        {
             defScale = Scale.X;
         }
 

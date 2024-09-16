@@ -59,7 +59,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             if (!Main.dedServ)
                 SoundEngine.PlaySound(SFX.DesertEagleShoot with { Volume = 0.3f }, position);
 
-            Particle.CreateParticle<GunFireRing>(position + new Vector2(14, 0).RotatedBy(velocity.ToRotation()), velocity * 0.25f, 1f, velocity.ToRotation(), false);
+            Particle.Create<GunFireRing>(position + new Vector2(14, 0).RotatedBy(velocity.ToRotation()), velocity * 0.25f, new(1f), velocity.ToRotation(), false);
 
             return true;
         }

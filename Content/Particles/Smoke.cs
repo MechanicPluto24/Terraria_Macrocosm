@@ -11,17 +11,22 @@ namespace Macrocosm.Content.Particles
         public override int FrameCount => 3;
         public override bool SetRandomFrameOnSpawn => true;
 
-        public float Opacity = 1f;
-
-        public bool FadeIn;
+        public float WindFactor { get; set; }
+        public float Opacity { get; set; }  
+        public bool FadeIn { get; set; }
         private bool fadedIn;
 
-        public float WindFactor = 0f;
+        public override void SetDefaults()
+        {
+            ScaleVelocity = new(-0.005f);
+            Opacity = 1f;
+            FadeIn = false;
+            fadedIn = false;
+            WindFactor = 0f;
+        }
 
         public override void OnSpawn()
         {
-            if(ScaleVelocity == default)
-                ScaleVelocity = new(-0.005f);
         }
 
         public override void AI()

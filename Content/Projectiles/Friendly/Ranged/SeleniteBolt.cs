@@ -92,8 +92,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
             for (int i = 0; i < 30; i++)
             {
-                Particle.CreateParticle<SeleniteSpark>(Projectile.Center + Projectile.oldVelocity, Main.rand.NextVector2Circular(9, 2), 5f, 0f);
-                Particle.CreateParticle<SeleniteSpark>(Projectile.Center + Projectile.oldVelocity, Main.rand.NextVector2Circular(2, 9), 5f, 0f);
+                Particle.Create<SeleniteSpark>(Projectile.Center + Projectile.oldVelocity, Main.rand.NextVector2Circular(9, 2), new(5f), 0f);
+                Particle.Create<SeleniteSpark>(Projectile.Center + Projectile.oldVelocity, Main.rand.NextVector2Circular(2, 9), new(5f), 0f);
             }
 
             float count = Projectile.oldVelocity.LengthSquared() * trailMultiplier;

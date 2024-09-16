@@ -69,7 +69,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 }
             }
 
-            Particle.CreateParticle<ArtemiteStar>((p) =>
+            Particle.Create<ArtemiteStar>((p) =>
             {
                 p.Position = Projectile.Center;
                 p.Velocity = Projectile.velocity * 0.1f;
@@ -160,7 +160,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            Particle.CreateParticle<ArtemiteStar>((p) =>
+            Particle.Create<ArtemiteStar>((p) =>
             {
                 p.Position = Projectile.Center - oldVelocity;
                 p.Velocity = oldVelocity * 0.4f;

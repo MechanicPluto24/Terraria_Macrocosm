@@ -14,10 +14,22 @@ namespace Macrocosm.Content.Particles
         public override string TexturePath => Macrocosm.EmptyTexPath;
         public override ParticleDrawLayer DrawLayer => ParticleDrawLayer.AfterProjectiles;
 
-        public override void OnSpawn()
+        private float origScale;
+
+        public override void SetDefaults()
         {
             TimeToLive = 250;
-            Color = new(177, 230, 207);
+        }
+
+        public override void OnSpawn()
+        {
+            origScale = Scale.X;
+            Color = new List<Color>() {
+                    new(177, 230, 207),
+                    new(83, 129, 167),
+                    new(157, 136, 169),
+                    new(130, 179, 185)
+            }.GetRandom();
         }
 
         public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
@@ -27,22 +39,8 @@ namespace Macrocosm.Content.Particles
             return false;
         }
 
-        bool spawned = false;
-        float origScale = 0f;
         public override void AI()
         {
-            if (!spawned)
-            {
-                origScale = Scale.X;
-                spawned = true;
-
-                Color = new List<Color>() {
-                    new(177, 230, 207),
-                    new(83, 129, 167),
-                    new(157, 136, 169),
-                    new(130, 179, 185)
-                }.GetRandom();
-            }
             float speed = Velocity.LengthSquared() * 0.9f;
             Rotation = Velocity.ToRotation();
             Scale = new Vector2(Math.Clamp(speed, 0, 15), Math.Clamp(speed, 0, 1)) * 0.09f * origScale;

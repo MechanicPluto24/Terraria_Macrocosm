@@ -47,7 +47,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
         private Vector3 lightColor;
         private WaveGunBeamTrail trail;
         private bool spawned;
-        private bool collided;
 
         public override void SetDefaults()
         {
@@ -133,7 +132,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
 
             for (int i = 0; i < (BeamType is BeamVariant.Purple ? 18 : 12); i++)
             {
-                Particle.CreateParticle<LightningParticle>((p) =>
+                Particle.Create<LightningParticle>((p) =>
                 {
                     p.Position = Projectile.Center + Projectile.oldVelocity * 0.5f;
                     p.Velocity = Main.rand.NextVector2Circular(8, 8);
@@ -144,7 +143,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
                 });
             }
 
-            Particle.CreateParticle<TintableFlash>((p) =>
+            Particle.Create<TintableFlash>((p) =>
             {
                 p.Position = Projectile.Center + Projectile.oldVelocity * 0.5f;
                 p.Scale = new(0.05f);

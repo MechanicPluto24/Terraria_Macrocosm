@@ -262,7 +262,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                     particleAim = aimVelocity.RotatedBy(-0.2f * Math.Sign(aimVelocity.X));
 
                 Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), aimPosition, aimVelocity, projType, projDamage, 0f, Main.myPlayer);
-                Particle.CreateParticle<GunFireRing>(NPC.Center + particleAim * 0.24f, aimVelocity * 0.05f, 1f, aimVelocity.ToRotation(), true);
+                Particle.Create<GunFireRing>(NPC.Center + particleAim * 0.24f, aimVelocity * 0.05f, new(1f), aimVelocity.ToRotation(), true);
             }
         }
 

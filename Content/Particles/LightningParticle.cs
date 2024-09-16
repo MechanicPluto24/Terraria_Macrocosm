@@ -13,13 +13,16 @@ namespace Macrocosm.Content.Particles
     public class LightningParticle : Particle
     {
         public override string TexturePath => Macrocosm.TexturesPath + "Lightning";
-
-        public override int FrameSpeed => 2;
         public override int FrameCount => 6;
+
+        public override void SetDefaults()
+        {
+            TimeToLive = 18;
+            FrameSpeed = 2;
+        }
 
         public override void OnSpawn()
         {
-            TimeToLive = 18;
         }
 
         public override void AI()
@@ -30,10 +33,10 @@ namespace Macrocosm.Content.Particles
 
         public override void UpdateFrame()
         {
-            frameCnt++;
-            if (frameCnt >= FrameSpeed)
+            frameCounter++;
+            if (frameCounter >= FrameSpeed)
             {
-                frameCnt = 0;
+                frameCounter = 0;
                 currentFrame = Main.rand.Next(FrameCount);
             }
         }

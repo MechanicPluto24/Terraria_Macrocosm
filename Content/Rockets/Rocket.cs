@@ -714,7 +714,7 @@ namespace Macrocosm.Content.Rockets
                 lightIntensity = StaticFireProgress;
                 screenshakeIntensity = 5f * (Utility.QuadraticEaseOut(StaticFireProgress));
 
-                int count = MacrocosmSubworld.CurrentAtmosphericDensity < 1f ? 1 : (int)(3f * atmoDesityFactor * StaticFireProgress);
+                int count = MacrocosmSubworld.CurrentAtmosphericDensity < 1f ? 1 : (int)(4f * atmoDesityFactor * StaticFireProgress);
                 SpawnSmokeExhaustTrail(countPerTick: count);
 
                 if (Main.rand.NextFloat() < StaticFireProgress)
@@ -771,7 +771,7 @@ namespace Macrocosm.Content.Rockets
                 if (Landing)
                     velocity = new(Main.rand.NextFloat(-0.4f, 0.4f), Main.rand.NextFloat(8, 16));
 
-                var smoke = Particle.CreateParticle<RocketExhaustSmoke>(p =>
+                var smoke = Particle.Create<RocketExhaustSmoke>(p =>
                 {
                     p.Position = position;
                     p.Velocity = velocity * speed;
@@ -783,8 +783,8 @@ namespace Macrocosm.Content.Rockets
                     p.FadeOutSpeed = 15;
                     p.TargetAlpha = 128;
                     p.ScaleDownSpeed = 0.001f;
-                    p.Acceleration = new(0.995f);
-                    p.DrawColor = Color.White.WithAlpha(150);
+                    p.Acceleration = new(0, -0.03f);
+                    p.Color = Color.White.WithAlpha(150);
                     p.Collide = true;
                 }, shouldSync: false);
             }
@@ -805,7 +805,7 @@ namespace Macrocosm.Content.Rockets
                 if (Landing)
                     velocity = new(Main.rand.NextFloat(-0.4f, 0.4f), Main.rand.NextFloat(8, 12));
 
-                var smoke = Particle.CreateParticle<RocketExhaustSmoke>(p =>
+                var smoke = Particle.Create<RocketExhaustSmoke>(p =>
                 {
                     p.Position = position;
                     p.Velocity = velocity * speed;
@@ -817,8 +817,8 @@ namespace Macrocosm.Content.Rockets
                     p.FadeOutSpeed = 12;
                     p.TargetAlpha = 128;
                     p.ScaleDownSpeed = 0.0015f;
-                    p.Acceleration = new(0.993f);
-                    p.DrawColor = Color.White.WithAlpha(150);
+                    p.Acceleration = new(0, -0.04f);
+                    p.Color = Color.White.WithAlpha(150);
                     p.Collide = true;
                 }, shouldSync: false);
             }
@@ -828,7 +828,7 @@ namespace Macrocosm.Content.Rockets
         {
             for (int i = 0; i < countPerTick; i++)
             {
-                var smoke = Particle.CreateParticle<Smoke>(p =>
+                var smoke = Particle.Create<Smoke>(p =>
                 {
                     p.Position = tileCoords.ToWorldCoordinates();
                     p.Velocity = new Vector2(Main.rand.NextFloat(-4f, 4f), Main.rand.NextFloat(-0.1f, -1f));

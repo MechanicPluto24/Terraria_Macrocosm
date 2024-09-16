@@ -12,11 +12,16 @@ namespace Macrocosm.Content.Particles
     {
         private static Asset<Texture2D> glow;
         public override int TrailCacheLength => 7;
+        public override int MaxPoolCount => 1500;
 
-        public override void OnSpawn()
+        public override void SetDefaults()
         {
             TimeToLive = 135;
             ScaleVelocity = new Vector2(-0.008f);
+        }
+
+        public override void OnSpawn()
+        {
         }
 
         public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)

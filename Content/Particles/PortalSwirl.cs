@@ -12,13 +12,16 @@ namespace Macrocosm.Content.Particles
     {
         public override string TexturePath => Macrocosm.EmptyTexPath;
         public override ParticleDrawLayer DrawLayer => ParticleDrawLayer.AfterProjectiles;
-
         public Vector2 TargetCenter { get; set; }
+
+        public override void SetDefaults()
+        {
+            TimeToLive = 150;
+            TargetCenter = default;
+        }
 
         public override void OnSpawn()
         {
-            TimeToLive = 150;
-
             if (TargetCenter != default)
             {
                 float speed = Velocity.Length();

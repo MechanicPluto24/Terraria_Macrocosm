@@ -58,7 +58,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                 if (Main.rand.NextBool())
                     color = new Color(85, 28, 37);
 
-                Particle.CreateParticle<LightningParticle>((p) =>
+                Particle.Create<LightningParticle>((p) =>
                 {
                     p.Position = target.Center;
                     p.Velocity = rotation.ToRotationVector2() * (Main.rand.NextFloat() * 6f + 0.1f) * new Vector2(1f, 0.5f);
@@ -157,11 +157,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                     Main.spriteBatch.End();
                     Main.spriteBatch.Begin(BlendState.Additive, state);
 
-                    Texture2D glowTex = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Slash1").Value;
+                    Texture2D glowTex = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Circle6").Value;
                     float glowScale = MathHelper.Lerp(0.4f, 1.3f, Utils.GetLerpValue(0.1f, 0.7f, progress, true) * Utils.GetLerpValue(0.9f, 0.7f, progress, true)) * 1.1f;
                     float glowProgress = 4f * progress * (1f - progress);
                     glowScale *= glowProgress;
-                    Main.NewText(glowProgress);
                     Main.EntitySpriteDraw(glowTex, Vector2.Lerp(list[^2], list[^3], 0.6f) - Main.screenPosition, null, new Color(44, 210, 91, 150) * glowScale, rotation + MathHelper.Pi / 6 * glowScale, glowTex.Size()/2f, new Vector2(glowScale * 0.02f, glowScale * 0.12f), default, 0);
                     Main.EntitySpriteDraw(glowTex, Vector2.Lerp(list[^2], list[^3], 0.1f) - Main.screenPosition, null, new Color(253, 174, 248, 150) * glowScale, rotation, glowTex.Size() / 2f, new Vector2(glowScale * 0.02f, glowScale * 0.12f), default, 0);
                     Main.EntitySpriteDraw(glowTex, Vector2.Lerp(list[^2], list[^3], 0.6f) - Main.screenPosition, null, new Color(90, 86, 167, 100) * glowScale, rotation - MathHelper.Pi / 6 * glowScale, glowTex.Size() / 2f, new Vector2(glowScale * 0.02f, glowScale * 0.12f), default, 0);
