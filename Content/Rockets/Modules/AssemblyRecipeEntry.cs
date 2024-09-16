@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Net.NetworkInformation;
 using Terraria;
 using Terraria.Localization;
 
@@ -12,9 +10,9 @@ namespace Macrocosm.Content.Rockets.Modules
         public int RequiredAmount { get; }
         public int? ItemType { get; }
 
-        public LocalizedText Description { get; } 
+        public LocalizedText Description { get; }
 
-        public AssemblyRecipeEntry(Func<Item, bool> itemCheck, LocalizedText description, int requiredAmount = 1) 
+        public AssemblyRecipeEntry(Func<Item, bool> itemCheck, LocalizedText description, int requiredAmount = 1)
         {
             ItemCheck = itemCheck;
             RequiredAmount = requiredAmount;
@@ -33,9 +31,9 @@ namespace Macrocosm.Content.Rockets.Modules
 
         public bool Check(Item inputItem, bool consume = false)
         {
-            if(ItemCheck(inputItem) && inputItem.stack >= RequiredAmount)
+            if (ItemCheck(inputItem) && inputItem.stack >= RequiredAmount)
             {
-                if(consume)
+                if (consume)
                     Consume(inputItem);
 
                 return true;
@@ -48,7 +46,7 @@ namespace Macrocosm.Content.Rockets.Modules
         {
             inputItem.stack -= RequiredAmount;
 
-            if(inputItem.stack <= 0)
+            if (inputItem.stack <= 0)
                 inputItem.TurnToAir();
         }
     }

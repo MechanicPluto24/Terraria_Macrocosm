@@ -1,6 +1,6 @@
 ﻿using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Buffs.Debuffs;
+using Macrocosm.Content.Debuffs.Weapons;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -89,7 +89,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                     case ProcellarumState.Charging:
                         Projectile.timeLeft += 1;
 
-                        int dust = Dust.NewDust(Projectile.Center, 5, 5, ModContent.DustType<LuminiteDust>(), Player.velocity.X + Main.rand.Next(-5, 5), Player.velocity.Y + Main.rand.Next(-5, 5));
+                        int dust = Dust.NewDust(Projectile.Center, 5, 5, ModContent.DustType<LuminiteBrightDust>(), Player.velocity.X + Main.rand.Next(-5, 5), Player.velocity.Y + Main.rand.Next(-5, 5));
                         //Main.dust[dust].scale = 1f - (currentChargeTick * 0.1f);
 
                         currentChargeTick += 1;
@@ -193,11 +193,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         public override void Load()
         {
-            mark = ModContent.Request<Texture2D>("Macrocosm/Content/Buffs/Debuffs/Procellarum_LightningMark");
         }
 
         public override void PostDraw(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
+            mark ??= ModContent.Request<Texture2D>("Macrocosm/Content/Debuffs/Weapons/Procellarum_LightningMark");
+
             if (npc.HasBuff(ModContent.BuffType<Procellarum_LightningMarkDebuff>()))
             {
                 Vector2 markPosition = new(npc.position.X + 0.5f * npc.width - 12, npc.position.Y - 36);

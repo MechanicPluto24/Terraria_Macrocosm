@@ -1,4 +1,5 @@
 using Macrocosm.Common.Bases.Projectiles;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
@@ -18,6 +19,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         {
             ProjectileID.Sets.TrailCacheLength[Type] = 10;
             ProjectileID.Sets.TrailingMode[Type] = 0;
+
+            ProjectileSets.HitsTiles[Type] = true;
         }
 
         public override void SetProjectileDefaults()

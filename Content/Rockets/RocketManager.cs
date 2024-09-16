@@ -93,12 +93,15 @@ namespace Macrocosm.Content.Rockets
         public static void DespawnAllRockets(bool announce = true)
         {
             if (announce)
-                Utility.Chat("Despawned all rockets!", Color.Green);
+                Utility.Chat("Despawned all rockets from this subworld!", Color.Green);
 
             for (int i = 0; i < MaxRockets; i++)
             {
-                Rockets[i].Despawn();
-                Rockets[i] = new Rocket();
+                Rocket rocket = Rockets[i];
+                if (rocket.ActiveInCurrentWorld)
+                {
+                    rocket.Despawn();
+                }
             }
         }
 
@@ -128,7 +131,7 @@ namespace Macrocosm.Content.Rockets
                 if (rocket.DrawLayer != layer)
                     continue;
 
-                rocket.Draw(Rocket.DrawMode.World, Main.spriteBatch, rocket.Position - Main.screenPosition);
+                rocket.Draw(Rocket.DrawMode.World, Main.spriteBatch, rocket.Position - Main.screenPosition, useRenderTarget: true);
 
                 if (DebugModeActive)
                 {
@@ -140,7 +143,7 @@ namespace Macrocosm.Content.Rockets
             if (DebugModeActive)
             {
                 string text = $"Rockets active: {Rockets.Where(r => r.Active).Count()}\nHere: {Rockets.Where(r => r.ActiveInCurrentWorld).Count()}";
-                ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, FontAssets.DeathText.Value, text, new Vector2(Main.screenWidth * 0.5f, 40f), Color.White, 0f, Vector2.Zero, Vector2.One * 0.5f);
+                ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, FontAssets.DeathText.Value, text, new Vector2(Main.screenWidth * 0.5f, Main.screenHeight * 0.14f), Color.White, 0f, Vector2.Zero, Vector2.One * 0.5f);
             }
         }
 
@@ -188,9 +191,7 @@ namespace Macrocosm.Content.Rockets
                     var rocket = Rockets[i];
                     rocket.NetSync(toClient: remoteClient);
                     rocket.SendCustomizationData(toClient: remoteClient);
-
-                    if (rocket.HasInventory)
-                        rocket.Inventory.SyncEverything(toClient: remoteClient);
+                    rocket.Inventory.SyncEverything(toClient: remoteClient);
                 }
             }
 

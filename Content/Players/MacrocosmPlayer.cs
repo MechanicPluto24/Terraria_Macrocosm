@@ -1,20 +1,15 @@
-﻿using Macrocosm.Common.Config;
-using Macrocosm.Common.Netcode;
-using Macrocosm.Common.Subworlds;
+﻿using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Systems;
 using Macrocosm.Common.Systems.Power;
-using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
-using Macrocosm.Content.Debuffs;
-using Macrocosm.Content.LoadingScreens;
+using Macrocosm.Content.Buffs.Potions;
+using Macrocosm.Content.Debuffs.Environment;
+using Macrocosm.Content.Debuffs.Radiation;
+using Macrocosm.Content.Items.Consumables.Potions;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Terraria;
-using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -23,28 +18,13 @@ using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Players
 {
-    public enum SpaceHazard
-    {
-        None,
-        Vacuum
-    }
-
     /// <summary>
     /// Miscellaneous class for storing custom player data. 
     /// Complex, very specific systems should be implemented in a separate ModPlayer.
     /// </summary>
     public class MacrocosmPlayer : ModPlayer
     {
-        /// <summary>
-        /// Whether the player has voluntarily initiated subworld travel. Not synced. 
-        /// <br> Value can be set in <see cref="MacrocosmSubworld.Travel"/>via the <c>trigger</c> parameter</br>
-        /// <br> If true, the title sequence will display, and SubworldSystem.Exit() will move the player to Earth.</br> 
-        /// <br> (Player took a Rocket, or used Teleporter)</br>
-        /// <br> If false, the title sequence will display, and SubworldSystem.Exit() will return to the main menu. </br>
-        /// <br> (Player clicks the "Return" button from the in-game options menu, or is forced to a subworld on world enter) </br>
-        /// </summary>
-        public bool TriggeredSubworldTravel { get; set; }
-
+        #region Equip data
         /// <summary> 
         /// The player's space protection level.
         /// Not synced.
@@ -52,25 +32,7 @@ namespace Macrocosm.Content.Players
         public float SpaceProtection { get; set; } = 0f;
 
         /// <summary> 
-        /// The radiation effect intensity for this player. 
-        /// Not synced.
-        /// </summary>
-        public float RadNoiseIntensity = 0f;
-
-        /// <summary> 
-        /// Chandrium whip hit stacks. 
-        /// Not synced.
-        /// </summary>
-        public int ChandriumWhipStacks = 0;
-
-        /// <summary> 
-        /// Whether this player is aware that they can use zombie fingers to unlock chests.
-        /// Persistent. Not synced.
-        /// </summary>
-        public bool KnowsToUseZombieFinger = false;
-
-        /// <summary> 
-        /// Chance to not consume ammo from equipment and weapons, stacks additively with the vanilla chance 
+        /// Chance to not consume ammo from equipment and weapons, stacks additively with the vanilla chance.
         /// Not synced.
         /// </summary>
         public float ChanceToNotConsumeAmmo
@@ -80,28 +42,46 @@ namespace Macrocosm.Content.Players
         }
 
         private float chanceToNotConsumeAmmo = 0f;
+        #endregion
 
-        /// <summary>
-        /// The subworlds this player has visited.
-        /// Persistent. Local to the player. Not synced.
-        /// </summary>
-        //TODO: sync this if needed
-        private List<string> visitedSubworlds = new();
-
-        /// <summary>
-        /// A dictionary of this player's last known subworld Id, by each Terraria main world file visited.
+        #region Weapon data
+        /// <summary> 
+        /// Chandrium whip hit stacks. 
         /// Not synced.
         /// </summary>
-        private readonly Dictionary<Guid, string> lastSubworldIdByWorldUniqueId = new();
+        public int ChandriumWhipStacks = 0;
+        #endregion
+
+        #region Consumables data
+        public bool MedkitActive => Player.HasBuff<MedkitLow>() || Player.HasBuff<MedkitMedium>() || Player.HasBuff<MedkitHigh>();
+
+        // Used for identifying medkit tier
+        public int MedkitItemType = ItemType<Medkit>();
+        private Medkit Medkit => (ContentSamples.ItemsByType[MedkitItemType].ModItem as Medkit);
+        private int medkitTimer;
+        private int medkitHitCooldown;
+        #endregion
+
+        #region Player flags
+        /// <summary> 
+        /// Whether this player is aware that they can use zombie fingers to unlock chests.
+        /// Persistent. Not synced.
+        /// </summary>
+        public bool KnowsToUseZombieFinger = false;
+        #endregion
 
         public override void ResetEffects()
         {
             SpaceProtection = 0f;
-            RadNoiseIntensity = 0f;
             ChanceToNotConsumeAmmo = 0f;
-            Player.buffImmune[BuffType<Depressurized>()] = false;
 
-            TriggeredSubworldTravel = false;
+            Player.buffImmune[BuffType<Depressurized>()] = false;
+        }
+
+        #region Hooks
+        public override void OnEnterWorld()
+        {
+            CircuitSystem.SearchCircuits();
         }
 
         public override bool CanConsumeAmmo(Item weapon, Item ammo)
@@ -116,105 +96,124 @@ namespace Macrocosm.Content.Players
 
         public override void PostUpdateBuffs()
         {
-            if (!Player.GetModPlayer<RocketPlayer>().InRocket)
-            {
-                if (SubworldSystem.AnyActive<Macrocosm>())
-                    Player.AddBuff(BuffType<Depressurized>(), 2);
-
-                //if(Player.InModBiome<IrradiationBiome>())
-                //    Player.AddBuff(BuffType<Irradiated>(), 2);
-            }
+            Update_EnvironmentalDebuffs();
+            Update_RocketImmunities();
+            Update_MedkitHealing();
         }
 
         public override void PostUpdateEquips()
         {
-            if (SpaceProtection >= (float)SpaceHazard.Vacuum * 3)
+            Update_EquipImmunities();
+            Update_SetBonuses();
+        }
+
+        public override void OnHurt(Player.HurtInfo info)
+        {
+            OnHurt_ChangeMedkit();
+        }
+        #endregion
+
+        #region Equipment & Environment Effects
+        private void Update_EnvironmentalDebuffs()
+        {
+            if (SubworldSystem.AnyActive<Macrocosm>())
+                Player.AddBuff(BuffType<Depressurized>(), 2);
+        }
+
+        private void Update_RocketImmunities()
+        {
+            if (Player.GetModPlayer<RocketPlayer>().InRocket)
+            {
                 Player.buffImmune[BuffType<Depressurized>()] = true;
+            }
+        }
 
-            //if (SpaceProtection >= (float)SpaceHazard.Radiation * 3)
-            //    Player.buffImmune[BuffType<Irradiated>()] = true;
+        private void Update_EquipImmunities()
+        {
+            if (SpaceProtection >= (float)3f)
+                Player.buffImmune[BuffType<Depressurized>()] = true;
+        }
 
+        private void Update_SetBonuses()
+        {
             if (SpaceProtection >= 3f)
                 Player.setBonus = Language.GetTextValue("Mods.Macrocosm.Items.SetBonuses.SpaceProtection_" + (int)(SpaceProtection / 3f));
         }
+        #endregion
 
+        #region Consumables Effects
+        private void Update_MedkitHealing()
+        {
+            if (MedkitActive)
+            {
+                int healPeriod = Medkit.HealPeriod;
+                if (medkitTimer++ >= healPeriod)
+                {
+                    medkitTimer = 0;
+                    int healAmount = Medkit.HealthPerPeriod;
+
+                    if (Player.HasBuff<MedkitLow>())
+                        Player.Heal((int)(healAmount * 0.33f));
+                    else if (Player.HasBuff<MedkitMedium>())
+                        Player.Heal((int)(healAmount * 0.66f));
+                    else if (Player.HasBuff<MedkitHigh>())
+                        Player.Heal(healAmount);
+                }
+
+                if (medkitHitCooldown > 0)
+                    medkitHitCooldown--;
+            }
+            else
+            {
+                medkitTimer = 0;
+                medkitHitCooldown = 0;
+            }
+        }
+
+        private void OnHurt_ChangeMedkit()
+        {
+            if (medkitHitCooldown > 0)
+                return;
+
+            if (Player.HasBuff<MedkitMedium>())
+            {
+                int index = Player.FindBuffIndex(BuffType<MedkitMedium>());
+                int time = Player.buffTime[index];
+                Player.DelBuff(index);
+                Player.AddBuff(BuffType<MedkitLow>(), time);
+
+                medkitHitCooldown = Medkit.HitCooldown;
+            }
+
+            if (Player.HasBuff<MedkitHigh>())
+            {
+                int index = Player.FindBuffIndex(BuffType<MedkitHigh>());
+                int time = Player.buffTime[index];
+                Player.DelBuff(index);
+                Player.AddBuff(BuffType<MedkitMedium>(), time);
+
+                medkitHitCooldown = Medkit.HitCooldown;
+            }
+        }
+        #endregion
+
+        #region Biome & Visual Effects
         public override void PostUpdateMiscEffects()
+        {
+            Update_Graveyard();
+        }
+
+        private static void Update_Graveyard()
         {
             if (SubworldSystem.AnyActive<Macrocosm>())
                 Main.SceneMetrics.GraveyardTileCount = 0;
             else
                 Main.SceneMetrics.GraveyardTileCount += TileCounts.Instance.GraveyardModTileCount;
-
-            if (!Main.dedServ)
-            {
-                if (Player.InModBiome<IrradiationBiome>())
-                {
-                    if (!Filters.Scene["Macrocosm:RadiationNoise"].IsActive())
-                        Filters.Scene.Activate("Macrocosm:RadiationNoise");
-
-                    RadNoiseIntensity += 0.189f * Utility.InverseLerp(400, 10000, TileCounts.Instance.IrradiatedRockCount, clamped: true);
-
-                    Filters.Scene["Macrocosm:RadiationNoise"].GetShader().UseIntensity(RadNoiseIntensity);
-                }
-                else
-                {
-                    if (Filters.Scene["Macrocosm:RadiationNoise"].IsActive())
-                        Filters.Scene.Deactivate("Macrocosm:RadiationNoise");
-                }
-            }
         }
 
-        public bool HasVisitedSubworld(string subworldId) => visitedSubworlds.Contains(subworldId);
+        #endregion
 
-        public void SetReturnSubworld(string subworldId)
-        {
-            Guid guid = SubworldSystem.AnyActive<Macrocosm>() ? MacrocosmSubworld.Current.MainWorldUniqueId : Main.ActiveWorldFileData.UniqueId;
-            lastSubworldIdByWorldUniqueId[guid] = subworldId;
-        }
-
-        public bool TryGetReturnSubworld(Guid worldUniqueId, out string subworldId) => lastSubworldIdByWorldUniqueId.TryGetValue(worldUniqueId, out subworldId);
-
-        public override void OnEnterWorld()
-        {
-            if (Main.netMode == NetmodeID.SinglePlayer)
-            {
-                LastSubworldCheck(Main.ActiveWorldFileData.UniqueId);
-            }
-
-            if (TriggeredSubworldTravel)
-            {
-                if (SubworldSystem.AnyActive<Macrocosm>())
-                {
-                    if (!HasVisitedSubworld(MacrocosmSubworld.CurrentID) || MacrocosmConfig.Instance.AlwaysDisplayTitleCards)
-                        TitleCard.Start();
-
-                    visitedSubworlds.Add(MacrocosmSubworld.CurrentID);
-                }
-                else
-                {
-                    if(MacrocosmConfig.Instance.AlwaysDisplayTitleCards)
-                        TitleCard.Start();
-                }
-            }
-
-            CircuitSystem.SearchCircuits();
-        }
-
-        public static void LastSubworldCheck(BinaryReader reader, int whoAmI)
-        {
-            Guid mainWorldUniqueId = new(reader.ReadString());
-            Main.LocalPlayer.GetModPlayer<MacrocosmPlayer>().LastSubworldCheck(mainWorldUniqueId);
-        }
-
-        private void LastSubworldCheck(Guid mainWorldUniqueId)
-        {
-            if (!SubworldSystem.AnyActive<Macrocosm>() && !TriggeredSubworldTravel && lastSubworldIdByWorldUniqueId.TryGetValue(mainWorldUniqueId, out string lastSubworldId))
-            {
-                if (lastSubworldId is not "Macrocosm/Earth")
-                    MacrocosmSubworld.Travel(lastSubworldId, trigger: false);
-            }
-        }
-
+        #region Netcode
         public override void CopyClientState(ModPlayer clientClone)
         {
             // TODO: copy data that has to be netsynced
@@ -242,34 +241,19 @@ namespace Macrocosm.Content.Players
             // TODO: read netsynced data here
         }
 
+        #endregion
+
+        #region Saving & Loading
         public override void SaveData(TagCompound tag)
         {
             if (KnowsToUseZombieFinger)
                 tag[nameof(KnowsToUseZombieFinger)] = true;
-
-            if (visitedSubworlds.Any())
-                tag[nameof(visitedSubworlds)] = visitedSubworlds;
-
-            TagCompound lastSubworldsByWorld = new();
-            foreach (var kvp in lastSubworldIdByWorldUniqueId)
-                lastSubworldsByWorld[kvp.Key.ToString()] = kvp.Value;
-
-            tag[nameof(lastSubworldIdByWorldUniqueId)] = lastSubworldsByWorld;
         }
 
         public override void LoadData(TagCompound tag)
         {
             KnowsToUseZombieFinger = tag.ContainsKey(nameof(KnowsToUseZombieFinger));
-
-            if (tag.ContainsKey(nameof(visitedSubworlds)))
-                visitedSubworlds = tag.GetList<string>(nameof(visitedSubworlds)).ToList();
-
-            if (tag.ContainsKey(nameof(lastSubworldIdByWorldUniqueId)))
-            {
-                TagCompound lastSubworldsByWorld = tag.GetCompound(nameof(lastSubworldIdByWorldUniqueId));
-                foreach (var kvp in lastSubworldsByWorld)
-                    lastSubworldIdByWorldUniqueId[new Guid(kvp.Key)] = lastSubworldsByWorld.GetString(kvp.Key);
-            }
         }
+        #endregion
     }
 }

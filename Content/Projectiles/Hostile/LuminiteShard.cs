@@ -28,11 +28,10 @@ namespace Macrocosm.Content.Projectiles.Hostile
             set => Projectile.ai[1] = value;
         }
 
-        public bool Fall
-        {
-            get => Projectile.ai[2] > 0f;
-            set => Projectile.ai[2] = value ? 1f : 0f;
-        }
+        public ref float AI_FloatTime => ref Projectile.ai[2];
+        public bool Fall { get; set; }
+
+        private bool launched;
 
         public override void SetDefaults()
         {
@@ -56,7 +55,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
-            Main.spriteBatch.DrawStar(Projectile.Center - Main.screenPosition, 1, LuminiteSlime.EffectColor, 0.6f, Projectile.rotation + MathHelper.PiOver2, entity: true);
+            Utility.DrawStar(Projectile.Center - Main.screenPosition, 1, LuminiteSlime.EffectColor, 0.6f, Projectile.rotation + MathHelper.PiOver2, entity: true);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);
@@ -64,13 +63,20 @@ namespace Macrocosm.Content.Projectiles.Hostile
             return false;
         }
 
+
+        private bool spawned;
+        private float baseShootSpeed = 12f;
+
         public override void AI()
         {
-            Projectile.rotation = Projectile.velocity.ToRotation();
+            if (!spawned)
+            {
+                baseShootSpeed = Projectile.velocity.Length();
+                spawned = true;
+            }
 
+            Projectile.rotation = Projectile.velocity.ToRotation();
             bool hasTarget = TargetPlayer >= 0 && TargetPlayer < 255;
-            float timeToShoot = 40;
-            float baseShootSpeed = 12f;
             float shootDeviation = 0.5f;
 
             if (Main.netMode != NetmodeID.MultiplayerClient && hasTarget)
@@ -78,18 +84,24 @@ namespace Macrocosm.Content.Projectiles.Hostile
                 AI_Timer++;
 
                 Player player = Main.player[TargetPlayer];
-                if (AI_Timer == timeToShoot && player.active && !player.dead && !player.longInvince)
+                if (!launched && AI_Timer >= AI_FloatTime && player.active && !player.dead && !player.longInvince)
                 {
                     float aimAngle = (player.Center - Projectile.Center).ToRotation();
                     float shootSpeed = baseShootSpeed + Main.rand.NextFloat(-shootDeviation, shootDeviation);
-                    Projectile.velocity = Utility.PolarVector(shootSpeed, aimAngle);
-                    Projectile.netUpdate = true;
+                    Projectile.velocity = Vector2.Lerp(Projectile.velocity, Utility.PolarVector(shootSpeed, aimAngle), 0.08f);
+
+                    if(AI_Timer >= 60)
+                        launched = true;
                 }
-                else if (!Fall && AI_Timer > timeToShoot * Main.rand.NextFloat(1.5f, 3f))
+                else if (!Fall && AI_Timer > AI_FloatTime * Main.rand.NextFloat(1.5f, 3f))
                 {
                     Fall = true;
                     Projectile.netUpdate = true;
                 }
+            }
+            else if (!hasTarget)
+            {
+                Fall = true;
             }
 
             if (Fall)
@@ -104,7 +116,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
             for (int i = 0; i < 10; i++)
             {
                 Vector2 dustVelocity = Utility.PolarVector(0.01f, Utility.RandomRotation());
-                Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<LuminiteDust>(), dustVelocity.X, dustVelocity.Y, newColor: Color.White * 0.1f);
+                Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<LuminiteBrightDust>(), dustVelocity.X, dustVelocity.Y, newColor: Color.White * 0.1f);
             }
         }
     }

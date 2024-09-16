@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Common.Enums;
-using Macrocosm.Common.Storage;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
@@ -162,9 +161,19 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             customizationPanelBackground.Activate();
         }
 
+        private void OnRocketChanged()
+        {
+            RefreshPatternConfigPanel();
+            RefreshDetailConfigPanel();
+
+            rocketCustomizationControlPanel.ReplaceChildWith(unlockableItemSlot, unlockableItemSlot = CreateUnlockableItemSlot());
+        }
+
         public void OnTabOpen()
         {
             RefreshPatternColorPickers();
+
+            rocketCustomizationControlPanel.ReplaceChildWith(unlockableItemSlot, unlockableItemSlot = CreateUnlockableItemSlot());
         }
 
         public void OnTabClose()
@@ -193,12 +202,6 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             UpdateHSLMenuVisibility();
             UpdateModulePicker();
             UpdateKeyboardCapture();
-        }
-
-        private void OnRocketChanged()
-        {
-            RefreshPatternConfigPanel();
-            RefreshDetailConfigPanel();
         }
 
         #region Update methods
@@ -879,17 +882,18 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             };
             modulePicker.Append(modulePickerIconPanel);
 
-            leftButton = new(ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "BackArrow", mode), ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "BackArrowBorder", mode))
+            leftButton = new(ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ShortArrow", mode), ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ShortArrowBorder", mode))
             {
                 VAlign = 0.5f,
                 Left = new StyleDimension(0f, 0f),
+                SpriteEffects = SpriteEffects.FlipHorizontally,
                 CheckInteractible = () => !rocketPreview.ZoomedOut
             };
             leftButton.OnLeftClick += (_, _) => PickPreviousModule();
 
             modulePicker.Append(leftButton);
 
-            rightButton = new(ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ForwardArrow", mode), ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ForwardArrowBorder", mode))
+            rightButton = new(ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ShortArrow", mode), ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ShortArrowBorder", mode))
             {
                 VAlign = 0.5f,
                 Left = new StyleDimension(0, 0.79f),
@@ -916,10 +920,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             rocketCustomizationControlPanel.SetPadding(2f);
             customizationPanelBackground.Append(rocketCustomizationControlPanel);
 
-            unlockableItemSlot = Rocket.Inventory.ProvideItemSlot(Rocket.SpecialInventorySlot_CustomizationUnlock);
-            unlockableItemSlot.AddReserved(CheckUnlockableItemUnlocked);
-            unlockableItemSlot.HAlign = 0.5f;
-            unlockableItemSlot.VAlign = 0.5f;
+            unlockableItemSlot = CreateUnlockableItemSlot();
             rocketCustomizationControlPanel.Append(unlockableItemSlot);
 
             unlockableApplyButton = new(ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "Hammer"))
@@ -1015,6 +1016,15 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             return rocketCustomizationControlPanel;
         }
 
+        private UIInventorySlot CreateUnlockableItemSlot()
+        {
+            unlockableItemSlot = Rocket.Inventory.ProvideItemSlot(Rocket.SpecialInventorySlot_CustomizationUnlock);
+            unlockableItemSlot.AddReserved(CheckUnlockableItemUnlocked);
+            unlockableItemSlot.HAlign = 0.5f;
+            unlockableItemSlot.VAlign = 0.5f;
+            return unlockableItemSlot;
+        }
+
         private UIPanel CreateNameplateConfigPanel()
         {
             nameplateConfigPanel = new()
@@ -1036,7 +1046,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
                 BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
                 BorderColor = UITheme.Current.PanelStyle.BorderColor,
                 HoverBorderColor = UITheme.Current.ButtonHighlightStyle.BorderColor,
-                TextMaxLenght = Nameplate.MaxChars,
+                TextMaxLength = Nameplate.MaxChars,
                 TextScale = 1f,
                 AllowSnippets = false,
                 FormatText = Nameplate.FormatText,

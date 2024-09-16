@@ -14,6 +14,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
     public class MoonSwordProjectile : ModProjectile
     {
+        private MoonSwordTrail trail;
+
         public override void SetStaticDefaults()
         {
             Main.projFrames[Type] = 6;
@@ -31,8 +33,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
             Projectile.penetrate = 5;
-
-            Projectile.SetTrail<MoonSwordTrail>();
+            trail = new();
         }
 
         private SpriteBatchState state;
@@ -47,7 +48,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
-            Projectile.GetTrail().Draw(new Vector2(24 * Projectile.direction, 4).RotatedBy(Projectile.rotation));
+            trail?.Draw(Projectile, new Vector2(24 * Projectile.direction, 4).RotatedBy(Projectile.rotation));
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);

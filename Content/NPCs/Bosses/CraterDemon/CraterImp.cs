@@ -1,6 +1,7 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Global.NPCs;
+using Macrocosm.Common.Sets;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.NPCs.Global;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -13,7 +14,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 {
-    public class CraterImp : ModNPC, IMoonEnemy
+    public class CraterImp : ModNPC
     {
         public enum AttackType
         {
@@ -24,7 +25,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             Chomp = 2,
             Despawning = 3
         };
-        public bool DropMoonstone => false;
 
         public ref float AI_Timer => ref NPC.ai[0];
         public AttackType AI_Attack
@@ -47,11 +47,11 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
         public override void SetStaticDefaults()
         {
-            Main.npcFrameCount[NPC.type] = 4;
-            NPCID.Sets.TrailCacheLength[NPC.type] = 5;
-            NPCID.Sets.TrailingMode[NPC.type] = 3;
+            Main.npcFrameCount[Type] = 4;
+            NPCID.Sets.TrailCacheLength[Type] = 5;
+            NPCID.Sets.TrailingMode[Type] = 3;
 
-            NPCID.Sets.ImmuneToRegularBuffs[NPC.type] = true;
+            NPCID.Sets.ImmuneToRegularBuffs[Type] = true;
 
             NPCID.Sets.NPCBestiaryDrawModifiers bestiaryData = new()
             {
@@ -59,6 +59,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 Velocity = 1f
             };
             NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, bestiaryData);
+
+            NPCSets.MoonNPC[Type] = true;
+            NPCSets.DropsMoonstone[Type] = false;
         }
 
         public override void SetDefaults()
@@ -76,6 +79,12 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             NPC.HitSound = SoundID.NPCHit2;
             NPC.DeathSound = SoundID.NPCDeath2;
         }
+         public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
+        {
+            //For comparison, Moon Lord's scale factor is 0.7f
+            NPC.ScaleHealthBy(0.4f, balance, bossAdjustment);
+            NPC.damage = (int)(NPC.damage * 0.5f * bossAdjustment);
+        }
 
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
         {
@@ -91,11 +100,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 CycleAnimation();
         }
 
-        public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
-        {
-            NPC.lifeMax = (int)(NPC.lifeMax * 0.55f * bossAdjustment);
-            NPC.damage = (int)(NPC.damage * 0.75f * bossAdjustment);
-        }
+       
 
         public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
         {
@@ -140,10 +145,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
             spriteBatch.Draw(texture, NPC.Center - Main.screenPosition, NPC.frame, color, NPC.rotation, NPC.Size / 2f, NPC.scale, effect, 0);
 
-            if (NPC.IsABestiaryIconDummy)
-                return true;
-
-            return false;
+            return NPC.IsABestiaryIconDummy;
         }
 
         public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)

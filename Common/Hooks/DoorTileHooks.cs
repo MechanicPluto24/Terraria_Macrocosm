@@ -11,7 +11,9 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Hooks
 {
-
+    /// <summary>
+    /// TML: Maybe add functionality to tModLoader 
+    /// </summary>
     public class DoorTileHooks : ILoadable
     {
         public void Load(Mod mod)
@@ -215,8 +217,7 @@ namespace Macrocosm.Common.Hooks
         {
             var c = new ILCursor(il);
 
-            if (!c.TryGotoNext(MoveType.After,
-                i => i.MatchCall(typeof(Rectangle), ".ctor")))
+            if (!c.TryGotoNext(MoveType.After, i => i.MatchCall(typeof(Rectangle), ".ctor")))
             {
                 Macrocosm.Instance.Logger.Error("Failed to inject ILHook: ModifyDoorOpenCollisionRectangleILHook");
                 return;

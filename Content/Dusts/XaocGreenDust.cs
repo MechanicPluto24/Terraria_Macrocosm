@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Common.Utils;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -6,13 +7,11 @@ namespace Macrocosm.Content.Dusts
 {
     public class XaocGreenDust : ModDust
     {
-        public override Color? GetAlpha(Dust dust, Color lightColor) => Color.White;
+        public override Color? GetAlpha(Dust dust, Color lightColor) => Color.White.WithAlpha((byte)dust.alpha);
 
         public override void OnSpawn(Dust dust)
         {
-            dust.noLight = false;
-            dust.color = Color.White;
-            dust.alpha = 255;
+            dust.alpha = 0;
         }
 
         public override bool Update(Dust dust)
@@ -37,15 +36,17 @@ namespace Macrocosm.Content.Dusts
                 dust.velocity = (dust.velocity * 4f + vector * dust.velocity.Length()) / 5f;
             }
 
-            if (dust.alpha > 0)
-                dust.alpha -= 24;
+            if (dust.alpha < 127)
+                dust.alpha += 10;
+            else
+                dust.alpha = 127;
 
-            if (!dust.noLight)
-                Lighting.AddLight(dust.position, new Color(30, 255, 105).ToVector3() * 0.6f);
+            Lighting.AddLight(dust.position, new Color(30, 255, 105).ToVector3() * 0.6f);
 
             dust.position += dust.velocity;
-            dust.rotation += 0.1f * (dust.dustIndex % 2 == 0 ? -1 : 1);
+            dust.rotation += 0.25f * (dust.dustIndex % 2 == 0 ? -1 : 1);
             dust.scale -= 0.08f;
+            dust.velocity *= 0.96f;
 
             if (dust.scale <= 0f)
                 dust.active = false;

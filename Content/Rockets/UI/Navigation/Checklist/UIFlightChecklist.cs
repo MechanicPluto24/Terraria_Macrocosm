@@ -2,7 +2,6 @@
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.LaunchPads;
-using Macrocosm.Content.Rockets.UI.Navigation;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,15 +29,15 @@ namespace Macrocosm.Content.Rockets.UI.Navigation.Checklist
         public UIFlightChecklist() : base(new LocalizedColorScaleText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Checklist"), scale: 1.2f))
         {
             SelectedLaunchCondition = new ChecklistCondition("Selected", () => MapTarget is not null && (TargetLaunchpad is not null || SelectedSpawnLocation));
-            DifferentTargetLaunchCondition = new ChecklistCondition("DifferentTarget", () => !Rocket.AtCurrentLaunchpad(TargetLaunchpad, MapTarget.WorldID));
+            DifferentTargetLaunchCondition = new ChecklistCondition("DifferentTarget", () => !Rocket.AtCurrentLaunchpad(TargetLaunchpad, MapTarget.TargetID));
             LaunchpadVacantCondition = new ChecklistCondition("VacantLaunchpad", () => SelectedSpawnLocation || (TargetLaunchpad is not null && !TargetLaunchpad.HasRocket));
 
-            CommonLaunchConditions.Add(new ChecklistCondition("Fuel", () => Rocket.Fuel >= Rocket.GetFuelCost(MapTarget.WorldID)));
+            CommonLaunchConditions.Add(new ChecklistCondition("Fuel", () => Rocket.Fuel >= Rocket.GetFuelCost(MapTarget.TargetID)));
 
             // NOTE: This must be kept as an explicit lambda expression!
-            #pragma warning disable IDE0200
+#pragma warning disable IDE0200
             CommonLaunchConditions.Add(new ChecklistCondition("Obstruction", () => Rocket.CheckFlightPathObstruction(), checkPeriod: 10));
-            #pragma warning restore IDE0200
+#pragma warning restore IDE0200
 
             CommonLaunchConditions.Add(new ChecklistCondition("Boss", () => !Utility.BossActive && !Utility.MoonLordIncoming, hideIfMet: true));
             CommonLaunchConditions.Add(new ChecklistCondition("Invasion", () => !Utility.InvastionActive && !Utility.PillarsActive, hideIfMet: true));
@@ -50,6 +49,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation.Checklist
             base.OnInitialize();
             BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor;
             BorderColor = UITheme.Current.PanelStyle.BorderColor;
+            AddRange(GetUpdatedChecklist());
         }
 
         public bool Check()

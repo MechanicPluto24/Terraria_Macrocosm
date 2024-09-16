@@ -1,4 +1,6 @@
+using Macrocosm.Common.Bases.Tiles;
 using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -7,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles.Ores
 {
-    public class DianiteOre : ModTile
+    public class DianiteOre : ModTile, IModifyTileFrame
     {
         public override void SetStaticDefaults()
         {
@@ -20,25 +22,22 @@ namespace Macrocosm.Content.Tiles.Ores
             Main.tileSolid[Type] = true;
             Main.tileBlockLight[Type] = true;
 
+            TileID.Sets.ChecksForMerge[Type] = true;
+            Main.tileMerge[ModContent.TileType<Regolith>()][Type] = true;
+
             LocalizedText name = CreateMapEntryName();
             AddMapEntry(new Color(210, 116, 75), name);
 
-            DustType = 84;
+            DustType = ModContent.DustType<DianiteDust>();
             HitSound = SoundID.Tink;
 
             MinPick = 225;
             MineResist = 5f;
         }
-        public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
+
+        public void ModifyTileFrame(int i, int j, ref int up, ref int down, ref int left, ref int right, ref int upLeft, ref int upRight, ref int downLeft, ref int downRight)
         {
-            r = 0.8f;
-            g = 0.25f;
-            b = 0.2f;
-        }
-        public override bool CreateDust(int i, int j, ref int type)
-        {
-            type = Dust.NewDust(new Vector2(i, j).ToWorldCoordinates(), 16, 16, ModContent.DustType<DianiteDust>());
-            return false;
+            WorldGen.TileMergeAttempt(-2, ModContent.TileType<Regolith>(), ref up, ref down, ref left, ref right, ref upLeft, ref upRight, ref downLeft, ref downRight);
         }
     }
 }

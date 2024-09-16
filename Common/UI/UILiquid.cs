@@ -1,6 +1,9 @@
 ﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Graphics;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Liquids;
+using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -23,6 +26,7 @@ namespace Macrocosm.Common.UI
     public class UILiquid : UIElement
     {
         private readonly Asset<Texture2D> texture;
+
         private Rectangle surfaceSourceRectangle;
         private Rectangle fillSourceRectangle;
 
@@ -30,32 +34,77 @@ namespace Macrocosm.Common.UI
         private /*const*/ readonly int surfaceSliceHeight = 3;
         private int cornerSize = 10;
 
-        public bool DrawPanel { get; set; } = true;
+        private readonly LiquidType? macrocosmLiquidType;
+
         public float LiquidLevel { get; set; } = 0f;
         public float WaveFrequency { get; set; } = 5f;
         public float WaveAmplitude { get; set; } = 0.1f;
+        public bool RoundCorners { get; set; } = false;
 
-        /// <summary>
-        /// Use <see cref="WaterStyleID"/>!
-        /// </summary>
+        /// <summary> Use <see cref="WaterStyleID"/>! </summary>
         public UILiquid(int liquidId)
         {
             texture = LiquidRenderer.Instance._liquidTextures[liquidId];
             surfaceSourceRectangle = new(16, 1280, sliceSize * 2, surfaceSliceHeight);
-            fillSourceRectangle = new(16, 64 - 1, sliceSize, sliceSize);
+            fillSourceRectangle = new(16, 64, sliceSize, sliceSize);
             OverflowHidden = true;
         }
 
-        public UILiquid() : this(0)
+        public UILiquid(LiquidType macrocosmLiquidType) : this(0)
         {
-            texture = ModContent.Request<Texture2D>("Macrocosm/Content/Liquids/Oil");
+            this.macrocosmLiquidType = macrocosmLiquidType;
+            texture = ModContent.Request<Texture2D>("Macrocosm/Content/Liquids/" + macrocosmLiquidType.ToString(), AssetRequestMode.ImmediateLoad);
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            Rectangle fillArea = GetFillArea();
+            List<Particle> bubbles = ParticleManager.GetParticlesDrawnBy(this);
+
+            if (macrocosmLiquidType.HasValue && bubbles.Count < (float)(20 * LiquidLevel))
+            {
+                if (macrocosmLiquidType.Value == LiquidType.RocketFuel)
+                {
+                    Particle.CreateParticle<RocketFuelBubble>((p) =>
+                    {
+                        p.Position = new(fillArea.X + Main.rand.NextFloat(fillArea.Width), fillArea.Bottom);
+                        p.Velocity = new Vector2(Main.rand.NextFloat(-0.1f, 0.1f), Main.rand.NextFloat(0.5f, 2.2f) * -1f * LiquidLevel);
+                        p.Scale = new(Main.rand.NextFloat(0.3f, 0.7f));
+                        p.CustomDrawer = this;
+                    });
+                }
+                /*
+                else if (macrocosmLiquidType.Value == LiquidType.Oil)
+                {
+                    Rectangle fillArea = GetFillArea();
+                    Particle.CreateParticle<RocketFuelBubble>((p) =>
+                    {
+                        p.Position = new(fillArea.X + Main.rand.NextFloat(fillArea.Width), fillArea.Bottom);
+                        p.MaxY = fillArea.Top;
+                        p.Velocity = new Vector2(Main.rand.NextFloat(-0.1f, 0.1f), Main.rand.NextFloat(0.5f, 2f) * -1f * LiquidLevel);
+                        p.Scale = Main.rand.NextFloat(0.3f, 0.7f);
+                        p.CustomDrawer = this;
+                    });
+                }
+                */
+            }
+
+            foreach (Particle bubble in bubbles)
+            {
+                if (bubble.Position.X < fillArea.X)
+                    bubble.Velocity.X = 0.5f;
+
+                if (bubble.Position.X > fillArea.Right)
+                    bubble.Velocity.X = -0.5f;
+
+                if (bubble.Position.Y < fillArea.Top)
+                    bubble.Kill();
+            }
         }
 
         SpriteBatchState state;
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
-            LiquidLevel = Utility.PositiveSineWave(800);
-
             if (Parent.OverflowHidden)
             {
                 state.SaveState(spriteBatch);
@@ -64,17 +113,6 @@ namespace Macrocosm.Common.UI
             }
 
             Rectangle fillArea = GetFillArea();
-            DrawWaves(spriteBatch, fillArea);
-
-            if (Parent.OverflowHidden)
-            {
-                spriteBatch.End();
-                spriteBatch.Begin(state);
-            }
-        }
-
-        private void DrawWaves(SpriteBatch spriteBatch, Rectangle fillArea)
-        {
             float time = (float)Main.gameTimeCache.TotalGameTime.TotalSeconds;
 
             float secondaryWaveAmplitude = WaveAmplitude * 0.5f;
@@ -98,7 +136,9 @@ namespace Macrocosm.Common.UI
                 float waveTop = fillArea.Top + totalWaveOffset;
                 waveTop = Math.Max(waveTop, CalculateCornerYOffsetTop(radius, x, dims.Width, dims.Top));
 
-                spriteBatch.Draw(texture.Value, new Vector2(fillArea.X + x, waveTop - surfaceSliceHeight), surfaceSourceRectangle, Color.White);
+                int fillBottom = dims.Bottom;
+                if (RoundCorners && (x < 2 || x >= dims.Width - 2))
+                    fillBottom -= 2;
 
                 int fillBottom = CalculateCornerYOffsetBottom(radius, x, dims.Width, dims.Bottom);
                 int waveFillHeight = fillBottom - (int)waveTop;
@@ -106,41 +146,28 @@ namespace Macrocosm.Common.UI
                 {
                     spriteBatch.Draw(texture.Value, new Rectangle(fillArea.X + x, (int)waveTop, sliceSize, waveFillHeight), fillSourceRectangle, Color.White);
                 }
+
+                spriteBatch.Draw(texture.Value, new Vector2(fillArea.X + x, waveTop - surfaceSliceHeight), surfaceSourceRectangle, Color.White * 0.8f);
+
             }
-        }
-        private int CalculateCornerYOffsetTop(int radius, int x, int fullWidth, int topYOffset)
-        {
-            if (x < radius)
+
+            foreach (var bubble in ParticleManager.GetParticlesDrawnBy(this))
             {
-                int dx = radius - x;  
-                int dy = (int)Math.Sqrt(radius * radius - dx * dx);  
-                return (topYOffset + radius) - dy;  
+                bubble.Draw(spriteBatch, Vector2.Zero, Color.White * 0.5f);
             }
-            else if (x >= fullWidth - radius)
+
+            if (Parent.OverflowHidden)
             {
-                int dx = x - (fullWidth - radius); 
-                int dy = (int)Math.Sqrt(radius * radius - dx * dx); 
-                return (topYOffset + radius) - dy;  
+                spriteBatch.End();
+                spriteBatch.Begin(state);
             }
 
             return topYOffset;
         }
 
-        private int CalculateCornerYOffsetBottom(int radius, int x, int fullWidth, int bottomYOffset)
+        private void DrawWaves(SpriteBatch spriteBatch, Rectangle fillArea)
         {
-            if (x < radius)
-            {
-                int dx = radius - x;
-                int dy = radius - (int)Math.Sqrt(radius * radius - dx * dx);
-                return bottomYOffset - dy;
-            }
-            else if (x >= fullWidth - radius)
-            {
-                int dx = x - (fullWidth - radius);
-                int dy = radius - (int)Math.Sqrt(radius * radius - dx * dx);
-                return bottomYOffset - dy;
-            }
-            return bottomYOffset;
+
         }
 
         private Rectangle GetFillArea()

@@ -1,4 +1,4 @@
-﻿using Macrocosm.Content.Items.Materials.Tech;
+﻿using Macrocosm.Content.Items.Tech;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -30,7 +30,7 @@ namespace Macrocosm.Content.Rockets.Modules
             {
                 glowmask ??= ModContent.Request<Texture2D>(TexturePath + "_Glow");
                 spriteBatch.Draw(glowmask.Value, position, null, Color.White, 0f, Origin, 1f, SpriteEffects.None, 0f);
-            }  
+            }
         }
     }
 }

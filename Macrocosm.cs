@@ -1,7 +1,6 @@
 using Macrocosm.Common.Config;
-using Macrocosm.Common.Debugging;
+using Macrocosm.Common.Crossmod;
 using Macrocosm.Common.Netcode;
-using Macrocosm.Common.Systems;
 using Macrocosm.Content.Subworlds;
 using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Microsoft.Xna.Framework.Graphics;
@@ -46,14 +45,16 @@ namespace Macrocosm
                 LoadResprites();
                 LoadEffects();
             }
-
-            LoadTimeModCalls();
         }
 
         public override void Unload()
         {
             UnloadResprites();
             UnloadEffects();
+        }
+
+        public override void PostSetupContent()
+        {
         }
 
         private static void LoadResprites()
@@ -78,23 +79,6 @@ namespace Macrocosm
         private static void UnloadEffects()
         {
             // What goes here?
-        }
-
-        private void LoadTimeModCalls()
-        {
-            #region Ryan's mods calls
-
-            if (ModLoader.TryGetMod("TerrariaAmbience", out Mod ta))
-                ta.Call("AddTilesToList", null, "Stone", Array.Empty<string>(), new int[]
-                {
-                    ModContent.TileType<Regolith>(),
-                    ModContent.TileType<Protolith>()
-                });
-
-            if (ModLoader.TryGetMod("TerrariaAmbienceAPI", out Mod taAPI))
-                taAPI.Call("Ambience", this, "MoonAmbience", "Assets/Sounds/Ambient/Moon", 1f, 0.0075f, new Func<bool>(SubworldSystem.IsActive<Moon>));
-
-            #endregion
         }
 
         public override void HandlePacket(BinaryReader reader, int whoAmI)

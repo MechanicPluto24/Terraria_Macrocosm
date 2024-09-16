@@ -39,6 +39,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             HoverText = Language.GetOrRegister("Mods.Macrocosm.UI.Rocket.Customization.Patterns." + Pattern.Name, () => Pattern.Name);
         }
 
+        private static Asset<Effect> colorMaskShading;
         private SpriteBatchState state;
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
@@ -47,7 +48,8 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             var dimensions = GetOuterDimensions();
 
             // Load the coloring shader
-            Effect effect = ModContent.Request<Effect>(Macrocosm.ShadersPath + "ColorMaskShading", AssetRequestMode.ImmediateLoad).Value;
+            colorMaskShading ??= ModContent.Request<Effect>(Macrocosm.ShadersPath + "ColorMaskShading", AssetRequestMode.ImmediateLoad);
+            Effect effect = colorMaskShading.Value;
 
             // Pass the pattern icon to the shader via the S1 register
             Main.graphics.GraphicsDevice.Textures[1] = Pattern.IconTexture.Value;

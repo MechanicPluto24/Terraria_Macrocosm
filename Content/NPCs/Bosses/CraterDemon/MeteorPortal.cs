@@ -71,8 +71,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 {
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, (-Vector2.UnitY).RotatedByRandom(MathHelper.PiOver2) * Main.rand.NextFloat(12f, 16f), ModContent.ProjectileType<FlamingMeteor>(),
-                            Projectile.damage, Projectile.knockBack, Projectile.owner);
+                        NPC.NewNPC(Projectile.GetSource_FromAI(), (int)Projectile.Center.X, (int)Projectile.Center.Y, ModContent.NPCType<FlamingMeteor>());
                     }
 
                     Terraria.Audio.SoundEngine.PlaySound(SoundID.Item20, Projectile.Center);
@@ -86,7 +85,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 {
                     p.Position = Projectile.Center + Main.rand.NextVector2Circular(Projectile.width, Projectile.height) * 2.2f * progress;
                     p.Velocity = Vector2.One * 8;
-                    p.Scale = (0.1f + Main.rand.NextFloat(0.1f)) * progress;
+                    p.Scale = new((0.1f + Main.rand.NextFloat(0.1f)) * progress);
                     p.Color = Main.rand.NextBool() ? new Color(92, 206, 130) : new Color(182, 79, 21);
                     p.TargetCenter = Projectile.Center;
                 });

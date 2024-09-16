@@ -1,6 +1,8 @@
-﻿using Macrocosm.Content.Biomes;
-using Macrocosm.Content.Items.Materials.Drops;
-using Macrocosm.Content.NPCs.Global;
+﻿using Macrocosm.Common.Bases.NPCs;
+using Macrocosm.Common.Sets;
+using Macrocosm.Content.Biomes;
+using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Items.Drops;
 using Microsoft.Xna.Framework;
 using System.IO;
 using Terraria;
@@ -12,24 +14,26 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-    // Adapted from Example Mod
-    public class CraterCrawlerHead : WormHead, IMoonEnemy
+    public class CraterCrawlerHead : WormHead
     {
         public override int BodyType => ModContent.NPCType<CraterCrawlerBody>();
         public override int TailType => ModContent.NPCType<CraterCrawlerTail>();
 
         public override void SetStaticDefaults()
         {
-            var drawModifier = new NPCID.Sets.NPCBestiaryDrawModifiers()    // Influences how the NPC looks in the Bestiary
+            NPCID.Sets.NPCBestiaryDrawModifiers value = new()
             {
                 CustomTexturePath = "Macrocosm/Content/NPCs/Enemies/Moon/CraterCrawler_Bestiary", // If the NPC is multiple parts like a worm, a custom texture for the Bestiary is encouraged.
                 Position = new Vector2(40f, 24f),
                 PortraitPositionXOverride = 0f,
                 PortraitPositionYOverride = 12f
             };
-            NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, drawModifier);
-        }
+            NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
 
+            NPCSets.MoonNPC[Type] = true;
+            NPCSets.DropsMoonstone[Type] = true;
+        }
+        public override float FallSpeed => 0.4f;
         public override void SetDefaults()
         {
             NPC.CloneDefaults(NPCID.DiggerHead);
@@ -38,6 +42,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.defense = 40;
             NPC.width = 20;
             NPC.height = 20;
+            SpawnModBiomes = [ModContent.GetInstance<MoonNightBiome>().Type];
             NPC.aiStyle = -1;
         }
 
@@ -53,11 +58,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
         {
-            /*
-            bestiaryEntry.Info.Add(
-				BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Times.NightTime
-			);
-            */
         }
 
         public override void Init()
@@ -107,9 +107,27 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override void HitEffect(NPC.HitInfo hit)
         {
+            for (int i = 0; i < 10; i++)
+            {
+                int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, i % 2 == 0 ? ModContent.DustType<RegolithDust>() : DustID.GreenBlood);
+                Dust dust = Main.dust[dustIndex];
+                dust.velocity.X *= dust.velocity.X * 1.25f * hit.HitDirection + Main.rand.Next(0, 100) * 0.015f;
+                dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;
+                dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
+            }
+
             if (NPC.life <= 0)
             {
                 Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("CraterCrawlerHeadGore").Type);
+
+                for (int i = 0; i < 20; i++)
+                {
+                    int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, i % 2 == 0 ? ModContent.DustType<RegolithDust>() : DustID.GreenBlood);
+                    Dust dust = Main.dust[dustIndex];
+                    dust.velocity.X *= dust.velocity.X * 1.25f * hit.HitDirection + Main.rand.Next(0, 100) * 0.015f;
+                    dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;
+                    dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
+                }
             }
         }
     }
@@ -118,7 +136,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
     {
         public override void SetStaticDefaults()
         {
-            NPCID.Sets.NPCBestiaryDrawModifiers value = new NPCID.Sets.NPCBestiaryDrawModifiers() { Hide = true }; // Hides this NPC from the Bestiary, useful for multi-part NPCs whom you only want one entry.
+            NPCID.Sets.NPCBestiaryDrawModifiers value = new() { Hide = true };
             NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
         }
 
@@ -127,6 +145,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.CloneDefaults(NPCID.DiggerBody);
             NPC.damage = 60;
             NPC.defense = 45;
+            NPC.npcSlots = 0f;
             NPC.width = 16;
             NPC.height = 16;
             NPC.aiStyle = -1;
@@ -148,9 +167,27 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override void HitEffect(NPC.HitInfo hit)
         {
+            for (int i = 0; i < 10; i++)
+            {
+                int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, i % 2 == 0 ? ModContent.DustType<RegolithDust>() : DustID.GreenBlood);
+                Dust dust = Main.dust[dustIndex];
+                dust.velocity.X *= dust.velocity.X * 1.25f * hit.HitDirection + Main.rand.Next(0, 100) * 0.015f;
+                dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;
+                dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
+            }
+
             if (NPC.life <= 0)
             {
                 Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("CraterCrawlerBodyGore").Type);
+
+                for (int i = 0; i < 20; i++)
+                {
+                    int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, i % 2 == 0 ? ModContent.DustType<RegolithDust>() : DustID.GreenBlood);
+                    Dust dust = Main.dust[dustIndex];
+                    dust.velocity.X *= dust.velocity.X * 1.25f * hit.HitDirection + Main.rand.Next(0, 100) * 0.015f;
+                    dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;
+                    dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
+                }
             }
         }
     }
@@ -159,10 +196,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
     {
         public override void SetStaticDefaults()
         {
-            NPCID.Sets.NPCBestiaryDrawModifiers value = new()
-            {
-                Hide = true // Hides this NPC from the Bestiary, useful for multi-part NPCs whom you only want one entry.
-            };
+            NPCID.Sets.NPCBestiaryDrawModifiers value = new() { Hide = true };
             NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
         }
 
@@ -173,6 +207,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.defense = 50;
             NPC.width = 30;
             NPC.height = 30;
+            NPC.npcSlots = 0f;
             NPC.aiStyle = -1;
         }
 
@@ -184,9 +219,27 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override void HitEffect(NPC.HitInfo hit)
         {
+            for (int i = 0; i < 10; i++)
+            {
+                int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, i % 2 == 0 ? ModContent.DustType<RegolithDust>() : DustID.GreenBlood);
+                Dust dust = Main.dust[dustIndex];
+                dust.velocity.X *= dust.velocity.X * 1.25f * hit.HitDirection + Main.rand.Next(0, 100) * 0.015f;
+                dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;
+                dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
+            }
+
             if (NPC.life <= 0)
             {
                 Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("CraterCrawlerTailGore").Type);
+
+                for (int i = 0; i < 20; i++)
+                {
+                    int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, i % 2 == 0 ? ModContent.DustType<RegolithDust>() : DustID.GreenBlood);
+                    Dust dust = Main.dust[dustIndex];
+                    dust.velocity.X *= dust.velocity.X * 1.25f * hit.HitDirection + Main.rand.Next(0, 100) * 0.015f;
+                    dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;
+                    dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
+                }
             }
         }
     }

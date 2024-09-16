@@ -9,7 +9,7 @@ namespace Macrocosm.Content.Particles
 {
     public class RocketExhaustSmoke : Particle
     {
-        public override int FrameNumber => 3;
+        public override int FrameCount => 3;
         public override bool SetRandomFrameOnSpawn => true;
 
         public bool FadeIn = false;
@@ -18,8 +18,6 @@ namespace Macrocosm.Content.Particles
         public Color DrawColor = Color.White;
 
         public int TargetAlpha = 255;
-
-        public float Deceleration = 0.98f;
 
         public int FadeInSpeed = 1;
         public int FadeOutSpeed = 4;
@@ -41,13 +39,13 @@ namespace Macrocosm.Content.Particles
 
             if (FadeIn)
                 alpha = 0;
+
+            Acceleration = new(0.98f);
+            ScaleVelocity = new(-0.005f);
         }
 
         public override void AI()
         {
-            Velocity *= Deceleration;
-            Scale -= ScaleDownSpeed;
-
             if (FadeIn && FadeOut)
             {
                 if (!fadedIn)
@@ -94,13 +92,13 @@ namespace Macrocosm.Content.Particles
 
             alpha = (int)MathHelper.Clamp(alpha, 0, 255);
 
-            if (Scale < 0.1 || (fadedIn && alpha <= 0))
+            if (Scale.X < 0.1f || (fadedIn && alpha <= 0))
                 Kill();
         }
 
         public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
-            spriteBatch.Draw(Texture, Position - screenPosition, GetFrame(), Color.Lerp(DrawColor, lightColor, 0.5f).WithAlpha(DrawColor.A) * ((float)alpha / 255f), Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(Texture.Value, Position - screenPosition, GetFrame(), Color.Lerp(DrawColor, lightColor, 0.5f).WithAlpha(DrawColor.A) * ((float)alpha / 255f), Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
         }
 
     }

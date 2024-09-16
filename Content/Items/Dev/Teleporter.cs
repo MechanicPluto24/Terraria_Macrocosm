@@ -1,6 +1,8 @@
-﻿using Macrocosm.Common.Subworlds;
-using Macrocosm.Content.Items.Global;
+﻿using Macrocosm.Common.Global.Items;
+using Macrocosm.Common.Sets;
+using Macrocosm.Common.Subworlds;
 using Macrocosm.Content.Rarities;
+using Macrocosm.Content.Subworlds;
 using SubworldLibrary;
 using Terraria;
 using Terraria.ID;
@@ -8,10 +10,11 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Dev
 {
-    class Teleporter : ModItem, IDevItem
+    class Teleporter : ModItem
     {
         public override void SetStaticDefaults()
         {
+            ItemSets.DeveloperItem[Type] = true;
         }
         public override void SetDefaults()
         {
@@ -30,9 +33,9 @@ namespace Macrocosm.Content.Items.Dev
             if (player.whoAmI == Main.myPlayer)
             {
                 if (!SubworldSystem.AnyActive<Macrocosm>())
-                    MacrocosmSubworld.Travel("Macrocosm/Moon");
+                    MacrocosmSubworld.Travel(Moon.Instance.ID);
                 else
-                    MacrocosmSubworld.Travel("Macrocosm/Earth");
+                    MacrocosmSubworld.Travel(Earth.ID);
             }
 
             return true;

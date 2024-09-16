@@ -1,4 +1,4 @@
-using Macrocosm.Content.Items.Materials.Bars;
+using Macrocosm.Content.Items.Bars;
 using Macrocosm.Content.Players;
 using Macrocosm.Content.Rarities;
 using Terraria;
@@ -26,7 +26,7 @@ namespace Macrocosm.Content.Items.Armor.Dianite
         {
             player.statManaMax2 += 60;
             player.GetDamage<MagicDamageClass>() += 0.1f;
-            player.GetModPlayer<MacrocosmPlayer>().SpaceProtection += 1.5f;
+            player.GetModPlayer<MacrocosmPlayer>().SpaceProtection += 1f;
         }
 
         public override bool IsArmorSet(Item head, Item body, Item legs)

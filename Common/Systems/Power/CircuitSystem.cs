@@ -1,16 +1,16 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Macrocosm.Common.Utils;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
-using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI.Chat;
-using Microsoft.Xna.Framework;
-using Macrocosm.Common.Utils;
-using System.Collections.Generic;
-using System;
-using Terraria.ID;
-using System.Reflection.PortableExecutable;
-using System.Linq;
 
 namespace Macrocosm.Common.Systems.Power
 {
@@ -19,22 +19,40 @@ namespace Macrocosm.Common.Systems.Power
         private static readonly Dictionary<int, Circuit> machineToCircuit = new();
         private static readonly List<Circuit> circuits = new();
 
+        public override void Load()
+        {
+            On_WorldGen.PlaceWire += On_WorldGen_PlaceWire;
+            On_WorldGen.PlaceWire2 += On_WorldGen_PlaceWire2;
+            On_WorldGen.PlaceWire3 += On_WorldGen_PlaceWire3;
+            On_WorldGen.PlaceWire4 += On_WorldGen_PlaceWire4;
+            On_WorldGen.KillWire += On_WorldGen_KillWire;
+            On_WorldGen.KillWire2 += On_WorldGen_KillWire2;
+            On_WorldGen.KillWire3 += On_WorldGen_KillWire3;
+            On_WorldGen.KillWire4 += On_WorldGen_KillWire4;
+        }
+
+        public override void Unload()
+        {
+            On_WorldGen.PlaceWire -= On_WorldGen_PlaceWire;
+            On_WorldGen.PlaceWire2 -= On_WorldGen_PlaceWire2;
+            On_WorldGen.PlaceWire3 -= On_WorldGen_PlaceWire3;
+            On_WorldGen.PlaceWire4 -= On_WorldGen_PlaceWire4;
+            On_WorldGen.KillWire -= On_WorldGen_KillWire;
+            On_WorldGen.KillWire2 -= On_WorldGen_KillWire2;
+            On_WorldGen.KillWire3 -= On_WorldGen_KillWire3;
+            On_WorldGen.KillWire4 -= On_WorldGen_KillWire4;
+        }
+
         public override void ClearWorld()
         {
             SearchCircuits();
         }
 
-        private static void SolveCircuits()
-        {
-            foreach (Circuit circuit in circuits)
-                circuit.Solve();
-        }
-
         private static int updateTimer = 0;
-        private const int updateRate = 60;
+        private const int updateRate = 1;
         public override void PostUpdateEverything()
         {
-            if(updateTimer++ >= 1)
+            if (updateTimer++ >= updateRate)
             {
                 SolveCircuits();
                 updateTimer = 0;
@@ -87,30 +105,10 @@ namespace Macrocosm.Common.Systems.Power
             SolveCircuits();
         }
 
-
-        private static void WireEffects(bool foundPower, MachineTE machine, HashSet<Point16> visited)
+        private static void SolveCircuits()
         {
-            if (foundPower && machine.PoweredOn && machine.ConsumedPower > 0)
-            {
-                foreach (var p in visited)
-                {
-                    if (Main.rand.NextBool(20) && PowerWiring.Map[p].AnyWire)
-                    {
-                        var d = Dust.NewDustDirect(p.ToWorldCoordinates() + new Vector2(2), 8, 8, DustID.Electric, Scale: 0.2f, SpeedX: 0, SpeedY: 0);
-                        d.noGravity = false;
-                    }
-                }
-            }
-        }
-
-        public override void PostDrawTiles()
-        {
-            SpriteBatch spriteBatch = Main.spriteBatch;
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, default, null, Main.GameViewMatrix.ZoomMatrix);
-
-            DebugDrawMachines(spriteBatch);
-
-            spriteBatch.End();
+            foreach (Circuit circuit in circuits)
+                circuit.Solve();
         }
 
         private static void DebugDrawMachines(SpriteBatch spriteBatch)
@@ -125,6 +123,62 @@ namespace Macrocosm.Common.Systems.Power
                     ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, $"{activePower}/{maxPower}", position, Color.Wheat, 0f, Vector2.Zero, Vector2.One);
                 }
             }
+        }
+
+        private bool On_WorldGen_PlaceWire(On_WorldGen.orig_PlaceWire orig, int i, int j)
+        {
+            SearchCircuits();
+            return orig(i, j);
+        }
+
+        private bool On_WorldGen_PlaceWire2(On_WorldGen.orig_PlaceWire2 orig, int i, int j)
+        {
+            SearchCircuits();
+            return orig(i, j);
+        }
+
+        private bool On_WorldGen_PlaceWire3(On_WorldGen.orig_PlaceWire3 orig, int i, int j)
+        {
+            SearchCircuits();
+            return orig(i, j);
+        }
+
+        private bool On_WorldGen_PlaceWire4(On_WorldGen.orig_PlaceWire4 orig, int i, int j)
+        {
+            SearchCircuits();
+            return orig(i, j);
+        }
+
+        private bool On_WorldGen_KillWire(On_WorldGen.orig_KillWire orig, int i, int j)
+        {
+            SearchCircuits();
+            return orig(i, j);
+        }
+
+        private bool On_WorldGen_KillWire2(On_WorldGen.orig_KillWire2 orig, int i, int j)
+        {
+            SearchCircuits();
+            return orig(i, j);
+        }
+
+        private bool On_WorldGen_KillWire3(On_WorldGen.orig_KillWire3 orig, int i, int j)
+        {
+            SearchCircuits();
+            return orig(i, j);
+        }
+
+        private bool On_WorldGen_KillWire4(On_WorldGen.orig_KillWire4 orig, int i, int j)
+        {
+            SearchCircuits();
+            return orig(i, j);
+        }
+
+        public override bool HijackGetData(ref byte messageType, ref BinaryReader reader, int playerNumber)
+        {
+            if(messageType is MessageID.TileManipulation or MessageID.TileSquare or MessageID.MassWireOperation)
+                 SearchCircuits();
+ 
+            return false;
         }
     }
 }

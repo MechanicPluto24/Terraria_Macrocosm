@@ -1,4 +1,4 @@
-using Macrocosm.Content.Items.Materials.Bars;
+using Macrocosm.Content.Items.Bars;
 using Macrocosm.Content.Projectiles.Friendly.Magic;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
@@ -13,6 +13,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
     {
         public override void SetStaticDefaults()
         {
+        
 
             Item.staff[Type] = true;
         }
@@ -21,7 +22,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
         {
             Item.damage = 135;
             Item.DamageType = DamageClass.Magic;
-            Item.mana = 30;
+            Item.mana = 6;
             Item.width = 80;
             Item.height = 80;
             Item.useTime = 12;

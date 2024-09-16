@@ -1,10 +1,9 @@
-﻿using Macrocosm.Common.Subworlds;
+﻿using Macrocosm.Common.Enums;
+using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
-using SubworldLibrary;
 using System;
 using System.Collections.Generic;
-using Terraria.ID;
 using Terraria.Map;
 using Terraria.ModLoader;
 

@@ -1,23 +1,24 @@
+using Macrocosm.Common.Sets;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.NPCs.Global;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-    public class MoonZombie : ModNPC, IMoonEnemy
+    public class MoonZombie : ModNPC
     {
         public override void SetStaticDefaults()
         {
             Main.npcFrameCount[Type] = 9;
+
+            NPCSets.MoonNPC[Type] = true;
+            NPCSets.DropsMoonstone[Type] = true;
         }
 
         public override void SetDefaults()
         {
-            base.SetDefaults();
-
             NPC.width = 18;
             NPC.height = 44;
             NPC.damage = 70;
@@ -28,20 +29,22 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.knockBackResist = 0.5f;
             NPC.aiStyle = 3;
             AIType = NPCID.ZombieMushroom;
+            SpawnModBiomes = [ModContent.GetInstance<MoonNightBiome>().Type];
             Banner = Item.NPCtoBanner(NPCID.Zombie);
             BannerItem = Item.BannerToItem(Banner);
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return spawnInfo.Player.InModBiome<MoonBiome>() && !Main.dayTime ? .1f : 0f;
+            return spawnInfo.Player.InModBiome<MoonBiome>() && spawnInfo.SpawnTileY < Main.rockLayer && !Main.dayTime ? .1f : 0f;
         }
 
-        public override void AI()
+        public override bool PreAI()
         {
             if (NPC.velocity.Y < 0f)
                 NPC.velocity.Y += 0.1f;
-            base.AI();
+
+            return true;
         }
 
         public override void FindFrame(int frameHeight)

@@ -10,6 +10,9 @@ using Terraria.UI;
 
 namespace Macrocosm.Common.UI
 {
+    /// <summary>
+    /// Button element representing an image, with a custom border and hover text. Adapted from ExampleMod.
+    /// </summary>
     public class UIHoverImageButton : UIElement, IFocusable
     {
         /// <summary> Tooltip text, shown on hover </summary>
@@ -20,7 +23,6 @@ namespace Macrocosm.Common.UI
 
         /// <summary> Whether to display hover text even if the button is not interactible </summary>
         public bool HoverTextOnButonNotInteractible { get; set; } = false;
-
         public bool DrawBorderIfInFocus { get; set; } = true;
 
         public bool HasFocus { get; set; }
@@ -29,6 +31,19 @@ namespace Macrocosm.Common.UI
         public Action OnFocusGain { get; set; } = () => { };
         public Action OnFocusLost { get; set; } = () => { };
 
+        public SpriteEffects SpriteEffects { get; set; } = SpriteEffects.None;
+        public float Rotation
+        {
+            get => rotation;
+            set
+            {
+                rotation = value;
+
+                if (rotation >= MathHelper.PiOver2 && rotation <= MathHelper.Pi - MathHelper.PiOver4 ||
+                    rotation >= MathHelper.Pi + MathHelper.PiOver4 && rotation <= MathHelper.TwoPi - MathHelper.PiOver4)
+                    Terraria.Utils.Swap(ref Width, ref Height);
+            }
+        }
 
         protected Asset<Texture2D> texture;
 
@@ -42,7 +57,7 @@ namespace Macrocosm.Common.UI
         protected float visibilityHover = 0.8f;
 
         protected float visibilityNotInteractible = 0.4f;
-
+        private float rotation;
 
         public UIHoverImageButton(Asset<Texture2D> texture, Asset<Texture2D> borderTexture = null, LocalizedText hoverText = null)
         {
@@ -98,10 +113,10 @@ namespace Macrocosm.Common.UI
             CalculatedStyle dimensions = GetDimensions();
 
             float visibility = CheckInteractible() ? (IsMouseHovering ? visibilityHover : visibilityInteractible) : visibilityNotInteractible;
-            spriteBatch.Draw(texture.Value, dimensions.Position(), Color.White * visibility);
+            spriteBatch.Draw(texture.Value, dimensions.Center(), null, Color.White * visibility, Rotation, texture.Size() / 2f, 1f, SpriteEffects, 0);
 
             if (borderTexture != null && (IsMouseHovering && CheckInteractible()) || remoteInteractionFeedbackTicks > 0 || HasFocus && DrawBorderIfInFocus)
-                spriteBatch.Draw(borderTexture.Value, dimensions.Position(), Color.White);
+                spriteBatch.Draw(borderTexture.Value, dimensions.Center(), null, Color.White, Rotation, texture.Size() / 2f, 1f, SpriteEffects, 0);
         }
 
         public override void LeftClick(UIMouseEvent evt)

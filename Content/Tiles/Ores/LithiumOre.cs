@@ -15,9 +15,10 @@ namespace Macrocosm.Content.Tiles.Ores
             Main.tileOreFinderPriority[Type] = 320;
             Main.tileShine2[Type] = true;
             Main.tileShine[Type] = 975;
-            Main.tileMergeDirt[Type] = true;
             Main.tileSolid[Type] = true;
             Main.tileBlockLight[Type] = true;
+
+            Main.tileMergeDirt[Type] = true;
 
             LocalizedText name = CreateMapEntryName();
             AddMapEntry(new Color(108, 101, 112), name);

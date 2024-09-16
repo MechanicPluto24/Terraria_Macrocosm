@@ -1,4 +1,4 @@
-using Macrocosm.Content.Items.Materials.Bars;
+using Macrocosm.Content.Items.Bars;
 using Macrocosm.Content.Players;
 using Macrocosm.Content.Rarities;
 using Terraria;
@@ -27,7 +27,7 @@ namespace Macrocosm.Content.Items.Armor.Dianite
         {
             player.GetDamage<MagicDamageClass>() += 0.05f;
             player.moveSpeed += 0.1f;
-            player.GetModPlayer<MacrocosmPlayer>().SpaceProtection += 1.5f;
+            player.GetModPlayer<MacrocosmPlayer>().SpaceProtection += 1f;
         }
 
         public override void AddRecipes()

@@ -1,10 +1,10 @@
 ﻿using Macrocosm.Common.Loot;
+using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Rockets;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +14,7 @@ using Terraria.GameContent.UI.Elements;
 
 namespace Macrocosm.Content.Machines
 {
-    internal class OreExcavatorUI : MachineUI
+    public class OreExcavatorUI : MachineUI
     {
         public OreExcavatorTE OreExcavator => MachineTE as OreExcavatorTE;
 
@@ -79,7 +79,16 @@ namespace Macrocosm.Content.Machines
                     BackgroundColor = UITheme.Current.InfoElementStyle.BackgroundColor,
                     BorderColor = UITheme.Current.InfoElementStyle.BorderColor
                 };
-                CheckBlacklisted(itemDropInfo, dropRateInfo);
+
+                foreach (var entry in OreExcavator.Loot.Entries)
+                {
+                    if (entry is IBlacklistable blacklistable)
+                    {
+                        if (dropRateInfo.itemId == blacklistable.ItemID && (OreExcavator.BlacklistedItems.Contains(dropRateInfo.itemId) || blacklistable.Blacklisted))
+                            itemDropInfo.ToggleBlacklisted();
+                    }
+                }
+
                 itemDropInfo.OnLeftClick += (_, element) => BlacklistItem(element as UIItemDropInfo, dropRateInfo);
                 dropRateList.Add(itemDropInfo);
             }
@@ -87,22 +96,27 @@ namespace Macrocosm.Content.Machines
             return dropRateList;
         }
 
-        private void CheckBlacklisted(UIItemDropInfo itemDropInfo, DropRateInfo dropRateInfo)
-        {
-            foreach (var blacklistable in OreExcavator.Loot.BlacklistableEntries)
-            {
-                if (dropRateInfo.itemId == blacklistable.ItemID && blacklistable.Blacklisted)
-                    itemDropInfo.ToggleBlacklisted();
-            }
-        }
-
         private void BlacklistItem(UIItemDropInfo itemDropInfo, DropRateInfo dropRateInfo)
         {
-            foreach (var blacklistable in OreExcavator.Loot.BlacklistableEntries)
+            foreach (var entry in OreExcavator.Loot.Entries)
             {
-                if (dropRateInfo.itemId == blacklistable.ItemID)
-                    blacklistable.Blacklisted = itemDropInfo.ToggleBlacklisted();
+                if (entry is IBlacklistable blacklistable)
+                {
+                    if (dropRateInfo.itemId == blacklistable.ItemID)
+                    {
+                        // For UI
+                        blacklistable.Blacklisted = itemDropInfo.ToggleBlacklisted();
+
+                        // For TE data
+                        if (blacklistable.Blacklisted)
+                            OreExcavator.BlacklistedItems.Add(blacklistable.ItemID);
+                        else
+                            OreExcavator.BlacklistedItems.Remove(blacklistable.ItemID);
+                    }
+                }
             }
+
+            TENetHelper.SyncTEFromClient(OreExcavator.ID);
         }
 
         public override void Update(GameTime gameTime)

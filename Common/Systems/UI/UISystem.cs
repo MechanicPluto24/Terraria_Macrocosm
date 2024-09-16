@@ -159,15 +159,20 @@ namespace Macrocosm.Common.Systems.UI
             if (Main.netMode == NetmodeID.Server || UserInterface.CurrentState is not null)
                 return;
 
-            Main.playerInventory = true;
+            if (UIAssemblyState is not null && !(UIAssemblyState.LaunchPad.Inventory.InteractingPlayer == Main.myPlayer || UIAssemblyState.LaunchPad.Inventory.InteractingPlayer == 255))
+                return;
 
             UIAssemblyState = new();
             UIAssemblyState.LaunchPad = launchPad;
+            UIAssemblyState.LaunchPad.Inventory.InteractingPlayer = Main.myPlayer;
+
             UIAssemblyState.Initialize();
             UIAssemblyState.OnShow();
             UIAssemblyState.Activate();
 
             UserInterface.SetState(UIAssemblyState);
+
+            Main.playerInventory = true;
         }
 
         private void ShowMachineUI_Internal(MachineTE machineTileEntity, MachineUI machineUI)
@@ -175,16 +180,29 @@ namespace Macrocosm.Common.Systems.UI
             if (Main.netMode == NetmodeID.Server || UserInterface.CurrentState is not null)
                 return;
 
-            Main.playerInventory = true;
+            if
+            (
+                UIMachineState is not null
+                && UIMachineState.MachineUI.MachineTE is IInventoryOwner inventoryOwner
+                && !(inventoryOwner.Inventory.InteractingPlayer == Main.myPlayer || inventoryOwner.Inventory.InteractingPlayer == 255)
+            )
+            {
+                return;
+            }
 
             machineUI.MachineTE = machineTileEntity;
             UIMachineState = new();
             UIMachineState.MachineUI = machineUI;
+            if (UIMachineState.MachineUI.MachineTE is IInventoryOwner inventoryOwner1)
+                inventoryOwner1.Inventory.InteractingPlayer = Main.myPlayer;
+
             UIMachineState.Initialize();
             UIMachineState.OnShow();
             UIMachineState.Activate();
 
             UserInterface.SetState(UIMachineState);
+
+            Main.playerInventory = true;
         }
 
         public void HideUI()
@@ -249,8 +267,8 @@ namespace Macrocosm.Common.Systems.UI
             if (element is null)
                 return;
 
-            if (element is IConsistentUpdateable updateable)
-                updateable.Update();
+            if (element is IFixedUpdateable updateable)
+                updateable.FixedUpdate();
         }
     }
 }

@@ -17,14 +17,6 @@ using Terraria.WorldBuilding;
 
 namespace Macrocosm.Content.LoadingScreens
 {
-    // TODO:
-    // Zoom reset causes:
-    //		- some stars to align on the edge due to their movement vector and wrapping mechanic,
-    //		- offset the rocket trail.
-    // What's weird is that it only happens sometimes. 
-    // Disabling SubLib's Zoom reset on Subworld.DrawSetup seems to NOT fix it.
-    // Pls help :sadcat: -- Feldy
-
     /// <summary> Loading screen, displayed when traveling to/from subworlds. </summary>
     public abstract class LoadingScreen
     {

@@ -1,6 +1,4 @@
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Items.Materials.Bars;
-using Macrocosm.Content.Projectiles.Friendly.Ranged;
+using Macrocosm.Content.Items.Bars;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -14,14 +12,13 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
     {
         public override void SetStaticDefaults()
         {
-
-
         }
+
         public override void SetDefaults()
         {
-            Item.DefaultToBow(18, 20, true);
+            Item.DefaultToBow(43, 20, true);
 
-            Item.damage = 190;
+            Item.damage = 164;
             Item.knockBack = 4;
 
             Item.width = 32;
@@ -31,23 +28,16 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             Item.rare = ModContent.RarityType<MoonRarityT1>();
 
             Item.channel = true;
-            Item.UseSound = null;
+            Item.UseSound = SoundID.Item5;
 
-            Item.noUseGraphic = true;
             Item.useAmmo = AmmoID.Arrow;
             Item.shoot = Macrocosm.ItemShoot_UsesAmmo;
         }
 
-        public override bool CanUseItem(Player player) => player.ownedProjectileCounts[Item.shoot] < 1;
-
-        public override bool CanConsumeAmmo(Item ammo, Player player) => player.ownedProjectileCounts[Item.shoot] == 1 || (player.itemTime == 0 && !player.AltFunction());
-        public override bool AltFunctionUse(Player player) => true;
-
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            float minCharge = 90f * player.GetAttackSpeed(DamageClass.Ranged);
-            Vector2 aim = velocity;
-            Projectile.NewProjectileDirect(source, position, aim, ModContent.ProjectileType<SeleniteBowHeld>(), damage, knockback, player.whoAmI, minCharge);
+            Projectile.NewProjectile(source, position + new Vector2(0, -7).RotatedBy(velocity.ToRotation()), velocity, type, damage, knockback, player.whoAmI);
+            Projectile.NewProjectile(source, position + new Vector2(0, +7).RotatedBy(velocity.ToRotation()), velocity, type, damage, knockback, player.whoAmI);
             return false;
         }
 
@@ -55,10 +45,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
         {
         }
 
-        public override Vector2? HoldoutOffset()
-        {
-            return new Vector2(6, 0);
-        }
+        public override Vector2? HoldoutOffset() => new Vector2(0, 0);
 
         public override void AddRecipes()
         {

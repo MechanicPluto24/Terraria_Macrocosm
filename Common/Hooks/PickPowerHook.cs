@@ -1,7 +1,6 @@
 ﻿using SubworldLibrary;
 using System.Collections.Generic;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Hooks
@@ -32,16 +31,14 @@ namespace Macrocosm.Common.Hooks
         {
             int result = orig(self, x, y, pickPower, hitBufferIndex, tileTarget);
 
-            if (modifiedPickPowerByType.ContainsKey(tileTarget.TileType))
+            if (modifiedPickPowerByType.TryGetValue(tileTarget.TileType, out (int minPick, int mineResist, bool onlyInMacrocosm) value))
             {
-                var (minPick, mineResist, onlyInMacrocosm) = modifiedPickPowerByType[tileTarget.TileType];
-
-                if (onlyInMacrocosm && !SubworldSystem.AnyActive<Macrocosm>())
+                if (value.onlyInMacrocosm && !SubworldSystem.AnyActive<Macrocosm>())
                     return result;
 
-                result = pickPower / mineResist;
+                result = pickPower / value.mineResist;
 
-                if (pickPower < minPick)
+                if (pickPower < value.minPick)
                     result = 0;
             }
 

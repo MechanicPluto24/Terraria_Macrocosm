@@ -5,6 +5,7 @@ using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Players;
 using Macrocosm.Content.Rockets.LaunchPads;
+using Macrocosm.Content.Rockets.UI.Cargo;
 using Macrocosm.Content.Rockets.UI.Customization;
 using Macrocosm.Content.Rockets.UI.Navigation.Checklist;
 using Macrocosm.Content.Rockets.UI.Navigation.Info;
@@ -23,6 +24,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
         public Rocket Rocket { get; set; } = new();
 
         public UIRocketPreviewSmall CustomizationPreview { get; set; }
+        public UICargoFuelPreview CargoPreview { get; set; }
 
         private UILaunchButton launchButton;
         private UINavigationPanel navigationPanel;
@@ -76,15 +78,21 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
             Append(launchLocationsList);
             launchLocationsList.Activate();
 
-            launchButton = new();
-            launchButton.ZoomIn = navigationPanel.ZoomIn;
-            launchButton.Launch = () => Rocket.Launch(target.WorldID, targetLaunchPad);
+            launchButton = new()
+            {
+                ZoomIn = navigationPanel.ZoomIn,
+                Launch = () => Rocket.Launch(target.TargetID, targetLaunchPad)
+            };
             Append(launchButton);
             launchButton.Activate();
 
             CustomizationPreview = new();
             Append(CustomizationPreview);
             CustomizationPreview.Activate();
+
+            CargoPreview = new();
+            Append(CargoPreview);
+            CargoPreview.Activate();
         }
 
         public override void OnDeactivate()
@@ -94,32 +102,25 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
         public void OnTabOpen()
         {
             CustomizationPreview.OnTabOpen();
-            WorldDataSystem.Instance.PropertyChanged += WorldDataSystem_PropertyChanged;
             LaunchPadManager.OnLaunchpadCreation += LaunchPadManager_OnLaunchpadCreation;
         }
 
         public void OnTabClose()
         {
-            WorldDataSystem.Instance.PropertyChanged -= WorldDataSystem_PropertyChanged;
             LaunchPadManager.OnLaunchpadCreation -= LaunchPadManager_OnLaunchpadCreation;
-        }
-
-        private void WorldDataSystem_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            navigationPanel.UpdateMapVisibility();
         }
 
         private void LaunchPadManager_OnLaunchpadCreation(object sender, System.EventArgs e)
         {
             if (target is not null)
-                CreateLaunchLocationPanel(target.WorldID);
+                CreateLaunchLocationPanel(target.TargetID);
         }
 
         public override void Update(GameTime gameTime)
         {
             lastTarget = target;
             target = navigationPanel.CurrentMap.GetSelectedTarget();
-            Main.LocalPlayer.GetModPlayer<RocketPlayer>().TargetWorld = target is null ? "" : target.WorldID;
+            Main.LocalPlayer.GetModPlayer<RocketPlayer>().TargetWorld = target is null ? "" : target.TargetID;
 
             base.Update(gameTime);
 
@@ -137,10 +138,10 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
                 if (target != lastTarget)
                 {
                     launchLocationsList.ClearList();
-                    CreateWorldInfoPanel(target.WorldID);
+                    CreateWorldInfoPanel(target.TargetID);
                 }
             }
-            else if(launchLocationsList.Any())
+            else if (launchLocationsList.Any())
             {
                 launchLocationsList.ClearList();
             }
@@ -149,8 +150,8 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
         private void UpdateLaunchLocationsList()
         {
             if (target is not null && target != lastTarget)
-                 CreateLaunchLocationPanel(target.WorldID);
- 
+                CreateLaunchLocationPanel(target.TargetID);
+
             targetLaunchPad = null;
             selectedSpawnLocation = false;
 
@@ -158,7 +159,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
             {
                 if (lpInfo.HasFocus)
                 {
-                    if(lpInfo.LaunchPad is not null)
+                    if (lpInfo.LaunchPad is not null)
                         targetLaunchPad = lpInfo.LaunchPad;
                     else
                         selectedSpawnLocation = true;
@@ -177,9 +178,11 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
 
         private void UpdateMapTarget()
         {
+            bool checklistResult = flightChecklist.Check();
+
             if (target is not null)
             {
-                target.IsReachable = flightChecklist.Check();
+                target.IsReachable = checklistResult;
                 target.LaunchLocationSelected = targetLaunchPad is not null || selectedSpawnLocation;
             }
         }
@@ -294,7 +297,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
                     HAlign = 0.5f,
                     Height = new(0, 0.505f),
                     BorderColor = UITheme.Current.PanelStyle.BorderColor,
-                    BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor 
+                    BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor
                 };
                 launchLocationsList.SetPadding(0f);
                 launchLocationsList.TitleHAlign = 0.6f;
@@ -339,13 +342,13 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
 
             launchLocationsList.AddRange(vacant.Cast<UIElement>().ToList());
 
-            if(vacant.Any() && occupied.Any()) 
+            if (vacant.Count > 0 && occupied.Count > 0)
                 launchLocationsList.Add(new UIHorizontalSeparator() { Width = new StyleDimension(0, 1), Color = UITheme.Current.SeparatorColor });
 
             launchLocationsList.AddRange(occupied.Cast<UIElement>().ToList());
 
             // Add the "Unknown" launch location if no vacant launchpads were found
-            if (!vacant.Any())
+            if (vacant.Count == 0)
             {
                 spawnInfoElement = new()
                 {
@@ -363,7 +366,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
 
             if (current is not null)
             {
-                launchLocationsList.Add(new UIHorizontalSeparator() { Width = new StyleDimension(0, 1), Color = UITheme.Current.SeparatorColor});
+                launchLocationsList.Add(new UIHorizontalSeparator() { Width = new StyleDimension(0, 1), Color = UITheme.Current.SeparatorColor });
                 launchLocationsList.Add(current);
             }
 
@@ -384,7 +387,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
         {
             if (listeningElement is UILaunchDestinationInfoElement infoElement)
             {
-                if(infoElement.HasFocus)
+                if (infoElement.HasFocus)
                     infoElement.HasFocus = false;
             }
         }

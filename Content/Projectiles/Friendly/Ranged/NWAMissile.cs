@@ -1,8 +1,8 @@
 using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Global.NPCs;
+using Macrocosm.Common.Global.Projectiles;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.NPCs.Global;
 using Macrocosm.Content.Particles;
-using Macrocosm.Content.Projectiles.Global;
 using Macrocosm.Content.Trails;
 using Microsoft.Xna.Framework;
 using System;
@@ -13,27 +13,27 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-    public class NWAMissile : ModProjectile, IExplosive
+    public class NWAMissile : ModProjectile
     {
+        private MissileTrail trail;
+
         public ref float AI_HomingTimer => ref Projectile.ai[0];
         public ref float AI_AccelerationTimer => ref Projectile.ai[1];
         public ref float AI_InitialDecelerationTimer => ref Projectile.ai[2];
-
-        public float BlastRadius => 120;
-
-        public int DefWidth => 16;
-        public int DefHeight => 16;
 
         public override void SetStaticDefaults()
         {
             ProjectileID.Sets.TrailCacheLength[Type] = 30;
             ProjectileID.Sets.TrailingMode[Type] = 3;
+
+            ProjectileID.Sets.RocketsSkipDamageForPlayers[Type] = true;
+            ProjectileID.Sets.Explosive[Type] = true;
         }
 
         public override void SetDefaults()
         {
-            Projectile.width = DefWidth;
-            Projectile.height = DefHeight;
+            Projectile.width = 16;
+            Projectile.height = 16;
             Projectile.aiStyle = -1;
             Projectile.penetrate = -1;
             Projectile.friendly = true;
@@ -41,17 +41,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             Projectile.tileCollide = true;
             Projectile.ignoreWater = true;
             Projectile.light = .5f;
-
-            Projectile.SetTrail<MissileTrail>();
-        }
-
-        public override void ModifyDamageHitbox(ref Rectangle hitbox)
-        {
+            trail = new();
         }
 
         /// <summary> Adapted from Projectile.AI_016() for homing snowman rockets </summary>
         public override void AI()
         {
+            if (Projectile.owner == Main.myPlayer && Projectile.timeLeft <= 3)
+                Projectile.PrepareBombToBlow();
+
             #region Acceleration
 
             float timeToReachTopSpeed = 10;
@@ -203,12 +201,24 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             #endregion
         }
 
+        public override void PrepareBombToBlow()
+        {
+            Projectile.tileCollide = false;
+            Projectile.alpha = 255;
+            Projectile.Resize(128, 128);
+            Projectile.knockBack = 8f;
+        }
+
+        public override bool OnTileCollide(Vector2 oldVelocity)
+        {
+            Projectile.timeLeft = 2;
+            return false;
+        }
+
         public override void OnKill(int timeLeft)
         {
             if (Main.dedServ)
                 return;
-
-            Projectile.Resize(DefWidth, DefHeight);
 
             SoundEngine.PlaySound(SoundID.Item14, Projectile.position);
 
@@ -246,7 +256,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             {
                 p.Position = Projectile.Center;
                 p.DrawColor = (new Color(195, 115, 62)).WithOpacity(0.6f);
-                p.Scale = 1.2f;
+                p.Scale = new(1.2f);
                 p.NumberOfInnerReplicas = 9;
                 p.ReplicaScalingFactor = 0.5f;
             });
@@ -262,10 +272,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Projectile.GetTrail().Opacity = Projectile.localAI[1];
+            trail.Opacity = Projectile.localAI[1];
 
-            if (Projectile.alpha < 1)
-                Projectile.GetTrail().Draw(Projectile.Size / 2f);
+            if (Projectile.alpha < 1 && Projectile.timeLeft > 3)
+                trail?.Draw(Projectile, Projectile.Size / 2f);
 
             return true;
         }

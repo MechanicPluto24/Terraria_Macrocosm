@@ -48,6 +48,7 @@ namespace Macrocosm.Common.Bases.Projectiles
             SetDefaultsHeldProjectile();
         }
 
+        /// <inheritdoc cref="ModItem.Shoot(Player, EntitySource_ItemUse_WithAmmo, Vector2, Vector2, int, int, float)"/>
         public sealed override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             if (!RightClickUse || player.AltFunction())

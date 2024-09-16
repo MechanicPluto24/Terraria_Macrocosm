@@ -20,8 +20,8 @@ MoonSwordSwing.DisplayName: Moon Sword
 ArchersLineProjectile.DisplayName: Archer's Line
 CruithneGreenSlug.DisplayName: Cruithne Green Slug
 DeliriumShell.DisplayName: Delirium Shell
-LHBMinigunProjectile.DisplayName: L.H.B.- 805
-NWAMissile.DisplayName: N.W.A.- 12691
+LHBMinigunProjectile.DisplayName: LHB-59
+NWAMissile.DisplayName: NWA-5000
 PlasmaGrenade.DisplayName: Plasma Grenade
 CalcicCaneMinion.DisplayName: Crater Imp
 ChandriumStaffMinion.DisplayName: Crescent Ghoul
@@ -79,3 +79,51 @@ SilicaPearlsandBall.DisplayName: Silica Pearlsand
 SilicaPearlsandFalling.DisplayName: Silica Pearlsand
 SilicaSandBall.DisplayName: Silica Sand
 SilicaSandFalling.DisplayName: Silica Sand
+MoonWormDust.DisplayName: Moon Worm Dust
+FrigorianGazeProjectile.DisplayName: Frigorian Gaze
+FrigorianIceSpike.DisplayName: Frigorian Ice Spike
+FrigorianIceCrystal.DisplayName: Frigorian Ice Crystal
+StarDestroyerBeam.DisplayName: Star Destroyer Beam
+StarDestroyerStar.DisplayName: Star Destroyer Star
+StarDestroyerStarBlue.DisplayName: Star Destroyer Star Blue
+StarDestroyerStarYellow.DisplayName: Star Destroyer Star Yellow
+MoonRubble.DisplayName: Moon Rubble
+MoonLichNPCSummon.DisplayName: Moon Lich
+DualWaveGunsHeld.DisplayName: Dual Wave Guns Held
+WaveGunLaser.DisplayName: Wave Gun Laser
+WaveRifleLaser.DisplayName: Wave Rifle Laser
+LichBolt.DisplayName: Lich Bolt
+GreenLaser.DisplayName: Green Laser
+LunarBarf.DisplayName: Lunar Barf
+FrigorianIceShard.DisplayName: Frigorian Ice Shard
+MicronovaBeam.DisplayName: Micronova Beam
+MicronovaPortal.DisplayName: Micronova Portal
+WaveStar.DisplayName: Wave Star
+InhibitorFieldGrenade.DisplayName: Inhibitor Field Grenade
+CrescentMoonProjectile.DisplayName: Crescent Moon Projectile
+LunarCrystalProjectile.DisplayName: Lunar Crystal Projectile
+ImbriumJewelPhantasmalSkull.DisplayName: Imbrium Jewel Phantasmal Skull
+ChampionsBladeSwing.DisplayName: Champions Blade Swing
+ChampionsBladeSwingEmpowered.DisplayName: Champions Blade Swing Empowered
+StarDestroyerStar_Blue.DisplayName: Star Destroyer Star_ Blue
+StarDestroyerStar_Yellow.DisplayName: Star Destroyer Star_ Yellow
+ArtemiteGreatswordSwingEmpowered.DisplayName: Artemite Greatsword Swing Empowered
+RocheChakramProjectile.DisplayName: Roche Chakram Projectile
+RocheSpike.DisplayName: Roche Spike
+ArtemiteSwordShoot.DisplayName: Artemite Sword Shoot
+BlueEnergyBolt.DisplayName: Blue Energy Bolt
+BlueGunHeld.DisplayName: Blue Gun Held
+PurpleEnergyBolt.DisplayName: Purple Energy Bolt
+RedEnergyBolt.DisplayName: Red Energy Bolt
+RedGunHeld.DisplayName: Red Gun Held
+WaveGunEnergyBolt.DisplayName: Wave Gun Energy Bolt
+WaveGunBlueHeld.DisplayName: Wave Gun Blue Held
+WaveGunDualHeld.DisplayName: Wave Gun Dual Held
+WaveGunRedHeld.DisplayName: Wave Gun Red Held
+WaveGunRifleHeld.DisplayName: Wave Gun Rifle Held
+ChampionsBladeSlash.DisplayName: Champions Blade Slash
+CrescentScriptureProjectile.DisplayName: Crescent Scripture Projectile
+LuminiteWave.DisplayName: Luminite Wave
+LunarBlood.DisplayName: Lunar Blood
+TotalityProjectile.DisplayName: Totality Projectile
+Explosion.DisplayName: Explosion

@@ -9,7 +9,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture
 {
-    internal class ConstructionLight : ModTile
+    public class ConstructionLight : ModTile
     {
         public override void SetStaticDefaults()
         {
@@ -24,9 +24,6 @@ namespace Macrocosm.Content.Tiles.Furniture
             TileObjectData.newTile.Height = 3;
             TileObjectData.newTile.Direction = TileObjectDirection.PlaceRight;
             TileObjectData.newTile.StyleHorizontal = true;
-            TileObjectData.newTile.WaterDeath = true;
-            TileObjectData.newTile.WaterPlacement = LiquidPlacement.NotAllowed;
-            TileObjectData.newTile.LavaPlacement = LiquidPlacement.NotAllowed;
 
             TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.Table, 2, 0);
 
@@ -46,7 +43,7 @@ namespace Macrocosm.Content.Tiles.Furniture
             AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTorch);
             AdjTiles = [TileID.Lamps];
 
-            DustType = ModContent.DustType<MoonBasePlatingDust>();
+            DustType = ModContent.DustType<IndustrialPlatingDust>();
 
             AddMapEntry(new Color(192, 137, 39), CreateMapEntryName());
 

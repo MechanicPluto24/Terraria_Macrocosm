@@ -15,7 +15,7 @@ namespace Macrocosm.Content.Machines
 
         public override void MachineUpdate()
         {
-            if(PoweredOn)
+            if (PoweredOn)
                 GeneratedPower = 1f;
             else
                 GeneratedPower = 0;

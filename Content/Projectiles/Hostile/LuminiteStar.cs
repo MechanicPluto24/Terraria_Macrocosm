@@ -57,7 +57,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
-            Main.spriteBatch.DrawStar(Projectile.Center - Main.screenPosition, 2, LuminiteSlime.EffectColor, 0.4f, Projectile.rotation, entity: true);
+            Utility.DrawStar(Projectile.Center - Main.screenPosition, 2, LuminiteSlime.EffectColor, 0.4f, Projectile.rotation, entity: true);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);
@@ -108,7 +108,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
             for (int i = 0; i < 10; i++)
             {
                 Vector2 dustVelocity = Utility.PolarVector(0.01f, Utility.RandomRotation());
-                Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<LuminiteDust>(), dustVelocity.X, dustVelocity.Y, newColor: Color.White * 0.1f);
+                Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<LuminiteBrightDust>(), dustVelocity.X, dustVelocity.Y, newColor: Color.White * 0.1f);
             }
         }
     }

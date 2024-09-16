@@ -81,7 +81,7 @@ namespace Macrocosm.Content.Rockets
                         break;
                 }
 
-                if(firstDraw)
+                if (firstDraw)
                 {
                     ResetRenderTarget();
                     firstDraw = false;
@@ -137,7 +137,7 @@ namespace Macrocosm.Content.Rockets
                 if (StaticFire)
                     scale *= Utility.QuadraticEaseOut(StaticFireProgress);
 
-                if(Landing && LandingProgress > 0.9f)
+                if (Landing && LandingProgress > 0.9f)
                     scale *= Utility.QuadraticEaseOut((1f - LandingProgress) * 10f);
 
                 var flare = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Flare2").Value;

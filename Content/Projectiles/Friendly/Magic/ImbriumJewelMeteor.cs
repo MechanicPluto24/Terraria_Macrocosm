@@ -14,6 +14,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
     public class ImbriumJewelMeteor : ModProjectile
     {
+        private ImbriumMeteorTrail trail;
+
         public override void SetStaticDefaults()
         {
             ProjectileID.Sets.TrailCacheLength[Type] = 20;
@@ -29,8 +31,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Projectile.timeLeft = 120;
             Projectile.DamageType = DamageClass.Magic;
             Projectile.alpha = 0;
-
-            Projectile.SetTrail<ImbriumMeteorTrail>();
+            trail = new();
         }
 
         public override void AI()
@@ -72,7 +73,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
-            Projectile.GetTrail().Draw(Projectile.Size / 2f);
+            trail?.Draw(Projectile, Projectile.Size / 2f);
 
             Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition,
                 sourceRect, new Color(255, 255, 255, Projectile.alpha), Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
@@ -101,8 +102,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 var star = Particle.CreateParticle<ImbriumStar>(Projectile.oldPos[j] + Main.rand.NextVector2FromRectangle(new Rectangle(0, 0, (int)Projectile.Size.X, (int)Projectile.Size.Y)), Main.rand.NextVector2Circular(0.1f, 0.1f), scale: 0.4f * progress);
                 star.Alpha = 0.8f * progress;
             }
-
-
         }
     }
 }

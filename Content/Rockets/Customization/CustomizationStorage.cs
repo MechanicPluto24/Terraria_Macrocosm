@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
@@ -11,7 +12,7 @@ namespace Macrocosm.Content.Rockets.Customization
     public class CustomizationStorage : ModSystem
     {
         public static bool Initialized { get; private set; }
-        private static bool initialLoad;
+        private static bool shouldLogLoadedItems = true;
 
         private static Dictionary<(string moduleName, string patternName), Pattern> patterns;
         private static Dictionary<(string moduleName, string detailName), Detail> details;
@@ -21,8 +22,6 @@ namespace Macrocosm.Content.Rockets.Customization
 
         public override void Load()
         {
-            initialLoad = true;
-
             patterns = new();
             details = new();
             patternUnlockStatus = new();
@@ -32,12 +31,11 @@ namespace Macrocosm.Content.Rockets.Customization
             LoadDetails();
 
             Initialized = true;
+            shouldLogLoadedItems = false;
         }
 
         public override void Unload()
         {
-            initialLoad = false;
-
             patterns = null;
             details = null;
             patternUnlockStatus = null;
@@ -70,7 +68,7 @@ namespace Macrocosm.Content.Rockets.Customization
             => patterns[(moduleName, patternName)];
 
         public static Pattern GetDefaultPattern(string moduleName)
-            => patterns[(moduleName, "Basic")];
+            => TryGetPattern(moduleName, "Basic", out var pattern) ? pattern : default; 
 
         public static List<Pattern> GetUnlockedPatterns(string moduleName)
         {
@@ -266,7 +264,7 @@ namespace Macrocosm.Content.Rockets.Customization
                 logstring += "\n\n";
             }
 
-            if (initialLoad)
+            if (shouldLogLoadedItems)
                 Macrocosm.Instance.Logger.Info(logstring);
         }
 
@@ -274,6 +272,9 @@ namespace Macrocosm.Content.Rockets.Customization
         {
             foreach (string moduleName in Rocket.DefaultModuleNames)
                 AddDetail(moduleName, "None", true);
+
+            if (Main.dedServ)
+                return;
 
             // Find all existing details
             string lookupString = "Content/Rockets/Customization/Details/";
@@ -307,7 +308,7 @@ namespace Macrocosm.Content.Rockets.Customization
                 logstring += "\n\n";
             }
 
-            if (initialLoad)
+            if (shouldLogLoadedItems)
                 Macrocosm.Instance.Logger.Info(logstring);
         }
     }

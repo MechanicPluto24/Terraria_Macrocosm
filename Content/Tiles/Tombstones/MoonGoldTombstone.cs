@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Common.Sets;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -9,7 +10,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Tombstones
 {
-    public class MoonGoldTombstone : ModTile, ITombstoneTile
+    public class MoonGoldTombstone : ModTile
     {
         public override void SetStaticDefaults()
         {
@@ -17,6 +18,8 @@ namespace Macrocosm.Content.Tiles.Tombstones
             Main.tileNoAttach[Type] = true;
             Main.tileLavaDeath[Type] = false;
             Main.tileSign[Type] = true;
+
+            TileSets.GraveyardTile[Type] = true;
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
             TileObjectData.newTile.Origin = new Point16(0, 1);

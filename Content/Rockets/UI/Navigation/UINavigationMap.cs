@@ -8,7 +8,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.UI.Navigation
 {
-    public class UINavigationMap : UIElement, IConsistentUpdateable
+    public class UINavigationMap : UIElement, IFixedUpdateable
     {
         /// <summary> The next navigation map, switched on zoom in </summary>
         public UINavigationMap Next = null;
@@ -65,7 +65,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
         }
 
         // Use for animation
-        public void Update()
+        public void FixedUpdate()
         {
             if (showAnimationActive)
             {

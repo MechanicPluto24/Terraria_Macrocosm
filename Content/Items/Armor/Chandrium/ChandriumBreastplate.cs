@@ -1,5 +1,5 @@
 // using Macrocosm.Tiles;
-using Macrocosm.Content.Items.Materials.Bars;
+using Macrocosm.Content.Items.Bars;
 using Macrocosm.Content.Players;
 using Macrocosm.Content.Rarities;
 using Terraria;
@@ -38,7 +38,7 @@ namespace Macrocosm.Content.Items.Armor.Chandrium
             player.maxMinions += 1;
             player.whipRangeMultiplier += 0.15f;
             player.GetAttackSpeed<SummonDamageClass>() += 0.15f;
-            player.GetModPlayer<MacrocosmPlayer>().SpaceProtection += 1.5f;
+            player.GetModPlayer<MacrocosmPlayer>().SpaceProtection += 1f;
         }
 
         public override void AddRecipes()

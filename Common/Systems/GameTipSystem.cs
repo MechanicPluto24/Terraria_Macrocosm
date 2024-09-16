@@ -37,12 +37,12 @@ namespace Macrocosm.Common.Systems
             // matches the code that fetches a random language key
             // stored as a local variable (index 0) and then constructs a new GameTip 
             if (!c.TryGotoNext(
-                i => i.MatchLdloc(2),
-                i => i.MatchStloc(0),
-                i => i.MatchLdarg(0),
+                i => i.MatchLdloc(out _),
+                i => i.MatchStloc(out _),
+                i => i.MatchLdarg(out _),
                 i => i.MatchLdfld<GameTipsDisplay>("_currentTips"),
-                i => i.MatchLdloc(0), // <- loading the textKey
-                i => i.MatchLdarg(1)
+                i => i.MatchLdloc(out _), // <- loading the textKey
+                i => i.MatchLdarg(out _)
             )) return;
 
             // move the cursor to the instruction that loads
@@ -90,7 +90,7 @@ namespace Macrocosm.Common.Systems
                 self.GetType().SetFieldValue("Duration", 1f, self);
                 return true;
             }
- 
+
             return orig(self, currentTime);
         }
 

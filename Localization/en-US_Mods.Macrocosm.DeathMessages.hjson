@@ -1,0 +1,48 @@
+Meteor: {
+	Message0: "{0} was flattened"
+	Message1: "{0} turned into a pancake"
+	Message2: "{0} got a taste of space"
+	Message3: Is it a meteor or is it an asteroid? {0} found out the hard way!
+	Message4: "{0} was star-struck.. literally!"
+	Message5: "{0}'s last sight was truly out of this world"
+	Message6: Stars in the sky, and one on {0}
+	Message7: Sky - 1, {0} - 0
+	Message8: A shooting star made a wish on {0}
+	Message9: "{0} tried to catch a shooting star"
+	Message10: "{0} experienced a real crash landing!"
+	Message11: "{0} should have looked up"
+	Message12: "{0} wanted to touch the stars"
+	Message13: "{0} had a smashing time"
+	Message14: "{0} now knows how the dinosaurs felt like"
+}
+
+Depressurized: {
+	Message0: "{0} expanded till they popped"
+	Message1: "{0} tried to breathe in space"
+	Message2: "{0} couldn't find their spacesuit"
+	Message3: "{0} felt the coldness of the cosmos"
+	Message4: "{0} forgot they weren't on Earth"
+	Message5: "{0} needed an iron lung"
+	Message6: "{0} snapped, crackled and popped"
+	Message7: "{0}'s lungs couldn't handle the pressure"
+}
+
+Irradiated: {
+	Message0: Uranium is {0}'s favorite food
+	Message1: "{0} imagined dragons"
+	Message2: "{0} is mistaken for a Chernobyl resident"
+	Message3: "{0} grew too many limbs"
+	Message4: "{0} can glow"
+	Message5: "{0} tasted the rads"
+	Message6: "{0} couldn't contain the roentgens"
+	Message7: "{0} licked the glowing paint brush"
+	Message8: "{0}'s cells held an insurrection"
+	Message9: "{0}'s list of symptoms grew too large"
+}
+
+Vacuum: {
+	Message0: "{0} became space debris"
+	Message1: "{0} eventually stopped thinking"
+	Message2: "{0}'s corpse was doomed to wander the cosmos"
+	Message3: "{0} wanted to experience the vastness of spaces"
+}

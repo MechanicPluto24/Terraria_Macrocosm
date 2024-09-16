@@ -1,11 +1,10 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Items.Materials.Tech;
+using Macrocosm.Content.Items.Tech;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
-using System.Linq;
 using Terraria;
 using Terraria.Graphics;
 using Terraria.Graphics.Shaders;
@@ -24,7 +23,7 @@ namespace Macrocosm.Content.Rockets.Modules
         public override AssemblyRecipe Recipe { get; } = new AssemblyRecipe()
         {
             new(ModContent.ItemType<RocketPlating>(), 45),
-            new(ModContent.ItemType<FuelTank>(), 15),
+            new(ModContent.ItemType<FuelCanister>(), 15),
             new(ModContent.ItemType<EngineComponent>(), 4),
             new(ModContent.ItemType<LandingGear>(), 3)
         };
@@ -104,11 +103,11 @@ namespace Macrocosm.Content.Rockets.Modules
                 positions[i] += new Vector2(0f, 4f * i);
 
             var shader = new MiscShaderData(Main.VertexPixelShaderRef, "MagicMissile")
-                            .UseProjectionMatrix(doUse: false)
-                            .UseSaturation(-2.2f)
-                            .UseImage0(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "FadeOutMask"))
-                            .UseImage1(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "RocketExhaustTrail2"))
-                            .UseImage2(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "RocketExhaustTrail2"));
+                .UseProjectionMatrix(doUse: false)
+                .UseSaturation(-2.2f)
+                .UseImage0(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "FadeOutMask"))
+                .UseImage1(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "RocketExhaustTrail2"))
+                .UseImage2(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "RocketExhaustTrail2"));
 
             shader.Apply();
 

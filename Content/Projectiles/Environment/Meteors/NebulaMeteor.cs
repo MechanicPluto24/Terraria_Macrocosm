@@ -9,38 +9,71 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
 {
     public class NebulaMeteor : BaseMeteor
     {
-        public NebulaMeteor()
+        public override void SetDefaults()
         {
-            Width = 52;
-            Height = 44;
-            Damage = 1500;
+            base.SetDefaults();
+
+            Projectile.width = 52;
+            Projectile.height = 44;
 
             ScreenshakeMaxDist = 140f * 16f;
             ScreenshakeIntensity = 100f;
 
             RotationMultiplier = 0.01f;
             BlastRadiusMultiplier = 3.5f;
+        }
 
-            DustType = 71; // Nebula Blaze dust
-            ImpactDustCount = Main.rand.Next(140, 160);
-            ImpactDustSpeed = new Vector2(3f, 10f);
-            DustScaleMin = 1f;
-            DustScaleMax = 1.6f;
-            AI_DustChanceDenominator = 1;
+        public override void MeteorAI()
+        {
+            float DustScaleMin = 1f;
+            float DustScaleMax = 1.6f;
+
+            // Nebula Dusts: 71, 72, 73
+            if (Main.rand.NextBool(1))
+            {
+                Dust dust = Dust.NewDustDirect(
+                        new Vector2(Projectile.position.X, Projectile.position.Y),
+                        Projectile.width,
+                        Projectile.height,
+                        DustID.UndergroundHallowedEnemies,  
+                        0f,
+                        0f,
+                        Scale: Main.rand.NextFloat(DustScaleMin, DustScaleMax)
+                    );
+
+                dust.noGravity = true;
+            }
+        }
+
+        public override void ImpactEffects()
+        {
+            int ImpactDustCount = Main.rand.Next(140, 160);
+            Vector2 ImpactDustSpeed = new Vector2(3f, 10f);
+            float DustScaleMin = 1f;
+            float DustScaleMax = 1.6f;
+
+            for (int i = 0; i < ImpactDustCount; i++)
+            {
+                Dust dust = Dust.NewDustDirect(
+                    new Vector2(Projectile.Center.X, Projectile.Center.Y),
+                    Projectile.width,
+                    Projectile.height,
+                    DustID.UndergroundHallowedEnemies,
+                    Main.rand.NextFloat(-ImpactDustSpeed.X, ImpactDustSpeed.X),
+                    Main.rand.NextFloat(0f, -ImpactDustSpeed.Y),
+                    Scale: Main.rand.NextFloat(DustScaleMin, DustScaleMax)
+                );
+
+                dust.noGravity = true;
+            }
         }
 
         public override void SpawnItems()
         {
             int type = ModContent.ItemType<NebulaChunk>();
-            Vector2 position = new Vector2(Projectile.position.X + Width / 2, Projectile.position.Y - Height);
+            Vector2 position = new Vector2(Projectile.position.X + Projectile.width / 2, Projectile.position.Y - Projectile.height);
             int itemIdx = Item.NewItem(Projectile.GetSource_FromThis(), position, new Vector2(Projectile.width, Projectile.height), type);
             NetMessage.SendData(MessageID.SyncItem, -1, -1, null, itemIdx, 1f);
         }
-
-        //public override void AI_SpawnDusts()
-        //{
-        //	int dustType = Main.rand.Next(71, 74); // Nebula Dusts: 71, 72, 73
-        //	AI_SpawnDusts(dustType);
-        //}
     }
 }

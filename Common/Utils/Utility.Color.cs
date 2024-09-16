@@ -1,3 +1,4 @@
+using Macrocosm.Common.Enums;
 using Microsoft.Xna.Framework;
 using System;
 using System.Globalization;
@@ -167,8 +168,7 @@ namespace Macrocosm.Common.Utils
         }
 
         ///<summary>
-        /// Alters the brightness of the color by the amount of the factor. If factor is negative, it darkens it. Else, it brightens it.
-        ///</summary>
+        /// Alters the brightness of the color by the amount of the factor. If factor is negative, it darkens it. Else, it brightens it.        ///</summary>
         public static Color Brighten(this Color color, int factor)
         {
             int r = Math.Max(0, Math.Min(255, color.R + factor));
@@ -178,8 +178,7 @@ namespace Macrocosm.Common.Utils
         }
 
         ///<summary>
-        /// Alters the brightness of the color by the multiplier.
-        ///</summary>
+        /// Alters the brightness of the color by the multiplier.        ///</summary>
         public static Color ColorMult(Color color, float mult)
         {
             int r = Math.Max(0, Math.Min(255, (int)(color.R * mult)));
@@ -189,8 +188,7 @@ namespace Macrocosm.Common.Utils
         }
 
         ///<summary>
-        /// Clamps the first color to be no lower then the values of the second color.
-        ///</summary>
+        /// Clamps the first color to be no lower then the values of the second color.        ///</summary>
         public static Color ColorClamp(Color color1, Color color2)
         {
             int r = color1.R;
@@ -205,8 +203,7 @@ namespace Macrocosm.Common.Utils
         }
 
         ///<summary>
-        /// Clamps the first color to be no lower then the brightness of the second color.
-        ///</summary>
+        /// Clamps the first color to be no lower then the brightness of the second color.        ///</summary>
         public static Color ColorBrightnessClamp(Color color1, Color color2)
         {
             float r = color1.R / 255f;
@@ -221,8 +218,7 @@ namespace Macrocosm.Common.Utils
         }
 
         ///<summary>
-        /// Tints the light color according to the buff color given. (prevents 'darkness' occuring if more than one is applied)
-        ///</summary>
+        /// Tints the light color according to the buff color given. (prevents 'darkness' occuring if more than one is applied)        ///</summary>
         public static Color BuffColorize(Color buffColor, Color lightColor)
         {
             Color color2 = ColorBrightnessClamp(buffColor, lightColor);
@@ -230,8 +226,7 @@ namespace Macrocosm.Common.Utils
         }
 
         ///<summary>
-        /// Tints the light color according to the tint color given.
-        ///</summary>
+        /// Tints the light color according to the tint color given.        ///</summary>
         public static Color Colorize(Color tint, Color lightColor)
         {
             float r = lightColor.R / 255f;
@@ -294,6 +289,40 @@ namespace Macrocosm.Common.Utils
             }
 
             return vectors;
+        }
+
+        public static Color GetTileColorFromLuminiteStyle(LuminiteStyle style)
+        {
+            return style switch
+            {
+                LuminiteStyle.Luminite => new Color(73, 168, 142),
+                LuminiteStyle.Heavenforge => new Color(195, 201, 215),
+                LuminiteStyle.LunarRust => new Color(83, 46, 57),
+                LuminiteStyle.Astra => new Color(23, 33, 81),
+                LuminiteStyle.DarkCelestial => new Color(91, 87, 167),
+                LuminiteStyle.Mercury => new Color(40, 49, 60),
+                LuminiteStyle.StarRoyale => new Color(21, 13, 77),
+                LuminiteStyle.Cryocore => new Color(11, 67, 80),
+                LuminiteStyle.CosmicEmber => new Color(53, 133, 103),
+                _ => Color.Transparent,
+            };
+        }
+
+        public static Color GetLightColorFromLuminiteStyle(LuminiteStyle style)
+        {
+            return style switch
+            {
+                LuminiteStyle.Luminite => new Color(154, 248, 224),
+                LuminiteStyle.Heavenforge => new Color(90, 83, 110),
+                LuminiteStyle.LunarRust => new Color(112, 242, 243),
+                LuminiteStyle.Astra => new Color(132, 255, 221),
+                LuminiteStyle.DarkCelestial => new Color(201, 126, 205),
+                LuminiteStyle.Mercury => new Color(200, 223, 223),
+                LuminiteStyle.StarRoyale => new Color(131, 198, 255),
+                LuminiteStyle.Cryocore => new Color(121, 245, 231),
+                LuminiteStyle.CosmicEmber => new Color(255, 180, 131),
+                _ => Color.Transparent,
+            };
         }
     }
 }

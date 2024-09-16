@@ -54,7 +54,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
 
             CurrentMap = GetInitialNavigationMap();
 
-            var initialTarget = CurrentMap.Targets.FirstOrDefault(target => target.WorldID == MacrocosmSubworld.CurrentID);
+            var initialTarget = CurrentMap.Targets.FirstOrDefault(target => target.TargetID == MacrocosmSubworld.CurrentID);
             if (initialTarget is not null)
                 initialTarget.Selected = true;
 
@@ -130,7 +130,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
 
         public void UpdateMapVisibility()
         {
-            if (WorldDataSystem.Instance.FoundVulcan)
+            if (WorldFlags.FoundVulcan)
             {
                 solarSystemInner.AddTarget(new UINavigationTarget(this, new Vector2(226, 88), 12, 12, "Vulcan"));
                 solarSystemInner.Texture = ModContent.Request<Texture2D>(navigationMapsPath + "SolarSystemInnerVulcan", AssetRequestMode.ImmediateLoad);

@@ -1,6 +1,4 @@
-﻿using Macrocosm.Content.Items.Materials.Tech;
-using Microsoft.Xna.Framework;
-using Terraria.ModLoader;
+﻿using Microsoft.Xna.Framework;
 
 namespace Macrocosm.Content.Rockets.Modules
 {

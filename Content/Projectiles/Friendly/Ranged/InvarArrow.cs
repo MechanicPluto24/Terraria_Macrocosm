@@ -1,7 +1,8 @@
+using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Projectiles.Global;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -11,8 +12,13 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-    public class InvarArrow : ModProjectile, IRangedProjectile
+    public class InvarArrow : ModProjectile
     {
+        public override void SetStaticDefaults()
+        {
+            ProjectileSets.HitsTiles[Type] = true;
+        }
+
         public override void SetDefaults()
         {
             Projectile.width = 14;

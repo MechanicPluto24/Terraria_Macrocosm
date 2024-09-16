@@ -39,16 +39,13 @@ namespace Macrocosm.Content.Machines
 
             TileObjectData.newTile.CoordinateHeights = [16, 16, 16, 16, 16, 16, 16, 16, 16, 16];
             TileObjectData.newTile.CoordinateWidth = 16;
-            TileObjectData.newTile.CoordinatePadding = 0; // No padding, in order to make animating the sprite easier
+            TileObjectData.newTile.CoordinatePadding = 2;
 
             TileObjectData.newTile.DrawYOffset = 2;
 
             TileObjectData.newTile.Origin = new Point16(0, Height - 1);
             TileObjectData.newTile.AnchorTop = new AnchorData();
             TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop, Width, 0);
-
-            TileObjectData.newTile.WaterPlacement = LiquidPlacement.NotAllowed;
-            TileObjectData.newTile.LavaPlacement = LiquidPlacement.NotAllowed;
 
             TileObjectData.newTile.AnchorInvalidTiles =
             [
@@ -70,8 +67,8 @@ namespace Macrocosm.Content.Machines
             AddMapEntry(new Color(206, 117, 44), CreateMapEntryName());
         }
 
-        public override bool IsPoweredOnFrame(int i, int j) => Main.tile[i, j].TileFrameY >= (Height * 16) * 1;
-        public override bool IsOperatingFrame(int i, int j) => Main.tile[i, j].TileFrameY >= (Height * 16) * 2;
+        public override bool IsPoweredOnFrame(int i, int j) => Main.tile[i, j].TileFrameY >= (Height * 18) * 1;
+        public override bool IsOperatingFrame(int i, int j) => Main.tile[i, j].TileFrameY >= (Height * 18) * 2;
 
         public override void TogglePowerStateFrame(int i, int j)
         {
@@ -82,9 +79,9 @@ namespace Macrocosm.Content.Machines
                 {
                     Tile tile = Main.tile[x, y];
                     if (IsPoweredOnFrame(x, y))
-                        tile.TileFrameY -= (short)(Height * 16 * (IsOperatingFrame(x, y) ? 2 : 1));
+                        tile.TileFrameY -= (short)(Height * 18 * (IsOperatingFrame(x, y) ? 2 : 1));
                     else
-                        tile.TileFrameY += (short)(Height * 16);
+                        tile.TileFrameY += (short)(Height * 18);
                 }
             }
 
@@ -104,9 +101,9 @@ namespace Macrocosm.Content.Machines
                     if (IsPoweredOnFrame(x, y))
                     {
                         if (IsOperatingFrame(x, y))
-                            tile.TileFrameY -= (short)(Height * 16);
+                            tile.TileFrameY -= (short)(Height * 18);
                         else
-                            tile.TileFrameY += (short)(Height * 16);
+                            tile.TileFrameY += (short)(Height * 18);
 
                         if (Wiring.running)
                             Wiring.SkipWire(x, y);
@@ -135,9 +132,9 @@ namespace Macrocosm.Content.Machines
                         if (IsPoweredOnFrame(x, y))
                         {
                             if (IsOperatingFrame(x, y))
-                                tile.TileFrameY -= (short)(Height * 16);
+                                tile.TileFrameY -= (short)(Height * 18);
                             else
-                                tile.TileFrameY += (short)(Height * 16);
+                                tile.TileFrameY += (short)(Height * 18);
                         }
                     }
                 }
@@ -148,9 +145,7 @@ namespace Macrocosm.Content.Machines
             else
             {
                 if (Utility.TryGetTileEntityAs(i, j, out OreExcavatorTE oreExcavator))
-                {
                     UISystem.ShowMachineUI(oreExcavator, new OreExcavatorUI());
-                }
             }
 
             return true;
@@ -177,9 +172,7 @@ namespace Macrocosm.Content.Machines
                 }
                 else
                 {
-                    Main.instance.MouseText("TOO BIG");
-                    player.cursorItemIconEnabled = true;
-                    player.cursorItemIconID = ModContent.ItemType<Items.Machines.OreExcavator>();
+                    CursorIcon.Current = CursorIcon.Drill;
                 }
             }
         }
@@ -187,16 +180,17 @@ namespace Macrocosm.Content.Machines
         public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)
         {
             if (IsOperatingFrame(i, j))
-                frameYOffset = 16 * Height * Main.tileFrame[type];
+                frameYOffset = 18 * Height * Main.tileFrame[type];
         }
 
         public override void AnimateTile(ref int frame, ref int frameCounter)
         {
-            frameCounter++;
-            if (frameCounter >= 4)
+            int ticksPerFrame = 4;
+            int frameCount = 4;
+            if (++frameCounter >= ticksPerFrame)
             {
                 frameCounter = 0;
-                if (++frame >= 4)
+                if (++frame >= frameCount)
                     frame = 0;
             }
         }
@@ -204,7 +198,7 @@ namespace Macrocosm.Content.Machines
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
         {
             glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
-            Utility.DrawTileGlowmask(i, j, spriteBatch, glowmask);
+            Utility.DrawTileExtraTexture(i, j, spriteBatch, glowmask);
         }
 
         public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref TileDrawInfo drawData)
@@ -213,8 +207,8 @@ namespace Macrocosm.Content.Machines
                 return;
 
             Tile tile = Main.tile[i, j];
-            int tileOffsetX = tile.TileFrameX % (Width * 16) / 16;
-            int tileOffsetY = tile.TileFrameY % (Height * 16) / 16;
+            int tileOffsetX = tile.TileFrameX % (Width * 18) / 18;
+            int tileOffsetY = tile.TileFrameY % (Height * 18) / 18;
 
             if (IsOperatingFrame(i, j))
             {
@@ -231,12 +225,13 @@ namespace Macrocosm.Content.Machines
                             {
                                 p.Position = new Vector2(i, j) * 16f + new Vector2(1f, 16f);
                                 p.Velocity = new Vector2(0, -1.1f).RotatedByRandom(MathHelper.Pi / 16) * atmoDensity;
-                                p.Scale = 0.3f;
+                                p.Scale = new(0.3f);
                                 p.Rotation = 0f;
-                                p.DrawColor = (new Color(80, 80, 80) * Main.rand.NextFloat(0.75f, 1f)).WithAlpha(215);
+                                p.Color = (new Color(80, 80, 80) * Main.rand.NextFloat(0.75f, 1f)).WithAlpha(215);
                                 p.FadeIn = true;
                                 p.Opacity = 0f;
-                                p.ExpansionRate = 0.0075f;
+                                p.ScaleVelocity = new(0.0075f);
+                                p.WindFactor = 0.01f;
                             });
                         }
                     }
@@ -247,10 +242,10 @@ namespace Macrocosm.Content.Machines
                 {
                     if (Main.tileFrame[Type] == 3)
                     {
-                        if(Main.rand.NextBool()) WorldGen.KillTile(i, j + 1, effectOnly: true, fail: true);
-                        if(Main.rand.NextBool()) WorldGen.KillTile(i, j + 2, effectOnly: true, fail: true);
-                        if(Main.rand.NextBool()) WorldGen.KillTile(i + 1, j + 1, effectOnly: true, fail: true);
-                        if(Main.rand.NextBool()) WorldGen.KillTile(i + 1, j + 2, effectOnly: true, fail: true);
+                        if (Main.rand.NextBool()) WorldGen.KillTile(i, j + 1, effectOnly: true, fail: true);
+                        if (Main.rand.NextBool()) WorldGen.KillTile(i, j + 2, effectOnly: true, fail: true);
+                        if (Main.rand.NextBool()) WorldGen.KillTile(i + 1, j + 1, effectOnly: true, fail: true);
+                        if (Main.rand.NextBool()) WorldGen.KillTile(i + 1, j + 2, effectOnly: true, fail: true);
                     }
 
                     if (Main.tileFrame[Type] % 2 == 0)
@@ -262,12 +257,12 @@ namespace Macrocosm.Content.Machines
                             {
                                 p.Position = hitTile.ToWorldCoordinates();
                                 p.Velocity = new Vector2(Main.rand.NextFloat(-0.7f, 0.7f), Main.rand.NextFloat(-0.1f, -0.25f));
-                                p.Scale = 0.3f;
+                                p.Scale = new(0.3f);
                                 p.Rotation = 0f;
-                                p.DrawColor = Smoke.GetTileHitColor(hitTile);
+                                p.Color = Smoke.GetTileHitColor(hitTile);
                                 p.FadeIn = true;
                                 p.Opacity = 0f;
-                                p.ExpansionRate = 0.0075f;
+                                p.ScaleVelocity = new(0.0075f);
                             });
                         }
                     }
@@ -278,8 +273,8 @@ namespace Macrocosm.Content.Machines
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
             Tile tile = Main.tile[i, j];
-            int tileOffsetX = tile.TileFrameX % (Width * 16) / 16;
-            int tileOffsetY = tile.TileFrameY % (Height * 16) / 16;
+            int tileOffsetX = tile.TileFrameX % (Width * 18) / 18;
+            int tileOffsetY = tile.TileFrameY % (Height * 18) / 18;
 
             if (tileOffsetX is 2 && tileOffsetY is 6)
             {

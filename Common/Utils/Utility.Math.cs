@@ -1,5 +1,4 @@
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
 
@@ -134,7 +133,7 @@ namespace Macrocosm.Common.Utils
             float y = rectangle.Y / maxSize.Y;
             float width = rectangle.Width / maxSize.X;
             float height = rectangle.Height / maxSize.Y;
-            return new Vector4(x, y, width, height); 
+            return new Vector4(x, y, width, height);
         }
         #endregion
 

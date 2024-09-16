@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation.Checklist
         private readonly Func<bool> predicate = () => false;
 
         private bool lastMet;
-        private bool hasChanged;
+        private bool hasChanged = true;
         private bool cachedMet;
         private int checkCounter;
         private int checkPeriod;

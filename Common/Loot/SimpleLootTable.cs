@@ -14,21 +14,14 @@ namespace Macrocosm.Common.Loot
     {
         public readonly List<IItemDropRule> Entries;
 
-        public readonly List<IBlacklistable> BlacklistableEntries;
-
         public SimpleLootTable()
         {
             Entries = new();
-            BlacklistableEntries = new();
         }
 
         public IItemDropRule Add(IItemDropRule entry)
         {
             Entries.Add(entry);
-
-            if (entry is IBlacklistable blacklistable)
-                BlacklistableEntries.Add(blacklistable);
-
             return entry;
         }
 
@@ -37,10 +30,6 @@ namespace Macrocosm.Common.Loot
         public IItemDropRule Remove(IItemDropRule entry)
         {
             Entries.Remove(entry);
-
-            if (entry is IBlacklistable blacklistable)
-                BlacklistableEntries.Remove(blacklistable);
-
             return entry;
         }
 

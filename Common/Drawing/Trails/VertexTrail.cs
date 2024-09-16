@@ -14,7 +14,6 @@ namespace Macrocosm.Common.Drawing.Trails
         public string FullName { get; }
 
         public abstract MiscShaderData TrailShader { get; }
-        public virtual object Owner { get; set; }
 
         public virtual float Opacity { get; set; } = 1f;
         public virtual float Saturation { get; set; } = -1f;
@@ -36,15 +35,11 @@ namespace Macrocosm.Common.Drawing.Trails
             TrailShader.UseSaturation(Saturation);
         }
 
-        public virtual void Draw(Vector2 offset = default)
-        {
-            if (Owner is Projectile projectile)
-                Draw(projectile.oldPos, projectile.oldRot, offset);
-            else if (Owner is Particle particle)
-                Draw(particle.OldPositions, particle.OldRotations, particle.Size / 2 + offset);
-        }
+        public virtual void Draw(Projectile projectile, Vector2 offset = default) => Draw(projectile.oldPos, projectile.oldRot, offset);
+        public virtual void Draw(NPC npc, Vector2 offset = default) => Draw(npc.oldPos, npc.oldRot, offset);
+        public virtual void Draw(Particle particle, Vector2 offset = default) => Draw(particle.OldPositions, particle.OldRotations, offset);
 
-        public virtual void Draw(Vector2[] positions, float[] rotations, Vector2 offset)
+        public virtual void Draw(Vector2[] positions, float[] rotations, Vector2 offset = default)
         {
             VertexStrip vertexStrip = new();
 

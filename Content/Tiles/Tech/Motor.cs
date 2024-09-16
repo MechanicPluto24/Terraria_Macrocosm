@@ -18,8 +18,9 @@ namespace Macrocosm.Content.Tiles.Tech
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style1x1);
             TileObjectData.newTile.CoordinateWidth = 16;
-            TileObjectData.newTile.CoordinateHeights = [18];
+            TileObjectData.newTile.CoordinateHeights = [16];
             TileObjectData.newTile.CoordinatePadding = 2;
+            TileObjectData.newTile.DrawYOffset = 2;
             TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.newTile.Direction = TileObjectDirection.PlaceRight;
             TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.Table, 2, 0);
@@ -28,7 +29,7 @@ namespace Macrocosm.Content.Tiles.Tech
             TileObjectData.addAlternate(1);
             TileObjectData.addTile(Type);
 
-            RegisterItemDrop(ModContent.ItemType<Items.Materials.Tech.Motor>(), 0, 1);
+            RegisterItemDrop(ModContent.ItemType<Items.Tech.Motor>(), 0, 1);
 
             HitSound = SoundID.Dig;
             DustType = -1;

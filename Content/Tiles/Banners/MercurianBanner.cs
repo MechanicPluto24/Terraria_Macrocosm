@@ -33,9 +33,6 @@ namespace Macrocosm.Content.Tiles.Banners
             TileObjectData.newTile.Origin = new Point16(1, 0);
             TileObjectData.newTile.AnchorTop = new AnchorData(AnchorType.SolidTile, 3, 0);
 
-            TileObjectData.newTile.WaterPlacement = LiquidPlacement.NotAllowed;
-            TileObjectData.newTile.LavaPlacement = LiquidPlacement.NotAllowed;
-
             TileObjectData.addTile(Type);
 
             DustType = ModContent.DustType<DianiteDust>(); // placeholder

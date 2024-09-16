@@ -4,6 +4,7 @@ using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.Localization;
@@ -72,6 +73,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             }
         }
 
+        private static Asset<Effect> pixelate;
         private SpriteBatchState state;
         public override void Draw(SpriteBatch spriteBatch)
         {
@@ -95,7 +97,8 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             int targetPixelsX = 48;
             int targetPixelsY = (int)(targetPixelsX / aspectRatio);
 
-            Effect effect = ModContent.Request<Effect>(Macrocosm.ShadersPath + "Pixelate", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+            pixelate ??= ModContent.Request<Effect>(Macrocosm.ShadersPath + "Pixelate", AssetRequestMode.ImmediateLoad);
+            Effect effect = pixelate.Value;
             effect.Parameters["uPixelCount"].SetValue(new Vector2(targetPixelsX, targetPixelsY));
 
             state.SaveState(spriteBatch);

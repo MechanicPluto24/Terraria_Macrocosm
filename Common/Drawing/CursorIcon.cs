@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Utils;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
@@ -16,6 +15,7 @@ namespace Macrocosm.Common.Drawing
         public static Icon MachineTurnOff { get; } = new(Macrocosm.SymbolsPath + "MachineTurnOff", scale: 1f);
         public static Icon SpaceStation { get; } = new(Macrocosm.SymbolsPath + "SpaceStation");
         public static Icon QuestionMark { get; } = new(Macrocosm.SymbolsPath + "QuestionMark");
+        public static Icon Drill { get; } = new(Macrocosm.SymbolsPath + "Drill");
 
         public record Icon(string texturePath, float scale = 1f)
         {
@@ -32,7 +32,7 @@ namespace Macrocosm.Common.Drawing
             }
         }
 
-        public static Icon Current { get; set; } 
+        public static Icon Current { get; set; }
 
         public override void Load()
         {
@@ -68,5 +68,5 @@ namespace Macrocosm.Common.Drawing
         }
     }
 
-    
+
 }

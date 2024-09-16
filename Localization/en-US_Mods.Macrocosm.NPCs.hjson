@@ -1,16 +1,14 @@
 CraterDemon: {
 	DisplayName: Crater Demon
 	BestiaryFlavorText: This massive meteorite demon is a member of a race that invaded the Moon long ago, and bears the scars of an ancient war.
+	SpawnInfo: Use a [i:Macrocosm/CraterDemonSummon] at any time on the Moon.
+	DespawnMessage: "{0} has left."
+	FunnyDeathMessage: "{0} died for the crater good"
 }
 
 CraterImp: {
 	DisplayName: Crater Imp
 	BestiaryFlavorText: Smaller companions of the infamous Crater Demon, these lesser demons aid their master in combat.
-}
-
-BloodMoonJuggernaut: {
-	DisplayName: Juggernaut
-	BestiaryFlavorText: A hulking, tanky behemoth of alien flesh, bone, and fury. Get too close and they'll slug your bloody entrails into orbit!
 }
 
 Clavite: {
@@ -20,7 +18,7 @@ Clavite: {
 
 CraterCrawlerHead: {
 	DisplayName: Crater Crawler
-	BestiaryFlavorText: ""
+	BestiaryFlavorText: The distant, non-domesticated relatives of crawltipedes, left to aimlessly wander the abandoned moonscape during its long, frigid nights.
 }
 
 CraterCrawlerBody.DisplayName: Crater Crawler
@@ -28,12 +26,12 @@ CraterCrawlerTail.DisplayName: Crater Crawler
 
 CrescentGhoul: {
 	DisplayName: Crescent Ghoul
-	BestiaryFlavorText: These devious, crescent-shaped aliens prowl the Moon's long nights, hunting and slaughtering whatever they can find.
+	BestiaryFlavorText: These devious, crescent-shaped aliens prowl the Moon's long nights, using their immense velocity to shred their victims.
 }
 
 Leaper: {
 	DisplayName: Leaper
-	BestiaryFlavorText: ""
+	BestiaryFlavorText: These agile creatures live deep below the Moon's surface, jumping to and from the walls and ceilings of caverns to confuse their victims.
 }
 
 LuminiteSlime: {
@@ -48,7 +46,7 @@ LuminiteSlimeVolatile: {
 
 MoonWormHead: {
 	DisplayName: Moon Worm
-	BestiaryFlavorText: ""
+	BestiaryFlavorText: The Moon's long nights bring forth many an alien monster, few more infamous than its colossal Moon worms, ambushing their prey from below.
 }
 
 MoonWormBody.DisplayName: Moon Worm
@@ -76,8 +74,14 @@ ZombieSecurity: {
 
 Dweller: {
 	DisplayName: Dweller
-	BestiaryFlavorText: ""
+	BestiaryFlavorText: Alien beasts of immense size that stalk their prey in the Moon's pitch black caverns. They act extremely aggressive in the presence of light.
 }
+
+/*
+SCATTERBRAINED: Reanimated storm divers, their bodies reconfigured and distorted. Their attacks are slow and inaccurate, but deadly.
+GUTBELCHER: Reconstructed amalgams of various lunar aliens, belching their acidic and volatile insides at their targets.
+LUMINITE HORROR: Possessed by countless souls of restless, enraged lunar spirits, this hulking mass of raw luminite patrols the Moon's caverns for new victims.
+*/
 
 MoonChampion: {
 	DisplayName: Moon Champion
@@ -106,28 +110,103 @@ MoonChampion: {
 		Shop: Shop
 		Advice: Advice
 		ShopName: Shop
-		FirstTime: Woah... Thank you, human! You have saved me from that scary Moon monster! Perhaps you are also a champion of the Moon?
+		Rescued1: Wow, it's bright! How long was I out for, I swear I only took a nap for a moment! ...Oh, you killed that big monster that ate me. Well, thank you!
+		Rescued2: Thank you very much for rescuing me! It was starting to get a little stuffy in there! You must be a brave champion to have come out all this way. Like me!
+		Rescued3: Woah, thank you human! You saved me from that frightening space monster! Perhaps...you are also a champion of the Moon, as I am!
 		Day1: The Moon is not so bad once you get used to it! I personally find it quite beautiful! Just stay indoors during the night, I shall defend you from those evil Moon monsters!
 		Day2: I found an old space lander once! It looked abandoned, and there was this weird pole with cloth attached to it. Do you know anything about this?
-		Day3: Earth looks very pretty! I want to visit it someday, but I do not know how to leave the Moon...
-		// Note to all: Yes, this is a TF2 reference.
-		DayRare: Am I a good Moon Champion? If I wasn't a good Moon Champion, I wouldn't be sitting here discussing it with you now would I?
+		Day3: Earth looks very pretty! I went to visit it once, the President of the planet gave me a cookie!
+		Day4: Am I a good Moon Champion? Of course! If I wasn't a good Moon Champion, I wouldn't be sitting here discussing it with you now, would I?
+		Day5: What was I doing on the Moon before I got eaten? I was fighting Moon monsters, of course!
+		Day6: A meteorite hit me on the head today. How rude!
+		Day7: Planet Earth is blue, and there's nothing I can do! Not that I'd want to, it's so pretty to look at!
+		Day8: What a wonderful place my Moon is, isn't it? Nothing but silver plains and dunes as far as the eye can see, amidst an inky black sky! ...And Earth's there, too!
+		Day9: Have I ever told you much I love my Moon?
 		Night1: Human, I am curious, is the Earth made of cheese?
-		Night2: Stand alert, human! Night-time lasts far longer than it does on Earth, and lots of scary monsters emerge from the craters and shadows looking for food!
+		Night2: Stand alert, human! Nighttime lasts far longer than it does on Earth, and lots of scary monsters emerge from the craters and shadows looking for food!
 		Night3: You look troubled, are you afraid of those Moon monsters? Do not be, for I will defend you! Those Moon monsters will never defeat me!
-		Moonstones: I see you have {0} {^0:Moonstone;Moonstones}! Why don't you try spending them here?
-		NoMoonstones: Hmm, you appear to have no Moonstones, try killing some Moon monsters to get some!
-		Standard1: What was I doing on the Moon before I got eaten? I was fighting Moon monsters, of course!
-		//Reference to Houston Space Center, Texas
-		Standard2: A while back I discovered I could tune in on human conversations if they were happening close enough to the Moon! I kept hearing the word 'Houston' come up in their conversations. I would like to meet this Houston some day!
-		// Reference to "SPACE IS COOL" Songify Remix by SCHMOYOHO
-		Standard3: Space is so cool! There are thousands of billions of billions of stars and galaxies! There is nothing I like more than space!
-		// Reference to "Space Oddity" by David Bowie
-		Standard4: Planet Earth is blue, and there's nothing I can do...
-		// LoLK reference
-		Standard5: A few years ago, there was chaos in these lunar outskirts. You should've seen it yourself.
-		Advice1: Monsters on the Moon drop these strange coins! If you can find enough of them, I'll trade them for some supplies!
-		Advice2: Be prepared for anything, and stay alert! The Moon is a very dangerous place crawling with all kinds of monsters, always be ready for anything!
-		Advice3: If you wish to explore the Moon, do not forget your spacesuit!
+		Night4: Yes, nighttime is finally here! This is the time my Moon offers some of its most challenging foes, and a true Champion will never shy away from a fight!
+		Night5: A while back, I discovered I could tune in on human conversations if they were happening close enough to the Moon! I kept hearing the word 'Houston' come up in their conversations. I haven't heard from him in a while...I would like to meet this Houston some day!
+		Night6: Space is so cool! There are thousands of billions of billions of stars and galaxies! There is nothing I like more than space...well, except my Moon, of course!
+		Night7: Why do I love my Moon so much? ...I'm not sure! I've been here since I first woke up, and it's captivated me with its beauty! It also keeps my senses and skills sharpened with its ceaseless monsters and challenges! It makes me feel alive!
+		Night8: So many Moon monsters out tonight...plaguing, desecrating my Moon. I shall kill all of them, and you shall help me!
+		Advice1: Don't forget your spacesuit, human! I don't know why, but it always makes me feel weird whenever I take it off, so I never do!
+		Advice2: Monsters on my Moon drop these shiny gemstones, and I love keeping them! I'll gladly take them in exchange for some supplies I...found!
+		Advice3: Be prepared for anything, and stay alert! The Moon is a very dangerous place crawling with all kinds of monsters, prowling the surface or crawling deep below!
+		Advice4: Take caution when going deeper into the Moon's caverns, many of its monsters HATE light! ...Why do they hate light? I'm not sure! They might be scared of it.
+		Advice5: There's an old human Moon base not far from here! I'd go explore it if I were you, but be careful! I don't think everything in there is entirely dead just yet!
+		BloodMoon1: Finally! The challenge I have been waiting millennia for... Stand back, human. This fight is MINE!
+		BloodMoon2: I have never felt so ALIVE. I wish this night to never end, I will return drenched in blood!
+		BloodMoon3: I LOVE THIS WORLD. IT GIVES ME NO SHORTAGE OF CHALLENGE, OF THRILL, OF BLOOD. I WILL BLEED AND SPILL FOR MY MOON.
+		BloodMoon4: Get inside. Now.
+		SolarStorm1: You should get inside, human! The Sun has sent a volley of interlopers here to my Moon, but they won't live long enough to tell the tale!
+		SolarStorm2: WOW, the Sun is bright today! More so than usual...but not the brightest I've seen it. You should have been there, human; there was no shortage of things to kill!
+		SolarStorm3: The Sun appears angry, human! Beware, sometimes frightening monsters ride the solar winds here, and they are not to be trifled with!
+		SolarStorm4: Do you taste metal, human?
 	}
+}
+
+KyaniteScarabSmall: {
+	DisplayName: Kyanite Scarab Small
+	BestiaryFlavorText: Mods.Macrocosm.NPCs.KyaniteScarabSmall.BestiaryFlavorText
+}
+
+LuminiteElemental: {
+	DisplayName: Luminite Elemental
+	BestiaryFlavorText: Even on this desolate Moon, elementals have manifested in clumps of luminite ore, using its bizarre properties to defend itself.
+}
+
+MoonLich: {
+	DisplayName: Moon Lich
+	BestiaryFlavorText: An ancient alien infused with powerful lunar magic, boasting the ability to reanimate the dead to serve and fight for their new master.
+}
+
+XenoHive: {
+	DisplayName: Xeno Hive
+	BestiaryFlavorText: Zombified aliens molded to serve as mobile hives for swarms of alien leeches, deployed to defend their Lich.
+}
+
+XenoHornet: {
+	DisplayName: Alien Leech
+	BestiaryFlavorText: Tiny, mutated alien drones that have evolved to fly with small, biochemical jets. They can quickly overwhelm their targets in large numbers.
+}
+
+Bruiser: {
+	DisplayName: Bruiser
+	BestiaryFlavorText: A hulking, tanky behemoth of alien flesh, bone, and fury. Get too close and they'll slug your bloody entrails into orbit!
+}
+
+FlamingMeteor: {
+	DisplayName: Flaming Meteor
+	BestiaryFlavorText: Mods.Macrocosm.NPCs.FlamingMeteor.BestiaryFlavorText
+}
+
+LunarChimera: {
+	DisplayName: Lunar Chimera
+	BestiaryFlavorText: Mods.Macrocosm.NPCs.LunarChimera.BestiaryFlavorText
+}
+
+Scatterbrained: {
+	DisplayName: Scatterbrained
+	BestiaryFlavorText: Mods.Macrocosm.NPCs.Scatterbrained.BestiaryFlavorText
+}
+
+KyaniteScarabCritter: {
+	DisplayName: Kyanite Scarab Critter
+	BestiaryFlavorText: Mods.Macrocosm.NPCs.KyaniteScarabCritter.BestiaryFlavorText
+}
+
+Hermite: {
+	DisplayName: Hermite
+	BestiaryFlavorText: Mods.Macrocosm.NPCs.Hermite.BestiaryFlavorText
+}
+
+Shade: {
+	DisplayName: Shade
+	BestiaryFlavorText: Mods.Macrocosm.NPCs.Shade.BestiaryFlavorText
+}
+
+ZombieEngineer: {
+	DisplayName: Zombie Engineer
+	BestiaryFlavorText: Mods.Macrocosm.NPCs.ZombieEngineer.BestiaryFlavorText
 }

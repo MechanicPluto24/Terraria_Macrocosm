@@ -1,5 +1,6 @@
+using Macrocosm.Common.Bases.Projectiles;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Projectiles.Global;
 using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -9,12 +10,14 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Hostile
 {
-    public class ZombieSecurityBullet : ModProjectile, IRangedProjectile
+    public class ZombieSecurityBullet : ModProjectile
     {
         public override void SetStaticDefaults()
         {
             ProjectileID.Sets.TrailCacheLength[Type] = 10;
             ProjectileID.Sets.TrailingMode[Type] = 0;
+
+            ProjectileSets.HitsTiles[Type] = true;
         }
 
         public override void SetDefaults()

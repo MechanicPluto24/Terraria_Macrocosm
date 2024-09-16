@@ -1,11 +1,9 @@
-﻿using Macrocosm.Common.Drawing;
-using Macrocosm.Common.Systems.Power;
+﻿using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Systems.UI;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.Enums;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
@@ -69,7 +67,7 @@ namespace Macrocosm.Content.Machines
         {
             Main.mouseRightRelease = false;
             Utility.UICloseOthers();
-           
+
             if (Utility.TryGetTileEntityAs(i, j, out OilRefineryTE refinery))
             {
                 UISystem.ShowMachineUI(refinery, new OilRefineryUI());
@@ -86,7 +84,7 @@ namespace Macrocosm.Content.Machines
             {
                 player.noThrow = 2;
                 player.cursorItemIconEnabled = true;
-                player.cursorItemIconID = ModContent.ItemType<Items.Machines.OilRefinery>();
+                player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, TileObjectData.GetTileStyle(Main.tile[i, j]));
             }
         }
     }

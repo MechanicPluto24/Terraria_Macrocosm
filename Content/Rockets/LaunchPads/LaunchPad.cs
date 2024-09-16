@@ -4,7 +4,6 @@ using Macrocosm.Common.Storage;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.UI;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.Modules;
 using Macrocosm.Content.Tiles.Special;
 using Microsoft.Xna.Framework;
@@ -94,13 +93,12 @@ namespace Macrocosm.Content.Rockets.LaunchPads
         public static LaunchPad Create(Point16 startTile, bool shouldSync = true) => Create(startTile.X, startTile.Y, shouldSync);
         public static LaunchPad Create(Point16 startTile, Point16 endTile, bool shouldSync = true) => Create(startTile.X, startTile.Y, endTile.X, endTile.Y, shouldSync);
 
-
         public void Update()
         {
             CheckMarkers();
             CheckRocket();
-            
-            if(spawned)
+
+            if (spawned)
                 Interact();
 
             if (!spawned)
@@ -125,7 +123,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
                 LaunchPadMarker.SetState(EndTile, MarkerState.Inactive);
             }
 
-            if(!Active)
+            if (!Active)
                 NetSync(MacrocosmSubworld.CurrentID);
         }
 
@@ -218,7 +216,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
             foreach (var kvp in rocket.Modules)
             {
                 RocketModule module = kvp.Value;
-                if(!module.Recipe.Linked)
+                if (!module.Recipe.Linked)
                     count += module.Recipe.Count();
             }
 

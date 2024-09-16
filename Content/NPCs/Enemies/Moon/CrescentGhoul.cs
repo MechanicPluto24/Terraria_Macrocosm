@@ -1,9 +1,10 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Global.NPCs;
+using Macrocosm.Common.Sets;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Items.Materials.Drops;
+using Macrocosm.Content.Items.Drops;
 using Macrocosm.Content.NPCs.Bosses.CraterDemon;
-using Macrocosm.Content.NPCs.Global;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -17,7 +18,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-    public class CrescentGhoul : ModNPC, IMoonEnemy
+    public class CrescentGhoul : ModNPC
     {
         public enum ActionState
         {
@@ -39,11 +40,12 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override void SetStaticDefaults()
         {
-            base.SetStaticDefaults();
-
             Main.npcFrameCount[NPC.type] = 4;
             NPCID.Sets.TrailCacheLength[NPC.type] = 4;
             NPCID.Sets.TrailingMode[NPC.type] = 0;
+
+            NPCSets.MoonNPC[Type] = true;
+            NPCSets.DropsMoonstone[Type] = true;
         }
 
         public override void SetDefaults()
@@ -60,15 +62,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.knockBackResist = 0f;
             NPC.noGravity = true;
             NPC.noTileCollide = true;
-        }
-
-        public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
-        {
-            /*
-            bestiaryEntry.Info.Add(
-				BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Times.NightTime
-			);
-            */
+            SpawnModBiomes = [ModContent.GetInstance<MoonNightBiome>().Type];
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
@@ -112,8 +106,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             // the radius around the player where the ghoul tends to spin 
             float dashRadius = 60f;
-            // huh 
-            float dashFactorThird = 0.33333334f * dashRadius;
 
             if (Main.expertMode)
                 kbResist *= Main.GameModeInfo.KnockbackToEnemiesMultiplier;
@@ -207,7 +199,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                     if (positionDiff.HasNaNs())
                         positionDiff = new Vector2(NPC.direction, 0f);
 
-                    NPC.velocity = (NPC.velocity * (dashRadius - 1f) + positionDiff * (NPC.velocity.Length() + dashFactorThird)) / dashRadius;
+                    NPC.velocity = (NPC.velocity * (dashRadius - 1f) + positionDiff * (NPC.velocity.Length() + dashRadius / 3f)) / dashRadius;
                 }
 
             }
@@ -251,13 +243,15 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override void FindFrame(int frameHeight)
         {
-            NPC.frame.Y = (int)(NPC.frameCounter / 10) * frameHeight;
+            int ticksPerFrame = 10;
+
+            NPC.frame.Y = (int)(NPC.frameCounter / ticksPerFrame) * frameHeight;
 
             if (NPC.localAI[0] == 0f)
             {
                 NPC.frameCounter++;
 
-                if (NPC.frameCounter >= 39)
+                if (NPC.frameCounter >= (Main.npcFrameCount[Type] * ticksPerFrame) - 1)
                     NPC.localAI[0] = 1f;
             }
             else if (NPC.localAI[0] == 1f)
@@ -275,9 +269,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override void HitEffect(NPC.HitInfo hit)
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 20; i++)
             {
-                int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, ModContent.DustType<RegolithDust>());
+                int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, i % 2 == 0 ? ModContent.DustType<RegolithDust>() : DustID.GreenBlood);
                 Dust dust = Main.dust[dustIndex];
                 dust.velocity.X *= dust.velocity.X * 1.25f * hit.HitDirection + Main.rand.Next(0, 100) * 0.015f;
                 dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;
@@ -299,7 +293,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
                 for (int i = 0; i < 50; i++)
                 {
-                    int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, ModContent.DustType<RegolithDust>());
+                    int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, i % 2 == 0 ? ModContent.DustType<RegolithDust>() : DustID.GreenBlood);
                     Dust dust = Main.dust[dustIndex];
                     dust.velocity.X *= dust.velocity.X * 1.25f * hit.HitDirection + Main.rand.Next(0, 100) * 0.015f;
                     dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;

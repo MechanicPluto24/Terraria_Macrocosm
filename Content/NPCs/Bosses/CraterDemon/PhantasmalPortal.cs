@@ -28,7 +28,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             set => Projectile.ai[2] = value;
         }
 
-        public int SpawnPeriod => 60;
+        public int SpawnPeriod => 12;
 
         public const int PortalTimerMax = (int)(4f * 60 + 1.5f * 60 + 24);
 
@@ -72,14 +72,13 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             else
             {
                 AITimer = 0f;
-                if (Projectile.timeLeft % SpawnPeriod == 0)
+                if (Projectile.timeLeft % SpawnPeriod == 0 && Projectile.timeLeft > 180)
                 {
-
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        for (int i = 0; i < 5; i++)
+                        for (int i = 0; i < 1; i++)
                         {
-                            Vector2 velocity = (Main.player[TargetPlayer].Center - Projectile.Center).SafeNormalize(Vector2.One).RotatedByRandom(MathHelper.PiOver4) * Main.rand.NextFloat(12, 20);
+                            Vector2 velocity = (Main.player[TargetPlayer].Center - Projectile.Center).SafeNormalize(Vector2.One).RotatedByRandom(MathHelper.PiOver4 * 0.6) * Main.rand.NextFloat(12, 20);
                             int type = ModContent.ProjectileType<PhantasmalImpSmall>();
                             int damage = Projectile.damage;
 
@@ -105,7 +104,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 {
                     p.Position = Projectile.Center + Main.rand.NextVector2Circular(Projectile.width, Projectile.height) * 1.6f * progress;
                     p.Velocity = Vector2.One * 18;
-                    p.Scale = (0.1f + Main.rand.NextFloat(0.1f)) * progress;
+                    p.Scale = new((0.1f + Main.rand.NextFloat(0.1f)) * progress);
                     p.Color = new Color(92, 206, 130);
                     p.TargetCenter = Projectile.Center;
                 });
@@ -143,7 +142,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
             Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Flare3").Value;
             float scale = Projectile.scale * Main.rand.NextFloat(0.9f, 1.1f);
-            Main.spriteBatch.Draw(flare, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(30, 255, 105).WithOpacity(0.55f), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(flare, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(30, 255, 105).WithOpacity(0.85f), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
 
             // Strange
             Main.spriteBatch.End();
