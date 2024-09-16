@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Items.Furniture.CosmicEmber
 
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminiteCandelabra>(), (int)LuminiteStyle.CosmicEmber * 2);
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminiteCandelabra>(), (int)LuminiteStyle.CosmicEmber );
             Item.width = 30;
             Item.height = 22;
             Item.value = 150;
