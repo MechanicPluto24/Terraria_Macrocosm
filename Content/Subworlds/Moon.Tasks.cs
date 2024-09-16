@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Utils;
 using Macrocosm.Common.WorldGeneration;
 using Macrocosm.Content.Tiles.Ambient;
 using Macrocosm.Content.Tiles.Blocks.Terrain;
@@ -924,13 +923,13 @@ namespace Macrocosm.Content.Subworlds
                     Tile tile = Main.tile[i, j];
                     if (WorldGen.genRand.NextFloat() < smallRockSpawnChance && tile.HasTile && Main.tileSolid[tile.TileType] && !tile.IsActuated)
                     {
-                        if(tile.TileType == regolithType)
+                        if (tile.TileType == regolithType)
                             WorldGen.PlaceTile(i, j - 1, TileType<RegolithRockSmallNatural>(), style: WorldGen.genRand.Next(10), mute: true);
 
                         if (tile.TileType == protolithType)
                             WorldGen.PlaceTile(i, j - 1, TileType<ProtolithRockSmallNatural>(), style: WorldGen.genRand.Next(10), mute: true);
                     }
-                    
+
                     if (WorldGen.genRand.NextFloat() < mediumRockSpawnChance && CheckEmptyAboveWithSolidToTheRight(i, j, 2, 1))
                     {
                         if (tile.TileType == regolithType)
@@ -939,7 +938,7 @@ namespace Macrocosm.Content.Subworlds
                         if (tile.TileType == protolithType)
                             WorldGen.PlaceTile(i, j - 1, TileType<ProtolithRockMediumNatural>(), style: WorldGen.genRand.Next(6), mute: true);
                     }
-                    
+
                     if (WorldGen.genRand.NextFloat() < largeRockSpawnChance && CheckEmptyAboveWithSolidToTheRight(i, j, 3, 2))
                     {
                         if (tile.TileType == regolithType)
@@ -960,7 +959,7 @@ namespace Macrocosm.Content.Subworlds
                         if (tile.TileType == protolithType)
                         {
                             WorldGen.PlaceTile(i, j - 1, TileType<KyaniteNest>(), mute: true);
-                            Console.WriteLine($"Placed Kyanite at {i},{j-1}");
+                            Console.WriteLine($"Placed Kyanite at {i},{j - 1}");
                         }
                     }
                 }
@@ -972,7 +971,7 @@ namespace Macrocosm.Content.Subworlds
         {
             int tries = 0;
             bool placed = false;
-            while(tries < 1000)
+            while (tries < 1000)
             {
                 int tileX = WorldGen.genRand.Next(80, Main.maxTilesX - 80);
                 int tileY = WorldGen.genRand.Next((int)(SurfaceHeight(tileX) + RegolithLayerHeight + 20.0), Main.maxTilesY - 230);

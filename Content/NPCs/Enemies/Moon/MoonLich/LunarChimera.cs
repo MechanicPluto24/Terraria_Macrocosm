@@ -1,12 +1,11 @@
 using Macrocosm.Common.Sets;
-using Macrocosm.Content.Biomes;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Projectiles.Hostile;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
-using Microsoft.Xna.Framework;
-using Macrocosm.Common.Utils;
 using Terraria.ModLoader;
-using Macrocosm.Content.Projectiles.Hostile;
 namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
 {
     public class LunarChimera : ModNPC
@@ -19,7 +18,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
             NPCSets.DropsMoonstone[Type] = true;
         }
 
-
         /* 
         Old more precise Equation was :
         i*(x(Realtive to inital firing point not world pos))+j*i*sin((x*pi)/j)
@@ -29,10 +27,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
 
         j is y postion of the target/i
         But really just take the derivative of these to be of any use.
-
-
         */
-
 
         public override void SetDefaults()
         {
@@ -46,28 +41,29 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
             NPC.knockBackResist = 0.5f;
             NPC.aiStyle = -1;
         }
-        int Timer= 0;
-      
+
+        int Timer = 0;
+
         public override void AI()
         {
-              Player target = Main.player[NPC.target];
+            Player target = Main.player[NPC.target];
             if (NPC.velocity.Y < 0f)
                 NPC.velocity.Y += 0.1f;
             Utility.AIZombie(NPC, ref NPC.ai, false, true, velMax: 1, maxJumpTilesX: 8, maxJumpTilesY: 5, moveInterval: 0.02f);
             Timer++;
-            if (Timer>300)
+            if (Timer > 300)
             {
                 for (int i = 0; i < 10; i++)//barf
-                    {
-                        if (Main.netMode != NetmodeID.MultiplayerClient)
-                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, (target.Center-NPC.Center).SafeNormalize(Vector2.UnitX).RotatedByRandom(MathHelper.Pi/4) * (float)Main.rand.NextFloat(5.0f, 10.0f), ModContent.ProjectileType<LunarBarf>(), 50, 0f, -1);
+                {
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, (target.Center - NPC.Center).SafeNormalize(Vector2.UnitX).RotatedByRandom(MathHelper.Pi / 4) * (float)Main.rand.NextFloat(5.0f, 10.0f), ModContent.ProjectileType<LunarBarf>(), 50, 0f, -1);
+                }
 
-                    }
-                Timer=0;
+                Timer = 0;
             }
-            
+
         }
-        
+
         public override void FindFrame(int frameHeight)
         {
             NPC.spriteDirection = NPC.direction;
@@ -99,7 +95,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
             if (NPC.life <= 0)
             {
                 var entitySource = NPC.GetSource_Death();
-
             }
         }
     }
