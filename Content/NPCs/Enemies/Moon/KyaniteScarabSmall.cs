@@ -37,6 +37,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             SpawnModBiomes = [ModContent.GetInstance<MoonUndergroundBiome>().Type];
         }
 
+       
         private int interestTimer = 0;
         private bool hasRock = false;
 
@@ -58,15 +59,17 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 if (nestCoords != default && hasRock)
                 {
                     Utility.AIFighter(NPC, ref NPC.ai, nestPosition);
-                    if (Vector2.Distance(NPC.Center, nestPosition) < 80f)
-                        NPC.active = false;
+                    if (Vector2.DistanceSquared(NPC.Center, nestPosition) < 30*100)
+                    {
+                    NPC.active = false;
                     NPC.life = 0;
+                    }
                 }
                 else
                 {
                     if (luminiteCoords != default && !hasRock)
                     {
-                        if (Vector2.DistanceSquared(NPC.Center, luminitePosition) > 50f && interestTimer < 200)
+                        if (Vector2.DistanceSquared(NPC.Center, luminitePosition) > 30*50 && interestTimer < 2000)
                         {
                             Utility.AIFighter(NPC, ref NPC.ai, luminitePosition);
                             interestTimer++;
@@ -135,5 +138,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             if (hasRock)
                 spriteBatch.Draw(rockTexture, drawPos, null, colour, NPC.rotation, NPC.Size / 2, NPC.scale, Effect, 0f);
         }
+       
     }
 }
