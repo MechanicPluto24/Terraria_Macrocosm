@@ -30,7 +30,7 @@ namespace Macrocosm.Common.Utils
 
         public static bool TryGetColorFromHex(string hexString, out Color color)
         {
-            if (hexString.StartsWith("#"))
+            if (hexString.StartsWith('#'))
             {
                 hexString = hexString[1..];
             }
@@ -47,6 +47,7 @@ namespace Macrocosm.Common.Utils
             color = Color.White;
             return false;
         }
+
         public static bool TryGetColorFromHex(string hexString, out Vector3 hsl, float luminanceFactor = 1f)
         {
             if (TryGetColorFromHex(hexString, out Color rgb))
@@ -63,7 +64,6 @@ namespace Macrocosm.Common.Utils
         #endregion
 
         #region HSL conversion
-
         public static Color WithHue(this Color color, float hue)
         {
             return HSLToRGB(ToHSL(color) with { X = hue });

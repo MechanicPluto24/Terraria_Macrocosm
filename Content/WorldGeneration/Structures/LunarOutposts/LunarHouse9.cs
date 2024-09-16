@@ -2,7 +2,7 @@
 
 namespace Macrocosm.Content.WorldGeneration.Structures.LunarOutposts
 {
-    public class LunarHouse9 : Structure
+    public class LunarHouse9 : StructureSH
     {
     }
 }

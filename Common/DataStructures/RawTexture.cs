@@ -18,6 +18,12 @@ namespace Macrocosm.Common.DataStructures
         public Color this[int index] => Data[index];
         public int Length => Data.Length;
 
+        public static RawTexture FromFile(string path)
+        {
+            path = path.Replace(nameof(Macrocosm) + "/", "") + ".rawimg";
+            return FromStream(Macrocosm.Instance.GetFileStream(path));
+        }
+
         public static RawTexture FromStream(Stream stream)
         {
             byte[] colorBytes = ImageIO.ReadRaw(stream, out int width, out int height);

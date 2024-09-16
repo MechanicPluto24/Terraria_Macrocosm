@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.WorldGeneration.Structures.Shrines
 {
-    public class MercuryShrine : Structure
+    public class MercuryShrine : StructureSH
     {
         public override bool PrePlace(Point16 origin)
         {

@@ -7,7 +7,7 @@ using Macrocosm.Content.Tiles.Ores;
 
 namespace Macrocosm.Content.WorldGeneration.Structures.Shrines
 {
-    public class LunarRustShrine : Structure
+    public class LunarRustShrine : StructureSH
     {
         public override bool PrePlace(Point16 origin)
         {

@@ -7,7 +7,7 @@ using Terraria.WorldBuilding;
 
 namespace Macrocosm.Common.WorldGeneration
 {
-    public abstract class Structure
+    public abstract class StructureSH
     {
         public virtual string StructureFile => this.GetNamespacePath().Replace("Macrocosm/", "");
 

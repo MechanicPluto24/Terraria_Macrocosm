@@ -47,7 +47,7 @@ namespace Macrocosm.Content.Subworlds
         private static Point gen_DarkCelestialShrinePosition;
         private static Point gen_CosmicEmberShrinePosition;
 
-        private Structure DetermineLunarHouse()
+        private StructureSH DetermineLunarHouse()
         {
             int i = Main.rand.Next(0, 9);
             return i switch
@@ -280,7 +280,7 @@ namespace Macrocosm.Content.Subworlds
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.CavePass");
 
-            Structure shrine = new HeavenforgeShrine();
+            StructureSH shrine = new HeavenforgeShrine();
 
             int x, y;
             do
@@ -301,7 +301,7 @@ namespace Macrocosm.Content.Subworlds
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.CavePass");
 
-            Structure shrine = new MercuryShrine();
+            StructureSH shrine = new MercuryShrine();
 
             int x, y;
             do
@@ -322,7 +322,7 @@ namespace Macrocosm.Content.Subworlds
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.CavePass");
 
-            Structure shrine = new LunarRustShrine();
+            StructureSH shrine = new LunarRustShrine();
 
             int x, y;
             do
@@ -343,7 +343,7 @@ namespace Macrocosm.Content.Subworlds
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.CavePass");
 
-            Structure shrine = new StarRoyaleShrine();
+            StructureSH shrine = new StarRoyaleShrine();
 
             int x, y;
             do
@@ -365,7 +365,7 @@ namespace Macrocosm.Content.Subworlds
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.CavePass");
 
-            Structure shrine = new CryocoreShrine();
+            StructureSH shrine = new CryocoreShrine();
 
             int x, y;
             do
@@ -387,7 +387,7 @@ namespace Macrocosm.Content.Subworlds
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.CavePass");
 
-            Structure shrine = new AstraShrine();
+            StructureSH shrine = new AstraShrine();
 
             int x, y;
             do
@@ -409,7 +409,7 @@ namespace Macrocosm.Content.Subworlds
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.CavePass");
 
-            Structure shrine = new DarkCelestialShrine();
+            StructureSH shrine = new DarkCelestialShrine();
 
             int x, y;
             do
@@ -431,7 +431,7 @@ namespace Macrocosm.Content.Subworlds
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.CavePass");
 
-            Structure shrine = new CosmicEmberShrine();
+            StructureSH shrine = new CosmicEmberShrine();
 
             int x, y;
             do
@@ -717,7 +717,7 @@ namespace Macrocosm.Content.Subworlds
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
 
-            Structure shrine = new HeavenforgeShrine();
+            StructureSH shrine = new HeavenforgeShrine();
             bool solidDown = WorldUtils.Find(gen_HeavenforgeShrinePosition, Searches.Chain(new Searches.Down(150), new Conditions.IsSolid()), out Point solidGround);
             if (solidDown && shrine.Place(new Point16(solidGround.X - shrine.Size.X / 2, solidGround.Y - (int)(shrine.Size.Y * 0.8f)), null))
                 return;
@@ -732,7 +732,7 @@ namespace Macrocosm.Content.Subworlds
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
 
-            Structure shrine = new MercuryShrine();
+            StructureSH shrine = new MercuryShrine();
             bool solidUp = WorldUtils.Find(gen_MercuryShrinePosition, Searches.Chain(new Searches.Up(150), new Conditions.IsSolid()), out Point solidGround);
             if (solidUp && shrine.Place(new Point16(solidGround.X + shrine.Size.X / 2 - 1, solidGround.Y - 10), null))
                 return;
@@ -747,7 +747,7 @@ namespace Macrocosm.Content.Subworlds
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
 
-            Structure shrine = new LunarRustShrine();
+            StructureSH shrine = new LunarRustShrine();
             bool solidUp = WorldUtils.Find(gen_LunarRustShrinePosition, Searches.Chain(new Searches.Up(150), new Conditions.IsSolid()), out Point solidGround);
             if (solidUp && shrine.Place(new Point16(gen_LunarRustShrinePosition.X + shrine.Size.X / 4, solidGround.Y - 10), null))
                 return;
@@ -762,7 +762,7 @@ namespace Macrocosm.Content.Subworlds
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
 
-            Structure shrine = new StarRoyaleShrine();
+            StructureSH shrine = new StarRoyaleShrine();
             bool solidDown = WorldUtils.Find(gen_StarRoyaleShrinePosition, Searches.Chain(new Searches.Down(150), new Conditions.IsSolid()), out Point solidGround);
             if (solidDown && shrine.Place(new Point16(gen_StarRoyaleShrinePosition.X - shrine.Size.X / 2, solidGround.Y - (int)(shrine.Size.Y * 1.1f)), null))
                 return;
@@ -777,7 +777,7 @@ namespace Macrocosm.Content.Subworlds
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
 
-            Structure shrine = new CryocoreShrine();
+            StructureSH shrine = new CryocoreShrine();
             bool solidDown = WorldUtils.Find(gen_CryocoreShrinePosition, Searches.Chain(new Searches.Down(150), new Conditions.IsSolid()), out Point solidGround);
             if (solidDown && shrine.Place(new Point16(gen_CryocoreShrinePosition.X - shrine.Size.X / 2, solidGround.Y - shrine.Size.Y - (int)(shrine.Size.Y * 0.2f)), null))
                 return;
@@ -792,7 +792,7 @@ namespace Macrocosm.Content.Subworlds
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
 
-            Structure shrine = new AstraShrine();
+            StructureSH shrine = new AstraShrine();
             bool solidDown = WorldUtils.Find(gen_AstraShrinePosition, Searches.Chain(new Searches.Down(150), new Conditions.IsSolid()), out Point solidGround);
             if (solidDown && shrine.Place(new Point16(gen_AstraShrinePosition.X - shrine.Size.X / 2, solidGround.Y - (int)(shrine.Size.Y)), null))
                 return;
@@ -807,7 +807,7 @@ namespace Macrocosm.Content.Subworlds
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
 
-            Structure shrine = new DarkCelestialShrine();
+            StructureSH shrine = new DarkCelestialShrine();
             bool solidDown = WorldUtils.Find(gen_DarkCelestialShrinePosition, Searches.Chain(new Searches.Down(150), new Conditions.IsSolid()), out Point solidGround);
             if (solidDown && shrine.Place(new Point16(gen_DarkCelestialShrinePosition.X - shrine.Size.X / 2, solidGround.Y - (int)(shrine.Size.Y * 0.9f)), null))
                 return;
@@ -822,7 +822,7 @@ namespace Macrocosm.Content.Subworlds
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
 
-            Structure shrine = new CosmicEmberShrine();
+            StructureSH shrine = new CosmicEmberShrine();
             bool solidDown = WorldUtils.Find(gen_CosmicEmberShrinePosition, Searches.Chain(new Searches.Down(150), new Conditions.IsSolid()), out Point solidGround);
             if (solidDown && shrine.Place(new Point16(gen_CosmicEmberShrinePosition.X - shrine.Size.X / 2, solidGround.Y - shrine.Size.Y), null))
                 return;
@@ -861,7 +861,7 @@ namespace Macrocosm.Content.Subworlds
         private void CheeseHouse(GenerationProgress progress)
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.Horror");
-            Structure cheeseHouse = new CheeseHouse();
+            StructureSH cheeseHouse = new CheeseHouse();
             cheeseHouse.Place(new Point16(420, 1000), StructureMap);
         }
 

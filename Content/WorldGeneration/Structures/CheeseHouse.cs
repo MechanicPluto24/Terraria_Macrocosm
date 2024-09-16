@@ -2,7 +2,7 @@
 
 namespace Macrocosm.Content.WorldGeneration.Structures
 {
-    public class CheeseHouse : Structure
+    public class CheeseHouse : StructureSH
     {
     }
 }
