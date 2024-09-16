@@ -59,6 +59,10 @@ namespace Macrocosm.Common.Bases.NPCs
         public NPC GetFollowingSegment()
             => NPC.ai[1] >= Main.maxNPCs ? null : FollowingNPC;
 
+        public NPC GetFollowerSegment()
+            => NPC.ai[1] >= Main.maxNPCs ? null : FollowerNPC;
+       
+
         private bool startDespawning;
 
         public sealed override bool PreAI()
@@ -105,9 +109,9 @@ namespace Macrocosm.Common.Bases.NPCs
             if (!FlipSprite && !collision)
                 return;
 
-            if (NPC.velocity.X < 1f)
+            if (NPC.velocity.X < 0f)
                 NPC.spriteDirection = -1;
-            else if (NPC.velocity.X > 1f)
+            else if (NPC.velocity.X >= 0f)
                 NPC.spriteDirection = 1;
         }
 
@@ -141,6 +145,8 @@ namespace Macrocosm.Common.Bases.NPCs
     public abstract class WormHead : Worm
     {
         public sealed override WormSegmentType SegmentType => WormSegmentType.Head;
+
+        public virtual bool UseSmoothening { get; set; }
 
         /// <summary>
         /// The NPCID or ModContent.NPCType for the body segment NPCs.<br/>
@@ -220,6 +226,11 @@ namespace Macrocosm.Common.Bases.NPCs
             HeadAI_SpawnSegments();
 
             HeadBehaviour();
+            if(UseSmoothening)
+            {
+                NPC follower = this.GetFollowerSegment();
+                NPC.rotation = (NPC.velocity.SafeNormalize(Vector2.UnitX)-(follower.Center-NPC.Center).SafeNormalize(Vector2.UnitX)).ToRotation() + MathHelper.PiOver2;
+            }
         }
         public virtual void HeadBehaviour()
         {
@@ -591,6 +602,7 @@ namespace Macrocosm.Common.Bases.NPCs
 
     public abstract class WormBody : Worm
     {
+        public override bool CheckActive()=>false;
         public sealed override WormSegmentType SegmentType => WormSegmentType.Body;
 
         public override void SetStaticDefaults()
@@ -599,14 +611,16 @@ namespace Macrocosm.Common.Bases.NPCs
             NPCID.Sets.NPCBestiaryDrawModifiers value = new() { Hide = true };
             NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, value);
         }
-
+        public virtual bool UseSmoothening { get; set; }
         public override void BodyTailAI()
         {
             CustomBodyAI(this);
             CommonAI_BodyTail(this);
             FlipBodyTail(this);
+            
 
         }
+
         public virtual void CustomBodyAI(Worm worm) { }
 
         public static void CommonAI_BodyTail(Worm worm)
@@ -627,7 +641,6 @@ namespace Macrocosm.Common.Bases.NPCs
                 if (following is null || !following.active || following.friendly || following.townNPC || following.lifeMax <= 5)
                 {
                     worm.NPC.life = 0;
-                    worm.NPC.HitEffect(0, 10);
                     worm.NPC.active = false;
                 }
             }
@@ -660,6 +673,7 @@ namespace Macrocosm.Common.Bases.NPCs
     // Since the body and tail segments share the same AI
     public abstract class WormTail : Worm
     {
+        public override bool CheckActive()=>false;
         public sealed override WormSegmentType SegmentType => WormSegmentType.Tail;
 
         public override void SetStaticDefaults()
