@@ -51,19 +51,18 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                 Color color = new List<Color>() {
                         new Color(44, 210, 91),
                         new Color(253, 174, 248),
-                        new Color(90, 86, 167)
+                        new Color(90, 86, 167),
+                        new Color(85, 28, 37)
                     }.GetRandom();
                 color.A = (byte)Main.rand.Next(120, 200);
-
-                if (Main.rand.NextBool())
-                    color = new Color(85, 28, 37);
 
                 Particle.Create<LightningParticle>((p) =>
                 {
                     p.Position = target.Center;
-                    p.Velocity = rotation.ToRotationVector2() * (Main.rand.NextFloat() * 6f + 0.1f) * new Vector2(1f, 0.5f);
+                    p.Velocity = rotation.ToRotationVector2() * (Main.rand.NextFloat() * 8f) * new Vector2(0.6f, 1f);
                     p.Rotation = rotation;
                     p.Color = color;
+                    p.OutlineColor = color * 0.2f;
                     p.Scale = new(Main.rand.NextFloat(0.2f, 0.5f));
                     p.ScaleVelocity = new Vector2(0.05f);
                     p.FadeInNormalizedTime = 0.01f;
@@ -157,13 +156,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                     Main.spriteBatch.End();
                     Main.spriteBatch.Begin(BlendState.Additive, state);
 
-                    Texture2D glowTex = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Circle6").Value;
+                    Texture2D glowTex = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Circle5").Value;
                     float glowScale = MathHelper.Lerp(0.4f, 1.3f, Utils.GetLerpValue(0.1f, 0.7f, progress, true) * Utils.GetLerpValue(0.9f, 0.7f, progress, true)) * 1.1f;
                     float glowProgress = 4f * progress * (1f - progress);
                     glowScale *= glowProgress;
-                    Main.EntitySpriteDraw(glowTex, Vector2.Lerp(list[^2], list[^3], 0.6f) - Main.screenPosition, null, new Color(44, 210, 91, 150) * glowScale, rotation + MathHelper.Pi / 6 * glowScale, glowTex.Size()/2f, new Vector2(glowScale * 0.02f, glowScale * 0.12f), default, 0);
-                    Main.EntitySpriteDraw(glowTex, Vector2.Lerp(list[^2], list[^3], 0.1f) - Main.screenPosition, null, new Color(253, 174, 248, 150) * glowScale, rotation, glowTex.Size() / 2f, new Vector2(glowScale * 0.02f, glowScale * 0.12f), default, 0);
-                    Main.EntitySpriteDraw(glowTex, Vector2.Lerp(list[^2], list[^3], 0.6f) - Main.screenPosition, null, new Color(90, 86, 167, 100) * glowScale, rotation - MathHelper.Pi / 6 * glowScale, glowTex.Size() / 2f, new Vector2(glowScale * 0.02f, glowScale * 0.12f), default, 0);
+                    Main.EntitySpriteDraw(glowTex, Vector2.Lerp(list[^2], list[^3], 0.1f) - Main.screenPosition, null, new Color(253, 174, 248, 150) * glowScale, rotation, glowTex.Size() / 2f, new Vector2(glowScale * 0.06f, glowScale * 0.14f), default, 0);
 
                     Main.spriteBatch.End();
                     Main.spriteBatch.Begin(state);
