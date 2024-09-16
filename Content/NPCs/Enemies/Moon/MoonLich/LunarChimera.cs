@@ -59,7 +59,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
             {
                 for (int i = 0; i < 10; i++)//barf
                     {
-                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, (target.Center-NPC.Center).SafeNormalize(Vector2.UnitX).RotatedByRandom(MathHelper.Pi/4) * (float)Main.rand.NextFloat(5.0f, 10.0f), ModContent.ProjectileType<LunarBarf>(), 50, 0f, -1);
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, (target.Center-NPC.Center).SafeNormalize(Vector2.UnitX).RotatedByRandom(MathHelper.Pi/4) * (float)Main.rand.NextFloat(5.0f, 10.0f), ModContent.ProjectileType<LunarBarf>(), 50, 0f, -1);
 
                     }
                 Timer=0;

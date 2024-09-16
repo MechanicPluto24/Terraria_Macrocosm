@@ -60,7 +60,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             if (AITimer == 20)
             {
                 int damage = Projectile.damage;
-                Projectile.NewProjectile(Terraria.Entity.InheritSource(Projectile), Projectile.Center + shootAim, shootAim, ModContent.ProjectileType<MicronovaBeam>(), damage, Projectile.knockBack, Main.player[Projectile.owner].whoAmI, ai1: shootAim.X, ai2: shootAim.Y);
+                if(Projectile.owner == Main.myPlayer)
+                    Projectile.NewProjectile(Terraria.Entity.InheritSource(Projectile), Projectile.Center + shootAim, shootAim, ModContent.ProjectileType<MicronovaBeam>(), damage, Projectile.knockBack, Main.player[Projectile.owner].whoAmI, ai1: shootAim.X, ai2: shootAim.Y);
             }
 
             if (AITimer % 16 == 0)
