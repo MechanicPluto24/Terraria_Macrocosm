@@ -44,11 +44,11 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
 
         public override void AI()
         {
-            Particle.CreateParticle<TintableFire>(p =>
+            Particle.Create<TintableFire>(p =>
             {
                 p.Position = Projectile.position + new Vector2(0, Projectile.height / 2);
                 p.Velocity = Vector2.UnitX.RotatedByRandom(MathHelper.TwoPi);
-                p.DrawColor = new Color(100, 255, 255, 0);
+                p.Color = new Color(100, 255, 255, 0);
                 p.Scale = new(0.12f);
             });
 
@@ -80,11 +80,11 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
 
                 for (int i = 0; i < 20; i++)
                 {
-                    Particle.CreateParticle<TintableFire>(p =>
+                    Particle.Create<TintableFire>(p =>
                     {
                         p.Position = Projectile.position + new Vector2(0, Projectile.height / 2);
                         p.Velocity = Vector2.UnitX.RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(1f, 5f);
-                        p.DrawColor = new Color(100, 255, 255, 0);
+                        p.Color = new Color(100, 255, 255, 0);
                         p.Scale = new(0.16f);
                     });
                 }

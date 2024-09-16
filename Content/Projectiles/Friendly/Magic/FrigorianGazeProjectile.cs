@@ -168,7 +168,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
             for (int i = 0; i < 30; i++)
             {
-                Particle.CreateParticle<IceMist>((p) =>
+                Particle.Create<IceMist>((p) =>
                 {
                     p.Position = Projectile.Center;
                     p.Velocity = -Vector2.UnitY.RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(0.2f, 4f);

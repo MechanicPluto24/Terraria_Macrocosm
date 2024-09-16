@@ -100,7 +100,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             for (int i = 0; i < 10; i++)
             {
                 float progress = (1f - AITimer / 255f);
-                Particle.CreateParticle<PortalSwirl>(p =>
+                Particle.Create<PortalSwirl>(p =>
                 {
                     p.Position = Projectile.Center + Main.rand.NextVector2Circular(Projectile.width, Projectile.height) * 1.6f * progress;
                     p.Velocity = Vector2.One * 18;

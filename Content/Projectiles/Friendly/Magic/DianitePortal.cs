@@ -52,7 +52,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             {
                 for (int i = 0; i < 25; i++)
                 {
-                    Particle.CreateParticle<PortalSwirl>(p =>
+                    Particle.Create<PortalSwirl>(p =>
                     {
                         p.Position = Projectile.Center + Main.rand.NextVector2Circular(Projectile.width, Projectile.height) * 0.2f;
                         p.Velocity = Vector2.One * 6;
@@ -127,7 +127,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             for (int i = 0; i < count; i++)
             {
                 float progress = (1f - Projectile.alpha / 255f);
-                Particle.CreateParticle<PortalSwirl>(p =>
+                Particle.Create<PortalSwirl>(p =>
                 {
                     p.Position = Projectile.Center + Main.rand.NextVector2Circular(Projectile.width, Projectile.height) * 1.6f * progress;
                     p.Velocity = Vector2.One * 18;

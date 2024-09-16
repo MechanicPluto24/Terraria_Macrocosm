@@ -252,10 +252,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 }
             }
 
-            var explosion = Particle.CreateParticle<TintableExplosion>(p =>
+            var explosion = Particle.Create<TintableExplosion>(p =>
             {
                 p.Position = Projectile.Center;
-                p.DrawColor = (new Color(195, 115, 62)).WithOpacity(0.6f);
+                p.Color = (new Color(195, 115, 62)).WithOpacity(0.6f);
                 p.Scale = new(1.2f);
                 p.NumberOfInnerReplicas = 9;
                 p.ReplicaScalingFactor = 0.5f;
@@ -265,7 +265,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             for (int i = 0; i < 2; i++)
             {
                 Vector2 velocity = Main.rand.NextVector2CircularEdge(3, 3) * (i == 1 ? 0.8f : 0.4f);
-                Particle.CreateParticle<Smoke>(Projectile.Center, velocity, scale: 1.2f);
+                Particle.Create<Smoke>(Projectile.Center, velocity, scale: new(1.2f));
             }
 
         }

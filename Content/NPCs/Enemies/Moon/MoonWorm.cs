@@ -144,7 +144,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                     // Spawn smoke
                     for (int i = 0; i < 90; i++)
                     {
-                        Smoke smoke = Particle.CreateParticle<Smoke>((p) =>
+                        Smoke smoke = Particle.Create<Smoke>((p) =>
                         {
                             p.Position = NPC.Center;
                             p.Velocity = NPC.velocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(MathHelper.Pi) * (float)Main.rand.NextFloat(1.0f, 15.0f);

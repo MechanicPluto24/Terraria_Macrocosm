@@ -189,7 +189,7 @@ namespace Macrocosm.Content.Machines
                             if (Main.rand.NextBool(2))
                                 continue;
 
-                            Smoke smoke = Particle.CreateParticle<Smoke>((p) =>
+                            Smoke smoke = Particle.Create<Smoke>((p) =>
                             {
                                 p.Position = new Vector2(i, j) * 16f + new Vector2(k % 2 == 0 ? 4 : 13, 18f);
                                 p.Velocity = new Vector2(0, -0.7f).RotatedByRandom(MathHelper.Pi / 16) * atmoDensity;

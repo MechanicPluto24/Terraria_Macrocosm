@@ -575,6 +575,13 @@ AstraToilet
 		Mythril Anvil
 
 
+AstraWorkbench
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Astra Brick x 10
+
+
 Boombox
 	Value: 5 silver
 	Research count: 1
@@ -844,6 +851,13 @@ CosmicEmberToilet
 		Mythril Anvil
 
 
+CosmicEmberWorkbench
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cosmic Ember Brick x 10
+
+
 CryocoreBookcase
 	Value: 1 silver 50 copper
 	Research count: 1
@@ -922,6 +936,13 @@ CryocoreToilet
 		Mythril Anvil
 
 
+CryocoreWorkbench
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cryocore Brick x 10
+
+
 DarkCelestialBookcase
 	Value: 1 silver 50 copper
 	Research count: 1
@@ -998,6 +1019,13 @@ DarkCelestialToilet
 		Dark Celestial Brick x 6
 		at
 		Mythril Anvil
+
+
+DarkCelestialWorkbench
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Dark Celestial Brick x 10
 
 
 DisplayScreen
@@ -1101,6 +1129,13 @@ HeavenforgeToilet
 		Heavenforge Brick x 6
 		at
 		Mythril Anvil
+
+
+HeavenforgeWorkbench
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Heavenforge Brick x 10
 
 
 IndustrialBathtub
@@ -1487,6 +1522,13 @@ LuminiteToilet
 		Mythril Anvil
 
 
+LuminiteWorkbench
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Luminite Brick x 10
+
+
 LunarRustBookcase
 	Value: 1 silver 50 copper
 	Research count: 1
@@ -1565,6 +1607,13 @@ LunarRustToilet
 		Mythril Anvil
 
 
+LunarRustWorkbench
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Lunar Rust Brick x 10
+
+
 MercuryBookcase
 	Value: 1 silver 50 copper
 	Research count: 1
@@ -1641,6 +1690,13 @@ MercuryToilet
 		Mercury Brick x 6
 		at
 		Mythril Anvil
+
+
+MercuryWorkbench
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Mercury Brick x 10
 
 
 SpaceTeddy
@@ -1727,6 +1783,13 @@ StarRoyaleToilet
 		Star Royale Brick x 6
 		at
 		Mythril Anvil
+
+
+StarRoyaleWorkbench
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Star Royale Brick x 10
 
 
 TeddyBear

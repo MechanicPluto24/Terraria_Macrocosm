@@ -4,9 +4,13 @@ namespace Macrocosm.Content.Particles
 {
     public class RocketFuelBubble : Particle
     {
-        public override void OnSpawn()
+        public override void SetDefaults()
         {
             ScaleVelocity = new(-0.001f);
+        }
+
+        public override void OnSpawn()
+        {
         }
 
         public override void AI()

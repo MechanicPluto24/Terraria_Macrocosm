@@ -14,7 +14,7 @@ namespace Macrocosm.Common.Netcode
     ///		<item> <c><see cref="Drawing.Particles.Particle.NetSync(int)"> Particle.NetSync(int) </see></c> is called </item>
     ///		<item> <c><see cref="Content.Rockets.Rocket.NetSync(int)"> Rocket.NetSync(int) </see></c> is called </item>
     ///		<item> <c><see cref="Content.Rockets.LaunchPads.LaunchPad.NetSync(string, int)"> LaunchPad.NetSync(string, int) </see></c> is called </item>
-    ///		<item> <c>NPC.netUpdate</c> or <c>Projectile.netUpdate</c> are set to true, or the corresponding NetMessage is sent <b>(TODO)</b></item>
+    ///		<item> <b>(TODO)</b> <c>NPC.netUpdate</c> or <c>Projectile.netUpdate</c> are set to true, or the corresponding NetMessage is sent</item>
     /// </list> </summary>
     [AttributeUsage(AttributeTargets.Field)]
     public class NetSyncAttribute : Attribute { }

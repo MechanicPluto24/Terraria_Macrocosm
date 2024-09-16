@@ -15,8 +15,6 @@ namespace Macrocosm.Content.Particles
         public bool FadeIn = false;
         public bool FadeOut = true;
 
-        public Color DrawColor = Color.White;
-
         public int TargetAlpha = 255;
 
         public int FadeInSpeed = 1;
@@ -32,6 +30,30 @@ namespace Macrocosm.Content.Particles
 
         public override ParticleDrawLayer DrawLayer => collided ? ParticleDrawLayer.AfterProjectiles : ParticleDrawLayer.BeforeNPCs;
 
+        public override void SetDefaults()
+        {
+            TimeToLive = 120;
+
+            Acceleration = new(0, -0.98f);
+            ScaleVelocity = new(-0.005f);
+
+            FadeIn = false;
+            FadeOut = true;
+
+            TargetAlpha = 255;
+
+            FadeInSpeed = 1;
+            FadeOutSpeed = 4;
+
+            ScaleDownSpeed = 0.005f;
+
+            Collide = false;
+
+            alpha = 255;
+            fadedIn = false;
+            collided = false;
+        }
+
         public override void OnSpawn()
         {
             if (FadeOut)
@@ -39,9 +61,6 @@ namespace Macrocosm.Content.Particles
 
             if (FadeIn)
                 alpha = 0;
-
-            Acceleration = new(0.98f);
-            ScaleVelocity = new(-0.005f);
         }
 
         public override void AI()
@@ -98,7 +117,7 @@ namespace Macrocosm.Content.Particles
 
         public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
-            spriteBatch.Draw(Texture.Value, Position - screenPosition, GetFrame(), Color.Lerp(DrawColor, lightColor, 0.5f).WithAlpha(DrawColor.A) * ((float)alpha / 255f), Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(Texture.Value, Position - screenPosition, GetFrame(), Color.Lerp(Color, lightColor, 0.5f).WithAlpha(Color.A) * ((float)alpha / 255f), Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
         }
 
     }
