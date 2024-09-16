@@ -139,6 +139,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
                     p.Scale = new(Main.rand.NextFloat(0.1f, 1f));
                     p.FadeOutNormalizedTime = 0.5f;
                     p.Color = color.WithAlpha((byte)Main.rand.Next(0, 64));
+                    p.OutlineColor = color * 0.2f;
                     p.ScaleVelocity = new(0.01f);
                 });
             }

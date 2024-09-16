@@ -593,12 +593,12 @@ AluminumShortsword: {
 
 ArtemiteGreatsword: {
 	DisplayName: Artemite Greatsword
-	Tooltip: "Hold <right> for a charged up swing"
+	Tooltip: Hold <right> for a charged up swing
 }
 
 ArtemiteSpear: {
 	DisplayName: Artemite Spear
-	Tooltip: "<right> to throw the spear"
+	Tooltip: <right> to throw the spear
 }
 
 ArtemiteSword: {
@@ -642,12 +642,12 @@ ArchersLine: {
 
 Copernicus: {
 	DisplayName: Copernicus
-	Tooltip: "Occasionally shoots Inhibitor Field Grenades"
+	Tooltip: Occasionally shoots Inhibitor Field Grenades
 }
 
 Cruithne: {
 	DisplayName: Cruithne-3753
-	Tooltip: "Shoots slugs and a Delirium shell"
+	Tooltip: Shoots slugs and a Delirium shell
 }
 
 LHBMinigun: {
@@ -771,7 +771,7 @@ SteelPickaxe: {
 
 SteelZweihander: {
 	DisplayName: Steel Zweihander
-	Tooltip: "Hold <right> for a charged up swing"
+	Tooltip: Hold <right> for a charged up swing
 }
 
 SteelCrossbow: {
