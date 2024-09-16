@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Drawing.Trails;
-using Macrocosm.Common.Netcode;
+﻿using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -91,6 +90,12 @@ namespace Macrocosm.Common.Drawing.Particles
         /// <summary> The draw color </summary>
         [NetSync] public Color Color = Color.White;
 
+        /// <summary> Particle animation update speed, in ticks per frame </summary>
+        [NetSync] public int FrameSpeed;
+
+        protected int currentFrame = 0;
+        protected int frameCounter = 0;
+
         #endregion
 
         #region Common Properties
@@ -143,25 +148,41 @@ namespace Macrocosm.Common.Drawing.Particles
         public virtual int MaxPoolCount { get; }
 
         /// <summary> Resets the particle's fields to their default values. </summary>
-        private void Reset()
+        public void Reset()
         {
             Active = false;
-            TimeLeft = 0;
+
             TimeToLive = 300;
+            TimeLeft = TimeToLive;
+
             Position = Vector2.Zero;
             Velocity = Vector2.Zero;
             Acceleration = Vector2.Zero;
+
             Rotation = 0f;
             RotationVelocity = 0f;
             RotationAcceleration = 0f;
+
             Scale = new Vector2(1f);
             ScaleVelocity = Vector2.Zero;
             ScaleAcceleration = Vector2.Zero;
             AllowNegativeScale = false;
+
             FadeInNormalizedTime = float.Epsilon;
             FadeOutNormalizedTime = 1f;
+
             Color = Color.White;
+
             spawned = false;
+
+            CustomDrawer = null;
+
+            FrameSpeed = int.MaxValue;
+            frameCounter = 0;
+            currentFrame = 0;
+
+            OldPositions = new Vector2[1];
+            OldRotations = new float[1];
 
             SetDefaults();
         }
@@ -199,20 +220,14 @@ namespace Macrocosm.Common.Drawing.Particles
 
         #region Animation
 
-        /// <summary> Whether to pick a random frame on spawn </summary>
+        /// <summary> Whether this particle type picks a random frame on spawn </summary>
         public virtual bool SetRandomFrameOnSpawn => false;
 
-        /// <summary> If true, particle will despawn on the end of animation </summary>
+        /// <summary> Whether this particle should despawn on the end of an animation cycle </summary>
         public virtual bool DespawnOnAnimationComplete => false;
 
         /// <summary> Number of animation frames of this particle </summary>
         public virtual int FrameCount => 1;
-
-        /// <summary> Particle animation update speed, in ticks per frame </summary>
-        public virtual int FrameSpeed { get; set; } = 1;
-
-        protected int currentFrame = 0;
-        protected int frameCnt = 0;
 
         /// <summary> Used for animating the <c>Particle</c>. By default, updates with <see cref="FrameCount"/> and <see cref="FrameSpeed"/> </summary>
         public virtual void UpdateFrame()
@@ -223,10 +238,10 @@ namespace Macrocosm.Common.Drawing.Particles
 
             if (Main.hasFocus || Main.netMode == NetmodeID.MultiplayerClient)
             {
-                frameCnt++;
-                if (frameCnt >= FrameSpeed)
+                frameCounter++;
+                if (frameCounter >= FrameSpeed)
                 {
-                    frameCnt = 0;
+                    frameCounter = 0;
                     currentFrame++;
 
                     if (currentFrame >= FrameCount)
@@ -347,12 +362,20 @@ namespace Macrocosm.Common.Drawing.Particles
         #endregion
 
         #region Trails
+
+        /// <summary> This particle length of <see cref="OldPositions"/> and <see cref="OldRotations"/> </summary>
         public virtual int TrailCacheLength { get; set; } = 1;
 
+        /// <summary> Previous position </summary>
         public Vector2 OldPosition => OldPositions[0];
+
+        /// <summary> Previous rotation </summary>
         public float OldRotation => OldRotations[0];
 
+        /// <summary> Collection of old position, of length <see cref="TrailCacheLength"/> </summary>
         public Vector2[] OldPositions = new Vector2[1];
+
+        /// <summary> Collection of old rotations, of length <see cref="TrailCacheLength"/> </summary>
         public float[] OldRotations = new float[1];
 
         private void PopulateTrailArrays()

@@ -32,7 +32,9 @@ namespace Macrocosm.Content.Particles
 
         public override void SetDefaults()
         {
-            Acceleration = new(0.98f);
+            TimeToLive = 120;
+
+            Acceleration = new(0, -0.98f);
             ScaleVelocity = new(-0.005f);
 
             FadeIn = false;

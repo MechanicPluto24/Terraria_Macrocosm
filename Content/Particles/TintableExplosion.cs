@@ -10,7 +10,6 @@ namespace Macrocosm.Content.Particles
     {
         public override int TrailCacheLength => 15;
         public override int FrameCount => 7;
-        public override int FrameSpeed => 4;
         public override bool DespawnOnAnimationComplete => true;
 
         public int NumberOfInnerReplicas { get; set; }
@@ -18,9 +17,11 @@ namespace Macrocosm.Content.Particles
 
         public override void SetDefaults()
         {
+            FrameSpeed = 4;
+            RotationVelocity = Main.rand.NextBool() ? 0.005f : -0.005f;
+
             NumberOfInnerReplicas = 0;
             ReplicaScalingFactor = 0f;
-            RotationVelocity = Main.rand.NextBool() ? 0.005f : -0.005f;
         }
 
         public override void OnSpawn()

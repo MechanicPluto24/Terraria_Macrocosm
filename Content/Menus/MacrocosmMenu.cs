@@ -137,6 +137,7 @@ namespace Macrocosm.Content.Menus
         }
 
         private bool drawOldLogo = false;
+
         public override Asset<Texture2D> Logo => !drawOldLogo ? logo : logoOld;
         public override Asset<Texture2D> SunTexture => Macrocosm.EmptyTex;
         public override Asset<Texture2D> MoonTexture => Macrocosm.EmptyTex;
@@ -465,7 +466,7 @@ namespace Macrocosm.Content.Menus
                 {
                     targetPosition = Vector2.Lerp(grabbed.Center, Sun.Center + (mousePosition - Sun.Center) * minDistanceFromSun, 0.0005f);
 
-                    if (Vector2.Distance(grabbed.Center, mousePosition) > 80f)
+                    if (Vector2.Distance(grabbed.Center, mousePosition) > 20f)
                         forceRelease = true;
                 }
                 else
@@ -479,8 +480,7 @@ namespace Macrocosm.Content.Menus
 
                 if (!Main.mouseLeft || forceRelease)
                 {
-                    if (!released.ContainsKey(grabbed))
-                        released.Add(grabbed, /*30*/ 1);
+                    released.TryAdd(grabbed, 1);
                     grabbed = null;
                 }
             }

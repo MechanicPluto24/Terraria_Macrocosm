@@ -86,7 +86,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, Projectile.rotation - MathHelper.PiOver2);
                 if (Timer >= MaxTime)
                 {
-                    Particle.CreateParticle<TintableExplosion>(p =>
+                    Particle.Create<TintableExplosion>(p =>
                     {
                         p.Position = Projectile.Center + new Vector2((Projectile.width / 2), 0).RotatedBy(Projectile.rotation);
                         p.Color = (new Color(94, 229, 163, 200));
@@ -95,7 +95,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                         p.ReplicaScalingFactor = 0.4f;
                     });
 
-                    Particle.CreateParticle<TintableExplosion>(p =>
+                    Particle.Create<TintableExplosion>(p =>
                    {
                        p.Position = Projectile.Center + new Vector2((Projectile.width / 2), 0).RotatedBy(Projectile.rotation);
                        p.Color = (new Color(213, 155, 148, 200));

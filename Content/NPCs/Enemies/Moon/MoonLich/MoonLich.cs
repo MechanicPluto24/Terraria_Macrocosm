@@ -75,7 +75,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
             offsetY = (float)(Math.Sin(timer / 10) * 7);
             timer++;
             if (timer % 5 == 0)
-                Particle.CreateParticle<TintableFire>(p =>
+                Particle.Create<TintableFire>(p =>
                 {
                     p.Position = NPC.position;
                     p.Velocity = Vector2.UnitX.RotatedByRandom(MathHelper.TwoPi);

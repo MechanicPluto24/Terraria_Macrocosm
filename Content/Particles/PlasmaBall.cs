@@ -12,7 +12,7 @@ namespace Macrocosm.Content.Particles
     {
         private static Asset<Texture2D> glow;
         public override int TrailCacheLength => 7;
-        public override int MaxPoolCount => 1000;
+        public override int MaxPoolCount => 1500;
 
         public override void SetDefaults()
         {

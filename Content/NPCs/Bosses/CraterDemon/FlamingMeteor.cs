@@ -107,7 +107,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 //NPC.friendly = true;
                 // NPC.dontTakeDamage = true;
                 //NPC.netUpdate = true;
-                Particle.CreateParticle<TintableExplosion>(p =>
+                Particle.Create<TintableExplosion>(p =>
                 {
                     p.Position = NPC.Center;
                     p.Color = (new Color(242, 142, 35, 65));
@@ -116,7 +116,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                     p.ReplicaScalingFactor = 0.4f;
                 });
 
-                 Particle.CreateParticle<TintableExplosion>(p =>
+                 Particle.Create<TintableExplosion>(p =>
                 {
                     p.Position = NPC.Center;
                     p.Color = (new Color(30, 255, 105, 65));
