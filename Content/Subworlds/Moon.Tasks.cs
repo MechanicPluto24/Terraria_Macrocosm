@@ -38,6 +38,7 @@ namespace Macrocosm.Content.Subworlds
         private bool gen_IsIrradiationRight;
         private static float gen_StartYOffset;
 
+        private static Point gen_LuminiteShrinePosition;
         private static Point gen_HeavenforgeShrinePosition;
         private static Point gen_MercuryShrinePosition;
         private static Point gen_LunarRustShrinePosition;
@@ -273,6 +274,26 @@ namespace Macrocosm.Content.Subworlds
                     }
                 }
             }
+        }
+        [Task]
+        private void PrepareLuminiteShrine(GenerationProgress progress)
+        {
+            progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.CavePass");
+
+            Structure shrine = new LuminiteShrine();
+
+            int x, y;
+            do
+            {
+                x = WorldGen.genRand.Next((int)(Main.maxTilesX * (0.115f * 3.5 + 0.03f)), (int)(Main.maxTilesX * (0.145f * 3.5 + 0.03f)));
+                y = WorldGen.genRand.Next((int)(Main.maxTilesY * 0.45f), (int)(Main.maxTilesY * 0.55f));
+            } while (!(StructureMap.CanPlace(new Rectangle(x, y, shrine.Size.X, shrine.Size.Y)) && WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Rectangle(shrine.Size.X, shrine.Size.Y), new Conditions.IsSolid()), out _)));
+            StructureMap.AddProtectedStructure(new Rectangle(x, y, shrine.Size.X, shrine.Size.Y), 10);
+
+            WorldUtils.Gen(new Point(x + shrine.Size.X / 2, y + shrine.Size.Y / 2), new CustomShapes.ChasmSideways(12, 8, 80, 2, 0, dir: true), new Actions.ClearTile());
+            WorldUtils.Gen(new Point(x + shrine.Size.X / 2, y + shrine.Size.Y / 2), new CustomShapes.ChasmSideways(12, 8, 80, 2, 0, dir: false), new Actions.ClearTile());
+
+            gen_LuminiteShrinePosition = new(x + shrine.Size.X / 2, y + shrine.Size.Y / 2);
         }
 
         [Task]
@@ -711,6 +732,20 @@ namespace Macrocosm.Content.Subworlds
             SmoothWorld(progress);
         }
 
+        [Task]
+        private void PlaceLuminiteShrine(GenerationProgress progress)
+        {
+            progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
+
+            Structure shrine = new LuminiteShrine();
+            bool solidDown = WorldUtils.Find(gen_LuminiteShrinePosition, Searches.Chain(new Searches.Down(150), new Conditions.IsSolid()), out Point solidGround);
+            if (solidDown && shrine.Place(new Point16(solidGround.X - shrine.Size.X / 2, solidGround.Y - (int)(shrine.Size.Y * 0.8f)), null))
+                return;
+
+            int fallbackX = WorldGen.genRand.Next(0, Main.maxTilesX - shrine.Size.X);
+            int fallbackY = WorldGen.genRand.Next(SurfaceHeight(fallbackX) + RegolithLayerHeight, Main.maxTilesY - shrine.Size.Y * 2);
+            shrine.Place(new Point16(fallbackX, fallbackY), null);
+        }
 
         [Task]
         private void PlaceHeavenforgeShrine(GenerationProgress progress)

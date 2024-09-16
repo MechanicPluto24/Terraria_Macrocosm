@@ -103,7 +103,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             }
 
             if (AI_Timer % 6 == 1)
-                if (Main.netMode != NetmodeID.MultiplayerClient)
+                if (Projectile.owner == Main.myPlayer)
                     Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.oldVelocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(Math.PI / 4) * 17f, ModContent.ProjectileType<FrigorianIceShard>(), Projectile.damage / 4, 2, -1);
 
             if (BounceCounter > numBounces)
@@ -156,7 +156,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
         private void CreateALotOfIce()
         {
-            if (Main.netMode != NetmodeID.MultiplayerClient)
+            if (Projectile.owner == Main.myPlayer)
             {
                 Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, (-Vector2.UnitY * 8f).RotatedByRandom(Math.PI / 4), ModContent.ProjectileType<FrigorianIceCrystal>(), Projectile.damage / 2, 2, -1);
                 Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, (-Vector2.UnitY * 8f).RotatedByRandom(Math.PI / 4), ModContent.ProjectileType<FrigorianIceCrystal>(), Projectile.damage / 2, 2, -1);

@@ -1,7 +1,9 @@
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Particles;
 using Macrocosm.Content.Projectiles.Hostile;
 using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Microsoft.Xna.Framework;
@@ -53,7 +55,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.height = 44;
             NPC.damage = 80;
             NPC.defense = 60;
-            NPC.lifeMax = 550;
+            NPC.lifeMax = 1000;
             NPC.HitSound = SoundID.NPCHit1;
             NPC.DeathSound = SoundID.NPCDeath2;
             NPC.knockBackResist = 0.01f;
@@ -74,11 +76,28 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         private bool gasLeak = false;
         private float runSpeed = 0.01f;
         private int headTimer = 0;
-
+        public override void ModifyHitByProjectile(Projectile projectile,ref NPC.HitModifiers modifiers){
+            if(projectile.type==ModContent.ProjectileType<ZombieEngineerExplosion>()){
+                modifiers.FinalDamage *= 0f;
+                {
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<ZombieEngineerExplosion>(), 100, 0f, Main.myPlayer);
+                var entitySource = NPC.GetSource_Death();
+                Gore.NewGore(entitySource, NPC.position, NPC.velocity, Mod.Find<ModGore>("ZombieEngineerGore1").Type);
+                Gore.NewGore(entitySource, NPC.position, NPC.velocity, Mod.Find<ModGore>("ZombieEngineerGore2").Type);
+                Gore.NewGore(entitySource, NPC.position, NPC.velocity, Mod.Find<ModGore>("ZombieEngineerGore3").Type);
+                Gore.NewGore(entitySource, NPC.position, NPC.velocity, Mod.Find<ModGore>("ZombieEngineerGore4").Type);
+                NPC.active = false;
+                NPC.life = 0;
+                }
+                }
+                   
+            }
+        }
         public override void AI()
         {
-            if (NPC.velocity.Y < 0f)
-                NPC.velocity.Y += 0.1f;
+          
 
             NPC.TargetClosest();
             Player target = Main.player[NPC.target];
@@ -130,7 +149,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     var entitySource = NPC.GetSource_Death();
-                    Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<Explosion>(), 100, 0f, Main.myPlayer);
+                    Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<ZombieEngineerExplosion>(), 100, 0f, Main.myPlayer);
                     Gore.NewGore(entitySource, NPC.position, NPC.velocity * 0.1f, Mod.Find<ModGore>("ZombieEngineerGore1").Type);
                     Gore.NewGore(entitySource, NPC.position, NPC.velocity * 0.1f, Mod.Find<ModGore>("ZombieEngineerGore2").Type);
                     Gore.NewGore(entitySource, NPC.position, NPC.velocity * 0.1f, Mod.Find<ModGore>("ZombieEngineerGore3").Type);
@@ -144,7 +163,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public void Idle()
         {
-            if (Timer % 120f == 0f && Main.rand.NextBool(5))
+            if (Timer % 120f == 0f && Main.rand.NextBool(5)||NPC.velocity.X==0f)
             {
                 if (Main.rand.NextBool(2))
                     idleDirection = new Vector2(1, 0);
@@ -159,9 +178,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             Player player = Main.player[NPC.target];
             bool clearLineOfSight = Collision.CanHitLine(NPC.position, NPC.width, NPC.height, player.position, player.width, player.height);
-            Utility.AIFighter(NPC, ref NPC.ai, player.Center, moveInterval: runSpeed, velMax: 4f, maxJumpTilesX: 3, maxJumpTilesY: 1);
-            if (runSpeed < 3f)
-                runSpeed += 0.01f;
+            Utility.AIFighter(NPC, ref NPC.ai, player.Center, accelerationFactor: 0.08f, velMax: 4f, maxJumpTilesX: 2, maxJumpTilesY: 1);
+           
 
             if (Vector2.Distance(NPC.Center, player.Center) < 300f)
                 gasLeak = true;
@@ -183,26 +201,25 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         private int npcFrame = 0;
         public void RaiseHead()
         {
-            if (raisedHead == false)
-            {
-                raisedHead = true;
-                NPC.frame.Y = 0;
+            if(raisedHead==false){
+                raisedHead=true;
+                NPC.frame.Y =0;
             }
-            NPC.velocity.X = 0f;
+            NPC.velocity.X=0f;
             headTimer++;
-            if (headTimer % 25 == 24)
-            {
+            if (headTimer%25==24){
                 npcFrame++;
             }
-            if (npcFrame > 2)
-            {
-                AI_State = ActionState.Attack;
+            if(npcFrame>2){
+                AI_State=ActionState.Attack;
             }
         }
 
         public void Jump()
         {
             NPC.rotation = NPC.velocity.ToRotation();
+            if (NPC.velocity.Y==0f)
+                NPC.velocity.X*=0.95f;
         }
 
         public override void FindFrame(int frameHeight)
@@ -239,6 +256,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
                 if (AI_State == ActionState.Attack)
                 {
+
                     if (!attackingFrame.Contains(frameIndex))
                         NPC.frame.Y = frameHeight * attackingFrame.Start.Value;
 
@@ -294,7 +312,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             if (NPC.life <= 0)
             {
-                Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<Explosion>(), 100, 0f, Main.myPlayer);
+                Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<ZombieEngineerExplosion>(), 100, 0f, Main.myPlayer);
 
                 if (Main.dedServ)
                     return; // don't run on the server

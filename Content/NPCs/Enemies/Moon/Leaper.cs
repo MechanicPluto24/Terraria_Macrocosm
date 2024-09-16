@@ -2,8 +2,10 @@ using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
+using ReLogic.Content;
 using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -14,6 +16,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
     public class Leaper : ModNPC
     {
+        private static Asset<Texture2D> eye;
         public override void SetStaticDefaults()
         {
             base.SetStaticDefaults();
@@ -42,6 +45,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             SpawnModBiomes = [ModContent.GetInstance<MoonUndergroundBiome>().Type];
         }
+        private bool PreformingWallAnimation=false;
 
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
         {
@@ -54,53 +58,15 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public bool Jumping = false;
 
-        public void AILeaper(NPC npc, ref float[] ai, bool fleeWhenDay = true, bool allowBoredom = true, int openDoors = 1, float moveInterval = 0.07f, float velMax = 1f, int maxJumpTilesX = 3, int maxJumpTilesY = 4, int ticksUntilBoredom = 60, bool targetPlayers = true, int doorBeatCounterMax = 10, int doorCounterMax = 60, bool jumpUpPlatforms = false, Action<bool, bool, Vector2, Vector2> onTileCollide = null, bool ignoreJumpTiles = false)
+        public static void AILeaper(Leaper leaper,NPC npc, ref float[] ai, Vector2 targetPosition, float accelerationFactor = 0.07f, float velMax = 1f, int maxJumpTilesX = 3, int maxJumpTilesY = 4, bool targetPlayers = true, bool jumpUpPlatforms = false, Action<bool, bool, Vector2, Vector2> onTileCollide = null, bool ignoreJumpTiles = false)
         {
-            bool xVelocityChanged = false;
-            //This block of code checks for major X velocity/directional changes as well as periodically updates the npc.
-            if (npc.velocity.Y == 0f && (npc.velocity.X > 0f && npc.direction < 0 || npc.velocity.X < 0f && npc.direction > 0))
-            {
-                xVelocityChanged = true;
-            }
-            if (npc.position.X == npc.oldPosition.X || ai[3] >= ticksUntilBoredom || xVelocityChanged)
-            {
-                ai[3] += 1f;
-            }
+            if(!leaper.PreformingWallAnimation){
+            
+            if (targetPosition.X > npc.Center.X)
+                npc.direction = 1;
             else
-            if (Math.Abs(npc.velocity.X) > 0.9 && ai[3] > 0f) { ai[3] -= 1f; }
-            if (ai[3] > ticksUntilBoredom * 10) { ai[3] = 0f; }
-            if (npc.justHit) { ai[3] = 0f; }
-            if (ai[3] == ticksUntilBoredom) { npc.netUpdate = true; }
+                npc.direction = -1;
 
-            bool notBored = ai[3] < ticksUntilBoredom;
-            //if npc does not flee when it's day, if is night, or npc is not on the surface and it hasn't updated projectile pass, update target.
-            if (targetPlayers && (!fleeWhenDay || !Main.dayTime || npc.position.Y > Main.worldSurface * 16.0) && (fleeWhenDay && Main.dayTime ? notBored : !allowBoredom || notBored))
-            {
-                npc.TargetClosest();
-            }
-            else
-            if (ai[2] <= 0f)//if 'bored'
-            {
-                if (fleeWhenDay && Main.dayTime && npc.position.Y / 16f < Main.worldSurface && npc.timeLeft > 10)
-                {
-                    npc.timeLeft = 10;
-                }
-                if (npc.velocity.X == 0f)
-                {
-                    if (npc.velocity.Y == 0f)
-                    {
-                        ai[0] += 1f;
-                        if (ai[0] >= 2f)
-                        {
-                            npc.direction *= -1;
-                            npc.spriteDirection = npc.direction;
-                            ai[0] = 0f;
-                        }
-                    }
-                }
-                else { ai[0] = 0f; }
-                if (npc.direction == 0) { npc.direction = -1; }
-            }
             //if velocity is less than -1 or greater than 1...
             if (npc.velocity.X < -velMax || npc.velocity.X > velMax)
             {
@@ -108,29 +74,29 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 if (npc.velocity.Y == 0f)
                 {
                     npc.velocity *= 0.8f;
-
                 }
             }
-            else
-            if (npc.velocity.X < velMax && npc.direction == 1) //handles movement to the right. Clamps at velMaxX.
+            else if (npc.velocity.X < velMax && npc.direction == 1) //handles movement to the right. Clamps at velMaxX.
             {
-                npc.velocity.X += moveInterval;
-                if (npc.velocity.X > velMax) { npc.velocity.X = velMax; }
+                npc.velocity.X += accelerationFactor;
+                if (npc.velocity.X > velMax)
+                {
+                    npc.velocity.X = velMax;
+                }
             }
-            else
-            if (npc.velocity.X > -velMax && npc.direction == -1) //handles movement to the left. Clamps at -velMaxX.
+            else if (npc.velocity.X > -velMax && npc.direction == -1) //handles movement to the left. Clamps at -velMaxX.
             {
-                npc.velocity.X -= moveInterval;
-                if (npc.velocity.X < -velMax) { npc.velocity.X = -velMax; }
+                npc.velocity.X -= accelerationFactor;
+                if (npc.velocity.X < -velMax)
+                {
+                    npc.velocity.X = -velMax;
+                }
             }
+
+
+
             Utility.WalkupHalfBricks(npc);
-            //if allowed to open doors and is currently doing so, reduce npc velocity on the X axis to 0. (so it stops moving)
-            if (openDoors != -1 && Utility.AttemptOpenDoor(npc, ref ai[1], ref ai[2], ref ai[3], ticksUntilBoredom, doorBeatCounterMax, doorCounterMax, openDoors))
-            {
-                npc.velocity.X = 0;
-            }
-            else //if no door to open, reset ai.
-            if (openDoors != -1) { ai[1] = 0f; ai[2] = 0f; }
+
             //if there's a solid floor under us...
             if (Utility.HitTileOnSide(npc, 3))
             {
@@ -138,14 +104,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 if (npc.velocity.X < 0f && npc.direction == -1 || npc.velocity.X > 0f && npc.direction == 1)
                 {
                     //...attempt to jump if needed.
-                    Vector2 newVec = Utility.AttemptJump(npc.position, npc.velocity, npc.width, npc.height, npc.direction, jumpUpPlatforms && notBored ? Main.player[npc.target] : null, npc.directionY, maxJumpTilesX, maxJumpTilesY, velMax, jumpUpPlatforms, ignoreJumpTiles);
-                    if (npc.noTileCollide)
-                    {
-                        Jumping = true;
-                    }
+                    Vector2 newVec = Utility.AttemptJump(npc.position, npc.velocity, npc.width, npc.height, npc.direction, targetPosition, npc.directionY, maxJumpTilesX, maxJumpTilesY, velMax, jumpUpPlatforms, ignoreJumpTiles);
                     if (!npc.noTileCollide)
                     {
-
                         newVec = Collision.TileCollision(npc.position, newVec, npc.width, npc.height);
                         Vector4 slopeVec = Collision.SlopeCollision(npc.position, newVec, npc.width, npc.height);
                         Vector2 slopeVel = new(slopeVec.Z, slopeVec.W);
@@ -157,8 +118,28 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                         npc.position = new Vector2(slopeVec.X, slopeVec.Y);
                         npc.velocity = slopeVel;
                     }
-                    if (npc.velocity != newVec) { npc.velocity = newVec; npc.netUpdate = true; }
+
+                    if (npc.velocity != newVec)
+                    {
+                        npc.velocity = newVec;
+                        npc.netUpdate = true;
+                       
+                    }
                 }
+            }
+            if (Utility.HitTileOnSide(npc, 3)){
+                leaper.Jumping=false;
+            }
+            else{
+                leaper.Jumping=true;
+            }
+            
+            if(Utility.HitTileOnSide(npc, 0)||Utility.HitTileOnSide(npc, 1)&&(leaper.Jumping==true&&leaper.Fear==false&&npc.velocity.X==0)){
+                leaper.PreformingWallAnimation=true;
+                npc.frame.Y=1056;
+            }
+            else
+                leaper.PreformingWallAnimation=false;
             }
         }
 
@@ -174,6 +155,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         public bool Fear = false; //is it fleeing?
         public float RageManager(float Lightlevel)//Manages the leapers rage.
         {
+            
             if (Lightlevel < LightValueFlee)
                 return -0.03f; //Calms down when in darkness
             if (Lightlevel >= LightValueFlee && Lightlevel < LightValueRage)
@@ -186,6 +168,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override void AI()
         {
+            NPC.TargetClosest();
+            Player player = Main.player[NPC.target];
             Rage += RageManager(Lighting.GetColor(NPC.Center.ToTileCoordinates()).GetBrightness()); //manage rage.
             //put caps on rage.
             if (Rage > RageThreshold)
@@ -196,17 +180,17 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             if (Rage <= 0.01f)
             {//Pure darkness, stalk the player slowly.
-                AILeaper(NPC, ref NPC.ai, false, true, velMax: 2, maxJumpTilesX: 15, maxJumpTilesY: 10, moveInterval: 0.06f);
+                AILeaper(this ,NPC, ref NPC.ai, player.Center, accelerationFactor: 0.08f, velMax: 2f, maxJumpTilesX: 2, maxJumpTilesY: 1);
                 Fear = false;
             }
             if (Rage > 0.01f && Rage < RageThreshold)
             {//Flee.
-                AILeaper(NPC, ref NPC.ai, false, true, velMax: 4, maxJumpTilesX: 15, maxJumpTilesY: 10, moveInterval: -0.075f);
+                AILeaper(this,NPC, ref NPC.ai, player.Center, accelerationFactor: -0.07f, velMax: 4f, maxJumpTilesX: 2, maxJumpTilesY: 1);
                 Fear = true;
             }
             if (Rage >= RageThreshold)
             {//Attack with increasing speed.
-                AILeaper(NPC, ref NPC.ai, false, true, velMax: 7, maxJumpTilesX: 18, maxJumpTilesY: 12, moveInterval: 0.08f + (Rage / 100f));
+                AILeaper(this,NPC, ref NPC.ai, player.Center, accelerationFactor: 0.2f, velMax: 7f, maxJumpTilesX: 2, maxJumpTilesY: 1);
                 Fear = false;
             }
 
@@ -225,71 +209,114 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         // frames 10 - 15: start leap
         // frame 16 - leap while mid-air (mid-vacuum?)
         // frames 17 - 23: run 
+        private readonly Range IdleFrames = 0..9;
+        private readonly Range JumpingFrames = 10..16;
+        private readonly Range RunningFrame = 17..23;
+        private readonly Range WallFrame = 24..39;
+        private int npcFrame = 0;
+       
 
         public override void FindFrame(int frameHeight)
         {
             int ticksPerFrame = 5;
-
-            int idleFrameInitial = 0;
-            int idleFrameCount = 10;
-
-            int leapFrameInitial = 10;
-            int leapFrameCount = 7;
-
-            int midAirFrame = 16;
-
-            int runFrameInitial = 17;
-            int runFrameCount = 7;
-
-            if (!NPC.IsABestiaryIconDummy)
-                if (NPC.velocity.Y < -0.1f ||
-                         !Main.tile[(int)(NPC.Center.X / 16), (int)((NPC.Center.Y + NPC.height / 2) / 16)].HasTile &&
-                         !Main.tile[(int)(NPC.Center.X / 16), (int)((NPC.Center.Y + NPC.height / 2) / 16) + 1].HasTile &&
-                         !Main.tile[(int)(NPC.Center.X / 16), (int)((NPC.Center.Y + NPC.height / 2) / 16) + 2].HasTile)
-                {
-                    NPC.frame.Y = midAirFrame * frameHeight;
-                }
-
+            int frameIndex = NPC.frame.Y / frameHeight;
             NPC.frameCounter++;
             NPC.spriteDirection = Fear == true ? -NPC.direction : NPC.direction; //Edtited this line to make the leaper face the right direction
+            if(PreformingWallAnimation){
+               
 
+            
+                    NPC.velocity=Vector2.Zero;
+                    // Update frame
+                    if (NPC.frameCounter > 5.0)
+                    {
+                        NPC.frame.Y += frameHeight;
+                        NPC.frameCounter = 0.0;
+                    }
+
+                    if (frameIndex >= WallFrame.End.Value){
+                        PreformingWallAnimation=false;
+                        NPC.velocity=(Main.player[NPC.target].Center-NPC.Center).SafeNormalize(Vector2.UnitX)*15f;
+                    }
+                    if(Utility.HitTileOnSide(NPC, 0)){
+                    NPC.spriteDirection=-1;
+                    }
+                    if(Utility.HitTileOnSide(NPC, 1)){
+                    NPC.spriteDirection=1;
+                    }
+                       
+            }
+            else{
             if (NPC.velocity == Vector2.Zero)
             {
-                if (NPC.frameCounter >= ticksPerFrame)
-                {
-                    NPC.frameCounter = 0;
-                    NPC.frame.Y += frameHeight;
+                // Reset walking 
+                    if (!IdleFrames.Contains(frameIndex))
+                        NPC.frame.Y = frameHeight * IdleFrames.Start.Value;
 
-                    if (NPC.frame.Y >= idleFrameCount * frameHeight - 1)
-                        NPC.frame.Y = idleFrameInitial * frameHeight;
-                }
+                    // Walking animation frame counter, accounting for walk speed
+                    NPC.frameCounter += Math.Abs(NPC.velocity.X);
+
+                    // Update frame
+                    if (NPC.frameCounter > 5.0)
+                    {
+                        NPC.frame.Y += frameHeight;
+                        NPC.frameCounter = 0.0;
+                    }
+
+                    if (frameIndex >= IdleFrames.End.Value)
+                        NPC.frame.Y = frameHeight * IdleFrames.Start.Value;
             }
             else if (!Jumping)
             {
-                NPC.frame.Y = (int)(NPC.frameCounter / ticksPerFrame + runFrameInitial) * frameHeight;
+                // Reset walking 
+                    if (!RunningFrame.Contains(frameIndex))
+                        NPC.frame.Y = frameHeight * RunningFrame.Start.Value;
 
-                if (NPC.frameCounter >= ticksPerFrame * runFrameCount)
-                {
-                    NPC.frameCounter = 0;
-                    NPC.frame.Y = runFrameInitial * frameHeight;
-                }
+                    // Walking animation frame counter, accounting for walk speed
+              
+
+                    // Update frame
+                    if (NPC.frameCounter > 5.0)
+                    {
+                        NPC.frame.Y += frameHeight;
+                        NPC.frameCounter = 0.0;
+                    }
+
+                    if (frameIndex >= RunningFrame.End.Value)
+                        NPC.frame.Y = frameHeight * RunningFrame.Start.Value;
             }
             else if (Jumping)
             {
-                NPC.frame.Y = (int)(NPC.frameCounter / ticksPerFrame + leapFrameInitial) * frameHeight;
+                // Reset walking 
+                    if (!JumpingFrames.Contains(frameIndex))
+                        NPC.frame.Y = frameHeight * JumpingFrames.Start.Value;
 
-                if (NPC.frameCounter >= ticksPerFrame * leapFrameCount)
-                {
-                    NPC.frameCounter = midAirFrame;
-                    NPC.frame.Y = midAirFrame * frameHeight;
-                }
+                    // Walking animation frame counter, accounting for walk speed
+                    
+
+                    // Update frame
+                    if (NPC.frameCounter > 5.0)
+                    {
+                        NPC.frame.Y += frameHeight;
+                        NPC.frameCounter = 0.0;
+                    }
+
+                    if (frameIndex >= JumpingFrames.End.Value)
+                        NPC.frame.Y = frameHeight *16;
+            }
             }
         }
 
         public override void ModifyNPCLoot(NPCLoot loot)
         {
         }
-
+        public override void PostDraw(SpriteBatch spriteBatch,Vector2 screenPos, Color drawColor)
+        {
+            eye ??= ModContent.Request<Texture2D>(Texture + "_Eye");
+            SpriteEffects effects = NPC.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+            Color glowColor = (Color.White*(((Rage/RageThreshold)*0.5f)+0.1f));
+            Main.EntitySpriteDraw(eye.Value, NPC.Center+(new Vector2(0f,3f)) - Main.screenPosition, NPC.frame, glowColor, 0f, NPC.frame.Size() * 0.5f, NPC.scale, effects, 0f);
+        }
         public override void HitEffect(NPC.HitInfo hit)
         {
 
