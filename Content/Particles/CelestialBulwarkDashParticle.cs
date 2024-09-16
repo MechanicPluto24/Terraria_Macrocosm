@@ -24,7 +24,6 @@ namespace Macrocosm.Content.Particles
 
         private float defScale;
         private float defRotation;
-        private bool spawned;
         private bool collided;
 
         private BlendState blendStateOverride;
@@ -34,9 +33,19 @@ namespace Macrocosm.Content.Particles
         public DashPlayer DashPlayer => Player.GetModPlayer<DashPlayer>();
         public float Progress => DashPlayer.DashProgress;
 
-        public override void OnSpawn()
+        public override void SetDefaults()
         {
             TimeToLive = 1000;
+            PlayerID = 0;
+            Opacity = 0f;
+            collided = false;
+        }
+
+        public override void OnSpawn()
+        {
+            defScale = Scale.X;
+            defRotation = Rotation;
+            CelestialBulwark.GetEffectColor(Player, out Color, out SecondaryColor, out blendStateOverride, out _, out rainbow);
         }
 
         private SpriteBatchState state;
@@ -115,15 +124,6 @@ namespace Macrocosm.Content.Particles
 
         public override void AI()
         {
-            if (!spawned)
-            {
-                spawned = true;
-                defScale = Scale.X;
-                defRotation = Rotation;
-
-                CelestialBulwark.GetEffectColor(Player, out Color, out SecondaryColor, out blendStateOverride, out _, out rainbow);
-            }
-
             if (DashPlayer.DashTimer <= 0 || Player.dead || Player.CCed)
                 Kill();
 

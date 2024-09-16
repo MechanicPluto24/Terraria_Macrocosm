@@ -8,8 +8,6 @@ using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.Utilities.Terraria.Utilities;
-
 
 namespace Macrocosm.Common.Drawing.Particles
 {
@@ -24,7 +22,6 @@ namespace Macrocosm.Common.Drawing.Particles
         public int WhoAmI => ParticleManager.Particles.IndexOf(this);
 
         #region Loading
-
         public override void Load()
         {
             ParticleManager.Textures.Add(ModContent.Request<Texture2D>(TexturePath));
@@ -45,12 +42,7 @@ namespace Macrocosm.Common.Drawing.Particles
 
         #endregion
 
-        protected Particle()
-        {
-            Active = true;
-        }
-
-        #region Fields
+        #region Common Fields
         /// <summary> Whether the current particle instance is active </summary>
         [NetSync] public bool Active;
 
@@ -101,7 +93,7 @@ namespace Macrocosm.Common.Drawing.Particles
 
         #endregion
 
-        #region Properties
+        #region Common Properties
         /// <summary> The <c>Particle</c>'s texture, autoloaded </summary>
         public Asset<Texture2D> Texture => ParticleManager.Textures[Type];
 
@@ -145,6 +137,37 @@ namespace Macrocosm.Common.Drawing.Particles
 
         #endregion
 
+        #region Pooling
+
+        /// <summary> The maximum number of particles of this type to keep in the pool. </summary>
+        public virtual int MaxPoolCount { get; }
+
+        /// <summary> Resets the particle's fields to their default values. </summary>
+        private void Reset()
+        {
+            Active = false;
+            TimeLeft = 0;
+            TimeToLive = 300;
+            Position = Vector2.Zero;
+            Velocity = Vector2.Zero;
+            Acceleration = Vector2.Zero;
+            Rotation = 0f;
+            RotationVelocity = 0f;
+            RotationAcceleration = 0f;
+            Scale = new Vector2(1f);
+            ScaleVelocity = Vector2.Zero;
+            ScaleAcceleration = Vector2.Zero;
+            AllowNegativeScale = false;
+            FadeInNormalizedTime = float.Epsilon;
+            FadeOutNormalizedTime = 1f;
+            Color = Color.White;
+            spawned = false;
+
+            SetDefaults();
+        }
+
+        #endregion
+
         #region Hooks
 
         public bool HasCustomDrawer => CustomDrawer is not null;
@@ -153,14 +176,14 @@ namespace Macrocosm.Common.Drawing.Particles
         /// <summary> Used for loading tasks, called on Mod load </summary>
         public virtual void OnLoad() { }
 
-
         /// <summary> Used for unloading tasks, called on Mod unload </summary>
         public virtual void OnUnload() { }
 
+        /// <summary> Set default values of this particle, called when instanced or fetched from pool. Randomized values are allowed. Runs before <c>CreateParticle</c>, values set here might be overwritten. </summary>
+        public virtual void SetDefaults() { }
 
-        /// <summary> Called when the <c>Particle</c> is spawned </summary>
+        /// <summary> Called when the <c>Particle</c> is spawned, used to create effects or run custom spawn logic. Runs after <c>CreateParticle</c> (on first update tick), may use value set here</summary>
         public virtual void OnSpawn() { }
-
 
         /// <summary> Used for defining the <c>Particle</c>'s behaviour </summary>
         public virtual void AI() { }
@@ -232,14 +255,14 @@ namespace Macrocosm.Common.Drawing.Particles
         #endregion
 
         #region Logic
-        private bool spawned;
+        internal bool spawned;
         public void Update()
         {
             if (!spawned)
             {
                 OnSpawn();
 
-                if(DespawnOnAnimationComplete)
+                if (DespawnOnAnimationComplete)
                     TimeToLive = FrameCount * FrameSpeed - 1;
 
                 TimeLeft = TimeToLive;
@@ -273,11 +296,10 @@ namespace Macrocosm.Common.Drawing.Particles
 
         public void Kill(bool shouldSync = false)
         {
-            if (!Active)
-                return;
-
             OnKill();
             Active = false;
+
+            ParticleManager.RemoveParticle(this);
 
             if (shouldSync)
                 NetSync();

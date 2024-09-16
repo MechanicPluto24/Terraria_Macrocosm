@@ -1,11 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
-
 using Terraria.GameContent.Drawing;
 
 namespace Macrocosm.Common.Drawing.Particles
 {
-    /// <summary> Particle.Creation, by sucss, Nurby & Feldy @ PellucidMod (RIP) </summary>
     public partial class Particle
     {
         /// <summary>
@@ -13,7 +11,7 @@ namespace Macrocosm.Common.Drawing.Particles
         /// </summary>
         /// <typeparam name="T">Type of the particle.</typeparam>
         /// <param name="position">Position of the newly created particle.</param>
-        /// <param name="velocity">Velocity of the newly created particle.</param>s
+        /// <param name="velocity">Velocity of the newly created particle.</param>
         /// <param name="rotation">Rotation of the newly created particle</param>
         /// <param name="scale">Scale of the newly created particle, as a 2-dimensional vector </param>
         /// <param name="shouldSync"> Whether to sync the particle spawn and its <see cref="Common.Netcode.NetSyncAttribute"> NetSync </see> fields </param>
@@ -34,7 +32,7 @@ namespace Macrocosm.Common.Drawing.Particles
         /// </summary>
         /// <typeparam name="T">Type of the particle.</typeparam>
         /// <param name="position">Position of the newly created particle.</param>
-        /// <param name="velocity">Velocity of the newly created particle.</param>s
+        /// <param name="velocity">Velocity of the newly created particle.</param>
         /// <param name="rotation">Rotation of the newly created particle</param>
         /// <param name="scale">Scale of the newly created particle, as a scalar </param>
         /// <param name="shouldSync"> Whether to sync the particle spawn and its <see cref="Common.Netcode.NetSyncAttribute"> NetSync </see> fields </param>
@@ -59,10 +57,19 @@ namespace Macrocosm.Common.Drawing.Particles
         /// <returns> The particle instance </returns>
         public static T CreateParticle<T>(Action<T> particleAction, bool shouldSync = false) where T : Particle
         {
-            T particle = (T)Activator.CreateInstance(typeof(T));
-            ParticleManager.Particles.Add(particle);
+            T particle;
 
+            if (ParticleManager.ParticlePools.TryGetValue(typeof(T), out var pool) && pool.Count > 0)
+                particle = (T)pool.Pop();
+            else
+                particle = (T)Activator.CreateInstance(typeof(T));
+
+            particle.Active = true;
+            particle.Reset(); 
             particleAction.Invoke(particle);
+
+            if (!ParticleManager.Particles.Contains(particle))
+                ParticleManager.Particles.Add(particle);
 
             if (shouldSync)
                 particle.NetSync();

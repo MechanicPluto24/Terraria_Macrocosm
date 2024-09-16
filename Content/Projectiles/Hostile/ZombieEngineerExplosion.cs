@@ -38,7 +38,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
                 Particle.CreateParticle<TintableExplosion>(p =>
                 {
                     p.Position = Projectile.Center;
-                    p.DrawColor = (new Color(25, 25, 25, 128));
+                    p.Color = (new Color(25, 25, 25, 128));
                     p.Scale = new(1.6f);
                     p.NumberOfInnerReplicas = 1;
                     p.ReplicaScalingFactor = 1f;
@@ -47,7 +47,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
                 Particle.CreateParticle<TintableExplosion>(p =>
                 {
                     p.Position = Projectile.Center;
-                    p.DrawColor = (new Color(255, 180, 100, 200));
+                    p.Color = (new Color(255, 180, 100, 200));
                     p.Scale = new(1.5f);
                     p.NumberOfInnerReplicas = 8;
                     p.ReplicaScalingFactor = 0.1f;

@@ -784,7 +784,7 @@ namespace Macrocosm.Content.Rockets
                     p.TargetAlpha = 128;
                     p.ScaleDownSpeed = 0.001f;
                     p.Acceleration = new(0.995f);
-                    p.DrawColor = Color.White.WithAlpha(150);
+                    p.Color = Color.White.WithAlpha(150);
                     p.Collide = true;
                 }, shouldSync: false);
             }
@@ -818,7 +818,7 @@ namespace Macrocosm.Content.Rockets
                     p.TargetAlpha = 128;
                     p.ScaleDownSpeed = 0.0015f;
                     p.Acceleration = new(0.993f);
-                    p.DrawColor = Color.White.WithAlpha(150);
+                    p.Color = Color.White.WithAlpha(150);
                     p.Collide = true;
                 }, shouldSync: false);
             }

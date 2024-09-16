@@ -10,6 +10,10 @@ namespace Macrocosm.Content.Particles
         public override int FrameSpeed => 8;
         public override bool DespawnOnAnimationComplete => true;
 
+        public override void SetDefaults()
+        {
+        }
+
         public override void OnSpawn()
         {
         }

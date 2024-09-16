@@ -10,21 +10,22 @@ namespace Macrocosm.Content.Particles
     public class CelestialStar : Particle
     {
         public override string TexturePath => Macrocosm.EmptyTexPath;
+        public BlendState BlendStateOverride;
 
-        public float Alpha = 0.3f;
-        public Color? SecondaryColor = Color.White;
+        private bool fadeIn;
+        private float defScale;
+        private float actualScale;
 
-        public BlendState BlendStateOverride = null;
-
-        bool fadeIn = true;
-        float defScale;
-        float actualScale;
+        public override void SetDefaults()
+        {
+            BlendStateOverride = null;
+            fadeIn = true;
+            actualScale = 0.5f;
+        }
 
         public override void OnSpawn()
         {
             defScale = Scale.X;
-            actualScale = 0.5f;
-            Alpha = 1f;
         }
 
         public override void AI()
@@ -48,7 +49,7 @@ namespace Macrocosm.Content.Particles
                 Kill();
         }
 
-        SpriteBatchState state;
+        private SpriteBatchState state;
         public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
             if (BlendStateOverride is not null)

@@ -26,6 +26,21 @@ namespace Macrocosm.Content.Particles
         public int ItemType;
         private Item item = new();
 
+        public override void SetDefaults()
+        {
+            TimeToLive = 60;
+
+            StartPosition = default;
+            EndPosition = default;
+
+            MovementBezier = default;
+            ScaleBezier = default;
+
+            Opacity = 0f;
+            ItemType = 0;
+            item = new();
+        }
+
         public override void OnSpawn()
         {
             if (ContentSamples.ItemsByType.TryGetValue(ItemType, out Item item) && !item.IsAir)
@@ -36,7 +51,6 @@ namespace Macrocosm.Content.Particles
                 float distance = Vector2.Distance(StartPosition, EndPosition);
                 MovementBezier = movement * distance + Main.rand.NextVector2Circular(32f, 32f);
                 ScaleBezier = -movement * distance + Main.rand.NextVector2Circular(32f, 32f);
-                TimeToLive = Main.rand.Next(60, 80);
             }
             else
             {

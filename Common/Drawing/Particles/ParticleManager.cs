@@ -28,14 +28,15 @@ namespace Macrocosm.Common.Drawing.Particles
     {
         public static List<Type> Types { get; private set; }
         public static List<Particle> Particles { get; private set; }
-
-        public static List<Asset<Texture2D>> Textures;
+        public static List<Asset<Texture2D>> Textures { get; private set; }
+        public static Dictionary<Type, Stack<Particle>> ParticlePools { get; private set; }
 
         public override void Load()
         {
             Types = new List<Type>();
             Particles = new List<Particle>();
             Textures = new List<Asset<Texture2D>>();
+            ParticlePools = new Dictionary<Type, Stack<Particle>>();
 
             On_Main.DrawBlack += DrawParticles_Tiles;
             On_Main.DrawProjectiles += DrawParticles_Projectiles;
@@ -47,6 +48,7 @@ namespace Macrocosm.Common.Drawing.Particles
             Types = null;
             Particles = null;
             Textures = null;
+            ParticlePools = null;
 
             On_Main.DrawBlack -= DrawParticles_Tiles;
             On_Main.DrawProjectiles -= DrawParticles_Projectiles;
@@ -68,11 +70,12 @@ namespace Macrocosm.Common.Drawing.Particles
             for (int i = 0; i < Particles.Count; i++)
             {
                 Particle particle = Particles[i];
+
                 particle.Update();
 
                 if (!particle.Active)
                 {
-                    Particles.RemoveAt(i);
+                    particle.Kill();
                     i--;
                 }
             }
@@ -90,6 +93,38 @@ namespace Macrocosm.Common.Drawing.Particles
         {
             var list = Particles.Where(p => p.CustomDrawer == customDrawer).ToList();
             return list;
+        }
+
+        public static void RemoveParticle(Particle particle)
+        {
+            Particles.Remove(particle);
+
+            var type = particle.GetType();
+            if (ParticlePools.TryGetValue(type, out var pool))
+                pool.Push(particle);
+        }
+
+        public override void PostSetupContent()
+        {
+            // Initialize particle pools after all content is loaded
+            foreach (var particleType in Types)
+            {
+                var templateParticle = (Particle)Activator.CreateInstance(particleType);
+                int poolCount = templateParticle.MaxPoolCount;
+
+                if (poolCount > 0)
+                {
+                    Stack<Particle> pool = new(poolCount);
+
+                    for (int i = 0; i < poolCount; i++)
+                    {
+                        var p = (Particle)Activator.CreateInstance(particleType);
+                        pool.Push(p);
+                    }
+
+                    ParticlePools.Add(particleType, pool);
+                }
+            }
         }
 
         public override bool HijackSendData(int whoAmI, int msgType, int remoteClient, int ignoreClient, NetworkText text, int number, float number2, float number3, float number4, int number5, int number6, int number7)
